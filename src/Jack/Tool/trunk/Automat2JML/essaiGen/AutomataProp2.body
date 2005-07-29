@@ -1,0 +1,103 @@
+
+/* Generated automatically on Fri Jul 08 17:48:16 CEST 2005*/
+
+Applet{
+
+	public void register(){
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.REGISTER2_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+			/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.REGISTER2_ET); @*/ 
+			throw e;
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ InstallConstraint.registered(InstallConstraint.REGISTER2_NT); 
+				set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.REGISTER2_NT); @*/ 
+			}
+		}
+	}
+	
+	public void register(byte[], short, byte){
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.REGISTER1_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+			/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.REGISTER1_ET); @*/ 
+			throw e;
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ InstallConstraint.registered(InstallConstraint.REGISTER1_NT); 
+				set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.REGISTER1_NT); @*/ 
+			}
+		}
+	}
+	
+	public void process(APDU apdu) {
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set ProcessConstraint.state=ProcessConstraint.goNext(ProcessConstraint.PROCESSMETHOD_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+			/*@ set ProcessConstraint.state=ProcessConstraint.goNext(ProcessConstraint.PROCESSMETHOD_ET); @*/ 
+			throw e;
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ set ProcessConstraint.state=ProcessConstraint.goNext(ProcessConstraint.PROCESSMETHOD_NT); @*/ 
+			}
+		}
+	}
+	
+	public void intall(byte[], short, byte){
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.INSTALL_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+			/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.INSTALL_ET); @*/ 
+			throw e;
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ set InstallConstraint.state=InstallConstraint.goNext(InstallConstraint.INSTALL_NT); @*/ 
+			}
+		}
+	}
+	
+
+} 
+
+

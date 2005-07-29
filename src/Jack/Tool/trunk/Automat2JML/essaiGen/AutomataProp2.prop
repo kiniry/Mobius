@@ -1,0 +1,44 @@
+
+/* Generated automatically on Fri Jul 08 17:48:16 CEST 2005*/
+
+import essaiGen.GlobalDefinitionClass;
+import essaiGen.NoNewObject;
+import essaiGen.ProcessConstraint;
+import essaiGen.TransactionSpecification;
+import essaiGen.InstallConstraint;
+
+Applet{
+
+	/*@ requires (InstallConstraint.state==InstallConstraint.Unregistered && (true) )  ; @*/ 
+	/*@ modifies  GlobalDefinitionClass.registered , InstallConstraint.state; @*/ 
+	/*@ ensures (\old(InstallConstraint.state)==InstallConstraint.Unregistered && (true) ) ==> (InstallConstraint.state==InstallConstraint.Registered) ; @*/ 
+	/*@ exsures (Exception e) (\old(InstallConstraint.state)==InstallConstraint.Unregistered && (true) ) ==> (InstallConstraint.state==InstallConstraint.Unregistered) ; @*/ 
+	public void register(); 
+	
+	
+	/*@ requires (InstallConstraint.state==InstallConstraint.Unregistered && (true) )  ; @*/ 
+	/*@ modifies  GlobalDefinitionClass.registered , InstallConstraint.state; @*/ 
+	/*@ ensures (\old(InstallConstraint.state)==InstallConstraint.Unregistered && (true) ) ==> (InstallConstraint.state==InstallConstraint.Registered) ; @*/ 
+	/*@ exsures (Exception e) (\old(InstallConstraint.state)==InstallConstraint.Unregistered && (true) ) ==> (InstallConstraint.state==InstallConstraint.Unregistered) ; @*/ 
+	public void register(byte[], short, byte); 
+	
+	
+	/*@ requires (ProcessConstraint.state==ProcessConstraint.CardIdle && (true) )  ; @*/ 
+	/*@ modifies ProcessConstraint.state; @*/ 
+	/*@ ensures (\old(ProcessConstraint.state)==ProcessConstraint.CardIdle && (!GlobalDefinitionClass.performingTransaction) ) ==> (ProcessConstraint.state==ProcessConstraint.CardIdle) ; @*/ 
+	/*@ exsures (Exception e) (\old(ProcessConstraint.state)==ProcessConstraint.CardIdle && (!GlobalDefinitionClass.performingTransaction) ) ==> (ProcessConstraint.state==ProcessConstraint.CardIdle) ; @*/ 
+	public void process(APDU apdu) ; 
+	
+	
+	/*@ requires (InstallConstraint.state==InstallConstraint.LOADED && (true) )  ; @*/ 
+	/*@ modifies InstallConstraint.state; @*/ 
+	/*@ ensures (\old(InstallConstraint.state)==InstallConstraint.LOADED && (true) ) ==> (InstallConstraint.state==InstallConstraint.LOADED) ; @*/ 
+	/*@ ensures (\old(InstallConstraint.state)==InstallConstraint.LOADED && (true) ) ==> (InstallConstraint.state==InstallConstraint.INSTALLED) ; @*/ 
+	/*@ exsures (Exception e) (\old(InstallConstraint.state)==InstallConstraint.LOADED && (true) ) ==> (InstallConstraint.state==InstallConstraint.LOADED) ; @*/ 
+	public void intall(byte[], short, byte); 
+	
+	
+
+} 
+
+

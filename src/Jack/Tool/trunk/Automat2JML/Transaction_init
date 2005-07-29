@@ -1,0 +1,71 @@
+
+
+
+/*
+ * Created on Apr 15, 2005
+ *
+ * TODO To change the template for this generated file go to
+ * Window - Preferences - Java - Code Style - Code Templates
+ */
+/**
+ * @author tdupont
+ * 
+ * TODO To change the template for this generated type comment go to Window -
+ * Preferences - Java - Code Style - Code Templates
+ */
+
+
+//@ import essaiGen.*;
+
+public class Transaction {
+
+	
+	private boolean transactionRunning = false;
+	
+	public void TransactionSimulation(){
+		
+		for(int i=0; i<10 ; i++)
+		{
+			try { beginTransaction();}catch(Exception e) { System.err.println("BOOM !");}
+			closeTransaction();
+		}
+	}
+	
+	
+	
+	
+	//-------------------------------------------
+	// Method to be verified
+	//-------------------------------------------
+		
+   
+   
+	//@ modifies transactionRunning;
+	public void beginTransaction() throws Exception{
+		
+			if (transactionRunning==false) {
+				transactionRunning = true ;
+				return;
+			}
+			else{	
+				throw new Exception();
+			}
+	}
+
+
+ 	//@ modifies transactionRunning;
+	public void closeTransaction() { //beglongs to call Transaction
+		
+			
+			transactionRunning = false;
+		
+	}
+	
+	
+	
+}
+
+
+
+
+

@@ -1,0 +1,4 @@
+rm -f ./essaiGen/* ; \
+javac -d ./bin *.java  ; \
+java -cp ./bin/ Test $1; 
+#../../UPPAAL/simpleTransaction_MultiProp.xml

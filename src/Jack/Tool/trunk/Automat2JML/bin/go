@@ -1,0 +1,5 @@
+rm -f ./essaiGen/Prop* ; \
+rm -f ./essaiGen/Global* ; \
+rm -f ./essaiGen/Automat* ; \
+javac -d ./bin *.java  ; \
+java -cp ./bin/ Test ../../UPPAAL/simpleTransaction_MultiProp.xml

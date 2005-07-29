@@ -1,0 +1,33 @@
+
+/* Generated automatically on Fri Jul 08 17:48:16 CEST 2005*/
+
+import essaiGen.GlobalDefinitionClass;
+import essaiGen.NoNewObject;
+import essaiGen.ProcessConstraint;
+import essaiGen.TransactionSpecification;
+import essaiGen.InstallConstraint;
+
+JCSystem{
+
+	/*@ requires (TransactionSpecification.state==TransactionSpecification.TransactionOpened && (true) )  ; @*/ 
+	/*@ modifies  GlobalDefinitionClass.performingTransaction , TransactionSpecification.state; @*/ 
+	/*@ ensures (\old(TransactionSpecification.state)==TransactionSpecification.TransactionOpened && (true) ) ==> (TransactionSpecification.state==TransactionSpecification.NoTransaction) ; @*/ 
+	public static void commitTransaction() ; 
+	
+	
+	/*@ requires (TransactionSpecification.state==TransactionSpecification.NoTransaction && (true) )  ; @*/ 
+	/*@ modifies  GlobalDefinitionClass.performingTransaction , TransactionSpecification.state; @*/ 
+	/*@ ensures (\old(TransactionSpecification.state)==TransactionSpecification.NoTransaction && (true) ) ==> (TransactionSpecification.state==TransactionSpecification.TransactionOpened) ; @*/ 
+	public static void beginTransaction() ; 
+	
+	
+	/*@ requires (TransactionSpecification.state==TransactionSpecification.TransactionOpened && (true) )  ; @*/ 
+	/*@ modifies  GlobalDefinitionClass.performingTransaction , TransactionSpecification.state; @*/ 
+	/*@ ensures (\old(TransactionSpecification.state)==TransactionSpecification.TransactionOpened && (true) ) ==> (TransactionSpecification.state==TransactionSpecification.NoTransaction) ; @*/ 
+	public static void abortTransaction() ; 
+	
+	
+
+} 
+
+

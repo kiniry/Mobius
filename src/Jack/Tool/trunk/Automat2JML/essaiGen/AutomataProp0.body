@@ -1,0 +1,30 @@
+
+/* Generated automatically on Fri Jul 08 17:48:16 CEST 2005*/
+
+MyObject{
+
+	MyObject()  {
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set NoNewObject.state=NoNewObject.goNext(NoNewObject.CONSTRUCTORMETHOD_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ set NoNewObject.state=NoNewObject.goNext(NoNewObject.CONSTRUCTORMETHOD_NT); @*/ 
+			}
+		}
+	}
+	
+
+} 
+
+

@@ -1,0 +1,75 @@
+
+/* Generated automatically on Fri Jul 08 17:48:16 CEST 2005*/
+
+JCSystem{
+
+	public static void commitTransaction() {
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set TransactionSpecification.state=TransactionSpecification.goNext(TransactionSpecification.COMMITTRANSACTION_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ TransactionSpecification.performingTransaction(TransactionSpecification.COMMITTRANSACTION_NT); 
+				set TransactionSpecification.state=TransactionSpecification.goNext(TransactionSpecification.COMMITTRANSACTION_NT); @*/ 
+			}
+		}
+	}
+	
+	public static void beginTransaction() {
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set TransactionSpecification.state=TransactionSpecification.goNext(TransactionSpecification.BEGINTRANSACTION_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ TransactionSpecification.performingTransaction(TransactionSpecification.BEGINTRANSACTION_NT); 
+				set TransactionSpecification.state=TransactionSpecification.goNext(TransactionSpecification.BEGINTRANSACTION_NT); @*/ 
+			}
+		}
+	}
+	
+	public static void abortTransaction() {
+		boolean __INTERNAL_TEST = false; 
+		/* Entry Actions */
+		/*@ set TransactionSpecification.state=TransactionSpecification.goNext(TransactionSpecification.ABORTTRANSACTION_Call); @*/ 
+		try{
+			/*-- Method Body --*/
+	
+			/*--- End Body ---*/
+		}
+		catch(Exception e){ 
+			__INTERNAL_TEST = true; 
+			/* Exceptional Exit Actions */
+		} 
+		finally{ 
+			/* Normal Exit Actions */
+			if (!__INTERNAL_TEST ){
+				/*@ TransactionSpecification.performingTransaction(TransactionSpecification.ABORTTRANSACTION_NT); 
+				set TransactionSpecification.state=TransactionSpecification.goNext(TransactionSpecification.ABORTTRANSACTION_NT); @*/ 
+			}
+		}
+	}
+	
+
+} 
+
+

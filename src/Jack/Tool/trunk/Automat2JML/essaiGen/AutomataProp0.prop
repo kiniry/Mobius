@@ -1,0 +1,20 @@
+
+/* Generated automatically on Fri Jul 08 17:48:16 CEST 2005*/
+
+import essaiGen.GlobalDefinitionClass;
+import essaiGen.NoNewObject;
+import essaiGen.ProcessConstraint;
+import essaiGen.TransactionSpecification;
+import essaiGen.InstallConstraint;
+
+MyObject{
+
+	/*@ requires (NoNewObject.state==NoNewObject.Init && (GlobalDefinitionClass.performingTransaction) )  ; @*/ 
+	/*@ modifies NoNewObject.state; @*/ 
+	MyObject()  ; 
+	
+	
+
+} 
+
+
