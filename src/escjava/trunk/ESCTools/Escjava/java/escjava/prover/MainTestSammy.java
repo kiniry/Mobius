@@ -1,12 +1,12 @@
+package escjava.prover;
+
 import java.util.Properties;
 
 class mainRpcSammy {
 
     public static void main(String[] args) {
 
-	Signature S = new Signature("../Escjava2-Logics/many-sorted/many-sorted-logic.smt","smt-lib");
-
-	//S.print();
+	Signature S = new Signature("../../docs/Escjava2-Logics/many-sorted/many-sorted-logic.smt");
 
 	Sammy sammy = new Sammy(true);
 

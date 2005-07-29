@@ -59,7 +59,7 @@ export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
 
 ## This is the path for classfiles (not sources) needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ANT_LIB}:${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils)
+export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ANT_LIB}:${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils:.)
 
 ###########################################################################
 .PHONY: all build buildall test alltests
@@ -122,6 +122,7 @@ STAMPFILE = classes.stamp
 compile: ${CLASSDIRECTORY} generate_files mocha ${STAMPFILE}
 
 compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
+	./dl-xml-rpc-lib.sh
 	@${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
@@ -154,6 +155,7 @@ ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.j
 	touch $@
 
 ${STAMPFILE}: ${JAVASOURCEFILES}
+	./dl-xml-rpc-lib.sh
 	${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \

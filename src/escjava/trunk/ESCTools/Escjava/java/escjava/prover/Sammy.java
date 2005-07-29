@@ -1,10 +1,13 @@
+package escjava.prover;
+
 import java.util.Properties;
 import org.apache.xmlrpc.*;
 import java.util.Vector;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.lang.Thread;
 
-class Sammy implements ProverInterface {
+public class Sammy extends NewProver {
     
     static XmlRpcClientLite serverInstance;
 
@@ -24,11 +27,15 @@ class Sammy implements ProverInterface {
 
     public ProverResponse start_prover() {
 
+	//++
 	if(debug) System.out.println("Sammy::start_prover");
+	//++
+
+	killAnySammyAndStartNewOne();
 
 	try { serverInstance = new XmlRpcClientLite("localhost",8000); }
 	catch (Exception e) {
-	    System.err.println("Failed to init XmlRpc");
+	    System.err.println("Sammy::Failed to init XmlRpc");
 	    System.exit(0);
 	}
       
@@ -37,9 +44,13 @@ class Sammy implements ProverInterface {
 	  
 	ProverResponse res = execute("start_solver");
 
+	//++
 	if(debug)
 	    if( res != ProverResponse.OK )
 		System.out.println("Failed to init sammy");
+	//++
+
+	started = true;
 
 	return res;
 
@@ -47,7 +58,9 @@ class Sammy implements ProverInterface {
 	  
     public ProverResponse set_prover_resource_flags(Properties properties) {
 
+	//++
 	if(debug) System.out.println("Sammy::set_prover_resource_flags");
+	//++
 
 	/* we have to create a big string containing
 	 * all the flags ( = key in the hashtable of Properties)
@@ -66,7 +79,7 @@ class Sammy implements ProverInterface {
 	    }
 	    
 	    catch (Exception e) {
-		System.err.println("Failed to inspect properties");
+		System.err.println("Sammy::Failed to inspect properties");
 		System.exit(0);
 	    }
 	    
@@ -80,22 +93,23 @@ class Sammy implements ProverInterface {
 		
 	}
 	
-	/* TODO, look how rpc call works precisely to avoid that : */
-	flatParameters();
-
 	ProverResponse res = execute("set_flags");
 
+	//++
 	if(debug)
 	    if( res!= ProverResponse.OK )
 		System.out.println("Failed to set flags");
+	//++
 
 	return res;
     }
 
     public ProverResponse signature(Signature signature) {
 
+	//++
 	if(debug)
 	    System.out.print("Sammy::signature");
+	//++
 
 	/*
 	 * Calls for every decomposition of the signature
@@ -110,20 +124,16 @@ class Sammy implements ProverInterface {
 
 	ProverResponse res = execute("type_declaration");
 
+	//++
 	if(debug)
 	    if( res!= ProverResponse.OK )
 		System.out.println("Failed to set types");
+	//++
 
 	/*
-	 * Variables = 0 unary function in smt lib
+	 * Variables = 0 unary function in smt lib so there is no
+	 * need to declare them apart from functions.
 	 */
-	parameters.add(signature.variable());
-
-	res = execute("func_declaration");
-
-	if(debug)
-	    if( res!= ProverResponse.OK )
-		System.out.println("Failed to set variable");
 
 	/*
 	 * Functions
@@ -134,7 +144,7 @@ class Sammy implements ProverInterface {
 
 	if(debug)
 	    if( res!= ProverResponse.OK )
-		System.out.println("Failed to set functions");
+		System.out.println("Sammy::Failed to set functions");
 
 	/*
 	 * Predicates
@@ -143,9 +153,13 @@ class Sammy implements ProverInterface {
 
 	res = execute("pred_declaration");
 
+	//++
 	if(debug)
 	    if( res!= ProverResponse.OK )
 		System.out.println("Failed to set predicates");
+	//++
+
+	signature_defined = true;
 
 	return res;
     }
@@ -164,6 +178,7 @@ class Sammy implements ProverInterface {
 	/*
 	 * Does it correspond to 'add_assertion' in sammy's interface ?
 	 */
+	
 
 	return null;
     }
@@ -190,8 +205,10 @@ class Sammy implements ProverInterface {
 
     public ProverResponse stop_prover() {
 
+	//++
 	if(debug) System.out.println("Sammy::stop_prover");
-
+	//++
+	
 	int result;
 
 	// parameters can't be empty (rpc stuff)
@@ -201,7 +218,10 @@ class Sammy implements ProverInterface {
 	    
 	if(debug)
 	    if( res != ProverResponse.OK )
-		System.out.println("Failed to stop sammy");
+		System.out.println("Sammy::Failed to stop");
+
+	started = false;
+	signature_defined = false;
 
 	return res;
     }
@@ -234,7 +254,13 @@ class Sammy implements ProverInterface {
       @*/
     private ProverResponse execute(/*@ non_null @*/ String cmd ){
 
-	System.out.print("Sammy::execute   "+cmd+" "+parameters);
+	// TODO : improve that
+	if( parameters.size() > 1)
+	    flatParameters();
+
+	//++
+	System.out.println("Sammy::execute   "+cmd+parameters.toString());
+	//++
 
 	Integer res = new Integer(-1); // negative attitude
 
@@ -242,12 +268,14 @@ class Sammy implements ProverInterface {
 
 	try { res = (Integer)serverInstance.execute("sammy."+cmd,parameters); }
 	catch (Exception e) {
-	    System.err.println("Error during rpc call\n"+e);
+	    System.err.println("Sammy::Error during rpc call\n"+e);
 	    System.exit(0);
 	}
 
+	//++
 	if(debug)
-	    System.out.println(", return value = "+res.intValue());
+	    System.out.println("=> return value = "+res.intValue());
+	//++
 
 	// clean the parameters before next call
 	parameters.clear();
@@ -268,7 +296,7 @@ class Sammy implements ProverInterface {
 
 	    try { temp = (String)i.next(); }
 	    catch (Exception e) {
-		System.err.println("Error during flattening parameters\n"+e);
+		System.err.println("Sammy::Error during flattening parameters\n"+e);
 		System.exit(0);
 	    }
 
@@ -281,9 +309,75 @@ class Sammy implements ProverInterface {
 	parameters.clear();
 	parameters.add(res.toString());
 
+	//++
 	if(debug)
 	    System.out.println("Sammy::flatParameters   "+res);
+	//++
 	    
+    }
+
+    /*
+     * Isn't it a good name ?
+     */
+    private int killAnySammyAndStartNewOne(){
+
+	//++
+	if(debug)
+	    System.out.println("Sammy::killAnySammyAndStartNewOne");
+	//++
+
+	/*
+	 * TODO : Make it portable 
+	 */
+
+	if( System.getProperty("os.name").compareTo("Linux") == 0 ){
+	    Runtime r = Runtime.getRuntime();
+
+	    /*
+	     * TODO : improve that
+	     */ 
+	    try{
+		r.exec("killall sammy");
+		r.exec("sammy");
+		Thread.sleep(1000);
+	    }
+	    catch(Exception e){
+		System.out.println(e);
+		System.out.println("Sammy::Failed to kill existing sammy and starting a new one");
+		System.exit(0);
+	    }
+	}
+	    
+
+	return 0;
+	
+    }
+    
+    /*
+     * Test
+     */
+    
+    static public void main(String[] argv){
+
+	Sammy sammy = new Sammy(true);
+
+	sammy.start_prover();
+
+	parameters.add("(exp real real real)");
+	parameters.add("(pc real)");
+	sammy.execute("func_declaration");
+
+	parameters.add("(greater_than real real)");
+	sammy.execute("pred_declaration");
+
+	parameters.add("(or (not true) (= (+ 1 1) 2))");
+	sammy.execute("add_assertion");
+
+	parameters.add("(= 1 2)");
+	sammy.execute("add_assertion");
+	
+	sammy.stop_prover();
+
     }
 
 }

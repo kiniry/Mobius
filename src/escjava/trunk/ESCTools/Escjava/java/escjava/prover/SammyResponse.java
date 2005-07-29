@@ -1,4 +1,6 @@
-class SammyResponse extends ProverResponse {
+package escjava.prover;
+
+public class SammyResponse extends ProverResponse {
 
     // placeholder for factory for building ProverResponses
     static public ProverResponse factory(int return_code) {
