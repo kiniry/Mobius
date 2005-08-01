@@ -33,7 +33,6 @@ erik,
 \newrgbcolor{blue}{.2 .36 .77}
 %\newrgbcolor{darkblue}{0.28 0.24 0.55}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\embf}[1]{\textit{\textbf{#1}}}
@@ -106,8 +105,6 @@ niks
 \end{slide}
 \fi
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Outline of this tutorial}
 \vspace*{-2ex}
@@ -127,7 +124,6 @@ Then
 interspersed with demos.
 
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -167,9 +163,7 @@ as in Eiffel (Design by Contract), but more expressive.
 \fromSlide{2}{\doos{Goal: JML should be easy to use for any Java
     programmer.}}
 
-
 \end{slide}}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{JML}
@@ -207,7 +201,6 @@ using a few keywords
 
 \end{slide}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{requires, ensures}
 \vspace*{-4ex}
@@ -230,6 +223,7 @@ Here \code{\old(balance)} refers to the value of \code{balance}
 before execution of the method.
 
 \end{slide}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{requires, ensures}
 \vspace*{-4ex}
@@ -311,6 +305,9 @@ i.e.\ the default signals clause is
 To rule them out, add an explicit
 \begin{alltt}\code{ {\blue signals} (Exception){\green false}; 
 }
+or
+\begin{alltt}\code{ {\blue signals_only} Exception; 
+}
 
 \end{alltt}
 or use the keyword {\blue normal\_behavior}
@@ -379,7 +376,7 @@ these.
 
   void createSubdir({\green{/*@}}{\blue non\_null}{\green @*/} String name)\{
    ...
-  Directory{\green /*@}{\blue non\_null}{\green @*/} getParent()\{
+  {\green /*@}{\blue non\_null}{\green @*/} Directory getParent()\{
    ...
 }
 \end{alltt} %} %} %}
@@ -478,9 +475,7 @@ eg.
 }
 \end{alltt} 
 
-
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{JML recap}
@@ -502,7 +497,6 @@ The JML keywords discussed so far:
 {\blue This is all you need to know to get started!}
 
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{{\Large \red Tools for JML}}
@@ -550,7 +544,6 @@ into {\blue runtime checks}:
    ``Invariant violated in line 8000'' \ after 1 minute 
   instead of  \ ``NullPointerException in line 2000'' \  after 4 minutes}}
 \end{itemize}
-
 
 \fromSlide{4}{Of course, an assertion violation can be an {\em error in
     code} {\green or} an {\em error in specification}.}
@@ -647,7 +640,6 @@ ESC/Java2 {\blue {\em will}} detect this at compile-time.
 
 \end{slide}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{static checking vs runtime checking}
 \vspace*{-4ex}
@@ -673,11 +665,9 @@ of methods (incl. API methods)
 and invariants needed for {\blue modular verification}
 \end{itemize}
 
-
 \end{itemize}
 
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \overlays{1}{\begin{slide}{more JML tools}
@@ -687,11 +677,12 @@ and invariants needed for {\blue modular verification}
 \item$\!$ {\blue javadoc-style documentation}:  {\green jmldoc}
 \item$\!$ {\green Eclipse} plugin
 \item
-Other red {\blue verification} tools:
+Other full {\blue verification} tools:
 \begin{itemize}
 \item$\!$ {\green LOOP tool + PVS} (Nijmegen)
 \item$\!$ {\green JACK} (Gemplus/INRIA)
 \item$\!$ {\green Krakatoa tool + Coq} (INRIA)
+\item$\!$ {\green KeY} (Chalmers + Germany)
 \end{itemize}
 These tools also allow {\blue interactive} verification
 (whereas ESC/Java2 only aims at {\blue fully automatic} verification)
@@ -703,7 +694,6 @@ See \texttt{www.jmlspecs.org}
 
 \end{slide}}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Related Work}
 \vspace*{-4ex}
@@ -711,11 +701,10 @@ See \texttt{www.jmlspecs.org}
 \begin{itemize}
 \item {\blue jContract} tool for Java by {\green Parasoft}
 \item {\blue Spec\#} for {\green C\#} by {\green Microsoft}
-\item {\blue SparkAda} for subset of Ada by {\green Praxis Critical Systems Ltd.}
+\item {\blue Spark-Ada} for subset of Ada by {\green Praxis Critical Systems Ltd.}
 \item {\blue OCL} specification language for {\green UML}
 \end{itemize}
 \end{slide}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{slide}{Acknowledgements}
