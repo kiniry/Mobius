@@ -18,6 +18,7 @@ escjava_builtin_array_theory : THEORY
     select_store2 : AXIOM
       FORALL (m, i, j, x : S): i /= j IMPLIES 
                                select(store(m, i, x), j) = select(m, j)
+
   END escjava_builtin_array_theory
 
 escjava_java_typesystem : THEORY
@@ -108,6 +109,31 @@ escjava_java_typesystem : THEORY
 
   END escjava_java_typesystem
 
+escjava_java_boolean_ops : THEORY
+  BEGIN
+    IMPORTING escjava_java_typesystem
+
+    % === ESCJ 8: Section 5.2
+
+    boolAnd (a, b : S): bool = a = bool_true AND b = bool_true
+    boolEq (a, b : S): bool = a = bool_true IFF b = bool_true
+    boolImplies (a, b : S): bool = a = bool_true IMPLIES b = bool_true
+    boolNE (a, b : S): bool = NOT (a = bool_true IFF b = bool_true)
+    boolNot (a : S): bool = NOT (a = bool_true)
+    boolOr (a, b : S): bool = a = bool_true OR b = bool_true
+
+    % === ESCJ 8: Section 5.3
+    % Java's ternary 'conditional' operator (? :)
+    termConditional : [ S, S, S -> S ]
+
+    termConditional_definition1 : AXIOM
+      FORALL (x, y : S): termConditional(bool_true, x, y) = x
+    termConditional_definition2 : AXIOM
+      FORALL (b, x, y : S): b /= bool_true IMPLIES
+                            termConditional(b, x, y) = y
+
+  END escjava_java_boolean_ops
+
 escjava_java_integral_types : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem
@@ -134,40 +160,143 @@ escjava_java_integral_types : THEORY
       longFirst < intFirst AND intFirst < -1000000 AND 1000000 < intLast AND intLast < longLast
   END escjava_java_integral_types
 
-escjava_jml_semantics : THEORY
+escjava_java_integral_ops : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem
 
-    % === Define typeof for primitive types - DRCok
-    typeof : [ S -> S ]
-    typeof_char_definition : AXIOM
-      FORALL (x : S): is(x, T_char) IFF typeof(x) = T_char
-    typeof_byte_definition : AXIOM
-      FORALL (x : S): is(x, T_byte) IFF typeof(x) = T_byte
-    typeof_short_definition : AXIOM
-      FORALL (x : S): is(x, T_short) IFF typeof(x) = T_short
-    typeof_int_definition : AXIOM
-      FORALL (x : S): is(x, T_int) IFF typeof(x) = T_int
-    typeof_long_definition : AXIOM
-      FORALL (x : S): is(x, T_long) IFF typeof(x) = T_long
-    typeof_float_definition : AXIOM
-      FORALL (x : S): is(x, T_float) IFF typeof(x) = T_float
-    typeof_double_definition : AXIOM
-      FORALL (x : S): is(x, T_double) IFF typeof(x) = T_double
+    % === ESCJ 8: Section 5.1
+    integralMod : [ S, S -> S ]
+    integralDiv : [ S, S -> S ]
 
-    % === ESCJ 8: Section 2.3
-    typeof_reference_definition : AXIOM
-      FORALL (x, t : S): t <= T_java_lang_Object IMPLIES
-                         x = t IFF (x = java_null OR typeof(x) <= t)
+    S_to_numfield : [ S -> numfield ]
+    numfield_to_S : [ numfield -> S ]
+    CONVERSION+ S_to_numfield, numfield_to_S
 
-    S_to_real : [ S -> real ]
-    CONVERSION+ S_to_real
+    integral_mod_div1 : AXIOM
+      FORALL (i, j : S): integralDiv(i, j) * j + integralMod(i, j) = i
 
-  END escjava_jml_semantics
+    integral_mod_div2 : AXIOM
+      FORALL (i, j : S): 0 < j IMPLIES
+                         (0 <= integralMod(i, j) AND
+                          integralMod(i, j) < j)
 
-escjava_field_representation : THEORY
+    integral_mod_div3 : AXIOM
+      FORALL (i, j : S): j < 0 IMPLIES
+                         (j < integralMod(i, j) AND
+                          integralMod(i, j) <= 0)
+
+    integral_mod_div4 : AXIOM
+      FORALL (i, j : S): integralMod(i + j, j) = integralMod(i, j)
+
+    integral_mod_div5 : AXIOM
+      FORALL (i, j : S): integralMod(j + i, j) = integralMod(i, j)
+
+    integral_mod_div6 : AXIOM
+      FORALL (i, j : S): i /= 0 IMPLIES integralMod(0, i) = 0
+
+    integral_div_definition : AXIOM
+      FORALL (x, y : S): integralDiv(x * y, y) * y = x * y
+
+    integralEQ, integralGE, integralGT, integralLE, integralLT, integralNE : [ S, S -> S ]
+    integralEQ_definition : AXIOM
+      FORALL (x, y : S): integralEQ(x, y) = bool_true IFF x = y
+    integralGE_definition : AXIOM
+      FORALL (x, y : S): integralGE(x, y) = bool_true IFF x >= y
+    integralGT_definition : AXIOM
+      FORALL (x, y : S): integralGT(x, y) = bool_true IFF x > y
+    integralLE_definition : AXIOM
+      FORALL (x, y : S): integralLE(x, y) = bool_true IFF x <= y
+    integralLT_definition : AXIOM
+      FORALL (x, y : S): integralLT(x, y) = bool_true IFF x < y
+    integralNE_definition : AXIOM
+      FORALL (x, y : S): integralNE(x, y) = bool_true IFF x /= y
+
+    % === Axioms about properties of integral &, |, and /
+    integralAnd, integralOr, integralXor, intShiftL, longShiftL : [ S, S -> S ]
+    integralAnd_definition1 : AXIOM
+      FORALL (x, y : S): (0 <= x OR 0 <= y) IMPLIES
+                         0 <= integralAnd(x, y)
+    integralAnd_definition2 : AXIOM
+      FORALL (x, y : S): 0 <= x IMPLIES
+                         integralAnd(x, y) <= x
+    integralAnd_definition3 : AXIOM
+      FORALL (x, y : S): 0 <= y IMPLIES
+                         integralAnd(x, y) <= y
+    integralOr_definition : AXIOM
+      FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
+                         x <= integralOr(x, y) AND y <= integralOr(x, y)
+    integralDiv_definition : AXIOM
+      FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
+                         0 <= integralDiv(x, y) AND integralDiv(x, y) <= x
+    integralXor_definition : AXIOM
+      FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
+                         0 <= integralXor(x, y)
+    intShiftL_definition : AXIOM
+      FORALL (n : S): (0 <= n AND n < 31) IMPLIES
+                      1 <= intShiftL(1, n)
+    longShiftL_definition : AXIOM
+      FORALL (n : S): (0 <= n AND n < 63) IMPLIES
+                      1 <= longShiftL(1, n)
+
+  END escjava_java_integral_ops
+
+escjava_java_floating_point : THEORY
   BEGIN
-    IMPORTING escjava_jml_semantics
+    IMPORTING escjava_java_typesystem
+
+    % === A few floating point axioms - DRCok
+    floatingEQ, floatingGE, floatingGT, floatingLE, floatingLT, floatingNE : [ S, S -> S ]
+    floatingADD, floatingMUL, floatingMOD : [ S, S -> S ]
+    floatingNEG : [ S -> S ]
+
+    order_axiom : AXIOM
+      FORALL (d, dd : S):
+        (floatingLT(d, dd) = bool_true OR
+         floatingEQ(d, dd) = bool_true OR
+         floatingGT(d, dd) = bool_true) AND
+        floatingLE(d, dd) = bool_true IFF floatingEQ(d, dd) = bool_true OR floatingLT(d, dd) = bool_true AND
+        floatingGE(d, dd) = bool_true IFF floatingEQ(d, dd) = bool_true OR floatingGT(d, dd) = bool_true AND
+        floatingLT(d, dd) = bool_true IFF floatingGT(dd, d) = bool_true AND
+        floatingLE(d, dd) = bool_true IFF floatingGE(dd, d) = bool_true AND
+        NOT (floatingLT(d, dd) = bool_true IFF floatingGE(d, dd) = bool_true) AND
+        NOT (floatingGT(d, dd) = bool_true IFF floatingLE(d, dd) = bool_true)
+
+    floatingNE_definition : AXIOM
+      FORALL (d, dd : S): floatingEQ(d, dd) = bool_true IFF NOT floatingNE(d, dd) = bool_true
+
+    F_0_0 : S
+
+    floatingADD_definition : AXIOM
+      FORALL (d, dd : S): (floatingGT(d, floatingNEG(dd)) = bool_true) IMPLIES
+                          floatingGT(floatingADD(d, dd), F_0_0) = bool_true
+
+    % currently commented out/incomplete in ESC/Java unsorted logic
+    % floatingMUL_definition : AXIOM
+    %   FORALL (d, dd : S): ...
+
+    floatingMOD_definition1 : AXIOM
+      FORALL (d, dd : S): (floatingNE(d, F_0_0) = bool_true) IMPLIES
+                          (floatingGE(d, F_0_0) = bool_true AND
+                           floatingGE(floatingMOD(d, dd), F_0_0) = bool_true AND
+                           floatingLE(d, F_0_0) = bool_true AND
+                           floatingLE(floatingMOD(d, dd), F_0_0) = bool_true)
+    floatingMOD_definition2 : AXIOM
+      FORALL (d, dd : S): (floatingGT(d, F_0_0) = bool_true) IMPLIES
+                          (floatingGT(floatingMOD(d, dd), floatingNEG(dd)) = bool_true AND
+                           floatingLT(floatingMOD(d, dd), dd) = bool_true)
+    floatingMOD_definition3 : AXIOM
+      FORALL (d, dd : S): (floatingLT(dd, F_0_0) = bool_true) IMPLIES
+                          floatingLT(floatingMOD(d, dd), floatingNEG(dd)) = bool_true
+    floatingMOD_definition4 : AXIOM
+      FORALL (d, dd : S): (floatingLT(dd, F_0_0) = bool_true) IMPLIES
+                          floatingGT(floatingMOD(d, dd), dd) = bool_true
+
+  END escjava_java_floating_point
+
+escjava_java_field_representation : THEORY
+  BEGIN
+    IMPORTING escjava_java_typesystem,
+              escjava_jml_semantics
 
     % === ESCJ 8: Section 2.4
     asField : [ S, S -> S ]
@@ -186,17 +315,17 @@ escjava_field_representation : THEORY
 
     % === ESCJ 8: Section 3.1
     fClosedTime : [ S -> S ]
-%     fClosedTime_definition : AXIOM
-%       FORALL (x, f, a0 : S): 
-%         (fClosedTime(f) < a0 AND isAllocated(x, a0)) IMPLIES
-%         isAllocated(select(f, x), a0)
+    fClosedTime_definition : AXIOM
+      FORALL (x, f, a0 : S): 
+        (fClosedTime(f) < a0 AND isAllocated(x, a0)) IMPLIES
+        isAllocated(select(f, x), a0)
 
     % === ESCJ 8: Section 3.2
     eClosedTime : [ S -> S ]
-%     eClosedTime_definition : AXIOM
-%       FORALL (a, e, i, a0 : S):
-%         (eClosedTime(e) < a0 AND isAllocated(a, a0)) IMPLIES
-%         isAllocated(select(select(e, a), i), a0)        
+    eClosedTime_definition : AXIOM
+      FORALL (a, e, i, a0 : S):
+        (eClosedTime(e) < a0 AND isAllocated(a, a0)) IMPLIES
+        isAllocated(select(select(e, a), i), a0)        
 
     % === Axioms about classLiteral; not in ESCJ 8 (yet?):
     classLiteral : [ S -> S ]
@@ -212,11 +341,38 @@ escjava_field_representation : THEORY
     classLiteral_definition2 : AXIOM
       FORALL (t : S): classLiteral(t) = t
 
-  END escjava_field_representation
+  END escjava_java_field_representation
 
-escjava_locks : THEORY
+escjava_java_strings : THEORY
   BEGIN
-    IMPORTING escjava_field_representation
+    IMPORTING escjava_java_typesystem,
+              escjava_jml_semantics
+
+    T_java_lang_String : S
+    stringCat (x, y : S): S
+
+    stringCat_definition1 : AXIOM
+      FORALL (x, y : S): stringCat(x, y) /= java_null AND
+                         typeof(stringCat(x, y)) <= T_java_lang_String
+
+  END escjava_java_strings
+
+escjava_java_semantics : THEORY
+  BEGIN
+    IMPORTING escjava_java_typesystem,
+              escjava_java_boolean_ops,
+              escjava_java_integral_types,
+              escjava_java_integral_ops,
+              escjava_java_floating_point,
+              escjava_java_field_representation,
+              escjava_java_strings
+  END escjava_java_semantics
+
+escjava_lock_semantics : THEORY
+  BEGIN
+    IMPORTING escjava_java_typesystem,
+              escjava_jml_semantics,
+              escjava_java_field_representation
 
     % === ESCJ 8: Section 4
     asLockSet : [ S -> S ]
@@ -241,11 +397,12 @@ escjava_locks : THEORY
       FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
                       lockLE(java_null, x)
 
-  END escjava_locks
+  END escjava_lock_semantics
 
 escjava_arrays : THEORY
   BEGIN
-    IMPORTING escjava_locks,
+    IMPORTING escjava_java_typesystem,
+              escjava_java_field_representation,
               escjava_java_integral_types
 
     % === ESCJ 8: Section 5.0
@@ -323,173 +480,40 @@ escjava_arrays : THEORY
 
   END escjava_arrays
 
-escjava_integral_ops : THEORY
-  BEGIN
-    IMPORTING escjava_arrays
-
-    % === ESCJ 8: Section 5.1
-    integralMod : [ S, S -> S ]
-    integralDiv : [ S, S -> S ]
-
-    S_to_numfield : [ S -> numfield ]
-    numfield_to_S : [ numfield -> S ]
-    CONVERSION+ S_to_numfield, numfield_to_S
-
-    integral_mod_div1 : AXIOM
-      FORALL (i, j : S): integralDiv(i, j) * j + integralMod(i, j) = i
-
-    integral_mod_div2 : AXIOM
-      FORALL (i, j : S): 0 < j IMPLIES
-                         (0 <= integralMod(i, j) AND
-                          integralMod(i, j) < j)
-
-    integral_mod_div3 : AXIOM
-      FORALL (i, j : S): j < 0 IMPLIES
-                         (j < integralMod(i, j) AND
-                          integralMod(i, j) <= 0)
-
-    integral_mod_div4 : AXIOM
-      FORALL (i, j : S): integralMod(i + j, j) = integralMod(i, j)
-
-    integral_mod_div5 : AXIOM
-      FORALL (i, j : S): integralMod(j + i, j) = integralMod(i, j)
-
-    integral_mod_div6 : AXIOM
-      FORALL (i, j : S): i /= 0 IMPLIES integralMod(0, i) = 0
-
-    integral_div_definition : AXIOM
-      FORALL (x, y : S): integralDiv(x * y, y) * y = x * y
-
-    integralEQ, integralGE, integralGT, integralLE, integralLT, integralNE : [ S, S -> S ]
-    integralEQ_definition : AXIOM
-      FORALL (x, y : S): integralEQ(x, y) = bool_true IFF x = y
-    integralGE_definition : AXIOM
-      FORALL (x, y : S): integralGE(x, y) = bool_true IFF x >= y
-    integralGT_definition : AXIOM
-      FORALL (x, y : S): integralGT(x, y) = bool_true IFF x > y
-    integralLE_definition : AXIOM
-      FORALL (x, y : S): integralLE(x, y) = bool_true IFF x <= y
-    integralLT_definition : AXIOM
-      FORALL (x, y : S): integralLT(x, y) = bool_true IFF x < y
-    integralNE_definition : AXIOM
-      FORALL (x, y : S): integralNE(x, y) = bool_true IFF x /= y
-
-    % === Axioms about properties of integral &, |, and /
-    integralAnd, integralOr, integralXor, intShiftL, longShiftL : [ S, S -> S ]
-    integralAnd_definition1 : AXIOM
-      FORALL (x, y : S): (0 <= x OR 0 <= y) IMPLIES
-                         0 <= integralAnd(x, y)
-    integralAnd_definition2 : AXIOM
-      FORALL (x, y : S): 0 <= x IMPLIES
-                         integralAnd(x, y) <= x
-    integralAnd_definition3 : AXIOM
-      FORALL (x, y : S): 0 <= y IMPLIES
-                         integralAnd(x, y) <= y
-    integralOr_definition : AXIOM
-      FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
-                         x <= integralOr(x, y) AND y <= integralOr(x, y)
-    integralDiv_definition : AXIOM
-      FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
-                         0 <= integralDiv(x, y) AND integralDiv(x, y) <= x
-    integralXor_definition : AXIOM
-      FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
-                         0 <= integralXor(x, y)
-    intShiftL_definition : AXIOM
-      FORALL (n : S): (0 <= n AND n < 31) IMPLIES
-                      1 <= intShiftL(1, n)
-    longShiftL_definition : AXIOM
-      FORALL (n : S): (0 <= n AND n < 63) IMPLIES
-                      1 <= longShiftL(1, n)
-
-  END escjava_integral_ops
-
-escjava_java_boolean_ops : THEORY
-  BEGIN
-    IMPORTING escjava_integral_ops
-
-    % === ESCJ 8: Section 5.2
-
-    boolAnd (a, b : S): bool = a = bool_true AND b = bool_true
-    boolEq (a, b : S): bool = a = bool_true IFF b = bool_true
-    boolImplies (a, b : S): bool = a = bool_true IMPLIES b = bool_true
-    boolNE (a, b : S): bool = NOT (a = bool_true IFF b = bool_true)
-    boolNot (a : S): bool = NOT (a = bool_true)
-    boolOr (a, b : S): bool = a = bool_true OR b = bool_true
-
-    % === ESCJ 8: Section 5.3
-    % Java's ternary 'conditional' operator (? :)
-    termConditional : [ S, S, S -> S ]
-
-    termConditional_definition1 : AXIOM
-      FORALL (x, y : S): termConditional(bool_true, x, y) = x
-    termConditional_definition2 : AXIOM
-      FORALL (b, x, y : S): b /= bool_true IMPLIES
-                            termConditional(b, x, y) = y
-
-  END escjava_java_boolean_ops
-
-escjava_java_strings : THEORY
-  BEGIN
-    IMPORTING escjava_java_typesystem,
-              escjava_jml_semantics
-
-    T_java_lang_String : S
-    stringCat (x, y : S): S
-
-    stringCat_definition1 : AXIOM
-      FORALL (x, y : S): stringCat(x, y) /= java_null AND
-                         typeof(stringCat(x, y)) <= T_java_lang_String
-  END escjava_java_strings
-
-escjava_floating_point : THEORY
+escjava_jml_semantics : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem
 
-    % === A few floating point axioms - DRCok
-    floatingEQ, floatingGE, floatingGT, floatingLE, floatingLT, floatingNE : [ S, S -> S ]
-    floatingADD, floatingMUL, floatingMOD : [ S, S -> S ]
-    floatingNEG : [ S -> S ]
+    % === Define typeof for primitive types - DRCok
+    typeof : [ S -> S ]
+    typeof_char_definition : AXIOM
+      FORALL (x : S): is(x, T_char) IFF typeof(x) = T_char
+    typeof_byte_definition : AXIOM
+      FORALL (x : S): is(x, T_byte) IFF typeof(x) = T_byte
+    typeof_short_definition : AXIOM
+      FORALL (x : S): is(x, T_short) IFF typeof(x) = T_short
+    typeof_int_definition : AXIOM
+      FORALL (x : S): is(x, T_int) IFF typeof(x) = T_int
+    typeof_long_definition : AXIOM
+      FORALL (x : S): is(x, T_long) IFF typeof(x) = T_long
+    typeof_float_definition : AXIOM
+      FORALL (x : S): is(x, T_float) IFF typeof(x) = T_float
+    typeof_double_definition : AXIOM
+      FORALL (x : S): is(x, T_double) IFF typeof(x) = T_double
 
-    order_axiom : AXIOM
-      FORALL (d, dd : S):
-        (floatingLT(d, dd) = bool_true OR
-         floatingEQ(d, dd) = bool_true OR
-         floatingGT(d, dd) = bool_true) AND
-        floatingLE(d, dd) = bool_true IFF floatingEQ(d, dd) = bool_true OR floatingLT(d, dd) = bool_true AND
-        floatingGE(d, dd) = bool_true IFF floatingEQ(d, dd) = bool_true OR floatingGT(d, dd) = bool_true AND
-        floatingLT(d, dd) = bool_true IFF floatingGT(dd, d) = bool_true AND
-        floatingLE(d, dd) = bool_true IFF floatingGE(dd, d) = bool_true AND
-        NOT (floatingLT(d, dd) = bool_true IFF floatingGE(d, dd) = bool_true) AND
-        NOT (floatingGT(d, dd) = bool_true IFF floatingLE(d, dd) = bool_true)
+    % === ESCJ 8: Section 2.3
+    typeof_reference_definition : AXIOM
+      FORALL (x, t : S): t <= T_java_lang_Object IMPLIES
+                         x = t IFF (x = java_null OR typeof(x) <= t)
 
-    floatingNE_definition : AXIOM
-      FORALL (d, dd : S): floatingEQ(d, dd) = bool_true IFF NOT floatingNE(d, dd) = bool_true
+    S_to_real : [ S -> real ]
+    CONVERSION+ S_to_real
 
-    F_0_0 : S
+  END escjava_jml_semantics
 
-    floatingADD_definition : AXIOM
-      FORALL (d, dd : S): (floatingGT(d, floatingNEG(dd)) = bool_true) IMPLIES
-                          floatingGT(floatingADD(d, dd), F_0_0) = bool_true
-
-    % currently commented out/incomplete in ESC/Java unsorted logic
-    % floatingMUL_definition : AXIOM
-    %   FORALL (d, dd : S): ...
-
-    floatingMOD_definition1 : AXIOM
-      FORALL (d, dd : S): (floatingNE(d, F_0_0) = bool_true) IMPLIES
-                          (floatingGE(d, F_0_0) = bool_true AND
-                           floatingGE(floatingMOD(d, dd), F_0_0) = bool_true AND
-                           floatingLE(d, F_0_0) = bool_true AND
-                           floatingLE(floatingMOD(d, dd), F_0_0) = bool_true)
-    floatingMOD_definition2 : AXIOM
-      FORALL (d, dd : S): (floatingGT(d, F_0_0) = bool_true) IMPLIES
-                          (floatingGT(floatingMOD(d, dd), floatingNEG(dd)) = bool_true AND
-                           floatingLT(floatingMOD(d, dd), dd) = bool_true)
-    floatingMOD_definition3 : AXIOM
-      FORALL (d, dd : S): (floatingLT(dd, F_0_0) = bool_true) IMPLIES
-                          floatingLT(floatingMOD(d, dd), floatingNEG(dd)) = bool_true
-    floatingMOD_definition4 : AXIOM
-      FORALL (d, dd : S): (floatingLT(dd, F_0_0) = bool_true) IMPLIES
-                          floatingGT(floatingMOD(d, dd), dd) = bool_true
-
-  END escjava_floating_point
+escjava_logic : THEORY
+  BEGIN
+    IMPORTING escjava_java_semantics,
+              escjava_jml_semantics,
+              escjava_lock_semantics
+  END escjava_logic
