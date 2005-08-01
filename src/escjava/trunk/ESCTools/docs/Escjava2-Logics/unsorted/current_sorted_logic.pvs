@@ -2,47 +2,58 @@ escjava2_types : THEORY
   BEGIN
     S : TYPE+
 
-    Boolean : Type+ FROM bool
+    % Java base types.
+    Boolean : TYPE+ FROM bool
+    % Eventually we'll refine IntegralNumber to bounded, modular ints.
     IntegralNumber : TYPE+ FROM int
-    FloatingNumber : TYPE+ FROM real
+    % The same thing holds true for this bad-boy.
+    FloatingPointNumber : TYPE+ FROM real
     BigIntNumber : TYPE+ FROM int
     RealNumber : TYPE+ FROM real
-    JavaNumber : TYPE+ = [IntegralNumber + FloatingNumber]
-    BasicType : TYPE+ = [Boolean + JavaNumber]
-    JMLNumber : TYPE+ = [JavaNumber + BigIntNumber + RealNumber]
-    Number : TYPE+ = JMLNumber
-    Time : TYPE FROM int
+    JavaNumber : TYPE+ = [IntegralNumber + FloatingPointNumber]
+    BasicValue : TYPE+ = [Boolean + JavaNumber]
     ObjectReference, ArrayReference : TYPE+
     Reference : TYPE+ = [ObjectReference + ArrayReference]
+    JMLNumber : TYPE+ = [JavaNumber + BigIntNumber + RealNumber]
+
+    % These two PVS types represent the actual Java types.
+    JavaType : TYPE+
+    PrimitiveType, ReferenceType : TYPE+ FROM JavaType
+    ArrayType : TYPE+ FROM ReferenceType
+    JavaTypes_are_disjoint : AXIOM 
+      FORALL(p : PrimitiveType, r : ReferenceType): p /= r
+
+    Number : TYPE+ = JMLNumber
+    Time : TYPE FROM int
+    % @review JoeK, CesareT: It is unclear if we need Object at
+    % all; reconsider later.
     Object : TYPE+
 
   END escjava2_types
 
-escjava2_builtin_array_theory : THEORY
+map_theory[Map : TYPE+, Index : TYPE+, Value : TYPE+] : THEORY
   BEGIN
-    IMPORTING escjava2_types
 
-    select : [ S, S -> S ]
-    store : [ S, S, S -> S ]
+    get : [ Map, Index -> Value ]
+    set : [ Map, Index, Value -> Map ]
 
-    % === ESCJ 8: Section 0.4
+    get_and_set_definition : AXIOM
+      FORALL(m : Map, i : Index, v : Value ) :
+             get(set(m, i, v), i) = v
 
-    select_store1 : AXIOM
-      FORALL (m, i, x : S): select (store (m, i, x), i) = x
+    set_only_changes_one_index : AXIOM
+      FORALL(m : Map, i,j : Index, v : Value) :
+             i /= j IMPLIES get(set(m, i, v), j) = get(m, j)
 
-    select_store2 : AXIOM
-      FORALL (m, i, j, x : S): i /= j IMPLIES 
-                               select(store(m, i, x), j) = select(m, j)
-
-  END escjava2_builtin_array_theory
+  END map_theory
 
 escjava2_java_typesystem : THEORY
   BEGIN
-    IMPORTING escjava2_builtin_array_theory,
-              orders[S]
+    IMPORTING escjava2_types,
+              orders[JavaType]
 
     % <: is <=
-    % subtyping_is_a_partial_order : AXIOM partial_order?(<=)
+    % subtyping_is_a_partial_order : AXIOM partial_order?(orders[JavaType].<=)
     % < is <
     % comparison_is_a_strict_total_order : AXIOM strict_total_order?(<)
 
@@ -51,63 +62,64 @@ escjava2_java_typesystem : THEORY
     % We will use '<=' in PVS for '<:' in the Simplify logic.  Thus,
     % <= is reflexive, transitive, and antisymmetric.
 
-    T_java_lang_Object : S
+    T_java_lang_Object : ReferenceType
 
-    % Primative types are final.
+    % Primitive types are final.
 
-    T_boolean, T_char, T_byte, T_short, T_int, T_long, T_float, T_double : S
+    T_boolean, T_char, T_byte, T_short, T_int, T_long, T_float, T_double : PrimitiveType
 
-    primitive?(c : S): bool = (c = T_boolean) OR
-                              (c = T_char) OR 
-                              (c = T_byte) OR 
-                              (c = T_short) OR 
-                              (c = T_int) OR
-                              (c = T_long) OR
-                              (c = T_float) OR
-                              (c = T_double)
+    % primitive? is no longer necessarily because the existence of
+    % PrimitiveType.
+
+    % extends? is Java's "extends" and "implements" (direct subtype)
+    extends? : ({R : PRED[[ReferenceType, ReferenceType]] | irreflexive?(R)})
+    <= : ({R : PRED[[JavaType, JavaType]] | 
+         reflexive?(R) AND transitive?(R) AND antisymmetric?(R)})
+
+    subtype_includes_extends : AXIOM
+      FORALL(t : ReferenceType, u : ReferenceType) :
+        extends?(t, u) IMPLIES t <= u
+
+    subtype_is_the_smallest_relation_that_contains_extends : AXIOM
+      FORALL(t : ReferenceType, u : ReferenceType) :
+        t <= u AND t /= u IMPLIES
+        EXISTS(v : ReferenceType) : extends?(t, v) AND v <= u
 
     primative_types_are_final : AXIOM
-      FORALL (c, p : S): c <= p AND primitive?(p) IMPLIES c = p
+      FORALL (t : JavaType, p : PrimitiveType): t <= p IMPLIES t = p
     primative_types_have_no_proper_supertypes : AXIOM
-      FORALL (c, p : S): c <= p AND primitive?(c) IMPLIES p = c
+      FORALL (p : PrimitiveType, t : JavaType): p <= t IMPLIES p = t
 
     java_lang_Object_is_Top : AXIOM
-      FORALL (c : S): NOT primitive?(c) IMPLIES c <= T_java_lang_Object
-    % This could be expressed also using upper_bound?
+      FORALL (t : ReferenceType): t <= T_java_lang_Object
 
     % === ESCJ 8: Section 1.2
 
-    % Another employment of the 'as' trick, faking types/sorts on an
-    % untyped/unsorted logic.
-    % 'as' trick in use.
-    asChild : [S, S -> S]
-    % If t0 is a proper subclass of t2, then classDown(t2, t0) is
-    % the direct subclass of t2 that is a superclass of t0.
-    classDown : [S, S -> S]
+    typeOf(r : Reference) : ReferenceType
+    NULL : Reference
 
-    classDown_definition : AXIOM
-      FORALL (t0, t1, t2 : S): t0 <= asChild(t1, t2) IMPLIES 
-                               classDown(t2, t0) = asChild(t1, t2)
+    isa?(r : Reference, t : ReferenceType) : bool =
+      ((r = NULL) OR typeOf(r) = t)
 
     % === ESCJ 8: Section 1.3
 
-    T_java_lang_Cloneable : S
+    T_java_lang_Cloneable : ReferenceType
 
-    elemtype : [S -> S]
-    array_constructor : [S -> S]
+    elemtype : [ArrayType -> JavaType]
+    array_constructor : [JavaType -> ArrayType]
 
     arrays_are_cloneable : AXIOM
-      FORALL (t : S): array_constructor(t) <= T_java_lang_Cloneable
+      FORALL (t : JavaType): array_constructor(t) <= T_java_lang_Cloneable
     elemtype_definition : AXIOM
-      FORALL (t : S): elemtype(array_constructor(t)) = t
+      FORALL (t : JavaType): elemtype(array_constructor(t)) = t
     array_subtyping : AXIOM
-      FORALL (t0, t1 : S): t0 <= array_constructor(t1) IFF
-                           (t0 = array_constructor(elemtype(t0)) AND 
-                            elemtype(t0) <= t1)
+      FORALL (t0 : ArrayType, t1 : JavaType): t0 <= array_constructor(t1) IFF
+                                              elemtype(t0) <= t1
 
     % === ESCJ 8: Section 2.1
 
-    is : [ S, S -> bool ]
+    % The static type predicate.
+    is : [ S, JavaType -> bool ]
     cast : [ S, S -> S ]
 
     redundant_cast_removal : AXIOM
@@ -119,8 +131,6 @@ escjava2_java_typesystem : THEORY
 
     java_false_and_true_are_distinct : AXIOM
       bool_false /= bool_true;
-
-    java_null : S
 
     % Not in ESCJ8, but should be
     refEQ, refNE : [ S, S -> S ]
