@@ -26,11 +26,15 @@ escjava_java_typesystem : THEORY
     IMPORTING escjava_builtin_array_theory,
               orders[S]
 
+    % <: is <=
+    % subtyping_is_a_partial_order : AXIOM partial_order?(<=)
+    % < is <
+    % comparison_is_a_strict_total_order : AXIOM strict_total_order?(<)
+
     % === ESCJ 8: Section 1.1
 
-    % We will use '<' and '<=' in PVS for 'extends?' and '<:' in the
-    % Simplify logic.  Thus, <= is reflexive, transitive, and
-    % antisymmetric.
+    % We will use '<=' in PVS for '<:' in the Simplify logic.  Thus,
+    % <= is reflexive, transitive, and antisymmetric.
 
     T_java_lang_Object : S
 
@@ -38,7 +42,7 @@ escjava_java_typesystem : THEORY
 
     T_boolean, T_char, T_byte, T_short, T_int, T_long, T_float, T_double : S
 
-    primative?(c : S): bool = (c = T_boolean) OR
+    primitive?(c : S): bool = (c = T_boolean) OR
                               (c = T_char) OR 
                               (c = T_byte) OR 
                               (c = T_short) OR 
@@ -48,19 +52,21 @@ escjava_java_typesystem : THEORY
                               (c = T_double)
 
     primative_types_are_final : AXIOM
-      FORALL (c, p : S): c <= p AND primative?(p) IMPLIES c = p
+      FORALL (c, p : S): c <= p AND primitive?(p) IMPLIES c = p
     primative_types_have_no_proper_supertypes : AXIOM
-      FORALL (c, p : S): c <= p AND primative?(c) IMPLIES p = c
+      FORALL (c, p : S): c <= p AND primitive?(c) IMPLIES p = c
 
     java_lang_Object_is_Top : AXIOM
-      FORALL (c : S): NOT primative?(c) IMPLIES c <= T_java_lang_Object
+      FORALL (c : S): NOT primitive?(c) IMPLIES c <= T_java_lang_Object
+    % This could be expressed also using upper_bound?
 
     % === ESCJ 8: Section 1.2
 
     % Another employment of the 'as' trick, faking types/sorts on an
     % untyped/unsorted logic.
+    % 'as' trick in use.
     asChild : [S, S -> S]
-    % If t0 is the proper subclass of t2, then classDown(t2, t0) is
+    % If t0 is a proper subclass of t2, then classDown(t2, t0) is
     % the direct subclass of t2 that is a superclass of t0.
     classDown : [S, S -> S]
 
@@ -79,32 +85,44 @@ escjava_java_typesystem : THEORY
       FORALL (t : S): array_constructor(t) <= T_java_lang_Cloneable
     elemtype_definition : AXIOM
       FORALL (t : S): elemtype(array_constructor(t)) = t
-    monomorphic_arrays : AXIOM
+    array_subtyping : AXIOM
       FORALL (t0, t1 : S): t0 <= array_constructor(t1) IFF
-                           t0 = array_constructor(elemtype(t0)) AND elemtype(t0) <= t1
+                           (t0 = array_constructor(elemtype(t0)) AND 
+                            elemtype(t0) <= t1)
 
     % === ESCJ 8: Section 2.1
+
     is : [ S, S -> bool ]
     cast : [ S, S -> S ]
 
-    cast_definition : AXIOM
+    redundant_cast_removal : AXIOM
       FORALL (x, t : S): is(x, t) IMPLIES cast(x, t) = x
 
     % === ESCJ 8: Section 2.2
 
     bool_false, bool_true : S
 
-    Java_false_and_true_are_distinct : AXIOM
+    java_false_and_true_are_distinct : AXIOM
       bool_false /= bool_true;
 
     java_null : S
 
     % Not in ESCJ8, but should be
-    refEQ, refNE : [ S, S -> S ]
 
-    refEQ_definition : AXIOM
+    refEQ(x, y : S): S = IF x = y
+                           THEN bool_true 
+                           ELSE bool_false
+                         ENDIF
+
+    refEQ : LEMMA
       FORALL (x, y : S): refEQ(x, y) = bool_true IFF x = y
-    refNE_definition : AXIOM
+
+    refNE(x, y : S): S = IF x /= y
+                           THEN bool_true 
+                           ELSE bool_false
+                         ENDIF
+
+    refNE : LEMMA
       FORALL (x, y : S): refNE(x, y) = bool_true IFF x /= y
 
   END escjava_java_typesystem
@@ -123,12 +141,17 @@ escjava_java_boolean_ops : THEORY
     boolOr (a, b : S): bool = a = bool_true OR b = bool_true
 
     % === ESCJ 8: Section 5.3
-    % Java's ternary 'conditional' operator (? :)
-    termConditional : [ S, S, S -> S ]
 
-    termConditional_definition1 : AXIOM
+    % Java's ternary 'conditional' operator (? :)
+
+    termConditional (b, x, y : S): S = IF b = bool_true
+                                         THEN x
+                                         ELSE y
+                                       ENDIF
+
+    termConditional_elimination : LEMMA
       FORALL (x, y : S): termConditional(bool_true, x, y) = x
-    termConditional_definition2 : AXIOM
+    termConditional_falsehood : LEMMA
       FORALL (b, x, y : S): b /= bool_true IMPLIES
                             termConditional(b, x, y) = y
 
@@ -158,6 +181,7 @@ escjava_java_integral_types : THEORY
 
     intFirst_definition : AXIOM
       longFirst < intFirst AND intFirst < -1000000 AND 1000000 < intLast AND intLast < longLast
+
   END escjava_java_integral_types
 
 escjava_java_integral_ops : THEORY
@@ -165,6 +189,7 @@ escjava_java_integral_ops : THEORY
     IMPORTING escjava_java_typesystem
 
     % === ESCJ 8: Section 5.1
+
     integralMod : [ S, S -> S ]
     integralDiv : [ S, S -> S ]
 
@@ -212,6 +237,7 @@ escjava_java_integral_ops : THEORY
       FORALL (x, y : S): integralNE(x, y) = bool_true IFF x /= y
 
     % === Axioms about properties of integral &, |, and /
+
     integralAnd, integralOr, integralXor, intShiftL, longShiftL : [ S, S -> S ]
     integralAnd_definition1 : AXIOM
       FORALL (x, y : S): (0 <= x OR 0 <= y) IMPLIES
@@ -245,6 +271,7 @@ escjava_java_floating_point : THEORY
     IMPORTING escjava_java_typesystem
 
     % === A few floating point axioms - DRCok
+
     floatingEQ, floatingGE, floatingGT, floatingLE, floatingLT, floatingNE : [ S, S -> S ]
     floatingADD, floatingMUL, floatingMOD : [ S, S -> S ]
     floatingNEG : [ S -> S ]
@@ -298,22 +325,31 @@ escjava_java_field_representation : THEORY
     IMPORTING escjava_java_typesystem,
               escjava_jml_semantics
 
+    S_to_real : [ S -> real ]
+    CONVERSION+ S_to_real
+
     % === ESCJ 8: Section 2.4
+
+    % 'as' trick in use.
     asField : [ S, S -> S ]
     asField_definition : AXIOM
       FORALL (f, t, x : S): is(select(asField(f, t), x), t)
 
     % === ESCJ 8: Section 2.5
+
+    % 'as' trick in use.
     asElems : [ S -> S ]
     asElems_definition : AXIOM
       FORALL (e, a, i : S): is(select(select(asElems(e), a), i),
                                elemtype(typeof(a)))
 
     % === ESCJ 8: Section 3.0
+
     vAllocTime : [ S -> S ]
-    isAllocated (x, a0 : S): bool % = vAllocTime(x) < a0
+    isAllocated (x, a0 : S): bool = vAllocTime(x) < a0
 
     % === ESCJ 8: Section 3.1
+
     fClosedTime : [ S -> S ]
     fClosedTime_definition : AXIOM
       FORALL (x, f, a0 : S): 
@@ -321,6 +357,7 @@ escjava_java_field_representation : THEORY
         isAllocated(select(f, x), a0)
 
     % === ESCJ 8: Section 3.2
+
     eClosedTime : [ S -> S ]
     eClosedTime_definition : AXIOM
       FORALL (a, e, i, a0 : S):
@@ -328,6 +365,7 @@ escjava_java_field_representation : THEORY
         isAllocated(select(select(e, a), i), a0)        
 
     % === Axioms about classLiteral; not in ESCJ 8 (yet?):
+
     classLiteral : [ S -> S ]
     T_java_lang_Class : S
     % TODO: review use of alloc
@@ -375,6 +413,8 @@ escjava_lock_semantics : THEORY
               escjava_java_field_representation
 
     % === ESCJ 8: Section 4
+
+    % 'as' trick in use.
     asLockSet : [ S -> S ]
     max : [ S -> S ]
     max_of_a_lockset_is_a_lockset : AXIOM
@@ -384,8 +424,8 @@ escjava_lock_semantics : THEORY
     null_is_in_lockset : AXIOM
       FORALL (s : S): select(asLockSet(s), java_null) = bool_true
 
-    lockLE (x, y : S): bool % = x <= y
-    lockLT (x, y : S): bool % = x < y
+    lockLE (x, y : S): bool = x <= y
+    lockLT (x, y : S): bool = x < y
 
     % all locks in lockset are below max(lockset) (not in ESCJ 8)
     all_locks_in_lockset_are_below_max_lockset : AXIOM
@@ -406,11 +446,16 @@ escjava_arrays : THEORY
               escjava_java_integral_types
 
     % === ESCJ 8: Section 5.0
+
     arrayLength : [ S -> S ]
     arrayLength_definition : AXIOM
       FORALL (a : S): 0 <= arrayLength(a) AND 
                       is(arrayLength(a), T_int)
 
+    % elems will be eliminated in the new logic, at a cost of
+    % complexity in the translator of course, and instead separate
+    % maps will be introduced for each array.  This will make the
+    % logic cleaner and possibly help the prover be more efficient.
     elems : S
     arrayFresh : [ S, S, S, S, S, S, S -> bool ]
     arrayMake : [ S, S, S, S, S -> S ]
@@ -466,12 +511,13 @@ escjava_arrays : THEORY
 
     arrayType_definition : AXIOM
       FORALL (t : S): array_constructor(t) <= arrayType
-    foo : AXIOM
+    arrayType_is_top : AXIOM
       FORALL (s : S):
         (bool_true = isNewArray(s)) IMPLIES
         typeof(s) <= arrayType
 
     % === Implementation of nonnullelements; not in ESCJ 8 (yet?):
+
     nonnullelements (x, e : S): bool =
       x /= java_null AND
       FORALL (i : S):
@@ -485,29 +531,31 @@ escjava_jml_semantics : THEORY
     IMPORTING escjava_java_typesystem
 
     % === Define typeof for primitive types - DRCok
+
     typeof : [ S -> S ]
-    typeof_char_definition : AXIOM
+    typeof_definition : AXIOM
+      FORALL (x, y : S): primitive?(y) AND is(x, y) IFF typeof(x) = y
+
+    typeof_char : LEMMA
       FORALL (x : S): is(x, T_char) IFF typeof(x) = T_char
-    typeof_byte_definition : AXIOM
+    typeof_byte : LEMMA
       FORALL (x : S): is(x, T_byte) IFF typeof(x) = T_byte
-    typeof_short_definition : AXIOM
+    typeof_short : LEMMA
       FORALL (x : S): is(x, T_short) IFF typeof(x) = T_short
-    typeof_int_definition : AXIOM
+    typeof_int : LEMMA
       FORALL (x : S): is(x, T_int) IFF typeof(x) = T_int
-    typeof_long_definition : AXIOM
+    typeof_long : LEMMA
       FORALL (x : S): is(x, T_long) IFF typeof(x) = T_long
-    typeof_float_definition : AXIOM
+    typeof_float : LEMMA
       FORALL (x : S): is(x, T_float) IFF typeof(x) = T_float
-    typeof_double_definition : AXIOM
+    typeof_double : LEMMA
       FORALL (x : S): is(x, T_double) IFF typeof(x) = T_double
 
     % === ESCJ 8: Section 2.3
+
     typeof_reference_definition : AXIOM
       FORALL (x, t : S): t <= T_java_lang_Object IMPLIES
                          x = t IFF (x = java_null OR typeof(x) <= t)
-
-    S_to_real : [ S -> real ]
-    CONVERSION+ S_to_real
 
   END escjava_jml_semantics
 
