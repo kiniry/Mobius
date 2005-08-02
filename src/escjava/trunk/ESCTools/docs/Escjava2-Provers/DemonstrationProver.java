@@ -33,7 +33,7 @@ class DemonstrationProver implements ProverInterface
 
   public ProverResponse start_prover() {
     prover_running = true;
-    return new ProverResponse(demo_start_prover());
+    return ProverResponse.factory(demo_start_prover());
   }
 
   // set_flags : string -> int
@@ -92,7 +92,7 @@ class DemonstrationProver implements ProverInterface
 
   public ProverResponse stop_prover() {
     prover_running = false;
-    return new ProverResponse(demo_stop_prover());
+    return ProverResponse.factory(demo_stop_prover());
   }
 
   // quick-and-dirty unit test for starting and stopping prover

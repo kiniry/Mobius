@@ -117,7 +117,7 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 
 .PHONY: all build
 
-#all:	java jni # was used to build the demonstration prover of Joe
+all:	java jni 
 
 all :   interface 
 
@@ -142,11 +142,7 @@ java:	ProverInterface.class DemonstrationProver.class
 
 jni:	DemonstrationProver.h $(DYNAMIC_LIB_PREFIX)demoprover$(DYNAMIC_LIB_EXTENSION) demoprover
 
-test:	#java jni
-	#demoprover : FIXME, these files were used to show how to use
-	# the prover interface, but it's useless to execute them
-	# because the interface has changed since
-	#java DemonstrationProver
+test:	java jni
 
 demoprover:	DemonstrationProver.c
 	$(CC) $(CFLAGS) \
