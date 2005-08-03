@@ -62,9 +62,9 @@ escjava2_java_typesystem : THEORY
               orders[JavaType]
 
     % <: is <=
-    % subtyping_is_a_partial_order : AXIOM partial_order?(orders[JavaType].<=)
+    % subtyping_is_a_partial_order : POSTULATE partial_order?(orders[JavaType].<=)
     % < is <
-    % comparison_is_a_strict_total_order : AXIOM strict_total_order?(<)
+    % comparison_is_a_strict_total_order : POSTULATE strict_total_order?(orders[JavaType].<)
 
     % === ESCJ 8: Section 1.1
 
@@ -215,38 +215,14 @@ escjava2_java_integral_ops : THEORY
     % === ESCJ 8: Section 5.1
 
     % Define using modulo_arithmetic theory.
-    integralMod, integralDiv : [ IntegralNumber, IntegralNumber -> IntegralNumber ]
-%    integralMod(x : IntegralNumber, y : IntegralNumber): IntegralNumber =
-%    integralDiv(x : IntegralNumber, y : IntegralNumber): IntegralNumber =
+%   integralMod, integralDiv : [ IntegralNumber, IntegralNumber -> IntegralNumber ]
 
-%     S_to_numfield : [ S -> numfield ]
-%     numfield_to_S : [ numfield -> S ]
-%     CONVERSION+ S_to_numfield, numfield_to_S
+    integralMod(x, y : IntegralNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
 
-%     integral_mod_div1 : AXIOM
-%       FORALL (i, j : S): integralDiv(i, j) * j + integralMod(i, j) = i
+    integralDiv(x, y : IntegralNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
 
-%     integral_mod_div2 : AXIOM
-%       FORALL (i, j : S): 0 < j IMPLIES
-%                          (0 <= integralMod(i, j) AND
-%                           integralMod(i, j) < j)
-
-%     integral_mod_div3 : AXIOM
-%       FORALL (i, j : S): j < 0 IMPLIES
-%                          (j < integralMod(i, j) AND
-%                           integralMod(i, j) <= 0)
-
-%     integral_mod_div4 : AXIOM
-%       FORALL (i, j : S): integralMod(i + j, j) = integralMod(i, j)
-
-%     integral_mod_div5 : AXIOM
-%       FORALL (i, j : S): integralMod(j + i, j) = integralMod(i, j)
-
-%     integral_mod_div6 : AXIOM
-%       FORALL (i, j : S): i /= 0 IMPLIES integralMod(0, i) = 0
-
-%     integral_div_definition : AXIOM
-%       FORALL (x, y : S): integralDiv(x * y, y) * y = x * y
+    integralMod_def : LEMMA
+      FORALL (a, b : IntegralNumber): a = (a / b) * b + (integralMod(a, b))
 
     integralEQ, integralGE, integralGT, integralLE, integralLT, integralNE :
       [ IntegralNumber, IntegralNumber -> Boolean ]
@@ -304,6 +280,8 @@ escjava2_java_floating_point : THEORY
       [ FloatingPointNumber, FloatingPointNumber -> Boolean ]
 %     floatingADD, floatingMUL, floatingMOD : [ S, S -> S ]
 %     floatingNEG : [ S -> S ]
+
+    floatingMod(x, y : FloatingPointNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
 
 %     order_axiom : AXIOM
 %       FORALL (d, dd : S):
@@ -365,6 +343,7 @@ escjava2_java_field_representation : THEORY
   BEGIN
     IMPORTING escjava2_java_typesystem,
               escjava2_jml_semantics,
+              escjava2_array_store,
               map_theory[BooleanField, Reference, Boolean],
               map_theory[NumberField, Reference, Number],
               map_theory[ReferenceField, Reference, Reference],
@@ -436,11 +415,11 @@ escjava2_java_strings : THEORY
               escjava2_jml_semantics
 
     T_java_lang_String : ReferenceType
-    stringCat (x, y : ReferenceType): ReferenceType
+    stringCat (x, y : Reference): Reference
 
     stringCat_definition : AXIOM
-      FORALL (x, y : ReferenceType): stringCat(x, y) /= NULL AND
-                                     typeof(stringCat(x, y)) <= T_java_lang_String
+      FORALL (x, y : Reference): stringCat(x, y) /= NULL AND
+                                 typeof(stringCat(x, y)) <= T_java_lang_String
 
   END escjava2_java_strings
 
@@ -463,26 +442,26 @@ escjava2_lock_semantics : THEORY
               escjava2_java_field_representation,
               sets[Lock]
 
-    % === ESCJ 8: Section 4
+%     % === ESCJ 8: Section 4
 
-    max : [ LockSet -> LockSet ]
+%     max : [ LockSet -> LockSet ]
 
-    % null is in lockset (not in ESCJ 8)
-    null_is_in_lockset : AXIOM
-      FORALL (s : S): select(asLockSet(s), NULL) = bool_true
+%     % null is in lockset (not in ESCJ 8)
+%     null_is_in_lockset : AXIOM
+%       FORALL (s : S): select(asLockSet(s), NULL) = bool_true
 
-    lockLE (x, y : S): bool = x <= y
-    lockLT (x, y : S): bool = x < y
+%     lockLE (x, y : S): bool = x <= y
+%     lockLT (x, y : S): bool = x < y
 
-    % all locks in lockset are below max(lockset) (not in ESCJ 8)
-    all_locks_in_lockset_are_below_max_lockset : AXIOM
-      FORALL (s, mu : S): select(asLockSet(s), mu) = bool_true IMPLIES
-                          lockLE(mu, max(asLockSet(s)))
+%     % all locks in lockset are below max(lockset) (not in ESCJ 8)
+%     all_locks_in_lockset_are_below_max_lockset : AXIOM
+%       FORALL (s, mu : S): select(asLockSet(s), mu) = bool_true IMPLIES
+%                           lockLE(mu, max(asLockSet(s)))
 
-    % null precedes all objects in locking order (not in ESCJ 8)
-    null_precedes_all_objects : AXIOM
-      FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
-                      lockLE(java_null, x)
+%     % null precedes all objects in locking order (not in ESCJ 8)
+%     null_precedes_all_objects : AXIOM
+%       FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
+%                       lockLE(java_null, x)
 
   END escjava2_lock_semantics
 
@@ -492,84 +471,84 @@ escjava2_arrays : THEORY
               escjava2_java_field_representation,
               escjava2_java_integral_types
 
-    % === ESCJ 8: Section 5.0
+%     % === ESCJ 8: Section 5.0
 
-    arrayLength : [ S -> S ]
-    arrayLength_definition : AXIOM
-      FORALL (a : S): 0 <= arrayLength(a) AND 
-                      is(arrayLength(a), T_int)
+%     arrayLength : [ S -> S ]
+%     arrayLength_definition : AXIOM
+%       FORALL (a : S): 0 <= arrayLength(a) AND 
+%                       is(arrayLength(a), T_int)
 
-    % elems will be eliminated in the new logic, at a cost of
-    % complexity in the translator of course, and instead separate
-    % maps will be introduced for each array.  This will make the
-    % logic cleaner and possibly help the prover be more efficient.
-    elems : S
-    arrayFresh : [ S, S, S, S, S, S, S -> bool ]
-    arrayMake : [ S, S, S, S, S -> S ]
-    arrayShapeOne : [ S -> S ]
-    arrayShapeMore : [ S, S -> S ]
-    arrayParent : [ S -> S ]
-    arrayPosition : [ S -> S ]
+%     % elems will be eliminated in the new logic, at a cost of
+%     % complexity in the translator of course, and instead separate
+%     % maps will be introduced for each array.  This will make the
+%     % logic cleaner and possibly help the prover be more efficient.
+%     elems : S
+%     arrayFresh : [ S, S, S, S, S, S, S -> bool ]
+%     arrayMake : [ S, S, S, S, S -> S ]
+%     arrayShapeOne : [ S -> S ]
+%     arrayShapeMore : [ S, S -> S ]
+%     arrayParent : [ S -> S ]
+%     arrayPosition : [ S -> S ]
 
-    array_axiom1 : AXIOM
-      FORALL (a, a0, b0, e, n, s, T, v : S):
-        arrayFresh(a, a0, b0, e, arrayShapeMore(n, s), T, v) IFF
-        (a0 <= vAllocTime(a) AND
-         isAllocated(a, b0) AND
-         a /= java_null AND
-         typeof(a) = T AND
-         arrayLength(a) = n AND
-         FORALL (i : S):
-           arrayFresh(select(select(e, a), i), a0, b0, e, s, elemtype(T), v) AND
-           arrayParent(select(select(e, a), i)) = a AND
-           arrayPosition(select(select(e, a), i)) = i)
+%     array_axiom1 : AXIOM
+%       FORALL (a, a0, b0, e, n, s, T, v : S):
+%         arrayFresh(a, a0, b0, e, arrayShapeMore(n, s), T, v) IFF
+%         (a0 <= vAllocTime(a) AND
+%          isAllocated(a, b0) AND
+%          a /= java_null AND
+%          typeof(a) = T AND
+%          arrayLength(a) = n AND
+%          FORALL (i : S):
+%            arrayFresh(select(select(e, a), i), a0, b0, e, s, elemtype(T), v) AND
+%            arrayParent(select(select(e, a), i)) = a AND
+%            arrayPosition(select(select(e, a), i)) = i)
 
-    array_axiom2 : AXIOM
-      FORALL (a, a0, b0, e, n, T, v : S):
-        arrayFresh(a, a0, b0, e, arrayShapeOne(n), T, v) IFF
-        (a0 <= vAllocTime(a) AND
-         isAllocated(a, b0) AND
-         a /= java_null AND
-         typeof(a) = T AND
-         arrayLength(a) = n AND
-         FORALL (i : S):
-           select(select(e, a), i) = v)
+%     array_axiom2 : AXIOM
+%       FORALL (a, a0, b0, e, n, T, v : S):
+%         arrayFresh(a, a0, b0, e, arrayShapeOne(n), T, v) IFF
+%         (a0 <= vAllocTime(a) AND
+%          isAllocated(a, b0) AND
+%          a /= java_null AND
+%          typeof(a) = T AND
+%          arrayLength(a) = n AND
+%          FORALL (i : S):
+%            select(select(e, a), i) = v)
 
-    array_axiom3 : AXIOM
-      FORALL (a0, b0, e, s, T, v : S):
-        arrayFresh(arrayMake(a0, b0, s, T, v), a0, b0, elems, s, T, v)
+%     array_axiom3 : AXIOM
+%       FORALL (a0, b0, e, s, T, v : S):
+%         arrayFresh(arrayMake(a0, b0, s, T, v), a0, b0, elems, s, T, v)
 
-    array_axiom4: AXIOM
-      FORALL (a0, b0, a1, b1, s1, s2, T1, T2, v : S):
-        (arrayMake(a0, b0, s1, T1, v) = arrayMake(a1, b1, s2, T2, v)) IMPLIES
-        (b0 = b1 AND T1 = T2 AND s1 = s2)
+%     array_axiom4: AXIOM
+%       FORALL (a0, b0, a1, b1, s1, s2, T1, T2, v : S):
+%         (arrayMake(a0, b0, s1, T1, v) = arrayMake(a1, b1, s2, T2, v)) IMPLIES
+%         (b0 = b1 AND T1 = T2 AND s1 = s2)
 
-    % === code to ensure that (isNewArray x) ==> x has no invariants
+%     % === code to ensure that (isNewArray x) ==> x has no invariants
 
-    % arrayType represents the type from which all Java arrays inherit.
-    arrayType : S
+%     % arrayType represents the type from which all Java arrays inherit.
+%     arrayType : S
 
-    % arrayType is distinct from all types with invariants (due to the
-    % generated type-distinctness axiom)
-    arrayType_distinct : AXIOM
-      arrayType = asChild(arrayType, T_java_lang_Object)
+%     % arrayType is distinct from all types with invariants (due to the
+%     % generated type-distinctness axiom)
+%     arrayType_distinct : AXIOM
+%       arrayType = asChild(arrayType, T_java_lang_Object)
 
-    isNewArray : [ S -> S ]
+%     isNewArray : [ S -> S ]
 
-    arrayType_definition : AXIOM
-      FORALL (t : S): array_constructor(t) <= arrayType
-    arrayType_is_top : AXIOM
-      FORALL (s : S):
-        (bool_true = isNewArray(s)) IMPLIES
-        typeof(s) <= arrayType
+%     arrayType_definition : AXIOM
+%       FORALL (t : S): array_constructor(t) <= arrayType
+%     arrayType_is_top : AXIOM
+%       FORALL (s : S):
+%         (bool_true = isNewArray(s)) IMPLIES
+%         typeof(s) <= arrayType
 
-    % === Implementation of nonnullelements; not in ESCJ 8 (yet?):
+%     % === Implementation of nonnullelements; not in ESCJ 8 (yet?):
 
-    nonnullelements (x, e : S): bool =
-      x /= java_null AND
-      FORALL (i : S):
-        (0 <= i AND i < arrayLength(x)) IMPLIES
-        select(select(e, x), i) /= java_null
+%     nonnullelements (x, e : S): bool =
+%       x /= java_null AND
+%       FORALL (i : S):
+%         (0 <= i AND i < arrayLength(x)) IMPLIES
+%         select(select(e, x), i) /= java_null
 
   END escjava2_arrays
 
@@ -578,31 +557,33 @@ escjava2_jml_semantics : THEORY
     IMPORTING escjava2_java_typesystem
 
     % === Define typeof for primitive types - DRCok
-    typeof : [ S -> S ]
+    typeof : [ Boolean -> PrimitiveType ]
+    typeof : [ IntegralNumber -> PrimitiveType ]
+    typeof : [ Reference -> ReferenceType ]
     % WRONG - not equivalent; need to review
 %     typeof_definition : AXIOM
 %       FORALL (x, y : S): primitive?(y) AND is(x, y) IFF typeof(x) = y
 
     typeof_char : AXIOM
-      FORALL (x : S): is(x, T_char) IFF typeof(x) = T_char
+      FORALL (x : IntegralNumber): is(x, T_char) IFF typeof(x) = T_char
     typeof_byte : AXIOM
-      FORALL (x : S): is(x, T_byte) IFF typeof(x) = T_byte
+      FORALL (x : IntegralNumber): is(x, T_byte) IFF typeof(x) = T_byte
     typeof_short : AXIOM
-      FORALL (x : S): is(x, T_short) IFF typeof(x) = T_short
+      FORALL (x : IntegralNumber): is(x, T_short) IFF typeof(x) = T_short
     typeof_int : AXIOM
-      FORALL (x : S): is(x, T_int) IFF typeof(x) = T_int
+      FORALL (x : IntegralNumber): is(x, T_int) IFF typeof(x) = T_int
     typeof_long : AXIOM
-      FORALL (x : S): is(x, T_long) IFF typeof(x) = T_long
+      FORALL (x : IntegralNumber): is(x, T_long) IFF typeof(x) = T_long
     typeof_float : AXIOM
-      FORALL (x : S): is(x, T_float) IFF typeof(x) = T_float
+      FORALL (x : IntegralNumber): is(x, T_float) IFF typeof(x) = T_float
     typeof_double : AXIOM
-      FORALL (x : S): is(x, T_double) IFF typeof(x) = T_double
+      FORALL (x : IntegralNumber): is(x, T_double) IFF typeof(x) = T_double
 
     % === ESCJ 8: Section 2.3
 
     typeof_reference_definition : AXIOM
-      FORALL (x, t : S): t <= T_java_lang_Object IMPLIES
-                         x = t IFF (x = java_null OR typeof(x) <= t)
+      FORALL (r : Reference, t : ReferenceType): t <= T_java_lang_Object IMPLIES
+                                                 is(r, t) IFF (r = NULL OR typeof(r) <= t)
 
   END escjava2_jml_semantics
 
