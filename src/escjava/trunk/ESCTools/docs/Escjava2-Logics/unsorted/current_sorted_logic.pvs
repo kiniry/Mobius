@@ -199,12 +199,12 @@ escjava2_java_integral_types : THEORY
       FORALL (x : Number): is(x, T_short) IFF -32768 <= x AND x <= 32767
     range_of_int : AXIOM
       FORALL (x : Number): is(x, T_int) IFF -2^31 <= x AND x <= 2^31-1
-%     range_of_long : AXIOM
-%       FORALL (x : Number): is(x, T_long) IFF longFirst <= x AND x <= longLast
-%     range_of_float : AXIOM
-%       FORALL (x : Number): is(x, T_float) IFF longFirst <= x AND x <= longLast
-%     range_of_double : AXIOM
-%       FORALL (x : Number): is(x, T_double) IFF longFirst <= x AND x <= longLast
+    range_of_long : AXIOM
+      FORALL (x : Number): is(x, T_long) IFF -2^63 <= x AND x <= 2^63-1
+    range_of_float : AXIOM
+      FORALL (x : Number): is(x, T_float) IFF -(2-(2^-23))*(2^127) <= x AND x <= (2-(2^-23))*(2^127)
+    range_of_double : AXIOM
+      FORALL (x : Number): is(x, T_double) IFF -(2-(2^-52))*(2^1023) <= x AND x <= (2-(2^-52))*(2^1023)
 
   END escjava2_java_integral_types
 
@@ -215,58 +215,48 @@ escjava2_java_integral_ops : THEORY
     % === ESCJ 8: Section 5.1
 
     % Define using modulo_arithmetic theory.
-%   integralMod, integralDiv : [ IntegralNumber, IntegralNumber -> IntegralNumber ]
-
     integralMod(x, y : IntegralNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
-
-    integralDiv(x, y : IntegralNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
+    integralDiv(x, y : IntegralNumber): {r: mod(y) | EXISTS (v: mod(y)): v = x * y + r}
 
     integralMod_def : LEMMA
       FORALL (a, b : IntegralNumber): a = (a / b) * b + (integralMod(a, b))
 
-    integralEQ, integralGE, integralGT, integralLE, integralLT, integralNE :
-      [ IntegralNumber, IntegralNumber -> Boolean ]
-%     integralEQ_definition : AXIOM
-%       FORALL (x, y : S): integralEQ(x, y) = bool_true IFF x = y
-%     integralGE_definition : AXIOM
-%       FORALL (x, y : S): integralGE(x, y) = bool_true IFF x >= y
-%     integralGT_definition : AXIOM
-%       FORALL (x, y : S): integralGT(x, y) = bool_true IFF x > y
-%     integralLE_definition : AXIOM
-%       FORALL (x, y : S): integralLE(x, y) = bool_true IFF x <= y
-%     integralLT_definition : AXIOM
-%       FORALL (x, y : S): integralLT(x, y) = bool_true IFF x < y
-%     integralNE_definition : AXIOM
-%       FORALL (x, y : S): integralNE(x, y) = bool_true IFF x /= y
+    integralEQ(x,y : IntegralNumber) : IntegralNumber = (x = y)
+    integralGE(x,y : IntegralNumber) : IntegralNumber = (x >= y)
+    integralGT(x,y : IntegralNumber) : IntegralNumber = (x > y)
+    integralLE(x,y : IntegralNumber) : IntegralNumber = (x <= y)
+    integralLT(x,y : IntegralNumber) : IntegralNumber = (x < y)
+    integralNE(x,y : IntegralNumber) : IntegralNumber = (x /= y)
 
     % === Axioms about properties of integral &, |, and /
 
     integralAnd, integralOr, integralXor, intShiftL, longShiftL :
       [ IntegralNumber, IntegralNumber -> IntegralNumber ]
-%     integralAnd_definition1 : AXIOM
-%       FORALL (x, y : S): (0 <= x OR 0 <= y) IMPLIES
-%                          0 <= integralAnd(x, y)
-%     integralAnd_definition2 : AXIOM
-%       FORALL (x, y : S): 0 <= x IMPLIES
-%                          integralAnd(x, y) <= x
-%     integralAnd_definition3 : AXIOM
-%       FORALL (x, y : S): 0 <= y IMPLIES
-%                          integralAnd(x, y) <= y
-%     integralOr_definition : AXIOM
-%       FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
-%                          x <= integralOr(x, y) AND y <= integralOr(x, y)
-%     integralDiv_definition : AXIOM
-%       FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
-%                          0 <= integralDiv(x, y) AND integralDiv(x, y) <= x
-%     integralXor_definition : AXIOM
-%       FORALL (x, y : S): (0 <= x AND 0 <= y) IMPLIES
-%                          0 <= integralXor(x, y)
-%     intShiftL_definition : AXIOM
-%       FORALL (n : S): (0 <= n AND n < 31) IMPLIES
-%                       1 <= intShiftL(1, n)
-%     longShiftL_definition : AXIOM
-%       FORALL (n : S): (0 <= n AND n < 63) IMPLIES
-%                       1 <= longShiftL(1, n)
+
+    integralAnd_definition1 : LEMMA
+      FORALL (x, y : IntegralNumber): (0 <= x OR 0 <= y) IMPLIES
+                         0 <= integralAnd(x, y)
+    integralAnd_definition2 : LEMMA
+      FORALL (x, y : IntegralNumber): 0 <= x IMPLIES
+                         integralAnd(x, y) <= x
+    integralAnd_definition3 : LEMMA
+      FORALL (x, y : IntegralNumber): 0 <= y IMPLIES
+                         integralAnd(x, y) <= y
+    integralOr_definition : LEMMA
+      FORALL (x, y : IntegralNumber): (0 <= x AND 0 <= y) IMPLIES
+                         x <= integralOr(x, y) AND y <= integralOr(x, y)
+    integralDiv_definition : LEMMA
+      FORALL (x, y : IntegralNumber): (0 <= x AND 0 <= y) IMPLIES
+                         0 <= integralDiv(x, y) AND integralDiv(x, y) <= x
+    integralXor_definition : LEMMA
+      FORALL (x, y : IntegralNumber): (0 <= x AND 0 <= y) IMPLIES
+                         0 <= integralXor(x, y)
+    intShiftL_definition : LEMMA
+      FORALL (n : IntegralNumber): (0 <= n AND n < 31) IMPLIES
+                      1 <= intShiftL(1, n)
+    longShiftL_definition : LEMMA
+      FORALL (n : IntegralNumber): (0 <= n AND n < 63) IMPLIES
+                      1 <= longShiftL(1, n)
 
   END escjava2_java_integral_ops
 
@@ -276,54 +266,17 @@ escjava2_java_floating_point : THEORY
 
     % === A few floating point axioms - DRCok
 
-    floatingEQ, floatingGE, floatingGT, floatingLE, floatingLT, floatingNE :
-      [ FloatingPointNumber, FloatingPointNumber -> Boolean ]
-%     floatingADD, floatingMUL, floatingMOD : [ S, S -> S ]
-%     floatingNEG : [ S -> S ]
+    floatingEQ(x, y : FloatingPointNumber) : FloatingPointNumber = (x = y)
+    floatingGE(x, y : FloatingPointNumber) : FloatingPointNumber = (x >= y)
+    floatingGT(x, y : FloatingPointNumber) : FloatingPointNumber = (x > y)
+    floatingLE(x, y : FloatingPointNumber) : FloatingPointNumber = (x <= y)
+    floatingLT(x, y : FloatingPointNumber) : FloatingPointNumber = (x < y)
+    floatingNE(x, y : FloatingPointNumber) : FloatingPointNumber = (x /= y)
 
-    floatingMod(x, y : FloatingPointNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
-
-%     order_axiom : AXIOM
-%       FORALL (d, dd : S):
-%         (floatingLT(d, dd) = bool_true OR
-%          floatingEQ(d, dd) = bool_true OR
-%          floatingGT(d, dd) = bool_true) AND
-%         floatingLE(d, dd) = bool_true IFF floatingEQ(d, dd) = bool_true OR floatingLT(d, dd) = bool_true AND
-%         floatingGE(d, dd) = bool_true IFF floatingEQ(d, dd) = bool_true OR floatingGT(d, dd) = bool_true AND
-%         floatingLT(d, dd) = bool_true IFF floatingGT(dd, d) = bool_true AND
-%         floatingLE(d, dd) = bool_true IFF floatingGE(dd, d) = bool_true AND
-%         NOT (floatingLT(d, dd) = bool_true IFF floatingGE(d, dd) = bool_true) AND
-%         NOT (floatingGT(d, dd) = bool_true IFF floatingLE(d, dd) = bool_true)
-
-%     floatingNE_definition : AXIOM
-%       FORALL (d, dd : S): floatingEQ(d, dd) = bool_true IFF NOT floatingNE(d, dd) = bool_true
-
-%     F_0_0 : S
-
-%     floatingADD_definition : AXIOM
-%       FORALL (d, dd : S): (floatingGT(d, floatingNEG(dd)) = bool_true) IMPLIES
-%                           floatingGT(floatingADD(d, dd), F_0_0) = bool_true
-
-    % currently commented out/incomplete in ESC/Java unsorted logic
-    % floatingMUL_definition : AXIOM
-    %   FORALL (d, dd : S): ...
-
-%     floatingMOD_definition1 : AXIOM
-%       FORALL (d, dd : S): (floatingNE(d, F_0_0) = bool_true) IMPLIES
-%                           (floatingGE(d, F_0_0) = bool_true AND
-%                            floatingGE(floatingMOD(d, dd), F_0_0) = bool_true AND
-%                            floatingLE(d, F_0_0) = bool_true AND
-%                            floatingLE(floatingMOD(d, dd), F_0_0) = bool_true)
-%     floatingMOD_definition2 : AXIOM
-%       FORALL (d, dd : S): (floatingGT(d, F_0_0) = bool_true) IMPLIES
-%                           (floatingGT(floatingMOD(d, dd), floatingNEG(dd)) = bool_true AND
-%                            floatingLT(floatingMOD(d, dd), dd) = bool_true)
-%     floatingMOD_definition3 : AXIOM
-%       FORALL (d, dd : S): (floatingLT(dd, F_0_0) = bool_true) IMPLIES
-%                           floatingLT(floatingMOD(d, dd), floatingNEG(dd)) = bool_true
-%     floatingMOD_definition4 : AXIOM
-%       FORALL (d, dd : S): (floatingLT(dd, F_0_0) = bool_true) IMPLIES
-%                           floatingGT(floatingMOD(d, dd), dd) = bool_true
+   floatingADD(x, y : FloatingPointNumber) : FloatingPointNumber = (x + y)
+   floatingMUL(x, y : FloatingPointNumber) : FloatingPointNumber = (x * y)
+   floatingNEQ(x : FloatingPointNumber) : FloatingPointNumber = (- x)
+   floatingMod(x, y : FloatingPointNumber): {v: mod(y) | EXISTS (r: mod(y)): v = x * y + r}
 
   END escjava2_java_floating_point
 
@@ -352,23 +305,7 @@ escjava2_java_field_representation : THEORY
               map_theory[ArrayReference, IntegralNumber, Reference],
               map_theory[ArrayStore, ArrayName, ArrayReference]
 
-%     S_to_real : [ S -> real ]
-%     CONVERSION+ S_to_real
-
-%     % === ESCJ 8: Section 2.4
-
-%     % 'as' trick in use.
-%     asField : [ S, S -> S ]
-%     asField_definition : AXIOM
-%       FORALL (f, t, x : S): is(select(asField(f, t), x), t)
-
-%     % === ESCJ 8: Section 2.5
-
-%     % 'as' trick in use.
-%     asElems : [ S -> S ]
-%     asElems_definition : AXIOM
-%       FORALL (e, a, i : S): is(select(select(asElems(e), a), i),
-%                                elemtype(typeof(a)))
+    elems : var ArrayStore
 
     % === ESCJ 8: Section 3.0
 
@@ -385,27 +322,11 @@ escjava2_java_field_representation : THEORY
 
     % === ESCJ 8: Section 3.2
     eClosedTime : [ ArrayStore -> Time ]
-    % @review JoeK, CesareT - original theory seems to have a sort
-    % error in the isAllocated() use.
+
     eClosedTime_definition : AXIOM
-      FORALL (a : ArrayName, e : ArrayStore, i : IntegralNumber, t : Time):
-        (eClosedTime(e) < t AND isAllocated(get(e, a), t)) IMPLIES
-        isAllocated(get(get(e, a), i), t)        
-
-    % === Axioms about classLiteral; not in ESCJ 8 (yet?):
-
-%     classLiteral : [ S -> S ]
-%     T_java_lang_Class : S
-%     % TODO: review use of alloc
-%     alloc : S
-
-%     classLiteral_definition1 : AXIOM
-%       FORALL (t : S): classLiteral(t) /= java_null AND
-%                       is(classLiteral(t), T_java_lang_Class) AND
-%                       isAllocated(classLiteral(t), alloc)
-
-%     classLiteral_definition2 : AXIOM
-%       FORALL (t : S): classLiteral(t) = t
+      FORALL (a : ArrayName, i : IntegralNumber, t : Time):
+        (eClosedTime(elems) < t AND isAllocated(get(elems, a), t)) IMPLIES
+        isAllocated(get(get(elems, a), i), t)        
 
   END escjava2_java_field_representation
 
@@ -415,11 +336,12 @@ escjava2_java_strings : THEORY
               escjava2_jml_semantics
 
     T_java_lang_String : ReferenceType
-    stringCat (x, y : Reference): Reference
 
-    stringCat_definition : AXIOM
+    stringCat (x, y : Reference) : Reference
+
+    stringCat_definition1 : AXIOM
       FORALL (x, y : Reference): stringCat(x, y) /= NULL AND
-                                 typeof(stringCat(x, y)) <= T_java_lang_String
+                         typeOf(stringCat(x, y)) <= T_java_lang_String
 
   END escjava2_java_strings
 
@@ -440,28 +362,32 @@ escjava2_lock_semantics : THEORY
     IMPORTING escjava2_java_typesystem,
               escjava2_jml_semantics,
               escjava2_java_field_representation,
-              sets[Lock]
+              map_theory[Lock, Reference, bool]
 
 %     % === ESCJ 8: Section 4
 
-%     max : [ LockSet -> LockSet ]
+    LS : Lock
+    maxLockset : Reference
 
-%     % null is in lockset (not in ESCJ 8)
-%     null_is_in_lockset : AXIOM
-%       FORALL (s : S): select(asLockSet(s), NULL) = bool_true
+    lockLE (l : Lock, x : Reference, y : Reference): bool 
+    lockLT (l : Lock, x : Reference, y : Reference): bool
 
-%     lockLE (x, y : S): bool = x <= y
-%     lockLT (x, y : S): bool = x < y
+    max(l : Lock) : Reference =
+      maxLockset
 
-%     % all locks in lockset are below max(lockset) (not in ESCJ 8)
-%     all_locks_in_lockset_are_below_max_lockset : AXIOM
-%       FORALL (s, mu : S): select(asLockSet(s), mu) = bool_true IMPLIES
-%                           lockLE(mu, max(asLockSet(s)))
+    % null is in lockset (not in ESCJ 8)
+    null_is_in_lockset : AXIOM
+      FORALL (l : Lock, r : Reference): get(l, NULL) = true
 
-%     % null precedes all objects in locking order (not in ESCJ 8)
-%     null_precedes_all_objects : AXIOM
-%       FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
-%                       lockLE(java_null, x)
+    % all locks in lockset are below max(lockset) (not in ESCJ 8)
+    all_locks_in_lockset_are_below_max_lockset : AXIOM
+      FORALL (l : Lock, r : Reference): get( l, r) = true IMPLIES
+                          lockLE(l, r, max(l))
+
+    % null precedes all objects in locking order (not in ESCJ 8)
+    null_precedes_all_objects : AXIOM
+      FORALL (l : Lock, x : Reference): typeOf(x) <= T_java_lang_Object IMPLIES
+                      lockLE(l, NULL, x)
 
   END escjava2_lock_semantics
 
@@ -471,84 +397,18 @@ escjava2_arrays : THEORY
               escjava2_java_field_representation,
               escjava2_java_integral_types
 
-%     % === ESCJ 8: Section 5.0
+    arrayOf( n : IntegralNumber, t : PrimitiveType) : ArrayReference
+    arrayOf( n : IntegralNumber, t : ReferenceType) : ArrayReference
 
-%     arrayLength : [ S -> S ]
-%     arrayLength_definition : AXIOM
-%       FORALL (a : S): 0 <= arrayLength(a) AND 
-%                       is(arrayLength(a), T_int)
+    arrayLength(r : ArrayReference) : IntegralNumber
+ 
+    arrayLengthDef1 : AXIOM
+      FORALL(n : IntegralNumber, t : PrimitiveType, r : ArrayReference) :
+        arrayLength(r) = n IFF r = arrayOf(n, t)
 
-%     % elems will be eliminated in the new logic, at a cost of
-%     % complexity in the translator of course, and instead separate
-%     % maps will be introduced for each array.  This will make the
-%     % logic cleaner and possibly help the prover be more efficient.
-%     elems : S
-%     arrayFresh : [ S, S, S, S, S, S, S -> bool ]
-%     arrayMake : [ S, S, S, S, S -> S ]
-%     arrayShapeOne : [ S -> S ]
-%     arrayShapeMore : [ S, S -> S ]
-%     arrayParent : [ S -> S ]
-%     arrayPosition : [ S -> S ]
-
-%     array_axiom1 : AXIOM
-%       FORALL (a, a0, b0, e, n, s, T, v : S):
-%         arrayFresh(a, a0, b0, e, arrayShapeMore(n, s), T, v) IFF
-%         (a0 <= vAllocTime(a) AND
-%          isAllocated(a, b0) AND
-%          a /= java_null AND
-%          typeof(a) = T AND
-%          arrayLength(a) = n AND
-%          FORALL (i : S):
-%            arrayFresh(select(select(e, a), i), a0, b0, e, s, elemtype(T), v) AND
-%            arrayParent(select(select(e, a), i)) = a AND
-%            arrayPosition(select(select(e, a), i)) = i)
-
-%     array_axiom2 : AXIOM
-%       FORALL (a, a0, b0, e, n, T, v : S):
-%         arrayFresh(a, a0, b0, e, arrayShapeOne(n), T, v) IFF
-%         (a0 <= vAllocTime(a) AND
-%          isAllocated(a, b0) AND
-%          a /= java_null AND
-%          typeof(a) = T AND
-%          arrayLength(a) = n AND
-%          FORALL (i : S):
-%            select(select(e, a), i) = v)
-
-%     array_axiom3 : AXIOM
-%       FORALL (a0, b0, e, s, T, v : S):
-%         arrayFresh(arrayMake(a0, b0, s, T, v), a0, b0, elems, s, T, v)
-
-%     array_axiom4: AXIOM
-%       FORALL (a0, b0, a1, b1, s1, s2, T1, T2, v : S):
-%         (arrayMake(a0, b0, s1, T1, v) = arrayMake(a1, b1, s2, T2, v)) IMPLIES
-%         (b0 = b1 AND T1 = T2 AND s1 = s2)
-
-%     % === code to ensure that (isNewArray x) ==> x has no invariants
-
-%     % arrayType represents the type from which all Java arrays inherit.
-%     arrayType : S
-
-%     % arrayType is distinct from all types with invariants (due to the
-%     % generated type-distinctness axiom)
-%     arrayType_distinct : AXIOM
-%       arrayType = asChild(arrayType, T_java_lang_Object)
-
-%     isNewArray : [ S -> S ]
-
-%     arrayType_definition : AXIOM
-%       FORALL (t : S): array_constructor(t) <= arrayType
-%     arrayType_is_top : AXIOM
-%       FORALL (s : S):
-%         (bool_true = isNewArray(s)) IMPLIES
-%         typeof(s) <= arrayType
-
-%     % === Implementation of nonnullelements; not in ESCJ 8 (yet?):
-
-%     nonnullelements (x, e : S): bool =
-%       x /= java_null AND
-%       FORALL (i : S):
-%         (0 <= i AND i < arrayLength(x)) IMPLIES
-%         select(select(e, x), i) /= java_null
+    arrayLengthDef2 : AXIOM
+      FORALL(n : IntegralNumber, t : ReferenceType, r : ArrayReference) :
+        arrayLength(r) = n IFF r = arrayOf(n, t)
 
   END escjava2_arrays
 
@@ -584,7 +444,6 @@ escjava2_jml_semantics : THEORY
     typeof_reference_definition : AXIOM
       FORALL (r : Reference, t : ReferenceType): t <= T_java_lang_Object IMPLIES
                                                  is(r, t) IFF (r = NULL OR typeof(r) <= t)
-
   END escjava2_jml_semantics
 
 escjava2_logic : THEORY
