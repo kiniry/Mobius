@@ -30,7 +30,7 @@ endif
 cd $TMP
 echo "## Running with a help argument to get a usage message"
 
-$ESCTOOLS_RELEASE/escj -help
+$ESCTOOLS_RELEASE/escj -help || (echo "FAILED"; exit 1)
 
 
 echo
@@ -41,14 +41,14 @@ echo "public class A {" > A.java
 echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
 echo "}" >> A.java
 
-$ESCTOOLS_RELEASE/escj A.java
+$ESCTOOLS_RELEASE/escj A.java || (echo "FAILED"; exit 1)
 rm -f A.java
 
 echo
 echo "## Now testing the escjava2 script"
 echo "## Running with a help argument to get a usage message"
 
-$ESCTOOLS_RELEASE/escjava2 -help
+$ESCTOOLS_RELEASE/escjava2 -help || (echo "FAILED"; exit 1)
 
 
 echo
@@ -59,7 +59,7 @@ echo "public class A {" > A.java
 echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
 echo "}" >> A.java
 
-$ESCTOOLS_RELEASE/escjava2 A.java
+$ESCTOOLS_RELEASE/escjava2 A.java || (echo "FAILED"; exit 1)
 rm -f A.java
 
 echo
