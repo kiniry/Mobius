@@ -117,51 +117,51 @@ public class Sammy extends NewProver {
 	 * worst one of all calls.
 	 */
 
-	/*
-	 * Types
-	 */
-	parameters.add(signature.type());
+// 	/*
+// 	 * Types
+// 	 */
+// 	parameters.add(signature.type());
 
-	ProverResponse res = execute("type_declaration");
+// 	ProverResponse res = execute("type_declaration");
 
-	//++
-	if(debug)
-	    if( res!= ProverResponse.OK )
-		System.out.println("Failed to set types");
-	//++
+// 	//++
+// 	if(debug)
+// 	    if( res!= ProverResponse.OK )
+// 		System.out.println("Failed to set types");
+// 	//++
 
-	/*
-	 * Variables = 0 unary function in smt lib so there is no
-	 * need to declare them apart from functions.
-	 */
+// 	/*
+// 	 * Variables = 0 unary function in smt lib so there is no
+// 	 * need to declare them apart from functions.
+// 	 */
 
-	/*
-	 * Functions
-	 */
-	parameters.add(signature.function());
+// 	/*
+// 	 * Functions
+// 	 */
+// 	parameters.add(signature.function());
 
-	res = execute("func_declaration");
+// 	res = execute("func_declaration");
 
-	if(debug)
-	    if( res!= ProverResponse.OK )
-		System.out.println("Sammy::Failed to set functions");
+// 	if(debug)
+// 	    if( res!= ProverResponse.OK )
+// 		System.out.println("Sammy::Failed to set functions");
 
-	/*
-	 * Predicates
-	 */
-	parameters.add(signature.predicate());
+// 	/*
+// 	 * Predicates
+// 	 */
+// 	parameters.add(signature.predicate());
 
-	res = execute("pred_declaration");
+// 	res = execute("pred_declaration");
 
-	//++
-	if(debug)
-	    if( res!= ProverResponse.OK )
-		System.out.println("Failed to set predicates");
-	//++
+// 	//++
+// 	if(debug)
+// 	    if( res!= ProverResponse.OK )
+// 		System.out.println("Failed to set predicates");
+// 	//++
 
-	signature_defined = true;
+// 	signature_defined = true;
 
-	return res;
+	return null;
     }
 
     public ProverResponse declare_axiom(Formula formula) {
