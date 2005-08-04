@@ -349,6 +349,7 @@ public class ErrorSet
    * other ErrorSet functionality.
    */
   //@ requires msg != null && type != null;
+  //@ requires javafe.Tool.options != null;
   //@ modifies System.out.output;
   //@ ensures gag ==> \not_modified(System.out.output);
   private static void report(/*@ non_null */ String type, /*@ non_null */ String msg) {

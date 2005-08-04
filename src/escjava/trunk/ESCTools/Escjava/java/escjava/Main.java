@@ -167,9 +167,10 @@ public class Main extends javafe.SrcTool
 	if (exitcode != 0) System.exit(exitcode);
     }
 
-    public Main() {
-        clear(true); // resets any static variables left from a previous instantiation
-    }
+  public Main() {
+    // resets any static variables left from a previous instantiation
+    clear(true);
+  }
 
     boolean keepProver = false;
 
@@ -181,7 +182,6 @@ public class Main extends javafe.SrcTool
         if (!keepProver) ProverManager.kill();
         // Disallow the -avoidSpec option:
         javafe.SrcToolOptions.allowAvoidSpec = false; 
-
     }
 
     /**
@@ -305,6 +305,16 @@ public class Main extends javafe.SrcTool
 		+	compositeSourcePath;
 	}
     }
+
+  public void preload() {
+    // Check to see that we are using a legitimate Java VM version.
+    // ESC/Java2 does not support Java 1.5 at this time.
+    if (System.getProperty("java.version").indexOf("1.5") != -1) {
+      ErrorSet.fatal("Java 1.5 source, bytecode, and VMs are not supported at this time.\nPlease use a Java 1.4 VM and only process source code and bytecode from\nJava versions prior to 1.5.");
+      return;
+    }
+    super.preload();
+  }
 
     /**
      * Hook for any work needed before <code>handleCU</code> is called
