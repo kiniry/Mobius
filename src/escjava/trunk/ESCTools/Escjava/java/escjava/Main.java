@@ -8,6 +8,7 @@ import java.io.*;
 
 import javafe.ast.*;
 import escjava.ast.*;
+import javafe.tc.OutsideEnv;
 import escjava.ast.EscPrettyPrint;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
@@ -22,7 +23,6 @@ import escjava.reader.EscTypeReader;
 import javafe.parser.PragmaParser;
 
 import escjava.sp.*;
-
 import escjava.translate.*;
 import escjava.pa.*;
 
@@ -341,6 +341,13 @@ public class Main extends javafe.SrcTool
             javafe.util.ErrorSet.fatal(e.getMessage());
             return null;  // unreachable
         }
+    }
+
+    public void postload() {
+      super.postload();
+      if (OutsideEnv.filesRead() == 0) {
+        ErrorSet.caution("No files read.");
+      }
     }
 
     /**
