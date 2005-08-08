@@ -53,6 +53,10 @@ public class Options extends javafe.SrcToolOptions
     //$$
     { "-Prover",
       "Use provers listed after this option, for example : -Prover simplify harvey"},
+    { "-PvsProof"
+	,
+	"Writes the transcription of the proof into pvs format to $ESCTOOLS/Escjava/lastPvsProof and then leaves escjava2"
+    },
     //$$
     { "-Routine [<routine_identifier> | <fully_quality_routine_signature>]",
       "Check\n\tonly the specified routine in all specified classes." },
@@ -239,6 +243,9 @@ public class Options extends javafe.SrcToolOptions
     // -> by default simplify is used when the option -Prover is not given.
     public boolean useSammy = false;
     public boolean useHarvey = false;
+
+    // flag for writing pvs proof to the file $ESCTOOLS/Escjava/lastPvsProof
+    public boolean pvsProof = false;
     //$$
 
   public boolean suggest = false;
@@ -704,9 +711,16 @@ public class Options extends javafe.SrcToolOptions
 
 	    newOffset++;
 	}
-	 
+
+	newOffset--;
+
 	return newOffset;
 	
+    } 
+    else if (option.equals("-pvsproof")) {
+	pvsProof = true;
+
+	return offset;
     } 
     //$$
 	else if (option.equals("-wpnxw")) {
