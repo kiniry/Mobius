@@ -142,9 +142,11 @@ Goal \ on \ bytecode: & Goal \ on \ source \ level: \\
 
 
 The verification conditions on bytecode and source level for the postcondition  correctness given in Fig. \ref{vcEnsures}
- have also the same shape modulo names. Still, there is one more difference; the goals on bytecode and source level, although semantically 
-equivalent are  sintactically different formulae. This is because on bytecode level boolean expressions are treated as integer 
-expressions that can have values only zero or one. This differences can be eliminated by not very sophisticated transformations.   
+ have also the same shape modulo names. Still, there is one more difference; as the JVM does not support boolean expressions
+directly and encodes them as integer expressions that have values 0 or 1, we have to express these restrictions on bytecode 
+level. That is why  on bytecode we have one more hypothesis in the bytecode case, which in this case is trivially equal to true and
+which stands for the boolean type of the result \footnote{the hypothesis related to the boolean variables in the program in most cases should be trivially true in the case
+that the bytecode has been certified by the bytecode verifier}.  
 
 
 
@@ -194,12 +196,15 @@ Hypothesis \ on \ bytecode:  & Hypothesis \ on \ source \ level:  \\
  typeof(\register{0}) <: ListArray & typeof( \this) <:  ListArray  \\
 
 & \\
+
+0=0 \vee 0=1 & \\
+& \\
 & \\
 Goal \ on \ bytecode: & Goal \ on \ source \ level: \\
 
 & \\
    \begin{array}{l}
-       \neg \exists  var(0) . \ 0 \leq var(0) \wedge \\
+       \Myfalse \equiv \exists  var(0) . \ 0 \leq var(0) \wedge \\
        var(0) < len(Binc.\#19(\register{0})) \wedge\\
        \#19(\register{0})[var(0)] = \register{1}  
    \end{array}
