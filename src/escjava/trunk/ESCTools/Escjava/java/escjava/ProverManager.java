@@ -42,23 +42,13 @@ public class ProverManager {
 	if( useSammy && (sammy == null || !sammy.started) ){
 	    long startTimeSammy = java.lang.System.currentTimeMillis();
 
-	    sammy = new Sammy(true); //create new instance with debug = true
-	    sammy.start_prover();
+	    System.out.println("Launching demo of sammy...");
 
-	    /*
-	     * Example to set flags : There's surely a need for a few new function
-	     * to give the property from the Main.java
-	     */
-	    Properties p = new Properties();
+	    Sammy.main(new String[0]);
 
-	    p.setProperty("-timeout","1000");
-	    p.setProperty("-max_instances","5");
-	    p.setProperty("-exhaustive","");
-
-	    sammy.set_prover_resource_flags(p);
-
-	    if (!Main.options().quiet)
-		System.out.println("  Sammy started:" + Main.timeUsed(startTimeSammy));
+	    System.out.println("exiting...");
+	    System.exit(0);
+	    
 	}
 
 	if( useSimplify && (simplify == null)) { 
@@ -72,7 +62,7 @@ public class ProverManager {
 	    escjava.backpred.BackPred.genUnivBackPred(simplify.subProcessToStream());
 	    simplify.sendCommands("");
 
-	}
+ 	}
 
 	if (listener != null) listener.stateChanged(1);
 	isStarted = true;
