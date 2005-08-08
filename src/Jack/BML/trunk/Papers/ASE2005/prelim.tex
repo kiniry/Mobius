@@ -26,35 +26,26 @@ ESC/Java~\cite{escjava} or dynamic checking by tools such as the assertion check
 be found in~\cite{BurdyCCEKLLP03}.
      
 Figure~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
-The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj1}. The loop specification also states
+The method \texttt{isElem} will search in the array for the first occurence of the object \texttt{obj} passed as first argument and if found, it will return true; 
+otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj}. The loop specification also states
 that the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
-  %//@requires list != null;
-  % //@ensures \result == false  ==>
-  % //@ (\forall int i;0 <= i && i < list.length ==> 
-  % //@     list[i] != o) 
-  % //@ && 
-  % //@ (\result == true ==> 
-   %//@ (\exists int i; 0 <= i && i < list.length && 
- %  //@         list[i] == o ));
+
 \begin{figure}[ht!]
 \begin{verbatim}
 public class ListArray {
   private Object[] list;
 
   //@requires list != null;
-  //@ensures \result ==(\exists int i; 
-  //@ 0 <= i && i < list.length && 
-  //@ \old(list[i]) == obj1 && list[i] == obj2); 
-  public boolean replace(Object obj1,Object obj2)
+  //@ensures\result ==  (\exists int i; 0 <= i && i < list.length &&  list[i] == o ) ; 
+  public boolean isElem(Object obj)
   {
     int i = 0;
-    //@loop_modifies i, list[*];
+    //@loop_modifies i;
     //@loop_invariant i <= list.length && i >=0 
     //@  && (\forall int k;0 <= k && k < i ==> 
-    //@  list[k] != obj1); 
+    //@  list[k] != obj); 
     for (i = 0; i < list.length; i++ ) {
-      if ( list[i] == obj1) {
-        list[i] = obj2;
+      if ( list[i] == obj) {
         return true;	
       }
     }

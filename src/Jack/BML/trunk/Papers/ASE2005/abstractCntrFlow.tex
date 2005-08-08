@@ -36,8 +36,8 @@ $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an e
 %We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
 %$\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
 
-\newdef{definition}{Definition}
-\begin{definition}
+\newtheorem{defin}{Definition}
+\begin{defin}
 %\begin{defn}
 {Loop.}
 \label{defLoop}
@@ -49,7 +49,7 @@ Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of 
 \item   there is a path in which $\blockm{e}$  is executed immediately after the execution of $\blockm{f}$,  $\blockm{f} \execRel \blockm{e}$
 
 \end{itemize}
-\end{definition}
+\end{defin}
 
 %\subsection{Acyclic control flow graph} \label{graph}
 

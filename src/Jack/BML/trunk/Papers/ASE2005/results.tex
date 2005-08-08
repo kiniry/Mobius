@@ -1,11 +1,240 @@
-%\section{Implementation and Results}\label{results}
 
-%\subsubsection{Experimental results}
+\subsection{Results}  \label{results}
+
 Here we discuss some experimental results. 
 The JML compilation augments around twice the file size. 
 For the example given at fig.~\ref{replaceSrc}, the class file without the specification extensions is 548 bytes, 
 and the class with the BCSL extension BCSL is 954 bytes. Ofcourse, the more specific is the specification, the greater will be the size of the class file. 
-On bytecode level, Jack generated 4 proof obligations, which can be proven interactively with Coq. On source level of the program 13 proof obligations, 
-which can also be proven interactively in Coq. The proof obligations on source and bytecode level are basically the same modulo 
- local variable names and field names; the difference in the number is due to differences in the implementation of $wp$ on source and bytecode level; splitting the conjunctions in the bytecode proof obligations results in the same proof obligations generated over the source code (modulo names). 
 
+We studied the relationship of Java source and bytecode code proof obligations. The experiments that we brought over examples on their source and
+ non optimized bytecode resulted in the same verification conditions modulo names and some types. The differences in the types are due to the fact
+ that the JVM (Java Virtual Machine) does not provide direct support for intergral types like byte, short, char, neither for boolean. Those types
+ are rather encoded in the integer type.
+
+
+We give the proof obligations on source and bytecode level respectively of the example program from the previous sections in figures \ref{vcLoopPreserv} and
+\ref{vcEnsures}.   
+
+In particular, Fig. \ref{vcLoopPreserv} shows the proof obligations for the loop preservation. As you can see the hypothesis and the goal have the same ``shape'' on bytecode and source code and the differences are due to the variable names.
+
+
+
+\begin{figure}{!htp}
+
+$$\begin{array}{ll}
+Hypothesis \ on \ bytecode:  & Hypothesis \ on \ source \ level:  \\
+ & \\
+
+
+\begin{array}{l}
+ \register{1} \neq \\
+\#19 (\register{0})[\register{2}\_at\_ins\_22]
+\end{array}  
+
+&  
+\begin{array}{l}
+ \srcVar{obj} \neq \\
+  ListArray.list(\this)[\srcVar{i}\_at\_ins\_26] 
+\end{array}   \\
+
+
+
+ & \\
+
+\#19(\register{0}) \neq \Mynull &  ListArray.list( \this) \neq \Mynull\\
+
+
+& \\
+
+\begin{array}{l}
+  len(\#19 (\register{0})) > \\
+ \register{2}\_at\_ins\_22 
+\end{array}
+& 
+\begin{array}{l}
+  len(ListArray.list(\this)) > \\
+\srcVar{i}\_at\_ins\_26
+\end{array}         \\ 
+
+
+
+ & \\
+
+ \register{2}\_at\_ins\_22 \geq 0 &   \srcVar{i}\_at\_ins\_26    \geq 0    \\
+
+
+ & \\
+\begin{array}{l}
+  \register{2}\_at\_ins\_22 < \\
+  len(\#19(\register{0}))
+\end{array} &
+
+\begin{array}{l}
+  \srcVar{i}\_at\_ins\_26 <\\
+  len(ListArray.list(\this))
+\end{array}   \\
+
+
+ & \\
+\begin{array}{l}
+  \register{2}\_at\_ins\_22 \leq \\
+  len( \#19(\register{0}))
+\end{array} 
+&  
+\begin{array}{l} 
+  \srcVar{i}\_at\_ins\_26 \leq \\
+  len(ListArray.list(\this))
+\end{array}   \\
+
+
+ &\\
+ \register{2}\_at\_ins\_22 \geq 0 &   \srcVar{i}\_at\_ins\_26 \geq 0 \\
+
+
+
+ &\\
+ \begin{array}{l} 
+         \forall  var(0). \ 0 \leq var(0) \wedge var(0) < (\register{2}\_at\_ins\_22) \Rightarrow \\
+                \Myspace    \#19(\register{0})[var(0)] \neq \register{1}
+      \end{array} &        
+      \begin{array}{l} 
+             \forall  var(0). \ 0 \leq var(0) \wedge var(0) < (\srcVar{i}\_at\_ins\_26) \Rightarrow \\
+                 \Myspace       ListArray.list(\this)[var(0)] \neq \srcVar{obj}
+      \end{array}  \\
+
+ typeof(\register{0}) <: ListArray &    typeof(this) <: ListArray     \\
+
+& \\
+& \\
+Goal \ on \ bytecode: & Goal \ on \ source \ level: \\
+
+& \\
+
+  \begin{array}{l}
+               1 + \register{2}\_at\_ins\_22 \leq  len(ListArray.list(\register{0}))  \\
+
+               1 + \register{2}\_at\_ins\_22 \geq 0 \\
+
+               \forall  var(0). 0 \leq var(0) \wedge var(0) < 1 + \register{2}\_at\_ins\_22 \Rightarrow \\
+                   \Myspace  ListArray.list(\register{0})[var(0)] \neq \register{1} 
+
+       \end{array}
+& 
+
+       \begin{array}{l}
+             1 + \srcVar{i}\_at\_ins\_26 \leq  len(ListArray.list(this))  \\
+	     \\
+             1 + \srcVar{i}\_at\_ins\_26 \geq 0 \\
+	     \\
+             \forall  var(0). 0 \leq var(0) \wedge\\
+	     \Myspace  var(0) < 1 + \srcVar{i}\_at\_ins\_26 \Rightarrow \\
+                  \Myspace  ListArray.list(this)[var(0)] \neq \srcVar{obj} 
+       \end{array}   
+
+ 
+\end{array}$$
+
+
+
+\caption{Source and Bytecode verification condition for loop preservation for method \texttt{ListArray.isElem} }
+\label{vcLoopPreserv}
+\end{figure}
+
+
+The verification conditions on bytecode and source level for the postcondition  correctness given in Fig. \ref{vcEnsures}
+ have also the same shape modulo names. Still, there is one more difference; the goals on bytecode and source level, although semantically 
+equivalent are  sintactically different formulae. This is because on bytecode level boolean expressions are treated as integer 
+expressions that can have values only zero or one. This differences can be eliminated by not very sophisticated transformations.   
+
+
+
+
+
+\begin{figure}
+$$\begin{array}{ll}
+Hypothesis \ on \ bytecode:  & Hypothesis \ on \ source \ level:  \\
+ & \\
+
+\begin{array}{l}
+   \register{2}\_at\_ins\_22 \geq \\
+   len(\#19(\register{0}))
+\end{array} &
+
+\begin{array}{l}
+   \srcVar{i}\_at\_ins\_26 \geq \\
+   len(ListArray.list(\this))
+\end{array} \\
+& \\
+
+
+\#19(\register{0}) \neq \Mynull & ListArray.list(\this) \neq \Mynull \\
+
+ & \\
+\register{2}\_at\_ins\_22) \leq len(\#19(\register{0})) &    \srcVar{i}\_at\_ins\_26  \leq  len(ListArray.list(\this)) \\
+& \\
+
+\register{2}\_at\_ins\_22 \geq 0 &    \srcVar{i}\_at\_ins\_26  \geq 0  \\
+& \\
+
+\begin{array}{l}
+   \forall  var(0). \  0 \leq var(0) \wedge  \\
+   \Myspace var(0) < \register{2}\_at\_ins\_22 \Rightarrow \\
+   \#19(\register{0})[var(0)] = \register{1} 
+\end{array} 
+& 
+\begin{array}{l}
+   \forall  var(0). \  0 \leq var(0) \wedge \\
+        \Myspace var(0) < \srcVar{i}\_at\_ins\_26 \Rightarrow \\
+   ListArray.list(\this)[var(0)] = \srcVar{obj} 
+\end{array} 
+
+\\
+
+& \\
+ typeof(\register{0}) <: ListArray & typeof( \this) <:  ListArray  \\
+
+& \\
+& \\
+Goal \ on \ bytecode: & Goal \ on \ source \ level: \\
+
+& \\
+   \begin{array}{l}
+       \neg \exists  var(0) . \ 0 \leq var(0) \wedge \\
+       var(0) < len(Binc.\#19(\register{0})) \wedge\\
+       \#19(\register{0})[var(0)] = \register{1}  
+   \end{array}
+
+&
+  \begin{array}{l}
+       \Myfalse \equiv \exists  var(0) . \ 0 \leq var(0) \wedge \\
+       var(0) < len(Binc.ListArray.List(this)) \wedge\\
+       \#19(this)[var(0)] = \srcVar{obj}  
+
+  \end{array}
+\end{array}
+$$
+
+\caption{Source and Bytecode verification condition for one case of the postcondition correctness }
+\label{vcEnsures}
+\end{figure}
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\subsubsection{Example}
+% We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in Fig.~\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the weakest precondition for block $\blockm{6}$ in case the control flows to block $\blockm{19}$( the condition of its last instruction holds and in this case 
+%the predicate $pre(b^{6}, b^{19})$ is $\wpi(\blockm{19})$).  The implications with conclusion \Myfalse \ stand for the possible exceptions \texttt{NullPointer} and \texttt{ArrayIndexOutOfBound} exceptions that may be thrown (as no postcondition is specified explicitely for these cases of abnormal termination, the one by default is taken). 
+
+%\input wpExample.tex

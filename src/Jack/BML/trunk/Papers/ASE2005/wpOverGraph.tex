@@ -105,7 +105,6 @@ they protect and at what index the handler starts at); the precondition of the h
 %has been certified by a Java bytecode verifier thus our analysis for identifying the instructions that belong to a subroutine or exception handler is not 
 %a problem (as the bytecode verifier guarantees that \texttt{jsr} are not the cause of cycles).  
 
-
 \subsection{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists in generating verification conditions for every method appearing in every class of the bytecode program.
 The verification procedure for a method \texttt{m} consists in  calculating the weakest precondition $\wpi(\tt{m})$ upon its specification: precondition $\psi^{pre}(m)$, 
 postcondition $\psi^{post}(\tt{m})$ and the mapping between exceptional types and predicates $\excPost(\tt{m})$ and then prove the condition: 
@@ -114,14 +113,6 @@ $$
 $$    
 The verification procedure does not trust neither the bytecode specification, nor the bytecode; in both cases --- wrong 
 specification or incorrect implementation will result in verification conditions that are not provable 
-
-%\subsubsection{Example}
- We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in Fig.~\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the weakest precondition for block $\blockm{6}$ in case the control flows to block $\blockm{19}$
-( the condition of its last instruction holds and in this case 
-the predicate $pre(b^{6}, b^{19})$ is $\wpi(\blockm{19})$).  The implications with conclusion \Myfalse \ stand for the possible exceptions \texttt{NullPointer} and \texttt{ArrayIndexOutOfBound} exceptions that may be thrown (as no postcondition is specified explicitely for these cases of abnormal termination, the one by default is taken). 
-
-\input wpExample.tex
-
 
 %\paragraph{Example} We give a simple example of how the \wpi \ works. Looking at figure~\ref{blockBC} we calculate the weakest precondition of the basic block starting at instruction \texttt{19} (it ends with the same instruction). In particular this block is a loop end block, thus its postcondition is
 %the invariant as specified for this loop in the loop attribute.
