@@ -230,9 +230,11 @@ public class Main extends javafe.SrcTool
 	if (options().simplify != null) System.setProperty("simplify",options().simplify);
         super.setup();
 
+	//$$
 	ProverManager.useSimplify = options().useSimplify;
 	ProverManager.useSammy = options().useSammy;
 	ProverManager.useHarvey = options().useHarvey;
+	//$$
 
         if (!options().quiet) {
 	    System.out.print("ESC/Java version " + 
@@ -522,6 +524,7 @@ public class Main extends javafe.SrcTool
 		o.println(td.id + "@" + locStr);
 		o.print("\n(BG_PUSH ");
 		escjava.backpred.BackPred.genTypeBackPred(scope, o);
+		//escjava.backpred.BackPred.genTypeBackPred(scope, System.out);
 		o.println(")");
 		o.close();
 	    }
@@ -772,18 +775,43 @@ public class Main extends javafe.SrcTool
         startTime = java.lang.System.currentTimeMillis();
         // Translate VC to a string
         Info.out("[converting VC to a string]");
-        if (options().pvc || (Info.on && options().traceInfo > 0))
+
+	//$$
+	if( options().pvsProof ) {
+
+	    VcToStringPvs.compute(vc, System.out);
+
+	    PrintStream o = fileToPrintStream(".","lastPvsProof");
+	    VcToStringPvs.compute(vc, o);
+	    o.close();
+
+	    Runtime run = Runtime.getRuntime();
+
+	    try{ run.exec("./rewrite-pvs-proof.py"); }
+	    catch(Exception e) {
+		System.out.println(e);
+	    }
+
+	    System.out.println("\nProof has been written to $ESCTOOLS_ROOT/Escjava/lastPvsProof ...");
+	    System.exit(0);
+	}
+	//$$
+
+        if (options().pvc || (Info.on && options().traceInfo > 0)) { 
             VcToString.compute(vc, System.out);
-        if (options().guardedVC) {
+	}
+
+	if (options().guardedVC) {
+			
             String fn = UniqName.locToSuffix(r.locId) + ".method." + 
                 options().guardedVCFileExt;
             PrintStream o = fileToPrintStream(options().guardedVCDir, fn);
             o.println(options().MethodVCPrefix);
-            o.println(r.parent.id + "@" + UniqName.locToSuffix(r.parent.locId));
+            o.println(r.parent.id + "@" + UniqName.locToSuffix(r.parent.locId));	    
             VcToString.compute(vc, o);
             o.close();
             return "guarded VC generation finished";
-        }
+	}
 
         String vcTime = timeUsed(startTime);
         startTime = java.lang.System.currentTimeMillis();
