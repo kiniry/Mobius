@@ -97,16 +97,36 @@ local variables described in the \textbf{Local\_Variable\_Table} attribute. If i
 identifier appears, for which no constant pool (cp) index exists, such is added in the constant pool and the identifier in question
 is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
 is compiled in binary form using tags in the standard way. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
-Thus for example the loop invariant specified in JML for the method \texttt{replace} in figure~\ref{replaceSrc} is :
+
+
+Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
+By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for intergral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that a variable in a Java source can have boolean type but it will be compiled to a variable with
+an integer type.% In case that the JML specification contains boolean expressions we transform the specification in an equivalent one. 
+For instance, in the example for the method 
+\texttt{isElem} and its specification in Fig. \ref{replaceSrc}  the postcondition contains an equiavlence between the JML expression  
+\result \ and a predicate. As the method \texttt{isElem} is declared with return type boolean the expression \result \ has type boolean on source level. 
+Still, the bytecode resulting from the compilation of the method  \texttt{isElem} has type integer. This means that the compiler method has to make
+ more effort than simply compiling the left and right side of the equivalence in the postcondition, otherwise the postcondition will not make sense
+ (it will not be well typed). Actually, 
+if the JML specification contains program boolean expressions that the java compiler will compile to bytecode expression with an integer type, the JML compiler 
+will also compile them in integer expressions and will transform the specification condition in equivalent one 
+\footnote{when generating proof obligations we add for every source boolean expression an assumption that it must be equal to 0 or 1. This, actually, must be always
+equal to true as we assume that the programs are well typed}.  
+
+Finally, the compilation of the postcondition of method \texttt{isElem} in figure~\ref{replaceSrc} is :
+ $$\begin{array}{l}
+         \result = 1 \\
+         \iff \\ 
+         \exists  var(0) . \ 0 \leq var(0) \wedge \\
+         \Myspace var(0) < len(\#19(\register{0})) \wedge\\
+         \Myspace  \#19(\register{0})[var(0)] = \register{1}  
+   \end{array}
 $$
-\begin{array}{l}
-\register{3} \le length(\#19(\register{0})) \ \wedge \\
-\register{3} \ge 0  \ \wedge \\ 
-       \forall  v_0 \in int . \left(\begin{array}{l} 0 \le v_0 \ \wedge \\ v_0 < \register{3}  \\
-                \Rightarrow  \#19(\register{0})[v_0] \neq \register{1} \end{array} \right)
-\end{array}
-$$
-From the example one can see that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the constant pool table (\#19 is the compilation of the field name \texttt{list}, \register{3} stands for the method local variable \texttt{i}). 
+One can see that \result \ is compiled to integer and the equivalence between the boolean expressions in the postcondition in Fig. \ref{replaceSrc}  is compiled into logical equivalence.
+
+The example also shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the constant pool table (\#19 is the compilation of the field name \texttt{list}, \register{1} stands for the method parameter \texttt{obj}). 
+
+
 \item add the result of the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
 newly defined attributes in the class file.
  For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given in figure~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
