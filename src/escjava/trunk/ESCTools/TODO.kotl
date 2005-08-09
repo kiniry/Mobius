@@ -47,3 +47,11 @@
   "also" keyword.
 
 ** Replace Assert with assert.
+
+* New reasoning
+
+** Darvas/Muller semantics (FTFJP05)
+
+* Parser
+
+** Why is DecreasesInfo not in hierarchy.j

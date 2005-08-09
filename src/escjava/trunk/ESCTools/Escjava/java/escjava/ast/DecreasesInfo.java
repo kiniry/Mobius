@@ -7,6 +7,7 @@ import javafe.ast.VariableAccess;
 import javafe.util.Location;
 import javafe.util.Assert;
 
+/* @review kiniry - Why is this class not in hierarchy.j */
 
 public class DecreasesInfo {
   // the location of the 'decreases' pragma

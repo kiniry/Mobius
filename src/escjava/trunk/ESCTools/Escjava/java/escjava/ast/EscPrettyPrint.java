@@ -178,13 +178,13 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     case TagConstants.IMMUTABLE:
     case TagConstants.IMPLIES_THAT:
     case TagConstants.INSTANCE:
-    case TagConstants.MAY_BE_NULL:
+    case TagConstants.MAY_BE_NULL: // Chalin-Kiniry experiements
     case TagConstants.MONITORED:
     case TagConstants.NON_NULL:
-    case TagConstants.NON_NULL_REF_BY_DEFAULT:
+    case TagConstants.NON_NULL_REF_BY_DEFAULT: // Chalin-Kiniry experiements
     case TagConstants.NORMAL_EXAMPLE:
-    case TagConstants.NULL_REF_BY_DEFAULT:
-    case TagConstants.OBS_PURE:
+    case TagConstants.NULL_REF_BY_DEFAULT: // Chalin-Kiniry experiements
+    case TagConstants.OBS_PURE: // Chalin-Kiniry experiements
     case TagConstants.PEER: // Universe type annotation
     case TagConstants.PURE:
     case TagConstants.READONLY: // Universe type annotation
