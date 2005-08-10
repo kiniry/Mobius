@@ -8,7 +8,7 @@
 \section{A quick overview of JML} \label{prelim}
 JML~\cite{JMLRefMan} (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications. JML 
 follows the design-by-contract approach (see~\cite{M97oos}), where classes are annotated with class invariants and method pre- and postconditions. Specification
-inside methods is also possible; for example one can specify loop invariants, or assertions  predicates that must hold at specific program points. 
+inside methods is also possible; for example one can specify loop invariants, or assertion predicates that must hold at specific program points. 
 %In particular class invariants are properties that must hold at every visible state of a class instance or simply class respectively, history constraints - a property that is a relation between the prestate and poststate of a method, method  pre and postconditions, loop invariants - the predicate that must hold at every program state where the loop is entered, frame conditions - the list of expression that a method modifies, termination conditions - an expression from a well founded set that can be proven to decrease , etc.
 
 JML specifications are written as comments so they are not visible by Java compilers. The JML syntax is close to the 
@@ -36,7 +36,8 @@ public class ListArray {
   private Object[] list;
 
   //@requires list != null;
-  //@ensures\result ==  (\exists int i; 0 <= i && i < list.length &&  list[i] == o ) ; 
+  //@ensures \result ==  (\exists int i; 0 <= i && i < list.length &&  
+             list[i] == o ) ; 
   public boolean isElem(Object obj)
   {
     int i = 0;

@@ -17,48 +17,53 @@ We propose a bytecode level specification language which corresponds to a repres
 We sketch the bytecode specification language grammar in figure~\ref{bclGrammar}. We omit some of the definitions 
 because of space constraints, e.g. the grammar for arithmetic expressions (which is defined in a standard way). The full specification can be found in~\cite{JML2BCSpec}.  
 \begin{figure}[!htb]
-$$ \begin{array}{l}
-\ClassSpec ::= \jmlStmt{class \ invariant} \ \predicate \\
-     \Myspace \Myspace \Myspace \Myspace \Myspace  \mid  \jmlStmt{history \ constraint} \ \predicate \\
-     \Myspace \Myspace \Myspace \Myspace \Myspace  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
-      \\
-\MethodSpec  ::= \SpecCase \\
-   \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
-   \\
-\SpecCase ::= \jmlStmt{requires} \ \predicate;\\ 
-	\Myspace \Myspace \Myspace \Myspace  \Myspace \jmlStmt{modifies} \ list(\expression);\\
-	%\Myspace \jmlStmt{decreases} \ \expression;\\
-    \Myspace \Myspace \Myspace \Myspace \Myspace \jmlStmt{ensures} \ \predicate;\\
-    \Myspace \Myspace \Myspace \Myspace \Myspace \jmlStmt{exsures} \ (\texttt{ExceptionClass}) \ \predicate;\\
-                     \\
-\interMethodSpec ::= \loopSpec \\
-	 \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace \Myspace  \mid \assert \\
-	  \\
-\loopSpec ::= \jmlStmt{pc\_ index} \ int;\\
-	    \Myspace \Myspace \Myspace \Myspace \Myspace \jmlStmt{loop\_modifies} \ list(\expression);\\
-       \Myspace\Myspace \Myspace \Myspace  \Myspace \jmlStmt{loop\_invariant}  \ \predicate; \\
-	   \Myspace \Myspace \Myspace \Myspace \Myspace \jmlStmt{loop\_decreases} \ \expression; \\
-	 \\								
-\assert   ::= \jmlStmt{pc\_ index} \ int;\\
-		\Myspace \Myspace \Myspace \Myspace \jmlStmt{assert} \ \predicate; \\
-	\\
+$$ \begin{array}{ll}
+\ClassSpec & ::=  \jmlStmt{class \ invariant} \ \predicate \\
+               &  \mid  \jmlStmt{history \ constraint} \ \predicate \\
+               &  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
 
-      \predicate ::= \true \ \mid \ \false \\
-      \Myspace  \Myspace \mid   \expression \ predSymbol \ \expression \\
-       \Myspace \Myspace \mid   \predicate \wedge \predicate \mid   \predicate \vee \predicate \mid   \predicate \Rightarrow \predicate \\
-       \Myspace \Myspace \mid   \forall (\texttt{boundVar } : JavaType )  \predicate \\
-       \Myspace \Myspace \mid   \exists(\texttt{boundVar } : JavaType )  \predicate \\
-       \\ 
-  \expression ::= \ArithExpr  \mid  \ \register{i} \\
-	  \Myspace \Myspace \mid  \reference \mid \ \intLiteral \\	
-  	  \Myspace \Myspace  \mid  \ \fieldAccess{\expression} \  \mid \ \arrayAccess{\expression} {\expression}  \\
-  	  \Myspace \Myspace  \mid \result \ \mid \old{\expression} \mid \ \EXC \\
-  	  \Myspace \Myspace \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \ \this \\
-  	  \Myspace  \Myspace \mid  \counter \mid \stack{\ArithExpr} \ldots
+& \\
+      
+\MethodSpec  ::= & \SpecCase \\
+           &  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
+&  \\
+\SpecCase & ::=  \jmlStmt{requires} \ \predicate;\\ 
+	      & \jmlStmt{modifies} \ list(\expression);\\
+	%\Myspace \jmlStmt{decreases} \ \expression;\\
+              & \jmlStmt{ensures} \ \predicate;\\
+              & \jmlStmt{exsures} \ (\texttt{ExceptionClass}) \ \predicate;\\
+          
+&  \\
+
+\interMethodSpec & ::= \loopSpec \\
+	             & \mid \assert \\
+	&  \\
+\loopSpec & ::= \jmlStmt{pc\_ index} \ int;\\
+	      & \jmlStmt{loop\_modifies} \ list(\expression);\\
+              & \jmlStmt{loop\_invariant}  \ \predicate; \\
+	      & \jmlStmt{loop\_decreases} \ \expression; \\
+	& \\								
+\assert   & ::= \jmlStmt{pc\_ index} \ int;\\
+	      & \jmlStmt{assert} \ \predicate; \\
+&	\\
+
+      \predicate & ::= \true \ \mid \ \false \\
+                     & \mid   \expression \ predSymbol \ \expression \\
+                     & \mid   \predicate \wedge \predicate \mid   \predicate \vee \predicate \mid   \predicate \Rightarrow \predicate \\
+                     & \mid   \forall (\texttt{boundVar } : JavaType )  \predicate \\
+                     & \mid   \exists(\texttt{boundVar } : JavaType )  \predicate \\
+     &  \\ 
+  \expression & ::= \ArithExpr  \mid  \ \register{i} \\
+	  & \mid  \reference \mid \ \intLiteral \\	
+  	  &  \mid  \ \fieldAccess{\expression} \  \mid \ \arrayAccess{\expression} {\expression}  \\
+  	  &  \mid \result \ \mid \old{\expression} \mid \ \EXC \\
+  	  & \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \ \this \\
+  	  &  \mid  \counter \mid \stack{\ArithExpr} \ldots
 \end{array}$$
 \caption{BCSL grammar}
  \label{bclGrammar}
  \end{figure}
+\clearpage 
  The language defined here is expressive enough for most purposes including the description of non trivial functional and 
  security properties. We now discuss some of the specification clauses that have some differences with JML, for the rest their semantics is the same as in JML and can be found in~\cite{RT03djml,JMLRefMan}.
  
@@ -113,7 +118,8 @@ will also compile them in integer expressions and will transform the specificati
 \footnote{when generating proof obligations we add for every source boolean expression an assumption that it must be equal to 0 or 1. This, actually, must be always
 equal to true as we assume that the programs are well typed}.  
 
-Finally, the compilation of the postcondition of method \texttt{isElem} in figure~\ref{replaceSrc} is :
+Finally, the compilation of the postcondition of method \texttt{isElem} in  is given in Fig. \ref{postCompile}.
+\begin{figure}[tb]
  $$\begin{array}{l}
          \result = 1 \\
          \iff \\ 
@@ -122,7 +128,11 @@ Finally, the compilation of the postcondition of method \texttt{isElem} in figur
          \Myspace  \#19(\register{0})[var(0)] = \register{1}  
    \end{array}
 $$
-One can see that \result \ is compiled to integer and the equivalence between the boolean expressions in the postcondition in Fig. \ref{replaceSrc}  is compiled into logical equivalence.
+\caption{The compilation of the postcondition in Fig. \ref{replaceSrc}}
+\label{postCompile}
+\end{figure}
+
+From the postcondition compilation, one can see that \result \ is compiled to integer and the equivalence between the boolean expressions in the postcondition in Fig. \ref{replaceSrc}  is compiled into logical equivalence.
 
 The example also shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the constant pool table (\#19 is the compilation of the field name \texttt{list}, \register{1} stands for the method parameter \texttt{obj}). 
 
@@ -130,7 +140,8 @@ The example also shows that local variables and  fields are respectively linked 
 \item add the result of the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
 newly defined attributes in the class file.
  For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given in figure~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
-More precisely, every element contains information about the instruction where the loop starts as specified in the \textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
+More precisely, every element contains information about the instruction where the loop starts as specified in the
+\textbf{Line\_Number\_Table}, the invariant associated to this loop, the decreasing expression in case of total correctness, the expressions that can be modified. 
 For the full specification of the compiler see~\cite{JML2BCSpec}.
 \end{enumerate}
 
@@ -163,7 +174,7 @@ JML\=Loop\_specification\_attribute \{\\
 %\end{frameit}
 \end{figure}
 
-The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debug information, namely the presence of the \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}); intuitively this means no jumps from outside a loop inside it; graph reducibility allows to establish the same order between loops in the bytecode and source code level and to compile correctly the invariants to the proper places in the bytecode.
+The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debug information, namely the presence of the \\ \textbf{Line\_Number\_Table} attribute for the proper compilation of inter method specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The most problematic part of the compilation is to find the program points where the loop invariants must hold. This basically means that one has to identify which source loop corresponds to which bytecode loop in the control flow graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}); intuitively this means no jumps from outside a loop inside it; graph reducibility allows to establish the same order between loops in the bytecode and source code level and to compile correctly the invariants to the proper places in the bytecode.
 
 
 \todo{limitations : registers that are used with two different types in the method bytecode}

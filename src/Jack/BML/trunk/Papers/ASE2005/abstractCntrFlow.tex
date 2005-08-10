@@ -51,37 +51,24 @@ Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of 
 \end{itemize}
 \end{defin}
 
-%\subsection{Acyclic control flow graph} \label{graph}
-
 We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is an abstraction of $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$
 
-%We consider the acyclic graph $\Gamma^A = ( \Omega, \execRel^A)$ obtained from the control flow graph 
-%$\Gamma  = ( \Omega, \execRel)$ of a well formed bytecode $ \Pi $ where the relation $\execRel^A$ is a subset of the  execution relation $\execRel$.
 
-%\begin{defn}[Acyclic Execution relation]
-%\label{acyclicExRel}
-%Assume we have a bytecode and let's have in it the two basic blocks  $\blockm{i} $ and   $\blockm{j}$. We say 
-%that $\blockm{i} \execRel^A \blockm{j}$ iff
-%\begin{itemize}
-% \item $\blockm{i} \execRel \blockm{j}$
-%\item and block $\blockm{i}$ and block $\blockm{j}$ are not the end and the entry blocks respectively of the same loop, see loop definition~\ref{defLoop}.
-%\end{itemize}
-%\end{defn}
 
-We give in Fig.~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
-excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
+%We give in Fig.~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
+%excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
 
-\begin{figure}
-\begin{center}
-\epsfig{file=graph1.eps}
-\end{center}
-dashed arrows stand for the standard execution relation \\ 
-black arrows represent the acyclic execution relation \\
-bytecode basic blocks are placed in boxes \\
-the invariant is placed between the blocks where it must hold
-\caption{control flow graph of method \texttt{replace} from figure~\ref{replaceSrc} }
-\label{blockBC}
-\end{figure}
+%\begin{figure}
+%\begin{center}
+%\epsfig{file=bytecode.eps}
+%\end{center}
+%dashed arrows stand for the standard execution relation \\ 
+%black arrows represent the acyclic execution relation \\
+%bytecode basic blocks are placed in boxes \\
+%the invariant is placed between the blocks where it must hold
+%\caption{control flow graph of method \texttt{replace} from figure~\ref{replaceSrc} }
+%\label{blockBC}
+%\end{figure}
 
-%Now a path in $\Gamma^A$  is a list of blocks between which is established a relation $\execRel^A$ and that starts at the entry point instruction and whose last block is a block that does not have next block.
+
 

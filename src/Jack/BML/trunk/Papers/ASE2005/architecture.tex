@@ -1,13 +1,16 @@
 \section{Framework}
 \label{architecture_s}	
 Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
-\begin{figure}[ht!]
+
+\begin{figure}[!tbp]
 \begin{center}
 \epsfig{file=architecture.eps, width=\linewidth}
 \caption{The overall architecture for annotating and verifying code}
 \label{architecture}
 \end{center}
 \end{figure}
+%\clearpage
+
 It describes a process that allows a client to trust a code produced by an untrusted code producer.
 
 In the first stage of the process the client provides the functional and (or) security requirements to the producer. The requirements can be in different form:
