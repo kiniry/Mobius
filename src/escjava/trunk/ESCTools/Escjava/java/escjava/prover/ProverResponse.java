@@ -112,7 +112,7 @@ public class ProverResponse
       @   \result == ProverResponse.TIMEOUT ||
       @   \result == ProverResponse.INCONSISTENCY_WARNING;
       @*/
-    static public ProverResponse factory(int return_code) {
+    static public /*@ pure non_null @*/ ProverResponse factory(int return_code) {
 
 	/*
 	 * Naive implementation, should be redefined in subclasses

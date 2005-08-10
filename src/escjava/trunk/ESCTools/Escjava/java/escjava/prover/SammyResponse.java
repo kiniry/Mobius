@@ -3,7 +3,13 @@ package escjava.prover;
 public class SammyResponse extends ProverResponse {
 
     // placeholder for factory for building ProverResponses
-    static public ProverResponse factory(int return_code) {
+    /*@ 
+      @ ensures return_code == 1 ==> \result == ProverResponse.OK;
+      @ ensures return_code == -1 ==> \result == ProverResponse.FAIL;
+      @ ensures return_code == -2 ==> \result == ProverResponse.SYNTAX_ERROR;
+      @
+      @*/
+    static public /*@ pure non_null @*/ ProverResponse factory(int return_code) {
 	switch(return_code){
 	  
 	case 1 :

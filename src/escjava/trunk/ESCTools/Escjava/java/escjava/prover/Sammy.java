@@ -8,15 +8,27 @@ import java.util.Iterator;
 import java.lang.Thread;
 
 public class Sammy extends NewProver {
+
+    /*
+     * README
+     * This class and the new other ones like NewProver, ProverResponse
+     * have been specified with jml. Even if we cannot use jmlc and jmlrac for
+     * the whole escjava2 program, these new classes have been tested
+     * apart from the rest of the program. Using jmlrac on a few test seems 
+     * to show that these classes are respecting there specification.
+     * Anyway nothing has been done with escjava2.
+     */ 
     
-    static XmlRpcClientLite serverInstance;
+    //@ public invariant started ==> serverInstance != null;
+
+    private static /*@ spec_public @*/ XmlRpcClientLite serverInstance;
 
     /**
      * Vector representing the parameters that are given to sammy
      * Notice that it's cleared after each call to execute()
      */
 
-    /*@ non_null @*/ static Vector parameters = new Vector();
+    private /*@ spec_public non_null @*/ static Vector parameters = new Vector();
 
     static boolean debug = false;
 
@@ -25,6 +37,10 @@ public class Sammy extends NewProver {
 	this.debug = debug;
     }
 
+    /*@
+      @ also
+      @ assignable serverInstance, parameters;
+      @*/
     public ProverResponse start_prover() {
 
 	//++
@@ -251,6 +267,7 @@ public class Sammy extends NewProver {
       @   \result == ProverResponse.PROGRESS_INFORMATION ||
       @   \result == ProverResponse.TIMEOUT ||
       @   \result == ProverResponse.INCONSISTENCY_WARNING;
+      @   assignable parameters;
       @*/
     private ProverResponse execute(/*@ non_null @*/ String cmd ){
 
@@ -263,8 +280,6 @@ public class Sammy extends NewProver {
 	//++
 
 	Integer res = new Integer(-1); // negative attitude
-
-	assert( serverInstance != null );
 
 	try { res = (Integer)serverInstance.execute("sammy."+cmd,parameters); }
 	catch (Exception e) {
@@ -286,6 +301,9 @@ public class Sammy extends NewProver {
     /*
      * Temporary ?
      */ 
+    /*@
+      @ assignable parameters;
+      @*/
     private void flatParameters() {
 
 	Iterator i = parameters.iterator();
@@ -319,7 +337,7 @@ public class Sammy extends NewProver {
     /*
      * Isn't it a good name ?
      */
-    private int killAnySammyAndStartNewOne(){
+    private /*@ pure @*/ int killAnySammyAndStartNewOne(){
 
 	//++
 	if(debug)
@@ -327,14 +345,16 @@ public class Sammy extends NewProver {
 	//++
 
 	/*
-	 * TODO : Make it portable 
+	 * TODO : Is it the right way to do that, and what about Windows ?
 	 */
 
-	if( System.getProperty("os.name").compareTo("Linux") == 0 ){
+	if( System.getProperty("os.name").startsWith("Linux") ||  System.getProperty("os.name").startsWith("Mac") ){
 	    Runtime r = Runtime.getRuntime();
 
 	    /*
 	     * TODO : improve that
+	     * for the moment the sleep is required, otherwise there is some issues
+	     * I guess that sammy needs a little time to get ready to accept rpc calls
 	     */ 
 	    try{
 		r.exec("killall sammy");
@@ -362,7 +382,8 @@ public class Sammy extends NewProver {
 	long startTime = java.lang.System.currentTimeMillis();
 	Sammy sammy = new Sammy(true);
 
-	sammy.start_prover();
+	/* Test 1 */
+// 	sammy.start_prover();
 
 // 	parameters.add("(exp real real real)");
 // 	parameters.add("(pc real)");
@@ -377,6 +398,11 @@ public class Sammy extends NewProver {
 // 	parameters.add("(= 1 2)");
 // 	sammy.execute("add_assertion");
 	
+// 	sammy.stop_prover();
+	
+	/* Test 2, given by Cesare */
+	sammy.start_prover();
+
 	parameters.add("(x_0) (x_1)  (x_2)  (x_3)  (x_4)  (x_5)  (x_11)  (x_12)  (x_14)  (x_15)  (x_16)  (x_17)  (x_25)  (x_26)  (x_28)  (x_29)  (x_30)  (x_31)  (x_39)  (x_40)  (x_42)  (x_43)  (x_44)  (x_45)");
 	sammy.execute("pred_declaration");
 
