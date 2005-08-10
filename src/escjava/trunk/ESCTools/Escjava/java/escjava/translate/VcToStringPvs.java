@@ -164,7 +164,7 @@ public class VcToStringPvs {
       String temp = null; // makes the compiler happy
 
 
-      to.print("testTheorem : THEOREM \n FORALL(");
+      to.print("testTheorem : THEOREM\nFORALL(");
       while(i.hasNext()){
 	    
 	  try{ temp = (String)i.next();}
@@ -1153,21 +1153,29 @@ public class VcToStringPvs {
     /* added for pvs */
     StringBuffer pvsDecl = new StringBuffer("\n");
     StringBuffer pvsAxiom = new StringBuffer("\n");
+    boolean somethingToDeclare = false;
 
     String valueI = (String)integralPrintNames.get(keys[0]);
+
     /* loop invariant:  valueI == integralPrintNames.get(keys[i]); */
     for (int i = 0; i < n - 1; i++) {
 
-	if( i == 0) /* first time */
-	    pvsAxiom.append("integralAxiom : AXIOM");
-
+	/* This loop can be runned even if their is no declaration
+	   That's the need for somethingToDeclare raises */
+		
       String valueNext = (String)integralPrintNames.get(keys[i + 1]);
       if (keys[i] == minThreshold) {
         Assert.notFalse(keys[i + 1] == maxThreshold);
       } else {
 
-	  /* lame way to determine if it's negXXXX or 10000 */
-	  /* (as we must declare only negXXXX in this case) */
+	  // Ugly hack to print it only the first time
+	  if(!somethingToDeclare) {
+	      pvsAxiom.append("integralAxiom : AXIOM");
+	      somethingToDeclare = true;
+	  }
+
+	  /* lame way to determine if it's negXXXX or 10000 
+	     (as we must declare only negXXXX in this case) */
 
 	  pvsAxiom.append("(");
 
@@ -1182,11 +1190,6 @@ public class VcToStringPvs {
 	  pvsDecl.append("\n");
 	  pvsAxiom.append(")\n");
 
-//         ps.print(" (< ");
-//         ps.print(valueI);
-//         ps.print(" ");
-//         ps.print(valueNext);
-//         ps.print(")");
       }
 
       if( i < n - 2 && i != 0)
