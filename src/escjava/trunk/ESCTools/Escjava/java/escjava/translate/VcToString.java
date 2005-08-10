@@ -91,20 +91,20 @@ public class VcToString {
   
   // holds set of symbols used
   //@ spec_public
-  private/*@  non_null */Set symbols = new Set();
+  protected/*@  non_null */Set symbols = new Set();
   
   // string of initial assumptions
   //@ spec_public
-  private/*@  non_null */Set stringLiterals = new Set();
+  protected/*@  non_null */Set stringLiterals = new Set();
   
   //-@ invariant integralPrintNames.keyType == \type(Long);
   //-@ invariant integralPrintNames.elementType == \type(String);
   //@ spec_public
-  private static/*@  non_null */Hashtable integralPrintNames;
+  protected static/*@  non_null */Hashtable integralPrintNames;
   
-  private VcToString() {}
+  protected VcToString() {}
   
-  private String vc2Term(/*@ non_null */Expr e, Hashtable subst) {
+  protected String vc2Term(/*@ non_null */Expr e, Hashtable subst) {
     Assert.notNull(e);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     PrintStream ps = new PrintStream(baos);
@@ -115,7 +115,7 @@ public class VcToString {
     return s;
   }
   
-  private void printDefpreds(/*@  non_null */PrintStream to, DefPredVec preds) {
+  protected void printDefpreds(/*@  non_null */PrintStream to, DefPredVec preds) {
     for (int i = 0; i < preds.size(); i++) {
       DefPred dp = preds.elementAt(i);
       to.print("(DEFPRED (" + dp.predId);
@@ -128,15 +128,15 @@ public class VcToString {
     }
   }
   
-  private DefPredVec preds;
+  protected DefPredVec preds;
   
-  private DefPredVec getDefpreds(/*@ non_null */Expr e) {
+  protected DefPredVec getDefpreds(/*@ non_null */Expr e) {
     preds = DefPredVec.make();
     getDefpredsHelper(e);
     return preds;
   }
   
-  private void getDefpredsHelper(/*@ non_null */Expr e) {
+  protected void getDefpredsHelper(/*@ non_null */Expr e) {
     if (e instanceof DefPredLetExpr) {
       DefPredLetExpr dple = (DefPredLetExpr)e;
       preds.append(dple.preds);
@@ -149,7 +149,7 @@ public class VcToString {
     }
   }
   
-  private void distinctSymbols(/*@  non_null */PrintStream to) {
+  protected void distinctSymbols(/*@  non_null */PrintStream to) {
     to.print("(DISTINCT");
     Enumeration e = symbols.elements();
     while (e.hasMoreElements()) {
@@ -160,7 +160,7 @@ public class VcToString {
     to.print(")");
   }
   
-  private void stringLiteralAssumptions(/*@  non_null */PrintStream to) {
+  protected void stringLiteralAssumptions(/*@  non_null */PrintStream to) {
     Enumeration e = stringLiterals.elements();
     while (e.hasMoreElements()) {
       String litname = (String)e.nextElement();
@@ -182,7 +182,7 @@ public class VcToString {
   
   // ======================================================================
   
-  private void printFormula(/*@ non_null */PrintStream out,
+  protected void printFormula(/*@ non_null */PrintStream out,
       /*@ non_null */Expr e) {
     // maps GenericVarDecls to Strings
     // some complex invariant here
@@ -191,14 +191,14 @@ public class VcToString {
     printFormula(out, subst, e);
   }
   
-  private void printFormula(/*@ non_null */PrintStream out, Hashtable subst,
+  protected void printFormula(/*@ non_null */PrintStream out, Hashtable subst,
       /*@ non_null */Expr e) {
     Assert.notNull(e);
     
     reallyPrintFormula(out, subst, e);
   }
   
-  private void reallyPrintFormula(/*@ non_null */PrintStream out,
+  protected void reallyPrintFormula(/*@ non_null */PrintStream out,
       Hashtable subst,
       /*@ non_null */Expr e) {
     
@@ -481,14 +481,12 @@ public class VcToString {
    * <code>printTerm</code>.
    */
   
-  private boolean insideNoPats = false;
+  protected boolean insideNoPats = false;
   
-  private void printTerm(/*@ non_null */PrintStream out, Hashtable subst,
+  protected void printTerm(/*@ non_null */PrintStream out, Hashtable subst,
       /*@ non_null */Expr e) {
     
-    // System.out.print("printTerm: ");
-    // PrettyPrint.inst.print(System.out, e);
-    // bSystem.out.println();
+      //      System.out.print("printTerm: ");
     
     int tag = e.getTag();
     switch (tag) {
@@ -757,7 +755,7 @@ public class VcToString {
   }
   
   //@ requires ne.op == TagConstants.DTTFSA;
-  private void printDttfsa(/*@ non_null */PrintStream out, Hashtable subst,
+  protected void printDttfsa(/*@ non_null */PrintStream out, Hashtable subst,
       /*@ non_null */NaryExpr ne) {
     LiteralExpr lit = (LiteralExpr)ne.exprs.elementAt(1);
     String op = (String)lit.value;
@@ -781,24 +779,24 @@ public class VcToString {
   
   // ======================================================================
   
-  private void printVarDecl(/*@ non_null */PrintStream out, GenericVarDecl decl) {
+  protected void printVarDecl(/*@ non_null */PrintStream out, GenericVarDecl decl) {
     out.print(Atom.printableVersion(UniqName.variable(decl)));
   }
   
   // ======================================================================
   
-  private static final long MaxIntegral = 1000000;
+  protected static final long MaxIntegral = 1000000;
   
-  private static final/*@ non_null */Long minThreshold = new Long(-MaxIntegral);
+  protected static final/*@ non_null */Long minThreshold = new Long(-MaxIntegral);
   
-  private static final/*@ non_null */Long maxThreshold = new Long(MaxIntegral);
+  protected static final/*@ non_null */Long maxThreshold = new Long(MaxIntegral);
   
   /**
    * * Convert an integral # into its printname according to the rules * of ESCJ
    * 23b, part 9.
    */
   
-  private/*@ non_null */String integralPrintName(long n) {
+  protected/*@ non_null */String integralPrintName(long n) {
     if (-MaxIntegral <= n && n <= MaxIntegral) {
       return String.valueOf(n);
     }
@@ -827,7 +825,7 @@ public class VcToString {
    * names.
    **/
   
-  private void integralPrintNameOrder(/*@ non_null */PrintStream ps) {
+  protected void integralPrintNameOrder(/*@ non_null */PrintStream ps) {
     int n = integralPrintNames.size();
     Assert.notFalse(2 <= n); // should contain the two thresholds
     if (n == 0) {
