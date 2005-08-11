@@ -2,7 +2,7 @@
 import sys
 import os
 
-fn = "lastPvsProof"
+fn = sys.argv[1]
 
 os.system("mv "+fn+" "+fn+"_old")
 
