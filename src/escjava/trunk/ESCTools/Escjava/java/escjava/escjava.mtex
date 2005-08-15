@@ -12,6 +12,12 @@
 
 \section{DESCRIPTION}
 
+\bf{Note: This manpage is seriously out-of-date and only reflects the
+switches and behavior of the original SRC ESC/Java, not ESC/Java2.
+See the built-in help (escjava2 -h) for a quick summary of current
+switches and the provided, extensive documentation "ESC/Java2
+Implementation Notes" for more information.}
+
 The \bf{escjava} command takes a list of Java source files (i.e.,
 \it{filename}\tt{.java}) and checks the classes contained within those
 files for possible errors.  If the \bf{-depend} option is supplied, then

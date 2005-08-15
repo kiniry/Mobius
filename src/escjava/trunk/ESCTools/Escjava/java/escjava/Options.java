@@ -37,7 +37,7 @@ public class Options extends javafe.SrcToolOptions
     { "-Simplify <path_to_executable>", 
       "The path to the SIMPLIFY executable." },
     { "-Specs <path_to_specs_directory_or_jarfile>", 
-      "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath." },
+      "The jar file or directory path of the set of system specs to use; these are appended to the sourcepath, if specified, or else the classpath.  Multiple uses of -Specs are ignored; only final use of -Specs is recognized, as in javac." },
     { "-Typecheck", 
       "Perform only parsing and typechecking; no generation of verification conditions or execution of prover takes place." },
     { "-LoopSafe",

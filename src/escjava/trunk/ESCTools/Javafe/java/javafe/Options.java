@@ -411,11 +411,11 @@ public class Options
     { "-Quiet, -q", 
       "quiet mode (no informational messages)" }, 
     { "-BootClassPath <classpath>",
-      "Directory path for specification and class files for the current JDK (default is the built-in classpath of your JDK); prepended to the current classpath" },
+      "Directory path for specification and class files for the current JDK (default is the built-in classpath of your JDK); prepended to the current classpath.  Multiple uses of -BootClassPath are ignored; only final use of -BootClassPath is recognized, as in javac." },
     { "-Class <fully.specified.classname>",
       "Check the specified class; this option can be specified multiple times" },
     { "-ClassPath <classpath>, -cp <classpath>",
-      "Directory path for class files (default  is value of CLASSPATH) and overrides all previous uses of -classpath." },
+      "Directory path for class files (default is value of CLASSPATH).  Multiple uses of -ClassPath are ignored; only final use of -ClassPath is recognized, as in javac." },
     { "-DisableAssertions, -da",
       "Ignores all Java assert statements" },
     { "-dir <directory>",
@@ -423,7 +423,7 @@ public class Options
     { "-EnableAssertions, -ea",
       "Processes all Java assert statements" },
     { "-f <file containing command-line arguments>",
-      "Path to a file containing command- line arguments that are inserted at this point in the command-line"},
+      "Path to a file containing command-line arguments that are inserted at this point in the command-line"},
     { "-File <filename>",
       "Check all classes in the specified file <filename>" },
     { "-List <filename>",
@@ -435,7 +435,7 @@ public class Options
     { "-Source <release>",
       "Provide source compatibility with specified release" },
     { "-SourcePath <classpath>",
-      "Directory path for source files (default is classpath)" },
+      "Directory path for source files (default is classpath).  Multiple uses of -SourcePath are ignored; only final use of -SourcePath is recognized, as in javac." },
   };
 
   final String[][] privateOptionData = {
