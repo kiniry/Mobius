@@ -155,7 +155,7 @@ ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.j
 	touch $@
 
 ${STAMPFILE}: ${JAVASOURCEFILES}
-	./dl-xml-rpc-lib.sh
+	-./dl-xml-rpc-lib.sh
 	${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \

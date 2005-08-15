@@ -508,9 +508,12 @@ zero-length-files:
 .PHONY: specs-test check-specs
 
 ## Run escjava on the specs
-specs-test:
+specs-test: build
 	@echo TESTING specs
-	cd specs; ${ESCJAVA} -quiet -classpath . -specs "" java/*/*.spec
+	${ESCJAVA} -quiet \
+	  -classpath ${ESCTOOLS_ROOT} \
+	  -specs ${ESCJAVA2_SPECS} \
+	  java.io java.lang java.lang.reflect java.math java.net java.util java.util.regex
 
 ## Experimental rule to generate a file that references every type
 ## that currently has a spec and run escjava2 on it to try to detect
