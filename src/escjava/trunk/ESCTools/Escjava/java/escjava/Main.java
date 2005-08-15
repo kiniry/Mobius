@@ -240,22 +240,9 @@ public class Main extends javafe.SrcTool
 	    System.out.print("ESC/Java version " + 
 			       (options().testMode?"VERSION":version));
 
-	    //$$
-	    System.out.print(", using");
-
-	    if(ProverManager.useSimplify)
-		System.out.print(" simplify");
-	    
-	    if(ProverManager.useSammy)
-		System.out.print(" sammy");
-
-	    if(ProverManager.useHarvey)
-		System.out.print(" harvey");
-
-	    System.out.print(".\n");
-
+	    System.out.print("\n");
 	}
-	//$$
+
     }
 
     public void setDefaultSimplify() {
@@ -524,7 +511,6 @@ public class Main extends javafe.SrcTool
 		o.println(td.id + "@" + locStr);
 		o.print("\n(BG_PUSH ");
 		escjava.backpred.BackPred.genTypeBackPred(scope, o);
-		//escjava.backpred.BackPred.genTypeBackPred(scope, System.out);
 		o.println(")");
 		o.close();
 	    }
@@ -693,6 +679,7 @@ public class Main extends javafe.SrcTool
             ((EscPrettyPrint)PrettyPrint.inst).print(System.out, 0, gc);
             System.out.println("");
         }
+
         Set directTargets = Targets.direct(gc);
         GCSanity.check(gc);
 
@@ -742,6 +729,7 @@ public class Main extends javafe.SrcTool
         } else {
             vcBody = Ejp.compute(gc, GC.truelit, GC.truelit);
         }
+
         Expr vc = GC.implies(initState.getInitialState(), vcBody);
             // Attach a label for use in the logfile generated (if any):
         String label = "vc." + sig.toString() + ".";
@@ -779,21 +767,22 @@ public class Main extends javafe.SrcTool
 	//$$
 	if( options().pvsProof ) {
 
-	    VcToStringPvs.compute(vc, System.out);
+            String fn = UniqName.locToSuffix(r.locId)+".method."+"pvs";
 
-	    PrintStream o = fileToPrintStream(".","lastPvsProof");
+	    PrintStream o = fileToPrintStream(".",fn);
 	    VcToStringPvs.compute(vc, o);
 	    o.close();
 
 	    Runtime run = Runtime.getRuntime();
 
-	    try{ run.exec("./rewrite-pvs-proof.py"); }
+	    try{
+		run.exec("./rewrite-pvs-proof.py "+fn); 
+	    }
 	    catch(Exception e) {
-		System.out.println(e);
+		System.out.println("Error when launching python script\n that reformats the proof for pvs, "+e);
 	    }
 
-	    System.out.println("\nProof has been written to $ESCTOOLS_ROOT/Escjava/lastPvsProof ...");
-	    System.exit(0);
+	    System.out.println("Pvs translation of the proof has been written to $ESCTOOLS_ROOT/Escjava/"+fn);
 	}
 	//$$
 

@@ -57,7 +57,7 @@ public class ProverManager {
 	    simplify = new Simplify();
 	
 	    if (!Main.options().quiet)
-		System.out.println("  Simplify started:" + Main.timeUsed(startTime));
+		System.out.println("  Prover started:" + Main.timeUsed(startTime));
 
 	    escjava.backpred.BackPred.genUnivBackPred(simplify.subProcessToStream());
 	    simplify.sendCommands("");

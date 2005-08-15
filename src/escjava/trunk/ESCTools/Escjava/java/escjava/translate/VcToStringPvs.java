@@ -21,66 +21,33 @@ import escjava.prover.Atom;
 
 public class VcToStringPvs {
 
+    /* list of already declared variables in the pvs logic 
+       like LS, null, Java.lang.Object etc... */
     static public Vector listOfDecl = new Vector();
+
+    /* name of the variables that need to be declared
+       Before adding a variable to this set, we check if the variable isn't
+       already in this set or in listOfDecl */
     static public Vector listOfDeclAdd = new Vector();
 
-    static private int add2Decl(String s){
-	
-	if( s.charAt(0) == '%')
-	    return 0;
+    /* set containing the name of the new fonctions that need to be declared,
+       that are introduced during the creation of gc, but aren't explicitly redeclared
+       here normally (because Simplify seems to allow declarations 'on the fly' ??) 
 
-	Iterator i = listOfDecl.iterator();
-	String temp = null; // make the compiler happy
+       The second vector contains the number of parameters for functions
+       declared in the first one.
 
-	while(i.hasNext()){
-	    
-	    try{ temp = (String)i.next();}
-	    catch(Exception e){
-		System.out.println("VcToStringPvs::add2Decl *** error *** "+e);
-	    }
+       It means :
+       listOfDeclFun = < f, g>
+       listOfDeclFunNbParam = < 1, 2>
 
-	    if( s.compareTo(temp) == 0)
-		return 0;
-	}
-
-	i = listOfDeclAdd.iterator();
-	
-	while(i.hasNext()){
-	    
-	    try{ temp = (String)i.next();}
-	    catch(Exception e){
-		System.out.println("VcToStringPvs::add2Decl *** error *** "+e);
-	    }
-
-	    if( s.compareTo(temp) == 0)
-		return 0;
-	}
-
-	listOfDeclAdd.add(s);
-
-	//++
-//	System.out.println("Adding "+s+" to the listOfDecl");
-	//++
-
-	return 1;
-    }
-
-    public static String replaceBadChar(String s){
-
-	// remove beginning and ending |
-	if(s.charAt(0) == '|')
-	    s = s.substring(1,s.length()-1);
-
-	if(s.charAt(s.length()-1) == '|')
-	    s = s.substring(0,s.length()-2);
-
-	s = s.replace('@','_').replace('#','_').replace('|','_').replace('.','_').replace(':','_').replace('<','_').replace('>','_').replace('-','_').replace('^','_').replace(',','_');
-
-	add2Decl(s);
-	
-	return s;
-    }
-
+       will be translated to :
+       f(a : S) : S
+       g(a, b :S) : S
+    */
+    static public Vector listOfDeclFun = new Vector();
+    static public Vector listOfDeclFunNbParam = new Vector();
+    
   /**
    * Resets any type-specific information that is accumulated through calls to
    * <code>computeTypeSpecific</code>.
@@ -128,7 +95,6 @@ public class VcToStringPvs {
       listOfDecl.add("T_char");
       listOfDecl.add("T_boolean");
       listOfDecl.add("T_java_lang_Cloneable");
-      listOfDecl.add("null");
       listOfDecl.add("LS");
 
       Hashtable oldNames = integralPrintNames;
@@ -141,8 +107,10 @@ public class VcToStringPvs {
       VcToStringPvs vts = new VcToStringPvs();
       vts.printDefpreds(to, vts.getDefpreds(e));
       //to.println("\n(EXPLIES ");
+      to.println("\n(EXPLIES(");
       vts.printFormula(to, e);
       //to.println(" (AND ");
+      to.println(",true))");
 
       // /* Remove the distinct clause at the end of the output
 // 	 it's replaced by declaring pvs variables
@@ -160,19 +128,80 @@ public class VcToStringPvs {
       integralPrintNames = oldNames;
 
       /* This piece of code declares all variables before leaving */
-      Iterator i = listOfDeclAdd.iterator();
-      String temp = null; // makes the compiler happy
+      Iterator i = null;
+      String tempString = null; // makes the compiler happy
+      Integer tempInteger = null;
 
+      to.println("ecReturn : S");
+      to.println("ecThrow : S;");
 
-      to.print("testTheorem : THEOREM\nFORALL(");
+      /* was in the simplify logic */
+      to.println("distinctAxiom : AXIOM\nrefEQ(ecReturn, ecThrow) = bool_false\n");
+
+      /* list of functions declarations
+
+      It means :
+      listOfDeclFun = < f, g>
+      listOfDeclFunNbParam = < 1, 2>
+      
+      will be translated to :
+      f(a : S) : S
+      g(a, b :S) : S
+      
+      */
+
+      if(listOfDeclFun.size() != listOfDeclFunNbParam.size())
+	  System.out.println("Warning, inconsistency in declaration of new functions...");
+
+      if(listOfDeclFun.size()!=0) { /* something to declare */
+	  i = listOfDeclFun.iterator();
+	  Iterator j = listOfDeclFunNbParam.iterator();	  
+
+	  while(i.hasNext() && j.hasNext()){
+
+	      try {
+		  tempString = (String)i.next();
+		  tempInteger = (Integer)j.next();
+	      }
+	      catch(Exception ex){
+		  System.out.println("VcToStringPvs::add2Decl *** error *** "+ex);
+	      }
+
+	      /* name of the function, for example : g */
+	      to.print(tempString+"(");
+	      char c = 'a';
+
+	      /* declaring (a1, a2 :S) for g for example 
+		 note that if there is more than 24 parameters, it will stupidly fail
+		 because c++ will come back to a, anyway it should not happen
+	      */
+	      for( int k = 0; k < tempInteger.intValue(); k++, c++) { 
+		  to.print(c);
+		  to.print(" : S");
+	      
+		  if(k < tempInteger.intValue() - 1) /* not the last */
+		      to.print(" ,");
+		  else /* finishing declaration, adding ) : S at the end */
+		      to.print(") : S\n"); 
+		      //to.print(") : S = "+c +"\n"); // experimental
+	      }
+	  }
+
+	  to.print(";\n");
+      }
+
+      /* theorem */
+      i = listOfDeclAdd.iterator();
+
+      to.println("testTheorem : THEOREM\nFORALL(");
       while(i.hasNext()){
 	    
-	  try{ temp = (String)i.next();}
+	  try{ tempString = (String)i.next();}
 	  catch(Exception ex){
 	      System.out.println("VcToStringPvs::add2Decl *** error *** "+ex);
 	  }
 	
-	  to.print(temp);
+	  to.print(tempString);
 
 	  if(i.hasNext())
 	      to.print(" , ");
@@ -438,10 +467,11 @@ public class VcToStringPvs {
 		insideNoPats = false;
 	    }
 	    printFormula(out, subst, qe.expr);
-	    // for pvs 
+	    /* for pvs,
+	       useless since we added conversion between S and bool */
 	    out.print(" = bool_true ");
 
-	    out.print(")");
+	    out.print(") ");
 
 	    break;
 	}
@@ -455,6 +485,7 @@ public class VcToStringPvs {
 	case TagConstants.BOOLEQ: {
 	    NaryExpr ne = (NaryExpr)e;
 	    String op;
+	    boolean normalCase = true;
 	    String pvsOp = null;
         
 	    switch (ne.getTag()) {
@@ -466,11 +497,13 @@ public class VcToStringPvs {
 	    case TagConstants.BOOLANDX:
 		//op = "AND";
 		op = "boolAnd";
+		normalCase = false;
 		pvsOp = "AND";
 		break;
 	    case TagConstants.BOOLOR:
 		//op = "OR";
 		op = "boolOr";
+		normalCase = false;
 		pvsOp = "OR";
 		break;
 	    case TagConstants.BOOLNOT:
@@ -485,16 +518,10 @@ public class VcToStringPvs {
 		Assert.fail("Fall thru");
 		op = null; // dummy assignment
 	    }
-        
+
 	    /* (EQ a b c d) =>
 	     * boolAnd(EQ(a ,b), EQ(b,c)) AND boolAnd( EQ(b,c), EQ(c,d)))
 	     */
-
-// 	    if(ne.exprs.size() < 2) {
-// 		//System.out.println("ne.exprs.size() < 2");
-// 		out.print(op);
-// 	    }
-	    
 
 	    out.print(op+"(");
 
@@ -519,6 +546,48 @@ public class VcToStringPvs {
 		
 	    }
  	    out.print(")");
+
+// 	    /*
+// 	     * Variant of the code for current_unsorted_logic_variante.pvs
+// 	     */
+
+// 	    int nbBracket = 0;
+// 	    int j = 0;
+
+// 	    out.print(op+"(");
+
+// 	    if(normalCase){
+// 		for (int i = 0; i < ne.exprs.size(); i++) {
+// 		    printFormula(out, subst, ne.exprs.elementAt(i));
+
+// 		    if( i != ne.exprs.size() -1)
+// 			out.print(",");
+// 		}
+// 	    }
+// 	    else {
+
+// 		if(ne.exprs.size() == 2){ // no need for a list
+// 		    printFormula(out, subst, ne.exprs.elementAt(0));
+// 		    out.print(",");
+// 		    printFormula(out, subst, ne.exprs.elementAt(1));
+
+// 		}
+// 		else {
+// 		    for (int i = 0; i < ne.exprs.size(); i++) {
+// 			out.print("cons(");
+// 			printFormula(out, subst, ne.exprs.elementAt(i));
+// 			out.print(",");
+		    
+// 			if(i == (ne.exprs.size() -1)) {// last
+// 			    out.print("null");
+// 			    for( int j2 = 0; j2 <= i; j2++)
+// 				out.print(")");
+// 			}
+// 		    }
+// 		}
+// 	    }	    
+
+// 	    out.print(")");
 
 	    break;
 	}
@@ -577,6 +646,7 @@ public class VcToStringPvs {
 	case TagConstants.TYPELE: {
 	    NaryExpr ne = (NaryExpr)e;
 	    String op;
+	    boolean possibleDeclarationOfStackTrace = false;
         
 	    switch (ne.getTag()) {
 	    case TagConstants.ALLOCLT:
@@ -588,6 +658,7 @@ public class VcToStringPvs {
 	    case TagConstants.ANYEQ:
 		//op = "EQ";
 		op = "refEQ";
+		possibleDeclarationOfStackTrace = true;
 		// for elems, alloc
 		break;
 	    case TagConstants.ANYNE:
@@ -653,7 +724,6 @@ public class VcToStringPvs {
 		if( i>=1 ) out.print(", ");
 		//out.print(" ");
 		// makes it more 'readable' cough cough...
-		out.print("");
 		printTerm(out, subst, ne.exprs.elementAt(i));
 	    }
 	    out.print(")");
@@ -707,6 +777,8 @@ public class VcToStringPvs {
 	//++
     
 	int tag = e.getTag();
+	boolean possibleNewPvsFunction = false;
+
 	switch (tag) {
       
 	case TagConstants.SUBSTEXPR: {
@@ -718,9 +790,6 @@ public class VcToStringPvs {
 	    SubstExpr se = (SubstExpr)e;
 	    // perform current substitution on expression
 	    String expr = vc2Term(se.val, subst);
-
-	    // just to see what this routine does
-	    System.out.println(expr);
 	    
 	    // get old val, install new val
 	    Object old = subst.put(se.var, expr);
@@ -801,7 +870,24 @@ public class VcToStringPvs {
 	case TagConstants.CHARLIT:
 	case TagConstants.INTLIT: {
 	    LiteralExpr le = (LiteralExpr)e;
-	    out.print(integralPrintName(((Integer)le.value).intValue()));
+	    //out.print(integralPrintName(((Integer)le.value).intValue()));
+
+	    /*
+	     * In case of special value, this fonction can print
+	     * neg2147483648 or pos2147483647 (and normal int like 1 or 2).
+	     * But in the latter case, we have to convert it to 
+	     * real_to_S(1) otherwise pvs will consider it as a real
+	     */
+
+	    String s = integralPrintName(((Integer)le.value).intValue());
+
+	    /* lame way to determine if it's negXXXX or a 'normal int'  */
+	    
+	    if( s.charAt(0)=='n' || s.charAt(0)=='p' )
+		out.print(s);
+	    else
+		out.print("real_to_S("+s+")");
+
 	    break;
 	}
       
@@ -824,7 +910,8 @@ public class VcToStringPvs {
 	}
       
 	case TagConstants.NULLLIT:
-	    out.print("null");
+	    //out.print("null");
+	    out.print("java_null");
 	    break;
       
 	case TagConstants.SYMBOLLIT: {
@@ -944,7 +1031,7 @@ public class VcToStringPvs {
 	case TagConstants.UNSET:
 	case TagConstants.VALLOCTIME: {
 	    NaryExpr ne = (NaryExpr)e;
-	    String op;
+	    String op = null; //compiler happy \o/
 	    switch (tag) {
 	    case TagConstants.INTEGRALADD:
 		op = "+";
@@ -971,13 +1058,16 @@ public class VcToStringPvs {
 
 		//op = "|" + ne.methodName.toString() + "|";
 
-		//++
-//		System.out.println("printTerm::METHODCALL");
-		//++
-
 		op = ne.methodName.toString();
 		
 		op = replaceBadChar(op);
+
+		//++
+//		System.out.println("printTerm::METHODCALL "+op);
+		//++
+
+		/* in order to declare the fonction after */
+		possibleNewPvsFunction = true;
 
 		break;
 	    case TagConstants.INTEGRALNE:
@@ -991,11 +1081,12 @@ public class VcToStringPvs {
 		// fall thru
 	    default:
 
+		op = TagConstants.toVcString(tag);
+
 	    //++
-//	    System.out.println("printTerm::default");
+//	     System.out.println("printTerm::default "+op);
 	    //++
 
-		op = TagConstants.toVcString(tag);
 	    }
 
 	    // (typeof X) => typeOf( )
@@ -1011,6 +1102,11 @@ public class VcToStringPvs {
 		printTerm(out, subst, ne.exprs.elementAt(i));
 	    }
 	    out.print(")");
+
+	    if(possibleNewPvsFunction) /* declaration of the function, by adding
+					  it to the appropriate set */
+		add2DeclFun(op,ne.exprs.size());
+
 	    break;
 	}
       
@@ -1170,7 +1266,7 @@ public class VcToStringPvs {
 
 	  // Ugly hack to print it only the first time
 	  if(!somethingToDeclare) {
-	      pvsAxiom.append("integralAxiom : AXIOM");
+	      pvsAxiom.append("integralAxiom : AXIOM(");
 	      somethingToDeclare = true;
 	  }
 
@@ -1188,15 +1284,18 @@ public class VcToStringPvs {
 	  pvsAxiom.append(valueI + " < "+ valueNext);
 	  
 	  pvsDecl.append("\n");
-	  pvsAxiom.append(")\n");
+	  pvsAxiom.append(")");
 
       }
 
-      if( i < n - 2 && i != 0)
+      if( i < n - 2 && i != 0) /* another declaration after */
 	  pvsAxiom.append("AND");
 
       valueI = valueNext;
     }
+
+    if(somethingToDeclare)
+	pvsAxiom.append(")");
 
     ps.print(pvsDecl.toString());
     ps.print(pvsAxiom.toString());
@@ -1206,5 +1305,107 @@ public class VcToStringPvs {
   static {
     resetTypeSpecific();
   }
+
+static private int add2Decl(String s){
+	
+	if( s.charAt(0) == '%')
+	    return 0;
+
+	Iterator i = listOfDecl.iterator();
+	String temp = null; // make the compiler happy
+
+	while(i.hasNext()){
+	    
+	    try{ temp = (String)i.next();}
+	    catch(Exception e){
+		System.out.println("VcToStringPvs::add2Decl *** error *** "+e);
+	    }
+
+	    if( s.compareTo(temp) == 0)
+		return 0;
+	}
+
+	i = listOfDeclAdd.iterator();
+	
+	while(i.hasNext()){
+	    
+	    try{ temp = (String)i.next();}
+	    catch(Exception e){
+		System.out.println("VcToStringPvs::add2Decl *** error *** "+e);
+	    }
+
+	    if( s.compareTo(temp) == 0)
+		return 0;
+	}
+
+	listOfDeclAdd.add(s);
+
+	//++
+//	System.out.println("Adding "+s+" to the listOfDecl");
+	//++
+
+	return 1;
+    }
+
+    static private int add2DeclFun(String s, int nbParameters){
+	
+	if( s.charAt(0) == '%')
+	    return 0;
+
+	Iterator i = listOfDeclFun.iterator();
+	String temp = null; // make the compiler happy
+
+	while(i.hasNext()){
+	    
+	    try{ temp = (String)i.next();}
+	    catch(Exception e){
+		System.out.println("VcToStringPvs::add2AdditionalDecl *** error *** "+e);
+	    }
+
+	    if( s.compareTo(temp) == 0)
+		return 0;
+	}
+
+	listOfDeclFun.add(s);
+
+	/* this is so crappy, not to be able to push an int direclty */
+	listOfDeclFunNbParam.add(new Integer(nbParameters));
+
+	//++
+//	if(listOfDeclFun.size() != listOfDeclFunNbParam.size())
+//	    System.out.println("Warning, inconsistency in declaration of new functions...");
+	//++
+
+	//++
+//	System.out.println("Adding "+s+", with arity "+nbParameters+" to listOfDeclFun");
+	//++
+
+	return 1;
+    }
+
+    public static String replaceBadChar(String s){
+
+	// remove beginning and ending |
+	if(s.charAt(0) == '|')
+	    s = s.substring(1,s.length()-1);
+
+	if(s.charAt(s.length()-1) == '|')
+	    s = s.substring(0,s.length()-2);
+
+	s = s.replace('@','_').replace('#','_').replace('|','_').replace('.','_').replace(':','_').replace('<','_').replace('>','_').replace('-','_').replace('^','_').replace(',','_').replace('[','_').replace(']','_').replace('!','_').replace('(','_').replace(')','_').replace(' ','_');
+
+	if(s.compareTo("o") == 0) /* handle the case where a variable
+				     is named just 'o' which is a special
+				     variable in pvs */
+	    s = "o_";
+
+	/* delete _ at the beginning of variable names, coz it's forbidden in pvs */
+	while(s.charAt(0)=='_')
+	    s = s.substring(1,s.length());
+
+	add2Decl(s);
+	
+	return s;
+    }
 
 }
