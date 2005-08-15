@@ -351,18 +351,18 @@ BEGIN
 
   lock_access_definition : LEMMA
     FORALL( r : Reference ) : 
-      lockSelect( lockLock(LS, r), r ) = false
+	NOT lockSelect( lockLock(LS, r), r )
 
   lock_access_definition2 : LEMMA
     FORALL( r : Reference ) : 
-      lockSelect( lockRelease(lockLock(LS, r), r), r) = true
+      lockSelect( lockRelease(lockLock(LS, r), r), r)
 
   ls_has_a_maximum_element : LEMMA
     FORALL( r : Reference ) : 
-      lockLess(r, maxLockset ) = true
+      lockLess(r, maxLockset )
 
   null_belongs_to_ls : LEMMA
     FORALL( r : Reference ) :
-      lockLess(NULL, r) = true
+      lockLess(NULL, r)
 
 END escjava2_locking
