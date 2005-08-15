@@ -101,12 +101,12 @@ $$
 Subroutines are treated, first by identifying the instructions that belongs to it and then by in-lining them. Exception handlers are 
 treated by identifying the instructions that belong to the handler (the class file format provides information about the exception handlers for all methods, in particular where starts and ends the region 
 they protect and at what index the handler starts at); the precondition of the handler bytecode is calculated upon the normal postcondition of the method.
-%As we assume that the  bytecode has been generates by a nonoptimizing compiler and that it 
+%As we assume that the  bytecode has been generates by a non optimizing compiler and that it 
 %has been certified by a Java bytecode verifier thus our analysis for identifying the instructions that belong to a subroutine or exception handler is not 
 %a problem (as the bytecode verifier guarantees that \texttt{jsr} are not the cause of cycles).  
 
-\subsection{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists in generating verification conditions for every method appearing in every class of the bytecode program.
-The verification procedure for a method \texttt{m} consists in  calculating the weakest precondition $\wpi(\tt{m})$ upon its specification: precondition $\psi^{pre}(m)$, 
+\subsection{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists of generating verification conditions for every method appearing in every class of the bytecode program.
+The verification procedure for a method \texttt{m} consists of  calculating the weakest precondition $\wpi(\tt{m})$ upon its specification: precondition $\psi^{pre}(m)$, 
 postcondition $\psi^{post}(\tt{m})$ and the mapping between exceptional types and predicates $\excPost(\tt{m})$ and then prove the condition: 
 $$
 \psi^{pre}(m)  \Rightarrow \wpi(m)

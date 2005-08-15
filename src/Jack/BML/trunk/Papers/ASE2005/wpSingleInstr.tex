@@ -110,7 +110,7 @@ $$
 Method calls are handled by using their specification. A method specification is a contract - the precondition of the called method
 must be established by the caller at the program point where the method is invoked and its postcondition is assumed to hold after the invocation. The rule for
 invocation on a non-void instance method is given in figure~\ref{wpInv}. In the precondition of the called method, the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. 
-Because the method returns a value, if it terminates normally, any occurence of the JML keyword \result \ in $\psi^{post}(m)$ is substituted with the fresh variable $fresh\_var$.  
+Because the method returns a value, if it terminates normally, any occurrence of the JML keyword \result \ in $\psi^{post}(m)$ is substituted with the fresh variable $fresh\_var$.  
 Because the return value in the normal case execution is put on the stack top, the $fresh\_var$ is substituted for the stack top in $\psi$. The resulting predicate is quantified over the expressions that may be modified by the called method. We also assume that if the invoked method terminates abnormally, by throwing an exception of type $\texttt{Exc}$, on returning the control to the invoker its exceptional postcondition $\excPost_{\tt{m} }( \tt{Exc} )$ holds. 
 The rule for static methods is rather the same except for the number of stack elements taken from the stack.  
 
