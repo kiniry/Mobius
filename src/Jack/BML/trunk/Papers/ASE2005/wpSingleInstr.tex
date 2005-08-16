@@ -7,34 +7,34 @@ The \wpi \ function returns the weakest predicate such that if it holds in the s
 	\item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
 	\item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
 \end{enumerate}
- So the signature of \wpi \ is:
-$$\wpi : \texttt{instruction} \rightarrow \predicate \rightarrow (\tt{ ExceptionType} \rightarrow  \predicate) \rightarrow \predicate   $$
+
 
  The Java bytecode language is stack based, i.e. the instructions take their arguments from the method execution stack and 
- put the result on the stack. So, we have to represent the elements of the stack that correspond to the arguments and the result for a given instruction. 
- In the examples in figure~\ref{instrWP} \stack{\counter} stands for the element on the top of the stack. 
+ put the result on the stack. In Fig.~\ref{instrWP} we show the \wpi \ rules for some bytecode instructions 
+where  \stack{\counter}~ stands for the element on the top of the stack. 
  The instruction $\instr{Type\_load} \ i$  loads on the top of the stack the value of the method local variable at index \textit{i}
  in the \textbf{Local\_Variable\_Table} (see section~\ref{bcSpecLg}). The \wpi \ rule for  \instr{Type\_load i} increments the stack
 counter \counter \ and puts on \stack{\counter} the contents of the local variable $\register{i}$.
-As we said in the beginning of the section, \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their 
-corresponding semantics. For example, the keyword \result \ is evaluated only by \instr{Type\_return} 
-instructions and if appearing in the postcondition, \result \ is substituted by the element on the top of 
-the stack \stack{\counter}. 
+
+%As we said in the beginning of the section, \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their 
+%corresponding semantics. For example, the keyword \result \ is evaluated only by \instr{Type\_return} 
+%instructions and if appearing in the postcondition, \result \ is substituted by the element on the top of 
+%the stack \stack{\counter}. 
 
 The rules also take into account the possible abnormal execution of the instruction. For example, in Fig. \ref{instrWP}, the rule for the instruction \instr{putField}
 has two conjuncts - one in the case when the dereferenced object is not null and the instruction execution terminates normally; the other one stands for the case when this is not true. Note, that if the exception thrown is not handled,
  we substitute the special specification variable \jmlKey{EXC} (see Subsection \ref{grammar}) in the exceptional postcondition by the thrown exception object.     
 
-A complete definition of \wpi can be found in~\cite{WPBC}.
+
 \begin{figure}[ht]
 
 $$
 \begin{array}{l}
-\wpi(\instr{iinc} \  i , \ \psi, \ \excPost) = \psi[\register{i} \leftarrow \register{i} + 1 ] \\
-\\
+%\wpi(\instr{iinc} \  i , \ \psi, \ \excPost) = \psi[\register{i} \leftarrow \register{i} + 1 ] \\
+%\\
 \wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) =  \\
 \Myspace \psi[\counter \ \leftarrow \ \counter+1] [\stack{\counter+1} \ \leftarrow \ \register{i}] \\
- \Myspace \texttt{where} \ i \ \texttt{is a valid local variable index}   \\
+ \Myspace \textit{where} \ i \ \textit{is a valid local variable index}   \\
 \\ 
 \wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
 \begin{array}{l}
@@ -70,7 +70,7 @@ $$
 %\end{frameit}
 \end{figure}
 
-\subsubsection{References: manipulating fields}
+\subsubsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
 We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 

@@ -20,8 +20,8 @@ JML annotation that models a list stored in an array field.
 From the example, we notice that JML annotations are written in comments and so they are not visible by the Java compiler.
 The specification of method \verb!isElem! declares
  that when the method is called the field \verb!list! must not be null in its precondition (introduced by \verb!requires!) and that its return value will be true if and only if the internal array 
-\verb!list! contains the object referenced by the argument \verb!obj! in its postcondition(\verb!ensures! ) . The method loop is also specified by
-its invariant (\verb!loop_invariant! ) which basically says that whenever the loop entry is reached the elements inspected already by the loop are all different from \verb!obj!.
+\verb!list! contains the object referenced by the argument \verb!obj! in its postcondition(\verb!ensures!). The method loop is also specified by
+its invariant (\verb!loop_invariant!) which basically says that whenever the loop entry is reached the elements inspected already by the loop are all different from \verb!obj!.
 
  
 \begin{figure}[!h]
@@ -53,7 +53,7 @@ public class ListArray {
 \end{figure}
 BCSL corresponds to a representative subset of JML.
 We sketch the bytecode specification language grammar in Fig.~\ref{bclGrammar}. We omit some of the definitions 
-because of space constraints, e.g. the grammar for arithmetic expressions (which is defined in a standard way). The full specification can be found in~\cite{JML2BCSpec}.  
+because of space constraints, e.g. the grammar for arithmetic expressions (which is defined in a standard way).
 \begin{figure}[!htb]
 $$ \begin{array}{ll}
 \ClassSpec & ::=  \jmlStmt{class \ invariant} \ \predicate \\
