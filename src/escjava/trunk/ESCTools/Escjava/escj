@@ -41,10 +41,6 @@
 ## (if not defined, tries to guess from the location
 ##                        of the current file)
 
-SIMPLIFY='./Simplify-1.5.4.linux' ## stupid trick by clement
-
-## (if not defined, guesses for some platforms)
-
 ##	CLASSPATH        (defaults to "."; set it to point to any java or
 ##                        spec files that escjava is acting on)
 
