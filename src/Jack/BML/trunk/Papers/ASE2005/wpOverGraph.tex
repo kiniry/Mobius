@@ -98,7 +98,7 @@ $$
 \end{itemize}
 \end{definition}
 
-Subroutines are treated, first by identifying the instructions that belongs to it and then by in-lining them. Exception handlers are 
+Subroutines are treated by in-lining. Exception handlers are 
 treated by identifying the instructions that belong to the handler (the class file format provides information about the exception handlers for all methods, in particular where starts and ends the region 
 they protect and at what index the handler starts at); the precondition of the handler bytecode is calculated upon the normal postcondition of the method.
 %As we assume that the  bytecode has been generates by a non optimizing compiler and that it 

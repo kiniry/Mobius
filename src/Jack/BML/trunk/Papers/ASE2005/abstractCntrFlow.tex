@@ -39,7 +39,7 @@ $\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an e
 \newtheorem{defin}{Definition}
 \begin{defin}
 %\begin{defn}
-{Loop.}
+{Loop}
 \label{defLoop}
 Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of a loop $l$ in $\Pi$ and $\blockm{f}$ is an end block of $l$ and we note this with  
  $\blockm{f} \execRel^l \blockm{e}$ if:
@@ -51,7 +51,8 @@ Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of 
 \end{itemize}
 \end{defin}
 
-We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is an abstraction of $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$
+We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is an abstraction of $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$. The weakest precondition is applied over the resulting abstraction of the control
+flow graph, where the eliminated edges are replaced by the appropriate loop invariant.
 
 
 

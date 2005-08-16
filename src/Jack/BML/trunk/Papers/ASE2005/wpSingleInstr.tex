@@ -11,10 +11,9 @@ The \wpi \ function returns the weakest predicate such that if it holds in the s
 
  The Java bytecode language is stack based, i.e. the instructions take their arguments from the method execution stack and 
  put the result on the stack. In Fig.~\ref{instrWP} we show the \wpi \ rules for some bytecode instructions 
-where  \stack{\counter}~ stands for the element on the top of the stack. 
- The instruction $\instr{Type\_load} \ i$  loads on the top of the stack the value of the method local variable at index \textit{i}
- in the \textbf{Local\_Variable\_Table} (see section~\ref{bcSpecLg}). The \wpi \ rule for  \instr{Type\_load i} increments the stack
-counter \counter \ and puts on \stack{\counter} the contents of the local variable $\register{i}$.
+where the expression \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack. 
+ The \wpi \ rule for  \instr{Type\_load i} increments the stack counter \counter \ and loads on the stack top the contents of the local variable $\register{i}$.  %The instruction $\instr{Type\_load} \ i$ loads on the top of the stack the value of the method local variable at index \textit{i}
+ %in the \textbf{Local\_Variable\_Table} (see section~\ref{bcSpecLg}).
 
 %As we said in the beginning of the section, \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their 
 %corresponding semantics. For example, the keyword \result \ is evaluated only by \instr{Type\_return} 
@@ -107,7 +106,7 @@ $$
 %\end{figure}
 
 \subsubsection{Method calls}
-Method calls are handled by using their specification. A method specification is a contract - the precondition of the called method
+Method calls are handled by using their specification. A method specification is a contract between callers and callees --- the precondition of the called method
 must be established by the caller at the program point where the method is invoked and its postcondition is assumed to hold after the invocation. The rule for
 invocation on a non-void instance method is given in figure~\ref{wpInv}. In the precondition of the called method, the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. 
 Because the method returns a value, if it terminates normally, any occurrence of the JML keyword \result \ in $\psi^{post}(m)$ is substituted with the fresh variable $fresh\_var$.  
