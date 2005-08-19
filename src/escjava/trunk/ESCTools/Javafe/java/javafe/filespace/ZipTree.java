@@ -82,7 +82,7 @@ class ZipTree extends ExtTree {
      * ZipException (e.g., file is not a properly formatted
      * zipfile).<p>
      *
-     * <jml> requires zipfile != null; </esc>
+     * <jml> requires zipfile != null; </jml>
      **/
     public ZipTree(File zipfile) throws IOException, ZipException {
 	super(null);
