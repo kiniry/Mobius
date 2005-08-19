@@ -101,7 +101,7 @@ fix-perms:
 	@if [ ! -x ./Javafe/java/javafe/ast/insert_ensures ]; \
 	then \
 		find $(ESCTOOLS_ROOT) -type f \
-		-name "*.[0-9]" -or \
+		\( -name "*.[0-9]" -or \
 		-name "*.[chjlo]" -or \
 		-name "*ans" -or \
 		-name "*diff" -or \
@@ -114,17 +114,15 @@ fix-perms:
 		-name "*out" -or \
 		-name "README*" -or \
 		-name "*.txt" -or \
-		-name "*.zip" \
-		-exec chmod 644 {} \; \
+		-name "*.zip" \) \
+		-exec chmod 644 {} \; ;\
 		find $(ESCTOOLS_ROOT) -type f \
-		-name "*.sh" -or \
+		\( -name "*.sh" -or \
 		-name "rtest*" -or \
-		-name "run" \
-		-name "*_tags" \
-		-name "insert_ensures" \
-		-exec chmod 755 {} \; \
-	else \
-		echo "false"; \
+		-name "run" -or \
+		-name "*_tags" -or \
+		-name "insert_ensures" \) \
+		-exec chmod 755 {} \; ;\
 	fi
 
 ################################################################################
