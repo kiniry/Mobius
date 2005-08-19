@@ -60,6 +60,10 @@ build buildall: fix-perms
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
 
+source: fix-perms
+	$(MAKE) -C Javafe source
+	$(MAKE) -C Escjava source
+
 test: build
 	for d in $(SUBDIRS) ; do \
 	    $(MAKE) -C $$d $@ || exit 1; \
@@ -113,6 +117,7 @@ fix-perms:
 		-name "*.zip" \
 		-exec chmod 644 {} \; \
 		find $(ESCTOOLS_ROOT) -type f \
+		-name "*.sh" -or \
 		-name "rtest*" -or \
 		-name "run" \
 		-name "*_tags" \
@@ -514,6 +519,13 @@ specs-test: build
 	  -classpath ${ESCTOOLS_ROOT} \
 	  -specs ${ESCJAVA2_SPECS} \
 	  java.io java.lang java.lang.reflect java.math java.net java.util java.util.regex
+
+current-specs-test: build
+	@echo TESTING specs
+	${ESCJAVA} -quiet \
+	  -classpath ${ESCTOOLS_ROOT} \
+	  -specs ${ESCJAVA2_SPECS} \
+	  java.util.Calendar java.util.GregorianCalendar java.util.Date
 
 ## Experimental rule to generate a file that references every type
 ## that currently has a spec and run escjava2 on it to try to detect

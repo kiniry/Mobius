@@ -222,7 +222,9 @@ TypeVec = \
 	${AST_DIR}/DefPredVec.java \
 	${AST_DIR}/DecreasesInfoVec.java
 
-.PHONY: generate_escjava_ast_source clean_escjava_ast
+.PHONY: source generate_escjava_ast_source clean_escjava_ast
+
+source: generate_escjava_ast_source
 
 generate_escjava_ast_source: ${AST_DIR}/GeneratedTags.java ${TypeVec} ${JavafeTypeVec}
 
