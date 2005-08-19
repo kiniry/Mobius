@@ -60,7 +60,7 @@ IntegerVec.java: ../util/_TYPE_Vec.j
 .PHONY: clean
 clean: $(ASTFILELIST)
 	@$(ASTFILELIST) < hierarchy.j | xargs rm -f 
-	@rm -f *~ ${TypeVec} ASTGEN* zASTGEN* *Vec.spec
+	@rm -f ${TypeVec} ASTGEN* zASTGEN* *Vec.spec
 	@rm -f tags ASTNode.before ASTNode.after ASTNode.tmp ASTNode.java
 	@rm -rf *.class ${CLASSDIRECTORY}/javafe/ast/*.class
 	@rm -f TypeDeclElem.java TypeDeclElem.before TypeDeclElem.after
