@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="escwizard/**|houdini/**|instrumenter/**|tohtml/**" kind="src" path="Escjava/java"/>
+	<classpathentry kind="src" path="Escjava/mochalib/java"/>
+	<classpathentry including="junitutils/*.java" kind="src" path="Utils"/>
+	<classpathentry excluding="jtools/jcheck/**" kind="src" path="Javafe/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="Utils/junit.jar"/>
+	<classpathentry kind="lib" path="Utils/ant.jar"/>
+	<classpathentry kind="lib" path="Escjava/xmlrpc-1.2-b1-modified.jar"/>
+	<classpathentry kind="output" path="classfiles"/>
+</classpath>
