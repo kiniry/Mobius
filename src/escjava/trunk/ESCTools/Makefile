@@ -279,7 +279,7 @@ jml: build
 .PHONY: releases test-releases releases-notests source-release patch-release \
 	jar srcjar binary-release test-binary-release test-patch-release \
 	generate-patches generate-archives generate-specs-archive \
-	generate-toplevel-archive zero-length-files
+	generate-toplevel-archive zero-length-files version
 
 ## FIXME: get mocha right
 
@@ -310,6 +310,9 @@ patch-release: clean
 	mkdir -p ${RELDIR}
 	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR} .
 	rm -rf ${PATCH_DIR}
+
+version:
+	$(MAKE) -C Escjava version
 
 jar:	build
 	mkdir -p ${RELTEMP}/sub
