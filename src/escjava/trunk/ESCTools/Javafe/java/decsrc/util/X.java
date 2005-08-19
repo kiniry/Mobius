@@ -33,12 +33,12 @@ public abstract class X {
   }
 
   /** Raise an assertion-failure exception iff <code>c</code> is false. */
-  public static void assert(boolean c) {
+  public static void assertTrue(boolean c) {
     if (! c) throw new RuntimeException("Assertion failure");
   }
 
   /** Raise an assertion-failure exception iff <code>c</code> is false. */
-  public static void assert(boolean c, String s) {
+  public static void assertTrue(boolean c, String s) {
     if (! c) throw new RuntimeException("Assertion failure: " + s);
   }
 

@@ -589,7 +589,7 @@ public class Main extends javafe.SrcTool
         long startTime = java.lang.System.currentTimeMillis();
         if (!options().quiet) {
             String name = TypeCheck.inst.getRoutineName(r) +
-                TypeCheck.inst.getSignature(r);
+                javafe.tc.TypeCheck.getSignature(r);
             System.out.println("\n" + sig.toString() + ": " +
                    name + " ...");
         }
@@ -637,7 +637,7 @@ public class Main extends javafe.SrcTool
                 return "skipped";
         String simpleName = TypeCheck.inst.getRoutineName(r).intern();
         String fullName = sig.toString() + "." + simpleName +
-            TypeCheck.inst.getSignature(r);
+            javafe.tc.TypeCheck.getSignature(r);
         fullName = removeSpaces(fullName).intern();
         if (options().routinesToSkip != null &&
                 (options().routinesToSkip.contains(simpleName) ||
