@@ -294,8 +294,10 @@ public class TypeSig extends Type
      * The domain type of map is String and its range type is (non-null)
      * TypeSigs.<p>
      */
-    //-@ invariant map.keyType == \type(String);
-    //-@ invariant map.elementType == \type(TypeSig);
+    //  Old specs from original full JML spec files.  Must be
+    //  rewritten for current java.util.Hashtable specs.
+    //- invariant map.keyType == \type(String);
+    //- invariant map.elementType == \type(TypeSig);
     //@ spec_public
     private static final Hashtable map = new Hashtable(101);
 

@@ -1158,8 +1158,10 @@ public class Lex extends Token
      * Unenforceable invariant: all tokenTypes in this table do not
      * require a non-null auxVal.  (cf. Token.auxVal).
      */
-    /*@ invariant (keywords != null) ==> (keywords.keyType == \type(Identifier)
-     && keywords.elementType == \type(Integer)); */
+    //  Old specs from original full JML spec files.  Must be
+    //  rewritten for current java.util.Hashtable specs.
+    /*  invariant (keywords != null) ==> (keywords.keyType == \type(Identifier) &&
+                  keywords.elementType == \type(Integer)); */
     protected Hashtable keywords = null;
 
     protected boolean javakeywords = false, onlyjavakeywords = false;
@@ -1218,8 +1220,10 @@ public class Lex extends Token
 	Assert.precondition(code != TagConstants.NULL);
 	if (keywords == null) {
 	    keywords = new Hashtable();
-	    //@ set keywords.keyType = \type(Identifier);
-	    //@ set keywords.elementType = \type(Integer);
+            //  Old specs from original full JML spec files.  Must be
+            //  rewritten for current java.util.Hashtable specs.
+	    //  set keywords.keyType = \type(Identifier);
+	    //  set keywords.elementType = \type(Integer);
 	}
 	keywords.put(Identifier.intern(newkeyword), new Integer(code));
 	onlyjavakeywords = false;
