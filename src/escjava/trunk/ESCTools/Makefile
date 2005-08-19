@@ -62,7 +62,7 @@ build buildall: fix-perms
 
 source: fix-perms
 	$(MAKE) -C Javafe source
-	$(MAKE) -C Escjava source
+	$(MAKE) -C Escjava source generate_files
 
 test: build
 	for d in $(SUBDIRS) ; do \
