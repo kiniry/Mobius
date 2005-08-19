@@ -2,3 +2,4 @@ astfilelist
 astgen
 astgen_snapshot_jml.tgz
 lex.yy.c
+*.o
