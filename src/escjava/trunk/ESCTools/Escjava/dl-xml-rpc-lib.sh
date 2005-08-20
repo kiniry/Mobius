@@ -12,7 +12,7 @@ if [ ! -e classfiles/org ]
     mv org/ classfiles/.
     mv uk/ classfiles/.
 
-    rm META-INF/ -r
+    rm -rf META-INF/
 fi
 
 # fileAdress=http://apache.mirrors.esat.net/ws/xmlrpc/binaries/xmlrpc-1.2-b1.tar.gz
