@@ -96,33 +96,47 @@ endif
 .PHONY: fix-perms
 
 ## This rule is needed because CVS does not properly keep permissions
-## (expecially x bits), so sometimes we need a reset.
-fix-perms:
-	@if [ ! -x ./Javafe/java/javafe/ast/insert_ensures ]; \
+## (expecially x bits), so sometimes we need a reset.  Delete the
+## datestamp file ".perms-fixed" to force re-execution.
+fix-perms:	.perms-fixed
+
+.perms-fixed:
+	@if [ ! -e ".perms-fixed" ]; \
 	then \
 		find $(ESCTOOLS_ROOT) -type f \
 		\( -name "*.[0-9]" -or \
-		-name "*.[chjlo]" -or \
-		-name "*ans" -or \
-		-name "*diff" -or \
-		-name "*.el" -or \
-		-name "*.gif" -or \
-		-name "*.html" -or \
-		-name "*.spec" -or \
-		-name "*.j*" -or \
-		-name "*Make*" -or \
-		-name "*out" -or \
-		-name "README*" -or \
-		-name "*.txt" -or \
-		-name "*.zip" \) \
-		-exec chmod 644 {} \; ;\
+		   -name "*.[chjlo]" -or \
+		   -name "*ans" -or \
+		   -name "*diff" -or \
+		   -name "*.el" -or \
+		   -name "*.gif" -or \
+		   -name "*.html" -or \
+		   -name "*.spec" -or \
+		   -name "*.j*" -or \
+		   -name "*Make*" -or \
+		   -name "*out" -or \
+		   -name "README*" -or \
+		   -name "*.txt" -or \
+		   -name "*.zip" \) \
+		-exec chmod 644 {} \; &&\
 		find $(ESCTOOLS_ROOT) -type f \
 		\( -name "*.sh" -or \
-		-name "rtest*" -or \
-		-name "run" -or \
-		-name "*_tags" -or \
-		-name "insert_ensures" \) \
-		-exec chmod 755 {} \; ;\
+		   -name "rtest*" -or \
+		   -name "escj" -or \
+		   -name "escj.bat" -or \
+		   -name "escjava2.exe" -or \
+		   -name "escjava2" -or \
+		   -name "escjava.bat.win" -or \
+		   -name "escjava.linux" -or \
+		   -name "escjava.nt.win" -or \
+		   -name "escjava.solaris" -or \
+		   -name "escjava.tru64" -or \
+		   -name "run" -or \
+		   -name "*_tags" -or \
+		   -name "Simplify-1.5*" -or \
+		   -name "insert_ensures" \) \
+		-exec chmod 755 {} \; &&\
+		touch .perms-fixed; \
 	fi
 
 ################################################################################
