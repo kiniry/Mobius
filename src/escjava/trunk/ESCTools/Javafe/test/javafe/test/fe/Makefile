@@ -25,9 +25,7 @@ else
   JBIN =
 endif
 
-export TOOLCMD = ${JAVA} \
-	-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8000 \
-	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}
+export TOOLCMD = ${JAVA} -mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}
 export TOOLARGS = -noprint -typecheck -quiet -testMode
 export TOOL = ${TOOLCMD} ${TOOLARGS}
 
@@ -68,8 +66,6 @@ endif
 # executes and compares test1
 ## Must have variables JAVA and JAVAFE_ROOT set
 do%: testclasses
-	echo "    TOOL: ${TOOL}"
-	echo "    CLASSPATH: ${CLASSPATH}"
 	@( cd $*; \
 	   export TOOLCMD="${TOOLCMD}" ;\
 	   export TOOL="${TOOL} -classpath ." ; \
