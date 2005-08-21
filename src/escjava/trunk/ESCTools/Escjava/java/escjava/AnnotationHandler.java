@@ -1163,7 +1163,7 @@ public class AnnotationHandler {
   }
 
   static public class CheckPurity {
-
+    
     public void visitNode(ASTNode x, Context cc) {
       if (x == null) return;
       //System.out.println("CP TAG " + TagConstants.toString(x.getTag()));
@@ -1172,55 +1172,60 @@ public class AnnotationHandler {
           MethodInvocation m = (MethodInvocation)x;
           if (Main.options().checkPurity && !Utils.isPure(m.decl)) {
             ErrorSet.error(m.locId, "Method " + m.id
-                + " may not be used in an annotation since it is not pure",
-                m.decl.loc);
+                           + " may not be used in an annotation since it is not pure",
+                           m.decl.loc);
             if (Main.options().checkPurity && Utils.isAllocates(m.decl)) {
               ErrorSet.error(m.locId, "Method " + m.id
-                + " may not be used in an annotation since it allocates"
-                + " fresh storage");
-            }
+                             + " may not be used in an annotation since it allocates"
+                             + " fresh storage");
           }
-          break;
+        }
+        break;
         case TagConstants.NEWINSTANCEEXPR:
           NewInstanceExpr c = (NewInstanceExpr)x;
-          if (Main.options().checkPurity && !Utils.isPure(c.decl)) {
-            ErrorSet.error(c.loc, "Constructor is used in an annotation"
-                + " but is not pure (" + Location.toFileLineString(c.decl.loc)
-                + ")");
-          }
-          break;
+          // @review kiniry, chalin 21 Aug 2005 - If/when we revise assertion semantics, 
+          // this will need to be updated appropriately.
+        	  if (Main.options().checkPurity && !Utils.isPure(c.decl)) {
+        	    ErrorSet.error(c.loc, "Constructor is used in an annotation"
+        	                   + " but is not pure (" + Location.toFileLineString(c.decl.loc)
+        	                   + ")");
+        	  }
+        	  break;
         case TagConstants.WACK_DURATION:
         case TagConstants.WACK_WORKING_SPACE:
         case TagConstants.SPACE:
           // The argument of these built-in functions is not
           // evaluated, so it need not be pure.
           return;
-
+        
         case TagConstants.ENSURES:
         case TagConstants.POSTCONDITION:
         case TagConstants.REQUIRES:
         case TagConstants.PRECONDITION: {
+          // @bug kiniry 21 Aug 2005 - Won't this crash with a SOO if any of these spec
+          // expressions are recursive?
           Context cn = new Context();
           cn.expr = ((ExprModifierPragma)x).expr;
           visitNode(cn.expr, cn);
           ((ExprModifierPragma)x).expr = cn.expr;
           return;
         }
-
+        
         case TagConstants.SIGNALS:
         case TagConstants.EXSURES:
-
+          // @review kiniry 21 Aug 2005 - Why are we not checking subexpressions of these 
+          // spec expressions?
           break;
       }
       {
         int n = x.childCount();
         for (int i = 0; i < n; ++i) {
           if (x.childAt(i) instanceof ASTNode)
-              visitNode((ASTNode)x.childAt(i), cc);
+            visitNode((ASTNode)x.childAt(i), cc);
         }
       }
     }
-
+    
   }
 
   static private void print(Expr e) {
