@@ -106,7 +106,6 @@ public class GhostEnv extends EnvForTypeSig
      * field (and not a model or Java field).
      *
      */
-    //@ public normal_behavior
     //@ requires field != null;
     public static boolean isGhostField(FieldDecl field) {
 	TypeDecl d = field.getParent();
