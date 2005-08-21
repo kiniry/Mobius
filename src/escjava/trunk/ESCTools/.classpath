@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="/Applications/Developer/Eclipse/Eclipse-3.0.2/plugins/org.jmlspecs_1.0.4/jml-release.jar"/>
 	<classpathentry excluding="escwizard/**|houdini/**|instrumenter/**|tohtml/**" kind="src" path="Escjava/java"/>
+	<classpathentry including="escjava/test/*.java" kind="src" path="Escjava/test"/>
+	<classpathentry including="javafe/parser/test/*.java|javafe/test/*.java|javafe/test/lex/*.java" kind="src" path="Javafe/test"/>
 	<classpathentry kind="src" path="Escjava/mochalib/java"/>
 	<classpathentry including="junitutils/*.java" kind="src" path="Utils"/>
 	<classpathentry excluding="jtools/jcheck/**" kind="src" path="Javafe/java"/>
@@ -8,5 +11,6 @@
 	<classpathentry kind="lib" path="Utils/junit.jar"/>
 	<classpathentry kind="lib" path="Utils/ant.jar"/>
 	<classpathentry kind="lib" path="Escjava/xmlrpc-1.2-b1-modified.jar"/>
+	<classpathentry kind="src" path="/JmlSpecs"/>
 	<classpathentry kind="output" path="classfiles"/>
 </classpath>
