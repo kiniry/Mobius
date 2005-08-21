@@ -25,10 +25,10 @@ public abstract class NewProver {
      */
 
     /*@ public normal_behavior
+      @   assignable started;
       @   ensures \result == ProverResponse.OK ||
       @           \result == ProverResponse.FAIL;
       @   ensures started;
-      @ assignable started;
       @*/
 
     public abstract /*@ non_null @*/ ProverResponse start_prover();
@@ -43,8 +43,7 @@ public abstract class NewProver {
      * prover.
      * @return a response code.
      */
-    /*@ public normal_behavior
-      @   requires started;
+    /*@   requires started;
       @   ensures \result == ProverResponse.OK || 
       @           \result == ProverResponse.FAIL ||
       @           \result == ProverResponse.SYNTAX_ERROR ||
@@ -62,8 +61,7 @@ public abstract class NewProver {
      * @param signature the signature of the new theory.
      * @return a response code.
      */
-    /*@ public normal_behavior
-      @   requires started;
+    /*@   requires started;
       @   ensures \result == ProverResponse.OK || 
       @           \result == ProverResponse.FAIL ||
       @           \result == ProverResponse.SYNTAX_ERROR;
@@ -77,8 +75,7 @@ public abstract class NewProver {
      * @param formula
      * @return a response code.
      */
-    /*@ public normal_behavior
-      @   requires started;
+    /*@   requires started;
       @   ensures \result == ProverResponse.OK || 
       @           \result == ProverResponse.FAIL ||
       @           \result == ProverResponse.SYNTAX_ERROR ||
@@ -93,8 +90,7 @@ public abstract class NewProver {
      * @param formula the assumption to make.
      * @return a response code.
      */
-    /*@ public normal_behavior
-      @   requires started;
+    /*@   requires started;
       @   ensures \result == ProverResponse.OK || 
       @           \result == ProverResponse.FAIL ||
       @           \result == ProverResponse.SYNTAX_ERROR ||
@@ -109,8 +105,7 @@ public abstract class NewProver {
      * @param count the number of assumptions to retract.
      * @return a response code.
      */
-    /*@ public normal_behavior
-      @   requires started;
+    /*@   requires started;
       @   requires count >= 0 ;
       @   ensures \result == ProverResponse.OK ||
       @           \result == ProverResponse.FAIL;
@@ -131,8 +126,7 @@ public abstract class NewProver {
      * method include check(), is_entailed(), is_an_entailed_model_of().
      * I prefer is_valid().
      */
-    /*@ public normal_behavior
-      @   requires started;
+    /*@   requires started;
       @   ensures \result == ProverResponse.YES ||
       @           \result == ProverResponse.NO ||
       @           \result == ProverResponse.COUNTER_EXAMPLE ||
@@ -153,6 +147,7 @@ public abstract class NewProver {
      */
     /*@ public normal_behavior
       @   requires started;
+      @   assignable started;
       @   ensures \result == ProverResponse.OK ||
       @           \result == ProverResponse.FAIL;
       @   ensures started == false;
