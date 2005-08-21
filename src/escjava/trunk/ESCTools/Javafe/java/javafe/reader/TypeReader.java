@@ -40,22 +40,22 @@ abstract public class TypeReader extends Reader
      * and may in fact be defined as always true.<p>
      */
     //@ requires \nonnullelements(P);
-    abstract public boolean accessable(/*@non_null*/ String[] P);
+    abstract public boolean accessable(/*@ non_null @*/ String[] P);
 
 
     /**
      * Return true iff the fully-qualified outside type P.T exists.
      */
     //@ requires \nonnullelements(P);
-    abstract public boolean exists(/*@non_null*/ String[] P, 
-				   /*@non_null*/ String T);
+    abstract public boolean exists(/*@ non_null @*/ String[] P, 
+				   /*@ non_null @*/ String T);
 
 
     /**
      *  Returns a (source or binary) file for the given type.
      */
-    abstract public GenericFile findType(/*@non_null*/ String[] P, 
-					 /*@non_null*/ String T);
+    abstract public GenericFile findType(/*@ non_null @*/ String[] P, 
+					 /*@ non_null @*/ String T);
 
     /***************************************************
      *                                                 *
@@ -92,7 +92,7 @@ abstract public class TypeReader extends Reader
      *
      * Target must be non-null.<p>
      */
-    abstract public CompilationUnit read(/*@non_null*/ GenericFile target,
+    abstract public CompilationUnit read(/*@ non_null @*/ GenericFile target,
 					 boolean avoidSpec);
 
 
@@ -125,14 +125,14 @@ abstract public class TypeReader extends Reader
      * binaries.<p>
      */
     //@ requires \nonnullelements(P);
-    abstract public CompilationUnit read(/*@non_null*/ String[] P, 
-					 /*@non_null*/ String T,
+    abstract public CompilationUnit read(/*@ non_null @*/ String[] P, 
+					 /*@ non_null @*/ String T,
                                          boolean avoidSpec);
 
     /** Returns an enumeration of the GenericFile objects in the given 
 	package P.
     */
-    abstract public ArrayList findFiles(/*@non_null*/ String[] P);
+    abstract public ArrayList findFiles(/*@ non_null @*/ String[] P);
 
     //@ ensures \result != null;
     public FilenameFilter filter() { 

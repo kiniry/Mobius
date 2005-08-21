@@ -73,16 +73,16 @@ public class jbddManager {
   protected native void jbddManagerInit(int i);
   protected native void jbddManagerFinalize();
   // exported functions
-  public native /*@non_null*/ jbdd jbdd_create_variable();
-  public native /*@non_null*/ jbdd jbdd_create_variable_after(int i);
-  public native /*@non_null*/ jbdd jbdd_get_variable(int i);
-  public native /*@non_null*/ jbdd jbdd_var_with_index(int i);
-  public native /*@non_null*/ jbdd jbdd_compute_cube(/*@non_null*/ int[] ia); // not done yet
-  public native /*@non_null*/ jbdd jbdd_one();
-  public native /*@non_null*/ jbdd jbdd_zero();
-  public native /*@non_null*/ jbdd jbdd_multiway_and (/*@non_null*/ jbdd[] bdd1);
-  public native /*@non_null*/ jbdd jbdd_multiway_or (/*@non_null*/ jbdd[] bdd1);
-  public native /*@non_null*/ jbdd jbdd_multiway_xor (/*@non_null*/ jbdd[] bdd1);
+  public native /*@ non_null @*/ jbdd jbdd_create_variable();
+  public native /*@ non_null @*/ jbdd jbdd_create_variable_after(int i);
+  public native /*@ non_null @*/ jbdd jbdd_get_variable(int i);
+  public native /*@ non_null @*/ jbdd jbdd_var_with_index(int i);
+  public native /*@ non_null @*/ jbdd jbdd_compute_cube(/*@ non_null @*/ int[] ia); // not done yet
+  public native /*@ non_null @*/ jbdd jbdd_one();
+  public native /*@ non_null @*/ jbdd jbdd_zero();
+  public native /*@ non_null @*/ jbdd jbdd_multiway_and (/*@ non_null @*/ jbdd[] bdd1);
+  public native /*@ non_null @*/ jbdd jbdd_multiway_or (/*@ non_null @*/ jbdd[] bdd1);
+  public native /*@ non_null @*/ jbdd jbdd_multiway_xor (/*@ non_null @*/ jbdd[] bdd1);
   public native int jbdd_read_reorderings ();
   public native void jbdd_realign_enable();
   public native void jbdd_realign_disable();
@@ -91,16 +91,16 @@ public class jbddManager {
   public native void jbdd_dynamic_reordering(String string1, String string2);
   public native int jbdd_reordering_status (String string1);
   public native void jbdd_reorder();
-  public native int jbdd_shuffle_heap (/*@non_null*/ int [] ia);
+  public native int jbdd_shuffle_heap (/*@ non_null @*/ int [] ia);
   public native void jbdd_dynamic_reordering_disable();
   public native int jbdd_read_reordered_field();
   public native int jbdd_enable_reordering_reporting();
   public native int jbdd_disable_reordering_reporting();
-  public native /*@non_null*/ String jbdd_reordering_reporting();
+  public native /*@ non_null @*/ String jbdd_reordering_reporting();
   public native void jbdd_set_gc_mode (boolean truth);
   public native int jbdd_num_vars();
   public native int jbdd_read_node_count();
-  public native long jbdd_top_var_level(/*@non_null*/ jbdd bd);
+  public native long jbdd_top_var_level(/*@ non_null @*/ jbdd bd);
   public native int jbdd_get_id_from_level(long l);
   public native int jbdd_get_level_from_id (int i);
   public native int jbdd_check_zero_ref();
@@ -116,7 +116,7 @@ public class jbddManager {
       jbddManagerFinalize();
     }
 
-  public static void main(/*@non_null*/ String args[]) {
+  public static void main(/*@ non_null @*/ String args[]) {
     jbddManager manager = new jbddManager(0);
     jbdd bdd1 = manager.jbdd_one();
     jbdd bdd0 = manager.jbdd_zero();

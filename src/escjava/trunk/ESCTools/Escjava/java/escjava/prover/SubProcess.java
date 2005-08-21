@@ -219,6 +219,7 @@ public class SubProcess
     //@   requires P == null;
     //@   modifies \everything;
     //@   signals_only Died;
+    //@   signals (Died) true;
     public int getChar() {
 	if (P == null) throw new Died();
 
@@ -255,6 +256,7 @@ public class SubProcess
     //@   requires P == null;
     //@   modifies \everything;
     //@   signals_only Died;
+    //@   signals (Died) true;
     public int peekChar() {
 	// P may have been closed on us 
 	if (P == null) throw new Died();

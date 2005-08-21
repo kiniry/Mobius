@@ -113,7 +113,7 @@ public class CheckCompilationUnit
 		} else {
 		    if (N1.size()>1 &&
 			(N1.prefix(N1.size()-1).equals(cu.pkgName)))
-			continue;	// fix for inner classes !!!!
+			continue;	// @bug fix for inner classes !!!!
 		}
 
 	        ErrorSet.fatal(N1.locIdAt(0),

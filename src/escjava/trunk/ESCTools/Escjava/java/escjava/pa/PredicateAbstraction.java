@@ -28,7 +28,7 @@ import mocha.wrappers.jbdd.*;
 
 public class PredicateAbstraction
 {
-    public static /*@non_null*/ ASTDecoration paDecoration = new ASTDecoration("paDecoration");
+    public static /*@ non_null @*/ ASTDecoration paDecoration = new ASTDecoration("paDecoration");
     
     static GuardedCmd abstractLoop(LoopCmd g, GuardedCmd context, Set env) {
 	PredicateAbstraction pa = (PredicateAbstraction) paDecoration.get(g);	
@@ -42,22 +42,22 @@ public class PredicateAbstraction
     private static boolean quantifyAssumptions = 
         !Boolean.getBoolean("PAnoQuantifyAssumptions");
     ExprVec invariants = ExprVec.make();
-    private /*@non_null*/ jbddManager bddManager;
-    public  /*@non_null*/ Abstractor abstractor;
-    private /*@non_null*/ LocalVarDeclVec skolemConstants;
-    private /*@non_null*/ ExprVec loopPredicates;
+    private /*@ non_null @*/ jbddManager bddManager;
+    public  /*@ non_null @*/ Abstractor abstractor;
+    private /*@ non_null @*/ LocalVarDeclVec skolemConstants;
+    private /*@ non_null @*/ ExprVec loopPredicates;
     private GuardedCmd body;
-    private /*@non_null*/ GuardedCmd bodyDesugared = GC.fail();
+    private /*@ non_null @*/ GuardedCmd bodyDesugared = GC.fail();
     private GuardedCmd havoc;
     private int startLoc;
     public int nQueries=0;
     long milliSecsUsed;
     GCProver perfCount;
     
-    private final /*@non_null*/ StackVector code = new StackVector();
-    private final /*@non_null*/ GenericVarDeclVec temporaries = GenericVarDeclVec.make();
+    private final /*@ non_null @*/ StackVector code = new StackVector();
+    private final /*@ non_null @*/ GenericVarDeclVec temporaries = GenericVarDeclVec.make();
 
-    PredicateAbstraction(/*@non_null*/ LoopCmd g, Set env) {
+    PredicateAbstraction(/*@ non_null @*/ LoopCmd g, Set env) {
 
 	body = GC.seq(g.guard, g.body);
 	startLoc = g.getStartLoc();
@@ -226,7 +226,7 @@ public class PredicateAbstraction
 	return r;
     }
 
-    private static boolean mentions(/*@non_null*/ Expr e, GenericVarDecl d) {
+    private static boolean mentions(/*@ non_null @*/ Expr e, GenericVarDecl d) {
 	if( e instanceof VariableAccess ) {
 	    return ((VariableAccess)e).decl == d;
 	} else {
@@ -278,8 +278,8 @@ public class PredicateAbstraction
     }
 */
 
-    private void inferPredicates(/*@non_null*/ LoopCmd g, 
-				 /*@non_null*/ Set env, 
+    private void inferPredicates(/*@ non_null @*/ LoopCmd g, 
+				 /*@ non_null @*/ Set env, 
 				 Set targets) 
     {
 	int loc = g.getStartLoc();

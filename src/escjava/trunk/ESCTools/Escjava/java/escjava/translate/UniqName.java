@@ -81,7 +81,7 @@ public final class UniqName {
   /** Returns the location corresponding to <code>suffix</code>.
     * Requires <code>suffix</code> to be a valid suffix.
     **/
-  public static int suffixToLoc(/*@non_null*/ String suffix) {
+  public static int suffixToLoc(/*@ non_null @*/ String suffix) {
     return suffixToLoc(suffix, false);
   }
 
@@ -90,7 +90,7 @@ public final class UniqName {
     * Requires <code>recoverable</code> or that <code>suffix</code> is
     * a valid suffix.
     **/
-  public static int suffixToLoc(/*@non_null*/ String suffix, 
+  public static int suffixToLoc(/*@ non_null @*/ String suffix, 
 				boolean recoverable) 
   {
     if (parseSuffix(suffix, recoverable)) {
@@ -113,7 +113,7 @@ public final class UniqName {
    **********************************************************************/
 
   //@ ensures \result != null;
-  public static String suffixToString(/*@non_null*/ String suffix) {
+  public static String suffixToString(/*@ non_null @*/ String suffix) {
     parseSuffix(suffix, false);
     String s = Location.streamIdToFile(psout0).getHumanName();
     if (psout1 == 0)
@@ -156,7 +156,7 @@ public final class UniqName {
     * parameters).
     **/
   
-  private static boolean parseSuffix(/*@non_null*/ String suffix, 
+  private static boolean parseSuffix(/*@ non_null @*/ String suffix, 
 				     boolean recoverable) 
   {
     // These numbers will be shifted as dots are discovered
@@ -300,7 +300,7 @@ public final class UniqName {
      ** This handles case 3 of ESCJ 23b.
      **/
     //@ ensures \result != null;
-    public static LocalVarDecl newBoundVariable(/*@non_null*/ String name) {
+    public static LocalVarDecl newBoundVariable(/*@ non_null @*/ String name) {
 	Identifier id = Identifier.intern(name);
 	return LocalVarDecl.make(Modifiers.NONE,  // Java modifiers
 	 		         null,            // pragma modifiers
@@ -372,7 +372,7 @@ public final class UniqName {
      ** Handles cases 3, 4, 6, 10, 11, 12, 13 and 15 of ESCJ 23b. <p>
      **/
     //@ ensures \result != null;
-    public static String variable(/*@non_null*/ GenericVarDecl v) {
+    public static String variable(/*@ non_null @*/ GenericVarDecl v) {
 	String s = v.id.toString();
 	int loc = v.locId;
 
@@ -404,8 +404,8 @@ public final class UniqName {
      *                                                 *
      ***************************************************/
 
-    private static /*@non_null*/ Hashtable mapObjStr = new Hashtable();
-    private static /*@non_null*/ Hashtable mapStrObj = new Hashtable();
+    private static /*@ non_null @*/ Hashtable mapObjStr = new Hashtable();
+    private static /*@ non_null @*/ Hashtable mapStrObj = new Hashtable();
 
     /**
      ** Reset the <n>-uniqueness-ensuring mechanism.
@@ -417,8 +417,8 @@ public final class UniqName {
 
 
     //@ ensures \result != null;
-    private static String verifyUnique(/*@non_null*/ GenericVarDecl o,
-				       /*@non_null*/ String s) {
+    private static String verifyUnique(/*@ non_null @*/ GenericVarDecl o,
+				       /*@ non_null @*/ String s) {
 	String s2 = (String)mapObjStr.get(o);
 	if( s2 != null ) {
 	    // Mapping already initialized, use it

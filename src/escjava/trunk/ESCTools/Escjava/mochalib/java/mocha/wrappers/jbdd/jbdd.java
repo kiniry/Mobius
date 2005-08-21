@@ -92,36 +92,36 @@ public class jbdd {
   //--------------------------------------------------------------------------
   // and these are the nonstatic functions
 
-  public native /*@non_null*/ jbdd jbdd_dup();
+  public native /*@ non_null @*/ jbdd jbdd_dup();
   public native	void jbdd_free();
-  public native	/*@non_null*/ jbdd jbdd_cofactor(/*@non_null*/ jbdd g);
-  public native	/*@non_null*/ jbdd jbdd_var_cofactor(/*@non_null*/ jbdd g);
-  public native	/*@non_null*/ jbdd jbdd_consensus(/*@non_null*/ jbdd [] quantifying_vars);
-  public native	/*@non_null*/ jbdd jbdd_cproject(/*@non_null*/ jbdd [] var_array);
-  public native	/*@non_null*/ jbdd jbdd_else();
-  public native	/*@non_null*/ jbdd jbdd_minimize(/*@non_null*/ jbdd c);
-  public native	/*@non_null*/ jbdd jbdd_compact(/*@non_null*/ jbdd c);
-  public native	/*@non_null*/ jbdd jbdd_squeeze(/*@non_null*/ jbdd c); // not doc'd
-  public native	/*@non_null*/ jbdd jbdd_not();
-  public native	/*@non_null*/ jbdd jbdd_smooth (/*@non_null*/ jbdd[] smoothing_vars);
-  public native	/*@non_null*/ jbdd jbdd_substitute(/*@non_null*/ jbdd[] old_array,
-						   /*@non_null*/ jbdd[] new_array);
-  public native /*@non_null*/ jbdd jbdd_then();
-  public native	/*@non_null*/ jbdd jbdd_top_var ();
-  public native	/*@non_null*/ jbdd jbdd_shortest_path(int [] weight, int [] support, int
+  public native	/*@ non_null @*/ jbdd jbdd_cofactor(/*@ non_null @*/ jbdd g);
+  public native	/*@ non_null @*/ jbdd jbdd_var_cofactor(/*@ non_null @*/ jbdd g);
+  public native	/*@ non_null @*/ jbdd jbdd_consensus(/*@ non_null @*/ jbdd [] quantifying_vars);
+  public native	/*@ non_null @*/ jbdd jbdd_cproject(/*@ non_null @*/ jbdd [] var_array);
+  public native	/*@ non_null @*/ jbdd jbdd_else();
+  public native	/*@ non_null @*/ jbdd jbdd_minimize(/*@ non_null @*/ jbdd c);
+  public native	/*@ non_null @*/ jbdd jbdd_compact(/*@ non_null @*/ jbdd c);
+  public native	/*@ non_null @*/ jbdd jbdd_squeeze(/*@ non_null @*/ jbdd c); // not doc'd
+  public native	/*@ non_null @*/ jbdd jbdd_not();
+  public native	/*@ non_null @*/ jbdd jbdd_smooth (/*@ non_null @*/ jbdd[] smoothing_vars);
+  public native	/*@ non_null @*/ jbdd jbdd_substitute(/*@ non_null @*/ jbdd[] old_array,
+						   /*@ non_null @*/ jbdd[] new_array);
+  public native /*@ non_null @*/ jbdd jbdd_then();
+  public native	/*@ non_null @*/ jbdd jbdd_top_var ();
+  public native	/*@ non_null @*/ jbdd jbdd_shortest_path(int [] weight, int [] support, int
                                           [] length); // check -- this is
   // trouble
   public native	boolean jbddest_unate(int var_id, int phase); // shouldn't
   // this be boolean?
-  public native	/*@non_null*/ jbdd[] jbdd_find_essential();
-  public native	/*@non_null*/ double[] jbdd_cof_minterm();
-  public native	boolean jbdd_var_is_dependent(/*@non_null*/ jbdd f);
-  public native	boolean jbdd_equal(/*@non_null*/ jbdd g);
-  public native	/*@non_null*/ jbdd jbdd_intersects(/*@non_null*/ jbdd g); 
+  public native	/*@ non_null @*/ jbdd[] jbdd_find_essential();
+  public native	/*@ non_null @*/ double[] jbdd_cof_minterm();
+  public native	boolean jbdd_var_is_dependent(/*@ non_null @*/ jbdd f);
+  public native	boolean jbdd_equal(/*@ non_null @*/ jbdd g);
+  public native	/*@ non_null @*/ jbdd jbdd_intersects(/*@ non_null @*/ jbdd g); 
   public native	boolean jbdd_is_tautology (boolean phase);
-  public native	boolean jbdd_leq(/*@non_null*/ jbdd g, boolean f_phase, boolean g_phase);
-  public native	double jbdd_count_onset(/*@non_null*/ jbdd[] var_array);
-  public native	double jbdd_correlation(/*@non_null*/ jbdd g);
+  public native	boolean jbdd_leq(/*@ non_null @*/ jbdd g, boolean f_phase, boolean g_phase);
+  public native	double jbdd_count_onset(/*@ non_null @*/ jbdd[] var_array);
+  public native	double jbdd_correlation(/*@ non_null @*/ jbdd g);
   public native	int jbdd_get_free ();
   public native	long jbdd_get_manager();
   public native	BitSet jbdd_get_support ();

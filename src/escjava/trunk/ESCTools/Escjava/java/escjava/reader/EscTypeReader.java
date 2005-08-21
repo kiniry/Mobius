@@ -53,10 +53,10 @@ public class EscTypeReader extends StandardTypeReader
      * source reader, and a binary reader.  All arguments must be
      * non-null.
      */
-    protected EscTypeReader(/*@non_null*/ Query engine, 
-			    /*@non_null*/ Query srcEngine, 
-			    /*@non_null*/ CachedReader srcReader,
-			    /*@non_null*/ CachedReader binReader) {
+    protected EscTypeReader(/*@ non_null @*/ Query engine, 
+			    /*@ non_null @*/ Query srcEngine, 
+			    /*@ non_null @*/ CachedReader srcReader,
+			    /*@ non_null @*/ CachedReader binReader) {
 	super(engine, srcEngine, srcReader, binReader);
     }
 
@@ -69,10 +69,10 @@ public class EscTypeReader extends StandardTypeReader
      * non-null.
      */
     //@ ensures \result != null;
-    public static StandardTypeReader make(/*@non_null*/ Query engine, 
-					  /*@non_null*/ Query srcEngine, 
-					  /*@non_null*/ CachedReader srcReader,
-					  /*@non_null*/ CachedReader binReader) {
+    public static StandardTypeReader make(/*@ non_null @*/ Query engine, 
+					  /*@ non_null @*/ Query srcEngine, 
+					  /*@ non_null @*/ CachedReader srcReader,
+					  /*@ non_null @*/ CachedReader binReader) {
 	return new EscTypeReader(engine, srcEngine, srcReader, binReader);
     }
 
@@ -146,9 +146,8 @@ public class EscTypeReader extends StandardTypeReader
     /**
      * Return true iff the fully-qualified outside type P.T exists.
      */
-    //@ requires P != null;
-    //@ requires T != null;
-    public boolean exists(String[] P, String T) {
+    public boolean exists(/*@ non_null @*/ String[] P, 
+                          /*@ non_null @*/ String T) {
 	if ( super.exists(P, T)) return true;
 	for (int i=0; i<activeSuffixes.length; ++i) {
 	    if (javaSrcFileSpace.findFile(P, T, activeSuffixes[i]) != null) {
@@ -179,10 +178,8 @@ public class EscTypeReader extends StandardTypeReader
 	return javaFileSpace.findFile(P,filename);
     }
 
-    //@ requires P != null;
-    //@ requires T != null;
-    // can return null
-    public GenericFile findType(String[] P, String T) {
+    public GenericFile findType(/*@ non_null @*/ String[] P, 
+                                /*@ non_null @*/ String T) {
         GenericFile gf = javaSrcFileSpace.findFile(P,T,activeSuffixes);
         if (gf == null) gf = javaFileSpace.findFile(P, T, "class");
         return gf;
@@ -190,7 +187,7 @@ public class EscTypeReader extends StandardTypeReader
 
 
 
-    public /*@non_null*/ FilenameFilter filter() {
+    public /*@ non_null @*/ FilenameFilter filter() {
 	return new FilenameFilter() {
 	    public boolean accept(File f, String n) {
 		int p = n.indexOf('.');
@@ -206,29 +203,27 @@ public class EscTypeReader extends StandardTypeReader
 	};
     }
 
-    /*@non_null*/ String[] activeSuffixes = { "refines-java", "refines-spec", "refines-jml",
+    /*@ non_null @*/ String[] activeSuffixes = { "refines-java", "refines-spec", "refines-jml",
 			  "java", "spec", "jml" };
 
-    /*@non_null*/ String[] nonJavaSuffixes = { "refines-java", "refines-spec", "refines-jml",
+    /*@ non_null @*/ String[] nonJavaSuffixes = { "refines-java", "refines-spec", "refines-jml",
 			  "spec", "jml",
 			  "java-refined", "spec-refined", "jml-refined" };
 
     // Reading
 
-    //@ requires f != null;
-    public CompilationUnit read(GenericFile f, boolean avoidSpec) {
-	return super.read(f,avoidSpec);
+    public CompilationUnit read(/*@ non_null @*/ GenericFile f, 
+                                boolean avoidSpec) {
+      return super.read(f,avoidSpec);
     }
 
     /**
      * Override {@link StandardTypeReader#read(String[], String, boolean)}
      * method to include ".spec" files.
      */
-    //@ requires P != null;
-    //@ requires T != null;
-    // can return null
-    public CompilationUnit read(String[] P, String T,
-				boolean avoidSpec) {
+    public CompilationUnit read(/*@ non_null @*/ String[] P, 
+                                /*@ non_null @*/ String T,
+                                boolean avoidSpec) {
 	// If a source exists and we wish to avoid specs, use it:
 	if (avoidSpec) {
 	    GenericFile src = locateSource(P, T, true);
