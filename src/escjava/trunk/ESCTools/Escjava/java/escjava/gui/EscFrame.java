@@ -643,7 +643,7 @@ public class EscFrame extends JFrame {
 
     static private class EscRenderer extends DefaultTreeCellRenderer {
     //@ also
-    //@   value != null;
+    //@   requires value != null;
 	public Component getTreeCellRendererComponent(
                         JTree tree,
                         Object value,
