@@ -941,16 +941,14 @@ public class PrepTypeDeclaration {
   // *********************************************************************
   
   //@ requires loc != Location.NULL;
-  public void 
-    checkModifiers(int modifiers, int allowed, int loc, String decl) {
-
-      for( int i=0; i<Modifiers.SIZE_MODIFIER_BITSET; i++) {
-	int bit = 1<<i;
-	if( (modifiers & bit) != 0 && (allowed & bit) == 0 )
-	  ErrorSet.error( loc, "Modifier '"+Modifiers.name(i)
-			 +"' not allowed on "+decl+" declarations");
-      }
+  public void checkModifiers(int modifiers, int allowed, int loc, String decl) {
+    for (int i = 0; i < Modifiers.SIZE_MODIFIER_BITSET; i++) {
+      int bit = 1<<i;
+      if ((modifiers & bit) != 0 && (allowed & bit) == 0)
+        ErrorSet.error(loc, "Modifier '" + Modifiers.name(i) +
+                       "' not allowed on " + decl + " declarations");
     }
+  }
   
 
     /**
