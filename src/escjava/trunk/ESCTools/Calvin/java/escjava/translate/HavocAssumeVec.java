@@ -58,7 +58,7 @@ public class  HavocAssumeVec {
      *                                                 *
      ***************************************************/
 
-    private /*@non_null*/ HavocAssume[] elements;
+    private /*@ non_null @*/ HavocAssume[] elements;
     //@ invariant (\forall int i; (0<=i && i<count) ==> elements[i]!=null) // @@@@
     //@ invariant \typeof(elements) == \type(HavocAssume[])
 
@@ -142,7 +142,7 @@ public class  HavocAssumeVec {
     //@ requires s.elementType <: \type(HavocAssume)
     //@ ensures \result!=null
     //@ ensures \result.count == (\old(s.elementCount) - \old(s.currentStackBottom))
-    public static HavocAssumeVec popFromStackVector(/*@non_null*/ StackVector s) {
+    public static HavocAssumeVec popFromStackVector(/*@ non_null @*/ StackVector s) {
 	// Creates a new HavocAssumeVec from top stuff in StackVector
 	int sz = s.size();
 	HavocAssumeVec r = new HavocAssumeVec(sz);

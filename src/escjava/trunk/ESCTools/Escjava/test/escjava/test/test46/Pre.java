@@ -76,12 +76,12 @@ class Outer {
 
     // Call via E.super() from a subclass...
     class SubInner2 extends Inner {
-	SubInner2(/*@non_null*/ Outer O) {
+	SubInner2(/*@ non_null @*/ Outer O) {
 	    O.super();            // error: O.x unknown
 	}
 
 	//@ requires O.x>2
-	SubInner2(/*@non_null*/ Outer O, int x) {
+	SubInner2(/*@ non_null @*/ Outer O, int x) {
 	    O.super();            // ok
 	}
     }

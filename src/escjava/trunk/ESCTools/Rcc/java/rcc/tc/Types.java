@@ -24,8 +24,8 @@ public class Types extends javafe.tc.Types {
     static { inst = new rcc.tc.Types(); }
     
     protected javafe.tc.TypeSig newTypeSigInstance(String simpleName,
-						   /*@non_null*/ Env enclosingEnv,
-						   /*@non_null*/ TypeDecl decl) {
+						   /*@ non_null @*/ Env enclosingEnv,
+						   /*@ non_null @*/ TypeDecl decl) {
 	return new rcc.tc.TypeSig(simpleName,
 				  enclosingEnv,
 				  decl);
@@ -36,7 +36,7 @@ public class Types extends javafe.tc.Types {
     //@ requires (decl==null) == (CU==null)
     //@ ensures \result!=null
     protected javafe.tc.TypeSig makeTypeSigInstance(String[] packageName,
-						    /*@non_null*/ String simpleName,
+						    /*@ non_null @*/ String simpleName,
 						    javafe.tc.TypeSig enclosingType,
 						    TypeDecl decl,
 						    CompilationUnit CU) {

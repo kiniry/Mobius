@@ -22,7 +22,7 @@ import javafe.util.Location;
 
 
 public class NowarnPragma extends LexicalPragma {
- public /*@non_null*/ IdentifierVec checks;
+ public /*@ non_null @*/ IdentifierVec checks;
 
         public int loc;
 
@@ -91,7 +91,7 @@ public class NowarnPragma extends LexicalPragma {
  }
 
  //@ ensures \result!=null
- public static NowarnPragma make(/*@non_null*/ IdentifierVec checks, int loc) {
+ public static NowarnPragma make(/*@ non_null @*/ IdentifierVec checks, int loc) {
     //@ set I_will_establish_invariants_afterwards = true
     NowarnPragma result = new NowarnPragma();
     result.checks = checks;

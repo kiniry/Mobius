@@ -2,7 +2,7 @@
 
 class Static {
 
-    static /*@non_null*/ String s = "hello";
+    static /*@ non_null @*/ String s = "hello";
 
 
     void doit() {

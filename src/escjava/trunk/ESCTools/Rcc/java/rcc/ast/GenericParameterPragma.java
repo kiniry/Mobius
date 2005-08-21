@@ -23,7 +23,7 @@ import javafe.util.Location;
 
 
 public class GenericParameterPragma extends TypeModifierPragma {
- public /*@non_null*/ FormalParaDeclVec args;
+ public /*@ non_null @*/ FormalParaDeclVec args;
 
   public int loc;
 
@@ -99,7 +99,7 @@ public class GenericParameterPragma extends TypeModifierPragma {
  }
 
  //@ ensures \result!=null
- public static GenericParameterPragma make(/*@non_null*/ FormalParaDeclVec args, int loc) {
+ public static GenericParameterPragma make(/*@ non_null @*/ FormalParaDeclVec args, int loc) {
     //@ set I_will_establish_invariants_afterwards = true
     GenericParameterPragma result = new GenericParameterPragma();
     result.args = args;

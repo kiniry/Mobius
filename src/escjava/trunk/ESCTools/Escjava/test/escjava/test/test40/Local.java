@@ -2,7 +2,7 @@ class Local {
 
     //@ requires x != null
     void bar(String x) {
-	/*@non_null*/ String s = x;
+	/*@ non_null @*/ String s = x;
 
 	//@ assert s != null
 

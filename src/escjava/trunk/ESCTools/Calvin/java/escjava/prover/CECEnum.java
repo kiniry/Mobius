@@ -37,7 +37,7 @@ class CECEnum implements Enumeration {
     /**
      ** The Simplify subprocess. <p>
      **/
-    private /*@non_null*/ final SubProcess P;
+    private /*@ non_null @*/ final SubProcess P;
 
 
     /**
@@ -78,8 +78,8 @@ class CECEnum implements Enumeration {
      **
      ** Note: This routine should be called *only* from class Simplify.<p>
      **/
-    /*package*/ CECEnum(/*@non_null*/ SubProcess simplify,
-			/*@non_null*/ String exp) {
+    /*package*/ CECEnum(/*@ non_null @*/ SubProcess simplify,
+			/*@ non_null @*/ String exp) {
 	//@ set pending.elementType = \type(SimplifyOutput);
 	//@ set pending.containsNull = false;
 
@@ -92,7 +92,7 @@ class CECEnum implements Enumeration {
 	P.send(exp);
     }
 
-    /*package*/ CECEnum(/*@non_null*/ SubProcess simplify) {
+    /*package*/ CECEnum(/*@ non_null @*/ SubProcess simplify) {
 	//@ set pending.elementType = \type(SimplifyOutput);
 	//@ set pending.containsNull = false;
 

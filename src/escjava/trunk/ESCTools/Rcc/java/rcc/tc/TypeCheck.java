@@ -42,8 +42,8 @@ public class TypeCheck extends javafe.tc.TypeCheck {
      **
      ** Note: pmodifiers may be null. <p>
      **/
-    public boolean canAccess(/*@non_null*/ TypeSig from, 
-			     /*@non_null*/ TypeSig target,
+    public boolean canAccess(/*@ non_null @*/ TypeSig from, 
+			     /*@ non_null @*/ TypeSig target,
 			     int modifiers,
 			     ModifierPragmaVec pmodifiers) {
 	if (FlowInsensitiveChecks.inAnnotation) {

@@ -25,15 +25,15 @@ public class GhostEnv extends EnvForTypeSig {
      *                                                 *
      ***************************************************/
     
-    public GhostEnv(/*@non_null*/ Env parent,
-		    /*@non_null*/ javafe.tc.TypeSig peer,
+    public GhostEnv(/*@ non_null @*/ Env parent,
+		    /*@ non_null @*/ javafe.tc.TypeSig peer,
 				  boolean staticContext) {
 	super(parent, peer, staticContext);
     }
     
     /** for instantiating a class only */
-    public GhostEnv(/*@non_null*/ Env parent,
-		    /*@non_null*/ javafe.tc.TypeSig peer) {
+    public GhostEnv(/*@ non_null @*/ Env parent,
+		    /*@ non_null @*/ javafe.tc.TypeSig peer) {
 	super(parent, peer, true);
     }  
   

@@ -43,7 +43,7 @@ public class Simplify {
      ** Our Simplify subprocess; no actions should be taken on this
      ** subprocess unless readySubProcess() is called first.
      **/
-    private final /*@non_null*/ SubProcess P;
+    private final /*@ non_null @*/ SubProcess P;
 
     /**
      ** This variable holds the CECEnum that is currently using
@@ -133,7 +133,7 @@ public class Simplify {
      **
      ** Precondition: we are not closed.<p>
      **/
-    public void sendCommand(/*@non_null*/ String s) {
+    public void sendCommand(/*@ non_null @*/ String s) {
 	readySubProcess();
 	P.resetInfo();
 
@@ -159,7 +159,7 @@ public class Simplify {
      **
      ** Precondition: we are not closed.<p>
      **/
-    public void sendCommands(/*@non_null*/ String s) {
+    public void sendCommands(/*@ non_null @*/ String s) {
 	readySubProcess();
 	P.resetInfo();
 
@@ -216,7 +216,7 @@ public class Simplify {
     //@ ensures \result!=null
     //@ ensures \result.elementType == \type(SimplifyOutput);
     //@ ensures !\result.returnsNull
-    public Enumeration prove(/*@non_null*/ String exp) {
+    public Enumeration prove(/*@ non_null @*/ String exp) {
 	readySubProcess();
 	subProcessUser = new CECEnum(P, exp);
 	return subProcessUser;

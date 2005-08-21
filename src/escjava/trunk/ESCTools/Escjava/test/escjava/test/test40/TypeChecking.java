@@ -1,6 +1,6 @@
 class TypeChecking {
 
-    /*@non_null*/ int x;	// error: non-reference type
+    /*@ non_null @*/ int x;	// error: non-reference type
 
 }
 
@@ -10,17 +10,17 @@ class Top {
 }
 
 class Bottom extends Top {
-    void get(/*@non_null*/ Object x) {}		// error: overrides!
+    void get(/*@ non_null @*/ Object x) {}		// error: overrides!
 }
 
 
 class Returns {
 
-  /*@non_null*/ Returns() { }  // error: cannot be used with constructor
+  /*@ non_null @*/ Returns() { }  // error: cannot be used with constructor
 
-  /*@non_null*/ String name() { return "hello"; }
+  /*@ non_null @*/ String name() { return "hello"; }
 
-  abstract /*@non_null*/ String m();
+  abstract /*@ non_null @*/ String m();
 
   /*@ non_null */ static Object p() { return new Object(); }
 
@@ -30,35 +30,35 @@ class Returns {
 }
 
 class Ret {
-  public /*@non_null*/ Object h() { return new Object(); }
+  public /*@ non_null @*/ Object h() { return new Object(); }
 }
 
 interface IReturn {
-  public /*@non_null*/ Object h();
+  public /*@ non_null @*/ Object h();
 }
 
 interface IReturn2 extends IReturn {
-  public /*@non_null*/ Object h();  // error: cannot be used on override
+  public /*@ non_null @*/ Object h();  // error: cannot be used on override
 }
 
 interface IReturn3 {
-  public /*@non_null*/ Object h();
+  public /*@ non_null @*/ Object h();
 }
 
 class EReturns0 extends Ret implements IReturn, IReturn3 {
-  public /*@non_null*/ Object h() {  // error: cannot be used on override
+  public /*@ non_null @*/ Object h() {  // error: cannot be used on override
     return new Object();
   }
 }
 
 class EReturns1 extends Ret {
-  public /*@non_null*/ Object h() {  // error: cannot be used on override
+  public /*@ non_null @*/ Object h() {  // error: cannot be used on override
     return new Object();
   }
 }
 
 class EReturns2 implements IReturn3 {
-  public /*@non_null*/ Object h() {  // error: cannot be used on override
+  public /*@ non_null @*/ Object h() {  // error: cannot be used on override
     return new Object();
   }
 }

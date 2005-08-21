@@ -115,7 +115,7 @@ type 'TYPE'.
 
 public class EscPragmaParser extends Parse implements PragmaParser {
   
-    private /*@non_null*/ EscPragmaLex scanner;
+    private /*@ non_null @*/ EscPragmaLex scanner;
 
     /** The value -2 means there is nothing else to process.
       * The value -1 means there is something to process and the next thing to

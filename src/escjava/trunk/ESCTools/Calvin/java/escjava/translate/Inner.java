@@ -151,7 +151,7 @@ public class Inner {
      ** of this.this$0 at the start.<p>
      **/
     //@ requires t.classPrefix!=null
-    static Expr unfoldThis(/*@non_null*/ ThisExpr t) {
+    static Expr unfoldThis(/*@ non_null @*/ ThisExpr t) {
 	TypeSig target = javafe.tc.Types.toClassTypeSig(t.classPrefix);
 
 	Expr result = ThisExpr.make(null, t.loc);

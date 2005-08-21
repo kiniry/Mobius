@@ -2,7 +2,7 @@
 
 class TypeChecking {
 
-    /*@non_null*/ int x;	// error: non-reference type
+    /*@ non_null @*/ int x;	// error: non-reference type
 
 }
 
@@ -12,12 +12,12 @@ class Top {
 }
 
 class Bottom extends Top {
-    void get(/*@non_null*/ Object x) {}		// error: overrides!
+    void get(/*@ non_null @*/ Object x) {}		// error: overrides!
 }
 
 
 class Returns {
 
-    abstract /*@non_null*/ String name();	// error
+    abstract /*@ non_null @*/ String name();	// error
 
 }

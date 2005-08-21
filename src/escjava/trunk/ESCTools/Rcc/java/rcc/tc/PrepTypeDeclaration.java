@@ -359,7 +359,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
     }
     
     //@ ensures RES!=null
-    public javafe.tc.TypeSig processTypeNameAnnotations(/*@non_null*/ TypeName tn, javafe.tc.TypeSig sig, Env env) {
+    public javafe.tc.TypeSig processTypeNameAnnotations(/*@ non_null @*/ TypeName tn, javafe.tc.TypeSig sig, Env env) {
 
 	if (env.getEnclosingClass()==null) {
 	    InterfaceDecl dummy = InterfaceDecl.make(0,null,

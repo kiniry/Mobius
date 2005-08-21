@@ -2,7 +2,7 @@
 
 class Basic {
 
-    /*@non_null*/ String x;
+    /*@ non_null @*/ String x;
 
     Basic() { }		// error: x not initialized to a non-null value
 

@@ -23,7 +23,7 @@ import javafe.util.Location;
 
 
 public class GhostDeclPragma extends TypeDeclElemPragma {
-  public /*@non_null*/ FieldDecl decl;
+  public /*@ non_null @*/ FieldDecl decl;
 
   public int loc;
 
@@ -94,7 +94,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
   }
 
   //@ ensures \result!=null
-  public static GhostDeclPragma make(/*@non_null*/ FieldDecl decl, int loc) {
+  public static GhostDeclPragma make(/*@ non_null @*/ FieldDecl decl, int loc) {
      //@ set I_will_establish_invariants_afterwards = true
      GhostDeclPragma result = new GhostDeclPragma();
      result.decl = decl;

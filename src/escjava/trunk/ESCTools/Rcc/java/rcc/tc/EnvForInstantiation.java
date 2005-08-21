@@ -26,8 +26,8 @@ public class EnvForInstantiation extends GhostEnv {
 	return false;
     }
     
-    public  EnvForInstantiation(/*@non_null*/ Env parent,
-				/*@non_null*/ javafe.tc.TypeSig peer,
+    public  EnvForInstantiation(/*@ non_null @*/ Env parent,
+				/*@ non_null @*/ javafe.tc.TypeSig peer,
 				FieldDeclVec fields,
 				MethodDeclVec methods,
 				boolean staticContext) {

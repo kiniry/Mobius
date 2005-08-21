@@ -24,8 +24,8 @@ public class GhostEnv extends EnvForTypeSig {
      *                                                 *
      ***************************************************/
 
-    public GhostEnv(/*@non_null*/ Env parent,
-		    /*@non_null*/ TypeSig peer,
+    public GhostEnv(/*@ non_null @*/ Env parent,
+		    /*@ non_null @*/ TypeSig peer,
 		    boolean staticContext) {
 	super(parent, peer, staticContext);
     }

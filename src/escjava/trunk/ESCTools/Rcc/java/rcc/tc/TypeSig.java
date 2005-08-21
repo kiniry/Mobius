@@ -28,7 +28,7 @@ public class TypeSig extends javafe.tc.TypeSig {
 
     
     public  TypeSig(String[] packageName,
-		    /*@non_null*/ String simpleName,
+		    /*@ non_null @*/ String simpleName,
 		    javafe.tc.TypeSig enclosingType,
 		    TypeDecl decl, CompilationUnit CU) {
 	
@@ -43,8 +43,8 @@ public class TypeSig extends javafe.tc.TypeSig {
     }
     
     public TypeSig(String simpleName,
-		   /*@non_null*/ Env enclosingEnv,
-		   /*@non_null*/ TypeDecl decl) {
+		   /*@ non_null @*/ Env enclosingEnv,
+		   /*@ non_null @*/ TypeDecl decl) {
 	super(simpleName,
 	      enclosingEnv,
 	      decl);

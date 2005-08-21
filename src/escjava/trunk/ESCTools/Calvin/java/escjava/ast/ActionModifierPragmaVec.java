@@ -58,7 +58,7 @@ public class  ActionModifierPragmaVec {
      *                                                 *
      ***************************************************/
 
-    private /*@non_null*/ ActionModifierPragma[] elements;
+    private /*@ non_null @*/ ActionModifierPragma[] elements;
     //@ invariant (\forall int i; (0<=i && i<count) ==> elements[i]!=null) // @@@@
     //@ invariant \typeof(elements) == \type(ActionModifierPragma[])
 
@@ -142,7 +142,7 @@ public class  ActionModifierPragmaVec {
     //@ requires s.elementType <: \type(ActionModifierPragma)
     //@ ensures \result!=null
     //@ ensures \result.count == (\old(s.elementCount) - \old(s.currentStackBottom))
-    public static ActionModifierPragmaVec popFromStackVector(/*@non_null*/ StackVector s) {
+    public static ActionModifierPragmaVec popFromStackVector(/*@ non_null @*/ StackVector s) {
 	// Creates a new ActionModifierPragmaVec from top stuff in StackVector
 	int sz = s.size();
 	ActionModifierPragmaVec r = new ActionModifierPragmaVec(sz);

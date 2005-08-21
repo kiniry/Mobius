@@ -21,7 +21,7 @@ import javafe.util.Location;
 
 
 public class HoldsStmtPragma extends StmtPragma {
- public /*@non_null*/ ExprVec expressions;
+ public /*@ non_null @*/ ExprVec expressions;
 
   public int loc;
 
@@ -91,7 +91,7 @@ public class HoldsStmtPragma extends StmtPragma {
  }
 
  //@ ensures \result!=null
- public static HoldsStmtPragma make(/*@non_null*/ ExprVec expressions, int loc) {
+ public static HoldsStmtPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
     //@ set I_will_establish_invariants_afterwards = true
     HoldsStmtPragma result = new HoldsStmtPragma();
     result.expressions = expressions;

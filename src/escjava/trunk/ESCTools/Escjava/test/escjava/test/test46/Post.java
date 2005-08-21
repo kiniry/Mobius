@@ -62,7 +62,7 @@ class OuterPost {
     // Call via E.super() from a subclass...
     class SubInner2 extends Inner {
         //@ ensures O.x>0
-	SubInner2(/*@non_null*/ OuterPost O) {
+	SubInner2(/*@ non_null @*/ OuterPost O) {
 	    O.super();
 	    //@ assert O.x>0
 	}

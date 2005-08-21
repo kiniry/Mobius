@@ -1,5 +1,5 @@
 class A {
-    void put(/*@non_null*/ String x) { }
+    void put(/*@ non_null @*/ String x) { }
 }
 
 class B extends A { }

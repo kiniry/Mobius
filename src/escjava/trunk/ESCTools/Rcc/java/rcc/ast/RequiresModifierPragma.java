@@ -21,7 +21,7 @@ import javafe.util.Location;
 
 
 public class RequiresModifierPragma extends ModifierPragma {
- public /*@non_null*/ ExprVec expressions;
+ public /*@ non_null @*/ ExprVec expressions;
 
   public int loc;
 
@@ -96,7 +96,7 @@ public class RequiresModifierPragma extends ModifierPragma {
  }
 
  //@ ensures \result!=null
- public static RequiresModifierPragma make(/*@non_null*/ ExprVec expressions, int loc) {
+ public static RequiresModifierPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
     //@ set I_will_establish_invariants_afterwards = true
     RequiresModifierPragma result = new RequiresModifierPragma();
     result.expressions = expressions;

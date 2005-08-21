@@ -21,7 +21,7 @@ import javafe.util.Location;
 
 
 public class ArrayGuardModifierPragma extends TypeModifierPragma {
- public /*@non_null*/ ExprVec expressions;
+ public /*@ non_null @*/ ExprVec expressions;
 
   public int loc;
 
@@ -97,7 +97,7 @@ public class ArrayGuardModifierPragma extends TypeModifierPragma {
  }
 
  //@ ensures \result!=null
- public static ArrayGuardModifierPragma make(/*@non_null*/ ExprVec expressions, int loc) {
+ public static ArrayGuardModifierPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
     //@ set I_will_establish_invariants_afterwards = true
     ArrayGuardModifierPragma result = new ArrayGuardModifierPragma();
     result.expressions = expressions;

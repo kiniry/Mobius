@@ -1032,7 +1032,7 @@ public final class GetSpec {
   
   //@ ensures RES != null && RES.elementType == type(InterfaceDecl);
   static public Enumeration getFirstInheritedInterfaces(
-					   /*@non_null*/ ClassDecl cd) {
+					   /*@ non_null @*/ ClassDecl cd) {
     Set interfaces = new Set();
     addSuperInterfaces(cd, interfaces);
     if (interfaces.size() != 0 && cd.superClass != null) {

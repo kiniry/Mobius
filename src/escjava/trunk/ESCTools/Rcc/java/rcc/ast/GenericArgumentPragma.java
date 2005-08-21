@@ -22,7 +22,7 @@ import javafe.util.Location;
 
 
 public class GenericArgumentPragma extends TypeModifierPragma {
- public /*@non_null*/ ExprVec expressions;
+ public /*@ non_null @*/ ExprVec expressions;
 
   public int loc;
 
@@ -98,7 +98,7 @@ public class GenericArgumentPragma extends TypeModifierPragma {
  }
 
  //@ ensures \result!=null
- public static GenericArgumentPragma make(/*@non_null*/ ExprVec expressions, int loc) {
+ public static GenericArgumentPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
     //@ set I_will_establish_invariants_afterwards = true
     GenericArgumentPragma result = new GenericArgumentPragma();
     result.expressions = expressions;

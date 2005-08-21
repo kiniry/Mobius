@@ -2,7 +2,7 @@
 
 class Param {
 
-    void put(/*@non_null*/ String x) {
+    void put(/*@ non_null @*/ String x) {
 	if ("hello".equals(x))
 	    put(x);
 
@@ -13,7 +13,7 @@ class Param {
 	put(y);				// error
     }
 
-    void doit2(/*@non_null*/ String y) {
+    void doit2(/*@ non_null @*/ String y) {
 	put(y);
     }
 }

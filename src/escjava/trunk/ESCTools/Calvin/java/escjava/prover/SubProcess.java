@@ -106,7 +106,7 @@ public class SubProcess {
      ** This constructor may result in a fatal error if any problems
      ** occur.<p>
      **/
-    public SubProcess(/*@non_null*/ String name, /*@non_null*/ String path) {
+    public SubProcess(/*@ non_null @*/ String name, /*@ non_null @*/ String path) {
 	this.name = name;
 	try {
 	    P = Runtime.getRuntime().exec(path);
@@ -174,7 +174,7 @@ public class SubProcess {
      **
      ** Precondition: we are not closed.<p>
      **/
-    public void send(/*@non_null*/ String s) {
+    public void send(/*@ non_null @*/ String s) {
 	Assert.notNull(P);     //@ nowarn Pre // precondition
 
 	to.println(s);
@@ -262,7 +262,7 @@ public class SubProcess {
      ** error.
      **/
     //@ ensures false
-    private void handleReadError(/*@non_null*/ IOException e) {
+    private void handleReadError(/*@ non_null @*/ IOException e) {
 	ErrorSet.fatal("I/O error encountered while reading "
 		       + name + "'s output: " + e.getMessage());
     }
@@ -377,7 +377,7 @@ public class SubProcess {
      **
      ** Precondition: we are not closed.<p>
      **/
-    public void checkString(/*@non_null*/ String s) {
+    public void checkString(/*@ non_null @*/ String s) {
 	for (int i=0; i<s.length(); i++) {
 	    checkChar(s.charAt(i));
 	}
@@ -412,7 +412,7 @@ public class SubProcess {
      ** Precondition: we are not closed.<p>
      **/
     //@ ensures \result != null;
-    public String readWord(/*@non_null*/ String stops) {
+    public String readWord(/*@ non_null @*/ String stops) {
 	StringBuffer soFar = new StringBuffer();
 
 	for (;;) {

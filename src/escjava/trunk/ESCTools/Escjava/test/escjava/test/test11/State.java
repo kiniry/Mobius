@@ -1,8 +1,8 @@
 abstract public class State {
 
-  /*@non_null*/ int[] vector;
+  /*@ non_null @*/ int[] vector;
 
-  protected State(/*@non_null*/ int[] vector) {
+  protected State(/*@ non_null @*/ int[] vector) {
     //@ set owner = this
     this.vector = vector;
   }  // error: OwnerNull
