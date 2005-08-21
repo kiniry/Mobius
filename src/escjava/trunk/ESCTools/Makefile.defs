@@ -247,6 +247,9 @@ export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/original_archives
 export JUNIT_LIB ?= ${ESCTOOLS_ROOT}/Utils/junit.jar
 export JUNIT_SOURCEPATH ?= /usr/local/Java/junit/src
 
+## XML-RPC
+export XMLRPC_LIB ?= $(ESCTOOLS_ROOT)/Escjava/xmlrpc-1.2-b1-modified.jar
+
 ################################################################################
 ## Ant
 
