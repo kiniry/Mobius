@@ -92,7 +92,7 @@ public class PrintSpec extends SrcTool
     String s = ".";
     for (int i = 0; i < P.length; i++) {
       s = s + "/" + P[i];
-      java.io.File f = new File(s);
+      File f = new File(s);
       if (!f.exists()) f.mkdir();            
     }
     return s;
