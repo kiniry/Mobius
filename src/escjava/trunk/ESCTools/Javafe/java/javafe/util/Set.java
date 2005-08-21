@@ -26,8 +26,8 @@ public class Set implements Cloneable
      *
      * All mappings of ht are of the form e' -> e' for some e'.
      */
-    //@ invariant ht.keyType == elementType;
-    //@ invariant ht.elementType == elementType;
+    //+@ invariant ht.keyType == elementType;
+    //+@ invariant ht.elementType == elementType;
     //@ invariant ht.owner == this;
     //@ spec_public
     private /*@ non_null @*/ Hashtable ht;
@@ -45,8 +45,8 @@ public class Set implements Cloneable
     public Set() {
 	int initCapacity = 5;
 	ht = new Hashtable(initCapacity);
-	//@ set ht.keyType = elementType;
-	//@ set ht.elementType = elementType;
+	//+@ set ht.keyType = elementType;
+	//+@ set ht.elementType = elementType;
 	//@ set ht.owner = this;
     }
 
@@ -60,8 +60,8 @@ public class Set implements Cloneable
     public Set(Enumeration e) {
 	this();
 	//@ set elementType = e.elementType;
-	//@ set ht.keyType = e.elementType;
-	//@ set ht.elementType = e.elementType;
+	//+@ set ht.keyType = e.elementType;
+	//+@ set ht.elementType = e.elementType;
 
 	while( e.hasMoreElements() ) {
 	    Object item = e.nextElement();
