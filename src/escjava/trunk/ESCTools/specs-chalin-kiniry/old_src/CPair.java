@@ -1,6 +1,6 @@
 public final class CPair implements Pair 
 {
-  private static final /*@non_null*/ Pair nullPair = new CPair(null, null);
+  private static final /*@ non_null @*/ Pair nullPair = new CPair(null, null);
   /*@ private normal_behavior
     @  ensures \result == (cpair == null ||
     @                      (cpair.first instanceof Pair &&

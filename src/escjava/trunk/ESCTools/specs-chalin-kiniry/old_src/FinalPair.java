@@ -1,6 +1,6 @@
 class FinalPair
 {
-  private static final /*@non_null*/ FinalPair nullPair = new FinalPair(null, null);
+  private static final /*@ non_null @*/ FinalPair nullPair = new FinalPair(null, null);
   /*@ private normal_behavior
     @  ensures \result == (cpair == null ||
     @                      (cpair.first instanceof FinalPair &&
