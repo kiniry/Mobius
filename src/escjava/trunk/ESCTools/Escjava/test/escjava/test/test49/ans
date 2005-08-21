@@ -14,19 +14,19 @@ Ghost.java:35: Warning: Possible assignment of null to variable declared non_nul
         //@ set foo = null     // error
                     ^
 Associated declaration is "Ghost.java", line 29, col 24:
-    //@ ghost public /*@ non_null @*/ Object foo
+    //@ ghost public /*@non_null*/ Object foo
                         ^
 Ghost.java:42: Warning: Possible assignment of null to variable declared non_null (NonNull)
         //@ set s = null     // error
                   ^
 Associated declaration is "Ghost.java", line 30, col 31:
-    //@ ghost public static /*@ non_null @*/ Object s
+    //@ ghost public static /*@non_null*/ Object s
                                ^
 Ghost.java:28: Warning: Field declared non_null possibly not initialized (NonNullInit)
 class NonNull {
               ^
 Associated declaration is "Ghost.java", line 29, col 24:
-    //@ ghost public /*@ non_null @*/ Object foo
+    //@ ghost public /*@non_null*/ Object foo
                         ^
 Ghost.java:56: Warning: Possible race condition (Race)
         //@ set x = foo         // error

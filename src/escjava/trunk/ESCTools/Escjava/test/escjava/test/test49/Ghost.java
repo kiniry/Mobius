@@ -26,17 +26,17 @@ class WritableIf {
 
 // Next, test non_null on ghost fields...
 class NonNull {
-    //@ ghost public /*@ non_null @*/ Object foo
-    //@ ghost public static /*@ non_null @*/ Object s
+    //@ ghost public /*@non_null*/ Object foo
+    //@ ghost public static /*@non_null*/ Object s
     //@ pure
-    void foo(/*@ non_null @*/ Object x) {
+    void foo(/*@non_null*/ Object x) {
 	//@ assert foo != null
 	//@ set foo = x        // ok since x != null
 	//@ set foo = null     // error
 	//@ set foo = foo      // ok since foo is known to be non-null
     }
     //@ pure
-    void foo2(/*@ non_null @*/ Object x) {
+    void foo2(/*@non_null*/ Object x) {
 	//@ assert s != null
 	//@ set s = x        // ok since x != null
 	//@ set s = null     // error
