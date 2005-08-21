@@ -29,14 +29,14 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      * relative to the outDir
      */
     public final Vector progIndirectFiles = new Vector();
-    //@ invariant progIndirectFiles.elementType == \type(String);
-    //@ invariant progIndirectFiles.owner == this;
-    //@ invariant !progIndirectFiles.containsNull;
+    //+@ invariant progIndirectFiles.elementType == \type(String);
+    //@  invariant progIndirectFiles.owner == this;
+    //+@ invariant !progIndirectFiles.containsNull;
 
     public final Vector argumentFileNames = new Vector();
-    //@ invariant argumentFileNames.elementType == \type(String);
-    //@ invariant !argumentFileNames.containsNull;
-    //@ invariant argumentFileNames.owner == this;
+    //+@ invariant argumentFileNames.elementType == \type(String);
+    //+@ invariant !argumentFileNames.containsNull;
+    //@  invariant argumentFileNames.owner == this;
 
 
 
@@ -47,26 +47,26 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      **************************************************/
 
 
-    //@ invariant loaded != null;
-    //@ invariant loaded.elementType == \type(CompilationUnit);
-    //@ invariant !loaded.containsNull;
-    //@ invariant loaded.owner == this;
+    //@  invariant loaded != null;
+    //+@ invariant loaded.elementType == \type(CompilationUnit);
+    //+@ invariant !loaded.containsNull;
+    //@  invariant loaded.owner == this;
     public Vector loaded = new Vector();
 
     //@ invariant loaded != argumentFileNames;
  
     public CopyLoaded() {
-        //@ set argumentFileNames.elementType = \type(String);
-        //@ set argumentFileNames.containsNull = false;
-        //@ set argumentFileNames.owner = this;
+        //+@ set argumentFileNames.elementType = \type(String);
+        //+@ set argumentFileNames.containsNull = false;
+        //@  set argumentFileNames.owner = this;
     
-        //@ set loaded.elementType = \type(CompilationUnit);
-        //@ set loaded.containsNull = false;
-        //@ set loaded.owner = this;
+        //+@ set loaded.elementType = \type(CompilationUnit);
+        //+@ set loaded.containsNull = false;
+        //@  set loaded.owner = this;
     
-        //@ set progIndirectFiles.containsNull = false;
-        //@ set progIndirectFiles.elementType = \type(String);
-        //@ set progIndirectFiles.owner = this;
+        //+@ set progIndirectFiles.containsNull = false;
+        //+@ set progIndirectFiles.elementType = \type(String);
+        //@  set progIndirectFiles.owner = this;
     }
 
 
@@ -176,15 +176,13 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         return array;
     }    
 
-
-
     //@ requires \nonnullelements(P);
     private String makeDirTree(/*@ non_null */ String root, 
-                   /*@ non_null */ String P[]) {
+                               /*@ non_null */ String P[]) {
         String s = root;
         for (int i = 0; i < P.length; i++) {
             s = s + "/" + P[i];
-            java.io.File f = new File(s);
+            File f = new File(s);
             if (!f.exists()) {
                 System.out.println("[making " + s + "]");
                 f.mkdir();            
@@ -193,9 +191,6 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         }
         return s;
     }
-
-
-
 
     //@ requires \nonnullelements(P);
     //@ ensures \result != null;
@@ -265,9 +260,9 @@ public class CopyLoaded extends FrontEndTool implements Listener {
         // set up the indirection files.
         try {
             progIndirectWriter =
-            new PrintWriter(new FileWriter(new File(outProgIndirect)));
+              new PrintWriter(new FileWriter(new File(outProgIndirect)));
             libIndirectWriter = 
-            new PrintWriter(new FileWriter(new File(outLibIndirect)));
+              new PrintWriter(new FileWriter(new File(outLibIndirect)));
         } catch (IOException e) {
             ErrorSet.fatal(e.getMessage());
         }
