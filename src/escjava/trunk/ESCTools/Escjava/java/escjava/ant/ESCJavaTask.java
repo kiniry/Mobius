@@ -416,7 +416,9 @@ public class ESCJavaTask extends DefaultCompilerAdapter
    *
    * @since Ant 1.6
    */
-  protected int executeExternalCompile(/*@ non_null @*/ String[] args,
+  //@ also
+  //@   requires args != null;
+  protected int executeExternalCompile(String[] args,
                                        int firstFileName,
                                        boolean quoteFiles)
   {

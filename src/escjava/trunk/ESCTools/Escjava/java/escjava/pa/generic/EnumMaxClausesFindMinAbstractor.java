@@ -18,31 +18,31 @@ import mocha.wrappers.jbdd.*;
 
 public class EnumMaxClausesFindMinAbstractor implements Abstractor {
 	
-	private /*@non_null*/ jbddManager bddManager;
+	private /*@ non_null @*/ jbddManager bddManager;
 	
-	private /*@non_null*/ jbdd R;
-	private /*@non_null*/ Vector clauses = new Vector();
+	private /*@ non_null @*/ jbdd R;
+	private /*@ non_null @*/ Vector clauses = new Vector();
 	// invariant: R = conjunction of clauses
 	
 	private boolean noisy = Boolean.getBoolean("PANOISY");
 	
 	private static boolean doRestrict = !Boolean.getBoolean("NORESTRICT");
 	
-	public EnumMaxClausesFindMinAbstractor(/*@non_null*/ jbddManager bddManager) {
+	public EnumMaxClausesFindMinAbstractor(/*@ non_null @*/ jbddManager bddManager) {
 		// bddManager.jbdd_num_vars
 		this.bddManager = bddManager;
 		R = bddManager.jbdd_zero();
 	}
 	
-	public /*@non_null*/ jbdd get() {
+	public /*@ non_null @*/ jbdd get() {
 		return R;
 	}
 	
-	public /*@non_null*/ Vector getClauses() {
+	public /*@ non_null @*/ Vector getClauses() {
 		return clauses;
 	}
 	
-	public boolean union(/*@non_null*/ Prover prover) {
+	public boolean union(/*@ non_null @*/ Prover prover) {
 		
 		int notImpliedOldR = 0, impliedR = 0, ndisj=0;
 		
@@ -103,10 +103,10 @@ public class EnumMaxClausesFindMinAbstractor implements Abstractor {
 		return oldR.jbdd_equal( R );
 	}
 	
-	private jbdd findMinClauseValid(/*@non_null*/ jbdd oldR,
-			/*@non_null*/ Prover prover, 
-			/*@non_null*/ jbdd a, 
-			/*@non_null*/ jbdd b) 
+	private jbdd findMinClauseValid(/*@ non_null @*/ jbdd oldR,
+			/*@ non_null @*/ Prover prover, 
+			/*@ non_null @*/ jbdd a, 
+			/*@ non_null @*/ jbdd b) 
 	{
 		if( noisy ) 
 			say( "findMinClauseValid("+prover.printClause(a)+", "+prover.printClause(b)+")");
@@ -148,7 +148,7 @@ public class EnumMaxClausesFindMinAbstractor implements Abstractor {
 	 }
 	 */
 	
-	private void say(/*@non_null*/ String s) {
+	private void say(/*@ non_null @*/ String s) {
 		if( noisy ) {
 			System.out.println(s);
 		}

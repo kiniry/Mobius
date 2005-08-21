@@ -161,7 +161,7 @@ final class MemoryPipeOutputStream extends OutputStream
 
     public void write(int b) {
         try {
-            buff[ini] = (byte)b;	//@ nowarn IndexTooBig  // caught
+            buff[ini] = (byte)b;	//@ nowarn IndexTooBig;  // caught
             ini++;
         } catch (ArrayIndexOutOfBoundsException e) {
             byte[] newbuff = new byte[2*buff.length];

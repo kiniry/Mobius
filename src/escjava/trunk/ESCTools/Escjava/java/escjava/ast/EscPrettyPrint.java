@@ -1187,7 +1187,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   /* (non-Javadoc)
    * @see javafe.ast.PrettyPrint#toString(int)
    */
-  public /*@non_null*/ String toString(int tag) {
+  public /*@ non_null @*/ String toString(int tag) {
     // Best version available in the back end:
     return escjava.ast.TagConstants.toString(tag);
   }

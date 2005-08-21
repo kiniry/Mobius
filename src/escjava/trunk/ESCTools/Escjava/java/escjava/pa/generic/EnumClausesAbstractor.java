@@ -21,14 +21,14 @@ public class EnumClausesAbstractor implements Abstractor {
 
     private boolean noisy = Boolean.getBoolean("PANOISY");
 
-    private /*@non_null*/ jbddManager bddManager;
+    private /*@ non_null @*/ jbddManager bddManager;
 
-    private /*@non_null*/ jbdd R;
-    private /*@non_null*/ Vector clauses = new Vector();
-    private /*@non_null*/ Vector enumSizes;
+    private /*@ non_null @*/ jbdd R;
+    private /*@ non_null @*/ Vector clauses = new Vector();
+    private /*@ non_null @*/ Vector enumSizes;
     private int size;
 
-    public EnumClausesAbstractor(/*@non_null*/ jbddManager bddManager) {
+    public EnumClausesAbstractor(/*@ non_null @*/ jbddManager bddManager) {
 	say("creating");
 	this.bddManager = bddManager;
 	R = bddManager.jbdd_zero();
@@ -55,15 +55,15 @@ public class EnumClausesAbstractor implements Abstractor {
 	say("Enum clauses of length: "+enumSizes);
     }
 	
-    public /*@non_null*/ jbdd get() {
+    public /*@ non_null @*/ jbdd get() {
 	return R;
     }
 
-    public /*@non_null*/ Vector getClauses() {
+    public /*@ non_null @*/ Vector getClauses() {
 	return clauses;
     }
 
-    public boolean union(/*@non_null*/ Prover prover) {
+    public boolean union(/*@ non_null @*/ Prover prover) {
 
 	jbdd valid = bddManager.jbdd_one();
 	Vector validClauses = new Vector();

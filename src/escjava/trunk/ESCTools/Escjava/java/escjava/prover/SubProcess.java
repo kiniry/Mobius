@@ -218,7 +218,7 @@ public class SubProcess
     //@ public exceptional_behavior
     //@   requires P == null;
     //@   modifies \everything;
-    //@   signals (Died) true;
+    //@   signals_only Died;
     public int getChar() {
 	if (P == null) throw new Died();
 
@@ -254,7 +254,7 @@ public class SubProcess
     //@ public exceptional_behavior
     //@   requires P == null;
     //@   modifies \everything;
-    //@   signals (Died) true;
+    //@   signals_only Died;
     public int peekChar() {
 	// P may have been closed on us 
 	if (P == null) throw new Died();

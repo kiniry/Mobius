@@ -21,7 +21,7 @@ public class TeeOutputStream extends FilterOutputStream
      * being <code>out</code> in the superclass).
      */
     //@ spec_public
-    protected /*@non_null*/ OutputStream out2;
+    protected /*@ non_null @*/ OutputStream out2;
 
     /**
      * Creates an output stream filter built on top of two specified 

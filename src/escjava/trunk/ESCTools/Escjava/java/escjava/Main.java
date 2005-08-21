@@ -76,10 +76,10 @@ public class Main extends javafe.SrcTool
 
     /** Our version number */
     //public final static String version = "(Nijmegen/Kodak) 1.3, 2003";
-    public final static /*@non_null*/ String version = Version.VERSION;
+    public final static /*@ non_null @*/ String version = Version.VERSION;
 
 
-    private /*@non_null*/ AnnotationHandler annotationHandler = new AnnotationHandler();
+    private /*@ non_null @*/ AnnotationHandler annotationHandler = new AnnotationHandler();
 
     // Convenience copy of options().stages
     public int stages;
@@ -89,9 +89,9 @@ public class Main extends javafe.SrcTool
      *
      * Used in usage and error messages.<p>
      */
-    public /*@non_null*/ String name() { return "escjava"; }
+    public /*@ non_null @*/ String name() { return "escjava"; }
 
-    public /*@non_null*/ javafe.Options makeOptions() { return new Options(); }
+    public /*@ non_null @*/ javafe.Options makeOptions() { return new Options(); }
     
     // result can be null
     public static /*@ pure */ Options options() { return (Options)options; }
@@ -102,7 +102,7 @@ public class Main extends javafe.SrcTool
      * Returns the Esc StandardTypeReader, EscTypeReader.
      */
     // All three arguments can be null.
-    public /*@non_null*/ StandardTypeReader makeStandardTypeReader(String path,
+    public /*@ non_null @*/ StandardTypeReader makeStandardTypeReader(String path,
 						     String sourcePath,
 						     PragmaParser P) {
         return EscTypeReader.make(path, sourcePath, P, annotationHandler);
@@ -111,7 +111,7 @@ public class Main extends javafe.SrcTool
     /**
      * Returns the EscPragmaParser.
      */
-    public /*@non_null*/ javafe.parser.PragmaParser makePragmaParser() {
+    public /*@ non_null @*/ javafe.parser.PragmaParser makePragmaParser() {
         return new escjava.parser.EscPragmaParser();
     }
 
@@ -119,7 +119,7 @@ public class Main extends javafe.SrcTool
      * Returns the pretty printer to set
      * <code>PrettyPrint.inst</code> to.
      */
-    public /*@non_null*/ PrettyPrint makePrettyPrint() {
+    public /*@ non_null @*/ PrettyPrint makePrettyPrint() {
         DelegatingPrettyPrint p = new EscPrettyPrint();
         p.del = new StandardPrettyPrint(p);
         return p;
@@ -130,7 +130,7 @@ public class Main extends javafe.SrcTool
      * (or a subclass thereof). May not return <code>null</code>.  By
      * default, returns <code>javafe.tc.TypeCheck</code>.
      */
-    public /*@non_null*/ javafe.tc.TypeCheck makeTypeCheck() {
+    public /*@ non_null @*/ javafe.tc.TypeCheck makeTypeCheck() {
         return new escjava.tc.TypeCheck();
     }
 
@@ -139,7 +139,9 @@ public class Main extends javafe.SrcTool
      * Override SrcTool.notify to ensure all lexicalPragmas get
      * registered as they are loaded.
      */
-    public void notify(/*@non_null*/ CompilationUnit justLoaded) {
+    //@ also
+    //@   requires justLoaded != null;
+    public void notify(CompilationUnit justLoaded) {
         super.notify(justLoaded);
     
         NoWarn.registerNowarns(justLoaded.lexicalPragmas);
@@ -162,9 +164,9 @@ public class Main extends javafe.SrcTool
      * command.<p>
      */
     //@ requires \nonnullelements(args);
-    public static void main(/*@non_null*/ String[] args) {
-	int exitcode = compile(args);
-	if (exitcode != 0) System.exit(exitcode);
+    public static void main(/*@ non_null @*/ String[] args) {
+      int exitcode = compile(args);
+      if (exitcode != 0) System.exit(exitcode);
     }
 
   public Main() {
@@ -332,7 +334,7 @@ public class Main extends javafe.SrcTool
      * dir can be null.
      */
     //@ ensures \result != null;
-    private PrintStream fileToPrintStream(String dir, /*@non_null*/ String fname) {
+    private PrintStream fileToPrintStream(String dir, /*@ non_null @*/ String fname) {
         File f = new File(dir, fname);
         try {
             return new PrintStream(new FileOutputStream(f));
@@ -662,7 +664,7 @@ public class Main extends javafe.SrcTool
 
         LabelInfoToString.resetToMark();
         GuardedCmd gc = computeBody(r, initState);
-        /*-@ uninitialized @*/ /*-@ readable_if stats; @*/ int origgcSize = 0;
+        /*-@ uninitialized @*/ /* readable_if stats; */ int origgcSize = 0;
         if (options().stats) {
                 origgcSize = Util.size(gc);
         }

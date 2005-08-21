@@ -89,8 +89,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	super.checkSuperInterfaces(sig,superInterfaces);
     }
 
-    protected void visitTypeDeclElem(/*@non_null*/ TypeDeclElem e,
-				 /*@non_null*/ TypeSig currentSig,
+    protected void visitTypeDeclElem(/*@ non_null @*/ TypeDeclElem e,
+				 /*@ non_null @*/ TypeSig currentSig,
 				 boolean abstractMethodsOK,
 				 boolean inFinalClass,
 				 boolean inInterface ) {

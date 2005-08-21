@@ -19,28 +19,28 @@ import mocha.wrappers.jbdd.*;
 
 public class BinaryDecisionTreeAbstractor implements Abstractor {
 
-    private /*@non_null*/ jbddManager bddManager;
+    private /*@ non_null @*/ jbddManager bddManager;
     private int numPredicates;
 
-    private /*@non_null*/ jbdd R;
-    private /*@non_null*/ Vector clauses = new Vector();
+    private /*@ non_null @*/ jbdd R;
+    private /*@ non_null @*/ Vector clauses = new Vector();
     // invariant: R = conjunction of clauses
 
-    public BinaryDecisionTreeAbstractor(/*@non_null*/ jbddManager bddManager) {
+    public BinaryDecisionTreeAbstractor(/*@ non_null @*/ jbddManager bddManager) {
 	this.numPredicates = bddManager.jbdd_num_vars();
 	this.bddManager = bddManager;
 	R = bddManager.jbdd_zero();
     }
 	
-    public /*@non_null*/ jbdd get() {
+    public /*@ non_null @*/ jbdd get() {
 	return R;
     }
 
-    public /*@non_null*/ Vector getClauses() {
+    public /*@ non_null @*/ Vector getClauses() {
 	return clauses;
     }
 
-    public boolean union(/*@non_null*/ Prover p) {
+    public boolean union(/*@ non_null @*/ Prover p) {
 	// System.out.println("Inside union");
 
 	clauses = new Vector();
@@ -61,8 +61,8 @@ public class BinaryDecisionTreeAbstractor implements Abstractor {
 
     private void abstractHelper(int n, String m, 
 				jbdd curTruthAss, 
-				/*@non_null*/ Vector clauses, 
-				/*@non_null*/ Prover p) {	
+				/*@ non_null @*/ Vector clauses, 
+				/*@ non_null @*/ Prover p) {	
 	// System.out.println("Inside abstractHelper: n = " + n);
 
 	if (n == numPredicates) 

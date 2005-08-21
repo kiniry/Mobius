@@ -76,7 +76,7 @@ public class CountFilesLoaded extends SrcTool {
      ** Start up an instance of this tool using command-line arguments
      ** <code>args</code>. <p> 
      **/
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	Tool t = new CountFilesLoaded();
 	int result = t.run(args);

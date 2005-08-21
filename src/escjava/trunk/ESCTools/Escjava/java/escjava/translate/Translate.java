@@ -1370,7 +1370,7 @@ public final class Translate
    *
    * @param stmt the statement that is to be translated.
    */
-  //@ assignable temporaries, loopinvariants, loopDecreases, skolemConstants;
+  //@ assignable loopinvariants, loopDecreases, skolemConstants;
   private void trStmt(/*@ non_null */ Stmt stmt, TypeDecl decl) {
     int tag = stmt.getTag();
     switch (tag) {

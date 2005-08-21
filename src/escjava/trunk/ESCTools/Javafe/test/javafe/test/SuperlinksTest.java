@@ -48,7 +48,7 @@ public class SuperlinksTest extends javafe.SrcTool {
      ** (This needs to be done because static methods cannot be
      ** inherited.)<p>
      **/
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 		Tool t = new SuperlinksTest();
 		int result = t.run(args);
@@ -56,7 +56,7 @@ public class SuperlinksTest extends javafe.SrcTool {
     }
 
     SuperlinksTest() {
-      //@ set decls.owner = this
+      //@ set decls.owner = this;
       //@ set decls.elementType = \type(TypeDecl);
       //@ set decls.containsNull = false;
     }
@@ -74,7 +74,7 @@ public class SuperlinksTest extends javafe.SrcTool {
     //@ invariant decls != null;
     //@ invariant decls.elementType == \type(TypeDecl);
     //@ invariant !decls.containsNull;
-    //@ invariant decls.owner == this
+    //@ invariant decls.owner == this;
     Vector decls = new Vector(10);
 
 

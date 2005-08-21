@@ -58,9 +58,8 @@ public abstract class SExp
     //@ public normal_behavior
     //@   requires \typeof(o) <: \type(String) || \typeof(o) <: \type(Integer) || \typeof(o) <: \type(SExp);
     //@   requires o != null;
-    //+@   assignable \not_specified;
     //@   ensures \result != null;
-    //-@ pure
+    //@ pure
     public static SExp fancyMake(Object o) {
 	javafe.util.Assert.precondition(o != null);
 	if (o instanceof SExp)

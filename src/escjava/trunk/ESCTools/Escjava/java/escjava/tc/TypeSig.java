@@ -9,7 +9,7 @@ import javafe.tc.LookupException;
 public class TypeSig extends javafe.tc.TypeSig {
 
     //@ requires \nonnullelements(packageName);
-    public TypeSig(/*@non_null*/ String[] packageName,
+    public TypeSig(/*@ non_null @*/ String[] packageName,
 		   /*@ non_null */ String simpleName,
 		   javafe.tc.TypeSig enclosingType,
 		   TypeDecl decl,
@@ -38,9 +38,11 @@ public class TypeSig extends javafe.tc.TypeSig {
 	return super.hasField(id);
     }
 
+    	//@ also
+    	//@   requires caller != null;
     public FieldDecl lookupField(Identifier id, 
-				/*@ non_null */ javafe.tc.TypeSig caller) 
-				throws LookupException {
+                                 javafe.tc.TypeSig caller) 
+    		throws LookupException {
 	FieldDecl r = null;
 	prep();
 	// FIXME: jmlFIelds can be null for a JMLDataGroup

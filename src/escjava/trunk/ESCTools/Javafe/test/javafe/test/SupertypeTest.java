@@ -56,7 +56,7 @@ public class SupertypeTest extends javafe.FrontEndTool {
      ** Start up an instance of this tool using command-line arguments
      ** <code>args</code>. <p> 
      **/
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 		Tool t = new SupertypeTest();
 		int result = t.run(args);
@@ -78,9 +78,9 @@ public class SupertypeTest extends javafe.FrontEndTool {
 		if (left % 2 != 0 || left==0)
 		    usage();
 	
-		// Handle each query:
-		//@ loop_invariant left==args.length-i
 		int i = 0;
+		// Handle each query:
+		//@ loop_invariant left == args.length - i;
 		for (; left>1; left-=2, i+=2) {
 		    query(args[i], args[i+1]);
 		}
@@ -128,7 +128,7 @@ public class SupertypeTest extends javafe.FrontEndTool {
 	
 		// Convert N to a list of its components:
 		String[] components = javafe.filespace.StringUtil.parseList(N, '.');
-		Assert.notFalse(components.length>0);	//@ nowarn Pre
+		Assert.notFalse(components.length>0);	//@ nowarn Pre;
 	
 		// Split components into P and T:
 		String[] P = new String[components.length-1];

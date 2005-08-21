@@ -191,7 +191,7 @@ public abstract class SList extends SExp
     //@ public normal_behavior
     //@   requires \nonnullelements(a);
     //@   ensures \result != null;
-    public static /*@ pure non_null @*/ SList fromArray(/*@non_null*/ SExp[] a) {
+    public static /*@ pure non_null @*/ SList fromArray(/*@ non_null @*/ SExp[] a) {
 	SList l = make();
 
 	for (int i = a.length-1; i >= 0; i--)
@@ -266,7 +266,7 @@ public abstract class SList extends SExp
     //@   requires i < this.length();
     //@   modifies \everything;
     //@   ensures at(i) == s;
-    public void setAt(int i, /*@non_null*/ SExp s) throws SExpTypeError {
+    public void setAt(int i, /*@ non_null @*/ SExp s) throws SExpTypeError {
 	SPair ptr = getPair();
 
 	for (; i > 0; i--)
@@ -288,7 +288,7 @@ public abstract class SList extends SExp
     //@   requires (this instanceof SNil);
     //@   modifies \everything;
     //@   ensures \result == x;
-    public /*@non_null*/ SList append(/*@non_null*/ SList x) {
+    public /*@ non_null @*/ SList append(/*@ non_null @*/ SList x) {
 	if (this instanceof SNil)
 	    return x;
 	else {
@@ -570,7 +570,7 @@ public abstract class SList extends SExp
     /**
      * A simple test routine
      */
-    public static void main(/*@non_null*/ String[] args) throws SExpTypeError {
+    public static void main(/*@ non_null @*/ String[] args) throws SExpTypeError {
 	make().print(System.out);
 	System.out.println();
 	make("a").print(System.out);

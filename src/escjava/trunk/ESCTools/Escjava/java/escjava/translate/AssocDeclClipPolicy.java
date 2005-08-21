@@ -7,7 +7,7 @@ import escjava.ast.TagConstants;
 
 public class AssocDeclClipPolicy extends ClipPolicy {
 
-  public boolean containsEndOfConstruct(/*@non_null*/ String s, int pos) {
+  public boolean containsEndOfConstruct(/*@ non_null @*/ String s, int pos) {
     if (s.startsWith(TagConstants.toString(TagConstants.NON_NULL), pos) ||
 	s.startsWith(TagConstants.toString(TagConstants.UNINITIALIZED), pos) ||
 	(s.startsWith(TagConstants.toString(TagConstants.MONITORED), pos) &&

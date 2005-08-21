@@ -19,14 +19,14 @@ public class Disjunction {
 	this.stars = stars;
 	this.bits = bits;
     }
-    public Disjunction(/*@non_null*/ Disjunction d) {
+    public Disjunction(/*@ non_null @*/ Disjunction d) {
 	this( d.stars, d.bits);
     }
     // Yields Disjunction for false
     public Disjunction() {
 	this( -1L, 0L);
     }
-    public /*@non_null*/ String toString() {
+    public /*@ non_null @*/ String toString() {
 	return "("+Long.toBinaryString(stars)+","+Long.toBinaryString(bits)+")";
     }
     public boolean equals(Object o) {

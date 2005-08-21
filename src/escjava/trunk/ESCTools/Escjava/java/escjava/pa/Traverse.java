@@ -114,7 +114,7 @@ public class Traverse
 	}	
     }
 
-    static /*@non_null*/ GuardedCmd computeHelper(/*@non_null*/ GuardedCmd g, 
+    static /*@ non_null @*/ GuardedCmd computeHelper(/*@ non_null @*/ GuardedCmd g, 
 						  GuardedCmd context, Set env) 
     {
         switch (g.getTag()) {

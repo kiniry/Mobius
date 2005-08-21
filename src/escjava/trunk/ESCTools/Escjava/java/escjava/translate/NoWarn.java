@@ -142,7 +142,7 @@ public class NoWarn
      *                                                 *
      ***************************************************/
 
-    static private /*@non_null*/ LexicalPragmaVec nowarns = LexicalPragmaVec.make();
+    static private /*@ non_null @*/ LexicalPragmaVec nowarns = LexicalPragmaVec.make();
 
     public static void registerNowarns(LexicalPragmaVec v) {
         if (v != null)

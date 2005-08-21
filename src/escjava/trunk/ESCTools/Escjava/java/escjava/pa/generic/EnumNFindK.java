@@ -23,12 +23,12 @@ import mocha.wrappers.jbdd.*;
 
 public class EnumNFindK implements Abstractor {
   
-  private /*@non_null*/ jbddManager bddManager;
+  private /*@ non_null @*/ jbddManager bddManager;
   
   private int k;
-  private /*@non_null*/ jbdd R;
-  private /*@non_null*/ Vector clauses = new Vector();
-  private /*@non_null*/ Vector disj = new Vector();
+  private /*@ non_null @*/ jbdd R;
+  private /*@ non_null @*/ Vector clauses = new Vector();
+  private /*@ non_null @*/ Vector disj = new Vector();
   // invariant: R = conjunction of clauses
   // clauses are bdds, disj are Disjunctions, otherwise identical
   
@@ -38,13 +38,13 @@ public class EnumNFindK implements Abstractor {
   private static boolean invLeqK = Boolean.getBoolean("INVLEQK");
   
   private final long seed = 0xcafcaf;
-  private /*@non_null*/ Random random = new Random(seed);
+  private /*@ non_null @*/ Random random = new Random(seed);
   
   static {
     System.out.println("invLeqK="+invLeqK);
   }
   
-  public EnumNFindK(/*@non_null*/ jbddManager bddManager, int k) {
+  public EnumNFindK(/*@ non_null @*/ jbddManager bddManager, int k) {
     if( k > bddManager.jbdd_num_vars() ) {
       k = bddManager.jbdd_num_vars();
     }
@@ -56,16 +56,16 @@ public class EnumNFindK implements Abstractor {
     disj.addElement(new Disjunction()); // Yields Disjunction for false
   }
   
-  public /*@non_null*/ jbdd get() {
+  public /*@ non_null @*/ jbdd get() {
     return R;
   }
   
-  public /*@non_null*/ Vector getClauses() {
+  public /*@ non_null @*/ Vector getClauses() {
     return clauses;
   }
   
-  private void add(/*@non_null*/ Disjunction d, 
-                   /*@non_null*/ DisjunctionProver disjProver) 
+  private void add(/*@ non_null @*/ Disjunction d, 
+                   /*@ non_null @*/ DisjunctionProver disjProver) 
   {
     jbdd b = disjProver.disjToBdd(d);
     R = jbdd.jbdd_and( R, b, true, true );
@@ -73,7 +73,7 @@ public class EnumNFindK implements Abstractor {
     disj.addElement(d);
   }
   
-  public boolean union(/*@non_null*/ Prover prover) {
+  public boolean union(/*@ non_null @*/ Prover prover) {
     
     int nclauses=0, kclauses=0;
     
@@ -162,8 +162,8 @@ public class EnumNFindK implements Abstractor {
   }
   
   // requires d valid, mutates d, leaves it valid
-  private void findMinDisjValid( /*@non_null*/ Disjunction d, 
-                                 /*@non_null*/ DisjunctionProver disjProver, 
+  private void findMinDisjValid( /*@ non_null @*/ Disjunction d, 
+                                 /*@ non_null @*/ DisjunctionProver disjProver, 
                                  long dropWhich)
   {
     if( noisy ) 
@@ -195,8 +195,8 @@ public class EnumNFindK implements Abstractor {
     
   }	
   
-  private boolean extendToMaxDisjUnknown(/*@non_null*/ Disjunction nd, int i, 
-                                         /*@non_null*/ DisjunctionProver disjProver) {
+  private boolean extendToMaxDisjUnknown(/*@ non_null @*/ Disjunction nd, int i, 
+                                         /*@ non_null @*/ DisjunctionProver disjProver) {
     //say("extendToMaxDisjUnknown("+disjProver.printClause( nd)+","+i+")");
     
     Assert.notFalse(disjProver.quickCheck(nd) == DisjunctionProver.UNKNOWN );
@@ -252,7 +252,7 @@ public class EnumNFindK implements Abstractor {
       */
   
   // return size of a disjunction
-  private int size(/*@non_null*/ Disjunction d) {
+  private int size(/*@ non_null @*/ Disjunction d) {
     int s=0;
     for(int i=0; i<bddManager.jbdd_num_vars(); i++) {
       if( (d.stars & (1L<<i)) == 0) s++;
@@ -260,7 +260,7 @@ public class EnumNFindK implements Abstractor {
     return s;
   }
   
-  /*@non_null*/ jbdd longsToBdd(long stars, long bits) {
+  /*@ non_null @*/ jbdd longsToBdd(long stars, long bits) {
     // Put choice into a bdd, 
     jbdd t = bddManager.jbdd_zero();
     for( int i=bddManager.jbdd_num_vars()-1; i>=0; i-- ) {

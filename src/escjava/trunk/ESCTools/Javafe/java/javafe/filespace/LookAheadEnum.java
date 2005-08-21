@@ -118,6 +118,7 @@ abstract class LookAheadEnum implements Enumeration {
     //@ also
     //@ public behavior
     //@   modifies \everything;
+    	//@   signals_only NoSuchElementException;
     //@   signals (NoSuchElementException) (lookAhead == null);
     //    Should be:
     //    modifies lookAheadValid, lookAhead;

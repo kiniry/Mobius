@@ -53,7 +53,7 @@ public class LocTool extends SrcTool {
      ** <code>args</code>. <p> 
      **
      **/
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 		Tool t = new LocTool();
 		int result = t.run(args);

@@ -55,7 +55,7 @@ public class Status {
 	return s > NOTPROCESSED;
     }
 
-    static public /*@non_null*/ String toString(int status) {
+    static public /*@ non_null @*/ String toString(int status) {
 	switch (status) {
 	    case NOTPROCESSED: return "Not Processed";
 	    case RESOLVED_OK: return "Resolved OK";

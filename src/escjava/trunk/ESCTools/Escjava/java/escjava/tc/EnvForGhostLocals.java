@@ -31,13 +31,13 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * Our parent environment
      */
     //@ invariant !(parent instanceof EnvForCU);
-    protected /*@non_null*/ Env parent;
+    protected /*@ non_null @*/ Env parent;
 
     /**
      * The new local binding.
      */
     //@ invariant decl.id != null;
-    protected /*@non_null*/ GenericVarDecl decl;
+    protected /*@ non_null @*/ GenericVarDecl decl;
 
 
     /**
@@ -49,8 +49,8 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      */
     //@ requires decl.id != null;
     //@ requires !(parent instanceof EnvForCU);
-    public EnvForGhostLocals(/*@non_null*/ Env parent,
-			/*@non_null*/ GenericVarDecl decl) {
+    public EnvForGhostLocals(/*@ non_null @*/ Env parent,
+			/*@ non_null @*/ GenericVarDecl decl) {
 	this.parent = parent;
 	this.decl = decl;
 
@@ -127,7 +127,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * avoided unless an unknown environment needs to be coerced in
      * this way. <p>
      */
-    public /*@non_null*/ Env asStaticContext() {
+    public /*@ non_null @*/ Env asStaticContext() {
 	EnvForGhostLocals n;
 	try {
 	    n = (EnvForGhostLocals)this.clone();
