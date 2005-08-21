@@ -53,7 +53,7 @@ public class Simplify
     private CECEnum subProcessUser = null;
 
     //@ public model boolean closed;
-
+    //@ represents closed <- (P == null);
 
     // Multiplexing Simplify
 
