@@ -47,7 +47,7 @@ public class Diff {
    */
   //@ requires oldTextLabel != null;
   //@ requires oldText != null;
-  //@ requires newTextlabel != null;
+  //@ requires newTextLabel != null;
   //@ requires newText != null;
   public Diff(String oldTextLabel, String oldText, String newTextLabel,
       String newText) {
@@ -68,7 +68,7 @@ public class Diff {
    * @param newTextLabel a label for the <code>newText</code> parameter
    */
   //@ requires oldTextLabel != null;
-  //@ requires newTextlabel != null;
+  //@ requires newTextLabel != null;
   private void calculate(String oldTextLabel, String newTextLabel) {
     // Accumulate the diff in resultSB
     StringBuffer resultSB = new StringBuffer(newText.length());
@@ -166,9 +166,9 @@ public class Diff {
   /**
    * Returns true if strings on which this was constructed are different.
    */
-  //@ private normal_behavior
+  //@ private behavior
   //@ ensures \result == areDifferent;
-  public/* @ pure @ */boolean areDifferent() {
+  public /*@ pure @*/ boolean areDifferent() {
     return areDifferent;
   }
 
@@ -196,7 +196,6 @@ public class Diff {
   private String newText;
 
   /** This is set to true if the oldText and newText are not the same */
-  //@ non_null
   private boolean areDifferent = false;
 
   /**
