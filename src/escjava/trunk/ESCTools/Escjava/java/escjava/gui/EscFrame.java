@@ -267,7 +267,9 @@ public class EscFrame extends JFrame {
 */
 	tree.addMouseListener(
 	    new MouseInputAdapter() {
-		public void mouseClicked(/*@non_null*/ MouseEvent e) {
+	      //@ also
+	      //@    requires e != null;
+		public void mouseClicked(MouseEvent e) {
 		    if (e.getClickCount() != 1) return;
 		    Object o = ((DefaultMutableTreeNode)
 			tree.getClosestPathForLocation(e.getX(),e.getY()).
@@ -640,9 +642,11 @@ public class EscFrame extends JFrame {
 
 
     static private class EscRenderer extends DefaultTreeCellRenderer {
+    //@ also
+    //@   value != null;
 	public Component getTreeCellRendererComponent(
                         JTree tree,
-                        /*@non_null*/ Object value,
+                        Object value,
                         boolean sel,
                         boolean expanded,
                         boolean leaf,

@@ -219,7 +219,9 @@ public class EscOptions extends JPanel implements ActionListener {
 	//cb.setToolTipText(opttext[2]);
     }
 
-    public void actionPerformed(/*@non_null*/ ActionEvent e) {
+    	//@ also
+    	//@   requires e != null;
+    public void actionPerformed(ActionEvent e) {
 	// write back out to the Options structure
 
 	Object source = e.getSource();
@@ -259,7 +261,9 @@ public class EscOptions extends JPanel implements ActionListener {
 
     static public class MListener implements ActionListener {
 	static private /*@non_null*/ String[] temp = new String[1];
-	public void actionPerformed(/*@non_null*/ ActionEvent e) {
+	//@ also
+	//@   requires e != null;
+	public void actionPerformed(ActionEvent e) {
 	    Object o = e.getSource();
 	    if (o instanceof JCheckBox) {
 		JCheckBox cb = (JCheckBox)o;
