@@ -147,7 +147,7 @@ public class Options
       } else if (s.charAt(0) == '-') {
         offset = processOption(s, args, offset);
       } else {
-        inputEntries.add(new InputEntry.Unknown(s));
+        inputEntries.add(new UnknownInputEntry(s));
       }
     }
   }
@@ -214,23 +214,23 @@ public class Options
       return offset + 1;
     } else if (option.equals("-package")) {
       checkMoreArguments(option, args, offset);
-      inputEntries.add(new InputEntry.Package(args[offset]));
+      inputEntries.add(new PackageInputEntry(args[offset]));
       return offset + 1;
     } else if (option.equals("-class")) {
       checkMoreArguments(option, args, offset);
-      inputEntries.add(new InputEntry.Class(args[offset]));
+      inputEntries.add(new ClassInputEntry(args[offset]));
       return offset + 1;
     } else if (option.equals("-dir")) {
       checkMoreArguments(option, args, offset);
-      inputEntries.add(new InputEntry.Dir(args[offset]));
+      inputEntries.add(new DirInputEntry(args[offset]));
       return offset + 1;
     } else if (option.equals("-file")) {
       checkMoreArguments(option, args, offset);
-      inputEntries.add(new InputEntry.File(args[offset]));
+      inputEntries.add(new FileInputEntry(args[offset]));
       return offset + 1;
     } else if (option.equals("-list")) {
       checkMoreArguments(option, args, offset);
-      inputEntries.add(new InputEntry.List(args[offset]));
+      inputEntries.add(new ListInputEntry(args[offset]));
       return offset + 1;
     } else if (option.equals("-f")) {
       checkMoreArguments(option, args, offset);
@@ -282,7 +282,7 @@ public class Options
       return offset;
     } else if (option.equals("--")) {
       while (offset < args.length) {
-        inputEntries.add(new InputEntry.Unknown(args[offset++]));
+        inputEntries.add(new UnknownInputEntry(args[offset++]));
       }
       return offset;
     }

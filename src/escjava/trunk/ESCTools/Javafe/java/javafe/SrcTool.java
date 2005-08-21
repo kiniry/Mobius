@@ -149,15 +149,15 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 		    return ie.contents;
 		}
 	    }
-	    if (ie instanceof InputEntry.File) {
+	    if (ie instanceof FileInputEntry) {
 		ie.contents = new ArrayList(1);
 		ie.contents.add(new NormalGenericFile(ie.name));
-	    } else if (ie instanceof InputEntry.Dir) {
+	    } else if (ie instanceof DirInputEntry) {
 		ie.contents = OutsideEnv.resolveDirSources(ie.name);
-	    } else if (ie instanceof InputEntry.Package) {
+	    } else if (ie instanceof PackageInputEntry) {
 		String[] pa = javafe.filespace.StringUtil.parseList(ie.name,'.');
 		ie.contents = OutsideEnv.resolveSources(pa);
-	    } else if (ie instanceof InputEntry.Class) {
+	    } else if (ie instanceof ClassInputEntry) {
 		ie.contents = new ArrayList(1);
 		int p = ie.name.lastIndexOf('.');
 		if (p == -1) {
@@ -174,7 +174,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 				    ie.name.substring(p+1));
 		    ie.contents.add(gf);
 	        }
-	    } else if (ie instanceof InputEntry.List) {
+	    } else if (ie instanceof ListInputEntry) {
 		ie.contents = resolveList(ie.name);
 	    } else {
 		ErrorSet.caution("Skipping unknown (or not found) input item: "

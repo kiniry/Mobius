@@ -35,6 +35,7 @@ import javafe.util.FatalError;
 import javafe.util.Location;
 import javafe.genericfile.GenericFile;
 import javafe.InputEntry;
+import javafe.FileInputEntry;
 
 import escjava.ast.LabelExpr;
 import escjava.ast.GuardedCmd;
@@ -544,7 +545,7 @@ public class GUI extends escjava.Main {
 	    return ie.name;
 	}
 	public String getFilename() {
-	    if (ie instanceof InputEntry.File)
+	    if (ie instanceof FileInputEntry)
 		return ie.name;
 	    else
 		return null;
