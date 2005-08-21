@@ -128,7 +128,7 @@ export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
 export JMLDOC ?= jmldoc
 export JML ?= jml
 
-export JDK_14_SOURCES = ${JAVA_HOME}/src
+export JDK_14_SOURCES ?= ${JAVA_HOME}/src
 
 ##########################################################################
 ## Variables that define the release.  They will be used to build

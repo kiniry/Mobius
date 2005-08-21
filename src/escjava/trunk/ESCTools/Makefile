@@ -10,19 +10,19 @@ include Makefile.defs
 ################################################################################
 ## These are the standard targets.  They are executed in all the
 ## subdirectories that are listed in the SUBDIRS variable:
-##	clean - removes all files created by a build
-##	build - compiles out of date generated source and class files (default)
-##	buildall - creates all generated source and class files 
-##	test  - runs the tests (build must have been run)
-##      alltests - test + rarely used or long tests
-##	docs  - creates all docs; to get javadocs you must execute the
-##		make from this directory
-##	all   - does all of the above
-##	patch-release  - makes the tar file constituting a patch release
-##      source-release - makes the tar file constituting a full source release
-##	binary-release - makes the tar file constituting a binary release
-##	releases-notests - makes both releases without doing any tests
-##	releases	 - makes both releases with tests after
+##  clean - removes all files created by a build
+##  build - compiles out of date generated source and class files (default)
+##  buildall - creates all generated source and class files 
+##  test  - runs the tests (build must have been run)
+##  alltests - test + rarely used or long tests
+##  docs  - creates all docs; to get javadocs you must execute the
+##          make from this directory
+##  all   - does all of the above
+##  patch-release  - makes the tar file constituting a patch release
+##  source-release - makes the tar file constituting a full source release
+##  binary-release - makes the tar file constituting a binary release
+##  releases-notests - makes both releases without doing any tests
+##  releases - makes both releases with tests after
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -53,7 +53,7 @@ jars: $(ESCJAVA2_SPECS_JAR) $(JML2_SPECS_JAR) jar srcjar
 ## Top-level build and test rules
 
 .PHONY: build buildall test javafetests escjavatests alltests \
-	javafealltests escjavaalltests findbugs
+	javafealltests escjavaalltests findbugs selftypecheck
 
 build buildall: fix-perms
 	for d in $(SUBDIRS) ; do \
@@ -89,6 +89,9 @@ ifdef FINDBUGS
 findbugs: jar
 	${FINDBUGS} -textui esctools2.jar
 endif
+
+selftypecheck: build
+	$(MAKE) -C Escjava selftypecheck
 
 ################################################################################
 ## General rules to clean up build tree
@@ -211,7 +214,7 @@ slides:
 papers:
 	${MAKE} -C papers build
 
-PACKAGE_LIST = \
+export PACKAGE_LIST = \
 	  junitutils \
           javafe javafe.ast javafe.parser  \
 	  javafe.reader javafe.genericfile javafe.filespace \

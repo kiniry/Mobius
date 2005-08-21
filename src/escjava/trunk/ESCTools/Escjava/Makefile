@@ -336,7 +336,7 @@ TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
 .PHONY: test_escjava tests build_javafe_test junittests jdktests \
 	checkspecs javaspecs test_escjava_parser typecheckEscjava \
-	test_matrix self_test self_testp test-release
+	test_matrix self_test self_testp test-release selftypecheck
 
 test_escjava: build build_javafe_test 
 	$(MAKE) tests
@@ -371,6 +371,12 @@ javaspecs:
 test_escjava_parser:
 	$(MAKE) -C ${JAVAFE_SOURCE_DIR}/.. javafe_test
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
+	
+selftypecheck:
+	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Utils:${ESCTOOLS_ROOT}/Utils/ant.jar:${JUNIT_LIB}}" \
+	    -sourcepath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
+		-source 1.4 -typecheck -quiet ${PACKAGE_LIST}
 
 typecheckEscjava:
 	@echo ===== Typechecking the Escjava package =====
