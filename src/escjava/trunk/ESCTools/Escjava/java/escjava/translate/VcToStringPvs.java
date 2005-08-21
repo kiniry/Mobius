@@ -54,8 +54,8 @@ public class VcToStringPvs {
    */
   public static void resetTypeSpecific() {
     integralPrintNames = new Hashtable();
-    //-@ set integralPrintNames.keyType = \type(Long);
-    //-@ set integralPrintNames.elementType = \type(String);
+    //+@ set integralPrintNames.keyType = \type(Long);
+    //+@ set integralPrintNames.elementType = \type(String);
     // add thresholds
     integralPrintNames.put(minThreshold, String.valueOf(-MaxIntegral));
     integralPrintNames.put(maxThreshold, String.valueOf(MaxIntegral));
@@ -68,8 +68,8 @@ public class VcToStringPvs {
    * that successive calls to <code>compute</code> can produce properties
    * about these names.
    */
-  public static void computeTypeSpecific(/*@  non_null */Expr e,
-      /*@  non_null */PrintStream to) {
+  public static void computeTypeSpecific(/*@ non_null */Expr e,
+                                         /*@ non_null */PrintStream to) {
     VcToString vts = new VcToString();
     vts.printFormula(to, e);
   }
@@ -100,7 +100,8 @@ public class VcToStringPvs {
       Hashtable oldNames = integralPrintNames;
       integralPrintNames = (Hashtable)oldNames.clone();
     
-      // tant qu'à faire, tant qu'à always pretty print!! 
+      // @review kiniry - Translation of Clement's French comment: 
+      // If we are going to do something, always pretty-print!
       //if (escjava.Main.options().prettyPrintVC)
 	  to = new PrintStream(new escjava.prover.PPOutputStream(to));
     
@@ -236,8 +237,8 @@ public class VcToStringPvs {
   //@ spec_public
   protected/*@  non_null */Set stringLiterals = new Set();
   
-  //-@ invariant integralPrintNames.keyType == \type(Long);
-  //-@ invariant integralPrintNames.elementType == \type(String);
+  //+@ invariant integralPrintNames.keyType == \type(Long);
+  //+@ invariant integralPrintNames.elementType == \type(String);
   //@ spec_public
   protected static/*@  non_null */Hashtable integralPrintNames;
   

@@ -26,7 +26,7 @@ public class VarMap
     }
 
     /*@ spec_public */ private Hashtable table;
-    /*-@ invariant table != null ==>
+    /*+@ invariant table != null ==>
      table.keyType == \type(GenericVarDecl) &&
      table.elementType == \type(Expr); */
 
@@ -73,8 +73,8 @@ public class VarMap
         if (this == botMap) return botMap;
         VarMap r = new VarMap();
         r.table = (Hashtable)table.clone();
-        //-@ assume r.table.keyType == table.keyType;
-        //-@ assume r.table.elementType == table.elementType;
+        //+@ assume r.table.keyType == table.keyType;
+        //+@ assume r.table.elementType == table.elementType;
         r.table.put(v,e);
         return r;
     }
@@ -84,16 +84,16 @@ public class VarMap
      * for every pair <v,e> in the hashtable h. 
      */
 
-    //-@ requires table != null ==> table.keyType <: h.keyType;
-    //-@ requires table != null ==> h.elementType <: table.elementType;
+    //+@ requires table != null ==> table.keyType <: h.keyType;
+    //+@ requires table != null ==> h.elementType <: table.elementType;
     //@ ensures \result != null;
     //@ ensures table != null ==> \result.table != null;
     public VarMap extend(/*@ non_null */ Hashtable h) {
         if (this == botMap) return botMap;
         VarMap r = new VarMap();
         r.table = (Hashtable)table.clone();
-        //-@ assume r.table.keyType == table.keyType;
-        //-@ assume r.table.elementType == table.elementType;
+        //+@ assume r.table.keyType == table.keyType;
+        //+@ assume r.table.elementType == table.elementType;
         for( Enumeration e = h.keys(); e.hasMoreElements(); ) {
             GenericVarDecl v = (GenericVarDecl)e.nextElement();
             r.table.put(v, h.get(v));
@@ -112,8 +112,8 @@ public class VarMap
         if (this == botMap) return botMap;
         VarMap r = new VarMap();
         r.table = (Hashtable)table.clone();
-        //-@ assume r.table.keyType == table.keyType;
-        //-@ assume r.table.elementType == table.elementType;
+        //+@ assume r.table.keyType == table.keyType;
+        //+@ assume r.table.elementType == table.elementType;
         for (int i = 0; i < vec.size(); i++)
             r.table.remove(vec.elementAt(i));
         return r;
@@ -130,7 +130,7 @@ public class VarMap
 
     //@ requires rename.length == 2;
     //@ requires \typeof(rename) == \type(GuardedCmdVec[]);
-    /*-@ requires lastVarUse != null ==>
+    /*+@ requires lastVarUse != null ==>
      lastVarUse.keyType == \type(GenericVarDecl) &&
      lastVarUse.elementType == \type(RefInt); */
     //@ ensures \result != null;
@@ -167,7 +167,7 @@ public class VarMap
     //@ requires mm.length == rename.length;
     //@ requires \typeof(mm) == \type(VarMap[]);
     //@ requires \typeof(rename) == \type(GuardedCmdVec[]);
-    /*-@ requires lastVarUse != null ==>
+    /*+@ requires lastVarUse != null ==>
      lastVarUse.keyType == \type(GenericVarDecl) &&
      lastVarUse.elementType == \type(RefInt); */
     //@ ensures \result != null;

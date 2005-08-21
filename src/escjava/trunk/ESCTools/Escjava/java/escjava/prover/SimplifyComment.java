@@ -16,7 +16,7 @@ public class SimplifyComment extends SimplifyOutput
     /*@ spec_public @*/ final String msg;
 
     //@ normal_behavior
-    //+@ assignable \not_specified;
+    //-@ assignable \not_specified;
     //-@   modifies this.*;
     //@   ensures this.msg == msg;
     SimplifyComment(String msg) {

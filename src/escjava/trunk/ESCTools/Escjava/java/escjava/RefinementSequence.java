@@ -71,7 +71,7 @@ public class RefinementSequence extends CompilationUnit {
   }
   
   //@ requires refinements != null;
-  //+@ requires refinements.size() > 0;
+  //-@ requires refinements.size() > 0;
   CompilationUnit consolidateRefinements(ArrayList refinements,
       CompilationUnit javacu) {
     

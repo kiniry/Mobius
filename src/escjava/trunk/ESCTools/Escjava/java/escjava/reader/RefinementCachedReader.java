@@ -42,7 +42,7 @@ public class RefinementCachedReader extends CachedReader
      */
     //@ invariant underlyingReader != null;
 
-    protected /*@non_null*/ AnnotationHandler annotationHandler = new AnnotationHandler();
+    protected /*@ non_null @*/ AnnotationHandler annotationHandler = new AnnotationHandler();
 
     /**
      * Creating a cached version of a Reader:
@@ -51,8 +51,8 @@ public class RefinementCachedReader extends CachedReader
     public RefinementCachedReader(Reader reader) {
 	super(reader);
 
-	//-@ set cache.keyType = \type(String);
-	//-@ set cache.elementType = \type(Object);
+	//+@ set cache.keyType = \type(String);
+	//+@ set cache.elementType = \type(Object);
     }
 
 
@@ -153,7 +153,7 @@ Don't complain, but don't do it twice either. ???
 
     protected ArrayList refinementSequence;
 
-    public CompilationUnit readRefinements(/*@non_null*/ CompilationUnit cu, boolean avoidSpec) {
+    public CompilationUnit readRefinements(/*@ non_null @*/ CompilationUnit cu, boolean avoidSpec) {
      
 	    // Get and parse the package name
 	    Name pkgName = cu.pkgName;
@@ -293,8 +293,8 @@ Don't complain, but don't do it twice either. ???
 	}
 
     CompilationUnit getCombinedBinaries(/*null*/ Name pkgName, 
-					/*@non_null*/ String[] pkg, 
-					/*@non_null*/ ArrayList rs) 
+					/*@ non_null @*/ String[] pkg, 
+					/*@ non_null @*/ ArrayList rs) 
     {
 	    CompilationUnit combination = null;
 	    java.util.List failures = new java.util.LinkedList();
@@ -353,9 +353,9 @@ Don't complain, but don't do it twice either. ???
 	// result is a list of CompilationUnits
 	// result will contain something, perhaps just the given cu
         //@ ensures \result != null;
-	ArrayList getRefinementSequence(/*@non_null*/ String[] pkgStrings,
+	ArrayList getRefinementSequence(/*@ non_null @*/ String[] pkgStrings,
 					Identifier type, 
-					/*@non_null*/ CompilationUnit cu, 
+					/*@ non_null @*/ CompilationUnit cu, 
 					boolean avoidSpec) {
 	    ArrayList refinements = new ArrayList();
 	    GenericFile mrcufile;
@@ -437,8 +437,8 @@ Don't complain, but don't do it twice either. ???
 	    return refinements;
 	}
 
-    public static GenericFile findRefined(/*@non_null*/ String[] pkgStrings, 
-					  /*@non_null*/ CompilationUnit cu) 
+    public static GenericFile findRefined(/*@ non_null @*/ String[] pkgStrings, 
+					  /*@ non_null @*/ CompilationUnit cu) 
     {
 	    LexicalPragmaVec v = cu.lexicalPragmas;
 	    for (int i=0; i<v.size(); ++i) {

@@ -45,7 +45,7 @@ public final class GetSpec {
     return extendSpecForBody(spec, scope, synTargs);
   }
   
-  private static /*@non_null*/ Spec getCommonSpec(
+  private static /*@ non_null @*/ Spec getCommonSpec(
       /*@ non_null */RoutineDecl rd,
       /*@ non_null */FindContributors scope, Hashtable premap) {
     /*
@@ -78,7 +78,7 @@ public final class GetSpec {
     return spec;
   }
   
-  static private /*@non_null*/ ASTDecoration dmdDecoration = new ASTDecoration("dmd");
+  static private /*@ non_null @*/ ASTDecoration dmdDecoration = new ASTDecoration("dmd");
   
   /**
    * * Implement GetCombinedMethodDecl from ESCJ 16c section 7:
@@ -273,14 +273,14 @@ public final class GetSpec {
   
   /** Perform a substitution on an ExprModifierPragma * */
   private static ExprModifierPragma doSubst(Hashtable subst,
-					    /*@non_null*/ ExprModifierPragma emp) {
+					    /*@ non_null @*/ ExprModifierPragma emp) {
     return ExprModifierPragma.make(emp.tag,
         Substitute.doSubst(subst, emp.expr), emp.loc);
   }
   
   /** Perform a substitution on a CondExprModifierPragma * */
   private static CondExprModifierPragma doSubst(Hashtable subst,
-						/*@non_null*/ CondExprModifierPragma emp) 
+						/*@ non_null @*/ CondExprModifierPragma emp) 
   {
     return CondExprModifierPragma.make(emp.tag, Substitute.doSubst(subst,
         emp.expr), emp.loc, emp.cond == null ? null : Substitute.doSubst(subst,
@@ -290,7 +290,7 @@ public final class GetSpec {
   /** Perform a substitution on a VarExprModifierPragma * */
   //@ ensures \result != null;
   private static VarExprModifierPragma doSubst(Hashtable subst,
-					       /*@non_null*/ VarExprModifierPragma vemp) 
+					       /*@ non_null @*/ VarExprModifierPragma vemp) 
   {
     VarExprModifierPragma v =
       VarExprModifierPragma.make(vemp.tag, vemp.arg, Substitute.doSubst(
@@ -945,7 +945,7 @@ public final class GetSpec {
    * axsToAdd holds a Set of RepHelper - we need to add to the assumptions any
    * axioms pertinent to the RepHelper.
    */
-  static public void addAxioms(/*@non_null*/ java.util.Set axsToAdd, ExprVec assumptions) {
+  static public void addAxioms(/*@ non_null @*/ java.util.Set axsToAdd, ExprVec assumptions) {
     java.util.Set axsDone = new java.util.HashSet();
     while (!axsToAdd.isEmpty()) {
       RepHelper o = (RepHelper)axsToAdd.iterator().next();
@@ -960,7 +960,7 @@ public final class GetSpec {
   
   // FIXME - need to include inherited constraint clauses
   static public ConditionVec addConstraintClauses(ConditionVec post,
-						  /*@non_null*/ TypeDecl decl, 
+						  /*@ non_null @*/ TypeDecl decl, 
 						  Hashtable wt, 
 						  ExprVec postAssumptions) {
     TypeDeclElemVec pmods = decl.elems;
@@ -1701,7 +1701,7 @@ public final class GetSpec {
   }
   
   //@ ensures \result != null;
-  private static ExprVec addNewAxs(/*@non_null*/ HashSet axsToAdd, ExprVec assumptions) {
+  private static ExprVec addNewAxs(/*@ non_null @*/ HashSet axsToAdd, ExprVec assumptions) {
     if (assumptions == null) assumptions = ExprVec.make();
     java.util.Set axsDone = new java.util.HashSet();
     while (!axsToAdd.isEmpty()) {
@@ -1741,11 +1741,12 @@ public final class GetSpec {
    * in the domain of <code>map</code>.
    */
   
-  //-@ requires map.keyType == \type(GenericVarDecl);
-  //-@ requires map.elementType == \type(VariableAccess);
-  //-@ requires e.elementType == \type(GenericVarDecl);
+  //+@ requires map.keyType == \type(GenericVarDecl);
+  //+@ requires map.elementType == \type(VariableAccess);
+  //+@ requires e.elementType == \type(GenericVarDecl);
   //@ ensures \result != null;
-  static Hashtable restrict(/*@non_null*/ Hashtable map, /*@non_null*/Enumeration e) {
+  static Hashtable restrict(/*@ non_null @*/ Hashtable map, 
+                            /*@ non_null @*/ Enumeration e) {
     Hashtable r = new Hashtable();
     while (e.hasMoreElements()) {
       GenericVarDecl vd = (GenericVarDecl)e.nextElement();
@@ -1811,7 +1812,7 @@ public final class GetSpec {
    */
   
   private static void addFreeTypeCorrectAs(GenericVarDecl vd, Type type,
-					   /*@non_null*/ ConditionVec cv) {
+					   /*@ non_null @*/ ConditionVec cv) {
     Expr e = TrAnExpr.typeCorrectAs(vd, type);
     Condition cond = GC.freeCondition(e, Location.NULL);
     cv.addElement(cond);
@@ -1825,7 +1826,7 @@ public final class GetSpec {
    */
   
   public static GuardedCmd surroundBodyBySpec(GuardedCmd body, 
-					      /*@non_null*/ Spec spec,
+					      /*@ non_null @*/ Spec spec,
 					      FindContributors scope, 
 					      Set syntargets, 
 					      Hashtable premap,
@@ -1850,8 +1851,8 @@ public final class GetSpec {
    * every condition <code>C</code> in <code>cv</code>.
    */
   
-  private static void addAssumptions(/*@non_null*/ ExprVec ev,
-				     /*@non_null*/ StackVector code) 
+  private static void addAssumptions(/*@ non_null @*/ ExprVec ev,
+				     /*@ non_null @*/ StackVector code) 
   {
     for (int i = 0; i < ev.size(); i++) {
       Expr e = ev.elementAt(i);
@@ -1860,8 +1861,8 @@ public final class GetSpec {
     }
   }
   
-  private static void assumeConditions(/*@non_null*/ ConditionVec cv, 
-				       /*@non_null*/ StackVector code) 
+  private static void assumeConditions(/*@ non_null @*/ ConditionVec cv, 
+				       /*@ non_null @*/ StackVector code) 
   {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
@@ -1874,7 +1875,7 @@ public final class GetSpec {
    * every condition <code>C</code> in <code>cv</code>.
    */
   
-  private static void checkConditions(/*@non_null*/ ConditionVec cv, 
+  private static void checkConditions(/*@ non_null @*/ ConditionVec cv, 
 				      int loc, 
 				      StackVector code) 
   {
@@ -1942,7 +1943,7 @@ public final class GetSpec {
   }
   
   private static boolean exprIsVisible(TypeSig originType, 
-				       /*@non_null*/ Expr e) {
+				       /*@ non_null @*/ Expr e) {
     
     switch (e.getTag()) {
       
@@ -1980,7 +1981,7 @@ public final class GetSpec {
     }
   }
   
-  static public void collectFields(/*@non_null*/ Expr e, java.util.Set s) {
+  static public void collectFields(/*@ non_null @*/ Expr e, java.util.Set s) {
     // FIXME - have to avoid collecting bound variables of quantifiers
     switch (e.getTag()) {
       case TagConstants.PRE:
