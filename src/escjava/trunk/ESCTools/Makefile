@@ -214,18 +214,25 @@ slides:
 papers:
 	${MAKE} -C papers build
 
-export PACKAGE_LIST = \
-	  junitutils \
-          javafe javafe.ast javafe.parser  \
+export JAVAFE_PACKAGE_LIST = \
+      javafe javafe.ast javafe.parser  \
 	  javafe.reader javafe.genericfile javafe.filespace \
 	  javafe.tc javafe.util \
-	  escjava escjava.ant escjava.ast escjava.backpred escjava.parser \
-	  escjava.prover escjava.tc escjava.translate escjava.sp \
-	  escjava.reader escjava.gui \
 
-#JAVADOC_SOURCEPATH = $(subst : ,:,$(addsuffix /java:,$(addprefix $(ESCTOOLS_ROOT)/,$(SUBDIRS)))):${ESCTOOLS_ROOT}/Utils
+export ESCJAVA_PACKAGE_LIST = \
+      javafe javafe.ast javafe.parser  \
+	  javafe.reader javafe.genericfile javafe.filespace \
+	  javafe.tc javafe.util \
+
+export PACKAGE_LIST = \
+	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
+
 JAVADOC_SOURCEPATH = ${SOURCEPATH}
-SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
+
+# Choose which specs you wish to use for documentation generation and typechecking.
+#SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
+SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
+#SPECS = $(ESCTOOLS_ROOT)/specs
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
@@ -258,10 +265,6 @@ javadoc:  build
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 
-## JMLDOC does not yet work with ESC/Java2 because of the use of old
-## keywords, missing terminating semi-colons, etc.  We'll continue
-## to update all specs to match modern JML syntax and soon we'll
-## be able to use jmldoc in all its glory. -Kiniry
 jmldoc:  build
 	rm -rf $(JMLDOC_GEN_DIR)
 	mkdir -p $(JMLDOC_GEN_DIR)
@@ -284,11 +287,24 @@ jmldoc:  build
 	  -A \
           $(PACKAGE_LIST)
 
-jml: build
-	$(JML) -A \
-	  -sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
-	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
-	$(PACKAGE_LIST)
+jml: .jml
+
+.jml: build
+	$(JML) \
+	  --sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	  --classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${SPECS}:)${CLASSPATH}" \
+	  --assignable --Assignable --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
+	  && touch .jml
+
+jmlc: .jmlc
+
+.jmlc: build
+	$(JMLC) \
+	  --sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	  --classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${SPECS}:)${CLASSPATH}" \
+	  -d jmlc_classfiles \
+	  --assignable --Assignable --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
+	  && touch .jmlc
 
 ################################################################################
 ## Rules to build various release types
