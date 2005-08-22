@@ -1,0 +1,24 @@
+
+$$\begin{array}{l}
+ \register{0} = \Mynull  \Rightarrow \Myfalse \wedge \\
+  ( \register{0} \ne \Mynull \wedge \\
+     \#19(\register{0}) \ne \Mynull  \wedge \\
+      len(\#19(\register{0})) > \register{3} \wedge \\
+      \register{3} \geq 0 \wedge  \\
+      \register{1} \ne \#19(\register{0})[\register{3}])  \\
+             \Rightarrow \left(\begin{array}{l}
+                        1+ \register{3} \leq len(\#19(\register{0})) \wedge  \\
+                        1 + \register{3} \geq 0  \wedge \\ 
+                	\forall  v0 . \left( \begin{array}{l} 0 \geq v0  \wedge \\
+                                                               v0 < 1 + \register{3} \\
+                                                               \Rightarrow  \\
+                  		            \#19(\register{0})[v0] \ne \register{1}     \\
+                			 \end{array} \right)
+                              \end{array} \right)
+		\wedge \\
+      \#19(\register{0}) = \Mynull \Rightarrow \Myfalse \wedge  \\
+      len(\#19(\register{0})) \leq \register{3} \vee \register{3} < 0 \Rightarrow \Myfalse 
+\end{array}$$
+
+
+

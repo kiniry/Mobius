@@ -1,60 +1,52 @@
 This is BibTeX, Version 0.99c (Web2C 7.4.5)
 The top-level auxiliary file: article.aux
-The style file: plain.bst
+The style file: abbrv.bst
 Database file #1: specification.bib
 Database file #2: bibliography.bib
 A bad cross reference---entry "B00ppp"
 refers to entry "DBLP:conf/mpc/2000", which doesn't exist
-Warning--I didn't find a database entry for "BR02jack"
 Warning--I didn't find a database entry for "DBLP:conf/mpc/2000"
-Warning--to sort, need author or key in escjava
-Warning--empty booktitle in BM05plb
-Warning--empty note in B04tlsj
 Warning--can't use both author and editor fields in M97oos
 Warning--empty publisher in M97oos
-Warning--empty booktitle in jmlrac
-Warning--empty year in jmlrac
-Warning--empty year in Ljbc
-Warning--empty booktitle in WildmoserN-ESOP05
-You've used 23 entries,
+You've used 13 entries,
             2118 wiz_defined-function locations,
-            669 strings with 7766 characters,
-and the built_in function-call counts, 6977 in all, are:
-= -- 643
-> -- 351
-< -- 8
-+ -- 143
-- -- 113
-* -- 417
-:= -- 1178
-add.period$ -- 74
-call.type$ -- 23
-change.case$ -- 122
+            617 strings with 6165 characters,
+and the built_in function-call counts, 4077 in all, are:
+= -- 394
+> -- 200
+< -- 5
++ -- 79
+- -- 65
+* -- 242
+:= -- 696
+add.period$ -- 43
+call.type$ -- 13
+change.case$ -- 70
 chr.to.int$ -- 0
-cite$ -- 32
-duplicate$ -- 300
-empty$ -- 574
-format.name$ -- 113
-if$ -- 1473
+cite$ -- 15
+duplicate$ -- 173
+empty$ -- 318
+format.name$ -- 65
+if$ -- 864
 int.to.chr$ -- 0
-int.to.str$ -- 23
-missing$ -- 17
-newline$ -- 118
-num.names$ -- 52
-pop$ -- 173
+int.to.str$ -- 13
+missing$ -- 9
+newline$ -- 69
+num.names$ -- 28
+pop$ -- 86
 preamble$ -- 1
-purify$ -- 99
+purify$ -- 57
 quote$ -- 0
-skip$ -- 196
+skip$ -- 118
 stack$ -- 0
-substring$ -- 234
-swap$ -- 70
-text.length$ -- 8
+substring$ -- 158
+swap$ -- 46
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 88
-warning$ -- 9
-while$ -- 58
-width$ -- 25
-write$ -- 242
+type$ -- 48
+warning$ -- 2
+while$ -- 35
+width$ -- 15
+write$ -- 145
 (There was 1 error message)

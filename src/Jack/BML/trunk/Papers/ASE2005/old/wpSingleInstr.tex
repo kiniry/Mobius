@@ -1,16 +1,18 @@
-%\subsection{Weakest Precondition Function for bytecode \\instructions}\label{wpInstr}
-%We define a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
-%\wpi \ takes three arguments: an instruction, a predicate that is the instruction's normal postcondition $\psi$, and a function
-%from exception types to predicates $\excPost$ (it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception; see section~\ref{grammar}).
-%The \wpi \ function returns the weakest predicate such that if it holds in the state when the instruction starts its execution the following conditions are met: 
-%\begin{enumerate}
-	% \item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
-	% \item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
-%\end{enumerate}
+\subsection{Weakest Precondition for bytecode \\instructions}\label{wpInstr}
+We define a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
+\wpi \ takes three arguments: an instruction, a predicate that is the instruction's normal postcondition $\psi$, and a function
+from exception types to predicates $\excPost$ (it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception; see section~\ref{bclGrammar}).
+The \wpi \ function returns the weakest predicate such that if it holds in the state when the instruction starts its execution the following conditions are met: 
+\begin{enumerate}
+	\item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
+	\item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
+\end{enumerate}
 
 
- 
- %The instruction $\instr{Type\_load} \ i$ loads on the top of the stack the value of the method local variable at index \textit{i}
+ The Java bytecode language is stack based, i.e. the instructions take their arguments from the method execution stack and 
+ put the result on the stack. In Fig.~\ref{instrWP} we show the \wpi \ rules for some bytecode instructions 
+where the expression \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack. 
+ The \wpi \ rule for  \instr{Type\_load i} increments the stack counter \counter \ and loads on the stack top the contents of the local variable $\register{i}$.  %The instruction $\instr{Type\_load} \ i$ loads on the top of the stack the value of the method local variable at index \textit{i}
  %in the \textbf{Local\_Variable\_Table} (see section~\ref{bcSpecLg}).
 
 %As we said in the beginning of the section, \wpi \ ``understands'' the bytecode specification language, i.e. the keywords have their 
@@ -18,11 +20,62 @@
 %instructions and if appearing in the postcondition, \result \ is substituted by the element on the top of 
 %the stack \stack{\counter}. 
 
-%The rules also take into account the possible abnormal execution of the instruction. For example, in Fig. \ref{instrWP}, the rule for the instruction \instr{putField}
-%has two conjuncts - one in the case when the dereferenced object is not null and the instruction execution terminates normally; the other one stands for the case when this is not true. Note, in case the exception thrown is not handled, we substitute the special specification variable \jmlKey{EXC} with the thrown exception object.
+The rules also take into account the possible abnormal execution of the instruction. For example, in Fig. \ref{instrWP}, the rule for the instruction \instr{putField}
+has two conjuncts - one in the case when the dereferenced object is not null and the instruction execution terminates normally; the other one stands for the case when this is not true. Note, that if the exception thrown is not handled,
+ we substitute the special specification variable \jmlKey{EXC} (see Subsection \ref{grammar}) in the exceptional postcondition by the thrown exception object.     
 
 
-\begin{figure}[htp]
+\begin{figure}[ht]
+
+$$
+\begin{array}{l}
+%\wpi(\instr{iinc} \  i , \ \psi, \ \excPost) = \psi[\register{i} \leftarrow \register{i} + 1 ] \\
+%\\
+\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) =  \\
+\Myspace \psi[\counter \ \leftarrow \ \counter+1] [\stack{\counter+1} \ \leftarrow \ \register{i}] \\
+ \Myspace \textit{where} \ i \ \textit{is a valid local variable index}   \\
+\\ 
+\wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
+\begin{array}{l}
+	%\begin{array}{l}
+   	\Myspace	\stack{\counter -1} \not= \Mynull \\
+	\Myspace	\Rightarrow  
+	\Myspace		%\begin{array}{l}
+	\Myspace	 \psi [\counter \leftarrow \counter-2 ] \\[0 mm] 
+   		\Myspace\Myspace\Myspace[\texttt{Cl.f} \leftarrow \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] ] \\
+	%	\end{array}
+	%\end{array}
+   \Myspace	\wedge \\
+   \Myspace	\stack{\counter-1} = \Mynull \\
+ \Myspace	\Rightarrow  \phi[ \counter \leftarrow  0][\stack{0} \leftarrow \stack{\counter}]  \\		  \\
+   \it{where \ the \ predicate \ \phi \  is \ the \ precondition \ of \ the} \\
+   \it{exception \ handler \ protecting \ the \ instruction \  against} \\ 
+   \tt{NullPointerException } \ \it{\ if \ it \  exists, \ otherwise}  \\
+   \it{if \ the } \ \tt{ NullPointerException} \ \it{\ is \ not \ handled}    \\
+      \phi = \excPost(\tt{NullPointerException})[ \jmlKey{EXC} \leftarrow \stack{\counter}]
+    \end{array}
+ \end{array} $$
+
+%\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
+%                $\phantom{ texttt{wp} textttifacmpeq n } $   $\wedge$ } \\
+%                $\phantom{ texttt{wp} textttifacmpeq n } $   \texttt{Stack(t)$\neq$Stack(t-1)} $\Rightarrow$ $\psi$\texttt{(index(if\_acmpeq n) + 1% ) } \\
+%                $\phantom{ texttt{wp} textttifacmpeq nnnnnnnnnnnnnn} $   \texttt{[t$\leftarrow$t-2]} \\\\
+
+
+%\texttt{wp(Type\_load index,$\psi$)} = $\psi$\texttt{[Stack(t)$\leftarrow$local(index)][t$\leftarrow$t+1]}  \\
+%, where the local variable must contain value of type Type
+\caption{rules for some bytecode instructions}
+\label{instrWP}
+%\end{frameit}
+\end{figure}
+
+\subsubsection{Manipulating object fields}
+Instance fields are treated as functions, where the domain of a field \texttt{f} 
+declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
+We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 
+In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$, in case the dereferenced object is not null. The definition of update function is given in figure~\ref{override}.
+
+\begin{figure}
 $$
  (\texttt{Cl.f})\oplus[e2 \rightarrow e1](o) = \left\{ \begin{array} {ll}
 						       e1 & if \ e2 = o \\
@@ -32,14 +85,6 @@ $$
 \caption{Overriding Function}
 \label{override}
 \end{figure}
-
-\subsubsection{Manipulating object fields}
-Instance fields are treated as functions, where the domain of a field \texttt{f} 
-declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
-We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 
-In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$, in case the dereferenced object is not null. The definition of update function is given in figure~\ref{override}.
-
-
 %To illustrate how references are treated we give an example at fig.\ref{aliasing} - a method that assigns to the parameter's instance integer field (we give the example in source code to keep simplicity). 
 %The \wpi \ for the method is given at      
 

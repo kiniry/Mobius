@@ -1,0 +1,75 @@
+
+\subsection{Abstracting The Control Flow Graph}\label{abstrCntrFlow}
+In this section we discuss how the control flow graph of a bytecode is transformed in an acyclic control flow graph. We assume that the bytecode is provided 
+with sufficient specification and in particular loop invariants. Under this assumption, we can ``cut'' the control flow graph at every program point
+where an invariant must hold and ``place'' at that point the invariant. This requires the introduction of several definitions.
+     
+ A method body is an array of bytecode instructions. We write $i_k$ the $k-th$ instruction in a method body.
+% We denote by $\Gamma  = ( \Omega, \execRel)$ the control flow graph of abytecode where the set of nodes $\Omega$ is the set of basic blocks of the bytecode.
+ We assume that method's bytecode has exactly one entry point(every execution of a method starts at the entry point instruction) and we denote it with $i_{\tt{entry}}$. Using 
+standard terminology (see \cite{ARUCom1986}), a
+basic block is a code segment that has no unconditional jump or
+conditional branch statements except for possibly the last
+statement, and none of its statements, except possibly the first,
+is a target of any jump or branch statement. 
+ We denote a block starting at instruction  $i_{j}$ with $\blockm{j}$. The block starting at the entry instruction is denoted with $\blockm{entry}$.
+ The execution relation  $\blockm{j} \execRel \blockm{k}$  states that block $\blockm{k}$ may be executed immediately after $\blockm{j}$ in some execution path of the method. For example if  instruction $\tt{i_{k}}$ = \texttt{athrow} is the last of the block $\blockm{j}$ then 
+$\blockm{j} \execRel \blockm{n}$, where  $\blockm{n}$ is the first block of an exception handler that protects $\tt{i_{k}}$ 
+% Definition \ref{execRel} states formally the execution relation.
+% \begin{defn}[Execution relation between blocks]\label{execRel}
+%\begin{tabbing}
+%\\Let \=  have \= the block $\blockm{j}$ such that  it ends with instruction \\ 
+%$\tt{i_{k}}$ and it is not a return instruction\\
+%\>  if $\tt{i_{k}}$ = \texttt{if\_cond n} then   $\blockm{j} \execRel \blockm{n}$ and $\blockm{j} \execRel  \blockm{k+1} $ \\
+%\>  if $\tt{i_{k}}$ = \texttt{goto n} then $\blockm{j} \execRel \blockm{n}$ \\
+%\>  if $\tt{i_{k}}$ = \texttt{athrow} then $\blockm{j} \execRel \blockm{n}$ for all \texttt{n}, such \\
+%\> \> that $\blockm{n}$ is the first\\
+%\> \> block of an exception handler that protects $\tt{i_{k}}$ \\
+%\>  if $\tt{i_{k}}$ = \texttt{jsr n} then $\blockm{j} \execRel \blockm{n}$ \\
+%\>  if  $\tt{i_{k}}$ = \texttt{ret n} then  $ \blockm{j} \execRel \blockm{s}$\\
+%\> \> for all s that are indexes of instruction following \\
+%\> \> a \texttt{jsr} to the subroutine that ends with $\tt{i_{k}}$ instruction\\
+%\>  else $\blockm{j}  \execRel   \blockm{k+1}$
+%\end{tabbing}
+%\end{defn}
+
+%We say that there exists a path between $\blockm{i}$ and $\blockm{j}$ and we note it with  $\pathm{i}{j}$, if there exists blocks 
+%$\blockm{s_{1}}... \blockm{s_{n}}$ such that $\blockm{i} \execRel \blockm{s_{1}} \execRel \blockm{s_{2}}... \blockm{s_{n}} \execRel  \blockm{j}$
+
+\newtheorem{defin}{Definition}
+\begin{defin}
+%\begin{defn}
+{Loop}
+\label{defLoop}
+Assume we have a bytecode $\Pi$. We say that $\blockm{e}$ is the entry block of a loop $l$ in $\Pi$ and $\blockm{f}$ is an end block of $l$ and we note this with  
+ $\blockm{f} \execRel^l \blockm{e}$ if:
+\begin{itemize}
+\item every path in the control flow graph starting at the entry block $\blockm{entry}$ of $\Pi$ and that reaches $\blockm{f}$, passes through  $\blockm{e}$ 
+ % i.e.$ \blockm{entry} \execRel^{*}  \blockm{s} \execRel^{*} \blockm{e}$
+\item   there is a path in which $\blockm{e}$  is executed immediately after the execution of $\blockm{f}$,  $\blockm{f} \execRel \blockm{e}$
+
+\end{itemize}
+\end{defin}
+
+We abstract the execution relation $\execRel$ to the acyclic execution relation $\execRel^A$ which is an abstraction of $\execRel$ where the backedges $ \execRel^l$ are removed: $\execRel^A = \execRel \backslash \execRel^l$. The weakest precondition is applied over the resulting abstraction of the control
+flow graph, where the eliminated edges are replaced by the appropriate loop invariant.
+
+
+
+%We give in Fig.~\ref{blockBC} the control flow graph of the method \texttt{replace} given earlier in Fig.~\ref{replaceSrc}. The figure shows that the acyclic relation
+%excludes edges between loop entry and loop end blocks and that at that place the corresponding loop invariant must hold.  
+
+%\begin{figure}
+%\begin{center}
+%\epsfig{file=bytecode.eps}
+%\end{center}
+%dashed arrows stand for the standard execution relation \\ 
+%black arrows represent the acyclic execution relation \\
+%bytecode basic blocks are placed in boxes \\
+%the invariant is placed between the blocks where it must hold
+%\caption{control flow graph of method \texttt{replace} from figure~\ref{replaceSrc} }
+%\label{blockBC}
+%\end{figure}
+
+
+

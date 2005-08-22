@@ -28,6 +28,7 @@ its invariant (\verb!loop_invariant!) which basically says that whenever the loo
 \begin{verbatim}
 public class ListArray {
   Object[] list;
+
   //@requires list != null;
   //@ensures \result ==  (\exists int i; 0 <= i && i < list.length &&  
              list[i] == o ) ; 
@@ -51,6 +52,55 @@ public class ListArray {
 \label{replaceSrc}
 \end{figure}
 BCSL corresponds to a representative subset of JML.
+We sketch the bytecode specification language grammar in Fig.~\ref{bclGrammar}. We omit some of the definitions 
+because of space constraints, e.g. the grammar for arithmetic expressions (which is defined in a standard way).
+\begin{figure}[!htb]
+$$ \begin{array}{ll}
+\ClassSpec & ::=  \jmlStmt{class \ invariant} \ \predicate \\
+               &  \mid  \jmlStmt{history \ constraint} \ \predicate \\
+               &  \mid  \jmlStmt{model} \ \texttt{ClassName}  \ id \\
+
+& \\
+      
+\MethodSpec  ::= & \SpecCase \\
+           &  \mid  \SpecCase \  \jmlStmt{also} \  \MethodSpec	;\\
+&  \\
+\SpecCase & ::=  \jmlStmt{requires} \ \predicate;\\ 
+	      & \jmlStmt{modifies} \ list(\expression);\\
+	%\Myspace \jmlStmt{decreases} \ \expression;\\
+              & \jmlStmt{ensures} \ \predicate;\\
+              & \jmlStmt{exsures} \ (\texttt{ExceptionClass}) \ \predicate;\\
+          
+&  \\
+
+\interMethodSpec & ::= \loopSpec \\
+	             & \mid \assert \\
+	&  \\
+\loopSpec & ::= \jmlStmt{pc\_ index} \ int;\\
+	      & \jmlStmt{loop\_modifies} \ list(\expression);\\
+              & \jmlStmt{loop\_invariant}  \ \predicate; \\
+	      & \jmlStmt{loop\_decreases} \ \expression; \\
+	& \\								
+\assert   & ::= \jmlStmt{pc\_ index} \ int;\\
+	      & \jmlStmt{assert} \ \predicate; \\
+&	\\
+
+      \predicate & ::= \true \ \mid \ \false \\
+                     & \mid   \expression \ predSymbol \ \expression \\
+                     & \mid   \predicate \wedge \predicate \mid   \predicate \vee \predicate \mid   \predicate \Rightarrow \predicate \\
+                     & \mid   \forall (\texttt{boundVar } : JavaType )  \predicate \\
+                     & \mid   \exists(\texttt{boundVar } : JavaType )  \predicate \\
+     &  \\ 
+  \expression & ::= \ArithExpr  \mid  \ \register{i} \\
+	  & \mid  \reference \mid \ \intLiteral \\	
+  	  &  \mid  \ \fieldAccess{\expression} \  \mid \ \arrayAccess{\expression} {\expression}  \\
+  	  &  \mid \result \ \mid \old{\expression} \mid \ \EXC \\
+  	  & \mid \typeof{\expression}  \ \mid \ \Mynull \ \mid \ \this \\
+  	  &  \mid  \counter \mid \stack{\ArithExpr} \ldots
+\end{array}$$
+\caption{BCSL grammar}
+ \label{bclGrammar}
+ \end{figure}
 
  The language defined here is expressive enough for most purposes including the description of non trivial functional and 
  security properties. We now discuss some of the specification clauses, for the rest their semantics is the same as in JML and can be found in~\cite{RT03djml,JMLRefMan}.
@@ -76,11 +126,9 @@ BCSL has few particular extra features that JML lacks :
    \item loop frame condition, which declares the locations
 that can be modified during a loop iteration. We were rather inspired for this by ~\cite{BRL-JACK}. 
 
-   \item stack expressions - $\counter$ which stands for the stack counter and \\
- $\stack{\ArithExpr}$ standing for a stack element at position \\
-\ArithExpr. These expressions are needed in BCSL as the Java bytecode language is
-stack based.  They do not appear in the specification. They are rather used for calculating the preconditions of program 
-instructions that use/change the execution stack. 
+   \item stack expressions - $\counter$ which stands for the stack counter and $\stack{\ArithExpr}$
+standing for a stack element at position \ArithExpr. These expressions are needed in BCSL as the Java bytecode language is
+stack based.  They do not appear in the specification. Later we shall see how they are used.
 \end{itemize}
 
 

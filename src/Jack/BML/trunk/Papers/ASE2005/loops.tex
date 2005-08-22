@@ -1,0 +1,12 @@
+\subsection{Loops}
+ We assume that a method's bytecode is provided with sufficient specification and in particular loop invariants. Under this assumption, we can ``cut'' the control flow graph at every program point where an invariant must hold and ``place'' at that point the invariant. 
+The ``cut'' points correspond to the backedges in a method's bytecode which can be identified using standard techniques (\cite{ARUCom1986}).
+
+
+     
+\subsection{Exceptions and Subroutines}
+
+Exceptions are treated by identifying the instruction at which they start. A normal Java compiler should supply for every method
+a \textbf{Exception\_Table} which contains data structures describing the compilation of every implicit (in presence of subroutines)
+ or explicite exception handler: the instruction at which the compiled exception handler starts, the protected region (its start and end instruction indexes), the exception type.
+Subroutines are treated by inlining. This is not a problem under the assumption that the bytecode has been certified by a bytecode verifier.

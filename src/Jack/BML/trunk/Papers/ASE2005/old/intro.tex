@@ -52,12 +52,15 @@ exceptions, references, method calls and subroutines.
  inserted in the class file format in newly defined attributes, thus making not only the code mobile but also its specification. These class
  file extensions do not affect the JVM performance. The scheme makes the Java bytecode benefit from the specification written at source level.
  We have implementations of a verification condition generator based on the weakest precondition calculus and of the JML specification compiler. Both are integrated in the Java Applet Correctness Kit (JACK)~\cite{BRL-JACK}. 
- The full specifications of the JML compiler, the weakest precondition predicate transformer definition and its proof of correctness can be found in~\cite{JBL05MP}.
+ The full specifications of the JML compiler and the weakest precondition predicate transformer definition can be found in~\cite{JML2BCSpec} and~\cite{WPBC} respectively.
   
 The remainder of the paper is organized as follows: 
 Section~\ref{architecture_s} reviews scenarios in which the architecture is appropriate to use; 
 %Section~\ref{relWork} provides an overview of related work;
- Section~\ref{bcSpecLg} presents the bytecode specification language BCSL and the JML compiler; Section~\ref{wpbc} explains how the weakest precondition calculus works illustrating it with definitions and example; in this section we also give the verification conditions that are generated for proving program correctness; Section~\ref{results} discusses the practical results and the relation; Section~\ref{conclusion} concludes with future work.  
+ Section~\ref{bcSpecLg} presents the bytecode 
+specification language BCSL and the JML compiler; Section~\ref{wpbc} explains how the weakest precondition calculus works illustrating it with definitions and example; in this section we also give the verification conditions that are generated for 
+proving program correctness; %Section~\ref{results} discusses some experiments; 
+Section~\ref{conclusion} concludes with future work.  
 
 
 
