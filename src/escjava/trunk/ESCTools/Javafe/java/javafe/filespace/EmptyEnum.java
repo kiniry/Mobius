@@ -36,7 +36,7 @@ class EmptyEnum implements Enumeration
     //@ also
     //@ public exceptional_behavior
     //@   signals_only NoSuchElementException;
-    //@   signals NoSuchElementException true;
+    //@   signals (NoSuchElementException) true;
     //@ pure
     public Object nextElement() {
       throw new NoSuchElementException();
