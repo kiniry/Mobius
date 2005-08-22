@@ -127,6 +127,7 @@ export JAVAC_FLAGS ?= -g -source 1.4
 export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
 export JMLDOC ?= jmldoc
 export JML ?= jml
+export JMLC ?= jmlc
 
 export JDK_14_SOURCES ?= ${JAVA_HOME}/src
 
