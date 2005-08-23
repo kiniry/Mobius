@@ -2,6 +2,7 @@
 # $Id$
 #
 
+
 paper =		Escjava2-Provers
 
 talk =		
@@ -169,4 +170,4 @@ clean:
 	  *.cp *.cps *.fn *.fns *.ky *.kys \
 	  *.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
 	  *.bbl *.blg *.toc *.thm *.out *.cb \
-	  *.lof *.lot *.gz *.Z *.texinfo #*
+	  *.lof *.lot *.gz *.Z #*
