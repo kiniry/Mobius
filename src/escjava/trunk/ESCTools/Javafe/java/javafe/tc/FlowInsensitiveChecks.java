@@ -2103,13 +2103,13 @@ public class FlowInsensitiveChecks
      */
     //@ requires env != null;
     protected Env checkModifierPragmaVec(ModifierPragmaVec v, 
-                                          ASTNode ctxt, 
-                                          Env env) {
-        if(v != null)
-            for(int i=0; i<v.size(); i++) {
-		env = checkModifierPragma(v.elementAt(i), ctxt, env);
-	    }
-	return env;
+                                         ASTNode ctxt, 
+                                         Env env) {
+        if (v != null)
+          for(int i = 0; i < v.size(); i++) {
+            env = checkModifierPragma(v.elementAt(i), ctxt, env);
+	      }
+	  return env;
     }
 
     /**
