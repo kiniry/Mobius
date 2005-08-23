@@ -215,8 +215,8 @@ public class Substitute {
 	if (rhsVars != null) {
 	    if (rhsVars.s == null) {
 	      rhsVars.s = new Set();
-	      for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
-		Expr ee = (Expr)enum.nextElement();
+	      for (Enumeration variables = subst.elements(); variables.hasMoreElements(); ) {
+		Expr ee = (Expr)variables.nextElement();
 		rhsVars.s.union(freeVars(ee));
 	      }
 	    }
@@ -261,8 +261,8 @@ public class Substitute {
 	// expression, so here's a check for that
 	if (rhsVars.s == null) {
 	  rhsVars.s = new Set();
-	  for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
-	    Expr ee = (Expr)enum.nextElement();
+	  for (Enumeration variables = subst.elements(); variables.hasMoreElements(); ) {
+	    Expr ee = (Expr)variables.nextElement();
 	    rhsVars.s.union(freeVars(ee));
 	  }
 	}
@@ -303,8 +303,8 @@ public class Substitute {
 	if (rhsVars != null) {
 	    if (rhsVars.s == null) {
 	      rhsVars.s = new Set();
-	      for (Enumeration enum = subst.elements(); enum.hasMoreElements(); ) {
-		Expr ee = (Expr)enum.nextElement();
+	      for (Enumeration variables = subst.elements(); variables.hasMoreElements(); ) {
+		Expr ee = (Expr)variables.nextElement();
 		rhsVars.s.union(freeVars(ee));
 	      }
 	    }

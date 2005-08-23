@@ -180,9 +180,9 @@ public class GCSanity {
 				/*@ non_null */ Set cdni,
 				/*@ non_null */ Set euei,
 				/*@ non_null */ Set uuei) {
-    for (Enumeration enum = Substitute.freeVars(e).elements();
-	 enum.hasMoreElements(); ) {
-      GenericVarDecl v = (GenericVarDecl)enum.nextElement();
+    for (Enumeration freeVars = Substitute.freeVars(e).elements();
+	 freeVars.hasMoreElements(); ) {
+      GenericVarDecl v = (GenericVarDecl)freeVars.nextElement();
       if (! cdni.contains(v)) {
 	Assert.notFalse(! uuei.contains(v));
 	euei.add(v);

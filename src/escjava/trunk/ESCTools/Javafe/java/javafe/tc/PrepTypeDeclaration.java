@@ -153,9 +153,9 @@ public class PrepTypeDeclaration {
     Set actualOverrides = new Set();
     //@ assume actualOverrides.elementType == \type(MethodDecl);
 
-    Enumeration enum = overrides.elements();
-    while (enum.hasMoreElements()) {
-      MethodDecl smd = (MethodDecl)enum.nextElement();
+    Enumeration overridden_methods = overrides.elements();
+    while (overridden_methods.hasMoreElements()) {
+      MethodDecl smd = (MethodDecl)overridden_methods.nextElement();
       //@ assume smd.hasParent;
       if (sig.isSubtypeOf(TypeSig.getSig(smd.parent))) {
 	actualOverrides.add(smd);

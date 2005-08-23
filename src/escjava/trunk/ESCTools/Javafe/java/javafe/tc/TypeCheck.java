@@ -375,9 +375,9 @@ public class TypeCheck
             cd = (ClassDecl)( getSig(cd.superClass).getTypeDecl() );//@ nowarn Null,Cast;
  
             // Find MethodDecl at cd that is overridden
-            Enumeration enum = overrides.elements();
-            while( enum.hasMoreElements() ) {
-                MethodDecl smd = (MethodDecl)enum.nextElement();
+            Enumeration overridden_methods = overrides.elements();
+            while( overridden_methods.hasMoreElements() ) {
+                MethodDecl smd = (MethodDecl)overridden_methods.nextElement();
                 if( smd.parent == cd )
                     return smd;
             }
@@ -398,9 +398,9 @@ public class TypeCheck
         TypeSig sig = getSig( cd );
         sig.prep();
         Set overrides = PrepTypeDeclaration.inst.getOverrides( md );
-        Enumeration enum = overrides.elements();
-        while( enum.hasMoreElements() ) {
-            MethodDecl smd = (MethodDecl)enum.nextElement();
+        Enumeration overridden_methods = overrides.elements();
+        while( overridden_methods.hasMoreElements() ) {
+            MethodDecl smd = (MethodDecl)overridden_methods.nextElement();
             if( smd.parent instanceof InterfaceDecl 
                 && sig.isSubtypeOf( getSig(smd.parent) ) )
                 result.add( smd );
@@ -420,9 +420,9 @@ public class TypeCheck
         //@ assume result.elementType == \type(MethodDecl);
  
         Set overrides = PrepTypeDeclaration.inst.getOverrides( md );
-        Enumeration enum = overrides.elements();
-        while( enum.hasMoreElements() ) {
-            MethodDecl smd = (MethodDecl)enum.nextElement();
+        Enumeration overridden_methods = overrides.elements();
+        while( overridden_methods.hasMoreElements() ) {
+            MethodDecl smd = (MethodDecl)overridden_methods.nextElement();
             if( smd.parent instanceof InterfaceDecl )
                 result.add( smd );
         }

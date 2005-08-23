@@ -1179,12 +1179,12 @@ public class TrAnExpr {
     if (h1 == null)
       return h0;
     Hashtable h2 = new Hashtable();
-    for (Enumeration enum = h0.keys(); enum.hasMoreElements(); ) {
-      Object key = enum.nextElement();
+    for (Enumeration keys = h0.keys(); keys.hasMoreElements(); ) {
+      Object key = keys.nextElement();
       h2.put(key, h0.get(key));
     }
-    for (Enumeration enum = h1.keys(); enum.hasMoreElements(); ) {
-      Object key = enum.nextElement();
+    for (Enumeration keys = h1.keys(); keys.hasMoreElements(); ) {
+      Object key = keys.nextElement();
       h2.put(key, h1.get(key));
     }
     return h2;

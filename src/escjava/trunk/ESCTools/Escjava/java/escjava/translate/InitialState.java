@@ -32,9 +32,9 @@ public final class InitialState {
     ExprVec conjuncts = ExprVec.make();
 
     // static fields and instance variables
-    Enumeration enum = scope.fields();
-    while (enum.hasMoreElements()) {
-	  FieldDecl fd = (FieldDecl)enum.nextElement();
+    Enumeration fields = scope.fields();
+    while (fields.hasMoreElements()) {
+	  FieldDecl fd = (FieldDecl)fields.nextElement();
 	  
 	  VariableAccess va = TrAnExpr.makeVarAccess(fd, Location.NULL);
 	  VariableAccess variant = addMapping(fd);
@@ -64,9 +64,9 @@ public final class InitialState {
 	   robust against errors in the modifies clauses and (b) allow the implementation
 	   of modifies \everything.
         */
-    enum = scope.preFields.elements();
-    while (enum.hasMoreElements()) {
-	  FieldDecl fd = ((FieldAccess)enum.nextElement()).decl;
+    fields = scope.preFields.elements();
+    while (fields.hasMoreElements()) {
+	  FieldDecl fd = ((FieldAccess)fields.nextElement()).decl;
 	  if (premap.get(fd) != null) continue;
 	  
 	  VariableAccess va = TrAnExpr.makeVarAccess(fd, Location.NULL);

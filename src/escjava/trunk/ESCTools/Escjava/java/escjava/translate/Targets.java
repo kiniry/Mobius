@@ -115,9 +115,9 @@ public final class Targets {
 	if (call.inlined) {
 	    simpleTargets(call.desugared, set, includeCallTargets);
 	} else if (includeCallTargets) {
-	    Enumeration enum = call.spec.preVarMap.keys();
-	    while (enum.hasMoreElements()) {
-		set.add(((GenericVarDecl)enum.nextElement()));
+	    Enumeration e = call.spec.preVarMap.keys();
+	    while (e.hasMoreElements()) {
+		set.add(((GenericVarDecl)e.nextElement()));
 	    }
 	}
 	return;

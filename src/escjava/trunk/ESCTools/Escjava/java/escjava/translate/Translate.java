@@ -451,9 +451,9 @@ public final class Translate
     // First, provide zero-equivalent values for fields in first-inherited
     // interfaces
     if (tdecl instanceof ClassDecl) {
-      Enumeration enum = GetSpec.getFirstInheritedInterfaces((ClassDecl)tdecl);
-      while (enum.hasMoreElements()) {
-        TypeDecl tdSuperInterface = (TypeDecl)enum.nextElement();
+      Enumeration interfaces = GetSpec.getFirstInheritedInterfaces((ClassDecl)tdecl);
+      while (interfaces.hasMoreElements()) {
+        TypeDecl tdSuperInterface = (TypeDecl)interfaces.nextElement();
         instanceInitializeZero(tdSuperInterface);
       }
     }

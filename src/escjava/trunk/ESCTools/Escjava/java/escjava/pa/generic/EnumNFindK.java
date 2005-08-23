@@ -102,20 +102,20 @@ public class EnumNFindK implements Abstractor {
       return true;
     }
     
-    for(EnumKofN enum = new EnumKofN(k, bddManager.jbdd_num_vars());
-    enum.getNext(); ) {
+    for(EnumKofN enumKofN = new EnumKofN(k, bddManager.jbdd_num_vars());
+    enumKofN.getNext(); ) {
       
       kclauses++;
       
-      if( disjProver.quickCheck(enum) == DisjunctionProver.UNKNOWN ) {
+      if( disjProver.quickCheck(enumKofN) == DisjunctionProver.UNKNOWN ) {
         
-        if( noisy ) say("kbdd = "+disjProver.printClause( enum ));
+        if( noisy ) say("kbdd = "+disjProver.printClause( enumKofN ));
         
         // Try to find extension to n-string that is unknown
         
-        Disjunction nd = new Disjunction(enum);
+        Disjunction nd = new Disjunction(enumKofN);
         if( !extendToMaxDisjUnknown(nd,0,disjProver) ) {
-          Assert.fail("Problem extending "+disjProver.printClause( enum )
+          Assert.fail("Problem extending "+disjProver.printClause( enumKofN )
                       +" to maximal disjunction of unknown validity");
         }
         
@@ -131,8 +131,8 @@ public class EnumNFindK implements Abstractor {
         if( disjProver.check(nd)) {
           // nd valid, find subset that is valid
           long usedBits = ~(-1L << bddManager.jbdd_num_vars());
-          findMinDisjValid( nd, disjProver, enum.stars & usedBits);
-          findMinDisjValid( nd, disjProver,~enum.stars & usedBits);
+          findMinDisjValid( nd, disjProver, enumKofN.stars & usedBits);
+          findMinDisjValid( nd, disjProver,~enumKofN.stars & usedBits);
           
           if( !invLeqK || size(nd) <= k ) {
             if( !disj.contains(nd) ) {
@@ -150,7 +150,7 @@ public class EnumNFindK implements Abstractor {
           }
         }
         
-        Assert.notFalse( disjProver.quickCheck(enum) != Prover.UNKNOWN );
+        Assert.notFalse( disjProver.quickCheck(enumKofN) != Prover.UNKNOWN );
       }
     }
     

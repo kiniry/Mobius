@@ -35,9 +35,9 @@ public class LabelInfoToString {
   
   public static String get() {
     StringBuffer sb = new StringBuffer();
-    for (Enumeration enum = annotationLocations.elements();
-	 enum.hasMoreElements(); ) {
-      String location = (String)enum.nextElement();
+    for (Enumeration annotations = annotationLocations.elements();
+	 annotations.hasMoreElements(); ) {
+      String location = (String)annotations.nextElement();
       sb.append(' ');
       sb.append(location);
     }

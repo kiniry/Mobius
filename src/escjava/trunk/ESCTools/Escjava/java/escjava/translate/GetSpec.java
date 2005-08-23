@@ -139,9 +139,9 @@ public final class GetSpec {
        */
       addModifiersToDMD(dmd, md);
       Set overrides = escjava.tc.FlowInsensitiveChecks.getAllOverrides(md);
-      Enumeration enum = overrides.elements();
-      while (enum.hasMoreElements()) {
-        MethodDecl smd = (MethodDecl)enum.nextElement();
+      Enumeration overridden_methods = overrides.elements();
+      while (overridden_methods.hasMoreElements()) {
+        MethodDecl smd = (MethodDecl)overridden_methods.nextElement();
         TypeSig.getSig(smd.parent).typecheck();
         
         addModifiersToDMD(dmd, smd);
@@ -1204,9 +1204,9 @@ public final class GetSpec {
     if (isConstructor && !spec.dmd.isConstructorThatCallsSibling()) {
       // first check fields in first-inherited interfaces
       ClassDecl cd = (ClassDecl)td;
-      Enumeration enum = getFirstInheritedInterfaces(cd);
-      while (enum.hasMoreElements()) {
-        TypeDecl tdSuperInterface = (TypeDecl)enum.nextElement();
+      Enumeration inheritedInterfaces = getFirstInheritedInterfaces(cd);
+      while (inheritedInterfaces.hasMoreElements()) {
+        TypeDecl tdSuperInterface = (TypeDecl)inheritedInterfaces.nextElement();
         nonNullInitChecks(tdSuperInterface, spec.post);
       }
       // then check fields in the current class
@@ -1287,9 +1287,9 @@ public final class GetSpec {
       TypeDecl tdSuper = TypeSig.getSig(cd.superClass).getTypeDecl();
       Set superClassInterfaces = new Set();
       addSuperInterfaces(tdSuper, superClassInterfaces);
-      Enumeration enum = superClassInterfaces.elements();
-      while (enum.hasMoreElements()) {
-        interfaces.remove(enum.nextElement());
+      Enumeration superClassesInterfaces = superClassInterfaces.elements();
+      while (superClassesInterfaces.hasMoreElements()) {
+        interfaces.remove(superClassesInterfaces.nextElement());
       }
     }
     return interfaces.elements();
@@ -1471,9 +1471,9 @@ public final class GetSpec {
     ExprVec r = ExprVec.make();
     
     TrAnExpr.initForClause();
-    for (Enumeration enum = scope.typeSigs(); enum.hasMoreElements();) {
+    for (Enumeration typeSigs = scope.typeSigs(); typeSigs.hasMoreElements();) {
       
-      TypeDecl td = ((javafe.tc.TypeSig)enum.nextElement()).getTypeDecl();
+      TypeDecl td = ((javafe.tc.TypeSig)typeSigs.nextElement()).getTypeDecl();
       
       for (int i = 0; i < td.elems.size(); i++) {
         TypeDeclElem tde = td.elems.elementAt(i);
@@ -1528,11 +1528,11 @@ public final class GetSpec {
     InvariantInfo ii = null;
     InvariantInfo iiPrev = null;
     
-    Enumeration enum = scope.invariants();
+    Enumeration invariants = scope.invariants();
     try {
       TrAnExpr.initForClause();
-      while (enum.hasMoreElements()) {
-        ExprDeclPragma ep = (ExprDeclPragma)enum.nextElement();
+      while (invariants.hasMoreElements()) {
+        ExprDeclPragma ep = (ExprDeclPragma)invariants.nextElement();
         Expr J = ep.expr;
         
         boolean Jvisible = !Main.options().filterInvariants
@@ -1676,9 +1676,9 @@ public final class GetSpec {
     }
     
     // Add the static fields
-    Enumeration enum = scope.fields();
-    while (enum.hasMoreElements()) {
-      FieldDecl fd = (FieldDecl)enum.nextElement();
+    Enumeration fields = scope.fields();
+    while (fields.hasMoreElements()) {
+      FieldDecl fd = (FieldDecl)fields.nextElement();
       
       TypeSig classSig = Types.toClassTypeSig(fd.type);
       

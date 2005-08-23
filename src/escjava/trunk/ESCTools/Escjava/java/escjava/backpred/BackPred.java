@@ -82,10 +82,10 @@ public class BackPred
         // Print them out, and add their contribution to the BP. 
         Info.out("[TypeSig contributors for "
                  +Types.printName(scope.originType)+":");
-        for( Enumeration enum = scope.typeSigs();
-             enum.hasMoreElements(); )
+        for( Enumeration typeSigs = scope.typeSigs();
+             typeSigs.hasMoreElements(); )
         {
-            TypeSig sig2 = (TypeSig)enum.nextElement();
+            TypeSig sig2 = (TypeSig)typeSigs.nextElement();
             Info.out("    "+Types.printName( sig2 ));
             addContribution( sig2.getTypeDecl(), proverStream );
             dta.append(" "+simplifyTypeName( sig2 ) );
@@ -98,9 +98,9 @@ public class BackPred
 
 
         // Handle constant fields' contribution:
-        for( Enumeration enum = scope.fields();
-        enum.hasMoreElements(); ) {
-            FieldDecl fd = (FieldDecl)enum.nextElement();
+        for( Enumeration fields = scope.fields();
+        fields.hasMoreElements(); ) {
+            FieldDecl fd = (FieldDecl)fields.nextElement();
             if (!Modifiers.isFinal(fd.modifiers) || fd.init==null)
                 continue;
             
