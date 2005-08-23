@@ -7,11 +7,12 @@ package javafe.filespace;
  */
 
 public class Resolve_AmbiguousName extends Exception {
-
-    Tree ambiguousPackage;	// The package that is also a reference type
-
-    public Resolve_AmbiguousName(String message, Tree P) {
-	super(message);
-	ambiguousPackage = P;
-    }
+  private static final long serialVersionUID = 2257695944062705896L;
+  
+  Tree ambiguousPackage;	// The package that is also a reference type
+  
+  public Resolve_AmbiguousName(String message, Tree P) {
+    super(message);
+    ambiguousPackage = P;
+  }
 }
