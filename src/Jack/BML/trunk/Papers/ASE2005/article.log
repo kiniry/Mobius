@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  22 AUG 2005 15:41
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  23 AUG 2005 14:38
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -112,15 +112,20 @@ st.length &&[]
 
 [6] [7] [8]
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 169.
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 165.
  [9]) (./wpbc.tex [10] (./wpSingleInstr.tex [11]) (./loops.tex))
-(./results.tex [12] [13]
-Overfull \hbox (126.04858pt too wide) in paragraph at lines 187--242
+(./results.tex
+Overfull \hbox (1.91963pt too wide) in paragraph at lines 2--2
+[]\OT1/cmr/bx/n/14.4 Comparison be-tween source and byte-code proofs 
+ []
+
+[12] [13]
+Overfull \hbox (25.68661pt too wide) in paragraph at lines 185--240
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--242
+Underfull \hbox (badness 10000) in paragraph at lines 185--240
 
  []
 
@@ -129,12 +134,12 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 ) (./conclusion.tex [14]) (./article.bbl [15]) [16] (./article.aux) ) 
 Here is how much of TeX's memory you used:
- 1077 strings out of 95847
- 11937 string characters out of 1195948
- 58280 words of memory out of 1000001
- 3985 multiletter control sequences out of 10000+50000
+ 1076 strings out of 95847
+ 11927 string characters out of 1195948
+ 59280 words of memory out of 1000001
+ 3984 multiletter control sequences out of 10000+50000
  16703 words of font info for 64 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
  32i,15n,24p,966b,358s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (16 pages, 52096 bytes).
+Output written on article.dvi (16 pages, 51164 bytes).

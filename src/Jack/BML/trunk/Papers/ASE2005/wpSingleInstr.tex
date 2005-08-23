@@ -22,22 +22,22 @@
 %has two conjuncts - one in the case when the dereferenced object is not null and the instruction execution terminates normally; the other one stands for the case when this is not true. Note, in case the exception thrown is not handled, we substitute the special specification variable \jmlKey{EXC} with the thrown exception object.
 
 
-\begin{figure}[htp]
-$$
- (\texttt{Cl.f})\oplus[e2 \rightarrow e1](o) = \left\{ \begin{array} {ll}
-						       e1 & if \ e2 = o \\
-					               \texttt{Cl.f}(o)	& else 
-	\end{array}\right. 
-$$ 
-\caption{Overriding Function}
-\label{override}
-\end{figure}
+%\begin{figure}[!htp]
+%$$
+% (\texttt{Cl.f})\oplus[e2 \rightarrow e1](o) = \left\{ \begin{array} {ll}
+%						       e1 & if \ e2 = o \\
+%					               \texttt{Cl.f}(o)	& else 
+%	\end{array}\right. 
+%$$ 
+%\caption{Overriding Function}
+%\label{override}
+%\end{figure}
 
 \subsubsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
 We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 
-In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$, in case the dereferenced object is not null. The definition of update function is given in figure~\ref{override}.
+%In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$, in case the dereferenced object is not null. The definition of update function is given in figure~\ref{override}.
 
 
 %To illustrate how references are treated we give an example at fig.\ref{aliasing} - a method that assigns to the parameter's instance integer field (we give the example in source code to keep simplicity). 

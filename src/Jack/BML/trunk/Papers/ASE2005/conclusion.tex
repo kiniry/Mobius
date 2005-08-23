@@ -10,10 +10,9 @@ We are now aiming to complete our architecture for establishing trust in untrust
 In this way, several important directions for future work are:
 \begin{itemize}
 \item perform case studies and strengthen the tool with more experiments.
-\item find an efficient representation and validation of proofs in order to construct a PCC framework for Java bytecode.
- We would like to build a PCC framework where the proofs are done interactively over the source code
-and then compiled down to bytecode. Actually, as we stated in Section \ref{results} the proof obligations generated over a source program and
- over its compilation with non optimizing compiler are syntactically equivalent modulo name and types. 
+\item  a PCC framework where the proofs are done interactively over the source code
+and then compiled down to bytecode. As we discussed in Section \ref{results} in the performed tests the 
+proof obligations generated over a source program and over its compilation with non optimizing compiler are syntactically the same modulo names and types.  
 \item an extension of the framework applying previous research results in automated annotation generation for Java bytecode (see~\cite{PBBHL}). The client thus will have the possibility to verify a security policy by propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
 %\item correctness of the semantics of the weakest precondition calculus proposed, which we will do over the bytecode operational semantics. 
 

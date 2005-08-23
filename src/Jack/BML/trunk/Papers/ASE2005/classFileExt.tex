@@ -85,10 +85,6 @@ instructions that use/change the execution stack.
 
 
 
-
-
-
- 
 \subsection{Compiling JML into bytecode specification language}\label{comJML}
 
 %This section explains how JML specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
@@ -118,8 +114,8 @@ an integer type.% In case that the JML specification contains boolean expression
  For instance, in the example for the method 
 \texttt{isElem} and its specification in Fig. \ref{replaceSrc}  the postcondition contains an equivalence between the JML expression  
 \result \ and a predicate. As the method \texttt{isElem} is declared with return type boolean the expression \result \ has type boolean on source level. 
-Still, the bytecode resulting from the compilation of the method  \texttt{isElem} has type integer. This means that the compiler method has to make
- more effort than simply compiling the left and right side of the equivalence in the postcondition, otherwise the postcondition will not make sense
+Still, the bytecode resulting from the compilation of the method  \texttt{isElem} returns a value of type integer. This means that the JML compiler has to 
+``make more effort'' than simply compiling the left and right side of the equivalence in the postcondition, otherwise the postcondition will not make sense
  (it will not be well typed). Actually, 
 if the JML specification contains program boolean expressions that the Java compiler will compile to bytecode expression with an integer type, the JML compiler 
 will also compile them in integer expressions and will transform the specification condition in equivalent one 
