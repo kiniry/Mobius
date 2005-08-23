@@ -1,0 +1,23 @@
+ESC/Java version VERSION
+    [TIME]
+
+Helper3 ...
+  Prover started:TIME
+    [TIME]
+
+Helper3: Helper3() ...
+------------------------------------------------------------------------
+Helper3.java:20: Warning: Possible violation of object invariant (Invariant)
+                                       ^
+Associated declaration is "Helper3.java", line 14, col 6:
+  //@ non_null
+      ^
+Helper3: Helper3(boolean) ...
+    [TIME]  passed
+
+Helper3: non_helper() ...
+    [TIME]  passed
+
+Helper3: helper() ...
+    [TIME]  passed immediately
+  [TIME total]
