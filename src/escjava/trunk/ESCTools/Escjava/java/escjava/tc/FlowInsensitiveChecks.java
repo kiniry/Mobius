@@ -1989,7 +1989,7 @@ System.out.println("FOUND " + t);
               } else if (md.body == null) {
                 ErrorSet.error(p.getStartLoc(),
                                "The helper pragma cannot be applied " +
-                               "to method without a given body");
+                               "to method without a body");
               }
               break;
             }
@@ -2344,12 +2344,13 @@ System.out.println("FOUND " + t);
 
         case TagConstants.MODIFIESGROUPPRAGMA: {
           ModifiesGroupPragma mg = (ModifiesGroupPragma)p;
-          if (ctxt instanceof InitBlock || ctxt instanceof RoutineDecl ) {
+          if (ctxt instanceof InitBlock || ctxt instanceof RoutineDecl) {
             CondExprModifierPragmaVec v = mg.items;
             for (int i=0; i<v.size(); ++i) {
               checkModifierPragma(v.elementAt(i),ctxt,env);
             }
-            if (mg.precondition != null) mg.precondition = checkPredicate(env,mg.precondition); // FIXME - pre environment ?
+            if (mg.precondition != null) 
+              mg.precondition = checkPredicate(env,mg.precondition); // FIXME - pre environment ?
           } else {
             ErrorSet.error(mg.clauseLoc,
                            "A modifies annotation " +
