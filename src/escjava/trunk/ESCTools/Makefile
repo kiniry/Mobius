@@ -293,7 +293,8 @@ jml: .jml
 	$(JML) \
 	  --sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
 	  --classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${SPECS}:)${CLASSPATH}" \
-	  --assignable --Assignable --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
+	  --assignable --Assignable --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jml
 
 jmlc: .jmlc
@@ -303,7 +304,8 @@ jmlc: .jmlc
 	  --sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
 	  --classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${SPECS}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
-	  --assignable --Assignable --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
+	  --assignable --Assignable --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jmlc
 
 ################################################################################
