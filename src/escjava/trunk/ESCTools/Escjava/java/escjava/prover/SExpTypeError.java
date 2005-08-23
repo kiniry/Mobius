@@ -11,4 +11,6 @@ package escjava.prover;
  * of a list. </p>
  */
 
-final public class SExpTypeError extends Exception {}
+final public class SExpTypeError extends Exception {
+  private static final long serialVersionUID = 5767797092888960711L;
+}

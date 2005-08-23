@@ -38,9 +38,10 @@ import javafe.util.*;
  * clearer preconditions.
  */
 
-public class SubProcess
-{
-    static public class Died extends RuntimeException {}
+public class SubProcess {
+    static public class Died extends RuntimeException {
+      private static final long serialVersionUID = 2624260378471410994L;
+    }
 
     final static public /*@ non_null @*/ Died DIED = new Died();
 

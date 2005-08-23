@@ -7,12 +7,13 @@ package javafe.util;
  * invalid.
  */
 
-public class UsageError extends java.lang.Exception
-{
-    /**
-     * Create a <code>UsageError</code> exception.
-     */
-    public UsageError(String s) {
-	super(s);
-    }
+public class UsageError extends java.lang.Exception {
+  private static final long serialVersionUID = 961376577543322857L;
+  
+  /**
+   * Create a <code>UsageError</code> exception.
+   */
+  public UsageError(String s) {
+    super(s);
+  }
 }

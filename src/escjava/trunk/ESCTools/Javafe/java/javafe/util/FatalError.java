@@ -18,15 +18,16 @@ package javafe.util;
  * anywhere else only for local cleanup purposes.
  */
 
-public class FatalError extends java.lang.RuntimeException
-{
-    /**
-     * Create a <code>FatalError</code> exception.  This constructor is
-     * intended to be called only by <code>ErrorSet.fatal</code>.
-     */
-    //@ normal_behavior
-    //@ modifies this.*;
-    /* package*/ FatalError() {
-	super("A fatal Error has occurred");
-    }
+public class FatalError extends java.lang.RuntimeException {
+  private static final long serialVersionUID = 4916981747846620833L;
+  
+  /**
+   * Create a <code>FatalError</code> exception.  This constructor is
+   * intended to be called only by <code>ErrorSet.fatal</code>.
+   */
+  //@ normal_behavior
+  //@ modifies this.*;
+  /* package*/ FatalError() {
+    super("A fatal Error has occurred");
+  }
 }

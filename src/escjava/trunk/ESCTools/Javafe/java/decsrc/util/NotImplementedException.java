@@ -1,8 +1,9 @@
 package decsrc.util;
 
 public class NotImplementedException extends RuntimeException {
-    NotImplementedException(String s) {
-	super(s);
-    }
+  private static final long serialVersionUID = 852607024405642641L;
+  
+  NotImplementedException(String s) {
+    super(s);
+  }
 }
-

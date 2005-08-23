@@ -10,12 +10,13 @@ package javafe.util;
  * @see Assert
  */
 
-public class NotImplementedException extends RuntimeException
-{
-    //@ normal_behavior
-    //@ requires s != null;
-    //@ modifies this.*;
-    /*package*/ NotImplementedException(String s) {
-	super(s);
-    }
+public class NotImplementedException extends RuntimeException {
+  private static final long serialVersionUID = 582846680511107743L;
+  
+  //@ normal_behavior
+  //@ requires s != null;
+  //@ modifies this.*;
+  /*package*/ NotImplementedException(String s) {
+    super(s);
+  }
 }
