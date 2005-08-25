@@ -1,21 +1,12 @@
 % CHANGED - the example o compilation of loop specification
 
-\section{Bytecode Specification \\Language (BCSL)}\label{bcSpecLg}
-%Traditionally a lot of research has been done in the field of program verification for structured program languages~\cite{WPCDS},
-%~\cite{DisDij}. This explains the fact that the existing specification languages are designed for dealing with high level program languages. 
-In this section, we itroduce a bytecode specification language which we call BCSL. We define a compiler from the high level specification language JML to BCSL. The specification compilation results in a class file extension. In the following we give the grammar of BCSL and sketch the specification compiler.
+\section{Bytecode Specification Language (BCSL)}\label{bcSpecLg}
 
-%In order to verify 
-%a program w.r.t. to some property, usually the property is expressed in a suitable specification language.
-%After compilation, the executable code is detached from the source code; still there are situations where the bytecode is subject to verification procedures (e.g. for example establishing trust in it). A typical example is when an untrusted bytecode implementing a public interface arrives at a 
-%receiver side and the latter wants to check that the unknown  bytecode respects the interface specification (which may not be trivial).
-% Here comes the need for writing specification on  bytecode level.
+In this section, we introduce a bytecode specification language which we call BCSL. 
+We define a compiler from the high level specification language JML to BCSL. 
+%The BCSL specifications is inserted in the class file as user defined attributes.
 
-
-\subsection{Grammar} \label{grammar}
-BCSL (short for ByteCode Specification Language) is based on the design principles of JML (Java Modeling Language), i.e. it is a behaviorial interface specification language and follows the design by contract approach, (see \cite{M97oos}).
-
-In order to give a flavour of what JML specifications look like, in Fig.~\ref{replaceSrc} we show an example of a Java class and its 
+Before going farther, we give a flavour of what JML specifications look like. In Fig.~\ref{replaceSrc} we show an example of a Java class and its 
 JML annotation that models a list stored in an array field. 
 From the example, we notice that JML annotations are written in comments and so they are not visible by the Java compiler.
 The specification of method \verb!isElem! declares
@@ -50,16 +41,21 @@ public class ListArray {
 \caption{class \texttt{ListArray} with JML annotations} 
 \label{replaceSrc}
 \end{figure}
-BCSL corresponds to a representative subset of JML.
 
- The language defined here is expressive enough for most purposes including the description of non trivial functional and 
+
+ In the following we give the grammar of BCSL and sketch the specification compiler.
+\subsection{Grammar} \label{grammar}
+BCSL (short for ByteCode Specification Language) is based on the design principles of JML (Java Modeling Language), i.e. it is a behaviorial interface specification language and follows the design by contract approach, (see \cite{M97oos}).
+
+
+BCSL corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and 
  security properties. We now discuss some of the specification clauses, for the rest their semantics is the same as in JML and can be found in~\cite{RT03djml,JMLRefMan}.
 
- As the grammar shows, BCSL supports like JML: 
+ Specification clauses in BCSL that are taken from JML and inherit their semantics directly from JML include
 \begin{itemize}
    \item class specification, e.g class invariants
-   \item  method pre and postconditions (normal and exceptional) and method frame conditions (the locations that may be modified by the method). 
-     We also support behavioral subtyping by specification inheritance (the keyword \jmlStmt{also} )
+   \item  method pre and postconditions (normal and exceptional), method frame conditions (the locations that may be modified by the method). 
+     We also support behavioral subtyping by specification inheritance (the keyword \jmlStmt{also})
    \item inter method specification, for instance loop invariants. One can notice that the loop invariant specification are tagged with the index of the instruction at which the loop invariant must hold (the loop entry instruction). this is different from  JML
 where loop invariants are written at the beginning of the declaration of the loop statement, while the BCSL specification are separated
 from the bytecode

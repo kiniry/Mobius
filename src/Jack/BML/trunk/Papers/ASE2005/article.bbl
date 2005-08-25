@@ -32,6 +32,11 @@ L.~Burdy, A.~Requet, and J.-L. Lanet.
 G.T.Leavens, E.~Poll, C.~Clifton, Y.~Cheon, C.~Ruby, D.~Cok, and J.~Kiniry.
 \newblock {\em JML Reference Manual}.
 
+\bibitem{Ljbc}
+X.~Leroy.
+\newblock {Java} bytecode verification: Algorithms and formalizations.
+\newblock {\em Journal of Automated Reasoning}.
+
 \bibitem{VMSpec}
 T.~Lindholm and F.~Yellin.
 \newblock {Java} virtual machine specification.

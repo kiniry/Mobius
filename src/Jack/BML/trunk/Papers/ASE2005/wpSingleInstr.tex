@@ -33,7 +33,7 @@
 %\label{override}
 %\end{figure}
 
-\subsubsection{Manipulating object fields}
+\subsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
 We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 
@@ -60,7 +60,7 @@ We are using function update when assigning a value to a field reference as, for
  %\label{aliasing}
 %\end{figure}
 
-\subsubsection{Method calls}
+\subsection{Method calls}
 Method calls are handled by using their specification. A method specification is a contract between callers and callees --- the precondition of the called method
 must be established by the caller at the program point where the method is invoked and its postcondition is assumed to hold after the invocation. The rule for
 invocation on a non-void instance method is given in figure~\ref{wpInv}. In the precondition of the called method, the formal parameters and the object on which the method is called are substituted with the first \textit{n+1} elements from the top of stack. 

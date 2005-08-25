@@ -4,11 +4,10 @@ The present paper addresses the  problem of establishing trust in software compo
 The question concerns important areas like 
 smart card applications, mobile phones, bank cards, ID cards and whatever scenario where untrusted code should be installed and executed.
 
- In particular, depending on what is the level of trust the code receiver wants to establish, 
-the state of the art proposes different solutions. 
+ In particular, the state of the art proposes different solutions. 
 For example, the verification may be performed over the source code. 
 In this case, the code receiver should make the compromise to trust the compiler, which is problematic. 
-The bytecode verification technique proposes another solution, which does not require to trust the compiler. 
+The bytecode verification technique \cite{Ljbc} is another solution, which does not require to trust the compiler. 
 The bytecode verifier performs the static analysis directly over the bytecode yet, it can only guarantee that 
 the code is well typed and well structured. %that the bytecode does not violate the proper function of the virtual machine. 
 The Proof Carrying Code paradigm (PCC) and the certifying compiler \cite{Necula97,ComNec,DesNecLee98} are another alternative.
@@ -20,10 +19,10 @@ As the certifying compiler is designed to be completely automatic, it will not b
  
 We propose a verification framework with the following features:
 \begin{itemize}
-  \item translating source program annotation into bytecode annotation.
- Thus bytecode can benefit from the source specification and does not need to be accompanied by its source code. 
+  \item compiler from source program annotation into bytecode annotation.
+ Thus, bytecode can benefit from the source specification and does not need to be accompanied by its source code. 
 
-   \item establishing the correctness of Java bytecode programs using a verification condition generator over Java bytecode, which supports
+   \item verification condition generator over Java bytecode, which supports
 the bytecode annotation. 
 \end{itemize}
 
@@ -40,16 +39,20 @@ For instance, its dialect JavaCard is largely used in smart card applications an
 (MIDP) finds application in GSM mobile components. 
 %In this article, we propose a static verification technique using formal methods for sequential Java bytecode programs.
 
-The aforementioned scheme is composed by several components.
+The proposed scheme is composed by several components.
+ We define a bytecode specification language, called BCSL, and supply a compiler from 
+ the high level Java specification language JML~\cite{JMLRefMan} to BCSL. 
+ BCSL supports a JML subset which is expressive enough to specify rich functional properties. 
+The specification is inserted in the class file format in newly defined attributes, thus making not only the code mobile but also its specification
+and allowing the Java bytecode benefit from the source specification. These class
+ file extensions do not affect the JVM performance.
 We define a bytecode logic in terms of weakest precondition calculus for the sequential Java bytecode language. 
 The logic gives rules for almost all Java bytecode instructions and supports the Java specific features like 
 exceptions, references, method calls and subroutines.  
- We define a bytecode specification language, called BCSL, and supply a compiler from 
- the high level Java specification language JML~\cite{JMLRefMan} to BCSL. 
- BCSL supports a JML subset which is expressive enough to specify rich functional properties. The specification is 
- inserted in the class file format in newly defined attributes, thus making not only the code mobile but also its specification
-and allowing the Java bytecode benefit from the source specification. These class
- file extensions do not affect the JVM performance. We have implementations of a verification condition generator based on the weakest precondition calculus and of the JML specification compiler. Both are integrated in the Java Applet Correctness Kit (JACK)~\cite{BRL-JACK}. 
+ We have implementations of a verification condition generator based on the weakest precondition calculus and of
+ the JML specification compiler. Both are integrated in the Java Applet Correctness Kit tool (JACK)~\cite{BRL-JACK}.
+
+ 
  The full specifications of the JML compiler, the weakest precondition predicate transformer definition and its proof of correctness can be found in~\cite{JBL05MP}.
   
 The remainder of the paper is organized as follows: 
