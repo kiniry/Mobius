@@ -9,45 +9,45 @@ Warning--I didn't find a database entry for "DBLP:conf/mpc/2000"
 Warning--can't use both author and editor fields in M97oos
 Warning--empty publisher in M97oos
 Warning--empty year in Ljbc
-You've used 14 entries,
+You've used 13 entries,
             2118 wiz_defined-function locations,
-            622 strings with 6274 characters,
-and the built_in function-call counts, 4282 in all, are:
-= -- 413
-> -- 207
+            618 strings with 6202 characters,
+and the built_in function-call counts, 4041 in all, are:
+= -- 387
+> -- 194
 < -- 5
-+ -- 82
-- -- 67
-* -- 252
-:= -- 734
-add.period$ -- 46
-call.type$ -- 14
-change.case$ -- 74
++ -- 77
+- -- 63
+* -- 241
+:= -- 686
+add.period$ -- 42
+call.type$ -- 13
+change.case$ -- 68
 chr.to.int$ -- 0
-cite$ -- 17
-duplicate$ -- 183
-empty$ -- 335
-format.name$ -- 67
-if$ -- 904
+cite$ -- 16
+duplicate$ -- 175
+empty$ -- 320
+format.name$ -- 63
+if$ -- 856
 int.to.chr$ -- 0
-int.to.str$ -- 14
+int.to.str$ -- 13
 missing$ -- 10
-newline$ -- 74
-num.names$ -- 30
-pop$ -- 92
+newline$ -- 68
+num.names$ -- 28
+pop$ -- 89
 preamble$ -- 1
-purify$ -- 60
+purify$ -- 56
 quote$ -- 0
-skip$ -- 124
+skip$ -- 118
 stack$ -- 0
-substring$ -- 163
+substring$ -- 158
 swap$ -- 47
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 52
+type$ -- 48
 warning$ -- 3
-while$ -- 37
-width$ -- 16
-write$ -- 154
+while$ -- 35
+width$ -- 15
+write$ -- 141
 (There was 1 error message)

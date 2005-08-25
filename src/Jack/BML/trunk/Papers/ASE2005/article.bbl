@@ -15,12 +15,6 @@ R.~Bornat.
 \newblock Proving pointer programs in {Hoare Logic}.
 \newblock In {\em MPC}, pages 102--126, 2000.
 
-\bibitem{JML2BCSpec}
-L.~Burdy and M.~Pavlova.
-\newblock From {JML} to {BCSL}.
-\newblock Technical report, INRIA, Sophia-Antipolis, 2004.
-\newblock draft.
-
 \bibitem{BRL-JACK}
 L.~Burdy, A.~Requet, and J.-L. Lanet.
 \newblock {Java} applet correctness: A developer-oriented approach.
