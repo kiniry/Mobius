@@ -1,4 +1,4 @@
-TestSuite.java
+fTestSuite.java
 ## Platform dependent
 PureCheck.java
 Quant.java
@@ -23,6 +23,7 @@ DesugaringA.java
 Inconsistent.java
 THERR.java
 StaticInit.java
+Helper3.java
 ## Until purity is resolved
 NL.java
 ## Simplify problems
