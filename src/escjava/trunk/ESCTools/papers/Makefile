@@ -105,7 +105,7 @@ cleanup:
 
 clean:
 	rm -rf auto _region_* \
-		$(PAPERS) $(HOMEWORK) ${DIAGRAMS} \
+		$(PAPERS) $(HOMEWORK) \
 		*.aux *.log *~ *.dvi *.brf \
 		*.cp *.cps *.fn *.ky *.pg *.tp *.vr \
 		*.bbl *.blg *.toc *.thm *.out *.cb \
