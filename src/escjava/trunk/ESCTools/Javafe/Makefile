@@ -104,8 +104,9 @@ clean: cleanclasses
 	${MAKE} -C java/jtools clean
 	${MAKE} -C astgen clean     ##  Has to be last - used by others
 
+# Erase content of ${CLASSDIRECTORY} except for CVS and .cvsignore.
 cleanclasses:
-	rm -rf ${CLASSDIRECTORY}
+	rm -rf `find ${CLASSDIRECTORY}/* ! -name CVS`
 
 ###########################################################################
 ## docs targets
