@@ -22,14 +22,15 @@ public class TriggerlessQuantWarning extends SimplifyResult
 
     public /*@ non_null @*/ SExp e1;
 
-    //@ normal_behavior
-    //@   requires 0 <= n;
-    //@   modifies this.*;
-    //@   ensures this.e0 == e0;
-    //@   ensures this.n == n;
-    //@   ensures this.e1 == e1;
-    //@   ensures this.labels == labels;
-    //@   ensures this.context == context;
+    /*@ normal_behavior
+      @   requires 0 <= n;
+      @   modifies this.e0, this.n, this.e1;
+      @   ensures this.e0 == e0;
+      @   ensures this.n == n;
+      @   ensures this.e1 == e1;
+      @   ensures this.labels == labels;
+      @   ensures this.context == context;
+      @*/
     TriggerlessQuantWarning(SList labels,
                             SList context,
                             /*@ non_null @*/ SExp e0,

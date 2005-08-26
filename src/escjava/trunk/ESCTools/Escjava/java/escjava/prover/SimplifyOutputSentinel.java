@@ -15,11 +15,12 @@ public class SimplifyOutputSentinel extends SimplifyOutput
 {
     /*@ spec_public @*/ int number;
 
-    //@ normal_behavior
-    //@   requires kind == VALID || kind == INVALID || kind == UNKNOWN;
-    //@   modifies this.*;
-    //@   ensures this.kind == kind;
-    //@   ensures this.number == number;
+    /*@ normal_behavior
+      @   requires kind == VALID || kind == INVALID || kind == UNKNOWN;
+      @   modifies this.number;
+      @   ensures this.kind == kind;
+      @   ensures this.number == number;
+      @*/
     SimplifyOutputSentinel(int kind, int number) {
         super(kind);
         this.number = number;

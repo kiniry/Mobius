@@ -35,8 +35,8 @@ import java.lang.ref.SoftReference;
  */
 
 public class Date implements java.io.Serializable, Cloneable, Comparable {
-    private /*@ spec_public @*/ transient Calendar cal;
-    private /*@ spec_public @*/ transient long fastTime;
+    //@ public model Calendar cal;
+    //@ public model long fastTime;
     
     /*@ public normal_behavior
        @   assignable \nothing;

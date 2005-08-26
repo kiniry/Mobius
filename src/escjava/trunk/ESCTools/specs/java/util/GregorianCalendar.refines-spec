@@ -28,28 +28,28 @@ public class GregorianCalendar extends Calendar {
     public static final int BC;
     public static final int AD;
     
-    private /*@ spec_public @*/ static final int JAN_1_1_JULIAN_DAY;
-    private /*@ spec_public @*/ static final int EPOCH_JULIAN_DAY;
-    private /*@ spec_public @*/ static final int EPOCH_YEAR;
+    //--- public model static final int JAN_1_1_JULIAN_DAY;
+    //--- public model static final int EPOCH_JULIAN_DAY;
+    //--- public model static final int EPOCH_YEAR;
 
-    private /*@ spec_public @*/ static final int ONE_SECOND;
-    private /*@ spec_public @*/ static final int ONE_MINUTE;
-    private /*@ spec_public @*/ static final int ONE_HOUR;
-    private /*@ spec_public @*/ static final long ONE_DAY;
-    private /*@ spec_public @*/ static final long ONE_WEEK;
+    //--- public model static final int ONE_SECOND;
+    //--- public model static final int ONE_MINUTE;
+    //--- public model static final int ONE_HOUR;
+    //--- public model static final long ONE_DAY;
+    //--- public model static final long ONE_WEEK;
 
-    private /*@ spec_public @*/ static final int[] NUM_DAYS; 
-    private /*@ spec_public @*/ static final int[] LEAP_NUM_DAYS; 
-    private /*@ spec_public @*/ static final int[] MONTH_LENGTH; 
-    private /*@ spec_public @*/ static final int[] LEAP_MONTH_LENGTH;
+    //--- public model static final int[] NUM_DAYS; 
+    //--- public model static final int[] LEAP_NUM_DAYS; 
+    //--- public model static final int[] MONTH_LENGTH; 
+    //--- public model static final int[] LEAP_MONTH_LENGTH;
         
-    private /*@ spec_public @*/ static final int[] MIN_VALUES;
-    private /*@ spec_public @*/ static final int[] LEAST_MAX_VALUES;
-    private /*@ spec_public @*/ static final int[] MAX_VALUES;
+    //--- public model static final int[] MIN_VALUES;
+    //--- public model static final int[] LEAST_MAX_VALUES;
+    //--- public model static final int[] MAX_VALUES;
     
-    private /*@ spec_public @*/ long gregorianCutover;
-    private /*@ spec_public @*/ transient long normalizedGregorianCutover; 
-    private /*@ spec_public @*/ transient int gregorianCutoverYear;
+    //--- public model long gregorianCutover;
+    //--- public model long normalizedGregorianCutover; 
+    //--- public model int gregorianCutoverYear;
 
     // The locale and timezone of this object is inherited from Calendar:
     //        spec_public TimeZone zone
@@ -711,7 +711,8 @@ public class GregorianCalendar extends Calendar {
       @    assignable \nothing;
       @    signals (IllegalArgumentException);
       @*/
-    public void add(int field, int amount);
+    public void add(int field, int amount)
+	throws IllegalArgumentException;
 
     /*@ also
       @   public normal_behavior
@@ -873,7 +874,8 @@ public class GregorianCalendar extends Calendar {
       @     ensures fields[field] == value && isSet[field]
       @             && calendarFieldsAreSet();
       @*/
-    public void roll(int field, int amount);
+    public void roll(int field, int amount)
+	throws IllegalArgumentException;
 
     /*@ also
       @ public normal_behavior
@@ -1025,7 +1027,8 @@ public class GregorianCalendar extends Calendar {
       @         ensures time == millis - zoneOffset - get(DST_OFFSET);
       @     |}
       @*/
-    protected void computeTime();
+    protected void computeTime()
+	throws IllegalArgumentException;
     
     //------------------------------------------------------------------------
     // Private Methods from Source Code

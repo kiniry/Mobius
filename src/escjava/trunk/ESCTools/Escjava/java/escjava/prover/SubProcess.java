@@ -104,12 +104,13 @@ public class SubProcess {
      * @param pathAndArgs is an array containing the full pathname of the program to execute to
      * obtain the subprocess (e.g., "/usr/bin/emacs") and any command-line arguments.
      */
-    //@ public normal_behavior
-    //@   modifies this.*;
-    //@   ensures this.name == name;
-    //@   ensures to != null;
-    //@   ensures from != null;
-    //@   ensures !closed;
+    /*@ public normal_behavior
+      @   assignable this.name, to, from, P;
+      @   ensures this.name == name;
+      @   ensures to != null;
+      @   ensures from != null;
+      @   ensures !closed;
+      @*/
     public SubProcess(/*@ non_null @*/ String name, 
                       /*@ non_null @*/ String[] pathAndArgs,
 		      String[] envp) {
@@ -152,12 +153,13 @@ public class SubProcess {
      * occur.  This subprocess is guaranteed to be destroyed on
      * completion, regardless of which exit is taken. </p>
      */
-    //@ public normal_behavior
-    //@   modifies this.*;
-    //@   ensures P == null;
-    //@   ensures to == null;
-    //@   ensures from == null;
-    //@   ensures closed;
+    /*@ public normal_behavior
+      @   modifies from, to, P;
+      @   ensures P == null;
+      @   ensures to == null;
+      @   ensures from == null;
+      @   ensures closed;
+      @*/
     public void close() {
 	try {
 	    if (to != null)
@@ -293,9 +295,13 @@ public class SubProcess {
      * Turn an {@link IOException} resulting from a read on {@link
      * #from} into a fatal error.
      */
-    //@ private behavior
-    //@   modifies \everything;
-    //@   ensures false;
+    /*@ private behavior
+      @   requires true;
+      @   diverges true;
+      @   assignable \everything;
+      @   ensures false;
+      @   signals(Exception) false;
+      @*/
     private void handleReadError(/*@ non_null @*/ IOException e) {
 	ErrorSet.fatal("I/O error encountered while reading "
 		       + name + "'s output: " + e.getMessage());

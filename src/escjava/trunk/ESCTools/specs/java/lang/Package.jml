@@ -109,9 +109,10 @@ public class Package {
       @      <==> sealbase != null && sealbase.equals(url);
       @ also public exceptional_behavior
       @   requires url == null;
-      @   signals (java.lang.NullPointerException);
+      @   signals (NullPointerException);
       @*/
-    public /*@ pure @*/ boolean isSealed(URL url);
+    public /*@ pure @*/ boolean isSealed(URL url)
+	throws NullPointerException;
 
     // A version is at least compatible with itself:
     //@ ensures desired.equals(getSpecificationVersion()) ==> \result;

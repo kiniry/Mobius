@@ -219,6 +219,8 @@ public class Sammy extends NewProver {
     return null;
   }
   
+    //@ also
+    //@ assignable parameters, signature_defined, started;
   public ProverResponse stop_prover() {
     
     //++

@@ -81,11 +81,11 @@ public abstract class Calendar implements Serializable, Cloneable {
     protected /*@ spec_public @*/ boolean       isTimeSet; 
     protected /*@ spec_public @*/ boolean       areFieldsSet; 
     transient /*@ spec_public @*/ boolean       areAllFieldsSet;
-    private   /*@ spec_public @*/ boolean       lenient;
-    private   /*@ spec_public @*/ TimeZone      zone;
-    private   /*@ spec_public @*/ int           firstDayOfWeek;
-    private   /*@ spec_public @*/ int           minimalDaysInFirstWeek;
-    private   /*@ spec_public @*/ static        Hashtable cachedLocaleData;
+    //@ public model boolean       lenient;
+    //@ public model TimeZone      zone;
+    //@ public model int           firstDayOfWeek;
+    //@ public model int           minimalDaysInFirstWeek;
+    //@ public model static        Hashtable cachedLocaleData;
     
     /*@ spec_public @*/ static final int UNSET;
     /*@ spec_public @*/ static final int INTERNALLY_SET;
