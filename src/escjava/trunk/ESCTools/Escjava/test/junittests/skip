@@ -1,4 +1,4 @@
-fTestSuite.java
+TestSuite.java
 ## Platform dependent
 PureCheck.java
 Quant.java
@@ -13,6 +13,7 @@ NonNullBad.java
 FormalNonnullInheritance.java
 ## A bug / tests to be fixed
 MethodInSpec.java
+Helper3.java
 ## Modify everything tests
 ModEverything.java
 ## New tests
@@ -23,7 +24,6 @@ DesugaringA.java
 Inconsistent.java
 THERR.java
 StaticInit.java
-Helper3.java
 ## Until purity is resolved
 NL.java
 ## Simplify problems
