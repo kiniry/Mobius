@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  25 AUG 2005 17:24
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  26 AUG 2005 15:50
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -6,8 +6,8 @@ Babel <v3.7h> and hyphenation patterns for american, french, german, ngerman, n
 ohyphenation, loaded.
 (/usr/share/texmf/tex/latex/base/article.cls
 Document Class: article 2001/04/21 v1.4e Standard LaTeX document class
-(/usr/share/texmf/tex/latex/base/size11.clo
-File: size11.clo 2001/04/21 v1.4e Standard LaTeX file (size option)
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 2001/04/21 v1.4e Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -82,12 +82,12 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
 LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Try loading font information for U+msa on input line 42.
+LaTeX Font Info:    Try loading font information for U+msa on input line 45.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 42.
+LaTeX Font Info:    Try loading font information for U+msb on input line 45.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
@@ -95,54 +95,79 @@ File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 [1
 
 ]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 22.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 23.
  (/usr/share/texmf/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 22.
- [2]) (./architecture.tex
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 23.
+) (./architecture.tex [2]
 File: architecture.eps Graphic file (type eps)
 
-<architecture.eps> [3] [4]) (./classFileExt.tex
-Overfull \hbox (36.65945pt too wide) in paragraph at lines 40--40
-[]  \OT1/cmtt/m/n/10.95 //@ensures \result ==  (\exists int i; 0 <= i && i < li
-st.length &&[] 
+<architecture.eps>) (./classFileExt.tex [3] [4]
+Overfull \hbox (17.24684pt too wide) in paragraph at lines 42--42
+[]  \OT1/cmtt/m/n/10 //@ensures \result ==  (\exists int i; 0 <= i && i < list.
+length &&[] 
+ []
+
+[5]
+Overfull \hbox (15.04373pt too wide) in paragraph at lines 99--105
+\OT1/cmr/m/n/10 sup-plies for ev-ery method in the gen-er-ated class file the \
+OT1/cmr/bx/n/10 Line[]Number[]Table
+ []
+
+[6] [7]
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 170.
+) (./wpbc.tex [8] [9]
+Underfull \hbox (badness 10000) in paragraph at lines 43--50
+
  []
 
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+Underfull \hbox (badness 10000) in paragraph at lines 43--50
 
-[5] [6] [7] [8]
-LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 163.
- [9]) (./wpbc.tex [10] (./wpSingleInstr.tex [11]) (./loops.tex)) (./results.tex
+ []
 
-Overfull \hbox (1.91963pt too wide) in paragraph at lines 2--2
+
+Overfull \hbox (43.5262pt too wide) detected at line 68
+[]\OT1/cmr/m/n/10 ([] []\OML/cmm/m/it/10 ;   ;   []\OT1/cmr/m/n/10 ) = [] [][][
+]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--74
+
+ []
+
+(./wpSingleInstr.tex
+Overfull \hbox (6.22385pt too wide) detected at line 100
+[]
+ []
+
+) (./ctrlFlowWp.tex [10] [11])) (./results.tex
+Overfull \hbox (16.91963pt too wide) in paragraph at lines 2--2
 []\OT1/cmr/bx/n/14.4 Comparison be-tween source and byte-code proofs 
  []
 
-[12] [13]
-Overfull \hbox (25.68661pt too wide) in paragraph at lines 185--240
+[12]
+Overfull \hbox (9.30751pt too wide) in paragraph at lines 173--228
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 185--240
+Underfull \hbox (badness 10000) in paragraph at lines 173--228
 
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-) (./conclusion.tex [14]) (./article.bbl [15]) [16] (./article.aux) ) 
+) (./conclusion.tex [13]) (./article.bbl [14]) [15] (./article.aux) ) 
 Here is how much of TeX's memory you used:
- 1077 strings out of 95847
- 11933 string characters out of 1195948
- 59280 words of memory out of 1000001
- 3985 multiletter control sequences out of 10000+50000
- 16703 words of font info for 64 fonts, out of 500000 for 1000
+ 1064 strings out of 95847
+ 11764 string characters out of 1195948
+ 59259 words of memory out of 1000001
+ 3977 multiletter control sequences out of 10000+50000
+ 13912 words of font info for 55 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
- 32i,15n,24p,966b,358s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 32i,22n,24p,780b,455s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (16 pages, 50780 bytes).
+Output written on article.dvi (15 pages, 53548 bytes).

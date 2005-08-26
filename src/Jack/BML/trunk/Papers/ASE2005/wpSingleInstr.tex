@@ -36,7 +36,10 @@
 \subsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
-We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. 
+We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. In Fig.\ref{instrWP}, we give the \wpi \ rule for the
+instruction \instr{putfield} \texttt{Cl.f}, which updates the field \texttt{Cl.f}\footnote{ \texttt{Cl.f} stands for the field \texttt{f} declared in class 
+\texttt{Cl}} of the object referenced by the reference stored in the stack below the stack top \stack{\counter-1} with the value on the stack top \stack{\counter}.
+ Note that the rule takes in account the possible exceptional termination.
 %In Fig.~\ref{instrWP} the rule for \instr{putField} substitutes the corresponding field function \texttt{Cl.f} with \texttt{Cl.f} updated for object $o$, in case the dereferenced object is not null. The definition of update function is given in figure~\ref{override}.
 
 
@@ -96,21 +99,15 @@ $$
 \end{array}
 $$
 $\psi^{pre}(\texttt{m})$ -  the specified  precondition of  method \texttt{m} \\
-\\
 $\psi^{post}(\texttt{m})$ - the   specified   postcondition   of   method  \texttt{m}  \\
-\\
 $\excPost_{\texttt{m}}$ - the   exceptional   function   for   method  \texttt{m}  \\
-\\
 \texttt{numArgs}( \texttt{m} ) -  the    number   of   arguments   of   \texttt{m} \\  
-\\
 $e_{j} , j = 1 .. s$ - the   locations   modified   by   method   \texttt{m} \\
-\\
 $\tt{Exc_i}, i = 1..k$ -  the   exceptions   that  \texttt{m} may  throw \\
-\\
-$\phi_{\tt{Exc_i}}, i = 1..k$ -   the   precondition  \\
-\Myspace of the exception handler protecting the instruction against \\
-\Myspace $\tt{Exc_i} $  if   it    exists,   otherwise if   the exception   $\tt{Exc_i}$ is not handled    \\
-\Myspace     $ \phi = \excPost( \tt{Exc_i}) \substitution{ \jmlKey{EXC}}{ \stack{\counter}}$
+$\phi_{\tt{Exc_i}}, i = 1..k$ -   the   precondition  
+of the exception handler protecting the instruction against 
+ $\tt{Exc_i} $  if   it    exists,   otherwise if   the exception   $\tt{Exc_i}$ is not handled    
+   $ \phi = \excPost( \tt{Exc_i}) \substitution{ \jmlKey{EXC}}{ \stack{\counter}}$
 
 \caption{\wpi \ rule for a call to an instance non void method}
 \label{wpInv}

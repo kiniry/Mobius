@@ -7,75 +7,86 @@ Clyde Ruby and David Cok and Joseph Kiniry},
   OPTedition =   {},
   OPTmonth =     {aug},
   OPTyear =      {2004},
-  OPTnote =      {},
+  note =   {Department of Computer Science, Iowa State
+                  University. Available from
+                  {\url{http://www.jmlspecs.org}}},
   OPTannote =    {}
 }
 
 
+
 @BOOK{ARUCom1986,
-  AUTHOR =       "Aho AV and Sethi R and Ullman JD.",
+      
+  AUTHOR =  "Alfred V. Aho and Ravi Sethi and Jeffrey D. Ullman",
   PUBLISHER =    "Addison-Wesley: Reading",
   TITLE =        "Compilers-Principles, Techniques and Tools ",
   YEAR =         "1986"
 }
 
-@TechReport{JML2BCSpec,
-  author =       {Lilian Burdy and Mariela Pavlova},
-  title =    {From {JML} to {BCSL}},
-  institution =  {INRIA, Sophia-Antipolis},
-  year =     {2004},
-  OPTkey =   {},
-  OPTtype =      {},
-  OPTnumber =    {},
-  OPTaddress =   {},
-  OPTmonth =     {jan},
-  note =     {draft},
-  OPTannote =    {}
-}
 
 @TechReport{JBL05MP,
-  author =       {Mariela Pavlova},
-  title =    { Java Bytecode Logic and Specification},
+  author =  {Mariela Pavlova},
+  title = {Java Bytecode Logic and Specification},
   institution =  {INRIA, Sophia-Antipolis},
   year =     {2005},
   OPTkey =   {},
   OPTtype =      {},
   OPTnumber =    {},
   OPTaddress =   {},
-  OPTmonth =     {jan},
-  note =     {draft},
+  OPTmonth =     {Jan},
+  note =     {Draft version. Available from {\url{http://www.inria.fr/everest/Mariela.Pavlova}}},
   OPTannote =    {}
 }
 
 
 @Book{M97oos,
   author = 	 {B.Meyer},
-  editor = 	 {Prentice Hall},
+  OPTeditor = 	 {},
   title = 	 {Object-Oriented Software Construction},
-  publisher = 	 {},
+  publisher = 	 {Prentice Hall},
   year = 	 {1997},
   OPTkey = 	 {},
   OPTvolume = 	 {},
   OPTnumber = 	 {},
   OPTseries = 	 {},
   OPTaddress = 	 {},
-  edition = 	 {2 rev edition},
+  edition = 	 {2 revised},
   OPTmonth = 	 {},
   OPTnote = 	 {},
   OPTannote = 	 {}
 }
 
 
-
 @Unpublished{B04tlsj,
   author = 	 {Nick Benton},
   title = 	 {A Typed Logic for Stack and Jumps},
-  note = 	 {},
+  note = 	 {draft},
   OPTkey = 	 {},
   OPTmonth = 	 {},
   year = 	 {2004},
   OPTannote = 	 {}
 }
+
+@InProceedings{JPVC03JKM,
+  author = 	 {B. Jacobs and J. Kiniry  and M. Warnier },
+  title = 	 {Java Program Verification Challenges},
+  OPTcrossref =  {},
+  OPTkey = 	 {},
+  booktitle = { Formal Methods for Components and Objects, volume 2852 of Lecture Notes in Computer Science},
+  pages = 	 {pages 202--219},
+  year = 	 {2003},
+  editor = 	 {F. S. de Boer and M. M. Bonsangue and S. Graf and W.-P. de Roever },
+  OPTvolume = 	 {},
+  OPTnumber = 	 {},
+  OPTseries = 	 {},
+  OPTaddress = 	 {},
+  OPTmonth = 	 {},
+  OPTorganization = {},
+  publisher = { Springer, Berlin },
+  OPTnote = 	 {},
+  OPTannote = 	 {}
+}
+ 
 
 @InProceedings{BM05plb,
   author = 	 {Fabian Bannwart and Peter M\..uller},
@@ -112,19 +123,7 @@ Clyde Ruby and David Cok and Joseph Kiniry},
   OPTannote =    {}
 }
 
-@TechReport{WPBC,
-  author =   {Lilian Burdy and Mariela Pavlova},
-  title =    {Weakest Precondition Calculus for {Java} Bytecode},
-  institution =  {INRIA, Sophia-Antipolis},
-  year =     {2004},
-  OPTkey =   {},
-  OPTtype =      {},
-  OPTnumber =    {},
-  OPTaddress =   {},
-  OPTmonth =     {},
-  note =     {draft},
-  OPTannote =    {}
-}
+
 
 @TechReport{VMSpec,
   author = {Tim Lindholm and Frank Yellin},
@@ -227,22 +226,23 @@ Clyde Ruby and David Cok and Joseph Kiniry},
 @InProceedings{DesNecLee98,
   author =   {George C. Necula and Peter Lee},
   title =    {The Design and Implementation of a Certifying Compiler},
-  booktitle =    {PLDI98},
+  booktitle =  {ACM SIGPLAN'98 Conference on Programming Language Design and Implementation (PLDI)},
   OPTcrossref =  {},
   OPTkey =   {},
-  OPTpages =     {},
+  pages =     { 333-344},
   year =     {1998},
   OPTeditor =    {},
   OPTvolume =    {},
   OPTnumber =    {},
   OPTseries =    {},
   OPTaddress =   {},
-  OPTmonth =     {},
+  month =     {17-19 June },
   OPTorganization = {},
   OPTpublisher = {},
-  OPTnote =      {},
+  note =      {Montreal, Canada },
   OPTannote =    {}
 }
+
 
 @InProceedings{ProColLeeNec,
   author =   {Christopher Colby and Peter Lee and George C. Necula },
@@ -331,19 +331,22 @@ formal features and provides a ``Java style view'' of lemmas."}
   OPTannote = 	 {}
 }
 
-@Article{Ljbc,
-  author = 	 {Xavier Leroy},
-  title = 	 {{Java} Bytecode Verification: Algorithms and Formalizations},
-  journal = 	 {Journal of Automated Reasoning},
-  year = 	 {},
-  OPTkey = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  OPTpages = 	 {},
-  OPTmonth = 	 {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
+
+@INPROCEEDINGS{Ljbc,
+  AUTHOR = {Xavier Leroy},
+  TITLE = {{Java} bytecode verification: an overview},
+  BOOKTITLE = {Computer Aided Verification, CAV 2001},
+  EDITOR = {G. Berry and H. Comon and A. Finkel},
+  YEAR = 2001,
+  PUBLISHER = {Springer-Verlag},
+  SERIES = {Lecture Notes in Computer Science},
+  VOLUME = 2102,
+  PAGES = {265--285},
+  URL = {http://pauillac.inria.fr/~xleroy/publi/survey-bytecode-verification.ps.gz},
+  URLPUBLISHER = {http://www.springerlink.com/openurl.asp?genre=article&issn=0302-9743&volume=2102&spage=265},
+  ABSTRACT = {Preliminary version of \cite{Leroy-bytecode-verification-03}.}
 }
+
 
 @InProceedings{F67amp,
   author = 	 {R.W.Floyd},

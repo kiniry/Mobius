@@ -55,8 +55,8 @@ BCSL corresponds to a representative subset of JML and is expressive enough for 
 
  Specification clauses in BCSL that are taken from JML and inherit their semantics directly from JML include:
 \begin{itemize}
-   \item class specification, e.g class invariants
-   \item  method pre and postconditions (normal and exceptional), method frame conditions (the locations that may be modified by the method). 
+   \item class specification, i.e. class invariants and history constraints
+   \item  method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method). 
      We also support behavioral subtyping by specification inheritance (the keyword \jmlStmt{also})
    \item inter method specification, for instance loop invariants
 % One can notice that the loop invariant specification are tagged with the index of the instruction at which the loop invariant must hold (the loop entry instruction). this is different from  JML
@@ -112,9 +112,8 @@ is compiled in binary form using tags in the standard way. Basically the compila
 
 Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
 By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for intergral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that a variable in a Java source can have boolean type but it will be compiled to a variable with
-an integer type.% In case that the JML specification contains boolean expressions we transform the specification in an equivalent one. 
- For instance, in the example for the method 
-\texttt{isElem} and its specification in Fig. \ref{replaceSrc}  the postcondition contains an equivalence between the JML expression  
+an integer type. For instance, in the example for the method 
+\texttt{isElem} and its specification in Fig. \ref{replaceSrc}  the postcondition states the equivalence between the JML expression  
 \result \ and a predicate. As the method \texttt{isElem} is declared with return type boolean the expression \result \ has type boolean on source level. 
 Still, the bytecode resulting from the compilation of the method  \texttt{isElem} returns a value of type integer. This means that the JML compiler has to 
 ``make more effort'' than simply compiling the left and right side of the equivalence in the postcondition, otherwise the postcondition will not make sense
@@ -125,14 +124,17 @@ one\footnote{when generating proof obligations we add for every source boolean e
  must be equal to 0 or 1. This, actually, must be always
 equal to true as we assume that the programs are well typed}.  
 
-Finally, the compilation of the postcondition of method \texttt{isElem} in  is given in Fig. \ref{postCompile}.
+Finally, the compilation of the postcondition of method \texttt{isElem} is given in Fig. \ref{postCompile}.
 \begin{figure}[tb]
  $$\begin{array}{l}
          \result = 1 \\
+          \\ 
          \iff \\ 
-         \exists  var(0) . \ 0 \leq var(0) \wedge \\
-         \Myspace var(0) < len(\#19(\register{0})) \wedge\\
-         \Myspace  \#19(\register{0})[var(0)] = \register{1}  
+         \exists  var(0) .
+           \biggl(\begin{array}{l} \ 0 \leq var(0) \wedge\\ 
+             var(0) < len(\#19(\register{0})) \wedge \\
+             \#19(\register{0})[var(0)] = \register{1} 
+         \end{array} \biggr) 
    \end{array}
 $$
 \caption{The compilation of the postcondition in Fig. \ref{replaceSrc}}

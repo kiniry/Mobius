@@ -6,48 +6,45 @@ Database file #2: bibliography.bib
 A bad cross reference---entry "B00ppp"
 refers to entry "DBLP:conf/mpc/2000", which doesn't exist
 Warning--I didn't find a database entry for "DBLP:conf/mpc/2000"
-Warning--can't use both author and editor fields in M97oos
-Warning--empty publisher in M97oos
-Warning--empty year in Ljbc
 You've used 13 entries,
             2118 wiz_defined-function locations,
-            618 strings with 6202 characters,
-and the built_in function-call counts, 4041 in all, are:
-= -- 387
-> -- 194
-< -- 5
-+ -- 77
-- -- 63
-* -- 241
-:= -- 686
-add.period$ -- 42
+            628 strings with 6763 characters,
+and the built_in function-call counts, 4830 in all, are:
+= -- 475
+> -- 230
+< -- 8
++ -- 88
+- -- 74
+* -- 299
+:= -- 780
+add.period$ -- 45
 call.type$ -- 13
-change.case$ -- 68
+change.case$ -- 70
 chr.to.int$ -- 0
-cite$ -- 16
-duplicate$ -- 175
-empty$ -- 320
-format.name$ -- 63
-if$ -- 856
+cite$ -- 13
+duplicate$ -- 210
+empty$ -- 372
+format.name$ -- 74
+if$ -- 1055
 int.to.chr$ -- 0
 int.to.str$ -- 13
 missing$ -- 10
-newline$ -- 68
-num.names$ -- 28
-pop$ -- 89
+newline$ -- 70
+num.names$ -- 32
+pop$ -- 87
 preamble$ -- 1
-purify$ -- 56
+purify$ -- 58
 quote$ -- 0
-skip$ -- 118
+skip$ -- 162
 stack$ -- 0
-substring$ -- 158
-swap$ -- 47
-text.length$ -- 5
+substring$ -- 248
+swap$ -- 79
+text.length$ -- 8
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 48
-warning$ -- 3
-while$ -- 35
+warning$ -- 0
+while$ -- 42
 width$ -- 15
-write$ -- 141
+write$ -- 151
 (There was 1 error message)

@@ -2,20 +2,19 @@
 This article describes a bytecode weakest precondition calculus applied to a bytecode specification language (BCSL).
 BCSL is defined as suitable extensions of the Java class file format.
 Implementations for a proof obligation generator and a JML compiler to BCSL have been developed and are part of the Jack 1.8 release\footnote{http://www-sop.inria.fr/everest/soft/Jack/jack.html}.
-At this step, we have built a framework for Java program verification.
- This validation can be done at source or at bytecode level in a common environment: for instance, to prove lemmas ensuring bytecode correctness all the current and future provers plugged in Jack can be used.
+At this step, we have built a framework for Java program verification. This validation can be done at source or at bytecode level in a common environment: for instance, to prove lemmas ensuring bytecode correctness all the current and future provers plugged in Jack can be used.
 
-We are now aiming to complete our architecture for establishing trust in untrusted code - in particular extending the present work to a PCC architecture for establishing non trivial requirements.  
-%Properties that can be verified are properties expressible in the JML specification language. Design by contract properties (used in interface design) can be easily expressed and sent through a network with this framework. What should be pointed out is that we do not deal with such low level properties like for example memory allocation or time constraints.What the approach proposes is suitable for verifying static properties (invariant) concerning objects: it can be relations between values, or conditions over expressions that the program treats.
-In this way, several important directions for future work are:
+
+ We envisage several directions for future work are:
 \begin{itemize}
-\item perform case studies and strengthen the tool with more experiments.
-\item  a PCC framework where the proofs are done interactively over the source code
+  \item perform case studies
+  \item  build a PCC framework where the proofs are done interactively over the source code
 and then compiled down to bytecode. As we discussed in Section \ref{results} in the performed tests the 
 proof obligations generated over a source program and over its compilation with non optimizing compiler are syntactically the same modulo names and types.  
-\item an extension of the framework applying previous research results in automated annotation generation for Java bytecode (see~\cite{PBBHL}). The client thus will have the possibility to verify a security policy by propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
-%\item correctness of the semantics of the weakest precondition calculus proposed, which we will do over the bytecode operational semantics. 
+  \item an extension of the framework applying previous research results in automated annotation generation for Java bytecode (see~\cite{PBBHL}). The client thus will have the possibility to verify a security policy by propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
 
 \end{itemize}
-%Finally, we are currently proving the correctness of the semantics of the weakest precondition calculus proposed, the proof is built over the bytecode operational semantics and will ensure the soundness of our weakest precondition calculus.
+
+\todo{je ne sais pas ou mettre la reference de Jver}
+
 
