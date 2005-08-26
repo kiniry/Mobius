@@ -93,7 +93,7 @@ public final class Class implements java.io.Serializable {
                       /*@ non_null @*/ ClassLoader loader)
         throws ClassNotFoundException;
 
-    public /*@ pure @*/ Object newInstance() 
+    public /*@ pure non_null @*/ Object newInstance() 
         throws InstantiationException, IllegalAccessException;
 
     //@ public normal_behavior
@@ -179,7 +179,7 @@ public final class Class implements java.io.Serializable {
 
     public /*@ pure @*/ Method[] getMethods() throws SecurityException;
 
-    public /*@ pure @*/ Constructor[] getConstructors() throws SecurityException;
+    public /*@ pure non_null @*/ Constructor[] getConstructors() throws SecurityException;
 
     public /*@ pure @*/ Field getField(String name)
         throws NoSuchFieldException, SecurityException;
@@ -187,7 +187,7 @@ public final class Class implements java.io.Serializable {
     public /*@ pure @*/ Method getMethod(String name, Class[] parameterTypes)
         throws NoSuchMethodException, SecurityException;
 
-    public /*@ pure @*/ Constructor getConstructor(Class[] parameterTypes)
+    public /*@ pure non_null @*/ Constructor getConstructor(Class[] parameterTypes)
         throws NoSuchMethodException, SecurityException;
 
     //@ ensures \result != null;
