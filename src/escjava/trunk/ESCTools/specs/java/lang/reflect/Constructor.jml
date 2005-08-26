@@ -61,7 +61,7 @@ class Constructor extends AccessibleObject implements Member {
 
     public /*@ pure @*/ String toString();
 
-    public Object newInstance(Object[] initargs)
+    public /*@ non_null @*/ Object newInstance(Object[] initargs)
 	throws InstantiationException, IllegalAccessException,
                IllegalArgumentException, InvocationTargetException;
 
