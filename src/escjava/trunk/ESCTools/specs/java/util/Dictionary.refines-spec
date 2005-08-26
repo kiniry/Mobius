@@ -2,6 +2,8 @@ package java.util;
 
 // No specification given, because this class is obsolete.
 public abstract class Dictionary {
+    //@ ghost public \TYPE elementType;
+    //@ ghost public \TYPE keyType;
 
     //@ pure
     public Dictionary();
