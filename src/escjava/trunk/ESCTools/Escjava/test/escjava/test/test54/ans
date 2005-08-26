@@ -148,7 +148,7 @@ Execution trace information:
 abstract.java:2: Error: The helper pragma cannot be applied to method that can be overridden
   /*@ helper */ abstract void m();
       ^
-abstract.java:3: Error: The helper pragma cannot be applied to method without a given body
+abstract.java:3: Error: The helper pragma cannot be applied to method without a body
   /*@ helper */ native final void n();
       ^
 Caution: Turning off extended static checking due to type error(s)
