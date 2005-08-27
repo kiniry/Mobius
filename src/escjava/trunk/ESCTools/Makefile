@@ -219,10 +219,7 @@ export JAVAFE_PACKAGE_LIST = \
 	  javafe.reader javafe.genericfile javafe.filespace \
 	  javafe.tc javafe.util \
 
-export ESCJAVA_PACKAGE_LIST = \
-      javafe javafe.ast javafe.parser  \
-	  javafe.reader javafe.genericfile javafe.filespace \
-	  javafe.tc javafe.util \
+export ESCJAVA_PACKAGE_LIST = escjava \
 
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
@@ -296,10 +293,15 @@ jml: .jml
 	$(JML) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -a -A \
-	  --purity \
-	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
+	  -a -A --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive \
+	  javafe escjava \
 	  && touch .jml
+
+# Add this package later (since escjava uses it)	  decsrc \
+
+# Javafe: decsrc javafe jtools tohtml
+# Escjava: escjava escwizard houdini instrumenter tohtml
 
 jmlc: .jmlc
 
@@ -308,9 +310,9 @@ jmlc: .jmlc
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
-	  -a -A \
-	  --purity \
-	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
+	  -a -A --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive \
+	  javafe escjava \
 	  && touch .jmlc
 
 ################################################################################
