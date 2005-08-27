@@ -1,6 +1,10 @@
 .emacs.desktop
+.jml
+.jmlc
+.perms-fixed
 Makefile.local
 OOBR
+classfiles
 docs
 docs_log
 escspecs.jar
@@ -16,5 +20,3 @@ release
 release-temp
 release-test
 semantic.cache
-classfiles
-.perms-fixed
