@@ -22,39 +22,89 @@ package java.util;
  * @version $Revision$
  * @author Kristina Boysen
  * @author Gary T. Leavens
+ * @author Patrice Chalin
  */
 public class GregorianCalendar extends Calendar {
 
-    public static final int BC;
-    public static final int AD;
+    //@ public static model int BC;  public static represents BC <- 0;
+    //@ public static model int AD;  public static represents AD <- 1;
+
+    //@ public static model int  JAN_1_1_JULIAN_DAY;
+    //@ public static represents JAN_1_1_JULIAN_DAY <- 1721426;
+    //@ public static model int  EPOCH_JULIAN_DAY;
+    //@ public static represents EPOCH_JULIAN_DAY <- 2440588;
+    //@ public static model int  EPOCH_YEAR;
+    //@ public static represents EPOCH_YEAR <- 1970;
+
+    //@ public static final ghost int NUM_DAYS[] = {0,31,59,90,120,151,181,212,243,273,304,334};
+    //@ public static final ghost int LEAP_NUM_DAYS[] = {0,31,60,91,121,152,182,213,244,274,305,335};
+    //@ public static final ghost int MONTH_LENGTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    //@ public static final ghost int LEAP_MONTH_LENGTH[] = {31,29,31,30,31,30,31,31,30,31,30,31};
+
+    /*@ constraint 
+      @		\old(NUM_DAYS).equals(NUM_DAYS) &&
+      @		\old(LEAP_NUM_DAYS).equals(LEAP_NUM_DAYS) &&
+      @		\old(MONTH_LENGTH).equals(MONTH_LENGTH) &&
+      @		\old(LEAP_MONTH_LENGTH).equals(LEAP_MONTH_LENGTH);
+      @*/
+
+    //@ public static model int  ONE_SECOND; public static represents ONE_SECOND = 1000;
+    //@ public static model int  ONE_MINUTE; public static represents ONE_MINUTE = 60*ONE_SECOND;
+    //@ public static model int  ONE_HOUR;   public static represents ONE_HOUR   = 60*ONE_MINUTE;
+    //@ public static model long ONE_DAY;    public static represents ONE_DAY    = 24*ONE_HOUR;
+    //@ public static model long ONE_WEEK;   public static represents ONE_WEEK   = 7*ONE_DAY;
+
+    /*
+     * <pre>
+     *                            Greatest       Least 
+     * Field name        Minimum   Minimum     Maximum     Maximum
+     * ----------        -------   -------     -------     -------
+     * ERA                     0         0           1           1
+     * YEAR                    1         1   292269054   292278994
+     * MONTH                   0         0          11          11
+     * WEEK_OF_YEAR            1         1          52          53
+     * WEEK_OF_MONTH           0         0           4           6
+     * DAY_OF_MONTH            1         1          28          31
+     * DAY_OF_YEAR             1         1         365         366
+     * DAY_OF_WEEK             1         1           7           7
+     * DAY_OF_WEEK_IN_MONTH   -1        -1           4           6
+     * AM_PM                   0         0           1           1
+     * HOUR                    0         0          11          11
+     * HOUR_OF_DAY             0         0          23          23
+     * MINUTE                  0         0          59          59
+     * SECOND                  0         0          59          59
+     * MILLISECOND             0         0         999         999
+     * ZONE_OFFSET           -12*      -12*         12*         12*
+     * DST_OFFSET              0         0           1*          1*
+     * </pre>
+     * (*) In units of one-hour
+     */
+
+    /*@ public static final ghost int MIN_VALUES[] = {
+      @   0,1,0,1,0,1,1,1,-1,0,0,0,0,0,0,-12*ONE_HOUR,0
+      @ };
+      @
+      @ public static final ghost int LEAST_MAX_VALUES[] = {
+      @   1,292269054,11,52,4,28,365,7,4,1,11,23,59,59,999,12*ONE_HOUR,1*ONE_HOUR
+      @ };
+      @
+      @ public static final ghost int MAX_VALUES[] = {
+      @   1,292278994,11,53,6,31,366,7,6,1,11,23,59,59,999,12*ONE_HOUR,1*ONE_HOUR
+      @ };
+      @
+      @ constraint
+      @		\old(MIN_VALUES).equals(MIN_VALUES) &&
+      @		\old(MAX_VALUES).equals(MAX_VALUES) &&
+      @		\old(LEAST_MAX_VALUES).equals(LEAST_MAX_VALUES);
+      @*/
+
+    //@ public model long gregorianCutover; 
+    //@ public represents gregorianCutover = -12219292800000L;
+    //@ public model long normalizedGregorianCutover;
+    //@ public represents normalizedGregorianCutover = gregorianCutover;
+    //@ public model int gregorianCutoverYear;
+    //@ public represents gregorianCutoverYear = 1582;
     
-    //--- public model static final int JAN_1_1_JULIAN_DAY;
-    //--- public model static final int EPOCH_JULIAN_DAY;
-    //--- public model static final int EPOCH_YEAR;
-
-    //--- public model static final int ONE_SECOND;
-    //--- public model static final int ONE_MINUTE;
-    //--- public model static final int ONE_HOUR;
-    //--- public model static final long ONE_DAY;
-    //--- public model static final long ONE_WEEK;
-
-    //--- public model static final int[] NUM_DAYS; 
-    //--- public model static final int[] LEAP_NUM_DAYS; 
-    //--- public model static final int[] MONTH_LENGTH; 
-    //--- public model static final int[] LEAP_MONTH_LENGTH;
-        
-    //--- public model static final int[] MIN_VALUES;
-    //--- public model static final int[] LEAST_MAX_VALUES;
-    //--- public model static final int[] MAX_VALUES;
-    
-    //--- public model long gregorianCutover;
-    //--- public model long normalizedGregorianCutover; 
-    //--- public model int gregorianCutoverYear;
-
-    // The locale and timezone of this object is inherited from Calendar:
-    //        spec_public TimeZone zone
-    //        public model Locale locale
-       
     /*@ public invariant zone != null;
       @ public invariant locale != null;
       @ public invariant boundsCheck(fields[ERA], ERA);
@@ -897,7 +947,7 @@ public class GregorianCalendar extends Calendar {
       @ public normal_behavior
       @ requires 0 <= field && field <= MIN_VALUES.length;
       @ assignable \nothing;
-      @ ensures \result == MIN_VALUES[field];
+      @ ensures \result == getMinimum(field);
       @*/
     public /*@ pure @*/ int getGreatestMinimum(int field);
 
