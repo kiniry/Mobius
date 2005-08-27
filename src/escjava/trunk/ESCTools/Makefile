@@ -296,6 +296,7 @@ jml: .jml
 	$(JML) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	  -a -A \
 	  --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jml
@@ -307,6 +308,7 @@ jmlc: .jmlc
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
+	  -a -A \
 	  --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jmlc
