@@ -139,7 +139,7 @@ export JDK_14_SOURCES ?= ${JAVA_HOME}/src
 export ESC_PROJECT ?= ESCJava
 export ESC_VERSION ?= CURRENT-CVS
 
-export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005 David Cok and Joseph Kiniry<br />&copy; 2005 University College Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
+export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005 David Cok and Joseph Kiniry<br />&copy; 2005 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
 ##########################################################################
 ## The following definitions are used in various Makefiles and should
@@ -268,7 +268,7 @@ export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}
 export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
 
 ## This is the path needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = ${ESC_CLASSFILES}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
+export ESCJAVA_BUILD_CLASSPATH = ${ESC_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
 
 ##########################################################################
 ##########################################################################

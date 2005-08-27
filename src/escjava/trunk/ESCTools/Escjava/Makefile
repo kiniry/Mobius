@@ -7,7 +7,8 @@ export TOP = ..
 include ${TOP}/Makefile.defs
 # Makefile.defs and the parent Makefile provide definitions of the 
 # following variables needed here:
-# JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, ESC_CLASSPATH, ESCJAVA_CLASSFILES, 
+# JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, 
+# ESCJAVA_BUILD_CLASSPATH, ESCJAVA_CLASSFILES, 
 # JAVAFE_ROOT, JAVAFE_SOURCE_DIR
 # (Building Escjava relies on the AST building tools in ${JAVAFE_ROOT}/astgen)
 
@@ -57,9 +58,6 @@ export ESCJ = ${ESCJAVA_ROOT}/escj
 export CLASSDIRECTORY=${ESCJAVA_CLASSFILES}
 export SOURCEDIRECTORY=${ESCJAVA_SOURCE_DIR}
 export TESTSOURCEDIRECTORY=${ESCJAVA_ROOT}/test
-
-## This is the path for classfiles (not sources) needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = $(call canonicalize,${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${MOCHA_LIB}:${ANT_LIB}:${JUNIT_LIB}:${ESCTOOLS_ROOT}/Utils:.)
 
 ###########################################################################
 .PHONY: all build buildall test alltests
@@ -371,10 +369,10 @@ javaspecs:
 test_escjava_parser:
 	$(MAKE) -C ${JAVAFE_SOURCE_DIR}/.. javafe_test
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
-	
+
 selftypecheck:
-	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Utils:${ESCTOOLS_ROOT}/Utils/ant.jar:${JUNIT_LIB}}" \
-	    -sourcepath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	    -sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet ${PACKAGE_LIST}
 
@@ -399,7 +397,7 @@ test_matrix:
 		${TESTSOURCEDIRECTORY}/matrix/*.java
 
 self_test: build
-	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 		-vclimit 1000000 \
 		-nocheck -source 1.4 -quiet -nosemicolonwarnings \
 		${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))}
@@ -407,7 +405,7 @@ self_test: build
 self_testp: build
 	echo ${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))} | \
 	xargs -t -n 50 \
-	${ESCJ} -classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}}" \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 		-nocheck -source 1.4 -quiet -noSemicolonWarnings
 
 ## FIXME - is this used? should it be?
@@ -432,7 +430,7 @@ test-release:
 
 string:
 	${ESCJ} \
-		-classpath "${call canonicalize,${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
+		-classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
 		-nowarn Deadlock -nowarn Post -nowarn Invariant \
 		-source 1.4 -quiet -noSemicolonWarnings \

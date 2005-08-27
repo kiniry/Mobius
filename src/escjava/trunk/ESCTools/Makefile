@@ -227,10 +227,15 @@ export ESCJAVA_PACKAGE_LIST = \
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
 
-# Choose which specs you wish to use for documentation generation and typechecking.
+# Choose which specs you wish to use for documentation generation and
+# typechecking.
+
+# The CVS HEAD JML specs,
 #SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
-SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
-#SPECS = $(ESCTOOLS_ROOT)/specs
+# The latest JML stable release specs.
+#SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
+# The ESC/Java2 specs.
+SPECS = $(ESCTOOLS_ROOT)/specs
 
 ## Javadoc depends on the build target since some of the .java files
 ## are generated in the course of the build (e.g. the AST classes).
@@ -289,9 +294,9 @@ jml: .jml
 
 .jml: build
 	$(JML) \
-	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  --assignable --Assignable --purity \
+	  --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jml
 
@@ -299,10 +304,10 @@ jmlc: .jmlc
 
 .jmlc: build
 	$(JMLC) \
-	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
-	  --assignable --Assignable --purity \
+	  --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jmlc
 
