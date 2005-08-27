@@ -33,6 +33,8 @@ import java.util.Iterator;
 */
 public class LineIterator implements Iterator {
 
+    //@ represents moreElements <- nextLine != null;
+
     /** A reader that reads lines from the file. */
     //@ non_null
     private BufferedReader r;

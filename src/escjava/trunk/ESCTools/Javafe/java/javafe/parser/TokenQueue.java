@@ -86,7 +86,7 @@ class TokenQueue
 
     /** Empties lookahead queue. */
 
-    //@ modifies notempty;
+    //@ modifies end, notempty, start;
     //@ ensures !notempty;
     public void clear() {
         end = start = 0;
@@ -108,6 +108,7 @@ class TokenQueue
      */
 
     //@ requires notempty;
+    //@ modifies start;
     //@ modifies notempty;
     public void dequeue(Token dst) {
         if (start != end) {

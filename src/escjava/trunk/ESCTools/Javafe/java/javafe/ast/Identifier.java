@@ -61,7 +61,7 @@ public final class Identifier
   /** Memoization of <code>String.valueOf(chars, 0,
     chars.length)</code>; may be <code>null</code>.  This variable may
     be written exactly once. */
-  private String equiv; //@ in objectState;
+  private String equiv; //@ in privateState;
 
 
   //// "Friend", variables

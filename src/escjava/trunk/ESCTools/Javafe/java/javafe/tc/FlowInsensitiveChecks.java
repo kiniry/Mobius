@@ -115,7 +115,7 @@ public class FlowInsensitiveChecks
      *
      */
     //@ requires (* <code>fd</code> is in prepped state. *);
-    //@ modifies sig;
+    //@ modifies sig, rootSEnv, rootIEnv;
     public void checkFieldDecl(/*@ non_null @*/ FieldDecl fd) {
 	/*
 	 * Special case for free-floating fields like length.

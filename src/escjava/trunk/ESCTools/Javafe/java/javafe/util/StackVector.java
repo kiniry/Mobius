@@ -172,7 +172,7 @@ public final class StackVector
      * ensure that a null element does not stay in the top Vector. <p>
      */
     //@ requires x==null || \typeof(x) <: elementType;
-    //@ modifies elementCount;
+    //@ modifies elementCount, elements;
     //@ ensures elementCount == \old(elementCount)+1;
     //@ ensures elementCount>0 && elements[elementCount-1]==x;
     private void addElementInternal(Object x) {
@@ -194,7 +194,7 @@ public final class StackVector
      */
     //@ requires x != null;
     //@ requires \typeof(x) <: elementType;
-    //@ modifies elementCount;
+    //@ modifies elementCount, elements;
     /*@ ensures (elementCount - currentStackBottom) ==
 	        (\old(elementCount) - currentStackBottom) + 1; */
     public final void addElement(Object x) {
@@ -280,7 +280,7 @@ public final class StackVector
      * Push a zero-length Vector.
      *
      */
-    //@ modifies vectorCount, currentStackBottom;
+    //@ modifies vectorCount, currentStackBottom, elementCount, elements;
     //@ ensures vectorCount == \old(vectorCount)+1;
     //@ ensures currentStackBottom == elementCount;
     public void push() {
@@ -325,7 +325,7 @@ public final class StackVector
      * Precondition: there are at least two vectors on our stack.<p>
      */
     //@ requires vectorCount>=2;
-    //@ modifies vectorCount;
+    //@ modifies vectorCount, elementCount;
     //@ ensures vectorCount == \old(vectorCount)-1;
     //@ modifies currentStackBottom;
     public void merge() {

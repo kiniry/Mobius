@@ -147,7 +147,7 @@ abstract class LookAheadEnum implements Enumeration {
      *
      * This function will never be called again once it returns null.
      */
-    //@ modifies \nothing;
+    //---@ modifies \nothing;
     //@ ensures \typeof(\result) <: elementType || \result==null;
     protected abstract Object calcNextElement();
 

@@ -18,6 +18,8 @@ public class UnlockedBufInputStream extends InputStream {
 	count = 0;
     }
 
+    //@ also private behavior
+    //@ assignable pos;
     public int read() throws IOException {
 	if (pos >= count) {
 	    if (!fill()) {
@@ -27,6 +29,8 @@ public class UnlockedBufInputStream extends InputStream {
 	return buf[pos++] & 0xff;
     }
 
+    //@ also private behavior
+    //@ assignable pos;
     public int read(byte[] b, int off, int len) throws IOException {
 	if (pos >= count) {
 	    if (!fill()) {
@@ -40,6 +44,8 @@ public class UnlockedBufInputStream extends InputStream {
 	return ret;
     }
 
+    //@ also private behavior
+    //@ assignable count, pos;
     public long skip(long n) throws IOException {
 	if (n > 0) {
 	    long buffered = count - pos;

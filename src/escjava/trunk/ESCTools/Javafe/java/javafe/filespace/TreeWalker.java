@@ -83,6 +83,8 @@ public final class TreeWalker extends LookAheadEnum {
      * This returns the next element in the enumeration or null if there
      * are no more nodes left.
      */
+    //@ also
+    //@ assignable remainingNodes;
     protected Object calcNextElement() {
         for (;;) {
 	    // First exhaust the nodes from the current child:
@@ -205,15 +207,17 @@ public final class TreeWalker extends LookAheadEnum {
  */
 class TreeWalker_ArrayEnum extends LookAheadEnum {
 
-    //@ invariant list != null;
-    //@ invariant \elemtype(\typeof(list)) == elementType;
-    Object[] list;
+    //@ private invariant list != null;
+    //@ private invariant \elemtype(\typeof(list)) == elementType;
+    private Object[] list;
 
-    //@ invariant index+1>=0;
-    int index = -1;
+    //@ private invariant index+1>=0;
+    private int index = -1;
 
 
+    //@ private normal_behavior
     //@ requires list != null;
+    //@ assignable \not_specified;
     //@ ensures elementType == \elemtype(\typeof(list));
     TreeWalker_ArrayEnum(Object[] list) {
 	this.list = list;
@@ -221,7 +225,8 @@ class TreeWalker_ArrayEnum extends LookAheadEnum {
 	//@ set elementType = \elemtype(\typeof(list));
     }
 
-
+    //@ also private normal_behavior
+    //@ assignable index;
     public Object calcNextElement() {
 	if (++index>=list.length)
 	    return null;

@@ -429,7 +429,7 @@ public class ErrorSet
    * No error is reported if an I/O error occurs.
    */
   //@ requires loc != Location.NULL;
-  //@ modifies \nothing;
+  //---@ modifies \nothing;
   //@ ensures \result != null ==> \result.isOpen;
   //@ ensures \fresh(\result); // FIXME - not sure about this
   //@ signals_only \nothing;

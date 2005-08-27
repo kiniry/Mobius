@@ -110,6 +110,8 @@ public abstract class LocationManagerCorrelatedReader
    * we have been closed.
    */
 
+    //@ also protected normal_behavior
+    //@ assignable maxLoc;
   public void close() {
     if (maxLoc == freeLoc) {
       maxLoc = beforeBufLoc + curNdx + 1;

@@ -64,6 +64,7 @@ class FilterEnum extends LookAheadEnum {
      * Compute the next element in the series, or return null if the
      * series is exhausted.
      */
+
     protected Object calcNextElement() {
 	while (underlyingEnum.hasMoreElements()) {
 	    Object next = underlyingEnum.nextElement();

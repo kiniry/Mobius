@@ -13,14 +13,16 @@ package decsrc.container;
 
 public final class IntVec
 {
-    //@ invariant count <= elements.length;
+    //@ private invariant count <= elements.length;
     private int count;
     private int[] elements;
 
     public IntVec () { this(1); }
 
-    //@ ensures elements != null;
-    //@ ensures elements.length == (predict < 1 ? 1 : predict);
+    /*@ private normal_behavior
+      @   ensures elements != null;
+      @   ensures elements.length == (predict < 1 ? 1 : predict);
+      @*/
     public IntVec (int predict) {
         if (predict < 1) predict = 1;
         this.elements = new int[predict];

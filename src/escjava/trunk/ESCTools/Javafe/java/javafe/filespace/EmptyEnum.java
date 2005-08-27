@@ -10,6 +10,8 @@ import java.util.*;
 
 class EmptyEnum implements Enumeration
 {
+    //@ represents moreElements <- false;
+
     //@ invariant !moreElements;
     //@ invariant !returnsNull;
 
@@ -23,7 +25,7 @@ class EmptyEnum implements Enumeration
      */
     //@ also
     //@ public normal_behavior
-    //@   ensures \result == false;
+    //@   ensures_redundantly \result == false;
     //@ pure
     public boolean hasMoreElements() {
 	return false;

@@ -49,7 +49,7 @@ public final class EscPragmaLex extends Lex
 
   // Documented in parent class.
   //@ also
-  //@ assignable endingLoc, identifierVal, textlen;
+  //@ assignable endingLoc, identifierVal, text, textlen;
   protected int scanJavaExtensions(int nextchr) {
     try { 
       if (nextchr == '\\') {

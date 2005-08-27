@@ -245,7 +245,7 @@ public class Lex extends Token
     protected int textlen = 0;
 
     /** Append 'c' to <CODE>text</CODE>, expanding if necessary. */
-    //@ modifies textlen;
+    //@ modifies text, textlen;
     //@ ensures textlen == \old(textlen)+1;
     protected void append(int c) {
         try {
@@ -319,8 +319,12 @@ public class Lex extends Token
      installed.  Note: The argument <code>in</code> is "captured" in
      the internal, private state of the resulting scanner and should
      not be used by other parts of the program. */
-    //@ modifies m_in;
+    //@ public normal_behavior
+    //@ modifies m_in, ttype, auxVal, identifierVal, lexicalPragmas;
     //@ ensures m_in != null;
+    //@ also
+    //@ protected normal_behavior
+    //@ modifies m_nextchr;
     public int restart(/*@ non_null @*/ CorrelatedReader in) {
 	close();
 	try {
@@ -342,8 +346,12 @@ public class Lex extends Token
      exception raised by closing the underlying input stream will be
      converted into a <code>javafe.util.FatalError</code> runtime
      exception.) */
-    //@ modifies m_in;
+    //@ public normal_behavior
+    //@ modifies m_in, lexicalPragmas;
     //@ ensures m_in==null;
+    //@ also 
+    //@ protected normal_behavior
+    //@ modifies inPragma;
     public void close() {
         if (m_in != null) {
 	    m_in.close();
@@ -371,8 +379,12 @@ public class Lex extends Token
      <code>startingLoc</code> and <code>endingLoc</code> fields of
      <code>this</code> are not accurate for the end-of-file token. */
 
+    //@ public normal_behavior
     //@ requires m_in != null;
     //@ modifies ttype, auxVal, identifierVal;
+    //@ also 
+    //@ protected normal_behavior
+    //@ modifies inPragma, m_nextchr;
     public int getNextToken() {
         if (lookaheadq.notempty) {
             lookaheadq.dequeue(this);
@@ -590,7 +602,7 @@ public class Lex extends Token
 
     //@ requires m_in != null;
     //@ requires !inPragma;
-    //@ modifies inPragma;
+    //@ modifies inPragma, m_nextchr;
     private void scanComment(int commentKind) {
 	try {
 	    m_in.mark();
@@ -777,7 +789,7 @@ public class Lex extends Token
      a legal literal is left in <code>text</code>. */
 
     //@ requires m_in != null;
-    //@ modifies ttype, auxVal;
+    //@ modifies endingLoc, ttype, auxVal, m_nextchr, text, textlen;
     //@ ensures \result==ttype;
     /*@ ensures \result==TagConstants.INTLIT || \result==TagConstants.LONGLIT ||
      \result==TagConstants.FLOATLIT || \result==TagConstants.DOUBLELIT ||
@@ -927,7 +939,7 @@ public class Lex extends Token
 
     //@ requires m_in != null;
     //@ requires textlen>0;
-    //@ modifies ttype, auxVal;
+    //@ modifies ttype, auxVal, m_nextchr, endingLoc, text, textlen;
     //@ ensures \result==ttype;
     //@ ensures \result==TagConstants.FLOATLIT || \result==TagConstants.DOUBLELIT;
     private int finishFloatingPointLiteral(int nextchr) {
@@ -1027,7 +1039,7 @@ public class Lex extends Token
      */
 
     //@ requires m_in != null;
-    //@ modifies ttype, auxVal, m_nextchr;
+    //@ modifies ttype, auxVal, m_nextchr, textlen, endingLoc, text;
     //@ modifies m_in.marked;
     //@ ensures \result==ttype;
     private int scanPunctuation(int nextchr) {

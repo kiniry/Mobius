@@ -34,6 +34,7 @@ final public class BitVec extends IntSet
     /**
      * Creates an empty bitvector of length "n".
      */
+    //@ private normal_behavior
     //@ requires n >= 0;
     //@ ensures num == n;
     //@ ensures words != null;
@@ -46,6 +47,7 @@ final public class BitVec extends IntSet
     }
 
     /** post(this) = [0,this.length()) */
+    //@ private normal_behavior
     //@ requires words != null;
     public void set_all() {
 	long[] w = words;
@@ -63,6 +65,7 @@ final public class BitVec extends IntSet
     /**
      * Ensures that bitvector length is at least "n".
      */
+    //@ private normal_behavior
     //@ requires n >= 0;
     //@ ensures num >= n;
     public void ensure(int n) {
@@ -88,6 +91,7 @@ final public class BitVec extends IntSet
     }
 
     //@ also
+    //@ private normal_behavior
     //@ ensures \result == num - 1;
     public int max_allowed() {
 	return num - 1;

@@ -13,14 +13,16 @@ package decsrc.container;
 
 public final class CharVec
 {
-    //@ invariant count <= elements.length;
+    //@ private invariant count <= elements.length;
     private int count;
     private char[] elements;
 
     public CharVec () { this(1); }
 
-    //@ ensures elements != null;
-    //@ ensures elements.length == (predict < 1 ? 1 : predict);
+    /*@ private normal_behavior
+      @   ensures elements != null;
+      @   ensures elements.length == (predict < 1 ? 1 : predict);
+      @*/
     public CharVec (int predict) {
         if (predict < 1) predict = 1;
         this.elements = new char[predict];
