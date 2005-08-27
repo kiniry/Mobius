@@ -5,12 +5,13 @@ Implementations for a proof obligation generator and a JML compiler to BCSL have
 At this step, we have built a framework for Java program verification. This validation can be done at source or at bytecode level in a common environment: for instance, to prove lemmas ensuring bytecode correctness all the current and future provers plugged in Jack can be used.
 
 
- We envisage several directions for future work are:
+ We envisage several directions for future work:
 \begin{itemize}
   \item perform case studies
   \item  build a PCC framework where the proofs are done interactively over the source code
 and then compiled down to bytecode. As we discussed in Section \ref{results} in the performed tests the 
-proof obligations generated over a source program and over its compilation with non optimizing compiler are syntactically the same modulo names and types.  
+proof obligations generated over a source program and over its compilation with non optimizing compiler are
+ syntactically the same modulo names and types. We aim to establish formally this property.  
   \item an extension of the framework applying previous research results in automated annotation generation for Java bytecode (see~\cite{PBBHL}). The client thus will have the possibility to verify a security policy by propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
 
 \end{itemize}
