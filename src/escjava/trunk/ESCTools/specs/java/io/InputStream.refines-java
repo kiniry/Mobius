@@ -53,12 +53,11 @@ public abstract class InputStream {
     //@ public model int availableBytes; in streamState;
     //@ public ghost boolean isOpen; in streamState;
     //@ public model boolean wasClosed; in streamState;
+    //@ public represents wasClosed = !isOpen;
 
     //@ public invariant availableBytes >= 0;
     //@ public invariant isOpen ==> !wasClosed;
     //@ public invariant wasClosed ==> !isOpen;
-
-    //@ represents wasClosed <- !isOpen;
 
     //@ requires a != null && b != null;
     //@ requires a.length >= length && b.length >= length;
@@ -66,7 +65,6 @@ public abstract class InputStream {
     //@ public static model boolean equalBytes(byte[] a, byte[] b, \bigint length);
 
     /*@ public normal_behavior
-      @   assignable \not_specified;
       @   ensures \result <==> (
       @       isOpen && !wasClosed && availableBytes >= 0 && readPosition == 0 
       @       && inputBytes != null && inputBytes.owner == this);
