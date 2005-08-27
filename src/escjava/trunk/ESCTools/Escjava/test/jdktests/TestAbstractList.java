@@ -53,7 +53,7 @@ System.out.println("EXC " + e);
    }
 
    static class Z extends AbstractList {
-        //@ non_null
+        //@ spec_public non_null
         final private Object[] array = new Object[100]; //@ in objectState;
 					//@ maps array[*] \into objectState;
         //@ public invariant array.owner == this;
@@ -64,7 +64,7 @@ System.out.println("EXC " + e);
 	    //@ set array.owner = this;
         }
 
-        private int s = 0;  //@ in objectState;
+        /*@ spec_public @*/ private int s = 0;  //@ in objectState;
         //@ public invariant s <= array.length;
         //@ represents theSize = s;
 

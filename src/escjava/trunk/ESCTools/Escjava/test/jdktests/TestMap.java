@@ -8,7 +8,7 @@ public class TestMap extends LocalTestCase {
 
     public void setUp() {
         map = new HashMap();
-    } //@ nowarn
+    } //@ nowarn;
     public void tearDown() {
         map = null;
     }

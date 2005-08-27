@@ -108,7 +108,7 @@ static class System {
     //@    initially systemProperties.containsKey("java.home");
     //@    initially systemProperties.getProperty("java.home") != null;
     //@    initially !systemProperties.containsKey("xxxxxx");
-    //@ public model final static non_null Properties nullSystemProperties;
+    //@ public model static non_null Properties nullSystemProperties;
 
     /*@ public normal_behavior
       @    ensures \result == systemProperties;
