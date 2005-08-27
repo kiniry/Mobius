@@ -163,9 +163,6 @@ export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
 export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
 export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
 
-## This is the path needed to build Javafe
-export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
-
 # This is the path needed to run Javafe (only used for testing)
 export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
 
@@ -263,6 +260,15 @@ export ANT_SOURCEPATH ?= /usr/local/Java/jakarta-ant/src
 ## This contains items needed for compiling/running JUnit tests, but
 ## not for compiling or running the tools themselves.
 export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}
+
+################################################################################
+## The classpath needed to build all of ESC/Java2.
+
+## This is the path needed to build Javafe
+export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
+
+## This is the path needed to build Escjava
+export ESCJAVA_BUILD_CLASSPATH = ${ESC_CLASSFILES}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
 
 ##########################################################################
 ##########################################################################

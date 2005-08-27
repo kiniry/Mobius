@@ -227,8 +227,6 @@ export ESCJAVA_PACKAGE_LIST = \
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
 
-JAVADOC_SOURCEPATH = ${SOURCEPATH}
-
 # Choose which specs you wish to use for documentation generation and typechecking.
 #SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
 SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
@@ -245,7 +243,7 @@ javadoc:  build
 	cp $(DOCS_STYLESHEET) $(JAVADOC_GEN_DIR)
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath \
-	  $(call canonicalize,$(JAVADOC_SOURCEPATH):$(JUNIT_SOURCEPATH)) \
+	  $(call canonicalize,$(SOURCEPATH):$(JUNIT_SOURCEPATH)) \
 	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}) \
 	  -overview docs/overview.html \
 	  -header $(COPYRIGHT) \
@@ -271,8 +269,8 @@ jmldoc:  build
 	mkdir -p $(JMLDOC_GEN_DIR)/images
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JMLDOC_GEN_DIR)/images
 	$(JMLDOC) -sourcepath \
-	  $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
-	  -classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${SPECS}:)${CLASSPATH}" \
+	  $(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
+	  -classpath "$(call canonicalize,${ESC_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:)${CLASSPATH}" \
 	  -private --source 1.4 \
 	  -doctitle "ESCTools API" \
 	  -windowtitle "ESCTools" \
@@ -291,8 +289,8 @@ jml: .jml
 
 .jml: build
 	$(JML) \
-	  --sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
-	  --classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${SPECS}:)${CLASSPATH}" \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  --assignable --Assignable --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
 	  && touch .jml
@@ -301,8 +299,8 @@ jmlc: .jmlc
 
 .jmlc: build
 	$(JMLC) \
-	  --sourcepath $(call canonicalize,$(JAVADOC_SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
-	  --classpath "$(call canonicalize,$(JAVADOC_SOURCEPATH):${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${SPECS}:)${CLASSPATH}" \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
 	  --assignable --Assignable --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive $(PACKAGE_LIST) \
