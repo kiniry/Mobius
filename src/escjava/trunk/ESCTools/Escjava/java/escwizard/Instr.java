@@ -85,7 +85,7 @@ abstract class Instr {
 
     error("unrecognized instruction, line too long: " +
 	  instr.substring(start));
-    //@ unreachable
+    //@ unreachable;
     return null;
   }
 

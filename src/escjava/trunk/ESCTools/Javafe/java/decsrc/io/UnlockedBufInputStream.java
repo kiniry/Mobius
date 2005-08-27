@@ -16,6 +16,7 @@ public class UnlockedBufInputStream extends InputStream {
 	buf = b;
 	pos = 0;
 	count = 0;
+	//@ set isOpen = true;
     }
 
     //@ also private behavior

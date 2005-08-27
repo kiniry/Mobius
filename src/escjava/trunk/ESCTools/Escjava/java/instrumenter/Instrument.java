@@ -538,7 +538,7 @@ public class Instrument {
 	    return mentionsThis(ed.expr);
 	  }
 	}
-	//@ unreachable
+	//@ unreachable;
 	return false;
       }
     case TagConstants.AMBIGUOUSVARIABLEACCESS:
@@ -681,7 +681,7 @@ public class Instrument {
     case TagConstants.FLOATTYPE:
       return GC.zerolit;
     }
-    /*@ unreachable */
+    /*@ unreachable; */
     Assert.fail("Bad tag");
     return null;
   }

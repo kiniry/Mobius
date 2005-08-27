@@ -31,7 +31,7 @@ public class CopyLoaded extends javafe.CopyLoaded implements Listener {
 	escjava.Main.nvu = true; // fix pretty printed names in quantified formulas
     }
 
-    //@ requires \nonnullelements(args)
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	Tool t = new CopyLoaded();
 	t.run(args);

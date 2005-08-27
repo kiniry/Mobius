@@ -55,9 +55,9 @@ public class SubProcess {
      */
     //@ spec_public
     private Process P = null;
-    //@ private invariant (P == null) ==> closed;
 
     //@ public model boolean closed;
+    //@ private represents closed <- P == null;
 
     /**
      * The {@link PrintStream} to the actual subprocess, or

@@ -30,7 +30,7 @@ public class AnnotationVisitor extends DefaultVisitor {
     
     public AnnotationVisitor(/*@ non_null */ AnnotationGuesser guesser) {
 	this.guesser = guesser;
-    } //@ nowarn NonNullInit
+    } //@ nowarn NonNullInit;
 
     public void visitTypeDeclVec(Vector tdv) {
 

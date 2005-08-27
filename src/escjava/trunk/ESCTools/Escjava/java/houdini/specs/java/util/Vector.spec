@@ -64,16 +64,16 @@ public class Vector extends AbstractList implements List, Cloneable,
      *
      * @serial
      */
-    //@ invariant \typeof(elementData) == \type(Object[])
+    //@ invariant \typeof(elementData) == \type(Object[]);
 
-    /*@ invariant (\forall int i; (0<=i && i<elementCount)
-	==> (\typeof(elementData[i]) <: elementType
-	     || elementData[i]==null)) */
-    /*@ invariant (\forall int i; (0<=i && i<elementCount)
-	==> (!containsNull ==> elementData[i] != null)) */
+    /*@ invariant (\forall int i; 0<=i && i<elementCount;
+      			\typeof(elementData[i]) <: elementType
+			|| elementData[i]==null); */
+    /*@ invariant (\forall int i; 0<=i && i<elementCount;
+      			!containsNull ==> elementData[i] != null); */
 
     /*@ invariant (\forall Vector v; v==null || v==this
-		   || v.elementData != elementData) */
+		   || v.elementData != elementData); */
 
     protected /*@non_null*/ Object elementData[];
 
@@ -112,7 +112,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      *               is negative
      */
     // //@ requires initialCapacity >= 0 ;
-    //@ ensures this.elementCount == 0
+    //@ ensures this.elementCount == 0;
     public Vector(int initialCapacity, int capacityIncrement) {
 	super();
         if (initialCapacity < 0)
@@ -121,8 +121,8 @@ public class Vector extends AbstractList implements List, Cloneable,
 	this.elementData = new Object[initialCapacity];
 	this.capacityIncrement = capacityIncrement;
 
-	//@ set elementType = \type(Object)
-	//@ set containsNull = true
+	//@ set elementType = \type(Object);
+	//@ set containsNull = true;
     }
 
     /**
@@ -134,7 +134,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      *               is negative
      */
     // //@ requires initialCapacity >= 0 ;
-    //@ ensures this.elementCount == 0
+    //@ ensures this.elementCount == 0;
     public Vector(int initialCapacity) {
 	this(initialCapacity, 0);
     }
@@ -144,7 +144,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      * has size <tt>10</tt> and its standard capacity increment is 
      * zero. 
      */
-    //@ ensures this.elementCount == 0
+    //@ ensures this.elementCount == 0;
     public Vector() {
 	this(10);
     }
@@ -156,18 +156,18 @@ public class Vector extends AbstractList implements List, Cloneable,
      *
      * @since   JDK1.2
      */
-    //@ ensures this.elementType == c.elementType
-    //@ ensures this.containsNull == c.containsNull
+    //@ ensures this.elementType == c.elementType;
+    //@ ensures this.containsNull == c.containsNull;
     public Vector(/*@non_null*/ Collection c) {
 	this((c.size()*110)/100);	// Allow 10% room for growth
 
-	//@ assume c.elementType <: \type(Object)
-	//@ set elementType = c.elementType
-	//@ set containsNull = c.containsNull
+	//@ assume c.elementType <: \type(Object);
+	//@ set elementType = c.elementType;
+	//@ set containsNull = c.containsNull;
 
 	Iterator i = c.iterator();
 	while (i.hasNext())
-	    elementData[elementCount++] = i.next();  //@ nowarn IndexTooBig
+	    elementData[elementCount++] = i.next();  //@ nowarn IndexTooBig;
     }
 
     /**
@@ -201,7 +201,7 @@ public class Vector extends AbstractList implements List, Cloneable,
 	    Object oldData[] = elementData;
 	    elementData = new Object[elementCount];
 	    /*@ assume (\forall Vector v; v==null || v==this ||
-			v.elementData != elementData) */
+			v.elementData != elementData); */
 	    System.arraycopy(oldData, 0, elementData, 0, elementCount);
 	}
     }
@@ -271,7 +271,7 @@ public class Vector extends AbstractList implements List, Cloneable,
 	elementCount = newSize;
     /*@ assume (\forall int i; (0<=i && i<newSize)
 	==> (\typeof(elementData[i]) <: elementType
-	     || elementData[i]==null)) */
+	     || elementData[i]==null)); */
 	elementCount = newSize;
     }
 
@@ -291,7 +291,7 @@ public class Vector extends AbstractList implements List, Cloneable,
      *
      * @return  the number of components in this vector.
      */
-    //@ also_ensures \result == elementCount
+    //@ also ensures \result == elementCount;
     public int size() {
 	return elementCount;
     }
@@ -317,10 +317,10 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @see     Enumeration
      * @see     Iterator
      */
-    //@ ensures \result != null
-    //@ ensures \result != null
-    //@ ensures \result.elementType == elementType
-    //@ ensures \result.returnsNull == containsNull
+    //@ ensures \result != null;
+    //@ ensures \result != null;
+    //@ ensures \result.elementType == elementType;
+    //@ ensures \result.returnsNull == containsNull;
     public Enumeration elements() {
 	return new Enumeration() {
 	    int count = 0;
@@ -457,8 +457,8 @@ public class Vector extends AbstractList implements List, Cloneable,
      */
     // //@ requires 0 <= index ;
     // //@ requires index < elementCount ;
-    //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures !false ==> \result != null
+    //@ ensures \typeof(\result) <: elementType || \result==null;
+    //@ ensures !false ==> \result != null;
     public synchronized Object elementAt(int index) {
 	if (index >= elementCount) {
 	    throw new ArrayIndexOutOfBoundsException(index + " >= " + elementCount);
@@ -483,8 +483,8 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @exception  NoSuchElementException  if this vector has no components.
      */
     // //@ requires elementCount > 0 ;
-    //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures !false ==> \result != null
+    //@ ensures \typeof(\result) <: elementType || \result==null;
+    //@ ensures !false ==> \result != null;
     public synchronized Object firstElement() {
 	if (elementCount == 0) {
 	    throw new NoSuchElementException();
@@ -500,8 +500,8 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @exception  NoSuchElementException  if this vector is empty.
      */
     // //@ requires elementCount > 0 ;
-    //@ ensures \typeof(\result) <: elementType || \result==null
-    //@ ensures !false ==> \result != null
+    //@ ensures \typeof(\result) <: elementType || \result==null;
+    //@ ensures !false ==> \result != null;
     public synchronized Object lastElement() {
 	if (elementCount == 0) {
 	    throw new NoSuchElementException();
@@ -564,8 +564,8 @@ public class Vector extends AbstractList implements List, Cloneable,
      */
     // //@ requires 0 <= index ;
     // //@ requires index < elementCount ;
-    //@ modifies elementCount
-    //@ ensures  elementCount == \old(elementCount)-1
+    //@ modifies elementCount;
+    //@ ensures  elementCount == \old(elementCount)-1;
     public synchronized void removeElementAt(int index) {
 	modCount++;
 	if (index >= elementCount) {
@@ -608,8 +608,8 @@ public class Vector extends AbstractList implements List, Cloneable,
      */
     // //@ requires 0 <= index ;
     // //@ requires index <= elementCount ;
-    // //@ requires \typeof(obj) <: elementType || obj==null
-    // //@ requires containsNull || obj != null
+    // //@ requires \typeof(obj) <: elementType || obj==null;
+    // //@ requires containsNull || obj != null;
     public synchronized void insertElementAt(Object obj, int index) {
 	modCount++;
 	if (index >= elementCount + 1) {
@@ -634,10 +634,10 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @see	   #add(Object)
      * @see	   List
      */
-    // //@ requires \typeof(obj) <: elementType
-    // //@ requires containsNull || obj != null
-    //@ modifies elementCount
-    //@ ensures  elementCount == \old(elementCount)+1
+    // //@ requires \typeof(obj) <: elementType;
+    // //@ requires containsNull || obj != null;
+    //@ modifies elementCount;
+    //@ ensures  elementCount == \old(elementCount)+1;
     public synchronized void addElement(Object obj) {
 	modCount++;
 	ensureCapacityHelper(elementCount + 1);
@@ -660,8 +660,8 @@ public class Vector extends AbstractList implements List, Cloneable,
      * @see	List#remove(Object)
      * @see	List
      */
-    // //@ requires !containsNull ==> obj != null
-    // //@ requires \typeof(obj) <: elementType || obj==null
+    // //@ requires !containsNull ==> obj != null;
+    // //@ requires \typeof(obj) <: elementType || obj==null;
     public synchronized boolean removeElement(Object obj) {
 	modCount++;
 	int i = indexOf(obj);

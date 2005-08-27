@@ -121,7 +121,7 @@ public class Java2Html
     //@ invariant declLinks.keyType == \type(String);
 
 
-    /*@ requires \nonnullelements(args) */
+    //@ requires \nonnullelements(args);
     //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 
@@ -183,8 +183,8 @@ public class Java2Html
 		    h = new Hashtable();
 		    declLinks.put(filename1,h);
 		}
-		//@ assume h.elementType == \type(String)
-		//@ assume h.keyType == \type(Long)
+		//@ assume h.elementType == \type(String);
+		//@ assume h.keyType == \type(Long);
 		h.put(offset,href);
 	    }
         } catch(IOException e) {
@@ -298,17 +298,17 @@ class JFile {
     /*@ non_null */ Package pack;
     /*@ non_null */ String name;            // filename
     /*@ non_null */ Hashtable declLinks;
-    //@ invariant declLinks.elementType == \type(String)
-    //@ invariant declLinks.keyType == \type(Long)
+    //@ invariant declLinks.elementType == \type(String);
+    //@ invariant declLinks.keyType == \type(Long);
 
     public JFile(/*@ non_null */ String name, 
 		 /*@ non_null */ Package pack) {
         this.name = name;
         this.pack = pack;
 	//@ set keywords.keyType = \type(String);
-	declLinks = (Hashtable)Java2Html.declLinks.get( SourceFilename() ); //@ nowarn 
-	//@ assume declLinks.elementType == \type(String)
-	//@ assume declLinks.keyType == \type(Long)
+	declLinks = (Hashtable)Java2Html.declLinks.get( SourceFilename() ); //@ nowarn;
+	//@ assume declLinks.elementType == \type(String);
+	//@ assume declLinks.keyType == \type(Long);
 	// System.out.println("JFile: "+SourceFilename() );
 	if( declLinks == null ) {
 	    declLinks = new Hashtable();

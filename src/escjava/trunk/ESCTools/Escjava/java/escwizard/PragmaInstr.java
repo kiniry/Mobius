@@ -90,7 +90,7 @@ class PragmaInstr extends Instr {
       return RIGHTBEFORE;
     } else {
       error("unknown placement code: " + str);
-      //@ unreachable
+      //@ unreachable;
       return 0;
     }
   }
@@ -106,7 +106,7 @@ class PragmaInstr extends Instr {
       case RIGHTAFTER:  return ">";
       case RIGHTBEFORE:  return ".";
       default:
-	//@ unreachable
+	//@ unreachable;
 	return null;
     }
   }
@@ -235,11 +235,11 @@ class PragmaInstr extends Instr {
 
       case NEXTLINE:
 	{
-	  String prefix = getWhitePrefix(substring(data, //@ nowarn NonNull
+	  String prefix = getWhitePrefix(substring(data, //@ nowarn NonNull;
 						   offsetStartLine, position));
 	  int semi = offsetOf(data, position, ';', true, fi) + 1;
 	  int eol = offsetOf(data, semi, '\n', false, fi) + 1;
-	  if (isWhite(substring(data, semi, eol), false)) { //@ nowarn NonNull
+	  if (isWhite(substring(data, semi, eol), false)) { //@ nowarn NonNull;
 	    return new WorkItem(fileidPragma, eol, prefix + pr + "\n");
 	  } else {
 	    return new WorkItem(fileidPragma, semi, " " + pr + " ");
@@ -257,7 +257,7 @@ class PragmaInstr extends Instr {
 	}
 
       default:
-	//@ unreachable
+	//@ unreachable;
 	return null;  // dummy return
     }
   }
@@ -434,7 +434,7 @@ class PragmaInstr extends Instr {
 	  } else if (chx == '/' && 0 <= j-1 && (char)data[j-1] == '/') {
 	    // a single-line comment
 	    i = j-1;
-	    //@ assert i < j
+	    //@ assert i < j;
 	    break;
 	  } else if (chx == '/' && 0 <= j-1 && (char)data[j-1] == '*') {
 	    // presumed not to be a single-line comment (see Caveats above)
@@ -480,7 +480,7 @@ class PragmaInstr extends Instr {
     boolean inInitializingExpr = false;
     int parenDepth = 0;
     int j = start;
-    //@ loop_invariant 0 <= parenDepth
+    //@ loop_invariant 0 <= parenDepth;
     //@ loop_invariant parenDepth != 0 ==> inInitializingExpr;
     while (true) {
       
@@ -583,13 +583,13 @@ class PragmaInstr extends Instr {
     **/
 
   //@ requires 0 <= start && start <= s.count;
-  /*@ ensures 0 <= \result && \result <= s.count; */ //@ nowarn Post
+  /*@ ensures 0 <= \result && \result <= s.count; */ //@ nowarn Post;
   static int indexOfNonWhite(/*@ non_null */ String s, int start,
 			     boolean considerPragmasWhite) {
     boolean inTraditionalComment = false;
     boolean inSingleLineComment = false;
 
-    /*@ readable_if inTraditionalComment || inSingleLineComment */
+    /*--- readable_if inTraditionalComment || inSingleLineComment; ---*/
     int startOfComment = 0;
 
     //@ loop_invariant !inTraditionalComment || !inSingleLineComment;

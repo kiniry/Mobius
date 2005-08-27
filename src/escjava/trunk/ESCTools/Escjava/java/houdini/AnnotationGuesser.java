@@ -30,7 +30,7 @@ public abstract class AnnotationGuesser {
 				    /*@ non_null */ Annotator modifiesAnnotator,
 				    /*@ non_null */ Annotator ensuresAnnotator,
 				    Annotator exsuresAnnotator,
-				    /*@ readable_if requiresAnnotator != null */
+				    /*--- readable_if requiresAnnotator != null; ---*/
 				    Hashtable envReq,
 				    /*@ non_null */ Hashtable envMod,
 				    /*@ non_null */ Hashtable envEns);
@@ -89,7 +89,7 @@ public abstract class AnnotationGuesser {
 
     if (t instanceof TypeName) {
       TypeName tn = (TypeName)t;
-      t = TypeSig.getSig(tn); //@ nowarn NonNull
+      t = TypeSig.getSig(tn); //@ nowarn NonNull;
     }
 
     //@ assume t instanceof TypeSig;

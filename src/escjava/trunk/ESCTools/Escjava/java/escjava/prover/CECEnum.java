@@ -118,8 +118,10 @@ class CECEnum implements Enumeration {
      *                                                 *
      ***************************************************/
 
-    //@ invariant pending.elementCount>0 ==> moreElements;
-    //@ invariant moreElements ==> !simplifyDone || pending.elementCount > 0;
+    //@ represents moreElements <- !(simplifyDone && pending.elementCount == 0);
+
+    //@ invariant_redundantly pending.elementCount > 0 ==> moreElements;
+    //@ invariant_redundantly moreElements ==> !simplifyDone || pending.elementCount > 0;
 
 
     /**
@@ -142,7 +144,6 @@ class CECEnum implements Enumeration {
 	if (pending.size()==0 && !simplifyDone)
 	    readFromSimplify();
 
-	// @ set moreElements = pending.elementCount != 0;
 	return pending.size()!=0;
     }
 
@@ -201,11 +202,9 @@ class CECEnum implements Enumeration {
 	  so = readResultMessage();
 	}
 	pending.addElement(so);
-	// @ set moreElements = true;
     }
 
-    //@ ensures \result != null;
-    private SimplifyOutputSentinel readSentinel() {
+    private /*@ non_null @*/ SimplifyOutputSentinel readSentinel() {
       int n = P.readNumber();
       P.checkString(": ");
 

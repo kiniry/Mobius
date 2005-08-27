@@ -145,9 +145,9 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @exception  IllegalArgumentException  if the initial capacity is less
      *             than zero, or if the load factor is nonpositive.
      */
-    //@ requires initialCapacity >= 0
-    //@ requires loadFactor > 0
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ requires initialCapacity >= 0;
+    //@ requires loadFactor > 0;
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(int initialCapacity, float loadFactor) {
 	if (initialCapacity < 0)
 	    throw new IllegalArgumentException("Illegal Capacity: "+
@@ -161,8 +161,8 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
 	table = new Entry[initialCapacity];
 	threshold = (int)(initialCapacity * loadFactor);
 
-	//@ set keyType = \type(Object)
-	//@ set elementType = \type(Object)
+	//@ set keyType = \type(Object);
+	//@ set elementType = \type(Object);
     }
 
     /**
@@ -173,8 +173,8 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @exception IllegalArgumentException if the initial capacity is less
      *              than zero.
      */
-    //@ requires initialCapacity >= 0
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ requires initialCapacity >= 0;
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(int initialCapacity) {
 	this(initialCapacity, 0.75f);
     }
@@ -183,7 +183,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * Constructs a new, empty hashtable with a default capacity and load
      * factor, which is <tt>0.75</tt>. 
      */
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable() {
 	this(101, 0.75f);
     }
@@ -196,7 +196,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since   JDK1.2
      */
-    //@ ensures keyType==\type(Object) && elementType==\type(Object)
+    //@ ensures keyType==\type(Object) && elementType==\type(Object);
     public Hashtable(/*@non_null*/ Map t) {
 	this(Math.max(2*t.size(), 11), 0.75f);
 	putAll(t);
@@ -267,7 +267,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see        #containsValue(Object)
      * @see	   Map
      */
-    //@ requires \typeof(value) <: elementType
+    //@ requires \typeof(value) <: elementType;
     public synchronized boolean contains(/*@non_null*/ Object value) {
 	if (value == null) {
 	    throw new NullPointerException();
@@ -294,8 +294,9 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see	   Map
      * @since JDK1.2
      */
-    //@ also_requires \typeof(value) <: elementType
-    //@ also_requires value != null;
+    //@ also
+    //@ requires \typeof(value) <: elementType;
+    //@ requires value != null;
     public boolean containsValue(Object value) {
 	return contains(value);
     }
@@ -309,8 +310,8 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *          <tt>equals</tt> method; <code>false</code> otherwise.
      * @see     #contains(Object)
      */
-	//    //@ requires \typeof(key) <: keyType
-    //@ also_requires key != null;
+    // requires \typeof(key) <: keyType
+    //@ also requires key != null;
     public synchronized boolean containsKey(Object key) {
 	Entry tab[] = table;
 	int hash = key.hashCode();
@@ -461,7 +462,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also_requires t != null;
+    //@ also requires t != null;
     public synchronized void putAll(Map t) {
 	Iterator i = t.entrySet().iterator();
 	while (i.hasNext()) {
@@ -550,7 +551,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also_ensures \result != null
+    //@ also ensures \result != null;
     public Set keySet() {
 	if (keySet == null)
 	    keySet = Collections.synchronizedSet(new KeySet(), this);
@@ -586,7 +587,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      * @see   Map.Entry
      * @since JDK1.2
      */
-    //@ also_ensures \result != null
+    //@ also ensures \result != null;
     public Set entrySet() {
 	if (entrySet==null)
 	    entrySet = Collections.synchronizedSet(new EntrySet(), this);
@@ -657,7 +658,7 @@ public class Hashtable extends Dictionary implements Map, Cloneable,
      *
      * @since JDK1.2
      */
-    //@ also_ensures \result != null
+    //@ also ensures \result != null;
     public Collection values() {
 	if (values==null)
 	    values = Collections.synchronizedCollection(new ValueCollection(),
