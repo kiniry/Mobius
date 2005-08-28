@@ -26,8 +26,8 @@ package java.util;
  */
 public class GregorianCalendar extends Calendar {
 
-    //@ public static model int BC;  public static represents BC <- 0;
-    //@ public static model int AD;  public static represents AD <- 1;
+    public static final int BC;
+    public static final int AD;
 
     //@ public static model int  JAN_1_1_JULIAN_DAY;
     //@ public static represents JAN_1_1_JULIAN_DAY <- 1721426;
