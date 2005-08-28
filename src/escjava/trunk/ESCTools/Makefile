@@ -303,16 +303,37 @@ jml: .jml
 # Javafe: decsrc javafe jtools tohtml
 # Escjava: escjava escwizard houdini instrumenter tohtml
 
-jmlc: .jmlc
+jmlc: .jmlc_fe .jmlc_ej
 
-.jmlc: build
+.jmlc_fe: build
 	$(JMLC) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
 	  -a -A --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive \
-	  javafe escjava \
+	  javafe \
+	  && touch .jmlc
+
+.jmlc_ej: build
+	$(JMLC) \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
+	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	  -d jmlc_classfiles \
+	  -a -A --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive \
+	  escjava \
+	  && touch .jmlc
+
+# Apply jmlc to one file named by FILE (value to be supplied on the command line).
+jmlc1: build
+	$(JMLC) \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
+	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	  -d jmlc_classfiles \
+	  -a -A --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive -P \
+	  $(FILE) \
 	  && touch .jmlc
 
 ################################################################################
