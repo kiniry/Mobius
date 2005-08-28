@@ -51,13 +51,11 @@ public abstract class InputStream {
     //@ public invariant readPosition+availableBytes <= inputBytes.length;
 
     //@ public model int availableBytes; in streamState;
-    //@ public ghost boolean isOpen; in streamState;
+    //@ public model boolean isOpen; in streamState;
     //@ public model boolean wasClosed; in streamState;
     //@ public represents wasClosed = !isOpen;
 
     //@ public invariant availableBytes >= 0;
-    //@ public invariant isOpen ==> !wasClosed;
-    //@ public invariant wasClosed ==> !isOpen;
 
     //@ requires a != null && b != null;
     //@ requires a.length >= length && b.length >= length;
