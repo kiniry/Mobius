@@ -746,7 +746,7 @@ public final class Translate
    * usual, emitted code is appended to <code>code</code> and temporaries are
    * appended to <code>temporaries</code>.
    */
-  private void Guard(Expr e, Expr label) {
+  private void guard(Expr e, Expr label) {
     Expr grd = ptrExpr(e);
     code.push();  // popped off by boxPopFromStackVector
     code.addElement(GC.assume(grd));
@@ -1498,7 +1498,7 @@ public final class Translate
         temporaries.push();  // this mark popped below
 
         code.push();  // this mark popped below
-        Guard(w.expr, bLabel);
+        guard(w.expr, bLabel);
         GuardedCmd guardCmd =
           GC.seq(GuardedCmdVec.popFromStackVector(code));
 
@@ -1545,7 +1545,7 @@ public final class Translate
         trStmt(d.stmt,decl);
         code.addElement(opBlockCmd(continueLabel(d)));
 
-        Guard(d.expr, bLabel);
+        guard(d.expr, bLabel);
 
         GuardedCmd body = GC.seq(GuardedCmdVec.popFromStackVector(code));
 
@@ -1581,7 +1581,7 @@ public final class Translate
         skolemConstants = LocalVarDeclVec.make();
 
         code.push();  // this mark popped below
-        Guard(x.test, bLabel);
+        guard(x.test, bLabel);
         GuardedCmd guardCmd =
           GC.seq(GuardedCmdVec.popFromStackVector(code));
 
