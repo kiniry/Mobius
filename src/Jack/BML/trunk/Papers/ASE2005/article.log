@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  26 AUG 2005 15:50
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  29 AUG 2005 12:55
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -104,70 +104,71 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 ) (./architecture.tex [2]
 File: architecture.eps Graphic file (type eps)
 
-<architecture.eps>) (./classFileExt.tex [3] [4]
+<architecture.eps> [3] [4]) (./relWork.tex) (./classFileExt.tex
 Overfull \hbox (17.24684pt too wide) in paragraph at lines 42--42
 []  \OT1/cmtt/m/n/10 //@ensures \result ==  (\exists int i; 0 <= i && i < list.
 length &&[] 
  []
 
-[5]
-Overfull \hbox (15.04373pt too wide) in paragraph at lines 99--105
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[5] [6]
+Overfull \hbox (15.04373pt too wide) in paragraph at lines 100--106
 \OT1/cmr/m/n/10 sup-plies for ev-ery method in the gen-er-ated class file the \
 OT1/cmr/bx/n/10 Line[]Number[]Table
  []
 
-[6] [7]
+[7] [8]
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 170.
-) (./wpbc.tex [8] [9]
-Underfull \hbox (badness 10000) in paragraph at lines 43--50
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 176.
+) (./wpbc.tex [9]
+Underfull \hbox (badness 10000) in paragraph at lines 41--48
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 43--50
+Underfull \hbox (badness 10000) in paragraph at lines 41--48
 
  []
 
 
-Overfull \hbox (43.5262pt too wide) detected at line 68
+Overfull \hbox (43.5262pt too wide) detected at line 66
 []\OT1/cmr/m/n/10 ([] []\OML/cmm/m/it/10 ;   ;   []\OT1/cmr/m/n/10 ) = [] [][][
 ]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--74
+Underfull \hbox (badness 10000) in paragraph at lines 66--72
 
  []
 
-(./wpSingleInstr.tex
+(./wpSingleInstr.tex [10]
 Overfull \hbox (6.22385pt too wide) detected at line 100
 []
  []
 
-) (./ctrlFlowWp.tex [10] [11])) (./results.tex
-Overfull \hbox (16.91963pt too wide) in paragraph at lines 2--2
-[]\OT1/cmr/bx/n/14.4 Comparison be-tween source and byte-code proofs 
- []
-
-[12]
-Overfull \hbox (9.30751pt too wide) in paragraph at lines 173--228
+) (./ctrlFlowWp.tex [11])) (./results.tex [12]
+Overfull \hbox (9.30751pt too wide) in paragraph at lines 172--227
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 173--228
+Underfull \hbox (badness 10000) in paragraph at lines 172--227
 
  []
 
-) (./conclusion.tex [13]) (./article.bbl [14]) [15] (./article.aux) ) 
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+) (./conclusion.tex [13]) (./article.bbl [14] [15]) [16] (./article.aux) ) 
 Here is how much of TeX's memory you used:
- 1064 strings out of 95847
- 11764 string characters out of 1195948
+ 1079 strings out of 95847
+ 11941 string characters out of 1195948
  59259 words of memory out of 1000001
- 3977 multiletter control sequences out of 10000+50000
- 13912 words of font info for 55 fonts, out of 500000 for 1000
+ 3987 multiletter control sequences out of 10000+50000
+ 14383 words of font info for 57 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
  32i,22n,24p,780b,455s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (15 pages, 53548 bytes).
+Output written on article.dvi (16 pages, 57592 bytes).

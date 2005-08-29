@@ -18,9 +18,7 @@ corresponding exceptional postcondition $\excPost(\texttt{Exc})$.
 The function $\wpi$ must satisfy the following property: if the instruction $\instr{ins}$ starts execution in a state where the predicate
 $\wpi(\instr{ins}, \ \psi, \ \excPost)$ holds then if it terminates normally then the poststate must satisfy the predicate $\psi$  
 and if terminates on exception \texttt{Exc} then  the poststate must satisfy $\excPost(\texttt{Exc})$.
- In the draft paper \cite{JBL05MP}\footnote{the draft is available at the second author's page},
- we show that the $\wpi$ function has this property (i.e. the calculus is correct). The proof is done by defining an operational semantics for the bytecode instructions and
- exploits several substitution lemmas.
+ In the draft paper \cite{JBL05MP}, we show that the $\wpi$ function has this property (i.e. the calculus is correct). The proof is done by defining an operational semantics for the bytecode instructions and exploits several substitution lemmas.
 
 Returning back to the example, the expression \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack.
  This is because the JVM is stack based, i.e. the instructions take their arguments from the method execution stack and 
@@ -81,7 +79,7 @@ where $i$ is a valid local variable index   \\
 
 %\texttt{wp(Type\_load index,$\psi$)} = $\psi$\texttt{[Stack(t)$\leftarrow$local(index)][t$\leftarrow$t+1]}  \\
 %, where the local variable must contain value of type Type
-\caption{rules for some bytecode instructions}
+\caption{\sc Rules for some bytecode instructions}
 \label{instrWP}
 %\end{frameit}
 \end{figure}

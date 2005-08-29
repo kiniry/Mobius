@@ -1,5 +1,5 @@
 
-\section{Comparison between source and bytecode proofs}  \label{results}
+\section{Comparison between source and bytecodes \\ proofs}  \label{results}
 
 The purpose of this section is to give a comparison between bytecode and source proof obligations.
 In particular, we illustrate this by the proof obligations of the example program in Fig.\ref{replaceSrc}.
@@ -18,8 +18,8 @@ program variables names and basic types.
 
  We return now to our example from the previous sections and give in Fig. \ref{vcEnsures} one of the proof obligations on source 
 and bytecode level respectively concerning the postcondition correctness. The verification conditions on bytecode and source level
- have the same shape modulo names (Section \ref{comJML}). Also in Section
- \ref{comJML}, we discussed the compilation of the JML postcondition from Fig. \ref{replaceSrc}. In particularly,
+ have the same shape modulo names (see Section \ref{comJML} for how names are compiled). Also in Section
+ \ref{comJML}, we discussed the compilation of the JML postcondition from Fig. \ref{replaceSrc}. Particularly,
  we saw that the compiler has to transform the source postcondition in an equivalent formula and we
  gave the compilation in Fig. \ref{postCompile}. 
 
@@ -171,7 +171,7 @@ We aim to formally give evidence that the proof obligations on non optimized byt
 
 \begin{tabular}{|l|l|}
 \hline
-Hypothesis \ on \ bytecode:  & Hypothesis \ on \ source \ level:  \\
+\bf{Hypothesis \ on \ bytecode:}  & \bf{Hypothesis \ on \ source \ level:}  \\
 \hline 
 $\register{2}\_at\_ins\_20 \geq $ 
 & $ \srcVar{i}\_at\_ins\_26 \geq$ \\
@@ -207,7 +207,7 @@ $0=0 \vee 0=1$ & \\
 & \\
 
 \hline
-Goal on bytecode: & Goal on source level: \\
+\bf{Goal on bytecode:} & \bf{Goal on source level:} \\
 \hline
 $\Myfalse  \iff $ & $\Myfalse \iff  $ \\
  $ \exists  var(0) . \ 0 \leq var(0) \wedge$ 
@@ -225,7 +225,7 @@ $\Myspace \Myspace \#19(\register{0})[var(0)] = \register{1} $
 Note: $\expression\_at\_ins\_n$ denotes the value of  
 expression $\expression$ at the bytecode instruction at index (source line)  $n$ \\
 
-\caption{Source and Bytecode verification condition for one case of the postcondition correctness }
+\caption{\sc Source and Bytecode verification condition for one case of the postcondition correctness }
 \label{vcEnsures}
 \end{figure}
  

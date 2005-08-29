@@ -18,9 +18,9 @@ verification conditions and type check the proof against them.
 The proof is generated automatically by the certifying compiler for properties like well typedness or safe memory access. 
 As the certifying compiler is designed to be completely automatic, it will not be able to deal with rich functional or security properties. 
  
-We propose a verification framework with the following features:
+We propose a bytecode verification framework with the following features:
 \begin{itemize}
-  \item compiler from source program annotation into bytecode annotation.
+  \item a bytecode specification language and a compiler from source program annotations into bytecode annotations.
  Thus, bytecode can benefit from the source specification and does not need to be accompanied by its source code. 
 
    \item verification condition generator over Java bytecode, which supports
@@ -58,7 +58,7 @@ exceptions, references, method calls and subroutines.
   
 The remainder of the paper is organized as follows: 
 Section~\ref{architecture_s} reviews scenarios in which the architecture is appropriate to use; 
-%Section~\ref{relWork} provides an overview of related work;
+Section~\ref{relWork} provides a brief overview of related work;
  Section~\ref{bcSpecLg} presents the bytecode specification language BCSL and the JML compiler; Section~\ref{wpbc} discusses the main
 features of the weakest precondition calculus; Section~\ref{results} discusses the relationship between the verification conditions for JML annotated source and BCSL annotated bytecode; Section~\ref{conclusion} concludes with future work.  
 
