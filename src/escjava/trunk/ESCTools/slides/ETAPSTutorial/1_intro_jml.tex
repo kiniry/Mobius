@@ -296,28 +296,32 @@ clause makes this {\green explicit}.
 \begin{slide}{signals}
 \vspace*{-4ex}
 
-Exceptions mentioned in throws clause are allowed by default,
-i.e.\ the default signals clause is
-\begin{alltt}\code{ {\blue signals} (Exception){\green true}; }
-\end{alltt}
+Exceptions mentioned in throws clause are allowed by default.
+To change this, there are three options:
 
-\medskip
-To rule them out, add an explicit
-\begin{alltt}\code{ {\blue signals} (Exception){\green false}; 
-}
-or
-\begin{alltt}\code{ {\blue signals_only} Exception; 
-}
-
-\end{alltt}
-or use the keyword {\blue normal\_behavior}
-\begin{alltt}
-\code{ {\green /*@}{\blue normal\_behavior}
+\begin{itemize}
+\item
+To {\em rule out all} exceptions, use a {\blue normal\_behavior}
+\begin{alltt} \code{ {\green /*@}{\blue normal\_behavior}
        {\black requires} ...
        {\black ensures}  ...              
  {\green   @*/}
 }
 \end{alltt}
+\vspace*{0.1ex}
+\item
+To {\em rule out particular} exception \code{E},
+add 
+\begin{alltt}\code{ {\blue signals} (E){\green false}; 
+}
+\end{alltt}
+\vspace*{0.1ex}
+\item
+To {\em allow only some exceptions}, add 
+\begin{alltt}\code{ {\blue signals_only} E1, ..., E2; 
+}
+\end{alltt}
+\end{itemize}
 
 \end{slide}
 
