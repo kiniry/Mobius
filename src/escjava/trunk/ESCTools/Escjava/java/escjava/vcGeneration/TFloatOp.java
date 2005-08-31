@@ -28,7 +28,7 @@ abstract class TFloatOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.type = $float;
+		nodeTemp.setType($float, true);
 
 	    nodeTemp.typeTree();
 	}

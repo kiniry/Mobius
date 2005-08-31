@@ -14,9 +14,61 @@ class TBoolEQ extends TBoolOp {}
 class TBoolNE extends TBoolOp {}
 
 // allocation comparisons
-class TAllocLT extends TBoolOp {}
+// $Time * $Time -> boolean
+class TAllocLT extends TBoolRes {
 
-class TAllocLE extends TBoolOp {}
+    public void typeTree(){
+	
+	/*
+	 * Semantic control
+	 */
+
+	if(sons.size() < 2)
+	    System.err.println("AllocLT node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
+	else {
+	    TNode n1 = getChildAt(0);
+	    TNode n2 = getChildAt(1);
+
+	    // we are sure about the type of the sons
+	    n1.setType($Time,true);
+	    n2.setType($Time,true);
+
+	    n1.typeTree();
+	    n2.typeTree();
+	}
+
+    }
+
+}
+
+// $Time * $Time -> boolean
+class TAllocLE extends TBoolRes {
+
+    public void typeTree(){
+	
+	/*
+	 * Semantic control
+	 */
+
+	if(sons.size() < 2)
+	    System.err.println("AllocLT node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
+	else {
+	    TNode n1 = getChildAt(0);
+	    TNode n2 = getChildAt(1);
+
+	    // we are sure about the type of the sons
+	    n1.setType($Time,true);
+	    n2.setType($Time,true);
+
+	    n1.typeTree();
+	    n2.typeTree();
+	}
+
+    }
+
+}
+
+
 
 // fixme
 class TAnyEQ extends TFunction {
@@ -27,8 +79,8 @@ class TAnyEQ extends TFunction {
 	 * Semantic control
 	 */
 
-	if(sons.size() != 2)
-	    System.err.println("AnyEQ node has a different number of sons = "+sons.size()+" which is != from 2, bizarre...");
+	if(sons.size() < 2)
+	    System.err.println("AnyEQ node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
 	else
 	    // retrieve the son and compare their type
 	    {
@@ -46,6 +98,9 @@ class TAnyEQ extends TFunction {
 		    else if(vi1 != null && vi2 == null)
 			n2.type = vi1;
 		}
+
+		n1.typeTree();
+		n2.typeTree();
 	    }
 
     }
@@ -116,11 +171,81 @@ class TTypeNE extends TTypeOp {}
 class TTypeLE extends TTypeOp {}
 
 // usual functions, is select store typeof isAllocated
-class TIs extends TFunction {} // %Reference, type -> integer
+class TIs extends TBoolRes { // %Reference | double | char etc ..., type -> boolean
 
-class TSelect extends TFunction {} // memory * %Reference -> object
+    public void typeTree(){
+	
+	if(sons.size()!=2)
+	    System.err.println("TIs node with "+sons.size()+" instead of 2, that's strange...");
+	else {
+	    TNode n1 = getChildAt(0);
+	    TNode n2 = getChildAt(1);
 
-class TStore extends TFunction {} // memory * %Reference * index -> memory
+	    /*
+	     * As the son #1 can be a reference of have a final type,
+	     * we can't guess it here. We just know that the second son should
+	     * be a type.
+	     */
+	    n2.setType($Type,true);
+
+	    n1.typeTree();
+	    n2.typeTree();
+	}
+
+    }
+
+} 
+
+// %Field * %Reference -> %Reference | double | char etc... (final types)
+class TSelect extends TFunction {
+
+        public void typeTree(){
+	
+	if(sons.size()!=2)
+	    System.err.println("TSelect node with "+sons.size()+" instead of 2, that's strange...");
+	else {
+	    TNode n1 = getChildAt(0);
+	    TNode n2 = getChildAt(1);
+
+	    /*
+	     * As the son #1 can be a reference of have a final type,
+	     * we can't guess it here. We just know that the second son should
+	     * be a %Reference.
+	     */
+	    n2.setType($Reference,true);
+
+	    n1.typeTree();
+	    n2.typeTree();
+	}
+
+    }
+
+}
+
+// fixme
+// %Field * %Reference * ? (value, %Reference?) -> memory
+class TStore extends TFunction {
+
+        public void typeTree(){
+	
+	if(sons.size()!=3)
+	    System.err.println("TStore node with "+sons.size()+" instead of 3, that's strange...");
+	else {
+	    TNode n1 = getChildAt(0);
+	    TNode n2 = getChildAt(1);
+	    TNode n3 = getChildAt(2);
+
+	    n1.setType($Field, true);
+	    n2.setType($Reference,true);
+
+	    n1.typeTree();
+	    n2.typeTree();
+	    n3.typeTree();
+	}
+
+    }
+
+} 
 
 // %Reference -> %Type
 class TTypeOf extends TFunction {
@@ -132,16 +257,54 @@ class TTypeOf extends TFunction {
 }
 
 //quantifier
-class TForAll extends TFunction {} // bool -> bool // fixme
+class TForAll extends TBoolRes {} // bool -> bool // fixme
 
-class TExist extends TFunction {} // bool -> bool // fixme
+class TExist extends TBoolRes {} // bool -> bool // fixme
 
 // allocation
-class TIsAllocated extends TBoolOp {} // %Reference -> bool
+class TIsAllocated extends TBoolOp {
+
+    public void typeTree(){
+	
+	if(sons.size()!=2)
+	    System.err.println("TIsAllocated node with "+sons.size()+" instead of 2, that's strange...");
+	else {
+	    TNode n1 = getChildAt(0);
+	    TNode n2 = getChildAt(1);
+
+	    // we are sure about the type of the sons
+	    n1.setType($Reference,true);
+	    n2.setType($Time,true);
+
+	    n1.typeTree();
+	    n2.typeTree();
+	}
+
+    }
+
+} // %Reference -> bool
 
 class TEClosedTime extends TFunction {} // %Reference -> integer
 
-class TFClosedTime extends TFunction {} // %Reference -> integer
+// %ReferenceField -> %Time
+class TFClosedTime extends TFunction {
+
+    public void typeTree(){
+	
+	if(sons.size()!=1)
+	    System.err.println("TFclosedTime node with "+sons.size()+" instead of 1, that's strange...");
+	else {
+	    TNode n1 = getChildAt(0);
+
+	    // we are sure about the type of the sons
+	    n1.setType($Field,true);
+
+	    n1.typeTree();
+	}
+
+    }
+
+} 
 
 // as trick : asElems asField asLockset
 class TAsElems extends TFunction {}

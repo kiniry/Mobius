@@ -30,9 +30,9 @@ abstract class TIntFun extends TFunction {
 		    for(int j = 0; j <= sons.size() - j; i++)
 			System.err.println("Node : "+getChildAt(j).toString());
 		}
-		else // type has not been set, setting it
-		    nodeTemp.type = $integer;
 	    }
+	    else // type has not been set, setting it
+		nodeTemp.setType($integer, true);
 
 	    nodeTemp.typeTree();
 	}

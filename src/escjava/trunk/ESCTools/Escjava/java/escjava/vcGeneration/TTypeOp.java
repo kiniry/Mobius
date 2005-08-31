@@ -28,7 +28,7 @@ abstract class TTypeOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType("%Type");
+		nodeTemp.setType("%Type", true);
 	    
 	    nodeTemp.typeTree();
 	}

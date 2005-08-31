@@ -71,18 +71,22 @@ abstract class TNode {
     static TypeInfo $boolean = null;
     static TypeInfo $char = null;
     static TypeInfo $double = null;
+    static TypeInfo $Field = null;
     static TypeInfo $INTTYPE = null;
     static TypeInfo $integer = null;
     static TypeInfo $float = null;
     static TypeInfo $String = null;
+    static TypeInfo $Time = null;
 
     static {
 	$Reference = addType("%Reference");
+	$Time = addType("%Time");
 	$Type = addType("%Type");
 	$boolean = addType("boolean");
 	$char = addType("char");
 	$DOUBLETYPE = addType("DOUBLETYPE");
 	$double = addType("double"); //fixme
+	$Field = addType("%Field");
 	$INTTYPE = addType("INTTYPE");
 	$integer = addType("integer");
 	$float = addType("float");
@@ -223,7 +227,7 @@ abstract class TNode {
     }
 
     // to avoid printing eachtime 'escjava.dsaParser.' and remove first 'T'
-    protected /*@ non_null @*/ String getShortName(){
+    protected /*@ pure non_null @*/ String getShortName(){
 	return getClass().getName().substring(22);
     }
 
@@ -237,9 +241,55 @@ abstract class TNode {
      * Add the type if not present to the global map of type
      * and fill the correct field with it.
      */
-    protected void setType(String s){
+    protected void setType(String s, boolean sure){
 	type = TNode.addType(s);
     }
+
+    protected void setType(TypeInfo type, boolean sure){
+	
+	if(this instanceof TName){
+	    TName m = (TName)this;
+
+	    //@ assert m.type == null;
+
+	    // retrieve current type;
+	    if(!variablesName.containsKey(m.name)) {
+		System.err.println("escjava::vcGeneration::TNode::setType");
+		System.err.println("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+	    }
+	    // take care no else here
+	    
+	    VariableInfo vi = (VariableInfo)variablesName.get(m.name);
+	    
+	    if(vi.type == null) {// we set it
+		vi.type = type;
+	    }
+	    else {
+		if(vi.type != type) {// inconsistency
+		    if(vi.typeSure) // we don't change it
+			System.err.println("Variable named "+m.name+", has type "+vi.type.old+" yet you try to change it to "+type.old);
+		    else {
+			System.err.println("Changing type of "+m.name+" (which was "+vi.type.old+") to "+type.old);
+			vi.type = type;
+		    }
+		}
+		    
+	    }
+	}
+	else {
+	    if(this.type != null) {
+		// we compare the existing type
+		if(this.type != type) { // The two types are not equals
+		    // inconsistancy
+		    System.err.println("*** Warning, typechecking inconsistancy, "+this.toString() +"has type "+this.type.old+ "but you're trying to set his type to "+type.old);
+		}
+	    }
+	    else  // type is null qué pasa ?
+		System.err.println("Node  "+this.toString()+" has no type");
+				   
+	}
+    }
+
 
     /*
      * return the type of the node according to the type of proof asked
@@ -250,21 +300,59 @@ abstract class TNode {
       @*/
     public /*@ non_null @*/ String getType(){
 
-	if(this.type == null)
-	    return "?";
+	if(this instanceof TName){
+	    // retrieve the type in the global variablesNames map
+	    TName m = (TName)this;
 
-	switch(lastType){
-	case(0):
-	    return this.type.old;
-	case(1):
-	    return this.type.getUnsortedPvs();
-	case(2):
-	    return this.type.getPvs();
-	case(3):
-	    return this.type.getSammy();
-	default :
-	    System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type asked is not correct");
-	    return "";
+	    //@ assert m.type == null;
+
+	    // retrieve current type;
+	    if(!variablesName.containsKey(m.name)) {
+		System.err.println("escjava::vcGeneration::TNode::setType");
+		System.err.println("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+	    }
+	    // take care no else here
+	    
+	    VariableInfo vi = (VariableInfo)variablesName.get(m.name);
+
+	    if(vi.type == null)
+		return "?";
+	    else {
+		TypeInfo ti = vi.type;
+
+		switch(lastType){
+		case(0):
+		    return ti.old;
+		case(1):
+		    return ti.getUnsortedPvs();
+		case(2):
+		    return ti.getPvs();
+		case(3):
+		    return ti.getSammy();
+		default :
+		    System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
+		    return "";
+		}
+	    }
+	    
+	}
+	else {
+	    if(this.type == null)
+		return "?";
+
+	    switch(lastType){
+	    case(0):
+		return this.type.old;
+	    case(1):
+		return this.type.getUnsortedPvs();
+	    case(2):
+		return this.type.getPvs();
+	    case(3):
+		return this.type.getSammy();
+	    default :
+		System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
+		return "";
+	    }
 	}
 	
     }

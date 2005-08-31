@@ -32,7 +32,7 @@ abstract class TBoolOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.type = $boolean;
+		nodeTemp.setType($boolean, true);
 	    
 	    nodeTemp.typeTree();
 	}

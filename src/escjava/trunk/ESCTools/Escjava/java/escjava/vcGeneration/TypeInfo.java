@@ -61,10 +61,16 @@ class TypeInfo {
   private void pvsRename(){
 
       // comparison are done in alphabetical order
-      if(old.equals("%Type")) // this is the type of a type
+      if(old.equals("%Time")) // this is the type of a type
+	  pvs = "Time";
+      else if(old.equals("%Type")) // this is the type of a type
 	  pvs = "ReferenceType";
       else if(old.equals("boolean"))
 	  pvs = "Boolean";
+      else if(old.equals("char"))
+	  pvs = "T_char";
+      else if(old.equals("double"))
+	  pvs = "ContinuousNumber";
       else if(old.equals("DOUBLETYPE"))
 	  pvs = "ContinuousNumber"; //fixme am I right ?
       else if(old.equals("float"))
@@ -76,8 +82,14 @@ class TypeInfo {
       else if(old.equals("null") || old.equals("%Reference"))
 	  pvs = "Reference";
       else {
-	  System.err.println("Type non handled in escjava::vcGeneration::TypeInfo::pvsRename() : "+old);
-	  pvs = old;
+	  // common rules here //fixme, be more specific maybe
+	  if(old.startsWith("java.")) //check if in the form java.x.y 
+	      pvs = old.replace('.','_');
+	  else {
+	      System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::pvsRename() : "+old); 
+	      System.err.println("Considering it as a user defined type...");
+	      pvs = old;
+	  }
       }
 
   }

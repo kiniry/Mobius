@@ -29,7 +29,7 @@ abstract class TRefOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.type = $Reference;
+		nodeTemp.setType($Reference,true);
 	    
 	    nodeTemp.typeTree();
 	}

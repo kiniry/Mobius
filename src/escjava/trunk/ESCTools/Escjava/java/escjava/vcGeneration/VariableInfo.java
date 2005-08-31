@@ -15,9 +15,10 @@ class VariableInfo {
   
     /*@ non_null @*/ String     oldName = null;
     TypeInfo                       type = null;
-    private String unsortedPvsName        = null;
-    private String pvsName                = null;
-    private String sammyName              = null;
+    private String unsortedPvsName      = null;
+    private String pvsName              = null;
+    private String sammyName            = null;
+    public boolean typeSure             = false;
 	
     /*
      * When we call this variable, we know his old type, so we gave it.

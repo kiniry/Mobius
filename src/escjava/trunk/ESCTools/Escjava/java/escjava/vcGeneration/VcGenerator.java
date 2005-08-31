@@ -222,7 +222,15 @@ public class VcGenerator {
 		    break;
 		}
 		case TagConstants.SYMBOLLIT: {
-		    System.out.println("SYMBOLLIT "+(String)m.value );
+		    //System.out.println("SYMBOLLIT "+(String)m.value );
+
+		    // pass here for ecReturn and ecThrow
+		    String s = (String)m.value;
+
+		    // fixme am I right ?
+		    TName newNode = new TName(s);
+		    TNode.addName(s, null);
+		    currentParent.addSon(newNode);
 		    break;
 		}
 		default : 
@@ -451,6 +459,7 @@ public class VcGenerator {
 		    TTypeEQ newNode = new TTypeEQ();
 		    currentParent.addSon(newNode);
 		    currentParent = newNode;
+		    break;
 		}
 		case TagConstants.TYPENE: {
 		    TTypeNE newNode = new TTypeNE();
@@ -472,6 +481,12 @@ public class VcGenerator {
 		}
 		case TagConstants.SELECT: {
 		    TSelect newNode = new TSelect();
+		    currentParent.addSon(newNode);
+		    currentParent = newNode;
+		    break;
+		}
+		case TagConstants.STORE: {
+		    TStore newNode = new TStore();
 		    currentParent.addSon(newNode);
 		    currentParent = newNode;
 		    break;
@@ -558,7 +573,7 @@ public class VcGenerator {
 
 		// this means this variable represent a type like
 		// Java.x.Vector or Java.lang.Object etc...
-		TName newNode = new TName(m.getInfoNewTree(),TNode.$Type);
+		TName newNode = new TName(m.getInfoNewTree());
 		TNode.addName(m.getInfoNewTree(),"%Type");
 		
 		currentParent.addSon(newNode);
@@ -569,22 +584,23 @@ public class VcGenerator {
 	    }
 	    else if(n instanceof QuantifiedExpr){
 		QuantifiedExpr m = (QuantifiedExpr) n;
+		String s = TagConstants.toString(m.getTag());
 
-		if(m.getInfoNewTree().equals("\\forall")){
+		if(s.equals("\\forall")){
 		    TForAll newNode = new TForAll();
 		    currentParent.addSon(newNode);
 		    currentParent = newNode;
 		}
-		else if(m.getInfoNewTree().equals("\\exist")){
+		else if(s.equals("\\exist")){
 		    TExist newNode = new TExist();
 		    currentParent.addSon(newNode);
 		    currentParent = newNode;
 		}
 		else
-		    System.err.println("escjava::vcGeneration::VcGenerator, QuantifiedExpr, unhandled tag : "+m.getInfoNewTree());
+		    System.err.println("escjava::vcGeneration::VcGenerator, QuantifiedExpr, unhandled tag : "+s);
 
 		if(dot)
-		    oldDot.append("\\n"+m.getInfoNewTree()+"\"");
+		    oldDot.append("\\n"+s+"\"");
 
 	    }
 	    else if(n instanceof SimpleName){ 
@@ -597,16 +613,61 @@ public class VcGenerator {
 		if(dot)
 		    oldDot.append("\\n"+m.printName()+"\"");
 	    }
-	    else if(n instanceof TypeExpr){ 
-		// this kind of node contains nothing interesting apparently
-		// fixme useless atm
+	    else if(n instanceof SubstExpr){
+		SubstExpr m = (SubstExpr) n;
 
-		TypeExpr m = (TypeExpr) n;
+		System.err.println("\n\n\nohoh SubsExpr");
+	    }
+	    // handled in next else
+	    else if(n instanceof TypeDecl){
+		
+		TypeDecl m = (TypeDecl) n;
+		// this represents a type
 
-		//       TypeExpr m = (TypeExpr) n;
+		String s = new String(m.id.chars);
+
+		TName newNode = new TName(s);
+		// we put it as a variable name with type %Type
+		TNode.addName(s, "%Type");
+		    
+		// we put as a type too
+		TNode.addType(s);
+		    
+		currentParent.addSon(newNode);
 
 		if(dot)
-		    oldDot.append("\\n"+m.type+"\"");
+		    // fixme, not precise enough maybe
+		    oldDot.append("\\n"+s+"\"");
+	    }
+	    else if(n instanceof TypeExpr){ 
+		/* It seems that this kind always has a son that contains 
+		   the information we want (like TypeSig).
+		   However from previoius experiment it seems that sometimes
+		   the sons contains (but is it harmful since name
+		   have been resoluted during compilation and we know there
+		   is no ambiguity)
+		   'Object' and that this one contains 
+		   'java.lang.Object' so maybe something has to be fixed.
+		  
+		   corrected since by adding the double instanceof switch,
+		   the class avoided here are handled in other else if
+		*/
+		TypeExpr m = (TypeExpr) n;
+
+		if(!(m.type instanceof TypeName || m.type instanceof PrimitiveType)) {
+		    String s = m.type.toString(); // here we get the type
+
+		    TName newNode = new TName(s);
+		    TNode.addName(s, "%Type");
+
+		    TNode.addType(s);
+
+		    currentParent.addSon(newNode);
+		}
+		    
+		
+ 		if(dot)
+ 		    oldDot.append("\\n \"");
 	    }
 	    else if(n instanceof TypeName){ // javafe/Type
 		// this represents a type
@@ -618,7 +679,7 @@ public class VcGenerator {
 		    System.err.println("escjava::vcGeneration::vcGeneator::generateIfpTree, case n instanceof TypeName, warning null reference not expected");
 
 		// we say that this name represents a type
-		TName newNode = new TName(s, TNode.$Type);
+		TName newNode = new TName(s);
 		TNode.addName(s, "%Type");
 		currentParent.addSon(newNode);
 
@@ -626,9 +687,19 @@ public class VcGenerator {
 		    oldDot.append("\\n"+s+"\"");
 	    }
 	    else if(n instanceof TypeSig){
-		TypeSig m = (TypeSig) n;
-		// this is the type of a class defined by the programmer
-		// (not a predefined Java Type)
+ 		TypeSig m = (TypeSig) n;
+// 		// this represents a type
+
+// 		String s = m.simpleName;
+
+// 		TName newNode = new TName(s, TNode.$Type);
+// 		// we put as a variable name
+// 		TNode.addName(s, "%Type");
+		    
+// 		// we put as a type too
+// 		TNode.addType(s);
+		    
+// 		currentParent.addSon(newNode);
 
 		if(dot)
 		    // fixme, not precise enough maybe
@@ -637,13 +708,19 @@ public class VcGenerator {
 	    }
 	    else if(n instanceof VariableAccess){
 		VariableAccess m = (VariableAccess) n;
-		String sTemp = m.getInfoNewTree();
+		String sTemp = new String(m.id.chars);
+
+// 		if(m.loc != 0)
+// 		    sTemp = sTemp+":"+UniqName.locToSuffix(m.loc);
+
+		// VariableAccess va = (VariableAccess)n;
+// 		String sTemp = (String)subst.get(va.decl);
 
 		// add it to the global map containg all variables name
 		TNode.addName(sTemp,null);
 
 		/* we don't know the type, so null */
-		TName nTemp = new TName(sTemp,null);
+		TName nTemp = new TName(sTemp);
 		currentParent.addSon(nTemp);
       
 		if(dot){
@@ -719,10 +796,10 @@ public class VcGenerator {
 
 		// we type the tree.
 		newRootNode.typeTree();
-		System.out.println("ifpTree have been typed...");
+		System.out.println("*** ifpTree have been typed...");
 
-		newRootNode.typeTree();
-		System.out.println("ifpTree have been typed... 2 times");
+// 		newRootNode.typeTree();
+// 		System.out.println("*** ifpTree have been typed... 2 times");
 	    }
 	
 	    // restore the parent

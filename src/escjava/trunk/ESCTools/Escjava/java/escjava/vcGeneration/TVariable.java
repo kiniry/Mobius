@@ -31,11 +31,9 @@ abstract class TVariable extends TNode {
     }
 
     /*
-     * This method does nothing and is abstract
+     * This method does nothing and is not abstract
      * because some of the subclasses did not need to
      * do something when this method is called.
-     * For example a TInt object is initialized with "integer" type
-     * so this function is useless for it.
      */
     protected void typeTree(){};
 

@@ -28,7 +28,7 @@ abstract class TIntOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.type = $integer;
+		nodeTemp.setType($integer, true);
 
 	    nodeTemp.typeTree();
 	    
