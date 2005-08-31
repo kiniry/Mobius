@@ -614,6 +614,16 @@ check-specs: build $(JML2_SPECS_JAR)
 	rm -f .specs SpecTest.java
 
 ################################################################################
+## Show system variables
+
+.PHONY: show show-vars
+
+show: show-vars
+
+show-vars:
+	@echo "CLASSPATH = $(CLASSPATH)"
+
+################################################################################
 ## Simple smoke tests
 
 .PHONY: make-test
