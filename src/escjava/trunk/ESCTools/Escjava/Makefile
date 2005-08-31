@@ -115,19 +115,27 @@ STAMPFILE = classes.stamp
 ## file has not been modified.  If in doubt do a clean before a build
 ## - it doesn't take long.
 
-.PHONY: compile compileall version generate_files
+.PHONY: compile compileall version generate_files really-compile rm-stampfile
 
-compile: ${CLASSDIRECTORY} generate_files mocha ${STAMPFILE}
+compile: ${CLASSDIRECTORY} generate_files mocha really-compile
 
-compileall: generate_files ${MOCHA_LIB} ${CLASSDIRECTORY}
-	./dl-xml-rpc-lib.sh
-	@${JAVAC} ${JAVAC_FLAGS} \
-		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
+# compileall: removing the stamp file makes all Java files out of date so that
+# we can reuse the compile target.
+compileall: rm-stampfile compile
+
+really-compile: ${STAMPFILE}
+
+${STAMPFILE}: ${JAVASOURCEFILES}
+	-./dl-xml-rpc-lib.sh
+	if [ -e .files ]; then rm -f .files; fi
+	echo $(call canonicalizeLots,$?) > .files
+	${JAVAC} ${JAVAC_FLAGS} \
+		-classpath $(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}) \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
-		-d $(call canonicalize,${CLASSDIRECTORY}) \
-		${JAVASOURCEFILES}
+		-d ${CLASSDIRECTORY} \
+		`cat .files`
 	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
-	touch ${STAMPFILE}
+	touch $@
 
 VERSION_FILE = ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 VERSION_TEMP = ${VERSION_FILE}-temp
@@ -152,15 +160,8 @@ generate_files: generate_escjava_ast_source generate_escjava_backpred
 ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 	touch $@
 
-${STAMPFILE}: ${JAVASOURCEFILES}
-	-./dl-xml-rpc-lib.sh
-	${JAVAC} ${JAVAC_FLAGS} \
-		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
-		-sourcepath $(call canonicalize,${SOURCEPATH}) \
-		-d $(call canonicalize,${CLASSDIRECTORY}) \
-		$(foreach file,$?,$(call canonicalize,$(file)))
-	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
-	touch $@
+rm-stampfile:
+	-rm -f ${STAMPFILE}
 
 ###########################################################################
 ## mocha
