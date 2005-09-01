@@ -6,15 +6,15 @@ The overall objective is to allow a client to trust a code produced by an untrus
  in cases where the client policy involves non trivial functional or safety requirements and thus, an automatic specification inference
  can not be applied. To this end, we propose a PCC technique that exploits the JML compiler and the weakest predicate function presented in the article. 
  
- The framework is presented in Fig.~\ref{architecture}; note that certificates are not yet implemented
- and thus are presented using special font and dotted lines.
+ The framework is presented in Fig.~\ref{architecture}; note that certificates and their checking are not yet implemented
+ and thus are presented using oblique font.
   
 %Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
 
 \begin{figure}[!tbp]
 \begin{center}
 \epsfig{file=architecture.eps, width=\linewidth}
-\caption{\sc The overall architecture for annotating and verifying code}
+\caption{\sc The overall architecture}
 \label{architecture}
 \end{center}
 \end{figure}
@@ -35,7 +35,7 @@ In this scenario, we can apply results of previous work \cite{PBBHL}.
 
 Typically, the development process involves annotating the source code with JML specification,
  generating verification conditions, using proof obligation generator over the source code and 
-discharging proofs which represent the program safety certificate and sends it to the client along with the bytecode.
+discharging proofs which represent the program safety certificate and finally, sends it to the client along with the bytecode.
  This is based on the observation that proof obligations on the source code and non-optimized bytecode respectively
  are syntactically the same modulo names and basic types. Every Java file of the 
 untrusted code is normally compiled with a Java compiler to obtain a class file. Every class file is extended with
