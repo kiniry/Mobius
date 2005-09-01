@@ -206,24 +206,14 @@ fi
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if [ -n "$ESCTOOLS_RELEASE" ]; then
-	if [ -n "$COMSPEC" ]; then
-	    ESC_CLASSPATH=`cygpath -a -w ${ESCTOOLS_RELEASE}/esctools2.jar`
-	else
-	    ESC_CLASSPATH=$ESCTOOLS_RELEASE/esctools2.jar
-	fi
+	ESC_CLASSPATH=$ESCTOOLS_RELEASE/esctools2.jar
     else
-	if [ -n "$COMSPEC" ]; then
-	    ESC_CLASSPATH=`cygpath -p -m ${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils`
-        else
-	    ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils
-	fi
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils
     fi
-else
-    if [ -n "$COMSPEC" ]; then
-	ESC_CLASSPATH=`cygpath -p -m ${ESC_CLASSPATH_S}`
-    else
-	ESC_CLASSPATH=$ESC_CLASSPATH_S
-    fi
+fi
+
+if [ -n "$COMSPEC" ]; then
+    ESC_CLASSPATH=`cygpath -p -m ${ESC_CLASSPATH}`
 fi
 
 ## Simplify settings
