@@ -36,7 +36,8 @@ In this scenario, we can apply results of previous work \cite{PBBHL}.
 Typically, the development process involves annotating the source code with JML specification,
  generating verification conditions, using proof obligation generator over the source code and 
 discharging proofs which represent the program safety certificate and finally, sends it to the client along with the bytecode.
- This is based on the observation that proof obligations on the source code and non-optimized bytecode respectively
+ Yielding certificates over the source code is based on the observation that
+ proof obligations on the source code and non-optimized bytecode respectively
  are syntactically the same modulo names and basic types. Every Java file of the 
 untrusted code is normally compiled with a Java compiler to obtain a class file. Every class file is extended with
  user defined attributes that contain the BCSL specification, resulting from the compilation of the
