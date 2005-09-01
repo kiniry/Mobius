@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  1 SEP 2005 11:57
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2003.8.8)  1 SEP 2005 14:11
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -163,12 +163,12 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 ) (./conclusion.tex [13]) (./article.bbl [14] [15]) [16] (./article.aux) ) 
 Here is how much of TeX's memory you used:
- 1079 strings out of 95847
- 11941 string characters out of 1195948
+ 1081 strings out of 95847
+ 12007 string characters out of 1193875
  59259 words of memory out of 1000001
  3987 multiletter control sequences out of 10000+50000
  14383 words of font info for 57 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
  32i,22n,24p,780b,455s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (16 pages, 57652 bytes).
+Output written on article.dvi (16 pages, 57560 bytes).
