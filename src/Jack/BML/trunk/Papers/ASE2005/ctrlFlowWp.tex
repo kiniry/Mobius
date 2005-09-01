@@ -18,7 +18,7 @@ that a Java compiler must supply for every method an \textbf{Exception\_Table} a
  every implicit (in presence of subroutines) or explicit exception handler: the instruction at which the compiled exception handler starts,
  the protected region (its start and end instruction indexes), and the exception type the exception handler protects from. Thus, 
 for every instruction \instr{ins} in method \method~ which may terminate exceptionally on exception \texttt{Exc} the exceptional function
- $\excPost$ (Fig.\ref{instrWP}) returns the \wpi \ predicate of the exceptional handler protecting \instr{ins} from \texttt{Exc} if such a handler exists.
+ $\excPost$ (Fig.\ref{instrWP}, Fig.\ref{wpInv}) returns the \wpi \ predicate of the exceptional handler protecting \instr{ins} from \texttt{Exc} if such a handler exists.
 Otherwise, $\excPost$ returns the specified exceptional postcondition for exception \texttt{Exc}  as specified in the specification of method \method.
 
 Subroutines are treated by abstract inlining\footnote{NB: we do not transform the bytecode. It is rather the \wpi \

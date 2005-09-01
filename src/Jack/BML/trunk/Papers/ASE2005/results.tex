@@ -31,7 +31,9 @@ In this case, the compiler does not generate the dead code and the bytecode veri
 Even though the source contains the never taken branch as the condition is equivalent to false, this will result in a trivially true
 verification condition which the JACK source verification condition generator will discard.
 
-The equivalence between source and bytecode proof obligations can be exploited in PCC scenarios, as we discussed in Section \ref{architecture}. 
+The equivalence between source and bytecode proof obligations can be exploited in PCC scenarios, as we discussed in Section \ref{architecture} where 
+the producer generates the program certificate over the source code and sends to the client the transformed in bytecode certificate along with the bytecode.
+ 
 We aim to formally give evidence that the proof obligations on non optimized bytecode and source programs are syntactically the same (modulo names and types). 
 
 %Fig. \ref{vcLoopPreserv} shows the proof obligations for the loop preservation. As you can see the hypothesis and the goal have the same ``shape'' on bytecode and source code and the differences are due to the variable names.

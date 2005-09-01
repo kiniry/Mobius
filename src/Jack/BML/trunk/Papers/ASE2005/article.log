@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  29 AUG 2005 12:55
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  1 SEP 2005 10:44
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -149,12 +149,12 @@ Overfull \hbox (6.22385pt too wide) detected at line 100
  []
 
 ) (./ctrlFlowWp.tex [11])) (./results.tex [12]
-Overfull \hbox (9.30751pt too wide) in paragraph at lines 172--227
+Overfull \hbox (9.30751pt too wide) in paragraph at lines 174--229
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 172--227
+Underfull \hbox (badness 10000) in paragraph at lines 174--229
 
  []
 
@@ -171,4 +171,4 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 1000
  32i,22n,24p,780b,455s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (16 pages, 57592 bytes).
+Output written on article.dvi (16 pages, 57804 bytes).
