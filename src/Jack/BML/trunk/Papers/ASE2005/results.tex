@@ -32,7 +32,7 @@ Even though the source contains the never taken branch as the condition is equiv
 verification condition which the JACK source verification condition generator will discard.
 
 The equivalence between source and bytecode proof obligations can be exploited in PCC scenarios, as we discussed in Section \ref{architecture} where 
-the producer generates the program certificate over the source code and sends to the client the transformed in bytecode certificate along with the bytecode.
+the producer generates the program certificate over the source code in scenarios where a complete automatic certification (e.g. the certifying compiler) will not work.
  
 We aim to formally give evidence that the proof obligations on non optimized bytecode and source programs are syntactically the same (modulo names and types). 
 
