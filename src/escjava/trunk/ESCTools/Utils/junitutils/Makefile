@@ -16,7 +16,7 @@ classes.stamp: *.java
 	touch classes.stamp
 
 .PHONY: test
-test:
+test: build
 
 .PHONY: esctest
 esctest:
