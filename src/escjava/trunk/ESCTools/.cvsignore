@@ -4,7 +4,7 @@
 .perms-fixed
 Makefile.local
 OOBR
-classfiles
+classfiles*
 docs
 docs_log
 escspecs.jar
