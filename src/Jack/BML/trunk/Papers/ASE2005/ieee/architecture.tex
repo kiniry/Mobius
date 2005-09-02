@@ -28,14 +28,14 @@ In the first stage of the process the client provides the functional and (or) se
 \item An API with restricted access to some method. In this case, the client can protect its system by restricting the API usage.
 For example, suppose that the client API provides transaction management facilities - the API method \texttt{open} for opening and method 
 \texttt{close} for closing transactions. In this case, a requirement can be for no nested transactions.
-In this case, the methods \texttt{open} and \texttt{close} can be annotated to ensure that the method \texttt{close} 
+This means that the methods \texttt{open} and \texttt{close} can be annotated to ensure that the method \texttt{close} 
  should not be called if there is no transaction running and the method \texttt{open} should not be called if there is already a running transaction. 
 In this scenario, we can apply results of previous work \cite{PBBHL}.  
 \end{itemize}
 
 Typically, the development process involves annotating the source code with JML specification,
  generating verification conditions, using proof obligation generator over the source code and 
-discharging proofs which represent the program safety certificate and finally, sends it to the client along with the bytecode.
+discharging proofs which represent the program safety certificate and finally, the producer sends the certificate to the client along with the bytecode.
  Yielding certificates over the source code is based on the observation that
  proof obligations on the source code and non-optimized bytecode respectively
  are syntactically the same modulo names and basic types. Every Java file of the 

@@ -1,5 +1,5 @@
-\documentclass[pagenumbers]{ieee} 	
-%\documentclass[a4paper,10pt]{article}
+%\documentclass[pagenumbers]{ieee} 	
+\documentclass[a4paper,10pt]{article}
 %\documentclass{acm_proc_article-sp\documentclass[pagenumbers]{ieee} 
 %\documentclass[pagenumbers]{llncs} 
 
@@ -10,21 +10,25 @@
 %\oddsidemargin  0.0in
 %\topmargin      1.0in
 
-\renewcommand{\floatpagefraction}[1]{4.0pt}
+\renewcommand{\floatpagefraction}[1]{1.0pt}
 %\pagestyle{plain}
+
 
 \usepackage{float}
 \newfloat{figure}{H}{lof} %Don't let them float by default
-\newfloat{table}{H}{lot}
+\newfloat{table*}{H}{lot}
 \floatname{figure}{\figurename}
-\floatname{table}{\tablename}
-
+\floatname{table*}{\tablename}
 \input cmd.tex
 
 
 
 \begin{document}
+
+
+
 \title{ Java Bytecode Specification and Verification }
+
 
 
 \author{
@@ -36,6 +40,7 @@
         INRIA Sophia-Antipolis \\
         Mariela.Pavlova@sophia.inria.fr
 }
+\maketitle
 %\author{Lilian Burdy  Mariela Pavlova\\
 %INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
 %06902 Sophia-Antipolis,\\  France}
@@ -46,7 +51,7 @@
 %\href{mailto:Lilian.Burdy@inria.sophia.fr}
 %\href{mailto:Mariela.Pavlova@sophia.inria.fr}
 
-\maketitle
+
 %\thispagestyle{empty}
 \begin{abstract}
 \input abstract.tex

@@ -19,18 +19,26 @@ that a Java compiler must supply for every method an \textbf{Exception\_Table} a
  the protected region (its start and end instruction indexes), and the exception type the exception handler protects from. Thus, 
 for every instruction \instr{ins} in method \method~ which may terminate exceptionally on exception \texttt{Exc} the exceptional function
  $\excPost$ (Fig.\ref{instrWP}, Fig.\ref{wpInv}) returns the \wpi \ predicate of the exceptional handler protecting \instr{ins} from \texttt{Exc} if such a handler exists.
-Otherwise, $\excPost$ returns the specified exceptional postcondition for exception \texttt{Exc} as specified in the specification of \\
+Otherwise, $\excPost$ returns the specified exceptional postcondition for exception \texttt{Exc} as specified in the specification of
 method \method.
 
 Subroutines are treated by abstract inlining\footnote{NB: we do not transform the bytecode. It is rather the \wpi \
- function that treats subroutines as if the subroutines were inlined}. First, the instructions of every subroutine code
+ function that treats subroutines as if the subroutines were inlined}. First, the instructions of every subroutine
  are identified. To this end, we suppose that the bytecode has
  been certified by a bytecode verifier which guarantees
 that there are no recursive subroutines. We also assume that every subroutine terminates with a \instr{ret} 
 instruction\footnote{Normally, the compilation of subroutines ends with a \instr{ret} instruction. Still, Java 
-compilers can sometimes also generate a subroutine ending with a jump}. For calculating the \wpi~ of a
-\instr{jsr}  \texttt{ind} instruction, the \wpi~ function is applied to the bytecode corresponding to
- the subroutine starting at index \texttt{ind}. 
+compilers can sometimes also generate a subroutine ending with a jump}. Thus, by abstract inlining, we mean that
+ whenever the \wpi~function is applied to \instr{jsr}  \texttt{ind}, a postcondition $\psi$ and an exceptional postcondition function 
+$\excPost$, its precondition  $\wpi^{\instr{jsr} \ \tt{ind}}$ is calculated as follows:
+first \wpi~ is applied to the bytecode instructions of the subroutine starting at instruction \texttt{ind},
+ the postcondition $\psi$ and the exceptional postcondition function  $\excPost$. This actually results in the weakest predicate 
+$\wpi^{\instr{jsr} \ \tt{ind}}$ of the subroutine starting at index \texttt{ind} and which guarantees that after its execution 
+$\psi$ will hold in the normal case, otherwise if the subroutine terminates on exception \texttt{Exc} then $\excPost(\texttt{Exc})$ will hold.
+  
+ 
+
+
 
 
  %The \instr{ret} instruction jumps to the instruction which follows the \instr{jsr} instruction that caused the to this subroutine. 

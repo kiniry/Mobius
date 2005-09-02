@@ -13,14 +13,14 @@ The proposed weakest precondition \wpi \ supports all Java bytecode sequential i
  In Fig.~\ref{instrWP}, we show the \wpi \ rules for some bytecode instructions. 
 As the examples show the \wpi \ function takes three arguments:
 the instruction for which we calculate the precondition, 
-the postcondition $\psi$ and the exceptional postcondition function $\excPost$ which for any exception \texttt{Exc} returns the
+the instruction's postcondition $\psi$ and the exceptional postcondition function $\excPost$ which for any exception \texttt{Exc} returns the
 corresponding exceptional postcondition $\excPost(\texttt{Exc})$. 
 The function $\wpi$ must satisfy the following property: if the instruction $\instr{ins}$ starts execution in a state where the predicate
 $\wpi(\instr{ins}, \ \psi, \ \excPost)$ holds then if it terminates normally then the poststate must satisfy the predicate $\psi$  
 and if terminates on exception \texttt{Exc} then  the poststate must satisfy $\excPost(\texttt{Exc})$.
  In the draft paper \cite{JBL05MP}, we show that the $\wpi$ function has this property (i.e. the calculus is correct). The proof is done by defining an operational semantics for the bytecode instructions and exploits several substitution lemmas.
 
-Returning back to the example, the expression \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack.
+Returning back to the example, the expressions \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack.
  This is because the JVM is stack based, i.e. the instructions take their arguments from the method execution stack and 
  put the result on the stack.
  The \wpi \ rule for  \instr{Type\_load i} increments the stack counter \counter \ and loads on the stack top the contents
@@ -50,7 +50,7 @@ where $i$ is a valid local variable index   \\
 \[
 \begin{array}{l}
 \wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
-\biggl(
+\biggl( 
 \begin{array}{l}
 	%\begin{array}{l}
    		\stack{\counter -1} \not= \Mynull\Rightarrow   \\

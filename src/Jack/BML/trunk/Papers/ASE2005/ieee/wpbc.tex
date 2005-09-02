@@ -1,5 +1,5 @@
 
-\section{Weakest Precondition Calculus For Java \\  Bytecode}\label{wpbc}
+\section{Weakest Precondition Calculus For Java Bytecode}\label{wpbc}
 In this section, we define a bytecode logic in terms of a weakest precondition calculus.
 We assume that the bytecode program has passed the bytecode verification procedure, i.e. it is well typed and
  thus the calculus deals only with program functional properties. 
@@ -20,7 +20,7 @@ $\wpi(\instr{ins}, \ \psi, \ \excPost)$ holds then if it terminates normally the
 and if terminates on exception \texttt{Exc} then  the poststate must satisfy $\excPost(\texttt{Exc})$.
  In the draft paper \cite{JBL05MP}, we show that the $\wpi$ function has this property (i.e. the calculus is correct). The proof is done by defining an operational semantics for the bytecode instructions and exploits several substitution lemmas.
 
-Returning back to the example, the expression \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack.
+Returning back to the example, the expressions \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack.
  This is because the JVM is stack based, i.e. the instructions take their arguments from the method execution stack and 
  put the result on the stack.
  The \wpi \ rule for  \instr{Type\_load i} increments the stack counter \counter \ and loads on the stack top the contents

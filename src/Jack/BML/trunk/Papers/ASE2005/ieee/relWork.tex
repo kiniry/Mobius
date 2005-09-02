@@ -16,14 +16,14 @@ We now review research works which treat similar problematic.
 % This work is limited to a subset of the Java virtual machine instructions and does not treat for example method calls, 
 % neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph, 
 % which gives an issue to complex rules.
-The JVer tool \cite{DBLP:conf/cav/ChanderEILN05} is a similar tool for verifying that downloaded Java bytecode programs do not abuse client computational resources.
-The bytecode programs are annotated with pre and postconditions written in a subset of JML specification language. The tool, however, doesnot support a compiler from high level specification annotations into bytecode annotations.  
+JVer \cite{DBLP:conf/cav/ChanderEILN05} is a tool for verifying that downloaded Java bytecode programs do not abuse client computational resources. The bytecode programs are annotated with pre and postconditions written in a subset of JML specification language. The tool, however, doesnot support a compiler from high level specification annotations into bytecode annotations.  
 
  
-In~\cite{BM05plb},  P.Muller and F.Bannwart define a Hoare logic over a 
+In~\cite{BM05plb}, P.Muller and F.Bannwart define a Hoare logic over a 
 bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined.
  To our knowledge, subroutines are not treated. Invariants are inferred by fixpoint calculation, differently 
-from the approach presented here, where invariants are compiled from the high level JML specification (see section \ref{comJML}). 
+from the approach presented here, where all specification clauses including
+loop invariants are compiled from the high level JML specification (see section \ref{comJML}). 
 %However, inferring invariants is not a decidable problem.% The work of P.Muller and F.Bannwart is inspired by the Nick Benton's work (see ~\cite{B04tlsj}). 
 %In the latter a bytecode logic for a stack based language is defined which checks programs both for well --- typedness and functional correctness. 
 % The language does not support objects, references, exceptions neither subroutines.
@@ -37,8 +37,8 @@ from the approach presented here, where invariants are compiled from the high le
 
  The traditional PCC and the certifying compiler proposed by Necula (see \cite{ComNec,DesNecLee98}) is an architecture for 
  establishing trust in unknown code in which the code producer accompanies the code with a proof certificate. Differently from our approach,
-  as the certifying compiler infers automatically a type specification such as loop invariants and generates automatically the proof certificate
-  it is not applicable for complex security policies.
+  as the certifying compiler infers automatically a type specification such as loop invariants and generates automatically
+ the proof certificate it is not applicable for complex security policies.
 
 There are also other close areas to our work, but we do not describe them because of space limitations.
 Among them are bytecode verification for which Xavier Leroy in  ~\cite{Ljbc} gives detailed overview, 

@@ -192,8 +192,7 @@ JML\=Loop\_specification\_attribute \{\\
 The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debugging information,
  namely the presence of the \\ \textbf{Line\_Number\_Table} attribute for the correct compilation of inter method
  specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The
- most problematic part of the compilation is to find the program points where the loop invariants must hold. This
- means that one has to identify which source loop corresponds to which bytecode loop in the control flow
+ most problematic part of the compilation is to identify which source loop corresponds to which bytecode loop in the control flow
  graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}), i.e. there are no
  jumps from outside a loop inside it; graph reducibility allows to establish the same order between loops in the
  bytecode and source code level and to compile the invariants to the correct places in the bytecode.

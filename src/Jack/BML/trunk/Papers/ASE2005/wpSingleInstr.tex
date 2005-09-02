@@ -70,7 +70,7 @@ invocation of a non-void instance method is given in Fig.~\ref{wpInv}. In the pr
 Because the method returns a value, if it terminates normally, any occurrence of the JML keyword \result \ in $\psi^{post}(m)$ is substituted with the fresh variable $fresh\_var$.  
 Because the return value in the normal case execution is put on the stack top, the $fresh\_var$ is substituted for the stack top in $\psi$. The resulting predicate is quantified over the expressions that may be modified by the called method. We also assume that if the invoked method terminates abnormally, by throwing an exception of type $\texttt{Exc}$, on returning the control to the invoker its exceptional postcondition $\excPost_{\tt{m} }( \tt{Exc} )$ holds. 
 The rule for static methods is rather the same except for the number of stack elements taken from the stack.  
-%\Myspace \Myspace\Myspace \Myspace
+
 \begin{figure}[!ht]
 $$
 \begin{array}{l}
@@ -80,16 +80,18 @@ $$
 \Myspace  \forall_{j = 1..s} e_{j}.\biggl( 
 \Myspace \psi^{post}( \texttt{m}) 
                      \begin{array}{l}
-                     \substitution{\register{i}}{\stack{\counter \ + i - numArgs(\texttt{m}) }}_{i=0}^{\tt{numArgs(m )}}  \\
+                     \substitution{\register{i}}{\stack{\counter+i-nArg(\texttt{m}) }}_{i=0}^{\tt{nArg(m)}}  \\
                       \substitution{\tt{\backslash result} }{ fresh\_var } \\
-                     \end{array} \Rightarrow  \\
+                     \end{array} \\
+  \Myspace\Myspace\Myspace\Myspace\Myspace                    \Rightarrow  \\
 \Myspace\Myspace\Myspace\Myspace\Myspace   \psi  \begin{array}{l}
-                             \substitution{\counter }{\counter - \tt{numArgs}( \texttt{m} )} \\
+                             \substitution{\counter }{\counter - \tt{nArg}( \texttt{m} )} \\
                              \substitution{\stack{\counter } }{ \tt{fresh\_var}}  \   
                          \end{array}\biggr) \\
 \wedge_{i = 1}^k\\
 \Myspace \forall_{j = 1..s} e_i \biggl( 
-\Myspace \excPost_{\tt{m} } ( \tt{Exc_i} )\Rightarrow \\
+\Myspace \excPost_{\tt{m} } ( \tt{Exc_i} ) \\
+\Myspace\Myspace\Myspace\Myspace\Myspace \Rightarrow \\
 \Myspace\Myspace\Myspace\Myspace\Myspace   \phi_{\tt{Exc_i} }
                                  \begin{array}{l}
                                        \substitution{ \counter}{  0} \\
@@ -101,7 +103,7 @@ $$
 $\psi^{pre}(\texttt{m})$ -  the specified  precondition of  method \texttt{m} \\
 $\psi^{post}(\texttt{m})$ - the   specified   postcondition   of   method  \texttt{m}  \\
 $\excPost_{\texttt{m}}$ - the   exceptional   function   for   method  \texttt{m}  \\
-\texttt{numArgs}( \texttt{m} ) -  the    number   of   arguments   of   \texttt{m} \\  
+\texttt{nArg}( \texttt{m} ) -  the    number   of   arguments   of   \texttt{m} \\  
 $e_{j} , j = 1 .. s$ - the   locations   modified   by   method   \texttt{m} \\
 $\tt{Exc_i}, i = 1..k$ -  the   exceptions   that  \texttt{m} may  throw \\
 $\phi_{\tt{Exc_i}}, i = 1..k$ -   the   precondition  
