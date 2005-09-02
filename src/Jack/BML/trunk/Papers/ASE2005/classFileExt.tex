@@ -22,8 +22,8 @@ its invariant (\verb!loop_invariant!) which states that whenever the loop entry 
 public class ListArray {
   Object[] list;
   //@requires list != null;
-  //@ensures \result ==  (\exists int i; 0 <= i && i < list.length &&  
-             list[i] == o ) ; 
+  //@ensures \result == (\exists int i;0 <= i && 
+             i < list.length && list[i] == o ) ; 
   public boolean isElem(Object obj)
   {
     int i = 0;
@@ -97,18 +97,18 @@ a single class or interface and contains information about  the class name, inte
 
 Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms jml into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
 \begin{enumerate}
-\item compile the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file 
-the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
+\item Compilation of the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file 
+the \\ \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
 these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
 The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  
 The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. 
 Those attributes are important for the next phase of the JML compilation.
-\item from the source file and the resulting class file compile the JML specification. In this phase, Java and JML source identifiers are 
+\item Compilation of the JML specification from the source file and the resulting class file. In this phase, Java and JML source identifiers are 
 linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of 
-local variables described in the \textbf{Local\_Variable\_Table} attribute. If in the JML specification a field
-identifier appears, for which no constant pool (cp) index exists, such is added in the constant pool and the identifier in question
-is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain source program point must be associated to the respective program point on bytecode level. The specification
-is compiled in binary form using tags in the standard way. Basically the compilation of an expression is a tag followed by the compilation of its subexpressions. 
+local variables described in the \textbf{Local\_Variable\_Table} attribute. If, in the JML specification a field
+identifier appears for which no constant pool (cp) index exists, it is added in the constant pool and the identifier in question
+is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain point in the source program must be associated to the respective program point on bytecode level. The specification
+is compiled in binary form using tags in the standard way. The compilation of an expression is a tag followed by the compilation of its subexpressions. 
 
 
 Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
@@ -129,7 +129,7 @@ Finally, the compilation of the postcondition of method \texttt{isElem} is given
  one can see that the expression \result \ has integer type and the equality between the boolean expressions in the postcondition in Fig.\ref{replaceSrc} is
  compiled into logical equivalence. The example also 
 shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding 
-index of the constant pool table (\#19 is the compilation of the field name \texttt{list}, \register{1} stands for the method parameter \texttt{obj}). 
+index of the constant pool table (\#19 is the compilation of the field name \texttt{list} and \register{1} stands for the method parameter \texttt{obj}). 
 
 \begin{figure}[tb]
  $$\begin{array}{l}
@@ -153,7 +153,7 @@ $$
 
 \item add the result of the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
 newly defined attributes in the class file.
- For example, the specification of all the loops in a method are compiled to a unique method attribute: whose syntax is given in Fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
+ For example, the specifications of all the loops in a method are compiled to a unique method attribute: whose syntax is given in Fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
 More precisely, every element contains information about the instruction where the loop starts as specified in the
 \textbf{Line\_Number\_Table}, the locations that can be modified in a loop iteration, 
  the invariant associated to this loop and the decreasing expression in case of total correctness, 
@@ -189,7 +189,7 @@ JML\=Loop\_specification\_attribute \{\\
 %\end{frameit}
 \end{figure}
 
-The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debug information,
+The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debugging information,
  namely the presence of the \\ \textbf{Line\_Number\_Table} attribute for the correct compilation of inter method
  specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The
  most problematic part of the compilation is to find the program points where the loop invariants must hold. This

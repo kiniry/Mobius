@@ -168,9 +168,9 @@ We aim to formally give evidence that the proof obligations on non optimized byt
 
 
 
-\begin{figure}[!h]
+\begin{figure*}[!h]
 
-
+\begin{center}
 \begin{tabular}{|l|l|}
 \hline
 \bf{Hypothesis \ on \ bytecode:}  & \bf{Hypothesis \ on \ source \ level:}  \\
@@ -223,13 +223,16 @@ $\Myspace \Myspace \#19(\register{0})[var(0)] = \register{1} $
 
 \hline
 \end{tabular}
-\\
-Note: $\expression\_at\_ins\_n$ denotes the value of  
-expression $\expression$ at the bytecode instruction at index (source line)  $n$ \\
+\end{center}
 
-\caption{\sc Source and Bytecode verification condition for one case of the postcondition correctness }
+Note: $\expression\_at\_ins\_n$ denotes the value of  
+expression $\expression$ at the bytecode instruction at index (source line)  $n$ 
+
+\caption{\sc Comparison of source and bytecode verification conditions}
 \label{vcEnsures}
-\end{figure}
+\end{figure*}
+
+\clearpage
  
 
 

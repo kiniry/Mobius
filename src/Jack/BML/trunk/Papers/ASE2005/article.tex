@@ -1,7 +1,6 @@
-
-\documentclass[a4paper,10pt]{article}
-%\documentclass{acm_proc_article-sp}
-%\documentclass[pagenumbers]{ieee} 
+\documentclass[pagenumbers]{ieee} 	
+%\documentclass[a4paper,10pt]{article}
+%\documentclass{acm_proc_article-sp\documentclass[pagenumbers]{ieee} 
 %\documentclass[pagenumbers]{llncs} 
 
 \usepackage{amssymb}
@@ -11,9 +10,14 @@
 %\oddsidemargin  0.0in
 %\topmargin      1.0in
 
-\renewcommand{\floatpagefraction}[1]{2.0pt}
+\renewcommand{\floatpagefraction}[1]{4.0pt}
 %\pagestyle{plain}
 
+\usepackage{float}
+\newfloat{figure}{H}{lof} %Don't let them float by default
+\newfloat{table}{H}{lot}
+\floatname{figure}{\figurename}
+\floatname{table}{\tablename}
 
 \input cmd.tex
 

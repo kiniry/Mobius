@@ -3,52 +3,44 @@ The top-level auxiliary file: article.aux
 The style file: abbrv.bst
 Database file #1: specification.bib
 Database file #2: bibliography.bib
-A bad cross reference---entry "DBLP:conf/cav/ChanderEILN05"
-refers to entry "DBLP:conf/cav/2005", which doesn't exist
-A bad cross reference---entry "B00ppp"
-refers to entry "DBLP:conf/mpc/2000", which doesn't exist
-Warning--I didn't find a database entry for "DBLP:conf/mpc/2000"
-Warning--I didn't find a database entry for "DBLP:conf/cav/2005"
-Warning--empty booktitle in BM05plb
 You've used 19 entries,
             2118 wiz_defined-function locations,
-            664 strings with 7799 characters,
-and the built_in function-call counts, 6658 in all, are:
-= -- 644
+            661 strings with 7737 characters,
+and the built_in function-call counts, 6666 in all, are:
+= -- 645
 > -- 320
 < -- 11
 + -- 127
 - -- 103
-* -- 407
-:= -- 1089
+* -- 408
+:= -- 1090
 add.period$ -- 65
 call.type$ -- 19
 change.case$ -- 102
 chr.to.int$ -- 0
-cite$ -- 20
-duplicate$ -- 290
-empty$ -- 523
+cite$ -- 19
+duplicate$ -- 291
+empty$ -- 525
 format.name$ -- 103
-if$ -- 1442
+if$ -- 1445
 int.to.chr$ -- 0
 int.to.str$ -- 19
 missing$ -- 14
 newline$ -- 101
 num.names$ -- 46
-pop$ -- 127
+pop$ -- 126
 preamble$ -- 1
 purify$ -- 84
 quote$ -- 0
 skip$ -- 214
 stack$ -- 0
 substring$ -- 310
-swap$ -- 98
+swap$ -- 99
 text.length$ -- 11
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 72
-warning$ -- 1
+warning$ -- 0
 while$ -- 57
 width$ -- 21
-write$ -- 217
-(There were 2 error messages)
+write$ -- 218

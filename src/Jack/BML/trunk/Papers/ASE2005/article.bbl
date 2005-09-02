@@ -6,9 +6,9 @@ A.~V. Aho, R.~Sethi, and J.~D. Ullman.
 \newblock Addison-Wesley: Reading, 1986.
 
 \bibitem{BM05plb}
-F.~Bannwart and P.~M\..uller.
+F.~Bannwart and P.~Muller.
 \newblock A program logic for bytecode.
-\newblock 2005.
+\newblock In {\em Bytecode 2005}, 2005.
 
 \bibitem{BLS04sp}
 M.~Barnett, K.~R.~M. Leino, and W.~Schulte.
