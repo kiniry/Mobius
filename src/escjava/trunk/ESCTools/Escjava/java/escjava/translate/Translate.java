@@ -3296,7 +3296,7 @@ public final class Translate
    * list of mutexes protecting a shared variable.  Thus, these methods are not
    * thread re-entrant.
    */
-  private /*@ non_null */ ExprVec mutexList = ExprVec.make(new Expr[5]);
+  private /*@ non_null */ ExprVec mutexList = ExprVec.make(5);
   private /*@ non_null */ ArrayList locList = new ArrayList(5);
 
   /**
