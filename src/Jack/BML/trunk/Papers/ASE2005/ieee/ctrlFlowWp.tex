@@ -1,0 +1,36 @@
+\subsection{Loops}
+Finding the preconditions of loops on bytecode and source programs is different because of their different nature --- 
+the first one lacks while the second has structure. While on source level loops correspond to loop statements,  
+on bytecode level we have to analyse the control flow graph in order to identidy them.
+ The analysis consists in finding the backedges in the control flow graph using standard techniques as described in \cite{ARUCom1986}. 
+  
+ We assume that a method's bytecode is provided with sufficient specification and in particular loop invariants.
+ Under this assumption, we build an abstract control flow graph where the backedges are replaced by
+ the corresponding invariant. We apply the \wpi \ function over the abstract version of the control flow graph which generates verification conditions for the 
+preservation and initialization of every invariant in the abstraction garph. 
+
+
+     
+\subsection{Exceptions and Subroutines}
+
+Exception handlers are treated by identifying the instruction at which the handler compilation starts. The JVM specification mandates 
+that a Java compiler must supply for every method an \textbf{Exception\_Table} attribute that contains data structures describing the compilation of
+ every implicit (in presence of subroutines) or explicit exception handler: the instruction at which the compiled exception handler starts,
+ the protected region (its start and end instruction indexes), and the exception type the exception handler protects from. Thus, 
+for every instruction \instr{ins} in method \method~ which may terminate exceptionally on exception \texttt{Exc} the exceptional function
+ $\excPost$ (Fig.\ref{instrWP}, Fig.\ref{wpInv}) returns the \wpi \ predicate of the exceptional handler protecting \instr{ins} from \texttt{Exc} if such a handler exists.
+Otherwise, $\excPost$ returns the specified exceptional postcondition for exception \texttt{Exc} as specified in the specification of \\
+method \method.
+
+Subroutines are treated by abstract inlining\footnote{NB: we do not transform the bytecode. It is rather the \wpi \
+ function that treats subroutines as if the subroutines were inlined}. First, the instructions of every subroutine code
+ are identified. To this end, we suppose that the bytecode has
+ been certified by a bytecode verifier which guarantees
+that there are no recursive subroutines. We also assume that every subroutine terminates with a \instr{ret} 
+instruction\footnote{Normally, the compilation of subroutines ends with a \instr{ret} instruction. Still, Java 
+compilers can sometimes also generate a subroutine ending with a jump}. For calculating the \wpi~ of a
+\instr{jsr}  \texttt{ind} instruction, the \wpi~ function is applied to the bytecode corresponding to
+ the subroutine starting at index \texttt{ind}. 
+
+
+ %The \instr{ret} instruction jumps to the instruction which follows the \instr{jsr} instruction that caused the to this subroutine. 

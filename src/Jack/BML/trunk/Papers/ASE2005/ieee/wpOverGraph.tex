@@ -1,0 +1,147 @@
+
+\newtheorem{blockkkPost}{Definition}
+\newtheorem{pre}{Definition}
+
+\subsection{Bytecode Weakest Precondition}\label{wpGraph}
+
+In the following we overload the function symbol \wpi \ applying it to a method and sequence of bytecode instructions.
+The \wpi \ function runs in a backwards direction starting from the blocks that do not have successors up to reaching the entry point
+ instruction. We distinguish the \wpi \ calculus over a method's body bytecode, a bytecode block and a sequence of 
+ bytecode instructions.
+
+{\it The weakest precondition $\wpi(\tt{m})$ for method \texttt{m}} is the weakest precondition of its entry block
+ $\blockm{entry}$. 
+ $$\wpi(\tt{m}) = \wpi(\blockm{entry})$$
+
+{\it The weakest precondition for a bytecode block} is calculated splitting the block in two parts: its last instruction and
+ its sequential part (the instruction sequence without the last one). We note with $\blockSeq{i}$ the sequential part of block
+  $\blockm{i}$ and $\blockPost{i}$ the predicate that must hold after the execution of $\blockSeq{i}$ and before its last instruction; 
+  the weakest precondition of $\blockm{i}$ is then defined as follows:
+
+$$ \wpi(\blockm{i}) = \wpi( \blockSeq{i}, \blockPost{i}, \excPost ) $$
+
+Concerning the sequential part, the \wpi \ is calculated applying the standard $\wpi$ rule for compositional statements :
+\begin{center}
+$ \begin{array}{l} \wpi( instrList;i_{j}, \psi,\excPost ) = \\ \wpi(instrList, \wpi(i_{j}, \psi,\excPost ),\excPost ) \end{array} $
+\end{center}
+%Calculating the precondition of the sequential part of the block $\blockm{i}$ which we denote with  $\blockSeq{i}$  is standard - the precondition of an instruction  is inferred from the precondition of the previous one.
+The postcondition $\blockPost{i}$ of the block $\blockm{i}$ depends on its last instruction and the respective predicates 
+that must hold between $\blockm{i}$ and its successor blocks. Those predicates are determined by the function $pre$, which for 
+any two blocks $\blockm{i}$ and $\blockm{n}$, such that $\blockm{i} \execRel \blockm{n}$ gives the predicate $pre(b^{i}, b^{n})$ that must hold
+after the execution of $\blockm{i}$ and before the execution of $\blockm{n}$. 
+
+We define the postcondition of the sequential part of a block $\blockm{i}$ as follows:
+%\newdef{definition}{Definition}
+\begin{blockkkPost}
+%\begin{defn}[ 
+{Block's postcondition $\blockPost{i}$.}\label{post}
+Let $i_s$ be the last instruction of $\blockm{i}$ then:
+\begin{itemize} 
+\item if  $i_s$ =  \instr{if\_cond n} 
+$$
+\blockPost{i} =  \\
+\left\{
+\begin{array}{l}
+cond( \stack{\counter}, \stack{\counter - 1} )   \Rightarrow \\
+\phantom{ \counter }   pre(b^{i}, b^{n})[ \counter \leftarrow \counter -2 ]  \\
+\wedge \\
+ not ( cond( \stack{\counter}, \stack{\counter - 1} )  )   \Rightarrow \\
+\phantom{ \counter}    pre(b^{i}, b^{s+1})[ \counter \leftarrow \counter -2 ]      \\                             
+\end{array}
+\right.
+$$
+\item if  $i_s$ =  \instr{goto n} \\ 
+$\blockPost{i} =  pre(b^{i}, b^{n})$ 
+\item  if  $i_s$ =  \instr{athrow}
+\begin{enumerate}
+\item if there exists a block $\blockm{e}$ such that 
+$\blockm{i} \execRel \blockm{e}$ (i.e. an exception handler protects the type of the exception thrown)
+then :\\
+$\blockPost{i }=$\\
+$ pre(b^{i}, b^{e})[\counter \leftarrow 0][\stack{0} \leftarrow \stack{\counter}] $.
+\item Otherwise the thrown exception is not handled and then $\blockm{i}$ must respect the postcondition determined by
+the exceptional postcondition function $\excPost$ for this exceptional type:\\ %(or if not specified for the closest supertype) : \\ 
+ $\blockPost{i }=$\\ $\excPost(\stack{\counter}) [\counter \leftarrow 0][\stack{0} \leftarrow \stack{\counter} ] [\EXC \leftarrow \stack{\counter}] $. \\
+see in section \ref{grammar} for the meaning of \EXC.
+    \end{enumerate}
+\item  if  $i_s$ = \instr{return}
+$$
+   \blockPost{i } = \psi[\result \leftarrow \stack{\counter} ]    
+$$
+where $\psi $ is the specified method postcondition.
+\item  else  \\[3 mm]
+ $ \blockPost{i} =$  \\ $\wpi(  i_s , pre(b^{i}, b^{s+1}) , \excPost)  $
+ \end{itemize}
+
+\end{blockkkPost}
+The function  $pre$ determines what is the property that should hold between two blocks that execute one after another,
+depending on if they determine a cycle or not (see definition~\ref{defLoop} in the previous Section \ref{abstrCntrFlow} ).  This definition
+gives us the right to abstract the control flow to an acyclic one, as discussed in the previous subsection \ref{abstrCntrFlow} and perform on the latter the weakest precondition calculus.  
+
+\begin{pre}
+
+{Predicate between consecutive blocks.}\label{post2}
+Assume that $b^i \execRel b^n$. The predicate $pre(b^{i}, b^{n})$ must hold after the execution of $\blockm{i}$ and before the execution of $\blockm{n}$ and is defined as follows:
+\begin{itemize}
+\item if \ $\blockm{i} \execRel^l \blockm{n}$ 
+then the corresponding loop invariant must hold:
+$$
+pre(b^{i}, b^{n}) =  \invariant
+$$
+
+\item else if $\ \blockm{n}$ is a loop entry then the corresponding loop invariant $\invariant$ must hold before $\blockm{n}$ is executed, i.e. after the execution of $\blockm{i}$. We also require that \invariant \ implies the weakest precondition of the loop entry instruction. The implication is quantified over the locations $m_i , i= 1..s$ that may be modified in the loop.
+
+$$
+pre(b^{i}, b^{n}) = \invariant \ \wedge \ \forall_{i = 1..s} m_i.(
+\invariant \Rightarrow \wpi(b^{n}))
+$$
+\item else the normal precondition is taken into account:
+$$
+pre(b^{i}, b^{n}) = \wpi(b^{n})
+$$
+\end{itemize}
+\end{pre}
+
+Subroutines are treated by in-lining. Exception handlers are 
+treated by identifying the instructions that belong to the handler (the class file format provides information about the exception handlers for all methods, in particular where starts and ends the region 
+they protect and at what index the handler starts at); the precondition of the handler bytecode is calculated upon the normal postcondition of the method.
+%As we assume that the  bytecode has been generates by a non optimizing compiler and that it 
+%has been certified by a Java bytecode verifier thus our analysis for identifying the instructions that belong to a subroutine or exception handler is not 
+%a problem (as the bytecode verifier guarantees that \texttt{jsr} are not the cause of cycles).  
+
+\subsection{Verifying Java Bytecode Programs} Bytecode programs represent a set of Java classes. Establishing the correctness of Java bytecode program w.r.t. to their specification thus, consists of generating verification conditions for every method appearing in every class of the bytecode program.
+The verification procedure for a method \texttt{m} consists of  calculating the weakest precondition $\wpi(\tt{m})$ upon its specification: precondition $\psi^{pre}(m)$, 
+postcondition $\psi^{post}(\tt{m})$ and the mapping between exceptional types and predicates $\excPost(\tt{m})$ and then prove the condition: 
+$$
+\psi^{pre}(m)  \Rightarrow \wpi(m)
+$$    
+The verification procedure does not trust neither the bytecode specification, nor the bytecode; in both cases --- wrong 
+specification or incorrect implementation will result in verification conditions that are not provable 
+
+%\paragraph{Example} We give a simple example of how the \wpi \ works. Looking at figure~\ref{blockBC} we calculate the weakest precondition of the basic block starting at instruction \texttt{19} (it ends with the same instruction). In particular this block is a loop end block, thus its postcondition is
+%the invariant as specified for this loop in the loop attribute.
+
+% $$
+%\wpi(\blockm{19}) = \\
+%\left\{ \begin{array}{l}    
+%1 + \register{3} <= length(\#19(\register{0}) \wedge \\
+     %                 1 + \register{3} >= 0)  \wedge \\ 
+ %                       \forall  var_0:int  (  0 <= var_0 \wedge \\
+   %                 \Myspace    var_0 < 1 + \register{3}  \Rightarrow \\
+  %              \Myspace \Myspace \#19(\register{0})[var_0] \neq \register{1})
+%\end{array}
+%\right.
+%$$
+%In the example the rule for the instruction \texttt{iinc 3} is applied which increments the \texttt{3$^{th}$} register of the method bytecode. 
+
+%\begin{center} \texttt{wp(instruction\_list;instruction, $\psi$)} = \texttt{wp(instruction\_list, wp(instruction, $\psi$))} \end{center}
+%For example for the sequence of instructions of the block starting with $\tt{instr_{18}}$ from figure~\ref{blockBC} we calculate
+%\begin{center}
+%\texttt{wp( iload\_2; ireturn,  $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ )}
+%\\
+%=
+%\\
+%\texttt{wp(iload\_2, wp( ireturn, $\ulcorner \backslash$\texttt{result} == $\backslash$ old(n)div 2 $\urcorner$ ))} \end{center}
+%Thus the weakest precondition for the block starting at $\tt{instr_{18}}$ at figure~\ref{blockBC} is
+%\texttt{local(2) $\ulcorner$==$\urcorner$ $\ulcorner$ $\backslash$ old(n)div 2 $\urcorner$}
+

@@ -1,0 +1,202 @@
+% CHANGED - the example o compilation of loop specification
+
+\section{Bytecode Specification Language (BCSL)}\label{bcSpecLg}
+
+In this section, we introduce a bytecode specification language which we call BCSL (short for ByteCode Specification Language).
+ BCSL is based on the design principles of JML (Java Modeling Language)~\cite{RT03djml,JMLRefMan}, which is a behaviorial interface specification 
+language following the design by contract approach \cite{M97oos}.
+
+%The BCSL specifications is inserted in the class file as user defined attributes.
+
+Before going farther, we give a flavour of what JML specifications look like. Fig.~\ref{replaceSrc} shows an example of a Java class and its 
+JML annotation that models a list stored in an array field. 
+From the example, we notice that JML annotations are written in comments and so they are not visible by the Java compiler.
+The specification of method \verb!isElem! declares
+ that when the method is called the field \verb!list! must not be null in its precondition (introduced by \verb!requires!) and that its return value will be true if and only if the internal array 
+\verb!list! contains the object referenced by the argument \verb!obj! in its postcondition(\verb!ensures!). The method loop is also specified by
+its invariant (\verb!loop_invariant!) which states that whenever the loop entry is reached the elements inspected already by the loop are all different from \verb!obj!.
+
+ 
+\begin{figure}[!h]
+\begin{verbatim}
+public class ListArray {
+  Object[] list;
+  //@requires list != null;
+  //@ensures \result == (\exists int i;0 <= i && 
+             i < list.length && list[i] == o ) ; 
+  public boolean isElem(Object obj)
+  {
+    int i = 0;
+    //@loop_modifies i;
+    //@loop_invariant i <= list.length && i >=0 
+    //@  && (\forall int k;0 <= k && k < i ==> 
+    //@  list[k] != obj); 
+    for (i = 0; i < list.length; i++ ) {
+      if ( list[i] == obj) {
+        return true;	
+      }
+    }
+    return false;
+  }
+}
+\end{verbatim}
+\caption{\sc class \texttt{ListArray} with JML annotations} 
+\label{replaceSrc}
+\end{figure}
+
+In the following, we give the grammar of BCSL and sketch the compiler from JML to BCSL. 
+
+\subsection{Grammar} \label{grammar}
+
+
+BCSL corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and 
+ security properties.
+% We now discuss some of the specification clauses, for the rest their semantics is the same as in JML and can be found in~\cite{RT03djml,JMLRefMan}. %There are some minor differences in the encoding of the JML specification and the BCSL specification: field names and local variables
+ %on bytecode level are represented respectively by the corresponding index in the constant pool table and  the index in the local variable table.
+
+ Specification clauses in BCSL that are taken from JML and inherit their semantics directly from JML include:
+\begin{itemize}
+   \item class specification, i.e. class invariants and history constraints
+   \item  method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method). 
+     We also support behavioral subtyping by specification inheritance as described in \cite{Dhara-Leavens95b}.
+   \item inter method specification, for instance loop invariants
+% One can notice that the loop invariant specification are tagged with the index of the instruction at which the loop invariant must hold (the loop entry instruction). this is different from  JML
+%where loop invariants are written at the beginning of the declaration of the loop statement, while the BCSL specification are separated from the bytecode
+   \item predicates from first order logic   
+      
+\item expressions from the programming language, like field access expressions, local variables, etc.
+\item specification operators. For instance  $\old{\expression}$ which is used in method postconditions and
+ designates the value of the expression $\expression$ in the prestate of a method, $ \result$ which stands for the value the method
+returns if it is not void  
+\end{itemize}
+
+BCSL has few particular extra features that JML lacks :
+\begin{itemize}
+   \item loop frame condition, which declares the locations
+that can be modified during a loop iteration. We were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}
+
+   \item stack expressions - $\counter$ which stands for the stack counter and \\
+ $\stack{\ArithExpr}$ standing for a stack element at position \\
+\ArithExpr. These expressions are needed in BCSL as the Java Virtual Machine (JVM) is
+stack based.  They do not appear in the specification clauses. The reason for this is that proving the soundness
+ of the bytecode weakest precondition predicate transformer function becomes considerably complicated.
+ This is not a restriction in the scenario in which we use BCSL specification --- compiling JML
+to BCSL specification, as JML doesnot contain stack expressions.
+
+
+\end{itemize}
+
+
+
+\subsection{Compiling JML into bytecode specification language}\label{comJML}
+
+%This section explains how JML specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
+
+We now turn to explaining how JML specifications are compiled into user defined attributes for Java class files. Recall that a class file defines
+a single class or interface and contains information about  the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The Java Virtual Machine Specification (JVMS) \cite{VMSpec} mandates that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file user specific information(\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
+
+Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms jml into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
+\begin{enumerate}
+\item Compilation of the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file 
+the \\ \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
+these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
+The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  
+The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. 
+Those attributes are important for the next phase of the JML compilation.
+\item Compilation of the JML specification from the source file and the resulting class file. In this phase, Java and JML source identifiers are 
+linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of 
+local variables described in the \textbf{Local\_Variable\_Table} attribute. If, in the JML specification a field
+identifier appears for which no constant pool (cp) index exists, it is added in the constant pool and the identifier in question
+is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain point in the source program must be associated to the respective program point on bytecode level. The specification
+is compiled in binary form using tags in the standard way. The compilation of an expression is a tag followed by the compilation of its subexpressions. 
+
+
+Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
+By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for intergral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that 
+if a Java source variable has a boolean type it will be compiled to a variable with
+an integer type. For instance, in the example for the method 
+\texttt{isElem} and its specification in Fig.\ref{replaceSrc} the postcondition states the equality between the JML expression  
+\result \ and a predicate. This is correct as the method \texttt{isElem} in the Java source is declared with return type boolean  and thus,
+ the expression \result \ has type boolean. 
+Still, the bytecode resulting from the compilation of the method  \texttt{isElem} returns a value of type integer. This means that the JML compiler has to 
+``make more effort'' than simply compiling the left and right side of the equality in the postcondition, otherwise its compilation will not make sense as 
+it will not be well typed. Actually, if the JML specification contains program boolean expressions that the Java compiler will compile to bytecode expression
+ with an integer type, the JML compiler will also compile them in integer expressions and will transform the specification condition in equivalent 
+one\footnote{when generating proof obligations we add for every source boolean expression an assumption that it
+ must be equal to 0 or 1. Actually, this must always hold as we assume that programs are well typed}.  
+
+Finally, the compilation of the postcondition of method \texttt{isElem} is given in Fig. \ref{postCompile}. From the postcondition compilation,
+ one can see that the expression \result \ has integer type and the equality between the boolean expressions in the postcondition in Fig.\ref{replaceSrc} is
+ compiled into logical equivalence. The example also 
+shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding 
+index of the constant pool table (\#19 is the compilation of the field name \texttt{list} and \register{1} stands for the method parameter \texttt{obj}). 
+
+\begin{figure}[tb]
+ $$\begin{array}{l}
+         \result = 1 \\
+          \\ 
+         \iff \\ 
+         \exists  var(0) .
+           \biggl(\begin{array}{l} \ 0 \leq var(0) \wedge\\ 
+             var(0) < len(\#19(\register{0})) \wedge \\
+             \#19(\register{0})[var(0)] = \register{1} 
+         \end{array} \biggr) 
+   \end{array}
+$$
+\caption{\sc The compilation of the postcondition in Fig. \ref{replaceSrc}}
+\label{postCompile}
+\end{figure}
+
+
+
+
+
+\item add the result of the JML compilation in the class file as user defined attributes. Method specifications, class invariants, loop invariants are 
+newly defined attributes in the class file.
+ For example, the specifications of all the loops in a method are compiled to a unique method attribute: whose syntax is given in Fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. Also for each loop in the source code there must be a corresponding element in the array. 
+More precisely, every element contains information about the instruction where the loop starts as specified in the
+\textbf{Line\_Number\_Table}, the locations that can be modified in a loop iteration, 
+ the invariant associated to this loop and the decreasing expression in case of total correctness, 
+%For the full specification of the compiler see~\cite{JML2BCSpec}.
+\end{enumerate}
+
+\begin{figure}[ht!]
+\textbf{     
+\begin{tabbing}
+JML\=Loop\_specification\_attribute \{\\
+\> ...\\
+\> \{\hspace{3 mm}\= u2 index;\\
+\> \> u2 modifies\_count;\\
+\> \> formula modifies[modifies\_count];\\
+\> \> formula invariant;\\
+\> \> expression decreases;\\
+\> \} loop[loop\_count];\\
+\}
+\end{tabbing}
+}
+
+\begin{itemize}
+\item \textbf{index}: The index in the  \texttt{LineNumberTable } where the beginning of the corresponding loop is described
+
+\item \textbf{modifies[]}: The array of locations that may be modified
+
+\item \textbf{invariant }: The predicate that is the loop invariant. It is a compilation of the JML formula in the low level specification language
+
+\item \textbf{decreases}: The expression which decreases at every loop iteration
+\end{itemize}
+\caption{\sc Structure of the Loop Attribute}
+\label{loopAttribute}
+%\end{frameit}
+\end{figure}
+
+The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debugging information,
+ namely the presence of the \\ \textbf{Line\_Number\_Table} attribute for the correct compilation of inter method
+ specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The
+ most problematic part of the compilation is to find the program points where the loop invariants must hold. This
+ means that one has to identify which source loop corresponds to which bytecode loop in the control flow
+ graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}), i.e. there are no
+ jumps from outside a loop inside it; graph reducibility allows to establish the same order between loops in the
+ bytecode and source code level and to compile the invariants to the correct places in the bytecode.
+
+
+%\todo{limitations : registers that are used with two different types in the method bytecode}

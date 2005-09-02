@@ -1,0 +1,64 @@
+\newcommand{\todo}[1]{ \textbf{#1}}
+\newcommand{\fig}[1]{ Fig.}
+\newcommand{\jmlKey}[1]{\texttt{#1}}% wrapping jml keywords
+\newcommand{\java}[1]{\texttt{#1}}
+\newcommand{\stack}[1]{\texttt{st(#1)}}% element on top stack 
+\newcommand{\counter}{\texttt{c}}
+
+\newcommand{\true}{\texttt{true}}
+\newcommand{\false}{\texttt{false}}
+
+\newcommand{\wpi}{\textit{wp}}
+
+\newcommand{\instr}[1]{\texttt{#1}}
+
+\newcommand{\substitution}[2]{[\tt{#1} \leftarrow \tt{#2}]}
+% thegrammar for the bytecode specification language
+\newcommand{\ClassSpec}{\rm{ClassSpec}}
+\newcommand{\MethodSpec}{\rm{MethodSpec}}
+\newcommand{\SpecCase}{\textrm{SpecCase}}
+\newcommand{\jmlStmt}[1]{\textrm{#1}}
+\newcommand{\interMethodSpec}{\rm{InterMethodSpec}}
+\newcommand{\loopSpec}{\rm{loopSpec}}
+\newcommand{\assert}{\rm{assertSpec}}
+
+\newcommand{\ArithExpr}{\texttt{Arithmetic\_Expr}}
+\newcommand{\expression}{\mathcal{E} }
+
+\newcommand{\integer}{\texttt{int} }
+\newcommand{\register}[1]{\texttt{lv[#1]} }
+\newcommand{\reference}{\texttt{ref} }
+\newcommand{\intLiteral}{\texttt{int\_literal} }
+\newcommand{\Mynull}{\texttt{null}}
+\newcommand{\this}{\texttt{this}}
+\newcommand{\fieldAccess}[1]{\texttt{field\_cp\_index(}#1 \texttt{)}}
+\newcommand{\arrayAccess}[2]{#1[#2] }
+
+\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
+\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
+\newcommand{\EXC}{\texttt{EXC}}
+
+\newcommand{\excPost}{\psi^{exc}}
+
+\newcommand{\Myspace}{\phantom{aa}}
+\newcommand{\predicate}{ \mathcal{P}} 
+\newcommand{\Myfalse}{\textit{false}}
+\newcommand{\Mytrue}{ \textit{true} }
+\newtheorem{defn}{Definition} 
+
+
+
+% abstractCtrlFlow.tex
+\newcommand{\execRel}{\rightarrow} % the execution relation
+\newcommand{\blockm}[1]{ \tt{b^{#1}} }
+\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
+\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
+
+\newcommand{\blockPost}[1]{ \it{post(}\tt{b_{seq}^{#1}}\it{)}}
+
+\newcommand{\invariant}{\textit{I}}
+
+\newcommand{\srcVar}[1]{\texttt{#1} }
+
+\newcommand{\method}{\texttt{m} }

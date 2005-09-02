@@ -1,0 +1,28 @@
+\subsection{Generating Verification Conditions}
+
+$
+l(1) \ge 0 \Rightarrow
+\left\{
+\begin{array}{l}
+l(1) = l(1) + 0 \  \wedge \\
+l(1)_{13} \ge 0 \land
+l(1)= l(1)_{13} + 2 * l(2)_{13} 
+\land l(1)_{13} \le 1 \Rightarrow l(2)_{13} = l(1)/2
+\end{array}
+\right.\\
+$
+$
+l(1) \ge 0 \Rightarrow
+\left\{
+\begin{array}{l}
+l(1) = l(1) + 0 \ \wedge \\
+\begin{array}{l}
+l(1)_{13} \ge 0 \land
+l(1) = l(1)_{13} + 2 * l(2)_{13} \land l(1)_{13} > 1 
+\Rightarrow \\
+\left\{ \begin{array}{l} 1 + l(2)_{13} = l(2)_{10} \ \wedge \\
+-2 + l(1)_{13} = l(1)_{10} \Rightarrow \left\{ \begin{array}{l} l(1) = l(1)_{10} + 2 * l(2)_{10} \ \wedge \\ 
+l(1) = l(1) \ \wedge \\ l(1)_{13} - 2 \ge 0 \ \wedge \\   l(1)_{13} - 2 <    l(1)_{13}  \end{array} \right.
+\end{array} \right.\end{array} \end{array} \right. \\ 
+ $
+% \hbox{( here $l(1)_{10}$ stands for the value of $l(1)$ on executing $i_{10}$)}

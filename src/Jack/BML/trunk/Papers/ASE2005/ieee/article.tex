@@ -1,0 +1,99 @@
+\documentclass[pagenumbers]{ieee} 	
+%\documentclass[a4paper,10pt]{article}
+%\documentclass{acm_proc_article-sp\documentclass[pagenumbers]{ieee} 
+%\documentclass[pagenumbers]{llncs} 
+
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{url}
+
+%\oddsidemargin  0.0in
+%\topmargin      1.0in
+
+\renewcommand{\floatpagefraction}[1]{1.0pt}
+%\pagestyle{plain}
+
+
+\usepackage{float}
+\newfloat{figure}{H}{lof} %Don't let them float by default
+\newfloat{table*}{H}{lot}
+\floatname{figure}{\figurename}
+\floatname{table*}{\tablename}
+\input cmd.tex
+
+
+
+\begin{document}
+\title{ Java Bytecode Specification and Verification }
+
+
+\author{
+       Lilian Burdy\\
+        INRIA Sophia-Antipolis\\
+       Lilian.Burdy@sophia.inria.fr \\
+\\
+        Mariela Pavlova\\
+        INRIA Sophia-Antipolis \\
+        Mariela.Pavlova@sophia.inria.fr
+}
+
+\clearpage
+\maketitle
+%\author{Lilian Burdy  Mariela Pavlova\\
+%INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
+%06902 Sophia-Antipolis,\\  France}
+%\thanks[lilemail]{Lilian.Burdy@sophia.inria.fr}
+%\thanks[maremail]{Mariela.Pavlova@sophia.inria.fr}
+%\address{INRIA Sophia Antipolis, France, \\ fax : ++ 33 4 92 38 50 29}
+
+%\href{mailto:Lilian.Burdy@inria.sophia.fr}
+%\href{mailto:Mariela.Pavlova@sophia.inria.fr}
+
+
+%\thispagestyle{empty}
+\begin{abstract}
+\input abstract.tex
+\end{abstract}
+%\begin{keyword}
+ % java bytecode verification, bytecode annotations, Java Modeling Language, Proof Carrying Code, Weakest Precondition Calculus
+%\end{keyword}
+
+
+\input intro.tex
+\input architecture.tex
+\input relWork.tex
+
+\input classFileExt.tex
+\input wpbc.tex
+\input results.tex
+\input conclusion.tex
+\bibliographystyle{abbrv}
+\bibliography{specification,bibliography}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

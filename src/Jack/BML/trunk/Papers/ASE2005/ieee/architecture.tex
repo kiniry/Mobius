@@ -1,0 +1,75 @@
+\section{Framework}
+\label{architecture_s}	
+
+
+The overall objective is to allow a client to trust a code produced by an untrusted code producer. Our approach is especially suitable
+ in cases where the client policy involves non trivial functional or safety requirements and thus, an automatic specification inference
+ can not be applied. To this end, we propose a PCC technique that exploits the JML compiler and the weakest predicate function presented in the article. 
+ 
+ The framework is presented in Fig.~\ref{architecture}; note that certificates and their checking are not yet implemented
+ and thus are in oblique font.
+  
+%Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
+
+\begin{figure}[!tbp]
+\begin{center}
+\epsfig{file=architecture.eps, width=\linewidth}
+\caption{\sc The overall architecture}
+\label{architecture}
+\end{center}
+\end{figure}
+\clearpage
+
+In the first stage of the process the client provides the functional and (or) security requirements to the producer.
+ The requirements can be in different form:
+\begin{itemize}
+\item A specified interface that describes the application to be developed. In that case,
+ the client specifies in JML the features that have to be implemented by the code producer.
+\item An API with restricted access to some method. In this case, the client can protect its system by restricting the API usage.
+For example, suppose that the client API provides transaction management facilities - the API method \texttt{open} for opening and method 
+\texttt{close} for closing transactions. In this case, a requirement can be for no nested transactions.
+In this case, the methods \texttt{open} and \texttt{close} can be annotated to ensure that the method \texttt{close} 
+ should not be called if there is no transaction running and the method \texttt{open} should not be called if there is already a running transaction. 
+In this scenario, we can apply results of previous work \cite{PBBHL}.  
+\end{itemize}
+
+Typically, the development process involves annotating the source code with JML specification,
+ generating verification conditions, using proof obligation generator over the source code and 
+discharging proofs which represent the program safety certificate and finally, sends it to the client along with the bytecode.
+ Yielding certificates over the source code is based on the observation that
+ proof obligations on the source code and non-optimized bytecode respectively
+ are syntactically the same modulo names and basic types. Every Java file of the 
+untrusted code is normally compiled with a Java compiler to obtain a class file. Every class file is extended with
+ user defined attributes that contain the BCSL specification, resulting from the compilation of the
+ JML specification of the corresponding Java source file.
+
+
+
+    
+
+% If the annotations are sufficient to prove the code, 
+%the Java file is normally compiled with a Java compiler to obtain a 
+%class file. This class file is then extended with user defined attributes that contain the BCSL specification, 
+%resulting from the compilation of the JML specification in the Java source file. 
+%At this stage, the Java class files contain all the information that will allow the client to check if the bytecode does not violate 
+%his requirements. 
+
+
+%Actually, our early experiments show that the proof obligations on source and bytecode level are syntactically modulo names and types.   
+
+%OLD
+%To implement this architecture, we have defined a compiler from JML to BCSL; the JML compilation results in an extension of the class file format; 
+%we have implemented a tool to insert those special attributes in the class file and we have extended the JACK framework to generate proof obligations at bytecode 
+%level and to prove them with the plugged JACK provers (as explained in the introduction). 
+%The coming sections introduce those features.  
+
+To implement this architecture we use JACK~\cite{BRL-JACK} as a verification condition generator both on the consumer and the
+producer side. JACK is a plugin for the eclipse\footnote{http://www.eclipse.org} integrated development environment for Java.
+ Originally, the tool was designed as verification condition generator for Java source programs against their JML specification.
+ JACK can interface with several theorem provers (AtelierB, Simplify, Coq, PVS). We have extended the tool with a compiler from
+ JML to BCSL and a bytecode verification condition generator. In the next sections, we introduce
+ the BCSL language, the JML compiler and the bytecode weakest precondition calculus which underlines the bytecode verification condition generator.
+ 
+%the JML compilation results in an extension of the class file format; we have implemented a tool to insert those special attributes in the class file and we have extended 
+%the JACK framework to generate proof obligations at bytecode level and to prove them with the plugged JACK provers (as explained in the introduction). 
+%The coming sections introduce those features.  
