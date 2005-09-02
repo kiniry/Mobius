@@ -22,6 +22,7 @@ ConstructorDecl.java
 ConstructorInvocation.java
 ContinueStmt.java
 DoStmt.java
+ErrorType.java
 EvalStmt.java
 Expr.java
 ExprObjectDesignator.java
