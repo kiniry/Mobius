@@ -32,7 +32,7 @@ public class ProverManager {
   public static boolean useSimplify = false;
   public static boolean useSammy = false;
   public static boolean useHarvey = false;
-  
+
   //@ ensures isStarted && prover != null;
   synchronized
   static public void start() {
@@ -169,12 +169,7 @@ public class ProverManager {
     try {
       simplify.startProve();
       VcToString.compute(vc, simplify.subProcessToStream());
-      
-      //++
-      // 	    System.out.println("ProverManager::prove");
-      //  	    System.out.println(vc);
-      //++
-      
+ 
       Enumeration en = simplify.streamProve();
       if (listener != null) listener.stateChanged(1);
       return en;

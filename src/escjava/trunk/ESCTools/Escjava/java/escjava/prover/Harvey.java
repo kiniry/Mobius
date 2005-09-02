@@ -137,6 +137,7 @@ public class Harvey extends NewProver {
   }
   
   public static void main(String[] argv){
+      
     
     Harvey harvey = new Harvey(true);
     
@@ -162,7 +163,14 @@ public class Harvey extends NewProver {
       harvey.is_valid(new Formula(formulaString),null); 
       
     }
-    catch (Exception e) { System.out.println(e);}
+    catch (Exception e) { 
+
+	System.err.println(e);
+	System.err.println("You seems to be trying to launch the harvey demo...");
+	System.err.println("In order to be able to do that, you need to have harvey in /usr/local/bin/ under the name rv");
+	System.err.println("And you need a proof example in a file called 'test-rv.rv' in ESCTools/Escjava/.");
+	System.err.println("I know that's crappy..");
+    }
     
     harvey.stop_prover();
     

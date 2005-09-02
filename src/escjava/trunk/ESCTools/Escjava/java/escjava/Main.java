@@ -31,6 +31,8 @@ import escjava.tc.TypeCheck;
 
 import escjava.prover.*;
 
+import escjava.vcGeneration.VcGenerator;
+
 import javafe.util.*;
 
 /**
@@ -51,7 +53,7 @@ public class Main extends javafe.SrcTool
     
     static {
 	java.net.URL urlJar = GUI.class.getClassLoader().getResource(
-                "escjava/Main.class");
+								     "escjava/Main.class");
         String urlStr = urlJar.toString();
         int from = "jar:file:".length();
         int to = urlStr.indexOf("!/");
@@ -103,8 +105,8 @@ public class Main extends javafe.SrcTool
      */
     // All three arguments can be null.
     public /*@ non_null @*/ StandardTypeReader makeStandardTypeReader(String path,
-						     String sourcePath,
-						     PragmaParser P) {
+								      String sourcePath,
+								      PragmaParser P) {
         return EscTypeReader.make(path, sourcePath, P, annotationHandler);
     }
 
@@ -165,14 +167,14 @@ public class Main extends javafe.SrcTool
      */
     //@ requires \nonnullelements(args);
     public static void main(/*@ non_null @*/ String[] args) {
-      int exitcode = compile(args);
-      if (exitcode != 0) System.exit(exitcode);
+	int exitcode = compile(args);
+	if (exitcode != 0) System.exit(exitcode);
     }
 
-  public Main() {
-    // resets any static variables left from a previous instantiation
-    clear(true);
-  }
+    public Main() {
+	// resets any static variables left from a previous instantiation
+	clear(true);
+    }
 
     boolean keepProver = false;
 
@@ -199,7 +201,7 @@ public class Main extends javafe.SrcTool
     //@ requires args != null;
     /*@ ensures \result == okExitCode || \result == badUsageExitCode
       @      || \result == errorExitCode || \result == outOfMemoryExitCode;
-     */
+    */
  
     public static int compile(String[] args) {
         try {
@@ -210,7 +212,7 @@ public class Main extends javafe.SrcTool
             Runtime rt = Runtime.getRuntime();
             long memUsedBytes = rt.totalMemory() - rt.freeMemory();
             System.out.println("java.lang.OutOfMemoryError (" + memUsedBytes +
-                                " bytes used)");
+			       " bytes used)");
             //oom.printStackTrace(System.out);
             return outOfMemoryExitCode;
         }
@@ -240,7 +242,7 @@ public class Main extends javafe.SrcTool
 
         if (!options().quiet) {
 	    System.out.print("ESC/Java version " + 
-			       (options().testMode?"VERSION":version));
+			     (options().testMode?"VERSION":version));
 
 	    System.out.print("\n");
 	}
@@ -285,27 +287,27 @@ public class Main extends javafe.SrcTool
 	super.setupPaths();
 	if (options().specspath == null) return;
 	if (compositeSourcePath == null) {
-		compositeClassPath = 
-		        options().specspath
+	    compositeClassPath = 
+		options().specspath
 		+	java.io.File.pathSeparator
 		+	compositeClassPath;
 	} else {
-		compositeSourcePath = 
-		        options().specspath
+	    compositeSourcePath = 
+		options().specspath
 		+	java.io.File.pathSeparator
 		+	compositeSourcePath;
 	}
     }
 
-  public void preload() {
-    // Check to see that we are using a legitimate Java VM version.
-    // ESC/Java2 does not support Java 1.5 at this time.
-    if (System.getProperty("java.version").indexOf("1.5") != -1) {
-      ErrorSet.fatal("Java 1.5 source, bytecode, and VMs are not supported at this time.\nPlease use a Java 1.4 VM and only process source code and bytecode from\nJava versions prior to 1.5.");
-      return;
+    public void preload() {
+	// Check to see that we are using a legitimate Java VM version.
+	// ESC/Java2 does not support Java 1.5 at this time.
+	if (System.getProperty("java.version").indexOf("1.5") != -1) {
+	    ErrorSet.fatal("Java 1.5 source, bytecode, and VMs are not supported at this time.\nPlease use a Java 1.4 VM and only process source code and bytecode from\nJava versions prior to 1.5.");
+	    return;
+	}
+	super.preload();
     }
-    super.preload();
-  }
 
     /**
      * Hook for any work needed before <code>handleCU</code> is called
@@ -323,7 +325,7 @@ public class Main extends javafe.SrcTool
             
             
         //if (6 <= stages || options().predAbstract) {
-	    //ProverManager.start();
+	//ProverManager.start();
         //}
         
     }
@@ -345,10 +347,10 @@ public class Main extends javafe.SrcTool
     }
 
     public void postload() {
-      super.postload();
-      if (OutsideEnv.filesRead() == 0) {
-        ErrorSet.caution("No files read.");
-      }
+	super.postload();
+	if (OutsideEnv.filesRead() == 0) {
+	    ErrorSet.caution("No files read.");
+	}
     }
 
     /**
@@ -418,13 +420,13 @@ public class Main extends javafe.SrcTool
 
 	/* If something is on the command-line, presume we want to check it
 	   as thoroughly as possible.
-        if (sig.getTypeDecl().specOnly &&
-		!options().checkSpecs) {    // do not process specs
-	    // No bodies to process
-	    if (!options().quiet) System.out.println("Skipping " + 
-				sig.toString() + " - specification only");
-            return;
-	}
+	   if (sig.getTypeDecl().specOnly &&
+	   !options().checkSpecs) {    // do not process specs
+	   // No bodies to process
+	   if (!options().quiet) System.out.println("Skipping " + 
+	   sig.toString() + " - specification only");
+	   return;
+	   }
 	*/
 
         if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
@@ -562,11 +564,11 @@ public class Main extends javafe.SrcTool
 	    ProverManager.pop();
         
 	} catch (FatalError e) {
-		// Error already reported
+	    // Error already reported
 	    throw e;
 	} catch (Throwable e) {
-		System.out.println("Exception " + e + " thrown while processing " + TypeSig.getSig(td));
-		e.printStackTrace(System.out);
+	    System.out.println("Exception " + e + " thrown while processing " + TypeSig.getSig(td));
+	    e.printStackTrace(System.out);
 	    return true;
 	}
 	return false;
@@ -581,7 +583,7 @@ public class Main extends javafe.SrcTool
      */
     //@ requires sig != null && initState != null;
     private void processTypeDeclElem(TypeDeclElem te, TypeSig sig,
-                     InitialState initState) {
+				     InitialState initState) {
         // Only handle methods and constructors here:
         if (!(te instanceof RoutineDecl))
             return;
@@ -593,7 +595,7 @@ public class Main extends javafe.SrcTool
             String name = TypeCheck.inst.getRoutineName(r) +
                 javafe.tc.TypeCheck.getSignature(r);
             System.out.println("\n" + sig.toString() + ": " +
-                   name + " ...");
+			       name + " ...");
         }
 
         // Do the actual work, handling not implemented exceptions:
@@ -608,7 +610,7 @@ public class Main extends javafe.SrcTool
 	}
     
         if (!options().quiet)
-                System.out.println("    [" + timeUsed(startTime) + "]  "
+	    System.out.println("    [" + timeUsed(startTime) + "]  "
                                + status);
 
         /*************************
@@ -616,7 +618,7 @@ public class Main extends javafe.SrcTool
                  (Location.toLineNumber(r.getEndLoc())
                      -Location.toLineNumber(r.getStartLoc()))
                      +" time "+timeUsed(startTime));
-         *******************/
+	*******************/
 
 
     }
@@ -630,25 +632,25 @@ public class Main extends javafe.SrcTool
      */
     //@ ensures \result != null;
     private String processRoutineDecl(/*@ non_null */ RoutineDecl r,
-                      /*@ non_null */ TypeSig sig,
-                      /*@ non_null */ InitialState initState) {
+				      /*@ non_null */ TypeSig sig,
+				      /*@ non_null */ InitialState initState) {
 
         if (r.body == null) return "passed immediately";
 	if (r.parent.specOnly) return "passed immediately";
         if ( Location.toLineNumber(r.getEndLoc()) < options().startLine )
-                return "skipped";
+	    return "skipped";
         String simpleName = TypeCheck.inst.getRoutineName(r).intern();
         String fullName = sig.toString() + "." + simpleName +
             javafe.tc.TypeCheck.getSignature(r);
         fullName = removeSpaces(fullName).intern();
         if (options().routinesToSkip != null &&
-                (options().routinesToSkip.contains(simpleName) ||
-                options().routinesToSkip.contains(fullName))) {
+	    (options().routinesToSkip.contains(simpleName) ||
+	     options().routinesToSkip.contains(fullName))) {
             return "skipped";
 	}
         if (options().routinesToCheck != null &&
-                !options().routinesToCheck.contains(simpleName) &&
-                !options().routinesToCheck.contains(fullName)) {
+	    !options().routinesToCheck.contains(simpleName) &&
+	    !options().routinesToCheck.contains(fullName)) {
             return "skipped";
         }
 
@@ -666,7 +668,7 @@ public class Main extends javafe.SrcTool
         GuardedCmd gc = computeBody(r, initState);
         /*-@ uninitialized @*/ /* readable_if stats; */ int origgcSize = 0;
         if (options().stats) {
-                origgcSize = Util.size(gc);
+	    origgcSize = Util.size(gc);
         }
 
         String gcTime = timeUsed(startTime);
@@ -697,7 +699,7 @@ public class Main extends javafe.SrcTool
             /*
              * From experiements from POPL01 (Cormac)
              gc = passify ? Passify.compute(gc) : DSA.dsa(gc);
-             */
+	    */
             gc = DSA.dsa(gc);
             dsaTime = timeUsed(startTime);
             startTime = java.lang.System.currentTimeMillis();
@@ -720,20 +722,20 @@ public class Main extends javafe.SrcTool
          if(wpnxw != 0 ) {
          vcBody = WpName.compute( gc, wpnxw );
          } else 
-         */
+	*/
         if (options().spvc) {
             /*  
              * From experiements from POPL01 (Cormac)
-                 vcBody = wpp ? Wpp.compute(gc, GC.truelit, GC.truelit) : 
-                 SPVC.compute(gc);
-             */ 
+	     vcBody = wpp ? Wpp.compute(gc, GC.truelit, GC.truelit) : 
+	     SPVC.compute(gc);
+	    */ 
             vcBody = SPVC.compute(gc);
         } else {
             vcBody = Ejp.compute(gc, GC.truelit, GC.truelit);
         }
 
         Expr vc = GC.implies(initState.getInitialState(), vcBody);
-            // Attach a label for use in the logfile generated (if any):
+	// Attach a label for use in the logfile generated (if any):
         String label = "vc." + sig.toString() + ".";
         if (r instanceof MethodDecl)
             label += ((MethodDecl)r).id;
@@ -741,7 +743,7 @@ public class Main extends javafe.SrcTool
             label += "<constructor>";
         label += "." + UniqName.locToSuffix(r.getStartLoc());
         vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(),
-                false, Identifier.intern(label), vc);
+			    false, Identifier.intern(label), vc);
 
         // Check for VC too big:
         int usize = Util.size(vc, options().vclimit);
@@ -767,6 +769,102 @@ public class Main extends javafe.SrcTool
         Info.out("[converting VC to a string]");
 
 	//$$
+	/* Use the new vc generator (= nvcg)
+	 * ifpvc stands for 'independant from prover'
+	 */
+	if(options().nvcg){
+
+	    StringBuffer sb = new StringBuffer();
+	    StringBuffer dot = null;
+
+	    VcGenerator vcg = new VcGenerator((ASTNode)vc);
+
+	    if(options().nvcgpi) 
+		vcg.printInfo();
+
+	    // write the proof generated by the new vcg to a file
+	    if(options().pSimplify){
+		try {
+		    String fn = UniqName.locToSuffix(r.locId);
+		    fn = fn + ".pSimplify";
+
+		    FileWriter fw = new FileWriter(fn);
+
+		    fw.write(vcg.simplifyProof());
+		
+		    fw.close();
+
+		    System.out.println("simplify proof using the new vcg has bee written to "+fn);
+		}
+		catch (Exception e) { 
+		    System.out.println(e.getMessage()); 
+		}
+	    }
+
+	    // generate the dot file for the original vc tree
+	    if(options().vc2dot){
+		try {
+		    String fn = UniqName.locToSuffix(r.locId);
+		    fn = fn + ".vc.dot";
+
+		    FileWriter fw = new FileWriter(fn);
+
+		    /* initialization of dot format */
+		    fw.write("digraph G {\n");
+	    
+		    fw.write(vcg.old2Dot());   
+
+		    /* end of dot file */
+		    fw.write("\n}\n");
+		    fw.close();
+
+		    /* run the appropriate commad to generate the graph */
+		    Runtime run = Runtime.getRuntime();
+		
+		    run.exec("dot -Tps "+fn+" -o "+fn+".ps"); 
+
+		    System.out.println("graph of the original vc tree for method "+UniqName.locToSuffix(r.locId)+" have been written to "+fn+".ps");
+
+		}
+		catch (Exception e) { 
+		    System.out.println(e.getMessage()); 
+		}
+	    }
+
+	    /* generate the dot file for the translation of the tree.
+	     * ifpvc stands for independant from prover verification conditons
+	     */
+	    if(options().ifpvc2dot){
+		try {
+		    String fn = UniqName.locToSuffix(r.locId);
+		    fn = fn + ".ifpvc.dot";
+
+		    FileWriter fw = new FileWriter(fn);
+
+		    /* initialization of dot format */
+		    fw.write("digraph G {\n");
+	    
+		    /* generate the graph by visiting the tree */
+		    fw.write(vcg.new2Dot());   
+
+		    /* end of dot file */
+		    fw.write("\n}\n");
+		    fw.close();
+
+		    /* run the appropriate commad to generate the graph */
+		    Runtime run = Runtime.getRuntime();
+		
+		    run.exec("dot -Tps "+fn+" -o "+fn+".ps"); 
+
+		    System.out.println("graph of the independant from prover vc tree have been written to "+fn+".ps");
+
+		}
+		catch (Exception e) { 
+		    System.out.println(e.getMessage()); 
+		}
+	    }
+	}
+
 	if( options().pvsProof ) {
 
             String fn = UniqName.locToSuffix(r.locId)+".method."+"pvs";
@@ -817,10 +915,10 @@ public class Main extends javafe.SrcTool
 
 	    int stat = doProving(vc,r,directTargets,null);
 	    switch (stat) {
-		case Status.STATICCHECKED_OK: status = "passed"; break;
-		case Status.STATICCHECKED_ERROR: status = "failed"; break;
-		case Status.STATICCHECKED_TIMEOUT: status = "timed out"; break;
-		default: status = "unexpectedly missing Simplify output";
+	    case Status.STATICCHECKED_OK: status = "passed"; break;
+	    case Status.STATICCHECKED_ERROR: status = "failed"; break;
+	    case Status.STATICCHECKED_TIMEOUT: status = "timed out"; break;
+	    default: status = "unexpectedly missing Simplify output";
 	    }
 	
 	} catch (escjava.prover.SubProcess.Died e) {
@@ -854,14 +952,14 @@ public class Main extends javafe.SrcTool
     //@ requires vc != null;
     // scope can be null
     public int doProving(Expr vc, RoutineDecl r, Set directTargets,
-				FindContributors scope) {
+			 FindContributors scope) {
 	try {
 
 	    Enumeration results = ProverManager.prove(vc,scope);
 
 	    //$$
 	    if( ProverManager.useSimplify ) {
-	    //$$
+		//$$
 
 		// Process Simplify's output
 		String status = "unexpectedly missing Simplify output";
@@ -989,12 +1087,12 @@ public class Main extends javafe.SrcTool
 	    return 0;
 	    //		return stat;
 
-	    } catch (escjava.prover.SubProcess.Died e) {
-		//status = "died";
+	} catch (escjava.prover.SubProcess.Died e) {
+	    //status = "died";
 	    return Status.STATICCHECKED_ERROR;
-	    }
-	    
 	}
+	    
+    }
     
     /**
      * This method computes the guarded command (including assuming
@@ -1052,12 +1150,12 @@ public class Main extends javafe.SrcTool
         /*
          * Translate the body:
          */
-	    /* Note: initState.preMap is the same for all declarations.
-		    This may be overkill (FIXME).
-		    It might be better to use information from scope directly
-		    since it is generated from the routine decl.
-		    However, I don't know for sure what would go missing.  DRCok
-	    */
+	/* Note: initState.preMap is the same for all declarations.
+	   This may be overkill (FIXME).
+	   It might be better to use information from scope directly
+	   since it is generated from the routine decl.
+	   However, I don't know for sure what would go missing.  DRCok
+	*/
 
         GuardedCmd body = gctranslator.trBody(r, scope,
                                               initState.getPreMap(),
@@ -1096,7 +1194,7 @@ public class Main extends javafe.SrcTool
         // constructor-inlined methods, then zero out its postconditions
         if (r instanceof MethodDecl &&
             InlineConstructor.isConstructorInlinedMethod((MethodDecl) r))
-                spec.post = ConditionVec.make();
+	    spec.post = ConditionVec.make();
 
         GuardedCmd fullCmd = 
             GetSpec.surroundBodyBySpec(body, spec, scope, fullSynTargs,
