@@ -165,6 +165,7 @@ import javafe.util.ErrorSet;
  *       TypeObjectDesignator (Type type)
  *       SuperObjectDesignator ()
  *    Type ()
+ *       ErrorType() // was previously represented as a PrimitiveType
  *       PrimitiveType (int tag)
  *       TypeName (Name name)
  *       ArrayType (Type elemType)
@@ -1920,6 +1921,25 @@ public abstract class Type extends ASTNode
 
     //# TypeModifierPragma* tmodifiers NullOK
 
+}
+
+
+/** 
+ * Used to indicate the type of an illegal operation, so that error messages
+ * do not unnecessarily propagate; should only be used if the error has
+ * already been reported.
+ */
+public class ErrorType extends Type
+{
+  public int getStartLoc() { return Location.NULL; }
+
+  //@ ensures \result != null;
+  //@ ensures !\result.syntax;
+  public static ErrorType make() {
+      //@ set I_will_establish_invariants_afterwards = true;
+      //@ set result.syntax = false;
+      return new ErrorType();
+  }
 }
 
 /**
