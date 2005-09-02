@@ -165,6 +165,7 @@ export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
 export JAVAFE_SOURCE_DIR = ${JAVAFE_ROOT}/java
 export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
+export JAVAFE_CLASSFILES4RAC = ${JAVAFE_ROOT}/classfiles4rac
 
 # This is the path needed to run Javafe (only used for testing)
 export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
@@ -173,6 +174,7 @@ export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
 export ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
 export ESCJAVA_CLASSFILES = ${ESCJAVA_ROOT}/classfiles
+export ESCJAVA_CLASSFILES4RAC = ${ESCJAVA_ROOT}/classfiles4rac
 
 ## Paths to Mocha components
 export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
@@ -180,6 +182,7 @@ export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
 ## This is the path needed to *run* Escjava.
 export ESC_CLASSPATH = \
 	${JAVAFE_CLASSFILES}:${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}
+export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
 export ESCJ = ${ESCJAVA_ROOT}/escj -nowarn Modifies
@@ -270,7 +273,7 @@ export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}
 export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
 
 ## This is the path needed to build Escjava
-export ESCJAVA_BUILD_CLASSPATH = ${ESC_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
+export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
 
 ##########################################################################
 ##########################################################################
@@ -327,3 +330,30 @@ export SOURCEPATH = ${JAVAFE_SOURCE_DIR}:${ESCJAVA_SOURCE_DIR}:${MOCHA_SOURCE_DI
 # need the binaries because don't have source for sun.* classes...
 #
 export JDKSPEC = ${JDKSPEC_ROOT}
+
+################################################################################
+## Path adjustments necesssary when using RAC generated classes ...
+
+ifneq ($(USE_RAC),)
+  # Ensure that ${JML_RUNTIME_JAR} actually exists ..
+  ifeq ($(wildcard ${JML_RUNTIME_JAR}),)
+    ifneq ($(wildcard ${JAR_FILES}/jmlruntime.jar),)
+      export JML_RUNTIME_JAR = ${JAR_FILES}/jmlruntime.jar
+    endif
+    ifneq ($(wildcard ${JML_CLASSROOT}/bin/jmlruntime.jar),)
+      export JML_RUNTIME_JAR = ${JML_CLASSROOT}/bin/jmlruntime.jar
+    endif
+    ifeq ($(wildcard ${JML_RUNTIME_JAR}),)
+      $(error Cannot find jmlruntime.jar.  Check setting of JML_RUNTIME_JAR)
+    endif
+  endif
+USE_RACC:=
+RAC_CLASSES=$(JAVAFE_CLASSFILES4RAC):$(ESCJAVA_CLASSFILES4RAC):$(JML_RUNTIME_JAR)
+CLASSPATH:=${RAC_CLASSES}:${CLASSPATH}
+JAVAFE_CLASSPATH:=${RAC_CLASSES}:${JAVAFE_CLASSPATH}
+ESC_CLASSPATH:=${RAC_CLASSES}:${ESC_CLASSPATH}
+ESCJAVA_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_CLASSPATH}
+ESCJAVA_BUILD_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_BUILD_CLASSPATH}
+endif
+
+# End of file
