@@ -31,7 +31,7 @@ import escjava.tc.TypeCheck;
 
 import escjava.prover.*;
 
-import escjava.vcGeneration.VcGenerator;
+//import escjava.vcGeneration.VcGenerator;
 
 import javafe.util.*;
 
