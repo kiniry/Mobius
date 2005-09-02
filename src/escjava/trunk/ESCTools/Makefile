@@ -94,6 +94,18 @@ selftypecheck: build
 	$(MAKE) -C Escjava selftypecheck
 
 ################################################################################
+## Test using jmlc compiled sources:
+
+# Eventually use $(SUBDIRS).  For now only test Escjava
+jmlc_test:
+	$(MAKE) -C Utils build
+	@echo CLASSPATH=${CLASSPATH}
+	@echo
+	@for d in Escjava ; do \
+	    $(MAKE) -C $$d USE_RAC=1 test || exit 1; \
+	done
+
+################################################################################
 ## General rules to clean up build tree
 
 .PHONY: fix-perms
@@ -287,8 +299,12 @@ jmldoc:  build
 	  -A \
           $(PACKAGE_LIST)
 
+################################################################################
+## JML checker targets:
+
 jml: .jml
 
+# TODO: Add package decsrc
 .jml: build
 	$(JML) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
@@ -298,20 +314,57 @@ jml: .jml
 	  javafe escjava \
 	  && touch .jml
 
-# Add this package later (since escjava uses it)	  decsrc \
+#===============================================================================
+## JMLc targets:
 
-# Javafe: decsrc javafe jtools tohtml
-# Escjava: escjava escwizard houdini instrumenter tohtml
+# Run jmlc on each file one by one (which seems to give us the best results for now)
+jmlc1b1: build jmlc_javafe_1b1 jmlc_escjava_1b1
 
-jmlc: .jmlc_fe .jmlc_ej
+jmlc_javafe_1b1:
+	@echo "JAVAFE============================================================"
+	for f in `find Javafe/java -name *.java ! -name "*/jcheck/*`; do \
+		${MAKE} JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} FILE=$$f jmlc1; \
+	done;
+
+jmlc_escjava_1b1:
+	@echo "ESCJAVA============================================================"
+	for f in `find Escjava/java -name *.java`; do \
+		${MAKE} JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} FILE=$$f jmlc1; \
+	done
+
+${JAVAFE_CLASSFILES4RAC}:
+	mkdir ${JAVAFE_CLASSFILES4RAC}
+${ESCJAVA_CLASSFILES4RAC}:
+	mkdir ${ESCJAVA_CLASSFILES4RAC}
+
+# Apply jmlc to one file named by FILE (value to be supplied on the command line).
+jmlc1:
+	$(JMLC) \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
+	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	  -d $(JMLC_CLASSFILES_DIR) \
+	  -a -A --purity \
+	  --keepGoing --source 1.4 --Quiet --recursive \
+	  $(FILE) \
+	  && touch .jmlc
+
+# Note that the following rules put the class files under JMLC_CLASSFILES.
+
+JMLC_CLASSFILES=jmlc_classfiles
+
+${JMLC_CLASSFILES}:
+	mkdir ${JMLC_CLASSFILES}
+
+jmlc: .jmlc_fe .jmlc_ej .jmlc_utils
 
 .jmlc_fe: build
 	$(JMLC) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -d jmlc_classfiles \
+	  -d $(JMLC_CLASSFILES) \
 	  -a -A --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive \
+	  $(JMLC_FLAGS) \
 	  javafe \
 	  && touch .jmlc
 
@@ -322,18 +375,19 @@ jmlc: .jmlc_fe .jmlc_ej
 	  -d jmlc_classfiles \
 	  -a -A --purity \
 	  --keepGoing --source 1.4 --Quiet --recursive \
+	  $(JMLC_FLAGS) \
 	  escjava \
 	  && touch .jmlc
 
-# Apply jmlc to one file named by FILE (value to be supplied on the command line).
-jmlc1: build
+.jmlc_utils: build
 	$(JMLC) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -d jmlc_classfiles \
+	  -d $(JMLC_CLASSFILES) \
 	  -a -A --purity \
-	  --keepGoing --source 1.4 --Quiet --recursive -P \
-	  $(FILE) \
+	  --keepGoing --source 1.4 --Quiet --recursive \
+	  $(JMLC_FLAGS) \
+	  junitutils \
 	  && touch .jmlc
 
 ################################################################################
