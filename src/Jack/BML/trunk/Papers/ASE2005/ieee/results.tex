@@ -23,8 +23,8 @@ and bytecode level respectively concerning the postcondition correctness. The ve
  we saw that the compiler has to transform the source postcondition in an equivalent formula and we
  gave the compilation in Fig.\ref{postCompile}. 
 
-Despite those transformations, the source and bytecode goal respectively (which are actually the postcondition) on bytecode and source level are not only
-semantically equivalent but syntactically the same (except for the variable names ). Still, in the bytecode proof obligation we have one more hypothesis than on source level. The extra hypothesis in the bytecode proof obligation is related to the fact that the result type is boolean but the JVM encodes boolean expressions as integers (which is trivially true). This means that the proof obligations have also the same shape.
+Despite those transformations, the source and bytecode goal respectively are not only
+semantically equivalent but syntactically the same (except for the variable names). Still, in the bytecode proof obligation we have one more hypothesis than on source level. The extra hypothesis in the bytecode proof obligation is related to the fact that the result type is boolean but the JVM encodes boolean expressions as integers (which is trivially true). This means that the proof obligations have also the same shape.
 
  Another important issue is the impact of simple optimizations like dead code elimination on the relationship between source and bytecode proof obligations. 
 In this case, the compiler does not generate the dead code and the bytecode verification condition generator will neither ``see'' it. 

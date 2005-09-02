@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  2 SEP 2005 13:48
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  2 SEP 2005 15:07
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -94,18 +94,17 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
 LaTeX Font Info:    ... okay on input line 26.
-LaTeX Font Info:    Try loading font information for U+msa on input line 41.
+LaTeX Font Info:    Try loading font information for U+msa on input line 43.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 41.
+LaTeX Font Info:    Try loading font information for U+msb on input line 43.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 ) (./abstract.tex) (./intro.tex
 [1
-
 
 ]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 21.
@@ -144,7 +143,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--76
 
  []
 
-(./wpSingleInstr.tex [10]) (./ctrlFlowWp.tex [11] [12])) (./results.tex
+(./wpSingleInstr.tex [10]
+Underfull \hbox (badness 10000) in paragraph at lines 102--109
+
+ []
+
+) (./ctrlFlowWp.tex [11])) (./results.tex [12]
 Overfull \hbox (9.30751pt too wide) in paragraph at lines 174--226
  [] 
  []
@@ -153,10 +157,10 @@ Overfull \hbox (9.30751pt too wide) in paragraph at lines 174--226
 Here is how much of TeX's memory you used:
  1154 strings out of 95847
  12848 string characters out of 1195948
- 61567 words of memory out of 1000001
+ 60567 words of memory out of 1000001
  4058 multiletter control sequences out of 10000+50000
  14383 words of font info for 57 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
  32i,21n,24p,780b,466s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (16 pages, 58580 bytes).
+Output written on article.dvi (16 pages, 58248 bytes).

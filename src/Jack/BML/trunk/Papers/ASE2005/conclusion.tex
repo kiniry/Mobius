@@ -7,10 +7,10 @@ At this step, we have built a framework for Java program verification. This vali
  We envisage several directions for future work:
 \begin{itemize}
   \item perform case studies
-  \item build the missing part of the PCC architecture described in Section \ref{architecture} where the proofs are done interactively over the source code
-and then compiled down to bytecode. As we discussed in Section \ref{results} in the performed tests the 
+  \item build the missing part of the PCC architecture described in Section \ref{architecture} where the proofs are done interactively over the source code.
+ As we discussed in Section \ref{results} in the performed tests the 
 proof obligations generated over a source program and over its compilation with non optimizing compiler are
- syntactically the same modulo names and types. We aim to establish formally this property.  
+ syntactically the same modulo names and basic types. We aim to establish formally this property.  
   \item an extension of the framework applying previous research results in automated annotation generation for
  Java bytecode (see~\cite{PBBHL}). The client thus will have the possibility to verify a security policy by
  propagating properties in the loaded code and then by verifying that the code verify the propagated properties.
