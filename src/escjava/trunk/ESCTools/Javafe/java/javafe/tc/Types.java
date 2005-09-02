@@ -83,6 +83,13 @@ public class Types
 
     public Types() {}
 
+    /** Used to indicate the type of an illegal operation, so that error messages do
+     * not unnecessarily propagate; should only be used if the error has already been
+     * reported.
+     */
+    //@ invariant errorType != null;
+    public static Type errorType = ErrorType.make();
+
     // ----------------------------------------------------------------------
     // Fields for primitive types
 
@@ -95,14 +102,6 @@ public class Types
     private static final PrimitiveType makePrimitiveType(int tag) {
         return PrimitiveType.makeNonSyntax(tag);
     }
-
-	/** Used to indicate the type of an illegal operation, so that
-		error messages do not unnecessarily propagate;
-		should only be used if the error has already been reported.
-	*/
-    //@ invariant errorType != null;
-    public static PrimitiveType 
-            errorType = makePrimitiveType( TagConstants.ERRORTYPE );
 
     //@ invariant voidType != null;
     public static PrimitiveType 
@@ -145,6 +144,7 @@ public class Types
             shortType = makePrimitiveType( TagConstants.SHORTTYPE );
 
     public static void remakeTypes() {
+            errorType = ErrorType.make();
             voidType = makePrimitiveType( TagConstants.VOIDTYPE );
             booleanType = makePrimitiveType( TagConstants.BOOLEANTYPE );
             intType = makePrimitiveType( TagConstants.INTTYPE );
@@ -304,12 +304,17 @@ public class Types
      *                                                 *
      **************************************************/
 
+    public static boolean isErrorType(Type t) {
+        return t instanceof ErrorType;
+    }
+
     public static boolean isReferenceType(Type t) {
-        return !(t instanceof PrimitiveType);
+        return !(t instanceof PrimitiveType)
+	    && !isErrorType(t);
     }
 
     public static boolean isReferenceOrNullType(Type t) {
-        return !(t instanceof PrimitiveType)
+        return isReferenceType(t)
             || t.getTag() == TagConstants.NULLTYPE;
     }
 
@@ -323,10 +328,6 @@ public class Types
 
     public static boolean isBooleanType(Type t) {
         return isPrimitiveType( t, TagConstants.BOOLEANTYPE );
-    }
-
-    public static boolean isErrorType(Type t) {
-        return isPrimitiveType( t, TagConstants.ERRORTYPE );
     }
 
     public static boolean isShortType(Type t){
@@ -1042,10 +1043,10 @@ public class Types
             else
                 // Arrays inherit all fields from java.lang.Object:
                 return javaLangObject().lookupField(id, caller);
-	} else if( t instanceof PrimitiveType ) {
+	} else if( t instanceof PrimitiveType || isErrorType(t) ) {
             throw new LookupException( LookupException.NOTFOUND );
 	} else {
-            Assert.fail("Unexpected type "+t.getTag());
+            Assert.fail("Unexpected type "+ t + "(" + t.getTag() + "), " + TagConstants.toString(t.getTag()));
             return null;
 	}
     }
@@ -1079,7 +1080,8 @@ public class Types
 	// Remaining cases: TypeSig, PrimitiveType, <unknown>
 	if (t instanceof TypeSig)
             return ((TypeSig)t).lookupMethod(id, args, caller );
-	if (! (t instanceof PrimitiveType))
+
+	if (!(t instanceof PrimitiveType) && !isErrorType(t))
 	    Assert.fail("Unexpected type: "+t);
 
 	throw new LookupException( LookupException.NOTFOUND );
