@@ -57,6 +57,7 @@ public class LineIterator implements Iterator {
 	//System.out.println("READ " + nextLine);
     }
 
+    //@ represents moreElements <- nextLine != null;
 
     /** Per a standard iterator, returns true if there is another value waiting. */
     public boolean hasNext() throws RuntimeException {
