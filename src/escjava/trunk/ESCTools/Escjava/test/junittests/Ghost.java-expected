@@ -8,9 +8,6 @@ Ghost.java:48: Error: Expected a declaration within the annotation following the
     [TIME]
 
 Ghost ...
-Ghost.java:68: Error: May not specify both static and instance on a declaration
-        //@ static ghost instance int superiii; // ERROR
-                         ^
 Ghost.java:79: Error: May not specify both static and instance on a declaration
         //@ ghost instance static int interkinst2; // ERROR
                   ^
@@ -39,7 +36,10 @@ Caution: Turning off extended static checking due to type error(s)
   [TIME total] (aborted)
 
 GhostA ...
-  [TIME total]
+Ghost.java:68: Error: May not specify both static and instance on a declaration
+        //@ static ghost instance int superiii; // ERROR
+                         ^
+  [TIME total] (aborted)
 
 GhostI ...
   [TIME total]
