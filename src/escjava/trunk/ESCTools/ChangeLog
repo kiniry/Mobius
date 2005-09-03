@@ -1,4 +1,1436 @@
+2005-09-03  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Utils/junitutils/LineIterator.java:
+	Added represents clause for model variable moreElements.
+
+	* Javafe/test/javafe/test/fe/test2000/ans:
+	Expected output from test2000.
+
+	* Javafe/test/javafe/test/fe/skip:
+	Currently skipping new test2000 until we have written expected output.
+
+	* Escjava/Makefile:
+	* Escjava/test/escjava/test/Makefile:
+	* Javafe/Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	Moved DEBUGGER_FLAGS and JAVA_REMOTE_DEBUG into Makefile.defs.
+
+	Removed typecheckEscjava rule since it was complex, fragile, and
+	now redundant given the availability of the selftypecheck rule.
+
+	Added a selftypecheck rule for Javafe to mirror that of Escjava.
+	Split typecheck testing into selftypecheck and typecheckJDK,
+	the latter of which is in the "alltests" rule, the former in
+	the "test" rule.
+
+	Made the typecheckJDK commands look for the appropriate jar files
+	in a directory "jars" under each source directory.  This is documented
+	in Makefile.local.sample as well as under the (now closed) bug
+	report.  (Closes bug#142)
+
+	Removed the use of the -source 1.4 switch from the JDK <1.4
+	typechecking tests.  (Closes bug#134)
+
+	* prj.el:
+	Wrote JDEE project definition.  This should be relatively platform and
+	location-neutral, but I have not yet extensively tested it beyond my
+	three Macs and one Linux box.
+
+	* Makefile.defs, Makefile.local.sample:
+	Moved DEBUGGER_FLAGS and JAVA_REMOTE_DEBUG into Makefile.defs.
+
+	Added Emacs mode hint to the top of both files.
+
+	* Javafe/java/javafe/tc/TypeSig.java:
+	Fix for bug#139, bug#136, bug#135, bug#133, and bug #130.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=139&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=136&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=135&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=133&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=130&group_id=97&atid=441
+
+	* Escjava/test/junittests/Ghost.java-expected:
+	Updated expected output for slightly new behavior of typecheck with fix for bug#139.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=139&group_id=97&atid=441
+
+	* Escjava/test/junittests/ExceptionChild.java:
+	* Escjava/test/junittests/ExceptionChild.java-expected:
+	* Escjava/test/junittests/ExceptionChild2.java:
+	* Escjava/test/junittests/ExceptionChild2.java-expected:
+	News tests for bug#154 and bug#156.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=154&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=156&group_id=97&atid=441
+
+2005-09-02  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Makefile:
+	New (and updated) rules to support checking with the JML checker
+	and JMLc.  The best targets to use right now is jmlc1b1.
+
+	* Makefile.defs:
+	Additions to support compiling with JML checker and JMLc.
+
+	* Javafe/java/javafe/tc/Types.java:
+	The public static field errorType is now initialized with an
+	instance of ErrorType rather than PrimitiveType.
+
+	Created isErrorType(Type t).
+
+	Changed isReference*Type() to excluded ErrorType's.  Also adjusted
+	lookupFieldInstance() and lookupMethodInstance().
+
+	Added code to do the reinitialization of errorType in
+	remakeTypes() -- I'm not sure if it is actually needed, but it
+	matched the pattern of the way things are done and seemed safer
+	that way.
+
+	* Escjava/test/escjava/test/test50/ans:
+	Changed the tag id output for the unexpected pragma from 168 to
+	169.  A bug report has been opened on this, see #146.
+
+	* Javafe/java/javafe/ast/.cvsignore: Added ErrorType.java
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Created a new subclass of "Type" named "ErrorType" (effectively
+	factoring it out of PrimitiveType). [Fix to GForge bug 143]
+
+	* .cvsignore, Escjava/.cvsignore, Javafe/.cvsignore:
+	Changed classfiles to classfiles* so that it would pickup
+	classfiles4rac.
+
+2005-09-02  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/Main.java: little fix
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/prover/Harvey.java:
+	* Escjava/java/escjava/prover/Simplify.java:
+	Cleaning some bullshit I added sometimes: no feature of
+	modifications done in this commit.
+
+2005-09-02  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Fix to GForge bug #144.
+
+2005-09-01  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Utils/junitutils/Makefile: test target now depends on build
+
+	* Escjava/escj:
+	Setting of ESC_CLASSPATH no longer makes use of
+	ESC_CLASSPATH_S (since the _S variable no longer exists).
+
+	Simplified script lines dealing with ESC_CLASSPATH; i.e. refactor
+	all conditionals related detecting cygwin and use of cygpath.
+
+2005-08-31  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/Makefile:
+	Reorganized targets and rules for compile and compileall (so that
+	the latter depends on the former and we don't need to
+	unnecessarily duplicate the rule commands).  These targets now
+	place the list of files to be compiled in the file named '.files'.
+
+	* Escjava/.cvsignore: Added .files*.
+
+	* Makefile.defs:
+	cygwin doesn't work when it is given too many arguments.  Hence, I
+	defined canonicalizeLots which will work for any number of
+	arguments.
+
+	Renamed ESC_CLASSPATH_S to ESC_CLASSPATH.  Hence ESC_CLASSPATH no
+	longer uses canonicalize.  This is the way it should be.
+	I.e. canonicalize should only be used at the point of use.
+	Otherwise when other variables are defined using ESC_CLASSPATH,
+	one gets nesting of canonicalize calls.
+
+	* Makefile: Minor change. Added target show-vars.
+
+2005-08-31  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/*.java:
+	These code compile with javac, yet surely not with jml but Patrice
+	wants it :0]
+
+2005-08-30  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Javafe/.cvsignore:
+	Added the Javafe/classpath that has been recently deleted from the
+	repository.
+
+2005-08-30  David Cok  <cok@frontiernet.net>
+
+	* Javafe/Makefile: Slight cleanup of clean target
+
+	* Javafe/test/javafe/test/fe/Makefile: Saving command for debugging
+
+2005-08-30  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* slides/ETAPSTutorial/1_intro_jml.tex:
+	fixed broken latex for signals(only), slide 10 of 1_intro_jml.tex
+
+2005-08-29  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/Documentation vc generator.pdf:
+	* Escjava/java/escjava/vcGeneration/Documentation vc generator.tex:
+	* Escjava/java/escjava/vcGeneration/TBoolOp.java:
+	* Escjava/java/escjava/vcGeneration/TBoolRes.java:
+	* Escjava/java/escjava/vcGeneration/TFloatFun.java:
+	* Escjava/java/escjava/vcGeneration/TFloatOp.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/TIntFun.java:
+	* Escjava/java/escjava/vcGeneration/TIntOp.java:
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	* Escjava/java/escjava/vcGeneration/TLiteral.java:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TRefOp.java:
+	* Escjava/java/escjava/vcGeneration/TRoot.java:
+	* Escjava/java/escjava/vcGeneration/TTypeOp.java:
+	* Escjava/java/escjava/vcGeneration/TVariable.java:
+	* Escjava/java/escjava/vcGeneration/TypeInfo.java:
+	* Escjava/java/escjava/vcGeneration/VariableInfo.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/clean.sh:
+	* Escjava/java/escjava/vcGeneration/division-j-file.pl:
+	Classes for the new vc generator. It's not finished so the
+	makefile hasn't been modified. Don't try to compile or use at the
+	moment, it's just a save to avoid having it only on one
+	machine. It can be harmful, isn't it Joe?
+
+2005-08-29  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Changing the initial letter of a method to lower case
+
+2005-08-28  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* specs/java/util/GregorianCalendar.refines-spec:
+	Reverting BC and AD to public fields (they were declared as
+	model fields by mistake).
+
+	* Makefile:
+	Splitting jmlc target so that it builds the Javafe and Escjava
+	separately.
+
+	* specs/java/io/InputStream.refines-java: More tweaks to the specs.
+
+2005-08-27  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/test/jdktests/LocalTestCase.java:
+	* Escjava/test/jdktests/TestAbstractList.java:
+	* Escjava/test/jdktests/TestMap.java:
+	* Escjava/test/jdktests/TestSystem3.java:
+	Fixed specs after having run the JML checker.  (Of course I did
+	not fix the errors that were purposefully there in the test case
+	file.)
+
+	* specs/java/io/InputStream.refines-java:
+	Moved wasClosed represents clause before invariants that use
+	it (so that ESC/Java can use the representation of wasClosed in
+	its proofs.
+
+	* specs/java/util/GregorianCalendar.refines-spec:
+	Found a way to encode as public model/ghost fields what had
+	incorrectly specified as private non-spec fields.
+
+	* Makefile: * Added escjava to jml and jmlc targets.
+
+	* specs/java/io/InputStream.refines-java:
+	Changed isOpen from model to ghost field.
+	Defined wasClosed in terms of isOpen.
+	Declared initialInputStream() as pure (and fixed spec).
+
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/java/escwizard/Instr.java:
+	* Escjava/java/escwizard/PragmaInstr.java:
+	* Escjava/java/houdini/AnnLinks.java:
+	* Escjava/java/houdini/AnnotationGuesser.java:
+	* Escjava/java/houdini/AnnotationVisitor.java:
+	* Escjava/java/houdini/CopyLoaded.java:
+	* Escjava/java/houdini/InferThrows.java:
+	* Escjava/java/houdini/specs/java/util/Collection.spec:
+	* Escjava/java/houdini/specs/java/util/Enumeration.spec:
+	* Escjava/java/houdini/specs/java/util/Hashtable.spec:
+	* Escjava/java/houdini/specs/java/util/Vector.spec:
+	* Escjava/java/instrumenter/Instrument.java:
+	* Javafe/java/decsrc/io/UnlockedBufInputStream.java:
+	* Javafe/java/tohtml/Java2Html.java:
+	Fixed problems in specs as reported by the JML checker.
+
+	* Makefile:
+	Reintroduced -a -A options for jml and jmlc in the targets for jml
+	and jmlc.
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Javafe/java/decsrc/container/BitVec.java:
+	* Javafe/java/decsrc/container/CharVec.java:
+	* Javafe/java/decsrc/container/IntVec.java:
+	* Javafe/java/decsrc/io/UnlockedBufInputStream.java:
+	* Javafe/java/javafe/ast/Identifier.java:
+	* Javafe/java/javafe/filespace/EmptyEnum.java:
+	* Javafe/java/javafe/filespace/FilterEnum.java:
+	* Javafe/java/javafe/filespace/LookAheadEnum.java:
+	* Javafe/java/javafe/filespace/TreeWalker.java:
+	* Javafe/java/javafe/parser/Lex.java:
+	* Javafe/java/javafe/parser/TokenQueue.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	* Javafe/java/javafe/util/StackVector.java:
+	* Utils/junitutils/LineIterator.java:
+	Fixed problems in specs as reported by the JML checker (run with
+	-a -A).
+
+	* .cvsignore: * Added .jml and .jmlc.
+
+2005-08-27  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/Makefile, Makefile, Makefile.defs:
+	Documented different choices for SPECS variable.  Made sure default
+	was the ESC specs.
+
+	Removed jUnit sources from sourcepaths.
+
+	Updated copyright notice for new university name (UCD Dublin).
+
+	Corrected typo in ESCJAVA_BUILD_CLASSPATH definition in Makefile.defs
+	and removed redundant definition from Escjava/Makefile.
+
+	Updated several test rules in Escjava/Makefile to use new
+	ESCJAVA_BUILD_CLASSPATH and SOURCEPATH.
+
+	* Makefile, Makefile.defs:
+	Removed JAVADOC_SOURCEPATH and just used SOURCEPATH.
+
+	Reconfigured use of -classpath and -sourcepath for JML commands to
+	match their actual semantics.  (Thanks to Patrice for helping out
+	and debugging with me.)
+
+	Added build env var ESCJAVA_BUILD_CLASSPATH to mirror that of
+	JAVAFE_BUILD_CLASSPATH.
+
+2005-08-26  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/parser/EscPragmaLex.java:
+	* Escjava/java/escjava/prover/Sammy.java:
+	* Escjava/java/escjava/prover/SimplifyOutputSentinel.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/java/escjava/prover/TriggerlessQuantWarning.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* specs/java/lang/Package.jml:
+	* specs/java/util/Calendar.refines-spec:
+	* specs/java/util/Date.refines-spec:
+	* specs/java/util/GregorianCalendar.refines-spec:
+	Fixes to problems in specs reported by the JML checker.
+
+	* papers/Makefile:
+	Simple fix to the "clean*" targets so that they stops removing
+	the DIAGRAMS (because they are part of the repository).
+
+	* Javafe/Makefile:
+	Simple fix to the "clean*" targets so that they stops rm -rf'ing
+	Javafe/classfiles. This is a bad idea because the classfiles
+	directory is in the repository.
+
+	* specs/java/util/ResourceBundle.jml: *** empty log message ***
+
+	* Javafe/.cvsignore:
+	Remove classfiles from .cvsignore because you can't ignore it if
+	it is in CVS.  Added ingore directives for subdirectories of
+	classfiles.
+
+	* Escjava/test/jdktests/skip:
+	Added TestSet.java, TestSet2.java, and TestCollection.java to
+	skip list ... awaiting news from David w.r.t. his recommendation
+	on what to do.
+
+	* Escjava/test/junittests/skip:
+	Put Helper3.java into 'A bug' category (and removed 'f' in first
+	line -- it had been introduced by mistake).
+
+	* Escjava/test/junittests/skip: Added Helper3.java to fix list.
+
+	* Escjava/test/escjava/test/test54/ans:
+	Minor update to error message text (to match corresponding
+	update that was applied to the code).
+
+	* specs/java/util/Dictionary.refines-spec:
+	Reintroduced ghost fields: elementType and keyType so that I can
+	get the JML checker to run on ESC/Java2 source.
+
+	* specs/java/lang/reflect/Constructor.jml:
+	Added non_null annotation to newInstance().
+
+	* specs/java/lang/Class.jml:
+	Added non_null annotation to newInstance(), getConstructors(),
+	and getConstructors().
+
+2005-08-23  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/java/escjava/backpred/BackPred.java:
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	* Javafe/java/javafe/tc/TypeCheck.java:
+	* Escjava/java/escjava/pa/generic/EnumNFindK.java:
+	* Escjava/java/escjava/translate/GCSanity.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/InitialState.java:
+	* Escjava/java/escjava/translate/LabelInfoToString.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/Targets.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Rename all identifiers "enum" appropriate for context.
+
+	* Javafe/java/javafe/filespace/Resolve_AmbiguousName.java:
+	Added serialVersionIds to all serializable exceptions.
+
+	* Javafe/java/javafe/genericfile/NormalGenericFile.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Corrected indentation and code formatting.
+
+	* Escjava/test/junittests/Helper3.java:
+	* Escjava/test/junittests/Helper3.java-expected:
+	Test for helper bug #138:
+	http://sort.ucd.ie/tracker/?group_id=97&atid=441&func=detail&aid=138
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	Clarified warning message.
+
+	* Escjava/java/escjava/prover/SubProcess.java:
+	Added serialVersionIds to all serializable exceptions.
+
+	* docs/Escjava2-Provers/Makefile:
+	Removed bogus *.texinfo from clean's rm command.
+
+	* Javafe/java/decsrc/util/NotImplementedException.java:
+	* Javafe/java/javafe/parser/FileFormatException.java:
+	* Escjava/java/escjava/prover/SExpTypeError.java:
+	* Javafe/java/javafe/tc/LookupException.java:
+	* Javafe/java/javafe/util/AssertionFailureException.java:
+	* Javafe/java/javafe/util/FatalError.java:
+	* Javafe/java/javafe/util/NotImplementedException.java:
+	* Javafe/java/javafe/util/UsageError.java:
+	Added serialVersionIds to all serializable exceptions.
+
+	* Makefile: Turned off purity checking jml and jmlc rules.
+
+	* .externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.JmldocBuilder.launch:
+	* .externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.RACBuilder.launch:
+	* .externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.autoCheckJMLBuilder.launch:
+	Removed JML builders from default project config.
+
+2005-08-22  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/escj:
+	Changed case statement target pattern from "linux" to "linux*" so
+	that it will match with "linux-gnu" for example.
+
+2005-08-22  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Makefile.defs: Added JMLC env var.
+
+	* Javafe/java/javafe/filespace/EmptyEnum.java:
+	Added missing parentheses to signals clause.
+
+	* Makefile:
+	Decomposed PACKAGE_LIST into Javafe and Escjava pieces.
+	Removed comment from javadoc rule as it is no longer true.
+	Added jmlc target.
+
+2005-08-21  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/test/escjava/test/test50/Nested.java:
+	* Escjava/test/escjava/test/test56/FormalModifiers.java:
+	* Escjava/test/escjava/test/test49/Ghost.java:
+	* Escjava/test/escjava/test/test49/ans:
+	Backing out change of non_null annotations syntax change to avoid
+	breaking test answers.
+
+	* Escjava/test/escjava/test/test49/ans:
+	Changed syntax of non_null annotations back to avoid breaking test
+	answers.
+
+	* Escjava/java/escjava/prover/Simplify.java:
+	Added represents clause for closed model field.
+
+	* Escjava/java/escjava/prover/NewProver.java:
+	* Escjava/java/escjava/prover/SimplifyComment.java:
+	* Escjava/java/escjava/prover/SimplifyResult.java:
+	Removed unnecessary behavior and scope keywords.
+
+	* Escjava/java/escjava/tc/GhostEnv.java:
+	Removed unnecessary behavior keyword and scope.
+
+	* Utils/junitutils/Diff.java:
+	Corrected typo on spec identifier, removed normal part of 
+	behavior spec as it had a scoping problem.
+
+	* Makefile.defs: Added XMLRPC_LIB variable.
+
+	* Escjava/java/escjava/gui/EscFrame.java: Missing requires keyword.
+
+	* .externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.JmldocBuilder.launch:
+	* .externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.RACBuilder.launch:
+	* .externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.autoCheckJMLBuilder.launch:
+	* .externalToolBuilders/make clean.launch:
+	Removed the use of JMLEclipse plugin from automatic build.
+	Tweak some of the build settings.  All this is for Eclipse 3.0 only.
+
+	* .cvsignore: Ignoring fix-perms timestamp.
+
+	* .classpath:
+	* .externalToolBuilders/make source.launch, .project:
+	Removed the use of JMLEclipse plugin from automatic build.
+	Tweak some of the build settings.  All this is for Eclipse 3.0 only.
+
+	* Javafe/test/javafe/test/fe/skip:
+	* Javafe/test/javafe/test/fe/test2000/InnerClassTest.java:
+	* Javafe/test/javafe/test/fe/test2000/run:
+	New test for typechecking nested classes.  It is currently skipped.
+
+	* Javafe/java/javafe/PackageInputEntry.java:
+	Moved static nested classes inheriting from InputEntry out into
+	their own files to avoid typechecking bug in ESC/Java2.  Renamed
+	the subclasses as FooInputEntry to avoid some classname collisions
+	and for clarity.
+
+	* Javafe/java/javafe/CopyLoaded.java:
+	Converted many /*- to /*+ as our specs for Map, Hashtable, and
+	related are in an intermediate state, thus these specs only
+	pass the JML tools currently, not CVS HEAD of ESC/Java2.
+
+	* Javafe/java/javafe/PrintSpec.java:
+	Removed (now unnecessary) package prefix on declaration.
+
+	* Javafe/java/javafe/ClassInputEntry.java:
+	* Javafe/java/javafe/DirInputEntry.java:
+	* Javafe/java/javafe/FileInputEntry.java:
+	* Javafe/java/javafe/InputEntry.java:
+	* Javafe/java/javafe/ListInputEntry.java:
+	* Javafe/java/javafe/Options.java:
+	* Javafe/java/javafe/SrcTool.java:
+	* Javafe/java/javafe/UnknownInputEntry.java:
+	* Escjava/java/escjava/gui/GUI.java:
+	Moved static nested classes inheriting from InputEntry out into
+	their own files to avoid typechecking bug in ESC/Java2.  Renamed
+	the subclasses as FooInputEntry to avoid some classname collisions
+	and for clarity.
+
+	* Escjava/java/escjava/gui/EscFrame.java:
+	* Escjava/java/escjava/gui/EscOptions.java:
+	Converted some non_nulls into != nulls as suggested by
+	ESC/Java2.
+
+	* Escjava/java/escjava/ProverManager.java:
+	Added prover model field as a refinement for new sammy field.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Added some @bug, @design, @review tags for followup.
+
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	Code formatting cleanup.
+
+	* Javafe/java/javafe/util/Set.java:
+	Converted many /*- to /*+ as our specs for Map, Hashtable, and
+	related are in an intermediate state, thus these specs only
+	pass the JML tools currently, not CVS HEAD of ESC/Java2.
+
+	* Javafe/test/javafe/parser/test/TestLex.java:
+	* Javafe/test/javafe/test/Print.java:
+	Added some missing semi-colons.  Some whitespace changes
+	due to code format corrections (replacing tabs with spaces).
+
+	* Escjava/Makefile, Makefile, Makefile.defs:
+	Added rule selftypecheck to top-level and Escjava Makefiles.
+	This rule causes a typecheck of the full javafe and escjava
+	packages.
+	Added an export to PACKAGE_LIST for the above.
+	Made setting JDK_14_SOURCES a conditional assignment.
+
+	* Escjava/java/escjava/pa/PredicateAbstraction.java:
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	* Javafe/java/javafe/filespace/EmptyEnum.java:
+	* Javafe/java/javafe/filespace/HashTree.java:
+	* Javafe/java/javafe/tc/CheckCompilationUnit.java:
+	* Escjava/java/escjava/prover/Atom.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/java/escjava/translate/UniqName.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbddManager.java
+	* Javafe/java/javafe/reader/StandardTypeReader.java:
+	* Javafe/java/javafe/reader/TypeReader.java:
+	Standardised syntax of /*@ non_null @*/ annotation.
+	Converted many /*- to /*+ as our specs for Map, Hashtable, and
+	related are in an intermediate state, thus these specs only
+	pass the JML tools currently, not CVS HEAD of ESC/Java2.
+
+	* Javafe/java/javafe/ast/DelegatingPrettyPrint.java:
+	* Javafe/test/javafe/parser/test/TestParse.java:
+	* Escjava/java/escjava/ant/ESCJavaTask.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/pa/Traverse.java:
+	* Javafe/test/javafe/test/CountFilesLoaded.java:
+	* Javafe/test/javafe/test/LocTool.java:
+	* Javafe/test/javafe/test/SuperlinksTest.java:
+	* Javafe/test/javafe/test/SupertypeTest.java:
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	* Escjava/java/escjava/pa/generic/Abstractor.java:
+	* Escjava/java/escjava/pa/generic/BinaryDecisionTreeAbstractor.java:
+	* Escjava/java/escjava/pa/generic/Disjunction.java:
+	* Escjava/java/escjava/pa/generic/EnumClausesAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumMaxClausesFindMinAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumNFindK.java:
+	* Escjava/java/escjava/tc/EnvForGhostLocals.java:
+	* Escjava/java/escjava/tc/PrepTypeDeclaration.java:
+	* Escjava/java/escjava/tc/TypeSig.java:
+	* Escjava/java/escjava/translate/InitialState.java:
+	* Javafe/java/javafe/filespace/EmptyEnum.java:
+	* Javafe/java/javafe/filespace/LookAheadEnum.java:
+	* Javafe/java/javafe/filespace/SlowQuery.java:
+	* Javafe/java/javafe/filespace/ZipTree.java:
+	* Escjava/java/escjava/ColorOptions.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Status.java:
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/prover/SExp.java:
+	* Escjava/java/escjava/prover/SList.java:
+	* Escjava/java/escjava/prover/SNil.java:
+	* Escjava/java/escjava/prover/SPair.java:
+	* Escjava/java/escjava/prover/SubProcess.java:
+	* Escjava/java/escjava/prover/TeeOutputStream.java:
+	* Escjava/java/escjava/translate/AssocDeclClipPolicy.java:
+	* Escjava/java/escjava/translate/NoWarn.java:
+	* Escjava/java/escjava/translate/RepHelper.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Standardised syntax of /*@ non_null @*/ annotation.
+
+	Converted many /*- to /*+ as our specs for Map, Hashtable, and
+	related are in an intermediate state, thus these specs only
+	pass the JML tools currently, not CVS HEAD of ESC/Java2.
+
+	Corrected several specs by: adding missing 'also's, adding missing
+	semicolons, converted some non_nulls to "!= null" to avoid cautions,
+	converted a few signals to signals_only clauses, and removed bogus
+	storeref from assignable clause.
+
+	Added some @bug, @design, @review tags for followup.
+
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/java/escjava/prover/SimplifyComment.java:
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Javafe/java/javafe/reader/CachedReader.java:
+	* Escjava/java/escjava/sp/DSA.java:
+	* Escjava/java/escjava/sp/VarMap.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Escjava/java/escjava/translate/VcToStringPvs.java:
+	Standardised syntax of /*@ non_null @*/ annotation.
+
+	Converted many /*- to /*+ as our specs for Map, Hashtable, and
+	related are in an intermediate state, thus these specs only
+	pass the JML tools currently, not CVS HEAD of ESC/Java2.
+
+	* Escjava/.cvsignore: Ignoring unpacked xml-rpc packages.
+
+	* specs-chalin-kiniry/old_src/CPair.java:
+	* specs-chalin-kiniry/old_src/FinalPair.java:
+	* Escjava/test/escjava/test/test11/State.java:
+	* Escjava/test/escjava/test/test40/Basic.java:
+	* Escjava/test/escjava/test/test40/Inherit.java:
+	* Escjava/test/escjava/test/test40/Local.java:
+	* Escjava/test/escjava/test/test40/Param.java:
+	* Escjava/test/escjava/test/test40/Static.java:
+	* Escjava/test/escjava/test/test40/TypeChecking.java:
+	* Escjava/test/escjava/test/test46/Post.java:
+	* Escjava/test/escjava/test/test46/Pre.java:
+	* Escjava/test/escjava/test/test50/Nested.java:
+	* Escjava/test/escjava/test/test56/FormalModifiers.java:
+	* Escjava/test/escjava/test/test49/Ghost.java:
+	* Calvin/java/escjava/test/test56/FormalModifiers.java:
+	* Rcc/java/rcc/ast/ArrayGuardModifierPragma.java:
+	* Rcc/java/rcc/ast/GenericArgumentPragma.java:
+	* Rcc/java/rcc/ast/GenericParameterPragma.java:
+	* Rcc/java/rcc/ast/GhostDeclPragma.java:
+	* Rcc/java/rcc/ast/GuardedByModifierPragma.java:
+	* Rcc/java/rcc/ast/HoldsStmtPragma.java:
+	* Rcc/java/rcc/ast/NowarnPragma.java:
+	* Rcc/java/rcc/ast/RequiresModifierPragma.java:
+	* Calvin/java/escjava/test/test49/Ghost.java:
+	* Calvin/java/escjava/test/test50/Nested.java:
+	* Calvin/java/escjava/parser/EscPragmaParser.java:
+	* Calvin/java/escjava/tc/GhostEnv.java:
+	* Calvin/java/escjava/test/test40/Basic.java:
+	* Calvin/java/escjava/test/test40/Inherit.java:
+	* Calvin/java/escjava/test/test40/Local.java:
+	* Calvin/java/escjava/test/test40/Param.java:
+	* Calvin/java/escjava/test/test40/Static.java:
+	* Calvin/java/escjava/test/test40/TypeChecking.java:
+	* Calvin/java/escjava/test/test46/Post.java:
+	* Calvin/java/escjava/test/test46/Pre.java:
+	* Calvin/java/escjava/ast/ActionModifierPragmaVec.java:
+	* Calvin/java/escjava/prover/CECEnum.java:
+	* Calvin/java/escjava/prover/Simplify.java:
+	* Calvin/java/escjava/prover/SubProcess.java:
+	* Calvin/java/escjava/translate/GetSpec.java:
+	* Calvin/java/escjava/translate/HavocAssumeVec.java:
+	* Calvin/java/escjava/translate/Inner.java:
+	* Rcc/java/rcc/tc/EnvForInstantiation.java:
+	* Rcc/java/rcc/tc/GhostEnv.java:
+	* Rcc/java/rcc/tc/PrepTypeDeclaration.java:
+	* Rcc/java/rcc/tc/TypeCheck.java:
+	* Rcc/java/rcc/tc/TypeSig.java:
+	* Rcc/java/rcc/tc/Types.java:
+	Standardised syntax of /*@ non_null @*/ annotation.
+
+	* Javafe/test/javafe/test/fe/skip:
+	Skipping test1104 as it is redundant and does not work.
+
+2005-08-21  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Simplify/libs/m3-ui/ui/src/trestle/ShTrestle.i3:
+	Unterminated comment fixed.
+
+2005-08-20  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Makefile:
+	Extended the capability of fix-perms rule to make more files 
+	executable.  Also introduced a hidden timestamp file for that
+	rule so that it is guaranteed to run at least once after a clean
+	checkout.  Fixed the formatting on the command for consistency
+	and documented the new behavior.
+
+	* Javafe/test/javafe/test/fe/Makefile:
+	Removed use of debug switches from TOOL var and introduced
+	complementary TOOL_DEBUG.  Removed echo of TOOL and 
+	CLASSPATH from tests; my apologies for leaving that in there
+	previously.
+
+	* Escjava/escj:
+	Corrected formatting of some docs and code.  Please use spaces, not tabs!
+
+	* Escjava/dl-xml-rpc-lib.sh:
+	Corrected "rm" command use in cleanup of unpack.
+
+2005-08-19  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* .cvsignore:
+	Ignoring 'classfiles', the location where I am putting .class files
+	when building in Eclipse.
+
+	* .classpath:
+	* .externalToolBuilders/make clean.launch:
+	* .externalToolBuilders/make source.launch, .project:
+	Eclipse 3.0 project definition and build specification.  I have tried
+	to make this as generic as possible so that it will be usable directly
+	by other developers.  Note that this is Eclipse *3.0*-specific.  It 
+	will not work with Eclipse 3.1.  I'm using 3.0 because all of the 
+	various JML plugins only currently run in 3.0 and we need to eat
+	our own dogfood.  We'll move to 3.1 when the plugins have been
+	upgraded.
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/pa/generic/EnumMaxClausesFindMinAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumNFindK.java:
+	* Javafe/java/decsrc/util/X.java:
+	Fixed several uses of static reference to make static-ness
+	obvious (Eclipse quickfix).
+
+	* Escjava/java/escjava/prover/Harvey.java:
+	* Escjava/java/escjava/prover/Sammy.java:
+	Changed use of .debug to static reference.  Reindented according
+	to the SRG standard.
+
+	* Makefile:
+	Added generate_files to source target's Escjava submake to make
+	sure all dependent source gets generated.
+
+	* Makefile:
+	Added version target at top-level.  It just calls the version target
+	in the Escjava makefile.  This is used by the Eclipse project builder
+	I am working on.
+
+	* Makefile:
+	Corrected fix-perms rule; added missing ';'s and parenthesis.
+	Also eliminated useless else block.  
+	I'm not sure that this rule ever worked right.
+
+	* Javafe/astgen/.cvsignore, papers/.cvsignore:
+	Added a few more binary files to various .cvsignores.
+
+	* docs/design-notes/escj00.html:
+	* docs/design-notes/escj01.html:
+	* docs/design-notes/escj02.html:
+	* docs/design-notes/escj05.html:
+	* docs/design-notes/escj06.html:
+	* docs/design-notes/escj07.html:
+	* docs/design-notes/escj09.html:
+	* docs/design-notes/escj10.html:
+	* docs/design-notes/escj11.html:
+	* docs/design-notes/escj12.html:
+	* docs/design-notes/escj13.html:
+	* docs/design-notes/escj17a.html:
+	* docs/design-notes/escj24.html:
+	* docs/design-notes/escj31.html:
+	* docs/escjava.css:
+	* slides/ECOOPTutorial-cok/escjava2-warnings.tex:
+	* slides/ECOOPTutorial-cok/examples/TestCheckedException.java:
+	* slides/ECOOPTutorial-cok/examples/TestUncheckedException.java:
+	* slides/ETAPSTutorial/examples/TestCheckedException.java:
+	* slides/ETAPSTutorial/examples/TestUncheckedException.java:
+	* specs/java/io/BufferedInputStream.refines-spec:
+	* specs/java/io/ByteArrayInputStream.refines-spec:
+	* specs/java/io/File.refines-spec:
+	* specs/java/io/FileFilter.refines-spec:
+	* specs/java/io/FileInputStream.refines-spec:
+	* specs/java/io/FilenameFilter.refines-spec:
+	* specs/java/io/FilterInputStream.refines-spec:
+	* specs/java/io/IOException.refines-spec:
+	* specs/java/io/Serializable.refines-spec:
+	* specs/java/io/UnsupportedEncodingException.refines-spec:
+	* specs/java/lang/CloneNotSupportedException.refines-spec:
+	* specs/java/lang/Cloneable.refines-spec:
+	* specs/java/lang/IndexOutOfBoundsException.refines-spec:
+	* specs/java/lang/InterruptedException.refines-spec:
+	* specs/java/lang/SecurityManager.refines-spec:
+	* specs/java/lang/StringIndexOutOfBoundsException.refines-spec:
+	* specs/java/lang/reflect/Array.refines-spec:
+	* specs/java/util/AbstractSequentialList.refines-spec:
+	* specs/java/util/ArrayList.spec:
+	* specs/java/util/BitSet.jml:
+	* specs/java/util/Comparator.refines-spec:
+	Corrected use of EOLs to match all other files in project.  Please keep EOLs
+	as UNIX LFs and not DOS CR/LFs or MacOS CRs.
+
+	* Escjava/Makefile, Makefile:
+	Added top-level target 'source' which rebuilds all dependent source (e.g.,
+	astgen-derived AST classes) in javafe and escjava packages.  Added another
+	pattern to fix-perms target to make all shell scripts user-executable.
+	This helps fix the new download script for the XML RPC work.  Added target
+	'current-specs-tests' for use in focusing on particular specifications
+	that are being rewritten.  Added target 'source' to Escjava/Makefile to
+	mirror that which already existed in the Javafe/Makefile.  It is just an
+	alias for generate_escjava_ast_source.
+
+	* Escjava/escjava2.sample:
+	Removed mention of tcsh use since it introduced errors for people
+	trying to use spaces in paths.
+
+	* Javafe/java/javafe/parser/Lex.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	Commented out specs that used old Hashtable specification, and keyType
+	in particular.  Once we have a new full spec of Hashtable that works
+	with ESC, then we should revisit these specs and update them
+	accordingly.
+
+	* Javafe/java/javafe/filespace/ZipTree.java:
+	Corrected closing attribute to match opening one.
+
+	* Javafe/java/javafe/ast/Makefile:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Added comment to top of hierarchy.j, which is then appended upon all
+	dependent Java classes generated by astgen, highlighting the fact that
+	one should never edit the generated Java classes, but instead
+	hierarchy.j.  Also modified the Makefile to not delete Emacs backup
+	files just in case a user mistakenly does not follow this demand.
+	Thanks (and apologies) to Clement Hurlin for this suggestion.
+
+2005-08-16  David Cok  <cok@frontiernet.net>
+
+	* Escjava/escj:
+	removed this line so that tests would run on MacOSX for me:
+	SIMPLIFY='./Simplify-1.5.4.linux' ## stupid trick by clement
+
+2005-08-16  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/translate/VcToStringPvsCleaned.java:
+	that was an error to commit it since it's only experimental
+
+	* Escjava/java/escjava/prover/Makefile: cleaning
+
+2005-08-15  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/escjava.mtex:
+	* Javafe/java/javafe/Options.java:
+	Clairified documentation on -specs switch.  Added comment in old man
+	page to make it clear that we are not currently keeping it up-to-date.
+	This is the last of the changes for bug #876093.
+
+	http://sourceforge.net/tracker/index.php?func=detail&aid=876093&group_id=65346&atid=510629
+
+	* Escjava/Makefile, Makefile:
+	Changed specs-test target to run from the top-level so that
+	automatically jumping to the error location has the proper relative
+	paths for next-error in Emacs and other tools that have the
+	ability to parse the GNU error format.
+
+	Hid the output from the (temporary) download script for the XML RPC
+	library.
+
+2005-08-15  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.pvs:
+	few simplification
+
+	* docs/Escjava2-Logics/pvs & unsorted logic
+
+	* Escjava/java/escjava/translate/VcToStringPvsCleaned.java:
+	Pvs translation of the logic for current_unsorted_logic_cleaned.pvs
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/translate/VcToStringPvs.java:
+	Translation of the unsorted logic for pvs
+
+2005-08-11  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/rewrite-pvs-proof.py: modularity++
+
+2005-08-10  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/translate/VcToString.java:
+	*** empty log message ***
+
+	* Escjava/java/escjava/prover/NewProver.java:
+	* Escjava/java/escjava/prover/ProverResponse.java:
+	* Escjava/java/escjava/prover/Sammy.java:
+	* Escjava/java/escjava/prover/SammyResponse.java:
+	add specifications, tested with jmlrac, not yet with escjava2
+
+	* Escjava/java/escjava/translate/VcToStringPvs.java:
+	*** empty log message ***
+
+2005-08-09  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/rewrite-pvs-proof.py: temporary script
+
+2005-08-09  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* TODO.kotl:
+	* Escjava/java/escjava/ast/DecreasesInfo.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	Home sync of small ongoing code review.
+
+2005-08-08  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/translate/VcToStringPvs.java:
+	lame implementation of rewriting process for the unsorted pvs logic
+
+	* Escjava/java/escjava/ProverManager.java:
+	passing option -Prover Sammy will now launch a fancy demo of Sammy
+
+	* Escjava/java/escjava/Options.java: adding support for pvs proof
+
+	* Escjava/java/escjava/Main.java: Adding support for pvs proof
+
+2005-08-04  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* release-files/quicktest:
+	Echo a FAILED message and exit with a non-zero return value if any tests
+	fails, fixing bug #110.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=110&group_id=97&atid=441
+
+	* Escjava/java/escjava/Main.java:
+	* README.first, Javafe/java/javafe/util/ErrorSet.java:
+	Added preload() method to check which VM version was being used and issue
+	a failure error message if a Java 1.5 VM is in use, per bug #109.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=109&group_id=97&atid=441
+
+2005-08-04  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/prover/MainTestSammy.java:
+	* Escjava/xmlrpc-1.2-b1-modified.jar:
+	* Escjava/dl-xml-rpc-lib.sh:
+	* Escjava/java/escjava/prover/Sammy.java:
+	* Escjava/java/escjava/prover/Signature.java:
+	*** empty log message ***
+
+2005-08-04  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/java/escjava/Main.java:
+	Added postload() method to check if no CUs are loaded, per bug #108
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=108&group_id=97&atid=441
+
+	* Escjava/java/escjava/Options.java:
+	Corrected documentation on -eaJML and -eaJava per bugs #106 and #107.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=106&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=107&group_id=97&atid=441
+
+	* specs/java/net/URL.incomplete:
+	* specs/java/net/URL.refines-spec:
+	* specs/java/util/HashSet.incomplete:
+	* specs/java/util/HashSet.refines-spec:
+	* specs/java/util/SortedMap.incomplete:
+	* specs/java/util/SortedMap.spec:
+	Removed incomplete and incorrect specs per bugs #34 and #35.
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=34&group_id=97&atid=441
+	http://sort.ucd.ie/tracker/index.php?func=detail&aid=35&group_id=97&atid=441
+
+2005-08-03  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic_clement_field_lock_added.pvs:
+	*** empty log message ***
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic.pvs:
+	final version of the pvs logic
+
+2005-08-03  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic.pvs:
+	o Made declarations of semantics of "<=" and "<" POSTULATES as in
+	  prelude but they still do not typecheck correctly due to overloading
+	  ambiguity.
+
+	o Introduced initial axiomatic definitions of integralMod, integralDiv,
+	  and floatingMod.  Removed all old axioms as a consequence.
+
+	o Fixed stringCat definition (just like Clement did in his sandbox).
+
+	o Commented out old array constructor stuff; Clement will add his
+	  stuff back in from the new theory soon.
+
+	o Added standard overloaded typeof definitions and fixed axiomatic
+	  definition for references.
+
+	o Various tweaks so things typecheck again.
+
+2005-08-02  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.pvs:
+	o Renamed top-level theories to escjava2_*.
+
+	o Added map_theory.
+
+	o Defined map for Memory type.
+
+	o Defined some axioms for heaps.
+
+	o Refined types for numbers
+
+	o Added maps for field access on Object type.
+
+	o Refined array type constructors and need to move to escjava sorted
+	logic.
+
+	This logic will be reviewed once the new sorted logic is finished
+	tomorrow.
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic.pvs:
+	o Extra docs about new sorts.
+
+	o Use PVS number type as parent type of all Java numeric types for
+	  easier type declarations.
+
+	o Defined is and cast over three core Java kinds (Boolean, Number, and
+	  Reference).
+
+	o Defined refEQ and refNE.
+
+	o Defined all boolean and integral operators.
+
+	o Started new definitions for integral type ranges but need to finish
+	  them up in the morning.
+
+	o Defined ArrayStore types to represent the type of the original
+	  "elems" and ArrayName for array lookup in such.
+
+	o Defined all maps for field and array access and update.
+
+	o Defined all axioms for reasoning about allocation.
+
+	o Defined string catenation.
+
+	I'll merge this with Clement's work on locks in the morning.
+
+	* Javafe/.cvsignore:
+	* docs/Escjava2-Logics/unsorted/.cvsignore:
+	* specs/java/lang/.cvsignore:
+	* specs/java/net/URL.incomplete:
+	* specs/java/util/.cvsignore:
+	* specs/java/util/HashSet.incomplete:
+	* specs/java/util/SortedMap.incomplete:
+	Moved old incomplete specs for URL, HashSet, and SortedMap to
+	temporary .incomplete files to see if anything is salvagable.
+	Updated various .cvsignore files.
+
+2005-08-02  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Provers/DemonstrationProver.java:
+	* docs/Escjava2-Provers/Makefile:
+	fix old Joe's demo and makefile, everything fine now
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic_clement_field_lock_added.pvs:
+	temp file for Joe
+
+2005-08-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic.pvs:
+	Worked our way down to midway through the Java typesystem.  Warning:
+	this file does not currently typecheck.
+
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic.pvs:
+	Added initial guesses for sorts necessary in "refined" sorted logic
+	based upon discussions of the past several days/months. :)
+
+	* docs/Escjava2-Logics/unsorted/current_unsorted_logic.pvs:
+	o Removed a couple of bad definitions (they are too weak because
+	bool_true is not Boolean true (yet) in the unsorted logic.  We'll be
+	introducing sorted in the sorted version momentarily (see
+	current_sorted_logic.pvs, coming soon) and this will be resolved.
+
+	* docs/Escjava2-Logics/unsorted/current_unsorted_logic.pvs:
+	o Added (currently commented) axiom stipulating the semantics of <=
+	and < on the (only) sort S.
+
+	o Fixed the spelling of primitive.
+
+	o Changed a few axioms into (formula) definitions (e.g., refEQ, refNE,
+	termConditional)
+
+	o Renamed a few axioms for clarity.
+
+	o Removed a few comments on definitions that previously didn't
+	typecheck due to missing auto-conversions (e.g., vAllocTime, lockLE,
+	lockLT, etc.).
+
+	o Reduced multiple axioms for definition of typeof into a single
+	axiom, which will likely turn into a definition next.
+
+	* slides/ETAPSTutorial/1_intro_jml.tex, slides/ETAPSTutorial/2_tool.tex:
+	Made line breaks more uniform, added mention of signals_only on one
+	slide, moved non_null to the right place in one example, red/full
+	typo, KeY group mention, spelled Spark-Ada right.
+
+	* docs/Escjava2-Logics/unsorted/current_unsorted_logic.pvs:
+	Uncommented final two axioms that used to not typecheck right and
+	reorganised all theories in incremental structure, providing distinct
+	theories for Java semantics, SRC ESC/Java semantics (just locks), JML
+	semantics, and ESC/Java2 semantics.
+
+2005-07-31  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/unsorted/.cvsignore:
+	* docs/Escjava2-Logics/unsorted/current_unsorted_logic.pvs:
+	First version of direct translation of current unsorted (Simplify)
+	logic into PVS.
+
+2005-07-29  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/prover/Sammy.java: *** empty log message ***
+
+2005-07-29  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Makefile:
+	Added javafetests, javafealltests, escjavatests, and escjavaalltests
+	as standard top-level targets.
+
+	* TODO.kotl:
+	Update my top-level TODO which is semi-corrolated with the current
+	tracker.  I want to get rid of this entirely eventually.
+
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/fe/skip:
+	* Javafe/Makefile:
+	* Javafe/README:
+	* Javafe/java/sources:
+	* Javafe/test/javafe/test/bugs:
+	Renamed some makefile targets for consistency.  Clarified standard
+	build targets in README for front-end.  Updated information about
+	current failing tests.  Added support for running tool with remotely
+	listening interface for remote debugging.
+
+	* Javafe/test/javafe/test/fe/test1103/run:
+	Fixed necessary classpath elements for robustness.
+
+	* docs/Escjava2-Provers/DemonstrationClient.c:
+	* docs/Escjava2-Provers/DemonstrationProver.h:
+	* docs/Escjava2-Provers/DemonstrationProver.java:
+	* docs/Escjava2-Provers/DemonstrationProver.ml:
+	Added additional docs to example interfaces, cleaned up code, added
+	some JML specs, ensured all OCaml interface code has consistent look
+	and feel, removed generated C header file, wrote
+	DemonstrationProver.ml.
+
+	* docs/Escjava2-Logics/many-sorted/.cvsignore:
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.pvs:
+	Untabified specification for printing.  (Reminder to devs: do not use
+	tab characters in code or specs, only spaces.)
+
+2005-07-29  Erik Poll  <erikpoll@cs.ru.nl>
+
+	* slides/ETAPSTutorial/2_tool.tex:
+	* slides/ETAPSTutorial/4_tips.tex:
+	* slides/ETAPSTutorial/5_more_jml.tex:
+	*** empty log message ***
+
+2005-07-29  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/prover/Harvey.java:
+	* Escjava/java/escjava/prover/HarveyResponse.java:
+	* Escjava/java/escjava/prover/Simplify.java:
+	* Escjava/java/escjava/Options.java:
+	*** empty log message ***
+
+	* docs/Escjava2-Provers/Signature.java:
+	* docs/Escjava2-Provers/Makefile:
+	uncomplete restoration of Joe's demo
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/dl-xml-rpc-lib.sh:
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/prover/Formula.java:
+	* Escjava/java/escjava/prover/MainTestSammy.java:
+	* Escjava/java/escjava/prover/NewProver.java:
+	* Escjava/java/escjava/prover/ProverResponse.java:
+	* Escjava/java/escjava/prover/Sammy.java:
+	* Escjava/java/escjava/prover/SammyResponse.java:
+	* Escjava/java/escjava/prover/Signature.java:
+	* Escjava/Makefile:
+	* Escjava/escj:
+	* Escjava/java/escjava/prover/Makefile:
+	* docs/Escjava2-Provers/LightAnalyser.java:
+	* docs/Escjava2-Provers/README-rpc-sammy:
+	* docs/Escjava2-Provers/Sammy.java:
+	* docs/Escjava2-Provers/SammyResponse.java:
+	* docs/Escjava2-Provers/exec-rpc-sammy.sh:
+	* docs/Escjava2-Provers/mainRpcSammy.java:
+	* docs/Escjava2-Provers/xmlrpc-1.2-b1-modified.jar:
+	*** empty log message ***
+
+2005-07-21  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.pvs:
+	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.smt:
+	*** empty log message ***
+
+2005-07-20  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Provers/Makefile:
+	* docs/Escjava2-Provers/Makefile-rpc-sammy:
+	* docs/Escjava2-Provers/exec-rpc-sammy.sh:
+	* docs/Escjava2-Provers/mainRpcSammy.java:
+	*** empty log message ***
+
+2005-07-19  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Provers/README-rpc-sammy:
+	* docs/Escjava2-Provers/Sammy.java:
+	* docs/Escjava2-Provers/LightAnalyser.java:
+	* docs/Escjava2-Provers/ProverInterface.java:
+	* docs/Escjava2-Provers/ProverResponse.java:
+	* docs/Escjava2-Provers/SammyResponse.java:
+	* docs/Escjava2-Provers/Signature.java:
+	*** empty log message ***
+
+2005-07-15  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* docs/Escjava2-Provers/Makefile-rpc-sammy:
+	* docs/Escjava2-Provers/ProverInterface.java:
+	* docs/Escjava2-Provers/ProverResponse.java:
+	* docs/Escjava2-Provers/README-rpc-sammy:
+	* docs/Escjava2-Provers/Sammy.java:
+	* docs/Escjava2-Provers/SammyResponse.java:
+	* docs/Escjava2-Provers/Signature.java:
+	* docs/Escjava2-Provers/exec-rpc-sammy.sh:
+	* docs/Escjava2-Provers/mainRpcSammy.java:
+	* docs/Escjava2-Provers/xmlrpc-1.2-b1-modified.jar:
+	*** empty log message ***
+
+2005-06-28  Matt Hoosier  <matt@cis.ksu.edu>
+
+	* docs/Escjava2-Provers/Makefile:
+	Dynamically select OSX or LINUX flags, and detect JAVA_HOME base
+	for -I directives.
+
+2005-06-14  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Provers/.cvsignore: *** empty log message ***
+
+	* specs-chalin-kiniry/Makefile: Tweaks for move of source into src.
+
+	* papers/LeavensKiniry/TODO.out:
+	* papers/TinelliKiniry/TODO.out:
+	TODO items from trip.
+
+	* papers/ChalinKiniry/Makefile:
+	* papers/ChalinKiniry/TODO.out:
+	* papers/ChalinKiniry/savcbs05.tex:
+	Ultra-high-level outline of paper.  Makefile ready to go.
+
+	* specs-chalin-kiniry/src/EmptySequence.java:
+	* specs-chalin-kiniry/src/NonEmptySequence.java:
+	* specs-chalin-kiniry/src/Pair.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	Switched from using Cons to Pair for representation in Sequence.
+	Renamed "chain" to "cache".  Tweaked a few specs (driven by use of
+	ESC).
+
+	* Escjava/java/escjava/ast/.cvsignore:
+	* Escjava/java/escjava/parser/.cvsignore:
+	* Escjava/java/escjava/tc/.cvsignore:
+	* Escjava/java/escjava/translate/.cvsignore:
+	* Escjava/test/escjava/parser/test/.cvsignore:
+	* Escjava/test/junittests/.cvsignore:
+	* Javafe/java/javafe/ast/.cvsignore:
+	* Javafe/java/javafe/parser/.cvsignore:
+	* papers/ChalinKiniry/.cvsignore:
+	*** empty log message ***
+
+2005-06-08  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	* Escjava/test/escjava/parser/test/GoodSpecExpr.ans:
+	* Escjava/test/escjava/parser/test/GoodSpecExpr.j:
+	Added lexer and parser support for: non_null_ref_by_default,
+	null_ref_by_default, obs_pure; java_math, safe_math, bigint_math,
+	code_java_math, code_safe_math, code_bigint_math, spec_java_math,
+	spec_safe_math, spec_bigint_math, and finally may_be_null.  The later
+	is meant to be "null"; may_be_null is a temporary renaming of the
+	keyword.
+
+2005-06-07  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/src/EmptySequence.java:
+	* specs-chalin-kiniry/src/NonEmptySequence.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	[most found by ESC/Java2] Added note about moving from Cons to Pair in
+	Sequence.  Added additional specs for head(), tail(),
+	NonEmptySequence(), and getCachedAndOrMake().  Improved class comments.
+
+2005-06-04  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/src/Cons.java:
+	* specs-chalin-kiniry/src/EmptySequence.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	[all found by ESC/Java2] Added precondition to length() to make sure
+	we are a chain; added throws clauses to head() and tail() in
+	EmptySequence to satisfy ESC semantics; added frame axiom to Sequence
+	constructor.
+
+	* specs-chalin-kiniry/Makefile:
+	Turned off purity checking (for now) due to our using observational
+	purity on occasion.  Made the JUnit GUI run in the background in its
+	rule.
+
+	* specs-chalin-kiniry/jmlunit/EmptySequence_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/NonEmptySequence_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/Pair_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/Sequence_JML_TestData.java:
+	Wrote legit generators for all the new types we are using.
+
+	* specs-chalin-kiniry/jmlunit/.cvsignore:
+	* specs-chalin-kiniry/src/.cvsignore:
+	*** empty log message ***
+
+	* specs-chalin-kiniry/src/EmptySequence.java:
+	* specs-chalin-kiniry/src/NonEmptySequence.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	Refactored, rewrote, reworked, and re-re-ed Sequences out the wazoo.
+	Everything is much prettier now and everything passes all tests.
+	W00t!
+
+2005-06-03  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/old_src/.cvsignore:
+	* specs-chalin-kiniry/old_src/extra.java:
+	* specs-chalin-kiniry/src/.cvsignore:
+	* specs-chalin-kiniry/src/Cons.java:
+	* specs-chalin-kiniry/src/Pair.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	Added length model method to Cons and supporting infrastructure.  Made
+	specs and helper method names in three classes consistent in style
+	with each other.  Switched from using a Pair to using a Cons for
+	representation in Sequence.
+
+	* specs-chalin-kiniry/src/Sequence.java:
+	Fixing purity and miscellaneous improvements.
+
+	* specs-chalin-kiniry/jmlunit/Sequence_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/Pair_JML_TestData.java:
+	Changes to get it to compile.
+
+	* specs-chalin-kiniry/src/Pair.java:
+	Beefed up the (private) specs for make.  Make first, second
+	spec_public. Added natural language comments to explain some of the
+	invariants.
+
+	* specs-chalin-kiniry/src/Bag.java:
+	Changes just to get it to compile (it is still just a shell).
+
+	* specs-chalin-kiniry/src/Cons.java:
+	Removed unnecessary modifies clauses (since the class is pure).
+	Reintroduced pure modifiers for static methods.
+
+	* specs-chalin-kiniry/.cvsignore:
+	* specs-chalin-kiniry/Makefile:
+	* specs-chalin-kiniry/jmlunit/.cvsignore:
+	* specs-chalin-kiniry/jmlunit/List_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/Sequence_JML_TestData.java:
+	* specs-chalin-kiniry/src/Bag.java:
+	* specs-chalin-kiniry/src/Cons.java:
+	* specs-chalin-kiniry/src/List.java:
+	* specs-chalin-kiniry/src/Map.java:
+	* specs-chalin-kiniry/src/Pair.java:
+	* specs-chalin-kiniry/src/Relation.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	* specs-chalin-kiniry/src/Set.java:
+	Renamed List to Sequence and added placeholders for remaining core
+	model concepts.
+
+	* specs-chalin-kiniry/Cons.java:
+	* specs-chalin-kiniry/List.java:
+	* specs-chalin-kiniry/Makefile:
+	* specs-chalin-kiniry/Pair.java:
+	* specs-chalin-kiniry/jmlunit/Cons_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/List_JML_TestData.java:
+	* specs-chalin-kiniry/jmlunit/Pair_JML_TestData.java:
+	* specs-chalin-kiniry/src/Cons.java:
+	* specs-chalin-kiniry/src/List.java:
+	* specs-chalin-kiniry/src/Pair.java:
+	* specs-chalin-kiniry/timestamps/.cvsignore:
+	Fixed Makefile now that jmlc no longer has --junit so we no longer
+	need a separate build dir for junit-related classfiles.  Moved source
+	into the 'src' subdir.  Added some more values for type generators in
+	unit tests.  Changed Makefile to write timestamps into a subdir so we
+	do not have to look at them.
+
 2005-06-02  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/Makefile:
+	Removed --junit as we are now using JML >= 5.2rc2.
+
+	* specs-chalin-kiniry/Pair.java:
+	A couple of notes inspired by an escjava2 run.
+
+	* specs-chalin-kiniry/Cons.java:
+	* specs-chalin-kiniry/Makefile:
+	* specs-chalin-kiniry/Pair.java:
+	* specs-chalin-kiniry/jmlunit/.cvsignore:
+	* specs-chalin-kiniry/jmlunit/Cons_JML_TestData.java:
+	* specs-chalin-kiniry/old_src/extra.java:
+	Added new Cons class used to build the chain of all Pairs.  Updated
+	specs for Pair and made sure all unit tests pass.
+
+	* specs-chalin-kiniry/Pair.java:
+	Wrote helper methods to express invariant that chain is not cyclic.
+
+	* ChangeLog: Updated ChangeLog.
 
 	* specs-chalin-kiniry/Makefile: Added patrice target.
 
@@ -29,11 +1461,12 @@
 
 	* specs-chalin-kiniry/List.java:
 	* specs-chalin-kiniry/Pair.java:
-	More hard thinking over tea, forest fruit, and brownies (no, not those kind!).
+	More hard thinking over tea, forest fruit, and brownies (no, not
+	those kind!).
 
 	* specs-chalin-kiniry/List.java:
-	Simplified several contracts by writing helper, freaky, recursive pure
-	methods.
+	Simplified several contracts by writing helper, freaky, recursive
+	pure methods.
 
 2005-06-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
