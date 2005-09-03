@@ -875,13 +875,22 @@ public class TypeSig extends Type
 	if (Info.on) Info.out("[typechecking " + this + "]");
 	TypeCheck.inst.makeFlowInsensitiveChecks().checkTypeDeclaration(this);
 	if (Info.on) Info.out("[typechecking-end " + this + " " + javafe.Tool.timeUsed(start) + "]");
+        // @review kiniry 31 Aug - Why is this commented out?
 	// FlowSensitiveChecks.checkTypeDeclaration(this);
 	this.state = TypeSig.CHECKED;
     }
 
+  /**
+   * Typecheck the superclass of the current classtype being typecheck and
+   * typecheck all interfaces that the current classtype implements.
+   */
     public void typecheckSuperTypes() {
         TypeSig t = superClass();
-        if (t != null) t.typecheck();
+        // If we are typechecking an inner class whose parent is the enclosing
+        // environment, then do not try to typecheck the parent as that is what we
+        // are doing at this moment!
+        if ((t != null) && getEnclosingEnv().getEnclosingClass() != enclosingType)
+          t.typecheck();
         TypeDecl decl = getTypeDecl();
         for (int i=0; i<decl.superInterfaces.size(); i++ ) {
             TypeName superInterfaceName = decl.superInterfaces.elementAt(i);
