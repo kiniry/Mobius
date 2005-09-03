@@ -25,8 +25,7 @@ else
   JBIN =
 endif
 
-export TOOLCMD = ${JAVA} \
-	-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,address=8000 \
+export TOOLCMD = ${JAVA} $(DEBUGGER_FLAGS) \
 	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}
 export TOOLCMD = ${JAVA} \
 	-mx40m -classpath ${CAN_CLASSDIRECTORY} javafe.test.Print ${JBIN}

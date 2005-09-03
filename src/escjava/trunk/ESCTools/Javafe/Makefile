@@ -35,9 +35,9 @@ build: fixperms compile
 buildall: compileall
 
 ifdef ALLTESTS
-test: extensive_tests typecheck_tests
+test: extensive_tests selftypecheck typecheckJDK
 else
-test: runtest
+test: runtest selftypecheck
 endif
 
 ###########################################################################
@@ -134,13 +134,13 @@ JAVAFETESTTARGETS = \
 
 ## Runs basic tests on Javafe
 
-.PHONY: runtest extensive_tests test_jdk_sources typecheck_tests \
-	test_release javafe_test
+.PHONY: runtest extensive_tests test_jdk_sources typecheckJDK \
+	selftypecheck test_release javafe_test
 
 runtest: javafe_test
 	${MAKE} -C test/javafe/parser/test runtest
-	${MAKE} -C java/javafe/util        runtest
-	${MAKE} -C test/javafe/test  JAVAFE_CLASSPATH_CAN="${call canonicalize,${JAVAFE_CLASSPATH}}"      runtest
+	${MAKE} -C java/javafe/util runtest
+	${MAKE} -C test/javafe/test JAVAFE_CLASSPATH_CAN="${call canonicalize,${JAVAFE_CLASSPATH}}" runtest
 
 ## Runs basic tests, plus some (but not all) that are long
 extensive_tests: javafe_test runtest
@@ -151,8 +151,10 @@ test_jdk_sources:
 	${MAKE} -C test/javafe/parser/test testparsejdkidempotence
 
 ## Runs the Javafe tool on bodies of code
-typecheck_tests: javafe_test
+typecheckJDK: javafe_test
 	${MAKE} -C test/javafe/test typecheckJDK
+
+selftypecheck:
 	${MAKE} -C test/javafe/test typecheckJavafe
 
 ## This tests a binary release that is untarred in the RELTEMP directory,

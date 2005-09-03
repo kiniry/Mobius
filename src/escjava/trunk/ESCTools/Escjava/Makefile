@@ -71,7 +71,6 @@ buildall: version compileall
 test: test_escjava
 
 alltests: test_escjava 
-	-$(MAKE) typecheckEscjava
 	-$(MAKE) self_testp
 
 ###########################################################################
@@ -334,7 +333,7 @@ archives: archive_esctools
 TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
 .PHONY: test_escjava tests build_javafe_test junittests jdktests \
-	checkspecs javaspecs test_escjava_parser typecheckEscjava \
+	checkspecs javaspecs test_escjava_parser \
 	test_matrix self_test self_testp test-release selftypecheck
 
 test_escjava: build build_javafe_test 
@@ -346,6 +345,7 @@ tests:
 	$(MAKE) -C test/nijmegen/OCF runtests
 	$(MAKE) -C test/nijmegen/JCF runtests
 	$(MAKE) jdktests
+	$(MAKE) selftypecheck
 	##$(MAKE) test_matrix   ## FIXME
 
 build_javafe_test:
@@ -376,20 +376,6 @@ selftypecheck:
 	    -sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet ${PACKAGE_LIST}
-
-typecheckEscjava:
-	@echo ===== Typechecking the Escjava package =====
-	cd ${ESCTOOLS_ROOT}/Escjava/java && \
-	for d in ast backpred gui parser tc reader prover sp translate ; do \
-	echo -n $${d} ;\
-	echo `find escjava/$${d} -name '*.java'` | xargs -n 300 \
-	    ${JAVA} -classpath ../../Javafe/classfiles javafe.test.Print \
-	    -classpath "${call canonicalize,.:../../Javafe/java:../../Utils}" \
-	    -typecheck -noprint  ;\
-	done && \
-	    ${JAVA} -classpath ../../Javafe/classfiles javafe.test.Print \
-	    -classpath "${call canonicalize,.:../../Javafe/java:../../Utils}" \
-	    -typecheck -noprint  escjava/*.java 
 
 test_matrix:
 	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
