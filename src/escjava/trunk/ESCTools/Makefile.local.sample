@@ -1,3 +1,4 @@
+# -*- mode: Makefile -*-
 # This file is part of the 2003 Revision of the ESC Tools
 # Author: David R. Cok
 
@@ -32,7 +33,13 @@ export SIMPLIFY ?= Simplify-1.5.4.linux
 ## Define the location of the source files for all JDKs installed.
 ## These are only used in tests in which the Javafe lexer/parser is
 ## exercised by running it on all the JDK sources, if they are
-## available.
+## available.  The JDK self-typecheck rules also look for the
+## jar files associated with each release (e.g., classes.jar, rt.jar,
+## and ui.jar) in a directory called "jars" under each of the following
+## directories.  If you do not have these jars, you will see some
+## additional typechecking error (type not found) because Sun does
+## not ship the source code to all classes upon which their source
+## depends.
 export JDK_SOURCE_DIR    = /usr/local/Java/src
 export JDK_PRE14_SOURCES = ${JDK_SOURCE_DIR}/jdk-1.0 ${JDK_SOURCE_DIR}/jdk-1.1 \
                            ${JDK_SOURCE_DIR}/jdk-1.2 ${JDK_SOURCE_DIR}/jdk-1.3
