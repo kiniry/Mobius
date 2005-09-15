@@ -8,7 +8,11 @@ The proposed weakest precondition \wpi \ supports all Java bytecode sequential i
  arithmetic instructions and 64 bit data (\java{long} and \java{double} types), including exceptions, object creation,
  references and subroutines. The calculus is defined over the method control flow graph and supports BCSL annotation,
  i.e. bytecode method's specification like preconditions, normal and exceptional postconditions, class invariants,
- assertions at particular program point among which loop invariants.
+ assertions at particular program point among which loop invariants. The verification condition generator applied to a method 
+bytecode generates a proof obligation for every execution path
+ by applying first the weakest predicate transformer to every \instr{return} instruction,
+ \instr{athrow} instruction and end of a loop instruction and then following in a backwards direction the control
+ flow graph upto reaching the entry point instruction.
 
  In Fig.~\ref{instrWP}, we show the \wpi \ rules for some bytecode instructions. 
 As the examples show the \wpi \ function takes three arguments:
@@ -39,10 +43,8 @@ loops, exception handling and subroutines.
 %subset and establishes that if the verification conditions are provable this means that the method implementation respects the method specification.
 \begin{figure}[ht]
 %\begin{tabular}{l}
-\[\begin{array}{l}\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) =  \\
-\psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}}
-\end{array}
-\] \\
+\[\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) = \psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}}
+\]
 where $i$ is a valid local variable index   \\
 %\end{tabular}
 \\

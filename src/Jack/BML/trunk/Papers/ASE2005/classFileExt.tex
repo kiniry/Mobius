@@ -3,12 +3,12 @@
 \section{Bytecode Specification Language (BCSL)}\label{bcSpecLg}
 
 In this section, we introduce a bytecode specification language which we call BCSL (short for ByteCode Specification Language).
- BCSL is based on the design principles of JML (Java Modeling Language)~\cite{RT03djml,JMLRefMan}, which is a behaviorial interface specification 
+ BCSL is based on the design principles of JML (Java Modeling Language)~\cite{RT03djml,JMLRefMan}, which is a behavioral interface specification 
 language following the design by contract approach \cite{M97oos}.
 
 %The BCSL specifications is inserted in the class file as user defined attributes.
 
-Before going farther, we give a flavour of what JML specifications look like. Fig.~\ref{replaceSrc} shows an example of a Java class and its 
+Before going farther, we give a flavor of what JML specifications look like. Fig.~\ref{replaceSrc} shows an example of a Java class and its 
 JML annotation that models a list stored in an array field. 
 From the example, we notice that JML annotations are written in comments and so they are not visible by the Java compiler.
 The specification of method \verb!isElem! declares
@@ -81,7 +81,7 @@ that can be modified during a loop iteration. We were inspired for this by the J
 stack based.  They do not appear in the specification clauses. The reason for this is that proving the soundness
  of the bytecode weakest precondition predicate transformer function becomes considerably complicated.
  This is not a restriction in the scenario in which we use BCSL specification --- compiling JML
-to BCSL specification, as JML doesnot contain stack expressions.
+to BCSL specification, as JML does not contain stack expressions.
 
 
 \end{itemize}
@@ -93,12 +93,12 @@ to BCSL specification, as JML doesnot contain stack expressions.
 %This section explains how JML specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
 
 We now turn to explaining how JML specifications are compiled into user defined attributes for Java class files. Recall that a class file defines
-a single class or interface and contains information about  the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The Java Virtual Machine Specification (JVMS) \cite{VMSpec} mandates that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file user specific information(\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
+a single class or interface and contains information about  the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The Java Virtual Machine Specification (JVM) \cite{VMSpec} mandates that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVM allows to add to the class file user specific information(\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVM).
 
-Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms jml into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
+Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms JML into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
 \begin{enumerate}
 \item Compilation of the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file 
-the \\ \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
+the \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
 these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
 The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  
 The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. 
@@ -112,7 +112,7 @@ is compiled in binary form using tags in the standard way. The compilation of an
 
 
 Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
-By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for intergral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that 
+By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for integral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that 
 if a Java source variable has a boolean type it will be compiled to a variable with
 an integer type. For instance, in the example for the method 
 \texttt{isElem} and its specification in Fig.\ref{replaceSrc} the postcondition states the equality between the JML expression  
@@ -190,7 +190,7 @@ JML\=Loop\_specification\_attribute \{\\
 \end{figure}
 
 The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debugging information,
- namely the presence of the \\ \textbf{Line\_Number\_Table} attribute for the correct compilation of inter method
+ namely the presence of the \textbf{Line\_Number\_Table} attribute for the correct compilation of inter method
  specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The
  most problematic part of the compilation is to identify which source loop corresponds to which bytecode loop in the control flow
  graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}), i.e. there are no
