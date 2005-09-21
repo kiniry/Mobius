@@ -667,7 +667,7 @@ public class Main extends javafe.SrcTool
         LabelInfoToString.resetToMark();
         GuardedCmd gc = computeBody(r, initState);
         /*-@ uninitialized @*/ /* readable_if stats; */ int origgcSize = 0;
-        if (options().stats) {
+        if (options().statsTime || options().statsSpace) {
 	    origgcSize = Util.size(gc);
         }
 
@@ -865,26 +865,26 @@ public class Main extends javafe.SrcTool
 // 	    }
 // 	}
 
-	if( options().pvsProof ) {
+// 	if( options().pvsProof ) {
 
-            String fn = UniqName.locToSuffix(r.locId)+".method."+"pvs";
+//             String fn = UniqName.locToSuffix(r.locId)+".method."+"pvs";
 
-	    PrintStream o = fileToPrintStream(".",fn);
-	    VcToStringPvs.compute(vc, o);
-	    o.close();
+// 	    PrintStream o = fileToPrintStream(".",fn);
+// 	    VcToStringPvs.compute(vc, o);
+// 	    o.close();
 
-	    Runtime run = Runtime.getRuntime();
+// 	    Runtime run = Runtime.getRuntime();
 
-	    try{
-		run.exec("./rewrite-pvs-proof.py "+fn); 
-	    }
-	    catch(Exception e) {
-		System.out.println("Error when launching python script\n that reformats the proof for pvs, "+e);
-	    }
+// 	    try{
+// 		run.exec("./rewrite-pvs-proof.py "+fn); 
+// 	    }
+// 	    catch(Exception e) {
+// 		System.out.println("Error when launching python script\n that reformats the proof for pvs, "+e);
+// 	    }
 
-	    System.out.println("Pvs translation of the proof has been written to $ESCTOOLS_ROOT/Escjava/"+fn);
-	}
-	//$$
+// 	    System.out.println("Pvs translation of the proof has been written to $ESCTOOLS_ROOT/Escjava/"+fn);
+// 	}
+// 	//$$
 
         if (options().pvc || (Info.on && options().traceInfo > 0)) { 
             VcToString.compute(vc, System.out);
@@ -930,7 +930,7 @@ public class Main extends javafe.SrcTool
 	}
 
         String proofTime = timeUsed(startTime);
-        if (options().stats) {
+        if (options().statsTime) {
             System.out.println("    [Time: "+timeUsed(routineStartTime)
                                +" GC: "+gcTime
                                +" DSA: "+dsaTime
@@ -938,6 +938,8 @@ public class Main extends javafe.SrcTool
                                +" VC: "+vcTime
                                +" Proof(s): "+proofTime
                                +"]");
+	}
+	if(options().statsSpace) {
             System.out.println("    [Size: "
                                +" src: "+Util.size(r)
                                +" GC: "+origgcSize
@@ -945,6 +947,13 @@ public class Main extends javafe.SrcTool
                                +" VC: "+Util.size(vc)
                                +"]");
         }
+	if(options().statsTermComplexity)
+	    System.out.println("    [Number of terms: "+VcToString.termNumber+"]");
+	if(options().statsVariableComplexity)
+	    System.out.println("    [Number of variables: "+VcToString.variableNumber+"]");
+	if(options().statsQuantifierComplexity)
+	    System.out.println("    [Number of quantifiers: "+VcToString.quantifierNumber+"]");
+
         return status;
     }
 
@@ -1141,7 +1150,7 @@ public class Main extends javafe.SrcTool
                 predictedSynTargs = Targets.normal(tmpBody);
             else
                 predictedSynTargs = Targets.direct(tmpBody);
-            if (options().stats)
+            if (options().statsTime)
                 System.out.println("      [prediction time: " + timeUsed(T) + "]");
         }
 
@@ -1205,7 +1214,7 @@ public class Main extends javafe.SrcTool
             Main.options().predAbstract) {
             long T = java.lang.System.currentTimeMillis();
             Traverse.compute(fullCmd, initState, gctranslator);
-            if (options().stats) {
+            if (options().statsTime) {
                 System.out.println("      [predicate abstraction time: " + 
                                    timeUsed(T) + "]");
             }

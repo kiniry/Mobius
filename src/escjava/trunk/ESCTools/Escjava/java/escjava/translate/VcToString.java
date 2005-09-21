@@ -20,6 +20,14 @@ import escjava.backpred.BackPred;
 import escjava.prover.Atom;
 
 public class VcToString {
+
+    /*
+     * Counter for additional informations when passing -Stats flag
+     */
+    static public int quantifierNumber = 0;
+    static public int termNumber = 0;
+    static public int variableNumber = 0;
+
   /**
    * Resets any type-specific information that is accumulated through calls to
    * <code>computeTypeSpecific</code>.
@@ -41,11 +49,11 @@ public class VcToString {
    * about these names.
    */
   public static void computeTypeSpecific(/*@  non_null */Expr e,
-      /*@  non_null */PrintStream to) {
+					 /*@  non_null */PrintStream to) {
     VcToString vts = new VcToString();
     vts.printFormula(to, e);
   }
-  
+
   /**
    * Prints <code>e</code> as a verification-condition string to
    * <code>to</code>. Any symbolic names of integral literals stored by the
@@ -53,14 +61,22 @@ public class VcToString {
    * considered when producing properties about such symbolic literals.
    */
   public static void compute(/*@  non_null */Expr e,
-      /*@  non_null */PrintStream to) {
+			     /*@  non_null */PrintStream to) {
     Hashtable oldNames = integralPrintNames;
     integralPrintNames = (Hashtable)oldNames.clone();
     
     if (escjava.Main.options().prettyPrintVC)
       to = new PrintStream(new escjava.prover.PPOutputStream(to));
+
+    /*
+     * reset counters;
+     */
+    quantifierNumber = 0;
+    termNumber = 0;
+    variableNumber = 0;
     
     VcToString vts = new VcToString();
+
     vts.printDefpreds(to, vts.getDefpreds(e));
     to.println("\n(EXPLIES ");
     vts.printFormula(to, e);
@@ -74,7 +90,7 @@ public class VcToString {
   }
   
   public static void computePC(/*@  non_null */Expr e,
-      /*@  non_null */PrintStream to) {
+			       /*@  non_null */PrintStream to) {
     Hashtable oldNames = integralPrintNames;
     integralPrintNames = (Hashtable)oldNames.clone();
     
@@ -95,7 +111,7 @@ public class VcToString {
   
   // string of initial assumptions
   //@ spec_public
-  protected/*@  non_null */Set stringLiterals = new Set();
+  protected /*@  non_null */ Set stringLiterals = new Set();
   
   //+@ invariant integralPrintNames.keyType == \type(Long);
   //+@ invariant integralPrintNames.elementType == \type(String);
@@ -183,7 +199,7 @@ public class VcToString {
   // ======================================================================
   
   protected void printFormula(/*@ non_null */PrintStream out,
-      /*@ non_null */Expr e) {
+			      /*@ non_null */Expr e) {
     // maps GenericVarDecls to Strings
     // some complex invariant here
     
@@ -192,15 +208,15 @@ public class VcToString {
   }
   
   protected void printFormula(/*@ non_null */PrintStream out, Hashtable subst,
-      /*@ non_null */Expr e) {
+			      /*@ non_null */Expr e) {
     Assert.notNull(e);
     
     reallyPrintFormula(out, subst, e);
   }
   
   protected void reallyPrintFormula(/*@ non_null */PrintStream out,
-      Hashtable subst,
-      /*@ non_null */Expr e) {
+				    Hashtable subst,
+				    /*@ non_null */Expr e) {
     
     // System.out.print("printFormula: ");
     // PrettyPrint.inst.print(System.out, e);
@@ -215,6 +231,9 @@ public class VcToString {
       }
       
       case TagConstants.SUBSTEXPR: {
+
+	  System.out.println("SubstExpr");
+
         SubstExpr se = (SubstExpr)e;
         // perform current substitution on expression
         String expr = vc2Term(se.val, subst);
@@ -235,7 +254,7 @@ public class VcToString {
       case TagConstants.LABELEXPR: {
         LabelExpr le = (LabelExpr)e;
         out.print("(" + (le.positive ? "LBLPOS" : "LBLNEG") + " |" + le.label
-            + "| ");
+		  + "| ");
         printFormula(out, subst, le.expr);
         out.print(")");
         break;
@@ -247,7 +266,7 @@ public class VcToString {
         } else {
           GuardExpr ge = (GuardExpr)e;
           String var = escjava.Main.options().guardedVCPrefix
-          + UniqName.locToSuffix(ge.locPragmaDecl);
+	    + UniqName.locToSuffix(ge.locPragmaDecl);
           out.print("(IMPLIES |" + var + "| ");
           printFormula(out, subst, ge.expr);
           out.print(")");
@@ -258,6 +277,8 @@ public class VcToString {
       
       case TagConstants.FORALL:
       case TagConstants.EXISTS: {
+	  quantifierNumber++;
+
         QuantifiedExpr qe = (QuantifiedExpr)e;
         if (qe.quantifier == TagConstants.FORALL) out.print("(FORALL (");
         else out.print("(EXISTS (");
@@ -266,7 +287,7 @@ public class VcToString {
         for (int i = 0; i < qe.vars.size(); i++) {
           GenericVarDecl decl = qe.vars.elementAt(i);
           Assert.notFalse(!subst.containsKey(decl), "Quantification over "
-              + "substituted variable");
+			  + "substituted variable");
           out.print(prefix);
           printVarDecl(out, decl);
           prefix = " ";
@@ -303,7 +324,7 @@ public class VcToString {
         break;
       }
       
-      //  Operators on formulas
+	//  Operators on formulas
       case TagConstants.BOOLIMPLIES:
       case TagConstants.BOOLAND:
       case TagConstants.BOOLANDX:
@@ -316,23 +337,23 @@ public class VcToString {
         switch (ne.getTag()) {
           case TagConstants.BOOLIMPLIES:
             op = "IMPLIES";
-          break;
+	    break;
           case TagConstants.BOOLAND:
           case TagConstants.BOOLANDX:
             op = "AND";
-          break;
+	    break;
           case TagConstants.BOOLOR:
             op = "OR";
-          break;
+	    break;
           case TagConstants.BOOLNOT:
             op = "NOT";
-          break;
+	    break;
           case TagConstants.BOOLEQ:
             op = "IFF";
-          break;
+	    break;
           default:
             Assert.fail("Fall thru");
-          op = null; // dummy assignment
+	    op = null; // dummy assignment
         }
         
         out.print("(" + op);
@@ -368,7 +389,7 @@ public class VcToString {
         break;
       }
       
-      // PredSyms
+	// PredSyms
       case TagConstants.ALLOCLT:
       case TagConstants.ALLOCLE:
       case TagConstants.ANYEQ:
@@ -392,58 +413,58 @@ public class VcToString {
         switch (ne.getTag()) {
           case TagConstants.ALLOCLT:
             op = "<";
-          break;
+	    break;
           case TagConstants.ALLOCLE:
             op = "<=";
-          break;
+	    break;
           case TagConstants.ANYEQ:
             op = "EQ";
-          break;
+	    break;
           case TagConstants.ANYNE:
             op = "NEQ";
-          break;
+	    break;
           case TagConstants.INTEGRALEQ:
             op = "EQ";
-          break;
+	    break;
           case TagConstants.INTEGRALGE:
             op = ">=";
-          break;
+	    break;
           case TagConstants.INTEGRALGT:
             op = ">";
-          break;
+	    break;
           case TagConstants.INTEGRALLE:
             op = "<=";
-          break;
+	    break;
           case TagConstants.INTEGRALLT:
             op = "<";
-          break;
+	    break;
           case TagConstants.INTEGRALNE:
             op = "NEQ";
-          break;
+	    break;
           case TagConstants.LOCKLE:
             op = TagConstants.toVcString(TagConstants.LOCKLE);
-          break;
+	    break;
           case TagConstants.LOCKLT:
             op = TagConstants.toVcString(TagConstants.LOCKLT);
-          break;
+	    break;
           case TagConstants.REFEQ:
             op = "EQ";
-          break;
+	    break;
           case TagConstants.REFNE:
             op = "NEQ";
-          break;
+	    break;
           case TagConstants.TYPEEQ:
             op = "EQ";
-          break;
+	    break;
           case TagConstants.TYPENE:
             op = "NEQ";
-          break;
+	    break;
           case TagConstants.TYPELE:
             op = "<:";
-          break;
+	    break;
           default:
             Assert.fail("Fall thru");
-          op = null; // dummy assignment
+	    op = null; // dummy assignment
         }
         
         out.print("(" + op);
@@ -484,10 +505,10 @@ public class VcToString {
   protected boolean insideNoPats = false;
   
   protected void printTerm(/*@ non_null */PrintStream out, Hashtable subst,
-      /*@ non_null */Expr e) {
-    
-      //      System.out.print("printTerm: ");
-    
+			   /*@ non_null */Expr e) {
+      
+      termNumber++;
+
     int tag = e.getTag();
     switch (tag) {
       
@@ -524,9 +545,9 @@ public class VcToString {
         break;
       }
       
-      // Literals
+	// Literals
       
-      // This handles case 8 of ESCJ 23b:
+	// This handles case 8 of ESCJ 23b:
       case TagConstants.STRINGLIT: {
         LiteralExpr le = (LiteralExpr)e;
         String s = "S_" + UniqName.locToSuffix(le.loc);
@@ -570,7 +591,7 @@ public class VcToString {
       
       case TagConstants.NULLLIT:
         out.print("null");
-      break;
+	break;
       
       case TagConstants.SYMBOLLIT: {
         // Handles case 5 of ESCJ 23b:
@@ -582,62 +603,65 @@ public class VcToString {
       }
       
       case TagConstants.VARIABLEACCESS: {
+	  variableNumber++;
+
         VariableAccess va = (VariableAccess)e;
         String to = (String)subst.get(va.decl);
+
         if (to != null) out.print(to);
         else printVarDecl(out, va.decl);
         break;
       }
       
-      // Nary functions
-      case TagConstants.ALLOCLT:
-      case TagConstants.ALLOCLE:
-      case TagConstants.ARRAYLENGTH:
-      case TagConstants.ARRAYFRESH:
-      case TagConstants.ARRAYMAKE:
-      case TagConstants.ARRAYSHAPEMORE:
-      case TagConstants.ARRAYSHAPEONE:
-      case TagConstants.ASELEMS:
-      case TagConstants.ASFIELD:
-      case TagConstants.ASLOCKSET:
-      case TagConstants.BOOLAND:
-      case TagConstants.BOOLANDX:
-      case TagConstants.BOOLEQ:
-      case TagConstants.BOOLIMPLIES:
-      case TagConstants.BOOLNE:
-      case TagConstants.BOOLNOT:
-      case TagConstants.BOOLOR:
+	// Nary functions
+    case TagConstants.ALLOCLT: //++
+    case TagConstants.ALLOCLE: //++
+    case TagConstants.ARRAYLENGTH: //++
+    case TagConstants.ARRAYFRESH: //++
+    case TagConstants.ARRAYMAKE: //++
+    case TagConstants.ARRAYSHAPEMORE: //++
+    case TagConstants.ARRAYSHAPEONE: //++
+    case TagConstants.ASELEMS: //++
+    case TagConstants.ASFIELD: //++
+    case TagConstants.ASLOCKSET: //++
+    case TagConstants.BOOLAND: //++
+    case TagConstants.BOOLANDX: //++
+    case TagConstants.BOOLEQ: //++
+    case TagConstants.BOOLIMPLIES: //++
+    case TagConstants.BOOLNE: //++
+    case TagConstants.BOOLNOT: //++
+    case TagConstants.BOOLOR: //++
       case TagConstants.CLASSLITERALFUNC:
       case TagConstants.CONDITIONAL:
       case TagConstants.ELEMSNONNULL:
       case TagConstants.ELEMTYPE:
-      case TagConstants.ECLOSEDTIME:
-      case TagConstants.FCLOSEDTIME:
+    case TagConstants.ECLOSEDTIME: //++
+    case TagConstants.FCLOSEDTIME: //++
         
-      case TagConstants.FLOATINGADD:
-      case TagConstants.FLOATINGDIV:
-      case TagConstants.FLOATINGEQ:
-      case TagConstants.FLOATINGGE:
-      case TagConstants.FLOATINGGT:
-      case TagConstants.FLOATINGLE:
-      case TagConstants.FLOATINGLT:
-      case TagConstants.FLOATINGMOD:
-      case TagConstants.FLOATINGMUL:
-      case TagConstants.FLOATINGNE:
+    case TagConstants.FLOATINGADD: //++
+    case TagConstants.FLOATINGDIV: //++
+    case TagConstants.FLOATINGEQ: //++
+    case TagConstants.FLOATINGGE: //++
+    case TagConstants.FLOATINGGT: //++
+    case TagConstants.FLOATINGLE: //++
+    case TagConstants.FLOATINGLT: //++
+    case TagConstants.FLOATINGMOD: //++
+    case TagConstants.FLOATINGMUL: //++
+    case TagConstants.FLOATINGNE: //++
       case TagConstants.FLOATINGNEG:
       case TagConstants.FLOATINGSUB:
         
-      case TagConstants.INTEGRALADD:
+      case TagConstants.INTEGRALADD: //++
       case TagConstants.INTEGRALAND:
-      case TagConstants.INTEGRALDIV:
-      case TagConstants.INTEGRALEQ:
-      case TagConstants.INTEGRALGE:
-      case TagConstants.INTEGRALGT:
-      case TagConstants.INTEGRALLE:
-      case TagConstants.INTEGRALLT:
-      case TagConstants.INTEGRALMOD:
-      case TagConstants.INTEGRALMUL:
-      case TagConstants.INTEGRALNE:
+      case TagConstants.INTEGRALDIV: //++
+    case TagConstants.INTEGRALEQ: //++
+      case TagConstants.INTEGRALGE: //++
+      case TagConstants.INTEGRALGT: //++
+      case TagConstants.INTEGRALLE: //++
+      case TagConstants.INTEGRALLT: //++
+    case TagConstants.INTEGRALMOD: //++
+    case TagConstants.INTEGRALMUL: //++
+      case TagConstants.INTEGRALNE: //++
       case TagConstants.INTEGRALNEG:
       case TagConstants.INTEGRALNOT:
       case TagConstants.INTEGRALOR:
@@ -652,23 +676,23 @@ public class VcToString {
         
       case TagConstants.INTERN:
       case TagConstants.INTERNED:
-      case TagConstants.IS:
-      case TagConstants.ISALLOCATED:
-      case TagConstants.ISNEWARRAY:
-      case TagConstants.LOCKLE:
-      case TagConstants.LOCKLT:
+    case TagConstants.IS: //++
+    case TagConstants.ISALLOCATED: //++
+    case TagConstants.ISNEWARRAY: //++
+    case TagConstants.LOCKLE: //++
+    case TagConstants.LOCKLT: //++
       case TagConstants.MAX:
       case TagConstants.METHODCALL:
-      case TagConstants.REFEQ:
-      case TagConstants.REFNE:
-      case TagConstants.SELECT:
-      case TagConstants.STORE:
+    case TagConstants.REFEQ: //++
+    case TagConstants.REFNE: //++
+    case TagConstants.SELECT: //++
+    case TagConstants.STORE: //++
       case TagConstants.STRINGCAT:
       case TagConstants.STRINGCATP:
-      case TagConstants.TYPEEQ:
-      case TagConstants.TYPENE:
-      case TagConstants.TYPELE:
-      case TagConstants.TYPEOF:
+    case TagConstants.TYPEEQ: //++
+    case TagConstants.TYPENE: //++
+    case TagConstants.TYPELE: //++
+    case TagConstants.TYPEOF: //++
       case TagConstants.UNSET:
       case TagConstants.VALLOCTIME: {
         NaryExpr ne = (NaryExpr)e;
@@ -676,22 +700,22 @@ public class VcToString {
         switch (tag) {
           case TagConstants.INTEGRALADD:
             op = "+";
-          break;
+	    break;
           case TagConstants.INTEGRALMUL:
             op = "*";
-          break;
+	    break;
           case TagConstants.INTEGRALNEG:
             op = "- 0";
-          break;
+	    break;
           case TagConstants.INTEGRALSUB:
             op = "-";
-          break;
+	    break;
           case TagConstants.TYPELE:
             op = "<:";
-          break;
+	    break;
           case TagConstants.METHODCALL:
             op = "|" + ne.methodName.toString() + "|";
-          break;
+	    break;
           case TagConstants.INTEGRALNE:
           case TagConstants.REFNE:
           case TagConstants.TYPENE:
@@ -750,13 +774,13 @@ public class VcToString {
       
       default:
         Assert.fail("Bad tag in GCTerm: " + "(tag=" + tag + ","
-            + TagConstants.toVcString(tag) + ") " + e);
+		    + TagConstants.toVcString(tag) + ") " + e);
     }
   }
   
   //@ requires ne.op == TagConstants.DTTFSA;
   protected void printDttfsa(/*@ non_null */PrintStream out, Hashtable subst,
-      /*@ non_null */NaryExpr ne) {
+			     /*@ non_null */NaryExpr ne) {
     LiteralExpr lit = (LiteralExpr)ne.exprs.elementAt(1);
     String op = (String)lit.value;
     if (ne.exprs.size() == 2) {
@@ -860,6 +884,7 @@ public class VcToString {
   static {
     resetTypeSpecific();
   }
+
 }
 
 /*
