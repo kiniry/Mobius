@@ -59,38 +59,6 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 %.java.texinfo: %.java
 	@$(CODE2TEXI) $< > $@
 
-%.pdf: %.tex
-	pdflatex $< $@
-	make cleanup
-
-%.pdf:	%.ps
-	ps2pdf $<
-
-%.pdf.gz: %.pdf
-	gzip -c $< > $@
-
-%.ps: %.dvi
-	dvips -Pcmz -Pamz -f < $< > $@
-
-%.ps.gz: %.ps
-	gzip -c $< > $@
-
-%.dvi: %.tex
-	latex $<
-
-# ${paper}.dvi: ${paper}.tex
-# 	latex ${paper}; latex ${paper}; bibtex ${paper}; \
-# 	latex ${paper}; latex ${paper}; \
-
-# ${paper}.dvi: ${paper}.tex
-# 	latex ${paper}; latex ${paper};
-
-# ${talk}.ps: ${talk}.dvi
-# 	dvips -ta4 -Pcmz -Pamz -f < $< > $@
-
-# ${talk}.dvi: ${talk}.tex
-# 	latex ${talk};
-
 %.pdf:	%.texinfo
 	texi2pdf $<
 	texindex `basename $< .texinfo`.??
@@ -116,29 +84,22 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 %.pdf: %.fig
 	fig2dev -L pdf $< $@
 
-.PHONY: all build
+%.class: %.java
+	javac -source 1.4 $<
 
-all:	java jni 
+%.h:	%.class
+	javah `basename $< .class`
 
-all :   interface 
+.PHONY: all build cleanup interface java jni test clean
+
+all:	java jni interface build
 
 build:	Escjava2-Provers.pdf
 
 Escjava2-Provers.pdf:	Escjava2-Provers.texinfo $(java_texinfo_files)
 
-cleanup:
-	rm -f _region_* *.aux *.log \
-		*.cp *.cps *.fn *.fns *.ky *.kys \
-		*.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
-		*# *~
+interface : ProverResponse.class Signature.class ProverInterface.class Formula.class
 
-%.class: %.java
-	javac -source 1.4 $<
-
-interface : ProverResponse.class Signature.class \
-	ProverInterface.class Formula.class
-
-.PHONY: java jni test
 java:	ProverInterface.class DemonstrationProver.class
 
 jni:	DemonstrationProver.h $(DYNAMIC_LIB_PREFIX)demoprover$(DYNAMIC_LIB_EXTENSION) demoprover
@@ -157,8 +118,11 @@ $(DYNAMIC_LIB_PREFIX)demoprover$(DYNAMIC_LIB_EXTENSION):	demoprover.o
 	$(CC) $(CFLAGS) $(DYNAMIC_LIB_SWITCH) \
 	  -o $(DYNAMIC_LIB_PREFIX)demoprover$(DYNAMIC_LIB_EXTENSION) demoprover.o $(LFLAGS)
 
-%.h:	%.class
-	javah `basename $< .class`
+cleanup:
+	rm -f _region_* *.aux *.log \
+		*.cp *.cps *.fn *.fns *.ky *.kys \
+		*.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
+		*# *~
 
 clean:
 	rm -rf auto _region_* \
@@ -166,6 +130,7 @@ clean:
 	  demoprover \
 	  *.class \
 	  *.o *.so \
+	  *.java.texinfo \
 	  *.aux *.log *~ *.dvi *.brf \
 	  *.cp *.cps *.fn *.fns *.ky *.kys \
 	  *.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
