@@ -618,8 +618,8 @@ generate-toplevel-archive: clean
 zero-length-files:
 	mkdir -p ${PATCH_DIR}
 	cd ${ESCTOOLS_ROOT}; \
-	tar cjf ${PATCH_PREFIX}-ZeroLengthFiles.tbz \
-		`find . -empty ! -name .M3SHIP`
+	find . -empty ! -name .M3SHIP -print0 | \
+		xargs -0 tar cjf ${PATCH_PREFIX}-ZeroLengthFiles.tbz
 	( cd ${ESCTOOLS_ROOT}; \
 	  for f in `cd ${ESCTOOLS_ORIGINAL}; find . -empty`; do \
 	      if [ ! -e $$f ]; then echo $$f; fi; \
