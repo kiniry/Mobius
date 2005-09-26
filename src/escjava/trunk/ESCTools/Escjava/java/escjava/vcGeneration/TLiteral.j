@@ -19,6 +19,10 @@ class TString extends TLiteral{
 	return r;
     }
 
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTString(this);
+    }
+
 }
 
 class TBoolean extends TLiteral{
@@ -38,6 +42,10 @@ class TBoolean extends TLiteral{
 	r.append("\"];\n");
 	
 	return r;
+    }
+
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTBoolean(this);
     }
 
 }
@@ -61,6 +69,10 @@ class TChar extends TLiteral{
 	return r;
     }
 
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTChar(this);
+    }
+
 }
 
 class TInt extends TLiteral {
@@ -80,6 +92,10 @@ class TInt extends TLiteral {
 	r.append("\"];\n");
 	
 	return r;
+    }
+
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTInt(this);
     }
 
 }
@@ -103,6 +119,10 @@ class TFloat extends TLiteral {
 	return r;
     }
 
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTFloat(this);
+    }
+
 }
 
 class TDouble extends TLiteral {
@@ -124,6 +144,10 @@ class TDouble extends TLiteral {
 	return r;
     }
 
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTDouble(this);
+    }
+
 }
 
 class TNull extends TLiteral {
@@ -141,6 +165,10 @@ class TNull extends TLiteral {
 	r.append("\\]\\nnull\"];\n");
 	
 	return r;
+    }
+
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTNull(this);
     }
 
 }

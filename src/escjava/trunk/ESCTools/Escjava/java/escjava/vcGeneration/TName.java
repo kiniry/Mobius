@@ -22,7 +22,7 @@ class TName extends TVariable {
     r.append(" [shape=box, label=\"");
 
     r.append("\\["+getType()+"\\]");
-    
+
     /* append the name of the variable */
     r.append("\\n"+name);
 
@@ -30,5 +30,10 @@ class TName extends TVariable {
 
     return r;
   }
+
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTName(this);
+    }
+
 
 }

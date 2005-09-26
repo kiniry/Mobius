@@ -24,7 +24,7 @@ abstract class TVariable extends TNode {
 
 	    r.append("\\n\\["+getType()+"\\]"); 
 	}
-
+	
 	r.append("\"];\n");
 	
 	return r;

@@ -21,6 +21,16 @@ class TypeInfo {
     this.old = old;
   }
 
+    /*
+     * Constructor for specifying the renaming of the type.
+     */
+  public TypeInfo(/*@ non_null @*/ String old, /*@ non_null @*/ String unsortedPvs, /*@ non_null @*/ String pvs, /*@ non_null @*/ String sammy){
+    this.old = old;
+    this.unsortedPvs = unsortedPvs;
+    this.pvs = pvs;
+    this.sammy = sammy;
+  }
+
   public /*@ non_null @*/ String getUnsortedPvs(){
     if(unsortedPvs == null)
       unsortedPvsRename();
@@ -60,26 +70,7 @@ class TypeInfo {
    @*/
   private void pvsRename(){
 
-      // comparison are done in alphabetical order
-      if(old.equals("%Time")) // this is the type of a type
-	  pvs = "Time";
-      else if(old.equals("%Type")) // this is the type of a type
-	  pvs = "ReferenceType";
-      else if(old.equals("boolean"))
-	  pvs = "Boolean";
-      else if(old.equals("char"))
-	  pvs = "T_char";
-      else if(old.equals("double"))
-	  pvs = "ContinuousNumber";
-      else if(old.equals("DOUBLETYPE"))
-	  pvs = "ContinuousNumber"; //fixme am I right ?
-      else if(old.equals("float"))
-	  pvs = "ContinuousNumber"; //fixme am I right ?
-      else if(old.equals("integer"))
-	  pvs = "DiscreteNumber";
-      else if(old.equals("INTTYPE")) 
-	  pvs = "DiscreteNumber";
-      else if(old.equals("null") || old.equals("%Reference"))
+      if(old.equals("null") )
 	  pvs = "Reference";
       else {
 	  // common rules here //fixme, be more specific maybe
@@ -87,8 +78,8 @@ class TypeInfo {
 	      pvs = old.replace('.','_');
 	  else {
 	      System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::pvsRename() : "+old); 
-	      System.err.println("Considering it as a user defined type...");
-	      pvs = old;
+	      System.err.println("Considering it as a user defined type... ie ReferenceType");
+	      pvs = "ReferenceType";
 	  }
       }
 
@@ -101,4 +92,5 @@ class TypeInfo {
   private void sammyRename(){
     sammy = old;
   }
+
 }

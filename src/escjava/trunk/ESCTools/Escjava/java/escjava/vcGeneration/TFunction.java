@@ -27,7 +27,7 @@ abstract class TFunction extends TNode {
 	    return (TNode)sons.elementAt(index); 
 	}
 	catch(ArrayIndexOutOfBoundsException e) { 
-	    System.out.println(e.getMessage());
+	    System.out.println("ArrayIndexOutOfBoundsException in escjava.vcGeneration.TFunction.getChildAt(int) "+e.getMessage());
 	    return null; /* notice this default behaviour */
 	}
     }

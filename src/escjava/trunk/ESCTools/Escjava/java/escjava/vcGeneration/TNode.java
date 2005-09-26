@@ -42,7 +42,7 @@ abstract class TNode {
      * It handles multiple renaming because each {@link VariableInfo} object contains 
      * multiples fields for renaming (take a look at it).
      */
-    static /*@ spec_public non_null @*/ protected HashMap variablesName = new HashMap();
+    static /*@ spec_public non_null @*/ protected HashMap variablesName = null;
 
     /*
      * map containing all the types used in the proof.
@@ -59,7 +59,7 @@ abstract class TNode {
      * If you make another call to setOutputType, it will add type the tree
      * for the new tree etc...
      */
-    static /*@ spec_public non_null @*/ protected HashMap typesName = new HashMap();
+    static /*@ spec_public non_null @*/ /* protected */ HashMap typesName = null;
 
     /*
      * We add some types that we know will be used to avoid looking
@@ -77,21 +77,7 @@ abstract class TNode {
     static TypeInfo $float = null;
     static TypeInfo $String = null;
     static TypeInfo $Time = null;
-
-    static {
-	$Reference = addType("%Reference");
-	$Time = addType("%Time");
-	$Type = addType("%Type");
-	$boolean = addType("boolean");
-	$char = addType("char");
-	$DOUBLETYPE = addType("DOUBLETYPE");
-	$double = addType("double"); //fixme
-	$Field = addType("%Field");
-	$INTTYPE = addType("INTTYPE");
-	$integer = addType("integer");
-	$float = addType("float");
-	$String = addType("String");
-    }
+    static TypeInfo $Path = null;
 
     public TNode(){
 
@@ -102,14 +88,43 @@ abstract class TNode {
 	id = counter;
     }
 
-    //   // fixme should not be declared
-    //   abstract void addSon(TNode n);
+    
+    // init every both variable and type map.
+    static public void init (){
+	typesName = new HashMap();
+	variablesName = new HashMap();
+
+	// Predefined types
+
+	$Reference = addType("%Reference", "S", "Reference", "?");
+	$Time = addType("%Time", "S", "Time", "?");
+	$Type = addType("%Type", "S", "ReferenceType", "?");
+	$boolean = addType("boolean", "S", "Boolean", "?");
+	$char = addType("char", "S", "T_char", "?");
+	$DOUBLETYPE = addType("DOUBLETYPE", "S", "ContinuousNumber", "?"); // fixme, is it JavaNumber or BaseType ?
+	$double = addType("double", "S", "ContinuousNumber", "?"); //fixme
+	$Field = addType("%Field", "S", "Field", "?"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
+	$INTTYPE = addType("INTTYPE", "S", "T_int", "?"); //fixme like DOUBLETYPE
+	$integer = addType("integer", "S", "DiscreteNumber", "?"); //fixme
+	$float = addType("float", "S", "ContinuousNumber", "?");
+	$Path = addType("%Path", "S", "Path", "?"); // used to modelize different ways
+	// of terminating a function
+	//$String = addType("String", "S", "String", "?"); fixme, does this type appears in original proof ?
+
+
+	// Predefined variables name
+	// variables used by the old proof system and that we still need
+	addName("ecReturn", "%Path", "ecReturn", "preDef?ecReturn", "ecReturn");
+	addName("ecThrow", "%Path", "ecThrow", "preDef?ecThrow", "ecThrow");
+	addName("XRES", "%Reference", "%XRES", "preDef?XRes", "XRES");
+	
+    }
 
     /*@
       @ requires type.equals("unsortedPvs") || type.equals("pvs") || type.equals("sammy");
       @ ensures (type.equals("unsortedPvs") <==> lastType == 1) &&
-      @ (type.equals("sammy") <==> lastType == 2) && 
-      @ (type.equals("pvs") <==> lastType == 3);
+      @ (type.equals("pvs") <==> lastType == 2) &&
+      @ (type.equals("sammy") <==> lastType == 3);
       @*/
     public void setOutputType(/*@ non_null @*/ String type){
 
@@ -128,6 +143,88 @@ abstract class TNode {
     
     }
 
+    /*@
+      @ requires type.equals("unsortedPvs") || type.equals("pvs") || type.equals("sammy");
+      @ requires typeProofSet;
+      @*/
+    protected void generateDeclarations(/*@ non_null @*/ StringBuffer s){
+	
+	Set keySet = variablesName.keySet();
+
+	Iterator iter = keySet.iterator();
+	String keyTemp = null;
+	VariableInfo viTemp = null;
+	TypeInfo tiTemp = null;
+
+	/*
+	 * Needed to avoid adding a comma after last declaration. As some declaration can be skipped
+	 * it's easier to put comma before adding variable (thus need for testing firstDeclaration
+	 * instead of last one)
+	 */
+	boolean firstDeclarationDone = false;
+
+	while(iter.hasNext()){
+      
+	    try {
+		keyTemp = (String)iter.next();
+	    }
+	    catch (Exception e){
+		System.err.println(e.getMessage());
+	    }
+	    viTemp = (VariableInfo)variablesName.get(keyTemp);
+
+	    /* output informations in this format : oldName, pvsUnsortedName,
+	     * pvsName, sammyName, type.
+	     */
+	    if(viTemp.type!=null) {
+		
+		switch(lastType){
+		case 1:
+		    if(firstDeclarationDone && !viTemp.getUnsortedPvs().equals("%NotHandled"))
+			s.append(",\n");
+
+		    if(!viTemp.getUnsortedPvs().equals("%NotHandled")) { // skipping non handled variables
+			s.append(viTemp.getUnsortedPvs()+" : "+viTemp.type.getUnsortedPvs());
+
+			if(!firstDeclarationDone)
+			    firstDeclarationDone = true;
+		    }
+
+		case 2 : 
+		    if(firstDeclarationDone && !viTemp.getPvs().equals("%NotHandled"))
+			s.append(",\n");
+
+		    if(!viTemp.getPvs().equals("%NotHandled")) { // skipping non handled variables
+			s.append(viTemp.getPvs()+" : "+viTemp.type.getPvs());
+
+			if(!firstDeclarationDone)
+			    firstDeclarationDone = true;
+		    }
+
+		    break;
+
+		case 3 :
+		    if(firstDeclarationDone && !viTemp.getSammy().equals("%NotHandled"))
+			s.append(",\n");
+
+		    if(!viTemp.getSammy().equals("%NotHandled")) { // skipping non handled variables
+			s.append(viTemp.getSammy()+" : "+viTemp.type.getSammy());
+
+			if(!firstDeclarationDone)
+			    firstDeclarationDone = true;
+		    }
+
+		default :
+		    System.err.println("Error in java.escjava.vcGeneration.TNode.generateDeclarations, type is equal to "+lastType+" which isn't ok");
+		    
+		}
+	    }
+	    else // fixme test it nevers happen
+		System.err.println("Warning type of variable "+keyTemp+" is not set when declarating variables for the proof, skipping it...");
+	}
+
+    }
+
     /*
      * This function add variable to the global map name.
      * @param oldName the old name.
@@ -138,7 +235,7 @@ abstract class TNode {
     /*@
       @ ensures variablesName.containsKey(oldName);
       @*/
-    static public /*@ non_null @*/ VariableInfo addName(/*@ non_null @*/ String oldName, /*@ non_null @*/ String type){
+    static public /*@ non_null @*/ VariableInfo addName(/*@ non_null @*/ String oldName, /*@ non_null @*/ String type, String unsortedPvs, String pvs, String sammy){
 
 	if(!variablesName.containsKey(oldName)){
 	    // we will do the renaming when necessary (look at {@link VariableInfo})
@@ -154,7 +251,7 @@ abstract class TNode {
 		System.err.println("Warning, adding variable named "+oldName+" with no types");
 
 	    //@ assert typesName.containsKey(type);
-	    variablesName.put(oldName, new VariableInfo(oldName, ti));
+	    variablesName.put(oldName, new VariableInfo(oldName, ti, unsortedPvs, pvs, sammy));
 	}
 	//++
 	else {
@@ -183,6 +280,38 @@ abstract class TNode {
 	//++
     }
 
+    static public /*@ non_null @*/ VariableInfo addName(/*@ non_null @*/ String oldName, /*@ non_null @*/ String type){
+	return addName(oldName, type, null, null, null);
+    }
+
+    /*
+     * return the {@link VariableInfo} object associated with this name
+     */
+    //@ requires variablesName.contains(s);
+    static /*@ non_null @*/ VariableInfo getVariableInfo(/*@ non_null @*/ String name){
+	return (VariableInfo)variablesName.get(name);
+    }
+
+    /*
+     * return the {@link VariableInfo} object associated of the caller which
+     * must be an instance of TName.
+     */
+    //@ requires variablesName.contains(s);
+    /*@ non_null @*/ VariableInfo getVariableInfo(){
+
+	//@ assert this instanceof TName;
+
+	if(! (this instanceof TName)) {
+	    System.err.println("Warning calling getVariableInfo on a non TName Node");
+	    return null;
+	}
+	else {
+	    TName n = (TName) this;
+	    return getVariableInfo(n.name);
+	}
+	
+    }
+
     /*
      * This function add type to the global map .
      * @param oldName the old name.
@@ -193,12 +322,12 @@ abstract class TNode {
     /*@
       @ ensures typesName.containsKey(oldType);
       @*/
-    static public /*@ non_null @*/ TypeInfo addType(/*@ non_null @*/ String oldType){
+    static public /*@ non_null @*/ TypeInfo addType(/*@ non_null @*/ String oldType, String unsortedPvs, String pvs, String sammy){
 
 	if(!typesName.containsKey(oldType)){
 	    // we will do the renaming when necessary (look at {@link TypeInfo})
       
-	    TypeInfo ti = new TypeInfo(oldType);
+	    TypeInfo ti = new TypeInfo(oldType, unsortedPvs, pvs, sammy);
 	    typesName.put(oldType, ti);
 
 	    //@ assert typesName.containsKey(oldType);
@@ -211,6 +340,10 @@ abstract class TNode {
 	    return (TypeInfo)typesName.get(oldType);
 	}    
       
+    }
+
+    static public /*@ non_null @*/ TypeInfo addType(/*@ non_null @*/ String oldType){
+	return TNode.addType(oldType, null, null, null);
     }
 
     abstract /*@ non_null @*/ StringBuffer toDot();
@@ -320,21 +453,63 @@ abstract class TNode {
 	    else {
 		TypeInfo ti = vi.type;
 
+		String result = "";
+		/*
+		 * Handle double type here
+		 */
+		if(ti == $Field){ // variables may have a second type;
+		    if(vi.getSecondType() != null) {
+
+			/*
+			 * fixme : explanations needed here, tricky stuff.
+			 */
+
+			TypeInfo ti2 = vi.getSecondType();
+			VariableInfo vi2 = getVariableInfo(ti2.old);
+
+			switch(lastType){
+			case(0):
+			    result = vi2.old + "\\n";
+			    break;
+			case(1):
+			    result = vi2.getUnsortedPvs() + "\\n";
+			    break;
+			case(2):
+			    result = vi2.getPvs() + "\\n";
+			    break;
+			case(3):
+			    result = vi2.getSammy() + "\\n";
+			    break;
+			default :
+			    System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
+			    return "";
+			}
+
+		    }
+			
+		}
+
 		switch(lastType){
 		case(0):
-		    return ti.old;
+		    result = result + ti.old;
+		    break;
 		case(1):
-		    return ti.getUnsortedPvs();
+		    result = result + ti.getUnsortedPvs();
+		    break;
 		case(2):
-		    return ti.getPvs();
+		    result = result + ti.getPvs();
+		    break;
 		case(3):
-		    return ti.getSammy();
+		    result = result + ti.getSammy();
+		    break;
 		default :
 		    System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
 		    return "";
 		}
+
+		return result;
 	    }
-	    
+   
 	}
 	else {
 	    if(this.type == null)
@@ -357,6 +532,41 @@ abstract class TNode {
 	
     }
 
+    /*
+     * Return the typeInfo associated with this node. It can just be
+     * the 'type' field for non instance of TName. Or in the case
+     * of TName node, we retrieve it in the global map.
+     */
+    public TypeInfo getTypeInfo(){
+
+	if(!(this instanceof TName))
+	    return this.type;
+	else { //retrieve the type in the map
+
+	    TName m = (TName)this;
+
+	    //@ assert m.type == null;
+
+	    // retrieve current type;
+	    if(!variablesName.containsKey(m.name)) {
+		System.err.println("escjava::vcGeneration::TNode::setType");
+		System.err.println("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+	    }
+	    // take care no else here
+	    
+	    VariableInfo vi = (VariableInfo)variablesName.get(m.name);
+
+	    //++
+// 	    if(vi.type != null)
+// 		System.out.println("returning "+vi.type.old+" for "+this.toString());
+	    //++
+
+	    // can be null
+	    return vi.type;
+	}
+
+    }
+
     public String toString(){
 	if(type!=null)
 	    return getShortName()+id+", "+type.old;
@@ -364,9 +574,11 @@ abstract class TNode {
 	    return getShortName()+id;
     }
 
+    abstract public void accept(/*@ non_null @*/ TVisitor v);
+
     static public void printInfo(){
     
-	// print all variables and their renaming in a nice way
+	// print all variables and their renaming in a 'nice' way
 	Set keySet = variablesName.keySet();
 
 	Iterator iter = keySet.iterator();
@@ -374,7 +586,7 @@ abstract class TNode {
 	VariableInfo viTemp = null;
 
 	System.out.println("\n=== List of variables ===");
-	System.out.println("[oldName, unsortedPvsName, pvsName, sammyName : oldType ]");
+	System.out.println("[oldName, unsortedPvsName, pvsName, sammyName : oldType]\n");
 
 	while(iter.hasNext()){
       
@@ -390,16 +602,17 @@ abstract class TNode {
 	     * pvsName, sammyName, type.
 	     */
 	    if(viTemp.type!=null) // fixme
-		System.out.println("["+viTemp.oldName+", "+viTemp.getUnsortedPvsName()+", "+viTemp.getPvsName()+", "+viTemp.getSammyName()+" : "+viTemp.type.old+"]"); 
+		System.out.println("["+viTemp.old+", "+viTemp.getUnsortedPvs()+", "+viTemp.getPvs()+", "+viTemp.getSammy()+" : "+viTemp.type.old+"]"); 
 	    else
-		System.out.println("["+viTemp.oldName+", "+viTemp.getUnsortedPvsName()+", "+viTemp.getPvsName()+", "+viTemp.getSammyName()+" : ?type? ]"); 
+		System.out.println("["+viTemp.old+", "+viTemp.getUnsortedPvs()+", "+viTemp.getPvs()+", "+viTemp.getSammy()+" : ?type? ]"); 
 	}
 
 	keySet = typesName.keySet();
 	iter = keySet.iterator();
 	TypeInfo tiTemp = null;
     
-	System.out.println("\n=== List of type      ===\n");
+	System.out.println("\n=== List of type      ===");
+	System.out.println("[old, unsortedPvs, Pvs, Sammy]\n");
 
 	while(iter.hasNext()){
       

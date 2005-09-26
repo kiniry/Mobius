@@ -38,4 +38,9 @@ public class TRoot extends TFunction {
       return r;
     }
 
+    public void accept(/*@ non_null @*/ TVisitor v){
+	v.visitTRoot(this);
+    }
+    
+
 }
