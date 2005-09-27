@@ -167,7 +167,14 @@ series of case studies.
 
 @cindex Introduction
 
+This document describes how to extend ESC/Java2.  It describes the
+high-level architecture of the system and how to extend it through a
+series of case studies.
 
+The case studies discussed were chosen because they: (a) focused on 
+each independent aspects of the architecture, (b) were relatively small and self-contained 
+examples, and (c) they were additions that we made to the original SRC
+ESC/Java system, thus writing them up in this manner was straightforward.
 
 @c =============================================================================
 @node ESC/Java2 Architecture, The ESC/Java2 AST, Introduction, Top
