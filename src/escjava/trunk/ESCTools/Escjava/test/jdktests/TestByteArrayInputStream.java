@@ -13,7 +13,12 @@ public class TestByteArrayInputStream extends LocalTestCase {
     //@ assume a != null && a.length == 20;
     ByteArrayInputStream b = new ByteArrayInputStream(a);
     assertTrue ( b.available() == 20);
+    // This is the earliest possible location of an assert false that
+    // does *not* get caught.  It is not an invariant consistency
+    // problem because checking just after a call to a method foo()
+    // with no spec does not cause the missed warning.  
     int c = b.read();
+    //@ assert false;
     assertTrue( c == a[0] );
     byte[] q = new byte[10];
     b.skip(4);

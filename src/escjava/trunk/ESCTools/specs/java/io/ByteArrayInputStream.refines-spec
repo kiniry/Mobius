@@ -65,21 +65,19 @@ public class ByteArrayInputStream extends InputStream {
       @*/
     public synchronized int available();
 
-    /*@
-      @ also public normal_behavior
-      @   requires pos < count;
-      @   modifies streamState;
-      @   ensures \result == \old(buf[pos]);
-      @   ensures pos == \old(pos+1);
-      @   ensures \result == buf[pos];
-      @   ensures \not_modified(isOpen,wasClosed);
-      @   ensures valid();
-      @ also public normal_behavior
-      @   requires pos >= count;
-      @   modifies \nothing;
-      @   ensures \result == -1;
-      @*/
-    public synchronized int read();
+  //@ also public normal_behavior
+  //@   requires pos < count;
+  //@   modifies streamState;
+  //@   ensures \result == \old(buf[pos]);
+  //   ensures pos == \old(pos+1);
+  //@   ensures \result == buf[pos];
+  //@   ensures \not_modified(isOpen,wasClosed);
+  //@   ensures valid();
+  //@ also public normal_behavior
+  //@   requires pos >= count;
+  //@   modifies \nothing;
+  //@   ensures \result == -1;
+  public synchronized int read();
 
     /*@
       @ 
