@@ -953,7 +953,7 @@
 	* Escjava/dl-xml-rpc-lib.sh:
 	* Escjava/java/escjava/prover/Sammy.java:
 	* Escjava/java/escjava/prover/Signature.java:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 2005-08-04  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
@@ -1180,11 +1180,11 @@
 	* Escjava/java/escjava/prover/HarveyResponse.java:
 	* Escjava/java/escjava/prover/Simplify.java:
 	* Escjava/java/escjava/Options.java:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 	* docs/Escjava2-Provers/Signature.java:
 	* docs/Escjava2-Provers/Makefile:
-	uncomplete restoration of Joe's demo
+	Incomplete restoration of Joe's demo.
 
 	* Escjava/java/escjava/Main.java:
 	* Escjava/dl-xml-rpc-lib.sh:
@@ -1206,13 +1206,13 @@
 	* docs/Escjava2-Provers/exec-rpc-sammy.sh:
 	* docs/Escjava2-Provers/mainRpcSammy.java:
 	* docs/Escjava2-Provers/xmlrpc-1.2-b1-modified.jar:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 2005-07-21  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
 
 	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.pvs:
 	* docs/Escjava2-Logics/many-sorted/many-sorted-logic.smt:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 2005-07-20  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
 
@@ -1220,7 +1220,7 @@
 	* docs/Escjava2-Provers/Makefile-rpc-sammy:
 	* docs/Escjava2-Provers/exec-rpc-sammy.sh:
 	* docs/Escjava2-Provers/mainRpcSammy.java:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 2005-07-19  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
 
@@ -1231,7 +1231,7 @@
 	* docs/Escjava2-Provers/ProverResponse.java:
 	* docs/Escjava2-Provers/SammyResponse.java:
 	* docs/Escjava2-Provers/Signature.java:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 2005-07-15  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
 
@@ -1245,7 +1245,7 @@
 	* docs/Escjava2-Provers/exec-rpc-sammy.sh:
 	* docs/Escjava2-Provers/mainRpcSammy.java:
 	* docs/Escjava2-Provers/xmlrpc-1.2-b1-modified.jar:
-	*** empty log message ***
+	Ongoing work to support new provers.
 
 2005-06-28  Matt Hoosier  <matt@cis.ksu.edu>
 
@@ -1275,17 +1275,6 @@
 	Switched from using Cons to Pair for representation in Sequence.
 	Renamed "chain" to "cache".  Tweaked a few specs (driven by use of
 	ESC).
-
-	* Escjava/java/escjava/ast/.cvsignore:
-	* Escjava/java/escjava/parser/.cvsignore:
-	* Escjava/java/escjava/tc/.cvsignore:
-	* Escjava/java/escjava/translate/.cvsignore:
-	* Escjava/test/escjava/parser/test/.cvsignore:
-	* Escjava/test/junittests/.cvsignore:
-	* Javafe/java/javafe/ast/.cvsignore:
-	* Javafe/java/javafe/parser/.cvsignore:
-	* papers/ChalinKiniry/.cvsignore:
-	*** empty log message ***
 
 2005-06-08  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
@@ -1711,7 +1700,8 @@
 
 2005-05-09  Patrice Chalin  <chalin@cs.concordia.ca>
 
-	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java, specs/java/util/BitSet.jml:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java:
+	* specs/java/util/BitSet.jml:
 	Updated class specifications.
 
 	* Escjava/java/escjava/ast/TagConstants.java:
@@ -1740,7 +1730,8 @@
 	Minor fix (due to interchange of +@ and -@).
 
 	* specs/java/util/List.spec:
-	Removing bogus declaration of model class named Content introduced by mistake.
+	Removing bogus declaration of model class named Content introduced
+	by mistake.
 
 	* specs/java/lang/String.spec: More adjustments of +@ and -@.
 
@@ -1988,7 +1979,7 @@
 	* Javafe/test/javafe/test/fe/make_outputs:
 	* Javafe/test/javafe/test/fe/make_summary:
 	* Javafe/test/javafe/test/fe/new:
-	Corrrecting Makefile; simplifying makefile and other associated files
+	Correcting Makefile; simplifying makefile and other associated files
 
 2005-04-13  Erik Poll  <erikpoll@cs.ru.nl>
 

@@ -1,7 +1,190 @@
 -------------------------------------------------------------------
-version 2.0a9 "Ernst 'Gimme-Gimme' Release" (25 September 2005)
+version 2.0a9 "2005 New Academic Term Release" (28 September 2005)
 
-TBD: Joe
+New features include:
+
+ o A number of specs have been upgraded or replaces for Java core
+   classes so as to provide specs that are as complete as possible for
+   extended static checking.  These specs have been check with both
+   ESC/Java2 and the JML typechecker.  Some portions of these specs
+   are annotated with optional comment markers (//-@ and //+@)
+   according to what specs current versions of tools support well.
+
+ o Dozens of new tests have been added to test the new specs of
+   various core Java classes.
+
+   These new specs and tests are primarily the work of David Cok.
+
+ o The build infrastructure has been cleaned up and made more robust.
+
+ o Support for the new JML keyword signals_only has been added and
+   specs have been updated to reflect such.
+
+ o Numerous non_null annotations have been added.
+
+   This work is due to Patrice Chalin and his group at Concordia.
+
+ o Improvements to handling modifies clauses and reasoning about
+   method calls in loop invariants and decreases statements.
+
+   This work is due to David Cok.
+
+ o Some initial work on new model classes is provided in the source
+   release.  These new model classes are observationally pure,
+   immutable, functional, executable, and use referential equality.
+   These new model classes are being written using the JML tool suite,
+   ESC/Java2, and the unit test generation.  A paper about this work
+   will be included in a future release.
+
+ o Added lexer and parser support for a number of new and experimental
+   JML keywords relating to null references.  See the change from
+   2005-06-08 for more information.  These new keywords have only
+   recently been chosen and support for their final choices will be in
+   the next release.
+
+ o Slides for tutorials (the ETAPS tutorial) have been updated to
+   reflect new JML keywords (e.g., signals_only).
+
+ o Eclipse 3.1 configuration files for development within the Eclipse
+   platform are provided.
+
+ o New object logics have been written for verification in PVS.  These
+   logics are the foundation for new work in supporting multiple
+   provers and multiple logics in extended static checking.
+
+   This theoretical work is led by Joe Kiniry.  It has been
+   accomplished with help from Cesare Tinelli, Patrice Chalin, and
+   Clement Hurlin.
+
+ o An interface has been designed, specified, and implemented for
+   communication between ESC/Java2 and backend theorem provers.  An
+   example implementation of such in both Java, C, and OCaml is
+   provided.  This work will be documented in the next release when
+   support for new provers has been tested.
+
+   This interface and new prover work is led by Joe Kiniry with able
+   assistance from Clement Hurlin.
+
+ o An entirely new AST infrastructure has been designed to replace the
+   existing ad hoc, untyped AST used to represent the verification
+   condition representation.  Pretty-printers have been written for
+   this AST for the Simplify and PVS theorem provers and the SMT-LIB
+   language that is supported by many theorem provers, namely Cesare
+   Tinelli's prover called Sammy.
+
+   This work is led by Joe Kiniry and has been designed and
+   implemented by Clement Hurlin.
+
+ o All specs for the javafe and escjava packages have been revised to
+   work with both ESC/Java2 and the JML tool suite.  This means that
+   ESC/Java2 now runs in the JML runtime assertion checker.  
+
+   This represented a monumental amount of hard work by Patrice Chalin
+   and Joe Kiniry.
+
+ o Numerous bugs have been identified, fixed, and added. :)
+
+Low-digit bug ids are in the new bug-tracking system, the GForge
+hosted in the SRG at UCD.  Some are migrations of bugs from the old
+system, thus the list contains a few duplicates, but the list in the
+next release will only list bugs in the SRG GForge.
+
+Most of the bugs listed below are subtle and rarely encountered with
+normal use.  The only bugs that may be seen by more than casual users
+include numbers 156, 155, 131, and 111.
+
+The following bugs are FIXED or CLOSED in this release:
+  [ 160     ] add expected output for test2000
+  [ 154     ] new spec for java.lang.Exception is problematic
+  [ 152     ] (aborted) message has gone missing on output from unit test Ghost.java
+  [ 144     ] [found-by-jmlc] illegal call to ExprVec.make in escjava.translate.Translate
+  [ 142     ] make JDK src typecheck tests use proper classfiles.jar in bootclasspath
+  [ 139     ] make specs-test results in stack overflow
+  [ 136     ] typechecking the JDK 1.3 source results in four SOEs
+  [ 135     ] typechecking the JDK 1.2 source results in a SOE
+  [ 134     ] The -source 1.4 switch should only be used in the JDK 1.4 typecheck test.
+  [ 133     ] typechecking the JDK 1.4 source results in an assertion failures and six StackOverflowErrors
+  [ 132     ] typechecking CopyLoaded results in AIOOBE
+  [ 130     ] make alltests causes StackOverflowError (loop in typechecker for nested classes)
+  [ 110     ] quicktest should set exit status and stop immediately on error
+  [ 109     ] ESC/Java2 requires JDK 1.4
+  [ 108     ] Warn if 0 files supplied on command line
+  [ 106     ] ESC/Java2 -help text updates needed
+  [ 35      ] java.net.URL spec problem
+  [ 34      ] java.util.SortedMap specs are incomplete
+  [ 33      ] Format of error/warning messages referencing filenames
+  [ 1235936 ] Simplify crashes on certain input (DUP)
+
+The following bugs are known to EXIST in this release:
+  [ 162     ] Shipped Simplify for Linux cannot be executed - shared libs missing
+  [ 161     ] deeply nested inner classes and inheritance
+  [ 159     ] make jmlc1b1 reports errors
+  [ 158     ] cannot typecheck several classes in JDK 1.4's source due to inner class resolution problems
+  [ 157     ] cannot typecheck JDK 1.1's java.awt.Container
+  [ 156     ] default constructor's default specification
+  [ 155     ] TestByteArrayInputStream missing five previously issued warnings
+  [ 153     ] error caret placement shift
+  [ 151     ] typechecking error for java.awt.image.IndexColorModel in JDK 1.3
+  [ 150     ] typechecking error for java.util.TreeMap in JDK 1.2
+  [ 149     ] typechecking error for rmi.server.RMIClassLoader in JDK 1.2
+  [ 148     ] typechecking error for javax.swing.plf.basic.BasicSliderUI in JDK 1.2
+  [ 147     ] typechecking error for swing.plaf.motif.MotifBorders in JDK 1.2
+  [ 146     ] unrecognized pragma error should name unrecognized pragma
+  [ 145     ] move jmlspecs.jar from ${ESCTOOLS_ROOT} to ${JAR_FILES} with the other jars
+  [ 143     ] [found-by-jmlc] ERRORTYPE tag constant is not a legal PrimitiveType tag value
+  [ 138     ] calling a non-helper private method in a constructor
+  [ 137     ] specs for java.util.Calendar, java.util.Date, and java.util.GregorianCalendar need to be finished
+  [ 131     ] Typechecking with no specs results in mysterious typechecking errors.
+  [ 129     ] Model imports change name resolution
+  [ 128     ] NullPointerException in escjava.translate.Translate.isStandaloneConstructor()
+  [ 127     ] SecurityKey and KeySet example.
+  [ 126     ] remaining scope problem with java/jml fields
+  [ 125     ] Must be able to reason about clone() in ESC/Java, verif. too
+  [ 124     ] problems with quantifier triggering
+  [ 123     ] Missing typecheck for uninitialized final fields.
+  [ 112     ] compilation error
+  [ 111     ] Recursive postconditions
+  [ 105     ] something borked in DSA for model methods
+  [ 104     ] constants in interfaces must be statically initialised
+  [ 103     ] do not crash when translating annotations we have ignored
+  [ 95      ] infinite loop caused similarly named methods in different classes
+  [ 55      ] inheritance of invariants
+  [ 1235942 ] Simplify crashes on certain input
+  [ 1233899 ] All subtypes of JMLType are not immutable
+  [ 1205276 ] Clone that calls constructor doesn't establish instanceof of \result
+  [ 33      ] Format of error/warning messages referencing filenames
+  [ 34      ] java.util.SortedMap specs are incomplete
+  [ 35      ] java.net.URL spec problem
+  [ 1092379 ] bad import not detected
+  [ 1087941 ] escj fails to report precond violation in static void main()
+  [ 1084179 ] Missing typecheck for uninitialized final fields.
+  [ 1074192 ] problems with quantifier triggering
+  [ 1005855 ] Must be able to reason about clone() in ESC/Java, verif. too
+  [ 983136  ] ESC/Java2 AssertionFailureException in substitution
+  [ 970234  ] Incompleteness of integral type bound axioms?
+  [ 965748  ] Bitwise operations need to be reviewed.
+  [ 958836  ] Use of maps clause with array member attributes.
+  [ 924986  ] Self-checking Javafe
+  [ 924856  ] Example escjava2 tcsh script fails on paths w whitespace
+  [ 888368  ] remaining scope problem with java/jml fields
+  [ 879849  ] SecurityKey &amp; KeySet example.
+  [ 879832  ] Implicit constructor postconditions.
+  [ 876972  ] NullPointerException by ESC/Java-2.0a5
+  [ 876093  ] Supplying the same command-line switch multiple times.
+  [ 868258  ] Unit test Desugaring.java OS-dependency.
+  [ 866268  ] Scripts should warn when specified paths do not exist.
+  [ 821466  ] Unexpected output from Simplify
+  [ 785972  ] Constant field initialization and refinement.
+  [ 781465  ] Predicate abstraction should work in ESC/Java
+  [ 779747  ] Model imports change name resolution
+
+The following feature requests are still unfulfilled:
+  [ 36	    ] Add SMT-LIB benchmark generation facility
+  [ 970215  ] Add Java Card support.
+  [ 962110  ] Add switch to print out number of VC variables and/or terms
+  [ 919162  ] model methods in interfaces
+
+All bugs have been migrated to the GForge at UCD. http://sort.ucd.ie/
 
 -------------------------------------------------------------------
 version 2.0a8 "ETAPS 2005 'April Fools' Release" (1 April 2005)
