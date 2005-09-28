@@ -1,4 +1,89 @@
+2005-09-27  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* ChangeLog, release-files/RELEASE_NOTES.txt:
+	Updated ChangeLog and release notes for new release.
+
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	Wrote a tiny intro.
+
+	* Escjava/test/jdktests/TestByteArrayInputStream.java:
+	* specs/java/io/ByteArrayInputStream.refines-spec:
+	* specs/java/io/InputStream.refines-java:
+	I have identified the single assertion line that causes the
+	consistency problem with this specification.  See the test code for
+	details.
+
+	* Escjava/test/jdktests/TestByteArrayInputStream.java:
+	* specs/java/io/ByteArrayInputStream.refines-spec:
+	* specs/java/io/InputStream.refines-java:
+	I have identified the single assertion line that causes the
+	consistency problem with this specification.  See the test code for
+	details.
+
+2005-09-26  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TRoot.java:
+	* Escjava/java/escjava/vcGeneration/TVariable.java:
+	* Escjava/java/escjava/vcGeneration/TypeInfo.java:
+	* Escjava/java/escjava/vcGeneration/VariableInfo.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/help:
+	Updating ast design and translation of old proofs.
+
+	* Escjava/java/escjava/vcGeneration/PvsStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/SimplifyStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/TCast.java:
+	* Escjava/java/escjava/vcGeneration/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TSimplifyVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TVisitor.java:
+	* Escjava/java/escjava/vcGeneration/generate-visitor-functions.sh:
+	Extending capacities of the current VC generator by adding visitor
+	for Simplify and PVS.  The StringBuffer classes handle pretty
+	printing of proofs.  The simplify visitor is here just to be
+	tested against old proof system.  The pvs one permits to generate
+	proof for the escjava2_logic. As usual it only works on small
+	examples for the moment, I didn't add it to the makefile or
+	Main.java as it's still experimental.
+
+2005-09-23  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Provers/Makefile:
+	Cleaned up makefile after all of Clement's changes.  Only necessary
+	rules now are included.  All documentation and example software build
+	properly.
+
+	* release-files/RELEASE_NOTES.txt:
+	Named new release "Ernst 'Gimme-Gimme' Release" <grin>.  I'll be
+	writing this section this weekend for the release.
+
+	* docs/BUILDING_NEW_RELEASES.txt:
+	Outline of release notes that SRG members will update in detail prior
+	to the next release for which they will be responsible.
+
+	* Makefile:
+	Make search for empty directories robust to spaces-in-filenames.
+
+2005-09-21  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	Add of new switch to -Stats option.
+	Counters are add to escjava/Translate/VcToString.java
+	A few conditional construct to Main.java
+
+2005-09-08  David Cok  <cok@frontiernet.net>
+
+	* Javafe/test/javafe/test/fe/test2000/.cvsignore: ignoring output file
+
 2005-09-03  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* ChangeLog: Updated ChangeLog.
 
 	* Utils/junitutils/LineIterator.java:
 	Added represents clause for model variable moreElements.
