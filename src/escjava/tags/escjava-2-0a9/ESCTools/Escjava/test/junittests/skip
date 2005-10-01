@@ -1,0 +1,43 @@
+TestSuite.java
+## Platform dependent
+PureCheck.java
+Quant.java
+Helper.java
+InheritNull.java
+PreconditionWarnings.java
+NonNullResult.java
+InheritedSpecs.java
+StringFresh.java
+NonNullBad.java
+## Varying output
+FormalNonnullInheritance.java
+## A bug / tests to be fixed
+MethodInSpec.java
+Helper3.java
+## Modify everything tests
+ModEverything.java
+## New tests
+Privacy.java
+## Fix
+Desugaring.java
+DesugaringA.java
+Inconsistent.java
+THERR.java
+StaticInit.java
+## Until purity is resolved
+NL.java
+## Simplify problems
+Bug1.java
+## Problem with model vars with represents clauses that are not declared
+## modified, but change anyway
+Impl4.java
+## Temp problem with new specs
+SetComprehension.java
+Min.java
+Scope.java
+## To fix
+Inherit.java
+ClassEquiv.java
+FinalRef.java
+## Check
+DefCon.java

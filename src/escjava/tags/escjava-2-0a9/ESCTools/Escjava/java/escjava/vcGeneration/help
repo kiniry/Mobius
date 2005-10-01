@@ -1,0 +1,4 @@
+./generate-visitor-functions
+
+./clean.sh && ./division-j-file.pl TFunction.j && ./division-j-file.pl TLiteral.j
+

@@ -1,0 +1,66 @@
+#! /bin/tcsh -f
+## This script executes a short test that an installation was successful
+## You should have ESCTOOLS_RELEASE set to the directory containing the
+## release, but if it is not set, this script attempts to guess it.
+
+unsetenv ESCTOOLS_ROOT
+unsetenv ESC_SPECS
+unsetenv ESCJ_SIMPLIFY_DIR
+
+
+set TMP = /tmp
+
+echo "### Trying a quick test of the release in directory " $TMP
+
+if ( ! $?ESCTOOLS_RELEASE ) then
+    set NAME = $PWD/$0
+    if ( -e $NAME ) then
+	set ESCTOOLS_RELEASE=$NAME:h
+	echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    else if ( -e $0 ) then
+	set ESCTOOLS_RELEASE=$0:h
+	echo Guessing ESCTOOLS_RELEASE = $ESCTOOLS_RELEASE
+    endif
+endif
+if ( ! $?ESCTOOLS_RELEASE ) then
+	echo "You need to set the environment variables ESCTOOLS_RELEASE to the location of the escjava2 release files"
+	exit 1
+endif
+
+cd $TMP
+echo "## Running with a help argument to get a usage message"
+
+$ESCTOOLS_RELEASE/escj -help || (echo "FAILED"; exit 1)
+
+
+echo
+echo "## Creating a simple java file and testing it - should produce a warning"
+echo "   (This also checks that Simplify will run) "
+
+echo "public class A {" > A.java
+echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
+echo "}" >> A.java
+
+$ESCTOOLS_RELEASE/escj A.java || (echo "FAILED"; exit 1)
+rm -f A.java
+
+echo
+echo "## Now testing the escjava2 script"
+echo "## Running with a help argument to get a usage message"
+
+$ESCTOOLS_RELEASE/escjava2 -help || (echo "FAILED"; exit 1)
+
+
+echo
+echo "## Creating a simple java file and testing it - should produce a warning"
+echo "   (This also checks that Simplify will run) "
+
+echo "public class A {" > A.java
+echo "  public void m(Object o) { String s = o.toString(); }" >> A.java
+echo "}" >> A.java
+
+$ESCTOOLS_RELEASE/escjava2 A.java || (echo "FAILED"; exit 1)
+rm -f A.java
+
+echo
+echo "## End of quick test"

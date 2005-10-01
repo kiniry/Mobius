@@ -1,0 +1,5 @@
+*.texinfo
+.pvscontext
+current_unsorted_logic.prf
+orphaned-proofs.prf
+pvsbin

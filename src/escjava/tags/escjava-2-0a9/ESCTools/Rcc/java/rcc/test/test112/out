@@ -1,0 +1,7 @@
+C.java:15: Warning:  super class 'C' of thread shared class 'G' must be thread shared (ThreadLocal)
+/*# thread_shared */
+    ^
+Associated declaration is "C.java", line 2, col 4:
+/*# thread_local */
+    ^
+1 warning

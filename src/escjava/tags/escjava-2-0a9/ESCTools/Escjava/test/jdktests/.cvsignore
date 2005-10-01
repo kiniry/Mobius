@@ -1,0 +1,6 @@
+*.class
+*.java-ckd
+listtests
+listfiles
+testfile
+tests_built

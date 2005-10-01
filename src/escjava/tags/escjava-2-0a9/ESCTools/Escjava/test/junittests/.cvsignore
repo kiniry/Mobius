@@ -1,0 +1,8 @@
+*.class
+*.java-ckd
+classes.stamp
+listtests
+listteststemp
+semantic.cache
+templist
+templista

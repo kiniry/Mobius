@@ -1,0 +1,1078 @@
+<<<<<<< StringBuffer.jml
+// @(#)$Id$
+=======
+// @(#)$Id$
+
+// Copyright (C) 2004 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+package java.lang;
+//@ model import org.jmlspecs.models.JMLString;
+>>>>>>> 1.9
+
+<<<<<<< StringBuffer.jml
+// Copyright (C) 2004 Iowa State University
+// Copyright (C) 2004 David R. Cok
+// Copyright (C) 2004 Joseph R. Kiniry
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+=======
+/** JML's specification of StringBuffer.
+ * @author David Cok
+ * @author Gary T. Leavens
+ */
+final public class StringBuffer implements java.io.Serializable, CharSequence {
+>>>>>>> 1.9
+
+<<<<<<< StringBuffer.jml
+package java.lang;
+=======
+    //@ public non_null model String accumulatedString;
+>>>>>>> 1.9
+
+<<<<<<< StringBuffer.jml
+//@ model import org.jmlspecs.models.JMLString;
+=======
+    /*@ public normal_behavior
+      @   assignable this.*;
+      @   ensures this.accumulatedString.equals("");
+      @*/
+    public StringBuffer();
+
+    /*@ public normal_behavior
+      @   assignable this.*;
+      @   ensures this.accumulatedString.equals("");
+      @*/
+    public StringBuffer(int i);
+
+    /*@ public normal_behavior
+      @   requires s != null;
+      @   assignable this.*;
+      @   ensures this.accumulatedString.equals(s);
+      @*/
+    public StringBuffer(String s);
+
+    /*@ public normal_behavior
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString + c));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(char c);
+
+    /*@ public normal_behavior
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString + b));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(boolean b);
+
+    /*@ public normal_behavior
+      @   requires s != null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.concat(s)));
+      @   ensures \result == this;
+      @ also
+      @ public normal_behavior
+      @   requires s == null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.concat("null")));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(String s);
+
+    /*@   public normal_behavior
+      @     assignable accumulatedString;
+      @     ensures accumulatedString
+      @            .equals(\old(accumulatedString.concat(String.valueOf(o))));
+      @     ensures \result == this;
+      @ implies_that
+      @   public normal_behavior
+      @     requires o != null;
+      @     assignable accumulatedString;
+      @     ensures accumulatedString.equals(\old(accumulatedString + o));
+      @     ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(Object o);
+
+    /*@ public normal_behavior
+      @   requires s != null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.concat(s.accumulatedString)));
+      @   ensures \result == this;
+      @ also
+      @ public normal_behavior
+      @   requires s == null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.concat("null")));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(StringBuffer s);
+
+    /*@ public normal_behavior
+      @   requires ca != null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString
+      @                        .concat(String.valueOf(ca, i, j))));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(char[] ca, int i, int j);
+
+    /*@ public normal_behavior
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString + i));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(int i);
+
+    /*@ public normal_behavior
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString + f));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(float f);
+
+    /*@ public normal_behavior
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString + d));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(double d);
+
+    /*@ public normal_behavior
+      @   requires ca != null;
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(ca))));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(char[] ca);
+
+    /*@ public normal_behavior
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.equals(\old(accumulatedString + l));
+      @   ensures \result == this;
+      @*/
+    public synchronized StringBuffer append(long l);
+
+    /*@ also
+      @ public normal_behavior
+      @   requires 0 <= index && index < accumulatedString.length();
+      @   assignable \nothing;
+      @   ensures \result == accumulatedString.charAt(index);
+      @*/
+    public /*@ pure @*/ synchronized char charAt(int index);
+
+    //@ requires 0 <= srcBegin && srcBegin <= srcEnd;
+    //@ requires srcEnd < accumulatedString.length();
+    //@ requires 0 < dstBegin && dstBegin + srcEnd - srcBegin < dst.length;
+    //@ assignable dst[*];
+    // !FIXME! needs postcondition
+    public synchronized void getChars(int srcBegin, int srcEnd,
+                                      char[] dst, int dstBegin);
+
+    /*@   public normal_behavior
+      @     requires str != null;
+      @     requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                              accumulatedString.startsWith(str, k));
+      @     assignable \nothing;
+      @     ensures \result
+      @             == (\min int k; 0 <= k && k < accumulatedString.length()
+      @                             && accumulatedString.startsWith(str, k);
+      @                             k);
+      @ also
+      @   public normal_behavior
+      @     requires str != null;
+      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                               accumulatedString.startsWith(str, k));
+      @     assignable \nothing;
+      @     ensures \result == -1;
+      @*/
+    public /*@ pure @*/ int indexOf(String str);
+
+    /*@  public normal_behavior
+      @    requires str != null;
+      @    requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                             accumulatedString.startsWith(str, k)
+      @                             && k >= Math.min(fromIndex, str.length()));
+      @    assignable \nothing;
+      @    ensures \result
+      @            == (\min int k; 0 <= k && k < accumulatedString.length()
+      @                            && accumulatedString.startsWith(str, k)
+      @                            && k >= Math.min(fromIndex, str.length());
+      @                            k);
+      @ also
+      @   public normal_behavior
+      @     requires str != null;
+      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                               accumulatedString.startsWith(str, k)
+      @                               && k >= Math.min(fromIndex, str.length()));
+      @     assignable \nothing;
+      @     ensures \result == -1;
+      @*/
+    public /*@ pure @*/ synchronized int indexOf(String str, int fromIndex);
+
+    /*@  public normal_behavior
+      @     requires str != null;
+      @     requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                              accumulatedString.startsWith(str, k));
+      @     assignable \nothing;
+      @     ensures \result
+      @             == (\max int k; 0 <= k && k < accumulatedString.length()
+      @                             && accumulatedString.startsWith(str, k);
+      @                             k);
+      @ also
+      @   public normal_behavior
+      @     requires str != null;
+      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                               accumulatedString.startsWith(str, k));
+      @     assignable \nothing;
+      @     ensures \result == -1;
+      @*/
+    public /*@ pure @*/ synchronized int lastIndexOf(String str);
+
+    /*@   public normal_behavior
+      @     requires str != null;
+      @     requires (\exists int k; 0 <= k && k < accumulatedString.length();
+      @                              accumulatedString.startsWith(str, k)
+      @                              && k <= Math.min(fromIndex, str.length()));
+      @     ensures \result
+      @             == (\max int k; 0 <= k && k < accumulatedString.length()
+      @                             && accumulatedString.startsWith(str, k)
+      @                             && k <= Math.min(fromIndex, str.length());
+      @                             k);
+      @ also
+      @   public normal_behavior
+      @     requires str != null;
+      @     requires !(\exists int k; 0 <= k && k < accumulatedString.length();
+      @                               accumulatedString.startsWith(str, k)
+      @                               && k <= Math.min(fromIndex, str.length()));
+      @     assignable \nothing;
+      @     ensures \result == -1;
+      @*/
+    public /*@ pure @*/ synchronized int lastIndexOf(String str, int fromIndex);
+
+    /*@ also
+      @ public normal_behavior
+      @   assignable \nothing;
+      @   ensures \result == accumulatedString.length();
+      @*/
+    public /*@ pure @*/ synchronized int length();
+
+    public synchronized StringBuffer replace(int start, int end, String str);
+
+    public /*@ pure @*/ CharSequence subSequence(int start, int end);
+
+    public /*@ pure @*/ synchronized int capacity();
+
+    public synchronized void ensureCapacity(int minimumCapacity);
+
+    //@ requires 0 <= index && index < accumulatedString.length();
+    //@ assignable accumulatedString;
+    // !FIXME! needs more postconditions...
+    //@ ensures \result == this;
+    public synchronized StringBuffer deleteCharAt(int index);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + l + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public StringBuffer insert(int offset, long l);
+
+    public synchronized StringBuffer insert(int offset ,char[] ca, int offset, int len);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + d + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public StringBuffer insert(int offset, double d);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + c + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public synchronized StringBuffer insert(int offset, char c);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + i + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public StringBuffer insert(int offset, int i);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + String.valueOf(ca)
+      @                        + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public synchronized StringBuffer insert(int offset, char[] ca);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + b + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public StringBuffer insert(int offset, boolean b);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + o + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public synchronized StringBuffer insert(int offset, Object o);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + s + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public synchronized StringBuffer insert(int offset, String s);
+
+    /*@ public normal_behavior
+      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,offset)
+      @                        + f + accumulatedString.substring(offset)));
+      @   ensures \result == this;   
+      @*/
+    public StringBuffer insert(int offset, float f);
+
+    public synchronized StringBuffer reverse();
+
+
+    /*@ public normal_behavior
+      @   requires 0 <= index && index < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString
+      @           .equals(\old(accumulatedString.substring(0,index)
+      @                        + c + accumulatedString.substring(index+1)));
+      @ implies_that
+      @ public normal_behavior
+      @   requires 0 <= index && index < accumulatedString.length();
+      @   assignable accumulatedString;
+      @   ensures accumulatedString.length()
+      @           == \old(accumulatedString.length())
+      @        && (\forall int i; 0 <= i && i < accumulatedString.length()
+      @                                  && i != index;
+      @                           accumulatedString.charAt(i)
+      @                           == \old(accumulatedString.charAt(i)))
+      @        && accumulatedString.charAt(index) == c;
+      @*/
+    public synchronized void setCharAt(int index, char c);
+
+    //@ also
+    //@  public normal_behavior
+    // !FIXME! not sure this is really pure, but CharSequence requires purity
+    //@  assignable \nothing;
+    //@  ensures \result.equals(accumulatedString);
+    public String toString();
+
+    public synchronized void setLength(int i);
+
+    public synchronized StringBuffer delete(int i, int j);
+
+    public synchronized String substring(int i);
+>>>>>>> 1.9
+
+/**
+ * JML's specification of {@link java.lang.StringBuffer}.
+ *
+ * @version $Revision$
+ * @author Gary T. Leavens
+ * @author David R. Cok
+ * @author Joseph Kiniry
+ */
+
+final public class StringBuffer
+  implements java.io.Serializable, CharSequence
+{
+  //@ public non_null model JMLString accumulatedString; in objectState;
+
+  //@ public invariant 0 <= length();
+
+  /*@ public normal_behavior
+    @   ensures length() == 0;
+    @*/
+  public /*@ pure @*/ StringBuffer();
+
+  /*@ public normal_behavior
+    @   requires 0 <= length;
+    @   ensures length <= capacity();
+    @ also
+    @ public exceptional_behavior
+    @   requires length < 0;
+    @   assignable \nothing;
+    @   signals (NegativeArraySizeException);
+    @*/
+  public /*@ pure @*/ StringBuffer(int length)
+    throws NegativeArraySizeException;
+
+  /*@ public normal_behavior
+    @   requires str != null;
+    @   ensures accumulatedString.theString.equals(str);
+    @   ensures str.length() == length();
+    @   ensures str.length() <= capacity();
+    @ also
+    @ public exceptional_behavior
+    @   requires str == null;
+    @   assignable \nothing;
+    @   signals (NullPointerException);
+    @*/
+  public /*@ pure @*/ StringBuffer(String str)
+    throws NullPointerException;
+
+  // public int length() is specified in CharSequence
+
+  /*@ public normal_behavior
+    @   ensures 0 <= \result;
+    @*/
+  public /*@ pure @*/ int capacity();
+
+  /*@ public normal_behavior
+    @   requires 0 < minimumCapacity;
+    @   assignable objectState;
+    @   ensures minimumCapacity <= capacity();
+    @ also
+    @ public normal_behavior
+    @   requires minimumCapacity <= 0;
+    @   assignable \nothing;
+    @*/
+  public void ensureCapacity(int minimumCapacity);
+
+  /*@ public normal_behavior
+    @   requires 0 <= newLength;
+    @   requires newLength < length();
+    @   assignable objectState;
+    @   ensures (* all characters from index 0 to index newLength-1 in accumulatedString
+    @              are unchanged *);
+    @   ensures (\forall int i; 0 <= i && i < newLength;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures length() == newLength;
+    @ also
+    @ public normal_behavior
+    @   requires 0 <= newLength;
+    @   requires length() <= newLength;
+    @   assignable objectState;
+    @   ensures (* all characters in the old accumulatedString are unchanged
+    @              and all other characters are the null character *);
+    @   ensures (\forall int i; 0 <= i && i < \old(length());
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; \old(length()) <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) == '\u0000');
+    @   ensures length() == newLength;
+    @ also
+    @ public exceptional_behavior
+    @   requires newLength < 0;
+    @   assignable \nothing;
+    @   signals (IndexOutOfBoundsException);
+    @*/
+  public void setLength(int newLength)
+    throws IndexOutOfBoundsException;
+
+  // public char charAt(int index) specified in CharSequence
+
+
+  /*@ public normal_behavior
+    @   requires dst != null;
+    @   requires !((srcBegin < 0) || (dstBegin < 0) || (srcEnd < srcBegin) ||
+    @              (length() < srcEnd) || (dst.length < dstBegin+srcEnd-srcBegin));
+    @   assignable objectState, dst[*];
+    @   ensures (* the contents of dst, beginning at index dstBegin, are the 
+    @              characters from index srcBegin to srcEnd-1 of this *);
+    @   ensures (\forall int i; srcBegin <= i && i < srcEnd;
+    @             accumulatedString.theString.charAt(i) == dst[dstBegin+(i-srcBegin)]);
+    @ also
+    @ public exceptional_behavior
+    @   requires dst == null;
+    @   assignable \nothing;
+    @   signals (NullPointerException);
+    @ also
+    @ public exceptional_behavior
+    @   requires (srcBegin < 0) || (dstBegin < 0) || (srcEnd < srcBegin) ||
+    @            (length() < srcEnd) || (dst.length < dstBegin+srcEnd-srcBegin);
+    @   assignable \nothing;
+    @   signals (IndexOutOfBoundsException);
+    @*/
+  public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin)
+    throws NullPointerException, IndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(index < 0 || length() <= index);
+    @   assignable objectState;
+    @   ensures accumulatedString.theString.charAt(index) == ch;
+    @   ensures length() == \old(length());
+    @ also
+    @ public exceptional_behavior
+    @   requires index < 0 || length() <= index;
+    @   assignable \nothing;
+    @   signals (IndexOutOfBoundsException);
+    @*/
+  public void setCharAt(int index, char ch)
+    throws IndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString).concat(String.valueOf(obj)));
+    @   ensures length() == \old(length() + String.valueOf(obj).length());
+    @*/
+  public StringBuffer append(Object obj);
+
+  /*@ public normal_behavior
+    @   requires str != null;
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(str)));
+    @   ensures length() == \old(length() + str.length());
+    @ also
+    @ public normal_behavior
+    @   requires str == null;
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat("null")));
+    @   ensures length() == \old(length() + 4);
+    @*/
+  public StringBuffer append(String str);
+
+  /*@ public normal_behavior
+    @   requires sb != null;
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(sb.accumulatedString)));
+    @   ensures length() == \old(length() + sb.length());
+    @ also
+    @ public normal_behavior
+    @   requires sb == null;
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat("null")));
+    @   ensures length() == \old(length() + 4);
+    @*/
+  public StringBuffer append(StringBuffer sb);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(str))));
+    @   ensures length() == \old(length() + str.length);
+    @*/
+  public StringBuffer append(char str[]);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals
+    @             (\old(accumulatedString.concat(String.valueOf(str, offset, len))));
+    @   ensures length() == \old(length() + len);
+    @*/
+  public StringBuffer append(char[] str, int offset, int len);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(b))));
+    @   ensures length() == \old(length() + (b ? 4 : 5));
+    @*/
+  public StringBuffer append(boolean b);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(c)));
+    @   ensures length() == \old(length() + 1);
+    @*/
+  public StringBuffer append(char c);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(i))));
+    @   ensures length() == \old(length() + String.valueOf(i).length());
+    @*/
+  public StringBuffer append(int i);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(l))));
+    @   ensures length() == \old(length() + String.valueOf(l).length());
+    @*/
+  public StringBuffer append(long l);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(f))));
+    @   ensures length() == \old(length() + String.valueOf(f).length());
+    @*/
+  public StringBuffer append(float f);
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures accumulatedString.equals(\old(accumulatedString.concat(String.valueOf(d))));
+    @   ensures length() == \old(length() + String.valueOf(d).length());
+    @*/
+  public StringBuffer append(double d);
+
+  /*@ public normal_behavior
+    @   requires !(start < 0 || length() < start || end < start);
+    @   requires start != end;
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures (\forall int i; 0 <= i && i < start;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; end <= i && i < \old(length());
+    @                           accumulatedString.theString.charAt(start+i-end) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures length() == \old(length() - (end - start));
+    @ also
+    @ public normal_behavior
+    @   requires start == end;
+    @   assignable \nothing;
+    @   ensures \result == this;
+    @ also
+    @ public exceptional_behavior
+    @   requires start < 0 || length() < start || end < start;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer delete(int start, int end)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(index < 0 || length() <= index);
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures (\forall int i; 0 <= i && i < index;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; index < i && i < \old(length());
+    @                           accumulatedString.theString.charAt(i-1) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures length() == \old(length() - 1);
+    @ also
+    @ public exceptional_behavior
+    @   requires index < 0 || length() <= index;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public  StringBuffer deleteCharAt(int index)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(start < 0 || length() < start || end < start);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < start;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; start <= i && i < start + str.length();
+    @                    accumulatedString.theString.charAt(i) == str.charAt(i-start));
+    @   ensures length() == start + str.length();
+    @ also
+    @ public exceptional_behavior
+    @   requires start < 0 || length() < start || end < start;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer replace(int start, int end, String str)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(start < 0 || length() < start);
+    @   assignable \nothing;
+    @   ensures \result.equals(accumulatedString.theString.substring(start, length()));
+    @ also
+    @ public exceptional_behavior
+    @   requires start < 0 || length() < start;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public /*@ pure @*/ String substring(int start)
+    throws StringIndexOutOfBoundsException;
+
+  // public CharSequence subSequence(int start, int end) specified in CharSequence
+
+  /*@ public normal_behavior
+    @   requires !(start < 0 || end < 0 || length() < start || length() < end || end < start);
+    @   assignable \nothing;
+    @   ensures \result.equals(accumulatedString.theString.substring(start, end));
+    @ also
+    @ public exceptional_behavior
+    @   requires start < 0 || end < 0 || length() < start || length() < end || end < start;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public /*@ pure @*/ String substring(int start, int end)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(index < 0 || length() < index || offset < 0 || len < 0 
+    @              || str.length < offset+len);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < index;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; index <= i && i < index+len;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(str[i-index+offset]));
+    @   ensures (\forall int i; index+len <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i-len)));
+    @   ensures length() == \old(length() + len);
+    @ also
+    @ public exceptional_behavior 
+    @   requires index < 0 || length() < index || offset < 0 || len < 0 
+    @            || str.length < offset+len;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  // Note that these insert() methods really do *insert* the given information
+  // into this StringBuffer, shifting all characters at the index/offset to the
+  // right.  Thus, the length of this StringBuffer *always* grows by the length
+  // of the inserted data.
+  public StringBuffer insert(int index, char str[], int offset, int len)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + String.valueOf(obj).length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(String.valueOf(obj).charAt(i - offset)));
+    @   ensures (\forall int i; offset + String.valueOf(obj).length() <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - String.valueOf(obj).length())));
+    @   ensures length() == \old(length() + String.valueOf(obj).length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, Object obj)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + str.length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(str.charAt(i - offset)));
+    @   ensures (\forall int i; offset + str.length() <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - str.length())));
+    @   ensures length() == \old(length() + str.length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, String str)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + str.length;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(str[i - offset]));
+    @   ensures (\forall int i; offset + str.length <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - length())));
+    @   ensures length() == \old(length() + String.valueOf(str).length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, char str[])
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + String.valueOf(b).length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(String.valueOf(b).charAt(i - offset)));
+    @   ensures (\forall int i; offset + String.valueOf(b).length() <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - String.valueOf(b).length())));
+    @   ensures length() == \old(length() + String.valueOf(b).length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, boolean b)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures accumulatedString.theString.charAt(offset) == c;
+    @   ensures (\forall int i; offset + 1 <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - 1)));
+    @   ensures length() == \old(length() + 1);
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, char c)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int j; 0 <= j && j < offset;
+    @                           accumulatedString.theString.charAt(j) ==
+    @                           \old(accumulatedString.theString.charAt(j)));
+    @   ensures (\forall int j; offset <= j && j < offset + String.valueOf(j).length();
+    @                           accumulatedString.theString.charAt(j) ==
+    @                           \old(String.valueOf(i).charAt(j - offset)));
+    @   ensures (\forall int j; offset + String.valueOf(i).length() <= j && j < length();
+    @                           accumulatedString.theString.charAt(j) ==
+    @                           \old(accumulatedString.theString.charAt(i - String.valueOf(j).length())));
+    @   ensures length() == \old(length() + String.valueOf(i).length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, int i)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + String.valueOf(l).length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(String.valueOf(l).charAt(i - offset)));
+    @   ensures (\forall int i; offset + String.valueOf(l).length() <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - String.valueOf(l).length())));
+    @   ensures length() == \old(length() + String.valueOf(l).length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, long l)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + String.valueOf(f).length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(String.valueOf(f).charAt(i - offset)));
+    @   ensures (\forall int i; offset + String.valueOf(f).length() <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - String.valueOf(f).length())));
+    @   ensures length() == \old(length() + String.valueOf(f).length());
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, float f)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires !(offset < 0 || length() < offset);
+    @   assignable objectState;
+    @   ensures (\forall int i; 0 <= i && i < offset;
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i)));
+    @   ensures (\forall int i; offset <= i && i < offset + String.valueOf(d).length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(String.valueOf(d).charAt(i - offset)));
+    @   ensures (\forall int i; offset + String.valueOf(d).length() <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(i - String.valueOf(d).length())));
+    @ also
+    @ public exceptional_behavior
+    @   requires offset < 0 || length() < offset;
+    @   assignable \nothing;
+    @   signals (StringIndexOutOfBoundsException);
+    @*/
+  public StringBuffer insert(int offset, double d)
+    throws StringIndexOutOfBoundsException;
+
+  /*@ public normal_behavior
+    @   requires str != null;
+    @   assignable \nothing;
+    @   ensures -1 <= \result;
+    @   ensures \result == indexOf(str, 0);
+    @ also
+    @ public exceptional_behavior
+    @   requires str == null;
+    @   assignable \nothing;
+    @   signals (NullPointerException);
+    @*/
+  public /*@ pure @*/ int indexOf(String str)
+    throws NullPointerException;
+
+  /*@ public normal_behavior
+    @   requires str != null;
+    @   assignable \nothing;
+    @   ensures -1 == \result || Math.min(fromIndex, str.length()) <= \result;
+    @   ensures (\result != -1) ==> accumulatedString.theString.startsWith(str, \result);
+    @   ensures (\result != -1) ==> !(\exists int i; 0 <= fromIndex && i < \result;
+    @                                 accumulatedString.theString.startsWith(str, i));
+    @   ensures (\result == -1) <==> !(\exists int i; fromIndex <= i && i < length();
+    @                                  accumulatedString.theString.startsWith(str, i));
+    @ also
+    @ public exceptional_behavior
+    @   requires str == null;
+    @   assignable \nothing;
+    @   signals (NullPointerException);
+    @*/
+  // Note that this method searches *forwards*, counting *up* from fromIndex.
+  public /*@ pure @*/ int indexOf(String str, int fromIndex)
+    throws NullPointerException;
+
+  /*@ public normal_behavior
+    @   requires str != null;
+    @   assignable \nothing;
+    @   ensures -1 <= \result;
+    @   ensures \result == lastIndexOf(str, length());
+    @ also
+    @ public exceptional_behavior
+    @   requires str == null;
+    @   assignable \nothing;
+    @   signals (NullPointerException);
+    @*/
+  public /*@ pure @*/ int lastIndexOf(String str)
+    throws NullPointerException;
+
+  /*@ public normal_behavior
+    @   requires str != null;
+    @   assignable \nothing;
+    @   ensures -1 <= \result;
+    @   ensures (* there is no match of str between the indicated match location
+    @              and fromIndex *);
+    @   ensures !(\exists int i; \result < i && i < fromIndex;
+    @                            accumulatedString.theString.startsWith(str, i));
+    @ also
+    @ public exceptional_behavior
+    @   requires str == null;
+    @   assignable \nothing;
+    @   signals (NullPointerException);
+    @*/
+  // Note that this method searches *backward*, counting *down* from fromIndex.
+  public /*@ pure @*/ int lastIndexOf(String str, int fromIndex)
+    throws NullPointerException;
+
+  /*@ public normal_behavior
+    @   assignable objectState;
+    @   ensures \result == this;
+    @   ensures (\forall int i; 0 <= i && i < length();
+    @                           accumulatedString.theString.charAt(i) ==
+    @                           \old(accumulatedString.theString.charAt(length()-i-1)));
+    @*/
+  public StringBuffer reverse();
+
+  // public String toString() specified in CharSequence
+
+  /*@ also
+    @ public normal_behavior
+    @   assignable \nothing;
+    @   ensures \result.equals(accumulatedString);
+    @*/
+  public /*@ pure @*/ String toString();
+}

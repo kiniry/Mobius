@@ -1,0 +1,24 @@
+ESC/Java version VERSION
+    [TIME]
+
+InnerClassTest ...
+  Prover started:TIME
+    [TIME]
+
+InnerClassTest: InnerClassTest() ...
+    [TIME]  passed
+  [TIME total]
+
+InnerClassTest$StaticInnerClass ...
+    [TIME]
+
+InnerClassTest$StaticInnerClass: StaticInnerClass() ...
+    [TIME]  passed
+  [TIME total]
+
+InnerClassTest$InnerClass ...
+    [TIME]
+
+InnerClassTest$InnerClass: InnerClass() ...
+    [TIME]  passed
+  [TIME total]

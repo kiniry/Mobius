@@ -1,0 +1,223 @@
+%
+% $Id$
+%
+
+\documentclass[times, 10pt, twocolumn]{article}
+
+\usepackage{latex8}
+\usepackage{times}
+\usepackage{ifpdf}
+%% \usepackage{a4wide}
+
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\else
+\usepackage{graphicx}
+\fi
+
+% \usepackage{html}
+% \usepackage{url}
+\usepackage{xspace}
+%\usepackage{doublespace}
+\usepackage{tabularx}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{eucal}
+% \ifpdf
+% \usepackage[centredisplay]{diagrams}
+% \else
+% \usepackage[centredisplay,PostScript=dvips]{diagrams}
+% \fi
+\usepackage{float}
+
+\ifpdf
+\usepackage[pdftex,bookmarks=false,a4paper=true,
+            plainpages=false,naturalnames=true,
+            colorlinks=true,pdfstartview=FitV,
+            linkcolor=blue,citecolor=blue,urlcolor=blue,
+            pdfauthor="Joseph R. Kiniry"]{hyperref}
+\else
+\usepackage[dvips,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\fi
+
+\newcommand{\todo}{\textbf{TODO:}}
+\newcommand{\tablesize}{\footnotesize}
+\newcommand{\eg}{e.g.,\xspace}
+\newcommand{\ie}{i.e.,\xspace}
+\newcommand{\etc}{etc.\xspace}
+\newcommand{\myhref}[2]{\ifpdf\href{#1}{#2}\else\htmladdnormallinkfoot{#2}{#1}\fi}
+%\newcommand{\myhref}[2]{\emph{#2}}
+
+%---------------------------------------------------------------------
+% New commands, macros, etc.
+%---------------------------------------------------------------------
+
+% We+Th=Us
+
+%% \input{kt}
+
+%=====================================================================
+
+\begin{document}
+
+% Tweaks of page setup from Erik.
+%% \setlength{\textwidth}{17.0cm}
+%% \topmargin=-.75cm
+%% \evensidemargin=0mm
+%% \oddsidemargin=0mm
+%% \headheight=0mm
+%% \headsep=0mm
+%% \footskip=0mm
+
+% Omit page numbers and running heads.
+% take the % away on next line to produce the final camera-ready version 
+\pagestyle{empty}
+
+% --- Author Metadata here ---
+%\conferenceinfo{BUGS}{Workshop on the Evaluation of Software Defect Detection Tools}
+% http://www.cs.umd.edu/%7Epugh/BugWorkshop05/
+%\setpagenumber{50}
+%\CopyrightYear{2005}
+%\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
+% --- End of Author Metadata ---
+
+\title{Referentially Equal, Infinite, Executable, Observationally Pure\\
+JML Model Classes that are Extended Static Checkable}
+
+% \title{Integrating Static Checking and Interactive Verification:\\
+%   Supporting Multiple Theories and Provers in Verification}
+
+\author{Patrice Chalin\\
+  Faculty of Engineering and Computer Science\\
+  Department of Computer Science and Software Engineering\\
+  Concordia University\\
+  1455 de Maisonneuve Blvd. West, LB 921-3\\
+  Montreal, Quebec, Canada\\
+  H3G 1M8\\
+  \\
+  Joseph R.~Kiniry\\
+  School of Computer Science and Informatics\\
+  University College Dublin\\
+  Belfield, Dublin 4, Ireland\\
+%  \email{joseph.kiniry@ucd.ie}\\
+}
+
+\maketitle
+
+%======================================================================
+\thispagestyle{empty}
+\begin{abstract}
+  
+Abstract.
+
+\end{abstract}
+
+%=====================================================================
+% A category with only the three required fields
+%\category{D.1.0}{Software}
+%                {Programming Techniques}
+%                [General]
+%\category{D.2}{Software}
+%              {Software Engineering}
+%\category{D.2.1}{Software}
+%                {Software Engineering}
+%                {Requirements/Specifications}
+%                [Languages, Methodologies, Tools]
+%\category{D.2.6}{Software}
+%                {Software Engineering}
+%                {Programming Environments}
+%\category{D.2.13}{Software}
+%                {Software Engineering}
+%                {Reusable Software}
+%\category{D.3.1}{Software}
+%                {Programming Languages}
+%                [Formal Definitions and Theory]
+%\category{F.3.1}{Theory of Computation}
+%                {Logics and Meanings of Programs}
+%                [Specifying and Verifying and Reasoning about Programs]
+%\category{F.4.1}{Theory of Computation}
+%                {Mathematical Logic and Formal Languages}
+%                [Mathematical Logic]
+%\category{F.4.3}{Theory of Computation}
+%                {Mathematical Logic and Formal Languages}
+%                [Formal Languages]
+
+%% \terms{kind theory, software reuse, knowledge, wiki}
+
+%% AMS classification: 68N15 68N19 68N30 68Q55 68Q60
+
+%% CR classification: D.1.0 D.2 D.2.1 D.2.6 D.2.13 D.3.1 F.3.1 F.4.1 F.4.3
+
+%=================================================================
+\Section{Introduction}
+
+Introduction.
+
+%=================================================================
+\Section{Models in JML}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSection{Critical Missing Properties}
+
+%=================================================================
+\Section{Model Properties}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSection{Referentially Equal}
+
+% - can be considered to be a form of thread-safe lazy initialization
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSubSection{Immutability}
+
+% JSR 133 (Java Memory Model and Thread Specification
+%   - all critical fields must be final
+%   - do not allow other threads to see the object until it is 
+%     fully constructed
+% ==> not susceptible to data races
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSection{Infinite Models}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSection{Executability}
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSection{Observational Purity}
+
+
+
+%=================================================================
+\Section{Designing for Extended Static Checking}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\SubSection{Constructs to Avoid}
+
+%=================================================================
+\Section{Experiences}
+
+%=================================================================
+\Section{Observations and Challenges}
+
+
+%=====================================================================
+\Section{Acknowledgments}
+
+
+%======================================================================
+%% \nocite{ex1,ex2}
+\bibliographystyle{latex8}
+\bibliography{abbrev,ads,category,complexity,hypertext,icsr,knowledge,languages,linguistics,meta,metrics,misc,modeling,modeltheory,reuse,rewriting,softeng,specification,ssr,technology,theory,web,upcoming,upcoming_conferences,conferences,workshops,verification,escjava,jml,nijmegen}
+
+%======================================================================
+% Fin
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
