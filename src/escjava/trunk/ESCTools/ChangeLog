@@ -1,3 +1,48 @@
+2005-10-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/escj:
+	* Makefile:
+	* Makefile.defs:
+	* Makefile.local.sample:
+	* papers/Makefile:
+	* release-files/RELEASE_NOTES.txt:
+	* slides/ECOOPTutorial-cok/Makefile:
+	* slides/ETAPSTutorial/Makefile:
+	* slides/Makefile:
+	A bunch of final changes necessary for the new release.
+
+	o Added a cleanup rule to the Makefile to delete all backup files,
+	merge files, etc.
+
+	o Build and incorporate the jmlspecs.jar appropriately in the
+	release.
+
+	o Build all Javadocs for escjava subpackages.
+
+	o Changed JML_ROOT to point to the actual root directory of the JML2
+	release (not the directory above it, or one level below it, etc.).
+
+	o Write new source-release rule.
+
+	o Added xmlrpc.jar to the release and to the javadoc classpath.
+
+	o Rewrote papers/Makefile and slides/Makefile to correctly build all
+	papers and slides.
+
+	o Added slides/ECOOPTutorial-cok/Makefile to build ECOOP slides.
+
+2005-10-01  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/Options.java: fixing bug :
+	[#163] Spec for -stats option parsing is invalid and does not match implementation
+
+	I do not use StringTokenize since the java doc discourage it. Thanks
+	to the bug reporter, the code is nicer now.
+
+2005-09-28  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* ChangeLog: Final updates for 2.0a9 release.
+
 2005-09-27  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* ChangeLog, release-files/RELEASE_NOTES.txt:
