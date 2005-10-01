@@ -241,7 +241,7 @@ export ESCJAVA_PACKAGE_LIST = escjava \
 	escjava.ant escjava.ast escjava.backpred escjava.gui \
 	escjava.pa escjava.pa.generic escjava.parser \
 	escjava.prover escjava.reader escjava.sp \
-	escjava.tc escjava.translate escjava.vcGeneration
+	escjava.tc escjava.translate # escjava.vcGeneration
 
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
@@ -448,6 +448,8 @@ source-release: cleanup alldocs
 	cp build.xml ${RELTEMP}
 	cp prj.el ${RELTEMP}
 	cp ChangeLog ${RELTEMP}
+#	Copy Javadoc API docs
+	cp -r $(JAVADOC_GEN_DIR) ${RELTEMP}
 #	Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
 	cp papers/*.pdf ${RELTEMP}/papers
@@ -479,7 +481,9 @@ source-release: cleanup alldocs
 	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
 	-find ${RELTEMP} -name ".cvsignore" -exec rm -rf {} \; > /dev/null  2>&1
 	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1
-	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR} *
+	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR}.tbz *
+	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELSRCTAR}.tgz *
+	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELSRCTAR}.zip *
 	rm -rf ${RELTEMP}
 
 patch-release: clean
@@ -489,7 +493,9 @@ patch-release: clean
 	${MAKE} jars generate-patches generate-archives zero-length-files
 	cp ${ESCTOOLS_ROOT}/install.sh ${PATCH_DIR}
 	mkdir -p ${RELDIR}
-	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR} .
+	cd ${PATCH_DIR}; tar cvjf ${RELDIR}/${RELPATCHTAR}.tbz .
+	cd ${PATCH_DIR}; tar cvzf ${RELDIR}/${RELPATCHTAR}.tgz .
+	cd ${PATCH_DIR}; zip -Ar ${RELDIR}/${RELPATCHTAR}.zip .
 	rm -rf ${PATCH_DIR}
 
 version:
@@ -540,6 +546,8 @@ binary-release: build jars alldocs cleanup
 	rm -rf ${RELTEMP}/original-specs
 	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
+#	Copy Javadoc API docs
+	cp -r $(JAVADOC_GEN_DIR) ${RELTEMP}
 #	Copy papers and slides and other documentation
 	mkdir ${RELTEMP}/papers
 	cp papers/*.pdf ${RELTEMP}/papers
@@ -571,17 +579,19 @@ binary-release: build jars alldocs cleanup
 	cp README.first README.txt ${RELTEMP}
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
-	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *
+	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR}.tbz *
+	cd ${RELTEMP}; tar czvf ${RELDIR}/${RELTAR}.tgz *
+	cd ${RELTEMP}; zip -Ar ${RELDIR}/${RELTAR}.zip *
 	rm -rf ${RELTEMP}
 
 test-binary-release:
 	@echo "Testing binary release ............"
 	rm -rf ${RELTEST}
 	mkdir -p ${RELTEST}
-	cp ${RELDIR}/${RELTAR} ${RELTEST}
+	cp ${RELDIR}/${RELTAR}.tbz ${RELTEST}
 	cd ${RELTEST} ;\
 	    unset ESC_CLASSPATH ; \
-	    tar xjf ${RELTAR} ;\
+	    tar xjf ${RELTAR}.tbz ;\
 	    ./quicktest
 
 ## Note - we need to unset lots of environmental variables here because we

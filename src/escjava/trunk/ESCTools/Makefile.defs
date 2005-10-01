@@ -214,9 +214,9 @@ export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
 export RELJAR  ?= ${JAR_FILES}/esctools2.jar
 export RELSRCJAR  ?= ${JAR_FILES}/esctools2src.jar
 export RELCODENAME ?= "ETAPS 2005"
-export RELTAR  ?= ${RELNAME-DATE}-binary.tbz
-export RELSRCTAR  ?= ${RELNAME-DATE}-source.tbz
-export RELPATCHTAR  ?= ${RELNAME-DATE}-patch.tbz
+export RELTAR  ?= ${RELNAME-DATE}-binary
+export RELSRCTAR  ?= ${RELNAME-DATE}-source
+export RELPATCHTAR  ?= ${RELNAME-DATE}-patch
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
 export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin-patch.bz
