@@ -201,14 +201,16 @@ fi
 
 ##########################################################################
 
+XMLRPC_LIB=${ESCTOOLS_RELEASE}/xmlrpc.jar
+
 ## This is the path needed to run escjava
 ## If it is not set, use the path suitable for working in CVS or in the
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if [ -n "$ESCTOOLS_RELEASE" ]; then
-	ESC_CLASSPATH=$ESCTOOLS_RELEASE/esctools2.jar
+	ESC_CLASSPATH=${ESCTOOLS_RELEASE}/esctools2.jar:${XMLRPC_LIB}:
     else
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${ESCTOOLS_ROOT}/Javafe/classfiles:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:
     fi
 fi
 

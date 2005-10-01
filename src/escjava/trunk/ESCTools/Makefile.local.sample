@@ -59,8 +59,8 @@ export JDK_BINARIES ?=
 
 ## If you have a JML development directory structure on your machine,
 ## you may set this variable to its root.  I.e., this directory
-## contains the directory "JML2".
-#export JML_ROOT = /Users/cok/JML
+## contains the directories "bin", "bin-for-developers", etc.
+#export JML_ROOT = /Users/cok/JML/JML2
 
 ## Define the location of the junit.jar file.  (This can alternatively
 ## be the location of the junit class files.)  This is only needed to

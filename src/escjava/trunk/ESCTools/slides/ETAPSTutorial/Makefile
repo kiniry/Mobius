@@ -8,6 +8,7 @@ clean:
 	rm -f *.ps
 	rm -f *.pdf
 	rm -f *.dvi
+	rm -f *.out
 
 intro: 1_intro_jml.pdf
 

@@ -13,13 +13,11 @@ psfiles =	$(foreach texfile,$(texfiles),\
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
 
-SLIDES =	escjava_demo.pdf introjml.pdf
+SLIDES =	escjava2-warnings.pdf
 
 all:	build
 
 build:	$(SLIDES)
-	make -C ETAPSTutorial all
-	make -C ECOOPTutorial-cok all
 
 # latex
 
@@ -58,8 +56,6 @@ cleanup:
 	rm -f _region_* *.aux *.log *# *~
 
 clean:
-	make -C ETAPSTutorial clean;
-	make -C ECOOPTutorial-cok clean;
 	rm -rf auto _region_* \
 		$(SLIDES) \
 		*.aux *.log *~ *.dvi *.ps *.pdf *.brf *.txt \

@@ -161,7 +161,7 @@ fix-perms:	.perms-fixed
 
 # To really clean, we need to clean Javafe last since some of its
 # tools are used in cleaning.
-clean: clean-norel clean-release clean-release-test
+clean: clean-norel clean-release clean-release-test cleanup
 
 # Cleans out the release directory
 clean-release:
@@ -190,6 +190,12 @@ clean-norel-noreltemp:
 	rm -f $(JAR_FILES)/*.jar
 	rm -f tags TAGS SpecTest.java .specs
 
+# Cleans all backups files, log files, CVS merge files, etc.
+cleanup:
+	-find ${ESCTOOLS_ROOT} \
+	\( -name "*~" -or -name "*.#*" -or -name "semantic.cache*" \) \
+	-exec rm -f {} \; > /dev/null 2>&1
+
 ################################################################################
 ## Specifications
 
@@ -198,8 +204,8 @@ $(ESCJAVA2_SPECS_JAR):
 
 $(JML2_SPECS_JAR):
 ifdef JML_ROOT
-	${MAKE} -C ${JML_ROOT}/JML2 jmlspecs-jar
-	cp ${JML_ROOT}/JML2/bin/jmlspecs.jar $(JML2_SPECS_JAR)
+	${MAKE} -C ${JML_ROOT} jmlspecs-jar
+	cp ${JML_ROOT}/bin/jmlspecs.jar ${JML2_SPECS_JAR}
 else
 	@echo NOT REMAKING JARS FROM JML - since JML_ROOT not defined
 	@true
@@ -227,11 +233,15 @@ papers:
 	${MAKE} -C papers build
 
 export JAVAFE_PACKAGE_LIST = \
-      javafe javafe.ast javafe.parser  \
-	  javafe.reader javafe.genericfile javafe.filespace \
-	  javafe.tc javafe.util \
+	javafe javafe.ast javafe.parser  \
+	javafe.reader javafe.genericfile javafe.filespace \
+	javafe.tc javafe.util \
 
 export ESCJAVA_PACKAGE_LIST = escjava \
+	escjava.ant escjava.ast escjava.backpred escjava.gui \
+	escjava.pa escjava.pa.generic escjava.parser \
+	escjava.prover escjava.reader escjava.sp \
+	escjava.tc escjava.translate escjava.vcGeneration
 
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
@@ -240,7 +250,7 @@ export PACKAGE_LIST = \
 # typechecking.
 
 # The CVS HEAD JML specs,
-#SPECS = ${JML_ROOT}/JML2/specs:${JML_ROOT}/JML2
+#SPECS = ${JML_ROOT}/specs:${JML_ROOT}
 # The latest JML stable release specs.
 #SPECS = /usr/local/Java/JML/specs:/usr/local/Java/JML
 # The ESC/Java2 specs.
@@ -250,7 +260,7 @@ SPECS = $(ESCTOOLS_ROOT)/specs
 ## are generated in the course of the build (e.g. the AST classes).
 ## TODO: Should have -overview , header, footer, bottom, group,
 ## stylesheetfile link/linkoffline, subpackages -FIXME Kiniry
-javadoc:  build
+javadoc: build
 	rm -rf $(JAVADOC_GEN_DIR)
 	mkdir -p $(JAVADOC_GEN_DIR)
 	mkdir -p $(JAVADOC_GEN_DIR)/images
@@ -258,7 +268,7 @@ javadoc:  build
 	cp $(JAVAFE_ROOT)/doc/javadoc/images/*.gif $(JAVADOC_GEN_DIR)/images
 	$(JAVADOC) -sourcepath \
 	  $(call canonicalize,$(SOURCEPATH):$(JUNIT_SOURCEPATH)) \
-	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}) \
+	  -classpath $(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}) \
 	  -overview docs/overview.html \
 	  -header $(COPYRIGHT) \
 	  -footer $(COPYRIGHT) \
@@ -277,7 +287,7 @@ javadoc:  build
 	  -d $(JAVADOC_GEN_DIR) \
           $(PACKAGE_LIST)
 
-jmldoc:  build
+jmldoc: build
 	rm -rf $(JMLDOC_GEN_DIR)
 	mkdir -p $(JMLDOC_GEN_DIR)
 	mkdir -p $(JMLDOC_GEN_DIR)/images
@@ -415,8 +425,62 @@ releases-notests:
 	${MAKE} binary-release
 	${MAKE} source-release
 
-source-release:
+source-release: cleanup alldocs
 	@echo "Creating source release .........."
+#	RELDIR is the staging area for all files
+#	First copy all .class files to sub and build a jar file
+	mkdir -p ${RELDIR}
+	rm -rf ${RELTEMP}
+	mkdir -p ${RELTEMP}
+	${MAKE} jars
+#	Now copy in all specs, new and old
+	rm -rf ${RELTEMP}/specs
+	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
+	rm -rf ${RELTEMP}/original-specs
+	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
+#       Copy all source code, tests, libs, Makefiles, ChangeLog, etc.
+	cp -r ${UTILS_SOURCE_DIR} ${RELTEMP}
+	cp -r ${MOCHA_SOURCE_DIR} ${RELTEMP}
+	cp -r ${JAVAFE_SOURCE_DIR} ${RELTEMP}
+	cp -r ${ESCJAVA_SOURCE_DIR} ${RELTEMP}
+	cp ${XMLRPC_LIB} ${RELTEMP}/xmlrpc.jar
+	cp Makefile* ${RELTEMP}
+	cp build.xml ${RELTEMP}
+	cp prj.el ${RELTEMP}
+	cp ChangeLog ${RELTEMP}
+#	Copy papers and slides and other documentation
+	mkdir ${RELTEMP}/papers
+	cp papers/*.pdf ${RELTEMP}/papers
+	mkdir ${RELTEMP}/slides
+	cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
+	cp slides/introjml.pdf ${RELTEMP}/slides
+	cp slides/escjava_demo.pdf ${RELTEMP}/slides
+	mkdir ${RELTEMP}/docs
+	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}/docs
+	cp docs/Escjava2-Extending/Escjava2-Extending.pdf ${RELTEMP}/docs
+	cp docs/Escjava2-Logics/Escjava2-Logics.pdf ${RELTEMP}/docs
+	cp docs/Escjava2-Provers/Escjava2-Provers.pdf ${RELTEMP}/docs
+	cp docs/ESCJAVA-UsersManual.html ${RELTEMP}/docs
+	cp -r Escjava/release/master/examples ${RELTEMP}
+#	Copy actual jar files with all ESC/Java2's classfiles and the two jar files
+#       with specs in them.
+	cp esctools2.jar ${RELTEMP}
+	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
+	cp $(JML2_SPECS_JAR) ${RELTEMP}
+# 	Copy other miscellaneous files
+	${MAKE} clean-norel-noreltemp
+	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escjava2.sample ${RELTEMP}
+	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
+	cp README.first README.txt ${RELTEMP}
+	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
+	-find ${RELTEMP} -name "CVS" -exec rm -rf {} \; > /dev/null 2>&1
+	-find ${RELTEMP} -name ".cvsignore" -exec rm -rf {} \; > /dev/null  2>&1
+	-find ${RELTEMP} -name "*~" -or -name ".#*" -exec rm -f {} \; > /dev/null 2>&1
+	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELSRCTAR} *
+	rm -rf ${RELTEMP}
 
 patch-release: clean
 	@echo "Creating patch release .........."
@@ -461,15 +525,15 @@ srcjar:
 	cp ${RELSRCJAR} ${ESCTOOLS_ROOT}
 
 .PHONY: binary-release
-binary-release: build jars alldocs ## FIXME javadoc
+binary-release: build jars alldocs cleanup
 	@echo "Creating binary release .........."
-#	 RELDIR is the staging area for all files
-#	 First copy all .class files to sub and build a jar file
+#	RELDIR is the staging area for all files
+#	First copy all .class files to sub and build a jar file
 	mkdir -p ${RELDIR}
 	rm -rf ${RELTEMP}
 	mkdir -p ${RELTEMP}
 	${MAKE} jars
-#	 Now copy in all specs, new and old
+#	Now copy in all specs, new and old
 	rm -rf ${RELTEMP}/specs
 	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \; > /dev/null  2>&1
@@ -481,6 +545,7 @@ binary-release: build jars alldocs ## FIXME javadoc
 	cp papers/*.pdf ${RELTEMP}/papers
 	mkdir ${RELTEMP}/slides
 	cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
+	cp slides/introjml.pdf ${RELTEMP}/slides
 	cp slides/escjava_demo.pdf ${RELTEMP}/slides
 	mkdir ${RELTEMP}/docs
 	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}/docs
@@ -499,11 +564,11 @@ binary-release: build jars alldocs ## FIXME javadoc
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
-	#cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escj.bat ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escjava2.exe ${RELTEMP}
+	cp ${ESCJAVA_ROOT}/escjava2.sample ${RELTEMP}
 	cp ${ESCJ_SIMPLIFY_DIR}/Simplify-1.5.4* ${RELTEMP}
 	cp README.first README.txt ${RELTEMP}
-	cp escspecs.jar ${RELTEMP}
-	cp escspecs.jar ${RELTEMP}/jmlspecs.jar
 	cd release-files; cp `ls | grep -v CVS` ${RELTEMP}
 	-find ${RELTEMP} -name "*~" -exec rm -f {} \; > /dev/null 2>&1
 	cd ${RELTEMP}; tar cjvf ${RELDIR}/${RELTAR} *

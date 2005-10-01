@@ -33,27 +33,32 @@ all:	build
 
 build:	$(PAPERS) $(HOMEWORK)
 
-jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)
-
-CASSIS2004.pdf:	CASSIS2004.tex koa_state_diagram.pdf
-	pdflatex CASSIS2004; bibtext CASSIS2004; pdflatex CASSIS2004; pdflatex CASSIS2004;
-	make cleanup
-
-CASSIS2004.dvi:	CASSIS2004.tex koa_state_diagram.eps
-	latex CASSIS2004; bibtext CASSIS2004; latex CASSIS2004; latex CASSIS2004;
-
-koa_state_diagram.eps: koa_state_diagram.fig
-	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
-
-koa_state_diagram.pdf: koa_state_diagram.fig
-	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
-
 $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 	@$(CODE2TEXI) $< > $@
 
-%.pdf: %.tex
-	pdflatex $< $@
-	make cleanup
+%.pdf: %.aux %.bbl
+	export BIBINPUTS="~/Sandboxes/Writing/Bibliography//:"; \
+	export BSTINPUTS="~/LaTeX//:"; \
+	export TEXINPUTS="~/LaTeX//:"; \
+	pdflatex $* && pdflatex $*;
+
+%.dvi: %.aux %.bbl
+	export BIBINPUTS="~/Sandboxes/Writing/Bibliography//:"; \
+	export BSTINPUTS="~/LaTeX//:"; \
+	export TEXINPUTS="~/LaTeX//:"; \
+	latex $* && latex $*;
+
+%.aux %.log: %.tex
+	export BIBINPUTS="~/Sandboxes/Writing/Bibliography//:"; \
+	export BSTINPUTS="~/LaTeX//:"; \
+	export TEXINPUTS="~/LaTeX//:"; \
+	latex $*;
+
+%.bbl %.blg: %.aux
+	export BIBINPUTS="~/Sandboxes/Writing/Bibliography//:"; \
+	export BSTINPUTS="~/LaTeX//:"; \
+	export TEXINPUTS="~/LaTeX//:"; \
+	bibtex $*;
 
 %.ps2pdf: %.ps
 	ps2pdf $<
@@ -67,21 +72,7 @@ $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 %.ps.gz: %.ps
 	gzip -c $< > $@
 
-%.dvi: %.tex
-	latex $<
-
-# ${paper}.dvi: ${paper}.tex
-# 	latex ${paper}; latex ${paper}; bibtex ${paper}; \
-# 	latex ${paper}; latex ${paper}; \
-
-# ${paper}.dvi: ${paper}.tex
-# 	latex ${paper}; latex ${paper};
-
-# ${talk}.ps: ${talk}.dvi
-# 	dvips -ta4 -Pcmz -Pamz -f < $< > $@
-
-# ${talk}.dvi: ${talk}.tex
-# 	latex ${talk};
+# texinfo
 
 %.info:	%.texinfo
 	makeinfo $<
@@ -97,6 +88,32 @@ $(PROBLEMS)/%.java.texinfo : $(PROBLEMS)/%.java
 
 %.pdf:	%.texinfo
 	texi2pdf $<
+
+jml_homework.dvi:	jml_homework.texinfo $(javatexinfofiles)
+
+PASTE2004.pdf:	PASTE2004.tex
+	pdflatex PASTE2004; pdflatex PASTE2004;
+	make cleanup
+
+CASSIS2004.pdf:	CASSIS2004.tex koa_state_diagram.pdf
+	(unset BSTINPUTS; \
+	pdflatex CASSIS2004; bibtex CASSIS2004; pdflatex CASSIS2004; pdflatex CASSIS2004;)
+	make cleanup
+
+CASSIS2004.dvi:	CASSIS2004.tex koa_state_diagram.eps
+	(unset BSTINPUTS; \
+	latex CASSIS2004; bibtex CASSIS2004; latex CASSIS2004; latex CASSIS2004;)
+
+NIII-R0413.pdf:	NIII-R0413.tex koa_state_diagram.pdf
+	(unset BSTINPUTS; \
+	pdflatex NIII-R0413; bibtex NIII-R0413; pdflatex NIII-R0413; pdflatex NIII-R0413;)
+	make cleanup
+
+koa_state_diagram.eps: koa_state_diagram.fig
+	fig2dev -L eps koa_state_diagram.fig koa_state_diagram.eps
+
+koa_state_diagram.pdf: koa_state_diagram.fig
+	fig2dev -L pdf koa_state_diagram.fig koa_state_diagram.pdf
 
 cleanup:
 	rm -f _region_* *.aux *.log \

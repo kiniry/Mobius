@@ -1,5 +1,5 @@
 -------------------------------------------------------------------
-version 2.0a9 "2005 New Academic Term Release" (28 September 2005)
+version 2.0a9 "2005 New Academic Term Release" (1 October 2005)
 
 New features include:
 
