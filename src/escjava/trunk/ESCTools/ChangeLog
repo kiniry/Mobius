@@ -1,5 +1,13 @@
 2005-10-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
+	* Makefile, Makefile.defs:
+	Currently we are avoiding generating javadocs for escjava.vcGeneration
+	as this package is not ready for release.
+
+	The Javadoc APIs are added to the releases.
+
+	Three archive types are now generated (tbz, tgz, zip).
+
 	* Escjava/escj:
 	* Makefile:
 	* Makefile.defs:
