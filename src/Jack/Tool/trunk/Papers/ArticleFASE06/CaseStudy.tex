@@ -1,0 +1,408 @@
+%\subsection{Application to the Example}\label{sec-casestudy}
+
+
+
+%\begin{figure}[hp]
+%
+%\begin{multicols}{2}
+%\begin{scriptsize}
+%\ttfamily
+%
+%	    private int state = GETTING\_SPECIFICS\_STATE;\\
+%	    private static  int GETTING\_SPECIFICS\_STATE = 1;\\
+%	    private static  int SENDING\_TO\_BANK\_STATE = 2;\\
+%	    private static  int INVALID\_PIN\_STATE = 3;\\
+%	    private static  int COMPLETING\_TRANSACTION\_STATE = 4;\\
+%	    private static  int PRINTING\_RECEIPT\_STATE = 5;\\
+%	    private static  int ASKING\_DO\_ANOTHER\_STATE = 6;\\
+%	    private static  int CARD\_RETAINED\_STATE = 7;\\
+%	    private static  int PIN\_MAX\_TRY = 3;\\
+%	    private int pin\_try = 0;\\
+%	    private boolean pin\_validated = false;\\
+%\begin{tabular}{|l|}
+%\hline
+%/*@ ghost bool Pa =\\
+%\quad @ (state == 7 || state == 6);\\
+%\quad @*/\\
+%\hline
+%\end{tabular}
+
+%\begin{tabular}{|l|}
+%\hline
+%//@ ghost bool Pe = pin\_validated;\\
+%\hline
+%\end{tabular}
+
+
+%\begin{tabular}{|l|}
+%\hline
+%/*@ ghost bool complete\_called\\
+%\quad @ = pin\_validated;\\
+%\quad @*/\\
+%\hline
+%\end{tabular}
+
+
+
+%\begin{tabular}{|l|}
+%\hline	    
+%//@ invariant complete\_called =$>$ Pe;\\
+%\hline
+%\end{tabular}\\
+
+
+
+
+%\begin{tabular}{|l|}
+%\hline	    
+%//@ invariant true =$>$ true;\\
+%\\
+%/*@ invariant ((7 - state) + \\
+%\quad @ \quad getTryLess()) $>$ 0;\\
+%\quad @*/\\
+%\\
+%/*@ constraint $\backslash$old(!Pa) \\
+%\quad @ \quad \&\& !(state == 7 || state == 6) =$>$ \\
+%\quad @ (7 - state + getTryLess()) \\
+%\quad @ \quad $<$ $\backslash$old(7 - state + getTryLess())\\
+%\quad @ for initialiseTransaction, sendToBank, \\
+%\quad @ pinValidation, complete,   printReceipt;\\
+%\quad @*/ \\ 
+%\\
+%/*@ constraint $\backslash$old(!Pa) \\
+%\quad @ \quad \&\& !(state == 7 || state == 6) =$>$ \\
+%\quad @ (7 - state + getTryLess()) \\
+%\quad @ \quad $<$= $\backslash$old(7 - state + getTryLess())\\
+%\quad @ for getTryLess;\\
+%\quad @*/ \\ 
+%\\
+%/*@ constraint $\backslash$old(!Pa) \\
+%\quad @ \quad \&\& !(state == 7 || state == 6) =$>$ \\
+%\quad @ ( state == GETTING\_SPECIFICS\_STATE\\
+%\quad @ || state == SENDING\_TO\_BANK\_STATE\\
+%\quad @ || state == INVALID\_PIN\_STATE;\\
+%\quad @ ||state == COMPLETING\_TRANSACTION\_STATE\\
+%\quad @ || state == PRINTING\_RECEIPT\_STATE;)\\
+%\quad @*/ \\ 
+%\hline
+
+ 
+%\end{tabular}
+%\\
+
+
+%	    /*@ private behaviour\\
+%\quad	      @ requires state == GETTING\_SPECIFICS\_STATE;\\
+%\quad	      @ modifies state;\\
+%\quad	      @ ensures  state == SENDING\_TO\_BANK\_STATE \\
+%\quad	      @ \qquad    ||  state ==ASKING\_DO\_ANOTHER\_STATE;\\
+%\quad	      @*/\\
+%	    private void initialiseTransaction()\{\\
+%\quad	    ...  	 \\
+%\quad \fbox{//@ set  Pa = (state == 7 || state == 6)?true;}\\
+%\quad \fbox{//@ set  Pe = (pin\_validated)?true;}\\
+
+%	    \}\\
+	   
+%	    /*@ private behaviour\\
+%\quad	      @ requires state == SENDING\_TO\_BANK\_STATE ;\\
+%\quad	      @ modifies state,pin\_try,pin\_validated;\\
+%\quad	      @ ensures  (state == INVALID\_PIN\_STATE \\
+%\quad	      @     \qquad             \&\& pin\_try == $\backslash$old(pin\_try) + 1\\
+%\quad	      @     \qquad             \&\& pin\_validated == false) \\
+%\quad	      @     \quad   ||   (state == ASKING\_DO\_ANOTHER\_STATE \\
+%\quad	      @     \qquad             \&\& pin\_try == $\backslash$old(pin\_try)\\
+%\quad	      @     \qquad             \&\& pin\_validated == false)\\
+%\quad	      @     \quad   ||   (state == COMPLETING\_TRANSACTION\_STATE \\
+%\quad	      @     \qquad             \&\& pin\_try == $\backslash$old(pin\_try)\\
+%\quad	      @     \qquad             \&\& pin\_validated == true);\\
+%\quad	      @*/\\
+%	    private void sendToBank()\{\\
+%\quad	    ...   \\
+%\quad \fbox{//@ set  Pa = (state == 7 || state == 6)?true;}\\
+%\quad \fbox{//@ set  Pe = (pin\_validated)?true;}\\
+%	    \}\\
+	    
+%	    /*@ private behaviour\\
+%\quad	      @ requires state == INVALID\_PIN\_STATE;\\
+%\quad	      @ modifies state,pin\_try,pin\_validated;\\
+%\quad	      @ ensures (state == COMPLETING\_TRANSACTION\_STATE \\  
+%\quad         @  \qquad          \&\& pin\_validated == true
+%              @  \qquad          \&\& pin\_try == $\backslash$old(pin\_try))\\
+%\quad	      @  \quad     || (state == ASKING\_DO\_ANOTHER\_STATE\\
+%\quad	      @  \qquad         \&\& pin\_try == $\backslash$old(pin\_try))\\
+%\%quad	      @  \quad     || (state == CARD\_RETAINED\_STATE \\
+%\quad	      @  \qquad         \&\& pin\_try == PIN\_MAX\_TRY\\
+%\quad	      @  \qquad         \&\& pin\_validated == false);\\
+%\quad	      @ signals (Exception) (state == INVALID\_PIN\_STATE \\
+%\quad	      @  \quad          \&\& pin\_try < PIN\_MAX\_TRY\\
+%\quad	      @  \quad           \&\& pin\_try == $\backslash$old(pin\_try) + 1\\
+%\quad	      @  \quad         \&\& pin\_validated == false)\\
+%\quad	      @*/\\
+%	    private void pinValidation() \{\\
+%\quad       ...\\
+%\quad \fbox{//@ set  Pa = (state == 7 || state == 6)?true;}\\
+%\quad \fbox{//@ set  Pe = (pin\_validated)?true;}\\
+%	    \}\\
+%	    
+%	    
+%	    /*@ private behaviour\\
+%\quad	      @ requires state ==COMPLETING\_TRANSACTION\_STATE;\\
+%\quad	      @ modifies state;\\
+%\quad	      @ ensures state == PRINTING\_RECEIPT\_STATE\\
+%\quad	      @     \quad   || state == ASKING\_DO\_ANOTHER\_STATE;\\
+%\quad	      @*/\\
+%	    private void complete()\{\\
+%\quad \fbox{//@ set  complete\_called = true;}\\
+%\quad	    	...\\
+%\quad \fbox{//@ set  Pa = (state == 7 || state == 6)?true;}\\
+%\quad \fbox{//@ set  Pe = (pin\_validated)?true;}\\
+%	    \}\\
+%	    
+%	    
+%	    /*@ private behavior\\
+%\quad	      @ requires state == PRINTING\_RECEIPT\_STATE;\\
+%\quad	      @ modifies state;\\
+%\quad	      @ ensures state == ASKING\_DO\_ANOTHER\_STATE;\\
+%%\quad	      @*/\\
+%	    private void printReceipt()\{\\
+%\quad	    ...	\\
+%\quad \fbox{//@ set  Pa = (state == 7 || state == 6)?true;}\\
+%\%quad \fbox{//@ set  Pe = (pin\_validated)?true;}\\
+%	    \}\\
+%
+%
+%//@ ensures $\backslash$result ==  (PIN\_MAX\_TRY - pin\_try);\\
+%public void /* pure */ getTryLess()\{\\
+%\quad...\\
+%\quad \fbox{//@ set  Pa = (state == 7 || state == 6)?true;}\\
+%\quad \fbox{//@ set  Pe = (pin\_validated)?true;}\\
+%\}
+	    
+	   
+
+
+
+%\normalfont
+%\setlength{\parindent}{1cm}
+%\end{scriptsize}
+%\end{multicols}
+%\caption{Transaction System Example}
+%\%label{FigExample}
+%\end{figure}
+
+
+
+%Let us consider both the verification the safety
+%property ($S$), following the approach of Huisman and 
+%Trentelman~\cite{Huis02} and the verification of the liveness property 
+%($L$) by the method presented in this paper. These property are expressed
+%by ($S_F$) and ($L_C$).
+
+%\marginpar{to be rewrited}
+
+% They can be expressed by our temporal logic language as follows:
+%\begin{enumerate}
+%\item \begin{small}
+%\begin{quote} 
+%(\textbf{eventually} pin\_Validated) \textbf{before} complete() \textbf{called} ;\\
+%\end{quote}
+%\end{small}
+
+%% changed 13 May.
+%%\item \textbf{After} pinValidation() \textbf{normal}, sendToBank() \textbf{normal}\\
+%% ((\textbf{always} pin\_Validated) \textbf{before} complete() \textbf{called} );\\
+%%\item \textbf{Eventually} \texttt{((state == ASKING\_DO\_ANOTHER\_STATE) $\mid \mid$}\\
+%%\qquad  \texttt{(state == CARD\_RETAINED\_STATE)} \\
+%%\qquad  \qquad  \textbf{under invariant} \texttt{true}\\ 
+%%\qquad  \qquad \textbf{variant} \texttt{(7 - state) + (PIN\_max\_try - pin\_try)};\\
+%\item \begin{small}
+%\begin{quote} 
+%\textbf{eventually} \texttt{(state == CARD\_RETAINED $\mid \mid$ state == ASKING\_ANOTHER\_STATE)}  \\
+%\hspace*{1.5em} \textbf{under} \\
+%\hspace*{3em}\textbf{invariant} \texttt{true}\\
+%\hspace*{3em}\textbf{variant} \texttt{(7 - state + getTryLess())})\\
+%\hspace*{3em}\textbf{for} \texttt{printReceipt(), complete(), pinValidation(),}\\
+%\hspace*{4,7em}\texttt{sendToBank(), initializeTransaction()};
+%\end{quote}
+%\end{small}
+
+%\end{enumerate}
+
+%Notice that ($L_C$) is completed  by a variant 
+%\fbox{\texttt{((7 - state) + getTryless())}} meaning that the state number 
+%must increase, or the number of attempts until the try limit must decrease.
+
+
+
+
+%\subsubsection{Generation of Annotations}
+
+%\marginpar{manque les annotations de la première propriété.}
+
+Considering the translation presented in \cite{Huis02} and both 
+the \textit{Loop} primitive and  Proposition~\ref{PropLeadsTo} 
+(see Sect.~\ref{sec-until}), we generate automatically the
+JML annotations for $S_F$ and $L_C$. 
+%Following
+%Proposition~\ref{PropLeadsTo}, this gives rise to the JML
+%assertions
+We obtain the class $Transaction$ displayed in Fig.~\ref{FigRunningExample}
+- generated annotations are displayed in boxes. 
+The consistency of this
+specification has automatically been checked using the method described in~\cite{bdgZB05}. 
+We can verify it against the Java code using any tool for JML; 
+in our case, we have discharged
+all proof obligations
+ automatically using JACK~\cite{BurdyRL03}.
+
+
+%that we specify works as follows: a call to
+%the method \texttt{beginTransaction} initiates a set of updates. Each
+%update is performed via the method \texttt{modify}. Updates are stored
+%in a buffer, whose state can be observed by the method
+%\texttt{getBufferFree}. Eventually, all modifications can be committed
+%by calling the method \texttt{commitTransaction}. In case the buffer
+%is full, the method \texttt{abortTransaction} is called to abort the
+%transaction. 
+
+%To model the buffer, we use the integer model variable
+%\texttt{BufferFree} to denote the free space in the buffer.  We
+%wish to verify that after \texttt{beginTransaction} is called, the
+%variable \texttt{TrDepth} remains true until
+%\texttt{abortTransaction} or \texttt{commit\-Transaction} is
+%alled. Notice that implicitly this implies a liveness property: after
+%invoking the method \texttt{beginTransaction}, either
+%\texttt{commitTransaction} or \texttt{abortTransaction} has
+%to be called eventually. This property can be expressed in JML's
+%temporal logic
+% extension as follows. 
+%\begin{small}
+%\begin{equation}\label{temporalformula}
+%\begin{array}[c]{l}
+%\mathbf{after}\ \mathtt{beginTransaction}\ \mathbf{called}\ ((\mathbf{always}\ \mathtt{TrDepth})\\
+%\quad \mathbf{until}\ \mathtt{commitTransaction}\ \mathbf{called}, 
+%                     \ \mathtt{abortTransaction} \ \mathbf{called} \\
+%%\mathbf{under\ invariant}\ \mathtt{true} \\
+%%\phantom{\mathbf{under\ }}\mathbf{variant}\ \mathtt{BufferFree} \\
+%\mathbf{under\ invariant}\ \mathtt{true}\ \mathbf{variant}\ \mathtt{BufferFree} \\
+%
+%%\mathbf{for}\ \mathtt{beginTransaction},\ \mathtt{commitTransaction},\\
+%%\phantom{\mathbf{for}\ }\mathtt{abortTransaction},\ \mathtt{modify;} 
+%\mathbf{for}\ \mathtt{beginTransaction},\ \mathtt{commitTransaction},\mathtt{abortTransaction},\ \mathtt{modify)}
+%
+%\end{array}
+%\end{equation}
+%\end{small}
+%%\begin{align}
+%%\begin{split}
+%\texttt{\textbf{after} beginTransaction called \textbf{always} (TrDepth==true)}\\
+%\texttt{\textbf{until} commitTransaction called, abortTransaction called} \\
+%\texttt{\textbf{under invariant} true \textbf{variant} BufferFree} \\
+%\texttt{\textbf{for} beginTransaction,commitTransaction,abortTransaction,modify} 
+%\end{split}
+%\end{align}
+
+
+%This is a liveness property: after an invocation of the method
+%\texttt{beginTransaction}, either the method
+%\texttt{commitTransaction} or \texttt{abortTransaction} has to be
+%invocated. 
+
+%Notice that \texttt{getBufferFree} is not involved in the liveness
+%property, thus we assume that there is no infinite sequence of \texttt{getBufferFree} 
+%invocations, and we do not
+%require that \texttt{getBufferFree} decreases the variant.
+
+
+%We hide the invocation of \texttt{getBufferFree}, i.e., we
+%assume that in the traces there is not an infinite sequence of
+%\texttt{getBufferFree} invocation.
+
+
+%\subsection{Generation of Annotations}
+
+% Using the \textit{Until} modality described in
+%Sect.~\ref{sec-until}, we generate JML annotations for this temporal
+%formula. The temporal formula is of the form:
+%\begin{small}
+%\[\mathbf{after}\ E_1\
+%(( \mathbf{always}\ \mathit{JP}) \ \mathbf{until}\ E_2\ \mathbf{under\
+%invariant} \ J\
+%\mathbf{variant}\ V\ \mathbf{for}\ M )\]
+
+%\end{small}
+%Thus, following Sect.~\ref{sec-until}, we have to verify the
+%following modality%\footnote{We introduce here the ghost variables, following the notation of~\cite{Huis02} -- for example JML(beginTransaction called) is the variable BTcalled}
+%:
+% (where \texttt{BTcalled}, \texttt{ATcalled} and
+%\texttt{CTcalled} are  \textit{ghost} variables associated to the
+%events \texttt{beginTransaction} \textbf{called},
+%\texttt{abortTransaction} \textbf{called} and \texttt{commitTransaction}
+%\textbf{called}, see~\cite{Huis02}).
+%\begin{small}
+%\[
+%\mathtt{BTcalled} \leadsto_{\mathit{JML}} (\mathtt{ATcalled \mid \mid
+%CTcalled}) (\mathtt{true} \wedge \mathtt{TrDepth} ,\mathtt{BufferFree},M)
+%\]
+%\end{small}
+%where $M$ = \{\texttt{beginTransac\-tion},
+%\texttt{commitTransac\-tion}, \texttt{abortTransac\-tion},
+%\texttt{mo\-dify}\}, and \texttt{BTcalled}, \texttt{CTcalled} and
+%\texttt{ATcalled} are ghost boolean variables associated to the 
+%events related to these methods. (cf.~\cite{Huis02}). Following
+%Proposition~\ref{PropLeadsTo}, this gives rise to the JML
+% assertions
+%displayed in Fig.~\ref{FigExample}.  The consistency of this
+%specification can
+% be verified using any tool for JML; we discharged
+%all proof obligations
+% automatically using JACK~\cite{BurdyRL03}.
+
+%This figure also shows the JML set annotations
+%generated for the 
+%\textit{ghost} variables, to capture the methods' behaviours
+%(following~\cite{Huis02}).
+%Where $M$ is the set \{beginTransaction, commitTransaction, modify, abortTransaction \}
+%\begin{figure}
+%\begin{center}
+%\vline
+%\begin{tabular}{r|l}
+%\hline
+%& \textbf{JML assertions}\\
+%\hline
+%\textit{1} & \texttt{//@ invariant  BTcalled ==>  true;}  \\
+%\hline
+%\textit{2} & \texttt{//@ invariant BufferFree >= 0;} \\
+%\hline
+%\textit{3} & //@ constraint $\backslash$old(BTcalled)  \& $\backslash$old(True)\\
+%& \& (!CTcalled \& !ATcalled) $\Rightarrow$ \\
+%& BufferFree <   $\backslash$old(BufferFree)\\
+%& for beginTransation, commitTransaction, modify, abortTransaction\\
+%\hline
+%\textit{4} & //@ Constraint $\backslash$old(BTcalled)\& $\backslash$old(True)\\
+%& \& (!CTcalled \& !ATcalled) $\Rightarrow$ \\
+%& (TrDepth == false) | (BufferFree > 0  \&  TrDepth == true)\\
+%& | (BufferFree == 0 \& TrDepth == true)\\
+%& for beginTransation, commitTransaction, modify, abortTransaction\\
+%\hline 
+%\end{tabular}\vline
+%\end{center}
+%\caption{Annotations generated for transaction
+%example}\label{FigExampleAnnotations} 
+%\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

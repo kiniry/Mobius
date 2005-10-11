@@ -1,0 +1,350 @@
+\section{JML annotations generation as proof obligations for liveness properties}\label{sec-until}
+
+\subsection{Hypotheses on the environment}
+
+\label{sec-until-environment}
+
+To be able to verify a liveness property on an isolated class, we assume the following hypotheses on its environment.
+\begin{enumerate}
+\item Executions are a sequence of calls of method of the class. 
+\item We presently work with atomic methods, that means that a method of the class cannot call another method.
+\item The environment catches all the exceptions produced by the execution of the methods of the class.
+\item The environment is fair, meaning that if a set of methods can be invocated (i.e. precondition of the method is true) one of these methods effectively invocated.
+\item Executions are infinite.
+\item When a liveness property is verified on executions traces restricted by a clause \textbf{when M}, it is assumed that the environement  invoke infinitely many times the methods of M.
+\end{enumerate} 
+
+
+\subsection{A generation primitive JML annotations for liveness properties}
+
+
+
+
+We introduce a until primitive $P\leadsto_{JML}Q~(J,V,M)$, where P,Q and J are JML predicates and V a JML expressions returning a natural number, and M a set of methods of the class.  It is a basis for generating JML annotations for the purpose  of  liveness properties verification. The basic liveness property \textbf{C until E under invariant J variant V} cannot be used to generate JML annotations because \textbf{C} and \textbf{E} are not JML expressions. 
+We define the \textit{Until}  ($\leadsto_{JML}~(J,V,M)$) primitive for JML as follows.
+
+
+\begin{definition}[\textit{Until}]\label{until1} Let \textit{J}, \emph{Q} and \emph{P} be three JML predicates, let M be a set of methods of the class, let V be a JML expression returning an integer, and let $\sigma$ be an execution, the primitive \emph{Q} $\leadsto_{JML}$ \emph{P} (J,V,M) is satisfied on $\sigma$ if
+$$ \forall i. (i \geq 0 \Rightarrow \sigma_i \models  Q \wedge J ~ \Rightarrow ~ \exists j. (j > i) \wedge \sigma_j \models  P  \wedge ~\forall k.(i<k<j \Rightarrow \sigma_k \models Q \wedge J)).$$
+\end{definition}
+
+It means that if \emph{Q} holds on a state of the execution $\sigma$, in the future we eventually have a state which satisfies \emph{P} (in the following \emph{Q} is always a predicate which is satisfied until \emph{P} holds, so we call this modality a \emph{Until} modality).
+
+
+
+The existence of j in the above definition has to be shown by a termination proof expressed from the loop invariant $J$ and the loop variant $V$ that must strictly decrease.
+
+
+\begin{definition}[\textit{Until}] 
+\label{until}
+Let J,\textit{Q} and \textit{P} be three JML predicates, \textit{V} a JML expression returning an integer and  $\sigma$ an execution, the modality \textit{Q} $\leadsto_{JML}$ \textit{P} (J,V,M) is satisfied by $\sigma$ if:
+
+
+\begin{equation}
+\forall i.(\sigma_i \models  Q  \Rightarrow \sigma_i \models J )
+\end{equation}
+\begin{equation}
+\forall i.(\sigma_i \models V \in \mathbb{N})
+\end{equation}
+\begin{equation}
+\forall i.((\sigma_i \models  Q  \wedge \sigma_{i+1} \models \neg  P  \wedge \sigma_i \models V = n \wedge \sigma_i \models event(M) \Rightarrow \sigma_{i+1} \models V < n)
+\end{equation}
+\begin{equation}
+\forall i.((\sigma_i \models  Q  \wedge \sigma_{i+1} \models \neg  P  \wedge \sigma_i \models V = n \wedge \sigma_i \models event(\overline{M}) \Rightarrow \sigma_{i+1} \models V \leq n)
+\end{equation}
+$\forall i.(((\sigma,i) \models Q ~ \wedge ~ (\sigma,i) \models J  ~\wedge ~ (\sigma,i+1) \models \neg  P )~ \mbox{\\} ~ \Rightarrow  ~ $
+\begin{equation}
+ \exists m.(\sigma_{i+1} \models (requires(m) \wedge \neg diverges(m))))
+\end{equation}
+
+\end{definition}
+
+Let us give a few comments about these four proof obligations that can be found in another context in \cite{Abrial:1998:IDC,abrial96}.
+\begin{enumerate}
+\item We can find a local invariant $J$ which holds when Q holds. Because Q holds until P, $J$ implicitly holds until P.
+\item There is a variant $V$, which is an expression returning a natural number.
+\item After a state where Q holds, the variant $V$ must decrease after each event until the predicate P is satisfied. This proof obligation establishes that we have no livelock in Q.
+\item We have to prove that all the observer methods (methods that belongs to the complementary set of $M$ denoted $overline{M}$) must not increase the variant $V$
+\item We have to ensure, that after a state where Q holds, the system cannot be blocked until the state where P holds. To do that, we verify for each of these states, that at least one precondition of a method is true (that means, that at least one method can be invocated), and we have to verify that if the method holds then this method cannot diverge.
+\end{enumerate}
+
+By Definition \ref{until} we find JML annotations, implying these five proof obligations. We propose the following JML annotations.
+
+\marginpar{This footnote disappears}
+\begin{proposition}\label{PropLeadsTo} The four following JML assertions imply that $Q\leadsto_{JML}P (J,V,M)$:
+\begin{center}
+\vline
+\small{
+\normalfont
+\begin{tabular}{r|l}
+\hline
+& \textbf{JML assertions}\\
+\hline
+1 & //@ \textbf{invariant}  Q ==$>$ J \\
+\hline
+2 & //@ \textbf{invariant} V $>$= 0 \\
+\hline
+3 & //@ \textbf{constraint} $\backslash$old(Q) \&\& $\backslash$old(J) \\
+& \&\& !P ==$>$ (V$<\backslash$old(V)) \\
+\hline
+4 & //@ \textbf{constraint} $\backslash$old(Q) \&\& $\backslash$old(J) \\
+& \&\& !P ==$>$ (V$\leq\backslash$old(V)) \textbf{when} $~ \underline{M} $\\
+\hline
+5 & //@ \textbf{constraint} $\backslash$old(Q) \&\& $\backslash$old(J) \\
+& \&\& !P ==$>$ \\
+&  $\exists$m. $\llbracket$(m $\in$ M) $\wedge \rrbracket$ (requires(m) $\wedge \neg$diverges(m))\footnote{requires(m) and diverges(m) are functions returning the JML predicates of the requires clause of the method \textit{m} and the JML predicate of the diverges clause of the method \textit{m}  } $\llbracket$ \textbf{when} $~ M \rrbracket$ \\
+\hline
+\end{tabular}\vline
+}
+\end{center}
+
+\end{proposition}
+
+Informally:
+\begin{enumerate}
+\item The first proof obligation is expressed in JML by an invariant.
+\item For the second one, the model variant $V$ can be declared as an integer or method returning an integer. Moreover, we use an invariant to say that this variant cannot be a negative expression.
+\end{enumerate}
+
+The preceding proposition can be proven using the rules of Appendix \ref{sec-rules}.
+
+%\begin{proof}[Assertion 1 implies Proof Obligation 1]
+
+%In the execution semantics defined in Appendix B, assertion 1 can be by (invariant Rule) rewriteen as:
+
+%$$ \forall i . (i \geq 0 \Rightarrow (\sigma,i) \models Q ==>  J ) $$
+
+%This is equivalent to Proof Obligation 1 by implication Rule:
+
+%$$ \forall i . (i \geq 0 \Rightarrow (\sigma,i) \models Q \Rightarrow  (\sigma,i) \models J) $$
+%\qed
+
+%\end{proof}
+
+
+%\begin{proof}[Assertion 2 implies Proof Obligation 2]
+
+%By declaring a variant function or variable, which has \texttt{int} return type, we give a signed bounded natural number which belongs to the set $\mathbb{Z}$ by definition. So, we can write in the execution semantics:
+
+%$$ \forall i . ((\sigma,i) \models ( V \in \mathbb{Z}) ) $$
+
+%The invariant \texttt{//@ invariant V >= 0} can be translated by invariant Rule:
+
+%$$ \forall i . ((\sigma,i) \models ( V \geq 0 ) ) $$
+
+%So, by conjunction of these two propositions, we can conclude Proof Obligation 2:
+
+%$$ \forall i . ((\sigma,i) \models V \in \mathbb{N}) ) $$\qed
+%\end{proof}
+
+%\begin{proof}[Assertion 3 implies Proof Obligation 3 (OP3)] 
+
+%This assertion is a JML historical constraint. This will be translated in semantics by constraint Rule:
+
+
+%$$ \forall i . (i > 0 ~ \Rightarrow ~ ((\sigma,i) \models ~  (\backslash old(Q) ~ \&\& ~\backslash old(J)~ \&\&~ ! P )~ ==> ~$$
+%$$ (V <  \backslash old(V)) ~ ) $$
+
+%By reduction with implication Rule, old operator Rule, negation Rule and equivalence Rule, we obtain:
+
+%$$ \forall i. (i > 0 \Rightarrow~ (\sigma,i) \models ~ (\backslash old( Q \ ) ~ \&\& ~ \backslash old(J) ~ \&\& !( P )~ \Rightarrow$$
+%$$ ~ \sigma _i \models ( V  <  \backslash old(  V  ))  ) $$
+
+%$$ \forall i. (i > 0\Rightarrow ~ (((\sigma,i) \models (\backslash old( Q )~~  \wedge ~ (\sigma,i) \models ~ \backslash old( J )~ ) ~ \wedge ~ (\sigma,i) \models~ \neg ~  P  ~  )) ~ \Rightarrow$$
+%$$ ~ (\sigma,i) \models~~(  V   <  \backslash old(  V  )))) $$
+
+%$$ \forall i. (i > 0 \Rightarrow ~ (((\sigma,i-1) \models Q)~  \wedge ~ (\sigma,i-1) \models J ) ~ \wedge ~ (\sigma,i) \models~ \neg P  ~ \Rightarrow$$
+%$$ ~ (\sigma,i) \models~~ (  V   <  \backslash old(  V  ))  )) $$
+
+
+%By adding hypothesis  $ (\sigma,i) \models (\backslash old(V) = n) $ and changing index we obtain Obligation Proof 3:
+
+
+%$$ \forall i. (((\sigma,i) \models Q ) ~ \wedge ~ (\sigma,i) \models J )~ \wedge ~(\sigma,i+1) \models \neg P  )~ \wedge ~ (\sigma,i) \models ( V = n)) ~~ \Rightarrow ~$$
+%$$ (\sigma,i+1) \models V > n) )) $$\qed.
+%\end{proof}
+
+%\begin{proof}[Assertion 4 implies Proof Obligation 4 (OP4)] 
+
+%In our semantics, we obtain:
+
+%$$ \forall i.( i \geq 0 \Rightarrow (\sigma,i) \models \backslash old( Q ) \&\& \backslash old( J ) \&\& ! P ~ ==>$$
+%$$ ~ ( (\bigvee_m~ ((requires(m) ~\wedge~ \neg diverges(m))  ) ~~ ) $$
+
+%Following the same transformations as the previous proof, we obtain Obligation Proof 4:
+
+%$$\forall i.(  i \geq 0 \Rightarrow ( \sigma,i) \models  Q  ) ~ \wedge ~ (\sigma,i+1) \models \neg  P   ))~ \Rightarrow ~~$$
+%$$ (\exists m . ( (\sigma,i+1) \models requires(m) ~\wedge~ \neg diverges(m) ))) $$ \qed
+%\end{proof}
+
+\subsection{Generation of the JML Annotations for \textbf{after $E_1$ always $JP$ until $E_2$}}
+
+We  use $Q\leadsto_{JML}P ~(J,V,M)$ to express the temporal liveness property \textbf{after $E_1$ always $JP$ until $E_2$}. 
+
+We write $JML(E)$ the JML ghost variable associated with the event $E$ (see \cite{Huis02}).
+
+
+\begin{proposition} \label{prop-after} Let $JP$ be a JML property  and $E_1$, $E_2$ be two Events, the temporal property \emph{\texttt{after $E_1$ always $JP$ until $E_2$ under invariant $J$ variant $V$ [when M] }} is satisfied by an execution $\sigma$ if the modality $JML(E_1) \leadsto_{JML} JML(E_2) ~(J \wedge JP,V,M)$ holds on $\sigma$.
+\end{proposition}
+
+%To prove this proposition, we need the following lemma:
+
+
+
+
+
+
+
+
+
+
+
+\begin{proof}[Proposition \ref{prop-after}]
+By definition  \ref{until1}, the semantics of $JML(E_1) \leadsto_{JML} JML(E_2) ~(J \wedge JP,V,M)$ is :
+
+$$ \forall j . (j \geq 0) \Rightarrow ((\sigma_j \models E_1 \wedge J \wedge JP) \Rightarrow (\exists k . (k > j \wedge \sigma_k \models E_2 \wedge $$
+$$(\forall i . (j \leq i < k) \Rightarrow (\sigma_i \models E_1 \wedge J \wedge JP )))$$
+
+To conclude, we claim:
+
+\begin{equation} 
+\label{lemmapart1} 
+\forall k. ( i \leq k < j \Rightarrow  \sigma_k \models JP)
+\end{equation}
+\begin{equation} 
+\label{lemmapart2} 
+\Rightarrow ~\forall k. (i \leq k \Rightarrow \sigma_k^{j-1} \models JP)
+\end{equation}
+This is true because (\ref{lemmapart1}) implies that every states of index  between i and j-1 satisfies $JP$. By definition $\sigma_i^{j-1}$ is only composed by these states, so $\sigma_k^{j-1} \models JP$. We have (\ref{lemmapart1}) implies (\ref{lemmapart2}).
+
+End of claiming.
+$$ \forall j.(j\geq0) \Rightarrow ((\sigma_j \models E1) \Rightarrow \exists k. (k>j \wedge \sigma_k \models E2) \wedge \forall i.(j < i) \Rightarrow \sigma_i^{k-1},i \models JP))$$
+
+The semantics of \texttt{after $E_1$ always JP until $E_2$ [when M]}.\qed
+\end{proof}
+
+
+
+
+
+%\begin{proposition}\label{prop-always} Let $JP$ be a JML property and %let $E$ be a event, the temporal property \emph{\texttt{always JP %until E2}} is satisfied by an execution $\sigma$ if the modality $\neg %JML(E) \leadsto_{JML} JML(E) ~(J \wedge JP,V)$.
+%\end{proposition}
+
+%\begin{proof}
+%By Definition \ref{until1} the semantics of $\neg JML(E) %\leadsto_{JML} JML(E) ~(J \wedge JP,V)$ is:
+
+%$$ \forall i . (i \geq 0) \Rightarrow (((\sigma,i) \neg JML(E) \wedge %J \wedge JP ) \Rightarrow (\exists j . (j > i) \wedge (\sigma,j) %\models E ))$$
+%$$ \wedge (\forall k . (i \leq k < j) \Rightarrow ((\sigma,k) \models %\neg JML(E) \wedge J \wedge JP))).$$
+
+%Particularly, for i=0, we have:
+
+%$$ (\sigma,0) \models \neg JML(E) \Rightarrow (\exists j . (j > 0) %\wedge ((\sigma,j) \models JML(E) ) \wedge$$
+%$$ (\forall k . (0 \leq k <j) \Rightarrow ((\sigma,k) \models \neg %JML(E) \wedge J \wedge JP))).$$
+
+%By definition:
+
+%$$ (\sigma,0) \nvDash JML(E).$$
+
+%it implies:
+
+%$$ \exists j . (j > 0) \wedge ((\sigma,j) \models JML(E) ) \wedge %(\forall k . (0 \leq k <j) \Rightarrow ((\sigma,k) \models \neg JML(E) %\wedge J \wedge JP)).$$
+
+%Using Event Rule and Lemma \ref{lemma1}, we can conclude:
+
+%$$\exists j. ((j >0 \wedge (\sigma,j) \models E  \wedge \forall i.(0 %<i \Rightarrow ((\sigma_0^{j-1},i) \models JP)))$$
+
+%This is the semantics of \texttt{always $JP$ until $E$}. \qed
+
+%\end{proof}
+
+
+
+\subsection{Generation of the JML annotations for liveness properties}
+
+
+
+Let us introduce two \textit{ghost} variables, \textbf{Pa} and \textbf{Pe}, described by the following behavior:
+
+
+\begin{center}
+\vline
+\begin{tabular}{l|l}
+\hline
+ \small{\textbf{JML Assertions for Pa}} & \small{\textbf{JML Assertions for Pe}}\\
+\hline
+\small //@ ghost boolean Pa &\small //@ ghost boolean Pe = false \\
+
+\small //@ Initially P == Pa & \\
+\hline
+
+\hline
+\small //@ ensures P $\Rightarrow$  Pa &\small //@ ensures P \& JML(E) $\Rightarrow$ Pe\\
+
+
+\hline
+\small //@ signals (Exception) P $\Rightarrow$  Pa &  \small //@ signals(Exception) P \& JML(E) $\Rightarrow$ Pe\\
+
+\hline
+
+\small //@ ensures $\backslash$old(Pa) $\Rightarrow$ Pa & \small //@ ensures $\backslash$old(Pe) $\Rightarrow$ Pe\\
+
+\hline
+\small //@ signals (Exception)  $\backslash$old(Pa) $\Rightarrow$ Pa & \small //@ signals (Exception) $\backslash$old(Pe) $\Rightarrow$ Pe \footnote{these ensures and signals clauses have to be added in the specification of all methods in the class}\\
+
+\hline
+\end{tabular}\vline
+\end{center}
+
+\textbf{Pa} takes the value \texttt{true} when the current state satisfies \textbf{P}  and keeps this value. \textbf{Pe} takes the value \texttt{true} when \textbf{P} is satisfied by the current state and the event $E$ has append. After that, \textbf{Pe} keeps this value. Using \textbf{Pe} and \textbf{Pa}, we are able to generate the JML annotations  for all the liveness properties (see Fig.\ref{liveness}). 
+
+
+
+\begin{figure}[htbp]
+{\small
+\begin{center}
+\vline
+\begin{tabular}{l|l}
+\hline
+\textbf{Temporal Formula} & \textbf{Proof Obligation}\\
+\hline
+eventually P under  & $\neg Pa ~\leadsto_{JML} P ~ (J,V,M) $\\
+invariant J variant V [when M]& \\
+\hline
+always P until E under & $ \neg  JML(E) \leadsto_{JML} JML(E)  ~ (J \wedge P, V,M) $\\
+invariant J variant V [when M]& \\
+\hline
+eventually P until E under  & $\neg JML(E) \leadsto_{JML} JML(E)  ~ (J,V,M)$ \\ 
+invariant J variant V [when M]& $//@ ~constraint JML(E) \Rightarrow \backslash old(Pa)$\\
+\hline 
+after E1 always P until E2 under  & $ JML(E1)  \leadsto_{JML} JML(E2)   ~~ (J \wedge P, V,M)$\\
+invariant J variant V [when M]& \\
+\hline
+\end{tabular}\vline
+\end{center}
+
+
+\begin{center}
+\vline
+\begin{tabular}{l|l}
+\hline
+\textbf{Temporal Formula} & \textbf{Proof obligation}\\
+\hline
+after E eventually P under  & $ (\neg Pe \wedge JML(E) ) \leadsto_{JML} P ~ (J,V,M) $\\
+invariant J variant V [when M]& \\
+\hline 
+after E1 eventually P until E2 under & $(JML(E1)\wedge \neg Pe) \leadsto_{JML} JML(E2)  ~ (J,V,M)$\\
+invariant J variant V [when M] & $//@~ constraint JML(E2) \Rightarrow \backslash old(Pe)$\\
+\hline
+after E1 eventually P unless E2 under  & $ JML(E1)  \leadsto_{JML} P ~ (J,V,M)$\\
+invariant J variant V [when M]& $//@~ constraint JML(E2)  \Rightarrow \backslash old(Pe) $\\
+\hline
+\end{tabular}\vline
+\end{center}}
+
+\caption{Liveness translation}
+
+\label{liveness}
+\end{figure}
+ 
+
+=======

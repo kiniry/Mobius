@@ -1,0 +1,637 @@
+\section{Conformity of the Environment w.r.t. $PH$}
+\label{sec-verif}
+
+
+In this section, we propose the annotations allowing to  
+verify that the set $\Sigma_C$ of executions of an environment satisfy $PH$.
+
+\begin{normalsize}
+%\marginpar{bien introduire la figure}
+%In the case of liveness properties, the generation
+%of annotations on the class $Transaction$ is not sufficient to ensures 
+%the verification. We also need ($MPH$) on the
+%environment of the class. Therefore, as explained in Section~\ref{SecIntro}, 
+%our method to verify
+%liveness properties consists in doing two tasks.  The first one requires
+%showing that the class $Transaction$ establishes the 
+%liveness property by
+%satisfying the appropriate JML annotations, as discussed in
+%Sect.~\ref{sec-until}, assuming ($MPH$) on the environment.
+
+%deals with the second task, consisting in showing that the
+%class runs in an appropriate environment, \emph{i.e.,} an environment
+%that will actually enable it to establish the liveness property, by
+%calling the appropriate methods often enough. 
+%that respects Hypothesis~($MPH$). 
+  For example, consider the class $Transaction$ whose surrounding
+  environment has to respect a hypothesis $PH$ (see
+  Section~\ref{sec-until}). Instances of $Transaction$ are used by a class
+  $Session$ through a method entitled \texttt{performTransaction()} (see
+  Fig.\ref{fig-perform}).  The executions of this method constitute
+  $\Sigma_{Transaction}$. We need to ensure that it respects
+  the hypothesis $PH$.
+
+
+
+
+%Suppose %for example 
+%that \texttt{performTransaction()} has the following body:
+%%the class in Fig.~\ref{FigExample} that this method is the following.
+\end{normalsize}
+
+\begin{figure}
+{\scriptsize
+\begin{multicols}{2}
+\begin{verbatim}
+public boolean performTransaction(TransactionSystem a)
+  {while (true)   
+    {switch(a.state)
+       { case 1:a.initialiseTransaction();                  
+                break;            
+         case 2:a.sendToBank();break;
+         case 3:try{a.pinValidation();}
+                catch(Exception e){}
+                break;
+         case 4:a.complete();break;                   
+         case 5:a.printReceipt();break;                                      
+         case 6: return true;
+         case 7: return false;
+       }
+   }
+  }
+\end{verbatim}
+\end{multicols}
+}
+\caption{The \texttt{performTransaction()} method}\label{fig-perform}
+\end{figure}
+
+%{\small
+%\begin{verbatim}
+%public void performTransaction{
+%    initialiseTransaction();}
+%\end{verbatim}
+%}
+Section~\ref{sec-preservation} 
+presents conditions implying that $\Sigma_C \models PH$. %the condition of preservation and the correctness of the 
+%method; 
+Then Section~\ref{sec-checking} explains how the verification
+of these conditions are implemented in our tool and presents
+the experimental results. 
+%
+\subsection{Clauses $\Sigma_C \models PH$}
+\label{sec-preservation}
+
+%We need a simulation relation $R$ between the executions 
+%of the methods of the class $Transaction$ agreeing with ($MPH$)
+%and the executions of the methods of the class $Transaction$ in
+%the application ($Session$).
+%This relation $R$ needs to preserve safety as well as liveness properties.
+%It is well-known that simulation preserves safety properties~\cite{ClarkeGP99}.
+%For liveness properties, $R$ has to be divergence sensitive, i.e., 
+%no new deadlock and no new livelock in the concrete system~\cite{glabbeek93}
+%are allowed. 
+%We introduce in this paper a simulation notion very closed to this
+%one, but which permits deadlock or livelock introduction \textit{under some
+%conditions}.
+%For this verification, we actually stay in the case where
+%the environment is allowed to modify the internal state of the 
+%class only through invocation of the methods of the class - thus
+%we disallow direct assignment of attributes or internal
+%modifications through aliasing. 
+
+In order to verify that $\Sigma_C \models PH$, we define the following clauses. 
+\begin{itemize}
+%\item The environment $S$ calls the methods of $T$ within
+%their preconditions. ($C_{\tau}$)
+\item[$C_{dead}$] The environment executions $\Sigma_{C}$ cannot terminate, either
+normally nor by throwing an exception when $Q \wedge \neg R$
+holds on the current state. 
+\item[$C_{live}$] The environment executions $\Sigma_{C}$ cannot diverge, i.e.,
+not performing any progress - by
+infinite loop, infinite recursive call or call to a method
+within diverging conditions when $Q \wedge \neg R$
+holds on the current state.
+\end{itemize}
+
+\begin{lemma}[Condition of $PH$ Satisfaction]
+\label{prop-preservation}
+Let $PH$ be the hypothesis of a class $C$ environment for  $Q \leadsto R (J,V,M)$. 
+Assuming that the environment of $C$ calls the methods in
+$\mathcal{PM}_C$ within their preconditions, %Second $C$ under $MPH$ satisfy 
+%the property $Q \leadsto_{JML} R (J,V,M)$. Then the environment $S$ 
+%using $C$ satisfy also $Q \leadsto_{JML} R (J,V,M)$ iff the
+%following conditions are satisfied:
+$\Sigma_C \models PH$ iff $\Sigma_{C} \models C_{live}$ and $\Sigma_{C} \models C_{dead}$.
+\end{lemma}
+The sketch of the proof 
+can be found in Appendix~\ref{sec-proof-proposition-preservation}. 
+
+%\begin{proposition}
+%\label{prop-preservation-2}
+%If $\sigma$ is a $\tau$-simulation of $\sigma'$, and both
+%$\sigma$ and $\sigma'$ verify  $Q \leadsto_{JML} R (J,V,M)$
+%then $\sigma'$ verify $C_{dead}$ and $C_{live}$
+%\end{proposition}
+
+
+
+
+%\begin{enumerate}
+%\item The environment execution cannot terminates - normaly
+%or abruptly when
+%$Q \wedge \neg R$ holds.
+%\item The environment execution cannot diverge - by a infinite
+%loop not containing a progress method or a call to a method within 
+%divergence condition $Q \wedge \neg R$ holds.
+%\item The environment cannot call a method out of its precondition.
+%\end{enumerate}
+%\end{proposition}
+%\marginpar{proof to be rewritted: it is only some notes}
+%\begin{proof}
+%We show that then these conditions are satisfied, the relation
+%between the executions of the environment and the executions
+%of the class under $MPH$ is a divergence sensitive $\tau$ simulation.
+%Let $\sigma$ be an execution of the method of the class under $MPH$,
+%and let $\sigma'$ be an execution of the environment using the class.
+%The proof is done by induction on the length of the execution.
+%\begin{itemize}
+%\item The initials states are in relation.
+%\item Suppose that the environment is in a state $s'_j$ in relation
+%with a state $s_i$. Then:
+%   \begin{itemize}
+%   \item a progress method is called, then it was possible to call
+%the same method in the execution with $MPH$ because the precondition
+%of the method holds + divergence condition
+%   \item the execution environment terminates. Then  $\sigma_i$ is
+%$ s_i xrightarrow{skip} s_{i+1} \dot$. Where all states are the same.
+%Because  $Q \wedge \neg R$ does not hold, this execution satisfy $MPH$.
+%   \item a non diverging block of code without call to a progress method ->
+%finite number of $\tau$. diverging block with call to progress method ->
+%regularly call -> verify $MPH$
+%diverging bloc without call to progress method. -> only when 
+%$\neg$ $Q \wedge \neg R$ -> this divergence already exists in the abstract 
+%level. 
+%   \end{itemize}
+%
+%\end{itemize}
+%
+%\end{proof}
+
+% We are able to verify by proof that
+% the environment verify  simulation conditions 
+% given in Proposition~\ref{prop-preservation} using, like
+% for the verification of the Task 1, 
+% the standard JML framework. The 
+% method is explained in the next section.
+
+
+
+
+\subsection{Checking the Clauses $C_{live}$ and $C_{dead}$} 
+\label{sec-checking}
+
+
+
+%The first condition, $C_{\tau}$, implying that each
+%method must be called within its precondition, can be checked using 
+%proof tools for JML~\cite{BurdyRL03,marche03jlap}.
+%This verification is performed in two step. %First, we 
+%perform a decomposition of the environment into atomic 
+%methods; Second we verify $C_{dead}$ on this decomposition;
+%Third we verify  $C_{live}$ on the decomposition.
+%First we verify $C_{dead}$ using standard JML annotations; 
+%Second, we perform a decomposition of the environment into
+%atomic methods and we  verify  $C_{live}$ on the decomposition.
+
+We present JML annotations to verify $C_{dead}$ and $C_{live}$.
+
+%\begin{definition}[JML Annotation for $C_{dead}$]
+We call $\mathcal{A}_{dead}$ the annotations for a method in the environment which invokes methods of the class $C$.\\ 
+\begin{tabular}{l}
+\hspace{8em}\verb+/*@ behavior+\\
+\hspace{8em}...\\
+\hspace{8em}\verb+  @ diverges true;+\\
+\hspace{8em}\verb+  @ ensures +($\neg Q \vee R$);\\
+\hspace{8em}\verb+  @ signals (Exception e) +($\neg Q \vee R$)\verb+;+\\
+\hspace{8em}\verb+  @*/+
+\end{tabular} \hspace{4em} ($\mathcal{A}_{dead}$)
+
+
+\begin{proposition}
+\label{prop-deadlock}
+%Let $C$ be a class where the liveness property 
+%$Q \leadsto R (J,V,M)$ is satisfied under $PH$. 
+%Let $S$ be a environment using this clas throw a
+%method $m$. $C_{dead}$ is satisfied on the environment
+%iff $m$ satisfies the folloving JML method specification ($\mathcal{A}_{dead}$
+%We verify on the decomposition that there is no deadlock 
+%using two invariants.
+%\begin{enumerate}
+%The first invariant implies that if the execution ends then $ Q \wedge \neg R$ %does
+%not hold. The second one implies that when $ Q \wedge \neg R$, the execution
+%cannot be blocked.
+Let $\Sigma_{C}$ be the set of the executions of a method in the
+environment which invokes methods of the class $C$. 
+
+$\Sigma_{C} \models C_{dead}$ iff
+$\Sigma_C : \mathcal{A}_{dead}$.
+\end{proposition}
+The proof of Proposition~\ref{prop-deadlock} is immediate by the 
+JML semantics. %and can be can be found in 
+%Appendix~\ref{sec-proof-proposition-CDead}.
+
+We call $\mathcal{A}_{Slive}$ the following JML annotations for a method in
+the environment which invokes methods of the class $C$.\\  
+%
+\begin{tabular}{l}
+\hspace{8em}\verb+/*@ behavior+\\
+\hspace{8em}...\\
+\hspace{8em}\verb+  @ diverges false;+\\
+\hspace{8em}\verb+  @*/+
+\end{tabular} \hspace{12em} ($\mathcal{A}_{Slive}$)
+
+
+
+\begin{proposition}
+\label{prop-livelock}
+%Let $C$ be a class where the liveness property 
+%$Q \leadsto R (J,V,M)$ is satisfied under $MPH$. 
+%Let $S$ be a environment using this clas throw a
+%method $m$. $C_{live}$ is satisfied on the environment
+%if $m$ satisfy the folloving $\mathcal{A}_{live_S}$ JML method specification:\\
+Let $\Sigma_{C}$ be the set of the executions of a method in the
+environment which invokes methods of the class $C$. 
+If $\Sigma_C : \mathcal{A}_{Slive}$
+then $\Sigma_{C} \models C_{live}$.
+\end{proposition}
+\begin{proof}
+  Following the JML semantics, when the predicate of the JML
+  diverges clause is set to false the method under consideration
+  cannot diverge.  If the method in the environment which invokes methods
+  of the class $C$ never diverges, it does not diverge when $\neg Q \wedge
+  R$ holds.\qed
+\end{proof}
+
+This sufficient condition is, in general, too restrictive since it forbids
+a divergence of the environment. The next section gives means to weaken
+this too strong requirement. 
+
+\subsection{Weakening of $C_{Slive}$}
+
+In the general case, i.e., when the environment $S$
+may diverge, %standard JML annotations 
+%do not allow to directly specify
+%$C_{live}$ on the environment. 
+$C_{live}$ cannot be directly specified by standard JML
+annotations. Take the example of Fig.\ref{fig-perform}, we
+replace the statement \verb+return false+ by a statement
+\verb+a = new Transaction()+. %Then, the method environment
+%may not terminate, i.e. may infinitely perform a 
+%new \textit{transaction}s. 
+We denote this environment \texttt{performTransaction2}. There
+exists an execution of \texttt{performTransaction2} that
+never terminates - when we always perform a new transaction.
+
+
+Then, to ensures $C_{live}$, we must verify that
+until a state where $\neg Q \vee R$ holds, each Java 
+statement must not diverge. That cannot be check by
+standard JML annotations.
+Therefore, we need to perform a decomposition
+of the environment $S$ into a environment $S'$
+such that the verification of $C_{live}$ on $S'$ can
+be performed using JML Annotations and such that
+$$\Sigma_{TS_{S'}} \models C_{live} 
+      \Rightarrow  
+          (\Sigma_{TS_S} \models C_{live})$$
+
+
+ %into atomic statement, i.e., statement without
+%while loop, on which
+%we can perform the verification and $C_{live}$ using standard
+%JML annotations.
+The decomposition is performed by rewriting 
+rules~(see Fig~\ref{fig-rewritting}) whose 
+correctness can be established using the Java 
+semantics~\cite{TheseMarieke}. These rules must be understood
+as follows: the \textit{bottom} method specification $m$ is rewritten 
+into the \textit{up} methods specification. The environment $S'$
+obtained using these rules is only composed of atomic methods.
+
+The proof of the rewriting rule $R_{while}$
+rule is given in Appendix~\ref{sec-while}, the other proofs are given 
+in~\cite{reportTACAS}. During the decomposition, we observe call to
+progress variables by introducing an 
+\textit{ghost} integer \texttt{callStack} representing 
+the execution stack. %- in this example, 
+%we have no \textit{nested calls} so an integer is sufficient. 
+%\marginpar{parageaphe a reecrire}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% rewritting rules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+{\scriptsize
+%%%%%%%%%%%%%%%%%%%
+%%%%% switch %%%%%%
+%%%%%%%%%%%%%%%%%%%
+\begin{tabular}{ll}
+\begin{tabular}{c}
+\begin{tabular}{lcl}
+
+\begin{tabular}{l}
+
+/*@ requires $P$ \&\&\\
+~~~@ $\mathsf{E_{switch}}$ == $\mathsf{E_{case1}}$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m()\_switch\_case1()\{\\ 
+$\mathsf{body_{case1}}$\\
+\}\\
+\end{tabular}
+&
+\quad ...
+&
+\quad
+\begin{tabular}{l}
+/*@ requires $P$ \&\&\\
+~~~@ $\mathsf{E_{switch}}$ == $\mathsf{E_{casen}}$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m\_switch\_casen()\{\\ 
+$\mathsf{body_{casen}}$\\
+\}\\
+
+\end{tabular}
+\end{tabular}\\
+\hline
+
+
+
+\begin{tabular}{l}
+/*@ requires $P$;\\
+~~@ ensures $Q$;\\
+~~@*/\\
+ m()\{\\
+switch($\mathsf{E_{switch}}$)\{\\
+\qquad case $\mathsf{E_{case1}}$: $\mathsf{body_{case1}}$;break;\\
+\qquad ...\\
+\qquad case $\mathsf{E_{casen}}$: $\mathsf{body_{casen}}$;break;\\
+%\qquad default: $\mathsf{body_{default}}$;break;\\
+\}\\
+
+\end{tabular} 
+\end{tabular}$(R_{switch})$
+
+& \\
+
+
+%~
+%& 
+%\begin{tabular}{c}
+%\begin{tabular}{l}
+%m()\{\\
+%//@ callstack = $END$;\\
+%return($X$);\\
+%\}\\
+%\end{tabular}\\
+%\hline
+%\begin{tabular}{l}
+%m()\{\\
+%return($X$);\\
+%\}\\
+%\end{tabular} 
+%\end{tabular}($R_{return}$)\\
+
+
+
+
+%%%%%%%%%%%%%%%%%
+%%%% While %%%%%%
+%%%%%%%%%%%%%%%%%
+
+$\frac{
+\begin{tabular}{l}
+/*@ requires $\mathsf{expr_{while}}$;\\
+~~~@ requires $P$;\\
+~~~@ ensures $P$;\\
+~~~@*/\\
+m\_while()\{\\
+\quad $\mathsf{body_{while}}$;\\
+\}\\
+\end{tabular}\qquad
+\begin{tabular}{l}
+/*@ requires $\neg \mathsf{expr_{while}}$;\\
+~~~@ requires $P$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m\_end\_while()\{\\
+\quad $\mathsf{body_{endwhile}}$;\\
+\}\\
+\end{tabular}
+}{\begin{tabular}{l}
+/*@ requires $P$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m()\{\\
+\quad while ($\mathsf{expr_{while}}$)\{\\
+\qquad$\mathsf{body_{while}}$;\\
+\quad\}\\
+\quad$\mathsf{body_{endwhile}}$\\
+\quad\}\\
+\end{tabular}
+}(R_{while})$ 
+
+
+&
+
+%\begin{tabular}{c}
+%\begin{tabular}{l}
+%m()\{\\
+%//@ callstack = $method$;\\
+%method();\\
+%\}\\
+%\end{tabular}\\
+%\hline
+%\begin{tabular}{l}
+%m()\{\\
+%method();\\
+%\}\\
+%\end{tabular} 
+%\end{tabular}($R_{call}$)
+
+
+
+
+
+
+
+
+
+
+\end{tabular}\\
+}
+
+
+\label{fig-rewritting}
+\caption{Rewriting rules used to decompose \texttt{performTransaction2}}
+\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%We can notice on this figure that we introduce
+%an integer \texttt{callStack} representing the execution stack - 
+%in this example, we have no \textit{nested calls}, so an integer
+%ùis sufficient. Notice also that  \texttt{initialize\-Transaction()}
+%has now a precondition \texttt{callStack \-== CALL\_INIT\-IA\-LIZE\_\-TRAN\-SAC\-TION},
+
+
+
+%The decomposition is performed using rewriting 
+%rules~(see Appendix~\ref{appendix-rewriting}), whose 
+%correctness can be established using the Java 
+%semantics~\cite{TheseMarieke}. Using JML
+%ghost variables, we modelize the execution stack and the exception
+%mechanism. Figure~\ref{fig-decomposition} give an extract of the decomposition
+%of the environment. We can notice on this figure that we introduce
+%an integer \texttt{callStack} representing the execution stack - 
+%in this example, we have no \textit{nested calls}, so an integer
+%is sufficient. Notice also that  \texttt{initialize\-Transaction()}
+%has now a precondition \texttt{callStack \-== CALL\_INIT\-IA\-LIZE\_\-TRAN\-SAC\-TION},
+%meaning that the method can only be executed when called by the environment.
+%When the execution ends normally, the ghost variable \texttt{callStack} is
+%set to  \texttt{END\_EXECUTION}.
+
+An extract of the decomposition of \texttt{performTransaction2()}
+is given in~\ref{fig-decomposition}.
+
+\begin{figure}
+{\scriptsize
+\begin{multicols}{2}
+\begin{verbatim}
+...
+ //@ ghost int callStack = 0;
+private  int WHILE_STATEMENT = 0;
+private  int CALL_INITIALIZE_TRANSACTION = 1;
+...
+
+
+/*@ requires callStack == 0; 
+  @ requires state == 1;
+  @ assignable callStack;
+  @ ensures callStack 
+  @    == CALL_INITIALIZE_TRANSACTION;
+  @*/
+public void performTransaction_case1()
+  {         
+  //@ set callStack = CALL_INITIALIZE_TRANSACTION;  
+  initialize_Transation();  
+  }
+...
+\end{verbatim}
+%/*@ private normal_behavior
+%  @ requires state == GETTING_SPECIFICS_STATE;
+%  @ requires callStack
+%  @   == CALL_INITIALIZE_TRANSACTION; 
+%  @ modifies state,callStack;
+%  @ ensures  state == SENDING_TO_BANK_STATE 
+%  @     ||  state ==ASKING_DO_ANOTHER_STATE;
+%  @ ensures callStack == 0; 
+%  @*/
+%public  void initializeTransaction(){
+%  state = SENDING_TO_BANK_STATE;
+%  //@ callStack = 0;
+%}
+%\end{verbatim}
+\end{multicols}
+}
+\label{fig-decomposition}
+\caption{Extract from a Decomposition}
+\end{figure}
+
+\begin{definition}[Necessary and Sufficient Annotation for $C_{live}$]
+Let $S'$ the environment obtained by decomposition of $S$. Let  $M_{S'}$
+the set of methods of this environment and  $M_{C}$ the set of all
+methods of $C$. We define the JML annotations 
+$\mathcal{A}_{live}$ as follows:\\
+\begin{tabular}{l}
+\verb+//@ invariant+ 0 $< V_{live}$ ;\\
+\verb+//@ constraint+ $Q \wedge \neg R$ \verb+=> \old(+$V_{live}$\verb+)+ $<~V_{live}$ \verb+for +$M_{env}$;\\
+\verb+//@ invariant + $Q \wedge \neg R$ \verb+=>+ $\bigwedge_{m \in (M_{S'} \cup M_{C})} $\verb+(callstack == +$m$ \verb+ => !+$diverges(m)$\verb+);+
+\end{tabular}\\
+Where $V_{live}$ is an expression over the variables 
+of $S'$ returning an integer
+\end{definition}
+             
+\begin{proposition}
+\label{prop-livelock2}
+%This verification is performed by checking that the atomic method
+%of the environment decrease a well-founded variant $V_{live}$ given by the user. 
+%That 
+%implies that the environment cannot perform continuously 
+%external actions.
+%Let $M_{env}$ the set of the methods of the environment
+%after decomposition,
+%then $C_live$ is
+%checked using the following annotations:\\
+The executions of the environment $S'$ obtained by decomposition of $S$ 
+verify $C_{live}$ iff we can found the \textit{variant} expression $V_{live}$
+such that $S'$ is conform to JML annotations $\mathcal{A}_{live}$,i.e.,
+\begin{center}
+\begin{tabular}{c}
+$\exists V_{live} : (\mathcal{P}red_{S'} \rightarrow \mathsf{int}) . (S': \mathcal{A}_{live})$\\
+\hline
+$\Sigma_{TS_{S'}} \models C_{live} $
+\end{tabular}
+\end{center}
+
+\end{proposition}
+
+
+
+%The proof of this proposition 
+%can be found in Appendix~\ref{sec-proof-proposition-CLive}.
+%The variables involved in the variant are most of the time
+%environment variables or variables, like \texttt{callStack},
+%introduced during the decomposition.
+%In the case of the example, where there is no while-loop
+%nor call to external methods, the variant can be generated
+%automatically.
+
+
+\subsubsection{Experimental Results}
+
+For technical reasons, due to the back-end proof obligation 
+generator used (Jack), we produces two files. The first one, 
+checked there exists no deadlocks introduced during the integration,
+the second one that there is no livelock introduction. 
+
+
+The table~\ref{table-refinement} gives the result of the proof
+of the two output files. The verification is done by the 
+Jack tool, using the prover Simplify
+\footnote{Results obtained with a Intel Pentium IV 3 ghtz. 500Mo RAM} . The reader can be surprised by
+the number of proof obligations generated, but most of them are obvious goal. 
+\begin{table}
+\label{table-refinement}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Verification & Number of PO & Proved Automatically & Time to perform proof \\
+Deadlock freeness & 104 & 100 \% & 3 seconds \\
+Livelock freeness & 42 & 100 \% & 1 seconds \\
+\hline
+\end{tabular}
+\caption{Result of the Analyze of the Environment}
+\end{table}
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main2"
+%%% End: 

@@ -1,0 +1,47 @@
+
+
+\section{Rules for JML properties execution semantics}
+\label{sec-rules}
+
+We give in this appendix rules of the semantics of the execution traces of JML properties.. Let $JP$, $P$ and $Q$ be JML predicates. Let $JML(E)$ be the \textit{ghost} variable associated to the event $E$ (for example, JML(\texttt{beginTransaction called}) $\equiv_{def}$ \texttt{BTcalled}).\smallskip
+
+
+
+
+
+
+%$$ P  \equiv_{def}  \llbracket \llbracket P \rrbracket_{s} %\rrbracket_{JML} $$
+%equivalence Rule
+
+$\llbracket //@ invariant ~ JP \rrbracket_{JML}  \equiv_{def} \forall \sigma. \forall i . (i \geq 0) \Rightarrow (\sigma_i \models JP )   \mbox{ [invariant Rule]} $\smallskip
+$ \llbracket  //@ constraint ~ JP \rrbracket_{JML} \equiv_{def} \forall \sigma . \forall i . (i > 0) \Rightarrow (\sigma_i \models JP )  \mbox{ [constraint Rule]} $\smallskip
+
+
+%\\
+%***********************
+%$$//@ invariant ~ \llbracket I \rrbracket_{s} 
+%\equiv_{def}  
+%\llbracket \forall i . (i \geq 0) \Rightarrow (\sigma_i \models  I) \rrbracket_{s} $$
+%invariant Rule
+%\\
+
+%$$ //@ constraint ~ \llbracket  C   \rrbracket_{s} \equiv_{def}    \llbracket \forall i . (i > 0) \Rightarrow (\sigma_i \models C ) \rrbracket_{s} $$
+%constraint Rule\\
+%***************************************************
+
+
+$ i > 0 \wedge \sigma_i \models \backslash old(JP)  \equiv_{def} \sigma_{i-1} \models JP \mbox{ [} \backslash \mbox{old operator Rule]}$\smallskip
+
+$ \sigma_i \models P \&\& Q \equiv_{def} \sigma_i \models P  \wedge \sigma_i \models Q  
+\mbox{ [conjunction Rule]}$\smallskip
+
+$ \sigma_i \models P ~ \|~ Q \equiv_{def} \sigma_i \models P  \vee \sigma_i \models Q  \mbox{ [disjunction Rule]}$\smallskip
+
+
+$ \sigma_i \models P ==> Q  \equiv_{def} \sigma_i \models P  \Rightarrow \sigma_i \models Q \mbox{ [implication Rule]}$\smallskip
+
+$ \sigma_i \models !P  \equiv_{def}  \sigma_i \models \neg P \mbox{[negation Rule]}$\smallskip
+
+
+$ \sigma_i \models JML(E) \&\& \backslash old(JML(E))  \equiv_{def} \sigma_i \models E  \mbox{[event Rule]}$\smallskip
+

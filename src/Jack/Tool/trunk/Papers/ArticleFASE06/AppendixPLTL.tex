@@ -1,0 +1,45 @@
+\section{Syntax and Semantics of PLTL}
+\label{appendix-PLTL}
+
+
+We give in this section the syntax and  semantics of \textsf{PLTL}
+operator.
+\begin{definition}[Syntax of \textsf{PLTL}]
+Let $P$ a predicate of \(\mathcal{P}red\), \textsf{PLTL} formula
+are given as follows:
+$$ \phi,\psi ::= \phi \wedge \psi ~ |~  \neg \phi ~  | ~ 
+\phi \mathsf{U} \psi ~ |~  \mathsf{X} \phi ~ |~ P  $$
+This is the minimal definition. We also add the followings abreviations. 
+{\small
+\begin{center}
+\begin{tabular}{lll|lll}
+ $\phi \vee \psi$ &  \qquad $\equiv_{def} $ & \qquad $ \neg( \neg \phi \wedge \neg \psi)$ \qquad & \qquad
+ $\mathsf{F} \phi$ &  \qquad$ \equiv_{def} $ & \qquad $ \mathit{true} \mathsf{U} \phi$\\
+ $\mathsf{G} \phi $ &  \qquad$\equiv_{def} $ &  \qquad $ \neg \mathsf{F} \neg \phi$  \qquad& \qquad
+
+ $\psi \mathsf{R} \phi $ &  \qquad$\equiv_{def} $ &  \qquad $ \neg (\neg \psi \mathsf{U} \neg \phi)$\\
+ $\mathsf{F^{\infty}} \phi$ &  \qquad$ \equiv_{def} $ & \qquad $ \mathsf{G} \mathsf{F} \phi$ \qquad & \qquad
+ $\mathsf{G^{\infty}} \phi $ &  \qquad$\equiv_{def} $ &  \qquad $ \mathsf{F} \mathsf{G}  \phi$\\
+\end{tabular}
+\end{center}
+}
+\end{definition}
+
+\begin{definition}[Semantics of PLTL]
+Let $\sigma$ be an execution, let $P \in  \mathcal{P}red$,
+let $i \in \mathbb{N}$, let $\phi$  and $\psi$ two PLTL formulae,
+we inductively define $\sigma_i \models \phi$ as follows:
+{\small
+\begin{center}
+\begin{tabular}{lll}
+$(\sigma,i) \models P$ & \qquad iff \qquad & \qquad $ P \in l(s_i)$  \\
+$(\sigma,i) \models \phi \wedge \psi$ & \qquad iff \qquad & \qquad $(\sigma,i) \models \phi$ and  $(\sigma,i) \models \psi$\\
+$(\sigma,i) \models \neg \phi $ &  \qquad iff \qquad & \qquad $\neg(\sigma,i \models \phi)$\\
+$(\sigma,i) \models \psi \mathsf{U} \phi$ & \qquad iff \qquad & \qquad $\exists j . (j \geq i \wedge (\sigma,j) \models \phi \wedge $\\
+  & & \qquad \qquad $\forall k . (i \leq k < j \Rightarrow (\sigma,k) \models \psi))$\\
+$(\sigma,i) \models \mathsf{X} \phi$ & \qquad iff \qquad  & \qquad $(\sigma,i+1) \models \phi$\\
+\end{tabular}
+\end{center}
+}
+\end{definition}
+

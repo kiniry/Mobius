@@ -1,0 +1,99 @@
+%\documentclass{llncs}
+\documentclass[runningheads,a4paper]{llncs}
+
+%\documentclass{article}
+%\usepackage[french]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx,graphics,epsfig,xypic}
+%\usepackage{Parallel}
+%\usepackage{psfrag}
+\usepackage[usenames]{color}
+\usepackage{latexsym}
+\usepackage{amsfonts,amssymb,amsmath}
+\usepackage{verbatim,theorem}
+\usepackage{longtable}
+\usepackage{tabularx}
+%\usepackage{mathenv}
+\usepackage{floatflt}
+%\usepackage{gastex}
+
+%\input{../common/macros}
+
+\def\dbB{$\backslash \backslash$}
+
+\def \bsl       {\symbol{92}}
+\def \unsc      {\symbol{95}}
+
+\newcommand{\sat}{\models}
+
+%\usepackage{vmargin}            % redÃ©finir les marges
+%\setmarginsrb{3cm}{3cm}{3cm}{3cm}{0cm}{0cm}{0cm}{0cm} %gauche,haut,droite,ba
+%\newfloat{prog}{tph}{lop}[section]
+%\floatstyle{boxed}
+
+%\pagestyle{plain}
+
+\titlerunning{Verification of Liveness Properties with JML}
+
+\authorrunning{F. Bellegarde \and J. Groslambert \and M. Huisman \and J. Julliand \and O. Kouchnarenko}
+
+
+\begin{document}
+
+
+
+\title{Verification of Liveness Properties with {JML}\thanks{Research partially funded by French Research ACI \emph{Geccoo}.}}
+\author{Françoise Bellegarde\inst{1} 
+\and Julien Groslambert\inst{1} 
+\and Marieke Huisman\inst{2} 
+\and Jacques Julliand\inst{1} 
+\and Olga Kouchnarenko\inst{1}}
+%\author{Bellegarde Françoise \inst{1} \and Groslambert Julien \inst{1} \and Huisman Marieke\inst{2} \and Julliand Jacques\inst{1} \and Kouchnarenko Olga\inst{1}}
+\institute{Université de Franche-Comté - LIFC - CNRS - INRIA\\
+%16 route de Gray -  25030 Besançon cedex France\\
+%Tel.: (33)381 666 664\\
+e-mail:\{bellegar, groslambert, julliand, kouchna\}@lifc.univ-fcomte.fr
+\and 
+INRIA Sophia Antipolis\\
+e-mail: Marieke.Huisman@sophia.inria.fr }
+
+%\email{bellegar \and groslambert \and julliand \and kouchna@lifc.univ-fcomte.fr \and Marieke.Huisman@sophia.inria.fr}
+\maketitle
+
+
+\setcounter{footnote}{0}
+
+\input{abstract.tex}
+
+\textbf{Keywords}: JML, Liveness Property, Verification.
+
+
+\input{papierJulien.tex}
+
+%\input{jml.tex}
+
+\input{RunningExample.tex}
+
+\input{sec_prelimv1.tex}
+
+
+\input{Annotation.tex}
+
+%\input{CaseStudy.tex}
+\input{sec-env.tex}
+\input{VerifAppli.tex}
+
+\input{conclusion}
+\bibliographystyle{plain}
+\bibliography{../biblio}
+
+\appendix
+%\input{Appendix1.tex}
+%\input{AppendixPLTL.tex}
+%\input{AnnexeSemantique.tex}
+\section{Proofs}
+This appendix could be removed from the final paper.
+\input{appendix-proof.tex}
+%\input{appendix-rewriting.tex}
+
+\end{document}

@@ -1,0 +1,119 @@
+\section{Rewriting Rules}
+\label{appendix-rewriting}
+
+In this section, we present the rewritting rules used for the decomposition
+of the method \texttt{performTransaction()}.
+
+
+%%%%%%%%%%%%%%%%%%%
+%%% SWITCH RULE %%%
+%%%%%%%%%%%%%%%%%%%
+{\scriptsize
+
+\subsection{Switch Rule}
+
+
+
+\begin{tabular}{|l|l|}
+\hline
+\begin{tabular}{l}
+m()\{\\
+switch($\mathsf{Expr_{switch}}$)\{\\
+\qquad case $\mathsf{Expr_{case1}}$: $\mathsf{body_{case1}}$;break;\\
+\qquad ...\\
+\qquad case $\mathsf{Expr_{casen}}$: $\mathsf{body_{casen}}$;break;\\
+\}\\
+
+\end{tabular} & 
+\begin{tabular}{l}
+\hline
+//@ requires $\mathsf{Expr_{switch}}$ == $\mathsf{Expr_{case1}}$;\\
+m()\_switch\_case1\{\\ 
+$\mathsf{body_{case1}}$\\
+\}\\
+\hline
+...\\
+\hline
+//@ requires $\mathsf{Expr_{switch}}$ == $\mathsf{Expr_{casen}}$;\\
+m()\_switch\_casen\{\\ 
+$\mathsf{body_{casen}}$\\
+\}\\
+
+\end{tabular}\\
+\hline
+\end{tabular}
+
+
+
+%%%%%%%%%%%%%%%%%%%
+%%% CALL RULE   %%%
+%%%%%%%%%%%%%%%%%%%
+\subsection{Call Rule}
+
+
+\begin{tabular}{c}
+\begin{tabular}{l}
+m()\{\\
+callstack = method;\\
+method();\\
+\}\\
+\end{tabular}\\
+\hline
+\begin{tabular}{l}
+m()\{\\
+method();\\
+\}\\
+\end{tabular} 
+\end{tabular} 
+
+
+%%%%%%%%%%%%%%%%%%%
+%%% WHILE RULE  %%%
+%%%%%%%%%%%%%%%%%%%
+
+\subsection{While Rule}
+
+
+\begin{tabular}{c}
+\begin{tabular}{ll}
+\begin{tabular}{l}
+/*@ requires $\mathsf{expr_{while}}$;\\
+~~~@ requires $P$;\\
+~~~@ ensures $P$;\\
+~~~@*/\\
+m\_while()\{\\
+\quad $\mathsf{body_{while}}$;\\
+\}\\
+\end{tabular}
+&
+\begin{tabular}{l}
+/*@ requires $\neg \mathsf{expr_{while}}$;\\
+~~~@ requires $P$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m\_end\_while()\{\\
+\quad $\mathsf{body_{endwhile}}$;\\
+\}\\
+\end{tabular}
+\end{tabular}\\
+\hline
+\begin{tabular}{l}
+/*@ requires $P$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m()\{\\
+\quad while ($\mathsf{expr_{while}}$)\{\\
+\qquad$\mathsf{body_{while}}$;\\
+\quad\}\\
+\quad$\mathsf{body_{endwhile}}$\\
+\quad\}\\
+\end{tabular} 
+ 
+\end{tabular}  
+
+
+\subsection{try catch Rule}
+}
+
+
+

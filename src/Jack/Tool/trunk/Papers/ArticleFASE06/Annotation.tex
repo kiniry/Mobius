@@ -1,0 +1,285 @@
+\subsection{The \textsf{Loop} Primitive and the Main Theorem}% and a Sufficient Hypothesis on the Environment}
+\label{sec-until}
+
+%To generate JML annotations for liveness properties, 
+This section introduces
+the  \textsf{Loop} primitive \(Q \leadsto_{\mathit{JML}} R (J,V,M)\), 
+the sufficient progress hypothesis $H_{S_1}$ on the environment, and the
+main theorem for generating annotations that conform the \textsf{Loop}
+primitive. 
+
+%\subsubsection{The \textsf{Loop} primitive}
+\begin{definition}[\textsf{Loop} Primitive]\label{until1} 
+  Let \(R\), \(Q\) and \(J\) be in $\mathcal{P}red_C$, \(M\) a subset of
+  the progress methods $\mathcal{PM}_C$, and \(V\) a JML expression
+  returning an integer.  The \textsf{Loop} primitive \(Q
+  \leadsto_{\mathit{JML}} R 
+  (J,V,M)\) holds on the execution $\sigma$, written $\sigma \models Q
+  \leadsto_{\mathit{JML}} R (J,V,M)$, if
+\[
+\forall i. (i \geq 0
+\wedge \sigma_i \models Q ) ~
+\Rightarrow ~ (\exists j. j > i \wedge \sigma_j \models R \wedge
+~(\forall k.i \leq k<j \Rightarrow \sigma_k \models Q )).
+\]
+\end{definition}
+%Notice that implicitly \(\sigma\) is supposed to satisfy the
+%hypotheses described in Sect.~\ref{sec-until-environment}, thus
+%calling the methods in \(M\) infinitely often. 
+Notice that the
+invariant \(J\) and the variant $V$ do not appear in the above
+expression,%this definition, 
+they are only used to generate the appropriate proof obligations for
+the termination of the loop.\\
+
+
+%We now describe an Hypothesis ($H_S$) on the surrounding environment 
+%-- in our example, the
+%class $Section$ -- which is sufficient to permit the verification of liveness 
+%properties using JML annotations.%, i.e., which permits to have infinite
+%executions.
+
+%Second, assuming that the environment verifies this hypothesis, we
+%give the needed JML annotations to verify the liveness property.
+%Section~\ref{sec-verif} discusses how the
+%assumptions on the environment can be verified.
+
+%Remember that for the time being, we assume all methods in \(C\) to be atomic,
+%\emph{i.e.,}\/~they do not call any other method.
+
+
+
+
+
+%\subsubsection{Hypothesis on the Environment}
+
+
+
+%Let $M$ be the set of all non-observer methods of $C$, 
+%assuming that we verify a liveness property expressed by the 
+%operator $Q \leadsto R (J,V,M)$
+
+
+
+Contrarily to safety properties, it is not possible to verify liveness
+properties without information about the programs, that use 
+the class. 
+
+We propose a hypothesis $H_{S_1}$ on the environment which is sufficient to
+guarantee a liveness property when some JML annotations are faithful w.r.t.
+the class methods. The hypothesis $H_{S_1}$ requires that the environment
+calls a progress method of the class infinitely often.  The hypothesis
+($H_{S_1}$) can be expressed in the semantics of LTL~\cite{pnueli77}, using
+the $F^{\infty}$ operator. % (see Appendix~\ref{appendix-PLTL}). 
+Given a predicate $P$, the formula $F^{\infty} P$  
+means that $P$ occurs \textit{``infinitely often''}, i.e., for each state
+of the execution, there exists a future state verifying $P$. Formally,
+$$\sigma_i \models F^{\infty} P \equiv_{def} \forall j \geq i . (\exists k
+. ( k\geq j \wedge \sigma_k \models P))$$
+
+$H_{S_1}$ can be expressed as follows.
+
+$$ \hspace*{15em} (\mathsf{F^{\infty}} M ~ \mathbf{called})
+  \hspace*{11em} (H_{S_1})$$
+
+%Where $M$ denotes the set of non-observer methods of the class
+%and  $M$ \textbf{called} denotes the predicate 
+%$\bigvee_{m \in M} m ~ \mathbf{called}$.
+
+where  $(M ~ \mathbf{called})$ is a predicate denoting 
+that a progress method of the class has been called.
+
+
+
+Assuming that the environment satisfies $H_{S_1}$, we are able to give JML
+annotations that ensure the satisfaction of a liveness property on a given
+execution. This is the matter of Sections~\ref{sec-OPLoop}.
+
+
+
+
+
+
+%It means that if \emph{Q} holds on a state of the execution $\sigma$,
+%in the future we eventually have a state which satisfies \emph{P} (in
+%the following \emph{Q} is always a predicate which is satisfied until
+%\emph{P} holds, so we call this modality a \emph{Until} modality).
+
+
+\subsection{Main Theorem}%Proof Obligation of the \textsf{Loop} primitive}
+\label{sec-OPLoop}
+
+We give the proof
+obligations inspired from~\cite{Abrial:1998:IDC,burstall}, and expressed as
+JML annotations. The proof obligations guarantee 
+the satisfaction of the \textsf{Loop}
+primitive under the hypothesis $H_{S_1}$. 
+
+
+Let \(Q \leadsto_{\mathit{JML}} R (J, V, M)\) be the \textsf{Loop}
+primitive. Let $\mathcal{A}_{1-6}$ be the following set of JML annotations. 
+
+
+\begin{small}
+\begin{enumerate}
+\item \emph{\texttt{//@ invariant} \(Q\) \texttt{==>} \(J\);}
+
+\item \emph{\texttt{//@ invariant} \(V\) \texttt{>= 0};}
+
+\item \emph{\texttt{//@ constraint \bsl old(}\(Q\)\texttt{) \& \bsl
+old(}\(J\)\texttt{) \& !}\(R\) \texttt{\:==>\:} Q \texttt{
+for} \(M\);}
+\item \emph{\texttt{//@ constraint \bsl old(}\(Q\)\texttt{) \& \bsl
+old(}\(J\)\texttt{) \& !}\(R\) \texttt{\:==>\:} \(V\) \texttt{< \bsl old(}\(V\)\texttt{)
+for} \(M\);}
+
+\item \emph{\texttt{//@ constraint \bsl old(}\(Q\)\texttt{) \& \bsl
+old(}\(J\)\texttt{) \& !}\(R\) \texttt{\:==>\:} \(V\) \texttt{<= \bsl
+old(}\(V\)\texttt{) for} \(\overline{M}\);}
+
+\item \emph{\texttt{//@ constraint \bsl old(}\(Q\)\texttt{) \& \bsl 
+old(}\(J\)\texttt{)  \& !}\(R\) \texttt{\:==>\:}   \(\exists m.\:  
+m\in \mathcal{PM_C}\)} %%%\mathsf{requires}(m)\) \texttt{\&} \(\neg \mathsf{diverges}(m)\);}
+\end{enumerate}
+\end{small}
+\marginpar{pb with OP6 JG}.
+
+
+The meta-notation (\(\exists m.\: \mathsf{requires}(m)\) \texttt{\&} \(\neg
+\mathsf{diverges}(m)\) ) is not a JML property. This can be written in JML
+as the negation of the predicate of the \texttt{diverges} clause and the
+disjunction of all the method's preconditions.
+%\marginpar{a modifier version journal}
+
+
+
+\begin{theorem}[Main Theorem]%JML Annotations for the \textit{Loop}]
+  \label{until} 
+If $\Sigma_C : \mathcal{A}_{1-6}$ and $\Sigma_C \models H_{S_1}$ then 
+$\Sigma_C \models Q \leadsto R (J,V,M)$. 
+%\begin{center}
+%\begin{tabular}{c}
+% $\Sigma_C : \mathcal{A}_{1-6}$\\
+% $\Sigma_C \models H_{S_1}$\\
+% \hline
+% $\Sigma_C \models Q \leadsto R (J,V,M)$\\
+% \end{tabular}
+% \end{center}
+\end{theorem}
+
+In other words, assuming that an execution $\sigma$ in $\Sigma_C$ of the
+environment of a class $C$ satisfies $H_{S_1}$, \(Q
+\leadsto_{\mathit{JML}} R (J, V, M)\) holds on $\sigma$ if $\sigma :
+\mathcal{A}_{1-6}$.
+
+%the following proof obligations are satisfied%\:\footnote{where
+%\(\mathsf{term}(M)\) is the set of events 
+%\(\{ m~\mathbf{terminates}, m~\mathbf{exceptional}, m~\mathbf{normal} \mid m \in M\}\), 
+%\(\mathsf{requires}(m)\)  denotes the precondition, and
+%\(\mathsf{diverges}(m)\) the diverges
+%clause --the conditions under which the method might
+%diverge --, of method \(m\), respectively.}.
+
+
+%\begin{footnotesize}
+%\begin{gather}
+%\forall i.\:(\sigma_i \models  Q ) \Rightarrow ( \sigma_i \models J ) \\
+%\forall i.\:\sigma_i \models (V \in \mathbb{N})\\
+%\forall i\:, n.\:(\sigma_i \models  (Q \wedge J \wedge V = n) \Rightarrow
+%((\sigma_{i+1} \models \neg  R \wedge \mathsf{term}(M))
+%%\wedge \sigma_i \models V = n \wedge \sigma_i \models event(M)
+%\Rightarrow \sigma_{i+1} \models Q))\\
+%\forall i\:, n.\:(\sigma_i \models  (Q \wedge J \wedge V = n) \Rightarrow
+%((\sigma_{i+1} \models \neg  R \wedge \mathsf{term}(M))
+%%\wedge \sigma_i \models V = n \wedge \sigma_i \models event(M)
+%\Rightarrow \sigma_{i+1} \models V < n))\\
+%\forall i\:, n.\:(\sigma_i \models  (Q \wedge J \wedge V = n)
+%\Rightarrow
+%((\sigma_{i+1} \models \neg  R \wedge \mathsf{term}(\overline{M})) 
+%%\wedge \sigma_i \models V = n \wedge \sigma_i \models
+%%event(\overline{M}) 
+%\Rightarrow \sigma_{i+1} \models V \leq n))\\
+%\forall i.\:(\sigma_i \models (Q \wedge J) 
+%%~ \wedge ~ \sigma_i \models J  ~\wedge ~ 
+%\Rightarrow (\sigma_{i+1} \models \neg  R ~ \Rightarrow  
+%(\exists m.\:\sigma_{i+1} \models (\mathsf{requires}(m) \wedge \neg \mathsf{diverges}(m)))))
+%\end{gather}
+%\end{footnotesize}
+
+
+
+%Notice that these JML annotations, 
+%completed by Hypothesis~($H_{S_1}$), basically describe a
+%termination proof~\cite{}:%, using an invariant
+% $J$ and a variant $V$, from which we
+%can conclude that eventually \(R\) should hold. 
+Intuitively, $\mathcal{A}_{1-6}$ could be understood as follows.
+\begin{enumerate}
+\item The invariant \(J\) has to hold, whenever \(Q\) holds.
+\item The variant $V$ actually expresses a natural number,
+\emph{i.e.,}\/~it is well-founded.
+\item %If $Q$ holds in the preceeding state, and $R$ do not 
+%hold in the current state, then $Q$ must holds in the 
+%current state. 
+The predicate $Q$ is preserved unless $R$ holds on the current state.
+\item If \(Q\) holds, and a method in $M$ is called, the variant \(V\) must
+  strictly decrease. It ensures the progress when the environement satifies
+  $H_{S_1}$ (livelock-freeness).
+\item If \(Q\) holds, and a method in $\overline{M}$ is
+  called, the variant \(V\) may not increase.
+%After a state where Q holds, the variant $V$ must decrease after
+%each event until the predicate P is satisfied. This proof obligation
+%establishes that we have no livelock in Q.
+%\item We have to prove that all the observer methods (methods that
+%belongs to the complementary set of $M$ denoted $\overline{M}$) must
+%not increase the variant $V$
+
+\item As long as \(Q\) holds, and \(R\) is not reached, there always
+should be a method enabled (\emph{i.e.,}\/~its precondition holds, and
+it will not diverge). This ensures the deadlock-freeness of the system.
+
+%We have to ensure, that after a state where Q holds, the system
+%cannot be blocked until the state where P holds. To do that, we verify
+%for each of these states, that at least one precondition of a method
+%is true (that means, that at least one method can be invocated), and
+%we have to verify that if the method holds then this method cannot
+%diverge.
+\end{enumerate}
+The reader can find a formal expression of $\mathcal{A}_{1-6}$) in
+Lemma~\ref{lemma-loop}. The proof of the main theorem is given in
+Appendix~\ref{sec-proof-theorem-loop}.
+
+
+
+
+
+
+
+%Following Theorem~\ref{until} and the JML
+%semantics~\cite{TheseMarieke}, the following JML annotations are
+%sufficient to imply the validity of the
+%\emph{Loop} primitive.
+
+
+%\begin{proposition}[JML Proof Obligations \emph{Loop}]\label{PropLeadsTo}
+%The following JML assertions implies that
+%$Q\leadsto_{\mathit{JML}}R(J,V,M)$ holds. 
+
+%\end{proposition}
+%\marginpar{commentaires ???}
+%The first and second proof obligations are simply expressed in
+%JML by an invariant. We other,
+
+
+
+
+%The generation of JML annotations that ensure liveness properties 
+%in JML is done through this $Loop$ primitive. Next subsection shows
+%the appropriate annotations for the liveness
+%property ($L_C$).
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main2"
+%%% End: 

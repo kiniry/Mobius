@@ -1,0 +1,155 @@
+\section{A Quick Overview of JML}\label{sect-JML}
+
+JML (Java Modeling
+Language)~\cite{Leavens-etal03,Preliminary} is a specification
+language especially tailored for Java applications. Originally, JML
+was proposed by G.T.~Lea\-vens and his team; nowadays the development of
+JML is a community effort. JML has been successfully used in several
+case studies to specify Java applications, and notably to specify
+smart card applications, written in Java
+Card~\cite{BreunesseCHJ03,BousquetLMOL04,JacobsMR04}.
+
+JML is developed following the Design by Contract
+approach~\cite{Meyer97}, where classes are annotated with class
+invariants and method pre- and post-conditions. The
+predicates are written as (side-effect-free) boolean Java expressions,
+extended with specification-specific constructs. Specifications
+are written as Java comments marked with a \texttt{@},
+\emph{i.e.,}\/~annotations follow \texttt{//@} or are enclosed between \texttt{/*@} and
+\texttt{*/}. Below, we give a brief introduction to the main
+specification constructs of JML, by means of the example in
+Fig.~\ref{SpecJavacard}; we refer
+to~\cite{Leavens-etal03} for a full overview of the language,
+and~\cite{Burdy-etal03} for an overview of different tools using JML.
+
+
+
+\begin{figure}[t]
+\begin{scriptsize}
+\begin{multicols}{2}
+\begin{verbatim}
+class Transaction {
+public int pin_try = 0;
+public boolean pin_validated = false;
+final int PIN_MAX_TRY = 3;
+...
+//@ ghost boolean pinValidation_called;
+//@ invariant pin_try <= PIN_MAX_TRY;
+//@ constraint PIN_MAX_TRY== \old(PIN_MAX_TRY);
+...
+//@ ensures \result==(PIN_MAX_TRY- in_try);
+public void /* pure */ getTryLess(){
+  ...
+ }
+
+...
+
+/*@ private behavior
+  @ requires pin_validated == false
+  @           && pin_try < PIN_MAX_TRY;
+  @ modifies pin_try, pin_validated;
+  @ ensures (pin_try == \old(pin_try)
+  @    && pin_validated == true))
+  @ signals (Exception) 
+  @     ( pin_try <= PIN_MAX_TRY
+  @	  && pin_try == \old(pin_try)+1
+  @       && pin_validated == false);
+  @*/
+private void pinValidation() {
+//@ set pinValidation_called = true;
+   ...
+  }
+}
+\end{verbatim}
+\end{multicols}
+\end{scriptsize}
+\caption{JML Specification Example}
+\label{SpecJavacard}
+\end{figure}
+
+%The keyword \texttt{model} allows to declare special JML variables
+%that can be used in specifications only. These variables typically are
+%%used as an abstract representation of (some of) the concrete variables
+%(a special \texttt{represents} clause allows to state this relation
+%explicitly). Model variables can not be explicitly initialized,
+%instead the \texttt{initially} clause gives a predicate constraining
+%their initial values. Notice that the variable declarations further
+%use Java syntax.  
+
+JML introduces its own \texttt{ghost} variables. 
+These exist also only in specifications, but a special
+\texttt{set} annotation exists to change their value.% (while
+%\texttt{model} variables change implicitly, when the concrete
+%variables they represent change).
+
+
+Further we see a declaration of a class \texttt{invariant}, denoting a
+predicate that has to hold before and after every method call. In the 
+example, the invariant denotes that in all states, the variable 
+\texttt{pin\_try} must be lower than a constant \texttt{PIN\_MAX\_TRY}.
+We can also specify  history \texttt{constraint}s, expressing 
+a relation between the pre- and post-state of a method. Such
+a constraint, is able to express that a value  can only increase. 
+In Fig.\ref{SpecJavacard}, the value of \texttt{pin\_try} cannot be
+lower that its value before the call of the method -- denoted by the
+JML keyword \texttt{$\backslash$old}. Moreover, one can specify, using
+the clause \texttt{for}, the list of the methods on which the 
+history constraint must be verified. In Fig.\ref{SpecJavacard} 
+a clause \texttt{for} is used to express that the 
+constraint is applied only on the method  
+\texttt{pinValidation()}. When this clause is omitted,
+the constraint must hold on all the methods of the class.
+
+ %Constraints and postconditions
+%can use the keyword \texttt{\bsl old} to denote the value of an
+%expression, evaluated in the pre-state of a method. The \texttt{for}
+%clause specifies to which methods the \texttt{constraint} apply.
+
+Finally, Figure~\ref{SpecJavacard} contains the method specifications for
+\texttt{pinValidation} and \texttt{getTryLess}. The first is a
+\texttt{behavior} specification:  if the
+method is called in a state satisfying the precondition, it terminates
+%either normally in a state satisfying the postcondition. One can also
+%find in JML some \texttt{behavior} specification meaning that the method terminates,
+either in a normal state satisfying the postcondition (\texttt{ensures} clause), or because of
+an exception, satisfying the exceptional postcondition
+(\texttt{signals} clause).
+One can also find in JML some \texttt{normal$\backslash$behavior} specification 
+meaning that the method terminates always without throwing an exception.
+
+
+Consider now the \texttt{getTryLess} method. The
+keyword \texttt{pure} denotes that this method is without side-effect, i.e.,
+it cannot modify the internal state of the class. %These method are \textit{observe}
+%method of the system: they do not provide any progress.
+
+%JML allows
+%several variations of method behaviour specifications.
+
+%Finally, not present in Figure~\ref{SpecJavacard} but important for
+%our work are so-called history \texttt{constraint}s, specifying a relation
+%between the pre- and post-state of a method. History constraints can
+%for example be used to specify that a value only can increase. 
+%Constraints and postconditions can use the keyword \texttt{\bsl old}
+%to denote the value of an expression, evaluated in the pre-state of a
+%method. 
+
+%satisfied in the execution
+%state before the call of a method and after the termination of a
+%method. We also use \textit{historical constraints}. An historical
+%constraint (using the keyword \texttt{constraint}) works with past
+%values of variables using the keyword \texttt{$\backslash$old} which
+%denotes the value of a variable in the predecessor state. As shown in
+%Fig. \ref{SpecJavacard}, a JML specification preceeds the declaration
+%of the method \texttt{beginTransaction}. This specification is a
+%\textit{normal behavior}, meaning that if the predicate following the
+%keyword \texttt{requires} holds when the method
+%\texttt{beginTransaction} is called, then this method will terminate
+%normally, i.e., it will not throw an exception and the post-condition
+%following the keyword \texttt{ensures} will hold at the end of the
+%method invocation.
+
+
+
+
+ 

@@ -1,0 +1,101 @@
+\section{Syntax of Temporal Extension JML}\label{Appendix-syntax}
+
+
+\subsection{Attribute Grammar}
+
+{\small
+\begin{longtable}{crcl}
+\textsf{(TF1)} & $<$Temp$_1$$>$ & ::=    & 
+               \textbf{after} $<$Events$>$ $<$Temp$_2$$>$\\
+\textsf{(TF2)} &            & $\mid$ & 
+               \textbf{before} $<$Events$>$ $<$TraceProp$>$\\ 
+\textsf{(TF3)} &            & $\mid$ &
+               $<$TraceProp$>$ \textbf{until} $<$Events$>$\\
+&&&            \textbf{under invariant} $<$JMLProp$>$ 
+               \textbf{variant} $<$JMLExpr$>$ \\
+&&&            [\textbf{for} $<$Methods$>$]\\ 
+\textsf{(TF4)} &              & $\mid$ &
+               $<$TraceProp$>$ \textbf{unless} $<$Events$>$   \\          
+%\textsf{(TF5)} &              & $\mid$ &
+%               \textbf{between} $<$Events$>$ $<$Events$>$ $<$TraceProp$>$ \\
+%\textsf{(TF6)} &              & $\mid$ & 
+%               \textbf{at most} $<$Nat$>$ $<$Events$>$  \\
+
+\textsf{(TF5)} &              & $\mid$ & $<$TraceProp$>$ \medskip\\     
+
+\textsf{(TP1)} & $<$TraceProp$_1$$>$ & ::= & 
+               \textbf{always} $<$JMLProp$>$    \\ 
+\textsf{(TP2)} &                   & $\mid$ &
+               \textbf{eventually} $<$JMLProp$>$ \\                        
+&&&            \textbf{under invariant} $<$JMLProp$>$ 
+               \textbf{variant} $<$JMLExpr$>$ \\
+&&&            [\textbf{for} $<$Methods$>$] \\
+\textsf{(TP3)} &                   & $\mid$ &
+               \textbf{eventually} $<$JMLProp$>$  \\                       
+%\textsf{(TP4)} &                   & $\mid$ &
+%               \textbf{never} $<$JMLProp$>$  \\                      
+\textsf{(TP4)} &                   & $\mid$ &
+               $<$TraceProp$_2$$>$ \texttt{\&} $<$TraceProp$_3$$>$ \\             
+\textsf{(TP5)} &                   & $\mid$ &
+               $<$TraceProp$_2$$>$ \texttt{$\mid$} $<$TraceProp$_3$$>$
+\end{longtable}
+\begin{longtable}{rclrcl}
+$<$Events$>$ & ::=      & $<$Event$>$ & 
+$<$Methods$>$ & ::=      & $<$Method$>$ \\
+
+              & $\mid$ & $<$Event$>$,$<$Events$>$ &
+              & $\mid$ & $<$Method$>$,$<$Methods$>$\medskip\\
+
+$<$Event$>$ & ::=      & $<$method$>$ \textbf{called}\\
+            & $\mid$ & $<$method$>$ \textbf{normal}\\
+            & $\mid$ & $<$method$>$ \textbf{exceptional}\\
+            & $\mid$ & $<$method$>$ \textbf{terminates}%\medskip\\
+
+%& $<$JMLProp$>$ & ::=      & $<$JMLProp$>$\\
+%&                 & $\mid$ & $<$JMLProp$>$ \texttt{\&} $<$JMLProp$>$\\
+%&                 & $\mid$ & $<$JMLProp$>$  \texttt{$\mid$}  $<$JMLProp$>$\\
+%&                 & $\mid$ & \texttt{!}$<$JMLProp$>$\\
+\end{longtable}
+}
+
+\subsection{Attribute Definitions.}
+\label{Appendix-atribute}
+
+{\small
+\begin{longtable}{rrcl}
+\textsf{(TF1)} & \textsf{correct}($<$Temp$_1$$>$) & \(\leftarrow\)& 
+                 \textsf{correct}($<$Temp$_2$$>$) \\
+\textsf{(TF2,3,4,5)} & \textsf{correct}($<$Temp$_1$$>$) &\(\leftarrow\)&
+                               \textsf{correct}($<$TraceProp$>$)\smallskip\\ 
+%\textsf{(TF4)}\textsf{(TF5)} & \textsf{correct}($<$Temp$_1$$>$) &\(\leftarrow\)& 
+%                               \textsf{correct}($<$TraceProp$>$)\smallskip\\ 
+%\textsf{(TF6)}\textsf{(TF7)} & \textsf{correct}($<$Temp$_1$$>$) &\(\leftarrow\)& 
+%                               \textsf{correct}($<$TraceProp$>$)\smallskip\\ 
+
+\textsf{(TF2,3)}&  \textsf{inherited}($<$TraceProp$>$) &
+              \(\leftarrow\)& \textsf{true}\\
+\textsf{(TF4,5)}&  \textsf{inherited}($<$TraceProp$>$) &
+              \(\leftarrow\)& \textsf{false}\medskip\\
+
+
+
+\textsf{(TP1)} & \textsf{correct}($<$TraceProp$_1$$>$) &
+               \(\leftarrow\)& \textsf{true}\\
+\textsf{(TP2)} & \textsf{correct}($<$TraceProp$_1$$>$) &\(\leftarrow\)& 
+                 \(\neg\)\textsf{inherited}($<$TraceProp$_1$$>$)\\
+\textsf{(TP3)} & \textsf{correct}($<$TraceProp$_1$$>$) &\(\leftarrow\)& 
+                 \textsf{inherited}($<$TraceProp$_1$$>$)
+                 \smallskip\\
+
+\textsf{(TP4,5)} & \textsf{correct}($<$TraceProp$_1$$>$) &
+               \(\leftarrow\)& \textsf{correct}($<$TraceProp$_2$$>$) $\wedge$  
+                               \textsf{correct}($<$TraceProp$_3$$>$)\smallskip\\
+
+
+\textsf{(TP4,5)} & \textsf{inherited}($<$TraceProp$_2$$>$) &
+               \(\leftarrow\)& \textsf{inherited}($<$TraceProp$_1$$>$)\\
+\textsf{(TP4,5)} & \textsf{inherited}($<$TraceProp$_3$$>$) &
+               \(\leftarrow\)& \textsf{inherited}($<$TraceProp$_1$$>$)\\
+
+\end{longtable}
+}

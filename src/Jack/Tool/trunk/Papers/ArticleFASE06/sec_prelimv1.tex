@@ -1,0 +1,181 @@
+ \section{Verification of Liveness Properties using a \textsf{Loop} primitive}\label{sec-temporal}
+
+%In earlier work, Trentelman and Huisman~\cite{Huis02} propose an
+%extension of JML with temporal logic constructs especially dedicated
+%%to the semantics of Java and inspired by the
+%\emph{Specification Patterns} developed by Dwyer \emph{et
+%al.}~\cite{1999:icse:dwyer}. We use this language as a basis
+% for our
+%work, but we extend it by requiring the additional
+% specification of a
+%variant and an invariant for liveness
+% properties. Variants and Invariants are used to
+%prove the validity of the formulae, as described in Section~\ref{sec-until}.
+%Below, in Section~\ref{sec-until} we will show how this
+%variant and invariant are used to prove that an application satisfies
+%these liveness properties.
+
+%In this section we present the formal model underlying 
+%the semantics of the language, the trace-based semantics of the language 
+%itself, and how we extends it for the verification of liveness
+%properties.
+
+
+%(informal) syntax and semantics of this
+%extension, and we discuss how we add the notions of variant and
+%invariant to the specification of the liveness properties.
+
+This section deals with the verification of a liveness 
+properties expressed by a \textsf{Loop} primitive as 
+follows. This section is outlined as follows. 
+Section~\ref{sec:prelim} presents the formal execution model,
+Section~\ref{sec-until} presents the \textsf{Loop} primitive and a
+progress hypothesis on the environment that ensures the 
+satisfaction of the \textsf{Loop} primitive. The translation
+of the \textsf{Loop} operator into standard \textsf{JML}
+assertions is given in \ref{sec-OPLoop}. Section~\ref{sec-env} presents
+a progress hypothesis on the environment ($PH$) which
+is shown to be %minimal, i.e., 
+necessary and sufficient to
+ensure the satisfaction of the liveness property.
+
+
+\subsection{Formal Execution Model}
+\label{sec:prelim}
+
+%In the next subsection, we give the formal semantics of the JML extension 
+%with temporal specifications. 
+This section  describes the formal model we use, 
+based on transition systems.
+%To verify liveness properties expressed by the \textsf{loop} operator, 
+%we only need to observe the
+%methods that modify the internal states of the class, 
+%and so we abstract the others into a \textit{skip event}. 
+%This abstraction allows us 
+%to reason more easier about Java program execution.
+
+\begin{definition}[Progress and Non-progress Methods]
+  Given a class $C$, we distinguish the set of all the methods with
+  side-effect, i.e., that may modify the value of the attributes of $C$. We
+  call these methods \emph{progress methods} of $C$, denoted by
+  $\mathcal{PM_C}$. The other methods (\emph{getters} of $C$) are in
+  $\overline{\mathcal{PM_C}}$
+ 
+%Given a class $C$, a method $m$ is called an observer if the execution of $m$
+%does not modify the value of the variable of $C$, otherwise, i.e.,
+%if the execution of $m$ may affect the value of the variables of 
+%class $C$, then $m$ is a progress method.
+\end{definition}
+
+%\begin{definition}[Skip Event]
+%Each call or termination of a observer method is denoted as a skip event. 
+%\end{definition}
+%By definition, each call to an observer method of the class or an external 
+%method is seen as a skip event. 
+
+
+
+%By definition, each call or termination of an observer method of the class
+%can be seen as a \textit{skip} event.
+
+
+
+
+%The temporal logic language  is defined over a trace semantics, 
+%so we introduce transition systems as a
+%% formal notion of system and execution.
+
+The \textsf{Loop} primitive is defined over an execution.  So, we introduce
+transition systems as a formal model of an environment using the class
+methods. It reflects a semantics of calls and terminations
+of the methods of the class $C$ in an environment respecting $PH$. % notion of system and execution.
+
+\begin{definition}[Transition System]\label{def-TS}   
+Let $Ev$ be a nonempty alphabet of
+\emph{events} and \(\mathcal{P}red_C\) a set of JML predicates
+over the variables of a class $C$.
+A interpreted \emph{transition system} $TS_C$ is a tuple
+$<S,S_0,\rightarrow,l_C>$ composed of 
+a set of states \(S\), 
+a set of initial states $S_0\subseteq S$, 
+a total transition relation $\rightarrow{} 
+\subseteq S \times S$, 
+and a state interpretation function $l_C$ : $S \rightarrow
+\mathcal{P}(\mathcal{P}red_C)$. 
+\end{definition}
+
+The semantics of \textsf{Loop} is defined over infinite sequences of states
+(executions) of a transition system.
+\begin{definition}[Execution]
+\label{def-TSexec}
+Given a transition system \(TS_C = <S, S_0, \rightarrow, l_C>\), an
+\emph{execution} $\sigma$  of $TS_C$ is an infinite sequence
+$s_0, s_1, s_2, \ldots , s_i, s_{i+1}, \ldots$ of
+states such that $s_0 \in S_0$ 
+and for each $i \ge 0$, $(s_i \xrightarrow{} s_{i+1}) \in \rightarrow$. 
+We denote $\Sigma_C$ the set of all the executions of $TS_C$.
+\end{definition}
+For any JML predicate \(P \in\mathcal{P}red_C\), and any state \(s \in
+S\), we say that $s$ satisfies $P$, written \(s\sat P\) 
+whenever \(P \in l_C(s)\). 
+A JML predicate \(P\) holds on an execution \(\sigma\), denoted \(\sigma
+\sat P\), if \(s_0 \sat P\).
+We have also to define the conformity of an execution $\sigma$
+with respect to a set of JML annotations $\mathcal{A}$ of a class $C$,
+written $\sigma : \mathcal{A}$. It can be extended to all the executions
+from $\Sigma_C$ ($\Sigma_C :  \mathcal{A}$), or to the transition system
+$TS_C$ ($TS_C : \mathcal{A}$).  
+% To define the  semantics, we also define
+%e%xecution suffixes and segments.
+ 
+\begin{definition}[Execution suffix]
+Given an execution \(\sigma\), the \emph{execution suffix} beginning
+at the index $i$, denoted \(\sigma_i\), is the infinite sequence
+\[ s_i , s_{i+1} , s_{i+2}, \ldots \]
+
+%{\noindent
+%Given an execution $\sigma$, the \emph{execution segment} \(\sigma^j_i\)
+%denotes the infinite sequence
+%}
+%$$ s_i \xrightarrow{e_{i+1}}s_{i+1}
+% \ldots s_{j-1} \xrightarrow{e_j} s_{j} \xrightarrow{skip} s_j \ldots $$
+\end{definition}
+
+We say that \(P\) holds on \(\sigma_i\) %and \(\sigma_i^j\) 
+if \(s_i \sat P\). 
+%Finally, we formally define what we mean be occurrence of an event in \(E\).
+%\begin{definition}[Occurrence of events]
+%\label{def-E-hold} 
+%Let \(E \subseteq Ev\) be a set of events and \(\sigma\) an execution.
+%We say an event in
+%\(E\) \emph{occurs} in state $s_i$, written $s_i \models E$,
+%if \(e_{i} \in E\).
+
+
+
+
+ %\(e_{i}\) is called a \emph{\(E\)-transition}.
+%We call the transition \(s_{i} \xrightarrow{e_{i+1}} s_{i+1}\) an
+%\emph{\(E\)-transition}. 
+
+
+
+%We say an event \(e\) \emph{occurs} on \(\sigma\) if there exists an \(i\)
+%such that \(s_i \sat e\). 
+%We say an event \(e\) does \emph{not occur}
+%on \(\sigma\) if for all \(i\) we have \(s_i \not\sat e\). 
+%\end{definition}
+
+
+%\begin{definition}[Progress of an Execution]
+%Let $\sigma$ be an infinite execution over a transition system,
+%we say that $\sigma$ progresses for all states $s$ of the
+%execution if there exists a state $s'$ in the future such that 
+%$l(s)$ is not equivalent to  $l(s')$.
+%\end{definition}
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main2"
+%%% End: 

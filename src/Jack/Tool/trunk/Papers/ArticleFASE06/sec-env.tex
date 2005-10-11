@@ -1,0 +1,190 @@
+
+
+
+\subsection{Application to the Example using the \textsf{JAG} tool}
+
+
+\begin{figure}
+
+\begin{multicols}{2}
+\begin{scriptsize}
+\ttfamily
+            
+//@ invariant true =$>$ true;\\
+\\
+/*@ invariant ((7 - state) + \\
+\quad @ \quad getTryLess()) $>$ 0;\\
+\quad @*/\\
+\\
+/*@ constraint $\backslash$old(true) \\
+\quad @ \quad \&\& !(state == 7 || state == 6) =$>$ \\
+\quad @ (7 - state + getTryLess()) \\
+\quad @ \quad $<$ $\backslash$old(7 - state + getTryLess())\\
+\quad @ for initialiseTransaction, sendToBank, \\
+\quad @ pinValidation, complete,   printReceipt;\\
+\quad @*/ \\ 
+\\
+/*@ constraint $\backslash$old(true) \\
+\quad @ \quad \&\& !(state == 7 || state == 6) =$>$ \\
+\quad @ (7 - state + getTryLess()) \\
+\quad @ \quad $<$= $\backslash$old(7 - state + getTryLess())\\
+\quad @ for getTryLess;\\
+\quad @*/ \\ 
+\\
+/*@ constraint $\backslash$old(true) \\
+\quad @ \quad \&\& !(state == 7 || state == 6) =$>$ \\
+\quad @ ( state == 1\\
+\quad @ || state == 2\\
+\quad @ || state == 3\\
+\quad @ ||state == 4\\
+\quad @ || state == 5)\\
+\quad @*/ \\ 
+
+\normalfont
+\setlength{\parindent}{1cm}
+\end{scriptsize}
+\end{multicols}
+\caption{Transaction System Example}
+\label{FigOutExample}
+
+
+\end{figure}
+
+
+
+
+
+The \textsf{JAG} (JML Assertion Generator)\footnote{
+\url{http://lifc.univ-fcomte.fr/\~{}groslambert/JAG}}
+implement the translation presented in Theorem~\ref{until} 
+(see Sect.~\ref{sec-OPLoop}). Given 
+a \textsf{Loop} primitive and a Java/JML File, the tool 
+automatically generates  an output file containing the
+ JML annotations. 
+%Following
+%Proposition~\ref{PropLeadsTo}, this gives rise to the JML
+%assertions
+We obtain the class $Transaction$ completed with the
+JML annotations  displayed in Fig.~\ref{FigOutExample}
+%- generated annotations are displayed in boxes. 
+The consistency of the JML specification with the extra annotations
+ has automatically been checked 
+using the method described in~\cite{bdgZB05}. 
+We can also verify the generated annotations  against the Java 
+code using any tool for JML; 
+in our case, we have discharged
+all proof obligations
+ automatically using JACK~\cite{BurdyRL03}.
+
+As an input language, the \textsf{JAG} tool can take 
+a linear temporal logic language
+dedicated to Java~\cite{Huis02,articleJournalTL}, which can deal
+with exceptional termination of methods. The formulae of this 
+language are reduced by the tool to JML invariants 
+and \textsf{Loop} primitives. The table \ref{table-result} summarizes
+the results obtained.
+\begin{table}
+
+{\scriptsize
+\begin{tabularx}{\linewidth}
+{|X|X|X|X|}
+\hline
+Example Name & 
+Number of temporal properties to verify & 
+Number of line annotation generated & 
+Number of PO (automatically proved) \\
+\hline
+TransactionSystem & 2 & 18 & 92  (91) \\
+\hline
+AtmTransaction & 2 & - & - \\
+Purse & - & - & -\\
+\hline
+\end{tabularx}
+}
+\caption{Results}
+\label{table-result}
+\end{table}
+
+
+\subsection{Progress Hypothesis $PH$}
+\label{sec-env}
+
+The hypothesis ($H_{S_1}$) is sufficient. However, there exists 
+executions of the environment which satisfy a liveness property but 
+do not satisfy $H_{S_1}$. %Recall that ($H_S$) is expressed 
+%by the following.
+%$$(\mathsf{F^{\infty}} M ~ \mathbf{called})   (H_S)$$
+For our running example, suppose that the environment $Section$ 
+verifies  $H_{S_1}$, that means that 
+$Section$ continuously performs some $Transaction$s. This is not a realistic
+use of the class $Transaction$. One would like to stop the 
+progress of section when the current transaction is terminated,
+i.e., a progress of $Section$ over $Transaction$ is needed
+only when the system is inside the loop. 
+%This requires to take account of the loop itself. 
+
+We propose the hypothesis ($H_{S_2}$) to take into account the executions
+which satisfy the liveness but do not satisfy ($H_{S_1}$).  For that, the
+\textsf{Loop} operator has to be considered.
+
+%More generally, 
+%Suppose that we verify 
+Let $Q \leadsto_{JML} R (J,V,M)$ be the \textsf{Loop} primitive of a
+liveness property. 
+%We give a condition ($H_S'$) on the environment
+%for which the modality $Q \leadsto_{JML} R (J,V,M)$ is also verified.
+The expression of $H_{S_2}$ uses the LTL operator 
+$\mathsf{G^{\infty}}$ (``almost everywhere''). 
+Intuitively, $\mathsf{G^{\infty}}P$ means 
+that after a finite number of states, the property $P$ holds forever.
+The semantics of $\mathsf{G^{\infty}}$ is the following~:
+$$\sigma_i \models G^{\infty} P \equiv_{def} \exists j \geq i . (\forall k . 
+( k \geq j \Rightarrow \sigma_k \models P)).$$ 
+
+\begin{proposition}
+\label{prop-hs}
+Assuming $\Sigma_C : \mathcal{A}_{1-6}$ (Theorem~\ref{until}),
+%the class $C$ satisfies the annotations 
+%given in Proposition~\ref{PropLeadsTo}. 
+if
+$$\hspace*{14em} \Sigma_C \models  \mathsf{G^{\infty}}  
+(\neg Q \vee R) \hspace*{8em} (H_{S_2}) $$
+then $\Sigma_C \models  Q \leadsto_{JML} R (J,V,M)$. 
+\end{proposition}
+The sketch of the proof is given
+in Appendix~\ref{sec-proof-proposition-MPH}.
+
+%\marginpar{La preuve n'est pas si claire. Peut-être la revoir.}
+
+
+The disjunction of ($H_{S_1}$) and ($H_{S_2}$) 
+constitutes the Progress Hypothesis~($PH$)
+on the environment. This hypothesis ensures that if a class conforms 
+to JML annotations $\mathcal{A}_{1-6}$ of Theorem~\ref{until} 
+then it satisfies the \textsf{Loop} operator.
+
+
+\begin{proposition}[Progress Hypothesis ($PH$)]
+Assuming that $\Sigma_C : \mathcal{A}_{1-6}$ (Theorem~\ref{until}),
+if 
+$$\hspace*{9em} \Sigma_C \models  \mathsf{G^{\infty}}  
+(\neg Q \vee R) \vee
+(\mathsf{F^{\infty}} M ~ \mathbf{called}) \hspace{8em} (PH)$$ 
+then $\Sigma_C \models  Q \leadsto_{JML} R (J,V,M)$. 
+\end{proposition} 
+The sketch of the proof is given 
+in Appendix~\ref{sec-proof-proposition-MPHminimal}.
+
+
+
+The hypothesis ($PH$) being a LTL formula, it can be
+model-checked~\cite{spin97,Moped03} on the environment $TS_C$ when $TS_C$
+is a finite-state model. For infinite or large size models, $PH$ is checked by
+proof. We explain how to generate the appropriate proof obligations 
+in Section~\ref{sec-verif}.
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main2"
+%%% End: 

@@ -1,0 +1,400 @@
+\subsection{Proof of Theorem  \ref{until}}
+\label{sec-proof-theorem-loop}
+
+\begin{lemma}
+\label{lemma-loop}
+The JML annotations that ensure the verification of the liveness
+primitive~\textsf{Loop} are equivalent to the following 
+proof obligations:\:\footnote{where
+\(\mathsf{term}(M)\) is the set of events 
+\(\{ m~\mathbf{terminates}, m~\mathbf{exceptional}, m~\mathbf{normal} \mid m \in M\}\), 
+\(\mathsf{requires}(m)\)  denotes the precondition, and
+\(\mathsf{diverges}(m)\) the diverges
+clause --the conditions under which the method might
+diverge --, of method \(m\), respectively.}.
+
+
+\begin{footnotesize}
+\begin{gather}
+\forall i.\:(\sigma_i \models  Q ) \Rightarrow ( \sigma_i \models J ) \\
+\forall i.\:\sigma_i \models (V \in \mathbb{N})\\
+\forall i\:, n.\:(\sigma_i \models  (Q \wedge J \wedge V = n) \Rightarrow
+((\sigma_{i+1} \models \neg  R \wedge \mathsf{term}(M))
+%\wedge \sigma_i \models V = n \wedge \sigma_i \models event(M)
+\Rightarrow \sigma_{i+1} \models Q))\\
+\forall i\:, n.\:(\sigma_i \models  (Q \wedge J \wedge V = n) \Rightarrow
+((\sigma_{i+1} \models \neg  R \wedge \mathsf{term}(M))
+%\wedge \sigma_i \models V = n \wedge \sigma_i \models event(M)
+\Rightarrow \sigma_{i+1} \models V < n))\\
+\forall i\:, n.\:(\sigma_i \models  (Q \wedge J \wedge V = n)
+\Rightarrow
+((\sigma_{i+1} \models \neg  R \wedge \mathsf{term}(\overline{M})) 
+%\wedge \sigma_i \models V = n \wedge \sigma_i \models
+%event(\overline{M}) 
+\Rightarrow \sigma_{i+1} \models V \leq n))\\
+\forall i.\:(\sigma_i \models (Q \wedge J) 
+%~ \wedge ~ \sigma_i \models J  ~\wedge ~ 
+\Rightarrow (\sigma_{i+1} \models \neg  R ~ \Rightarrow  
+%(\exists m.\:\sigma_{i+1} \models (\mathsf{requires}(m) \wedge \neg \mathsf{divrges}(m)))))
+\end{gather}
+\end{footnotesize}
+\end{lemma}
+
+This lemma comes from the Java/JML semantics~\cite{TheseMarieke}.
+%Following Theorem~\ref{until} and the JML
+%semantics~\cite{TheseMarieke}, the following JML annotations are
+%sufficient to imply the validity of the
+%\emph{Loop} primitive.
+
+
+\begin{proof}[Theorem  \ref{until}]
+The proof is performed using proof obligation given in Lemma~\ref{lemma-loop}.
+Because the proof obligation (3) obviously implies that $Q$ always
+holds until $R$ holds, we only give the proof of termination, i.e.,
+we show that the proof obligations (1--6) implies that:
+\[ \forall i. ((i \geq 0
+\wedge \sigma_i \models Q ) ~
+\Rightarrow ~ (\exists j. j > i \wedge \sigma_j \models R)) \]
+The proof is by  contradiction. Suppose that :
+\[ \exists i. ((i \geq 0
+\wedge \sigma_i \models Q )) ~
+\wedge ~ (\forall j. j > i \Rightarrow \sigma_j \not \models R) \]
+Proof obligation (3) and (1)  implies that there exists 
+an $i \in \mathbb{N}$ such that:
+$$  (\forall j > i ~ . ~ \sigma_j \models (Q \wedge J)  \wedge \sigma_{j+1} 
+\not \models R) \qquad \qquad (a)$$
+Since ($H_S$) holds on $\sigma$, also holds  
+on the suffix of $\sigma$ begining at the 
+indice $i$: 
+  $$\sigma_i \models F^{\infty} M ~ \mathtt{called} $$
+Using ($a$) and the proof obligation (6), we deduce
+that the method does not diverge, so:
+  $$(\sigma_i \models F^{\infty} M ~ \mathtt{terminates} $$
+It now implies, using (4),(5) and ($a$) that the variant
+$V$ infinitely decreases. Then, the proof obligation (2) 
+cannot be established, this is a contradiction. \qed 
+\end{proof}
+
+
+\subsection{Proof of Proposition~\ref{prop-hs}}
+\label{sec-proof-proposition-MPH}
+
+\begin{proof}
+
+Let $\sigma$ be an execution of the environment. Suppose
+that $H_S'$ holds, then
+$$ \exists i . (\forall j \geq i ~ . ~ \sigma_j \models (\neg Q \vee R))$$
+Because in each state of the execution after the index $i$, 
+the property $Q \Rightarrow R$ holds, the $Loop$ primitive is
+obviously verified on the suffix of the execution beginning
+at the i$^{th}$ state.
+We now show that the property is verified on the 
+totality of the execution. 
+We first suppose that $\sigma_i \models R$, then, the primitive 
+is verified. 
+Second, suppose that $\sigma_i \models \neg R$, then, 
+$\sigma_i \models \neg Q$. There are two cases.
+\begin{enumerate}
+\item If $i = 0$, the primitive is
+verified. 
+\item If $i > 0$ we show that $Q$ cannot
+hold at the index $i-1$.
+Suppose that $\sigma_{i-1} \models Q$, then,
+using the proof obligation($3$), that implies
+that $\sigma_{i} \models Q$ - a contradiction
+with the hypothesis. Otherwise $\sigma_{i-1} \models \neg Q$,
+then the property is still verified on the suffix of the
+execution at the index $i-1$.\qed 
+
+\end{enumerate}
+ 
+\end{proof}
+
+
+\subsection{Proof of $MPH$}
+\label{sec-proof-proposition-MPHminimal}
+
+\begin{proof}
+We first show that, assuming that the class $C$ 
+satisfy the generated JML annotations, all execution satisfying $MPH$ 
+satisfy $Q \leadsto R (J,V,M)$. Second we whow that an execution 
+satisfying $Q \leadsto R (J,V,M)$ satisfy also $MPH$.
+\begin{enumerate}
+\item  Assuming that the class $C$ 
+satisfy the generated JML annotations, we have shown that $H_S$ 
+implies  $Q \leadsto R (J,V,M)$ and that  $H'_S$ implies 
+also  $Q \leadsto R (J,V,M)$. So, because $MPH$ is the 
+disjunction of $H_S$ and $H'_S$, we conclude that $MPH$
+implies $Q \leadsto R (J,V,M)$.
+\item Suppose an execution $\sigma$ which 
+does not satisfy the ($MPH$). So, $\sigma$ satisfies
+its negation:
+$$ \mathsf{F^{\infty}}  (Q \wedge \neg R) \wedge (\mathsf{G^{\infty}} \neg (M ~ \mathbf{called}))$$
+First, $(\mathsf{G^{\infty}} \neg (M ~ \mathbf{called}))$ means that
+there exists an index $k$ such that for all indexes greater than $k$, 
+progressive
+methods are no more called, i.e., there exists an index $j \geq k$
+such that the internal state of the class always stays the same. 
+
+Second, $ \mathsf{F^{\infty}}  (Q \wedge \neg R)$ denotes that there always
+exists a state in the future where $(Q \wedge \neg R)$ holds. So, for
+all indexes greater than $j$, $(Q \wedge \neg R)$ holds. 
+The execution cannot satisfy the modality $Q \leadsto_{JML} R$.
+\end{enumerate}
+\qed
+\end{proof}
+
+\subsection{Proof of Lemma~\ref{prop-preservation}}
+\label{sec-proof-proposition-preservation}
+
+\begin{proof}
+%We show that, under the hypothesis:
+%\item ($H_2$) The action of $S$ do not modify 
+%the value of the variables of $C$.
+%\end{itemize}
+
+
+First, we show that $C_{Dead} \wedge C_{Live} \Rightarrow MPH$; 
+Second we show that $MPH \Rightarrow  C_{Dead} \wedge C_{Live} $.
+\begin{enumerate}
+\item Let $\sigma$ be an execution of the environment. 
+   First suppose that the execution terminates, either
+        normally or throwing an exception, at an index $k$. Then $\sigma_k$
+        is:
+        $$ s_k \rightarrow s_k \rightarrow s_k ...$$
+        Because $C_{Dead}$ holds on the execution, we deduce that 
+        $s_k \models (\neg Q \vee R)$. So $\sigma$ satisfies the 
+        \textsf{PLTL} property $G^{\infty}(\neg Q \vee R)$. We can 
+        conclude that $\sigma$ satisfies $MPH$.
+
+      Second suppose now that the execution does not terminate, i.e., the
+        execution is infinite. Then the environment can have two behaviors:
+       \begin{itemize}
+         \item First, the environment infinitely often call a method in the set
+         $M$ of the progress methods of $C$, then 
+         $\sigma \models F^{\infty} M~\mathbf{called}$. 
+         \item Second, the environment $S$ performs a finite number of call
+         to the methods of $C$. That means, that there exists an index $k$, 
+         such that $\sigma_k \models G^{\infty} \neg M~\mathbf{called}$, where
+         $M$ is the set of progress method of $C$. Following $C_{Live}$, 
+         we obtain 
+         $$s_k \models (\neg Q \vee R).$$  
+         Remembering that environment cannot modify the value of the variables
+         of $C$, we can write:
+         $$ \forall i \geq k . (\sigma_i  \models (\neg Q \vee R))$$
+         The preceding predicate is the definition of 
+         $$ \sigma \models G^{\infty}(\neg Q \vee R).$$
+         We can conclude that $\sigma$ satisfies $MPH$. 
+       \end{itemize} 
+ \item We now show that $MPH \Rightarrow  C_{Dead} \wedge C_{Live} $. This
+proof is performed by contradiction. We 
+show that $\neg C_{Dead} \vee \neg C_{Live} \Rightarrow \neg ($MPH$)$.
+\begin{itemize}
+\item Suppose that $C_{Dead}$ does not hold on $\sigma$ and suppose that 
+$\sigma$ terminates on a state where $(Q \wedge \neg R)$ holds, then $\sigma$
+satisfies $$(\mathsf{F}^{\infty}(Q \wedge \neg R)) 
+\wedge (\mathsf{G^{\infty}} \neg (M \mathbf{called})$$. 
+This is the negation of $MPH$.
+\item Suppose that $C_{Live}$ does not hold on $\sigma$. So  
+$\sigma$ can diverge on a state $s_k$ where $(Q \wedge \neg R)$ holds.
+The divergence of the environment implies that progress methods will no more
+be called on $\sigma_k$, it means that:
+$$\sigma \models (\mathsf{G^{\infty}} \neg (M \mathbf{called})$$
+Moreover, the environment cannot modify the value of the variable of $C$ so
+ $ \forall i \geq k . (\sigma_i  \models (Q \wedge \neg R)).$
+That implies that  $\sigma \models (\mathsf{G}^{\infty}(Q \wedge \neg R)).$
+So, $\sigma \models (\mathsf{F}^{\infty}(Q \wedge \neg R)).$
+We conclude that 
+ $$\sigma \models (\mathsf{F}^{\infty}(Q \wedge \neg R)) 
+\wedge (\mathsf{G^{\infty}} \neg (M \mathbf{called})).$$ 
+This is the negation of $MPH$.
+\end{itemize} 
+\end{enumerate}
+%We have prove that $C_{Dead} \wedge C_{Live} \Rightarrow MPH$ and
+% $MPH \Rightarrow  C_{Dead} \wedge C_{Live} $. \qed
+\end{proof}
+
+%\begin{proof}
+%We prove this proposition by first showing that ($C_{\tau}$)
+%implies that each execution of $S+T$ is a $\tau$-
+%simulation of an execution of a environment using
+%$T$. Second we show that $\tau$-
+%simulations verifying ($C_{dead}$) and ($C_{live}$) 
+%preserve $Q \leadsto_{JML} R (J,V,M)$.
+%Let $\sigma$ be an execution of $T$  and
+%let $\sigma'$ be an execution of $T$ in $S$.
+%\begin{enumerate}
+%\item Trivially, we have l($s_0$) $\equiv$ l($s'_0$). Now 
+%suppose that until an index $i$ of $\sigma'$ and l($s_i$) $\equiv$ l($s'_j$), we have $\tau$-
+%simulation relation between $\sigma$ and $\sigma'$, then.
+%\begin{itemize}
+%\item The environment stop the execution or diverges then 
+%we have a $\tau$-simulation relation between $\sigma$ and $\sigma'$.
+%\item The environment performs an external action. This action cannot
+%modify the internal state of the class, so l($s_i$) $\equiv$ l($s'_{i+1}$)
+%then l($s'_{i+1}$) $\equiv$ l($s'_j$). We have the $\tau$-simulation relation
+%until the index $i+1$.
+%\item The environment call a method of the class. This invokation leads to
+%a state  $s'_{i+1}$. Because this method is call in its precondition, it it
+%also possible to call the same method in $s_j$, leading to a state $s_{j+1}$.
+%then, because ($s_j$) $\equiv$ $s'_{i}$ and the same method is invoked, then
+% $s_{j+1}$ $\equiv$ $s'_{i+1}$. We have the $\tau$-simulation relation
+%until the index $i+1$.
+%\end{itemize}
+%We can conclude that under the condition ($C_{\tau}$, the executions
+%of  $S+T$ are $\tau$-simulation of the executions of $T$.
+%\item We show that a $\tau$-simulation that satisfies $C_{dead}$
+%and $C_{live}$ preserves $Q \leadsto_{JML} R (J,V,M)$. 
+%\begin{itemize}
+%\item Suppose that there exists a state of $\sigma'$ with a deadlock then
+%this state must verify  $\neg Q \vee R$ ($C_{dead}$). Then the execution
+%verify $Q \leadsto_{JML} R (J,V,M)$.
+%\item Suppose that there exists a state of $\sigma'$ with a livelock then
+%this state must verify  $\neg Q \vee R$ ($C_{dead}$). Then the execution
+%verify $Q \leadsto_{JML} R (J,V,M)$.
+%\item Suppose that there is no livelock nor deadlock in the execution $\sigma'$,
+%then the relation between $\sigma$ and $\sigma'$ is a  divergence s
+%ensitive simulation~\cite{glabbeek93}. This kind of simulation preserve
+%liveness properties~\cite{bellegarde00}, so $Q \leadsto_{JML} R (J,V,M)$.
+%\end{itemize}
+%\end{enumerate}\qed
+%\end{proof}
+
+%\subsection{Proof of Proposition~\ref{prop-preservation-2}}
+%\label{sec-proof-proposition-preservation-2}
+
+%\begin{proof}
+%This proof is done by contradiction. 
+%\begin{itemize}
+%\item Suppose that $C_{dead}$ does not hold on the
+%execution  $\sigma'$ then the execution stops in
+%a state where  $Q \wedge \neg R$. The liveness 
+%property is not satisfied.
+%\item Suppose that $C_{live}$ does not hold on the
+%execution  $\sigma'$ then the execution diverges in
+%a state where  $Q \wedge \neg R$. The liveness 
+%property is not satisfied.
+%\end{itemize}\qed
+%\end{proof}
+
+
+%\subsection{Proof of Proposition~\ref{prop-deadlock}}
+%\label{sec-proof-proposition-CDead}
+%\begin{proof}
+%\end{proof}
+
+
+%\subsection{Proof of Proposition~\ref{prop-livelock}}
+%\label{sec-proof-proposition-CLive}
+%\begin{proof}
+%The environment execution can diverge by:
+%\begin{enumerate}
+%\item A call to a method within the diverging conditions.
+%\item An infinite loop.
+%\end{enumerate}
+
+%\end{proof}
+
+
+
+\subsection{Proof of $R_{while}$}
+\label{sec-while}
+
+The proof of rewritting rules for non-nested 
+environment is done using the Hoare semantics 
+for Java program~\cite{TheseMarieke}. The rules
+used in this proof are given iné\ref{fig-Mariekerules}. 
+We assume that all Java predicates are side-effects free.
+
+\begin{proof}
+Let $S$ and $Q$ be two JML predicates, let $body_{while}$ and
+$body_{endwhile}$ be  Java
+Statements, let $expr_{while}$ be a side-effect-free Java expression.
+Consider the \textit{bottom} side of our rewriting rule $R_{while}$:
+\begin{center}
+\texttt{
+ \begin{tabular}{l}
+//@ requires $P$;\\
+//@ ensures $Q$;\\
+m()\{
+while ($\mathsf{expr_{while}}$)\{
+$\mathsf{body_{while}}$
+\}
+$\mathsf{body_{endwhile}}$
+\}
+\end{tabular}}
+\end{center}
+In Hoare formalism~\cite{TheseMarieke}, $m$ satisfy its JML
+annotations if the following partial correctness triple is satisfied:
+\begin{center}
+\textsf{\{P\} WHILE ($expr_{while}$)($body_{while}$);$body_{endwhile}$\{Q\}}
+\end{center}
+Using \textit{Composition Rule}~\cite{TheseMarieke}, we obtain the
+followings two Hoare triple.
+\begin{center}
+\textsf{
+\hspace{7em} 
+\{P\} WHILE ($Expr_{while}$)($body_{while}$)\{R\} \hspace{8em}($a$)\\
+\hspace{10em}
+\{R\} $body_{endwhile}$\{Q\} \hspace{13.5em}($b$)\\
+}
+\end{center}
+Using \textit{Partial WHILE Rule}~\cite{TheseMarieke} on ($a$),
+we obtain:
+\begin{center}
+\textsf{
+\hspace{8em} \{P $\wedge Expr_{while}$\} ($body_{while}$) \{P\}
+\hspace{9em} ($a_1$)\\
+\hspace{9em} \{P $\wedge \neg (Expr_{while})$\} skip \{R\}
+\hspace{10em} ($a_2$)\\
+}
+\end{center}
+Now using \textit{partial skip rule} and \textit{partial composition rule}
+on ($a_2$) and ($b$), we obtain the following Hoare triple:
+\begin{center}
+\hspace{8em} \{P$\wedge \neg (Expr_{while})$\} $body_{endwhile}$\{Q\}
+\hspace{8em} ($c$)\\
+\end{center}
+Correctness of ($a_1$) and ($c$) can be verified in the JML framework 
+by proving the correctness of the JML annotations of the following
+methods:
+\begin{center}
+\texttt{
+\begin{tabular}{l}
+/*@ requires $\mathsf{expr_{while}}$;\\
+~~~@ requires $P$;\\
+~~~@ ensures $P$;\\
+~~~@*/\\
+m\_while()\{
+\quad $\mathsf{body_{while}}$;
+\}\\
+\end{tabular}
+\begin{tabular}{l}
+/*@ requires $\neg \mathsf{expr_{while}}$;\\
+~~~@ requires $P$;\\
+~~~@ ensures $Q$;\\
+~~~@*/\\
+m\_end\_while()\{
+\quad $\mathsf{body_{endwhile}}$;
+\}\\
+\end{tabular}
+}
+\end{center}
+This is the \textit{top} side of our rewriting rule.
+\qed
+
+
+\end{proof}
+
+\begin{figure}
+Partial Composition rule
+$$\frac{\{P\}S\{R\} \quad \{R\}T\{Q\}}{\{P\}S;T\{Q\}}$$
+Partial WHILE rule
+$$\frac{\{P \wedge \neg C\} skip \{Q\} \quad \{P \wedge C\} (S)\{P\} }{\{P\}WHILE(C)(S)\{Q\}} $$
+Partial SKIP rule
+$$\frac{\{P\}skip;S\{R\}}{\{P\}S\{Q\}}$$
+
+\caption{Hoare Triple Rules}
+\label{fig-Mariekerules}
+\end{figure}
+

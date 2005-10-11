@@ -1,0 +1,19 @@
+\begin{abstract} 
+
+This paper proposes a method, implemented in the \textsf{JAG}
+tool to verify a liveness operator in Java using JML annotations. 
+The verification is divided
+into two subtasks: (1)~generation of appropriate JML annotations that
+allow to verify that the class under consideration respects the
+liveness property, and (2)~showing that the environment preserves the
+liveness properties by proving a liveness preserving simulation. 
+For the generation of
+appropriate JML annotations, we require a
+\emph{variant} and an \emph{invariant} (conform variants and invariants
+to show termination of loops). We then show that under certain
+assumptions on the environment, we can prove the satisfaction of the
+liveness properties. The second subtask then boils down to showing that
+the given environment in fact respects these assumptions. The method is
+illustrated by an example.
+\end{abstract}
+

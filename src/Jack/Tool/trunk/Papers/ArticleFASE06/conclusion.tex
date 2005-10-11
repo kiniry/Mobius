@@ -1,0 +1,104 @@
+\section{Conclusion and Future Work}\label{sec-conclusion} 
+
+This paper presents a way to verify liveness properties on Java classes,
+by generating appropriate JML annotation generation. 
+This requires that the user specifies a
+variant and an invariant. The generated JML annotations can be verified
+(or validated) with any tool handling JML. Additionally, the
+verification method requires to show that the code in which a
+class is used respects Hypotheses ($MPH$).
+The \textsf{JAG} tool implements this translation and has been
+used on several examples with temporal properties specified in
+JML temporal logic extension~\cite{Huis02,articleJournalTL}.
+
+To the best of our knowledge, this is the first attempt to verify
+liveness properties for potentially infinite-state systems using a
+translation into JML. %Most approaches to verification of liveness
+%properties are based on model checking.
+%In order to verify liveness properties on infinite-states systems, 
+%one needs to verify them in a finite liveness preserving 
+%abstraction~\cite{bellegarde00,zb2003}.
+For finite state systems, liveness properties in PLTL are usually
+verified automatically by model checkers such as
+SPIN~\cite{spin97}. For infinite state systems, model checking
+can be used on a liveness preserving %computed abstraction or directly
+abstraction which must be refined later. This supposes a
+liveness preserving refinement.% In our work, we use such a refinement
+%-- the B refinement -- in order to verify that the environment of the
+%class satisfies the assumptions~$(MPH)$.
+ Our method is closed to the
+approaches for the verification of PLTL properties of fair systems
+%using a 
+%liveness preserving refinement 
+in TLA~\cite{TLA}, UNITY~\cite{unity} or B~\cite{BB02}. The use of a
+deductive system for PLTL \cite{MannaPnueli83} has the inconvenience
+of requiring the intervention of experienced users. In this paper, we
+present an easier verification technique, thanks to the automatic
+generation of annotations.  This is similar to the methodology of
+Abrial and Mussat~\cite{Abrial:1998:IDC}, and it can be also compared
+with the work of Back and Xu~\cite{BackXu98}, who show that
+verifying liveness preserving simulation requires a well-founded
+variant.
+In the near future we plan to extend our method to the verification
+of a more general temporal logic such as LTL (Linear Temporal Logic).
+
+The appropriate integration of the classes in a Java code
+is done throw the verification of a certain kind of simulation,
+which preserve liveness properties~\cite{bellegarde00}.
+%In a preliminary work~\cite{inriareport}, this verification
+%was done using a translation from JML to B event system, to
+%show the feasibility of checking that the integration of $Transaction$
+%into $Session$ preserves the liveness property.
+%Our actual approach give better results and permits to performs
+%the proof using the tool the user is keen on.
+
+%Whatever the way, 
+The verification of the integration of a class $C$ in
+an application %by  a divergence sensitive simulation 
+requires a
+variant. For a certain kind of environment (environment without
+nested calls and while loop) we are actually able to generate automatically
+it. An interesting future work is to extends that to 
+a more larges class of environment. 
+Another future work is to have weakest conditions
+ on the environment allowing access to internal state of the class, 
+using public variable access or
+aliasing%, causes problems to verify the correctness of programs. We 
+%would like to see if simulation technics can be an interresting 
+%approach to solve some of these problems.
+We have sketched a method to verify $C_{live}$ in the general case reusing
+the JML framework, that allow us to be independant of the back-end tool.
+However a more efficient solution is to produce, using the krakatoa, loop,
+or Jack framework, extra proof obligations that implies $C_{live}$. 
+Moreover, it is also possible to use model-checking techniques to verify
+($MPH$) on the environment if we are able to give a finite model
+of the environment~\cite{Alur01,Moped03}.
+
+
+ 
+%To verify that the code respects the appropriate
+%progress conditions, we have sketched an approach in
+%Sect.~\ref{sec-verif}. 
+%However, the challenge is to verify the
+%appropriate integration of the classes in a Java code. 
+
+%Section~\ref{sec-verif} suggests an answer based on a translation
+%into a B event system. 
+%%Another possibility, which seems easier at first, could be to check
+%%Hypothesis $(MPH)$ directly during the integration of $Transaction$
+%%into $Session$. 
+%This shows the feasability of checking that the integration of $Transaction$
+%into $Session$ preserves the liveness property.
+%%This would require to  effectively check $(MPH)$ 
+%%on $Transaction + Session$ 
+%%or model check $(MPH)$ on a
+%%suitable finite abstraction of $Transaction + Session$. 
+%Our actual work consists in a tool which 
+%generates automatically the proof obligations for the 
+%verification of a preserving liveness simulation \cite{bellegarde00}, 
+%avoiding this way a translation into B and use of the B prover. Whatever
+%the way, the verification of the integration of a class $C$ in
+%an application by  a divergence sensitive simulation requires a
+%variant.
+%Moreover, it is also possible to use model-checking techniques to verify
+%($MPH$) on the Java control flow~\cite{Alur01,Moped03}.
