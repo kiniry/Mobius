@@ -1,3 +1,16 @@
+% The ESC/Java2 sorted logic.
+%
+% This is the sorted logic used by ESC/Java2.
+%
+% $Id$
+%
+% It was written by Joe Kiniry, Cesare Tinelli, Patrice Chalin, and
+% Clement Hurlin in 2005.
+%
+% This is the canonical sorted logic which is to be translated
+% automatically into SMT-LIB by either an external script or by a new
+% extension to PVS (to be written by folks at UCD).
+
 escjava2_types : THEORY
   BEGIN
     S : TYPE+
@@ -39,7 +52,7 @@ escjava2_types : THEORY
     Object : TYPE+
 
   END escjava2_types
-
+
 map_theory[Map : TYPE+, Index : TYPE+, Value : TYPE+] : THEORY
   BEGIN
 
@@ -60,16 +73,25 @@ escjava2_java_typesystem : THEORY
   BEGIN
     IMPORTING escjava2_types,
               orders[JavaType]
+    t, u : ReferenceType
 
     % <: is <=
-    % subtyping_is_a_partial_order : POSTULATE partial_order?(orders[JavaType].<=)
     % < is <
-    % comparison_is_a_strict_total_order : POSTULATE strict_total_order?(orders[JavaType].<)
+    <,<= : [ ReferenceType, ReferenceType -> bool ]
 
     % === ESCJ 8: Section 1.1
 
     % We will use '<=' in PVS for '<:' in the Simplify logic.  Thus,
     % <= is reflexive, transitive, and antisymmetric.
+
+    comparison_is_a_strict_order : POSTULATE strict_order?(<)
+    % Add an axiom to relate these two orders and define subtyping (<=) as a
+    % partial order.
+    subtype_definitions: AXIOM
+      FORALL(t : ReferenceType, u : ReferenceType) : 
+             t <= u IFF t < u OR t = u
+
+    % The base type in Java (java.lang.Object).
 
     T_java_lang_Object : ReferenceType
 
@@ -81,18 +103,24 @@ escjava2_java_typesystem : THEORY
     % PrimitiveType.
 
     % extends? is Java's "extends" and "implements" (direct subtype)
-    extends? : ({R : PRED[[ReferenceType, ReferenceType]] | irreflexive?(R)})
-    <= : ({R : PRED[[JavaType, JavaType]] | 
-         reflexive?(R) AND transitive?(R) AND antisymmetric?(R)})
+    extends? : [ ReferenceType, ReferenceType -> bool ]
+    extends_is_irreflexive : POSTULATE irreflexive?(extends?)
 
     subtype_includes_extends : AXIOM
       FORALL(t : ReferenceType, u : ReferenceType) :
         extends?(t, u) IMPLIES t <= u
 
-    subtype_is_the_smallest_relation_that_contains_extends : AXIOM
+    subtype_is_a_relation_that_contains_extends : AXIOM
       FORALL(t : ReferenceType, u : ReferenceType) :
         t <= u AND t /= u IMPLIES
         EXISTS(v : ReferenceType) : extends?(t, v) AND v <= u
+
+    % Note that this is a higher-order axiom that cannot be translated
+    % to SMT-LIB.
+    subtype_is_the_smallest_relation_that_contains_extends : AXIOM
+      FORALL(r : [ ReferenceType, ReferenceType -> bool ],
+             t : ReferenceType, u : ReferenceType) : 
+        t <= u AND t /= u IMPLIES r(t, u)
 
     primative_types_are_final : AXIOM
       FORALL (t : JavaType, p : PrimitiveType): t <= p IMPLIES t = p
@@ -219,7 +247,7 @@ escjava2_java_integral_ops : THEORY
     integralDiv(x, y : IntegralNumber): {r: mod(y) | EXISTS (v: mod(y)): v = x * y + r}
 
     integralMod_def : LEMMA
-      FORALL (a, b : IntegralNumber): a = (a / b) * b + (integralMod(a, b))
+      FORALL (a, b : IntegralNumber): b /= 0 IMPLIES a = (a / b) * b + (integralMod(a, b))
 
     integralEQ(x,y : IntegralNumber) : IntegralNumber = (x = y)
     integralGE(x,y : IntegralNumber) : IntegralNumber = (x >= y)

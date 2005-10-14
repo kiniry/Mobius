@@ -107,6 +107,9 @@ escjava_java_typesystem : THEORY
 
     java_null : S
 
+    boolTrueDiffFromboolFalse : AXIOM
+      (bool_false = bool_true) = false
+
     % Not in ESCJ8, but should be
     refEQ, refNE : [ S, S -> S ]
 
@@ -123,13 +126,29 @@ escjava_java_boolean_ops : THEORY
     IMPORTING escjava_java_typesystem
 
     % === ESCJ 8: Section 5.2
-
     boolAnd (a, b : S): bool = a = bool_true AND b = bool_true
     boolEq (a, b : S): bool = a = bool_true IFF b = bool_true
     boolImplies (a, b : S): bool = a = bool_true IMPLIES b = bool_true
     boolNE (a, b : S): bool = NOT (a = bool_true IFF b = bool_true)
     boolNot (a : S): bool = NOT (a = bool_true)
     boolOr (a, b : S): bool = a = bool_true OR b = bool_true
+
+    % Added to make the translation of the pretty printer easier
+
+%     S_to_bool(a : S) : bool = 
+% 	if(a = bool_true) 
+% 	  then true 
+% 	  else false
+% 	endif 
+
+    bool_to_S(a : bool) : S = 
+	if(a) 
+	  then bool_true 
+	  else bool_false
+	endif 
+	
+%    CONVERSION+ S_to_bool
+    CONVERSION+ bool_to_S
 
     % === ESCJ 8: Section 5.3
 
@@ -157,6 +176,11 @@ escjava_java_integral_types : THEORY
     % Axioms to express the size of the basic types.
     S_to_real : [ S -> real ]
     CONVERSION+ S_to_real
+	
+    % Additional axiom for the translation
+    real_to_S : [ real -> S ]
+    CONVERSION+ real_to_S
+
     intFirst, intLast, longFirst, longLast : real
 
     range_of_char : AXIOM
@@ -401,7 +425,10 @@ escjava_lock_semantics : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem,
               escjava_jml_semantics,
-              escjava_java_field_representation
+              escjava_java_field_representation,
+	      escjava_java_integral_ops
+
+    LS : S
 
     % === ESCJ 8: Section 4
 
@@ -415,18 +442,21 @@ escjava_lock_semantics : THEORY
     null_is_in_lockset : AXIOM
       FORALL (s : S): select(asLockSet(s), java_null) = bool_true
 
-    lockLE (x, y : S): bool = x <= y
-    lockLT (x, y : S): bool = x < y
+%     lockLE (x, y : S): bool = x <= y
+%     lockLT (x, y : S): bool = x < y
+
+    lockLE (x, y : S): S = integralLE(x, y)
+    lockLT (x, y : S): S = integralLT(x, y)
 
     % all locks in lockset are below max(lockset) (not in ESCJ 8)
     all_locks_in_lockset_are_below_max_lockset : AXIOM
       FORALL (s, mu : S): select(asLockSet(s), mu) = bool_true IMPLIES
-                          lockLE(mu, max(asLockSet(s)))
+                          lockLE(mu, max(asLockSet(s))) = bool_true
 
     % null precedes all objects in locking order (not in ESCJ 8)
     null_precedes_all_objects : AXIOM
       FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
-                      lockLE(java_null, x)
+                      lockLE(java_null, x) = bool_true
 
   END escjava_lock_semantics
 
@@ -551,5 +581,314 @@ escjava_logic : THEORY
   BEGIN
     IMPORTING escjava_java_semantics,
               escjava_jml_semantics,
-              escjava_lock_semantics
-  END escjava_logic
+              escjava_lock_semantics,
+              escjava_arrays
+
+EXPLIES( a, b : bool) : bool = a OR (NOT b) 
+
+ecReturn : S
+ecThrow : S;
+
+distinctAxiom : AXIOM
+refEQ
+(ecReturn, ecThrow)
+= bool_false
+
+java_lang_Throwable__stackTrace
+(a : S ,b : S)
+: S
+getStackTrace__state
+(a : S ,b : S)
+: S
+java_lang_Object_Object_49_4
+(a : S ,b : S)
+: S
+;
+
+testTheorem : THEOREM
+FORALL
+(
+  vc_B__constructor__1_8 , elems_pre , alloc_pre , state_pre , state , RES , brokenObj , java_lang_Throwable__stackTrace , getStackTrace__state , brokenObj_1_ , objectToBeConstructed , RES_1_8 , EC_1_8_1_8 , XRES_1_8_1_8 , T_java_lang_Exception , after_1_8_1_8 , T_java_lang_Object , java_lang_Object_Object_49_4 , alloc_ , allocNew_ , owner_5_44_28 , T_B , Exception_1_8 , OwnerNull_1_8 : S )
+:
+
+(EXPLIES
+  (
+    %LBLNEGvc_B__constructor__1_8% 
+    boolImplies
+    (
+      (boolAnd
+        (
+          (refEQ
+            (elems_pre, elems)
+            )
+          ,
+          (refEQ
+            (elems, asElems
+              (elems)
+              )
+            )
+          )
+        AND boolAnd
+        ( 
+          (lockLT
+            (eClosedTime
+              (elems)
+              , alloc)
+            )
+          ,
+          (refEQ
+            (LS, asLockSet
+              (LS)
+              )
+            )
+          )
+        AND boolAnd
+        ( 
+          (refEQ
+            (alloc_pre, alloc)
+            )
+          ,
+          (refEQ
+            (state_pre, state)
+            )
+          )
+        )
+      ,
+      (boolNot
+        (
+          (boolAnd
+            (
+              (refNE
+                (RES, java_null)
+                )
+              ,
+              (boolNot
+                (
+                  (isAllocated
+                    (RES, alloc)
+                    )
+                  )
+                )
+              )
+            AND boolAnd
+            ( 
+              (
+                (FORALL 
+                  (brokenObj : S)
+                  : 
+                  refEQ
+                  (java_lang_Throwable__stackTrace
+                    (state, brokenObj)
+                    , getStackTrace__state
+                    (state, brokenObj)
+                    )
+                  = bool_true )
+                )
+              ,
+              (
+                (FORALL 
+                  (brokenObj_1_ : S)
+                  : 
+                  refEQ
+                  (java_lang_Throwable__stackTrace
+                    (state, brokenObj_1_)
+                    , getStackTrace__state
+                    (state, brokenObj_1_)
+                    )
+                  = bool_true )
+                )
+              )
+            AND boolAnd
+            ( 
+              (boolNot
+                (
+                  (isAllocated
+                    (objectToBeConstructed, alloc)
+                    )
+                  )
+                )
+              ,
+              (refNE
+                (RES_1_8, java_null)
+                )
+              )
+            AND boolAnd
+            ( 
+              (boolNot
+                (
+                  (isAllocated
+                    (RES_1_8, alloc)
+                    )
+                  )
+                )
+              ,
+              (bool_true )
+              )
+            AND boolAnd
+            ( 
+              (boolOr
+                (
+                  (refEQ
+                    (EC_1_8_1_8, ecReturn)
+                    )
+                  ,
+                  (boolAnd
+                    (
+                      (refEQ
+                        (EC_1_8_1_8, ecThrow)
+                        )
+                      ,
+                      (<=
+                        (typeof
+                          (XRES_1_8_1_8)
+                          , T_java_lang_Exception)
+                        )
+                      )
+                    )
+                  )
+                )
+              ,
+              (lockLT
+                (alloc, after_1_8_1_8)
+                )
+              )
+            AND boolAnd
+            ( 
+              (refNE
+                (RES_1_8, java_null)
+                )
+              ,
+              (boolNot
+                (
+                  (isAllocated
+                    (RES_1_8, alloc)
+                    )
+                  )
+                )
+              )
+            AND boolAnd
+            ( 
+              (is
+                (RES_1_8, T_java_lang_Object)
+                )
+              ,
+              (isAllocated
+                (RES_1_8, after_1_8_1_8)
+                )
+              )
+            AND boolAnd
+            ( 
+              (refEQ
+                (RES_1_8, java_lang_Object_Object_49_4
+                  (alloc_, allocNew_)
+                  )
+                )
+              ,
+              (refEQ
+                (select
+                  (owner_5_44_28, RES_1_8)
+                  , java_null)
+                )
+              )
+            AND boolAnd
+            ( 
+              (boolNot
+                (
+                  (boolAnd
+                    (
+                      (refEQ
+                        (EC_1_8_1_8, ecThrow)
+                        )
+                      ,
+                      (<=
+                        (typeof
+                          (XRES_1_8_1_8)
+                          , T_java_lang_Exception)
+                        )
+                      )
+                    )
+                  )
+                )
+              ,
+              (<=
+                (typeof
+                  (RES_1_8)
+                  , T_B)
+                )
+              )
+            AND boolAnd
+            ( 
+              (refEQ
+                (objectToBeConstructed, RES_1_8)
+                )
+              ,
+              (
+                (FORALL 
+                  (brokenObj : S)
+                  : 
+                  refEQ
+                  (java_lang_Throwable__stackTrace
+                    (state, brokenObj)
+                    , getStackTrace__state
+                    (state, brokenObj)
+                    )
+                  = bool_true )
+                )
+              )
+            AND boolAnd
+            ( 
+              (
+                (FORALL 
+                  (brokenObj_1_ : S)
+                  : 
+                  refEQ
+                  (java_lang_Throwable__stackTrace
+                    (state, brokenObj_1_)
+                    , getStackTrace__state
+                    (state, brokenObj_1_)
+                    )
+                  = bool_true )
+                )
+              ,
+              (boolOr
+                (
+                  (boolNot
+                    (
+                      (%LBLNEGException_1_8% 
+                        refEQ
+                        (ecReturn, ecReturn)
+                        )
+                      )
+                    )
+                  ,
+                  (boolAnd
+                    (
+                      (%LBLNEGException_1_8% 
+                        refEQ
+                        (ecReturn, ecReturn)
+                        )
+                      ,
+                      (boolNot
+                        (
+                          (%LBLNEGOwnerNull_1_8% 
+                            refEQ
+                            (select
+                              (owner_5_44_28, RES_1_8)
+                              , java_null)
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    ,true)
+  )
+
+END escjava_logic
+

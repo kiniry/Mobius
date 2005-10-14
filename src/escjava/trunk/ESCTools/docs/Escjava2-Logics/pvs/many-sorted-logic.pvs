@@ -218,8 +218,8 @@ escjava2_object_fields : THEORY
               map_theory[Object, ContinuousNumberField, ContinuousNumber],
               map_theory[Object, ReferenceField, Reference]
 
-    select : [ Object, BooleanField -> Boolean ] = get
-    store : [ Object, BooleanField, Boolean -> Object ] = set
+%     select : [ Object, BooleanField -> Boolean ] = get
+%     store : [ Object, BooleanField, Boolean -> Object ] = set
 
 %     select : [ DiscreteNumberField, Object -> DiscreteNumber ] = get
 %     store : [ DiscreteNumberField, Object, DiscreteNumber -> DiscreteNumberField ] = set
