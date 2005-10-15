@@ -229,34 +229,145 @@ In this section, I describe features that are more related to the fact that TNod
 \item String label : this will store the name of the current proof generated (like method\_X\_file\_Y for example).
 \end{itemize}
 
-\paragraph{Functions \protect\footnote{By looking at the code you can notice that I skip some overloaded function whose sense is trivial}}{}
+\paragraph{Functions \protect\footnote{By looking at the code you can notice that I skip some (often overloaded one) function whose sense is trivial}}{}
 
 \begin{itemize}
 \item public TNode() : this is the default constructor for all node in the proof, it's just increase the counter and the id for the node being created.
 \item static public void init() : This functions reinitializes \textit{variablesName} and \textit{typesName} before beginning a new proof.
 \item public void setOutputType(String type) : this is used to set the type of the proof.
 \item protected void generateDeclarations(StringBuffer s) : As now variables are typed, we should declare it in new proofs. For the example of proof (see figure \ref{simplifyProof} page \pageref{simplifyProof}), the declaration for the pvs many sorted logic will consist of (I skip the array variable as it's not yet implemented) :
-\item static public VariableInfo addName(String oldName, String type, \dots) : this function is called when the user discover a new variable and want to add it to the variables map. Imagine (still refering to Simplify's proof example of figure \ref{simplifyProof}) that this is the first you encounter \textit{c-1.8}, you will make a call looking like TNode.addName("c-1.8", "integer"). This call handle adding variable (if not already present in the map) to the map and adding its type to the types map (same notice).
-\item static VariableInfo(String name) : this function allows to retrieve the \textit{VariableInfo} object associated to this name.
-\item static public TypeInfo addType(String oldType, \dots) : Identical to variable operation, if we encounter a type in the proof, we will add it by calling this function. For example, when encountering \textit{$\vert$TYPE:9.. $\vert$ } in our example, we will make the following call : 
 \begin{verbatim}
 c_1_8 : DiscreteNumber
 TYPE_9__ : ReferenceType
 \end{verbatim}
-\item 
+\item static public VariableInfo addName(String oldName, String type, \dots) : this function is called when the user discover a new variable and want to add it to the variables map. Imagine (still refering to Simplify's proof example of figure \ref{simplifyProof}) that this is the first you encounter \textit{c-1.8}, you will make a call looking like TNode.addName("c-1.8", "integer"). This call handle adding variable (if not already present in the map) to the map and adding its type to the types map (same notice).
+\item static VariableInfo(String name) : this function allows to retrieve the \textit{VariableInfo} object associated to this name.
+\item static public TypeInfo addType(String oldType, \dots) : Identical to variable operation, if we encounter a type in the proof, we will add it by calling this function. Imagine we are checking the constructor of a user defined class \textit{A}. We will then do the following call : 
+\begin{verbatim}
+TName n = new TName();
+TNode.addType("A");
+n.setType("A");
+\end{verbatim}
+\item abstract protected void typeTree() : this function is not defined here because his behaviour is different in all direct subclasses. It is used when you (desperatly) try to type all node of the proof, see section \ref{typeTree} \pageref{typeTree}.
+\item protected void setType(TypeInfo type, boolean sure) : this function is used to set the type of a node. For example, if we are in a node representing the addition of 2 \textit{integers}, we can deduce that all sons should have type \textit{integer} too. Thus, in such a case, you will write code looking like :
+\item public String getType() : this function return the type of the node according to the type of proof asked. Ie if the type of the proof is \textit{pvs}. The renaming function used will be the one for pvs.
+\item public TypeInfo getTypeInfo() : If the current node has a type, ie if it contains a \textit{TypeInfo} object, it will be returned.
+\item static public void printInfo() : This function is called when you pass the \textit{-pInfo} flag to ESC/Java2. It displays the content of \textit{variablesName} and \textit{typesName} map on standard output.
 \end{itemize}
 
-
-
 \subsubsection{TFunction}
+This class, which inherits directly from \textit{TNode}, is used to represent nodes corresponding to function, ie nodes that have sons. That's why it contains a \textit{vector} of \textit{TNode}.
+
+That's why it contains a few additional functions related to son adding/getting :
+\begin{itemize}
+\item void addSon(TNode n)
+\item void getChildAt(index i) : Notice that it does not throw an exception if you ask for a too big index. It just displays a message.
+\item protected void typeTree() : This method does nothing except calling it on all sons. As \textit{TFunction} is abstract, ie has no implementation, we have no information about type here.
+\end{itemize}
+
+\paragraph{Class extending TFunction}{}
+
+\paragraph{}{A lot of classes are here just to factorize behaviour of function depending on what type they are related to. Let me explain. For example \textit{TBoolRes} extends \textit{TFunction} and represents node returning a boolean (\textit{Boolean Result}). That's why you can see in his constructor :
+\begin{verbatim}
+    public TBoolRes(){
+        type = $boolean;
+    }
+\end{verbatim}
+Notice that sometimes we are speaking of type of node, sometimes type of variable. In fact, we consider (and this is very natural) that every node has a type. If a node is a variable, it has the type of the variable. If a node is a function, it has the type the functions returns. Thus you can easily typecheck the whole tree.\\
+\indent All abstract classes are in different files (TBoolRes.java, TIntOp.java etc \dots). Implementation of classes are all in a central file (TFunction\textbf{.j}). For example \textit{TIntegralAdd} which modelizes \textit{+} (the natural $3 + 5$ operator), which inherits from TIntOp (integer * integer $\rightarrow$ boolean\footnote{Name of classes finishing by \textit{Op} indicates that these class returns a boolean}) is in this file \textit{TFunction.j}. In order to split files (thus generate classes) you can launch the perl script \textit{division-j-file.pl}\footnote{Thanks to Patrice Chalin for this script) on .j files. At the moment there is two .j files, TFunction.j and TLiteral.j. \textbf{Important}, note that if you want to modify code of automaticaly generated class, you should modify the .j file, then clean the folder (launching \textit{clean.sh}) and launch \textit{division-j-file TFunction.j} for example. I will detail everything later (see section \ref{practically} \pageref{practically}).
+}
 
 \subsubsection{TVariable}
 
 \subsubsection{More functions}
 
+\section{Pratically speaking, how does it work ?}
+\label{practically}
+All source code is located in ESCTools/Escjava/java/escjava/vcGeneration/.
+\subsection{Flags you can pass to escjava2}
+
+\begin{itemize}
+\item \textbf{-nvcg} : this flag enables all other feature. If you do not pass this one, you can't use the \textbf{n}ew \textbf{vc} \textbf{g}enerator.
+\item \textbf{-pPvs} : Generate \textbf{p}roof for the pvs sorted logic (located in ESCTools/Escjava2-Logics/pvs/escjava2.pvs).
+\item \textbf{-pSimplify} : Generate proof for simplify. This was done to compare that the proof system doesn't skip important node (for example we skip label, and handling of \textit{forall} and \textit{exist} isn't supported \footnote{I didn't make further test but these constructs have been added by David Cok to support \textit{model} keyword but have not been implemented correctly (it uses tag not recognized by escjava2), you should contact him for further details.}) by comparing proof generated this way and proof generated by the old system (ie compare output of ./escj ~/javaFile.java -nvcg -pSimplify and ./escj ~/javaFile.java -pvc). From previous tests, it seems to work very well (no inconsistancy between both proofs generated (knowing the limitations of the new proof system)).
+\item \textbf{-pErr} : Display errors on error output.
+\item \textbf{-pWarn} : Display warning on error output.
+\item \textbf{-pInfo} : Display additional messages on error output.
+\item \textbf{-pColors} : used bash special characters to display some colors (absolutely useless).
+\item \textbf{-pToDot} : output the proof (before simplification) in dot format, and launch dot on it to generate a .ps file \footnote{dot is an open source software developed by graphwiz (AT\&T laboratory), you can get it at \textit{www.graphviz.org/} (for Debian users, there is a package \textit{graphviz}}. This is \textbf{very useful}. Dot files are postfixed with .proof.dot, ps files generated after are postfixed with .proof.dot.ps
+\item \textbf{-vc2Dot} : output the old proof in dot format and launch the appropriate dot command on it (look at Main.java).
+\end{itemize}
+
+\subsection{Generating new ast tree}
+Translation of the old tree is done in the \textit{generateIfpTree} function in the VcGenerator class. So if you want to modify the way it's done, that's where you have to first look. The translation is similar with the code of the pretty printer for the old logic (ESCTools/Escjava/java/escjava/translate/VcToString.java). It takes non typed object and create a lot of node using inheritance from TFunction to build a new typed tree.\\
+All you have to give to this function is the root node (here named \textit{vcBody}) of the old proof (this is done in Main.java), something like :
+\begin{verbatim}
+VcGenerator vcg = new VcGenerator(vcBody, options().pErr,
+                                  options().pWarn, options().pInfo,
+                                  options().pColors);
+\end{verbatim}
+It leads me to speak of this part. If you carefully read Main.java, you will notice that the root node given to the vc generator is not the same as the one used for the old generation process. In fact the old proof is modified one more time before beeing sent to Simplify. This piece of code looks like :
+\begin{verbatim}
+Expr vc = GC.implies(initState.getInitialState(), vcBody);
+
+vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(),
+                    false, Identifier.intern(label), vc);
+\end{verbatim}
+This was done this way because in the old logic, there was a need for a few additional hypothesis for each proof. Ie the proof sent to Simplify was :
+
+\begin{center}
+(additional hypothesis) $\wedge$ (proof current method)
+\end{center}
+
+I won't explain, but if you have a good knowledge of Simplify's logic, it will makes sense (you can read \textit{The logic and calculi of ESC/Java2}, that's explained), so the additional hypothesis are :
+\begin{verbatim}
+      (AND 
+        (EQ |elems@pre| elems)
+        (EQ elems 
+          (asElems elems)
+          )
+        (< 
+          (eClosedTime elems)
+          alloc)
+        (EQ LS 
+          (asLockSet LS)
+          )
+        (EQ |alloc@pre| alloc)
+        (EQ |state@pre| state)
+        )
+\end{verbatim}
+As it's no more useful in new logic, the vc generator use the old proof before adding these hypothesis to it.
+
+\subsection{Typing the tree}
+\label{typeTree}
+
+\subsection{Simplication}
+
+\subsection{Generating the proof}
+
+\subsection{Creating graphical representation of proof}
+
 \section{How to generate vcs for another logic / modify the generator ?}
 
+\section{Conclusion and possible improvements}
 
-\section{Conclusion and possible improvement}
+\pagenumbering{Roman}
+
+\appendix
+
+\section{Appendix} % can be done in other way I guess
+\label{appendix}
+
+\paragraph{List of non automaticaly generated classes used to modelize types}{
+The $^{*}$ indicates that there is no constraint on the number of sons. '?' indicates that the type is not fixed.
+\begin{tabbing}
+TBoolRes \space\space\space\space\space \= : $?^{*} \rightarrow$ boolean\\
+TFloatOp \> : float$^{*}$ $\rightarrow$ boolean\\
+TIntFun \> : integer$^{*}$ $\rightarrow$ integer\\
+TIntOp \> : integer$^{*}$ $\rightarrow$ boolean\\
+TRefOp \> : reference$^{*}$ $\rightarrow$ boolean\\
+TTypeOp \> : type$^{*}$ $\rightarrow$ boolean\\
+\end{tabbing}
+}
 
 \end{document}
