@@ -14,7 +14,7 @@ map_theory[Map : TYPE+, Index : TYPE+, Value : TYPE+] : THEORY
 
   END map_theory
 
-escjava2_memory_types : THEORY
+escjava3_memory_types : THEORY
   BEGIN
 
     Memory : TYPE+	
@@ -22,13 +22,13 @@ escjava2_memory_types : THEORY
     ReferenceType, Reference : TYPE+
     Object : TYPE+
 
-  END escjava2_memory_types
+  END escjava3_memory_types
 
-escjava2_memory : THEORY
+escjava3_memory : THEORY
   BEGIN
-    IMPORTING escjava2_memory_types,
+    IMPORTING escjava3_memory_types,
               map_theory[Memory, Reference, Object],
-              escjava2_object_fields_types
+              escjava3_object_fields_types
 
     initial_heap : Memory
 
@@ -51,11 +51,11 @@ escjava2_memory : THEORY
         arrayFresh(r, m, a) IMPLIES
           vAllocTime(r) = a AND isAllocated(r, a)
 
-   END escjava2_memory
+   END escjava3_memory
 
-escjava2_java_typesystem : THEORY
+escjava3_java_typesystem : THEORY
   BEGIN
-    IMPORTING escjava2_memory
+    IMPORTING escjava3_memory
 
     Boolean : Type+ FROM bool
     DiscreteNumber : TYPE+ FROM int
@@ -114,11 +114,11 @@ escjava2_java_typesystem : THEORY
     instantiable(referenceType : ReferenceType) : bool =
         subtype?(referenceType, java_lang_Object)
 
-  END escjava2_java_typesystem
+  END escjava3_java_typesystem
 
-escjava2_java_numeric_types : THEORY
+escjava3_java_numeric_types : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem, integers
+    IMPORTING escjava3_java_typesystem, integers
 
     java_lang_Double_MAX_VALUE : DiscreteNumber % (2-2^-52)*2^1023
     java_lang_Double_MIN_VALUE : DiscreteNumber % 
@@ -174,11 +174,11 @@ escjava2_java_numeric_types : THEORY
     isDouble_def : LEMMA
       FORALL(number : Number) : isDouble?(number) IFF 
         rangeCheck(number, java_lang_Double_MIN_VALUE, java_lang_Double_MAX_VALUE)
-  END escjava2_java_numeric_types
+  END escjava3_java_numeric_types
 
-escjava2_java_casting : THEORY
+escjava3_java_casting : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem, escjava2_java_numeric_types
+    IMPORTING escjava3_java_typesystem, escjava3_java_numeric_types
 
     % numeric downcasting (truncation)
     narrowDouble2Float(source : ContinuousNumber) : ContinuousNumber
@@ -200,19 +200,19 @@ escjava2_java_casting : THEORY
     castByte2Char : ConversionFunction
     castChar2Byte : ConversionFunction
 
-  END escjava2_java_casting
+  END escjava3_java_casting
 
-escjava2_object_fields_types : THEORY
+escjava3_object_fields_types : THEORY
   BEGIN
 
     BooleanField, DiscreteNumberField, ContinuousNumberField, ReferenceField : TYPE+
 
-  END escjava2_object_fields_types
+  END escjava3_object_fields_types
 
-escjava2_object_fields : THEORY
+escjava3_object_fields : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem,
-              escjava2_object_fields_types,
+    IMPORTING escjava3_java_typesystem,
+              escjava3_object_fields_types,
               map_theory[Object, BooleanField, Boolean],
               map_theory[Object, DiscreteNumberField, DiscreteNumber],
               map_theory[Object, ContinuousNumberField, ContinuousNumber],
@@ -235,11 +235,11 @@ escjava2_object_fields : THEORY
 %         fClosedTime(f) < t AND isAllocated(r, t) IMPLIES
 %         isAllocated(select(f, memGet(m, r)), t) 
 
-  END escjava2_object_fields
+  END escjava3_object_fields
 
-escjava2_java_arrays_base[T : TYPE] : THEORY
+escjava3_java_arrays_base[T : TYPE] : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem
+    IMPORTING escjava3_java_typesystem
 
     get(obj : Object, num : DiscreteNumber) : T
     set(obj : Object, num : DiscreteNumber, val : T) : Object
@@ -252,15 +252,15 @@ escjava2_java_arrays_base[T : TYPE] : THEORY
       FORALL(obj : Object, val : Object, n : DiscreteNumber, m : DiscreteNumber, val : T) :
         get((set(obj, n, val)), m) = get(obj, m)
 
-  END escjava2_java_arrays_base
+  END escjava3_java_arrays_base
 
-escjava2_java_arrays : THEORY
+escjava3_java_arrays : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem,
-              escjava2_java_arrays_base[DiscreteNumber],
-              escjava2_java_arrays_base[ContinuousNumber],
-              escjava2_java_arrays_base[Boolean],
-              escjava2_java_arrays_base[Reference]
+    IMPORTING escjava3_java_typesystem,
+              escjava3_java_arrays_base[DiscreteNumber],
+              escjava3_java_arrays_base[ContinuousNumber],
+              escjava3_java_arrays_base[Boolean],
+              escjava3_java_arrays_base[Reference]
 
     % Cesare and Joe think that this sort is unnecessary since the
     % type constructors below tell you everything you need to know
@@ -298,11 +298,11 @@ escjava2_java_arrays : THEORY
       FORALL(m : DiscreteNumber, r : ReferenceType) :
         subtype?(arrayOf(m, r), java_lang_Cloneable)
 
-  END escjava2_java_arrays
+  END escjava3_java_arrays
 
-escjava2_java_operators : THEORY
+escjava3_java_operators : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem
+    IMPORTING escjava3_java_typesystem
 
     % arithmetic functions
     DiscreteArithmeticFunction : [DiscreteNumber, DiscreteNumber -> DiscreteNumber]
@@ -322,21 +322,21 @@ escjava2_java_operators : THEORY
 
     upcast_has_no_effect : LEMMA
       FORALL(r : Reference, t : ReferenceType) : isa?(r, t) IMPLIES (cast(r, t) = r)
-  END escjava2_java_operators
+  END escjava3_java_operators
 
-escjava2_jml_operators : THEORY
+escjava3_jml_operators : THEORY
   BEGIN
-    IMPORTING escjava2_java_typesystem, escjava2_java_arrays
+    IMPORTING escjava3_java_typesystem, escjava3_java_arrays
 
-  END escjava2_jml_operators
+  END escjava3_jml_operators
 
-escjava2_object_logic : THEORY
+escjava3_object_logic : THEORY
   BEGIN
-  END escjava2_object_logic
+  END escjava3_object_logic
 
-escjava2_locking : THEORY
+escjava3_locking : THEORY
 BEGIN
-  IMPORTING escjava2_java_typesystem
+  IMPORTING escjava3_java_typesystem
    
   lockMap : TYPE+
 
@@ -365,4 +365,4 @@ BEGIN
     FORALL( r : Reference ) :
       lockLess(NULL, r)
 
-END escjava2_locking
+END escjava3_locking

@@ -33,6 +33,18 @@ escjava_builtin_array_theory : THEORY
 
   END escjava_builtin_array_theory
 
+escjava_builtin_array_theory_lemmas : THEORY
+  BEGIN
+    IMPORTING escjava_builtin_array_theory
+
+    map, map0, map1, index, index0, index1, value, value0, value1 : VAR S
+
+    ss0 : LEMMA
+      FORALL (map, index, value) :
+        select(store (map, index, value), index) = value
+
+  END escjava_builtin_array_theory_lemmas
+
 escjava_java_typesystem : THEORY
   BEGIN
     IMPORTING escjava_builtin_array_theory,
@@ -118,6 +130,9 @@ escjava_java_typesystem : THEORY
 
     java_null : S
 
+    Javas_boolTrue_differs_from_Javas_boolFalse : AXIOM
+      bool_false /= bool_true
+
     % Not in ESCJ8, but should be
     refEQ, refNE : [ S, S -> S ]
 
@@ -141,6 +156,23 @@ escjava_java_boolean_ops : THEORY
     boolNE (a, b : S): bool = NOT (a = bool_true IFF b = bool_true)
     boolNot (a : S): bool = NOT (a = bool_true)
     boolOr (a, b : S): bool = a = bool_true OR b = bool_true
+
+    % Added to make the translation of the pretty-printer easier.
+
+%     S_to_bool(a : S) : bool = 
+% 	if(a = bool_true) 
+% 	  then true 
+% 	  else false
+% 	endif 
+
+    bool_to_S(a : bool) : S = 
+	if(a) 
+	  then bool_true 
+	  else bool_false
+	endif 
+	
+%    CONVERSION+ S_to_bool
+    CONVERSION+ bool_to_S
 
     % === ESCJ 8: Section 5.3
 
@@ -168,6 +200,11 @@ escjava_java_integral_types : THEORY
     % Axioms to express the size of the basic types.
     S_to_real : [ S -> real ]
     CONVERSION+ S_to_real
+	
+    % Additional axiom for the translation
+    real_to_S : [ real -> S ]
+    CONVERSION+ real_to_S
+
     intFirst, intLast, longFirst, longLast : real
 
     range_of_char : AXIOM
@@ -412,7 +449,10 @@ escjava_lock_semantics : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem,
               escjava_jml_semantics,
-              escjava_java_field_representation
+              escjava_java_field_representation,
+	      escjava_java_integral_ops
+
+    LS : S
 
     % === ESCJ 8: Section 4
 
@@ -426,18 +466,21 @@ escjava_lock_semantics : THEORY
     null_is_in_lockset : AXIOM
       FORALL (s : S): select(asLockSet(s), java_null) = bool_true
 
-    lockLE (x, y : S): bool = x <= y
-    lockLT (x, y : S): bool = x < y
+%     lockLE (x, y : S): bool = x <= y
+%     lockLT (x, y : S): bool = x < y
+
+    lockLE (x, y : S): S = integralLE(x, y)
+    lockLT (x, y : S): S = integralLT(x, y)
 
     % all locks in lockset are below max(lockset) (not in ESCJ 8)
     all_locks_in_lockset_are_below_max_lockset : AXIOM
       FORALL (s, mu : S): select(asLockSet(s), mu) = bool_true IMPLIES
-                          lockLE(mu, max(asLockSet(s)))
+                          lockLE(mu, max(asLockSet(s))) = bool_true
 
     % null precedes all objects in locking order (not in ESCJ 8)
     null_precedes_all_objects : AXIOM
       FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
-                      lockLE(java_null, x)
+                      lockLE(java_null, x) = bool_true
 
   END escjava_lock_semantics
 
@@ -562,5 +605,9 @@ escjava_logic : THEORY
   BEGIN
     IMPORTING escjava_java_semantics,
               escjava_jml_semantics,
-              escjava_lock_semantics
+              escjava_lock_semantics,
+              escjava_arrays
+
+  EXPLIES(a, b : bool) : bool = a OR (NOT b) 
+
   END escjava_logic
