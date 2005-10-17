@@ -19,11 +19,14 @@ psfiles =	$(foreach texfile,$(texfiles),\
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
 
-unsorted_files =		$(wildcard unsorted/*.ax)
-unsorted_texinfo_files =	$(addsuffix .texinfo,$(unsorted_files))
+simplify_files =		$(wildcard simplify/*.ax)
+simplify_texinfo_files =	$(addsuffix .texinfo,$(simplify_files))
 
-many-sorted_files =		$(wildcard many-sorted/*.smt)
-many-sorted_texinfo_files =	$(addsuffix .texinfo,$(many-sorted_files))
+pvs_files =		$(wildcard pvs/*.pvs)
+pvs_texinfo_files =	$(addsuffix .texinfo,$(pvs_files))
+
+smt-lib_files =		$(wildcard smt-lib/*.smt)
+smt-lib_texinfo_files =	$(addsuffix .texinfo,$(smt-lib_files))
 
 PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
@@ -35,6 +38,9 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 	@$(CODE2TEXI) $< > $@
 
 %.smt.texinfo:	%.smt
+	@$(CODE2TEXI) $< > $@
+
+%.pvs.texinfo:	%.pvs
 	@$(CODE2TEXI) $< > $@
 
 %.pdf: %.tex
@@ -94,12 +100,16 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 %.pdf: %.fig
 	fig2dev -L pdf $< $@
 
-.PHONY: all build
+.PHONY: all build cleanup clean force
 all:	build
 
 build:	Escjava2-Logics.pdf
 
-Escjava2-Logics.pdf:	Escjava2-Logics.texinfo $(unsorted_texinfo_files) $(many-sorted_texinfo_files)
+Escjava2-Logics.pdf:	Escjava2-Logics.texinfo \
+	$(simplify_texinfo_files) $(pvs_texinfo_files) $(smt-lib_texinfo_files)
+
+force:
+	rm Escjava2-Logics.pdf; make Escjava2-Logics.pdf;
 
 cleanup:
 	rm -f _region_* *.aux *.log \
@@ -115,5 +125,6 @@ clean:
 		*.pg *.pgs *.tp *.tps *.vr *.vrs *.p *.k \
 		*.bbl *.blg *.toc *.thm *.out *.cb \
 		*.lof *.lot *.gz *.Z #*
-	rm -f unsorted/*.texinfo
-	rm -f many-sorted/*.texinfo
+	rm -f simplify/*.texinfo
+	rm -f pvs/*.texinfo
+	rm -f smt-lib/*.texinfo

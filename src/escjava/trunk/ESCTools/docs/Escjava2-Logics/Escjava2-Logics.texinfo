@@ -42,7 +42,7 @@ and Raymie Stata, 11 April 1997.  Additional comments by Cormac
 Flanagan.
 
 Modified by Joseph Kiniry, with initial input from Cesare Tinelli and
-input from Silvio Ranise, beginning on 21 June 2004.
+input from Silvio Ranise and Patrice Chalin, beginning on 21 June 2004.
 
 Current editor Joseph Kiniry.
 
@@ -63,9 +63,9 @@ This document is a work in progress.  Suggestions and input are always
 welcome.
 
 @copying
-``The Logics and Calculi of ESC/Java2'' is licensed under the Creative
-Commons Attribution-NonCommercial-ShareAlike 2.0 license.  See
-@uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
+Portions of ``The Logics and Calculi of ESC/Java2'' is licensed under
+the Creative Commons Attribution-NonCommercial-ShareAlike 2.0 license.
+See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/}
 
 Copyright @copyright{} 1997 K. Rustan Leino, Jim Saxe, and Digital
 Equipment Corporation.
@@ -126,9 +126,9 @@ See @uref{http://creativecommons.org/licenses/by-nc-sa/2.0/legalcode}
 
 @titlepage
 @title The Logics and Calculi of ESC/Java2
-@subtitle Edition $Revision$, November 2004
+@subtitle Edition $Revision$, Begun November 2004
 @subtitle This document describes the logics of ESC/Java2 version 2.0a8 and later.
-@author Joseph R. Kiniry <kiniry@@acm.org>
+@author Joseph R. Kiniry <joseph.kiniry@@ucd.ie>
 
 @c The following two commands start the copyright page.
 @page
@@ -308,7 +308,7 @@ Simplify's built-in predicate symbols include ``=='', ``!='', and
 ``<''; its built-in boolean connectives include ``&&'', ``||'', and
 ``!''.  (The actual symbols used by Simplify differ from those in this
 document, which uses a general mathematical syntax.  For example, we write
-@math{x \neq y} where Simplify expects @t{(NEQ x y)}.  The different 
+@math{x \neq y} where Simplify expects @code{(NEQ x y)}.  The different 
 syntax should not create any
 confusion, except possibly for the built-in predicate symbol @code{EQ}
 and the built-in boolean connective @code{IFF}, both of which we write
@@ -2766,11 +2766,13 @@ unsorted logics of the SRC tools Calvin and Houdini.  @ref{Additional
 Axioms Introduced in ESC/Java2} contains all additional axioms that
 have been added to ESC/Java2 by David Cok and Joe Kiniry.
 
-@ref{Many-Sorted Logics} contains a new many-sorted logics developed
-by Joe Kiniry and Cesare Tinelli.  These logics are being developed
-for use with SMT-LIB based provers.  They are not yet supported in
-ESC/Java2.  These logics are being realized in the Maude logical
-framework and the PVS higher-order theorem prover.
+@ref{Many-Sorted Logics} contains a new many-sorted logics developed by
+Joseph Kiniry, Cesare Tinelli, and Patrice Chalin.  These logics are
+primarily being developed for use with SMT-LIB based provers but can
+also be used within the PVS higher-order prover.  They are an
+experimental feature and not yet supported in ESC/Java2.  These logics
+have been realised in PVS and we intend to realise them as well in
+the Maude logical framework.
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
@@ -2780,7 +2782,7 @@ framework and the PVS higher-order theorem prover.
 * SMT-LIB Many-Sorted Logic::   
 * Many-Sorted Logic with Subsorts::  
 * Maude Realization of Many-Sorted Logics::  
-* PVS Realization of Many-Sorted Logics::  
+* PVS Realizations ESC Logics::  
 @end menu
 
 @node Unsorted Logics,  , Logics, Logics
@@ -2793,7 +2795,7 @@ framework and the PVS higher-order theorem prover.
 @appendixsubsec Original Logic
 
 @example
-@include unsorted/original-unsorted-logic.ax.texinfo
+@include simplify/original-unsorted-logic.ax.texinfo
 @end example
 
 @c -----------------------------------------------------------------------------
@@ -2804,7 +2806,7 @@ The following axioms were added to the object logic of Calvin.  They
 have not yet been evaluated for inclusion in ESC/Java2.
 
 @example
-@include unsorted/calvin-unsorted-axiom-additions.ax.texinfo
+@include simplify/calvin-unsorted-axiom-additions.ax.texinfo
 @end example
 
 Houdini introduced no new axioms.
@@ -2817,7 +2819,7 @@ The following axioms were introduced to the unsorted object logic to
 reason about new constructs introduced in ESC/Java2.
 
 @example
-@include unsorted/escjava2-unsorted-axiom-additions.ax.texinfo
+@include simplify/escjava2-unsorted-axiom-additions.ax.texinfo
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2834,30 +2836,130 @@ logics.
 @node SMT-LIB Many-Sorted Logic, Many-Sorted Logic with Subsorts, Additional Axioms Introduced in ESC/Java2, Unsorted Logics
 @appendixsubsec SMT-LIB Many-Sorted Logic
 
-What follows is a many-sorted object logic for Java, written in
-SMT-LIB.
+What follows is a sketch of the many-sorted object logic for Java,
+written in SMT-LIB.  It is our intention to automatically
+@emph{generate} this logic from the PVS @var{escjava2_logic} using new
+functionality we are introducing to PVS.  The PVS logic
+@var{escjava2_logic} is the canonical representation of this logic and is
+described in @ref{PVS Realizations ESC Logics}.
 
 @example
-@include many-sorted/many-sorted-logic.smt.texinfo
+@include smt-lib/many-sorted-logic.smt.texinfo
 @end example
 
 @c -----------------------------------------------------------------------------
 @node Many-Sorted Logic with Subsorts, Maude Realization of Many-Sorted Logics, SMT-LIB Many-Sorted Logic, Unsorted Logics
 @appendixsubsec Many-Sorted Logic with Subsorts
 
-TBD
+We have not yet written the many-sorted logic with subsorts.
 
 @c -----------------------------------------------------------------------------
-@node Maude Realization of Many-Sorted Logics, PVS Realization of Many-Sorted Logics, Many-Sorted Logic with Subsorts, Unsorted Logics
+@node Maude Realization of Many-Sorted Logics, PVS Realizations ESC Logics, Many-Sorted Logic with Subsorts, Unsorted Logics
 @appendixsubsec Maude Realization of Many-Sorted Logics
 
-TBD
+We have not yet written the Maude realisation of any of these logics.
 
 @c -----------------------------------------------------------------------------
-@node PVS Realization of Many-Sorted Logics,  , Maude Realization of Many-Sorted Logics, Unsorted Logics
-@appendixsubsec PVS Realization of Many-Sorted Logics
+@node PVS Realizations ESC Logics,  , Maude Realization of Many-Sorted Logics, Unsorted Logics
+@appendixsubsec PVS Realizations ESC Logics
 
-TBD
+The original unsorted Simplify-based logic described in @ref{Unsorted
+Logic} has been translated into a single-typed first-order logic in
+PVS.  We call this logic the ESC/Java logic, or equivalently, in PVS,
+the @var{escjava_logic} theory.
+
+The intent of this translation is threefold:
+@enumerate
+@item
+The PVS specification provides a familiar realisation of the logic to
+readers who are unfamiliar with the Simplify theorem prover and its
+idiosyncrasies.
+@item
+This logic provides a foundation for writing the ``lifted'', typed
+version of the logic (called the ESC/Java2 logic) that is described in
+@ref{Sorted Logic}.
+@item
+Finally, within PVS we hope to formally reason about metatheoretical
+properties of each of these logics.  In particular, we are interested in
+showing that each logic is sound.
+@end enumerate
+
+The @var{escjava_logic} theory is decomposed into several theories, each
+of which documents a different set of related axioms, mirroring the
+structure of the preceeding discussions.  The following section
+documents this logic.
+
+@c .............................................................................
+@node The PVS Logic escjava_logic,  , PVS Realizations ESC Logics, PVS Realizations ESC Logics
+@appendixsubsubsec The PVS Logic @var{escjava_logic}
+
+@node The Theory escjava_types, Copying, Logics, Top
+The Theory @var{escjava_types} 
+
+The original Simplify logic, as documented in @ref{Unsorted Logic}, is
+unsorted.  An unsorted logic is equivalent to a sorted logic with a
+unique sort @math{S} where each term has sort @math{S}.  The sole
+purpose of the theory @var{escjava_types} is the declaration of this
+single sort @math{S}.
+
+@example
+@include pvs/escjava_types.pvs.texinfo
+@end example
+
+The keyword @var{TYPE+} indicates that the type @var{S} is a non-empty
+type; that is to say, the type @var{S} has at least one representative,
+or, alternatively, there exists at least one entity of type @var{S}.
+
+@node The Theory escjava_simplify
+The Theory @var{escjava_simplify}
+
+We encode Simplify's built-in array theory and document its forumlas in
+the PVS theory @var{escjava_simplify} in the following
+fashion@footnote{Note that we annotate in a given PVS theory the
+location of the definitions contained therein, both in the original SRC
+ESC/Java design documentation, in this ESC/Java2-centric document, and
+in the JACM Simplify paper.}.
+
+@example
+@include pvs/escjava_simplify.pvs.texinfo
+@end example
+
+This theory defines two functions, @var{select} and @var{store}, whose
+signatures and axiomatic definitions exactly match those described in
+the Simplify technical report@cite{Simplify-HPL-2003-148} and the
+Simplify JACM paper@cite{DetlefsNelsonSaxe2005}.  The basic use of
+these functions are described in @ref{Maps}.
+
+@c @TechReport{Simplify-HPL-2003-148,
+@c   author =	 "David Detlefs and Greg Nelson and James B. Saxe",
+@c   title =	 "Simplify: A Theorem Prover for Program Checking",
+@c   institution =	 "HP Labs",
+@c   number =	 "HPL-2003-148",
+@c   month =	 jul,
+@c   year =	 2003
+@c }
+
+@c @Article{DetlefsNelsonSaxe2005,
+@c   author =       {David Detlefs and Greg Nelson and James B. Saxe},
+@c   title =        {Simplify: a theorem prover for program checking},
+@c   journal =      {J. ACM},
+@c   volume =       52,
+@c   number =       3,
+@c   year =         2005,
+@c   issn =         {0004-5411},
+@c   pages =        {365--473},
+@c   doi =          {http://doi.acm.org/10.1145/1066100.1066102},
+@c   publisher =    {ACM Press},
+@c   address =      {New York, NY, USA},
+@c }
+
+
+@node The Theory escjava_java_typesystem
+The Theory @var{escjava_java_typesystem}
+
+The theory @var{escjava_java_typesystem} encodes portions of the Java
+1.4 typesystem, as described in @ref{Types and Subtypes}.
+
 
 @c =============================================================================
 @node Copying, Index, Logics, Top
