@@ -2006,9 +2006,10 @@ public class ErrorType extends Type
   //@ ensures \result != null;
   //@ ensures !\result.syntax;
   public static ErrorType make() {
-      //@ set I_will_establish_invariants_afterwards = true;
-      //@ set result.syntax = false;
-      return new ErrorType();
+    //@ set I_will_establish_invariants_afterwards = true;
+    ErrorType result = new ErrorType();
+    //@ set \result.syntax = false;
+    return result;
   }
 }
 
