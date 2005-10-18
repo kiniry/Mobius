@@ -32,6 +32,7 @@ JAVASOURCEFILES = \
 	${ESCJAVA_SOURCE_DIR}/escjava/sp/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/tc/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/translate/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/*.java
 
 #	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
@@ -125,7 +126,8 @@ compileall: rm-stampfile compile
 really-compile: ${STAMPFILE}
 
 ${STAMPFILE}: ${JAVASOURCEFILES}
-	-./dl-xml-rpc-lib.sh
+	#./dl-xml-rpc-lib.sh # for future use
+	./generate-functions-vcGenerator.sh #fixme, this is lame
 	if [ -e .files ]; then rm -f .files; fi
 	echo $(call canonicalizeLots,$?) > .files
 	${JAVAC} ${JAVAC_FLAGS} \
@@ -159,8 +161,20 @@ generate_files: generate_escjava_ast_source generate_escjava_backpred
 ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 	touch $@
 
+${STAMPFILE}: ${JAVASOURCEFILES}
+	#./dl-xml-rpc-lib.sh #for future use
+	./generate-functions-vcGenerator.sh #fixme, this is lame
+	${JAVAC} ${JAVAC_FLAGS} \
+		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
+		-sourcepath $(call canonicalize,${SOURCEPATH}) \
+		-d $(call canonicalize,${CLASSDIRECTORY}) \
+		$(foreach file,$?,$(call canonicalize,$(file)))
+	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
+	touch $@
+
 rm-stampfile:
 	-rm -f ${STAMPFILE}
+
 
 ###########################################################################
 ## mocha
