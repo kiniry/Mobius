@@ -55,8 +55,9 @@ public final class Identifier
   /** Sequence of characters represented by this Identifier (never
     <code>null</code>). */
   //@ invariant chars != null;
-  //@ spec_public
-  private char[] chars; //@ in objectState;
+
+    //private char[] chars; //@ in objectState;
+    public char[] chars; //@ in objectState;
 
   /** Memoization of <code>String.valueOf(chars, 0,
     chars.length)</code>; may be <code>null</code>.  This variable may

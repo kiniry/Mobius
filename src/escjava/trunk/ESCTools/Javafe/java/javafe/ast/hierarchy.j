@@ -238,7 +238,7 @@ public abstract class ASTNode implements Cloneable
   public void setDecorations(Object d[]) {
     decorations = d;
   }
-  
+    
   /**
    * Used to remind callers of ASTNode subclass constructors that they
    * must manually establish any required invariants after calling an
@@ -246,6 +246,24 @@ public abstract class ASTNode implements Cloneable
    * invariants.)
    */
   //@ ghost public static boolean I_will_establish_invariants_afterwards;
+
+  //$$
+  static public int dotCounter = 0 ;
+  public int dotId;
+
+    /*
+     * Constructor needed for GRAPHICAL representation (dot output) 
+     *
+     * This is temporary as I don't know how the class generator works.
+     * And it always generate a constructor empty (which classes with this one
+     * if I remove this useless boolean).
+     */
+//   protected ASTNode(){
+//     dotCounter += 1;
+//     dotId = dotCounter;
+//   }    
+  //$$
+
 }
 
 /* ---------------------------------------------------------------------- */
@@ -1247,6 +1265,57 @@ public class LiteralExpr extends Expr
      result.loc = loc;
      return result;
   }
+
+  //$$
+  public /*@ non_null @*/ String getInfoNewTree(){
+    String r;
+
+    if(tag==TagConstants.BOOLEANLIT){ // 
+      Boolean valueTemp = (Boolean) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.INTLIT) {
+      Integer valueTemp = (Integer) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.LONGLIT){
+      Long valueTemp = (Long) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.FLOATLIT){
+      Float valueTemp = (Float) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.DOUBLELIT){
+      Double valueTemp = (Double) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.BYTELIT){
+      Byte valueTemp = (Byte) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.SHORTLIT){
+      Short valueTemp = (Short) value;
+      r = value.toString();
+    }
+    else if(tag==TagConstants.STRINGLIT){
+      r = value.toString();
+    }
+    else if(tag==TagConstants.NULLLIT)
+      r = "null";
+    else if(tag==TagConstants.CHARLIT){ // according to the comments
+      // in this case, value has type Integer
+      Integer valueTemp = (Integer) value;
+      r = value.toString();
+    }
+    else { // according to Clement's experiment, the type here is String
+      // Error in LiteralExpr::getInfoNewTree(), it seems that the ast tree of the guarded commands isn't well typed, try to continue with a trick");
+      r = value.toString();
+    }
+
+    return r;
+  }
+  //$$
 }
 
 public class ArrayRefExpr extends Expr
@@ -1662,6 +1731,7 @@ public class VariableAccess extends Expr
 	result.decl = decl;
 	return result;
   }
+
 }
 
 /**
@@ -2037,6 +2107,7 @@ public class PrimitiveType extends Type
   static public PrimitiveType make(int tag, int loc) {
     return PrimitiveType.make(null, tag, loc);
   }
+
 }
 
 public class TypeName extends Type
