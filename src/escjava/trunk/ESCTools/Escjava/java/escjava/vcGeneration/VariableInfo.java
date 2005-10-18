@@ -130,7 +130,7 @@ class VariableInfo {
 		    
 	    }
 
-	    System.err.println("Warning in escjava.java.vcGenerator.VariableInfo.getPvs(), considering "+old+" as a user defined type, or a not (yet) handled variable.");
+	    TDisplay.warn(this, "getPvs()", "Considering "+old+" as a user defined type, or a not (yet) handled variable.");
 
 	    pvsRename();
 
@@ -181,8 +181,8 @@ class VariableInfo {
 		if(old.startsWith("java.")) //check if in the form java.x.y 
 		    return "T_"+old;
 		else {
-		    System.err.println("Type not handled in escjava.vcGeneration.VariableInfo.getSimplify() "+old);
-		    System.err.println("Considering it as a user defined type");
+		    TDisplay.warn(this, "getSimplify()", "Type not handled : "+old);
+		    TDisplay.warn(this, "getSimplify()", "Considering it as a user defined type");
 		    return "T_"+old;
 		}
 	    }
@@ -246,7 +246,7 @@ class VariableInfo {
 	  we use it to make the difference.
 	*/
 	else if(type == TNode.$Type){
-	    System.err.println("Warning in escjava.java.vcGeneration.VariableInfo.pvsRename() : considering "+old+" as a user defined type.");
+	    TDisplay.warn(this, "pvsRename()", "Considering "+old+" as a user defined type.");
 
 	    // renaming done here
 	    pvs = "userDef?"+old;
@@ -258,12 +258,12 @@ class VariableInfo {
 	    //@ assert m.groupCount() == 3;
 
 	    if(m1.groupCount() != 3)
-		System.err.println("Error in escjava.java.vcGeneration.VariableInfo.pvsRename : m.groupCount() != 3");
+		TDisplay.err(this, "pvsRename()", "m.groupCount() != 3");
 
 	    for( i = 1; i <= m1.groupCount(); i++) {
 
 		if(m1.start(i) == -1 || m1.end(i) == -1)
-		    System.err.println("Error in escjava.java.vcGeneration.VariableInfo.pvsRename : return value of regex matching is -1");
+		    TDisplay.err(this, "pvsRename()", "Return value of regex matching is -1");
 		else {
 		    
 		    String temp = old.substring(m1.start(i),m1.end(i));
@@ -283,7 +283,7 @@ class VariableInfo {
 			//@ assert column != null;
 			break;
 		    default :
-			System.err.println("Error in escjava.java.vcGeneration.VariableInfo.pvsRename : switch call incorrect, switch on value "+i);
+			TDisplay.err(this, "pvsRename()", "Switch call incorrect, switch on value "+i);
 			break;
 		    }
 		} // no error in group

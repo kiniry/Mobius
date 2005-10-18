@@ -14,9 +14,11 @@ abstract class TNode {
       @ protected invariant (\forall TNode i,j ; i != j; i.id != j.id) &&
       @ (lastType >= 0) &&
       @ (typeProofSet ==> (lastType <= 1 && lastType <= 3)) &&
-      @ (isroot ==> (this instanceof TRoot));
+      @ (isroot ==> (this instanceof TRoot)) &&
+      @ (parent != null || this instanceof TRoot);
       @*/
 
+    // fixme explain it in the doc
     static /*@ spec_public @*/ protected PrintStream dotPs;
     protected int id;
     static protected int counter = 0;
@@ -27,6 +29,8 @@ abstract class TNode {
     // internal representation of last type asked
     static /*@ spec_public @*/ protected int lastType = 0;
     static /*@ spec_public @*/ protected boolean typeProofSet = false;
+
+    protected TFunction parent = null;
 
     String label = null;
   
@@ -215,12 +219,12 @@ abstract class TNode {
 		    }
 
 		default :
-		    System.err.println("Error in java.escjava.vcGeneration.TNode.generateDeclarations, type is equal to "+lastType+" which isn't ok");
+		    TDisplay.err(this, "generateDeclarations", "Type is equal to "+lastType+" which isn't ok");
 		    
 		}
 	    }
-	    else // fixme test it nevers happen
-		System.err.println("Warning type of variable "+keyTemp+" is not set when declarating variables for the proof, skipping it...");
+	    else // fixme test that it nevers happen
+		TDisplay.warn(this, "generateDeclarations", "Type of variable "+keyTemp+" is not set when declarating variables for the proof, skipping it...");
 	}
 
     }
@@ -248,7 +252,7 @@ abstract class TNode {
 	    if(type!=null)
 		ti = TNode.addType(type);
 	    else
-		System.err.println("Warning, adding variable named "+oldName+" with no types");
+		TDisplay.warn("TNode", "addName", "Adding variable named "+oldName+" with no types");
 
 	    //@ assert typesName.containsKey(type);
 	    variablesName.put(oldName, new VariableInfo(oldName, ti, unsortedPvs, pvs, sammy));
@@ -262,8 +266,7 @@ abstract class TNode {
 		VariableInfo vi = (VariableInfo)variablesName.get(oldName);
       		if(vi.type != typesName.get(type)) {
 		    
-		    System.out.println("escjava/vcGeneration/TNode::addVariable *** Warning ***");
-		    System.out.print("You're trying to add a variable named "+oldName+" whith type "+type.toString()+" which has been already stored with the type "+vi.type.toString() +" to the proof tree");
+		    TDisplay.warn("TNode", "addName", "You're trying to add a variable named "+oldName+" whith type "+type.toString()+" which has been already stored with the type "+vi.type.toString() +" to the proof tree");
 		}
 	    }
 
@@ -302,7 +305,7 @@ abstract class TNode {
 	//@ assert this instanceof TName;
 
 	if(! (this instanceof TName)) {
-	    System.err.println("Warning calling getVariableInfo on a non TName Node");
+	    TDisplay.err(this, "getVariableInfo()", "Warning calling getVariableInfo on a non TName Node");
 	    return null;
 	}
 	else {
@@ -346,8 +349,6 @@ abstract class TNode {
 	return TNode.addType(oldType, null, null, null);
     }
 
-    abstract /*@ non_null @*/ StringBuffer toDot();
-
     /* dot id which is unique because of adding 
        'id' to the name of the node */
     protected /*@ non_null @*/ String dotId(){
@@ -387,8 +388,7 @@ abstract class TNode {
 
 	    // retrieve current type;
 	    if(!variablesName.containsKey(m.name)) {
-		System.err.println("escjava::vcGeneration::TNode::setType");
-		System.err.println("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+		TDisplay.err(this, "setType(TypeInfo, boolean)", "You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
 	    }
 	    // take care no else here
 	    
@@ -400,9 +400,9 @@ abstract class TNode {
 	    else {
 		if(vi.type != type) {// inconsistency
 		    if(vi.typeSure) // we don't change it
-			System.err.println("Variable named "+m.name+", has type "+vi.type.old+" yet you try to change it to "+type.old);
+			TDisplay.err(this, "setType(TypeInfo, boolean)", "Variable named "+m.name+", has type "+vi.type.old+" yet you try to change it to "+type.old);
 		    else {
-			System.err.println("Changing type of "+m.name+" (which was "+vi.type.old+") to "+type.old);
+			TDisplay.warn(this, "setType(TypeInfo, boolean)", "Changing type of "+m.name+" (which was "+vi.type.old+") to "+type.old);
 			vi.type = type;
 		    }
 		}
@@ -414,11 +414,11 @@ abstract class TNode {
 		// we compare the existing type
 		if(this.type != type) { // The two types are not equals
 		    // inconsistancy
-		    System.err.println("*** Warning, typechecking inconsistancy, "+this.toString() +"has type "+this.type.old+ "but you're trying to set his type to "+type.old);
+		    TDisplay.warn(this, "setType(TypeInfo, boolean)", "Typechecking inconsistancy, "+this.toString() +"has type "+this.type.old+ "but you're trying to set his type to "+type.old);
 		}
 	    }
 	    else  // type is null qué pasa ?
-		System.err.println("Node  "+this.toString()+" has no type");
+		TDisplay.err(this, "setType(TypeInfo, boolean)", "Node "+this.toString()+" has no type");
 				   
 	}
     }
@@ -441,8 +441,7 @@ abstract class TNode {
 
 	    // retrieve current type;
 	    if(!variablesName.containsKey(m.name)) {
-		System.err.println("escjava::vcGeneration::TNode::setType");
-		System.err.println("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+		TDisplay.err(this, "getType", "You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
 	    }
 	    // take care no else here
 	    
@@ -481,7 +480,7 @@ abstract class TNode {
 			    result = vi2.getSammy() + "\\n";
 			    break;
 			default :
-			    System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
+			    TDisplay.err(this, "getType", "Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
 			    return "";
 			}
 
@@ -503,7 +502,7 @@ abstract class TNode {
 		    result = result + ti.getSammy();
 		    break;
 		default :
-		    System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
+		    TDisplay.err(this, "getType", "Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
 		    return "";
 		}
 
@@ -525,7 +524,7 @@ abstract class TNode {
 	    case(3):
 		return this.type.getSammy();
 	    default :
-		System.err.println("Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
+		TDisplay.err(this, "getType", "Error when calling escjava::vcGeneration::TNode::getType, type of the proof is not correctly set");
 		return "";
 	    }
 	}
@@ -549,8 +548,7 @@ abstract class TNode {
 
 	    // retrieve current type;
 	    if(!variablesName.containsKey(m.name)) {
-		System.err.println("escjava::vcGeneration::TNode::setType");
-		System.err.println("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+		TDisplay.err(this, "getType", "You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
 	    }
 	    // take care no else here
 	    

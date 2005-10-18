@@ -77,8 +77,8 @@ class TypeInfo {
 	  if(old.startsWith("java.")) //check if in the form java.x.y 
 	      pvs = old.replace('.','_');
 	  else {
-	      System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::pvsRename() : "+old); 
-	      System.err.println("Considering it as a user defined type... ie ReferenceType");
+	      TDisplay.warn(this, "pvsRename()", "Type not handled  : "+old); 
+	      TDisplay.warn(this, "pvsRename()", "Considering it as a user defined type... ie ReferenceType");
 	      pvs = "ReferenceType";
 	  }
       }

@@ -35,15 +35,7 @@ public class VcGenerator {
     private /*@ spec_public non_null @*/ ASTNode oldRootNode = null;
     private /*@ spec_public non_null @*/ TNode newRootNode = null;
     private /*@ spec_public @*/ StringBuffer oldDot = null;
-    private /*@ spec_public @*/ StringBuffer newDot = null;
     private /*@ spec_public @*/ boolean computationDone = false;
-
-    /*
-     * PrintWriter that will contain all errors/information/debugging messages
-     * I have absolutely idea why the flushing is automatic even with
-     * the appropriate call to the constructor. FIXME
-     */
-    static java.io.PrintWriter error = new java.io.PrintWriter(java.lang.System.err, false);
 
     /*@
       @ public invariant computationDone ==> newRootNode != null &&
@@ -56,9 +48,14 @@ public class VcGenerator {
      * @return The VcGenerator on which you can call method to get
      * vcs for different syntax
      */ 
-    public VcGenerator(/*@ non_null @*/ ASTNode e){
+    public VcGenerator(/*@ non_null @*/ ASTNode e, boolean err, boolean warn, boolean info, boolean colors){
 	oldRootNode = e;
 	
+	/*
+	 * Set different output (or not);
+	 */
+	TDisplay.init(err, warn, info, colors);
+
 	/*
 	 * Reset static initialization for TNode.
 	 */ 
@@ -81,12 +78,15 @@ public class VcGenerator {
         if(!computationDone)
           generateIfpTree(oldRootNode, false);
 
+	TProofSimplifier psvi = new TProofSimplifier();
+	newRootNode.accept(psvi);
+
  	TPvsVisitor pvi = new TPvsVisitor();
 
 	// generate declarations
 	StringBuffer s = new StringBuffer();
 
-	s.append(proofName+" : CONJECTURE\n"); // let be modest...
+	s.append(proofName+" : CONJECTURE\n"); // let's be modest...
 
 	s.append("ForAll(\n");
 	
@@ -121,15 +121,17 @@ public class VcGenerator {
     }
 
     /*@
-      @ ensures computationDone && newDot != null;
+      @ ensures computationDone;
       @*/
-    public String new2Dot(){
+    public String toDot(){
 	if(!computationDone)
 	    generateIfpTree(oldRootNode, false);
 
-	newDot = newRootNode.toDot();
-
-	return newDot.toString();
+	TDotVisitor v = new TDotVisitor();
+	
+	newRootNode.accept(v);
+	
+	return v.out.toString();
     }
 
     /*@
@@ -213,7 +215,7 @@ public class VcGenerator {
 
 		String s = m.toString();
 
-		error.println(s);
+		TDisplay.err(this, "generateIfpTree", s);
 
 // 		TName newNode = new TName(s);
 // 		// we put it as a variable name with type %Type
@@ -286,7 +288,7 @@ public class VcGenerator {
 		    break;
 		}
 		default : 
-		    error.println("instanceof LiteralExpr, case missed");
+		    TDisplay.err(this, "generateIfpTree", "Instanceof LiteralExpr, case missed :"+TagConstants.toString(m.getTag()));
 		    break;
 		}
 
@@ -339,7 +341,9 @@ public class VcGenerator {
 		    break;
 		} // allocation comparisons
 		case TagConstants.METHODCALL: {
-		    error.println("METHODCALL "+m.methodName);
+		    ; // FIXME
+		    //TDisplay.err(this, "generateIfpTree", TagConstants.toString(m.getTag()));
+
 		    break;
 		}
 		case TagConstants.ALLOCLT: {
@@ -623,7 +627,7 @@ public class VcGenerator {
 		    break;
 		}
 		default : 
-		    System.err.println("Error when translating old gc tree, methodName not recognized "+methodName);
+		    TDisplay.err(this, "generateIfpTree", "translating old gc tree, methodName not recognized "+methodName);
 		}
 
 		if(dot)
@@ -663,8 +667,8 @@ public class VcGenerator {
 		    currentParent = newNode;
 		}
 		else
-		    System.err.println("escjava::vcGeneration::VcGenerator, QuantifiedExpr, unhandled tag : "+s);
-
+		    TDisplay.err(this, "generateIfpTree", "QuantifiedExpr, unhandled tag : "+s);
+		
 		if(dot)
 		    oldDot.append("\\n"+s+"\"");
 
@@ -682,7 +686,7 @@ public class VcGenerator {
 	    else if(n instanceof SubstExpr){
 		SubstExpr m = (SubstExpr) n;
 
-		System.err.println("\n\n\nohoh SubsExpr");
+		TDisplay.err(this, "generateIfpTree", "SubstExpr viewed and not handled");
 	    }
 	    else if(n instanceof TypeDecl){
 		
@@ -741,7 +745,7 @@ public class VcGenerator {
 		String s = m.name.printName();
 
 		if(s == null)
-		    System.err.println("escjava::vcGeneration::vcGeneator::generateIfpTree, case n instanceof TypeName, warning null reference not expected");
+		    TDisplay.err(this, "generateIfpTree", "case n instanceof TypeName, warning null reference not expected");
 
 		// we say that this name represents a type
 		TName newNode = new TName(s);
@@ -860,10 +864,10 @@ public class VcGenerator {
 		newRootNode = currentParent;
 		
 		if(newRootNode == null)
-		    error.println("Error in escjava::vcGeneration::VcGenerator::generateIfpTree(), root node is null...");
+		    TDisplay.err(this, "generateIfpTree", "root node is null");
 
 		if(! (newRootNode instanceof TRoot))
-		    error.println("Error in escjava::vcGeneration::VcGenerator::generateIfpTree(), root node don't have type TRoot...");
+		    TDisplay.err(this, "generateIfpTree", "root node doesn't have type TRoot");
 
 		//
 		firstNotSkipped = false;
@@ -871,10 +875,8 @@ public class VcGenerator {
 
 		// we type the tree.
 		newRootNode.typeTree();
-		error.println("*** ifpTree have been typed...");
+		TDisplay.info(this, "generateIfpTree","tree has been typed");
 
-// 		newRootNode.typeTree();
-// 		error.println("*** ifpTree have been typed... 2 times");
 	    }
 	
 	    // restore the parent

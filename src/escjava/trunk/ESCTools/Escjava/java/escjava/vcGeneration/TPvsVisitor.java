@@ -45,7 +45,7 @@ class TPvsVisitor extends TVisitor {
     public void unaryGeneric(/*@ non_null @*/ String s, TFunction n){
 
 	if(n.sons.size() != 1)
-	    System.err.println("java.escjava.vcGeneration.TPvsVisitor.unFun : an unary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 1");
+	    TDisplay.err(this, "unaryGeneric(String s, TFunction n)","An unary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 1");
 
 	out.appendI(s);
 	
@@ -101,7 +101,7 @@ class TPvsVisitor extends TVisitor {
     public void binOp(/*@ non_null @*/ String s, TFunction n){
 
 	if(n.sons.size() != 2)
-	    System.err.println("java.escjava.vcGeneration.TPvsVisitor : a binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");
+	    TDisplay.err(this, "binOp(String s, TFunction n)", "Binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");
 
 	out.appendI("");
 	
@@ -163,7 +163,7 @@ class TPvsVisitor extends TVisitor {
     }
     
     public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n){
-	binOp("=", n);
+	genericOp("=", n);
     }
     
     public void visitTBoolNE(/*@ non_null @*/ TBoolNE n){
@@ -179,7 +179,7 @@ class TPvsVisitor extends TVisitor {
     }
 
     public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n){
-	binOp("=", n);
+	genericOp("=", n);
     }
 
     public void visitTAnyNE(/*@ non_null @*/ TAnyNE n){
@@ -300,14 +300,18 @@ class TPvsVisitor extends TVisitor {
     }
 			
     public void visitTIs(/*@ non_null @*/ TIs n){
+
+	/*
+	 * As this node should be simplified in TProofSimplifier, we should not be here.
+	 */
+	TDisplay.err(this, "visitTIs", "This node should have been simplified in TProofSimplifier");
 	
 	/*
 	 * As the proof is typed, no need for this operator anymore.
 	 * FIXME, handle it in a nicer way.
 	 */
-	out.appendN("TRUE");
+	out.appendN("TAMERE");
 
-	//genericFun("isa?", n);
     }
 				  
     public void visitTSelect(/*@ non_null @*/ TSelect n){

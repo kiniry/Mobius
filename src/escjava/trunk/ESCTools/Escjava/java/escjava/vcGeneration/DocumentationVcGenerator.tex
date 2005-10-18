@@ -5,33 +5,11 @@
 \usepackage{verbatim}
 \usepackage{float} % pour l'option H sur les figures
 
-%\usepackage{pstricks}
-%\usepackage{vmargin} % in order to change margins inside a block
-
 \title{\textbf{Verification condition generator for escjava2}}
-
-% % allow to change margins locally, ie inside a block
-% \newenvironment{changemargin}[2]{\begin{list}{}{%
-% \setlength{\topsep}{0pt}%
-% \setlength{\leftmargin}{0pt}%
-% \setlength{\rightmargin}{0pt}%
-% \setlength{\listparindent}{\parindent}%
-% \setlength{\itemindent}{\parindent}%
-% \setlength{\parsep}{0pt plus 1pt}%
-% \addtolength{\leftmargin}{#1}%
-% \addtolength{\rightmargin}{#2}%
-% }\item }{\end{list}}
 
 \usepackage{color}
 \usepackage{alltt}
-% \newcommand{\darkgreen[1]}{\textcolor[rgb]{0.33,0.79,0.28}}
-% \newcommand{\violet}[1]{\textcolor[rgb]{0.77,0.21,0.82}{#1}}
-% \newcommand{\orange}[1]{\textcolor[rgb]{1,0.6,0}{#1}}
-% \newcommand{\green}[1]{\textcolor{green}{#1}}
-% \newcommand{\red}[1]{\textcolor{red}{#1}}
-% \newcommand{\blue}[1]{\textcolor{blue}{#1}}
-% %\newcommand{\JavaDeclaration}[3]{\violet{#1} \green{#2} \orange{#3}; \hspace{1cm}}}
-% \newcommand{\JavaDeclaration}[4]{\violet{#1} \darkgreen{#3} \orange{#4}; \hspace{1cm}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
 
 \author{Clément Hurlin\\\texttt{clement.hurlin@gmail.com}}
 
@@ -210,7 +188,6 @@ As you can guess, when we encounter a type name in the old tree, we check if it'
 }
 \end{verbatim}
 
-%fixme
 It means that the new object \textit{TypeInfo} is stored in the field \textit{\$Reference} and added to the \textit{typesName} during initialization of the class. As these object are stored as \textit{public static field} in the \textit{TNode} class, we can easily use it to set type of variables. Moreover when we want to add a variable which has type '\%Reference' we can set its type without having to call a function which check if this type is already in the map. You can just do \textit{this.type = TNode.\$Reference} which is a valid call because \textit{\$Reference} is a static field of \textit{TNode}. I can imagine that you may wonder why variables name begins with a \$, I don't know why too, it just makes easier to remember that they are static. So as a resume, \textit{TNode} class have fields prefixed with a \$, that store the types, and some of these types begins with a \% to differentiate them from user defined types.
 
 \subsubsection{TNode}
@@ -335,6 +312,7 @@ Note that, each call to \textit{TDisplay} function receives the object of the ca
 \label{practically}
 All source code is located in ESCTools/Escjava/java/escjava/vcGeneration/.
 \subsection{Flags you can pass to escjava2}
+\label{flags}
 
 \begin{itemize}
 \item \textbf{-nvcg} : this flag enables all other feature. If you do not pass this one, you can't use the \textbf{n}ew \textbf{vc} \textbf{g}enerator.
@@ -345,7 +323,7 @@ All source code is located in ESCTools/Escjava/java/escjava/vcGeneration/.
 \item \textbf{-pInfo} : Display additional messages on error output.
 \item \textbf{-pColors} : used bash special characters to display some colors (absolutely useless).
 \item \textbf{-pToDot} : output the proof (before simplification) in dot format, and launch dot on it to generate a .ps file \footnote{dot is an open source software developed by graphwiz (AT\&T laboratory), you can get it at \textit{www.graphviz.org/} (for Debian users, there is a package \textit{graphviz}}. This is \textbf{very useful}. Dot files are postfixed with .proof.dot, ps files generated after are postfixed with .proof.dot.ps
-\item \textbf{-vc2Dot} : output the old proof in dot format and launch the appropriate dot command on it (look at Main.java).
+\item \textbf{-vc2Dot} : output the old proof in dot format and launch the appropriate dot command on it (look at Main.java). \red{Fixme, I guess that if you've tried this flag}, you've noticed it does not work. That's very easy to fix. As the constructor of ASTNode does nothing special, I need to add a counter to it (to identify each node). Yet the problem is that if I define a constructor in ESCTools/Javafe/java/javafe/ast/hierarchy.j the default constructor is still generated (which clashes with the new one), thus you can't compile. So you need to decomment the constructor in hierarchy.j, compile one time, fix ASTNode.java to comment the old constructor and that's it.
 \end{itemize}
 
 \subsection{Generating new ast tree}
@@ -444,9 +422,20 @@ This is the main advantage of all this system. You can see that's is very flexib
 \paragraph{}{As I said before you can add flags \textit{-Vc2Dot} to generate graphic display of the old proof or \textit{-pToDot} to see the new proof tree. Note that the proof outputted is the one before simplification and that you can easily do it at any stage.\\
 As you may have guess, I love to use examples so this part won't avoid it because I think the dot syntax is so simple that you can understand it in a second. So this is the classical aspect of a dot file :
 \begin{verbatim}
-
-\end{verbatim} %fixme
-For further information you can go on \textit{www.graphviz.org}. I can't tell you more than continuing using that, this is very useful to discover errors, see the form of the proof and much more.
+digraph G {
+BoolAnd140 [label = "BoolAnd\n\[boolean\]"];
+BoolAnd140 -> Is141;
+Is141 [label = "Is\n\[boolean\]"];
+Is141 -> Name142 [color = red];
+Name142 [shape=box, label="\[integer\]\n|x:8.25|"];
+Is141 -> Name143 [color = red];
+Name143 [shape=box, label="\[%Type\]\nINTTYPE"];
+BoolAnd140 -> Is144;
+...
+}
+\end{verbatim}
+For further information you can go on \textit{www.graphviz.org}. I can't tell you more than continuing using that, this is very useful to discover errors, see the form of the proof and much more. \\
+\red{Important : see section \ref{flags} to see why it does not work to launch -Vc2Dot and how you can fix it in a sec.}
 
 \section{How to finish the job/generate vcs for another logic/modify the generator ?}
 \label{howTo}
@@ -462,7 +451,11 @@ Even if it's atm not finished for a single logic, I can already tell what need t
 \label{variousStuffs}
 
 \paragraph{clean.sh} : this file deletes all classes generated by the division of .j files. It also delete backup files (including the ones generated by latex when editing this file). Note you can rebuild automaticaly the list of files to delete by running :
-%fixme
+\begin{verbatim}
+cat TFunction.j | grep class | awk '{print $2}' | sed 's/^T\(.*\)/rm\ T\1.java\ -f/g'
+cat TLiteral.j | grep class | awk '{print $2}' | sed 's/^T\(.*\)/rm\ T\1.java\ -f/g'
+\end{verbatim}
+
 \paragraph{division-j-file.pl} : this script, which was written by Patrice Chalin divide .j files into different classes. I don't really know how it works, you should ask him.
 \paragraph{generate-visitir-functions} : this script generates function for visitors by looking at .j files.
 
