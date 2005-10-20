@@ -220,6 +220,8 @@ public class Options extends javafe.SrcToolOptions
       "TBD" },
     { "-NonNullElements, -nne",
       "Enable support for generating type-predicates for the \nonnullelements keyword.  Disabled by default." },
+    { "-ConsistencyCheck, -inChk",//conor Jan05 #testme
+      "Check for JML specification inconsistencies. Removes each specification one-at-a-time and rechecks. Currently requires the manual insertion of a false assert(assert false; will work). Incomplete implementation. The removed specifications are currently listed with a toString(). Needs to be made more presentable" },
     //$$
     { "-PvsProof"
       ,
@@ -303,6 +305,9 @@ public class Options extends javafe.SrcToolOptions
   public boolean statsQuantifierComplexity = false;
 
   public boolean plainWarning   = false;
+
+  //conor Jan05 #testme
+  public boolean consistencyCheck = false; //Check for JML inconsistencies when true
 
   public boolean useOldStringHandling = false; // Just for backwards compatibility for Esc/Java tests
 
@@ -1132,6 +1137,10 @@ public class Options extends javafe.SrcToolOptions
     } else if (option.equals("-verbosetrace")) {
       traceInfo = 2;
       return offset;
+    } else if (option.equals("-consistencycheck") ||
+	       option.equals("-inchk")) {
+	consistencyCheck = true;//conor Jan05 #testme
+	return offset;
     } else if (option.equals("-counterexample")) {
       counterexample = true;
       return offset;

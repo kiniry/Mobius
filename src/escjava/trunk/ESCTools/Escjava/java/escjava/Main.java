@@ -600,29 +600,98 @@ public class Main extends javafe.SrcTool
 
         // Do the actual work, handling not implemented exceptions:
         String status = "error";
-        try {
+
+        ///////////////////////////////////////////////////////
+        ///     Remove one of this RoutineDecl 's           ///
+        ///     annotations and continue,                   ///
+        ///     each time returning results                 ///
+        ///     (and annotation removed)        ##Incomplete///
+        ///////////////////////////////////////////////////////
+        if (options().consistencyCheck){
+            DerivedMethodDecl dmd = null;
+            ExprModifierPragma oMP = null;
+            ExprModifierPragma tMP = null;
+            ExprVec bvec = null;
+            Object[] obj = new Object[r.getDecorations().length];
+            obj = r.getDecorations();
+            for (int i = 0; i < obj.length; i++){
+                if (obj[i] instanceof DerivedMethodDecl){
+                    dmd = (DerivedMethodDecl)obj[i];
+                    //System.out.println(dmd.requires.toString());
+
+                }
+            }
+                
+            for (int i = 0; i < dmd.requires.size(); i++){
+                oMP = dmd.requires.elementAt(i);
+                bvec = visit (oMP);
+                
+                //Remove Precondition
+                for (int j = 0; j < bvec.size(); j ++){
+                    BinaryExpr be = (BinaryExpr) bvec.elementAt(j);
+
+                    for (int k = 0; k < 2; k++){
+                        if (k == 0){
+                            tMP = ExprModifierPragma.make(be.left.getTag(), be.left, oMP.getStartLoc() );
+                            System.out.println();
+                            System.out.println("Rechecking with only the following Specifications (see VariableAccess id):");
+                            System.out.println("....................................................................................");
+                            System.out.println(be.left.toString());
+                            System.out.println("....................................................................................");
+                        }
+                        else{
+                            tMP = ExprModifierPragma.make(be.right.getTag(), be.right, oMP.getStartLoc() );
+                            System.out.println();
+                            System.out.println("Rechecking with only the following Specifications (see VariableAccess id):");
+                            System.out.println("....................................................................................");
+                            System.out.println(be.right.toString());
+                            System.out.println("....................................................................................");
+                        }
+                        dmd.requires.removeElementAt(i);
+                        dmd.requires.insertElementAt(tMP, i);
+                        
+                        try{
+                            status = processRoutineDecl(r, sig, initState);
+                        } catch (javafe.util.NotImplementedException e) {
+                            // continue - problem already reported
+                            status = "not-implemented";
+                        } catch (FatalError e) {
+                            // continue;
+                        }
+                        dmd.requires.removeElementAt(i);
+                        dmd.requires.insertElementAt(oMP, i);
+                        System.out.println("    [" + timeUsed(startTime) + "]  " + status);
+
+                    }
+                }
+            }
+        }
+        else {
+        
+          try {
             status = processRoutineDecl(r, sig, initState);
-        } catch (javafe.util.NotImplementedException e) {
+          } catch (javafe.util.NotImplementedException e) {
 	    // continue - problem already reported
 	    status = "not-implemented";
-        } catch (FatalError e) {
+          } catch (FatalError e) {
 	    // continue;
-	}
+          }
     
-        if (!options().quiet)
+          if (!options().quiet)
 	    System.out.println("    [" + timeUsed(startTime) + "]  "
                                + status);
 
-        /*************************
+          /*************************
              System.out.println("Lines " +
                  (Location.toLineNumber(r.getEndLoc())
                      -Location.toLineNumber(r.getStartLoc()))
                      +" time "+timeUsed(startTime));
-	*******************/
+          *******************/
 
+
+        }
 
     }
-
     /**
      * Run stages 3+..6 as requested on a RoutineDeclElem; returns a
      * short (~ 1 word) status message.
@@ -1242,6 +1311,30 @@ public class Main extends javafe.SrcTool
             }
             s = s.substring(0, k) + s.substring(k+1);
         }
+    }
+
+    /*Helper method for retrieving all Bianry "AND" and "OR"
+     *occurences in the children of a Node. Performs a Depth First
+     *Search and returns a vector of the results.
+     *Used by the Consistency Checker - Conor 2005
+     */      
+    private ExprVec visit(ASTNode mp){
+        ExprVec beVec = ExprVec.make();
+        
+        for(int i = 0;i < mp.childCount();i++){
+            if (mp.childAt(i) instanceof BinaryExpr){
+                BinaryExpr b = (BinaryExpr)mp.childAt(i);
+                if (b.getTag() == TagConstants.OR || b.getTag() == TagConstants.AND){
+                    beVec.addElement(b);
+                }
+            }
+             
+            if (mp.childAt(i) instanceof ASTNode){
+                beVec.append(visit( (ASTNode)mp.childAt(i) ));
+                
+            }
+        }
+        return beVec;  
     }
 }
 
