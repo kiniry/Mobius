@@ -2008,7 +2008,7 @@ public class ErrorType extends Type
   public static ErrorType make() {
     //@ set I_will_establish_invariants_afterwards = true;
     ErrorType result = new ErrorType();
-    //@ set \result.syntax = false;
+    //@ set result.syntax = false;
     return result;
   }
 }
