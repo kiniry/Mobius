@@ -171,16 +171,77 @@ This document describes how to extend ESC/Java2.  It describes the
 high-level architecture of the system and how to extend it through a
 series of case studies.
 
-The case studies discussed were chosen because they: (a) focused on 
-each independent aspects of the architecture, (b) were relatively small and self-contained 
-examples, and (c) they were additions that we made to the original SRC
-ESC/Java system, thus writing them up in this manner was straightforward.
+The case studies discussed were chosen because they: (a) focused on each
+independent aspects of the architecture, (b) were relatively small and
+self-contained examples, and (c) they were additions that we made to the
+original SRC ESC/Java system, thus writing them up in this manner was
+straightforward.
 
 @c =============================================================================
 @node ESC/Java2 Architecture, The ESC/Java2 AST, Introduction, Top
 @chapter ESC/Java2 Architecture
 
 @cindex ESC/Java2 Architecture
+
+ESC/Java2 is an extension of Digital/Compaq/Hewlett-Packard System
+Research Center's (SRC henceforth) ESC/Java.
+
+ESC/Java2 has two primary subcomponents: a generic Java front-end in the
+Java package @var{javafe} and the extended static checking framework
+found in the package @var{escjava}.
+
+There are a few other classes used for testing found in the
+@var{junitutils} package.  We discuss this part of the architecture in
+@ref{X}.
+@c fill in cross-reference
+
+ESC/Java depended at one time (and perhaps still today) upon a few
+external packages that we do not have the source for.  These relevant
+packages are called @var{mochalib}, @var{decsrc}, @var{jtools}, and
+@var{tohtml}@footnote{There are also a number of deprecated packages
+currently included in the CVS repository for ESC/Java2 including
+@var{escwizard}, @var{houdini}, and @var{instrumenter}.  These packages
+are not used or supported at this time and we plan on removing them from
+the CVS HEAD in the near future.  See Bug #X for more information.}
+
+@c analyse and discuss these packages somewhere and xref here
+
+ESC/Java2 depends upon a number of Open Source Java libraries whose Java
+archive (jar) files are provided with the source release.  The current
+packages on which we depend include Ant, jUnit, and XML-RPC libraries.
+@c add hyperlinks/cites to these libraries
+
+@section The Generic Java Front-end
+@cindex The Generic Java Front-end
+
+ESC/Java2 uses the generic Java front-end developed by SRC, available as
+an independent download from http://todo.  The only modifications that
+have been made to the javafe package are the addition of support for the
+assert statement that was added to the Java languange in the Java 1.4
+release.  We discuss this extension as the first case study, found in
+@ref{X}.
+
+The main subcomponents of the Java front-end are a Java lexer, a parser,
+and typechecker.  An abstract symbol tree (AST) is used to represent the
+parsed Java classes.  Command-line option parsing is another major
+subcomponent that most extensions need to modify.  Finally, there are a
+number of classes used to search for source and class files in the
+classpath, read in source and class files and cache their locations and
+contents, and track warning and errors and related data that are
+detected during compilation.
+
+@section The Extended Static Checker for Java
+@cindex The Extended Static Checker for Java
+
+The extended static checker for Java has several major subcomponents
+discussed herein.  
+
+A full JML parser and typechecker is the first main component.  It is
+realised as a specialisation of the generic pragma parser in the Java
+front-end.  Conseqently, an AST hierarchy also exists for JML
+constructs.  
+
+@c ant ast backpred gui pa parser prover reader sp tc translate vcGenertion
 
 @c =============================================================================
 @node The ESC/Java2 AST, Extending the ESC/Java2 Lexer, ESC/Java2 Architecture, Top
