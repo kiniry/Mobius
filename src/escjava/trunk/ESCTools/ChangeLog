@@ -1,3 +1,204 @@
+2005-10-24  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	Refactoring to correspond to PVS refactoring.
+
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	Introductory section written.
+
+	* Escjava/.cvsignore:
+	* Escjava/java/escjava/vcGeneration/.cvsignore:
+	* docs/Escjava2-Logics/pvs/.cvsignore:
+	* docs/Escjava2-Logics/pvs/escjava_arrays.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_arrays.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_lock_semantics.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_semantics.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_lock_semantics.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_logic.pvs:
+	* docs/Escjava2-Logics/simplify/.cvsignore:
+	* docs/Escjava2-Logics/smt-lib/.cvsignore:
+	More refactoring of PVS logics for writeup and clarity.  New entries
+	in several .cvsignore files as well.
+
+2005-10-20  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Twiddling back to the correct form; whoops.
+
+	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java:
+	Conor Gallagher's initial work on checking specification soundness.
+	He will followup with added documentation and will be coordinating
+	with one or more of Robin Green, Alan Morkan, and Radu Grigore on
+	getting this more comprehensive and robust.
+
+2005-10-18  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Javafe/java/javafe/ast/hierarchy.j: Fixed \result.syntax bug.
+
+2005-10-18  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/generate-functions-vcGenerator.sh:
+	Script called by 'Makefile' to generate classes (if needed) by
+	extracting it from .j files in escjava/java/vcGeneration. This
+	should and can be done in a nicer way, I guess just inside the
+	makefile for example.
+
+	* Escjava/Makefile:
+	Adding hack to allow file division of
+	escjava/java/vcGeneration/TFunction.j
+	andescjava/java/vcGeneration/TLiteral.j. This should be done in
+	an other way in the future I think.
+
+	* Escjava/java/escjava/vcGeneration/TDisplay.java:
+	* Escjava/java/escjava/vcGeneration/TDotVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TProofSimplifier.java:
+	TDotVisitor.java > Doing graphical representation with a
+	visitor (better)
+	TDisplay.java > bad try to centralize output
+	TProofSimplifier.java > example to complete of how you can
+	manipulate (and simplify here) the proof
+
+	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	* Escjava/java/escjava/vcGeneration/TLiteral.java:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TRoot.java:
+	* Escjava/java/escjava/vcGeneration/TVariable.java:
+	* Escjava/java/escjava/vcGeneration/TypeInfo.java:
+	* Escjava/java/escjava/vcGeneration/VariableInfo.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/clean.sh:
+	Spreading last version of the new ast generator ->*and
+	documentation*<-, enjoy
+
+	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java:
+	Options.java > Uniformizing all flags for the new proof generator
+	and adding new ones. Be sure to read doc in
+	ESCTools/Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.pdf.
+
+	Main.java > adding a conditionnal switch you can enter by "-nvcg"
+	and enabling new ast generations
+
+	* Javafe/java/javafe/ast/Identifier.java, Javafe/java/javafe/ast/hierarchy.j:
+	minor tweaks to allow new ast generations. Note that there is
+	something to fix in hierarchy.h (see section "flags you can pass
+	to escjava2" in
+	ESCTools/Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.pdf)
+
+2005-10-17  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	* docs/Escjava2-Logics/Makefile:
+	* docs/Escjava2-Logics/pvs/.cvsignore:
+	* docs/Escjava2-Logics/pvs/escjava.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_arrays.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_boolean_ops.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_field_representation.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_floating_point.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_integral_ops.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_integral_types.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_semantics.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_strings.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_java_typesystem.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_jml_semantics.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_lock_semantics.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_logic.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_simplify.pvs:
+	* docs/Escjava2-Logics/pvs/escjava_types.pvs:
+	Refactored PVS realisation of original, unsorted, Simplify logic.
+	This makes for easier theory inclusion in the logics document.
+
+	The first couple of sections have been written in this document, but
+	the booklet has not yet been reorganised to reflect the current status
+	of the three prover types and the VC generators.
+
+2005-10-16  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
+	almost finished version, need to be reviewed and commit all the rest of files.
+
+2005-10-15  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
+	adding stuff, adding stuff, adding stuff...
+
+2005-10-15  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/pvs/.cvsignore:
+	* docs/Escjava2-Logics/pvs/current_sorted_logic.pvs:
+	* docs/Escjava2-Logics/pvs/current_unsorted_logic.pvs:
+	* docs/Escjava2-Logics/pvs/escjava.pvs:
+	* docs/Escjava2-Logics/pvs/escjava2.pvs:
+	* docs/Escjava2-Logics/pvs/escjava3.pvs:
+	* docs/Escjava2-Logics/pvs/many-sorted-logic.pvs:
+	* docs/Escjava2-Logics/pvs/vcGen_experiments/.cvsignore:
+	* docs/Escjava2-Logics/pvs/vcGen_experiments/Report.tex:
+	Finish logic reorganisation for now.  Renamed logics to correspond
+	with the terminology we have been using.
+
+	o escjava.pvs contains escjava_logic, the unsorted translation of the
+	  current ESC/Java2 unsorted Simplify-based logic.  This logic is
+	  used for documenting the original Simplify logic, and reasoning about
+	  it a bit, documenting some obvious lemmas.
+	o escjava2.pvs contains a typed and simplified version of the
+	  escjava_logic.  It is meant for testing the PVS backend to ESC/Java2
+	  written by Clement Hurlin.
+
+	  We hope to relate these two logics within PVS at some point, proving
+	  the obvious inter-logic properties.
+
+	o escjava3.pvs contains a new ESC logic, written from scratch by Joe,
+	  Cesare Tinelli, and Patrice Chalin.  This logic is meant to be used
+	  to strengthen the capabilities of ESC with PVS by providing an
+	  explicit heap model, more intuitive semantics, and provides a
+	  platform for expressing simple Java, JML, and ESC properties.
+
+	  No VC generator exists as of yet for this logic as it is by no means
+	  complete at the moment.
+
+2005-10-14  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/pvs/vcGen_experiments/*
+	* docs/Escjava2-Logics/pvs/current_sorted_logic.pvs:
+	* docs/Escjava2-Logics/pvs/current_unsorted_logic.pvs:
+	* docs/Escjava2-Logics/pvs/many-sorted-logic.pvs:
+	* docs/Escjava2-Logics/simplify/calvin-unsorted-axiom-additions.ax:
+	* docs/Escjava2-Logics/simplify/calvin-unsorted-logic.ax:
+	* docs/Escjava2-Logics/simplify/current-unsorted-logic.ax:
+	* docs/Escjava2-Logics/simplify/escjava2-unsorted-axiom-additions.ax:
+	* docs/Escjava2-Logics/simplify/houdini-unsorted-axiom-additions.ax:
+	* docs/Escjava2-Logics/simplify/houdini-unsorted-logic.ax:
+	* docs/Escjava2-Logics/simplify/original-unsorted-logic.ax:
+	* docs/Escjava2-Logics/smt-lib/many-sorted-logic.smt:
+	* docs/Escjava2-Logics/unsorted/.cvsignore:
+	* docs/Escjava2-Logics/unsorted/calvin-unsorted-axiom-additions.ax:
+	* docs/Escjava2-Logics/unsorted/calvin-unsorted-logic.ax:
+	* docs/Escjava2-Logics/unsorted/current-unsorted-logic.ax:
+	* docs/Escjava2-Logics/unsorted/current_sorted_logic.pvs:
+	* docs/Escjava2-Logics/unsorted/current_unsorted_logic.pvs:
+	* docs/Escjava2-Logics/unsorted/escjava2-unsorted-axiom-additions.ax:
+	* docs/Escjava2-Logics/unsorted/houdini-unsorted-axiom-additions.ax:
+	* docs/Escjava2-Logics/unsorted/houdini-unsorted-logic.ax:
+	* docs/Escjava2-Logics/unsorted/original-unsorted-logic.ax:
+	Reorganisation of experimental logics and related code.
+
+2005-10-13  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
+	New version of the documentation for the vc's generator. Still not
+	complete, not finished, not funny and so on.. but saving it in
+	order to avoid having it only on my machine.
+
+2005-10-12  Clement Hurlin  <Clement.Hurlin@esial.uhp-nancy.fr>
+
+	* Escjava/java/escjava/vcGeneration/Documentation vc generator.pdf:
+	* Escjava/java/escjava/vcGeneration/Documentation vc generator.tex:
+	Soon renaming and updating of these files
+
 2005-10-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* Makefile, Makefile.defs:
@@ -2806,7 +3007,7 @@
 	* specs/java/io/PrintStream.refines-java:
 	New versions of specs - with cleanup needed
 
-2005-02-28  Joseph Kiniry  <kiniry@category.ucd.ie>
+2005-02-28  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* ChangeLog: Major update to ChangeLog for past few months of work.
 
