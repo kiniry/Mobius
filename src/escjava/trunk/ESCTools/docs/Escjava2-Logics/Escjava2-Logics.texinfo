@@ -2785,7 +2785,7 @@ the Maude logical framework.
 * PVS Realizations ESC Logics::  
 @end menu
 
-@node Unsorted Logics,  , Logics, Logics
+@node Unsorted Logics, The PVS Logic escjava_logic, Logics, Logics
 @appendixsection Unsorted Logics
 
 @cindex Unsorted Logics
@@ -2823,7 +2823,7 @@ reason about new constructs introduced in ESC/Java2.
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node Many-Sorted Logics,  , Unsorted Logics, Logics
+@node Many-Sorted Logics, The PVS Logic escjava_logic, Unsorted Logics, Logics
 
 @appendixsection Many-Sorted Logics
 
@@ -2889,12 +2889,13 @@ of which documents a different set of related axioms, mirroring the
 structure of the preceeding discussions.  The following section
 documents this logic.
 
-@c .............................................................................
-@node The PVS Logic escjava_logic,  , PVS Realizations ESC Logics, PVS Realizations ESC Logics
-@appendixsubsubsec The PVS Logic @var{escjava_logic}
+@c =============================================================================
+@node The PVS Logic escjava_logic,  , Unsorted Logics, Logics
+@section The PVS Logic @var{escjava_logic}
 
-@node The Theory escjava_types, Copying, Logics, Top
-The Theory @var{escjava_types} 
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Theory escjava_types, The Theory escjava_simplify, The PVS Logic escjava_logic, The PVS Logic escjava_logic
+@subsection The Theory @var{escjava_types} 
 
 The original Simplify logic, as documented in @ref{Unsorted Logic}, is
 unsorted.  An unsorted logic is equivalent to a sorted logic with a
@@ -2910,8 +2911,9 @@ The keyword @var{TYPE+} indicates that the type @var{S} is a non-empty
 type; that is to say, the type @var{S} has at least one representative,
 or, alternatively, there exists at least one entity of type @var{S}.
 
-@node The Theory escjava_simplify
-The Theory @var{escjava_simplify}
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Theory escjava_simplify, A Partial Semantics of Java, The Theory escjava_types, The PVS Logic escjava_logic
+@subsection The Theory @var{escjava_simplify}
 
 We encode Simplify's built-in array theory and document its forumlas in
 the PVS theory @var{escjava_simplify} in the following
@@ -2953,13 +2955,126 @@ these functions are described in @ref{Maps}.
 @c   address =      {New York, NY, USA},
 @c }
 
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node A Partial Semantics of Java, The Java Typesystem, The Theory escjava_simplify, The PVS Logic escjava_logic
+@subsection A Partial Semantics of Java
 
-@node The Theory escjava_java_typesystem
+The Theory @var{escjava_java_semantics}
+
+@example
+@include pvs/escjava_java_semantics.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Typesystem, The Java Boolean Operations, A Partial Semantics of Java, The PVS Logic escjava_logic
+@subsection The Java Typesystem
+
 The Theory @var{escjava_java_typesystem}
 
 The theory @var{escjava_java_typesystem} encodes portions of the Java
 1.4 typesystem, as described in @ref{Types and Subtypes}.
 
+@example
+@include pvs/escjava_java_typesystem.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Boolean Operations, The Java Integral Types, The Java Typesystem, The PVS Logic escjava_logic
+@subsection The Java Boolean Operations
+
+The Theory @var{escjava_java_boolean_ops}
+
+@example
+@include pvs/escjava_java_boolean_ops.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Integral Types, The Java Floating Point Types, The Java Boolean Operations, The PVS Logic escjava_logic
+@subsection The Java Integral Types
+
+The Theory @var{escjava_java_integral_types}
+
+@example
+@include pvs/escjava_java_integral_types.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Floating Point Types, Representations for Java Fields, The Java Integral Types, The PVS Logic escjava_logic
+@subsection The Java Floating Point Types
+
+The Theory @var{escjava_java_floating_point}
+
+@example
+@include pvs/escjava_java_floating_point.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Representations for Java Fields, Java Strings, The Java Floating Point Types, The PVS Logic escjava_logic
+@subsection Representations for Java Fields
+
+The Theory @var{escjava_java_field_representation}
+
+@example
+@include pvs/escjava_java_field_representation.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Java Strings, Java Arrays, Representations for Java Fields, The PVS Logic escjava_logic
+@subsection Java Strings
+
+The Theory @var{escjava_java_strings}
+
+@example
+@include pvs/escjava_java_strings.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Java Arrays, Java Concurrency Primitives, Java Strings, The PVS Logic escjava_logic
+@subsection Java Arrays
+
+The Theory @var{escjava_java_arrays}
+
+@example
+@include pvs/escjava_arrays.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Java Concurrency Primitives, A Partial Semantics of JML, Java Arrays, The PVS Logic escjava_logic
+@subsection Java Concurrency Primitives
+
+The Theory @var{escjava_java_lock_semantics}
+
+@example
+@include pvs/escjava_java_lock_semantics.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node A Partial Semantics of JML, The Java , Java Concurrency Primitives, The PVS Logic escjava_logic
+@subsection A Partial Semantics of JML
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java , The Unified Logic, A Partial Semantics of JML, The PVS Logic escjava_logic
+@subsection The Java 
+
+The Theory @var{escjava_java_}
+
+@example
+@include pvs/escjava_jml_semantics.pvs.texinfo
+@end example
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Unified Logic, The Java , The Java , The PVS Logic escjava_logic
+@subsection The Unified Logic
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java ,  , The Unified Logic, The PVS Logic escjava_logic
+@subsection The Java 
+
+The Theory @var{escjava_java_}
+
+@example
+@include pvs/escjava_logic.pvs.texinfo
+@end example
 
 @c =============================================================================
 @node Copying, Index, Logics, Top
