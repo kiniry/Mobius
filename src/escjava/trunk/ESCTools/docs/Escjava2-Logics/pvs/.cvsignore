@@ -1,2 +1,5 @@
-pvsbin
 *.texinfo
+.pvscontext
+escjava.header
+escjava.prf
+pvsbin

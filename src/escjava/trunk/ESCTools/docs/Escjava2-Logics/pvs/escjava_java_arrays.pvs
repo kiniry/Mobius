@@ -1,4 +1,4 @@
-escjava_arrays : THEORY
+escjava_java_arrays : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem,
               escjava_java_field_representation,
@@ -83,4 +83,4 @@ escjava_arrays : THEORY
         (0 <= i AND i < arrayLength(x)) IMPLIES
         select(select(e, x), i) /= java_null
 
-  END escjava_arrays
+  END escjava_java_arrays

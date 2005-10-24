@@ -13,10 +13,7 @@
 
 escjava_logic : THEORY
   BEGIN
-    IMPORTING escjava_java_semantics,
-              escjava_jml_semantics,
-              escjava_lock_semantics,
-              escjava_arrays,
-              escjava_simplify
-
+    IMPORTING escjava_simplify,
+              escjava_java_semantics,
+              escjava_jml_semantics
   END escjava_logic

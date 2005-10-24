@@ -1,7 +1,6 @@
-escjava_lock_semantics : THEORY
+escjava_java_lock_semantics : THEORY
   BEGIN
     IMPORTING escjava_java_typesystem,
-              escjava_jml_semantics,
               escjava_java_field_representation,
 	      escjava_java_integral_ops
 
@@ -35,4 +34,4 @@ escjava_lock_semantics : THEORY
       FORALL (x : S): typeof(x) <= T_java_lang_Object IMPLIES
                       lockLE(java_null, x) = bool_true
 
-  END escjava_lock_semantics
+  END escjava_java_lock_semantics
