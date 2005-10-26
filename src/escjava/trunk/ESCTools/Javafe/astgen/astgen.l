@@ -14,8 +14,6 @@
 	fwrite( yytext, yyleng, 1, yyout ); fflush(yyout); \
   } while(0) */
 
-#define yywrap() 1
-
 static int lineno;
 
 #define PUSH(m) do { modes_push(m); BEGIN(m); } while (0)
@@ -42,6 +40,8 @@ FSP [ \t\n]
 NAME ([a-zA-Z][a-zA-Z0-9_]*)
 PNAME ([a-zA-Z][a-zA-Z0-9_.]*)
 
+%option noyywrap
+
 %s INIT
 %s ABOVECLASS
 %s LOOKINGFORNAME
@@ -51,6 +51,7 @@ PNAME ([a-zA-Z][a-zA-Z0-9_.]*)
 %s COMMENT
 
 %%
+
 
  yyrestart(yyin_i);
  init();
