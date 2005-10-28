@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  28 OCT 2005 11:45
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  28 OCT 2005 13:13
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
@@ -175,14 +175,14 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box30
 \@float@everytoks=\toks37
 \@floatcapt=\box31
+) (./cmd.tex
+\c@defn=\count109
 )
-\@float@every@figure=\toks38
-\@float@every@table*=\toks39
-\c@table*=\count109
- (./cmd.tex
-\c@defn=\count110
-)
-No file article.aux.
+
+LaTeX Warning: Unused global option(s):
+    [lettersizepaper,8.5pt].
+
+(./article.aux)
 \openout1 = `article.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
@@ -198,7 +198,7 @@ LaTeX Font Info:    ... okay on input line 33.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
 LaTeX Font Info:    ... okay on input line 33.
 LaTeX Font Info:    Try loading font information for U+msa on input line 51.
-(/usr/share/texmf/tex/latex/amsfonts/umsa.fd
+ (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 51.
@@ -214,84 +214,99 @@ File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 
 LaTeX Warning: No \author given.
 
-
-Overfull \hbox (17.12251pt too wide) in paragraph at lines 51--51
- [] 
- []
-
-(./abstract.tex
-Overfull \hbox (3.70291pt too wide) in paragraph at lines 2--10
-\OT1/cmr/m/n/9 sub-rou-tines, ref-er-ences, ob-ject cre-ation and method calls.
- 
- []
-
-) (./intro.tex
-
-LaTeX Warning: Citation `Ljbc' on page \thepage  undefined on input line 9.
+(./abstract.tex) (./intro.tex [1
 
 
-LaTeX Warning: Citation `DesNecLee98' on page \thepage  undefined on input line
- 12.
-
-[1
-
-
-]
-
-LaTeX Warning: Citation `JMLRefMan' on page \thepage  undefined on input line 4
-3.
-
-
-LaTeX Warning: Citation `BRL-JACK' on page \thepage  undefined on input line 52
-.
-
-
-LaTeX Warning: Citation `JBL05MP' on page \thepage  undefined on input line 55.
-
-
-
-LaTeX Warning: Reference `architecture_s' on page \thepage  undefined on input 
-line 58.
-
-
-LaTeX Warning: Reference `relWork' on page \thepage  undefined on input line 59
-.
-
-
-LaTeX Warning: Reference `bcSpecLg' on page \thepage  undefined on input line 6
-0.
-
-
-LaTeX Warning: Reference `wpbc' on page \thepage  undefined on input line 60.
-
-
-LaTeX Warning: Reference `results' on page \thepage  undefined on input line 61
-.
-
-
-LaTeX Warning: Reference `conclusion' on page \thepage  undefined on input line
- 61.
-
-) (./architecture.tex
-
-LaTeX Warning: Reference `architecture' on page \thepage  undefined on input li
-ne 9.
-
+]) (./architecture.tex
 File: architecture.eps Graphic file (type eps)
-<architecture.eps>
-! Undefined control sequence.
-\fname@figure ->\figurename 
-                            
-l.18 \caption{The overall architecture}
-                                       
-? x
- 
+ <architecture.eps>
+
+LaTeX Warning: Float too large for page by 35.78874pt on input line 20.
+
+) (./relWork.tex) (./classFileExt.tex
+Overfull \hbox (14.09758pt too wide) in paragraph at lines 3--3
+[]\secfnt BYTECODE SPEC-I-FI-CA-TION LAN-GUAGE
+ []
+
+[2] [3]
+Overfull \hbox (2.57701pt too wide) in paragraph at lines 60--62
+\OT1/cmr/m/n/9 con-di-tions, method frame con-di-tions (the lo-ca-tions that
+ []
+
+[4]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 176.
+
+ (/usr/share/texmf/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 176.
+) (./wpbc.tex
+Overfull \hbox (5.94962pt too wide) in paragraph at lines 2--2
+[]\secfnt WEAKEST PRE-CON-DI-TION CAL-CU-LUS
+ []
+
+[5]
+Overfull \hbox (1.0285pt too wide) detected at line 56
+[]\OT1/cmr/m/n/9 ([] \OML/cmm/m/it/9 i;   ;   []\OT1/cmr/m/n/9 ) = \OML/cmm/m/i
+t/9  \OT1/cmr/m/n/9 [[][] \OMS/cmsy/m/n/9   []\OT1/cmr/m/n/9 ][[] \OMS/cmsy/m/n
+/9   []\OT1/cmr/m/n/9 ]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--61
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--61
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 56--61
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--87
+
+ []
+
+(./wpSingleInstr.tex
+Overfull \hbox (24.23547pt too wide) detected at line 102
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--109
+
+ []
+
+) (./ctrlFlowWp.tex [6])) (./results.tex
+Overfull \hbox (5.51642pt too wide) in paragraph at lines 2--2
+[]\secfnt COMPARISON BE-TWEEN SOURCE AND
+ []
+
+) (./conclusion.tex [7]
+Overfull \hbox (1.10616pt too wide) in paragraph at lines 10--13
+\OT1/cmr/m/n/9 We aim to es-tab-lish for-mally that nonop-ti-miz-ing source
+ []
+
+) (./article.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8])
+[9
+
+] (./article.aux) ) 
 Here is how much of TeX's memory you used:
- 1734 strings out of 95847
- 18888 string characters out of 1195948
- 71486 words of memory out of 1000001
- 4656 multiletter control sequences out of 10000+50000
- 18190 words of font info for 49 fonts, out of 500000 for 1000
+ 1806 strings out of 95847
+ 19788 string characters out of 1195948
+ 80588 words of memory out of 1000001
+ 4690 multiletter control sequences out of 10000+50000
+ 20461 words of font info for 58 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
- 39i,8n,26p,448b,298s stack positions out of 1500i,500n,5000p,200000b,5000s
-Output written on article.dvi (1 page, 5860 bytes).
+ 39i,22n,26p,777b,507s stack positions out of 1500i,500n,5000p,200000b,5000s
+
+Output written on article.dvi (9 pages, 59388 bytes).

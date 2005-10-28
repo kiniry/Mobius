@@ -1,6 +1,6 @@
-% SIG-ALTERNATE.CLS - VERSION 1.7
+% SIG-ALTERNATE.CLS - VERSION 1.8
 % "COMPATIBLE" WITH THE "ACM_PROC_ARTICLE-SP.CLS" V2.7SP
-% Gerald Murray October 15th. 2004
+% Gerald Murray July 26th. 2005
 %
 % ---- Start of 'updates'  ----
 %
@@ -22,9 +22,9 @@
 %
 % ---- End of 'updates' ----
 %
-\def\fileversion{v1.7}          % for ACM's tracking purposes
-\def\filedate{October 15, 2004}    % Gerry Murray's tracking data
-\def\docdate {Friday 15th. October 2004} % Gerry Murray (with deltas to doc}
+\def\fileversion{v1.8}          % for ACM's tracking purposes
+\def\filedate{July 26, 2005}    % Gerry Murray's tracking data
+\def\docdate {Tuesday 26th. July 2005} % Gerry Murray (with deltas to doc}
 \usepackage{epsfig}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -90,7 +90,7 @@
 %%% You may turn this hackery off via the -e option:
 %%%     dvips -e 0 foo.dvi >foo.ps
 %%%
-\typeout{Document Class 'sig-alternate' <15th. October '04>.  Modified by G.K.M. Tobin/Gerry Murray}
+\typeout{Document Class 'sig-alternate' <26th. July '05>.  Modified by G.K.M. Tobin/Gerry Murray}
 \typeout{Based in part upon document Style `acmconf' <22 May 89>. Hacked 4/91 by}
 \typeout{shivers@cs.cmu.edu, 4/93 by theobald@cs.mcgill.ca}
 \typeout{Excerpts were taken from (Journal Style) 'esub2acm.cls'.}
@@ -571,7 +571,7 @@
 
 \if@ll
   \NeedsTeXFormat{LaTeX2e}
-  \ProvidesClass{sig-alternate} [2004/15/10 - V1.7 - based on acmproc.cls V1.3 <Nov. 30 '99>]
+  \ProvidesClass{sig-alternate} [2005/26/07 - V1.8 - based on acmproc.cls V1.3 <Nov. 30 '99>]
   \RequirePackage{latexsym}% QUERY: are these two really needed?
   \let\dooptions\ProcessOptions
 \else
@@ -1230,27 +1230,27 @@
 \newdimen\bibindent
 \setcounter{enumi}{1}
 \bibindent=0em
-\def\thebibliography#1{%
+\def\thebibliography#1{% 
 \ifnum\addauflag=0\addauthorsection\global\addauflag=1\fi
-    \section{%
-       {References} % was uppercased but this affects pdf bookmarks (SP/GM October 2004)
-         \vskip -9pt  % GM July 2000 (for tighter spacing)
-        \@mkboth{{\refname}}{{\refname}}%
-    }%
-    \list{[\arabic{enumi}]}{%
-        \settowidth\labelwidth{[#1]}%
-        \leftmargin\labelwidth
-        \advance\leftmargin\labelsep
-        \advance\leftmargin\bibindent
-        \parsep=0pt\itemsep=1pt % GM July 2000
-        \itemindent -\bibindent
-        \listparindent \itemindent
-        \usecounter{enumi}
-    }%
-    \let\newblock\@empty
-    \raggedright % GM July 2000
-    \sloppy
-    \sfcode`\.=1000\relax
+     \section[References]{%    <=== OPTIONAL ARGUMENT ADDED HERE
+        {References} % was uppercased but this affects pdf bookmarks (SP/GM October 2004)
+          \vskip -9pt  % GM July 2000 (for tighter spacing)
+         \@mkboth{{\refname}}{{\refname}}%
+     }%
+     \list{[\arabic{enumi}]}{%
+         \settowidth\labelwidth{[#1]}%
+         \leftmargin\labelwidth
+         \advance\leftmargin\labelsep
+         \advance\leftmargin\bibindent
+         \parsep=0pt\itemsep=1pt % GM July 2000
+         \itemindent -\bibindent
+         \listparindent \itemindent
+         \usecounter{enumi}
+     }%
+     \let\newblock\@empty
+     \raggedright % GM July 2000
+     \sloppy
+     \sfcode`\.=1000\relax
 }
 
 
@@ -1363,5 +1363,5 @@
 \toappear{\the\boilerplate\par
 {\confname{\the\conf}} \the\confinfo\par \the\copyrightetc.}
 %
-%% End of sig-alternate.cls -- V1.7 - 10/15/2004 --
-%% Gerry Murray -- Wednesday October 15th. 2004
+%% End of sig-alternate.cls -- V1.8 - 7/26/2005 --
+%% Gerry Murray -- Wednesday July 26th. 2005
