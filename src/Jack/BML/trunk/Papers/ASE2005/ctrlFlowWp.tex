@@ -1,8 +1,8 @@
 \subsection{Loops}
-Finding the preconditions of loops on bytecode and source programs is different because of their different nature --- 
+Indentifying loops on bytecode and source programs is different because of their different nature --- 
 the first one lacks while the second has structure. While on source level loops correspond to loop statements,  
-on bytecode level we have to analyse the control flow graph in order to identidy them.
- The analysis consists in finding the backedges in the control flow graph using standard techniques as described in \cite{ARUCom1986}. 
+on bytecode level we have to analyse the control flow graph in order to find them.
+ The analysis consists in looking for the backedges in the control flow graph using standard techniques as described in \cite{ARUCom1986}. 
   
  We assume that a method's bytecode is provided with sufficient specification and in particular loop invariants.
  Under this assumption, we build an abstract control flow graph where the backedges are replaced by

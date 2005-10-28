@@ -36,7 +36,7 @@
 \subsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
-We are using function update when assigning a value to a field reference as, for instance in~\cite{B00ppp}. In Fig.\ref{instrWP}, we give the \wpi \ rule for the
+We are using function update ($\oplus$) when assigning a value to a field reference as, for instance in~\cite{B00ppp}. In Fig.\ref{instrWP}, we give the \wpi \ rule for the
 instruction \instr{putfield} \texttt{Cl.f}, which updates the field \texttt{Cl.f}\footnote{ \texttt{Cl.f} stands for the field \texttt{f} declared in class 
 \texttt{Cl}} of the object referenced by the reference stored in the stack below the stack top \stack{\counter-1} with the value on the stack top \stack{\counter}.
  Note that the rule takes in account the possible exceptional termination.

@@ -1,5 +1,7 @@
 %\documentclass[pagenumbers]{ieee} 	
-\documentclass[a4paper,10pt]{article}
+\documentclass{sig-alternate}
+
+%\documentclass[lettersizepaper,11pt]{article} - submission version
 %\documentclass{acm_proc_article-sp\documentclass[pagenumbers]{ieee} 
 %\documentclass[pagenumbers]{llncs} 
 
@@ -7,8 +9,13 @@
 \usepackage{epsfig}
 \usepackage{url}
 
-%\oddsidemargin  0.0in
-%\topmargin      1.0in
+\headsep 0.0in
+\headheight 0.0in 
+\textheight 8.0in 
+%\footheight 1.0in 
+\oddsidemargin  0.0in
+\topmargin      1.0in
+\textwidth 6.5in
 
 \renewcommand{\floatpagefraction}[1]{1.0pt}
 %\pagestyle{plain}
@@ -25,21 +32,22 @@
 
 \begin{document}
 
-
+\conferenceinfo{SAC'06}{April 23-27, 2006, Dijon, France}
+\CopyrightYear{2006} % Allows default copyright year (2002) to be over-ridden - IF NEED BE.
 
 \title{ Java Bytecode Specification and Verification }
 
 
 
-\author{
-       Lilian Burdy\\
-        INRIA Sophia-Antipolis\\
-       Lilian.Burdy@sophia.inria.fr \\
-\\
-        Mariela Pavlova\\
-        INRIA Sophia-Antipolis \\
-        Mariela.Pavlova@sophia.inria.fr
-}
+%\author{
+ %      Lilian Burdy\\
+%        INRIA Sophia-Antipolis\\
+%       Lilian.Burdy@sophia.inria.fr \\
+%\\
+%        Mariela Pavlova\\
+%        INRIA Sophia-Antipolis \\
+%        Mariela.Pavlova@sophia.inria.fr
+%}
 \maketitle
 %\author{Lilian Burdy  Mariela Pavlova\\
 %INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93

@@ -9,7 +9,7 @@ In particular, the state of the art proposes different solutions. For example,
  the verification may be performed over the source code. In this case, the code receiver should make the compromise to trust the compiler, which is problematic. Bytecode verification techniques \cite{Ljbc} are another solution, which does not require to trust the compiler. 
 The bytecode verifier performs static analysis directly over the bytecode yet, it can only guarantee that 
 the code is well typed and well structured. %that the bytecode does not violate the proper function of the virtual machine. 
-The Proof Carrying Code paradigm (PCC) and the certifying compiler \cite{ComNec,DesNecLee98} are another alternative.
+The Proof Carrying Code paradigm (PCC) and the certifying compiler \cite{DesNecLee98} are another alternative.
  In this architecture, untrusted code
 is accompanied by a proof for its safety w.r.t. to some safety property and the code receiver has just to generate the 
 verification conditions and type check the proof against them. 

@@ -42,6 +42,15 @@ loops, exception handling and subroutines.
 %We have the proof of soundness of the \wpi \ predicate transformer. The proof is done w.r.t. to the operational semantics of the sequential Java bytecode
 %subset and establishes that if the verification conditions are provable this means that the method implementation respects the method specification.
 \begin{figure}[ht]
+
+%\[\begin{array}{l}\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) =  \\
+%\psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}}
+%\end{array}
+%\] \\
+%where $i$ is a valid local variable index   \\
+
+%\\
+%\\
 %\begin{tabular}{l}
 \[\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) = \psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}}
 \]

@@ -11,13 +11,17 @@ The overall objective is to allow a client to trust a code produced by an untrus
   
 %Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
 
-\begin{figure}[!tbp]
-\begin{center}
-\epsfig{file=architecture.eps, width=\linewidth}
-\caption{\sc The overall architecture}
+\begin{figure*}%[!tbp]
+\centering
+\epsfig{file=architecture.eps}    
+%%, width=\linewidth }
+\caption{The overall architecture}
 \label{architecture}
-\end{center}
-\end{figure}
+\end{figure*}
+
+
+
+
 %\clearpage
 
 In the first stage of the process the client provides the functional and (or) security requirements to the producer.
@@ -33,9 +37,10 @@ This means that the methods \texttt{open} and \texttt{close} can be annotated to
 In this scenario, we can apply results of previous work \cite{PBBHL}.  
 \end{itemize}
 
-Typically, the development process involves annotating the source code with JML specification, generating verification conditions, using proof obligation generator over the source code and 
+Typically, the development process involves annotating the source code with JML specification,
+ generating verification conditions, using proof obligation generator over the source code and 
 discharging proofs which represent the program safety certificate and finally, the producer sends the certificate 
-to the client along with the bytecode.
+to the client along with the annotated class files.
  Yielding certificates over the source code is based on the observation that
  proof obligations on the source code and non-optimized bytecode respectively
  are syntactically the same modulo names and basic types. Every Java file of the 

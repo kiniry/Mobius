@@ -5,30 +5,30 @@ Database file #1: specification.bib
 Database file #2: bibliography.bib
 You've used 19 entries,
             2118 wiz_defined-function locations,
-            661 strings with 7737 characters,
-and the built_in function-call counts, 6666 in all, are:
-= -- 645
+            660 strings with 7714 characters,
+and the built_in function-call counts, 6635 in all, are:
+= -- 641
 > -- 320
 < -- 11
 + -- 127
 - -- 103
-* -- 408
-:= -- 1090
-add.period$ -- 65
+* -- 407
+:= -- 1085
+add.period$ -- 64
 call.type$ -- 19
-change.case$ -- 102
+change.case$ -- 101
 chr.to.int$ -- 0
 cite$ -- 19
-duplicate$ -- 291
-empty$ -- 525
+duplicate$ -- 289
+empty$ -- 521
 format.name$ -- 103
-if$ -- 1445
+if$ -- 1437
 int.to.chr$ -- 0
 int.to.str$ -- 19
 missing$ -- 14
-newline$ -- 101
+newline$ -- 100
 num.names$ -- 46
-pop$ -- 126
+pop$ -- 125
 preamble$ -- 1
 purify$ -- 84
 quote$ -- 0
@@ -43,4 +43,4 @@ type$ -- 72
 warning$ -- 0
 while$ -- 57
 width$ -- 21
-write$ -- 218
+write$ -- 215
