@@ -35,6 +35,8 @@ import escjava.vcGeneration.VcGenerator;
 
 import javafe.util.*;
 
+import escjava.soundness.*;
+
 /**
  * Top level control module for ESC for Java.
  *
@@ -157,7 +159,11 @@ public class Main extends javafe.SrcTool
 
 
     // Main processing code
-
+    
+    //Store Instance of class for use with Consistency checking (Soundness Package) Conor 05
+    
+    private static Main instance = null;
+    public static Main getInstance() { return instance; }
     /**
      * Start up an instance of this tool using command-line arguments
      * <code>args</code>. <p>
@@ -167,6 +173,7 @@ public class Main extends javafe.SrcTool
      */
     //@ requires \nonnullelements(args);
     public static void main(/*@ non_null @*/ String[] args) {
+    	
 	int exitcode = compile(args);
 	if (exitcode != 0) System.exit(exitcode);
     }
@@ -205,7 +212,8 @@ public class Main extends javafe.SrcTool
  
     public static int compile(String[] args) {
         try {
-            Main t = new Main();
+        	Main t = new Main();
+        	instance = t;
             int result = t.run(args);
             return result;
         } catch (OutOfMemoryError oom) {
@@ -607,64 +615,11 @@ public class Main extends javafe.SrcTool
         ///     each time returning results                 ///
         ///     (and annotation removed)        ##Incomplete///
         ///////////////////////////////////////////////////////
+       
         if (options().consistencyCheck){
-            DerivedMethodDecl dmd = null;
-            ExprModifierPragma oMP = null;
-            ExprModifierPragma tMP = null;
-            ExprVec bvec = null;
-            Object[] obj = new Object[r.getDecorations().length];
-            obj = r.getDecorations();
-            for (int i = 0; i < obj.length; i++){
-                if (obj[i] instanceof DerivedMethodDecl){
-                    dmd = (DerivedMethodDecl)obj[i];
-                    //System.out.println(dmd.requires.toString());
-
-                }
-            }
-                
-            for (int i = 0; i < dmd.requires.size(); i++){
-                oMP = dmd.requires.elementAt(i);
-                bvec = visit (oMP);
-                
-                //Remove Precondition
-                for (int j = 0; j < bvec.size(); j ++){
-                    BinaryExpr be = (BinaryExpr) bvec.elementAt(j);
-
-                    for (int k = 0; k < 2; k++){
-                        if (k == 0){
-                            tMP = ExprModifierPragma.make(be.left.getTag(), be.left, oMP.getStartLoc() );
-                            System.out.println();
-                            System.out.println("Rechecking with only the following Specifications (see VariableAccess id):");
-                            System.out.println("....................................................................................");
-                            System.out.println(be.left.toString());
-                            System.out.println("....................................................................................");
-                        }
-                        else{
-                            tMP = ExprModifierPragma.make(be.right.getTag(), be.right, oMP.getStartLoc() );
-                            System.out.println();
-                            System.out.println("Rechecking with only the following Specifications (see VariableAccess id):");
-                            System.out.println("....................................................................................");
-                            System.out.println(be.right.toString());
-                            System.out.println("....................................................................................");
-                        }
-                        dmd.requires.removeElementAt(i);
-                        dmd.requires.insertElementAt(tMP, i);
-                        
-                        try{
-                            status = processRoutineDecl(r, sig, initState);
-                        } catch (javafe.util.NotImplementedException e) {
-                            // continue - problem already reported
-                            status = "not-implemented";
-                        } catch (FatalError e) {
-                            // continue;
-                        }
-                        dmd.requires.removeElementAt(i);
-                        dmd.requires.insertElementAt(oMP, i);
-                        System.out.println("    [" + timeUsed(startTime) + "]  " + status);
-
-                    }
-                }
-            }
+        	
+        	Consistency c = new Consistency();
+        	c.consistency(r,sig,initState,startTime);
         }
         else {
         
@@ -700,7 +655,7 @@ public class Main extends javafe.SrcTool
      * for r's parent, and initState != null.
      */
     //@ ensures \result != null;
-    private String processRoutineDecl(/*@ non_null */ RoutineDecl r,
+    public String processRoutineDecl(/*@ non_null */ RoutineDecl r,
 				      /*@ non_null */ TypeSig sig,
 				      /*@ non_null */ InitialState initState) {
 
@@ -1313,28 +1268,6 @@ public class Main extends javafe.SrcTool
         }
     }
 
-    /*Helper method for retrieving all Bianry "AND" and "OR"
-     *occurences in the children of a Node. Performs a Depth First
-     *Search and returns a vector of the results.
-     *Used by the Consistency Checker - Conor 2005
-     */      
-    private ExprVec visit(ASTNode mp){
-        ExprVec beVec = ExprVec.make();
-        
-        for(int i = 0;i < mp.childCount();i++){
-            if (mp.childAt(i) instanceof BinaryExpr){
-                BinaryExpr b = (BinaryExpr)mp.childAt(i);
-                if (b.getTag() == TagConstants.OR || b.getTag() == TagConstants.AND){
-                    beVec.addElement(b);
-                }
-            }
-             
-            if (mp.childAt(i) instanceof ASTNode){
-                beVec.append(visit( (ASTNode)mp.childAt(i) ));
-                
-            }
-        }
-        return beVec;  
-    }
+ 
 }
 
