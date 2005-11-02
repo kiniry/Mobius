@@ -1,5 +1,5 @@
 
-\section{Weakest Precondition Calculus For Java \\  Bytecode}\label{wpbc}
+\section{Weakest Precondition Calculus For Java Bytecode}\label{wpbc}
 In this section, we define a bytecode logic in terms of a weakest precondition calculus.
 We assume that the bytecode program has passed the bytecode verification procedure, i.e. it is well typed and
  thus the calculus deals only with program functional properties. 
@@ -12,26 +12,28 @@ The proposed weakest precondition \wpi \ supports all Java bytecode sequential i
 bytecode generates a proof obligation for every execution path
  by applying first the weakest predicate transformer to every \instr{return} instruction,
  \instr{athrow} instruction and end of a loop instruction and then following in a backwards direction the control
- flow graph upto reaching the entry point instruction.
+ flow upto reaching the entry point instruction.
+%The function $\wpi$ must satisfy the following property: if the instruction $\instr{ins}$ starts execution in a state where the predicate
+%$\wpi(\instr{ins}, \ \psi, \ \excPost)$ holds then if it terminates normally then the poststate must satisfy the predicate $\psi$  
+%and if terminates on exception \texttt{Exc} then  the poststate must satisfy $\excPost(\texttt{Exc})$.
+ In an extended version of the present paper \cite{JBL05MP}, we show that the $\wpi$ function has this property (i.e. the calculus is correct). The proof is done by defining an operational semantics for the bytecode instructions and exploits several substitution lemmas.
 
- In Fig.~\ref{instrWP}, we show the \wpi \ rules for some bytecode instructions. 
-As the examples show the \wpi \ function takes three arguments:
+
+ In Fig.~\ref{instrWP}, we show the \wpi \ rule for the \instr{Type\_load i} instruction. As the example
+ shows the \wpi \ function takes three arguments:
 the instruction for which we calculate the precondition, 
 the instruction's postcondition $\psi$ and the exceptional postcondition function $\excPost$ which for any exception \texttt{Exc} returns the
 corresponding exceptional postcondition $\excPost(\texttt{Exc})$. 
-The function $\wpi$ must satisfy the following property: if the instruction $\instr{ins}$ starts execution in a state where the predicate
-$\wpi(\instr{ins}, \ \psi, \ \excPost)$ holds then if it terminates normally then the poststate must satisfy the predicate $\psi$  
-and if terminates on exception \texttt{Exc} then  the poststate must satisfy $\excPost(\texttt{Exc})$.
- In the draft paper \cite{JBL05MP}, we show that the $\wpi$ function has this property (i.e. the calculus is correct). The proof is done by defining an operational semantics for the bytecode instructions and exploits several substitution lemmas.
 
-Returning back to the example, the expressions \counter~ and  \stack{\counter}~ stand respectively for the the stack counter and the element on the top of the stack.
- This is because the JVM is stack based, i.e. the instructions take their arguments from the method execution stack and 
+Returning back to the example in the figure,
+one can see that the rule involves the stack expressions \counter \ and \stack{\counter} which we discussed in Subsection~\ref{grammar}.
+ This is because the JVM is stack based and the instructions take their arguments from the method execution stack and 
  put the result on the stack.
  The \wpi \ rule for  \instr{Type\_load i} increments the stack counter \counter \ and loads on the stack top the contents
  of the local variable $\register{i}$. 
 
- In the rest of the section, we consider the following specific features: instance fields, method invocations, 
-loops, exception handling and subroutines. 
+In the following, we consider how instance fields, %method invocations, 
+loops exception handling and subroutines are treated. We omit here aspects like method invocation and object creation because of space limitations but a detailed explanation can be found in~\cite{JBL05MP}. 
 
 
 % The calculus is defined over the control flow graph of the program and has two levels of definitions --- the first one is the set of rules for sequential Java bytecode instructions (discussed in subsection~\ref{wpInstr} ) and the second one takes into account how control flows in the bytecode (subsection~\ref{wpGraph}).
@@ -43,42 +45,33 @@ loops, exception handling and subroutines.
 %subset and establishes that if the verification conditions are provable this means that the method implementation respects the method specification.
 \begin{figure}[ht]
 
-%\[\begin{array}{l}\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) =  \\
-%\psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}}
-%\end{array}
-%\] \\
-%where $i$ is a valid local variable index   \\
-
-%\\
-%\\
-%\begin{tabular}{l}
 \[\wpi(\instr{Type\_load} \ i, \ \psi, \ \excPost) = \psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}}
 \]
-where $i$ is a valid local variable index   \\
-%\end{tabular}
-\\
-\\
-\[
-\begin{array}{l}
-\wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
-\biggl( 
-\begin{array}{l}
-	%\begin{array}{l}
-   		\stack{\counter -1} \not= \Mynull\Rightarrow   \\
-	\Myspace \psi\begin{array}{l} \substitution{\counter}{ \counter-2 } \\[0 mm] 
-   	                   \substitution{\texttt{Cl.f} }{ \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] } \\
-		\end{array}\\
-	%\end{array}
-   \wedge \\
-   	\stack{\counter-1} = \Mynull 	\Rightarrow\\
-   \Myspace	 \excPost(\tt{NullPointerException})
-        \begin{array}{l}
-          \substitution{ \counter }{ 0} \\
-          \substitution{\stack{0}}{ \stack{\counter}} 
-	\end{array}
-    \end{array} \biggr)
-\end{array}
- \]	  \\
+%where $i$ is a valid local variable index   \\
+
+
+
+%\[
+%\begin{array}{l}
+% \wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
+%\biggl( 
+%\begin{array}{l}
+%
+%   		\stack{\counter -1} \not= \Mynull\Rightarrow   \\
+%	\Myspace \psi\begin{array}{l} \substitution{\counter}{ \counter-2 } \\[0 mm] 
+%   	                   \substitution{\texttt{Cl.f} }{ \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] } \\
+%		\end{array}\\
+%
+%   \wedge \\
+%   	\stack{\counter-1} = \Mynull 	\Rightarrow\\
+%   \Myspace	 \excPost(\tt{NullPointerException})
+%        \begin{array}{l}
+%          \substitution{ \counter }{ 0} \\
+%          \substitution{\stack{0}}{ \stack{\counter}} 
+%%	\end{array}
+%    \end{array} \biggr)
+%\end{array}
+% \]	  \\
   % where  the   predicate   $\phi$    is   the   precondition   of   the
   % exception   handler   protecting   the   instruction    against 
   % \texttt{NullPointerException} if  it exists,  otherwise 
@@ -88,25 +81,16 @@ where $i$ is a valid local variable index   \\
 
 %\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
 %                $\phantom{ texttt{wp} textttifacmpeq n } $   $\wedge$ } \\
-%                $\phantom{ texttt{wp} textttifacmpeq n } $   \texttt{Stack(t)$\neq$Stack(t-1)} $\Rightarrow$ $\psi$\texttt{(index(if\_acmpeq n) + 1% ) } \\
-%                $\phantom{ texttt{wp} textttifacmpeq nnnnnnnnnnnnnn} $   \texttt{[t$\leftarrow$t-2]} \\\\
+%                $\phantom{ texttt{wp} textttifacmpeq n } $   \texttt{Stack(t)$\neq$Stack(t-1)} $\Rightarrow$ $\psi$\texttt{(index(if\_acmpeq n) + 1% ) } %                $\phantom{ texttt{wp} textttifacmpeq nnnnnnnnnnnnnn} $   \texttt{[t$\leftarrow$t-2]} \\\\
 
 
-%\texttt{wp(Type\_load index,$\psi$)} = $\psi$\texttt{[Stack(t)$\leftarrow$local(index)][t$\leftarrow$t+1]}  \\
-%, where the local variable must contain value of type Type
-\caption{\sc Rules for some bytecode instructions}
+\caption{\sc Example of a bytecode wp rule}
 \label{instrWP}
 %\end{frameit}
 \end{figure}
 
 \input wpSingleInstr.tex
-\input ctrlFlowWp.tex
-
-
-%\input abstractCntrFlow.tex
-%\input wpOverGraph.tex
-
-%\begin{center} \texttt{wp} : \texttt{STMT} $\longrightarrow$ \texttt{Predicate} $\longrightarrow$ \texttt{Predicate}\end{center}
+%\input ctrlFlowWp.tex
 
 
 

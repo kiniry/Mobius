@@ -1,21 +1,21 @@
-\section{Framework}
+\section{Applications}
 \label{architecture_s}	
 
 
 The overall objective is to allow a client to trust a code produced by an untrusted code producer. Our approach is especially suitable
- in cases where the client policy involves non trivial functional or safety requirements and thus, an automatic specification inference
- can not be applied. To this end, we propose a PCC technique that exploits the JML compiler and the weakest predicate function presented in the article. 
+ in cases where the client policy involves non trivial functional or safety requirements and thus, a full automatization of the verification 
+process is impossible. To this end, we propose a PCC technique that exploits the JML compiler and the weakest predicate function presented in the article. 
  
  The framework is presented in Fig.~\ref{architecture}; note that certificates and their checking are not yet implemented
  and thus are in oblique font.
   
 %Figure~\ref{architecture} presents the proposed overall architecture for ensuring Java bytecode correctness. 
 
-\begin{figure*}%[!tbp]
+\begin{figure*}[!tbp]
 \centering
-\epsfig{file=architecture.eps}    
+\epsfig{file=architecture.eps , width=3in, height=3in }    
 %%, width=\linewidth }
-\caption{The overall architecture}
+\caption{\sc The overall architecture for client producer scenarios }
 \label{architecture}
 \end{figure*}
 
@@ -27,9 +27,9 @@ The overall objective is to allow a client to trust a code produced by an untrus
 In the first stage of the process the client provides the functional and (or) security requirements to the producer.
  The requirements can be in different form:
 \begin{itemize}
-\item A specified interface that describes the application to be developed. In that case,
- the client specifies in JML the features that have to be implemented by the code producer.
-\item An API with restricted access to some method. In this case, the client can protect its system by restricting the API usage.
+\item Typical functional requirements can be a specified interface describing the application to be developed. 
+In that case, the client specifies in JML the features that have to be implemented by the code producer.
+\item Client security requirements can be a restricted access to some method from the API expressed as a finite state automata.
 For example, suppose that the client API provides transaction management facilities - the API method \texttt{open} for opening and method 
 \texttt{close} for closing transactions. In this case, a requirement can be for no nested transactions.
 This means that the methods \texttt{open} and \texttt{close} can be annotated to ensure that the method \texttt{close} 
@@ -37,7 +37,7 @@ This means that the methods \texttt{open} and \texttt{close} can be annotated to
 In this scenario, we can apply results of previous work \cite{PBBHL}.  
 \end{itemize}
 
-Typically, the development process involves annotating the source code with JML specification,
+Usually, the development process involves annotating the source code with JML specification,
  generating verification conditions, using proof obligation generator over the source code and 
 discharging proofs which represent the program safety certificate and finally, the producer sends the certificate 
 to the client along with the annotated class files.

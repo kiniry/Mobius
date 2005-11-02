@@ -5,21 +5,6 @@ A.~V. Aho, R.~Sethi, and J.~D. Ullman.
 \newblock {\em Compilers-Principles, Techniques and Tools}.
 \newblock Addison-Wesley: Reading, 1986.
 
-\bibitem{BM05plb}
-F.~Bannwart and P.~Muller.
-\newblock A program logic for bytecode.
-\newblock In {\em Bytecode 2005}, 2005.
-
-\bibitem{BLS04sp}
-M.~Barnett, K.~R.~M. Leino, and W.~Schulte.
-\newblock The {spec}\# programming system: An overview.
-\newblock In Springer, editor, {\em in CASSIS workshop proceedings}, 2004.
-
-\bibitem{B04tlsj}
-N.~Benton.
-\newblock A typed logic for stack and jumps.
-\newblock draft, 2004.
-
 \bibitem{M97oos}
 B.Meyer.
 \newblock {\em Object-Oriented Software Construction}.
@@ -36,11 +21,6 @@ L.~Burdy, A.~Requet, and J.-L. Lanet.
 \newblock In K.~Araki, S.~Gnesi, and D.~Mandrioli, editors, {\em FME 2003:
   Formal Methods: International Symposium of Formal Methods Europe}, volume
   2805 of {\em LNCS}, pages 422--439. Springer, 2003.
-
-\bibitem{DBLP:conf/cav/ChanderEILN05}
-A.~Chander, D.~Espinosa, N.~Islam, P.~Lee, and G.~C. Necula.
-\newblock Jver: A java verifier.
-\newblock In {\em CAV}, pages 144--147, 2005.
 
 \bibitem{Dhara-Leavens95b}
 K.~K. Dhara and G.~T. Leavens.
@@ -77,11 +57,6 @@ T.~Lindholm and F.~Yellin.
 \newblock {Java} virtual machine specification.
 \newblock Technical report, Java Software, Sun Microsystems, Inc., 2004.
 
-\bibitem{ComNec}
-G.~Necula.
-\newblock {\em Compiling With Proofs}.
-\newblock PhD thesis, Carnegie Mellon University, 1998.
-
 \bibitem{DesNecLee98}
 G.~C. Necula and P.~Lee.
 \newblock The design and implementation of a certifying compiler.
@@ -92,20 +67,13 @@ G.~C. Necula and P.~Lee.
 \bibitem{JBL05MP}
 M.~Pavlova.
 \newblock Java bytecode logic and specification.
-\newblock Draft version. Available from
+\newblock Preliminary version. Available from
   {\url{http://www.inria.fr/everest/Mariela.Pavlova}}, 2005.
 
 \bibitem{PBBHL}
 M.~Pavlova, G.~Barthe, L.~Burdy, M.~Huisman, and J.-L. Lanet.
 \newblock Enforcing high-level security properties for applets.
 \newblock In {\em CARDIS 2004}. Springer-Verlag, 2004.
-
-\bibitem{Quigley}
-C.~Quigley.
-\newblock A programming logic for {Java} bytecode programs.
-\newblock In {\em Proceedings of the 16th International Conference on Theorem
-  Proving in Higher Order Logics}, volume 2758 of {\em Lecture Notes in
-  Computer Science}. Springer-Verlag, 2003.
 
 \bibitem{RT03djml}
 A.~Raghavan and G.~Leavens.

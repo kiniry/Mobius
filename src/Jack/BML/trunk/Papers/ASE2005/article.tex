@@ -1,5 +1,5 @@
 %\documentclass[pagenumbers]{ieee} 	
-\documentclass[lettersizepaper,8.5pt]{sig-alternate}
+\documentclass[lettersizepaper]{sig-alternate}
 
 %\documentclass[lettersizepaper,11pt]{article} - submission version
 %\documentclass{acm_proc_article-sp\documentclass[pagenumbers]{ieee} 
@@ -34,20 +34,39 @@
 
 \conferenceinfo{SAC'06}{April 23-27, 2006, Dijon, France}
 \CopyrightYear{2006} % Allows default copyright year (2002) to be over-ridden - IF NEED BE.
-
+\crdata{1-59593-108-2/06/0004}
 \title{ Java Bytecode Specification and Verification }
 
 
 
-%\author{
- %      Lilian Burdy\\
-%        INRIA Sophia-Antipolis\\
-%       Lilian.Burdy@sophia.inria.fr \\
-%\\
-%        Mariela Pavlova\\
-%        INRIA Sophia-Antipolis \\
-%        Mariela.Pavlova@sophia.inria.fr
-%}
+\numberofauthors{2}
+%
+% You can go ahead and credit authors number 4+ here;
+% their names will appear in a section called
+% "Additional Authors" just before the Appendices
+% (if there are any) or Bibliography (if there
+% aren't)
+
+% Put no more than the first THREE authors in the \author command
+\author{
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+%% e-mail address with \email.
+\alignauthor Lilian Burdy \\
+       \affaddr{INRIA Sophia-Antipolis}\\
+       \affaddr{2004, Route des Lucioles, BP 93,}\\
+       \affaddr{06902 Sophia-Antipolis, France }\\
+       \email{Lilian.Burdy@sophia.inria.fr}
+\alignauthor Mariela Pavlova \\
+       \affaddr{INRIA Sophia-Antipolis}\\
+       \affaddr{2004, Route des Lucioles, BP 93,}\\
+       \affaddr{06902 Sophia-Antipolis, France }\\
+       \email{Mariela.Pavlova@sophia.inria.fr} }
+
+
 \maketitle
 %\author{Lilian Burdy  Mariela Pavlova\\
 %INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
@@ -71,7 +90,7 @@
 
 \input intro.tex
 \input architecture.tex
-\input relWork.tex
+%\input relWork.tex
 
 \input classFileExt.tex
 \input wpbc.tex

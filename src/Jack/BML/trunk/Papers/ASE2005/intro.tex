@@ -19,7 +19,7 @@ As the certifying compiler is designed to be completely automatic, it will not b
 We propose a bytecode verification framework with the following features:
 \begin{itemize}
   \item a bytecode specification language and a compiler from source program annotations into bytecode annotations.
- Thus, bytecode can benefit from the source specification and does not need to be accompanied by its source code. 
+ Thus, bytecode can benefit from the source specification but does not need to be accompanied by its source code. 
 
    \item verification condition generator over Java bytecode, which supports
 the bytecode annotation. 
@@ -51,12 +51,11 @@ exceptions, references, method calls and subroutines.
  We have implementations of a verification condition generator based on the weakest precondition calculus and of
  the JML specification compiler. Both are integrated in the Java Applet Correctness Kit tool (JACK)~\cite{BRL-JACK}.
 
- 
- The full specifications of the JML compiler, the weakest precondition predicate transformer definition and its proof of correctness can be found in~\cite{JBL05MP}.
+  The full specifications of the JML compiler, the weakest precondition predicate transformer definition and its proof of correctness can be found in~\cite{JBL05MP}.
   
 The remainder of the paper is organized as follows: 
 Section~\ref{architecture_s} reviews scenarios in which the architecture may be appropriate to use; 
-Section~\ref{relWork} provides a brief overview of related work;
+%Section~\ref{relWork} provides a brief overview of related work;
  Section~\ref{bcSpecLg} presents the bytecode specification language BCSL and the JML compiler; Section~\ref{wpbc} discusses the main
 features of the weakest precondition calculus; Section~\ref{results} discusses the relationship between the verification conditions for JML annotated source and BCSL annotated bytecode; Section~\ref{conclusion} concludes with future work.  
 

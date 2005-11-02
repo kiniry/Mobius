@@ -1,9 +1,12 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  28 OCT 2005 13:13
+This is e-TeX, Version 3.14159-2.1 (Web2C 7.4.5) (format=latex 2005.7.25)  2 NOV 2005 09:14
+entering extended mode
 **article.tex
 (./article.tex
 LaTeX2e <2001/06/01>
-Babel <v3.7h> and hyphenation patterns for american, french, german, ngerman, n
-ohyphenation, loaded.
+Babel <v3.7h> and hyphenation patterns for american, french, german, ngerman, b
+ahasa, basque, catalan, croatian, czech, danish, dutch, finnish, greek, iceland
+ic, irish, italian, latin, magyar, norsk, norsk, portuges, romanian, russian, s
+lovak, slovene, spanish, swedish, turkish, ukrainian, nohyphenation, loaded.
 (./sig-alternate.cls (/usr/share/texmf/tex/latex/graphics/epsfig.sty
 Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
 
@@ -164,9 +167,9 @@ Using 'Abbrev' bibliography style
 \acmcopyr=\toks33
 \boilerplate=\toks34
 \copyrightetc=\toks35
-) (/usr/share/texmf/tex/latex/html/url.sty
-Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
- names
+) (/usr/share/texmf/tex/latex/misc/url.sty
+\Urlmuskip=\muskip11
+Package: url 1999/03/28  ver 1.5x  Verb mode for urls, etc.
 )
 (/usr/share/texmf/tex/latex/misc/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
@@ -180,7 +183,7 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 )
 
 LaTeX Warning: Unused global option(s):
-    [lettersizepaper,8.5pt].
+    [lettersizepaper].
 
 (./article.aux)
 \openout1 = `article.aux'.
@@ -197,116 +200,95 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
 LaTeX Font Info:    ... okay on input line 33.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
 LaTeX Font Info:    ... okay on input line 33.
-LaTeX Font Info:    Try loading font information for U+msa on input line 51.
+LaTeX Font Info:    Try loading font information for U+msa on input line 70.
  (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 51.
+LaTeX Font Info:    Try loading font information for U+msb on input line 70.
 
 (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2002/01/19 v2.2g AMS font definitions
 )
-LaTeX Font Info:    Try loading font information for U+lasy on input line 51.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 70.
 
 (/usr/share/texmf/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
-)
-
-LaTeX Warning: No \author given.
-
-(./abstract.tex) (./intro.tex [1
+) (./abstract.tex) (./intro.tex
+[1
 
 
-]) (./architecture.tex
+]
+
+LaTeX Warning: Reference `results' on page \thepage  undefined on input line 60
+.
+
+) (./architecture.tex
 File: architecture.eps Graphic file (type eps)
- <architecture.eps>
-
-LaTeX Warning: Float too large for page by 35.78874pt on input line 20.
-
-) (./relWork.tex) (./classFileExt.tex
+ <architecture.eps>) (./classFileExt.tex
 Overfull \hbox (14.09758pt too wide) in paragraph at lines 3--3
 []\secfnt BYTECODE SPEC-I-FI-CA-TION LAN-GUAGE
  []
 
-[2] [3]
-Overfull \hbox (2.57701pt too wide) in paragraph at lines 60--62
+[2]
+Overfull \hbox (2.57701pt too wide) in paragraph at lines 58--60
 \OT1/cmr/m/n/9 con-di-tions, method frame con-di-tions (the lo-ca-tions that
  []
 
-[4]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 176.
+[3]
+Overfull \hbox (15.49588pt too wide) detected at line 127
+[] \OT1/cmr/m/n/9 == 1  \OMS/cmsy/m/n/9 ([])  9\OML/cmm/m/it/9 var\OT1/cmr/m/n/
+9 (0)\OML/cmm/m/it/9 :[][][]
+ []
 
- (/usr/share/texmf/tex/latex/base/omscmr.fd
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 160.
+
+(/usr/share/texmf/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 176.
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 160.
 ) (./wpbc.tex
 Overfull \hbox (5.94962pt too wide) in paragraph at lines 2--2
 []\secfnt WEAKEST PRE-CON-DI-TION CAL-CU-LUS
  []
 
-[5]
-Overfull \hbox (1.0285pt too wide) detected at line 56
+[4]
+Overfull \hbox (1.0285pt too wide) detected at line 49
 []\OT1/cmr/m/n/9 ([] \OML/cmm/m/it/9 i;   ;   []\OT1/cmr/m/n/9 ) = \OML/cmm/m/i
 t/9  \OT1/cmr/m/n/9 [[][] \OMS/cmsy/m/n/9   []\OT1/cmr/m/n/9 ][[] \OMS/cmsy/m/n
 /9   []\OT1/cmr/m/n/9 ]
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--61
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--61
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--61
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 81--87
-
- []
-
 (./wpSingleInstr.tex
-Overfull \hbox (24.23547pt too wide) detected at line 102
-[]
+Overfull \hbox (6.12555pt too wide) in paragraph at lines 37--46
+[]\OT1/cmr/bx/n/9 Manipulating ob-ject fields \OT1/cmr/m/n/9 In-stance fields a
+re treated
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 102--109
-
+Overfull \hbox (2.18575pt too wide) in paragraph at lines 99--105
+\OT1/cmr/m/n/9 the first one lacks while the sec-ond has struc-ture. While
  []
 
-) (./ctrlFlowWp.tex [6])) (./results.tex
-Overfull \hbox (5.51642pt too wide) in paragraph at lines 2--2
-[]\secfnt COMPARISON BE-TWEEN SOURCE AND
- []
-
-) (./conclusion.tex [7]
+)) (./results.tex) (./conclusion.tex
 Overfull \hbox (1.10616pt too wide) in paragraph at lines 10--13
 \OT1/cmr/m/n/9 We aim to es-tab-lish for-mally that nonop-ti-miz-ing source
  []
 
-) (./article.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
+) (./article.bbl [5]) [6
 
- [8])
-[9
+] (./article.aux)
 
-] (./article.aux) ) 
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 1806 strings out of 95847
- 19788 string characters out of 1195948
- 80588 words of memory out of 1000001
- 4690 multiletter control sequences out of 10000+50000
- 20461 words of font info for 58 fonts, out of 500000 for 1000
- 14 hyphenation exceptions out of 1000
- 39i,22n,26p,777b,507s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 1796 strings out of 95370
+ 19656 string characters out of 1188185
+ 75009 words of memory out of 1000001
+ 4808 multiletter control sequences out of 10000+50000
+ 21071 words of font info for 60 fonts, out of 500000 for 1000
+ 198 hyphenation exceptions out of 1000
+ 39i,10n,26p,777b,281s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on article.dvi (9 pages, 59388 bytes).
+Output written on article.dvi (6 pages, 42220 bytes).
