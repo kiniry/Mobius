@@ -1,0 +1,16 @@
+
+We propose a framework for establishing the correctness of untrusted
+Java bytecode components w.r.t. to complex functional and/or security
+policies. To this end, we define a bytecode specification language
+(BCSL) and a weakest precondition calculus for sequential Java
+bytecode. BCSL and the calculus are expressive enough for verifying
+non-trivial properties of programs, and cover most of sequential Java
+bytecode, including exceptions, subroutines, references, object
+creation and method calls. Our approach does not require that bytecode components are provided
+with their source code. Nevertheless, we provide a means to
+compile JML annotations into BCSL annotations 
+by defining a compiler from the Java Modeling Language (JML) to BCSL.
+Our compiler can be used in combination with most Java compilers to
+produce extended class files from JML-annotated Java source programs. All components, including the verification condition generator and the
+compiler are implemented and integrated in the Java Applet Correctness
+Kit (JACK).

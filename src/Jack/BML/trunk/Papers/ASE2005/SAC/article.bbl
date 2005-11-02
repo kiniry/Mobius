@@ -1,0 +1,74 @@
+\begin{thebibliography}{10}
+
+\bibitem{ARUCom1986}
+A.~V. Aho, R.~Sethi, and J.~D. Ullman.
+\newblock {\em Compilers-Principles, Techniques and Tools}.
+\newblock Addison-Wesley: Reading, 1986.
+
+\bibitem{M97oos}
+B.Meyer.
+\newblock {\em Object-Oriented Software Construction}.
+\newblock Prentice Hall, 2 revised edition, 1997.
+
+\bibitem{B00ppp}
+R.~Bornat.
+\newblock Proving pointer programs in {Hoare Logic}.
+\newblock In {\em MPC}, pages 102--126, 2000.
+
+\bibitem{BRL-JACK}
+L.~Burdy, A.~Requet, and J.-L. Lanet.
+\newblock {Java} applet correctness: A developer-oriented approach.
+\newblock In K.~Araki, S.~Gnesi, and D.~Mandrioli, editors, {\em FME 2003:
+  Formal Methods: ISFME}, volume 2805 of {\em LNCS}, pages 422--439. Springer,
+  2003.
+
+\bibitem{Dhara-Leavens95b}
+K.~K. Dhara and G.~T. Leavens.
+\newblock Forcing behavioral subtyping through specification inheritance.
+\newblock In {\em 18th International Conference on Software Engineering,
+  Berlin, Germany}, pages 258--267, 1996.
+
+\bibitem{JMLRefMan}
+G.T.Leavens, E.~Poll, C.~Clifton, Y.~Cheon, C.~Ruby, D.~Cok, and J.~Kiniry.
+\newblock {\em JML Reference Manual}.
+\newblock Department of Computer Science, Iowa State University. Available from
+  {\url{http://www.jmlspecs.org}}.
+
+\bibitem{JPVC03JKM}
+B.~Jacobs, J.~Kiniry, and M.~Warnier.
+\newblock Java program verification challenges.
+\newblock In F.~S. de~Boer, M.~M. Bonsangue, S.~Graf, and W.-P. de~Roever,
+  editors, {\em Formal Methods for Components and Objects, volume 2852}, lncs,
+  pages 202--219. Springer, Berlin, 2003.
+
+\bibitem{Ljbc}
+X.~Leroy.
+\newblock {Java} bytecode verification: an overview.
+\newblock In G.~Berry, H.~Comon, and A.~Finkel, editors, {\em Computer Aided
+  Verification, CAV 2001}, volume 2102 of {\em lncs}, pages 265--285.
+  Springer-Verlag, 2001.
+
+\bibitem{VMSpec}
+T.~Lindholm and F.~Yellin.
+\newblock {\em Java Virtual Machine Specification}.
+\newblock Addison-Wesley Longman Publishing Co., Inc., 1999.
+
+\bibitem{DesNecLee98}
+G.~C. Necula and P.~Lee.
+\newblock The design and implementation of a certifying compiler.
+\newblock In {\em ACM SIGPLAN'98 Conference on Programming Language Design and
+  Implementation (PLDI)}, pages 333--344, 17-19 June 1998.
+\newblock Montreal, Canada.
+
+\bibitem{JBL05MP}
+M.~Pavlova.
+\newblock Java bytecode logic and specification.
+\newblock Preliminary version. Available from
+  {\url{http://www.inria.fr/everest/Mariela.Pavlova}}.
+
+\bibitem{PBBHL}
+M.~Pavlova, G.~Barthe, L.~Burdy, M.~Huisman, and J.-L. Lanet.
+\newblock Enforcing high-level security properties for applets.
+\newblock In {\em CARDIS 2004}. Springer-Verlag, 2004.
+
+\end{thebibliography}

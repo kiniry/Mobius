@@ -1,0 +1,142 @@
+%\documentclass[pagenumbers]{ieee} 	
+\documentclass[lettersizepaper]{sig-alternate}
+
+%\documentclass[lettersizepaper,11pt]{article} - submission version
+%\documentclass{acm_proc_article-sp\documentclass[pagenumbers]{ieee} 
+%\documentclass[pagenumbers]{llncs} 
+
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{url}
+
+% \headsep 0.0in
+%\headheight 0.0in 
+%\textheight 8.0in 
+%%\footheight 1.0in 
+%\oddsidemargin  0.75in
+%\topmargin      1.0in
+%\textwidth 6.5in
+
+\renewcommand{\floatpagefraction}[1]{1.0pt}
+%\pagestyle{plain}
+
+
+\usepackage{float}
+%\newfloat{figure}{H}{lof} %Don't let them float by default
+%\newfloat{table*}{H}{lot}
+%\floatname{figure}{\figurename}
+%\floatname{table*}{\tablename}
+\input cmd.tex
+
+
+
+\def\doframeit#1{\vbox{%
+  \hrule height\fboxrule
+    \hbox{%
+      \vrule width\fboxrule \kern\fboxsep
+      \vbox{\kern\fboxsep #1\kern\fboxsep }%
+      \kern\fboxsep \vrule width\fboxrule }%
+    \hrule height\fboxrule }}
+
+\def\frameit{\smallskip \advance \linewidth by -7.5pt \setbox0=\vbox \bgroup
+\strut \ignorespaces }
+
+\def\endframeit{\ifhmode \par \nointerlineskip \fi \egroup
+\doframeit{\box0}}
+
+\begin{document}
+
+\conferenceinfo{SAC'06}{April 23-27, 2006, Dijon, France}
+\CopyrightYear{2006} % Allows default copyright year (2002) to be over-ridden - IF NEED BE.
+\crdata{1-59593-108-2/06/0004}
+\title{ Java Bytecode Specification and Verification }
+
+
+
+\numberofauthors{2}
+%
+% You can go ahead and credit authors number 4+ here;
+% their names will appear in a section called
+% "Additional Authors" just before the Appendices
+% (if there are any) or Bibliography (if there
+% aren't)
+
+% Put no more than the first THREE authors in the \author command
+\author{
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+%% e-mail address with \email.
+\alignauthor Lilian Burdy \\
+       \affaddr{INRIA Sophia-Antipolis}\\
+       \affaddr{2004, Route des Lucioles, BP 93,}\\
+       \affaddr{06902 Sophia-Antipolis, France }\\
+       \email{Lilian.Burdy@sophia.inria.fr}
+\alignauthor Mariela Pavlova \\
+       \affaddr{INRIA Sophia-Antipolis}\\
+       \affaddr{2004, Route des Lucioles, BP 93,}\\
+       \affaddr{06902 Sophia-Antipolis, France }\\
+       \email{Mariela.Pavlova@sophia.inria.fr} }
+
+
+\maketitle
+%\author{Lilian Burdy  Mariela Pavlova\\
+%INRIA Sophia-Antipolis,\\ 2004 route des Lucioles BP 93
+%06902 Sophia-Antipolis,\\  France}
+%\thanks[lilemail]{Lilian.Burdy@sophia.inria.fr}
+%\thanks[maremail]{Mariela.Pavlova@sophia.inria.fr}
+%\address{INRIA Sophia Antipolis, France, \\ fax : ++ 33 4 92 38 50 29}
+
+%\href{mailto:Lilian.Burdy@inria.sophia.fr}
+%\href{mailto:Mariela.Pavlova@sophia.inria.fr}
+
+
+%\thispagestyle{empty}
+\begin{abstract}
+\input abstract.tex
+\end{abstract}
+%\begin{keyword}
+ % java bytecode verification, bytecode annotations, Java Modeling Language, Proof Carrying Code, Weakest Precondition Calculus
+%\end{keyword}
+
+
+\input intro.tex
+\input architecture.tex
+%\input relWork.tex
+
+\input classFileExt.tex
+\input wpbc.tex
+\input results.tex
+\input conclusion.tex
+\bibliographystyle{abbrv}
+\bibliography{specification,bibliography}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
