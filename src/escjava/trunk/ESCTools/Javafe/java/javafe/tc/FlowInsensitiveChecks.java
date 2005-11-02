@@ -178,10 +178,13 @@ public class FlowInsensitiveChecks
                     Assert.notFalse(allowedExceptions.size() == 0);
                     fd.init = checkInit(rootEnv, fd.init, fd.type);
                 }
-                else if (Modifiers.isFinal(fd.modifiers) && !specOnly) {
-                    // Removed for 1.1:
-                    //  ErrorSet.caution(fd.locId, 
-                    //    "Final variables must be initialized");
+                else if (Modifiers.isFinal(fd.modifiers) && 
+			 Modifiers.isStatic(fd.modifiers) && 
+			 Modifiers.isPublic(fd.modifiers) && !specOnly) {
+                    
+		    String msg = ("Variable " + fd.id
+				  + " might not have been initialized");
+                    ErrorSet.caution(fd.locId, msg); 
                 }
                 break;
             }
