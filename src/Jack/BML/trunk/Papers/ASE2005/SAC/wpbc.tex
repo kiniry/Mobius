@@ -25,8 +25,9 @@ We give here the \wpi \ rule of the  \instr{Type\_load i} instruction:
 % In Fig.~\ref{instrWP}, we show the \wpi \ rule for the \instr{Type\_load i} instruction.
  As the example shows the \wpi \ function takes three arguments:
 the instruction for which we calculate the precondition, 
-the instruction's postcondition $\psi$ and the exceptional postcondition function $\excPost$ which for any exception \texttt{Exc} returns the
-corresponding exceptional postcondition $\excPost(\texttt{Exc})$. One can also notice that the rule involves the stack expressions \counter \ and \stack{\counter} which we discussed in Subsection~\ref{grammar}.
+the instruction's postcondition $\psi$ and the exceptional postcondition function $\excPost$ which for any exception \texttt{Exc} and 
+instruction index \texttt{ind} returns the
+corresponding exceptional postcondition $\excPost(\texttt{Exc}, \tt{ind})$. One can also notice that the rule involves the stack expressions \counter \ and \stack{\counter} which we discussed in Subsection~\ref{grammar}.
  This is because the JVM is stack based and the instructions take their arguments from the method execution stack and 
  put the result on the stack.
  The \wpi \ rule for  \instr{Type\_load i} increments the stack counter \counter \ and loads on the stack top the contents

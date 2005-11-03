@@ -108,11 +108,9 @@ is compiled to the new cp index. It is also in this phase that the specification
 is compiled in binary form using tags in the standard way. The compilation of an expression is a tag followed by the compilation of its subexpressions. 
 
 Another intersting point in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
-The type differences are due to the fact that the JVM does not provide direct support for integral types like byte, short, char, neither for boolean.
- Those types are rather encoded as integers in the bytecode and thus, if a Java source variable has a boolean type it will be compiled to a variable with
-an integer type.
- The JML compiler performs transformation on specifications that involve Java boolean values and variables.  
-We illustrate this by an example in Fig.~\ref{postCompile}, which shows the resulting compilation of the postcondition of method \texttt{isElem} in Fig.~\ref{replaceSrc}. The example also shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the cp table  (\#19 is the compilation of the field name \texttt{list} and \register{1} stands for the method parameter \texttt{obj}). 
+The JVM does not provide a direct support for integral types like byte, short, char, neither for boolean.
+ Those types are rather encoded as integers in the bytecode. The JML compiler performs transformation on specifications that involve Java boolean values and variables.
+ We illustrate this by an example in Fig.~\ref{postCompile}, which shows the resulting compilation of the postcondition of method \texttt{isElem} in Fig.~\ref{replaceSrc}. The example also shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the cp table  (\#19 is the compilation of the field name \texttt{list} and \register{1} stands for the method parameter \texttt{obj}). 
 
 \begin{figure}[t]
 \begin{frameit}
@@ -136,7 +134,7 @@ $$
 
 
 
-\item add the result of the compiled method specifications, class invariants, loop invariants in
+\item add the result of the compiled specifications components in
 newly defined attributes in the class file.
  For example, the specifications of all the loops in a method are compiled to a unique method attribute whose syntax is given in Fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code. 
 More precisely, every element contains information about the instruction where the loop starts as specified in the

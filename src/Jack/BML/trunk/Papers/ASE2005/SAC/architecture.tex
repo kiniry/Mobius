@@ -29,7 +29,7 @@ In the first stage of the process the client provides the functional and (or) se
 \begin{itemize}
 \item Typical functional requirements can be a specified interface describing the application to be developed. 
 In that case, the client specifies in JML the features that have to be implemented by the code producer.
-\item Client security requirements can be a restricted access to some method from the API expressed as a finite state automata.
+\item Client security requirements can be a restricted access to some method from the API expressed as a finite state machine.
 For example, suppose that the client API provides transaction management facilities - the API method \texttt{open} for opening and method 
 \texttt{close} for closing transactions. In this case, a requirement can be for no nested transactions.
 This means that the methods \texttt{open} and \texttt{close} can be annotated to ensure that the method \texttt{close} 

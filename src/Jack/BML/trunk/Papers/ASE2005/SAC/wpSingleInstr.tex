@@ -22,17 +22,6 @@
 %has two conjuncts - one in the case when the dereferenced object is not null and the instruction execution terminates normally; the other one stands for the case when this is not true. Note, in case the exception thrown is not handled, we substitute the special specification variable \jmlKey{EXC} with the thrown exception object.
 
 
-%\begin{figure}[!htp]
-%$$
-% (\texttt{Cl.f})\oplus[e2 \rightarrow e1](o) = \left\{ \begin{array} {ll}
-%						       e1 & if \ e2 = o \\
-%					               \texttt{Cl.f}(o)	& else 
-%	\end{array}\right. 
-%$$ 
-%\caption{Overriding Function}
-%\label{override}
-%\end{figure}
-
 %\begin{itemize}
 %\item 
 \paragraph{Manipulating object fields}
