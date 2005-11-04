@@ -1,13 +1,15 @@
 \section{Conclusion and Future Work}\label{conclusion}
-This article describes the bytecode specification language BCSL, a compiler from the JML language to BCSL and bytecode \wpi \ calculus.
-A proof obligation generator based on the wp calculus and a JML compiler to BCSL have been implemented and are part of the Jack 1.8 release\footnote{http://www-sop.inria.fr/everest/soft/Jack/jack.html}.
-Currently, we have a framework for Java program verification which is the first step towards a PCC infrastructure.
+This article describes the bytecode specification language BCSL, a compiler from the JML language to BCSL and a bytecode \wpi \ calculus.
+A proof obligation generator based on the wp calculus and a JML compiler to BCSL have been implemented and are part of the Jack 1.8 release\footnote{http://www-sop.inria.fr/everest/soft/Jack/jack.html}. Those components have been applied to Java to native code optimization of realistic examples \cite{CPG06LFN}.  
+
 % The validation can be done at source or at bytecode level in a common environment: for instance, to prove lemmas ensuring bytecode correctness all the current and future provers plugged in Jack can be used.
 
  We conclude with future work directions. 
-First, we would like to perform more real case studies. Second, we aim to establish formally that nonoptimizing source compilation
+Currently, we have a framework for Java program verification which is the first step towards a PCC infrastructure.
+ First, we aim to establish formally that non optimizing source compilation
 preserves proof obligations modulo names and basic types. This equivalence can
- be used to complete the PCC framework where the proof certificates will be made interactively on source level. Finally, we are interested in 
+ be used to complete the PCC framework where the proof certificates will be made interactively on source level. Second, we would like to perform more real case studies. 
+Finally, we are interested in 
 the extension of the framework applying previous research results in automated annotation generation for Java source programs
  (see~\cite{PBBHL}). The client thus will establish that the code respects his security policy %have the possibility to verify a security policy by
 by first propagating automatically annotations in the loaded code and then verifying the resulting annotated code.

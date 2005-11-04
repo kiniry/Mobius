@@ -17,9 +17,10 @@ and that the method return value will be true if and only if the internal array
 its invariant (\verb!loop_invariant!) which states that whenever the loop entry is reached the elements inspected already by the loop are all different from \verb!obj!.
 
 
-\begin{figure}[!t]
+\begin{figure}[t]
 
 \begin{frameit}
+\small{
 \begin{verbatim}
 public class ListArray {
   Object[] list;
@@ -37,6 +38,7 @@ public class ListArray {
     }
     return false;}}
 \end{verbatim}
+}
 \end{frameit}
 \caption{\sc class \texttt{ListArray} with JML annotations} 
 \label{replaceSrc}
@@ -53,35 +55,27 @@ BCSL corresponds to a representative subset of JML and is expressive enough for 
  %on bytecode level are represented respectively by the corresponding index in the constant pool table and  the index in the local variable table.
 
  Specification clauses in BCSL that are taken from JML and inherit their semantics directly from JML include:
-\begin{itemize}
-   \item class specification, i.e. class invariants and history constraints
-   \item  method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method). 
-     We also support behavioral subtyping by specification inheritance as described in \cite{Dhara-Leavens95b}.
-   \item inter method specification, for instance loop invariants
-% One can notice that the loop invariant specification are tagged with the index of the instruction at which the loop invariant must hold (the loop entry instruction). this is different from  JML
-%where loop invariants are written at the beginning of the declaration of the loop statement, while the BCSL specification are separated from the bytecode
-   \item predicates from first order logic   
-      
-\item expressions from the programming language, like field access expressions, local variables, etc.
-\item specification operators. For instance  $\old{\expression}$ which is used in method postconditions and
+%\begin{itemize}
+   %\item 
+class specification, i.e. class invariants and history constraints,   %\item
+  method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method), inter method specification, as for instance loop invariants and loop frame conditions(this is not a standard feature of JML but we were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}). 
+We also support specification inheritance and thus behavioral subtyping as described in \cite{Dhara-Leavens95b}. Most of the Java expressions like field access expressions, local variables, etc can be mentioned in the BCSL specification.
+BCSL supports the standard JML specification operators as for example, $\old{\expression}$ which is used in method postconditions and
  designates the value of the expression $\expression$ in the prestate of a method, $ \result$ which stands for the value the method
-returns if it is not void  
-\end{itemize}
+returns if it is not void,  $\typeof{\expression}$ which stands for type of $\expression$ etc.  
+%\end{itemize}
 
-BCSL has few particular extra features that JML lacks :
-\begin{itemize}
-   \item loop frame condition, which declares the locations
-that can be modified during a loop iteration. We were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}
-
-   \item stack expressions - $\counter$ which stands for the stack counter and 
- $\stack{\ArithExpr}$ standing for a stack element at position 
-\ArithExpr. Stack expressions are not mentioned in the specification but
- appear in the intermediate stages of the wp calculus as shown later in Section~\ref{wpbc}.
+% BCSL has few particular extra features that JML lacks. First, the language has a special clause for loop frame condition, which declares the locations
+% that can be modified during a loop iteration. We were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}.
+% Second,  stack counter expressions denoted by $\counter$ and  
+% $\stack{\ArithExpr}$ standing for a stack element at position 
+% \ArithExpr. Stack expressions are not mentioned in the class / method specification but
+% appear in the intermediate stages of the wp calculus as shown later in Section~\ref{wpbc}.
 
 
 
 
-\end{itemize}
+%\end{itemize}
 
 
 
@@ -107,14 +101,16 @@ identifier, for which no cp index exists, appears in the JML specification, a ne
 is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain point in the source program must be associated to the respective program point on bytecode level. The specification
 is compiled in binary form using tags in the standard way. The compilation of an expression is a tag followed by the compilation of its subexpressions. 
 
-Another intersting point in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
+Another interesting point in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
 The JVM does not provide a direct support for integral types like byte, short, char, neither for boolean.
  Those types are rather encoded as integers in the bytecode. The JML compiler performs transformation on specifications that involve Java boolean values and variables.
  We illustrate this by an example in Fig.~\ref{postCompile}, which shows the resulting compilation of the postcondition of method \texttt{isElem} in Fig.~\ref{replaceSrc}. The example also shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the cp table  (\#19 is the compilation of the field name \texttt{list} and \register{1} stands for the method parameter \texttt{obj}). 
 
 \begin{figure}[t]
 \begin{frameit}
-$$%\begin{array}{l}
+$$
+\small{
+%\begin{array}{l}
          \result == 1 %\\
           %\\ 
          \iff %\\ 
@@ -124,6 +120,7 @@ $$%\begin{array}{l}
              \#19(\register{0})[var(0)] = \register{1} 
          \end{array}
   % \end{array}
+}
 $$
 \end{frameit}
 \caption{\sc The compilation of the postcondition of method \texttt{isElem}}
@@ -143,7 +140,7 @@ More precisely, every element contains information about the instruction where t
 %For the full specification of the compiler see~\cite{JML2BCSpec}.
 \end{enumerate}
 
-\begin{figure}[ht!]
+\begin{figure}[t]
  \begin{frameit}   
 \small{
 \textbf{

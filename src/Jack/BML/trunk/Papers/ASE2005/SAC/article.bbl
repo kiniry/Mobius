@@ -22,6 +22,12 @@ L.~Burdy, A.~Requet, and J.-L. Lanet.
   Formal Methods: ISFME}, volume 2805 of {\em LNCS}, pages 422--439. Springer,
   2003.
 
+\bibitem{CPG06LFN}
+A.~Courbot, M.~Pavlova, G.~Grimaud, and J.-J. Vandewalle.
+\newblock A low-footprint java-to-native compilation scheme using formal
+  methods.
+\newblock submitted to Cardis06.
+
 \bibitem{Dhara-Leavens95b}
 K.~K. Dhara and G.~T. Leavens.
 \newblock Forcing behavioral subtyping through specification inheritance.
