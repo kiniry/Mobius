@@ -24,15 +24,15 @@
 
 %\begin{itemize}
 %\item 
-\paragraph{Manipulating object fields}
+\paragraph*{Manipulating object fields}
 %\subsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
 We are using function updates when assigning a value to a field reference as, for instance in~\cite{B00ppp}.
-% In Fig.\ref{instrWP}, we give the \wpi \ rule for the
-%instruction \instr{putfield} \texttt{Cl.f}, which updates the field \texttt{Cl.f}\footnote{ \texttt{Cl.f} stands for the field \texttt{f} declared in cla%ss 
-%\texttt{Cl}} of the object referenced by the reference stored in the stack below the stack top \stack{\counter-1} with the value on the stack top \stack{\counter}.
-% Note that the rule takes in account the possible exceptional termination.
+In Fig.\ref{instrWP}, we give the \wpi \ rule for the
+instruction \instr{putfield} \texttt{Cl.f}, which updates the field \texttt{Cl.f}\footnote{ \texttt{Cl.f} stands for the field \texttt{f} declared in class 
+\texttt{Cl}} of the object referenced by the reference stored in the stack below the stack top \stack{\counter-1} with the value on the stack top \stack{\counter}.
+Note that the rule takes in account the possible exceptional termination of the instruction execution.
 
 
 % \item \textbf{Method calls}
@@ -86,11 +86,11 @@ We are using function updates when assigning a value to a field reference as, fo
 
 
 
-\paragraph{Loops}
+\paragraph*{Loops}
 %\subsection{Loops}
-Indentifying loops on bytecode and source programs is different because of their different nature --- 
+Identifying loops on bytecode and source programs is different because of their different nature --- 
 the first one lacks while the second has structure. While on source level loops correspond to loop statements,  
-on bytecode level we have to analyse the control flow graph in order to find them.
+on bytecode level we have to analyze the control flow graph in order to find them.
  The analysis consists in looking for the backedges in the control flow graph using standard techniques, see~\cite{ARUCom1986}. 
   
  We assume that a method's bytecode is provided with sufficient specification and in particular loop invariants.
@@ -101,7 +101,7 @@ preservation and initialization of every invariant in the abstraction graph.
 
      
 
-\paragraph{Exceptions and Subroutines}
+\paragraph*{Exceptions and Subroutines}
 Exception handlers are treated by identifying the instruction at which the handler compilation starts. The JVM specification mandates 
 that a Java compiler must supply for every method an \textbf{Exception\_Table} attribute that contains data structures describing the compilation of every implicit (in the presence of subroutines) or explicit exception handler: the instruction at which the compiled exception handler starts,
  the protected region (its start and end instruction indexes), and the exception type the exception handler protects from. Thus, 
