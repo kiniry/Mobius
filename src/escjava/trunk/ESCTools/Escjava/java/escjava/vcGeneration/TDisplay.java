@@ -1,84 +1,90 @@
 package escjava.vcGeneration;
 
-class TDisplay {
+public class TDisplay {
 
     private static boolean err;
+
     private static boolean warn;
+
     private static boolean info;
 
     private static boolean colors;
 
-    static /*@ non_null @*/ String errPrompt;
-    static /*@ non_null @*/ String warnPrompt;
-    static /*@ non_null @*/ String infoPrompt;
+    static/*@ non_null @*/String errPrompt;
 
-    static public void init(boolean err, boolean warn, boolean info, boolean colors){
+    static/*@ non_null @*/String warnPrompt;
 
-	TDisplay.err = err;
-	TDisplay.warn = warn;
-	TDisplay.info = info;
-	TDisplay.colors = colors;
+    static/*@ non_null @*/String infoPrompt;
 
-	if(!colors){
-	    TDisplay.errPrompt = "Err ";
-	    TDisplay.warnPrompt = "Warning ";
-	}
-	else {
-	    TDisplay.errPrompt = "\033[31m>\033[0;m ";
-	    TDisplay.warnPrompt = "\033[33m>\033[0;m ";
-	}
-	
-    }
+    static public void init(boolean err, boolean warn, boolean info, boolean colors) {
 
-    public static void err(/*@ non_null  @*/ Object o, /*@ non_null @*/ String method, String err){
+        TDisplay.err = err;
+        TDisplay.warn = warn;
+        TDisplay.info = info;
+        TDisplay.colors = colors;
 
-	if(TDisplay.err) {
-	    System.err.println(errPrompt+o.getClass().getName()+"."+method);
-	    System.err.println("  "+err);
-	}
-    }
-
-    public static void warn(/*@ non_null  @*/ Object o, /*@ non_null @*/ String method, String warn){
-	
-	if(TDisplay.warn) {
-	    System.err.println(warnPrompt+o.getClass().getName()+"."+method);
-	    System.err.println("  "+warn);
-	}
-    }
-
-    public static void info(/*@ non_null  @*/ Object o, /*@ non_null @*/ String method, String info){
-
-	if(TDisplay.info) {
-	    System.err.println("["+o.getClass().getName()+"."+method+"]");
-	    System.err.println("["+info+"]");
-	}
+        if (!colors) {
+            TDisplay.errPrompt = "Err ";
+            TDisplay.warnPrompt = "Warning ";
+        } else {
+            TDisplay.errPrompt = "\033[31m>\033[0;m ";
+            TDisplay.warnPrompt = "\033[33m>\033[0;m ";
+        }
 
     }
 
-    public static void err(/*@ non_null  @*/ String o, /*@ non_null @*/ String method, String err){
+    public static void err(/*@ non_null  @*/Object o, /*@ non_null @*/String method, String err) {
 
-	if(TDisplay.err) {
-	    System.err.println(errPrompt+o+"."+method);
-	    System.err.println("  "+err);
-	}
+        if (TDisplay.err) {
+            System.err.println(errPrompt + o.getClass().getName() + "."
+                    + method);
+            System.err.println("  " + err);
+        }
+    }
+
+    public static void warn(/*@ non_null  @*/Object o, /*@ non_null @*/String method, String warn) {
+
+        if (TDisplay.warn) {
+            System.err.println(warnPrompt + o.getClass().getName() + "."
+                    + method);
+            System.err.println("  " + warn);
+        }
+    }
+
+    public static void info(/*@ non_null  @*/Object o, /*@ non_null @*/String method, String info) {
+
+        if (TDisplay.info) {
+            System.err.println("[" + o.getClass().getName() + "." + method
+                    + "]");
+            System.err.println("[" + info + "]");
+        }
 
     }
 
-    public static void warn(/*@ non_null  @*/ String o, /*@ non_null @*/ String method, String warn){
+    public static void err(/*@ non_null  @*/String o, /*@ non_null @*/String method, String err) {
 
-	if(TDisplay.warn) {
-	    System.err.println(warnPrompt+o+"."+method);
-	    System.err.println("  "+warn);
-	}
+        if (TDisplay.err) {
+            System.err.println(errPrompt + o + "." + method);
+            System.err.println("  " + err);
+        }
 
     }
 
-    public static void info(/*@ non_null  @*/ String o, /*@ non_null @*/ String method, String info){
+    public static void warn(/*@ non_null  @*/String o, /*@ non_null @*/String method, String warn) {
 
-	if(TDisplay.info) {
-	    System.err.println("["+o+"."+method+"]");
-	    System.err.println("["+info+"]");
-	}
+        if (TDisplay.warn) {
+            System.err.println(warnPrompt + o + "." + method);
+            System.err.println("  " + warn);
+        }
+
+    }
+
+    public static void info(/*@ non_null  @*/String o, /*@ non_null @*/String method, String info) {
+
+        if (TDisplay.info) {
+            System.err.println("[" + o + "." + method + "]");
+            System.err.println("[" + info + "]");
+        }
 
     }
 

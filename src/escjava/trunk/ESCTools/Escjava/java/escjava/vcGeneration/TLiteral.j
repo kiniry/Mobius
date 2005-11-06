@@ -1,8 +1,8 @@
 package escjava.vcGeneration;
 
-class TString extends TLiteral{
+public class TString extends TLiteral{
 
-    protected String value;
+    public String value;
 
     protected TString (String value){
 	this.value = value;
@@ -15,9 +15,9 @@ class TString extends TLiteral{
 
 }
 
-class TBoolean extends TLiteral{
+public class TBoolean extends TLiteral{
 
-    protected boolean value;
+    public boolean value;
 
     protected TBoolean (boolean value){
 	this.value = value;
@@ -30,9 +30,9 @@ class TBoolean extends TLiteral{
 
 }
 
-class TChar extends TLiteral{
+public class TChar extends TLiteral{
 
-    protected char value;
+    public char value;
 
     protected TChar (int value){
 	this.value = (char)value;
@@ -45,9 +45,9 @@ class TChar extends TLiteral{
 
 }
 
-class TInt extends TLiteral {
+public class TInt extends TLiteral {
     
-    protected int value;
+    public int value;
     
     protected TInt(int value){
 	this.value = value;
@@ -60,9 +60,9 @@ class TInt extends TLiteral {
 
 }
 
-class TFloat extends TLiteral {
+public class TFloat extends TLiteral {
     
-    protected  float value;
+    public  float value;
     
     protected TFloat(float value){
 	this.value = value;
@@ -75,9 +75,9 @@ class TFloat extends TLiteral {
 
 }
 
-class TDouble extends TLiteral {
+public class TDouble extends TLiteral {
     
-    protected  double value;
+    public  double value;
     
     protected TDouble(double value){
 	this.value = value;
@@ -90,7 +90,7 @@ class TDouble extends TLiteral {
 
 }
 
-class TNull extends TLiteral {
+public class TNull extends TLiteral {
     
     protected Object value = null;
     

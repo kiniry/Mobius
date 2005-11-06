@@ -1,5 +1,5 @@
 package escjava.vcGeneration;
 
-abstract class TLiteral extends TVariable {
+abstract public class TLiteral extends TVariable {
 
 }

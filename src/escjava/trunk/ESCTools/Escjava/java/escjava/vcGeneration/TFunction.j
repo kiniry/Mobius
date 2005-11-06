@@ -1,7 +1,7 @@
 package escjava.vcGeneration;
 
 // TBoolOp = return a boolean and sons are boolean : list(boolean) -> boolean
-class TBoolImplies extends TBoolOp {
+public class TBoolImplies extends TBoolOp {
 
     public void accept(TVisitor v){
 	v.visitTBoolImplies(this);
@@ -9,7 +9,7 @@ class TBoolImplies extends TBoolOp {
     
 }
 
-class TBoolAnd extends TBoolOp {
+public class TBoolAnd extends TBoolOp {
     
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTBoolAnd(this);
@@ -17,7 +17,7 @@ class TBoolAnd extends TBoolOp {
 
 }
 
-class TBoolOr extends TBoolOp {
+public class TBoolOr extends TBoolOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTBoolOr(this);
@@ -25,7 +25,7 @@ class TBoolOr extends TBoolOp {
 
 }
 
-class TBoolNot extends TBoolOp {
+public class TBoolNot extends TBoolOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTBoolNot(this);
@@ -33,7 +33,7 @@ class TBoolNot extends TBoolOp {
 
 }
 
-class TBoolEQ extends TBoolOp {
+public class TBoolEQ extends TBoolOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTBoolEQ(this);
@@ -41,7 +41,7 @@ class TBoolEQ extends TBoolOp {
 
 }
 
-class TBoolNE extends TBoolOp {
+public class TBoolNE extends TBoolOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTBoolNE(this);
@@ -51,7 +51,7 @@ class TBoolNE extends TBoolOp {
 
 // allocation comparisons
 // $Time * $Time -> boolean
-class TAllocLT extends TBoolRes {
+public class TAllocLT extends TBoolRes {
 
     public void typeTree(){
 	
@@ -82,7 +82,7 @@ class TAllocLT extends TBoolRes {
 }
 
 // $Time * $Time -> boolean
-class TAllocLE extends TBoolRes {
+public class TAllocLE extends TBoolRes {
 
     public void typeTree(){
 	
@@ -115,7 +115,7 @@ class TAllocLE extends TBoolRes {
 
 
 // fixme
-class TAnyEQ extends TFunction {
+public class TAnyEQ extends TFunction {
 
     public void typeTree(){
 	
@@ -160,7 +160,7 @@ class TAnyEQ extends TFunction {
 
 }
 
-class TAnyNE extends TFunction {
+public class TAnyNE extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTAnyNE(this);
@@ -169,7 +169,7 @@ class TAnyNE extends TFunction {
 }
 
 // integral comparisons, TIntOp : int * int -> boolean
-class TIntegralEQ extends TIntOp {
+public class TIntegralEQ extends TIntOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralEQ(this);
@@ -177,7 +177,7 @@ class TIntegralEQ extends TIntOp {
 
 }
 
-class TIntegralGE extends TIntOp {
+public class TIntegralGE extends TIntOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralGE(this);
@@ -185,7 +185,7 @@ class TIntegralGE extends TIntOp {
 
 }
 
-class TIntegralGT extends TIntOp {
+public class TIntegralGT extends TIntOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralGT(this);
@@ -193,7 +193,7 @@ class TIntegralGT extends TIntOp {
 
 }
 
-class TIntegralLE extends TIntOp {
+public class TIntegralLE extends TIntOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralLE(this);
@@ -201,7 +201,7 @@ class TIntegralLE extends TIntOp {
 
 }
 
-class TIntegralLT extends TIntOp {
+public class TIntegralLT extends TIntOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralLT(this);
@@ -209,7 +209,7 @@ class TIntegralLT extends TIntOp {
 
 }
 
-class TIntegralNE extends TIntOp {
+public class TIntegralNE extends TIntOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralNE(this);
@@ -218,7 +218,7 @@ class TIntegralNE extends TIntOp {
 }
 
 // integral operation : TIntFun : int * int -> int
-class TIntegralAdd extends TIntFun {
+public class TIntegralAdd extends TIntFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralAdd(this);
@@ -226,7 +226,7 @@ class TIntegralAdd extends TIntFun {
 
 }
 
-class TIntegralDiv extends TIntFun {
+public class TIntegralDiv extends TIntFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralDiv(this);
@@ -234,7 +234,7 @@ class TIntegralDiv extends TIntFun {
 
 }
 
-class TIntegralMod extends TIntFun {
+public class TIntegralMod extends TIntFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralMod(this);
@@ -242,7 +242,7 @@ class TIntegralMod extends TIntFun {
 
 }
 
-class TIntegralMul extends TIntFun {
+public class TIntegralMul extends TIntFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIntegralMul(this);
@@ -251,7 +251,7 @@ class TIntegralMul extends TIntFun {
 }
 
 //real comparisons : TFloatOp : float * float -> boolean
-class TFloatEQ extends TFloatOp {
+public class TFloatEQ extends TFloatOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatEQ(this);
@@ -259,7 +259,7 @@ class TFloatEQ extends TFloatOp {
 
 }
 
-class TFloatGE extends TFloatOp {
+public class TFloatGE extends TFloatOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatGE(this);
@@ -267,7 +267,7 @@ class TFloatGE extends TFloatOp {
 
 }
 
-class TFloatGT extends TFloatOp {
+public class TFloatGT extends TFloatOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatGT(this);
@@ -275,7 +275,7 @@ class TFloatGT extends TFloatOp {
 
 }
 
-class TFloatLE extends TFloatOp {
+public class TFloatLE extends TFloatOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatLE(this);
@@ -283,7 +283,7 @@ class TFloatLE extends TFloatOp {
 
 }
 
-class TFloatLT extends TFloatOp {
+public class TFloatLT extends TFloatOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatLT(this);
@@ -291,7 +291,7 @@ class TFloatLT extends TFloatOp {
 
 }
 
-class TFloatNE extends TFloatOp {
+public class TFloatNE extends TFloatOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatNE(this);
@@ -300,7 +300,7 @@ class TFloatNE extends TFloatOp {
 }
 
 // float operation : TFloatFun : float * float -> float
-class TFloatAdd extends TFloatFun {
+public class TFloatAdd extends TFloatFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatAdd(this);
@@ -308,7 +308,7 @@ class TFloatAdd extends TFloatFun {
 
 }
 
-class TFloatDiv extends TFloatFun {
+public class TFloatDiv extends TFloatFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatDiv(this);
@@ -316,7 +316,7 @@ class TFloatDiv extends TFloatFun {
 
 }
 
-class TFloatMod extends TFloatFun {
+public class TFloatMod extends TFloatFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatMod(this);
@@ -324,7 +324,7 @@ class TFloatMod extends TFloatFun {
 
 }
 
-class TFloatMul extends TFloatFun {
+public class TFloatMul extends TFloatFun {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTFloatMul(this);
@@ -333,7 +333,7 @@ class TFloatMul extends TFloatFun {
 }
 
 // lock comparisons
-class TLockLE extends TFunction {
+public class TLockLE extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTLockLE(this);
@@ -341,7 +341,7 @@ class TLockLE extends TFunction {
 
 }
 
-class TLockLT extends TFunction {
+public class TLockLT extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTLockLT(this);
@@ -350,7 +350,7 @@ class TLockLT extends TFunction {
 }
 
 // reference comparisons : %Reference * %Reference -> boolean
-class TRefEQ extends TRefOp {
+public class TRefEQ extends TRefOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTRefEQ(this);
@@ -358,7 +358,7 @@ class TRefEQ extends TRefOp {
 
 }
 
-class TRefNE extends TRefOp {
+public class TRefNE extends TRefOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTRefNE(this);
@@ -367,7 +367,7 @@ class TRefNE extends TRefOp {
 }
 
 // type comparisons : %Type * %Type -> boolean
-class TTypeEQ extends TTypeOp {
+public class TTypeEQ extends TTypeOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTTypeEQ(this);
@@ -375,7 +375,7 @@ class TTypeEQ extends TTypeOp {
 
 }
 
-class TTypeNE extends TTypeOp {
+public class TTypeNE extends TTypeOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTTypeNE(this);
@@ -383,7 +383,7 @@ class TTypeNE extends TTypeOp {
 
 }
 
-class TTypeLE extends TTypeOp {
+public class TTypeLE extends TTypeOp {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTTypeLE(this);
@@ -393,7 +393,7 @@ class TTypeLE extends TTypeOp {
 
 // usual functions, cast is select store typeof 
 
-class TCast extends TBoolRes{
+public class TCast extends TBoolRes{
 
     public void typeTree(){}
     
@@ -403,7 +403,7 @@ class TCast extends TBoolRes{
 
 }
 
-class TIs extends TBoolRes { // %Reference | double | char etc ..., type -> boolean
+public class TIs extends TBoolRes { // %Reference | double | char etc ..., type -> boolean
 
     public void typeTree(){
 	
@@ -433,7 +433,7 @@ class TIs extends TBoolRes { // %Reference | double | char etc ..., type -> bool
 } 
 
 // %Field * %Reference -> %Reference | double | char etc... (final types)
-class TSelect extends TFunction {
+public class TSelect extends TFunction {
 
     public void typeTree(){
 	
@@ -464,7 +464,7 @@ class TSelect extends TFunction {
 
 // fixme
 // %Field * %Reference * ? (value, %Reference?) -> memory
-class TStore extends TFunction {
+public class TStore extends TFunction {
 
     public void typeTree(){
 	
@@ -492,7 +492,7 @@ class TStore extends TFunction {
 } 
 
 // %Reference -> %Type
-class TTypeOf extends TFunction {
+public class TTypeOf extends TFunction {
     
     public TTypeOf(){
 	type = $Type;
@@ -506,7 +506,7 @@ class TTypeOf extends TFunction {
 
 //quantifier
 // bool -> bool // fixme
-class TForAll extends TBoolRes {
+public class TForAll extends TBoolRes {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTForAll(this);
@@ -515,7 +515,7 @@ class TForAll extends TBoolRes {
 } 
 
 // bool -> bool // fixme
-class TExist extends TBoolRes {
+public class TExist extends TBoolRes {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTExist(this);
@@ -524,7 +524,7 @@ class TExist extends TBoolRes {
 } 
 
 // allocation
-class TIsAllocated extends TBoolOp {
+public class TIsAllocated extends TBoolOp {
 
     public void typeTree(){
 	
@@ -551,7 +551,7 @@ class TIsAllocated extends TBoolOp {
 } // %Reference -> bool
 
 // %Reference -> %Time
-class TEClosedTime extends TFunction {
+public class TEClosedTime extends TFunction {
 
     protected TEClosedTime(){
 	type = $Time;
@@ -564,7 +564,7 @@ class TEClosedTime extends TFunction {
 } 
 
 // %ReferenceField -> %Time
-class TFClosedTime extends TFunction {
+public class TFClosedTime extends TFunction {
 
     protected TFClosedTime(){
 	type = $Time;
@@ -592,7 +592,7 @@ class TFClosedTime extends TFunction {
 } 
 
 // as trick : asElems asField asLockset
-class TAsElems extends TFunction {
+public class TAsElems extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTAsElems(this);
@@ -600,7 +600,7 @@ class TAsElems extends TFunction {
 
 }
 
-class TAsField extends TFunction {
+public class TAsField extends TFunction {
 
     public void typeTree(){
 	
@@ -635,7 +635,7 @@ class TAsField extends TFunction {
 
 }
 
-class TAsLockSet extends TFunction {
+public class TAsLockSet extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTAsLockSet(this);
@@ -645,7 +645,7 @@ class TAsLockSet extends TFunction {
 
 //array 
 // %ArrayReference -> integer
-class TArrayLength extends TFunction {
+public class TArrayLength extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTArrayLength(this);
@@ -654,7 +654,7 @@ class TArrayLength extends TFunction {
 }
 
 //
-class TArrayFresh extends TFunction {
+public class TArrayFresh extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTArrayFresh(this);
@@ -662,7 +662,7 @@ class TArrayFresh extends TFunction {
 
 } 
 
-class TArrayShapeOne extends TFunction {
+public class TArrayShapeOne extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTArrayShapeOne(this);
@@ -670,7 +670,7 @@ class TArrayShapeOne extends TFunction {
 
 }
 
-class TArrayShapeMore extends TFunction {
+public class TArrayShapeMore extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTArrayShapeMore(this);
@@ -678,7 +678,7 @@ class TArrayShapeMore extends TFunction {
 
 }
 
-class TIsNewArray extends TFunction {
+public class TIsNewArray extends TFunction {
 
     public void accept(/*@ non_null @*/ TVisitor v){
 	v.visitTIsNewArray(this);
