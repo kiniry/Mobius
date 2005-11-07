@@ -5,12 +5,7 @@ ParsePure.java:16: Associated declaration:
         //@ pure
             ^
 Caution: Turning off extended static checking due to type error(s)
-ParsePure.java:44: Error: A pure constructor may not have a modifies clause
-        //@ modifies \everything; // ERROR
-                     ^
-ParsePure.java:42: Associated declaration: 
-//@ pure
-    ^
+
 ParsePure.java:27: Error: A pure method may not have a modifies clause
         //@ also modifies \everything; // ERROR
                           ^
@@ -32,6 +27,12 @@ ParsePure.java:38: Associated declaration:
 ParsePure.java:33: Error: A pure method may not have a modifies clause
         //@ also modifies \everything;  // ERROR
                           ^
+ParsePure.java:42: Associated declaration: 
+//@ pure
+    ^
+ParsePure.java:44: Error: A pure constructor may not have a modifies clause
+        //@ modifies \everything; // ERROR
+                     ^
 ParsePure.java:42: Associated declaration: 
 //@ pure
     ^
