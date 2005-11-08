@@ -111,6 +111,7 @@ abstract public class TNode {
     static ProverType prover = null;
     
     // init every both variable and type map.
+
     static public void init(ProverType prover) {
         TNode.prover = prover;
         
@@ -124,6 +125,7 @@ abstract public class TNode {
      @ requires type.equals("unsortedPvs") || type.equals("pvs") || type.equals("sammy");
      @ requires typeProofSet;
      @*/
+    //FIXME: generateDeclarations should be in ProverType
     protected void generateDeclarations(/*@ non_null @*/StringBuffer s) {
 
         Set keySet = variablesName.keySet();
@@ -337,6 +339,7 @@ abstract public class TNode {
         type = TNode.addType(s);
     }
 
+
     protected void setType(TypeInfo type, boolean sure) {
 
         if (this instanceof TName) {
@@ -389,7 +392,7 @@ abstract public class TNode {
                                     + type.old);
                 }
             } else
-                // type is null qué pasa ?
+                // type is null quï¿½ pasa ?
                 TDisplay.err(this, "setType(TypeInfo, boolean)", "Node "
                         + this.toString() + " has no type");
 
