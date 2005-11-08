@@ -268,7 +268,7 @@ public class Options extends javafe.SrcToolOptions
   /* flag for writing pvs proof to a file located in $ESCTOOLS/Escjava/
    The name of the file is the identifier of the method being tested */
   public boolean pvsProof = false;
-
+  public boolean coqProof = false;
   // use the new verification conditions generator
   public boolean nvcg = false;
   // print information about the vcg
@@ -283,6 +283,7 @@ public class Options extends javafe.SrcToolOptions
   // to a file.
   public boolean pSimplify = false;
   public boolean pPvs = false;
+  public boolean pCoq = false;
   // output gc tree in dot format
   public boolean vc2dot = false; 
     // create dot tree of proof
@@ -773,6 +774,11 @@ public class Options extends javafe.SrcToolOptions
 
       return offset;
     } 
+    else if (option.equals("-coqproof")) {
+        coqProof = true;
+
+        return offset;
+      } 
     else if (option.equals("-nvcg")){
       nvcg = true;
 
@@ -808,6 +814,11 @@ public class Options extends javafe.SrcToolOptions
 
       return offset;
     }
+    else if (option.equals("-pcoq")){
+        pCoq = true;
+
+        return offset;
+      }
     else if (option.equals("-vc2dot")){
       vc2dot = true;
 
@@ -850,7 +861,7 @@ public class Options extends javafe.SrcToolOptions
 		which shouldn't contain any space
 		the usual way to handle it is to store the string in a field
 		(look at guardedVCDir for example)
-		and use it in the main, but this way is nicer I think. [Clément]
+		and use it in the main, but this way is nicer I think. [Clï¿½ment]
 	*/
 	  if(args[offset].charAt(args[offset].length()-1) ==',')
 	      throw new UsageError("Argument to option '"+ option +"' is finished by ',' which is not correct.");
@@ -1311,7 +1322,7 @@ public class Options extends javafe.SrcToolOptions
     Reader R = null;
     try {
       R = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-      int c;
+      int c= 0;
       do {
 	while( (c=R.read())!= -1 && c != '\n' ) {
 	  s.append( (char)c );
