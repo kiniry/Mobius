@@ -78,7 +78,7 @@ public class CoqProver implements ProverType {
         TNode.$INTTYPE = TNode.addType("INTTYPE", "t_int");
         TNode.$integer = TNode.addType("integer", "t_int"); 
         TNode.$float = TNode.addType("float", "t_float");
-        TNode.$Path = TNode.addType("%Path", "Path"); /
+        TNode.$Path = TNode.addType("%Path", "Path"); 
         // of terminating a function
         //$String = addType("String" "String"); fixme, does this type appears in original proof ?
 
