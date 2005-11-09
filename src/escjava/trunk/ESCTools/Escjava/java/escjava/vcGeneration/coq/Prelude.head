@@ -1,3 +1,5 @@
+package escjava.vcGeneration.coq;
+
 // Coq Prelude Generator
 import java.io.*;
 public class Prelude {
@@ -7,5 +9,5 @@ public class Prelude {
    }
 
    public void generate() throws IOException {
-	PrintStream out = new PrintStream(FileOutputStream(f));
+	PrintStream out = new PrintStream(new FileOutputStream(f));
    
