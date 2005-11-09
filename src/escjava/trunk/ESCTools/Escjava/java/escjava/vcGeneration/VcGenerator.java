@@ -299,7 +299,8 @@ public class VcGenerator {
                 break;
             }
             case TagConstants.BOOLNOT: {
-
+            	//FIXME: I am sorry Clement but I can't prove anything with
+            	// your experiment...
                 if (firstNotSkipped) {
                     TBoolNot newNode = new TBoolNot();
                     currentParent.addSon(newNode);
@@ -314,7 +315,7 @@ public class VcGenerator {
                 currentParent.addSon(newNode);
                 currentParent = newNode;
                 break;
-            } // allocation comparisons
+            } 
             case TagConstants.METHODCALL: {
     		    ; // FIXME I think it is fixed... needs further testing
     		    //TDisplay.err(this, "generateIfpTree", TagConstants.toString(m.getTag()));
@@ -323,6 +324,7 @@ public class VcGenerator {
     		    currentParent = newNode;
     		    break;
     		}
+            // allocation comparisons
             case TagConstants.ALLOCLT: {
                 TAllocLT newNode = new TAllocLT();
                 currentParent.addSon(newNode);
@@ -611,6 +613,12 @@ public class VcGenerator {
             }
             case TagConstants.ISNEWARRAY: {
                 TIsNewArray newNode = new TIsNewArray();
+                currentParent.addSon(newNode);
+                currentParent = newNode;
+                break;
+            }
+            case TagConstants.ARRAYLENGTH: {
+                TArrayLength newNode = new TArrayLength();
                 currentParent.addSon(newNode);
                 currentParent = newNode;
                 break;
