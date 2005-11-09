@@ -104,7 +104,7 @@ public class CoqProver implements ProverType {
   	      t.def = t.old.replace('.','_');
   	  else {
   	      System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::coqRename() : "+t.old); 
-  	      System.err.println("Considering it as a user defined type... ie ReferenceType");
+  	      System.err.println("Considering it as a user defined type... ie Types");
   	      t.def = "ReferenceType";
   	  }
         }
@@ -150,7 +150,12 @@ public class CoqProver implements ProverType {
 				    
 			    }
 
-			    System.err.println("Warning in escjava.java.vcGenerator.VariableInfo.getCoq(), considering "+vi.old+" as a user defined type, or a not (yet) handled variable.");
+			    System.err.println("Warning in " +
+			    		"escjava.java.vcGenerator.coq.CoqProver.getCoq(VariableInfo), " +
+			    		"considering "+
+			    		vi.old
+			    		+" as a user defined type, " +
+			    				"or a not (yet) handled variable.");
 
 			    coqRename(vi);
 

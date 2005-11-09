@@ -1,0 +1,11 @@
+// Coq Prelude Generator
+import java.io.*;
+public class Prelude {
+   private File f;
+   public Prelude(File path) {
+	f = path;
+   }
+
+   public generate() throws IOException {
+	PrintStream out = new PrintStream(FileOutputStream(f));
+   

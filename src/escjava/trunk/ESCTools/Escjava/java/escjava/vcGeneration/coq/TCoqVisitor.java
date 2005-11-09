@@ -437,12 +437,12 @@ class TCoqVisitor extends TVisitor {
     	// FIXME: sometime an AnyEQ can be a boolean EQ. that's sick.
     	if(n.sons.size() == 2) {
     		Object son = n.sons.get(1);
-//    		if((son instanceof TAsLockSet) || 
-//    				(son instanceof TAsElems) ||
-//    				(son instanceof TAsField)) {
-//    			out.appendN("True ");
-//    			return;
-//    		}
+    		if((son instanceof TAsLockSet) || 
+    				(son instanceof TAsElems) ||
+    				(son instanceof TAsField)) {
+    			out.appendN("(* TAs *) True ");
+    			return;
+    		}
     		if((son instanceof TBoolNot)||
     				(son instanceof TBoolean)) {
     			printBoolEq(n);
@@ -574,7 +574,7 @@ class TCoqVisitor extends TVisitor {
 			
     public void visitTIs(/*@ non_null @*/ TIs n){
     	//genericFun("subtypes", n); //
-	out.appendN(" True");
+	out.appendN("(* TIs *) True");
 
 	//genericFun("isa?", n);
     }
@@ -592,14 +592,26 @@ class TCoqVisitor extends TVisitor {
     }
     public void visitTStore(/*@ non_null @*/ TStore n){
     	String pre = "";
-    	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
+    	TNode index =(TNode)n.sons.get(1);
+    	TNode val =(TNode)n.sons.get(2);
+    	if(TNode.$integer.equals(index.type))
     		pre = "arr";
-    	if(TNode.$integer.equals(((TNode)n.sons.get(2)).type))
+    	
+    	if((TNode.$integer.equals(val.type)) ||
+    			(TNode.$INTTYPE.equals(val.type))) {
+    		
     		genericFun("IntHeap." + pre + "store ", n);
-    	else if(TNode.$boolean.equals(((TNode)n.sons.get(2)).type))
+    	}
+    	else if(TNode.$boolean.equals(val.type))
     		propFun("BoolHeap." + pre +"store ", n);
-    	else
+    	else {
+    		if(val instanceof TName) {
+    			String na = ((TName)val).name;
+    			if(na.indexOf("resu") != -1)
+    				System.out.println(na + " " + val.type);	
+    		}
     		genericFun("RefHeap." + pre + "store ", n);
+    	}
     }
 
     public void visitTTypeOf(/*@ non_null @*/ TTypeOf n){
