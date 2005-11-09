@@ -90,5 +90,12 @@ public class VariableInfo {
     public/*@ non_null @*/String getVariableInfo() {
         return prover.getVariableInfo(this);
     }
-
+    
+    public boolean equals(Object o){
+    	if(o instanceof VariableInfo) {
+    		VariableInfo vi = (VariableInfo) o;
+    		return old.equals(vi.old);
+    	}
+    	return false;
+    }
 }
