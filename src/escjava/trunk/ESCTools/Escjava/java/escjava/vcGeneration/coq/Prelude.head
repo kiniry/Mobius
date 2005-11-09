@@ -6,6 +6,6 @@ public class Prelude {
 	f = path;
    }
 
-   public generate() throws IOException {
+   public void generate() throws IOException {
 	PrintStream out = new PrintStream(FileOutputStream(f));
    
