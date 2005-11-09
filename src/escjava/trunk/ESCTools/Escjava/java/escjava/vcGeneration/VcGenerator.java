@@ -316,11 +316,13 @@ public class VcGenerator {
                 break;
             } // allocation comparisons
             case TagConstants.METHODCALL: {
-                ; // FIXME
-                //TDisplay.err(this, "generateIfpTree", TagConstants.toString(m.getTag()));
-
-                break;
-            }
+    		    ; // FIXME I think it is fixed... needs further testing.
+    		    //TDisplay.err(this, "generateIfpTree", TagConstants.toString(m.getTag()));
+    		    TMethodCall newNode = new TMethodCall(m.methodName.toString());
+    		    currentParent.addSon(newNode);
+    		    currentParent = newNode;
+    		    break;
+    		}
             case TagConstants.ALLOCLT: {
                 TAllocLT newNode = new TAllocLT();
                 currentParent.addSon(newNode);
