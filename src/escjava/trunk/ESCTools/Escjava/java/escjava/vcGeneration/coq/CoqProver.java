@@ -71,14 +71,14 @@ public class CoqProver implements ProverType {
         TNode.$Time = TNode.addType("%Time", "Time");
         TNode.$Type = TNode.addType("%Type", "Types");
         TNode.$boolean = TNode.addType("boolean", "Boolean");
-        TNode.$char = TNode.addType("char", "T_char");
-        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "ContinuousNumber"); // fixme, is it JavaNumber or BaseType ?
-        TNode.$double = TNode.addType("double", "ContinuousNumber"); //fixme
-        TNode.$Field = TNode.addType("%Field", "Field"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
-        TNode.$INTTYPE = TNode.addType("INTTYPE", "T_int"); //fixme like DOUBLETYPE
-        TNode.$integer = TNode.addType("integer", "DiscreteNumber"); //fixme
-        TNode.$float = TNode.addType("float", "ContinuousNumber");
-        TNode.$Path = TNode.addType("%Path", "Path"); // used to modelize different ways
+        TNode.$char = TNode.addType("char", "t_char");
+        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "t_double"); 
+        TNode.$double = TNode.addType("double", "t_double"); 
+        TNode.$Field = TNode.addType("%Field", "Field"); 
+        TNode.$INTTYPE = TNode.addType("INTTYPE", "t_int");
+        TNode.$integer = TNode.addType("integer", "t_int"); 
+        TNode.$float = TNode.addType("float", "t_float");
+        TNode.$Path = TNode.addType("%Path", "Path"); /
         // of terminating a function
         //$String = addType("String" "String"); fixme, does this type appears in original proof ?
 
