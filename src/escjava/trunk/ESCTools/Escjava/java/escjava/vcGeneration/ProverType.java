@@ -1,5 +1,7 @@
 package escjava.vcGeneration;
 
+import java.util.HashMap;
+
 /**
  * The interface to be implemented when adding a new prover to ESC/Java.
  * 
@@ -71,5 +73,7 @@ public interface ProverType {
      */
     //FIXME To what extent is this really necessary?
     public void rewrite(TNode tree);
+
+    public void generateDeclarations(/*@ non_null @*/StringBuffer s, HashMap variablesName);
 
 }

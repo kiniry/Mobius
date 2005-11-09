@@ -11,7 +11,10 @@ public class CoqStringBuffer {
 	out = new StringBuffer();
 	indentation = new StringBuffer();
     }
-
+    public CoqStringBuffer(StringBuffer o){
+    	out = o;
+    	indentation = new StringBuffer();
+        }
     /*
      * just append the parameter, N stands for normal
      */

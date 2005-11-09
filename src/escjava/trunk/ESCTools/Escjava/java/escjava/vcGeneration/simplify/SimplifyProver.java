@@ -1,5 +1,7 @@
 package escjava.vcGeneration.simplify;
 
+import java.util.HashMap;
+
 import escjava.vcGeneration.*;
 
 public class SimplifyProver implements ProverType {
@@ -86,4 +88,9 @@ public class SimplifyProver implements ProverType {
     public void rewrite(TNode tree) {
         // intentionally do nothing!
     }
+
+	public void generateDeclarations(StringBuffer s, HashMap variablesName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

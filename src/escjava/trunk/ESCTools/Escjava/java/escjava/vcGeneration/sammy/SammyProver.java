@@ -1,5 +1,7 @@
 package escjava.vcGeneration.sammy;
 
+import java.util.HashMap;
+
 import escjava.vcGeneration.*;
 
 public class SammyProver implements ProverType {
@@ -70,4 +72,9 @@ public class SammyProver implements ProverType {
     public void rewrite(TNode tree) {
         // Intentionally do nothing!
     }
+
+	public void generateDeclarations(StringBuffer s, HashMap variablesName) {
+		// TODO Auto-generated method stub
+		
+	}
 }

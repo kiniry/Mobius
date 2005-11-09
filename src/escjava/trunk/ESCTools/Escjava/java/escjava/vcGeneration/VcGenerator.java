@@ -405,6 +405,12 @@ public class VcGenerator {
                 currentParent = newNode;
                 break;
             }
+            case TagConstants.INTEGRALSUB: {
+    		    TIntegralSub newNode = new TIntegralSub();
+    		    currentParent.addSon(newNode);
+    		    currentParent = newNode;
+    		    break;
+    		}
             // real comparisons
             case TagConstants.FLOATINGEQ: {
                 TFloatEQ newNode = new TFloatEQ();
@@ -534,6 +540,12 @@ public class VcGenerator {
                 currentParent = newNode;
                 break;
             }
+            case TagConstants.UNSET: {
+    			TUnset newNode = new TUnset();
+    		    currentParent.addSon(newNode);
+    		    currentParent = newNode;
+    			break;
+    		}
             case TagConstants.TYPEOF: {
                 TTypeOf newNode = new TTypeOf();
                 currentParent.addSon(newNode);

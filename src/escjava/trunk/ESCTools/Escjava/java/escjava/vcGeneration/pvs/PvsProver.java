@@ -1,5 +1,6 @@
 package escjava.vcGeneration.pvs;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -243,4 +244,55 @@ public class PvsProver implements ProverType {
         TProofSimplifier psvi = new TProofSimplifier();
         tree.accept(psvi);
     }
+
+	public void generateDeclarations(StringBuffer s, HashMap variablesName) {
+	    Set keySet = variablesName.keySet();
+
+        Iterator iter = keySet.iterator();
+        String keyTemp = null;
+        VariableInfo viTemp = null;
+        TypeInfo tiTemp = null;
+
+        /*
+         * Needed to avoid adding a comma after last declaration. As some declaration can be skipped
+         * it's easier to put comma before adding variable (thus need for testing firstDeclaration
+         * instead of last one)
+         */
+        boolean firstDeclarationDone = false;
+
+        while (iter.hasNext()) {
+
+            try {
+                keyTemp = (String) iter.next();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+            viTemp = (VariableInfo) variablesName.get(keyTemp);
+
+            /* output informations in this format : oldName, pvsUnsortedName,
+             * pvsName, sammyName, type.
+             */
+            if (viTemp.type != null) {
+                if (firstDeclarationDone
+                        && !viTemp.getVariableInfo().equals("%NotHandled"))
+                    s.append(",\n");
+
+                if (!viTemp.getVariableInfo().equals("%NotHandled")) { // skipping non handled variables
+                    s.append(viTemp.getVariableInfo() + " : "
+                            + viTemp.type.getTypeInfo());
+
+                    if (!firstDeclarationDone)
+                        firstDeclarationDone = true;
+                }
+            } else
+                // FIXME test that it nevers happen
+                TDisplay
+                        .warn(
+                                this,
+                                "generateDeclarations",
+                                "Type of variable "
+                                        + keyTemp
+                                        + " is not set when declarating variables for the proof, skipping it...");
+        }
+	}
 }

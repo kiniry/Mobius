@@ -386,4 +386,19 @@ class TProofSimplifier extends TVisitor {
     public void visitTNull(/*@ non_null @*/TNull n) {
     }
 
+	public void visitTUnset(TUnset n) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void visitTMethodCall(TMethodCall call) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void visitTIntegralSub(TIntegralSub sub) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

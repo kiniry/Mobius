@@ -1,5 +1,6 @@
 package escjava.vcGeneration;
 
+
 abstract public class TVisitor {
 
     protected StringBufferWrapper lib = null;
@@ -12,6 +13,7 @@ abstract public class TVisitor {
         out = new StringBuffer();
         lib = new StringBufferWrapper(out);
         indentation = new StringBuffer();
+
     }
 
     //non automatic division
@@ -20,6 +22,7 @@ abstract public class TVisitor {
     abstract public void visitTRoot(/*@ non_null @*/TRoot n);
 
     // class created using the perl script
+
     abstract public void visitTBoolImplies(/*@ non_null @*/TBoolImplies n);
 
     abstract public void visitTBoolAnd(/*@ non_null @*/TBoolAnd n);
@@ -143,5 +146,14 @@ abstract public class TVisitor {
     abstract public void visitTDouble(/*@ non_null @*/TDouble n);
 
     abstract public void visitTNull(/*@ non_null @*/TNull n);
+
+    
+    // added by me
+    abstract public void visitTUnset(/*@ non_null @*/ TUnset n);
+
+    abstract public void visitTMethodCall(/*@ non_null @*/ TMethodCall call);
+
+    abstract public void visitTIntegralSub(/*@ non_null @*/ TIntegralSub sub) ;
+
 
 }
