@@ -821,7 +821,7 @@ public class Main extends javafe.SrcTool
 				vcg = new VcGenerator(new CoqProver(), vcBody, options().pErr, options().pWarn, options().pInfo, options().pColors);
 
 			    String fn = UniqName.locToSuffix(r.locId);
-			    fn = fn + ".pPvs";
+			    fn = fn + ".pCoq";
 
 			    FileWriter fw = new FileWriter(fn);
 
