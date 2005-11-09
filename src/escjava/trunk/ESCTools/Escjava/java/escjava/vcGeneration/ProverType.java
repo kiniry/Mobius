@@ -74,6 +74,11 @@ public interface ProverType {
     //FIXME To what extent is this really necessary?
     public void rewrite(TNode tree);
 
+    /**
+     * This methods generates the declarations for a specified prover.
+     * @param s The buffer to which we want to generate the declarations to. 
+     * @param variablesName The hashmap containing all the variables, usually {@link TNode#variablesName}.
+     */
     public void generateDeclarations(/*@ non_null @*/StringBuffer s, HashMap variablesName);
 
 }

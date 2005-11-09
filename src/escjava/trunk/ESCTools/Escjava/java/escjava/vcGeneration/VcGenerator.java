@@ -83,7 +83,7 @@ public class VcGenerator {
 
         StringBuffer s = new StringBuffer();
 
-        newRootNode.generateDeclarations(s);
+        newRootNode.generateDeclarations(s, prover);
 
         return prover.getProof(proofName, s.toString(), vi.out.toString());
     }
@@ -316,7 +316,7 @@ public class VcGenerator {
                 break;
             } // allocation comparisons
             case TagConstants.METHODCALL: {
-    		    ; // FIXME I think it is fixed... needs further testing.
+    		    ; // FIXME I think it is fixed... needs further testing
     		    //TDisplay.err(this, "generateIfpTree", TagConstants.toString(m.getTag()));
     		    TMethodCall newNode = new TMethodCall(m.methodName.toString());
     		    currentParent.addSon(newNode);

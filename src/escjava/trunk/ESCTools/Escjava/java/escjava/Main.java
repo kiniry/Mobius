@@ -33,6 +33,7 @@ import escjava.prover.*;
 
 import escjava.vcGeneration.*;
 import escjava.vcGeneration.simplify.*;
+import escjava.vcGeneration.coq.CoqProver;
 import escjava.vcGeneration.pvs.*;
 
 import javafe.util.*;
@@ -815,7 +816,29 @@ public class Main extends javafe.SrcTool
 		    System.out.println(e.getMessage()); 
 		}
 	    }
+	    if(options().pCoq){
+			try {
+				vcg = new VcGenerator(new CoqProver(), vcBody, options().pErr, options().pWarn, options().pInfo, options().pColors);
 
+			    String fn = UniqName.locToSuffix(r.locId);
+			    fn = fn + ".pPvs";
+
+			    FileWriter fw = new FileWriter(fn);
+
+			    // renaming the label to remove '.'
+			    label = label.replace('.','_');
+			    label = label.replace('<','_');
+			    label = label.replace('>','_');
+			    fw.write(vcg.getProof(label));
+			
+			    fw.close();
+
+			    System.out.println("[Pvs many sorted proof using the new vcg has been written to "+fn+".]");
+			}
+			catch (Exception e) { 
+			    System.out.println(e.getMessage()); 
+			}
+		    }
 	    // generate the dot file for the original vc tree
 	    if(options().vc2dot){
 		try {
