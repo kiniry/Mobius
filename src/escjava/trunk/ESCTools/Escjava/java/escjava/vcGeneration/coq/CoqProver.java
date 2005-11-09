@@ -69,7 +69,7 @@ public class CoqProver implements ProverType {
 
         TNode.$Reference = TNode.addType("%Reference", "Reference");
         TNode.$Time = TNode.addType("%Time", "Time");
-        TNode.$Type = TNode.addType("%Type", "ReferenceType");
+        TNode.$Type = TNode.addType("%Type", "Types");
         TNode.$boolean = TNode.addType("boolean", "Boolean");
         TNode.$char = TNode.addType("char", "T_char");
         TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "ContinuousNumber"); // fixme, is it JavaNumber or BaseType ?
@@ -84,9 +84,9 @@ public class CoqProver implements ProverType {
 
         // Predefined variables name
         // variables used by the old proof system and that we still need
-        TNode.addName("ecReturn", "%Path", "preDef?ecReturn");
-        TNode.addName("ecThrow", "%Path", "preDef?ecThrow");
-        TNode.addName("XRES", "%Reference", "preDef?XRes");
+        TNode.addName("ecReturn", "%Path", "ecReturn");
+        TNode.addName("ecThrow", "%Path", "ecThrow");
+        TNode.addName("XRES", "%Reference", "XRes");
     }
     
     public void rewrite(TNode tree) {
@@ -343,6 +343,9 @@ public class CoqProver implements ProverType {
             /* output informations in this format : oldName, pvsUnsortedName,
              * pvsName, sammyName, type.
              */
+            String name = viTemp.getVariableInfo().toString();
+            if(name.equals("ecReturn") || name.equals("ecThrow"))
+            	continue;
             if (viTemp.type != null) {
                 
                 //if (!viTemp.getVariableInfo().equals("%NotHandled")) { // skipping non handled variables
@@ -354,8 +357,9 @@ public class CoqProver implements ProverType {
 //                        firstDeclarationDone = true;
                     s.append(")");
                 
-            } else
-                // FIXME test that it nevers happen
+            } else {
+                s.append("(" + viTemp.getVariableInfo() + " : S)");
+
                 TDisplay
                         .warn(
                                 this,
@@ -363,6 +367,7 @@ public class CoqProver implements ProverType {
                                 "Type of variable "
                                         + keyTemp
                                         + " is not set when declarating variables for the proof, skipping it...");
+            }
         }
 
     }
