@@ -833,7 +833,7 @@ public class Main extends javafe.SrcTool
 			
 			    fw.close();
 
-			    System.out.println("[Pvs many sorted proof using the new vcg has been written to "+fn+".]");
+			    System.out.println("[Coq many sorted proof using the new vcg has been written to "+fn+".]");
 			}
 			catch (Exception e) { 
 			    System.out.println(e.getMessage()); 
