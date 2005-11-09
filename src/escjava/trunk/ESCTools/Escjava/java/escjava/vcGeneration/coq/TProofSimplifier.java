@@ -370,23 +370,23 @@ public class TProofSimplifier extends TVisitor {
 
     public void visitTForAll(/*@ non_null @*/ TForAll n){
 
-	if(n.parent instanceof TBoolRes) {
-	    TBoolRes nTemp = (TBoolRes) n.parent;
-	    simplify(nTemp, n);
-	}
-	else 
-	    TDisplay.err(this, "visitTForAll", "TIs node has a parent which type is != from TBoolRes");
+//	if(n.parent instanceof TBoolRes) {
+//	    TBoolRes nTemp = (TBoolRes) n.parent;
+//	    simplify(nTemp, n);
+//	}
+//	else 
+//	    TDisplay.err(this, "visitTForAll", "TIs node has a parent which type is != from TBoolRes");
 
     }
 
     public void visitTExist(/*@ non_null @*/ TExist n){
 
-	if(n.parent instanceof TBoolRes) {
-	    TBoolRes nTemp = (TBoolRes) n.parent;
-	    simplify(nTemp, n);
-	}
-	else 
-	    TDisplay.err(this, "visitTExist", "TIs node has a parent which type is != from TBoolRes");
+//	if(n.parent instanceof TBoolRes) {
+//	    TBoolRes nTemp = (TBoolRes) n.parent;
+//	    simplify(nTemp, n);
+//	}
+//	else 
+//	    TDisplay.err(this, "visitTExist", "TIs node has a parent which type is != from TBoolRes");
 
     }
 

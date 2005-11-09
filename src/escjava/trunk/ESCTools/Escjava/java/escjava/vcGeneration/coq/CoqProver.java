@@ -70,7 +70,7 @@ public class CoqProver implements ProverType {
         TNode.$Reference = TNode.addType("%Reference", "Reference");
         TNode.$Time = TNode.addType("%Time", "Time");
         TNode.$Type = TNode.addType("%Type", "Types");
-        TNode.$boolean = TNode.addType("boolean", "Boolean");
+        TNode.$boolean = TNode.addType("boolean", "bool");
         TNode.$char = TNode.addType("char", "t_char");
         TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "t_double"); 
         TNode.$double = TNode.addType("double", "t_double"); 
@@ -90,8 +90,8 @@ public class CoqProver implements ProverType {
     }
     
     public void rewrite(TNode tree) {
-        TProofSimplifier psvi = new TProofSimplifier();
-        tree.accept(psvi);
+//        TProofSimplifier psvi = new TProofSimplifier();
+//        tree.accept(psvi);
     }
     
     private void coqRename(TypeInfo t){
@@ -344,7 +344,7 @@ public class CoqProver implements ProverType {
              * pvsName, sammyName, type.
              */
             String name = viTemp.getVariableInfo().toString();
-            if(name.equals("ecReturn") || name.equals("ecThrow"))
+            if(name.equals("ecReturn") || name.equals("ecThrow") || name.equals("t_int"))
             	continue;
             if (viTemp.type != null) {
                 

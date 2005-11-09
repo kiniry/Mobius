@@ -77,17 +77,20 @@ import escjava.vcGeneration.VariableInfo;
 class TCoqVisitor extends TVisitor {
 
     protected CoqStringBuffer out = null;
-    private TCoqVisitor tcbv; 
-    private CoqProver p;
+    private TCoqVisitor tcbv;
+    private TCoqVisitor tcv; 
+    protected CoqProver p;
     TCoqVisitor(CoqProver prover){
     	out = new CoqStringBuffer(super.out);
     	p= prover;
-    	tcbv = new TCoqBoolVisitor(out, p);
+    	tcv = this;
+    	tcbv = new TCoqBoolVisitor(this, out, p);
     }
     
-    protected TCoqVisitor(CoqStringBuffer out, CoqProver p){
+    protected TCoqVisitor(TCoqVisitor v, CoqStringBuffer out, CoqProver p){
     	this.out = out;
     	tcbv = this;
+    	tcv = v;
     	this.p = p;
     }
     /*
@@ -235,7 +238,7 @@ class TCoqVisitor extends TVisitor {
 	out.appendI("(");
 	out.appendN(s);
 	out.appendN(" (");
-	n.getChildAt(0).accept(this);
+	n.getChildAt(0).accept(tcv);
 	 if(n.getChildAt(0) instanceof TName)
 	    	out.appendN(" = true");
 	out.appendN("))");
@@ -262,7 +265,7 @@ class TCoqVisitor extends TVisitor {
 
 	out.appendI("(");
 	
-	n.getChildAt(0).accept(this);
+	n.getChildAt(0).accept(tcv);
 
 	if(! ((n.getChildAt(0)) instanceof TName || (n.getChildAt(0)) instanceof TLiteral)) {
 	    out.appendN("\n");
@@ -270,7 +273,7 @@ class TCoqVisitor extends TVisitor {
 	}
 	
 	out.appendN(" "+s+" ");
-	n.getChildAt(1).accept(this);
+	n.getChildAt(1).accept(tcv);
 	out.appendN(")");
 	if((n.getChildAt(1)) instanceof TName || (n.getChildAt(1)) instanceof TLiteral)
 	    out.reduceIwNl();
@@ -292,9 +295,9 @@ class TCoqVisitor extends TVisitor {
     		else
     			out.appendN("(");
     		// Frankie says... no equality on Prop
-    		n.getChildAt(i).accept(tcbv);    	
+    		n.getChildAt(i).accept(tcv);    	
     		out.appendN(" "+s+" ");
-    		n.getChildAt(i+1).accept(tcbv);
+    		n.getChildAt(i+1).accept(tcv);
     		out.appendN(")");
     	}
     	out.appendN(")");
@@ -322,7 +325,7 @@ class TCoqVisitor extends TVisitor {
     public void visitTRoot(/*@ non_null @*/ TRoot n){
 	
 	for(int i = 0; i <= n.sons.size() - 1; i++)
-	    n.getChildAt(i).accept(this);
+	    n.getChildAt(i).accept(tcv);
 
     }
 
@@ -382,10 +385,14 @@ class TCoqVisitor extends TVisitor {
     }
     
     public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n){
-    	String s = "=";
-    	if(n.sons.size() < 2 )
-    	    System.err.println("java.escjava.vcGeneration.TCoqVisitor : the spaced out binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");
-
+    
+    	printBoolEq(n);
+    
+    }
+    public void printBoolEq(TFunction n) {
+    	//String s = "=";
+       	if(n.sons.size() < 2 )
+    	    System.err.println("java.escjava.vcGeneration.TCoqVisitor.printBoolEq : the spaced out binary operator named = has a number of sons equals to "+n.sons.size()+" which is different from 2");
     	out.appendI("(");
     	for(int i =0; i < n.sons.size() - 1; i++) {
     		
@@ -394,9 +401,17 @@ class TCoqVisitor extends TVisitor {
     		}
     		else
     			out.appendN("(");
-    		n.getChildAt(i).accept(tcbv);
-    		out.appendN(" "+s+" ");
-    		n.getChildAt(i+1).accept(tcbv);
+    		Object o = (n.getChildAt(i+1));
+    		if((o instanceof TBoolean)) {
+    			n.getChildAt(i).accept(tcv);
+    			out.appendN(" = ");	
+    		}
+    		else {
+    			n.getChildAt(i).accept(tcbv);
+    			out.appendN(" <-> ");
+    		}
+
+			n.getChildAt(i+1).accept(tcbv);
     		out.appendN(")");
     	}
     	out.appendN(")");
@@ -404,10 +419,6 @@ class TCoqVisitor extends TVisitor {
     	    out.reduceIwNl();
     	else
     	    out.reduceI();
-    	    
-    
-		
-    	//spacedBinOp("(* Bool Eq *) =", n);
     }
     
     public void visitTBoolNE(/*@ non_null @*/ TBoolNE n){
@@ -423,12 +434,18 @@ class TCoqVisitor extends TVisitor {
     }
 
     public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n){
+    	// FIXME: sometime an AnyEQ can be a boolean EQ. that's sick.
     	if(n.sons.size() == 2) {
     		Object son = n.sons.get(1);
-    		if((son instanceof TAsLockSet) || 
-    				(son instanceof TAsElems) ||
-    				(son instanceof TAsField)) {
-    			out.appendN("True ");
+//    		if((son instanceof TAsLockSet) || 
+//    				(son instanceof TAsElems) ||
+//    				(son instanceof TAsField)) {
+//    			out.appendN("True ");
+//    			return;
+//    		}
+    		if((son instanceof TBoolNot)||
+    				(son instanceof TBoolean)) {
+    			printBoolEq(n);
     			return;
     		}
     		
@@ -567,11 +584,11 @@ class TCoqVisitor extends TVisitor {
     	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
     	if(TNode.$integer.equals(n.type))
-    		genericFun(pre +"IntHeap.select ", n);
+    		genericFun("IntHeap." + pre +"select ", n);
     	else if(TNode.$boolean.equals(n.type))
-    		propFun(pre +"BoolHeap.select ", n);
+    		propFun("BoolHeap." + pre +"select ", n);
     	else
-    		genericFun(pre +"RefHeap.select ", n);
+    		genericFun("RefHeap." +pre +"select ", n);
     }
     public void visitTStore(/*@ non_null @*/ TStore n){
     	String pre = "";
@@ -589,7 +606,6 @@ class TCoqVisitor extends TVisitor {
 	genericFun("typeof",n);
     }
 
-    // fixme not handled atm
     public void visitTForAll(/*@ non_null @*/ TForAll n){
     	out.appendI("(forall ");	
     	int i =0;
@@ -608,7 +624,7 @@ class TCoqVisitor extends TVisitor {
     	    
     	    out.appendN( "(");
     	    TName var = (TName) a;
-    	    this.visitTName(var);
+    	    tcv.visitTName(var);
     	    
     	    out.appendN(  ": "+ p.getTypeInfo(TNode.getVariableInfo(var.name).type) + ")");
     	    
@@ -619,7 +635,7 @@ class TCoqVisitor extends TVisitor {
     	//for(; i < n.sons.size(); i++) {
     	    TNode a = n.getChildAt(i);
     	    out.appendN(" ");    
-    	   	a.accept(this);
+    	   	a.accept(tcv);
     	    	
     	//}
     	out.appendN(")");
