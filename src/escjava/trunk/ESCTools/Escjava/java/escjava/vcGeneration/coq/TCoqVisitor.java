@@ -567,22 +567,22 @@ class TCoqVisitor extends TVisitor {
     	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
     	if(TNode.$integer.equals(n.type))
-    		genericFun(pre +"select_int ", n);
+    		genericFun(pre +"IntHeap.select ", n);
     	else if(TNode.$boolean.equals(n.type))
-    		propFun(pre +"select_bool ", n);
+    		propFun(pre +"BoolHeap.select ", n);
     	else
-    		genericFun(pre +"select ", n);
+    		genericFun(pre +"RefHeap.select ", n);
     }
     public void visitTStore(/*@ non_null @*/ TStore n){
     	String pre = "";
     	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
     	if(TNode.$integer.equals(((TNode)n.sons.get(2)).type))
-    		genericFun(pre + "store_int ", n);
+    		genericFun("IntHeap." + pre + "store ", n);
     	else if(TNode.$boolean.equals(((TNode)n.sons.get(2)).type))
-    		propFun(pre +"store_bool ", n);
+    		propFun("BoolHeap." + pre +"store ", n);
     	else
-    		genericFun(pre + "store ", n);
+    		genericFun("RefHeap." + pre + "store ", n);
     }
 
     public void visitTTypeOf(/*@ non_null @*/ TTypeOf n){
