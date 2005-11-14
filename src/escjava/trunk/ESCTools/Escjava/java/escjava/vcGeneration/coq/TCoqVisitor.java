@@ -93,13 +93,15 @@ class TCoqVisitor extends ANotHandledVisitor {
     		if((o instanceof TBoolean)) {
     			n.getChildAt(i).accept(tcv);
     			out.appendN(" = ");	
+    			n.getChildAt(i+1).accept(tcv);
     		}
     		else {
     			n.getChildAt(i).accept(tcbv);
     			out.appendN(" <-> ");
+    			n.getChildAt(i+1).accept(tcbv);
     		}
 
-			n.getChildAt(i+1).accept(tcbv);
+			
     		out.appendN(")");
     	}
     	out.appendN(")");

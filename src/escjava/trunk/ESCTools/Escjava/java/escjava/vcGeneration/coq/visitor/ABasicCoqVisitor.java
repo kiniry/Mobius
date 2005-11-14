@@ -43,7 +43,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
     	out.appendI("("+ s+" ");
     	int i =0;
     	for(; i < n.sons.size(); i++) {
-    		n.getChildAt(i).accept(this);
+    		n.getChildAt(i).accept(tcv);
     		if(i != n.sons.size() - 1)
     			out.appendN(" ");
     	}
@@ -89,7 +89,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	out.appendI("(");
 	out.appendN(s);
 	out.appendN(" (");
-	n.getChildAt(0).accept(this);
+	n.getChildAt(0).accept(tcv);
 	out.appendN("))");
 	if((n.getChildAt(0)) instanceof TName || (n.getChildAt(0)) instanceof TLiteral)
 	    out.reduceIwNl();
@@ -115,7 +115,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 //		out.appendN("(");
 	for(; i < n.sons.size(); i++) {
 		out.appendN("(");
-	    n.getChildAt(i).accept(this);
+	    n.getChildAt(i).accept(tcv);
 	    //if(i != 0)
 		out.appendN(")");
 	    /*
@@ -141,10 +141,8 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 //    		out.appendN("(");
     	for(; i < n.sons.size(); i++) {
     		out.appendN("(");
-    	    n.getChildAt(i).accept(this);
-    	    if(n.getChildAt(i) instanceof TName)
-    	    	out.appendN(" = true");
-    	    //if(i != 0)
+    	    n.getChildAt(i).accept(tcbv);
+
     		out.appendN(")");
     	    /*
     	     * not the last
