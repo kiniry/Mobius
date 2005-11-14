@@ -131,7 +131,11 @@ class TCoqVisitor extends ANotHandledVisitor {
     			out.appendN("(* TAs *) True ");
     			return;
     		}
-    		if((son instanceof TBoolNot)||
+    		if((son instanceof TBoolNot)
+    				||
+    				(son instanceof TRefEQ)||
+    				(son instanceof TAnyEQ)||
+    				(son instanceof TBoolEQ)||
     				(son instanceof TBoolean)) {
     			printBoolEq(n);
     			return;
@@ -240,9 +244,9 @@ class TCoqVisitor extends ANotHandledVisitor {
 
     public void visitTBoolean(/*@ non_null @*/ TBoolean n){
 	if(n.value)
-	    out.appendN(" (* bool*) True");
+	    out.appendN(" (* bool*) true");
 	else
-	    out.appendN("False");
+	    out.appendN("false");
     }
 
     public void visitTChar(/*@ non_null @*/ TChar n){

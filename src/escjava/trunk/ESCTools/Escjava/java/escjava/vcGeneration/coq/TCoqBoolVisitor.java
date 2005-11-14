@@ -30,15 +30,15 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 	
 	
 	/**
-	 * Boolean value seen as a real boolean value:
-	 * <code>true</code> or <code>false</code>.
+	 * Boolean value seen as a prop boolean value:
+	 * <code>True</code> or <code>False</code>.
 	 * @see TCoqVisitor#visitTBoolean(TBoolean)
 	 */
 	public void visitTBoolean(/*@ non_null @*/ TBoolean n){	
 		if(n.value)
-		    out.appendN("true");
+		    out.appendN("True");
 		else
-		    out.appendN("false");
+		    out.appendN("False");
 	 }
 	 
 	 /**
