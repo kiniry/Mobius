@@ -74,6 +74,12 @@ import escjava.vcGeneration.TTypeOf;
 import escjava.vcGeneration.TUnset;
 import escjava.vcGeneration.TVisitor;
 
+/**
+ * Stolen from the PVS extension.
+ * FIXME: it should be adapted to Coq specific environment.
+ * @author C. Hurlin
+ * @version 14/11/2005
+ */
 public class TProofSimplifier extends TVisitor {
 
     StringBuffer out = null;
