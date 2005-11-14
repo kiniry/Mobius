@@ -64,7 +64,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     		genericFun("IntHeap." + pre +"select ", n);
     		
     	} else if(TNode.$boolean.equals(n.type))
-    		propFun("BoolHeap." + pre +"select ", n);
+    		genericFun("BoolHeap." + pre +"select ", n);
     	else
     		genericFun("RefHeap." +pre +"select ", n);
     }
@@ -85,7 +85,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     		genericFun("IntHeap." + pre + "store ", n);
     	}
     	else if(TNode.$boolean.equals(tval))
-    		propFun("BoolHeap." + pre +"store ", n);
+    		genericFun("BoolHeap." + pre +"store ", n);
     	else {
     		if(val instanceof TName) {
     			String na = ((TName)val).name;
