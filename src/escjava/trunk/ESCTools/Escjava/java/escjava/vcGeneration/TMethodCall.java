@@ -62,14 +62,16 @@ public class TMethodCall extends TFunction {
 	 * @see TFunction#typeTree()
 	 */
     protected void typeTree(){
-
+    	// in case of double typing...
+    	if(argTypes.size() > 0)
+    		argTypes.clear();
     	/*
     	 * Semantic control : for now we determine the type of the pure method
     	 */
-    	
     	for(int i = 0; i < sons.size(); i++){
     	    TNode nodeTemp = getChildAt(i);
     	    nodeTemp.typeTree();
+    	    // does not work at all: we only get the same empty type -- julien
     	    argTypes.add(nodeTemp.type);
     	}
 
