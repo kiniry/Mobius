@@ -6,27 +6,51 @@ import escjava.vcGeneration.TNode;
 import escjava.vcGeneration.VariableInfo;
 
 
-
+/**
+ * In the Coq extension, we differentiate <code>Boolean</code>
+ * value and variables from usual <code>Prop</code>.
+ * So we have 2 visitors which are coupled. 
+ * <p>
+ * This is the visitor used for <code>Boolean</code> specific values.  
+ * @author J.Charles
+ * @version 14/11/2005
+ */
 public class TCoqBoolVisitor extends TCoqVisitor {
+	
+	/**
+	 * Constructor of the couple  TCoqVisitor/TCoqBoolVisitor.
+	 * It should not be called by any other class than TCoqVisitor.
+	 * @param v the current visitor.
+	 * @param o the current CoqStringBuffer.
+	 * @param p the current instance of CoqProver.
+	 */
 	TCoqBoolVisitor(TCoqVisitor v, CoqStringBuffer o, CoqProver p){
     	super(v, o, p);	
     }
-	 public void visitTBoolean(/*@ non_null @*/ TBoolean n){	
+	
+	
+	/**
+	 * Boolean value seen as a real boolean value:
+	 * <code>true</code> or <code>false</code>.
+	 * @see TCoqVisitor#visitTBoolean(TBoolean)
+	 */
+	public void visitTBoolean(/*@ non_null @*/ TBoolean n){	
 		if(n.value)
 		    out.appendN("true");
 		else
 		    out.appendN("false");
 	 }
 	 
+	 /**
+	  * Boolean variables that are used within a prop
+	  * should be translated in the form <code>myvar = true</code>
+	  * @param n the variable to translate.
+	  */
 	 public void visitTName(/*@ non_null @*/ TName n){
-
-			/*
-			 * This call handles everything, ie if n is a variable or a type name
-			 */
-		    	VariableInfo vi = TNode.getVariableInfo(n.name);
-		    	String name = p.getVariableInfo(vi);
-		    	if(name.equals("Z"))
-		    		name = "T_Z";
-				out.appendN(name + " = true");
+		    VariableInfo vi = TNode.getVariableInfo(n.name);
+		    String name = p.getVariableInfo(vi);
+		    if(name.equals("Z"))
+		    	name = "T_Z";
+			out.appendN(name + " = true");
 	 }
 }
