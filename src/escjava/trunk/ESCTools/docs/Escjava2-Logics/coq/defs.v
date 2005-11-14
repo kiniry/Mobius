@@ -124,10 +124,12 @@ Ltac unfoldEscArith := unfold  integralEQ_bool, integralGE_bool, integralLE_bool
 
 
 Variable null : Reference.
-Variable isAllocated: Reference -> Time -> Prop.
-Variable fClosedTime : S -> S.
-Variable vAllocTime : Reference -> Time.
+Variable fClosedTime : S -> Time.
 
+Variable vAllocTime : Reference -> Time.
+Definition isAllocated: Reference -> Time -> Prop := 
+    fun (obj : Reference) (t: Time) => vAllocTime obj < t.
+Ltac unfoldEscTime := unfold isAllocated.
 Variable ecReturn : S.
 Variable ecThrow : S.
 Axiom distinctAxiom : ecReturn <> ecThrow.
@@ -532,7 +534,7 @@ end;
 repeat match goal with
 |[H: _ |- _] => rewrite BoolHeap.select_store1 in H
 end; autorewrite with escj; auto.
-Ltac startsc := unfold not; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
+Ltac startsc := unfold not; unfoldEscTime; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
 (* unfoldArrAx. *)
 
 
