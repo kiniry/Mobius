@@ -128,7 +128,7 @@ public class VcToStringCoq extends VcToString{
       to = new PrintStream(new escjava.prover.PPOutputStream(to));
       //vts.distinctSymbols(to);
       vts.stringLiteralAssumptions(to);
-      to.print("Load \"/home/jcharles/workspace/ESCTools/docs/Escjava2-Logics/coq/defs_unsorted.v\".");
+      to.print("Load \"defs_unsorted.v\".");
       to.print("(* Start of Coq declarations : *)\n ");
       vts.integralPrintNameOrder(to);
 
