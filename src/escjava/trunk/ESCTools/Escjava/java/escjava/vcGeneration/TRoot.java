@@ -14,5 +14,14 @@ public class TRoot extends TFunction {
 	v.visitTRoot(this);
     }
     
+    
+    protected void typeTree() {
+    	/* FIXME: The typing is done twice because the first time
+    	 * some types can't be determined. A better handling 
+    	 * should be found // julien
+    	 */
+    	super.typeTree();
+    	super.typeTree();
 
+    }
 }
