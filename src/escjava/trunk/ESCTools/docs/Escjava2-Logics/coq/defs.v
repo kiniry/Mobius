@@ -192,16 +192,16 @@ Module Type Heap .
 Parameter A : Set.
 Variable arrselect: S -> Z -> A.
 Variable arrstore: S -> Z -> A -> S.
-
-Variable select: S -> A -> S.
-Variable store: S -> A -> S -> S.
+Variable select: S -> S -> A.
+Variable store: S -> S -> A -> S.
 
 Axiom select_store1: 
-    forall(var val :S)(obj :A), (select (store var obj val) obj) = val.
+    forall(var obj :S)(val :A), (select (store var obj val) obj) = val.
 Axiom select_store2: 
-    forall(var val :S)(obj1 obj2 :A), 
+    forall(var obj1 obj2 :S) (val : A), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
+
 Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types -> A -> Prop.
 
 (* array axioms2 *)
@@ -257,13 +257,13 @@ Definition A := X.A.
 Variable arrselect: S -> Z -> A.
 Variable arrstore: S -> Z -> A -> S.
 
-Variable select: S -> A -> S.
-Variable store: S -> A -> S -> S.
+Variable select: S -> S -> A.
+Variable store: S -> S -> A -> S.
 
 Axiom select_store1: 
-    forall(var val :S)(obj :A), (select (store var obj val) obj) = val.
+    forall(var obj :S)(val :A), (select (store var obj val) obj) = val.
 Axiom select_store2: 
-    forall(var val :S)(obj1 obj2 :A), 
+    forall(var obj1 obj2 :S) (val : A), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
 Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types -> A -> Prop.
