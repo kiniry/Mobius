@@ -73,8 +73,10 @@ public class VcGenerator {
 
     public/*@ non_null @*/String getProof(String proofName) {
 
-        if (!computationDone)
+        if (!computationDone) {
             generateIfpTree(oldRootNode, false);
+            newRootNode.typeTree();
+        }
         
         prover.rewrite(newRootNode);
         
@@ -336,7 +338,9 @@ public class VcGenerator {
                 currentParent.addSon(newNode);
                 currentParent = newNode;
                 break;
-            } // references
+            } 
+            
+            // references
             case TagConstants.ANYEQ: {
                 TAnyEQ newNode = new TAnyEQ();
                 currentParent.addSon(newNode);
@@ -348,7 +352,9 @@ public class VcGenerator {
                 currentParent.addSon(newNode);
                 currentParent = newNode;
                 break;
-            } // integral comparisons
+            } 
+            
+            // integral comparisons
             case TagConstants.INTEGRALEQ: {
                 TIntegralEQ newNode = new TIntegralEQ();
                 currentParent.addSon(newNode);
@@ -865,6 +871,7 @@ public class VcGenerator {
 
             // we type the tree.
             newRootNode.typeTree();
+            
             TDisplay.info(this, "generateIfpTree", "tree has been typed");
 
         }
