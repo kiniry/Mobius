@@ -1,5 +1,7 @@
 package escjava.vcGeneration.coq;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -9,18 +11,56 @@ import java.util.regex.Pattern;
 
 import escjava.vcGeneration.*;
 
+
+/**
+ * This class is an implementations of the interface {@link ProverType}.
+ * In order to handle the Coq theorem prover.
+ * @author J. Charles, based on the work of C. Hurlin and C.Pulley
+ * @version 14/11/2005
+ */
 public class CoqProver implements ProverType {
 
+	/**
+	 * @return an instance of the class {@link TCoqVisitor}.
+	 */
     public TVisitor visitor() {
         return new TCoqVisitor(this);
     }
 
+    /**
+     * @param proofname the name we should give to the generated lemma.
+     * @param declns the declarations of the forall.
+     * @param vc the generated verification condition.
+     * @return the Coq vernacular file representing the proof.
+     */
     public String getProof(String proofName, String declns, String vc) {
-    	//TCoqVisitor pvi = new TCoqVisitor(this);
-    	//System.out.println("here lieth thee");
+    	
+//    	// We try to generate the prelude.
+//   		try {
+//			new Prelude(new File("defs.v")).generate();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+    	
     	// generate declarations
     	StringBuffer s = new StringBuffer();
     	s.append("Load \"defs.v\".\n");
+    	generatePureMethodsDeclarations(s);
+    	s.append("Lemma "  + proofName + " : \n"); 
+    	s.append("forall " + declns + " ,\n");
+    	s.append(vc + ".\n");
+    	s.append("Proof with autosc.\n" + "Qed.");
+    	return s.toString();
+ 
+
+    }
+
+    
+    /**
+     * Generates the pure methods declarations
+     * @param s The output for the declarations.
+     */
+    private void generatePureMethodsDeclarations(StringBuffer s) {
     	//Let's go for the purity:
     	Vector methNames = TMethodCall.methNames;
     	Vector methDefs = TMethodCall.methDefs;
@@ -42,31 +82,27 @@ public class CoqProver implements ProverType {
     	    	s.append(tmc.type.def +".\n");
     	    }
     	}
-    	s.append("Lemma "  + proofName+" : \n"); 
-
-    	s.append("forall ");
-    		
-    		
-    	s.append(declns + " ,\n");
-
-    	s.append(vc);
-    	
-    	s.append(".\nProof with autosc.\nQed.");
-    	return s.toString();
- 
-
     }
 
-
+    
+    /**
+     * @param caller the type to translate to Coq.
+     * @return a valid type name.
+     */
     public String getTypeInfo(TypeInfo caller) {
         if (caller.def == null)
             coqRename(caller);
         return caller.def;
     }
 
+    
+    /**
+     * Defines predefined Coq types, and some predefined variables
+     * (ecReturn, ecThrow and XRES).
+     * For now there is no String types should be extended in the future.
+     */
     public void init() {
         // Predefined types
-
         TNode.$Reference = TNode.addType("%Reference", "Reference");
         TNode.$Time = TNode.addType("%Time", "Time");
         TNode.$Type = TNode.addType("%Type", "Types");
@@ -89,86 +125,98 @@ public class CoqProver implements ProverType {
         TNode.addName("XRES", "%Reference", "XRes");
     }
     
+    
+    /**
+     * Tries to simplify the given tree using the class
+     * {@link TProofSimplifier}.
+     * @param tree the tree to simplify.
+     */
     public void rewrite(TNode tree) {
-//        TProofSimplifier psvi = new TProofSimplifier();
-//        tree.accept(psvi);
+        TProofSimplifier psvi = new TProofSimplifier();
+        tree.accept(psvi);
+    	
     }
     
+    
+    /**
+     * Rename the type, ie. the name {@link TypeInfo#old} to
+     * a proper Coq name in the variable {@link TypeInfo#def} 
+     * @param t the type name to rename.
+     */
     private void coqRename(TypeInfo t){
 
         if(t.old.equals("null") )
       	  t.def = "Reference";
         else {
-  	  // common rules here //fixme, be more specific maybe
-  	  if(t.old.startsWith("java.")) //check if in the form java.x.y 
-  	      t.def = t.old.replace('.','_');
-  	  else {
-  	      System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::coqRename() : "+t.old); 
-  	      System.err.println("Considering it as a user defined type... ie Types");
-  	      t.def = "ReferenceType";
-  	  }
+        	// common rules here //fixme, be more specific maybe
+        	if(t.old.startsWith("java.")) //check if in the form java.x.y 
+        		t.def = t.old.replace('.','_');
+        	else {
+        		System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::coqRename() : "+t.old); 
+        		System.err.println("Considering it as a user defined type... ie Types");
+        		t.def = "ReferenceType";
+        	}
         }
-
     }
     
-	   public /*@ non_null @*/ String getVariableInfo(VariableInfo vi){
-
-			if(vi.type != TNode.$Type){
-			    if(vi.def == null)
-			    	coqRename(vi);
-
-			    return vi.def;
-			}
-			else {
-			    /*
-
-			    When variable is a type, we first have to check if it's in the type table.
-			    If yes, we take the name here (it's the case with predefined types like INTYPE, integer, Reference etc...
-
-			    Else it's normally a user defined Type
-
-			    */
+    /**
+     * Returns a valid Coq name corresponding to the given VariableInfo.
+     * @param vi the variable info to analyse.
+     */
+    public /*@ non_null @*/ String getVariableInfo(VariableInfo vi){ 	
+    	if(vi.type != TNode.$Type){
+    		if(vi.def == null)
+    			coqRename(vi);
+    		
+    		return vi.def;
+		}
+    	else {
+    		/* 
+    		 * When variable is a type, we first have to check if it's in the type table.
+    		 * If yes, we take the name here (it's the case with predefined types like INTYPE, integer, Reference etc...
+    		 * Else it's normally a user defined Type
+    		 */
 			    
-			    Set keySet = TNode.typesName.keySet();
-			    Iterator iter = keySet.iterator();
-			    TypeInfo tiTemp = null;
-			    String keyTemp = null;
-
-			    while(iter.hasNext()){
-		      
-				try {
+    		Set keySet = TNode.typesName.keySet();
+    		Iterator iter = keySet.iterator();
+    		TypeInfo tiTemp = null;
+    		String keyTemp = null;
+    		
+    		while(iter.hasNext()) {
+    			try {
 				    keyTemp = (String)iter.next();
-				}
-				catch (Exception e){
+				} catch (Exception e){
 				    System.err.println(e.getMessage());
 				}
 				tiTemp = (TypeInfo)TNode.typesName.get(keyTemp);
-
 				if(tiTemp.old.equals(vi.old)) {
 				    return getTypeInfo(tiTemp);
 				}
 				    
-			    }
+    		}
 
-			    System.err.println("Warning in " +
-			    		"escjava.java.vcGenerator.coq.CoqProver.getCoq(VariableInfo), " +
-			    		"considering "+
-			    		vi.old
-			    		+" as a user defined type, " +
-			    				"or a not (yet) handled variable.");
-
-			    coqRename(vi);
-
-			    return vi.def;
-			}
-   }
+    		System.err.println("Warning in " +
+    				"escjava.java.vcGenerator.coq.CoqProver.getCoq(VariableInfo), " +
+    				"considering "+
+    				vi.old
+    				+" as a user defined type, " +
+    				"or a not (yet) handled variable.");
+    			
+    		coqRename(vi);
+    		
+    		return vi.def;
+    	}
+    }
 	   
-	   /*@
-	      @ ensures coq != null;
-	      @*/
-	    private void coqRename(VariableInfo vi){
+    /** 
+     * Rename the variable, ie. the name {@link VariableInfo#old} to
+     * a proper Coq name in the variable {@link VariableInfo#def}.
+     * Stolen from the PVS plugin...
+     * @param vi the variable to rename.
+     */
+    private void coqRename(VariableInfo vi){
 
-	    	String coq;
+    	String coq;
 		// definitions of different regexp used.
 		Pattern p1 = Pattern.compile("\\|(.*):(.*)\\.(.*)\\|");
 		Matcher m1 = p1.matcher(vi.old);
@@ -225,44 +273,42 @@ public class CoqProver implements ProverType {
 		    //@ assert m.groupCount() == 3;
 
 		    if(m1.groupCount() != 3)
-			System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : m.groupCount() != 3");
+		    	System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : m.groupCount() != 3");
 
 		    for( i = 1; i <= m1.groupCount(); i++) {
 
-			if(m1.start(i) == -1 || m1.end(i) == -1)
-			    System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : return value of regex matching is -1");
-			else {
+		    	if(m1.start(i) == -1 || m1.end(i) == -1)
+		    		System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : return value of regex matching is -1");
+		    	else {
 			    
-			    String temp = vi.old.substring(m1.start(i),m1.end(i));
-			    //@ assert temp != null;
+		    		String temp = vi.old.substring(m1.start(i),m1.end(i));
+		    		//@ assert temp != null;
 
-			    switch(i){ 
-			    case 1 :
-				name = temp;
-				//@ assert name != null;
-				break;
-			    case 2:
-				line = temp;
-				//@ assert line != null;
-				break;
-			    case 3:
-				column = temp;
-				//@ assert column != null;
-				break;
-			    default :
-				System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : switch call incorrect, switch on value "+i);
-				break;
-			    }
-			} // no error in group
-			
+		    		switch(i){ 
+		    			case 1 :
+		    				name = temp;
+		    				//@ assert name != null;
+		    				break;
+		    			case 2:
+		    				line = temp;
+		    				//@ assert line != null;
+		    				break;
+		    			case 3:
+		    				column = temp;
+		    				//@ assert column != null;
+		    				break;
+		    			default :
+		    				System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : switch call incorrect, switch on value "+i);
+		    		}
+		    	} // no error in group			
 		    } // checking all group
 
 		    /* renaming done here, if you want the way it's done
 		       (for pattern like |y:8.31|)
 		       do it here. */
 		    coq = name+"_"+line+"_"+column;
-
 		} // </case 2>
+
 		else if(m4.matches()) {
 		    if(m4.groupCount() != 2)
 				System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : m.groupCount() != 3");
@@ -277,18 +323,16 @@ public class CoqProver implements ProverType {
 				    //@ assert temp != null;
 
 				    switch(i){ 
-				    case 1 :
-					name = temp;
-					//@ assert name != null;
-					break;
-				    case 2:
-					line = temp;
-					//@ assert line != null;
-					break;
-				    
-				    default :
-					System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : switch call incorrect, switch on value "+i);
-					break;
+				    	case 1 :
+				    		name = temp;
+				    		//@ assert name != null;
+				    		break;
+				    	case 2:
+				    		line = temp;
+				    		//@ assert line != null;
+				    		break;
+				    	default :
+				    		System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : switch call incorrect, switch on value "+i);
 				    }
 				} // no error in group
 			
@@ -303,38 +347,47 @@ public class CoqProver implements ProverType {
 		else {
 		    coq = vi.old; // FIXME handle everything
 		} // regexp didn't match
-		coq = coq.replace('@', '_');
-		coq = coq.replace('#', '_');
-		coq = coq.replace('.', '_');
-		coq = coq.replace('-', '_');
-		coq = coq.replace('<', '_');
-		coq = coq.replace('>', '_');
-		coq = coq.replace('?', '_');
-		coq = coq.replace('[', '_');
-		coq = coq.replace(']', '_');
-		coq = coq.replace('!', '_');
-		coq = coq.replaceAll("\\|", "");
-//		if(coq.startsWith("XRES"))
-//			coq = "XRES";
+		coq = removeInvalidChar(coq);
+
 		if(coq.equals("Z"))
 			coq = "z";
 		vi.def = coq;
-	}
-	    
-   public void generateDeclarations(/*@ non_null @*/StringBuffer s, HashMap variablesName) {
-	    Set keySet = variablesName.keySet();
+    }
+	
+    /**
+     * Removes the invalid characters in Coq for a given String.
+     * @param name The name where some invalid characters appear.
+     * @return The name without the invalid characters.
+     */
+    public String removeInvalidChar (String name) {
+    	name = name.replace('@', '_');
+		name = name.replace('#', '_');
+		name = name.replace('.', '_');
+		name = name.replace('-', '_');
+		name = name.replace('<', '_');
+		name = name.replace('>', '_');
+		name = name.replace('?', '_');
+		name = name.replace('[', '_');
+		name = name.replace(']', '_');
+		name = name.replace('!', '_');
+		name = name.replaceAll("\\|", "");
+		return name;
+    }
+    
+    
+    /**
+     * Generates the declarations for the forall construct in the Coq Fashion,
+     * i.e. (var1: Type1) (var2 : Type2)...
+     * @param s The output
+     * @param variablesNames the variables' names.
+     */
+    public void generateDeclarations(/*@ non_null @*/StringBuffer s, HashMap variablesNames) {
+    	Set keySet = variablesNames.keySet();
 
         Iterator iter = keySet.iterator();
         String keyTemp = null;
         VariableInfo viTemp = null;
-        TypeInfo tiTemp = null;
-
-        /*
-         * Needed to avoid adding a comma after last declaration. As some declaration can be skipped
-         * it's easier to put comma before adding variable (thus need for testing firstDeclaration
-         * instead of last one)
-         */
-        boolean firstDeclarationDone = false;
+     
 
         while (iter.hasNext()) {
 
@@ -343,37 +396,26 @@ public class CoqProver implements ProverType {
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
-            viTemp = (VariableInfo) variablesName.get(keyTemp);
+            viTemp = (VariableInfo) variablesNames.get(keyTemp);
 
-            /* output informations in this format : oldName, pvsUnsortedName,
-             * pvsName, sammyName, type.
-             */
             String name = viTemp.getVariableInfo().toString();
             if(name.equals("ecReturn") || name.equals("ecThrow") || name.equals("t_int"))
             	continue;
             if (viTemp.type != null) {
-                
-                //if (!viTemp.getVariableInfo().equals("%NotHandled")) { // skipping non handled variables
-                	s.append("(");
-                    s.append(viTemp.getVariableInfo() + " : "
-                            + viTemp.type.getTypeInfo());
-
-//                    if (!firstDeclarationDone)
-//                        firstDeclarationDone = true;
-                    s.append(")");
+            	s.append("(");
+            	s.append(viTemp.getVariableInfo() + " : "
+            			+ viTemp.type.getTypeInfo());
+            	s.append(")");
                 
             } else {
                 s.append("(" + viTemp.getVariableInfo() + " : S)");
-
-                TDisplay
-                        .warn(
-                                this,
-                                "generateDeclarations",
-                                "Type of variable "
-                                        + keyTemp
-                                        + " is not set when declarating variables for the proof, skipping it...");
+                TDisplay.warn(
+                		this,
+                		"generateDeclarations",
+                		"Type of variable "
+                		+ keyTemp
+                		+ " is not set when declarating variables for the proof, skipping it...");
             }
         }
-
     }
 }
