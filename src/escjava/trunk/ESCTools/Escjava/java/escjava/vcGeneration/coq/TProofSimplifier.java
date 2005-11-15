@@ -77,6 +77,7 @@ import escjava.vcGeneration.TVisitor;
 /**
  * Stolen from the PVS extension.
  * FIXME: it should be adapted to Coq specific environment.
+ * FIXME: it deletes too much nodes!!!
  * @author C. Hurlin
  * @version 14/11/2005
  */

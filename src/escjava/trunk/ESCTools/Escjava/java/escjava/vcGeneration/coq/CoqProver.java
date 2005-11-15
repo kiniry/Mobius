@@ -128,10 +128,12 @@ public class CoqProver implements ProverType {
     
     /**
      * Tries to simplify the given tree using the class
-     * {@link TProofSimplifier}.
+     * {@link TProofTyperVisitor}.
      * @param tree the tree to simplify.
      */
     public void rewrite(TNode tree) {
+    	TProofTyperVisitor tptv = new TProofTyperVisitor();
+    	tree.accept(tptv);
         //TProofSimplifier psvi = new TProofSimplifier();
         //tree.accept(psvi);
     	

@@ -124,7 +124,6 @@ class TCoqVisitor extends ANotHandledVisitor {
     }
 
     public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n){
-    	// FIXME: sometime an AnyEQ can be a boolean EQ. that's sick.
     	if(n.sons.size() == 2) {
     		Object son = n.sons.get(1);
     		if((son instanceof TAsLockSet) || 
@@ -133,16 +132,6 @@ class TCoqVisitor extends ANotHandledVisitor {
     			out.appendN("(* TAs *) True ");
     			return;
     		}
-    		if((son instanceof TBoolNot)
-    				||
-    				(son instanceof TRefEQ)||
-    				(son instanceof TAnyEQ)||
-    				(son instanceof TBoolEQ)||
-    				(son instanceof TBoolean)) {
-    			printBoolEq(n);
-    			return;
-    		}
-    		
     	}
     	
     	spacedBinOp("(* Any Eq *) =", n);

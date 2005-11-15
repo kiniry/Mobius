@@ -63,9 +63,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     			n.parent instanceof TIntegralEQ) {
     		genericFun("IntHeap." + pre +"select ", n);
     		
-    	} else if ((TNode.$boolean.equals(n.type)) || 
-    			(n.parent instanceof TBoolEQ) ||
-    			(n.parent instanceof TBoolNot))
+    	} else if (TNode.$boolean.equals(n.type)) 
     		genericFun("BoolHeap." + pre +"select ", n);
     	else
     		genericFun("RefHeap." +pre +"select ", n);
