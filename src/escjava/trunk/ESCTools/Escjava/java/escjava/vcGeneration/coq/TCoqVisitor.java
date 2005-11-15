@@ -69,7 +69,7 @@ class TCoqVisitor extends ANotHandledVisitor {
     }
 
     public void visitTBoolNot(/*@ non_null @*/ TBoolNot n){
-    	unaryProp("not ", n);
+    	unaryGeneric("negb ", n);
     }
     
     public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n){
@@ -209,12 +209,10 @@ class TCoqVisitor extends ANotHandledVisitor {
     	out.appendN(","); 
     	if( i <n.sons.size() - 1)
     		i++;
-    	//for(; i < n.sons.size(); i++) {
-    	    TNode a = n.getChildAt(i);
-    	    out.appendN(" ");    
-    	   	a.accept(tcv);
-    	    	
-    	//}
+    	
+    	TNode a = n.getChildAt(i);
+    	out.appendN(" ");    
+    	a.accept(tcv);
     	out.appendN(")");
     	out.reduceI();
     }

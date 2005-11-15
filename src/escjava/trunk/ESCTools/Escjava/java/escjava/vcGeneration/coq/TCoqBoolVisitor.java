@@ -1,8 +1,6 @@
 package escjava.vcGeneration.coq;
 
-import escjava.vcGeneration.TBoolean;
-import escjava.vcGeneration.TName;
-import escjava.vcGeneration.TNode;
+import escjava.vcGeneration.*;
 import escjava.vcGeneration.VariableInfo;
 
 
@@ -52,5 +50,17 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 		    if(name.equals("Z"))
 		    	name = "T_Z";
 			out.appendN(name + " = true");
+	 }
+	 
+	 public void visitTSelect(/*@ non_null @*/ TSelect n){
+	    	String pre = "";
+	    	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
+	    		pre = "arr";
+	    	genericFun("BoolHeap." + pre +"select ", n);
+	    	out.appendN(" = true");
+	    }
+	 
+	 public void visitTBoolNot(/*@ non_null @*/ TBoolNot n){
+	    	unaryProp("not ", n);
 	 }
 }

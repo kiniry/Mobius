@@ -169,9 +169,8 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	out.appendI("(");
 	out.appendN(s);
 	out.appendN(" (");
-	n.getChildAt(0).accept(tcv);
-	 if(n.getChildAt(0) instanceof TName)
-	    	out.appendN(" = true");
+	n.getChildAt(0).accept(tcbv);
+
 	out.appendN("))");
 	if((n.getChildAt(0)) instanceof TName || (n.getChildAt(0)) instanceof TLiteral)
 	    out.reduceIwNl();
