@@ -1,9 +1,12 @@
 package escjava.vcGeneration.pvs.unsorted;
 
+import javafe.ast.Expr;
+import escjava.translate.GC;
+import escjava.translate.InitialState;
 import escjava.vcGeneration.*;
 
-public class UnsortedPvsProver extends escjava.vcGeneration.pvs.PvsProver {
-
+public class PvsUnsortedProver extends escjava.vcGeneration.pvs.PvsProver {
+    
     public String getVariableInfo(VariableInfo caller) {
 
         if (caller.type != TNode.$Type) {
@@ -63,5 +66,15 @@ public class UnsortedPvsProver extends escjava.vcGeneration.pvs.PvsProver {
         TNode.addName("ecThrow", "%Path", "ecThrow");
         TNode.addName("XRES", "%Reference", "%XRES");
 
+    }
+    
+    public Expr addTypeInfo(InitialState initState, Expr tree) {
+        tree = GC.implies(initState.getInitialState(), tree);
+        return tree;
+    }
+
+    public TNode rewrite(TNode tree) {
+        // FIXME
+        return tree;
     }
 }

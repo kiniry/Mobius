@@ -3,9 +3,15 @@ package escjava.vcGeneration.simplify;
 import java.util.HashMap;
 
 import escjava.vcGeneration.*;
+import escjava.translate.*;
+import javafe.ast.*;
 
 public class SimplifyProver implements ProverType {
-
+    
+    public String labelRename(String label) {
+        return label;
+    }
+    
     public TVisitor visitor() {
         return new TSimplifyVisitor();
     }
@@ -85,8 +91,14 @@ public class SimplifyProver implements ProverType {
         TNode.addName("XRES", "%Reference", "XRES");        
     }
     
-    public void rewrite(TNode tree) {
-        // intentionally do nothing!
+    public Expr addTypeInfo(InitialState initState, Expr tree) {
+        tree = GC.implies(initState.getInitialState(), tree);
+        return tree;
+    }
+    
+    public TNode rewrite(TNode tree) {
+        // Intentionally does nothing
+        return tree;
     }
 
 	public void generateDeclarations(StringBuffer s, HashMap variablesName) {

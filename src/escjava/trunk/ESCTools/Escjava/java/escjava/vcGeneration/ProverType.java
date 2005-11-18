@@ -1,9 +1,23 @@
 package escjava.vcGeneration;
 
 import java.util.HashMap;
+import escjava.translate.InitialState;
+import javafe.ast.Expr;
 
 /**
  * The interface to be implemented when adding a new prover to ESC/Java.
+ * 
+ * <p><b>Any</b> implementing class <i>should</i> be placed in an appropriately named 
+ * <i>subpackage</i> of the <i>escjava.vcGeneration</i> 
+ * package. In addition, the implementing classes name should be be a capitilized 
+ * version of the subpackages name with all dots removed:
+ * <center>
+ * For example, for subpackage <i>pvs.unsorted</i>, the implementing classes name 
+ * should be <i>PvsUnsortedProver</i>.
+ * </center>
+ * This restriction exists so that new provers may be generically loaded and 
+ * created at runtime within the <i>escjava.Main</i> class and different provers may 
+ * be easily identified within an editing environment.
  * 
  * <p>With this interface, even Simplify is treated as just another prover.
  * 
@@ -18,7 +32,15 @@ import java.util.HashMap;
  */
 
 public interface ProverType {
-
+    
+    /**
+     * This method is used to provide prover based renaming of the VC file name.
+     * 
+     * @param label The method based label that needs to be renamed.
+     * @return The renamed method label.
+     */
+    public String labelRename(String label);
+    
     /**
      * The visitor pattern is used to map an ESC/Java VC term to a prover term.
      * 
@@ -66,13 +88,23 @@ public interface ProverType {
     public void init();
 
     /**
+     * This method is used by untyped prover logics to add typing predicates to
+     * the supplied VC term.
+     * <p>Typed prover logics do not need to do anything here.
+     * 
+     * @param tree the VC term to which typing predicates <i>may</i> need to be added.
+     * @return
+     */
+    public Expr addTypeInfo(InitialState initState, Expr tree);
+    
+    /**
      * This method allows an ESC/Java VC term to be simplified <i>before</i> 
      * it is translated to the target prover.
      * 
      * @param tree a VC term to be simplified
      */
     //FIXME To what extent is this really necessary?
-    public void rewrite(TNode tree);
+    public TNode rewrite(TNode tree);
 
     /**
      * This methods generates the declarations for a specified prover.

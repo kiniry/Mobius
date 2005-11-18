@@ -2,10 +2,18 @@ package escjava.vcGeneration.sammy;
 
 import java.util.HashMap;
 
+import javafe.ast.Expr;
+
+import escjava.translate.GC;
+import escjava.translate.InitialState;
 import escjava.vcGeneration.*;
 
 public class SammyProver implements ProverType {
-
+    
+    public String labelRename(String label) {
+        return label;
+    }
+    
     public TVisitor visitor() {
         return null; //FIXME
     }
@@ -69,8 +77,14 @@ public class SammyProver implements ProverType {
         TNode.addName("XRES", "%Reference", "XRES");        
     }
     
-    public void rewrite(TNode tree) {
+    public Expr addTypeInfo(InitialState initState, Expr tree) {
+        tree = GC.implies(initState.getInitialState(), tree);
+        return tree;
+    }
+
+    public TNode rewrite(TNode tree) {
         // Intentionally do nothing!
+        return tree;
     }
 
 	public void generateDeclarations(StringBuffer s, HashMap variablesName) {

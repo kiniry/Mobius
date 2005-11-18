@@ -1,7 +1,5 @@
 package escjava.vcGeneration.coq;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -10,6 +8,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import escjava.vcGeneration.*;
+import escjava.translate.*;
+import javafe.ast.*;
 
 
 /**
@@ -19,7 +19,14 @@ import escjava.vcGeneration.*;
  * @version 14/11/2005
  */
 public class CoqProver implements ProverType {
-
+    
+    public String labelRename(String label) {
+        label = label.replace('.','_');
+        label = label.replace('<','_');
+        label = label.replace('>','_');
+        return label;
+    }
+    
 	/**
 	 * @return an instance of the class {@link TCoqVisitor}.
 	 */
@@ -125,18 +132,23 @@ public class CoqProver implements ProverType {
         TNode.addName("XRES", "%Reference", "XRes");
     }
     
+    public Expr addTypeInfo(InitialState initState, Expr tree) {
+        //FIXME Our prover logic is (presumably?) typed, so why do we need to do this here?
+        tree = GC.implies(initState.getInitialState(), tree);
+        return tree;
+    }
     
     /**
      * Tries to simplify the given tree using the class
      * {@link TProofTyperVisitor}.
      * @param tree the tree to simplify.
      */
-    public void rewrite(TNode tree) {
+    public TNode rewrite(TNode tree) {
     	TProofTyperVisitor tptv = new TProofTyperVisitor();
     	tree.accept(tptv);
         //TProofSimplifier psvi = new TProofSimplifier();
         //tree.accept(psvi);
-    	
+    	return tree;
     }
     
     

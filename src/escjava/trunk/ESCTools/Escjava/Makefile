@@ -33,6 +33,8 @@ JAVASOURCEFILES = \
 	${ESCJAVA_SOURCE_DIR}/escjava/tc/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/translate/*.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*/*Prover.java \
+	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*/*/*Prover.java \
 	${ESCJAVA_SOURCE_DIR}/escjava/*.java
 
 #	${ESCJAVA_SOURCE_DIR}/escjava/Version.java

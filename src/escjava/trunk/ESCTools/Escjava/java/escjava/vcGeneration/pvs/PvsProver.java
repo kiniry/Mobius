@@ -6,10 +6,19 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafe.ast.Expr;
+
+import escjava.translate.GC;
+import escjava.translate.InitialState;
 import escjava.vcGeneration.*;
 
 public class PvsProver implements ProverType {
 
+    public String labelRename(String label) {
+        label = label.replace('.','_');
+        return label;
+    }
+    
     public TVisitor visitor() {
         return new TPvsVisitor();
     }
@@ -240,9 +249,24 @@ public class PvsProver implements ProverType {
         TNode.addName("XRES", "%Reference", "preDef?XRes");
     }
     
-    public void rewrite(TNode tree) {
+    public Expr addTypeInfo(InitialState initState, Expr tree) {
+        return tree;
+    }
+
+    /** We expect this method to be called with a tree of type TBoolImplies:
+     * <ul>
+     * <li>the hypothesis of the tree is expected to be typing information</li>
+     * <li>the conclusion of the tree is expected to be the VC body</li>
+     * </ul>
+     * Since the Pvs prover is a strongly typed logic, we may eliminate this typing 
+     * information <i>before</i> providing any additional simplifications.
+     * 
+     * Strictly speaking, we should check that the hypothesis is as expected (FIXME).
+     */   
+    public TNode rewrite(TNode tree) {
         TProofSimplifier psvi = new TProofSimplifier();
         tree.accept(psvi);
+        return tree;
     }
 
 	public void generateDeclarations(StringBuffer s, HashMap variablesName) {

@@ -67,10 +67,6 @@ public class VcGenerator {
         TNode.init(prover);
     }
 
-    public/*@ non_null @*/String getProof() {
-        return getProof(null);
-    }
-
     public/*@ non_null @*/String getProof(String proofName) {
 
         if (!computationDone) {
@@ -78,7 +74,7 @@ public class VcGenerator {
             newRootNode.typeTree();
         }
         
-        prover.rewrite(newRootNode);
+        newRootNode = prover.rewrite(newRootNode);
         
         TVisitor vi = prover.visitor();
         newRootNode.accept(vi);
