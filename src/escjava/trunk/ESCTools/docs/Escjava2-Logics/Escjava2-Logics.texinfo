@@ -3035,7 +3035,7 @@ The Theory @var{escjava_java_strings}
 The Theory @var{escjava_java_arrays}
 
 @example
-@include pvs/escjava_arrays.pvs.texinfo
+@include pvs/escjava_java_arrays.pvs.texinfo
 @end example
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

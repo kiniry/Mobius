@@ -23,4 +23,4 @@ if '%CLASSPATH%'=='' set USERPATH=.
 if not '%CLASSPATH%'=='' set USERPATH=%CLASSPATH%
 rem @echo on
 rem echo %ESCJ_ARGS%
-java  -Dsimplify="%ESCJ_SIMPLIFY%" -classpath "%ESCJAVA_ROOT%\esctools2.jar" escjava.Main -specs "%ESCJAVA_ROOT%\jmlspecs.jar" -classpath "%USERPATH%" %ESCJ_STDARGS% %ESCJ_ARGS%
+java  -Dsimplify="%ESCJ_SIMPLIFY%" -classpath "%ESCJAVA_ROOT%\esctools2.jar" escjava.Main -classpath "%USERPATH%" %ESCJ_STDARGS% %ESCJ_ARGS%

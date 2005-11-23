@@ -2,6 +2,9 @@
 # $Id$
 #
 
+export TOP = ../..
+include ../../Makefile.defs
+
 paper =		Escjava2-Logics
 
 talk =		

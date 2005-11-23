@@ -41,3 +41,6 @@ ClassEquiv.java
 FinalRef.java
 ## Check
 DefCon.java
+## Until jmlspecs.jar is re-imported, leave these out
+SetComprehension.java
+StringFresh.java

@@ -17,8 +17,6 @@ following files:
     platform
   escjava2 - a sample wrapper script for escj
 
-  jmlspecs.jar - the JML specification files from the JML tools suite
-    that may be used with the ESC/Java2 tool
   escspecs.jar - the new JML specification files which are an
     refinement of jmlspecs.jar that should be used with the ESC/Java2
     tool.
@@ -81,13 +79,12 @@ escjava2 executable will attempt to guess an appropriate value for
 some platforms.]
 
 d) The program requires some specification files for the Java system
-classes.  A basic set is provided with the release as the jmlspecs.jar
-file (these are a snapshot of those suppled by the JML project); they
-are used unless the user provides an alternate set.  An alternate set
-can be specified as a classpath in the ESC_SPECS environment variable.
-For example, if you wished to use the specs in the JML directory
-structure as found in CVS, and you were using csh or tcsh, you might
-write:
+classes.  A basic set is provided with the release as the escspecs.jar
+file; they are used unless the user provides an alternate set.  An
+alternate set can be specified as a classpath in the ESC_SPECS
+environment variable. For example, if you wished to use the specs in
+the JML directory structure as found in CVS, and you were using csh or
+tcsh, you might write:
 
   setenv ESC_SPECS /home/cok/JML/JML2:/home/cok/JML/JML2/specs
 

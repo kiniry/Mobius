@@ -2,6 +2,9 @@
 # $Id$
 #
 
+export TOP = ..
+include ../Makefile.defs
+
 texfiles =	$(wildcard *.tex)
 
 dvifiles =	$(foreach texfile,$(texfiles),\
