@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ESCJava</name>
+	<name>ESCTools</name>
 	<comment></comment>
 	<projects>
 		<project>JmlSpecs</project>
@@ -11,7 +11,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/make clean.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/make-clean.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
@@ -20,40 +20,13 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/make source.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/make-source.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.autoCheckJMLBuilder.launch</value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.RACBuilder.launch</value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/edu.ksu.cis.projects.jmleclipse.checker.JmldocBuilder.launch</value>
-				</dictionary>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
