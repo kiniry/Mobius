@@ -2,21 +2,14 @@
 
 package escjava.reader;
 
-import javafe.ast.CompilationUnit;
-import javafe.ast.LexicalPragmaVec;
 import javafe.ast.Modifiers;
-import javafe.ast.Identifier;
-import javafe.ast.Name;
 import javafe.ast.*;
-import javafe.ast.TypeDecl;
-import javafe.ast.TypeDeclVec;
 import javafe.tc.TypeSig;
 import javafe.ast.PrettyPrint;			// Debugging methods only
 import javafe.ast.StandardPrettyPrint;		// Debugging methods only
 import javafe.ast.DelegatingPrettyPrint;	// Debugging methods only
 import escjava.ast.EscPrettyPrint;		// Debugging methods only
 import javafe.util.Location;
-import escjava.ast.RefinePragma;
 import escjava.ast.*;
 import escjava.ast.TagConstants; // Resolves ambiguity
 import escjava.RefinementSequence;
@@ -24,6 +17,7 @@ import escjava.RefinementSequence;
 import escjava.AnnotationHandler;
 import javafe.genericfile.*;
 import javafe.parser.PragmaParser;
+import javafe.filespace.ClassPath;
 import javafe.filespace.Tree;
 import javafe.filespace.Query;
 
@@ -102,16 +96,22 @@ public class EscTypeReader extends StandardTypeReader
      * an I/O error occurs while initially scanning the filesystem.
      */
     //@ ensures \result != null;
-    public static StandardTypeReader make(String path, String srcPath,
-			    PragmaParser pragmaP, AnnotationHandler ah) {
-	if (path==null)
-	    path = javafe.filespace.ClassPath.current();
-	Query q = StandardTypeReader.queryFromClasspath(path);
-
-	Query srcq = srcPath == null ? q : 
-			StandardTypeReader.queryFromClasspath(srcPath);
+    public static StandardTypeReader make(
+            String classPath, String srcPath, PragmaParser pragmaP, AnnotationHandler ah) {
+        // Plug in default values for parameters
+	if (classPath == null) {
+            classPath = ClassPath.current();
+        }
+        if (srcPath == null) {
+            srcPath = classPath;
+        }
+        
+        // Construct queries
+        Query classQ = StandardTypeReader.queryFromClasspath(classPath);
+        Query srcQ   = StandardTypeReader.queryFromClasspath(srcPath);
 	
-	return make(q, srcq, pragmaP, ah);
+        // Construct the type reader
+	return make(classQ, srcQ, pragmaP, ah);
     }
 
     /**
