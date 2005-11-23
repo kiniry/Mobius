@@ -68,6 +68,7 @@ public abstract class FrontEndTool extends Tool
       sys = System.getProperty("sun.boot.class.path", null);
       //System.out.println("SYS-SUN " + sys);
     }
+    Info.out("sysPath: " + sys);
     if (sys == null) {
       sys =
         System.getProperty("java.home")
@@ -78,9 +79,11 @@ public abstract class FrontEndTool extends Tool
       //System.out.println("SYS-JH " + sys);
     }
 
+    // TODO: does this work if classPath is empty
+    Info.out("sysPath: " + sys);
     if (sys != null && !sys.equals("")) {
       if (!classPath.equals("")) {
-        classPath += System.getProperty("path.separator", ":");
+        classPath += java.io.File.pathSeparator;
       }
       classPath += sys;
     }
