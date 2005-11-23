@@ -15,10 +15,13 @@
 @author David R. Cok
 @email{cok@@frontiernet.net}
 
+@author Joseph R. Kiniry
+@email{joseph.kiniry@@ucd.ie}
+
 @sp 1
 
 
-@center November 2004
+@center November 2005
 
 @sp 2
 
@@ -52,6 +55,7 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 @sp 1
 
 Copyright @copyright{} 2003-2004 David R. Cok
+Copyright @copyright{} 2005 Joseph R. Kiniry
 
 
 @sp 4
@@ -122,6 +126,8 @@ Type modifiers
 * pure (JML)::                  
 * model (JML)::                 
 * weakly (JML)::                
+* non_null_by_default::         
+* nullable_by_default::         
 * final-type::                  
 * abstract-type::               
 * strictfp-type::               
@@ -180,6 +186,7 @@ Annotation modifiers for a method or constructor
 
 * pure-routine::                
 * nonnull-routine::             
+* nullable-routine::            
 * helper (JML)::                
 * final::                       
 * static-routine::              
@@ -195,6 +202,7 @@ Annotation assertions for a field declaration
 Annotation modifiers for a field declaration
 
 * nonnull (JML)::               
+* nullable (JML)::              
 * monitored (JML)::             
 * final-field::                 
 * volatile::                    
@@ -205,6 +213,7 @@ Annotation modifiers for a field declaration
 Annotation modifiers for formal parameters
 
 * nonnull-formal::              
+* nullable-formal::             
 * final-formal::                
 
 Annotation statements within the body of a method or constructor
@@ -834,7 +843,7 @@ that would improve processing time.
 @end itemize 
 
 @noindent
-@strong{Status: } The above rules are implemented in ESC/Java2 with
+@strong{Status:} The above rules are implemented in ESC/Java2 with
 the following exceptions.
 @itemize @bullet
 @item ESC/Java2 does not yet use the search order for the MRCU as described.
@@ -937,7 +946,7 @@ result of the current work on ESC/Java2 will diminish the need for the
 JML-only comments.  They may remain useful as a way to retain JML
 annotations that are not processed (though they could be) by
 ESC/Java2.  
-@*@strong{Status: } All of these annotation markers are
+@*@strong{Status:} All of these annotation markers are
 implemented.  
 @*@strong{Differences:} None.
 
@@ -1110,7 +1119,7 @@ specifications may not add any Java (that is, non-model, non-ghost)
 declarations to the signature.  They may only repeat declarations.
 The specification files may declare specifications for a method that
 is not implemented in the Java implementation if (a) the declaration
-overrides a method in a super class or super interface or, for
+overrides a method in a superclass or superinterface or, for
 interfaces, a method in @code{java.lang.Object} and (b) the
 declaration is within an interface or is an abstract declaration in a
 class.  This enables the specification writer to write specifications
@@ -1126,9 +1135,10 @@ field may be declared in only one file of a refinement sequence.
 
 @item These JML modifiers must be consistent across all redeclarations
 of a field:
-@code{model}, @code{ghost}, @code{instance}.  The modifiers 
-@code{spec_public}, @code{spec_protected}, @code{non_null} and
-@code{monitored} may be added by a refinement file, but may not be removed.
+@code{model}, @code{ghost}, @code{instance}.  The modifiers
+@code{spec_public}, @code{spec_protected}, @code{non_null},
+@code{nullable} and @code{monitored} may be added by a refinement file,
+but may not be removed.
 
 @item If a method or constructor is redeclared, it must be redeclared with the
 same return type, the same Java modifiers, and the same names for its formal
@@ -1146,7 +1156,7 @@ consistent across all redeclarations of a method or constructor.  The JML
 modifier @code{non_null} may be added, but not removed.
 
 @item If a refinement file redeclares a method or constructor from a previous
-refinement, or if the method is overriding a method in a super class
+refinement, or if the method is overriding a method in a superclass
 or interface (including the case where a type redeclares a method with
 specifications even though there is no Java declaration), the
 specification for that redeclared or overriding method must begin with
@@ -1312,13 +1322,15 @@ modifiers @code{public}, @code{strictfp} and the JML modifiers
 @code{spec_protected}.  Nested classes and interfaces may have the
 additional modifiers @code{static}, @code{protected}, and
 @code{private}.  The access modifiers are described in @ref{Access
-modifiers}.  In addition the superclass and super interfaces may be
+modifiers}.  In addition the superclass and superinterfaces may be
 modified with the keyword @code{weakly}.
 
 @menu
 * pure (JML)::                  
 * model (JML)::                 
 * weakly (JML)::                
+* non_null_by_default::         
+* nullable_by_default::         
 * final-type::                  
 * abstract-type::               
 * strictfp-type::               
@@ -1365,12 +1377,12 @@ erroneous uses of model types in Java code; both tools may also have some
 related name lookup bugs.
 @end itemize
 
-@node weakly (JML), final-type, model (JML), Type modifiers
+@node weakly (JML), non_null_by_default, model (JML), Type modifiers
 @subsection weakly (JML)
 
 @itemize @bullet
 @item @strong{Description:} This annotation is used to 
-modify super classes and super interfaces in a class
+modify superclasses and superinterfaces in a class
 or interface declaration.  An example of its syntax is this:
 @example
    public class A extends B /*@@ weakly */ 
@@ -1386,13 +1398,103 @@ or interface declaration.  An example of its syntax is this:
 
 @end itemize
 
-@node final-type, abstract-type, weakly (JML), Type modifiers
+@c @author kiniry
+@node non_null_by_default, nullable_by_default, weakly (JML), Type modifiers
+@subsection non_null_by_default (JML)
+
+@itemize @bullet
+@item @strong{Description:} This annotation is used to 
+denote a @code{non_null} default semantics for reference types in a
+given class.  An example of its syntax is this:
+@example
+   public /*@@ non_null_by_default @@*/ class A @{ ... @}
+@end example
+@noindent
+@noindent If a class is labeled with the annotation
+@code{non_null_by_default} then every field, formal parameter, and
+method has a default specification of @code{non_null}.  Local variables
+do not have any default specification.
+
+If a class is annotated @code{non_null_by_default} and a formal
+parameter, method, or field is annotated @code{non_null} then the latter
+spec is redundant and the user is notified of such.
+
+If a class is annotated @code{non_null_by_default} and a formal
+parameter, method, or field is annotated with @code{nullable} then this
+specified annotation overrides the class annotation and the reference
+may be null.
+
+[[ The scope of this annotation to the class to which it is applied
+as well as nested (possibly anonymous) classes.  The class-scoped
+annotation is not inherited. ]]
+
+[[ An interface may be annotated with @code{non_null_by_default}.  All
+constants, formal parameters, and methods in the interface have a
+default specification of @code{non_null}.  All concrete implementations
+of this interface must be consistent with these default
+specifications. ]]
+
+@item @strong{Status:} The modifier is parsed.  Typechecking implementation
+      is underway.  This modifier is not yet used by the static checker.
+
+@item @strong{Differences from JML or Java:} In the current JML2
+implementation the @code{non_null_by_default} annotation is file-scoped
+rather than class-scoped.
+
+@end itemize
+
+@c @author kiniry
+@node nullable_by_default, final-type, non_null_by_default, Type modifiers
+@subsection nullable_by_default (JML)
+
+@itemize @bullet
+@item @strong{Description:} This annotation is used to 
+denote a @code{nullable} default semantics for reference types in a
+given class.  An example of its syntax is this:
+@example
+   public /*@@ nullable_by_default @@*/ class A @{ ... @}
+@end example
+@noindent
+@noindent If a class is labeled with the annotation
+@code{nullable_by_default} then every field, formal parameter, and
+method has a default specification of @code{nullable}.  Local variables
+do not have any default specification.
+
+If a class is annotated @code{nullable_by_default} and a formal
+parameter, method, or field is annotated @code{nullable} then the latter
+spec is redundant and the user is notified of such.
+
+If a class is annotated @code{nullable_by_default} and a formal
+parameter, method, or field is annotated with @code{non_null} then this
+specified annotation overrides the class annotation and the reference
+may be null.
+
+[[ The scope of this annotation to the class to which it is applied
+as well as nested (possibly anonymous) classes.  The class-scoped
+annotation is not inherited. ]]
+
+[[ An interface may be annotated with @code{nullable_by_default}.  All
+constants, formal parameters, and methods in the interface have a
+default specification of @code{nullable}.  All concrete implementations
+of this interface must be consistent with these default
+specifications. ]]
+
+@item @strong{Status:} The modifier is parsed.  Typechecking implementation
+      is underway.  This modifier is not yet used by the static checker.
+
+@item @strong{Differences from JML or Java:} In the current JML2
+implementation the @code{nullable_by_default} annotation is file-scoped
+rather than class-scoped.
+
+@end itemize
+
+@node final-type, abstract-type, nullable_by_default, Type modifiers
 @subsection final (Java)
 
 @itemize @bullet
 @item @strong{Description:} A final class may not have subclasses.
-@item @strong{Status:} This modifier is parsed and checked.  It does not need
-any static checking.
+@item @strong{Status:} Parsed, typechecked, and used by the static checker.
+
 @item @strong{Differences from JML or Java:} None.
 
 @end itemize
@@ -1476,7 +1578,7 @@ the ghost field may be initialized in only one compilation unit of a
 refinement sequence.  A ghost field may have modifiers that a Java
 field declaration would have (namely, access modifiers (@pxref{Access
 modifiers}), @code{static}, @code{final}, but not @code{volatile},
-@code{transient}) as well as the JML modifiers @code{non_null},
+@code{transient}) as well as the JML modifiers @code{non_null}, @code{nullable},
 @code{monitored} and @code{instance} (@pxref{Field Annotation modifiers}).
 
 An interface may also declare ghost fields; these fields may be
@@ -1507,7 +1609,7 @@ of the class.
 
 A model field may have these modifiers: access modifiers
 (@pxref{Access modifiers}), @code{static}, [[[ what about @code{final}
-]]] and the JML modifiers @code{non_null}, [[[@code{monitored} ???]]] and
+]]] and the JML modifiers @code{non_null}, @code{nullable}, [[[@code{monitored} ???]]] and
 @code{instance} (@pxref{Field Annotation modifiers}).  
 Model fields may not have initializers.  [[[ An
 initializer expression would make nice syntactic sugar for the
@@ -1531,7 +1633,7 @@ specifications.  Model methods may have these Java modifiers:
 @code{public}, @code{protected}, @code{private}, @code{static},
 @code{abstract}, @code{final}, @code{synchronized}, @code{strictfp};
 they may have these JML modifiers: @code{pure}, @code{non_null},
-@code{helper}.
+@code{nullable}, and @code{helper}.
 
 Model methods may be declared in multiple specification files, but may have 
 an implementation in at most one.
@@ -1611,10 +1713,10 @@ specifications are required to hold until all static initialization and class
 loading is complete (for static invariants) or until a constructor has 
 completed execution (for instance invariants).
 
-@item @strong{Status: } Most specifications are parsed
-but not all and no reasoning is implemented.
+@item @strong{Status: } Most specifications are parsed but not all and 
+      no reasoning is implemented.
 
-@item @strong{Differences from JML or Java:}
+@item @strong{Differences from JML or Java:} None.
 @end itemize
 
 @node initializer, static initializer, Java initializer blocks, Type Annotations
@@ -1625,19 +1727,19 @@ but not all and no reasoning is implemented.
 stand-ins for all of the instance and class initialization that is
 performed as part of object creation or class loading. Within a class
 declaration in a compilation unit there may be just one each of the
-@code{initializer} and @code{static_initializer} keywords, each
-preceded by specifications (like those preceding a routine declaration
-or a Java initialization block).  If more than one compilation unit of
-a refinement sequence has these keywords, then the associated
+@code{initializer} and @code{static_initializer} keywords, each preceded
+by specifications (like those preceding a routine declaration or a Java
+initialization block).  If more than one compilation unit of a
+refinement sequence has these keywords, then the associated
 specifications are combined just like routine specifications are
 combined.  The composite specifications associated with an
-@code{initializer} keyword give preconditions that must hold before
-any instance initialization and postconditions that must hold after
-any instance initialization (but before constructors are executed).
+@code{initializer} keyword give preconditions that must hold before any
+instance initialization and postconditions that must hold after any
+instance initialization (but before constructors are executed).
 Similarly, the specifications of a @code{static_initializer} keyword
-hold before and after the static initialization of the class.  Note
-that these are different than the specifications for a Java
-initializer block, which apply only to that block.
+hold before and after the static initialization of the class.  Note that
+these are different than the specifications for a Java initializer
+block, which apply only to that block.
 
 @item @strong{Status:} Not yet parsed or implemented in static checking.
 
@@ -1688,7 +1790,6 @@ within a class or interface.  These are called nested classes or
 interfaces.  Inner classes or interfaces are nested classes or interfaces
 that are not @code{static}.  The modifiers allowed are listed in 
 Appendix A.
-
 
 @item @strong{Status:} Implemented.
 
@@ -1798,7 +1899,7 @@ Axioms are always considered to be static.
 @item @strong{Description:} This clause specifies a condition 
 that must hold in the post-state of any (non-helper) constructor
 (including the default constructor).  Within the body of a
-constructor, any super class @code{initially} clauses are assumed to hold
+constructor, any superclass @code{initially} clauses are assumed to hold
 after the execution of a (non-helper) @code{super(...)} call,
 including a possible implied call of the default superclass
 constructor.  A class does not inherit any superclass @code{initially}
@@ -1837,7 +1938,7 @@ defined.
 
 @item @strong{Status:} Implemented.  However, the semantics is
 not well-defined for the situation
-in which the field referred to in the clause is declared in a super class of
+in which the field referred to in the clause is declared in a superclass of
 the class declaration containing the clause.
 
 @item @strong{Differences from JML or Java:}
@@ -1868,7 +1969,6 @@ the given object.
 [[[ Is a static modifier allowed???]]]
 
 @item @strong{Differences from JML or Java:} None.
-
 
 @end itemize
 
@@ -1944,12 +2044,12 @@ requires clause, the default is @code{requires true;}
 
 @item If there is no specification at all and the 
 routine is a constructor or is a method that does not override any
-super class or super interface methods, the default is @code{requires
+superclass or superinterface methods, the default is @code{requires
 true;}
 
 @item If there is no specification at all (including no 
-@code{non_null} modifiers) and the method does override some super
-class or super interface method, the default is @code{requires false;}
+@code{non_null} modifier) and the method does override some superclass
+or superinterface method, the default is @code{requires false;}
 
 @item For the default constructor, if no specifications 
 have been given, the default requires specification is the same as the
@@ -1974,7 +2074,6 @@ be non-terminating (but not required to be).  The heavyweight default,
 @code{diverges false}, requires the implementation to terminate with
 either an exception or a normal return.  [[[ However, this is not
 checked in the current implementation. ]]]
-
 
 @item @strong{Status:} The lightweight and heavyweight specification forms,
 including nesting using @code{@{|} and @code{|@}} and combination with
@@ -2078,7 +2177,7 @@ JML allows multiple specifications for a single method declaration;
 these are separated and connected by the @code{also} keyword.
 Furthermore, if the method has additional declarations (with or
 without specifications) in an earlier source file in the refinement
-sequence or an overridden method in a super class or interface, then
+sequence or an overridden method in a superclass or interface, then
 (and only then) the specification must begin with @code{also} to
 indicate that there are some previous declarations, with possible
 specifications, of which the reader should be aware.
@@ -2098,7 +2197,7 @@ This syntax for combining specifications is different than and not
 backwards compatible with the syntax used in ESC/Java.  That tool did
 not allow combining multiple specifications using @code{also} and did
 not support refinement sequences.  Where there was inheritance of
-specification clauses from a super class or interface, the keywords
+specification clauses from a superclass or interface, the keywords
 @code{also_requires}, @code{also_ensures}, @code{also_modifies}, and
 @code{also_exsures} were required.  These keywords are not supported
 in ESC/Java2 and such specifications will need to be rewritten using
@@ -2503,7 +2602,6 @@ any static checking.
 
 @item @strong{Differences from JML or Java:} None.
 
-
 @end itemize
 
 @c ----------------------------------------------------------------------------
@@ -2521,7 +2619,6 @@ keywords @code{\nothing}, @code{\everything}, Any expressions
 @item @strong{Status:} status....  - status unknown
 
 @item @strong{Differences from JML or Java:} bugs...
-
 
 @end itemize
 
@@ -2541,7 +2638,6 @@ Any expressions (e.g. array indices) are evaluated in the pre-state.
 
 @item @strong{Differences from JML or Java:} bugs...
 
-
 @end itemize
 
 @c ----------------------------------------------------------------------------
@@ -2556,7 +2652,6 @@ may also be @code{\not_specified}, which is equivalent to omitting the clause.
 @item @strong{Status:} Parsed and ignored.
 
 @item @strong{Differences from JML or Java:} bugs...
-
 
 @end itemize
 
@@ -2575,7 +2670,6 @@ conclusions.
 
 Note that the @code{implies_that} and @code{for_example} specifications are
 additional forms of redundancy.
-
 
 @item @strong{Status:} Currently in ESC/Java2 a command-line option selects 
 between using redundant specifications (those with keywords ending in
@@ -2604,6 +2698,7 @@ access modifiers described in @ref{Access modifiers}.
 @menu
 * pure-routine::                
 * nonnull-routine::             
+* nullable-routine::            
 * helper (JML)::                
 * final::                       
 * static-routine::              
@@ -2639,7 +2734,7 @@ pure constructor may not modify static fields.
 @end itemize
 
 @c ---------------------------------------------------------------------------
-@node nonnull-routine, helper (JML), pure-routine, Routine modifiers
+@node nonnull-routine, nullable-routine, pure-routine, Routine modifiers
 @subsection non_null (JML - methods only)
 @itemize @bullet
 @item @strong{Description:} Modifying a routine with the 
@@ -2665,14 +2760,46 @@ thorough discussion in @ref{Inheritance and non_null}.
 @end itemize
 
 @c ---------------------------------------------------------------------------
-@node helper (JML), final, nonnull-routine, Routine modifiers
+@c @author kiniry
+@node nullable-routine, helper (JML), nonnull-routine, Routine modifiers
+@subsection nullable (JML - methods only)
+@itemize @bullet
+@item @strong{Description:} Modifying a routine with the 
+@code{nullable} modifier is valid only for methods that return objects
+as return values (and not for constructors).  The modifier specifies
+that the return value may be null.  
+
+Note that this modifier is @emph{not} the opposite of @code{non_null}
+since the negation of the equivalent specification would be
+@*@center @code{ensures !(\result != null); }
+@*which is equivalent to
+@*@center @code{ensures \result == null; }
+@*which is not the intent of @code{nullable}.
+
+Note that superclass and subclass declarations of a method each
+independently may have or not have @code{nullable} (and @code{non_null})
+declarations.  A method's implementation must satisfy the superclass
+specification and independently satisfy the subclass specification.
+There is a more thorough discussion in @ref{Inheritance and non-null}.
+
+In short, a @code{nullable} method may be overridden by a
+@code{non_null} method but must then be @code{non_null} thereafter.
+
+@item @strong{Status:} The modifier is parsed.  Typechecking implementation
+      is underway.  This modifier is not yet used by the static checker.
+
+@item @strong{Differences from JML or Java:} None.
+@end itemize
+
+@c ---------------------------------------------------------------------------
+@node helper (JML), final, nullable-routine, Routine modifiers
 @subsection helper (JML)
 @itemize @bullet
 @item @strong{Description:} This modifier indicates that the 
-method or constructor in question is used as an internal helper
-routine and that the method or constructor is therefore not expected
-to satisfy any of the class-level invariants or constraints, in either
-its pre-state or its post-state.  The method or constructor is still
+method or constructor in question is used as an internal helper routine
+and that the method or constructor is therefore not expected to satisfy
+any of the class-level invariants or constraints, in either its
+pre-state or its post-state.  The method or constructor is still
 expected to satisfy any specifications (e.g. ensures clauses) that are
 explicitly associated with this method or constructor.
 
@@ -2684,12 +2811,12 @@ constructors, final methods or methods of final classes to be helpers.
 (ESC/Java2's rule is that only routines that cannot be overridden may
 be helpers.)
 
-[[[ It seems constructors and methods labelled helper are not checked
+[[[ It seems constructors and methods labeled helper are not checked
 at all, and are inlined when used elsewhere.  Rather they should be
 checked against their own pre and post conditions but not against
-invariants, constraints, initiallys]]]
+invariants, constraints, initially clauses. ]]]
 
-[[[ COmment on inlining and resulting differecnes in checking. ]]]
+[[[ Comment on inlining and resulting differences in checking. ]]]
 
 @end itemize
 
@@ -2723,7 +2850,6 @@ instance of the class.
 
 @item @strong{Differences from JML or Java:} None.
 
-
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -2741,8 +2867,11 @@ method, it is the lock associated with the class object (T.class for type T)
 that is obtained.
 [[[ Are the preconditions/postconditions evaluated before or after 
 obtaining and releasing the locks. ]]]
+
 @item @strong{Status:} Implemented.
+
 @item @strong{Differences from JML or Java:} None.
+
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -2814,11 +2943,13 @@ itself.
 @subsection maps, \into (JML)
 @itemize @bullet
 @item @strong{Description:} [[[ Comment needed. ]]]
+
 @item @strong{Status:} Parsed, typechecked and static checked using a 
 limited unrolling of any recursive definitions.
+
 @item @strong{Differences from JML or Java:} [[[ Comment needed. ]]]
 
-[[[ COmment on the unrolling of recursive mappings. ]]]
+[[[ Comment on the unrolling of recursive mappings. ]]]
 [[[ Potential performance improvement: unroll datagroups, wildcard refs 
 only when needed. Perhaps have to do this to verify superclasses.  ]]]
 [[[ Comment on non-support for wild-cards and array ranges in the middle of
@@ -2839,6 +2970,7 @@ field declarations.
 
 @menu
 * nonnull (JML)::               
+* nullable (JML)::              
 * monitored (JML)::             
 * final-field::                 
 * volatile::                    
@@ -2848,7 +2980,7 @@ field declarations.
 @end menu
 
 @c ---------------------------------------------------------------------------
-@node nonnull (JML), monitored (JML), Field Annotation modifiers, Field Annotation modifiers
+@node nonnull (JML), nullable (JML), Field Annotation modifiers, Field Annotation modifiers
 @subsection non_null (JML)
 @itemize @bullet
 @item @strong{Description:} This modifier on a field declaration 
@@ -2860,7 +2992,7 @@ form
 access modifiers as the field itself.
 
 Note that the field is not null after @emph{construction}. The field may
-indeed be null after class innitialization and during the execution of
+indeed be null after class initialization and during the execution of
 constructors or helper methods called by constructors.
 
 @item @strong{Status:} Fully implemented and supported by the static checker.
@@ -2869,7 +3001,26 @@ constructors or helper methods called by constructors.
 @end itemize
 
 @c ---------------------------------------------------------------------------
-@node monitored (JML), final-field, nonnull (JML), Field Annotation modifiers
+@c @author kiniry
+@node nullable (JML), monitored (JML), nonnull (JML), Field Annotation modifiers
+@subsection nullable (JML)
+@itemize @bullet
+@item @strong{Description:} This modifier on a field declaration 
+indicates that the field in question may have a null value.  It is
+equivalent to a class invariant of the
+@*@center @code{invariant @emph{field} != null && @emph{field} == null;}
+@*with the same access modifiers as the field itself which, since this
+specification simplifies to @code{true} because all references in Java
+either have @code{null} value or they do not, is not added at all.
+
+@item @strong{Status:} The modifier is parsed.  Typechecking implementation
+      is underway.  This modifier is not yet used by the static checker.
+
+@item @strong{Differences from JML or Java:} None.
+@end itemize
+
+@c ---------------------------------------------------------------------------
+@node monitored (JML), final-field, nullable (JML), Field Annotation modifiers
 @subsection monitored (JML)
 @itemize @bullet
 @item @strong{Description:} This modifier indicates that the field modified
@@ -2923,8 +3074,11 @@ are not subsequently assigned to.  Is definite-assignment checked???
 might be applied and the semantics of the order of writing the values
 of object fields to memory.  It affects multi-threaded programs only.
 It is not applicable to a ghost or model declaration.
+
 @item @strong{Status:} Parsed but ignored by the static checker.
+
 @item @strong{Differences from JML or Java:} None.
+
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -2955,7 +3109,6 @@ class and not of each instance of the class.
 
 @item @strong{Differences from JML or Java:} None.
 
-
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -2978,8 +3131,8 @@ public interface are implicitly public.
 
 @item @strong{Status:} Implemented.
 
-@item @strong{Differences from JML or Java:} [[[ CHeck that illformed JML uses are checked and forbidden by ESC/Java2]]]
-
+@item @strong{Differences from JML or Java:} 
+[[[ Check that ill-formed JML uses are checked and forbidden by ESC/Java2]]]
 
 @end itemize
 
@@ -2992,23 +3145,24 @@ the declaration of the method or constructor.
 
 @menu
 * nonnull-formal::              
+* nullable-formal::             
 * final-formal::                
 @end menu
 
 @c ---------------------------------------------------------------------------
-@node nonnull-formal, final-formal, formal parameter modifiers, formal parameter modifiers
+@node nonnull-formal, nullable-formal, formal parameter modifiers, formal parameter modifiers
 @subsection non_null (JML)
 @itemize @bullet
 @item @strong{Description:} Modifying a formal parameter 
 with a @code{non_null} modifier is equivalent to adding a precondition
 stating that the parameter is not equal to @code{null} and requiring
 that any assignment to that variable assign a non-null value.  It is
-only legal for reference types, not for primitive types.  The non_null
-condition is in addition to the composite specification formed from
-the complete refinement sequence.  Hence it is equivalent to adding a
-precondition requiring the parameter be non_null to the desugared
-specification of the routine (as well as the conditions on subsequent
-assignments within the body of the routine).
+only legal for reference types, not for primitive types.  The
+@code{non_null} condition is in addition to the composite specification
+formed from the complete refinement sequence.  Hence it is equivalent to
+adding a precondition requiring the parameter be @code{non_null} to the
+desugared specification of the routine (as well as the conditions on
+subsequent assignments within the body of the routine).
 
 Note that parameters of superclass and subclass declarations of a
 method each independently may have or not have @code{non_null}
@@ -3019,8 +3173,8 @@ more thorough discussion is given in @ref{Inheritance and non_null}.
 @item @strong{Status:} The modifier is parsed, checked and supported by the
 static checker.
 
-@item @strong{Differences from JML or Java:} None known. [[[FIXME - does JML detect 
-problems with overriding methods?]]].  
+@item @strong{Differences from JML or Java:} None known. 
+      [[[FIXME - does JML detect problems with overriding methods?]]].  
 
 @item @strong{Comment:} The original ESC/Java did not permit a 
 subclass to modify a formal parameter as @code{non_null} in an
@@ -3029,7 +3183,33 @@ were used for all overriding declarations.
 @end itemize
 
 @c ---------------------------------------------------------------------------
-@node final-formal,  , nonnull-formal, formal parameter modifiers
+@c @author kiniry
+@node nullable-formal, final-formal, nonnull-formal, formal parameter modifiers
+@subsection nullable (JML)
+@itemize @bullet
+@item @strong{Description:} Modifying a formal parameter 
+with a @code{nullable} modifier does not modify a method specification
+in any way.  It is only legal for reference types, not for primitive
+types.
+
+Note that parameters of superclass and subclass declarations of a
+method each independently may have or not have @code{nullable}
+declarations.  A method's implementation must satisfy the superclass
+specification and independently satisfy the subclass specification.  A
+more thorough discussion is given in @ref{Inheritance and non_null}.
+
+@item @strong{Status:} The modifier is parsed.  Typechecking implementation
+      is underway.  This modifier is not yet used by the static checker.
+
+@item @strong{Differences from JML or Java:} None known. 
+      [[[FIXME - does JML detect problems with overriding methods?]]].
+
+@item @strong{Comment:} The original ESC/Java did not support this 
+annotation at all, as it did not exist in JML until late 2005.
+@end itemize
+
+@c ---------------------------------------------------------------------------
+@node final-formal,  , nullable-formal, formal parameter modifiers
 @subsection final (Java)
 @itemize @bullet
 @item @strong{Description:} This Java modifier indicates that a 
@@ -3173,11 +3353,11 @@ them a few iterations.  The number of iterations can be set by the
 @subsection ghost declarations
 @itemize @bullet
 @item @strong{Description:} JML and ESC/Java2 (but not ESC/Java) allow the 
-declaration of local ghost variables within the body of a routine,
-just as Java allows local declarations.  These can then be used in
-subsequent annotation statements within the body, such as assert,
-assume, or set statements.  Such declarations may also be declared
-@code{final} or @code{non_null} and may have initializers.
+declaration of local ghost variables within the body of a routine, just
+as Java allows local declarations.  These can then be used in subsequent
+annotation statements within the body, such as assert, assume, or set
+statements.  Such declarations may also be declared @code{final},
+@code{non_null}, or @code{nullable} and may have initializers.
 
 @item @strong{Status:} Implemented.  
 @item @strong{Differences from JML or Java:} None.
@@ -3201,7 +3381,7 @@ The following modifiers are allowed.
 @end menu
 
 @c ---------------------------------------------------------------------------
-@node nonnull on local decls, uninitialized-local, Local Modifiers, Local Modifiers
+@node nonnull on local decls, nonnull on local decls, Local Modifiers, Local Modifiers
 @subsection non_null (JML)
 
 @itemize @bullet
@@ -3214,6 +3394,24 @@ be null.  [[[ must have an initializer ???]]]
 
 @item @strong{Status:} Fully implemented (in ESC/Java and ESC/Java2).
 [[[ Failure to initialize is not detected. Or failure to initialize with null value.  Also ghost declarations. ]]]
+
+@item @strong{Differences from JML or Java:} None.
+
+@end itemize
+
+@c ---------------------------------------------------------------------------
+@node nonnull on local decls, uninitialized-local, nonnull on local decls, Local Modifiers
+@subsection nullable (JML)
+
+@itemize @bullet
+@item @strong{Description:} A local declaration
+of a variable of reference type within the body of a method or
+constructor (including local ghost declarations) may be modified with
+the JML annotation @code{nullable}.  This places no requirements on the
+initial value and any subsequently assigned value for that variable.
+
+@item @strong{Status:} The modifier is parsed.  Typechecking implementation
+      is underway.  This modifier is not yet used by the static checker.
 
 @item @strong{Differences from JML or Java:} None.
 
@@ -3297,6 +3495,7 @@ The subtype operator (@code{<:}) has lower precedence than the shift operator
 This operator (equivalence) takes two boolean arguments; it returns a
 boolean value of @code{true} if the two arguments are both @code{true}
 or both @code{false}, and @code{false} otherwise.  
+
 @*@strong{Status:} Implemented.
 
 @cindex @code{<=!=>}
@@ -3305,6 +3504,7 @@ This operator (inequivalence) takes two boolean arguments; it returns
 a boolean value of @code{false} if the two arguments are both
 @code{true} or both @code{false}, and @code{true} otherwise.  
 @code{(A <==> B)} is equivalent to @code{!(A <=!=> B)}.  
+
 @*@strong{Status:} Implemented.
 
 @cindex @code{==>}
@@ -3313,7 +3513,8 @@ This operator (implies) takes two boolean arguments and returns a
 boolean value of @code{true} if the first is @code{false} or the
 second is @code{true}, and returns @code{false} if the first is
 @code{true} and the second is @code{false}.
-@*@strong{Status: }Implemented.
+
+@*@strong{Status:} Implemented.
 
 @cindex @code{<==}
 @item @code{<==} : 
@@ -3322,7 +3523,8 @@ arguments and returns a boolean value of @code{true} if the second is
 @code{false} or the first is @code{true}, and returns @code{false} if
 the second is @code{true} and the first is @code{false}.  
 @code{(A ==> B)} is equivalent to @code{(B <== A)}.
-@*@strong{Status: }Implemented.
+
+@*@strong{Status:} Implemented.
 
 @cindex @code{<:}
 @item @code{<:} : 
@@ -3330,7 +3532,8 @@ This operator takes two arguments of type @code{\TYPE} (or, equivalently, of
 type @code{java.lang.Class}); it returns @code{true}
 if the left-hand argument is the same type as or a subtype of the right-hand
 argument. 
-@*@strong{Status: }Implemented.
+
+@*@strong{Status:} Implemented.
 
 @cindex @code{<}
 @cindex @code{<=}
@@ -3352,7 +3555,9 @@ independent of whether the locks have actually been acquired; the
 @code{\lockset} expression supplies that information.  The ESC/Java
 User's Manual provides additional information and examples about
 Deadlock and Race detection.  
-@*@strong{Status: }Implemented.
+
+@*@strong{Status:} Implemented.
+
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -3366,6 +3571,7 @@ Deadlock and Race detection.
 that returns a value.  It may be used in an @code{ensures} clause (but
 not a @code{signals} clause).  [[[ What about duration, working_space
 clauses ]]] 
+
 @*@strong{Status:} Implemented.
 
 @cindex @code{\old}
@@ -3376,8 +3582,9 @@ in the pre-state.  It is used in ensures and signals clauses to
 distinguish pre- and post-state values.  It may also be used within
 annotations in the body of a routine (e.g. assert, assume, set
 statements).
-@*@strong{Status: } Implemented.  JML does not allow \old in set statements or 
-local ghost variable initialization.
+
+@*@strong{Status: } Implemented.  JML does not allow \old in set
+statements or local ghost variable initialization.
 
 @cindex @code{\not_modified}
 @item @code{\not_modified} : This function of an arbitrary number of
@@ -3385,11 +3592,14 @@ arguments returns a boolean value indicating whether all of the
 arguments are unchanged between pre-state and the current state.  It
 may be used in an ensures or signals clause and in annotations in the
 body of a routine.  It is equivalent to boolean AND of @code{x ==
-\old(x)} for each argument.  @*@strong{Status:} Implemented (not part
-of the original ESC/Java).  @*@strong{Differences:} ESC/Java2 allows
-arbitrary (pure) expressions as the arguments of @code{\not_modified};
-JML only allows store locations.  [[[ Check that ESC/Java2 and JML
-actually allow this in routine bodies.]]]
+\old(x)} for each argument.  
+
+@*@strong{Status:} Implemented (not part of the original ESC/Java).
+
+@*@strong{Differences:} ESC/Java2 allows arbitrary (pure) expressions as
+the arguments of @code{\not_modified}; JML only allows store locations.
+[[[ Check that ESC/Java2 and JML actually allow this in routine
+bodies.]]]
 
 @cindex @code{\fresh}
 @item @code{\fresh} : This function takes a single argument of 
@@ -3397,7 +3607,8 @@ any reference type and returns a @code{boolean}.  The operator may be
 used in an expression that is evaluated in the post-state.  The result
 is true if its argument is non-null and was not allocated in the
 pre-state.  
-@*@strong{Status:} Implemented.  [[[ CHecks needed that
+
+@*@strong{Status:} Implemented.  [[[ Checks needed that
 this is allowed in set and initialization statements and works
 correctly - both in ESC/Java and JML.]]]
 
@@ -3409,6 +3620,7 @@ correctly - both in ESC/Java and JML.]]]
 giving a maximum number of virtual machine cycles needed to execute
 the method or constructor call which is the argument.  The argument is
 not executed (and so need not be a pure expression).
+
 @*@strong{Status:} Parsed.  No type checking is performed on the
 argument nor is any static checking performed.  [[[ Why not allow any
 expression as the argument. ]]]
@@ -3417,6 +3629,7 @@ expression as the argument. ]]]
 @item @code{\space} : This function returns a @code{long} value 
 giving the number of bytes of heap space allocated to the object
 referred to by its argument.  The argument must have reference type.
+
 @*@strong{Status:} Parsed.  No type checking is performed on the
 argument nor is any static checking performed.
 
@@ -3425,6 +3638,7 @@ argument nor is any static checking performed.
 value giving the number of bytes of heap space needed to execute the
 method or constructor call that is the argument.  The argument is not
 executed (and so need not be a pure expression).
+
 @*@strong{Status:} Parsed.  No type checking is performed on the
 argument nor is any static checking performed.  [[[ Why not allow an
 arbitrary expression ]]]
@@ -3433,6 +3647,7 @@ arbitrary expression ]]]
 @item @code{\nonnullelements} : This function returns a boolean and 
 takes an argument of a reference array type.  The result is true if
 the argument is not null and no element of the array is null.
+
 @*@strong{Status:} Implemented.
 
 @cindex @code{\typeof}
@@ -3441,7 +3656,9 @@ the argument is not null and no element of the array is null.
 one argument of any type.  The result is the dynamic type of the 
 argument.  The result of \typeof applied to a null expression is not equal to
 nor a subtype of the type of any reference or primitive type.
+
 @*@strong{Status:} Implemented.
+
 @*@strong{Differences:} JML allows arguments of primitive types; ESC/Java2 does
 also, but the original ESC/Java did not. 
 
@@ -3451,6 +3668,7 @@ also, but the original ESC/Java did not.
 returns a value of type @code{\TYPE}.  If the argument is an array type then
 the result is the (dynamic) most-specific type of the elements of the array;
 if the argument is not an array type, the result is unspecified.
+
 @*@strong{Status:} Implemented.  [[[ The results of applying \elemtype
 to any non-array type all test equal.  This should perhaps not be so. 
 Check what the behavior actually is. Perhaps should define the result.  ]]]
@@ -3460,7 +3678,9 @@ Check what the behavior actually is. Perhaps should define the result.  ]]]
 denote type literals.  
 It denotes the type constant (of value @code{\TYPE}) corresponding to the
 type name given as the argument.
+
 @*@strong{Status:} Implemented. 
+
 @*@strong{Differences:} None.
 
 @cindex @code{\is_initialized}
@@ -3468,6 +3688,7 @@ type name given as the argument.
 name as its argument.
 It returns true just in the case that the type named has completed its static 
 initialization.
+
 @*@strong{Status:} Parsed and partly typechecked.  No static checking is
 implemented.
 
@@ -3475,6 +3696,7 @@ implemented.
 @item @code{\invariant_for} : This function takes one object of reference-type 
 as its argument and returns a boolean.  The result is true just when
 the object satisfies its class invariants.
+
 @*@strong{Status:} Parsed and partly typechecked.  No static checking is
 implemented.
 
@@ -3499,6 +3721,7 @@ an expression is causing some condition to hold or not to hold.
 @item @code{\lockset} : This value has type @code{\LockSet}.  
 The value is the set of objects whose
 locks are held by the current thread. 
+
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 
 (as inherited from ESC/Java).
 
@@ -3507,6 +3730,7 @@ locks are held by the current thread.
 Membership in a @code{\lockset} is tested using this syntax, for some
 object expression @code{o} : @code{\lockset[o]} .  This expression
 returns a boolean, which is true if the object is in the lockset.
+
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 (as
 inherited from ESC/Java). It is not part of JML, but should be.
 [[[ There should be a way to get the lockset of a thread other than the
@@ -3517,9 +3741,9 @@ current thread. ]]]
 It returns an object of type @code{java.lang.Object}.  The result is one of the
 elements of the argument; the function satisfies the following for any 
 @code{\LockSet} @code{s} and Object @code{o}: @code{s[o] ==> (o <= \max(s))}.
+
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 
 (as inherited from ESC/Java).
-
 
 @item Operators for overflow checking : These are under development 
 in JML and are not yet implemented in ESC/Java2.
@@ -3532,9 +3756,10 @@ in JML and are not yet implemented in ESC/Java2.
 enclosed within the delimiters @code{(*} and @code{*)}.  Informal
 predicates are interpreted as boolean expressions that are always true
 (independent of what the text may say!), and they may only be used in
-contexts where a boolean expression is allowed.  @*@strong{Status:
-}This feature is fully implemented in ESC/Java2 (as well as ESC/Java).
+contexts where a boolean expression is allowed.  
 
+@*@strong{Status:}
+This feature is fully implemented in ESC/Java2 (as well as ESC/Java).
 
 @end itemize
 
@@ -3554,16 +3779,17 @@ type of type designations.  For example, @code{\typeof} and
 operator takes arguments of type @code{\TYPE}.  Values of type
 @code{\TYPE} can also be compared using the @code{==} or @code{!=}
 operators.
+
 @*@strong{Status:} This is fully implemented.  [[[ In JML \TYPE and
 java.lang.Class are now equivalent.  This is not yet the case in
 ESC/Java2. ]]]
-
 
 @cindex @code{\bigint}
 @item @code{\bigint} : This is a new type name used in JML to 
 denote an integral type equivalent to the mathematical integers.  That
 is, it has infinite range and no underflow or overflow as a result of
 a fixed bit depth.
+
 @*@strong{Status:} The type name is parsed but is equivalent to @code{long}.
 
 @cindex @code{\real}
@@ -3571,6 +3797,7 @@ a fixed bit depth.
 equivalent to the mathematical real numbers.  That is, it has infinite range 
 and precision and no
 underflow, overflow, or rounding error as do @code{float} and @code{double}.
+
 @*@strong{Status:} The type name is parsed but is equivalent to @code{double}.
 
 @cindex @code{\LockSet}
@@ -3600,10 +3827,11 @@ As described in the JML documentation, quantified expressions take the form
 @*@center @code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; ; @emph{expr} )}
 @*or
 @*@center @code{( @emph{quantifier-keyword} @emph{type} @emph{idlist} ; @emph{expr} )}
-@*The @emph{range-expr} is a boolean expression; its default value is @strong{true}.
+@*The @emph{range-expr} is a boolean expression; its default value is @code{true}.
 The @emph{idlist} is a comma-separated list of identifiers; these are
 the bound variables of the quantification.  No side-effects are
 permitted in the predicate or expression.
+
 @*@strong{Status:} 
 @itemize @bullet
 @item @code{\forall}, @code{\exists}: Fully implemented and 
@@ -3625,8 +3853,9 @@ JML has a syntax for expressions whose value is a set.  An example is
 
 @noindent
 No side-effects are permitted in the predicate.
-@*@strong{Status: }ESC/Java2 parses and typechecks set comprehension expressions, with
-the following omissions:
+
+@*@strong{Status: }ESC/Java2 parses and typechecks set comprehension
+expressions, with the following omissions:
 @itemize @bullet
 @item Set comprehension in class-level specifications is not handled.
 @item Expressions containing set comprehension are not used in static checking
@@ -3643,6 +3872,7 @@ predicate or store-ref expression in an annotation clause.  JML allows
 tools to provide their own behavior for @code{\not_specified}.
 Escjava2 treats such clauses as if they were not present, making them
 equivalent to the default for that clause type.
+
 @*@strong{Status: } Fully implemented.
 
 @c ---------------------------------------------------------------------------
@@ -3707,29 +3937,34 @@ wake of data groups and in/maps clauses ]]]
 @node field store-refs, wild-card field store-refs, store-ref expressions, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{.} [ @emph{ident} | @code{this} ]
 This designates a field of an object.  [[[ Describe the function of the this suffix]]]
+
 @*@strong{Status: } Implemented within modifies clauses.
 
 @node wild-card field store-refs, array element store-refs, field store-refs, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{.*}  
 This designates all static and instance fields, of any privacy level, including
 those inherited from superclasses and interfaces, of the given object.
+
 @*@strong{Status: } Not implemented.
 
 @node array element store-refs, array range store-refs, wild-card field store-refs, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{[@emph{expr}]}  
 This designates an element of the given array object.   [[[ Describe the function of the this and super prefix ]]]
+
 @*@strong{Status: } Implemented within modifies clauses.
 
 
 @node array range store-refs, all array elements store-refs, array element store-refs, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{[@emph{expr}..@emph{expr2}]}  
 This designates a range of elements of the given array object.
+
 @*@strong{Status: } Not implemented.
 
 @node all array elements store-refs, static wild-card store-refs, array range store-refs, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{[*]}  
 This designates all the elements of the given array object.
-@*@strong{Status: } Not implemented.
+
+@*@strong{Status:} Not implemented.
 
 @c ---------------------------------------------------------------------------
 @node static wild-card store-refs, nothing , all array elements store-refs, store-ref expressions
@@ -3737,7 +3972,8 @@ This designates all the elements of the given array object.
 This designates all static fields, of any privacy level, including
 those in superclasses and interfaces, and including ghost and model fields,
 of the given class.
-@*@strong{Status: } Not implemented.
+
+@*@strong{Status:} Not implemented.
 
 @c ---------------------------------------------------------------------------
 @cindex \nothing
@@ -3747,7 +3983,8 @@ This designates an empty set of store-refs.  It may be used with the
 @code{modifies}, @code{accessible}, and @code{callable} clauses.
 If @code{\nothing} appears in a sequence of other store-refs, it is ignored,
 since a sequence of store-refs is essentially a union.
-@*@strong{Status: } Fully implemented.
+
+@*@strong{Status:} Fully implemented.
 
 @c ---------------------------------------------------------------------------
 @cindex \everything
@@ -3757,7 +3994,8 @@ This designates a universal set - the set of references to all object
 and class fields for every object and class allocated in the current
 state of the program.  It may be used with the @code{modifies},
 @code{accessible}, and @code{callable} clauses.  
-@*@strong{Status: }
+
+@*@strong{Status:}
 Fully parsed - refer to the clause descriptions for specific behavior.
 
 @c ---------------------------------------------------------------------------
@@ -3991,7 +4229,7 @@ the original ESC/Java did not.  ESC/Java2 follows JML.
 The original ESC/Java utilized the keywords @code{also_requires},
 @code{also_ensures}, @code{also_exsures}, and @code{also_modifies} to
 add annotations to subclasses.  These annotations were simply
-textually conjoined with the annotations from a super class or
+textually conjoined with the annotations from a superclass or
 interface.  The syntax and semantics in JML are different and
 ESC/Java2 has changed to match JML.  These keywords are now deprecated
 and are translated into the corresponding keyword without
@@ -4013,10 +4251,10 @@ class body and the members within it.  However, since there are no
 quantities declared with the static type of the anonymous type, those
 specifications are not used in checking any uses of the routines of
 the anonymous class.  ESC/Java2 does recognize that the anonymous
-class is a subclass and not the same class as its super class.
+class is a subclass and not the same class as its superclass.
 
-@*@strong{Status: }There is no static checking of the implementation of any
-of the methods of an anonymous class.
+@*@strong{Status:} There is no static checking of the implementation of
+any of the methods of an anonymous class.
 
 @c ----------------------------------------------------------------------------
 @node block-level class declarations, field-method-constructor keywords, anonymous classes, Other issues
@@ -4044,34 +4282,35 @@ annotations.  For example, if @code{helper} has been declared a class, then an
 @center @code{//@@ helper model ...}
 @noindent
 @*could be interpreted as the beginning of a declaration with type
-@code{helper} and identifier @code{model} or as the beginning of a
-model method declaration with JML modifier helper.  Though in some
-cases sufficient lookahead could distinguish these different uses, JML
-has defined the keywords @code{field}, @code{method}, and
-@code{constructor} to help disambiguate such situations.  These are
-used in ghost field and model field, method, and constructor
-declarations.  [[[ Are they applicable to non-model decls in JML???]]]
-[[[ Are they needed with model type declarations or model programs???]]]
-They have the effect that any identifiers appearing after these
-keywords in a JML annotation are not interpreted as JML keywords
-(except for non_null in formal parameters as described below).  For
-example, in 
+@code{helper} and identifier @code{model} or as the beginning of a model
+method declaration with JML modifier helper.  Though in some cases
+sufficient lookahead could distinguish these different uses, JML has
+defined the keywords @code{field}, @code{method}, and @code{constructor}
+to help disambiguate such situations.  These are used in ghost field and
+model field, method, and constructor declarations.  [[[ Are they
+applicable to non-model decls in JML???]]]  [[[ Are they needed with
+model type declarations or model programs???]]]  They have the effect
+that any identifiers appearing after these keywords in a JML annotation
+are not interpreted as JML keywords (except for @code{non_null} and
+@code{nullable} in formal parameters as described below).  For example,
+in
 @center @code{//@@ public model non_null helper method requires ensures() @{@};}
 @noindent
-@*@code{model}, @code{non_null}, @code{helper}, and @code{method}
- are JML keywords, but @code{requires} is 
-expected to be a Java type name and @code{ensures} is interpreted 
-as an identifier, the name of the method being declared.
+@*@code{model}, @code{non_null}, @code{nullable}, @code{helper}, and
+@code{method} are JML keywords, but @code{requires} is expected to be a
+Java type name and @code{ensures} is interpreted as an identifier, the
+name of the method being declared.
 
-The one exception to this rule is that @code{non_null} is needed as a
-JML modifier within the formal parameter declarations.  A parser is
-capable of distinguishing these cases, however.  Thus in
+The two exceptions to this rule are that @code{non_null} and
+@code{nullable} are needed as a JML modifier within the formal parameter
+declarations.  A parser is capable of distinguishing these cases,
+however.  Thus in
 @*@center @code{//@@ public model requires ensures(non_null Object o, non_null oo);}
 @noindent
 @*the first occurrence of @code{non_null} is a JML modifier, but the
 second is expected to be a Java type name.  [[[ ESC/Java treats
 non_null specially in this case, but the JML tools do not.  For JML
-you cannot use non_null here and need to write explicit
+you cannot use @code{non_null} here and need to write explicit
 pre/post-conditions instead.]]]  @*@noindent @code{Status: } Fully
 implemented.
 
@@ -4176,7 +4415,7 @@ ESC/Java2 has corrected this problem by using the syntax and
 desugaring approach outlined by JML.  JML allows subclasses to have
 additional @code{requires} clauses, and does not utilize the
 @code{also_requires} syntax.  Consider the following example (the
-handling of super interfaces is the same as the handling of super
+handling of superinterfaces is the same as the handling of super
 classes):
 @example
 public interface Super @{
@@ -4248,7 +4487,7 @@ The specifications in @code{D} desugar to
         //@@ ensures  P4 ==> Q4;
 @end example
 @noindent
-but they are then combined with the super class specifications to
+but they are then combined with the superclass specifications to
 produce the composite specification:
 @example
         //@@ requires P1 || P2 || (P3 && PP3) || P4;
@@ -4396,14 +4635,21 @@ class Derived extends Super @{
 @node Inheritance and non_null,  , Defaults and inheritance, Specifications and inheritance
 @subsubsection Inheritance and non_null
 
-The syntactic rules and semantic meaning of 
-@code{non_null} on formal parameters in the presence of inheritance
-differ between ESC/Java and ESC/Java2.
+@c @todo kiniry Rewrite this section for nullable.
+
+The syntactic rules and semantic meaning of @code{non_null} on formal
+parameters in the presence of inheritance differ between ESC/Java and
+ESC/Java2.
+
+The annotation @code{nullable} did not exist at all in JML until late
+2005, thus it was not supported at all in ESC/Java.
+
 A @code{non_null} annotation on a formal parameter is equivalent to 
-(a) a requirement that the parameter not be assigned a null value in the body
-of the implementation of the routine, and
+(a) a requirement that the parameter not be assigned a null value in the
+body of the implementation of the routine, and
 (b) an additional precondition in each of the specification cases of
-the method's (or constructor's) specifications.  Item (b) means that
+the method's (or constructor's) specifications.
+Item (b) means that
 @example
 ... specifications ...
 public void m(/*@@ non_null */ Object o, Object oo)
@@ -4417,8 +4663,8 @@ is equivalent to
 //@@ |@}
 @end example
 @noindent
-Similarly a non_null annotation on the result is equivalent to an additional
-post-condition:
+Similarly a @code{non_null} annotation on the result is equivalent to an
+additional post-condition:
 @example
 ... specifications ...
 public /*@@ non_null*/ Object m()
@@ -4437,10 +4683,11 @@ of the nested specifications, but the intent is evident: the ensures
 clause is distributed to each specification case. ]
 
 Confusing situations can arise if formal parameters in a overridden
-and overiding declaration differ in non_null annotations.
+and overiding declaration differ in @code{non_null} annotations.
 
 @itemize @bullet
-@item Case 1: Super class has non_null, subclass has a spec, but no non_null
+@item Case 1: superclass has @code{non_null}, subclass has a specification,
+      but no @code{non_null}
 
 @example
 class Super @{
@@ -4466,11 +4713,11 @@ class Derived extends Super @{
     @}
 @}
 @end example
-In this case, ESC/Java has @code{Derived.m} inherit the non_null
+In this case, ESC/Java has @code{Derived.m} inherit the @code{non_null}
 specification from the overridden method.  Hence ESC/Java reports
 errors for lines B, D, E and F, with A and C being OK.  In ESC/Java2,
 however, @code{Derived.m} has its own specification and does not
-inherit the non_null specification.  It must still satisfy the parent
+inherit the @code{non_null} specification.  It must still satisfy the parent
 spec (which in this case simply has a trivial postcondition).  So
 Lines B and F are errors and A is not.  However, the combined spec for
 @code{Derived.m} is (ignoring other clause types)
@@ -4499,7 +4746,8 @@ and C and D would be OK.  In otherwords, it would be the same as Case
 
 
  
-@item Case 2: Super class has non_null, subclass has no spec and no non_null
+@item Case 2: superclass has @code{non_null}, subclass has no specification
+       and no @code{non_null}
 
 @example
 class Super @{
@@ -4533,7 +4781,7 @@ because of the specification of Super.m; line E is an error, and C and
 D are not.
  
 
-@item Case 3: Super class has no non_null, but subclass does
+@item Case 3: superclass has no @code{non_null}, but subclass does
 
 @example
 class Super @{
@@ -4559,22 +4807,22 @@ class Derived extends Super @{
 @}
 @end example
 @noindent In this case, it is the derived class that has the 
-@code{non_null} specification, but not the super class.  This is a
+@code{non_null} specification, but not the superclass.  This is a
 problematic case, since the body of the overriding method may be
 called through the overridden signature, in which case the actual
 argument may not be constrained to be non_null.  Hence the non_null
 annotation on the overriding formal paramater can be misleading.
-Therefore in ESC/Java2, a non_null annotation is ignored if there is
+Therefore in ESC/Java2, a @code{non_null} annotation is ignored if there is
 any overridden method that has that formal parameter declared without
-a non_null argument.  A caution message is provided to warn the user
+a @code{non_null} argument.  A caution message is provided to warn the user
 of this behavior.
 
-Thus, ESC/Java2 will allow lines B and F since the super class does
+Thus, ESC/Java2 will allow lines B and F since the superclass does
 not limit the values of the parameter; similarly line A provokes an
 error.  Although the parameter of @code{Derived.m} is declared
 @code{non_null}, the @code{non_null} annotation is ignored.
 Consequently, there is no limitation on the value of the formal
-parameter (since it may have been called through the super class's
+parameter (since it may have been called through the superclass's
 signature), and hence line C fails; similarly, there is no limitation
 on what may be assigned to the formal parameter variable, so line D is
 ok.  Finally, line E is ok since there is no additional precondition
@@ -4582,10 +4830,10 @@ created by the ignored @code{non_null}.
 
 Note that behavior equivalent to the @code{non_null} declaration on a
 formal parameter can be obtained by adding appropriate explicit
-preconditions requiring the formal parameter to be non_null in the
+preconditions requiring the formal parameter to be @code{non_null} in the
 appropriate circumstances.  Furthermore, if it is actually desired to
-have the formal parameter be non_null within the body, code such as
-the following can be written.  Instead of
+have the formal parameter be @code{non_null} within the body, code such
+as the following can be written.  Instead of
 @example
         public void m(/*@@ non_null */ Object o) @{
                 ...
@@ -4603,7 +4851,7 @@ the following can be written.  Instead of
 Finally note that
 @itemize @bullet
 @item the original ESC/Java does not allow overriding methods to have
-non_null parameters, whether or not the overridden method does;
+@code{non_null} parameters, whether or not the overridden method does;
 @item there are no particular issues with respect to @code{non_null} 
 on the result type; overriding and overridden methods may have any
 combination of @code{non_null} annotations or lack thereof.
@@ -5169,11 +5417,12 @@ inheritance}.
 @node nonnull, Translation of the Java assert statement, Handling of specification inheritance, Changes to static checking
 @section non_null
 
-The semantics of non_null applied to formal parameters in the presence of
-inheritance has changed from ESC/Java to ESC/Java2.  If an overriding 
-declaration declares a formal parameter @code{non_null} then all overridden
-declarations must have that formal parameter declared @code{non_null}.
-This is described in more detail in @ref{Inheritance and non_null}.
+The semantics of @code{non_null} applied to formal parameters in the
+presence of inheritance has changed from ESC/Java to ESC/Java2.  If an
+overriding declaration declares a formal parameter @code{non_null} then
+all overridden declarations must have that formal parameter declared
+@code{non_null}.  This is described in more detail in @ref{Inheritance
+and non_null}.
 
 @c ----------------------------------------------------------------------------
 @cindex assert
@@ -5324,7 +5573,7 @@ allow more fields to be modified than are contained in @code{this.*}.
 
 @item A default constructor (that is not declared) has a default 
 modifies clause that allows the same fields to be modified as does its
-super class constructor.
+superclass constructor.
 @end itemize
 
 @c ----------------------------------------------------------------------------
@@ -5535,8 +5784,8 @@ specified for JML, as described in @ref{Specifications and inheritance}.
 
 @node non null on formal parameters and results of routines, monitored by, inheritance of specifications, Incompatibilities-escjava
 @subsection non_null on formal parameters and results of routines
-The rules and meaning of non_null in the presence of inheritance is altered
-as described in @ref{Inheritance and non_null}.
+The rules and meaning of @code{non_null} in the presence of inheritance
+is altered as described in @ref{Inheritance and non_null}.
 
 @c ----------------------------------------------------------------------------
 @node monitored by, readable if, non null on formal parameters and results of routines, Incompatibilities-escjava
@@ -5725,19 +5974,19 @@ and the following comma or right parenthesis.
 @end itemize
 
 JML does not recognize this syntax, with the exception of specification
-clauses (but not modifiers such as @code{pure} or @code{non_null}) placed
-just prior to the routine body.  Consequently using this style of 
-annotation writing is discouraged in ESC/Java2.
-[[[ SHould we generate a caution?]]]
+clauses (but not modifiers such as @code{pure}, @code{non_null}, or
+@code{nullable}) placed just prior to the routine body.  Consequently
+using this style of annotation writing is discouraged in ESC/Java2.  [[[
+Should we generate a caution?]]]
 
 @node semicolon termination - nonJML, need for the field, placement of annotations, Non-JML features
-@subsection  semicolon termination
+@subsection semicolon termination
 JML requires annotations to be terminated with semicolons.  
 ESC/Java2 will warn about missing semicolons, but does not require them.
 
 @node need for the field, omission of method bodies, semicolon termination - nonJML, Non-JML features
-@subsection  need for the field, method, constructor keywords
-[[[ ESC/Java2 parses non_null in method declarations ]]]
+@subsection need for the field, method, constructor keywords
+[[[ ESC/Java2 parses @code{non_null} and @code{nullable} in method declarations ]]]
 
 @node omission of method bodies, Errors and cautions, need for the field, Non-JML features
 @subsection omission of method bodies
@@ -5845,7 +6094,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private abstract static final synchronized transient volatile native strictfp}
 @tab
-@tab @code{spec_public spec_protected model ghost pure instance helper non_null}
+@tab @code{spec_public spec_protected model ghost pure instance helper non_null nullable non_null_by_default nullable_by_default}
 
 @item
 
@@ -5901,7 +6150,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private final volatile transient static}
 @tab
-@tab @code{spec_public spec_protected non_null instance monitored}
+@tab @code{spec_public spec_protected non_null nullable instance monitored}
 
 @item
 
@@ -5909,7 +6158,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private static final}
 @tab
-@tab @code{non_null instance monitored}
+@tab @code{non_null nullable instance monitored}
 
 @item
 
@@ -5917,7 +6166,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private static}
 @tab
-@tab @code{non_null instance}
+@tab @code{non_null nullable instance}
 
 @item
 
@@ -5925,7 +6174,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private abstract final static synchronized native strictfp}
 @tab
-@tab @code{spec_public spec_protected pure non_null helper }
+@tab @code{spec_public spec_protected pure non_null nullable helper }
 
 @item
 
@@ -5942,7 +6191,7 @@ various grammatical contexts.
 @tab
 @tab @code{public protected private abstract static final synchronized strictfp}
 @tab
-@tab @code{pure non_null helper}
+@tab @code{pure non_null nullable helper}
 
 @item
 
@@ -5972,7 +6221,7 @@ various grammatical contexts.
 @tab
 @tab @code{final}
 @tab
-@tab @code{non_null}
+@tab @code{non_null nullable}
 
 @item
 
@@ -5980,7 +6229,7 @@ various grammatical contexts.
 @tab
 @tab @code{final}
 @tab
-@tab @code{ghost non_null uninitialized}
+@tab @code{ghost non_null nullable uninitialized}
 
 @end multitable
 
