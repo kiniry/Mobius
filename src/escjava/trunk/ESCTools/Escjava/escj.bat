@@ -13,7 +13,7 @@ set ESCJ_SIMPLIFY_ARGS=-noprune -noplunge
 set PROVER_KILL_TIME=300
 set PROVER_CC_LIMIT=10
 
-if "%ESCJ_STDARGS%"=="" set ESCJ_STDARGS=-nowarn Deadlock
+if "%ESCJ_STDARGS%"=="" set ESCJ_STDARGS=-nowarn Deadlock -specs %ESCJAVA_ROOT%\specs
 
 rem ESCJ_ARGS is a variable local to this batch file
 set ESCJ_ARGS=%*
