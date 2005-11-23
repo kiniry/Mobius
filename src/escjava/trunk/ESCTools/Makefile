@@ -47,7 +47,7 @@ nodocs: clean build jars test
 
 nodocs+: clean build jars alltests
 
-jars: $(ESCJAVA2_SPECS_JAR) $(JML2_SPECS_JAR) jar srcjar
+jars: $(ESCJAVA2_SPECS_JAR) jar srcjar
 
 ################################################################################
 ## Top-level build and test rules
@@ -202,14 +202,17 @@ cleanup:
 $(ESCJAVA2_SPECS_JAR):
 	(cd specs; jar cf $(ESCJAVA2_SPECS_JAR) .)
 
-$(JML2_SPECS_JAR):
-ifdef JML_ROOT
-	${MAKE} -C ${JML_ROOT} jmlspecs-jar
-	cp ${JML_ROOT}/bin/jmlspecs.jar ${JML2_SPECS_JAR}
-else
-	@echo NOT REMAKING JARS FROM JML - since JML_ROOT not defined
-	@true
-endif
+# RDG: We are not shipping jmlspecs.jar right now because the large VC
+# conditions generated for the full JML specs can make our theorem prover choke
+
+#$(JML2_SPECS_JAR):
+#ifdef JML_ROOT
+#	${MAKE} -C ${JML_ROOT} jmlspecs-jar
+#	cp ${JML_ROOT}/bin/jmlspecs.jar ${JML2_SPECS_JAR}
+#else
+#	@echo NOT REMAKING JARS FROM JML - since JML_ROOT not defined
+#	@true
+#endif
 
 ################################################################################
 ## Rules to build documentation
@@ -468,7 +471,7 @@ source-release: cleanup alldocs
 #       with specs in them.
 	cp esctools2.jar ${RELTEMP}
 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
-	cp $(JML2_SPECS_JAR) ${RELTEMP}
+#	cp $(JML2_SPECS_JAR) ${RELTEMP}
 # 	Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	cp ${ESCJAVA_ROOT}/escj ${RELTEMP}
@@ -567,7 +570,7 @@ binary-release: build jars alldocs cleanup
 #       with specs in them.
 	cp esctools2.jar ${RELTEMP}
 	cp $(ESCJAVA2_SPECS_JAR) ${RELTEMP}
-	cp $(JML2_SPECS_JAR) ${RELTEMP}
+#	cp $(JML2_SPECS_JAR) ${RELTEMP}
 # 	Copy other miscellaneous files
 	${MAKE} clean-norel-noreltemp
 	${MAKE} -C Utils/junitutils build
@@ -723,7 +726,8 @@ current-specs-test: build
 ## Experimental rule to generate a file that references every type
 ## that currently has a spec and run escjava2 on it to try to detect
 ## problems with package- and private-level types.
-check-specs: build $(JML2_SPECS_JAR)
+#check-specs: build $(JML2_SPECS_JAR)
+check-specs: build
 	find specs -type f | grep -v Entries | grep -v Repository | grep -v Root | \
 	  grep -v "*~" | sed -e s+specs/++ | sed -e s+\\.spec++ | \
 	  sed -e s+\\.refines-spec++ | sed -e s+\\.refines++ | \
