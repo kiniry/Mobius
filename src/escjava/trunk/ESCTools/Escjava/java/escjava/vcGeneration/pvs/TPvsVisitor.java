@@ -14,8 +14,7 @@ public class TPvsVisitor extends TVisitor {
 
         lib.appendI(s + " (");
 
-        int i = 0;
-        for (; i < n.sons.size(); i++) {
+        for (int i = 0; i < n.sons.size(); i++) {
             n.getChildAt(i).accept(this);
 
             /*
@@ -27,8 +26,9 @@ public class TPvsVisitor extends TVisitor {
 
         lib.appendN(")");
 
-        if ((n.getChildAt(--i)) instanceof TName
-                || (n.getChildAt(--i)) instanceof TLiteral)
+        int lastChild = n.sons.size() - 1;
+        if ((n.getChildAt(lastChild)) instanceof TName
+                || (n.getChildAt(lastChild)) instanceof TLiteral)
             lib.reduceIwNl();
         else
             lib.reduceI();
