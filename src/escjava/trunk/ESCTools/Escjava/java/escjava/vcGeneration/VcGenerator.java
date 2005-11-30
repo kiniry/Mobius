@@ -8,12 +8,11 @@ import escjava.translate.*;
 import escjava.ast.TagConstants;
 import escjava.prover.Atom;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class VcGenerator {
 
-    /*
+    /**
      * README :
      *
      * This class is an interface to the vc generation suite
@@ -46,7 +45,7 @@ public class VcGenerator {
      @ (newRootNode != null ==> (newRootNode instanceof TRoot));
      @*/
 
-    /*
+    /**
      * @param e the root node of the gc tree.
      *
      * @return The VcGenerator on which you can call method to get
@@ -67,7 +66,7 @@ public class VcGenerator {
         TNode.init(prover);
     }
 
-    public/*@ non_null @*/String getProof(String proofName) {
+    public void getProof(Writer out, String proofName) throws IOException {
 
         if (!computationDone) {
             generateIfpTree(oldRootNode, false);
@@ -75,15 +74,8 @@ public class VcGenerator {
         }
         
         newRootNode = prover.rewrite(newRootNode);
-        
-        TVisitor vi = prover.visitor();
-        newRootNode.accept(vi);
 
-        StringBuffer s = new StringBuffer();
-
-        newRootNode.generateDeclarations(s, prover);
-
-        return prover.getProof(proofName, s.toString(), vi.out.toString());
+        prover.getProof(out, proofName, newRootNode);
     }
 
     /*@
@@ -106,7 +98,7 @@ public class VcGenerator {
     /*@
      @ ensures computationDone;
      @*/
-    public String toDot() {
+    public String toDot() throws IOException {
         if (!computationDone)
             generateIfpTree(oldRootNode, false);
 
@@ -117,7 +109,7 @@ public class VcGenerator {
         return v.out.toString();
     }
 
-    /*
+    /**
      * This attribute is used by the next function to save the current parent of the node
      * we may create. Before any call to generateIfpTree, and after the last call has returned
      * this field is always null. This is bizarre, but avoids to add a parameter to this function
@@ -129,7 +121,7 @@ public class VcGenerator {
     // Clement's experiment
     private boolean firstNotSkipped = false;
 
-    /*
+    /**
      * The main goal of this method is to translate the 
      * gc tree (which is still independant from simplify) to a new tree
      * (classes of this new tree are in escjava/vcGeneration which is, by far, 
@@ -314,8 +306,14 @@ public class VcGenerator {
                 currentParent = newNode;
                 break;
             } 
+            case TagConstants.BOOLNE: {
+                TBoolNE newNode = new TBoolNE();
+                currentParent.addSon(newNode);
+                currentParent = newNode;
+                break;
+            } 
             case TagConstants.METHODCALL: {
-    		    ; // FIXME I think it is fixed... needs further testing
+    		    // FIXME I think it is fixed... needs further testing
     		    //TDisplay.err(this, "generateIfpTree", TagConstants.toString(m.getTag()));
     		    TMethodCall newNode = new TMethodCall(m.methodName.toString());
     		    currentParent.addSon(newNode);
@@ -877,7 +875,7 @@ public class VcGenerator {
 
     }
 
-    /*
+    /**
      * Utility method for creating dot representation of gc tree
      *
      * @return transform escjava.prover.sammy to sammy, ie escjava.x.y to y
@@ -895,7 +893,7 @@ public class VcGenerator {
 
     }
 
-    /*
+    /**
      * Debugging purpose only.
      */
     public void printInfo() {

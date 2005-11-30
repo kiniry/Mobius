@@ -1,5 +1,7 @@
 package escjava.vcGeneration.coq;
+
 import java.lang.StringBuffer;
+import java.io.*;
 
 import escjava.vcGeneration.TAllocLE;
 import escjava.vcGeneration.TAllocLT;
@@ -83,15 +85,14 @@ import escjava.vcGeneration.TVisitor;
  */
 public class TProofSimplifier extends TVisitor {
 
-    StringBuffer out = null;
-
-    TProofSimplifier(){
+    TProofSimplifier(Writer out){
+        super(out);
     }
 
     /*
      * Generic functions used by different visit* functions
      */
-    public void visitTFunction(/*@ non_null @*/ TFunction n){
+    public void visitTFunction(/*@ non_null @*/ TFunction n) throws IOException {
 	
 	int i = 0;
 	int sizeTemp = n.sons.size();
@@ -185,10 +186,10 @@ public class TProofSimplifier extends TVisitor {
     /* 
      * non automatic generated class
      */ 
-    public void visitTName(/*@ non_null @*/ TName n){
+    public void visitTName(/*@ non_null @*/ TName n) throws IOException{
     }
 
-    public void visitTRoot(/*@ non_null @*/ TRoot n){
+    public void visitTRoot(/*@ non_null @*/ TRoot n) throws IOException{
 	/* add all the sons */
 	for(int i = 0; i <= n.sons.size() - 1; i++){
 
@@ -200,159 +201,159 @@ public class TProofSimplifier extends TVisitor {
     /*
      * class created using the perl script
      */
-    public void visitTBoolImplies(/*@ non_null @*/ TBoolImplies n){
+    public void visitTBoolImplies(/*@ non_null @*/ TBoolImplies n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTBoolAnd(/*@ non_null @*/ TBoolAnd n){
+    public void visitTBoolAnd(/*@ non_null @*/ TBoolAnd n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTBoolOr(/*@ non_null @*/ TBoolOr n){
+    public void visitTBoolOr(/*@ non_null @*/ TBoolOr n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTBoolNot(/*@ non_null @*/ TBoolNot n){
+    public void visitTBoolNot(/*@ non_null @*/ TBoolNot n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n){
+    public void visitTBoolEQ(/*@ non_null @*/ TBoolEQ n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTBoolNE(/*@ non_null @*/ TBoolNE n){
+    public void visitTBoolNE(/*@ non_null @*/ TBoolNE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAllocLT(/*@ non_null @*/ TAllocLT n){
+    public void visitTAllocLT(/*@ non_null @*/ TAllocLT n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAllocLE(/*@ non_null @*/ TAllocLE n){
+    public void visitTAllocLE(/*@ non_null @*/ TAllocLE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n){
+    public void visitTAnyEQ(/*@ non_null @*/ TAnyEQ n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAnyNE(/*@ non_null @*/ TAnyNE n){
+    public void visitTAnyNE(/*@ non_null @*/ TAnyNE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralEQ(/*@ non_null @*/ TIntegralEQ n){
+    public void visitTIntegralEQ(/*@ non_null @*/ TIntegralEQ n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralGE(/*@ non_null @*/ TIntegralGE n){
+    public void visitTIntegralGE(/*@ non_null @*/ TIntegralGE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralGT(/*@ non_null @*/ TIntegralGT n){
+    public void visitTIntegralGT(/*@ non_null @*/ TIntegralGT n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralLE(/*@ non_null @*/ TIntegralLE n){
+    public void visitTIntegralLE(/*@ non_null @*/ TIntegralLE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralLT(/*@ non_null @*/ TIntegralLT n){
+    public void visitTIntegralLT(/*@ non_null @*/ TIntegralLT n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralNE(/*@ non_null @*/ TIntegralNE n){
+    public void visitTIntegralNE(/*@ non_null @*/ TIntegralNE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralAdd(/*@ non_null @*/ TIntegralAdd n){
+    public void visitTIntegralAdd(/*@ non_null @*/ TIntegralAdd n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralDiv(/*@ non_null @*/ TIntegralDiv n){
+    public void visitTIntegralDiv(/*@ non_null @*/ TIntegralDiv n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralMod(/*@ non_null @*/ TIntegralMod n){
+    public void visitTIntegralMod(/*@ non_null @*/ TIntegralMod n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIntegralMul(/*@ non_null @*/ TIntegralMul n){
+    public void visitTIntegralMul(/*@ non_null @*/ TIntegralMul n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatEQ(/*@ non_null @*/ TFloatEQ n){
+    public void visitTFloatEQ(/*@ non_null @*/ TFloatEQ n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatGE(/*@ non_null @*/ TFloatGE n){
+    public void visitTFloatGE(/*@ non_null @*/ TFloatGE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatGT(/*@ non_null @*/ TFloatGT n){
+    public void visitTFloatGT(/*@ non_null @*/ TFloatGT n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatLE(/*@ non_null @*/ TFloatLE n){
+    public void visitTFloatLE(/*@ non_null @*/ TFloatLE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatLT(/*@ non_null @*/ TFloatLT n){
+    public void visitTFloatLT(/*@ non_null @*/ TFloatLT n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatNE(/*@ non_null @*/ TFloatNE n){
+    public void visitTFloatNE(/*@ non_null @*/ TFloatNE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatAdd(/*@ non_null @*/ TFloatAdd n){
+    public void visitTFloatAdd(/*@ non_null @*/ TFloatAdd n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatDiv(/*@ non_null @*/ TFloatDiv n){
+    public void visitTFloatDiv(/*@ non_null @*/ TFloatDiv n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatMod(/*@ non_null @*/ TFloatMod n){
+    public void visitTFloatMod(/*@ non_null @*/ TFloatMod n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFloatMul(/*@ non_null @*/ TFloatMul n){
+    public void visitTFloatMul(/*@ non_null @*/ TFloatMul n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTLockLE(/*@ non_null @*/ TLockLE n){
+    public void visitTLockLE(/*@ non_null @*/ TLockLE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTLockLT(/*@ non_null @*/ TLockLT n){
+    public void visitTLockLT(/*@ non_null @*/ TLockLT n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTRefEQ(/*@ non_null @*/ TRefEQ n){
+    public void visitTRefEQ(/*@ non_null @*/ TRefEQ n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTRefNE(/*@ non_null @*/ TRefNE n){
+    public void visitTRefNE(/*@ non_null @*/ TRefNE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTTypeEQ(/*@ non_null @*/ TTypeEQ n){
+    public void visitTTypeEQ(/*@ non_null @*/ TTypeEQ n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTTypeNE(/*@ non_null @*/ TTypeNE n){
+    public void visitTTypeNE(/*@ non_null @*/ TTypeNE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTTypeLE(/*@ non_null @*/ TTypeLE n){
+    public void visitTTypeLE(/*@ non_null @*/ TTypeLE n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTCast(/*@ non_null @*/ TCast n){
+    public void visitTCast(/*@ non_null @*/ TCast n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIs(/*@ non_null @*/ TIs n){
+    public void visitTIs(/*@ non_null @*/ TIs n) throws IOException{
 
 	if(n.parent instanceof TBoolRes) {
 	    TBoolRes nTemp = (TBoolRes) n.parent;
@@ -363,19 +364,19 @@ public class TProofSimplifier extends TVisitor {
 
     }
 
-    public void visitTSelect(/*@ non_null @*/ TSelect n){
+    public void visitTSelect(/*@ non_null @*/ TSelect n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTStore(/*@ non_null @*/ TStore n){
+    public void visitTStore(/*@ non_null @*/ TStore n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTTypeOf(/*@ non_null @*/ TTypeOf n){
+    public void visitTTypeOf(/*@ non_null @*/ TTypeOf n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTForAll(/*@ non_null @*/ TForAll n){
+    public void visitTForAll(/*@ non_null @*/ TForAll n) throws IOException{
 
 //	if(n.parent instanceof TBoolRes) {
 //	    TBoolRes nTemp = (TBoolRes) n.parent;
@@ -386,7 +387,7 @@ public class TProofSimplifier extends TVisitor {
 
     }
 
-    public void visitTExist(/*@ non_null @*/ TExist n){
+    public void visitTExist(/*@ non_null @*/ TExist n) throws IOException{
 
 //	if(n.parent instanceof TBoolRes) {
 //	    TBoolRes nTemp = (TBoolRes) n.parent;
@@ -397,53 +398,53 @@ public class TProofSimplifier extends TVisitor {
 
     }
 
-    public void visitTIsAllocated(/*@ non_null @*/ TIsAllocated n){
+    public void visitTIsAllocated(/*@ non_null @*/ TIsAllocated n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTEClosedTime(/*@ non_null @*/ TEClosedTime n){
+    public void visitTEClosedTime(/*@ non_null @*/ TEClosedTime n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTFClosedTime(/*@ non_null @*/ TFClosedTime n){
+    public void visitTFClosedTime(/*@ non_null @*/ TFClosedTime n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAsElems(/*@ non_null @*/ TAsElems n){
+    public void visitTAsElems(/*@ non_null @*/ TAsElems n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAsField(/*@ non_null @*/ TAsField n){
+    public void visitTAsField(/*@ non_null @*/ TAsField n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTAsLockSet(/*@ non_null @*/ TAsLockSet n){
+    public void visitTAsLockSet(/*@ non_null @*/ TAsLockSet n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTArrayLength(/*@ non_null @*/ TArrayLength n){
+    public void visitTArrayLength(/*@ non_null @*/ TArrayLength n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n){
+    public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTArrayShapeOne(/*@ non_null @*/ TArrayShapeOne n){
+    public void visitTArrayShapeOne(/*@ non_null @*/ TArrayShapeOne n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTArrayShapeMore(/*@ non_null @*/ TArrayShapeMore n){
+    public void visitTArrayShapeMore(/*@ non_null @*/ TArrayShapeMore n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTIsNewArray(/*@ non_null @*/ TIsNewArray n){
+    public void visitTIsNewArray(/*@ non_null @*/ TIsNewArray n) throws IOException{
 	visitTFunction(n);
     }
 
-    public void visitTString(/*@ non_null @*/ TString n){}
+    public void visitTString(/*@ non_null @*/ TString n) throws IOException{}
 
-    public void visitTBoolean(/*@ non_null @*/ TBoolean n){
+    public void visitTBoolean(/*@ non_null @*/ TBoolean n) throws IOException{
 
 	if(n.parent instanceof TBoolRes) {
 	    TBoolRes nTemp = (TBoolRes) n.parent;
@@ -454,20 +455,20 @@ public class TProofSimplifier extends TVisitor {
 
     }
 
-    public void visitTChar(/*@ non_null @*/ TChar n){}
-    public void visitTInt(/*@ non_null @*/ TInt n){}
-    public void visitTFloat(/*@ non_null @*/ TFloat n){}
-    public void visitTDouble(/*@ non_null @*/ TDouble n){}
-    public void visitTNull(/*@ non_null @*/ TNull n){}
+    public void visitTChar(/*@ non_null @*/ TChar n) throws IOException{}
+    public void visitTInt(/*@ non_null @*/ TInt n) throws IOException{}
+    public void visitTFloat(/*@ non_null @*/ TFloat n) throws IOException{}
+    public void visitTDouble(/*@ non_null @*/ TDouble n) throws IOException{}
+    public void visitTNull(/*@ non_null @*/ TNull n) throws IOException{}
 
-	public void visitTMethodCall(TMethodCall call) {}
+	public void visitTMethodCall(TMethodCall call) throws IOException {}
 
-	public void visitTUnset(TUnset n) {
+	public void visitTUnset(TUnset n) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTIntegralSub(TIntegralSub sub) {
+	public void visitTIntegralSub(TIntegralSub sub) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

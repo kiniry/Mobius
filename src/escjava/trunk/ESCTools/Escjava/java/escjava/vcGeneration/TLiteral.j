@@ -9,7 +9,7 @@ public class TString extends TLiteral{
 	type = $String;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTString(this);
     }
 
@@ -24,7 +24,7 @@ public class TBoolean extends TLiteral{
 	type = $boolean;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolean(this);
     }
 
@@ -39,7 +39,7 @@ public class TChar extends TLiteral{
 	type = $char;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTChar(this);
     }
 
@@ -54,7 +54,7 @@ public class TInt extends TLiteral {
 	type = $integer;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTInt(this);
     }
 
@@ -69,7 +69,7 @@ public class TFloat extends TLiteral {
 	type = $float;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloat(this);
     }
 
@@ -84,7 +84,7 @@ public class TDouble extends TLiteral {
 	type = $float;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTDouble(this);
     }
 
@@ -98,7 +98,7 @@ public class TNull extends TLiteral {
 	type = $Reference;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTNull(this);
     }
 

@@ -775,6 +775,7 @@ public class Main extends javafe.SrcTool
             String[] subpackage = options().pProver;
             for (int spindex = 0; spindex < subpackage.length; spindex++) {
                 String className = "";
+                String proverName = "";
                 String[] spname = subpackage[spindex].split("\\.");
                 try {
                     for (int index = 0; index < spname.length; index++) {
@@ -782,10 +783,31 @@ public class Main extends javafe.SrcTool
                                 + spname[index].substring(0, 1).toUpperCase()
                                 + spname[index].substring(1);
                     }
-                    ProverType prover = (ProverType) (Class
-                            .forName("escjava.vcGeneration."
-                                    + subpackage[spindex] + "." + className
-                                    + "Prover").newInstance());
+                    proverName = className;
+                    if (className.startsWith("Xml")) {
+                        proverName = "Xml";
+                    }
+                    ProverType prover = null;
+                    if (subpackage[spindex].startsWith("xml.")) {
+                        String stylesheet = subpackage[spindex].substring(4);
+                        prover = (ProverType) (Class
+                                .forName("escjava.vcGeneration.xml.XmlProver")
+                                .newInstance());
+                        ((escjava.vcGeneration.xml.XmlProver) prover)
+                                .setStyleSheet(stylesheet);
+                    } else {
+                        prover = (ProverType) (Class
+                                .forName("escjava.vcGeneration."
+                                        + subpackage[spindex] + "." + className
+                                        + "Prover").newInstance());
+                    }
+                    String method = sig.toString() + ".";
+                    if (r instanceof MethodDecl)
+                        method += ((MethodDecl) r).id;
+                    else
+                        method += "<constructor>";
+                    System.out.println("[" + proverName
+                            + "Prover: generating VC for " + method + "]");
                     Expr vc = prover.addTypeInfo(initState, vcBody);
                     vcg = new VcGenerator(prover, vc, options().pErr,
                             options().pWarn, options().pInfo, options().pColors);
@@ -796,20 +818,39 @@ public class Main extends javafe.SrcTool
 
                     FileWriter fw = new FileWriter(fn);
 
-                    fw.write(vcg.getProof(prover.labelRename(label)));
+                    vcg.getProof(fw, prover.labelRename(label));
 
                     fw.close();
 
-                    System.out.println("[" + subpackage[spindex]
-                            + " proof using the new vcg has been written to "
+                    System.out.println("[" + proverName + "Prover: "
+                            + subpackage[spindex] + " VC has been written to "
                             + fn + "]");
+                } catch (escjava.vcGeneration.xml.XmlProverException exn) {
+                    System.out
+                            .println("[XmlProver: can not locate '"
+                                    + exn.stylesheet
+                                    + ".xslt' within ESC/Java or within the "
+                                    + (System.getProperty("XMLPROVERPATH") == null
+                                            || System.getProperty(
+                                                    "XMLPROVERPATH").equals("") ? "current working directory"
+                                            : "system property XMLPROVERPATH (ie. "
+                                                    + System
+                                                            .getProperty("XMLPROVERPATH")
+                                                    + ")") + "]");
+
                 } catch (ClassNotFoundException exn) {
                     System.out
-                            .println("Prover \""
+                            .println("["
+                                    + proverName
+                                    + "Prover: \""
                                     + subpackage[spindex]
-                                    + "\" not recognised: ensure that you have specified the correct prover.");
+                                    + "\" not recognised - ensure that you have specified the correct prover]");
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    if (e.getMessage() != null) {
+                        System.out.println("[" + proverName + "Prover: "
+                                + e.getMessage() + "]");
+                    }
+                    e.printStackTrace();
                 }
             }
             // generate the dot file for the original vc tree

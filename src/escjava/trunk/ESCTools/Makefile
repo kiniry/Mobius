@@ -506,6 +506,8 @@ version:
 
 jar:	build
 	mkdir -p ${RELTEMP}/sub
+	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/*.xslt ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
+	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/xmlprover.dtd ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
 	cp -r ${JAVAFE_CLASSFILES}/* ${RELTEMP}/sub
 	cp -r ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
@@ -514,7 +516,7 @@ jar:	build
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
 	( cd ${RELTEMP}/sub; jar cmf ../../manifest.txt \
-	  ${RELJAR} *; )
+	  ${RELJAR} *; jar i ${RELJAR}; )
 #	 ${JARMUPDATE} manifest.txt ${RELJAR}
 	rm -rf ${RELTEMP}/sub
 	cp ${RELJAR} ${ESCTOOLS_ROOT}

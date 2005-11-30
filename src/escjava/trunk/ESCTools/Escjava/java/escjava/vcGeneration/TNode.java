@@ -1,10 +1,7 @@
 package escjava.vcGeneration;
 
-import java.lang.Class;
-import java.io.PrintStream;
-import java.util.Vector;
+import java.io.*;
 import java.util.Iterator;
-import java.lang.StringBuffer;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -38,7 +35,7 @@ abstract public class TNode {
 
     String label = null;
 
-    /* map containing the variables names
+    /** map containing the variables names
      * When the tree is created, old name are entered as keys with 
      * a new {@link VariableInfo}(oldName, type) associated as value.
      * When the vc are generated, each time a variable is looked at, we look 
@@ -52,7 +49,7 @@ abstract public class TNode {
      */
     static/*@ spec_public non_null @*/protected HashMap variablesName = null;
 
-    /*
+    /**
      * map containing all the types used in the proof.
      * 
      * After calling {@link typeTree}, each node has his {@link TypeInfo} field 
@@ -69,7 +66,7 @@ abstract public class TNode {
      */
     static public/*@ spec_public non_null @*//* protected */HashMap typesName = null;
 
-    /*
+    /**
      * We add some types that we know will be used to avoid looking
      * at the map typesName when we want to add it.
      */
@@ -108,7 +105,7 @@ abstract public class TNode {
         id = counter;
     }
 
-    static ProverType prover = null;
+    static public ProverType prover = null;
     
     // init every both variable and type map.
 
@@ -121,16 +118,11 @@ abstract public class TNode {
         prover.init();
     }
 
-    /*@
-     @ requires type.equals("unsortedPvs") || type.equals("pvs") || type.equals("sammy");
-     @ requires typeProofSet;
-     @*/
-    protected void generateDeclarations(/*@ non_null @*/StringBuffer s, ProverType p) {
-    	p.generateDeclarations(s, variablesName);
-
+    protected void generateDeclarations(/*@ non_null @*/Writer s, ProverType p) throws IOException {
+        p.generateDeclarations(s, variablesName);
     }
 
-    /*
+    /**
      * This function add variable to the global map name.
      * @param oldName the old name.
      * @param type the type of the variable which has been infered from the old tree.
@@ -199,7 +191,7 @@ abstract public class TNode {
         return addName(oldName, type, null);
     }
 
-    /*
+    /**
      * return the {@link VariableInfo} object associated with this name
      */
     //@ requires variablesName.contains(s);
@@ -207,7 +199,7 @@ abstract public class TNode {
         return (VariableInfo) variablesName.get(name);
     }
 
-    /*
+    /**
      * return the {@link VariableInfo} object associated of the caller which
      * must be an instance of TName.
      */
@@ -227,7 +219,7 @@ abstract public class TNode {
 
     }
 
-    /*
+    /**
      * This function add type to the global map .
      * @param oldName the old name.
      *
@@ -260,7 +252,7 @@ abstract public class TNode {
         return TNode.addType(oldType, null);
     }
 
-    /* dot id which is unique because of adding 
+    /** dot id which is unique because of adding 
      'id' to the name of the node */
     protected/*@ non_null @*/String dotId() {
 
@@ -282,7 +274,7 @@ abstract public class TNode {
      @*/
     abstract protected void typeTree();
 
-    /*
+    /**
      * Add the type if not present to the global map of type
      * and fill the correct field with it.
      */
@@ -350,7 +342,7 @@ abstract public class TNode {
         }
     }
 
-    /*
+    /**
      * return the type of the node according to the type of proof asked
      * or "?" if type isn't known.
      */
@@ -418,7 +410,7 @@ abstract public class TNode {
 
     }
 
-    /*
+    /**
      * Return the typeInfo associated with this node. It can just be
      * the 'type' field for non instance of TName. Or in the case
      * of TName node, we retrieve it in the global map.
@@ -465,7 +457,7 @@ abstract public class TNode {
             return getShortName() + id;
     }
 
-    abstract public void accept(/*@ non_null @*/TVisitor v);
+    abstract public void accept(/*@ non_null @*/TVisitor v) throws IOException;
 
     static public void printInfo() {
 

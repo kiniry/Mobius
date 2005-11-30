@@ -5,40 +5,34 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.*;
 
 import javafe.ast.Expr;
 
-import escjava.translate.GC;
 import escjava.translate.InitialState;
 import escjava.vcGeneration.*;
 
-public class PvsProver implements ProverType {
+public class PvsProver extends ProverType {
 
     public String labelRename(String label) {
         label = label.replace('.','_');
         return label;
     }
     
-    public TVisitor visitor() {
-        return new TPvsVisitor();
+    public TVisitor visitor(Writer out) throws IOException {
+        return new TPvsVisitor(out);
     }
 
-    public String getProof(String proofName, String declns, String vc) {
-        // generate declarations
-        StringBuffer s = new StringBuffer();
-
-        s.append(proofName + " : CONJECTURE\n"); // let's be modest...
-
-        s.append("ForAll(\n");
-
-        s.append(declns);
-
-        s.append(") :\n\n");
-
-        // add the proof
-        s.append(vc);
-
-        return s.toString();
+    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+        try {
+            out.write(proofName + " : CONJECTURE\n"); // let's be modest...
+            out.write("ForAll(\n");
+            generateDeclarations(out, term);
+            out.write(") :\n\n");
+            generateTerm(out, term);
+        } catch (IOException e) {
+            // Intentionally do nothing
+        }
     }
 
     public String getVariableInfo(VariableInfo caller) {
@@ -265,17 +259,21 @@ public class PvsProver implements ProverType {
      */   
     public TNode rewrite(TNode tree) {
         TProofSimplifier psvi = new TProofSimplifier();
-        tree.accept(psvi);
+        try {
+            tree.accept(psvi);
+        } catch (IOException e) {
+            // This should never happen!
+            System.out.println(e.getMessage());
+        }
         return tree;
     }
 
-	public void generateDeclarations(StringBuffer s, HashMap variablesName) {
-	    Set keySet = variablesName.keySet();
+	public void generateDeclarations(Writer s, HashMap variablesName) throws IOException {
+        Set keySet = variablesName.keySet();
 
         Iterator iter = keySet.iterator();
         String keyTemp = null;
         VariableInfo viTemp = null;
-        TypeInfo tiTemp = null;
 
         /*
          * Needed to avoid adding a comma after last declaration. As some declaration can be skipped
@@ -297,16 +295,20 @@ public class PvsProver implements ProverType {
              * pvsName, sammyName, type.
              */
             if (viTemp.type != null) {
-                if (firstDeclarationDone
-                        && !viTemp.getVariableInfo().equals("%NotHandled"))
-                    s.append(",\n");
+                try {
+                    if (firstDeclarationDone
+                            && !viTemp.getVariableInfo().equals("%NotHandled"))
+                        s.write(",\n");
 
-                if (!viTemp.getVariableInfo().equals("%NotHandled")) { // skipping non handled variables
-                    s.append(viTemp.getVariableInfo() + " : "
-                            + viTemp.type.getTypeInfo());
+                    if (!viTemp.getVariableInfo().equals("%NotHandled")) { // skipping non handled variables
+                        s.write(viTemp.getVariableInfo() + " : "
+                                + viTemp.type.getTypeInfo());
 
-                    if (!firstDeclarationDone)
-                        firstDeclarationDone = true;
+                        if (!firstDeclarationDone)
+                            firstDeclarationDone = true;
+                    }
+                } catch (IOException e) {
+                    // Intentionally do nothing
                 }
             } else
                 // FIXME test that it nevers happen
@@ -318,5 +320,5 @@ public class PvsProver implements ProverType {
                                         + keyTemp
                                         + " is not set when declarating variables for the proof, skipping it...");
         }
-	}
+    }
 }

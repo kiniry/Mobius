@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 
 public class VariableInfo {
 
-    /*
+    /**
      * README :
      *
      * This class is used to contain renaming of variables.
@@ -30,7 +30,7 @@ public class VariableInfo {
 
     public boolean typeSure = false;
 
-    /*
+    /**
      * This last field wasn't planned intially. 
      * But it is necessary when some variables have two types
      * like for a class like :
@@ -46,7 +46,7 @@ public class VariableInfo {
      */
     private TypeInfo secondType = null;
 
-    /*
+    /**
      * When we call this constructor, we know the old type, so we give it.
      */
     public VariableInfo(/*@ non_null @*/String old, TypeInfo type) {
@@ -54,7 +54,7 @@ public class VariableInfo {
         this.type = type;
     }
 
-    /*
+    /**
      * Constructor for specifying the renaming of the variable.
      */
     public VariableInfo(/*@ non_null @*/String old, TypeInfo type, /*@ non_null @*/String def, /*@ non_null @*/ProverType prover) {

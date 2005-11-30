@@ -5,7 +5,7 @@ public class TCast extends TBoolRes{
 
     public void typeTree(){}
     
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTCast(this);
     }
 

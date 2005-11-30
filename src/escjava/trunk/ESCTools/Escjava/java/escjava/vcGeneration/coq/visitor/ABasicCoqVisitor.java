@@ -1,17 +1,19 @@
 package escjava.vcGeneration.coq.visitor;
 
+import java.io.*;
+
 import escjava.vcGeneration.*;
 import escjava.vcGeneration.coq.CoqProver;
-import escjava.vcGeneration.coq.CoqStringBuffer;
+import escjava.vcGeneration.PrettyPrinter;
 
 public abstract class ABasicCoqVisitor extends TVisitor{
-	protected ABasicCoqVisitor tcbv;
+    protected ABasicCoqVisitor tcbv;
     protected ABasicCoqVisitor tcv;
     
     /**
      * The output buffer.
      */
-    protected CoqStringBuffer out = null;
+    protected PrettyPrinter out = null;
     /**
      * The current instance of the CoqProver.
      */
@@ -19,13 +21,14 @@ public abstract class ABasicCoqVisitor extends TVisitor{
     
     
     
-    protected ABasicCoqVisitor(CoqProver prover, CoqStringBuffer out) {
-    	if(out == null)
-    		this.out = new CoqStringBuffer(super.out);
-    	else
-    		this.out = out;
-    	
-    	p= prover;	
+    protected ABasicCoqVisitor(Writer out, CoqProver prover, PrettyPrinter ppout) {
+        super(out, "  ", "(", ")", "\n");
+        if (ppout == null)
+            this.out = new PrettyPrinter(out, "  ", "(", ")", "\n");
+        else
+            this.out = ppout;
+
+        p = prover;
     }
     
     protected void setVisitors(ABasicCoqVisitor tcv, ABasicCoqVisitor tcbv) {
@@ -38,7 +41,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
      * op (son1, son2 ...)
      * )
      */
-    public void genericFun(/*@ non_null @*/ String s, TFunction n){
+    public void genericFun(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
     	out.appendI("("+ s+" ");
     	int i =0;
@@ -55,7 +58,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
     		out.reduceI();    
     }
     
-    public void propFun(/*@ non_null @*/ String s, TFunction n){
+    public void propFun(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
     	out.appendI("("+ s+" ");
     	
@@ -82,7 +85,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
      * Function/Operator with arity 1 :
      * (op X)
      */
-    public void unaryGeneric(/*@ non_null @*/ String s, TFunction n){
+    public void unaryGeneric(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
 	if(n.sons.size() != 1)
 	    System.err.println("java.escjava.vcGeneration.TCoqVisitor.unFun : an unary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 1");
@@ -106,7 +109,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	op 
 	  sonN)
      */
-    public void genericOp(/*@ non_null @*/ String s, TFunction n){
+    public void genericOp(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
 	out.appendI("(");
 
@@ -132,7 +135,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 		out.appendN(")");
 	out.reduceI();
     }
-    public void genericPropOp(/*@ non_null @*/ String s, TFunction n){
+    public void genericPropOp(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
     	out.appendI("(");
 
@@ -162,7 +165,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
      * Function/Operator with arity 1 :
      * (op X)
      */
-    public void unaryProp(/*@ non_null @*/ String s, TFunction n){
+    public void unaryProp(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
 	if(n.sons.size() != 1)
 	    System.err.println("java.escjava.vcGeneration.TCoqVisitor.unFun : an unary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 1");
@@ -188,7 +191,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
      * If son1 is a variable, op isn't on the next line
      * If son2 is a variable, it doesn't go to next line.
      */
-    public void binOp(/*@ non_null @*/ String s, TFunction n){
+    public void binOp(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
 	if(n.sons.size() != 2)
 	    System.err.println("java.escjava.vcGeneration.TCoqVisitor : a binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");
@@ -211,7 +214,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	    out.reduceI();
 	    
     }
-    public void spacedBinOp(/*@ non_null @*/ String s, TFunction n){
+    public void spacedBinOp(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
     	if(n.sons.size() < 2 )
     	    System.err.println("java.escjava.vcGeneration.TCoqVisitor : the spaced out binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");

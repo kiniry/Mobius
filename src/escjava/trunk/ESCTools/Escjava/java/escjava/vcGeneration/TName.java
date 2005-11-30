@@ -1,10 +1,12 @@
 package escjava.vcGeneration;
 
+import java.io.IOException;
+
 public class TName extends TVariable {
 
     /*@ non_null @*/public String name;
 
-    /*
+    /**
      * type is supposed to be one of the object that is statically
      * initialized in TNode, like $Reference, $Type etc...
      */
@@ -12,7 +14,7 @@ public class TName extends TVariable {
         this.name = name;
     }
 
-    public void accept(/*@ non_null @*/TVisitor v) {
+    public void accept(/*@ non_null @*/TVisitor v) throws IOException {
         v.visitTName(this);
     }
     protected void typeTree(){

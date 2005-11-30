@@ -10,7 +10,7 @@ public class TRoot extends TFunction {
 	isroot = true;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTRoot(this);
     }
     

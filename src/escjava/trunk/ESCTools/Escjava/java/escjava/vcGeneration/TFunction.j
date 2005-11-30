@@ -3,7 +3,7 @@ package escjava.vcGeneration;
 // TBoolOp = return a boolean and sons are boolean : list(boolean) -> boolean
 public class TBoolImplies extends TBoolOp {
 
-    public void accept(TVisitor v){
+    public void accept(TVisitor v) throws java.io.IOException{
 	v.visitTBoolImplies(this);
     }
     
@@ -11,7 +11,7 @@ public class TBoolImplies extends TBoolOp {
 
 public class TBoolAnd extends TBoolOp {
     
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolAnd(this);
     }
 
@@ -19,7 +19,7 @@ public class TBoolAnd extends TBoolOp {
 
 public class TBoolOr extends TBoolOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolOr(this);
     }
 
@@ -27,7 +27,7 @@ public class TBoolOr extends TBoolOp {
 
 public class TBoolNot extends TBoolOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolNot(this);
     }
 
@@ -35,7 +35,7 @@ public class TBoolNot extends TBoolOp {
 
 public class TBoolEQ extends TBoolOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolEQ(this);
     }
 
@@ -43,7 +43,7 @@ public class TBoolEQ extends TBoolOp {
 
 public class TBoolNE extends TBoolOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolNE(this);
     }
 
@@ -75,7 +75,7 @@ public class TAllocLT extends TBoolRes {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAllocLT(this);
     }
 
@@ -106,7 +106,7 @@ public class TAllocLE extends TBoolRes {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAllocLE(this);
     }
 
@@ -154,7 +154,7 @@ public class TAnyEQ extends TFunction {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAnyEQ(this);
     }
 
@@ -162,7 +162,7 @@ public class TAnyEQ extends TFunction {
 
 public class TAnyNE extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAnyNE(this);
     }
 
@@ -171,7 +171,7 @@ public class TAnyNE extends TFunction {
 // integral comparisons, TIntOp : int * int -> boolean
 public class TIntegralEQ extends TIntOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralEQ(this);
     }
 
@@ -179,7 +179,7 @@ public class TIntegralEQ extends TIntOp {
 
 public class TIntegralGE extends TIntOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralGE(this);
     }
 
@@ -187,7 +187,7 @@ public class TIntegralGE extends TIntOp {
 
 public class TIntegralGT extends TIntOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralGT(this);
     }
 
@@ -195,7 +195,7 @@ public class TIntegralGT extends TIntOp {
 
 public class TIntegralLE extends TIntOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralLE(this);
     }
 
@@ -203,7 +203,7 @@ public class TIntegralLE extends TIntOp {
 
 public class TIntegralLT extends TIntOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralLT(this);
     }
 
@@ -211,7 +211,7 @@ public class TIntegralLT extends TIntOp {
 
 public class TIntegralNE extends TIntOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralNE(this);
     }
 
@@ -220,7 +220,7 @@ public class TIntegralNE extends TIntOp {
 // integral operation : TIntFun : int * int -> int
 public class TIntegralAdd extends TIntFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralAdd(this);
     }
 
@@ -228,7 +228,7 @@ public class TIntegralAdd extends TIntFun {
 
 public class TIntegralDiv extends TIntFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralDiv(this);
     }
 
@@ -236,7 +236,7 @@ public class TIntegralDiv extends TIntFun {
 
 public class TIntegralMod extends TIntFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralMod(this);
     }
 
@@ -244,14 +244,14 @@ public class TIntegralMod extends TIntFun {
 
 public class TIntegralMul extends TIntFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralMul(this);
     }
 
 }
 public class TIntegralSub extends TIntFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIntegralSub(this);
     }
 
@@ -259,7 +259,7 @@ public class TIntegralSub extends TIntFun {
 //real comparisons : TFloatOp : float * float -> boolean
 public class TFloatEQ extends TFloatOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatEQ(this);
     }
 
@@ -267,7 +267,7 @@ public class TFloatEQ extends TFloatOp {
 
 public class TFloatGE extends TFloatOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatGE(this);
     }
 
@@ -275,7 +275,7 @@ public class TFloatGE extends TFloatOp {
 
 public class TFloatGT extends TFloatOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatGT(this);
     }
 
@@ -283,7 +283,7 @@ public class TFloatGT extends TFloatOp {
 
 public class TFloatLE extends TFloatOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatLE(this);
     }
 
@@ -291,7 +291,7 @@ public class TFloatLE extends TFloatOp {
 
 public class TFloatLT extends TFloatOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatLT(this);
     }
 
@@ -299,7 +299,7 @@ public class TFloatLT extends TFloatOp {
 
 public class TFloatNE extends TFloatOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatNE(this);
     }
 
@@ -308,7 +308,7 @@ public class TFloatNE extends TFloatOp {
 // float operation : TFloatFun : float * float -> float
 public class TFloatAdd extends TFloatFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatAdd(this);
     }
 
@@ -316,7 +316,7 @@ public class TFloatAdd extends TFloatFun {
 
 public class TFloatDiv extends TFloatFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatDiv(this);
     }
 
@@ -324,7 +324,7 @@ public class TFloatDiv extends TFloatFun {
 
 public class TFloatMod extends TFloatFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatMod(this);
     }
 
@@ -332,7 +332,7 @@ public class TFloatMod extends TFloatFun {
 
 public class TFloatMul extends TFloatFun {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFloatMul(this);
     }
 
@@ -341,7 +341,7 @@ public class TFloatMul extends TFloatFun {
 // lock comparisons
 public class TLockLE extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTLockLE(this);
     }
 
@@ -349,7 +349,7 @@ public class TLockLE extends TFunction {
 
 public class TLockLT extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTLockLT(this);
     }
 
@@ -358,7 +358,7 @@ public class TLockLT extends TFunction {
 // reference comparisons : %Reference * %Reference -> boolean
 public class TRefEQ extends TRefOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTRefEQ(this);
     }
 
@@ -366,7 +366,7 @@ public class TRefEQ extends TRefOp {
 
 public class TRefNE extends TRefOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTRefNE(this);
     }
 
@@ -375,7 +375,7 @@ public class TRefNE extends TRefOp {
 // type comparisons : %Type * %Type -> boolean
 public class TTypeEQ extends TTypeOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTTypeEQ(this);
     }
 
@@ -383,7 +383,7 @@ public class TTypeEQ extends TTypeOp {
 
 public class TTypeNE extends TTypeOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTTypeNE(this);
     }
 
@@ -391,7 +391,7 @@ public class TTypeNE extends TTypeOp {
 
 public class TTypeLE extends TTypeOp {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTTypeLE(this);
     }
 
@@ -403,7 +403,7 @@ public class TCast extends TBoolRes{
 
     public void typeTree(){}
     
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTCast(this);
     }
 
@@ -432,7 +432,7 @@ public class TIs extends TBoolRes { // %Reference | double | char etc ..., type 
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIs(this);
     }
 
@@ -462,7 +462,7 @@ public class TSelect extends TFunction {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTSelect(this);
     }
 
@@ -491,7 +491,7 @@ public class TStore extends TFunction {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTStore(this);
     }
 
@@ -504,7 +504,7 @@ public class TTypeOf extends TFunction {
 	type = $Type;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTTypeOf(this);
     }
 
@@ -514,7 +514,7 @@ public class TTypeOf extends TFunction {
 // bool -> bool // fixme
 public class TForAll extends TBoolRes {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTForAll(this);
     }
 
@@ -523,7 +523,7 @@ public class TForAll extends TBoolRes {
 // bool -> bool // fixme
 public class TExist extends TBoolRes {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTExist(this);
     }
 
@@ -550,7 +550,7 @@ public class TIsAllocated extends TBoolOp {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIsAllocated(this);
     }
 
@@ -563,7 +563,7 @@ public class TEClosedTime extends TFunction {
 	type = $Time;
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTEClosedTime(this);
     }
 
@@ -591,7 +591,7 @@ public class TFClosedTime extends TFunction {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTFClosedTime(this);
     }
 
@@ -600,7 +600,7 @@ public class TFClosedTime extends TFunction {
 // as trick : asElems asField asLockset
 public class TAsElems extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAsElems(this);
     }
 
@@ -635,7 +635,7 @@ public class TAsField extends TFunction {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAsField(this);
     }
 
@@ -643,7 +643,7 @@ public class TAsField extends TFunction {
 
 public class TAsLockSet extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTAsLockSet(this);
     }
 
@@ -653,7 +653,7 @@ public class TAsLockSet extends TFunction {
 // %ArrayReference -> integer
 public class TArrayLength extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTArrayLength(this);
     }
 
@@ -662,7 +662,7 @@ public class TArrayLength extends TFunction {
 //
 public class TArrayFresh extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTArrayFresh(this);
     }
 
@@ -670,7 +670,7 @@ public class TArrayFresh extends TFunction {
 
 public class TArrayShapeOne extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTArrayShapeOne(this);
     }
 
@@ -678,7 +678,7 @@ public class TArrayShapeOne extends TFunction {
 
 public class TArrayShapeMore extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTArrayShapeMore(this);
     }
 
@@ -686,7 +686,7 @@ public class TArrayShapeMore extends TFunction {
 
 public class TIsNewArray extends TFunction {
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTIsNewArray(this);
     }
 
@@ -712,7 +712,7 @@ public class TUnset extends TFunction {
 
     }
 
-    public void accept(/*@ non_null @*/ TVisitor v){
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTUnset(this);
     }
 

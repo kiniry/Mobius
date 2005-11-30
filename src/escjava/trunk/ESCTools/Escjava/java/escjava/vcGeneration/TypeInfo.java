@@ -2,7 +2,7 @@ package escjava.vcGeneration;
 
 public class TypeInfo {
 
-    /*
+    /**
      * README :
      * 
      * This class is used to store old types and corresponding new types.
@@ -21,7 +21,7 @@ public class TypeInfo {
         this.old = old;
     }
 
-    /*
+    /**
      * Constructor for specifying the renaming of the type.
      */
     public TypeInfo(/* @ non_null @ */String old, /* @ non_null @ */String def, /*@ non_null @*/ProverType prover) {

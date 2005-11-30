@@ -24,6 +24,8 @@
 ##	ESC_REMOTE_DEBUG (if on, adds the debug flags to JAVA_VM_FLAGS)
 ##	JAVA_VM_DEBUG_FLAGS (the set of debug flags - a default set is already
 ##                       defined)
+##  XMLPROVERPATH    (path for prover based stylesheets to be used by the 
+##                    VC generator)
 ##
 ## The following are set based on the structure of a standard release (if
 ## ESCTOOLS_RELEASE is defined) or otherwise on the structure of the CVS files
@@ -260,7 +262,7 @@ if [ -n "$ESCJ_VERBOSE" ]; then
     echo "=================================================================="
 fi
 
-${JAVA} ${JAVA_VM_FLAGS} -Dsimplify="${ESCJ_SIMPLIFY}" \
+${JAVA} ${JAVA_VM_FLAGS} -DXMLPROVERPATH="${XMLPROVERPATH}" -Dsimplify="${ESCJ_SIMPLIFY}" \
     -classpath "${ESC_CLASSPATH}" ${MAIN} \
     ${JBIN} -classpath "${CLASSPATH}" -specs "${ESC_SPECS}" ${ESCJ_STDARGS} $*
 

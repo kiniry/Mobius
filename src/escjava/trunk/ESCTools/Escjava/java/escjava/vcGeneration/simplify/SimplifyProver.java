@@ -1,23 +1,24 @@
 package escjava.vcGeneration.simplify;
 
 import java.util.HashMap;
+import java.io.*;
 
 import escjava.vcGeneration.*;
 import escjava.translate.*;
 import javafe.ast.*;
 
-public class SimplifyProver implements ProverType {
+public class SimplifyProver extends ProverType {
     
     public String labelRename(String label) {
         return label;
     }
     
-    public TVisitor visitor() {
-        return new TSimplifyVisitor();
+    public TVisitor visitor(Writer out) throws IOException {
+        return new TSimplifyVisitor(out);
     }
 
-    public String getProof(String proofName, String declns, String vc) {
-        return vc;
+    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+        generateTerm(out, term);
     }
 
     public String getVariableInfo(VariableInfo caller) {
@@ -101,7 +102,7 @@ public class SimplifyProver implements ProverType {
         return tree;
     }
 
-	public void generateDeclarations(StringBuffer s, HashMap variablesName) {
+	public void generateDeclarations(Writer s, HashMap variablesName) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

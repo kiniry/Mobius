@@ -1,6 +1,7 @@
 package escjava.vcGeneration.sammy;
 
 import java.util.HashMap;
+import java.io.*;
 
 import javafe.ast.Expr;
 
@@ -8,18 +9,18 @@ import escjava.translate.GC;
 import escjava.translate.InitialState;
 import escjava.vcGeneration.*;
 
-public class SammyProver implements ProverType {
+public class SammyProver extends ProverType {
     
     public String labelRename(String label) {
         return label;
     }
     
-    public TVisitor visitor() {
+    public TVisitor visitor(Writer out) throws IOException {
         return null; //FIXME
     }
     
-    public String getProof(String proofName, String vc, String proof) {
-        return null; //FIXME
+    public void getProof(Writer out, String proofName, TNode term) throws IOException {
+        //FIXME
     }
     
     public/*@ non_null @*/String getVariableInfo(VariableInfo caller) {
@@ -87,7 +88,7 @@ public class SammyProver implements ProverType {
         return tree;
     }
 
-	public void generateDeclarations(StringBuffer s, HashMap variablesName) {
+	public void generateDeclarations(Writer s, HashMap variablesName) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

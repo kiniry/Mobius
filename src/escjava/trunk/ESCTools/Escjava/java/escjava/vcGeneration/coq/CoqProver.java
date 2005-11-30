@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.*;
 
 import escjava.vcGeneration.*;
 import escjava.translate.*;
@@ -18,7 +19,7 @@ import javafe.ast.*;
  * @author J. Charles, based on the work of C. Hurlin and C.Pulley
  * @version 14/11/2005
  */
-public class CoqProver implements ProverType {
+public class CoqProver extends ProverType {
     
     public String labelRename(String label) {
         label = label.replace('.','_');
@@ -30,8 +31,8 @@ public class CoqProver implements ProverType {
 	/**
 	 * @return an instance of the class {@link TCoqVisitor}.
 	 */
-    public TVisitor visitor() {
-        return new TCoqVisitor(this);
+    public TVisitor visitor(Writer out) throws IOException {
+        return new TCoqVisitor(out, this);
     }
 
     /**
@@ -40,26 +41,25 @@ public class CoqProver implements ProverType {
      * @param vc the generated verification condition.
      * @return the Coq vernacular file representing the proof.
      */
-    public String getProof(String proofName, String declns, String vc) {
-    	
-//    	// We try to generate the prelude.
-//   		try {
-//			new Prelude(new File("defs.v")).generate();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-    	
-    	// generate declarations
-    	StringBuffer s = new StringBuffer();
-    	s.append("Load \"defs.v\".\n");
-    	generatePureMethodsDeclarations(s);
-    	s.append("Lemma "  + proofName + " : \n"); 
-    	s.append("forall " + declns + " ,\n");
-    	s.append(vc + ".\n");
-    	s.append("Proof with autosc.\n" + "Qed.");
-    	return s.toString();
- 
+    public void getProof(Writer out, String proofName, TNode term) throws IOException {
 
+        //    	// We try to generate the prelude.
+        //   		try {
+        //			new Prelude(new File("defs.v")).generate();
+        //		} catch (IOException e) {
+        //			e.printStackTrace();
+        //		}
+
+        // generate declarations
+        out.write("Load \"defs.v\".\n");
+        generatePureMethodsDeclarations(out);
+        out.write("Lemma " + proofName + " : \n");
+        out.write("forall ");
+        generateDeclarations(out, term);
+        out.write(" ,\n");
+        generateTerm(out, term);
+        out.write(".\n");
+        out.write("Proof with autosc.\n" + "Qed.");
     }
 
     
@@ -67,28 +67,29 @@ public class CoqProver implements ProverType {
      * Generates the pure methods declarations
      * @param s The output for the declarations.
      */
-    private void generatePureMethodsDeclarations(StringBuffer s) {
-    	//Let's go for the purity:
-    	Vector methNames = TMethodCall.methNames;
-    	Vector methDefs = TMethodCall.methDefs;
-    	for(int i = 0; i < methNames.size(); i++) {
-    		s.append("Variable "  + getVariableInfo(((VariableInfo)methNames.get(i)))+" : "); 
-    		TMethodCall tmc = (TMethodCall)(methDefs.get(i));
-    		Vector v = tmc.getArgType();
-    		for(int j = 0; j < v.size(); j++) {
-    			TypeInfo ti = ((TypeInfo) v.get(j));
-    			if (ti == null) 
-    				s.append("S -> ");
-    			else
-    				s.append(((TypeInfo) v.get(j)).def + " -> ");
-    	    }	
-    	    if(tmc.type == null) {
-    	    	s.append("S.\n");
-    	    }
-    	    else {
-    	    	s.append(tmc.type.def +".\n");
-    	    }
-    	}
+    private void generatePureMethodsDeclarations(Writer s) throws IOException {
+        //Let's go for the purity:
+        Vector methNames = TMethodCall.methNames;
+        Vector methDefs = TMethodCall.methDefs;
+        for (int i = 0; i < methNames.size(); i++) {
+            s.write("Variable "
+                    + getVariableInfo(((VariableInfo) methNames.get(i)))
+                    + " : ");
+            TMethodCall tmc = (TMethodCall) (methDefs.get(i));
+            Vector v = tmc.getArgType();
+            for (int j = 0; j < v.size(); j++) {
+                TypeInfo ti = ((TypeInfo) v.get(j));
+                if (ti == null)
+                    s.write("S -> ");
+                else
+                    s.write(((TypeInfo) v.get(j)).def + " -> ");
+            }
+            if (tmc.type == null) {
+                s.write("S.\n");
+            } else {
+                s.write(tmc.type.def + ".\n");
+            }
+        }
     }
 
     
@@ -144,11 +145,15 @@ public class CoqProver implements ProverType {
      * @param tree the tree to simplify.
      */
     public TNode rewrite(TNode tree) {
-    	TProofTyperVisitor tptv = new TProofTyperVisitor();
-    	tree.accept(tptv);
+        TProofTyperVisitor tptv = new TProofTyperVisitor();
+        try {
+            tree.accept(tptv);
+        } catch (IOException e) {
+            // This should never happen!?
+        }
         //TProofSimplifier psvi = new TProofSimplifier();
         //tree.accept(psvi);
-    	return tree;
+        return tree;
     }
     
     
@@ -395,13 +400,12 @@ public class CoqProver implements ProverType {
      * @param s The output
      * @param variablesNames the variables' names.
      */
-    public void generateDeclarations(/*@ non_null @*/StringBuffer s, HashMap variablesNames) {
-    	Set keySet = variablesNames.keySet();
+    public void generateDeclarations(/*@ non_null @*/Writer s, HashMap variablesNames) throws IOException {
+        Set keySet = variablesNames.keySet();
 
         Iterator iter = keySet.iterator();
         String keyTemp = null;
         VariableInfo viTemp = null;
-     
 
         while (iter.hasNext()) {
 
@@ -413,22 +417,24 @@ public class CoqProver implements ProverType {
             viTemp = (VariableInfo) variablesNames.get(keyTemp);
 
             String name = viTemp.getVariableInfo().toString();
-            if(name.equals("ecReturn") || name.equals("ecThrow") || name.equals("t_int"))
-            	continue;
+            if (name.equals("ecReturn") || name.equals("ecThrow")
+                    || name.equals("t_int"))
+                continue;
             if (viTemp.type != null) {
-            	s.append("(");
-            	s.append(viTemp.getVariableInfo() + " : "
-            			+ viTemp.type.getTypeInfo());
-            	s.append(")");
-                
+                s.write("(");
+                s.write(viTemp.getVariableInfo() + " : "
+                        + viTemp.type.getTypeInfo());
+                s.write(")");
+
             } else {
-                s.append("(" + viTemp.getVariableInfo() + " : S)");
-                TDisplay.warn(
-                		this,
-                		"generateDeclarations",
-                		"Type of variable "
-                		+ keyTemp
-                		+ " is not set when declarating variables for the proof, skipping it...");
+                s.write("(" + viTemp.getVariableInfo() + " : S)");
+                TDisplay
+                        .warn(
+                                this,
+                                "generateDeclarations",
+                                "Type of variable "
+                                        + keyTemp
+                                        + " is not set when declarating variables for the proof, skipping it...");
             }
         }
     }

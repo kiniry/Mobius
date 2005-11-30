@@ -31,7 +31,7 @@ public class TMethodCall extends TFunction {
 	 * @see TNode#accept(TVisitor)
 	 * @param args
 	 */ 
-	public void accept(/*@ non_null @*/ TVisitor v){
+	public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 			v.visitTMethodCall(this);
 	}
 	

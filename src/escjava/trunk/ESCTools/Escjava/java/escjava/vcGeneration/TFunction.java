@@ -1,10 +1,6 @@
 package escjava.vcGeneration;
 
-import java.lang.Class;
-import java.io.PrintStream;
 import java.util.Vector;
-import java.util.Iterator;
-import java.lang.StringBuffer;
 
 import java.lang.ArrayIndexOutOfBoundsException;
 

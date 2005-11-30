@@ -1,24 +1,26 @@
 package escjava.vcGeneration.coq.visitor;
 
+import java.io.*;
+
 import escjava.vcGeneration.*;
 import escjava.vcGeneration.coq.CoqProver;
-import escjava.vcGeneration.coq.CoqStringBuffer;
+import escjava.vcGeneration.PrettyPrinter;
 
 public abstract class AArrayOpsVisitor extends AFloatVisitor {
 
-	protected AArrayOpsVisitor(CoqProver prover, CoqStringBuffer out) {
-		super(prover, out);
+	protected AArrayOpsVisitor(Writer out, CoqProver prover, PrettyPrinter ppout) {
+		super(out, prover, ppout);
 	}
 	
-    public void visitTAsLockSet(/*@ non_null @*/ TAsLockSet n){
+    public void visitTAsLockSet(/*@ non_null @*/ TAsLockSet n) throws IOException{
     	genericFun("asLockSet", n);
     	
     }
 				  
-    public void visitTArrayLength(/*@ non_null @*/ TArrayLength n){
+    public void visitTArrayLength(/*@ non_null @*/ TArrayLength n) throws IOException{
     	genericFun("arrayLength", n);
     }
-    public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n){
+    public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n) throws IOException{
     	if(TNode.$boolean.equals(n.getChildAt(6).type)) {
     		String s= "arrayFreshBool";
     	
@@ -46,15 +48,15 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     		genericFun("arrayFresh", n);     	
     	
     }
-    public void visitTArrayShapeOne(/*@ non_null @*/ TArrayShapeOne n){
+    public void visitTArrayShapeOne(/*@ non_null @*/ TArrayShapeOne n) throws IOException{
     	genericFun("arrayShapeOne", n);
     }
-    public void visitTArrayShapeMore(/*@ non_null @*/ TArrayShapeMore n){
+    public void visitTArrayShapeMore(/*@ non_null @*/ TArrayShapeMore n) throws IOException{
     	genericFun("arrayShapeMore", n);
     }
     
 	  
-    public void visitTSelect(/*@ non_null @*/ TSelect n){
+    public void visitTSelect(/*@ non_null @*/ TSelect n) throws IOException{
     	String pre = "";
     	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
@@ -68,7 +70,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     	else
     		genericFun("RefHeap." +pre +"select ", n);
     }
-    public void visitTStore(/*@ non_null @*/ TStore n){
+    public void visitTStore(/*@ non_null @*/ TStore n) throws IOException{
     	String pre = "";
     	TNode index =(TNode)n.sons.get(1);
     	TNode val =(TNode)n.sons.get(2);
@@ -97,7 +99,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     }
 	  
 
-    public void visitTIsNewArray(/*@ non_null @*/ TIsNewArray n){
+    public void visitTIsNewArray(/*@ non_null @*/ TIsNewArray n) throws IOException{
     	genericFun("isNewArray", n);
     }
 }
