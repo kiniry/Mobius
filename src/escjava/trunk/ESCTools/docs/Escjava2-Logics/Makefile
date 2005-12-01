@@ -31,6 +31,8 @@ pvs_texinfo_files =	$(addsuffix .texinfo,$(pvs_files))
 smt-lib_files =		$(wildcard smt-lib/*.smt)
 smt-lib_texinfo_files =	$(addsuffix .texinfo,$(smt-lib_files))
 
+texi2pdf =	texi2pdf
+
 PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
 
@@ -79,9 +81,9 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 # 	latex ${talk};
 
 %.pdf:	%.texinfo
-	texi2pdf $<
+	${texi2pdf} $<
 	texindex `basename $< .texinfo`.??
-	texi2pdf $<
+	${texi2pdf} $<
 
 %.info:	%.texinfo
 	makeinfo $<
