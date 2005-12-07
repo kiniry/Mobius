@@ -21,10 +21,7 @@ Inductive Stmt_jToStmt_m : Stmt Invariant_j -> Stmt Invariant_m -> Prop :=
                    j2m (Seq Invariant_j s1 s2) ==>  (Seq Invariant_m s1' s2')
 where "'j2m' s1 ==> s2" :=   (Stmt_jToStmt_m s1 s2).
 
-Axiom triche: forall p: Prop, p.
 
-Axiom vcGen_monotone:
-forall S (p1  p2 pre: Assertion)  P  s, (p1 s -> p2 s) ->  ((vcGen(S, p1) ==> (pre, P)) -> vcGen(S, p2) ==> (pre, P)) .
 
 Lemma imp1:
 forall (post: Assertion) pre Sm,    wpMod(Sm, post) ==> pre ->

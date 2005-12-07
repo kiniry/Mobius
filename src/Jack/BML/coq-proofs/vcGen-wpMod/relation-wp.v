@@ -5,6 +5,9 @@ Require Import wp.
 Require Import wpMod.
 
 
+Axiom triche: forall p: Prop, p.
+
+
 Inductive transformMod2NoMod : stmt_m -> stmt_j -> Prop:= 
          | transformSkip : ( transformMod2NoMod ( Skip Invariant_m ) ( Skip Invariant_j ))
          | transformAffect : forall x v, (transformMod2NoMod ( Affect Invariant_m x v  ) ( Affect Invariant_j x v ))
@@ -71,9 +74,25 @@ Inductive isSp : stmt_m  -> Assertion -> Assertion -> Prop :=
 
 *)
 
-Lemma existElim: forall P: Prop, exists x, P x -> P x.
+Reserved Notation "'m2j' s1 ==> s2" (at level 30).
 
+Inductive Stmt_mToStmt_j : Stmt Invariant_m -> Stmt Invariant_j -> Prop :=
+| Stmt_m2jSkip : m2j (Skip Invariant_m) ==>  (Skip Invariant_j)
+| Stmt_m2jAffect : forall v val, 
+                    m2j (Affect Invariant_m v val) ==> (Affect Invariant_j v val)
+| Stmt_m2jIf : forall b t t' f f', 
+                   m2j t ==> t' -> m2j f ==> f' -> 
+                   m2j (If Invariant_m b t f) ==>  (If Invariant_j b t' f')
+| Stmt_m2jWhile : forall b  s s' (l: list Var) v pre im pred,
+               (wpMod(pred,  fun s : State => (forall  x: Var,   ~In x  l  -> s x  = v)) ==> pre) ->
+               m2j s ==> s' -> 
+              m2j (While Invariant_m b (inv_m im l) s) ==>  (While Invariant_j b (inv_j (fun state => im state /\ (forall  x: Var,   ~In x  l  -> state x  = v) /\  (pre state))) s')
+| Stmt_m2jSeq : forall s1 s1' s2 s2', 
+                   m2j s1 ==> s1' -> m2j s2 ==> s2' -> 
+                   m2j (Seq Invariant_m s1 s2) ==>  (Seq Invariant_j s1' s2')
+where "'m2j' s1 ==> s2" :=   (Stmt_mToStmt_j s1 s2).
 
+Axiom triche: forall p: Prop, p.
 
 
 

@@ -96,3 +96,15 @@ intros; apply H0; intuition.
 apply (IHHi1 _ _ _ H8)...
 intros; apply H0; intuition.
 Qed.
+Axiom wpCons :
+forall S (post post' pre' pre : Assertion) Vcs' Vcs,
+ vcGen(S, post') ==> (pre', Vcs') -> (forall s,  (pre' s -> post' s) ->(pre s -> post s) ) ->
+ vcGen(S, post) ==> (pre, Vcs).
+
+Lemma vcGen_monotone:
+forall S, forall (p1  p2 : Assertion)  ,  (forall s, (p1 s -> p2 s)) -> forall pre P, ((vcGen(S, p1) ==> (pre, P)) -> vcGen(S, p2) ==> (pre, P)) .
+Proof with auto.
+intros S p1 p2 Himp.
+intros.
+apply wpCons with p1 pre P...
+Qed.
