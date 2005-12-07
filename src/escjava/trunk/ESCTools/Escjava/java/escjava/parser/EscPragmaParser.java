@@ -1788,8 +1788,8 @@ public class EscPragmaParser extends Parse
             // Same for model.
             semicolonExpected = parseDeclaration(dst, loc, 0);
           } else {
-            ErrorSet.error(loc, "Unrecognized pragma: " + tag + " "
-                + TagConstants.toString(tag));
+            ErrorSet.error(loc, "Unrecognized pragma: \""
+                + scanner.identifierVal + "\"");
             // Skip to end
             while (scanner.ttype != TagConstants.EOF)
               scanner.getNextToken();
