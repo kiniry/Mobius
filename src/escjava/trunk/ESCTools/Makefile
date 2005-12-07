@@ -335,7 +335,7 @@ jmlc1b1: build jmlc_javafe_1b1 jmlc_escjava_1b1
 
 jmlc_javafe_1b1:
 	@echo "JAVAFE============================================================"
-	for f in `find Javafe/java -name *.java ! -name "*/jcheck/*`; do \
+	for f in `find Javafe/java -name *.java ! -name "*/jcheck/*"`; do \
 		${MAKE} JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} FILE=$$f jmlc1; \
 	done;
 

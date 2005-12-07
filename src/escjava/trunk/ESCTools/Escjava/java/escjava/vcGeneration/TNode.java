@@ -64,7 +64,7 @@ abstract public class TNode {
      * If you make another call to setOutputType, it will add type the tree
      * for the new tree etc...
      */
-    static public/*@ spec_public non_null @*//* protected */HashMap typesName = null;
+    static public/* spec_public */ /*@ non_null @*//* protected */HashMap typesName = null;
 
     /**
      * We add some types that we know will be used to avoid looking
@@ -335,7 +335,7 @@ abstract public class TNode {
                                     + type.old);
                 }
             } else
-                // type is null qu� pasa ?
+                // type is null que pasa ?
                 TDisplay.err(this, "setType(TypeInfo, boolean)", "Node "
                         + this.toString() + " has no type");
 

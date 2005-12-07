@@ -922,7 +922,7 @@ public class Options extends javafe.SrcToolOptions {
              which shouldn't contain any space
              the usual way to handle it is to store the string in a field
              (look at guardedVCDir for example)
-             and use it in the main, but this way is nicer I think. [Cl�ment]
+             and use it in the main, but this way is nicer I think. [Clement]
              */
                 if (args[offset].charAt(args[offset].length() - 1) == ',')
                     throw new UsageError("Argument to option '" + option
