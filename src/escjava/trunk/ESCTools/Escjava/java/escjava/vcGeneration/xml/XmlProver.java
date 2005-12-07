@@ -1,20 +1,40 @@
  package escjava.vcGeneration.xml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.jar.*;
-import java.io.*;
 
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import javafe.ast.Expr;
 
-import escjava.vcGeneration.*;
-import escjava.translate.*;
-import javafe.ast.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import escjava.translate.GC;
+import escjava.translate.InitialState;
+import escjava.vcGeneration.ProverType;
+import escjava.vcGeneration.TNode;
+import escjava.vcGeneration.TVisitor;
+import escjava.vcGeneration.TypeInfo;
+import escjava.vcGeneration.VariableInfo;
 
 /**
  * This class provides a simple mechanism by which new prover plugins to the VC 
