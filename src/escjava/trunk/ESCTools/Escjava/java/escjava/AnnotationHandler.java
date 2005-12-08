@@ -293,6 +293,13 @@ public class AnnotationHandler {
     System.out.println("");
   }
 
+  /**
+   * Desugar the annotations of a routine.
+   *
+   * @param pm TBD
+   * @param tde TBD
+   * @return TBD
+   */
   protected ModifierPragmaVec desugarAnnotations(ModifierPragmaVec pm,
       RoutineDecl tde) {
     if (pm == null) {
@@ -303,8 +310,8 @@ public class AnnotationHandler {
 
     boolean isConstructor = tde instanceof ConstructorDecl;
 
-    // Get non_null specs
-    ModifierPragmaVec nonnullBehavior = getNonNull(tde);
+    // Get non_null and nullable specs
+    ModifierPragmaVec nullRelatedBehavior = getNonNullAndNullable(tde);
 
     javafe.util.Set overrideSet = null;
     if (!isConstructor)
@@ -313,7 +320,7 @@ public class AnnotationHandler {
     boolean overrides = !isConstructor && !overrideSet.isEmpty();
 
     boolean defaultSpecs = false;
-    if (!overrides && nonnullBehavior.size() == 0) {
+    if (!overrides && nullRelatedBehavior.size() == 0) {
       // Add a default 'requires true' clause if there are no
       // specs at all and the routine is not overriding anything
       boolean doit = pm.size() == 0;
@@ -399,9 +406,9 @@ public class AnnotationHandler {
       if (p.getTag() == TagConstants.PARSEDSPECS) {
         ParsedRoutineSpecs ps = ((ParsedSpecs)p).specs;
         ParsedRoutineSpecs newps = new ParsedRoutineSpecs();
-        deNest(ps.specs, nonnullBehavior, newps.specs);
-        deNest(ps.impliesThat, nonnullBehavior, newps.impliesThat);
-        deNest(ps.examples, nonnullBehavior, newps.examples);
+        deNest(ps.specs, nullRelatedBehavior, newps.specs);
+        deNest(ps.impliesThat, nullRelatedBehavior, newps.impliesThat);
+        deNest(ps.examples, nullRelatedBehavior, newps.examples);
         accumulatedSpecs.specs.addAll(newps.specs);
         accumulatedSpecs.impliesThat.addAll(newps.impliesThat);
         accumulatedSpecs.examples.addAll(newps.examples);
@@ -517,7 +524,15 @@ public class AnnotationHandler {
   // (If expressions are created before typechecking they must not be
   // annotated with types, so that typechecking happens properly).
 
-  public ModifierPragmaVec getNonNull(RoutineDecl rd) {
+  /**
+   * Find every formal parameter or reslut of a routine declaration
+   * that is either non_null or nullable.
+   *
+   * @param rd the routine declaration to examine.
+   * @return a decorated modifier pragma vector that properly
+   * desugars all null-related annotations.
+   */
+  public /*@ non_null @*/ ModifierPragmaVec getNonNullAndNullable(/*@ non_null @*/ RoutineDecl rd) {
     ModifierPragmaVec result = ModifierPragmaVec.make(2);
     FormalParaDeclVec args = rd.args;
 
@@ -530,6 +545,7 @@ public class AnnotationHandler {
       if (overrides != null && !overrides.isEmpty()) {
         for (int i = 0; i < args.size(); ++i) {
           FormalParaDecl arg = args.elementAt(i);
+          // @todo kiniry Must do the following for nullable as well.
           ModifierPragma m = Utils.findModifierPragma(arg,
               TagConstants.NON_NULL);
           if (m != null) { // overriding method has non_null for parameter i
@@ -903,6 +919,10 @@ public class AnnotationHandler {
         e, null, null);
   }
 
+  /**
+   * @todo must add support for ps == nullableBehavior
+   * @see line 413-415
+   */
   public void deNest(ArrayList ps, ModifierPragmaVec prefix,
       ArrayList deNestedSpecs) {
     if (ps.size() == 0 && prefix.size() != 0) {
@@ -1247,6 +1267,16 @@ public class AnnotationHandler {
       e.locOp = locNN;
       javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
       return e;
+    }
+  }
+
+  /**
+   * @todo kiniry Write this class.
+   */
+  static public class NullableExpr extends BinaryExpr {
+    static NullableExpr make(FormalParaDecl arg, int locNN) {
+      assert false;
+      return null;
     }
   }
 

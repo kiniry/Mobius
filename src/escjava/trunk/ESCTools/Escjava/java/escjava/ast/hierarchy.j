@@ -894,11 +894,11 @@ public class SimpleModifierPragma extends ModifierPragma
        || tag == TagConstants.CODE_SAFE_MATH
        || tag == TagConstants.HELPER
        || tag == TagConstants.IMMUTABLE
-       || tag == TagConstants.MAY_BE_NULL
+       || tag == TagConstants.NULLABLE
        || tag == TagConstants.MONITORED
        || tag == TagConstants.NON_NULL
-       || tag == TagConstants.NON_NULL_REF_BY_DEFAULT
-       || tag == TagConstants.NULL_REF_BY_DEFAULT
+       || tag == TagConstants.NON_NULL_BY_DEFAULT
+       || tag == TagConstants.NULLABLE_BY_DEFAULT
        || tag == TagConstants.OBS_PURE
        || tag == TagConstants.PEER
        || tag == TagConstants.READONLY

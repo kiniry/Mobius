@@ -2846,6 +2846,8 @@ System.out.println("FOUND " + t);
    * override anything, or if in everything that it does override that parameter is
    * declared non_null.  Otherwise returns the MethodDecl corresponding to the
    * overridden method with which the argument rd is in conflict.
+   *
+   * @todo kiniry - implement nullable versions of this or make two new methods
    */
   static public MethodDecl getSuperNonNullStatus(RoutineDecl rd, int j) {
     if (!(rd instanceof MethodDecl) || Modifiers.isStatic(rd.modifiers)) {

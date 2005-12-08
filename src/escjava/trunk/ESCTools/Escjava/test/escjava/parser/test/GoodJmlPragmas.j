@@ -182,7 +182,7 @@
 //@ null_ref_by_default
 //@ non_null_ref_by_default
 //@ obs_pure
-//@ may_be_null
+//@ nullable
 
 //@ code_java_math
 //@ code_safe_math

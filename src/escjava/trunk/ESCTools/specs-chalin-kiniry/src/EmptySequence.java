@@ -46,9 +46,8 @@ public final class EmptySequence extends Sequence
     return theEmptySequence;
   }
 
-  /*@ public normal_behavior
+  /*@ private normal_behavior
     @   ensures isEmpty();
-    @ protected normal_behavior
     @   ensures elts == null;
     @*/
   private /*@ pure @*/ EmptySequence() {

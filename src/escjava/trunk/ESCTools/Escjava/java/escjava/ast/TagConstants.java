@@ -409,10 +409,10 @@ public class TagConstants extends GeneratedTags
     public static final int REP = READONLY + 1;
 
     // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
-    public static final int MAY_BE_NULL = REP + 1;
-    public static final int NULL_REF_BY_DEFAULT = MAY_BE_NULL + 1;
-    public static final int NON_NULL_REF_BY_DEFAULT = NULL_REF_BY_DEFAULT + 1;
-    public static final int OBS_PURE = NON_NULL_REF_BY_DEFAULT + 1;
+    public static final int NULLABLE = REP + 1;
+    public static final int NULLABLE_BY_DEFAULT = NULLABLE + 1;
+    public static final int NON_NULL_BY_DEFAULT = NULLABLE_BY_DEFAULT + 1;
+    public static final int OBS_PURE = NON_NULL_BY_DEFAULT + 1;
 
     // Chalin's spec and code modifiers for different math semantics
     public static final int WACK_JAVA_MATH = OBS_PURE + 1;
@@ -552,7 +552,8 @@ public class TagConstants extends GeneratedTags
 
     public static boolean isKeywordTag(int tag) {
 	return (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
-          || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG);
+          || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG)
+          || tag == TagConstants.NULLLIT;
     }
 
     public static int checkFromString(/*@non_null*/ String s) {
@@ -1024,9 +1025,9 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("\\rep"),
 
         // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
-        Identifier.intern("may_be_null"),
-        Identifier.intern("null_ref_by_default"),
-        Identifier.intern("non_null_ref_by_default"),
+        Identifier.intern("nullable"),
+        Identifier.intern("nullable_by_default"),
+        Identifier.intern("non_null_by_default"),
         Identifier.intern("obs_pure"),
 
         // Chalin's spec and code modifiers for different math semantics

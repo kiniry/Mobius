@@ -74,11 +74,13 @@ import java.util.Iterator;
  BehaviorPragma ::= 'behavior' | 'normal_behavior' | 'exceptional_behavior'
  
  SimpleModifierPragma ::= 'uninitialized' | 'monitored' 
- | 'non_null' | 'instance' | 'pure' 
+ | 'non_null_by_default' | 'nullable_by_default' 
+ | 'non_null' | 'nullable' 
+ | 'instance' 
+ | 'pure' | 'obs_pure'
  | 'spec_public' | 'writable_deferred' | 'helper' 
  | 'public' | 'private' | 'protected' 
  | 'spec_protected' | 'model' | 'transient' | '\peer' | '\readonly' | '\rep'
- | 'may_be_null' | 'non_null_ref_by_default' | 'null_ref_by_default' | 'obs_pure'
  | 'code_java_math' | 'code_safe_math' | 'code_bigint_math'
  | 'spec_java_math' | 'spec_safe_math' | 'spec_bigint_math'
 
@@ -1390,11 +1392,11 @@ public class EscPragmaParser extends Parse
         case TagConstants.HELPER:
         case TagConstants.IMMUTABLE:
         case TagConstants.INSTANCE: // complete (cok)
-        case TagConstants.MAY_BE_NULL: // incomplete (chalin/kiniry)
+        case TagConstants.NULLABLE: // incomplete (chalin/kiniry)
         case TagConstants.MONITORED: // incomplete
         case TagConstants.NON_NULL: // incomplete
-        case TagConstants.NON_NULL_REF_BY_DEFAULT: // incomplete (chalin/kiniry)
-        case TagConstants.NULL_REF_BY_DEFAULT: // incomplete (chalin/kiniry)
+        case TagConstants.NON_NULL_BY_DEFAULT: // incomplete (chalin/kiniry)
+        case TagConstants.NULLABLE_BY_DEFAULT: // incomplete (chalin/kiniry)
         case TagConstants.OBS_PURE: // incomplete (chalin/kiniry)
         case TagConstants.PEER: // parsed but not typechecked - Universe type annotation (cjbooms)
         case TagConstants.PURE:

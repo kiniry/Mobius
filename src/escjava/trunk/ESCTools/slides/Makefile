@@ -21,7 +21,8 @@ SLIDES =	escjava_demo.pdf introjml.pdf
 all:	build
 
 build:	$(SLIDES)
-	make -C ETAPSTutorial all
+	export TEXINPUTS=$(ESCTOOLS_ROOT)/slides//:$$(TEXINPUTS) && \
+	make -C ETAPSTutorial all && \
 	make -C ECOOPTutorial-cok all
 
 # latex

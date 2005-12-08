@@ -72,7 +72,7 @@ public final class NonEmptySequence extends Sequence
     @   modifies elts;
     @   ensures  elts == e;
     @*/
-  NonEmptySequence(/*@ non_null @*/ Pair e) {
+  protected NonEmptySequence(/*@ non_null @*/ Pair e) {
     this.elts = e;
   }
 }

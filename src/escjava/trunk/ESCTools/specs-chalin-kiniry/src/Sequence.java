@@ -96,12 +96,14 @@ public abstract class Sequence
 
   /*@ public normal_behavior
     @  requires !isEmpty();
+    @  modifies \nothing;
     @ also
     @ public exceptional_behavior
     @  requires isEmpty();
+    @  modifies \nothing;
     @  signals_only RuntimeException;
     @*/
-  public abstract /*@ pure @*/ Object head();
+  public abstract /* observationally_pure */ Object head();
 
   /*@ public normal_behavior
     @  requires !isEmpty();
@@ -112,7 +114,7 @@ public abstract class Sequence
     @  modifies \nothing;
     @  signals_only RuntimeException;
     @*/
-  public abstract /*@ non_null pure @*/ /* observationally_pure */ Sequence tail();
+  public abstract /*@ non_null @*/ /* observationally_pure */ Sequence tail();
 
   //  Returns the item at index 'i'.
   //@ public pure model Object itemAt(\bigint i);

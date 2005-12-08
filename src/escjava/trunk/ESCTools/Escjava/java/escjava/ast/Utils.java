@@ -35,9 +35,11 @@ public final class Utils
    * <code>null</code>.<p>
    *
    * Note, if you want to know whether a variable is
-   * <code>non_null</code>, use method <code>NonNullPragma</code>
+   * <code>non_null</code> or <code>nullable</code> (outside of called
+   * within AnnotationHandler, of course), use method 
+   * {@link escjava.AnnotationHandler.getNonNullAndNullable(javafe.ast.RoutineDecl)}
    * instead, for it properly handles inheritance of
-   * <code>non_null</code> pragmas.
+   * <code>non_null</code> and <code>nullable</code> pragmas.
    **/
   static public ModifierPragma findModifierPragma(/*@ non_null */ GenericVarDecl vdecl,
                                                   int tag) {
