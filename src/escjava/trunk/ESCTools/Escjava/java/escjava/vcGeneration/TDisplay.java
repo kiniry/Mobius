@@ -33,7 +33,7 @@ public class TDisplay {
 
     }
 
-    public static void err(/*@ non_null  @*/Object o, /*@ non_null @*/String method, String err) {
+    public static void err(/*@ non_null @*/Object o, /*@ non_null @*/String method, String err) {
 
         if (TDisplay.err) {
             System.err.println(errPrompt + o.getClass().getName() + "."
@@ -42,7 +42,7 @@ public class TDisplay {
         }
     }
 
-    public static void warn(/*@ non_null  @*/Object o, /*@ non_null @*/String method, String warn) {
+    public static void warn(/*@ non_null @*/Object o, /*@ non_null @*/String method, String warn) {
 
         if (TDisplay.warn) {
             System.err.println(warnPrompt + o.getClass().getName() + "."
@@ -51,7 +51,7 @@ public class TDisplay {
         }
     }
 
-    public static void info(/*@ non_null  @*/Object o, /*@ non_null @*/String method, String info) {
+    public static void info(/*@ non_null @*/Object o, /*@ non_null @*/String method, String info) {
 
         if (TDisplay.info) {
             System.err.println("[" + o.getClass().getName() + "." + method
@@ -61,7 +61,7 @@ public class TDisplay {
 
     }
 
-    public static void err(/*@ non_null  @*/String o, /*@ non_null @*/String method, String err) {
+    public static void err(/*@ non_null @*/String o, /*@ non_null @*/String method, String err) {
 
         if (TDisplay.err) {
             System.err.println(errPrompt + o + "." + method);
@@ -70,7 +70,7 @@ public class TDisplay {
 
     }
 
-    public static void warn(/*@ non_null  @*/String o, /*@ non_null @*/String method, String warn) {
+    public static void warn(/*@ non_null @*/String o, /*@ non_null @*/String method, String warn) {
 
         if (TDisplay.warn) {
             System.err.println(warnPrompt + o + "." + method);
@@ -79,7 +79,7 @@ public class TDisplay {
 
     }
 
-    public static void info(/*@ non_null  @*/String o, /*@ non_null @*/String method, String info) {
+    public static void info(/*@ non_null @*/String o, /*@ non_null @*/String method, String info) {
 
         if (TDisplay.info) {
             System.err.println("[" + o + "." + method + "]");
