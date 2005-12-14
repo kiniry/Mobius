@@ -87,7 +87,9 @@ Inductive myProp : Set :=
 | p_neq : Num -> Num -> myProp
 | p_not: myProp -> myProp
 | p_true :  myProp
-| p_false : myProp .
+| p_false : myProp 
+| p_foralls :  (State -> myProp) -> myProp
+| p_forallv : (Var -> myProp) -> myProp.
 
 
 
@@ -108,9 +110,11 @@ match p with
 | p_not p1  => not (evalMyProp p1)
 | p_true => True
 | p_false => False
+| p_foralls p1 => forall st, evalMyProp (p1 st)
+| p_forallv p1 => forall var, evalMyProp (p1 var)
 end.
 Definition EmptyAssertion := 
-fun (s: State) => True.
+fun (s: State) => p_true.
 (*Definition if_assert : NumExpr -> AssertionWP -> AssertionWP -> AssertionWP := 
 fun (b: NumExpr) (a1 : AssertionWP) (a2: AssertionWP) =>
           fun (s: State) => ((assert_eval s b) -> a1 s) /\ ((not (assert_eval s b)) -> a2 s). *)

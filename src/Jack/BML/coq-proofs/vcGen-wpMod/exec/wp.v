@@ -3,7 +3,7 @@ Require Import  semantique.
 Require Import List.
 Reserved Notation "'vcGen' ( a , p )  ==> ( b , c )" (at level 30).
 
-Inductive wp : Stmt Invariant_j  -> Assertion -> Assertion -> list Assertion -> Set:=
+Inductive wp : Stmt Invariant_j  -> Assertion -> Assertion -> list Assertion -> Prop:=
 | wpSkip: forall a, vcGen(Skip Invariant_j, a) ==>  (a, nil)
 | wpSeq: forall i1 i2 a p2 P2 p1 P1, 
                     vcGen(i2, a) ==> (p2, P2) -> vcGen(i1, p2) ==> (p1, P1) ->
@@ -20,14 +20,50 @@ Inductive wp : Stmt Invariant_j  -> Assertion -> Assertion -> list Assertion -> 
              let Cs := fun s => (p_implies (p_and  (inv s)  (p_neq (neval s b) 0))  (pI s)) in
              let Ci := fun s => (p_implies (p_and (inv s) (p_eq (neval s b)  0)) (a  s) ) in
               vcGen(While Invariant_j b (inv_j inv)  i, a) ==>
-                   (inv,  ( Cs :: nil) ++ (Ci :: nil)  ++ PI )
+                   (inv,  ( Cs :: Ci ::  PI ))
 where " 'vcGen' ( a , p ) ==> ( b , c ) " := (wp a p b c) .
-
+Definition pres (l:list Assertion) :=
+  match l with
+  | nil => EmptyAssertion 
+  | x :: L => x
+  end.
+Definition vcs (l:list Assertion) :=
+  match l with
+  | nil => EmptyAssertion :: nil
+  | x :: L => L
+  end.
+Fixpoint VcGen  (S: Stmt Invariant_j)  (post: Assertion) {struct S}: list Assertion  :=
+match S with
+| Skip => post:: nil
+| Affect v exp => ((fun s => post (update s v (neval s exp))):: nil)
+| If b t f => let resT := (VcGen t post) in 
+                  let pT := pres resT in
+                  let PT := vcs resT in
+                  let resF := (VcGen f post) in 
+                  let pF := pres resF in
+                  let PF := vcs resF in
+            ((fun s => p_and (p_implies (p_neq (neval s b) 0) (pT s) ) 
+                                          (p_implies (p_eq (neval s b)  0) (pF s)))::  (PT ++ PF ))
+| While b (inv_j inv) i =>
+         let resI := (VcGen i inv) in
+         let pI := pres resI in
+         let PI := vcs resI in
+            let Cs := fun s => (p_implies (p_and  (inv s)  (p_neq (neval s b) 0))  (pI s)) in
+             let Ci := fun s => (p_implies (p_and (inv s) (p_eq (neval s b)  0)) (post s) ) in
+            (inv ::  ( Cs :: nil) ++ (Ci :: nil)  ++ PI )
+| Seq i1 i2 => let res2 := (VcGen i2 post) in 
+                        let p2 :=  pres res2 in 
+                        let P2 := vcs res2 in
+                        let res1 := (VcGen i1 p2) in
+                        let p1 :=  pres res1 in 
+                        let P1 := vcs res1 in
+                       (p1:: (P1 ++ P2 ))
+end.
 
 
 Notation "S |- l ==> l1  " := ((execBs Invariant_j) l S  l1) (at level 30).
 Notation " |- P" := (forall l : State, P l) (at level 30).
-
+Axiom triche: forall p: Prop, p.
 
 Lemma corr:
 forall S  (l l': State), 
@@ -106,8 +142,194 @@ intros; apply H0; intuition.
 apply (IHHi1 _ _ _ H8)...
 intros; apply H0; intuition.
 Qed.
+Lemma vcg_decomp :
+forall S post, 
+VcGen S post = pres ( VcGen S post) :: vcs ( VcGen S post).
+Proof with auto.
+intros S.
+elim S;
+intros;
+try apply refl_equal.
+simpl in |- *.
+unfold pres.
+
+case (i)...
+Qed.
+Lemma equiv : 
+forall S, forall post p P, VcGen S post = p :: P  <-> vcGen(S, post) ==> (p, P).
+Proof with auto.
+intro S.
+induction S; split; intros.
 
 
+(* Skip *)
+simpl in H.
+injection H; intros. 
+rewrite <- H0;
+rewrite <- H1.
+apply wpSkip.
+inversion H.
+simpl in |- *; auto.
+
+(* Affect *)
+
+simpl in H; injection H; intros.
+rewrite <-  H0; rewrite <- H1.
+apply wpAffect.
+inversion H.
+simpl in |- *; auto.
+
+
+(* If *)
+generalize H.
+simpl in H.
+intros.
+injection H.
+intros.
+rewrite <-  H2; rewrite <- H1.
+apply wpIf.
+assert (h :=IHS1 post (pres (VcGen S1 post)) (vcs (VcGen S1 post))); destruct h.
+apply H3; apply vcg_decomp.
+assert (h :=IHS2 post (pres (VcGen S2 post)) (vcs (VcGen S2 post))); destruct h.
+apply H3; apply vcg_decomp.
+(* If 2 *)
+simpl in |- *; auto.
+inversion H.
+clear H4 H5; subst.
+assert (h_1 :=IHS1 post (pT) (PT)); destruct h_1.
+assert(h1 := H1 H6); rewrite h1.
+assert (h_2 :=IHS2 post (pF) (PF)); destruct h_2.
+assert(h2 := H3 H7); rewrite h2...
+
+(* While 1 *)
+simpl in H.
+destruct i.
+injection H.
+intros.
+rewrite <- H0; rewrite <- H1.
+
+apply wpWhile.
+assert(h := IHS a (pres (VcGen S a)) (vcs (VcGen S a))); destruct h.
+apply H2.
+apply vcg_decomp.
+
+(* While 2 *)
+simpl in |- *.
+inversion H.
+unfold Cs, Ci in H5;  unfold Cs, Ci ; clear Cs Ci.
+assert(h := IHS p pI PI); destruct h.
+rewrite H1.
+assert(h1:= H8 H6).
+rewrite h1...
+rewrite H4; rewrite  H0.
+simpl in |- *...
+
+(* Seq 1 *)
+simpl in H.
+injection H; intros.
+rewrite <- H0; rewrite <- H1.
+apply wpSeq with (pres (VcGen S2 post)).
+assert(h := IHS2 post  (pres (VcGen S2 post)) (vcs (VcGen S2 post))); destruct h.
+apply H2.
+apply vcg_decomp.
+assert(h := IHS1 (pres (VcGen S2 post))
+(pres (VcGen S1 (pres (VcGen S2 post))))
+(vcs (VcGen S1 (pres (VcGen S2 post))))); destruct h.
+apply H2.
+apply vcg_decomp.
+
+(* Seq 2 *)
+simpl in |-  *.
+inversion H.
+assert(h_1 := IHS2 post p2 P2); destruct h_1.
+assert(h1:= H8 H2).
+rewrite h1.
+assert(h_2 := IHS1 p2 p P1); destruct h_2.
+assert(h2 := H10 H6).
+simpl in |- *.
+rewrite h2...
+Qed.
+
+
+Lemma corr_exec :
+forall S  (l l': State), 
+(S |- l ==> l' ) -> forall (post : Assertion ) ,
+(let (p, P) := VcGen S post in 
+(forall a: Assertion, In a P   ->  forall s: State,  (evalMyProp (a s))) ->
+evalMyProp ( p l)) ->
+evalMyProp (post l').
+Proof with auto.
+intros S l l' Hi.
+induction Hi.
+intros.
+
+pose ((p, P) = VcGen (Skip Invariant_j)) .
+(* Skip *)
+intros.
+intuition.(p, P) := VcGen S
+inversion H; subst...
+
+(* Affect *)
+intros.
+inversion H; subst...
+
+(* If true *)
+intros.
+inversion H; subst...
+
+apply (IHHi _ _ _ H1)...
+intros; 
+apply H0; intuition.
+
+(* If false *)
+intros.
+inversion H; subst...
+simpl in H1.
+destruct H1.
+apply (IHHi _ _ _ H9)...
+intros; 
+apply H0; intuition.
+
+(* While false *)
+intros.
+inversion H.
+unfold Cs, Ci in H7; clear Cs Ci; subst.
+assert(h :=  H0 (fun s : State =>
+          p_implies (p_and (p s) (p_eq (neval s b) 0)) (post s))).
+assert(forall s : State,
+    evalMyProp
+      ((fun s0 : State =>
+        p_implies (p_and (p s0) (p_eq (neval s0 b) 0)) (post s0)) s)).
+apply h; intuition.
+assert(h1:= H2 s); simpl in h1.
+apply h1...
+
+(* While true *)
+intros.
+inversion H;
+unfold Cs, Ci in H7; clear Cs Ci; subst.
+apply (IHHi2 _ _ _ H)...
+apply (IHHi1 _ _ _ H8)...
+intros; apply H0; intuition.
+assert(h :=  H0 (fun s : State =>
+           p_implies (p_and (p s) (p_neq (neval s b) 0)) (pI s))).
+assert(forall s : State,
+    evalMyProp
+      ((fun s0 : State =>
+        p_implies (p_and (p s0) (p_neq (neval s0 b) 0)) (pI s0)) s)).
+apply h; intuition.
+assert(h1:= H2 s); simpl in h1.
+apply h1...
+
+
+(* Seq *)
+intros.
+inversion H; subst.
+apply (IHHi2 _ _ _ H4)...
+intros; apply H0; intuition.
+apply (IHHi1 _ _ _ H8)...
+intros; apply H0; intuition.
+Qed.
 Lemma wpCons :
 forall S (post post' pre' pre : Assertion) Vcs' Vcs,
  vcGen(S, post') ==> (pre', Vcs') -> (forall s,  (post' s -> post s)) ->(forall s, (pre' s -> pre s) ) ->
