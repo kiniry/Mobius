@@ -250,87 +250,7 @@ simpl in |- *.
 rewrite h2...
 Qed.
 
-
-Lemma corr_exec :
-forall S  (l l': State), 
-(S |- l ==> l' ) -> forall (post : Assertion ) ,
-(let (p, P) := VcGen S post in 
-(forall a: Assertion, In a P   ->  forall s: State,  (evalMyProp (a s))) ->
-evalMyProp ( p l)) ->
-evalMyProp (post l').
-Proof with auto.
-intros S l l' Hi.
-induction Hi.
-intros.
-
-pose ((p, P) = VcGen (Skip Invariant_j)) .
-(* Skip *)
-intros.
-intuition.(p, P) := VcGen S
-inversion H; subst...
-
-(* Affect *)
-intros.
-inversion H; subst...
-
-(* If true *)
-intros.
-inversion H; subst...
-
-apply (IHHi _ _ _ H1)...
-intros; 
-apply H0; intuition.
-
-(* If false *)
-intros.
-inversion H; subst...
-simpl in H1.
-destruct H1.
-apply (IHHi _ _ _ H9)...
-intros; 
-apply H0; intuition.
-
-(* While false *)
-intros.
-inversion H.
-unfold Cs, Ci in H7; clear Cs Ci; subst.
-assert(h :=  H0 (fun s : State =>
-          p_implies (p_and (p s) (p_eq (neval s b) 0)) (post s))).
-assert(forall s : State,
-    evalMyProp
-      ((fun s0 : State =>
-        p_implies (p_and (p s0) (p_eq (neval s0 b) 0)) (post s0)) s)).
-apply h; intuition.
-assert(h1:= H2 s); simpl in h1.
-apply h1...
-
-(* While true *)
-intros.
-inversion H;
-unfold Cs, Ci in H7; clear Cs Ci; subst.
-apply (IHHi2 _ _ _ H)...
-apply (IHHi1 _ _ _ H8)...
-intros; apply H0; intuition.
-assert(h :=  H0 (fun s : State =>
-           p_implies (p_and (p s) (p_neq (neval s b) 0)) (pI s))).
-assert(forall s : State,
-    evalMyProp
-      ((fun s0 : State =>
-        p_implies (p_and (p s0) (p_neq (neval s0 b) 0)) (pI s0)) s)).
-apply h; intuition.
-assert(h1:= H2 s); simpl in h1.
-apply h1...
-
-
-(* Seq *)
-intros.
-inversion H; subst.
-apply (IHHi2 _ _ _ H4)...
-intros; apply H0; intuition.
-apply (IHHi1 _ _ _ H8)...
-intros; apply H0; intuition.
-Qed.
-Lemma wpCons :
+(* Lemma wpCons :
 forall S (post post' pre' pre : Assertion) Vcs' Vcs,
  vcGen(S, post') ==> (pre', Vcs') -> (forall s,  (post' s -> post s)) ->(forall s, (pre' s -> pre s) ) ->
  vcGen(S, post) ==> (pre, Vcs).
@@ -340,16 +260,16 @@ intros post post' pre' pre Vcs' Vcs.
 intros H.
 
 elim H.
-inversion H; subst.
+inversion H; subst. *)
 (* intros S.
 induction S; 
 intros post post' pre' pre Vcs' Vcs.
 intros.
 inversion H; subst.
 injection H0. *)
-Lemma vcGen_monotone:
-forall S, forall (p1  p2 : Assertion)  ,  (forall s, (p1 s -> p2 s)) -> forall pre P, ((vcGen(S, p1) ==> (pre, P)) -> vcGen(S, p2) ==> (pre, P)) .
-Proof with auto.
+Axiom vcGen_monotone:
+forall S, forall (p1  p2 : Assertion)  ,  (forall s, (evalMyProp (p1 s) -> evalMyProp (p2 s))) -> forall pre P, ((vcGen(S, p1) ==> (pre, P)) -> vcGen(S, p2) ==> (pre, P)).
+(* Proof with auto.
 intros.
 
 
@@ -383,3 +303,4 @@ injection.
 intros.
 apply wpCons with p1 pre P...
 Qed.
+*)

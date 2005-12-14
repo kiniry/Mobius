@@ -26,9 +26,9 @@ where "'j2m' s1 ==> s2" :=   (Stmt_jToStmt_m s1 s2).
 Lemma imp1:
 forall (post: Assertion) pre Sm,    wpMod(Sm, post) ==> pre ->
 forall Sj, j2m Sj ==> Sm ->
-forall  vcPre (Pre : Ensemble Assertion), 
+forall  vcPre (Pre : list Assertion), 
  (vcGen(Sj, post) ==> (vcPre, Pre)) ->
-forall s,   (vcPre s /\ (forall (s :State)  (a : Assertion), Pre a -> a s))  -> pre s.
+forall s,   (evalMyProp (vcPre s) /\ (forall (s :State)  (a : Assertion), In a Pre -> evalMyProp(a s)))  -> evalMyProp (pre s).
 Proof with auto.
 
 intros post  pre Sm  Hm.
@@ -51,17 +51,19 @@ intros;
 destruct H;
 inversion Htr; subst;
 inversion Hj; subst...
-destruct H.
-split.
+simpl in H; destruct H.
+simpl in |- *; split.
 intros;
 apply IHHm2 with t pT PT...
 split...
-intros; apply H0; apply Union_introl...
+intros; apply H0. 
+intuition.
 
 intros.
 apply IHHm1 with f pF PF...
 split...
-intros; apply H0; apply Union_intror...
+intros; apply H0.
+intuition.
 
 
 (* While *)
@@ -73,29 +75,41 @@ repeat split...
 intros x h; destruct h...
 destruct H...
 destruct H.
+simpl in |- *.
 intros st_fin.
-assert (h0 := H0 st_fin (fun s : State => vcPre s /\ neval s bExp = 0 -> post s)).
-assert(h1 : (fun s : State => vcPre s /\ neval s bExp = 0 -> post s) st_fin); [apply h0 | idtac].
-apply Union_introl; intuition.
+assert (h0 := H0 st_fin (fun s : State =>
+            p_implies (p_and (vcPre s) (p_eq (neval s bExp) 0)) (post s))).
+assert(h1 : evalMyProp
+       ((fun s : State =>
+         p_implies (p_and (vcPre s) (p_eq (neval s bExp) 0)) (post s)) st_fin)); [apply h0 | idtac].
+intuition.
 intros h2 h3 h4; simpl in h1.
 apply h1; split; trivial.
 
+simpl in |- *.
 intros st_ h0 h1 h2.
 apply IHHm with s0 pI PI...
-apply vcGen_monotone with vcPre. intros; split...
+apply vcGen_monotone with vcPre. 
+simpl in |- *.
+intros; split...
+
 intros.
 destruct H1...
 destruct H; auto.
 destruct H.  
-assert (h3 := H0 st_ (fun s : State => vcPre s /\ neval s bExp <> 0 -> pI s)).
-assert(h4 : (fun s : State => vcPre s /\ neval s bExp <> 0 -> pI s) st_); [apply h3 | idtac].
-apply Union_introl; intuition.
+assert (h3 := H0 st_ (fun s : State =>
+         p_implies (p_and (vcPre s) (p_neq (neval s bExp) 0)) (pI s))).
+assert(h4 : evalMyProp
+       ((fun s : State =>
+         p_implies (p_and (vcPre s) (p_neq (neval s bExp) 0)) (pI s)) st_)); 
+[apply h3 | idtac].
+intuition.
 simpl in h4...
 split; auto.
 
 
 intros s1 a h5.
-apply H0; apply Union_intror...
+apply H0; intuition.
 
 
 
@@ -110,7 +124,7 @@ apply vcGen_monotone with p2...
 intros.
 apply IHHm1 with s2 p2 P2...
 split...
-intros; apply H0; apply Union_intror...
-intros; apply H0; apply Union_introl...
+intros; apply H0; intuition.
+intros; apply H0; intuition.
 
 Qed.
