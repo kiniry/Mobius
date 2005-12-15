@@ -63,7 +63,7 @@ end.
 
 Notation "S |- l ==> l1  " := ((execBs Invariant_j) l S  l1) (at level 30).
 Notation " |- P" := (forall l : State, P l) (at level 30).
-Axiom triche: forall p: Prop, p.
+
 
 Lemma corr:
 forall S  (l l': State), 
