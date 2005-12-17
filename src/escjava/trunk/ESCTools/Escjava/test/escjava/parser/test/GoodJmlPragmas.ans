@@ -90,8 +90,8 @@ GoodJmlPragmas.j:176: /*@ \peer */
 GoodJmlPragmas.j:177: /*@ \readonly */
 GoodJmlPragmas.j:178: /*@ \rep */
 GoodJmlPragmas.j:180: /*@ immutable */
-GoodJmlPragmas.j:182: /*@ null_ref_by_default */
-GoodJmlPragmas.j:183: /*@ non_null_ref_by_default */
+GoodJmlPragmas.j:182: /*@ nullable_by_default */
+GoodJmlPragmas.j:183: /*@ non_null_by_default */
 GoodJmlPragmas.j:184: /*@ obs_pure */
 GoodJmlPragmas.j:185: /*@ may_be_null */
 GoodJmlPragmas.j:187: /*@ code_java_math */
