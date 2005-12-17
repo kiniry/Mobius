@@ -53,7 +53,7 @@ jars: $(ESCJAVA2_SPECS_JAR) jar srcjar
 ## Top-level build and test rules
 
 .PHONY: build buildall test javafetests escjavatests alltests \
-	javafealltests escjavaalltests findbugs selftypecheck
+	javafealltests escjavaalltests findbugs self_typecheck
 
 build buildall: fix-perms
 	for d in $(SUBDIRS) ; do \
@@ -90,8 +90,11 @@ findbugs: jar
 	${FINDBUGS} -textui esctools2.jar
 endif
 
-selftypecheck: build
-	$(MAKE) -C Escjava selftypecheck
+self_typecheck: build
+	$(MAKE) -C Escjava self_typecheck
+
+self_esc: build
+	$(MAKE) -C Escjava self_test
 
 ################################################################################
 ## Test using jmlc compiled sources:
@@ -234,20 +237,6 @@ slides:
 
 papers:
 	${MAKE} -C papers build
-
-export JAVAFE_PACKAGE_LIST = \
-	javafe javafe.ast javafe.parser  \
-	javafe.reader javafe.genericfile javafe.filespace \
-	javafe.tc javafe.util \
-
-export ESCJAVA_PACKAGE_LIST = escjava \
-	escjava.ant escjava.ast escjava.backpred escjava.gui \
-	escjava.pa escjava.pa.generic escjava.parser \
-	escjava.prover escjava.reader escjava.sp \
-	escjava.tc escjava.translate # escjava.vcGeneration
-
-export PACKAGE_LIST = \
-	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
 
 # Choose which specs you wish to use for documentation generation and
 # typechecking.
