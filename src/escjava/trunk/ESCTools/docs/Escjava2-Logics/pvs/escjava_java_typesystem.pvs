@@ -11,11 +11,7 @@ escjava_java_typesystem : THEORY
     <= : ({R : PRED[[S, S]] | 
          reflexive?(R) AND transitive?(R) AND antisymmetric?(R)})
 
-    % The base type in Java (java.lang.Object).
-
-    T_java_lang_Object : S
-
-    % Primative types are final.
+    % Primitive type definitions.
 
     T_boolean, T_char, T_byte, T_short, T_int, T_long, T_float, T_double : S
 
@@ -28,10 +24,13 @@ escjava_java_typesystem : THEORY
                               (c = T_float) OR
                               (c = T_double)
 
-    primative_types_are_final : AXIOM
+    primitive_types_are_final : AXIOM
       FORALL (c, p : S): c <= p AND primitive?(p) IMPLIES c = p
-    primative_types_have_no_proper_supertypes : AXIOM
+    primitive_types_have_no_proper_supertypes : AXIOM
       FORALL (c, p : S): c <= p AND primitive?(c) IMPLIES p = c
+
+    % The base type in Java (java.lang.Object).
+    T_java_lang_Object : S
 
     java_lang_Object_is_Top : AXIOM
       FORALL (c : S): NOT primitive?(c) IMPLIES c <= T_java_lang_Object
