@@ -179,8 +179,8 @@
 
 //@ immutable
 
-//@ null_ref_by_default
-//@ non_null_ref_by_default
+//@ nullable_by_default
+//@ non_null_by_default
 //@ obs_pure
 //@ nullable
 
