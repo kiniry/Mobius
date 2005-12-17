@@ -2930,7 +2930,7 @@ This theory defines two functions, @var{select} and @var{store}, whose
 signatures and axiomatic definitions exactly match those described in
 the Simplify technical report@cite{Simplify-HPL-2003-148} and the
 Simplify JACM paper@cite{DetlefsNelsonSaxe2005}.  The basic use of
-these functions are described in @ref{Maps}.
+these functions are described earlier in this document in @ref{Maps}.
 
 @c @TechReport{Simplify-HPL-2003-148,
 @c   author =	 "David Detlefs and Greg Nelson and James B. Saxe",
@@ -2959,24 +2959,62 @@ these functions are described in @ref{Maps}.
 @node A Partial Semantics of Java, The Java Typesystem, The Theory escjava_simplify, The PVS Logic escjava_logic
 @subsection A Partial Semantics of Java
 
-The Theory @var{escjava_java_semantics}
+The theory @var{escjava_java_semantics} defines a partial semantics
+for Java.  
 
 @example
 @include pvs/escjava_java_semantics.pvs.texinfo
 @end example
 
+As seen above, this semantics is decomposed into several related pieces,
+each of which can be extended independently.  We describe each theory
+upon which @var{escjava_java_semantics} is based in the following
+sections.
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The Java Typesystem, The Java Boolean Operations, A Partial Semantics of Java, The PVS Logic escjava_logic
 @subsection The Java Typesystem
 
-The Theory @var{escjava_java_typesystem}
-
-The theory @var{escjava_java_typesystem} encodes portions of the Java
-1.4 typesystem, as described in @ref{Types and Subtypes}.
+The theory @var{escjava_java_typesystem} encodes portions of the @w{Java
+1.4} typesystem, as described in @ref{Types and Subtypes}.
 
 @example
 @include pvs/escjava_java_typesystem.pvs.texinfo
 @end example
+
+This theory depends upon the PVS builtin theory @var{orders}.
+@var{orders} defines the usual ordering relations as predicate variables
+@var{<=} and @var{<}.  By instantiating these variables as predicated
+formulas we can easily define Java's subtype relation, as described in
+@ref{Types and Subtypes}.
+
+Recall that these PVS specifications are meant to be the canonical
+semantics and are translated into various first-order semantics for
+other theorem provers.  Since most, if not all, first-order theorem
+provers have builtin orders, translating this (textually) efficient (but
+somewhat opaque) PVS definition into the corresponding prover-dependent
+definition is straightforward: it is typically realised as a simple
+textual replacement (e.g., @var{<=} for @var{<:} in the case of
+Simplify).
+
+We first define Java's primitive types, as well as a helper
+@var{primitive?} predicate function.  Note that we follow the standard
+PVS (and Lisp) convention of naming predicate functions with a trailing
+question mark.
+
+The subtyping axioms for primitive types are next introduced: primitive
+types cannot have subtypes, nor do they have supertypes---they are
+independent types that have nothing to do with reference/object types.
+
+We next define the base type of all Java classes,
+@var{java.lang.Object}.  Because we cannot use periods in PVS
+identifiers, we use underscores instead, thus @var{T_java_lang_Object}.
+The prefix @var{T_} hints that the constant is a Java type.  We state a
+single axiom about @var{T_java_lang_Object}: it is the top of the type
+hierarchy for all non-primitive types.
+
+
+
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The Java Boolean Operations, The Java Integral Types, The Java Typesystem, The PVS Logic escjava_logic

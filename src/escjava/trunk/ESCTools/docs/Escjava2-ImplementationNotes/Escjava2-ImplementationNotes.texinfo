@@ -3025,7 +3025,7 @@ either have @code{null} value or they do not, is not added at all.
 @itemize @bullet
 @item @strong{Description:} This modifier indicates that the field modified
 is guarded by the monitor associated with @code{this} if the field is not
-static and by the monintor associated with the class object if the
+static and by the monitor associated with the class object if the
 field is static.  On any write to the field, all monitors guarding the
 field must be held by the thread executing the write; on any read of
 the field, at least one of the monitors guarding the field must be

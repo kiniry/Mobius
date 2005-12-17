@@ -177,6 +177,15 @@ self-contained examples, and (c) they were additions that we made to the
 original SRC ESC/Java system, thus writing them up in this manner was
 straightforward.
 
+We describe the ESC/Java2 architecture using the specification language
+BON.  BON is a specification language developed by Kim Walden and
+Jean-Marc Nerson and is documented in the book ``Seamless Object-Oriented
+Software Construction,'' available from @uref{http://www.bon-method.com/}.
+
+BON is a simple enough specification language that most, if not all, of
+the specifications herein will be understandable to the reader who knows
+nothing at all of BON.
+
 @c =============================================================================
 @node ESC/Java2 Architecture, The ESC/Java2 AST, Introduction, Top
 @chapter ESC/Java2 Architecture
@@ -185,6 +194,41 @@ straightforward.
 
 ESC/Java2 is an extension of Digital/Compaq/Hewlett-Packard System
 Research Center's (SRC henceforth) ESC/Java.
+
+@c -----------------------------------------------------------------------------
+@float Chart,fig:System_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{SYSTEM}
+@tab EXTENDED_STATIC_CHECKER
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+An extended static checker for Java.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{keywords:} extended static checker, ESC, Java
+@end multitable
+@multitable @columnfractions .4 .6
+@item @b{Cluster}
+@tab
+@b{Description}
+@item JAVA_FRONT_END
+@tab A generic Java scanner, parser, and typechecker.
+@item EXTENDED_STATIC_CHECKER
+@tab An extended static checker for Java.
+@item UTILITY
+@tab Miscellaneous utility classes.
+@end multitable
+
+@caption{The BON System Chart for ESC/Java2}
+@end float
+@c -----------------------------------------------------------------------------
 
 ESC/Java2 has two primary subcomponents: a generic Java front-end in the
 Java package @var{javafe} and the extended static checking framework
@@ -221,25 +265,138 @@ assert statement that was added to the Java languange in the Java 1.4
 release.  We discuss this extension as the first case study, found in
 @ref{X}.
 
-The main subcomponents of the Java front-end are a Java lexer, a parser,
-and typechecker.  An abstract symbol tree (AST) is used to represent the
-parsed Java classes.  Command-line option parsing is another major
-subcomponent that most extensions need to modify.  Finally, there are a
-number of classes used to search for source and class files in the
-classpath, read in source and class files and cache their locations and
-contents, and track warning and errors and related data that are
-detected during compilation.
+@c -----------------------------------------------------------------------------
+@float Chart,fig:Javafe_Cluster_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{CLUSTER}
+@tab JAVA_FRONT_END
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+A generic Java scanner, parser, and typechecker.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{keywords:} Java, scanner, parser, typechecker
+@end multitable
+@multitable @columnfractions .33 .66
+@item @b{Class/(Cluster)}
+@tab
+@b{Description}
+@item (AST)
+@tab The abstract symbol tree classes for Java.
+@item (FILES)
+@tab TBD
+@item (LEXER)
+@tab TBD
+@item (OPTIONS)
+@tab TBD
+@item (PARSER)
+@tab TBD
+@item (READER)
+@tab TBD
+@item (TYPECHECKER)
+@tab TBD
+@item (UTILITY)
+@tab TBD
+@item (TOOLS)
+@tab TBD
+@item (UTILITY)
+@tab TBD
+@end multitable
+
+@caption{The BON Cluster Chart for the ESC/Java2 Java Front-end}
+@end float
+@c -----------------------------------------------------------------------------
+
+@c PARSER should have classfile parser and source file parser
+
+The Java front-end is summarised in the informal cluster chart in
+@ref{fig:Escjava_Cluster_Chart}.  The main subcomponents of the Java
+front-end are the core tool classes (in the @sc{TOOLS} cluster), a Java
+lexer, a parser, and typechecker (the @sc{LEXER}, @sc{PARSER}, and
+@sc{TYPECHECKER} clusters).  An abstract symbol tree is used to
+represent the parsed Java classes (the @sc{AST} cluster).  Command-line
+option parsing is another major subcomponent that most extensions need
+to modify (the @sc{OPTIONS} cluster).  Finally, there are a number of
+classes used to search for source and class files in the classpath
+(@sc{FILES}), read in source and class files and cache their locations
+and contents (@sc{READER}), and track warning and errors and related
+data that are detected during compilation (@sc{UTILITY}).
 
 @section The Extended Static Checker for Java
 @cindex The Extended Static Checker for Java
 
-The extended static checker for Java has several major subcomponents
-discussed herein.  
+The extended static checker for Java has several major subcomponents.
 
-A full JML parser and typechecker is the first main component.  It is
-realised as a specialisation of the generic pragma parser in the Java
-front-end.  Conseqently, an AST hierarchy also exists for JML
-constructs.  
+@c -----------------------------------------------------------------------------
+@float Chart,fig:Escjava_Cluster_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{CLUSTER}
+@tab EXTENDED_STATIC_CHECKER
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+An extended static checker for Java.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{keywords:} extended static checker, Java
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{Class/(Cluster)}
+@tab
+@b{Description}
+@item (ANT)
+@tab TBD
+@item (AST)
+@tab TBD
+@item (BACKGROUND_PREDICATE)
+@tab TBD
+@item (GUI)
+@tab TBD
+@item (OPTIONS)
+@tab TBD
+@item (PREDICATE_ABSTRACTION)
+@tab TBD
+@item (PARSER)
+@tab TBD
+@item (PROVER)
+@tab TBD
+@item (READER)
+@tab TBD
+@item (SOUNDNESS_CHECKER)
+@c This cluster should get refactored to include the new work by Barry.
+@tab TBD
+@item (DYNAMIC_SINGLE_ASSIGNMENT)
+@tab TBD
+@item (TYPECHECKER)
+@tab TBD
+@item (VERIFICATION_CONDITION_GENERATOR)
+@tab TBD
+@item (TOOLS)
+@tab TBD
+@end multitable
+
+@caption{The BON Cluster Chart for the ESC/Java2 Extended Static Checker}
+@end float
+@c -----------------------------------------------------------------------------
+
+A full JML parser and typechecker is the first main component (clusters
+@sc{PARSER} and @sc{TYPECHECKER}).  It is realised as a specialisation
+of the generic pragma parser in the Java front-end (cluster
+@sc{JAVA_FRONT_END.PARSER}).  Conseqently, an AST hierarchy also exists
+for JML constructs (cluster @sc{AST}).
 
 @c ant ast backpred gui pa parser prover reader sp tc translate vcGenertion
 
@@ -248,6 +405,32 @@ constructs.
 @chapter The ESC/Java2 AST
 
 @cindex The ESC/Java2 AST
+@cindex AST
+@cindex Pragma AST
+@cindex hierarchy.j
+
+Like in the Java front-end, the AST for pragmas is specified with a
+@file{hierarchy.j} file which is transformed with the @command{astgen}
+tool into source Java files.  This file and its related classes are
+locate in the @code{escjava.ast} package that is located in the
+repository at @file{ESCTools/Escjava/java/escjava/ast/}.
+
+There are only a handful of classes in this package that are not
+specified using @file{hierarchy.j}: DecreasesInfo.java,
+DerivedMethodDecl.java, @file{EscPrettyPrint.java}, Modifiers.java,
+@file{TagConstants.java}, and @file{Utils.java}.
+
+@c Consider moving these classes into hierarchy.j. -JRK
+
+The case study that we use to demonstrate how to extend the JML pragma
+lexer and parser is the addition of the @code{nullable} keyword,
+presented by Patrice Chalin at SAVCBS 2005@cite{P. Chalin and F. Rioux,
+``Non-null References by Default in the Java Modeling Language.''
+Workshop on the Specification and Verification of Component-Based
+Systems (SAVCBS'05), Lisbon, Portugal, Sept. 2005. (Updated version:
+@uref{http://www.cs.concordia.ca/%7Echalin/papers/TR-2005-004-r3.2.pdf}
+{ENCS-CSE TR 2005-004, December 2005}).  We discuss this extension as
+the in @ref{nullable_case_study}.
 
 @c =============================================================================
 @node Extending the ESC/Java2 Lexer, Extending the ESC/Java2 Parser, The ESC/Java2 AST, Top
@@ -306,6 +489,14 @@ constructs.
 @chapter Testing Extensions
 
 @cindex Testing Extensions
+
+@c =============================================================================
+@node Specifications
+@unnumbered List of Charts
+@listoffloats Chart
+
+@unnumbered List of Interface Specifications
+@listoffloats Interface
 
 @c =============================================================================
 @node Copying, Index, Testing Extensions, Top
