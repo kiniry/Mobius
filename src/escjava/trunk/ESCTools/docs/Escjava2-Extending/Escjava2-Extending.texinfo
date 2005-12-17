@@ -143,15 +143,14 @@ series of case studies.
 
 @menu
 * Introduction::                An introduction to this document.
-* ESC/Java2 Architecture::      A summary of the architecture.
-* The ESC/Java2 AST::           The abstract symbol table/tree.
-* Extending the ESC/Java2 Lexer::  Turning bytes into tokens.
-* Extending the ESC/Java2 Parser::  Turning tokens into an AST.
-* Extending the ESC/Java2 Type Checker::  Type checking the AST.
-* Extending the VC Generation Calculus::  Generating verification conditions.
-* Extending the ESC/Java2 Logics::  Axioms about Java and JML.
+* The ESC/Java2 Architecture::  The detailed design of the Extended Static Checker.
+* The Java Front-end Architecture::  The detailed design of the Java front-end.
+* The ESC/Java2 Architecture::  The detailed design of the Extended Static Checker.
+* The ESC/Java2 VC Generation Calculi::  
+* The ESC/Java2 Logics::        
 * The Theorem Prover Interface::  Adding a new prover.
 * Testing Extensions::          How to test your extension.
+* Specifications::              BON specifications of ESC/Java2.
 * Copying::                     Your rights and freedoms.
 * Index::                       Complete index.
 @end menu
@@ -162,7 +161,8 @@ series of case studies.
 @c =============================================================================
 @c %**body
 
-@node Introduction, ESC/Java2 Architecture, Top, Top
+@c =============================================================================
+@node Introduction, The ESC/Java2 Architecture, Top, Top
 @chapter Introduction
 
 @cindex Introduction
@@ -187,10 +187,10 @@ the specifications herein will be understandable to the reader who knows
 nothing at all of BON.
 
 @c =============================================================================
-@node ESC/Java2 Architecture, The ESC/Java2 AST, Introduction, Top
-@chapter ESC/Java2 Architecture
+@node The ESC/Java2 Architecture, The Java Front-end Architecture, Introduction, Top
+@chapter The ESC/Java2 Architecture
 
-@cindex ESC/Java2 Architecture
+@cindex The ESC/Java2 Architecture
 
 ESC/Java2 is an extension of Digital/Compaq/Hewlett-Packard System
 Research Center's (SRC henceforth) ESC/Java.
@@ -219,7 +219,7 @@ An extended static checker for Java.
 @tab
 @b{Description}
 @item JAVA_FRONT_END
-@tab A generic Java scanner, parser, and typechecker.
+@tab A generic Java scanner, parser, and type checker.
 @item EXTENDED_STATIC_CHECKER
 @tab An extended static checker for Java.
 @item UTILITY
@@ -255,7 +255,15 @@ archive (jar) files are provided with the source release.  The current
 packages on which we depend include Ant, jUnit, and XML-RPC libraries.
 @c add hyperlinks/cites to these libraries
 
+@menu
+* The Generic Java Front-end::  The high-level design of the Java front-end.
+* The Extended Static Checker for Java::  The high-level design of the Extended Static Checker.
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Generic Java Front-end, The Extended Static Checker for Java, The ESC/Java2 Architecture, The ESC/Java2 Architecture
 @section The Generic Java Front-end
+
 @cindex The Generic Java Front-end
 
 ESC/Java2 uses the generic Java front-end developed by SRC, available as
@@ -276,13 +284,13 @@ release.  We discuss this extension as the first case study, found in
 @multitable @columnfractions .50 .50
 @item @b{PURPOSE}
 
-A generic Java scanner, parser, and typechecker.
+A generic Java scanner, parser, and type checker.
 @tab
 @b{INDEXING}
 
 @b{author:} Joseph Kiniry
 
-@b{keywords:} Java, scanner, parser, typechecker
+@b{keywords:} Java, scanner, parser, type checker
 @end multitable
 @multitable @columnfractions .33 .66
 @item @b{Class/(Cluster)}
@@ -319,7 +327,7 @@ A generic Java scanner, parser, and typechecker.
 The Java front-end is summarised in the informal cluster chart in
 @ref{fig:Escjava_Cluster_Chart}.  The main subcomponents of the Java
 front-end are the core tool classes (in the @sc{TOOLS} cluster), a Java
-lexer, a parser, and typechecker (the @sc{LEXER}, @sc{PARSER}, and
+lexer, a parser, and type checker (the @sc{LEXER}, @sc{PARSER}, and
 @sc{TYPECHECKER} clusters).  An abstract symbol tree is used to
 represent the parsed Java classes (the @sc{AST} cluster).  Command-line
 option parsing is another major subcomponent that most extensions need
@@ -329,6 +337,8 @@ classes used to search for source and class files in the classpath
 and contents (@sc{READER}), and track warning and errors and related
 data that are detected during compilation (@sc{UTILITY}).
 
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Extended Static Checker for Java,  , The Generic Java Front-end, The ESC/Java2 Architecture
 @section The Extended Static Checker for Java
 @cindex The Extended Static Checker for Java
 
@@ -392,7 +402,7 @@ An extended static checker for Java.
 @end float
 @c -----------------------------------------------------------------------------
 
-A full JML parser and typechecker is the first main component (clusters
+A full JML parser and type checker is the first main component (clusters
 @sc{PARSER} and @sc{TYPECHECKER}).  It is realised as a specialisation
 of the generic pragma parser in the Java front-end (cluster
 @sc{JAVA_FRONT_END.PARSER}).  Conseqently, an AST hierarchy also exists
@@ -401,10 +411,72 @@ for JML constructs (cluster @sc{AST}).
 @c ant ast backpred gui pa parser prover reader sp tc translate vcGenertion
 
 @c =============================================================================
-@node The ESC/Java2 AST, Extending the ESC/Java2 Lexer, ESC/Java2 Architecture, Top
-@chapter The ESC/Java2 AST
+@node The Java Front-end Architecture, The ESC/Java2 Architecture, The ESC/Java2 Architecture, Top
+@chapter The Java Front-end Architecture
 
-@cindex The ESC/Java2 AST
+@cindex The Java Front-end Architecture
+
+@menu
+* The Java Lexer::              The Java lexer.
+* The Java AST::                The Java abstract symbol tree.
+* The Java Parser::             The Java parser.
+* The Java Type Checker::       The Java type checker.
+* Case Studies in Extending the Java Front-end::  Front-end case studies.
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Lexer, The Java AST, The Java Front-end Architecture, The Java Front-end Architecture
+@section The Java Lexer
+
+@cindex The Java Lexer
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java AST, The Java Parser, The Java Lexer, The Java Front-end Architecture
+@section The Java AST
+
+@cindex The Java AST
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Parser, The Java Type Checker, The Java AST, The Java Front-end Architecture
+@section The Java Parser
+
+@cindex The Java Parser
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Java Type Checker, Case Studies in Extending the Java Front-end, The Java Parser, The Java Front-end Architecture
+@section The Java Type Checker
+
+@cindex The Java Type Checker
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Case Studies in Extending the Java Front-end,  , The Java Type Checker, The Java Front-end Architecture
+@section Case Studies in Extending the Java Front-end
+
+@cindex Case Studies in Extending the Java Front-end
+
+@menu
+* The Assert Statement::        
+* New Java Bytecodes::          
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node The Assert Statement, New Java Bytecodes, Case Studies in Extending the Java Front-end, Case Studies in Extending the Java Front-end
+@subsection The Assert Statement
+
+@cindex assert
+
+@c -----------------------------------------------------------------------------
+@node New Java Bytecodes,  , The Assert Statement, Case Studies in Extending the Java Front-end
+@subsection New Java Bytecodes
+
+@cindex bytecodes
+@cindex types
+
+@c =============================================================================
+@node The ESC/Java2 Architecture, The ESC/Java2 VC Generation Calculi, The Java Front-end Architecture, Top
+@chapter The ESC/Java2 Architecture
+
+@cindex The ESC/Java2 Architecture
 @cindex AST
 @cindex Pragma AST
 @cindex hierarchy.j
@@ -415,12 +487,12 @@ tool into source Java files.  This file and its related classes are
 locate in the @code{escjava.ast} package that is located in the
 repository at @file{ESCTools/Escjava/java/escjava/ast/}.
 
-There are only a handful of classes in this package that are not
-specified using @file{hierarchy.j}: DecreasesInfo.java,
-DerivedMethodDecl.java, @file{EscPrettyPrint.java}, Modifiers.java,
-@file{TagConstants.java}, and @file{Utils.java}.
+There are a few classes in this package that are not specified using
+@file{hierarchy.j}: @file{DecreasesInfo.java},
+@file{DerivedMethodDecl.java}, @file{EscPrettyPrint.java},
+@file{Modifiers.java}, @file{TagConstants.java}, and @file{Utils.java}.
 
-@c Consider moving these classes into hierarchy.j. -JRK
+@c Move DecreasesInfo and Modifiers into hierarchy.j. -JRK
 
 The case study that we use to demonstrate how to extend the JML pragma
 lexer and parser is the addition of the @code{nullable} keyword,
@@ -432,66 +504,135 @@ Systems (SAVCBS'05), Lisbon, Portugal, Sept. 2005. (Updated version:
 {ENCS-CSE TR 2005-004, December 2005}).  We discuss this extension as
 the in @ref{nullable_case_study}.
 
-@c =============================================================================
-@node Extending the ESC/Java2 Lexer, Extending the ESC/Java2 Parser, The ESC/Java2 AST, Top
-@chapter Extending the ESC/Java2 Lexer
-
-@cindex Extending the ESC/Java2 Lexer
-
-@c =============================================================================
-@node Extending the ESC/Java2 Parser, Extending the ESC/Java2 Type Checker, Extending the ESC/Java2 Lexer, Top
-@chapter Extending the ESC/Java2 Parser
-
-@cindex Extending the ESC/Java2 Parser
-
-@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @menu
-* The Java Parser::             
-* The Java Modeling Language Parser::  
+* The ESC/Java2 JML Lexer::     The JML lexer.
+* The ESC/Java2 JML Parser::    The JML parser.
+* The ESC/Java2 Type Checker::  The JML type checker.
+* Case Studies in Extending the Extended Static Checker Lexer::  Extended static checker case studies.
 @end menu
 
-@node The Java Parser, The Java Modeling Language Parser, Extending the ESC/Java2 Parser, Extending the ESC/Java2 Parser
-@section The Java Parser
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The ESC/Java2 JML Lexer, The ESC/Java2 JML Parser, The ESC/Java2 Architecture, The ESC/Java2 Architecture
+@section The ESC/Java2 JML Lexer
+
+@cindex The ESC/Java2 JML Lexer
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@node The Java Modeling Language Parser,  , The Java Parser, Extending the ESC/Java2 Parser
-@section The Java Modeling Language Parser
+@node The ESC/Java2 JML Parser, The ESC/Java2 Type Checker, The ESC/Java2 JML Lexer, The ESC/Java2 Architecture
+@section The ESC/Java2 JML Parser
 
-@c =============================================================================
-@node Extending the ESC/Java2 Type Checker, Extending the VC Generation Calculus, Extending the ESC/Java2 Parser, Top
-@chapter Extending the ESC/Java2 Type Checker
-
-@cindex Extending the ESC/Java2 Type Checker
-
-@c =============================================================================
-@node Extending the VC Generation Calculus, Extending the ESC/Java2 Logics, Extending the ESC/Java2 Type Checker, Top
-@chapter Extending the VC Generation Calculus
-
-@cindex Extending the VC Generation Calculus
+@cindex The ESC/Java2 JML Parser
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@section The ESC/Java2 Weakest Precondition Calculus
+@node The ESC/Java2 Type Checker, Case Studies in Extending the Extended Static Checker Lexer, The ESC/Java2 JML Parser, The ESC/Java2 Architecture
+@section The ESC/Java2 Type Checker
+
+@cindex The ESC/Java2 Type Checker
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Case Studies in Extending the Extended Static Checker Lexer,  , The ESC/Java2 Type Checker, The ESC/Java2 Architecture
+@section Case Studies in Extending the Extended Static Checker Lexer, Parser, and Type Checker
+
+@cindex case study
+@cindex case studies
+@cindex extending the extended static checker lexer
+@cindex extending the extended static checker parser
+@cindex extending the extended static checker type checker
+
+@menu
+* Default Reference Type Values::  
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node Default Reference Type Values,  , Case Studies in Extending the Extended Static Checker Lexer, Case Studies in Extending the Extended Static Checker Lexer
+@subsection Default Reference Type Values
+
+@cindex reference type value
+@cindex non-null
+@cindex nullable
 
 @c =============================================================================
-@node Extending the ESC/Java2 Logics, The Theorem Prover Interface, Extending the VC Generation Calculus, Top
-@chapter Extending the ESC/Java2 Logics
+@node The ESC/Java2 VC Generation Calculi, The ESC/Java2 Logics, The ESC/Java2 Architecture, Top
+@chapter The ESC/Java2 VC Generation Calculi
 
-@cindex Extending the ESC/Java2 Logics
+@cindex calculus
+@cindex calculi
+@cindex weakest-precondition calculus
+@cindex strongest-postcondition calculus
+
+@menu
+* The DSA Intermediate Representation::  
+* The Weakest-Precondition Calculus::  
+* The Strongest-Postcondition Calculus::  
+* Case Studies in Extending the VC Generation Calculi::  
+@end menu
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The DSA Intermediate Representation, The Weakest-Precondition Calculus, The ESC/Java2 VC Generation Calculi, The ESC/Java2 VC Generation Calculi
+@section The DSA Intermediate Representation
+
+@cindex DSA
+@cindex dynamic single assignment
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Weakest-Precondition Calculus, The Strongest-Postcondition Calculus, The DSA Intermediate Representation, The ESC/Java2 VC Generation Calculi
+@section The Weakest-Precondition Calculus
+
+@cindex calculus
+@cindex weakest-precondition calculus
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node The Strongest-Postcondition Calculus, Case Studies in Extending the VC Generation Calculi, The Weakest-Precondition Calculus, The ESC/Java2 VC Generation Calculi
+@section The Strongest-Postcondition Calculus
+
+@cindex calculus
+@cindex strongest-postcondition calculus
+
+@c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+@node Case Studies in Extending the VC Generation Calculi,  , The Strongest-Postcondition Calculus, The ESC/Java2 VC Generation Calculi
+@section Case Studies in Extending the VC Generation Calculi
+
+@cindex case study
+@cindex case studies
+@cindex extending the vc generation calculi
+
+@menu
+* Reasoning about Loops::       
+* Reasoning about Java Bytecodes::  
+@end menu
+
+@c -----------------------------------------------------------------------------
+@node Reasoning about Loops, Reasoning about Java Bytecodes, Case Studies in Extending the VC Generation Calculi, Case Studies in Extending the VC Generation Calculi
+@subsection Reasoning about Loops
+
+@cindex loops
+
+@c -----------------------------------------------------------------------------
+@node Reasoning about Java Bytecodes,  , Reasoning about Loops, Case Studies in Extending the VC Generation Calculi
+@subsection Reasoning about Java Bytecodes
+
+@cindex bytecode
 
 @c =============================================================================
-@node The Theorem Prover Interface, Testing Extensions, Extending the ESC/Java2 Logics, Top
+@node The ESC/Java2 Logics, The Theorem Prover Interface, The ESC/Java2 VC Generation Calculi, Top
+@chapter The ESC/Java2 Logics
+
+@cindex The ESC/Java2 Logics
+
+@c =============================================================================
+@node The Theorem Prover Interface, Testing Extensions, The ESC/Java2 Logics, Top
 @chapter The Theorem Prover Interface
 
 @cindex The Theorem Prover Interface
 
 @c =============================================================================
-@node Testing Extensions, Copying, The Theorem Prover Interface, Top
+@node Testing Extensions, Specifications, The Theorem Prover Interface, Top
 @chapter Testing Extensions
 
 @cindex Testing Extensions
 
 @c =============================================================================
-@node Specifications
+@node Specifications, Copying, Testing Extensions, Top
 @unnumbered List of Charts
 @listoffloats Chart
 
@@ -499,7 +640,7 @@ the in @ref{nullable_case_study}.
 @listoffloats Interface
 
 @c =============================================================================
-@node Copying, Index, Testing Extensions, Top
+@node Copying, Index, Specifications, Top
 @appendix Copying
 
 @cindex Copying
