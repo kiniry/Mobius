@@ -1,4 +1,463 @@
+2005-12-13  Frederic Rioux  <f_rioux@cs.concordia.ca>
+
+	* Escjava/java/escjava/vcGeneration/TDisplay.java:
+	Replace a character that was not parsed well using the ISU JML
+	tools in the non_null annotations.
+
+2005-12-08  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/test/junittests/FormalNullableInheritance.java:
+	* Escjava/test/junittests/InheritNullable.java:
+	* Escjava/test/junittests/ManyAlsos.java:
+	* Escjava/test/junittests/NonNullDefault.java:
+	* Escjava/test/junittests/StaticInnerClasses.java:
+	Some new tests that have not yet been fully incorporated into full
+	testing.  Party the possible broken tests for a couple of days.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	* slides/Makefile:
+	* specs-chalin-kiniry/src/EmptySequence.java:
+	* specs-chalin-kiniry/src/NonEmptySequence.java:
+	* specs-chalin-kiniry/src/Sequence.java:
+	Partly complete implementation of new nullable work.  This checkin
+	includes a complete scanner and parser but no static checking support
+	(yet).  I believe all tests pass at this moment and plan on finishing
+	this implemementation in the next few days.
+
+2005-12-07  Robin Green  <robin.green@ucd.ie>
+
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/test/escjava/test/test50/ans:
+	Fixed bug 146
+
+	* Escjava/java/escjava/vcGeneration/xml/XmlProver.java:
+	Fixed import ambiguity on TypeInfo found by Eclipse compiler
+
+2005-12-07  Frederic Rioux  <f_rioux@cs.concordia.ca>
+
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java, Makefile:
+	Fixed Makefile target, special characters, and spec to better
+	support jmlc compilation. Please note that due to a ISU JML tools
+	problem, special (e.g. accented) characters are not parsed
+	properly, even in comments. Hence, they should be avoided.
+
+2005-12-01  Aleksy Schubert  <alx@mimuw.edu.pl>
+
+	* docs/Escjava2-Logics/Makefile: added
+
+2005-11-30  Carl Pulley  <c.pulley@acme-labs.org.uk>
+
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/TSimplifyVisitor.java:
+	* Makefile:
+	* Escjava/java/escjava/vcGeneration/PrettyPrinter.java:
+	* Escjava/java/escjava/vcGeneration/ProverType.java:
+	* Escjava/java/escjava/vcGeneration/StringBufferWrapper.java:
+	* Escjava/java/escjava/vcGeneration/TCast.java:
+	* Escjava/java/escjava/vcGeneration/TDotVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	* Escjava/java/escjava/vcGeneration/TMethodCall.java:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TRoot.java:
+	* Escjava/java/escjava/vcGeneration/TVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TypeInfo.java:
+	* Escjava/java/escjava/vcGeneration/VariableInfo.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ABasicCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AFloatVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AIntegralVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ANotHandledVisitor.java:
+	* Escjava/java/escjava/vcGeneration/generate-visitor-functions.sh:
+	* Escjava/java/escjava/vcGeneration/sammy/SammyProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/xml/TXmlVisitor.java:
+	* Escjava/java/escjava/vcGeneration/xml/XmlProver.java:
+	* Escjava/java/escjava/vcGeneration/xml/XmlProverException.java:
+	* Escjava/java/escjava/vcGeneration/xml/simplify.xslt:
+	* Escjava/java/escjava/vcGeneration/xml/xmlprover.dtd:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/escj:
+	* Escjava/escj.bat:
+	* Escjava/generate-functions-vcGenerator.sh:
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	New XML prover plugin interface added. Interface means that a user
+	may specify new plugins to the vcGenerator by simply defining an
+	appropriate XML stylesheet that targets that prover. This should
+	ease the debugging of new plugin provers. See
+	escjava.vcGeneration.xml.XmlProver and
+	escjava.vcGeneration.xml.simplify.xslt for examples of usage.
+
+	Additional changes include:
+	-some classes within package escjava.vcGeneration have had their
+	 comments made visible to javadoc.
+	-escjava.vcGeneration.StringBufferWrapper altered so that caller
+	 may define the terms TAB, LBR, RBR and NL.
+	-escjava.Main altered so that options to nvcg starting "xml." are
+	 treated as if they are XML stylesheets by
+	 escjava.vcGeneration.xml.XmlProver.
+	-escjava.Option altered to reflect this additional behavior.
+	-replaced usages of escjava.vcGeneration.coq.CoqStringBuffer by
+	 escjava.vcGeneration.StringBufferWrapper.
+	-escjava.vcGeneration.StringBufferWrapper altered to use
+	 java.io.Writer instead of StringBuffer. Alterations to
+	 escjava.vcGeneration.* so that java.io.Writer generated
+	 IOException's are handled by escjava.Main.
+	-renamed escjava.vcGeneration.StringBufferWrapper to
+	 escjava.vcGeneration.PrettyPrinter.
+	-Makefile has commands to copy all *.xlst and xmlprover.dtd files
+	 into the esctools2.jar file and INDEX.LIST files generated for
+	 additional runtime speedup.
+	-generate-functions-vcGenerator.sh altered so that TFuntion.j and
+	 TLiteral.j are always used to build other java files (solves
+	 updates issues wrt these .j files).
+	-escj and escj.bat altered so that the environment variable
+	 XMLPROVERPATH is passed as a system property to the java runtime.
+	-added TBoolNE to escjava.vcGeneration.VcGenerator
+	-deleted generate-functions-vcGenerator.sh since this is no longer
+	 of any real use (easier to copy and paste TVisitor).
+
+2005-11-29  Carl Pulley  <c.pulley@acme-labs.org.uk>
+
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	Fix to bug #221: Restricting i to the scope of the for-loop and
+	correctly alter the --i references to be a reference to the last
+	child solves this issue.
+
+2005-11-23  Robin Green  <robin.green@ucd.ie>
+
+	* .classpath:
+	* .project:
+	* .externalToolBuilders/make clean.launch:
+	* .externalToolBuilders/make source.launch:
+	* .externalToolBuilders/make-clean.launch:
+	* .externalToolBuilders/make-source.launch:
+	Removed spaces from paths, fixing bug 164
+
+2005-11-23  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* release-files/escj.bat:
+	* release-files/escjava2:
+	BUGFIX: #185 (http://sort.ucd.ie/tracker/index.php?func=detail&aid=185&group_id=97&atid=441)
+
+	* Javafe/java/javafe/FrontEndTool.java:
+	refactor: switched to safer os-dependent path separator
+
+2005-11-23  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Initial, and mostly complete, writeup of the current work on nullable,
+	nullable_by_default, non_null_by_default.
+
+2005-11-23  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Javafe/doc/.cvsignore: rg: cvs ignore generated javadocs
+
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	(Very) small refactorings.
+
+	* Escjava/escj.bat:
+	Partial fix for bug185 (for those using escj.bat on windows)
+
+	* .settings/org.eclipse.jdt.ui.prefs:
+	Make eclipse display correctly things edited with emacs (in
+	"compressed tab" mode)
+
+2005-11-23  Robin Green  <robin.green@ucd.ie>
+
+	* slides/Makefile:
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	* docs/Escjava2-Logics/Makefile:
+	* docs/Escjava2-Provers/Makefile:
+	* release-files/README.release:
+	* Escjava/java/escjava/vcGeneration/TCast.java:
+	* Escjava/test/junittests/skip:
+	* Escjava/escj.bat:
+	Fixes for bugs 214,215,216
+
+	* Makefile, Makefile.defs:
+	- Removed jmlspecs.jar from build process (bug 216)
+	- Fixes for bugs 214, 215
+
+2005-11-18  Carl Pulley  <c.pulley@acme-labs.org.uk>
+
+	* Escjava/java/escjava/translate/VcToStringCoq.java:
+	* Escjava/java/escjava/translate/VcToStringPvs.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/sammy/SammyProver.java:
+	* Escjava/Makefile:
+	* Escjava/java/escjava/vcGeneration/ProverType.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/unsorted/PvsUnsortedProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/unsorted/UnsortedPvsProver.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	Alterations to Main, Option and escjava.vcgeneration package so
+	that plugin provers may be dynamically loaded and accessed via the
+	command line *without* having to alter Main or Option.
+
+	In particular:
+	-deleted unused files VcToStringPvs and VcToStringCoq
+	-deleted redundant options pvsProof and coqProof
+	-deleted VcGenerator.getProof() since this is no longer used
+	-options pnvg, pSimplify, pPvs and pCoq now replaced by the new
+	 combined option "pnvcg <prover>[,<prover>]*"
+	-naming convention introduced for new plugin provers (see
+	 ProverType for details)
+	-UnsortedPvsProver renamed to PvsUnsortedProver to meet naming
+	 convention for provers
+	-main Makefile has had new dependancies added to JAVASOURCEFILES
+	 so that plugin vcGeneration provers are compiled
+	-ProverType.addTypeInfo added so that untyped prover logics
+	 (ie. Simplify, Sammy, PvsUnsorted) may add type info to their VC
+	 term
+
+2005-11-15  Julien Charles  <julien.charles@sophia.inria.fr>
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	Added type tree correction through the CoqProver.rewrite method.
+
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ABasicCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	prop/bool differenciation fix -- again
+
+2005-11-14  Julien Charles  <julien.charles@sophia.inria.fr>
+
+	* docs/Escjava2-Logics/coq/defs.v:
+	added some more logics handling (the time constructs)
+
+	* Escjava/java/escjava/Main.java:
+	fix some implies missing for the Coq extension in the new vcGen.
+
+	* Escjava/java/escjava/translate/VcToStringCoq.java:
+	fix the defs_unsorted.v path
+
+	* Escjava/java/escjava/translate/VcToStringCoq.java:
+	to help to compare old proofs with new proofs
+
+	* Escjava/java/escjava/Options.java:
+	added the line for Coq in the verbose help menu
+
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ABasicCoqVisitor.java:
+	prop/bool differenciation fix (once again)
+
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ABasicCoqVisitor.java:
+	select/store fix
+
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	prop/bool differenciation fix
+
+	* docs/Escjava2-Logics/coq/defs.v: fixed the select construct
+
+	* Escjava/java/escjava/vcGeneration/TMethodCall.java:
+	fixed the signature type
+
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java: Tree typing fix.
+
+	* Escjava/java/escjava/vcGeneration/TRoot.java: Typing fix.
+
+	* Escjava/java/escjava/vcGeneration/coq/Prelude.tail:
+	* Escjava/java/escjava/vcGeneration/coq/Prelude.head:
+	* Escjava/java/escjava/vcGeneration/coq/PreludeGenerator.sh:
+	fixed some spaces in the prelude generator
+
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ANotHandledVisitor.java:
+	New visitor hierarchy update.
+
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ABasicCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AFloatVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AIntegralVisitor.java:
+	Added several visitor classes to have smaller files.
+
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/TMethodCall.java:
+	Added some javadoc.
+
+2005-11-10  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/clean.sh:
+	Simplified java/escjava/vcGeneration/clean.sh
+
+2005-11-09  Julien Charles  <julien.charles@sophia.inria.fr>
+
+	* Escjava/java/escjava/vcGeneration/coq/Prelude.head:
+	*** empty log message ***
+
+	* Escjava/java/escjava/vcGeneration/coq/.cvsignore:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/Prelude.head:
+	* Escjava/java/escjava/vcGeneration/coq/Prelude.tail:
+	* Escjava/java/escjava/vcGeneration/coq/PreludeGenerator.sh:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	Prelude generator added
+
+	* docs/Escjava2-Logics/coq/defs.v, docs/Escjava2-Logics/coq/defs_unsorted.v:
+	Coq logics
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	Some fix.
+
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	*** empty log message ***
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	Types right (it seems)
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	Better types handling
+
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	Now it works properly
+
+	* Escjava/java/escjava/vcGeneration/VariableInfo.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/ProverType.java:
+	* Escjava/java/escjava/vcGeneration/.cvsignore:
+	* Escjava/java/escjava/vcGeneration/help:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TDotVisitor.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/TSimplifyVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/sammy/SammyProver.java:
+	* Escjava/java/escjava/vcGeneration/TMethodCall.java:
+	* Escjava/java/escjava/vcGeneration/TVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/clean.sh:
+	*** empty log message ***
+
+2005-11-08  Julien Charles  <julien.charles@sophia.inria.fr>
+
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqStringBuffer.java:
+	*** empty log message ***
+
+2005-11-07  Alan Morkan  <alan.morkan@ucd.ie>
+
+	* Escjava/test/junittests/ParsePure.java-expected:
+	Bug Fix: [#153] error caret placement shift
+
+2005-11-06  Carl Pulley  <c.pulley@acme-labs.org.uk>
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/pvs/unsorted/UnsortedPvsProver.java:
+	* Escjava/java/escjava/vcGeneration/sammy/SammyProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/TSimplifyVisitor.java:
+	* Escjava/java/escjava/vcGeneration/ProverType.java:
+	* Escjava/java/escjava/vcGeneration/PvsStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/SimplifyStringBuffer.java:
+	* Escjava/java/escjava/vcGeneration/StringBufferWrapper.java:
+	* Escjava/java/escjava/vcGeneration/TBoolRes.java:
+	* Escjava/java/escjava/vcGeneration/TCast.java:
+	* Escjava/java/escjava/vcGeneration/TDisplay.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	* Escjava/java/escjava/vcGeneration/TLiteral.java:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TSimplifyVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TypeInfo.java:
+	* Escjava/java/escjava/vcGeneration/VariableInfo.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	vcGeneration package alterations:
+	- refactored code so that prover dependant code is located in
+	  separate subpackages (one for each prover)
+	- introduction of the ProverType interface for implementing new
+	  prover targets
+	- PvsStringBuffer and simplifyStringBuffer now replaced by
+	  StringBufferWrapper
+	- alterations to TNode and subclass access types to allow their
+	  access from prover subpackages
+	- alterations to Main to facilitate use of code restructuring
+	- some reformating of code
+
+2005-11-02  Alan Morkan  <alan.morkan@ucd.ie>
+
+	* Javafe/test/javafe/test/fe/test2001/.cvsignore:
+	* Javafe/test/javafe/test/fe/test2001/TestStaticFinalFields.java:
+	* Javafe/test/javafe/test/fe/test2001/ans:
+	* Javafe/test/javafe/test/fe/test2001/run:
+	Adding Test Case for Bug Fix: [#104] constants in interfaces must
+	be statically initialised
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	Bug Fix: [#104] constants in interfaces must be statically initialised
+
+2005-10-30  Conor Gallagher  <cjbooms@gmail.com>
+
+	* Escjava/java/escjava/soundness/Consistency.java:
+	* Escjava/java/escjava/soundness/Visit.java:
+	* Escjava/java/escjava/Main.java:
+	Moved all of the conistency soundness checking stuff out and
+	placing it in a new package "escjava.soundness".  added a
+	getInstance() method and changed the access modifier of
+	processRoutineDecl() to public to allow access from outside.
+
+2005-10-26  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Javafe/astgen/astgen.l: fix for bug #112
+	http://sort.ucd.ie/tracker/?func=detail&atid=441&aid=112&group_id=97
+
 2005-10-24  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* ChangeLog: Updated for recent work by Clement and myself.
 
 	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
 	Refactoring to correspond to PVS refactoring.
