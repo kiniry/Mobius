@@ -36,8 +36,8 @@
 //  * @author thomas.haas@softwired-inc.com
 //  * @author Stefan Bodewig
 //  */
-// public class Commandline implements Cloneable
-// {
+public class Commandline implements Cloneable
+{
 //   /*@  public normal_behavior
 //     @   requires toProcess != null;
 //     @*/
@@ -58,4 +58,4 @@
 //     @*/
 //   public static String toString(String [] line);
 
-// }
+}
