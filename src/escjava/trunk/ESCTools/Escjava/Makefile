@@ -5,6 +5,7 @@
 
 export TOP = ..
 include ${TOP}/Makefile.defs
+
 # Makefile.defs and the parent Makefile provide definitions of the 
 # following variables needed here:
 # JAVAC, JAVAC_FLAGS, ESCJAVA_ROOT, 
@@ -19,35 +20,54 @@ include ${TOP}/Makefile.defs
 ###########################################################################
 # Defining relevant directory locations and other variables.
 
+ESCTOOLS_ROOT_REL = ..
+ESCTOOLS_UTILS_ROOT_REL = $(ESCTOOLS_ROOT_REL)/Utils
 ESCJAVA_SOURCE_DIR = ${ESCJAVA_ROOT}/java
+ESCJAVA_SOURCE_DIR_REL = java
 JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
-JAVASOURCEFILES = \
-	${ESCJAVA_SOURCE_DIR}/escjava/ant/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/ast/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/backpred/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/gui/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/parser/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/prover/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/reader/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/sp/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/tc/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/translate/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*/*Prover.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/vcGeneration/*/*/*Prover.java \
-	${ESCJAVA_SOURCE_DIR}/escjava/*.java
+
+JAVAFE_SOURCE_DIR_REL ?= $(ESCTOOLS_ROOT_REL)/Javafe/java
+
+ESCJAVA_SOURCE_FILES_RELATIVE = \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/ant/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/ast/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/backpred/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/gui/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/parser/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/prover/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/reader/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sp/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/tc/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/translate/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java)
+
+ESCJAVA_SOURCE_FILES = \
+	$(foreach javafile,$(ESCJAVA_SOURCE_FILES_RELATIVE),\
+	$(subst escjava,$(ESCJAVA_SOURCE_DIR)/escjava,$(javafile)))
 
 #	${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 
-OTHERSOURCEFILES = ${JAVAFE_SOURCE_DIR}/javafe/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/ast/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/parser/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/reader/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/genericfile/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/filespace/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/tc/*.java \
-		${JAVAFE_SOURCE_DIR}/javafe/util/*.java \
-		${ESCTOOLS_ROOT}/Utils/junitutils/*.java 
+JAVAFE_SOURCE_FILES_RELATIVE = \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/ast/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/parser/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/reader/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/genericfile/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/filespace/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/tc/*.java) \
+		$(wildcard $(JAVAFE_SOURCE_DIR_REL)/javafe/util/*.java)
+
+JAVAFE_SOURCE_FILES = \
+	$(foreach javafile,$(JAVAFE_SOURCE_FILES_RELATIVE),\
+	$(subst ../Javafe/javafe,$(JAVAFE_SOURCE_DIR)/javafe,$(javafile)))
+
+OTHER_SOURCE_FILES_RELATIVE = \
+	$(wildcard $(ESCTOOLS_UTILS_ROOT_REL)/junitutils/*.java)
+
+OTHER_SOURCE_FILES = \
+	$(foreach javafile,$(OTHER_SOURCE_FILES_RELATIVE),\
+	$(subst Utils,$(ESCTOOLS_ROOT)/Utils,$(javafile)))
 
 ## FIXME - Version.java is listed above because it might not exist when *.java
 ## is expanded, but isn't that true for ast/*.java as well??? -David
@@ -74,7 +94,7 @@ buildall: version compileall
 test: test_escjava
 
 alltests: test_escjava 
-	-$(MAKE) self_testp
+	-$(MAKE) self_test
 
 ###########################################################################
 # Documentation targets.
@@ -127,7 +147,7 @@ compileall: rm-stampfile compile
 
 really-compile: ${STAMPFILE}
 
-${STAMPFILE}: ${JAVASOURCEFILES}
+${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
 	#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
 	if [ -e .files ]; then rm -f .files; fi
@@ -161,17 +181,6 @@ ${CLASSDIRECTORY}:
 generate_files: generate_escjava_ast_source generate_escjava_backpred
 
 ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
-	touch $@
-
-${STAMPFILE}: ${JAVASOURCEFILES}
-	#./dl-xml-rpc-lib.sh #for future use
-	./generate-functions-vcGenerator.sh #fixme, this is lame
-	${JAVAC} ${JAVAC_FLAGS} \
-		-classpath ${ESCJAVA_BUILD_CLASSPATH} \
-		-sourcepath $(call canonicalize,${SOURCEPATH}) \
-		-d $(call canonicalize,${CLASSDIRECTORY}) \
-		$(foreach file,$?,$(call canonicalize,$(file)))
-	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
 	touch $@
 
 rm-stampfile:
@@ -350,7 +359,7 @@ TOP_ESCJAVA_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/test
 
 .PHONY: test_escjava tests build_javafe_test junittests jdktests \
 	checkspecs javaspecs test_escjava_parser \
-	test_matrix self_test self_testp test-release selftypecheck
+	test_matrix self_test test-release self_typecheck
 
 test_escjava: build build_javafe_test 
 	$(MAKE) tests
@@ -361,7 +370,7 @@ tests:
 	$(MAKE) -C test/nijmegen/OCF runtests
 	$(MAKE) -C test/nijmegen/JCF runtests
 	$(MAKE) jdktests
-	$(MAKE) selftypecheck
+	$(MAKE) self_typecheck
 	##$(MAKE) test_matrix   ## FIXME
 
 build_javafe_test:
@@ -387,29 +396,36 @@ test_escjava_parser:
 	$(MAKE) -C ${JAVAFE_SOURCE_DIR}/.. javafe_test
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
-selftypecheck:
+self_typecheck:
+	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	    -sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
-		-source 1.4 -typecheck -quiet ${PACKAGE_LIST}
+		-source 1.4 -typecheck -quiet \
+		${PACKAGE_LIST}
 
 test_matrix:
+	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
 		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
 		${TESTSOURCEDIRECTORY}/matrix/*.java
 
-self_test: build
+self_test_nocheck: build
+	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
 		-vclimit 1000000 \
 		-nocheck -source 1.4 -quiet -nosemicolonwarnings \
-		${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))}
+		$(PACKAGE_LIST)
 
-self_testp: build
-	echo ${foreach file,${OTHERSOURCEFILES} ${JAVASOURCEFILES},$(call canonicalize,$(file))} | \
-	xargs -t -n 50 \
+self_test: build
+	JAVA_VM_FLAGS=-Xmx512m \
 	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-		-nocheck -source 1.4 -quiet -noSemicolonWarnings
+		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
+		-vclimit 1000000 \
+		-source 1.4 -quiet -nosemicolonwarnings \
+		$(PACKAGE_LIST)
 
 ## FIXME - is this used? should it be?
 ## This tests a binary release that is present in the RELTEMP directory,
