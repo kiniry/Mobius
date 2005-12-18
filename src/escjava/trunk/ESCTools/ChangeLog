@@ -1,3 +1,112 @@
+2005-12-18  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/test/junittests/FormalNullableInheritance.java-expected:
+	* Escjava/test/junittests/StaticInnerClasses.java-expected:
+	Added placeholder test results for new tests for nullable and static
+	inner classes.
+
+	* Escjava/java/escjava/ast/DecreasesInfo.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/translate/Translate.java:
+	Moved escjava.ast.DecreasesInfo into hierachy.j and modified
+	escjava.translate.Translate for new type interface.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	Corrected test result to correspond to final keyword choice(s) for
+	class-level nullable modifiers.
+
+	* Escjava/test/junittests/ExpandWildRef.java-expected:
+	* Escjava/test/junittests/Ghost.java-expected:
+	Modified expected results due to fix for bug #104.
+
+	* Javafe/astgen/astactions.c:
+	* Javafe/astgen/astgen.h:
+	* Javafe/astgen/astoutput.c:
+	Added extern declarations for string.h functions used in these files.
+
+	* Escjava/Makefile:
+	* Escjava/test/jdktests/Makefile:
+	* Makefile:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/Makefile:
+	* Javafe/java/javafe/ast/Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* docs/Escjava2-Extending/Makefile:
+	* docs/Escjava2-Logics/Makefile:
+	Standardizing Makefile echos and some indentation formatting.
+
+	* Calvin/java/escjava/Makefile:
+	* Calvin/java/escjava/ast/Makefile:
+	* Calvin/java/escjava/backpred/Makefile:
+	* Calvin/java/escjava/parser/Makefile:
+	* Calvin/java/escjava/parser/test/Makefile:
+	* Calvin/java/escjava/prover/Makefile:
+	* Calvin/java/escjava/tc/Makefile:
+	* Calvin/java/escjava/test/Makefile:
+	* Calvin/java/escjava/translate/Makefile:
+	* Calvin/test/Makefile:
+	* Rcc/java/rcc/ast/Makefile:
+	* Rcc/java/rcc/parser/Makefile:
+	* Rcc/java/rcc/parser/test/Makefile:
+	* Rcc/java/rcc/tc/Makefile:
+	* Rcc/java/rcc/test/Makefile:
+	* Rcc/java/rccwizard/test/Makefile:
+	Standardizing Makefile echos.
+
+2005-12-17  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java: Corrected typo.
+
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	Reworking outline for Extending booklet.
+
+	* Makefile.defs:
+	Added package list variables to manage which packages are 'live'.
+
+	* Makefile:
+	* Escjava/Makefile:
+	* Javafe/Makefile:
+	Renamed selftypecheck to self_typecheck and self_testp to
+	self_test to conform to Makefile naming conventions.  Added new
+	variables and build infrastructure to make builds from
+	subdirectories more reliable.
+
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Some new text in the Logics booklet on types.  Fixed a typo in the
+	Implementation Notes.  Beginning to write the AST sections in the
+	Extending booklet.
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/README:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/format.txt:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/small_suite/:
+	Adding small test and benchmark suite for Simplify.  This suite
+	comes from the TCS Simplify article's webpage written by Greg
+	Nelson.
+
+	* docs/Escjava2-Logics/pvs/escjava_java_typesystem.pvs:
+	Fixed the standard spelling error that I always make.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.j:
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	Corrected test result to correspond to final keyword choice(s) for
+	class-level nullable modifiers.
+
+	* Escjava/test/junittests/InheritNullable.java-expected:
+	* Escjava/test/junittests/ManyAlsos.java-expected:
+	* Escjava/test/junittests/NonNullDefault.java-expected:
+	Added placeholder test results for new tests for nullable and complex
+	branching behavior with JML 'also'.
+
+	* Escjava/java/escjava/ant/Commandline.java:
+	Added Commandline class back in for builds.  It has no content at this
+	moment, and will not until we get someone to take responsibility for
+	the ESC/Java2 ant task.
+
+	* ChangeLog: Updated for recent work by many.
+
 2005-12-13  Frederic Rioux  <f_rioux@cs.concordia.ca>
 
 	* Escjava/java/escjava/vcGeneration/TDisplay.java:
@@ -3071,7 +3180,8 @@
 	* Escjava/java/escjava/AnnotationHandler.java:
 	* Escjava/java/escjava/ast/Utils.java:
 	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
-	COrrrecting support for datagroups and pure methods used in annotations
+	Correcting support for datagroups and pure methods used in
+	annotations
 
 	* Escjava/java/escjava/backpred/UnivBackPred.ax:
 	* Escjava/java/escjava/ast/EscPrettyPrint.java:
