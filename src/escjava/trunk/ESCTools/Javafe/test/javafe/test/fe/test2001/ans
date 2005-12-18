@@ -14,4 +14,3 @@ TestStaticFinalFields.java:31: Caution: Variable e1 might not have been initiali
   public static final int e1;  //ERROR
                           ^
 5 cautions
-
