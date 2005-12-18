@@ -93,7 +93,7 @@ GoodJmlPragmas.j:180: /*@ immutable */
 GoodJmlPragmas.j:182: /*@ nullable_by_default */
 GoodJmlPragmas.j:183: /*@ non_null_by_default */
 GoodJmlPragmas.j:184: /*@ obs_pure */
-GoodJmlPragmas.j:185: /*@ may_be_null */
+GoodJmlPragmas.j:185: /*@ nullable */
 GoodJmlPragmas.j:187: /*@ code_java_math */
 GoodJmlPragmas.j:188: /*@ code_safe_math */
 GoodJmlPragmas.j:189: /*@ code_bigint_math */
