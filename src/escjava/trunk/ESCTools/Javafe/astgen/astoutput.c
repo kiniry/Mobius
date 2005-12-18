@@ -6,6 +6,10 @@
 #include "astutil.h"
 #include "astoutput.h"
 
+extern char *strcpy(char *dst, const char *src);
+extern char *strcat(char *s, const char *append);
+extern size_t strlen(const char *s);
+
 void outputStartOfFile(FILE *o, const char *text, int len)
 { fwrite(text, len, 1, o); }
 

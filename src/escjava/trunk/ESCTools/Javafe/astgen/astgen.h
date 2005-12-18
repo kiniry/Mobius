@@ -33,7 +33,6 @@ extern void expand(const char *text, int len);
 extern void endclass();
 extern void endastfile();
 
-
 #ifndef DEBUGPRINT
 #define DEBUGPRINT 0
 #endif

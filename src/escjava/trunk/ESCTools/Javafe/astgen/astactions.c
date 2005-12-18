@@ -8,6 +8,7 @@
 #include "astoutput.h"
 #include "astactions.h"
 
+extern void *memcpy(void *dst, const void *src, size_t len);
 
 /*
    Constants defining the various states
