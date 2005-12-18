@@ -814,9 +814,9 @@ public final class Translate
       ExprStmtPragma d = decreases.elementAt(i);
       TrAnExpr.initForClause();
       Expr de = TrAnExpr.trSpecExpr(d.expr);  // FIXME - what about old?
-      int loc = d.getStartLoc();
-      VariableAccess fOld = temporary("decreases", loc, loc);
-      DecreasesInfo di = new DecreasesInfo(loc, de, fOld);
+      int startLoc = d.getStartLoc();
+      VariableAccess fOld = temporary("decreases", startLoc, startLoc);
+      DecreasesInfo di = DecreasesInfo.make(startLoc, d.getEndLoc(), de, fOld);
       if (TrAnExpr.extraSpecs) ev.append(addNewAssumptionsNow());
       decs.addElement(di);
     }
@@ -984,12 +984,12 @@ public final class Translate
       case 1: // check 0 <= fOld;
         addCheck(loop.locHotspot, TagConstants.CHKDECREASES_BOUND,
                  GC.nary(TagConstants.INTEGRALLE, GC.zerolit, di.fOld),
-                 di.loc);
+                 di.locStart);
         break;
       case 2: // check F < fOld;
         addCheck(loop.locHotspot, TagConstants.CHKDECREASES_DECR,
                  GC.nary(TagConstants.INTEGRALLT, di.f, di.fOld),
-                 di.loc);
+                 di.locStart);
         break;
       default:
         //@ unreachable;

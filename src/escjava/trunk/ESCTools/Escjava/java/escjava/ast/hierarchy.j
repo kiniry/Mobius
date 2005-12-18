@@ -99,7 +99,7 @@ import escjava.ParsedRoutineSpecs;
  *         + SimpleModifierPragma () 
  *                   // Uninitialized, Monitored, NonNull, WritableDeferred,
  *                   // Helper, \Peer, \ReadOnly, \Rep,
- *                   // may_be_null, null_ref_by_default, non_null_ref_by_default, 
+ *                   // may_be_null, nullable_by_default, non_null_by_default, 
  *                   // obs_pure,
  *                   // code_java_math, code_safe_math, code_bigint_math,
  *                   // spec_java_math, spec_safe_math, spec_bigint_math
@@ -490,6 +490,19 @@ public class SeqCmd extends GuardedCmd
 
   public int getStartLoc() { return cmds.elementAt(0).getStartLoc(); }
   public int getEndLoc() { return cmds.elementAt(cmds.size()-1).getEndLoc(); }
+}
+
+public class DecreasesInfo extends ASTNode {
+  // the location of the 'decreases' pragma
+  //# int locStart
+  //# int locEnd
+  // the translated expression
+  //# Expr f
+  // a local variable storing the previous value of expr "f"
+  //# VariableAccess fOld
+
+  public int getStartLoc() { return locStart; }
+  public int getEndLoc() { return locEnd; }
 }
 
 public class LoopCmd extends GuardedCmd
