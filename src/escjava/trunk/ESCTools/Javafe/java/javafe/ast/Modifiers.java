@@ -4,14 +4,10 @@ package javafe.ast;
 
 import javafe.parser.ParseUtil;
 
-
 /**
-
-<TT>Modifiers</TT> is a class defining the constants used
-to identify the different kinds of modifiers, and 
-static methods to test for modifiers.
-
-*/
+ * This class defines the constants used to identify the different
+ * kinds of modifiers, and static methods to test for modifiers.
+ */
 
 public class Modifiers {
 
