@@ -1,7 +1,7 @@
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 all:
-	echo "No all target exists!"
+	@echo "No all target exists!"
 
 full: source
 	javac -d ${CLASSDIRECTORY} *.java
@@ -63,6 +63,4 @@ clean: $(ASTFILELIST)
 	rm -rf *.class ${CLASSDIRECTORY}/rcc/ast/*.class
 
 runtest:
-	echo No tests to do
-
- 
+	@echo "No tests to run."

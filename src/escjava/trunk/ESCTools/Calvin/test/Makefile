@@ -8,10 +8,10 @@ bigtest:
 	cd matrix; escjava \*.java
 
 source:
-	echo "ERROR: this is not a legal target!"
+	@echo "ERROR: this is not a legal target!"
 
 class:
-	echo "ERROR: this is not a legal target!"
+	@echo "ERROR: this is not a legal target!"
 
 clean: 
 	rm -rf *.class *~

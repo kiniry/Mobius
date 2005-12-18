@@ -7,7 +7,7 @@ full: source
 	$(JAVAC) -d ${CLASSDIRECTORY} *.java
 
 source:
-	echo Nothing to do
+	@echo "Nothing to build."
 
 clean: 
 	cd test; ${MAKE} clean

@@ -1,7 +1,7 @@
 # Copyright Hewlett-Packard, 2002
 
 class:	source
-	echo !!!!! ${JAVAC} -d ${CLASSDIRECTORY} Root.java
+	@echo !!!!! ${JAVAC} -d ${CLASSDIRECTORY} Root.java
 	${JAVAC} -d ${CLASSDIRECTORY} Root.java
 
 full:	source

@@ -1,7 +1,7 @@
 # Copyright Hewlett-Packard, 2002
 
 all:
-	echo "No all target exists!"
+	@echo "No all target exists!"
 
 full: source
 	$(JAVAC) -d ${CLASSDIRECTORY} *.java
@@ -68,6 +68,4 @@ clean: $(ASTFILELIST)
 	rm -rf *.class ${CLASSDIRECTORY}/escjava/ast/*.class
 
 runtest:
-	echo No tests to do
-
- 
+	@echo "No tests to run."

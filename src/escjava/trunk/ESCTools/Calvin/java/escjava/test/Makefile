@@ -3,10 +3,10 @@
 all: runtest
 
 class:
-	echo "No .class files need to be built"
+	@echo "No .class files need to be built"
 
 source:
-	echo "No .java files need to be built"
+	@echo "No .java files need to be built"
 
 runtest: 
 	rtestall

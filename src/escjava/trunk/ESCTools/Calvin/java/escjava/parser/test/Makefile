@@ -8,7 +8,7 @@ full: java
 	javac -d ${CLASSDIRECTORY} TestLex.java TestEscPragmaParser.java
 
 java:
-	echo Nothing to do
+	@echo "Nothing to build."
 
 clean:
 	rm -f *~ *.out
