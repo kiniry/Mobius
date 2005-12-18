@@ -2,12 +2,11 @@
 (jde-set-variables
  '(jde-project-name "ESC/Java2")
  '(jde-javadoc-gen-link-online t)
- '(jde-make-args "-k")
  '(jde-jdk-registry (quote (("1.5" . "/System/Library/Frameworks/JavaVM.framework/Versions/1.5") ("1.4" . "/System/Library/Frameworks/JavaVM.framework/Versions/1.4"))))
  '(jde-javadoc-gen-destination-directory "~/Sandboxes/ESCTools/docs/api")
+ '(jde-imenu-enable nil)
  '(jde-db-option-heap-size (quote ((16 . "megabytes") (128 . "megabytes"))))
  '(jde-run-option-enable-system-assertions t)
- '(jde-make-working-directory "~/Sandboxes/ESCTools")
  '(jde-db-option-host "localhost")
  '(jde-import-insert-group-names t)
  '(jde-db-option-verbose (quote (nil nil nil)))
