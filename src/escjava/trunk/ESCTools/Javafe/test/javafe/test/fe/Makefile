@@ -70,9 +70,9 @@ endif
 ## Must have variables JAVA and JAVAFE_ROOT set
 do%: testclasses
 	@( cd $*; \
-	   export TOOLCMD="${TOOLCMD}" ;\
-	   export TOOL="${TOOL} -classpath ." ; \
-	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
+		export TOOLCMD="${TOOLCMD}" ;\
+		export TOOL="${TOOL} -classpath ." ; \
+		./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@if [ -e $*/ans${SUFFIX} ]; then \
 		diff $*/out $*/ans${SUFFIX} || echo Test $* failed ;\
 	else \
@@ -82,8 +82,8 @@ do%: testclasses
 
 ex%: testclasses
 	@( cd $*; \
-	   export TOOL="${TOOL} -classpath ." ; \
-	   ./run 2>&1 | sed "s|`pwd`|<TEST>|g" )
+		export TOOL="${TOOL} -classpath ." ; \
+		./run 2>&1 | sed "s|`pwd`|<TEST>|g" )
 
 testclasses: ${CLASSDIRECTORY}/javafe/test/Print.class
 
@@ -94,11 +94,11 @@ ${CLASSDIRECTORY}/javafe/test/Print.class:
 ## Must have variables JAVA and JAVAFE_ROOT set
 
 %-run: testclasses
-	(  cd $*; \
-	   export JAVAFE=$(call canonicalize,${ESCTOOLS_ROOT}/Javafe); \
-	   export CLASSPATH=$(call canonicalize,$*) ;\
-	   export TOOL="${TOOL} -classpath ." ; \
-	   ./run )
+	( cd $*; \
+		export JAVAFE=$(call canonicalize,${ESCTOOLS_ROOT}/Javafe); \
+		export CLASSPATH=$(call canonicalize,$*) ;\
+		export TOOL="${TOOL} -classpath ." ; \
+		./run )
 
 clean: 
 	rm -rf *.class test*/*.class
