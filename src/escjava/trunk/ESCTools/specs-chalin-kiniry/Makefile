@@ -290,7 +290,7 @@ $(timestamppath)/jmldoc.stamp:	$(javafiles) $(srcpath)/package.html $(basedocdir
 
 
 release:
-	echo '$(RELEASE)' > $(version_file)
+	@echo '$(RELEASE)' > $(version_file)
 	date >> $(version_file)
 
 distr:	$(timestamppath)/distr.stamp
