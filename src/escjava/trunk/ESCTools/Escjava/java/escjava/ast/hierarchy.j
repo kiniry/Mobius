@@ -129,8 +129,9 @@ import escjava.ParsedRoutineSpecs;
  *      + RefinePragma (String filename)
  *    + Spec (MethodDecl md, Expr* targets, Hashtable preVarMap, 
  *            Condition* pre, Condition* post)
- *    + Condition(int label, Expr pred)
+ *    + Condition (int label, Expr pred)
  *    + DefPred (Identifier predId, GenericVarDecl* args, Expr body)
+ *    + DecreasesInfo (Expr f, VariableAccess fOld)
  * </pre>
  * 
  * <p> (Classes with a <code>-</code> next to them are defined in
