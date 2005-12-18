@@ -141,7 +141,6 @@ partjunittests:
 	@rm -f templist templista
 	@mv listteststemp listtests
 
-
 .PHONY: separate_java_tests
 separate_java_tests:
 	@touch skip

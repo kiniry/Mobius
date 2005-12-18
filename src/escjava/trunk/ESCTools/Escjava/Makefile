@@ -151,7 +151,7 @@ ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
 	#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
 	if [ -e .files ]; then rm -f .files; fi
-	echo $(call canonicalizeLots,$?) > .files
+	@echo $(call canonicalizeLots,$?) > .files
 	${JAVAC} ${JAVAC_FLAGS} \
 		-classpath $(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}) \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
@@ -185,7 +185,6 @@ ${ESCJAVA_SOURCE_DIR}/escjava/Main.java: ${ESCJAVA_SOURCE_DIR}/escjava/Version.j
 
 rm-stampfile:
 	-rm -f ${STAMPFILE}
-
 
 ###########################################################################
 ## mocha
@@ -383,7 +382,7 @@ jdktests:
 	$(MAKE) -C test/jdktests runtests
 
 checkspecs:
-	@echo Type-checking the Esc/Java specs
+	@echo "Type checking the ESC/Java2 specs...."
 #ifdef JML_ROOT
 	jml -Q ${ESCJAVA2_SPECS}
 #endif

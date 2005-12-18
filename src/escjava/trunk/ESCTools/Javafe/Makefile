@@ -162,7 +162,7 @@ self_typecheck:
 ## The current directory should be the usual ESCTOOLS_ROOT directory so that
 ## the tests are available.
 test-release: 
-	@ echo TESTING RELEASE - Javafe
+	@echo TESTING RELEASE - Javafe
 	${MAKE} JAVAFE_CLASSPATH=$(call canonicalize,${RELCLASSPATH}) CLASSDIRECTORY=$(call canonicalize,${RELTEMP}) javafe_test
 	${MAKE} ALLTESTS=1 CLASSPATH=$(call canonicalize,${RELCLASSPATH}) -C java/javafe/util runtest
 	${MAKE} ALLTESTS=1 JAVAFE_CLASSPATH_CAN=$(call canonicalize,${RELCLASSPATH}) CLASSPATH=$(call canonicalize,${RELCLASSPATH}:${RELTEMP}) -C test/javafe/test runtest

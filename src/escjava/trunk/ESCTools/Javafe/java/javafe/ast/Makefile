@@ -27,9 +27,9 @@ typevecs: $(TypeVec)
 $(ASTFILELIST) $(ASTGEN):
 	${MAKE} -C ${JAVAFE_ROOT}/astgen
 
-ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) make_tags manual_tags insert_ensures manual_gettag_spec TypeDeclElem.j
+ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) \
+		make_tags manual_tags insert_ensures manual_gettag_spec TypeDeclElem.j
 	$(ASTGEN) < hierarchy.j
-	#
 	@$(ASTFILELIST) < hierarchy.j | xargs grep -h '^public class' | \
 	grep -v 'Visitor' | grep -v 'GeneratedTags' | grep -v 'class Type ' | \
 	grep -v 'BinaryExpr' | grep -v 'UnaryExpr' | \
@@ -37,23 +37,21 @@ ASTNode.java TypeDeclElem.java tags: hierarchy.j $(ASTGEN) $(ASTFILELIST) make_t
 	sed 's/.* class \([^ ]*\).*/\1/' | \
 	./make_tags > tags
 	@grep -v "#" manual_tags >> tags
-	#
 	@cat tags | ./insert_ensures ASTNode > ASTNode.tmp
 	@mv ASTNode.tmp ASTNode.java
-	#
 	@cp TypeDeclElem.j TypeDeclElem.java
 	@cat tags | ./insert_ensures TypeDeclElem > TypeDeclElem.tmp
 	@mv TypeDeclElem.tmp TypeDeclElem.java
 
 IntegerVec.java: ../util/_TYPE_Vec.j
 	@sed s/_TYPE_/Integer/g ../util/_TYPE_Vec.j | \
-        sed s/_PKG_/javafe.ast/g              | \
-        sed s/_COMPONENTPKG_/java.lang/g > $@
+		sed s/_PKG_/javafe.ast/g              | \
+		sed s/_COMPONENTPKG_/java.lang/g > $@
 
 %Vec.java: ../util/_TYPE_Vec.j
 	@sed s/_TYPE_/$*/g ../util/_TYPE_Vec.j | \
-        sed s/_PKG_/javafe.ast/g              | \
-        sed s/_COMPONENTPKG_/javafe.ast/g > $@
+		sed s/_PKG_/javafe.ast/g              | \
+		sed s/_COMPONENTPKG_/javafe.ast/g > $@
 
 #####
 

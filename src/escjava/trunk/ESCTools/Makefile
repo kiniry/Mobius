@@ -104,7 +104,7 @@ jmlc_test:
 	$(MAKE) -C Utils build
 	@echo CLASSPATH=${CLASSPATH}
 	@echo
-	@for d in Escjava ; do \
+	for d in Escjava ; do \
 	    $(MAKE) -C $$d USE_RAC=1 test || exit 1; \
 	done
 
@@ -196,8 +196,8 @@ clean-norel-noreltemp:
 # Cleans all backups files, log files, CVS merge files, etc.
 cleanup:
 	-find ${ESCTOOLS_ROOT} \
-	\( -name "*~" -or -name "*.#*" -or -name "semantic.cache*" \) \
-	-exec rm -f {} \; > /dev/null 2>&1
+		\( -name "*~" -or -name "*.#*" -or -name "semantic.cache*" \) \
+		-exec rm -f {} \; > /dev/null 2>&1
 
 ################################################################################
 ## Specifications
@@ -622,6 +622,7 @@ test-patch-release:
 
 PATCH_PREFIX = ${PATCH_DIR}/${PATCH_NAME}
 generate-patches: clean
+	@echo "Generating patches..."
 	( cd ${ESCTOOLS_ROOT}/.. ; mkdir -p ${PATCH_DIR}; \
 	LC_ALL=C TZ=UTC0 diff -Naur --exclude=*.class --exclude=.#* --exclude=CVS \
 		--exclude=Simplify-1* ${ESCTOOLS_ORIGINAL}/Calvin ESCTools/Calvin \
@@ -701,14 +702,14 @@ zero-length-files:
 
 ## Run escjava on the specs
 specs-test: build
-	@echo TESTING specs
+	@echo "TESTING specs..."
 	${ESCJAVA} -quiet \
 	  -classpath ${ESCTOOLS_ROOT} \
 	  -specs ${ESCJAVA2_SPECS} \
 	  java.io java.lang java.lang.reflect java.math java.net java.util java.util.regex
 
 current-specs-test: build
-	@echo TESTING specs
+	@echo "TESTING specs..."
 	${ESCJAVA} -quiet \
 	  -classpath ${ESCTOOLS_ROOT} \
 	  -specs ${ESCJAVA2_SPECS} \
@@ -727,12 +728,12 @@ check-specs: build
 	  grep -v VERSION | grep -v META | grep -v '\.\.' | \
 	  grep -v "\.$$" | sort > .specs
 	cat .specs | sed -e s+.*+import\ \&\;+ > SpecTest.java
-	echo "class SpecTest {" >> SpecTest.java
+	@echo "class SpecTest {" >> SpecTest.java
 	i=0; for f in `cat .specs`; do \
 	  echo "$$f x$$i ;" >> SpecTest.java ; \
 	  ((i=i+1)); \
 	done
-	echo "}" >> SpecTest.java
+	@echo "}" >> SpecTest.java
 	CLASSPATH=$(call canonicalize,${CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}); $(ESCJAVA) \
 	  SpecTest.java
 	rm -f .specs SpecTest.java
@@ -757,6 +758,6 @@ show-vars:
 ## cygwin.
 make-test:
 ifdef COMSPEC
-	echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
-	echo ${foo}
+	@echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
+	@echo ${foo}
 endif

@@ -17,7 +17,7 @@ clean:
 .PHONY: typecheckJDK
 typecheckJDK:
 	-for d in ${JDK_PRE14_SOURCES}; do \
-	    echo ===== Typechecking $${d} ;\
+	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \
 	    (cd $${d} && \
 		echo `find . -name '*.java'` | xargs -n 300 \
@@ -31,7 +31,7 @@ typecheckJDK:
 	    fi ;\
 	done
 	-for d in ${JDK_14_SOURCES}; do \
-	    echo ===== Typechecking $${d} ;\
+	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \
 	    (cd $${d} && \
 		echo `find . -name '*.java'` | xargs -n 300 \
@@ -48,15 +48,15 @@ typecheckJDK:
 
 .PHONY: typecheckJavafe
 typecheckJavafe:
-	@echo ===== Typechecking the Javafe package =====
+	@echo "===== type checking the Javafe package ====="
 	cd ${ESCTOOLS_ROOT}/Javafe/java && \
-	for d in ast parser tc util filespace reader decsrc genericfile ; do \
-	echo -n $${d} ;\
-	echo `find javafe/$${d} -name '*.java'` | xargs -n 300 \
-	    ${JAVA} -classpath ../classfiles javafe.test.Print \
-	    -classpath "${call canonicalize,.:../../Utils}" \
-	    -typecheck -noprint  ;\
-	done && \
-	    ${JAVA} -classpath ../classfiles javafe.test.Print \
-	    -classpath "${call canonicalize,.:../../Utils}" \
-	    -typecheck -noprint  javafe/*.java ;\
+		for d in ast parser tc util filespace reader decsrc genericfile ; do \
+		echo -n $${d} ;\
+		echo `find javafe/$${d} -name '*.java'` | xargs -n 300 \
+			${JAVA} -classpath ../classfiles javafe.test.Print \
+			-classpath "${call canonicalize,.:../../Utils}" \
+			-typecheck -noprint  ;\
+		done && \
+			${JAVA} -classpath ../classfiles javafe.test.Print \
+			-classpath "${call canonicalize,.:../../Utils}" \
+			-typecheck -noprint  javafe/*.java ;\

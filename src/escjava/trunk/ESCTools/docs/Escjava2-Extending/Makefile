@@ -29,13 +29,13 @@ PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
 
 %.java.texinfo: %.java
-	@$(CODE2TEXI) $< > $@
+	$(CODE2TEXI) $< > $@
 
 %.ax.texinfo:	%.ax
-	@$(CODE2TEXI) $< > $@
+	$(CODE2TEXI) $< > $@
 
 %.smt.texinfo:	%.smt
-	@$(CODE2TEXI) $< > $@
+	$(CODE2TEXI) $< > $@
 
 %.pdf: %.tex
 	pdflatex $< $@

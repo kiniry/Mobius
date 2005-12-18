@@ -31,7 +31,7 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 buildtests: lists
 	$(JAVAC) -classpath "${_ECLASSPATH}" -source 1.4 `cat listfiles` \
 		AllTests.java Suite.java LocalTestCase.java
-	echo "abc" > testfile
+	@echo "abc" > testfile
 
 .PHONY: test runtests
 test runtests: extests separate_java_tests
@@ -77,7 +77,7 @@ endif
 
 .PHONY: provetests
 provetests:
-	echo "Proving jdk tests..."
+	@echo "Proving jdk tests..."
 	${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}" Test*.java
 
 .PHONY: partjunittests
@@ -94,7 +94,6 @@ partjunittests: lists buildtests
 	done 
 	@rm -f templist templista
 	@mv listteststemp listtests
-
 
 .PHONY: quiet-junittests
 quiet-junittests:
