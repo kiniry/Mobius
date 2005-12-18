@@ -2,6 +2,9 @@ ESC/Java version VERSION
     [TIME]
 
 ExpandWildRef ...
+ExpandWildRef.java:190: Caution: Variable ewrj might not have been initialized
+        public int ewrj;
+                   ^
   Prover started:TIME
     [TIME]
 

@@ -8,6 +8,9 @@ Ghost.java:48: Error: Expected a declaration within the annotation following the
     [TIME]
 
 Ghost ...
+Ghost.java:75: Caution: Variable a might not have been initialized
+        int a;
+            ^
 Ghost.java:79: Error: May not specify both static and instance on a declaration
         //@ ghost instance static int interkinst2; // ERROR
                   ^
@@ -43,5 +46,5 @@ Ghost.java:68: Error: May not specify both static and instance on a declaration
 
 GhostI ...
   [TIME total]
-1 caution
+2 cautions
 11 errors
