@@ -72,7 +72,7 @@ inversion Htr; subst.
 inversion Hj;
 unfold Cs, Ci in H7; subst...
 repeat split...
-intros x h; destruct h...
+(* intros x h; destruct h... *)
 destruct H...
 destruct H.
 simpl in |- *.
@@ -89,14 +89,15 @@ apply h1; split; trivial.
 simpl in |- *.
 intros st_ h0 h1 h2.
 apply IHHm with s0 pI PI...
-apply vcGen_monotone with vcPre. 
+apply vcGen_monotone with vcPre...
+intros.
 simpl in |- *.
-intros; split...
+intros; split... 
 
 intros.
-destruct H1...
+destruct H1... 
 destruct H; auto.
-destruct H.  
+split.
 assert (h3 := H0 st_ (fun s : State =>
          p_implies (p_and (vcPre s) (p_neq (neval s bExp) 0)) (pI s))).
 assert(h4 : evalMyProp
@@ -105,10 +106,11 @@ assert(h4 : evalMyProp
 [apply h3 | idtac].
 intuition.
 simpl in h4...
-split; auto.
+
+(* split; auto. *)
 
 
-intros s1 a h5.
+ intros s1 a h5. 
 apply H0; intuition.
 
 

@@ -96,15 +96,56 @@ intros; apply H0; intuition.
 apply (IHHi1 _ _ _ H8)...
 intros; apply H0; intuition.
 Qed.
-Axiom wpCons :
+Lemma wpCons :
 forall S (post post' pre' pre : Assertion) Vcs' Vcs,
- vcGen(S, post') ==> (pre', Vcs') -> (forall s,  (pre' s -> post' s) ->(pre s -> post s) ) ->
+ vcGen(S, post') ==> (pre', Vcs') -> (forall s,  (post' s -> post s)) ->(forall s, (pre' s -> pre s) ) ->
  vcGen(S, post) ==> (pre, Vcs).
+intros S.
+induction S.
+intros post post' pre' pre Vcs' Vcs.
+intros H.
 
+elim H.
+inversion H; subst.
+(* intros S.
+induction S; 
+intros post post' pre' pre Vcs' Vcs.
+intros.
+inversion H; subst.
+injection H0. *)
 Lemma vcGen_monotone:
 forall S, forall (p1  p2 : Assertion)  ,  (forall s, (p1 s -> p2 s)) -> forall pre P, ((vcGen(S, p1) ==> (pre, P)) -> vcGen(S, p2) ==> (pre, P)) .
 Proof with auto.
+intros.
+
+
 intros S p1 p2 Himp.
+induction S.
+intros pre P H.
+generalize (refl_equal p2).
+pattern p2 at -1.
+elim H.
+
+pattern p2 at 1 .
+elim H.
+intros.
+injection.
+inversion H; subst.
+intros...
+intuition.
+elim H.
+pattern p2 at 1.
+elim p2.
+intros.
+ Himp.
+induction S.
+generalize (refl_equal p2).
+pattern p2 at -1 -2.
+
+case p2.
+intros pre P H.
+induction S.
+injection.
 intros.
 apply wpCons with p1 pre P...
 Qed.

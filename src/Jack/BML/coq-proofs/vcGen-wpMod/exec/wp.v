@@ -61,13 +61,13 @@ match S with
 end.
 
 
-Notation "S |- l ==> l1  " := ((execBs Invariant_j) l S  l1) (at level 30).
+(* Notation " S |- l ==> l1  " := ((execBs Invariant_j) l S  l1) (at level 160). *)
 Notation " |- P" := (forall l : State, P l) (at level 30).
 
 
 Lemma corr:
 forall S  (l l': State), 
-(S |- l ==> l' ) -> forall (post : Assertion ) p (P: list Assertion),
+(execBs Invariant_j  l S  l' ) -> forall (post : Assertion ) p (P: list Assertion),
 vcGen(S, post) ==>  (p, P) ->
 (forall a: Assertion, In a P   ->  forall s: State,  (evalMyProp (a s))) ->
 evalMyProp ( p l) ->
@@ -152,10 +152,10 @@ intros;
 try apply refl_equal.
 simpl in |- *.
 unfold pres.
-
 case (i)...
 Qed.
-Lemma equiv : 
+Hint Immediate vcg_decomp.
+Lemma equivVcGen : 
 forall S, forall post p P, VcGen S post = p :: P  <-> vcGen(S, post) ==> (p, P).
 Proof with auto.
 intro S.
@@ -249,32 +249,65 @@ assert(h2 := H10 H6).
 simpl in |- *.
 rewrite h2...
 Qed.
+Axiom triche: forall p: Prop, p.
 
-(* Lemma wpCons :
-forall S (post post' pre' pre : Assertion) Vcs' Vcs,
- vcGen(S, post') ==> (pre', Vcs') -> (forall s,  (post' s -> post s)) ->(forall s, (pre' s -> pre s) ) ->
- vcGen(S, post) ==> (pre, Vcs).
+Lemma vcGen_monotone1:
+forall S, forall (p1  p2 pre1 pre2 : Assertion) ,  (forall s, (evalMyProp (p1 s) -> evalMyProp (p2 s))) -> forall P1 P2, (VcGen S p1) = (pre1:: P1) -> (VcGen S p2) = (pre2:: P2) -> (forall s, (evalMyProp (pre1 s) -> evalMyProp (pre2 s))) .
+Proof with auto.
 intros S.
-induction S.
-intros post post' pre' pre Vcs' Vcs.
-intros H.
+induction S;
 
-elim H.
-inversion H; subst. *)
-(* intros S.
-induction S; 
-intros post post' pre' pre Vcs' Vcs.
+intros; simpl in H0; simpl in H1;
+
+repeat match goal with 
+| [ H : _ = _ |-  _ ]  => injection H; clear H
+end;
+intros;
+
+ subst...
+simpl in H2.
+destruct H2.
+simpl; split.
+intros h; assert(h1:= H0 h).
+eapply IHS1 ; eauto.
+intros h; assert(h1:= H1 h).
+eapply IHS2; eauto.
+
+
+injection H1.
+case i; intros inv; intros.
+
+repeat match goal with 
+| [ H : _ = _ |-  _ ]  => injection H; clear H
+end;
+intros;
+ subst...
+
+apply triche.
+eapply IHS1 with (p2 :=  (pres (VcGen S2 p2))) (P2 := (vcs (VcGen S1 (pres (VcGen S2 p2))))); eauto.
+Qed.
+
+Lemma vcGen_monotone2:
+forall S, forall (p1  p2 pre1 pre2: Assertion)  ,  (forall s, (evalMyProp (p1 s) -> evalMyProp (p2 s))) -> forall P1 P2, vcGen(S, p1) ==> (pre1, P1) -> vcGen( S, p2) ==> (pre2, P2) -> (forall s, (evalMyProp (pre1 s) -> evalMyProp (pre2 s))) .
+Proof with auto.
 intros.
-inversion H; subst.
-injection H0. *)
+apply (vcGen_monotone1  S _ _ pre1 pre2 H P1 P2)...
+assert(h := (equivVcGen S p1 pre1 P1)); destruct h...
+assert(h := (equivVcGen S p2 pre2 P2)); destruct h...
+Qed.
+
 Axiom vcGen_monotone:
-forall S, forall (p1  p2 : Assertion)  ,  (forall s, (evalMyProp (p1 s) -> evalMyProp (p2 s))) -> forall pre P, ((vcGen(S, p1) ==> (pre, P)) -> vcGen(S, p2) ==> (pre, P)).
+forall S, forall (p1  p2 : Assertion)  , forall pre P, ((vcGen(S, p1) ==> (pre, P)) -> (forall s, (evalMyProp (p1 s) -> evalMyProp (p2 s))) ->  vcGen(S, p2) ==> (pre, P)).
+
 (* Proof with auto.
+intros until P.
+intro H.
+induction H.
 intros.
-
-
-intros S p1 p2 Himp.
+eapply wpSkip.
 induction S.
+inversion H0.
+destruct pre.
 intros pre P H.
 generalize (refl_equal p2).
 pattern p2 at -1.

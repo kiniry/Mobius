@@ -92,7 +92,48 @@ Inductive Stmt_mToStmt_j : Stmt Invariant_m -> Stmt Invariant_j -> Prop :=
                    m2j (Seq Invariant_m s1 s2) ==>  (Seq Invariant_j s1' s2')
 where "'m2j' s1 ==> s2" :=   (Stmt_mToStmt_j s1 s2).
 
-Axiom triche: forall p: Prop, p.
 
 
+Lemma imp1:
+forall  Sj post vcPre (Pre : Ensemble Assertion), 
+ (vcGen(Sj, post) ==> (vcPre, Pre)) ->
+forall Sm, m2j Sm ==> Sj ->
+forall pre,    wpMod(Sm, post) ==> pre ->
+forall s,    pre s -> (vcPre s /\ (forall (s :State)  (a : Assertion), Pre a -> a s)) .
+Proof with auto.
+intros Sj post vcPre Pre Hj.
+induction Hj; intros Sm Htr pre Hm s Hpre.
+
+inversion Htr; subst.
+inversion Hm; subst; split; intros...
+intuition.
+
+apply triche. (* Seq *)
+
+(* Affect *)
+inversion Htr; subst.
+inversion Hm; subst; split; intros...
+intuition.
+
+(* If *)
+inversion Htr; subst.
+inversion Hm; subst; split; intros...
+destruct Hpre.
+split; intros.
+assert(h := IHHj1 _ H2 _ H7 s (H H1)).
+destruct h...
+
+assert(h := IHHj2 _ H4 _ H6 s (H0 H1)).
+destruct h...
+
+destruct Hpre.
+assert(h1 := IHHj1 _ H2 _ H7 s).
+assert(h2 := IHHj2 _ H4 _ H6 s).
+destruct (neval s b)...
+assert(h3: pre_f s); auto; assert(h4 :=  h2 h3); destruct h4.
+apply H5; intuition.
+destruct h...
+
+eapply IHHj2.
+intuition.
 
