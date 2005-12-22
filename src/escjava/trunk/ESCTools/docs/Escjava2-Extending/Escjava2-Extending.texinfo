@@ -436,6 +436,92 @@ for JML constructs (cluster @sc{AST}).
 
 @cindex The Java AST
 
+@subsection AST Generation
+
+@cindex AST Generation
+@cindex astgen
+
+A custom tool called @command{astgen} is used to generate the Java and
+JML abstract symbol tree classes.  @command{astgen} reads an input file
+that is a kind of ``Java shorthand'' with annotations and it generates
+JML-annotated Java source code.
+
+The input to @command{astgen} must have the same lexical language as
+Java and must follow the following grammar: @code{astfile ::=
+PackageDeclaration_opt ImportDeclarations_opt ClassDeclaration*} where
+the non-terminals on the right are those defined in the Java Language
+Specification.  Before the first @code{ClassDeclaration} there must be a line
+with the following lexical structure
+@code{^[white-space]*"//#"[white-space]*"EndHeader".*\n}
+
+Roughly speaking, @command{astgen} does the following: all text
+(including comments and whitespace) before the @code{EndHeader}
+directive is read into a buffer.  Then, for each
+@code{ClassDeclaration}, the text of the declaration (again including
+comments and whitespace) is appended to an "expanded" version of the
+class decaration.
+
+With two exceptions, every piece of text in the input file (except the
+EOF character) is sent through (exactly) one of the following echo
+routines.  This includes text that is also passed to state transition
+procedures such as "classname" and "supername"; in these cases, astecho
+is called first, then the state transition routine.
+
+One exception to the rule that every piece of text is sent to an echo
+routine is the line containing the ``@samp{//# EndHeader}'' section,
+which triggers the call to @code{endheader()} function.  The other
+exception is the `@code{@}}' character that ends a (top-level) class
+declaration; this triggers the call to ``@code{endclass()}'' function,
+to which the closing `@code{@}}' plus any characters matching
+``@code{"[white-space]\n@{0,1@}}'' is passed.
+
+The @code{astecho()} function is called in most situations; it may be
+called in any state.  The @code{expand()} function is called only in
+state @code{INCLASS}, and is called only on (and on every) piece of text
+that matches the pattern @code{[whitespace]*"//#".*\n}.
+
+
+@command{astgen} is written in C.  A scanner/lexer is generated using
+@command{lex}.  The lexer is quite simple, as it only matches the basic
+structure of Java with special annotations prefixed by @code{//#}.  The
+source for @command{astgen} is located in the directory
+@file{ESCTools/Javafe/astgen}.
+
+There are six different kinds of annotations, also known as
+``directives'' in the @command{astgen} source code, organised into three
+different categories.  
+
+The first type of directive are field qualifiers, as they are used to
+annotate Java fields.  These annotations include:
+@itemize
+@item @code{NullOK}
+@item @code{NoCheck}
+@item @code{NotNullLoc}
+@item @code{Syntax}
+@end itemize
+
+The character ``@code{*}'' is also used as a special annotation on types
+to indicate the multiplicity of a field.
+
+@itemize
+@item @code{NoMaker}
+@item @code{ManualTag}
+@item @code{PostMakeCall}
+@item @code{PostCheckCall}
+@item @code{MakerSpec}
+@end itemize
+
+Finally, the annotation @code{EndHeader} is used to indicate the end of
+the AST class declaration.
+
+
+The source file @file{astutil.h} summarises these annotations.
+
+The balance of the Java code, fields that are not annotated with
+@command{astgen} comments, can be annotated with JML specifications and
+ESC/Java2 pragmas and @command{astgen} will ignore them completely.
+
+
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The Java Parser, The Java Type Checker, The Java AST, The Java Front-end Architecture
 @section The Java Parser
@@ -488,11 +574,15 @@ locate in the @code{escjava.ast} package that is located in the
 repository at @file{ESCTools/Escjava/java/escjava/ast/}.
 
 There are a few classes in this package that are not specified using
-@file{hierarchy.j}: @file{DecreasesInfo.java},
-@file{DerivedMethodDecl.java}, @file{EscPrettyPrint.java},
-@file{Modifiers.java}, @file{TagConstants.java}, and @file{Utils.java}.
+@file{hierarchy.j}: @file{DerivedMethodDecl.java},
+@file{EscPrettyPrint.java}, @file{TagConstants.java}, and
+@file{Utils.java}.
 
-@c Move DecreasesInfo and Modifiers into hierarchy.j. -JRK
+@c explain these classes
+@c DerivedMethodDecl
+@c escjava.ast.TagConstants <: escjava.ast.GeneratedTags
+@c escjava.ast.EscPrettyPrint <: escjava.ast.DelegatingPrettyPrint
+@c escjava.ast.Utils
 
 The case study that we use to demonstrate how to extend the JML pragma
 lexer and parser is the addition of the @code{nullable} keyword,
