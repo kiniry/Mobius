@@ -291,13 +291,13 @@ public class CompilationUnit extends ASTNode
     }
   }
 
-    /**
-     * @return true iff this CompilationUnit was created from a .class
-     * file.
-     */
-    public boolean isBinary() {
-	return Location.toFileName(loc).endsWith(".class");
-    }
+  /**
+   * @return true iff this CompilationUnit was created from a .class
+   * file.
+   */
+  public boolean isBinary() {
+    return Location.toFileName(loc).endsWith(".class");
+  }
 
   public int getStartLoc() { return loc; }
   public int getEndLoc() { 
