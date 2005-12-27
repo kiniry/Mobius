@@ -7,6 +7,7 @@ CondExprModifierPragma.java
 CondExprModifierPragmaVec.java
 Condition.java
 ConditionVec.java
+DecreasesInfo.java
 DecreasesInfoVec.java
 DefPred.java
 DefPredApplExpr.java
