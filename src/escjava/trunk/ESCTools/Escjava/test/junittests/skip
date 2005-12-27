@@ -45,7 +45,13 @@ DefCon.java
 SetComprehension.java
 StringFresh.java
 ## Stuff that Joe is currently working on
-FormalNullableInheritance.java
+## @see bug #122 (assigned to Joe Kiniry)
+FormalNullableInheritance.java 
 InheritNullable.java
 ManyAlsos.java
 NonNullDefault.java
+## Tests that are currently failing and are being worked on.
+## @see bug #156 (assigned to Radu Grigore)
+ExceptionChild.java
+## @see bug #156 (assigned to Radu Grigore)
+SignalsOnly.java

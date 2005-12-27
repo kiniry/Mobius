@@ -14,3 +14,6 @@ TestFile.java
 TestSet.java
 TestSet2.java
 TestCollection.java
+## Turn this test back on once we have new/good specs for ByteArrayInputStream.
+TestByteArrayInputStream.java
+
