@@ -20,7 +20,7 @@
    comments and whitespace) before the EndHeader directive is read
    into a buffer.  Then, for each ClassDeclaration, the text of the
    declaration (again including comments and whitespace) is appended
-   to an "expanded" version of the class decaration.
+   to an "expanded" version of each generated class decaration.
 */
 
 

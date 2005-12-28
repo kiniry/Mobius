@@ -11,16 +11,36 @@ import javafe.util.ErrorSet;
 import javafe.util.FileCorrelatedReader;
 import javafe.util.Location;
 
-// Test harness for expressions.
+/** Test harness for expression parsing. */
 
 public class TestExpr
 {
+    /**
+     * Fail with a specific error message.
+     *
+     * @param msg the error message to print to {@link System.err}. 
+     */
     //@ ensures false;
     public static void fatal(String msg) {
 	System.err.println("Fatal error: " + msg);
 	System.exit(99);
     }
 
+    /**
+     * Parse a given byte-stream for pairs of comma-separated Java
+     * expressions, check the invariant of each parsed expression (if
+     * the command-line arguments contain "check"), and compare the
+     * pairs of parsed expression (if the command-line arguments contain
+     * "compare").
+     *
+     * @param argv the command-line arguments.
+     * @bon_constraint The input byte-stream is expected to contain
+     * only Java expressions.
+     * @bon_constraint The input byte-stream may contain either individual Java
+     * expressions, or comma-separated pairs of expressions.
+     * @bon_constraint The command-line arguments may only be "compare" or
+     * "check".
+     */
     //@ requires \nonnullelements(argv);
     public static void main(String[] argv) {
         boolean compare = false;
@@ -53,8 +73,9 @@ public class TestExpr
         }
     }
 
-    //@ requires n1 != null && n2 != null;
-    private static boolean compare( ASTNode n1, ASTNode n2 ) {
+    /** Are two Java expressions equivalent, ignoring parentheses? */
+    private static boolean compare(/*@ non_null @*/ ASTNode n1,
+                                   /*@ non_null @*/ ASTNode n2) {
 
         // Ignores parens
 

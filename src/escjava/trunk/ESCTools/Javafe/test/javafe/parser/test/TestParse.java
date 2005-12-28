@@ -17,14 +17,17 @@ import javafe.util.FileCorrelatedReader;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
 
+/**
+ * Parse Java compilation units in various ways to test the Java
+ * front-end parser.
+ */
+
 public class TestParse
 {
     // The parser and scanner used to process files
-    //@ invariant lexer != null;
-    public static Lex lexer = new Lex(null, true);
+    public static /*@ non_null @*/ Lex lexer = new Lex(null, true);
 
-    //@ invariant parser != null;
-    public static Parse parser = new Parse();
+    public static /*@ non_null @*/ Parse parser = new Parse();
 
     // The following variables are set by command-line options.
     public static boolean check = false;
@@ -34,16 +37,31 @@ public class TestParse
     public static boolean idempotence = false;
 
     // Buffers used to hold intermediate results
-    //@ invariant out1 != null && out2 != null;
-    public static MemoryPipeOutputStream out1 = new MemoryPipeOutputStream();
-    public static MemoryPipeOutputStream out2 = new MemoryPipeOutputStream();
+    public static /*@ non_null @*/ MemoryPipeOutputStream out1 = new MemoryPipeOutputStream();
+    public static /*@ non_null @*/ MemoryPipeOutputStream out2 = new MemoryPipeOutputStream();
 
+    /**
+     * Fail with a specific error message.
+     *
+     * @param msg the error message to print to {@link System.err}. 
+     */
     //@ ensures false;
     public static void fatal(String msg) {
 	System.err.println("Fatal error: " + msg);
 	System.exit(99);
     }
 
+    /**
+     * @param argv the command-line arguments.
+     * @bon_constraint If first command-line argument is "diff" then the
+     * second and third command-line arguments must be the name of the
+     * two file to parse and compare as a test.
+     * @bon_constraint The command-line arguments may only be "diff",
+     * "assert", "check", "print", "progress", "silent", or
+     * "idempotence".
+     * @bon_constraint The command-line argument "diff" may only be the
+     * first command-line argument.
+     */
     //@ requires \nonnullelements(argv);
     public static void main(String[] argv) throws IOException {
 
@@ -97,9 +115,23 @@ public class TestParse
         System.exit(exitStatus);
     }
 
-    //@ requires n != null;
-    //@ requires src != null && dst != null;
-    public static void prettyPrint(String n, InputStream src, OutputStream dst,
+    /**
+     * @bon Pretty-print a given parsed Java compilation unit to a specified output stream.
+     * @bon Pretty-print a given parsed Java compilation unit to the system output stream.
+     * @bon Check the invariant of a parsed Java compilation unit.
+     * @param n the name of the input stream.
+     * @param src the input stream from which to read the Java compilation unit(s).
+     * @param dst the output stream on which to send the
+     * pretty-printed parsed Java compilation unit.
+     * @param check if <code>true</code> check the invariant of the
+     * parsed Java compilation unit using the {@link ASTNode#check()}
+     * method.
+     * @param print if <code>true</code> pretty-print the parsed Java
+     * compilation unit to {@link System.out}.
+     */
+    public static void prettyPrint(/*@ non_null @*/ String n,
+                                   /*@ non_null @*/ InputStream src,
+                                   /*@ non_null @*/ OutputStream dst,
                                    boolean check, boolean print) {
         CorrelatedReader in = new FileCorrelatedReader(src, n);
         PrintStream out = new PrintStream(dst);
@@ -113,13 +145,19 @@ public class TestParse
     }
 
     /**
-     * Compares two files.  Prints a message and returns
-     * <code>true</code> if they're different; otherwise, returns
-     * <code>false</code>.
+     * Compare two input streams and prints a message and returns
+     * <code>true</code> if they are different, return
+     * <code>false</code> otherwise.
+     *
+     * @return <code>true</code> iff input stream <var>in1</var> and
+     * <var>in2</var> are different.
+     * @param n
+     * @param in1 the first input stream to compare.
+     * @param in2 the second input stream to compare.
      */
-
-    //@ requires in1 != null && in2 != null;
-    public static boolean diff(String n, InputStream in1, InputStream in2) {
+    public static boolean diff(String n,
+                               /*@ non_null @*/ InputStream in1,
+                               /*@ non_null @*/ InputStream in2) {
 	StringBuffer sb = new StringBuffer();
         try {
             int c1 = in1.read(), c2 = in2.read();
@@ -148,17 +186,28 @@ public class TestParse
     }
 }
 
+/**
+ * A helper class for the parser test framework.  Values written to
+ * this MemoryPipeOutputStream will be readable from its associated
+ * MemoryPipeInputStream.
+ */
+
 final class MemoryPipeOutputStream extends OutputStream
 {
-    //@ invariant buff != null;
-    byte[] buff = new byte[16*1024];
+    //@ invariant 16*1024 <= buff.length;
+    /*@ non_null @*/ byte[] buff = new byte[16*1024];
 
-    int outi = 0;
-
-    //@ invariant ini >= 0;
+    //@ invariant 0 <= ini;
     //@ invariant ini <= buff.length;
     int ini = 0;
 
+    /**
+     * Write the given value into the buffer <code>buff</code> at index
+     * <code>ini</code>.
+     * @param b the value to write into the buffer.
+     */
+    //@ ensures buff[ini] == b;
+    //@ ensures ini == \old(ini + 1);
     public void write(int b) {
         try {
             buff[ini] = (byte)b;	//@ nowarn IndexTooBig;  // caught
@@ -171,27 +220,54 @@ final class MemoryPipeOutputStream extends OutputStream
         }
     }
 
-    void reset() { ini = 0; }
+    //@ ensures ini == 0;
+    void reset() {
+      ini = 0;
+    }
 
-    //@ ensures \result != null;
-    MemoryPipeInputStream getInputStream()
-    { return new MemoryPipeInputStream(this); }
+    //@ ensures \fresh(\result);
+    /*@ non_null @*/ MemoryPipeInputStream getInputStream() { 
+      return new MemoryPipeInputStream(this);
+    }
 }
+
+/**
+ * A helper class for the parser test framework. 
+ */
 
 final class MemoryPipeInputStream extends InputStream
 {
-    //@ invariant src != null;
-    MemoryPipeOutputStream src;
+    /*@ non_null @*/ MemoryPipeOutputStream src;
 
     //@ invariant outi >= 0;
     int outi = 0;
 
-    //@ requires src != null;
-    MemoryPipeInputStream(MemoryPipeOutputStream src) { this.src = src; }
+    /**
+     * Create a new input stream connected to the given output stream.
+     * Bytes read from this input stream will be exactly those bytes
+     * written to the output stream <code>src</code>, in the same order.
+     *
+     * @param src the MemoryPipeOutputStream this straem is attached to.
+     */
+    //@ ensures this.src == src;
+    MemoryPipeInputStream(/*@ non_null @*/ MemoryPipeOutputStream src) {
+      this.src = src;
+    }
 
+    /**
+     * @return a -1 if there is no value available on this input stream,
+     * otherwise return the next value that is available.
+     */
+    //@ public normal_behavior
+    //@   requires src.ini <= outi;
+    //@   ensures \result == -1;
+    //@ also
+    //@ public normal_behavior
+    //@   requires outi < src.ini;
+    //@   ensures \result == src.buff[outi];
+    //@   ensures outi == \old(outi + 1);
     public int read() {
-        int result = src.ini <= outi ? -1
-            : src.buff[outi++];
+        int result = (src.ini <= outi) ? -1 : src.buff[outi++];
         return result;
     }
 }

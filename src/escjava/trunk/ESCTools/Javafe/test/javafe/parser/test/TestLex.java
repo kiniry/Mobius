@@ -10,27 +10,44 @@ import javafe.parser.TagConstants;
 import javafe.util.*;
 
 /**
- * Tokenizes standard input and prints <tt>Lex.toString</tt> of the
- * resulting stream, on token per output line.
+ * Tokenizes standard input and prints 
+ * {@link javafe.ast.PrettyPrint#toString(int)} 
+ * of the resulting stream, one token per output line.
  */
 
 public class TestLex implements PragmaParser
 {
+  /**
+   * Fail with a specific error message.
+   *
+   * @param msg the error message to print to {@link System.err}. 
+   */
   //@ ensures false;
   public static void fatal(String msg) {
     System.err.println("Fatal error: " + msg);
     System.exit(99);
   }
   
-  
   /**
-   * Tokenizes standard input and prints <tt>toString</tt> of the
-   * resulting stream, on token per output line.  Meant for
-   * debugging purposes.
+   * Tokenizes standard input and prints 
+   * {@link javafe.ast.PrettyPrint#toString(int)} 
+   * of the resulting stream, one token per output line.
+   *
+   * If the command-line argument "javakeywords" is used, then the
+   * Java keywords are added to the lexer as recognisable tokens.  If
+   * the command-line argument "lookahead" is used, then a random
+   * lookahead between 0 and 9 is chosen to test the lexer; if it is
+   * not passed, then no lookahead is used.  If the command-line
+   * argument "parsepragmas" is used then two test operators, "==>"
+   * and "<:", are added to the lexer for testing using
+   * {@link javafe.parser.Lex#addPunctuation(java.lang.String, int)}.
+   *
+   * @param argv the command-line arguments.
+   * @bon_constraints The command-line arguments may only be
+   * "javakeywords", "lookahed", or "parsepragmas".
    */
-  
   //@ requires \nonnullelements(argv);
-  public static void main(String argv[]) {
+  public static void main(String[] argv) {
     boolean javakeywords = false;
     boolean lookahead = false;
     boolean parsepragmas = false;
@@ -44,7 +61,7 @@ public class TestLex implements PragmaParser
     Lex ll = new Lex(parsepragmas ? new TestLex() : null, false);
     ll.addJavaPunctuation();
     if (javakeywords) ll.addJavaKeywords();
-    ll.restart(new FileCorrelatedReader(System.in,"stdin"));
+    ll.restart(new FileCorrelatedReader(System.in, "stdin"));
     
     Random r = new Random(System.currentTimeMillis());
     
@@ -84,9 +101,9 @@ public class TestLex implements PragmaParser
     System.exit(ErrorSet.errors);
   }
   
-  
-  //// Below this point are instance variables and methods that
-  //// implement the PragmaParser interface.
+  // =================================================================  
+  // Below this point are instance variables and methods that
+  // implement the javafe.parser.PragmaParser interface.
   
   /*@ non_null spec_public @*/ private Lex l;
   
@@ -96,17 +113,21 @@ public class TestLex implements PragmaParser
   private static final Identifier MODIFIER = Identifier.intern("modifier");
   private static final Identifier STATEMENT = Identifier.intern("statement");
   private static final Identifier TDE = Identifier.intern("typedeclelem");
-  
+
+  /**
+   * Create a test lexer and add a couple of test pragma operators to
+   * the lexer.
+   */
   public TestLex() {
     l = new Lex(null, true);
     l.addPunctuation("==>", IMPLIES);
     l.addPunctuation("<:", SUBTYPE);
   }
-  
+
   public boolean checkTag(int tag) {
     return tag == '@';
   }
-  
+
   //@ also
   //@   modifies l.m_in;
   //@   ensures  l.m_in != null;
@@ -118,7 +139,7 @@ public class TestLex implements PragmaParser
     } catch (IOException e) { Assert.fail("I/O exception"); }   //@ nowarn Pre;
     l.restart(in);
   }
-  
+
   //@ also
   //@   requires l.m_in != null;
   public boolean getNextPragma(Token destination) {
@@ -160,7 +181,7 @@ public class TestLex implements PragmaParser
     l.close();
     return false;
   }
-  
+
   public void close() {
     l.close();
   }
