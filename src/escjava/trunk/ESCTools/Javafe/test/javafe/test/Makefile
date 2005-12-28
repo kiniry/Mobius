@@ -14,8 +14,13 @@ clean:
 
 # $(foreach jar,$(wildcard $${d}/jars/*.jar),$(jar):)
 
-.PHONY: typecheckJDK
-typecheckJDK:
+# @note kiniry 25 Dec 2005 - Only the source of the JDK that we are
+# currently running in (1.4 at this time) should completely typecheck.
+# @see bug #142
+.PHONY: typecheckJDK typecheckOldJDK typecheckJDK14
+typecheckJDK: typecheckOldJDK typecheckJDK14
+
+typecheckOldJDK:
 	-for d in ${JDK_PRE14_SOURCES}; do \
 	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \
@@ -30,6 +35,8 @@ typecheckJDK:
 		echo "      $${d} does not exist";\
 	    fi ;\
 	done
+
+typecheckJDK14:
 	-for d in ${JDK_14_SOURCES}; do \
 	    echo "===== type checking $${d}" ;\
 	    if [ -e $${d} ]; then \

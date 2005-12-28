@@ -35,7 +35,7 @@ build: fixperms compile
 buildall: compileall
 
 ifdef ALLTESTS
-test: extensive_tests self_typecheck typecheckJDK
+test: extensive_tests self_typecheck typecheckJDK14
 else
 test: runtest self_typecheck
 endif

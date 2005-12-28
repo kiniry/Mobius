@@ -40,7 +40,7 @@ dotests: lists
 
 .PHONY: junittests
 junittests:
-	@echo TESTING Escjava: junittests
+	@echo "TESTING Escjava: junittests"
 	$(JUNIT) TestSuite
 
 .PHONY: quiet-junittests
@@ -118,7 +118,7 @@ separate_tests:
 
 .PHONY: notjunittests
 notjunittests:
-	@echo TESTING Escjava: notjunittests
+	@echo "TESTING Escjava: notjunittests"
 	@touch skip
 	@-for f in ${NOTJUNITTESTS} ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
@@ -133,10 +133,10 @@ partjunittests:
 	@cp listtests listteststemp
 	@cp listteststemp templist
 	@while test -s templist ; do \
-	    head -n ${CHUNK} templist > listtests ;\
-	    ${MAKE} --no-print-directory quiet-junittests ;\
-	    tail +${CHUNK} templist | tail +2 > templista ;\
-	    mv templista templist; \
+		head -n ${CHUNK} templist > listtests ;\
+		${MAKE} --no-print-directory quiet-junittests ;\
+		tail +${CHUNK} templist | tail +2 > templista ;\
+		mv templista templist; \
 	done 
 	@rm -f templist templista
 	@mv listteststemp listtests

@@ -77,7 +77,7 @@ escjavatests: build
 
 alltests:	build
 	${MAKE} test ALLTESTS=1
-	${MAKE} specs-test
+	${MAKE} specs_test
 
 javafealltests: build
 	$(MAKE) -C Javafe test ALLTESTS=1 || exit 1;
@@ -698,17 +698,17 @@ zero-length-files:
 ############################################################################
 ## Testing our specifications
 
-.PHONY: specs-test check-specs
+.PHONY: specs_test check_specs
 
 ## Run escjava on the specs
-specs-test: build
+specs_test: build
 	@echo "TESTING specs..."
 	${ESCJAVA} -quiet \
 	  -classpath ${ESCTOOLS_ROOT} \
 	  -specs ${ESCJAVA2_SPECS} \
 	  java.io java.lang java.lang.reflect java.math java.net java.util java.util.regex
 
-current-specs-test: build
+current_specs_test: build
 	@echo "TESTING specs..."
 	${ESCJAVA} -quiet \
 	  -classpath ${ESCTOOLS_ROOT} \
@@ -718,8 +718,8 @@ current-specs-test: build
 ## Experimental rule to generate a file that references every type
 ## that currently has a spec and run escjava2 on it to try to detect
 ## problems with package- and private-level types.
-#check-specs: build $(JML2_SPECS_JAR)
-check-specs: build
+#check_specs: build $(JML2_SPECS_JAR)
+check_specs: build
 	find specs -type f | grep -v Entries | grep -v Repository | grep -v Root | \
 	  grep -v "*~" | sed -e s+specs/++ | sed -e s+\\.spec++ | \
 	  sed -e s+\\.refines-spec++ | sed -e s+\\.refines++ | \

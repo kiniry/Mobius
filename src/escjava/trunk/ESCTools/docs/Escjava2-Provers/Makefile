@@ -58,7 +58,7 @@ PERL=perl
 CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\}/g; } continue { print; }'
 
 %.java.texinfo: %.java
-	@$(CODE2TEXI) $< > $@
+	$(CODE2TEXI) $< > $@
 
 %.pdf:	%.texinfo
 	texi2pdf $<
@@ -117,8 +117,8 @@ demoprover.o:	DemonstrationProver.c
 
 libdemoprover.la:	demoprover.o
 	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) \
-	  -o libdemoprover.la -rpath $(PWD) demoprover.lo $(LFLAGS) \
-	&& mv .libs/*.so .
+		-o libdemoprover.la -rpath $(PWD) demoprover.lo $(LFLAGS) \
+		&& mv .libs/*.so .
 
 cleanup:
 	rm -f _region_* *.aux *.log \
