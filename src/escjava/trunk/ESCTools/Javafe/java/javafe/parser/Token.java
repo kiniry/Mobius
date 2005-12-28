@@ -37,11 +37,11 @@ public class Token
      **************************************************/
 
     /**
-     * Integer code giving the kind of token.<p>
+     * Integer code giving the kind of token.
      *
-     * To clear a token, set this field to Token.CLEAR and set
+     * <p> To clear a token, set this field to Token.CLEAR and set
      * identifierVal and auxVal to null, as is done in the
-     * clear() method.
+     * clear() method. </p>
      *
      * @see javafe.parser.TagConstants
      */
@@ -50,6 +50,10 @@ public class Token
     //* The token code to use to clear a token; EOF for now.
     public static final int CLEAR = TagConstants.EOF;
 
+    /** Clear the current token. */
+    //@ ensures ttype == CLEAR;
+    //@ ensures identifierVal == null;
+    //@ ensures auxVal == null;
     public void clear() {
         ttype = CLEAR;
         identifierVal = null;
@@ -142,6 +146,7 @@ public class Token
      * Copy all the fields of <code>this</code> into
      * <code>dst</code>.  For convenience, returns <code>dst</code>.
      */
+    //@ ensures \result.equals(this);
     public final Token copyInto(/*@ non_null @*/ Token dst) {
 	dst.ttype = ttype;
 	dst.startingLoc = startingLoc;
