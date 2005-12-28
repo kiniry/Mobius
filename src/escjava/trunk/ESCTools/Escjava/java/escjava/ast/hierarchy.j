@@ -1,3 +1,4 @@
+// -*- mode: java -*-
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 /* IF THIS IS A JAVA FILE, DO NOT EDIT IT!  

@@ -1,3 +1,4 @@
+// -*- mode: java -*-
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 /* IF THIS IS A JAVA FILE, DO NOT EDIT IT!  
@@ -71,7 +72,7 @@ import javafe.util.ErrorSet;
  * 
  * </ul>
  * 
- * <p> Measurements:
+ * <p> Measurements (circa SRC ESC/Java):
  * <blockquote>
  * Node abstract classes: 13
  * <br> Node concrete classes: 59
@@ -332,8 +333,9 @@ public class OnDemandImportDecl extends ImportDecl
 
 /* ---------------------------------------------------------------------- */
 
-/** Represents a TypeDeclaration.
- *  Common fields of ClassDeclarations and InterfaceDeclarations are here.
+/**
+ * Represents a TypeDeclaration.
+ * Common fields of ClassDeclarations and InterfaceDeclarations are here.
  */
 
 public abstract class TypeDecl extends ASTNode implements TypeDeclElem
