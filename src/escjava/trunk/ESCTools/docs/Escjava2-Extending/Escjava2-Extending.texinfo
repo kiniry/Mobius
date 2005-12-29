@@ -225,7 +225,7 @@ An extended static checker for Java.
 @tab Miscellaneous utility classes.
 @end multitable
 
-@caption{The BON System Chart for ESC/Java2}
+@caption{The ESC/Java2 System}
 @end float
 @c -----------------------------------------------------------------------------
 
@@ -316,7 +316,7 @@ A generic Java scanner, parser, and type checker.
 @tab TBD
 @end multitable
 
-@caption{The BON Cluster Chart for the ESC/Java2 Java Front-end}
+@caption{The ESC/Java2 Java Front-end}
 @end float
 @c -----------------------------------------------------------------------------
 
@@ -396,7 +396,7 @@ An extended static checker for Java.
 @tab TBD
 @end multitable
 
-@caption{The BON Cluster Chart for the ESC/Java2 Extended Static Checker}
+@caption{The ESC/Java2 Extended Static Checker}
 @end float
 @c -----------------------------------------------------------------------------
 
@@ -427,6 +427,173 @@ for JML constructs (cluster @sc{AST}).
 @section The Java Lexer
 
 @cindex The Java Lexer
+
+@c -----------------------------------------------------------------------------
+@float Diagram,fig:Tag_Constants
+
+@verbatim
+static_diagram Tag_Constants
+-- The inheritance relationship between all of the classes that define
+-- lexical tags.
+component
+  -- Classes with a GENERATED_ prefix are generated automatically from
+  -- the a hierarchy.j class using the astgen tool.  See the section of
+  -- this manual on astgen (node "The Java AST") for more information.
+  class JAVAFE.AST.GENERATED_TAGS
+  class JAVAFE.AST.OPERATOR_CONSTANTS
+  class JAVAFE.AST.TAG_CONSTANTS
+
+  class JAVAFE.PARSER.TAG_CONSTANTS
+
+  class JAVAFE.TYPECHECKER.TAG_CONSTANTS
+
+  class ESCJAVA.AST.TAG_CONSTANTS
+  class ESCJAVA.AST.GENERATED_CONSTANTS
+
+  JAVAFE.AST.OPERATOR_CONSTANTS inherit JAVAFE.AST.GENERATED_TAGS
+  JAVAFE.AST.TAG_CONSTANTS inherit JAVAFE.AST.OPERATOR_CONSTANTS
+
+  JAVAFE.PARSER.TAG_CONSTANTS inherit JAVAFE.AST.TAG_CONSTANTS
+  JAVAFE.TYPECHECKER.TAG_CONSTANTS inherit JAVAFE_PARSER.TAG_CONSTANTS
+
+  ESCJAVA.AST.GENERATED_CONSTANTS inherit JAVAFE.TYPECHECKER.TAG_CONSTANTS
+  ESCJAVA.AST.TAG_CONSTANTS inherit ESCJAVA.AST.GENERATED_CONSTANTS
+end
+@end verbatim
+
+@caption{Constants Representing Fundamental Lexing and Parsing Constructs}
+@end float
+@c -----------------------------------------------------------------------------
+
+The Java lexer that is part of ESC/Java2 is, like the Java and pragma
+parsers, hand-written.  This means that it is faster and smaller than a
+generated lexer, but is also a bit trickier to understand and extend.
+
+The Java lexer inherits from a token class that describes the lexical
+tokens of the parser.  The lexer provides arbitrary lookahead using a
+token queue.  The static diagram in @ref{fig:Java_Lexer_Diagram}
+summarises the classes related to the Java lexer.
+
+@c -----------------------------------------------------------------------------
+@float Diagram,fig:Java_Lexer_Diagram
+
+@verbatim
+static_diagram Java_Lexer
+component
+  cluster JAVAFE.PARSER
+  component
+    class TAG_CONSTANTS
+
+    class FILE_FORMAT_EXCEPTION
+
+    class LEXER
+    class TOKEN
+    class TOKEN_QUEUE
+
+    TAG_CONSTANTS inherit JAVAFE.AST.TAG_CONSTANTS
+
+    FILE_FORMAT_EXCEPTION inherit JAVA.IO.IO_EXCEPTION
+
+    LEXER inherit TOKEN
+  end  
+end
+@end verbatim
+
+@caption{The Java Lexer}
+@end float
+@c -----------------------------------------------------------------------------
+
+A complementary hierarchy of tag constant classes define all of the
+lexical constants of the lexer.  The static diagram in
+@ref{fig:Tag_Constants}.
+
+@c must explain LEXICAL_PRAGMA, MODIFIER_PRAGMA, STATEMENT_PRAGMA, AND TYPE_DECLARATOIN_ELEMENT_PRAGMA
+
+@c -----------------------------------------------------------------------------
+@float Chart,fig:Java_Token_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{CLASS}
+@tab TOKEN
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+An abstract representation of a Java token.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{cluster:} JAVAFE.PARSER
+
+@b{keywords:} token, lexer, Java
+@end multitable
+@multitable @columnfractions .4 .6
+@item @b{Queries}
+@tab
+``What is the current token?'',
+``What is the location of the first character of the current token?'',
+``What is the location of the last character of the current token?'',
+``What is the identifier related to the current token, if it is an identifer token?'',
+``What auxilliary information is available for the current token?'',
+``What is the string representation of the current token?'',
+``What is the full string representation of the current token, suitable for debugging output?'',
+``Does the current token fulfill its invariants?''
+@item @b{Commands}
+@tab
+``Clear the current token.'',
+``Copy all the fields from a source token into a target token.''
+@item @b{Constraints}
+@tab
+``The start and ending location of a token must be valid.'',
+``If the current token represents a Java integral type literal, then the auxilliary information must only be value or the corresponding integral type.'',
+``If the current token represents a Java character or string type, then the auxilliary information must only be a value or the corresponding Java value type.'',
+``If the current token represents a lexical, modifier, statement, or type declaration element pragma, then the auxilliary information must only be a value of the corresponding pragma type.''
+@end multitable
+
+@caption{The Java TOKEN Class Chart}
+@end float
+@c -----------------------------------------------------------------------------
+
+@c -----------------------------------------------------------------------------
+@float Chart,fig:Java_Lexer_Chart
+
+@multitable @columnfractions .15 .70 .15
+@item @b{CLASS}
+@tab LEXER
+@tab @b{Part:} 1/1
+@end multitable
+@multitable @columnfractions .50 .50
+@item @b{PURPOSE}
+
+Generates a sequence of Java tokens by converting a sequence of input
+characters and line terminators.
+@tab
+@b{INDEXING}
+
+@b{author:} Joseph Kiniry
+
+@b{cluster:} JAVAFE.PARSER
+
+@b{keywords:} lexer, Java
+@end multitable
+@multitable @columnfractions .4 .6
+@item @b{Queries}
+@tab
+
+@item @b{Commands}
+@tab
+
+@item @b{Constraints}
+@tab 
+
+@end multitable
+
+@caption{The Java LEXER Class Chart}
+@end float
+@c -----------------------------------------------------------------------------
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The Java AST, The Java Parser, The Java Lexer, The Java Front-end Architecture
@@ -555,6 +722,43 @@ ESC/Java2 pragmas and @command{astgen} will ignore them completely.
 @section The Java Parser
 
 @cindex The Java Parser
+
+@c -----------------------------------------------------------------------------
+@float Diagram,fig:Java_Parser
+
+@verbatim
+static_diagram Java_Parser
+component
+  cluster JAVAFE.PARSER
+  component
+    class PARSE
+    class PARSE_EXPRESSION
+    class PARSE_STATEMENT
+    class PARSE_TYPE
+    class PARSE_UTILITY
+
+    deferred class PRAGMA_PARSER
+
+    PARSE inherit PARSE_STATEMENT
+    PARSE_STATEMENT inherit PARSE_EXPRESSION
+    PARSE_EXPRESSION inherit PARSE_TYPE
+    PARSE_TYPE inherit PARSE_UTILITY
+  end  
+end
+@end verbatim
+
+@caption{Java Parser Classes and Inheritance}
+@end float
+@c -----------------------------------------------------------------------------
+
+The Java parser is decomposed into several classes related to each other
+via inheritance, summarised in the static diagram in
+@ref{fig:Java_Parser}.  A pragma parser interface is also defined from
+which one must inherit to parse pragmas from pragma-containing comments.
+It is also used to check to see whether or not a comment contains
+pragmas in the first place.
+
+@c JRK
 
 @c ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @node The Java Type Checker, Case Studies in Extending the Java Front-end, The Java Parser, The Java Front-end Architecture
@@ -862,11 +1066,22 @@ none
 @c explain that these classes are just package-level classes used for testing.
 
 @c -----------------------------------------------------------------------------
-@float Diagram,Static_Diagram,fig:javafe.parser_test_harness_support_classes
+@float Diagram,fig:javafe.parser_test_harness_support_classes
 
 @verbatim
 static_diagram Java_Front-end_Lexer_Test_Harness_Support_Classes
 component
+  cluster JAVAFE.AST
+  component
+    deferred class LEXICAL_PRAGMA
+    deferred class MODIFIER_PRAGMA
+    deferred class STATEMENT_PRAGMA
+    deferred class TYPE_DECLARATION_ELEMENT_PRAGMA
+  end
+  cluster JAVAFE.PARSER
+  component
+    deferred class PRAGMA_PARSER
+  end
   cluster JAVAFE.PARSER.TEST
   component
     effective class TEST_LEXER
@@ -874,8 +1089,10 @@ component
     effective class LEXER_TEST_MODIFIER_PRAGMA
     effective class LEXER_TEST_STATEMENT_PRAGMA
     effective class LEXER_TEST_TYPE_DECLARATION_ELEMENT_PRAGMA
+
+    TEST_LEXER inherit PRAGMA_PARSER
     LEXER_TEST_LEXICAL_PRAGMA inherit LEXICAL_PRAGMA
-    LEXER_TEST_MODIFIER_PRAGMA inherit JAVAFE.AST.MODIFIER_PRAGMA
+    LEXER_TEST_MODIFIER_PRAGMA inherit MODIFIER_PRAGMA
     LEXER_TEST_STATEMENT_PRAGMA inherit STATEMENT_PRAGMA
     LEXER_TEST_TYPE_DECLARATION_ELEMENT_PRAGMA inherit 
       TYPE_DECLARATION_ELEMENT_PRAGMA
@@ -883,7 +1100,7 @@ component
 end
 @end verbatim
 
-@caption{The Test Harness for the Java Front-end Lexer Support Classes}
+@caption{The Test Harness for the Java Front-end Lexer (Support Classes)}
 @end float
 @c -----------------------------------------------------------------------------
 
@@ -940,9 +1157,14 @@ parser.
 @verbatim
 static_diagram Java_Front-end_Parser_Test_Harness_Support_Classes
 component
+  cluster JAVA.IO
+  component
+    deferred class OUTPUT_STREAM
+    deferred class INPUT_STREAM
+  end
   cluster JAVAFE.PARSER.TEST
   component
-    effective class TEST_PARSER
+    class TEST_PARSER
     -- Helper classes for the parser test framework.
     effective class MEMORY_PIPE_OUTPUT_STREAM
     effective class MEMORY_PIPE_INPUT_STREAM
@@ -997,7 +1219,7 @@ Test harness for expression parsing.
 ``The command-line arguments may only be "compare" or "check".''
 @end multitable
 
-@caption{The Test Harness for the Java Front-end Parser}
+@caption{The Test Harness for the Java Front-end Expression Parser}
 @end float
 @c -----------------------------------------------------------------------------
 
@@ -1085,6 +1307,9 @@ Test harness for expression parsing.
 @node Specifications, Copying, Testing Extensions, Top
 @unnumbered List of Charts
 @listoffloats Chart
+
+@unnumbered List of Diagrams
+@listoffloats Diagram
 
 @unnumbered List of Interface Specifications
 @listoffloats Interface
