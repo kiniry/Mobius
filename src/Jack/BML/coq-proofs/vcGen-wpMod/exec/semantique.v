@@ -4,13 +4,21 @@ Require Import BoolEq.
 Require Import List.
 Open Scope Z_scope.
 Inductive Var : Set := 
-Name : Z -> Z -> Var.
+Name : Z -> Z-> Var.
+
 Definition vareq := fun (v1 v2: Var) => 
 match v1 with 
 | Name z1 z2 => match v2 with 
                              | Name z3 z4 => andb (Zeq_bool z1 z3) (Zeq_bool z2 z4) 
                              end
 end.
+
+Lemma varEqDec : forall v1 v2 : Var ,  {v1 = v2} + {v1 <> v2}.
+decide equality.
+apply Z_eq_dec.
+apply Z_eq_dec.
+Qed.
+
 Definition Num := Z.
 Definition Value := Num.
 Inductive BinOp: Set :=
