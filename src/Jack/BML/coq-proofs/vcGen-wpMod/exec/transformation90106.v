@@ -86,13 +86,14 @@ Inductive wpAssume  :   stmtJAssume -> Assertion -> Assertion -> list Assertion 
                 ( wpAssume (WhileAssume  (inv_j inv)  b i)   a inv  ( Cs :: Ci ::  PI ) )
 | wpAssumeAss : forall (hyp: Assertion )  post  ,
                 ( wpAssume (Assume hyp ) post ( fun s : State => (p_implies (hyp s) )  (post s )  ) nil ) .
-
+(*
 (* where " 'vcGenAssume' ( a , p ) ==> ( b , c ) " := (wpAssume a p b c) . *)
  Axiom wpSpRel : forall pre1  post1  post2 pre2  stmt statePre statePost stmtA, 
                           ( is_wpMod   stmt post1 pre1  ) ->  
                           ( evalMyProp (p_implies (pre2 statePre) ( pre1 statePre))) -> 
                           ( sp stmt (pre2, statePre) (post2, statePost, stmtA)) ->
                           ( evalMyProp (p_implies (post2 statePost)  (post1 statePost ))). 
+
 Lemma wpModImplieswp : forall stmtM  pre  post  stPre preJ listPOGs stmtJ assPost statePost,
                  (  ( is_wpMod  stmtM post  pre ) /\  
                     ( evalMyProp (pre stPre)  ) /\ 
@@ -112,3 +113,7 @@ rewrite <- H7.
 rewrite <- H10.
 rewrite H14.
 assumption.
+subst.
+discriminate.
+clear .
+*)
