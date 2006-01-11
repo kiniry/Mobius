@@ -218,11 +218,10 @@ simpl in |- *.
 inversion H.
 unfold Cs, Ci in H5;  unfold Cs, Ci ; clear Cs Ci.
 assert(h := IHS p pI PI); destruct h.
-rewrite H1.
+subst.
+(* rewrite H1.*)
 assert(h1:= H8 H6).
 rewrite h1...
-rewrite H4; rewrite  H0.
-simpl in |- *...
 
 (* Seq 1 *)
 simpl in H.
