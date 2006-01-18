@@ -95,7 +95,13 @@ Axiom triche: forall p: Prop, p.
                           ( sp stmt (pre2, statePre) (post2, statePost, stmtA)) ->
                           ( evalMyProp (p_implies (post2 statePost)  (post1 statePost ))). 
 
-
+Axiom wpModMono :
+forall post post', (forall s,  evalMyProp (post s) ->  evalMyProp (post' s)) ->
+forall s preM, is_wpMod s post'  preM -> is_wpMod s post  preM.
+Axiom wpModMono1 :
+forall preM preM' post post', (forall s,  evalMyProp (post s) ->  evalMyProp (post' s)) ->
+(forall s,  evalMyProp (preM s)  <->  evalMyProp (preM' s))  ->
+forall s preM, is_wpMod s post'  preM -> is_wpMod s post  preM'.
 Axiom wpMono1 :
 forall post post', (forall s,  evalMyProp (post s) ->  evalMyProp (post' s)) ->
 forall s preJ l, wpAssume s post'  preJ l -> wpAssume s post  preJ l.
@@ -108,129 +114,117 @@ forall s1 hyp post p P, wpAssume (Seq s post p P -> (forall f s, In f P  -> (eva
 
 Hint Resolve wpSpRel.
 
-Lemma wpModImplieswp : forall stmtM  pre preSp post  stPre preJ listPOGs stmtJ assPost statePost,
-                  evalMyProp preSp -> ( is_wpMod  stmtM post  pre ) ->
-                    ( evalMyProp (pre stPre)  ) ->
+Lemma wpModImplieswp : 
+forall stmtM  pre preSp post  stPre preJ listPOGs stmtJ assPost statePost,                  
+                    ( is_wpMod  stmtM post  pre ) ->
                     (sp stmtM ( fun s => preSp , stPre  )  ( assPost ,  statePost , stmtJ  ) )  ->  
                  (wpAssume stmtJ post  preJ listPOGs )  -> 
+                    (evalMyProp preSp ->( evalMyProp (pre stPre) ) ) ->
                                   ((evalMyProp preSp  -> ( evalMyProp ( preJ stPre))) /\ 
                                          (forall f: Assertion, (In f listPOGs) -> ( evalMyProp (f stPre)   ))).  
 Proof with  auto.
 intro stmtM.
-induction stmtM; intros until statePost; intros Hpre; intros.
+induction stmtM; intros until statePost;
+intros  HwpMod Hsp HwpAssume Hpre.
 
 
 (* skip *)
-inversion  H1; subst...
-inversion H2; subst...
-inversion H; subst...
-split...
+
+inversion  Hsp; subst...
+inversion HwpAssume; subst...
+inversion HwpMod; subst...
+split; [intros HpreSp; assert (Hres  := Hpre HpreSp)| idtac]...
 intros f h; elim h.
 
 (* affect *)
-inversion H1; subst...
-inversion  H2; subst...
-inversion H; subst...
-split...
+inversion  Hsp; subst...
+inversion HwpAssume; subst...
+inversion HwpMod; subst...
+split; [intros HpreSp; assert (Hres  := Hpre HpreSp)| idtac]...
 intros f h; elim h.
 
 
 (* If *)
+inversion  Hsp; subst...
+inversion HwpAssume; subst...
 
-inversion H1; subst...
-inversion H; subst.
-inversion H2; subst.
 
 assert(h2 : forall a b c s ass pre,
       (sp s (fun _ : State => p_and ass pre, stPre) (a, b, c))->
       (sp s(fun _ : State => pre, stPre) (a, b, c))).
    (* debut preuve assert *)
     intros.
-    eassert(h := (spMono _ (fun _ : State => pre) _ _  s c  _ b H3))...
+    eassert(h := (spMono _ (fun _ : State => pre0) _ _  s c  _ b H))...
     simpl... 
    intros [hh hhh]...
    (* fin preuve assert *)
-split.
-apply triche.
-assert (forall f : Assertion, In f (PT) -> evalMyProp (f stPre) /\
-forall f : Assertion, In f (PF) -> evalMyProp (f stPre)).
-split.
+
+inversion H7; subst...
+inversion H2; subst...
+rewrite <- app_nil_end.
+inversion HwpMod; subst...
+eassert  (h4 := (IHstmtM1 pre_t _  post _ pT P1  _ _ _ _   H1  _ _  ))...
+(* debut preuve eassert *)
+eapply wpMono1.
+2:eexact H6.
+intros; simpl;intros...
+
 destruct (classic ((neval stPre n) = 0)).
-(* if false *)
+intros.
 simpl in H0.
-destruct H0.
-eassert(h1 := (H4 H3)).
-eassert(h3 :=  (h2 _ _ _ _ _ _ H12)).
-eassert  (h4 := (IHstmtM2  _ _ _ stPre pF PF _ _ _ _ H9 h1 h3 _))...
-(* debut preuve h3 *)
-inversion H14; subst.
-inversion H8; subst...
- assert (forall s, evalMyProp (post s) -> 
-  evalMyProp ((fun s : State =>
-         p_implies
-           (p_forallv
-              (fun x : Var =>
-               p_eq (stateF x)
-                 (if Zeq (stateT x) (stateF x) then stateT x else Constant x)))
-           (post s)) s)).
-intros; simpl.
-intros...
-eassert (h := (wpMono1 _ _ H6  st2j pF (P1 ++ nil) _ ))...
-rewrite <- app_nil_end...
-(* fin preuve h3 *)
-
-
-destruct h4.
-simpl...
-repeat split...
-intros h;
-destruct h...
-
-assert(h4 : forall f : Assertion, In f PT -> evalMyProp (f stPre)).
-(* debut preuve h4 *)
-inversion H13; subst...
-inversion H15; subst...
-(* rewrite <- app_nil_end... *)
-intros f hh.
-
-apply (absurdAssume _ _ _ _ _ H13)...
+destruct H0; destruct H0...
 simpl.
 intros.
-simpl.
-induction st1j.
-inversion H19; intros f hh; elim hh.
-inversion H19; intros f hh; elim hh.
-inversion H19; subst.
-intros f hh; elim hh.
-inversion H19; subst.
-apply triche.
-(* fin preuve h4 *)
+destruct H0.
+simpl in Hpre.
+assert (Hpre_t  := Hpre H3).
+destruct Hpre_t...
 
 
+inversion HwpMod; subst...
+eapply wpModMono with post.
+intros...
+apply triche (* les deux pre sont equivalentes *).
 
-intros f h...
-eassert(h' := (in_app_or _ _ _ h)).
-destruct h'...
-
-(* if true *)
+inversion H9; subst...
+inversion H3; subst...
+rewrite <- app_nil_end.
+eassert  (h5 := (IHstmtM2 pre _  post _ pF P0  _ _ _ _   H8  _ _  ))...
+eapply wpMono1.
+2:eexact H11.
+intros; simpl;intros...
+destruct (classic ((neval stPre n) = 0)).
+intros.
 simpl in H0.
 destruct H0.
-eassert(h1 := (H0 H3)).
+assert (HwpMod  := Hmod H4).
+inversion HwpMod; subst...
+eapply (wpModMono1 pre_f).
+3: eexact H15.
+intros...
+intros.
+simpl.
+split...
+intros; split...
+intros hh; destruct hh...
+intros; intuition.
+apply triche (* i don't know *).
 
-eassert  (h3 := (IHstmtM1 _ _ stPre pT PT _ _ _ H11 h1 (h2 _ _ _ _ _ H5) _)).
-inversion H13; subst.
-inversion H8; subst...
-apply triche.
-destruct h3.
-simpl...
-repeat split...
-intros h;
-destruct H3...
-assert(forall f : Assertion, In f PF -> evalMyProp (f stPre)).
-apply triche.
-intros f h...
-eassert(h' := (in_app_or _ _ _ h)).
-destruct h'...
+intros.
+simpl in H0.
+destruct H; destruct H0...
+
+simpl in h4.
+simpl in h5.
+simpl.
+destruct h4.
+destruct h5.
+split; intros...
+assert(h :=  in_app_or _ _ _ H10).
+destruct h.
+apply H0...
+apply H5...
+
 
 
 (* while *)

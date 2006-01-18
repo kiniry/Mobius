@@ -5,7 +5,7 @@ Require Import wp.
 Require Import wpMod.
 Require Import ZArith.
 Require Import Classical.
-
+Axiom user : forall t: Type, t.
 (* a function for generating fresh variables *)
 Inductive  fresh : list Var -> Var -> Prop := 
 |isFresh : forall lVar y  , ~(In y lVar ) -> (fresh lVar y).
@@ -65,8 +65,8 @@ Inductive sp :  myProp * State * Z * stmt_m -> stmtJAssume * myProp  * State * Z
                             (sp  (  ( p_and  ( p_neq  ( neval state  expB  )  0 ) ass   ), state, z , st1 )   (  st1j, assT, stateT , zt  ) ) ->
                             (sp  (  ( p_and   ( p_eq ( neval state  expB  )  0 )   ass  ), state, zt , st2 )   (  st2j, assF, stateF ,ze) ) ->                       
                             let stateMerge := fun v: Var => if ( Zeq  ( neval state  expB  )  0 ) 
-                                                                                    then (neval stateT (nvar v )) 
-                                                                                    else  ( neval stateF (nvar v))  in 
+                                                                                    then (neval stateF (nvar v )) 
+                                                                                    else  ( neval stateT (nvar v))  in 
                                    ( sp    ( ass, state, z , ( If Invariant_m expB  st1 st2) )  
                                              (  ( IfAssume expB  st1j   st2j  ),  p_or assF  assT ,  stateMerge, ze  ) )
   | isSpwhile : forall  expB stmt ass state inv lVar stmtj assIter stateIter z zIt lVarSubst,
@@ -84,17 +84,19 @@ Inductive sp :  myProp * State * Z * stmt_m -> stmtJAssume * myProp  * State * Z
                                                                                        p_and (inv s )  
                                                                                              ( p_forallv ( fun v: Var => (p_implies (p_not ( p_in  v lVar))    
                                                                                                                                         ( p_eq ( neval state (nvar v ) )  ( neval s (nvar v) )))))) 
-                                                                                             ass  )) in      
+                                                                                             ass  )) in
+                           (evalMyProp ass -> evalMyProp (inv state) ) -> 
 			  ( constructModVarSubstList lVar z stateWithMod lVarSubst ) -> 
                            (sp (   (p_and (  newInv stateWithMod )  
                                                    ( p_not( p_eq ( neval stateWithMod expB )  0) )) , stateWithMod , z , stmt) (stmtj, assIter, stateIter , zIt ) ) ->
-                               ( sp                (   ass, 
+                               ( sp                (    ass, 
                                                           state,     
                                                           z,
                                                           While  Invariant_m expB ( inv_m  inv lVar )  stmt )
                                                     
                                                     ( WhileAssume (inv_j newInv) lVarSubst expB stmtj   , 
-                                                       p_and  (newInv stateWithMod)   (  p_eq ( neval stateWithMod expB )  0) , 
+                                                       p_and  (  p_and (inv stateWithMod) ass )  
+                                                                    (  p_eq ( neval stateWithMod expB )  0) , 
                                                        stateWithMod,  
                                                        zIt ) ).
                                 
@@ -127,27 +129,152 @@ Inductive wpAssume  :   stmtJAssume -> Assertion -> Assertion -> list Assertion 
 (sp ( Pre , statePre , zPre , stmtm ) ( stmtj , Post , statePost, zPost ))  -> 
 forall state , ( fun s : State => Post ) state = Post . 
 
-Lemma spCorrect : forall stmtJAss state1 state2 stmtM  Pre Post z1 z2 , 
+Lemma spStrongerThanPre : forall stmtm  stmtj Pre Post zPre zPost statePre statePost , 
+ (sp (Pre , statePre , zPre , stmtm) ( stmtj , Post , statePost,  zPost )) -> ( (evalMyProp Post )->  (evalMyProp Pre ) ).
+intros stmtM; induction stmtM; intros until statePost; intros Hsp Hpost.
+Proof with auto.
+inversion Hsp; subst...
+inversion Hsp; subst...
+inversion Hsp; subst...
+simpl in Hpost.
+destruct Hpost.
+eassert(Hfalse := (IHstmtM2 _ _ _ _ _ _ _ H10 H)).
+simpl in Hfalse; destruct Hfalse...
+eassert(Htrue := (IHstmtM1 _ _ _ _ _ _ _ H1 H)).
+simpl in Htrue; destruct Htrue...
+
+(* while *)
+inversion Hsp. 
+unfold stateWithMod in H1, H7, H8, H10, H11, H; 
+clear stateWithMod; subst...
+eassert(Hs := (IHstmtM _ _ _ _ _ _ _ H11 ))...
+simpl in Hpost.
+simpl in Hs.
+destruct Hpost as [[Hpost1 Hpost2] Hpost3]...
+
+(* seq *)
+inversion Hsp; subst...
+eassert(Hs1 := (IHstmtM1 _ _ _ _ _ _ _ H1 )).
+eassert(Hs2 := (IHstmtM2 _ _ _ _ _ _ _ H9 ))...
+Qed.
+
+
+Lemma spCorrect : forall  stmtJAss state1 state2,
+        (execStmtAss  state1 stmtJAss state2) -> 
+        forall stmtM    Pre Post z1 z2 , 
          ( sp ( Pre , state1 , z1 , stmtM ) (stmtJAss,  Post , state2, z2 )) ->
+         
          ( evalMyProp Pre )  ->
          ( evalMyProp Post   ).
 Proof with auto.
 
-intros stmtJAss.
-induction stmtJAss.
 
+
+intros stmtJ s1 s2 Hexec; induction Hexec; intros until z2; intros Hsp Hpre.
+
+inversion Hsp; subst...
+inversion Hsp; subst...
+
+(* if true *)
+inversion Hsp; subst...
+simpl in H8.
+assert(h : forall (a: State), (fun v : Var => a v) = a ).
+intros. apply user.
+destruct (neval s cond)...
+(*destruct but 1: *)
+destruct n...
+(*destruct but 2: *)
+simpl in H8.
+simpl.
+rewrite h in H8.
+rewrite <- H8 in IHHexec.
+eassert (HindEx := (IHHexec _ _ _ _ _ H1 _))...
+simpl...
+(*destruct but 3 *)
+simpl in H8.
+simpl.
+rewrite h in H8.
+rewrite <- H8 in IHHexec.
+eassert (HindEx := (IHHexec _ _ _ _ _ H1 _))...
+simpl...
+
+(* if false *)
+inversion Hsp; subst...
+
+simpl.
+(* seq *)
+inversion Hsp; subst...
+apply user.
+(* inversion Hexec; subst...
+eassert(Hs1 := (IHstmtJ1 _ _ _ _ _ _ _ H1 H5)).
+eassert(Hs2 := (IHstmtJ2 _ _ _ _ _ _ _ H9 ))... *)
+(* if  *)
+apply user. (*
+inversion Hsp; subst...
+simpl.
+inversion Hexec; subst...
+destruct (classic ( (neval state1 n)  = 0) ).
+destruct H5...
+eassert(Htrue := (IHstmtM1 _ _ _ _ _ _ _ H1 _))...
+destruct (neval state1 n) ...
+destruct H...
+simpl in H6...
+eassert(Hfalse := (IHstmtM2 _ _ _ _ _ _ _ H10 _ _))...
+simpl in H6.
+destruct (neval state1 n) ...
+destruct H...
+simpl in H6...
+trivial.
+left...
+
+simpl...
+*)
+apply user.
+
+(* while *)
+(* inversion Hsp. 
+unfold stateWithMod in H1, H7, H8, H10, H11, H; 
+unfold stateWithMod; clear stateWithMod; subst...
+unfold newInv in H11, Hsp; clear newInv.
+simpl.
+eassert(HspStrong1 := (spStrongerThanPre _ _ _ _ _ _ _ _ Hsp )).
+eassert(HspStrong2 := (spStrongerThanPre _ _ _ _ _ _ _ _ H11)).
+simpl in Hpre.
+repeat split...
+inversion H1; subst...
+Focus 2.
+destruct HspStrong2 as [[[h1 h2] h3] h4]; repeat split...
+eassert(HindS := (IHstmtM _ _ _ _ _ _ _ H11 ))...
+apply HindS.
+simpl.
+repeat split...
+simpl in HspStrong2.
+
+simpl.
+repeat split...
+eassert(HspStrong1 := (spStrongerThanPre _ _ _ _ _ _ _ _ Hsp )).
+eassert(HspStrong2 := (spStrongerThanPre _ _ _ _ _ _ _ _ H11 )).
+repeat split...
+simpl.
+simpl in HspStrong2.
+split.
+simpl in Hs.
+apply user.
+
+*)
 (*skip*)
-intros.
+(* intros.
 inversion H.
 subst ...
-
+*)
 (*assignment*)
-intros.
+(* intros.
 inversion H. subst ...
-
+*)
 (* if case *)
-intros. 
-inversion H.  subst ...
+(* intros. 
+inversion H.  subst ... *)
+apply user.
 Qed.
  
 
@@ -159,9 +286,9 @@ Axiom closedPredinPost :  forall stmt Pre1 PreL1 Pre2 PreL2 (Post1 Post2 : Asser
 
 (*sp ( stmt, pre) = post -> (post ->  pre)     *)
 (*used in the case of a sequence*)
-Axiom spStrongerThanPre : forall stmtm  stmtj Pre Post zPre zPost statePre statePost , 
+(* Axiom spStrongerThanPre : forall stmtm  stmtj Pre Post zPre zPost statePre statePost , 
  (sp (Pre , statePre , zPre , stmtm) ( stmtj , Post , statePost,  zPost )) -> ( (evalMyProp Post )->  (evalMyProp Pre ) ).
-
+*)
 Axiom relWpSp : forall stmtM stmtJ PreM Pre Post PostJ zPre zPost statePre statePost ,
 ( is_wpMod  stmtM Post  PreM ) ->
                     ( (evalMyProp ( Pre  statePre)) -> ( evalMyProp ( PreM  statePre)) ) ->
@@ -169,13 +296,13 @@ Axiom relWpSp : forall stmtM stmtJ PreM Pre Post PostJ zPre zPost statePre state
 ((evalMyProp PostJ ) ->  (evalMyProp  (Post statePost) )).
 
 
-Axiom wpModMon : forall stmtM  Post1 Post2 Pre1 Pre2 ,
-
+Axiom wpModMon : forall stmtM  Post1 Post2 Pre1 Pre2 st,
 (is_wpMod stmtM Post1 Pre1) ->  
 (is_wpMod stmtM Post2 Pre2) -> 
-(forall st, ( (evalMyProp (Post1 st) ) -> (evalMyProp (Post2 st))) )   ->  
+ ( (evalMyProp (Post1 st) ) -> (evalMyProp (Post2 st)))    ->  
 (forall st, ( (evalMyProp (Pre1 st) ) -> (evalMyProp (Pre2 st))) )   .
 
+Axiom wpModFunInt : forall stmtM Post, exists Pre,  (is_wpMod stmtM Post Pre).
 
 
 
@@ -184,8 +311,8 @@ Lemma wpModImplieswp : forall stmtM  P Q  preM preJ listPogJ  stmtJ (assPost : m
                     ( (evalMyProp ( P  statePre)) -> ( evalMyProp ( preM  statePre)) ) ->
                    (sp  ( (P statePre) , statePre, zPre, stmtM   ) (  stmtJ, assPost ,  stateSP,zPost  )) ->    
                    (wpAssume stmtJ Q   preJ listPogJ )  -> 
-                                  ((evalMyProp ( P statePre)  -> ( evalMyProp ( preJ statePre))) /\ 
-                                         (forall f: Assertion, (In f listPogJ) -> ( evalMyProp (f statePre)   ))).
+                                  ((evalMyProp ( preM statePre)  -> ( evalMyProp ( preJ statePre))) /\ 
+                                         (forall s, (forall f: Assertion, (In f listPogJ) -> ( evalMyProp (f s)   )))).
 Proof with  auto.
 
 
@@ -199,8 +326,8 @@ inversion HwpMod; subst...
 inversion Hsp; subst ...
 inversion HwpAssume; subst ...
 split.
-assumption.
-intros f absurde.
+intros;assumption.
+intros s f absurde;
 inversion absurde.
 
 (* affect *)
@@ -208,8 +335,9 @@ inversion HwpMod; subst...
 inversion Hsp; subst ...
 inversion HwpAssume; subst ...
 split.
-assumption.
-intros f absurde.
+unfold update_assert.
+intros; assumption.
+intros s f absurde;
 inversion absurde.
 
 
@@ -218,7 +346,9 @@ inversion absurde.
 inversion HwpMod; subst...
 inversion Hsp; subst ...
 inversion HwpAssume; subst ...
+
  assert (hypPandCimplPreT :  ( evalMyProp ((fun s : State => p_and (p_neq (neval statePre n) 0) (P s) ) statePre ) ) -> ( evalMyProp ( pre_t statePre ) )  ).
+(*debut assert *)
 intros Hyp_PandCond.
 simpl in Hyp_PandCond.
 simpl in Himply.
@@ -227,68 +357,63 @@ assert ( hyp_NimplPre_t := Himply H0 ).
 destruct hyp_NimplPre_t.
 assert(hyp_Pre_t := H2 H).
 exact hyp_Pre_t.
+(* fin assert*)
 
-
-assert ( HypIndThen := IHstmtM1  ((fun s : State => p_and (p_neq (neval statePre n) 0) (P s) ))  Q pre_t pT PT st1j  assT statePre   stateT zPre zt H5  hypPandCimplPreT H1    H8 ) .
+eassert ( HypIndThen := (IHstmtM1  _ Q pre_t pT PT st1j  assT statePre   stateT zPre zt H5  hypPandCimplPreT H1    H8 )) .
 
 assert (hypPandNotCimplPreF :  ( evalMyProp ((fun s : State => p_and (p_eq (neval statePre n) 0) (P s) ) statePre ) ) -> ( evalMyProp ( pre_f statePre ) )  ).
-intros Hyp_PandNotCond.
-simpl in  Hyp_PandNotCond.
+(* debut preuve assert *)
+simpl.
+intros [Hf Hp].
 simpl in Himply.
-destruct Hyp_PandNotCond .
-assert ( hyp_NimplPre_f := Himply H0 ).
-destruct hyp_NimplPre_f.
-assert(hyp_Pre_t := H3 H).
-exact hyp_Pre_t.
+assert ( h := Himply Hp ).
+destruct h as [Hpre_t Hpre_f].
+exact (Hpre_f Hf).
+(* fin preuve assert *)
 
-
-
-assert ( HypIndElse := IHstmtM2  ((fun s : State => p_and (p_eq (neval statePre n) 0) (P s) ))  Q pre_f pF PF st2j  assF statePre stateF zt zPost H4 hypPandNotCimplPreF H12 H9 ) .
+assert ( HypIndElse := (IHstmtM2  (*(fun s : State => p_and (p_eq (neval statePre n) 0) (P s) )*)  _ Q pre_f pF PF st2j  assF statePre stateF zt zPost H4 hypPandNotCimplPreF H12 H9 )) .
 simpl in HypIndThen .
 simpl in HypIndElse.
+destruct HypIndThen as [HThenPre HThenVc].
+destruct HypIndElse as [HElsePre HElseVc].
 split.
+(* preuve des pres *)
 intro.
 simpl in *.
-split.
+destruct H as [hThen hElse].
+split;
+intro...
+(* fin preuve pres *)
 
-intro.
-assert ( PandCond := conj H0 H).
-destruct HypIndThen.
-assert ( ptHolds := H2 PandCond).
-exact ptHolds.
+(* preuve vcs *)
+intros s f h.
+assert(h1 :=  in_app_or _ _ _ h).
+destruct h1...
+(*fin preuve vcs *)
 
-intro.
-assert ( PandNotCond := conj H0 H).
-destruct HypIndElse .
-assert (pfHolds :=  H2 PandNotCond ).
-exact pfHolds.
-destruct HypIndThen.
-destruct HypIndElse.
-assert ( f_in_PTorPFimpl_f : forall f : Assertion, ( In f PF \/ In f PT) -> evalMyProp (f statePre) ).
+(* While *)
+apply user.
 
-(*this goal is clear but long*)
-Focus 4.
 
 (*Sequence*)
 inversion HwpMod; subst...
 inversion Hsp; subst ...
 inversion HwpAssume; subst ...
-assert ( hypPostImpliesPre_inter := relWpSp stmtM1 st1j preM P pre_st2 ass1 zPre z1 statePre state1 H4 Himply H2 ).  
-split .
-Focus 2.
-intros.
-assert (hyInterm := IHstmtM2 (fun s => ass1 ) Q  pre_st2 p2 P2 st2j assPost state1 stateSP z1  zPost H1   hypPostImpliesPre_inter H11 H3).
-destruct hyInterm  .
+eassert ( HrelWpSpS1 := (relWpSp _ _ _ _ _ _ _ _ _ _ H4 _ H2) )...
 
- assert ( wp_st2_Qimpl_p2 : ( ((( evalMyProp ass1) -> ( evalMyProp (pre_st2 state1 ) ) )/\   (evalMyProp ass1)  )-> ( evalMyProp (p2 state1 )))).
+eassert(HindS2 := (IHstmtM2 (fun _ => ass1) Q pre_st2 p2 P2 st2j assPost state1 stateSP z1 zPost _ _ _ _))...
+assert(Htotale := wpModFunInt stmtM1 p2).
+elim Htotale...
+intros x hx. 
+destruct HindS2 as [HindS2a HindS2b].
 
-intros.
-destruct H6.
-assert( H100 := H0 H7). 
-exact H100.
-
-(* CANNOT CONTINUE BECAUSE OF TYPE PROBLEMS*)
-assert ( wpUseMonotone := wpModMon stmtM1 ((( evalMyProp ass1) -> ( evalMyProp (pre_st2 state1 ) ) )/\   (evalMyProp ass1)  )  ( evalMyProp (p2 state1 ))  ).
-(* the hypothesis H5 will be used later zwhen proving the main goal  *) 
+eassert(HindS1 := (IHstmtM1 P p2  x  preJ P1 st1j ass1 statePre state1 zPre z1 _ _ _ _))...
+eassert ( wpUseMonotone := (wpModMon _ _ _ _ _ state1  H4 hx))...
+eassert ( wpUseMonotone := (wpModMon _ _ _ _ _ state1  H4 hx))...
+destruct HindS1 as [HindS1a HindS1b].
+split...
+intros s f h.
+assert(h1 :=  in_app_or _ _ _ h).
+destruct h1...
 
 Qed.
