@@ -6,6 +6,9 @@ Require Import wpMod.
 Require Import ZArith.
 Require Import Classical.
 Axiom user : forall t: Type, t.
+Axiom etaExpansion: forall s: State, s = (fun v : Var => s v).
+
+
 (* a function for generating fresh variables *)
 Inductive  fresh : list Var -> Var -> Prop := 
 |isFresh : forall lVar y  , ~(In y lVar ) -> (fresh lVar y).
@@ -183,15 +186,14 @@ Axiom closedPredinPost :  forall stmt Pre1 PreL1 Pre2 PreL2 (Post1 Post2 : Asser
 
 (*RELATION WP AND SP *)
 (* ( P -> WP(ST, Q) ) -> (Q -> SP (ST, P)) *)
-Axiom relWpSp : forall stmtM stmtJ WP Pre Post SP zPre zPost statePre statePost ,
+Lemma relWpSp : forall stmtM stmtJ WP Pre Post SP zPre zPost statePre statePost ,
 ( is_wpMod  stmtM Post  WP ) ->
                     ( (evalMyProp ( Pre  statePre)) -> ( evalMyProp ( WP  statePre)) ) ->
  (sp  ( (Pre statePre) , statePre, zPre, stmtM   ) (  stmtJ, SP ,  statePost,zPost  )) ->    
 ((evalMyProp SP ) ->  (evalMyProp  (Post statePost) )).
 
-(*
 Proof with auto.
-intro stmtM. induction stmtM; intros until statePost; intro hypWP; intro hypWP_Implied; intro hypSP.
+intro stmtM; induction stmtM; intros until statePost; intro hypWP; intro hypWP_Implied; intro hypSP.
 (*skip*)
 intros SPholds.
 inversion hypWP; subst...
@@ -213,15 +215,60 @@ assert ( HypWpThen : (  neval statePre n <> 0 /\ evalMyProp (Pre statePre)  )-> 
 intros.
 destruct H.
 assert ( hypWpImp := hypWP_Implied H0 ).
-destruct hypWpImp.
-assert (hypWpImp1 := H2 H ).
-exact hypWpImp1.
-assert (    spBeta : sp
-    ((fun s : State => p_and (p_neq (neval s n) 0) (Pre s)) statePre,
-    statePre, zPre, stmtM1) (st1j, assT, stateT, zPost)  ).
-eassert (hypIndThen := ( IHstmtM1 st1j   pre_t  ( fun s => (  p_and (p_neq (neval s n)  0 )  ( Pre s)  )) Post assT zPre zPost statePre stateT  H5 HypWpThen H1 ) ).
+destruct hypWpImp...
+
+eassert (hypIndThen := ( IHstmtM1 st1j   pre_t  ( fun s => (  p_and (p_neq (neval s n)  0 )  ( Pre s)  )) Post assT zPre zt statePre stateT  H5 HypWpThen H1 ) )...
+
+eassert (hypIndElse := ( IHstmtM2 _   pre_f  ( fun s => (  p_and (p_eq (neval s n)  0 )  ( Pre s)  ))  Post assF zt _ statePre stateF  H4 _ H12 ) )...
+simpl.
+intros h; destruct h as [h1 h2].
+assert ( hypWpImp := hypWP_Implied h2 ).
+destruct hypWpImp as [h3 h4]...
+eassert(hStrT := (spStrongerThanPre _ _ _ _ _ _ _ _ H1)).
+eassert(hStrF := (spStrongerThanPre _ _ _ _ _ _ _ _ H12)).
+simpl in hStrT, hStrF.
+destruct SPholds as [ hF | hT].
+assert(h1 := (hStrF hF)).
+destruct h1 as [hCond h].
+rewrite hCond.
+simpl.
+assert(hRes := hypIndElse hF).
+rewrite (etaExpansion stateF) in hRes.
+trivial.
+assert(h1 := (hStrT hT)).
+destruct h1 as [hCond h].
+destruct (neval statePre n).
+destruct hCond...
+simpl; assert(hRes := hypIndThen hT).
+rewrite (etaExpansion stateT) in hRes.
+trivial.
+simpl; assert(hRes := hypIndThen hT).
+rewrite (etaExpansion stateT) in hRes.
+trivial.
+
+(* while *)
+inversion hypSP; subst...
+simpl.
+inversion hypWP; subst...
+intros h.
+destruct h as [[h1 h2] h3].
+simpl in hypWP_Implied.
+assert(h4 := hypWP_Implied h2).
+destruct h4 as [ h4 [h5 h6] ].
+eassert(h :=  (h5 _ _ _ h3))...
+intros.
+destruct (In_dec varEqDec var lVar).
+destruct H...
+trivial.
+
+(* Seq *)
+inversion hypSP; subst...
+inversion hypWP; subst...
+intros.
+eassert(Hind2 := (IHstmtM2 _ _ (fun _ => ass1) _ _ _ _ _ _    H2 _ H9))...
+eassert(Hind1 := (IHstmtM1 _ _  _  _ _ _ _ _ _    H5 _ H1))...
 Qed.
-*)
+
 
 Lemma  wpModMon : forall stmtM  Post1 Post2 Pre1 Pre2 ,
 (is_wpMod stmtM Post1 Pre1) ->  
@@ -426,20 +473,6 @@ assumption.
 assert (invInStatePre := conj H1 H0).
 Focus 3.
 intros .
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
