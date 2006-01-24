@@ -5,28 +5,61 @@ Require Import List.
 Open Scope Z_scope.
 
 Inductive Var : Set := 
- | Name : Z -> Z-> Var
- | AuxName : Var-> Z-> Var.
- 
+ | Name : Z -> Z-> Var.
 
-
-Fixpoint vareq  (v1 v2: Var) {struct v1} : bool  :=  
+Definition vareq := fun (v1 v2: Var) => 
 match v1 with 
 | Name z1 z2 => match v2 with 
                              | Name z3 z4 => andb (Zeq_bool z1 z3) (Zeq_bool z2 z4) 
-                             | _ =>  false
                              end
- |AuxName var1 z1 => match v2 with 
-                            | AuxName var2 z2 =>  andb (vareq var1 var2) (Zeq_bool z1 z2 ) 
-                            | _ => false
-                            end 
 end.
+
 
 Lemma varEqDec : forall v1 v2 : Var ,  {v1 = v2} + {v1 <> v2}.
 decide equality.
 apply Z_eq_dec.
 apply Z_eq_dec.
+Qed.
+
+
+Inductive AuxVar : Set :=  
+ | AuxName : Var-> Z-> AuxVar.
+
+
+Definition varAuxEq := fun (v1 v2: AuxVar) => 
+match v1 with 
+| AuxName var1 z1 => match v2 with 
+                             | AuxName var2 z2 => andb (vareq var1 var2 ) (Zeq_bool z1 z2) 
+                             end
+end.
+
+
+Lemma varAuxEqDec : forall v1 v2 : AuxVar ,  {v1 = v2} + {v1 <> v2}.
+decide equality.
 apply Z_eq_dec.
+apply varEqDec.
+Qed.
+
+Inductive AllVar : Set :=
+ | progvar  : Var -> AllVar 
+ | auxvar :  AuxVar -> AllVar. 
+  
+Definition varAllVarEq ( v1 v2 : AllVar ) : bool :=
+ match v1  with
+| progvar v1'  => match v2 with 
+                             | progvar v2' => (vareq v1' v2')
+			     | _ => false 
+                             end
+| auxvar v1' => match v2 with
+			    | auxvar v2' =>  ( varAuxEq v1' v2')
+		            | _ => false 
+		            end
+end.
+
+Lemma varAllEqDec : forall v1 v2 : AllVar ,  {v1 = v2} + {v1 <> v2}.
+decide equality.
+apply  varEqDec.
+apply varAuxEqDec.
 Qed.
 
 Definition Num := Z.
@@ -55,29 +88,34 @@ Infix "!" := bNot (at level 30) : W_Scope .
 Inductive NumExpr : Set :=
 | nval : Num -> NumExpr
 | nvar : Var -> NumExpr
+| nAuxVar : AuxVar -> NumExpr
 | binOpExpr: BinOp -> NumExpr -> NumExpr -> NumExpr
 | unOpExpr: UnOp -> NumExpr -> NumExpr.
 
 
 
-(* Variable v: Var.
-Check ((v <- (nval 1)); Skip). *)
-
-Definition State:  Set := Var -> Num.
-Definition EmptyState : State := 
-fun (v : Var) => 0.
 
 
+(*change the state to be a function that maps aux var and  program var to values *)
+Definition State:  Set := AllVar -> Num.
+(* Definition EmptyState : State :=  fun (v : Var) => 0. *)
+
+Print sum.
 Definition update : State -> Var -> Num -> State :=
 fun (s : State) (v : Var) (val : Num) =>
-       fun (v1: Var) => if (vareq v v1) then val else (s v1).
+       fun (v1: AllVar) =>
+       match v1 with 
+       |   auxvar  _ (* AuxName v1 z *) => (s v1)
+       |   progvar v1' (*Name z1 z2 *) => if (vareq v v1') then val else (s v1) end.
+
 Definition Num2Bool : Num -> bool :=
 fun (n : Num) => (negb (Zeq_bool  n 0)).
 
 Fixpoint neval (s: State) (n: NumExpr) {struct n} : Num :=
      match n with 
      | nval a => a
-     | nvar v => (s v) 
+     | nvar v => (s  (progvar v)  )
+     | nAuxVar v => (s (auxvar v)) 
      | binOpExpr o a1 a2 => match o with 
                                           | add => Zplus (neval s a1)  (neval s a2)
                                           | sub =>  (neval s a1) - (neval s a2)
@@ -109,9 +147,21 @@ Inductive myProp : Set :=
 | p_foralls :  (State -> myProp) -> myProp
 | p_forallv : (Var -> myProp) -> myProp.
 
-
-
 Definition Assertion := State -> myProp .
+
+(*NB : define a function that checks if  the index z is fres in the proposition P. *)
+(*This means that in P should appear no auxiliary variable constructed with that index *)
+Axiom  isFresh : Z -> Assertion -> Prop. 
+(* to be defined : the definition for myProp must be changed before for the cases p_eq, p_neq *)
+(* match p with
+| p_or  P1 P2 => (isFresh var P1 ) /\ ( isFresh var P2)
+| p_and P1 P2 => (isFresh var P1 ) /\ ( isFresh var P2)
+| p_implies P1 P2 => (isFresh var P1 ) \/ ( isFresh var P2)
+| p_in  v' P2 => not (varEqDec var v') /\  ( isFresh var P2)
+| p_eq z1 z2  => True   *)
+
+ 
+
 
 Definition update_assert : Assertion -> Var -> NumExpr ->  Assertion := 
 fun (a: Assertion) (v: Var) (val : NumExpr) =>
