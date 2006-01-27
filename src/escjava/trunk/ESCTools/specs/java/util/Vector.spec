@@ -92,7 +92,7 @@ public class Vector extends AbstractList
     public /*@ pure @*/ Vector();
 
     /*@ public normal_behavior
-      @    requires c != null && c.content.theSize < Integer.MAX_VALUE;
+      @    requires c != null;
       @    assignable objectState;
       @    assignable maxCapacity, capacityIncrement, elementType, containsNull;
       @    ensures elementCount == c.size();
