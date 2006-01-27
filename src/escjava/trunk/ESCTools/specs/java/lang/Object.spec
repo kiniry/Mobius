@@ -167,18 +167,16 @@ public class Object {
 
     /*@   public normal_behavior
       @     assignable privateState;
-      @     ensures \result != null;
       @     ensures \result == theString;
       @     ensures (* \result is a string representation of this object *);
       @ also
       @   public normal_behavior
       @     requires \typeof(this) == \type(Object);
       @     assignable privateState;
-      @     ensures \result != null;
       @     ensures \result.equals(getClass().getName() + "@" + 
                                      Integer.toHexString(theHashCode));
       @*/
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     public final void notify();
 
