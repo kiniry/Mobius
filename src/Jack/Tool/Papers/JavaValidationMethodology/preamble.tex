@@ -1,0 +1,112 @@
+\parindent 1cm
+\parskip 0.2cm
+\topmargin 0.2cm
+\oddsidemargin 1cm
+\evensidemargin 0.5cm
+\textwidth 15cm
+\textheight 21cm
+
+\newcommand{\comment}[1]{{\sf #1}}
+\newcommand{\alarm}[1]{\marginpar{#1}}
+
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+
+
+\def \bsl       {\symbol{92}}
+\def \unsc      {\symbol{95}}
+
+\newcommand{\todo}[1]{ \textbf{#1}}
+\newcommand{\fig}[1]{ Fig.}
+\newcommand{\jmlKey}[1]{\texttt{#1}}% wrapping jml keywords
+\newcommand{\java}[1]{\texttt{#1}}
+\newcommand{\stack}[1]{\texttt{st(#1)}}% element on top stack 
+\newcommand{\counter}{\texttt{ct}}
+
+\newcommand{\true}{\texttt{true}}
+\newcommand{\false}{\texttt{false}}
+
+\newcommand{\wpi}{\textit{wp}}
+
+\newcommand{\instr}[1]{\texttt{#1}}
+
+\newcommand{\substitution}[2]{[\tt{#1} \leftarrow \tt{#2}]}
+% thegrammar for the bytecode specification language
+\newcommand{\ClassSpec}{\rm{ClassSpec}}
+\newcommand{\MethodSpec}{\rm{MethodSpec}}
+\newcommand{\SpecCase}{\textrm{SpecCase}}
+\newcommand{\jmlStmt}[1]{\textrm{#1}}
+\newcommand{\interMethodSpec}{\rm{InterMethodSpec}}
+\newcommand{\loopSpec}{\rm{loopSpec}}
+\newcommand{\assert}{\rm{assertSpec}}
+
+\newcommand{\ArithExpr}{\texttt{Arithmetic\_Expr}}
+\newcommand{\expression}{\mathcal{E} }
+
+\newcommand{\integer}{\texttt{int} }
+\newcommand{\register}[1]{\texttt{lv[#1]} }
+\newcommand{\reference}{\texttt{ref} }
+\newcommand{\intLiteral}{\texttt{int\_literal} }
+\newcommand{\Mynull}{\texttt{null}}
+\newcommand{\this}{\texttt{this}}
+\newcommand{\fieldAccess}[1]{\texttt{field\_cp\_index(}#1 \texttt{)}}
+\newcommand{\arrayAccess}[2]{#1[#2] }
+
+\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
+\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
+\newcommand{\EXC}{\texttt{EXC}}
+
+\newcommand{\excPost}{\psi^{exc}}
+
+\newcommand{\Myspace}{\phantom{aa}}
+\newcommand{\predicate}{ \mathcal{P}} 
+\newcommand{\Myfalse}{\textit{false}}
+\newcommand{\Mytrue}{ \textit{true} }
+\newtheorem{defn}{Definition} 
+
+
+
+% abstractCtrlFlow.tex
+\newcommand{\execRel}{\rightarrow} % the execution relation
+\newcommand{\blockm}[1]{ \tt{b^{#1}} }
+\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
+\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
+
+\newcommand{\blockPost}[1]{ \it{post(}\tt{b_{seq}^{#1}}\it{)}}
+
+\newcommand{\invariant}{\textit{I}}
+
+\newcommand{\srcVar}[1]{\texttt{#1} }
+
+\newcommand{\method}{\texttt{m} }
+
+% recuperé dans le prelude du code généré par l'Atelier B.
+% Doit permettre d'écrire à peu-près correctement <+
+\def\famletter#1{\ifcase #1 0\or 1\or 2\or 3\or 4\or 5\or 6\or 7\or
+    8\or 9\or A\or B\or C\or D\or E\or F\fi}
+\font\msx=msam10
+\newfam\msxfam \textfont\msxfam=\msx
+\edef\fx{\famletter\msxfam}
+\mathchardef    \dres       "2\fx43
+\def    \lover      {\mathbin{{\dres} \llap{$-\!\!\!\!-\!$}}}
+
+\def\keywords{\noindent\bf Keywords: \vspace{0pt}
+\it\normalsize\normalsize}
+\def\endkeywords{\par}
+
+\def\acknowledgement{\vspace{4pt} \noindent{\bf Acknowledgements} \\ \vspace{1pt}
+\normalsize\normalsize}
+\def\endkeywords{\par}
+
+\newcommand{\JACK}{\texttt{JACK}}
+\newcommand{\ESC}{\texttt{ESC/Java}}
+\newcommand{\LOOP}{\texttt{LOOP}}
+
+
+\title{Methodology for Java Application Validation}
+
+\author{L. Burdy, ...}
+
+\date{ }

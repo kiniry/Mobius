@@ -1,0 +1,254 @@
+\label{Industrialisation}
+% 4-5 pages
+JML has the advantage of being a language that can be rapidly and
+easily learned and used by developers. One can consider that using a
+prover is not so easy. Nevertheless formal activities like modeling
+and proving should not be reserved to experts. To demonstrate this
+concept, we provide a prover interface understandable to non-experts
+in formal methods.
+
+In order to simplify the modeling activity with the JML language, our
+interface requirements are:
+\begin{itemize}
+ \item to be integrated with other tools used by developers, and
+ \item not to require the developer to use a mathematical formalism,
+    but hide the mathematical formalism under a ``Java'' view.
+\end{itemize}
+Compared to other formal tools using the JML language, the efforts on
+the user interface and integration within the developement
+environment is probably the main strength of \JACK, as is the fact
+that the underlying mathematical formalism is not exposed to the
+user.
+\subsubsection{Integration in developers environment}
+ Java developers are used to develop using integrated development
+environments (IDE).  Those IDEs provide many features useful during
+the development process.  Integrating the tool in such IDEs allows the
+user to work in a familiar environment.  This leads both to better
+acceptance of the tool, and to a reduced learning curve.  Currently,
+\JACK\ is integrated within the eclipse IDE.  It could however be ported
+to other IDEs, and a standalone version that does not require an IDE
+also exists.
+
+ Another constraint has to be taken into account to obtain developer
+ agreement: it is the tool's responsiveness.  The tool has to be used interactively, with a
+ debugger spirit: it should not require the developer to wait for a
+ long time.  Lemma generation takes, in realistic examples, less
+ than one minute. %(see Section \ref{Case Study} for metrics).
+ Nevertheless, the automatic proof of lemmas is not such a  reactive
+ activity. Thus, the tool provides a feature that allows to schedule proof
+ tasks in order to optimize proof time (see paragraph \ref{Support for
+ automatic proof}).
+
+
+Several other minor features are available to integrate within the
+development cycle, for example, reports on the status of the project
+can be generated as Microsoft Excel files.
+\subsubsection{Lemma Viewer}
+\label{Viewer}
+One of the most important points of \JACK\ is that it does not require
+developers to learn a mathematical language.  Although lemmas are
+generated, those lemmas are not directly displayed to the user.
+
+Instead, we provide the user with a graphical view (Figure \ref{Viewer image}) of the lemma.
+ The viewer displays
+ \begin{itemize}
+  \item information concerning the current proof status;
+  \item the class methods with their lemmas;
+  \item the source code;
+  \item and the currently selected lemma (goals and hypotheses with Java or B presentation).
+\end{itemize}
+ Within a method, each execution path corresponds to a case.
+ Possibly, several lemmas are associated to each case.
+ When a case is selected, the corresponding execution path is highlighted.
+ When a lemma is selected, its views are displayed.
+\paragraph{Path highlighting}
+The source code of the program considered is displayed, and the
+path within the program that leads to the generated proof obligation
+is highlighted.
+
+\begin{figure}[th]
+ \epsfig{file=fm03/jack3.eps,width=12cm}
+ \caption{Viewer integrated in eclipse}
+ \label{Viewer image}
+\end{figure}
+
+Different highlighting colors are used to represent this path:
+\begin{itemize}
+\item green indicates that the corresponding instruction has been
+   executed normally;
+\item blue indicates that the corresponding instruction has been
+   executed normally, and that additional information is
+   available. For instance, the condition of an \texttt{if} construct will
+   usually be displayed in blue with additional information indicating
+   if the condition has been considered as true or false;
+\item red indicates that the corresponding instruction was supposed to
+   raise an exception when it has been executed in the case
+   considered.  Additional information are also provided indicating
+   the exception that has been raised.
+\end{itemize}
+The part of the specification (invariant or post-condition) that is
+involved in the current lemma is also highlighted.  Highlighting the
+part of the source code involved in the proof obligation allows to
+quickly understand the proof obligation, and allows the user to treat
+the proof obligations as execution scenarios of the program.
+\paragraph{Java presentation of lemmas}
+The hypothesis and goals of the current lemma are also displayed. As
+the conversion mechanism to B may be hard to follow, especially by
+non-experts, the internal representation used by the tool is used to
+present the hypothesis and goals in a Java representation. That is,
+all the variables are displayed using the Java dotted notation, and
+the Java operators are used instead of their corresponding function.
+
+However, such a translation may be more complicated when operators that
+have no Java or Jml equivalent constructs are used.  To emphasize this
+point, we present some lemmas that have been generated from the
+method of Figure \ref{JMLexample} concerning the post-condition
+correction.  The ''B style view`` (Figure \ref{B style view}) presents
+two lemmas concerning the fact that \texttt{i} becomes 3 for the
+instance \texttt{this} and becomes 2 for the instance \texttt{c}.
+ The fact that \texttt{i} has changed during the method is denoted using
+the overriding operator ($\lover$ in the B language) twice, replacing the
+value of \texttt{i} for the instances \texttt{c} and \texttt{this}.
+\begin{figure}[htp]
+\begin{center}
+$\begin{array}{l}
+ (i \lover \{ this \mapsto 3\} \lover \{ c \mapsto 2 \})(this) = 3 \\
+ (i \lover \{ this \mapsto 3\} \lover \{ c \mapsto 2 \})(c) = 2
+\end{array}$
+ \caption{B style view}
+ \label{B style view}
+\end{center}
+\end{figure}
+
+ The ''Java style view`` (Figure \ref{Java style view}) presents the
+ same two lemmas. However, as Java has no operator equivalent to the
+ B overriding operator, a special notation using the
+ ``\texttt{WITH}'' keyword is used. This view allows to understand
+ quickly which part of the specification is concerned by the lemma:
+ the postcondition is presented as it appears in the
+ code. Modifications concerning \texttt{i} are presented in a second
+ part (under the \texttt{WITH} keyword) in a specific order, and
+ possibly under constraints. In this example, the constraints express
+ the fact that the value of \texttt{this.i} is equal to \texttt{3}
+ under the assumption that \texttt{this} is different from \texttt{c}.
+ This allows to understand rapidly that there is an error in the code
+ in Figure \ref{JMLexample}, as it does not implement the
+ requirements when \texttt{c} equals \texttt{this}. This can also be
+ seen in the ''B style view`` but it requires more expertise.
+\begin{figure}[htp]
+\begin{center}
+ \begin{tabular}{ll|ll}
+ this.i == 3 & \hspace{2mm} & \hspace{3mm} & c.i == 2 \\
+ WITH & &       &  WITH       \\
+ c.i == 2 & &   &  c.i == 2     \\
+ this.i == 3 (this != c) & & & this.i == 3 (this != c)
+ \end{tabular}
+ \caption{Java style view}
+ \label{Java style view}
+\end{center}
+\end{figure}
+
+ However, although the Java view is able to handle some internal
+ representation constructs that do not have direct Java or JML
+ equivalent constructs, there are still constructs that cannot be
+ translated yet, and for which a Java notation is hard to define. For
+ instance the set operators cannot be translated in a generic way.
+ Handling such constructs will be performed by modifying the internal
+ representation in order to better match the JML language. For
+ instance the set $\in$ operator can be difficult to translate back
+ into Java. However, as it is mainly used for representing the Java
+ type information, adding a dedicated operator (that would be handled
+ like a $in$ operator from a B point of view) for
+ representing this type information would allow an easy translation.
+
+ Such changes to the internal representation would also be useful for
+ generating lemmas to other proof language such as Coq or PVS, for
+ which a translation using the set operators may not be the most
+ appropriate translation.
+
+%\subsubsection{Benefits of using a dedicated viewer}
+%Obviously, providing a simple viewer reduce the learning curve required for using the tool. However, a point
+%that we found worth mentioning is that this also provide benefits for the tool implementor.
+%
+%Separating the display of the lemmas from their underlying representation allowed us more freedom in the
+%underlying mathematical representation. Especially, before using a separate lemma viewer, special care was taken
+% to have a B representation as close as possible from Java. This was required since it was expected that users
+% would have to read the B lemmas.
+%  However, adding a dedicated viewer removed this constraints. Thus, the
+% generated lemmas can use representations that are not directly usable by a user, but more suited for machine
+% handling.
+%  For instance, when the viewer has become useable, the internal
+% representation of arrays has been modified in order to be easier to
+% use by  the tools even if it becomes more difficult to understand by
+% human. 
+\subsubsection{Support for verification}
+Apart from displaying the generated proof obligations, \JACK\ also
+provides support for validating those proof, as detailed hereafter.
+\paragraph{Support for automatic proof}
+\label{Support for automatic proof}
+ A point that should not be taken lightly is the time taken by
+automatic proof: generating proof obligations for industrial size
+applications will generate thousands of proof obligations.
+
+Typically, those proofs can be quite lengthy, and it is necessary that
+the user is not obliged to wait for proofs to finish.
+
+To achieve this, \JACK\ provides an independent proof view, where files can be queued in order to be submitted to
+the prover. Thus, the proofs are performed as soon as possible, possibly during the night, allowing the user to
+focus on cases inspection.
+\paragraph{Support for interactive proof}
+Although the automatic prover allows discharging many proof
+obligations, it cannot discharge all the proof obligations. Thus, the
+remaining proof obligations have to be verified manually.
+
+Currently, developers are not supposed to handle this task, but to
+delegate it to a team of experts that would perform the proofs using
+the interactive prover of the \texttt{Atelier B} tool.
+
+% However, proving a program correct simply correspond to explaining why
+% the programs works correctly.
+However, it is expected that developers will be able to handle more
+and more of the interactive proofs. To achieve this, we provide
+limited support for interacting with the prover in order to allow
+users to prove common cases.
+
+% voir si l'explication est suffisante
+Currently, two interactions are provided:
+\begin{itemize}
+\item Identifying false hypothesis. In that case, the prover tries to
+    prove the negation of the hypothesis, and if the proof succeeds,
+    the goal is discharged.
+\item Showing ``wrong pathes'' in the source code. This is performed
+    by clicking on a condition in the source code that ``cannot
+    happen''. For instance, a condition within a {\tt if} that is in
+    contradiction with the preconditions. \\ In that case, the
+    corresponding hypothesis is retrieved and sent to the prover as a
+    false hypothesis in a way similar to the previous case.
+\end{itemize}
+Those actions are still limited to one proof command that can either
+succeed or fail, and so cannot be used to perform full interactive
+proof yet.
+However, they still allow to discharge some classes of common  proof
+obligations.
+\paragraph{Checking proof obligations}
+Additionally to the ``\textit{proved}'' and ``\textit{unproved}''
+states, \JACK\ can also differentiate ``\textit{checked}'' proof
+obligations. Checked proof obligations correspond to proof obligations
+that are not formally proved, but have been manually verified.
+
+Checking a proof obligations is performed by the user to indicate that
+he has read and understood the proof obligation and has confidence
+that it is correct. Although the checked state provides no formal
+guarantee on the correctness of the proof obligations, it still
+provides valuable information on the state of a project.
+
+The checked state of the proof obligations can be used in different
+ways:
+\begin{itemize}
+\item To flag cases as already seen in order to start an interactive
+   proof only if we are pretty sure that the cases are correct, and
+\item In some cases, when a full correctness assurance of the program is not
+   required, we may accept that not all the proof obligations are
+   formally proved. In that case, it may however, be required that all
+   the proof obligations have been checked.
+\end{itemize}

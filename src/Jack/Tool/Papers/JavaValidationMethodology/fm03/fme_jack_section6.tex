@@ -1,0 +1,59 @@
+\label{Perspectives}
+ At the moment, we have developed a prototype that is becoming a
+ usable tool.  We are beginning experimentation outside the lab.  But
+ we are considering that there are still many points where the
+ approach can be improved.
+%\subsection{JML Subset considered}
+% JACK currently handles a subset of JML corresponding to lightweight
+% specifications.  Future work should improve that subset by allowing
+% to use a larger subset of JML including full fledged behavior
+% specifications and pure method calls.
+
+\subsubsection{Interactive proof cost}
+ Currently, the interactive proof support is rather limited.  Thus,
+ proving the remaining proof obligations requires users to directly
+ use the \texttt{Atelier B} tool interactive prover.  Such a task can
+ be tedious, since the B representation of the generated proof
+ obligations can be hard to follow.  Different perspectives exist to
+ reduce the interactive proof cost.
+
+% AR: remplacé non-expert par Java: en effet je trouve que ça serais
+% plus pratique même pour un expert.
+\paragraph{Java interface}
+ Although full interactive proof will still be reserved to experts,
+ providing an interface to the \texttt{Atelier B} interactive prover
+ allowing to perform proofs by directly using the Java syntax would
+ greatly improve the productivity of those experts.  A first step
+ would be to extend the Java view used to display the lemmas.
+
+\paragraph{Test Activity}
+ Another way to reduce interactive proof activity is to balance it
+ with testing activity.  Methods where lemmas are not automatically
+ proved could be tested.  Using \texttt{JmlJunit} can be a good way to
+ generate test skeleton on certain cases.  A perspective is to
+ integrate \texttt{JmlJunit} in our environment in manner to propose
+ different validation level (full proof, proof mixed with test, etc).
+
+\paragraph{Counter-example}
+ Another idea to reduce the cost of false lemma detection is to
+ provide counter-example when it is possible.  \ESC\ already tempts to
+ give such counter-examples.  Studies on that subject could give
+ results helpful for developers to understand errors on the code or on
+ the specifications.
+
+\subsubsection{Allowing expressions in the target formal language}
+Currently, \JACK\ can be seen as a proof-obligations generator from
+JML annotated Java programs to B lemmas.  A possible extension would
+be to add different target languages for lemma generation, for
+instance Coq or PVS. Such extension would allow using different
+provers for different lemmas.  On the other side, it is also possible
+to enrich the JML specification by adding inline expressions or
+variables in a target language of the lemma generator. 
+Such an extension would have a role similar to Java ``native methods''
+at a specification level. That is, allowing to describe in a
+lower-level language things that cannot be described in JML (or that
+cannot be described efficiently from a proof point of view).
+
+We are currently investigating such extension mechanisms, that would
+allow adding different languages for such use without having to modify
+the weakest-precondition calculus core.

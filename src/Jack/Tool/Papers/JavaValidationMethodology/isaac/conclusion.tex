@@ -1,0 +1,40 @@
+\subsection{Conclusions}\label{SecConcl} 
+
+We have developed a mechanism to synthesise JML annotations from
+high-level security properties. The mechanism has been implemented as
+a front-end for tools accepting JML-annotated Java programs; we use
+it in combination with JACK. The resulting tool set has been
+successfully applied to the area of smart cards, both to verify secure
+applications, and to discover programming errors in insecure
+ones. Our broad conclusion is that the tool set contributes to
+effectively carrying out formal security analyses, while also being
+reasonably accessible to security experts without intensive training
+in formal techniques.
+
+Currently, we are developing solutions to hide the complexity of
+generating core annotations from the user. To this end, we plan to
+develop appropriate formalisms for expressing high-level security
+properties, and a compiler that translates properties expressed in
+these formalisms into appropriate JML core-annotations. Possible
+formalisms include security automata, for which appealing visual
+representations can be given, or more traditional logics, such as
+temporal logic.  In the latter case, we believe that it will be necessary
+to rely on a form of security patterns reminiscent of the
+specification patterns developed by Dwyer \emph{et
+al.}~\cite{DwyerAC98}, and also to consider extensions of JML
+with temporal logic~\cite{TrentelmanH02}.
+
+
+Further, we intend to apply our methods and tools in other contexts,
+and in particular for mobile phone applications. In particular, this
+will require extending our tools to other Java technologies that,
+unlike Java Card, feature recursion and multi-threading.
+
+
+% that allow to specify the behaviour of an
+%application.
+
+
+
+
+ 

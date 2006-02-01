@@ -1,0 +1,40 @@
+\label{Conclusion}
+ The presented work allows formal methods experts to prove Java applet correctness.
+ Moreover, it allow Java programmers to obtain an high assurance on their code correctness.
+ This leads to the most important point:
+it allows non-experts to venture into the formal world.  This is a necessary starting point for such validation
+techniques to be widely used.
+
+  The tool has been developed following a main
+ objective: let Java developers validate their own code.  We claim
+ that JML is well suited to express low level design and conception
+ choices and that usage of \JACK\ can replace effectively unitary tests,
+ giving developers the means to furnish code with good quality
+ and non ambiguous documentation.
+
+ Taking benefits from recent research on Java program validation, we have
+ developed an automated tool that generates lemmas from Java classes
+ annotated with JML.
+ The \JACK\ principles are not really different from the \LOOP\
+ team choices.  Nevertheless, one can highlight some important
+ differences.
+ The \LOOP\ tool describes formally Java semantics and the WP-calculus rules are applied by the prover.
+ The main advantage is that the rules have been proven sound with regards to the semantics in the theorem prover.
+ Our point of view, is more pragmatic: lemma are generated automatically, using
+ Java developed rules that can only be checked by usual validation: test, code-inspection.
+ The soundness of the tool cannot be formally proved but on the other hand a big effort is done to present
+ lemmas to users in a way that he can understand them and verify
+ that they are valid.
+
+ The tool is fully integrated in the eclipse IDE
+ and presents lemmas in a visual way that allows developers to form their
+ opinion on the lemma validity.  An automatic prover discharges an
+ important part of the lemmas.  The remaining lemmas have to be proved
+ using the prover interface.  Often, this task cannot be done by developers.
+ Different ways are studied to bypass it: expert support, test case
+ generation, counter-example detection, etc.
+
+ We are now experimenting on real industrial products.  We are
+ trying to collect metrics in order to prove that this kind of
+ validation is cost-saving, especially when the cost of testing is
+ taken into account.
