@@ -2725,7 +2725,11 @@ specifications of the form
 restrictive than @code{modifies this.*;}.  Note that if a method is
 declared pure, then all overriding methods are also pure, whether or
 not they have an explicit declaration to that effect.  Note that a
-pure constructor may not modify static fields.
+pure constructor may not modify static fields. 
+
+It is also worth mentioning that it is possible to call non-pure methods
+from within the pure ones provided that the changed state is locally
+allocated in the pure method.
 
 @item @strong{Status:} Fully supported. 
 
