@@ -101,7 +101,7 @@ public class InferThrows extends DefaultVisitor {
 		TypeDeclElem elem = siblings.elementAt(i);
 		if( elem instanceof FieldDecl ) {
 		    FieldDecl fd = (FieldDecl)elem;
-		    if( !Modifiers.isStatic(fd.modifiers) &&
+		    if( !javafe.ast.Modifiers.isStatic(fd.modifiers) &&
 			fd.init != null ) {
 			fd.init.accept( this );
 		    }

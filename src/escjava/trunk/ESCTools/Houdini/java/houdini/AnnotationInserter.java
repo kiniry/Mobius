@@ -35,7 +35,7 @@
 # will be 0 (and so will "col").
 */
 
-package escwizard;
+package houdini;
 
 import java.io.File;
 import java.io.BufferedReader;

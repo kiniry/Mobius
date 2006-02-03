@@ -5,7 +5,7 @@
 // Change history:
 //    2 Apr 1999  rustan     Created
 
-package escwizard;
+package houdini;
 
 import java.io.File;
 

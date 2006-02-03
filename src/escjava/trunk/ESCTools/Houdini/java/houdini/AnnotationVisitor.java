@@ -93,7 +93,7 @@ public class AnnotationVisitor extends DefaultVisitor {
 		  if (AnnotationGuesser.isObjectArrayType(decl.type)) {
 		    Annotator requiresAnnotator = 
 		      new Annotator(rd, "parameter:" + ms, "requires ");
-		    requiresAnnotator.put("\\nonnullelements(" + decl.id.toString() + ")");
+		    requiresAnnotator.put("\\nonnullelements(" + decl.id.toString() + ");");
 		    return;
 		  }
 		}
@@ -300,7 +300,7 @@ public class AnnotationVisitor extends DefaultVisitor {
 	//@ assume env.elementType == \type(Type);
 	
 	TypeSig sig = TypeSig.getSig( td );
-	FieldDeclVec fds = sig.getFields();
+	FieldDeclVec fds = sig.getFields(true);
 	
 	for(int i=0; i<fds.size(); i++) {
 	    FieldDecl fd = fds.elementAt(i);

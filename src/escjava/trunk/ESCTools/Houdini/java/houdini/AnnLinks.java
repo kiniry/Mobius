@@ -52,7 +52,7 @@ public class AnnLinks extends javafe.SrcTool {
      ** <code>System.err</code>. <p>
      **/
     public void showOptions() {
-      super.showOptions();
+      options.showOptions(false);
       System.err.println("");
     }
 
@@ -69,10 +69,10 @@ public class AnnLinks extends javafe.SrcTool {
      ** See <code>Tool.processOption</code> for the complete
      ** specification of this routine.<p>
      **/
-    public int processOption(String option, String[] args, int offset) {
+    public int processOption(String option, String[] args, int offset) throws javafe.util.UsageError {
 
 	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
+	return options.processOption(option, args, offset);
     }
 
 
@@ -103,9 +103,11 @@ public class AnnLinks extends javafe.SrcTool {
     /**
      ** Returns the Esc StandardTypeReader, EscTypeReader.
      **/
-    public StandardTypeReader makeStandardTypeReader(String path,
+    public StandardTypeReader makeStandardTypeReader(String classpath,
+						     String sourcepath,
 						     PragmaParser P) {
-        return EscTypeReader.make(path, P);
+        // parallel to code in Escjava/java/escjava/Main.java
+        return escjava.reader.EscTypeReader.make(classpath, sourcepath, P, new escjava.AnnotationHandler ());
     }
 
     /**
