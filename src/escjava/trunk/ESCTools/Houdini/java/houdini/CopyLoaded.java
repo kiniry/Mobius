@@ -1,6 +1,6 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
-package javafe;
+package houdini;
 
 
 import java.util.Vector;
@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class CopyLoaded extends FrontEndTool implements Listener {
+public class CopyLoaded extends javafe.FrontEndTool implements Listener {
 
     public String name() { return "CopyLoaded"; }
 
@@ -30,13 +30,24 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      */
     public final Vector progIndirectFiles = new Vector();
     //+@ invariant progIndirectFiles.elementType == \type(String);
-    //@  invariant progIndirectFiles.owner == this;
+    // @  invariant progIndirectFiles.owner == this;
     //+@ invariant !progIndirectFiles.containsNull;
 
-    public final Vector argumentFileNames = new Vector();
-    //+@ invariant argumentFileNames.elementType == \type(String);
-    //+@ invariant !argumentFileNames.containsNull;
-    //@  invariant argumentFileNames.owner == this;
+    public void setupPaths() {
+	super.setupPaths();
+	if (options().specspath == null) return;
+	if (compositeSourcePath == null) {
+	    compositeClassPath = 
+		options().specspath
+		+	java.io.File.pathSeparator
+		+	compositeClassPath;
+	} else {
+	    compositeSourcePath = 
+		options().specspath
+		+	java.io.File.pathSeparator
+		+	compositeSourcePath;
+	}
+    }
 
 
 
@@ -50,23 +61,23 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     //@  invariant loaded != null;
     //+@ invariant loaded.elementType == \type(CompilationUnit);
     //+@ invariant !loaded.containsNull;
-    //@  invariant loaded.owner == this;
+    // @  invariant loaded.owner == this;
     public Vector loaded = new Vector();
 
-    //@ invariant loaded != argumentFileNames;
+    // @ invariant loaded != argumentFileNames;
  
     public CopyLoaded() {
         //+@ set argumentFileNames.elementType = \type(String);
         //+@ set argumentFileNames.containsNull = false;
-        //@  set argumentFileNames.owner = this;
+        // @  set argumentFileNames.owner = this;
     
         //+@ set loaded.elementType = \type(CompilationUnit);
         //+@ set loaded.containsNull = false;
-        //@  set loaded.owner = this;
+        // @  set loaded.owner = this;
     
         //+@ set progIndirectFiles.containsNull = false;
         //+@ set progIndirectFiles.elementType = \type(String);
-        //@  set progIndirectFiles.owner = this;
+        // @  set progIndirectFiles.owner = this;
     }
 
 
@@ -77,7 +88,7 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 
     private String packageDirForFile(/*@ non_null */ CompilationUnit cu) {
         Name pkg = cu.pkgName;
-        String s = pkg == null ? "" : pkg.printName() + ".";
+        String s = (pkg == null) ? "" : (pkg.printName() + ".");
         s = s.replace('.', '/'); 
         return s;
     }
@@ -109,16 +120,14 @@ public class CopyLoaded extends FrontEndTool implements Listener {
      *                                                 *
      **************************************************/
 
-
-
     //@ requires \nonnullelements(args);
     public static void main(String[] args) {
-        Tool t = new CopyLoaded();
+        javafe.Tool t = new CopyLoaded();
         int result = t.run(args);
         if (result != 0) System.exit(result);
     }
     
-    public Options makeOptions() {
+    public javafe.Options makeOptions() {
         return new CopyLoadedOptions();
     }
     
@@ -226,13 +235,21 @@ public class CopyLoaded extends FrontEndTool implements Listener {
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(filename);
-                PrettyPrint.inst.print(fos, sig.getCompilationUnit());
+		CompilationUnit c = sig.getCompilationUnit();
+                PrettyPrint.inst.print(fos, c);
             } finally {
                 if (fos != null) fos.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+	    //System.out.println (e.toString());
             ErrorSet.fatal(e.getMessage());
         }
+/*-ARN
+        } catch (Exception e) {
+	    System.out.println (e.toString());
+            ErrorSet.fatal(e.getMessage());
+        }
+*/
     }
 
     public final void frontEndToolProcessing(ArrayList args) {
@@ -271,10 +288,13 @@ public class CopyLoaded extends FrontEndTool implements Listener {
          * Load in each source file:
          */
 	Iterator i = args.iterator();
-	while (i.hasNext()) OutsideEnv.addSource((String)i.next());
+	while (i.hasNext()) {
+	    String next = ((javafe.InputEntry)i.next()).toString();
+	    OutsideEnv.addSource(next);
+	}
     
-         /* load in source files from supplied file name */
-	i = argumentFileNames.iterator();
+        /* load in source files from supplied file name */
+	i = options().argumentFileNames.iterator();
 	while (i.hasNext()) {
 	    String argumentFileName = (String)i.next();
 	    try {
@@ -298,9 +318,13 @@ public class CopyLoaded extends FrontEndTool implements Listener {
 	    }
 	}
     
-	i = loaded.iterator();
+        // FIXME! -ARN
+        // handleCU seems to modify loaded, invalidating the iterator.
+        Vector loaded_now = new Vector (loaded);
+	i = loaded_now.iterator();
 	while (i.hasNext()) {
-            handleCU((CompilationUnit)i.next());
+	    CompilationUnit nextcu = (CompilationUnit)i.next();
+            handleCU(nextcu);
         }
     
         progIndirectWriter.close();
@@ -404,14 +428,54 @@ public class CopyLoaded extends FrontEndTool implements Listener {
     }
     
 
+    /**
+     ** Returns the Esc StandardTypeReader, EscTypeReader.
+     **/
+    public javafe.reader.StandardTypeReader makeStandardTypeReader(String classpath,
+						     String sourcepath,
+						     javafe.parser.PragmaParser P) {
+        // parallel to code in Escjava/java/escjava/Main.java
+        return escjava.reader.EscTypeReader.make(classpath, sourcepath, P, new escjava.AnnotationHandler ());
+    }
+
+    /**
+     ** Returns the EscPragmaParser.
+     **/
+    public javafe.parser.PragmaParser makePragmaParser() {
+      return new escjava.parser.EscPragmaParser();
+    }
+
+    /**
+     ** Returns the pretty printer to set
+     ** <code>PrettyPrint.inst</code> to.
+     **/
+    public PrettyPrint makePrettyPrint() {
+      DelegatingPrettyPrint p = new escjava.ast.EscPrettyPrint();
+      p.del = new StandardPrettyPrint(p);
+      return p;
+    }
+
+    /**
+     ** Called to obtain an instance of the javafe.tc.TypeCheck class
+     ** (or a subclass thereof). May not return <code>null</code>.  By
+     ** default, returns <code>javafe.tc.TypeCheck</code>.
+     **/
+    public javafe.tc.TypeCheck makeTypeCheck() {
+	return new escjava.tc.TypeCheck();
+    }
+ 
 }
 
-class CopyLoadedOptions extends SrcToolOptions {
+class CopyLoadedOptions extends escjava.Options {
 
     /*@ non_null */ public String outDir = "./outdir/src-annotated";
     /*@ non_null */ public String outProgIndirect = "./outProgIndirect";
     /*@ non_null */ public String outLibIndirect = "./outLibIndirect";
 
+    public final Vector argumentFileNames = new Vector();
+    //+@ invariant argumentFileNames.elementType == \type(String);
+    //+@ invariant !argumentFileNames.containsNull;
+    // @  invariant argumentFileNames.owner == this;
    
     public String showNonOptions() {
         return ("<program indirection file>");
@@ -437,7 +501,14 @@ class CopyLoadedOptions extends SrcToolOptions {
     
     public int processOption(String option, String[] args, int offset) 
                                         throws UsageError {
-        if (option.equals("-outProgIndirect")) {
+        if (option.equals("-f")) { 
+            if (offset>=args.length) {
+                throw new UsageError("Option " + option + 
+                                         " requires one argument");
+            }
+            argumentFileNames.addElement(args[offset]);
+            return offset + 1;
+        } else if (option.equals("-outProgIndirect")) {
             if (offset>=args.length) {
                 throw new UsageError("Option " + option + 
                                          " requires one argument");
