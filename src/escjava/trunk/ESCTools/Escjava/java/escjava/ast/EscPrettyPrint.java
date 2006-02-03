@@ -341,7 +341,6 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
       
     case TagConstants.PARSEDSPECS: {
       ParsedRoutineSpecs s = ((ParsedSpecs)mp).specs;
-      writeln(o,"/*@");
       if (s.initialAlso != null) self.print(o,ind,s.initialAlso);
       java.util.Iterator i = s.specs.iterator();
       int k = 0;
@@ -350,12 +349,12 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
         if (oo == mp || oo == s) break;
         print(o,ind,(ModifierPragmaVec)oo);
       }
-      if (s.impliesThat.size() > 0) writeln(o, "implies_that");
+      if (s.impliesThat.size() > 0) writeln(o, "/*@ implies_that */"); 
       i = s.impliesThat.iterator();
       while (i.hasNext()) {
         print(o,ind,(ModifierPragmaVec)i.next());
       }
-      if (s.examples.size() > 0) writeln(o, "for_example");
+      if (s.examples.size() > 0) writeln(o, "/*@ for_example */");
       i = s.examples.iterator();
       while (i.hasNext()) {
         print(o,ind,(ModifierPragmaVec)i.next());
@@ -363,7 +362,6 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
       for (int j=0; j<s.modifiers.size(); ++j) {
         //print(o,ind,s.modifiers.elementAt(j));
       }
-      writeln(o,"@*/");
       break;
     }
       
