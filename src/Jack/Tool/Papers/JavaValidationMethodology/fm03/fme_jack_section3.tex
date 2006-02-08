@@ -1,28 +1,4 @@
 \label{JavaAppletCorrectnessKit}
-% Previous section shows that many different tools already exist,
-% providing utilities to prove Java application correctness.  In spite
-% of this existing context, we have decided to develop our own proof
-% tool. This section explains the different reasons that have guided
-% us.
-
-% The main reason is that it seems really difficult to put the existing
-% tools (mainly \LOOP and \textit{Jive}, which are the most
-% achieved ones) in developers hand.  They both require the user to be
-% a proof expert, even if the \LOOP tool now goes through
-% automation.  Our challenge was to allow Java developers to have an
-% assurance of the correctness of their code without appealing to proof
-% experts from help.
-
-%Contrary to \ESC that can only give a weak assurance on code correctness due to the unsoundness of the tool
-%(which is the price of the full automation), we are concerned by giving an high assurance on code correctness
-%with a high level of automation. The tool is not formally developed, as \LOOP is, but implements, in Java, a
-%weakest precondition calculus that generates lemmas without user interaction. We cannot prove that those lemmas
-%are necessary and sufficient to ensure the correctness of the applet but the tool is designed in this way.
-
-The previous section presented several tools that exist to handle JML annotated Java programs. However, we feel
- that the aspects of user friendliness and automatization are not sufficiently addressed by these tools,
-therefore we  decided to develop our own tool.
-
  The main design goals were the following:
  \begin{itemize}
  \item it should provide an easy accessible user interface, that enables average Java programmers to use the tool
@@ -30,15 +6,13 @@ therefore we  decided to develop our own tool.
 described section \ref{Industrialisation};
  \item it should provide a high degree of automation, so that most proof obligations can be discharged without user
  interaction. Only in this way, the tool can be effectively used by non-expert users, which is necessary if we want that
- formal methods will ever be used in industry. This is in
-contrast with the \LOOP\ and \texttt{Jive} approach, where users need in-depth PVS knowledge to be able to do
-verifications;
+ formal methods will ever be used in industry. 
  \item it should provide high correctness assurance: at the moment the prover says that a certain proof obligation
-is satisfied, it should be possible to trust this without any reservation (in contrast to \ESC). Nevertheless
+is satisfied, it should be possible to trust this without any reservation. Nevertheless
 the tool is not formally developed, as \LOOP\ is. It implements, in Java, a weakest precondition calculus that
 generates lemmas without user interaction. We cannot prove that those lemmas are necessary and sufficient to
 ensure the correctness of the applet but the tool is designed in this way;
- \item it should be relatively independent of the particular prover used, so that if the use of another prover is
+ \item it should be relatively independent of any particular prover, so that if the use of another prover is
  required (for example by a certification institute) it is relatively easy to adapt the tool accordingly.
 \end{itemize}
 
@@ -52,34 +26,18 @@ ensure the correctness of the applet but the tool is designed in this way;
 \end{figure}
  Figure \ref{JACKarchitecture} presents an overview of the \JACK\
  architecture.  \JACK\ consists of two parts: a converter (a lemma generator) from
- Java source annotated with JML into B lemmas, and a viewer that
+ Java source annotated with JML into JPOL lemmas, and a viewer that
  allows developers to understand the generated
  lemmas.  The viewer is integrated in an IDE and is described more precisely in section
  \ref{Viewer}.  This part focuses on the converter.
 
- The \JACK\ converter converts a Java class into a B model and allows to
- prove properties.  The B method \cite{bbook} is a formal method
- with different features such as refinement schema, translation in C
- code, etc.  We only use it as a framework that allows us to express
- lemmas and to prove them using a prover.  This prover is part of the
- \texttt{Atelier B\footnote{\texttt{Atelier B} is a CASE tool developed by
- Clearsy (\texttt{http://www.clearsy.com}) that allows one to develop
- using the B method.}} tool and provides two modules: an automatic one
- and an interactive one.  The choice of the B method as the targeted
- prover is due to different reasons.  The \texttt{Atelier B} prover is quite
- well automated with proof rate approaching 80\%. It can also
- easily be customized to increase this rate by adding new proof tactics
- and theorems.  Nevertheless, dealing with the interactive interface
- which allows to prove remaining lemmas is still an activity reserved
- to experts.  Another more pragmatic reason is the good experience
- of our team in the \texttt{Atelier B} prover (see
- \cite{Casset13:FME:2002,CBR:DSN2002}).
-
+ The \JACK\ converter converts a Java class into a JPOL model and allows to
+ prove properties. 
  Our goal is to prove properties on source files written with the Java
  language.  To reach this goal, one has to know how to ``translate'' a
- Java source file in B lemmas.  The two main issues are:
+ Java source file in formal lemmas.  The two main issues are:
 \begin{enumerate}
- \item How to formalize the object-oriented Java features in set theory (the B language is a first order language with set theory)?
+ \item How to formalize the object-oriented Java features?
  \item How to generate lemmas from Java methods?
 \end{enumerate}
 The following sections provide answers to those questions.
@@ -100,7 +58,7 @@ can use. The prelude contains two parts: a generic one and a contextual one.
  \rm{typeof} & \in & \rm{instances} & \rightarrow & \rm{TYPES}
  \end{array}$
 \end{center}
- \caption{Memory model representation}
+ \caption{Memory model representation in B}
  \label{Memory model representation}
 \end{figure}
 

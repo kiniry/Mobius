@@ -1,0 +1,321 @@
+Because annotating a Java program in conformity with the specification is long and hard process, JML generation mechanisms have been implemented to answer these problems. The tool basic idea of the tool developed was to introduce propagation mechanism in order to avoid redundant annotation of being inserted manually. After having translated the specification into JML preconditions and postconditions attached to functions, the propagation tool is able to spread the established requirements through the code using a simplified weakest precondition calculus [1]. Because this mechanism is fully automated, if the annotations generated can be proven, then the whole behavior of the class will be cover. As a result, this mechanism not only demonstrated its efficiency by sparing time but also in identifying incomplete software proofs on some already proven applications.
+Even though the interest of automating JML generation has been proved to increase reliability and efficiency, further automation would be a must to face the growth in complexity of applications. Nowadays, applications are growing more and more complex which obviously impacts the difficulty of the proving the applications conformity to specification. What revealed the use of the propagation tool is especially the hardness to correlate a specification to an implementation. Moreover, this gap results in lacks when proof is performed manually. Hence, further automation of JML generation would surely help in minimizing this gap and improve once again reliability and efficiency of the verification task. 
+By relying on the propagation tool it has become possible to propose new mechanisms based on high level representation of properties to build a bridge between specification and the verification of a specific implementation. As the propagation tool already capable of deducing annotations from methods' specification, the only missing step to lower the gap between specification and annotations is to describe properties at a more abstract level. This move towards high level specification is deeply facilitated by the frequent use of tools such as UML to specify software components. Analogous mechanisms are usable to represent what software should or should not do, i.e. no knowledge of the implementation it is required to do so. Moreover, this approach presents two other advantages: it makes the properties reusable on different components and makes conceivable to inherit properties from specification.
+Nevertheless, the selection of the model is not trivial as regards to the huge number of exiting models which lead to the choice of state machine model. UML itself appears more as a concatenation of previously existing models than a universal answer to the software modeling problematic. Among all model diagrams offered in UML, some easily express the sequences and some others are more appropriated to describe components' dependencies. For instance, sequence diagram would be adequate in our case to guaranty very constrained executions such as protocols. Therefore, a model is chosen in accordance with the problem being solved. 
+
+\subsection{Specification of the goals}
+As a result, a minimal set of constraint can be defined concerning the choice of the abstract model with the hope of keeping most of JML's expressiveness. First of all, the chosen model needs to be able to generate JML annotation for native methods. This requirement is mainly due to the fact that Java Card API is not provided together with JML specification. As a result, the model being chosen must be able to fit with both native and non-native methods. Secondly, the abstract model should consider methods' sequences as well as their pre and postconditions : this level of description surely is not only the most adequate to connect implementation to its high level specification, but also very crucial to smart verification. Furthermore, this choice is of great importance to connect the present work with the existing propagation tool. Finally, all possible improvement such as the support of invariants would be definitely a plus to keep as much as possible of the JML expressiveness.
+Independently from the model being chosen, several other parameters have to be considered during the elaboration phase of the tool being implemented. Firstly, the verification phase should be of no impact on the code. This requirements is explainable by the fact that verification is often perform by a third party, whose role is only to prove the conformity with the specification. This party is consequently not allowed to include new Java variables or statement that would penalize the execution of the program later on. Therefore, only JML statements should be generated for the verification. Secondly, the efficiency of the modeling tool will be greatly improved if the translation to JML could be done as direct as possible. Actually, it would be very limiting if the annotations generated were not understandable by human brain at the time the proof has to be carried out. Thus, the model should be user-friendly and be very likely to respond the previous expectations.
+For many reasons, the choice of finite state machine as a model to describe these properties is about to fulfill the previous expectations. FSM have been historically employed to model check software execution. Thereof, it is possible to assert that it is capable of specifying valid and invalid sequences in an intuitive way to people of the verification field. Nevertheless, the semantic of this automaton would require to be adapted to the expression of properties. It will be in particular compulsory to make an automaton stick to a property, by defining what could be the properties' states and what could make it switch from one to another. However, automatons make trivial the possibility to express pre and postcondition as they can be seen as methods' use cases, which is possible to describe through automatons' conditional evolution. As a consequence, the model used for this present study will be the FSM model.
+
+\subsection{The Automaton model}
+In the modeling context, an automaton is a conceptual representation dedicated to describe the evolution of physical systems. The essential intent of automatons is to order a sequence of actions conditioned by the result of logical or arithmetical operations. Today, there are admitted as standard model representation mostly because of the intuitive mechanisms they introduced. Thus, automatons appear very adapted to represent High Level Specifications of all self-evolving systems such as computer programs.
+An automaton can basically be dived in 2 sets. The first set is constituted of the system's states, which are identified by unique system's characteristics. If the previous set is finite, the automaton would also been called Finite State Machine. The second set regroups what people call transitions, which are in charge of ruling the automaton's evolution. For the need of some model, the automaton's evolution can be rendered conditional through the use of guards, or can even update some internal variables to be test latter on. A simple example illustrating the use of automaton is given figure 1. 
+
+
+Figure 1- Automaton modeling a light System
+
+Despite of its simplistic aspect, the example figure N exemplifies not only the classical notation used to represent automatons, but also the expressiveness of the automaton model. States are commonly represented by circles and transitions by arrows. The double circle state is the initial state. The system remains at 'green' as long as no warnings are provided by the system. If a warning turns out to become critical then the red light is turned on. However, the automaton specifies efficiently that it is not possible to reach the "RedLight" state unless "OrangeLight" has been crossed first. This simplistic figure exemplifies how adequate FSM can be for modeling sequences, all types of automatic systems, or even specifying communication protocols. This is the reason why, the two most frequent examples given in literature illustrating these are the lift's operating model and the multi-user protocol for printer.
+Because automatons come along with formal mathematical definitions, they present very attractive aspects for model behavior verification. Owing to the nature of automatons' model, the properties to be checked on automatons would necessarily concerns the sequences, i.e. the evolution of the system being modeled. To do so, temporal logic introduces the missing formalism to expressing order in time. The verification phase is then achieved through a model checker, which is a tool using a bunch of algorithms to check whether or not the properties is respected. 
+
+\subsection{Translating automatons to Properties}
+In this chapter begins the real cognitive process so as to make the automaton model fit to the description of properties. As an introduction to that, some related works that also use model/FSM approach for generating JML properties will be presented and commented as regards to the problematic detailed in the previous chapter. Further to that, the basics given about automatons and verification will be put into practice in order to find a suitable formalism for generating proofs. 
+\subsubsection{Related Work}
+\paragraph{Key-Tool}
+KeY-Tool is a project initiated in November 1998 at the University of Karlsruhe which aimed to design an integrated development environment for specifying and verifying implementation. It originally presented it self as an add-on for Together Control Center which purpose was to encourage people to use formal methods. Systems modeled with UML class diagrams could be verified by using a interactive tool generating OCL constraints [13]. Yet, lots of work has been performed for to tailor this approach to Java. First, Hoare logic has been adapted to a Java and gave birth to JDL (Java Dynamic Logic), which is employed to reason on Java program for building proof obligations. The second extension made to the tool is the support of JML statements to specify the program additionally to OCL constraints [14]. As a consequence, proofs can be carried out of OCL and JML textual description to model the dynamic aspects the system has to fit to. 
+Despite the fact that the concerns seems to be similar, Key does not respond to the same problematic. Firstly, although it uses program models, the constraints are written manually in OCL and no support of sequence or state diagram is provided: the only diagram used is the class diagram. This makes this tool inefficient to build automatically proofs. However, when talking about modeling tool and carrying proofs out, people may think about key tool. 
+
+\paragraph{F2J and AutoJML}
+F2J and AutoJML are experimental tools developed at the University of Nijmegen generating both Java code and JML. F2J original intent is to be used as a simple specification tool very suitable to protocol description which allow first refinement before generating code and the JML annotations in order to prove the applications behavior [15][16]. The description of what the program is expected to conform to is given via the use of temporal automaton, it is then possible use model checker to build the program correct from the start. Because of its similarity with the UML approach, AutoJML is an extension of its predecessor which introduces the support of UML State Diagrams, and offers accordingly some improvements of the model's expressiveness [17]. The extension operation mainly consisted in building a standard FSM description in XML understandable by the original F2J tool, and then implementing the appropriate parsers. 
+Despite of its proximity with our research thematic, AutoJML's features doesn't exactly respond to the same problematic as ours. Since JML comments generated by AutoJML are meant to verify the implementation of the Java code it built at the same time, it makes it difficult to use in the auditing context without affecting the source code. For JML annotations would rely very much on Java variables that it has introduced automatically during the generation process, it would lost its interest to make the JML suitable for back end verification. Furthermore, the tool neither is able to express recursive behaviors, nor takes no advantage of conditional executions that tends to make certain sequences of method difficult to specify. An illustration would be to consider that some authentication may not reasonably happen more than a predefined number of times on a smart card, unless a user is attempting to break a private key of the system. The expression of such a property would be almost impossible (especially for a big number of trials) without taking advantage of conditional executions. Nevertheless the approach offered first by AutoJML provides a interesting entry point to our work. 
+
+\subsubsection{Finding a suitable formalism}
+\paragraph{Expressing properties with automatons} 
+Starting from the use of FSM, the initial problem was to correlate the semantic of states and transitions with a program execution to characterize properties. On one hand, the state should be characterized by a unique set of properties from which a given set of evolution is possible. Hence, a program state could be defined by a set of values attached to program variables, or possibly by method's status (i.e. active state would represent the method currently executed). On the other hand, the evolution between those states is expressible with the automaton model through guards, update, and message passing. Once again, several possibilities are acceptable. In the case where the active state represents the method currently executing, transitions might be use to express pre and postconditions through guards and even specify some entry/exit action in the update field. Nevertheless, it is as well acceptable to assert that program's evolution is conditioned by the sequent call and returns of method, so that transition should be attached to methods, and pre and postconditions could be specified as state invariants.
+Even though several formalisms would be suitable, many of them could be discarded due to the limited nature of the properties expressible. First, correlating the active state with the method currently executing happened to be a bad idea. Such a representation imposes transition to define the pre and postcondition with the meaning that a method would neither be executed without respecting the preconditions of the incoming transitions nor terminate without fulfilling the postcondition specified as guard. For a unique transition plays both the roles of pre and post condition, choosing this modeling scheme would be perfectly appropriate to for expressing exact sequences of method call for which postcondition stands also as the precondition of the next method being called. This could be practical for describing completely known sequences which would be the case for protocols specification. However, considering the annotation of the beginTransaction and commitTransaction methods (which are involved in the transaction process of smart cards) demonstrates in the general case the need to partially specify sequences as methods have to be called in between those two methods. Moreover, this representation is not suitable to express properties dealing with recursion.
+As a result, methods will be attached to transition through the definition of method's events. Because transitions are meant to express a logical condition for going from the active state to the next, the FSM model supposes that the transition to take no time for switching. Therefore, events on methods should be define so that to be expressible in transitions. Fortunately, these events appear obvious for they are exactly the one considered in specifying pre and postcondition. First is the method call, which will cause the method to be executed. Second and third are the normal termination invoke by a simple return statement or an exceptional termination triggered by the throw statement. As a consequence, the whole systems evolution will be conditioned by 3 types of event which could stand for any language supporting exceptions.
+From what has been defined so far, transitions' role could finally be defined to carrying method's contract and the contribution of states to the model could be clarified. Yet, only two possibilities are offered to specify the contract: either states or transitions have to carry the pre and postconditions. The choice of state invariant to carry this information was discarded right away for the simple reason that a unique description would again stand for sequent post and preconditions. Guards appeared to be more likely to hold the contract for it would link methods' events to their triggering conditions. In other words, taking a transition would mean that the associated method call or return was done with respect to the pre or postcondition. This solution presents the huge advantage of keeping state free to specify invariants in accordance with the meaning a user would give to it. 
+
+\paragraph{Formal description of property's automatons}
+As a consequence of what was said previously, it is now possible to offer a proper definition of property's automaton. First, each property is associated with an automaton. Therefore a property responds to the following definition:
+
+property := ( [states]+ , [transitions]+)
+On the one hand, the states composing such automatons are abstraction of programs' state for which a user can specify invariants. For instance, after calling a sorting method, the state of a program could be called "Sorted" and an invariant taking into account the order of elements could be attached to the state. For this reason, a state regroups name information, possible invariants under the form of Boolean expressions, and a qualification to assert whether it is the initial state or not. This can be summed up through the below expression:
+
+state := ( name , [invariant]* , [initial])
+On the other hand, transitions are responsible of the evolution of the model and are attached to methods behavior. Transition are rather complex in comparison to states: not only are they attached to method event (namely the previously defined call, return and throw events) but also are in charge of updating the variable useful to the model and specifying the conditions in which these events can or cannot occur. Finally, transitions are attached to an incoming and outgoing state in order to maintain the coherency of the representation. This is synthesizable by the next expression:
+
+transition := ( IncomingState, OutgoingState, condition, event, [updates]*)
+event := {call, return, throw}
+However, the above representation is not sufficient to specify unequivocally properties. As far as we are now, a user will still in incapable of using the representation to an input for describing properties: what would mean to a normal user to define a condition associated to a method call? Although it appears obvious the user tends to specify a precondition, there are several ways for him to see it. For example, what would occur for states where the specified condition is not fulfilled? The user would possibly want to express that this call is not allowed or on the contrary that the automaton has to stay in the current state until the all the conditions are fulfilled to set the next state active.
+Because this mechanism for describing properties is meant to be used in the security context, it semantic has to be narrowed to avoid all sequences that might not have been explicitly allowed. This will of narrowing the semantic is natural for anybody involved in security would confirm that most of the time what has not been defined valid may constitute undesirable behaviors. Nevertheless, the constraint imposed by such a policy would make it very difficult to use, e.g. this would result in extensive definition of all possible behaviors, which is not conceivable in complex systems. This is the reason why smooth restrictions were added to this very limiting policy is that for a particular property (i.e. an automaton), only the methods declared in the context of that property have to have fully defined their sequences. In other words, it is possible to describe sequences affecting only some methods: the methods not specified for that sequence will be of no effect on the properties so that there execution would not be conditioned by the property.
+
+		According to these previous assertions, it is possible to express more formally the property that would be extracted out of the model. These basically consist in the following definitions:
+
+	Precondition: the precondition is expressed through a transition attached for a specific method to a call event. To be satisfied a precondition must fulfill the condition link to the transition as well as having its IncomingState set active. 
+
+Precondition := (IncommingStateCondition, method )
+
+	Postcondition: postcondition are defined similarly to precondition except that they are attached to termination event of methods. A return event would then define a normal postcondition and a throw event would define an exceptional postcondition. Finally, the satisfaction of the postcondition is complemented by the fact that as part of the contract the output state should be guaranteed in addition to appropriate IncomingState status and valid condition. 
+
+Postcondition: = (IncommingStateConditionOutgoingState, method)
+
+	Modification statement: the so-called 'modifies' or 'assignable' clause is defined according to the update statement of transitions. It is therefore associated to the method defined in the transition regardless of the nature of the events it is associated with. All the variable declare (even the one not affected explicitly) in the update statement will appear in the modifies clause. 
+
+Modifies: = (updates, method )
+
+	Invariants: invariants are specified in association with state and have to stand as long as the state to which they are attached is active. Thus, invariants translates by a logical implication.
+
+Invariants: = (State => invariant)
+
+\paragraph{Combination rules}
+Because it is possible for a specific method to be employed several times inside a same property, merging the pre and postconditions implicitly declared is mandatory and results in defining their combination rules. In the case of preconditions, specifying another entry point for the method surely means to extend the original preconditions to allow another case. Therefore, building a method's precondition for a given property consists in building the disjunction of all allowed cases. The case of postcondition is completely analogous. By specifying another exit point (exceptional or not), the user relates different executions for the methods leading to different states for the properties, which would also leads another disjunction. Nevertheless, for the need of verification the implementation would be slightly different (i.e. for building proofs, the disjunction can be efficiently replaced by implication a conjunction of implication). The below definition express consequently the combination rules for a given property and method:
+
+IntermediatePrecondition := (Precondition, method )
+IntermediatePostcondition: = (Postcondition, method )
+IntermediateModifies:= (Modifies, Method)
+However, being able to define several properties is almost mandatory therefore methods' contracts should be extracted from the complete set of automatons. Fortunately, the combination rules for merging contract of different state machines are trivial once they are known for each property individually. One wants the method specified to stand all properties at the same time, so the combination rule simply consist in building the conjunction of all preconditions and postconditions separately. This remarks stand also for the assignable clause which will be built as a consequence as the union of all single variables assigned.
+In conclusion, we need to clarify the definitions of pre and postconditions according to the combination rules defined previously. These more complete definitions are presented here below.
+
+GlobalPrecondition := (IntemediatePrecondition, method )
+GlobalPostcondition: = (IntermeditatePostcondition, method )
+GlobalModifies:= (IntermediateModifies, Method)
+
+\subsection{Implementing the concept}
+Because the process of translating automation into high level properties is now known from the reader, it becomes possible to consider the implementation problem. For an input was needed to describe the automatons, the choice of an entry point tool will be discussed first. Next, implementation choices such as the elaboration of data structures and the form of JML statements used will be explained. In conclusion, output files will be described so as to explain how the effective annotation of Java code is performed. All along this part, a rather simple but practical example will be followed so as to show a complete flow of property design.
+
+\subsubsection{Automaton input} 
+The first step to have been considered in the implementation phase was the choice of an input for the FSM description. Lots of tools are available for free on the Internet, so that it appeared immediately unnecessary to loose time in building a custom one. Among all possible tool one of the most interesting one was the UML plug-in for Eclipse called Omondo. The most interesting feature about it was precisely that Eclipse used as the unique environment for all the verification flow. Nonetheless, the input given as an XML file seemed very difficult to interpret, as no DTD description was available for it. Fortunately, the tool was implemented for evaluation first, so the choice was made to select another tool also supporting XML format, which would allow to reused our primary implementation and extend it to XML. UPPAAL [18] was therefore selected for its simple FSM representation and the availability of its DTD flat schema. 
+Nevertheless, the choice of UPPAAL as input for our properties appeared to be very suitable to our problematic. The most interesting feature of this tool is the native support of multiple uses of automation through an instantiation mechanism. Because in our description automatons are properties, this mechanism should be used profitably to make properties described once reusable. For instance, the specification of no recursive behavior would possibly be extensively reused in some specification from the same or another project. In addition, the efficient separations of concepts the tool kept a XML simple description making it very easy to extract. Moreover, not only is the interface very user-friendly so the user rapidly gets efficient in describing property, but very practical to extract Encapsulated Post Script images (namely '.eps' files) of the property to be used in writing down the specification.
+
+\paragraph{Example}
+A simple example of property is presented figure 2 which is called "NoNestedCall" and avoids methods from having recursive behaviour. The double-circled state represents the initial state, which for a method's point of view is obviously the idle state. After any call of the method, the method will be running. Then, the method would only be able to leave this state if either it calls itself recursively or returns (normally or by throwing an exception). Because the recursive behaviour is the one the property should avoid, any recursive call will lead to a Error state characterized by a false invariant. Therefore, the program could not be proven correct if the method has any recursive behaviour. This property could be particularly useful for checking complex methods' dependencies in which encapsulation could hide recursive behaviours.
+
+
+Figure 2 - UPPAAL input for the "NoNestedCall" property
+Linking the method to such a property is done using the "Process assignment" frame. In this frame, both properties and methods used by all the properties should be declared. Instantiating a property is trivial operation it basically consists in naming it as associating with the declared parameters. As an example, the "NoNestedCall" property detailed previously will receive the method to which it will be attached as parameter. Declaring a method is neither difficult and follows almost the same model. This process is therefore seen as instantiating a method represented by a so-called "MethodBehavior" automaton1. The name given to the method 'instance' has no real important. On the contrary, additional information has to be provided to make the method recognizable after synthesis. Table 2shows an example of "Process assignments" where both methods A and B of a given Class DummyObject should avoid recursive behavior.
+
+\begin{verbatim}
+	//Property instantiation
+	NoRecursion1 := NoNestedCall(A_call, A_return, A_except);
+	NoRecursion2 := NoNestedCall(B_call, B_return, B_except);
+	
+	//method Definition
+	//@ public Class DummyObject	//this is how class is specified
+	//@ public int A(String s) 	//this is how method is specified
+	A := MethodBehavior(A_call, A_return, A_except);
+	//@ public Object B(int value) 
+	B := MethodBehavior(B_call, B_return, B_except);
+\end{verbatim}
+Table 2 - Declaration 2 methods constrained by the "NoNestedCall" property
+
+\subsubsection{Generating JML}
+Because the contract generated would basically deal with the state variable visibility, it is compulsory to first set up how FSM would be inserted in the code. First of all, methods being constraint by a property may belong to various classes. Hence, it appears practical to describe automatons in dedicate classes instead of inserting it in one random method's class consider for the property. Furthermore, by using the instance names defined by the user himself for naming this class, proof obligations are made more transparent to user. However, the current state of the automaton has to be made public unless they would not be usable inside the method's contract. This is exemplified figure 3 in which is presented the skeleton of automaton class synthesized for the above "NoNestedCall" property. Finally, building a unique modification function for the state would be very practical not only to structure the code but also improve the readability of the JML generated. This part is discussed in the next section.
+As automatons are to be represented in isolated classes, all the elements of the description dealing only with this automaton found logically there place inside this class. This is basically the case of local variables, which are used only in the scope of their automaton. Not only would they be placed in this class, but also would they be declared private members of the class so as to restrict to the visibility of these variables strictly to their useful scope. Moreover, a unique modification function would be defined for of these variables in order to improve the structuring of code. For similar reasons, invariants which express properties in close relation with automatons and their local variables had to be included into the class as well. 
+
+\begin{figure}
+\begin{verbatim}
+public class NoRecursion1 { 
+
+	//Local variables
+	//(None to be added)
+
+	//State Definition
+	public final static int Idle = 0 ; 
+	public final static int Running = 1 ;
+	public final static int Error = é ;
+	public static int state = Idle ;		//
+
+	//states invariants
+	/*@ static invariant (state==Idle || state==Running ||
+				state==Error ); @*/ 
+
+	...
+}
+\end{verbatim}
+\caption{skeleton of the first instance of the "NoNestedCall" property}
+\end{figure}
+Although it is very similar to what was said for local variables, the case of global variables has not been treated yet. The specificity of global variable is that have to be visible at least to several automatons otherwise they would simply be local. Therefore, they visibility should be declared public. Nevertheless, it is important to keep a unique function, now also public, to modify so as to keep the code as structured as possible. Moreover, automatons should be defined inside independent classes in order for global variables not to be inserted in a random class. This is both useful to structuring the code and to avoid interference of local to general variables. Finally, the name of this class could be predefined, as it would be at most only class containing global variables in the whole verification. For the convenience, this class is called by default "GlobalVariables". 
+
+Invariants, update functions
+Although invariants are the easiest properties extractible from the description, they still are useful to emphasize some visibility issues. The invariants expressible with the predefined model basically consist in asserting a conditional property to stand at any time the state specified is active. This logical implication is possible to generate almost by a single copy and paste of the invariant given in the automaton's description. This makes the annotation very easy to produce so-far. Nevertheless, care should be taken not to consider them as real class invariants: first because they do not belong properly to the class. As a result, they are concerned with the visibility issues of private variable. It is therefore necessary to use the $spec\_public$ key word to make them accessible for the spec outside the class. Obviously, this remark stands also the visibility of guards which will encounter the same need for specifying them public to the specification. However, the simple invariant given for the Error state of the "NoNestedCall" property is here below. 
+
+//@ static invariant (state==Error) ==> (false) ;
+Building the evolution function of each individual automaton could be constructed by iterating on all transition composing the automaton. In the present case, each transition defines a new possible behaviour of the property. Each transition enriches the evolution function of one statement taking into account not only the guard but also the correct method event. Because the method would be called by each individual method, the function generated has to take into account the current state of the automaton, the guard if any is specified, as well as proper methods' event (namely call, return or throw) which it received as parameter. Later on, this function would have to be implanted after precondition or before postcondition checks have and be used as entry or exit actions. Figure 4 exemplifies code generated for this evolution method called 'getNext' in the case of the "NoNestedCall" example.
+
+\begin{figure}
+\begin{verbatim}
+public class NoRecursion1 {
+
+	...
+
+	/*	Modification function of the Automaton   */
+	public final static int A_Call = 0; 
+	public final static int A_NT = 1; 
+	public final static int A_ET = 2; 
+
+	//@ modifies \nothing ; 
+	/*@ ensures ((methodAction== NoRecursion1.A_Call &&
+		NoRecursion1.state== NoRecursion1.Idle) ==> 
+		\result==Running); @*/ 
+	/*@ ensures ((methodAction== NoRecursion1.A_NT &&
+		NoRecursion1.state== NoRecursion1.Running) ==> 
+		\result==Idle); @*/ 
+	/*@ ensures ((methodAction== NoRecursion1.A_ET &&
+		NoRecursion1.state== NoRecursion1.Running) ==> 
+		\result==Idle); @*/ 
+	/*@ ensures ((methodAction== NoRecursion1.A_Call &&
+		NoRecursion1.state== NoRecursion1.Running) ==> 
+		\result==Error); @*/
+	/*@ ensures (!(methodAction== NoRecursion1.A_Call &&
+			NoRecursion1.state== NoRecursion1.Idle) && 
+		!(methodAction== NoRecursion1.A_NT &&
+			NoRecursion1.state== NoRecursion1.Running) &&
+		!(methodAction== NoRecursion1.A_ET &&
+			NoRecursion1.state== NoRecursion1.Running) && 
+		!(methodAction== NoRecursion1.A_ET &&
+			NoRecursion1.state== NoRecursion1.Running) ==> 
+		\result==state); @*/
+	public static /*@pure@*/ int getNext(int methodAction);
+
+	...
+}
+\end{verbatim}
+\caption{evolution function synthesized for the "NoNestedCall" example}
+\end{figure}
+Similarly, update functions defined for variables requires gathering information by using regular expressions and iterating on all update fields of the given automatons. Regular expressions have to be used both to identify the variable updated and to isolate how the modification would be performed. Then a new statement in the modification function could be generated to complete the modification function of the identified variable: the modification should obviously be permitted only if the transition is about to be taken, which is analogous to what was said for evolution function. In the case of local variable, the update function is completely constructed once the automaton they belong to has been covered entirely. On the Contrary, global variables need the complete set of properties to be covered to be fully built.
+
+'Modifies' clause
+Although generating a modification clause could be though simple owing to the fact that it deals only with updates, it is actually a lot more complicated than the problems treated so far. Because the modification clause aims to take inventory of all modified variables outside the function, information should gather not only the variables modified by the function itself but also by their sub-function. Because, our model is able to express such sub-function use, these should be considered when generating the modification clause. Nevertheless, what can be generated only depends on the information extractable from the description. In other words, as long as sub-functions are used but not constrained by an automaton description, the modification they introduced would logically not be taken into account. 
+As a result of this complexity, the class diagram established while describing the XML parsing had to be refined. Because sub-functions call and return is express through the specification of path inside the automaton, gathering information basically consists in a graph exploration. This introduced the need to enhance the data structure described previously in order to improve the efficiency of the search. Thus, a graph structure was added to the Property, State, and Transition classes. In the mean time, several algorithms adapted to the current exploration problem caused by sub-functions usage were implemented to speed up the analysis. 
+Still, generating the 'modifies' clauses remained a difficult problem owing to the difficulty of identifying valid sequences. Being able to identify sub-functions usage requires first being able to identify all valid sequences leading from a call to a return. Sequences are seen from the graph defined above as a simple path which by definition prevents any transition of being used twice. However, it does allow a single state to be used more than once: it is possible for a function to make used of recursive function (namely described by a circuit) before returning. Sequences are asserted to be valid if it is feasible for a method to be called by the first transition of the sequence and to return by its last transition. This criterion was implemented by evaluating the depth of the call stack for any of the simple paths and circuits available between a given call and return. 
+However, the exploitation valid sequences allow simply identifying all sub-functions used by a given method. Consequently it would be necessary to wait for all automatons to have been explored and for each individual method to know the variables directly affect to generate correctly the 'modifies' clause. Not doing so might result in incomplete specification since the set of modified variables may not be complete before all properties were covered. Only then, information could be merged to give birth to a correct 'assignable clause'. In performing this operation, care was taken to avoid redundant declarations. 
+
+Pre and postconditions
+Despite of its apparent simple complexity, generating methods contract still is not trivial. Although preconditions are easy to synthesize, the difficult part of the problem stands in expressing a correct postcondition. According to what had been defined in the previous, a postcondition has to take into account the incoming state to assert that a termination is valid. Nevertheless, this is almost not obtainable since the incoming state of our representation is not visible from the postcondition. Because the evolution of the automaton have to be performed before the verification of the postcondition (at least for semantic reasons), this 'incoming' state is not visible. However this state is neither available through the use of the '\old()' JML statement because it only give back the value stored at the time the method was called. Consequently, solutions had to be found to circumvent this problem.
+Even if several solutions were conceivable, the effort made to build correct 'modifies' clause strongly orientated the choice of the solution. The first solution considered was both efficient and of the simplest imaginable. It simply consisted in inserting a new variable in the automaton class to represent at each time the value of the state before the evolution function was called for the last time. Nevertheless, a more creative solution was selected, which lead to strengthen the definition of postcondition. Due to the work performed for the modification clause, it is possible to list the entire possible path. Therefore, the postcondition could be directly specified as regard the value of state at the time the function was called. This definition is provably more restrictive since it keeps guarantying a valid state after leaving the function but imposes more restriction on the way used to reach the output state. Although a lot less complex, figure 5 exposes the contract generated for the method A, which had been constrained with the "NoNestedCall" property.
+
+\begin{figure}
+\begin{verbatim}
+	/*@ requires (NoRecursion1.state== NoRecursion1.Idle || 
+			(NoRecursion1.state== NoRecursion1.Running) ; @*/ 
+	/*@ modifies NoRecursion1.state; @*/ 
+	/*@ ensures (\old(NoRecursion1.state)== NoRecursion1.Idle) ==> 
+			(NoRecursion1.state==Property1.Idle) ; @*/ 
+	/*@ signals (\old(NoRecursion1.state)== NoRecursion1.Idle ==> 
+			(NoRecursion1.state== NoRecursion1.Idle) ; @*/ 
+	public int A(String s);
+\end{verbatim}
+\caption{Contract synthetized in accordance with the "NoNestedCall" property}
+\end{figure}
+
+Entry and Exit Actions
+As a conclusion of the generation process, statements have to be generated to perform the entry and exit actions. These actions which will be performed immediately after method's call and right before exiting the method constitutes the mandatory complement to make out model function. These actions basically consist in updating automatons' states as well as global and local variable, for which functions were already implemented. Consequently, for each transition declaring an update while calling or returning from a function a simple statement making use of this function would be generated. 
+Nevertheless, these statements are not possible to generate by using only JML. The troubles come from the difficulty to insert entry and exit actions in the code at the appropriate place. More precisely, inserting exit actions before a return state would have no meaning if this return statement makes use of a function (e.g. a statement that would be similar to " return modifyEverthing();"). Besides, the return can even be differed by the use of a finally clause. Furthermore, even if the entry point of a function can be considered known2, the exceptional termination point of the function is not predictable, so that it is impossible to anticipate where the exit statement should be inserted. Although each return or throw statement could be identify, Java can still leave the function by throwing any runtime exception such as a NullPointerException. As long as the use of entry or exit action is not supported by JML language, the recourse to java statement will be unfortunately unavoidable.
+As a consequence of the use of Java statements, each individual method constrained would have to endure functional modifications. In order to identify all possible source of interruptions, a global capture clause had to be generated. Though, in order not to modify the application functionally, care should be taken not to forget to throw again the Exception caught. Moreover, the Java structure try{}catch{}finally{}(exemplified in figure 6) appeared to be also had to be used in order to 'catch' also the termination for normal execution. So far, the use of Java statement could be considered an advantage, since these would be easier to insert into the code. However, this would lead to restrictions later on as detailed in the part called 'current" limitations' of the next chapter.
+
+\begin{figure}
+\begin{verbatim}
+	boolean __INTERNAL_TEST = false; 
+	/* Entry Actions */
+	/*@ set NoRecursion1.state =
+			NoRecursion1.goNext(Property1.A_Call); @*/ 
+	try{
+		/*-- Method Body --*/
+				/*--- End Body ---*/
+	}
+	catch(Exception e){ 
+		__INTERNAL_TEST = true; 
+		/* Exceptional Exit Actions */
+		set NoRecursion1.state =
+			NoRecursion1.goNext(Property1.A_Call);
+	} 
+	finally{ 
+		/* Normal Exit Actions */
+		if (!__INTERNAL_TEST ){
+			/*@ set NoRecursion1.state =
+			NoRecursion1.goNext(Property1.A_Call); @*/ 
+		}
+	}
+\end{verbatim}
+\caption{Entry and Exit actions to be inserted into methods definition. This example is associated with the "NoNestedCall" property attached to the A method}
+\end{figure}
+\subsubsection{Output files}
+After generating JML all the previous JML statement the effective annotation of code had to be considered resulting in the generation of 2 different files. The first of these two is a ".prop" file dedicated to be used by the propagation tool. As a result, it basically contains the methods definition in association with the contract  extracted from the description. Starting from this, propagation is performed the standard way by users. The second file is made up for gathering the modification of functions due to the need of entry/exit actions. This file basically consists in redefining the function's first and final lines. Nevertheless, no automation is provided yet to place them automatically into the code being verified. Hopefully, this functionality would never have to be coded if new JML statements supporting those actions could be inserted into Jack. (Please refer to "current limitations" section of next chapter)
+
+\subsection{Evaluating the Tool} 
+In this chapter, practice will be given on using the tool implemented according to the previous chapter. Because Java Cards have encompassing security aspects but still are both simple and very close to the problematic considered, JavaCard will be a efficient the support for evaluating our tool. As a result some high level properties required for the security of Java Card such as the one enforceable for the transaction mechanism will be implemented. Hence, an analysis of the result achieved by this tool will be provided. Then, the third and last part will conclude with some mid and long term perspectives for the tool. 
+
+\subsubsection{Atomic actions}
+One of the most crucial mechanisms used by JavaCard is the previously detailed Transaction mechanism, which provides the functionality to make any treatment in atomic time. This mechanism is implemented in the API by 2 functions: On the one hand the so-called beginTransaction() is responsible to open a transaction and on the other hand is the commitTransaction() method which is in charge of achieving the transaction. In case any problems occurs in the transaction the card will be rolled back to the state it was in before calling beginTransaction(). The abortion of the transaction is performed by calling the abortTransaction() method and can be commanded either programmatically or automatically by the JCRE to enforce security in cases such as power-loss or card-tear.
+Nevertheless this powerful mechanism should be restricted at the minimum by the three following properties so as to prevent security flaw. 
+No Authentication in transaction [1]: If not, it would become possible after each authentication failure to roll back the card by invoking directly or indirectly the abortTransaction(). Thus no record would be kept of the authentication attempts, which would allow a possibly unbounded number of retries. 
+No exception in transaction: according to the same paper, one should additionally make sure that all the exceptions thrown inside a transaction are handled.
+No instantiations in transaction[19][20]: From the API documentation we learn that one should not call abortTransaction() method inside a transaction which created new objects as it may not be able to free heap space granted to those objects. Because of the eventuality of hardware failure, the only possible way to ensure those restrictions is to avoid object of being created in a transaction.
+The first and third properties went implemented easily using the previously automaton tool. For their representation we used a 'global' Boolean variable denoting weather a transaction was performing or not. The management of this variable will be detailed later on with the modeling of the transaction mechanism. From this, the bounded retries property presented figure 7 becomes obvious: function constrained by a bounded number of retries could implement this property that leads the system to an error if called during a transaction. However, this particular property works to assert any restriction of calls inside a transaction. Hence, the no instantiation property is obtainable by declaring the same model behavior for all the possible constructors: any call of a constructor while a transaction is performing would result in an error.
+
+
+Figure 7 - property avoiding the some method's event during transaction
+
+The "no exception in transaction" property required nonetheless slightly more efforts. This property is not directly obtainable under its current form. It is obviously difficult from a high level specification to ensure such a requirement. However, if an exception remains uncaught during a transaction this means that the 'main' method will receive it and attempt to throw it again without closing the transaction. As a consequence, the 'main' method should be specified so that this behavior is avoided. Moreover, it should come naturally that in a more general way, any transaction should be committed before leaving the 'main' method. This is the property, given figure 8, attached to the "process" method which is kind of the equivalent of 'main' function in JavaCard's world3 [20].  
+
+
+Figure 8- "No exception in transaction" property
+
+
+\subsubsection{Atomicity life cycle}
+Because expressing properties on what is allow or should be prevent inside transaction is a must, the API methods involved in building atomic actions should be modeled. A first approximation of this mechanism is given in figure 9. A transaction always begins by calling the method beginTransaction(). Once the method returns, the transaction is opened, which is notified to the system by setting up the 'global' performingTransaction variable to true. From there only two solutions are available to leave the "transactionOpened" state: either the transaction is aborted or the changes made while being in this state are committed. It is of importance to notice it is not possible to encapsulate different levels of transactions by calling a second time the beginTransaction method once a transaction is already opened. This automaton therefore enforces the no nested transaction property specified in the Java Runtime Environment [20]. Moreover, this model avoids any invalid call to abortTransaction() or commitTransaction() methods while no transaction has been initiated.
+
+
+Figure 9- -simple Transaction model
+
+However the previous model is very restrictive in comparison to the API specification and could be made a lot more precise with almost no efforts. The first notice concerns the possibility to perform the call to beginTransaction(). According to the specification, it "may" (sic) be of no effect if the method has not yet been properly registered. Because it is up to the designer to implement the install method (which encapsulates the registration), it is reasonable to preserve it use until the registration had been performed properly. The new global variable called registered (detailed later on) is responsible for avoiding such behavior. Further to that, exceptions thrown by the functions involved in the transaction have been also modeled so that the implementation being verified does not suffer from restricted behavior. This results in the new offering the new model presented figure 10 in conformation to the API specification [19]. 
+
+\subsubsection{Applet Life Cycle}
+Because install method has to be redefined for every applet, it makes sense to express the properties every redefinition should conform with. The first intent of the install method is first to create the objects which will be used by the applet and second to register the applet. In the first stage, the install method can be seen as the applet's constructor. The second stage is compulsory so as to make the method selectable (in other words executable), but can be achieved using two different register methods [API]. However, installation would only be considered successful if register method returns without an error, which is to say that no exception has been thrown neither before calling the register method, nor by the register method itself [20]. In case of failure, it is the role of the Virtual Machine to roll back the card to the state it had prior to the call of the installation method. 
+
+Figure 10 - Refined model of the transaction mechanism
+
+From the above specification of the property presented in figure 11 could be modeled and give useful information to perform the verification. This property sets the "registered" variable to denote a successful installation. As regards to the previous transaction model, it expresses the possibility for methods to initiate a transaction (or even abort or commit a transaction which may result in throwing an exception). Nevertheless, this variable is a synonym for selectable from a more extensive point of view and in particular for the system that the method can be deselected, selected, and process. Because no particular semantic had been given to those methods inside Jack, the "registered" variable could be useful to build a more complete model of the system so as to perform the verification.
+
+\subsubsection{Current limitations}
+Even though the tool provided can has demonstrated its adequacy to describe high level properties, some weaknesses have appeared while using the tool so that extensions would be required for it to be fully operational. Three main axes where seen as possibly improvable. 
+First are the properties dealing with the effective annotation of code. Among this category of weaknesses is the limitation that appeared while expressing properties on private or protected members of classes. Because the properties are synthesized in independent classes, or could possibly deal with various classes it is not possible to manage directly those not visible fields or methods (such as accessors) directly in invariants or guards. However, this could be handled as long as those members are precise with the JML $spec\_public$ statement, which the tools could possibly manage automatically. Besides, it would be a plus for the propagation to be extended to support packages so that the verification classes could be placed in a dedicated package.
+
+
+Figure 11 - Installation model of JavaCard Applets
+
+Then, some limitations appeared in the expressiveness obtainable for exceptions. Actually, there are as many ways to return from a method as there are types of exceptions plus one (as the return statement should be considered). This remark happened to be useful in annotation the JavaCard API for which only ISOException should be visible at the top level [1]. For instance, the process method should avoid throwing ArithmeticException since this bug should be manage in the core of the program but could not avoid throwing ISOException for protocol reasons. Fortunately, even though not implemented yet, this feature had been anticipated from the beginning thus the solution is available. Only a few modifications would be required as the solution consists in managing additional fields in methods definition and set up a way to name the exception concerned such as the example propose in figure12 for which the extraction would be trivial.
+
+The final limitation identified is due to the solution chosen (temporary) to implement entry and exit action and may be solved if the new key words inserted in Jack for specifying them could handle the \result. Because of it is not possible condition the evolution of the property according to the result returned. As a example one could consider the select method of the JavaCard API which role is to make the method active. The select method however may decline the will express by a terminal to use its applet's services. To do so, it return true or false whether it accepts or not to exchange data with the terminal. Nevertheless, the try{}catch{}finally{} set up for handling entry and exit action may not possibly access to the result returned by the function. However, if entry and exit actions where added specifically to the contract by introducing specific keywords, it would be possible to handle such problems by using the \result statement available in JML.
+
+\begin{figure}
+\begin{verbatim}
+	//@ public Class DummyObject
+	//@ public int foo(int param) throws IOException
+	foo := MethodBehavior(call, return, foo_Exception,
+				foo_NullPointerException, foo_IOException);
+
+	/* - Using foo_Exception will set properties for all exceptions
+	   - Using foo_NullPointerException will set properties for
+				NullPointerException exceptions only
+	   - Using foo_IOException will set properties for
+				IOException exceptions only
+	*/
+\end{verbatim}
+\caption{Proposition of content for process assignment solving the problem of exception}
+\end{figure}
+
+
+Figure 13 - Suggestion for Select/Process/Deselect life-cylce
+
+In figure13 is a simple example to illustrate how sequence select/process/deselect sequence could benefit as many other sequences form such a modification. Using such a model would be useful to precise for verification the sequences ensured by the virtual machine (as no particular semantic is associated by Jack to those functions). Therefore, any modifications made during selection would be taken into account while verifying the process method. This goal is achieved by defining a new global variable called "isSelected" to be used in constraining the process method. In all other aspects, the specification logically derives from the JavaCard Runtime Environment Specification. Particular attention should be taken in analyzing the disjunction of cases represented from the AcceptOrDeny state, which is explicitly demonstrate the need for considering return value to influence automaton's evolution..
+7.3 - Perspectives / Pending work
+Even though many perspectives are offered to the tool, the most evident in the close future seems to be the addition of some JML syntax to Jack in order to build a proper support for entry and exit transactions. New statements are proposed every day by JML users which are more or less useful to the purpose of JML users. Example of proposition could be some sugaring syntaxes. This possibility is however reinforced by the fact that semantic issues are no completely solved by the JML community. As a result of all this, it appears possible to insert some specific to Jack JML keywords. (Obviously, it would be a plus if those key words and semantic could be accepted by the JML community). Moreover, the semantic of such keywords would be relatively clear: entry action should be performed after checking the precondition and exit action executed before guarantying the postcondition so that the meaning of the contract would not be modified. Further to that, it could be enforced that only JML variables may be modified by such statements in order not to modify functionally the Java program. Finally, additional work should be required to consider in what proportion this modification would impact the propagation tool and perform adaptations in consequence.
+Other improvement would rather address productivity issues. It could be a huge advantage for developers to benefit from a completely integrated environment supporting all the JML tools. Therefore, an improvement would be to integrate the tool to the Eclipse environment. Additionally, providing a standard library of properties would be definitely of importance for developers. This is made possible the properties being verified are often similar or identical, e.g. the above properties of the JavaCard have to stand regard less of the applications. This is yet also facilitated from a user point of view by the importation mechanism proposed in UPPAAL.
+Besides, other minor improvements could be performed that would ameliorate the quality of the tool. First of all, further support could be provided for managing guards which up to now have to be specified disjoints. If a user specify two transitions starting from the same node guarded by two Boolean possibly true at the time the transition could be taken, the behavior of the system is not predictable4. More support could also be provided in identifying 'dummy' subsequences such as never-returning calls. In conclusion, as regards to users need it would be possible to produce XML parsers casting some UML to our standard input.  
+
+\subsection{Conclusion}
+At the term of this internship, a relatively complete solution for the problematic detail in introduction has been designed. After getting some backgrounds on the verification of Java programs, formalism was elaborated which was then put into practice. Even though the tool would yet need some extensions to be fully operational, the proposed formalism appeared satisfying for all the practical case study made. Moreover, through the case study of JavaCard application verification, the tool demonstrated its real ability to facilitate the verification of high level security properties.
+However, functional enhancement of the tool might be very profitable. The introduction of new key words to specify entry and exit action in JML seems by the end of this internship a real necessity. Other improvements could be in the integration of the present tool to the Eclipse environment or building a library of reusable properties so that the tool really contributes to make verification more efficient and reliable. Finally, it could be of use to allow new description inputs by offering support for the parsing UML state or sequence diagrams to an XML equivalent (in the sense of properties expressed) interpretable by our tool.
+

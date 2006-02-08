@@ -1,3 +1,480 @@
 \chapter{Java Validation}
+\section{Java}
 \section{JML}
+JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the
+``Java Modeling Language'', is useful for specifying detailed
+designs of Java classes and interfaces.  JML is a behavioral interface
+specification language for Java; that is, it specifies both the behavior
+and the syntactic interface of Java code.  The syntactic interface of
+a Java class or interface consists of its method signatures,
+the names and types of its fields, etc.
+This is what is commonly meant by an application programming
+interface (API).
+The behavior of such an API can be precisely documented in JML annotations;
+these describe the intended way that programmers should
+use the API.  In terms of behavior, JML can detail, for example, the
+preconditions and postconditions for methods as well as class
+invariants.
+
+An important goal for the design of JML is that it should be easily
+understandable by Java programmers. This is achieved by staying as
+close as possible to Java syntax and semantics.  Another important
+design goal is that JML {\em not} impose any particular design method
+on users; instead, JML should be able to document Java programs
+designed in any manner \cite{Leavens-Baker-Ruby03}.
+
+The work on JML was started by Gary Leavens and his colleagues and
+students at Iowa State University, but has grown into a cooperative,
+open effort.  Several groups worldwide are now building tools that
+support the JML notation and are involved with the ongoing design of
+JML\@.  The open, cooperative nature of the JML effort is important
+both for tool developers and users, and we welcome participation by
+others.  For potential users, the fact that there are several tools
+supporting the same notation is clearly an advantage.  For tool
+developers, using a common syntax and semantics can make it much
+easier to get users interested. After all, one of the biggest hurdles
+to using a new specification-centric tool is often the lack of
+familiarity with the associated specification language.
+
+\medskip
+
+The next section introduces the JML notation.  Sections~\ref{tools}
+through \ref{toolsEnd} then discuss the tools currently available for
+JML in more detail.  Section~\ref{applications} discusses the
+applications of JML in the domain of Java Card, the Java dialect for
+programming smartcards.  Section~\ref{related} discusses some related
+languages and tools, such as OCL and other runtime assertion checkers,
+and Section~\ref{conclusions} concludes.
+
+%=====================================================================
+\subsection{The JML Notation}
+\label{notation}
+
+JML blends Eiffel's Design by Contract approach~\cite{Meyer97} with
+the Larch~\cite{Guttag-Horning93} tradition (and others that space
+precludes mentioning).  Because JML supports quantifiers such as
+\verb_\forall_ and \verb_\exists_, and because JML allows ``model''
+(i.e., specification-only) fields and methods, specifications can
+easily be made more precise and complete than is typical for Eiffel software.
+However, like Eiffel, JML uses Java's expression syntax in assertions,
+thus JML's notation is easier for programmers to learn than notations
+based on a language-independent specification language, like the Larch Shared
+Language~\cite{Leavens-Baker-Ruby03,Leavens-etal03a} or
+OCL~\cite{WarmerKleppe99}.
+
+%% Note that I have used the newly specified constructor to illustrate
+%% a point about ESC/Java below, so beware if you try to save space by
+%% deleting it. -- Gary
+
+\begin{figure*}
+{\small
+\verbatiminput{Purse.java}}
+\caption{\label{example}Example JML specification}
+\end{figure*}
+
+Figure~\ref{example} gives an example of a JML specification that
+illustrates its main features.  JML assertions are written as special
+annotation comments in Java code,
+either after \verb_//@_ or between \verb_/*@ ... @*/_,
+so that they are ignored by Java compilers but can be used
+by tools that support JML\@.  Within annotation comments JML extends the
+Java syntax with several keywords---in the example in
+Figure~\ref{example}, the JML keywords {\tt invariant}, {\tt
+  requires}, {\tt assignable}, {\tt ensures}, and {\tt signals} are
+used.  It also extends Java's expression syntax with several
+operators---in the example \verb_\forall_, \verb_\old_, and
+\verb_\result_ are used; these begin with a backslash so they do not
+clash with existing Java identifiers.
+
+The central ingredients of a JML specification are preconditions
+(given in {\tt requires} clauses), postconditions (given in {\tt
+  ensures} clauses), and (class and interface) invariants.  These are
+all expressed as boolean expressions in JML's extension to Java's
+expression syntax.
+
+In addition to ``normal'' postconditions, the language also supports
+``exceptional'' postconditions, specified in {\tt signals} clauses.
+These can be used to specify what must be true when a method throws an
+exception.  For example, the {\tt signals} clause in
+Figure~\ref{example} specifies that {\tt debit} may throw a {\tt
+  PurseException}, and, in that case, the balance will not change (as
+specified by the use of the \verb+\old+ keyword).
+
+The {\tt assignable} clause for the method {\tt debit} specifies a
+frame condition, namely that {\tt debit} will assign to only the {\tt
+  balance} field.  Although not a traditional part of design by
+contract languages like Eiffel, such frame conditions are essential for
+verification of code when using some of the tools described later.
+
+\medskip
+
+There are many additional features of JML that are not used in the
+example in Figure~\ref{example}. We briefly discuss the most important
+of these below.
+
+%% [[[I wonder if, in this journal version, the model variable
+%% feature of JML deserves a more systematic treatment. -- Gary]]]
+\begin{itemize}
+\item Model variables, which play the role of abstract values for
+  abstract data types~\cite{Cheon-etal03}, allow specifications that
+  hide implementation details.
+  For example, if instead of a class {\tt Purse}, we were specifying
+  an interface {\tt PurseInterface}, we could introduce the balance as
+  such a model variable.  A class implementing this interface could
+  then specify how this model field is related to the class's
+  particular representation of balance.
+  
+\item An extensive library that provides Java types that can be used
+  for describing behavior mathematically.  This library includes such
+  concepts as sets, sequences, and relations.  It is similar to
+  similar libraries of mathematical concepts found in VDM, Z, LSL, or
+  OCL, but allows such concepts to be used directly in assertions,
+  since they are embodied as Java objects.
+  
+\item A semantics that prevents side-effects in assertions.  This
+  both allows assertion checks to be used safely during debugging, and
+  supports mathematical reasoning about assertions.
+  This semantics works conservatively, by allowing a method to only be
+  used in assertions only if it is declared as 
+  {\tt pure}, meaning the method does not have any side-effects and
+  does not perform any input or output \cite{Leavens-Baker-Ruby03}.
+%\footnote{Unfortunately, some methods that one would like to be pure,
+%  such as String's equals method, are not.  This is a topic of current
+%  research.}
+  For example, if there is a method {\tt getBalance()} that is
+  declared as {\tt pure},
+\begin{verbatim}
+  /*@ pure @*/ int getBalance() { ... }
+\end{verbatim}
+  then this method can be used in the specification instead of the field
+  {\tt balance}.
+\item Finally, JML supports all the Java modifiers ({\tt public},
+  {\tt protected}, and {\tt private}) for expressing visibility.  For
+  example, invariants can be declared {\tt protected} if
+  they are not observable by clients but intended for use by
+  programmers of subclasses.  (Technically, the invariants and method
+  specifications in the Purse example of Figure~\ref{example} have default
+  or package visibility, and thus would only be visible to code in the
+  same package.)
+\end{itemize}
+
+\subsection{JML vs.\ OCL}
+\label{related}
+
+Despite the similarity in the acronyms, JML is {\em very} different in
+its aims from UML~\cite{RumbaughJacobsonBooch98}.
+The most basic difference is that the UML aims to cover all phases of
+analysis and design with many notations, and tries to be independent
+of programming language, while JML only deals with detailed designs
+(for APIs) and is tied to Java.  The ``model'' in
+JML refers to abstract, specification-only fields that can be used to
+describe the behavior of various types.  By contrast, the ``model'' of
+UML refers to the general modeling process (analysis and design) and
+is not limited to abstractions of individual types.
+%% [[[Text cut, as it's incorporated above in a better form, I
+%% hope. -- Gary]]]
+% Unlike UML, which attempts
+% to have notations for all phases of the analysis and design process,
+% JML has the much more modest aim of describing the behavior of Java
+% classes and interfaces and recording detailed design and
+% implementation decisions.
+
+JML does have some things in common with the Object Constraint
+Language (OCL)~\cite{WarmerKleppe99}, which is part of the UML
+standard.  Like JML, OCL can be used to specify invariants and pre-
+and postconditions.  An important difference is that JML explicitly
+targets Java, whereas OCL is not specific to any one programming
+language.  One could say that JML is related to Java in the same way
+that OCL is related to UML\@.
+
+JML clearly has the disadvantage that it can not be used for, say, C++
+programs, whereas OCL can.  But it also has obvious advantages when it
+comes to syntax, semantics, and expressivity.  Because JML sticks to
+the Java syntax and typing rules, a typical Java programmer will
+prefer JML notation over OCL notation, and, for instance, prefer to
+write (in JML):
+\begin{verbatim}
+     invariant pin != null && pin.length == 5;
+\end{verbatim}
+rather than the OCL:
+\begin{verbatim}
+     inv: pin <> null and pin->size() = 5
+\end{verbatim}
+
+JML supports all the Java modifiers such as {\tt static}, {\tt
+  private}, {\tt public}, etc., and these can be used to record
+detailed design decisions for different readers.
+Furthermore, there are legal Java
+expressions that can be used in JML specifications but that cannot be
+expressed in OCL\@.
+%% [[[Like what?  Can we give an example?]]]
+% Thus JML can specify more details about Java programs than would be
+% possible in OCL\@.
+
+More significant than these limitations, or differences in syntax, are
+differences in semantics.  JML builds on the (well-defined) semantics
+of Java. So, for instance, {\tt equals} has the same meaning in JML
+and Java, as does {\tt ==}, and the same rules for overriding,
+overloading, and hiding apply.  One cannot expect this for OCL\@.  In
+fact, a semantics for OCL was only recently
+proposed~\cite{brucker.ea:proposal:2002}.
+
+In all, we believe that a language like JML, which is tailored to
+Java, is better suited for recording the detailed design of a Java
+programs than a generic language like OCL\@.  Even if one uses UML in
+the development of a Java application, it may be better to use JML
+rather than OCL for the specification of object constraints,
+especially in the later stages of the development.
+
+%=====================================================================
 \input{sttt/sttt}
+
+
+\section{Extended Static Checking with ESC/Java}
+\label{escjava}
+
+ESC/Java tool~\cite{Flanagan-Et-Al02}, developed at Compaq Research,
+performs what is called ``extended static
+checking''~\cite{ESC:Overview,10yearsESC},
+% KRML: I would prefer \emph{extended static checking}, but such a
+% change would probably require similar changes to other places of the
+% document where double quotes are used.  For example, one would
+% probably change ``model'' in:
+%     JML allows ``model'' (i.e., specification-only) fields
+% to \emph{model}.  Ditto for ``candidate annotations'' below.
+% [[[I'd also like that... -- Gary]]]
+compile-time checking that goes well beyond type checking.  It can
+check relatively simple assertions and can check for certain kinds of
+common errors in Java code, such as dereferencing \texttt{null},
+indexing an array outside its bounds, or casting a reference to an
+impermissible type.  ESC/Java supports a subset of JML and also checks
+the consistency between the code and the given JML annotations.  The
+user's interaction with ESC/Java is quite similar to the interaction
+with the compiler's type checker: the user includes JML annotations in
+the code and runs the tool, and the tool responds with a list of
+possible errors in the program.
+
+JML annotations affect ESC/Java in two ways.  First, the given JML
+annotations help ESC/Java suppress spurious warning messages.  For
+example, in Figure~\ref{example}, the constructor's
+precondition \texttt{p != null} lets ESC/Java determine that the
+dereference of \texttt{p} in the constructor's body is valid, and thus
+ESC/\-Java produces no \texttt{null}-dereference warning.  Second,
+annotations make ESC/\-Java do additional checks.  For example,
+when checking a caller of the \texttt{Purse} constructor, the
+precondition \texttt{p != null} causes ESC/Java to emit a warning if
+the actual parameter for \texttt{p} may be passed in as \texttt{null}.
+In these two ways, the use of JML annotations enables ESC/Java to
+produce warnings not at the source locations where errors manifest
+themselves at runtime, but at the source locations where the errors
+are committed.
+
+An interesting property of ESC/Java is that it is neither sound nor
+complete; that is, it neither warns about all errors, nor does it
+warn only about actual errors.  This is a deliberate design choice:
+the aim is to increase the cost-effectiveness of the tool.  In some
+situations, convincing a mechanical checker of the absence of some
+particular error may require a large number of JML annotations
+(consider, for example, a hypothetical program that dereferences
+\texttt{null} if four of the program's large-valued integer variables
+satisfy the equation in Fermat's Last Theorem).  To make the tool more
+cost-effective, it may therefore be prudent to ignore the possibility
+of certain errors, which is what ESC/Java has been designed to do.
+The ESC/Java User's Manual~\cite{escjava:userman} contains a list of
+all cases of unsoundness and incompleteness in ESC/Java.
+
+Under the hood, ESC/Java is powered by detailed program semantics and
+an automatic (non-interactive) theorem prover.  ESC/Java translates a
+given JML-an\-no\-tat\-ed Java program into verification
+conditions~\cite{LeinoSaxeStata:JavaViaGC,FlanaganSaxe:POPL01},
+logical formulas that are valid if and only if the program is free of
+the kinds of errors being analyzed.  Any verification-condition
+counterexamples found by the theorem prover are turned into
+programmer-sensible warning messages, including the kind and source
+location of each potential error.  The ESC/Java User's
+Manual~\cite{escjava:userman} also provides a detailed description of
+the semantics of JML annotations, as they pertain to ESC/Java.
+
+\subsection{ESC/Java2}
+\label{escjava2}
+
+Development of version 1 of ESC/Java ceased with the dissolving of the
+SRC group at Compaq.  Consequently Cok and Kiniry have in progress a
+version 2 of ESC/Java, built on the source code release provided by
+Compaq and HP.  This version has the following goals:
+\begin{itemize}
+\item to migrate the code base of ESC/Java and the code accepted by
+  ESC/Java to Java 1.4;
+\item to update ESC/Java to accept annotations consistent with current
+  version of JML;
+\item to increase the general use of the tool by packaging it in an
+  easy-to-use form;
+\item to increase the amount of JML that ESC/Java statically checks,
+  consistent with the original engineering goals of ESC/Java;
+\item and, over time, to update the associated tools of the ESC suite
+  (Calvin, Houdini, RCC) in a similar manner.
+\end{itemize}
+
+There is currently an alpha version of ESC/Java2 available
+(from \url{http://www.cs.kun.nl/ita/research/} 
+\url{projects/sos/projects/escjava.html}).
+This release includes the following improvements with respect to the original
+ESC/\-Java.
+
+%% [[[I worried that the following had too much detail for most
+%% readers. I'm especially thinking about the second point below,
+%% which detailed all the features of JML that are not thoroughly type
+%% checked. I edited to try to correct this. --Gary]]]
+
+\begin{itemize}
+\item Parses Java 1.4 (the old version only parsed Java 1.3). 
+  In particular ESC/Java2 handles the Java
+  \verb$assert$ statement.  The user has the option of treating the
+  statement as in Java, namely, as a conditional statement that
+  might throw an exception.  Alternatively, ESC/Java2 will translate
+  the Java \verb$assert$ statement into a JML \verb$assert$ statement,
+  producing a static warning if the condition in the
+  statement appears not to be always true.
+\item Parses all of current JML.  This is a somewhat moving target,
+  since JML is the subject of current discussion and research.
+  Nevertheless the core part of JML is stable and that is the portion
+  that ESC/Java2 attempts to statically check.  Some
+  of the more esoteric features of JML (e.g. model programs)
+  % the clauses in the \verb$code_contract$
+  % section, the resource clauses \verb$\working_space$, \verb$space$,
+  % \verb$\duration$, and the frame and datagroup features)
+  are only parsed, are not thoroughly type checked, and are ignored for
+  purposes of static checking.
+\item Allows specifications to be placed in (multiple) files separate from the
+  implementation, using JML's refinement features.  ESC/Java2 makes checks
+  using the appropriate combination of all available specifications and
+  implementations.  It also checks these specifications for consistency.
+\item Follows the JML semantics for specification inheritance.
+  The constructs specific to ESC/Java version 1
+  (\verb$also_requires$, etc.)
+  % \verb$also_ensures$, \verb$also_modifies$, and \verb$also_exsures$).
+  were dropped.
+\end{itemize}
+
+Many other details in the static checking have also been improved in
+ESC/Java2, making it more suitable for general use.
+
+%% [[[Cut text below:]]]
+%   The integration and inheritance of
+%   \verb$non_null$ annotations was also improved.
+% \item The static checking provided in ESC/Java has been expanded in
+%   ESC/Java2 in these ways: checking of the \texttt{assert} statement;
+%   checking of \texttt{initially} and \texttt{constraint} clauses;
+%   improvements in handling \texttt{modifies} (\texttt{assignable})
+%   clauses; checking of \verb$\not_modified$ expressions; allowing and
+%   checking the application of \verb$\typeof$ to primitive types;
+%   handling of \texttt{forall} and \texttt{old} method specification
+%   clauses.
+
+There are two major areas of development of ESC/\-Java2 that will
+improve overall usability of the tool, besides performance
+improvements.  The first is the use of model variables and method
+calls in annotation expressions.  Model variables are an important
+abstraction mechanism in writing specifications and model methods
+allow much more readable and compact specifications.  This is a
+current topic of research and experimentation and some partial
+facilities in this direction are a part of the current alpha release
+of ESC/Java2.
+
+The second important needed advance is to provide some level of
+checking of the frame conditions (i.e., JML's \texttt{modifies} or
+\texttt{assignable} clauses).  It is an acknowledged unsoundness of
+ESC/Java that these are not checked and faulty \texttt{modifies}
+clauses can be a subtle source of errors.  In particular, the default
+\texttt{modifies} clause in some JML specifications is that everything
+is potentially modified; this interpretation is not currently
+implemented.
+
+\section{Program Verification with LOOP}
+\label{loop}
+
+The University of Nijmegen's LOOP tool~\cite{Jacobs-etal98,Huisman01}
+translates JML-annotated Java code into proof obligations for the
+theorem prover PVS~\cite{OwreRRSS96}.  One can then try to prove these
+obligations, interactively, in PVS\@.  The translation from JML to
+formal proof obligations builds on a formal semantics for sequential
+Java that has has been formalized in PVS, and which has been extended
+to provide a formal semantics for a large part of JML\@.  The
+verification of the proof obligations is accomplished using a Hoare
+Logic~\cite{JacobsPoll01a} and a weakest-precondition
+calculus~\cite{Jacobs03} for Java and JML\@.
+
+Interactive theorem proving is very labor-intensive, but allows
+verification of more complicated properties than can be handled by
+extended static checking with ESC/Java.  A recent paper describing a
+case study with the LOOP tool, giving the best impression of the state
+of the art, is now available~\cite{BreunesseBJ02}.
+
+%% It seems there isn't enough to say about this to justify its own section.
+ \section{Krakatoa}
+ \label{krakatoa}
+ 
+ Krakatoa~\cite{krakatoa03a} is a
+ program verification tool for JML-annotated code that is currently
+ under development.  It is similar to LOOP, but produces proof
+ obligations for the theorem prover Coq\authcomment{Add citation}, and
+ currently covers only a subset of Java.
+
+%=====================================================================
+\section{Applications of JML to Java Card}
+\label{applications}
+
+Although JML is able to specify arbitrary sequential Java programs,
+most of the serious applications of JML and JML tools up to now
+have targeted Java Card.  Java Card$^{TM}$ is a dialect of Java specifically
+designed for the programming of the latest generation of smartcards.
+Java Card is adapted to the hardware limitations of smartcards; for
+instance, it does not support floating point numbers, strings, object
+cloning, or threads.
+
+Java Card is a well-suited target for the application of formal
+methods.  It is a relatively simple language with a restricted API\@.
+Moreover, Java Card programs, called ``applets'', are small, typically
+on the order of several KBytes of bytecode.  Additionally, correctness
+of Java Card programs is of crucial importance, since they are used in
+sensitive applications such as bank cards and mobile phone SIMs.  (An
+interesting overview of security properties that are relevant for Java
+Card applications is available~\cite{MarletLM01}.)
+
+JML, and several tools for JML, have been used for Java Card,
+especially in the context of the EU-supported project VerifiCard
+(www.verificard.org).  JML has been used to write a formal
+specification of almost the entire Java Card
+API~\cite{PollBergJacobs01}.  This experience has shown that JML is
+expressive enough to specify a non-trivial existing API\@.  The
+runtime assertion checker has been used to specify and verify a
+component of a smartcard operating system~\cite{PollHarteldeJong02}.
+
+ESC/Java has been used with great success to verify a realistic
+example of an electronic purse implementation in Java
+Card~\cite{CatanoHuisman02}. This case study was instrumental in
+convincing industrial users of the usefulness of JML and feasibility
+of automated program checking by ESC/Java for Java Card applets.  This
+provided the motivation for the development of the JACK tool discussed
+earlier, which is specifically designed for Java Card programs.  One
+of the classes of the electronic purse mentioned above has provided
+the most serious case study to date with the LOOP
+tool~\cite{BreunesseBJ02}.
+
+As witnessed by the development of the JACK tool by Gemplus, Java Card
+smartcard programs may be one of the niche markets where formal
+methods have a promising future. Here, the cost that companies are
+willing to pay to ensure the absence of certain kinds of bugs is quite
+high.  It seems that, given the current state of the art, using static
+checking techniques to ensure relatively simple properties (e.g., that
+no runtime exception ever reaches the top-level without being caught)
+seems to provide an acceptable return-on-investment.  It should be
+noted that the very simplicity of Java Card is not without its
+drawbacks.  In particular, the details of its very primitive
+communication with smartcards (via a byte array buffer) is not easily
+abstracted away from.  It will be interesting to investigate if J2ME (Java 2
+Micro Edition), which targets a wider range of electronic consumer
+products, such as mobile phones and PDAs, is also an interesting
+application domain for JML\@.
+
+
