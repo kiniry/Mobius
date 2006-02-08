@@ -44,6 +44,11 @@ Several other minor features are available to integrate within the
 development cycle, for example, reports on the status of the project
 can be generated as Microsoft Excel files.
 \subsubsection{Lemma Viewer}
+\begin{figure}[p]
+ \psfig{file=fm03/preferences-editor.eps,width=14cm}
+ \caption{\JACK\ lemma viewer preferences page}
+ \label{JACKlemviewprefpage}
+\end{figure}
 \label{Viewer}
 One of the most important points of \JACK\ is that it does not require
 developers to learn a mathematical language.  Although lemmas are
@@ -66,8 +71,8 @@ The source code of the program considered is displayed, and the
 path within the program that leads to the generated proof obligation
 is highlighted.
 
-\begin{figure}[th]
- \epsfig{file=fm03/jack3.eps,width=12cm}
+\begin{figure}[p]
+ \epsfig{file=fm03/jack01.eps,width=15cm}
  \caption{Viewer integrated in eclipse}
  \label{Viewer image}
 \end{figure}
@@ -109,7 +114,7 @@ instance \texttt{this} and becomes 2 for the instance \texttt{c}.
  The fact that \texttt{i} has changed during the method is denoted using
 the overriding operator ($\lover$ in the B language) twice, replacing the
 value of \texttt{i} for the instances \texttt{c} and \texttt{this}.
-\begin{figure}[htp]
+\begin{figure}[ht]
 \begin{center}
 $\begin{array}{l}
  (i \lover \{ this \mapsto 3\} \lover \{ c \mapsto 2 \})(this) = 3 \\
@@ -135,7 +140,7 @@ $\begin{array}{l}
  in Figure \ref{JMLexample}, as it does not implement the
  requirements when \texttt{c} equals \texttt{this}. This can also be
  seen in the ''B style view`` but it requires more expertise.
-\begin{figure}[htp]
+\begin{figure}[ht]
 \begin{center}
  \begin{tabular}{ll|ll}
  this.i == 3 & \hspace{2mm} & \hspace{3mm} & c.i == 2 \\

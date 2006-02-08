@@ -1,26 +1,63 @@
 \chapter{Introduction}
 
-Java et JML
+\line(1,0){15 cm}
+
+1 Argument : possibilite et outils permettant la validation de programmes Java, methodologies associees
+
+2 Java : besoin de validation (source, bytecode)
+  JML
 
 Etat de l'art
 - javadoc
 - jml
-- escjava
 - jmlrac
 
-Bytecode PCC
+- escjava
+- LOOP
+- Krakatoa
 
-Automate de securite -> rapport Thibaut
+3 Methodology
 
-Generation d'annotations
+3.1 JACK
 
-Propagation d'annotations
+    Generation d'annotations
 
-Preuve interactive et automatique
+3.2 Automate de securite - rapport Thibaut
 
+    Propagation d'annotations
+
+3.3 Preuve interactive et automatique
+
+3.4 Bytecode PCC
+
+4 Evaluations
 JACK evaluation 
 	- Oberthur
 	- Axalto
 	- Bytecode verifier
 	- Memory consumption
+
+\line(1,0){15 cm}
+
+Providing high quality on applet development is becoming a crucial
+issue, especially when those applets are aimed to be loaded and executed in smart cards.  Actually, the card
+remains a specific domain where post issuance corrections are very expensive due to the deployment process and
+the mass production. Currently, the quality is ensured by costly test campaigns, whenever tests are technically
+possible. We consider that using formal techniques is a solution that allows us to increase the quality, but
+also to reduce validation costs.
+
+ Formal validation of Java programs is a growing research
+ field.  As Java has become a reference language, many technologies are
+ emerging to help Java program validation.  Java can also be
+ considered as a good support for formal techniques, as it has precise semantics \cite{Gosl00a}.
+
+ Nevertheless, proving program correctness, and more generally using
+formal methods, is traditionally an activity reserved for experts.  This restriction is usually caused by the
+mathematical nature of the concepts involved.  This explains why formal techniques are difficult to introduce in
+industrial processes, even if they are now widely used in research and teaching activities.  However, we believe
+that this restriction can be reduced by providing notations and tools hiding the mathematical formalisms.
+Therefore, formal tools should be developed to fit into classical developers environment.  We strongly believe
+that efforts should be done to allow users to benefit from formal techniques without having to learn new
+formalisms and to become experts. Java developers should be able to validate their code, or at least to get a
+good assurance on its correctness.
 

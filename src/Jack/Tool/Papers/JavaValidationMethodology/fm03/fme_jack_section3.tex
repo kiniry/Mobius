@@ -45,8 +45,8 @@ ensure the correctness of the applet but the tool is designed in this way;
  This section presents the tool architecture and its principles,
  concerning object-oriented concepts formalization and lemma generation.
 \subsubsection{Architecture}
-\begin{figure}[thp]
- \psfig{file=fm03/archi2.eps,width=12cm}
+\begin{figure}[tp]
+ \psfig{file=fm03/image002.eps,width=14cm}
  \caption{\JACK\ architecture}
  \label{JACKarchitecture}
 \end{figure}
@@ -173,6 +173,11 @@ f\_i(c))$.
  of the formalization.  But, proofs remain simpler as they remain
  centered on the specific case of a dedicated class.
 \subsubsection{Lemma generation}
+\begin{figure}[p]
+ \psfig{file=fm03/preferences-compiler.eps,width=14cm}
+ \caption{\JACK\ compiler preferences page}
+ \label{JACKcompprefpage}
+\end{figure}
  The JML annotations are Java boolean expressions without side
  effects.  Thus, they are easily translated in logical formulas: Java operators are
  translated into functions. For example, shift left (\texttt{<<}) is
