@@ -7,9 +7,11 @@ import houdini.util.*;
 import java.util.*;
 import java.io.*;
 
+import javafe.Options;
+
 import escjava.prover.*;
 
-class HoudiniServer extends OptionHandler {
+class HoudiniServer extends javafe.FrontEndTool {
 
     GuardManager guards;
 
@@ -33,23 +35,29 @@ class HoudiniServer extends OptionHandler {
     /** check pointer */
     CheckPoint cp;
 
-    /** true if we are trying to restart */
-    boolean restart;
-
     /** file name for guard info */
     static final String guardRestartFile = "GUARDS";
 
     /** file name of universal background pred */
     String backGroundPredicate = "UnivBackPred.ax";
 
+    public void logWithDate(String s) {
+        options().logFile.println("["+ Utility.getDateString() + "] " + s);
+    }
 
+    public static String shortName(String s) {
+	int lastSlash = s.lastIndexOf("/");
+	if (lastSlash == -1) return s;
+	return s.substring(lastSlash + 1);
+    }
+ 
     private void log(String s) {
         logWithDate(s);
     }
 
     /** return all .sx files in the vc directory */
     private String[] getVCFiles() {
-        File f = new File(vcdir);
+        File f = new File(options().vcdir);
 	houdini.util.Assert.notFalse(f.exists(), "gvc dir does not exist");
         return f.list(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -73,16 +81,22 @@ class HoudiniServer extends OptionHandler {
 	    log(j + " preempted");
 	}
     }
+    public Options makeOptions() {
+        return new HoudiniServerOptions();
+    }
+
+    public static HoudiniServerOptions options() {
+        return (HoudiniServerOptions) options;
+    }
         
     /**
      * Process options, set up threads, and then wait for clients to connect.
      */
-    public void run(String st[]) {
-        int offset = this.processOptions(st);
+    public final void frontEndToolProcessing (ArrayList args) {
 	try {
-	    if (this.logToFile) {
-		logFile = 
-		    Utility.getPrintStream(new File(vcdir, "server.log"));
+	    if (options().logToFile) {
+		options().logFile = 
+		    Utility.getPrintStream(new File(options().vcdir, "server.log"));
 	    }
 	} catch (IOException e) {
 	    Assert.fail(e);
@@ -91,7 +105,7 @@ class HoudiniServer extends OptionHandler {
 	Thread t = new Thread(new Main());
 	t.start();
         while (true) {
-            WorkerState ws = new WorkerState(this, this.port, workerCounter++);
+            WorkerState ws = new WorkerState(this, options().port, workerCounter++);
             workers.addElement(ws);
         }
     }
@@ -102,7 +116,7 @@ class HoudiniServer extends OptionHandler {
      */
     SExp makeCanonForm(String fileName) {
 	try {
-	    String shortFileName = OptionHandler.shortName(fileName);
+	    String shortFileName = shortName(fileName);
 	    log("Computing canon form for " + fileName);
 	    DataInputStream in = Utility.getInputStream(fileName);
 	    Assert.notFalse(in.readLine().equals("*Method*"));
@@ -130,7 +144,7 @@ class HoudiniServer extends OptionHandler {
      */
     void makeDeps(String fileName, SExp s) {
 	try {
-	    String shortFileName = OptionHandler.shortName(fileName);
+	    String shortFileName = shortName(fileName);
 	    log("Computing deps for " + shortFileName);
 	    guards.computeDependencies(fileName, s);
 	    log("Done with deps for " + shortFileName);
@@ -149,7 +163,7 @@ class HoudiniServer extends OptionHandler {
     }
 
     private void createCoordFile(boolean restart) throws IOException {
-	String coord = (new File(vcdir, "coordinator.out")).getAbsolutePath();
+	String coord = (new File(options().vcdir, "coordinator.out")).getAbsolutePath();
 	coordWriter = new PrintWriter(new FileWriter(coord, restart));
     }
 
@@ -169,42 +183,42 @@ class HoudiniServer extends OptionHandler {
 
 		// try to load deps from file.  if it fails, stop the restart and do it 
 		// all from scratch.
-		if (restart) {
-		    log("Loading deps from file " + vcdir + guardRestartFile);
+		if (options().restart) {
+		    log("Loading deps from file " + options().vcdir + guardRestartFile);
 		    try {
-			guards = new GuardManager(new ObjectInputStream(new FileInputStream(vcdir + guardRestartFile)));
+			guards = new GuardManager(new ObjectInputStream(new FileInputStream(options().vcdir + guardRestartFile)));
 		    } catch (Exception e) {
 			log("failed on reload.  starting from scratch");
-			guards = new GuardManager(vcdir);
-			restart = false;
+			guards = new GuardManager(options().vcdir);
+			options().restart = false;
 		    }
 		} else {
-		    guards = new GuardManager(vcdir);
+		    guards = new GuardManager(options().vcdir);
 		}
 	
 		// make cononical file forms as needed (ie, if restarting don't redo work)
 		for (int i = 0; i < f.length; i++) {
-		    String name = (new File(vcdir, f[i])).getAbsolutePath();
-		    if ((new File(vcdir, f[i]+"x")).exists() && restart) {
+		    String name = (new File(options().vcdir, f[i])).getAbsolutePath();
+		    if ((new File(options().vcdir, f[i]+"x")).exists() && options().restart) {
 			log("Skipping prep of " + name);
 		    } else {
 			SExp s = makeCanonForm(name);
-			if (!restart) makeDeps(name, s);
+			if (!options().restart) makeDeps(name, s);
 		    }
 		    f[i] = name;
 		}
 		
 		// write out guard info if not restarting
-		if (!restart) {
+		if (!options().restart) {
 		    log("Writing deps to file"); 
-		    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(vcdir + guardRestartFile));
+		    ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(options().vcdir + guardRestartFile));
 		    guards.writeToFile(out);
 		    out.close();
 		    log("Done");
 		}
 
 		log(guards.depsToString());
-		createCoordFile(restart);
+		createCoordFile(options().restart);
 		
 		// add every job to the work list
 		for (int i = 0; i < f.length; i++) {
@@ -248,18 +262,30 @@ class HoudiniServer extends OptionHandler {
     
     public String name() { return "HoudiniServer"; }
 
-    public void showOptions() {
-	super.showOptions();
-	System.err.println(" -restart \n");
+    public String showOptions(boolean all) {
+	return options.showOptions(all);
     }
     
-    public int processOption(String option, String[] args, int offset) {
+}
+
+class HoudiniServerOptions extends OptionHandlerOptions
+{
+    /** true if we are trying to restart */
+    boolean restart;
+
+    public int processOption(String option, String[] args, int offset) throws javafe.util.UsageError {
 	if (option.equals("-restart")) {
 	    restart = true;
 	    return offset;
-	} 
+	}
         return super.processOption(option, args, offset);
     }
-    
-    
+
+
+    public String showOptions(boolean all) {
+        StringBuffer sb = new StringBuffer(super.showOptions(all));
+        String[][] data1 = {{"-restart", "TODO"}};
+        sb.append(data1);
+        return sb.toString();
+    }
 }
