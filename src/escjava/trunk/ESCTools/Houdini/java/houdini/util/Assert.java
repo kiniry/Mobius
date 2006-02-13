@@ -14,7 +14,7 @@ public class Assert {
      * If passed false, this method well report an assertion failure
      * and exit the program.
      */
-    //@ ensures b
+    //@ ensures b;
     static public void notFalse(boolean b) {
         if (!b) {
             System.err.println("assertion failed");
@@ -27,7 +27,7 @@ public class Assert {
      * If passed false, this method well report an assertion failure,
      * print the string passed in, and exit the program.
      */
-    //@ ensures b 
+    //@ ensures b;
     static public void notFalse(boolean b, String s) {
         if (!b) {
             System.err.println("assertion failed: " + s);
@@ -39,7 +39,7 @@ public class Assert {
     /**
      * Prints the exception e, dumps the stack where e occurred, and exits.
      */
-    //@ ensures false
+    //@ ensures false;
     static public void fail(Throwable e) {
         System.err.println("fail: " + e);
         e.printStackTrace();
@@ -50,7 +50,7 @@ public class Assert {
      * Prints the exception e and message s, dumps the stack where e 
      * occurred, and exits.
      */
-    //@ ensures false 
+    //@ ensures false;
     static public void fail(Throwable e, String s) {
         System.err.println("fail: " + s);
         fail(e);
@@ -59,7 +59,7 @@ public class Assert {
    /**
      * Prints the message s, dumps the current stack, and exits.
      */
-    //@ ensures false
+    //@ ensures false;
     static public void fail(String s) {
         fail(new Throwable(), s);
     }    

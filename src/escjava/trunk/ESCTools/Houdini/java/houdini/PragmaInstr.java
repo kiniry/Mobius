@@ -582,8 +582,8 @@ class PragmaInstr extends Instr {
     * <code>s.length()</code> is returned.
     **/
 
-  //@ requires 0 <= start && start <= s.count;
-  /*@ ensures 0 <= \result && \result <= s.count; */ //@ nowarn Post;
+  //@ requires 0 <= start && start <= s.length();
+  /*@ ensures 0 <= \result && \result <= s.length(); */ //@ nowarn Post;
   static int indexOfNonWhite(/*@ non_null */ String s, int start,
 			     boolean considerPragmasWhite) {
     boolean inTraditionalComment = false;

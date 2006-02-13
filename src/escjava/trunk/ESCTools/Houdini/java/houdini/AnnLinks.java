@@ -143,7 +143,7 @@ public class AnnLinks extends javafe.SrcTool {
      ** This is the main entry point for the <code>escjava</code>
      ** command.<p>
      **/
-    //@ requires elemsnonnull(args);
+    //@ requires \nonnullelements(args);
     public static void main(String[] args) {
 	//System.out.println ("main,"+args[2]);
 	javafe.SrcTool t = new AnnLinks();

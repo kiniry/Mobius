@@ -192,7 +192,7 @@ public class AnnotationVisitor extends DefaultVisitor {
 	if (kind != 0) {
 	    MethodDecl md = (MethodDecl)rd;
 	    if (! Types.isVoidType(md.returnType)) {
-		String ens = kind < 3 ? "ensures " : "also_ensures ";
+		String ens = kind < 3 ? "ensures " : "also ensures ";
 		Annotator ensuresAnnotator = new Annotator(rd, ms, ens);
 		guesser.guessExpr("\\result", md.returnType, ensuresAnnotator, null,
 				  envEns, null );
@@ -211,13 +211,13 @@ public class AnnotationVisitor extends DefaultVisitor {
 		ensuresAnnotator = new Annotator(rd, ms, "ensures ");
 	    } else {
 		requiresAnnotator = null;
-		modifiesAnnotator = new Annotator(rd, ms, "also_modifies ");
-		ensuresAnnotator = new Annotator(rd, ms, "also_ensures ");
+		modifiesAnnotator = new Annotator(rd, ms, "also modifies ");
+		ensuresAnnotator = new Annotator(rd, ms, "also ensures ");
 	    }
 	    if (kind < 3) {
 		exsuresAnnotator = new Annotator(rd, ms, "exsures ");
 	    } else {
-		exsuresAnnotator = new Annotator(rd, ms, "also_exsures ");
+		exsuresAnnotator = new Annotator(rd, ms, "also exsures ");
 	    }
 
 //              if (kind != 0) {

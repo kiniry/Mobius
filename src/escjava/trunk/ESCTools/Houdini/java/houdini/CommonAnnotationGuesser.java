@@ -49,7 +49,7 @@ public class CommonAnnotationGuesser extends AnnotationGuesser {
 			Hashtable env, 
 			ASTNode astNode) {
     if (Types.isIntegralType(type)) {
-      propertyAnnotator.put("0 <= " + expr);
+      propertyAnnotator.put("0 <= " + expr + ";");
 
     } else if (Types.isReferenceType(type)) {
       if (modifierAnnotator != null) {

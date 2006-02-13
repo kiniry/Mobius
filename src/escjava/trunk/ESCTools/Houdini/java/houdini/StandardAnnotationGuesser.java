@@ -94,7 +94,7 @@ public class StandardAnnotationGuesser extends AnnotationGuesser {
 		}
 		
 		if( exsuresAnnotator != null ) {
-		    exsuresAnnotator.put(annot+")");
+		    exsuresAnnotator.put(annot+");");
 		}
 	    }
 	}
@@ -266,7 +266,7 @@ public class StandardAnnotationGuesser extends AnnotationGuesser {
 	
 	if( Types.isIntegralType(type) && Types.isIntegralType(type2) ) {
 	    for(int i=0; i<comparators.length; i++) {
-		propertyAnnotator.put(expr+" "+comparators[i]+" "+expr2);
+		propertyAnnotator.put(expr+" "+comparators[i]+" "+expr2+";"); //-ARN
 	    }
 	} else if( type2 instanceof ArrayType ) {
 	    guessTypeAndArray( expr, type, expr2, ((ArrayType)type2),
@@ -296,10 +296,10 @@ public class StandardAnnotationGuesser extends AnnotationGuesser {
 		if( !expr.equals(tmp) && !arrayExpr.equals(tmp) ) {
 		    propertyAnnotator.put("(\\forall int "+tmp
 					  +"; 0 <= "+tmp+" && "+tmp+" < "+expr
-					  +" ==> "+arrayExpr+"["+tmp+"] != null)");
+					  +" ==> "+arrayExpr+"["+tmp+"] != null);");
 		    propertyAnnotator.put("(\\forall int "+tmp
 					  +"; "+expr+" <= "+tmp+" && "+tmp+" < "+arrayExpr+
-					  ".length ==> "+arrayExpr+"["+tmp+"] != null)");
+					  ".length ==> "+arrayExpr+"["+tmp+"] != null);");
 		}
 	    }
 	}
