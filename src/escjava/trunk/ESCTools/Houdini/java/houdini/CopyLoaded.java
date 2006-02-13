@@ -98,7 +98,7 @@ public class CopyLoaded extends javafe.FrontEndTool implements Listener {
      
         String fileName = Location.toFileName(justLoaded.loc);
         /* if a Java file, then copy the file over into outDir */
-        if (fileName.endsWith(".java")) {
+        if (fileName.endsWith(".java") || fileName.endsWith(".spec") || fileName.endsWith(".jml")) {
             copySourceFile(fileName, 
                    packageDirForFile(justLoaded) + fileNameName(fileName));
         } else {
