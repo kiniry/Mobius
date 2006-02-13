@@ -1,8 +1,4 @@
-# Copyright 2000, 2001, Compaq Computer Corporation
+#!/bin/sh
 
-cd java
-
-${HOUDINI} -bootclasspath "${JDKSPEC_ROOT}:/udir/freund/java/jdksrc-1.2.2" -classpath "${JDKSPEC_ROOT}:/udir/freund/proj/Rcc/freund/java:${ESCJAVA_ROOT}/classes:${JAVAFE_ROOT}/classes/javafe.zip"  -outdir ../houdini-outdir -f ../sources $*
-
-cd .. 
-
+rm -r houdini-outdir
+./jhoudini -outdir houdini-outdir `find java/houdini -name "*.java"`
