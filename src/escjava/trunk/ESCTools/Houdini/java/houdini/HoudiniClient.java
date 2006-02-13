@@ -11,8 +11,29 @@ import java.net.*;
 import escjava.prover.*;
 import javafe.util.FatalError;
 
-class HoudiniClient extends OptionHandler {
-    
+// We do not extend from OptionHandler any more:
+// that abstraction is already been taken care of
+// by splitting off OptionHandlerOptions.
+class HoudiniClient extends javafe.FrontEndTool {
+
+    public javafe.Options makeOptions() {
+        return new OptionHandlerOptions();
+    }
+
+    public static OptionHandlerOptions options() {
+        return (OptionHandlerOptions) options;
+    }
+
+    public void logWithDate(String s) {
+        options().logFile.println("["+ Utility.getDateString() + "] " + s);
+    }
+
+    public static String shortName(String s) {
+	int lastSlash = s.lastIndexOf("/");
+	if (lastSlash == -1) return s;
+	return s.substring(lastSlash + 1);
+    }
+  
     SocketSender sender; 
 
     /**
@@ -102,7 +123,7 @@ class HoudiniClient extends OptionHandler {
 	log("Loading guard files");
 	hguards = new Hashtable(50000);
 	try {
-	    DataInputStream in = Utility.getInputStream(vcdir+"hguards.txt");
+	    DataInputStream in = Utility.getInputStream(options().vcdir+"hguards.txt");
 	    while (true) {
 		String s = in.readLine(); 
 		if (s==null) {
@@ -126,18 +147,18 @@ class HoudiniClient extends OptionHandler {
 	    String id = sender.sendMessage("hello", InetAddress.getLocalHost().getHostName(), true);
 	    this.id = Integer.parseInt(id);
 	    log("got id");
-	    vcdir = sender.sendMessage("vcdir?", true);
+	    options().vcdir = sender.sendMessage("vcdir?", true);
 	    log("got vcdir");
-	    if (this.logToFile) {
-		logFile = 
-		    new PrintStream(new BufferedOutputStream(new FileOutputStream(new File(vcdir, "client." + this.id + ".log"))), 
+	    if (options().logToFile) {
+		options().logFile = 
+		    new PrintStream(new BufferedOutputStream(new FileOutputStream(new File(options().vcdir, "client." + this.id + ".log"))), 
 				    true);
 	    }
 	    log("Recieved id " + id);
 	    log("Java version is " +
 		System.getProperty("java.vendor") + ":" +
 		System.getProperty("java.version"));
-	    log("Recieved vcdir " + vcdir);
+	    log("Recieved vcdir " + options().vcdir);
 	    this.fileNames = loadFiles();
 	    makeHGuards();
 	} catch (Exception e) {
@@ -150,7 +171,7 @@ class HoudiniClient extends OptionHandler {
      */
     private void prepareSimplify() {
 	if (S == null) {
-	    log("Starting Simplify");
+            log("Starting Simplify");
 	    S = new Simplify();
 	    simplifyStartTime = System.currentTimeMillis();
 	}
@@ -162,8 +183,8 @@ class HoudiniClient extends OptionHandler {
      * that occur.  This will always set S to null.
      */
     private void closeSimplify() {
-	log("Closing Simplify");
 	try {
+            log("Closing Simplify");
 	    if (S != null) S.close();
 	} catch (Exception e) {
 	    error(e.toString());
@@ -172,24 +193,24 @@ class HoudiniClient extends OptionHandler {
 	}
     }
     
-    //@ requires this.S != null
+    //@ requires this.S != null;
     /**
      * load the backGroundPredicate and push it on to the Simplify stream. 
      */
     private void backGroundPush() throws IOException {
-	log("Loading background predicate from " + this.univBackPredFile);
+	log("Loading background predicate from " + options().univBackPredFile);
 	PrintStream ps = S.subProcessToStream();
-	DataInputStream in = Utility.getInputStream(this.univBackPredFile);
+	DataInputStream in = Utility.getInputStream(options().univBackPredFile);
 	getFileContents(in, ps);
 	in.close();
     }        
     
-    //@ requires this.S != null
+    //@ requires this.S != null;
     /**
      * load in the class predicate from fileName and pass it to Simplify. 
      */
     private void classPredPush(String fileName) throws IOException {
-	log("Loading class predicates from " + OptionHandler.shortName(fileName));
+	log("Loading class predicates from " + shortName(fileName));
 	PrintStream ps = S.subProcessToStream();
 	DataInputStream in =  Utility.getInputStream(fileName);
 	Assert.notFalse(in.readLine().equals("*Class*"));
@@ -263,7 +284,7 @@ class HoudiniClient extends OptionHandler {
      */
     private void handleClassPred(DataInputStream in) throws IOException {
 	String className = in.readLine();
-	className = this.vcdir + className.substring(className.indexOf("@") + 1) + ".class.sx";
+	className = options().vcdir + className.substring(className.indexOf("@") + 1) + ".class.sx";
 	classPredPush(className);
     }
     
@@ -272,7 +293,7 @@ class HoudiniClient extends OptionHandler {
      * This process is repeated until running simplify does not refute
      * any additinal guards.
      */
-    //@ requires this.S != null
+    //@ requires this.S != null;
     private void proveFile(String fileName) throws IOException, SExpTypeError {
 	String shortFileName = shortName(fileName);
 	boolean firstTime = true;
@@ -415,6 +436,7 @@ class HoudiniClient extends OptionHandler {
     }
     
     public void error(String s) {
+	System.out.println ("HoudiniClient error: " + s);
 	try {
 	    sender.sendMessage("error", s, true);
 	} catch (IOException e) {
@@ -422,13 +444,15 @@ class HoudiniClient extends OptionHandler {
 	}
     }
     
-    public HoudiniClient(String st[]) {
-	int offset = this.processOptions(st);
-	sender = new SocketSender(this.host, this.port);
-	init();  
+    public HoudiniClient() {
+	//options.processOptions(st);
+	//sender = new SocketSender(options().host, options().port);
+	//init();  
     }
     
-    public void run() {
+    public final void frontEndToolProcessing (ArrayList args) {
+	sender = new SocketSender(options().host, options().port);
+	init();  
 	String vcFile = "";
 	int retry = 0;
 	while (sender.isConnected()) {
@@ -456,6 +480,7 @@ class HoudiniClient extends OptionHandler {
 	    } catch (FatalError e) {
 		retry++;
 		log("Failure: " + e);
+		System.out.println ("Fatal error in client " + id);
 		error(e.toString());		
 	    } catch (Exception e) {
 		retry++;
@@ -470,13 +495,16 @@ class HoudiniClient extends OptionHandler {
     
     
     public static void main(String st[]) {
-	HoudiniClient s = new HoudiniClient(st);
-	s.run();
+	HoudiniClient s = new HoudiniClient();
+	int exitcode = s.run(st);
+
+        if (exitcode != 0)
+	    System.exit(exitcode);
     }
     
     
     private String[] loadFiles() throws IOException {
-	DataInputStream in =  Utility.getInputStream(this.vcdir+"files.txt");
+	DataInputStream in =  Utility.getInputStream(options().vcdir+"files.txt");
 	Vector v = new Vector();
 	log("Loading file map");
 	while (true) {

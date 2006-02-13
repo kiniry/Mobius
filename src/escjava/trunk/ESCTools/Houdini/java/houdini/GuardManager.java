@@ -36,6 +36,12 @@ class GuardManager {
     /** hguard -> vector of file names */
     Hashtable deps;
    
+    public static String shortName(String s) {
+	int lastSlash = s.lastIndexOf("/");
+	if (lastSlash == -1) return s;
+	return s.substring(lastSlash + 1);
+    }
+
     /**
      * load guards from fileName, putting them in g.  Will not put a guard
      * into g if it already is contained in hguards.
@@ -196,14 +202,14 @@ class GuardManager {
 	    Vector v = (Vector)deps.get(o);
 	    for (int i = 0; i < v.size(); i++) {
 		String name = (String)v.elementAt(i);
-		s.append(OptionHandler.shortName(name)).append(i < v.size()-1?", " : "");
+		s.append(shortName(name)).append(i < v.size()-1?", " : "");
 	    }
 	    s.append("]\n");
 	}
         s.append("\nDependencies by File\n");
 	for (Enumeration e = assumes.keys(); e.hasMoreElements(); ) {
 	    String name = (String)e.nextElement();
-	    s.append(" ").append(OptionHandler.shortName(name)).append(": ").append(depsToString(name)).append("\n");
+	    s.append(" ").append(shortName(name)).append(": ").append(depsToString(name)).append("\n");
 	}
 	return s.toString();
     }
@@ -239,7 +245,7 @@ class GuardManager {
      */
     public void computeDependencies(String fileName, SExp s) {
 	try {
-	    String shortFileName = OptionHandler.shortName(fileName);
+	    String shortFileName = shortName(fileName);
 	    if (Debug.debug) Log.log("guard", "Computing deps for " + shortFileName);
 	    if (s == null) {
 		DataInputStream in = Utility.getInputStream(fileName + "x");

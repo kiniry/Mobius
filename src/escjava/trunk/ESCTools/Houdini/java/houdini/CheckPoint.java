@@ -68,7 +68,7 @@ public class CheckPoint extends Thread {
 	StringBuffer sb = new StringBuffer(10000);
 	try {
 	    PrintStream outJob = 
-		Utility.getPrintStream(server.vcdir + "job.html");
+		Utility.getPrintStream(server.options().vcdir + "job.html");
 	    sb.append("<HTML><TITLE>Houdini Job Log- " + Utility.getDateString() + "</TITLE><BODY>\n");
 	    sb.append("WORKLIST: <BR>\n").append(server.list.toHTML()).append("<BR><BR>");
 	    sb.append("JOBS: <BR>\n");
@@ -90,7 +90,7 @@ public class CheckPoint extends Thread {
     public void reportNet() {
 	try {
 	    PrintStream out = 
-		Utility.getPrintStream(server.vcdir + "net.html");
+		Utility.getPrintStream(server.options().vcdir + "net.html");
 	    out.println("<HTML><TITLE>Houdini Network Status- " + Utility.getDateString() + "</TITLE><BODY>\n");
 	    for (int i = 0; i < server.workers.size(); i++) {
 		WorkerState ws = (WorkerState)server.workers.elementAt(i);
@@ -108,7 +108,7 @@ public class CheckPoint extends Thread {
     public void makeRoot() {
 	try {
 	    PrintStream out = 
-		Utility.getPrintStream(server.vcdir + "reports.html");
+		Utility.getPrintStream(server.options().vcdir + "reports.html");
 	    out.println("<HTML><TITLE>Houdini Reports- " + Utility.getDateString() + "</TITLE><BODY>");
 	    out.println("<A HREF=\"job.html\">Job Summary<A><BR>");
 	    out.println("<A HREF=\"worker.html\">Worker Summary<A><BR>");
@@ -138,7 +138,13 @@ public class CheckPoint extends Thread {
     }
 
     public void reportError(int worker, Job j, String s) {
-	outError.println("[" + Utility.getDateString() + "][id="+worker+"] ERROR! Job =" + j.toString() + " " + s + "<br>\n");
+	String job;
+        if (j == null)
+            job = " (no job)";
+        else
+            job = j.toString();
+
+	outError.println("[" + Utility.getDateString() + "][id="+worker+"] ERROR! Job =" + job + " " + s + "<br>\n");
 	outError.flush();
     }
 
@@ -159,11 +165,11 @@ public class CheckPoint extends Thread {
 	makeRoot();
 	try {
 	    outWorker = 
-		Utility.getPrintStream(server.vcdir + "worker.html");
+		Utility.getPrintStream(server.options().vcdir + "worker.html");
 	    outTimes = 
-		Utility.getPrintStream(server.vcdir + "times.html");
+		Utility.getPrintStream(server.options().vcdir + "times.html");
 	    outError = 
-		Utility.getPrintStream(server.vcdir + "error.html");
+		Utility.getPrintStream(server.options().vcdir + "error.html");
        	} catch (IOException e) {
 	    Assert.fail(e);
 	}

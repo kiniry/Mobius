@@ -50,6 +50,12 @@ class WorkerState {
 	lastMessage = System.currentTimeMillis();
     }
     
+    public static String shortName(String s) {
+	int lastSlash = s.lastIndexOf("/");
+	if (lastSlash == -1) return s;
+	return s.substring(lastSlash + 1);
+    }
+
     /** connect to client and set up command handlers */
     SocketCommand makeConnection(int port) {
 	final SocketCommand command = new SocketCommand(port);
@@ -99,7 +105,7 @@ class WorkerState {
     class VCDirCommand extends Command {
 	public String doIt(String args[]) {
 	    touchDate();
-	    return parent.vcdir;
+	    return parent.options().vcdir;
 	}
     };
     
@@ -143,7 +149,6 @@ class WorkerState {
 	public String doIt(String args[]) {
 	    touchDate();
 	    Assert.notFalse(args.length == 2);
-	    Assert.notFalse(currentJob != null);
 	    parent.cp.reportError(id, currentJob, args[1]);
 	    return "ack";
 	}
@@ -201,7 +206,7 @@ class WorkerState {
 		    String s = (String)deps.elementAt(i);
 		    if (parent.guards.isPositiveDependency(s, args[1])) {
 			parent.list.add(s, false);
-			log("Refuted " + args[1] + " --> " + OptionHandler.shortName(s));
+			log("Refuted " + args[1] + " --> " + shortName(s));
 		    }
 		}
 		reply = "rerun";
