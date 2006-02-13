@@ -7,6 +7,9 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javafe.Options;
+import javafe.SrcToolOptions;
+
 import javafe.ast.*;
 
 import javafe.reader.StandardTypeReader;
@@ -50,69 +53,19 @@ public class Main extends javafe.SrcTool {
      **/
     public String name() { return "houdini annotation generator"; }
 
-    /**
-     ** Print option option information to
-     ** <code>System.err</code>. <p>
-     **/
-    public void showOptions() {
-      super.showOptions();
-      System.err.println("  -common");
-    }
-
   
     /***************************************************
      *                                                 *
      * Option processing:			       *
      *                                                 *
      ***************************************************/
-
-    AnnotationGuesser ag = new StandardAnnotationGuesser();
-    public static boolean ignoreBodies = false;
-
-
-    /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **/
-    public int processOption(String option, String[] args, int offset) {
-	//System.out.println ("processOption"+option+offset);
-	if (option.equals("-guesser")) {
-	    if (offset == args.length) {
-		usage();
-		System.exit(usageError);
-	    }
-	    if (args[offset].equals("Standard")) {
-	      ag = new StandardAnnotationGuesser();
-	    } else if (args[offset].equals("Common")) {
-	      ag = new CommonAnnotationGuesser();
-	    } else if (args[offset].equals("ReqFalse")) {
-	      ag = new ReqFalseAnnotationGuesser();
-	    } else if (args[offset].equals("Library")) {
-	      ag = new LibraryAnnotationGuesser();
-	    } else if (args[offset].equals("Swing")) {
-	      ag = new SwingGuesser(false);
-	    } else if (args[offset].equals("SwingWithReqFalse")) {
-	      ag = new SwingGuesser(true);
-	    } else if (args[offset].equals("MoreReachable")) {
-	      ag = new MoreReachableAnnotationGuesser();
-	    } else {
-	      System.err.println("Unknown guesser '" + args[offset] + "'");
-	      usage();
-	      System.exit(usageError);
-	    }
-	    return offset+1;
-	} else if (option.equals("-ignoreBodies")) {
-	  javafe.tc.FlowInsensitiveChecks.dontAddImplicitConstructorInvocations = true;
-	  ignoreBodies = true;
-	  return offset;
-	} else {
-	    // Pass on unrecognized options:
-	    return super.processOption(option, args, offset);
-	}
+    public Options makeOptions() {
+        return new HoudiniOptions();
     }
 
+    private static HoudiniOptions options() {
+        return (HoudiniOptions) options;
+    }
 
     /**
      ** This method is called on each <code>CompilationUnit</code>
@@ -134,9 +87,11 @@ public class Main extends javafe.SrcTool {
     /**
      ** Returns the Esc StandardTypeReader, EscTypeReader.
      **/
-    public StandardTypeReader makeStandardTypeReader(String path,
+    public StandardTypeReader makeStandardTypeReader(String classpath,
+						     String sourcepath,
 						     PragmaParser P) {
-        return EscTypeReader.make(path, P);
+        // parallel to code in Escjava/java/escjava/Main.java
+        return escjava.reader.EscTypeReader.make(classpath, sourcepath, P, new escjava.AnnotationHandler ());
     }
 
 
@@ -192,9 +147,69 @@ public class Main extends javafe.SrcTool {
     public void postprocess() {
 
 	InferThrows.compute(typeDecls);
-	AnnotationVisitor v = new AnnotationVisitor(ag);
+	AnnotationVisitor v = new AnnotationVisitor(options().ag);
 	v.visitTypeDeclVec(typeDecls);
     }
 
 }
 
+class HoudiniOptions extends SrcToolOptions
+{
+    AnnotationGuesser ag = new StandardAnnotationGuesser();
+    public static boolean ignoreBodies = false;
+
+    /**
+     ** Process next option. <p>
+     **
+     ** See <code>Options.processOption</code> for the complete
+     ** specification of this routine.<p>
+     **/
+    public int processOption(String option, String[] args, int offset) throws javafe.util.UsageError {
+	//System.out.println ("processOption"+option+offset);
+	if (option.equals("-guesser")) {
+	    if (offset == args.length) {
+		usage("Houdini");
+		throw (new javafe.util.UsageError("Unknown UsageError"));
+	    }
+	    if (args[offset].equals("Standard")) {
+	      ag = new StandardAnnotationGuesser();
+	    } else if (args[offset].equals("Common")) {
+	      ag = new CommonAnnotationGuesser();
+	    } else if (args[offset].equals("ReqFalse")) {
+	      ag = new ReqFalseAnnotationGuesser();
+	    } else if (args[offset].equals("Library")) {
+	      ag = new LibraryAnnotationGuesser();
+	    } else if (args[offset].equals("Swing")) {
+	      ag = new SwingGuesser(false);
+	    } else if (args[offset].equals("SwingWithReqFalse")) {
+	      ag = new SwingGuesser(true);
+	    } else if (args[offset].equals("MoreReachable")) {
+	      ag = new MoreReachableAnnotationGuesser();
+	    } else {
+	      //System.err.println("Unknown guesser '" + args[offset] + "'");
+	      usage("Houdini");
+	      //System.exit(usageError);
+              throw (new javafe.util.UsageError("Unknown guesser '" + args[offset] + "'"));
+	    }
+	    return offset+1;
+	} else if (option.equals("-ignoreBodies")) {
+	  javafe.tc.FlowInsensitiveChecks.dontAddImplicitConstructorInvocations = true;
+	  ignoreBodies = true;
+	  return offset;
+	} else {
+	    // Pass on unrecognized options:
+	    return super.processOption(option, args, offset);
+	}
+    }
+
+    /**
+     ** Print option option information to
+     ** <code>System.err</code>. <p>
+     **/
+    public String showOptions(boolean all) {
+      StringBuffer sb = new StringBuffer(super.showOptions(all));
+      String[][] data1 = {{"-common", "TODO"}};
+      sb.append(data1);
+      return sb.toString();
+    }
+}
