@@ -33,7 +33,7 @@ class WorkList {
 	public int compare(Object o, Object p) {
 	    return ((Job)o).shortName.compareTo(((Job)p).shortName);
 	}
-    }
+    };
 
     /** object used to notify the server when the list is empty */
     private Object signalObject;
