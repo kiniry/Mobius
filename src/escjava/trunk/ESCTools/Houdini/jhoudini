@@ -18,6 +18,32 @@
 VERSION="Houdini version 3, April 2001"
 echo ${VERSION}
 
+if [ -z $ESCTOOLS_ROOT ]; then
+    if [ -e "$0" ]; then
+        #ESCTOOLS_ROOT=`dirname "$0"`/..
+        ESCTOOLS_ROOT=`pwd`/..
+        echo "Warning: Guessing ESCTOOLS_ROOT = $ESCTOOLS_ROOT"
+    fi
+    if [ -z "$ESCTOOLS_ROOT" ]; then
+        echo "Error: ESCTOOLS_ROOT is not set and guessing was unsuccessful."
+        exit 2
+    fi
+fi
+
+HOUDINI_ROOT=${ESCTOOLS_ROOT}/Houdini
+ESCJAVA_ROOT=${ESCTOOLS_ROOT}/Escjava
+# 'export' needed for tool2html
+export JAVAFE_ROOT=${ESCTOOLS_ROOT}/Javafe
+UTILS_ROOT=${ESCTOOLS_ROOT}/Utils
+
+CLASSPATH=${CLASSPATH}:${HOUDINI_ROOT}/classfiles:${ESCJAVA_ROOT}/classfiles:${JAVAFE_ROOT}/classfiles:${UTILS_ROOT}:.
+HOUDINI_CLASSPATH=${CLASSPATH}
+ESC_CLASSPATH=${CLASSPATH}
+
+JDKSPEC_ROOT=${HOUDINI_ROOT}/../specs
+
+ESCJ=${ESCJAVA_ROOT}/escj
+
 COMMANDLINE="$*"
 
 ### ---------- Parse command line
@@ -29,10 +55,10 @@ USAGE_MSG="Usage: jhoudini [-bootclasspath p] [-classpath p] \
   [-hosts hostfile] \
   [-f programIndirectionFile] files..."
 
-if [ "x$ESCJ" = "x" ]; then
-    echo "houdini: Error: setup must be sourced first"
-    exit 2
-fi
+#if [ "x$ESCJ" = "x" ]; then
+#    echo "houdini: Error: setup must be sourced first"
+#    exit 2
+#fi
 
 ANNOTATE_ONLY="false"
 RESTART="false"
@@ -234,7 +260,7 @@ fi
 
 ### ---------- Absolutify OUTDIR and define vars dependent on it
 
-OUTDIR=`expandpath $OUTDIR`
+OUTDIR=$PWD/$OUTDIR
 LOGDIR="${OUTDIR}/log"
 export LOGDIR
 LOGFILE="${LOGDIR}/houdini.log"
@@ -280,26 +306,30 @@ ESCJ_FLAGS_FINALRUN="\
 	${ESCJ_FLAGS_BOTH} -suggest"
 
 # the following variables are exported for the benefit of the Coordinator
-OLD_HOUDINI_ROOT="${ESCJAVA_ROOT}/scheme/houdini"
-HOUDINI_ROOT="${ESCJAVA_ROOT}/../Houdini"
+#OLD_HOUDINI_ROOT="${ESCJAVA_ROOT}/scheme/houdini"
+#HOUDINI_ROOT="${ESCJAVA_ROOT}/../Houdini"
 export HOUDINI_ROOT
 
 # various programs
-COPY_LOADED="${JAVA} -classpath ${ESC_CLASSPATH} houdini.CopyLoaded"
-ANNOTATION_VISITOR="${JAVA} -classpath ${ESC_CLASSPATH} houdini.Main -noCautions"
-ANNOTATION_INSERTER="${JAVA} -classpath ${ESC_CLASSPATH} escwizard.AnnotationInserter"
-ANNOTATION_REMOVER="${ESCJAVA_ROOT}/java/houdini/AnnotationRemover.perl"
-HGUARD_EXTRACTOR="${OLD_HOUDINI_ROOT}/HGuards.perl"
+# (need to export JAVA for tool2html)
+export JAVA=java
+COPY_LOADED="${JAVA} -classpath ${CLASSPATH} houdini.CopyLoaded" 
+ANNOTATION_VISITOR="${JAVA} -classpath ${CLASSPATH} houdini.Main -noCautions"
+ANNOTATION_INSERTER="${JAVA} -classpath ${CLASSPATH} houdini.AnnotationInserter"
+ANNOTATION_REMOVER="${HOUDINI_ROOT}/AnnotationRemover.perl"
+HGUARD_EXTRACTOR="${HOUDINI_ROOT}/HGuards.perl"
 JAVA2HTML="${JAVAFE_ROOT}/java/tohtml/tool2html"
 GEN_ESC_SCRIPT="${JAVA}  -classpath ${HOUDINI_CLASSPATH} houdini.FinalESCRun"
 
-HCLIENT="/proj/cra/pkg/jdk1.2.2/bin/java -fast -Xmx1000000000 -Dsimplify=${ESCJAVA_ROOT}/simplify -classpath ${HOUDINI_CLASSPATH} houdini.HoudiniClient -port 9999 -host ${HOST} -vcdir ${GVCDIR} -ubp ${HOUDINI_ROOT}/UnivBackPred.ax -logToFile"
+SMPLFY=${ESCJAVA_ROOT}/release/master/bin/Simplify-1.5.4.linux
+HOST=localhost
+HCLIENT="${JAVA} -Xmx1000000000 -Dsimplify=${SMPLFY} -classpath ${HOUDINI_CLASSPATH} houdini.HoudiniClient -port 9999 -host ${HOST} -vcdir ${GVCDIR} -ubp ${ESCJAVA_ROOT}/java/escjava/backpred/UnivBackPred.ax -logToFile"
 
-HSERVER="/proj/cra/pkg/jdk1.2.2/bin/java -fast -Xmx1000000000 -Dsimplify=${ESCJAVA_ROOT}/simplify -classpath ${HOUDINI_CLASSPATH} houdini.HoudiniServer -port 9999 -vcdir ${GVCDIR} -logToFile"
+HSERVER="${JAVA} -Xmx1000000000 -Dsimplify=${SMPLFY}/simplify -classpath ${HOUDINI_CLASSPATH} houdini.HoudiniServer -port 9999 -vcdir ${GVCDIR} -logToFile"
 
 HSERVER_RESTART="srcjava -Dsimplify=${ESCJAVA_ROOT}/simplify -classpath ${HOUDINI_CLASSPATH} houdini.HoudiniServer -port 9999 -vcdir ${GVCDIR} -restart -logToFile"
 
-SIMPLIFY_ENV='limit stacksize 32000; set PROVER_CC_LIMIT=30000; set PROVER_KILL_TIME=300; set ESCJ_SIMPLIFY_ARGS="-noprune -noplunge -labelsonly"; set JAVAVERSION=fast1.2.2;'
+SIMPLIFY_ENV='set PROVER_CC_LIMIT=30000; set PROVER_KILL_TIME=300; set ESCJ_SIMPLIFY_ARGS="-noprune -noplunge -labelsonly"; set JAVAVERSION=fast1.2.2;'
 
 ### ---------- Start work
 
@@ -326,9 +356,15 @@ if [ "${RESTART}" = "false" ]; then
   ### ---------- Copy files
 
   echo "`date`: Copying files..." | tee -a ${LOGFILE}
-  ${COPY_LOADED} ${PATH_ARG_NO_DOT} -outdir ${OUTDIR}/src-original \
+  echo "${COPY_LOADED} ${PATH_ARG_NO_DOT} -specs ${JDKSPEC_ROOT} -outdir ${OUTDIR}/src-original \
+      -outProgIndirect ${PROG_INDIRECT_FILE} -outLibIndirect ${LIB_INDIRECT_FILE} \
+      -f ${SPECIFIED_SOURCE_FILES}" 
+  ${COPY_LOADED} ${PATH_ARG_NO_DOT} -specs ${JDKSPEC_ROOT} -outdir ${OUTDIR}/src-original \
       -outProgIndirect ${PROG_INDIRECT_FILE} -outLibIndirect ${LIB_INDIRECT_FILE} \
       -f ${SPECIFIED_SOURCE_FILES} >> ${LOGFILE} 2>&1
+  #${COPY_LOADED} ${PATH_ARG_NO_DOT} -specs ${HOUDINI_ROOT}/../specs -outdir ${OUTDIR}/src-original \
+  #    -outProgIndirect ${PROG_INDIRECT_FILE} -outLibIndirect ${LIB_INDIRECT_FILE} \
+  #    -f ${SPECIFIED_SOURCE_FILES} >> ${LOGFILE} 2>&1
   if [ $? != 0 ]; then
     echo "`date`: Failed to run CopyLoaded" | tee -a ${LOGFILE}
     exit 1
@@ -339,7 +375,7 @@ if [ "${RESTART}" = "false" ]; then
   cd ${OUTDIR}/src-original
 
   echo "`date`: Create candidate annotation set..." | tee -a ${LOGFILE}
-  if ${ANNOTATION_VISITOR} ${PATH_ARG} -guesser ${PROG_GUESSER} \
+  if ${ANNOTATION_VISITOR} ${PATH_ARG} -guesser ${PROG_GUESSER} -q \
        -f ${PROG_INDIRECT_FILE} > ${LOGDIR}/annotations.instr; then
     : nothing
   else
@@ -348,7 +384,7 @@ if [ "${RESTART}" = "false" ]; then
     exit 1
   fi
 
-  if ${ANNOTATION_VISITOR} ${PATH_ARG} -ignoreBodies -guesser ${LIB_GUESSER} \
+  if ${ANNOTATION_VISITOR} ${PATH_ARG} -ignoreBodies -guesser ${LIB_GUESSER} -q \
        -f ${LIB_INDIRECT_FILE} >> ${LOGDIR}/annotations.instr; then
     : nothing
   else
@@ -398,7 +434,7 @@ if [ "${RESTART}" = "false" ]; then
   ${escjavaCommand} >> ${ESCOUT} 2>&1
 
   if [ $? != 0 ]; then
-    echo "`date`: Failed to run escjava" | tee -a ${LOGFILE}
+    echo "`date`: Failed to run escjava: $?" | tee -a ${LOGFILE}
     exit 1
   fi
 
@@ -443,11 +479,15 @@ fi
   echo "`date`: Starting Clients" | tee -a ${LOGFILE}
 
   for f in `cat ${HOST_FILE}`; do
-    echo "`date`: Starting HoudiniClient on ${f}" | tee -a ${LOGFILE}
-    echo Calling: rsh -n ${f} ${HCLIENT} >> ${LOGFILE}
-    (rsh -n ${f} ${SIMPLIFY_ENV}'; '${HCLIENT} >> ${CLIENTLOG} 2>&1 
+    # echo "`date`: Starting HoudiniClient on ${f}" | tee -a ${LOGFILE}
+    echo "`date`: Starting HoudiniClient" | tee -a ${LOGFILE}
+    echo Calling: ${HCLIENT} >> ${LOGFILE}
+    #(rsh -n ${f} ${SIMPLIFY_ENV}'; '${HCLIENT} >> ${CLIENTLOG} 2>&1 
+    (${SIMPLIFY_ENV}; 
+     ${HCLIENT} >> ${CLIENTLOG} 2>&1 
     if [ $? != 0 ]; then
-      echo "`date`: Failed to run client on ${f}.  Could it be your .rhosts?" | tee -a ${LOGFILE}
+      #echo "`date`: Failed to run client on ${f}.  Could it be your .rhosts?" | tee -a ${LOGFILE}
+      echo "`date`: Failed to run client" | tee -a ${LOGFILE}
       exit 1
     fi)&
   done
@@ -512,7 +552,9 @@ echo "`date`: Final escjava run" | tee -a ${LOGFILE}
 # Concatenate the output from the different processors into one file
 ESCOUT=${LOGDIR}/escjava.final.out
 
-escjavaCommand="(rsh -n %1 '(cd ${ESCJAVA_ROOT}; source setup; cd ${OUTDIR}/src-annotated; ${ESCJ} ${PATH_ARG} ${ESCJ_FLAGS_FINALRUN} %2) >& ${ESCOUT}.%3 ')&"
+# hackish for now - we don't have rsh
+# escjavaCommand="(rsh -n %1 '(cd ${ESCJAVA_ROOT}; source setup; cd ${OUTDIR}/src-annotated; ${ESCJ} ${PATH_ARG} ${ESCJ_FLAGS_FINALRUN} %2) >& ${ESCOUT}.%3 ')&"
+escjavaCommand="(echo \"not rshing to %1.\" | cd ${OUTDIR}/src-annotated; ${ESCJ} ${PATH_ARG} ${ESCJ_FLAGS_FINALRUN} %2 >> ${ESCOUT}.%3)&"
 
 echo Calling: ${GEN_ESC_SCRIPT} -hosts ${HOST_FILE} -files ${PROG_INDIRECT_FILE} -command "${escjavaCommand}" \
     | tee -a ${ESCOUT} >> ${LOGFILE}
@@ -527,7 +569,7 @@ fi
 echo "wait" >> esc.final.script
 
 echo Calling: esc.final.script | tee -a ${ESCOUT} >> ${LOGFILE}
-`sh esc.final.script` >> ${ESCOUT} 2>&1
+sh esc.final.script >> ${ESCOUT} 2>&1
 
 if [ $? != 0 ]; then
   echo "`date`: Failed to run esc.final.script" | tee -a ${LOGFILE}
