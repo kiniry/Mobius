@@ -38,10 +38,16 @@ class Job {
     /** time at which the job was assigned. */
     long assignTime;
     
+    public static String shortName(String s) {
+	int lastSlash = s.lastIndexOf("/");
+	if (lastSlash == -1) return s;
+	return s.substring(lastSlash + 1);
+    }
+
     public Job(WorkList owner, String vcFile) {
 	this.owner = owner;
 	this.vcFile = vcFile;
-	String s = OptionHandler.shortName(vcFile);
+	String s = shortName(vcFile);
 	shortName = s.substring(0, s.indexOf(".method.sx"));
     }
 
