@@ -1,6 +1,7 @@
+#!/usr/bin/perl
+
 # Copyright 2000, 2001, Compaq Computer Corporation
 
-#!/usr/local/bin/perl
 # Copyright (c) 1999, Compaq Computer Corporation
 # Change history:
 #   31 Aug 1999  rustan & flanagan  Created
