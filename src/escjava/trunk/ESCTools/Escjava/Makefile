@@ -40,6 +40,12 @@ ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/tc/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/translate/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/*.java) \
+        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/coq/*.java) \
+        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/coq/visitor/*.java) \
+        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/pvs/*.java) \
+        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/sammy/*.java) \
+        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/simplify/*.java) \
+        $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/xml/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java)
 
 ESCJAVA_SOURCE_FILES = \
