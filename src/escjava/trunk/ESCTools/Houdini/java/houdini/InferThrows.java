@@ -51,7 +51,7 @@ public class InferThrows extends DefaultVisitor {
      ** nodes to point to <code>Set</code> of TypeSigs for thrown exceptions.
      **/
     //@ invariant throwsDecoration != null;
-    //@ invariant throwsDecoration.decorationType == \type(Type);
+    // outdated invariant(?): throwsDecoration.decorationType == \type(Type);
     private static ASTDecoration throwsDecoration
 	= new ASTDecoration("throwsDecoration");
 
