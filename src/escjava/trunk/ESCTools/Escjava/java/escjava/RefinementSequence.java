@@ -68,6 +68,10 @@ public class RefinementSequence extends CompilationUnit {
     imports = newcu.imports;
     elems = newcu.elems;
     loc = newcu.loc;
+    // otherPragmas should never be null (class invariant of CompilationUnit)
+    if (otherPragmas == null) {
+        otherPragmas = TypeDeclElemVec.make();
+    }
   }
   
   //@ requires refinements != null;
@@ -227,7 +231,8 @@ public class RefinementSequence extends CompilationUnit {
         }
       }
     }
-    return CompilationUnit.make(pkgName,lexicalPragmaVec,imports,types,loc,null);
+    TypeDeclElemVec emptyTypeDeclElemVec = TypeDeclElemVec.make();
+    return CompilationUnit.make(pkgName,lexicalPragmaVec,imports,types,loc,emptyTypeDeclElemVec);
   }
   
   void combineFields(FieldDecl newfd, FieldDecl fd) {
