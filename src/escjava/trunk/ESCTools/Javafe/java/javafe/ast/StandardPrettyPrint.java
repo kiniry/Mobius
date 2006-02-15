@@ -663,11 +663,13 @@ public class StandardPrettyPrint extends PrettyPrint {
     public void print(OutputStream o, int ind, FieldDecl d, boolean showBody) {
         if (d == null) write(o, "<null VarDecl>");
         else {
+            boolean specOnly = d.getParent().specOnly;
+
             write(o, Modifiers.toString(d.modifiers));
             self.print(o, d.type);
             write(o, ' ');
             write(o, d.id.toString());
-            if (showBody && d.init != null)
+            if (showBody && d.init != null && !specOnly)
             { write(o, " = "); self.print(o, ind, d.init); }
             if (d.pmodifiers != null)
                 for (int i = 0; i < d.pmodifiers.size(); i++) {
