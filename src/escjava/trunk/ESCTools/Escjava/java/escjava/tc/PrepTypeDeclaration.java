@@ -222,7 +222,16 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 		System.out.println("MODEL TYPE PRAGMA");
 */
 	} else if (e instanceof NamedExprDeclPragma) {
-	    ((TypeDeclElemVec)Utils.representsDecoration.get(currentSig.getTypeDecl())).addElement(e);
+            TypeDecl decl = currentSig.getTypeDecl();
+            TypeDeclElemVec elemvec = (TypeDeclElemVec)Utils.representsDecoration.get(decl);
+            // REVIEW: I added robustness in case elemvec is null, but is it allowed to be null
+            //   here in the first place?
+            if (elemvec == null)
+            {
+              elemvec = TypeDeclElemVec.make();
+              Utils.representsDecoration.set(decl, elemvec);
+            }
+            elemvec.addElement(e);
 	} else 
 	    super.visitTypeDeclElem(e,currentSig,abstractMethodsOK, 
 			inFinalClass, inInterface);
@@ -338,10 +347,19 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	}
 	TypeDeclElemVec mpv = (TypeDeclElemVec)Utils.representsDecoration.get(type.getTypeDecl());
 	TypeDeclElemVec mpvsuper = (TypeDeclElemVec)Utils.representsDecoration.get(st.getTypeDecl());
+
+        // REVIEW: I added robustness in case mpv is null, but is it allowed to be null
+        //   in the first place?
 	if (st.getTypeDecl() instanceof ClassDecl) {
-	    mpv.append(mpvsuper);
+	    if (mpv != null)
+                mpv.append(mpvsuper);
+            else
+                Utils.representsDecoration.set(type.getTypeDecl(), mpvsuper.Clone());
 	} else {
-	    mpv.append(mpvsuper);
+            if (mpv != null)
+	        mpv.append(mpvsuper);
+            else
+                Utils.representsDecoration.set(type.getTypeDecl(), mpvsuper.Clone());
 		//interfaces get them from Object as well ?
 		// FIXME - no dups
 	    //for (int i=0; i<mpvsuper.size(); ++i) 
