@@ -354,12 +354,12 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 	    if (mpv != null)
                 mpv.append(mpvsuper);
             else
-                Utils.representsDecoration.set(type.getTypeDecl(), mpvsuper.Clone());
+                Utils.representsDecoration.set(type.getTypeDecl(), TypeDeclElemVec.make (mpvsuper.toArray()));
 	} else {
             if (mpv != null)
 	        mpv.append(mpvsuper);
             else
-                Utils.representsDecoration.set(type.getTypeDecl(), mpvsuper.Clone());
+                Utils.representsDecoration.set(type.getTypeDecl(), TypeDeclElemVec.make (mpvsuper.toArray()));
 		//interfaces get them from Object as well ?
 		// FIXME - no dups
 	    //for (int i=0; i<mpvsuper.size(); ++i) 
