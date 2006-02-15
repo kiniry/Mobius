@@ -7,6 +7,7 @@ import java.io.*;
 import javafe.ast.CompilationUnit;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclVec;
+import javafe.ast.TypeDeclElemVec;
 import javafe.ast.ImportDeclVec;
 import javafe.ast.PrettyPrint;			// Debugging methods only
 
@@ -61,13 +62,15 @@ public class BinReader extends Reader
 		// sometimes included.
 	    TypeDeclVec types =
 		TypeDeclVec.make(new TypeDecl[] { parser.typeDecl });
+            TypeDeclElemVec emptyTypeDeclElemVec = TypeDeclElemVec.make();
 	    ImportDeclVec emptyImportDeclVec = ImportDeclVec.make();
 	    CompilationUnit result = 
 		CompilationUnit.make(parser.classPackage,
 				     null,
 				     emptyImportDeclVec,
 				     types,
-				     parser.classLocation,null);
+				     parser.classLocation,
+				     emptyTypeDeclElemVec); 
 	    return result;
 	}
 	catch (IOException e)
