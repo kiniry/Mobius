@@ -581,6 +581,11 @@ public class VcGenerator {
                 currentParent = newNode;
                 break;
             }
+            case TagConstants.SUM: {
+            	TSum newNode = new TSum();
+            	currentParent.addSon(newNode);
+                currentParent = newNode;
+            }
             case TagConstants.ASFIELD: {
                 TAsField newNode = new TAsField();
                 currentParent.addSon(newNode);

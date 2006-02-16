@@ -259,5 +259,10 @@ class TCoqVisitor extends ANotHandledVisitor {
 		genericFun("unset", n);
 	}
 
+	public void visitTSum(TSum s) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

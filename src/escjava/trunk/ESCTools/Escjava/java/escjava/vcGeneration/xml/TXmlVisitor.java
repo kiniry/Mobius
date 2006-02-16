@@ -1,6 +1,7 @@
 package escjava.vcGeneration.xml;
 
 import escjava.vcGeneration.*;
+
 import java.io.*;
 
 import org.w3c.dom.*;
@@ -393,6 +394,11 @@ class TXmlVisitor extends TVisitor {
 
 	public void visitTIntegralSub(TIntegralSub sub) throws IOException {
 		term("int", "SUB", sub);
+	}
+
+	public void visitTSum(TSum s) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

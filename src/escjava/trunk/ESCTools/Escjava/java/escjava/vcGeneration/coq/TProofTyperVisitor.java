@@ -459,6 +459,11 @@ public class TProofTyperVisitor extends TVisitor {
 		
 	}
 
+	public void visitTSum(TSum s) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	
 

@@ -69,6 +69,7 @@ import escjava.vcGeneration.TRoot;
 import escjava.vcGeneration.TSelect;
 import escjava.vcGeneration.TStore;
 import escjava.vcGeneration.TString;
+import escjava.vcGeneration.TSum;
 import escjava.vcGeneration.TTypeEQ;
 import escjava.vcGeneration.TTypeLE;
 import escjava.vcGeneration.TTypeNE;
@@ -469,6 +470,11 @@ public class TProofSimplifier extends TVisitor {
 	}
 
 	public void visitTIntegralSub(TIntegralSub sub) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void visitTSum(TSum s) {
 		// TODO Auto-generated method stub
 		
 	}
