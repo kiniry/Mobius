@@ -159,5 +159,6 @@ abstract public class TVisitor {
     abstract public void visitTMethodCall(/*@ non_null @*/ TMethodCall call) throws IOException;
 
     abstract public void visitTIntegralSub(/*@ non_null @*/ TIntegralSub sub) throws IOException;
-
+    
+    abstract public void visitTSum (TSum s);
 }

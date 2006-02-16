@@ -691,6 +691,14 @@ public class TIsNewArray extends TFunction {
     }
 
 }
+
+public class TSum extends TFunction {
+
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
+	v.visitTIsNewArray(this);
+    }
+
+}
 public class TUnset extends TFunction {
 
     public void typeTree(){
