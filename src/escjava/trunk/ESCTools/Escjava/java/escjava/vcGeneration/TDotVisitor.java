@@ -388,4 +388,9 @@ class TDotVisitor extends TVisitor {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void visitTSum(TSum s) {
+		// TODO Auto-generated method stub
+		
+	}
 }
