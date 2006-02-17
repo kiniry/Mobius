@@ -1,9 +1,38 @@
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
+/** CopyLoaded loads the files specified by the '-f' parameter
+  and copies it and its dependencies.
+
+  By setting OutsideEnv.setListener(this), notify() is called
+  every time a new CompilationUnit is loaded. The file 
+  corresponding to the CompilationUnit is copied or parsed and
+  prettyprinted as a spec file, and it is added to the 'loaded'
+  stack.
+
+  All CompilationUnits are popped from the loaded stack and passed
+  to handleCU (which might cause more CompilationUnits to be loaded
+  and thus be pushed onto loaded). Non-specOnly TypeDecl elements of 
+  the CU will be handled further by handleTD.
+
+  The popped CU's are added to the "handled" HashSet to prevent 
+  loops - though it is not clear if that can ever happen in
+  practice.
+
+  This process ends when the loaded stack is empty after handling
+  its last CU.
+  
+  It's not entirely clear to me yet, but it looks like classes which
+  are merely used as parameters for methods for which only specs
+  are available are not loaded, which leads to errors when trying
+  to parse the copied code. 
+*/
+
 package houdini;
 
 
 import java.util.Vector;
+import java.util.HashSet;
+import java.util.Stack;
 
 import javafe.ast.*;
 import javafe.tc.*;
@@ -49,8 +78,6 @@ public class CopyLoaded extends javafe.FrontEndTool implements Listener {
 	}
     }
 
-
-
     /***************************************************
      *                                                 *
      * Keeping track of loaded CompilationUnits:       *
@@ -58,11 +85,15 @@ public class CopyLoaded extends javafe.FrontEndTool implements Listener {
      **************************************************/
 
 
+    // CU's that have been loaded, but not yet handled
     //@  invariant loaded != null;
     //+@ invariant loaded.elementType == \type(CompilationUnit);
     //+@ invariant !loaded.containsNull;
     // @  invariant loaded.owner == this;
-    public Vector loaded = new Vector();
+    public Stack loaded = new Stack();
+
+    // CU's that have already been handled
+    public HashSet handled = new HashSet();
 
     // @ invariant loaded != argumentFileNames;
  
@@ -94,7 +125,10 @@ public class CopyLoaded extends javafe.FrontEndTool implements Listener {
     }
 
     public void notify(CompilationUnit justLoaded) {
-        loaded.addElement(justLoaded);
+        // REVIEW: can this ever occur? if not, the 'handled' set
+        // can be entirely removed.
+        if (! handled.contains(justLoaded) )
+          loaded.push(justLoaded);
      
         String fileName = Location.toFileName(justLoaded.loc);
         /* if a Java file, then copy the file over into outDir */
@@ -244,7 +278,7 @@ public class CopyLoaded extends javafe.FrontEndTool implements Listener {
 	    //System.out.println (e.toString());
             ErrorSet.fatal(e.getMessage());
         }
-/*-ARN
+/*
         } catch (Exception e) {
 	    System.out.println (e.toString());
             ErrorSet.fatal(e.getMessage());
@@ -318,12 +352,9 @@ public class CopyLoaded extends javafe.FrontEndTool implements Listener {
 	    }
 	}
     
-        // FIXME! -ARN
-        // handleCU seems to modify loaded, invalidating the iterator.
-        Vector loaded_now = new Vector (loaded);
-	i = loaded_now.iterator();
-	while (i.hasNext()) {
-	    CompilationUnit nextcu = (CompilationUnit)i.next();
+        while (!loaded.empty()) {
+            CompilationUnit nextcu = (CompilationUnit)loaded.pop();
+            handled.add(nextcu);
             handleCU(nextcu);
         }
     
