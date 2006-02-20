@@ -145,7 +145,7 @@ Qed. *)
  
 Axiom semAux : 
 forall state aState ( P :  Assertion )  lVar  z,
- (isFresh  z P) -> 
+ (* isFresh  z P) -> *)
 evalMyProp ( p_forallsAux  ( fun auxState => P ( ( stateAtLoop state auxState z lVar )  , auxState)))  ->
  (evalMyProp ( P ( state, aState ))).
 (* Proof.
