@@ -70,9 +70,9 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 # 	latex ${talk};
 
 %.pdf:	%.texinfo
-	texi2pdf $<
+	texi2dvi -p $<
 	texindex `basename $< .texinfo`.??
-	texi2pdf $<
+	texi2dvi -p $<
 
 %.info:	%.texinfo
 	makeinfo $<

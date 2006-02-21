@@ -32,6 +32,8 @@
 # Included JML files that are automatically generated
 # from corresponding files in other directories
 
+include ../../Makefile.defs
+
 ROOT = Escjava2-ImplementationNotes
 
 TEXINFOS = 
@@ -150,7 +152,6 @@ MKDIR = mkdir -p
 TEXI2DVI = texi2dvi
 TEXI2HTML = texi2html
 TEXI2HTMLOPTS = -menu -number
-TEXI2PDF = texi2pdf
 DVIPS = dvips -P pdf -t letter
 DVIPDF = dvipdf
 PERL = perl

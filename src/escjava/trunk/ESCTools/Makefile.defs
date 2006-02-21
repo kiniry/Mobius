@@ -140,6 +140,13 @@ export JAVA_REMOTE_DEBUG = $(JAVA) $(DEBUGGER_FLAGS)
 export JDK_14_SOURCES ?= ${JAVA_HOME}/src
 
 ##########################################################################
+## Definitions of other tools.
+## Override these by defining them in Makefile.local or as environment
+## variables.
+
+export TEXI2PDF ?= texi2pdf
+
+##########################################################################
 ## Variables that define the release.  They will be used to build
 ## archives for distribution.  They are used to create the Version.java
 ## file, which is used by Main.java to provide a version string.

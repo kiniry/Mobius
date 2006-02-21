@@ -2,6 +2,7 @@
 # $Id$
 #
 
+include ../../Makefile.defs
 
 paper =		Escjava2-Provers
 
@@ -61,9 +62,9 @@ CODE2TEXI=$(PERL) -e 'BEGIN: while (<>) { s/\r//g; s/@/@@/g; s/\{/@\{/g; s/\}/@\
 	$(CODE2TEXI) $< > $@
 
 %.pdf:	%.texinfo
-	texi2pdf $<
+	${TEXI2PDF} $<
 	texindex `basename $< .texinfo`.??
-	texi2pdf $<
+	${TEXI2PDF} $<
 
 %.info:	%.texinfo
 	makeinfo $<
