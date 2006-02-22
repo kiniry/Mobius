@@ -15,8 +15,8 @@ Classes : TYPE = {
    Method,
    [...]
    NameService}
-
-
+\end{verbatim}
+\begin{verbatim}
 c_minint : integer = -2147483648
 c_maxint : integer = 2147483647
 c_maxshort : integer = 32767
@@ -57,22 +57,26 @@ j_int2byteId : AXIOM (FORALL (n:t_byte): j_int2byte(n) = n)
 
 j_int2short : [t_int -> t_short]
 j_int2shortId : AXIOM (FORALL (n:t_int): j_int2short(n) = n)
-
+\end{verbatim}
+\begin{verbatim}
 Types : DATATYPE
     BEGIN
       class (c: Classes) : class?
       arrays (c: Classes, n : posnat) : arrays?
     END Types
-
+\end{verbatim}
+\begin{verbatim}
 REFERENCES : DATATYPE
     BEGIN
       null : null?
       instances (typeof : Types) : instances?
     END REFERENCES
-
+\end{verbatim}
+\begin{verbatim}
 STRING : NONEMPTY_TYPE
 j_string : [STRING -> REFERENCES]
-
+\end{verbatim}
+\begin{verbatim}
 elemtype : [{t:Types | arrays?(t)} -> Types] =
    (LAMBDA (t:{t:Types | arrays?(t)}): CASES t OF
       arrays(c,n) : IF n > 1 THEN arrays(c, n-1) ELSE class(c) ENDIF
@@ -103,7 +107,8 @@ refelements : [y:{x:REFERENCES | instances?(x) AND
                                  typeof(x) /= arrays(c_short,1) AND 
                                  typeof(x) /= arrays(c_int,1)} 
                -> [below(arraylength(y)) -> REFERENCES]]
-
+\end{verbatim}
+\begin{verbatim}
 subtype : [Types ,Types -> bool] =
    (LAMBDA (t1,t2:Types):
       CASES t2 OF
@@ -155,16 +160,15 @@ subtype : [Types ,Types -> bool] =
          arrays(s,t) : t1 = t2
       ENDCASES)
 END prelude
-
-
- \end{verbatim}
+\end{verbatim}
 \section{Coq}
- \begin{verbatim}
+\begin{verbatim}
 Require Import Bool.
 Require Import ZArith.
 Require Import Zdiv.
 Open Scope Z_scope.
-
+\end{verbatim}
+\begin{verbatim}
 (* Primitive Type Definition:*)
 Definition c_minbyte := -128.
 Definition c_maxbyte := 127.
@@ -184,15 +188,15 @@ Definition t_longDom (n:Z): Prop := c_minlong <= n /\ n <= c_maxlong.
 Variable t_float : Set.
 Variable F0 : t_float.
 Variable Fle : t_float -> t_float -> Prop.
-
-
+\end{verbatim}
+\begin{verbatim}
 Definition t_byte := Z.
 Definition t_short := Z.
 Definition t_int := Z.
 Definition t_char := Z.
 Definition t_long := Z.
-
-
+\end{verbatim}
+\begin{verbatim}
 (* Arithmetic Operators *)
 Definition j_add: t_int -> t_int -> t_int := Zplus.
 Infix "+" := j_add: J_Scope.
@@ -218,7 +222,8 @@ Variable j_ushr : t_int -> t_int -> t_int.
 Variable j_and : t_int -> t_int -> t_int.
 Variable j_or : t_int -> t_int -> t_int.
 Variable j_xor : t_int -> t_int -> t_int.
-
+\end{verbatim}
+\begin{verbatim}
 (* Dummy Arithmetic Conversions *)
 Definition j_convert := fun (min max:Z) =>
    let range :=  ((- min) + max ) in
@@ -236,8 +241,8 @@ Definition j_int2short : t_int -> t_short
 Add Ring t_int j_add j_mul 1%Z 0%Z j_neg Zeq ZTheory
 [ Zpos Zneg 0%Z xO xI 1%positive ].
 
-
-
+\end{verbatim}
+\begin{verbatim}
 (* Class Definitions *)
 Inductive Classes : Set
    := c_int : Classes
@@ -252,25 +257,25 @@ Inductive Classes : Set
       | WeakReference : Classes
       | ...
       | NameService : Classes.
-
-
+\end{verbatim}
+\begin{verbatim}
 (* Objects Definitions *)
 Inductive Types : Set :=
     class : Classes -> Types 
 |   array : Types -> Z -> Types.
-
-
+\end{verbatim}
+\begin{verbatim}
 Variable REFERENCES : Set.
 Variable null : REFERENCES.
 Variable instanceof : REFERENCES -> Types -> Prop.
-
-
+\end{verbatim}
+\begin{verbatim}
 Variable STRING : Set.
 Variable j_string : STRING -> REFERENCES.
 Variable instances : REFERENCES -> Prop.
 Axiom nullInstances : (not (instances null)).
-
-
+\end{verbatim}
+\begin{verbatim}
 Variable typeof : REFERENCES -> Types.
 Variable REFeq : REFERENCES -> REFERENCES -> bool.
 Variable REFeq_refl : forall x, REFeq x x = true. 
@@ -322,7 +327,8 @@ Definition equalsOnOldInstances (s:Set) (f g:REFERENCES->s)
    := forall x:REFERENCES, (instances x) -> (f x) = (g x) :> s.
 Definition intersectionIsNotEmpty (s:Set)(f g:s->Prop)
    := (exists y : _, (f y) /\ (g y)).
-
+\end{verbatim}
+\begin{verbatim}
 Definition  overridingCoupleRef (T:Set) 
                                 (f:REFERENCES -> T)
                                 (a:REFERENCES) 
@@ -371,8 +377,8 @@ Axiom question_t :
 Axiom question_f : 
    forall (t: Set) (x: Prop) (y z: t), 
       ~x -> ((question t x y z) = z :> t).
-
-
+\end{verbatim}
+\begin{verbatim}
 (* Time to play with the arrays. *)
 Variable elemtype : Types -> Types.
 Definition elemtypeDomDef (t:Types): Prop :=
@@ -403,11 +409,12 @@ Axiom boolelementsDomDef :
 Variable refelements : REFERENCES -> Z -> REFERENCES.
 Axiom refelementsDom : 
    forall r a b, r = refelements a b -> (r = null \/ instances r).
-
+\end{verbatim}
+\begin{verbatim}
 Definition j_stringRan : STRING -> Prop 
    := fun (s:STRING) =>(instanceof (j_string s) (class String)).
-
-
+\end{verbatim}
+\begin{verbatim}
 Definition subtypes (t1: Types) (t2: Types): Prop :=
     match t2 with
       (class c_int) => match t1 with
@@ -479,7 +486,8 @@ SETS
 ...
 ,NameService
 }
-
+\end{verbatim}
+\begin{verbatim}
 ABSTRACT_CONSTANTS
 c_minint,
 c_maxint,
@@ -526,7 +534,8 @@ refelements,
 flatran,
 elemtype,
 f_j
-
+\end{verbatim}
+\begin{verbatim}
 PROPERTIES
 c_minint: INTEGER & 
 c_maxint: INTEGER & 
@@ -584,6 +593,8 @@ dom(j_int2short) = t_int &
 t_char<|j_int2char = id(t_char) & 
 t_byte<|j_int2byte = id(t_byte) & 
 t_short<|j_int2short = id(t_short) & 
+\end{verbatim}
+\begin{verbatim}
 !ii.(ii: t_int 
      => (0<=ii => (ii mod 256<=127 => j_int2byte(ii) = ii mod 256) & 
                   (not(ii mod 256<=127) 
@@ -609,6 +620,8 @@ typeof: instances +-> (1..207)*{NAMES}*NATURAL &
 dom(typeof) = instances & 
 j_string : STRING +-> typeof~[{0|->NAMES |-> 0}] &
 dom(j_string) = STRING &
+\end{verbatim}
+\begin{verbatim}
 elemtype: (1..207)*{NAMES}*(NATURAL-{0}) +-> (1..207)*{NAMES}*NATURAL & 
 dom(elemtype) = (1..207)*{NAMES}*(NATURAL-{0}) & 
 arraylength: typeof~[(1..207)*{NAMES}*(NATURAL-{0})] +-> NATURAL & 
@@ -657,35 +670,7 @@ elemtype =
   %(name,dim).(name: (1..207)*{NAMES} & 
                (dim: INTEGER & 0<=dim & not(dim = 0)) | 
                name|->dim-1)
- & subtypes[{1 |-> NAMES |-> 0 }] = { 1 |-> NAMES |-> 0 }
- & subtypes[{2 |-> NAMES |-> 0 }] = { 2 |-> NAMES |-> 0 }
- & subtypes[{3 |-> NAMES |-> 0 }] = { 3 |-> NAMES |-> 0 }
- & subtypes[{4 |-> NAMES |-> 0 }] = { 4 |-> NAMES |-> 0 }
- & subtypes[{5 |-> NAMES |-> 0 }] = { 5 |-> NAMES |-> 0 }
- & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
-}
- & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-}
- & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
-}
- & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
-}
- & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-}
- & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-} \/ {(0|->NAMES |-> 0)
-}
- & ...
-END
- \end{verbatim}
+\end{verbatim}
 \section{Simplify}
 \begin{verbatim}
 (DEFPRED (<: subtype supertype))
@@ -703,6 +688,8 @@ END
  ...
  NameService
 )
+\end{verbatim}
+\begin{verbatim}
 (FORALL (x) (IFF (<: x (ref c_int)) (EQ x (ref c_int))))
 (FORALL (x) (IFF (<: x (ref c_short)) (EQ x (ref c_short))))
 (FORALL (x) (IFF (<: x (ref c_char)) (EQ x (ref c_char))))
@@ -721,6 +708,8 @@ END
 )))
 )
 )
+\end{verbatim}
+\begin{verbatim}
 (DEFPRED (BOOL arg1))
 (DEFPRED (t_long arg1))
 (DEFPRED (t_int arg1))
@@ -752,9 +741,7 @@ END
 (FORALL (x) (IMPLIES (AND (>= x c_minchar) (<= x c_maxchar)) 
                      (EQ x (j_int2char x))))
 (FORALL (x) (IMPLIES (AND (>= x c_minshort) (<= x c_maxshort)) 
-                     (EQ x (j_int2short x))))
-)
-)
+                     (EQ x (j_int2short x))))))
 (DEFPRED (REFERENCES arg1))
 (DEFPRED (instances arg1))
 (BG_PUSH (AND
@@ -768,7 +755,5 @@ END
 (FORALL (x y) (IFF (EQ x y) (EQ (ref x) (ref y))))
 (FORALL (x y z) (NEQ (ref x) (array y z)))
 (FORALL (x y) (<: (select typeof (select (select |refelements| x) y)) 
-                  (select elemtype (select typeof x))))
-)) 
-
+                  (select elemtype (select typeof x)))))) 
 \end{verbatim}

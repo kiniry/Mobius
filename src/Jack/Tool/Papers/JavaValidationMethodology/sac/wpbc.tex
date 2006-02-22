@@ -39,25 +39,15 @@ corresponding exceptional postcondition $\excPost(\texttt{Exc}, \tt{ind})$. One 
 
 %We have the proof of soundness of the \wpi \ predicate transformer. The proof is done w.r.t. to the operational semantics of the sequential Java bytecode
 %subset and establishes that if the verification conditions are provable this means that the method implementation respects the method specification.
-\begin{figure}[t]
+\begin{figure}[htp]
 \[
-\small{
 \begin{array}{l}
 \wpi(\instr{Type\_load \ i}, \ \psi, \ \excPost)  = \\
 \begin{array}{l}  \psi\substitution{\counter }{\counter+1} \substitution{\stack{\counter+1}}{\register{i}} \end{array} \\
 \\
 \\
-
-%where \texttt{i} is a valid local variable index   \\
-
-
-
-
-
  \wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost)  = \\
-%\biggl( 
 \begin{array}{l}
-
    		\stack{\counter -1} \not= \Mynull\Rightarrow   
 	 \psi\begin{array}{l} \substitution{\counter}{ \counter-2 } \\[0 mm] 
    	                   \substitution{\texttt{Cl.f} }{ \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] } \\
@@ -70,19 +60,8 @@ corresponding exceptional postcondition $\excPost(\texttt{Exc}, \tt{ind})$. One 
           \substitution{\stack{0}}{ \stack{\counter}} 
 	\end{array}
     \end{array} %\biggr. & \\
-\end{array}}
- \]	  \\
-  % where  the   predicate   $\phi$    is   the   precondition   of   the
-  % exception   handler   protecting   the   instruction    against 
-  % \texttt{NullPointerException} if  it exists,  otherwise 
-  % if \texttt{ NullPointerException}  is not  handled    
-   %   $\phi = \excPost(\tt{NullPointerException})[ \jmlKey{EXC} \leftarrow \stack{\counter}]$
-
-
-%\texttt{wp(if\_acmpeq n , $\psi$)} =  \texttt{(Stack(t)==Stack(t-1)} $\Rightarrow$ $\psi(n)$ \texttt{[t$\leftarrow$t-2]\\
-%                $\phantom{ texttt{wp} textttifacmpeq n } $   $\wedge$ } \\
-%                $\phantom{ texttt{wp} textttifacmpeq n } $   \texttt{Stack(t)$\neq$Stack(t-1)} $\Rightarrow$ $\psi$\texttt{(index(if\_acmpeq n) + 1% ) } %                $\phantom{ texttt{wp} textttifacmpeq nnnnnnnnnnnnnn} $   \texttt{[t$\leftarrow$t-2]} \\\\
-
+\end{array}
+ \]	  
 \caption{\sc Examples for bytecode wp rules}
  \label{instrWP}
 
