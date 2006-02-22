@@ -19,8 +19,6 @@ its invariant (\verb!loop_invariant!) which states that whenever the loop entry 
 
 \begin{figure}[t]
 
-\begin{frameit}
-\small{
 \begin{verbatim}
 public class ListArray {
   Object[] list;
@@ -38,8 +36,6 @@ public class ListArray {
     }
     return false;}}
 \end{verbatim}
-}
-\end{frameit}
 \caption{\sc class \texttt{ListArray} with JML annotations} 
 \label{replaceSrc}
 \end{figure}
@@ -59,7 +55,7 @@ BCSL corresponds to a representative subset of JML and is expressive enough for 
    %\item 
 class specification, i.e. class invariants and history constraints,   %\item
   method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method), inter method specification, as for instance loop invariants and loop frame conditions(this is not a standard feature of JML but we were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}). 
-We also support specification inheritance and thus behavioral subtyping as described in \cite{Dhara-Leavens95b}. Most of the Java expressions like field access expressions, local variables, etc can be mentioned in the BCSL specification.
+We also support specification inheritance and thus behavioral subtyping as described in \cite{Dhara-Leavens96}. Most of the Java expressions like field access expressions, local variables, etc can be mentioned in the BCSL specification.
 BCSL supports the standard JML specification operators as for example, $\old{\expression}$ which is used in method postconditions and
  designates the value of the expression $\expression$ in the prestate of a method, $ \result$ which stands for the value the method
 returns if it is not void,  $\typeof{\expression}$ which stands for type of $\expression$ etc.  
@@ -107,9 +103,7 @@ The JVM does not provide a direct support for integral types like byte, short, c
  We illustrate this by an example in Fig.~\ref{postCompile}, which shows the resulting compilation of the postcondition of method \texttt{isElem} in Fig.~\ref{replaceSrc}. The example also shows that local variables and  fields are respectively linked to the index of the register table for the method and to the corresponding index of the cp table  (\#19 is the compilation of the field name \texttt{list} and \register{1} stands for the method parameter \texttt{obj}). 
 
 \begin{figure}[t]
-\begin{frameit}
 $$
-\small{
 %\begin{array}{l}
          \result == 1 %\\
           %\\ 
@@ -120,9 +114,7 @@ $$
              \#19(\register{0})[var(0)] = \register{1} 
          \end{array}
   % \end{array}
-}
 $$
-\end{frameit}
 \caption{\sc The compilation of the postcondition of method \texttt{isElem}}
 \label{postCompile}
 \end{figure}
@@ -141,8 +133,6 @@ More precisely, every element contains information about the instruction where t
 \end{enumerate}
 
 \begin{figure}[t]
- \begin{frameit}   
-\small{
 \textbf{
 \begin{tabbing}
 JML\=Loop\_specification\_attribute \{ \\
@@ -155,8 +145,7 @@ JML\=Loop\_specification\_attribute \{ \\
 \> \} loop[loop\_count];\\
 \}
 \end{tabbing}
-}}
-\end{frameit}
+}
 %\begin{itemize}
 %\item \textbf{index}: The index in the  \texttt{LineNumberTable } where the beginning of the corresponding loop is described
 

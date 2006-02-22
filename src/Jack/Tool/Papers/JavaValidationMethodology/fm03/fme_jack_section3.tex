@@ -83,17 +83,7 @@ dimension represented by a natural number (for objects, this number is always 0)
 
  The set $\rm{NAMES}$ is not generic since it depends on the reachable classes from the current one.
  It does not belong to the common prelude but to the contextual one.
- For instance, the valuation of $\rm{NAMES}$ in the case of the example in Figure \ref{JMLexample} (where classes
-names are prefixed to avoid names conflict) is
-\begin{center}
-$\rm{NAMES} =  \left\{ \begin{array}{l} \rm{c\_int} , \rm{c\_short} ,\rm{c\_char} ,\rm{c\_byte} ,\rm{c\_boolean} ,\rm{c\_Object} ,\\
-\rm{c\_RuntimeException}, \rm{c\_Exception} ,\rm{c\_Throwable} , \\
-\rm{c\_NullPointerException} ,\rm{c\_ArithmeticException}, \\
-\rm{c\_ArrayIndexOutOfBoundsException}, \\
-\rm{c\_NegativeArraySizeException}, \rm{c\_ClassCastException} , \\
-\rm{c\_ArrayStoreException} ,\rm{c\_C}
- \end{array} \right\}$
-\end{center}
+
  One can notice that primitive types belongs to $\rm{NAMES}$ but they are only used to type arrays. For
 instance the Java type {\tt short[]} will correspond to $\rm{c\_short} \mapsto 1$, but the type {\tt short} will
 correspond to a prelude-defined type $\rm{t\_short} = -32768..32767$.
@@ -115,17 +105,8 @@ $\begin{array}{l}
 
  The fields are declared as variables, static fields are directly typed with their translated type,
  member fields are declared as functions from the set of instances of a type to the type of the field.
- For instance, the member field $i$ (see Figure \ref{JMLexample}) is declared as follow:
- \begin{center}
- $f\_i \in \rm{typeof}^{-1}[\rm{subtypes}[\{c\_C \mapsto 0\}] \rightarrow \rm{t\_short}$.
- \end{center}
 
  The invariants are declared as properties quantified over the instances.
- For instance, the invariant of the class $C$ (see Figure \ref{JMLexample}) is declared as follow:
-\begin{center}
- $\forall c.(c \in \rm{instances} \land \rm{typeof}(c) \in \rm{subtypes}[\{c\_C \mapsto 0\}] \Rightarrow 0 \le
-f\_i(c))$.
-\end{center}
 
  The drawback of this approach is that one can not directly prove properties on the correctness
  of the formalization.  But, proofs remain simpler as they remain

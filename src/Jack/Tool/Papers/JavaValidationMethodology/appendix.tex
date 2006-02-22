@@ -26,15 +26,21 @@ c_minbyte : integer = -128
 c_minchar : integer = 0
 c_maxchar : integer = 65535
 
-t_int : TYPE = {x: integer | c_minint <= x AND x <= c_maxint} CONTAINING 0
-t_short : TYPE = {x: integer | c_minshort <= x AND x <= c_maxshort} CONTAINING 0
-t_byte : TYPE = {x: integer | c_minbyte <= x AND x <= c_maxbyte} CONTAINING 0
-t_char : TYPE = {x: integer | c_minchar <= x AND x <= c_maxchar} CONTAINING 0
+t_int : TYPE = {x: integer 
+                | c_minint <= x AND x <= c_maxint} CONTAINING 0
+t_short : TYPE = {x: integer 
+                  | c_minshort <= x AND x <= c_maxshort} CONTAINING 0
+t_byte : TYPE = {x: integer 
+                 | c_minbyte <= x AND x <= c_maxbyte} CONTAINING 0
+t_char : TYPE = {x: integer 
+                 | c_minchar <= x AND x <= c_maxchar} CONTAINING 0
 j_add : [integer, integer -> integer] = (LAMBDA (x,y:integer): x + y)
 j_sub : [integer, integer -> integer] = (LAMBDA (x,y:integer): x - y)
 j_mul : [integer, integer -> integer] = (LAMBDA (x,y:integer): x * y)
-j_div : [integer, nonzero_integer -> integer] = (LAMBDA (x:integer,y:nonzero_integer): div(x,y))
-j_rem : [integer, nonzero_integer -> integer] = (LAMBDA (x:integer,y:nonzero_integer): rem(x,y))
+j_div : [integer, nonzero_integer -> integer] 
+   = (LAMBDA (x:integer,y:nonzero_integer): div(x,y))
+j_rem : [integer, nonzero_integer -> integer] 
+   = (LAMBDA (x:integer,y:nonzero_integer): rem(x,y))
 j_neg : [integer -> integer] = (LAMBDA (x:integer): -x)
 j_shl : [integer, integer -> integer]
 j_shr : [integer, integer -> integer]
@@ -72,13 +78,31 @@ elemtype : [{t:Types | arrays?(t)} -> Types] =
       arrays(c,n) : IF n > 1 THEN arrays(c, n-1) ELSE class(c) ENDIF
      ENDCASES)
 
-arraylength : [{x:REFERENCES | instances?(x) AND arrays?(typeof(x))} -> nat]
-intelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
-shortelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
-charelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
-byteelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
-booleanelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
-refelements : [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+arraylength : [{x:REFERENCES | instances?(x) AND arrays?(typeof(x))} 
+               -> nat]
+intelements : [y:{x : REFERENCES | instances?(x) AND 
+                                   typeof(x) = arrays(c_int,1)} 
+               -> [below(arraylength(y)) -> t_int]]
+shortelements : [y:{x : REFERENCES | instances?(x) AND 
+                                     typeof(x) = arrays(c_short,1)} 
+                 -> [below(arraylength(y)) -> t_short]]
+charelements : [y:{x : REFERENCES | instances?(x) AND 
+                                    typeof(x) = arrays(c_char,1)} 
+                -> [below(arraylength(y)) -> t_char]]
+byteelements : [y:{x : REFERENCES | instances?(x) AND 
+                                    typeof(x) = arrays(c_byte,1)} 
+                -> [below(arraylength(y)) -> t_byte]]
+booleanelements : [y:{x : REFERENCES | instances?(x) AND 
+                                       typeof(x) = arrays(c_boolean, 1)} 
+                   -> [below(arraylength(y)) -> bool]]
+refelements : [y:{x:REFERENCES | instances?(x) AND 
+                                 arrays?(typeof(x)) AND 
+                                 typeof(x) /= arrays(c_boolean,1) AND 
+                                 typeof(x) /= arrays(c_byte,1) AND 
+                                 typeof(x) /= arrays(c_char,1) AND 
+                                 typeof(x) /= arrays(c_short,1) AND 
+                                 typeof(x) /= arrays(c_int,1)} 
+               -> [below(arraylength(y)) -> REFERENCES]]
 
 subtype : [Types ,Types -> bool] =
    (LAMBDA (t1,t2:Types):
@@ -206,7 +230,8 @@ Definition j_convert := fun (min max:Z) =>
              else ((n mod range) - range).
 Definition j_int2char : t_int -> t_char := j_convert c_minchar c_maxchar.
 Definition j_int2byte : t_int -> t_byte := j_convert c_minbyte c_maxbyte.
-Definition j_int2short : t_int -> t_short := j_convert c_minshort c_maxshort.
+Definition j_int2short : t_int -> t_short 
+   := j_convert c_minshort c_maxshort.
 
 Add Ring t_int j_add j_mul 1%Z 0%Z j_neg Zeq ZTheory
 [ Zpos Zneg 0%Z xO xI 1%positive ].
@@ -272,10 +297,7 @@ Proof.
  intro. apply H. apply REFeq_eq. assumption.
 Qed. 
 Lemma eq_dec : forall (x y:REFERENCES), {x = y} + {x <> y}.
-Proof.
- intros x y; case (exists_REFeq_eq x y). intros b; case b; intro H.
- left; apply REFeq_eq; assumption. right; apply REFeq_false_not_eq ; assumption.
-Qed.
+
 Lemma Zeq_refl : forall x, Zeq x x = true.
 Proof.
  intros; unfold Zeq; rewrite Zcompare_refl; trivial.
@@ -293,37 +315,62 @@ Proof.
  elim H; apply H1;exact I.
 Qed.
 Lemma Zeq_false_not_eq :  forall x y, Zeq x y = false -> x <> y.
-Proof.
- intros x y H1 H2; rewrite H2 in H1; rewrite Zeq_refl in H1; discriminate H1.
-Qed. 
+
 Definition singleton (a:Set) (r s:a) := r = s :> a.
 Definition union (s:Set) (a b:s -> Prop) (c:s) := (a c) \/ (b c).
-Definition equalsOnOldInstances (s:Set) (f g:REFERENCES->s) :=forall x:REFERENCES, (instances x) -> (f x) = (g x) :> s.
-Definition intersectionIsNotEmpty (s:Set)(f g:s->Prop) := (exists y : _, (f y) /\ (g y)).
+Definition equalsOnOldInstances (s:Set) (f g:REFERENCES->s) 
+   := forall x:REFERENCES, (instances x) -> (f x) = (g x) :> s.
+Definition intersectionIsNotEmpty (s:Set)(f g:s->Prop)
+   := (exists y : _, (f y) /\ (g y)).
 
-Definition  overridingCoupleRef (T:Set) (f:REFERENCES -> T)(a:REFERENCES) (b:T) (c:REFERENCES) := if (REFeq a c) then b else (f c).
-Lemma overridingCoupleRef_diff : forall T f a b c, a <> c -> overridingCoupleRef T f a b c = f c.
-Proof. intros; unfold overridingCoupleRef; rewrite not_eq_false_REFeq; trivial. Qed.
-Lemma overridingCoupleRef_eq : forall T f a b c, a = c -> overridingCoupleRef T f a b c = b.
-Proof. intros; unfold overridingCoupleRef; rewrite REFeq_eq_true; trivial. Qed.
-Definition  overridingCoupleZ (T:Set) (f:Z -> T)(a:Z) (b:T) (c:Z) := if (Zeq a c) then b else (f c).
-Lemma overridingCoupleZ_diff : forall T f a b c, a <> c -> overridingCoupleZ T f a b c = f c.
-Proof. intros; unfold overridingCoupleZ; rewrite not_eq_false_Zeq; trivial. Qed.
-Lemma overridingCoupleZ_eq : forall T f a b c, a = c -> overridingCoupleZ T f a b c = b. 
-Proof.
- intros T f a b c H; unfold overridingCoupleZ; rewrite (Zeq_eq_true _ _ H); trivial.
-Qed.
+Definition  overridingCoupleRef (T:Set) 
+                                (f:REFERENCES -> T)
+                                (a:REFERENCES) 
+                                (b:T) 
+                                (c:REFERENCES) 
+    := if (REFeq a c) then b else (f c).
+Lemma overridingCoupleRef_diff : 
+   forall T f a b c, a <> c -> overridingCoupleRef T f a b c = f c.
 
-Variable overridingArray : forall s t u:Set, (s->t->u)->(s->Prop)->(t->Prop)->u->s->t->u.
-Axiom overridingArray_t_t : forall (s t u: Set) (f: s->t->u) (a: s->Prop) (b: t->Prop) (c: u) (x: s) (y: t), (a x) -> (b y) -> ((overridingArray s t u f a b c x y) = c :> u).
-Axiom overridingArray_t_f : forall (s t u: Set) (f: s->t->u) (a: s->Prop) (b: t->Prop) (c: u) (x: s) (y: t), (a x) -> ~(b y) -> ((overridingArray s t u f a b c x y) = (f x y) :> u).
-Axiom overridingArray_f : forall (s t u: Set) (f: s->t->u) (a: s->Prop) (b: t->Prop) (c: u) (x: s) (y: t), ~(a x) -> ((overridingArray s t u f a b c x y) = (f x y) :> u).
-Definition setEquals (s: Set) (f g: s->Prop) := forall x: s, (f x) -> (g x) /\ (g x) -> (f x).
-Definition functionEquals (s t: Set)(f g: s->t) := forall x: s, ((f x) = (g x) :> t).
+Lemma overridingCoupleRef_eq : 
+   forall T f a b c, a = c -> overridingCoupleRef T f a b c = b.
+
+Definition  overridingCoupleZ (T:Set) (f:Z -> T)(a:Z) (b:T) (c:Z) 
+   := if (Zeq a c) then b else (f c).
+Lemma overridingCoupleZ_diff : 
+   forall T f a b c, a <> c -> overridingCoupleZ T f a b c = f c.
+
+Lemma overridingCoupleZ_eq : 
+   forall T f a b c, a = c -> overridingCoupleZ T f a b c = b. 
+
+Variable overridingArray : 
+   forall s t u:Set, (s->t->u)->(s->Prop)->(t->Prop)->u->s->t->u.
+Axiom overridingArray_t_t : 
+   forall (s t u: Set) 
+          (f: s->t->u) (a: s->Prop) (b: t->Prop) (c: u) (x: s) (y: t), 
+      (a x) -> (b y) -> ((overridingArray s t u f a b c x y) = c :> u).
+Axiom overridingArray_t_f : 
+   forall (s t u: Set) 
+          (f: s->t->u) (a: s->Prop) (b: t->Prop) (c: u) (x: s) (y: t), 
+      (a x) 
+        -> ~(b y) 
+          -> ((overridingArray s t u f a b c x y) = (f x y) :> u).
+Axiom overridingArray_f : 
+   forall (s t u: Set) 
+          (f: s->t->u) (a: s->Prop) (b: t->Prop) (c: u) (x: s) (y: t), 
+      ~(a x) -> ((overridingArray s t u f a b c x y) = (f x y) :> u).
+Definition setEquals (s: Set) (f g: s->Prop) 
+   := forall x: s, (f x) -> (g x) /\ (g x) -> (f x).
+Definition functionEquals (s t: Set)(f g: s->t) 
+   := forall x: s, ((f x) = (g x) :> t).
 Definition interval (a b: Z) (c: Z) := (j_le a c) /\ (j_le c b).
 Variable question : forall t: Type, Prop -> t -> t -> t.
-Axiom question_t : forall (t: Set) (x: Prop) (y z: t), x -> ((question t x y z) = y :> t).
-Axiom question_f : forall (t: Set) (x: Prop) (y z: t), ~x -> ((question t x y z) = z :> t).
+Axiom question_t : 
+   forall (t: Set) (x: Prop) (y z: t), 
+      x -> ((question t x y z) = y :> t).
+Axiom question_f : 
+   forall (t: Set) (x: Prop) (y z: t), 
+      ~x -> ((question t x y z) = z :> t).
 
 
 (* Time to play with the arrays. *)
@@ -338,17 +385,24 @@ Axiom elemtypeAx : forall (c : Types) (n : Z), (1 <= n) ->
 
 Variable arraylength : REFERENCES -> t_int.
 Variable intelements : REFERENCES -> t_int -> t_int.
-Definition intelementsDomDef (r:REFERENCES): Prop := (instances r) /\ ((typeof r) = (array (class c_int) 1) :> Types).
+Definition intelementsDomDef (r:REFERENCES): Prop 
+   := (instances r) /\ ((typeof r) = (array (class c_int) 1) :> Types).
 Variable shortelements : REFERENCES -> t_int -> t_short.
-Definition shortelementsDomDef (r:REFERENCES): Prop := (instances r) /\ ((typeof r) = (array (class c_short) 1) :> Types).
+Definition shortelementsDomDef (r:REFERENCES): Prop 
+   := (instances r) /\ ((typeof r) = (array (class c_short) 1) :> Types).
 Variable charelements : REFERENCES -> t_int -> t_char.
-Definition charelementsDomDef (r:REFERENCES): Prop := (instances r) /\ ((typeof r) = (array (class c_char) 1) :> Types).
+Definition charelementsDomDef (r:REFERENCES): Prop 
+   := (instances r) /\ ((typeof r) = (array (class c_char) 1) :> Types).
 Variable byteelements : REFERENCES -> t_int -> t_byte.
-Definition byteelementsDomDef (r:REFERENCES): Prop := (instances r) /\ ((typeof r) = (array (class c_byte) 1) :> Types).
+Definition byteelementsDomDef (r:REFERENCES): Prop 
+   := (instances r) /\ ((typeof r) = (array (class c_byte) 1) :> Types).
 Variable booleanelements : REFERENCES -> Z -> bool.
-Axiom boolelementsDomDef : forall (r:REFERENCES), (instances r) /\ ((typeof r) = (array (class c_boolean) 1)).
+Axiom boolelementsDomDef : 
+   forall (r:REFERENCES), 
+      (instances r) /\ ((typeof r) = (array (class c_boolean) 1)).
 Variable refelements : REFERENCES -> Z -> REFERENCES.
-Axiom refelementsDom : forall r a b, r = refelements a b -> (r = null \/ instances r).
+Axiom refelementsDom : 
+   forall r a b, r = refelements a b -> (r = null \/ instances r).
 
 Definition j_stringRan : STRING -> Prop 
    := fun (s:STRING) =>(instanceof (j_string s) (class String)).
@@ -405,7 +459,11 @@ Axiom ArrayTypeAx :
 forall arr c n,  (subtypes (typeof arr) (array (class c) n)) -> 
      forall pos, subtypes (typeof (refelements arr pos)) (class c).
 
-Axiom arraylenAx : forall a c n, instances a -> subtypes (typeof a) (array c n) -> j_le 0 (arraylength a).
+Axiom arraylenAx : 
+   forall a c n, 
+      instances a 
+        -> subtypes (typeof a) (array c n) 
+          -> j_le 0 (arraylength a).
 \end{verbatim}
 \section{B}
 \begin{verbatim}
@@ -526,9 +584,23 @@ dom(j_int2short) = t_int &
 t_char<|j_int2char = id(t_char) & 
 t_byte<|j_int2byte = id(t_byte) & 
 t_short<|j_int2short = id(t_short) & 
-!ii.(ii: t_int => (0<=ii => (ii mod 256<=127 => j_int2byte(ii) = ii mod 256) & (not(ii mod 256<=127) => j_int2byte(ii) = ii mod 256-256)) & (not(0<=ii) => j_int2byte(ii) = j_int2byte(ii+((-ii)/256+1)*256))) & 
-!ii.(ii: t_int => (0<=ii => (ii mod 65536<=32767 => j_int2short(ii) = ii mod 65536) & (not(ii mod 65536<=32767) => j_int2short(ii) = ii mod 65536-65536)) & (not(0<=ii) => j_int2short(ii) = j_int2short(ii+((-ii)/65536+1)*65536))) & 
-j_int2char = %ii.(ii: t_int & 0<=ii | ii mod 65536)<+%ii.(ii: t_int & not(0<=ii) | (ii+((-ii)/65536+1)*65536) mod 65536) & 
+!ii.(ii: t_int 
+     => (0<=ii => (ii mod 256<=127 => j_int2byte(ii) = ii mod 256) & 
+                  (not(ii mod 256<=127) 
+                   => j_int2byte(ii) = ii mod 256-256)) & 
+        (not(0<=ii) 
+         => j_int2byte(ii) = j_int2byte(ii+((-ii)/256+1)*256))) & 
+!ii.(ii: t_int 
+     => (0<=ii => (ii mod 65536<=32767 
+                   => j_int2short(ii) = ii mod 65536) & 
+                  (not(ii mod 65536<=32767) 
+                   => j_int2short(ii) = ii mod 65536-65536)) & 
+        (not(0<=ii) 
+         => j_int2short(ii) = j_int2short(ii+((-ii)/65536+1)*65536))) & 
+
+j_int2char = %ii.(ii: t_int & 0<=ii | ii mod 65536)
+             <+%ii.(ii: t_int & not(0<=ii) 
+                    | (ii+((-ii)/65536+1)*65536) mod 65536) & 
 null: REFERENCES & 
 subtypes: (1..207)*{NAMES}*NATURAL <-> (1..207)*{NAMES}*NATURAL & 
 instances: POW(REFERENCES) & 
@@ -543,26 +615,48 @@ arraylength: typeof~[(1..207)*{NAMES}*(NATURAL-{0})] +-> NATURAL &
 dom(arraylength) = typeof~[(1..207)*{NAMES}*(NATURAL-{0})] & 
 intelements: typeof~[{1 |-> NAMES|->1}] +-> (t_int +-> t_int) &
 dom(intelements) = typeof~[{1 |-> NAMES|->1}] & 
-!array.(array: dom(intelements) => dom(intelements(array)) = 0..arraylength(array)-1) & 
+!array.(array: dom(intelements) 
+        => dom(intelements(array)) = 0..arraylength(array)-1) & 
 charelements:typeof~[{3 |-> NAMES|->1}] +-> (t_int +-> t_char) &
 dom(charelements) = typeof~[{3 |-> NAMES|->1}] & 
-!array.(array: dom(charelements) => dom(charelements(array)) = 0..arraylength(array)-1) & 
+!array.(array: dom(charelements) 
+        => dom(charelements(array)) = 0..arraylength(array)-1) & 
 shortelements:typeof~[{2 |-> NAMES|->1}] +-> (t_int +-> t_short) &
 dom(shortelements) = typeof~[{2 |-> NAMES|->1}] & 
-!array.(array: dom(shortelements) => dom(shortelements(array)) = 0..arraylength(array)-1) & 
+!array.(array: dom(shortelements) 
+        => dom(shortelements(array)) = 0..arraylength(array)-1) & 
 byteelements: typeof~[{4 |-> NAMES|->1}] +-> (t_int +-> t_byte) &
 dom(byteelements) = typeof~[{4 |-> NAMES|->1}] & 
-!array.(array: dom(byteelements) => dom(byteelements(array)) = 0..arraylength(array)-1) & 
+!array.(array: dom(byteelements) 
+        => dom(byteelements(array)) = 0..arraylength(array)-1) & 
 booleanelements: typeof~[{5 |-> NAMES|->1}] +-> (t_int +-> BOOL) &
 dom(booleanelements) = typeof~[{5 |-> NAMES|->1}] & 
-!array.(array: dom(booleanelements) => dom(booleanelements(array)) = 0..arraylength(array)-1) & 
-refelements: typeof~[(1..207)*{NAMES}*(NATURAL-{0})-({1 |-> NAMES}\/{3 |-> NAMES}\/{2 |-> NAMES}\/{4 |-> NAMES}\/{5 |-> NAMES})*{1}] +-> (t_int +-> instances\/{null}) &
-dom(refelements) = typeof~[(1..207)*{NAMES}*(NATURAL-{0})-({1 |-> NAMES}\/{3 |-> NAMES}\/{2 |-> NAMES}\/{4 |-> NAMES}\/{5 |-> NAMES})*{1}] & 
-!array.(array: dom(refelements) => dom(refelements(array)) = 0..arraylength(array)-1 & 
-ran(refelements(array)): POW(typeof~[subtypes[{elemtype(typeof(array))}]]\/{null})) & 
-!(name,dim).(name: (1..207)*{NAMES} & (dim: INTEGER & 0<=dim & not(dim = 0)) => subtypes[{name|->dim}] = {cc,dd | cc: (1..207)*{NAMES} & (dd: INTEGER & 0<=dd & not(dd = 0)) & cc|->dd-1: subtypes[{name|->dim-1}]}) & 
-flatran = %xx.(xx: REFERENCES +-> (t_int +-> REFERENCES) | {yy | yy: REFERENCES & #zz.(zz: dom(xx) & yy: ran(xx(zz)))}) & 
-elemtype = %(name,dim).(name: (1..207)*{NAMES} & (dim: INTEGER & 0<=dim & not(dim = 0)) | name|->dim-1)
+!array.(array: dom(booleanelements) 
+        => dom(booleanelements(array)) = 0..arraylength(array)-1) & 
+refelements: typeof~[(1..207)*{NAMES}*(NATURAL-{0})-
+                     ({1 |-> NAMES}\/{2 |-> NAMES}\/{3 |-> NAMES}
+                      \/{4 |-> NAMES}\/{5 |-> NAMES})*{1}] 
+             +-> (t_int +-> instances\/{null}) &
+dom(refelements) = typeof~[(1..207)*{NAMES}*(NATURAL-{0})-
+                           ({1 |-> NAMES}\/{2 |-> NAMES}\/{3 |-> NAMES}
+                            \/{4 |-> NAMES}\/{5 |-> NAMES})*{1}] & 
+!array.(array: dom(refelements) 
+        => dom(refelements(array)) = 0..arraylength(array)-1 & 
+ran(refelements(array)): 
+    POW(typeof~[subtypes[{elemtype(typeof(array))}]]\/{null})) & 
+!(name,dim).(name: (1..207)*{NAMES} & 
+             (dim: INTEGER & 0<=dim & not(dim = 0)) 
+             => subtypes[{name|->dim}] 
+                = {cc,dd | cc: (1..207)*{NAMES} & 
+                           (dd: INTEGER & 0<=dd & not(dd = 0)) & 
+                           cc|->dd-1: subtypes[{name|->dim-1}]}) & 
+flatran = %xx.(xx: REFERENCES +-> (t_int +-> REFERENCES) 
+               | {yy | yy: REFERENCES & 
+                       #zz.(zz: dom(xx) & yy: ran(xx(zz)))}) & 
+elemtype = 
+  %(name,dim).(name: (1..207)*{NAMES} & 
+               (dim: INTEGER & 0<=dim & not(dim = 0)) | 
+               name|->dim-1)
  & subtypes[{1 |-> NAMES |-> 0 }] = { 1 |-> NAMES |-> 0 }
  & subtypes[{2 |-> NAMES |-> 0 }] = { 2 |-> NAMES |-> 0 }
  & subtypes[{3 |-> NAMES |-> 0 }] = { 3 |-> NAMES |-> 0 }
@@ -640,24 +734,41 @@ END
 (FORALL (x) (IFF (t_short x) (AND (<= c_minshort x) (<= x c_maxshort))))
 (FORALL (x) (IFF (t_byte x) (AND (<= c_minbyte x) (<= x c_maxbyte))))
 (FORALL (x) (IFF (t_char x) (AND (<= c_minchar x) (<= x c_maxchar))))
-(EQ c_minbyte -128) (EQ c_maxbyte 127) (EQ c_minchar 0) (EQ c_maxchar 65535) (EQ c_minshort -32768) (EQ c_maxshort 32767)
-(<= c_minint c_minshort) (<= c_maxshort c_maxint) (<= c_minlong c_minint) (<= c_maxint c_maxlong)
-(FORALL (a b) (EQ (j_add a b) (+ a b))) (FORALL (a b) (EQ (j_sub a b) (- a b))) (FORALL (a b) (EQ (j_mul a b) (* a b)))
-(FORALL (x) (IMPLIES (AND (>= x c_minbyte) (<= x c_maxbyte)) (EQ x (j_int2byte x))))
-(FORALL (x) (IMPLIES (AND (>= x c_minchar) (<= x c_maxchar)) (EQ x (j_int2char x))))
-(FORALL (x) (IMPLIES (AND (>= x c_minshort) (<= x c_maxshort)) (EQ x (j_int2short x))))
+(EQ c_minbyte -128) 
+(EQ c_maxbyte 127) 
+(EQ c_minchar 0) 
+(EQ c_maxchar 65535) 
+(EQ c_minshort -32768) 
+(EQ c_maxshort 32767)
+(<= c_minint c_minshort) 
+(<= c_maxshort c_maxint) 
+(<= c_minlong c_minint) 
+(<= c_maxint c_maxlong)
+(FORALL (a b) (EQ (j_add a b) (+ a b))) 
+(FORALL (a b) (EQ (j_sub a b) (- a b))) 
+(FORALL (a b) (EQ (j_mul a b) (* a b)))
+(FORALL (x) (IMPLIES (AND (>= x c_minbyte) (<= x c_maxbyte)) 
+                     (EQ x (j_int2byte x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minchar) (<= x c_maxchar)) 
+                     (EQ x (j_int2char x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minshort) (<= x c_maxshort)) 
+                     (EQ x (j_int2short x))))
 )
 )
 (DEFPRED (REFERENCES arg1))
 (DEFPRED (instances arg1))
 (BG_PUSH (AND
 (FORALL (x) (EQ (select elemtype (array x 1)) (ref x)))
-(FORALL (x y) (IMPLIES (< 1 y) (EQ (select elemtype (array x y)) (array x (- y 1)))))
-(FORALL (c) (IMPLIES (EQ (|instances| c) |@true|) (REFERENCES c)))(NOT (EQ (|instances| null) |@true|))
+(FORALL (x y) (IMPLIES (< 1 y) 
+                       (EQ (select elemtype (array x y)) 
+                           (array x (- y 1)))))
+(FORALL (c) (IMPLIES (EQ (|instances| c) |@true|) (REFERENCES c)))
+(NOT (EQ (|instances| null) |@true|))
 (FORALL (x) (<= 0 (select |arraylength| x)))
 (FORALL (x y) (IFF (EQ x y) (EQ (ref x) (ref y))))
 (FORALL (x y z) (NEQ (ref x) (array y z)))
-(FORALL (x y) (<: (select typeof (select (select |refelements| x) y)) (select elemtype (select typeof x))))
+(FORALL (x y) (<: (select typeof (select (select |refelements| x) y)) 
+                  (select elemtype (select typeof x))))
 )) 
 
 \end{verbatim}

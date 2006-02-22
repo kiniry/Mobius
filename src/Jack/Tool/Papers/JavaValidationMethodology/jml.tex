@@ -38,13 +38,8 @@ familiarity with the associated specification language.
 
 \medskip
 
-The next section introduces the JML notation.  Sections~\ref{tools}
-through \ref{toolsEnd} then discuss the tools currently available for
-JML in more detail.  Section~\ref{applications} discusses the
-applications of JML in the domain of Java Card, the Java dialect for
-programming smartcards.  Section~\ref{related} discusses some related
-languages and tools, such as OCL and other runtime assertion checkers,
-and Section~\ref{conclusions} concludes.
+The next section introduces the JML notation and the section~\ref{related} discusses some related
+languages and tools, such as OCL and other runtime assertion checkers.
 
 %=====================================================================
 \subsection{The JML Notation}
@@ -66,24 +61,13 @@ OCL~\cite{WarmerKleppe99}.
 %% a point about ESC/Java below, so beware if you try to save space by
 %% deleting it. -- Gary
 
-\begin{figure*}
-{\small
-\verbatiminput{Purse.java}}
-\caption{\label{example}Example JML specification}
-\end{figure*}
-
-Figure~\ref{example} gives an example of a JML specification that
-illustrates its main features.  JML assertions are written as special
+JML assertions are written as special
 annotation comments in Java code,
 either after \verb_//@_ or between \verb_/*@ ... @*/_,
 so that they are ignored by Java compilers but can be used
 by tools that support JML\@.  Within annotation comments JML extends the
-Java syntax with several keywords---in the example in
-Figure~\ref{example}, the JML keywords {\tt invariant}, {\tt
-  requires}, {\tt assignable}, {\tt ensures}, and {\tt signals} are
-used.  It also extends Java's expression syntax with several
-operators---in the example \verb_\forall_, \verb_\old_, and
-\verb_\result_ are used; these begin with a backslash so they do not
+Java syntax with several keywords.  It also extends Java's expression syntax with several
+operators; these begin with a backslash so they do not
 clash with existing Java identifiers.
 
 The central ingredients of a JML specification are preconditions
@@ -95,22 +79,10 @@ expression syntax.
 In addition to ``normal'' postconditions, the language also supports
 ``exceptional'' postconditions, specified in {\tt signals} clauses.
 These can be used to specify what must be true when a method throws an
-exception.  For example, the {\tt signals} clause in
-Figure~\ref{example} specifies that {\tt debit} may throw a {\tt
-  PurseException}, and, in that case, the balance will not change (as
-specified by the use of the \verb+\old+ keyword).
-
-The {\tt assignable} clause for the method {\tt debit} specifies a
-frame condition, namely that {\tt debit} will assign to only the {\tt
-  balance} field.  Although not a traditional part of design by
-contract languages like Eiffel, such frame conditions are essential for
-verification of code when using some of the tools described later.
+exception. 
 
 \medskip
 
-There are many additional features of JML that are not used in the
-example in Figure~\ref{example}. We briefly discuss the most important
-of these below.
 
 %% [[[I wonder if, in this journal version, the model variable
 %% feature of JML deserves a more systematic treatment. -- Gary]]]
@@ -118,12 +90,7 @@ of these below.
 \item Model variables, which play the role of abstract values for
   abstract data types~\cite{Cheon-etal03}, allow specifications that
   hide implementation details.
-  For example, if instead of a class {\tt Purse}, we were specifying
-  an interface {\tt PurseInterface}, we could introduce the balance as
-  such a model variable.  A class implementing this interface could
-  then specify how this model field is related to the class's
-  particular representation of balance.
-  
+    
 \item An extensive library that provides Java types that can be used
   for describing behavior mathematically.  This library includes such
   concepts as sets, sequences, and relations.  It is similar to
@@ -141,8 +108,6 @@ of these below.
 %\footnote{Unfortunately, some methods that one would like to be pure,
 %  such as String's equals method, are not.  This is a topic of current
 %  research.}
-  For example, if there is a method {\tt getBalance()} that is
-  declared as {\tt pure},
 \begin{verbatim}
   /*@ pure @*/ int getBalance() { ... }
 \end{verbatim}
@@ -152,10 +117,7 @@ of these below.
   {\tt protected}, and {\tt private}) for expressing visibility.  For
   example, invariants can be declared {\tt protected} if
   they are not observable by clients but intended for use by
-  programmers of subclasses.  (Technically, the invariants and method
-  specifications in the Purse example of Figure~\ref{example} have default
-  or package visibility, and thus would only be visible to code in the
-  same package.)
+  programmers of subclasses.  
 \end{itemize}
 
 \subsection{JML vs.\ OCL}
@@ -255,15 +217,8 @@ the code and runs the tool, and the tool responds with a list of
 possible errors in the program.
 
 JML annotations affect ESC/Java in two ways.  First, the given JML
-annotations help ESC/Java suppress spurious warning messages.  For
-example, in Figure~\ref{example}, the constructor's
-precondition \texttt{p != null} lets ESC/Java determine that the
-dereference of \texttt{p} in the constructor's body is valid, and thus
-ESC/\-Java produces no \texttt{null}-dereference warning.  Second,
-annotations make ESC/\-Java do additional checks.  For example,
-when checking a caller of the \texttt{Purse} constructor, the
-precondition \texttt{p != null} causes ESC/Java to emit a warning if
-the actual parameter for \texttt{p} may be passed in as \texttt{null}.
+annotations help ESC/Java suppress spurious warning messages.   Second,
+annotations make ESC/\-Java do additional checks.  
 In these two ways, the use of JML annotations enables ESC/Java to
 produce warnings not at the source locations where errors manifest
 themselves at runtime, but at the source locations where the errors
@@ -417,7 +372,7 @@ of the art, is now available~\cite{BreunesseBJ02}.
  Krakatoa~\cite{krakatoa03a} is a
  program verification tool for JML-annotated code that is currently
  under development.  It is similar to LOOP, but produces proof
- obligations for the theorem prover Coq\authcomment{Add citation}, and
+ obligations for the theorem prover Coq, and
  currently covers only a subset of Java.
 
 %=====================================================================
