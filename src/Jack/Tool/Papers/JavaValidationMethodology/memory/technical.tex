@@ -1,0 +1,319 @@
+The objective of this section is to demonstrate how the user can
+annotate and verify programs in order to obtain an upper bound on
+memory consumption. We begin by describing the principles of our
+approach, then turn to establish its soundness, and finally show
+how it can be applied to non-trivial examples involving recursive
+methods and exceptions.
+
+
+\subsubsection{Principles}
+Let us begin with a very simple memory consumption policy which aims
+at enforcing that  programs do not consume more than
+some fixed amount of memory \Max . To enforce this policy, we first
+introduce a ghost variable \Mem\ that represents at any given point of
+the program the memory used so far. Then, we annotate the program both
+with the policy and with additional statements that will be used to
+check that the application respects the policy.
+
+
+
+\paragraph{The precondition} of the method \method\ should ensure
+that there must be enough free memory for the method
+execution. Suppose that we know an upper bound of the allocations done
+by method \method\ in any execution. We will denote this upper
+bound by \allocMethod{\method}. Thus there must be at least
+\allocMethod{\method}\ free memory units from the allowed \Max\ when
+method \method\ starts execution. Thus the precondition for \method\ is:
+$$
+//@ \ \requires \ \Mem + \allocMethod{\method}  \leq \Max.
+$$
+The precondition of the program entry point (i.e., the \textit{main} 
+method from which an application may start its execution) should 
+also give the initial memory used by the virtual machine, i.e.
+require that variable \Mem\ is equal to some fixed constant.
+
+\paragraph{The normal postcondition} of the method $\method$ must
+guarantee that the memory allocated during a normal execution of
+$\method$ is not more than some fixed number \allocMethod{\method}\
+of memory units. Thus for the method $\method$ the postcondition is:
+$$
+%\begin{array}{l}
+//@ \ \ensures \ \Mem \leq \oldp(\Mem) + \allocMethod{\method}.
+%\end{array}
+$$
+
+\paragraph{The exceptional postcondition} of the method $\method$ must
+specify that the memory allocated during an execution of $\method$ 
+terminating by throwing an exception \texttt{Exception} is not more
+than \allocMethod{\method} units. Thus for the method $\method$ the
+exceptional postcondition is:
+$$
+\begin{array}{l}
+//@ \ \exsures{Exception} \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \  \Mem \leq \oldp(\Mem) + \allocMethod{\method}.
+\end{array}
+$$
+
+
+
+
+\paragraph{For every instruction that allocates memory} the ghost
+variable \Mem\ must be updated accordingly. For the purpose of
+this paper, we only consider dynamic object creation with the 
+bytecode \new; arrays are left for future work and briefly discussed 
+in the conclusion. 
+
+In order to perform the update for \new\ bytecodes, we assume given a
+function $\texttt{allocInst}: Class \rightarrow int$ gives an
+estimation of the memory used by an instance of a class. Then at every
+program point where a bytecode \srcCode{\new \ A} is found, the ghost
+variable \Mem\ must be incremented by $\allocInstance{A}$. This is
+achieved by inserting a ghost assignment associated with any \new\
+instruction, as shown below:
+$$
+%\begin{array}{l}
+\srcCode{\new \ A} \ \ \ \ // \ghostSet \ \Mem = \Mem + \allocInstance{A}.
+%\end{array}
+$$
+
+\subsubsection{Correctness} An important question is whether our approach
+guarantees that the memory allocated by a given program conforms to
+the memory consumption policy imposed by BCSL annotations. We can
+prove that our approach is correct by instrumenting the operational
+semantics of the bytecode language to reflect memory
+consumption. Concretely, this is achieved by extending states with the
+special variable \Mem, and describing for each bytecode and for ghost
+assignments the effect of the weakest precondition calculus on \Mem\
+(in the fragment of the language considered, the only instruction to
+modify memory is \new, thus the only instruction whose weakest
+precondition calculus has an effect on \Mem\ is \new).
+
+We can then prove the correctness of the annotations w.r.t. the
+instrumented operational semantics, under the proviso that ghost
+assignments triggered by object creation are compatible with the
+instrumented operational semantics. 
+
+\subsubsection{Examples}
+We illustrate hereafter our approach by several examples, coping with
+recursive and overridden methods and with exceptions.
+
+\paragraph{Inheritance and overridden methods} Overriding methods
+are treated as follows: whenever a call to a method \method\ is
+performed, we require that there is enough free memory space for the
+maximal consumption by all the methods that override or are overridden
+by \method. In Fig. \ref{classExt} we show a class \srcCode{A}
+and its extending class \srcCode{B}, where \srcCode{B} overrides the
+method \method\ from class \srcCode{A}. Method \method\ is
+invoked by method $n$. Given that the dynamic type of the
+parameter passed to $n$ is not known, we cannot know which of the
+two methods will be invoked. This is the reason for requiring enough
+memory space for the execution of any of these methods.
+
+
+
+%After the method execution we consider the extreme case where there is executed the method \method\ that consumes the most.
+
+\begin{figure}[!t]%[!htp]
+Specification of method $m$ in class A:
+$$
+\begin{array}{ll}
+//@ \ \requires & \Mem + k  \leq \Max \\
+//@ \ \modifies & \Mem \\
+//@ \ \ensures & \Mem  \leq \oldp(\Mem) + k
+\end{array}
+$$
+
+Specification for method $m$ in class B:
+$$
+\begin{array}{ll}
+//@ \ \requires & \Mem + l  \leq \Max \\
+//@ \ \modifies & \Mem \\
+//@ \ \ensures & \Mem  \leq \oldp(\Mem) + l
+\end{array}
+$$
+
+%\begin{verbatim}
+%$$
+%\begin{array}{l}
+\begin{alltt}
+\srcCode{\textbf{public void n (\srcCode{A} a)}}
+... 
+//\small{\textit{Prove } \srcCode{\Mem +} \textit{max(l,k)} \srcCode{<= \Max}}
+\srcCode{invokevirtual <A.m>}
+//\small{\textit{Assume } \srcCode{\Mem <= \oldp(\Mem) +} \textit{max(l,k)}}
+...
+\end{alltt}
+%\end{verbatim}
+%\end{array}
+%$$
+
+\caption{\sc Example of overridden methods}
+\label{classExt}
+\end{figure}
+
+
+\paragraph{Recursive Methods} In Fig. \ref{recMeth} the bytecode
+of the recursive method $m$ and its specification are shown. For
+simplicity we show only a simplified version of the bytecode; we
+assume that the constructors for the class \srcCode{A} and \srcCode{C}
+do not allocate memory. Besides the pre- and the postcondition, the
+specification also includes information about the termination of the
+method: \variant\ $\local{1}$, meaning that the local variable
+$\local{1}$ decreases on every recursive call down to $0$, guaranteeing 
+that the execution of the method will terminate.
+
+ 
+%Now we explain why such a precondition is required for method \textbf{m} in order to specify the property for constraint memory consumption. 
+
+\begin{figure}[!t]
+\begin{alltt}
+public class D \{
+ public void m (int i) \{
+   if (i > 0) \{ new A(); m(i-1); new A(); \}
+   else \{ new C(); new A(); \} \} \}
+\end{alltt}
+$$
+\begin{array}{l}
+ //@ \ \requires \ \Mem + \allocInstance{A} + \allocInstance{C}) \\
+\ \ \ \ \ \ \ \ \ \ \ \ \  + \local{1}*2*\allocInstance{A} \le \Max \\
+//@ \ \variant \ \local{1} \\
+//@ \  \ensures  \ \local{1} \ge 0 \ \wedge \ \Mem \leq \oldp(\Mem)\ +  \\
+\ \ \ \ \ \ \ \ \ \oldp(\local{1})*2*\allocInstance{A}\ + \\
+\ \ \ \ \ \ \ \ \ \allocInstance{A} +  \allocInstance{C})
+\end{array}$$
+
+\begin{alltt}
+\srcCode{\textbf{public void m()}}
+\srcCode{0 \load\_1} //\small{\textit{Local var. loaded on the stack of \textbf{m}}}
+\srcCode{1 ifle 12} //\small{\textit{If \local{1} <= 0 jump}}
+\srcCode{2 new <A>} //\small{\textit{Here \local{1} > 0  } }
+//set \Mem = \Mem + \allocInstance{A}
+\srcCode{3 invokespecial <A.<init>>}
+\srcCode{4 aload\_0}
+\srcCode{5 iload\_1}
+\srcCode{6 iconst\_1}
+\srcCode{7 isub} //\small{\textit{\local{1} decremented with 1}}
+\srcCode{8 invokevirtual <D.m>} //\small{\textit{Recursive call}}
+\srcCode{9 new <A>}
+//set \Mem = \Mem + \allocInstance{A}
+\srcCode{10 invokespecial <A.<init>>}
+\srcCode{11 goto 16}
+\srcCode{12 new <A>} //\small{\textit{Target of the jump at \srcCode{1}}}
+//set \Mem = \Mem +  \allocInstance{A}
+\srcCode{13 invokespecial <A.<init>>}
+\srcCode{14 new  <C>}
+//set \Mem = \Mem + \allocInstance{C}
+\srcCode{15 invokespecial <C.<init>>}
+\srcCode{16 return}
+\end{alltt}
+
+\caption{\sc Example of a recursive method}
+ \label{recMeth}
+\end{figure}
+
+We explain first the precondition. If the condition of line
+\srcCode{1} is not true, the execution continues at line
+\srcCode{2}. In the sequential execution up to line \srcCode{7}, the
+program allocates at most $\allocInstance{A}$ memory units and
+decrements by $1$ the value of $\local{1}$. The instruction at line
+\srcCode{8} is a recursive call to $m$, which either will take the
+same branch if $\local{1} > 0 $ or will jump to line \srcCode{12}
+otherwise, where it allocates at most $\allocInstance{A} +
+\allocInstance{C}$ memory units. On returning from the recursive call
+one more allocation will be performed at line \srcCode{9}.  Thus $m$
+will execute, $\local{1}$ times, the instructions from lines
+\srcCode{2} to \srcCode{7}, and it finally will execute all the
+instructions from lines \srcCode{12} to \srcCode{16}.
+
+The postcondition states that the method will perform no more than
+$\oldp(\local{1})$ recursive calls (i.e., the value of the register
+variable in the pre-state of the method) and that on every recursive
+call it allocates no more than two instances of class \texttt{A} (one
+corresponding to line \srcCode{2} and the other to line \srcCode{9})
+and that it will finally allocate one instance of class \texttt{A}
+(line \srcCode{12}) and another of class \texttt{C} (line
+\srcCode{14}).
+
+For proving the correctness of this method, 18 proof obligations were
+generated with Jack, most of which were automatically proved in Coq
+using its standard tactics.
+
+
+\paragraph{Loops} must also be annotated with appropriate invariants,
+and with variants that guarantee their termination. If we know that
+some expression $e$ bound by \verb!0! decreases at every
+iteration of the loop, and that each loop iteration will not allocate
+more than $k$ units, then we can strengthen the loop invariant
+to:
+$$\begin{array}{l}
+//@ \ \modifies \ i, \Mem \\
+//@ \ \invariant \ 0 \le e \wedge \ \Mem \le \atState{\Mem}{Before_{l}} + e * k \\
+
+//@ \ \variant \ e
+\end{array}$$
+$\atState{\Mem}{Before_{l}}$ is a special variable denoting the value
+of the consumed memory just before entering for the first time the
+loop \progLoop{l}. At every iteration the consumed memory must not go
+beyond the upper bound given for the body of loop.
+
+\paragraph{More precise specification} We can be more precise in
+specifying the precondition of a method by considering the field
+values of an instance, for example. Let \method\ be the method shown
+in Fig. \ref{excMeth} and assume no allocations are done in the
+constructor of the class \texttt{A}. The first line of \method\
+initialises one of the fields of field \texttt{b}. Since nothing
+guarantees that \texttt{b} is not \NULL, the execution may terminate
+with \texttt{NullPointerException}. Depending on the values of the
+parameters passed to \method, the memory allocated will be
+different. The precondition specifies the required memory space
+depending on whether the field \texttt{b} is \NULL\ or not.  In the
+normal postcondition we state that the method has allocated an object
+of class \texttt{A}. The exceptional postcondition states that no
+allocation is performed if \texttt{NullpointerException} causes the
+termination.
+
+
+\begin{figure}[!t]
+%\begin{figure}[t]
+$$
+\begin{array}{l}
+//@\  \requires\ \ !(\local{1} == \NULL) \Rightarrow  \\
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \phantom{\local{1}} \Mem +  \allocInstance{A} \le \Max \\
+//@\  \modifies\ \ \Mem \\
+//@\  \ensures \ \Mem \le \oldp(\Mem) +  \allocInstance{A} \\
+//@\   \exsures{NullPointerException} \\
+\hspace*{4.5cm} \Mem == \oldp(\Mem)
+\end{array}$$
+
+\begin{tabular}{lr}
+\begin{minipage}[t]{4.2cm}
+\begin{alltt}
+\srcCode{0 aload\_0}
+\srcCode{1 getfield<C.b>}
+\srcCode{2 iload\_2}
+\srcCode{3 putfield <B.i>}
+\srcCode{4 new <A>}
+//set \Mem = \Mem +
+      \allocInstance{A}
+\srcCode{5 dup}
+\srcCode{6 invokespecial <A.<init>>}
+\srcCode{7 astore\_1}
+\srcCode{8 return}
+\end{alltt}
+\end{minipage}
+ &
+\begin{minipage}[t]{4cm}
+\begin{alltt}
+public class C     \{
+  B b;
+  public void 
+    m (A a, int i)\{
+      b.i = i ;
+      a = new A();\}\}
+\end{alltt}
+\end{minipage}
+\end{tabular}
+\caption{\sc Example of a method with possible exceptional termination}
+\label{excMeth}
+\end{figure}
+

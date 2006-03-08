@@ -34,7 +34,7 @@ For example, suppose that the client API provides transaction management facilit
 \texttt{close} for closing transactions. In this case, a requirement can be for no nested transactions.
 This means that the methods \texttt{open} and \texttt{close} can be annotated to ensure that the method \texttt{close} 
  should not be called if there is no transaction running and the method \texttt{open} should not be called if there is already a running transaction. 
-In this scenario, we can apply results of previous work \cite{PBBHL}.  
+In this scenario, we can apply results of previous work \cite{m+04:cardis}.  
 \end{itemize}
 
 Usually, the development process involves annotating the source code with JML specification,

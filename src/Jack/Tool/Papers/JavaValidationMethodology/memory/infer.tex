@@ -1,0 +1,168 @@
+In the previous section, we have described how the memory consumption
+of a program can be modelled in BCSL and verified using an appropriate
+verification environment. While our examples illustrate the benefits
+of our approach, especially regarding the precision of the analysis,
+the applicability of our method is hampered by the cost of providing
+the annotations manually. In order to reduce the burden of manually
+annotating the program, one can rely on annotation assistants that
+infer automatically some of the program annotations (indeed such
+assistants already exist for loop invariants~\cite{NimmerE02:ISSTA} and class
+invariants~\cite{log04:vmcai}). In this section, we describe an
+implementation of an annotation assistant dedicated to the analysis of
+memory consumption, and illustrate its functioning on an example.
+
+
+\subsubsection{Annotation assistant}
+The annotation assistant performs two tasks. First, it inserts the
+ghost assignments on appropriate places; for this task, the user must
+provide annotations about the memory required to create objects of the
+given classes. 
+
+Second, it inserts pre- and postconditions for each method. In this case, variants for loops and recursive methods may be given by the user or be
+synthesised through appropriate mechanisms.  Based on this
+information, the annotation assistant recursively computes the memory
+allocated on each loop and method. Essentially, it finds the maximal
+memory that can be allocated in a method by exploring all its possible
+execution paths.
+
+The function $\allocMethod{.}$ is defined as follows:
+\begin{itemize}
+\item \textbf{Input:} Annotated bytecode of a method \method, and memory
+policies for methods that are called by \method;
+
+\item \textbf{Output:} Upper bound of the memory allocated by \method;
+
+\item \textbf{Body:} The first step is to compute the loop structure
+of the method, then to compute an upper bound to the memory allocated
+by each loop using its variant, and then to compute an upper bound to
+the memory allocated along each execution path.
+\end{itemize}
+
+
+
+%A pseudo-code of the algorithm for inferring an upper bound for method
+%allocations is given in Fig.~\ref{methodAlloc}.  Essentially, it finds
+%the maximal memory that can be allocated in a method by exploring all
+%its possible execution paths. in Fig.~\ref{methodAlloc} the auxiliary
+%function $allocPath(\cdot)$ infers the allocations done by the set of
+%execution paths ending with the same \return\ instruction.
+
+%\begin{figure}[t]
+%function $\allocMethod{.}$\\
+%\textbf{Input:} Bytecode of a method $m$. \\
+%\textbf{Output:} Upper bound of the memory allocated by $m$. \\
+%\textbf{Body:}
+%\begin{enumerate}
+%   \item Detect all the loops in $m$;
+%  \item For every loop $l$ determine $\loopSet{l}$, $\loopEntry{l}$ and $\loopEndsSet$;
+%   \item Apply the function $\allocated{\cdot}$ to each instruction $i_k$, such that $i_k = \return$;
+%  \item Take the maximum of the results given in the previous step:  $max_{i_k = \return } \allocated{i_k}$.
+%\end{enumerate}
+%\caption{\sc Inference algorithm}
+%\label{methodAlloc}
+%\end{figure}
+
+%Inferring the memory allocated inside loops is done by the function $\allocLoopWithEnd{\cdot}{\cdot}$, which is invoked by $allocPath$ whenever the current instruction belongs to a loop. The specification of the function is shown in Fig. \ref{fig:loopPath} (where $P = max_{\instrAt{k} \in preds(\loopEntry{l'} ) - \loopEndsSet{\progLoop{l'}}}$).
+
+%\begin{figure}[!ht]
+%$\allocated{\instrAt{s}}$ = 
+%$$ \left\{ \begin{array}{l}
+%\allocIns{\instrAt{s} } \hspace*{1.8cm}  \mbox{if  $\instrAt{s}$  has  no  predecessors} \\
+%            \allocLoop{\loopEntry{l}} \ + \\
+%\ \ \ \ \            max_{\instrAt{k} \in preds(\instrAt{s} )-\loopEndsSet{\progLoop{l}}}( \allocated{\instrAt{k}} ) \\
+%\hspace*{4cm}  \mbox{if  $\instrAt{s}\in \loopSet{\progLoop{l}}$} \\
+%\allocIns{\instrAt{s}} \ + \ max_{\instrAt{k} \in preds(\instrAt{s} )}( \allocated{\instrAt{k}} ) \\
+%\hspace*{4cm} \mbox{otherwise}
+%\end{array}
+%\right.
+%$$
+%\caption{\sc Definition of the function $\allocated{\instrAt{s}}$} 
+%\label{fig:allocMethod}
+%\end{figure}
+
+
+%\begin{figure}[!ht]
+%$\allocLoopWithEnd{\loopEntry{l}}{\instrAt{s}} = $
+%$$ 
+%\left\{\begin{array}{l}
+
+% \allocIns{\loopEntry{l}}   \hspace*{1.8cm} \mbox{if $\instrAt{s} = \loopEntry{l}$} \\
+%  \allocLoop{\loopEntry{l'}} \ + \\
+%\ \ \ \ \      P(\allocLoopWithEnd{\loopEntry{l}}{\instrAt{k}}) \\
+%\hspace*{2cm}  \mbox{if $\instrAt{s} \in  \loopSet{\progLoop{l'}} \ \land \ \progLoop{l'}$ is  nested in $\progLoop{l}$} \\
+
+%     \allocIns{\instrAt{s}} \ + \\
+%\ \ \ \ \     max_{\instrAt{k} \in preds(\instrAt{s} )}(\allocLoopWithEnd{\loopEntry{l}}{\instrAt{k}}) \\
+% \hspace*{5cm} \mbox{otherwise}
+%\end{array} \right.
+%$$
+% \caption{\sc Definition of the function $\allocLoopWithEnd{\loopEntry{l}}{\instrAt{s}}$}
+%\label{fig:loopPath}
+%\end{figure}
+
+The annotation assistant currently synthesises only simple memory
+policies (i.e., whenever the memory consumption policy does not depend
+on the input).  Furthermore, it does not deal with arrays,
+subroutines, nor exceptions, and is restricted to loops with a unique
+entry point. The latter restriction is not critical because it
+accommodates code produced by non-optimising compilers. However, a
+pre-analysis could give us all the entry points of more general loops,
+for instance by the algorithms given in \cite{CJPS05cmu}; our approach
+may be thus applied straightforwardly. How to treat arrays is
+briefly discussed in the conclusion.
+
+
+\subsubsection{Example}
+
+Let us consider the bytecode given in Fig. \ref{inf:src}, which is a
+simplified version of the bytecode corresponding to the source code
+given in the right of the figure. For simplicity of presentation, we
+do not show all the instructions (the result of the inference
+procedure is not affected). Method \method\ has two branching
+instructions, where two objects are created: one instance of class \texttt{A}
+and another of class \texttt{B}. Our inference algorithm gives that
+$\allocMethod{\method} =$ $\allocInstance{A} +$ $\allocMethod{A.init}
++ \allocInstance{B} + \allocMethod{B.init}$.
+
+%Due to limitation on space, we do not explain the details of such inference, which is given in Fig. \ref{inf:ex} ($\instrAt{k}$ refers to the bytecode instruction at position $k$).
+
+\begin{figure}[!hbp]
+\begin{tabular}{lr}
+\begin{minipage}[t]{4.3cm}
+\begin{alltt}
+\begin{small}
+\srcCode{0 aload\_1} 
+\srcCode{1 ifnonnull 6 } 
+\srcCode{2 new <A>}
+... 
+\srcCode{4 invokespecial <A.<init>>} 
+\srcCode{6 aload\_2}
+\srcCode{7 ifnonnull 12}
+\srcCode{8 new <B>} 
+... 
+\srcCode{10 invokespecial <B.<init>>}
+...
+\srcCode{12 return}
+\end{small}
+\end{alltt}
+\end{minipage} &
+
+\begin{minipage}[t]{4cm}
+\begin{alltt}
+\small{
+public void 
+ m (A a , B b )   \{
+  if (a == null) \{
+    a = new A(); \}
+  if (b == null) \{
+    b = new B(); \}\}
+}
+\end{alltt}
+\end{minipage}
+\end{tabular}
+\caption{\sc Example}
+\label{inf:src}
+\end{figure}
+
+%The procedure presented above terminates as an acyclic
+%representation of the control flow graph is used.

@@ -1,0 +1,140 @@
+% conclusion 
+
+Program logics have traditionally been used to verify functional
+properties of applications, but we have shown that such logics 
+are also appropriate to enforce security properties including
+memory consumption policies. We have shown that program logics
+complement nicely existing methods to verify memory consumption,
+over which they are superior in terms of the precision of the
+analysis (and inferior in terms of automation).
+
+We intend to pursue our work in four directions. Firstly, we would
+like to extend our approach to arrays. In principle, it should be
+reasonably easy to extend the verification method to arrays; however,
+it seems more complicated to extend our inference algorithm to arrays.
+The main difficulty here is to provide an estimate of the size of an
+array, as it is given by the top value on the operand stack at the
+time of its creation. Our intuition is that this can be done using
+an abstract interpretation or a symbolic evaluation of the program. 
+If we look at the example code below (in source code): 
+\begin{verbatim}
+void m(int s)
+   { int len = s;  int[] i = new int[len] } 
+\end{verbatim}
+where \verb!len! is a local variable to the method, one can infer by
+symbolic computation that its value is the value of the method
+parameter. Thus the method can be given the precondition \texttt{Mem +
+s.sizeof(int) <= \Max}. In a similar line of work, we would like to extend our
+results to concurrency using recent advances in program logics for
+multi-threaded Java programs \cite{RDFHL05ess}. Providing an appropriate
+treatment of arrays and multi-threading is an important step towards
+applying our results to mobile phone applications.
+
+Secondly, we would like to adapt our approach to account for explicit
+memory management. More precisely, we would like to consider an
+extended language with a special instruction \texttt{free(o)} that
+deallocates the object \texttt{o}, and establish the correctness of
+our method under the assumption that deallocation is correct, i.e.
+that the object \texttt{o} is not reachable from the program point
+where \texttt{free(o)} is inserted. By combining our approach with
+existing compile-time analysis that infers for each program point
+which objects are not reachable, we should be able to provide more
+precise estimates of memory consumption.
+%\alarm{ref needed}
+
+Thirdly, we intend to apply our technique to other resources such as
+communication channels, bandwidth, and power consumption, as well as
+to more refined analysis that distinguish between different kinds of
+memory, such as RAM or non-volatile EEPROM.  As suggested by the MRG
+project~\cite{asp+04:cassis}, it seems also interesting to consider
+policies that enforce limits on the interaction between the program
+and its environment, for example w.r.t. the number of system calls or
+the bounds on parameters passed to them.
+
+Finally, we envisage to experiment with more complex applets and to
+compare the results with other approaches.
+
+\paragraph*{Acknowledgements} The authors are grateful to the anonymous
+referees for their comments on the paper, to Lilian Burdy and Julien
+Charles for making available a Coq plug-in for verifying annotated
+bytecode programs, and to the members of the CASTLES project for
+useful discussions on memory consumption.
+
+%\onecolumn
+
+%\begin{figure}[!hbp]
+%$\begin{array}{l}
+%\\
+%\allocMethod{m}\\
+%=\\
+%\allocated{\instrAt{12}} \\
+%= max_{\instrAt{k} \in preds(1_{12})} (\allocated{\instrAt{k} }) + \allocIns{ \instrAt{12}}\\
+%\{\allocIns{\instrAt{12}} = 0, preds(\instrAt{i_{12}} ) = \{ i_{10}, i_7 \}\}\\
+%= max( \allocated{\instrAt{10}} , \allocated{\instrAt{7}} ) \\
+%= max(max_{ \instrAt{k} \in preds(\instrAt{10})}(\allocated{ \instrAt{k}}) + \allocIns{\instrAt{10}} ,\\
+%\phantom{= max.}
+%max_{ \instrAt{k} \in preds(\instrAt{7} )}(\allocated{ \instrAt{k}}) +\allocIns{\instrAt{7}}   \\
+%\phantom{=}) \\
+
+%\{preds(\instrAt{10} ) = \{ i_8 \} , preds(\instrAt{7} ) = \{ i_6 \} \} \\
+
+%= max( \allocated{\instrAt{8}} + \allocIns{\instrAt{10}}, \allocated{\instrAt{6}} + \allocIns{\instrAt{7}} ) \\
+%\{ \allocIns{\instrAt{10}} = \allocMethod{B.init} ,  \allocIns{\instrAt{7}} = 0 \} \\
+
+%= max( max_{ \instrAt{k} \in preds(\instrAt{8} )}(\allocated{ \instrAt{k}})  +  \allocIns{\instrAt{8}} + \allocMethod{B.init}  , \\
+% \phantom{= max.} max_{ \instrAt{k} \in preds(\instrAt{6} )}(\allocated{ \instrAt{k}})  +   \allocIns{\instrAt{6}}  \\
+%\phantom{=}) \\
+
+%\{preds(\instrAt{8} ) = \{ i_7 \}, preds(\instrAt{6} ) = \{ i_4 \} \} \\
+
+%= max( \allocated{\instrAt{7}}  +  +  \allocIns{\instrAt{8}} + \allocMethod{B.init}  , \\ 
+% \phantom{= max.} \allocated{\instrAt{4}}  + \allocIns{\instrAt{6}}  \\
+%\phantom{=}) \\
+
+%\{ \allocIns{\instrAt{8}} = \allocInstance{B} ,  \allocIns{\instrAt{6}} = 0 \} \\
+
+%= max( max_{ \instrAt{k} \in preds(\instrAt{7} )}(\allocated{ \instrAt{k}})  +  \allocIns{\instrAt{7}} + \allocInstance{B} +\allocMethod{B.init}  , \\
+% \phantom{= max.} max_{ \instrAt{k} \in preds(\instrAt{4} )}(\allocated{ \instrAt{k}}) + \allocIns{\instrAt{4}}\\
+% \phantom{=}) \\
+%\{ preds(\instrAt{7}) = \{ i_6\}, preds(\instrAt{4}) = \{ i_2 \}  \}\\
+% = max(\allocated{i_6} + \allocIns{\instrAt{7}} + \allocInstance{B} +\allocMethod{B.init}, \\
+%   \phantom{= max.}   \allocated{i_2} +\allocIns{i_4} \\
+%  \phantom{=} ) \\ 
+%\{ \allocIns{\instrAt{7}} = 0 ,  \allocIns{\instrAt{4}} = \allocMethod{A.init} \} \\
+% = max( max_{ \instrAt{k} \in preds(\instrAt{6} )}(\allocated{ \instrAt{k}})  +  \allocIns{\instrAt{6}} + \allocInstance{B} +\allocMethod{B.init}  , \\
+%  \phantom{= max.} max_{ \instrAt{k} \in preds(\instrAt{2} )}(\allocated{ \instrAt{k}}+  \allocIns{\instrAt{2}}  +  \allocMethod{A.init} \\
+%  \phantom{=} ) \\ 
+%  =  \{ preds(\instrAt{6}) = \{ i_4, i_1\}, preds(\instrAt{2}) = \{ i_1 \}  \} \\
+%  = max( max(\allocated{i_4} , \allocated{i_1})  +  \allocIns{\instrAt{6}} + \allocInstance{B} +\allocMethod{B.init}  , \\
+%  \phantom{= max.} \allocated{i_1} +  \allocIns{\instrAt{2}} +  \allocMethod{A.init} \\
+%\phantom{=} ) \\ 
+%\{ \allocIns{\instrAt{6}} = 0 ,  \allocIns{\instrAt{2}} = \allocInstance{A} \} \\
+%= max( max ( max_{i_k \in preds(i_4)}( \allocated{i_k} ) + \allocIns{i_4}, \\
+%\phantom{ = max. max.} max_{i_k \in preds(i_1)}( \allocated{i_k} ) + \allocIns{i_1} \\
+%\phantom{ = max.} ) + \allocInstance{B} +\allocMethod{B.init}  , \\
+%\phantom{= max .}  \allocated{i_0}+ \allocInstance{A} + \allocMethod{A.init}  , \\
+%\phantom{=} ) \\ 
+% \{ preds(i_4)= \{i_2 \}, preds(i_1) =\{i_0 \} \} \\
+% \{ \allocated{i_0} = \allocIns{i_0} = 0, \allocIns{i_1} = 0 , \allocIns{i_4} = \allocMethod{A.init} \} \\
+% = max(   max ( \allocated{i_2} + \allocMethod{A.init} , \\
+% \phantom{ = max. max.}\allocated{i_0}   \\
+% \phantom{ = max.} ) + \allocInstance{B} +\allocMethod{B.init}  , \\
+% \phantom{= max .} \allocInstance{A} + \allocMethod{A.init}  , \\
+% \phantom{=} ) \\ 
+%  \{ \allocated{i_0} = \allocIns{i_0} = 0 \} \\
+% = max(   \allocated{i_2} + \allocMethod{A.init} + \allocInstance{B} +\allocMethod{B.init}  , \\
+% \phantom{= max .} \allocInstance{A} + \allocMethod{A.init}  , \\
+% \phantom{=} ) \\ 
+% \ldots \\
+% = max(   \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} +\allocMethod{B.init}  \\
+% \phantom{= max .} \allocInstance{A} + \allocMethod{A.init}  , \\
+% \phantom{=} ) \\ 
+% =   \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} +\allocMethod{B.init}
+  
+%\end{array} $
+%\caption{\sc Inference of the memory allocated by the method $m$ of Fig. \ref{inf:src}}
+%\label{inf:ex}
+%\end{figure}
+
+%\twocolumn
+

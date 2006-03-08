@@ -102,7 +102,7 @@ it has been generally accepted as
 %calculus~\cite{BartJacobsWP}. We mention \emph{e.g.}~\/JACK (Java
 %Applet Correctness Kit)~\cite{BRL-JACK}, Jive~\cite{MeyerP00},
 %Krakatoa~\cite{MarchePU03}, Loop~\cite{BergJ01} and
-%ESC/Java~\cite{LeinoNS00}. These tools vary in the amount of user
+%ESC/Java~\cite{escjava:userman}. These tools vary in the amount of user
 %interaction required, but also in the level of correctness they
 %provide. Jive, Krakatoa and Loop are sound, but require much user
 %interaction, while ESC/Java is automatic, but unsound. For smart card
@@ -122,14 +122,14 @@ it has been generally accepted as
 %automation~\cite{BRL-JACK}. Other sound tools are
 %Jive~\cite{MeyerP00}, Krakatoa~\cite{MPU03:jlap} and
 %Loop~\cite{vdBJ01:tacas}, but these all require relatively much user
-%interaction. ESC/Java~\cite{LeinoNS00} automatically checks
+%interaction. ESC/Java~\cite{escjava:userman} automatically checks
 %specifications, but is not sound.
 
 While JML is easily accessible to Java developers, actually writing
 the specifications of a smart card application is labour-intensive and
 error-prone, as it is easy to forget some annotations. There
 exist tools which assist in writing these annotations,
-\emph{e.g.}~Daikon~\cite{ErnstCGN01} and Houdini~\cite{FlanaganL01}
+\emph{e.g.}~Daikon~\cite{ErnstCGN2001:TSE} and Houdini~\cite{FlanaganL01}
 use heuristic methods to produce annotations for simple safety and
 functional invariants.  However, these tools cannot be guided by the
 user---they do not require any user input---and in particular cannot
@@ -177,7 +177,7 @@ The annotations we generate can be checked with existing verification
 tools \emph{e.g.}~\/JACK (Java Applet Correctness
 Kit)~\cite{BRL-JACK}, Jive~\cite{MeyerP00},
 Krakatoa~\cite{MarchePU03}, Loop~\cite{BergJ01} and
-ESC/Java~\cite{LeinoNS00}. We use JACK as it provides the
+ESC/Java~\cite{escjava:userman}. We use JACK as it provides the
 best compromise between soundness, efficiency, scalability and
 usability.
 

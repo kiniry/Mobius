@@ -1,0 +1,290 @@
+% Introduction 
+
+Trusted personal devices (TPDs for short) such as smart cards, mobile
+phones, and PDAs commonly rely on execution platforms such as the Java
+Virtual Machine and the Common Language Runtime. Such platforms
+feature security mechanisms such as bytecode verification and stack
+inspection that guarantee basic safety properties of downloaded
+applications. However, current security architectures for TPDs do not
+provide any mechanism to control resource usage by downloaded
+applications, despite TPDs being subject to stringent resource
+constraints.  Therefore, TPDs are particularly vulnerable to
+denial-of-service attacks, since executing a downloaded application
+may potentially lead to resource exhaustion.
+
+
+Several approaches have been suggested to date to enforce memory
+consumption policies for programs, see Section~\ref{sec:rel}.  All
+approaches are automatic, but none of them is ideally suited for TPDs,
+either for their lack of precision, or for the runtime penalty they
+impose on programs.
+
+The objective of this work is to explore an alternative approach that
+favours precision of the analysis at the cost of automation, but
+without runtime penalty. The approach is based on program logics and
+allows users to perform a precise analysis of resource consumption for
+Java bytecode programs (for the clarity of the explanations all
+examples in the introduction deal with source code).  In order
+to illustrate the principles of our approach, let us consider the
+following program:
+\begin{verbatim}
+public void m (A a) {
+  if (a == null) 
+    { a = new A();  }  
+  a.b = new B(); }
+\end{verbatim}
+In order to model the memory consumption of this program, we introduce
+a {\em ghost} (or, {\em model}) variable \verb!Mem! that accounts for
+memory consumption; more precisely, the value of \verb!Mem! at any
+given program point is meant to provide an upper bound to the amount
+of memory consumed so far. To keep track of the memory consumption, we
+perform immediately after every bytecode that allocates memory an
+increment of \verb!Mem!\ by the amount of memory consumed by the
+allocation. Thus, if the programmer specifies that \verb!ka! and
+\verb!kb! is the memory consumed by the allocation of an instance of
+class \verb!A! and \verb!B! respectively, the program must be
+annotated as:
+\begin{verbatim} 
+public void m (A a) {
+ if (a == null) 
+   {a = new A(); //set Mem = Mem + ka;}  
+ a.b = new B(); //set Mem = Mem + kb; }
+\end{verbatim}
+Such annotations allow to compute at run-time the memory consumed by
+the program. However, we are interested in static prediction of memory
+consumption, and resort to pre- and postconditions to this end.  
+
+Even for a simple example as above, one can express the specification
+at different levels of granularity. For example, fixing the amount of
+memory that the program may use, \verb!Max!, one can specify that the
+method will use at most \verb!ka! $+$ \verb!kb! memory units and will not
+overpass the authorised limit \verb!Max!, with the following
+specification:
+$$
+\begin{array}{ll}
+//@ \ \requires & \Mem + \srcCode{ka} + \srcCode{kb} \leq \Max \\
+//@ \ \ensures &  \Mem \leq \oldp(\Mem) + \srcCode{ka} + \srcCode{kb}     
+\end{array}
+$$
+\begin{verbatim}
+    public void m (A a) { ... }
+\end{verbatim}
+Or try to be more precise and relate memory consumption to inputs with
+the following specification:
+%\begin{verbatim}
+$$
+\begin{array}{l}
+//@ \ \requires \ \srcCode{a==null} \Rightarrow \Mem + \srcCode{ka} + \srcCode{kb} \leq \Max \\ 
+\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \land \ \srcCode{!(a==null)} \Rightarrow \Mem + \srcCode{kb} \leq \Max \\
+//@ \ \ensures \\
+\ \ \ \ \ \ \   \old\srcCode{(a)==null} \Rightarrow \Mem \leq \oldp(\Mem) + \srcCode{ka} + \srcCode{kb} \\ 
+\ \ \ \ \ \ \land \ !(\old\srcCode{(a)==null}) \Rightarrow \Mem \leq \oldp(\Mem) + \srcCode{kb}    
+\end{array}
+$$
+\begin{verbatim}
+  public void m (A a) { ... }
+\end{verbatim}
+More complex specifications are also possible: one can
+take into account whether the program will throw an exception or not by
+using (possibly several) exceptional postconditions stating that
+$\texttt{k}_{\texttt{E}}$ memory units are allocated in case the
+method exits on exception \texttt{E}.
+
+The main characteristics of our approach are:
+\begin{itemize}
+\item \emph{Precision:} our analysis allows to specify and enforce
+precise memory consumption policies, including those that take
+into account the results of branching statements or the values of
+parameters in method calls. Being based on program logics, which are
+very versatile, the precision of our analysis can be further improved
+by using it in combination with other analysis, such as control flow
+analysis and exception analysis;
+
+
+\item \emph{Correctness:} our analysis exploits existing program logics
+which are (usually) already known to be sound. In fact, it is immediate
+to derive the soundness of our analysis from the soundness of the program
+logic, provided ghost annotations that update memory consumption variables
+are consistent with an instrumented semantics that  extends the language
+operational semantics with a suitable cost model that reflects resource
+usage;
+
+\item \emph{Language coverage:} our analysis relies on the existence
+of a verification condition generator for the programming language at
+hand, and is therefore scalable to complex programming features.  In
+the course of the paper, we shall illustrate applications of our
+approach to programs featuring recursive methods, method
+overriding and exceptions;
+
+
+\item \emph{Usability:} our approach can be put to practise
+immediately using existing verification tools for program logics. We
+have applied it to annotated Java bytecode programs using a
+verification environment developed in \cite{LM05:acc}. It is also
+possible to use our approach on JML annotated Java source
+code~\cite{BRL-JACK}, and more generally on programs that are written
+in a language for which appropriate support for contract-based
+reasoning exists;
+
+
+
+
+\item \emph{Annotation and proof generation:} in contrast to other
+techniques discussed above, our approach requires user interaction,
+both for specifying the program and for proving that it meets its
+specification.  In order to reduce the burden of the user, we have
+developed heuristics that infer automatically part of the annotations,
+and use automatic procedures to help discharge many proof obligations
+automatically.
+\end{itemize}
+Furthermore, our analysis may be used to guarantee that no memory
+allocation is performed in undesirable states of the application,
+namely after initialisation or during a transaction in a Java Card.
+
+On the negative side, our method does not deal with garbage collection 
+nor arrays (see Section \ref{sec:conc}).
+
+\paragraph*{Contents}
+The paper is organised as follows: the next Section discusses related
+work while Section~\ref{sec:prelim} provides a brief introduction to
+Java bytecode programs and to the modelling language and weakest
+precondition calculus used to specify and verify such programs.
+Section~\ref{sec:verif} describes in some detail program logics can be
+used to specify and verify precise memory consumption
+policies. Section~\ref{sec:infer} is devoted to inference of
+annotations. We conclude in Section~\ref{sec:conc} with directions for
+future work.
+
+
+\subsection{Related Work}\label{sec:rel}
+\begin{itemize}
+\item \emph{Static analysis and abstract interpretations:} in such an
+approach, one performs an abstract execution of an approximation of
+the program. The approximation is chosen to be coarse enough to be
+computable, as a result of which it yields automatically bounds on
+memory consumption, but at the cost of precision. Such methods are not
+very accurate for recursive methods and loops, and often fail to
+provide bounds for programs that contain dynamic object creation
+within a loop or a recursive method.
+
+In a series of papers including~\cite{asp+04:cassis}, M.~Hofmann and
+co-authors have investigated the use of type systems for estimating
+memory consumption. For example, Hofmann and Jost~\cite{HJ03sph}
+propose an automatic heap space usage static analysis for first-order
+functional programs. The analysis determines both the amount of free
+cells necessary before execution as well as a safe (under)-estimate of
+the size of a \emph{free-list} after successful execution of a
+function.  These numbers are obtained as solutions to a set of linear
+programming (LP) constraints derived from the program text. Automatic
+inference is obtained by using standard polynomial-time algorithms for
+solving LP constraints. The type systems are then used within a
+proof-carrying code architecture for enforcing resource control
+policies.
+
+
+In a similar line of work, R.~Amadio and co-workers have been studying
+the resource bounds problem using type, size and termination
+verifications for programs that execute in a simple stack machine.
+Their early work~\cite{schneider04cba} defines an analysis at the
+level of the bytecode for a sequential language, while their later
+work~\cite{ADZ04:concur} extends their result to cooperative threads,
+but works at the level of source code.
+
+
+Another related work is~\cite{AC03hba}, which introduces a first-order
+linearly typed assembly language that allows the safe reuse of heap
+space for elements of different types. The idea is to design a family
+of assembly languages which have high-level typing features (e.g. the
+use of a special {\em diamond} resource type) which are used to
+express resource bound constraints.
+
+A different technique, based on the computation of linear invariants
+which relate program variables to memory consumption, is presented in
+\cite{BGS05sps}. In a nutshell, the amount of  memory consumed by a
+program is the number of integer points satisfying the invariant; such
+number is a polynomial where the unknowns are method input
+parameters. Many experiments are presented showing the precision of
+the technique.
+
+
+Building up on~\cite{schneider04cba} (no mechanical proof nor
+implementation is provided in such work), the third author and
+co-workers~\cite{CJPS05cmu} have also developed a certified static
+analysis for a Java-like bytecode language. Their analysis uses a
+constraint-based algorithm to check the existence of \new\
+instructions inside intra- and inter-procedural loops; the analyser has been automatically extracted from its Coq's correctness proof.
+
+
+
+\item \emph{Run-time monitoring:} here the program also comes equipped
+with a specification of its memory consumption, but the verification
+is performed at run-time, and interrupted if the memory consumption
+policy is violated. Such an approach is both precise and automatic,
+but incurs a runtime overhead which makes it unsuitable for TPDs.
+
+L.-A. Fredlund~\cite{fredlund04gcp} implements a runtime monitor that
+controls the execution of a Java card applet.  In order to guarantee
+the desired memory allocation property, a call to a monitor method is
+added before a \new\ instruction; the monitor method has as parameter
+the size of the allocation request and it halts the execution of the
+applet if a predefined allocation bound is exceeded.
+
+A method for analysing, monitoring and controlling dynamic memory
+allocation using pointer and scope analysis is presented
+in~\cite{GNYZ04pir}. A Java program is automatically instrumented
+using the information given by the pointer and escape analysis and a
+region-based memory manager is synthesised, which dynamically maps ``creation sites to the region stack at runtime via a registering mechanism''.
+
+\end{itemize}
+A hybrid (i.e., static and dynamic) resource bound checker for an
+imperative language designed is presented in \cite{CEILN05}. The
+verifier is based on a variant of Dijkstra's weakest precondition
+calculus using ``generalised predicates'', which keeps track of the
+resource units available. Besides adding loop invariants, pre- and
+postconditions, the programmer must insert ``acquires'' annotations to
+reserve the resource units to be consumed. The checker is designed to
+admit decidable verification, and has been used on a realistic case
+study.
+
+
+
+%Our approach has the advantage of
+%treating recursive methods and exceptions, not taken into account in
+%\cite{CEILN05}. Another difference with our work is that we operate on
+%the bytecode instead of the source code.
+
+
+
+Type systems and program logics have been used to enforce other
+resource consumption policies: for example Vanderwaart and
+Crary~\cite{VC04fta} describe a type theory for certified code, in
+which type safety guarantees cooperation with a mechanism to limit the
+CPU usage of untrusted code. In earlier work, Crary and
+Weirich~\cite{CW00rbc} define a logic for reasoning about execution
+time of programs. Finally, some earlier work has shown how general
+purpose logics can be used to enforce security properties of Java
+programs, including confidentiality~\cite{gpt04:csfw} and high-level
+security rules~\cite{m+04:cardis}.
+
+
+
+%\emph{Proof-carrying code:} the program comes equipped with a
+%  specification of its memory consumption, in the form of statements
+%  expressed in an appropriate program logic, and a certificate that
+%  establishes that the program verifies the specification attached to
+%  it. The approach potentially allows for precise specifications.
+%  However, existing works on proof carrying code for resource usage
+%  sacrifice the possibility of enforcing accurate policies in favor of
+%  the possibility of generating automatically the specification and
+%  the certificate, in line with earlier work on certifying
+%  compilation;
+
+Works defining bytecode logics comprise \cite{Q03plj} and
+\cite{WN05abs}. In \cite{Q03plj} a Hoare logic for bytecode is
+defined; the approach is based on searching structure in the bytecode
+programs which is not very natural for unstructured bytecode
+programs. In \cite{WN05abs}, on the other hand, a Hoare bytecode
+logics is defined in terms of weakest precondition calculus over the
+Jinja language (subset of Java). The logics is used for verifying
+bytecode against arithmetic overflow.
+
