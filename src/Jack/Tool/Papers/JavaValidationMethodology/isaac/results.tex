@@ -12,33 +12,8 @@ The core-annotations related to the atomicity properties specify the
 methods related to the transaction mechanism declared in class
 \texttt{JCSystem} of the Java Card API. As explained above, a static
 ghost variable \texttt{TRANS} is used to keep track of whether there
-is a transaction in progress.  Section~\ref{SubSecJML} presents the
-annotations for method
-\texttt{beginTransaction}; for \texttt{commitTransaction} and 
-\texttt{abortTransaction} similar annotations are synthesised. 
-After propagation, these annotations are sufficient to check for the
-absence of nested transactions.
+is a transaction in progress.  
 
-
-%for the core-annotations related to the atomicity
-%properties, in the class \texttt{javacard.framework.JCSystem} of the
-%Java Card API---where the methods related to the transaction
-%mechanism are defined---we declare a static ghost variable
-%\texttt{TRANS} keeping track of whether there is a transaction in
-%progress. This variable is initialised to 0, denoting that there is
-%no transaction in progress.
-%\begin{verbatim}
-%//@ static ghost int TRANS == 0;
-%\end{verbatim}
-%The method \texttt{beginTransaction} is annotated as follows.
-%\begin{verbatim}
-%/*@ requires TRANS == 0;
-%  @ assignable TRANS;
-%  @ ensures TRANS == 1;
-% */
-%public static native void beginTransaction() 
-%                          throws TransactionException;
-%\end{verbatim}
 
 To check for the absence of uncaught exceptions inside transactions,
 we use a special feature of JACK, namely pre- and postcondition
