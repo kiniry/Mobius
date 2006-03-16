@@ -1,130 +1,4 @@
 
-Nowadays, most efforts in smart card security focus on adequate
-countermeasures against hardware attacks. However, logical attacks,
-caused by \emph{e.g.}~\/illegal control flow or uncaught exceptions,
-form a new major threat for security and privacy. An example of such
-an attack is a malicious GSM applet that performs illegal calls to the
-method {\tt sendSMS}.
-
-To ensure user confidence, smart card application providers therefore
-have to guarantee the dependability of their software. This can be
-achieved by following certification procedures, such as ``Common
-Criteria\footnote{\texttt{http://commoncriteria.com/}}'', focusing on
-security aspects. But such procedures are relatively heavy, and they
-are also concerned with aspects unrelated to software
-security. Therefore, industry often prefers to do a more lightweight
-analysis or software audit.
-
-Such an analysis typically consists in a manual deep code review, for
-which no tool support is available. Therefore, this is a costly
-procedure, and there is no formal guarantee of its results. The
-quality of this analysis can be improved by using program verification
-techniques. Therefore, industry is investigating how these techniques
-can be used to provide high quality software. For example, in the
-context of smart cards, program verification has been successfully
-used to verify functional properties of applications, discovering
-subtle programming errors that remain undetected by intensive
-testing~\cite{BieberCWZGL02,BreunesseCHJ03}.
-
-
-%To improve the trust and to be recognized as confidence providers,
-%smart card application providers need to have some guarantees about
-%the dependability of their software. Those guarantees can be brought
-%by certification procedures, for example the "Common Criteria"
-%certification concerning security aspects. But such procedures are
-%relatively heavy and concern also features unrelated with quality
-%requirements. Lightweight security analysis or software audit is often
-%the choice made by the industry.
-
-
-%Currently analyzing the code is a non computer assisted task, which
-%consists in deep code review. Such a methodology is a heavy and costly
-%procedure without any formal guarantee about the results. Quality
-%improvement of the code review can be obtained through program
-%verification techniques. These techniques are increasingly being
-%advocated by industry as a way to provide high quality software. 
-
-
-
-Unfortunately, the cost of employing program verification techniques
-remains an important obstacle for most industrials. Our experiences,
-which are confirmed by two recent road-maps for smart card
-research\footnote{\texttt{http://www.ercim.org/reset} and
-\texttt{ftp://ftp.cordis.lu/pub/ist/docs/ka2/}}, show that the difficulty of
-learning a specification language whose internals may be obscure to
-programmers, and the large amount of work required to formally specify
-and verify applications constitute major obstacles to the use of
-program verification techniques in industry. Therefore, recent work on
-formal methods for Java and Java Card\footnote{Java Card is a dialect
-of Java, tailored explicitly to smart card applications.} tries to
-tackle these problems.
-
-
-%Program verification techniques are increasingly being advocated by
-%industry as a way to provide high quality software. In particular in
-%the context of smart cards they already have been successfully used to
-%verify functional properties and interoperability
-%(\emph{i.e.}~platform-independence) of applications, and also to
-%discover subtle programming errors that remain undetected by intensive
-%testing~\cite{lan+02:jcs,BreunesseCHJ03}. However, current
-%techniques are often not appropriate to verify typical security
-%policies for applets (smart card applications), expressed as high
-%level rules, such as ``no authentication must take place within a
-%transaction'', or ``an applet can be personalised only once''.
-
-%Moreover, the cost of employing program verification techniques
-%remains an important obstacle for most industrials. Our experiences,
-%which are confirmed by two recent roadmaps for smart card
-%research~\cite{sc2010,reset}, show that the difficulty of learning a
-%specification language whose internals may be obscure to programmers,
-%and the large amount of work required to formally specify and verify
-%applications constitute major obstacles to the use of program
-%verification techniques in industry. Therefore, recent work on formal
-%methods for Java and Java Card\footnote{Java Card is a dialect of
-%Java, tailored explicitly to smart card applications.} tries to tackle
-%these problems.
-
-To reduce the difficulty of learning a specification language, the
-Java Modeling Language
-(JML)\footnote{\texttt{http://www.jmlspecs.org}}~\cite{BurdyCCEKLLP03}
-has been designed as an easily accessible specification language. It
-uses a Java-like syntax with some specification-specific keywords
-added.  JML allows developers to specify the properties of their
-program in a generalisation of Hoare logic, tailored to Java.  By now,
-it has been generally accepted as
-\emph{the} behavioural interface specification language for Java
-(Card).
-
-
-%For the verification of Java (Card) programs, several tools are
-%available using (variations of) JML as specification language---based
-%on Hoare logic~\cite{JP01:fase} or weakest preconditions
-%calculus~\cite{BartJacobsWP}. We mention \emph{e.g.}~\/JACK (Java
-%Applet Correctness Kit)~\cite{BRL-JACK}, Jive~\cite{MeyerP00},
-%Krakatoa~\cite{MarchePU03}, Loop~\cite{BergJ01} and
-%ESC/Java~\cite{escjava:userman}. These tools vary in the amount of user
-%interaction required, but also in the level of correctness they
-%provide. Jive, Krakatoa and Loop are sound, but require much user
-%interaction, while ESC/Java is automatic, but unsound. For smart card
-%industry, both soundness and automation are major concerns. One needs
-%to be able to give firm correctness guarantees, while automation
-%provides scalability and usability. JACK is the tool which addresses
-%these issues best, combining soundness with a high degree of
-%automation, therefore we use it in our work.
-
-
-%For smart card industry, soundness is a
-%major concern, because of the firm guarantees needed for applications
-%used in \emph{e.g.}\/~banking, e-government or telephony. Other
-%industrial concerns are efficiency, scalability and usability. JACK
-%(Java Applet Correctness Kit) is the tool which addresses these issues
-%best, combining soundness and a high degree of
-%automation~\cite{BRL-JACK}. Other sound tools are
-%Jive~\cite{MeyerP00}, Krakatoa~\cite{MPU03:jlap} and
-%Loop~\cite{vdBJ01:tacas}, but these all require relatively much user
-%interaction. ESC/Java~\cite{escjava:userman} automatically checks
-%specifications, but is not sound.
-
 While JML is easily accessible to Java developers, actually writing
 the specifications of a smart card application is labour-intensive and
 error-prone, as it is easy to forget some annotations. There
@@ -135,7 +9,7 @@ functional invariants.  However, these tools cannot be guided by the
 user---they do not require any user input---and in particular cannot
 be used to synthesise annotations from realistic security policies.
 
-The main contribution of this paper is a method that, given a security policy,
+We describe here, a method that, given a security policy,
 automatically annotates a Java (Card) application, in such a way that
 if the application respects the annotations then it also respects the
 security policy. The generation of annotations proceeds in two phases:
@@ -148,58 +22,18 @@ indirectly invoking the methods that form the core of the security
 policy, thus \emph{weaving} the security policy throughout the
 application. 
 \end{enumerate} 
-%For example, suppose that the security policy prescribes that the
-%synthesised core-annotations contain precondition \(P\) and
-%postcondition \(Q\) for method \(m\). When weaving the annotations,
-%every method \(n\) that calls method \(m\) will also get precondition
-%\(P\) and postcondition
-%\(Q\), \emph{unless} we find that the implementation of \(n\)
-%establishes \(P\) before calling \(m\), or breaks \(Q\) after
-%returning from \(m\).  Next, the same approach will be used for all
-%methods calling \(n\), \emph{etc.} Once the whole application is
-%annotated, using JACK one can verify automatically whether the
-%application respects the security policy.  This whole process might
-%seem trivial, but doing it manually is labour-intensive and
-%error-prone. Our method provides a sound, automatic and cost-effective
-%way for checking security policies.
-
-The need for such a propagation phase stems from the fact that we are
-interested in doing static verification. We need tool support for the
-propagation, because a typical security property may involve methods
-from different classes, as illustrated below. The annotations that we
-generate all use JML static ghost variables: special
-specification-only variables, that can be modified via a special
-ghost-assignment annotation.  Since we use only static ghost
-variables, the properties are independent of the particular class
-instances available.
-
-The annotations we generate can be checked with existing verification
-tools \emph{e.g.}~\/JACK (Java Applet Correctness
-Kit)~\cite{BRL-JACK}, Jive~\cite{MeyerP00},
-Krakatoa~\cite{MarchePU03}, Loop~\cite{BergJ01} and
-ESC/Java~\cite{escjava:userman}. We use JACK as it provides the
-best compromise between soundness, efficiency, scalability and
-usability.
-
-
-%Our method provides a sound, automatic and cost-effective way for 
-%checking security policies.
-%We have defined special weakest precondition and
-%strongest postcondition calculi, considering static ghost variables
-%only, and we have proven that our algorithms for weaving the
-%annotations correspond exactly to these calculi.
 
 To show the usefulness of our approach, we applied the algorithm to
 several realistic examples of smart card applications. When doing
 this, we actually found violations against the security policies
 documented for some of these applications.
 
-This paper is organised as follows. Section~\ref{SecHighLevelSecProp}
+This section is organised as follows. Subsection~\ref{SecHighLevelSecProp}
 introduces several typical high-level security properties. Next,
-Section~\ref{SecVerif} presents the process to weave these properties
-throughout applications. Subsequently, Section~\ref{SecResults}
+Subsection~\ref{SecVerif} presents the process to weave these properties
+throughout applications. Subsequently, Subsection~\ref{SecResults}
 discusses the application of our method to realistic
-examples. Finally, Sections~\ref{SecConcl} concludes.
+examples.
 
 
 

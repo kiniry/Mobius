@@ -5,100 +5,13 @@
 For a specification language, just as for a programming language, a
 range of tools is necessary to address the various needs of the
 specification language's users such as reading, writing, and checking
-JML annotations.\footnote{Most of these tools rely upon an underlying
-  tool that type checks a Java program and its JML specification.}
+JML annotations.
 
-
-%% Isn't some transition text necessary here, as we jump right into the
-%% detailed discussion of each of these tools without a prelude?
-%% -- Joe
-%% [[[How's this?  -- Gary]]]
-
-The rest of this paper describes the various tools that are currently
-available for JML.  The following categorization serves also as an
-organization for the immediately following sections of this paper.
-
-\smallskip
-
-\begin{itemize}
-\item {\bf Runtime assertion checking and testing:}
-\begin{itemize}
-\item One way of checking the correctness of JML specifications is by
-  runtime assertion checking, i.e., simply running the Java code and
-  testing for violations of JML assertions.  Such runtime assertion
-  checks are accomplished by using the JML compiler {\tt jmlc}
-  (Section~\ref{jmlc}).
-\item Given that one often wants to do runtime assertion checking in
-  the testing phase, there is also a {\tt jmlunit} tool
-  (Section~\ref{jmlunit}) which combines runtime assertion checking
-  with unit testing.
-\end{itemize}
-\item {\bf Static checking and verification:} More ambitious than
-  testing if the code satisfies the specifications at runtime, is
-  verifying that the code satisfies its specification statically.
-  Verifying a specification gives more assurance in the correctness of
-  code as it establishes the correctness for all possible execution paths,
-  whereas runtime assertion checking is limited by the execution paths
-  exercised by the test suite being used.  Of course, correctness of a
-  program with respect to a given specification is not decidable in
-  general.  A verification tool must trade off the level of automation
-  it offers (i.e., the amount of user interaction it requires) and the
-  complexity of the properties and code that it can handle.  There are
-  several tools for statically checking or verifying JML assertions
-  providing different levels of automation and supporting different
-  levels of expressivity in specifications.
-\begin{itemize}
-\item The program checker ESC/Java  can
-  automatically detect certain common errors in Java code and check
-  relatively simple assertions.
-\item ESC/Java2 extends ESC/Java
-  to support more of the JML syntax and to add other functionality.
-\item The CHASE tool checks some aspects of
-  frame conditions.
-\item The LOOP tool translates JML-annotated code
-  to proof obligations that one can then try to prove using the
-  theorem prover PVS\@.  The LOOP tool can handle more complex
-  specifications and code than automatic checkers like ESC/Java can,
-  but at the price of more user interaction.
-\item Krakatoa~\cite{krakatoa03a} is similar to LOOP, but integrates
-  with the Coq theorem prover.  It is currently under development and
-  handles a subset of Java.
-\item The program checker JACK offers similar
-  functionality to ESC/Java, but is more ambitious in attempting real
-  program verification.
-\end{itemize}
-
-\item {\bf Generating specifications: } In addition to
-  these tools for checking specifications, there are also tools that
-  help a developer write JML specifications, with the aim of reducing
-  the cost of producing JML specifications.
-\begin{itemize}
-\item The Daikon tool (Section~\ref{daikon})
-  infers likely invariants by observing the runtime behavior
-  of a program.
-\item The Houdini tool (Section~\ref{houdini}) postulates annotations
-  for code, then uses ESC/Java to check them.
-\item The {\tt jmlspec} tool can produce a skeleton of a
-  specification file from Java source and can compare the interfaces of
-  two different files for consistency.
-\end{itemize}
-
-\item {\bf Documentation}: Finally, in spite of all the tools
-  mentioned above, ultimately human beings must 
-  read and understand JML specifications.  The {\tt jmldoc} tool
-  (Section~\ref{jmldoc}) helps the reading process by producing
-  browsable HTML from JML 
-  specifications, in the style of Javadoc.  The resulting HTML is a
-  convenient format for reading large bodies of JML specifications.
-
-\end{itemize}
+This section describes the various tools that are currently
+available for JML.
 
 \subsection{Documentation Generation}
 \label{jmldoc}
-
-%% Why is this a separate subsection here, if it was just discussed
-%% above?  I suggest moving (some of) this discussion up into the item
-%% above. -- Joe
 
 Since JML specifications are meant to be read and written by ordinary
 Java programmers, it is important to support the conventional ways
@@ -108,20 +21,14 @@ produces browsable HTML pages containing both the
 API and the specifications for Java code, in the style of pages
 generated by Javadoc~\cite{Friendly95}.
 
-This tool reuses the parsing and checking performed by the JML checker
-and connects it to the doclet API underlying Javadoc.  In this way,
-\texttt{jmldoc} remains consistent with the definition of JML and
-creates HTML pages that are very familiar to a user of Javadoc.  The
-{\tt jmldoc} tool combines and displays in one place all of the
+The {\tt jmldoc} tool combines and displays in one place all of the
 specifications that pertain to a given class, interface, method, or
 field; it combines annotations across a series of source files that
 constitute successive refinements of a given class or interface, as
 well as the relevant specifications of overridden methods.
 
 %=====================================================================
-\subsection{Runtime Assertion Checking and Testing}
-
-\subsubsection{Runtime Assertion Checking}
+\subsection{Runtime Assertion Checking}
 \label{jmlc}
 
 The JML compiler (\texttt{jmlc}), developed at Iowa State University,
@@ -137,28 +44,7 @@ original program is unchanged.  The transparency of runtime assertion
 checking is guaranteed, as JML assertions are not allowed to have any
 side-effects~\cite{Leavens-etal03a}.
 
-The JML language provides a rich set of specification facilities to
-write abstract, complete behavioral specifications of Java program
-modules~\cite{Leavens-etal03a}.  It opens a new possibility in runtime
-assertion checking by supporting abstract specifications written in
-terms of specification-only declarations such as model fields, ghost
-fields, and model methods.  Thus the JML compiler represents a
-significant advance over the state of the art in runtime assertion
-checking as represented by Design by Contract tools such as
-Eiffel~\cite{Meyer97}, or by Java tools such as
-iContract~\cite{Kramer98} or Jass~\cite{Bartetzko-etal01}.  The
-\texttt{jmlc} tool also supports advances such as (stateful) interface
-specifications, multiple inheritance of specifications, various forms
-of quantifiers and set comprehension notation, support for strong and
-weak behavioral subtyping~\cite{Liskov-Wing94,Dhara-Leavens96}, and a
-contextual interpretation of undefinedness~\cite{Leavens-etal03a}.
-
-In sum, the JML compiler brings ``programming benefits'' to formal
-interface specifications by allowing Java programmers to use JML
-specifications as practical and effective tools for debugging,
-testing, and design by contract.
-
-\subsubsection{Unit Testing}
+\subsection{Unit Testing}
 \label{jmlunit}
 
 A formal specification can be viewed as a test
@@ -186,44 +72,8 @@ still responsible for generating test data; however the test classes
 make it easy for the user to supply such test data. In addition, the
 user can supply hand-written JUnit test methods if desired.
 
-Our experience shows that the tool allows us to perform unit testing
-with minimal coding effort and detects many kinds of errors.
-Ironically, about half of our test failures were caused by
-specification errors, which shows that the approach is also useful for
-debugging specifications.  In addition, the tool can report assertion coverage
-information, identifying assertions that are always true or always
-false, and thus indicating deficiencies in the set of test cases.
-However, the approach requires specifications to be fairly complete
-descriptions of the desired behavior, as the quality of the generated
-test oracles depends on the quality of the specifications. Thus, the
-approach trades the effort one might spend in writing test cases for
-effort spent in writing formal specifications.
-
-%\section{Static Techniques for JML}
-%\label{static}
-%
-%More ambitious than {\em testing} if the code satisfies the specifications
-%at runtime, by doing runtime assertion checking, is
-%{\em verifying} that the code
-%satisfies its specifications statically.
-%This can give more assurance in the correctness of code:
-%verification establishes the correctness for all possible inputs,
-%unlike runtime assertion checking, which is always limited by the test
-%suite being used.
-%
-%Correctness of a program with respect to
-%a given specification is not decidable in general.
-%A verification tool must trade off the level of automation the tool
-%offers (i.e., the amount of user interaction it requires)
-%and the expressiveness of the properties and code that it can handle.
-%There are several tools for verification of JML assertions,
-%that provide different levels of automation
-%and support different levels of expressivity in specifications.
-
 %=====================================================================
-\subsection{Generating Specifications} 
-
-\subsubsection{Invariant Detection with Daikon}
+\subsection{Invariant Detection with Daikon}
 \label{daikon}
 
 Most tools that work with JML assume the existence of a JML
@@ -245,11 +95,7 @@ properties reported by Daikon encompass numbers ($x \le y$, $y=ax+b$),
 collections ($x \in \mathit{mytree}$, $\mathit{mylist}$ {\it is
   sorted\/}), pointers ($\mathit{n} = \mathit{n.child.parent}$),
 and conditionals ($\mathit{if\,} p \neq \mathit{null\; then\; p.value}
-> x$); a complete list appears in the Daikon user manual.  Daikon is
-available at {\small\url{http://pag.lcs.mit.edu/daikon/}}.  Several
-other implementations of dynamic invariant detection
-exist~\cite{HangalL02,PytlikRKR2003,HenkelD2003}, but they do not
-presently produce output in JML format.
+> x$).  
 
 Like any dynamic analysis, the accuracy of the inferred invariants
 depends in part on the quality and completeness of the test cases, and
@@ -259,61 +105,5 @@ the same as its intended behavior.)  However, Daikon uses static
 analysis, statistical tests, and other mechanisms to reduce the number
 of false positives~\cite{ErnstCGN2000:Relevance}.  Even if a property
 is not true in general, Daikon's output provides valuable information
-about the test suite over which the program was run.  Combining
-invariant detection with a static verifier such as ESC/Java helps to
-overcome the problems of both techniques: the unsoundness of the
-dynamic analysis and the static analysis's need for annotations.
-
-Even with modest test suites, Daikon's output is remarkably accurate.
-In one set of experiments~\cite{NimmerE02:ISSTA}, over 90\% of the
-properties that it reported were verifiable by ESC/Java (the other
-properties were true, but were beyond the capabilities of ESC/Java),
-and it reported over 90\% of the properties that ESC/Java needed in
-order to complete its verification.  For example, if Daikon generated
-100 properties, users had only to delete less than 10 properties and
-to add another 10 properties in order to have a verifiable set of
-properties.  In another experiment~\cite{NimmerE02:FSE}, users who
-were provided with Daikon output (even from unrealistically bad test
-suites) performed statistically significantly better on a program
-verification task than did users who did not have such assistance.
-
-In addition to aiding the task of static checking as described above,
-operational abstractions generated by the Daikon invariant detector
-have been used to generate and improve test
-suites~\cite{HarderME03,XieN2003:ASE,GuptaH2003}, to automate
-theorem-proving~\cite{NeWinE02:TR841,NeWinEGKL04:STTT}, to identify
-refactoring opportunities~\cite{KataokaEGN01}, to aid program
-analysis~\cite{DodooDLE02,DodooLE2003:TR}, and to to detect anomalies
-and bugs~\cite{RazKS2002,GroceV2003,Brun2003}, among other uses.
-
-\subsubsection{Inferring annotations with Houdini}
-\label{houdini}
-
-An obstacle to using program verification tools such as ESC/Java on
-legacy code is the lack of annotations in such a program.  The
-warnings
-% that ESC/Java then produces
-more likely point out missing annotations than errors in the code.
-The Houdini tool~\cite{FlanaganL01,Houdini-theory:IPL} attempts
-to alleviate this problem by supplying many of the missing
-annotations.
-
-Houdini works by making up ``candidate annotations'' for the given
-program.  These candidate annotations compare fields and array lengths
-to -1, 0, 1, constants used in array constructors, \texttt{null},
-\texttt{true}, and \texttt{false} (depending on the type of the
-field), and indicate that arrays and subarrays contain no null
-elements.  To find which of the candidate annotations hold for the
-program, Houdini repeatedly invokes ESC/Java, removing those candidate
-annotations that ESC/Java finds to be inconsistent with the code.
-When all remaining candidate annotations are consistent with the code,
-Houdini invokes ESC/Java a final time to produce warnings that are
-then presented to the user.  Houdini thus retains the precision of
-ESC/Java, trading quick turnaround for a reduced annotation effort.
-
-Note that any user-supplied JML annotations in the program still get
-used by Houdini, since they become part of each invocation of
-ESC/Java.  Thus, the benefits of using JML annotations are the same
-for Houdini as for ESC/Java, but Houdini can find program errors from
-a smaller set of user-supplied JML annotations.
+about the test suite over which the program was run.  
 

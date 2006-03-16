@@ -1,3 +1,4 @@
+
 \subsection{Applications}
 \label{architecture_s}	
 
@@ -14,15 +15,9 @@ process is impossible. To this end, we propose a PCC technique that exploits the
  \begin{figure}[!tbp]
  \centering
 \epsfig{ file=sac/architecture.eps, width=3in, height=3in }
-%\includegraphics[width=3in,height=3in]{architecture}  
 \caption{\sc The overall architecture for client producer scenarios }
 \label{architecture}
 \end{figure}
-
-
-
-
-%\clearpage
 
 In the first stage of the process the client provides the functional and (or) security requirements to the producer.
  The requirements can be in different form:
@@ -48,33 +43,7 @@ untrusted code is normally compiled with a Java compiler to obtain a class file.
  user defined attributes that contain the BCSL specification, resulting from the compilation of the
  JML specification of the corresponding Java source file.
 
-
-
-    
-
-% If the annotations are sufficient to prove the code, 
-%the Java file is normally compiled with a Java compiler to obtain a 
-%class file. This class file is then extended with user defined attributes that contain the BCSL specification, 
-%resulting from the compilation of the JML specification in the Java source file. 
-%At this stage, the Java class files contain all the information that will allow the client to check if the bytecode does not violate 
-%his requirements. 
-
-
-%Actually, our early experiments show that the proof obligations on source and bytecode level are syntactically modulo names and types.   
-
-%OLD
-%To implement this architecture, we have defined a compiler from JML to BCSL; the JML compilation results in an extension of the class file format; 
-%we have implemented a tool to insert those special attributes in the class file and we have extended the JACK framework to generate proof obligations at bytecode 
-%level and to prove them with the plugged JACK provers (as explained in the introduction). 
-%The coming sections introduce those features.  
-
-To implement this architecture we use JACK~\cite{BRL-JACK} as a verification condition generator both on the consumer and the
-producer side. JACK is a plugin for the eclipse\footnote{http://www.eclipse.org} integrated development environment for Java.
- Originally, the tool was designed as verification condition generator for Java source programs against their JML specification.
- JACK can interface with several theorem provers (AtelierB, Simplify, Coq, PVS). We have extended the tool with a compiler from
+We have extended the Jack tool with a compiler from
  JML to BCSL and a bytecode verification condition generator. In the next sections, we introduce
  the BCSL language, the JML compiler and the bytecode \wpi calculus which underlines the bytecode verification condition generator.
  
-%the JML compilation results in an extension of the class file format; we have implemented a tool to insert those special attributes in the class file and we have extended 
-%the JACK framework to generate proof obligations at bytecode level and to prove them with the plugged JACK provers (as explained in the introduction). 
-%The coming sections introduce those features.  

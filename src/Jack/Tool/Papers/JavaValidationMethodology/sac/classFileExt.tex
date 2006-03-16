@@ -1,45 +1,8 @@
-% CHANGED - the example o compilation of loop specification
-
 \subsection{Bytecode Specification Language}\label{bcSpecLg}
 
 In this section, we introduce a bytecode specification language which we call BCSL (short for ByteCode Specification Language).
  BCSL is based on the design principles of JML (Java Modeling Language)~\cite{JMLRefMan}, which is a behavioral interface specification 
 language following the design by contract approach \cite{M97oos}.
-
-
-Before going further, we give a flavor of what JML specifications look like. Fig.~\ref{replaceSrc} shows an example of a Java class and its 
-JML annotation that models a list stored in an array field. 
-As the figure shows, JML annotations are written in comments and thus they are not visible by the Java compiler.
-The specification of method \verb!isElem! declares
- that when the method is called the field \verb!list! must not be null in the method precondition (introduced by \verb!requires!) 
-and that the method return value will be true if and only if the internal array 
-\verb!list! contains the object referenced by the argument \verb!obj! in the method postcondition(\verb!ensures!). The method loop is also specified by
-its invariant (\verb!loop_invariant!) which states that whenever the loop entry is reached the elements inspected already by the loop are all different from \verb!obj!.
-
-
-\begin{figure}[t]
-
-\begin{verbatim}
-public class ListArray {
-  Object[] list;
-  //@requires list != null;
-  //@ensures \result == (\exists int i;0<=i && 
-             i < list.length && list[i]==obj); 
-  public boolean isElem(Object obj){
-    int i = 0;
-    //@loop_modifies i;
-    //@loop_invariant i <= list.length && i >=0 
-    //@  && (\forall int k;0 <= k && k < i ==> 
-    //@  list[k] != obj); 
-    for (i = 0; i < list.length; i++ ) {
-      if ( list[i] == obj) return true; 
-    }
-    return false;}}
-\end{verbatim}
-\caption{\sc class \texttt{ListArray} with JML annotations} 
-\label{replaceSrc}
-\end{figure}
-
 
 In the following, we give the grammar of BCSL and sketch the compiler from JML to BCSL. 
 
@@ -47,37 +10,18 @@ In the following, we give the grammar of BCSL and sketch the compiler from JML t
 
 
 BCSL corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and security properties.
-% We now discuss some of the specification clauses, for the rest their semantics is the same as in JML and can be found in~\cite{RT03djml,JMLRefMan}. %There are some minor differences in the encoding of the JML specification and the BCSL specification: field names and local variables
- %on bytecode level are represented respectively by the corresponding index in the constant pool table and  the index in the local variable table.
+
 
  Specification clauses in BCSL that are taken from JML and inherit their semantics directly from JML include:
-%\begin{itemize}
-   %\item 
-class specification, i.e. class invariants and history constraints,   %\item
+class specification, i.e. class invariants and history constraints, 
   method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method), inter method specification, as for instance loop invariants and loop frame conditions(this is not a standard feature of JML but we were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}). 
 We also support specification inheritance and thus behavioral subtyping as described in \cite{Dhara-Leavens96}. Most of the Java expressions like field access expressions, local variables, etc can be mentioned in the BCSL specification.
 BCSL supports the standard JML specification operators as for example, $\old{\expression}$ which is used in method postconditions and
  designates the value of the expression $\expression$ in the prestate of a method, $ \result$ which stands for the value the method
 returns if it is not void,  $\typeof{\expression}$ which stands for type of $\expression$ etc.  
-%\end{itemize}
-
-% BCSL has few particular extra features that JML lacks. First, the language has a special clause for loop frame condition, which declares the locations
-% that can be modified during a loop iteration. We were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}.
-% Second,  stack counter expressions denoted by $\counter$ and  
-% $\stack{\ArithExpr}$ standing for a stack element at position 
-% \ArithExpr. Stack expressions are not mentioned in the class / method specification but
-% appear in the intermediate stages of the wp calculus as shown later in Section~\ref{wpbc}.
-
-
-
-
-%\end{itemize}
-
-
 
 \subsection{Compiling JML into BCSL}\label{comJML}
 
-%This section explains how JML specifications are compiled into bytecode level specifications and how they are inserted into the bytecode. 
 
 We now turn to explaining how JML specifications are compiled into user defined attributes for Java class files. Recall that a class file defines
 a single class or interface and contains information about  the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The Java Virtual Machine Specification (JVM) \cite{VMSpec} mandates that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVM allows to add to the class file user specific information(\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVM).
@@ -166,4 +110,3 @@ i.e. there are no jumps into the middle of the loops from outside; graph reducib
  bytecode and source code level and to find the right places in the bytecode where the loop invariants must hold.
 
 
-%\todo{limitations : registers that are used with two different types in the method bytecode}

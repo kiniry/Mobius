@@ -1,22 +1,5 @@
-\subsection{High-level Security Properties for Applets}  \label{SecHighLevelSecProp}
-
-% However, as these applications should be
-%able to share information, this raises big challenges for the security
-%of smart cards. Moreover, one would like that a smart card holder
-%dynamically can download new applications, while the card is already
-%out in the field, which of course raises even more security
-%issues. 
-
-Over the last years, smart cards have evolved from proprietary into
-open systems, making it possible to have applications from different
-providers on a single card. To ensure that these applications cannot
-damage the other applications or the card itself, strict security
-policies---expressed as high-level security properties---must be
-obeyed.  Such properties are high-level in the sense that they have
-impact on the whole application and are not restricted to single
-classes. Below we will present several examples. It is important to
-notice that we restrict our attention to source code-level security of
-applications.
+\subsection{High-level Security Properties for Applets}
+\label{SecHighLevelSecProp}
 
 The properties that we consider can be divided in several groups,
 related to different aspects of smart cards. First of all there are
@@ -30,13 +13,6 @@ consider properties dealing with access control, limiting the possible
 interactions between different applications. For each group we present
 some example properties. For all these properties encodings into JML
 annotations exist.
-
-We would like to emphasise that there exist many more
-relevant security properties for smart cards, for example specifying
-memory management, information flow and management of sensitive
-data. Identifying all relevant security properties for smart cards,
-and expressing them formally, is an important ongoing research issue.
- 
 
 \paragraph {Applet life cycle}
 

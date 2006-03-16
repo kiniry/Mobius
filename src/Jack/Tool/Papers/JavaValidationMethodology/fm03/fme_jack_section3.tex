@@ -16,8 +16,7 @@ ensure the correctness of the applet but the tool is designed in this way;
  required (for example by a certification institute) it is relatively easy to adapt the tool accordingly.
 \end{itemize}
 
- This section presents the tool architecture and its principles,
- concerning object-oriented concepts formalization and lemma generation.
+ This section presents the tool architecture and its principles.
 \subsubsection{Architecture}
 \begin{figure}[tp]
  \psfig{file=fm03/image002.eps,width=14cm}
@@ -35,83 +34,8 @@ ensure the correctness of the applet but the tool is designed in this way;
  prove properties. 
  Our goal is to prove properties on source files written with the Java
  language.  To reach this goal, one has to know how to ``translate'' a
- Java source file in formal lemmas.  The two main issues are:
-\begin{enumerate}
- \item How to formalize the object-oriented Java features?
- \item How to generate lemmas from Java methods?
-\end{enumerate}
-The following sections provide answers to those questions.
-\subsubsection{Object-oriented concepts formalization}
- The adopted solution concerning the formalization of object-oriented concept is to generate lemmas with the point of
- view of one Java class.
- Each generated lemma for a class contains, as prelude, the formalization of the memory model instantiated with the
-context of the current class, i.e. the class hierarchy that it can access, all the fields and methods that it
-can use. The prelude contains two parts: a generic one and a contextual one.
- \begin{figure}[thp]
-\begin{center}
- $\begin{array}{lllll}
- \rm{SET} & \multicolumn{4}{l}{\rm{REFERENCES}} \\
- \rm{null} & \in & \multicolumn{3}{l}{\rm{REFERENCES}} \\
- \rm{subtypes} & \in & \rm{TYPES} & \leftrightarrow & \rm{TYPES} \\
- \rm{instances} & \subset & \multicolumn{3}{l}{\rm{REFERENCES}} \\
- \rm{null} & \notin & \multicolumn{3}{l}{\rm{instances}} \\
- \rm{typeof} & \in & \rm{instances} & \rightarrow & \rm{TYPES}
- \end{array}$
-\end{center}
- \caption{Memory model representation in B}
- \label{Memory model representation}
-\end{figure}
+ Java source file in formal lemmas.  
 
- The generic prelude contains many definitions concerning built-in types with their operators.
- It contains also the memory model representation (see Figure \ref{Memory model representation}). This model is defined
- by an infinite set of possible
- references, a particular reference corresponding to $\rm{null}$, a subtyping relation, the set of currently allocated
-instances and a function associating a type to each instance.
- This model is completed with definitions allowing to handle arrays that are not given here.
- This set of constants and variables represents the memory state associated to each lemma, corresponding, for instance, to
-the state of the memory at the beginning of an operation.
- In this model, an object creation, for instance, will be defined as taking an
-arbitrary element from the set of references (different from the special constant null), adding this reference
-to the set of instances and assigning a type to it.
-
- The set of types is defined by $\rm{TYPES} = \rm{NAMES} * \mathbb{N}$, where $\rm{NAMES}$ corresponds to the set of
-classes referenced by the program.
- This definition allows to handle the types corresponding to array types: a type corresponds to a class and a
-dimension represented by a natural number (for objects, this number is always 0). For instance the Java type
-{\tt \rm{Object}} will correspond to the type $\rm{c\_Object} \mapsto 0$ and the Java type {\tt
-\rm{Object}[][][]} to $\rm{c\_Object} \mapsto 3$.
-
- The set $\rm{NAMES}$ is not generic since it depends on the reachable classes from the current one.
- It does not belong to the common prelude but to the contextual one.
-
- One can notice that primitive types belongs to $\rm{NAMES}$ but they are only used to type arrays. For
-instance the Java type {\tt short[]} will correspond to $\rm{c\_short} \mapsto 1$, but the type {\tt short} will
-correspond to a prelude-defined type $\rm{t\_short} = -32768..32767$.
-
-The subtyping relation is also valuated depending on the class hierarchy. It assigns to a class itself and all
-its subclasses and to an interface itself and all its implementing classes and interfaces.
- This gives, for example,
-\begin{center}
-$\begin{array}{l}
-\rm{subtypes}[\{\rm{c\_RuntimeException} \mapsto 0\}] \\[1 mm]
- = \left\{ \begin{array}{l} \rm{c\_RuntimeException} \mapsto 0,  \\
-\rm{c\_NullPointerException} \mapsto 0 , \\ \rm{c\_ArithmeticException} \mapsto 0,   \\
-\rm{c\_ArrayIndexOutOfBoundsException} \mapsto 0, \\
-\rm{c\_NegativeArraySizeException} \mapsto 0, \\ \rm{c\_ClassCastException} \mapsto 0 , \\
-\rm{c\_ArrayStoreException}  \mapsto 0
- \end{array} \right\}
-\end{array}$.
-\end{center}
-
- The fields are declared as variables, static fields are directly typed with their translated type,
- member fields are declared as functions from the set of instances of a type to the type of the field.
-
- The invariants are declared as properties quantified over the instances.
-
- The drawback of this approach is that one can not directly prove properties on the correctness
- of the formalization.  But, proofs remain simpler as they remain
- centered on the specific case of a dedicated class.
-\subsubsection{Lemma generation}
 \begin{figure}[p]
  \psfig{file=fm03/preferences-compiler.eps,width=14cm}
  \caption{\JACK\ compiler preferences page}
