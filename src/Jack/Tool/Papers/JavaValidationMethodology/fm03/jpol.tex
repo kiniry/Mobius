@@ -5,88 +5,88 @@ The Java/Jack Proof Obligation Language is an internal language used in Jack to 
 \item JML keywords
 \item Java construction
 \end{itemize}
-Java construction:
+%Java construction:
 
-$\begin{array}{ll}
-Ja\_ADD\_OP(Expression \ e_1, Expression \ e_2) & \hat{=} \ e_1 \land e_2 \\
-	Ja\_EQUALS\_OP(E1,E2) & \\
-	Ja\_AND\_OP(E1,E2)& \\
-	Ja\_MUL\_OP(E1,E2)& \\
-	Ja\_LE\_OP(E1,E2)& \\
-	Ja\_UNARY\_NUMERIC\_OP(E)& \\
-	Ja\_IDENT& \\
-	Ja\_COMMA(E1,E2)& \\
-	Ja\_LITERAL\_this& \\
-	Ja\_MOD(E1,E2)& \\
-	Ja\_LNOT(E)& \\
-	Ja\_LITERAL\_true& \\
-	Ja\_LITERAL\_false& \\
-	Ja\_LITERAL\_null& \\
-	Ja\_NUM\_INT(int)& \\
-	Ja\_CHAR\_LITERAL(char)& \\
-	Ja\_JAVA\_BUILTIN\_TYPE& \\
-	Ja\_LITERAL\_super& \\
-	Ja\_STRING\_LITERAL(String)& \\
-	Ja\_NEGATIVE\_OP(E1,E2)& \\
-	Ja\_OR\_OP(E1,E2)& \\
-	Ja\_DIFFERENT\_OP(E1,E2)& \\
-	Ja\_LESS\_OP(E1,E2)& \\
-	Ja\_GE\_OP& \\
-	Ja\_GREATER\_OP& \\
-	Ja\_DIV\_OP& \\
-	Ja\_QUESTION& 
-\end{array}$
+%$\begin{array}{ll}
+%Ja\_ADD\_OP(Expression \ e_1, Expression \ e_2) & \hat{=} \ e_1 \land e_2 \\
+%	Ja\_EQUALS\_OP(E1,E2) & \\
+%	Ja\_AND\_OP(E1,E2)& \\
+%	Ja\_MUL\_OP(E1,E2)& \\
+%	Ja\_LE\_OP(E1,E2)& \\
+%	Ja\_UNARY\_NUMERIC\_OP(E)& \\
+%	Ja\_IDENT& \\
+%	Ja\_COMMA(E1,E2)& \\
+%	Ja\_LITERAL\_this& \\
+%	Ja\_MOD(E1,E2)& \\
+%	Ja\_LNOT(E)& \\
+%	Ja\_LITERAL\_true& \\
+%	Ja\_LITERAL\_false& \\
+%	Ja\_LITERAL\_null& \\
+%	Ja\_NUM\_INT(int)& \\
+%	Ja\_CHAR\_LITERAL(char)& \\
+%	Ja\_JAVA\_BUILTIN\_TYPE& \\
+%	Ja\_LITERAL\_super& \\
+%	Ja\_STRING\_LITERAL(String)& \\
+%	Ja\_NEGATIVE\_OP(E1,E2)& \\
+%	Ja\_OR\_OP(E1,E2)& \\
+%	Ja\_DIFFERENT\_OP(E1,E2)& \\
+%	Ja\_LESS\_OP(E1,E2)& \\
+%	Ja\_GE\_OP& \\
+%	Ja\_GREATER\_OP& \\
+%	Ja\_DIV\_OP& \\
+%	Ja\_QUESTION& 
+%\end{array}$
 
-$\begin{array}{ll}
-	Jm\_T\_RESULT& \\
-	Jm\_IMPLICATION\_OP& \\
-	Jm\_T\_OLD& \\
-	Jm\_T\_TYPE& \\
-	Jm\_IS\_SUBTYPE& \\
-	Jm\_FORALL& \\
-	Jm\_EXISTS& \\
-	Jm\_AND\_THEN& \\
-	Jm\_OR\_ELSE& 
-\end{array}$
+%$\begin{array}{ll}
+%	Jm\_T\_RESULT& \\
+%	Jm\_IMPLICATION\_OP& \\
+%	Jm\_T\_OLD& \\
+%	Jm\_T\_TYPE& \\
+%	Jm\_IS\_SUBTYPE& \\
+%	Jm\_FORALL& \\
+%	Jm\_EXISTS& \\
+%	Jm\_AND\_THEN& \\
+%	Jm\_OR\_ELSE& 
+%\end{array}$
 
-$\begin{array}{ll}
-	B\_BTRUE& \\
-	B\_ACCOLADE& \\
-	B\_OVERRIDING& \\
-	B\_UNION& \\
-	B\_INTERVAL& \\
-	B\_APPLICATION& \\
-	B\_IN& \\
-	B\_BOOL& \\
-	B\_COUPLE& \\
-	B\_DOM& \\
-	B\_SET\_EQUALS& \\
-	B\_SUBSTRACTION\_DOM& \\
-	B\_FUNCTION\_EQUALS& \\
-	B\_ARRAY\_EQUALS &
-\end{array}$
+%$\begin{array}{ll}
+%	B\_BTRUE& \\
+%	B\_ACCOLADE& \\
+%	B\_OVERRIDING& \\
+%	B\_UNION& \\
+%	B\_INTERVAL& \\
+%	B\_APPLICATION& \\
+%	B\_IN& \\
+%	B\_BOOL& \\
+%	B\_COUPLE& \\
+%	B\_DOM& \\
+%	B\_SET\_EQUALS& \\
+%	B\_SUBSTRACTION\_DOM& \\
+%	B\_FUNCTION\_EQUALS& \\
+%	B\_ARRAY\_EQUALS &
+%\end{array}$
 
-$\begin{array}{ll}
-	CONSTANT\_FUNCTION& \\
-	IS\_ARRAY& \\
-	IS\_MEMBER\_FIELD& \\
-	EQUALS\_ON\_OLD\_INSTANCES& \\
-	FINAL\_IDENT& \\
-	T\_CALLED\_OLD& \\
-	LOCAL\_VAR\_DECL& \\
-	GUARDED\_SET& \\
-	INTERSECTION\_IS\_NOT\_EMPTY& \\
-	ARRAY\_RANGE& \\
-	CONSTANT\_FUNCTION\_FUNCTION& \\
-	MODIFIED\_FIELD& \\
-	T\_VARIANT\_OLD& \\
-	NEW\_OBJECT& \\
-	EQUALS\_ON\_OLD\_INSTANCES\_ARRAY& \\
-	T\_TYPE& \\
-	IS\_STATIC\_FIELD& \\
-	ARRAY\_ACCESS& \\
-	LOCAL\_ELEMENTS\_DECL& \\
-	ALL\_ARRAY\_ELEMS
-\end{array}$
+%$\begin{array}{ll}
+%	CONSTANT\_FUNCTION& \\
+%	IS\_ARRAY& \\
+%	IS\_MEMBER\_FIELD& \\
+%	EQUALS\_ON\_OLD\_INSTANCES& \\
+%	FINAL\_IDENT& \\
+%	T\_CALLED\_OLD& \\
+%	LOCAL\_VAR\_DECL& \\
+%	GUARDED\_SET& \\
+%	INTERSECTION\_IS\_NOT\_EMPTY& \\
+%	ARRAY\_RANGE& \\
+%	CONSTANT\_FUNCTION\_FUNCTION& \\
+%	MODIFIED\_FIELD& \\
+%	T\_VARIANT\_OLD& \\
+%	NEW\_OBJECT& \\
+%	EQUALS\_ON\_OLD\_INSTANCES\_ARRAY& \\
+%	T\_TYPE& \\
+%	IS\_STATIC\_FIELD& \\
+%	ARRAY\_ACCESS& \\
+%	LOCAL\_ELEMENTS\_DECL& \\
+%	ALL\_ARRAY\_ELEMS
+%\end{array}$
 
 

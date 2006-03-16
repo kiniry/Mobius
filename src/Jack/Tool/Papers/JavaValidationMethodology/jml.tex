@@ -22,28 +22,23 @@ design goal is that JML {\em not} impose any particular design method
 on users; instead, JML should be able to document Java programs
 designed in any manner \cite{Leavens-Baker-Ruby03}.
 
-\label{notation}
-
 JML uses Java's expression syntax in assertions,
 thus JML's notation is easy for programmers to learn.  
 Because JML supports quantifiers such as
 \verb_\forall_ and \verb_\exists_, and because JML allows ``model''
 (i.e., specification-only) fields and methods, specifications can
 easily be made precise and complete.
-
 JML assertions are written as special
 annotation comments in Java code,
 so that they are ignored by Java compilers but can be used
 by tools that support JML\@.  Within annotation comments JML extends the
 Java syntax with several keywords.  It also extends Java's expression syntax with several
 operators.
-
 The central ingredients of a JML specification are preconditions
 (given in {\tt requires} clauses), postconditions (given in {\tt
   ensures} clauses), and (class and interface) invariants.  These are
 all expressed as boolean expressions in JML's extension to Java's
 expression syntax.
-
 In addition to ``normal'' postconditions, the language also supports
 ``exceptional'' postconditions, specified in {\tt signals} clauses.
 These can be used to specify what must be true when a method throws an

@@ -1,6 +1,3 @@
-\subsection{Introduction}
-\label{sec:intro}
-
 % Pertinence of compiling bytecode into native code for embedded devices
 Enabling Java on embedded and restrained systems is an important challenge for today's industry and research groups~\cite{Mulchandani1998}. Java brings features like execution safety and low-footprint program code that make this technology appealing for embedded devices which have obvious memory restrictions, as the success of Java Card witnesses. However, the memory footprint and safety features of Java come at the price of a slower program execution, which can be a problem when the host device already has a limited processing power. As of today, the interest of Java for smart cards is still growing, with next generation operating systems for smart cards that are closer to standard Java systems~\cite{Lagosanto2002,Grimaud2003}, but runtime performance in still an issue. To improve the runtime performances of Java systems, a common practice is to translate some parts of the program bytecode into native code.
 
@@ -13,13 +10,10 @@ Although the runtime checks are necessary to the safety of the Java virtual mach
 % Our contribution
 Several studies proposed to factorize these checks or in some case to eliminate them, but none proposed a complete elimination without hazarding the system security. In this paper, we use formal proofs to ensure that run-time checks can never be true into a program, which allows us to completely and safely eliminate them from the generated native code. The programs to optimize are JML-annotated against runtime exceptions and verified by the Java Applet Correctness Kit (JACK~\cite{BRL-JACK}). We have been able to remove almost all of the runtime checks on tested programs, and obtained native ARM thumb code which size was comparable to the original bytecode.
 
-% Plan
-The remainder of this paper is organized as follows. In section~\ref{sec:sota}, we overview the methods used for compiling Java bytecode into native code, and evaluate the previous work aiming at optimizing runtime exceptions in the native code. Then, section~\ref{sec:method} describes our method for removing runtime exceptions on the basis of formal proofs. We experimentally evaluate this method in section~\ref{sec:experiments}, discuss its limitations in~\ref{sec:limitations} and conclude in~\ref{sec:conclusion}.
-
 \subsection{Java and Ahead-of-Time Compilation}
 \label{sec:sota}
 
-Compiling Java into native code common on embedded devices. This section gives an overview of the different compilation techniques of Java programs, and points out the issue of runtime exceptions. We are then looking at how existing solutions address this issue.
+Compiling Java into native code common on embedded devices. This section gives an overview of the different compilation techniques of Java programs, and points out the issue of runtime exceptions.
 
 \subsubsection{Ahead-of-Time \& Just-in-Time Compilation}
 
@@ -37,75 +31,12 @@ Both JIT and AOT compilers must produce code that exactly mimics the behavior of
 % Why runtime exceptions
 The JVM (Java Virtual Machine)~\cite{VMSpec} specifies a safe execution environment for Java programs. Contrary to native execution, which does not automatically control the safety of the program's operations, the Java virtual machine ensures that every instruction operates safely. The Java environment may throw predefined runtime exceptions at runtime, like the following ones:
 
-\begin{description}
-\item[\texttt{NullPointerException}]
-This exception is thrown when the program tries to dereference a \texttt{null} pointer. Among the instructions
-that may throw this exceptions are: \texttt{getfield}, \texttt{putfield}, \texttt{invokevirtual}, \texttt{invokespecial}, the set of  \texttt{\emph{type}astore} instructions\footnote{the JVM instructions are parametrized, thus we denote by \texttt{\emph{type}astore} the set of array store instructions, which includes \texttt{iastore}, \texttt{sastore}, \texttt{lastore}, ...} may throw such an exception.
-\item[\texttt{ArrayIndexOutOfBoundsException}] If an array is accessed out of its bounds, this exception is thrown to prevent the program from accessing an illegal memory location. According to the Java Virtual Machine specification, the instructions of the family \texttt{\emph{type}astore} and \texttt{\emph{type}aload} may throw such an exception.
-\item[\texttt{ArithmeticException}] This exception is thrown when exceptional arithmetic conditions are met. Actually, there is only one such case that may occur during runtime, namely the division of an integer by zero, which may be done by \texttt{idiv}, \texttt{irem}, \texttt{ldiv} and \texttt{lrem}.
-\item[\texttt{NegativeArraySizeException}] Thrown when trying to allocate an array of negative size. \texttt{newarray}, \texttt{anewarray} and \texttt{multianewarray} may throw such an exception.
-\item[\texttt{ArrayStoreException}] Thrown when an object is attempted to be stored into an array of incompatible type. This exception may be thrown by the \texttt{aastore} instruction.
-\item[\texttt{ClassCastException}] Thrown when attempting to cast an object to an incompatible type. The \texttt{checkcast} instruction may throw such an exception.
-\item[\texttt{IllegalMonitorStateException}] Thrown when the current thread is not the owner of a released monitor, typically by \texttt{monitorexit}.
-
-\end{description}
-
-If the JVM detects that executing the next instruction will result in an inconsistency or an illegal memory access, it throws a runtime exception, that may be caught by the current method or by other methods on the current stack. If the exception is not caught, the virtual machine exits. This safe execution mode implies that many checks are made during runtime to detect potential inconsistencies. For instance, the \texttt{aastore} bytecode, which stores an object reference into an array, may throw three different exceptions:
-\begin{itemize}
-\item \texttt{NullPointerException}, if the reference to the array is \texttt{null},
-\item \texttt{ArrayIndexOutOfBoundsException}, if the index in which to store the object is not within the bounds of the array,
-\item \texttt{ArrayStoreException}, if the object to store is not assignment-compatible with the array (for instance, storing an \texttt{Integer} into an array of \texttt{Boolean}).
-\end{itemize}
+If the JVM detects that executing the next instruction will result in an inconsistency or an illegal memory access, it throws a runtime exception, that may be caught by the current method or by other methods on the current stack. If the exception is not caught, the virtual machine exits. This safe execution mode implies that many checks are made during runtime to detect potential inconsistencies. 
 
 Of the 202 bytecodes defined by the Java virtual machine specification, we noticed that 43 require at least one runtime exception check before being executed. While these checks are implicitly performed by the bytecode interpreter in the case of interpreted code, they must explicitly be issued every time such a bytecode is compiled into native code, which leads to a code size explosion. Ishizaki et al. measured that bytecodes requiring runtime checks are frequent in Java programs: for instance, the natively-compiled version of the SPECjvm98 \texttt{compress} benchmark has 2964 exception check sites for a size of 23598 bytes. As for the \texttt{mpegaudio} benchmark, it weights 38204 bytes and includes 6838 exception sites~\cite{Ishizaki1999}. The exception check sites therefore make a non-neglectable part of the compiled code.
 
-Figure~\ref{fig:javatoc} shows an example of Java bytecode that requires a runtime check to be issued when being compiled into native code.
-
-\begin{figure}[t]
-\begin{center}
-\begin{minipage}[b]{0.4\linewidth}
-\textbf{Java version:}
-\centering
-\begin{verbatim}
-  iload i
-  iload j
-  idiv
-  ireturn
-\end{verbatim}
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.5\linewidth}
-\textbf{C version:}
-\centering
-\begin{verbatim}
-1   int i, j;
-2   if (j == 0) 
-3     THROW(ArithmeticException);
-4   RETURN_INT(i / j);
-\end{verbatim}
-\end{minipage}
-\end{center}
-\caption{A Java bytecode program and its (simplified) C-compiled version. The behavior of the division operator in Java must be entirely reproduced by the C program, which leads to the generation of a runtime exception check site}
-\label{fig:javatoc}
-\end{figure}
-
-It is, however, possible to eliminate these checks from the native code if the execution context of the bytecode shows that the exceptional case never happens. In the program of figure~\ref{fig:javatoc}, the lines 2 and 3 could have been omitted if we were sure that for all possible program paths, \texttt{j} can never be equal to zero at this point. This allows to generate less code and thus to save memory. Removing exception check sites is a topic that has largely been studied in the domain of JIT and AOT compilation.
-
-\subsubsection{Related Work}
-\label{sec:relatedwork}
-% AOTs
-Toba~\cite{Proebsting1997} is a Java-to-C compiler that transforms a whole Java program into a native one. Harissa~\cite{Muller1997} is a Java environment that includes a Java-to-C compiler as well as a virtual machine, and therefore supports mixed execution. While both environments implement some optimizations, they are not able to detect and remove unused runtime checks during ahead-of-time compilation. The JC Virtual Machine~\cite{JCVM} is a Java virtual machine implementations that converts class files into C code using the Soot~\cite{Raja1999} framework, and runs their compiled version. It supports redundant exceptions checks removal, and is tuned for runtime performance, by using operating system signals in order to detect exceptional conditions like null pointer dereferencing. This allows to automatically remove most of the \texttt{NullPointerException}-related checks.
-
-% Optimizing during JIT compilation
-In~\cite{Hummel1997} and~\cite{Azevedo1999}, Hummel et al. use a Java compiler that annotates bytecodes with higher-level information known during compile-time in order to improve the efficiency of generated native code. \cite{Ishizaki1999} proposes methods for optimizing exceptions handling in the case of JIT compiled native code. These works rely on knowledge that can be statically inferred either by the Java compiler or by the JIT compiler. In doing so, they manage to efficiently factorize runtime checks, or in some cases to remove them. However, they are still limited to the context of the compiled method, and do not take the whole program into account. Indeed, knowing properties about a the parameters of a method can help removing further checks.
-
-We propose to go further than these approaches, by giving more precise directives as to how the program behaves in the form of JML annotations. These annotations are then used to get formal behavioral proofs of the program, which guarantee that runtime checks can safely be eliminated for ahead-of-time compilation.
-
 \subsection{Optimizing Ahead-of-Time Compiled Java Code}
 \label{sec:method}
-
-% short description
-For verifying the bytecode that will be compiled into native code, we use the JACK verification framework (short for Java Applet Correctness Kit). JACK is designed as a plugin for the eclipse interface development environment. It supports both the Java Modeling Language (JML~\cite{Leavens2005}) and the ByteCode Specification Language (BCSL~\cite{JBL05MP}), respectively at source and bytecode level, and also supplies a compiler from JML to BCSL. The tool supports only the sequential subset of the Java and Java bytecode languages, but this is sufficient for the purpose of the present paper. Thus, from a Java program annotated with JML or a bytecode program annotated with BCSL, JACK generates proof obligations at the source or bytecode level respectively. JACK can then translate the resulting verification conditions for several theorem provers: Coq, Simplify, Atelier B.
 
 %verification procedure
 Verifying that a bytecode program does not throw Runtime exceptions using JACK involves several stages:
@@ -119,17 +50,6 @@ Verifying that a bytecode program does not throw Runtime exceptions using JACK i
 Our approach benefits from the accurateness of the JML specification and from the bytecode verification condition generator. Performing the verification over the bytecode allows to easily establish a relationship between the proof obligations generated over the bytecode and the bytecode instructions to optimized.
 
 In the rest of this section, we explain in detail all the stages of the optimization procedure.
-
-\subsubsection{JML Annotations}
-\label{jml}
-
-JML is a rich behavioral interface specification language, similar to Java and designed for it, that follows the design by contract paradigm~\cite{M97oos}. Among the features that JML supports and which we use in this study are:
-\begin{description}
-\item[Method preconditions] The method precondition states what must hold when the method is called, i.e. the precondition must hold at every method call site.
-\item[Method postconditions] JML allows to specify both the exceptional and normal terminations of a method. One can express which property should hold if a method terminates normally and which property should hold if a method terminates by throwing an exception. The exceptional and normal postconditions state what the method guarantees after its execution and are verified when establishing the correctness of the method implementation.
-\item[Class invariants] These properties must be established at every visible program state. In particular, the property must hold before and after every method call. The class invariant is not required to hold before calling the class constructor, but must hold once the constructor returns.
-\item[Loop invariants and loop frame conditions] A loop invariant is a predicate that must hold every time the corresponding loop entry is reached. The loop framecondition states which locations are modified by the loop.
-\end{description}
 
 \subsubsection{Methodology for Writing Specification Against Runtime Exception}
 
@@ -165,77 +85,9 @@ final class Code_Table {
 
 The method precondition requires the \verb!size! parameter to be smaller than the length of \verb!tab!. The normal postcondition, introduced by the keyword \verb!ensures!, basically says that the method will always terminate normally, by declaring that the set of final states in case of normal termination includes all the possible final states, i.e. that the predicate \verb!true! holds after the method's normal execution\footnote{Actually, after terminating execution the method guarantees that the first \texttt{size} elements of the array tab will be equal to 0, but as this information is not relevant to proving that the method will not throw runtime exceptions we omit it}. On the other hand, the exceptional postcondition for the exception \texttt{java.lang.Exception} says that the method will not throw any exception of type \texttt{java.lang.Exception} (which includes all runtime exceptions). This is done by declaring that the set of final states in the exceptional termination case is empty, i.e. the predicate \texttt{false} holds if an exception caused the termination of the method. The loop invariant says that the array accesses are between index \verb!0! and index \verb!size - 1! of the array \verb!tab!, which guarantees that no loop iteration will cause a \verb!ArrayIndexOutOfBoundsException! since the precondition requires that \verb!size <= tab.length!.
 
-\subsubsection{Compiling JML annotations into BCSL specifications}
-\label{JML2BCSL}
-Once the source code is completed by the JML specification, the Java source is compiled using a normal non-optimizing Java compiler that generates debug information like \textrm{LineNumberTable} and \textrm{LocalVariableTable}, needed for compiling the JML annotations. From the resulting class file and the specified source file, the JML annotations are compiled into BCSL and inserted into user-defined attributes of the class file. Figure~\ref{bcsl} gives the bytecode version of the \verb!clear! method shown earlier and its BSCL specification. In the example, \verb!lv[0]! stands for the \verb!this! instance and \verb!lv[1]! stands for the first parameter that the method receives. A detailed description of the JML compiler can be found in \cite{JBL05MP}.
+Once the source code is completed by the JML specification, the Java source is compiled using a normal non-optimizing Java compiler that generates debug information like \textrm{LineNumberTable} and \textrm{LocalVariableTable}, needed for compiling the JML annotations. From the resulting class file and the specified source file, the JML annotations are compiled into BCSL and inserted into user-defined attributes of the class file. 
 
-\begin{figure}[thp]
-\begin{verbatim}
-  //@invariant tab(lv[0]) != null;
-
-  ...
-
-  //@requires lv[1] <= length(tab(lv[0]));
-  //@ensures true;
-  //@exsures (Exception) false;
-
-method clear
-
- 0 iconst_0
- 1 istore_2
- 2 goto 15
- 5 aload_0
- 6 getfield tab
- 9 iload_2
-10 iconst_0
-11 sastore
-12 iinc 2 by 1
-15 iload_2
-16 iload_1
-17 if_icmplt 5
-20 return
-\end{verbatim}
-
-\caption{The specified bytecode of method \texttt{clear}}
-\label{bcsl}
-\end{figure}
-
-
-\subsubsection{Generation of the Verification Conditions}
-\label{vcGen}
-For generating the verification conditions, we use a bytecode verification condition generator (vcGen) based on a bytecode weakest precondition calculus~\cite{JBL05MP}. The weakest precondition function $wp$ returns for every instruction \texttt{ins}, normal postcondition $\psi$, and exceptional function $\excPost$ the weakest predicate \\ $\wpi( \texttt{ins} ,\psi ,\excPost)$ such that if it holds in the pre-state of the instruction \texttt{ins} and if the instruction terminates normally, then the normal postcondition $\psi$ holds in the poststate and if \texttt{ins} terminates on an exception \texttt{Exc}, then the predicate $\excPost(\texttt{Exc})$ holds. From the annotated bytecode the vcGen calculates a set of verification conditions for every method of the application. The verification conditions for a method are generated by tracing all the execution paths in it starting at every \texttt{return}, \texttt{athrow} and loop end instruction up to reaching the method entry point. During the process of generation of the verification conditions, for every instruction that may throw a \verb!Runtime! exception a new verification condition is generated.
-
-In figure \ref{fig:wpRule}, we show the weakest precondition rule for the \texttt{getfield} instruction. As the virtual machine is stack-based, the rule mentions the stack \texttt{stack} and the stack counter \texttt{cntr}, thus the stack top element is referred as \stack{\counter}. If the top stack element \stack{\counter} is not null, \texttt{getfield} pops \stack{\counter} which is an object reference and pushes the value of the referenced field onto the operand stack in \stack{\counter}. If the stack top element is null, the Java Virtual Machine specification says that the \texttt{getfield} instruction throws a \texttt{NullPointerException}.
-
-When the verification condition generator works over a method, it labels the formula related to the exceptional termination of every instruction with the index of the instruction in the bytecode array of the method. For example, if a \texttt{getField} instruction is met in the bytecode of a method, a conjunction is generated and the conjunct related to the exception is labeled as shown by figure \ref{fig:wpRule}. Finally, indexing the verification conditions allows to identify later in the proof phase which instructions can be optimized.
-
-Another important point is that the underlying vcGen is proved to be correct \cite{JBL05MP}, thus our methodology also correctly performs optimizations.
-
-\begin{figure}
-\[
-\begin{array}{l}
-\wpi(ind : \texttt{getfield} \ \texttt{Cl.f}, \ \psi, \ \excPost) = \\
-\biggl( 
-\begin{array}{l}
-	%\begin{array}{l}
-   		\stack{\counter} \not= \Mynull\Rightarrow   \\
-	\Myspace \psi\begin{array}{l} \substitution{\stack{\counter}}{\texttt{Cl.f} (\stack{ \counter}) } \\[0 mm]
-
-		\end{array}\\
-	%\end{array}
-   \wedge \\
-    ind : \stack{\counter} = \Mynull 	\Rightarrow\\
-   \Myspace	 \excPost(\texttt{NullPointerException})
-        \begin{array}{l}
-          \substitution{ \counter }{ 0} \\
-          \substitution{\stack{0}}{ \texttt{ref}_{NullPointer} }
-	\end{array}
-    \end{array} \biggr)
-\end{array}
- \]
-\caption{The weakest precondition rule for the \texttt{putfield} instruction}
-\label{fig:wpRule}
-\end{figure}
+For generating the verification conditions, we use a bytecode verification condition generator (vcGen) based on a bytecode weakest precondition calculus~\cite{JBL05MP}. 
 
 \subsubsection{From Program Proofs to Program Optimizations }
 \label{proofs}
@@ -370,22 +222,4 @@ On the three programs that are annotated for the unique purpose of our study, th
 
 The gain in terms of memory footprint obtained using our approach is therefore real. One may also wonder whether the runtime performance of such optimized methods would be increased. We did the measurements, and only noticed a very slight, almost undetectable, improvement of the execution speed of the programs. This is explained by the fact that the exception check sites conditions are always false when evaluated, and therefore the amount of supplementary code executed is very low. The bodies of the proved runtime exception check sites are, actually, dead code that is never executed.
 
-\subsection{Limitations}
-\label{sec:limitations}
-
-Our approach suffers from some limitations and usage restrictions, regarding its application on multi-threaded programs and in combination with dynamic code loading.
-
-\subsubsection{Multi-Threaded Programs}
-
-As we said in section~\ref{sec:method}, JACK only supports the sequential subset of Java. Because of this, we are unable to prove check sites related to monitor state checking, that typically throws an \texttt{IllegalMonitorStateException}. However, they can be simplified if it is known that the system will never run more than one thread simultaneously. It should be noted, that Java Card does not make use of multi-threading and thus doesn't suffer from this limitation.
-
-\subsubsection{Dynamic Code Loading}
-
-Our removal of runtime exception check sites is based on the assumption that a method's preconditions are always respected at all its call sites. For closed systems, it is easy to verify this property, but in the case of open systems which may load and execute any kind of code, the property could not always be ensured. In the case where the set of applications that will run on the system is not statically known, our approach could not be safely applied on public methods since dynamically-loaded code may call them without respecting their preconditions.
-
-\subsection{Conclusion}
-\label{sec:conclusion}
-The main result of the present article is a new Java-to-native code optimization technique based on static program verification using formal methods. The methodology gives more precise and therefore better results than other existing solutions in the field and allows us to remove almost all the exception check sites in the native code, as we show in section \ref{sec:experiments}. The memory footprints of natively-compiled methods thus become comparable with the ones of the original bytecode when compiled in ARM thumb.
-
-Although we applied this work to the ahead-of-time compilation of Java methods, the bytecode annotations could also be interpreted by JIT compilers, which would then also be able to completely get rid of a considerable part of runtime exceptions.
 
