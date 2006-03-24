@@ -1,0 +1,24 @@
+------------------------------------------------------------------------------
+Section status/mutex
+
+* Abstract: seems ok.
+* Section 1
+  - Patrice: reviewing and editing.
+  - ...
+* Section 2
+* Section 3
+* Section 4
+* Section 5
+* Section 6
+* Section 7
+* Section 8
+
+==============================================================================
+Log:
+
+* 2006-03-24, Patrice
+- Added \extracite{} command so that we can hide citations which we think we
+  might want to remove without actually deleting them from the .tex file.
+- ...
+
+==============================================================================
