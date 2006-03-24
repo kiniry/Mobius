@@ -6,6 +6,7 @@ Todo:
 - Erik, did you use & instead of && on purpose in the AlarmClock class? --PC
 - Section on ghost var should indeed probably be simplified; maybe just use
   the example of the alarmSecondsRemaining? --PC
+- Ensure that all our samples and snippets pass through our tools! --PC
 
 ------------------------------------------------------------------------------
 Section status/mutex
@@ -16,12 +17,13 @@ Section status/mutex
     notes -- though I have left them in for now.
 * Section 2: completed review, editing and spell-checking (PC).
   - This seems like is very close to being final -- maybe a mising reference.
-* Section 3
+* Section 3: completed review, editing and spell-checking (PC).
+  - Might require a little rework, but it is ok for now --PC.
 * Section 4: completed review, editing and spell-checking (PC).
 * Section 5: completed review, editing and spell-checking (PC).
 * Section 6: completed review, editing and spell-checking (PC).
-  - The section can probably be simplified. --PC.
-* Section 7: write mutex owned by Patrice.
+  - The section can probably (and should) be simplified. --PC.
+* Section 7: completed review, editing and spell-checking (PC).
 * Section 8: completed review, editing and spell-checking (PC).
 
 ==============================================================================

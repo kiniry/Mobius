@@ -42,12 +42,12 @@
 % ``Notes-to-authors''
 % \newcommand{\NTA}[1]{\begin{quotation}\textsf{#1}\end{quotation}}
 % \newcommand{\NTA}[1]{[NTA\footnote{#1}]}
-%
-\newcommand{\GMARGIN}[1]{\marginpar{\textcolor{blue}{\sf\scriptsize #1}}}
-\newcommand{\MARGIN}[1]{\marginpar{\sf\scriptsize #1}}
-\newcommand{\COMMENT}[1]{{\sf\scriptsize  #1}}
-%\newcommand{\MARGIN}[1]{}
-%\newcommand{\COMMENT}[1]{}
+
+%\newcommand{\COMMENT}[1]{{\sf\scriptsize  #1}}
+%\newcommand{\MARGIN}[1]{\marginpar{\sf\scriptsize #1}}
+\newcommand{\MARGIN}[1]{}
+\newcommand{\COMMENT}[1]{}
+\newcommand{\GMARGIN}[1]{\MARGIN{\textcolor{blue}{\sf\scriptsize #1}}}
 
 \newcommand{\figref}[1]{\figurename~\ref{#1}}
 \newcommand{\secref}[1]{Section~\ref{#1}}
@@ -318,6 +318,7 @@ remembering what remains to be formalized, or in escaping from
 formalism, although they do not help in verification. 
 
 \subsection{Purity}
+\label{Sec:purity}
 %
 In the DBC approach, only query methods can be used in assertion expressions
 because they are required to be side-effect free \cite{Meyer97}.
@@ -523,30 +524,9 @@ explored elsewhere
 \section{Frame properties}
 \label{Sec:assignable}
 
-%\COMMENT{Section~\ref{Sec:assignable} explain the use of \emph{assignable clauses} to
-%specify \emph{frame properties}, and explains the need for \emph{datagroups}
-%(both as a way to abstract away from implementation details and to allow
-%subclasses some freedom) still using the example in Fig~\ref{Example:TickTockClock}.}
-
-JML provides \texttt{assignable} clauses to specify frame properties
-of methods, i.e.\ to specify the possible side-effects of a method.
-The notion of \emph{datagroup} allows us to abstract away from private implementation 
-details in frame properties and provides the flexibility in specifications
-that we want to have in an object-oriented language.
-This section explains these notions, and the need for them.
-
-We should stress that although these clauses are needed when doing program 
-verification, they are \emph{not} needed to do runtime assertion checking. 
-If one is only interested in runtime assertion checking, one need not know 
-that \texttt{assignable} clauses exist.
-(A tool for runtime assertion checking could try to enforce \texttt{assignable} 
-clauses, but typically will not because of the high overhead this involves.)
-
-\smallskip
-
 In traditional specifications that give pre- and postcondition for methods
 (or procedures) one often uses the convention that any variables not mentioned 
-in the postcondition of a method have not been changed.  This approach is 
+in the postcondition have not been changed.  This approach is 
 \emph{not} workable for realistic object-oriented programs.
 For example, consider the the method \texttt{tick()} in 
 \figref{Example:TickTockClock}. This method may modify the three private 
@@ -555,39 +535,46 @@ not appear in the postcondition. Rewriting the specification so it does
 mention these fields is clearly not what we would want, as in the 
 specification of this public method we do not want to refer to private fields.
 
-%Suppose we wanted to follow this approach in the specification 
-%of the method \texttt{tick()} in \figref{Example:TickTockClock}.
-%Because this method modifies three fields, namely
-%\texttt{second}, \texttt{minute} and \texttt{hour}, 
-%the postcondition will have to mention all these fields.
-%This is probably not what we want, because this would require a very
-%detailed specification. Moreover, the specification would mention implementation 
-%details -- namely the three private fields -- that should be of no concern to the 
-%client.
+A JML \texttt{assignable} clause can be used in a method contract to specify
+which parts of the system state \emph{may} change as the result of the
+method execution.  This is the so-called \emph{frame property}.
+%
+Any location outside the frame property is guaranteed to have the
+same value after the method has executed (called the post-state) as it did
+before the method executed (called the pre-state).
+%
+The notion of \emph{datagroup} allows us to abstract away from private implementation 
+details in frame properties and provides flexibility in specifications.
+% that we want to have in an object-oriented language.
+This section explains these notions, and the need for them.
 
-An  \texttt{assignable} clause specifies that a method may change certain 
+An \texttt{assignable} clause specifies that a method may change certain 
 fields, without having to specifying how.
-So a specification of the method \texttt{tick} could include
+So the specification of the method \texttt{tick()} could include
 \begin{verbatim}
    assignable hour, minute, second;
 \end{verbatim}
 to state that is may modify these three fields, without having to mention
 the fields in the postcondition.
+%
 If no \texttt{assignable} clause is given for a method, it has the
 default frame condition \texttt{assignable \everything}.
-A pure method is a method with a frame condition \texttt{assignable \nothing}.
+%
+A pure method (\secref{Sec:purity}) is a method with a frame condition
+\texttt{assignable \nothing}.
 
-Object-oriented language such as Java require some means for abstraction in
-assignable clauses.  The \texttt{assignable} clause for \texttt{tick} given
-above leaves a lot to be desired.  Firstly, it still exposes implementation
-details, because it mentions the three private fields.  Secondly, the
+Object-oriented languages such as Java require some means for abstraction in
+assignable clauses.  The \texttt{assignable} clause for \texttt{tick()} given
+above leaves a lot to be desired.  Firstly, it exposes implementation
+details, because it mentions private fields.  Secondly, the
 specification is overly restrictive for any future subclasses.  By the
 principle of \emph{behavioral subtyping}, discussed in more detail in
-Section~\ref{Sec:behsubtyping}, the implementation of \texttt{tick} in any
+\secref{Sec:behsubtyping}, the implementation of \texttt{tick()} in any
 future subclass of \texttt{TickTockClock} has to meet the specification given
 in \texttt{TickTockClock}.  This means that it can only assign to the three
-fields of \texttt{TickTockClock}, which is far to restrictive in practice.  To
-give a concrete example, suppose we introduce a subclass
+fields of \texttt{TickTockClock}, which is far to restrictive in practice.  
+%
+To give a concrete example, suppose we introduce a subclass
 \texttt{Tick\-Tock\-Clock\-With\-Date} of \texttt{TickTockClock} that, in
 addition to keeping the time, also keeps track of the current date.  Clearly
 such a subclass will introduce additional fields, to record the date, and the
@@ -600,20 +587,29 @@ this problem. The idea is that a datagroup is an abstract piece of an object's
 state, that can still be extended by future subclasses.
 The specification in \figref{Example:TickTockClock} declares a (public) datagroup
 \texttt{\_time\_state} and declares that the three (private) fields belong
-to this datagroup. This datagroup is used to specify \texttt{tick}.
-This avoid exposing any private implementation details, and
+to this datagroup. This datagroup is used to specify \texttt{tick()}.
+This avoids exposing any private implementation details, and
 any subclasses of \texttt{TickTockClock} may extend the datagroup with
 additional fields it introduces.
 
 Datagroups can be nested, by using the \texttt{in} clause to say that
 one datagroup is part of another one. The JML specifications for
-\texttt{java.lang.Object}\footnote{These are a part of the (incomplete) JML 
-specifications developed for the Java API that are distributed along with 
-some the tools.} declare a JML datagroup \texttt{objectState}. As this datagroup
-is inherited by all other classes, as a convention one can use this datagroup 
-to describe for a class what constitutes the `state' of an object of that class.
+\texttt{java.lang.Object}%
+% PC: why the bad press?
+% \footnote{These are a part of the (incomplete) JML specifications developed
+%  for the Java API that are distributed along with some the tools.}
+%
+declare a JML datagroup \texttt{objectState}. As this datagroup
+is inherited by all other classes, as a convention one can use this datagroup
+in any given class to describe what constitutes the `state' of an object of that class.
 By that convention, the datagroup \texttt{\_time\_state} would be declared
 to belong to \texttt{objectState}.
+
+Finally we note that although \texttt{assignable} clauses are needed when doing program 
+verification, they are \emph{not} needed to do runtime assertion checking, and
+hence are ignored by RAC tools.
+% (A tool for runtime assertion checking could try to enforce \texttt{assignable} 
+% clauses, but typically will not because of the high overhead this involves.)
 
 \section{Model fields}
 \label{Sec:model}
@@ -1010,33 +1006,33 @@ by the representation relation.
 
 \begin{figure}[tbp] \label{Example:alias}
 %
-\verbatiminput{DigitalDisplayClock.java} % was Clock_using_array_universes.java
+\VerbatimInput[numbers=left]{DigitalDisplayClock.java}
 %
 \vspace*{-3ex} % to fit this on one page
-\caption{An implementation using an array, which uses the universe type 
-system \cite{Mueller-Poetzsch-Heffter-Leavens03} to ensure that references
-to this array are not leaked outside the current object.}
+\caption{Clock implementation using an array and the universe type 
+  system to ensure that references to this array are not leaked outside the
+  current object.}
 \end{figure}
 
 \begin{figure}[tbp] \label{Example:brokenalias}
 %
-\verbatiminput{BrokenDigitalDisplayClock.java} % was Clock_using_array_universes.java
+\VerbatimInput[numbers=left]{BrokenDigitalDisplayClock.java}
 %
 \vspace*{-2ex} % to fit this on one page
 \caption{A subclass of \texttt{DigitalDisplayClock} which breaks encapsulation
-of the private array \texttt{time}, both by its constructor, which imports
-a potentially aliased reference, and the method \texttt{expose}, which exports
-a reference to \texttt{time}.}
+  of the private array \texttt{time}, both by its constructor, which imports a
+  potentially aliased reference, and the method \texttt{expose}, which exports
+  a reference to \texttt{time}.}
 \end{figure}
 
 The potential of aliasing is a major complication in program verification,
 and indeed a major source of bugs in programs. 
-To illustrate the issue, \figref{Example:alias} shows a subclass 
-\texttt{DigitialDisplayClock} 
-of \texttt{Clock}, which uses an integer array \texttt{time} of length 6 
+To illustrate the issue, \figref{Example:alias} shows
+\texttt{DigitialDisplayClock},
+a subclass of \texttt{Clock}, which uses an integer array \texttt{time} of length 6 
 to represent time.  For the correct functioning of the clock it will be 
 important that this array is not aliased. If the array is aliased, code 
-outside of this class could for instance break the invariants for the array.
+outside of this class could alter \texttt{time} and break the invariants for the array.
 Indeed, the fact that the (private) invariants depends on the array 
 \texttt{time} already suggest that it needs to be alias-protected.
 
@@ -1048,17 +1044,17 @@ For example, the subclass \texttt{BrokenDigitalDisplayClock} in
 \figref{Example:brokenalias} breaks the guarantee that \texttt{time}
 will not be aliased.
 
-There has been a lot of work on ways to equip programming languages
-with some form of alias control, aka encapsulation or confinement.
+There has been considerable work on extending programming languages
+with some form of alias control (also known as encapsulation or confinement).
 JML includes support for the universe type system
 \cite{Mueller-Poetzsch-Heffter-Leavens03} as a way to specify
-and enforce constraints on aliasing. This is illustrated in 
-\figref{Example:alias}: the array \texttt{time} is declared
-as a \texttt{rep}-field -- rep being short for representation -- forbidding
-references to the field to be aliased outside the object.
-The typechecker incorporated in the JML runtime assertion checker
-will for instance warn that the class \texttt{BrokenDigitalDisplayClock}
-in \figref{Example:brokenalias} is not well-typed, as it  breaks 
+and enforce constraints on aliasing. As is illustrated in 
+\figref{Example:alias}, the \texttt{time} array is declared
+as a \texttt{rep}-field\footnote{\texttt{rep} is short for representation}
+hence forbidding \texttt{time} from being aliased outside the object.
+The typechecker incorporated in the JML compiler
+will, e.g., warn that the class \texttt{BrokenDigitalDisplayClock}
+in \figref{Example:brokenalias} is not well-typed because it breaks 
 the guarantee that \texttt{time} will not be aliased outside this class.
 Verification with ESC/Java2 does not yet take universes into account;
 this is still the subject of ongoing work.
