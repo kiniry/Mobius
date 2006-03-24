@@ -7,11 +7,11 @@ Section status/mutex
     notes -- though I have left them in for now.
 * Section 2: completed review, editing and spell-checking (PC).
   - This seems like is very close to being final -- maybe a mising reference.
-* Section 3: write mutex owned by Erik
-* Section 4: write mutex owned by Erik
-* Section 5: write mutex owned by Erik
-* Section 6: write mutex owned by Erik
-* Section 7: write mutex owned by Erik
+* Section 3: 
+* Section 4:
+* Section 5:
+* Section 6:
+* Section 7:
 * Section 8: completed review, editing and spell-checking (PC).
 
 ==============================================================================
