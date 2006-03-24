@@ -1,6 +1,9 @@
 public class Clock {
-  //@ public model long _time;                                    
+  //@ public model long _time;
   //@ private represents _time = second + minute*60 + hour*60*60;
+
+  //@ public invariant _time == getSecond() + getMinute()*60 + getHour()*60*60;
+  //@ public invariant 0 <= _time && _time < 24*60*60;
 
   //@ private invariant 0 <= hour && hour <= 23;
   private int hour; //@ in _time;
@@ -11,20 +14,22 @@ public class Clock {
   //@ private invariant 0 <= second && second <= 59;
   private int second; //@ in _time;
 
-  //@   ensures getHour() == 12 && getMinute() == 0 && getSecond() == 0;
+  //@ ensures _time == 12*60*60;
+  //@ ensures_redundantly getHour() == 12  && getMinute() == 0  &&  getSecond() == 0;
   public /*@ pure @*/ Clock() {
     hour = 12; minute = 0; second = 0;
   }
 
-  //@ ensures 0 <= \result && \result <= 23;
+  //@ ensures \result == (_time / (60*60)) % 24;
   public /*@ pure @*/ int getHour() { return hour; }
 
-  //@ ensures 0 <= \result && \result <= 59;
+  //@ ensures \result == (_time / 60) % 60;
   public /*@ pure @*/ int getMinute() { return minute; }
 
-  //@ ensures 0 <= \result && \result <= 59;
+  //@ ensures \result == _time % 60;
   public /*@ pure @*/ int getSecond() { return second; }
 
+  // REMOVE SET TIME IF NOT NEEDED in the prose.
   /*@ requires 0 <= hour && hour <= 23;
     @ requires 0 <= minute && minute <= 59;
     @ assignable _time;
