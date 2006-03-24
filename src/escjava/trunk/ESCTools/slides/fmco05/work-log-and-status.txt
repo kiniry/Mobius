@@ -15,8 +15,8 @@ Section status/mutex
   - This seems like is very close to being final -- maybe a mising reference.
 * Section 3
 * Section 4: completed review, editing and spell-checking (PC).
-* Section 5: write mutex owned by Patrice.
-* Section 6:
+* Section 5: completed review, editing and spell-checking (PC).
+* Section 6: write mutex owned by Patrice.
 * Section 7:
 * Section 8: completed review, editing and spell-checking (PC).
 

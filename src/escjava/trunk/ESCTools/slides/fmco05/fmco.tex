@@ -582,7 +582,7 @@ assignable clauses.  The \texttt{assignable} clause for \texttt{tick} given
 above leaves a lot to be desired.  Firstly, it still exposes implementation
 details, because it mentions the three private fields.  Secondly, the
 specification is overly restrictive for any future subclasses.  By the
-principle of \emph{behavioural subtyping}, discussed in more detail in
+principle of \emph{behavioral subtyping}, discussed in more detail in
 Section~\ref{Sec:behsubtyping}, the implementation of \texttt{tick} in any
 future subclass of \texttt{TickTockClock} has to meet the specification given
 in \texttt{TickTockClock}.  This means that it can only assign to the three
@@ -686,11 +686,11 @@ Cok discusses how model fields are treated in ESC/Java2 \cite{Cok05}, while
 Leino and M\"{u}ller have recently worked on handling model fields in the
 context of verification \cite{LeinoMuller06}.
 
-\section{Behavioural subtyping and specification inheritance}
+\section{Behavioral subtyping and specification inheritance}
 \label{Sec:behsubtyping}
 
-JML enforces the principle of \emph{behavioural subtyping}: any class
-has to meet the specifications of its superclasses.
+JML enforces the principle of \emph{behavioral subtyping}: any class
+has to meet the specifications of its supertypes.
 This ensures Liskov's Substitution Principle \cite{LiskovWing94},
 i.e.\ that using an object of a subclass in a place where an object of 
 the superclass is expected does not cause any surprises, and hence that 
@@ -709,30 +709,27 @@ that they maintain any additional invariants of the subclass.
 
 \begin{figure}[tbp] 
 %
-\verbatiminput{AlarmClock_interfaceless.java}
+\VerbatimInput[numbers=left]{AlarmClock.java}
 %
 \vspace*{-2ex} % to fit this on one page
 \caption{\label{Example:alarmclock}Example JML specification illustrating the concepts of 
-specification inheritance -- the class also has to satisfy all
-the specification given in the parent class \texttt{Clock} -- and 
-ghost fields -- the ghost field \texttt{\_alarm\_going\_off}
-keeps track of some additional state --.}
+specification inheritance and ghost fields.}
 \end{figure}
 
 \begin{figure}[tbp] \label{Example:alarminterface}
 %
-\verbatiminput{AlarmInterface.java}
+\VerbatimInput[numbers=left]{AlarmInterface.java}
 %
 \vspace*{-2ex} % to fit this on one page
 \caption{Interface of the alarm used in \texttt{AlarmClock}}
 \end{figure}
 
-When it comes to method specifications, behavioural subtyping requires
+When it comes to method specifications, behavioral subtyping requires
 that preconditions of a method in a subclass can only  be weakened,
 whereas postconditions of a method in a subclass can only  be strengthened.
-One way to achieve this is to allow subclass to give a new specification
-for a method -- effectively overriding the one in the superclass --
-and then proving that (i) the precondition in the superclass implies the
+One way to achieve this is to allow a subclass to give a new specification
+for a method---effectively overriding the one in the superclass---and 
+then proving that (i) the precondition in the superclass implies the
 precondition in the subclass and that (ii) the postcondition in the subclass
 implies the postcondition in the superclass.
 
@@ -745,7 +742,7 @@ are automatically met.
 The process of conjoining specs can be a bit subtle. This process is carried 
 out by the tools, e.g.\ by the JML runtime assertion checker or ESC/Java2, 
 but the human who reads or writes specification has to understand the 
-conseqences.  If sub- and superclass
+consequences.  If sub- and superclass
 give the same precondition for a method, then the conjoined specification will
 have the conjunction of the postconditions and the intersection of the frame
 properties.  If different preconditions are given in the sub- and superclass it
@@ -755,9 +752,9 @@ is slightly weaker than the conjunction of the postcondition, as each
 postcondition only has to apply in case the corresponding precondition did.
 See \cite{Dhara-Leavens96} for details.
 
-\MARGIN{An example of this?}
-\MARGIN{Or refer to the desugaring paper?}
-
+% \MARGIN{An example of this?}
+% \MARGIN{Or refer to the desugaring paper?}
+%
 % The flexibility of object-oriented programming -- notably the notion
 % of late binding -- makes it more complicated to understand programs:
 % at compile time it is not clear which implementation of a
@@ -771,7 +768,6 @@ See \cite{Dhara-Leavens96} for details.
 % that the addition of some new subclass does not necessiatate
 % the re-verification of all code, but just the verification
 % of the new subclass.
-
 
 \section{Ghost fields}
 \label{Sec:ghost}
@@ -876,7 +872,7 @@ The state of an \texttt{AlarmClock} object does not record if the associated
 \texttt{alarm} is going off or not (except maybe implicitly, in that the alarm is 
 going off for 60 seconds after the alarm time). The state of an \texttt{AlarmClock}
 does therefore not record which method it has last invoked on \texttt{alarm}.
-For the purpose of understanding the behaviour of the \texttt{AlarmClock}, 
+For the purpose of understanding the behavior of the \texttt{AlarmClock}, 
 and possibly capturing this understanding in additional JML annotations,
 it can be useful to add an extra boolean field to the state, which records if 
 the associated alarm is going off.
@@ -923,7 +919,7 @@ can be violated,
 namely by invocations of \texttt{setTime} and  \texttt{setAlarmTime}.
 This highlights a potential weakness in the implementation;
 relying on the comparison of the current time and the alarm time
-in the decision to turn the alarm off might result in unwanted behaviour. 
+in the decision to turn the alarm off might result in unwanted behavior. 
 The alarm could be turned on twice in a row, or turned on twice in a row.
 Also, the alarm could go off for longer than 60 seconds, if one of these times 
 are changed while the alarm is going of.  
