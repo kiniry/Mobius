@@ -1,14 +1,13 @@
-
 class AlarmClock extends Clock {
   //@ public model int _alarmTime;
   //@ private represents _alarmTime = alarmMinute*60 + alarmHour*60*60;
 
   //@ public ghost boolean _alarm_going_off = false; //@ in _time;
   
-    //@ private invariant 0 <= alarmHour && alarmHour <= 23;
+  //@ private invariant 0 <= alarmHour && alarmHour <= 23;
   private int alarmHour; //@ in _alarmTime;
 
-    //@ private invariant 0 <= alarmMinute && alarmMinute <= 59;
+  //@ private invariant 0 <= alarmMinute && alarmMinute <= 59;
   private int alarmMinute; //@ in _alarmTime;
 
   private /*@ non_null @*/ AlarmInterface alarm;
@@ -17,16 +16,16 @@ class AlarmClock extends Clock {
     this.alarm = alarm;
   }
 
-   /*@ requires 0 <= hour && hour <= 23;
-     @ requires 0 <= minute && minute <= 59;
-     @ assignable _alarmTime;
-     @*/
+  /*@ requires 0 <= hour && hour <= 23;
+    @ requires 0 <= minute && minute <= 59;
+    @ assignable _alarmTime;
+    @*/
   public void setAlarmTime(int hour, int minute) {
     alarmHour = hour;
     alarmMinute = minute;
   }
 
-    // spec inherited from superclass Clock
+  // spec inherited from superclass Clock
   public void tick() {
     super.tick();
     if (getHour() == alarmHour & getMinute() == alarmMinute & getSecond() == 0) {
