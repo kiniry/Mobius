@@ -15,13 +15,13 @@ public class Clock {
   //@ ensures _time == 12*60*60;
   public /*@ pure @*/ Clock() { hour = 12; minute = 0; second = 0; }
 
-  //@ ensures \result == (_time / (60*60)) % 24;
+  //@ ensures 0 <= \result && \result <= 23;
   public /*@ pure @*/ int getHour() { return hour; }
 
-  //@ ensures \result == (_time / 60) % 60;
+  //@ ensures 0 <= \result && \result <= 59;
   public /*@ pure @*/ int getMinute() { return minute; }
 
-  //@ ensures \result == _time % 60;
+  //@ ensures 0 <= \result && \result <= 59;
   public /*@ pure @*/ int getSecond() { return second; }
 
   /*@ requires 0 <= hour && hour <= 23;
