@@ -7,18 +7,13 @@ public class Clock {
 
   //@ private invariant 0 <= hour && hour <= 23;
   private int hour; //@ in _time;
-
   //@ private invariant 0 <= minute && minute <= 59;
   private int minute; //@ in _time;
-
   //@ private invariant 0 <= second && second <= 59;
   private int second; //@ in _time;
 
   //@ ensures _time == 12*60*60;
-  //@ ensures_redundantly getHour() == 12  && getMinute() == 0  &&  getSecond() == 0;
-  public /*@ pure @*/ Clock() {
-    hour = 12; minute = 0; second = 0;
-  }
+  public /*@ pure @*/ Clock() { hour = 12; minute = 0; second = 0; }
 
   //@ ensures \result == (_time / (60*60)) % 24;
   public /*@ pure @*/ int getHour() { return hour; }
@@ -29,18 +24,17 @@ public class Clock {
   //@ ensures \result == _time % 60;
   public /*@ pure @*/ int getSecond() { return second; }
 
-  // REMOVE SET TIME IF NOT NEEDED in the prose.
   /*@ requires 0 <= hour && hour <= 23;
     @ requires 0 <= minute && minute <= 59;
     @ assignable _time;
-    @ ensures getHour() == hour && getMinute() == minute && getSecond() == 0;
+    @ ensures _time == hour*60*60 + minute*60;
     @*/
   public void setTime(int hour, int minute) {
     this.hour = hour; this.minute = minute; this.second = 0;
   }
 
   //@ assignable _time;
-  //@ ensures _time == \old(_time + 1) % 60*60*24;        
+  //@ ensures _time == \old(_time + 1) % 24*60*60;
   public void tick() {
     second++;
     if (second == 60) { second = 0; minute++; }
