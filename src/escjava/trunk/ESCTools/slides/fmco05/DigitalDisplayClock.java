@@ -12,7 +12,7 @@ public class DigitalDisplayClock {
     //@ private invariant time[5] == 2 ==> time[4] <= 3; // hr
     private /*@ non_null rep @*/ int[] time;  // rep modifier to prevent aliasing 
 
-    /*@ pure @*/ public DigitalDisplayClock() { time = new /*@ rep @*/ rep int [6]; }   // note rep modifier
+    /*@ pure @*/ public DigitalDisplayClock() { time = new rep int [6]; }   // note rep modifier
 
     //@ ensures 0 <= \result && \result <= 23;
     public /*@ pure @*/ int getHour() { return  time[5]*10 + time[4]; }
