@@ -1,8 +1,11 @@
 Todo:
 
-- Reviewing each section one by one.
+- Reviewing each section one by one. --PC
 - Fig. 3 now has public invariants, it would be worth mentioning these in the
-  prose of the Section on model fields.
+  prose of the Section on model fields. --PC
+- Erik, did you use & instead of && on purpose in the AlarmClock class? --PC
+- Section on ghost var should indeed probably be simplified; maybe just use
+  the example of the alarmSecondsRemaining? --PC
 
 ------------------------------------------------------------------------------
 Section status/mutex
@@ -16,8 +19,9 @@ Section status/mutex
 * Section 3
 * Section 4: completed review, editing and spell-checking (PC).
 * Section 5: completed review, editing and spell-checking (PC).
-* Section 6: write mutex owned by Patrice.
-* Section 7:
+* Section 6: completed review, editing and spell-checking (PC).
+  - The section can probably be simplified. --PC.
+* Section 7: write mutex owned by Patrice.
 * Section 8: completed review, editing and spell-checking (PC).
 
 ==============================================================================
@@ -32,7 +36,8 @@ Log:
 - Section 2:
   - I've pulled out the not on non-null because there are no referece type
     decls in the samples of Section 2. :)  
-- Section 4: 
+- Section 6:
+  - bell --> alarm, ...
 - Section 8: Conclusion, reviewed and updated.
 
 ==============================================================================

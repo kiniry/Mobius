@@ -776,14 +776,14 @@ See \cite{Dhara-Leavens96} for details.
 
 Like model fields, ghost fields are specification-only fields,
 so they cannot be referred to in Java code.
-The difference is that whereas a model field provide an abstraction
-of the existing state, a ghost field provide some additional state,
-which may -- or may not -- be related to the existing state.
-Unlike a model field, a ghost field can therefore
+While a model field provides an abstraction
+of the existing state, a ghost field can provide some additional state,
+which may---or may not---be related to the existing state.
+Unlike a model field, a ghost field can
 be assigned a value. This is done by a special \texttt{set} statement
 that has to be given in a JML context.
 Before we discuss the difference between model and ghost fields
-in more detail, first an example of the use of a ghost field.
+in more detail, let us first look at an example of the use of a ghost field.
 
 % {\scriptsize A more interesting example of a ghost field is 
 % Typical use pattern for ghost fields: 
@@ -850,15 +850,14 @@ in more detail, first an example of the use of a ghost field.
 % \label{ghost}
 % \end{figure}
 % 
-% \subsection{Example ghost field: a boolean \texttt{alarmOn}}
+% \subsection{Example ghost field: a boolean \texttt{\_alarmEnabled}}
 % \MARGIN{Erik: an alternative example might be adding a boolean ghost field 
 % in the \texttt{AlarmInterface}; maybe the earlier example can then be dropped?}
 % 
 % Our third example of the use of a ghost field is more interesting, as
 % it points a possible bug in the implementation, or at least an 
 % ambuity in the informal specification.
-
-\medskip
+% \medskip
 
 Suppose that we want to convince ourselves that the implementation of 
 \texttt{AlarmClock} will not invoke the method \texttt{alarm.on()}
@@ -876,38 +875,41 @@ For the purpose of understanding the behavior of the \texttt{AlarmClock},
 and possibly capturing this understanding in additional JML annotations,
 it can be useful to add an extra boolean field to the state, which records if 
 the associated alarm is going off.
-This is illustrated in \figref{Example:alarmclock}:
-a boolean ghost field \texttt{\_alarm\_going\_off} is declared, 
-and two assignments to this field are included in the method \texttt{tick()},
-which ensure that the field is true when the alarm is going off and false
-otherwise\footnote{A subtle issue here is that \texttt{\_alarm\_going\_off} 
-has to be included in the datagroup associated with \texttt{\_time}. This is 
-because --  by the principle of specification inheritance -- the method 
-\texttt{tick()} is only allowed to have side effects on \texttt{\_time}.
-Because \texttt{tick()} assigns to \texttt{\_alarm\_going\_off}, the field
-has to be included in this datagroup.}.
+%
+In \figref{Example:alarmclock}, we have declared 
+a boolean ghost field \texttt{\_alarmEnabled}.
+Two assignments to this field are included in the method \texttt{tick()}.
+The assignments ensure that the field is true when the alarm enabled and false
+otherwise%
+%
+\footnote{A subtle issue here is that \texttt{\_alarmEnabled} has to be
+  included in the datagroup associated with \texttt{\_time}. This is
+  because---by the principle of specification inheritance---the method
+  \texttt{tick()} is only allowed to have side effects on \texttt{\_time}.
+  Since \texttt{tick()} assigns to \texttt{\_alarmEnabled}, the field
+  has to be included in this datagroup.}.
 
 % \begin{figure}[tbp]
 % %
 % \verbatiminput{AlarmClockGhostTwo.java}
 % %
-% \caption{\label{example}Example JML specification using ghost field \texttt{alarmOn} to record if alarm is going off}
+% \caption{\label{example}Example JML specification using ghost field \texttt{\_alarmEnabled} to record if alarm is going off}
 % \label{ghosttwo}
 % \end{figure}
 
 One can now try to capture the informal requirement that ``if an alarm time
 has been set, and the alarm is enabled, then the alarm will go off for
 one minute at the specified alarm time'', by formulating one or more
-suitable invariants relating the new ghost field \texttt{alarmOn} to
+suitable invariants relating the new ghost field \texttt{\_alarmEnabled} to
 the `real' state of the \texttt{AlarmClock}. There are many way to express
 such a relation, for instance using the following invariants:
 \begin{verbatim}
- invariant alarmTime+60 <= 24*60*60 ==> 
-     ( _alarm_going_off 
+ invariant _alarmTime+60 <= 24*60*60 ==> 
+     ( _alarmEnabled 
        <==> _alarmTime <= time && time <= _alarmTime+60);
 
  invariant alarmtime+60 > 24*60*60 ==> 
-     ( _alarm_going_off 
+     ( _alarmEnabled 
        <==> 
        ( (_alarmTime <= time && time <= 24*60*60)
         ||
@@ -929,51 +931,48 @@ AlarmInterface, with a boolean model/ghost field, to forbid this. Of course,
 if the alarm is aliased, we still have a problem.}
 
 An improvement in the implementation would be to count down the number of 
-seconds the alarm still have to go off, and use this as a basis for switching 
+seconds left until the alarm is disabled, and use this as a basis for switching 
 off the alarm, rather than relying on a comparison of the current time 
 and the alarm time.
 
 \begin{verbatim}
   /** The number of second that the alarm will still be on.
-    * If zero, the alarm is off.
-    */
-  /*@ private invariant -1 <= alarmSecondsRemaining 
-    @                     && alarmSecondsRemaining <= 60;
-    @*/
-  /*@ private invariant (alarmSecondsRemaining > 0)
-    @                   == _alarm_going_off;
-    @*/
-  private int alarmSecondsRemaining = 0; //@ in _time;
+    * If zero, the alarm is off. */
+  //@ private invariant 0 <= alarmSecondsRemaining 
+  //@                     && alarmSecondsRemaining <= 60;
 
+  //@ private invariant (alarmSecondsRemaining > 0) == _alarmEnabled;
+  private int alarmSecondsRemaining = 0; //@ in _time;
   ...
 
   public boolean tick() {
-  super.tick();
-  if (alarmSecondsRemaining > 0) {
-      alarmSecondsRemaining--;
-      if (alarmSecondsRemaining == 0) {
-          bell.off();
-          //@ set _alarm_going_off = false;
-      }
-  }
-  if (getHour() == alarmHour & getMinute() == alarmMinute &
-      getSecond() == 0) {
-      bell.on();
-      alarmSecondsRemaining = 60;
-      //@ set _alarm_going_off = true;
+    super.tick();
+    if (alarmSecondsRemaining > 0) {
+        alarmSecondsRemaining--;
+        if (alarmSecondsRemaining == 0) {
+            alarm.off();
+            //@ set _alarmEnabled = false;
+        }
+    }
+    if (getHour() == alarmHour & getMinute() == alarmMinute &
+        getSecond() == 0) {
+        alarm.on();
+        alarmSecondsRemaining = 60;
+        //@ set _alarmEnabled = true;
+    }
   }
 \end{verbatim}
 Now that we have such a close correspondence between the
-ghost field \texttt{alarmOn} and the field
+ghost field \texttt{\_alarmEnabled} and the field
 \texttt{alarmSecondsRemaining}, one could choose to replace
 the ghost field by a model field:
 \begin{verbatim}
- //@ public boolean model _alarm_going_off; //@ in _time;
- //@ private represents _alarm_going_off 
- //@                    == (alarmSecondsRemaining >= 0);
+ //@ public boolean model _alarmEnabled; //@ in _time;
+ //@ private represents _alarmEnabled == (alarmSecondsRemaining > 0);
 \end{verbatim}
-However, for conceptual clarity, the ghost field is probably better.
-
+% However, for conceptual clarity, the ghost field is probably better.
+% \MARGIN{I think the model field is clearer :) --PC}
+%
 Of course, one could choose to turn the ghost field into a real field,
 so that it can be used in the implementation.
 This would make the implementation simpler to understand.
