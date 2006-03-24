@@ -200,17 +200,17 @@ Finally, conclusions and related work are given in \secref{Sec:conclusion}.
 \section{JML Basics: Pre- and Postconditions, and Invariants}
 \label{Sec:basics}
 
-\MARGIN{Erik: Explain \texttt{non\_null}, giving forward ref to
-\figref{Example:alarmclock} where it is used. PC: this has not been done yet.
-Maybe it can merely be mentioned with the alarm clock example?}
+%% \MARGIN{Erik: Explain \texttt{non\_null}, giving forward ref to
+%% \figref{Example:alarmclock} where it is used. PC: this has not been done yet.
+%% Maybe it can merely be mentioned with the alarm clock example?}
 %
 % Intro: Clock examples.
 %
 This section examines the specification and implementation of
-various kinds of clock, which are used to review basic concepts like
+various kinds of clock.  In doing so, we review basic concepts like
 method contracts and class invariants and introduce their JML notation.
 
-\subsection{Method Contracts}
+\subsection{Method contracts}
 
 % intro: requires, ensures.
 %
@@ -221,8 +221,8 @@ We begin with the specification of a \texttt{TickTockClock} as given in
 \VerbatimInput[numbers=left]{TickTockClock.java}
 %
 \vspace*{-2ex} % to fit this on one page
-\caption{JML specification for \texttt{TickTockClock} with line
-  numbers added. The datagroup \texttt{\_time\_state} and the
+\caption{JML specification for \texttt{TickTockClock}.
+  The datagroup \texttt{\_time\_state}, the
   associated \texttt{assignable} clauses and \texttt{in} clauses are
   explained later, in Section~\ref{Sec:assignable}.} 
 \label{Example:TickTockClock}
@@ -237,49 +237,58 @@ method contracts formed from:
 An example of such a contract is found in the specification of the
 method \texttt{getHour()} on lines 17--19.  The JML specification for
 this method is written in front of the method itself, and is found in
-special annotations, which look like Java comments that begin with an
-at-sign (\texttt{@}).
+stylized Java comments 
+% special annotations, which look like Java comments 
+that begin with an at-sign (\texttt{@}).
+
+% NOTE: this doesn't seem to be quite the right time to introduce the notion
+% of non-null types because, in fact, the given clock spec doesn't make use of
+% reference types :). --PC
+%
+%% Ignoring some details for the moment,\footnote{
+%% E.g., that declarations of reference types are non-null by default in JML.
+%% % The omitted details are that JML, by default, asserts that formal
+%% % parameters and the result of a method are not null.
+%% }
 
 % Implicit pre- and post-conditions.
-Ignoring some details,\footnote{
-The omitted details are that JML, by default, asserts that formal
-parameters and the result of a method are not null.
-}
 % 
 \GMARGIN{implicit clauses}
 %
-a method contract without an explicit \texttt{requires} clause has
-an implicit precondition of ``\texttt{true}.''  Thus, by default, a
+A method contract without an explicit \texttt{requires} clause has
+an implicit precondition of ``$true$''.  Thus, such a
 method imposes no requirements on its callers.  This default means
 that the \texttt{requires} clause written for \texttt{getHour()} could
 have been omitted entirely.
 Similarly, the default postcondition 
 when none is explicitly given in an \texttt{ensures} clause is also
-``\texttt{true},'' which says that the method makes no guarantees to
+``$true$'', which says that the method makes no guarantees to
 its caller.
 In \figref{Example:TickTockClock}, the constructor (on lines 12--15)
 and the method \texttt{getMinute()} (on lines 21--22) are
 examples of class members with implicit requires clauses.
 
-Preconditions and postconditions can be split over multiple \texttt{requires}
-and \texttt{ensures} clauses, as illustrated for the postcondition of 
-\texttt{getSecond()} (on lines 24--25).  Multiple \texttt{ensures}
-clauses, or multiple \texttt{requires} clauses, are equivalent to
-their conjunction. 
-
 Note that the assertion expressions appearing in the \texttt{requires} and
 \texttt{ensures} clauses are written using a Java-like syntax.
 %
 \GMARGIN{\old}
-\MARGIN{\result}
+\GMARGIN{\result}
 %
-In postconditions of (non-void) methods, \result\ can be used to refer to the 
-result of the method.
+In postconditions of (non-\texttt{void}) methods, \result\ can be used to refer to the 
+value being returned by the method.
 The only other JML specific operator used in this clock specification is the
 \old$()$ operator, which is used in the \texttt{ensures} clauses of
 \texttt{tick} (on lines 30--32).  The 
 expression \old$(e)$ refers to the value of $e$ in the method's pre-state,
 i.e.\ the state just before the method was invoked.
+
+% \GMARGIN{multiple clauses}
+Preconditions and postconditions can be split over multiple \texttt{requires}
+and \texttt{ensures} clauses, as illustrated for the postcondition of 
+\texttt{getSecond()} (on lines 24--25).  Multiple \texttt{ensures}
+clauses, or multiple \texttt{requires} clauses, are equivalent to
+a single clause consisting of the conjunction (\texttt{\&\&}) of their
+respective assertions.
 
 Method contracts, like the contract of \texttt{tick()} on lines 28--38
 of \figref{Example:TickTockClock}, can be written as one or
@@ -302,25 +311,22 @@ essentially has two cases of interest: i.e., either
 %
 We note in passing that the specification of \texttt{tick()} is incomplete, as
 it might appear during the development of the \texttt{TickTockClock} class.
-Informal comments, of the form \texttt{(* ... *)} on line 37 can be useful in
+Informal comments, line the one on line 37 can be useful in
 remembering what remains to be formalized, or in escaping from
 formalism, although they do not help in verification. 
 
 \subsection{Purity}
 %
-In the DBC approach \cite{Meyer97}, only query methods can be used in assertion
-expressions because they are required to be side-effect free.
+In the DBC approach, only query methods can be used in assertion expressions
+because they are required to be side-effect free \cite{Meyer97}.
 % 
-The corresponding concept in JML is known as method purity; i.e. only methods
-declared as \texttt{pure} can be used in assertion expressions; e.g.\ the
-\texttt{pure} method \texttt{getSecond()} is used in the postcondition of
-\texttt{tick()}.
-%
-% \subsection{Purity for constructors}
-%\MARGIN{Erik: not sure if this should go in, but it's defintely a FAQ. PC:
-%  lets put it in and see.}
+The corresponding concept in JML is known as method \emph{purity}; i.e. only methods
+declared as \texttt{pure} can be used in assertion expressions. 
+E.g., since the method \texttt{getSecond()} is declared \texttt{pure}, it is
+legal to make use of it in the postcondition of \texttt{tick()}.
 
-Notice that the constructor is declared as \texttt{pure}, despite the fact 
+Notice that the \texttt{TickTockClock} constructor is declared as \texttt{pure}, 
+despite the fact 
 that it assigns to the fields \texttt{hour}, \texttt{minute} and \texttt{second}.
 Such instance field assignments are permitted inside the bodies of constructors
 because they are benevolent side-effects---i.e., that have no observable effect
@@ -329,7 +335,10 @@ on clients.
 On the other hand, a constructor would not be permitted to assign to a static
 field.
 %
-A stronger notion of purity has been proposed in \cite{DarvasMuller05}.
+Purity, and particularly variants in the strength (restrictiveness) of its
+definition are a subject of active research--e.g., a stronger notion of purity
+than that of JML has been proposed by Darvas and M\"uller
+\cite{DarvasMuller05}.
 
 \subsection{Lightweight vs. heavyweight}
 
@@ -343,7 +352,7 @@ Examples of heavyweight specification cases are those given for the
 \texttt{setTime()} method of the \texttt{SettableClock} class given in
 \figref{Example:SettableClock}.
 %
-A heavyweight specification case is easily recognized by the use of
+A heavyweight specification case is easily recognized by the use of a
 ``behavior'' keyword at the beginning of the case.
 %
 The contract of \texttt{setTime()} illustrates the two kinds of heavyweight
@@ -366,27 +375,28 @@ with \texttt{public}.
 %
 This means that the specification cases are visible to clients, and hence, for
 example, will be included as a part of client visible documentation generated
-using \texttt{JmlDoc}. It also means that these specification cases cannot
-refer to, say, private fields.
+using JmlDoc \cite{STTT05}. It also means that these specification cases cannot
+refer to \texttt{private} or \texttt{protected} fields.
 
 \begin{figure}[tbp]
 %
-\verbatiminput{SettableClock.java}
+\VerbatimInput[numbers=left]{SettableClock.java}
 %
 \vspace*{-2ex} % to fit this on one page
 \caption{JML specification for \texttt{SettableClock}}
 \label{Example:SettableClock}
 \end{figure}
+%
 \GMARGIN{lightweight}
 %
 Contracts built from lightweight specification cases have fewer keywords and
 mandatory clauses.  In particular, the visibility of a lightweight
-specification case cannot be given explicitly: by default it always matches
+specification case cannot be given explicitly since, by definition, its
+visibility is the same as 
 the visibility of the method it is attached to.
 %
-The method  contracts in \texttt{TickTockClass} are all examples of 
+The method contracts in \texttt{TickTockClock} are all examples of 
 lightweight method specifications.
-
 
 %\subsection{Completeness of specifications}
 %%
@@ -417,52 +427,24 @@ interpreted as follows: if \texttt{hour} and \texttt{minute} are not within
 their valid ranges, then the method will raise an \texttt{IllegalArgumentException} 
 (and the system state will be left unchanged).
 
-%------------------------------------------------------------------------------
-% PC: I had to comment out the text below because of the way that I reworked
-% the sample specs ... sorry, but I though that it was more important to
-% introduce normal and exceptional postconditions than not.  The issue raised
-% below by Erik is important, but not necessarily obvious to integrate.
-% Actually, I think that the point that Erik makes is an argument for a special
-% command line option of ESC/Java2.
-%------------------------------------------------------------------------------
-%Specifying exceptional behaviour can be tricky.
-%
-%It has been our experience, that it is better to initially specify a class
-%using preconditions (and invariants) that rule out situations that could give
-%rise to exceptions.
-%%
-%% [Oups, can't say this anymore ...]
-%One of the benefits of using a static analysis tool like ESC/Java2 
-%ESC/Java2 is to discover places in the code where \texttt{setTime} is called
-%with illegal arguments, and for this purpose the precondition specificied in
-%\figref{Example:SettableClock} is precisely what we want.
-%
-%Traditionally, one makes the distinction between partial and total correctness.
-%By default, JML specifications are partial\footnote{To make specification total, 
-%one should add an additional clause \texttt{diverges false} to the method
-%specifications, ruling out non-termination.}.
-%The situation in Java is more complicated, because apart from terminating 
-%normally, programs can also terminate abruptly, by throwing an exception. 
-%
-%\medskip
-%------------------------------------------------------------------------------
-% PC: another topic that I am temporarily excluding ...
-
-Notice that there are no Java \texttt{throws} clauses in the \texttt{TickTocClock} 
-class.  Still, Java permits the constructor and any of the methods to throw a 
+Notice that in the \texttt{TickTocClock} class,
+there are no Java \texttt{throws} clauses.
+Still, Java permits the constructor and any of the methods of this class to throw a 
 \texttt{RuntimeException}--one commonly raised runtime exception is 
 \texttt{NullpointerException}.
 %
-JML is more strict than Java when it comes to declaring runtime exceptions: 
-whereas Java allows any method to throw a runtime exception, JML only 
-allows this if the exception is listed in the method's throws clause
-\footnote{or in the contract's \texttt{signals\_only} clause, but we will not go 
-into this}.
-This means that constructors or methods without an explicit throws clause
-have an implicit exceptional postcondition \texttt{signals (Exception) false}.
-Note that this means that the specification in \figref{Example:TickTockClock} 
-rules out that any exception are thrown, making the specification a lot stronger 
-than it may appear at first sight.
+JML is more strict when it comes to declaring runtime exceptions: 
+whereas Java allows any constructor or method to throw a runtime exception, JML only 
+allows this if the exception is listed in the method's throws clause,
+or in the method contract's \texttt{signals\_only} clause.
+\texttt{SettableClock.setTime()} illustrates use of the latter.
+%
+Therefore, constructors or methods without an explicit throws clause
+have an implicit exceptional postcondition of \texttt{signals (Exception) false}.
+%
+Hence, the specification in \figref{Example:TickTockClock} 
+rules out the generation of any runtime exceptions, making the specification a lot stronger 
+than it might appear at first sight.
 
 \subsection{Instance and static invariants (and the callback problem)}
 
@@ -475,75 +457,66 @@ attributes of a class.
 An assertion that appears in a non-static \texttt{invariant} clause is called
 a \emph{instance invariant} or an \emph{object invariant}.
 %
-Note that this terminology is contrary to the literature but it is more
-accurate with respect to the nomenclature of Java.  In this paper an
+Note that while this terminology is contrary to the literature, it is more
+accurate with respect to the nomenclature of Java.  In this paper, an
 unqualified use of the term ``invariant'' will refer to an ``object
 invariant''.
 
-% \MARGIN{Erik: do we want to go into this? Many people seem to be unaware of
-%  it. PC: yes, I think so.}
-%
-%In traditional literature on program verification, by invariant one usually
-%means \emph{loop invariant}. \COMMENT{PC: really?!?}
-%
-%In an object-oriented setting, class invariants are a much more important notion.
-%
-%In this paper, we will use ``invariant'' to mean ``object invariant''%
-%\footnote{About terminology: we prefer the term ``object invariant'' over
-%   ``class invariant''; the term ``class invariant'' can be confusing in the
-%   presence of invariants on the static fields of a class.}%
-
 The semantics of object invariants is more involved than most specifiers
-expect--especially newcomers to the field of object-oriented specification.
-Hence, while this issue has been widely known for quite some time--e.g.\
-\cite{Szyperski98}--we believe it is worth a brief explanation.
+expect, especially for newcomers to the field of object-oriented specification.
+Hence, while this issue has been widely known for quite some time
+\cite{Szyperski98} we believe it is worth a brief explanation.
 %
-Intuitively, an object invariant has to be:
+Intuitively, an object invariant
 \begin{itemize}
-  \item established by constructors, i.e., the object invariant is implicitly
+  \item  has to be established by constructors--i.e., it is implicitly
     included in the postcondition of constructors;
-  \item preserved by all methods, i.e., it is implicitly included in the pre-
-    and postconditions of all methods\footnote{The object invariant also has 
-    to be re-established in case a method throws an exception, so the it is also 
-    implicitly included in all exceptional postconditions.}.
+  \item can be assumed to hold on entry to methods, but methods must also
+    re-establish it. Hence, the invariant is implicitly included in the
+    preconditions, and (normal and exceptional) postconditions of methods.
 \end{itemize}
-The object invariant also has to be re-established in case a method throws an exception,
-so the it is also implicitly included in all exceptional postconditions.
-%
-This intuition may suggest that the notion of object invariant is not really
-necessary, but just provides a convenient shorthand.  However, this is a
-common misconception as it is \emph{not} the case. There is more to the notion
-of invariant than the intuition above.
 
-For example, suppose the method \texttt{tick} calls some method
-at a program point where its invariant is broken.
+This intuition may suggest that the notion of object invariant is not really
+necessary, but rather that it just provides a convenient shorthand.  This is a
+common misconception.
+%
+There is more to the notion of invariant than the intuition above.
+%
+For example, suppose that the \texttt{tick} method called another method
+at a program point where its invariant is broken, such as the call to
+\texttt{canvas.paint()} in the following:
 \begin{verbatim}
   public void tick() {
     second++;
+    // object invariant might no longer hold
     canvas.paint();
     if (second == 60) { second = 0; minute++; }
     if (minute == 60) { minute = 0; hour++; }
     if (hour == 24)   { hour = 0; }
   }
 \end{verbatim}
-This can cause to problems, namely if execution of \texttt{canvas.paint()} 
-involves an invocation of a method on the current clock object, a so-called 
-callback. Because the invariant of this clock object is broken, all bets
-about its behaviour are off; in particular, we  have no guarantee that the
-object meets its method contracts.
+It would then be reasonable for the canvas to invoke, e.g., the
+\texttt{getSecond()} method of the current clock object, performing a so-called 
+callback. \GMARGIN{callback}
+% Unfortunately, the canvas is not permitted to do so ...
+However, since the invariant of this clock object is broken, its behavior is
+unconstrained, in particular because the preconditions of all methods (which
+implicitly include the object invariant) are all false.
 
 To avoid such problems, the invariant not only has to be re-established at the
-end of each method, but also at those program points where a method is invoked,
-possibly on another object. These program points--i.e.\ all program points
+end of each method, but also at those program points where a method is invoked.
+These program points--i.e., all program points
 at which a method invocation starts or ends--are called the \emph{visible
 states}. The visible state semantics for invariants says that all invariants
 of all object have to hold at these visible states.
-
-It should be noted that this semantics is very strong and in many cases,
+\MARGIN{Do we have a reference to give here? --PC}
+%
+This semantics is very strong and in many cases,
 overly restrictive.  Less restrictive, but still sound, approaches are still a
-hot topic of ongoing research. For a more thorough discussion of this problem
-and a proposed solution we refer to \cite{Mueller-Poetzsch-Heffter-Leavens05}.
-Other papers exploring alternative solutions are
+hot topic of ongoing research. A more thorough discussion of this problem
+and a proposed solution are offered by M\"{u}ller, Poetzsch-Heffter and
+Leavens \cite{Mueller-Poetzsch-Heffter-Leavens05}; alternative solutions are
+explored elsewhere
 \cite{Huizing-Kuiper00,JacobsLeinoPiessensSchulte05,Middelkoop05}.
 
 \section{Frame properties}
