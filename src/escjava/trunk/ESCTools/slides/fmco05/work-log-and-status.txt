@@ -6,12 +6,12 @@ Section status/mutex
   - PC: There is a potential to trim citations in Section 1.1 -- see margin
     notes -- though I have left them in for now.
 * Section 2: write mutex owned by PC.
-* Section 3
-* Section 4
-* Section 5
-* Section 6
-* Section 7
-* Section 8
+* Section 3: write mutex owned by Erik
+* Section 4: write mutex owned by Erik
+* Section 5: write mutex owned by Erik
+* Section 6: write mutex owned by Erik
+* Section 7: write mutex owned by Erik
+* Section 8: write mutex owned by Erik
 
 ==============================================================================
 Log:
