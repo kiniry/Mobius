@@ -618,12 +618,9 @@ to belong to \texttt{objectState}.
 \section{Model fields}
 \label{Sec:model}
 
-%\COMMENT{This section explain the use of a model field as abstract values,
-%using the example in \figref{Example:model}}
-
 \begin{figure}[tbp] 
 %
-\VerbatimInput{Clock.java}
+\VerbatimInput[numbers=left]{Clock.java}
 %
 \vspace*{-2ex} % to fit this on one page
 \caption{\label{Example:model}Example JML specification illustrating the use of model fields.}
@@ -631,39 +628,43 @@ to belong to \texttt{objectState}.
 
 \MARGIN{We can point out the danger of the model field being
 subject to an integer overflow, and explain Patrice's solution
-to this.}
+to this. --Erik  Don't think we'll have time to add that. --P}
 
-Model fields are closely related to the notion of data abstraction proposed in 
-\cite{Hoare72}.  A model field is a specification-only field that provides an 
+Model fields are closely related to the notion of data abstraction proposed by
+Hoare \cite{Hoare72}.  A model field is a specification-only field that provides an 
 abstraction of (part of) the concrete state of an object.  
 %
-The specification in \figref{Example:model} illustrates this.
+The specification in \figref{Example:model} illustrates the use of a model field.
 It abstracts away from the particular concrete representation of time
-by three fields \texttt{hours}, \texttt{minute} and \texttt{second},
 by using a model field \texttt{\_time} that represents the number of seconds
 past midnight.
-This allows a brief but complete specification of the method \texttt{tick()}.
+%
+Notice how this abstraction allows for a brief but complete specification of the method \texttt{tick()}.
+%
+The \texttt{represents} clause of line 3, relates the model field to its
+concrete representation, 
+in this case, as a function of \texttt{hour}, \texttt{minute} and 
+\texttt{second}. Hence, the \texttt{represents} clause defines the 
+representation function of \texttt{\_time}.  (In its most general form, JML also
+permits \texttt{represents} clauses that are relational, though we do not cover
+that here.)
 
-The \texttt{represents} clause relates the model field to the concrete representation,
-in this case given by the three fields  \texttt{hours}, \texttt{minute} and 
-\texttt{second}. So the \texttt{represents} clause defines the 
-representation function. In general, one can also have a representation relation.
-Note that the \texttt{represents} clause is private, as it refers to the private
-fields that make up the concrete implementation, but that the model field
-is public, so that it is visible to public clients.
-
+Note that the \texttt{\_time} model field is public, and hence visible to
+clients, though its representation is not.  The \texttt{represents} clause
+must be declared private, because it refers to private class fields.
+%
 For every model field there is an associated datagroup, so that the 
 model field can also be used in \texttt{assignable} clauses.
-In fact, a datagroup can be viewed as a degenerated model field, namely
+In fact, a datagroup can be viewed as a degenerate model field, namely
 a model field of some unit type.
 
 A difference between model fields for objects and the traditional notion of
 abstract value for abstract data types is that an object can have several
 model fields, providing abstractions of different aspects of the object.
-For instance, in the specification of the subclass \texttt{AlarmClock}
-of \texttt{Clock} in \figref{Example:alarmclock} uses 
+For instance, the specification of \texttt{AlarmClock}
+(a subclass of \texttt{Clock}, given in \figref{Example:alarmclock}) uses 
 two model fields, one for the current time, which it inherits from
-it parent class \texttt{Clock}, and one for the alarm time.
+\texttt{Clock}, and one for the alarm time.
 
 Model fields are especially useful in the specification of Java interfaces,
 as interfaces do not contain any concrete representation we can refer
@@ -671,7 +672,7 @@ to in specifications. We can declare model fields in a Java interface
 to use in its specifications, and then every class that implements 
 the interface can define its own \texttt{represents} clause relating
 this abstract field to its concrete representation. 
-
+%
 % Erik: I removed the sentence below, as overriding represents clause
 %       is a dubious thing to do.
 % Similarly, a subclass
@@ -679,10 +680,11 @@ this abstract field to its concrete representation.
 % of time and then override the \texttt{represents} clause. For example,
 % the example \texttt{DigitalDisplayClock} in \figref{Example:alias}
 % does this.
-
+%
 For a more extensive discussion of model fields see \cite{Cheon-etal05}.
-\cite{Cok05} discusses how model fields are treated in ESC/Java2;
-more recent work on handling model fields in verification is \cite{LeinoMuller06}.
+Cok discusses how model fields are treated in ESC/Java2 \cite{Cok05}, while
+Leino and M\"{u}ller have recently worked on handling model fields in the
+context of verification \cite{LeinoMuller06}.
 
 \section{Behavioural subtyping and specification inheritance}
 \label{Sec:behsubtyping}

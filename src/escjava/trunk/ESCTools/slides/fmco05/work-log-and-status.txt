@@ -1,7 +1,6 @@
 Todo:
 
 - Reviewing each section one by one.
-- Remove setTime() from Clock class if it is not referenced in the prose.
 - Fig. 3 now has public invariants, it would be worth mentioning these in the
   prose of the Section on model fields.
 
@@ -15,8 +14,8 @@ Section status/mutex
 * Section 2: completed review, editing and spell-checking (PC).
   - This seems like is very close to being final -- maybe a mising reference.
 * Section 3: write mutex owned by Erik.
-* Section 4: write mutex owned by Patrice.
-* Section 5:
+* Section 4: completed review, editing and spell-checking (PC).
+* Section 5: write mutex owned by Patrice.
 * Section 6:
 * Section 7:
 * Section 8: completed review, editing and spell-checking (PC).
@@ -33,6 +32,7 @@ Log:
 - Section 2:
   - I've pulled out the not on non-null because there are no referece type
     decls in the samples of Section 2. :)  
+- Section 4: 
 - Section 8: Conclusion, reviewed and updated.
 
 ==============================================================================
