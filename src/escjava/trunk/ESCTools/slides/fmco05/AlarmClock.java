@@ -2,7 +2,7 @@ class AlarmClock extends Clock {
   //@ public model int _alarmTime;
   //@ private represents _alarmTime = alarmMinute*60 + alarmHour*60*60;
 
-  //@ public ghost boolean _alarm_going_off = false; //@ in _time;
+  //@ public ghost boolean _alarmEnabled = false; //@ in _time;
   
   //@ private invariant 0 <= alarmHour && alarmHour <= 23;
   private int alarmHour; //@ in _alarmTime;
@@ -30,13 +30,13 @@ class AlarmClock extends Clock {
     super.tick();
     if (getHour() == alarmHour & getMinute() == alarmMinute & getSecond() == 0) {
          alarm.on();
-         //@ set _alarm_going_off = true;
+         //@ set _alarmEnabled = true;
     }
     if ((getHour() == alarmHour & getMinute() == alarmMinute+1 & getSecond() == 0) 
         ||
         (getHour() == alarmHour+1 & alarmMinute == 59 & getSecond() == 0) ) {
          alarm.off();
-         //@ set _alarm_going_off = false;
+         //@ set _alarmEnabled = false;
     }
   }
 
