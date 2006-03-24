@@ -5,7 +5,7 @@ Section status/mutex
 * Section 1: completed review, editing and spell-checking (PC).
   - PC: There is a potential to trim citations in Section 1.1 -- see margin
     notes -- though I have left them in for now.
-* Section 2
+* Section 2: write mutex owned by PC.
 * Section 3
 * Section 4
 * Section 5
@@ -16,9 +16,10 @@ Section status/mutex
 ==============================================================================
 Log:
 
-* 2006-03-24, Patrice
+2006-03-24, Patrice:
 - Added \extracite{} command so that we can hide citations which we think we
   might want to remove without actually deleting them from the .tex file.
-- ...
+- Finished a pass on Section 1.
+- Starting revision of Section 2.
 
 ==============================================================================
