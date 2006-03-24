@@ -221,14 +221,13 @@ We begin with the specification of a \texttt{TickTockClock} as given in
 \VerbatimInput[numbers=left]{TickTockClock.java}
 %
 \vspace*{-2ex} % to fit this on one page
-\caption{JML specification for \texttt{TickTockClock}.
+\caption{\label{Example:TickTockClock}JML specification for \texttt{TickTockClock}.
   The datagroup \texttt{\_time\_state}, the
   associated \texttt{assignable} clauses and \texttt{in} clauses are
   explained later, in Section~\ref{Sec:assignable}.} 
-\label{Example:TickTockClock}
 \end{figure}
 This example specification illustrates basic
-method contracts formed from:
+method contracts formed by:
 %
 \begin{itemize}
   \item preconditions (introduced by the \texttt{requires} keyword), and
@@ -266,7 +265,7 @@ when none is explicitly given in an \texttt{ensures} clause is also
 its caller.
 In \figref{Example:TickTockClock}, the constructor (on lines 12--15)
 and the method \texttt{getMinute()} (on lines 21--22) are
-examples of class members with implicit requires clauses.
+examples of class members with implicit \texttt{requires} clauses.
 
 Note that the assertion expressions appearing in the \texttt{requires} and
 \texttt{ensures} clauses are written using a Java-like syntax.
@@ -353,7 +352,7 @@ Examples of heavyweight specification cases are those given for the
 \figref{Example:SettableClock}.
 %
 A heavyweight specification case is easily recognized by the use of a
-``behavior'' keyword at the beginning of the case.
+``\texttt{behavior}'' keyword at the beginning of the case.
 %
 The contract of \texttt{setTime()} illustrates the two kinds of heavyweight
 specification case most often used.
@@ -383,8 +382,7 @@ refer to \texttt{private} or \texttt{protected} fields.
 \VerbatimInput[numbers=left]{SettableClock.java}
 %
 \vspace*{-2ex} % to fit this on one page
-\caption{JML specification for \texttt{SettableClock}}
-\label{Example:SettableClock}
+\caption{\label{Example:SettableClock}JML specification for \texttt{SettableClock}}
 \end{figure}
 %
 \GMARGIN{lightweight}
@@ -430,8 +428,8 @@ their valid ranges, then the method will raise an \texttt{IllegalArgumentExcepti
 Notice that in the \texttt{TickTocClock} class,
 there are no Java \texttt{throws} clauses.
 Still, Java permits the constructor and any of the methods of this class to throw a 
-\texttt{RuntimeException}--one commonly raised runtime exception is 
-\texttt{NullpointerException}.
+\texttt{Runtime\-Exception} -- one commonly raised runtime exception is 
+\texttt{Null\-pointer\-Exception}.
 %
 JML is more strict when it comes to declaring runtime exceptions: 
 whereas Java allows any constructor or method to throw a runtime exception, JML only 
@@ -465,11 +463,11 @@ invariant''.
 The semantics of object invariants is more involved than most specifiers
 expect, especially for newcomers to the field of object-oriented specification.
 Hence, while this issue has been widely known for quite some time
-\cite{Szyperski98} we believe it is worth a brief explanation.
+\cite{Szyperski98}, we believe it is worth a brief explanation.
 %
 Intuitively, an object invariant
 \begin{itemize}
-  \item  has to be established by constructors--i.e., it is implicitly
+  \item  has to be established by constructors -- i.e., it is implicitly
     included in the postcondition of constructors;
   \item can be assumed to hold on entry to methods, but methods must also
     re-establish it. Hence, the invariant is implicitly included in the
@@ -505,10 +503,10 @@ implicitly include the object invariant) are all false.
 
 To avoid such problems, the invariant not only has to be re-established at the
 end of each method, but also at those program points where a method is invoked.
-These program points--i.e., all program points
-at which a method invocation starts or ends--are called the \emph{visible
+These program points -- i.e., all program points
+at which a method invocation starts or ends -- are called the \emph{visible
 states}. The visible state semantics for invariants says that all invariants
-of all object have to hold at these visible states.
+of all objects have to hold at these visible states.
 \MARGIN{Do we have a reference to give here? --PC}
 %
 This semantics is very strong and in many cases,
@@ -522,16 +520,16 @@ explored elsewhere
 \section{Frame properties}
 \label{Sec:assignable}
 
-\COMMENT{Section~\ref{Sec:assignable} explain the use of \emph{assignable clauses} to
-specify \emph{frame properties}, and explains the need for \emph{datagroups}
-(both as a way to abstract away from implementation details and to allow
-subclasses some freedom) still using the example in Fig~\ref{Example:TickTockClock}.}
+%\COMMENT{Section~\ref{Sec:assignable} explain the use of \emph{assignable clauses} to
+%specify \emph{frame properties}, and explains the need for \emph{datagroups}
+%(both as a way to abstract away from implementation details and to allow
+%subclasses some freedom) still using the example in Fig~\ref{Example:TickTockClock}.}
 
 JML provides \texttt{assignable} clauses to specify frame properties
 of methods, i.e.\ to specify the possible side-effects of a method.
-The notion of \emph{datagroup} allows us to abstract from private implementation 
-details in frame properties and provides the flexibility that we want to have 
-in an object-oriented language.
+The notion of \emph{datagroup} allows us to abstract away from private implementation 
+details in frame properties and provides the flexibility in specifications
+that we want to have in an object-oriented language.
 This section explains these notions, and the need for them.
 
 We should stress that although these clauses are needed when doing
@@ -549,7 +547,7 @@ in the postcondition of a method have not been changed.  This approach is
 \emph{not} workable for realistic object-oriented programs, as explained below.
 
 Suppose we wanted to follow this approach in the specification 
-of the method \texttt{tick()} in Fig.~\ref{Example:TickTockClock}.
+of the method \texttt{tick()} in \figref{Example:TickTockClock}.
 Because this method modifies three fields, namely
 \texttt{second}, \texttt{minute} and \texttt{hour}, 
 the postcondition will have to mention all these fields.
@@ -592,7 +590,7 @@ these fields to be changed, as they are not listed in the \texttt{assignable} cl
 Datagroups \cite{Leino98} provide a solution to 
 this problem. The idea is that a datagroup is an abstract piece of an object's
 state, that can still be extended by future subclasses.
-The specification in Fig.~\ref{Example:TickTockClock} declares a (public) datagroup
+The specification in \figref{Example:TickTockClock} declares a (public) datagroup
 \texttt{\_time\_state} and declares that the three (private) fields belong
 to this datagroup. This datagroup is used to specify \texttt{tick}.
 This avoid exposing any private implementation details, and
@@ -601,9 +599,9 @@ additional fields it introduces.
 
 Datagroups can be nested, by using the \texttt{in} clause to say that
 one datagroup is part of another one. The JML specifications for
-\texttt{java.lang.Object}\footnote{These are apart of the (incomplete) JML 
+\texttt{java.lang.Object}\footnote{These are a part of the (incomplete) JML 
 specifications developed for the Java API that are distributed along with 
-some the tools} declare a JML datagroup \texttt{objectState}. As this datagroup
+some the tools.} declare a JML datagroup \texttt{objectState}. As this datagroup
 is inherited by all other classes, as a convention one can use this datagroup 
 to describe for a class what constitutes the `state' of an object of that class.
 By that convention, the datagroup \texttt{\_time\_state} would be declared
@@ -612,15 +610,15 @@ to belong to \texttt{objectState}.
 \section{Model fields}
 \label{Sec:model}
 
-\COMMENT{This section explain the use of a model field as abstract values,
-using the example in Fig~\ref{Example:model}}
+%\COMMENT{This section explain the use of a model field as abstract values,
+%using the example in \figref{Example:model}}
 
-\begin{figure}[tbp] \label{Example:model}
+\begin{figure}[tbp] 
 %
 \verbatiminput{Clock.java}
 %
 \vspace*{-2ex} % to fit this on one page
-\caption{Example JML specification illustrating the use of model fields. Interesting changes wrt. the earlier specification are marked.}
+\caption{\label{Example:model}Example JML specification illustrating the use of model fields.}
 \end{figure}
 
 \MARGIN{We can point out the danger of the model field being
@@ -629,11 +627,9 @@ to this.}
 
 Model fields are closely related to the notion of data abstraction proposed in 
 \cite{Hoare72}.  A model field is a specification-only field that provides an 
-abstraction from the concrete state of an object.  Using a model field, a 
-specification can abstract away from the concrete representation used in 
-the implementation.
+abstraction from the concrete state of an object.  
 
-The specification in Fig.~\ref{Example:model} illustrates this.
+The specification in \figref{Example:model} illustrates this.
 It abstracts away from the particular concrete representation of time
 by three fields \texttt{hours}, \texttt{minute} and \texttt{second},
 by using a model field \texttt{\_time} that represents the number of seconds
@@ -642,9 +638,9 @@ This allows a brief but complete specification of the method \texttt{tick()}.
 
 The \texttt{represents} clause relates the model field to the concrete representation,
 in this case given by the three fields  \texttt{hours}, \texttt{minute} and 
-\texttt{second}. So the \texttt{represents} clause defines called the 
+\texttt{second}. So the \texttt{represents} clause defines the 
 representation function. In general, one can also have a representation relation.
-Note that the \texttt{represents} is private, as it refers to the private
+Note that the \texttt{represents} clause is private, as it refers to the private
 fields that make up the concrete implementation, but that the model field
 is public, so that it is visible to public clients.
 
@@ -657,20 +653,24 @@ A difference between model fields for objects and the traditional notion of
 abstract value for abstract data types is that an object can have several
 model fields, providing abstractions of different aspects of the object.
 For instance, in the specification of the subclass \texttt{AlarmClock}
-of \texttt{Clock} in Fig.~\ref{Example:alarmclock} uses 
+of \texttt{Clock} in \figref{Example:alarmclock} uses 
 two model fields, one for the current time, which it inherits from
 it parent class \texttt{Clock}, and one for the alarm time.
 
 Model fields are especially useful in the specification of Java interfaces,
 as interfaces do not contain any concrete representation we can refer
 to in specifications. We can declare model fields in a Java interface
-to use in its specifications, and then every calls that implements 
+to use in its specifications, and then every class that implements 
 the interface can define its own \texttt{represents} clause relating
-this abstract field to its concrete representation. Similarly, a subclass
-of \texttt{Clock} could choose to provide a different representation
-of time and then override the \texttt{represents} clause. For example,
-the example \texttt{DigitalDisplayClock} in \figref{Example:alias}
-does this.
+this abstract field to its concrete representation. 
+
+% Erik: I removed the sentence below, as overriding represents clause
+%       is a dubious thing to do.
+% Similarly, a subclass
+% of \texttt{Clock} could choose to provide a different representation
+% of time and then override the \texttt{represents} clause. For example,
+% the example \texttt{DigitalDisplayClock} in \figref{Example:alias}
+% does this.
 
 For a more extensive discussion of model fields see \cite{Cheon-etal05}.
 \cite{Cok05} discusses how model fields are treated in ESC/Java2;
@@ -686,29 +686,27 @@ i.e.\ that using an object of a subclass in a place where an object of
 the superclass is expected does not cause any surprises, and hence that 
 the introduction of new subclasses does not break any existing code.
 
-For example, consider the class \texttt{AlarmClock} in Figure~\ref{Example:alarmclock}.
+For example, consider the class \texttt{AlarmClock} in \figref{Example:alarmclock}.
 Because \texttt{AlarmClock} is a subclass of \texttt{Clock}, it also
-inherits all the specification of \texttt{Clock}, i.e.\ 
+inherits all the specifications of \texttt{Clock}, i.e.\ 
 all invariants specified for \texttt{Clock} also apply to \texttt{AlarmClock},
 and that any method in \texttt{AlarmClock} has to meet the specification
 for that method given in  \texttt{Clock}.
-So, for example, all methods in \texttt{AlarmClock} have to maintain the
-\texttt{Clock} invariant th
 For example, the method \texttt{tick()}, which is overridden in \texttt{AlarmClock},
 has to meet the specification given for it in \texttt{Clock}. 
 Note that any methods which are not overridden have to be re-verified, to ensure 
 that they maintain any additional invariants of the subclass.
 
-\begin{figure}[tbp] \label{Example:alarmclock}
+\begin{figure}[tbp] 
 %
 \verbatiminput{AlarmClock_interfaceless.java}
 %
 \vspace*{-2ex} % to fit this on one page
-\caption{Example JML specification illustrating the concepts of 
+\caption{\label{Example:alarmclock}Example JML specification illustrating the concepts of 
 specification inheritance -- the class also has to satisfy all
 the specification given in the parent class \texttt{Clock} -- and 
 ghost fields -- the ghost field \texttt{\_alarm\_going\_off}
-keeps track of some additional state--.}
+keeps track of some additional state --.}
 \end{figure}
 
 \begin{figure}[tbp] \label{Example:alarminterface}
@@ -734,14 +732,17 @@ in the subclass is ``conjoined'' with the specification, if any, for that
 method in the superclass, in such a way that the conditions (i) and (ii) above 
 are automatically met.
 
-The process of conjoining specs can be a bit subtle.  If sub- and superclass
+The process of conjoining specs can be a bit subtle. This process is carried 
+out by the tools, e.g.\ by the JML runtime assertion checker or ESC/Java2, 
+but the human who reads or writes specification has to understand the 
+conseqences.  If sub- and superclass
 give the same precondition for a method, then the conjoined specification will
 have the conjunction of the postconditions and the intersection of the frame
 properties.  If different preconditions are given in the sub- and superclass it
 becomes trickier: the precondition of the conjoined spec will be the
 disjunction of the preconditions, and the postcondition of the conjoined spec
-is slightly weaker than the conjunction of the postcondition, as the each
-postcondition only has to apply in case the corresponding preconditions did.
+is slightly weaker than the conjunction of the postcondition, as each
+postcondition only has to apply in case the corresponding precondition did.
 See \cite{Dhara-Leavens96} for details.
 
 \MARGIN{An example of this?}
@@ -772,7 +773,7 @@ so they cannot be referred to in Java code.
 The difference is that whereas a model field provide an abstraction
 of the existing state, a ghost field provide some additional state,
 which may -- or may not -- be related to the existing state.
-Unlike a model field, a \texttt{ghost} field can therefore
+Unlike a model field, a ghost field can therefore
 be assigned a value. This is done by a special \texttt{set} statement
 that has to be given in a JML context.
 Before we discuss the difference between model and ghost fields
@@ -856,9 +857,10 @@ in more detail, first an example of the use of a ghost field.
 Suppose that we want to convince ourselves that the implementation of 
 \texttt{AlarmClock} will not invoke the method \texttt{alarm.on()}
 twice in a row, or the method \texttt{alarm.off()} twice in a row,
-but that it will always call \texttt{alarm.on()} alternately. 
-(One could add JML contracts to \texttt{AlarmInterface} to ensure this,
-but we will postpone doing this until later.)
+but that it will always call \texttt{alarm.on()} and \texttt{alarm.off()}
+ alternately. 
+(One could add JML contracts to \texttt{AlarmInterface} to specify this
+requirement, but we will not consider that here.)
 
 The state of an \texttt{AlarmClock} object does not record if the associated
 \texttt{alarm} is going off or not (except maybe implicitly, in that the alarm is 
@@ -866,10 +868,10 @@ going off for 60 seconds after the alarm time). The state of an \texttt{AlarmClo
 does therefore not record which method it has last invoked on \texttt{alarm}.
 For the purpose of understanding the behaviour of the \texttt{AlarmClock}, 
 and possibly capturing this understanding in additional JML annotations,
-it can useful to add a extra boolean field to the state, which records if 
+it can be useful to add an extra boolean field to the state, which records if 
 the associated alarm is going off.
-This is illustrated in Figure~\ref{Example:alarmclock}.
-A boolean ghost field \texttt{\_alarm\_going\_off} is declared, 
+This is illustrated in \figref{Example:alarmclock}:
+a boolean ghost field \texttt{\_alarm\_going\_off} is declared, 
 and two assignments to this field are included in the method \texttt{tick()},
 which ensure that the field is true when the alarm is going off and false
 otherwise\footnote{A subtle issue here is that \texttt{\_alarm\_going\_off} 
@@ -921,12 +923,12 @@ AlarmInterface, with a boolean model/ghost field, to forbid this. Of course,
 if the alarm is aliased, we still have a problem.}
 
 An improvement in the implementation would be to count down the number of 
-seconds the alarm still have to go off, as use this as a basis for switching 
+seconds the alarm still have to go off, and use this as a basis for switching 
 off the alarm, rather than relying on a comparison of the current time 
 and the alarm time.
 
 \begin{verbatim}
-  /** The numbers of second that the alarm will still be on.
+  /** The number of second that the alarm will still be on.
     * If zero, the alarm is off.
     */
   /*@ private invariant -1 <= alarmSecondsRemaining 
@@ -974,7 +976,7 @@ This would make the implementation simpler to understand.
 
 To recap, the crucial difference between a ghost and a model field 
 is that a ghost field extends the state of an object, whereas
-a model field is an abstraction of the existing state is an object.
+a model field is an abstraction of the existing state of an object.
 A ghost field can be assigned to, in annotations, using the
 special \texttt{set} keywords.
 A model field cannot be assigned to, but it changes value automatically
@@ -1016,7 +1018,7 @@ to this array are not leaked outside the current object.}
 \verbatiminput{BrokenDigitalDisplayClock.java} % was Clock_using_array_universes.java
 %
 \vspace*{-2ex} % to fit this on one page
-\caption{An subclass of \texttt{DigitalDisplayClock} which breaks encapsulation
+\caption{A subclass of \texttt{DigitalDisplayClock} which breaks encapsulation
 of the private array \texttt{time}, both by its constructor, which imports
 a potentially aliased reference, and the method \texttt{expose}, which exports
 a reference to \texttt{time}.}
@@ -1028,10 +1030,10 @@ To illustrate the issue, \figref{Example:alias} shows a subclass
 \texttt{DigitialDisplayClock} 
 of \texttt{Clock}, which uses an integer array \texttt{time} of length 6 
 to represent time.  For the correct functioning of the clock it will be 
-important that this array is not aliased. If the array, code outside of
-this class could for instance break the invariants for the array.
-Indeed, the fact that the (private) invariant depends on the array \texttt{time}
-already suggest that it needs to be alias-protected.
+important that this array is not aliased. If the array is aliased, code 
+outside of this class could for instance break the invariants for the array.
+Indeed, the fact that the (private) invariants depends on the array 
+\texttt{time} already suggest that it needs to be alias-protected.
 
 By inspecting the entire code of the class, it is easy to convince
 oneself that references to this array are not leaked.
@@ -1053,7 +1055,8 @@ The typechecker incorporated in the JML runtime assertion checker
 will for instance warn that the class \texttt{BrokenDigitalDisplayClock}
 in \figref{Example:brokenalias} is not well-typed, as it  breaks 
 the guarantee that \texttt{time} will not be aliased outside this class.
-Verification with ESC/Java2 does not yet take the universes into account.
+Verification with ESC/Java2 does not yet take universes into account;
+this is still the subject of ongoing work.
 
 % In modular verification of code, as ESC/Java2 does, one tries to
 % verify the correctness of code irrespective of any future subclasses.
