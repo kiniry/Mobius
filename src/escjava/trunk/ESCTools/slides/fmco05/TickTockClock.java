@@ -33,8 +33,8 @@ public class TickTockClock {
     @ also
     @  requires   getSecond() == 59;
     @  assignable _time_state;
-    @  ensures    getSecond() == 0 &&
-    @           (* hours and minutes are updated appropriately *);
+    @  ensures    getSecond() == 0;
+    @  ensures    (* hours and minutes are updated appropriately *);
     @*/
   public void tick() {
       second++; 
