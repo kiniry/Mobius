@@ -20,6 +20,7 @@
 
 include Makefile.defs
 
+ESC = escj
 JAVAC = javac
 JAVACFLAGS = 
 JML = jml
@@ -93,11 +94,13 @@ ${paper}.pdf: ${sourcefiles} ${paper}.tex
 check:
 	$(JML) -Q $(sourcefiles)
 
+esc:
+	$(ESC) $(sourcefiles)
+
 javac:
 	javac $(sourcefiles)
 	mjc2 DigitalDisplayClock.java
 
-clean cleanup:
 jml:
 	$(JML) -Q $(sourcefiles)
 	$(JML) -Q --universes DigitalDisplayClock.java
