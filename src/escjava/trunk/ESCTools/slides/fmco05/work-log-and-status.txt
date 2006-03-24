@@ -12,7 +12,7 @@ Section status/mutex
 * Section 5: write mutex owned by Erik
 * Section 6: write mutex owned by Erik
 * Section 7: write mutex owned by Erik
-* Section 8: write mutex owned by Erik
+* Section 8: completed review, editing and spell-checking (PC).
 
 ==============================================================================
 Log:
@@ -26,5 +26,6 @@ Log:
 - Section 2:
   - I've pulled out the not on non-null because there are no referece type
     decls in the samples of Section 2. :)  
+- Section 8: Conclusion, reviewed and updated.
 
 ==============================================================================

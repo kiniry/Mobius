@@ -65,7 +65,7 @@ not sufficiently expressive to permit formal modular verification of programs
 written in modern object-oriented languages like Java. The necessary extra
 constructs for specifying an object-oriented module include the less familiar
 frame properties, datagroups, and ghost and model fields.  These constructs
-help specifiers deal with potential problems, including unexpected side
+help specifiers deal with potential problems related to, e.g., unexpected side
 effects, aliasing, class invariants, inheritance, and lack of information
 hiding.
 %
@@ -1077,28 +1077,29 @@ Verification with ESC/Java2 does not yet take the universes into account.
 \section{Conclusions}
 \label{Sec:conclusion}
 
-Just pre- and postconditions do not suffice to specify object-oriented
-programs.  This paper illustrates some of the core ingredients of the JML
-specification language, notably frame conditions, datagroups, model and
-ghost fields, and support for alias control, which we believe are important
-in any approach to the specification of object-oriented programs.
+Preconditions, postconditions and invariants alone are insufficient to
+accurately specify object-oriented programs.  This paper illustrated some of
+the more advanced specification constructs of the JML specification language,
+notably: frame conditions, datagroups, model and
+ghost fields, and support for alias control.
 
-Closely related work to the JML specification language for Java is the
-Spec\# specification language for C\# \cite{SpecSharp}. This work also aims
-at specification for a real object-oriented programming language with tool
-support for runtime assertion checking and for static verification, the
-latter with the Boogie program verifier.  Spec\# and JML share many of the
-same core constructs, including the ones listed above, although precise
-details may vary.  In particular, Spec\# provides a novel methodology to 
+A language extension to C\#, that is similar in purpose and scope to JML, is
+the Spec\# specification language \cite{SpecSharp}.
+%
+Like JML, Spec\# enjoys tools support for runtime checking and static
+verification, the latter being provided by the Boogie program verifier.
+%
+Spec\# and JML share similar basic and advanced language constructs, 
+although details vary.  In particular, Spec\# provides a novel methodology to 
 cope with object invariants \cite{BoogieInvariants}.
 
-Indeed, we should point out that the debate on what is the right set of 
-primitives for the specification of object-oriented programs, and what 
-are the precise semantics of these primitives, is still far from finished.
-Even for some of the core ingredients discussed in this paper the precise
-semantics, and the precise way of handling them in tools, is still subject
-of active research, as should be clear to the many references in this paper 
-to very recent work.
+As a final note, we point out that the debate is far from settled, when it
+comes to agreement on the necessary and sufficient primitive constructs
+for the specification of mainstream object-oriented programs.
+%
+Even the semantics for some of the basic, let alone advanced, features
+discussed in this paper are still the subject of active research (as is clear
+from the references given to very recent work).
 
 \bibliographystyle{alpha}
 \bibliography{fmco}
