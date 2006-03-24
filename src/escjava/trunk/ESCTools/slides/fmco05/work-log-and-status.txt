@@ -2,6 +2,8 @@ Todo:
 
 - Reviewing each section one by one.
 - Remove setTime() from Clock class if it is not referenced in the prose.
+- Fig. 3 now has public invariants, it would be worth mentioning these in the
+  prose of the Section on model fields.
 
 ------------------------------------------------------------------------------
 Section status/mutex
