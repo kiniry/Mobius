@@ -535,8 +535,8 @@ details in frame properties and provides the flexibility in specifications
 that we want to have in an object-oriented language.
 This section explains these notions, and the need for them.
 
-We should stress that although these clauses are needed when doing
-program verification, they are \emph{not} needed to do runtime assertion checking. 
+We should stress that although these clauses are needed when doing program 
+verification, they are \emph{not} needed to do runtime assertion checking. 
 If one is only interested in runtime assertion checking, one need not know 
 that \texttt{assignable} clauses exist.
 (A tool for runtime assertion checking could try to enforce \texttt{assignable} 
@@ -547,48 +547,53 @@ clauses, but typically will not because of the high overhead this involves.)
 In traditional specifications that give pre- and postcondition for methods
 (or procedures) one often uses the convention that any variables not mentioned 
 in the postcondition of a method have not been changed.  This approach is 
-\emph{not} workable for realistic object-oriented programs, as explained below.
+\emph{not} workable for realistic object-oriented programs.
+For example, consider the the method \texttt{tick()} in 
+\figref{Example:TickTockClock}. This method may modify the three private 
+fields \texttt{second}, \texttt{minute} and \texttt{hour}, but these do 
+not appear in the postcondition. Rewriting the specification so it does 
+mention these fields is clearly not what we would want, as in the 
+specification of this public method we do not want to refer to private fields.
 
-Suppose we wanted to follow this approach in the specification 
-of the method \texttt{tick()} in \figref{Example:TickTockClock}.
-Because this method modifies three fields, namely
-\texttt{second}, \texttt{minute} and \texttt{hour}, 
-the postcondition will have to mention all these fields.
-This is probably not what we want, because this would require a very
-detailed specification. Moreover, the specification would mention implementation 
-details -- namely the three private fields -- that should be of no concern to the 
-client.
+%Suppose we wanted to follow this approach in the specification 
+%of the method \texttt{tick()} in \figref{Example:TickTockClock}.
+%Because this method modifies three fields, namely
+%\texttt{second}, \texttt{minute} and \texttt{hour}, 
+%the postcondition will have to mention all these fields.
+%This is probably not what we want, because this would require a very
+%detailed specification. Moreover, the specification would mention implementation 
+%details -- namely the three private fields -- that should be of no concern to the 
+%client.
 
 An  \texttt{assignable} clause specifies that a method may change certain 
 fields, without having to specifying how.
-So \texttt{tick} could be specified as follows
+So a specification of the method \texttt{tick} could include
 \begin{verbatim}
-   /*@ assignable hour, minute, second;
-     @ ensures getSecond() == \old(getSecond() + 1) % 60;
-     @*/
-  public void tick() { ... }
+   assignable hour, minute, second;
 \end{verbatim}
+to state that is may modify these three fields, without having to mention
+the fields in the postcondition.
 If no \texttt{assignable} clause is given for a method, it has the
 default frame condition \texttt{assignable \everything}.
 A pure method is a method with a frame condition \texttt{assignable \nothing}.
 
-Object-oriented language such as Java require some means for abstraction in 
-assignable clauses.
-The specification for \texttt{tick} given above leaves a lot to be desired.
-Firstly, the specification still exposes implementation details,
-because it mentions the three private fields.
-Secondly, the specification is overly restrictive for any future subclasses.
-By the principle of \emph{behavioural subtyping}, discussed in more detail
-in Section~\ref{Sec:behsubtyping}, the implementation of \texttt{tick} in any future
-subclass of \texttt{Clock} has to meet the specification given in \texttt{Clock}.
-This means that it can only assign to the three fields of \texttt{Clock},
-which is far to restrictive in practice.
-To give a concrete example, suppose we introduce a subclass \texttt{ClockWithDate} 
-of \texttt{Clock} that, in addition to keeping the time, also keeps track of the 
-current date.  Clearly such a subclass will introduce additional fields, to record 
-the date, and the \texttt{tick} will have to modify these fields when the end
-of a day is reached,  but the specification of \texttt{tick} above will not allow 
-these fields to be changed, as they are not listed in the \texttt{assignable} clause.
+Object-oriented language such as Java require some means for abstraction in
+assignable clauses.  The \texttt{assignable} clause for \texttt{tick} given
+above leaves a lot to be desired.  Firstly, it still exposes implementation
+details, because it mentions the three private fields.  Secondly, the
+specification is overly restrictive for any future subclasses.  By the
+principle of \emph{behavioural subtyping}, discussed in more detail in
+Section~\ref{Sec:behsubtyping}, the implementation of \texttt{tick} in any
+future subclass of \texttt{TickTockClock} has to meet the specification given
+in \texttt{TickTockClock}.  This means that it can only assign to the three
+fields of \texttt{TickTockClock}, which is far to restrictive in practice.  To
+give a concrete example, suppose we introduce a subclass
+\texttt{Tick\-Tock\-Clock\-With\-Date} of \texttt{TickTockClock} that, in
+addition to keeping the time, also keeps track of the current date.  Clearly
+such a subclass will introduce additional fields, to record the date, and the
+\texttt{tick} will have to modify these fields when the end of a day is
+reached; however, the specification of \texttt{tick} above will not allow these
+fields to be changed, as they are not listed in the \texttt{assignable} clause.
 
 Datagroups \cite{Leino98} provide a solution to 
 this problem. The idea is that a datagroup is an abstract piece of an object's
@@ -597,7 +602,7 @@ The specification in \figref{Example:TickTockClock} declares a (public) datagrou
 \texttt{\_time\_state} and declares that the three (private) fields belong
 to this datagroup. This datagroup is used to specify \texttt{tick}.
 This avoid exposing any private implementation details, and
-any subclasses of \texttt{Clock} may extend the datagroup with
+any subclasses of \texttt{TickTockClock} may extend the datagroup with
 additional fields it introduces.
 
 Datagroups can be nested, by using the \texttt{in} clause to say that
