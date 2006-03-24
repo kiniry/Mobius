@@ -39,7 +39,7 @@ paper =		fmco
 sourcefiles =	TickTockClock.java	\
 		SettableClock.java	\
 		Clock.java		\
-		AlarmClock_interfaceless.java \
+		AlarmClock.java \
 
 #		AlarmClock.java
 
@@ -99,7 +99,6 @@ esc:
 
 javac:
 	javac $(sourcefiles)
-	mjc2 DigitalDisplayClock.java
 
 jml:
 	$(JML) -Q $(sourcefiles)
