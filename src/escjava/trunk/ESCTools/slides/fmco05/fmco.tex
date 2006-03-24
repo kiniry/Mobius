@@ -56,7 +56,7 @@
 
 \begin{abstract}
 Many state-based specification languages, including the Java Modeling Language
-(JML), contain at their core, specification constructs familiar to most
+(JML), contain at their core specification constructs familiar to most
 computer science and software engineering undergraduates: e.g., assertions,
 pre- and postconditions, and invariants.  Unfortunately, these constructs are
 not sufficiently expressive to permit formal modular verification of programs
@@ -669,7 +669,15 @@ This avoid exposing any the private implementation details, and
 any subclasses of \texttt{Clock} may extend the datagroup with
 additional fields it introduces.
 
-\COMMENT{Datagroups can be nested.  Default datagroup objectState.}
+Datagroups can be nested, by using the \texttt{in} clause to say that
+one datagroup is part of another one. The JML specifications for
+\texttt{java.lang.Object} (which are apart of the (incomplete) JML 
+specifications developed for the Java API that are distributed along with 
+some the tools) declare a JML datagroup \texttt{objectState}. As this datagroup
+is inherited by all other classes, as a convention one can use this datagroup 
+to describe for a class what constitutes the `state' of an object of that class.
+By that convention, the datagroup \texttt{\_time\_state} would be declared
+to belong to \texttt{objectState}.
 
 \section{Model fields}
 \label{Sec:model}
@@ -734,9 +742,9 @@ of time and then override the \texttt{represents} clause. For example,
 the example \texttt{DigitalDisplayClock} in \figref{Example:alias}
 does this.
 
-For a more extensive discussion of model fields see \cite{Cheon-etal05},
-for recent work on handling model fields in verification see 
-\cite{LeinoMuller06}.
+For a more extensive discussion of model fields see \cite{Cheon-etal05}.
+\cite{Cok05} discusses how model fields are treated in ESC/Java2;
+more recent work on handling model fields in verification is \cite{LeinoMuller06}.
 
 \section{Behavioural subtyping and specification inheritance}
 \label{Sec:behsubtyping}
@@ -826,6 +834,8 @@ See \cite{Dhara-Leavens96} for details.
 
 \section{Ghost fields}
 \label{Sec:ghost}
+
+\MARGIN{Erik: Maybe the example in this section is too involved?}
 
 Like model fields, ghost fields are specification-only fields,
 so they cannot be referred to in Java code.
@@ -1065,7 +1075,7 @@ by the representation relation.
 %
 \verbatiminput{DigitalDisplayClock.java} % was Clock_using_array_universes.java
 %
-\vspace*{-2ex} % to fit this on one page
+\vspace*{-3ex} % to fit this on one page
 \caption{An implementation using an array, which uses the universe type 
 system \cite{Mueller-Poetzsch-Heffter-Leavens03} to ensure that references
 to this array are not leaked outside the current object.}
@@ -1102,49 +1112,62 @@ For example, the subclass \texttt{BrokenDigitalDisplayClock} in
 will not be aliased.
 
 There has been a lot of work on ways to equip programming languages
-with some form of alias control, aka.\ encapsulation or confinement.
+with some form of alias control, aka encapsulation or confinement.
 JML includes support for the universe type system
 \cite{Mueller-Poetzsch-Heffter-Leavens03} as a way to specify
 and enforce constraints on aliasing. This is illustrated in 
 \figref{Example:alias}: the array \texttt{time} is declared
-as a rep-field -- rep being short for representation -- forbidding
-references to the field to 
+as a \texttt{rep}-field -- rep being short for representation -- forbidding
+references to the field to be aliased outside the object.
 The typechecker incorporated in the JML runtime assertion checker
-will warn that the class \texttt{BrokenDigitalDisplayClock}
-in \figref{Example:brokenalias} is not well-typed, as breaks
-the guarantee that \texttt{time} will not be aliased
-
-In modular verification of code, as ESC/Java2 does, one tries to
-verify the correctness of code irrespective of any future
-subclasses.
-Suppose that we are verifying
-\begin{verbatim}
-public class SomeOtherClass{
-  /*@ non_null @*/ int[] a;
-  //@ invariant a.length > 1;
- 
-  //@ ensures true;
-  public void set(){ a[0] = 7;}
-
-}
-\end{verbatim}
-The spec of \texttt{set} is trivially satisfied.
-But how can we be sure that this method does not break the invariant
-of some \texttt{ClockUsingArray} object, whose \texttt{time} field
-is aliased to \texttt{a}? This would require a whole program analysis,
-taking into account all subclasses of \texttt{ClockUsingArray}.
-
+will for instance warn that the class \texttt{BrokenDigitalDisplayClock}
+in \figref{Example:brokenalias} is not well-typed, as it  breaks 
+the guarantee that \texttt{time} will not be aliased outside this class.
 Verification with ESC/Java2 does not yet take the universes into account.
+
+% In modular verification of code, as ESC/Java2 does, one tries to
+% verify the correctness of code irrespective of any future subclasses.
+% Suppose that we are verifying
+% \begin{verbatim}
+% public class SomeOtherClass{
+%  /*@ non_null @*/ int[] a = 
+%  //@ invariant a.length > 1;
+% 
+%  //@ ensures a[0];
+%  public void set(){ a[0] = 7;}
+%
+% }
+% \end{verbatim}
+% The spec of \texttt{set} is trivially satisfied.
+% But how can we be sure that this method does not break the invariant
+% of some \texttt{ClockUsingArray} object, whose \texttt{time} field
+% is aliased to \texttt{a}? This would require a whole program analysis,
+% taking into account all subclasses of \texttt{DigitalDisplayClock}.
 
 \section{Conclusions}
 
-Related work Spec\# for C\# \cite{SpecSharp}
+Just pre- and postconditions do not suffice to specify object-oriented
+programs.  This paper illustrates some of the core ingredients of the JML
+specification language, notably frame conditions, datagroups, model and
+ghost fields, and support for alias control, which we believe are important
+in any approach to the specification of object-oriented programs.
 
-Just pre- and postconditions do not suffice to specify object-oriented 
-programs.
-This paper illustrates some of the core ingredients of the JML
-specification language, which we believe are important in any approach
-to the specification of object-oriented programs.
+Closely related work to the JML specification language for Java is the
+Spec\# specification language for C\# \cite{SpecSharp}. This work also aims
+at specification for a real object-oriented programming language with tool
+support for runtime assertion checking and for static verification, the
+latter with the Boogie program verifier.  Spec\# and JML share many of the
+same core constructs, including the ones listed above, although precise
+details may vary.  In particular, Spec\# provides a novel methodology to 
+cope with object invariants \cite{BoogieInvariants}.
+
+Indeed, we should point out that the debate on what is the right set of 
+primitives for the specification of object-oriented programs, and what 
+are the precise semantics of these primitives, is still far from finished.
+Even for some of the core ingredients discussed in this paper the precise
+semantics, and the precise way of handling them in tools, is still subject
+of active research, as should be clear to the many references in this paper 
+to very recent work.
 
 \COMMENT{
 \section{PC Outline}
