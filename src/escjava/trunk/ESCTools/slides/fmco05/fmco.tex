@@ -143,9 +143,12 @@ Runtime assertion checking involves the testing of specifications during
 program execution; any violations result in special errors being reported.
 %
 The idea of checking \emph{contracts} at runtime
-goes back to (at least) Rosenblum's work on APP
-\cite{Rosenblum92,Rosenblum95}\MARGIN{A candidate for citation trim? --PC}
-and was popularized by Eiffel \cite{Meyer97}.
+was popularized by Eiffel \cite{Meyer97} as of the late 80's; other early work includes
+Rosenblum's APP annotation langauge for C \cite{Rosenblum92,Rosenblum95}.
+%% goes back to (at least) Rosenblum's work on APP
+%% \cite{Rosenblum92,Rosenblum95}\MARGIN{A candidate for citation trim? --PC}
+%% and was popularized by Eiffel \cite{Meyer97}.
+%
 The main RAC tool for JML is \texttt{jmlc} \cite{Cheon-Leavens02b}.
 % Jass:
 RAC support for JML is also planned for the next release of the Jass tool
@@ -615,7 +618,7 @@ to belong to \texttt{objectState}.
 
 \begin{figure}[tbp] 
 %
-\verbatiminput{Clock.java}
+\VerbatimInput{Clock.java}
 %
 \vspace*{-2ex} % to fit this on one page
 \caption{\label{Example:model}Example JML specification illustrating the use of model fields.}
@@ -627,8 +630,8 @@ to this.}
 
 Model fields are closely related to the notion of data abstraction proposed in 
 \cite{Hoare72}.  A model field is a specification-only field that provides an 
-abstraction from the concrete state of an object.  
-
+abstraction of (part of) the concrete state of an object.  
+%
 The specification in \figref{Example:model} illustrates this.
 It abstracts away from the particular concrete representation of time
 by three fields \texttt{hours}, \texttt{minute} and \texttt{second},
