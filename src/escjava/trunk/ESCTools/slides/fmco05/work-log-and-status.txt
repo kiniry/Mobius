@@ -2,9 +2,9 @@
 Section status/mutex
 
 * Abstract: seems ok.
-* Section 1
-  - Patrice: reviewing and editing.
-  - ...
+* Section 1: completed review, editing and spell-checking (PC).
+  - PC: There is a potential to trim citations in Section 1.1 -- see margin
+    notes -- though I have left them in for now.
 * Section 2
 * Section 3
 * Section 4

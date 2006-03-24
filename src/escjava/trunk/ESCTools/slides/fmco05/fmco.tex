@@ -52,6 +52,8 @@
 \newcommand{\figref}[1]{\figurename~\ref{#1}}
 \newcommand{\secref}[1]{Section~\ref{#1}}
 
+\newcommand{\extracite}[1]{} % {\cite{#1}}
+
 \maketitle
 
 \begin{abstract}
@@ -74,9 +76,9 @@ illustrating how they can be used to address the stated problems.
 \section{Introduction}
 
 Textbooks on program verification
-\cite{Apt-Olderog97,Francez92,Loeckx-Sieber87} typically explain the notions
-of pre- and postconditions, loop invariants, and so on for toy programming
-languages.
+\extracite{Apt-Olderog97,Francez92,Loeckx-Sieber87} typically explain the
+notions of pre- and postconditions, loop invariants, and so on for toy
+programming languages.
 %
 The goal of this paper is to explain some of the more advanced concepts that
 are necessary in order to allow the formal modular verification of
@@ -85,68 +87,44 @@ language: Java.
 %
 The Java Modeling Language (JML)
 \cite{STTT05,Leavens-Baker-Ruby06,Leavens-etal05a}, a Behavioral Interface
-Specification Language (BISL) \cite{Wing90a} for Java, will be our medium for
-expressing specifications.
+Specification Language (BISL) \cite{Wing90a} for Java, will be our
+notation of choice for expressing specifications.
 
-The reader is assumed to be familiar with the basics of, say, Design by
+The reader is assumed to be familiar with the basics of Design by
 Contract (DBC) \cite{Meyer97} or Behavioral Interface Specifications (BISs)
 and the central role played by assertions in these approaches.
 %
-%% PC: 
-%% We're saying ``specification and verification of sequential, impertative pgms''
-%% too often so I've factored it out.
-% assertions in the specification and verification of sequential, impertative
-% programs.
-%
-% PC: if we tell them that we expect them to know, then it will be best not to 
-% give these details: IMHO:
-%------------------------------------------------------------------------------
-% For example, it assumes that the reader is familiar with specifying a
-% method (or procedure) using a \emph{precondition} to describe the states in
-% which the method may be invoked, and a \emph{postcondition} to relate the
-% invocation state (the \emph{pre-state}) to the state in which the
-% procedure returns (the \emph{post-state\/}).
-% An abstract data type may be specified by describing its methods in
-% this manner and in addition specifying an \emph{invariant},
-% which describes properties what must be true about its objects
-% (instances) whenever control is outside of an invocation of its
-% methods.
-%
-Readers without this background may wish to consult one of several tutorial
-books or articles on the subject
+Readers without this background may wish to consult one of several
+books or articles offering tutorials on the subject
 \cite{Hoare69,Liskov-Guttag01,Mitchell-McKim02,Meyer92a,Meyer97,Morgan94}.
 %
-A tutorial that explains these ideas using JML is also available
+A tutorial that explains these basic ideas using JML is also available
 \cite{Leavens-Cheon05}.
 
-% Starting from an understanding of how assertions are used in
-% specification of sequential, imperative programs, this tutorial
-% attempts to explain some of the more advanced concepts needed to verify
-% sequential object-oriented programs.
-% We illustrate these more advanced concepts using Java 
-% \cite{Arnold-Gosling-Holmes00} and the
-% Java Modeling Language (JML)
-% \cite{STTT05,Leavens-Baker-Ruby06,Leavens-etal05a}.
-% JML is an interface specification language \cite{Wing90a}
-% that can be used to specify sequential Java modules and to document their
-% detailed design decisions. 
-% Thus another way to view this paper is an advanced tutorial on JML.
-% In particular, the paper clarifies various subtle distinctions in JML,
-% such as that the difference between two kinds of specification-only
-% fields that JML makes available.
-% 
 % Note that, as a tutorial, this paper does not present any new results.
 % However, we believe that the ideas are of interest to the wider
 % community of people interested in formal methods for object-oriented
 % languages.
 
 \subsection{Tool Support}
+%
+\MARGIN{Purpose (as far as I can tell --PC): mention tools support; introduce
+  ESC/Java2 and motivate the need for the advanced features talked about in
+  this paper (viz. without them static verification cannot be effective).}
+%
+% \MARGIN{FYI: I'm not sure why the content of this section is as it is.
+%   I've revised it while kept the original focus on RAC vs. SV. Maybe we should
+%   just talk about ``tool support'' in general :).  I can probably guess that
+%   the section was originally motivated by the actual tutorial material in
+%   which jmlc and ESC/Java2 are discussed, but we talk about neither of these
+%   specifically in the paper, ... right? Well actually, we do talk about
+%   ESC/Java2, but not jmlc. In any case I will leave the content as is for
+%   now. --PC}
 
-
-Tools that can be used to check that JML annotated Java modules meet their
+Tools useful for checking that JML annotated Java modules meet their
 specifications, fall into two main categories:%
 %
-\footnote{Of course, there are several other kinds of tools available for use
+\footnote{Of course, there are several other kinds of tool available for use
   with JML \cite{STTT05}.}
 %
 \begin{itemize}
@@ -154,100 +132,74 @@ specifications, fall into two main categories:%
   \item static verification (SV) tools.
 \end{itemize}
 %
-These also represent two complementary forms of assertion checking the
+\MARGIN{Trim this sentence on origins? If we do, maybe remove reference to
+  Rosenblum a few lines down? --PC}
+These also represent two complementary forms of assertion checking, the
 foundations of which were laid out before the 1950's in the pioneering work
 of Goldstine, von Neumann and Turing \cite{Jones03}.
 %
 % RAC:
-During RAC, specifications are tested during program execution. Runtime
-violations of specifications result in special errors being reported.
+Runtime assertion checking involves the testing of specifications during
+program execution; any violations result in special errors being reported.
 %
-The idea of checking contracts at runtime
+The idea of checking \emph{contracts} at runtime
 goes back to (at least) Rosenblum's work on APP
-\cite{Rosenblum92,Rosenblum95}
-and was popularised by Eiffel \cite{Meyer97}.
-The JML runtime assertion checker, \texttt{jmlc} \cite{Cheon-Leavens02b},
-does runtime checking of JML specifications.
+\cite{Rosenblum92,Rosenblum95}\MARGIN{A candidate for citation trim? --PC}
+and was popularized by Eiffel \cite{Meyer97}.
+The main RAC tool for JML is \texttt{jmlc} \cite{Cheon-Leavens02b}.
 % Jass:
-Support for the runtime assertion checking of JML is also planned for the next
-release of the Jass tool \cite{Bartetzko-etal01}.
+RAC support for JML is also planned for the next release of the Jass tool
+\cite{Bartetzko-etal01}.
 
 In static verification,
 logical techniques are used to prove that no violations of
 specifications can happen at runtime.
-The adjective \emph{static\/} emphasizes that such verification
+The adjective \emph{static\/} emphasizes that verification
 happens by means of a static analysis of the code, i.e., without running it.
 %
-There are two main kinds of static verifiers:
-\begin{itemize}
-  \item Extended Static Checking (ESC) tools that perform efficient and fully
-    automatic checking at the cost of being potentially unsound and
-    incomplete,
-  \item full program verification (PV) tools that are designed to be sound and
-    complete, at the expense of requiring much more human intervention and
-    insight during the verification process.
-\end{itemize}
+%% There are two main kinds of static verifiers:
+%% \begin{itemize}
+%%   \item Extended Static Checking (ESC) tools that perform efficient and fully
+%%     automatic checking at the cost of being potentially unsound and
+%%     incomplete,
+%%   \item full program verification (PV) tools that are designed to be sound and
+%%     complete, at the expense of requiring much more human intervention and
+%%     insight during the verification process.
+%% \end{itemize}
 %
-Several program verification tools support JML:
-e.g.\ JACK \cite{JACK}, KeY \cite{KeY}, Krakatoa \cite{Krakatoa},
-LOOP \cite{LOOP}, and Jive. In this paper we will focus
-on ESC/Java2 \cite{Cok-Kiniry04},
-the successor tool to ESC/Java \cite{Flanagan-Et-Al02},
-an extended static checker for JML.
+Program verification tools supporting JML include: e.g., JACK \cite{JACK}, KeY
+\cite{KeY}, Krakatoa \cite{Krakatoa}, LOOP \cite{LOOP}, and Jive
+\cite{Jive00}.  In this paper we will focus on ESC/Java2 \cite{Cok-Kiniry04},
+the main extended static checker for JML.
+% the successor tool to ESC/Java \cite{Flanagan-Et-Al02}.
 
 RAC and SV tools have complimentary strengths.
 As compared to runtime assertion checking, static verification can give
-stronger guarantees and it can give them at an earlier stage in the software
-development life cycle. However, these advantages come at a price.
+stronger guarantees and it can give them earlier.
+% at an earlier stage in the software development life cycle. 
+However, these advantages come at a price:
 %
-For example, PV tools generally require a great deal of mathamtical
-sophisitication of the part of users.
-%
-On the other hand, while ESC tools are as easy to invoke and use as modern day
-compilers, they still require fairly complete
-specifications, not only for the module being checked, but also for the
-modules and libraries that it depends on.
-
-\MARGIN{PC: mention that for ESC the specs of the check module must not be too
-  complete either?}
-%
-% \begin{itemize}
-%   \item PV tools 
-%   \item ESC tools 
-% \end{itemize}
-%
-%------------------------------------------------------------------------------
-% PC: isn't it the other way around. The price that you pay in using SV tools
-% (or, at least ESC/Java2) is that you can generally check weaker
-% specifications.}
-%
-% much more complete (i.e., detailed
-% and comprehensive) specifications are required.  Furthermore, fairly
-% complete specifications are also needed for the API classes   
-% that are used.  At the least, one typically needs specifications
-% of pre- and postconditions and frame conditions 
-% (see Section~\ref{Sec:assignable}) of all methods used in the code.
-
+SV tools generally require fairly complete specifications, not only for the
+module being checked, but also for the modules and libraries that it depends
+on. Furthermore, in order to be effective, and keep false positives to a
+minimum, SV tools require specifications to make use of some of the advanced
+features described in this paper.
 
 \subsection{Outline}
 
-This paper is organized as follows.  Section~\ref{Sec:basics}
-explains the basic notations used in JML for pre- and postconditions
-and invariants. Section~\ref{Sec:assignable} explains frame properties.
-Section~\ref{Sec:model} explains model fields.
-Section~\ref{Sec:behsubtyping} explains how JML treats behavioral subtyping.
-Section~\ref{Sec:ghost} explains ghost fields.
-Section~\ref{Sec:ownership} introduces the JML notations that deal with
-ownership and aliasing.  This is followed by a conclusions section,
-which also discusses related work.
+The remainder of the paper is organized as follows.
+The basic notation used in JML for method contracts
+and invariants is covered in \secref{Sec:basics}.
+\secref{Sec:assignable} explains frame properties, and \secref{Sec:model} model fields.
+The treatment of behavioral subtyping is given in \secref{Sec:behsubtyping}.
+\secref{Sec:ghost} explains ghost fields.
+\secref{Sec:ownership} introduces the JML notations that deal with
+ownership and aliasing.  
+Finally, conclusions and related work are given in \secref{Sec:conclusion}.
 
 \section{JML Basics: Pre- and Postconditions, and Invariants}
 \label{Sec:basics}
 
-
-%\MARGIN{Concepts introduced:
-%method contracts, class invariants, assignable clauses (and datagroups).
-%}
 \MARGIN{Erik: Explain \texttt{non\_null}, giving forward ref to
 \figref{Example:alarmclock} where it is used. PC: this has not been done yet.
 Maybe it can merely be mentioned with the alarm clock example?}
@@ -1145,6 +1097,7 @@ Verification with ESC/Java2 does not yet take the universes into account.
 % taking into account all subclasses of \texttt{DigitalDisplayClock}.
 
 \section{Conclusions}
+\label{Sec:conclusion}
 
 Just pre- and postconditions do not suffice to specify object-oriented
 programs.  This paper illustrates some of the core ingredients of the JML
@@ -1168,48 +1121,6 @@ Even for some of the core ingredients discussed in this paper the precise
 semantics, and the precise way of handling them in tools, is still subject
 of active research, as should be clear to the many references in this paper 
 to very recent work.
-
-\COMMENT{
-\section{PC Outline}
-PC suggested topics to be covered
-\begin{itemize}
-  \item Design by Contract Basics
-    \begin{itemize}
-    \item Example: Counter
-    \item Method and constructor contracts
-    \item Specification cases
-    \item Purity
-    \item Class invariants
-    \item Lightweight vs. heavyweight specifications and Specification element
-      visibility: rewrite contract of inc() method.
-    \end{itemize}    
-  \item Method constracts: more advances topics
-    \begin{itemize}
-    \item Exceptions
-    \item Frame properties
-    \end{itemize}    
-  \item Specification-only members
-    \begin{itemize}
-    \item Ghost \& Model fields
-    \item Model methods
-    \end{itemize}    
-  \item Inheritance and Java interfaces
-    \begin{itemize}
-    \item Behavioral subtyping
-    \item Specification of Java interfaces
-    \end{itemize}    
-  \item Potential problems
-    \begin{itemize}
-    \item Invariants and the callback problem
-    \item Aliasing
-    \end{itemize}
-  \item Optional possible topics
-    \begin{itemize}
-    \item Partial and total correctness
-    \item (Tools?)
-    \end{itemize}
-\end{itemize}
-}
 
 \bibliographystyle{alpha}
 \bibliography{fmco}
