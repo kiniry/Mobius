@@ -119,7 +119,7 @@ public class VcGenerator {
 
     // boolean to skip first not
     // Clement's experiment
-    private boolean firstNotSkipped = false;
+    private boolean firstNotSkipped = true;
 
     /**
      * The main goal of this method is to translate the 
@@ -866,7 +866,7 @@ public class VcGenerator {
                         "root node doesn't have type TRoot");
 
             //
-            firstNotSkipped = false;
+            //firstNotSkipped = false;
 
             // we type the tree.
             newRootNode.typeTree();
