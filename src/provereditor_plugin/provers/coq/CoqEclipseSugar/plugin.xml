@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/proj.gif"
+            id="CoqEditor.project.image"
+            natureId="coq.editor.coqNature"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="CoqEditor.category"
+            class="fr.inria.everest.coq.sugar.builder.CoqProjectWizard"
+            icon="icons/coqtoo.gif"
+            id="CoqEditor.wizard"
+            name="Coq Project"
+            project="true"/>
+      <primaryWizard id="CoqEditor.primaryWizard"/>
+      <wizard
+            category="CoqEditor.category"
+            class="fr.inria.everest.coq.sugar.builder.CoqFileWizard"
+            descriptionImage="icons/coq.gif"
+            icon="icons/coq.gif"
+            id="CoqEditor.file.wiz"
+            name="Vernacular file"/>
+      <category
+            id="CoqEditor.category"
+            name="Coq"/>
+   </extension>
+
+</plugin>
