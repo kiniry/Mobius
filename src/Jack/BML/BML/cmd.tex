@@ -1,0 +1,153 @@
+
+\newcommand{\todo}[1]{}
+\newcommand{\fig}[1]{ Fig.#1}
+\newcommand{\jmlKey}[1]{\textit{#1}}% wrapping jml keywords
+\newcommand{\java}[1]{\texttt{#1}}
+\newcommand{\stack}[1]{st(#1)}% element on top stack 
+\newcommand{\counter}{cntr}
+\newcommand{\topStack}{cntr}
+\newcommand{\true}{true}
+\newcommand{\false}{false}
+
+
+\newcommand{\fwpi}{ \rm{wp} }
+\newcommand{\instr}[1]{\rm{#1}}
+
+%\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
+%\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
+%\newcommand{\invariant}[1]{\it{I}_{\tt{#1}}}
+%\newcommand{\boucle}[1]{\texttt{#1}}
+%\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
+
+\newcommand{\ins}[1]{\texttt{instr}_#1}
+
+% the grammar for the bytecode specification language
+\newcommand{\ClassSpec}{\rm{ClassSpec}}
+\newcommand{\ClassInv}{ClassInv}
+\newcommand{\ClassHistoryConstr}{ClassHistoryConstr}
+\newcommand{\ghost}{ ghost }
+
+
+\newcommand{\MethodSpec}{\textrm{MethodSpec}}
+\newcommand{\also}{also}
+
+\newcommand{\specCase}{\textrm{SpecCase}}
+\newcommand{\requires}{requires}
+\newcommand{\ensures}{ensures}
+\newcommand{\exsures}{exsures}
+\newcommand{\modifies}{modifies}
+
+\newcommand{\jmlStmt}[1]{\textrm{#1}}
+\newcommand{\specExpression}{\textrm{specExpr}}
+
+\newcommand{\interMethodSpec}{\textrm{InterMethodSpec}}
+\newcommand{\set}{\rm{set}}
+\newcommand{\loopSpec}{\rm{loopSpec}}
+\newcommand{\assert}{assert}
+
+\newcommand{\ArithExpr}{\texttt{ArithmeticExpr} }
+\newcommand{\expression}{\textrm{E} }
+\newcommand{\JMLExpr }{\texttt{JmlExp} }
+
+
+\newcommand{\integer}{int }
+\newcommand{\register}[1]{reg_{#1}}
+\newcommand{\reference}[1]{\tt{ref_{#1}} }
+\newcommand{\Mynull}{null}
+\newcommand{\this}{this}
+\newcommand{\fieldAccess}[1]{Cl.fld(#1)}
+\newcommand{\arrayAccess}[2]{ #1[#2]  }
+
+
+\newcommand{\loopInv}{loopInvariant}
+\newcommand{\loopMod}{loopModifies}
+\newcommand{\loopDecreases}{loopDecreases}
+
+\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
+\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
+\newcommand{\type}[1]{\jmlKey{$\backslash$type(}#1 \jmlKey{)}}
+\newcommand{\TYPE}{\jmlKey{TYPE} }
+\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
+%\newcommand{\excPost}{\psi^{exc}}
+
+\newcommand{\Myspace}{\phantom{aaa}}
+\newcommand{\predicate}{ \mathcal{P}} 
+\newcommand{\Myfalse}{ \textit{false} }
+\newcommand{\Mytrue}{ \textit{true} }
+\newtheorem{defn}{Definition} 
+
+
+% abstractCtrlFlow.tex
+\newcommand{\execRel}{\rightarrow} % the execution relation
+\newcommand{\blockm}[1]{ \tt{b^{#1}} }
+\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
+\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
+\newcommand{\instrPost}[1]{ post(\instr{#1} )}
+\newcommand{\invariant}{\textit{I}}
+\newcommand{\excPostSpec}{\texttt{exc}} % the postcondition that is specified in case the method ends with an exception exc 
+
+%from wp.tex
+\newcommand{\wpExeWithLoops}[1]{ \rm{Wp''}\rm{(#1)} }
+\newcommand{\wpExe}[1]{ \rm{Wp'}\rm{(#1)} }
+\newcommand{\wpi}[3]{ \textrm{wp}( \rm{#1}, #2, #3) }
+\newcommand{\pre}{\psi^{pre}}
+\newcommand{\normalPost}{\psi^{n}}
+\newcommand{\excPost}{\psi_{exc}}
+\newcommand{\javaNull}{null}
+\newcommand{\arrayLength}{length}
+\newcommand{\arrayLen}[1]{length(#1)}
+\newcommand{\entryPoint}{i_{\tt{entry}}}
+
+\newcommand{\inter}[2]{inter(#1, #2)} % predicate that holds between two blocks
+
+\newcommand{\objects}{\texttt{Objects}}
+\newcommand{\heap}{\texttt{Heap}}
+\newcommand{\pc}{\texttt{pc}}
+\newcommand{\reff}{\tt{REF}} % the type reference
+\newcommand{\field}[2]{f}
+\newcommand{\Values}{\textrm{Values} }
+\newcommand{\locVar}[1]{reg_{#1} }
+
+\newcommand{\Ref}[1]{ref_{#1} }
+\newcommand{\substitution}[2]{[\tt{#1} \leftarrow \tt{#2}]}
+\newcommand{\prevState}[1]{prev(#1)}
+\newcommand{\nextState}[1]{next(#1)}
+
+
+
+
+\newcommand{\comment}[1]{ \{ \textit{ #1} \} }
+
+
+
+\newcommand{\numConclusion}[1]{\textit{(#1)}}
+\newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
+
+\newcommand{\stateTrans}{\longrightarrow}
+\newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
+
+\newcommand{\config}[2]{\tt{<#1, #2>}} % <\tau , \pc>
+\newcommand{\conf}[1]{\tt{<#1>}} % <\tau>
+
+\newcommand{\bottom}{\bot}
+%\newcommand{\pstate}[2]{<#1,#2> }
+
+\newcommand{\retValue}[1]{\textrm{returnVal}(#1)} % designates the result of the method
+\newcommand{\objCl}[1]{\tt{Obj_{#1}}}
+\newcommand{\modExp}{modExp}% stands for modfied locations by loops and methods
+
+
+\newcommand{\method}{\texttt{m}}
+\newcommand{\excIndex}[2]{excIndex(#1,#2 )}
+
+
+%classFileExt.tex
+\newcommand{\intLiteral}{\texttt{int\_const} }
+\newcommand{\EXC}{\texttt{EXC}}
+\newcommand{\predicates}{ \textrm{R} }
+
+\newtheorem{Formula}{Formulas}
+\newtheorem{Predicate}{Predicates}
+
+\newcommand{\formulaBc}{\textrm{F}}

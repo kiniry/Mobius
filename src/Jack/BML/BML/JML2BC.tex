@@ -1,0 +1,34 @@
+
+\newcommand{\code}{\textit{code}}
+\newcommand{\indexComp}{\textit{index}}
+
+
+
+
+
+\section{Introduction} \label{bcsl}
+This document is an overview of a bytecode level specification language, called for short BCSL and a compiler from a
+ subset of the high level Java specification language JML to BCSL. 
+ BCSL can express functional properties of Java bytecode programs in the form of method pre and postconditions, class and object 
+invariants, assertions for particular program points like loop invariants.  Before going further, we discuss what advocates the need of a low level specification.
+Traditionally, specification languages were tailored for high level languages. 
+Source  specification allows to express functional or security properties about a program and they are / can successfully be used 
+for software audit and validation. Still, source specification in the context of mobile code does not help a lot for several reasons.
+First, the executable / interpreted code  may not be accompanied by its specified  source. Second, it is more reasonable for the 
+code receiver to check the executable code than its source code, especially if he is not willing to trust the compiler. 
+Third, if the client has complex requirements and even if the code respects them, in order to establish them, 
+the code should be specified. Of course, for properties like well typedness this specification can be inferred \todo{what kind of 
+techniques: abstract interp ? } 
+but  for more sophisticated policies, an automatic inference will not work. It is in this perspective, that we propose to make the Java
+bytecode benefit from the source specification by defining the BCSL language and a compiler from JML towards BCSL.    
+
+In what follows subsection \ref{prelim} \ introduces the basic features of JML, subsection \ref{grammar} \ gives the formal grammar
+ of the specification language and subsection 
+ \ref{comJML} \ describes the compilation process from JML to BCSL.
+  The full specification of the new user defined Java attributes in which the JML specification is compiled is given in the appendix.
+
+
+
+\input prelim.tex
+\input classFileExt.tex
+

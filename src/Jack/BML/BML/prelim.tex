@@ -1,0 +1,61 @@
+
+%\section{Preliminaries} 
+% \subsection{JACK}
+%Jack \footnote{ http://www-sop.inria.fr/everest/soft/Jack/jack.html} is a plugin for the eclipse \todo{referenced - the eclipse site} integrated development environment for Java. Originally, Jack statically checks, using formal methods, source programs against their JML specification. The tool can interface with several theorem provers (AtelierB, 
+%Simplify, Coq, PVS ) \todo{references}. We have upgraded the tool with implementations of the JML compiler and the bytecode verification condition generator. Jack has a user-friendly interface which makes it easy for use by developers that do not have a large background in formal methods.
+
+
+\subsection{A quick overview of JML} \label{prelim}
+JML~\cite{JMLRefMan} (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications. JML 
+follows the design-by-contract approach (see~\cite{M97oos}), where classes are annotated with class invariants and method pre- and postconditions. Specification
+inside methods is also possible; for example one can specify loop invariants, or assertions  predicates that must hold at specific program points. 
+
+JML specifications are written as comments so they are not visible by Java compilers. The JML syntax is close to the 
+ Java syntax: JML extends Java with few keywords and operators.
+ For introducing method precondition and postcondition one has to use the keywords \jmlKey{requires} and \jmlKey{ensures} 
+  respectively,  \jmlKey{modifies} keyword is followed by all the locations that can be modified by the method, 
+  \jmlKey{loop\_invariant}, not surprisingly, stands for loop invariants, \jmlKey{loop\_modifies} keyword gives the locations modified by loop invariants etc. 
+  The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}. Special JML operators are, for instance, \jmlKey{$\backslash$result} which stands for the value that a method returns if it is not void, the \jmlKey{$\backslash$old(expression)} operator 
+  designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. 
+  JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
+
+JML can be used for either static checking of Java programs by tools such as JACK, the Loop tool, 
+ESC/Java~\cite{escjava} or dynamic checking by tools such as the assertion checker jmlrac~\cite{jmlrac}. An overview of the JML tools can 
+be found in~\cite{BurdyCCEKLLP03}.
+     
+Figure~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
+The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj1}. The loop specification also states
+that the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
+
+\begin{figure}[ht!]
+\begin{verbatim}
+public class ListArray {
+  private Object[] list;
+
+  //@requires list != null;
+  //@ensures \result ==(\exists int i; 
+  //@ 0 <= i && i < list.length && 
+  //@ \old(list[i]) == obj1 && list[i] == obj2); 
+  public boolean replace(Object obj1,Object obj2)
+  {
+    int i = 0;
+    //@loop_modifies i, list[*];
+    //@loop_invariant i <= list.length && i >=0 
+    //@  && (\forall int k;0 <= k && k < i ==> 
+    //@  list[k] != obj1); 
+    for (i = 0; i < list.length; i++ ) {
+      if ( list[i] == obj1) {
+        list[i] = obj2;
+        return true;	
+      }
+    }
+    return false;
+  }
+}
+\end{verbatim}
+\caption{class \texttt{ListArray} with JML annotations} 
+\label{replaceSrc}
+\end{figure}
+
+
