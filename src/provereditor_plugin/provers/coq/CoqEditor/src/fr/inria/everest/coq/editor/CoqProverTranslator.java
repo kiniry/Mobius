@@ -2,7 +2,7 @@ package fr.inria.everest.coq.editor;
 
 import prover.AProverTranslator;
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.exceptions.CoqException;
+import prover.exec.toplevel.exceptions.ProverException;
 import fr.inria.everest.coq.CoqUtils;
 import fr.inria.everest.coq.coqtop.CoqTop;
 
@@ -18,7 +18,7 @@ public class CoqProverTranslator extends AProverTranslator {
 		"User error", "Syntax error: "
 	};
 	
-	public ITopLevel createNewTopLevel(String[] paths) throws CoqException {
+	public ITopLevel createNewTopLevel(String[] paths) throws ProverException {
 		return new CoqTop(CoqUtils.getCoqTop(), paths);
 	}
 	

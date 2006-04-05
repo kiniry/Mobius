@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.exceptions.CoqException;
+import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.IncompleteProofException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
 
@@ -28,23 +28,23 @@ public class CoqTop extends Coq implements ITopLevel{
 
 	/**
 	 * The simple constructor.
-	 * @throws CoqException if it is unable to build the coq process.
+	 * @throws ProverException if it is unable to build the coq process.
 	 */
-	public CoqTop (String strCoqTop, String [] path) throws CoqException {
+	public CoqTop (String strCoqTop, String [] path) throws ProverException {
 		super(strCoqTop, path, 100);
 	}
 	
-	public ITopLevel createTopLevel (String strCoqTop, String [] path) throws CoqException {
+	public ITopLevel createTopLevel (String strCoqTop, String [] path) throws ProverException {
 		return new CoqTop(strCoqTop, path);
 		
 	}
 	
 	/**
 	 * The one arg constructor.
-	 * @param iGraceTime The grace time for Coq
-	 * @throws CoqException if it is unable to build the coq process.
+	 * @param iGraceTime The grace time for TopLevel
+	 * @throws ProverException if it is unable to build the coq process.
 	 */
-	public CoqTop (String strCoqTop, String [] path, int iGraceTime) throws CoqException {
+	public CoqTop (String strCoqTop, String [] path, int iGraceTime) throws ProverException {
 		super(strCoqTop, path, iGraceTime);
 	}
 	
@@ -52,9 +52,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	/**
 	 * Send the command to start a new section in coq.
 	 * @param name the name of the section
-	 * @throws CoqException if there is an unexpected problem.
+	 * @throws ProverException if there is an unexpected problem.
 	 */
-	public void startSection(String name) throws CoqException {
+	public void startSection(String name) throws ProverException {
 		sections.addFirst(name);
 		sendCommand("Section " + name + ".");
 	}
@@ -64,16 +64,16 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * Send the command to end a section in coq. 
 	 * It checks if the section can be closed.
 	 * @param name the name of the section
-	 * @throws CoqException if there is an unexpected problem or 
+	 * @throws ProverException if there is an unexpected problem or 
 	 *                      if it is asked to close the wrong section.
 	 */
-	public void endSection(String name) throws CoqException {
+	public void endSection(String name) throws ProverException {
 		String s = (String) sections.removeFirst();
 		if (s.equals(name)) {
 			sendCommand("End " + name + ".");
 		} else {
 			sections.addFirst(s);
-			throw new CoqException("Bad section close operation: you should have closed section " + s + ".");
+			throw new ProverException("Bad section close operation: you should have closed section " + s + ".");
 		}
 	}
 	
@@ -81,16 +81,16 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * Reset the named section and also erase it.
 	 * It checks if the section can be reset.
 	 * @param name the name of the section
-	 * @throws CoqException if there is an unexpected problem or 
+	 * @throws ProverException if there is an unexpected problem or 
 	 *                      if it is asked to reset the wrong section.
 	 */
-	public void resetSection(String name) throws CoqException {
+	public void resetSection(String name) throws ProverException {
 		String s = (String) sections.removeFirst();
 		if (s.equals(name)) {
 			sendCommand("Reset " + name + ".");
 		} else {
 			sections.addFirst(s);
-			throw new CoqException("Bad section reset operation: you should have closed section " + s + ".");
+			throw new ProverException("Bad section reset operation: you should have closed section " + s + ".");
 		}
 	}
 	
@@ -98,9 +98,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * Starts a new lemma; and send the commande Proof to Coqtop.
 	 * @param name name of the lemma
 	 * @param body body of the lemma
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void declareLemma(String name, String body) throws CoqException {
+	public void declareLemma(String name, String body) throws ProverException {
 		sendCommand("Lemma " + name +": " + body + ".");
 		sendCommand("Proof.");
 		lemmas.addFirst(name);
@@ -109,9 +109,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * Starts a new lemma; and send the commande Proof to Coqtop.
 	 * @param name name of the lemma
 	 * @param body body of the lemma
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void declareLemma(String name, String body, String thing) throws CoqException {
+	public void declareLemma(String name, String body, String thing) throws ProverException {
 		sendCommand("Lemma " + name +": " + body + ".");
 		sendCommand("Proof with " + thing);
 		lemmas.addFirst(name);
@@ -120,9 +120,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	
 	/**
 	 * Restart the current proof.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void restart() throws CoqException {
+	public void restart() throws ProverException {
 		sendCommand("Restart.");
 	}
 	
@@ -131,9 +131,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	
 	/**
 	 * Send the command Proof to coq. I wonder who will use it.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void proof() throws CoqException {
+	public void proof() throws ProverException {
 		sendCommand("Proof.");
 	}
 	
@@ -142,9 +142,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * Send the given command to coqtop. A command is a sentence which ends with a dot.
 	 * @param s The command to send
 	 * @throws SyntaxErrorException If coq yells about a syntax error.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void sendCommand(String s) throws CoqException {
+	public void sendCommand(String s) throws ProverException {
 		super.sendCommand(s);
 		String str = getBuffer().toString();
 		if(str.indexOf("Syntax error: ") != -1)
@@ -154,17 +154,17 @@ public class CoqTop extends Coq implements ITopLevel{
 		if(str.indexOf("Anomaly:") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
-			throw new CoqException("An error occured during the proof:\n" + str + "\n");
+			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 	}
 	
 	/**
 	 * Give the translation of the last object sent to CoqTop.
 	 * @return A pretty print of the last object.
 	 * @throws SyntaxErrorException If coq yells about a syntax error.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 * @throws IOException If there is a failure
 	 */
-	public String inspect() throws CoqException, IOException {
+	public String inspect() throws ProverException, IOException {
 		super.sendCommand("Inspect 1.");
 		String str;
 		str = getBuffer().toString();
@@ -177,7 +177,7 @@ public class CoqTop extends Coq implements ITopLevel{
 		if(str.indexOf("Error:") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
-			throw new CoqException("An error occured during the proof:\n" + str + "\n");
+			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 		return str;
 	}
 	
@@ -186,11 +186,11 @@ public class CoqTop extends Coq implements ITopLevel{
 	
 	
 	/**
-	 * Send the Qed command to Coq.
+	 * Send the Qed command to TopLevel.
 	 * @throws IncompleteProofException If the proof you are trying to save is incomplete.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void qed() throws CoqException {
+	public void qed() throws ProverException {
 		super.sendCommand("Qed.");
 		while ((getBuffer().indexOf("User error: Attempt to save an incomplete proof") == -1) &&
 				(getBuffer().indexOf("is defined")) == -1){
@@ -268,16 +268,16 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * Send the command Show Intros to coqtop and return the list of the 
 	 * identifiers to introduce  
 	 * @return The list of identifiers
-	 * @throws CoqException 
+	 * @throws ProverException 
 	 */
-	public String [] showIntros() throws CoqException {
+	public String [] showIntros() throws ProverException {
 		clearBuffer();
 		sendCommand("Show Intros.");
 		String buff = getBuffer().replaceAll("\n", " ");
 		return buff.split(" +");
 	}
 
-	public String [] show() throws CoqException, IOException{
+	public String [] show() throws ProverException, IOException{
 		clearBuffer();
 		super.sendCommand("Show.");
 		String str;
@@ -291,7 +291,7 @@ public class CoqTop extends Coq implements ITopLevel{
 		if(str.indexOf("Error:") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
-			throw new CoqException("An error occured during the proof:\n" + str + "\n");
+			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 		
 		LineNumberReader lnr = new LineNumberReader(new StringReader(str.toString()));
 		ArrayList al = new ArrayList();
@@ -324,9 +324,9 @@ public class CoqTop extends Coq implements ITopLevel{
 	/**
 	 * Undo n vernac commands or n tactics if we are in proof mode.
 	 * @param steps the number of vernacs to undo.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void undo(int steps) throws CoqException {
+	public void undo(int steps) throws ProverException {
 		
 		int step = getStep();
 		int last = getProofStep();
@@ -357,13 +357,13 @@ public class CoqTop extends Coq implements ITopLevel{
 	
 	/**
 	 * Abort the current proof.
-	 * @throws CoqException if there is an unexpected problem
+	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void abort() throws CoqException {
+	public void abort() throws ProverException {
 		sendCommand("Abort.");	
 	}
 
-	public String print(String nom) throws CoqException, IOException{
+	public String print(String nom) throws ProverException, IOException{
 		super.sendCommand("Print " + nom +".");
 		String str;
 		str = getBuffer().toString();
@@ -376,7 +376,7 @@ public class CoqTop extends Coq implements ITopLevel{
 		if(str.indexOf("Error:") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
-			throw new CoqException("An error occured during the proof:\n" + str + "\n");
+			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 		return str;
 	}
 }

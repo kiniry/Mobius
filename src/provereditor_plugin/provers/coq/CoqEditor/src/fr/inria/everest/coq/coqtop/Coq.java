@@ -1,7 +1,7 @@
 //******************************************************************************
 /* Copyright (c) 2005 INRIA. All Rights Reserved.
 /*------------------------------------------------------------------------------
-/* Name: Coq.java
+/* Name: TopLevel.java
 /*
 /********************************************************************************
 /* Warnings/Remarks:
@@ -13,15 +13,15 @@ import java.io.IOException;
 import prover.exec.AProverException;
 import prover.exec.IStreamListener;
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.exceptions.CoqException;
-import prover.exec.toplevel.exceptions.CoqTopException;
+import prover.exec.toplevel.exceptions.ProverException;
+import prover.exec.toplevel.exceptions.ToplevelException;
 import prover.exec.toplevel.stream.ErrorStreamHandler;
 import prover.exec.toplevel.stream.InputStreamHandler;
 import prover.exec.toplevel.stream.StandardStreamHandler;
 
 
 /**
- * Class to manage Coq
+ * Class to manage TopLevel
  * @author Julien Charles
  */
 public class Coq implements ITopLevel {
@@ -59,7 +59,7 @@ public class Coq implements ITopLevel {
 		this.stop();
 	}
 	private void startProcess()
-		throws CoqException {
+		throws ProverException {
 		iIsWorking= 1;
 		try {
 			coq = Runtime.getRuntime().exec(cmds);
@@ -71,17 +71,17 @@ public class Coq implements ITopLevel {
 			out = new InputStreamHandler(coq.getOutputStream());
 			bIsAlive = true;
 		} catch (IOException e) {
-			throw new CoqException(
+			throw new ProverException(
 				"Error running command: '" + cmds[0] + "': " + e.toString());
 		}
 		
 		if (coq == null) {
-			throw new CoqException("Coq.Error_running_command___4" + cmds[0]); //$NON-NLS-1$
+			throw new ProverException("TopLevel.Error_running_command___4" + cmds[0]); //$NON-NLS-1$
 		}
 		clearBuffer();
 		try {
 			waitForPrompt(coqBuffer);
-		} catch (CoqTopException e) {
+		} catch (ToplevelException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -89,7 +89,7 @@ public class Coq implements ITopLevel {
 	}
 
 
-	public Coq(String cmd, String[] path, int iGrace) throws CoqException {
+	public Coq(String cmd, String[] path, int iGrace) throws ProverException {
 		if(path != null) {
 			cmds = new String[2 + path.length * 2];
 			for(int i = 0; i < path.length; i++) {
@@ -110,7 +110,7 @@ public class Coq implements ITopLevel {
 
 	
 	private synchronized void waitForPrompt(StringBuffer buff)
-		throws IOException, CoqTopException {
+		throws IOException, ToplevelException {
 		
 		// on mange le prompt;
 		Thread t;
@@ -127,14 +127,14 @@ public class Coq implements ITopLevel {
 				
 			if(!bIsAlive) {
 				err.stopEating();
-				throw new CoqTopException("Oh no ! Coq was killed !");
+				throw new ToplevelException("Oh no ! TopLevel was killed !");
 			}
 			if (err.isStillEating()) {
 				err.stopEating();
 				if(i== iGraceTime)
-					throw new CoqTopException("Timed out !"); //ca me gave!
+					throw new ToplevelException("Timed out !"); //ca me gave!
 				else
-					throw new CoqTopException("Unexpected thread death !");
+					throw new ToplevelException("Unexpected thread death !");
 			}
 			err.stopEating();
 			do {
@@ -160,11 +160,11 @@ public class Coq implements ITopLevel {
 		}
 	}
 
-	protected void waitForMoreInput() throws IOException, CoqTopException {
+	protected void waitForMoreInput() throws IOException, ToplevelException {
 		waitForMoreInput(coqBuffer);
 	}
 	
-	private synchronized void waitForMoreInput(StringBuffer buff) throws IOException, CoqTopException {
+	private synchronized void waitForMoreInput(StringBuffer buff) throws IOException, ToplevelException {
 		
 		int i;
 		try {
@@ -174,11 +174,11 @@ public class Coq implements ITopLevel {
 			} 
 			if (!in.hasFinished()) {
 				if (!isAlive())
-					throw new CoqTopException("Oh no ! Coq was killed !");
+					throw new ToplevelException("Oh no ! TopLevel was killed !");
 				else if(i== iGraceTime)
-					throw new CoqTopException("Timed out !"); //ca me gave!
+					throw new ToplevelException("Timed out !"); //ca me gave!
 				else
-					throw new CoqTopException("Unexpected thread death !");
+					throw new ToplevelException("Unexpected thread death !");
 			}
 		}
 		catch (InterruptedException e) {
@@ -196,7 +196,7 @@ public class Coq implements ITopLevel {
 	 * Sends the given command to the prover and waits for the prompt,
 	 * printing all the output of the prover to the standard output.
 	 */
-	public void sendCommand(String command) throws CoqException {
+	public void sendCommand(String command) throws ProverException {
 
 		clearBuffer();
 		if(!isAlive()) {
@@ -204,7 +204,7 @@ public class Coq implements ITopLevel {
 			 * throw new CoqTopException("Maldoror is dead dead dead!!!");
 			 * soyons un peu serieux...
 			 */
-			throw new CoqTopException("Coqtop has been killed.");
+			throw new ToplevelException("Coqtop has been killed.");
 		}
 		if (command.trim().equals("") && !command.equals(BREAKSTR))
 			return;
@@ -224,13 +224,13 @@ public class Coq implements ITopLevel {
 			iIsWorking = 0;
 			e.printStackTrace();
 		}
-		catch (CoqException ec) {
+		catch (ProverException ec) {
 			iIsWorking --;
 			throw ec;
 		}
 		coqBuffer.append(str);
 		if(iIsWorking == 0)
-			throw new CoqException("I was interrupted!");
+			throw new ProverException("I was interrupted!");
 		iIsWorking--;
 	}
 
@@ -238,7 +238,7 @@ public class Coq implements ITopLevel {
 		return prompt;
 	}
 
-	public void restart() throws CoqException {
+	public void restart() throws ProverException {
 		startProcess();
 	}
 
@@ -251,13 +251,13 @@ public class Coq implements ITopLevel {
 			// it is normally already terminated... coq.waitFor();
 		//} catch (InterruptedException e) {
 		//	System.err.println(
-		//		"Coq.InterruptedException_catched____20" + e.toString()); //$NON-NLS-1$
+		//		"TopLevel.InterruptedException_catched____20" + e.toString()); //$NON-NLS-1$
 		//}
 	}
 
 
 	public boolean isProofMode() {
-		return !prompt.startsWith("Coq <");
+		return !prompt.startsWith("TopLevel <");
 	}
 	
 	public boolean isAlive() {
@@ -294,11 +294,11 @@ public class Coq implements ITopLevel {
 	
 	/**
 	 * Tries to tell coqtop to stop arguing with these @$!%* commands.
-	 * @throws CoqException in case of traumas
+	 * @throws ProverException in case of traumas
 	 */
-	public void doBreak() throws CoqException {
+	public void doBreak() throws ProverException {
 		if(!isWorking())
-			throw new CoqException("There is nothing to break!");
+			throw new ProverException("There is nothing to break!");
 		iIsWorking --;
 		if(iIsWorking < 0) iIsWorking = 0;
 		out.println(BREAKSTR);
