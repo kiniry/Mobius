@@ -280,5 +280,44 @@ public class CoqTop extends BasicCoqTop {
 		return str;
 	}
 	
+	/**
+	 * Pretty print the sections.
+	 * @param i internal use - if called should be sections.size()
+	 * @param indent some spaces
+	 * @return the pretty printed sections
+	 */
+	private String printSections(int i, String indent) {
+		String s;
+		if (i > 0) {
+			s = indent + sections.get(i - 1) + " {\n" + 
+				indent + printSections(i - 1, indent + "   ")  + "\n" +
+				indent + "}";
+		}
+		else {
+			s = indent + printLemmas(lemmas.size());
+		}
+		return s;
+	}
 	
+	/**
+	 * Pretty print the lemmas.
+	 * @param i internal use - if called should be lemmas.size()
+	 * @return the pretty printed lemmas
+	 */
+	private String printLemmas(int i) {
+		String s = "";
+		if (i > 0) {
+			s = "[" + lemmas.get(i - 1) + " " + 
+				printLemmas(i - 1) + "] ";
+		}
+		return s;
+	}
+	
+	/**
+	 * Prints the current state (more or less) of CoqTop.
+	 * @return A string representing an internal state.
+	 */
+	public String toString() {
+		return "CoqTop State: \n" + printSections(sections.size(), "   "); 
+	}
 }
