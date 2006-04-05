@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import prover.exec.ITopLevel;
+import prover.exec.toplevel.exceptions.CoqException;
+import prover.exec.toplevel.exceptions.IncompleteProofException;
+import prover.exec.toplevel.exceptions.SyntaxErrorException;
 
-import fr.inria.everest.coq.coqtop.exceptions.CoqException;
-import fr.inria.everest.coq.coqtop.exceptions.IncompleteProofException;
-import fr.inria.everest.coq.coqtop.exceptions.SyntaxErrorException;
 
 
 /**

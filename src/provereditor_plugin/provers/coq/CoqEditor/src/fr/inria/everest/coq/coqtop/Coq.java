@@ -10,20 +10,21 @@ package fr.inria.everest.coq.coqtop;
 
 import java.io.IOException;
 
+import prover.exec.AProverException;
 import prover.exec.IStreamListener;
-
-import fr.inria.everest.coq.coqtop.exceptions.CoqException;
-import fr.inria.everest.coq.coqtop.exceptions.CoqTopException;
-import fr.inria.everest.coq.coqtop.stream.ErrorStreamHandler;
-import fr.inria.everest.coq.coqtop.stream.InputStreamHandler;
-import fr.inria.everest.coq.coqtop.stream.StandardStreamHandler;
+import prover.exec.ITopLevel;
+import prover.exec.toplevel.exceptions.CoqException;
+import prover.exec.toplevel.exceptions.CoqTopException;
+import prover.exec.toplevel.stream.ErrorStreamHandler;
+import prover.exec.toplevel.stream.InputStreamHandler;
+import prover.exec.toplevel.stream.StandardStreamHandler;
 
 
 /**
  * Class to manage Coq
  * @author Julien Charles
  */
-public class Coq {
+public class Coq implements ITopLevel {
 	private StringBuffer coqBuffer = new StringBuffer();
 	
 	private StandardStreamHandler in;
@@ -301,5 +302,13 @@ public class Coq {
 		iIsWorking --;
 		if(iIsWorking < 0) iIsWorking = 0;
 		out.println(BREAKSTR);
+	}
+	public ITopLevel createTopLevel(String strCoqTop, String[] path) throws AProverException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void undo(int steps) throws AProverException {
+		// TODO Auto-generated method stub
+		
 	}	
 }

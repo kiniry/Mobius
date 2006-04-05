@@ -2,9 +2,9 @@ package fr.inria.everest.coq.editor;
 
 import prover.AProverTranslator;
 import prover.exec.ITopLevel;
+import prover.exec.toplevel.exceptions.CoqException;
 import fr.inria.everest.coq.CoqUtils;
 import fr.inria.everest.coq.coqtop.CoqTop;
-import fr.inria.everest.coq.coqtop.exceptions.CoqException;
 
 public class CoqProverTranslator extends AProverTranslator {
 	
