@@ -19,7 +19,6 @@
       <language
             extension=".v"
             name="Coq"
-            scanner="fr.inria.everest.coq.editor.CoqRuleScanner"
             translator="fr.inria.everest.coq.editor.CoqProverTranslator"/>
    </extension>
 
