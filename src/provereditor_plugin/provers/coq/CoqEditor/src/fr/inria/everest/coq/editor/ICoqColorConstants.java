@@ -20,7 +20,8 @@ public interface ICoqColorConstants extends IColorConstants {
 		new Color(Display.getCurrent(), new RGB(0, 100, 0));
 	public final static Color LEMMA_COLOR = 
 		new Color(Display.getCurrent(), new RGB(200, 30, 30));
-	
+	public final static Color LIGHTGREY = 
+		new Color(Display.getCurrent(), new RGB(230,230, 230));
 	// Some tokens
 	IToken completed = new Token(new BasicTextAttribute(BLUE));
 	IToken forall = new Token(new BasicTextAttribute(DARKRED));
@@ -29,4 +30,5 @@ public interface ICoqColorConstants extends IColorConstants {
 	IToken lemma = new Token(new BasicTextAttribute(LEMMA_COLOR));
 	IToken string = new Token(new BasicTextAttribute(STRING_COLOR));
 	IToken def = new Token(new BasicTextAttribute(DEFAULT_TAG_COLOR));
+	IToken subgoal2 = new Token(new BasicTextAttribute(GREY));
 }

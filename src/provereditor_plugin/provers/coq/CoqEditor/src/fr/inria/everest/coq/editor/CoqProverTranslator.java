@@ -11,7 +11,6 @@ import prover.exec.ITopLevel;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;
 import fr.inria.everest.coq.CoqUtils;
-import fr.inria.everest.coq.coqtop.CoqTop;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
 	
@@ -19,7 +18,14 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 	public final static String strCommentEnd = "\\*\\)";
 	public final static String strEndOfSentence = "\\.[ \n\t]"; 
 	public final static CoqProverTranslator instance = new CoqProverTranslator();
-	
+	public final static String [] vernac = {"forall", "Proof",
+			"Load", "Require", "Qed", "Import", "Open", "Scope", 
+			"match","end", "Section", "End" 
+	};
+	public final static String [] lem = {
+			"Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
+	};
+				
 	public final static String [] errorExpressions = { 
 		"Error:", "Anomaly:", "Toplevel input",
 		"User error", "Syntax error: "
@@ -75,15 +81,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return replacements;
 	}
 
-	public IRule [] getProofRules() {
-		String [] vernac = {"forall", "Proof",
-				"Load", "Require", "Qed", "Import", "Open", "Scope", 
-				"match","end", "Section", "End" 
-		};
-		String [] lem = {
-				"Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
-		};
-				
+	public IRule [] getFileRules() {
 		WordRule wr = new WordRule(new WordDetector(), def);
 		for (int i = 0; i < vernac.length; i++) {
 			wr.addWord(vernac[i], tag);
@@ -94,9 +92,6 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		WordRule wexpr = new WordRule(new ExprDetector(), tag);
 		wexpr.addWord(".", tag);
 		IRule [] rules = {
-				new SingleLineRule("Proof ", "completed", completed),
-				new MultiLineRule("forall ", ",", forall),
-				new MultiLineRule("exists ", ",", forall),
 				new MultiLineRule("(*", "*)", comment),
 				new MultiLineRule("\"", "\"", string),
 				new SingleLineRule("(*", "*)", comment),
@@ -108,15 +103,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return rules;
 	}
 	
-	public IRule [] getFileRules() {
-		String [] vernac = {"forall", "Proof",
-				"Load", "Require", "Qed", "Import", "Open", "Scope", 
-				"match","end", "Section", "End" 
-		};
-		String [] lem = {
-				"Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
-		};
-				
+	public IRule [] getProofRules() {				
 		WordRule wr = new WordRule(new WordDetector(), def);
 		for (int i = 0; i < vernac.length; i++) {
 			wr.addWord(vernac[i], tag);
@@ -126,8 +113,20 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		}
 		WordRule wexpr = new WordRule(new ExprDetector(), tag);
 		wexpr.addWord(".", tag);
+		WordRule hypothesis = new WordRule(new WordDetector(), comment);
+		hypothesis.setColumnConstraint(2);
+//		WordPatternRule hypothesis = new WordPatternRule(new WordDetector(), "  ", " :", comment);
+//		hypothesis.setColumnConstraint(0);
+		SingleLineRule subg = new SingleLineRule("1 ", "subgoal", completed);
+		subg.setColumnConstraint(0);
+		MultiLineRule mlr = new MultiLineRule(" subgoal", "",subgoal2, (char) 0, true);
+		mlr.setColumnConstraint(0);
+		
 		IRule [] rules = {
 				new SingleLineRule("Proof ", "completed", completed),
+				subg,
+				mlr,
+				hypothesis,
 				new MultiLineRule("forall ", ",", forall),
 				new MultiLineRule("exists ", ",", forall),
 				new MultiLineRule("(*", "*)", comment),
@@ -135,8 +134,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 				new SingleLineRule("(*", "*)", comment),
 				new SingleLineRule("\"", "\"", string),
 				wr,
-				wexpr
-				
+				wexpr		
 		};
 		return rules;
 	}
