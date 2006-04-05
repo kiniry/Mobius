@@ -2,8 +2,8 @@ package fr.inria.everest.coq;
 
 import prover.ProverEditorPlugin;
 import prover.exec.AProverException;
-import fr.inria.everest.coq.coqtop.CoqTop;
 import fr.inria.everest.coq.editor.CoqProverTranslator;
+import fr.inria.everest.coq.editor.CoqTop;
 
 public class CoqUtils {
 	public static CoqTop createNewCoqTop() throws AProverException {
