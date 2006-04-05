@@ -10,6 +10,7 @@ package prover.exec.toplevel;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import prover.Prover;
 import prover.exec.IStreamListener;
@@ -62,6 +63,13 @@ public abstract class TopLevel implements ITopLevel {
 	public void removePromptListener(IPromptListener ipl) {
 		hs.remove(ipl);
 	}
+	private void firePromptChangeEvent() {
+		Iterator iter = hs.iterator();
+		while(iter.hasNext()) {
+			IPromptListener ipl = (IPromptListener)iter.next();
+			ipl.promptHasChanged(this);
+		}
+	}
 	
 	public void dispose() {
 		this.stop();
@@ -98,9 +106,9 @@ public abstract class TopLevel implements ITopLevel {
 
 
 	protected TopLevel(String name, String [] cmd, int iGrace) throws ProverException {
-		pkind = Prover.findProverFromFile(name);
+		pkind = Prover.get(name);
 		if(pkind == null) {
-			throw new ProverException("Prover " + name + "not found!");
+			throw new ProverException("Prover " + name + " not found!");
 		}
 		this.cmds = cmd;
 		iGraceTime = iGrace == 0 ? 123456 : iGrace;
@@ -147,6 +155,7 @@ public abstract class TopLevel implements ITopLevel {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		firePromptChangeEvent();
 	}
 
 	protected void waitForMoreInput() throws IOException, ToplevelException {

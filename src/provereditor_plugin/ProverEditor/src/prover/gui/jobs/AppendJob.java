@@ -8,11 +8,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.progress.UIJob;
 
 import prover.gui.ProverPresentation;
+import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.BasicTextAttribute;
 import prover.gui.editor.IColorConstants;
 
 public class AppendJob extends UIJob implements IColorConstants {
@@ -21,22 +24,25 @@ public class AppendJob extends UIJob implements IColorConstants {
 	private TextViewer tv;
 	
 	private ProverPresentation tp;
+	private BasicRuleScanner scanner;
 	
-	public AppendJob(ProverPresentation tp) {
+	public AppendJob(BasicRuleScanner scanner, ProverPresentation tp) {
 		super("Updating view");
 		strToAppend = new StringBuffer();
 		this.tp = (ProverPresentation)tp.clone();
 		tv = tp.getTextViewer();
 		doc = tv.getDocument();
+		this.scanner = scanner;
+		
 	}
 		
-	public AppendJob(ProverPresentation tp, String name ) {
-		this(tp);
+	public AppendJob(BasicRuleScanner scanner, ProverPresentation tp, String name ) {
+		this(scanner, tp);
 		add(name);
 	}
 	
 	public AppendJob(ProverPresentation tp, String name, Color col) {
-		this(tp);
+		this(null, tp);
 		add(name, col);
 	}
 	public void add(StringBuffer str) {
@@ -66,24 +72,40 @@ public class AppendJob extends UIJob implements IColorConstants {
 			len = strToAppend.length() - (offset + 1); 
 		}
 		
-		
-		
-//		if(realoffset + len >= dc.getLength() + strToAppend.length()) {
-//			len = ((dc.getLength() + strToAppend.length()) - (realoffset)); 
-//		}
-		
 		tp.mergeStyleRange(new StyleRange(offset + doc.getLength(), len, col, WHITE));
 		
 	}
+	
+	public void prepare() {
+		
+		schedule();
+	}
+	
 	public IStatus runInUIThread(IProgressMonitor monitor) {
+		int len = doc.getLength();
 		try {
-			doc.replace(doc.getLength(), 0, strToAppend.toString());
-			
-			tv.setTopIndex(doc.getLength() - 1);
-			tv.changeTextPresentation(tp, true);
+			doc.replace(len, 0, strToAppend.toString());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+		tv.setTopIndex(len - 1);
+		if(scanner != null) {
+			//System.out.println(strToAppend);
+			scanner.setRange(doc, len, strToAppend.length());
+			IToken tok;
+			while (!(tok = scanner.nextToken()).isEOF()) {
+				if(tok != scanner.getDefaultReturnToken()) {
+					BasicTextAttribute bta = (BasicTextAttribute)tok.getData();
+					tp.mergeStyleRange(new StyleRange(scanner.getTokenOffset(), 
+							scanner.getTokenLength(), bta.getForeground(), 
+							bta.getBackground()));
+					
+				}
+				
+			}
+		}	
+		tv.changeTextPresentation(tp, true);
+			
 		return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 	}
 	

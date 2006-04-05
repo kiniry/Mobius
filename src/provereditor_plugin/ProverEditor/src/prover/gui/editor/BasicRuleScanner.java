@@ -9,13 +9,15 @@ import org.eclipse.jface.text.rules.Token;
 public class BasicRuleScanner extends RuleBasedScanner implements IColorConstants {
 	private int limit = 0;
 
-
 	public BasicRuleScanner() {
+		this(null);
+	}
+	
+	public BasicRuleScanner(IRule[] rules) {
 		super();
-		IRule [] rules = {
-				
-		};
-		
+		if(rules == null) {
+			rules = new IRule[0];
+		}
 		setRules(rules);
 		setDefaultReturnToken(new Token(
 			new BasicTextAttribute(DEFAULT_TAG_COLOR)));
@@ -60,5 +62,9 @@ public class BasicRuleScanner extends RuleBasedScanner implements IColorConstant
 	}
 	public  int getLimit() {
 		return limit;
+	}
+
+	public IToken getDefaultReturnToken() {
+		return fDefaultReturnToken;
 	}
 }

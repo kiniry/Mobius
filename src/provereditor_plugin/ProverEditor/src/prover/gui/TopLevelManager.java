@@ -74,7 +74,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		tp = new ProverPresentation(tv);
 //		tv.changeTextPresentation(tp, true);
 		
-		new AppendJob(tp, GREETINGS, VIOLET).schedule();
+		new AppendJob(tp, GREETINGS, VIOLET).prepare();
 		
 		//if (top == null) {
 		//	respawn();
@@ -88,6 +88,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	private boolean bLock = false;
 
 	private String msg;
+	private BasicRuleScanner scanner;
 
 	protected synchronized boolean lock() {
 		if(bLock)
@@ -300,7 +301,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 						tp = new ProverPresentation(tv);
 						
 						tv.changeTextPresentation(tp, true);
-						new AppendJob(tp, GREETINGS, VIOLET).schedule();
+						new AppendJob(tp, GREETINGS, VIOLET).prepare();
 						return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 					}
 					
@@ -324,6 +325,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 	    translator = Prover.findProverFromFile(path.getRawLocation().toString()).getTranslator();
+	    scanner = new BasicRuleScanner(translator.getProofRules());
 		String [] tab = null;
 		
 		if(path != null) {
@@ -340,7 +342,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			top = translator.createNewTopLevel(tab);
 			top.addStreamListener(this);
 		} catch (AProverException e) {
-			new AppendJob(tp, e.toString(), RED).schedule();
+			new AppendJob(tp, e.toString(), RED).prepare();
 		}
 		
 		//System.out.println(oldce.getSite());
@@ -396,11 +398,11 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			job.add("\nProof Completed.\n", BLUE);
 			return;
 		}
-		//String [] tab = str.split("\n");
+		
 		job.add("\n");
-		//int j = 0;
+		
 		int goalindex;
-		String separator = "============================";
+		String separator = "-----------------------------------------------------------------------------------";
 		if((goalindex = str.indexOf(separator)) == -1) {
 			return;
 		}
@@ -410,12 +412,9 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		job.add(hypos);
 		forall_coloring(job, hypos, 0, gap);
 		hypname_coloring(job, hypos, 0, gap);
-		job.add("-----------------------------------------------------------------------------------");
+		job.add(separator);
 		gap = job.getLength();
-		int index = 0;
-		while((index = goals.indexOf("\ufffd", index)) != -1) {
-			goals.setCharAt(index, ' ');
-		}
+		
 		job.add(goals);
 		forall_coloring(job, goals, 0, gap);
 		subgoals_coloring(job, goals, 0, gap);
@@ -431,16 +430,20 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			str = str.substring(ind);
 		}
 		
-		String [][] unicodeReplacement = translator.getUnicodeReplacement();
+		String [][] unicodeReplacements = translator.getUnicodeReplacements();
 		
 		if(isUnicodeMode()) {
-			for(int i =0; i < unicodeReplacement.length; i++) {
-				str = str.replaceAll(unicodeReplacement[i][0], 
-						unicodeReplacement[i][1]);
+			for(int i =0; i < unicodeReplacements.length; i++) {
+				str = str.replaceAll(unicodeReplacements[i][0], 
+						unicodeReplacements[i][1]);
 			}
 		}
-		
-		AppendJob job = new AppendJob(tp);
+		String [][] replacements = translator.getReplacements();
+		for(int i =0; i < replacements.length; i++) {
+			str = str.replaceAll(replacements[i][0], 
+					replacements[i][1]);
+		}
+		AppendJob job = new AppendJob(scanner, tp);
 		
 		
 		// Error handling
@@ -449,31 +452,32 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		for (int i = 0; (i < errorExpressions.length) && (ind == -1); i++){
 			ind = str.indexOf(errorExpressions[i]);
 		}
-		if(ind != -1) {
-			String hyps = str.substring(0, ind);
-			if (hyps.indexOf(" subgoal") != -1) {
-				append_subgoal(new StringBuffer(hyps), job);
-				job.add("\n\n");
-			}
-			
-			String err = str.substring(ind);
-			int gap = job.getLength();
-			job.add(err);
-			job.addColor(gap, str.length()- ind -1, RED);
-			job.add("\n");
-		}
-		else if (str.indexOf(" subgoal") != -1) {
-			append_subgoal(new StringBuffer(str), job);
-			job.add("\n\n");
-		}
-		else if (str.indexOf("Proof completed.") != -1) {
-			job.add("\nProof Completed.\n", BLUE);
-		}
-		else {
-			job.add(str);
-		}
+//		if(ind != -1) {
+//			String hyps = str.substring(0, ind);
+//			if (hyps.indexOf(" subgoal") != -1) {
+//				append_subgoal(new StringBuffer(hyps), job);
+//				job.add("\n\n");
+//			}
+//			
+//			String err = str.substring(ind);
+//			int gap = job.getLength();
+//			job.add(err);
+//			job.addColor(gap, str.length()- ind -1, RED);
+//			job.add("\n");
+//		}
+//		else if (str.indexOf(" subgoal") != -1) {
+//			append_subgoal(new StringBuffer(str), job);
+//			job.add("\n\n");
+//		}
+//		else if (str.indexOf("Proof completed.") != -1) {
+//			job.add("\nProof Completed.\n", BLUE);
+//		}
+//		else {
+		job.add(str);
+		//System.out.println(str);
+//		}
 		
-		job.schedule();
+		job.prepare();
 	}
 
 

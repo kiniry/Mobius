@@ -33,7 +33,7 @@ public class ProverEditor extends TextEditor{
 				scanner = p.getRuleScanner();
 			}
 			else { 
-				scanner = new BasicRuleScanner();
+				scanner = new BasicRuleScanner(null);
 			}
 		}
 		return scanner;

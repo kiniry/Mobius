@@ -49,10 +49,10 @@ public class Prover {
 			scanner = (BasicRuleScanner) lang.createExecutableExtension("scanner");
 		} catch (CoreException e) {
 			e.printStackTrace();
-			scanner = new BasicRuleScanner();
+			scanner = new BasicRuleScanner(null);
 		}
 		if(scanner == null) {
-			scanner = new BasicRuleScanner();
+			scanner = new BasicRuleScanner(null);
 		}
 		ProverPreferenceNode pn = new ProverPreferenceNode(name, prefs);
 		PlatformUI.getWorkbench().getPreferenceManager().addTo("ProverEditor.page",	pn);
@@ -85,9 +85,9 @@ public class Prover {
 		try {
 			scanner = (BasicRuleScanner) scanner.getClass().newInstance();
 		} catch (InstantiationException e) {
-			scanner = new BasicRuleScanner();
+			scanner = new BasicRuleScanner(null);
 		} catch (IllegalAccessException e) {
-			scanner = new BasicRuleScanner();
+			scanner = new BasicRuleScanner(null);
 		}
 		return scanner;
 	}
