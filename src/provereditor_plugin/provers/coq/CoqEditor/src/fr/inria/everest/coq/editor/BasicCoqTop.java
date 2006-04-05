@@ -3,8 +3,6 @@
  */
 package fr.inria.everest.coq.editor;
 
-import java.util.LinkedList;
-
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.IPromptListener;
 import prover.exec.toplevel.TopLevel;
@@ -19,8 +17,8 @@ import prover.exec.toplevel.exceptions.SyntaxErrorException;
  */
 
 public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener {
-	private LinkedList sections = new LinkedList();
-	private LinkedList lemmas = new LinkedList();
+//	private LinkedList sections = new LinkedList();
+//	private LinkedList lemmas = new LinkedList();
 
 
 	/**
@@ -28,7 +26,7 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 	 * @throws ProverException if it is unable to build the coq process.
 	 */
 	public BasicCoqTop (String [] strCoqTop) throws ProverException {
-		super("Coq", strCoqTop, 100);
+		this(strCoqTop, 100);
 	}
 	
 	
@@ -39,6 +37,7 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 	 */
 	public BasicCoqTop (String [] strCoqTop, int iGraceTime) throws ProverException {
 		super("Coq", strCoqTop, iGraceTime);
+		this.addPromptListener(this);
 	}
 	
 	
@@ -64,54 +63,6 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
 			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 	}
-	
-	
-	
-
-	
-	
-	/**
-	 * Pretty print the sections.
-	 * @param i internal use - if called should be sections.size()
-	 * @param indent some spaces
-	 * @return the pretty printed sections
-	 */
-	private String printSections(int i, String indent) {
-		String s;
-		if (i > 0) {
-			s = indent + sections.get(i - 1) + " {\n" + 
-				indent + printSections(i - 1, indent + "   ")  + "\n" +
-				indent + "}";
-		}
-		else {
-			s = indent + printLemmas(lemmas.size());
-		}
-		return s;
-	}
-	
-	/**
-	 * Pretty print the lemmas.
-	 * @param i internal use - if called should be lemmas.size()
-	 * @return the pretty printed lemmas
-	 */
-	private String printLemmas(int i) {
-		String s = "";
-		if (i > 0) {
-			s = "[" + lemmas.get(i - 1) + " " + 
-				printLemmas(i - 1) + "] ";
-		}
-		return s;
-	}
-	
-	/**
-	 * Prints the current state (more or less) of CoqTop.
-	 * @return A string representing an internal state.
-	 */
-	public String toString() {
-		return "CoqTop State: \n" + printSections(sections.size(), "   "); 
-	}
-	
-
 	
 
 	
