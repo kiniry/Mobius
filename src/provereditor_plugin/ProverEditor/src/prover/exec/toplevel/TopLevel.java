@@ -9,8 +9,9 @@
 package prover.exec.toplevel;
 
 import java.io.IOException;
+import java.util.HashSet;
 
-import prover.exec.AProverException;
+import prover.Prover;
 import prover.exec.IStreamListener;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
@@ -24,8 +25,9 @@ import prover.exec.toplevel.stream.StandardStreamHandler;
  * Class to manage TopLevel
  * @author Julien Charles
  */
-public class TopLevel implements ITopLevel {
+public abstract class TopLevel implements ITopLevel {
 	private StringBuffer proverBuffer = new StringBuffer();
+	private Prover pkind;
 	
 	private StandardStreamHandler in;
 	private InputStreamHandler out;
@@ -38,9 +40,6 @@ public class TopLevel implements ITopLevel {
 	private boolean bIsAlive = true;
 	private Thread tin;
 	private String prompt;
-	private int iStep;
-	private int iProofStep;
-
 	private int iIsWorking = 0;
 	
 	private static char BREAK = 3;
@@ -49,12 +48,21 @@ public class TopLevel implements ITopLevel {
 		BREAKSTR = "" + BREAK;
 	}
 	
-	public void addListener(IStreamListener isl) {
+	public void addStreamListener(IStreamListener isl) {
 		in.addStreamListener(isl);
 	}
-	public void removeListener(IStreamListener isl) {
+	public void removeStreamListener(IStreamListener isl) {
 		in.removeStreamListener(isl);
 	}
+	
+	HashSet hs = new HashSet();
+	public void addPromptListener(IPromptListener ipl) {
+		hs.add(ipl);
+	}
+	public void removePromptListener(IPromptListener ipl) {
+		hs.remove(ipl);
+	}
+	
 	public void dispose() {
 		this.stop();
 	}
@@ -76,7 +84,7 @@ public class TopLevel implements ITopLevel {
 		}
 		
 		if (prover == null) {
-			throw new ProverException("TopLevel.Error_running_command___4" + cmds[0]); //$NON-NLS-1$
+			throw new ProverException("TopLevel", "Error running command: " + cmds[0]); //$NON-NLS-1$
 		}
 		clearBuffer();
 		try {
@@ -89,26 +97,18 @@ public class TopLevel implements ITopLevel {
 	}
 
 
-	public TopLevel(String cmd, String[] path, int iGrace) throws ProverException {
-		if(path != null) {
-			cmds = new String[2 + path.length * 2];
-			for(int i = 0; i < path.length; i++) {
-				cmds[(2 * i) + 1] = "-I";
-				cmds[(2 * i) + 2] = path[i];
-			}
-			
+	protected TopLevel(String name, String [] cmd, int iGrace) throws ProverException {
+		pkind = Prover.findProverFromFile(name);
+		if(pkind == null) {
+			throw new ProverException("Prover " + name + "not found!");
 		}
-		else {
-			cmds = new String[2];
-		}
-		cmds[0] = cmd.trim();
-		cmds[cmds.length - 1] = "-emacs";
+		this.cmds = cmd;
 		iGraceTime = iGrace == 0 ? 123456 : iGrace;
 		
 		startProcess();
 	}
 
-	
+
 	private synchronized void waitForPrompt(StringBuffer buff)
 		throws IOException, ToplevelException {
 		
@@ -127,14 +127,14 @@ public class TopLevel implements ITopLevel {
 				
 			if(!bIsAlive) {
 				err.stopEating();
-				throw new ToplevelException("Oh no ! TopLevel was killed !");
+				throw new ToplevelException(pkind, "Oh no ! TopLevel was killed !");
 			}
 			if (err.isStillEating()) {
 				err.stopEating();
 				if(i== iGraceTime)
-					throw new ToplevelException("Timed out !"); //ca me gave!
+					throw new ToplevelException(pkind, "Timed out !"); //ca me gave!
 				else
-					throw new ToplevelException("Unexpected thread death !");
+					throw new ToplevelException(pkind, "Unexpected thread death !");
 			}
 			err.stopEating();
 			do {
@@ -144,17 +144,6 @@ public class TopLevel implements ITopLevel {
 					return;
 			} while(newPrompt.equals("")) ;
 			prompt = newPrompt;
-			//System.out.println(prompt);
-			String [] tab = prompt.split("<");
-			if(tab.length > 1) {
-				String [] nums = tab[1].split("\\|");
-				iStep = Integer.valueOf(nums[0].trim()).intValue();
-				iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
-				//if(!nums[1].trim().equals("")) {
-				//	;
-				//}
-				//System.err.println(nums.length + " " + iProofStep);
-			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -163,6 +152,8 @@ public class TopLevel implements ITopLevel {
 	protected void waitForMoreInput() throws IOException, ToplevelException {
 		waitForMoreInput(proverBuffer);
 	}
+	
+	
 	
 	private synchronized void waitForMoreInput(StringBuffer buff) throws IOException, ToplevelException {
 		
@@ -174,11 +165,11 @@ public class TopLevel implements ITopLevel {
 			} 
 			if (!in.hasFinished()) {
 				if (!isAlive())
-					throw new ToplevelException("Oh no ! TopLevel was killed !");
+					throw new ToplevelException(pkind, "Oh no ! TopLevel was killed !");
 				else if(i== iGraceTime)
-					throw new ToplevelException("Timed out !"); //ca me gave!
+					throw new ToplevelException(pkind, "Timed out !"); //ca me gave!
 				else
-					throw new ToplevelException("Unexpected thread death !");
+					throw new ToplevelException(pkind, "Unexpected thread death !");
 			}
 		}
 		catch (InterruptedException e) {
@@ -204,7 +195,7 @@ public class TopLevel implements ITopLevel {
 			 * throw new CoqTopException("Maldoror is dead dead dead!!!");
 			 * soyons un peu serieux...
 			 */
-			throw new ToplevelException("Coqtop has been killed.");
+			throw new ToplevelException(pkind, "The toplevel has been killed.");
 		}
 		if (command.trim().equals("") && !command.equals(BREAKSTR))
 			return;
@@ -213,12 +204,11 @@ public class TopLevel implements ITopLevel {
 		iIsWorking++;
 		
 		out.println(command);
-		if(command.split("\\(\\*").length > command.split("\\*\\)").length)
-			return;
+//		if(command.split("\\(\\*").length > command.split("\\*\\)").length)
+//			return;
 		StringBuffer str = new StringBuffer();
 		try {
 				waitForPrompt(str);
-				//if(command.startsWith("Proof"))
 				waitForMoreInput(str);
 		} catch (IOException e) {
 			iIsWorking = 0;
@@ -245,14 +235,8 @@ public class TopLevel implements ITopLevel {
 
 	public void stop() {
 		prover.destroy();
-		//try {
 		bIsAlive = false;
 		iIsWorking = 0;
-			// it is normally already terminated... coq.waitFor();
-		//} catch (InterruptedException e) {
-		//	System.err.println(
-		//		"TopLevel.InterruptedException_catched____20" + e.toString()); //$NON-NLS-1$
-		//}
 	}
 
 
@@ -279,13 +263,7 @@ public class TopLevel implements ITopLevel {
 	public void clearBuffer() {
 		proverBuffer = new StringBuffer();
 	}
-	
-	public int getStep() {
-		return iStep;
-	}
-	public int getProofStep() {
-		return iProofStep;
-	}
+
 	
 	public boolean isWorking() {
 		return iIsWorking >0;
@@ -303,12 +281,4 @@ public class TopLevel implements ITopLevel {
 		if(iIsWorking < 0) iIsWorking = 0;
 		out.println(BREAKSTR);
 	}
-	public ITopLevel createTopLevel(String strCoqTop, String[] path) throws AProverException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public void undo(int steps) throws AProverException {
-		// TODO Auto-generated method stub
-		
-	}	
 }

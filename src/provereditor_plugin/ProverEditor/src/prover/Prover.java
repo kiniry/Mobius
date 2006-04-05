@@ -91,6 +91,11 @@ public class Prover {
 		}
 		return scanner;
 	}
+	
+	
+	public String getName() {
+		return name;
+	}
 	public String toString() {
 		String res = name + " (" + extension + "): " 
 			+ translator.toString() + ", " + preference.toString();

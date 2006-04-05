@@ -22,4 +22,8 @@ public class ProverException extends AProverException {
 	public ProverException(String description) {
 		super(description);
 	}
+	
+	public ProverException(String location, String description) {
+		super("ProverEditor." + location + ": " + description);
+	}
 }

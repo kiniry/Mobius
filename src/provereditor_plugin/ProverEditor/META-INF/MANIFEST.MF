@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-AutoStart: true
 Export-Package: prover,
  prover.exec,
+ prover.exec.toplevel,
  prover.exec.toplevel.exceptions,
  prover.exec.toplevel.stream,
  prover.gui,

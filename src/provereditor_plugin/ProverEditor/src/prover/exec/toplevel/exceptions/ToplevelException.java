@@ -3,6 +3,8 @@
  */
 package prover.exec.toplevel.exceptions;
 
+import prover.Prover;
+
 
 /**
  * @author jcharles
@@ -15,11 +17,9 @@ public class ToplevelException extends ProverException {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @param description
-	 */
-	public ToplevelException(String description) {
-		super(description);
+
+	public ToplevelException(Prover pkind, String description) {
+		super(pkind.getName() +".TopLevel", description);
 	}
 
 }

@@ -338,7 +338,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		try {
 			
 			top = translator.createNewTopLevel(tab);
-			top.addListener(this);
+			top.addStreamListener(this);
 		} catch (AProverException e) {
 			new AppendJob(tp, e.toString(), RED).schedule();
 		}
