@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CoqEditor Plug-in
+Bundle-SymbolicName: coq.editor; singleton:=true
+Bundle-Version: 0.0.1
+Bundle-Activator: fr.inria.everest.coq.editor.CoqEditorPlugin
+Bundle-Vendor: Inria - Everest Team
+Bundle-Localization: plugin
+Require-Bundle: prover.editor,
+ org.eclipse.ui,
+ org.eclipse.jdt.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jface.text,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide
+Eclipse-AutoStart: true
+Export-Package: fr.inria.everest.coq,
+ fr.inria.everest.coq.coqtop,
+ fr.inria.everest.coq.coqtop.exceptions,
+ fr.inria.everest.coq.coqtop.stream
