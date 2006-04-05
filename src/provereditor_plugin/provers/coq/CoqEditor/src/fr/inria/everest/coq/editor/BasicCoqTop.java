@@ -12,13 +12,11 @@ import prover.exec.toplevel.exceptions.SyntaxErrorException;
 
 
 /**
- * The class CoqTop contains those higher level interactions with coq.
+ * The class BasicCoqTop contains minimal higher level interactions with the toplevel.
  * @author J. Charles
  */
 
 public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener {
-//	private LinkedList sections = new LinkedList();
-//	private LinkedList lemmas = new LinkedList();
 
 
 	/**
