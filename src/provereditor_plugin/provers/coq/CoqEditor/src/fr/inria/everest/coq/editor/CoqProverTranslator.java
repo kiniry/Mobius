@@ -1,8 +1,8 @@
 package fr.inria.everest.coq.editor;
 
 import prover.AProverTranslator;
+import prover.exec.AProverException;
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.exceptions.ProverException;
 import fr.inria.everest.coq.CoqUtils;
 import fr.inria.everest.coq.coqtop.CoqTop;
 
@@ -18,9 +18,6 @@ public class CoqProverTranslator extends AProverTranslator {
 		"User error", "Syntax error: "
 	};
 	
-	public ITopLevel createNewTopLevel(String[] paths) throws ProverException {
-		return new CoqTop(CoqUtils.getCoqTop(), paths);
-	}
 	
 	public String[] getErrorExpressions() {
 		return errorExpressions;
@@ -40,5 +37,24 @@ public class CoqProverTranslator extends AProverTranslator {
 	
 	public static AProverTranslator getInstance() {
 		return instance;
+	}
+	
+	
+	public ITopLevel createNewTopLevel(String[] path) throws AProverException {
+		String [] cmds;
+		if(path != null) {
+			cmds = new String[2 + path.length * 2];
+			for(int i = 0; i < path.length; i++) {
+				cmds[(2 * i) + 1] = "-I";
+				cmds[(2 * i) + 2] = path[i];
+			}
+			
+		}
+		else {
+			cmds = new String[2];
+		}
+		cmds[0] = CoqUtils.getCoqTop().trim();
+		cmds[cmds.length - 1] = "-emacs";
+		return new CoqTop(cmds, 10);
 	}
 }

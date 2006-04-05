@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import prover.exec.ITopLevel;
+import prover.exec.toplevel.IPromptListener;
+import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.IncompleteProofException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
@@ -21,7 +23,7 @@ import prover.exec.toplevel.exceptions.SyntaxErrorException;
  * @author J. Charles
  */
 
-public class CoqTop extends Coq implements ITopLevel{
+public class CoqTop extends TopLevel implements ITopLevel, IPromptListener {
 	private LinkedList sections = new LinkedList();
 	private LinkedList lemmas = new LinkedList();
 
@@ -30,22 +32,18 @@ public class CoqTop extends Coq implements ITopLevel{
 	 * The simple constructor.
 	 * @throws ProverException if it is unable to build the coq process.
 	 */
-	public CoqTop (String strCoqTop, String [] path) throws ProverException {
-		super(strCoqTop, path, 100);
+	public CoqTop (String [] strCoqTop) throws ProverException {
+		super("Coq", strCoqTop, 100);
 	}
 	
-	public ITopLevel createTopLevel (String strCoqTop, String [] path) throws ProverException {
-		return new CoqTop(strCoqTop, path);
-		
-	}
 	
 	/**
 	 * The one arg constructor.
 	 * @param iGraceTime The grace time for TopLevel
 	 * @throws ProverException if it is unable to build the coq process.
 	 */
-	public CoqTop (String strCoqTop, String [] path, int iGraceTime) throws ProverException {
-		super(strCoqTop, path, iGraceTime);
+	public CoqTop (String [] strCoqTop, int iGraceTime) throws ProverException {
+		super("Coq", strCoqTop, iGraceTime);
 	}
 	
 	
@@ -379,4 +377,31 @@ public class CoqTop extends Coq implements ITopLevel{
 			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 		return str;
 	}
+	
+	
+	
+	private int iStep;
+	private int iProofStep;
+
+
+	public boolean isProofMode() {
+		return !getPrompt().startsWith("TopLevel <");
+	}
+	
+	public int getStep() {
+		return iStep;
+	}
+	public int getProofStep() {
+		return iProofStep;
+	}
+	
+	public void newPromptFetched(TopLevel caller) {
+		String prompt = this.getPrompt();
+		String [] tab = prompt.split("<");
+		if(tab.length > 1) {
+			String [] nums = tab[1].split("\\|");
+			iStep = Integer.valueOf(nums[0].trim()).intValue();
+			iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
+		}		
+	}	
 }
