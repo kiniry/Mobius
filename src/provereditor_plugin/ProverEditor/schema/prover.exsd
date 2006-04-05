@@ -70,16 +70,6 @@
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="scanner" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="java" basedOn="prover.gui.editor.BasicRuleScanner"/>
-               </appInfo>
-            </annotation>
-         </attribute>
       </complexType>
    </element>
 

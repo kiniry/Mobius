@@ -35,7 +35,6 @@ public class Prover {
 	private String extension;
 	private ProverPreferenceNode preference;
 	private AProverTranslator translator;
-	private BasicRuleScanner scanner;
 	
 	public Prover (IPreferenceStore prefs, IConfigurationElement lang) {
 		name = lang.getAttribute("name");
@@ -45,15 +44,7 @@ public class Prover {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		try {
-			scanner = (BasicRuleScanner) lang.createExecutableExtension("scanner");
-		} catch (CoreException e) {
-			e.printStackTrace();
-			scanner = new BasicRuleScanner(null);
-		}
-		if(scanner == null) {
-			scanner = new BasicRuleScanner(null);
-		}
+		
 		ProverPreferenceNode pn = new ProverPreferenceNode(name, prefs);
 		PlatformUI.getWorkbench().getPreferenceManager().addTo("ProverEditor.page",	pn);
 		preference = pn;
@@ -82,14 +73,8 @@ public class Prover {
 	}
 
 	public BasicRuleScanner getRuleScanner() {	
-		try {
-			scanner = (BasicRuleScanner) scanner.getClass().newInstance();
-		} catch (InstantiationException e) {
-			scanner = new BasicRuleScanner(null);
-		} catch (IllegalAccessException e) {
-			scanner = new BasicRuleScanner(null);
-		}
-		return scanner;
+		
+		return new BasicRuleScanner(translator.getFileRules());
 	}
 	
 	

@@ -469,10 +469,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 //			append_subgoal(new StringBuffer(str), job);
 //			job.add("\n\n");
 //		}
-//		else if (str.indexOf("Proof completed.") != -1) {
-//			job.add("\nProof Completed.\n", BLUE);
-//		}
-//		else {
 		job.add(str);
 		//System.out.println(str);
 //		}
