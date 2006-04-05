@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="prover" name="Prover" schema="schema/prover.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="ProverEditor.actions"
+            label="Prover Editor"
+            visible="true">
+         <action
+               class="prover.gui.actions.BreakAction"
+               icon="icons/deadcoq.gif"
+               id="ProverEditor.break"
+               label="Break"
+               style="push"
+               toolbarPath="/Normal/ProverEditor"/>
+         <action
+               class="prover.gui.actions.ResetAction"
+               definitionId="ProverEditor.reset_command"
+               icon="icons/uptoo.gif"
+               id="ProverEditor.resetproof"
+               label="Reset"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/ProverEditor"/>
+         <action
+               class="prover.gui.actions.ProgressEndAction"
+               definitionId="ProverEditor.eval_all_command"
+               icon="icons/downtoo.gif"
+               id="ProverEditor.progressend"
+               label="Evaluate to the end"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/ProverEditor"/>
+         <action
+               class="prover.gui.actions.BackAction"
+               definitionId="ProverEditor.back_command"
+               icon="icons/up.gif"
+               id="CoqEditor.back"
+               label="Back"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/ProverEditor"/>
+         <action
+               class="prover.gui.actions.ProgressAction"
+               definitionId="ProverEditor.progress_command"
+               icon="icons/down.gif"
+               id="ProverEditor.progress"
+               label="Progress"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/ProverEditor"/>
+         <action
+               class="prover.gui.actions.BeginAction"
+               icon="icons/coqtoo.gif"
+               id="ProverEditor.beginproof"
+               label="Respawn Prover"
+               state="true"
+               style="push"
+               toolbarPath="/Normal/ProverEditor"/>
+      </actionSet>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="ProverEditor.progress_command"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+M3+ARROW_DOWN"/>
+      <scheme
+            description="extends no things"
+            id="ProverEditor.scheme"
+            name="Prover Editor"
+            parentId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+      <key
+            commandId="ProverEditor.back_command"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+M3+ARROW_UP"/>
+      <key
+            commandId="ProverEditor.reset_command"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+M3+HOME"/>
+      <key
+            commandId="ProverEditor.eval_all_command"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+M3+END"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="ProverEditor.category"
+            description="Progress in the current proof"
+            id="ProverEditor.progress_command"
+            name="Progress Command"/>
+      <category
+            description="Prover Editor Category"
+            id="ProverEditor.category"
+            name="Prover Editor"/>
+      <command
+            categoryId="ProverEditor.category"
+            description="Back in the current proof"
+            id="ProverEditor.back_command"
+            name="Back Command"/>
+      <command
+            categoryId="ProverEditor.category"
+            description="Reset the file"
+            id="ProverEditor.reset_command"
+            name="Reset Command"/>
+      <command
+            categoryId="ProverEditor.category"
+            description="Evaluate all in the file"
+            id="ProverEditor.eval_all_command"
+            name="Evaluate All Command"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="prover.preference.PreferencePage"
+            id="ProverEditor.page"
+            name="Prover Editor"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="ProverEditor.contribution"
+            nameFilter="*"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               id="ProverEditor_menu"
+               label="Prover Editor"
+               />
+         <action
+               class="prover.gui.popup.CompileFile"
+               id="ProverEditor.compile"
+               label="Compile"
+               menubarPath="ProverEditor_menu/s"/>
+         <action
+               class="prover.gui.popup.LaunchIde"
+               id="ProverEditor.launchide"
+               label="Launch an IDE"
+               menubarPath="ProverEditor_menu/s"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="Prover"
+            class="prover.gui.TopLevelManager"
+            id="ProverEditor.topview"
+            name="Prover Editor Toplevel"/>
+   </extension>
+
+</plugin>
