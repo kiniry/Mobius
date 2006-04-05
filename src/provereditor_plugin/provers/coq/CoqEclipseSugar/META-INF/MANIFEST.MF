@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Coq Sugar for Eclipse Plug-in
 Bundle-SymbolicName: coq.sugar; singleton:=true
-Bundle-Version: 1.1.3
+Bundle-Version: 0.0.1
 Bundle-Activator: fr.inria.everest.coq.editor.CoqEditorPlugin
 Bundle-Vendor: Inria - Everest Team
 Bundle-Localization: plugin
