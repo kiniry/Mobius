@@ -17,4 +17,4 @@ Require-Bundle: prover.editor,
  org.eclipse.ui.ide
 Eclipse-AutoStart: true
 Export-Package: fr.inria.everest.coq,
- fr.inria.everest.coq.coqtop
+ fr.inria.everest.coq.editor
