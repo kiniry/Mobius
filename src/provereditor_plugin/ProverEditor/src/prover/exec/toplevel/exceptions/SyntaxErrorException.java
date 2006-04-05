@@ -8,7 +8,7 @@ package prover.exec.toplevel.exceptions;
 /**
  * @author jcharles
  */
-public class SyntaxErrorException extends CoqException{
+public class SyntaxErrorException extends ProverException{
 
 	/**
 	 * 

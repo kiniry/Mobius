@@ -9,7 +9,7 @@ package prover.exec.toplevel.exceptions;
  * @author jcharles
  *
  */
-public class IncompleteProofException extends CoqException {
+public class IncompleteProofException extends ProverException {
 
 	/**
 	 * 

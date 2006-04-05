@@ -54,7 +54,7 @@ public class ErrorStreamHandler implements Runnable{
 			while (!bStopEating) {
 				if(err.available() >0) {	
 					read = err.read();
-					if(read != 249) {/* Coq Special char*/
+					if(read != 249) {/* TopLevel Special char*/
 						str.append((char)read);
 					}
 					else

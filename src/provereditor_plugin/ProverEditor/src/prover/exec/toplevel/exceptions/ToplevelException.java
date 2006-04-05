@@ -8,7 +8,7 @@ package prover.exec.toplevel.exceptions;
  * @author jcharles
  *
  */
-public class CoqTopException extends CoqException {
+public class ToplevelException extends ProverException {
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class CoqTopException extends CoqException {
 	/**
 	 * @param description
 	 */
-	public CoqTopException(String description) {
+	public ToplevelException(String description) {
 		super(description);
 	}
 

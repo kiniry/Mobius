@@ -13,13 +13,13 @@ import prover.exec.AProverException;
 /**
  * @author J. Charles
  */
-public class CoqException extends AProverException {
+public class ProverException extends AProverException {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public CoqException(String description) {
+	public ProverException(String description) {
 		super(description);
 	}
 }

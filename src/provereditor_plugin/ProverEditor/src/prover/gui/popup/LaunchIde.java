@@ -24,7 +24,7 @@ public class LaunchIde implements IActionDelegate {
 		    	  Object o = sel.getFirstElement();
 		    	  if (o instanceof IFile) {
 		    		  IFile f = (IFile) o;
-		    		  Prover prover = ProverEditorPlugin.getInstance().getProver("Coq");
+		    		  Prover prover = ProverEditorPlugin.getInstance().getProver("TopLevel");
 		    		  String [] cmds = {
 		    				  	prover.getIde(),
 		    				  	f.getRawLocation().toString()
@@ -33,7 +33,7 @@ public class LaunchIde implements IActionDelegate {
 		    				Process p = Runtime.getRuntime().exec(cmds);
 		    				p.waitFor();
 		    			} catch (IOException e) {
-		    				System.err.println("I was unable to find an ide for Coq. Check the path.");
+		    				System.err.println("I was unable to find an ide for TopLevel. Check the path.");
 		    			} catch (InterruptedException e2) {
 		    				e2.printStackTrace();
 		    			}

@@ -18,7 +18,7 @@ public class PreferencePage extends FieldEditorPreferencePage
 	public PreferencePage() {
 		super(GRID);
 		curr = this;
-		setDescription("Preferences for the Coq proof assistant");
+		setDescription("Preferences for the TopLevel proof assistant");
 	
 	}
 	FieldEditor [] fe = new FieldEditor[1];

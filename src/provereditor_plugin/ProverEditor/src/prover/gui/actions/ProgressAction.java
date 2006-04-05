@@ -48,7 +48,7 @@ public class ProgressAction
 		private ProverEditor ce;
 		public UpdateJob(ProverEditor ce, BasicSourceViewerConfig sv, BasicRuleScanner scan,
 		IDocument doc,FindReplaceDocumentAdapter fda) {
-			super("Coq is progressing...");
+			super("TopLevel is progressing...");
 			this.doc = doc;
 			this.fda = fda;
 			this.scan = scan;

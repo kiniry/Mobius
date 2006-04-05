@@ -41,7 +41,7 @@ public class ProgressEndAction  extends AProverAction {
 			doc = sv.getPresentationReconciler().getDocument();
 			fda = sv.getPresentationReconciler().getFinder();
 			
-			Job j = new Job("Coq Editor is computing...") {
+			Job j = new Job("TopLevel Editor is computing...") {
 				boolean lastres;
 				protected IStatus run(IProgressMonitor monitor) {
 					lastres = true;
