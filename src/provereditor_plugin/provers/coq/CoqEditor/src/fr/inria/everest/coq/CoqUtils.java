@@ -13,9 +13,9 @@ public class CoqUtils {
 		return (CoqTop) CoqProverTranslator.getInstance().createNewTopLevel(paths);
 	}
 	public static String getCoqTop() {
-		return ProverEditorPlugin.getInstance().getProver("TopLevel").getTop();
+		return ProverEditorPlugin.getInstance().getProver("Coq").getTop();
 	}
 	public static String getCoqIde() {
-		return ProverEditorPlugin.getInstance().getProver("TopLevel").getIde();
+		return ProverEditorPlugin.getInstance().getProver("Coq").getIde();
 	}
 }

@@ -319,6 +319,59 @@ public class CoqTop extends TopLevel implements ITopLevel, IPromptListener {
 		return arr;
 	}
 	
+
+	
+	
+	/**
+	 * Abort the current proof.
+	 * @throws ProverException if there is an unexpected problem
+	 */
+	public void abort() throws ProverException {
+		sendCommand("Abort.");	
+	}
+
+	public String print(String nom) throws ProverException, IOException{
+		super.sendCommand("Print " + nom +".");
+		String str;
+		str = getBuffer().toString();
+//		while(str.indexOf("*** [") == -1){
+//			waitForMoreInput();
+//			str = getBuffer().toString();
+//		}
+		if(str.indexOf("Syntax error: ") != -1)
+			throw new SyntaxErrorException(str.toString());
+		if(str.indexOf("Error:") != -1)
+			throw new SyntaxErrorException(str.toString());
+		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
+			throw new ProverException("An error occured during the proof:\n" + str + "\n");
+		return str;
+	}
+	
+	
+	private int iStep;
+	private int iProofStep;
+
+
+	public boolean isProofMode() {
+		return !getPrompt().startsWith("TopLevel <");
+	}
+	
+	public int getStep() {
+		return iStep;
+	}
+	public int getProofStep() {
+		return iProofStep;
+	}
+	
+	public void promptHasChanged(TopLevel caller) {
+		String prompt = this.getPrompt();
+		String [] tab = prompt.split("<");
+		if(tab.length > 1) {
+			String [] nums = tab[1].split("\\|");
+			iStep = Integer.valueOf(nums[0].trim()).intValue();
+			iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
+		}		
+	}
 	/**
 	 * Undo n vernac commands or n tactics if we are in proof mode.
 	 * @param steps the number of vernacs to undo.
@@ -352,56 +405,4 @@ public class CoqTop extends TopLevel implements ITopLevel, IPromptListener {
 				sendCommand("Back " + steps + ".");
 	}
 	
-	
-	/**
-	 * Abort the current proof.
-	 * @throws ProverException if there is an unexpected problem
-	 */
-	public void abort() throws ProverException {
-		sendCommand("Abort.");	
-	}
-
-	public String print(String nom) throws ProverException, IOException{
-		super.sendCommand("Print " + nom +".");
-		String str;
-		str = getBuffer().toString();
-//		while(str.indexOf("*** [") == -1){
-//			waitForMoreInput();
-//			str = getBuffer().toString();
-//		}
-		if(str.indexOf("Syntax error: ") != -1)
-			throw new SyntaxErrorException(str.toString());
-		if(str.indexOf("Error:") != -1)
-			throw new SyntaxErrorException(str.toString());
-		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
-			throw new ProverException("An error occured during the proof:\n" + str + "\n");
-		return str;
-	}
-	
-	
-	
-	private int iStep;
-	private int iProofStep;
-
-
-	public boolean isProofMode() {
-		return !getPrompt().startsWith("TopLevel <");
-	}
-	
-	public int getStep() {
-		return iStep;
-	}
-	public int getProofStep() {
-		return iProofStep;
-	}
-	
-	public void newPromptFetched(TopLevel caller) {
-		String prompt = this.getPrompt();
-		String [] tab = prompt.split("<");
-		if(tab.length > 1) {
-			String [] nums = tab[1].split("\\|");
-			iStep = Integer.valueOf(nums[0].trim()).intValue();
-			iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
-		}		
-	}	
 }
