@@ -351,11 +351,11 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		
 		
 		// Error handling
-		String [] errorExpressions = translator.getErrorExpressions();
-		
-		for (int i = 0; (i < errorExpressions.length) && (ind == -1); i++){
-			ind = str.indexOf(errorExpressions[i]);
-		}
+//		String [] errorExpressions = translator.getErrorExpressions();
+//		
+//		for (int i = 0; (i < errorExpressions.length) && (ind == -1); i++){
+//			ind = str.indexOf(errorExpressions[i]);
+//		}
 		job.add(str);
 		job.prepare();
 	}
