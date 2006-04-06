@@ -90,7 +90,7 @@ public class BasicPresentationReconciler extends PresentationReconciler{
 		if (p != null)
 			viewer.changeTextPresentation(p, false);
 		viewer.revealRange(crs.getLimit() - 1, 1);
-		viewer.setSelectedRange(end, 0);
+		viewer.setSelectedRange(crs.getLimit(), 0);
 	}
 	public void everythingHasChanged() {
 		TextPresentation p= createPresentation(new Region(0, document.getLength()), document);

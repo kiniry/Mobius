@@ -67,8 +67,8 @@ public class AppendJob extends UIJob implements IColorConstants {
 		if (offset >= strToAppend.length()) // out of bounds
 			throw new IllegalArgumentException("AppendJob.addColor: Wrong offset !");
 		if (offset + len >= strToAppend.length()) { // out of bounds
-			System.err.println("CoqEditor: AppendJob.addColor, Wrong length !");
-			System.err.println("CoqEditor: Recovering...");
+			System.err.println("ProverEditor: AppendJob.addColor, Wrong length !");
+			System.err.println("ProverEditor: Recovering...");
 			len = strToAppend.length() - (offset + 1); 
 		}
 		

@@ -12,8 +12,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.SWT;
@@ -31,16 +29,16 @@ import prover.exec.IStreamListener;
 import prover.exec.ITopLevel;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.IColorConstants;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.ProverEditor;
 import prover.gui.jobs.AppendJob;
 import prover.preference.PreferencePage;
 
 public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {
 	private IDocument dc;	
-	private LinkedList prooflist = new LinkedList();
+//	private LinkedList prooflist = new LinkedList();
 	
 	private ProverContext oldpc = ProverContext.empty;
 	private ITopLevel top;
@@ -58,6 +56,8 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	private String msg;
 	private LimitRuleScanner scanner;
 	private BasicRuleScanner parser;
+	private LinkedList parsedList = new LinkedList();
+	
 	public TopLevelManager() {
 		super();
 		instance = this;
@@ -103,66 +103,76 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	protected synchronized void unlock() {
 		bLock = false;
 	}
-	public static IRegion findComment(AProverTranslator translator, FindReplaceDocumentAdapter fda, int start, boolean forward) throws BadLocationException {
-		if(forward) return  findComment_forw(translator, fda, start);
-		else return findComment_back(translator, fda, start);
-	}
 	
-	private static IRegion findComment_forw(AProverTranslator translator, FindReplaceDocumentAdapter fda, int start) throws BadLocationException {
-		IRegion r1 = fda.find(start, translator.getCommentBegin(), true, true, false, true);
-		if(r1 == null)
-			return null;
-		IRegion r2 = fda.find(r1.getOffset() + 2, translator.getCommentEnd(), true, true, false, true);
-		if(r2 == null)
-			return null;
-		return new Region(r1.getOffset(), (r2.getOffset() - r1.getOffset()) + 2);		
-	}
-	private static IRegion findComment_back(AProverTranslator translator, FindReplaceDocumentAdapter fda, int start) throws BadLocationException {
-		IRegion r1 = fda.find(start, translator.getCommentEnd(), false, true, false, true);
-		if(r1 == null)
-			return null;
-		IRegion r2 = fda.find(r1.getOffset(), translator.getCommentBegin(), false, true, false, true);
-		if(r2 == null)
-			return null;
-		return new Region(r2.getOffset(), (r1.getOffset() - r2.getOffset()) + 2);		
-	}
-		
+	
 	protected synchronized boolean progress_intern (ProverContext pc) {
-		if(isNewDoc(pc.doc))
+		if(isNewDoc(pc))
 			reset(pc);
 		int oldlimit =pc.scan.getLimit();
-		try {
-			parser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
+		return progress_intern(pc, oldlimit, oldlimit);
+	}
+	
+	
+	private boolean progress_intern (ProverContext pc, int realoldlimit, int oldlimit) { 
+		parser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
+		UpdateJob uj;
+		IToken tok;
+		do {
+			tok = parser.nextToken();
+		} while(tok != AProverTranslator.SENTENCE_TOKEN && (!tok.isEOF()));
+		if(tok.isEOF()) {
+			return false;
+		}
 			
-			IToken tok;
-			do {
-				tok = parser.nextToken();
-			} while(tok != AProverTranslator.SENTENCE_TOKEN && (!tok.isEOF()));
-			if(tok.isEOF()) {
+		int newlimit = parser.getTokenOffset() + parser.getTokenLength() - 1;
+		try {
+			String cmd;
+			try {
+				cmd = pc.doc.get(realoldlimit, newlimit - oldlimit).trim();
+			} catch (BadLocationException e) {
+				// it should not happen
+				System.err.println("TopLevel.progress_intern: " + e);
 				return false;
 			}
 			
-			int newlimit = parser.getTokenOffset() + parser.getTokenLength() - 1;
-			try {
-				String cmd = pc.doc.get(oldlimit, newlimit - oldlimit).trim();
-				if(cmd.equals(""))
-					return false;
-				//append(cmd + "\n");
-				top.clearBuffer();
-				top.sendCommand(cmd);
-				if(top.isAlive()) {
-					msg = top.getBuffer();
-					pc.scan.setLimit(newlimit);
-				}
-				else return false;
-				
-			} catch (AProverException e) {
-				msg = e + top.getBuffer();
-				return false;
-			} 
-
+			// first we lock the evaluated part
+			pc.scan.setLimit(newlimit);
+			uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
+			uj.schedule();
 			
-		} catch (BadLocationException e) {return false;}		
+			
+			//we send the command
+			switch(top.hasToSend(pc.doc, cmd, oldlimit, newlimit)) {
+				case ITopLevel.DONT_SKIP: {
+					top.clearBuffer();
+					top.sendCommand(cmd);
+					if(top.isAlive()) {
+						msg = top.getBuffer();
+						parsedList.addFirst(new Integer(realoldlimit));
+					}
+					else {
+						pc.scan.setLimit(realoldlimit);
+						uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
+						uj.schedule();
+						return false;
+					}
+					break;
+				}
+				case ITopLevel.SKIP: 
+					break;
+				case ITopLevel.SKIP_AND_CONTINUE: {
+					progress_intern(pc, realoldlimit, newlimit);
+					break;
+				}
+			}
+		} catch (AProverException e) {
+			msg = e + top.getBuffer();
+			pc.scan.setLimit(realoldlimit);
+			uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
+			uj.schedule();
+			return false;
+		} 
+		
 		return true;
 	}
 	
@@ -174,98 +184,64 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		}
 	}
 
-	private boolean isNewDoc(IDocument doc) {
-		return doc != oldpc.doc;
+	private boolean isNewDoc(ProverContext pc) {
+		return pc.doc != oldpc.doc;
 	}
 
 	public String getMsg() {
 		return msg;
 	}
 	
-	private boolean isIn(IRegion region, int index) {
-		return (region != null) && (region.getOffset() <= index) 
-			&& (index < (region.getOffset() + region.getLength()));
-	}
+	
 	protected synchronized boolean regress_intern(ProverContext pc) {
-		if (isNewDoc(pc.doc)) {
+		if (isNewDoc(pc)) {
 			reset(pc);
 			return false;
 		}
 		
 		int oldlimit = pc.scan.getLimit();
-		boolean proof = !top.isProofMode();
-		if(oldlimit > 0)
+		if((oldlimit > 0) && (parsedList.size() > 0)) {
+			int newlimit = ((Integer) parsedList.removeFirst()).intValue();
+			String cmd;
 			try {
-				top.undo(1);
-			} catch (AProverException e) {
-				append(e.toString());
-			}
-		try {
-			if(oldlimit > 0) {
-				do {
-					int ol = oldlimit;
-					IRegion comment; 
-					IRegion r = null;
-					do {
-						r = pc.fda.find(ol - 1, translator.getEndOfSentence(), false, true, false, true);
-						comment = findComment(translator, pc.fda, ol, false);
-						if(comment != null) {
-							ol = comment.getOffset();
-						}
-						else {
-							if(r!= null)
-								ol = r.getOffset();
-						}
-					} while(r != null &&
-							(isIn(comment, r.getOffset()) || 
-							(ol  > r.getOffset())));
-					String str = "";
-					if (r != null) {
-						try { 
-							str = pc.doc.get(r.getOffset(), (oldlimit - 1) - r.getOffset());
-						} catch (BadLocationException e) { 
-							System.out.println(e + " : " + "I have gone bad bad bad!!!");
-						}
-					}
-					if (r == null) {
-						pc.scan.setLimit(0);
-						UpdateJob uj = new UpdateJob(pc.sv.getPresentationReconciler(), oldlimit + 1);
-						uj.schedule();
-						return false;
-					}
-					pc.scan.setLimit(r.getOffset() + 1);
-					UpdateJob uj = new UpdateJob(pc.sv.getPresentationReconciler(), oldlimit + 1);
-					uj.schedule();
-					oldlimit = r.getOffset() + 1;
-					if(str.indexOf("Proof") != -1) {	
-						proof = true;
-					}
-					if((prooflist.size() >0) &&(oldlimit <= ((Integer)prooflist.getLast()).intValue())) {
-						prooflist.removeLast();
-					}
-				} while(proof &&(prooflist.size() %2 ==1));
-			}
-		} catch (BadLocationException e) {
-				resetView();
+				cmd = pc.doc.get(newlimit, oldlimit - newlimit).trim();
+			} catch (BadLocationException e) {
+				// it should not happen
+				System.err.println("TopLevel.regress_intern: " + e);
 				return false;
+			}
+			switch(top.hasToSkip(pc.doc, cmd, newlimit, oldlimit)) {
+				case ITopLevel.DONT_SKIP: {
+					try {
+						top.undo();
+					} catch (AProverException e) {
+						append(e.toString());
+					}
+					pc.scan.setLimit(newlimit);
+					break;
+				}
+				case ITopLevel.SKIP: {
+					pc.scan.setLimit(newlimit);
+					break;
+				}
+				case ITopLevel.SKIP_AND_CONTINUE: {
+					pc.scan.setLimit(newlimit);
+					regress_intern(pc);
+					break;
+				}
+				
+			}
+			
+			
+			UpdateJob uj = new UpdateJob(pc.sv.getPresentationReconciler(), oldlimit + 1);
+			uj.schedule();
 		}
 		return true;
 	}
-	
-
 	public boolean progress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, LimitRuleScanner scan) {
 		if(!lock())
 			return true;
-		int oldlimit =scan.getLimit();
-		boolean b = progress_intern(new ProverContext(ce, doc, fda, sv, scan));
-		UIJob job = new UpdateJob(sv.getPresentationReconciler(),scan.getLimit() +1);
-		job.schedule();
-		if(top.isProofMode()) {
-			if(prooflist.size() % 2 == 0) 
-				prooflist.add(new Integer(oldlimit));
-		}
-		else if(prooflist.size() % 2 == 1) 
-				prooflist.add(new Integer(oldlimit));
+		boolean b = progress_intern(new ProverContext(ce, doc, sv, scan));
 		unlock();
 		return b;
 	}
@@ -273,9 +249,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	public boolean regress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, LimitRuleScanner scan) {
 		if(!lock())
 			return true;
-		boolean b = regress_intern(new ProverContext(ce, doc, fda, sv, scan));
-		
-		
+		boolean b = regress_intern(new ProverContext(ce, doc, sv, scan));
 		unlock();
 		return b;
 	}
@@ -355,66 +329,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		//dc.set(msg);
 	}
 	
-	private void forall_coloring(AppendJob job, StringBuffer src, int start, int gap) {
-		int ind = start;
-		//int len = src.length();
-		while ((ind = src.indexOf("forall ", ind)) != -1) {
-			// we have a forall
-			job.addColor(gap + ind, 7, RED);
-			// looking for the end....
-			ind += 7;
-			int i = src.indexOf(",", ind);
-			if(i != -1) {
-				job.addColor(gap + ind, (i - ind) + 1, DARKRED);
-				ind = i;
-			}
-		}
-	}
-	private void hypname_coloring(AppendJob job, StringBuffer src, int start, int gap) {
-		int ind = start;
-		do {
-			int end;
-			if((src.indexOf("  ", ind) == ind) &&
-					(src.indexOf(" ", ind + 2) == (end = src.indexOf(" :", ind)))) {
-				job.addColor(ind + gap, (end - ind) + 2, GREEN);
-			}
-		} while ((ind = (src.indexOf("\n", ind) + 1)) != 0);
-	}
-	
-	
-	private void subgoals_coloring(AppendJob job, StringBuffer src, int start, int gap) {
-		if((start = src.indexOf("subgoal 2", start)) != -1) {
-			job.addColor(start + gap, (src.length() - 1) - start, GREY);
-		}
-	}
-
-	public void append_subgoal(StringBuffer str, AppendJob job) {
-		if (str.indexOf("Proof completed.") != -1) {
-			job.add("\nProof Completed.\n", BLUE);
-			return;
-		}
-		
-		job.add("\n");
-		
-		int goalindex;
-		String separator = "-----------------------------------------------------------------------------------";
-		if((goalindex = str.indexOf(separator)) == -1) {
-			return;
-		}
-		StringBuffer hypos = new StringBuffer(str.substring(0, goalindex - 2));
-		StringBuffer goals = new StringBuffer(str.substring(goalindex + separator.length()));
-		int gap = job.getLength();
-		job.add(hypos);
-		forall_coloring(job, hypos, 0, gap);
-		hypname_coloring(job, hypos, 0, gap);
-		job.add(separator);
-		gap = job.getLength();
-		
-		job.add(goals);
-		forall_coloring(job, goals, 0, gap);
-		subgoals_coloring(job, goals, 0, gap);
-
-	}
 	
 	
 	
