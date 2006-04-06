@@ -1,6 +1,7 @@
 package fr.inria.everest.coq.editor;
 
 import org.eclipse.jface.text.rules.IRule;
+import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
@@ -30,7 +31,18 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		"Error:", "Anomaly:", "Toplevel input",
 		"User error", "Syntax error: "
 	};
+	public final static String [][] replacements = {
+		{"\ufffd", " "},
+		{"============================",
+			"-----------------------------------------------------------------------------------"
+		}
+    };	
 	
+	
+
+	private IRule [] proofRules;
+	private IRule [] fileRules;
+	private IRule [] parsingRules;
 	
 	public String[] getErrorExpressions() {
 		return errorExpressions;
@@ -70,18 +82,13 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		cmds[cmds.length - 1] = "-emacs";
 		return new BasicCoqTop(cmds, 10);
 	}
-	public static String [][] replacements = {
-		{"\ufffd", " "},
-		{"============================",
-			"-----------------------------------------------------------------------------------"
-		}
-    };
+
 	
 	public String [][] getReplacements() {
 		return replacements;
 	}
 
-	public IRule [] getFileRules() {
+	private IRule [] initFileRules() {
 		WordRule wr = new WordRule(new WordDetector(), def);
 		for (int i = 0; i < vernac.length; i++) {
 			wr.addWord(vernac[i], tag);
@@ -102,8 +109,13 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		};
 		return rules;
 	}
+	public IRule [] getFileRules() {
+		if(fileRules == null)
+			fileRules = initFileRules();
+		return fileRules;
+	}
 	
-	public IRule [] getProofRules() {				
+	private IRule [] initProofRules() {
 		WordRule wr = new WordRule(new WordDetector(), def);
 		for (int i = 0; i < vernac.length; i++) {
 			wr.addWord(vernac[i], tag);
@@ -121,21 +133,54 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		subg.setColumnConstraint(0);
 		MultiLineRule mlr = new MultiLineRule(" subgoal", "",subgoal2, (char) 0, true);
 		mlr.setColumnConstraint(0);
-		
 		IRule [] rules = {
 				new SingleLineRule("Proof ", "completed", completed),
-				subg,
-				mlr,
-				hypothesis,
+				subg, mlr, hypothesis,
 				new MultiLineRule("forall ", ",", forall),
 				new MultiLineRule("exists ", ",", forall),
 				new MultiLineRule("(*", "*)", comment),
 				new MultiLineRule("\"", "\"", string),
 				new SingleLineRule("(*", "*)", comment),
 				new SingleLineRule("\"", "\"", string),
-				wr,
-				wexpr		
+				wr, wexpr};
+		return rules;
+	}
+	
+	public IRule [] getProofRules() {				
+		if(proofRules == null)
+			proofRules = initProofRules();
+		return proofRules;
+	}
+
+	private IRule[] initParsingRules() {
+		WordRule endofsentence = new WordRule(new IWordDetector() {
+
+			public boolean isWordStart(char c) {
+				return c == '.';
+			}
+
+			public boolean isWordPart(char c) {
+				return Character.isWhitespace(c);
+			}
+			
+		}, SENTENCE_TOKEN);
+		endofsentence.addWord(".\n", SENTENCE_TOKEN);
+		endofsentence.addWord(". ", SENTENCE_TOKEN);
+		endofsentence.addWord(".\t", SENTENCE_TOKEN);
+		
+		IRule [] rules = {
+			new MultiLineRule("(*", "*)", COMMENT_TOKEN),
+			new MultiLineRule("\"", "\"", COMMENT_TOKEN),
+			new SingleLineRule("(*", "*)", COMMENT_TOKEN),
+			new SingleLineRule("\"", "\"", COMMENT_TOKEN),
+			endofsentence
 		};
 		return rules;
+	}
+	public IRule[] getParsingRules() {
+		if(parsingRules == null) {
+			parsingRules = initParsingRules();
+		}
+		return parsingRules;
 	}
 }
