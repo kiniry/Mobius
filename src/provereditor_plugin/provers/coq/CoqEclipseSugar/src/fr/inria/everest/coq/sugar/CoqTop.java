@@ -9,6 +9,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import prover.exec.toplevel.IPromptListener;
+import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.exceptions.IncompleteProofException;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
@@ -21,10 +23,12 @@ import fr.inria.everest.coq.editor.BasicCoqTop;
  * @author J. Charles
  */
 
-public class CoqTop extends BasicCoqTop {
+public class CoqTop extends BasicCoqTop implements IPromptListener {
 	private LinkedList sections = new LinkedList();
 	private LinkedList lemmas = new LinkedList();
-
+	
+	private int iStep;
+	private int iProofStep;
 
 	/**
 	 * The simple constructor.
@@ -32,6 +36,7 @@ public class CoqTop extends BasicCoqTop {
 	 */
 	public CoqTop (String [] strCoqTop) throws ProverException {
 		super(strCoqTop);
+		addPromptListener(this);
 	}
 	
 	
@@ -319,5 +324,64 @@ public class CoqTop extends BasicCoqTop {
 	 */
 	public String toString() {
 		return "CoqTop State: \n" + printSections(sections.size(), "   "); 
+	}
+	
+	
+	/**
+	 * Abort the current proof.
+	 * @throws ProverException if there is an unexpected problem
+	 */
+	public void abort() throws ProverException {
+		sendCommand("Abort.");	
+	}
+	
+	/**
+	 * Undo n vernac commands or n tactics if we are in proof mode.
+	 * @param steps the number of vernacs to undo.
+	 * @throws ProverException if there is an unexpected problem
+	 */
+	public void undo(int steps) throws ProverException {
+		
+		int step = getStep();
+		int last = getProofStep();
+		if(step > 0) {//we have the right version *cvs* of coq
+			if((last == 1)){ //&& isProofMode()) {
+				abort();
+			} else
+			if(last >0) {
+				
+				try {
+					sendCommand("Undo " + steps + ".");
+				}
+				catch (Exception e) {
+					sendCommand("Back " + steps + ".");
+				}
+			}
+			else {
+				sendCommand("Back " + steps + ".");
+			}
+		}
+		else
+			if(isProofMode())
+				sendCommand("Undo " + steps + ".");
+			else
+				sendCommand("Back " + steps + ".");
+	}
+	
+	public int getStep() {
+		return iStep;
+	}
+	public int getProofStep() {
+		return iProofStep;
+	}
+	
+	public void promptHasChanged(TopLevel caller) {
+		String prompt = this.getPrompt();
+		String [] tab = prompt.split("<");
+		if(tab.length > 1) {
+			String [] nums = tab[1].split("\\|");
+			iStep = Integer.valueOf(nums[0].trim()).intValue();
+			iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
+		}		
 	}
 }
