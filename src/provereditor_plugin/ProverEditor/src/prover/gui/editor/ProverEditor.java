@@ -8,7 +8,7 @@ import prover.Prover;
 
 public class ProverEditor extends TextEditor{
 	private BasicSourceViewerConfig csvc;
-	private BasicRuleScanner scanner = null;
+	private LimitRuleScanner scanner = null;
 	
 	public ProverEditor() {
 		super();
@@ -26,14 +26,14 @@ public class ProverEditor extends TextEditor{
 	}
 	
 	
-	public BasicRuleScanner getScanner() {
+	public LimitRuleScanner getScanner() {
 		if(scanner == null) {
 			Prover p = Prover.findProverFromFile(this.getTitle());
 			if (p != null) {
 				scanner = p.getRuleScanner();
 			}
 			else { 
-				scanner = new BasicRuleScanner(null);
+				scanner = new LimitRuleScanner(null);
 			}
 		}
 		return scanner;

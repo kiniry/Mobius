@@ -9,7 +9,7 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 public class BasicSourceViewerConfig extends SourceViewerConfiguration implements IColorConstants {
 	
-	private BasicRuleScanner scanner = null;
+	private LimitRuleScanner scanner = null;
 	private BasicPresentationReconciler rc = null;
 	private ProverEditor editor = null;
 	
@@ -18,7 +18,7 @@ public class BasicSourceViewerConfig extends SourceViewerConfiguration implement
 		this.editor = editor;
 	}
 
-	public BasicRuleScanner getTagScanner() {
+	public LimitRuleScanner getTagScanner() {
 		if(scanner == null) {
 			scanner = editor.getScanner();
 		}

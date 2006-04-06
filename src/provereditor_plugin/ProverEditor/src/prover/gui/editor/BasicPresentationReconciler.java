@@ -17,9 +17,9 @@ public class BasicPresentationReconciler extends PresentationReconciler{
 	private IDocument document;
 	private ITextViewer viewer;
 	private FindReplaceDocumentAdapter fda;
-	private BasicRuleScanner crs;
+	private LimitRuleScanner crs;
 	IDocumentListener list;
-	public BasicPresentationReconciler(BasicRuleScanner scan) {
+	public BasicPresentationReconciler(LimitRuleScanner scan) {
 		super();
 		crs = scan;
 	}
