@@ -9,7 +9,7 @@ import org.eclipse.ui.PlatformUI;
 
 import prover.gui.ProverContext;
 import prover.gui.TopLevelManager;
-import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
@@ -33,7 +33,7 @@ public class ResetAction extends AProverAction{
 			return;
 		ProverEditor ce = (ProverEditor) ed;
 		BasicSourceViewerConfig sv = ce.getSourceViewerConfig();
-		BasicRuleScanner scan = sv.getTagScanner();
+		LimitRuleScanner scan = sv.getTagScanner();
 		IDocument doc = sv.getPresentationReconciler().getDocument();
 		TopLevelManager.getInstance().reset(new ProverContext(ce, doc, sv, scan));		
 

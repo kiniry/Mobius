@@ -8,7 +8,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import prover.gui.TopLevelManager;
-import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
@@ -22,7 +22,7 @@ public class BackAction extends AProverAction{
 		if(ed instanceof ProverEditor) {
 			ProverEditor ce = (ProverEditor) ed;
 			BasicSourceViewerConfig sv = ce.getSourceViewerConfig();
-			BasicRuleScanner scan = sv.getTagScanner();
+			LimitRuleScanner scan = sv.getTagScanner();
 			FindReplaceDocumentAdapter fda = sv.getPresentationReconciler().getFinder();
 			TopLevelManager.getInstance().regress(ce, sv.getPresentationReconciler().getDocument(), fda, sv, scan);			
 		}

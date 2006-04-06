@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.preference.ProverPreferenceNode;
 
 public class Prover {
@@ -72,9 +72,9 @@ public class Prover {
 		return str.endsWith(extension);
 	}
 
-	public BasicRuleScanner getRuleScanner() {	
+	public LimitRuleScanner getRuleScanner() {	
 		
-		return new BasicRuleScanner(translator.getFileRules());
+		return new LimitRuleScanner(translator.getFileRules());
 	}
 	
 	

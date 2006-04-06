@@ -15,13 +15,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
 import prover.gui.TopLevelManager;
-import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
 public class ProgressEndAction  extends AProverAction {
 	private BasicSourceViewerConfig sv;
-	private BasicRuleScanner scan;
+	private LimitRuleScanner scan;
 	private IDocument doc;
 	private FindReplaceDocumentAdapter fda;
 	private ProverEditor ce;

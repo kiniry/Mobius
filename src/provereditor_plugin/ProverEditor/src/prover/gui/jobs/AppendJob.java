@@ -14,7 +14,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.progress.UIJob;
 
 import prover.gui.ProverPresentation;
-import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicTextAttribute;
 import prover.gui.editor.IColorConstants;
 
@@ -24,9 +24,9 @@ public class AppendJob extends UIJob implements IColorConstants {
 	private TextViewer tv;
 	
 	private ProverPresentation tp;
-	private BasicRuleScanner scanner;
+	private LimitRuleScanner scanner;
 	
-	public AppendJob(BasicRuleScanner scanner, ProverPresentation tp) {
+	public AppendJob(LimitRuleScanner scanner, ProverPresentation tp) {
 		super("Updating view");
 		strToAppend = new StringBuffer();
 		this.tp = (ProverPresentation)tp.clone();
@@ -36,7 +36,7 @@ public class AppendJob extends UIJob implements IColorConstants {
 		
 	}
 		
-	public AppendJob(BasicRuleScanner scanner, ProverPresentation tp, String name ) {
+	public AppendJob(LimitRuleScanner scanner, ProverPresentation tp, String name ) {
 		this(scanner, tp);
 		add(name);
 	}

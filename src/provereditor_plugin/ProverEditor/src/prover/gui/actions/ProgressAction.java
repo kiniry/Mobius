@@ -14,7 +14,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import prover.gui.TopLevelManager;
-import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
@@ -32,7 +32,7 @@ public class ProgressAction
 			ProverEditor ce = (ProverEditor) ed;
 			
 			BasicSourceViewerConfig sv = ce.getSourceViewerConfig();
-			BasicRuleScanner scan = sv.getTagScanner();
+			LimitRuleScanner scan = sv.getTagScanner();
 			
 			IDocument doc = sv.getPresentationReconciler().getDocument();
 			FindReplaceDocumentAdapter fda = sv.getPresentationReconciler().getFinder();
@@ -43,10 +43,10 @@ public class ProgressAction
 		
 	}
 	private class UpdateJob extends Job {
-		BasicSourceViewerConfig sv; BasicRuleScanner scan;
+		BasicSourceViewerConfig sv; LimitRuleScanner scan;
 		IDocument doc;FindReplaceDocumentAdapter fda;
 		private ProverEditor ce;
-		public UpdateJob(ProverEditor ce, BasicSourceViewerConfig sv, BasicRuleScanner scan,
+		public UpdateJob(ProverEditor ce, BasicSourceViewerConfig sv, LimitRuleScanner scan,
 		IDocument doc,FindReplaceDocumentAdapter fda) {
 			super("TopLevel is progressing...");
 			this.doc = doc;

@@ -15,6 +15,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextViewer;
+import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -30,6 +31,7 @@ import prover.exec.IStreamListener;
 import prover.exec.ITopLevel;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.IColorConstants;
 import prover.gui.editor.ProverEditor;
@@ -48,8 +50,14 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			ProverEditorPlugin.MAJORVERSION + "." + ProverEditorPlugin.VERSION + "." + ProverEditorPlugin.SUBVERSION +" !\n"; 
 	
 	AProverTranslator translator;
+	
 	private static TopLevelManager instance;
 	
+	private boolean bLock = false;
+
+	private String msg;
+	private LimitRuleScanner scanner;
+	private BasicRuleScanner parser;
 	public TopLevelManager() {
 		super();
 		instance = this;
@@ -85,10 +93,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	public void setFocus() {}
 	
 	
-	private boolean bLock = false;
-
-	private String msg;
-	private BasicRuleScanner scanner;
+	
 
 	protected synchronized boolean lock() {
 		if(bLock)
@@ -127,29 +132,17 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			reset(pc);
 		int oldlimit =pc.scan.getLimit();
 		try {
-			int ol = oldlimit;IRegion comment; IRegion r = null;
+			parser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
+			
+			IToken tok;
 			do {
-				r = pc.fda.find(ol, translator.getEndOfSentence(),true, true, false, true);
-				
-				comment = findComment(translator, pc.fda, ol, true);
-				if(comment != null) {
-					ol = comment.getOffset() + comment.getLength();
-					//System.out.println(doc.get(r1.getOffset(), r1.getLength()));
-				}
-				else {
-					if(r!= null){
-						ol = r.getOffset() + r.getLength();
-					}
-				}
-			} while(r != null && (isIn(comment, r.getOffset()) || 
-					ol < r.getOffset())); 
-	//				(r.getOffset() >= ol));
-
-			//IRegion r = fda.find(oldlimit, "\\.[ \n\t]",true, true, false, true);
-			if (r == null) {
+				tok = parser.nextToken();
+			} while(tok != AProverTranslator.SENTENCE_TOKEN && (!tok.isEOF()));
+			if(tok.isEOF()) {
 				return false;
 			}
-			int newlimit = r.getOffset() + 1;
+			
+			int newlimit = parser.getTokenOffset() + parser.getTokenLength() - 1;
 			try {
 				String cmd = pc.doc.get(oldlimit, newlimit - oldlimit).trim();
 				if(cmd.equals(""))
@@ -173,6 +166,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		return true;
 	}
 	
+
 	public void reset(ProverContext pc) {
 		if(pc.doc != null) {
 			oldpc = pc;
@@ -259,7 +253,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	}
 	
 
-	public boolean progress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, BasicRuleScanner scan) {
+	public boolean progress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, LimitRuleScanner scan) {
 		if(!lock())
 			return true;
 		int oldlimit =scan.getLimit();
@@ -276,7 +270,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		return b;
 	}
 	
-	public boolean regress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, BasicRuleScanner scan) {
+	public boolean regress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, LimitRuleScanner scan) {
 		if(!lock())
 			return true;
 		boolean b = regress_intern(new ProverContext(ce, doc, fda, sv, scan));
@@ -325,7 +319,8 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 	    translator = Prover.findProverFromFile(path.getRawLocation().toString()).getTranslator();
-	    scanner = new BasicRuleScanner(translator.getProofRules());
+	    scanner = new LimitRuleScanner(translator.getProofRules());
+	    parser = new BasicRuleScanner(translator.getParsingRules());
 		String [] tab = null;
 		
 		if(path != null) {

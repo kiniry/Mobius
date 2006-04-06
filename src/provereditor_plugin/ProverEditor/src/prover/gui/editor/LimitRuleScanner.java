@@ -2,11 +2,10 @@ package prover.gui.editor;
 
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 
 
-public class LimitRuleScanner extends RuleBasedScanner implements IColorConstants {
+public class LimitRuleScanner extends BasicRuleScanner implements IColorConstants {
 	private int limit = 0;
 
 	public LimitRuleScanner() {
@@ -64,7 +63,4 @@ public class LimitRuleScanner extends RuleBasedScanner implements IColorConstant
 		return limit;
 	}
 
-	public IToken getDefaultReturnToken() {
-		return fDefaultReturnToken;
-	}
 }
