@@ -18,7 +18,6 @@ import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import prover.Prover;
-import prover.ProverEditorPlugin;
 import prover.gui.jobs.ProverStatus;
 
 
@@ -30,6 +29,7 @@ public class CompileFile implements IActionDelegate {
 	public void init(IWorkbenchWindow window) {
 
 	}
+	private Prover prover;
 	String[] cmdCoqC;
 	private IStructuredSelection sel = null;
 	public void run(IAction action) {
@@ -38,12 +38,11 @@ public class CompileFile implements IActionDelegate {
 		if(! (sel.getFirstElement() instanceof IFile))
 			return;
 		IFile f = (IFile) sel.getFirstElement();
+		prover = Prover.findProverFromFile(f.toString());
 		String name =  f.getLocation().toString();
-		Prover p = ProverEditorPlugin.getInstance().getProver("Coq");
-		String com = (p.getTop() + " -I " + f.getProject().getLocation() + 
+		String com = (prover.getTop() + " -I " + f.getProject().getLocation() + 
 				" -I " + f.getLocation().removeLastSegments(1) + 
 				" -compile " + name.substring(0, name.length() -2)); 
-		//System.out.println(com);
 		cmdCoqC = com.replaceAll(" +", " ").split(" ");
 		
 		if(f.getName().endsWith(".v")) {
@@ -84,7 +83,7 @@ public class CompileFile implements IActionDelegate {
 				String res = "";
 				while((s = in.readLine()) != null){
 					res += s + "\n";
-					if (s.matches("Error.*")) {
+					if (prover.isErrorMsg(s)) {
 						while((s = in.readLine()) != null)
 							res += s + "\n";
 						return ProverStatus.getErrorStatus("The file " + file.getName() + " was not compiled.", 

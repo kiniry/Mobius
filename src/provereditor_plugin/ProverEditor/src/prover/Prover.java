@@ -86,4 +86,8 @@ public class Prover {
 			+ translator.toString() + ", " + preference.toString();
 		return res;
 	}
+
+	public boolean isErrorMsg(String s) {
+		return translator.isErrorMsg(s);
+	}
 }

@@ -28,13 +28,13 @@ public abstract class AProverTranslator {
 	public String [][] getReplacements() {
 		return replacements;
 	}
-	public abstract String[] getErrorExpressions();
-	public abstract String getCommentBegin();
-	public abstract String getCommentEnd();
-	public abstract String getEndOfSentence();
+//	public abstract String[] getErrorExpressions();
+
 	public abstract ITopLevel createNewTopLevel(String[] paths) throws AProverException;
 	
     public abstract IRule [] getProofRules();
 	public abstract IRule [] getFileRules();
 	public abstract IRule [] getParsingRules();
+
+	public abstract boolean isErrorMsg(String s);
 }
