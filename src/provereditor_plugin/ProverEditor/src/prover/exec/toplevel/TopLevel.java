@@ -13,11 +13,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import prover.Prover;
-import prover.exec.IStreamListener;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.ToplevelException;
 import prover.exec.toplevel.stream.ErrorStreamHandler;
+import prover.exec.toplevel.stream.IStreamListener;
 import prover.exec.toplevel.stream.InputStreamHandler;
 import prover.exec.toplevel.stream.StandardStreamHandler;
 
@@ -248,10 +248,6 @@ public abstract class TopLevel implements ITopLevel {
 		iIsWorking = 0;
 	}
 
-
-	public boolean isProofMode() {
-		return !prompt.startsWith("TopLevel <");
-	}
 	
 	public boolean isAlive() {
 		if (bIsAlive) {

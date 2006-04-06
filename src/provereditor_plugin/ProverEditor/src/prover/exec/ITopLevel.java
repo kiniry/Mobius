@@ -2,6 +2,9 @@ package prover.exec;
 
 import org.eclipse.jface.text.IDocument;
 
+import prover.exec.toplevel.IPromptListener;
+import prover.exec.toplevel.stream.IStreamListener;
+
 /**
  * Basic interactions needed to dialog with the toplevel.
  * @author J.Charles
@@ -89,6 +92,7 @@ public interface ITopLevel {
 	public void addStreamListener(IStreamListener isl);
 	public void removeStreamListener(IStreamListener isl);
 
-	
+	public void addPromptListener(IPromptListener isl);
+	public void removePromptListener(IPromptListener isl);
 	
 }

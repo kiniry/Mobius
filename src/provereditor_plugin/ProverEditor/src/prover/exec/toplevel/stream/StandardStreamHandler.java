@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import prover.exec.IStreamListener;
 
 public class StandardStreamHandler implements Runnable{
 	private InputStream in;
