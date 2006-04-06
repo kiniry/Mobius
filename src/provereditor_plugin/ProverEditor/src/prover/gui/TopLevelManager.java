@@ -34,11 +34,11 @@ import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.ProverEditor;
 import prover.gui.jobs.AppendJob;
+import prover.gui.jobs.ColorAppendJob;
 import prover.preference.PreferencePage;
 
 public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {
 	private IDocument dc;	
-//	private LinkedList prooflist = new LinkedList();
 	
 	private ProverContext oldpc = ProverContext.empty;
 	private ITopLevel top;
@@ -80,13 +80,9 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		
 		tv.setDocument(dc);
 		tp = new ProverPresentation(tv);
-//		tv.changeTextPresentation(tp, true);
-		
-		new AppendJob(tp, GREETINGS, VIOLET).prepare();
-		
-		//if (top == null) {
-		//	respawn();
-		//}
+
+		new ColorAppendJob(tp, GREETINGS, VIOLET).prepare();
+
 	}
 
 	
@@ -269,7 +265,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 						tp = new ProverPresentation(tv);
 						
 						tv.changeTextPresentation(tp, true);
-						new AppendJob(tp, GREETINGS, VIOLET).prepare();
+						new ColorAppendJob(tp, GREETINGS, VIOLET).prepare();
 						return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 					}
 					
@@ -290,7 +286,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		}
 		IEditorInput input = oldpc.ce.getEditorInput();
 		
-		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 	    translator = Prover.findProverFromFile(path.getRawLocation().toString()).getTranslator();
 	    scanner = new LimitRuleScanner(translator.getProofRules());
@@ -311,7 +306,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			top = translator.createNewTopLevel(tab);
 			top.addStreamListener(this);
 		} catch (AProverException e) {
-			new AppendJob(tp, e.toString(), RED).prepare();
+			new ColorAppendJob(tp, e.toString(), RED).prepare();
 		}
 		
 		//System.out.println(oldce.getSite());
@@ -361,27 +356,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		for (int i = 0; (i < errorExpressions.length) && (ind == -1); i++){
 			ind = str.indexOf(errorExpressions[i]);
 		}
-//		if(ind != -1) {
-//			String hyps = str.substring(0, ind);
-//			if (hyps.indexOf(" subgoal") != -1) {
-//				append_subgoal(new StringBuffer(hyps), job);
-//				job.add("\n\n");
-//			}
-//			
-//			String err = str.substring(ind);
-//			int gap = job.getLength();
-//			job.add(err);
-//			job.addColor(gap, str.length()- ind -1, RED);
-//			job.add("\n");
-//		}
-//		else if (str.indexOf(" subgoal") != -1) {
-//			append_subgoal(new StringBuffer(str), job);
-//			job.add("\n\n");
-//		}
 		job.add(str);
-		//System.out.println(str);
-//		}
-		
 		job.prepare();
 	}
 

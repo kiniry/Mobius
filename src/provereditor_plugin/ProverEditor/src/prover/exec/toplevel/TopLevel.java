@@ -213,8 +213,7 @@ public abstract class TopLevel implements ITopLevel {
 		iIsWorking++;
 		
 		out.println(command);
-//		if(command.split("\\(\\*").length > command.split("\\*\\)").length)
-//			return;
+
 		StringBuffer str = new StringBuffer();
 		try {
 				waitForPrompt(str);
