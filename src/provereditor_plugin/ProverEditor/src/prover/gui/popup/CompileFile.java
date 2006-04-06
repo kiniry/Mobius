@@ -39,7 +39,7 @@ public class CompileFile implements IActionDelegate {
 			return;
 		IFile f = (IFile) sel.getFirstElement();
 		String name =  f.getLocation().toString();
-		Prover p = ProverEditorPlugin.getInstance().getProver("TopLevel");
+		Prover p = ProverEditorPlugin.getInstance().getProver("Coq");
 		String com = (p.getTop() + " -I " + f.getProject().getLocation() + 
 				" -I " + f.getLocation().removeLastSegments(1) + 
 				" -compile " + name.substring(0, name.length() -2)); 
