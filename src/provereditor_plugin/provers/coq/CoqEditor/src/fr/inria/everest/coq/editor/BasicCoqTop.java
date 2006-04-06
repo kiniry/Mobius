@@ -3,6 +3,9 @@
  */
 package fr.inria.everest.coq.editor;
 
+import org.eclipse.jface.text.IDocument;
+
+import prover.exec.AProverException;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.IPromptListener;
 import prover.exec.toplevel.TopLevel;
@@ -130,6 +133,23 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 				sendCommand("Undo " + steps + ".");
 			else
 				sendCommand("Back " + steps + ".");
+	}
+
+
+	public int hasToSkip(IDocument document, String cmd, int beg, int end) {
+		if(cmd.startsWith("Proof"))
+			return SKIP;
+		return DONT_SKIP;
+	}
+
+
+	public int hasToSend(IDocument doc, String cmd, int beg, int end) {
+		return DONT_SKIP;
+	}
+
+
+	public void undo() throws AProverException {
+		undo(1);
 	}
 	
 }
