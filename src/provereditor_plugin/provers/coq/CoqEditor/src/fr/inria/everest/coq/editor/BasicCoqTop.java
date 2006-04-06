@@ -3,6 +3,9 @@
  */
 package fr.inria.everest.coq.editor;
 
+import java.util.LinkedList;
+
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 import prover.exec.AProverException;
@@ -83,7 +86,7 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 
 
 	public boolean isProofMode() {
-		return !getPrompt().startsWith("TopLevel <");
+		return !getPrompt().startsWith("Coq <");
 	}
 	
 	public int getStep() {
@@ -136,14 +139,56 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 	}
 
 
+	LinkedList proofBeginList = new LinkedList();
+	LinkedList proofEndList = new LinkedList();
 	public int hasToSkip(IDocument document, String cmd, int beg, int end) {
-		if(cmd.startsWith("Proof"))
-			return SKIP;
+		if(proofBeginList.size() > 0) {
+			if((isProofMode())) {
+				if(proofBeginList.size() == proofEndList.size())
+					proofEndList.removeFirst();
+				if(cmd.startsWith("Proof"))
+					return SKIP;
+			}
+			else {
+				if(proofBeginList.size() == proofEndList.size()) {
+					int endProof = ((Integer) proofEndList.getFirst()).intValue();
+					if (endProof >= beg) {
+						proofEndList.removeFirst();
+						return SKIP_AND_CONTINUE;
+					}
+				}
+				else {
+					int begProof = ((Integer) proofBeginList.getFirst()).intValue();
+					if(begProof > beg) {
+						proofBeginList.removeFirst();
+					}
+					else {
+						return SKIP_AND_CONTINUE;
+					}
+				}
+			}
+		}
 		return DONT_SKIP;
 	}
 
 
 	public int hasToSend(IDocument doc, String cmd, int beg, int end) {
+		
+		if(isProofMode() && 
+				(proofBeginList.size() == proofEndList.size())) {
+			System.out.println(cmd);
+			proofBeginList.add(new Integer(beg));
+		}
+		else if((!isProofMode()) && (proofBeginList.size() != proofEndList.size())) {
+			proofEndList.add(new Integer(beg));
+			beg = ((Integer) proofBeginList.getFirst()).intValue();
+			try {
+				System.out.println(doc.get(beg, end - beg));
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return DONT_SKIP;
 	}
 
