@@ -154,7 +154,7 @@ compileall: rm-stampfile compile
 really-compile: ${STAMPFILE}
 
 ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
-	#./dl-xml-rpc-lib.sh # for future use
+	@#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
 	if [ -e .files ]; then rm -f .files; fi
 	@echo $(call canonicalizeLots,$?) > .files
