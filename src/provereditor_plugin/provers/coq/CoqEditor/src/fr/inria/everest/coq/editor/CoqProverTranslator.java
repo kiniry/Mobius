@@ -7,9 +7,11 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 import prover.AProverTranslator;
+import prover.Prover;
 import prover.ProverEditorPlugin;
 import prover.exec.AProverException;
 import prover.exec.ITopLevel;
+import prover.gui.editor.FixedSizeWordRule;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;
 
@@ -64,9 +66,10 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		else {
 			cmds = new String[2];
 		}
-		cmds[0] = ProverEditorPlugin.getInstance().getProver("Coq").getTop();
+		Prover po = ProverEditorPlugin.getInstance().getProver("Coq"); 
+		cmds[0] = po.getTop();
 		cmds[cmds.length - 1] = "-emacs";
-		return new BasicCoqTop(cmds, 10);
+		return new BasicCoqTop(cmds, po.getGraceTime());
 	}
 
 	
