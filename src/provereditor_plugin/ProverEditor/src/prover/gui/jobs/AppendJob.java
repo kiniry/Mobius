@@ -61,12 +61,12 @@ public class AppendJob extends UIJob implements IColorConstants {
 		saj.add(strToAppend);
 		oldlen = doc.getLength();
 		saj.schedule();
-		try {
-			saj.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			//saj.join();
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		schedule();
 	}
 	

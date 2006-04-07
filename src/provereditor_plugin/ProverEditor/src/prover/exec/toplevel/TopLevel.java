@@ -117,7 +117,7 @@ public abstract class TopLevel implements ITopLevel {
 	}
 
 
-	private synchronized void waitForPrompt(StringBuffer buff)
+	private void waitForPrompt(StringBuffer buff)
 		throws IOException, ToplevelException {
 		
 		// on mange le prompt;
@@ -164,7 +164,7 @@ public abstract class TopLevel implements ITopLevel {
 	
 	
 	
-	private synchronized void waitForMoreInput(StringBuffer buff) throws IOException, ToplevelException {
+	private void waitForMoreInput(StringBuffer buff) throws IOException, ToplevelException {
 		
 		int i;
 		try {

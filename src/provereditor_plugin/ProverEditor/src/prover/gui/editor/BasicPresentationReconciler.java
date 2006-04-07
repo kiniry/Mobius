@@ -1,6 +1,6 @@
 package prover.gui.editor;
 
-import java.util.LinkedList;
+import java.util.Stack;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -34,7 +34,7 @@ public class BasicPresentationReconciler extends PresentationReconciler{
 		}
 		this.document = document;
 		list = new IDocumentListener() {
-			LinkedList li = new LinkedList();
+			Stack li = new Stack();
 			boolean flag = false;	
 			public void documentAboutToBeChanged(DocumentEvent event) {
 				
@@ -51,7 +51,7 @@ public class BasicPresentationReconciler extends PresentationReconciler{
 					ev = new DocumentEvent(doc, event.getOffset(),
 							event.getText().length(), doc.get(event.getOffset(),
 									event.getLength()));
-					li.add(ev);
+					li.push(ev);
 				} catch (BadLocationException e) {}
 				
 				
@@ -59,7 +59,7 @@ public class BasicPresentationReconciler extends PresentationReconciler{
 			
 			public void documentChanged(DocumentEvent event) {
 				if(li.size() > 0) {
-					DocumentEvent de = (DocumentEvent)li.removeFirst();
+					DocumentEvent de = (DocumentEvent)li.pop();
 					
 					try {
 						de.getDocument().replace(de.getOffset(), de.getLength(), de.getText());

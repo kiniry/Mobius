@@ -1,6 +1,6 @@
 package prover.gui;
 
-import java.util.LinkedList;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -56,7 +56,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	private String msg;
 	private LimitRuleScanner scanner;
 	private BasicRuleScanner parser;
-	private LinkedList parsedList = new LinkedList();
+	private Stack parsedList = new Stack();
 	
 	public TopLevelManager() {
 		super();
@@ -101,7 +101,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	}
 	
 	
-	protected synchronized boolean progress_intern (ProverContext pc) {
+	protected boolean progress_intern (ProverContext pc) {
 		if(isNewDoc(pc))
 			reset(pc);
 		int oldlimit =pc.scan.getLimit();
@@ -144,7 +144,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 					top.sendCommand(cmd);
 					if(top.isAlive()) {
 						msg = top.getBuffer();
-						parsedList.addFirst(new Integer(realoldlimit));
+						parsedList.push(new Integer(realoldlimit));
 					}
 					else {
 						pc.scan.setLimit(realoldlimit);
@@ -189,7 +189,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	}
 	
 	
-	protected synchronized boolean regress_intern(ProverContext pc) {
+	protected boolean regress_intern(ProverContext pc) {
 		if (isNewDoc(pc)) {
 			reset(pc);
 			return false;
@@ -197,7 +197,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		
 		int oldlimit = pc.scan.getLimit();
 		if((oldlimit > 0) && (parsedList.size() > 0)) {
-			int newlimit = ((Integer) parsedList.removeFirst()).intValue();
+			int newlimit = ((Integer) parsedList.pop()).intValue();
 			String cmd;
 			try {
 				cmd = pc.doc.get(newlimit, oldlimit - newlimit).trim();
