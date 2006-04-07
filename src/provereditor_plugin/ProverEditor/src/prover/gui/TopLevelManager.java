@@ -65,8 +65,10 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	public static TopLevelManager getInstance() {
 		return instance;
 	}
-	
 	public void append(String str) {
+		append(str, translator);
+	}
+	public void append(int type, String str) {
 		append(str, translator);
 	}
 	
@@ -349,13 +351,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		}
 		AppendJob job = new AppendJob(scanner, tp);
 		
-		
-		// Error handling
-//		String [] errorExpressions = translator.getErrorExpressions();
-//		
-//		for (int i = 0; (i < errorExpressions.length) && (ind == -1); i++){
-//			ind = str.indexOf(errorExpressions[i]);
-//		}
+	
 		job.add(str);
 		job.prepare();
 	}

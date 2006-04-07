@@ -2,7 +2,6 @@ package prover.exec;
 
 import org.eclipse.jface.text.IDocument;
 
-import prover.exec.toplevel.IPromptListener;
 import prover.exec.toplevel.stream.IStreamListener;
 
 /**
@@ -92,7 +91,7 @@ public interface ITopLevel {
 	public void addStreamListener(IStreamListener isl);
 	public void removeStreamListener(IStreamListener isl);
 
-	public void addPromptListener(IPromptListener isl);
-	public void removePromptListener(IPromptListener isl);
+	public void addErrorStreamListener(IStreamListener isl);
+	public void removeErrorStreamListener(IStreamListener isl);
 	
 }

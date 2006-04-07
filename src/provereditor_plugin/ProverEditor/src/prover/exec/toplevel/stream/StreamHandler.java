@@ -6,15 +6,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 
-public class StandardStreamHandler implements Runnable{
+public class StreamHandler implements Runnable{
 	private InputStream in;
 	private StringBuffer buff = new StringBuffer();
 	private StringBuffer internbuff = new StringBuffer();
 	private boolean bHasFinished;
-	public StandardStreamHandler(InputStream inputStream) {
+	private int type = IStreamListener.NORMAL;
+	public StreamHandler(InputStream inputStream) {
 		in = inputStream;
 	}
-	
+	public StreamHandler(int type, InputStream inputStream) {
+		in = inputStream;
+		this.type = type; 
+	}
 
 	private HashSet hs = new HashSet();
 	public void addStreamListener(IStreamListener isl) {
@@ -27,7 +31,7 @@ public class StandardStreamHandler implements Runnable{
 		Iterator iter = hs.iterator();
 		while(iter.hasNext()) {
 			IStreamListener isl = (IStreamListener)iter.next();
-			isl.append(str);
+			isl.append(type, str);
 		}
 	}
 	
