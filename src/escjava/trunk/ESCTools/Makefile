@@ -139,6 +139,7 @@ fix-perms:	.perms-fixed
 		-exec chmod 644 {} \; &&\
 		find $(ESCTOOLS_ROOT) -type f \
 		\( -name "*.sh" -or \
+		   -name "*.pl" -or \
 		   -name "rtest*" -or \
 		   -name "escj" -or \
 		   -name "escj.bat" -or \
