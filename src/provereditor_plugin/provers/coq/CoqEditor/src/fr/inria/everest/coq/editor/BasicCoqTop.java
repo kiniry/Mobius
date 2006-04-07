@@ -4,13 +4,12 @@
 package fr.inria.everest.coq.editor;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 import prover.exec.AProverException;
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.IPromptListener;
 import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
@@ -22,7 +21,7 @@ import prover.exec.toplevel.exceptions.SyntaxErrorException;
  * @author J. Charles
  */
 
-public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener {
+public class BasicCoqTop extends TopLevel implements ITopLevel {
 
 
 	/**
@@ -41,10 +40,10 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 	 */
 	public BasicCoqTop (String [] strCoqTop, int iGraceTime) throws ProverException {
 		super("Coq", strCoqTop, iGraceTime);
-		this.addPromptListener(this);
 	}
 	
-	
+
+
 	
 	
 	
@@ -68,101 +67,65 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 	}
 	
-
+	public void undo() throws AProverException {
+		if(isProofMode()) {
+			try {
+				sendCommand("Undo 1.");
+			}
+			catch (Exception e) {
+				sendCommand("Abort.");
+			}
+		}
+		else
+			sendCommand("Back 1.");
+	}	
 	
-	
-	/**
-	 * Abort the current proof.
-	 * @throws ProverException if there is an unexpected problem
-	 */
-	public void abort() throws ProverException {
-		sendCommand("Abort.");	
-	}
-
-	
-	
-	private int iStep;
-	private int iProofStep;
-
 
 	public boolean isProofMode() {
 		return !getPrompt().startsWith("Coq <");
 	}
 	
-	public int getStep() {
-		return iStep;
-	}
-	public int getProofStep() {
-		return iProofStep;
-	}
+
+
+
+
+	Stack proofBeginList = new Stack();
+	Stack proofEndList = new Stack();
 	
-	public void promptHasChanged(TopLevel caller) {
-		String prompt = this.getPrompt();
-		String [] tab = prompt.split("<");
-		if(tab.length > 1) {
-			String [] nums = tab[1].split("\\|");
-			iStep = Integer.valueOf(nums[0].trim()).intValue();
-			iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
-		}		
-	}
-	/**
-	 * Undo n vernac commands or n tactics if we are in proof mode.
-	 * @param steps the number of vernacs to undo.
-	 * @throws ProverException if there is an unexpected problem
-	 */
-	public void undo(int steps) throws ProverException {
-		
-		int step = getStep();
-		int last = getProofStep();
-		if(step > 0) {//we have the right version *cvs* of coq
-			if((last == 1)){ //&& isProofMode()) {
-				abort();
-			} else
-			if(last >0) {
-				
-				try {
-					sendCommand("Undo " + steps + ".");
-				}
-				catch (Exception e) {
-					sendCommand("Back " + steps + ".");
-				}
-			}
-			else {
-				sendCommand("Back " + steps + ".");
-			}
-		}
-		else
-			if(isProofMode())
-				sendCommand("Undo " + steps + ".");
-			else
-				sendCommand("Back " + steps + ".");
-	}
-
-
-	LinkedList proofBeginList = new LinkedList();
-	LinkedList proofEndList = new LinkedList();
 	public int hasToSkip(IDocument document, String cmd, int beg, int end) {
 		if(proofBeginList.size() > 0) {
 			if((isProofMode())) {
-				if(proofBeginList.size() == proofEndList.size())
-					proofEndList.removeFirst();
+				if(proofBeginList.size() == proofEndList.size()) {
+					proofEndList.pop();
+					return SKIP_AND_CONTINUE;
+				}
 				if(cmd.startsWith("Proof"))
 					return SKIP;
 			}
 			else {
+				int begProof = ((Integer) proofBeginList.peek()).intValue();
 				if(proofBeginList.size() == proofEndList.size()) {
-					int endProof = ((Integer) proofEndList.getFirst()).intValue();
-					if (endProof >= beg) {
-						proofEndList.removeFirst();
-						return SKIP_AND_CONTINUE;
+					//we can be outside a proof
+					int endProof = ((Integer) proofEndList.peek()).intValue();
+
+					if (endProof == beg) {
+						// we are in fact inside a the end of the proof
+						proofEndList.pop();
+						
+//						if(begProof == beg) {
+//							proofBeginList.removeFirst();
+//						}
+						return DONT_SKIP;
 					}
 				}
 				else {
-					int begProof = ((Integer) proofBeginList.getFirst()).intValue();
-					if(begProof > beg) {
-						proofBeginList.removeFirst();
+					if(begProof == beg) {
+						// we are outside a proof
+						proofBeginList.pop();
+						return SKIP_AND_CONTINUE;
 					}
 					else {
+						// we are within a proof
 						return SKIP_AND_CONTINUE;
 					}
 				}
@@ -171,30 +134,29 @@ public class BasicCoqTop extends TopLevel implements ITopLevel, IPromptListener 
 		return DONT_SKIP;
 	}
 
-
+	LinkedList proofList = new LinkedList();
 	public int hasToSend(IDocument doc, String cmd, int beg, int end) {
 		
-		if(isProofMode() && 
-				(proofBeginList.size() == proofEndList.size())) {
-			System.out.println(cmd);
-			proofBeginList.add(new Integer(beg));
+		if(isProofMode()) {
+			if (proofBeginList.size() == proofEndList.size()) {
+				proofBeginList.push(new Integer(beg));
+				proofList.addFirst(getPrompt().split(" ")[0]);
+			}
+			else {
+				if (!(getPrompt().startsWith(proofList.getFirst().toString()))) {
+					proofEndList.push(new Integer(beg));
+					proofBeginList.push(new Integer(beg));
+					proofList.addFirst(getPrompt().split(" ")[0]);
+				}
+			}
 		}
 		else if((!isProofMode()) && (proofBeginList.size() != proofEndList.size())) {
-			proofEndList.add(new Integer(beg));
-			beg = ((Integer) proofBeginList.getFirst()).intValue();
-			try {
-				System.out.println(doc.get(beg, end - beg));
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			proofEndList.push(new Integer(beg));
+
 		}
 		return DONT_SKIP;
 	}
 
 
-	public void undo() throws AProverException {
-		undo(1);
-	}
 	
 }

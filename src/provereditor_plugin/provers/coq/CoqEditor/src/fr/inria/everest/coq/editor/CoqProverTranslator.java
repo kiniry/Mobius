@@ -15,9 +15,6 @@ import prover.gui.editor.detector.WordDetector;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
 	
-	public final static String strCommentBegin = "\\(\\*";
-	public final static String strCommentEnd = "\\*\\)";
-	public final static String strEndOfSentence = "\\.[ \n\t]"; 
 	public final static CoqProverTranslator instance = new CoqProverTranslator();
 	public final static String [] vernac = {"forall", "Proof",
 			"Load", "Require", "Qed", "Import", "Open", "Scope", 
@@ -48,17 +45,6 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return errorExpressions;
 	}
 	
-	public String getCommentBegin() {
-		return strCommentBegin;
-	}
-	
-	public String getCommentEnd() {
-		return strCommentEnd;
-	}
-	
-	public String getEndOfSentence() {
-		return strEndOfSentence;
-	}
 	
 	public static AProverTranslator getInstance() {
 		return instance;
@@ -153,7 +139,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 	}
 
 	private IRule[] initParsingRules() {
-		WordRule endofsentence = new WordRule(new IWordDetector() {
+		WordRule endofsentence = new FixedSizeWordRule(new IWordDetector() {
 
 			public boolean isWordStart(char c) {
 				return c == '.';
@@ -163,14 +149,16 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 				return Character.isWhitespace(c);
 			}
 			
-		}, SENTENCE_TOKEN);
-		endofsentence.addWord(".\n", SENTENCE_TOKEN);
+		}, 2);
+
 		endofsentence.addWord(". ", SENTENCE_TOKEN);
+		endofsentence.addWord(".\n", SENTENCE_TOKEN);
 		endofsentence.addWord(".\t", SENTENCE_TOKEN);
 		
 		IRule [] rules = {
 			new MultiLineRule("(*", "*)", COMMENT_TOKEN),
 			new MultiLineRule("\"", "\"", COMMENT_TOKEN),
+
 			new SingleLineRule("(*", "*)", COMMENT_TOKEN),
 			new SingleLineRule("\"", "\"", COMMENT_TOKEN),
 			endofsentence
@@ -182,5 +170,10 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 			parsingRules = initParsingRules();
 		}
 		return parsingRules;
+	}
+
+
+	public boolean isErrorMsg(String s) {
+		return s.matches("Error.*");
 	}
 }
