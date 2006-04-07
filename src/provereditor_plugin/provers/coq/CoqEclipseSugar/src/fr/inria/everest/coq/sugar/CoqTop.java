@@ -4,16 +4,12 @@
 package fr.inria.everest.coq.sugar;
 
 import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
-import prover.exec.toplevel.IPromptListener;
 import prover.exec.toplevel.TopLevel;
-import prover.exec.toplevel.exceptions.IncompleteProofException;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
+import prover.exec.toplevel.stream.IStreamListener;
 import fr.inria.everest.coq.editor.BasicCoqTop;
 
 
@@ -23,7 +19,7 @@ import fr.inria.everest.coq.editor.BasicCoqTop;
  * @author J. Charles
  */
 
-public class CoqTop extends BasicCoqTop implements IPromptListener {
+public class CoqTop extends BasicCoqTop implements IStreamListener {
 	private LinkedList sections = new LinkedList();
 	private LinkedList lemmas = new LinkedList();
 	
@@ -36,7 +32,7 @@ public class CoqTop extends BasicCoqTop implements IPromptListener {
 	 */
 	public CoqTop (String [] strCoqTop) throws ProverException {
 		super(strCoqTop);
-		addPromptListener(this);
+		addErrorStreamListener(this);
 	}
 	
 	
@@ -173,26 +169,26 @@ public class CoqTop extends BasicCoqTop implements IPromptListener {
 	 * @throws IncompleteProofException If the proof you are trying to save is incomplete.
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void qed() throws ProverException {
-		super.sendCommand("Qed.");
-		while ((getBuffer().indexOf("User error: Attempt to save an incomplete proof") == -1) &&
-				(getBuffer().indexOf("is defined")) == -1){
-			// we wait for a cool output...
-			try {
-				waitForMoreInput();
-			} catch (IOException e) {
-				// this should not happen
-				e.printStackTrace();
-			}
-		}
-		
-		if(getBuffer().indexOf("is defined") != -1) {
-			// which output did we get?
-			lemmas.removeFirst();
-		} else {
-			throw new IncompleteProofException(getBuffer());
-		}
-	}
+//	public void qed() throws ProverException {
+//		super.sendCommand("Qed.");
+//		while ((getBuffer().indexOf("User error: Attempt to save an incomplete proof") == -1) &&
+//				(getBuffer().indexOf("is defined")) == -1){
+//			// we wait for a cool output...
+//			try {
+//				waitForMoreInput();
+//			} catch (IOException e) {
+//				// this should not happen
+//				e.printStackTrace();
+//			}
+//		}
+//		
+//		if(getBuffer().indexOf("is defined") != -1) {
+//			// which output did we get?
+//			lemmas.removeFirst();
+//		} else {
+//			throw new IncompleteProofException(getBuffer());
+//		}
+//	}
 	
 	
 	/**
@@ -221,49 +217,49 @@ public class CoqTop extends BasicCoqTop implements IPromptListener {
 		return buff.split(" +");
 	}
 
-	public String [] show() throws ProverException, IOException{
-		clearBuffer();
-		super.sendCommand("Show.");
-		String str;
-		str = getBuffer();
-		while(str.indexOf("========\n") == -1){
-			waitForMoreInput();
-			str = getBuffer();
-		}
-		if(str.indexOf("Syntax error: ") != -1)
-			throw new SyntaxErrorException(str.toString());
-		if(str.indexOf("Error:") != -1)
-			throw new SyntaxErrorException(str.toString());
-		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
-			throw new ProverException("An error occured during the proof:\n" + str + "\n");
-		
-		LineNumberReader lnr = new LineNumberReader(new StringReader(str.toString()));
-		ArrayList al = new ArrayList();
-		String curr = "";
-		while((str = lnr.readLine()) != null) {
-			if (str.indexOf("=========") != -1) {
-				al.add(curr);
-				str = "";
-				curr = lnr.readLine();
-				break;
-			}
-			else if (str.matches("^  [a-zA-Z_0-9]+ : .*")) {
-				al.add(curr);
-				curr = str;
-			}
-			else {
-				curr += "\n" + str;
-			}
-		}
-		while((str = lnr.readLine()) != null) {
-			curr += "\n" + str;
-		}
-		al.add(curr);
-		String [] arr = new String [al.size()];
-		Object[] t = al.toArray();
-		for(int i = 0; i < t.length; i++) arr[i] = (String)t[i];
-		return arr;
-	}
+//	public String [] show() throws ProverException, IOException{
+//		clearBuffer();
+//		super.sendCommand("Show.");
+//		String str;
+//		str = getBuffer();
+//		while(str.indexOf("========\n") == -1){
+//			waitForMoreInput();
+//			str = getBuffer();
+//		}
+//		if(str.indexOf("Syntax error: ") != -1)
+//			throw new SyntaxErrorException(str.toString());
+//		if(str.indexOf("Error:") != -1)
+//			throw new SyntaxErrorException(str.toString());
+//		if(str.startsWith("Toplevel input") || str.indexOf("User error") != -1)
+//			throw new ProverException("An error occured during the proof:\n" + str + "\n");
+//		
+//		LineNumberReader lnr = new LineNumberReader(new StringReader(str.toString()));
+//		ArrayList al = new ArrayList();
+//		String curr = "";
+//		while((str = lnr.readLine()) != null) {
+//			if (str.indexOf("=========") != -1) {
+//				al.add(curr);
+//				str = "";
+//				curr = lnr.readLine();
+//				break;
+//			}
+//			else if (str.matches("^  [a-zA-Z_0-9]+ : .*")) {
+//				al.add(curr);
+//				curr = str;
+//			}
+//			else {
+//				curr += "\n" + str;
+//			}
+//		}
+//		while((str = lnr.readLine()) != null) {
+//			curr += "\n" + str;
+//		}
+//		al.add(curr);
+//		String [] arr = new String [al.size()];
+//		Object[] t = al.toArray();
+//		for(int i = 0; i < t.length; i++) arr[i] = (String)t[i];
+//		return arr;
+//	}
 	
 
 
@@ -383,5 +379,11 @@ public class CoqTop extends BasicCoqTop implements IPromptListener {
 			iStep = Integer.valueOf(nums[0].trim()).intValue();
 			iProofStep = Integer.valueOf(nums[nums.length - 1].trim()).intValue();
 		}		
+	}
+
+
+	public void append(int type, String str) {
+		// TODO Auto-generated method stub
+		
 	}
 }
