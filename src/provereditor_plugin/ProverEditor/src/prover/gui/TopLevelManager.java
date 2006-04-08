@@ -26,6 +26,7 @@ import prover.Prover;
 import prover.ProverEditorPlugin;
 import prover.exec.AProverException;
 import prover.exec.ITopLevel;
+import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.stream.IStreamListener;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
@@ -41,7 +42,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	private IDocument dc;	
 	
 	private ProverContext oldpc = ProverContext.empty;
-	private ITopLevel top;
+	private TopLevel top;
 	private TextViewer tv;
 	private ProverPresentation tp;
 	private final static String GREETINGS = "This is ProverEditor version " + 
@@ -57,6 +58,8 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	private LimitRuleScanner scanner;
 	private BasicRuleScanner parser;
 	private Stack parsedList = new Stack();
+
+	private Prover fProver;
 	
 	public TopLevelManager() {
 		super();
@@ -140,7 +143,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			
 			
 			//we send the command
-			switch(top.hasToSend(pc.doc, cmd, oldlimit, newlimit)) {
+			switch(translator.getTopLevel().hasToSend(top, pc.doc, cmd, oldlimit, newlimit)) {
 				case ITopLevel.DONT_SKIP: {
 					top.clearBuffer();
 					top.sendCommand(cmd);
@@ -208,7 +211,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				System.err.println("TopLevel.regress_intern: " + e);
 				return false;
 			}
-			switch(top.hasToSkip(pc.doc, cmd, newlimit, oldlimit)) {
+			switch(translator.getTopLevel().hasToSkip(top, pc.doc, cmd, newlimit, oldlimit)) {
 				case ITopLevel.DONT_SKIP: {
 					try {
 						top.undo();
@@ -289,7 +292,8 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		IEditorInput input = oldpc.ce.getEditorInput();
 		
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
-	    translator = Prover.findProverFromFile(path.getRawLocation().toString()).getTranslator();
+		fProver = Prover.findProverFromFile(path.getRawLocation().toString());
+		translator = fProver.getTranslator();
 	    scanner = new LimitRuleScanner(translator.getProofRules());
 	    parser = new BasicRuleScanner(translator.getParsingRules());
 		String [] tab = null;
@@ -305,7 +309,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		}
 		try {
 			
-			top = translator.createNewTopLevel(tab);
+			top = new TopLevel(fProver.getName(), tab);
 			top.addStreamListener(this);
 		} catch (AProverException e) {
 			new ColorAppendJob(tp, e.toString(), RED).prepare();

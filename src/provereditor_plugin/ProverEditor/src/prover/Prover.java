@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
+import prover.exec.IProverTopLevel;
 import prover.gui.editor.LimitRuleScanner;
 import prover.preference.ProverPreferenceNode;
 
@@ -89,5 +90,9 @@ public class Prover {
 
 	public boolean isErrorMsg(String s) {
 		return translator.isErrorMsg(s);
+	}
+
+	public IProverTopLevel getTopLevel() {
+		return translator.getTopLevel();
 	}
 }

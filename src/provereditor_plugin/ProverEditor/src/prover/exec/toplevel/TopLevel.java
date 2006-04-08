@@ -11,6 +11,8 @@ package prover.exec.toplevel;
 import java.io.IOException;
 
 import prover.Prover;
+import prover.exec.AProverException;
+import prover.exec.IProverTopLevel;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.ToplevelException;
@@ -26,10 +28,12 @@ import prover.exec.toplevel.stream.StreamHandler;
  * Class to manage TopLevel
  * @author Julien Charles
  */
-public abstract class TopLevel implements ITopLevel {
+public class TopLevel implements ITopLevel {
 	private StringBuffer fStdBuffer = new StringBuffer();
 	private StringBuffer fErrBuffer = new StringBuffer();
 	private Prover fProver;
+	private IProverTopLevel fProverTopLevel;
+	
 	
 	private StreamHandler fIn;
 	private InputStreamHandler fOut;
@@ -86,12 +90,14 @@ public abstract class TopLevel implements ITopLevel {
 	}
 
 
-	protected TopLevel(String name, String [] cmd, int iGrace) throws ProverException {
+	public TopLevel(String name, String[] path) throws ProverException {
 		fProver = Prover.get(name);
 		if(fProver == null) {
 			throw new ProverException("Prover " + name + " not found!");
 		}
-		this.fCmds = cmd;
+		fProverTopLevel = fProver.getTopLevel();
+		fCmds = fProverTopLevel.getCommands(fProver.getTop(), path);
+		int iGrace = fProver.getGraceTime();
 		fiGraceTime = iGrace == 0 ? 123456 : iGrace;
 		
 		startProcess();
@@ -157,13 +163,11 @@ public abstract class TopLevel implements ITopLevel {
 	}
 	
 
-
-
 	/**
 	 * Sends the given command to the prover and waits for input
 	 * coming from the,
 	 */
-	public void sendCommand(String command) throws ProverException {
+	public void sendToProver(String command) throws ProverException {
 		clearBuffer();	
 		if(!isAlive()) {
 			throw new TopLevelDeathException(fProver);
@@ -183,6 +187,14 @@ public abstract class TopLevel implements ITopLevel {
 		if(!fbIsWorking)
 			throw new ProverException("I was interrupted!");
 		fbIsWorking = false;
+	}
+
+	/**
+	 * Sends the given command to the prover and waits for input
+	 * coming from the,
+	 */
+	public void sendCommand(String command) throws AProverException {
+		fProverTopLevel.sendCommand(this, command);
 	}
 
 
@@ -246,5 +258,9 @@ public abstract class TopLevel implements ITopLevel {
 			throw new ProverException("There is nothing to break!");
 		fbIsWorking = false;
 		fOut.println(BREAKSTR);
+	}
+	
+	public void undo() throws AProverException {
+		fProverTopLevel.undo(this);
 	}
 }

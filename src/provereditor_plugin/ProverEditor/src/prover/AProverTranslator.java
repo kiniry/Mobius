@@ -4,8 +4,7 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
-import prover.exec.AProverException;
-import prover.exec.ITopLevel;
+import prover.exec.IProverTopLevel;
 
 public abstract class AProverTranslator {
 	private final static String [][] unicodeReplacements = {
@@ -28,13 +27,12 @@ public abstract class AProverTranslator {
 	public String [][] getReplacements() {
 		return replacements;
 	}
-//	public abstract String[] getErrorExpressions();
 
-	public abstract ITopLevel createNewTopLevel(String[] paths) throws AProverException;
-	
     public abstract IRule [] getProofRules();
 	public abstract IRule [] getFileRules();
 	public abstract IRule [] getParsingRules();
 
 	public abstract boolean isErrorMsg(String s);
+
+	public abstract IProverTopLevel getTopLevel();
 }
