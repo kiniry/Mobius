@@ -19,16 +19,39 @@ public abstract class AProverTranslator {
 	public static final IToken COMMENT_TOKEN = new Token("comment");
 	public static final IToken SENTENCE_TOKEN = new Token("sentence");
 	
+	
+	/**
+	 * Returns an array consisting of couples a 
+	 * string / its unicode replacement.
+	 * Used when the option "Use unicode characters" is
+	 * selected.
+	 * @return An array of couples (it can be empty), not null.
+	 */
 	public String [][] getUnicodeReplacements() {
 		return unicodeReplacements;
 	}
 	
+	
+	/**
+	 * Returns an array consisting of couples:
+	 * String and its replacement.
+	 * @return
+	 */
 	public String [][] getReplacements() {
 		return replacements;
 	}
 
     public abstract IRule [] getProofRules();
 	public abstract IRule [] getFileRules();
+	
+	/**
+	 * Returns a serie of rules used to parse
+	 * the sentences from the file. If 
+	 * the returned tag from the rule is {@link #SENTENCE_TOKEN}
+	 * it is considered that an end of sentence has been detected.
+	 * A command can be sent.
+	 * @return Rules to parse the input to send to the prover from a file
+	 */
 	public abstract IRule [] getParsingRules();
 
 	public abstract boolean isErrorMsg(String s);
