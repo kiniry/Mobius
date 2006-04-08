@@ -6,11 +6,11 @@ package fr.inria.everest.coq.sugar;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import prover.exec.AProverException;
 import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
 import prover.exec.toplevel.stream.IStreamListener;
-import fr.inria.everest.coq.editor.BasicCoqTop;
 
 
 
@@ -19,7 +19,7 @@ import fr.inria.everest.coq.editor.BasicCoqTop;
  * @author J. Charles
  */
 
-public class CoqTop extends BasicCoqTop implements IStreamListener {
+public class CoqTop extends TopLevel implements IStreamListener {
 	private LinkedList sections = new LinkedList();
 	private LinkedList lemmas = new LinkedList();
 	
@@ -30,20 +30,13 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * The simple constructor.
 	 * @throws ProverException if it is unable to build the coq process.
 	 */
-	public CoqTop (String [] strCoqTop) throws ProverException {
-		super(strCoqTop);
+	public CoqTop (String [] path) throws ProverException {
+		super("Coq", path);
 		addErrorStreamListener(this);
 	}
 	
 	
-	/**
-	 * The one arg constructor.
-	 * @param iGraceTime The grace time for TopLevel
-	 * @throws ProverException if it is unable to build the coq process.
-	 */
-	public CoqTop (String [] strCoqTop, int iGraceTime) throws ProverException {
-		super(strCoqTop, iGraceTime);
-	}
+
 	
 	
 	/**
@@ -51,7 +44,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @param name the name of the section
 	 * @throws ProverException if there is an unexpected problem.
 	 */
-	public void startSection(String name) throws ProverException {
+	public void startSection(String name) throws AProverException {
 		sections.addFirst(name);
 		sendCommand("Section " + name + ".");
 	}
@@ -64,7 +57,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @throws ProverException if there is an unexpected problem or 
 	 *                      if it is asked to close the wrong section.
 	 */
-	public void endSection(String name) throws ProverException {
+	public void endSection(String name) throws AProverException {
 		String s = (String) sections.removeFirst();
 		if (s.equals(name)) {
 			sendCommand("End " + name + ".");
@@ -81,7 +74,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @throws ProverException if there is an unexpected problem or 
 	 *                      if it is asked to reset the wrong section.
 	 */
-	public void resetSection(String name) throws ProverException {
+	public void resetSection(String name) throws AProverException {
 		String s = (String) sections.removeFirst();
 		if (s.equals(name)) {
 			sendCommand("Reset " + name + ".");
@@ -97,7 +90,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @param body body of the lemma
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void declareLemma(String name, String body) throws ProverException {
+	public void declareLemma(String name, String body) throws AProverException {
 		sendCommand("Lemma " + name +": " + body + ".");
 		sendCommand("Proof.");
 		lemmas.addFirst(name);
@@ -108,7 +101,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @param body body of the lemma
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void declareLemma(String name, String body, String thing) throws ProverException {
+	public void declareLemma(String name, String body, String thing) throws AProverException {
 		sendCommand("Lemma " + name +": " + body + ".");
 		sendCommand("Proof with " + thing);
 		lemmas.addFirst(name);
@@ -119,7 +112,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * Restart the current proof.
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void restartProof() throws ProverException {
+	public void restartProof() throws AProverException {
 		sendCommand("Restart.");
 	}
 	
@@ -130,7 +123,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * Send the command Proof to coq. I wonder who will use it.
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void proof() throws ProverException {
+	public void proof() throws AProverException {
 		sendCommand("Proof.");
 	}
 	
@@ -143,10 +136,10 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @throws ProverException if there is an unexpected problem
 	 * @throws IOException If there is a failure
 	 */
-	public String inspect() throws ProverException, IOException {
+	public String inspect() throws AProverException, IOException {
 		super.sendCommand("Inspect 1.");
 		String str;
-		str = getBuffer().toString();
+		str = getStdBuffer().toString();
 //		while(str.indexOf("*** [") == -1){
 //			waitForMoreInput();
 //			str = getBuffer().toString();
@@ -210,10 +203,10 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * @return The list of identifiers
 	 * @throws ProverException 
 	 */
-	public String [] showIntros() throws ProverException {
+	public String [] showIntros() throws AProverException {
 		clearBuffer();
 		sendCommand("Show Intros.");
-		String buff = getBuffer().replaceAll("\n", " ");
+		String buff = getStdBuffer().replaceAll("\n", " ");
 		return buff.split(" +");
 	}
 
@@ -264,10 +257,10 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 
 
 
-	public String print(String nom) throws ProverException, IOException{
+	public String print(String nom) throws AProverException, IOException{
 		super.sendCommand("Print " + nom +".");
 		String str;
-		str = getBuffer().toString();
+		str = getStdBuffer().toString();
 //		while(str.indexOf("*** [") == -1){
 //			waitForMoreInput();
 //			str = getBuffer().toString();
@@ -327,16 +320,21 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	 * Abort the current proof.
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void abort() throws ProverException {
+	public void abort() throws AProverException {
 		sendCommand("Abort.");	
 	}
 	
+	
+	
+	public boolean isProofMode() {
+		return !getErrBuffer().startsWith("Coq <");
+	}
 	/**
 	 * Undo n vernac commands or n tactics if we are in proof mode.
 	 * @param steps the number of vernacs to undo.
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void undo(int steps) throws ProverException {
+	public void undo(int steps) throws AProverException {
 		
 		int step = getStep();
 		int last = getProofStep();
@@ -372,7 +370,7 @@ public class CoqTop extends BasicCoqTop implements IStreamListener {
 	}
 	
 	public void promptHasChanged(TopLevel caller) {
-		String prompt = this.getPrompt();
+		String prompt = this.getErrBuffer();
 		String [] tab = prompt.split("<");
 		if(tab.length > 1) {
 			String [] nums = tab[1].split("\\|");
