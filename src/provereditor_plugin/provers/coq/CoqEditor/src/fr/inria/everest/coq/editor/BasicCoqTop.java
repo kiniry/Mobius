@@ -9,8 +9,8 @@ import java.util.Stack;
 import org.eclipse.jface.text.IDocument;
 
 import prover.exec.AProverException;
+import prover.exec.IProverTopLevel;
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
 
@@ -21,31 +21,8 @@ import prover.exec.toplevel.exceptions.SyntaxErrorException;
  * @author J. Charles
  */
 
-public class BasicCoqTop extends TopLevel implements ITopLevel {
+public class BasicCoqTop implements IProverTopLevel  {
 
-
-	/**
-	 * The simple constructor.
-	 * @throws ProverException if it is unable to build the coq process.
-	 */
-	public BasicCoqTop (String [] strCoqTop) throws ProverException {
-		this(strCoqTop, 100);
-	}
-	
-	
-	/**
-	 * The one arg constructor.
-	 * @param iGraceTime The grace time for TopLevel
-	 * @throws ProverException if it is unable to build the coq process.
-	 */
-	public BasicCoqTop (String [] strCoqTop, int iGraceTime) throws ProverException {
-		super("Coq", strCoqTop, iGraceTime);
-	}
-	
-
-
-	
-	
 	
 	
 	/**
@@ -54,9 +31,9 @@ public class BasicCoqTop extends TopLevel implements ITopLevel {
 	 * @throws SyntaxErrorException If coq yells about a syntax error.
 	 * @throws ProverException if there is an unexpected problem
 	 */
-	public void sendCommand(String s) throws ProverException {
-		super.sendCommand(s);
-		String str = getBuffer().toString();
+	public void sendCommand(ITopLevel itl, String s) throws AProverException {
+		itl.sendToProver(s);
+		String str = itl.getStdBuffer().toString();
 		if(str.indexOf("Syntax error: ") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.indexOf("Error:") != -1)
@@ -67,22 +44,22 @@ public class BasicCoqTop extends TopLevel implements ITopLevel {
 			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 	}
 	
-	public void undo() throws AProverException {
-		if(isProofMode()) {
+	public void undo(ITopLevel itl) throws AProverException {
+		if(isProofMode(itl)) {
 			try {
-				sendCommand("Undo 1.");
+				itl.sendCommand("Undo 1.");
 			}
 			catch (Exception e) {
-				sendCommand("Abort.");
+				itl.sendCommand("Abort.");
 			}
 		}
 		else
-			sendCommand("Back 1.");
+			itl.sendCommand("Back 1.");
 	}	
 	
 
-	public boolean isProofMode() {
-		return !getPrompt().startsWith("Coq <");
+	public boolean isProofMode(ITopLevel itl) {
+		return !itl.getErrBuffer().startsWith("Coq <");
 	}
 	
 
@@ -92,15 +69,15 @@ public class BasicCoqTop extends TopLevel implements ITopLevel {
 	Stack proofBeginList = new Stack();
 	Stack proofEndList = new Stack();
 	
-	public int hasToSkip(IDocument document, String cmd, int beg, int end) {
+	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
 		if(proofBeginList.size() > 0) {
-			if((isProofMode())) {
+			if((isProofMode(itl))) {
 				if(proofBeginList.size() == proofEndList.size()) {
 					proofEndList.pop();
-					return SKIP_AND_CONTINUE;
+					return ITopLevel.SKIP_AND_CONTINUE;
 				}
 				if(cmd.startsWith("Proof"))
-					return SKIP;
+					return ITopLevel.SKIP;
 			}
 			else {
 				int begProof = ((Integer) proofBeginList.peek()).intValue();
@@ -115,46 +92,64 @@ public class BasicCoqTop extends TopLevel implements ITopLevel {
 //						if(begProof == beg) {
 //							proofBeginList.removeFirst();
 //						}
-						return DONT_SKIP;
+						return ITopLevel.DONT_SKIP;
 					}
 				}
 				else {
 					if(begProof == beg) {
 						// we are outside a proof
 						proofBeginList.pop();
-						return SKIP_AND_CONTINUE;
+						return ITopLevel.SKIP_AND_CONTINUE;
 					}
 					else {
 						// we are within a proof
-						return SKIP_AND_CONTINUE;
+						return ITopLevel.SKIP_AND_CONTINUE;
 					}
 				}
 			}
 		}
-		return DONT_SKIP;
+		return ITopLevel.DONT_SKIP;
 	}
 
 	LinkedList proofList = new LinkedList();
-	public int hasToSend(IDocument doc, String cmd, int beg, int end) {
+	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
 		
-		if(isProofMode()) {
+		if(isProofMode(itl)) {
 			if (proofBeginList.size() == proofEndList.size()) {
 				proofBeginList.push(new Integer(beg));
-				proofList.addFirst(getPrompt().split(" ")[0]);
+				proofList.addFirst(itl.getErrBuffer().split(" ")[0]);
 			}
 			else {
-				if (!(getPrompt().startsWith(proofList.getFirst().toString()))) {
+				if (!(itl.getErrBuffer().startsWith(proofList.getFirst().toString()))) {
 					proofEndList.push(new Integer(beg));
 					proofBeginList.push(new Integer(beg));
-					proofList.addFirst(getPrompt().split(" ")[0]);
+					proofList.addFirst(itl.getErrBuffer().split(" ")[0]);
 				}
 			}
 		}
-		else if((!isProofMode()) && (proofBeginList.size() != proofEndList.size())) {
+		else if((!isProofMode(itl)) && (proofBeginList.size() != proofEndList.size())) {
 			proofEndList.push(new Integer(beg));
 
 		}
-		return DONT_SKIP;
+		return ITopLevel.DONT_SKIP;
+	}
+
+	public String[] getCommands(String top, String[] path) {
+		String [] cmds;
+		if(path != null) {
+			cmds = new String[2 + path.length * 2];
+			for(int i = 0; i < path.length; i++) {
+				cmds[(2 * i) + 1] = "-I";
+				cmds[(2 * i) + 2] = path[i];
+			}
+			
+		}
+		else {
+			cmds = new String[2];
+		}
+		cmds[0] = top;
+		cmds[cmds.length - 1] = "-emacs";
+		return cmds;
 	}
 
 

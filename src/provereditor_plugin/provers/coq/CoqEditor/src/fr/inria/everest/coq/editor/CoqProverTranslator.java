@@ -7,10 +7,7 @@ import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
 
 import prover.AProverTranslator;
-import prover.Prover;
-import prover.ProverEditorPlugin;
-import prover.exec.AProverException;
-import prover.exec.ITopLevel;
+import prover.exec.IProverTopLevel;
 import prover.gui.editor.FixedSizeWordRule;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;
@@ -52,25 +49,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return instance;
 	}
 	
-	
-	public ITopLevel createNewTopLevel(String[] path) throws AProverException {
-		String [] cmds;
-		if(path != null) {
-			cmds = new String[2 + path.length * 2];
-			for(int i = 0; i < path.length; i++) {
-				cmds[(2 * i) + 1] = "-I";
-				cmds[(2 * i) + 2] = path[i];
-			}
-			
-		}
-		else {
-			cmds = new String[2];
-		}
-		Prover po = ProverEditorPlugin.getInstance().getProver("Coq"); 
-		cmds[0] = po.getTop();
-		cmds[cmds.length - 1] = "-emacs";
-		return new BasicCoqTop(cmds, po.getGraceTime());
-	}
+
 
 	
 	public String [][] getReplacements() {
@@ -179,4 +158,13 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 	public boolean isErrorMsg(String s) {
 		return s.matches("Error.*");
 	}
+
+	BasicCoqTop bct;
+	public IProverTopLevel getTopLevel() {
+		if(bct == null) {
+			bct = new BasicCoqTop();
+		}
+		return bct;
+	}
+
 }
