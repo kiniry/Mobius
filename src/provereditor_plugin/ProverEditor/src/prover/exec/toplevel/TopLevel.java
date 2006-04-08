@@ -12,7 +12,6 @@ import java.io.IOException;
 
 import prover.Prover;
 import prover.exec.AProverException;
-import prover.exec.IProverTopLevel;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.ToplevelException;
@@ -22,6 +21,7 @@ import prover.exec.toplevel.exceptions.toplevel.TopLevelDeathException;
 import prover.exec.toplevel.stream.IStreamListener;
 import prover.exec.toplevel.stream.InputStreamHandler;
 import prover.exec.toplevel.stream.StreamHandler;
+import prover.plugins.IProverTopLevel;
 
 
 /**

@@ -1,10 +1,9 @@
-package prover;
+package prover.plugins;
 
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
-import prover.exec.IProverTopLevel;
 
 public abstract class AProverTranslator {
 	private final static String [][] unicodeReplacements = {

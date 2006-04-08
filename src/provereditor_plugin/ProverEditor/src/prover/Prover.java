@@ -8,8 +8,9 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
-import prover.exec.IProverTopLevel;
 import prover.gui.editor.LimitRuleScanner;
+import prover.plugins.AProverTranslator;
+import prover.plugins.IProverTopLevel;
 import prover.preference.ProverPreferenceNode;
 
 public class Prover {

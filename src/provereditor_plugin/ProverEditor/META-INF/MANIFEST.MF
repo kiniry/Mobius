@@ -24,4 +24,5 @@ Export-Package: prover,
  prover.gui.actions,
  prover.gui.editor,
  prover.gui.editor.detector,
- prover.gui.jobs
+ prover.gui.jobs,
+ prover.plugins

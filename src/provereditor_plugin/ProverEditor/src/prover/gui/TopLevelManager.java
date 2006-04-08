@@ -21,7 +21,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.AProverTranslator;
 import prover.Prover;
 import prover.ProverEditorPlugin;
 import prover.exec.AProverException;
@@ -36,6 +35,7 @@ import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.ProverEditor;
 import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
+import prover.plugins.AProverTranslator;
 import prover.preference.PreferencePage;
 
 public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {

@@ -1,8 +1,13 @@
-package prover.exec;
+package prover.plugins;
 
 import org.eclipse.jface.text.IDocument;
 
+import prover.exec.AProverException;
+import prover.exec.ITopLevel;
+
 public interface IProverTopLevel {
+	
+	
 	public void sendCommand(ITopLevel itl, String s) throws AProverException;
 
 	/**
@@ -40,6 +45,7 @@ public interface IProverTopLevel {
 	/**
 	 * Sends to the top level the command to undo one step
 	 * in the proof.
+	 * @param itl The toplevel to send the command to
 	 * @throws AProverException If anything goes wrong.
 	 */
 	public void undo(ITopLevel itl) throws AProverException;

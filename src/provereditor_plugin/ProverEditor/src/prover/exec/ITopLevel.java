@@ -15,7 +15,7 @@ public interface ITopLevel {
 	/**
 	 * Sends a command to the top level. Any pre treatment
 	 * regarding the command to send to the prover should be
-	 * done here.
+	 * done before this call.
 	 * @param cmd The command to send to the prover.
 	 * @throws AProverException thrown if anything goes wrong.
 	 */
@@ -82,6 +82,4 @@ public interface ITopLevel {
 	public void removeErrorStreamListener(IStreamListener isl);
 
 
-	public void sendCommand(String string) throws AProverException;
-	
 }
