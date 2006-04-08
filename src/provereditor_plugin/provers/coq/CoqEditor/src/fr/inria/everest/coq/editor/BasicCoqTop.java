@@ -9,10 +9,10 @@ import java.util.Stack;
 import org.eclipse.jface.text.IDocument;
 
 import prover.exec.AProverException;
-import prover.exec.IProverTopLevel;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
+import prover.plugins.IProverTopLevel;
 
 
 
@@ -47,14 +47,14 @@ public class BasicCoqTop implements IProverTopLevel  {
 	public void undo(ITopLevel itl) throws AProverException {
 		if(isProofMode(itl)) {
 			try {
-				itl.sendCommand("Undo 1.");
+				sendCommand(itl, "Undo 1.");
 			}
 			catch (Exception e) {
-				itl.sendCommand("Abort.");
+				sendCommand(itl, "Abort.");
 			}
 		}
 		else
-			itl.sendCommand("Back 1.");
+			sendCommand(itl, "Back 1.");
 	}	
 	
 

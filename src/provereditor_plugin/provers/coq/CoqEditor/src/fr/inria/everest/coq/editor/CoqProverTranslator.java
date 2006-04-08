@@ -6,11 +6,11 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
 
-import prover.AProverTranslator;
-import prover.exec.IProverTopLevel;
 import prover.gui.editor.FixedSizeWordRule;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;
+import prover.plugins.AProverTranslator;
+import prover.plugins.IProverTopLevel;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
 	
