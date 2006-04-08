@@ -46,6 +46,9 @@ public class TopLevel implements ITopLevel {
 	private boolean fbIsAlive = true;
 	private boolean fbIsWorking;
 	
+//	public final int NORMAL = IStreamListener.NORMAL;
+//	public final int ERROR = IStreamListener.ERROR;
+	
 	private static char BREAK = 3;
 	public static String BREAKSTR;
 	static {
