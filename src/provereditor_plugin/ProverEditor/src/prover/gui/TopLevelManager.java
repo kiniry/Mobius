@@ -145,7 +145,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 					top.clearBuffer();
 					top.sendCommand(cmd);
 					if(top.isAlive()) {
-						msg = top.getBuffer();
+						msg = top.getStdBuffer();
 						parsedList.push(new Integer(realoldlimit));
 					}
 					else {
@@ -164,7 +164,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				}
 			}
 		} catch (AProverException e) {
-			msg = e + top.getBuffer();
+			msg = e + top.getStdBuffer();
 			pc.scan.setLimit(realoldlimit);
 			uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
 			uj.schedule();

@@ -86,7 +86,7 @@ public interface ITopLevel {
 	
 	
 	public void clearBuffer();
-	public String getBuffer();
+	public String getStdBuffer();
 	
 	public void addStreamListener(IStreamListener isl);
 	public void removeStreamListener(IStreamListener isl);

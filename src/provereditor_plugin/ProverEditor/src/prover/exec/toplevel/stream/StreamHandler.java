@@ -12,14 +12,34 @@ public class StreamHandler implements Runnable{
 	private StringBuffer internbuff = new StringBuffer();
 	private boolean bHasFinished;
 	private int type = IStreamListener.NORMAL;
-	public StreamHandler(InputStream inputStream) {
+	private Thread fThread;
+	
+	protected StreamHandler(InputStream inputStream) {
 		in = inputStream;
 	}
-	public StreamHandler(int type, InputStream inputStream) {
-		in = inputStream;
+	protected StreamHandler(int type, InputStream inputStream) {
+		this(inputStream);
 		this.type = type; 
 	}
 
+	
+	protected void setThread(Thread t) {
+		fThread = t;
+	}
+	
+	public Thread getThread() {
+		return fThread;
+	}
+	
+	public static StreamHandler createStreamHandler(int type, InputStream inputStream) {
+		StreamHandler sh = new StreamHandler(type, inputStream);
+		Thread t = new Thread(sh);
+		t.start();
+		sh.setThread(t);
+		return sh;
+	}
+	
+	
 	private HashSet hs = new HashSet();
 	public void addStreamListener(IStreamListener isl) {
 		hs.add(isl);

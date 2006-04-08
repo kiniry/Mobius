@@ -14,6 +14,9 @@ import prover.Prover;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.ToplevelException;
+import prover.exec.toplevel.exceptions.toplevel.ThreadDeathException;
+import prover.exec.toplevel.exceptions.toplevel.TimeOutException;
+import prover.exec.toplevel.exceptions.toplevel.TopLevelDeathException;
 import prover.exec.toplevel.stream.IStreamListener;
 import prover.exec.toplevel.stream.InputStreamHandler;
 import prover.exec.toplevel.stream.StreamHandler;
@@ -24,22 +27,20 @@ import prover.exec.toplevel.stream.StreamHandler;
  * @author Julien Charles
  */
 public abstract class TopLevel implements ITopLevel {
-	private StringBuffer proverBuffer = new StringBuffer();
-	private StringBuffer prompt = new StringBuffer();
-	private Prover pkind;
+	private StringBuffer fStdBuffer = new StringBuffer();
+	private StringBuffer fErrBuffer = new StringBuffer();
+	private Prover fProver;
 	
-	private StreamHandler in;
-	private InputStreamHandler out;
-	private StreamHandler err;
+	private StreamHandler fIn;
+	private InputStreamHandler fOut;
+	private StreamHandler fErr;
 
 	
-	private Process prover;
-	private int iGraceTime;
-	private String[] cmds;
-	private boolean bIsAlive = true;
-	private Thread tin;
-	private Thread terr;
-	private int iIsWorking = 0;
+	private Process fProverProc;
+	private int fiGraceTime;
+	private String[] fCmds;
+	private boolean fbIsAlive = true;
+	private boolean fbIsWorking;
 	
 	private static char BREAK = 3;
 	public static String BREAKSTR;
@@ -48,17 +49,17 @@ public abstract class TopLevel implements ITopLevel {
 	}
 	
 	public void addStreamListener(IStreamListener isl) {
-		in.addStreamListener(isl);
+		fIn.addStreamListener(isl);
 	}
 	public void removeStreamListener(IStreamListener isl) {
-		in.removeStreamListener(isl);
+		fIn.removeStreamListener(isl);
 	}
 	
 	public void addErrorStreamListener(IStreamListener ipl) {
-		err.addStreamListener(ipl);
+		fErr.addStreamListener(ipl);
 	}
 	public void removeErrorStreamListener(IStreamListener ipl) {
-		err.removeStreamListener(ipl);
+		fErr.removeStreamListener(ipl);
 	}
 	
 	public void dispose() {
@@ -66,161 +67,122 @@ public abstract class TopLevel implements ITopLevel {
 	}
 	private void startProcess()
 		throws ProverException {
-		iIsWorking= 1;
+		fbIsWorking= false;
 		try {
-			prover = Runtime.getRuntime().exec(cmds);
+			fProverProc = Runtime.getRuntime().exec(fCmds);
 			
-			in = new StreamHandler(IStreamListener.NORMAL, prover.getInputStream());
-			err = new StreamHandler(IStreamListener.ERROR, prover.getErrorStream());
-
-			tin = new Thread(in);
-			tin.start();
-	
-			terr = new Thread(err);
-			terr.start();
-						out = new InputStreamHandler(prover.getOutputStream());
-			bIsAlive = true;
+			fIn = StreamHandler.createStreamHandler(IStreamListener.NORMAL, fProverProc.getInputStream());
+			fErr = StreamHandler.createStreamHandler(IStreamListener.ERROR, fProverProc.getErrorStream());
+			fOut = new InputStreamHandler(fProverProc.getOutputStream());
+			fbIsAlive = true;
 		} catch (IOException e) {
 			throw new ProverException(
-				"Error running command: '" + cmds[0] + "': " + e.toString());
+				"Error running command: '" + fCmds[0] + "': " + e.toString());
 		}
-		
-		if (prover == null) {
-			throw new ProverException("TopLevel", "Error running command: " + cmds[0]); //$NON-NLS-1$
+		if (fProverProc == null) {
+			throw new ProverException("TopLevel", "Error running command: " + fCmds[0]); 
 		}
 		clearBuffer();
 	}
 
 
 	protected TopLevel(String name, String [] cmd, int iGrace) throws ProverException {
-		pkind = Prover.get(name);
-		if(pkind == null) {
+		fProver = Prover.get(name);
+		if(fProver == null) {
 			throw new ProverException("Prover " + name + " not found!");
 		}
-		this.cmds = cmd;
-		iGraceTime = iGrace == 0 ? 123456 : iGrace;
+		this.fCmds = cmd;
+		fiGraceTime = iGrace == 0 ? 123456 : iGrace;
 		
 		startProcess();
 	}
 
 
-	private void waitForPrompt(StringBuffer buff, StringBuffer bufferr)
-		throws IOException, ToplevelException {
-		waitForMoreInput(in, tin, buff);
-		waitForMoreInput(err, terr, bufferr);
-//		// on mange le prompt;
-//		Thread t;
-//		
-//		//String strPrompt = prompt;
-//		String newPrompt;
-//		try {
-//			int i = 0;
-//			t = new Thread(err);
-//			in.hasFinished()
-//			t.start();
-//			for (i = 0; i < iGraceTime && err.isStillEating() && isAlive(); i++) {
-//				t.join(100);
-//			}
-//				
-//			if(!bIsAlive) {
-//				err.stopEating();
-//				throw new ToplevelException(pkind, "Oh no ! TopLevel was killed !");
-//			}
-//			if (err.isStillEating()) {
-//				err.stopEating();
-//				if(i== iGraceTime)
-//					throw new ToplevelException(pkind, "Timed out !"); //ca me gave!
-//				else
-//					throw new ToplevelException(pkind, "Unexpected thread death !");
-//			}
-//			err.stopEating();
-//			do {
-//				Thread.yield();
-//				newPrompt = err.getPrompt();
-//				if(!(bIsAlive && iIsWorking > 0))
-//					return;
-//			} while(newPrompt.equals("")) ;
-//			prompt = newPrompt;
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+	/**
+	 * 
+	 * @param type One of the values {@link IStreamListener#NORMAL} or 
+	 * {@link IStreamListener#ERROR}
+	 * @throws ToplevelException if a top level exception was raised
+	 */
+	public void waitForInput(int type) throws ToplevelException {
+		StringBuffer str = new StringBuffer();
+		try {
+			switch (type) {
+				case IStreamListener.NORMAL:
+					waitForInput(fIn, str);
+					fStdBuffer.append(str);
+					break;
+				case IStreamListener.ERROR:
+					waitForInput(fErr, str);
+					fErrBuffer.append(str);
+					break;
+			}
+		}
+		catch (IOException e) {
+			fbIsWorking = false;
+			e.printStackTrace();
+		}
 	}
-
-//	protected void waitForMoreInput() throws IOException, ToplevelException {
-//		waitForMoreInput(proverBuffer);
-//	}
 	
-	
-	
-	private void waitForMoreInput(StreamHandler in, Thread tin, StringBuffer buff) throws IOException, ToplevelException {
-		
+	/**
+	 * Wait for the input coming from the specified stream.
+	 * @param stream the stream to manage
+	 * @param buff the output buffer
+	 * @throws IOException In case of a system error on the stream
+	 * @throws ToplevelException In case of the grace time, 
+	 * death of the thread, death of the prover
+	 */
+	private void waitForInput(StreamHandler stream, StringBuffer buff) throws IOException, ToplevelException {
 		int i;
 		try {
 			Thread.yield();
-			for (i = 0; i < iGraceTime && (!in.hasFinished()) && isAlive(); i++) {
-				tin.join(1000);
+			for (i = 0; i < fiGraceTime && (!stream.hasFinished()) && isAlive(); i++) {
+				stream.getThread().join(1000);
 			} 
-			if (!in.hasFinished()) {
+			if (!stream.hasFinished()) {
 				if (!isAlive())
-					throw new ToplevelException(pkind, "Oh no ! TopLevel was killed !");
-				else if(i== iGraceTime)
-					throw new ToplevelException(pkind, "Timed out !"); //ca me gave!
+					throw new TopLevelDeathException(fProver);
+				else if(i== fiGraceTime)
+					throw new TimeOutException(fProver);
 				else
-					throw new ToplevelException(pkind, "Unexpected thread death !");
+					throw new ThreadDeathException(fProver);
 			}
 		}
 		catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		buff.append(in.getBuffer());
+		buff.append(stream.getBuffer());
 		//in.fireToListeners();
-		in.clearBuffer();
+		stream.clearBuffer();
 	}
 	
 
 
 
 	/**
-	 * Sends the given command to the prover and waits for the prompt,
-	 * printing all the output of the prover to the standard output.
+	 * Sends the given command to the prover and waits for input
+	 * coming from the,
 	 */
 	public void sendCommand(String command) throws ProverException {
-
-		clearBuffer();
-		
+		clearBuffer();	
 		if(!isAlive()) {
-			/*
-			 * throw new CoqTopException("Maldoror is dead dead dead!!!");
-			 * soyons un peu serieux...
-			 */
-			throw new ToplevelException(pkind, "The toplevel has been killed.");
+			throw new TopLevelDeathException(fProver);
 		}
 		if (command.trim().equals("") && !command.equals(BREAKSTR))
 			return;
-
-		if(iIsWorking < 0) iIsWorking = 0;
-		iIsWorking++;
-		
-		out.println(command);
-
-		StringBuffer str1 = new StringBuffer();
-		StringBuffer str2 = new StringBuffer();
+		fbIsWorking = true;
+		fOut.println(command);
 		try {
-				waitForPrompt(str1, str2);
-//				waitForMoreInput(str);
-		} catch (IOException e) {
-			iIsWorking = 0;
-			e.printStackTrace();
-		}
+				waitForInput(IStreamListener.NORMAL);
+				waitForInput(IStreamListener.ERROR);
+		} 
 		catch (ProverException ec) {
-			iIsWorking --;
+			fbIsWorking = false;
 			throw ec;
 		}
-		proverBuffer.append(str1);
-		prompt.append(str2);
-		if(iIsWorking == 0)
+		if(!fbIsWorking)
 			throw new ProverException("I was interrupted!");
-		iIsWorking--;
+		fbIsWorking = false;
 	}
 
 
@@ -230,16 +192,16 @@ public abstract class TopLevel implements ITopLevel {
 
 
 	public void stop() {
-		prover.destroy();
-		bIsAlive = false;
-		iIsWorking = 0;
+		fProverProc.destroy();
+		fbIsAlive = false;
+		fbIsWorking = false;
 	}
 
 	
 	public boolean isAlive() {
-		if (bIsAlive) {
+		if (fbIsAlive) {
 			try {
-				prover.exitValue();
+				fProverProc.exitValue();
 				return false;
 			} catch (IllegalThreadStateException itse) {
 				return true;
@@ -248,22 +210,30 @@ public abstract class TopLevel implements ITopLevel {
 		else return false;
 	}
 	
-	public String getBuffer() {
-		return proverBuffer.toString();
+	public String getStdBuffer() {
+		return fStdBuffer.toString();
 	}
 
-	public String getPrompt() {
-		return prompt.toString();
+	public String getErrBuffer() {
+		return fErrBuffer.toString();
 	}
 	
 	public void clearBuffer() {
-		proverBuffer = new StringBuffer();
-		prompt = new StringBuffer();
+		clearStdBuffer();
+		clearErrBuffer();
 	}
-
+	
+	public void clearStdBuffer() {
+		fStdBuffer = new StringBuffer();
+		fErrBuffer = new StringBuffer();
+	}
+	public void clearErrBuffer() {
+		fStdBuffer = new StringBuffer();
+		fErrBuffer = new StringBuffer();
+	}
 	
 	public boolean isWorking() {
-		return iIsWorking >0;
+		return fbIsWorking;
 	}
 	
 	
@@ -274,8 +244,7 @@ public abstract class TopLevel implements ITopLevel {
 	public void doBreak() throws ProverException {
 		if(!isWorking())
 			throw new ProverException("There is nothing to break!");
-		iIsWorking --;
-		if(iIsWorking < 0) iIsWorking = 0;
-		out.println(BREAKSTR);
+		fbIsWorking = false;
+		fOut.println(BREAKSTR);
 	}
 }
