@@ -37,12 +37,14 @@ public class Prover {
 	private String extension;
 	private ProverPreferenceNode preference;
 	private AProverTranslator translator;
+	private IProverTopLevel fTopLevelTranslator;
 	
 	public Prover (IPreferenceStore prefs, IConfigurationElement lang) {
 		name = lang.getAttribute("name");
 		extension = lang.getAttribute("extension");
 		try {
 			translator = (AProverTranslator) lang.createExecutableExtension("translator");
+			fTopLevelTranslator = (IProverTopLevel) lang.createExecutableExtension("toplevel");
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
@@ -70,6 +72,11 @@ public class Prover {
 	public AProverTranslator getTranslator() {
 		return translator;
 	}
+	
+	public IProverTopLevel getTopLevelTranslator() {
+		return fTopLevelTranslator;
+	}
+	
 	private boolean extensionMatch(String str) {
 		return str.endsWith(extension);
 	}
@@ -93,7 +100,4 @@ public class Prover {
 		return translator.isErrorMsg(s);
 	}
 
-	public IProverTopLevel getTopLevel() {
-		return translator.getTopLevel();
-	}
 }

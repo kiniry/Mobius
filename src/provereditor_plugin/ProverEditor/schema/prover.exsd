@@ -70,57 +70,13 @@
                </appInfo>
             </annotation>
          </attribute>
-      </complexType>
-   </element>
-
-   <element name="editor">
-      <annotation>
-         <appInfo>
-            <meta.element icon="file.icon"/>
-         </appInfo>
-      </annotation>
-      <complexType>
-         <attribute name="file.icon" type="string">
+         <attribute name="toplevel" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="resource"/>
-               </appInfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="wizard">
-      <annotation>
-         <appInfo>
-            <meta.element icon="icon"/>
-         </appInfo>
-      </annotation>
-      <complexType>
-         <attribute name="Description" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="Title" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
-         <attribute name="icon" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appInfo>
-                  <meta.attribute kind="resource"/>
+                  <meta.attribute kind="java" basedOn="prover.plugins.IProverTopLevel"/>
                </appInfo>
             </annotation>
          </attribute>

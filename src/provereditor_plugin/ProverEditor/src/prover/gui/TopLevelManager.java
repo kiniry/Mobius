@@ -143,7 +143,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			
 			
 			//we send the command
-			switch(translator.getTopLevel().hasToSend(top, pc.doc, cmd, oldlimit, newlimit)) {
+			switch(fProver.getTopLevelTranslator().hasToSend(top, pc.doc, cmd, oldlimit, newlimit)) {
 				case ITopLevel.DONT_SKIP: {
 					top.clearBuffer();
 					top.sendCommand(cmd);
@@ -211,7 +211,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				System.err.println("TopLevel.regress_intern: " + e);
 				return false;
 			}
-			switch(translator.getTopLevel().hasToSkip(top, pc.doc, cmd, newlimit, oldlimit)) {
+			switch(fProver.getTopLevelTranslator().hasToSkip(top, pc.doc, cmd, newlimit, oldlimit)) {
 				case ITopLevel.DONT_SKIP: {
 					try {
 						top.undo();

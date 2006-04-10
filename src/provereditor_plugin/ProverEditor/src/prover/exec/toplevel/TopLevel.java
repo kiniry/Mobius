@@ -98,7 +98,7 @@ public class TopLevel implements ITopLevel {
 		if(fProver == null) {
 			throw new ProverException("Prover " + name + " not found!");
 		}
-		fProverTopLevel = fProver.getTopLevel();
+		fProverTopLevel = fProver.getTopLevelTranslator();
 		fCmds = fProverTopLevel.getCommands(fProver.getTop(), path);
 		int iGrace = fProver.getGraceTime();
 		fiGraceTime = iGrace == 0 ? 123456 : iGrace;

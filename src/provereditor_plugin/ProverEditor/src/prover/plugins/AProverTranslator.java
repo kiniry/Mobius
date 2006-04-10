@@ -55,6 +55,4 @@ public abstract class AProverTranslator {
 	public abstract IRule [] getParsingRules();
 
 	public abstract boolean isErrorMsg(String s);
-
-	public abstract IProverTopLevel getTopLevel();
 }
