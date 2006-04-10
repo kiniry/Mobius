@@ -17,6 +17,7 @@
    <extension
          point="prover.editor.prover">
       <language
+            toplevel="fr.inria.everest.coq.editor.BasicCoqTop"
             extension=".v"
             name="Coq"
             translator="fr.inria.everest.coq.editor.CoqProverTranslator"/>
