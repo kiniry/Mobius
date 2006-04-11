@@ -16,7 +16,7 @@ public interface ITopLevel {
 	 * Sends a command to the top level. Any pre treatment
 	 * regarding the command to send to the prover should be
 	 * done before this call.
-	 * @param cmd The command to send to the prover.
+	 * @param s The command to send to the prover.
 	 * @throws AProverException thrown if anything goes wrong.
 	 */
 	public void sendToProver(String s) throws AProverException;

@@ -6,7 +6,7 @@
          <meta.schema plugin="prover.editor" id="prover" name="Prover"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point is used to add a new prover to the ProverEditor.
       </documentation>
    </annotation>
 
@@ -14,8 +14,6 @@
       <complexType>
          <sequence>
             <element ref="language"/>
-            <element ref="editor"/>
-            <element ref="wizard"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -49,31 +47,31 @@
          <attribute name="name" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The name by which the prover will be called afterward.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="extension" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The extension of the files used for this prover.
                </documentation>
             </annotation>
          </attribute>
          <attribute name="translator" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The class used to mainly to parse the different files.
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn="prover.exec.AProverTranslator"/>
+                  <meta.attribute kind="java" basedOn="prover.plugins.AProverTranslator"/>
                </appInfo>
             </annotation>
          </attribute>
-         <attribute name="toplevel" type="string" use="required">
+         <attribute name="provertoplevel" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The class to help interact with the toplevel.
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="prover.plugins.IProverTopLevel"/>
@@ -88,7 +86,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         The first release.
       </documentation>
    </annotation>
 
@@ -97,7 +95,13 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         [Enter extension point usage example here.]
+         &lt;br&gt;An example which is used with the Coq prover: 
+&lt;p&gt;&lt;pre&gt;&lt;extension point=&quot;prover.editor.prover&quot;&gt; 
+       &lt;language toplevel=&quot;fr.inria.everest.coq.editor.BasicCoqTop&quot;
+                          extension=&quot;.v&quot;
+                          name=&quot;Coq&quot;
+                          translator=&quot;fr.inria.everest.coq.editor.CoqProverTranslator&quot;/&gt;
+&lt;/extension&gt;&lt;/pre&gt;&lt;/p&gt;
       </documentation>
    </annotation>
 
@@ -106,7 +110,10 @@
          <meta.section type="apiInfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         The translator attribute specified class must extend the class
+prover.plugins.AProverTranslator.
+The toplevel attribute specified class must extend the class
+prover.plugins.IProverTopLevel.
       </documentation>
    </annotation>
 
@@ -115,7 +122,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         No.
       </documentation>
    </annotation>
 
@@ -124,7 +131,7 @@
          <meta.section type="copyright"/>
       </appInfo>
       <documentation>
-         
+         2006
       </documentation>
    </annotation>
 

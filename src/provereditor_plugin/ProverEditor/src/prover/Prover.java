@@ -44,7 +44,7 @@ public class Prover {
 		extension = lang.getAttribute("extension");
 		try {
 			translator = (AProverTranslator) lang.createExecutableExtension("translator");
-			fTopLevelTranslator = (IProverTopLevel) lang.createExecutableExtension("toplevel");
+			fTopLevelTranslator = (IProverTopLevel) lang.createExecutableExtension("provertoplevel");
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}

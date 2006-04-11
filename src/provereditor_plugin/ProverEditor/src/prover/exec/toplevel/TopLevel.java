@@ -253,7 +253,7 @@ public class TopLevel implements ITopLevel {
 	
 	
 	/**
-	 * Tries to tell coqtop to stop arguing with these @$!%* commands.
+	 * Tries to tell coqtop to stop arguing with these commands.
 	 * @throws ProverException in case of traumas
 	 */
 	public void doBreak() throws ProverException {
