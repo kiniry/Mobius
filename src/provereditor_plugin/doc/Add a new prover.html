@@ -1,0 +1,33 @@
+<html>
+<title>To add a new prover</title>
+<body>
+To add a new prover:<br/>
+<br/>
+First :<br/>
+Create a plugin project  within eclipse.
+<br/>
+Extend the extension point:<br/>
+org.eclipse.ui.editors<br/>
+with the following standard parameters:<br/>
+class="prover.gui.editor.ProverEditor"<br/>
+contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"<br/>
+and then customize these ones:<br/>
+extensions=".proof"<br/>
+icon="icons/mypprover.gif"<br/>
+id="myprover.MyProverEditor"<br/>
+name="MyProverEditor"<br/>
+<br/>
+Then:<br/>
+Extend also the extension point<br/>
+prover.editor.prover<br/>
+and fill up all the asked parameters<br/>
+(the extension must be the same as the editor extension)<br/>
+The specified name must be the name
+you will call the prover afterward.<br/>
+The translator tag need to be specified a class that extends:<br/>
+prover.plugins.AProverTranslator.<br/>
+The toplevel tag need to be specified a class that extends:<br/>
+prover.plugins.IProverTopLevel.<br/>
+</body>
+</html>
+           

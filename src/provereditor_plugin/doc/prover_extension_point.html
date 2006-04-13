@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Prover</title>
+<style>@import url("file:/home/jcharles/eclipse/plugins/org.eclipse.sdk_3.1.0/book.css");</style>
+<style>@import url("file:/home/jcharles/eclipse/plugins/org.eclipse.platform.doc.isv_3.1.0/schema.css");</style>
+</HEAD>
+<BODY>
+<H1><CENTER>Prover</CENTER></H1>
+<p></p>
+<h6 class=CaptionFigColumn id=header>Identifier: </h6>prover.editor.prover<p></p>
+<h6 class=CaptionFigColumn id=header>Since: </h6>The first release.
+<p></p>
+
+<p>
+<h6 class=CaptionFigColumn id=header>Description: </h6>This extension point is used to add a new prover to the ProverEditor.</p>
+<p><h6 class=CaptionFigColumn id=header>Configuration Markup:</h6></p>
+<p class=code id=dtd>&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.language">language</a>)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST extension</p>
+<p class=code id=dtdAttlist>point&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.language">language</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST language</p>
+<p class=code id=dtdAttlist>name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>extension&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>translator&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>toplevel&nbsp;&nbsp;&nbsp;CDATA #REQUIRED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>name</b> - The name by which the prover will be called afterward.</li>
+<li><b>extension</b> - The extension of the files used for this prover.</li>
+<li><b>translator</b> - The class used to mainly to parse the different files.</li>
+<li><b>toplevel</b> - The class to help interact with the toplevel.</li>
+</ul>
+<br><h6 class=CaptionFigColumn id=header>Examples: </h6><br>An example which is used with the Coq prover: 
+<p><pre><p class=code id=tag>&lt;extension point=<p class=code id=cstring>&quot;prover.editor.prover&quot;</p><p class=code id=tag>&gt;</p> 
+       <p class=code id=tag>&lt;language toplevel=<p class=code id=cstring>&quot;fr.inria.everest.coq.editor.BasicCoqTop&quot;</p><p class=code id=tag>
+                          extension=<p class=code id=cstring>&quot;.v&quot;</p><p class=code id=tag>
+                          name=<p class=code id=cstring>&quot;Coq&quot;</p><p class=code id=tag>
+                          translator=<p class=code id=cstring>&quot;fr.inria.everest.coq.editor.CoqProverTranslator&quot;</p><p class=code id=tag>/&gt;</p>
+<p class=code id=tag>&lt;/extension&gt;</p></pre></p>
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>API Information: </h6>The translator attribute specified class must extend the class
+prover.plugins.AProverTranslator.
+The toplevel attribute specified class must extend the class
+prover.plugins.IProverTopLevel.
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>Supplied Implementation: </h6>No.
+<p></p>
+
+<br>
+<p class=note id=copyright>
+2006
+<p></p>
+
+</p>
+</BODY>
+</HTML>
