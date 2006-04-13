@@ -167,4 +167,29 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return bct;
 	}
 
+
+	public String[] getIdeCommand(String ide, String[] path, String file) {
+		String [] cmds = new String[1 + (path.length * 2) + 1];
+		cmds[0] = ide;
+		for(int i = 0; i < path.length; i++) {
+			cmds[(i * 2) + 1] = "-I";
+			cmds[(i * 2) + 2] = path[i];
+		}
+		cmds[cmds.length - 1] = file;
+		return cmds;
+	}
+
+
+	public String[] getCompilingCommand(String ide, String[] path, String file) {
+		String [] cmds = new String[1 + (path.length * 2) + 2];
+		cmds[0] = ide;
+		for(int i = 0; i < path.length; i++) {
+			cmds[(i * 2) + 1] = "-I";
+			cmds[(i * 2) + 2] = path[i];
+		}
+		cmds[cmds.length - 2] = "-compile";
+		cmds[cmds.length - 1] = file.substring(0, file.length() -2);
+		return cmds;
+	}
+
 }

@@ -33,6 +33,8 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 */
 	public void sendCommand(ITopLevel itl, String s) throws AProverException {
 		itl.sendToProver(s);
+		while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
+			itl.waitForInput(2);
 		String str = itl.getStdBuffer().toString();
 		if(str.indexOf("Syntax error: ") != -1)
 			throw new SyntaxErrorException(str.toString());
@@ -59,6 +61,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	
 
 	public boolean isProofMode(ITopLevel itl) {
+		System.out.println(itl.getErrBuffer().trim());
 		return !itl.getErrBuffer().startsWith("Coq <");
 	}
 	
@@ -84,15 +87,10 @@ public class BasicCoqTop implements IProverTopLevel  {
 				if(proofBeginList.size() == proofEndList.size()) {
 					//we can be outside a proof
 					int endProof = ((Integer) proofEndList.peek()).intValue();
-
 					if (endProof == beg) {
 						// we are in fact inside a the end of the proof
-						proofEndList.pop();
-						
-//						if(begProof == beg) {
-//							proofBeginList.removeFirst();
-//						}
-						return ITopLevel.DONT_SKIP;
+						proofEndList.pop();	
+						return ITopLevel.SKIP_AND_CONTINUE;
 					}
 				}
 				else {
@@ -108,6 +106,9 @@ public class BasicCoqTop implements IProverTopLevel  {
 				}
 			}
 		}
+		if((cmd.startsWith("Show ")) ||
+			(cmd.startsWith("Print ")))
+			return ITopLevel.SKIP;
 		return ITopLevel.DONT_SKIP;
 	}
 
@@ -152,6 +153,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 		return cmds;
 	}
 
+	
 
 	
 }
