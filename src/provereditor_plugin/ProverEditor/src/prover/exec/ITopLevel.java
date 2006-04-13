@@ -1,5 +1,6 @@
 package prover.exec;
 
+import prover.exec.toplevel.exceptions.ToplevelException;
 import prover.exec.toplevel.stream.IStreamListener;
 
 /**
@@ -73,7 +74,7 @@ public interface ITopLevel {
 	 */
 	public String getErrBuffer();
 	
-	
+	public void waitForInput(int type) throws ToplevelException;
 	
 	public void addStreamListener(IStreamListener isl);
 	public void removeStreamListener(IStreamListener isl);

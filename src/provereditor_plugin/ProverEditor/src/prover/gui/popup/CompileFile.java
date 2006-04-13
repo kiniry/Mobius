@@ -30,7 +30,7 @@ public class CompileFile implements IActionDelegate {
 
 	}
 	private Prover prover;
-	String[] cmdCoqC;
+	String[] fCmd;
 	private IStructuredSelection sel = null;
 	public void run(IAction action) {
 		if(sel == null)
@@ -39,16 +39,15 @@ public class CompileFile implements IActionDelegate {
 			return;
 		IFile f = (IFile) sel.getFirstElement();
 		prover = Prover.findProverFromFile(f.toString());
+		if(prover == null)
+			return;
 		String name =  f.getLocation().toString();
-		String com = (prover.getTop() + " -I " + f.getProject().getLocation() + 
-				" -I " + f.getLocation().removeLastSegments(1) + 
-				" -compile " + name.substring(0, name.length() -2)); 
-		cmdCoqC = com.replaceAll(" +", " ").split(" ");
-		
-		if(f.getName().endsWith(".v")) {
-			Job job = new CompilationJob(f);
-			job.schedule();
-		}
+		String [] path = {f.getProject().getLocation().toString(),
+				f.getLocation().removeLastSegments(1).toString()
+		};
+		fCmd = prover.getTranslator().getCompilingCommand(prover.getTop().trim(), path, name);
+		Job job = new CompilationJob(f);
+		job.schedule();
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {
@@ -57,7 +56,7 @@ public class CompileFile implements IActionDelegate {
 			Object o = sel.getFirstElement();
 	    	if (o instanceof IFile) {
 	    		IFile f = (IFile) o;
-	    		if(f.toString().endsWith(".v")) {
+	    		if(Prover.findProverFromFile(f.toString()) != null) {
 	    			action.setEnabled(true);
 	    			return;
 	    		}
@@ -77,7 +76,7 @@ public class CompileFile implements IActionDelegate {
 
 		protected IStatus run(IProgressMonitor monitor) {
 			try {					
-				Process p = Runtime.getRuntime().exec(cmdCoqC);
+				Process p = Runtime.getRuntime().exec(fCmd);
 				LineNumberReader in = new LineNumberReader( new InputStreamReader(p.getInputStream()));
 				String s;
 				String res = "";
@@ -94,7 +93,7 @@ public class CompileFile implements IActionDelegate {
 				file.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
 			} catch (IOException e) {
 				return ProverStatus.getErrorStatus(
-						"I was unable to find the path to coqtop. Check the path." , 
+						"I was unable to find the path to the compilation program. Check the path." , 
 							e.toString());
 			} catch (CoreException e) {
 				e.printStackTrace();

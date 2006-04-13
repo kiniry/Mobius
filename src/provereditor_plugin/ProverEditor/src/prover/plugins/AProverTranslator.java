@@ -55,4 +55,7 @@ public abstract class AProverTranslator {
 	public abstract IRule [] getParsingRules();
 
 	public abstract boolean isErrorMsg(String s);
+	
+	public abstract String[] getIdeCommand(String ide, String[] path, String file);
+	public abstract String[] getCompilingCommand(String ide, String[] path, String file);
 }

@@ -9,7 +9,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
 import prover.Prover;
-import prover.ProverEditorPlugin;
 
 public class LaunchIde implements IActionDelegate {
 	IStructuredSelection sel = null;
@@ -24,11 +23,12 @@ public class LaunchIde implements IActionDelegate {
 		    	  Object o = sel.getFirstElement();
 		    	  if (o instanceof IFile) {
 		    		  IFile f = (IFile) o;
-		    		  Prover prover = ProverEditorPlugin.getInstance().getProver("TopLevel");
-		    		  String [] cmds = {
-		    				  	prover.getIde(),
-		    				  	f.getRawLocation().toString()
-		    		  };
+		    		  String rawloc = f.getRawLocation().toString(); 
+		    		  Prover prover = Prover.findProverFromFile(rawloc);
+		    		  String [] path = {f.getProject().getLocation().toString(), f.getParent().getRawLocation().toString()}; 
+		    		  String [] cmds = prover.getTranslator().getIdeCommand(prover.getIde(), path,rawloc);
+		    				  
+		    			
 		    		  try {
 		    				Process p = Runtime.getRuntime().exec(cmds);
 		    				p.waitFor();
