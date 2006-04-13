@@ -17,7 +17,7 @@ public class ProverFileContext {
 	 */
 	public static final ProverFileContext empty = new ProverFileContext(null);
 	
-	
+
 	public ProverEditor ce;
 	public IDocument doc; 
 	public BasicSourceViewerConfig sv; 

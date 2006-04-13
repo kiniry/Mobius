@@ -12,31 +12,31 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.ProverPresentation;
 import prover.gui.editor.IColorConstants;
+import prover.gui.editor.BasicTextPresentation;
 
 public class ColorAppendJob extends UIJob implements IColorConstants {
 	private StringBuffer strToAppend;
 	private IDocument doc;
 	private TextViewer tv;
 	
-	private ProverPresentation tp;
+	private BasicTextPresentation tp;
 	
-	public ColorAppendJob(ProverPresentation tp) {
+	public ColorAppendJob(BasicTextPresentation tp) {
 		super("Updating view");
 		strToAppend = new StringBuffer();
-		this.tp = (ProverPresentation)tp.clone();
+		this.tp = (BasicTextPresentation)tp.clone();
 		tv = tp.getTextViewer();
 		doc = tv.getDocument();
 		
 	}
 		
-	public ColorAppendJob(ProverPresentation tp, String name ) {
+	public ColorAppendJob(BasicTextPresentation tp, String name ) {
 		this(tp);
 		add(name);
 	}
 	
-	public ColorAppendJob(ProverPresentation tp, String name, Color col) {
+	public ColorAppendJob(BasicTextPresentation tp, String name, Color col) {
 		this(tp);
 		add(name, col);
 	}

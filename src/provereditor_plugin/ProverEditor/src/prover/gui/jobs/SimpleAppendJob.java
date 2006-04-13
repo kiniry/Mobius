@@ -10,9 +10,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.ProverPresentation;
 import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
+import prover.gui.editor.BasicTextPresentation;
 
 public class SimpleAppendJob extends UIJob implements IColorConstants {
 	private StringBuffer strToAppend;
@@ -20,7 +20,7 @@ public class SimpleAppendJob extends UIJob implements IColorConstants {
 	private TextViewer tv;
 	
 	
-	public SimpleAppendJob(ProverPresentation tp) {
+	public SimpleAppendJob(BasicTextPresentation tp) {
 		super("Updating view");
 		strToAppend = new StringBuffer();
 //		this.tp = (ProverPresentation)tp.clone();
@@ -29,12 +29,12 @@ public class SimpleAppendJob extends UIJob implements IColorConstants {
 		
 	}
 		
-	public SimpleAppendJob(LimitRuleScanner scanner, ProverPresentation tp, String name ) {
+	public SimpleAppendJob(LimitRuleScanner scanner, BasicTextPresentation tp, String name ) {
 		this(tp);
 		add(name);
 	}
 	
-	public SimpleAppendJob(ProverPresentation tp, String name) {
+	public SimpleAppendJob(BasicTextPresentation tp, String name) {
 		this(tp);
 	}
 	public void add(StringBuffer str) {

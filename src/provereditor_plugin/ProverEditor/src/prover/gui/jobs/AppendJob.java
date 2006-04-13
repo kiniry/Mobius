@@ -11,36 +11,36 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.ui.progress.UIJob;
 
-import prover.gui.ProverPresentation;
+import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.BasicTextAttribute;
+import prover.gui.editor.BasicTextPresentation;
 import prover.gui.editor.IColorConstants;
-import prover.gui.editor.LimitRuleScanner;
 
 public class AppendJob extends UIJob implements IColorConstants {
 	private StringBuffer strToAppend;
 	private IDocument doc;
 	private TextViewer tv;
 	
-	private ProverPresentation tp;
-	private LimitRuleScanner scanner;
+	private BasicTextPresentation tp;
+	private BasicRuleScanner scanner;
 	private int oldlen;
 	
-	public AppendJob(LimitRuleScanner scanner, ProverPresentation tp) {
+	public AppendJob(BasicRuleScanner scanner, BasicTextPresentation tp) {
 		super("Updating view");
 		strToAppend = new StringBuffer();
-		this.tp = (ProverPresentation)tp.clone();
+		this.tp = (BasicTextPresentation)tp.clone();
 		tv = tp.getTextViewer();
 		doc = tv.getDocument();
 		this.scanner = scanner;
 		
 	}
 		
-	public AppendJob(LimitRuleScanner scanner, ProverPresentation tp, String name ) {
+	public AppendJob(BasicRuleScanner scanner, BasicTextPresentation tp, String name ) {
 		this(scanner, tp);
 		add(name);
 	}
 	
-	public AppendJob(ProverPresentation tp, String name) {
+	public AppendJob(BasicTextPresentation tp, String name) {
 		this(null, tp);
 	}
 	public void add(StringBuffer str) {

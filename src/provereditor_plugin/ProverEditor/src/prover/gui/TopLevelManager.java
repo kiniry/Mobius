@@ -30,36 +30,61 @@ import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
+import prover.gui.editor.BasicTextPresentation;
 import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
 import prover.plugins.AProverTranslator;
 import prover.preference.PreferencePage;
 
 public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {
+	/* Private fields: */
+	/** the greetings message */
+	public final static String GREETINGS = "This is ProverEditor version " + 
+											ProverEditorPlugin.MAJORVERSION + "." + 
+											ProverEditorPlugin.VERSION + "." + 
+											ProverEditorPlugin.SUBVERSION +" !\n"; 	
+	/** the current TopLevelManager instance */
 	private static TopLevelManager instance;
-	private final static String GREETINGS = "This is ProverEditor version " + 
-				ProverEditorPlugin.MAJORVERSION + "." + ProverEditorPlugin.VERSION + "." + ProverEditorPlugin.SUBVERSION +" !\n"; 
 	
-	
-		
-	private ProverFileContext fOldPc = ProverFileContext.empty;
+	/* Instance fields: */
+	/** the context associated with the current top level */
+	private ProverFileContext fProverContext = ProverFileContext.empty;
+	/** the current running top level */
 	private TopLevel fTopLevel;
-	private AProverTranslator fTranslator;
-
-	private boolean fLock = false;
-	private LimitRuleScanner fScanner;
-	private BasicRuleScanner fParser;
-	private Stack fParsedList = new Stack();
+	/** the current prover running */
 	private Prover fProver;
-
-	private TextViewer tv;
-	private IDocument fDocView;	
-	private ProverPresentation fPresentation;
+	/** the translator currently used */
+	private AProverTranslator fTranslator;
+	/** the parser used to parse the currently evaluated document */
+	private BasicRuleScanner fParser;
 	
+	/** the lock system to avoid race conditions */
+	private boolean fLock = false;
+	/** the list of offset being the steps already taken by progress */
+	private Stack fParsedList = new Stack();
+
+	/* The text viewer used to show the prover state related fields: */
+	/** the text viewer to show the state of the prover */
+	private TextViewer fStateText;
+	/** the current text presentation associated with the text viewer */
+	private BasicTextPresentation fStatePres;
+	/** the scanner used to color the text in the text viewer */
+	private BasicRuleScanner fStateScan;
+	
+	
+	/**
+	 * Empty constructor. Creates an instance. There shall be only one
+	 * instance of the top level manager.
+	 */
 	public TopLevelManager() {
 		super();
 		instance = this;
 	}
+	
+	/**
+	 * Returns the current instance of the top level manager.
+	 * @return the last instance created of the top level manager.
+	 */
 	public static TopLevelManager getInstance() {
 		return instance;
 	}
@@ -78,17 +103,19 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
-		tv = new TextViewer(parent, SWT.V_SCROLL);
-		tv.setEditable(false);
-		
-		if (fDocView == null) {
-			fDocView = new Document("");
+		IDocument doc = null;
+		if (fStateText == null) {
+			doc = new Document("");
 		}
-		
-		tv.setDocument(fDocView);
-		fPresentation = new ProverPresentation(tv);
+		else {
+			doc = fStateText.getDocument();
+		}
+		fStateText = new TextViewer(parent, SWT.V_SCROLL);
+		fStateText.setEditable(false);		
+		fStateText.setDocument(doc);
+		fStatePres = new BasicTextPresentation(fStateText);
 
-		new ColorAppendJob(fPresentation, GREETINGS, VIOLET).prepare();
+		new ColorAppendJob(fStatePres, GREETINGS, VIOLET).prepare();
 
 	}
 
@@ -102,19 +129,33 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	
 
 	
-	
+	/**
+	 * Sets the lock.
+	 * @return <code>true</code> if everything went well, 
+	 *  <code>false</code> if the lock was already set.
+	 */
 	protected synchronized boolean lock() {
 		if(fLock)
 			return false;
 		fLock = true; return true;
 	}
+	
+	/**
+	 * Unsets the lock.
+	 */
 	protected synchronized void unlock() {
 		fLock = false;
 	}
 	
 	
 
-	
+	/**
+	 * Progress in the proof. If the progress was successful return true,
+	 * otherwise returns false.
+	 * @param pc the context in which to progress.
+	 * @return true if the progress was successful, false otherwise or if the
+	 *  lock was already set.
+	 */
 	public boolean progress(ProverFileContext pc) {
 		if(!lock())
 			return true;
@@ -191,26 +232,15 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		return true;
 	}
 	
+
+
 	/**
-	 * Reset the top level and the view with the context
-	 * passed as a parameter.
-	 * @see #reset()
-	 * @param pc The prover context which we have to
-	 * reset the view with
+	 * Regress in the proof. If the undo was successful returns true,
+	 * otherwise returns false.
+	 * @param pc the context in which to undo a command.
+	 * @return true if the undo was successful, false otherwise or if the
+	 *  lock was already set.
 	 */
-	public void reset(ProverFileContext pc) {
-		if(pc.doc != null) {
-			fOldPc = pc;
-			reset();
-		}
-	}
-
-	
-	public boolean isNewDoc(ProverFileContext pc) {
-		return pc.doc != fOldPc.doc;
-	}
-
-	
 	public boolean regress(ProverFileContext pc) {
 		if(!lock())
 			return true;
@@ -276,21 +306,20 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		Job job = new Job("Toplevel Starting") {
 
 			protected IStatus run(IProgressMonitor monitor) {
-				fDocView = new Document("");
 				new UIJob("Updating Toplevel monitor") {
 
 					public IStatus runInUIThread(IProgressMonitor monitor) {
-						tv.setDocument(fDocView);
-						fPresentation = new ProverPresentation(tv);
+						fStateText.setDocument(new Document(""));
+						fStatePres = new BasicTextPresentation(fStateText);
 						
-						tv.changeTextPresentation(fPresentation, true);
-						new ColorAppendJob(fPresentation, GREETINGS, VIOLET).prepare();
+						fStateText.changeTextPresentation(fStatePres, true);
+						new ColorAppendJob(fStatePres, GREETINGS, VIOLET).prepare();
 						return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 					}
 					
 				}.schedule();
 				
-				reset(fOldPc);
+				reset(fProverContext);
 				return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 			}
 			
@@ -306,12 +335,12 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		if(fTopLevel != null) {
 			fTopLevel.stop();
 		}
-		IEditorInput input = fOldPc.ce.getEditorInput();
+		IEditorInput input = fProverContext.ce.getEditorInput();
 		
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 		fProver = Prover.findProverFromFile(path.getRawLocation().toString());
 		fTranslator = fProver.getTranslator();
-	    fScanner = new LimitRuleScanner(fTranslator.getProofRules());
+	    fStateScan = new LimitRuleScanner(fTranslator.getProofRules());
 	    fParser = new BasicRuleScanner(fTranslator.getParsingRules());
 		String [] tab = null;
 		
@@ -329,15 +358,20 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			fTopLevel = new TopLevel(fProver.getName(), tab);
 			fTopLevel.addStreamListener(this);
 		} catch (AProverException e) {
-			new ColorAppendJob(fPresentation, e.toString(), RED).prepare();
+			new ColorAppendJob(fStatePres, e.toString(), RED).prepare();
 		}
 	
 		// we reset the view
-		fOldPc.scan.setLimit(0);
-		new UpdateJob(fOldPc.sv.getPresentationReconciler()).schedule();
+		fProverContext.scan.setLimit(0);
+		new UpdateJob(fProverContext.sv.getPresentationReconciler()).schedule();
 	}
 
 	
+	/**
+	 * Add the string given as an argument to the text viewer
+	 * used to show the state of the prover.
+	 * @param str The string to add to the text viewer of the prover.
+	 */
 	public void append(String str) {
 		int ind = 0;
 		if((ind = str.indexOf("\n\n\n")) != -1) {
@@ -358,13 +392,37 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			str = str.replaceAll(replacements[i][0], 
 					replacements[i][1]);
 		}
-		AppendJob job = new AppendJob(fScanner, fPresentation);
+		AppendJob job = new AppendJob(fStateScan, fStatePres);
 		
 	
 		job.add(str);
 		job.prepare();
 	}
 
+	
+	/**
+	 * Reset the top level and the view with the context
+	 * passed as a parameter.
+	 * @see #reset()
+	 * @param pc The prover context which we have to
+	 * reset the view with
+	 */
+	public void reset(ProverFileContext pc) {
+		if(pc.doc != null) {
+			fProverContext = pc;
+			reset();
+		}
+	}
+
+	/**
+	 * Tells whether or not the doc from the field {@link #fProverContext}
+	 * is the same as the doc in the context given as a parameter.
+	 * @param pc The context to test
+	 * @return true if the documents are different.
+	 */
+	public boolean isNewDoc(ProverFileContext pc) {
+		return pc.doc != fProverContext.doc;
+	}
 
 	/**
 	 * Tell whether or not we shall use unicode characters.
@@ -394,17 +452,28 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	 * @author J. Charles
 	 */
 	private class UpdateJob extends UIJob {
-		private int newlimit;
-		private BasicPresentationReconciler scan;
+		/** the limit of the update */
+		private int fLimit;
+		/** the presentation reconciler to update */
+		private BasicPresentationReconciler fReconciler;
 		
-		public UpdateJob(BasicPresentationReconciler sc, int limit) {
+		/**
+		 * Create a job to update a presentation reconciler in a UIThread context.
+		 * @param reconciler The reconciler to update.
+		 * @param limit The limit of the update.
+		 */
+		public UpdateJob(BasicPresentationReconciler reconciler, int limit) {
 			super("Updating text");
-			scan = sc;
-			this.newlimit = limit;
+			fReconciler = reconciler;
+			fLimit = limit;
 		}
 
-		public UpdateJob(BasicPresentationReconciler sc) {
-			this(sc, sc.getDocument().getLength());
+		/**
+		 * Create a job to update a presentation reconciler in a UIThread context.
+		 * @param reconciler The reconciler to update.
+		 */
+		public UpdateJob(BasicPresentationReconciler reconciler) {
+			this(reconciler, reconciler.getDocument().getLength());
 		}
 		
 		
@@ -413,7 +482,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		 * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		public IStatus runInUIThread(IProgressMonitor monitor) {
-			scan.everythingHasChanged(0/*oldlimit*/, newlimit); 
+			fReconciler.everythingHasChanged(0, fLimit); 
 			return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 		}
 		

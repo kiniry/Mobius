@@ -1,4 +1,4 @@
-package prover.gui;
+package prover.gui.editor;
 
 import java.util.Iterator;
 
@@ -6,15 +6,15 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.swt.custom.StyleRange;
 
-public class ProverPresentation extends TextPresentation {
+public class BasicTextPresentation extends TextPresentation {
 	private TextViewer tv;
 	
-	public ProverPresentation(TextViewer tv) {
+	public BasicTextPresentation(TextViewer tv) {
 		super();
 		this.tv = tv;
 	}
 	
-	public ProverPresentation(ProverPresentation pres) {
+	public BasicTextPresentation(BasicTextPresentation pres) {
 		super();
 		Iterator iter = pres.getAllStyleRangeIterator();
 		while(iter.hasNext()) {
@@ -29,7 +29,7 @@ public class ProverPresentation extends TextPresentation {
 	}
 	
 	public Object clone() {
-		return new ProverPresentation(this);
+		return new BasicTextPresentation(this);
 	}
 	
 }
