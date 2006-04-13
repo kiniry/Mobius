@@ -36,6 +36,12 @@ import prover.gui.jobs.ColorAppendJob;
 import prover.plugins.AProverTranslator;
 import prover.preference.PreferencePage;
 
+/**
+ * The top level manager is the main class of the gui of ProverEditor.
+ * It controls the top level, it glue the editor with the commands.
+ * And it is a view part to show the current prover state.
+ * @author J. Charles
+ */
 public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {
 	/* Private fields: */
 	/** the greetings message */
