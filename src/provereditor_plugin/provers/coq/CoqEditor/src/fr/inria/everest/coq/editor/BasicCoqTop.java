@@ -12,6 +12,7 @@ import prover.exec.AProverException;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
+import prover.exec.toplevel.exceptions.ToplevelException;
 import prover.plugins.IProverTopLevel;
 
 
@@ -55,14 +56,18 @@ public class BasicCoqTop implements IProverTopLevel  {
 				sendCommand(itl, "Abort.");
 			}
 		}
-		else
+		else {
 			sendCommand(itl, "Back 1.");
+		}
 	}	
 	
 
 	public boolean isProofMode(ITopLevel itl) {
-		System.out.println(itl.getErrBuffer().trim());
-		return !itl.getErrBuffer().startsWith("Coq <");
+		try {
+			while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
+				itl.waitForInput(2);
+		} catch (ToplevelException e) {}
+		return !itl.getErrBuffer().trim().startsWith("Coq <");
 	}
 	
 
