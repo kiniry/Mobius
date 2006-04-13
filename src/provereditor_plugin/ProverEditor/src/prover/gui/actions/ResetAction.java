@@ -1,16 +1,13 @@
 package prover.gui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import prover.gui.ProverContext;
+import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
-import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
 
@@ -32,12 +29,7 @@ public class ResetAction extends AProverAction{
 		if(! (ed instanceof ProverEditor))
 			return;
 		ProverEditor ce = (ProverEditor) ed;
-		BasicSourceViewerConfig sv = ce.getSourceViewerConfig();
-		LimitRuleScanner scan = sv.getTagScanner();
-		IDocument doc = sv.getPresentationReconciler().getDocument();
-		TopLevelManager.getInstance().reset(new ProverContext(ce, doc, sv, scan));		
-
-		
+		TopLevelManager.getInstance().reset(new ProverFileContext(ce));		
 	}
 	
 }

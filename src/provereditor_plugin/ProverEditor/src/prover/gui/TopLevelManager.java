@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.rules.IToken;
@@ -29,37 +28,33 @@ import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.stream.IStreamListener;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
-import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.ProverEditor;
 import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
 import prover.plugins.AProverTranslator;
 import prover.preference.PreferencePage;
 
 public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {
-	private IDocument dc;	
-	
-	private ProverContext oldpc = ProverContext.empty;
-	private TopLevel top;
-	private TextViewer tv;
-	private ProverPresentation tp;
-	private final static String GREETINGS = "This is ProverEditor version " + 
-			ProverEditorPlugin.MAJORVERSION + "." + ProverEditorPlugin.VERSION + "." + ProverEditorPlugin.SUBVERSION +" !\n"; 
-	
-	AProverTranslator translator;
-	
 	private static TopLevelManager instance;
+	private final static String GREETINGS = "This is ProverEditor version " + 
+				ProverEditorPlugin.MAJORVERSION + "." + ProverEditorPlugin.VERSION + "." + ProverEditorPlugin.SUBVERSION +" !\n"; 
 	
-	private boolean bLock = false;
+	
+		
+	private ProverFileContext fOldPc = ProverFileContext.empty;
+	private TopLevel fTopLevel;
+	private AProverTranslator fTranslator;
 
-	private String msg;
-	private LimitRuleScanner scanner;
-	private BasicRuleScanner parser;
-	private Stack parsedList = new Stack();
-
+	private boolean fLock = false;
+	private LimitRuleScanner fScanner;
+	private BasicRuleScanner fParser;
+	private Stack fParsedList = new Stack();
 	private Prover fProver;
+
+	private TextViewer tv;
+	private IDocument fDocView;	
+	private ProverPresentation fPresentation;
 	
 	public TopLevelManager() {
 		super();
@@ -68,64 +63,85 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	public static TopLevelManager getInstance() {
 		return instance;
 	}
-	public void append(String str) {
-		append(str, translator);
-	}
+	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.toplevel.stream.IStreamListener#append(int, java.lang.String)
+	 */
 	public void append(int type, String str) {
-		append(str, translator);
+		append(str);
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+	 */
 	public void createPartControl(Composite parent) {
 		tv = new TextViewer(parent, SWT.V_SCROLL);
 		tv.setEditable(false);
 		
-		if (dc == null) {
-			dc = new Document("");
+		if (fDocView == null) {
+			fDocView = new Document("");
 		}
 		
-		tv.setDocument(dc);
-		tp = new ProverPresentation(tv);
+		tv.setDocument(fDocView);
+		fPresentation = new ProverPresentation(tv);
 
-		new ColorAppendJob(tp, GREETINGS, VIOLET).prepare();
+		new ColorAppendJob(fPresentation, GREETINGS, VIOLET).prepare();
 
 	}
 
-	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+	 */
 	public void setFocus() {}
 	
 	
 	
 
+	
+	
 	protected synchronized boolean lock() {
-		if(bLock)
+		if(fLock)
 			return false;
-		bLock = true; return true;
+		fLock = true; return true;
 	}
 	protected synchronized void unlock() {
-		bLock = false;
+		fLock = false;
 	}
 	
 	
-	protected boolean progress_intern (ProverContext pc) {
+
+	
+	public boolean progress(ProverFileContext pc) {
+		if(!lock())
+			return true;
+		boolean b = progress_intern(pc);
+		unlock();
+		return b;
+	}
+	
+	protected boolean progress_intern (ProverFileContext pc) {
 		if(isNewDoc(pc))
 			reset(pc);
 		int oldlimit =pc.scan.getLimit();
 		return progress_intern(pc, oldlimit, oldlimit);
 	}
 	
-	
-	private boolean progress_intern (ProverContext pc, int realoldlimit, int oldlimit) { 
-		parser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
+	private boolean progress_intern (ProverFileContext pc, int realoldlimit, int oldlimit) { 
+		fParser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
 		UpdateJob uj;
 		IToken tok;
 		do {
-			tok = parser.nextToken();
+			tok = fParser.nextToken();
 		} while(tok != AProverTranslator.SENTENCE_TOKEN && (!tok.isEOF()));
 		if(tok.isEOF()) {
 			return false;
 		}
 			
-		int newlimit = parser.getTokenOffset() + parser.getTokenLength() - 1;
+		int newlimit = fParser.getTokenOffset() + fParser.getTokenLength() - 1;
 		try {
 			String cmd;
 			try {
@@ -143,13 +159,12 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			
 			
 			//we send the command
-			switch(fProver.getTopLevelTranslator().hasToSend(top, pc.doc, cmd, oldlimit, newlimit)) {
+			switch(fProver.getTopLevelTranslator().hasToSend(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
 				case ITopLevel.DONT_SKIP: {
-					top.clearBuffer();
-					top.sendCommand(cmd);
-					if(top.isAlive()) {
-						msg = top.getStdBuffer();
-						parsedList.push(new Integer(realoldlimit));
+					fTopLevel.clearBuffer();
+					fTopLevel.sendCommand(cmd);
+					if(fTopLevel.isAlive()) {
+						fParsedList.push(new Integer(realoldlimit));
 					}
 					else {
 						pc.scan.setLimit(realoldlimit);
@@ -167,7 +182,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				}
 			}
 		} catch (AProverException e) {
-			msg = e + top.getStdBuffer();
 			pc.scan.setLimit(realoldlimit);
 			uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
 			uj.schedule();
@@ -177,32 +191,43 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		return true;
 	}
 	
-
-	public void reset(ProverContext pc) {
+	/**
+	 * Reset the top level and the view with the context
+	 * passed as a parameter.
+	 * @see #reset()
+	 * @param pc The prover context which we have to
+	 * reset the view with
+	 */
+	public void reset(ProverFileContext pc) {
 		if(pc.doc != null) {
-			oldpc = pc;
+			fOldPc = pc;
 			reset();
 		}
 	}
 
-	private boolean isNewDoc(ProverContext pc) {
-		return pc.doc != oldpc.doc;
+	
+	public boolean isNewDoc(ProverFileContext pc) {
+		return pc.doc != fOldPc.doc;
 	}
 
-	public String getMsg() {
-		return msg;
-	}
 	
+	public boolean regress(ProverFileContext pc) {
+		if(!lock())
+			return true;
+		boolean b = regress_intern(pc);
+		unlock();
+		return b;
+	}	
 	
-	protected boolean regress_intern(ProverContext pc) {
+	protected boolean regress_intern(ProverFileContext pc) {
 		if (isNewDoc(pc)) {
 			reset(pc);
 			return false;
 		}
 		
 		int oldlimit = pc.scan.getLimit();
-		if((oldlimit > 0) && (parsedList.size() > 0)) {
-			int newlimit = ((Integer) parsedList.pop()).intValue();
+		if((oldlimit > 0) && (fParsedList.size() > 0)) {
+			int newlimit = ((Integer) fParsedList.pop()).intValue();
 			String cmd;
 			try {
 				cmd = pc.doc.get(newlimit, oldlimit - newlimit).trim();
@@ -211,10 +236,10 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				System.err.println("TopLevel.regress_intern: " + e);
 				return false;
 			}
-			switch(fProver.getTopLevelTranslator().hasToSkip(top, pc.doc, cmd, newlimit, oldlimit)) {
+			switch(fProver.getTopLevelTranslator().hasToSkip(fTopLevel, pc.doc, cmd, newlimit, oldlimit)) {
 				case ITopLevel.DONT_SKIP: {
 					try {
-						top.undo();
+						fTopLevel.undo();
 					} catch (AProverException e) {
 						append(e.toString());
 					}
@@ -239,44 +264,33 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		}
 		return true;
 	}
-	public boolean progress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, LimitRuleScanner scan) {
-		if(!lock())
-			return true;
-		boolean b = progress_intern(new ProverContext(ce, doc, sv, scan));
-		unlock();
-		return b;
-	}
 	
-	public boolean regress(ProverEditor ce, IDocument doc, FindReplaceDocumentAdapter fda, BasicSourceViewerConfig sv, LimitRuleScanner scan) {
-		if(!lock())
-			return true;
-		boolean b = regress_intern(new ProverContext(ce, doc, sv, scan));
-		unlock();
-		return b;
-	}
+
 	
-	
-	
+	/**
+	 * Tries to respawn the top level. 
+	 * First stop the toplevel if it is running, and after start it again.
+	 */
 	public void respawn() {
-		top.stop();
+		fTopLevel.stop();
 		Job job = new Job("Toplevel Starting") {
 
 			protected IStatus run(IProgressMonitor monitor) {
-				dc = new Document("");
+				fDocView = new Document("");
 				new UIJob("Updating Toplevel monitor") {
 
 					public IStatus runInUIThread(IProgressMonitor monitor) {
-						tv.setDocument(dc);
-						tp = new ProverPresentation(tv);
+						tv.setDocument(fDocView);
+						fPresentation = new ProverPresentation(tv);
 						
-						tv.changeTextPresentation(tp, true);
-						new ColorAppendJob(tp, GREETINGS, VIOLET).prepare();
+						tv.changeTextPresentation(fPresentation, true);
+						new ColorAppendJob(fPresentation, GREETINGS, VIOLET).prepare();
 						return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 					}
 					
 				}.schedule();
 				
-				reset(oldpc);
+				reset(fOldPc);
 				return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 			}
 			
@@ -285,17 +299,20 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		
 	}
 	
+	/**
+	 * Reset the view, reset the toplevel, and set up everything.
+	 */
 	private synchronized void reset() {
-		if(top != null) {
-			top.stop();
+		if(fTopLevel != null) {
+			fTopLevel.stop();
 		}
-		IEditorInput input = oldpc.ce.getEditorInput();
+		IEditorInput input = fOldPc.ce.getEditorInput();
 		
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 		fProver = Prover.findProverFromFile(path.getRawLocation().toString());
-		translator = fProver.getTranslator();
-	    scanner = new LimitRuleScanner(translator.getProofRules());
-	    parser = new BasicRuleScanner(translator.getParsingRules());
+		fTranslator = fProver.getTranslator();
+	    fScanner = new LimitRuleScanner(fTranslator.getProofRules());
+	    fParser = new BasicRuleScanner(fTranslator.getParsingRules());
 		String [] tab = null;
 		
 		if(path != null) {
@@ -309,38 +326,26 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		}
 		try {
 			
-			top = new TopLevel(fProver.getName(), tab);
-			top.addStreamListener(this);
+			fTopLevel = new TopLevel(fProver.getName(), tab);
+			fTopLevel.addStreamListener(this);
 		} catch (AProverException e) {
-			new ColorAppendJob(tp, e.toString(), RED).prepare();
+			new ColorAppendJob(fPresentation, e.toString(), RED).prepare();
 		}
-		
-		//System.out.println(oldce.getSite());
-		resetView();
-	}
 	
-	protected synchronized void resetView() {
-		if(oldpc != null) {
-			oldpc.scan.setLimit(0);
-			new UpdateJob(oldpc.sv.getPresentationReconciler()).schedule();
-		}
+		// we reset the view
+		fOldPc.scan.setLimit(0);
+		new UpdateJob(fOldPc.sv.getPresentationReconciler()).schedule();
 	}
 
-	public void printMsg() {
-		//dc.set(msg);
-	}
 	
-	
-	
-	
-	public void append(String str, AProverTranslator translator) {
+	public void append(String str) {
 		int ind = 0;
 		if((ind = str.indexOf("\n\n\n")) != -1) {
 			append(str.substring(0, ind));
 			str = str.substring(ind);
 		}
 		
-		String [][] unicodeReplacements = translator.getUnicodeReplacements();
+		String [][] unicodeReplacements = fTranslator.getUnicodeReplacements();
 		
 		if(isUnicodeMode()) {
 			for(int i =0; i < unicodeReplacements.length; i++) {
@@ -348,12 +353,12 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 						unicodeReplacements[i][1]);
 			}
 		}
-		String [][] replacements = translator.getReplacements();
+		String [][] replacements = fTranslator.getReplacements();
 		for(int i =0; i < replacements.length; i++) {
 			str = str.replaceAll(replacements[i][0], 
 					replacements[i][1]);
 		}
-		AppendJob job = new AppendJob(scanner, tp);
+		AppendJob job = new AppendJob(fScanner, fPresentation);
 		
 	
 		job.add(str);
@@ -361,19 +366,37 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	}
 
 
-	
+	/**
+	 * Tell whether or not we shall use unicode characters.
+	 * @return True if the unicode checkbox in the preferences is checked.
+	 */
 	public boolean isUnicodeMode() {
 		return PreferencePage.getProverIsUnicode();
 	}
 
-
-
-
 	
 
+	/**
+	 * Tries to send a Ctrl-Break command to the prover.
+	 * @see prover.exec.TopLevel#doBreak()
+	 */
+	public void doBreak() {
+		try {
+			if(fTopLevel != null)
+				fTopLevel.doBreak();
+		} catch (AProverException e) { }
+	}
+	
+
+	/**
+	 * The class UpdateJob is used to update the view once it has changed
+	 * internally.
+	 * @author J. Charles
+	 */
 	private class UpdateJob extends UIJob {
 		private int newlimit;
 		private BasicPresentationReconciler scan;
+		
 		public UpdateJob(BasicPresentationReconciler sc, int limit) {
 			super("Updating text");
 			scan = sc;
@@ -383,23 +406,16 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		public UpdateJob(BasicPresentationReconciler sc) {
 			this(sc, sc.getDocument().getLength());
 		}
-
+		
+		
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+		 */
 		public IStatus runInUIThread(IProgressMonitor monitor) {
-			
 			scan.everythingHasChanged(0/*oldlimit*/, newlimit); 
 			return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 		}
 		
-	}
-
-
-	public void doBreak() {
-		try {
-			if(top != null)
-				top.doBreak();
-		} catch (AProverException e) {
-			//e.printStackTrace();
-		}
-	}
-	
+	}	
 }

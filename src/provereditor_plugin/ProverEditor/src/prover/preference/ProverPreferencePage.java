@@ -13,8 +13,11 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
 	private String PROVER_GRACETIME = "Editor.gracetime";
 	private String PROVER_IDE = "Editor.ide";
 	private String PROVER_TOP = "Editor.top";
-	private IPreferenceStore prefs;
-	private String language;
+	private String PROVER_COMP = "Editor.compiler";
+	private IPreferenceStore fPrefs;
+	private String fLanguage;
+	private FieldEditor [] fFields = new FieldEditor[4];
+	
 	
 	/**
 	 * Creates the PreferencePage.
@@ -28,12 +31,14 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
 		this();
 		setTitle(language);
 		setDescription("Preferences for " + language);
-		this.language = language;
+		this.fLanguage = language;
 		PROVER_GRACETIME += language;
 		PROVER_IDE += language;
 		PROVER_TOP += language;
+		PROVER_COMP += language;
 	}
-	FieldEditor [] fe = new FieldEditor[3];
+	
+	
 	/**
 	 * Creates the field editors. Field editors are abstractions of
 	 * the common GUI blocks needed to manipulate various types
@@ -41,62 +46,63 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
 	 * restore itself.
 	 */
 	public void createFieldEditors() {
-		fe [0] = new FileFieldEditor(
+		fFields [0] = new FileFieldEditor(
 				PROVER_IDE,
-				language + " ide path:",
+				fLanguage + " ide path:",
 				true,
 				getFieldEditorParent()){
 						public boolean checkState() {
 							return true;
 						}
 					}; 
-		fe [1] = 	 new FileFieldEditor(
+		fFields [1] = 	 new FileFieldEditor(
 					 PROVER_TOP,
-					 language + " toplevel path:",
+					 fLanguage + " toplevel path:",
 					 true,
 					 getFieldEditorParent());
-		fe [2] = new IntegerFieldEditor(PROVER_GRACETIME, 
-				      language + " toplevel grace time:", 
+		fFields [2] = new IntegerFieldEditor(PROVER_GRACETIME, 
+				      fLanguage + " toplevel grace time:", 
 					 getFieldEditorParent(), 3);
-		for (int i = 0; i < fe.length; i++) {
-			addField(fe[i]);
+		for (int i = 0; i < fFields.length; i++) {
+			addField(fFields[i]);
 		}
 	}
 	
 	
 	
 	public void quit() {
-		for (int i = 0; i < fe.length; i++) {
-			fe[i].store();
+		for (int i = 0; i < fFields.length; i++) {
+			fFields[i].store();
 		}
 	}
 	public void setDefault(IPreferenceStore pr) {
-		prefs = pr; 
-		prefs.setDefault(PROVER_GRACETIME, 10);
-		prefs.setDefault(PROVER_IDE, "coqide");
-		prefs.setDefault(PROVER_TOP, "coqtop");
+		fPrefs = pr; 
+		fPrefs.setDefault(PROVER_GRACETIME, 10);
+		fPrefs.setDefault(PROVER_IDE, "coqide");
+		fPrefs.setDefault(PROVER_TOP, "coqtop");
 	}
 	
 	
 	public String getIde() {
-		return prefs.getString(PROVER_IDE);
-
+		return fPrefs.getString(PROVER_IDE);
 	}
 	public String getTop() {
-		return prefs.getString(PROVER_TOP);
+		return fPrefs.getString(PROVER_TOP);
 	}
-
-	
-	
+	public String getCompiler() {
+		return fPrefs.getString(PROVER_COMP);
+	}
 	public int getGraceTime() {
-		return prefs.getInt(PROVER_GRACETIME);
+		return fPrefs.getInt(PROVER_GRACETIME);
 	}
+	
+	
 	public void init(IWorkbench workbench) {
 		
 	}
 	
 	protected IPreferenceStore doGetPreferenceStore() {
-		return prefs;
+		return fPrefs;
 	}
 }
 

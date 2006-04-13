@@ -1,15 +1,13 @@
 package prover.gui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
-import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
 public class BackAction extends AProverAction{
@@ -21,10 +19,7 @@ public class BackAction extends AProverAction{
 		IEditorPart ed = ap.getActiveEditor();
 		if(ed instanceof ProverEditor) {
 			ProverEditor ce = (ProverEditor) ed;
-			BasicSourceViewerConfig sv = ce.getSourceViewerConfig();
-			LimitRuleScanner scan = sv.getTagScanner();
-			FindReplaceDocumentAdapter fda = sv.getPresentationReconciler().getFinder();
-			TopLevelManager.getInstance().regress(ce, sv.getPresentationReconciler().getDocument(), fda, sv, scan);			
+			TopLevelManager.getInstance().regress(new ProverFileContext(ce));			
 		}
 		
 	}

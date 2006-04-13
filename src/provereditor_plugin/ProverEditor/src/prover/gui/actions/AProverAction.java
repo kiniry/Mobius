@@ -22,9 +22,7 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate{
 		
 	}
 
-	public void init(IWorkbenchWindow window) {
-	//	current = this;
-	}
+	public void init(IWorkbenchWindow window) {}
 
 	public void selectionChanged(IAction action, ISelection selection) {
 		set.add(action);

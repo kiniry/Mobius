@@ -6,16 +6,13 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
-import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
 public class ProgressAction  
@@ -30,35 +27,22 @@ public class ProgressAction
 		IEditorPart ed = ap.getActiveEditor();
 		if(ed instanceof ProverEditor) {
 			ProverEditor ce = (ProverEditor) ed;
-			
-			BasicSourceViewerConfig sv = ce.getSourceViewerConfig();
-			LimitRuleScanner scan = sv.getTagScanner();
-			
-			IDocument doc = sv.getPresentationReconciler().getDocument();
-			FindReplaceDocumentAdapter fda = sv.getPresentationReconciler().getFinder();
-			Job job = new UpdateJob(ce, sv, scan, doc, fda);
+			Job job = new UpdateJob(ce);
 			job.schedule();
 			
 		}
 		
 	}
 	private class UpdateJob extends Job {
-		BasicSourceViewerConfig sv; LimitRuleScanner scan;
-		IDocument doc;FindReplaceDocumentAdapter fda;
 		private ProverEditor ce;
-		public UpdateJob(ProverEditor ce, BasicSourceViewerConfig sv, LimitRuleScanner scan,
-		IDocument doc,FindReplaceDocumentAdapter fda) {
+		public UpdateJob(ProverEditor ce) {
 			super("TopLevel is progressing...");
-			this.doc = doc;
-			this.fda = fda;
-			this.scan = scan;
-			this.sv = sv;
 			this.ce = ce;
 		}
 
 		public IStatus run(IProgressMonitor monitor) {
 			try {
-				TopLevelManager.getInstance().progress(ce, doc, fda, sv, scan);
+				TopLevelManager.getInstance().progress(new ProverFileContext(ce));
 			}
 			catch(Exception e) {
 				e.printStackTrace();
