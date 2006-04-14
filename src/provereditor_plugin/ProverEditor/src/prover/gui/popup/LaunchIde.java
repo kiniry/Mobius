@@ -10,12 +10,19 @@ import org.eclipse.ui.IActionDelegate;
 
 import prover.Prover;
 
+/**
+ * The action used to launch an external ide to edit the prover file.
+ * @author J. Charles
+ */
 public class LaunchIde implements IActionDelegate {
+
+	/** The current selection in the workbench */
 	IStructuredSelection sel = null;
-	public LaunchIde() {
-		super();
-	}
-	
+
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
 	public void run(IAction action) {
 		if(sel == null) return;
 		Thread myJob = new Thread("Prover Ide") {
@@ -43,6 +50,11 @@ public class LaunchIde implements IActionDelegate {
 		   myJob.start();
 		
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			sel = (IStructuredSelection) selection;

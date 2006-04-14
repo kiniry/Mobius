@@ -15,45 +15,49 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
-import org.eclipse.ui.IWorkbenchWindow;
 
 import prover.Prover;
 import prover.gui.jobs.ProverStatus;
 
-
+/**
+ * The action triggering a compilation deed.
+ * @author J. Charles
+ */
 public class CompileFile implements IActionDelegate {
-	public void dispose() {
 
-	}
-
-	public void init(IWorkbenchWindow window) {
-
-	}
-	private Prover prover;
-	String[] fCmd;
-	private IStructuredSelection sel = null;
+	/** The current selection in the workbench */
+	private IStructuredSelection fSel = null;
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
 	public void run(IAction action) {
-		if(sel == null)
+		if(fSel == null)
 			return;
-		if(! (sel.getFirstElement() instanceof IFile))
+		if(! (fSel.getFirstElement() instanceof IFile))
 			return;
-		IFile f = (IFile) sel.getFirstElement();
-		prover = Prover.findProverFromFile(f.toString());
+		IFile f = (IFile) fSel.getFirstElement();
+		Prover prover = Prover.findProverFromFile(f.toString());
 		if(prover == null)
 			return;
 		String name =  f.getLocation().toString();
 		String [] path = {f.getProject().getLocation().toString(),
 				f.getLocation().removeLastSegments(1).toString()
 		};
-		fCmd = prover.getTranslator().getCompilingCommand(prover.getTop().trim(), path, name);
-		Job job = new CompilationJob(f);
+		String[] cmd = prover.getTranslator().getCompilingCommand(prover.getTop().trim(), path, name);
+		Job job = new CompilationJob(prover, f, cmd);
 		job.schedule();
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
-			sel = (IStructuredSelection) selection;
-			Object o = sel.getFirstElement();
+			fSel = (IStructuredSelection) selection;
+			Object o = fSel.getFirstElement();
 	    	if (o instanceof IFile) {
 	    		IFile f = (IFile) o;
 	    		if(Prover.findProverFromFile(f.toString()) != null) {
@@ -65,15 +69,37 @@ public class CompileFile implements IActionDelegate {
 		action.setEnabled(false);
 	}
 	
-	protected class CompilationJob extends Job {
-		IFile file;
-		String path;
-		public CompilationJob(IFile f) {
-			super("Compiling " + f.getName());
-			file = f;
-			path =  f.getRawLocation().toString();
+
+	/**
+	 * This class represents the Job used to compile a file.
+	 * @author J. Charles
+	 */
+	private static class CompilationJob extends Job {
+		/** The file to compile */
+		private IFile fFile;
+		/** The command line to compile the file */
+		private String [] fCmd;
+		/** The current prover object assiciated with the current file */
+		private Prover fProver;
+		
+		
+		/**
+		 * Create a new Compilation Job.
+		 * @param prover the prover object to compile the file with
+		 * @param file the file to compile
+		 * @param cmd the command to compile the file
+		 */
+		public CompilationJob(Prover prover, IFile file, String[] cmd) {
+			super("Compiling " + file.getName());
+			fFile = file;
+			fCmd = cmd;
+			fProver = prover;
 		}
 
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+		 */
 		protected IStatus run(IProgressMonitor monitor) {
 			try {					
 				Process p = Runtime.getRuntime().exec(fCmd);
@@ -82,15 +108,15 @@ public class CompileFile implements IActionDelegate {
 				String res = "";
 				while((s = in.readLine()) != null){
 					res += s + "\n";
-					if (prover.isErrorMsg(s)) {
+					if (fProver.isErrorMsg(s)) {
 						while((s = in.readLine()) != null)
 							res += s + "\n";
-						return ProverStatus.getErrorStatus("The file " + file.getName() + " was not compiled.", 
+						return ProverStatus.getErrorStatus("The fFile " + fFile.getName() + " was not compiled.", 
 											res);  			
 					}
 					 			
 				}
-				file.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
+				fFile.getParent().refreshLocal(IResource.DEPTH_ONE, monitor);
 			} catch (IOException e) {
 				return ProverStatus.getErrorStatus(
 						"I was unable to find the path to the compilation program. Check the path." , 
