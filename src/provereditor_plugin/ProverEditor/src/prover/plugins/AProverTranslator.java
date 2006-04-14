@@ -35,7 +35,8 @@ public abstract class AProverTranslator {
 	/**
 	 * Returns an array consisting of couples:
 	 * String and its replacement.
-	 * @return
+	 * @return an array of replacements. The array can be empty,
+	 * not <code>null</code>.
 	 */
 	public String [][] getReplacements() {
 		return replacements;

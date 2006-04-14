@@ -16,80 +16,102 @@ import prover.gui.editor.BasicTextAttribute;
 import prover.gui.editor.BasicTextPresentation;
 import prover.gui.editor.IColorConstants;
 
-public class AppendJob extends UIJob implements IColorConstants {
-	private StringBuffer strToAppend;
-	private IDocument doc;
-	private TextViewer tv;
+
+/**
+ * A job to add some text to the specified document. 
+ * It uses a fScanner to highlight the words.
+ * To schedule this Job the {@link #prepare()} method shall be used.
+ * @author J. Charles
+ */
+public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
+	/** The string to append to the document */
+	private StringBuffer fStrToAppend;
+	/** The document to modify */
+	private IDocument fDoc;
+	/** The viewer to target */
+	private TextViewer fViewer;
 	
-	private BasicTextPresentation tp;
-	private BasicRuleScanner scanner;
-	private int oldlen;
+	/** The presentation containing the highlight informations */
+	private BasicTextPresentation fPresentation;
+	/** The scanner to colour the words. */
+	private BasicRuleScanner fScanner;
+	/** The length of the document before any modifications. */
+	private int fLen;
 	
+	
+	/**
+	 * Create a new AppendJob.
+	 * @param scanner The scanner used to decide which word to highlight
+	 * @param tp The information about the document that shall be updated
+	 */
 	public AppendJob(BasicRuleScanner scanner, BasicTextPresentation tp) {
 		super("Updating view");
-		strToAppend = new StringBuffer();
-		this.tp = (BasicTextPresentation)tp.clone();
-		tv = tp.getTextViewer();
-		doc = tv.getDocument();
-		this.scanner = scanner;
+		fStrToAppend = new StringBuffer();
+		fPresentation = (BasicTextPresentation)tp.clone();
+		fViewer = tp.getTextViewer();
+		fDoc = fViewer.getDocument();
+		fScanner = scanner;
 		
-	}
-		
-	public AppendJob(BasicRuleScanner scanner, BasicTextPresentation tp, String name ) {
-		this(scanner, tp);
-		add(name);
 	}
 	
-	public AppendJob(BasicTextPresentation tp, String name) {
-		this(null, tp);
-	}
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#add(java.lang.StringBuffer)
+	 */
 	public void add(StringBuffer str) {
-		strToAppend.append(str);
+		fStrToAppend.append(str);
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#add(java.lang.String)
+	 */
 	public void add(String str) {
 		add(new StringBuffer(str));
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#getLength()
+	 */
 	public int getLength() {
-		return strToAppend.length();
+		return fStrToAppend.length();
 	}
 	
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#prepare()
+	 */
 	public void prepare() {
-		SimpleAppendJob saj = new SimpleAppendJob(tp);
-		saj.add(strToAppend);
-		oldlen = doc.getLength();
+		SimpleAppendJob saj = new SimpleAppendJob(fViewer);
+		saj.add(fStrToAppend);
+		fLen = fDoc.getLength();
 		saj.schedule();
-//		try {
-//			//saj.join();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		schedule();
 	}
 	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-
-//		tv.setTopIndex(oldlen - 1);
-		if(scanner != null) {
-			//System.out.println(strToAppend);
-			scanner.setRange(doc, oldlen, strToAppend.length());
+		if(fScanner != null) {
+			fScanner.setRange(fDoc, fLen, fStrToAppend.length());
 			IToken tok;
-			while (!(tok = scanner.nextToken()).isEOF()) {
-				if(tok != scanner.getDefaultReturnToken()) {
+			while (!(tok = fScanner.nextToken()).isEOF()) {
+				if(tok != fScanner.getDefaultReturnToken()) {
 					BasicTextAttribute bta = (BasicTextAttribute)tok.getData();
-					tp.mergeStyleRange(new StyleRange(scanner.getTokenOffset(), 
-							scanner.getTokenLength(), bta.getForeground(), 
+					fPresentation.mergeStyleRange(new StyleRange(fScanner.getTokenOffset(), 
+							fScanner.getTokenLength(), bta.getForeground(), 
 							bta.getBackground()));
 					
 				}
 				
 			}
 		}	
-		tv.changeTextPresentation(tp, true);
-			
+		fViewer.changeTextPresentation(fPresentation, true);
 		return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 	}
 	

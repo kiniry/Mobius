@@ -11,60 +11,76 @@ import org.eclipse.jface.text.TextViewer;
 import org.eclipse.ui.progress.UIJob;
 
 import prover.gui.editor.IColorConstants;
-import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.BasicTextPresentation;
 
-public class SimpleAppendJob extends UIJob implements IColorConstants {
-	private StringBuffer strToAppend;
-	private IDocument doc;
-	private TextViewer tv;
+/**
+ * A Job to append text to the specified document contained in a viewer.
+ * @author J. Charles
+ */
+public class SimpleAppendJob extends UIJob implements IColorConstants, IAppendJob {
+	/** The string to append to the document */
+	private StringBuffer fStrToAppend;
+	/** The document to modify */
+	private IDocument fDoc;
+	/** The viewer to target */
+	private TextViewer fViewer;
 	
 	
-	public SimpleAppendJob(BasicTextPresentation tp) {
+	/**
+	 * Create a job to append text to the document in the viewer.
+	 * @param viewer The viewer to append text to.
+	 */
+	public SimpleAppendJob(TextViewer viewer) {
 		super("Updating view");
-		strToAppend = new StringBuffer();
-//		this.tp = (ProverPresentation)tp.clone();
-		tv = tp.getTextViewer();
-		doc = tv.getDocument();
+		fStrToAppend = new StringBuffer();
+		fViewer = viewer;
+		fDoc = fViewer.getDocument();
 		
-	}
-		
-	public SimpleAppendJob(LimitRuleScanner scanner, BasicTextPresentation tp, String name ) {
-		this(tp);
-		add(name);
 	}
 	
-	public SimpleAppendJob(BasicTextPresentation tp, String name) {
-		this(tp);
-	}
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#add(java.lang.StringBuffer)
+	 */
 	public void add(StringBuffer str) {
-		strToAppend.append(str);
+		fStrToAppend.append(str);
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#add(java.lang.String)
+	 */
 	public void add(String str) {
 		add(new StringBuffer(str));
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#getLength()
+	 */
 	public int getLength() {
-		return strToAppend.length();
+		return fStrToAppend.length();
 	}
 	
-	
-	public void prepare() {
-		
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.gui.jobs.IAppendJob#prepare()
+	 */
+	public void prepare() {	
 		schedule();
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.progress.UIJob#runInUIThread(org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	public IStatus runInUIThread(IProgressMonitor monitor) {
-		int len = doc.getLength();
+		int len = fDoc.getLength();
 		try {
-			doc.replace(len, 0, strToAppend.toString());
+			fDoc.replace(len, 0, fStrToAppend.toString());
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-		tv.setTopIndex(len - 1);
-//		tv.changeTextPresentation(tp, true);
-			
+		fViewer.setTopIndex(len - 1);
 		return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 	}
 	

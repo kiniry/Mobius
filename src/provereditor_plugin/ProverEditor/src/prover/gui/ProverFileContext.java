@@ -26,7 +26,7 @@ public class ProverFileContext {
 	
 	/**
 	 * The constructor to initialize the different fields.
-	 * @param ce
+	 * @param ce The editor giving the different context elements.
 	 */
 	public ProverFileContext(ProverEditor ce) {
 		this.ce = ce;

@@ -409,7 +409,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	/**
 	 * Reset the top level and the view with the context
 	 * passed as a parameter.
-	 * @see #reset()
 	 * @param pc The prover context which we have to
 	 * reset the view with
 	 */
@@ -421,7 +420,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	}
 
 	/**
-	 * Tells whether or not the doc from the field {@link #fProverContext}
+	 * Tells whether or not the current doc
 	 * is the same as the doc in the context given as a parameter.
 	 * @param pc The context to test
 	 * @return true if the documents are different.
@@ -442,7 +441,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 
 	/**
 	 * Tries to send a Ctrl-Break command to the prover.
-	 * @see prover.exec.TopLevel#doBreak()
+	 * @see prover.exec.ITopLevel#doBreak()
 	 */
 	public void doBreak() {
 		try {

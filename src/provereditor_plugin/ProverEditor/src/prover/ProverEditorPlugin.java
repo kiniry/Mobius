@@ -126,8 +126,9 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
 	
 	/**
 	 * Preferences for provers
-	 * @param language
-	 * @return
+	 * @param language The language we want to have a prover instance
+	 * @return the prover instance denominated by the parameter
+	 * or <code>null</code> if it wasn't found. 
 	 */
 	public Prover getProver(String language) {
 		Prover pn = (Prover) Prover.get(language);
