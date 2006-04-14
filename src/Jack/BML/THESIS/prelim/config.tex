@@ -1,0 +1,79 @@
+
+
+
+%\newtheorem{StateSubst}[StateTransition]{State after assignment}
+\newtheorem{StateProp0}{Substitution Property for Expressions}
+\newtheorem{StateProp1}[StateProp0]{Substitution Property for Formulas} % lemme
+\newtheorem{UpdateStateSem}[StateProp0]{Definition}
+%\newtheorem{FieldAtState}[StateTransition]{Interpretation of field functions in a state}
+%\newtheorem{StateSatisfiesProp}[StateTransition]{Predicate holds in a state}
+
+
+\newtheorem{AtState}{Definition}
+
+
+\newtheorem{FormulaInterp}[AtState]{Definition}
+\newtheorem{StateProp2}[AtState]{Substitution Property for Field Functions } %lemme
+
+
+\subsection{State configuration}\label{def}
+ In this section, we introduce the notion of state configuration.
+ A state configuration \SetConfigs models the program state in particular execution
+ program point by specifying what is the state of the memory heap, the stack and the stack counter, the values of the
+ local variables of the currently executed method  and what is the instruction which is executed next. 
+ 
+ We define two kinds of state configurations:
+ $$\SetConfigs = \SetConfigInterm \cup \SetConfigFinal$$
+ The set $\SetConfigInterm$ consists of method intermediate state configurations, which stand for a 
+ \textit{not stuck state} in which the execution of the current method is not finished i.e.
+ there is still another instruction of the method body to be executed.  
+ The configuration $\config{\heap}{\counter}{ \stackOnly }{\locVarOnly}{\pc } \in \SetConfigInterm$ has the following elements:
+               \begin{itemize}
+                     \item the function \heap is a mapping from field function names to the corresponding field function and from 
+		     references to objects in the memory heap.
+	   
+	             \item \counter is a variable that contains a natural number which stands for the number of
+		     elements in the operand stack.  
+
+		     \item \stackOnly  stands for the operand stack and which for any integer 
+		     \texttt{ind} smaller than the operand stack counter \counter 
+		     retruns the value \stack{\texttt{ind}}  stored in the operand stack at \texttt{ind}
+		     positions of the bottom of the stack. \stackOnly is not defined for natural values
+		     greater than the counter. A newly created stack is denoted with \newStack
+	     
+
+	             \item \locVarOnly is the array of local variables of a method
+		     and for an index \texttt{i} returns the value $\locVar{i}$ which is stored at that 
+		     index of the array
+	
+	            \item \pc stands for the program counter and contains the index of the instruction to be executed in the current state
+	        \end{itemize}
+
+
+ The elements of the set $\SetConfigFinal$ are the final states, states in which the current method execution is terminated and consists of 
+ normal termination states ($\SetConfigFinalNorm$) and exceptional termination states ($\SetConfigFinalExc$):
+ $$\SetConfigFinal =  \SetConfigFinalNorm   \cup \SetConfigFinalExc $$ 
+ 
+ A method may terminate either normally (by reaching a return instruction) or exceptionally (by throwing an exception).
+ 
+ \begin{itemize}
+        \item  $\configFinalNorm{\heap}{\Res} \in \SetConfigFinalNorm $ which describes a \textit{normal final state}, i.e.
+	       the method execution terminates normally. The normal termination configuration has the following components :
+               \begin{itemize}
+                      \item \heap \ reflects what is the heap state after the method terminated 
+		      \item \Res \ stands for the return value  of the method
+	       \end{itemize}
+
+	\item  $\configFinalExc{\heap}{\Exc} \in \SetConfigFinalExc $ which stands for an \textit{exceptional final state} of a method,
+	       i.e. the method terminates by throwing an exception. The exceptional configuration has the following components:
+               \begin{itemize}
+                      \item the heap \heap 
+		      \item \Exc \ is a reference to the uncaught exception that caused the method termination
+               \end{itemize}
+
+ \end{itemize}
+  
+ We will use the notation $\configFinal{\heap}{\Final}$ for any configuration which belongs to the set  $\SetConfigFinal$. 
+ In the next subsection, we define in terms of state configuration transition relation the operational semantics of
+ our bytecode programming language.
+ 

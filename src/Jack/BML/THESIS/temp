@@ -1,0 +1,31 @@
+ \item \putfield  
+            $$\begin{array}{l} 
+	      \frac{ \stack{\topStack - 1} \neq \Mynull \Rightarrow  
+                      \begin{array}{l}
+	              %       \heap' = \update{\heap}{\field{c}{f} }{\update{\field{c}{f}}{\topStack}{\topStack - 2}} \\
+			  %   \counter' = \counter - 2 \\
+			     \pc' = \pc + 1
+	              \end{array} }
+                   {}\\ %\putfield \ \field{c}{f}:  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		       %        \stateTrans  
+			%       \config{\heap'}{\counter'}{\stackOnly}{\locVarOnly}{\pc'}  } 
+		      
+                     \\ 
+                     \\ 
+		     \\
+		     \frac{    
+	                   \begin{array}{l}
+			           \stack{\topStack - 1} == \Mynull \Rightarrow  \\
+				         \begin{array}{l}
+					        \heap' = \update{\heap}{ \Ref{NullPointerExc} }{  \objCl{NullPointerExc}  } \\
+						\counter' = 0 \\
+						\stackOnly' =  \update{\stackOnly}{0}{\Ref{NullPointerExc}  }\\
+						\pc' = \tt{ \excIndex{\pc }{NullPointerExc}}\\
+	                                 \end{array} }
+			   {\putfield \ \field{c}{f}:  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		                                       \stateTrans  
+						       \config{\heap'}{\counter'}{\stackOnly' }{\locVarOnly}{\pc'}} 
+	           \end{array} $$ \\\\
+		  The top stack element \texttt{value} and the element below it \texttt{objRef} are popped from the stack. 
+		  If \texttt{objRef} is not null, the value of the field \texttt{f} for the object  \texttt{objRef} is set
+		  to \texttt{value}. If \texttt{objRef} is null then a \texttt{NullPointerExc} is thrown

@@ -1,0 +1,582 @@
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.4.28)  14 APR 2006 16:38
+**thesis.tex
+(./thesis.tex
+LaTeX2e <2001/06/01>
+Babel <v3.7h> and hyphenation patterns for american, french, german, ngerman, n
+ohyphenation, loaded.
+(/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2001/04/21 v1.4e Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 2001/04/21 v1.4e Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+) (./cmd.tex
+\c@defn=\count87
+\c@Formula=\count88
+\c@Predicate=\count89
+)
+(/usr/share/texmf/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+)
+(/usr/share/texmf/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks14
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(/usr/share/texmf/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2001/08/31 v1.1 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: dvips.def on input line 80.
+
+(/usr/share/texmf/tex/latex/graphics/dvips.def
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+) (./thesis.aux)
+\openout1 = `thesis.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Try loading font information for U+msa on input line 13.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 13.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+)
+
+LaTeX Warning: No \author given.
+
+(./thesis.toc)
+\tf@toc=\write3
+\openout3 = `thesis.toc'.
+
+ [1
+
+] (./prelim/operational_sem.tex
+\c@StateTransition=\count90
+ (./prelim/relWork.tex)
+(./prelim/notation.tex [2]) (./prelim/classAndMeths.tex [3])
+(./prelim/progTypes.tex [4]) (./prelim/expressions.tex
+\c@Expression=\count91
+ [5]
+Overfull \hbox (70.01852pt too wide) detected at line 118
+[]
+ []
+
+) (./prelim/heap.tex [6]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 14.
+ (/usr/share/texmf/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 14.
+ [7]
+Overfull \hbox (41.03249pt too wide) detected at line 134
+[]
+ []
+
+) (./prelim/config.tex
+\c@StateProp0=\count92
+\c@AtState=\count93
+ [8]) [9] [10]
+Underfull \hbox (badness 10000) in paragraph at lines 141--142
+
+ []
+
+
+Overfull \hbox (84.36111pt too wide) detected at line 167
+[]
+ []
+
+[11]
+Overfull \hbox (5.28598pt too wide) detected at line 187
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 196--197
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 196--197
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
+
+ []
+
+
+Overfull \hbox (16.90427pt too wide) detected at line 225
+[]
+ []
+
+[12]
+Overfull \hbox (14.13188pt too wide) in paragraph at lines 257--257
+[][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--257
+\OT1/cmss/m/n/10 case for
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--257
+\OT1/cmss/m/n/10 arith-metic
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--257
+\OT1/cmss/m/n/10 in-struc-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--257
+\OT1/cmss/m/n/10 that throw
+ []
+
+
+Overfull \hbox (3.31633pt too wide) detected at line 272
+[]
+ []
+
+
+Overfull \hbox (6.17741pt too wide) detected at line 284
+[]
+ []
+
+
+Overfull \hbox (1.0663pt too wide) detected at line 297
+[]
+ []
+
+
+Overfull \hbox (20.0107pt too wide) detected at line 310
+[]
+ []
+
+
+Overfull \hbox (17.95508pt too wide) detected at line 318
+[]
+ []
+
+
+Overfull \hbox (7.50789pt too wide) detected at line 339
+[]
+ []
+
+[13]
+Overfull \hbox (11.3362pt too wide) detected at line 361
+[]
+ []
+
+
+Overfull \hbox (36.10027pt too wide) detected at line 371
+[]
+ []
+
+
+Overfull \hbox (12.1119pt too wide) detected at line 392
+[]
+ []
+
+
+Overfull \hbox (36.10027pt too wide) detected at line 401
+[]
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 408--409
+
+ []
+
+
+Overfull \hbox (20.65004pt too wide) detected at line 424
+[]
+ []
+
+
+Overfull \hbox (46.60017pt too wide) detected at line 432
+[]
+ []
+
+
+Overfull \hbox (21.7779pt too wide) detected at line 454
+[]
+ []
+
+
+Overfull \hbox (36.10027pt too wide) detected at line 463
+[]
+ []
+
+
+Overfull \hbox (41.35022pt too wide) detected at line 471
+[]
+ []
+
+
+Overfull \hbox (14.13188pt too wide) in paragraph at lines 475--475
+[][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 475--475
+\OT1/cmss/m/n/10 sign-ment
+ []
+
+[15]
+Overfull \hbox (14.13188pt too wide) in paragraph at lines 484--484
+[][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 484--484
+\OT1/cmss/m/n/10 one more
+ []
+
+
+Underfull \hbox (badness 5091) in paragraph at lines 484--484
+\OT1/cmss/m/n/10 case of ex-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 484--484
+\OT1/cmss/m/n/10 cep-tional
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 484--484
+\OT1/cmss/m/n/10 ter-mi-na-tion
+ []
+
+
+Underfull \hbox (badness 7012) in paragraph at lines 484--484
+\OT1/cmss/m/n/10 if it ter-mi-
+ []
+
+
+Underfull \hbox (badness 1558) in paragraph at lines 484--484
+\OT1/cmss/m/n/10 nates on an
+ []
+
+
+Overfull \hbox (18.91681pt too wide) detected at line 504
+[]
+ []
+
+
+Overfull \hbox (36.10027pt too wide) detected at line 513
+[]
+ []
+
+
+Overfull \hbox (41.35022pt too wide) detected at line 523
+[]
+ []
+
+
+Overfull \hbox (22.34459pt too wide) detected at line 549
+[]
+ []
+
+
+Overfull \hbox (36.10027pt too wide) detected at line 560
+[]
+ []
+
+[16]
+Overfull \hbox (1.67474pt too wide) detected at line 578
+[]
+ []
+
+
+Overfull \hbox (18.92784pt too wide) detected at line 590
+[]
+ []
+
+
+Overfull \hbox (16.42497pt too wide) detected at line 604
+[]
+ []
+
+
+Overfull \hbox (11.76712pt too wide) detected at line 611
+[]
+ []
+
+
+Overfull \hbox (23.3139pt too wide) detected at line 628
+[]
+ []
+
+
+Overfull \hbox (14.10027pt too wide) detected at line 637
+[]
+ []
+
+
+Overfull \hbox (32.05896pt too wide) detected at line 669
+[]
+ []
+
+[17]
+Overfull \hbox (24.82445pt too wide) detected at line 687
+[]
+ []
+
+
+Overfull \hbox (14.10027pt too wide) detected at line 697
+[]
+ []
+
+) (./BML/JML2BC.tex (./BML/cmdBML.tex)
+Overfull \hbox (14.13188pt too wide) in paragraph at lines 23--23
+[][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--23
+\OT1/cmss/m/n/10 tech-niques:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 23--23
+\OT1/cmss/m/n/10 ab-stract
+ []
+
+[18] (./BML/prelim.tex [19]) (./BML/classFileExt.tex [20]
+Overfull \hbox (132.23276pt too wide) detected at line 129
+[]
+ []
+
+[21] [22] [23
+
+]
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 220.
+ [24]))
+Overfull \hbox (0.81299pt too wide) in paragraph at lines 30--30
+[] \OT1/cmr/bx/n/14.4 Weak-est Pre-con-di-tion Cal-cu-lus for Java Byte-
+ []
+
+(./wpbc.tex [25]
+LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 34.
+File: bytecode.eps Graphic file (type eps)
+ <bytecode.eps>
+
+LaTeX Warning: Float too large for page by 1616.28442pt on input line 51.
+
+[26]
+Overfull \hbox (1.87848pt too wide) in paragraph at lines 86--89
+\OT1/cmr/m/n/10 one af-ter an-other in some ex-e-cu-tion graph de-ter-mines the
+ pred-i-cate $[]((\OML/cmm/m/it/10 ; k\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; j\OT1
+/cmr/m/n/10 )$
+ []
+
+
+Overfull \hbox (13.19397pt too wide) in paragraph at lines 91--93
+[]\OT1/cmr/m/it/10 Assume
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 126--127
+
+ []
+
+
+Overfull \hbox (13.30057pt too wide) detected at line 138
+[]
+ []
+
+[27]
+Underfull \hbox (badness 10000) in paragraph at lines 152--153
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 161--164
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 165--168
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 169--172
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--222
+
+ []
+
+[28]
+Underfull \hbox (badness 10000) in paragraph at lines 227--229
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 235--236
+
+ []
+
+
+Overfull \hbox (11.20274pt too wide) detected at line 249
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--259
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 273--275
+
+ []
+
+
+Overfull \hbox (10.24208pt too wide) detected at line 289
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 290--292
+
+ []
+
+[29]
+Underfull \hbox (badness 10000) in paragraph at lines 305--307
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 320--322
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 352--356
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--381
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--381
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--381
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--381
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--381
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--381
+
+ []
+
+[30]
+Underfull \hbox (badness 10000) in paragraph at lines 383--384
+
+ []
+
+[31]
+Overfull \hbox (17.3819pt too wide) detected at line 526
+[]
+ []
+
+[32]
+Overfull \hbox (74.25412pt too wide) detected at line 597
+[]
+ []
+
+[33] [34] [35])
+Overfull \hbox (15.11626pt too wide) in paragraph at lines 35--35
+[] \OT1/cmr/bx/n/14.4 Ver-i-fi-ca-tion Con-di-tion Genara-tor for Java Byte-
+ []
+
+(./thesis.bbl [36] [37]) [38] [39] (./thesis.aux) ) 
+Here is how much of TeX's memory you used:
+ 1342 strings out of 95847
+ 14536 string characters out of 1195948
+ 67827 words of memory out of 1000001
+ 4229 multiletter control sequences out of 10000+50000
+ 15899 words of font info for 63 fonts, out of 500000 for 1000
+ 14 hyphenation exceptions out of 1000
+ 32i,21n,24p,808b,432s stack positions out of 1500i,500n,5000p,200000b,5000s
+
+Output written on thesis.dvi (39 pages, 142056 bytes).

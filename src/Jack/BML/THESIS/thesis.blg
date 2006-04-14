@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99c (Web2C 7.4.5)
+The top-level auxiliary file: thesis.aux
+The style file: plain.bst
+Database file #1: biblio.bib
+Warning--string name "springer" is undefined
+--line 299 of file biblio.bib
+Database file #2: specification.bib
+You've used 14 entries,
+            2118 wiz_defined-function locations,
+            623 strings with 7210 characters,
+and the built_in function-call counts, 5059 in all, are:
+= -- 472
+> -- 267
+< -- 8
++ -- 110
+- -- 89
+* -- 328
+:= -- 823
+add.period$ -- 43
+call.type$ -- 14
+change.case$ -- 83
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 204
+empty$ -- 392
+format.name$ -- 89
+if$ -- 1082
+int.to.chr$ -- 0
+int.to.str$ -- 14
+missing$ -- 11
+newline$ -- 72
+num.names$ -- 32
+pop$ -- 113
+preamble$ -- 1
+purify$ -- 70
+quote$ -- 0
+skip$ -- 155
+stack$ -- 0
+substring$ -- 233
+swap$ -- 66
+text.length$ -- 8
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 52
+warning$ -- 0
+while$ -- 44
+width$ -- 16
+write$ -- 154
+(There was 1 warning)

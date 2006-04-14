@@ -1,0 +1,124 @@
+
+\newtheorem{Expression}{Expression}
+
+
+
+\subsection{Expressions}\label{lang}
+
+We are now going to look at the expressions that our bytecode language manipulates. 
+Similarly to the Java Bytecode language, the values of our language are of primitive data 
+type\footnote{ we support only the integer primitive data type, which is sufficient for the purposes of this document} or references
+where  references can be either references to class instance objects or to array objects. 
+The special reference \Mynull \ does not point to any object.  
+$$ \begin{array}{ll}
+             \Values & := i, i \in \  \Myint \mbox{\rm literal } \mid \RefValues \\
+	     \RefValues & := Ref : \AllRefs \mid \Mynull 
+  \end{array} $$
+
+
+ We introduce several notations which will be used in the following.
+ If we want to say explicitely that a reference points to a class instance object of type \clazz \ we denote this with $\reference{\clazz}$ and if
+ a reference points to a location of an array object whose elements are of type \anyType \ we denote this
+ with $\RefArr{\anyType \lbrack \ \rbrack}$.
+ Fields are modeled as functions from references to values. 
+
+% The field with unique name  $i$  in a class \clazz is denoted by the function $\field{i}{C}$ and its domain is the set of
+% references of class \clazz and has the following signature:
+% $$ \begin{array}{l}
+%           \field{i}{\clazz}: \reff \rightarrow \Values \\
+%	   \dom{\field{i}{\clazz}} = \{ \Ref{\clazz} \}
+%   \end{array} $$
+
+ Our language supports field access expressions $\fieldd(\expression)$.
+ When assigning value $v$ to the object field \fieldd \ of the object pointed by the reference $r$,
+ the  corresponding field function is updated resulting in a new field function $\fieldd[ \oplus r \longrightarrow v]: \AllRefs \longrightarrow \Values $.
+ Next, our language supports arrays
+ and the access to the $\rm{i^{th}}$ element in the array \textrm{arr} is denoted with $ \arrayAccess{\rm{arr}}{\rm{i}}$.
+ Similarly, we use update functions for array access expressions  $ \update{\arrayAccess{\rm{arr}}{\rm{i}}}{ (ref, ind)  } { val}$.
+
+The list of registers is denoted with \locVarOnly. The $\rm{i^{th}}$ element of \textrm{reg} is denoted by 
+$\locVar{i}$. Note that $\locVar{0}$ will stand for the current object, 
+which corresponds to \texttt{this} in the Java language. 
+ The language deals also with arithmetic expressions that evaluate to an integer value and have the form $\expression_1 \ \op \ \expression_2 $,
+ where  $ \expression_1$ and $\expression_2$ are also arithmetic expressions and $op$ is an arithmetic operation symbol
+ ranging in $+, - , div, rem , xor, xand $. 
+
+As the Java virtual machine is stack based we will also 
+need expressions that model respectively the operand stack and the stack counter.
+Thus, the expressions $\counter$ and  \textrm{stack} stand respectively for the stack counter and the stack. 
+With \stack{i}, we denote the expression at the \textrm{i}-th position 
+on the stack is. 
+
+The following definition gives the formal grammar for the expressions of the bytecode language.
+\begin{Expression}[Formal Grammar of Expressions] \label{expr}
+    
+\end{Expression}
+
+  $$ 
+  \begin{array}{ll}  
+    \op             & ::= + \mid - \mid div \mid rem \mid xor \mid xand  \\
+		    &                                                \\
+		    &                                                \\
+    \expression     & ::= \\
+                    &  \Values \\
+	            &  \mid  \fieldd(\expression) \\
+		    &  \mid  \update{\fieldd}{ \expression}{\expression}(\expression) \\
+		    &  \mid  \arrayAccess{\expression} {\expression} \\	   
+		    &  \mid \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression) \\	
+		    &  \mid  \locVar{i} \\ 
+		    &  \mid  \expression \ \op \ \expression   \\
+		    &  \mid  \counter \\
+		    &  \mid  \stack{ \expression} \\
+		  %  &  \mid  \result 		 
+ \end{array} 
+ $$
+
+
+ 
+
+
+
+\subsubsection{Substitution} \label{subst}
+ Expression substitution is defined inductively in a standard way over the expression structure. Still, we allow also
+ substitution over objects that are not from our language, i.e. we apply substitution over field functions which result 
+ in an update version of this field function. 
+ This is done by establishing the substitution rule for field access as follows:
+ $$  \texttt{f(o)}\substitution{\expression_1}{\expression_2} =\texttt{f} \substitution{\expression_1}{\expression_2} ( \texttt{o} \substitution{\expression_1}{\expression_2}) $$
+
+
+ In the next, we define a substitution over field function objects:
+$$  
+\begin{array}{l}
+\texttt{f}\substitution{\expression_1}{\expression_2} = 
+\left\{\begin{array}{ll}
+\texttt{f}  & if \ \expression_1 \neq \tt{f}\\ 
+&\\ 
+
+\expression_2  &  if \  \expression_1 = \tt{f} \wedge \\
+               &  \expression_2 = \texttt{f}[ \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } ]
+\end{array}
+\right. \\
+\\
+\texttt{f}[ \oplus \mbox{ \rm \texttt{r'} } \longrightarrow \mbox{  \rm \texttt{v'} } ]\substitution{\expression_1}{\expression_2} = 
+\left\{\begin{array}{ll}
+\texttt{f}[ \oplus \mbox{ \rm \texttt{r} }\substitution{\expression_1}{\expression_2} \longrightarrow  \mbox{ \rm \texttt{v} }\substitution{\expression_1}{\expression_2} ]  & if \ \expression_1 \neq \tt{f}\\
+& \\ 
+\texttt{f} \begin{array}{l}
+             \lbrack \oplus  \mbox{ \rm \texttt{r'}} \substitution{\expression_1}{\expression_2}\longrightarrow  \mbox{ \rm \texttt{v'}}\substitution{\expression_1}{\expression_2} \rbrack \\
+	     \lbrack \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } \rbrack
+	     \end{array}
+&  
+
+                if \   \expression_1 = \tt{f} \wedge \\
+               &  \expression_2 = \texttt{f}[ \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } ]
+
+\end{array}
+\right. 
+\end{array}
+$$ 
+
+
+For example, consider the following substitution  
+$$\tt{f(o)} \substitution{f}{f[\oplus e \longrightarrow v ]} $$
+This results in the new expression : 
+$$\tt{ f[\oplus e \longrightarrow v](o\substitution{ f}{f[\oplus e \longrightarrow v ]})} $$

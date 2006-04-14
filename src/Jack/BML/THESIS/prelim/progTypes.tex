@@ -1,0 +1,40 @@
+
+\subsection{Program Types}\label{types}
+ The types supported by our language are a simplified version
+ of the types supported by the JVM.
+ Thus, we have a unique simple type : the integer data type \Myint.
+ The reference type (\AllRefs) stands for the simple reference types (\reff)
+ and array reference types(\reffArr ) .
+ The language does not support interface types, still it can be extended 
+ with minor difficuties to interface types. 
+
+  
+
+$$ \begin{array}{ll}
+          \JavaType & ::= \Myint \mid \AllRefs\\
+          \AllRefs  & ::= \reff \mid \reffArr \\
+	  \reff     & ::= \ClassSet \\
+	  \reffArr  & ::= \JavaType[]	  
+   \end{array}  $$
+
+
+Every type has an associated default value which can be accessed via
+the function \defaultValueOnly. The function is defined as follows
+$$ \defaultValue{\anyType} = 
+           \left\{\begin{array}{ll}
+	      \Mynull & \anyType \in \AllRefs \\
+	       0 &  \anyType = \Myint
+	    \end{array}\right. $$
+
+We define also a subtyping relation as follows:
+
+$$\begin{array}{ll}
+  \frac{}{ \subtype{C}{C}} &  
+  \frac{   C2 = C1.\superClass  }{\subtype{C1}{C2}} \\  
+  & \\
+  \frac{ C3 = C1.\superClass \   \subtype{C3}{C2} }{ \subtype{C1}{C2} } &
+  \frac{}{  \subtype{C1}{Object}} \\
+  & \\
+  \frac{   }{\subtype{C[]}{Object}} &  
+  \frac{ \subtype{C1}{C2}}{\subtype{C1[]}{C2[]}} \\
+  \end{array}$$

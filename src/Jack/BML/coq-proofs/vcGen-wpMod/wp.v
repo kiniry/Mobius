@@ -1,8 +1,7 @@
-
 Require Import  semantique.
 Require Import Ensembles.
 Reserved Notation "'vcGen' ( a , p )  ==> ( b , c )" (at level 30).
-
+ 
 Inductive wp : Stmt Invariant_j  -> Assertion -> Assertion -> Ensemble Assertion -> Prop:=
 | wpSkip: forall a, vcGen(Skip Invariant_j, a) ==>  (a, Empty_set Assertion)
 | wpSeq: forall i1 i2 a p2 P2 p1 P1, 

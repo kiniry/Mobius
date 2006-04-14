@@ -105,8 +105,8 @@ Definition update : State -> Var -> Num -> State :=
 fun (s : State) (v : Var) (val : Num) =>
        fun (v1: AllVar) =>
        match v1 with 
-       |   auxvar  _ (* AuxName v1 z *) => (s v1)
-       |   progvar v1' (*Name z1 z2 *) => if (vareq v v1') then val else (s v1) end.
+       |   auxvar  _  => (s v1)
+       |   progvar v1'  => if (vareq v v1') then val else (s v1) end.
 
 Definition Num2Bool : Num -> bool :=
 fun (n : Num) => (negb (Zeq_bool  n 0)).
@@ -145,6 +145,7 @@ Inductive myProp : Set :=
 | p_true :  myProp
 | p_false : myProp 
 | p_foralls :  (State -> myProp) -> myProp
+| p_exists : (State ->myProp) -> myProp
 | p_forallv : (Var -> myProp) -> myProp.
 
 Definition Assertion := State -> myProp .
@@ -179,6 +180,7 @@ match p with
 | p_true => True
 | p_false => False
 | p_foralls p1 => forall st, evalMyProp (p1 st)
+| p_exists p1 => exists st, evalMyProp (p1 st)
 | p_forallv p1 => forall var, evalMyProp (p1 var)
 end.
 Definition EmptyAssertion := 

@@ -1,0 +1,77 @@
+ %\newcommand{\isFieldOfOnly}{\mbox{ \rm \textit{isFieldOf}} \ }
+ % \newcommand{\isFieldOf}[2]{\mbox{ \rm \textit{isFieldOf}}(#1, #2) }
+
+ \subsection{Classes, Fields and Methods}\label{clazz}
+ Java programs are a set of classes. As the JVM says \textit{ A class declaration specifies a new reference type and provides its implementation. \ldots
+ The body of a class declares members (fields and methods), static initializers, and constructors. }
+ In our formalisation, the set of classes is denoted with $\ClassSet$, the set of fields with $\FieldSet$, the set of methods $\MethodSet$.
+ We define a domain for class names \ClassName, for field names \FieldName \ and for method names \MethodName respectively.
+
+ An object of type \ClassSet \ is a tuple with the following components: list of field objects (\fields), which are declared in this class,
+ list of the methods declared in the class (\methods), the name of the class (\className)   and the super class of the class (\superClass)  :
+
+
+ $$ \begin{array}{l}
+          \forall  \clazz : \ClassSet , \\
+         \clazz = \left\{\begin{array}{ll} \fields   & :    list \FieldSet \\
+                                          \methods   & :    list \MethodSet\\
+					  \className & :   \ClassName \\
+					  \superClass& :   \ClassSet
+                    \end{array} \right\}
+   \end{array} $$
+
+ A field object is a tuple that contains the unique field id and a field type, as well as where as the class where it is declared :  
+ $$ \begin{array}{l} \forall \fieldd : \FieldSet, \\
+       \fieldd = \left\{\begin{array}{ll}  \fieldName & : \FieldName;\\
+                                     \fieldType &  : \JavaType; \\
+				     \declaredIn & : \JavaClass
+                     \end{array} \right\}
+   \end{array} $$
+ We introduce a special field which stands for the number of components of any reference pointing to an array object and which does not belong to any class
+ (the name of the object and its field  \fieldName \ have the same name ):
+ $$  \length =  \left\{\begin{array}{ll}  \fieldName & = \length;\\
+                               \fieldType  & = int; \\
+			       \declaredIn & = \bottom
+                     \end{array} \right\}$$
+ 
+% We assume that for any two different fields $\fieldd_1$ and $\fieldd_2$ their names are different : 
+% $$\fieldd_1 \neq \fieldd_2 \Rightarrow \fieldd_1.fieldName \neq  \fieldd_2.fieldName  $$
+
+ A method has a unique method id ( \methodName), a return type (\retType),
+ a list containing the formal parameter names and their types(\args), 
+ the number of its formal parameters (\numArgs),
+ list of bytecode instructions representing its body (\body)
+ and the entry point instruction of the method (\entryPoint)
+ (the instruction at which every execution of the method starts), 
+ the exception handler table ( \excHandlerTable )
+
+ $$ \begin{array}{l}  \forall \methodd: \MethodSet, \\
+                     \methodd  = \left\{\begin{array}{ll}  \methodName & :\MethodName\\
+						          \retType & :\JavaType\\
+							  \args &  : (name * \JavaType) [] \\
+							  \numArgs & : nat \\
+							  \body &  : \bcIns [] \\
+							  \entryPoint  &  : \bcIns\\
+							  \excHandlerTable & : \ExcHandler []
+                                     \end{array}  \right\}
+     \end{array} $$
+  
+ We assume that for every method \methodd the entrypoint is the first instruction in the array of instructions 
+ of which its body consists, i.e. $ \methodd.\entryPoint =\methodd.\body[0]  $.
+
+
+ An object of type \ExcHandler \ contains information about the region in the method body that it protects, i.e. the start
+ position (\pcStart) of the region and the end position ( \pcEnd ), about the exception it protects from (\exc),
+ as well as what position in the method body the exception handler starts (\pcHandler) at.
+
+
+ $$ \begin{array}{l}  \forall \excHH: \ExcHandler, \\
+                     \excHH  = \left\{\begin{array}{ll} \pcStart & : nat\\
+						          \pcEnd & : nat\\
+							  \pcHandler &  : (name * type)[] \\
+							  \exc & : \ClassSet_{exc} 
+                                        \end{array}  \right\}
+     \end{array} $$
+ 
+% For getting the value of any of the attributes in a class, method or field object we use the notation \textit{ name of the object . name of the attribute }
+  

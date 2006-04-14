@@ -5,19 +5,24 @@ Require Import wp.
 Require Import wpMod.
 Require Import ZArith.
 Require Import Classical.
-Axiom user : forall t: Type, t.
-Axiom etaExpansion: forall s: State, s = (fun v : Var => s v).
+
+(*a closed formula in the postcondition can be take out (and vice versa ) *)
+Axiom  relClosFormWP : forall state ( P : myProp ) ( Post WP1 WP2  : Assertion ) stmtM,
+   ( is_wpMod  stmtM Post  WP1 ) -> 
+   ( is_wpMod  stmtM (fun s => ( p_and P  ( Post s )  ) )  WP2 ) -> 
+   (  ( evalMyProp ( WP1 state) /\ (evalMyProp P )  ) -> 
+   ( evalMyProp ( WP2 state) ) ) .  
 
 
-(* a function for generating fresh variables *)
-Inductive  fresh : list Var -> Var -> Prop := 
-|isFresh : forall lVar y  , ~(In y lVar ) -> (fresh lVar y).
-   
-(* a function  for generating a fresh constant*)
-(* Require Import ZArith.
-(*defined rapidly *)
-Inductive AuxVar : Set := 
-AuxName : Var-> Z-> AuxVar. *)
+
+(*sp ( stmt, pre) = post   ->  (post ->  pre) , PROVED BY JULIEN     *)
+(*used in the case of a sequence*)
+(* Axiom spStrongerThanPre : forall stmtm  stmtj Pre Post zPre zPost statePre statePost , 
+ (sp (Pre , statePre , zPre , stmtm) ( stmtj , Post , statePost,  zPost )) -> ( (evalMyProp Post )->  (evalMyProp Pre ) ).
+*)
+
+
+
 
  Inductive stmtJAssume : Set := 
  | SkipAssume : stmtJAssume
@@ -26,7 +31,7 @@ AuxName : Var-> Z-> AuxVar. *)
  | SeqAssume : stmtJAssume -> stmtJAssume -> stmtJAssume 
  | IfAssume : NumExpr -> stmtJAssume  ->  stmtJAssume  -> stmtJAssume  
 (*note that the second argument is a list of pairs of prog variables and auxiliary variables, but we do not see the difference as both variables are from the type Var *)
- | WhileAssume : Invariant_j ->  list  ( Var* Var ) ->NumExpr ->  stmtJAssume  ->  stmtJAssume  .
+ | WhileAssume : Invariant_j ->  list  ( Var * AuxVar ) -> NumExpr ->  stmtJAssume  ->  stmtJAssume  .
 
 (*operational semantics *)
 Inductive execStmtAss : State -> stmtJAssume    -> State -> Set :=
@@ -48,7 +53,7 @@ Inductive execStmtAss : State -> stmtJAssume    -> State -> Set :=
 | execBsSeq: forall s s' s'' st1 st2, execStmtAss s st1 s' -> execStmtAss s' st2 s'' -> execStmtAss s (SeqAssume st1 st2) s''.
 
 (*constructing a  new auxiliary variable corresponding to the value of the variable given as first parameter at program state given as second parameter *)
-Inductive constructModVarSubstList : list Var -> Z ->  State -> list (Var *Var) -> Set := 
+Inductive constructModVarSubstList : list Var -> Z ->  State -> list (Var * AuxVar) -> Set := 
  | empty : forall lVar   z state   lVarSubst , lVar = nil -> lVarSubst = nil ->  ( constructModVarSubstList lVar z state lVarSubst)
  | notEmpty : forall lVar   z ( lVarHead : Var)  lVarTail state lVarSubst lVarSubstHead lVarSubstTail,
           lVar = lVarHead :: lVarTail -> 
@@ -57,6 +62,28 @@ Inductive constructModVarSubstList : list Var -> Z ->  State -> list (Var *Var) 
 	  ( constructModVarSubstList lVarTail z  state lVarSubstTail) -> 
 	  ( constructModVarSubstList lVar z  state lVarSubst ).
 
+Definition nevalVar (s:State)(v: AllVar)  := 
+match v with 
+|  progvar varP => (neval s (nvar varP) )
+|  auxvar varA => (neval s (nAuxVar varA) )
+end.
+
+(*creates a state which corresponds to the state at the loop borders and takes into account the modified variables *)
+Definition stateAtLoop (state : State) ( z: Z) (lVar : list Var )  : State := 
+                                                                         fun var: AllVar =>  
+                                                                        match var with
+                                                                        | progvar v' => 
+                                                                            if  ( In_dec  varEqDec   v' lVar ) 
+                                                                                 then (neval state (nAuxVar ( AuxName v' z ) ))
+                                                                                 else  (neval state (nvar v')  )
+                                                                         | auxvar v' => (neval state (nAuxVar v'))
+                                                                         end.
+
+Definition stateAtIf  (state : State ) (stateF : State) (stateT : State )(expB : NumExpr)  : State :=  
+ fun v: AllVar => if ( Zeq  ( neval state  expB  )  0 )
+         then (nevalVar stateF  v ) 
+         else  ( nevalVar stateT v)
+.
 
 Inductive sp :  myProp * State * Z * stmt_m -> stmtJAssume * myProp  * State * Z -> Prop := 
    | isSpSkip : forall state z ass, sp  (ass,state, z, Skip Invariant_m)  (SkipAssume,  ass,  state,  z)
@@ -68,18 +95,17 @@ Inductive sp :  myProp * State * Z * stmt_m -> stmtJAssume * myProp  * State * Z
                             ( sp    (ass, state, z, (Seq Invariant_m st1 st2) ) ( ( SeqAssume st1j st2j ), ass2, state2 , z2  ))
    | isSpIf : forall   expB st1 st2 ass state assT assF  stateT stateF st2j st1j z zt ze, 
                             (sp  (  ( p_and  ( p_neq  ( neval state  expB  )  0 ) ass   ), state, z , st1 )   (  st1j, assT, stateT , zt  ) ) ->
-                            (sp  (  ( p_and   ( p_eq ( neval state  expB  )  0 )   ass  ), state, zt , st2 )   (  st2j, assF, stateF ,ze) ) ->                       
-                            let stateMerge := fun v: Var => if ( Zeq  ( neval state  expB  )  0 ) 
-                                                                                    then (neval stateF (nvar v )) 
-                                                                                    else  ( neval stateT (nvar v))  in 
-                                   ( sp    ( ass, state, z , ( If Invariant_m expB  st1 st2) )  
-                                             (  ( IfAssume expB  st1j   st2j  ),  p_or assF  assT ,  stateMerge, ze  ) )
+                            (sp  (  ( p_and   ( p_eq ( neval state  expB  )  0 )   ass  ), state, zt , st2 )   (  st2j, assF, stateF ,ze) ) ->    
+                            ( sp    ( ass, state, z , ( If Invariant_m expB  st1 st2) )  
+                                             (  ( IfAssume expB  st1j   st2j  ),  p_or assF  assT , ( stateAtIf state stateF stateT expB)  , ze  ) )
   | isSpwhile : forall  expB stmt ass state inv lVar stmtj assIter stateIter z zIt lVarSubst,
-                            let  stateWithMod := ( fun var: Var =>  
-                                                                         if  ( In_dec varEqDec var lVar ) 
-                                                                         then (neval state (nvar  ( AuxName var z )) )
-                                                                         else  (neval state (nvar var) ) )  in   
-                            let z := z + 1 in 
+                           ( isFresh z  ( fun st => ass) )    ->
+                           ( isFresh z (fun st => (p_and (inv st) ( (p_eq (neval st expB)  0 ) ))) ) ->
+                          (* the folowing condition is redundant wrt with the previous but suitable for the proof of the lemma p -> wp(st , sp(st, P)) *)
+                          ( isFresh z (fun st => (inv st)) )->
+                          ( isFresh z ( fun st => ( p_eq (neval st expB) 0 ) ) ) ->
+                           let  stateWithMod := ( stateAtLoop  state z lVar )   in   
+                           let z := z + 1 in 
                             (* let assume := (Assume stateWithMod ( fun s: State =>
                                                                  ( p_forallv (fun x: Var =>  
                                                                                  ( p_implies  (p_in  x lVar ) ( p_eq ( neval s  ( nvar x) ) 
@@ -105,6 +131,13 @@ Inductive sp :  myProp * State * Z * stmt_m -> stmtJAssume * myProp  * State * Z
                                                        stateWithMod,  
                                                        zIt ) ).
                                 
+(*RELATION WP AND SP *)
+(* ( P -> WP(ST, Q) ) -> (Q -> SP (ST, P)) *)
+Axiom relWpSp : forall stmtM stmtJ WP Pre Post SP zPre zPost statePre statePost ,
+( is_wpMod  stmtM Post  WP ) ->
+                    ( (evalMyProp ( Pre  statePre)) -> ( evalMyProp ( WP  statePre)) ) ->
+ (sp  ( (Pre statePre) , statePre, zPre, stmtM   ) (  stmtJ, SP ,  statePost,zPost  )) ->    
+((evalMyProp SP ) ->  (evalMyProp  (Post statePost) )).
 
 
 Inductive wpAssume  :   stmtJAssume -> Assertion -> Assertion -> list Assertion -> Prop:=
@@ -127,14 +160,30 @@ Inductive wpAssume  :   stmtJAssume -> Assertion -> Assertion -> list Assertion 
 (*TODO ; apply the substitutions from listModSubst on  Cs Ci Pl *)
 | wpWhileAss : forall stmt inv pI PI cond  listModSubst (post  : Assertion),
                  ( wpAssume stmt inv pI PI) -> 
-                 let Cs := fun s => (p_implies (p_and  (inv s)  (p_neq (neval s cond) 0))  (pI s)) in
+                 let Cs := fun s => (p_implies (p_and  (inv s)  (p_neq (neval s cond) 0))  (pI s) )  in
                  let Ci := fun s => (p_implies (p_and (inv s) (p_eq (neval s cond)  0)) (post  s) ) in
                 ( wpAssume (WhileAssume  (inv_j inv)  listModSubst cond stmt )  post inv  ( Cs :: Ci ::  PI ) ).
 
 (* the axiom (which must be  a lemma ) says that  sp returns closed formulas *)
- Axiom spClosed :  forall stmtm stmtj Pre Post zPre zPost statePre statePost ,
+ (* Axiom spClosed :  forall stmtm stmtj Pre Post zPre zPost statePre statePost ,
 (sp ( Pre , statePre , zPre , stmtm ) ( stmtj , Post , statePost, zPost ))  -> 
-forall state , ( fun s : State => Post ) state = Post . 
+forall state , ( fun s : State => Post ) state = Post .  *)
+
+(*CLOSED PREDICATES, DIFFERENT FROM FALSE, IN POST CAN BE TAKEN OUT WHEN APPLIED TO A WP FUNCTION *)
+(* p CLOSED , ( P -> WP(ST, Q) ) -> ( P-> WP(ST,Q /\ P))*)
+(* TODO THE PROOF *)
+Axiom closedPredinPost :  
+forall stmtM (P : myProp) ( Post  Wp1 Wp2 : Assertion )  , 
+( is_wpMod  stmtM Post  Wp1  ) ->
+( is_wpMod  stmtM ( fun st => p_and ( Post st ) P  )  Wp2 ) ->
+forall state : State  , ( (evalMyProp P ) -> ( evalMyProp( Wp1 state ) ) ) ->
+( (evalMyProp P ) -> (evalMyProp (Wp2 state ))) .
+	   
+
+
+Axiom evalClosedFormulas  : forall ( P : myProp ) (state : State ) ,  ( evalMyProp ( ( fun _ =>  P ) state )) = ( evalMyProp  P ).  
+
+Axiom applicationToConstFuncts  : forall ( P : myProp ) (state : State ) ,  ( ( fun _ =>  P ) state )  =   P .  
 
 Lemma spStrongerThanPre : forall stmtm  stmtj Pre Post zPre zPost statePre statePost , 
  (sp (Pre , statePre , zPre , stmtm) ( stmtj , Post , statePost,  zPost )) -> ( (evalMyProp Post )->  (evalMyProp Pre ) ).
@@ -153,8 +202,8 @@ simpl in Htrue; destruct Htrue...
 (* while *)
 inversion Hsp. 
 unfold stateWithMod in H1, H7, H8, H10, H11, H; 
-clear stateWithMod; subst...
-eassert(Hs := (IHstmtM _ _ _ _ _ _ _ H11 ))...
+(*commented because of the change in the sp def - add a check that z is fresh . clear stateWithMod; *) subst...
+eassert(Hs := (IHstmtM _ _ _ _ _ _ _ H15 ))... (* originally the hypothesis was H11 . The proof Changed because  of the change in the sp def *)
 simpl in Hpost.
 simpl in Hs.
 destruct Hpost as [[Hpost1 Hpost2] Hpost3]...
@@ -168,108 +217,7 @@ Qed.
 
 
 
-
-(*CLOSED PREDICATES IN POST CAN BE TAKEN OUT WHEN APPLIED TO A WP FUNCTION *)
-(* p CLOSED ,  WP(ST, p /\ Q) = WP(ST,Q) /\ p*)
-Axiom closedPredinPost :  forall stmt Pre1 PreL1 Pre2 PreL2 (Post1 Post2 : Assertion ) (prop : myProp),  
-(forall state, (Post2 state ) = prop ) ->
-(wpAssume stmt ( fun s : State => p_and (Post1 s)  (  Post2 s)  ) Pre1 PreL1 )  ->   
-(wpAssume stmt Post1 Pre2 PreL2 ) /\ (evalMyProp  prop) .
-
-
-  
-(*sp ( stmt, pre) = post   ->  (post ->  pre) , PROVED BY JULIEN     *)
-(*used in the case of a sequence*)
-(* Axiom spStrongerThanPre : forall stmtm  stmtj Pre Post zPre zPost statePre statePost , 
- (sp (Pre , statePre , zPre , stmtm) ( stmtj , Post , statePost,  zPost )) -> ( (evalMyProp Post )->  (evalMyProp Pre ) ).
-*)
-
-(*RELATION WP AND SP *)
-(* ( P -> WP(ST, Q) ) -> (Q -> SP (ST, P)) *)
-Lemma relWpSp : forall stmtM stmtJ WP Pre Post SP zPre zPost statePre statePost ,
-( is_wpMod  stmtM Post  WP ) ->
-                    ( (evalMyProp ( Pre  statePre)) -> ( evalMyProp ( WP  statePre)) ) ->
- (sp  ( (Pre statePre) , statePre, zPre, stmtM   ) (  stmtJ, SP ,  statePost,zPost  )) ->    
-((evalMyProp SP ) ->  (evalMyProp  (Post statePost) )).
-
-Proof with auto.
-intro stmtM; induction stmtM; intros until statePost; intro hypWP; intro hypWP_Implied; intro hypSP.
-(*skip*)
-intros SPholds.
-inversion hypWP; subst...
-inversion hypSP; subst...
-
-(*assign*)
-
-intros SPholds.
-inversion hypWP; subst...
-inversion hypSP; subst...
-
-(* if *)
-intros SPholds.
-inversion hypWP; subst...
-inversion hypSP; subst...
-simpl in *.
-
-assert ( HypWpThen : (  neval statePre n <> 0 /\ evalMyProp (Pre statePre)  )-> evalMyProp (pre_t statePre) ).
-intros.
-destruct H.
-assert ( hypWpImp := hypWP_Implied H0 ).
-destruct hypWpImp...
-
-eassert (hypIndThen := ( IHstmtM1 st1j   pre_t  ( fun s => (  p_and (p_neq (neval s n)  0 )  ( Pre s)  )) Post assT zPre zt statePre stateT  H5 HypWpThen H1 ) )...
-
-eassert (hypIndElse := ( IHstmtM2 _   pre_f  ( fun s => (  p_and (p_eq (neval s n)  0 )  ( Pre s)  ))  Post assF zt _ statePre stateF  H4 _ H12 ) )...
-simpl.
-intros h; destruct h as [h1 h2].
-assert ( hypWpImp := hypWP_Implied h2 ).
-destruct hypWpImp as [h3 h4]...
-eassert(hStrT := (spStrongerThanPre _ _ _ _ _ _ _ _ H1)).
-eassert(hStrF := (spStrongerThanPre _ _ _ _ _ _ _ _ H12)).
-simpl in hStrT, hStrF.
-destruct SPholds as [ hF | hT].
-assert(h1 := (hStrF hF)).
-destruct h1 as [hCond h].
-rewrite hCond.
-simpl.
-assert(hRes := hypIndElse hF).
-rewrite (etaExpansion stateF) in hRes.
-trivial.
-assert(h1 := (hStrT hT)).
-destruct h1 as [hCond h].
-destruct (neval statePre n).
-destruct hCond...
-simpl; assert(hRes := hypIndThen hT).
-rewrite (etaExpansion stateT) in hRes.
-trivial.
-simpl; assert(hRes := hypIndThen hT).
-rewrite (etaExpansion stateT) in hRes.
-trivial.
-
-(* while *)
-inversion hypSP; subst...
-simpl.
-inversion hypWP; subst...
-intros h.
-destruct h as [[h1 h2] h3].
-simpl in hypWP_Implied.
-assert(h4 := hypWP_Implied h2).
-destruct h4 as [ h4 [h5 h6] ].
-eassert(h :=  (h5 _ _ _ h3))...
-intros.
-destruct (In_dec varEqDec var lVar).
-destruct H...
-trivial.
-
-(* Seq *)
-inversion hypSP; subst...
-inversion hypWP; subst...
-intros.
-eassert(Hind2 := (IHstmtM2 _ _ (fun _ => ass1) _ _ _ _ _ _    H2 _ H9))...
-eassert(Hind1 := (IHstmtM1 _ _  _  _ _ _ _ _ _    H5 _ H1))...
-Qed.
-
-
+(* wpMod  is monotone *)
 Lemma  wpModMon : forall stmtM  Post1 Post2 Pre1 Pre2 ,
 (is_wpMod stmtM Post1 Pre1) ->  
 (is_wpMod stmtM Post2 Pre2) -> 
@@ -338,7 +286,7 @@ assert ( invImpliesInv :  forall st ,
         p_and
           (p_forallv
              (fun x : Var =>
-              p_implies (p_not (p_in x lVar)) (p_eq (stf x) (st x))))
+              p_implies (p_not (p_in x lVar)) (p_eq (stf (progvar x) ) (st (progvar x)))))
           (invariant stf)) ) st ) )   ->  
  (evalMyProp ( ( fun stf : State =>
      p_foralls
@@ -346,7 +294,7 @@ assert ( invImpliesInv :  forall st ,
         p_and
           (p_forallv
              (fun x : Var =>
-              p_implies (p_not (p_in x lVar)) (p_eq (stf x) (st x))))
+              p_implies (p_not (p_in x lVar)) (p_eq (stf (progvar x)) (st (progvar x )))))
           (invariant stf)) ) st) )
   ).
 intros.
@@ -368,14 +316,35 @@ assert (hypIdentGoal := hypInd1 st H0).
 exact hypIdentGoal.
 Qed.
 
-
+(**************************  wpMod represents a total function relation *********************************************************************)
 Axiom wpModTotal: forall stmtM Post, exists Pre,  (is_wpMod stmtM Post Pre).
+Axiom etaExpansion: forall s: State, s = (fun v : AllVar => s v).
+(*need to be proven, may be not true *)
+Axiom relationBtwStates: forall (P : Assertion ) ( fixedState :State )  (lVar : list Var ) (z : Z),
+ ( isFresh z   P) ->
+(evalMyProp ( p_exists (fun state =>  
+                                           ( p_and      (p_forallv (fun x =>
+                                                                   (p_implies (p_not (p_in x lVar)) (p_eq (state (progvar x) ) (fixedState (progvar x) )))))
+                                                                   (P state) )))) ->
+(evalMyProp (   P 
+                    ( fun var : AllVar =>  match var with
+                                                      | progvar v' => if (In_dec varEqDec v' lVar)
+                                                                                 then (neval fixedState (nAuxVar ( AuxName v' z) ))  
+                                                                                 else (neval fixedState  (nvar v') )
+                                                      | auxvar v' =>   (neval fixedState (nAuxVar v')) 
+                                                      end))).   
 
+ Axiom spIsSurjective :  
+forall  stmtM stmtJ ( statePre1 statePre2  statePost  : State ) ( Spost pre : myProp ) (z1 z2: Z) , 
+(   sp (pre , statePre1, z1, stmtM)  (stmtJ , Spost , statePost, z2)  ) ->  
+(   sp (pre, statePre2, z1, stmtM) (stmtJ , Spost , statePost, z2)  ) ->
+ statePre1 = statePre2.
 
+Axiom TRich : False.
 Lemma Pre_implies_wp_of_sp : forall stmtM stmtJ PRE  sPost  zPre zPost statePre statePost wPre , 
   ( sp ( ( PRE  statePre ) , statePre , zPre, stmtM) ( stmtJ,  sPost , statePost, zPost ) )->  
   ( is_wpMod  stmtM ( fun s =>  sPost)  wPre ) -> 
-  ( (evalMyProp ( PRE  statePre)) -> ( evalMyProp ( wPre  statePre) ) ) .
+  ( (evalMyProp ( PRE  statePre )) -> ( evalMyProp ( wPre  statePre ) ) ) .
 
 Proof with auto.
 intro stmtM. induction stmtM; intros until wPre; intro SP;  intro WP.
@@ -397,7 +366,7 @@ inversion SP ; subst ...
 inversion WP; subst ...
 
 simpl in *.
-split.
+split. 
 intros.
 
 (*then case *)
@@ -407,7 +376,7 @@ intro wpExists.
 intros.
 
 eassert ( IHypThen1 :=  (IHstmtM1 st1j ( fun s =>   p_and (p_neq (neval statePre n) 0) (PRE statePre) )   assT zPre zt statePre stateT wpExists _ H1)).
-exact H2.
+ exact H2.
 
 assert ( Then_impl_ThenOrElse :  ( evalMyProp assT ) -> (  evalMyProp (  p_or assF assT) )    ).
 intros.
@@ -448,6 +417,29 @@ assert ( assWpExists := IHypElse1  PandNotCond ).
 assert ( goal :=  applyMonotElseInStatePre assWpExists  ).
 assumption.
 
+elim TRich.
+
+(*seq*)
+inversion SP; subst...
+inversion WP; subst ...
+
+intros.
+assert ( wpOfStmt1Ass1exists := wpModTotal stmtM1 (fun _ => ass1 )).
+elim wpOfStmt1Ass1exists.
+intros.
+assert (HIndSt1 := IHstmtM1 st1j PRE ass1 zPre z1 statePre state1  x H1 H0 H).
+
+assert (HIndSt2 := IHstmtM2 st2j  ( fun  state1 => ass1) sPost z1 zPost state1 statePost pre_st2 ).
+
+rewrite (  applicationToConstFuncts ass1 state1) in HIndSt2.
+assert (HIndSt22 := HIndSt2 H9 H2).
+assert ( wpMonot := wpModMon stmtM1  ( fun st => ass1) pre_st2 x wPre H0 H5 ).
+apply wpMonot.
+intros.
+apply (IHstmtM2 st2j  ( fun  st => ass1) sPost z1 zPost state1 statePost pre_st2 ).
+assert ( spSurj := spIsSurjective stmtM2 st2j state1  st  statePost sPost ass1 z1 zPost   H9 ).
+exact H9.
+
 
 (*while *)
 
@@ -458,44 +450,176 @@ simpl in *.
 split.
 
 (*the invariant is proven *)
-assert ( goal := H3 H). 
+assert ( goal := H14 H). 
 assumption.
 
 
-(*the invariant preservation*)
+(*the loop termination *)
 simpl in *.
 split.
-intros .
+assert ( goal := relationBtwStates ( fun st => p_and (inv st ) ( p_eq (neval st n)  0) )  statePre lVar z H11  ).
+simpl in *.
+intros.
+destruct goal.
+intros.
+assert ( modVars_and_inv_notCond := ( conj ( conj H0 H1  ) H2) ).
+exists st .
 split.
-split.
-Focus 2.
+destruct modVars_and_inv_notCond.
+destruct H3.
 assumption.
-assert (invInStatePre := conj H1 H0).
-Focus 3.
-intros .
+split.
+assumption.
+assumption.
+
+simpl in *.
+split.
+split.
+assert ( goal1 := relationBtwStates ( fun st => inv st )  statePre lVar z H12  ).
+simpl in *.
+intros.
+apply goal1.
+exists st;split; assumption.
+assumption.
+
+assert ( goal1 := relationBtwStates ( fun st =>  p_eq ( neval st n) 0 )  statePre lVar z H13  ).
+simpl in *.
+intros.
+apply goal1.
+exists st; split; assumption.
+(*invariant preservation*)
+
+(* from here not good *)
+
+assert (existsWpPre := wpModTotal stmtM ( fun s => assIter ) ).
+destruct existsWpPre.
+
+assert (IndHyp :=
+            IHstmtM 
+            stmtj     
+           (fun s => (p_and
+           (newInv
+              (fun var : AllVar =>
+               match var with
+               | progvar v' =>
+                   if In_dec varEqDec v' lVar
+                   then statePre (auxvar (AuxName v' z))
+                   else statePre (progvar v')
+               | auxvar v' => statePre (auxvar v')
+               end))
+           (p_not
+              (p_eq
+                 (neval
+                    (fun var : AllVar =>
+                     match var with
+                     | progvar v' =>
+                         if In_dec varEqDec v' lVar
+                         then statePre (auxvar (AuxName v' z))
+                         else statePre (progvar v')
+                     | auxvar v' => statePre (auxvar v')
+                     end) n) 0)) ) ) 
+                     assIter 
+                     (z + 1)
+                     zPost
+                    (*prestate*)
+                    ( fun var : AllVar =>
+                    match var with
+                     | progvar v' =>
+                     if In_dec varEqDec v' lVar
+                        then statePre (auxvar (AuxName v' z))
+                        else statePre (progvar v')
+                     | auxvar v' => statePre (auxvar v')
+                     end) 
+                     (*poststate*)
+                     stateIter
+                     x 
+                     H16 
+                     H0 ).
+simpl in *.
+assert (spIterStrongerThanPre := spStrongerThanPre 
+       stmtM 
+       stmtj
+       (*the precondition*)
+       ( p_and
+           (newInv
+              (fun var : AllVar =>
+               match var with
+               | progvar v' =>
+                   if In_dec varEqDec v' lVar
+                   then statePre (auxvar (AuxName v' z))
+                   else statePre (progvar v')
+               | auxvar v' => statePre (auxvar v')
+               end))
+           (p_not
+              (p_eq
+                 (neval
+                    (fun var : AllVar =>
+                     match var with
+                     | progvar v' =>
+                         if In_dec varEqDec v' lVar
+                         then statePre (auxvar (AuxName v' z))
+                         else statePre (progvar v')
+                     | auxvar v' => statePre (auxvar v')
+                     end) n) 0)) ) 
+                     (*the sp predicate*)
+                     assIter
+                     (z + 1)
+                     
+                     (zPost)
+                     (*the prestate*)
+                     (  fun var : AllVar =>
+                           match var with
+                           | progvar v' =>
+                               if In_dec varEqDec v' lVar
+                               then statePre (auxvar (AuxName v' z))
+                               else statePre (progvar v')
+                           | auxvar v' => statePre (auxvar v')
+                           end )
+                     stateIter
+                     H16
+ ).
+simpl in *.
+
+
+  assert ( assIter_implies_inv : 
+              (evalMyProp assIter) ->  (evalMyProp ( (  fun stf : State =>
+              p_foralls
+                  (fun st : State =>
+                        p_and
+                        (p_forallv
+                           (fun x : Var =>
+                                   p_implies (p_not (p_in x lVar))
+                                   (p_eq (stf (progvar x)) (st (progvar x))))) (inv stf)) ) 
+                          (fun var : AllVar =>
+                                match var with
+                                | progvar v' =>
+                                    if In_dec varEqDec v' lVar
+                                    then statePre (auxvar (AuxName v' z))
+                                    else statePre (progvar v')
+                                | auxvar v' => statePre (auxvar v')
+                                end)   ))).
+intros.
+simpl in *.
+assert ( invInPost := spIterStrongerThanPre H1).
+split.
+destruct invInPost as [ [[Pre InvAtIter] NotMod ]  NotCond]     .
+intros.
+assert ( notMod := H4 var H6).
 
 
 
 
 
 
-(*version Benjamin *)
- (* Lemma wpModImplieswp : forall stmtM  P Q  Q1 preM preJ listPogJ  stmtJ (assPost : myProp)  statePre  stateSP  zPre zPost,
+
+
+
+(************************************************************************************************)
+ Lemma wpModImplieswp : forall stmtM  P Q preM preJ listPogJ  stmtJ (assPost : myProp)  statePre  stateSP  zPre zPost,
                     ( is_wpMod  stmtM Q  preM ) ->
                     ( (evalMyProp ( P  statePre)) -> ( evalMyProp ( preM  statePre)) ) ->
-                   (sp  ( (P statePre) , statePre, zPre, stmtM   ) (  stmtJ, assPost ,  stateSP,zPost  ) ) ->   
-                   ( ( evalMyProp ( Q  stateSP ) ) ->  ( evalMyProp ( Q1  stateSP ) ) ) ->
-                   (wpAssume stmtJ Q1   preJ listPogJ )  -> 
-                                  ((evalMyProp ( preM statePre)  -> ( evalMyProp ( preJ statePre)) )  /\ 
-                                         (forall s, (forall f: Assertion, (In f listPogJ) -> ( evalMyProp (f s)   )))).
-*)
-
- Lemma wpModImplieswp : forall stmtM  P Q  Q1 preM preJ listPogJ  stmtJ (assPost : myProp)  statePre  stateSP  zPre zPost,
-                    ( is_wpMod  stmtM Q  preM ) ->
-                    ( (evalMyProp ( P  statePre)) -> ( evalMyProp ( preM  statePre)) ) ->
-                   (sp  ( (P statePre) , statePre, zPre, stmtM   ) (  stmtJ, assPost ,  stateSP,zPost  ) ) ->   
-                   ( ( evalMyProp ( Q  stateSP ) ) ->  ( evalMyProp ( Q1  stateSP ) ) ) ->
-                   (wpAssume stmtJ Q1   preJ listPogJ )  -> 
+                   (sp  ( (P statePre) , statePre, zPre, stmtM   ) (  stmtJ, assPost ,  stateSP,zPost  ) ) ->  
+                   (wpAssume stmtJ Q  preJ listPogJ )  -> 
                                   ((evalMyProp ( P statePre)  -> ( evalMyProp ( preJ statePre)) )  /\ 
                                          (forall s, (forall f: Assertion, (In f listPogJ) -> ( evalMyProp (f s)   )))).
 
@@ -503,11 +627,10 @@ Proof with  auto.
 
 
 intro stmtM.
-induction stmtM; intros until zPost; intros HwpMod Himply Hsp HpostRelation HwpAssume. 
+induction stmtM; intros until zPost; intros HwpMod Himply Hsp  HwpAssume. 
 
 (* While *)
 Focus  4.
-
 inversion Hsp.  
 unfold newInv in *.
 subst.
@@ -526,14 +649,129 @@ split...
 intros state vc h.
 destruct h as [  vcPreserv | [   vcTermination | vcBody ]].
 
-Focus 2. 
+
 subst ...
 simpl ...
-
 intros .
-destruct H as [ [ P_in_statePre invHolds  ]  varNotMod]. 
-assert ( Himply1 := Himply )
+assert ( pre_inv_cond_impl_p :  ( 
+                            forall st : State,
+                             (   evalMyProp (P statePre) )  /\
+                            (forall var : Var,
+                            ~ In var lVar -> st (progvar var) = statePre (progvar var)) ->
+                            evalMyProp (inv st) -> neval st n <> 0 -> evalMyProp (pre_st st) /\    (   evalMyProp (P statePre )))   ).
 
+split.
+destruct H as [ [ [ P_in_statePre invInState  ]   varNotMod ] condInState].
+assert ( impliesWP :=  Himply  P_in_statePre ).
+destruct impliesWP.
+destruct H3.
+destruct H0.
+assert ( pre_stHolds := H4 st  H5 H1 H2 ).
+assumption.
+destruct H0.
+assumption.
+simpl in *.
+assert (wpExistsForInvAndP :=wpModTotal  
+   stmtM  
+   (fun st => p_and 
+              (P statePre)
+             ( ( fun stf : State =>
+                 p_foralls
+                    (fun st : State =>
+                         p_and
+                             (p_forallv
+                                 (fun x : Var =>
+                                 p_implies (p_not (p_in x lVar))
+                                 (p_eq (stf (progvar x)) (st (progvar x))))) (inv stf) ) ) st )
+                                )
+).
+
+destruct wpExistsForInvAndP.
+simpl in *.
+assert ( hyp_wp_and_P_impl_wpOfP := relClosFormWP   
+   statePre 
+   ( P statePre )
+   ( fun stf : State =>
+                 p_foralls
+                    (fun st : State =>
+                         p_and
+                             (p_forallv
+                                 (fun x : Var =>
+                                 p_implies (p_not (p_in x lVar))
+                                 (p_eq (stf (progvar x)) (st (progvar x))))) (inv stf)))
+      pre_st
+      x
+      stmtM 
+      H6
+      H0).
+
+simpl in *.
+(*  ************* *)
+assert ( pre_inv_cond_impl_p1 := pre_inv_cond_impl_p statePre ).
+assert( trans : (evalMyProp (P statePre) /\
+                       (forall var : Var,
+                        ~ In var lVar ->
+                        statePre (progvar var) = statePre (progvar var))  /\ 
+                       evalMyProp (inv statePre) /\ 
+                       neval statePre n <> 0) -> evalMyProp (x statePre) ).
+intros.
+destruct H1  .
+destruct H2.
+destruct H3.
+assert ( pre_stAndP :=pre_inv_cond_impl_p1 (conj  H1 H2 ) H3 H4). 
+assert (wpForInvAndP :=  hyp_wp_and_P_impl_wpOfP pre_stAndP ).
+assumption.
+assert (ind  := IHstmtM      
+        (fun s => (p_and
+        ( p_and 
+        ( p_and  (P statePre) 
+        ( p_forallv (fun var =>
+         p_implies (p_not (p_in var lVar)) (  p_eq ( statePre (progvar var) ) (  statePre (progvar var) )))))
+          (inv statePre)  )
+         (p_neq (neval statePre n ) 0 ) ) )
+
+     (fun st : State =>
+     p_and (P statePre)
+       (p_foralls
+          (fun st0 : State =>
+           p_and
+             (p_forallv
+                (fun x : Var =>
+                 p_implies (p_not (p_in x lVar))
+                   (p_eq (st (progvar x)) (st0 (progvar x))))) (inv st))))
+                   x  
+                   pI 
+                   PI 
+                   stmtj 
+                   assIter  
+                   statePre 
+                   stateIter 
+                   (z+1) 
+                   zPost 
+                   H0  
+).
+rewrite (evalClosedFormulas  ( p_and
+             (p_and
+                (p_and (P statePre)
+                   (p_forallv
+                      (fun var : Var =>
+                       p_implies (p_not (p_in var lVar))
+                         (p_eq (statePre (progvar var))
+                            (statePre (progvar var)))))) (inv statePre))
+             (p_neq (neval statePre n) 0))  statePre ) in ind.
+simpl in *.
+
+
+assert (trans1 : (((evalMyProp (P statePre) /\
+         (forall var : Var,
+          ~ In var lVar -> statePre (progvar var) = statePre (progvar var))) /\
+        evalMyProp (inv statePre)) /\ neval statePre n <> 0 ->
+       evalMyProp (x statePre)) ).
+intros.
+destruct H1 as [ [ [H2 H3] H4 ] H5].
+assert ( trans2 :=  trans (conj H2 (conj H3  (conj H4  H5 ) ) ) ) . 
+assumption.
+assert ( ind1 := ind trans1 H15 ).
 
 (* skip *)
 inversion HwpMod; subst...

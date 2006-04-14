@@ -117,7 +117,7 @@ Inductive sp :  myProp * State *AuxState * stmt_m -> stmtJAssume * myProp  * Sta
                                      stateAux
                                    ) 
                             )
-  | isSpwhile : forall  expB stmt ass state inv lVar stmtj assIter stateIter auxState  z  ,
+  | isSpwhile : forall  expB stmt ass state inv lVar stmtj assIter stateIter stateIterStart  stateLoopEnd  auxState  z  ,
                            ( isFresh z  ( fun st => ass) )    ->
                            ( isFresh z (fun st => let (s , sAux ) := st in (p_and (inv st) ( (p_eq (neval s auxState  expB)  0 ) )))) ->
                            (* the following condition is redundant wrt with the previous but suitable for the proof of the lemma p -> wp(st , sp(st, P)) *)
@@ -132,15 +132,15 @@ Inductive sp :  myProp * State *AuxState * stmt_m -> stmtJAssume * myProp  * Sta
                                                                                             
                            (evalMyProp ass -> evalMyProp (inv (state, auxState))) -> 
                            (evalMyProp ( p_and 
-                                                 (p_eq ( neval  ( stateAtLoop  state auxState z lVar )  auxState  expB )  0 ) 
-                                                 ( inv   ( ( stateAtLoop  state auxState z lVar ),  auxState) ) 
+                                                 (p_eq ( neval  ( stateAtLoop  stateLoopEnd auxState z lVar )  auxState  expB )  0 ) 
+                                                 ( inv   ( ( stateAtLoop  stateLoopEnd auxState z lVar ),  auxState) ) 
                                                 ) 
                            )  ->
                            (*CONSTRUCT THE SUBSTITUTION lIST*)
 			  (* ( constructModVarSubstList lVar z ( stateAtLoop  state stateAux z lVar )  lVarSubst ) ->  *)
-                           (sp  ( (p_and (  newInv ( ( stateAtLoop  state auxState z lVar ) , auxState) )  
-                                                   ( p_not( p_eq ( neval   ( stateAtLoop  state auxState z lVar )  auxState expB )  0) )) ,
-                                    ( stateAtLoop  state auxState z lVar )  , 
+                          (sp  ( (p_and (  p_and ass ( inv ( ( stateAtLoop  stateIterStart auxState z lVar ) , auxState) ))   
+                                                   ( p_not( p_eq ( neval   ( stateAtLoop  stateIterStart auxState z lVar )  auxState expB )  0) )) ,
+                                    ( stateAtLoop  stateIterStart auxState z lVar )  , 
                                     auxState,
                                     stmt
                                   ) 
@@ -149,17 +149,17 @@ Inductive sp :  myProp * State *AuxState * stmt_m -> stmtJAssume * myProp  * Sta
                                    assIter, 
                                    stateIter ,
                                    auxState
-                                 ) ) -> 
+                                 ) )  -> 
                            ( sp    ( ass,  
                                        state, 
                                        auxState,
                                        WhileInd  Invariant_m z expB ( inv_m  inv lVar )  stmt 
                                      )                                                   
-                                     ( WhileAssume z (inv_j newInv) ( stateAtLoop  state auxState z lVar )  expB stmtj   ,                                    
+                                     ( WhileAssume z (inv_j newInv) ( stateAtLoop  stateLoopEnd auxState z lVar )  expB stmtj   ,                                    
                                             p_and  ( 
-                                               p_and (  inv ( ( stateAtLoop  state auxState z lVar ) , auxState) ) ass )
-                                                          (  p_eq  ( neval ( stateAtLoop  state auxState z lVar )  auxState expB )  0 ), 
-                                             ( stateAtLoop  state auxState z lVar )  ,
+                                               p_and (  inv ( ( stateAtLoop  stateLoopEnd auxState z lVar ) , auxState) ) ass )
+                                                          (  p_eq  ( neval ( stateAtLoop  stateLoopEnd auxState z lVar )  auxState expB )  0 ), 
+                                             ( stateAtLoop  stateLoopEnd auxState z lVar )  ,
                                              auxState
                                       )
                            ).
@@ -379,7 +379,7 @@ inversion Hsp.
 (*commented because of the change in the sp def - add a check that z is fresh . clear stateWithMod; *) 
 unfold newInv in *.
 subst...
-assert(Hs := (IHstmtM _ _ _ _ _ _ H15 ))... (* originally the hypothesis was H11 . The proof Changed because  of the change in the sp def *)
+assert(Hs := (IHstmtM _ _ _ _ _ _ H15  ))... (* originally the hypothesis was H11 . The proof Changed because  of the change in the sp def *)
 simpl in Hpost.
 simpl in Hs.
 destruct Hpost as [[Hpost1 Hpost2] Hpost3]...
@@ -615,9 +615,69 @@ apply H19.
 assumption.
 split.
 Focus 2.
+intro stAux.
+split.
+Focus 2.
+intros.
+split.
+split.
+destruct H20.
+assumption.
+assumption.
+destruct H20.
+assumption.
+Focus 2.
+assert ( existsWPfor_inv_c_Pre := wpModTotal stmtM ( fun _ =>assIter)  ).
+elim  existsWPfor_inv_c_Pre .
+intro wp_for_inv_c_Pre.
+intro wpRel_for_inv_c_Pre.
+clear existsWPfor_inv_c_Pre. 
+assert ( HI1 :=   IHstmtM 
+                           stmtj 
+                           ( p_and
+                                   (p_and PRE
+                                         (invariant (stateAtLoop stateIterStart auxState z lVar, auxState)))
+                                   (p_not
+                                         (p_eq (neval (stateAtLoop stateIterStart auxState z lVar) auxState n) 0)))
+                           assIter 
+                           ( stateAtLoop stateIterStart auxState z lVar) 
+                           stateIter 
+                           auxState
+                           wp_for_inv_c_Pre  
+                           H21
+                           wpRel_for_inv_c_Pre).
+simpl in *.
+assert ( relBtwPost := spStrongerThanPre 
+                                       stmtM 
+                                       stmtj 
+                                       ( p_and
+                                              (p_and PRE
+                                                    (invariant (stateAtLoop stateIterStart auxState z lVar, auxState)))
+                                       (p_not (p_eq (neval (stateAtLoop stateIterStart auxState z lVar) auxState n) 0)))  
+                                       assIter 
+                                       ( stateAtLoop stateIterStart auxState z lVar) 
+                                       stateIter 
+                                       auxState
+                                       H21
+                                       ).
+simpl in *.
+intros.
+assert ( assIter_implies_invAtStateLoop:  
+forall (state : State) ( stateAux: AuxState) , 
+evalMyProp assIter ->
+ evalMyProp (invariant (stateAtLoop stateIterStart auxState z lVar, auxState))) .
+intros state stateAux assIter1 .
+assert  ( inv_in_conj := relBtwPost assIter1 ).
+destruct inv_in_conj .
+destruct H1.
+assumption.
+monot
 (*seq*)
 Qed. 
-
+Lemma spStrongerThanPre : forall stmtm  stmtj Pre Post statePre statePost stateAux , 
+  (sp (Pre , statePre , stateAux , stmtm) ( stmtj , Post , statePost, stateAux  )) -> 
+  ( (evalMyProp Post )->  
+  (evalMyProp Pre ) ).
 
 (* the axiom (which must be  a lemma ) says that  sp returns closed formulas *)
  (* Axiom spClosed :  forall stmtm stmtj Pre Post zPre zPost statePre statePost ,

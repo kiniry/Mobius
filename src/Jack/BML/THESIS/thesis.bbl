@@ -1,0 +1,87 @@
+\begin{thebibliography}{10}
+
+\bibitem{ARUCom1986}
+AV, Sethi R, and Ullman JD.
+\newblock {\em Compilers-Principles, Techniques and Tools}.
+\newblock Addison-Wesley: Reading, 1986.
+
+\bibitem{barthe02formal}
+Gilles Barthe, Guillaume Dufay, Line Jakubiec, and Simao~Melo de~Sousa.
+\newblock A formal correspondence between offensive and defensive javacard
+  virtual machines.
+\newblock In {\em {VMCAI}}, pages 32--45, 2002.
+
+\bibitem{barthe01formal}
+Gilles Barthe, Guillaume Dufay, Line Jakubiec, Bernard Serpette, and
+  Sim{\~a}o~Melo de~Sousa.
+\newblock A formal executable semantics of the {JavaCard} platform.
+\newblock {\em Lecture Notes in Computer Science}, 2028:302+, 2001.
+
+\bibitem{M97oos}
+B.Meyer.
+\newblock {\em Object-Oriented Software Construction}.
+\newblock Prentice Hall, second revised edition edition, 1997.
+
+\bibitem{BurdyCCEKLLP03}
+L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.T. Leavens, K.R.M. Leino,
+  and E.~Poll.
+\newblock An overview of {JML} tools and applications.
+\newblock In T.~Arts and W.~Fokkink, editors, {\em Formal Methods for
+  Industrial Critical Systems (FMICS 2003)}, volume~80 of {\em ENTCS}.
+  Elsevier, 2003.
+
+\bibitem{BRL-JACK}
+L.~Burdy, A.~Requet, and J.-L. Lanet.
+\newblock {Java} applet correctness: A developer-oriented approach.
+\newblock In K.~Araki, S.~Gnesi, and D.~Mandrioli, editors, {\em FME 2003:
+  Formal Methods: International Symposium of Formal Methods Europe}, volume
+  2805 of {\em {LNCS}}, pages 422--439, 2003.
+
+\bibitem{jmlrac}
+Yoonsik Cheon and Gary~T. Leavens.
+\newblock A runtime assertion checker for the {Java} modeling language.
+\newblock In {\em Software Engineering Research and Practice (SERP'02)}, CSREA
+  Press, pages 322--328, June 2002.
+
+\bibitem{FM99FFJ}
+Stephen~N. Freund and John~C. Mitchell.
+\newblock A formal framework for the java bytecode language and verifier.
+\newblock In {\em OOPSLA '99: Proceedings of the 14th ACM SIGPLAN conference on
+  Object-oriented programming, systems, languages, and applications}, pages
+  147--166, New York, NY, USA, 1999. ACM Press.
+
+\bibitem{JMLRefMan}
+G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
+  and Joseph Kiniry.
+\newblock {\em JML Reference Manual}.
+\newblock technical report.
+
+\bibitem{KleinN04}
+Gerwin Klein and Tobias Nipkow.
+\newblock A machine-checked model for a {Java}-like language, virtual machine
+  and compiler.
+\newblock Technical Report 0400001T.1, National ICT Australia, Sydney, March
+  2004.
+
+\bibitem{escjava}
+R.K. Leino.
+\newblock escjava.
+\newblock \url{http://secure.ucd.ie/products/opensource/ESCJava2/docs.html}.
+
+\bibitem{VMSpec}
+Tim Lindholm and Frank Yellin.
+\newblock Java virtual machine specification.
+\newblock Technical report, Java Software, Sun Microsystems, Inc., 2004.
+
+\bibitem{pusch98proving}
+Cornelia Pusch.
+\newblock Proving the soundness of a java bytecode verifier in isabelle/hol,
+  1998.
+
+\bibitem{qian99formal}
+Zhenyu Qian.
+\newblock A formal specification of java virtual machine instructions for
+  objects, methods and subrountines.
+\newblock In {\em Formal Syntax and Semantics of Java}, pages 271--312, 1999.
+
+\end{thebibliography}

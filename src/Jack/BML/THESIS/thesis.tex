@@ -1,0 +1,59 @@
+\documentclass[a4paper]{article}
+\input cmd.tex
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{epsfig}
+
+\title{Bytecode Verification and its Applications}
+\begin{document}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+
+\maketitle
+\tableofcontents
+\newpage
+%1
+\section{Introduction}
+
+%2
+\section{ Java Bytecode Language and its Operational semantics}
+   \input prelim/operational_sem.tex
+
+
+   
+%4
+\section{ Specification language for Java Bytecode programs} 
+   \input BML/JML2BC.tex
+
+%5
+\section{ Weakest Precondition Calculus for Java Bytecode} \label{wpGeneral}
+     \input wpbc.tex
+
+
+
+\section{ Verification Condition Genarator for Java Bytecode Programs}
+
+%6
+\section{ Equivalence between Java Source and Bytecode Proof Obligations}
+
+
+
+
+
+%8
+\section{ Fitting a verification condition generator on a small device}
+
+
+
+%9
+\section{ Applications} 
+
+ 
+%10
+\section{ Conclusion}
+
+\bibliographystyle{plain}
+\bibliography{biblio,specification}
+
+\end{document}

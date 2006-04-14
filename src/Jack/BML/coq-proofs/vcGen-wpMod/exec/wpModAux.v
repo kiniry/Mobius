@@ -9,7 +9,7 @@ Definition stateAtLoop (state : State) (stateAux : AuxState )( z: Z) (lVar : lis
                                                                          fun var: Var => 
                                                                             if  ( In_dec  varEqDec   var lVar ) 
                                                                                  then (  stateAux  ( AuxName var z ))
-                                                                                 else  (neval  state stateAux (nvar var)  ).                                                    
+                                                                                 else  state var.
 
  (*creates a state which corresponds to the state at the loop borders and takes into account the modified variables *)
 Definition FreezeVarAtIterStart (state : State) (stateAux : AuxState )( z: Z)   : State := 
@@ -29,52 +29,74 @@ Inductive is_wpMod : stmt_m -> Assertion -> Assertion -> Prop :=
 	  p_and (p_implies (p_neq ( neval s sAux  bExp  ) 0) (pre_t st ))
 	   	    (p_implies (p_eq ( neval s  sAux bExp  ) 0)     (pre_f st) ) ) 
 | is_wpMod_caseWhile : forall post pre_st invariant varNotModif lVar bExp stmt z , 
-	  ( isFresh z
+	(*   ( isFresh z
           (fun st : State * AuxState =>
           let (s, sAux) := st in
-          p_implies (p_and (invariant (s, sAux)) (p_neq (neval s sAux bExp ) 0))
+          p_implies 
+                (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (sAux  ( AuxName x z   )) ( s  x )))))  
+                (p_and (invariant (s, sAux)) (p_neq (neval s sAux bExp ) 0)))
           (pre_st (s, sAux))))  ->  
-                  (isFresh z     (fun st : State * AuxState =>
-                  let (s, sAux) := st in
+          
+          (isFresh z     (fun st : State * AuxState =>
+                  let (stProg, sAux) := st in
+                   ( p_and  ( varNotModif  ((FreezeVarAtIterStart  stProg sAux z  ), sAux ) )
                    (p_and
                       (p_foralls (fun s  =>  (p_implies
+                           (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (stProg x) ( s  x )))))  
                           (p_and (invariant ( s, sAux) ) 
-                                       (p_neq (neval s  sAux bExp) 0))
+                                       (p_neq (neval s  sAux bExp) 0)))
                           (pre_st ( s , sAux) ))))
                        (p_foralls (fun s=> ( p_implies
-                          (p_and (invariant (s, sAux) ) (p_eq (neval s sAux bExp) 0))
-                          (post (s, sAux) )))))))   ->  
+                           (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (stProg x ) ( s  x )))))  
+                          (p_and (invariant (s, sAux) ) (p_eq (neval s sAux bExp) 0)))
+                          (post (s, sAux) ))))))))   ->  
 
 
        ( isFresh z
     (fun st : State * AuxState =>
      let (s, sAux) := st in
-     p_implies (p_and (invariant (s, sAux)) (p_eq (neval s sAux bExp ) 0))
+     p_implies
+       (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (sAux  ( AuxName x z   )) ( s  x )))))  
+       (p_and (invariant (s, sAux)) (p_eq (neval s sAux bExp ) 0)))
        (post (s, sAux)))) -> 
       (* let  stateWithMod := ( stateAtLoop  state z lVar )   in *)
-
+*)
 (wpMod(stmt ,   fun st   => let (s, sAux) := st in
                                              (p_forallv (fun x => (p_implies 
                                                                                 (p_not (p_in x lVar)) 
-                                                                                (p_eq (sAux  ( AuxName x z   )) ( s  x )))))) = varNotModif  ) -> 
+                                                                                (p_eq (sAux  ( AuxName x z   )) ( s  x ))))) ) = varNotModif  ) -> 
           
 (wpMod(stmt ,   invariant  ) = pre_st  ) -> 
        wpMod((WhileInd Invariant_m  z bExp   (inv_m invariant lVar ) stmt ), post) =
        fun st => 
-              let (s, sAux) := st in
+              let (sProg , sAux) := st in
                p_and 
               ( invariant st )
-              ( p_and  ( varNotModif  ((FreezeVarAtIterStart  s sAux z  ), sAux) )
-              ( p_forallsAux  ( fun sAux1 => 
-                 ( p_and    
-                      (p_foralls (fun s=>  ( p_implies 
+               ( p_forallsAux  ( fun sAux1 => 
+               ( p_and  ( varNotModif  ((FreezeVarAtIterStart  sProg sAux1 z  ), sAux1) )
+                  ( p_and                         
+                   (p_foralls ( fun s => ( p_implies 
+                    (p_and (p_forallv (fun x => (p_implies  (* every variable var not declared in the list lVar must be equal at every start iteration state to the values the var had in the state stProg just before the loop started  *)
+                                                                                (p_not (p_in x lVar)) 
+                                                                                (p_eq (sProg x ) ( s  x )))))        
                      ( p_and ( invariant ( ( stateAtLoop  s sAux1 z lVar ),  sAux1 )    )
-                           (p_neq (neval  ( stateAtLoop  s sAux1 z lVar ) sAux1   bExp)  0))  
-		     ( 	pre_st ( ( stateAtLoop  s sAux1 z lVar ), sAux1)  )))))
-		   (p_foralls (fun s=> (p_implies  
-                   ( p_and ( invariant ( ( stateAtLoop  s sAux1 z lVar ), sAux1 ) ) 
-                            (p_eq (neval  ( stateAtLoop  s sAux1 z lVar ) sAux1   bExp)  0))
-                 	( post ( ( stateAtLoop  s sAux1 z lVar ), sAux1))))))))
+                           (p_neq (neval  ( stateAtLoop s sAux1 z  lVar) sAux1   bExp)  0))  )
+		     ( 	pre_st ( (stateAtLoop s sAux1 z lVar ), sAux1)))))
+                   (p_foralls ( fun s => ( p_implies  
+                   ( p_and  (p_forallv (fun x => (p_implies 
+                                                                                (p_not (p_in x lVar)) 
+                                                                                (p_eq (sAux1  ( AuxName x z   )) ( s  x )))))
+                                  ( p_and  ( invariant ( ( stateAtLoop  s sAux1 z lVar ), sAux1 ) ) 
+                                               (p_eq (neval  ( stateAtLoop  s sAux1 z lVar ) sAux1   bExp)  0)))
+                 	( post ( ( stateAtLoop  s sAux1 z lVar ), sAux1)))))))))
 | is_wpMod_caseSeq : forall post pre_st2 pre_st1 st1 st2 z,
       ( wpMod(st2, post) = pre_st2) -> 
         (wpMod(st1, pre_st2) = pre_st1) ->
@@ -86,20 +108,44 @@ where "'wpMod' ( a , post )  = pre"  := (is_wpMod a post pre).
 
 Axiom semAux : 
 forall state aState ( P :  Assertion )  lVar  z,
-(isFresh  z P) -> 
+ (isFresh  z P) -> 
 evalMyProp ( p_forallsAux  ( fun auxState => P ( ( stateAtLoop state auxState z lVar )  , auxState)))  ->
  (evalMyProp ( P ( state, aState ))).
-  
+(* Proof.
+intros.
+simpl in *.
+unfold stateAtLoop in *.
+assert (H1 :=  H  aState).
+clear H.
+unfold If in *.
+Qed.  
+*)
 
 Axiom semAux1 : 
 forall   ( P :  Assertion )  lVar  z,
-(isFresh  z P) -> 
+(* (isFresh  z P) -> *) 
 evalMyProp ( p_forallsAux   ( fun auxState => 
                                            p_foralls  (fun state => 
                                                  P ( ( stateAtLoop state auxState z lVar )  , auxState))))  ->
  ( forall  aState state, (evalMyProp ( P ( state, aState )))).
 
+(*equivalent assertions have the same truth value for every state*)
+Axiom AssertEqEvalEq : forall ass1 ass2  (state: State )( stateAux: AuxState), 
+ass1 = ass2 ->  
+( evalMyProp ( ass1 (state, stateAux) )) = ( evalMyProp ( ass2 (state, stateAux)) ). 
 
+
+Lemma semAux2 : forall st stAux ( lVar : list Var) (z : Z), 
+ (forall var : Var,
+        ~ In var lVar ->
+        st var = stateAtLoop st stAux z lVar var) .
+Proof with auto.
+unfold stateAtLoop.
+intros.
+destruct In_dec.
+contradiction.
+trivial.
+Qed.
 Lemma wpModCorrBS: 
 forall (stateAux : AuxState  ) ( state1: State) (stmt : stmt_m ) (state2: State) ,
        ( execBs _ state1 stmt  state2) -> 
@@ -133,16 +179,24 @@ assert ( atFinalState := semAux
                                s
                                stateAux
                                (fun st : State*AuxState => 
-                               let (s , sAux ) := st in 
-                               (p_and
+                               let (sProg , sAux ) := st in 
+                               ( p_and  ( varNotModif  ((FreezeVarAtIterStart  sProg sAux z  ), sAux ) ) 
+                              (p_and
                                   (p_foralls ( fun s =>  ( p_implies 
-                                         ( p_and (invariant ( s , sAux) )  
-                                         (p_neq (neval s sAux b)  0 ) ) 
-                                         ( pre_st  ( s , sAux) )
-                                    ) ))
+                                      (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar))
+                                                                  (p_eq (sProg x ) ( s  x )))))
+                                         (   p_and (invariant ( s , sAux) )  
+                                             (p_neq (neval s sAux b)  0 ) 
+                                          ))
+                                         ( pre_st  ( s , sAux) ))))
+
                                      (p_foralls (fun s=>   ( p_implies 
-                                         ( p_and (invariant (s, sAux))  (p_eq (neval s sAux b)  0 ) ) 
-                                         ( post (s, sAux) ))))))
+                                         (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (sProg x ) ( s  x )))))
+                                         ( p_and (invariant (s, sAux))  (p_eq (neval s sAux b)  0 ) ) )
+                                         ( post (s, sAux) )))))))
                                     lVar
                                     z
                                   H4  ).
@@ -150,9 +204,12 @@ simpl in *.
 (* intermediate lemma *)
 assert ( hyp:= semAux1   
                         ( fun st =>
-                        let (s, sAux) := st in
+                        let (sP, sAux) := st in
                         p_implies
-                        ( p_and (invariant (s, sAux) ) (p_neq (neval s sAux b) 0) )
+                        (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (sP x) ( s  x )))))  
+                        ( p_and (invariant (s, sAux) ) (p_neq (neval s sAux b) 0) ) )
                         ( pre_st (s, sAux)) )
                         lVar
                         z
@@ -160,57 +217,122 @@ assert ( hyp:= semAux1
 ).
 simpl in *.
 assert( interm :  (forall (stAux : AuxState) (st : State),
+        (forall var : Var, (~ In var lVar ) -> ( stAux (AuxName var z) = (st var ) )) /\
        evalMyProp (invariant (stateAtLoop st stAux z lVar, stAux)) /\
        neval (stateAtLoop st stAux z lVar) stAux b <> 0 ->
        evalMyProp (pre_st (stateAtLoop st stAux z lVar, stAux))) ).
 intros.
-destruct H0.
-destruct (H2 stAux).
+assert ( H00 := H0 stAux ).
+destruct H00.
+destruct H5.
 apply (H5 st0).
+destruct H1.
+destruct H10.
+split.
 assumption.
-(* coq Inria intuition. *) 
-
-assert ( hyp1 := hyp interm ).
+split.
+assumption.
+assumption.
+(*make a rewrite in interm*)
+assert ( H000 : forall (stAux : AuxState) (st : State),
+         (forall var : Var, ~ In var lVar -> stAux (AuxName var z) = (stateAtLoop st stAux z lVar)  var) /\
+         evalMyProp (invariant (stateAtLoop st stAux z lVar, stAux)) /\
+         neval (stateAtLoop st stAux z lVar) stAux b <> 0 ->
+         evalMyProp (pre_st (stateAtLoop st stAux z lVar, stAux)) ).
+intros.
+assert (interm1 := interm stAux st0).
+apply interm1.
+intuition.
+generalize (H2 var).
+rewrite <- semAux2; auto.
+(*rewrite proven*)
+assert ( hyp1 := hyp H000 ).
 clear hyp.
 clear interm.
 assert ( hyp:= semAux1   
                         ( fun st =>
                         let (s, sAux) := st in
                         p_implies
-                        ( p_and (invariant (s, sAux) ) (p_eq (neval s sAux b) 0) )
+                                   (p_and (p_forallv (fun x => (p_implies 
+                                                                  (p_not (p_in x lVar)) 
+                                                                  (p_eq (sAux  ( AuxName x z   )) ( s  x )))))  
+                        ( p_and (invariant (s, sAux) ) (p_eq (neval s sAux b) 0) ))
                         ( post (s, sAux)) )
                         lVar
                         z
                         H7
 ).
 simpl in *.
+
 assert( interm :  (forall (stAux : AuxState) (st : State),
+        (forall var : Var, (~ In var lVar ) -> ( stAux (AuxName var z) = (st var ) )) /\
        evalMyProp (invariant (stateAtLoop st stAux z lVar, stAux)) /\
-       neval (stateAtLoop st stAux z lVar) stAux b =  0 ->
-       evalMyProp (post  (stateAtLoop st stAux z lVar, stAux))) ).
+       neval (stateAtLoop st stAux z lVar) stAux b = 0 ->
+       evalMyProp (post (stateAtLoop st stAux z lVar, stAux))) ).
 intros.
-destruct H0 .
+assert ( H00 := H0 stAux ).
+destruct H00.
+destruct H5.
+apply (H6 st0).
+destruct H1.
+destruct H10.
+split.
+assumption.
+split.
+assumption.
+assumption.
+(*make a rewrite in interm*)
+assert ( H0001 : forall (stAux : AuxState) (st : State),
+         (forall var : Var, ~ In var lVar -> stAux (AuxName var z) = (stateAtLoop st stAux z lVar)  var) /\
+         evalMyProp (invariant (stateAtLoop st stAux z lVar, stAux)) /\
+         neval (stateAtLoop st stAux z lVar) stAux b = 0 ->
+         evalMyProp (post (stateAtLoop st stAux z lVar, stAux)) ).
+intros.
+assert (interm1 := interm stAux st0).
+apply interm1.
+intuition.
+generalize (H2 var).
+rewrite <- semAux2; auto.
+(*rewrite proven*)
+(* destruct H0 .
 destruct (H2 stAux).
 apply (H6 st0).
 assumption.
+*)
 
-assert ( hyp2 := hyp interm ).
+assert ( hyp2 := hyp H0001 ).
 clear hyp.
 clear interm.
 
 
-assert (hyp3:   forall (aState : AuxState),  ( ( forall (state : State),
-       evalMyProp (invariant (state, aState)) /\ neval state aState b <> 0 ->
+assert (hyp3:   forall (aState : AuxState),  ( 
+( forall (state : State),
+       (forall var : Var, ~ In var lVar -> 
+                     aState (AuxName var z) = (stateAtLoop state aState z lVar)  var) /\
+       evalMyProp (invariant (state, aState)) /\ 
+       neval state aState b <> 0 ->
        evalMyProp (pre_st (state, aState)) ))
        /\
-            forall (state: State) , (evalMyProp (invariant (state, aState)) /\
-                 neval state aState b = 0 ->
-                 evalMyProp (post  (state , aState )))).
+( forall (state: State) , 
+         (forall var : Var, ~ In var lVar -> 
+                        aState (AuxName var z) = (stateAtLoop state aState z lVar)  var) /\
+         evalMyProp (invariant (state, aState)) /\
+         neval state aState b = 0 ->
+         evalMyProp (post  (state , aState )))).
 intros.
 split.
-apply (hyp1 aState).
-apply (hyp2 aState).
-
+intros.
+clear H000.
+clear H0001.
+apply (hyp1 aState state  ).
+intuition.
+generalize (H2 var).
+rewrite <- semAux2; auto.
+intros.
+apply (hyp2 aState state).
+intuition.
+generalize (H2 var).
+rewrite <- semAux2; auto.
 
 
 assert (atFinalState1 := atFinalState hyp3).

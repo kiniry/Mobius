@@ -1,0 +1,528 @@
+
+\newcommand{\state}[1]{ \tau_{#1} } 
+\newcommand{\straightBraces}[1]{ \texttt{ (} #1 \texttt{ )} }
+
+\newcommand{\tbc}{\textit{TBC}}
+
+\newtheorem{lemma1}{Progress lemma }
+\newtheorem{th1}{Correctness }
+
+
+
+
+\section{Proof of Correctness } \label{proof}
+
+ 
+We now prove that our method is correct, i.e. if the proof obligations generated for a method are provable then if the method starts
+execution in a state where its precondition holds then  
+\begin{enumerate}
+\item if it terminates normally ( without throwing exception ) its normal  postcondition holds
+\item if it terminates with an exception then the specified exceptional postcondition must hold.
+\end{enumerate}
+As we stated earlier, we assume that the bytecode programs are well structured and well typed, as we are concerned with higher level functional properties. 
+
+
+ First, we prove an auxiliary lemma that establishes that until the execution can go on, the weakest precondition of the next instruction to be executed holds in the prestate and that if an instruction causes returning the control to the caller, then the respective postcondition holds after this instruction execution ( if a \instr{return} instruction then the normal postcondition holds, if an \instr{athrow} instruction then the corresponding exceptional postcondition holds).
+ Then we state the basic theorem of the correctness proof: if a method \method \ starts execution in  a state where its precondition holds $Pre( \method)$ 
+and the implication  $Pre( \method)  \Rightarrow \rm{wp}(\method) $ holds  then the  respective postcondition of method \method holds - 
+the normal  one if it terminates on a return or the exceptional postcondition for exception \texttt{E}, if it terminates by a throwing an exception \texttt{E}. 
+
+As our verification method is modular, when verifying a method we assume that all other methods are correct, and in particular the methods that are invoked in the body of the current method. This means that if a method \method' is invoked and its precondition  $Pre( \method')$ holds upon the value of the call receiver $val_0$( which is encoded as $\locVar{0}$) and the argument values $val_i , i = 1.. \tt{numArgs}(\method')$, i.e.  
+$Pre( \method') \substitution{\locVar{i}}{val_i}_{i0}^{ \tt{numArgs}( \method')}$ holds in the prestate,
+ then the postcondition of the method \method' \ holds in the poststate upon the values of the call receiver, the argument values and the return value 
+$\tt{retValue}(\method', val_i)_{i=0}^{\tt{numArgs}( \method')} $
+(if \method' \ is not void), i.e. 
+$Post( \method') \substitution{\locVar{i}}{val_i}_{i=0}^{\tt{numArgs}( \method')} \substitution{\result}{retValue(\method', val_i)_{i=0}^{\tt{numArgs}( \method')} }$
+holds in the poststate of the method \method'. These assumptions are used when verifying the method call instruction in the lemma that comes next.
+
+
+In what follows, we will prove that a predicate holds in a state by representing the state not by a tuple $\config{\tau}{\pc}$, but just by $\conf{\tau}$ as for a predicate 
+validity the program counter is not important, the value of the  program counter will appear implicitely as the index of the instruction to be executed. 
+
+\begin{lemma1} \label{lemma1}
+Assume we have a program $\Pi$ and its normal postcondition  $\normalPost$ and the partial exception function $\excPost$. 
+Assume that for execution path the first n - 1 instructions are executed $\ins{0} \execRel^*  \ins{n-1} $ 
+causing the state transitions 
+$\config{\state{0}}{\pc_0}  \longrightarrow_{n} \config{\state{n}}{\pc_{n}}  $.
+Assume that  $ \forall i (\ 0 \leq i \leq n ) \ \wpi{\ins{i}}{ \pc_i }{\excPost}$  holds in 
+$\config{\state{i}}{\pc_{i} } $ and
+\begin{enumerate}
+	\item if $\ins{{\pc_n}}$ is a \instr{return} instruction then $\normalPost (\config{\state{n+1}}{\pc_{n+1}})$ holds.  
+	
+	\item if $\ins{{\pc_n}}$ throws a not handled exception of type $E$ \\
+	$\excPost(E) (\config{\state{n+1}}{\pc_{n+1}} )$ holds. 
+ 
+	\item else $\wpi{instr_{n+1}}{\pc_{n+1} }{\excPost}  (\config{\state{n+1}}{\pc_{n+1}} ) $ holds
+\end{enumerate}
+\end{lemma1}
+
+
+	Proof :
+The proof is done by induction on the length of the execution path and on the type of instruction that will be next executed. 
+%	By hypothesis $\wpExeLoops{ i_{ pc_{n} } }( \state{n})$ holds\\
+%\begin{enumerate}
+%	\item assume that $\tt{i_{pc_{\state{n}}}}$ is not a start of a loop
+We consider two cases: the case when the next execution step doesnot do an iteration (the execution step is not  $\execRel_l$ ) 
+case when the current instruction is a loop end and the next instruction to be executed is a loop entry instruction (the execution step is $\execRel_l$ ) 
+  
+\begin{enumerate}
+  \item assume that the  $\ins{{\pc_{n}}}$ is not an end loop and that $\ins{{\pc_{n + 1}}}$ is not a loop entry 
+  (the next execution step is neither a loop iteration, neither a loop initial entrance ).  
+   \begin{enumerate} 
+		\item   \textit{Let's} $\tt{i_{\pc_n}}$ = \instr{return}\\
+		    	\textit{ As we assume that the bytecode programs are well formed after the execution of this instruction
+ 			the method execution will terminate and so the value of the program counter after the execution of a return
+			instruction is} $\pc_n = \bottom$ \\
+			$$\wpi{ \instr{return}}{\pc_n}{\excPost}(\conf{\state{n}}) $$\\
+			\comment{by definition the weakest precondition for \instr{return} }\\
+			 
+                        $$ normalPost \substitution{ \result }{\stack{\topStack} } (\conf{\state{n}}) $$\\
+			\comment{by the substitution property \ref{substProp} in Section \ref{def} and $\pc_{n+1} = \bottom$ }\\
+			$ \normalPost (\conf{\state{n}\substitution{\result}{\stack{\topStack}} } )  $\\
+			
+			 \comment{by definition of the operational semantics of \textrm{return}} \\
+		
+	 	$$ 
+		\begin{array}{l}
+		   \state{n + 1} = \state{n}\substitution{\result}{ \stack{\topStack}} \\
+		   \pc_{n+1} = \bottom 
+		\end{array} $$\\
+		%	and case 1 proved
+
+		\item Let's $\tt{i_{pc_n}}$ = \instr{op}\\
+	
+				
+			\comment{by definition of the postcondition for sequential instructions}\\
+					$$ \wpi{ \instr{op}}{\pc_n  }{\excPost}(\conf{\state{n}}) $$ \\
+            \comment{from the definition of \mbox{ \rm wp } for $\instr{type\_op}$  } \\
+				
+                                        $$ \inter{\pc_n}{\pc_{n}+1}   
+						\begin{array}{l}
+							\substitution{\topStack}{\topStack - 1} \\
+							 \substitution{ \stack{\topStack - 1} }{\stack{\topStack} \ op \  \stack{\topStack -1}}
+							 \end{array}
+					(\conf{\state{n}}$$ \\
+				 \comment{from the assumption for $\ins{{\pc_n}}$  and $\ins{{\pc_{n +1}}}$ and Def. \ref{inter} from Section \ref{wpHelp} } \\
+		
+                        $$ \wpi{next( \ins{{\pc_n}})} {\pc_{n}+1} {\excPost}
+			\begin{array}{l}
+			    \substitution{\topStack}{\topStack - 1}\\
+			    \substitution{ \stack{\topStack - 1} }{\stack{\topStack} \ op \  \stack{\topStack -1}}
+			 \end{array}  (\conf{\state{n}})$$\\
+				\comment{ by the substitution property \ref{substProp} from section ~\ref{def} }\\
+				$$ \wpi{ next(\ins{{\pc_n }} )} {\pc_n+1 }{\excPost}
+			 ( \conf{\state{n} 
+			 		\begin{array}{l}
+			 			\substitution{\topStack}{\topStack - 1} \\
+			 			\substitution { \stack{\topStack - 1} }{\stack{\topStack} \ op \  \stack{\topStack -1}} 
+			 		\end{array}
+			 			} )   $$\\
+				\comment{ from the operational semantics of $ \rm{op}$ } \\ 
+				
+				$$  \begin{array}{l} 
+							\state{n + 1} = \state{n} 
+							\begin{array}{l}
+								\substitution{\topStack}{\topStack - 1} \\
+								\substitution { \stack{\topStack - 1} }{\stack{\topStack} \ op \  \stack{\topStack -1}}  
+								\end{array}\\
+				\pc_{n+1} = \pc_n +1
+				\end{array}
+				$$ 
+				\comment{and this case holds}\\
+			
+			%	$ \wpi{i_{pc_{\state{n}+ 1}}}{\instrPost{i_{pc_{\state{n}+ 1}}}}{ \excPost} (\state{n + 1})$ \\
+
+
+    \item  $\tt{i_{\pc_n}}$ = \instr{load} \textit{ind} \\
+
+		 $$ \wpi{\instr{load} \ ind}{\pc_n }{\excPost}(\conf{\state{n}})$$ \\
+		 \comment{by definition of $wp$ for sequential instruction \instr{load} and as the execution step is not loop itertation, 
+		i.e. it is not of the kind $\execRel_l$ } \\
+	$$ \wpi{ next( \ins{ {\pc_n}} )} {\pc_{n}+1 }{\excPost } 
+	\begin{array}{l} \substitution{\topStack}{\topStack + 1} \\
+		\substitution{\stack{\topStack + 1} } {\locVar{ind} }
+	\end{array}
+		(\conf{\state{n}})$$ \\
+		\comment{  by the substitution property \ref{substProp} from section ~\ref{def} } \\
+	$$ \wpi{ next(\ins{{\pc_n}} )  }{\pc_n + 1}{\excPost }(\conf {\state{n}
+	\begin{array}{l} 
+		\substitution{\topStack}{\topStack + 1} \\
+		\substitution{\stack{\topStack + 1} } {\locVar{ind} } 
+	\end{array}				
+					}$$ \\
+		\comment{by the operational semantics of  \instr{load }  we have} \\ 
+	
+		$$ 
+		\begin{array}{l}
+			\state{n + 1} = \state{n} 
+			\begin{array}{l} 
+				\substitution{\topStack}{\topStack + 1} \\
+				\substitution{\stack{\topStack + 1} }{\locVar{ind}}
+			 \end{array} \\
+	 		\pc_{\state{n + 1}} =  \pc_{\state{n}} + 1 
+ 		\end{array}$$ 
+ 		
+ 		\textit{and the proposition holds } \\
+
+			% $\wpi{i_{pc_{\state{n + 1}}}}{\instrPost{ i_{pc_{\state{n+1}}}  } }{\excPost }(\state{n + 1}) $ \\
+        
+\item  $\tt{i_{\pc_n}}$ = \instr{if\_cond } \textit{s} \\
+
+		$\wpi{ \instr{if\_cond } \ s } {\pc_n  }{\excPost}  (\conf{\state{n}}$  \\
+		\comment{ by  definition of $wp$ for \instr{if\_cond} and the assumption for non loop iteration step } \\
+	$  \ cond( \stack{\topStack}, \stack{\topStack - 1} ) \Rightarrow $  \\
+\Myspace \Myspace $\wpi{ i_{\pc_n + s}}{\pc_n + s}{\excPost} \substitution{\topStack}{\topStack - 2} (\conf{\state{n}})$ \\ 
+		$\wedge$\\
+		$not(cond( \stack{\topStack}, \stack{\topStack - 1} )) \Rightarrow $ \\
+\Myspace \Myspace $\wpi{i_{pc_{n} + 1} }{\pc_n + 1 }{\excPost} \substitution{\topStack}{\topStack - 2} (\conf{\state{n}} ) $\\
+		\comment{assuming that $cond(\stack{\topStack}, \stack{\topStack - 1} )$ holds in state 
+		$\conf{\state{n}}$ and applying implication elimination}\\
+  		$ \wpi{ i_{\pc_n + s } }{\pc_n + s}{\excPost} \substitution{\topStack}{\topStack - 2}(\conf{\state{n}} )$ \\
+  		\\
+ 		$ \wpi{ i_{\pc_n + s } }{\pc_n + s }{\excPost}(\conf{\state{n} \substitution{\topStack}{\topStack - 2} }  )$ \\
+		 \textit{ from the definition of the operational semantics of }\instr{if\_cond s} \textit{ when the condition holds it  follows that:} \\
+		
+$\state{n + 1} = \conf{\state{n} \substitution{\topStack }{\topStack - 2}}$ \\	
+	$  	\pc_{n+1}= pc_n + s $ \\
+	 \textit{and the proposition holds  }
+
+	\item $\tt{i_{\pc_n}}$ = \instr{athrow} \\
+		Assume that the exception thrown is \texttt{E}
+		\begin{enumerate}
+			\item suppose that the thrown exception is not handled, i.e.  $\tt{ \excIndex{\pc_0 }{\stack{\counter}}}=\bottom$   
+				Then by definition we have :\\
+		            
+		               \comment{ by hypothesis the exception is not handled and applying the definition of \textit{wp} for \instr{athrow} } \\
+		               $$
+		               \excPost(class(\stack{\topStack}))
+		                \begin{array}{l} 
+		                	\substitution{\topStack}{0}\\
+					 \substitution{\stack{0} } { \Ref{E} } \\
+					\substitution{\heap}{ \heap[ \oplus \Ref{E} \longrightarrow \objCl{E}]}
+		               \end{array} (\conf{\state{n}})
+                       		$$    
+		                \comment{from lemma \ref{substProp} from section \ref{def}} \\
+                       	$$ \excPost(class(\stack{\topStack})) (\conf
+                       		{\state{n}\begin{array}{l}
+                       				\substitution{\topStack }{0} \\
+                       				\substitution{\stack{0} } { \Ref{E} } \\ 
+						\substitution{\heap}{ \heap[ \oplus \Ref{E} \longrightarrow \objCl{E}]}
+		               			
+		                \end{array}}  )   
+                               $$  
+		               \comment{from the operational semantics of \textrm{athrow} we have that :}
+		               
+				$$\begin{array}{l} \state{n + 1} = \state{n}\substitution{\topStack }{0} \\
+				\Myspace \Myspace \substitution{\stack{0} } { \Ref{E}}\\
+				 \substitution{\heap} { \heap [ \oplus \Ref{E} \longrightarrow \objCl{E}] }   \\
+					pc_{\state{n + 1}} = \bottom
+				\end{array}
+				$$
+			 \\
+		           %    $ \excPost(class(\stack{\topStack})) (\conf{\heap_{n}}{\state{n}}{\pc_{n}})$ \\
+		             \textit{ and the lemma holds for the case when an unhadled exception is thrown}
+                          
+                     \item Assume that this is a handled exception, i.e. $ \tt{\exists \ s. \excIndex{\pc_0 }{\stack{\counter}} }= \tt{s}$  
+			 there exists a handler that starts at instruction $\tt{i_{s}}$: \\ 
+
+			       $$ \wpi{ \instr{i}}{s}{\excPost} 
+						\begin{array}{l}
+							\substitution{\topStack }{0} \\
+							\substitution{\stack{0} } { \Ref{E}}  \\
+							\substitution{\heap}{\heap [ \oplus \Ref{E} \longrightarrow \objCl{E}]}
+						\end{array}
+			       (\conf{\state{n}}) $$
+ 
+                  	 $$  	  \wpi{\instr{i}}{s}{\excPost} (\conf{\state{n}
+				\begin{array}{l}\substitution{\topStack }{0}\\
+						 \substitution{\stack{0} } { \Ref{E}}  \\
+						\substitution{\stack{0} } { \Ref{E}}  
+				\end{array}}	) $$
+				%\comment{$ \instr{i}$ is the instruction at which starts the exception handler for this exception}
+			 	\textit{ from the  operational semantics of \instr{athrow} we have that : }  \\
+			     
+				$\state{n + 1} = \state{n}\substitution{\topStack }{0} \substitution{\stack{0}}{\Ref{E}} \substitution{\stack{0} } { \Ref{E}}   $  \\
+				$pc_{\state{n + 1}} =  s$ \textit{where $s$ is the index of the instruction  at which starts the exception handler for the exception thrown and thus this case holds}					
+                \end{enumerate}
+
+	\item $\tt{i_{\pc_n}}$ = \instr{putfield} \\
+	\textit{Assume that the instruction executes normally without throwing an exception, i.e. the object on the top of the stack
+	is not null.
+	 The case when the instruction throws an exception is similar to the } \instr{athrow} \textit{case} \\
+
+ 	    $$ \wpi{ \instr{putfield} \ \tt{f}}{\pc_n}{\excPost} (\conf{\state{n}}) $$
+	\comment{by definition of the weakest precondition rules in Section \ref{wprules} and  considering only the predicate related to the normal termination case.}
+	
+	  $$ \begin{array}{l}  \stack{\counter } \ne \Mynull \Rightarrow \\
+						\inter{\pc_n}{\pc_n +1} 
+						\begin{array}{l} 
+							[ \counter \leftarrow  \counter -2  ] \\
+							\substitution{ \tt{f} }{\tt{f} [ \oplus  \stack{\counter - 2}  \longrightarrow  \stack{\counter  -1} ]  }
+						\end{array}
+						 (\conf{\state{n}}) \end{array} 
+			  $$
+	\comment{ Applying the definition of the function inter Def. \ref{inter} \ in Section \ref{wpHelp} under the hypothesis that the execution step is not
+		 	of the kind $\execRel^l$}
+	$$ \begin{array}{l} \numConclusion{0} \  \ \stack{\counter } \ne \Mynull \Rightarrow \\
+					\Myspace	\wpi{\tt{next} (i_{\pc_n} ) } { \pc_n +1 }{ \excPost}
+						\begin{array}{l} 
+							[ \counter \leftarrow  \counter -2  ] \\
+							\substitution{ \tt{f} }{  \tt{f} [\oplus  \stack{\counter - 2}  \longrightarrow  \stack{\counter  -1} ]  }
+						\end{array}
+		\end{array}(\conf{\state{n}})
+  $$	
+  
+  \textit{ \{ by hypothesis} $\stack{\counter } \ne \Mynull $ \textit{and \numConclusion{0} follows \} }
+  
+  	$$ \begin{array}{l} 
+						\wpi{\tt{next} (i_{\pc_n} ) } { \pc_n +1 }{ \excPost} 
+						\begin{array}{l} 
+							[ \counter \leftarrow  \counter -2  ] \\
+							\substitution{\tt{f} } {\tt{f} (\oplus [ \stack{\counter - 2}  \longrightarrow  \stack{\counter  -1} ] ) }
+						\end{array}
+		\end{array}(\conf{\state{n}})
+  $$	
+\comment{ apply lemma \ref{substProp} from Section \ref{def}}
+	$$ \begin{array}{l} 
+						\wpi{\tt{next} (i_{\pc_n} ) }{ \pc_n +1 }{ \excPost}
+		\end{array}(\conf{\state{n}
+			 \begin{array}{l}
+		 	\substitution{ \counter }{\counter -2  } \\
+			\substitution{  \tt{f} }{  \tt{f} (\oplus [ \stack{\counter - 2}  \longrightarrow  \stack{\counter  -1} ] ) }
+		 \end{array} }) $$	
+\comment{ from the operational semantics of putfield the state after the normal execution of the instruction is    }
+
+$$
+\begin{array}{l}
+	\state{n+1} = \state{n}
+			 \begin{array}{l}
+		 	\substitution{ \counter }{\counter -2  } \\
+			\substitution{  \tt{f} }{  \tt{f} (\oplus [ \stack{\counter - 2}  \longrightarrow  \stack{\counter  -1} ] ) }
+		 \end{array} \\
+		 \pc_{n+1} = \pc_n +1 
+\end{array}
+$$
+\textit{and so this case holds}
+
+	\item $\tt{i_{\pc_n}}$ = \instr{invoke \method} \\
+		We consider only the case when the method terminates normally (the case when the method terminates on an exception is similar)
+		$\wpi{\instr{invoke \ \method'}}{\pc_n}{\excPost} \conf{\heap_n}{\state{n}}$ \\
+		\comment{from the definition of \textrm{wp} in the case that this is not a loop end instruction  } \\
+		
+
+			$\numConclusion{0}   $
+			$$ 
+	 		\begin{array}{l}
+	 			Pre( \texttt{m})[ \register{s} \leftarrow \stack{\counter + s - numargs(m)}]_{s = 0}^{\tt{numargs(\method) }}  \\
+	 			\wedge \\
+	 			\forall  \modExp_i ( i =1 .. k  )(  \\ 
+	 			Post( \texttt{m} )\substitution{\result}{\tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{numargs(m) } }\\
+	 			\Myspace \Myspace \substitution{ \register{s}}{ \stack{\counter + s - numargs(m)}}_{s = 0}^{numargs(m)} \\	 				 					\Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\
+	 			\Myspace \Myspace \Rightarrow \\  
+	 			\Myspace \Myspace \Myspace  \inter{\pc_n}{\pc_n + 1 } [\counter \leftarrow \counter -  \tt{numargs(m)}   ] \\ 
+				\Myspace \Myspace \Myspace \Myspace   [  \stack{\counter -  numargs(m)   } \leftarrow freshVar ] \\
+				\Myspace \Myspace \Myspace \Myspace   \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } 	\\										) \\
+	 			\wedge_{j = 1}^s \\
+	 			\forall \modExp_i ( i =1 .. k  ) ( \excPost^{\tt{m} }( \tt{Exc_j} ) \Rightarrow \excPost(\pc_n, \tt{Exc_j} ) ) \\											(\conf{\state{n}})
+	 		\end{array} 
+	 		$$ \\
+		\comment{ from \numConclusion{0} follows } \\
+		$$ \numConclusion{1} \	Pre( \method )[ \register{s} \leftarrow \stack{\counter + s - numargs(m)}]_{s = 0}^{\tt{numargs(m)} }\conf{\state{n}}  $$
+		\comment{by hypothesis method \ \method is correct and from \numConclusion{1} it
+ 			 follows that its postcondition $Post(\method)$ holds in the instruction poststate for the actual values of the call receiver, 
+			arguments and return value, where the heap  may be changed during the execution of \method as well as the expressions $\modExp_i$, i= 1..k  } \\
+		 \numConclusion{2} 
+		$$ \begin{array}{l}
+		 (Post(\method)\substitution{ \result }{ \tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{\tt{numargs(m)}}  } \\
+                \Myspace \Myspace \substitution{\register{s}}{\stack{\counter + s - numargs(m)}}    \\
+		\Myspace \Myspace  \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} }	 \\
+		\Myspace \Myspace \substitution{\modExp_i }{val_i} ) \conf{\state{n} }  
+		\end{array}
+		$$
+		\textit{ From the formula \numConclusion{0} and by applying first conjunction elimination and then Def. \ref{formulaInt} for formula interpretation from Section \ref{def} it follows: } \\
+		 
+		$$   \begin{array}{l} 
+				\forall  v_i ( i =1 .. k  )\\
+(  \\ 
+	 			Post( \texttt{m} )\substitution{\result}{\tt{retValue(m,\stack{\counter + s - \tt{numargs(m) }})_{s=0} }^{numargs(m) } }\\
+	 				 	\Myspace \Myspace [ \register{s} \leftarrow \stack{\counter + s - \tt{numargs(m)}}]_{s = 0}^{\tt{numargs(m)} } \\	 				 				\Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\	
+						\Myspace \Myspace \Rightarrow \\  
+	 				 	\Myspace \Myspace \Myspace  \inter{\pc_n}{\pc_n + 1 }[\counter \leftarrow \counter -  \tt{numargs(m)}   ] \\ 
+						\Myspace \Myspace \Myspace \Myspace  \substitution{\stack{\counter - \tt{ numargs(m)}   }}{  \tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{numargs(m) }  }	\\
+				\Myspace \Myspace \Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\
+) \\
+			(\conf{\state{n} \substitution{\modExp_i  }{v_i} })
+			\end{array}
+		$$
+		\comment{applying universal quantification elimination and  Def. \ref{formulaInt}  from Section \ref{def}  } \\
+		$\numConclusion{3}  $ 
+		$$\begin{array}{l}
+			(
+			Post( \texttt{m} )\substitution{\result}{\tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{numargs(m) } }\\
+	 				 	\Myspace \Myspace [ \register{s} \leftarrow \stack{\counter + s - numargs(m)}]_{s = 0}^{numargs(m) } \\	
+						\Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\
+			)(\conf{\state{n} \substitution{\modExp_i  }{val_i}_{i =1}^{s}})  \\
+ 				 						\Myspace \Myspace \Rightarrow \\  
+	 				 	\Myspace \Myspace \Myspace ( \inter{i}{i+1 } [\counter \leftarrow \counter -  \tt{numargs(m)}   ] \\ 
+						\Myspace \Myspace \Myspace   [  \stack{\counter -  numargs(m)   } \leftarrow \tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{numargs(m) } ] \\
+				\Myspace \Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } 
+			\Myspace \Myspace \Myspace){\state{n} \substitution{\modExp_i  }{val_i}_{i =1}^{s}})
+		\end{array}
+		$$	
+	
+		\comment{from \numConclusion{2} and \numConclusion{3} } \\
+		$$
+		\begin{array}{l}
+		( \inter{i}{i+1 } [\counter \leftarrow \counter -  \tt{numargs(m)}   ] \\ 
+		\Myspace \Myspace \Myspace   [  \stack{\counter -  numargs(m)   } \leftarrow  \tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{numargs(m) }]\\
+		\Myspace \Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\
+		 \Myspace \Myspace)(\conf{\state{n} \substitution{\modExp_i  }{val_i}_{i =1}^{s}})	 
+		\end{array}
+		$$
+		\comment{by hypothesis the $\ins{{\pc_n}}$ is not a loop end and $\ins{{\pc_{n+1} }}$ is not  a loop start and Def. 
+		\ref{inter} from Section \ref{wp} } \\
+		$$
+		\begin{array}{l}
+		 \wpi{\instr{i}}{\pc_n +1}{\excPost}  \\ 
+		 \substitution{\stack{\counter -  \tt{numargs(m)} }}{ \tt{retValue(m,\stack{\counter + s - \tt{numargs(m)} })}_{s=0} }^{ \tt{numargs(m)}} \\
+		 \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\
+		 \substitution{\counter}{ \counter -  \tt{numargs(m)}} \\
+		 \substitution{\modExp_i  }{val_i}_{i =1}^{s} \\		
+		(\conf{\state{n} } )	 
+		\end{array}
+		$$
+		\comment{applying the substitution lemma \ref{substProp} from Section \ref{def} we obtain } \\
+		$$\wpi{\instr{i}}{\pc_n +1}{\excPost} \\
+			( \conf{\state{n}	
+		\begin{array}{l}  \substitution{\modExp_i  }{val_i}_{i =1}^{s}  \\
+  			  \substitution{\counter}{ \counter -  \tt{numargs(m)}} \\
+  			  \substitution{ \stack{\counter -  \tt{numargs(m)} }}{\tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0}^{numargs(m)}}} \\
+ 			  \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } 
+		\end{array} }) \\	 $$
+
+		\comment{from the operational semantics of the \instr{invoke} } \\
+		
+		$$ \begin{array}{l}
+		\pc_{n+1} = \pc_n + 1	\\
+		\state{n+1}=  \state{n} \substitution{\modExp_i  }{val_i}_{i =1}^{s}  \\
+  		\Myspace \Myspace  \Myspace\substitution{\counter}{ \counter-\tt{numargs(m)}} \\
+ 		\Myspace \Myspace \Myspace \substitution{ \stack{\counter-\tt{numargs(m)} }}{\tt{retValue(m,\stack{\counter + s - numargs(m) })_{s=0} }^{numargs(m)}}\\
+		\Myspace \Myspace \Myspace \substitution{\heap}{\heap[\oplus \Ref{Cl_s} \longrightarrow \objCl{Cl_s }]_{s=0}^{newObj} } \\
+
+		\end{array} $$
+	
+\end{enumerate}
+\item  $\tt{i_{\pc_n}} $ is an end of a loop with invariant \invariant \ and the next instruction to be executed is a loop entry 
+instruction (i.e. the execution step is of kind $\execRel^l$ ). 
+We consider the case when the current instruction is a sequential instruction. The cases when the current instruction 
+is a jump instruction are similar. $\tt{\modExp_i, i = 1..s}$ are the locations that can be modified during a loop iteration.  \\ 
+				
+		  	
+		  		 $$\wpi{\ins{{\pc_n}}}{\pc_n}{\excPost}(\conf{\state{n }} )  $$  
+				\comment{from the definition of \mbox{\rm wp } and reasoning in the same way as the previous cases we can deduce that: } 
+			$$	 \inter{\pc_n}{\pc_{n+1}}( \conf{\state{n +1 } })$$
+				
+				\comment{as the execution step is  $\execRel^l$, i.e. a loop iteration and from Def. \ref{inter} from Section \ref{wpHelp}    } \\
+		 	
+		 	
+		 		$$  \numConclusion{0} \   \invariant (\conf{\state{n +1 }} )$$ 
+		 	     	
+		 					
+		 		\comment{ The next instruction to be executed is the loopentry  $\ins{{ls}}$. From Def. \ref{defLoop} 
+                                 for loop entry / end instructions in Section \ref{prelim}, we have that every execution trace that ends with an end of a loop, has passed forcingly 
+		 		through the start instruction of this loop. So, there exists   $\tt{  0 \leq k \leq n  } $  such that
+				$ls = k$ and the previous instruction  $\ins{{\pc_{k -1}}}$   
+                                 is not the loop end instruction. From the hypothesis that all the weakest preconditions for the executed instructions hold, we can deduce that 
+		 		$\inter{\pc_{k-1}}{\pc_k}$ holds in state $\conf{ \state{k}}$.  From Def. \ref{inter} \ in Section \ref{wpHelp}  and the 
+		 		upper assumption for the modified expressions  }    \\             
+ 					$$ \invariant \ \wedge \  \tt{ \forall_{i = 1..s}\modExp_i}.(
+\invariant \Rightarrow \wpi{\ins{{ls}}}{ \pc_{n+1}}{ \excPost })  \ (\conf{ \state{k}})$$ 
+
+				\comment{by eliminating the conjunction} \\
+
+				$$ \tt{ \forall_{i = 1..s}\modExp_i}.(\invariant \Rightarrow \wpi{\ins{{ls}}}{ \pc_{n+1}}{ \excPost }) (\conf{ \state{k}})$$ 
+ 				
+ 				\comment{applying the Def. \ref{formulaInt} from Subsection \ref{def} for interpretation of formula in a state } \\
+ 				
+ 				$$\numConclusion{1}   \  \forall_{i = 1..s}\tt{v_i} .(\invariant \Rightarrow \wpi{\ins{{ls}}}{ \pc_{n+1}}{ \excPost }) (\conf{ \state{k}\substitution{ \tt{\modExp_i}}{\tt{v_i}}} )   $$ 
+ 				
+				\comment{During loop iteration the locations $ \tt{\modExp_i, i = 0 .. s}$, the stack \stackOnly, the stack
+				counter \counter \ and \heap \ can be modified} 
+
+				\numConclusion{*}
+				 $$ \begin{array}{l} 
+				 \state{ n + 1} = \state{k}
+				    \begin{array}{l}  
+				       \substitution{\tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} \\
+				       \substitution{\stackOnly}{...} \\
+				       \substitution{\counter}{...}\\
+				       \substitution{\heap}{...}
+				    \end{array}
+				 \end{array} $$
+
+				 \comment{  Still, the invariant cannot say nothing about \stackOnly, \counter \ or \heap \
+				we can conclude that : }
+
+			\numConclusion{**}	
+                      $$ 
+			   \invariant (\conf{\state{k}\substitution{\tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} } ) = \\
+			    \invariant (\conf{\state{k}
+                                                 \begin{array}{l} \substitution{\tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} \\
+			                          \substitution{\texttt{st}}{...} \\
+				                  \substitution{\counter}{...}\\
+				                  \substitution{\heap}{...}\\ 
+			                         \end{array}})
+			   $$			 
+				\comment{ From \numConclusion{0} and 	\numConclusion{**}}
+				$$ \numConclusion{2}  \ \invariant (\conf{\state{k}\substitution{\tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} } )$$
+			
+				\comment{from \numConclusion{1} } \\
+				 
+				 $$ (\invariant \Rightarrow \wpi{\ins{{ls}}}{ \pc_{n+1}}{ \excPost }) (\conf{ \state{k}\substitution{ \tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} } )   $$ 
+				
+				
+				\comment{applying the formula interpretation defintion } \\
+				
+				 
+				 $$ \numConclusion{3}  \  \begin{array}{l} 
+				 		\invariant  (\conf{ \state{k}\substitution{ \tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} } ) \Rightarrow \\
+				 \Myspace \wpi{\ins{{ls}}}{ \pc_{n+1}}{ \excPost } (\conf{ \state{k}\substitution{ \tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} } )   
+				 	\end{array}
+				 $$
+				 
+				  \comment{ from  \numConclusion{2} and \numConclusion{3}} 
+				  
+				  $$\wpi{\ins{{ls}}}{ \pc_{n+1}}{ \excPost } (\conf{ \state{k}\substitution{ \tt{\modExp_i}}{\tt{val_i}}_{i=1}^{s} } )   $$
+				\comment{from  \numConclusion{*}} 
+				
+				 $$\wpi{\ins{{ls}}} { \pc_{n+1}}{ \excPost } (\conf{ \state{n+1}})$$
+				
+				and so the weakest predicate of the loop entry $\ins{{ls}}$ holds in the resulting state .
+
+\end{enumerate}
+
+
+The general theorem states that if the verification conditions for 
+a method implementation are provable and its precondition holds then the method respects its postcondition.
+
+
+\begin{th1} \label{th1}
+Let's have a method \texttt{m}  with precondition $\psi^{pre}$, postcondition $\psi^{post}$, exception postcondition function $\excPost$. We assume that 
+the execution of \texttt{m} starts in a state $\state{0}$ where the  $\psi^{pre}$ holds and 
+$$\pre (\tt{m}) \Rightarrow \wpi{\entryPoint}{post(\entryPoint)}{\excPost}$$ holds also. Then if  the \texttt{m}
+\begin{enumerate}
+	\item terminates its execution normally in state $\tau$ then $\normalPost(\tau)$ holds.  
+	\item terminates its execution abnormally in a state $\tau$ with an exception of type $E$ then  $\excPost(E)(\tau)$ holds.
+                        
+\end{enumerate}
+\end{th1}
+Proof : 
+From the assumptions we have that  $\wpi{\entryPoint}{post(\entryPoint)} {\excPost}(\conf{\state{0}}) $ holds. 
+Applying the previous lemma~\ref{lemma1} we obtain that at every intermediate program state 
+$\conf{\state{j}}$ the predicate  $\wpi{\instr{i} }{\pc_j} {\excPost}(\conf{\state{j}}) $ up to reaching either a \instr{return} instruction for some state
+$\conf{\state{n}}$, where 
+after its execution, i.e. in the method's poststate $\psi^{post}(\conf{\state{n}})$ will be established, or an unhandled exception \texttt{E} is thrown and in this case the method terminates
+abruptly and   $\excPost(E)(\conf{\state{n}})$ is established. 
+
+
+

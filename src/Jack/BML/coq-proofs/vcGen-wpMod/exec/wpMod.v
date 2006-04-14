@@ -1,6 +1,7 @@
 Require Import semantique. 
 Require Import List.
-Fixpoint  quant  (s: State )(l: list Var)(p: Prop) {struct l} : Prop :=
+
+(* Fixpoint  quant  (s: State )(l: list Var)(p: Prop) {struct l} : Prop :=
 match l with
 | nil => p
 | x :: l1  =>  (quant  s l1  ( forall v ,  (s x)  = v  ->  p ) )
@@ -9,6 +10,7 @@ end.
 Definition assert_forall:  State -> list Var -> Prop  -> Prop := 
 fun   (s: State) (l : list Var) (assert : Prop)  =>
         ( quant s l assert ) .
+*)
 
 Reserved Notation "'wpMod' ( a , post )  ==> pre" (at level 30).
 Inductive is_wpMod : stmt_m -> Assertion -> Assertion -> Prop :=
@@ -27,7 +29,7 @@ Inductive is_wpMod : stmt_m -> Assertion -> Assertion -> Prop :=
    (*      (forall st,  *)
        (wpMod(S, (fun stf => p_foralls (fun st =>
             p_and
-             (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (stf x) (st x)))))
+             (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (stf ( progvar x )) (st ( progvar x ))))))
              (invariant stf)))) 
          ==> pre_st  ) -> 
       wpMod((While Invariant_m  bExp   (inv_m invariant lVar ) S ), post) ==>
@@ -40,12 +42,12 @@ Inductive is_wpMod : stmt_m -> Assertion -> Assertion -> Prop :=
               (p_foralls 
                   (fun st_f => 
                    p_implies
-                     (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_f x) (st_i x)))))             
+                     (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_f (progvar x)) (st_i (progvar x))))))             
                        (p_implies (invariant st_f) (p_implies (p_eq (neval st_f bExp) 0) (post st_f)))))
               (* l'inv est preserve *)
               (p_foralls ( fun st_Si =>
                  (p_implies
-                   (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_Si x) (st_i x)))))
+                   (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_Si (progvar x)) (st_i (progvar x))))))
           	     (p_implies (invariant st_Si) 
                           (p_implies (p_neq (neval st_Si bExp)  0) (pre_st  st_Si) ) )) ))))
 	
@@ -80,7 +82,7 @@ apply H0; intros...
 (* case while true *)
 simpl in H;
 destruct H. destruct H0. 
-assert (h := IHHexec1 _ _ H4 (H1 s (fun var toto => refl_equal (s var) )H n)).
+assert (h := IHHexec1 _ _ H4 (H1 s (fun var toto => refl_equal (s ( progvar var) ) )H n)).
 simpl in h. 
 assert(h1 := h s). 
 destruct h1. 
@@ -111,7 +113,7 @@ match S with
 | While  bExp   (inv_m invariant lVar ) s =>
        let pre_st := (wp_mod s (fun stf => (p_foralls (fun st => 
             p_and
-             (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (stf x) (st x)))))
+             (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (stf ( progvar x) ) (st (progvar  x) )))))
              (invariant stf)))))
          in 
          (fun st_i : State  => 
@@ -123,12 +125,12 @@ match S with
               (p_foralls 
                   (fun st_f => 
                    p_implies
-                     (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_f x) (st_i x)))))             
+                     (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_f (progvar x)) (st_i (progvar x))))))             
                        (p_implies (invariant st_f) (p_implies (p_eq (neval st_f bExp) 0) (post st_f)))))
               (* l'inv est preserve *)
               (p_foralls ( fun st_Si =>
                  (p_implies
-                   (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_Si x) (st_i x)))))
+                   (p_forallv (fun x => (p_implies (p_not (p_in x lVar)) (p_eq (st_Si (progvar x)) (st_i (progvar x))))))
           	     (p_implies (invariant st_Si) 
                           (p_implies (p_neq (neval st_Si bExp)  0) (pre_st  st_Si) ) )) ))))
 	
@@ -196,7 +198,7 @@ p_foralls
   (fun st : State =>
    p_and
      (p_forallv
-        (fun x : Var => p_implies (p_not (p_in x l)) (p_eq (stf x) (st x))))
+        (fun x : Var => p_implies (p_not (p_in x l)) (p_eq (stf (progvar x)) (st (progvar x)))))
      (a stf)))
 ((fix wp_mod (S0 : Stmt Invariant_m) (post0 : Assertion) {struct S0} :
    Assertion :=
@@ -219,7 +221,7 @@ p_foralls
                       (p_forallv
                          (fun x : Var =>
                           p_implies (p_not (p_in x lVar))
-                            (p_eq (st_f x) (st_i x))))
+                            (p_eq (st_f (progvar x)) (st_i (progvar x)))))
                       (p_implies (invariant st_f)
                          (p_implies (p_eq (neval st_f bExp) 0) (post0 st_f)))))
                 (p_foralls
@@ -228,7 +230,7 @@ p_foralls
                       (p_forallv
                          (fun x : Var =>
                           p_implies (p_not (p_in x lVar))
-                            (p_eq (st_Si x) (st_i x))))
+                            (p_eq (st_Si (progvar x)) (st_i (progvar x)))))
                       (p_implies (invariant st_Si)
                          (p_implies (p_neq (neval st_Si bExp) 0)
                             (wp_mod s
@@ -239,7 +241,7 @@ p_foralls
                                      (p_forallv
                                         (fun x : Var =>
                                          p_implies (p_not (p_in x lVar))
-                                           (p_eq (stf x) (st x))))
+                                           (p_eq (stf (progvar x)) (st (progvar x)))))
                                      (invariant stf))) st_Si))))))
        end
    | Seq st1 st2 => wp_mod st1 (wp_mod st2 post0)
@@ -249,7 +251,7 @@ p_foralls
      (fun st : State =>
       p_and
         (p_forallv
-           (fun x : Var => p_implies (p_not (p_in x l)) (p_eq (stf x) (st x))))
+           (fun x : Var => p_implies (p_not (p_in x l)) (p_eq (stf (progvar x)) (st (progvar x)))))
         (a stf))))).
 
 
@@ -269,7 +271,7 @@ assert(h := IHS (fun stf : State =>
         p_and
           (p_forallv
              (fun x : Var =>
-              p_implies (p_not (p_in x lVar)) (p_eq (stf x) (st x))))
+              p_implies (p_not (p_in x lVar)) (p_eq (stf  (progvar x) ) (st (progvar x)))))
           (invariant stf))) pre_st).
 destruct h.
 assert(h1 := H7 H5).

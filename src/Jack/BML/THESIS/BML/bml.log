@@ -1,0 +1,621 @@
+This is pdfTeX, Version 3.14159-1.10b (Web2C 7.4.5) (format=pdflatex 2005.7.20)  10 MAR 2006 13:29
+**bml.tex
+(./bml.tex{/usr/share/texmf/pdftex/config/pdftex.cfg}
+LaTeX2e <2001/06/01>
+Babel <v3.7h> and hyphenation patterns for american, french, german, ngerman, n
+ohyphenation, loaded.
+(./cmd.tex
+\c@defn=\count79
+\c@Formula=\count80
+\c@Predicate=\count81
+) (/usr/share/texmf/tex/latex/base/article.cls
+Document Class: article 2001/04/21 v1.4e Standard LaTeX document class
+(/usr/share/texmf/tex/latex/base/size10.clo
+File: size10.clo 2001/04/21 v1.4e Standard LaTeX file (size option)
+)
+\c@part=\count82
+\c@section=\count83
+\c@subsection=\count84
+\c@subsubsection=\count85
+\c@paragraph=\count86
+\c@subparagraph=\count87
+\c@figure=\count88
+\c@table=\count89
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texmf/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2002/01/22 v2.2d
+
+(/usr/share/texmf/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks14
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+))
+(/usr/share/texmf/tex/latex/graphics/epsfig.sty
+Package: epsfig 1999/02/16 v1.7a (e)psfig emulation (SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+(/usr/share/texmf/tex/latex/graphics/graphics.sty
+Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texmf/tex/latex/config/graphics.cfg
+File: graphics.cfg 2001/08/31 v1.1 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 80.
+
+(/usr/share/texmf/tex/latex/graphics/pdftex.def
+File: pdftex.def 2002/06/19 v0.03k graphics/color for pdftex
+\Gread@gobject=\count90
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+\epsfxsize=\dimen105
+\epsfysize=\dimen106
+)
+(/usr/share/texmf/tex/latex/html/url.sty
+Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
+ names
+)
+(/usr/share/texmf/tex/latex/tools/longtable.sty
+Package: longtable 2000/10/22 v4.10 Multi-page Table package (DPC)
+\LTleft=\skip43
+\LTright=\skip44
+\LTpre=\skip45
+\LTpost=\skip46
+\LTchunksize=\count91
+\LTcapwidth=\dimen107
+\LT@head=\box26
+\LT@firsthead=\box27
+\LT@foot=\box28
+\LT@lastfoot=\box29
+\LT@cols=\count92
+\LT@rows=\count93
+\c@LT@tables=\count94
+\c@LT@chunks=\count95
+\LT@p@ftn=\toks16
+) (./bml.aux)
+\openout1 = `bml.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+(/usr/share/texmf/tex/context/base/supp-mis.tex
+loading : Context Support Macros / Missing
+\protectiondepth=\count96
+\scratchcounter=\count97
+\scratchtoks=\toks17
+\scratchdimen=\dimen108
+\scratchskip=\skip47
+\scratchmuskip=\muskip10
+\scratchbox=\box30
+\scratchread=\read1
+\scratchwrite=\write3
+\zeropoint=\dimen109
+\minusone=\count98
+\thousandpoint=\dimen110
+\emptytoks=\toks18
+\nextbox=\box31
+\nextdepth=\dimen111
+\everyline=\toks19
+\!!counta=\count99
+\!!countb=\count100
+\recursecounter=\count101
+)
+loading : Context Support Macros / PDF
+\nofMPsegments=\count102
+\nofMParguments=\count103
+\everyMPtoPDFconversion=\toks20
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 12.
+ (/usr/share/texmf/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 12.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+) [1
+
+{/usr/share/texmf/dvips/config/pdftex.map}] (./JML2BC.tex (./prelim.tex [2]) (.
+/classFileExt.tex
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 14.
+
+(/usr/share/texmf/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 14.
+ [3]
+Overfull \hbox (130.16568pt too wide) detected at line 149
+[]
+ []
+
+
+LaTeX Warning: Float too large for page by 102.88889pt on input line 152.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (7.72942pt too wide) in paragraph at lines 153--153
+[]/cmbx12@14.4pt/Compiling JML into byte-code spec-i-fi-ca-tion lan-
+ []
+
+[4] [5]
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 239.
+)) (./appendix.tex
+Overfull \hbox (20.8079pt too wide) in paragraph at lines 5--5
+[]/cmbx12@14.4pt/Specification of the Byte-code Spec-i-fi-ca-tion Com-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--31
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 32--34
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--40
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 82--84
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 85--87
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--90
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--90
+
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 102--104
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 105--107
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--110
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--110
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--140
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--143
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 144--146
+
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 147--149
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 150--152
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--155
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--158
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 159--161
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--164
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--164
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 165--167
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--170
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 171--173
+
+ []
+
+
+Overfull \hbox (24.33604pt too wide) in paragraph at lines 174--182
+/cmtt10/exsures /cmr10/(/cmtt10/Exception[]name /cmr10/e) P(e) it is first tran
+s-formed in : /cmtt10/exsures Exception[]name
+ []
+
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 200--202
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--208
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 209--211
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 212--214
+
+ []
+
+
+LaTeX Warning: Reference `jmlExprs' on page 10 undefined on input line 217.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 215--218
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 219--221
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 238--240
+
+ []
+
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 244--246
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 247--249
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 278--280
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 281--283
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 284--287
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 288--290
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 291--293
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 294--296
+
+ []
+
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 318--320
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--323
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 333--335
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 336--338
+
+ []
+
+
+LaTeX Warning: Reference `bclGrammar' on page 12 undefined on input line 344.
+
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 379--381
+
+ []
+
+
+Overfull \hbox (5.95093pt too wide) in paragraph at lines 402--403
+$/msam10/p[]q /cmr10/::= /msam10/p[]q /cmr10/(/msam10/p[]q[] p[]q[]/cmr10/)[]$,
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 402--403
+
+ []
+
+[13]
+Overfull \hbox (30.78174pt too wide) in paragraph at lines 452--453
+/cmr10/rep-re-sen-ta-tion of ex-pres-sions , e.g $+ []$
+ []
+
+
+Overfull \hbox (64.6706pt too wide) in paragraph at lines 452--453
+/cmr10/which stands for the in-fix rep-re-sen-ta-tion $[]$ 
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 475--481
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 475--481
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 475--481
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 483--488
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 508--512
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 513--517
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 518--519
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 518--519
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 520--521
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 520--521
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 522--524
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 525--528
+
+ []
+
+
+LaTeX Warning: Reference `CodesJMLkw' on page 15 undefined on input line 533.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 532--534
+
+ []
+
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 573--578
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 594--599
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 607--619
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 620--635
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 620--635
+
+ []
+
+
+Overfull \hbox (60.05626pt too wide) in paragraph at lines 620--635
+[] 
+ []
+
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 654--655
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 672--673
+
+ []
+
+
+Overfull \hbox (133.30598pt too wide) detected at line 709
+[]
+ []
+
+[17]
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 725--726
+
+ []
+
+[18]
+Overfull \vbox (50.2583pt too high) has occurred while \output is active []
+
+
+[19]) (./bml.bbl) [20] [21] [22] (./bml.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 1571 strings out of 95437
+ 17667 string characters out of 1190233
+ 84578 words of memory out of 1000001
+ 4550 multiletter control sequences out of 10000+50000
+ 14808 words of font info for 59 fonts, out of 500000 for 1000
+ 14 hyphenation exceptions out of 1000
+ 32i,12n,24p,790b,413s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 127 PDF objects out of 300000
+ 0 named destinations out of 131072
+ 0 words of extra memory for PDF output out of 65536
+{/usr/share/texmf/dvips/tetex/0ef0afca.enc}</usr/share/texmf/fonts/type1/blue
+sky/cm/cmcsc10.pfb>{/usr/share/texmf/dvips/tetex/f7b6d320.enc}</usr/share/texmf
+/fonts/type1/bluesky/cm/cmr9.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmex1
+0.pfb>{/usr/share/texmf/dvips/tetex/aae443f0.enc}</usr/share/texmf/fonts/type1/
+bluesky/cm/cmmi7.pfb>{/usr/share/texmf/dvips/tetex/09fbbfac.enc}</usr/share/tex
+mf/fonts/type1/bluesky/cm/cmtt8.pfb></usr/share/texmf/fonts/type1/bluesky/symbo
+ls/msam10.pfb>{/usr/share/texmf/dvips/tetex/10037936.enc}</usr/share/texmf/font
+s/type1/bluesky/cm/cmbsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pf
+b></usr/share/texmf/fonts/type1/bluesky/cm/cmr6.pfb></usr/share/texmf/fonts/typ
+e1/bluesky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmbx10.pfb></us
+r/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/b
+luesky/cm/cmtt10.pfb>{/usr/share/texmf/dvips/tetex/bbad153f.enc}</usr/share/tex
+mf/fonts/type1/bluesky/cm/cmsy10.pfb>{/usr/share/texmf/dvips/tetex/74afc74c.enc
+}</usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb></usr/share/texmf/fonts/ty
+pe1/bluesky/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr10.pfb></
+usr/share/texmf/fonts/type1/bluesky/cm/cmr12.pfb></usr/share/texmf/fonts/type1/
+bluesky/cm/cmr17.pfb>
+Output written on bml.pdf (22 pages, 204813 bytes).
