@@ -5,13 +5,31 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
 
+/**
+ * A specific scanner that highlight text using the specified rules.
+ * It sets a background color different from the beginning of the
+ * text to a specified limit than from the limit to the end of the
+ * text. The first part is highlighted with the color 
+ * {@link IColorConstants#HILIT_COLOR} the second part with the color
+ * {@link IColorConstants#NORMAL_COLOR}. 
+ * @author J. Charles
+ *
+ */
 public class LimitRuleScanner extends BasicRuleScanner implements IColorConstants {
+	/** the limit to which the background shall be different */
 	private int limit = 0;
 
+	/**
+	 * Create a new rule scanner.
+	 */
 	public LimitRuleScanner() {
 		this(null);
 	}
 	
+	/**
+	 * Create a new rule scanner, with the given rules.
+	 * @param rules the rules to set the colors
+	 */
 	public LimitRuleScanner(IRule[] rules) {
 		super();
 		if(rules == null) {
@@ -23,7 +41,10 @@ public class LimitRuleScanner extends BasicRuleScanner implements IColorConstant
 	}
 	
 	
-	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.text.rules.ITokenScanner#nextToken()
+	 */
 	public IToken nextToken() {
 		fTokenOffset= fOffset;
 		IToken tok = getNextToken(fTokenOffset);
@@ -38,10 +59,13 @@ public class LimitRuleScanner extends BasicRuleScanner implements IColorConstant
 		return tok;
 	}
 	
+	/**
+	 * Returns the next token found. 
+	 * @param off the offset where to start looking at
+	 * @return the token without the specific background color
+	 */
 	private IToken getNextToken(int off) {
-	
 		fColumn= UNDEFINED;
-
 		if (fRules != null) {
 			for (int i= 0; i < fRules.length; i++) {
 				IToken token= (fRules[i].evaluate(this));
@@ -55,10 +79,18 @@ public class LimitRuleScanner extends BasicRuleScanner implements IColorConstant
 		return fDefaultReturnToken;
 	}
 	
-	
+	/**
+	 * Set the limit to which the background shall be different
+	 * @param l the offset where to divide the two parts of the
+	 * text
+	 */
 	public void setLimit(int l) {
 		limit  = l;
 	}
+	/**
+	 * Return the limit dividing the two highlighted differently part.
+	 * @return a valid offset
+	 */
 	public  int getLimit() {
 		return limit;
 	}

@@ -1,42 +1,54 @@
 package prover.gui.editor;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 
 import prover.Prover;
 
+/**
+ * The editor used to edit any prover language defined file.
+ * It selects the right scanner to highlight with the right color
+ * and parse for the right language.
+ * @author J. Charles
+ */
 public class ProverEditor extends TextEditor{
-	private BasicSourceViewerConfig csvc;
-	private LimitRuleScanner scanner = null;
+	/** the viewer associated with the editor */
+	private BasicSourceViewerConfig fViewer;
+	/** a rule scanner to highlight the file in the editor */
+	private LimitRuleScanner fScanner = null;
 	
+	
+	/**
+	 * Create a new editor.
+	 */
 	public ProverEditor() {
 		super();
-		setSourceViewerConfiguration(csvc = new BasicSourceViewerConfig(this));
+		setSourceViewerConfiguration(fViewer = new BasicSourceViewerConfig(this));
 	}
 	
-	
+	/**
+	 * Return the source viewer associated with the editor.
+	 * @return a source viewer, not <code>null</code>.
+	 */
 	public BasicSourceViewerConfig getSourceViewerConfig() {
-		return csvc;
-	}
-	
-	public void doUndo() {
-		IAction undo = getAction(ITextEditorActionConstants.UNDO);
-		undo.run();
+		return fViewer;
 	}
 	
 	
+	/**
+	 * Returns the scanner associated with the editor.
+	 * @return A scanner to highlight the file opened in the editor.
+	 */
 	public LimitRuleScanner getScanner() {
-		if(scanner == null) {
-			Prover p = Prover.findProverFromFile(this.getTitle());
+		if(fScanner == null) {
+			Prover p = Prover.findProverFromFile(getTitle());
 			if (p != null) {
-				scanner = p.getRuleScanner();
+				fScanner = p.getRuleScanner();
 			}
 			else { 
-				scanner = new LimitRuleScanner(null);
+				fScanner = new LimitRuleScanner(null);
 			}
 		}
-		return scanner;
+		return fScanner;
 	}
 	
 }

@@ -4,7 +4,6 @@ import java.util.Stack;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.ITextViewer;
@@ -12,72 +11,58 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
 
-
-public class BasicPresentationReconciler extends PresentationReconciler{
-	private IDocument document;
-	private ITextViewer viewer;
-	private FindReplaceDocumentAdapter fda;
-	private LimitRuleScanner crs;
-	IDocumentListener list;
+/**
+ * A presentation reconciler to avoid editing of a text below a limit
+ * defined by a scanner associated with it.
+ * @author J. Charles
+ */
+public class BasicPresentationReconciler extends PresentationReconciler {
+	/** the document associated with the reconciler */
+	private IDocument fDoc;
+	/** the viewer associated with the reconciler */
+	private ITextViewer fViewer;
+	/** the scanner uset to highlight a part of the text */
+	private LimitRuleScanner fScanner;
+	/** the listener to listen to the events associated with the document */
+	private IDocumentListener fListener;
+	
+	/**
+	 * Create a presentation reconciler associated with a scanner. 
+	 * @param scan The scanner of the presentation reconciler
+	 */
 	public BasicPresentationReconciler(LimitRuleScanner scan) {
 		super();
-		crs = scan;
+		fScanner = scan;
 	}
-	/**
-	 * Informs all registered damagers about the document on which they will work.
-	 *
-	 * @param document the document on which to work
+	
+	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.text.presentation.PresentationReconciler#setDocumentToDamagers(org.eclipse.jface.text.IDocument)
 	 */
-	protected void setDocumentToDamagers(IDocument document) {
-		if(this.document != null) {
-			this.document.removeDocumentListener(list);
+	protected void setDocumentToDamagers(IDocument doc) {
+		if(fDoc != null) {
+			fDoc.removeDocumentListener(fListener);
 		}
-		this.document = document;
-		list = new IDocumentListener() {
-			Stack li = new Stack();
-			boolean flag = false;	
-			public void documentAboutToBeChanged(DocumentEvent event) {
-				
-				IDocument doc = event.getDocument();
-				
-				DocumentEvent ev;
-				
-				if(flag || (event.getOffset() > (crs.getLimit() - 1))) {
-					flag = false;
-					return;
-				}
-				flag = true;
-				try {
-					ev = new DocumentEvent(doc, event.getOffset(),
-							event.getText().length(), doc.get(event.getOffset(),
-									event.getLength()));
-					li.push(ev);
-				} catch (BadLocationException e) {}
-				
-				
-			}
-			
-			public void documentChanged(DocumentEvent event) {
-				if(li.size() > 0) {
-					DocumentEvent de = (DocumentEvent)li.pop();
-					
-					try {
-						de.getDocument().replace(de.getOffset(), de.getLength(), de.getText());
-					} catch (BadLocationException e) {
-					}
-					
-				}
-			}
-			
-		};
-		document.addDocumentListener(list);
-		fda = new FindReplaceDocumentAdapter(document);
-		super.setDocumentToDamagers(document);
-		
+		fDoc = doc;
+		fListener = new DocumentListener();
+		doc.addDocumentListener(fListener);
+		super.setDocumentToDamagers(doc);
 	}
+	
+	
+	
+	/**
+	 * Update the presentation of the viewer associated
+	 * with the presentation reconciler, but only a part of it
+	 * within a specified range.
+	 * @param beg The beginning of the part to update.
+	 * @param end The end of the part to update.
+	 */
 	public void everythingHasChanged(int beg, int end) {
-		if(end >= document.getLength()) {
-			end = document.getLength()-1;
+		if(end >= fDoc.getLength()) {
+			end = fDoc.getLength()-1;
 		}
 		if(beg > end) {
 			beg = end;
@@ -86,27 +71,85 @@ public class BasicPresentationReconciler extends PresentationReconciler{
 			beg = 0;
 		}
 		
-		TextPresentation p= createPresentation(new Region(beg, end), document);
+		TextPresentation p= createPresentation(new Region(beg, end), fDoc);
 		if (p != null)
-			viewer.changeTextPresentation(p, false);
-		viewer.revealRange(crs.getLimit() - 1, 1);
-		viewer.setSelectedRange(crs.getLimit(), 0);
+			fViewer.changeTextPresentation(p, false);
+		fViewer.revealRange(fScanner.getLimit() - 1, 1);
+		fViewer.setSelectedRange(fScanner.getLimit(), 0);
 	}
+	
+	
+	/**
+	 * Update the presentation of the viewer associated with 
+	 * the presentation reconciler.
+	 */
 	public void everythingHasChanged() {
-		TextPresentation p= createPresentation(new Region(0, document.getLength()), document);
+		TextPresentation p= createPresentation(new Region(0, fDoc.getLength()), fDoc);
 		if (p != null)
-			viewer.changeTextPresentation(p, false);
-		viewer.revealRange(crs.getLimit() - 1, 1);
+			fViewer.changeTextPresentation(p, false);
+		fViewer.revealRange(fScanner.getLimit() - 1, 1);
 	}
+	
+	/**
+	 * Return the current document associated with this presentation reconciler.
+	 * @return A document or <code>null</code>
+	 */
 	public IDocument getDocument() {
-		return document;
+		return fDoc;
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.text.presentation.IPresentationReconciler#install(org.eclipse.jface.text.ITextViewer)
+	 */
 	public void install(ITextViewer v) {
-		viewer = v;
+		fViewer = v;
 		super.install(v);
 	}
-	public FindReplaceDocumentAdapter getFinder() {
-		return fda;
+	
+	/**
+	 * A class used to avoid the change of a document if it is below a 
+	 * limit given by the scanner.
+	 * @author J. Charles
+	 */
+	private class DocumentListener implements IDocumentListener {
+		/** the list of events to undo */
+		private Stack fUpcoming = new Stack();
+		/** a flag to avoid recursive call */
+		private boolean flag = false;
+		
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+		 */
+		public void documentAboutToBeChanged(DocumentEvent event) {
+			IDocument doc = event.getDocument();
+			DocumentEvent ev;
+			if(flag || (event.getOffset() > (fScanner.getLimit() - 1))) {
+				flag = false;
+				return;
+			}
+			flag = true;
+			try {
+				ev = new DocumentEvent(doc, event.getOffset(),
+						event.getText().length(), doc.get(event.getOffset(),
+								event.getLength()));
+				fUpcoming.push(ev);
+			} catch (BadLocationException e) {}
+		}
+		
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+		 */
+		public void documentChanged(DocumentEvent event) {
+			if(fUpcoming.size() > 0) {
+				DocumentEvent de = (DocumentEvent)fUpcoming.pop();	
+				try {
+					de.getDocument().replace(de.getOffset(), de.getLength(), de.getText());
+				} catch (BadLocationException e) {
+				}
+			}
+		}	
 	}
-
 }

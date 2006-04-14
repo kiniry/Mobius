@@ -6,16 +6,31 @@ import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
 
+/**
+ * A rule to detect words of a fixed size.
+ * @author J. Charles
+ */
 public class FixedSizeWordRule extends WordRule {
-	int fSize = 0;
+	/** the size of the word */
+	private int fSize = 0;
 	/** Buffer used for pattern detection */
 	private StringBuffer fBuffer= new StringBuffer();
 	
+	/**
+	 * Create a new word rule.
+	 * @param detector a word detector
+	 * @param size the size of a word
+	 */
 	public FixedSizeWordRule(IWordDetector detector, int size) {
 		super(detector);
 		fSize = size;
 	}
 	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.text.rules.IRule#evaluate(org.eclipse.jface.text.rules.ICharacterScanner)
+	 */
 	public IToken evaluate(ICharacterScanner scanner) {
 		int c= scanner.read();
 		if (fDetector.isWordStart((char) c)) {
@@ -44,10 +59,10 @@ public class FixedSizeWordRule extends WordRule {
 		scanner.unread();
 		return Token.UNDEFINED;
 	}
-	/**
-	 * Returns the characters in the buffer to the scanner.
-	 *
-	 * @param scanner the scanner to be used
+
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.text.rules.WordRule#unreadBuffer(org.eclipse.jface.text.rules.ICharacterScanner)
 	 */
 	protected void unreadBuffer(ICharacterScanner scanner) {
 		for (int i= fBuffer.length() - 1; i >= 0; i--)

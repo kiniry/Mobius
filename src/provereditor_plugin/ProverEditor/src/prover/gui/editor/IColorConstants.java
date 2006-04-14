@@ -4,6 +4,12 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * An interface to define some basic colors and tags to use with
+ * the rules and/or scanners.
+ * @author J. Charles
+ *
+ */
 public interface IColorConstants {
 	// Text is black
 	public final static Color DEFAULT_TAG_COLOR = new Color(Display.getCurrent(), 
