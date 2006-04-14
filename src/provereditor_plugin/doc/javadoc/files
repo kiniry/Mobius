@@ -34,6 +34,7 @@
 ../../ProverEditor/src/prover/gui/jobs/ProverStatus.java
 ../../ProverEditor/src/prover/gui/jobs/ColorAppendJob.java
 ../../ProverEditor/src/prover/gui/jobs/SimpleAppendJob.java
+../../ProverEditor/src/prover/gui/jobs/IAppendJob.java
 ../../ProverEditor/src/prover/gui/popup/CompileFile.java
 ../../ProverEditor/src/prover/gui/popup/LaunchIde.java
 ../../ProverEditor/src/prover/gui/ProverFileContext.java
