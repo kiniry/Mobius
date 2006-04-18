@@ -69,13 +69,46 @@ public interface ITopLevel {
 	 */
 	public String getErrBuffer();
 	
+	/**
+	 * Wait for the input coming from the standard stream.
+	 * It fills the internal buffer with the informations.
+	 * @throws AProverException In case of the grace time, 
+	 * death of the thread, death of the prover, or an I/O error
+	 */
 	public void waitForStandardInput() throws AProverException;
+	
+	/**
+	 * Wait for the input coming from the error stream.
+	 * It fills the internal buffer with the informations.
+	 * @throws AProverException In case of the grace time, 
+	 * death of the thread, death of the prover, or an I/O error
+	 */
 	public void waitForErrorInput() throws AProverException;
 	
+	/**
+	 * Add a listener to listen to the events of the standard stream.
+	 * @param isl the listener to add
+	 */
 	public void addStandardStreamListener(IStreamListener isl);
+	
+	/**
+	 * Remove a listener that was previously registered to listen
+	 * to the standard stream
+	 * @param isl the listener to remove
+	 */
 	public void removeStandardStreamListener(IStreamListener isl);
 
+	/**
+	 * Add a listener to listen to the events of the error stream.
+	 * @param isl the listener to add
+	 */
 	public void addErrorStreamListener(IStreamListener isl);
+
+	/**
+	 * Remove a listener that was previously registered to listen
+	 * to the error stream
+	 * @param isl the listener to remove
+	 */
 	public void removeErrorStreamListener(IStreamListener isl);
 
 
