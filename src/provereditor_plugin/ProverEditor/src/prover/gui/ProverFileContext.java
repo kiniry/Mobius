@@ -18,10 +18,10 @@ public class ProverFileContext {
 	public static final ProverFileContext empty = new ProverFileContext(null);
 	
 
-	public ProverEditor ce;
-	public IDocument doc; 
-	public BasicSourceViewerConfig sv; 
-	public LimitRuleScanner scan;
+	public final ProverEditor ce;
+	public final IDocument doc; 
+	public final BasicSourceViewerConfig sv; 
+	public final LimitRuleScanner scan;
 	
 	
 	/**
