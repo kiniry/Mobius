@@ -1,9 +1,10 @@
 /*
  * Created on Mar 3, 2005
  */
-package prover.exec.exceptions;
+package prover.exec.toplevel.exceptions;
 
 import prover.Prover;
+import prover.exec.exceptions.ProverException;
 
 
 /**

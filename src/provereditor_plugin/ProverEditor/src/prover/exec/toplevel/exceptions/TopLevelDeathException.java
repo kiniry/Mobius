@@ -1,7 +1,6 @@
 package prover.exec.toplevel.exceptions;
 
 import prover.Prover;
-import prover.exec.exceptions.ToplevelException;
 
 public class TopLevelDeathException extends ToplevelException {
 

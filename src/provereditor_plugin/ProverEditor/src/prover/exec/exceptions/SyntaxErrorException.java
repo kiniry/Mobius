@@ -6,7 +6,8 @@ package prover.exec.exceptions;
 
 
 /**
- * @author jcharles
+ * Exception to be thrown in case
+ * @author J. Charles
  */
 public class SyntaxErrorException extends ProverException{
 
