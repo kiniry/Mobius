@@ -6,41 +6,37 @@ package prover.exec.toplevel.stream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 
 /**
- *
- *  @author jcharles
+ * This class is alike {@link java.io.PrintWriter} except that
+ * the buffer is flushed after each print command.
+ * @author J. Charles
  */
-public class InputStreamHandler extends Thread{
-	PrintWriter out = null;
-	LinkedList list = new LinkedList();
-	//private boolean bIsAlive;
+public class InputStreamHandler extends PrintWriter {
+	
+	/**
+	 * Construct a new InputStreamHandler for the stream o.
+	 * @param o The stream to write to.
+	 */
 	public InputStreamHandler(OutputStream o) {
-		out = new PrintWriter( new OutputStreamWriter(o));
-		//bIsAlive = true;
+		super( new OutputStreamWriter(o));
 	}
-	public void run() {
-		try {
-			while(true) {
-				if(list.size() != 0) {
-					out.println((String)list.removeFirst());
-					out.flush();
-				}
 
-			}
-		}
-		catch (Exception e) {
-			//bIsAlive = false;
-		}
+	/*
+	 *  (non-Javadoc)
+	 * @see java.io.PrintWriter#println(java.lang.String)
+	 */
+	public void println(String str) {
+		super.println(str);
+		flush();
 	}
 	
-	public void println(String str) {
-		list.add(str);
-		if(list.size() != 0) {
-			out.println((String)list.removeFirst());
-			out.flush();
-		}
+	/*
+	 *  (non-Javadoc)
+	 * @see java.io.PrintWriter#print(java.lang.String)
+	 */
+	public void print(String str) {
+		super.print(str);
+		flush();
 	}
-
 }

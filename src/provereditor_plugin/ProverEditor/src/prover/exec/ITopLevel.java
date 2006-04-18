@@ -9,6 +9,7 @@ import prover.exec.toplevel.stream.IStreamListener;
  *
  */
 public interface ITopLevel {
+	
 	public final int DONT_SKIP = 0;
 	public final int SKIP = 1;
 	public final int SKIP_AND_CONTINUE = 2;
@@ -74,10 +75,11 @@ public interface ITopLevel {
 	 */
 	public String getErrBuffer();
 	
-	public void waitForInput(int type) throws ToplevelException;
+	public void waitForStandardInput() throws ToplevelException;
+	public void waitForErrorInput() throws ToplevelException;
 	
-	public void addStreamListener(IStreamListener isl);
-	public void removeStreamListener(IStreamListener isl);
+	public void addStandardStreamListener(IStreamListener isl);
+	public void removeStandardStreamListener(IStreamListener isl);
 
 	public void addErrorStreamListener(IStreamListener isl);
 	public void removeErrorStreamListener(IStreamListener isl);

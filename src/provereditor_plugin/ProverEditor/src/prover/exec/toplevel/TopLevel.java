@@ -25,62 +25,101 @@ import prover.plugins.IProverTopLevel;
 
 
 /**
- * Class to manage TopLevel
- * @author Julien Charles
+ * Class to manage TopLevel. It is generic for all the provers.
+ * It can be subclassed to get more elaborated API (and prover
+ * specific), adding new standard commands.
+ * @author J. Charles
  */
 public class TopLevel implements ITopLevel {
+	/** the buffer containing the latest entries from the standard output */	
 	private StringBuffer fStdBuffer = new StringBuffer();
+	/** the buffer containing the latest entries from the error output */
 	private StringBuffer fErrBuffer = new StringBuffer();
+	/** the current prover instanciated by the top level */
 	private Prover fProver;
+	/** the top level translator as specified by the prover */
 	private IProverTopLevel fProverTopLevel;
 	
-	
-	private StreamHandler fIn;
-	private InputStreamHandler fOut;
+
+	/** the top level standard input */
+	private InputStreamHandler fIn;
+	/** the top level standard output */
+	private StreamHandler fOut;
+	/** the top level error output */
 	private StreamHandler fErr;
 
-	
+	/** the top level process */
 	private Process fProverProc;
+	/** the grace time */
 	private int fiGraceTime;
+	/** the command line to call the top level */
 	private String[] fCmds;
+	/** tells whether or not the toplevel is alive */
 	private boolean fbIsAlive = true;
+	/** tells whether or not the toplevel is processing a command */
 	private boolean fbIsWorking;
 	
-//	public final int NORMAL = IStreamListener.NORMAL;
-//	public final int ERROR = IStreamListener.ERROR;
-	
-	private static char BREAK = 3;
+	/** The Break character */
+	private final static char BREAK = 3;
+	/** The Break String: Ctrl-Brk */
 	public static String BREAKSTR;
 	static {
 		BREAKSTR = "" + BREAK;
 	}
 	
-	public void addStreamListener(IStreamListener isl) {
-		fIn.addStreamListener(isl);
-	}
-	public void removeStreamListener(IStreamListener isl) {
-		fIn.removeStreamListener(isl);
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#addStandardStreamListener(prover.exec.toplevel.stream.IStreamListener)
+	 */
+	public void addStandardStreamListener(IStreamListener isl) {
+		fOut.addStreamListener(isl);
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#removeStandardStreamListener(prover.exec.toplevel.stream.IStreamListener)
+	 */
+	public void removeStandardStreamListener(IStreamListener isl) {
+		fOut.removeStreamListener(isl);
+	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#addErrorStreamListener(prover.exec.toplevel.stream.IStreamListener)
+	 */
 	public void addErrorStreamListener(IStreamListener ipl) {
 		fErr.addStreamListener(ipl);
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#removeErrorStreamListener(prover.exec.toplevel.stream.IStreamListener)
+	 */
 	public void removeErrorStreamListener(IStreamListener ipl) {
 		fErr.removeStreamListener(ipl);
 	}
 	
+	/**
+	 * Stop the currently running top level.
+	 */
 	public void dispose() {
 		this.stop();
 	}
+	
+	/**
+	 * Start a new top level process.
+	 * @throws ProverException If the process could not be started properly.
+	 */
 	private void startProcess()
 		throws ProverException {
 		fbIsWorking= false;
 		try {
 			fProverProc = Runtime.getRuntime().exec(fCmds);
 			
-			fIn = StreamHandler.createStreamHandler(IStreamListener.NORMAL, fProverProc.getInputStream());
-			fErr = StreamHandler.createStreamHandler(IStreamListener.ERROR, fProverProc.getErrorStream());
-			fOut = new InputStreamHandler(fProverProc.getOutputStream());
+			fOut = StreamHandler.createStreamHandler(fProverProc.getInputStream());
+			fErr = StreamHandler.createStreamHandler(fProverProc.getErrorStream());
+			fIn = new InputStreamHandler(fProverProc.getOutputStream());
 			fbIsAlive = true;
 		} catch (IOException e) {
 			throw new ProverException(
@@ -92,7 +131,12 @@ public class TopLevel implements ITopLevel {
 		clearBuffer();
 	}
 
-
+	/**
+	 * Create a new instance of a top level.
+	 * @param name the language which host the top level
+	 * @param path the path of the libraries
+	 * @throws ProverException if something went wrong
+	 */
 	public TopLevel(String name, String[] path) throws ProverException {
 		fProver = Prover.get(name);
 		if(fProver == null) {
@@ -107,31 +151,38 @@ public class TopLevel implements ITopLevel {
 	}
 
 
-	/**
-	 * 
-	 * @param type One of the values {@link IStreamListener#NORMAL} or 
-	 * {@link IStreamListener#ERROR}
-	 * @throws ToplevelException if a top level exception was raised
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#waitForStandardInput()
 	 */
-	public void waitForInput(int type) throws ToplevelException {
+	public void waitForStandardInput() throws ToplevelException {
 		StringBuffer str = new StringBuffer();
 		try {
-			switch (type) {
-				case IStreamListener.NORMAL:
-					waitForInput(fIn, str);
-					fStdBuffer.append(str);
-					break;
-				case IStreamListener.ERROR:
-					waitForInput(fErr, str);
-					fErrBuffer.append(str);
-					break;
-			}
+			waitForInput(fOut, str);
+			fStdBuffer.append(str);
 		}
 		catch (IOException e) {
 			fbIsWorking = false;
 			e.printStackTrace();
 		}
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#waitForErrorInput()
+	 */
+	public void waitForErrorInput() throws ToplevelException {
+		StringBuffer str = new StringBuffer();
+		try {
+			waitForInput(fErr, str);
+			fErrBuffer.append(str);
+		}
+		catch (IOException e) {
+			fbIsWorking = false;
+			e.printStackTrace();
+		}
+	}
+	
 	
 	/**
 	 * Wait for the input coming from the specified stream.
@@ -178,10 +229,10 @@ public class TopLevel implements ITopLevel {
 		if (command.trim().equals("") && !command.equals(BREAKSTR))
 			return;
 		fbIsWorking = true;
-		fOut.println(command);
+		fIn.println(command);
 		try {
-				waitForInput(IStreamListener.NORMAL);
-				waitForInput(IStreamListener.ERROR);
+				waitForStandardInput();
+				waitForErrorInput();
 		} 
 		catch (ProverException ec) {
 			fbIsWorking = false;
@@ -200,19 +251,46 @@ public class TopLevel implements ITopLevel {
 		fProverTopLevel.sendCommand(this, command);
 	}
 
-
+	
+	/**
+	 * Restart the currently running top level.
+	 * @throws ProverException If the restart couldn't be done properly.
+	 */
 	public void restart() throws ProverException {
 		startProcess();
 	}
 
-
+	/**
+	 * Tells if the top level is computing something.
+	 * @return <code>true</code> if the top level is computing.
+	 */
+	public boolean isWorking() {
+		return fbIsWorking;
+	}
+	
+	/**
+	 * Tries to undo the last step from the top level,
+	 * by calling the {@link prover.plugins.IProverTopLevel#undo(ITopLevel)}.
+	 * @throws AProverException If there was an error.
+	 */
+	public void undo() throws AProverException {
+		fProverTopLevel.undo(this);
+	}	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#stop()
+	 */
 	public void stop() {
 		fProverProc.destroy();
 		fbIsAlive = false;
 		fbIsWorking = false;
 	}
 
-	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#isAlive()
+	 */
 	public boolean isAlive() {
 		if (fbIsAlive) {
 			try {
@@ -225,32 +303,52 @@ public class TopLevel implements ITopLevel {
 		else return false;
 	}
 	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#getStdBuffer()
+	 */
 	public String getStdBuffer() {
 		return fStdBuffer.toString();
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#getErrBuffer()
+	 */
 	public String getErrBuffer() {
 		return fErrBuffer.toString();
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#clearBuffer()
+	 */
 	public void clearBuffer() {
 		clearStdBuffer();
 		clearErrBuffer();
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#clearStdBuffer()
+	 */
 	public void clearStdBuffer() {
 		fStdBuffer = new StringBuffer();
 		fErrBuffer = new StringBuffer();
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.exec.ITopLevel#clearErrBuffer()
+	 */
 	public void clearErrBuffer() {
 		fStdBuffer = new StringBuffer();
 		fErrBuffer = new StringBuffer();
 	}
 	
-	public boolean isWorking() {
-		return fbIsWorking;
-	}
 	
+
 	
 	/**
 	 * Tries to tell coqtop to stop arguing with these commands.
@@ -260,10 +358,8 @@ public class TopLevel implements ITopLevel {
 		if(!isWorking())
 			throw new ProverException("There is nothing to break!");
 		fbIsWorking = false;
-		fOut.println(BREAKSTR);
+		fIn.print(BREAKSTR);
 	}
 	
-	public void undo() throws AProverException {
-		fProverTopLevel.undo(this);
-	}
+
 }

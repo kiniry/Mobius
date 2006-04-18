@@ -26,6 +26,7 @@ import prover.exec.AProverException;
 import prover.exec.ITopLevel;
 import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.stream.IStreamListener;
+import prover.exec.toplevel.stream.StreamHandler;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.IColorConstants;
@@ -100,7 +101,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	 *  (non-Javadoc)
 	 * @see prover.exec.toplevel.stream.IStreamListener#append(int, java.lang.String)
 	 */
-	public void append(int type, String str) {
+	public void append(StreamHandler handler, String str) {
 		append(str);
 	}
 	
@@ -362,7 +363,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		try {
 			
 			fTopLevel = new TopLevel(fProver.getName(), tab);
-			fTopLevel.addStreamListener(this);
+			fTopLevel.addStandardStreamListener(this);
 		} catch (AProverException e) {
 			new ColorAppendJob(fStatePres, e.toString(), RED).prepare();
 		}
