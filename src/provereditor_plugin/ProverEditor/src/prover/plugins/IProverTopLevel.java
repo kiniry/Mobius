@@ -5,10 +5,48 @@ import org.eclipse.jface.text.IDocument;
 import prover.exec.AProverException;
 import prover.exec.ITopLevel;
 
+
+/**
+ * This interface is used at the plugin level, when extending the
+ * prover.editor extension point.
+ * It is used to handle all the interactions with the top level
+ * API. It is done to specify all the prover specific behaviours.
+ * @author J. Charles
+ */
 public interface IProverTopLevel {
 	
 	
-	public void sendCommand(ITopLevel itl, String s) throws AProverException;
+	/** 
+	 * the constant returned by 
+	 * {@link #hasToSend(ITopLevel, IDocument, String, int, int)} or 
+	 * {@link #hasToSend(ITopLevel, IDocument, String, int, int)}
+	 * if the command shall be sent
+	 * */ 
+	public final int DONT_SKIP = 0;
+	/** 
+	 * the constant returned by 
+	 * {@link #hasToSend(ITopLevel, IDocument, String, int, int)} or 
+	 * {@link #hasToSend(ITopLevel, IDocument, String, int, int)}
+	 * if the command shall be skipped and the evaluation shall
+	 * end here
+	 * */ 
+	public final int SKIP = 1;
+	/** 
+	 * the constant returned by 
+	 * {@link #hasToSend(ITopLevel, IDocument, String, int, int)} or 
+	 * {@link #hasToSend(ITopLevel, IDocument, String, int, int)}
+	 * if the command has to be skipped and the next command shall be
+	 * evaluated
+	 * */ 
+	public final int SKIP_AND_CONTINUE = 2;
+
+	/**
+	 * Called when a command has to be send to the top level.
+	 * @param itl The top level to whom the command shall be sent
+	 * @param cmd The command to send
+	 * @throws AProverException if there is an error while interacting with the top level
+	 */
+	public void sendCommand(ITopLevel itl, String cmd) throws AProverException;
 
 	/**
 	 * Called before sending an {@link prover.exec.toplevel.TopLevel#undo()} command to the 
@@ -20,8 +58,8 @@ public interface IProverTopLevel {
 	 * @param cmd The command that will be sent
 	 * @param beg the starting point of the command in the text
 	 * @param end the ending point of the command in the text
-	 * @return One of the values {@link prover.exec.ITopLevel#DONT_SKIP} {@link prover.exec.ITopLevel#SKIP} 
-	 * 			or {@link prover.exec.ITopLevel#SKIP_AND_CONTINUE}
+	 * @return One of the values {@link prover.plugins.IProverTopLevel#DONT_SKIP} {@link prover.plugins.IProverTopLevel#SKIP} 
+	 * 			or {@link prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
 	 */
 	public int hasToSkip(ITopLevel itl, IDocument doc, String cmd, int beg, int end);
 	
@@ -35,10 +73,10 @@ public interface IProverTopLevel {
 	 * @param doc The current document from which the command was taken
 	 * @param cmd The command that will be sent
 	 * @param beg the command in the text before any 
-	 * {@link prover.exec.ITopLevel#SKIP_AND_CONTINUE} that could have happened
+	 * {@link prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE} that could have happened
 	 * @param end the ending point of the command in the text
-	 * @return One of the values {@link prover.exec.ITopLevel#DONT_SKIP} {@link prover.exec.ITopLevel#SKIP} 
-	 * 			or {@link prover.exec.ITopLevel#SKIP_AND_CONTINUE}
+	 * @return One of the values {@link prover.plugins.IProverTopLevel#DONT_SKIP} {@link prover.plugins.IProverTopLevel#SKIP} 
+	 * 			or {@link prover.plugins.IProverTopLevel#SKIP_AND_CONTINUE}
 	 */
 	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end);
 	
@@ -50,5 +88,14 @@ public interface IProverTopLevel {
 	 */
 	public void undo(ITopLevel itl) throws AProverException;
 
+	/**
+	 * Compute the top level command, from the top level path
+	 * and the path to its libraries.
+	 * @param top the top level path as specified by the user in the
+	 * preference page.
+	 * @param path the different library path gotten from the environment
+	 * @return an array containing the command line 
+	 * as specified for {@link java.lang.Runtime#exec(java.lang.String[])}
+	 */
 	public String[] getCommands(String top, String[] path);
 }
