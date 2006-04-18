@@ -21,10 +21,13 @@ import prover.gui.preference.PreferencePage;
  * The main plugin class.
  */
 public class ProverEditorPlugin extends AbstractUIPlugin {
-
+	/** the number of minor version */
 	public static final int SUBVERSION = 1;
+	/** the number of version */
 	public static final int VERSION = 0;
+	/** the number of the major version */
 	public static final int MAJORVERSION = 0;
+	
 	/** the plugin's extension namespace */
 	public static final String PROVER_EXTENSION_NAMESPACE = "prover.editor";
 	/** the plugin ID for storage issues */
