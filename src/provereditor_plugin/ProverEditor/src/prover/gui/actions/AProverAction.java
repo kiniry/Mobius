@@ -15,28 +15,53 @@ import org.eclipse.ui.PlatformUI;
 import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
+/**
+ * Action used for the toolbar buttons provided by ProverEditor.
+ * @author J. Charles
+ */
 public abstract class AProverAction implements IWorkbenchWindowActionDelegate{
-
-	private static Set set = new HashSet();
-	public void dispose() {
-		
-	}
-
+	/** The set of all the actions of type {@link AProverAction} */
+	private static Set fSet = new HashSet();
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+	 */
 	public void init(IWorkbenchWindow window) {}
-
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+	 */
+	public void dispose() {}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
-		set.add(action);
+		fSet.add(action);
 		action.setEnabled(isEnabled());
 	}
 	
+	
+	/**
+	 * Call on all actions implementing AProverAction the method
+	 * {@link IAction#setEnabled(boolean)}. With the value of
+	 * {@param b} as parameter.
+	 * @param b Whether or not it the actions shall be enabled
+	 */
 	public static void setAllEnabled(boolean b) {
-		Iterator i = set.iterator();
+		Iterator i = fSet.iterator();
 		while(i.hasNext()) {
 			IAction a = (IAction)i.next();
 			a.setEnabled(b);
 		}
 	}
 	
+	/**
+	 * Tell whether or not the action shall be enabled.
+	 * @return <code>true</code> if the action shall be enabled.
+	 */
 	public boolean isEnabled() {
 		IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorPart ed = ap.getActiveEditor();

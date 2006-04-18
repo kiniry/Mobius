@@ -15,10 +15,16 @@ import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
-public class ProgressAction  
-	extends AProverAction  {
+/**
+ * An action to progress in ProverEditor.
+ * @author J. Charles
+ */
+public class ProgressAction extends AProverAction  {
 
-	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
 	public void run(IAction action) {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("CoqEditor.coqtopview");
@@ -33,25 +39,36 @@ public class ProgressAction
 		}
 		
 	}
+	
+	/**
+	 * The Job to send a progress action to the top level.
+	 * @author J. Charles
+	 */
 	private class UpdateJob extends Job {
-		private ProverEditor ce;
-		public UpdateJob(ProverEditor ce) {
+		/** The target editor where to progress */
+		private ProverEditor fEditor;
+		
+		/**
+		 * Create a new Job to progress.
+		 * @param editor The target editor
+		 */
+		public UpdateJob(ProverEditor editor) {
 			super("TopLevel is progressing...");
-			this.ce = ce;
-		}
-
+			fEditor = editor;
+		}	
+		
+		/*
+		 *  (non-Javadoc)
+		 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+		 */
 		public IStatus run(IProgressMonitor monitor) {
 			try {
-				TopLevelManager.getInstance().progress(new ProverFileContext(ce));
+				TopLevelManager.getInstance().progress(new ProverFileContext(fEditor));
 			}
 			catch(Exception e) {
 				e.printStackTrace();
 			}
 			return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 		}
-
-		
-		
 	}
-	
 }

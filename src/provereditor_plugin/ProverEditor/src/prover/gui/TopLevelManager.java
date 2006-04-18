@@ -33,8 +33,8 @@ import prover.gui.editor.LimitRuleScanner;
 import prover.gui.editor.BasicTextPresentation;
 import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
+import prover.gui.preference.PreferencePage;
 import prover.plugins.AProverTranslator;
-import prover.preference.PreferencePage;
 
 /**
  * The top level manager is the main class of the gui of ProverEditor.

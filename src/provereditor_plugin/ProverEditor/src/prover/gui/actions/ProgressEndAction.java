@@ -14,37 +14,40 @@ import org.eclipse.ui.progress.UIJob;
 
 import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
-import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.ProverEditor;
 
+/**
+ * An action to progress until the end of the file.
+ * @author J. Charles
+ */
 public class ProgressEndAction  extends AProverAction {
-	private BasicSourceViewerConfig sv;
-	private ProverEditor ce;
+	/** the target editor */
+	private ProverEditor fEditor;
 
 	public void run(IAction action) {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("CoqEditor.coqtopview");
 		} catch (PartInitException e) {	}
 		IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		IEditorPart ed = ap.getActiveEditor();
-		if(ed instanceof ProverEditor) {
-			ce = (ProverEditor) ed;
-			
+		IEditorPart editor = ap.getActiveEditor();
+		if(editor instanceof ProverEditor) {
+			fEditor = (ProverEditor) editor;
 			Job j = new Job("TopLevel Editor is computing...") {
-				boolean lastres;
+				/*
+				 *  (non-Javadoc)
+				 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+				 */
 				protected IStatus run(IProgressMonitor monitor) {
-					lastres = true;
+					boolean notlastres = true;
 					if(TopLevelManager.getInstance() == null)
 						System.out.println("nul");
-					while (lastres) {
-						lastres = TopLevelManager.getInstance().progress( new ProverFileContext(ce));
+					while (notlastres) {
+						notlastres = TopLevelManager.getInstance().progress( new ProverFileContext(fEditor));
 						UIJob job = new UIJob("CoqEditor is updating..."){
 							public IStatus runInUIThread(IProgressMonitor monitor) {
-								sv.getPresentationReconciler().everythingHasChanged();
 								return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 							}
 						};
-
 						job.schedule();
 						try {
 							job.join();
@@ -57,10 +60,7 @@ public class ProgressEndAction  extends AProverAction {
 				}
 				
 			};
-			j.schedule();
-			
-		}
-		
+			j.schedule();		
+		}		
 	}
-	
 }

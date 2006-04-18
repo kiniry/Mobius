@@ -10,7 +10,15 @@ import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
+/**
+ * The action to send a back command to the toplevel.
+ * @author J. Charles
+ */
 public class BackAction extends AProverAction{
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
 	public void run(IAction action) {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("CoqEditor.coqtopview");
@@ -23,6 +31,4 @@ public class BackAction extends AProverAction{
 		}
 		
 	}
-	
-
 }

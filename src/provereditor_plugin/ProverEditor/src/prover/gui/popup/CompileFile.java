@@ -45,7 +45,7 @@ public class CompileFile implements IActionDelegate {
 		String [] path = {f.getProject().getLocation().toString(),
 				f.getLocation().removeLastSegments(1).toString()
 		};
-		String[] cmd = prover.getTranslator().getCompilingCommand(prover.getTop().trim(), path, name);
+		String[] cmd = prover.getTranslator().getCompilingCommand(prover.getCompiler().trim(), path, name);
 		Job job = new CompilationJob(prover, f, cmd);
 		job.schedule();
 	}

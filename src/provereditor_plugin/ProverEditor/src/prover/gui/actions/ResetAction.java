@@ -13,13 +13,13 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * This Class trigger an action to reset the current proof.
- * @author jcharles
- *
+ * @author J. Charles
  */
 public class ResetAction extends AProverAction{
-
-
-
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
 	public void run(IAction action) {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("CoqEditor.coqtopview");
@@ -31,5 +31,4 @@ public class ResetAction extends AProverAction{
 		ProverEditor ce = (ProverEditor) ed;
 		TopLevelManager.getInstance().reset(new ProverFileContext(ce));		
 	}
-	
 }
