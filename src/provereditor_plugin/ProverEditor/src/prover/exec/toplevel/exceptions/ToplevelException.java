@@ -4,7 +4,7 @@
 package prover.exec.toplevel.exceptions;
 
 import prover.Prover;
-import prover.exec.exceptions.ProverException;
+import prover.plugins.exceptions.ProverException;
 
 
 /**

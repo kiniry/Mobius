@@ -2,7 +2,7 @@
  * Created on Mar 7, 2005
  *
  */
-package prover.exec.exceptions;
+package prover.plugins.exceptions;
 
 
 /**
