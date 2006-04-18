@@ -11,9 +11,9 @@ import java.util.LinkedList;
 
 import prover.exec.AProverException;
 import prover.exec.toplevel.TopLevel;
-import prover.exec.toplevel.exceptions.IncompleteProofException;
-import prover.exec.toplevel.exceptions.ProverException;
-import prover.exec.toplevel.exceptions.SyntaxErrorException;
+import prover.plugins.exceptions.IncompleteProofException;
+import prover.plugins.exceptions.ProverException;
+import prover.plugins.exceptions.SyntaxErrorException;
 
 
 
