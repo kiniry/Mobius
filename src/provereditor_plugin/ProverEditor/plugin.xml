@@ -121,7 +121,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="prover.preference.PreferencePage"
+            class="prover.gui.preference.PreferencePage"
             id="ProverEditor.page"
             name="Prover Editor"/>
    </extension>

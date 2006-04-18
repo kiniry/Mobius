@@ -14,7 +14,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import prover.preference.PreferencePage;
+import prover.gui.preference.PreferencePage;
 
 
 /**

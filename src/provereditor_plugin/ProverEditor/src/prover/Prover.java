@@ -9,9 +9,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.PlatformUI;
 
 import prover.gui.editor.LimitRuleScanner;
+import prover.gui.preference.ProverPreferenceNode;
 import prover.plugins.AProverTranslator;
 import prover.plugins.IProverTopLevel;
-import prover.preference.ProverPreferenceNode;
 
 public class Prover {
 
@@ -64,7 +64,10 @@ public class Prover {
 	public String getTop() {
 		return preference.getTop();
 	}
-
+	
+	public String getCompiler() {
+		return preference.getCompiler();
+	}
 	public int getGraceTime() {
 		return preference.getGraceTime();
 	}
