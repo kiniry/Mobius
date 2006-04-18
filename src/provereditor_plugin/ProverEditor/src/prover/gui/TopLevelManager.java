@@ -23,7 +23,6 @@ import org.eclipse.ui.progress.UIJob;
 import prover.Prover;
 import prover.ProverEditorPlugin;
 import prover.exec.AProverException;
-import prover.exec.ITopLevel;
 import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.stream.IStreamListener;
 import prover.exec.toplevel.stream.StreamHandler;
@@ -36,6 +35,7 @@ import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
 import prover.gui.preference.PreferencePage;
 import prover.plugins.AProverTranslator;
+import prover.plugins.IProverTopLevel;
 
 /**
  * The top level manager is the main class of the gui of ProverEditor.
@@ -208,7 +208,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			
 			//we send the command
 			switch(fProver.getTopLevelTranslator().hasToSend(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
-				case ITopLevel.DONT_SKIP: {
+				case IProverTopLevel.DONT_SKIP: {
 					fTopLevel.clearBuffer();
 					fTopLevel.sendCommand(cmd);
 					if(fTopLevel.isAlive()) {
@@ -222,9 +222,9 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 					}
 					break;
 				}
-				case ITopLevel.SKIP: 
+				case IProverTopLevel.SKIP: 
 					break;
-				case ITopLevel.SKIP_AND_CONTINUE: {
+				case IProverTopLevel.SKIP_AND_CONTINUE: {
 					progress_intern(pc, realoldlimit, newlimit);
 					break;
 				}
@@ -274,7 +274,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				return false;
 			}
 			switch(fProver.getTopLevelTranslator().hasToSkip(fTopLevel, pc.doc, cmd, newlimit, oldlimit)) {
-				case ITopLevel.DONT_SKIP: {
+				case IProverTopLevel.DONT_SKIP: {
 					try {
 						fTopLevel.undo();
 					} catch (AProverException e) {
@@ -283,11 +283,11 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 					pc.scan.setLimit(newlimit);
 					break;
 				}
-				case ITopLevel.SKIP: {
+				case IProverTopLevel.SKIP: {
 					pc.scan.setLimit(newlimit);
 					break;
 				}
-				case ITopLevel.SKIP_AND_CONTINUE: {
+				case IProverTopLevel.SKIP_AND_CONTINUE: {
 					pc.scan.setLimit(newlimit);
 					regress_intern(pc);
 					break;
