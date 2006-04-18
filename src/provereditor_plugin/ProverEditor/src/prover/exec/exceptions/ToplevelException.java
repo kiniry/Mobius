@@ -1,7 +1,7 @@
 /*
  * Created on Mar 3, 2005
  */
-package prover.exec.toplevel.exceptions;
+package prover.exec.exceptions;
 
 import prover.Prover;
 

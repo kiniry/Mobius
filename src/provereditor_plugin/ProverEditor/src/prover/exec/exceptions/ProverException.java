@@ -6,7 +6,7 @@
 /********************************************************************************
 /* Warnings/Remarks:
 /*******************************************************************************/
-package prover.exec.toplevel.exceptions;
+package prover.exec.exceptions;
 
 import prover.exec.AProverException;
 

@@ -1,6 +1,6 @@
 package prover.exec;
 
-import prover.exec.toplevel.exceptions.ToplevelException;
+import prover.exec.exceptions.ToplevelException;
 import prover.exec.toplevel.stream.IStreamListener;
 
 /**

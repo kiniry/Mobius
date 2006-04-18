@@ -1,7 +1,7 @@
 package prover.exec.exceptions.toplevel;
 
 import prover.Prover;
-import prover.exec.toplevel.exceptions.ToplevelException;
+import prover.exec.exceptions.ToplevelException;
 
 public class ThreadDeathException  extends ToplevelException {
 

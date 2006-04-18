@@ -2,14 +2,13 @@
  * Created on Mar 7, 2005
  *
  */
-package prover.exec.toplevel.exceptions;
+package prover.exec.exceptions;
 
 
 /**
  * @author jcharles
- *
  */
-public class IncompleteProofException extends ProverException {
+public class SyntaxErrorException extends ProverException{
 
 	/**
 	 * 
@@ -19,7 +18,7 @@ public class IncompleteProofException extends ProverException {
 	/**
 	 * @param description
 	 */
-	public IncompleteProofException(String description) {
+	public SyntaxErrorException(String description) {
 		super(description);
 	}
 
