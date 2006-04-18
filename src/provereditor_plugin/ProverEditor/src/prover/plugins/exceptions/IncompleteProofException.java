@@ -6,7 +6,9 @@ package prover.plugins.exceptions;
 
 
 /**
- * An exception 
+ * An exception to express the fact that the proof the user is 
+ * trying to save (or trying to do anything with it..)
+ * is still uncomplete.
  * @author J. Charles
  */
 public class IncompleteProofException extends ProverException {
@@ -15,7 +17,9 @@ public class IncompleteProofException extends ProverException {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param description
+	 * Create a new exception, with a message specifying the 
+	 * problem.
+	 * @param description A description of the problem encountered
 	 */
 	public IncompleteProofException(String description) {
 		super(description);
