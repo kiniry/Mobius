@@ -1,6 +1,5 @@
 package prover.exec;
 
-import prover.exec.toplevel.exceptions.ToplevelException;
 import prover.exec.toplevel.stream.IStreamListener;
 
 /**
@@ -9,10 +8,6 @@ import prover.exec.toplevel.stream.IStreamListener;
  *
  */
 public interface ITopLevel {
-	
-	public final int DONT_SKIP = 0;
-	public final int SKIP = 1;
-	public final int SKIP_AND_CONTINUE = 2;
 	
 	/**
 	 * Sends a command to the top level. Any pre treatment
@@ -44,7 +39,6 @@ public interface ITopLevel {
 	 */
 	public void stop();
 	
-
 	
 	/**
 	 * Clear the snapshot of the standard output
@@ -75,8 +69,8 @@ public interface ITopLevel {
 	 */
 	public String getErrBuffer();
 	
-	public void waitForStandardInput() throws ToplevelException;
-	public void waitForErrorInput() throws ToplevelException;
+	public void waitForStandardInput() throws AProverException;
+	public void waitForErrorInput() throws AProverException;
 	
 	public void addStandardStreamListener(IStreamListener isl);
 	public void removeStandardStreamListener(IStreamListener isl);

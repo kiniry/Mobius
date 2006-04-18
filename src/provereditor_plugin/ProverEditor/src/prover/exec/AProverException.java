@@ -2,7 +2,8 @@ package prover.exec;
 
 /**
  * A generic exception containing a description.
- * Used to have a single way to catch all the exceptions.
+ * Used to have a single way to catch all the exceptions thrown by
+ * the ProverEditor.
  * @author J. Charles
  */
 public abstract class AProverException extends Exception {
