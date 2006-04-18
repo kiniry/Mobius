@@ -14,7 +14,6 @@ import prover.exec.toplevel.TopLevel;
 import prover.exec.toplevel.exceptions.IncompleteProofException;
 import prover.exec.toplevel.exceptions.ProverException;
 import prover.exec.toplevel.exceptions.SyntaxErrorException;
-import prover.exec.toplevel.stream.IStreamListener;
 
 
 
@@ -23,7 +22,7 @@ import prover.exec.toplevel.stream.IStreamListener;
  * @author J. Charles
  */
 
-public class CoqTop extends TopLevel implements IStreamListener {
+public class CoqTop extends TopLevel {
 	private LinkedList sections = new LinkedList();
 	private LinkedList lemmas = new LinkedList();
 	
@@ -36,7 +35,6 @@ public class CoqTop extends TopLevel implements IStreamListener {
 	 */
 	public CoqTop (String [] path) throws ProverException {
 		super("Coq", path);
-		addErrorStreamListener(this);
 	}
 	
 	
@@ -171,7 +169,7 @@ public class CoqTop extends TopLevel implements IStreamListener {
 		while ((getStdBuffer().indexOf("User error: Attempt to save an incomplete proof") == -1) &&
 				(getStdBuffer().indexOf("is defined")) == -1){
 			// we wait for a cool output...
-			waitForInput(IStreamListener.NORMAL);
+			waitForStandardInput();
 		}
 		
 		if(getStdBuffer().indexOf("is defined") != -1) {
@@ -215,7 +213,7 @@ public class CoqTop extends TopLevel implements IStreamListener {
 		String str;
 		str = getStdBuffer();
 		while(str.indexOf("========\n") == -1){
-			waitForInput(NORMAL);
+			waitForStandardInput();
 			str = getStdBuffer();
 		}
 		if(str.indexOf("Syntax error: ") != -1)
@@ -378,9 +376,4 @@ public class CoqTop extends TopLevel implements IStreamListener {
 		}		
 	}
 
-
-	public void append(int type, String str) {
-		// TODO Auto-generated method stub
-		
-	}
 }
