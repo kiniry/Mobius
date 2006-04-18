@@ -10,6 +10,7 @@ package prover.exec.exceptions;
 
 import prover.exec.AProverException;
 
+
 /**
  * A basic implementation of a prover exception.
  * @author J. Charles
