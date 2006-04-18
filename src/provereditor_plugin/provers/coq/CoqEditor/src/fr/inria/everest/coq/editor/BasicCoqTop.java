@@ -35,7 +35,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	public void sendCommand(ITopLevel itl, String s) throws AProverException {
 		itl.sendToProver(s);
 		while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
-			itl.waitForInput(2);
+			itl.waitForErrorInput();
 		String str = itl.getStdBuffer().toString();
 		if(str.indexOf("Syntax error: ") != -1)
 			throw new SyntaxErrorException(str.toString());
@@ -65,7 +65,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	public boolean isProofMode(ITopLevel itl) {
 		try {
 			while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
-				itl.waitForInput(2);
+				itl.waitForErrorInput();
 		} catch (ToplevelException e) {}
 		return !itl.getErrBuffer().trim().startsWith("Coq <");
 	}
