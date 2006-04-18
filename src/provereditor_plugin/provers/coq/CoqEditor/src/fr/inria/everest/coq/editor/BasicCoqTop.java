@@ -10,10 +10,9 @@ import org.eclipse.jface.text.IDocument;
 
 import prover.exec.AProverException;
 import prover.exec.ITopLevel;
-import prover.exec.toplevel.exceptions.ProverException;
-import prover.exec.toplevel.exceptions.SyntaxErrorException;
-import prover.exec.toplevel.exceptions.ToplevelException;
 import prover.plugins.IProverTopLevel;
+import prover.plugins.exceptions.ProverException;
+import prover.plugins.exceptions.SyntaxErrorException;
 
 
 
@@ -24,7 +23,13 @@ import prover.plugins.IProverTopLevel;
 
 public class BasicCoqTop implements IProverTopLevel  {
 
-	
+	public boolean isProofMode(ITopLevel itl) {
+		try {
+			while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
+				itl.waitForErrorInput();
+		} catch (AProverException e) {}
+		return !itl.getErrBuffer().trim().startsWith("Coq <");
+	}	
 	
 	/**
 	 * Send the given command to coqtop. A command is a sentence which ends with a dot.
@@ -47,6 +52,12 @@ public class BasicCoqTop implements IProverTopLevel  {
 			throw new ProverException("An error occured during the proof:\n" + str + "\n");
 	}
 	
+	
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.IProverTopLevel#undo(prover.exec.ITopLevel)
+	 */
 	public void undo(ITopLevel itl) throws AProverException {
 		if(isProofMode(itl)) {
 			try {
@@ -62,13 +73,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	}	
 	
 
-	public boolean isProofMode(ITopLevel itl) {
-		try {
-			while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
-				itl.waitForErrorInput();
-		} catch (ToplevelException e) {}
-		return !itl.getErrBuffer().trim().startsWith("Coq <");
-	}
+
 	
 
 
@@ -76,16 +81,19 @@ public class BasicCoqTop implements IProverTopLevel  {
 
 	Stack proofBeginList = new Stack();
 	Stack proofEndList = new Stack();
-	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
+	 */
 	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
 		if(proofBeginList.size() > 0) {
 			if((isProofMode(itl))) {
 				if(proofBeginList.size() == proofEndList.size()) {
 					proofEndList.pop();
-					return ITopLevel.SKIP_AND_CONTINUE;
+					return IProverTopLevel.SKIP_AND_CONTINUE;
 				}
 				if(cmd.startsWith("Proof"))
-					return ITopLevel.SKIP;
+					return IProverTopLevel.SKIP;
 			}
 			else {
 				int begProof = ((Integer) proofBeginList.peek()).intValue();
@@ -95,29 +103,34 @@ public class BasicCoqTop implements IProverTopLevel  {
 					if (endProof == beg) {
 						// we are in fact inside a the end of the proof
 						proofEndList.pop();	
-						return ITopLevel.SKIP_AND_CONTINUE;
+						return IProverTopLevel.SKIP_AND_CONTINUE;
 					}
 				}
 				else {
 					if(begProof == beg) {
 						// we are outside a proof
 						proofBeginList.pop();
-						return ITopLevel.SKIP_AND_CONTINUE;
+						return IProverTopLevel.SKIP_AND_CONTINUE;
 					}
 					else {
 						// we are within a proof
-						return ITopLevel.SKIP_AND_CONTINUE;
+						return IProverTopLevel.SKIP_AND_CONTINUE;
 					}
 				}
 			}
 		}
 		if((cmd.startsWith("Show ")) ||
 			(cmd.startsWith("Print ")))
-			return ITopLevel.SKIP;
-		return ITopLevel.DONT_SKIP;
+			return IProverTopLevel.SKIP;
+		return IProverTopLevel.DONT_SKIP;
 	}
 
 	LinkedList proofList = new LinkedList();
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.IProverTopLevel#hasToSend(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
+	 */
 	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
 		
 		if(isProofMode(itl)) {
@@ -137,9 +150,13 @@ public class BasicCoqTop implements IProverTopLevel  {
 			proofEndList.push(new Integer(beg));
 
 		}
-		return ITopLevel.DONT_SKIP;
+		return IProverTopLevel.DONT_SKIP;
 	}
-
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.IProverTopLevel#getCommands(java.lang.String, java.lang.String[])
+	 */
 	public String[] getCommands(String top, String[] path) {
 		String [] cmds;
 		if(path != null) {
@@ -157,8 +174,4 @@ public class BasicCoqTop implements IProverTopLevel  {
 		cmds[cmds.length - 1] = "-emacs";
 		return cmds;
 	}
-
-	
-
-	
 }
