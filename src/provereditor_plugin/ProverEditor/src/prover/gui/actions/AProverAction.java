@@ -47,7 +47,7 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate{
 	/**
 	 * Call on all actions implementing AProverAction the method
 	 * {@link IAction#setEnabled(boolean)}. With the value of
-	 * {@param b} as parameter.
+	 * <code>b</code> as parameter.
 	 * @param b Whether or not it the actions shall be enabled
 	 */
 	public static void setAllEnabled(boolean b) {
