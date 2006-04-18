@@ -28,4 +28,5 @@ Export-Package: prover,
  prover.gui.editor,
  prover.gui.editor.detector,
  prover.gui.jobs,
- prover.plugins
+ prover.plugins,
+ prover.plugins.exceptions

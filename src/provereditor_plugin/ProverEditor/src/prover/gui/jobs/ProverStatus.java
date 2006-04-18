@@ -16,7 +16,7 @@ public class ProverStatus {
 	 * @return A standard ok status.
 	 */
 	public static IStatus getOkStatus() {
-		return new Status(IStatus.OK, ProverEditorPlugin.getPluginId(), IStatus.OK, "", null);
+		return new Status(IStatus.OK, ProverEditorPlugin.PLUGIN_ID, IStatus.OK, "", null);
 	}
 	
 	/**
@@ -27,8 +27,8 @@ public class ProverStatus {
 	 * @return A status containing an message plus its summary as specified.
 	 */
 	public static IStatus getErrorStatus(String msg1, String msg2) {
-		MultiStatus ms = new MultiStatus(ProverEditorPlugin.getPluginId(), IStatus.ERROR,  msg1, null);
-		ms.add(new Status(IStatus.ERROR, ProverEditorPlugin.getPluginId(), IStatus.OK, msg2, null));
+		MultiStatus ms = new MultiStatus(ProverEditorPlugin.PLUGIN_ID, IStatus.ERROR,  msg1, null);
+		ms.add(new Status(IStatus.ERROR, ProverEditorPlugin.PLUGIN_ID, IStatus.OK, msg2, null));
 		return ms;
 	}
 	
@@ -40,8 +40,8 @@ public class ProverStatus {
 	 * @return A status containing an error message plus its exception originating it.
 	 */
 	public static IStatus getErrorStatus(String msg1, Exception e) {
-		MultiStatus ms = new MultiStatus(ProverEditorPlugin.getPluginId(), IStatus.ERROR,  msg1, null);
-		ms.add(new Status(IStatus.ERROR, ProverEditorPlugin.getPluginId(), IStatus.OK, "", e));
+		MultiStatus ms = new MultiStatus(ProverEditorPlugin.PLUGIN_ID, IStatus.ERROR,  msg1, null);
+		ms.add(new Status(IStatus.ERROR, ProverEditorPlugin.PLUGIN_ID, IStatus.OK, "", e));
 		return ms;
 	}
 }

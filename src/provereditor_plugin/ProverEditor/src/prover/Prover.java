@@ -15,13 +15,13 @@ import prover.plugins.IProverTopLevel;
 
 public class Prover {
 
-	private static Hashtable hs = new Hashtable();
+	private static Hashtable fProverSet = new Hashtable();
 	public static Prover get(String language) {
-		return (Prover) hs.get(language);
+		return (Prover) fProverSet.get(language);
 	}
 	
 	public static Prover findProverFromFile(String str) {
-		Iterator iter = hs.values().iterator();
+		Iterator iter = fProverSet.values().iterator();
 		while(iter.hasNext()) {
 			Prover p = (Prover)iter.next();
 			if(p.extensionMatch(str))
@@ -33,47 +33,46 @@ public class Prover {
 	
 
 
-	private String name;
-	private String extension;
-	private ProverPreferenceNode preference;
-	private AProverTranslator translator;
+	private String fName;
+	private String fExtension;
+	private ProverPreferenceNode fPreference;
+	private AProverTranslator fTranslator;
 	private IProverTopLevel fTopLevelTranslator;
 	
 	public Prover (IPreferenceStore prefs, IConfigurationElement lang) {
-		name = lang.getAttribute("name");
-		extension = lang.getAttribute("extension");
+		fName = lang.getAttribute("fName");
+		fExtension = lang.getAttribute("fExtension");
 		try {
-			translator = (AProverTranslator) lang.createExecutableExtension("translator");
+			fTranslator = (AProverTranslator) lang.createExecutableExtension("fTranslator");
 			fTopLevelTranslator = (IProverTopLevel) lang.createExecutableExtension("provertoplevel");
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 		
-		ProverPreferenceNode pn = new ProverPreferenceNode(name, prefs);
+		ProverPreferenceNode pn = new ProverPreferenceNode(fName, prefs);
 		PlatformUI.getWorkbench().getPreferenceManager().addTo("ProverEditor.page",	pn);
-		preference = pn;
+		fPreference = pn;
 		
-		hs.put(name, this);
-		//System.out.println(this);
+		fProverSet.put(fName, this);
 	}
 
 	public String getIde() {
-		return preference.getIde();
+		return fPreference.getIde();
 	}
 
 	public String getTop() {
-		return preference.getTop();
+		return fPreference.getTop();
 	}
 	
 	public String getCompiler() {
-		return preference.getCompiler();
+		return fPreference.getCompiler();
 	}
 	public int getGraceTime() {
-		return preference.getGraceTime();
+		return fPreference.getGraceTime();
 	}
 	
 	public AProverTranslator getTranslator() {
-		return translator;
+		return fTranslator;
 	}
 	
 	public IProverTopLevel getTopLevelTranslator() {
@@ -81,26 +80,26 @@ public class Prover {
 	}
 	
 	private boolean extensionMatch(String str) {
-		return str.endsWith(extension);
+		return str.endsWith(fExtension);
 	}
 
 	public LimitRuleScanner getRuleScanner() {	
 		
-		return new LimitRuleScanner(translator.getFileRules());
+		return new LimitRuleScanner(fTranslator.getFileRules());
 	}
 	
 	
 	public String getName() {
-		return name;
+		return fName;
 	}
 	public String toString() {
-		String res = name + " (" + extension + "): " 
-			+ translator.toString() + ", " + preference.toString();
+		String res = fName + " (" + fExtension + "): " 
+			+ fTranslator.toString() + ", " + fPreference.toString();
 		return res;
 	}
 
 	public boolean isErrorMsg(String s) {
-		return translator.isErrorMsg(s);
+		return fTranslator.isErrorMsg(s);
 	}
 
 }

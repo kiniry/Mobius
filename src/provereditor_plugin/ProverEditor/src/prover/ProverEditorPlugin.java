@@ -18,19 +18,25 @@ import prover.gui.preference.PreferencePage;
 
 
 /**
- * The main plugin class to be used in the desktop.
+ * The main plugin class.
  */
 public class ProverEditorPlugin extends AbstractUIPlugin {
 
 	public static final int SUBVERSION = 1;
 	public static final int VERSION = 0;
 	public static final int MAJORVERSION = 0;
-	private static final String PROVER_EXTENSION_NAMESPACE = "prover.editor";
-
-	//The shared instance.
+	/** the plugin's extension namespace */
+	public static final String PROVER_EXTENSION_NAMESPACE = "prover.editor";
+	/** the plugin ID for storage issues */
+	public static final String PLUGIN_ID = "ProverEditor";
+	
+	/** The shared instance. */
 	private static ProverEditorPlugin plugin;
 	
-	private IPreferenceStore prefs;
+	/** the current preference store */
+	private IPreferenceStore fPrefs;
+	
+	
 	/**
 	 * The constructor.
 	 */
@@ -43,8 +49,8 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		prefs = PlatformUI.getPreferenceStore(); 
-		PreferencePage.setDefault(prefs);
+		fPrefs = PlatformUI.getPreferenceStore(); 
+		PreferencePage.setDefault(fPrefs);
 		PlatformUI.getWorkbench().getExtensionTracker();
 		
 		if (Platform.getExtensionRegistry() != null) {
@@ -94,12 +100,16 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("ProverEditor", path);
 	}
 
-	public static String getPluginId() {
-		return "ProverEditor"; //Platform.PI_RUNTIME;
-	}
+	
+	
 	
 
-	public void register(IExtension ie) {
+	/**
+	 * Registers an extension extending the extension point
+	 * <code>prover.editor</code> specified.
+	 * @param ie the extension to add
+	 */
+	private void register(IExtension ie) {
 		if(ie == null)
 			return;
 		IConfigurationElement[] ice = ie.getConfigurationElements();
@@ -107,7 +117,7 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
 		for (int k = 0; k < ice.length; k++) {
 			if (ice[k].getName().equals("language")) {
 				try {
-					new Prover(prefs, ice[k]);
+					new Prover(fPrefs, ice[k]);
 				} catch (Exception ce) {
 					System.err.println(ce.getMessage());
 				}
@@ -118,7 +128,11 @@ public class ProverEditorPlugin extends AbstractUIPlugin {
 	
 	
 
-	
+	/**
+	 * Returns the current instance of the plugin.
+	 * @return the current instance or <code>null</code> if
+	 * no instance was created yet. 
+	 */
 	public static ProverEditorPlugin getInstance() {
 		return plugin;
 	}
