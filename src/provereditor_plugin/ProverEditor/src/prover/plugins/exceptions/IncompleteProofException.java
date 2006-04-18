@@ -6,9 +6,10 @@ package prover.plugins.exceptions;
 
 
 /**
- * An exception to express the fact that the proof the user is 
- * trying to save (or trying to do anything with it..)
- * is still uncomplete.
+ * An exception when encountering incomplete proofs.
+ * It is to express the fact that the proof the user is 
+ * trying to save (or trying to do anything with it...)
+ * is still incomplete.
  * @author J. Charles
  */
 public class IncompleteProofException extends ProverException {
