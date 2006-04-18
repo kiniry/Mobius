@@ -12,10 +12,7 @@ import prover.exec.exceptions.ProverException;
  *
  */
 public class ToplevelException extends ProverException {
-
-	/**
-	 * 
-	 */
+	/** A serial UID to have much more fun... */
 	private static final long serialVersionUID = 1L;
 
 

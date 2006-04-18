@@ -6,18 +6,17 @@ package prover.exec.exceptions;
 
 
 /**
- * Exception to be thrown in case
+ * Exception to be thrown in case of a syntax error
+ * detected by the prover.
  * @author J. Charles
  */
 public class SyntaxErrorException extends ProverException{
-
-	/**
-	 * 
-	 */
+	/** Serial UID to have much more fun... */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param description
+	 * The constructor. Takes a description of the error as parameter.
+	 * @param description The source of the error.
 	 */
 	public SyntaxErrorException(String description) {
 		super(description);

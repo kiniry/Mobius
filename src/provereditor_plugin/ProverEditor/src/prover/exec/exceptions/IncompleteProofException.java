@@ -6,14 +6,12 @@ package prover.exec.exceptions;
 
 
 /**
- * @author jcharles
- *
+ * An exception 
+ * @author J. Charles
  */
 public class IncompleteProofException extends ProverException {
 
-	/**
-	 * 
-	 */
+	/** A serial UID to have much more fun... */
 	private static final long serialVersionUID = 1L;
 
 	/**
