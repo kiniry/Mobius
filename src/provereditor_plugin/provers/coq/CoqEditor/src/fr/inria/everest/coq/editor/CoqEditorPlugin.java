@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
  */
 public class CoqEditorPlugin extends AbstractUIPlugin {
 
-	//The shared instance.
+	/** The shared instance. */
 	private static CoqEditorPlugin plugin;
 	
 	/**
@@ -51,10 +51,4 @@ public class CoqEditorPlugin extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("CoqEditor", path);
 	}
-
-	public static String getPluginId() {
-		return "CoqEditor"; //Platform.PI_RUNTIME;
-	}
-	
-
 }

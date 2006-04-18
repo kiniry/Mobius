@@ -10,7 +10,6 @@ import prover.gui.editor.FixedSizeWordRule;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;
 import prover.plugins.AProverTranslator;
-import prover.plugins.IProverTopLevel;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
 	
@@ -23,10 +22,6 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 			"Definition", "Variable", "Lemma", "Fixpoint", "Axiom", "Hypothesis", "Inductive"
 	};
 				
-	public final static String [] errorExpressions = { 
-		"Error:", "Anomaly:", "Toplevel input",
-		"User error", "Syntax error: "
-	};
 	public final static String [][] replacements = {
 		{"\ufffd", " "},
 		{"============================",
@@ -39,19 +34,17 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 	private IRule [] proofRules;
 	private IRule [] fileRules;
 	private IRule [] parsingRules;
-	
-	public String[] getErrorExpressions() {
-		return errorExpressions;
-	}
+
 	
 	
 	public static AProverTranslator getInstance() {
 		return instance;
 	}
 	
-
-
-	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#getReplacements()
+	 */
 	public String [][] getReplacements() {
 		return replacements;
 	}
@@ -77,11 +70,16 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		};
 		return rules;
 	}
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#getFileRules()
+	 */
 	public IRule [] getFileRules() {
 		if(fileRules == null)
 			fileRules = initFileRules();
 		return fileRules;
 	}
+	
 	
 	private IRule [] initProofRules() {
 		WordRule wr = new WordRule(new WordDetector(), def);
@@ -114,6 +112,10 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return rules;
 	}
 	
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#getProofRules()
+	 */
 	public IRule [] getProofRules() {				
 		if(proofRules == null)
 			proofRules = initProofRules();
@@ -147,6 +149,11 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		};
 		return rules;
 	}
+
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#getParsingRules()
+	 */
 	public IRule[] getParsingRules() {
 		if(parsingRules == null) {
 			parsingRules = initParsingRules();
@@ -154,20 +161,19 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return parsingRules;
 	}
 
-
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#isErrorMsg(java.lang.String)
+	 */
 	public boolean isErrorMsg(String s) {
 		return s.matches("Error.*");
 	}
 
-	BasicCoqTop bct;
-	public IProverTopLevel getTopLevel() {
-		if(bct == null) {
-			bct = new BasicCoqTop();
-		}
-		return bct;
-	}
 
-
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#getIdeCommand(java.lang.String, java.lang.String[], java.lang.String)
+	 */
 	public String[] getIdeCommand(String ide, String[] path, String file) {
 		String [] cmds = new String[1 + (path.length * 2) + 1];
 		cmds[0] = ide;
@@ -179,7 +185,10 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		return cmds;
 	}
 
-
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.AProverTranslator#getCompilingCommand(java.lang.String, java.lang.String[], java.lang.String)
+	 */
 	public String[] getCompilingCommand(String ide, String[] path, String file) {
 		String [] cmds = new String[1 + (path.length * 2) + 2];
 		cmds[0] = ide;

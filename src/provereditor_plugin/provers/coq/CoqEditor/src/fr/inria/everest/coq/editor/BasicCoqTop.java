@@ -22,7 +22,10 @@ import prover.plugins.exceptions.SyntaxErrorException;
  */
 
 public class BasicCoqTop implements IProverTopLevel  {
-
+	private Stack proofBeginList = new Stack();
+	private Stack proofEndList = new Stack();
+	private LinkedList proofList = new LinkedList();
+	
 	public boolean isProofMode(ITopLevel itl) {
 		try {
 			while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
@@ -73,14 +76,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 	}	
 	
 
-
-	
-
-
-
-
-	Stack proofBeginList = new Stack();
-	Stack proofEndList = new Stack();
 	/*
 	 *  (non-Javadoc)
 	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
@@ -125,7 +120,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 		return IProverTopLevel.DONT_SKIP;
 	}
 
-	LinkedList proofList = new LinkedList();
 	
 	/*
 	 *  (non-Javadoc)
