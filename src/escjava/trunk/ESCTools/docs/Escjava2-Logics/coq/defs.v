@@ -124,6 +124,8 @@ Ltac unfoldEscArith := unfold  integralEQ_bool, integralGE_bool, integralLE_bool
 
 
 Variable null : Reference.
+Definition cast : Reference -> Types -> Reference := 
+ fun (v:Reference)  (t: Types) => v.
 Variable fClosedTime : S -> Time.
 
 Variable vAllocTime : Reference -> Time.
@@ -203,6 +205,12 @@ Axiom select_store2:
     forall(var obj1 obj2 :S) (val : A), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
+Axiom arrselect_store1: 
+    forall(var :S) (obj :Z)(val :A), (arrselect (arrstore var obj val) obj) = val.
+Axiom arrselect_store2: 
+    forall(var :S)(obj1 obj2 :Z) (val : A), 
+         obj1 <> obj2 -> 
+                 (arrselect (arrstore var obj1 val) obj2) = (arrselect var obj2).
 
 Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types -> A -> Prop.
 
@@ -268,6 +276,13 @@ Axiom select_store2:
     forall(var obj1 obj2 :S) (val : A), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
+Axiom arrselect_store1: 
+    forall(var :S) (obj :Z)(val :A), (arrselect (arrstore var obj val) obj) = val.
+Axiom arrselect_store2: 
+    forall(var :S)(obj1 obj2 :Z) (val : A), 
+         obj1 <> obj2 -> 
+                 (arrselect (arrstore var obj1 val) obj2) = (arrselect var obj2).
+
 Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types -> A -> Prop.
 (* array axioms2 *)
 Axiom array_axiom2 : 
@@ -319,7 +334,7 @@ End ArgRef.
 
 Module RefHeap := AHeap ArgRef.
 Hint Resolve RefHeap.select_store2.
-Hint Rewrite  -> RefHeap.select_store1 : escj_select.
+Hint Rewrite  -> RefHeap.select_store1 RefHeap.arrselect_store1: escj_select.
 
 
 Module ArgInt : A_args with Definition A := t_int.
@@ -328,7 +343,7 @@ End ArgInt.
 
 Module IntHeap := AHeap ArgInt.
 Hint Resolve IntHeap.select_store2.
-Hint Rewrite  -> IntHeap.select_store1 : escj_select.
+Hint Rewrite  -> IntHeap.select_store1 IntHeap.arrselect_store1: escj_select.
 
 Module ArgBool : A_args with Definition A := bool.
 Definition A := bool.
@@ -336,7 +351,7 @@ End ArgBool.
 
 Module BoolHeap := AHeap ArgBool.
 Hint Resolve BoolHeap.select_store2.
-Hint Rewrite  -> BoolHeap.select_store1 : escj_select.
+Hint Rewrite  -> BoolHeap.select_store1 BoolHeap.arrselect_store1 : escj_select.
 
 
 
@@ -533,7 +548,8 @@ repeat match goal with
 end;
 repeat match goal with
 |[H: _ |- _] => rewrite BoolHeap.select_store1 in H
-end; autorewrite with escj; auto.
+end; autorewrite with escj; autorewrite with escj_select;
+auto.
 Ltac startsc := unfold not; unfoldEscTime; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
 (* unfoldArrAx. *)
 
