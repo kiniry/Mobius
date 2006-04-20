@@ -24,6 +24,8 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 				
 	public final static String [][] replacements = {
 		{"\ufffd", " "},
+		{"([0-9]+) subgoals", "\n\n\\Subgoals :"},
+		{"([0-9]+) subgoal", "\n\n\\Subgoal :"},
 		{"============================",
 			"-----------------------------------------------------------------------------------"
 		}
@@ -95,9 +97,9 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		hypothesis.setColumnConstraint(2);
 //		WordPatternRule hypothesis = new WordPatternRule(new WordDetector(), "  ", " :", comment);
 //		hypothesis.setColumnConstraint(0);
-		SingleLineRule subg = new SingleLineRule("1 ", "subgoal", completed);
+		SingleLineRule subg = new SingleLineRule("Subgoal", ":", completed);
 		subg.setColumnConstraint(0);
-		MultiLineRule mlr = new MultiLineRule(" subgoal", "",subgoal2, (char) 0, true);
+		MultiLineRule mlr = new MultiLineRule("subgoal", "",subgoal2, (char) 0, true);
 		mlr.setColumnConstraint(0);
 		IRule [] rules = {
 				new SingleLineRule("Proof ", "completed", completed),

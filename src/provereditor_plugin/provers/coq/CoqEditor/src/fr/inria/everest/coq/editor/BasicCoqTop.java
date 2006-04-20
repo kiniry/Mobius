@@ -41,10 +41,15 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 * @throws ProverException if there is an unexpected problem
 	 */
 	public void sendCommand(ITopLevel itl, String s) throws AProverException {
+//		System.out.println(s);
 		itl.sendToProver(s);
+	
 		while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
 			itl.waitForErrorInput();
-		String str = itl.getStdBuffer().toString();
+		if(itl.getStdBuffer().trim().equals(""))
+			itl.waitForStandardInput();
+		String str = itl.getStdBuffer();
+//		System.out.println(str);
 		if(str.indexOf("Syntax error: ") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.indexOf("Error:") != -1)
@@ -154,7 +159,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	public String[] getCommands(String top, String[] path) {
 		String [] cmds;
 		if(path != null) {
-			cmds = new String[2 + path.length * 2];
+			cmds = new String[1 + path.length * 2];
 			for(int i = 0; i < path.length; i++) {
 				cmds[(2 * i) + 1] = "-I";
 				cmds[(2 * i) + 2] = path[i];
@@ -162,10 +167,10 @@ public class BasicCoqTop implements IProverTopLevel  {
 			
 		}
 		else {
-			cmds = new String[2];
+			cmds = new String[1];
 		}
 		cmds[0] = top;
-		cmds[cmds.length - 1] = "-emacs";
+		//cmds[cmds.length - 1] = "-emacs";
 		return cmds;
 	}
 }
