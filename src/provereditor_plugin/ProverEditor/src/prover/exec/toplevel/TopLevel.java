@@ -144,9 +144,7 @@ public class TopLevel implements ITopLevel {
 		}
 		fProverTopLevel = fProver.getTopLevelTranslator();
 		fCmds = fProverTopLevel.getCommands(fProver.getTop(), path);
-		int iGrace = fProver.getGraceTime();
-		fiGraceTime = iGrace == 0 ? 123456 : iGrace;
-		
+		fiGraceTime = fProver.getGraceTime();
 		startProcess();
 	}
 
@@ -293,8 +291,7 @@ public class TopLevel implements ITopLevel {
 	 */
 	public boolean isAlive() {
 		if (fbIsAlive) {
-			try {
-				
+			try {		
 				fProverProc.exitValue();
 				fbIsAlive = false;
 			} catch (IllegalThreadStateException itse) {

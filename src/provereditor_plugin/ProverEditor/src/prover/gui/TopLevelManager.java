@@ -164,7 +164,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	 *  lock was already set.
 	 */
 	public boolean progress(ProverFileContext pc) {
-		System.out.print(">");
 		if(!lock())
 			return true;
 		boolean res;
@@ -177,7 +176,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			res = progress_intern(pc, oldlimit, oldlimit);
 		}
 		unlock();
-		System.out.println("<");
 		return res;
 	}
 	
