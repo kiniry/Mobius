@@ -164,19 +164,23 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	 *  lock was already set.
 	 */
 	public boolean progress(ProverFileContext pc) {
+		System.out.print(">");
 		if(!lock())
 			return true;
-		boolean b = progress_intern(pc);
+		boolean res;
+		if(isNewDoc(pc)) {
+			reset(pc);
+			res = false;
+		}
+		else {
+			int oldlimit =pc.scan.getLimit();
+			res = progress_intern(pc, oldlimit, oldlimit);
+		}
 		unlock();
-		return b;
+		System.out.println("<");
+		return res;
 	}
 	
-	protected boolean progress_intern (ProverFileContext pc) {
-		if(isNewDoc(pc))
-			reset(pc);
-		int oldlimit =pc.scan.getLimit();
-		return progress_intern(pc, oldlimit, oldlimit);
-	}
 	
 	private boolean progress_intern (ProverFileContext pc, int realoldlimit, int oldlimit) { 
 		fParser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
@@ -209,13 +213,12 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			//we send the command
 			switch(fProver.getTopLevelTranslator().hasToSend(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
 				case IProverTopLevel.DONT_SKIP: {
-					fTopLevel.clearBuffer();
 					fTopLevel.sendCommand(cmd);
 					if(fTopLevel.isAlive()) {
 						fParsedList.push(new Integer(realoldlimit));
 					}
 					else {
-						pc.scan.setLimit(realoldlimit);
+						pc.scan.setLimit(oldlimit);
 						uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
 						uj.schedule();
 						return false;
@@ -251,17 +254,19 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 	public boolean regress(ProverFileContext pc) {
 		if(!lock())
 			return true;
-		boolean b = regress_intern(pc);
+		boolean res;
+		if (isNewDoc(pc)) {
+			reset(pc);
+			res = false;
+		}
+		else {
+			res = regress_intern(pc);
+		}
 		unlock();
-		return b;
+		return res;
 	}	
 	
 	protected boolean regress_intern(ProverFileContext pc) {
-		if (isNewDoc(pc)) {
-			reset(pc);
-			return false;
-		}
-		
 		int oldlimit = pc.scan.getLimit();
 		if((oldlimit > 0) && (fParsedList.size() > 0)) {
 			int newlimit = ((Integer) fParsedList.pop()).intValue();
@@ -360,6 +365,8 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 				tab[0] = path.getParent().getRawLocation().toString();
 			}
 		}
+		new ColorAppendJob(fStatePres, "\nEditing file: \n" + path.getName() + "\n", DARKRED).prepare();
+		
 		try {
 			
 			fTopLevel = new TopLevel(fProver.getName(), tab);

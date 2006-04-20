@@ -294,13 +294,14 @@ public class TopLevel implements ITopLevel {
 	public boolean isAlive() {
 		if (fbIsAlive) {
 			try {
+				
 				fProverProc.exitValue();
-				return false;
+				fbIsAlive = false;
 			} catch (IllegalThreadStateException itse) {
-				return true;
+				fbIsAlive = true;
 			}
 		}
-		else return false;
+		return fbIsAlive;
 	}
 	
 	
