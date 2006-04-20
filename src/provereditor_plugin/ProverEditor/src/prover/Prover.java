@@ -73,10 +73,10 @@ public class Prover {
 	 * users outside ProverEditor.
 	 */
 	public Prover (IPreferenceStore prefs, IConfigurationElement lang) {
-		fName = lang.getAttribute("fName");
-		fExtension = lang.getAttribute("fExtension");
+		fName = lang.getAttribute("name");
+		fExtension = lang.getAttribute("extension");
 		try {
-			fTranslator = (AProverTranslator) lang.createExecutableExtension("fTranslator");
+			fTranslator = (AProverTranslator) lang.createExecutableExtension("translator");
 			fTopLevelTranslator = (IProverTopLevel) lang.createExecutableExtension("provertoplevel");
 		} catch (CoreException e) {
 			e.printStackTrace();
