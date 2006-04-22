@@ -43,7 +43,7 @@ import prover.plugins.IProverTopLevel;
  * And it is a view part to show the current prover state.
  * @author J. Charles
  */
-public class TopLevelManager extends ViewPart implements IStreamListener, IColorConstants {
+public class TopLevelManager extends ViewPart implements IColorConstants {
 	/* Private fields: */
 	/** the greetings message */
 	public final static String GREETINGS = "This is ProverEditor version " + 
@@ -212,6 +212,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			switch(fProver.getTopLevelTranslator().hasToSend(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
 				case IProverTopLevel.DONT_SKIP: {
 					fTopLevel.sendCommand(cmd);
+					append(fTopLevel.getStdBuffer());
 					if(fTopLevel.isAlive()) {
 						fParsedList.push(new Integer(realoldlimit));
 					}
@@ -236,7 +237,6 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 			uj.schedule();
 			return false;
 		} 
-		
 		return true;
 	}
 	
@@ -368,7 +368,7 @@ public class TopLevelManager extends ViewPart implements IStreamListener, IColor
 		try {
 			
 			fTopLevel = new TopLevel(fProver.getName(), tab);
-			fTopLevel.addStandardStreamListener(this);
+			//fTopLevel.addStandardStreamListener(this);
 		} catch (AProverException e) {
 			new ColorAppendJob(fStatePres, e.toString(), RED).prepare();
 		}

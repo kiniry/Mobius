@@ -333,7 +333,7 @@ public class TopLevel implements ITopLevel {
 	 */
 	public void clearStdBuffer() {
 		fStdBuffer = new StringBuffer();
-		fErrBuffer = new StringBuffer();
+		fOut.clearBuffer();
 	}
 	
 	/*
@@ -341,8 +341,8 @@ public class TopLevel implements ITopLevel {
 	 * @see prover.exec.ITopLevel#clearErrBuffer()
 	 */
 	public void clearErrBuffer() {
-		fStdBuffer = new StringBuffer();
 		fErrBuffer = new StringBuffer();
+		fErr.clearBuffer();
 	}
 	
 	
