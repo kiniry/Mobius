@@ -1,5 +1,6 @@
 package prover.gui.preference;
 
+import org.eclipse.jface.preference.IPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceNode;
 
@@ -14,6 +15,7 @@ public class ProverPreferenceNode extends PreferenceNode {
 	private IPreferenceStore fPrefs;
 	/** the page to wrap up */
 	private ProverPreferencePage fPage;
+	private boolean bDisposed;
 	
 	
 	/**
@@ -39,6 +41,7 @@ public class ProverPreferenceNode extends PreferenceNode {
 		fPage = new ProverPreferencePage(fLanguage);
 		fPage.setDefault(fPrefs);
 		setPage(fPage);
+		bDisposed = false;
 	}
 
 	/**
@@ -76,4 +79,27 @@ public class ProverPreferenceNode extends PreferenceNode {
 	public int getGraceTime() {
 		return fPage.getGraceTime();
 	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.preference.IPreferenceNode#disposeResources()
+	 */
+	public void disposeResources() {
+		// ok this is a violent way to handle it... we DON'T 
+		// dispose anything.
+		bDisposed = true;
+		//super.disposeResources();
+	}
+	
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.jface.preference.IPreferenceNode#getPage()
+	 */
+	public IPreferencePage getPage() {
+		if(bDisposed) {
+			createPage();
+		}
+		return super.getPage();
+	}
+	
 }
