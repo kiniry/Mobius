@@ -11,7 +11,6 @@ import prover.exec.ITopLevel;
  * prover.editor extension point.
  * It is used to handle all the interactions with the top level
  * API. It is done to specify all the prover specific behaviours.
- * @author J. Charles
  */
 public interface IProverTopLevel {
 	

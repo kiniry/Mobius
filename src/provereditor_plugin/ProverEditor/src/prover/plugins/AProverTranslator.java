@@ -9,7 +9,6 @@ import org.eclipse.jface.text.rules.Token;
  * extending the <code>prover.editor</code> extension point.
  * It offers all the translations/specific things for the gui
  * of a prover plugin in ProverEditor.
- * @author J. Charles
  */
 public abstract class AProverTranslator {
 	/** a token to return by a rule when encountering a comment while parsing */

@@ -13,7 +13,6 @@ import prover.exec.AProverException;
 
 /**
  * A basic implementation of a prover exception.
- * @author J. Charles
  */
 public class ProverException extends AProverException {
 	/** Serial UID to have much more fun... */
