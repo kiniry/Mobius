@@ -12,7 +12,6 @@ import prover.Prover;
 
 /**
  * The action used to launch an external ide to edit the prover file.
- * @author J. Charles
  */
 public class LaunchIde implements IActionDelegate {
 

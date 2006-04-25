@@ -21,7 +21,6 @@ import prover.gui.jobs.ProverStatus;
 
 /**
  * The action triggering a compilation deed.
- * @author J. Charles
  */
 public class CompileFile implements IActionDelegate {
 
@@ -72,7 +71,7 @@ public class CompileFile implements IActionDelegate {
 
 	/**
 	 * This class represents the Job used to compile a file.
-	 * @author J. Charles
+	
 	 */
 	private static class CompilationJob extends Job {
 		/** The file to compile */
