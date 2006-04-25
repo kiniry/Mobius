@@ -8,6 +8,8 @@ import java.util.Stack;
 
 import org.eclipse.jface.text.IDocument;
 
+import fr.inria.everest.coq.editor.utils.Proof;
+
 import prover.exec.AProverException;
 import prover.exec.ITopLevel;
 import prover.plugins.IProverTopLevel;
@@ -22,9 +24,10 @@ import prover.plugins.exceptions.SyntaxErrorException;
  */
 
 public class BasicCoqTop implements IProverTopLevel  {
-	private Stack proofBeginList = new Stack();
-	private Stack proofEndList = new Stack();
 	private LinkedList proofList = new LinkedList();
+	private int fLast;
+	private Proof fCurrentProof;
+	private Stack fProofs = new Stack();
 	
 	public boolean isProofMode(ITopLevel itl) {
 		try {
@@ -48,8 +51,8 @@ public class BasicCoqTop implements IProverTopLevel  {
 			itl.waitForErrorInput();
 		if(itl.getStdBuffer().trim().equals(""))
 			itl.waitForStandardInput();
-		String str = itl.getStdBuffer();
-//		System.out.println(str);
+		String str = itl.getStdBuffer().trim();
+		//System.out.println(str);
 		if(str.indexOf("Syntax error: ") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.indexOf("Error:") != -1)
@@ -86,38 +89,35 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
 	 */
 	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
-		if(proofBeginList.size() > 0) {
-			if((isProofMode(itl))) {
-				if(proofBeginList.size() == proofEndList.size()) {
-					proofEndList.pop();
+		if(fCurrentProof != null) {
+			// we might be within a proof
+			if(!isProofMode(itl)) {
+				// we are at the end of a proof
+				if(fCurrentProof.fNamePos != beg)
 					return IProverTopLevel.SKIP_AND_CONTINUE;
+				else {
+					fCurrentProof = null;
+					return IProverTopLevel.DONT_SKIP;
 				}
+			}
+			else  {
 				if(cmd.startsWith("Proof"))
 					return IProverTopLevel.SKIP;
+				return IProverTopLevel.DONT_SKIP;
 			}
-			else {
-				int begProof = ((Integer) proofBeginList.peek()).intValue();
-				if(proofBeginList.size() == proofEndList.size()) {
-					//we can be outside a proof
-					int endProof = ((Integer) proofEndList.peek()).intValue();
-					if (endProof == beg) {
-						// we are in fact inside a the end of the proof
-						proofEndList.pop();	
-						return IProverTopLevel.SKIP_AND_CONTINUE;
-					}
+		}
+		else {
+			// we are outside the proof or at the begining of one
+			Proof p = (Proof)fProofs.peek();
+			if(p.isWithinProof(beg)) {
+				if(p.fNamePos == beg) {
+					fProofs.pop();
+					return IProverTopLevel.DONT_SKIP;
 				}
-				else {
-					if(begProof == beg) {
-						// we are outside a proof
-						proofBeginList.pop();
-						return IProverTopLevel.SKIP_AND_CONTINUE;
-					}
-					else {
-						// we are within a proof
-						return IProverTopLevel.SKIP_AND_CONTINUE;
-					}
-				}
+				return IProverTopLevel.SKIP_AND_CONTINUE;
 			}
+				
+			
 		}
 		if((cmd.startsWith("Show ")) ||
 			(cmd.startsWith("Print ")))
@@ -130,27 +130,36 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 *  (non-Javadoc)
 	 * @see prover.plugins.IProverTopLevel#hasToSend(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
 	 */
-	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
-		
+	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {		
 		if(isProofMode(itl)) {
-			if (proofBeginList.size() == proofEndList.size()) {
-				proofBeginList.push(new Integer(beg));
+			if (fCurrentProof == null) {
 				proofList.addFirst(itl.getErrBuffer().split(" ")[0]);
+				fCurrentProof = new Proof();
+				fCurrentProof.fBeginPos = beg;
+				fCurrentProof.fNamePos = fLast;
+				System.err.println(fCurrentProof.getProof(doc));
 			}
 			else {
 				if (!(itl.getErrBuffer().startsWith(proofList.getFirst().toString()))) {
-					proofEndList.push(new Integer(beg));
-					proofBeginList.push(new Integer(beg));
 					proofList.addFirst(itl.getErrBuffer().split(" ")[0]);
+					fCurrentProof.fEndPos = beg;
+					fProofs.push(fCurrentProof);
+					fCurrentProof = null;
 				}
 			}
 		}
-		else if((!isProofMode(itl)) && (proofBeginList.size() != proofEndList.size())) {
-			proofEndList.push(new Integer(beg));
-
+		else if((!isProofMode(itl)) && (fCurrentProof != null)) {
+			fCurrentProof.fEndPos = beg;
+			fProofs.push(fCurrentProof);
+			fCurrentProof = null;
+			
 		}
+		fLast = beg;
 		return IProverTopLevel.DONT_SKIP;
+
 	}
+	
+	
 	
 	/*
 	 *  (non-Javadoc)
