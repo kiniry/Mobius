@@ -4,7 +4,6 @@ package prover.gui.jobs;
  * Jobs to append some text to viewers.
  * To schedule this Job the {@link #prepare()} method shall be used
  * instead of the usual {@link org.eclipse.ui.progress.Job#schedule()}.
- * @author J. Charles
  */
 public interface IAppendJob {
 

@@ -8,7 +8,6 @@ import prover.ProverEditorPlugin;
 
 /**
  * A class to ease the returning of status for the Jobs.
- * @author J. Charles
  */
 public class ProverStatus {
 	/**

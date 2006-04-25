@@ -14,7 +14,6 @@ import prover.gui.editor.IColorConstants;
 
 /**
  * A Job to append text to the specified document contained in a viewer.
- * @author J. Charles
  */
 public class SimpleAppendJob extends UIJob implements IColorConstants, IAppendJob {
 	/** The string to append to the document */

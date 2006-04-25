@@ -21,7 +21,6 @@ import prover.gui.editor.IColorConstants;
  * A job to add some text to the specified document. 
  * It uses a fScanner to highlight the words.
  * To schedule this Job the {@link #prepare()} method shall be used.
- * @author J. Charles
  */
 public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
 	/** The string to append to the document */

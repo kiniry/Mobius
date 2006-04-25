@@ -15,7 +15,6 @@ import prover.gui.editor.IColorConstants;
 
 /**
  * A Job to append some text with the specified color.
- * @author J. Charles
  */
 public class ColorAppendJob extends SimpleAppendJob implements IColorConstants, IAppendJob {
 	/** The document to modify */
