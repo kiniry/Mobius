@@ -6,6 +6,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
 import prover.gui.editor.ProverEditor;
 
@@ -26,7 +27,7 @@ public class BeginAction extends AProverAction{
 		if(ed instanceof ProverEditor) {
 			TopLevelManager ctm = TopLevelManager.getInstance();
 			if(ctm != null)
-				ctm.respawn();
+				ctm.reset(new ProverFileContext((ProverEditor)ed));
 		}
 	}
 	
