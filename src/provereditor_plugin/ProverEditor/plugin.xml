@@ -11,7 +11,7 @@
             visible="true">
          <action
                class="prover.gui.actions.BreakAction"
-               icon="icons/deadcoq.gif"
+               icon="icons/dead.gif"
                id="ProverEditor.break"
                label="Break"
                style="push"
@@ -54,7 +54,7 @@
                toolbarPath="/Normal/ProverEditor"/>
          <action
                class="prover.gui.actions.BeginAction"
-               icon="icons/coqtoo.gif"
+               icon="icons/icon_lego.gif"
                id="ProverEditor.beginproof"
                label="Respawn Prover"
                state="true"
