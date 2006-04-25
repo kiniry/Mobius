@@ -15,7 +15,8 @@ public class ProverPreferenceNode extends PreferenceNode {
 	private IPreferenceStore fPrefs;
 	/** the page to wrap up */
 	private ProverPreferencePage fPage;
-	private boolean bDisposed;
+	/** the dispose fix */
+	private boolean fDisposed;
 	
 	
 	/**
@@ -41,7 +42,7 @@ public class ProverPreferenceNode extends PreferenceNode {
 		fPage = new ProverPreferencePage(fLanguage);
 		fPage.setDefault(fPrefs);
 		setPage(fPage);
-		bDisposed = false;
+		fDisposed = false;
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class ProverPreferenceNode extends PreferenceNode {
 	public void disposeResources() {
 		// ok this is a violent way to handle it... we DON'T 
 		// dispose anything.
-		bDisposed = true;
+		fDisposed = true;
 		//super.disposeResources();
 	}
 	
@@ -96,7 +97,7 @@ public class ProverPreferenceNode extends PreferenceNode {
 	 * @see org.eclipse.jface.preference.IPreferenceNode#getPage()
 	 */
 	public IPreferencePage getPage() {
-		if(bDisposed) {
+		if(fDisposed) {
 			createPage();
 		}
 		return super.getPage();
