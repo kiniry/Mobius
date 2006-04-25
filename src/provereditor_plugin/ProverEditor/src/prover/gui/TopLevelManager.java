@@ -233,6 +233,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 			pc.scan.setLimit(realoldlimit);
 			uj = new UpdateJob(pc.sv.getPresentationReconciler(), newlimit);
 			uj.schedule();
+			ColorAppendJob caj = new ColorAppendJob(fStatePres, e.toString(), RED);
+			caj.prepare();
 			return false;
 		} 
 		return true;
