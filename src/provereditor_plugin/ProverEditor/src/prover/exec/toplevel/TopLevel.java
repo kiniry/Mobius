@@ -28,7 +28,6 @@ import prover.plugins.exceptions.ProverException;
  * Class to manage TopLevel. It is generic for all the provers.
  * It can be subclassed to get more elaborated API (and prover
  * specific), adding new standard commands.
- * @author J. Charles
  */
 public class TopLevel implements ITopLevel {
 	/** the buffer containing the latest entries from the standard output */	
