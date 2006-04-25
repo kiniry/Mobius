@@ -28,6 +28,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	private int fLast;
 	private Proof fCurrentProof;
 	private Stack fProofs = new Stack();
+	private String fModuleName = null;
 	
 	public boolean isProofMode(ITopLevel itl) {
 		try {
@@ -89,6 +90,21 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
 	 */
 	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
+		if(fModuleName != null) {
+			if((cmd.indexOf("Module " + fModuleName) != -1) ||
+				(cmd.indexOf("Module Type " + fModuleName) != -1) ||
+				(cmd.indexOf("Section " + fModuleName) != -1)) {
+				fModuleName = null;
+				return IProverTopLevel.DONT_SKIP;
+			}
+			return IProverTopLevel.SKIP_AND_CONTINUE;
+		}
+		if(cmd.trim().startsWith("End ")) {
+			fModuleName = cmd.substring(4, cmd.length() - 1);
+			System.out.println(fModuleName);
+			return IProverTopLevel.SKIP_AND_CONTINUE;
+		}
+		
 		if(fCurrentProof != null) {
 			// we might be within a proof
 			if(!isProofMode(itl)) {
@@ -108,13 +124,15 @@ public class BasicCoqTop implements IProverTopLevel  {
 		}
 		else {
 			// we are outside the proof or at the begining of one
-			Proof p = (Proof)fProofs.peek();
-			if(p.isWithinProof(beg)) {
-				if(p.fNamePos == beg) {
-					fProofs.pop();
-					return IProverTopLevel.DONT_SKIP;
+			if(fProofs.size() > 0) {
+				Proof p = (Proof)fProofs.peek();
+				if(p.isWithinProof(beg)) {
+					if(p.fNamePos == beg) {
+						fProofs.pop();
+						return IProverTopLevel.DONT_SKIP;
+					}
+					return IProverTopLevel.SKIP_AND_CONTINUE;
 				}
-				return IProverTopLevel.SKIP_AND_CONTINUE;
 			}
 				
 			
@@ -137,7 +155,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 				fCurrentProof = new Proof();
 				fCurrentProof.fBeginPos = beg;
 				fCurrentProof.fNamePos = fLast;
-				System.err.println(fCurrentProof.getProof(doc));
 			}
 			else {
 				if (!(itl.getErrBuffer().startsWith(proofList.getFirst().toString()))) {

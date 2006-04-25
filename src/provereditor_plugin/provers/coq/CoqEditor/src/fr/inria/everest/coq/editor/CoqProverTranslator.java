@@ -6,6 +6,8 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
 
+import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
+
 import prover.gui.editor.FixedSizeWordRule;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;

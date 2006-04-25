@@ -1,4 +1,4 @@
-package fr.inria.everest.coq.editor;
+package fr.inria.everest.coq.editor.utils;
 
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
