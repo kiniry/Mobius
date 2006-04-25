@@ -18,7 +18,6 @@ import prover.plugins.IProverTopLevel;
  * A prover is a class containing all the information given by
  * the plugins in a handy way. It is the basic object used to have
  * informations on the different plugins.
- * @author J. Charles
  */
 public class Prover {
 	/** A set containing all the prover instances */
