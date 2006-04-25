@@ -3,7 +3,6 @@ package prover.gui.editor.detector;
 import org.eclipse.jface.text.rules.IWordDetector;
 /**
  * A basic implementation of a detector to detect expressions for a prover.
- * @author J. Charles
  */
 public class ExprDetector implements IWordDetector {
 

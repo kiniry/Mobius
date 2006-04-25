@@ -4,7 +4,6 @@ import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
  * A basic implementation to detect words for a prover.
- * @author J. Charles
  */
 public class WordDetector implements IWordDetector {
 

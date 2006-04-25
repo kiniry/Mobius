@@ -8,7 +8,6 @@ import org.eclipse.jface.text.rules.WordRule;
 
 /**
  * A rule to detect words of a fixed size.
- * @author J. Charles
  */
 public class FixedSizeWordRule extends WordRule {
 	/** the size of the word */

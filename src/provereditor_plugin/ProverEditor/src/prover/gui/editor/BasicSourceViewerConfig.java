@@ -10,7 +10,6 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 /**
  * A viewer to use with a prover editor.
- * @author J. Charles
  */
 public class BasicSourceViewerConfig extends SourceViewerConfiguration implements IColorConstants {
 	/** the current scanner associated with the viewer */

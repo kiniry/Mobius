@@ -10,7 +10,6 @@ import org.eclipse.swt.custom.StyleRange;
  * This class is just the same as the normal text presentation
  * class, but some useful methods are added.
  * @see TextPresentation
- * @author J. Charles
  */
 public class BasicTextPresentation extends TextPresentation {
 	/** the viewer associated with the text presentation */

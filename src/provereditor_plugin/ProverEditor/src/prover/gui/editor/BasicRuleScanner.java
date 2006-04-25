@@ -6,7 +6,6 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 
 /**
  * A minimal implementation of a RuleBasedScanner.
- * @author J. Charles
  */
 public class BasicRuleScanner extends RuleBasedScanner implements IColorConstants {
 

@@ -6,7 +6,6 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * A text attribute class with enhanced background color support.
- * @author J. Charles
  */
 public class BasicTextAttribute extends TextAttribute {
 	/** the background color */

@@ -12,8 +12,6 @@ import org.eclipse.jface.text.rules.Token;
  * text. The first part is highlighted with the color 
  * {@link IColorConstants#HILIT_COLOR} the second part with the color
  * {@link IColorConstants#NORMAL_COLOR}. 
- * @author J. Charles
- *
  */
 public class LimitRuleScanner extends BasicRuleScanner implements IColorConstants {
 	/** the limit to which the background shall be different */

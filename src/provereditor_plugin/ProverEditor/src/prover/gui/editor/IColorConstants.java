@@ -7,8 +7,6 @@ import org.eclipse.swt.widgets.Display;
 /**
  * An interface to define some basic colors and tags to use with
  * the rules and/or scanners.
- * @author J. Charles
- *
  */
 public interface IColorConstants {
 	// Text is black

@@ -8,7 +8,6 @@ import prover.Prover;
  * The editor used to edit any prover language defined file.
  * It selects the right scanner to highlight with the right color
  * and parse for the right language.
- * @author J. Charles
  */
 public class ProverEditor extends TextEditor{
 	/** the viewer associated with the editor */
