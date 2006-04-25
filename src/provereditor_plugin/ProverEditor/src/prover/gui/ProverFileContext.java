@@ -9,7 +9,6 @@ import prover.gui.editor.ProverEditor;
 /**
  * A data structure to have an easy way to handle the different 
  * elements associated with a prover editor.
- * @author J. Charles
  */
 public class ProverFileContext {
 	/**

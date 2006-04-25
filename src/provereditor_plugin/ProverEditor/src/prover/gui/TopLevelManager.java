@@ -24,13 +24,12 @@ import prover.Prover;
 import prover.ProverEditorPlugin;
 import prover.exec.AProverException;
 import prover.exec.toplevel.TopLevel;
-import prover.exec.toplevel.stream.IStreamListener;
 import prover.exec.toplevel.stream.StreamHandler;
 import prover.gui.editor.BasicPresentationReconciler;
 import prover.gui.editor.BasicRuleScanner;
+import prover.gui.editor.BasicTextPresentation;
 import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
-import prover.gui.editor.BasicTextPresentation;
 import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
 import prover.gui.preference.PreferencePage;
@@ -41,7 +40,6 @@ import prover.plugins.IProverTopLevel;
  * The top level manager is the main class of the gui of ProverEditor.
  * It controls the top level, it glue the editor with the commands.
  * And it is a view part to show the current prover state.
- * @author J. Charles
  */
 public class TopLevelManager extends ViewPart implements IColorConstants {
 	/* Private fields: */
@@ -460,7 +458,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 	/**
 	 * The class UpdateJob is used to update the view once it has changed
 	 * internally.
-	 * @author J. Charles
+	
 	 */
 	private class UpdateJob extends UIJob {
 		/** the limit of the update */
