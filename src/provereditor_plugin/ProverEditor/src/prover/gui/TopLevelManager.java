@@ -310,6 +310,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 	/**
 	 * Tries to respawn the top level. 
 	 * First stop the toplevel if it is running, and after start it again.
+	 * @deprecated
+	 * Use {@link #reset(ProverFileContext)} instead.
 	 */
 	public void respawn() {
 		fTopLevel.stop();
