@@ -5,7 +5,6 @@ import prover.Prover;
 /**
  * This exception is thrown if the thread associated with one
  * of the the stream was unexpectedly killed.
- * @author J. Charles
  */
 public class ThreadDeathException  extends ToplevelException {
 	/** A serial UID to have much more fun... */

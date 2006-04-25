@@ -5,7 +5,6 @@ import prover.Prover;
 /**
  * This exception is thrown when the grace time has ended.
  * The prove is timed out.
- * @author J. Charles
  */
 public class TimeOutException extends ToplevelException {
 	/** A serial UID to have much more fun... */

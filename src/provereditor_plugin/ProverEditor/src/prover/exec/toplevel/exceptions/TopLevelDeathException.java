@@ -5,7 +5,6 @@ import prover.Prover;
 /**
  * If the top level process was killed unexpectedly by the 
  * kernel for instance, this exception shall be thrown.
- * @author J. Charles
  */
 public class TopLevelDeathException extends ToplevelException {
 	/** A serial UID to have much more fun... */
