@@ -53,7 +53,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 		if(itl.getStdBuffer().trim().equals(""))
 			itl.waitForStandardInput();
 		String str = itl.getStdBuffer().trim();
-		//System.out.println(str);
 		if(str.indexOf("Syntax error: ") != -1)
 			throw new SyntaxErrorException(str.toString());
 		if(str.indexOf("Error:") != -1)
@@ -101,7 +100,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 		}
 		if(cmd.trim().startsWith("End ")) {
 			fModuleName = cmd.substring(4, cmd.length() - 1);
-			System.out.println(fModuleName);
 			return IProverTopLevel.SKIP_AND_CONTINUE;
 		}
 		
