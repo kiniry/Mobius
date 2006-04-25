@@ -17,7 +17,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * An action to progress in ProverEditor.
- * @author J. Charles
  */
 public class ProgressAction extends AProverAction  {
 
@@ -42,7 +41,7 @@ public class ProgressAction extends AProverAction  {
 	
 	/**
 	 * The Job to send a progress action to the top level.
-	 * @author J. Charles
+	
 	 */
 	private class UpdateJob extends Job {
 		/** The target editor where to progress */

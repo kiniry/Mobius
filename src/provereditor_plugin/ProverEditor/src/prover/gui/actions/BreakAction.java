@@ -11,7 +11,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * The action that send a break command to the top level.
- * @author J. Charles
  */
 public class BreakAction extends AProverAction {
 	/*

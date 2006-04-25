@@ -11,7 +11,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * The action to start a new toplevel
- * @author J. Charles
  */
 public class BeginAction extends AProverAction{
 	/*

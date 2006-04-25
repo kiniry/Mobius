@@ -18,7 +18,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * An action to progress until the end of the file.
- * @author J. Charles
  */
 public class ProgressEndAction  extends AProverAction {
 	/** the target editor */

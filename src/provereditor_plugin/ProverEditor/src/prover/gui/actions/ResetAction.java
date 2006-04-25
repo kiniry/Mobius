@@ -13,7 +13,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * This Class trigger an action to reset the current proof.
- * @author J. Charles
  */
 public class ResetAction extends AProverAction{
 	/*

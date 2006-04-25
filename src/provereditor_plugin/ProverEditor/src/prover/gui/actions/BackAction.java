@@ -12,7 +12,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * The action to send a back command to the toplevel.
- * @author J. Charles
  */
 public class BackAction extends AProverAction{
 	/*

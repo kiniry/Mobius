@@ -17,7 +17,6 @@ import prover.gui.editor.ProverEditor;
 
 /**
  * Action used for the toolbar buttons provided by ProverEditor.
- * @author J. Charles
  */
 public abstract class AProverAction implements IWorkbenchWindowActionDelegate{
 	/** The set of all the actions of type {@link AProverAction} */
