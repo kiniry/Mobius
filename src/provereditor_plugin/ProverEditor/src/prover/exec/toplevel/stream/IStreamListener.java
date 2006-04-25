@@ -3,7 +3,6 @@ package prover.exec.toplevel.stream;
 /**
  * A listener to listen to 
  * {@link prover.exec.toplevel.stream.StreamHandler} events.
- * @author J. Charles
  */
 public interface IStreamListener {
 	/**

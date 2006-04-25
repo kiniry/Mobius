@@ -10,7 +10,6 @@ import java.io.PrintWriter;
 /**
  * This class is alike {@link java.io.PrintWriter} except that
  * the buffer is flushed after each print command.
- * @author J. Charles
  */
 public class InputStreamHandler extends PrintWriter {
 	

@@ -9,7 +9,6 @@ import java.util.Iterator;
  * A stream handler is used to manage a stream.
  * It associates a stream with a thread in order to read
  * it asynchonously, in a non-blocking way.
- * @author J. Charles
  */
 public class StreamHandler implements Runnable{
 	/** the input stream from which we read the input */
