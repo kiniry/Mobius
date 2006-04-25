@@ -12,7 +12,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * The prover preference page. For each prover a prover preference
  * page is added, giving the properties for the grace time,
  * the ide, the top level and the compiler.
- * @author J. Charles
  */
 public class ProverPreferencePage extends FieldEditorPreferencePage 
 	implements IWorkbenchPreferencePage {

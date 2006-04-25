@@ -6,7 +6,6 @@ import org.eclipse.jface.preference.PreferenceNode;
 /**
  * The preference node is used to wrap up the preference pages
  * and add them dynamically to Eclipse's preference pages. 
- * @author J. Charles
  */
 public class ProverPreferenceNode extends PreferenceNode {
 	/** the language regarding the node  */

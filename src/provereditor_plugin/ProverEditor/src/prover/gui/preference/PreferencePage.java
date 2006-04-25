@@ -9,7 +9,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * The class representing the ProverEditor preference page.
- * @author J. Charles
  */
 public class PreferencePage extends FieldEditorPreferencePage 
 	implements IWorkbenchPreferencePage {
