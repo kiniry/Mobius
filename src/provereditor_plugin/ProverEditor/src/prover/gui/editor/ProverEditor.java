@@ -1,8 +1,10 @@
 package prover.gui.editor;
 
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import prover.Prover;
+import prover.gui.editor.outline.BasicContentOutline;
 
 /**
  * The editor used to edit any prover language defined file.
@@ -49,5 +51,13 @@ public class ProverEditor extends TextEditor{
 		}
 		return fScanner;
 	}
-	
+	public Object getAdapter(Class cl) {
+		if(cl == IContentOutlinePage.class) {
+			IContentOutlinePage cop = new BasicContentOutline(this);
+			return cop;
+		}
+		else {
+			return super.getAdapter(cl);
+		}
+	}
 }
