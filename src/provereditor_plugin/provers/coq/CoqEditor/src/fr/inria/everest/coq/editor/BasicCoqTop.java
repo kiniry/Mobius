@@ -82,27 +82,11 @@ public class BasicCoqTop implements IProverTopLevel  {
 			sendCommand(itl, "Back 1.");
 		}
 	}	
-	
-
 	/*
 	 *  (non-Javadoc)
 	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
 	 */
-	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
-		if(fModuleName != null) {
-			if((cmd.indexOf("Module " + fModuleName) != -1) ||
-				(cmd.indexOf("Module Type " + fModuleName) != -1) ||
-				(cmd.indexOf("Section " + fModuleName) != -1)) {
-				fModuleName = null;
-				return IProverTopLevel.DONT_SKIP;
-			}
-			return IProverTopLevel.SKIP_AND_CONTINUE;
-		}
-		if(cmd.trim().startsWith("End ")) {
-			fModuleName = cmd.substring(4, cmd.length() - 1);
-			return IProverTopLevel.SKIP_AND_CONTINUE;
-		}
-		
+	public int hasToSkip_proof(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
 		if(fCurrentProof != null) {
 			// we might be within a proof
 			if(!isProofMode(itl)) {
@@ -115,8 +99,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 				}
 			}
 			else  {
-				if(cmd.startsWith("Proof"))
-					return IProverTopLevel.SKIP;
+				
 				return IProverTopLevel.DONT_SKIP;
 			}
 		}
@@ -131,10 +114,38 @@ public class BasicCoqTop implements IProverTopLevel  {
 					}
 					return IProverTopLevel.SKIP_AND_CONTINUE;
 				}
-			}
-				
-			
+			}	
 		}
+		return IProverTopLevel.DONT_SKIP;
+	}
+	
+
+	/*
+	 *  (non-Javadoc)
+	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
+	 */
+	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
+
+		int res;
+		if((res = hasToSkip_proof(itl, document, cmd, beg, end)) != IProverTopLevel.DONT_SKIP) {
+			return res;
+		}
+		if(fModuleName != null) {
+			if((cmd.indexOf("Module " + fModuleName) != -1) ||
+				(cmd.indexOf("Module Type " + fModuleName) != -1) ||
+				(cmd.indexOf("Section " + fModuleName) != -1)) {
+				fModuleName = null;
+				return IProverTopLevel.DONT_SKIP;
+			}
+			return IProverTopLevel.SKIP_AND_CONTINUE;
+		}
+		if(cmd.trim().startsWith("End ")) {
+			fModuleName = cmd.substring(4, cmd.length() - 1);
+			return IProverTopLevel.SKIP_AND_CONTINUE;
+		}
+		if(cmd.startsWith("Proof"))
+			return IProverTopLevel.SKIP;
+
 		if((cmd.startsWith("Show ")) ||
 			(cmd.startsWith("Print ")))
 			return IProverTopLevel.SKIP;
@@ -146,7 +157,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 *  (non-Javadoc)
 	 * @see prover.plugins.IProverTopLevel#hasToSend(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
 	 */
-	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {		
+	public int hasToSend_proof(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {		
 		if(isProofMode(itl)) {
 			if (fCurrentProof == null) {
 				proofList.addFirst(itl.getErrBuffer().split(" ")[0]);
@@ -174,7 +185,13 @@ public class BasicCoqTop implements IProverTopLevel  {
 
 	}
 	
-	
+	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
+		int res;
+		if((res = hasToSend_proof(itl, doc, cmd, beg, end)) != IProverTopLevel.DONT_SKIP) {
+			return res;
+		}
+		return IProverTopLevel.DONT_SKIP;
+	}
 	
 	/*
 	 *  (non-Javadoc)
