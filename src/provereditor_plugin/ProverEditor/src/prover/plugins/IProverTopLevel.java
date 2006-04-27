@@ -88,13 +88,20 @@ public interface IProverTopLevel {
 	public void undo(ITopLevel itl) throws AProverException;
 
 	/**
-	 * Compute the top level command, from the top level path
+	 * Compute the top-level command for a specific prover from the top-level path
 	 * and the path to its libraries.
-	 * @param top the top level path as specified by the user in the
-	 * preference page.
-	 * @param path the different library path gotten from the environment
-	 * @return an array containing the command line 
+	 * @param top the toplevel path to the prover executable or wrapper shell script, as 
+   * specified by the user in the preference page.
+	 * @param path a sequence of fully resolved paths, the first element of which is where the
+   * prover should run, and the other paths are library paths from the environment.  Your
+   * prover may choose to ignore the running location specified in path[0] as Coq does.
+	 * @return an array containing the command-line to execute the prover given this specificiation 
 	 * as specified for {@link java.lang.Runtime#exec(java.lang.String[])}
 	 */
-	public String[] getCommands(String top, String[] path);
+  //@ example In the Coq plugin, top is (usually) "/usr/bin/coqtop" and path is an array with
+  //          two elements, path[0] being "/home/foo/workspace/MyProject/" and path[1] is 
+  //          "/home/foo/workspace/MyProject/some/path".  So Coq will run in path path[0] 
+  //          but will look for theories in path[0] and path[1].  The result would be the
+  //          array \result = { "/usr/bin/coqtop", "-I", path[0], "-I", path[1] }
+	public String[] getCommands(String top, /*@ non_null @*/ String[] path);
 }

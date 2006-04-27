@@ -30,85 +30,90 @@ public abstract class AProverTranslator {
 	/** basic replacements: no replacements */
 	private final static String [][] replacements = {};
 	
-	
 	/**
-	 * Returns an array consisting of couples a 
-	 * string / its unicode replacement.
-	 * Used when the option "Use unicode characters" is
-	 * selected.
-	 * @return An array of couples (it can be empty), not null.
+	 * Returns an array consisting of a set of pairs, where \result[i][0] is paired with 
+   * \result[i][1], where each \result[i][0] is a string and \result[i][1] is its Unicode 
+   * replacement.  This replacement set is only used when the Prover Editor proferences option 
+   * "Use unicode characters" is selected.
+	 * @return What is the array of substitution pairs, as specified above?
+   * @see #getReplacements()
 	 */
-	public String [][] getUnicodeReplacements() {
+	public /*@ non_null @*/ String [][] getUnicodeReplacements() {
 		return unicodeReplacements;
 	}
 	
-	
 	/**
-	 * Returns an array consisting of couples:
-	 * String and its replacement.
-	 * @return an array of replacements. The array can be empty,
-	 * not <code>null</code>.
+   * Returns an array consisting of a set of pairs, where \result[i][0] is paired with 
+   * \result[i][1], where each \result[i][0] is a regexp string and \result[i][1] is its 
+   * string replacement.  Substitution is performed via 
+   * {@link java.lang.String#replaceAll(java.lang.String, java.lang.String)}.
+   * @return What is the array of substitution pairs, as specified above?
+   * @see #getUnicodeReplacements()
 	 */
-	public String [][] getReplacements() {
+	public /*@ non_null @*/ String [][] getReplacements() {
 		return replacements;
 	}
 
 	/**
-	 * Returns the array of rules used to highlight the proof.
-	 * @return an array of rules, can be empty but not <code>null</code>
+   * @return What is the array of {@link IRule}s that may be used to highlight the top-level 
+   * state and/or proof-state in the Prover Editor Toplevel view?
 	 */
-    public abstract IRule [] getProofRules();
+  public abstract /*@ non_null @*/ IRule [] getProofRules();
     
 	/**
-	 * Returns the array of rules used to highlight the file in the 
-	 * prover language.
-	 * @return an array of rules, can be empty but not <code>null</code>
+   * @return What is the array of {@link IRule}s that may be used to highlight the theory
+   * specification/proof script file (in the language of the prover; e.g., a .v file in Coq)?
 	 */
-	public abstract IRule [] getFileRules();
+	public abstract IRule /*@ non_null @*/ [] getFileRules();
 	
 	/**
-	 * Returns a serie of rules used to parse
-	 * the sentences from the file. If 
-	 * the returned tag from the rule is {@link #SENTENCE_TOKEN}
-	 * it is considered that an end of sentence has been detected.
-	 * A command can be sent.
-	 * @return Rules to parse the input to send to the prover from a file
+	 * @return What is the array of {@link IRule}s that may be used to highlight the portions of
+   * the theory specification/proof script file as we progress within the evaluation of the
+   * file's contents.  E.g., in Coq, these rules matches comments and sentences that end in
+   * '.' followed by whitespace (i.e., a newline, because the other periods are used for
+   * namespaces or elipses to trigger automatic tactic application).  If the returned tag from 
+   * a rule is {@link #SENTENCE_TOKEN}, then end of sentence has been detected.
 	 */
-	public abstract IRule [] getParsingRules();
+	public abstract IRule /*@ non_null @*/ [] getParsingRules();
 
 	/**
-	 * Tells if the specified message is an error. This method
-	 * is an oracle used while compiling a file, to know if the 
-	 * compilation was a success.
-	 * @param s the message to understand
-	 * @return <code>true</code> if no errors were found
+	 * @param s the message to evalute.
+	 * @return Is the string <var>s</var> an error message returned by the compiler?
 	 */
 	public abstract boolean isErrorMsg(String s);
 	
 	/**
-	 * Compute the ide command, from the ide path
-	 * the path to its libraries, and the file to edit in the
-	 * ide.
-	 * @param ide the ide path as specified by the user in the
-	 * preference page.
-	 * @param path the different library paths gotten from the environment
-	 * @param file the full path to the file to open
-	 * @return an array containing the command line 
-	 * as specified for {@link java.lang.Runtime#exec(java.lang.String[])}
+	 * Compute the command to run the "normal" prover interface (e.g., Emacs with Coq or PVS), 
+   * from the IDE path, the path to its libraries, and the file to edit in the IDE.  You use
+   * this command when you have become completely frustrated by the Eclipse front-end.
+   * Typically, this command is trigger from by ProverEditor->LaunchIDE file menu.
+	 * @param ide the IDE path as specified by the user in the preference page.
+   * @param path a sequence of fully resolved paths, the first element of which is where the
+   * prover should run, and the other paths are library paths from the environment.  Your
+   * prover may choose to ignore the running location specified in path[0] as Coq does.
+   * @param file the full path to the file to compile.
+   * @return What is the command-line that may be used with 
+   * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <var>file</var> to be
+   * loaded into the "normal" IDE for this prover, as specified in the project preferences?
 	 */
-	public abstract String[] getIdeCommand(String ide, String[] path, String file);
+	public abstract String[] /*@ non_null @*/ getIdeCommand(String ide, String[] path, String file);
 	
 	/**
-	 * Compute the compiling command, from the compiler path
-	 * the path to the libraries, and the path to the file to compile.
-	 * @param comp the compiler path as specified by the user in the
-	 * preference page.
-	 * @param path the different library paths gotten from the environment
-	 * @param file the full path to the file to compile
-	 * @return an array containing the command line 
-	 * as specified for {@link java.lang.Runtime#exec(java.lang.String[])}
+	 * Compute the "compiling" command, (the command to execute that will cause the prover to
+   * compile <var>file</var>) from the compiler path, the path to the libraries, and the path 
+   * to the file to compile.
+   * Typically, this command is trigger from by ProverEditor->Compile file menu.
+	 * @param comp the top-level path to the compiler executable or wrapper shell script, as 
+   * specified by the user in the preference page.
+   * @param path a sequence of fully resolved paths, the first element of which is where the
+   * prover should run, and the other paths are library paths from the environment.  Your
+   * prover may choose to ignore the running location specified in path[0] as Coq does.
+   * @param file the full path to the file to compile.
+   * @return What is the command-line that may be used with 
+   * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <var>file</var> to be
+   * compiled?
 	 */
-	public abstract String[] getCompilingCommand(String comp, String[] path, String file);
+	public abstract /*@ non_null @*/ String[] getCompilingCommand(String comp, String[] path, String file);
 
 	
 	
