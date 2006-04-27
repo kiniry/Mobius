@@ -1,8 +1,11 @@
 package prover.plugins;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
+
+import prover.gui.editor.outline.types.ProverType;
 
 /**
  * This class is the main class to implement by a plugin
@@ -106,4 +109,17 @@ public abstract class AProverTranslator {
 	 * as specified for {@link java.lang.Runtime#exec(java.lang.String[])}
 	 */
 	public abstract String[] getCompilingCommand(String comp, String[] path, String file);
+
+	
+	
+	/**
+	 * Experimental -- do not user
+	 * @param doc
+	 * @param root
+	 * @return
+	 */
+	public ProverType getFileOutline(IDocument doc, ProverType root) {
+		return root;
+	}
+
 }

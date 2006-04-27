@@ -5,6 +5,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 
+import prover.Prover;
+import prover.gui.ProverFileContext;
 import prover.gui.editor.ProverEditor;
 import prover.gui.editor.outline.types.FileType;
 import prover.gui.editor.outline.types.ProverType;
@@ -30,6 +32,10 @@ public class BasicContentOutline extends ContentOutlinePage {
 	private Object getInitalInput() {
 		ProverType root = new ProverType();
 		root.add(new FileType(fEditor.getTitle(), fEditor.getTitleImage()));
+		ProverFileContext ctxt = new ProverFileContext(fEditor);
+		
+		Prover p = Prover.findProverFromFile(fEditor.getTitle());
+		p.getTranslator().getFileOutline(ctxt.doc, root);
 		return root;
 	}
 
