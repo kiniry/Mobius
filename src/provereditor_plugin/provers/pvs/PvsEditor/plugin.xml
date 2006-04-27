@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="prover.gui.editor.ProverEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            default="false"
+            extensions="pvs"
+            icon="icons/coq.gif"
+            id="PvsEditor.proof_interaction_editor"
+            name="PvsEditor.proof_interaction_editor"/>
+   </extension>
+   <extension
+         point="prover.editor.prover">
+      <language
+            extension=".pvs"
+            name="PVS_Proof"
+            provertoplevel="ie.ucd.csi.srg.kindsoft.pvs.editor.BasicPvsTop"
+            translator="ie.ucd.csi.srg.kindsoft.pvs.editor.PvsProverTranslator"/>
+   </extension>
+
+</plugin>

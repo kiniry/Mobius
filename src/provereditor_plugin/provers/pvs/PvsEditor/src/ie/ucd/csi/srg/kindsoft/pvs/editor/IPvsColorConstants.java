@@ -1,0 +1,40 @@
+package ie.ucd.csi.srg.kindsoft.pvs.editor;
+
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.Token;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
+
+import prover.gui.editor.BasicTextAttribute;
+import prover.gui.editor.IColorConstants;
+
+public interface IPvsColorConstants extends IColorConstants {
+  
+  // Colors...
+  public final static Color TAG_COLOR = 
+    new Color(Display.getCurrent(), new RGB(100, 0, 100));
+  public final static Color STRING_COLOR = 
+    new Color(Display.getCurrent(), new RGB(0, 0, 200));
+  public final static Color COMMENT_COLOR = 
+    new Color(Display.getCurrent(), new RGB(0, 100, 0));
+  public final static Color LEMMA_COLOR = 
+    new Color(Display.getCurrent(), new RGB(200, 30, 30));
+  public final static Color LIGHTGREY = 
+    new Color(Display.getCurrent(), new RGB(230,230, 230));
+  // Some tokens
+  IToken completed = new Token(new BasicTextAttribute(BLUE));
+  IToken forall = new Token(new BasicTextAttribute(DARKRED));
+  IToken tag = new Token(new BasicTextAttribute(TAG_COLOR));
+  IToken comment = new Token(new BasicTextAttribute(COMMENT_COLOR));
+  IToken lemma = new Token(new BasicTextAttribute(LEMMA_COLOR));
+  IToken string = new Token(new BasicTextAttribute(STRING_COLOR));
+  IToken def = new Token(new BasicTextAttribute(DEFAULT_TAG_COLOR));
+  IToken subgoal2 = new Token(new BasicTextAttribute(GREY));
+  
+  // todo jrk My real constants
+  IToken consequent = new Token(new BasicTextAttribute(RED));
+  IToken precedent = new Token(new BasicTextAttribute(GREEN));
+  IToken turnstile = new Token(new BasicTextAttribute(BLUE));
+  
+}

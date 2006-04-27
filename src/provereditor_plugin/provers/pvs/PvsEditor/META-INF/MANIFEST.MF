@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PvsEditor Plug-in
+Bundle-SymbolicName: PvsEditor; singleton:=true
+Bundle-Version: 0.1
+Bundle-Activator: ie.ucd.csi.srg.kindsoft.pvs.editor.PvsEditorPlugin
+Bundle-Vendor: KindSoftware, Systems Research Group, University College Dublin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ prover.editor,
+ org.eclipse.jface.text
+Eclipse-AutoStart: true
