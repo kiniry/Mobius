@@ -60,7 +60,7 @@ public class PvsProverTranslator extends AProverTranslator implements IPvsColorC
     return super.getReplacements();
   }
 
-  public IRule[] getProofRules() {
+  public IRule[] getProverStateRules() {
      // Highlight all consequences in a different way than the precedences.
     final WordRule consequence_rule =
         new WordRule(new ConsequentComponentDetector(), consequent);
@@ -77,12 +77,11 @@ public class PvsProverTranslator extends AProverTranslator implements IPvsColorC
     return result;
   }
      
-  public IRule[] getFileRules() {
+  public IRule[] getProverTheoryRules() {
     WordRule reserved_words_rule = new WordRule(new WordDetector(), def);
     for (int i = 0; i < pvs_reserved_words.length; i++) {
       reserved_words_rule.addWord(pvs_reserved_words[i], tag);
     }
-    // todo jrk We are here!
     WordRule wexpr = new WordRule(new ExprDetector(), tag);
     IRule[] rules = {
         new MultiLineRule("\"", "\"", string),
