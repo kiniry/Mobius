@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="umbra"
+   name="Umbra Plug-in"
+   version="1.0.0"
+   provider-name=""
+   class="umbra.UmbraPlugin">
+
+   <runtime>
+      <library name="umbra.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.apache.bcel"/>
+   </requires>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="umbra.BytecodeEditor"
+            icon="icons/b01m.gif"
+            default="true"
+            name="Bytecode Editor"
+            contributorClass="umbra.BytecodeEditorContributor"
+            id="umbra.BytecodeEditor"
+            extensions="btc"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.eclipse.jdt.ui.CompilationUnitEditor"
+            id="umbra.javaEditorContribution">
+         <menu
+               label="&amp;Bytecode"
+               id="umbra.bytecodeMenu">
+               <separator name="showGroup"/>
+         </menu>      
+         <action
+               toolbarPath="showGroup"
+               label="Disassemble"
+               tooltip="Disassemble"
+               icon="icons/b01m.gif"
+               class="umbra.DisasBCEL"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.BCELTest"/>
+         <action
+               toolbarPath="showGroup"
+               label="Synchronize"
+               tooltip="Synchronize"
+               class="umbra.SynchrSBAction"
+               icon="icons/synchr.bmp"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.synchrAction"/>
+         <action
+               toolbarPath="showGroup"
+               label="Change Path"
+               tooltip="Change Path"
+               icon="icons/sample.gif"
+               class="umbra.ChangePath"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.changePath"/>
+      </editorContribution>
+      <editorContribution
+            targetID="umbra.BytecodeEditor"
+            id="umbra.bytecodeEditorContribution">
+         <menu
+               label="&amp;Bytecode"
+               id="umbra.bytecodeMenu">
+               <separator name="synchrGroup"/>
+               <separator name="historyGroup"/>
+               <separator name="helpGroup"/>
+         </menu>      
+         <action
+               toolbarPath="historyGroup"
+               label="Synchronize"
+               tooltip="Synchronize"
+               class="umbra.SynchrBSAction"
+               icon="icons/synchr.bmp"
+               menubarPath="umbra.bytecodeMenu/synchrGroup"
+               id="umbra.synchrAction"/>
+         <action
+               toolbarPath="historyGroup"
+               label="&amp;Add to history"
+               tooltip="Add to history"
+               class="umbra.HistoryAction"
+               icon="icons/addH.GIF"
+               menubarPath="umbra.bytecodeMenu/historyGroup"
+               id="umbra.history"/>
+         <action
+               toolbarPath="historyGroup"
+               label="&amp;Clear history"
+               tooltip="Clear history"
+               class="umbra.ClearHistoryAction"
+               icon="icons/clearH.GIF"
+               menubarPath="umbra.bytecodeMenu/historyGroup"
+               id="umbra.clearHistory"/>
+         <action
+               toolbarPath="helpGroup"
+               label="&amp;Installation Info"
+               tooltip="Installation Info"
+               class="umbra.InstalInfoAction"
+               icon="icons/info.GIF"
+               menubarPath="umbra.bytecodeMenu/helpGroup"
+               id="umbra.instalInfo"/>
+         <action
+               toolbarPath="helpGroup"
+               label="&amp;User Guide"
+               tooltip="User Guide"
+               class="umbra.UserGuideAction"
+               icon="icons/help.GIF"
+               menubarPath="umbra.bytecodeMenu/helpGroup"
+               id="umbra.userGuide"/>
+      </editorContribution>
+   </extension>
+
+</plugin>
