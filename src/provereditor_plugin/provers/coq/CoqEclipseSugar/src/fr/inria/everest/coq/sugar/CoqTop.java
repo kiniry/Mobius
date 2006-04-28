@@ -139,7 +139,7 @@ public class CoqTop extends TopLevel {
 	 * @throws IOException If there is a failure
 	 */
 	public String inspect() throws AProverException, IOException {
-		super.sendCommand("Inspect 1.");
+		sendCommand("Inspect 1.");
 		String str;
 		str = getStdBuffer().toString();
 //		while(str.indexOf("*** [") == -1){
