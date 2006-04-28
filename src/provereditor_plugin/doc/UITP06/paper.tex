@@ -1,0 +1,173 @@
+%
+% $Id: paper.tex,v 1.4 2005/04/04 10:38:07 kiniry Exp $
+%
+
+\documentclass{entcs}
+
+% \usepackage{latex8}
+\usepackage{times}
+\usepackage{ifpdf}
+% \usepackage{a4wide}
+
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\else
+\usepackage{graphicx}
+\fi
+
+% \usepackage{html}
+% \usepackage{url}
+\usepackage{xspace}
+%\usepackage{doublespace}
+\usepackage{tabularx}
+\usepackage{epsfig}
+% \usepackage{amsmath}
+% \usepackage{amsfonts}
+% \usepackage{amssymb}
+% \usepackage{eucal}
+% \ifpdf
+% \usepackage[centredisplay]{diagrams}
+% \else
+% \usepackage[centredisplay,PostScript=dvips]{diagrams}
+% \fi
+\usepackage{float}
+
+\ifpdf
+\usepackage[pdftex,bookmarks=false,a4paper=true,
+            plainpages=false,naturalnames=true,
+            colorlinks=true,pdfstartview=FitV,
+            linkcolor=blue,citecolor=blue,urlcolor=blue,
+            pdfauthor="Joseph R. Kiniry"]{hyperref}
+\else
+\usepackage[dvips,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\fi
+
+\newcommand{\todo}{\textbf{TODO:}}
+\newcommand{\sstt}{\begin{small}\begin{alltt}}
+\newcommand{\estt}{\end{alltt}\end{small}}
+\newcommand{\TODO}{\Large\textbf{TODO}\normalsize}
+\newcommand{\tablesize}{\footnotesize}
+\newcommand{\cf}{cf.,\xspace}
+\newcommand{\eg}{e.g.,\xspace}
+\newcommand{\ie}{i.e.,\xspace}
+\newcommand{\etc}{etc.\xspace}
+\newcommand{\myhref}[2]{\ifpdf\href{#1}{#2}\else\htmladdnormallinkfoot{#2}{#1}\fi}
+% \newcommand{\myhref}[2]{\emph{#2}}
+
+%---------------------------------------------------------------------
+% New commands, macros, etc.
+%---------------------------------------------------------------------
+
+%% \input{kt}
+
+%=====================================================================
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Lightweight Theorem Prover Interface for Eclipse}
+
+\author{Julien Charles\thanksref{charles}}
+
+\address{Everest Group\\
+  INRIA Sophia Antipolis\\
+  2004 Route des Lucioles - BP 93\\
+  FR-06902 Sophia Antipolis, France}
+
+\author{Joseph R.~Kiniry\thanksref{kiniry}}
+
+\address{Systems Research Group\\
+  School of Computer Science and Informatics\\
+  University College Dublin\\
+  Belfield, Dublin 4, Ireland}
+
+\thanks[charles]{Email:\href{mailto:julien.charles@sophia.inria.fr}
+  {\texttt{\normalshape julien.charles@sophia.inria.fr}}}
+\thanks[kiniry]{Email:\href{mailto:joseph.kiniry@ucd.ie}
+  {\texttt{\normalshape joseph.kiniry@ucd.ie}}}
+
+\maketitle
+
+%======================================================================
+\thispagestyle{empty}
+\begin{abstract}
+
+  An abstract.  
+
+\end{abstract}
+
+\end{frontmatter}
+
+%=====================================================================
+\section{Introduction}
+
+An introduction.
+
+%=====================================================================
+\section{User Interfaces for Theorem Proving}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Command-line Interfaces}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Emacs}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Eclipse}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsubsection{Proof General Toolkit}
+
+Motivations - IDE and IVE integration
+
+Requirements - maintain and extend current interface modality
+
+Context of Work - Mobius
+
+%=====================================================================
+\section{Design}
+
+plugin architecture
+component use via Java APIs
+component use via command-line
+
+
+%=====================================================================
+\section{Current Plugins}
+
+
+
+%=====================================================================
+\section{Conclusion}
+
+A conclusion.
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Practical Next Steps}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Graphical Representation of Proof Trees}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Integrating Other Provers}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\subsection{Open Research Questions and Challenges}
+
+
+%======================================================================
+
+\bibliographystyle{entcs}
+\bibliography{abbrev,ads,category,complexity,hypertext,icsr,knowledge,languages,linguistics,meta,metrics,misc,modeling,modeltheory,reuse,rewriting,softeng,specification,ssr,technology,theory,web,upcoming,upcoming_conferences,conferences,workshops,verification,escjava,jml,nijmegen}
+% \bibliography{uitp06}
+
+%======================================================================
+% Fin
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
