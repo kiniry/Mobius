@@ -58,13 +58,13 @@ public abstract class AProverTranslator {
    * @return What is the array of {@link IRule}s that may be used to highlight the top-level 
    * state and/or proof-state in the Prover Editor Toplevel view?
 	 */
-  public abstract /*@ non_null @*/ IRule [] getProofRules();
+  public abstract /*@ non_null @*/ IRule [] getProverStateRules();
     
 	/**
    * @return What is the array of {@link IRule}s that may be used to highlight the theory
    * specification/proof script file (in the language of the prover; e.g., a .v file in Coq)?
 	 */
-	public abstract IRule /*@ non_null @*/ [] getFileRules();
+	public abstract /*@ non_null @*/ IRule [] getProverTheoryRules();
 	
 	/**
 	 * @return What is the array of {@link IRule}s that may be used to highlight the portions of
@@ -74,7 +74,7 @@ public abstract class AProverTranslator {
    * namespaces or elipses to trigger automatic tactic application).  If the returned tag from 
    * a rule is {@link #SENTENCE_TOKEN}, then end of sentence has been detected.
 	 */
-	public abstract IRule /*@ non_null @*/ [] getParsingRules();
+	public abstract /*@ non_null @*/ IRule [] getParsingRules();
 
 	/**
 	 * @param s the message to evalute.

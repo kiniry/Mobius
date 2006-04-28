@@ -207,7 +207,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 			
 			
 			//we send the command
-			switch(fProver.getTopLevelTranslator().hasToSend(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
+			switch(fProver.getTopLevelTranslator().hasToSkipSendCommand(fTopLevel, pc.doc, cmd, oldlimit, newlimit)) {
 				case IProverTopLevel.DONT_SKIP: {
 					fTopLevel.sendCommand(cmd);
 					append(fTopLevel.getStdBuffer());
@@ -276,7 +276,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 				System.err.println("TopLevel.regress_intern: " + e);
 				return false;
 			}
-			switch(fProver.getTopLevelTranslator().hasToSkip(fTopLevel, pc.doc, cmd, newlimit, oldlimit)) {
+			switch(fProver.getTopLevelTranslator().hasToSkipUndo(fTopLevel, pc.doc, cmd, newlimit, oldlimit)) {
 				case IProverTopLevel.DONT_SKIP: {
 					try {
 						fTopLevel.undo();
@@ -352,7 +352,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 		IFile path= (input instanceof IFileEditorInput) ? ((IFileEditorInput) input).getFile() : null;
 		fProver = Prover.findProverFromFile(path.getRawLocation().toString());
 		fTranslator = fProver.getTranslator();
-	    fStateScan = new LimitRuleScanner(fTranslator.getProofRules());
+	    fStateScan = new LimitRuleScanner(fTranslator.getProverStateRules());
 	    fParser = new BasicRuleScanner(fTranslator.getParsingRules());
 		String [] tab = null;
 		

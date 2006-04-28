@@ -16,6 +16,7 @@ public interface ITopLevel {
 	 * @param s The command to send to the prover.
 	 * @throws AProverException thrown if anything goes wrong.
 	 */
+  //@ signals (TopLevelDeathException) !isAlive(); 
 	public void sendToProver(String s) throws AProverException;
 	
 	

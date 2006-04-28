@@ -154,7 +154,7 @@ public class Prover {
 	 * @return A scanner to highlight the file in the editor
 	 */
 	public LimitRuleScanner getRuleScanner() {		
-		return new LimitRuleScanner(fTranslator.getFileRules());
+		return new LimitRuleScanner(fTranslator.getProverTheoryRules());
 	}
 	
 	/**
