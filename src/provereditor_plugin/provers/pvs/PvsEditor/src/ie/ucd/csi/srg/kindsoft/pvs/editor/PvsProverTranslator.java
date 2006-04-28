@@ -33,7 +33,7 @@ public class PvsProverTranslator extends AProverTranslator implements IPvsColorC
     }
   }
 
-  // todo jrk Just stick in all reserved words for now then refine to the different 
+  // @todo jrk Just stick in all reserved words for now then refine to the different 
   // classifications below so that we can highlight different keywords and operators in
   // different ways.  E.g., an outfix overloadable operator might be RED and ITALIC.
   private static final String[] pvs_reserved_words = { "CHALLENGE", "CLAIM", "CONJECTURE", "COROLLARY", 
@@ -50,12 +50,12 @@ public class PvsProverTranslator extends AProverTranslator implements IPvsColorC
   
   private static final String[] pvs_infix_symbols = { };
   
-  // todo jrk Refine this method to better match what we did in the fancy PVS front-end.
+  // @todo jrk Refine this method to better match what we did in the fancy PVS front-end.
   public String[][] getUnicodeReplacements() {
     return super.getUnicodeReplacements();
   }
  
-  // todo jrk Refine this method to better match what we did in the fancy PVS front-end.
+  // @todo jrk Refine this method to better match what we did in the fancy PVS front-end.
   public String[][] getReplacements() {
     return super.getReplacements();
   }
@@ -95,8 +95,8 @@ public class PvsProverTranslator extends AProverTranslator implements IPvsColorC
  
   public IRule[] getParsingRules() {
     //@ assert false;
-    // todo Implement this method.
-    //assert false : "This method is not yet implemented.";
+    // @todo Implement this method.
+    assert false : "This method is not yet implemented.";
     return null;
   }
 

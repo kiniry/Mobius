@@ -6,12 +6,19 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
 /**
+ * This class is a predicate rule for matching S-expressions.
+ * 
  * @design We assume that the user has not hand-edited the PVS proof file and added Common
  * Lisp comments.  We also assume that the user has not maliciously put parentheses inside
  * of PVS proof names or labels.
  * 
  * @author Joe Kiniry (kiniry@ucd.ie)
+ * @version 27 April 2006
  */
+//@explanation A predicate rule for S-expression matching.
+//@module MOBIUS.PROOF_EDITOR.PVS.EDITOR
+//@organisation School of Computer Science and Informatics
+//@copyright University College Dublin
 
 public class SexpRule implements IPredicateRule {
 
@@ -30,7 +37,7 @@ public class SexpRule implements IPredicateRule {
     if (!resume)
       return evaluate(scanner);
     
-    // todo This method is not yet implemented.
+    // @todo This method is not yet implemented.
     assert false : "This method is not yet implemented.";
     //@ assert false;
     return null;

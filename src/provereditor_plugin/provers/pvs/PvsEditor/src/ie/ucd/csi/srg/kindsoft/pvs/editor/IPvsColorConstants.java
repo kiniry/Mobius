@@ -32,7 +32,7 @@ public interface IPvsColorConstants extends IColorConstants {
   IToken def = new Token(new BasicTextAttribute(DEFAULT_TAG_COLOR));
   IToken subgoal2 = new Token(new BasicTextAttribute(GREY));
   
-  // todo jrk My real constants
+  // @todo jrk My real constants
   IToken consequent = new Token(new BasicTextAttribute(RED));
   IToken precedent = new Token(new BasicTextAttribute(GREEN));
   IToken turnstile = new Token(new BasicTextAttribute(BLUE));
