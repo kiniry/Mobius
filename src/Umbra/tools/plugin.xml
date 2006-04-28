@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="umbra.BytecodeEditor"
+            contributorClass="umbra.BytecodeEditorContributor"
+            default="true"
+            extensions="btc"
+            icon="icons/b01m.gif"
+            id="umbra.BytecodeEditor"
+            name="Bytecode Editor"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            id="umbra.javaEditorContribution"
+            targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
+         <menu
+               id="umbra.bytecodeMenu"
+               label="Bytecode">
+            <separator name="showGroup"/>
+         </menu>
+         <action
+               class="umbra.DisasBCEL"
+               icon="icons/b01m.gif"
+               id="umbra.BCELTest"
+               label="Disassemble"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               toolbarPath="showGroup"
+               tooltip="Disassemble"/>
+         <action
+               class="umbra.SynchrSBAction"
+               icon="icons/synchr.bmp"
+               id="umbra.synchrAction"
+               label="Synchronize"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               style="push"
+               toolbarPath="showGroup"
+               tooltip="Synchronize"/>
+      </editorContribution>
+      <editorContribution
+            id="umbra.bytecodeEditorContribution"
+            targetID="umbra.BytecodeEditor">
+         <menu
+               id="umbra.bytecodeMenu"
+               label="Bytecode">
+            <separator name="synchrGroup"/>
+            <separator name="historyGroup"/>
+         </menu>
+         <action
+               class="umbra.HistoryAction"
+               icon="icons/addH.GIF"
+               id="umbra.history"
+               label="Add to history"
+               menubarPath="umbra.bytecodeMenu/historyGroup"
+               style="push"
+               toolbarPath="historyGroup"
+               tooltip="Add to history"/>
+         <action
+               class="umbra.ClearHistoryAction"
+               icon="icons/clearH.GIF"
+               id="umbra.clearHistory"
+               label="Clear history"
+               menubarPath="umbra.bytecodeMenu/historyGroup"
+               style="push"
+               toolbarPath="historyGroup"
+               tooltip="Clear history"/>
+      </editorContribution>
+   </extension>
+	
+</plugin>
