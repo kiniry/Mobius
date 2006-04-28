@@ -78,7 +78,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 	 *  (non-Javadoc)
 	 * @see prover.plugins.AProverTranslator#getFileRules()
 	 */
-	public IRule [] getFileRules() {
+	public IRule [] getProverTheoryRules() {
 		if(fileRules == null)
 			fileRules = initFileRules();
 		return fileRules;
@@ -120,7 +120,7 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 	 *  (non-Javadoc)
 	 * @see prover.plugins.AProverTranslator#getProofRules()
 	 */
-	public IRule [] getProofRules() {				
+	public IRule [] getProverStateRules() {				
 		if(proofRules == null)
 			proofRules = initProofRules();
 		return proofRules;

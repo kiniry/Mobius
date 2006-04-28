@@ -84,7 +84,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 *  (non-Javadoc)
 	 * @see prover.plugins.IProverTopLevel#hasToSkip(prover.exec.ITopLevel, org.eclipse.jface.text.IDocument, java.lang.String, int, int)
 	 */
-	public int hasToSkip(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
+	public int hasToSkipUndo(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
 
 		int res;
 		if((res = ph.hasToSkip(this, itl, document, cmd, beg, end)) != IProverTopLevel.DONT_SKIP) {
@@ -119,7 +119,7 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 */
 
 	
-	public int hasToSend(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
+	public int hasToSkipSendCommand(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
 		int res;
 		if((res = ph.hasToSend(this, itl, doc, cmd, beg, end)) != IProverTopLevel.DONT_SKIP) {
 			return res;
