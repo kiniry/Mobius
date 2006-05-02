@@ -118,7 +118,7 @@ public abstract class AProverTranslator {
 	
 	
 	/**
-	 * Experimental -- do not user
+	 * Experimental -- do not use
 	 * @param doc
 	 * @param root
 	 * @return
