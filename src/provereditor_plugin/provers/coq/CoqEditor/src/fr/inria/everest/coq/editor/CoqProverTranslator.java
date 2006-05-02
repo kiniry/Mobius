@@ -1,17 +1,24 @@
 package fr.inria.everest.coq.editor;
 
+import java.io.InputStream;
+
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IWordDetector;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.WordRule;
-
-import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 
 import prover.gui.editor.FixedSizeWordRule;
+import prover.gui.editor.ProverEditor;
 import prover.gui.editor.detector.ExprDetector;
 import prover.gui.editor.detector.WordDetector;
+import prover.gui.editor.outline.types.ProverType;
 import prover.plugins.AProverTranslator;
+import fr.inria.everest.coq.editor.utils.CoqConstructFinder;
+import fr.inria.everest.coq.editor.utils.ICoqColorConstants;
 
 public class CoqProverTranslator extends AProverTranslator implements ICoqColorConstants {
 	
@@ -203,6 +210,31 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		cmds[cmds.length - 2] = "-compile";
 		cmds[cmds.length - 1] = file.substring(0, file.length() -2);
 		return cmds;
+	}
+
+	
+	public static Image [] imgs;
+	public Image createImage(String path) {
+		InputStream is = this.getClass().getClassLoader().getResourceAsStream(path);
+		Image img = new Image(PlatformUI.getWorkbench().getDisplay(), is);
+		return img;
+	}
+	
+	public ProverType getFileOutline(ProverEditor ed, IDocument doc, ProverType root) {
+
+		if(imgs == null) {
+			Image [] tab = { createImage("/icons/module.gif"),
+					createImage("/icons/moduleb.gif"),
+					createImage("/icons/sections.gif"),
+					createImage("/icons/defs1.gif"),
+					createImage("/icons/defs2.gif"),
+					createImage("/icons/defs3.gif")};
+			imgs = tab;
+		}
+		CoqConstructFinder ccf = new CoqConstructFinder(ed, doc);
+		
+		ccf.parse(root);
+		return root;
 	}
 
 }
