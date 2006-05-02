@@ -5,6 +5,7 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
+import prover.gui.editor.ProverEditor;
 import prover.gui.editor.outline.types.ProverType;
 
 /**
@@ -119,11 +120,12 @@ public abstract class AProverTranslator {
 	
 	/**
 	 * Experimental -- do not use
+	 * @param editor 
 	 * @param doc
 	 * @param root
 	 * @return
 	 */
-	public ProverType getFileOutline(IDocument doc, ProverType root) {
+	public ProverType getFileOutline(ProverEditor editor, IDocument doc, ProverType root) {
 		return root;
 	}
 

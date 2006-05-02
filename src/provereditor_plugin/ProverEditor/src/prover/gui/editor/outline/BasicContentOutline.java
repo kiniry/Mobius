@@ -1,6 +1,10 @@
 package prover.gui.editor.outline;
 
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
@@ -26,16 +30,30 @@ public class BasicContentOutline extends ContentOutlinePage {
     	tree.setLabelProvider(new TypeLabelProvider());
     	tree.setInput(getInitalInput());
     	tree.expandAll();
+    	tree.addPostSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection sel = event.getSelection();
+				if(sel instanceof StructuredSelection) {
+					StructuredSelection s  = (StructuredSelection) sel;
+					ProverType pt = (ProverType)s.getFirstElement();
+					pt.selectAndReveal();
+				}
+				
+			}
+    		
+    	});
     	
     }
 
 	private Object getInitalInput() {
-		ProverType root = new ProverType();
-		root.add(new FileType(fEditor.getTitle(), fEditor.getTitleImage()));
+		ProverType root = new ProverType(fEditor);
+		FileType ft = new FileType(fEditor, fEditor.getTitle(), fEditor.getTitleImage()); 
+		root.add(ft);
 		ProverFileContext ctxt = new ProverFileContext(fEditor);
 		
 		Prover p = Prover.findProverFromFile(fEditor.getTitle());
-		p.getTranslator().getFileOutline(ctxt.doc, root);
+		p.getTranslator().getFileOutline(fEditor, ctxt.doc, ft);
 		return root;
 	}
 
