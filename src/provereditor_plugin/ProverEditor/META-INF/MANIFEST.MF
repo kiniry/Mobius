@@ -28,6 +28,8 @@ Export-Package: prover,
  prover.gui.actions,
  prover.gui.editor,
  prover.gui.editor.detector,
+ prover.gui.editor.outline,
+ prover.gui.editor.outline.types,
  prover.gui.jobs,
  prover.plugins,
  prover.plugins.exceptions
