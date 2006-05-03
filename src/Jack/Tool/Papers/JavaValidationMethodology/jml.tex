@@ -47,112 +47,60 @@ exception.
 %=====================================================================
 \input{sttt/sttt}
 
-\subsection{Extended Static Checking with ESC/Java2}
+\section{ESC/Java2}
 \label{escjava}
 
-ESC/Java tool~\cite{Flanagan-Et-Al02}, developed at Compaq Research,
+ESC/Java2 tool~\cite{Flanagan-Et-Al02}, originallt developed at Compaq Research,
 performs what is called ``extended static
 checking''~\cite{ESC:Overview,10yearsESC},
 compile-time checking that goes well beyond type checking.  It can
 check relatively simple assertions and can check for certain kinds of
 common errors in Java code, such as dereferencing \texttt{null},
 indexing an array outside its bounds, or casting a reference to an
-impermissible type.  ESC/Java supports a subset of JML and also checks
+impermissible type.  ESC/Java2 supports a subset of JML and also checks
 the consistency between the code and the given JML annotations.  The
-user's interaction with ESC/Java is quite similar to the interaction
+user's interaction with ESC/Java2 is quite similar to the interaction
 with the compiler's type checker: the user includes JML annotations in
 the code and runs the tool, and the tool responds with a list of
 possible errors in the program.
 
-JML annotations affect ESC/Java in two ways.  First, the given JML
-annotations help ESC/Java suppress spurious warning messages.   Second,
-annotations make ESC/\-Java do additional checks.  
-In these two ways, the use of JML annotations enables ESC/Java to
+JML annotations affect ESC/Java2 in two ways.  First, the given JML
+annotations help ESC/Java2 suppress spurious warning messages.   Second,
+annotations make ESC/\-Java2 do additional checks.  
+In these two ways, the use of JML annotations enables ESC/Java2 to
 produce warnings not at the source locations where errors manifest
 themselves at runtime, but at the source locations where the errors
 are committed.
 
-An interesting property of ESC/Java is that it is neither sound nor
-complete; that is, it neither warns about all errors, nor does it
-warn only about actual errors.  This is a deliberate design choice:
-the aim is to increase the cost-effectiveness of the tool.  
-
-ESC/Java translates a
-given JML-an\-no\-tat\-ed Java program into verification
-conditions~\cite{LeinoSaxeStata:JavaViaGC,FlanaganSaxe:POPL01},
-logical formulas that are valid if and only if the program is free of
-the kinds of errors being analyzed.  Any verification-condition
-counterexamples found by the theorem prover are turned into
-programmer-sensible warning messages, including the kind and source
-location of each potential error.  The ESC/Java User's
-Manual~\cite{escjava:userman} also provides a detailed description of
-the semantics of JML annotations, as they pertain to ESC/Java.
-
-\subsubsection{ESC/Java2}
-\label{escjava2}
-
-Development of version 1 of ESC/Java ceased with the dissolving of the
-SRC group at Compaq.  Consequently Cok and Kiniry have in progress a
-version 2 of ESC/Java, built on the source code release provided by
-Compaq and HP.  This version has the following goals:
-\begin{itemize}
-\item to migrate the code base of ESC/Java and the code accepted by
-  ESC/Java to Java 1.4;
-\item to update ESC/Java to accept annotations consistent with current
-  version of JML;
-\item to increase the general use of the tool by packaging it in an
-  easy-to-use form;
-\item to increase the amount of JML that ESC/Java statically checks,
-  consistent with the original engineering goals of ESC/Java;
-\item and, over time, to update the associated tools of the ESC suite
-  (Calvin, Houdini, RCC) in a similar manner.
-\end{itemize}
-
-There are two major areas of development of ESC/\-Java2 that will
-improve overall usability of the tool, besides performance
-improvements.  The first is the use of model variables and method
-calls in annotation expressions.  Model variables are an important
-abstraction mechanism in writing specifications and model methods
-allow much more readable and compact specifications. 
-
-The second important needed advance is to provide some level of
-checking of the frame conditions (i.e., JML's \texttt{modifies} or
-\texttt{assignable} clauses).  It is an acknowledged unsoundness of
-ESC/Java that these are not checked and faulty \texttt{modifies}
-clauses can be a subtle source of errors.  In particular, the default
-\texttt{modifies} clause in some JML specifications is that everything
-is potentially modified; this interpretation is not currently
-implemented.
-
 %=====================================================================
-\section{Applications of JML to Java Card}
-\label{applications}
+%\section{Applications of JML to Java Card}
+%\label{applications}
 
-Although JML is able to specify arbitrary sequential Java programs,
-most of the serious applications of JML and JML tools up to now
-have targeted Java Card.  Java Card$^{TM}$ is a dialect of Java specifically
-designed for the programming of the latest generation of smartcards.
-Java Card is adapted to the hardware limitations of smartcards; for
-instance, it does not support floating point numbers, strings, object
-cloning, or threads.
+%Although JML is able to specify arbitrary sequential Java programs,
+%most of the serious applications of JML and JML tools up to now
+%have targeted Java Card.  Java Card$^{TM}$ is a dialect of Java specifically
+%designed for the programming of the latest generation of smartcards.
+%Java Card is adapted to the hardware limitations of smartcards; for
+%instance, it does not support floating point numbers, strings, object
+%cloning, or threads.
 
-Java Card is a well-suited target for the application of formal
-methods.  It is a relatively simple language with a restricted API\@.
-Moreover, Java Card programs, called ``applets'', are small, typically
-on the order of several KBytes of bytecode.  Additionally, correctness
-of Java Card programs is of crucial importance, since they are used in
-sensitive applications such as bank cards and mobile phone SIMs.  (An
-interesting overview of security properties that are relevant for Java
-Card applications is available~\cite{MarletLM01}.)
+%Java Card is a well-suited target for the application of formal
+%methods.  It is a relatively simple language with a restricted API\@.
+%Moreover, Java Card programs, called ``applets'', are small, typically
+%on the order of several KBytes of bytecode.  Additionally, correctness
+%of Java Card programs is of crucial importance, since they are used in
+%sensitive applications such as bank cards and mobile phone SIMs.  (An
+%interesting overview of security properties that are relevant for Java
+%Card applications is available~\cite{MarletLM01}.)
 
-JML, and several tools for JML, have been used for Java Card,
-especially in the context of the EU-supported project VerifiCard
-(www.verificard.org).  JML has been used to write a formal
-specification of almost the entire Java Card
-API~\cite{PollBergJacobs01}.  This experience has shown that JML is
-expressive enough to specify a non-trivial existing API\@.  The
-runtime assertion checker has been used to specify and verify a
-component of a smartcard operating system~\cite{PollHarteldeJong02}.
+%JML, and several tools for JML, have been used for Java Card,
+%especially in the context of the EU-supported project VerifiCard
+%(www.verificard.org).  JML has been used to write a formal
+%specification of almost the entire Java Card
+%API~\cite{PollBergJacobs01}.  This experience has shown that JML is
+%expressive enough to specify a non-trivial existing API\@.  The
+%runtime assertion checker has been used to specify and verify a
+%component of a smartcard operating system~\cite{PollHarteldeJong02}.
 
 
 

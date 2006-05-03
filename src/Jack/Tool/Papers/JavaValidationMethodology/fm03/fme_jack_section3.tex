@@ -2,21 +2,22 @@
  The main design goals were the following:
  \begin{itemize}
  \item it should provide an easy accessible user interface, that enables average Java programmers to use the tool
- without too much difficulties (in contrast to for example \LOOP). This interface is
+ without too much difficulties. This interface is
 described section \ref{Industrialisation};
  \item it should provide a high degree of automation, so that most proof obligations can be discharged without user
  interaction. Only in this way, the tool can be effectively used by non-expert users, which is necessary if we want that
  formal methods will ever be used in industry. 
  \item it should provide high correctness assurance: at the moment the prover says that a certain proof obligation
 is satisfied, it should be possible to trust this without any reservation. Nevertheless
-the tool is not formally developed, as \LOOP\ is. It implements, in Java, a weakest precondition calculus that
+the tool is not formally developed. It implements, in Java, a weakest precondition calculus that
 generates lemmas without user interaction. We cannot prove that those lemmas are necessary and sufficient to
 ensure the correctness of the applet but the tool is designed in this way;
- \item it should be relatively independent of any particular prover, so that if the use of another prover is
+ \item it should be independent of any particular prover, so that if the use of a particular prover is
  required (for example by a certification institute) it is relatively easy to adapt the tool accordingly.
 \end{itemize}
 
- This section presents the tool architecture and its principles.
+
+This section presents the tool architecture and its principles.
 \subsubsection{Architecture}
 \begin{figure}[tp]
  \psfig{file=fm03/image002.eps,width=14cm}
@@ -32,7 +33,7 @@ ensure the correctness of the applet but the tool is designed in this way;
 
  The \JACK\ converter converts a Java class into a JPOL model and allows to
  prove properties. 
- Our goal is to prove properties on source files written with the Java
+ The initial goal was to prove properties on source files written with the Java
  language.  To reach this goal, one has to know how to ``translate'' a
  Java source file in formal lemmas.  
 
@@ -49,8 +50,7 @@ ensure the correctness of the applet but the tool is designed in this way;
  lemmas can be generated automatically.
 
  From the start, taking into account
- experiences in lemma generation for B machines, we have tried to
- implement a Weakest Precondition (WP) calculus to automate lemma
+ experiences in lemma generation for B machines, we have implemented a Weakest Precondition (WP) calculus to automate lemma
  generation.  Huisman, in \cite{Huisman:PhD}, presents how the
  classical Hoare logic can be completed to allow the generation of
  lemmas in the context of Java.  The Java statements contain different
@@ -60,14 +60,12 @@ ensure the correctness of the applet but the tool is designed in this way;
  Moreover, JML should be lightly upgraded to allow fully automated proof obligation generation.
  Notably, to
  automate lemma generation for the loops, we have had to extend
- the JML language with new keywords: \texttt{loop\_modifies} and \texttt{loop\_exsures}.
+ the JML language with new keywords: \texttt{loop\_modifies}.
  The \texttt{loop\_modifies} keyword allows us to declare the variables modified in
 the body of the loop, as it is done for the methods. During the WP calculus, it is necessary to universally
 quantify the loop invariant with those variables, and since they cannot be automatically calculated, one has to
 specify them.
- The \texttt{loop\_exsures} allows us to specify the exceptional behavior of a loop. It is not necessary to apply
-the WP calculus but it can improve the understandability of the specification.
-
+ 
  The two main drawbacks of the WP calculus are the loss of information and
  potential exponentional explosion.  After lemmas have been generated,
  it is often difficult to understand from which part of the code they

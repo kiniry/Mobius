@@ -1,10 +1,11 @@
 \label{JPOL}
 The Java/Jack Proof Obligation Language is an internal language used in Jack to represent verification conditions issued from the weakest precondition calculus. It can be considered as a melting-pot language based on first order logic with some specific features like:
 \begin{itemize}
-\item some basic set theory (coming from the B notation)
-\item JML keywords
-\item Java construction
+\item some basic set theory constructions (coming from the B notation)
+\item some JML keywords
+\item some Java constructions
 \end{itemize}
+The language is typed but has no specific syntax. It corresponds to an internal representation in the tool. Its semantic is given by the translation into the different theorem provers. Adding a theorem prover in JACK corresponds manely to convert expressions of the JPOL language into the specific theorem prover language.
 %Java construction:
 
 %$\begin{array}{ll}

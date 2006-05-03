@@ -39,9 +39,9 @@ also exists.
  automatic proof}).
 
 
-Several other minor features are available to integrate within the
-development cycle, for example, reports on the status of the project
-can be generated as Microsoft Excel files.
+%Several other minor features are available to integrate within the
+%development cycle, for example, reports on the status of the project
+%can be generated as Microsoft Excel files.
 \subsubsection{Lemma Viewer}
 \begin{figure}[p]
  \psfig{file=fm03/preferences-editor.eps,width=14cm}
@@ -59,7 +59,7 @@ Instead, we provide the user with a graphical view (Figure \ref{Viewer image}) o
   \item information concerning the current proof status;
   \item the class methods with their lemmas;
   \item the source code;
-  \item and the currently selected lemma (goals and hypotheses with Java or B presentation).
+  \item and the currently selected lemma (goals and hypotheses with JPOL and prover language translations).
 \end{itemize}
  Within a method, each execution path corresponds to a case.
  Possibly, several lemmas are associated to each case.
@@ -97,7 +97,7 @@ quickly understand the proof obligation, and allows the user to treat
 the proof obligations as execution scenarios of the program.
 \paragraph{Java presentation of lemmas}
 The hypothesis and goals of the current lemma are also displayed. As
-the conversion mechanism to B may be hard to follow, especially by
+the conversion mechanism into provers lqnguqge may be hard to follow, especially by
 non-experts, the internal representation used by the tool is used to
 present the hypothesis and goals in a Java representation. That is,
 all the variables are displayed using the Java dotted notation, and
@@ -110,20 +110,8 @@ have no Java or Jml equivalent constructs are used.
  However, although the Java view is able to handle some internal
  representation constructs that do not have direct Java or JML
  equivalent constructs, there are still constructs that cannot be
- translated yet, and for which a Java notation is hard to define. For
- instance the set operators cannot be translated in a generic way.
- Handling such constructs will be performed by modifying the internal
- representation in order to better match the JML language. For
- instance the set $\in$ operator can be difficult to translate back
- into Java. However, as it is mainly used for representing the Java
- type information, adding a dedicated operator (that would be handled
- like a $in$ operator from a B point of view) for
- representing this type information would allow an easy translation.
-
- Such changes to the internal representation would also be useful for
- generating lemmas to other proof language such as Coq or PVS, for
- which a translation using the set operators may not be the most
- appropriate translation.
+ translated, and for which a Java notation is hard to define. For
+ instance some set operators cannot be translated in a generic way.
 
 \subsection{Support for verification}
 Apart from displaying the generated proof obligations, \JACK\ also
@@ -147,33 +135,8 @@ remaining proof obligations have to be verified manually.
 
 Currently, developers are not supposed to handle this task, but to
 delegate it to a team of experts that would perform the proofs using
-the interactive prover of the \texttt{Atelier B} tool.
+the interactive prover of the \texttt{Atelier B} tool, emacs with PVS or the Coq editor.
 
-% However, proving a program correct simply correspond to explaining why
-% the programs works correctly.
-However, it is expected that developers will be able to handle more
-and more of the interactive proofs. To achieve this, we provide
-limited support for interacting with the prover in order to allow
-users to prove common cases.
-
-% voir si l'explication est suffisante
-Currently, two interactions are provided:
-\begin{itemize}
-\item Identifying false hypothesis. In that case, the prover tries to
-    prove the negation of the hypothesis, and if the proof succeeds,
-    the goal is discharged.
-\item Showing ``wrong pathes'' in the source code. This is performed
-    by clicking on a condition in the source code that ``cannot
-    happen''. For instance, a condition within a {\tt if} that is in
-    contradiction with the preconditions. \\ In that case, the
-    corresponding hypothesis is retrieved and sent to the prover as a
-    false hypothesis in a way similar to the previous case.
-\end{itemize}
-Those actions are still limited to one proof command that can either
-succeed or fail, and so cannot be used to perform full interactive
-proof yet.
-However, they still allow to discharge some classes of common  proof
-obligations.
 \paragraph{Checking proof obligations}
 Additionally to the ``\textit{proved}'' and ``\textit{unproved}''
 states, \JACK\ can also differentiate ``\textit{checked}'' proof
