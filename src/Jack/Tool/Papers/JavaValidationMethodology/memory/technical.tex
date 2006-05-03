@@ -283,10 +283,9 @@ $$
 //@\  \ensures \ \Mem \le \oldp(\Mem) +  \allocInstance{A} \\
 //@\   \exsures{NullPointerException} \\
 \hspace*{4.5cm} \Mem == \oldp(\Mem)
-\end{array}$$
-
+\end{array}$$\\
 \begin{tabular}{lr}
-\begin{minipage}[t]{4.2cm}
+\begin{minipage}[t]{7cm}
 \begin{alltt}
 \srcCode{0 aload\_0}
 \srcCode{1 getfield<C.b>}
@@ -304,12 +303,15 @@ $$
  &
 \begin{minipage}[t]{4cm}
 \begin{alltt}
-public class C     \{
+public class C
+\{
   B b;
-  public void 
-    m (A a, int i)\{
+  public void m (A a, int i)
+  \{
       b.i = i ;
-      a = new A();\}\}
+      a = new A();
+  \}
+\}
 \end{alltt}
 \end{minipage}
 \end{tabular}

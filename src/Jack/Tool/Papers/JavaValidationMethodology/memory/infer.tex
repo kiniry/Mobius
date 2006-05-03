@@ -10,9 +10,7 @@ assistants already exist for loop invariants~\cite{NimmerE02:ISSTA} and class
 invariants~\cite{log04:vmcai}). In this section, we describe an
 implementation of an annotation assistant dedicated to the analysis of
 memory consumption, and illustrate its functioning on an example.
-
-
-\subsubsection{Annotation assistant}
+ 
 The annotation assistant performs two tasks. First, it inserts the
 ghost assignments on appropriate places; for this task, the user must
 provide annotations about the memory required to create objects of the
@@ -112,57 +110,57 @@ may be thus applied straightforwardly. How to treat arrays is
 briefly discussed in the conclusion.
 
 
-\subsubsection{Example}
+%\subsubsection{Example}
 
-Let us consider the bytecode given in Fig. \ref{inf:src}, which is a
-simplified version of the bytecode corresponding to the source code
-given in the right of the figure. For simplicity of presentation, we
-do not show all the instructions (the result of the inference
-procedure is not affected). Method \method\ has two branching
-instructions, where two objects are created: one instance of class \texttt{A}
-and another of class \texttt{B}. Our inference algorithm gives that
-$\allocMethod{\method} =$ $\allocInstance{A} +$ $\allocMethod{A.init}
-+ \allocInstance{B} + \allocMethod{B.init}$.
+%Let us consider the bytecode given in Fig. \ref{inf:src}, which is a
+%simplified version of the bytecode corresponding to the source code
+%given in the right of the figure. For simplicity of presentation, we
+%do not show all the instructions (the result of the inference
+%procedure is not affected). Method \method\ has two branching
+%instructions, where two objects are created: one instance of class \texttt{A}
+%and another of class \texttt{B}. Our inference algorithm gives that
+%$\allocMethod{\method} =$ $\allocInstance{A} +$ $\allocMethod{A.init}
+%+ \allocInstance{B} + \allocMethod{B.init}$.
 
-%Due to limitation on space, we do not explain the details of such inference, which is given in Fig. \ref{inf:ex} ($\instrAt{k}$ refers to the bytecode instruction at position $k$).
+%%Due to limitation on space, we do not explain the details of such inference, which is given in Fig. \ref{inf:ex} ($\instrAt{k}$ refers to the bytecode instruction at position $k$).
 
-\begin{figure}[!hbp]
-\begin{tabular}{lr}
-\begin{minipage}[t]{4.3cm}
-\begin{alltt}
-\begin{small}
-\srcCode{0 aload\_1} 
-\srcCode{1 ifnonnull 6 } 
-\srcCode{2 new <A>}
-... 
-\srcCode{4 invokespecial <A.<init>>} 
-\srcCode{6 aload\_2}
-\srcCode{7 ifnonnull 12}
-\srcCode{8 new <B>} 
-... 
-\srcCode{10 invokespecial <B.<init>>}
-...
-\srcCode{12 return}
-\end{small}
-\end{alltt}
-\end{minipage} &
+%\begin{figure}[!hbp]
+%\begin{tabular}{lr}
+%\begin{minipage}[t]{4.3cm}
+%\begin{alltt}
+%\begin{small}
+%\srcCode{0 aload\_1} 
+%\srcCode{1 ifnonnull 6 } 
+%\srcCode{2 new <A>}
+%... 
+%\srcCode{4 invokespecial <A.<init>>} 
+%\srcCode{6 aload\_2}
+%\srcCode{7 ifnonnull 12}
+%\srcCode{8 new <B>} 
+%... 
+%\srcCode{10 invokespecial <B.<init>>}
+%...
+%\srcCode{12 return}
+%\end{small}
+%\end{alltt}
+%\end{minipage} &
 
-\begin{minipage}[t]{4cm}
-\begin{alltt}
-\small{
-public void 
- m (A a , B b )   \{
-  if (a == null) \{
-    a = new A(); \}
-  if (b == null) \{
-    b = new B(); \}\}
-}
-\end{alltt}
-\end{minipage}
-\end{tabular}
-\caption{\sc Example}
-\label{inf:src}
-\end{figure}
+%\begin{minipage}[t]{4cm}
+%\begin{alltt}
+%\small{
+%public void 
+% m (A a , B b )   \{
+%  if (a == null) \{
+%    a = new A(); \}
+%  if (b == null) \{
+%    b = new B(); \}\}
+%}
+%\end{alltt}
+%\end{minipage}
+%\end{tabular}
+%\caption{\sc Example}
+%\label{inf:src}
+%\end{figure}
 
-%The procedure presented above terminates as an acyclic
-%representation of the control flow graph is used.
+%%The procedure presented above terminates as an acyclic
+%%representation of the control flow graph is used.
