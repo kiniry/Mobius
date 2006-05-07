@@ -10,7 +10,7 @@ public class TagConstants
     extends javafe.tc.TagConstants
     implements GeneratedTags
 {
-		
+                
     //// keywords
     public static final int FIRSTRCCKEYWORDTAG = rcc.ast.GeneratedTags.LAST_TAG + 1;
     public static final int GUARDED_BY = FIRSTRCCKEYWORDTAG; 
@@ -50,79 +50,79 @@ public class TagConstants
     //// Helper functions
     
     public static String toString(int tag) {
-	switch(tag) {
-	case CHK_AS_ASSUME:
-	    return "CHK_AS_ASSUME";
-	case CHK_AS_ASSERT:
-	    return "CHK_AS_ASSERT";
-	case CHK_AS_SKIP:
-	    return "CHK_AS_SKIP";
-	default:
-	    if (FIRSTRCCKEYWORDTAG <= tag && tag <= LASTRCCKEYWORDTAG)
-		return rcckeywords[tag - FIRSTRCCKEYWORDTAG].toString();
-	    else if (FIRSTRCCCHECKTAG <= tag && tag < LASTRCCCHECKTAG)
-		return rccchecks[tag - FIRSTRCCCHECKTAG];
-	    else if (tag < javafe.tc.TagConstants.LAST_TAG + 1)
-		return javafe.tc.TagConstants.toString(tag);
-	    else
-		return "Unknown RCC tag <" + tag
-		    + " (+" + (tag-javafe.tc.TagConstants.LAST_TAG) + ") >";
-	}
+        switch(tag) {
+        case CHK_AS_ASSUME:
+            return "CHK_AS_ASSUME";
+        case CHK_AS_ASSERT:
+            return "CHK_AS_ASSERT";
+        case CHK_AS_SKIP:
+            return "CHK_AS_SKIP";
+        default:
+            if (FIRSTRCCKEYWORDTAG <= tag && tag <= LASTRCCKEYWORDTAG)
+                return rcckeywords[tag - FIRSTRCCKEYWORDTAG].toString();
+            else if (FIRSTRCCCHECKTAG <= tag && tag < LASTRCCCHECKTAG)
+                return rccchecks[tag - FIRSTRCCCHECKTAG];
+            else if (tag < javafe.tc.TagConstants.LAST_TAG + 1)
+                return javafe.tc.TagConstants.toString(tag);
+            else
+                return "Unknown RCC tag <" + tag
+                    + " (+" + (tag-javafe.tc.TagConstants.LAST_TAG) + ") >";
+        }
     }
     
     public static int fromIdentifier(Identifier rcckeyword) {
-	for(int i = 0; i < rcckeywords.length; i++)
-	    if (rcckeyword == rcckeywords[i]) return i + GUARDED_BY;
-	return NULL;
+        for(int i = 0; i < rcckeywords.length; i++)
+            if (rcckeyword == rcckeywords[i]) return i + GUARDED_BY;
+        return NULL;
     }
     
     public static int checkFromString(String s) {
-	for (int i = FIRSTRCCCHECKTAG; i <= LASTRCCCHECKTAG; i++) {
-	    if (s.equals(rccchecks[i - FIRSTRCCCHECKTAG]))
-		return i;
-	}
-				//@ unreachable
-	Assert.fail("unrecognized check string: \"" + s + "\"");
-	return -1;
+        for (int i = FIRSTRCCCHECKTAG; i <= LASTRCCCHECKTAG; i++) {
+            if (s.equals(rccchecks[i - FIRSTRCCCHECKTAG]))
+                return i;
+        }
+                                //@ unreachable
+        Assert.fail("unrecognized check string: \"" + s + "\"");
+        return -1;
     }
     
     private static Identifier[] rcckeywords = {
-	Identifier.intern("guarded_by"),
-	Identifier.intern("requires"),
-	Identifier.intern("holds"),
-	Identifier.intern("no_warn"),
-	Identifier.intern("elems_guarded_by"),
-	Identifier.intern("thread_local"),
-	Identifier.intern("thread_shared"),
-	Identifier.intern("readonly"),
-	Identifier.intern("ghost")
+        Identifier.intern("guarded_by"),
+        Identifier.intern("requires"),
+        Identifier.intern("holds"),
+        Identifier.intern("no_warn"),
+        Identifier.intern("elems_guarded_by"),
+        Identifier.intern("thread_local"),
+        Identifier.intern("thread_shared"),
+        Identifier.intern("readonly"),
+        Identifier.intern("ghost")
     };
     
     private static String[] rccchecks = {
-	"BadCast", 
-	"ConstantLocks",
-	"Modifiers",
-	"Super",
-	"Race",
-	"ThreadLocal",
-	"Override",
-	"Message",
-	"ReadOnly",
-	"StaticField",
-	"SharedField",
-	"SharedArray"
+        "BadCast", 
+        "ConstantLocks",
+        "Modifiers",
+        "Super",
+        "Race",
+        "ThreadLocal",
+        "Override",
+        "Message",
+        "ReadOnly",
+        "StaticField",
+        "SharedField",
+        "SharedArray"
     };
     
     
     static {
-				
+                                
     }
     
     
     
     public static void main(String[] args) {
-	for(int i= 0; i< LAST_TAG; i++ )
-	    System.out.println(i+" "+toString(i));
+        for(int i= 0; i< LAST_TAG; i++ )
+            System.out.println(i+" "+toString(i));
     }
 }
 

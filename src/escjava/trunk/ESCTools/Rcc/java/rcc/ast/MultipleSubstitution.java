@@ -37,7 +37,7 @@ public class MultipleSubstitution {
     for (i = 0; i<substitutions.size(); i++) {
       Substitution s = substitutions.elementAt(i);
       if (equalityTester.equals(s.match,a)) {
-	return s.replace;
+        return s.replace;
       }
     }
     return null;

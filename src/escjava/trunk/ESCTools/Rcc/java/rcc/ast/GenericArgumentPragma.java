@@ -26,15 +26,15 @@ public class GenericArgumentPragma extends TypeModifierPragma {
 
   public int loc;
 
-			
-	public int getStartLoc() { return loc; }
-	public int getEndLoc() { 
-		if (expressions.size()==0)
-	    return super.getEndLoc();
-		
-		Expr e=expressions.elementAt(expressions.size()-1);
-		return e.getEndLoc();
-	}
+                        
+        public int getStartLoc() { return loc; }
+        public int getEndLoc() { 
+                if (expressions.size()==0)
+            return super.getEndLoc();
+                
+                Expr e=expressions.elementAt(expressions.size()-1);
+                return e.getEndLoc();
+        }
 
 
 // Generated boilerplate constructors:

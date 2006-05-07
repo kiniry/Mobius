@@ -27,15 +27,15 @@ public class GenericParameterPragma extends TypeModifierPragma {
 
   public int loc;
 
-			
-	public int getStartLoc() { return loc; }
-	public int getEndLoc() { 
-		if (args.size()==0)
-	    return super.getEndLoc();
-		
-		FormalParaDecl e= args.elementAt(args.size()-1);
-		return e.getEndLoc();
-	}
+                        
+        public int getStartLoc() { return loc; }
+        public int getEndLoc() { 
+                if (args.size()==0)
+            return super.getEndLoc();
+                
+                FormalParaDecl e= args.elementAt(args.size()-1);
+                return e.getEndLoc();
+        }
 
 
 // Generated boilerplate constructors:

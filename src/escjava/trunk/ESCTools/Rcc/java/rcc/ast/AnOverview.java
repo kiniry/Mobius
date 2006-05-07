@@ -21,37 +21,37 @@ import javafe.util.Location;
 
 
 /**
-	
-	The files in this package extend the AST classes defined in
-	<code>javafe.ast</code>.  The following diagram shows how the new
-	classes related to the old classes in the class hierarchy:
-	
-	* <PRE>
-	* - ASTNode
-	*    - Stmt ()
-	*       - StmtPragma ()
-	*         + HoldStmtPragma (Expr* locks) 
-	*    - ModifierPragma ()
-	*         + RequiresPragma (Expr* locks) 
-	*         + GuardedByPragma (Expr* locks)
-	*         + ThreadLocalStatusPragma (boolean local) 
-	*         + ReadOnlyPragma (boolean local) 
-	*    - LexicalPragma ()
-	*      + NowarnPragma (Identifier* checks)
-	*    - TypeModifierPragma ()
-	*      + ArrayGuardModifierPragma (Expr* locks)
-	* </PRE>
-	
-	(Classes with a <code>-</code> next to them are defined in
-	<code>javafe.ast</code>; classes with a <code>+</code> are defined in
-	this package.
-	
-	(P.S. Ignore the stuff that appears below; the only purpose of this class
-	is to contain the above overview.)
-	
-	@see javafe.ast.AnOverview
-	
-	*/
+        
+        The files in this package extend the AST classes defined in
+        <code>javafe.ast</code>.  The following diagram shows how the new
+        classes related to the old classes in the class hierarchy:
+        
+        * <PRE>
+        * - ASTNode
+        *    - Stmt ()
+        *       - StmtPragma ()
+        *         + HoldStmtPragma (Expr* locks) 
+        *    - ModifierPragma ()
+        *         + RequiresPragma (Expr* locks) 
+        *         + GuardedByPragma (Expr* locks)
+        *         + ThreadLocalStatusPragma (boolean local) 
+        *         + ReadOnlyPragma (boolean local) 
+        *    - LexicalPragma ()
+        *      + NowarnPragma (Identifier* checks)
+        *    - TypeModifierPragma ()
+        *      + ArrayGuardModifierPragma (Expr* locks)
+        * </PRE>
+        
+        (Classes with a <code>-</code> next to them are defined in
+        <code>javafe.ast</code>; classes with a <code>+</code> are defined in
+        this package.
+        
+        (P.S. Ignore the stuff that appears below; the only purpose of this class
+        is to contain the above overview.)
+        
+        @see javafe.ast.AnOverview
+        
+        */
 
 public abstract class AnOverview extends ASTNode {
 

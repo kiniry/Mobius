@@ -25,9 +25,9 @@ public class HoldsStmtPragma extends StmtPragma {
 
   public int loc;
 
-			
-	public int getStartLoc() { return loc; }
-	public int getEndLoc() { return expressions.elementAt(expressions.size()-1).getEndLoc(); }
+                        
+        public int getStartLoc() { return loc; }
+        public int getEndLoc() { return expressions.elementAt(expressions.size()-1).getEndLoc(); }
 
 
 // Generated boilerplate constructors:

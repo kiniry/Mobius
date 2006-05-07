@@ -16,14 +16,14 @@ public class CloneWithSubstitution extends CloneAST {
     protected CloneAST cloneNoSubs;
        
     public ASTNode  prep(ASTNode a, Object o) {
-	ASTNode b = substitutions.substitute(a);
-	return (ASTNode)(b==null?null:cloneNoSubs.clone(b,true));
+        ASTNode b = substitutions.substitute(a);
+        return (ASTNode)(b==null?null:cloneNoSubs.clone(b,true));
     }
     
     
     public CloneWithSubstitution(MultipleSubstitution ms) {
-	substitutions = ms;
-	cloneNoSubs = new CloneAST();
+        substitutions = ms;
+        cloneNoSubs = new CloneAST();
     }
     
 

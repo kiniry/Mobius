@@ -23,8 +23,8 @@ import javafe.util.Location;
 public class ReadOnlyModifierPragma extends ModifierPragma {
   public int loc;
 
-			
-	public int getStartLoc() { return loc; }
+                        
+        public int getStartLoc() { return loc; }
 
 
 // Generated boilerplate constructors:

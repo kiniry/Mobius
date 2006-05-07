@@ -31,7 +31,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
   public void setParent(TypeDecl p) {
     super.setParent(p);
     if (decl!=null)
-	decl.setParent(p);
+        decl.setParent(p);
   }
 
   public int getStartLoc() { return loc; }

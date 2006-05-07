@@ -26,9 +26,9 @@ public class NowarnPragma extends LexicalPragma {
 
         public int loc;
 
-	boolean triggered = false;
+        boolean triggered = false;
 
-	public int getStartLoc() { return loc; }
+        public int getStartLoc() { return loc; }
 
 
 // Generated boilerplate constructors:

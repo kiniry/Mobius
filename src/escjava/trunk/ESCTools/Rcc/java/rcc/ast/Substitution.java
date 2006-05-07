@@ -12,12 +12,12 @@ public class Substitution {
     public ASTNode replace;
 
     public  Substitution(ASTNode m,ASTNode r) {
-	match = m;
-	replace = r;
+        match = m;
+        replace = r;
     }
 
     public String  toString() {
-	return "("+match+"->"+replace+")";
+        return "("+match+"->"+replace+")";
     }
     
 }
