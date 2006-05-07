@@ -12,9 +12,9 @@ class F extends C {
     
     
     public void  f() {
-	synchronized(b.s) {
-	    t = "asd";
-	}
+        synchronized(b.s) {
+            t = "asd";
+        }
     }
 }
 

@@ -12,14 +12,14 @@ public class C {
 /*# thread_shared */
 class D {
     static String s,t;
-		static final String s2;
+                static final String s2;
 }
 
 /*# thread_local */
 class F  {
-		final static String s;
-		static String s2;
-		String g /*# guarded_by this */;
+                final static String s;
+                static String s2;
+                String g /*# guarded_by this */;
 }
 
 

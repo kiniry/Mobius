@@ -14,12 +14,12 @@ class F extends C {
     
     
     public void  f() {
-	synchronized(C.class) {
-	    tt = "123";
-	}
-	synchronized(b.s) {
-	    t = "asd";
-	}
+        synchronized(C.class) {
+            tt = "123";
+        }
+        synchronized(b.s) {
+            t = "asd";
+        }
     }
 }
 

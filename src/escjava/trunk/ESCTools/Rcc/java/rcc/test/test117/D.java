@@ -16,11 +16,11 @@ class C {
     D/*#{F.d}*/ dd; 
     D/*#{F.e}*/ ee;
     void f() {
-	synchronized(F.d) {
-	    dd.a = 2;
-	    dd = ee;
-	    dd.a=ee.a;
-		}
+        synchronized(F.d) {
+            dd.a = 2;
+            dd = ee;
+            dd.a=ee.a;
+                }
     }
 }
 

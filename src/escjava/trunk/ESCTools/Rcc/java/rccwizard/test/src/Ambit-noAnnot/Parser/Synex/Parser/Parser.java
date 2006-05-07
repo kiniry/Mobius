@@ -51,7 +51,7 @@ public class Parser {
     try {
       return nonTerminal.accept(this);
     } catch (SynexException ex) {
-	  return new ParseFailure(scanner.getLocation(), ex.getMessage());
+          return new ParseFailure(scanner.getLocation(), ex.getMessage());
     }
   }
   

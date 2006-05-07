@@ -20,10 +20,10 @@ public class Annotator {
 
   //@ requires loc != Location.NULL;
   public Annotator(/*@ non_null */ String placement,
-		   int loc,
-		   /*@ non_null */ String id,
-		   /*@ non_null */ String commentPrefix,
-		   /*@ non_null */ String pragmaPrefix) {
+                   int loc,
+                   /*@ non_null */ String id,
+                   /*@ non_null */ String commentPrefix,
+                   /*@ non_null */ String pragmaPrefix) {
     this.placement = placement;
     this.loc = loc;
     this.id = id;
@@ -32,8 +32,8 @@ public class Annotator {
   }
 
   public Annotator(/*@ non_null */ RoutineDecl rd,
-		   /*@ non_null */ String commentPrefix,
-		   /*@ non_null */ String pragmaPrefix) {
+                   /*@ non_null */ String commentPrefix,
+                   /*@ non_null */ String pragmaPrefix) {
     if (rd instanceof ConstructorDecl) {
       this.placement = "<|";
     } else {
@@ -63,20 +63,20 @@ public class Annotator {
       c += ":" + comment;
     }
     outputSuggestion(placement, loc, id,
-		     pragmaPrefix + pragma, c);
+                     pragmaPrefix + pragma, c);
   }
 
   //@ requires loc != Location.NULL;
   private static void outputSuggestion(/*@ non_null */ String placement,
-				       int loc,
-				       /*@ non_null */ String id,
-				       /*@ non_null */ String pragma,
-              			       /*@ non_null */ String comment) {
+                                       int loc,
+                                       /*@ non_null */ String id,
+                                       /*@ non_null */ String pragma,
+                                             /*@ non_null */ String comment) {
       System.out.println("nofile 1 1 Null "
-			 + "<rccwizard:" + comment + "> "
-			 + Location.toFileName(loc) + ' '
-			 + placement + ' ' + Location.toLineNumber(loc) + ' '
-			 + Location.toColumn(loc) + ' ' + id + ' '
-			 + '\'' + pragma + '\'');
+                         + "<rccwizard:" + comment + "> "
+                         + Location.toFileName(loc) + ' '
+                         + placement + ' ' + Location.toLineNumber(loc) + ' '
+                         + Location.toColumn(loc) + ' ' + id + ' '
+                         + '\'' + pragma + '\'');
   }
 }

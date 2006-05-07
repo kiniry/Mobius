@@ -26,22 +26,22 @@ public class ErrorPragmaParser implements PragmaParser {
 
     /** Create a new ErrorPragmaParser that report error message msg **/
     public ErrorPragmaParser(String msg) {
-	this.msg = msg;
+        this.msg = msg;
     }
 
     public boolean checkTag(int tag) {
-	return tag == '@'; // SNF || tag == '*';
+        return tag == '@'; // SNF || tag == '*';
     }
 
     /** Report an error for each annotation comment **/
     public void restart(CorrelatedReader in, boolean eolComment) {
-	try {
-	    int c = in.read();
-	} catch (IOException e) {
-	    ErrorSet.fatal(in.getLocation(), e.toString());
-	}
+        try {
+            int c = in.read();
+        } catch (IOException e) {
+            ErrorSet.fatal(in.getLocation(), e.toString());
+        }
 
-	ErrorSet.error(in.getLocation(), msg);
+        ErrorSet.error(in.getLocation(), msg);
     }
 
 

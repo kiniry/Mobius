@@ -46,10 +46,10 @@ class PragmaInstr extends Instr {
   //@ requires 0 <= linePragma;
   //@ requires 0 <= colPragma;
   PragmaInstr(int fileidNowarn, int lineNowarn, int colNowarn,
-	      /*@ non_null */ String errorType,
-	      /*@ non_null */ String descriptionPragma, int fileidPragma,
-	      int placement, int linePragma, int colPragma,
-	      /*@ non_null */ String idPragma, /*@ non_null */ String pragma) {
+              /*@ non_null */ String errorType,
+              /*@ non_null */ String descriptionPragma, int fileidPragma,
+              int placement, int linePragma, int colPragma,
+              /*@ non_null */ String idPragma, /*@ non_null */ String pragma) {
     this.fileidNowarn = fileidNowarn;
     this.lineNowarn = lineNowarn;
     this.colNowarn = colNowarn;
@@ -102,8 +102,8 @@ class PragmaInstr extends Instr {
       case PREVLINE_CONSTR:  return "<|";
       case NEXTLINE:  return ">>";
       default:
-	//@ unreachable
-	return null;
+        //@ unreachable
+        return null;
     }
   }
 
@@ -113,12 +113,12 @@ class PragmaInstr extends Instr {
     FileInfo fi = sources.getFileInfo(fileidPragma);
     if (!fi.canModify()) {
       return processNowarn(fileidNowarn, lineNowarn, colNowarn, errorType,
-			   "cannot modify " + fi.getFilename() +
-			   " to insert '" + pragma + "' " +
-			   placementToString(placement) + " " +
-			   linePragma + "," + colPragma + " for '" +
-			   idPragma + "'",
-			   sources);
+                           "cannot modify " + fi.getFilename() +
+                           " to insert '" + pragma + "' " +
+                           placementToString(placement) + " " +
+                           linePragma + "," + colPragma + " for '" +
+                           idPragma + "'",
+                           sources);
     }
     /* If the file can be modified, it isn't a binary file, so the
      * "linePragma" denotes an actual line (as opposed to denoting
@@ -132,117 +132,117 @@ class PragmaInstr extends Instr {
     //@ assume position < data.length;
     if (!startsWith(data, position, idPragma)) {
       fileChanged("expected '" + idPragma + "' at " +
-		  linePragma + "," + colPragma + " in " + fi.getFilename());
+                  linePragma + "," + colPragma + " in " + fi.getFilename());
     }
 
     String pr = "/*#(" + descriptionPragma + ") " + pragma + " */";
-	
+        
     switch (placement) {
       case BEFORE:
       case BEFORE_PARAM:
       case PREVLINE:
-	{
-	  if (placement != BEFORE_PARAM &&
-	      //	      isMultipleDeclAfter(data, position, fi)) {
-	      false) {
-	    // Resort to nowarn pragma
-	    return processNowarn(fileidNowarn, lineNowarn, colNowarn,
-				 errorType,
-				 "cannot decorate '" + idPragma + "' " +
-				 placementToString(placement) + " " +
-				 linePragma + "," + colPragma + " in " +
-				 fi.getFilename() + " with '" +
-				 pragma + "' because it occurs in a " +
-				 "declaration of several variables",
-				 sources);
-	  }
-	}
-	// Fall thru!
+        {
+          if (placement != BEFORE_PARAM &&
+              //              isMultipleDeclAfter(data, position, fi)) {
+              false) {
+            // Resort to nowarn pragma
+            return processNowarn(fileidNowarn, lineNowarn, colNowarn,
+                                 errorType,
+                                 "cannot decorate '" + idPragma + "' " +
+                                 placementToString(placement) + " " +
+                                 linePragma + "," + colPragma + " in " +
+                                 fi.getFilename() + " with '" +
+                                 pragma + "' because it occurs in a " +
+                                 "declaration of several variables",
+                                 sources);
+          }
+        }
+        // Fall thru!
 
       case PREVLINECOMMAOK:
-	{
-	  int o = position;
-	  while (true) {
-	    o = backOffsetOfNonComment(data, o, true);
-	    if (o < 0) {
-	      fileChanged("expected type before '" + idPragma +
-			  "' at " + linePragma + "," + colPragma +
-			  " in " + fi.getFilename());
-	    }
-	    char ch = (char)data[o];
-	    if (ch != ' ' && ch != '\t' && ch != '\r' && ch != '\n') {
-	      if (ch == '[' || ch == ']') {
-		// skip
-	      } else if (ch == ',') {
-		// Resort to nowarn pragma
-		return processNowarn(fileidNowarn, lineNowarn, colNowarn,
-				     errorType,
-				     "cannot decorate '" + idPragma + "' " +
-				     placementToString(placement) + " " +
-				     linePragma + "," + colPragma + " in " +
-				     fi.getFilename() + " with '" +
-				     pragma + "' because it occurs in a " +
-				     "declaration of several variables",
-				     sources);
-	      } else {
-		break;
-	      }
-	    }
-	  }
+        {
+          int o = position;
+          while (true) {
+            o = backOffsetOfNonComment(data, o, true);
+            if (o < 0) {
+              fileChanged("expected type before '" + idPragma +
+                          "' at " + linePragma + "," + colPragma +
+                          " in " + fi.getFilename());
+            }
+            char ch = (char)data[o];
+            if (ch != ' ' && ch != '\t' && ch != '\r' && ch != '\n') {
+              if (ch == '[' || ch == ']') {
+                // skip
+              } else if (ch == ',') {
+                // Resort to nowarn pragma
+                return processNowarn(fileidNowarn, lineNowarn, colNowarn,
+                                     errorType,
+                                     "cannot decorate '" + idPragma + "' " +
+                                     placementToString(placement) + " " +
+                                     linePragma + "," + colPragma + " in " +
+                                     fi.getFilename() + " with '" +
+                                     pragma + "' because it occurs in a " +
+                                     "declaration of several variables",
+                                     sources);
+              } else {
+                break;
+              }
+            }
+          }
 
-	  while (true) {
-	    //@ loop_invariant 0 <= o && o < position;
-	    o = skipBackToStartOfId(data, o, fi);
-	    int possibleDot = backOffsetOfNonComment(data, o, true);
-	    if (possibleDot == -1 || (char)data[possibleDot] != '.') {
-	      break;
-	    }
-	    o = possibleDot;
-	  }
-	  if (placement != PREVLINE) {
-	    return new WorkItem(fileidPragma, o, pr + " ");
-	  }
+          while (true) {
+            //@ loop_invariant 0 <= o && o < position;
+            o = skipBackToStartOfId(data, o, fi);
+            int possibleDot = backOffsetOfNonComment(data, o, true);
+            if (possibleDot == -1 || (char)data[possibleDot] != '.') {
+              break;
+            }
+            o = possibleDot;
+          }
+          if (placement != PREVLINE) {
+            return new WorkItem(fileidPragma, o, pr + " ");
+          }
 
-	  int m = backOffsetOf(data, o, '\n', false) + 1;
-	  String prefix = substring(data, m, o);
-	  //@ assume prefix != null;
-	  if (isModifiersOnly(prefix)) {
-	    prefix = getWhitePrefix(prefix);
-	    return new WorkItem(fileidPragma, m, prefix + pr + "\n");
-	  } else {
-	    return new WorkItem(fileidPragma, o, pr + " ");
-	  }
-	}
+          int m = backOffsetOf(data, o, '\n', false) + 1;
+          String prefix = substring(data, m, o);
+          //@ assume prefix != null;
+          if (isModifiersOnly(prefix)) {
+            prefix = getWhitePrefix(prefix);
+            return new WorkItem(fileidPragma, m, prefix + pr + "\n");
+          } else {
+            return new WorkItem(fileidPragma, o, pr + " ");
+          }
+        }
 
       case PREVLINE_CONSTR:
-	{
-	  String prefix = substring(data, offsetStartLine, position);
-	  //@ assume prefix != null;
-	  if (isModifiersOnly(prefix)) {
-	    prefix = getWhitePrefix(prefix);
-	    return new WorkItem(fileidPragma, offsetStartLine,
-				prefix + pr + "\n");
-	  } else {
-	    return new WorkItem(fileidPragma, position, pr + " ");
-	  }
-	}
+        {
+          String prefix = substring(data, offsetStartLine, position);
+          //@ assume prefix != null;
+          if (isModifiersOnly(prefix)) {
+            prefix = getWhitePrefix(prefix);
+            return new WorkItem(fileidPragma, offsetStartLine,
+                                prefix + pr + "\n");
+          } else {
+            return new WorkItem(fileidPragma, position, pr + " ");
+          }
+        }
 
       case NEXTLINE:
-	{
-	  String prefix = getWhitePrefix(substring(data, //@ nowarn NonNull
-						   offsetStartLine, position));
-	  int semi = offsetOf(data, position, ';', true, fi) + 1;
-	  int eol = offsetOf(data, semi, '\n', false, fi) + 1;
-	  if (isWhite(substring(data, semi, eol), false)) { //@ nowarn NonNull
-	    return new WorkItem(fileidPragma, eol, prefix + pr + "\n");
-	  } else {
-	    return new WorkItem(fileidPragma, semi, " " + pr + " ");
-	  }
-	}
+        {
+          String prefix = getWhitePrefix(substring(data, //@ nowarn NonNull
+                                                   offsetStartLine, position));
+          int semi = offsetOf(data, position, ';', true, fi) + 1;
+          int eol = offsetOf(data, semi, '\n', false, fi) + 1;
+          if (isWhite(substring(data, semi, eol), false)) { //@ nowarn NonNull
+            return new WorkItem(fileidPragma, eol, prefix + pr + "\n");
+          } else {
+            return new WorkItem(fileidPragma, semi, " " + pr + " ");
+          }
+        }
 
       default:
-	//@ unreachable
-	return null;  // dummy return
+        //@ unreachable
+        return null;  // dummy return
     }
   }
 
@@ -263,16 +263,16 @@ class PragmaInstr extends Instr {
   //@ requires 0 <= start && start <= data.length;
   //@ ensures start <= RES && RES < data.length;
   static int offsetOf(/*@ non_null */ byte[] data, int start, char ch,
-		      boolean honorComments, /*@ non_null */ FileInfo fi) {
+                      boolean honorComments, /*@ non_null */ FileInfo fi) {
     int i = start;
     while (true) {
       i = offsetOfNonComment(data, i, honorComments, fi);
       if (i == data.length) {
-	fileChanged("expected '" + ch + "' after offset " + start +
-		    " in file " + fi.getFilename());
+        fileChanged("expected '" + ch + "' after offset " + start +
+                    " in file " + fi.getFilename());
       }
       if ((char)data[i] == ch) {
-	return i;
+        return i;
       }
       i++;
     }
@@ -296,8 +296,8 @@ class PragmaInstr extends Instr {
   //@ requires 0 <= start && start <= data.length;
   //@ ensures start <= RES && RES <= data.length;
   static int offsetOfNonComment(/*@ non_null */ byte[] data, int start,
-				boolean honorComments,
-				/*@ non_null */ FileInfo fi) {
+                                boolean honorComments,
+                                /*@ non_null */ FileInfo fi) {
     boolean inTraditionalComment = false;
     boolean inSingleLineComment = false;
     
@@ -306,31 +306,31 @@ class PragmaInstr extends Instr {
 
       char cur = (char)data[i];
       if (inSingleLineComment) {
-	if (cur == '\n') {
-	  inSingleLineComment = false;
-	}
+        if (cur == '\n') {
+          inSingleLineComment = false;
+        }
       } else if (inTraditionalComment) {
-	if (cur == '*' && i+1 < data.length && (char)data[i+1] == '/') {
-	  i++;
-	  inTraditionalComment = false;
-	}
+        if (cur == '*' && i+1 < data.length && (char)data[i+1] == '/') {
+          i++;
+          inTraditionalComment = false;
+        }
       } else if (honorComments && cur == '/' &&
-		 i+1 < data.length && (char)data[i+1] == '/') {
-	i++;
-	inSingleLineComment = true;
+                 i+1 < data.length && (char)data[i+1] == '/') {
+        i++;
+        inSingleLineComment = true;
       } else if (honorComments && cur == '/' &&
-		 i+1 < data.length && (char)data[i+1] == '*') {
-	i++;
-	inTraditionalComment = true;
+                 i+1 < data.length && (char)data[i+1] == '*') {
+        i++;
+        inTraditionalComment = true;
       } else {
-	return i;
+        return i;
       }
     }
 
     if (inSingleLineComment || inTraditionalComment) {
       fileChanged("expected end-of-comment to terminate the comment that " +
-		  "starts at offset " + start + " in file " +
-		  fi.getFilename());
+                  "starts at offset " + start + " in file " +
+                  fi.getFilename());
     }
     return data.length;
   }
@@ -352,15 +352,15 @@ class PragmaInstr extends Instr {
   //@ requires 0 <= start && start <= data.length;
   //@ ensures -1 <= RES && RES < start;
   static int backOffsetOf(/*@ non_null */ byte[] data, int start, char ch,
-			  boolean honorComments) {
+                          boolean honorComments) {
     int j = start;
     while (true) {
       j = backOffsetOfNonComment(data, j, honorComments);
       if (j < 0) {
-	return -1;
+        return -1;
       }
       if ((char)data[j] == ch) {
-	return j;
+        return j;
       }
     }
   }
@@ -382,51 +382,51 @@ class PragmaInstr extends Instr {
   //@ ensures -1 <= RES && RES < start;
   //@ ensures RES < start;
   static int backOffsetOfNonComment(/*@ non_null */ byte[] data, int start,
-				    boolean honorComments) {
+                                    boolean honorComments) {
     boolean inTraditionalComment = false;
     int i = start;
     while (true) {
       i--;
       if (i < 0) {
-	// not found
-	return -1;
+        // not found
+        return -1;
       }
 
       char cur = (char)data[i];
       if (inTraditionalComment) {
-	if (cur == '*' && 0 <= i-1 && (char)data[i-1] == '/') {
-	  i--;
-	  inTraditionalComment = false;
-	}
+        if (cur == '*' && 0 <= i-1 && (char)data[i-1] == '/') {
+          i--;
+          inTraditionalComment = false;
+        }
       } else if (honorComments && cur == '/' &&
-		 0 <= i-1 && (char)data[i-1] == '*') {
-	i--;
-	inTraditionalComment = true;
+                 0 <= i-1 && (char)data[i-1] == '*') {
+        i--;
+        inTraditionalComment = true;
       } else if (honorComments && cur == '\n') {
         // check if this looks like a single-line comment
         int j = i;
         while (true) {
           j--;
-	  if (j < 0) {
-	    // not a single-line comment
-	    return i;
-	  }
-	  char chx = (char)data[j];
-	  if (chx == '\n') {
-	    // not a single-line comment
-	    return i;
-	  } else if (chx == '/' && 0 <= j-1 && (char)data[j-1] == '/') {
-	    // a single-line comment
-	    i = j-1;
-	    //@ assert i < j
-	    break;
-	  } else if (chx == '/' && 0 <= j-1 && (char)data[j-1] == '*') {
-	    // presumed not to be a single-line comment (see Caveats above)
-	    return i;
-	  }
-	}
+          if (j < 0) {
+            // not a single-line comment
+            return i;
+          }
+          char chx = (char)data[j];
+          if (chx == '\n') {
+            // not a single-line comment
+            return i;
+          } else if (chx == '/' && 0 <= j-1 && (char)data[j-1] == '/') {
+            // a single-line comment
+            i = j-1;
+            //@ assert i < j
+            break;
+          } else if (chx == '/' && 0 <= j-1 && (char)data[j-1] == '*') {
+            // presumed not to be a single-line comment (see Caveats above)
+            return i;
+          }
+        }
       } else {
-	return i;
+        return i;
       }
     }
   }
@@ -459,8 +459,8 @@ class PragmaInstr extends Instr {
     **/
   
   static boolean isMultipleDeclAfter(/*@ non_null */ byte[] data,
-				     int start,
-				     /*@ non_null */ FileInfo fi) {
+                                     int start,
+                                     /*@ non_null */ FileInfo fi) {
     boolean inInitializingExpr = false;
     int parenDepth = 0;
     int j = start;
@@ -470,32 +470,32 @@ class PragmaInstr extends Instr {
       
       j = offsetOfNonComment(data, j, true, fi);
       if (j == data.length) {
-	// who knows what the identifier is part of, but it isn't a
-	// multiple-variable declaration
-	return false;
+        // who knows what the identifier is part of, but it isn't a
+        // multiple-variable declaration
+        return false;
       }
       char ch = (char)data[j];
       if (ch == ';') {
-	// "parenDepth" is presumed 0
-	return false;
+        // "parenDepth" is presumed 0
+        return false;
       } else if (ch == ',') {
-	if (parenDepth == 0) {
-	  return true;
-	}
+        if (parenDepth == 0) {
+          return true;
+        }
       } else if (!inInitializingExpr && ch == '=') {
-	inInitializingExpr = true;
+        inInitializingExpr = true;
       } else if (ch == '(' || ch == '{') {
-	if (inInitializingExpr) {
-	  parenDepth++;
-	} else {
-	  // this is probably the open round paren of a method declaration
-	  return false;
-	}
+        if (inInitializingExpr) {
+          parenDepth++;
+        } else {
+          // this is probably the open round paren of a method declaration
+          return false;
+        }
       } else if (ch == ')' || ch == '}') {
-	// "parenDepth" ought to be positive
-	if (0 < parenDepth) {
-	  parenDepth--;
-	}
+        // "parenDepth" ought to be positive
+        if (0 < parenDepth) {
+          parenDepth--;
+        }
       }
       j++;
     }
@@ -511,7 +511,7 @@ class PragmaInstr extends Instr {
     while (i < s.length()) {
       char ch = s.charAt(i);
       if (ch != ' ' && ch != '\t' && ch != '\r') {
-	break;
+        break;
       }
       i++;
     }
@@ -525,7 +525,7 @@ class PragmaInstr extends Instr {
 
   //@ requires 0 <= start && start <= data.length;
   static boolean startsWith(/*@ non_null */ byte[] data, int start,
-			    /*@ non_null */ String s) {
+                            /*@ non_null */ String s) {
     int end = start + s.length();
     if (data.length < end) {
       return false;
@@ -533,7 +533,7 @@ class PragmaInstr extends Instr {
     for (int i = start; i < end; i++) {
       char ch = (char)data[i];
       if (ch != s.charAt(i-start)) {
-	return false;
+        return false;
       }
     }
     return true;
@@ -548,7 +548,7 @@ class PragmaInstr extends Instr {
     **/
 
   static boolean isWhite(/*@ non_null */ String s,
-			 boolean considerPragmaWhite) {
+                         boolean considerPragmaWhite) {
     return indexOfNonWhite(s, 0, considerPragmaWhite) == s.length();
   }
 
@@ -569,7 +569,7 @@ class PragmaInstr extends Instr {
   //@ requires 0 <= start && start <= s.count;
   /*@ ensures 0 <= RES && RES <= s.count; */ //@ nowarn Post
   static int indexOfNonWhite(/*@ non_null */ String s, int start,
-			     boolean considerPragmasWhite) {
+                             boolean considerPragmasWhite) {
     boolean inTraditionalComment = false;
     boolean inSingleLineComment = false;
 
@@ -581,31 +581,31 @@ class PragmaInstr extends Instr {
 
       char ch = s.charAt(i);
       if (ch == ' ' || ch == '\t' || ch != '\r') {
-	// skip
+        // skip
       } else if (ch == '\n') {
-	if (inSingleLineComment) {
-	  inSingleLineComment = false;
-	}
+        if (inSingleLineComment) {
+          inSingleLineComment = false;
+        }
       } else if (ch == '*' && inTraditionalComment &&
-		 i+1 < s.length() && s.charAt(i+1) == '/') {
-	i++;
-	inTraditionalComment = false;
+                 i+1 < s.length() && s.charAt(i+1) == '/') {
+        i++;
+        inTraditionalComment = false;
       } else if (inTraditionalComment || inSingleLineComment) {
-	// skip
+        // skip
       } else if (ch == '/' && i+1 < s.length() && s.charAt(i+1) == '*' &&
-		  (considerPragmasWhite ||
-		   !(i+2 < s.length() && s.charAt(i+2) == '@'))) {
-	startOfComment = i;
-	i++;
-	inTraditionalComment = true;
+                  (considerPragmasWhite ||
+                   !(i+2 < s.length() && s.charAt(i+2) == '@'))) {
+        startOfComment = i;
+        i++;
+        inTraditionalComment = true;
       } else if (ch == '/' && i+1 < s.length() && s.charAt(i+1) == '/' &&
-		  (considerPragmasWhite ||
-		   !(i+2 < s.length() && s.charAt(i+2) == '@'))) {
-	startOfComment = i;
-	i++;
-	inSingleLineComment = true;
+                  (considerPragmasWhite ||
+                   !(i+2 < s.length() && s.charAt(i+2) == '@'))) {
+        startOfComment = i;
+        i++;
+        inSingleLineComment = true;
       } else {
-	return i;
+        return i;
       }
     }
     if (inTraditionalComment || inSingleLineComment) {
@@ -634,27 +634,27 @@ class PragmaInstr extends Instr {
       i = indexOfNonWhite(s, i, false);
       int j = i;
       for (; j < s.length(); j++) {
-	char ch = s.charAt(j);
-	if (ch < 'a' || 'z' < ch) {
-	  break;
-	}
+        char ch = s.charAt(j);
+        if (ch < 'a' || 'z' < ch) {
+          break;
+        }
       }
       if (i == j) {
-	// loop did not scan any letters
-	return i == s.length();
+        // loop did not scan any letters
+        return i == s.length();
       }
       String n = s.substring(i, j);
       if (! n.equals("public") &&
-	  ! n.equals("private") &&
-	  ! n.equals("protected") &&
-	  ! n.equals("static") &&
-	  ! n.equals("final") &&
-	  ! n.equals("synchronized") &&
-	  ! n.equals("volatile") &&
-	  ! n.equals("transient") &&
-	  ! n.equals("native") &&
+          ! n.equals("private") &&
+          ! n.equals("protected") &&
+          ! n.equals("static") &&
+          ! n.equals("final") &&
+          ! n.equals("synchronized") &&
+          ! n.equals("volatile") &&
+          ! n.equals("transient") &&
+          ! n.equals("native") &&
           ! n.equals("abstract")) {
-	return false;
+        return false;
       }
       i = j;
     }
@@ -674,33 +674,33 @@ class PragmaInstr extends Instr {
   //@ requires 0 <= start && start <= data.length;
   //@ ensures 0 <= RES && RES < start;
   static int skipBackToStartOfId(/*@ non_null */ byte[] data, int start,
-				 /*@ non_null */ FileInfo fi) {
+                                 /*@ non_null */ FileInfo fi) {
     int j = start;
     while (true) {
       j = backOffsetOfNonComment(data, j, true);
       if (j < 0) {
-	fileChanged("expected identifier before offset " + start +
-		    " in file " + fi.getFilename());
+        fileChanged("expected identifier before offset " + start +
+                    " in file " + fi.getFilename());
       }
       char ch = (char)data[j];
       if (ch != ' ' && ch != '\t' && ch != '\r' && ch != '\n') {
-	// This character is presumed to be the last character of an
-	// identifier.
-	if (!(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') ||
-	      ('0' <= ch && ch <= '9') || ch == '_')) {
-	  fileChanged("expected identifier before offset " + start +
-		      " in file " + fi.getFilename());
-	}
-	// Step backwards until the beginning of the identifier.
-	while (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') ||
-	       ('0' <= ch && ch <= '9') || ch == '_') {
-	  j--;
-	  if (j < 0) {
-	    break;
-	  }
-	  ch = (char)data[j];
-	}
-	return j+1;
+        // This character is presumed to be the last character of an
+        // identifier.
+        if (!(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') ||
+              ('0' <= ch && ch <= '9') || ch == '_')) {
+          fileChanged("expected identifier before offset " + start +
+                      " in file " + fi.getFilename());
+        }
+        // Step backwards until the beginning of the identifier.
+        while (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') ||
+               ('0' <= ch && ch <= '9') || ch == '_') {
+          j--;
+          if (j < 0) {
+            break;
+          }
+          ch = (char)data[j];
+        }
+        return j+1;
       }
     }
   }
@@ -708,6 +708,6 @@ class PragmaInstr extends Instr {
   //@ ensures false;
   static void fileChanged(/*@ non_null */ String msg) {
     AnnotationInserter.error(msg + "; perhaps file was changed during " +
-			     "run of Wizard?");
+                             "run of Wizard?");
   }
 }

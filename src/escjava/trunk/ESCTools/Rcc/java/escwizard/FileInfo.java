@@ -31,15 +31,15 @@ class FileInfo {
       FileInputStream in = new FileInputStream(file);
       // read file into a buffer
       while (true) {
-	int r = in.read(b, n, b.length - n);
-	if (r == -1)
-	  break;
-	n += r;
-	if (n == b.length) {
-	  byte[] a = b;
-	  b = new byte[2 * a.length];
-	  System.arraycopy(a, 0, b, 0, n);
-	}
+        int r = in.read(b, n, b.length - n);
+        if (r == -1)
+          break;
+        n += r;
+        if (n == b.length) {
+          byte[] a = b;
+          b = new byte[2 * a.length];
+          System.arraycopy(a, 0, b, 0, n);
+        }
       }
       // close file
       in.close();
@@ -79,7 +79,7 @@ class FileInfo {
       // to be a proper index into "data"
       //@ assume offset < data.length;
       while ((char)data[offset] != '\n') {
-	offset++;
+        offset++;
       }
       offset++;  // skip the '\n', too
       cur++;
@@ -103,8 +103,8 @@ class FileInfo {
     WorkItem cur = wiList;
     while (cur != null && cur.offset <= wi.offset) {
       if (cur.offset == wi.offset && cur.s.equals(wi.s)) {
-	// duplicate item; don't insert it again
-	return;
+        // duplicate item; don't insert it again
+        return;
       }
       prev = cur;
       cur = cur.next;
@@ -129,37 +129,37 @@ class FileInfo {
       out = new FileOutputStream(outName);
     } catch (SecurityException se) {
       AnnotationInserter.error("SecurityException raised when trying to " +
-			       "open '" + outName + "' for writing");
+                               "open '" + outName + "' for writing");
     } catch (FileNotFoundException fnfe) {
       AnnotationInserter.error("FileNotFoundException raised when trying to " +
-			       "open '" + outName + "' for writing");
+                               "open '" + outName + "' for writing");
     } catch (IOException ioe) {
       AnnotationInserter.error("IOException raised when trying to " +
-			       "open '" + outName + "' for writing");
+                               "open '" + outName + "' for writing");
     }
 
     try {
       int n = 0;
       WorkItem wi = wiList;
       while (wi != null || n < data.length) {
-	if (wi == null) {
-	  out.write(data, n, data.length - n);
-	  n = data.length;
-	} else if (n < wi.offset) {
-	  out.write(data, n, wi.offset - n);
-	  n = wi.offset;
-	} else {
-	  for (int i = 0; i < wi.s.length(); i++) {
-	    byte by = (byte)wi.s.charAt(i);
-	    out.write(by);
-	  }
-	  wi = wi.next;
-	}
+        if (wi == null) {
+          out.write(data, n, data.length - n);
+          n = data.length;
+        } else if (n < wi.offset) {
+          out.write(data, n, wi.offset - n);
+          n = wi.offset;
+        } else {
+          for (int i = 0; i < wi.s.length(); i++) {
+            byte by = (byte)wi.s.charAt(i);
+            out.write(by);
+          }
+          wi = wi.next;
+        }
       }
       out.close();
     } catch (IOException ioe) {
       AnnotationInserter.error("IOException raised when trying to " +
-			       "operate on '" + outName + "'");
+                               "operate on '" + outName + "'");
     }
   }
 }

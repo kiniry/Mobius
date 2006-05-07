@@ -22,8 +22,8 @@ class NowarnInstr extends Instr {
   //@ requires 1 <= line;
   //@ requires 0 <= col;
   NowarnInstr(int fileid, int line, int col,
-	      /*@ non_null */ String errorType,
-	      /*@ non_null */ String reason) {
+              /*@ non_null */ String errorType,
+              /*@ non_null */ String reason) {
     this.fileid = fileid;
     this.line = line;
     this.col = col;

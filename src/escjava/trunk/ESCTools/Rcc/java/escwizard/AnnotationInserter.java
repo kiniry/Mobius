@@ -24,25 +24,25 @@ public class AnnotationInserter {
     }
     File instructionFile = new File(args[0]);
     String instructions = new String(FileInfo.getFileContents(instructionFile),
-				     0);
+                                     0);
     FileCollection sources = new FileCollection(2*(args.length-1));
     for (int i = 1; i < args.length; i++) {
       if (args[i].equals("-f")) {
-	try {
-	  i++; // yes, it's the loop counter.
-	  //@ assume i < args.length;
-	  BufferedReader in = 
-	    new BufferedReader(new FileReader(args[i]));
-	  String s;
-	  while ((s = in.readLine()) != null) {
-	    sources.add(s);
-	  }
-	} catch (IOException e) {
-	  System.out.println(e.toString());
-	  System.exit(1);
-	} 
+        try {
+          i++; // yes, it's the loop counter.
+          //@ assume i < args.length;
+          BufferedReader in = 
+            new BufferedReader(new FileReader(args[i]));
+          String s;
+          while ((s = in.readLine()) != null) {
+            sources.add(s);
+          }
+        } catch (IOException e) {
+          System.out.println(e.toString());
+          System.exit(1);
+        } 
       } else {
-	sources.add(args[i]);
+        sources.add(args[i]);
       }
     }
 
@@ -50,7 +50,7 @@ public class AnnotationInserter {
       iCurrentLine++;
       int k = instructions.indexOf('\n', i);
       if (i == -1) {
-	error(args[0] + " does not end with newline");
+        error(args[0] + " does not end with newline");
       }
       String instr = instructions.substring(i, k);
       process(instr, sources);
@@ -65,12 +65,12 @@ public class AnnotationInserter {
   //@ ensures false;
   static void error(/*@ non_null */ String s) {
     System.out.println("AnnotationInserter: " + s +
-		       " [instruction " + iCurrentLine + "]");
+                       " [instruction " + iCurrentLine + "]");
     System.exit(1);
   }
 
   static void process(/*@ non_null */ String instr,
-		      /*@ non_null */ FileCollection sources) {
+                      /*@ non_null */ FileCollection sources) {
     Instr ii = Instr.make(instr, sources);
     // System.out.println("@@ " + ii.toString());  System.out.flush();
     WorkItem wi = ii.process(sources);

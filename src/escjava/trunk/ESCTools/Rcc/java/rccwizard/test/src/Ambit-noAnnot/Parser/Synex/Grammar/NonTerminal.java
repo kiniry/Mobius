@@ -32,7 +32,7 @@ public class NonTerminal extends GrammarNonTerminal {
   public void production(String productionName, Action action, int frameSize, int argsNo, Grammar gram) {
     /** productionName is just for error reporting */
     this.info = new ProductionInfo(productionName, 
-    				Math.max(0, Math.max(argsNo, frameSize)), Math.max(0, argsNo));
+                                    Math.max(0, Math.max(argsNo, frameSize)), Math.max(0, argsNo));
     this.gram = gram;  
     this.action = action;
   }

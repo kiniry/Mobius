@@ -6,14 +6,14 @@ class CB {
     Object d;
 
     void m() {
-	synchronized(a) {
-	    b = new Object();
-	}
-	d = a;
+        synchronized(a) {
+            b = new Object();
+        }
+        d = a;
     }
 
     public static void main(String[] args) {
-	(new CB()).m();
+        (new CB()).m();
     }
 }
 
@@ -21,8 +21,8 @@ class CB {
 class CC {
     CB b;
     public void run() {
-	b.m();
-	b = new CB();
+        b.m();
+        b = new CB();
     }
 }
 
@@ -31,7 +31,7 @@ class CC {
 class CCC extends Thread {
     static CCC a;
     public void run() {
-	b.run();
+        b.run();
     }
     CC b;
 }

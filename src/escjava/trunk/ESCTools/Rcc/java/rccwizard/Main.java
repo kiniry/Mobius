@@ -42,7 +42,7 @@ public class Main extends javafe.SrcTool {
 
     /***************************************************
      *                                                 *
-     * Generating an options message:		       *
+     * Generating an options message:                       *
      *                                                 *
      ***************************************************/
 
@@ -58,16 +58,16 @@ public class Main extends javafe.SrcTool {
      ** <code>System.err</code>. <p>
      **/
     public void showOptions() {
-	System.err.println(" -pmnr \t\t\t public methods cannot have requires clauses   ");
-	System.err.println(" -noguessnull \t\t\t don't guess null as guarding lock  ");
-	System.err.println(" -readonly \t\t\t only guess readonly annotations");
-	super.showOptions();
+        System.err.println(" -pmnr \t\t\t public methods cannot have requires clauses   ");
+        System.err.println(" -noguessnull \t\t\t don't guess null as guarding lock  ");
+        System.err.println(" -readonly \t\t\t only guess readonly annotations");
+        super.showOptions();
     }
 
   
     /***************************************************
      *                                                 *
-     * Option processing:			       *
+     * Option processing:                               *
      *                                                 *
      ***************************************************/
 
@@ -79,17 +79,17 @@ public class Main extends javafe.SrcTool {
      ** specification of this routine.<p>
      **/
     public int processOption(String option, String[] args, int offset) {
-	if (option.equals("-pmnr")) {
-	    pmnr = true;
-	    return offset;
-	} else if (option.equals("-readonly")) {
-	    readonly = true;
-	    return offset;
-	} else if (option.equals("-noguessnull")) {
-	    guessnull = false;
-	    return offset;
-	}
-	return super.processOption(option, args, offset);
+        if (option.equals("-pmnr")) {
+            pmnr = true;
+            return offset;
+        } else if (option.equals("-readonly")) {
+            readonly = true;
+            return offset;
+        } else if (option.equals("-noguessnull")) {
+            guessnull = false;
+            return offset;
+        }
+        return super.processOption(option, args, offset);
     }
 
 
@@ -100,27 +100,27 @@ public class Main extends javafe.SrcTool {
      ** superclass implementation is called.
      **/
     public void handleCU(CompilationUnit cu) {
-	super.handleCU(cu);
+        super.handleCU(cu);
     }
   
     /***************************************************
      *                                                 *
-     *  Front-end setup:		               *
+     *  Front-end setup:                               *
      *                                                 *
      ***************************************************/
 
     public javafe.parser.PragmaParser makePragmaParser() {
-	return new rcc.parser.RccPragmaParser();
+        return new rcc.parser.RccPragmaParser();
     }
     /*
       public javafe.tc.TypeCheck makeTypeCheck() {
-	return new rcc.tc.TypeCheck();
+        return new rcc.tc.TypeCheck();
     }
     */
     
     /***************************************************
      *                                                 *
-     * Main processing code:			       *
+     * Main processing code:                               *
      *                                                 *
      ***************************************************/
 
@@ -133,17 +133,17 @@ public class Main extends javafe.SrcTool {
      **/
     //@ requires elemsnonnull(args)
     public static void main(String[] args) {
-	//new rcc.tc.Types();
-	//System.out.println ("main,"+args[2]);
-	javafe.SrcTool t = new Main();
+        //new rcc.tc.Types();
+        //System.out.println ("main,"+args[2]);
+        javafe.SrcTool t = new Main();
 
-	t.run(args);
+        t.run(args);
     }
 
 
     /***************************************************
      *                                                 *
-     * SrcTool-instance specific processing:	       *
+     * SrcTool-instance specific processing:               *
      *                                                 *
      ***************************************************/
 
@@ -155,8 +155,8 @@ public class Main extends javafe.SrcTool {
      ** nested within outside types.<p>
      **/
     public void handleTD(TypeDecl td) {
-	//System.out.println ("handleTD");
-	
+        //System.out.println ("handleTD");
+        
       TypeSig sig = TypeCheck.inst.getSig(td);
       sig.typecheck();
 

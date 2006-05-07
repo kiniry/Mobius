@@ -11,7 +11,7 @@ package escwizard;
 abstract class Instr {
   //@ ensures RES != null;
   static Instr make(/*@ non_null */ String instr,
-		    /*@ non_null */ FileCollection sources) {
+                    /*@ non_null */ FileCollection sources) {
     int k, start = 0;
 
     k = next(instr, start, ' ');
@@ -41,7 +41,7 @@ abstract class Instr {
 
     if (start == instr.length()) {
       return new NowarnInstr(fileidNowarn, lineNowarn, colNowarn,
-			     errorType, dr);
+                             errorType, dr);
     } else if (! instr.startsWith(" ", start)) {
       error(instr);
     }
@@ -78,13 +78,13 @@ abstract class Instr {
 
     if (start == instr.length()) {
       return new PragmaInstr(fileidNowarn, lineNowarn, colNowarn,
-			     errorType, dr,
-			     fileidPragma, placement, linePragma, colPragma,
-			     idPragma, pragma);
+                             errorType, dr,
+                             fileidPragma, placement, linePragma, colPragma,
+                             idPragma, pragma);
     }
 
     error("unrecognized instruction, line too long: " +
-	  instr.substring(start));
+          instr.substring(start));
     //@ unreachable
     return null;
   }
@@ -103,7 +103,7 @@ abstract class Instr {
     for (int i = 0; i < s.length(); i++) {
       char ch = s.charAt(i);
       if (ch < '0' || '9' < ch) {
-	error("expected number, found '" + s + "'");
+        error("expected number, found '" + s + "'");
       }
       k = 10*k + ch - '0';
     }
@@ -124,9 +124,9 @@ abstract class Instr {
   //@ ensures RES != null ==> RES.fileid < sources.n;
   //@ ensures RES != null ==> RES.next == null;
   WorkItem processNowarn(int fileid, int line, int col,
-			 /*@ non_null */ String errorType,
-			 /*@ non_null */ String reason,
-			 /*@ non_null */ FileCollection sources) {
+                         /*@ non_null */ String errorType,
+                         /*@ non_null */ String reason,
+                         /*@ non_null */ FileCollection sources) {
     FileInfo fi = sources.getFileInfo(fileid);
 
     if (fi.getFilename().equals("nofile"))
@@ -134,8 +134,8 @@ abstract class Instr {
 
     if (!fi.canModify()) {
       AnnotationInserter.error("Wizard work item requires modifying file '" +
-			       fi.getFilename() +
-			       "', which wizard was instructed not to modify");
+                               fi.getFilename() +
+                               "', which wizard was instructed not to modify");
     }
 
     String s = "/*#(" + reason + ") nowarn " + errorType + " */";
@@ -146,17 +146,17 @@ abstract class Instr {
     for (; offset < data.length; offset++) {
       char ch = (char)data[offset];
       if (ch == '\n') {
-	// Note:  initial space is needed so that first pragma slash doesn't
-	// become the second slash of a division operator found at the end of
-	// a line.
-	s = " " + s;
-	break;
+        // Note:  initial space is needed so that first pragma slash doesn't
+        // become the second slash of a division operator found at the end of
+        // a line.
+        s = " " + s;
+        break;
       } else if (ch == '/' && offset+1 < data.length) {
-	char chch = (char)data[offset+1];
-	if (chch == '/' || chch == '*') {
-	  s = s + " ";
-	  break;
-	}
+        char chch = (char)data[offset+1];
+        if (chch == '/' || chch == '*') {
+          s = s + " ";
+          break;
+        }
       }
     }
     return new WorkItem(fileid, offset, s);

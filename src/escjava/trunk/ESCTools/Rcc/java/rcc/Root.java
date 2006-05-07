@@ -5,7 +5,7 @@ package rcc;
 public class Root {
   Main x1;
   
-	  // SNF Tue Jul 13 12:05:04 1999XXXrcc.ast.EscPrettyPrint x5;
+          // SNF Tue Jul 13 12:05:04 1999XXXrcc.ast.EscPrettyPrint x5;
 
       rcc.ast.CloneAST x7;
     rcc.ast.EqualsAST x8;

@@ -26,55 +26,55 @@ import javafe.ast.ExprVec;
 class  RccPragmaParserWithPrint extends RccPragmaParser {
     
     public boolean getNextPragma(Token dst) {
-	
-	CloneWithSubstitution a=new CloneWithSubstitution(new MultipleSubstitution(SubstitutionVec.make())) ;
-	
-	EqualsAST e=new EqualsAST();
-	
-	
-	
-	if (!super.getNextPragma(dst)) {
-	    return false;
-	} else {
-	    
-	    switch (((ASTNode)dst.auxVal).getTag()) {
-	    case TagConstants.NOWARNPRAGMA:
-		break;
-		
-	    case TagConstants.GUARDEDBYMODIFIERPRAGMA: {
-		Assert.notFalse(e.equals(a.clone(((GuardedByModifierPragma)dst.auxVal).expressions,true),((GuardedByModifierPragma)dst.auxVal).expressions));
-		break;
-	    }
-	    
-	    case TagConstants.HOLDSSTMTPRAGMA: {
-		Assert.notFalse(e.
-				equals(a.clone(((HoldsStmtPragma)dst.auxVal).expressions,
-					       true),
-				       ((HoldsStmtPragma)dst.auxVal).expressions)
-				);
-		break;		
-	    }
-	    
-	    case TagConstants.REQUIRESMODIFIERPRAGMA: {
-		Assert.notFalse(e.
-				equals((ExprVec)a.
-				       clone(
-					     ((RequiresModifierPragma)dst.auxVal).expressions,
-					     true),
-				       ((RequiresModifierPragma)dst.auxVal).expressions
-				       )
-				);
-		break;
-	    }
-	    
-	    default:
-		ErrorSet.fatal(dst.startingLoc, "Unrecognized pragma" + ((ASTNode)dst.auxVal).getTag());
-	    }
-	    
-	    
-	    return true;
-	}
-	
+        
+        CloneWithSubstitution a=new CloneWithSubstitution(new MultipleSubstitution(SubstitutionVec.make())) ;
+        
+        EqualsAST e=new EqualsAST();
+        
+        
+        
+        if (!super.getNextPragma(dst)) {
+            return false;
+        } else {
+            
+            switch (((ASTNode)dst.auxVal).getTag()) {
+            case TagConstants.NOWARNPRAGMA:
+                break;
+                
+            case TagConstants.GUARDEDBYMODIFIERPRAGMA: {
+                Assert.notFalse(e.equals(a.clone(((GuardedByModifierPragma)dst.auxVal).expressions,true),((GuardedByModifierPragma)dst.auxVal).expressions));
+                break;
+            }
+            
+            case TagConstants.HOLDSSTMTPRAGMA: {
+                Assert.notFalse(e.
+                                equals(a.clone(((HoldsStmtPragma)dst.auxVal).expressions,
+                                               true),
+                                       ((HoldsStmtPragma)dst.auxVal).expressions)
+                                );
+                break;                
+            }
+            
+            case TagConstants.REQUIRESMODIFIERPRAGMA: {
+                Assert.notFalse(e.
+                                equals((ExprVec)a.
+                                       clone(
+                                             ((RequiresModifierPragma)dst.auxVal).expressions,
+                                             true),
+                                       ((RequiresModifierPragma)dst.auxVal).expressions
+                                       )
+                                );
+                break;
+            }
+            
+            default:
+                ErrorSet.fatal(dst.startingLoc, "Unrecognized pragma" + ((ASTNode)dst.auxVal).getTag());
+            }
+            
+            
+            return true;
+        }
+        
     }
 }
 
@@ -82,14 +82,14 @@ class  RccPragmaParserWithPrint extends RccPragmaParser {
 
 public class TestRccPragmaParser {
     public static void main(String[] argv) throws IOException {
-		
-	// DelegatingPrettyPrint p = new javafe.tc.TypePrint();
-	// p.del = new RccPrettyPrint(p, new StandardPrettyPrint(p));
-	DelegatingPrettyPrint p = new RccPrettyPrint();
-	p.del = new StandardPrettyPrint(p);
-	PrettyPrint.inst = p;
-	
-	TestParse.lexer = new Lex(new RccPragmaParserWithPrint(), true);
-	TestParse.main(argv);
+                
+        // DelegatingPrettyPrint p = new javafe.tc.TypePrint();
+        // p.del = new RccPrettyPrint(p, new StandardPrettyPrint(p));
+        DelegatingPrettyPrint p = new RccPrettyPrint();
+        p.del = new StandardPrettyPrint(p);
+        PrettyPrint.inst = p;
+        
+        TestParse.lexer = new Lex(new RccPragmaParserWithPrint(), true);
+        TestParse.main(argv);
     }
 }

@@ -52,7 +52,7 @@ class FileCollection {
     File file = new File(filename);
     for (int i = 0; i < n; i++) {
       if (file.equals(fi[i].file)) {
-	return i;
+        return i;
       }
     }
     return addW(file, false);

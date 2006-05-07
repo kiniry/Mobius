@@ -34,7 +34,7 @@ public class AnnLinks extends javafe.SrcTool {
     
     /***************************************************
      *                                                 *
-     * Generating an options message:		       *
+     * Generating an options message:                       *
      *                                                 *
      ***************************************************/
     
@@ -50,14 +50,14 @@ public class AnnLinks extends javafe.SrcTool {
      ** <code>System.err</code>. <p>
      **/
     public void showOptions() {
-	super.showOptions();
-	System.err.println("");
+        super.showOptions();
+        System.err.println("");
     }
     
     
     /***************************************************
      *                                                 *
-     * Option processing:			       *
+     * Option processing:                               *
      *                                                 *
      ***************************************************/
     
@@ -68,9 +68,9 @@ public class AnnLinks extends javafe.SrcTool {
      ** specification of this routine.<p>
      **/
     public int processOption(String option, String[] args, int offset) {
-	
-	// Pass on unrecognized options:
-	return super.processOption(option, args, offset);
+        
+        // Pass on unrecognized options:
+        return super.processOption(option, args, offset);
     }
     
     
@@ -81,13 +81,13 @@ public class AnnLinks extends javafe.SrcTool {
      ** superclass implementation is called.
      **/
     public void handleCU(CompilationUnit cu) {
-	//System.out.println ("handleCU"+cu );
-	super.handleCU(cu);
+        //System.out.println ("handleCU"+cu );
+        super.handleCU(cu);
     }
     
     /***************************************************
      *                                                 *
-     *  Front-end setup: Use ESC stuff	               *
+     *  Front-end setup: Use ESC stuff                       *
      *                                                 *
      ***************************************************/
     
@@ -95,7 +95,7 @@ public class AnnLinks extends javafe.SrcTool {
      ** Returns the EscPragmaParser.
      **/
     public javafe.parser.PragmaParser makePragmaParser() {
-	return new rcc.parser.RccPragmaParser();
+        return new rcc.parser.RccPragmaParser();
     }
     
   
@@ -105,9 +105,9 @@ public class AnnLinks extends javafe.SrcTool {
      ** <code>PrettyPrint.inst</code> to.
      **/
     public PrettyPrint makePrettyPrint() {
-	DelegatingPrettyPrint p = new RccPrettyPrint();
-	p.del = new StandardPrettyPrint(p);
-	return p;
+        DelegatingPrettyPrint p = new RccPrettyPrint();
+        p.del = new StandardPrettyPrint(p);
+        return p;
     }
     
     /**
@@ -116,13 +116,13 @@ public class AnnLinks extends javafe.SrcTool {
      ** default, returns <code>javafe.tc.TypeCheck</code>.
      **/
     public javafe.tc.TypeCheck makeTypeCheck() {
-	return new rcc.tc.TypeCheck();
+        return new rcc.tc.TypeCheck();
     }
     
     
     /***************************************************
      *                                                 *
-     * Main processing code:			       *
+     * Main processing code:                               *
      *                                                 *
      ***************************************************/
     
@@ -135,15 +135,15 @@ public class AnnLinks extends javafe.SrcTool {
      **/
     //@ requires elemsnonnull(args)
     public static void main(String[] args) {
-	//System.out.println ("main,"+args[2]);
-	javafe.SrcTool t = new AnnLinks();
-	t.run(args);
+        //System.out.println ("main,"+args[2]);
+        javafe.SrcTool t = new AnnLinks();
+        t.run(args);
     }
     
     
     /***************************************************
      *                                                 *
-     * SrcTool-instance specific processing:	       *
+     * SrcTool-instance specific processing:               *
      *                                                 *
      ***************************************************/
     
@@ -155,13 +155,13 @@ public class AnnLinks extends javafe.SrcTool {
      ** nested within outside types.<p>
      **/
     public void handleTD(TypeDecl td) {
-	//System.out.println ("handleTD");
-	
-	TypeSig sig = TypeCheck.inst.getSig(td);
-	sig.typecheck();
-	
-	AnnLinkVisitor v = new AnnLinkVisitor();
-	td.accept(v);
+        //System.out.println ("handleTD");
+        
+        TypeSig sig = TypeCheck.inst.getSig(td);
+        sig.typecheck();
+        
+        AnnLinkVisitor v = new AnnLinkVisitor();
+        td.accept(v);
     }
 }
 
@@ -175,68 +175,68 @@ public class AnnLinks extends javafe.SrcTool {
 class AnnLinkVisitor extends DefaultVisitor {
     
     public void visitModifierPragma(ModifierPragma x) {
-	super.visitModifierPragma(x);
-	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	javafe.ast.PrettyPrint.inst.print(baos, 0, x);
-	System.out.println("AnnText "+convert(x.getStartLoc())+" "+baos.toString());
+        super.visitModifierPragma(x);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        javafe.ast.PrettyPrint.inst.print(baos, 0, x);
+        System.out.println("AnnText "+convert(x.getStartLoc())+" "+baos.toString());
     }
 
     
     public void visitTypeDecl(TypeDecl x) {
-	super.visitTypeDecl(x);
-	reportThreadLocalModifier(x);
-	System.out.println("DeclName "+convert(x.getStartLoc())+" type "+x.id);
+        super.visitTypeDecl(x);
+        reportThreadLocalModifier(x);
+        System.out.println("DeclName "+convert(x.getStartLoc())+" type "+x.id);
     }
 
     public void visitFieldDecl(FieldDecl x) {
-	super.visitFieldDecl(x);
-	if (!Modifiers.isStatic(x.modifiers)) {
-	    reportWarnDecl(x.getStartLoc(), x.parent.getStartLoc());
-	}
+        super.visitFieldDecl(x);
+        if (!Modifiers.isStatic(x.modifiers)) {
+            reportWarnDecl(x.getStartLoc(), x.parent.getStartLoc());
+        }
     }
     
     private ModifierPragma searchModifierPragmas(ModifierPragmaVec x, String contains) {
-	if( x != null ) {
-	    for(int i=0; i<x.size(); i++) {
-		ModifierPragma mp = x.elementAt(i);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		javafe.ast.PrettyPrint.inst.print(baos, 0, mp);
-		if( baos.toString().indexOf(contains) >= 0 )
-		    return mp;
-	    }
-	}
-	return null;    
+        if( x != null ) {
+            for(int i=0; i<x.size(); i++) {
+                ModifierPragma mp = x.elementAt(i);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                javafe.ast.PrettyPrint.inst.print(baos, 0, mp);
+                if( baos.toString().indexOf(contains) >= 0 )
+                    return mp;
+            }
+        }
+        return null;    
     }
     
     private void reportThreadLocalModifier(TypeDecl x) {
-	if( x.pmodifiers != null ) 
-	    for(int i=0; i<x.pmodifiers.size(); i++)
-		visitModifierPragma(x.pmodifiers.elementAt(i));
-	ModifierPragma mp = searchModifierPragmas(x.pmodifiers, "thread_local");
-	if( mp != null ) {
-	    reportDeclAnn( x.getStartLoc(), mp.getStartLoc());
-	}
+        if( x.pmodifiers != null ) 
+            for(int i=0; i<x.pmodifiers.size(); i++)
+                visitModifierPragma(x.pmodifiers.elementAt(i));
+        ModifierPragma mp = searchModifierPragmas(x.pmodifiers, "thread_local");
+        if( mp != null ) {
+            reportDeclAnn( x.getStartLoc(), mp.getStartLoc());
+        }
     }
 
         
     private void reportWarnDecl(int locdecl, int locann) {
-	if( locdecl != Location.NULL && !Location.isWholeFileLoc(locdecl) &&
-	    locann != Location.NULL && !Location.isWholeFileLoc(locann) ) {
-	    System.out.println("WarnDecl "+convert(locdecl)+" "+convert(locann));
-	}
+        if( locdecl != Location.NULL && !Location.isWholeFileLoc(locdecl) &&
+            locann != Location.NULL && !Location.isWholeFileLoc(locann) ) {
+            System.out.println("WarnDecl "+convert(locdecl)+" "+convert(locann));
+        }
     }
     
     private void reportDeclAnn(int locdecl, int locann) {
-	if( locdecl != Location.NULL && !Location.isWholeFileLoc(locdecl) &&
-	    locann != Location.NULL && !Location.isWholeFileLoc(locann) ) {
-	    System.out.println("DeclAnn "+convert(locdecl)+" "+convert(locann));
-	}
+        if( locdecl != Location.NULL && !Location.isWholeFileLoc(locdecl) &&
+            locann != Location.NULL && !Location.isWholeFileLoc(locann) ) {
+            System.out.println("DeclAnn "+convert(locdecl)+" "+convert(locann));
+        }
     }
     
     private String convert(int loc) {
-	return Location.toFileName(loc)+
-	    " "+Location.toLineNumber(loc)+
-	    " "+Location.toColumn(loc);
+        return Location.toFileName(loc)+
+            " "+Location.toLineNumber(loc)+
+            " "+Location.toColumn(loc);
     }
 }
 

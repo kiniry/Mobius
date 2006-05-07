@@ -126,7 +126,7 @@ public class Ambient implements AnAmbient {
     
   private Ambient findMatchingParent(OutCap outCap) {
       if ((parent != null) && getName().matches(outCap)) {
-	  return parent; 
+          return parent; 
     } else {
       return null;
     }
@@ -149,7 +149,7 @@ public class Ambient implements AnAmbient {
   // Move this ambient above parent.
       
       if (!ownAgents.contains(agent)) 
-	{return false;} // arbitrates race
+        {return false;} // arbitrates race
     Ambient newParent = waitForParent().movingOut(this, parentCap);
     if (newParent != null) {
       insertInto(newParent);
@@ -178,7 +178,7 @@ public class Ambient implements AnAmbient {
   public boolean moveIn(Agent agent, InCap receiverCap) throws AmbitException {
   // Move this ambient inside receivingAmbient; they are currently siblings.
       if (!ownAgents.contains(agent)) 
-	{return false;} // arbitrates race
+        {return false;} // arbitrates race
     Ambient newParent = waitForParent().movingIn(this, receiverCap);
     if (newParent != null) {
       insertInto(newParent);
@@ -313,14 +313,14 @@ public class Ambient implements AnAmbient {
     long now = System.currentTimeMillis();
     if (screamMsg.equals("")) { screamMsg = console.getState(); }
     // this may actually be a race.
-  	console.appendOutput(name.toString() + ": " + screamMsg  
-	  //-- + "  @" + Long.toString(now) 
-	  + "\n");
+          console.appendOutput(name.toString() + ": " + screamMsg  
+          //-- + "  @" + Long.toString(now) 
+          + "\n");
   }
 
   public String toString() {
     // Unsynchronized, just for debugging: can display an inconsistent configuration.
-			String string = name.toString() + "[";
+                        String string = name.toString() + "[";
     Enumeration enumAgents = ownAgents.elements();
     boolean hasAgents = enumAgents.hasMoreElements();
     while (enumAgents.hasMoreElements()) {

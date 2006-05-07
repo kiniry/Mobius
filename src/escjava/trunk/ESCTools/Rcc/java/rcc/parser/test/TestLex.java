@@ -47,13 +47,13 @@ public class TestLex {
     for(int i = 0; i < esckeywords.length; i++) {
      int t = i + escjava.ast.TagConstants.FIRSTESCKEYWORDTAG;
      Assert.notFalse(!esckeywords.equals(escjava.ast.TagConstants.toString(t)),
-		     "Ouch on " + esckeywords[i] + " != "
-		     + escjava.ast.TagConstants.toString(t));
+                     "Ouch on " + esckeywords[i] + " != "
+                     + escjava.ast.TagConstants.toString(t));
     }
 
     Lex ll = new Lex(new EscPragmaParser(), false);
     ll.restart(new CorrelatedReader(new FileInputStream(argv[argi]),
-				    argv[argi]));
+                                    argv[argi]));
 
     Random r = new Random(System.currentTimeMillis());
 
@@ -61,29 +61,29 @@ public class TestLex {
     int la = ll.lookahead(lac);
     while (ll.ttype != TagConstants.EOF) {
       Assert.notFalse(lac != 0 || ll.ttype == la,
-		      "Bad lookahead, is " + TagConstants.toString(ll.ttype)
-		      + ", expected " + TagConstants.toString(la));
+                      "Bad lookahead, is " + TagConstants.toString(ll.ttype)
+                      + ", expected " + TagConstants.toString(la));
 
       // Print token
       System.out.print(Location.toFileName(ll.startingLoc));
       if (! Location.isWholeFileLoc(ll.startingLoc))
-	System.out.print(":" + Location.toLineNumber(ll.startingLoc));
+        System.out.print(":" + Location.toLineNumber(ll.startingLoc));
       System.out.print(": ");
       int tag = ((ASTNode)ll.auxVal).getTag();
       if (ll.auxVal instanceof TypeDeclElemPragma)
-	PrettyPrint.inst.print(System.out, 0, (TypeDeclElemPragma)ll.auxVal);
+        PrettyPrint.inst.print(System.out, 0, (TypeDeclElemPragma)ll.auxVal);
       else if (ll.auxVal instanceof ModifierPragma)
-	PrettyPrint.inst.print(System.out, 0, (ModifierPragma)ll.auxVal);
+        PrettyPrint.inst.print(System.out, 0, (ModifierPragma)ll.auxVal);
       else if (ll.auxVal instanceof StmtPragma)
-	PrettyPrint.inst.print(System.out, 0, (StmtPragma)ll.auxVal);
+        PrettyPrint.inst.print(System.out, 0, (StmtPragma)ll.auxVal);
       else 
-	Assert.notFalse(false, "Unexpected tag " + TagConstants.toString(tag));
+        Assert.notFalse(false, "Unexpected tag " + TagConstants.toString(tag));
       System.out.println("");
 
       ll.getNextToken();
       if (lac == 0) {
-	lac = (lookahead ? Math.abs(r.nextInt()) % 9 + 1 : 0);
-	la = ll.lookahead(lac);
+        lac = (lookahead ? Math.abs(r.nextInt()) % 9 + 1 : 0);
+        la = ll.lookahead(lac);
       } else lac--;
       ll.zzz();
     }
@@ -94,7 +94,7 @@ public class TestLex {
       LexicalPragma lp = lpv.elementAt(i);
       System.out.print(Location.toFileName(lp.getStartLoc()));
       if (! Location.isWholeFileLoc(lp.getStartLoc()))
-	System.out.print(":" + Location.toLineNumber(lp.getStartLoc()));
+        System.out.print(":" + Location.toLineNumber(lp.getStartLoc()));
       System.out.print(": ");
       PrettyPrint.inst.print(System.out, lp);
     }

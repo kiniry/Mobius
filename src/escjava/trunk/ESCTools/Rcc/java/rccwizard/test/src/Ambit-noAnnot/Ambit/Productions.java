@@ -25,7 +25,7 @@ public class Productions {
       // setup state
       console.setupState();
     } catch (SynexException ex) {
-	  console.setOutput("Exception at setup: " + ex.getMessage());
+          console.setOutput("Exception at setup: " + ex.getMessage());
     }
   }
   
@@ -201,7 +201,7 @@ public class Productions {
         new Choice(new GrammarList(
           new Sequence(new GrammarList(
             new Terminal(new TokenDelim('&', scanner)),
-            new Store(1, term)	
+            new Store(1, term)        
           )),
           new Sequence(null)
         ))
@@ -265,7 +265,7 @@ public class Productions {
         new Choice(new GrammarList(
           new Sequence(new GrammarList(
             new Terminal(new TokenDelim('|', scanner)),
-            new Store(1, process)	
+            new Store(1, process)        
           )),
           new Sequence(null)
         ))
@@ -371,7 +371,7 @@ public class Productions {
         new Store(0, new TerminalFamily(new TokenIde(""))),
         new Choice(new GrammarList(
           new Sequence(new GrammarList(
-            new Terminal(new TokenDelim('.', scanner)),	
+            new Terminal(new TokenDelim('.', scanner)),        
             new Store(1, process)
           )),
           new Store(1, newProcess)
@@ -384,7 +384,7 @@ public class Productions {
       new Sequence(new GrammarList(
         new Terminal(new TokenKey("rec", scanner)),
         new Store(0, new TerminalFamily(new TokenIde(""))),
-        new Terminal(new TokenDelim('.', scanner)),	
+        new Terminal(new TokenDelim('.', scanner)),        
         new Store(1, simpleProcess)
       ))
     );
@@ -400,7 +400,7 @@ public class Productions {
     optDotSimpleProcess.production("optDotSimpleProcess", ActionFetch.fetch0, 1, 0,
       new Choice(new GrammarList(
         new Sequence(new GrammarList(
-          new Terminal(new TokenDelim('.', scanner)),	
+          new Terminal(new TokenDelim('.', scanner)),        
           new Store(0, simpleProcess)
         )),
         new Store(0, nullProcess)

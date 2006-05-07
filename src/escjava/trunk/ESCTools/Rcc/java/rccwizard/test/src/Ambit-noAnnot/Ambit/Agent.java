@@ -107,11 +107,11 @@ public class Agent extends Thread {
     try {
       code.exec(this, initEnv);
     } catch (ExecException e) {
-	  scream(e.getMessage() + "\n");
-	  completed();
-	} catch (java.lang.Exception ex) {
-	  scream("Java exception: " + ex.getMessage() + "\n");
-	  completed();
+          scream(e.getMessage() + "\n");
+          completed();
+        } catch (java.lang.Exception ex) {
+          scream("Java exception: " + ex.getMessage() + "\n");
+          completed();
 //    ex.printStackTrace();
     }
   }
@@ -129,9 +129,9 @@ public class Agent extends Thread {
   public void scream(String screamMsg) {
     long now = System.currentTimeMillis();
     if (screamMsg.equals("")) { screamMsg = console.getState(); }
-	console.appendOutput(ambient.getName() + "'s agent: " + screamMsg
-	  //-- + "      @" + Long.toString(now) 
-	  + "\n");
+        console.appendOutput(ambient.getName() + "'s agent: " + screamMsg
+          //-- + "      @" + Long.toString(now) 
+          + "\n");
   }
       
   public String toString() {

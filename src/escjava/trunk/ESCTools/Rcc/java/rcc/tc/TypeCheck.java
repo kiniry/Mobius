@@ -21,9 +21,9 @@ public class TypeCheck extends javafe.tc.TypeCheck {
      ** Also initializes PrepTypeDeclaration.
      **/
     public TypeCheck() {
-	super();
-	inst = this;
-	new rcc.tc.PrepTypeDeclaration();
+        super();
+        inst = this;
+        new rcc.tc.PrepTypeDeclaration();
     }
     
     
@@ -33,7 +33,7 @@ public class TypeCheck extends javafe.tc.TypeCheck {
      ** <code>rcc.tc.FlowInsensitiveChecks</code>.
      **/
     public javafe.tc.FlowInsensitiveChecks makeFlowInsensitiveChecks() {
-	return new rcc.tc.FlowInsensitiveChecks();
+        return new rcc.tc.FlowInsensitiveChecks();
     }
     
     /**
@@ -43,28 +43,28 @@ public class TypeCheck extends javafe.tc.TypeCheck {
      ** Note: pmodifiers may be null. <p>
      **/
     public boolean canAccess(/*@ non_null @*/ TypeSig from, 
-			     /*@ non_null @*/ TypeSig target,
-			     int modifiers,
-			     ModifierPragmaVec pmodifiers) {
-	if (FlowInsensitiveChecks.inAnnotation) {
-	    return true;
-	}
-	
-	if (Modifiers.isPublic(modifiers))
-	    return true;
-	if (Modifiers.isProtected(modifiers) && from.isSubtypeOf(target))
-	    return true;
-	if (!Modifiers.isPrivate(modifiers))  // aka, protected, package
-	    return from.inSamePackageAs(target);
-	
-	/*
-	 * private case -- have same enclosing class? [1.1]:
-	 */
-	while (from.enclosingType!=null)
-	    from = from.enclosingType;
-	while (target.enclosingType!=null)
-      	    target = target.enclosingType;
-	return target==from;
+                             /*@ non_null @*/ TypeSig target,
+                             int modifiers,
+                             ModifierPragmaVec pmodifiers) {
+        if (FlowInsensitiveChecks.inAnnotation) {
+            return true;
+        }
+        
+        if (Modifiers.isPublic(modifiers))
+            return true;
+        if (Modifiers.isProtected(modifiers) && from.isSubtypeOf(target))
+            return true;
+        if (!Modifiers.isPrivate(modifiers))  // aka, protected, package
+            return from.inSamePackageAs(target);
+        
+        /*
+         * private case -- have same enclosing class? [1.1]:
+         */
+        while (from.enclosingType!=null)
+            from = from.enclosingType;
+        while (target.enclosingType!=null)
+                  target = target.enclosingType;
+        return target==from;
     }
     
 }

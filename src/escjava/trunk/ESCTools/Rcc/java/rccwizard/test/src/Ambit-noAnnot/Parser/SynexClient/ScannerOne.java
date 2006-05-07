@@ -7,13 +7,13 @@ package Parser.SynexClient;
 |   The ascii characters are divided into a fixed number of 
 |   character classes which default to the following table:
 |
-|     Blank	HT LF FF CR SP
-|     Reserved	" ' ~ DEL
-|     Delimiter	( )
-|     Special	# $ % & * + - / : = < > @ \ ^ | , . ; [ ] _ { } ? !
-|     Digit	0..9
-|     Letter	A..Z ` a..z
-|     Illegal	all the others
+|     Blank        HT LF FF CR SP
+|     Reserved        " ' ~ DEL
+|     Delimiter        ( )
+|     Special        # $ % & * + - / : = < > @ \ ^ | , . ; [ ] _ { } ? !
+|     Digit        0..9
+|     Letter        A..Z ` a..z
+|     Illegal        all the others
 |
 |   (N.B. Special characters can be changed to Delimiter by addDelimiter().)
 |
@@ -21,25 +21,25 @@ package Parser.SynexClient;
 |
 |     StringChar  is either any single character that is not Illegal
 |                 or one of `'` `"` `\`, or is one of the pairs of
-|		  characters `\'` `\"` `\\`.
+|                  characters `\'` `\"` `\\`.
 |     Comment     is, recursively, a sequence of non-Illegal chars and
-|		  Comments enclosed between `(*` and `*)`.
-|     Eof	  is the end-of-file token (optionally generated)
+|                  Comments enclosed between `(*` and `*)`.
+|     Eof          is the end-of-file token (optionally generated)
 |
 |  The stream of input characters is split into "lexemes" by always
 |  extracting the longest prefix that is a legal lexeme.
 |  The following fixed set of lexemes is recognized:
 |
-|     Space	  a sequence of Blanks and Comments
-|     AlphaNum	  a sequence of Letters and Digits starting with a Letter
-|     Symbol	  a sequence of Specials
-|     Char	  a single StringChars enclosed between two `'`
-|     String	  a sequence of StringChars enclosed betweenn two `"`
-|     Nat	  a sequence of Digits
-|     Int	  a Nat, possibly preceded by a single `~`
-|     Real	  an Int followed by `.` and a Nat
-|     Delimiter	  a single Delimiter character
-|     Eof	  end-of-file (optionally generated)
+|     Space          a sequence of Blanks and Comments
+|     AlphaNum          a sequence of Letters and Digits starting with a Letter
+|     Symbol          a sequence of Specials
+|     Char          a single StringChars enclosed between two `'`
+|     String          a sequence of StringChars enclosed betweenn two `"`
+|     Nat          a sequence of Digits
+|     Int          a Nat, possibly preceded by a single `~`
+|     Real          an Int followed by `.` and a Nat
+|     Delimiter          a single Delimiter character
+|     Eof          end-of-file (optionally generated)
 |
 |  Finally, the scanner produces "tokens" from the stream of lexemes:
 |
@@ -65,11 +65,11 @@ package Parser.SynexClient;
 |    LOOP
 |      TRY
 |        SynScan.FirstPrompt();
-| 	 IF SynScan.GetTokenEof() THEN RAISE SynScan.NoReader END;
-|	 (* ... *)
+|          IF SynScan.GetTokenEof() THEN RAISE SynScan.NoReader END;
+|         (* ... *)
 |        (* parse, execute, and print *)
-|	 (* ... *)
-|    	 SynWr.Flush(swr);
+|         (* ... *)
+|             SynWr.Flush(swr);
 |      EXCEPT
 |      | SynScan.Fail => (* Continue. *)
 |      | SynScan.NoReader => EXIT;

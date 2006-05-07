@@ -21,25 +21,25 @@ public class GhostEnv extends EnvForTypeSig {
     
     /***************************************************
      *                                                 *
-     * Creation:				       *
+     * Creation:                                       *
      *                                                 *
      ***************************************************/
     
     public GhostEnv(/*@ non_null @*/ Env parent,
-		    /*@ non_null @*/ javafe.tc.TypeSig peer,
-				  boolean staticContext) {
-	super(parent, peer, staticContext);
+                    /*@ non_null @*/ javafe.tc.TypeSig peer,
+                                  boolean staticContext) {
+        super(parent, peer, staticContext);
     }
     
     /** for instantiating a class only */
     public GhostEnv(/*@ non_null @*/ Env parent,
-		    /*@ non_null @*/ javafe.tc.TypeSig peer) {
-	super(parent, peer, true);
+                    /*@ non_null @*/ javafe.tc.TypeSig peer) {
+        super(parent, peer, true);
     }  
   
     /***************************************************
      *                                                 *
-     * Debugging functions:			       *
+     * Debugging functions:                               *
      *                                                 *
      ***************************************************/
     
@@ -48,15 +48,15 @@ public class GhostEnv extends EnvForTypeSig {
      ** is intended only for debugging use.
      **/
     public void display() {
-	parent.display();
-	System.out.println("[[ extended with the (ghost) bindings of type "
-			   + peer.getExternalName() + " ]]");
+        parent.display();
+        System.out.println("[[ extended with the (ghost) bindings of type "
+                           + peer.getExternalName() + " ]]");
     }
     
     
     /***************************************************
      *                                                 *
-     * Code to locate our ghost fields by name:	       *
+     * Code to locate our ghost fields by name:               *
      *                                                 *
      ***************************************************/
     
@@ -67,79 +67,79 @@ public class GhostEnv extends EnvForTypeSig {
      ** Excluded may be null.
      **/
     public FieldDecl getGhostField(String n, FieldDecl excluded) {
-	Enumeration e = collectGhostFields().elements();
-	
-	while (e.hasMoreElements()) {
-	    FieldDecl f = (FieldDecl)e.nextElement();
+        Enumeration e = collectGhostFields().elements();
+        
+        while (e.hasMoreElements()) {
+            FieldDecl f = (FieldDecl)e.nextElement();
 
-	    if (!f.id.toString().equals(n))
-		continue;
-	    
-	    if (f!=excluded)
-		return f;
-	}	
-	
-	return null;
+            if (!f.id.toString().equals(n))
+                continue;
+            
+            if (f!=excluded)
+                return f;
+        }        
+        
+        return null;
     }
     
     
     /***************************************************
      *                                                 *
-     * Code to collect all our ghost fields:	       *
+     * Code to collect all our ghost fields:               *
      *                                                 *
      ***************************************************/
     
-    private Hashtable fields;	// used like a set
+    private Hashtable fields;        // used like a set
     
     /**
      ** Add all new ghost fields found in s (including its supertypes)
      ** to fields.
      **/
     private void collectGhostFields(javafe.tc.TypeSig s) {
-	// Iterate over all TypeDeclElems in s:
-	TypeDecl d = s.getTypeDecl();
-	TypeDeclElemVec elems = d.elems;
-	for (int i=0; i<elems.size(); i++) {
-	  TypeDeclElem elem = elems.elementAt(i);
-	  if (elem instanceof GhostDeclPragma) {
-	    FieldDecl ghost = ((GhostDeclPragma)elem).decl;
-	    if (!fields.containsKey(ghost)) {
-	      fields.put(ghost, ghost);
-	    }
-	  }
-	}
+        // Iterate over all TypeDeclElems in s:
+        TypeDecl d = s.getTypeDecl();
+        TypeDeclElemVec elems = d.elems;
+        for (int i=0; i<elems.size(); i++) {
+          TypeDeclElem elem = elems.elementAt(i);
+          if (elem instanceof GhostDeclPragma) {
+            FieldDecl ghost = ((GhostDeclPragma)elem).decl;
+            if (!fields.containsKey(ghost)) {
+              fields.put(ghost, ghost);
+            }
+          }
+        }
 
-	
-	/*
-	  // Now recursive to all supertypes:
-	if (d instanceof ClassDecl) {
-	    TypeName superClass = ((ClassDecl)d).superClass;
-	    if (superClass!=null)
-		collectGhostFields(TypeSig.getSig(superClass));
-	}
-	
-	for (int i=0; i<d.superInterfaces.size(); i++)
-	    collectGhostFields(TypeSig.getSig(
-					      d.superInterfaces.elementAt(i) ));
-	*/
+        
+        /*
+          // Now recursive to all supertypes:
+        if (d instanceof ClassDecl) {
+            TypeName superClass = ((ClassDecl)d).superClass;
+            if (superClass!=null)
+                collectGhostFields(TypeSig.getSig(superClass));
+        }
+        
+        for (int i=0; i<d.superInterfaces.size(); i++)
+            collectGhostFields(TypeSig.getSig(
+                                              d.superInterfaces.elementAt(i) ));
+        */
     }
     
     /**
      ** Return all our ghost fields (including our supertypes) as "set".
      **/
     private Hashtable collectGhostFields() {
-	if (fields!=null)
-	    return fields;
-	
-	fields = new Hashtable(5);
-	collectGhostFields(peer);
-	return fields;
+        if (fields!=null)
+            return fields;
+        
+        fields = new Hashtable(5);
+        collectGhostFields(peer);
+        return fields;
     }
     
     
     /***************************************************
      *                                                 *
-     * Misc. routines:				       *
+     * Misc. routines:                                       *
      *                                                 *
      ***************************************************/
     
@@ -151,20 +151,20 @@ public class GhostEnv extends EnvForTypeSig {
      ** faster.
      **/
     public static boolean isGhostField(FieldDecl field) {
-	TypeDecl d = field.getParent();
-	
-	TypeDeclElemVec elems = d.elems;
-	for (int i=0; i<elems.size(); i++) {
-	    TypeDeclElem elem = elems.elementAt(i);
-	    if (elem instanceof GhostDeclPragma) {
-		FieldDecl ghost = ((GhostDeclPragma)elem).decl;
-		if (field==ghost)
-		    return true;
-	    }
-	}
-	return false;
+        TypeDecl d = field.getParent();
+        
+        TypeDeclElemVec elems = d.elems;
+        for (int i=0; i<elems.size(); i++) {
+            TypeDeclElem elem = elems.elementAt(i);
+            if (elem instanceof GhostDeclPragma) {
+                FieldDecl ghost = ((GhostDeclPragma)elem).decl;
+                if (field==ghost)
+                    return true;
+            }
+        }
+        return false;
     }
-	
+        
     
     /**
      ** Override to make ghost fields visible if
@@ -172,12 +172,12 @@ public class GhostEnv extends EnvForTypeSig {
      **/
     protected boolean hasField(Identifier id) {
 
-	if (peer.hasField(id))
-	    return true;
-	
-	if (!FlowInsensitiveChecks.inAnnotation)
-	    return false;
-	
-	return (getGhostField(id.toString(), null) != null);
+        if (peer.hasField(id))
+            return true;
+        
+        if (!FlowInsensitiveChecks.inAnnotation)
+            return false;
+        
+        return (getGhostField(id.toString(), null) != null);
     }
 }
