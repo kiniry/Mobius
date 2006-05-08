@@ -2,6 +2,9 @@
 
 package javafe.parser;
 
+//alx: 
+import javafe.Tool;
+//alx-end
 import javafe.ast.*;
 import javafe.util.StackVector;
 import javafe.util.ErrorSet;
@@ -17,9 +20,23 @@ import javafe.util.Location;
 
 public class ParseUtil
 {
+    //alx: dw if to use the universe type system and with which level
+    //alx: TODO what specs for these fields
+    public int universeLevel=23;
+    public boolean useUniverses=false;
+    // used by parseModifiers() to remember universe modifiers
+    public int[] universeArray = {0,0};
+    //alx-end
+
     public ParseUtil() {
 	//@ set seqModifierPragma.elementType = \type(ModifierPragma);
 	//@ set seqModifierPragma.owner = this;
+    	//alx: dw init universe vars
+    	if (Tool.options!=null) {
+    		universeLevel=Tool.options.universeLevel;
+    		useUniverses=Tool.options.useUniverseTypeSystem;
+    	}
+	//alx-end
     }
 
 
@@ -158,11 +175,36 @@ public class ParseUtil
     //@ modifies modifierPragmas;
     public int parseModifiers(/*@ non_null @*/ Lex l) {
         boolean seenPragma = false;
+    	//alx: dw next 3 variables are used for the universe type system
+    	int nof_universeModifiers=0;
+    	universeArray[0]=0;
+    	universeArray[1]=0;
+
         int modifiers = Modifiers.NONE;
 
         getModifierLoop:
         for(;;) {
             if (l.ttype == TagConstants.MODIFIERPRAGMA) {
+		//alx: dw
+		//handle universe modifiers returned from PragmaParser
+		if (universeLevel%2==0 && l.auxVal instanceof ModifierPragma) {
+		    int tag = ((ModifierPragma) l.auxVal).getTag();
+		    if (tag==TagConstants.PEER || 
+			tag==TagConstants.REP || 
+			tag==TagConstants.READONLY) {
+			if (nof_universeModifiers>1) {
+			    if (universeLevel%5!=0)
+				ErrorSet.error(((ModifierPragma) l.auxVal).getStartLoc(),
+					       "too many Universe type modifiers");
+			    l.getNextToken();
+			    continue getModifierLoop;
+			}
+			universeArray[nof_universeModifiers++]=tag;
+			l.getNextToken();
+			continue getModifierLoop;
+		    }    
+		}
+		//alx-end
                 if (! seenPragma) { 
 			seqModifierPragma.push(); 
 			seenPragma = true; 
@@ -171,12 +213,29 @@ public class ParseUtil
                 l.getNextToken();
                 continue getModifierLoop;
             } else {
+		//alx: dw handle universe modifiers that are used as keywords
+		if (universeLevel%3==0 && (l.ttype==TagConstants.PEER || 
+					   l.ttype==TagConstants.REP || 
+					   l.ttype==TagConstants.READONLY)) {
+		    if (nof_universeModifiers>1) {
+			if (universeLevel%5!=0)
+			    ErrorSet.error(l.startingLoc,
+					   "too many Universe type modifiers");
+			l.getNextToken();
+			continue getModifierLoop;
+		    }
+		    universeArray[nof_universeModifiers++]=l.ttype;
+		    l.getNextToken();
+		    continue getModifierLoop;
+		}
+		//alx-end
 		int i = getJavaModifier(l,modifiers);
 		if (i != 0) {
                     modifiers |= i;
                     continue getModifierLoop;
                 }
             }
+
             // Next token is not a modifier
             if (! seenPragma)
                 modifierPragmas = null;
@@ -237,4 +296,159 @@ public class ParseUtil
 		return sb.toString();
 	}
     }
+
+    //alx: dw parses universes and rejects all other modifiers!!
+    //TODO: what other specs?
+    public void parseUniverses(/*@ non_null @*/ Lex l) {
+    	int loc = l.startingLoc;
+    	int jmods = parseModifiers(l);
+    	if (jmods!=0)
+    		ErrorSet.error(loc,"no java modifiers allowed");
+    	if (modifierPragmas!=null && modifierPragmas.size()!=0)
+    		ErrorSet.error(loc,"only Universe type modifiers allowed");
+    }
+    //alx-end
+    
+    //alx: dw using decorations to save the universe modifiers
+    private static ASTDecoration universeDecoration =
+	new ASTDecoration("universeDecoration");
+    //alx-end
+    
+    //alx: dw sets the universeDecoration of node i
+    //TODO: what other specs?
+    public static /*@ non_null @*/ ASTNode setUniverse(
+		   /*@ non_null @*/ ASTNode i, 
+	           int u) {
+        universeDecoration.set(i,new Integer(u));
+    	return i;
+    }
+    //alx-end
+    
+    //alx: dw sets the universe modifier and array element modifier of i to
+    //   the values in the array. with error-checking!
+    //TODO: what other specs?
+    public static /*@ non_null @*/ ASTNode setUniverse(
+				      /*@ non_null @*/ ASTNode i, 
+				      int[] a, 
+				      /*@ non_null @*/ Type t, int loc) {
+	int tag = t.getTag();
+	boolean reportErrors=Tool.options!=null && 
+	                     Tool.options.universeLevel%5!=0;
+	if (a!=null && !(tag==TagConstants.ARRAYTYPE)) {
+	    if (t instanceof PrimitiveType) {
+		if (a[0]!=0 && reportErrors)
+		    ErrorSet.error(loc,
+			   "primitive types must not have Universe modifiers");
+		return i;
+	    }
+	    if (a[0]!=0)
+		universeDecoration.set(i,new Integer(a[0]));
+	    else
+		universeDecoration.set(i,new Integer(TagConstants.IMPL_PEER));
+	    if (a[1]!=0 && reportErrors)
+		ErrorSet.error(loc,
+		     "only array types can have 2 Universe modifiers");
+	} 
+	else if (a!=null && tag==TagConstants.ARRAYTYPE) {
+	    ArrayType at = (ArrayType ) t;
+	    //primitive types need only the array modifier
+	    if (at.elemType instanceof PrimitiveType) {
+		if (a[0]==0) {
+		    universeDecoration.set(i,
+					 new Integer(TagConstants.IMPL_PEER));
+		    return i;
+		}
+		else if (a[1]!=0 && reportErrors) 
+		    ErrorSet.error(loc,
+		         "only one Universe modifier allowed for "+
+			 "arrays of primitve type");
+		universeDecoration.set(i,new Integer(a[0]));
+	    } 
+	    else {
+		if (a[0]==0) {
+		    universeDecoration.set(i,
+				      new Integer(TagConstants.IMPL_PEER));
+		    elementUniverseDecoration.set(i,
+				      new Integer(TagConstants.IMPL_PEER));
+		    return i;
+		}
+		else if(a[1]==0) {
+		    if (a[0]==TagConstants.REP) {
+			if (reportErrors)
+			    ErrorSet.error(loc,
+				 "rep not allowed for array elements");
+			a[0]=TagConstants.IMPL_PEER;
+		    }
+		    universeDecoration.set(i,
+			    new Integer(TagConstants.IMPL_PEER));
+		    elementUniverseDecoration.set(i,new Integer(a[0]));
+		} else {
+		    if (a[1]==TagConstants.REP) {
+			if (reportErrors)
+			    ErrorSet.error(loc,
+				 "rep not allowed for array elements");
+			a[1]=TagConstants.IMPL_PEER;
+		    }
+		    universeDecoration.set(i,new Integer(a[0]));
+		    elementUniverseDecoration.set(i,new Integer(a[1]));
+		}
+	    }
+	}
+	if (reportErrors && getUniverse(i)==TagConstants.READONLY &&
+	    (i.getTag()==TagConstants.NEWINSTANCEEXPR
+	     || i.getTag()==TagConstants.NEWARRAYEXPR))
+	    ErrorSet.error(i.getStartLoc(),
+                 "readonly not allowed for new expression, except for "+
+		 "array element modifier");
+	return i;
+    }
+    //alx-end
+    
+    //alx: dw sets the universe modifier and array element modifier of i to
+    //   the values in the array. with error-checking!
+    //TODO: what other specs?
+    /*@ 
+      @ requires i.type !=null;
+      @*/
+    public static /*@ non_null @*/ ASTNode setUniverse(
+				      /*@ non_null @*/ GenericVarDecl i, 
+				      int[] a) {
+    	return setUniverse(i,a,i.type,i.getStartLoc());
+    }
+    
+    //alx: dw gets the universeDecoration of node i
+    //TODO: what other specs?
+    public static int getUniverse(/*@ non_null @*/ ASTNode i) {
+    	Object o = universeDecoration.get(i);
+    	if (o instanceof Integer)
+    		return ((Integer) o).intValue();
+    	return 0;
+    }
+    //alx-end
+    
+    //alx: dw using decorations for array element universe modifier
+    //TODO: what specs?
+    private static ASTDecoration elementUniverseDecoration
+		= new ASTDecoration("elementUniverseDecoration");
+    //alx-end
+    
+    //alx: dw sets the elementUniverseDecoration of node i
+    //TODO: what other specs?
+    public static /*@ non_null @*/ ASTNode setElementUniverse(
+					     /*@ non_null @*/ ASTNode i, 
+					     int u) {
+    	elementUniverseDecoration.set(i,new Integer(u));
+    	return i;
+    }
+    //alx-end
+    
+    //alx: dw gets the elementUniverseDecoration of node i
+    //TODO: what other specs?
+    public static int getElementUniverse(/*@ non_null @*/ ASTNode i) {
+    	Object o = elementUniverseDecoration.get(i);
+    	if (o instanceof Integer)
+    		return ((Integer) o).intValue();
+    	return 0;
+    }
+    //alx-end
 }

@@ -25,6 +25,11 @@ public class TagConstants extends javafe.ast.TagConstants
     public static final int TYPEDECLELEMPRAGMA = STMTPRAGMA + 1;
     public static final int TYPEMODIFIERPRAGMA = TYPEDECLELEMPRAGMA + 1;
 
+    //alx: dw implicit peer tag, it cannot stand with the other universe 
+    //   modifiers, because it isn't a keyword
+    public static final int IMPL_PEER = TYPEMODIFIERPRAGMA + 1;
+    //alx-end
+
     public static final int UNKNOWN_KEYWORD = TYPEMODIFIERPRAGMA + 1;
 
     // Some punctuation tokens (rest come from OperatorTags)
@@ -98,7 +103,12 @@ public class TagConstants extends javafe.ast.TagConstants
     public static final int TRY      = TRUE + 1;
     public static final int VOID     = TRY + 1;
     public static final int VOLATILE = VOID + 1;
-    public static final int WHILE    = VOLATILE + 1;
+    //alx: dw definition of the universe type modifiers as keywords
+    public static final int REP      = VOLATILE + 1;
+    public static final int PEER     = REP + 1;
+    public static final int READONLY = PEER + 1;
+    public static final int WHILE    = READONLY + 1;
+    //alx-end
     public static final int LAST_KEYWORD = WHILE;
 
     public static final int LAST_TAG = LAST_KEYWORD;
@@ -119,6 +129,11 @@ public class TagConstants extends javafe.ast.TagConstants
 
         if (code <= javafe.ast.TagConstants.LAST_TAG)
             return javafe.ast.TagConstants.toString(code);
+
+        //alx: dw special case for IMPL_PEER, it isn't a keyword
+        if (code==TagConstants.IMPL_PEER)
+        	return "[peer]";
+	//alx-end
 
         return "Tag unknown to javafe.parser.TagConstants <" + code 
             + " (+" + (code - javafe.ast.TagConstants.LAST_TAG) + ") >";
@@ -190,7 +205,11 @@ public class TagConstants extends javafe.ast.TagConstants
         "native", "new", "null", 
         "package", "private", "protected", "public", "return",
         "short", "static", "strictfp", "super", "switch", "synchronized", "this",
-        "throw", "throws", "transient", "true", "try", "void", "volatile", "while"
+        "throw", "throws", "transient", "true", "try", "void", "volatile", 
+	//alx: dw added rep, peer & readonly
+	"rep", "peer", "readonly", 
+	//alx-end
+	"while"
     };
 
     //@ invariant \nonnullelements(otherStrings);

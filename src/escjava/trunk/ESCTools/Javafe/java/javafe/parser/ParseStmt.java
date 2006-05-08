@@ -183,6 +183,13 @@ public abstract class ParseStmt extends ParseExpr
                 Type basetype = TypeName.make(tmodifiers, n);
 
                 basetype = parseBracketPairs(l, basetype);
+                //alx: dw need to reset universeArray because in this case, 
+                //     parseModifiers wasn't called (which would have reseted 
+                //     universeArray)
+                universeArray[0]=0;
+                universeArray[1]=0;
+		//alx-end
+
                 addVarDeclStmts(l, Modifiers.NONE, null, basetype);
                 expect(l, TagConstants.SEMICOLON);
                 return;
@@ -355,6 +362,9 @@ public abstract class ParseStmt extends ParseExpr
         {
             int modifiers = parseModifiers(l);
             ModifierPragmaVec pmodifiers = this.modifierPragmas;
+            //alx: dw handle universes
+            int[] localUniverseArray = (int[]) this.universeArray.clone();
+	    //alx-end
 
 	    // This is rather a hack, because some pragmas that are allowed
 	    // are not statement pragmas (because they are indistinguishable
@@ -393,7 +403,15 @@ public abstract class ParseStmt extends ParseExpr
                 seqStmt.addElement(ClassDeclStmt.make(cd));
                 return;
             } else if (modifiers != Modifiers.NONE || pmodifiers != null ||
+            	       //alx: dw universe modifiers are also in this case
+		       localUniverseArray[0]!=0 ||
+		       //alx-end
                        isPrimitiveKeywordTag(ttype)) {
+            	//alx: dw save universes to our field, addVarDeclStmts expects 
+                //   it there
+            	universeArray=localUniverseArray;
+		//alx-end
+
                 addVarDeclStmts(l, modifiers, pmodifiers, parseType(l));
                 expect(l, TagConstants.SEMICOLON);
                 return;
@@ -757,6 +775,17 @@ public abstract class ParseStmt extends ParseExpr
             l.getNextToken(); // Discard CATCH
             expect(l, TagConstants.LPAREN);
             FormalParaDecl arg = parseFormalParaDecl(l);
+            //alx: dw in catchclauses the default is readonly
+            if (useUniverses && getUniverse(arg)==TagConstants.IMPL_PEER)
+            	setUniverse(arg,TagConstants.READONLY);
+            else if (useUniverses && getUniverse(arg)!=TagConstants.READONLY) {
+            	setUniverse(arg,TagConstants.READONLY);
+            	if (universeLevel%5!=0)
+		    ErrorSet.error(arg.getStartLoc(),
+				   "only readonly allowed for catch clauses");
+            }
+	    //alx-end
+	    
             expect(l, TagConstants.RPAREN);
             seqCatchClause.addElement( CatchClause.make(arg, parseBlock(l,false),
                                                         loc) );
@@ -797,6 +826,12 @@ public abstract class ParseStmt extends ParseExpr
         if( modifierPragmas == null )
             modifierPragmas = ModifierPragmaVec.make();
 
+        //alx: dw needed because init can have more modifiers!
+        int[] localUniverseArray=null;
+        if (useUniverses)
+        	localUniverseArray = (int[]) universeArray.clone();
+	//alx-end
+
         for(;;) {
             // Get identifier and any [] pairs trailing it
             Identifier id = l.identifierVal;
@@ -816,6 +851,10 @@ public abstract class ParseStmt extends ParseExpr
             LocalVarDecl d
                 = LocalVarDecl.make(modifiers, modifierPragmas, 
                                     id, vartype, locId, init, locAssignOp);
+            //alx: dw set universe modifiers
+            if (useUniverses)
+            	setUniverse(d,localUniverseArray);
+	    //alx-end
             seqStmt.addElement( VarDeclStmt.make(d) );
 
             // check if end of declaration
@@ -848,6 +887,11 @@ public abstract class ParseStmt extends ParseExpr
     //@ ensures \result != null;
     public FormalParaDecl parseFormalParaDecl(Lex l) {
         int modifiers = parseModifiers(l);
+        //alx: dw save the universe modifiers
+        int[] localUniverseArray=null;
+        if (useUniverses)
+        	localUniverseArray = (int[]) this.universeArray.clone();
+	//alx-end
         ModifierPragmaVec modifierPragmas = this.modifierPragmas;
         Type paratype = parseType(l);
         Identifier idn = l.identifierVal;
@@ -857,8 +901,13 @@ public abstract class ParseStmt extends ParseExpr
         // allow more modifier pragmas
         modifierPragmas = parseMoreModifierPragmas( l, modifierPragmas );
 
-        return FormalParaDecl.make(modifiers, modifierPragmas, 
-                                   idn, paratype, locId);
+        FormalParaDecl fpd = FormalParaDecl.make(modifiers, modifierPragmas, 
+              idn, paratype, locId);
+        //alx: dw attatch universe modifiers to the formal parameter
+        if (useUniverses)
+        	setUniverse(fpd,localUniverseArray);
+	//alx-end
+        return fpd;
     }
 
     /**

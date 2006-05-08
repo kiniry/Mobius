@@ -33,11 +33,16 @@ import javafe.util.Info;
 
 import javafe.reader.*;
 import javafe.tc.OutsideEnv;
+//alx: 
+import javafe.Tool;
+import javafe.parser.ParseUtil;
+//alx-end
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class RefinementSequence extends CompilationUnit {
   
@@ -45,6 +50,9 @@ public class RefinementSequence extends CompilationUnit {
   protected ArrayList refinements; // list of CompilationUnits
   protected boolean hasJavaDef;
   protected boolean javaIsBinary = false;
+  //alx: dw
+  private boolean useUniverses=false;
+  //alx-end
   
   public ArrayList refinements() { return refinements; }
   
@@ -54,6 +62,11 @@ public class RefinementSequence extends CompilationUnit {
       ArrayList refinements, // list of CompilationUnit
       CompilationUnit javacu,
       AnnotationHandler ah) {
+    //dw init useUniverses
+    useUniverses = (Tool.options!=null) && 
+	           (Tool.options.useUniverseTypeSystem);
+    //alx-end
+
     this.refinements = refinements;
     this.javacu = javacu;
     hasJavaDef = javacu != null;
@@ -236,6 +249,11 @@ public class RefinementSequence extends CompilationUnit {
   }
   
   void combineFields(FieldDecl newfd, FieldDecl fd) {
+    //alx: dw combine universe of refined newfd with universe of fd
+    if (useUniverses)
+	combineUniverses(newfd,fd);
+    //alx-end
+
     if (newfd.modifiers != fd.modifiers) {
       ErrorSet.error(newfd.getStartLoc(),
           "Field has been redeclared with different Java modifiers",
@@ -337,6 +355,10 @@ public class RefinementSequence extends CompilationUnit {
     //System.out.println("Combining routine "+Location.toString(newrd.getStartLoc()) + " " +Location.toString(rd.getStartLoc()) + " " + rd.binaryArgNames + " " + Modifiers.toString(rd.modifiers) );
     //System.out.println(newrd.id() + " " + (newrd.body!= null) + (rd.body != null));
     rd.loc = newrd.loc;
+    //alx: dw combine universe of return type
+    if (useUniverses)
+    	combineUniverses(newrd,rd);
+    //alx-end
     {
        int nn = newrd.raises.size();
        for (int i=0; i<nn; ++i) {
@@ -363,6 +385,11 @@ public class RefinementSequence extends CompilationUnit {
     for (int i=0; i<newrd.args.size(); ++i) {
       FormalParaDecl newarg = newrd.args.elementAt(i);
       FormalParaDecl arg = rd.args.elementAt(i);
+      //alx: dw combine universes of the arguments
+      if (useUniverses)
+      	combineUniverses(newarg,arg);
+      //alx-end
+
       // FIXME - check modifiers
       // FIXME - check pragmas; does it matter if we duplicate pragmas?
       arg.modifiers |= newarg.modifiers;
@@ -878,4 +905,39 @@ public class RefinementSequence extends CompilationUnit {
     }
     return result;
   }
+
+  //alx: dw
+  //combine the universe modifiers of the old node with them of the
+  //refined new node, into the old node!!!
+    private void combineUniverses(/*@ non_null @*/ ASTNode newNode, 
+				  /*@ non_null @*/ ASTNode oldNode) {
+  	int n=ParseUtil.getUniverse(newNode);
+  	int o=ParseUtil.getUniverse(oldNode);
+  	if (n==0)
+  		return;
+  	if (o==0 || o==TagConstants.IMPL_PEER)
+  		ParseUtil.setUniverse(oldNode,n);
+  	else if(o!=n) {
+  		ErrorSet.error(newNode.getStartLoc(),
+			       "cannot refine to "+TagConstants.toString(n)+
+			       ", already defined as "+
+			       TagConstants.toString(o));
+  		return;
+  	}
+  	//now the same for the element type (if an array)
+  	int n2=ParseUtil.getElementUniverse(newNode);
+  	int o2=ParseUtil.getElementUniverse(oldNode);
+  	if (n2==0)
+  		return;
+  	if (o2==0 || o2==TagConstants.IMPL_PEER)
+  		ParseUtil.setElementUniverse(oldNode,n2);
+  	else if(o2!=n2)
+  		ErrorSet.error(newNode.getStartLoc(),"cannot refine to "+
+			       TagConstants.toString(n)+" "+
+			       TagConstants.toString(n2)+
+			       ", already defined as "+
+			       TagConstants.toString(o)+" "+
+			       TagConstants.toString(o2));
+  }
+  //alx-end
 }

@@ -30,10 +30,10 @@ public class EnvForTypeSig extends Env {
     /**
      * The TypeSig providing new bindings
      */
-    protected /*@ non_null @*/ TypeSig peer;
+    protected /*@ non_null @*/ TypeSig peervar;
 
     /**
-     * Are peer's instance members accessible? <p>
+     * Are peervar's instance members accessible? <p>
      *
      * WARNING: never modify this variable after creation -- Env's
      * need to be immutible.
@@ -49,10 +49,10 @@ public class EnvForTypeSig extends Env {
      * iff staticContext is true.
      */
     public EnvForTypeSig(/*@ non_null @*/ Env parent,
-			 /*@ non_null @*/ TypeSig peer,
+			 /*@ non_null @*/ TypeSig peervar,
 			 boolean staticContext) {
 	this.parent = parent;
-	this.peer = peer;
+	this.peervar = peervar;
 	this.staticContext = staticContext;
     }
 
@@ -89,7 +89,7 @@ public class EnvForTypeSig extends Env {
      * If isStaticContext() returns true, then this is the type of "this".
      */
     public TypeSig getEnclosingClass() {
-	return peer;
+	return peervar;
     }
 
 
@@ -105,12 +105,12 @@ public class EnvForTypeSig extends Env {
 	 * For now, the rule is: we have enclosing instances iff we
 	 * are not in a static context: !!!!
 	 */
-	Env outsideEnv = peer.getEnclosingEnv();
+	Env outsideEnv = peervar.getEnclosingEnv();
 	if (outsideEnv.isStaticContext())
 	    return null;
 
 	// Our first enclosing instance is our enclosing type:
-	return peer.enclosingType;
+	return peervar.enclosingType;
     }
 
 
@@ -123,7 +123,7 @@ public class EnvForTypeSig extends Env {
      * this way. <p>
      */
     public Env asStaticContext() {
-	return new EnvForTypeSig(parent, peer, true);
+	return new EnvForTypeSig(parent, peervar, true);
     }
 
 
@@ -146,8 +146,8 @@ public class EnvForTypeSig extends Env {
      * its possible meanings is returned.<p>
      */
     public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
-	// Check for a definition in peer:
-	TypeSig result = peer.lookupType(caller, id, loc);
+	// Check for a definition in peervar:
+	TypeSig result = peervar.lookupType(caller, id, loc);
 	if (result != null) return result;
 
 	// Otherwise, look to enclosing scopes...
@@ -180,7 +180,7 @@ public class EnvForTypeSig extends Env {
      */
     public ASTNode locateFieldOrLocal(Identifier id) {
 	if (hasField(id))
-	    return peer;
+	    return peervar;
 
 	return parent.locateFieldOrLocal(id);
     }
@@ -202,9 +202,9 @@ public class EnvForTypeSig extends Env {
      * id disambiguates to C[.this].id.<p>
      */
     public TypeSig locateMethod(Identifier id) {
-	// Check for a definition in peer:
+	// Check for a definition in peervar:
 	if (hasMethod(id))
-	    return peer;
+	    return peervar;
 
 	// Otherwise, look to enclosing scopes...
 	return parent.locateMethod(id);
@@ -214,15 +214,15 @@ public class EnvForTypeSig extends Env {
     /** This is to allow overriding by subclasses */
 
     protected boolean hasField(Identifier id) {
-	return peer.hasField(id);
+	return peervar.hasField(id);
     }
 
     public FieldDeclVec getFields(boolean allFields) {
-	return peer.getFields(allFields);
+	return peervar.getFields(allFields);
     }
 
     protected boolean hasMethod(Identifier id) {
-	MethodDeclVec methods = peer.getMethods();
+	MethodDeclVec methods = peervar.getMethods();
 
 	for (int i = 0; i < methods.size(); i++) {
 	    MethodDecl md = methods.elementAt(i);
@@ -249,6 +249,6 @@ public class EnvForTypeSig extends Env {
 	System.out.println("[[ extended with the "
 			   + (staticContext ? "static" : "complete")
 			   + " bindings of type "
-			   + peer.getExternalName() + " ]]");
+			   + peervar.getExternalName() + " ]]");
     }
 }

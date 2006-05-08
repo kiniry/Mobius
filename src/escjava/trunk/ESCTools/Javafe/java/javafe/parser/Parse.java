@@ -428,6 +428,12 @@ VariableDeclarator:
   {
     int loc = l.startingLoc;
     int modifiers = parseModifiers(l);
+    //alx: dw clone the array to use it later
+    int[] localUniverseArray = null;
+    if (useUniverses)
+    	localUniverseArray = (int[])this.universeArray.clone();
+    //alx-end
+
     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
     TypeDeclElem result = null;
 
@@ -568,6 +574,11 @@ VariableDeclarator:
 					raises, body, locOpenBrace,
                                         loc, locId, locThrowsKeyword,
 					id, type, locType);
+        //alx: dw save universe return type to method declaration node
+        if (useUniverses)
+        	setUniverse(md,localUniverseArray,type,locType);
+	//alx-end
+
         seqTypeDeclElem.addElement( md );
         return md;
 
@@ -598,6 +609,11 @@ VariableDeclarator:
           FieldDecl fielddecl
 	    = FieldDecl.make(modifiers, modifierPragmas.copy(), 
 			     id, vartype, locId, init, locAssignOp );
+          //alx: dw set universes of field decls
+          if (useUniverses)
+          	setUniverse(fielddecl,localUniverseArray);
+	  //alx-end
+
           seqTypeDeclElem.addElement( fielddecl );
 	  fds.add(fielddecl);
 
@@ -668,12 +684,29 @@ VariableDeclarator:
       while( l.ttype != TagConstants.RPAREN ) {
         l.getNextToken();                // swallow open paren or comma
 	int modifiers = parseModifiers(l);
+	//alx: dw save array to use it later
+	int[] localUniverseArray = null;
+	if (useUniverses)
+		localUniverseArray = (int[]) this.universeArray.clone();
+	//alx-end
+
 	ModifierPragmaVec modifierPragmas = this.modifierPragmas;
         Type type = parseType(l);
         int locId = l.startingLoc;
         Identifier id = parseIdentifier(l);
         type = parseBracketPairs(l, type);
 	modifierPragmas = parseMoreModifierPragmas(l, modifierPragmas);
+	//alx: dw save array to the var decl node and add the node to the 
+        //        vector
+	if (useUniverses) seqFormalParaDecl.addElement( 
+		             setUniverse(FormalParaDecl.make(modifiers, 
+                                                             modifierPragmas, 
+                                                             id, 
+                                                             type, 
+                                                             locId ),
+                             localUniverseArray) );
+	else
+	//alx-end
         seqFormalParaDecl.addElement( FormalParaDecl.make(modifiers,
 							  modifierPragmas, 
 							  id, type, locId ) );

@@ -3,6 +3,10 @@
 package javafe.parser;
 
 import javafe.ast.*;
+//alx: 
+import javafe.tc.FlowInsensitiveChecks;
+import javafe.util.ErrorSet;
+//alx-end
 import javafe.util.Location;
 import javafe.util.StackVector;
 import javafe.util.Assert;
@@ -242,8 +246,21 @@ public abstract class ParseExpr extends ParseType
                 else if( op == TagConstants.INSTANCEOF ) {
                     // get ReferenceType, and reduce
                     l.getNextToken();
+                    //alx: dw parse the universe modifiers
+                    int[] localUniverseArray=null;
+                    if (useUniverses) {
+                    	parseUniverses(l);
+                    	localUniverseArray = 
+			    (int[]) this.universeArray.clone();
+                    }
+		    //alx-end
                     Type t = parseType( l );
                     e = InstanceOfExpr.make( e, t, locOp );
+
+                    //alx: dw set the universe modifiers
+                    if (useUniverses)
+                    	setUniverse(e,localUniverseArray,t,locOp);
+		    //alx-end
           
                     // Now go to check following op
                     continue getOp;
@@ -380,6 +397,17 @@ public abstract class ParseExpr extends ParseType
                         i++;
                     }
 
+                    //alx: dw go over the universe modifiers
+                    if (useUniverses)
+                    {
+                    	int universeTag = l.lookahead(i);
+                    	while (universeTag == TagConstants.PEER || 
+			       universeTag == TagConstants.REP || 
+			       universeTag == TagConstants.READONLY)
+			    universeTag = l.lookahead(++i);
+                    }
+		    //alx-end
+
                     switch( l.lookahead(i) ) {
                         case TagConstants.IDENT:
                             { 
@@ -512,6 +540,14 @@ public abstract class ParseExpr extends ParseType
             expect( l, TagConstants.LPAREN );
         }
 
+        //alx: dw parse modifiers
+        int[] localUniverseArray = null;
+        if (useUniverses) {
+        	parseUniverses(l);
+        	localUniverseArray = (int[]) this.universeArray.clone();
+        }
+	//alx-end
+
         Type castType = parseType(l);
         int locClose = l.startingLoc;
 
@@ -522,7 +558,13 @@ public abstract class ParseExpr extends ParseType
         }
     
         Expr exprAfterCast = parseUnaryExpression(l);
-        return CastExpr.make( exprAfterCast, castType, locOpen, locClose );
+        //alx: dw save modifiers in node
+        CastExpr ce = CastExpr.make( exprAfterCast, castType, 
+				     locOpen, locClose );
+        if (useUniverses)
+	    setUniverse(ce,localUniverseArray,castType,locOpen);
+        return ce;
+	//alx-end
     }
 
     /**********************************************************************
@@ -852,9 +894,30 @@ public abstract class ParseExpr extends ParseType
         int locNew = l.startingLoc;
         l.getNextToken();
     
+        //alx: dw parse modifiers in new-expression
+        int[] localUniverseArray=null;
+        if (useUniverses) {
+        	parseUniverses(l);
+        	localUniverseArray = (int[]) this.universeArray.clone();
+        }
+	//alx-end
+
         // Next is Name or PrimitiveType
         Type type = parsePrimitiveTypeOrTypeName(l);
-   	return parseNewExpressionTail(l,type,locNew); 
+
+        //alx: dw set the universe modifiers
+	Expr e = parseNewExpressionTail(l,type,locNew);
+        if (useUniverses)
+	    if (e.getTag()==TagConstants.NEWINSTANCEEXPR) {
+		setUniverse(e,localUniverseArray,type,locNew);
+	    }
+	    else if (e.getTag()==TagConstants.NEWARRAYEXPR) {
+		setUniverse(e,localUniverseArray,
+			    ArrayType.make(type,locNew),locNew);
+	    }
+
+        return e;
+	//alx-end
     }
     public Expr parseNewExpressionTail(Lex l, Type type, int locNew) {
         switch( l.ttype ) {

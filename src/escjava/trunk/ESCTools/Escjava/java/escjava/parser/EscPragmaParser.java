@@ -17,6 +17,9 @@ import javafe.parser.Lex;
 import javafe.parser.Parse;
 import javafe.parser.PragmaParser;
 import javafe.parser.Token;
+//alx: 
+import javafe.parser.ParseUtil;
+//alx-end
 import javafe.util.Assert;
 import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
@@ -1398,10 +1401,14 @@ public class EscPragmaParser extends Parse
         case TagConstants.NON_NULL_BY_DEFAULT: // incomplete (chalin/kiniry)
         case TagConstants.NULLABLE_BY_DEFAULT: // incomplete (chalin/kiniry)
         case TagConstants.OBS_PURE: // incomplete (chalin/kiniry)
-        case TagConstants.PEER: // parsed but not typechecked - Universe type annotation (cjbooms)
+	//alx: commented out not to interfere with dw
+        //case TagConstants.PEER: // parsed but not typechecked - Universe type annotation (cjbooms)
+	//alx-end
         case TagConstants.PURE:
-        case TagConstants.READONLY: // parsed but not typechecked - Universe type annotation (cjbooms)
-        case TagConstants.REP: // parsed but not typechecked - Universe type annotation (cjbooms)
+        //alx: commented out not to interfere with dw
+        //case TagConstants.READONLY: // parsed but not typechecked - Universe type annotation (cjbooms)
+        //case TagConstants.REP: // parsed but not typechecked - Universe type annotation (cjbooms)
+	//alx-end
         case TagConstants.SPEC_BIGINT_MATH:
         case TagConstants.SPEC_JAVA_MATH:
         case TagConstants.SPEC_PROTECTED: // SC HPT AAST 3, SUPPORT COMPLETE (cok)
@@ -1413,7 +1420,28 @@ public class EscPragmaParser extends Parse
           dst.ttype = TagConstants.MODIFIERPRAGMA;
           dst.auxVal = SimpleModifierPragma.make(tag, loc);
           break;
-
+        //alx: dw handle universe modifiers
+        case TagConstants.PEER:
+        case TagConstants.READONLY:
+        case TagConstants.REP:
+	  dst.ttype = TagConstants.MODIFIERPRAGMA;
+	  dst.auxVal = SimpleModifierPragma.make(tag, loc);
+	  scanner.getNextToken(); //because these keywords are from javafe
+	  break;
+	  /*case TagConstants.PEER2: //here the same for the alternative keywords
+	  dst.ttype = TagConstants.MODIFIERPRAGMA;
+	  dst.auxVal = SimpleModifierPragma.make(TagConstants.PEER, loc);
+	  break;
+        case TagConstants.READONLY2:
+	  dst.ttype = TagConstants.MODIFIERPRAGMA;
+	  dst.auxVal = SimpleModifierPragma.make(TagConstants.READONLY, loc);
+	  break;
+        case TagConstants.REP2:
+	  dst.ttype = TagConstants.MODIFIERPRAGMA;
+	  dst.auxVal = SimpleModifierPragma.make(TagConstants.REP, loc);
+	  break;*/
+       //alx-end
+	  
         case TagConstants.ALSO_ENSURES:
         case TagConstants.ALSO_REQUIRES:
           int oldtag = tag;
@@ -2075,8 +2103,18 @@ public class EscPragmaParser extends Parse
               case TagConstants.TYPE:
               {
                 l.getNextToken();
+		//alx: dw if using universe type system, the type can have 
+		//   universe modifiers
+                if (useUniverses)
+                	parseUniverses(l);
+		//alx-end
+
                 Type subexpr = parseType(l);
                 primary = TypeExpr.make(loc, l.startingLoc, subexpr);
+		//alx: dw attach them to the node
+                if (useUniverses)
+		    ParseUtil.setUniverse(primary,universeArray,subexpr,loc);
+		//alx-end
                 expect(l, TagConstants.RPAREN);
                 break;
               }

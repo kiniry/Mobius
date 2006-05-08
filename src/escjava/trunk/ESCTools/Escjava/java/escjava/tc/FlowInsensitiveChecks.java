@@ -522,8 +522,14 @@ System.out.println("FOUND " + t);
           setType( e, Types.errorType );
           FieldAccess fa = (FieldAccess)e;
           Type t = checkObjectDesignator(env, fa.od);
-          if (t==null)
-            return fa;
+          if (t==null) {
+	      //alx: dw field has not target, take universe of declaration 
+	      //        (when should this happen?)
+	      if (useUniverses)
+		  copyUniverses(fa,fa.decl);
+	      //alx-end
+	      return fa;
+	  }
           if (t instanceof TypeName)
             t = TypeSig.getSig( (TypeName) t );
 
@@ -534,6 +540,10 @@ System.out.println("FOUND " + t);
 
           try {
             fa.decl = escjava.tc.Types.lookupField( t, fa.id, sig );
+	    //alx: dw
+            if (useUniverses)
+    			determineUniverseForFieldAccess(fa);
+            //alx-end
           } catch( LookupException ex) {
             if (!Types.isErrorType(t))
               reportLookupException(ex, "field", 
@@ -694,6 +704,11 @@ System.out.println("FOUND " + t);
             Expr ee = LiteralExpr.make(TagConstants.BOOLEANLIT,Boolean.TRUE,
                                           Location.NULL);
             setType(ee, Types.booleanType);
+	    //alx: dw could be hardcoded
+            if (useUniverses)
+            	determineUniverseForMethodInvocation(mi);
+	    //alx-end
+
             return ee;
           } else {
 	    Expr ee = super.checkExpr(env,e);
@@ -1249,7 +1264,10 @@ System.out.println("FOUND " + t);
               ErrorSet.error( r.locOpenBracket, 
                               "Attempt to index a non-array value");
           }
-
+          //alx: dw set universe modifier for ArrayRefExpr
+          if (useUniverses)
+          	determineUniverseForArrayRefExpr(r);
+	  //alx-end
           return r;
         }
 
@@ -2569,11 +2587,13 @@ System.out.println("FOUND " + t);
           break;
         }
 
+	//alx: commented out not to interfere with the dw implementation
         case TagConstants.READONLY:
         case TagConstants.PEER:
         case TagConstants.REP:
-          // FIXME - need to support these
-          break;
+	    // FIXME - need to support these
+	    break;
+	//alx-end
 
         default:
           ErrorSet.error(p.getStartLoc(),
@@ -2921,6 +2941,13 @@ System.out.println("FOUND " + t);
     if (super.assignmentConvertable(e,t)) return true;
     return Types.isTypeType(t) && Types.isTypeType(getType(e));
   }
+
+  //alx: dw overridden, so javafe handels pure methods correctly
+  //TODO: what other specs?
+  protected boolean isPure(/*@ non_null @*/ RoutineDecl rd) {
+  	return Utils.isPure(rd);
+  }
+  //alx-end
 
 } // end of class FlowInsensitiveChecks
 

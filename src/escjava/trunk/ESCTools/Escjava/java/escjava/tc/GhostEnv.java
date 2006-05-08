@@ -25,9 +25,9 @@ public class GhostEnv extends EnvForTypeSig
     // Creation
 
     public GhostEnv(/*@ non_null */ Env parent,
-		    /*@ non_null */ TypeSig peer,
+		    /*@ non_null */ TypeSig peervar,
 		    boolean staticContext) {
-	super(parent, peer, staticContext);
+	super(parent, peervar, staticContext);
     }
 
     // Current/enclosing instances
@@ -40,7 +40,7 @@ public class GhostEnv extends EnvForTypeSig
      * unknown environment needs to be coerced in this way.
      */
     public Env asStaticContext() {
-	return new GhostEnv(parent, peer, true);
+	return new GhostEnv(parent, peervar, true);
     }
 
     // Debugging functions
@@ -54,8 +54,8 @@ public class GhostEnv extends EnvForTypeSig
 	System.out.println("[[ extended with the (ghost) "
 			   + (staticContext ? "static" : "complete")
 			   + " bindings of type "
-	    + peer.getExternalName() + " ]]");
-	FieldDeclVec fdv = ((escjava.tc.TypeSig)peer).jmlFields;
+	    + peervar.getExternalName() + " ]]");
+	FieldDeclVec fdv = ((escjava.tc.TypeSig)peervar).jmlFields;
 	for (int i=0; i<fdv.size(); ++i) {
 		System.out.println("    " + fdv.elementAt(i).id);
 	}
@@ -76,7 +76,7 @@ public class GhostEnv extends EnvForTypeSig
      * <code>null</code>.
      */
     public FieldDecl getGhostField(String n, FieldDecl excluded) {
-	FieldDeclVec fdv = peer.getFields(false);
+	FieldDeclVec fdv = peervar.getFields(false);
 	for (int i=0; i<fdv.size(); ++i) {
 	    FieldDecl f = fdv.elementAt(i);
 	    if (!f.id.toString().equals(n))
@@ -135,7 +135,7 @@ public class GhostEnv extends EnvForTypeSig
      * escjava.tc.FlowInsensitiveChecks#inAnnotation} is <code>true</code>.
      */
     protected boolean hasField(Identifier id) {
-	if (peer.hasField(id))
+	if (peervar.hasField(id))
 	    return true;
 
 	if (!FlowInsensitiveChecks.inAnnotation)
@@ -147,8 +147,8 @@ public class GhostEnv extends EnvForTypeSig
     public FieldDeclVec getFields(boolean allFields) {
 	FieldDeclVec fdv = FieldDeclVec.make();
 	fdv.append(super.getFields(allFields));
-	if (!(peer instanceof escjava.tc.TypeSig)) return fdv;
-	escjava.tc.TypeSig ts = (escjava.tc.TypeSig)peer;
+	if (!(peervar instanceof escjava.tc.TypeSig)) return fdv;
+	escjava.tc.TypeSig ts = (escjava.tc.TypeSig)peervar;
 	fdv.append(ts.jmlFields);
 	if (!allFields) return fdv;
 	fdv.append(ts.jmlHiddenFields);

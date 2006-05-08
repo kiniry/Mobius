@@ -404,9 +404,16 @@ public class TagConstants extends GeneratedTags
     public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
 
     // Include the Universe type annotation keywords (cjbooms)
+    //alx: dw
     public static final int PEER = ALSO_REQUIRES + 1;
     public static final int READONLY = PEER + 1;
     public static final int REP = READONLY + 1;
+    /*
+    public static final int PEER = ALSO_REQUIRES + 1;
+    public static final int READONLY = PEER + 1;
+    public static final int REP = READONLY + 1;
+    */
+    //alx-end
 
     // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
     public static final int NULLABLE = REP + 1;

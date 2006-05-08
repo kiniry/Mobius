@@ -115,6 +115,15 @@ public class Options
   static public final int NEVER_SOURCE = 4;
   public int fileOrigin = PREFER_RECENT;
 
+  //alx: dw if we have to recognize and check the Universe type modifiers
+  public boolean useUniverseTypeSystem = false;
+  // the next variable decodes where the modifiers can be and if one has to check them
+  // modifiers in comments => mod 2 == 0
+  // modifiers as keyword  => mod 3 == 0
+  // no checking           => mod 5 == 0  
+  public int universeLevel = 23; // just some arbitrary prime larger then the primes used as universe modes
+  //alx-end
+
   public Options() {
     // Everything should be initialized to default values.
     javafe.util.Info.on = false;
@@ -280,6 +289,38 @@ public class Options
     } else if (option.equals("-neversource")) {
       fileOrigin = NEVER_SOURCE;
       return offset;
+    //alx: dw recoginze options
+    } else if (option.equals("-universes")) {
+    	useUniverseTypeSystem=true;
+    	universeLevel=2;
+    	if ((offset < args.length) && (args[offset].charAt(0) != '-')) {
+    		if (args[offset].equalsIgnoreCase("comment")) {
+    			universeLevel=2;
+    			offset++;
+    		}
+    		else if (args[offset].equalsIgnoreCase("keyword")) {
+    			universeLevel=3;
+    			offset++;
+    		}
+    		else if (args[offset].equalsIgnoreCase("commentandkeyword")) {
+    			universeLevel=6;
+    			offset++;
+    		}
+    		if ((offset < args.length) && 
+		    (args[offset].charAt(0) != '-') && 
+		    args[offset].equalsIgnoreCase("readonlyforpurector")) {
+    			universeLevel*=7;
+    			offset++;
+    		}
+    		if ((offset < args.length) && 
+		    (args[offset].charAt(0) != '-') && 
+		    args[offset].equalsIgnoreCase("nochecks")) {
+    			universeLevel*=5;
+    			offset++;
+    		}
+    	}
+    	return offset;
+    //alx-end
     } else if (option.equals("--")) {
       while (offset < args.length) {
         inputEntries.add(new UnknownInputEntry(args[offset++]));

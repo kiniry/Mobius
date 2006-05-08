@@ -2,7 +2,6 @@
 .jml
 .jmlc
 .perms-fixed
-Makefile.local
 OOBR
 classfiles*
 docs
