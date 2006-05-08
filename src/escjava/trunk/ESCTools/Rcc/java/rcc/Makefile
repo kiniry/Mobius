@@ -27,9 +27,6 @@ runtest:
 	cd test; ${MAKE} runtest
 	cd tc; ${MAKE} runtest
 
-doc:    doc/rccjava.mtex
-	mtex2man < doc/rccjava.mtex > ${RCC_ROOT}/doc/man1/escjava.1
-	mtex2html < doc/rccjava.mtex > ${RCC_ROOT}/doc/escjava.html
 
 # Counting size of source
 
