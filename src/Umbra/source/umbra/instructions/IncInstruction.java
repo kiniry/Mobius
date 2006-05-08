@@ -9,18 +9,28 @@ import org.apache.bcel.generic.Instruction;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * This is only dealing with iinc instruction.
+ * 
  * @author Jaros³aw Paszek i Tomasz Batkiewicz 
  */
 public class IncInstruction extends NumInstruction {
 
-	// &* usuwam grrhh
+	
 	
 	public IncInstruction(String l, String n) {
 		super(l, n);
 	}
 
+	
 	/**
-	 * Checks if this instruction's line of bytecode has correct syntax.
+	 * Inc instruction line is correct if it has 
+	 * two simple number parameters (first preceded with %).
+	 * 
+	 *@see InstructionLineController#correct()
+	 *@see InstructionLineController#chkcorr(String, String) 
 	 */
 	public boolean correct() {
 		return super.chkcorr(line, "W%DW?-D?W");
@@ -100,7 +110,7 @@ public class IncInstruction extends NumInstruction {
 		int liczba = 0;
 		
 		isd = true;	
-		//ustawia za pierwszym parametrem liczbowym
+		//sets after first number parameter
 		int skadskad = line.length();
 		for (int i = line.lastIndexOf("%") + 1;i < line.length();i++) {
 			if (!Character.isDigit(line.charAt(i))){
@@ -108,7 +118,7 @@ public class IncInstruction extends NumInstruction {
 				break;
 			}
 		}
-		//ustawia na poczatku drugiego parametru liczbowego
+		//sets the starting point of second number parameter
 		int skad = 0;
 		for (int i = skadskad;i < line.length();i++) {
 			if (Character.isDigit(line.charAt(i))){
@@ -116,7 +126,7 @@ public class IncInstruction extends NumInstruction {
 				break;
 			}
 		}
-		//ustawia gdzie koniec drugiego parametru liczbowego		
+		//sets the ending point of second number parameter		
 		int dokad = line.length();
 		for (int i = skad;i < line.length();i++) {
 			if (!Character.isDigit(line.charAt(i))){
@@ -126,7 +136,7 @@ public class IncInstruction extends NumInstruction {
 		}
 		
 		
-		//konwersja na int zawsze
+		//always convert to int 
 		if (isd){
 			liczba = 0;
 			for (int i = skad;i < dokad;i++) {
@@ -140,11 +150,15 @@ public class IncInstruction extends NumInstruction {
 		return 0;
 	}
 	
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
+	
 	public Instruction getInstruction() {
-		// zmienione 7.27.19
+		
 		if (!correct())
 			return null;
-		// koniec
+		
 		int index1 = 0;
 		index1 = getInd1();
 		int index2 = 0;

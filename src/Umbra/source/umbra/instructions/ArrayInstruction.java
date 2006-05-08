@@ -10,9 +10,15 @@ import org.apache.bcel.generic.Type;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * There is only one array instruction used to create new
+ * array of a particular type.
+ * 
  * @author Jaros³aw Paszek
  */
-public class ArrayInstruction extends OtherInstruction {
+public class ArrayInstruction extends StringInstruction {
 
 	private final String names[] =
 	{"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
@@ -32,13 +38,15 @@ public class ArrayInstruction extends OtherInstruction {
 		};
 		return null;
 	}
-	
-	//&*usuniete grhh
-	
+		
 	public ArrayInstruction(String l, String n) {
 		super(l, n);
 	}
 
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
+	
 	public Instruction getInstruction() {
 		//System.out.println("ArrayInstruction->getInstruction...");
 		String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
@@ -57,6 +65,14 @@ public class ArrayInstruction extends OtherInstruction {
 		//System.out.println("   Failed!");
 		return null;
 	}
+
+	
+	/**
+	 * Array instruction line is correct if it has 
+	 * one parameter that is class (or non-classed type) name.
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
 
 	public boolean correct()
 	{
@@ -77,7 +93,7 @@ public class ArrayInstruction extends OtherInstruction {
 					System.out.println("E04");
 					return false;
 				}
-				// koniec
+				
 				for (y = (s.indexOf("<") + 1); y < s.indexOf(">"); y++)
 		           {if (!(Character.isDefined(s.charAt(y)))) return false;}
 				return true;

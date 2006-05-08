@@ -12,12 +12,17 @@ import org.apache.bcel.generic.LDC_W;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * These instruction are dealing with long data.
+ * 
  * @author Jaros³aw Paszek
  *
  */
 public class LdcInstruction extends OtherInstruction {
 
-	//&* usuwam grrhh	
+		
 	public LdcInstruction(String l, String n) {
 		super(l, n);
 	}
@@ -46,10 +51,13 @@ public class LdcInstruction extends OtherInstruction {
 		}
 		return 0;
 	}
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
 	
 	public Instruction getInstruction() {
 	int index;
-	//&*
+	
 	if (!correct())
 		return null;
 	index = getInd();
@@ -65,9 +73,18 @@ public class LdcInstruction extends OtherInstruction {
 	return null;
 	
 	}
+	
+	/**
+	 * Ldc instruction line is correct if it has 
+	 * one main parameter that may be a simple number
+	 * as well as a string in "" and another one that
+	 * is a number in ().
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
+
 	public boolean correct()
 	{
-		// uwaga tu juz poprawione na last index poprawic w innych
 		String s,str;
 		s = extractPoint(line);
 		String[] s2 = IBytecodeStrings.ldc;
@@ -76,7 +93,7 @@ public class LdcInstruction extends OtherInstruction {
 			if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) 
 				if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("%"))
 				{ 
-				//&*sprawdzanie parametru
+				//parameter checking
 					if (s.lastIndexOf("(") < 2) return false;
 					if (s.lastIndexOf(")") < 2) return false;
 					int m,n,o;
@@ -87,7 +104,7 @@ public class LdcInstruction extends OtherInstruction {
 						{ if (!(Character.isDigit(line.charAt(o))))
 							{return false;}
 						}
-				//dwa typy liczba (liczba) lub string (liczba)
+				//two types: number and (number) or string and (number)
 				okok = 0;
 				for (y = (s.indexOf(s2[j]) + s2[j].length()); y < s.lastIndexOf("("); y++)
 						{if (!(Character.isDigit(s.charAt(y)))) okok++;}
@@ -95,8 +112,8 @@ public class LdcInstruction extends OtherInstruction {
 				str = "\"\"";
 				if (okok > 0) {
 					if (((s.indexOf(s2[j]) + s2[j].length())) == s.indexOf("\"")) {
-						//jest tu null tr lub false, true charsetName
-						//sprawdza czy jest drugi" i czy sa dwa
+						//here is null, true or false, true charsetName
+						//checking if there is second" and if there are are 2
 						if (!(s.indexOf("\"") == (s.lastIndexOf("(") - 1))) {
 							if ((s.charAt(s.lastIndexOf("(") - 1)) == str.charAt(1)) {
 						        	okokok++;
@@ -105,7 +122,7 @@ public class LdcInstruction extends OtherInstruction {
 					}
 				}
 				
-//				//no i jeszcze jeden if czy to sa dwie liczby czy jedna
+//				//if there are two numbers or one
 				int a,b,c,d,e;
 				int f,g,h,l;
 				f = 0; g = 0;h = 0;l = 0;

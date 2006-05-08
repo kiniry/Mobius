@@ -5,6 +5,10 @@ package umbra.instructions;
 
 
 /**
+ * This is a class for a special Bytecode lines located after
+ * the headers or at the end of the method, 
+ * containing some method data, not to be edited by a user.
+ * 
  * @author Tomek Batkiewicz i Jaros³aw Paszek
  */ 
 public class CodeLineController extends BytecodeLineController {
@@ -13,7 +17,7 @@ public class CodeLineController extends BytecodeLineController {
 		super(l);
 	}
 
-	private String dajs() {
+	private String removeWhitespaces() {
 	String s;
     s = "";
     int i = 0;
@@ -24,13 +28,24 @@ public class CodeLineController extends BytecodeLineController {
     	}
 	return s;
 	}
+	
+	/**
+	 * The line is correct if it contains one of four sets of 
+	 * keywords. For lines started with "Code" there is also 
+	 * checked if all parameters are present reasonably set. 
+	 * It is only for displaying information because modification of
+	 * these lines is not provided.
+	 * 
+	 * @see BytecodeLineController#correct()
+	 */
+	
 	public boolean correct()
 	{   //Code musi byc bo by nie byla ta klasa
 		if (this.line.startsWith("Code")) {
 		if (!(line.indexOf("(") > 0))
 			return false;
 	    
-		String s = dajs();
+		String s = removeWhitespaces();
 		int i = 0;
 	    //czy jest to co trzeba
 	    if (!(s.indexOf("max_stack=") > 0))
@@ -92,7 +107,7 @@ public class CodeLineController extends BytecodeLineController {
 			return true;
 		}
 		if (this.line.startsWith("LocalVariable")) {
-			String s = dajs();
+			String s = removeWhitespaces();
 			if ((s.indexOf("start_pc=")) > -1) {
 				if ((s.indexOf("length=")) > -1) {
 					if ((s.indexOf("index=")) > -1) {
@@ -108,7 +123,7 @@ public class CodeLineController extends BytecodeLineController {
 			}
 		}
 		if (this.line.startsWith("Attribute")) {
-			String s = dajs();
+			String s = removeWhitespaces();
 			if ((s.indexOf("(s)=")) > -1) {
 			  return true;
 			}

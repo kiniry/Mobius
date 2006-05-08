@@ -19,15 +19,27 @@ import org.apache.bcel.generic.LSTORE;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * Load and store instrucions.
+ * 
  * @author Jaros³aw Paszek
  *
  */
 public class StackInstruction extends NumInstruction {
 
-	//&* usuwam grrhh	
 	public StackInstruction(String l, String n) {
 		super(l, n);
 	}
+	
+	/**
+	 * Stack instruction line is correct if it has 
+	 * one number parameter preceded with %.
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
+	
 	public boolean correct()
 	{
 		String s;
@@ -43,7 +55,6 @@ public class StackInstruction extends NumInstruction {
 				{ for (y = (s.indexOf("%") + 1); y < s.length(); y++)
 						{if (!(Character.isDigit(s.charAt(y)))) 
 						    return false;}
-//				no i jeszcze jeden if czy to sa dwie liczby czy jedna
 				int a,b,d,e,f,g;  
 				a = (s.length() - s.indexOf("%"));
 				int c = 0;
@@ -89,6 +100,9 @@ public class StackInstruction extends NumInstruction {
 		}
 		return 0;
 	}
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
 	
 	public Instruction getInstruction() {
 		int index = 0;

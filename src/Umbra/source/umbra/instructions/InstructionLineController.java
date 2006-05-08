@@ -17,7 +17,10 @@ import org.apache.bcel.generic.TargetLostException;
 
 
 /**
- * @author Tomek Batkiewicz
+ * This class defines a structure that describes a single Bytecode
+ * instruction and contains related BCEL structures
+ * 
+ * @author Wojciech W¹s, Tomek Batkiewicz
  */
 public abstract class InstructionLineController extends BytecodeLineController {
 
@@ -40,6 +43,22 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		return true;
 	}
 	
+	/**
+	 * This method is executed when a new line is inserted to
+	 * the method and it must be added to BCEL structures,
+	 * especially new handle is generated 
+	 * 
+	 * @param nextLine		next line necessary to get handle -
+	 * 		a new handle is inserted before the next one 
+	 * @param cg			class generator from BCEL 
+	 * @param ins			BCEL instruction (to generate handle)
+	 * @param metEnd		true if the line is inserted after the
+	 * 		end of the method - then the 'nextLine' is actually the previous
+	 * 		one and the handle is generated with 'append' 
+	 * @param instructions	an array from BytecodeController that the new line
+	 * 		is added
+	 * @param off			an offset in this array
+	 */
 	public void initHandle(BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, LinkedList instructions, int off) {
 //		controlPrint(nextLine);
 		InstructionHandle next = nextLine.getHandle();
@@ -90,6 +109,22 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		}
 	}
 	
+	/**
+	 * This method is executed when a line is modificated
+	 * but not inserted or removed; it usually replaces BCEL
+	 * instruction related to a handle, but it can also call
+	 * dispose method (if new version is incorrect) or
+	 * init handle (if the previous one was incorrect).  
+	 * 
+	 * @param oldLine		the previous structure
+	 * @param nextLine		next line, necessary if new handle must be generated 
+	 * @param cg			class generator from BCEL 
+	 * @param ins			BCEL instruction (to generate handle)
+	 * @param metEnd		true if the line is the last one of the method
+	 * @param instructions	an array from BytecodeController that the line
+	 * 		is included
+	 * @param off			an offset in this array
+	 */
 	public void update(BytecodeLineController oldLine,
 			BytecodeLineController nextLine, ClassGen cg,
 			Instruction ins, boolean metEnd, boolean theLast,
@@ -130,6 +165,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		}
 	}
 	
+	/**
+	 * Replacing BCEL method with the new one with updated
+	 * instruction list
+	 * 
+	 * @param cg			class generator from BCEL 
+	 */
 	private void updateMethod(ClassGen cg) {
 		Method oldMet = cg.getMethodAt(index);
 		cg.replaceMethod(oldMet, mg.getMethod());
@@ -148,11 +189,29 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		return mg;
 	}
 	
+	/**
+	 * This method is redefined in each subclass. It is used
+	 * to check some basic condition of correctness. A positive
+	 * result is necessary to continue any attempt of
+	 * generating BCEL structures about the line.
+	 * 
+	 * @return true if the instruction is correct
+	 */
 	public boolean correct()
 	{
 		return true;
 	}
 	
+	/**
+	 * Removing line from BCEL structures
+	 * 
+	 * @param nextLine		a line after the removed one; it becomes
+	 * 			a target of any jump instruction directed to the removed one 
+	 * @param cg			class generator from BCEL 
+	 * @param instructions	an array from BytecodeController that the line
+	 * 		is included
+	 * @param off			an offset in this array
+	 */
 	public void dispose(BytecodeLineController nextLine, ClassGen cg, boolean theLast, LinkedList instructions, int off)
 	{
 		InstructionHandle next = nextLine.getHandle();

@@ -13,15 +13,28 @@ import org.apache.bcel.generic.PUTSTATIC;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * This subset is similar to ordinary Java subset.
+ * 
  * @author Jaros³aw Paszek
  */
 public class FieldInstruction extends StringInstruction {
 
-	//&* usuwam grrhh
-	
 	public FieldInstruction(String l, String n) {
 		super(l, n);
 	}
+	
+	
+	/**
+	 * Field instruction line is correct if its 
+	 * parameter contains a number in ().
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
+
+	
 	public boolean correct()
 	{
 		String s;
@@ -31,7 +44,6 @@ public class FieldInstruction extends StringInstruction {
 		for (j = 0; j < s2.length; j++) {
 			if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) {
 				
-				//&* ulepszone sprawdzanie podawania nr pola
 				if (s.lastIndexOf("(") < 2) return false;
 				if (s.lastIndexOf(")") < 2) return false;
 				int m,n,o;
@@ -73,6 +85,9 @@ public class FieldInstruction extends StringInstruction {
 		return 0;
 	}
 	
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
 	public Instruction getInstruction() {
 	int index;
 	index = getInd();

@@ -9,6 +9,11 @@ import org.apache.bcel.generic.*;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * Various instructions with no parameter.
+ * 
  * @author Jaros³aw Paszek
  */
 public class SingleInstruction extends InstructionLineController {
@@ -17,6 +22,9 @@ public class SingleInstruction extends InstructionLineController {
 		super(l, n);
 	}
 	
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
 	public Instruction getInstruction() {
 		//&*
 		if (!correct())
@@ -141,7 +149,13 @@ public class SingleInstruction extends InstructionLineController {
 		if (name == "swap") return new SWAP();
 		return null;
 	}
-	
+
+	/**
+	 * Simple instruction line is correct if it has 
+	 * no parameter
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
 	public boolean correct()
 	{
 		String s;

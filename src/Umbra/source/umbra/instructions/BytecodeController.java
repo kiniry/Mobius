@@ -21,7 +21,17 @@ import umbra.BytecodeDocument;
 import umbra.IBytecodeStrings;
 
 /**
- * @author Tomek Batkiewicz i Jaros³aw Paszek
+ * This class defines some structures related to BCEL as well
+ * as to Bytecode Editor contents. They are updated after
+ * each Bytecode modification and its modification allow
+ * updating BCEL. Especially a list of all lines (on purpose to
+ * check corectness) as well as a list of instruction lines
+ * to detect when BCEL modification is needed. Additional
+ * structures keep the information which method has been
+ * modified (in case of combining changes) and what comments
+ * are added to Bytecode
+ * 
+ * @author Wojciech W¹s, Tomek Batkiewicz i Jaros³aw Paszek
  */
 public class BytecodeController {
 	
@@ -52,7 +62,16 @@ public class BytecodeController {
 		    //czemu zaczyna sie od 9
 		}
 	}
-
+	
+	/**
+	 * Initialization of all Bytecode structures related to
+	 * the document; it uses BCEL structures linked to the
+	 * document  
+	 * 
+	 * @param Bytecode document with linked appropriate BCEL
+	 * 	structures
+	 * @throws BadLocationException
+	 */
 	public void init(IDocument doc) throws BadLocationException {
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
 		ConstantPoolGen cpg = cg.getConstantPool();
@@ -101,6 +120,17 @@ public class BytecodeController {
 		}
 	}
 	
+	/**
+	 * Detects which kind of modification (adding lines, removing lines or both) 
+	 * has been made and preforms appropriate action to Bytecode structures  
+	 * 
+	 * @param doc		Bytecode document that modification has
+	 * 		been made to
+	 * @param startRem	Old-version number of the first modified line
+	 * @param stopRem	Old-version number of the last modified line
+	 * @param start		New-version number of the first modified line
+	 * @param stop		New-version number of the last modified line
+	 */
 	public void addAllLines(IDocument doc, int startRem, int stopRem, int start, int stop)
 	{
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
@@ -162,6 +192,15 @@ public class BytecodeController {
 		return;
 	}
 
+	/**
+	 * Checks whether all lines of selected area are correct
+	 * (they satisfies some given syntax conditions) 
+	 * 
+	 * @param start	the beginning of the area
+	 * @param stop	the end of the area
+	 * @return 		true if all lines of the area are correct,
+	 * 	false otherwise
+	 */
 	public boolean checkAllLines(int start, int stop)
 	{
 		boolean ok = true;
@@ -173,6 +212,16 @@ public class BytecodeController {
 		};
 		return ok;
 	}
+	
+	/**
+	 * Chooses one of line types that mathes the given line
+	 * contents
+	 * 
+	 * @param line	String contents of inserted or modified line 
+	 * @return		Instance of subclass of line controller
+	 * 		that contents of the given line satisfies
+	 * 		classification conditions (Unknown if it does not for all)
+	 */
 	private BytecodeLineController getType(String line)
 	{
 		int i;
@@ -308,6 +357,12 @@ public class BytecodeController {
 		return l.substring(i, l.length());
 	}
 	
+	/**
+	 * Checks if the given line is commented and extract the comment 
+	 * 
+	 * @param line	Given line contents
+	 * @return		Comment or an empty string
+	 */
 	private String extractCommentFromLine(String line) {
 		int i = line.indexOf("//");
 		if (i == -1) return null;
@@ -316,14 +371,29 @@ public class BytecodeController {
 		return nl;
 	}
 	
+	/**
+	 * @return true if there is no incorrect line within whole document
+	 */
 	public boolean allCorrect() {
 		return incorrect.isEmpty();
 	}
 
+	/**
+	 * @return Number of a line that the first error occurs
+	 * (not necessarily: number of the first line that an error occurs) 
+	 */
 	public int getFirstError() {
 		return all.lastIndexOf(incorrect.getFirst());
 	}
 	
+	/**
+	 * Finds index in the instruction array that is linked with
+	 * the position in the line array
+	 * 
+	 * @param lineNum	Line number (including all lines in a document)
+	 * @return	Instruction offset (including only instruction lines)
+	 * 	or -1 if the line is not an instruction
+	 */
 	private int getInstructionOff(int lineNum) {
 		for (int i = lineNum; i >= 0; i--) {
 			Object line = all.get(i);
@@ -333,6 +403,11 @@ public class BytecodeController {
 		return -1;
 	}
 	
+	/**
+	 * @param lineNum Numebr of line (including all lines)
+	 * @return true if the line is the last instruction in a method
+	 * 	or is a non-istruction one located after 
+	 */
 	private boolean isEnd(int lineNum) {
 		int off = getInstructionOff(lineNum);
 		if (off + 1 >= instructions.size()) return true;
@@ -342,6 +417,10 @@ public class BytecodeController {
 		return (index1 != index2);
 	}
 	
+	/**
+	 * @param lineNum Numebr of line (including all lines)
+	 * @return true if the line is located before the first instruction in a method
+	 */
 	private boolean isFirst(int lineNum) {
 		int off = getInstructionOff(lineNum);
 		if (off == 0) return true;
@@ -358,6 +437,11 @@ public class BytecodeController {
 		this.modified = modified;
 	}
 	
+	/**
+	 * Transforms a map from lines to comments into string array.
+	 * 
+	 * @return Array of comments
+	 */
 	public String[] getComments() {
 		String[] commentTab = new String[instructions.size()];
 		for (int i = 0; i < instructions.size(); i++) {

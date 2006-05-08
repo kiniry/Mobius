@@ -2,7 +2,6 @@
  * Created on 2005-05-17
  */
 package umbra.instructions;
-
 import java.util.LinkedList;
 
 import org.apache.bcel.generic.ClassGen;
@@ -12,6 +11,10 @@ import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
 /**
+ * This is completely abstract class that contains some information
+ * useful when the line is modified or BCEL structure is created.
+ * Most details are implemented in subclasses.
+ * 
  * @author Tomek Batkiewicz
  */
 public abstract class BytecodeLineController {
@@ -29,6 +32,15 @@ public abstract class BytecodeLineController {
 		return false;
 	}
 	
+	/**
+	 * This method is redefined in each subclass of particular
+	 * instruction type. It is used for creating a handle
+	 * containing appropriate BCEL instruction object
+	 * that matches with the instruction name.
+	 * 
+	 * @return Handle to the appropriate instruction;
+	 * 	null if the line is not an instruction one.
+	 */
 	public Instruction getInstruction() {
 		return null;
 	}
@@ -75,6 +87,15 @@ public abstract class BytecodeLineController {
 		return s;	
 	}
 	
+	/**
+	 * This method is used to check some basic condition of 
+	 * correctness. For non-instruction line this is the only 
+	 * checking. If it returns true the line is regarded 
+	 * to be correct.
+	 * 
+	 * @return	true if the instruction is correct
+	 * @see		InstructionLineController#correct()
+	 */
 	public boolean correct()	{
 		return false;
 	}

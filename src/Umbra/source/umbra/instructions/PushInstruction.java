@@ -11,15 +11,26 @@ import org.apache.bcel.generic.*;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * Here are two instructions resposible for pushing onto the stack.
+ * 
  * @author Jaros³aw Paszek
  *
  */
 public class PushInstruction extends NumInstruction {
-
-	//&* usuwam grrhh	
+	
 	public PushInstruction(String l, String n) {
 		super(l, n);
 	}
+	
+	/**
+	 * Push instruction line is correct if it has 
+	 * one simple number parameter.
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
 	public boolean correct()
 	{
 		String s;
@@ -70,17 +81,17 @@ public class PushInstruction extends NumInstruction {
 		}
 		return 0;
 	}
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
 	
 	public Instruction getInstruction() {
 		int index = 0;
-		//&*
 		if (!correct())
 			return null;
 		index = getInd();
 		
-		// zwraca dobry index
 		byte b = 0;
-		// sprawdzic czy b =index dobrzedziala na razie blad w getmethod
 		b = (byte)index;
 		
 		if (name == "bipush") {

@@ -9,15 +9,32 @@ import org.apache.bcel.generic.*;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * Instructions of this class are responsible for jumping in code. 
+ * Their specificity is having target.
+ * 
  * @author Jaros³aw Paszek
  */
 public class JumpInstruction extends NumInstruction {
 
-	//&* usuwam grrhh
+	
 	
 	public JumpInstruction(String l, String n) {
 		super(l, n);
 	}
+	
+	
+	
+	/**
+	 * Jump instruction line is correct if it has 
+	 * one number parameter preceded by #.
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
+
+	
 	public boolean correct()
 	{
 		String s;
@@ -31,7 +48,7 @@ public class JumpInstruction extends NumInstruction {
 				if (s.indexOf(s2[j]) + (s2[j].length()) + 1 > s.indexOf("#"))
 				{ for (y = (s.indexOf("#") + 1); y < s.length(); y++)
 						{if (!(Character.isDigit(s.charAt(y)))) return false;}
-				//no i jeszcze jeden if czy to sa dwie liczby czy jedna
+				//checking if there are two numbers or one
 				int a,b,d,e,f,g;
 				a = (s.length() - s.indexOf("#"));
 				int c = 0;
@@ -77,9 +94,13 @@ public class JumpInstruction extends NumInstruction {
 		return 0;
 	}
 	
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
+	
 	public Instruction getInstruction() {
 		
-		//&*
+		
 		InstructionHandle ih = null;
 		
 		if (!correct())
@@ -148,13 +169,21 @@ public class JumpInstruction extends NumInstruction {
 		
 		}
 	
+	/**
+	 * Jump instruction requires an instruction number of 
+	 * its target as a parameter. This method is resposible 
+	 * for setting such a number. The case that target line 
+	 * does not exist is not completely solved yet.
+	 * 
+	 */
+	
 	public void setTarget(InstructionList il, Instruction ins) {
 		int i = 0;
 		i = getInd();
 		InstructionHandle iha = null;
-		// dodany parametr do getInstruction
+		// add parameter to getInstruction
 		iha = il.findHandle(i);
-		//TODO Rozwi¹zanie bardzo prowizoryczne!!
+		//TODO not generalized !-3
 		if (iha == null) iha = il.findHandle(i - 3);
 		System.out.println("i = " + i);
 		if (il == null) System.out.println("null il");

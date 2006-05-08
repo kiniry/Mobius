@@ -13,15 +13,30 @@ import org.apache.bcel.generic.NEW;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * This is a set of various instructions with class name
+ * as a parameter.
+ * 
  * @author Jaros³aw Paszek
  *
  */
 public class NewInstruction extends StringInstruction {
 
-	//&* usuwam grrhh	
+		
 	public NewInstruction(String l, String n) {
 		super(l, n);
 	}
+	
+	
+	/**
+	 * New instruction line is correct if it has 
+	 * one parameter that is a class name and
+	 * another one that is a number in ().
+	 * 
+	 *@see InstructionLineController#correct() 
+	 */
 	public boolean correct()
 	{
 		String s;
@@ -78,16 +93,16 @@ public class NewInstruction extends StringInstruction {
 		}
 		return 0;
 	}
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
 	
 	public Instruction getInstruction() {
 	int index;
-	//&*
 	if (!correct())
 		return null;
 	index = getInd();
 
-//	   wydaje sie ze dziala dla zmieniania na to samo
-//	   aby testowac przy zmianie na inne ciezko sprawdzic
 	
 	if (name == "anewarray") {
 		return new ANEWARRAY(index);

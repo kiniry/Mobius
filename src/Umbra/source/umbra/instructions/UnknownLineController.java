@@ -5,6 +5,8 @@ package umbra.instructions;
 
 
 /**
+ * This class is resposible for all lines that we cannot classify.
+ * 
  * @author Jaros³aw Paszek
  */
 public class UnknownLineController extends BytecodeLineController {

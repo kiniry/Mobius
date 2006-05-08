@@ -12,6 +12,11 @@ import org.apache.bcel.generic.Instruction;
 import umbra.IBytecodeStrings;
 
 /**
+ * This class is related to some subset of instructions 
+ * depending on parameters. It redefines some crucial while 
+ * handling with single instruction methods(correctness, getting handle).
+ * Instructions of this kind are used to call other methods.
+ * 
  * @author Jaros³aw Paszek
  */
 public class InvokeInstruction extends StringInstruction {
@@ -21,10 +26,15 @@ public class InvokeInstruction extends StringInstruction {
 		super(l, n);
 	}
 	
+	
 	/**
-	 * This is a 
+	 * Invoke instruction line is correct if its parameter 
+	 * contains class name at the beginning and a number in ()
+	 * at the end.
 	 * 
+	 *@see InstructionLineController#correct() 
 	 */
+
 	public boolean correct()
 	{
 		String s;
@@ -33,7 +43,6 @@ public class InvokeInstruction extends StringInstruction {
 		int j;
 		for (j = 0; j < s2.length; j++) {
 			if ((s.indexOf(s2[j]) > 0) && (s.indexOf(s2[j]) < s.indexOf(":") + 2)) 
-				//nie mozna latwo (liczba bo jakies nawiasy ktore jescze nie wiemy jak)
 				
 				if (s.lastIndexOf("(") < 2) return false;
 				if (s.lastIndexOf(")") < 2) return false;
@@ -73,10 +82,14 @@ public class InvokeInstruction extends StringInstruction {
 		return 0;
 	}
 	
+	/**
+	 * @see BytecodeLineController#getInstruction()
+	 */
+	
 	public Instruction getInstruction() {
 	int index;
 	index = getInd();
-	//&*
+	
 	if (!correct())
 		return null;
 	

@@ -5,6 +5,9 @@
 package umbra.instructions;
 
 /**
+ * This is abstract class for all instructions with at least one
+ * parameter.
+ * 
  * @author Jaros³aw Paszek
  *
  */
