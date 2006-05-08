@@ -12,18 +12,15 @@ zip:
 	rm -f ${CLASSDIRECTORY}/javafe
 
 source:	
-	cd java/rcc; ${MAKE} source
+	$(MAKE) -C java/rcc source
 
 clean: cleanclasses
-	cd java/rcc; ${MAKE} clean
-	cd test; ${MAKE} clean
-	rm -f doc/rcc.html doc/man1/*.1
-	cd doc/javadoc; rm -f *.html
-	find . -name mon.out -exec rm -f {} \;
+	$(MAKE) -C java/rcc clean
+	find -name mon.out | xargs rm -f
 	rm -f ${CLASSDIRECTORY}/rcc.zip ${CLASSDIRECTORY}/javafe
 
 cleanclasses:
-	cd classes; find . -name \*.class -exec \rm -f {} \;
+	cd classes && find . -name \*.class -exec \rm -f {} \;
 
 prot:
 	chmod -fR a+rwX .
@@ -91,7 +88,9 @@ depend:
 
 rcc:	source
 	cd java; \
-	javac -d ${CLASSDIRECTORY} ./rcc/Main.java \
+	${JAVAC} -d ${CLASSDIRECTORY} \
+	./rcc/Main.java \
+	./rcc/RccOptions.java \
 	./rcc/ast/CloneWithSubstitution.java\
 	./rcc/ast/EqualsAST.java\
 	./rccwizard/Main.java\
