@@ -28,7 +28,7 @@ public class Module extends CoqType{
 	}
 
 	public String toString() {
-		return "Module " + super.toString();
+		return super.toString();
 	}
 	
 

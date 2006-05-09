@@ -39,14 +39,41 @@ public class Declaration extends CoqType {
 			fName = name;
 			fImg = CoqProverTranslator.imgs[3];
 		}
+		else if(name.startsWith("Fixpoint")) {
+			int i = name.indexOf(":=");
+			if(i == -1) {
+				i = name.length() -1;
+			}
+			name = name.substring(0, i);
+			fName = name;
+			fImg = CoqProverTranslator.imgs[8];
+		}
+		else if(name.startsWith("Record")) {
+			int i = name.indexOf(":=");
+			if(i == -1) {
+				i = name.length() -1;
+			}
+			name = name.substring(0, i);
+			fName = name;
+			fImg = CoqProverTranslator.imgs[9];
+		}
+		else if(name.startsWith("Let")) {
+			int i = name.indexOf(":=");
+			if(i == -1) {
+				i = name.length() -1;
+			}
+			name = name.substring(0, i);
+			fName = name;
+			fImg = CoqProverTranslator.imgs[10];
+		}
 		else if(name.startsWith("Scheme")) {
 			name = name.substring(0, name.length() -2);
 			fName = name;
-			fImg = CoqProverTranslator.imgs[3];
+			fImg = CoqProverTranslator.imgs[6];
 			setLength(len -2);
 		}
 		else {
-			fImg = CoqProverTranslator.imgs[3];
+			fImg = CoqProverTranslator.imgs[7];
 		}
 	}
 

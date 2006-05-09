@@ -228,7 +228,12 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 					createImage("/icons/sections.gif"),
 					createImage("/icons/defs1.gif"),
 					createImage("/icons/defs2.gif"),
-					createImage("/icons/defs3.gif")};
+					createImage("/icons/defs3.gif"),
+					createImage("/icons/defs4.gif"),
+					createImage("/icons/defs5.gif"),
+					createImage("/icons/defs6.gif"),
+					createImage("/icons/defs7.gif"),
+					createImage("/icons/defs8.gif")};
 			imgs = tab;
 		}
 		CoqConstructFinder ccf = new CoqConstructFinder(ed, doc);
