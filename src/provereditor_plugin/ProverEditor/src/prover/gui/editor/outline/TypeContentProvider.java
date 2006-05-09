@@ -14,7 +14,6 @@ public class TypeContentProvider implements ITreeContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		// TODO Auto-generated method stub
 	}
 
 	public Object[] getChildren(Object parent) {

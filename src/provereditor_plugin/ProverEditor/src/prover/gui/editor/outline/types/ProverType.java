@@ -1,6 +1,7 @@
 package prover.gui.editor.outline.types;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
@@ -38,7 +39,10 @@ public class ProverType {
 	public void add(ProverType pt) {
 		subtypes.add(pt);
 		pt.supertype = this;
+		pt.addPath(getPath());
 	}
+
+
 
 	public Object [] getSubtypes() {
 		return subtypes.toArray();
@@ -58,5 +62,30 @@ public class ProverType {
 		}
 	}
 
+	String fPath = toString();
+	public String getPath() {
+		return fPath;
+	}
+	private void addPath(String path) {
+		fPath = path + "." + toString();
+	}	
+	public String toString() {
+		return "root";
+	}
+
+	public ProverType findFromPath(String path) {
+		if(!path.startsWith(fPath))
+			return null;
+		if(path.length() == fPath.length())
+			return this;
+		Iterator iter = subtypes.iterator();
+		while(iter.hasNext()) {
+			ProverType pt = (ProverType)iter.next();
+			ProverType res = pt.findFromPath(path);
+			if(res != null)
+				return res;
+		}
+		return null;
+	}
 	
 }
