@@ -148,18 +148,30 @@ Context of Work - Mobius
 \subsection{plugin architecture}
 The main architecture is based on an Eclipse plugin hosting several other
 plugins. Eclipse, itself is plugin based. This modularity is useful to 
-combine its subversion facilities together with cvs to checkout some 
+combine its subversion facilities together with CVS to checkout some 
 CVS or/and SVN projects made in Coq. Eclipse also permits to manage 
 Java programs together with prover interactions really 
 if doing some formal program verification.
 
-The interest of this plugin architecture lies also in the plugin-way of 
-integration in Eclipse. It easily permits to adapt some of the modern 
+The interest of this plugin architecture lies also in the extension points 
+ in Eclipse. It easily allows to adapt some of the modern 
 IDE features to use with the provers a thing which was not the case
-with the extensions for Emacs.
+with the extensions for Emacs, which are in a way less restrictive
+since .
 \subsubsection{Plugins in Eclipse}
-In Eclipse the plugin architecture is based upon extensions:
-extending and/or providing extension points.
+In Eclipse the plugin architecture is based upon extension point by
+extending or providing them. 
+Extension points are defined by a unique identifier which is link
+to a definition of a XML tag. Programmers wanting to extend
+this extension point just have to write an XML file ({\tt plugin.xml}) 
+and provide the right parameters to the tag.
+The plugin providing the extension point inspects at runtime what was 
+specified with the XML tag. One can find the name of a class to load
+and afterward instanciate, the name of a resource or a simple String.
+
+Eclipse provides many extension points. Editors for specific files can be
+added, binding together a specific icon, an highlighting, the extension of a
+file. There are also parts in Eclipse called ViewParts used
 \subsubsection{Plugins in plugins in plugins...}
 One plugin used from Eclipse is the integrated editor, to edit the 
 file for the prover. The main point was using the standard Eclipse file editor
@@ -190,6 +202,13 @@ assistant. There is also a plugin to do some higher level interaction
 with the top-level, i.e. provide some high level Java API to control 
 a Coq top-level, called the CoqSugar plugin. 
 \subsection{ProverEditor}
+\todo{Basic description of the functionalities}\\
+\includegraphics[width=\linewidth]{screenshot1}
+
+A normal execution of ProverEditor...
+
+\includegraphics[width=0.3\linewidth]{toolbar}
+the toolbar
 \subsubsection{Description}
 First we will discuss the main features provided by the ProverEditor plugin
 (the basic plugin). This plugin provides some low level handling of the target
@@ -227,7 +246,9 @@ right parameter.
 For instance for Coq depending on the context it will  reduce to 
 sending the {\tt Back 1} command {\tt Undo 1}
  (if we are within a proof) or {\tt Abort}
-to cancel a proof.
+to cancel a proof.\\
+
+
 \subsubsection{Extending ProverEditor with provers}
 No command line thing 'per se' since
 the it is still entirely configured through Eclipse
@@ -294,8 +315,9 @@ like {\tt Definition}, {\tt Parameter} and other single non-imbricated
 definitions. There is another kind of construct, the imbricated ones.
 In Coq these are the section and the module. These constructs are of
 a binary kind, with one to begin them ({\tt Module m.} or {\tt Section s.})
-and one to end them ({\tt End m.} or {\tt End s.}).
-
+and one to end them ({\tt End m.} or {\tt End s.}).\\
+\includegraphics[width=0.5\linewidth]{coqoutline}\\
+\includegraphics[width=0.6\linewidth]{coqeditor}
 \subsection{The Coq sugar-coated plugin}
 We have made another plugin which add lots of useless things to the basic plugin,
 indeed things that can easily be made over the basic implementation.
@@ -323,7 +345,8 @@ A conclusion.
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Graphical Representation of Proof Trees}
 Now we use the outline to get an idea of the file structures for Coq and PVS.
-
+We plan to do an enhanced outline that could give a representation
+of the proof tree. This structure more akin of the Proof by Pointing.
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Integrating Other Provers}
 We plan to include Isabelle/HOL in a near future.
