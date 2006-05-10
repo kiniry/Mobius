@@ -7,12 +7,14 @@ paper =		paper
 talk = 		talk
 
 texfiles =	$(wildcard *.tex)
-
+jpgfiles =	$(wildcard *.jpg)
 dvifiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.dvi,$(texfile)))
 
 psfiles =	$(foreach texfile,$(texfiles),\
-		$(subst .tex,.ps,$(texfile)))
+		$(subst .tex,.ps,$(texfile))) $(foreach jpgfile,$(jpgfiles), $(subst .jpg,.ps,$(jpgfile)))
+graphicfiles =	$(foreach jpgfile,$(jpgfiles), \
+             $(subst .jpg,.ps,$(jpgfile)))
 
 pdffiles =	$(foreach texfile,$(texfiles),\
 		$(subst .tex,.pdf,$(texfile)))
@@ -29,12 +31,18 @@ talk: 	talk.ps talk.pdf
 # 		Makefile \
 # 		paper.tex paper.bib paper.bbl paper.pdf
 
-paper.pdf: paper.tex
+paper.pdf: $(graphicfiles) paper.tex 
 	pdflatex paper;
 	pdflatex paper;
 	bibtex paper;
 	pdflatex paper;
 	pdflatex paper;
+
+%.pnm : %.jpg
+	jpegtopnm $< > $@
+
+%.ps : %.pnm
+	pnmtops -noturn $< > $@
 
 cleanup:
 	rm -f _region_* *.aux *.log *# *~
