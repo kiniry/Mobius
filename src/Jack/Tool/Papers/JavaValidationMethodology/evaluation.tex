@@ -4,16 +4,17 @@
 \section{Bytecode Verifier}
 The tools have also been tested on a bytecode verifier java implementation. A termination proof has been provided.
 A specific implementation has been coded with on one hand the main loop which remain unchanged whatever the specifications of the virtual machine Java chosen, and other instructions and memory states which depends on selected model.
+\subsection{Implementation and Modelisation}
 The main loop is in a package which contains abstract classes: 
 the instructions and the states are implemented in a more generic way.
 The package containing the implementation is composed from the instructions for the standard Java types and of the states of memory typing. 
-\subsection {Memory states}
+\subsubsection {Memory states}
 The memory states are represented by the State class, which is an abstract class.  It does not contain any precise definition of the memory: 
 one has no information on the stack or on the local variables table. 
 The implementation is relatively simple: 
 it is a class which contains a type stack and a table of the types of the local variables. 
 Functions allowing to read simply these structures and to generate verification error in the cases of misuse are defined.   
-\subsection{Instructions}
+\subsubsection{Instructions}
 The instructions are also represented by an abstract class: 
 the class Instruction.  
 Since in the Kildall algorithm each instruction is associated to a memory state,  the Instruction class has a field of the State type. 
@@ -33,7 +34,7 @@ If it succeeds, a new non null state is build.
 Around ten instructions have been implementeds:  {\tt load} and {\tt blind} for the access to local variables, {\tt push} and {\ ttpop}   to obtain or put element on the stack, {\tt op1} and {\ ttop2} which is two operators who consume both the two top element of the stack and which replaces them by a eesultat of a certain type, {\tt ifle} and {\tt jump} instructions of jump towards another instruction successor, {\tt nop}  the instruction which does not do anything   and finally {\tt stop} which is an instruction which does not have a successor.
 These instructions have an associated type in the OperandType class,
 who can be None, Type1 or Type2.  Those are the minimal instructions to have a Java-like program.  
-\subsection {The main loop}
+\subsubsection {The main loop}
 The main loop is implementes in the Verifier class.
 It is not an abstract class because it uses the properties of the State and Instruction abstract classes  to verify an instruction set on particular states.
 This class provides two functions, the function  {\ tt verify} in which the loop is written and the function {\ tt check} which verify an instruction.
@@ -89,9 +90,9 @@ The lemmas conerning the loop invariant of the verify method and its initialisat
 \input{memory/intro}
 %\subsection{Preliminaries}\label{sec:prelim}
 %\input{memory/prelim}
-\subsection{Modelling memory consumption}\label{sec:verif}
+\subsection{Modelling Memory Consumption}\label{sec:verif}
 \input{memory/technical}
-\subsection{Inferring memory allocation}\label{sec:infer}
+\subsection{Inferring Memory Allocation}\label{sec:infer}
 \input{memory/infer}
 %\subsection{Conclusion}\label{sec:conc}
 %\input{memory/conclusion}
