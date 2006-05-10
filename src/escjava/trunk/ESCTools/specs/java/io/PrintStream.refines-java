@@ -33,13 +33,23 @@ public class PrintStream extends FilterOutputStream {
     //@ public normal_behavior
     //@   ensures outputText.equals("");
     //@   ensures !endsInNewLine;
+    //@   ensures out.isOpen ==> isOpen;
     //@ pure
-    public PrintStream(OutputStream fs);
+    public PrintStream(OutputStream out);
 
-    public PrintStream(java.io.OutputStream Param0, boolean Param1);
+    //@ public normal_behavior
+    //@   ensures outputText.equals("");
+    //@   ensures !endsInNewLine;
+    //@   ensures out.isOpen ==> isOpen;
+    //@ pure
+    public PrintStream(OutputStream out, boolean autoFlush);
 
-
-    public PrintStream(java.io.OutputStream Param0, boolean Param1, java.lang.String Param2)
+    //@ public normal_behavior
+    //@   ensures outputText.equals("");
+    //@   ensures !endsInNewLine;
+    //@   ensures out.isOpen ==> isOpen;
+    //@ pure
+    public PrintStream(OutputStream out, boolean autoFlush, String enoding)
         throws java.io.UnsupportedEncodingException;
 
 
