@@ -93,7 +93,7 @@
 \thispagestyle{empty}
 \begin{abstract}
 
-  An abstract.  
+  An abstract  
 
 \end{abstract}
 
@@ -146,7 +146,7 @@ Context of Work - Mobius
 %=====================================================================
 \section{Design}
 
-\subsection{plugin architecture}
+\subsection{Plugin architecture}
 The main architecture is based on an Eclipse plugin hosting several other
 plugins. Eclipse, itself is plugin based. This modularity is useful to 
 combine its subversion facilities together with CVS to checkout some 
@@ -203,13 +203,43 @@ assistant. There is also a plugin to do some higher level interaction
 with the top-level, i.e. provide some high level Java API to control 
 a Coq top-level, called the CoqSugar plugin. 
 \subsection{ProverEditor}
-\todo{Basic description of the functionalities}\\
+\begin{figure}
+\begin{center}
 \includegraphics[width=\linewidth]{screenshot1}
+\end{center}
+  \caption{A normal execution of ProverEditor}
+  \label{scrs1}
+\end{figure}
+The main features are taken from the above extensions descriptions.
+ProverEditor is formed of 4 parts (\ref{scrs1}): the editor part, the top-level view
+which is the output from the top-level, the outline and the toolbar (as well as the keyboard 
+shortcuts to trigger the actions within the toolbar).
 
-A normal execution of ProverEditor...
+The actions associated with the buttons (\ref{tb}) are:
+\begin{itemize}
+\item spawn a new top-level
+\item progress through the proof
+\item progress to the end of the proof
+\item undo a step
+\item undo to the beginning of the file
+\item cancel an action
+\end{itemize}
 
+These actions are standard and are just like the ones implemented in ProofGeneral
+or CoqIde. In fact the general organisation of the view for ProverEditor is 
+really near the one found in those two tools. One of the the main feature it adds
+is the syntax highlighting of the top-level output. So ProverEditor is basically a simplified
+version of ProofGeneral and CoqIde (with less feature like apply a specific tactic).
+Instead it relies on a light-weight and easy to extend for new provers API integrated in Eclipse.
+
+\begin{figure}
+\begin{center}
 \includegraphics[width=0.3\linewidth]{toolbar}
-the toolbar
+\end{center}
+  \caption{The toolbar}
+  \label{tb}
+\end{figure}
+
 \subsubsection{Description}
 First we will discuss the main features provided by the ProverEditor plugin
 (the basic plugin). This plugin provides some low level handling of the target
@@ -251,27 +281,26 @@ to cancel a proof.\\
 
 
 \subsubsection{Extending ProverEditor with provers}
-No command line thing 'per se' since
-the it is still entirely configured through Eclipse
-the package prover.exec anyway it does not use any of the graphical 
-Eclipse's API beside the Preference Page
-%\subsection{component use via command-line}
+The key feature in ProverEditor is the easiness to add
+some new provers. To add a new prover one must write an Eclipse plugin
+in the standard way and after extend 2 extension points. One forcing
+to implement 2 classes, one to help handle top-level interactions, and
+the other more prover oriented, to implement more gui related things.
 
-\todo{explain properly how to extend}
-To add a new prover:\\
+The first extension point to extend is {\tt org.eclipse.ui.editors}.
+It is the extension point used to add a new file format handling.
+The editor to edit the file is provided by ProverEditor it is the class:
+{\tt prover.gui.editor.ProverEditor}. One of the problem with Eclipse
+is that extension points have to be statically extended. So ProverEditor
+cannot extend the Editor dynamically. Otherwise it would have been easy
+to remove this prerequisite, like what was done for the PreferencePage,
+even though dynamically extending the preference pages isn't either 
+really safe.
 
-First :\\
-Create a plugin project within eclipse.\\
-Extend the extension point:\\
-org.eclipse.ui.editors\\
-with the following standard parameters:\\
-class="prover.gui.editor.ProverEditor"\\
-contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"\\
-and then customize these ones:\\
-extensions=".proof"\\
-icon="icons/mypprover.gif"\\
-id="myprover.MyProverEditor"\\
-name="MyProverEditor"\\
+
+The second one is one extension point specific to ProverEditor.
+The main things it needs to be specified are the 2 classes that the prover
+needs to implement.
 
 Then:\\
 Extend also the extension point\\
@@ -318,8 +347,21 @@ definitions. There is another kind of construct, the imbricated ones.
 In Coq these are the section and the module. These constructs are of
 a binary kind, with one to begin them ({\tt Module m.} or {\tt Section s.})
 and one to end them ({\tt End m.} or {\tt End s.}).\\
-\includegraphics[width=0.5\linewidth]{coqoutline}\\
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.5\linewidth]{coqoutline}
+\end{center}
+  \caption{The outline for Coq}
+  \label{outline}
+\end{figure}
+\begin{figure}
+\begin{center}
 \includegraphics[width=0.6\linewidth]{coqeditor}
+\end{center}
+  \caption{The editor customized for Coq}
+  \label{editor}
+\end{figure}
 \subsection{The Coq sugar-coated plugin}
 We have made another plugin which add lots of useless things to the basic plugin,
 indeed things that can easily be made over the basic implementation.
@@ -339,16 +381,31 @@ to have clearer / more user-readable proof obligations.
 %=====================================================================
 \section{Conclusion}
 
-A conclusion.
+We have implemented a lightweight theorem prover within, based on the extensions
+facilities provided by Eclipse. To have done it lightweight and minimal in its mandatory
+fatures has allowed us to extend it quite fast for the theorem provers like Coq or PVS.
+What will follow is the extension of these basic feature toward more prover specific features.
+One of the main idea would be to extend it in a component based approach.
+Instead of having as in the proof general toolkit one single mediator communicating
+through lighweight protocols to other plugins, we will have separated lightweight
+plugins and their extensions.
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Practical Next Steps}
+The next step will be to have real API plugins for provers. It has already begun
+through Coq's Sugar plugin which only aim is to provide this kind of API.
+It will be done later on for PVS. Other features that should be added
+as separate plugins are the projects and file wizard to creat new prover specific
+files or projects dedicated to a single prover.
+Hints like for Java could also be added, like what is done in Eclipse, when a variable
+is pointed its doc or the nearest documentation from it should appear. 
+
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Graphical Representation of Proof Trees}
 Now we use the outline to get an idea of the file structures for Coq and PVS.
 We plan to do an enhanced outline that could give a representation
-of the proof tree. This structure more akin of the Proof by Pointing.
+of the proof tree. This structure more akin of the Proof by Pointing \cite{bertot94proof}.
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Integrating Other Provers}
 We plan to include Isabelle/HOL in a near future.
