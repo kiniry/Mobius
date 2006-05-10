@@ -1,5 +1,41 @@
 \chapter{Java Validation}
-\section{Java}
+\section{Java and JavaCard}
+ Formal validation of Java programs is a growing research
+ field.  As Java has become a reference language, many technologies are
+ emerging to help Java program validation.  Java can also be
+ considered as a good support for formal techniques, as it has precise 
+semantics \cite{Gosl00a}.
+
+JavaCard is a popular programming language for multiple
+application smart cards.  According to the JavaCard Forum \footnote{http://www.javacardforum.org},
+which involves key players in the field of smart cards, 
+including smart card manufacturers and banks, the JavaCard language has two
+important features that make it the ideal choice for smart cards: 
+\begin{itemize}
+\item JavaCard programs are written in a subset of Java, using
+the JavaCard APIs (Application Programming Interfaces). JavaCard
+developers can therefore benefit from the well-established Java technology; 
+
+\item the JavaCard security model enables multiple applications to
+coexist  on the same card and communicate securely, and in principle,
+enables new applications to be loaded on the card after its issuance.
+\end{itemize}
+Yet recent research has unveiled several problems in the JavaCard
+security model, most notably with object sharing and the associated
+mechanism of shareable interfaces.
+This has  emphasised the necessity to develop environments for
+verifying the security of the JavaCard platform and of JavaCard
+programs.  Thus far JavaCard security (and also Java security) has
+been studied  mainly at two levels:    
+\begin{itemize}
+\item  platform level: here the goal is to prove safety properties of
+the language, in particular type safety and properties related to
+memory management; 
+\item  application level: here the goal is to prove that a specific
+program obeys a given property, and in particular that it satisfies a
+security policy, for example based on information flow. 
+\end{itemize}
+We are focusing at the application level, developping tools and methodologies based on JML to reach this goal.
 \section{JML}
 JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the
 ``Java Modeling Language'', is a behavioral interface

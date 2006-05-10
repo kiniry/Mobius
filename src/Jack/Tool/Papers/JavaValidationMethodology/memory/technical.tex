@@ -93,229 +93,229 @@ instrumented operational semantics, under the proviso that ghost
 assignments triggered by object creation are compatible with the
 instrumented operational semantics. 
 
-\subsubsection{Examples}
-We illustrate hereafter our approach by several examples, coping with
-recursive and overridden methods and with exceptions.
+%\subsubsection{Examples}
+%We illustrate hereafter our approach by several examples, coping with
+%recursive and overridden methods and with exceptions.
 
-\paragraph{Inheritance and overridden methods} Overriding methods
-are treated as follows: whenever a call to a method \method\ is
-performed, we require that there is enough free memory space for the
-maximal consumption by all the methods that override or are overridden
-by \method. In Fig. \ref{classExt} we show a class \srcCode{A}
-and its extending class \srcCode{B}, where \srcCode{B} overrides the
-method \method\ from class \srcCode{A}. Method \method\ is
-invoked by method $n$. Given that the dynamic type of the
-parameter passed to $n$ is not known, we cannot know which of the
-two methods will be invoked. This is the reason for requiring enough
-memory space for the execution of any of these methods.
+%\paragraph{Inheritance and overridden methods} Overriding methods
+%are treated as follows: whenever a call to a method \method\ is
+%performed, we require that there is enough free memory space for the
+%maximal consumption by all the methods that override or are overridden
+%by \method. In Fig. \ref{classExt} we show a class \srcCode{A}
+%and its extending class \srcCode{B}, where \srcCode{B} overrides the
+%method \method\ from class \srcCode{A}. Method \method\ is
+%invoked by method $n$. Given that the dynamic type of the
+%parameter passed to $n$ is not known, we cannot know which of the
+%two methods will be invoked. This is the reason for requiring enough
+%memory space for the execution of any of these methods.
 
 
 
-%After the method execution we consider the extreme case where there is executed the method \method\ that consumes the most.
+%%After the method execution we consider the extreme case where there is executed the method \method\ that consumes the most.
 
-\begin{figure}[!t]%[!htp]
-Specification of method $m$ in class A:
-$$
-\begin{array}{ll}
-//@ \ \requires & \Mem + k  \leq \Max \\
-//@ \ \modifies & \Mem \\
-//@ \ \ensures & \Mem  \leq \oldp(\Mem) + k
-\end{array}
-$$
-
-Specification for method $m$ in class B:
-$$
-\begin{array}{ll}
-//@ \ \requires & \Mem + l  \leq \Max \\
-//@ \ \modifies & \Mem \\
-//@ \ \ensures & \Mem  \leq \oldp(\Mem) + l
-\end{array}
-$$
-
-%\begin{verbatim}
+%\begin{figure}[!t]%[!htp]
+%Specification of method $m$ in class A:
 %$$
-%\begin{array}{l}
-\begin{alltt}
-\srcCode{\textbf{public void n (\srcCode{A} a)}}
-... 
-//\small{\textit{Prove } \srcCode{\Mem +} \textit{max(l,k)} \srcCode{<= \Max}}
-\srcCode{invokevirtual <A.m>}
-//\small{\textit{Assume } \srcCode{\Mem <= \oldp(\Mem) +} \textit{max(l,k)}}
-...
-\end{alltt}
-%\end{verbatim}
+%\begin{array}{ll}
+%//@ \ \requires & \Mem + k  \leq \Max \\
+%//@ \ \modifies & \Mem \\
+%//@ \ \ensures & \Mem  \leq \oldp(\Mem) + k
 %\end{array}
 %$$
 
-\caption{\sc Example of overridden methods}
-\label{classExt}
-\end{figure}
+%Specification for method $m$ in class B:
+%$$
+%\begin{array}{ll}
+%//@ \ \requires & \Mem + l  \leq \Max \\
+%//@ \ \modifies & \Mem \\
+%//@ \ \ensures & \Mem  \leq \oldp(\Mem) + l
+%\end{array}
+%$$
+
+%%\begin{verbatim}
+%%$$
+%%\begin{array}{l}
+%\begin{alltt}
+%\srcCode{\textbf{public void n (\srcCode{A} a)}}
+%... 
+%//\small{\textit{Prove } \srcCode{\Mem +} \textit{max(l,k)} \srcCode{<= \Max}}
+%\srcCode{invokevirtual <A.m>}
+%//\small{\textit{Assume } \srcCode{\Mem <= \oldp(\Mem) +} \textit{max(l,k)}}
+%...
+%\end{alltt}
+%%\end{verbatim}
+%%\end{array}
+%%$$
+
+%\caption{\sc Example of overridden methods}
+%\label{classExt}
+%\end{figure}
 
 
-\paragraph{Recursive Methods} In Fig. \ref{recMeth} the bytecode
-of the recursive method $m$ and its specification are shown. For
-simplicity we show only a simplified version of the bytecode; we
-assume that the constructors for the class \srcCode{A} and \srcCode{C}
-do not allocate memory. Besides the pre- and the postcondition, the
-specification also includes information about the termination of the
-method: \variant\ $\local{1}$, meaning that the local variable
-$\local{1}$ decreases on every recursive call down to $0$, guaranteeing 
-that the execution of the method will terminate.
+%\paragraph{Recursive Methods} In Fig. \ref{recMeth} the bytecode
+%of the recursive method $m$ and its specification are shown. For
+%simplicity we show only a simplified version of the bytecode; we
+%assume that the constructors for the class \srcCode{A} and \srcCode{C}
+%do not allocate memory. Besides the pre- and the postcondition, the
+%specification also includes information about the termination of the
+%method: \variant\ $\local{1}$, meaning that the local variable
+%$\local{1}$ decreases on every recursive call down to $0$, guaranteeing 
+%that the execution of the method will terminate.
 
  
-%Now we explain why such a precondition is required for method \textbf{m} in order to specify the property for constraint memory consumption. 
+%%Now we explain why such a precondition is required for method \textbf{m} in order to specify the property for constraint memory consumption. 
 
-\begin{figure}[!t]
-\begin{alltt}
-public class D \{
- public void m (int i) \{
-   if (i > 0) \{ new A(); m(i-1); new A(); \}
-   else \{ new C(); new A(); \} \} \}
-\end{alltt}
-$$
-\begin{array}{l}
- //@ \ \requires \ \Mem + \allocInstance{A} + \allocInstance{C}) \\
-\ \ \ \ \ \ \ \ \ \ \ \ \  + \local{1}*2*\allocInstance{A} \le \Max \\
-//@ \ \variant \ \local{1} \\
-//@ \  \ensures  \ \local{1} \ge 0 \ \wedge \ \Mem \leq \oldp(\Mem)\ +  \\
-\ \ \ \ \ \ \ \ \ \oldp(\local{1})*2*\allocInstance{A}\ + \\
-\ \ \ \ \ \ \ \ \ \allocInstance{A} +  \allocInstance{C})
-\end{array}$$
+%\begin{figure}[!t]
+%\begin{alltt}
+%public class D \{
+% public void m (int i) \{
+%   if (i > 0) \{ new A(); m(i-1); new A(); \}
+%   else \{ new C(); new A(); \} \} \}
+%\end{alltt}
+%$$
+%\begin{array}{l}
+% //@ \ \requires \ \Mem + \allocInstance{A} + \allocInstance{C}) \\
+%\ \ \ \ \ \ \ \ \ \ \ \ \  + \local{1}*2*\allocInstance{A} \le \Max \\
+%//@ \ \variant \ \local{1} \\
+%//@ \  \ensures  \ \local{1} \ge 0 \ \wedge \ \Mem \leq \oldp(\Mem)\ +  \\
+%\ \ \ \ \ \ \ \ \ \oldp(\local{1})*2*\allocInstance{A}\ + \\
+%\ \ \ \ \ \ \ \ \ \allocInstance{A} +  \allocInstance{C})
+%\end{array}$$
 
-\begin{alltt}
-\srcCode{\textbf{public void m()}}
-\srcCode{0 \load\_1} //\small{\textit{Local var. loaded on the stack of \textbf{m}}}
-\srcCode{1 ifle 12} //\small{\textit{If \local{1} <= 0 jump}}
-\srcCode{2 new <A>} //\small{\textit{Here \local{1} > 0  } }
-//set \Mem = \Mem + \allocInstance{A}
-\srcCode{3 invokespecial <A.<init>>}
-\srcCode{4 aload\_0}
-\srcCode{5 iload\_1}
-\srcCode{6 iconst\_1}
-\srcCode{7 isub} //\small{\textit{\local{1} decremented with 1}}
-\srcCode{8 invokevirtual <D.m>} //\small{\textit{Recursive call}}
-\srcCode{9 new <A>}
-//set \Mem = \Mem + \allocInstance{A}
-\srcCode{10 invokespecial <A.<init>>}
-\srcCode{11 goto 16}
-\srcCode{12 new <A>} //\small{\textit{Target of the jump at \srcCode{1}}}
-//set \Mem = \Mem +  \allocInstance{A}
-\srcCode{13 invokespecial <A.<init>>}
-\srcCode{14 new  <C>}
-//set \Mem = \Mem + \allocInstance{C}
-\srcCode{15 invokespecial <C.<init>>}
-\srcCode{16 return}
-\end{alltt}
+%\begin{alltt}
+%\srcCode{\textbf{public void m()}}
+%\srcCode{0 \load\_1} //\small{\textit{Local var. loaded on the stack of \textbf{m}}}
+%\srcCode{1 ifle 12} //\small{\textit{If \local{1} <= 0 jump}}
+%\srcCode{2 new <A>} //\small{\textit{Here \local{1} > 0  } }
+%//set \Mem = \Mem + \allocInstance{A}
+%\srcCode{3 invokespecial <A.<init>>}
+%\srcCode{4 aload\_0}
+%\srcCode{5 iload\_1}
+%\srcCode{6 iconst\_1}
+%\srcCode{7 isub} //\small{\textit{\local{1} decremented with 1}}
+%\srcCode{8 invokevirtual <D.m>} //\small{\textit{Recursive call}}
+%\srcCode{9 new <A>}
+%//set \Mem = \Mem + \allocInstance{A}
+%\srcCode{10 invokespecial <A.<init>>}
+%\srcCode{11 goto 16}
+%\srcCode{12 new <A>} //\small{\textit{Target of the jump at \srcCode{1}}}
+%//set \Mem = \Mem +  \allocInstance{A}
+%\srcCode{13 invokespecial <A.<init>>}
+%\srcCode{14 new  <C>}
+%//set \Mem = \Mem + \allocInstance{C}
+%\srcCode{15 invokespecial <C.<init>>}
+%\srcCode{16 return}
+%\end{alltt}
 
-\caption{\sc Example of a recursive method}
- \label{recMeth}
-\end{figure}
+%\caption{\sc Example of a recursive method}
+% \label{recMeth}
+%\end{figure}
 
-We explain first the precondition. If the condition of line
-\srcCode{1} is not true, the execution continues at line
-\srcCode{2}. In the sequential execution up to line \srcCode{7}, the
-program allocates at most $\allocInstance{A}$ memory units and
-decrements by $1$ the value of $\local{1}$. The instruction at line
-\srcCode{8} is a recursive call to $m$, which either will take the
-same branch if $\local{1} > 0 $ or will jump to line \srcCode{12}
-otherwise, where it allocates at most $\allocInstance{A} +
-\allocInstance{C}$ memory units. On returning from the recursive call
-one more allocation will be performed at line \srcCode{9}.  Thus $m$
-will execute, $\local{1}$ times, the instructions from lines
-\srcCode{2} to \srcCode{7}, and it finally will execute all the
-instructions from lines \srcCode{12} to \srcCode{16}.
+%We explain first the precondition. If the condition of line
+%\srcCode{1} is not true, the execution continues at line
+%\srcCode{2}. In the sequential execution up to line \srcCode{7}, the
+%program allocates at most $\allocInstance{A}$ memory units and
+%decrements by $1$ the value of $\local{1}$. The instruction at line
+%\srcCode{8} is a recursive call to $m$, which either will take the
+%same branch if $\local{1} > 0 $ or will jump to line \srcCode{12}
+%otherwise, where it allocates at most $\allocInstance{A} +
+%\allocInstance{C}$ memory units. On returning from the recursive call
+%one more allocation will be performed at line \srcCode{9}.  Thus $m$
+%will execute, $\local{1}$ times, the instructions from lines
+%\srcCode{2} to \srcCode{7}, and it finally will execute all the
+%instructions from lines \srcCode{12} to \srcCode{16}.
 
-The postcondition states that the method will perform no more than
-$\oldp(\local{1})$ recursive calls (i.e., the value of the register
-variable in the pre-state of the method) and that on every recursive
-call it allocates no more than two instances of class \texttt{A} (one
-corresponding to line \srcCode{2} and the other to line \srcCode{9})
-and that it will finally allocate one instance of class \texttt{A}
-(line \srcCode{12}) and another of class \texttt{C} (line
-\srcCode{14}).
+%The postcondition states that the method will perform no more than
+%$\oldp(\local{1})$ recursive calls (i.e., the value of the register
+%variable in the pre-state of the method) and that on every recursive
+%call it allocates no more than two instances of class \texttt{A} (one
+%corresponding to line \srcCode{2} and the other to line \srcCode{9})
+%and that it will finally allocate one instance of class \texttt{A}
+%(line \srcCode{12}) and another of class \texttt{C} (line
+%\srcCode{14}).
 
-For proving the correctness of this method, 18 proof obligations were
-generated with Jack, most of which were automatically proved in Coq
-using its standard tactics.
-
-
-\paragraph{Loops} must also be annotated with appropriate invariants,
-and with variants that guarantee their termination. If we know that
-some expression $e$ bound by \verb!0! decreases at every
-iteration of the loop, and that each loop iteration will not allocate
-more than $k$ units, then we can strengthen the loop invariant
-to:
-$$\begin{array}{l}
-//@ \ \modifies \ i, \Mem \\
-//@ \ \invariant \ 0 \le e \wedge \ \Mem \le \atState{\Mem}{Before_{l}} + e * k \\
-
-//@ \ \variant \ e
-\end{array}$$
-$\atState{\Mem}{Before_{l}}$ is a special variable denoting the value
-of the consumed memory just before entering for the first time the
-loop \progLoop{l}. At every iteration the consumed memory must not go
-beyond the upper bound given for the body of loop.
-
-\paragraph{More precise specification} We can be more precise in
-specifying the precondition of a method by considering the field
-values of an instance, for example. Let \method\ be the method shown
-in Fig. \ref{excMeth} and assume no allocations are done in the
-constructor of the class \texttt{A}. The first line of \method\
-initialises one of the fields of field \texttt{b}. Since nothing
-guarantees that \texttt{b} is not \NULL, the execution may terminate
-with \texttt{NullPointerException}. Depending on the values of the
-parameters passed to \method, the memory allocated will be
-different. The precondition specifies the required memory space
-depending on whether the field \texttt{b} is \NULL\ or not.  In the
-normal postcondition we state that the method has allocated an object
-of class \texttt{A}. The exceptional postcondition states that no
-allocation is performed if \texttt{NullpointerException} causes the
-termination.
+%For proving the correctness of this method, 18 proof obligations were
+%generated with Jack, most of which were automatically proved in Coq
+%using its standard tactics.
 
 
-\begin{figure}[!t]
-%\begin{figure}[t]
-$$
-\begin{array}{l}
-//@\  \requires\ \ !(\local{1} == \NULL) \Rightarrow  \\
-\ \ \ \ \ \ \ \ \ \ \ \ \ \ \phantom{\local{1}} \Mem +  \allocInstance{A} \le \Max \\
-//@\  \modifies\ \ \Mem \\
-//@\  \ensures \ \Mem \le \oldp(\Mem) +  \allocInstance{A} \\
-//@\   \exsures{NullPointerException} \\
-\hspace*{4.5cm} \Mem == \oldp(\Mem)
-\end{array}$$\\
-\begin{tabular}{lr}
-\begin{minipage}[t]{7cm}
-\begin{alltt}
-\srcCode{0 aload\_0}
-\srcCode{1 getfield<C.b>}
-\srcCode{2 iload\_2}
-\srcCode{3 putfield <B.i>}
-\srcCode{4 new <A>}
-//set \Mem = \Mem +
-      \allocInstance{A}
-\srcCode{5 dup}
-\srcCode{6 invokespecial <A.<init>>}
-\srcCode{7 astore\_1}
-\srcCode{8 return}
-\end{alltt}
-\end{minipage}
- &
-\begin{minipage}[t]{4cm}
-\begin{alltt}
-public class C
-\{
-  B b;
-  public void m (A a, int i)
-  \{
-      b.i = i ;
-      a = new A();
-  \}
-\}
-\end{alltt}
-\end{minipage}
-\end{tabular}
-\caption{\sc Example of a method with possible exceptional termination}
-\label{excMeth}
-\end{figure}
+%\paragraph{Loops} must also be annotated with appropriate invariants,
+%and with variants that guarantee their termination. If we know that
+%some expression $e$ bound by \verb!0! decreases at every
+%iteration of the loop, and that each loop iteration will not allocate
+%more than $k$ units, then we can strengthen the loop invariant
+%to:
+%$$\begin{array}{l}
+%//@ \ \modifies \ i, \Mem \\
+%//@ \ \invariant \ 0 \le e \wedge \ \Mem \le \atState{\Mem}{Before_{l}} + e * k \\
+
+%//@ \ \variant \ e
+%\end{array}$$
+%$\atState{\Mem}{Before_{l}}$ is a special variable denoting the value
+%of the consumed memory just before entering for the first time the
+%loop \progLoop{l}. At every iteration the consumed memory must not go
+%beyond the upper bound given for the body of loop.
+
+%\paragraph{More precise specification} We can be more precise in
+%specifying the precondition of a method by considering the field
+%values of an instance, for example. Let \method\ be the method shown
+%in Fig. \ref{excMeth} and assume no allocations are done in the
+%constructor of the class \texttt{A}. The first line of \method\
+%initialises one of the fields of field \texttt{b}. Since nothing
+%guarantees that \texttt{b} is not \NULL, the execution may terminate
+%with \texttt{NullPointerException}. Depending on the values of the
+%parameters passed to \method, the memory allocated will be
+%different. The precondition specifies the required memory space
+%depending on whether the field \texttt{b} is \NULL\ or not.  In the
+%normal postcondition we state that the method has allocated an object
+%of class \texttt{A}. The exceptional postcondition states that no
+%allocation is performed if \texttt{NullpointerException} causes the
+%termination.
+
+
+%\begin{figure}[!t]
+%%\begin{figure}[t]
+%$$
+%\begin{array}{l}
+%//@\  \requires\ \ !(\local{1} == \NULL) \Rightarrow  \\
+%\ \ \ \ \ \ \ \ \ \ \ \ \ \ \phantom{\local{1}} \Mem +  \allocInstance{A} \le \Max \\
+%//@\  \modifies\ \ \Mem \\
+%//@\  \ensures \ \Mem \le \oldp(\Mem) +  \allocInstance{A} \\
+%//@\   \exsures{NullPointerException} \\
+%\hspace*{4.5cm} \Mem == \oldp(\Mem)
+%\end{array}$$\\
+%\begin{tabular}{lr}
+%\begin{minipage}[t]{7cm}
+%\begin{alltt}
+%\srcCode{0 aload\_0}
+%\srcCode{1 getfield<C.b>}
+%\srcCode{2 iload\_2}
+%\srcCode{3 putfield <B.i>}
+%\srcCode{4 new <A>}
+%//set \Mem = \Mem +
+%      \allocInstance{A}
+%\srcCode{5 dup}
+%\srcCode{6 invokespecial <A.<init>>}
+%\srcCode{7 astore\_1}
+%\srcCode{8 return}
+%\end{alltt}
+%\end{minipage}
+% &
+%\begin{minipage}[t]{4cm}
+%\begin{alltt}
+%public class C
+%\{
+%  B b;
+%  public void m (A a, int i)
+%  \{
+%      b.i = i ;
+%      a = new A();
+%  \}
+%\}
+%\end{alltt}
+%\end{minipage}
+%\end{tabular}
+%\caption{\sc Example of a method with possible exceptional termination}
+%\label{excMeth}
+%\end{figure}
 
