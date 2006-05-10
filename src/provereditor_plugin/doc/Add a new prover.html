@@ -9,10 +9,11 @@ Create a plugin project  within eclipse.
 Extend the extension point:<br/>
 org.eclipse.ui.editors<br/>
 with the following standard parameters:<br/>
+(put a proper id and name depending on the use)
 class="prover.gui.editor.ProverEditor"<br/>
 contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"<br/>
 and then customize these ones:<br/>
-extensions=".proof"<br/>
+extensions="proof"<br/>
 icon="icons/mypprover.gif"<br/>
 id="myprover.MyProverEditor"<br/>
 name="MyProverEditor"<br/>
@@ -20,6 +21,7 @@ name="MyProverEditor"<br/>
 Then:<br/>
 Extend also the extension point<br/>
 prover.editor.prover<br/>
+(add as dependencies)
 and fill up all the asked parameters<br/>
 (the extension must be the same as the editor extension)<br/>
 The specified name must be the name
@@ -28,6 +30,20 @@ The translator tag need to be specified a class that extends:<br/>
 prover.plugins.AProverTranslator.<br/>
 The toplevel tag need to be specified a class that extends:<br/>
 prover.plugins.IProverTopLevel.<br/>
+
+It's time to fix the class path of  the project (normallu no need to add Prover
+Editor to project dependencies)
+org.eclipse.jface.text in dependencies
+
+Now implement the
+getCommands methods which are made to call the prover specific commands.
+getErrorMessage should be defined at the same time getCompilingMessage
+
+ProofState Rules (Proof rules)
+FileRules
+Parsing Rules 
+--> maybe add yr own rule?
+
 </body>
 </html>
            
