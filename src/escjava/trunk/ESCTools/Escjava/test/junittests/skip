@@ -50,6 +50,7 @@ FormalNullableInheritance.java
 InheritNullable.java
 ManyAlsos.java
 NonNullDefault.java
+StaticInnerClasses.java
 ## Tests that are currently failing and are being worked on.
 ## @see bug #156 (assigned to Radu Grigore)
 ExceptionChild.java
