@@ -1,10 +1,12 @@
 # $Id$
 
+ifndef TEXINPUTS
 LATEXDIR=$(HOME)/LaTeX
 ifeq ($(wildcard ${LATEXDIR}/*.tex),)
   LATEXDIR=$(HOME)/pkg/LaTeX
 endif
 
 TEXINPUTS=$(LATEXDIR)//:
+endif
 
 # End of file
