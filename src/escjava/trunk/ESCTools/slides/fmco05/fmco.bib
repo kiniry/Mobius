@@ -87,6 +87,19 @@ YEAR         = 1990}
   year =	 2000,
 }
 
+@Article{Borgida-Mylopoulos-Reiter95,
+  author =	 {Alex Borgida and John Mylopoulos and Raymond Reiter},
+  title =	 {On the Frame Problem in Procedure Specifications},
+  journal =	 IEEETSE,
+  year =	 1995,
+  key =		 {Borgida \& Mylopoulos \& Reiter},
+  volume =	 21,
+  number =	 10,
+  month =	 Oct,
+  pages =	 {785-798},
+  annote =	 {34 references.}
+}
+
 @article{STTT05,
   author = 	 {Lilian Burdy and Yoonsik Cheon and David Cok and 
                    Michael Ernst and Joe Kiniry and Gary T. Leavens and 
@@ -176,20 +189,6 @@ YEAR         = 1990}
   Annote =  "19 references."
 }
 
-@TechReport{Cheon-etal03,
-  Key =      "Cheon \& Leavens \& Sitaraman \& Edwards",
-  Author =   "Yoonsik Cheon and Gary T. Leavens and Murali
-                  Sitaraman and Stephen Edwards",
-  Title =    "Model Variables: Cleanly Supporting Abstraction in
-                  Design By Contract",
-  Institution =  "Department of Computer Science, Iowa State
-                  University",
-  Month =    Apr,
-  Year =     2003,
-  Number =   "03-10",
-  Annote =   "39 references."
-}
-
 @InProceedings{Leino98,
   key =		 {Leino},
   author =	 {K. Rustan M. Leino},
@@ -241,17 +240,35 @@ NUMBER = "4",
 PAGES  = "271-281",
 YEAR   = "1972"}
 
-@Unpublished{Leavens-etal05a,
+@Unpublished{Leavens-etal06,
   Key =		 {Leavens, {\em et al.}},
   Author =	 {Gary T. Leavens and Erik Poll and Curtis Clifton and
                   Yoonsik Cheon and Clyde Ruby and David R. Cok and
                   Peter M\"{u}ller and Joseph Kiniry and Patrice Chalin},
   Title =	 {{JML} Reference Manual},
-  Month =	 Jul,
+  Month =	 Jan,
   Year =	 2006,
   Note =	 {Department of Computer Science, Iowa State
                   University. Available from
                   {\url{http://www.jmlspecs.org}}}
+}
+
+@InProceedings{Ruby-Leavens00,
+  Key =		 "Ruby \& Leavens",
+  Author =	 "Clyde Ruby and Gary T. Leavens",
+  Title =	 "Safely Creating Correct Subclasses without Seeing
+                  Superclass Code",
+  BookTitle =	 "OOPSLA 2000 Conference on Object-Oriented
+                  Programming, Systems, Languages, and Applications,
+                  Minneapolis, Minnesota",
+  Series =	 SIGPLAN,
+  Volume =	 "35(10)",
+  Month =	 Oct,
+  Year =	 2000,
+  Pages =	 "208-228",
+  URL =
+                  "ftp://ftp.cs.iastate.edu/pub/techreports/TR00-05/TR.ps.gz",
+  Annote =	 "39 references."
 }
 
 @TechReport{Leavens-Baker-Ruby06,
@@ -268,6 +285,7 @@ YEAR   = "1972"}
   Annote =	 "79 references.",
   Note =	 "To appear in \emph{ACM SIGSOFT Software Engineering Notes}."
 }
+
 @Book{Morgan94,
   Key =		 "Morgan",
   Author =	 "Carroll Morgan",
@@ -298,6 +316,34 @@ YEAR   = "1972"}
   Address =	 "Cambridge, Mass.",
   Annote =	 "Program design. CLU used as a vehicle and defined."
 }
+
+@Article{Liskov88,
+  Key =		 "Liskov",
+  Author =	 "Barbara Liskov",
+  Title =	 "Data Abstraction and Hierarchy",
+  Journal =	 SIGPLAN,
+  Volume =	 23,
+  Number =	 5,
+  Month =	 May,
+  Year =	 1988,
+  Pages =	 "17-34",
+  Note =	 "Revised version of the keynote address given at
+                  OOPSLA '87.",
+  Annote =	 "When a subclass uses its superclass abstractly (as a
+                  client), then the superclass might just as well have
+                  been a component of the representation. When a
+                  subclass does not use its superclass abstractly,
+                  then this inheritance is an implementation detail
+                  that is best forgotten. So implementation
+                  inheritance may be useful but uninteresting from the
+                  point of view of design. Subtyping, as a semantic
+                  relation, is interesting because it allows one to
+                  keep track of design decisions, group and classify
+                  types, limit the effects of specification changes,
+                  and provides for generics. Data abstraction is
+                  fundamental to object oriented programming."
+}
+
 
 @Article{LiskovWing94,
   key =      "Liskov \& Wing",
@@ -356,6 +402,54 @@ YEAR   = "1972"}
   pages = {137-147},
 }
 
+@TechReport{Leavens90,
+  Key =		 "Leavens",
+  Author =	 "Gary T. Leavens",
+  Title =	 "Modular Verification of Object-Oriented Programs
+                  with Subtypes",
+  Month =	 Jul,
+  Year =	 1990,
+  Institution =	 "Department of Computer Science, Iowa State
+                  University",
+  Address =	 "Ames, Iowa, 50011",
+  Number =	 "90-09",
+  URL =
+                  "ftp://ftp.cs.iastate.edu/pub/techreports/TR90-09/TR.ps.Z",
+  Note =	 "Available by anonymous ftp from
+                  \url{ftp.cs.iastate.edu}, and by e-mail from
+                  almanac@cs.iastate.edu",
+  Annote =	 "Revised thesis. 74 references."
+}
+
+@InCollection{Leavens-Dhara00,
+  key =		 {Leavens \& Dhara},
+  author =	 {Gary T. Leavens and Krishna Kishore Dhara},
+  title =	 {Concepts of Behavioral Subtyping and a Sketch of
+                  Their Extension to Component-Based Systems},
+  booktitle =	 {Foundations of Component-Based Systems},
+  publisher =	 {Cambridge University Press},
+  year =	 2000,
+  editor =	 {Gary T. Leavens and Murali Sitaraman},
+  chapter =	 6,
+  pages =	 {113-135},
+  URL =
+                  {http://www.cs.iastate.edu/~leavens/FoCBS-book/06-leavens-dhara.pdf},
+  annote =	 {A survey of behavioral subtyping. 79 references.}
+}
+
+@Article{Leavens-Weihl95,
+  author =	 {Gary T. Leavens and William E. Weihl},
+  title =	 {Specification and Verification of Object-Oriented
+                  Programs Using Supertype Abstraction},
+  journal =	 {Acta Informatica},
+  year =	 1995,
+  key =		 {Leavens \& Weihl},
+  volume =	 32,
+  number =	 8,
+  month =	 Nov,
+  pages =	 {705-778}
+}
+
 @InProceedings{SpecSharp,
   author =   {Mike Barnett and K. Rustan M. Leino and Wolfram Schulte},
   booktitle = {Construction and Analysis of Safe,
@@ -368,6 +462,27 @@ YEAR   = "1972"}
   pages = {49--69},
 }
 
+@InProceedings{Barnett-etal04a,
+  key =		 {Barnett, {\em et al.}},
+  author = 	 {Mike Barnett and David A. Naumann Wolfram Schulte and Qi Sun},
+  title = 	 {99.44\% pure: Useful Abstractions in Specification},
+  booktitle="Formal Techniques for Java-like Programs (FTfJP'2004)",
+  Month = May,
+  Year =  2004,
+  Pages="11-19",
+  note = 	 {\url{http://www.cs.ru.nl/ftfjp/2004/Purity.pdf}},
+  annote = "18 references."
+}
+
+@InProceedings{Naumann05,
+  key =		 {Naumann},
+  author = 	 {David A. Naumann},
+  title = 	 {Observational Purity and Encapsulation},
+  note = 	 {Obtained from the author},
+  booktitle =	 {Fundamental Aspects of Software Engineering (FASE)},
+  year =	 2005
+}
+
 @InProceedings{LeinoMuller06,
   author =   {K. Rustan M. Leino and Peter M\"{u}ller},
   booktitle = {ESOP'2006},
@@ -376,6 +491,32 @@ YEAR   = "1972"}
   series =   lncs,
   note =   {To appear},
   publisher = {Springer},
+}
+
+@Article{Leavens-etal05,
+  Key =		 {Leavens, {\em et al.}},
+  Author =	 {Gary T. Leavens and Yoonsik Cheon and Curtis Clifton
+                  and Clyde Ruby and David R. Cok},
+  Title =	 {How the Design of {JML} Accommodates Both Runtime
+                  Assertion Checking and Formal Verification},
+  Journal =	 {Science of Computer Programming},
+  Year =	 2005,
+  Month =        Mar,
+  Volume =       55,
+  Number =       {1-3},
+  Publisher =	 {Elsevier},
+  Pages =        {185-208}
+}
+
+@Misc{Poetzsch-Heffter97,
+  Key =		 "Poetzsch-Heffter",
+  Author =	 { Arnd Poetzsch-Heffter },
+  Title =	 { Specification and Verification of Object-Oriented
+                  Programs },
+  HowPublished = { Habilitation thesis, Technical University of Munich
+                  },
+  Month =	 { January },
+  Year =	 1997
 }
 
 @InProceedings{Bartetzko-etal01,
@@ -435,6 +576,21 @@ YEAR   = "1972"}
     booktitle = "Proceedings of the International Workshop on Formal Aspects of Component Software ({FACS'05})",
     year = "2005",
 } 
+
+@InProceedings{Noble-Vitek-Potter98,
+  author =	 {James Noble and Jan Vitek and John Potter},
+  title =	 {Flexible Alias Protection},
+  BookTitle =	 {ECOOP '98 -- Object-Oriented Programming, 12th
+                  European Conference, Brussels, Belgium},
+  Editor =	 "Eric Jul",
+  Series =	 LNCS,
+  Volume =	 1445,
+  Month =	 Jul,
+  Year =	 1998,
+  key =		 {Noble \& Vitek \& Potter},
+  publisher =	 {Springer-Verlag},
+  pages =	 {158-185}
+}
 
 @inproceedings{Flanagan-Et-Al01,
   author =   {Cormac Flanagan and K. Rustan M. Leino},
