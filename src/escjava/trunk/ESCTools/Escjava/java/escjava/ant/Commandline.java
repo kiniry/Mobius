@@ -1,5 +1,7 @@
 // package org.apache.tools.ant.types;
 
+package escjava.ant;
+
 // import java.io.File;
 // import java.util.StringTokenizer;
 // import java.util.Vector;
