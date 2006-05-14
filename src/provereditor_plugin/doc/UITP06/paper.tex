@@ -5,6 +5,7 @@
 \documentclass{entcs}
 
 % \usepackage{latex8}
+\usepackage{entcsmacro}
 \usepackage{times}
 \usepackage{ifpdf}
 % \usepackage{a4wide}
@@ -42,6 +43,7 @@
 % \usepackage[dvips,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 % \fi
 
+\def\lastname{Charles}
 \newcommand{\todo}{\textbf{TODO: }}
 \newcommand{\sstt}{\begin{small}\begin{alltt}}
 \newcommand{\estt}{\end{alltt}\end{small}}
@@ -66,7 +68,7 @@
 
 \begin{frontmatter}
 
-\title{A Lightweight Theorem Prover Interface for Eclipse}
+\title{A Lightweight\\Theorem Prover Interface\\for Eclipse}
 
 \author{Julien Charles\thanksref{charles}}
 
@@ -87,8 +89,6 @@
 \thanks[kiniry]{Email:\href{mailto:joseph.kiniry@ucd.ie}
   {\texttt{\normalshape joseph.kiniry@ucd.ie}}}
 
-\maketitle
-
 %======================================================================
 \thispagestyle{empty}
 \begin{abstract}
@@ -96,19 +96,28 @@
   An abstract  
 
 \end{abstract}
+\begin{keyword}
+ interative theorem prover, Eclipse, IDE, higher-order, interface, editor
+\end{keyword}
 
 \end{frontmatter}
 
 %=====================================================================
 \section{Introduction}
+\label{sec:introduction}
 
 An introduction.
 
 %=====================================================================
 \section{User Interfaces for Theorem Proving}
+\label{sec:user-interf-theor}
+
+Some intro text.
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Command-line Interfaces}
+\label{subsec:comm-line-interf}
+
 All the provers we are targeting (Coq, PVS, Isabelle), have command line interfaces as 
 some top-level. These top-level are all alike. It allows to send some commands
 to the prover and receive its answers. Usually the standard output is
@@ -121,20 +130,30 @@ interaction is somewhat unnatural. That's why usually these basic interactions
 are wrapped up in a graphical environment like in Emacs or for Coq
 in its own IDE Coqide.
 
-
-
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Emacs}
+\label{subsec:emacs}
+
 \todo{jrk, I think you are much more qualified than me for the Emacs part}
+
+%---------------------------------------------------------------------
 \subsubsection{PVS }
+
+%---------------------------------------------------------------------
 \subsubsection{PG}
+
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Eclipse}
+\label{subsec:eclipse}
+
 The Eclipse main project can be used like emacs, as a front-end 
 for an integrated development environment, or more generally as
 a Rich Client Platform \cite{eclipse-rcp}. 
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+%---------------------------------------------------------------------
 \subsubsection{Proof General Toolkit}
+\label{subsubsec:proof-gener-toolk}
+
 \todo{I see more or less things to write for PGToolkit... but I'm not quite
 sure what to put in what follows...}\\
 Motivations - IDE and IVE integration
@@ -145,8 +164,14 @@ Context of Work - Mobius
 
 %=====================================================================
 \section{Design}
+\label{sec:design}
 
+Some intro text.
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Plugin architecture}
+\label{subsec:plugin-architecture}
+
 The main architecture is based on an Eclipse plugin hosting several other
 plugins. Eclipse, itself is plugin based. This modularity is useful to 
 combine its subversion facilities together with CVS to checkout some 
@@ -159,7 +184,11 @@ The interest of this plugin architecture lies also in the extension points
 IDE features to use with the provers a thing which was not the case
 with the extensions for Emacs, which are in a way less restrictive
 since .
+
+%---------------------------------------------------------------------
 \subsubsection{Plugins in Eclipse}
+\label{subsubsec:plugins-eclipse}
+
 In Eclipse the plugin architecture is based upon extension point by
 extending or providing them. 
 Extension points are defined by a unique identifier which is link
@@ -173,7 +202,10 @@ and afterward instanciate, the name of a resource or a simple String.
 Eclipse provides many extension points. Editors for specific files can be
 added, binding together a specific icon, an highlighting, the extension of a
 file. There are also parts in Eclipse called ViewParts used
+
+%---------------------------------------------------------------------
 \subsubsection{Plugins in plugins in plugins...}
+\label{subsubsec:plug-plug-plug}
 One plugin used from Eclipse is the integrated editor, to edit the 
 file for the prover. The main point was using the standard Eclipse file editor
 but extending it with some syntax highlight, a way to block some part
@@ -202,7 +234,10 @@ PVS interactions, a Coq plugin for the interaction with the Coq proof
 assistant. There is also a plugin to do some higher level interaction 
 with the top-level, i.e. provide some high level Java API to control 
 a Coq top-level, called the CoqSugar plugin. 
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{ProverEditor}
+\label{subsec:provereditor}
 \begin{figure}
 \begin{center}
 \includegraphics[width=\linewidth]{screenshot1}
@@ -240,7 +275,10 @@ Instead it relies on a light-weight and easy to extend for new provers API integ
   \label{tb}
 \end{figure}
 
+%---------------------------------------------------------------------
 \subsubsection{Description}
+\label{subsubsec:description}
+
 First we will discuss the main features provided by the ProverEditor plugin
 (the basic plugin). This plugin provides some low level handling of the target
 prover top-level as well as the basic UI bricks to edit a file from the 
@@ -279,8 +317,10 @@ sending the {\tt Back 1} command {\tt Undo 1}
  (if we are within a proof) or {\tt Abort}
 to cancel a proof.\\
 
-
+%---------------------------------------------------------------------
 \subsubsection{Extending ProverEditor with provers}
+\label{subsubsec:extend-prov-with}
+
 The key feature in ProverEditor is the easiness to add
 some new provers. To add a new prover one must write an Eclipse plugin
 in the standard way and after extend 2 extension points. One forcing
@@ -313,12 +353,13 @@ prover.plugins.AProverTranslator.\\
 The toplevel tag need to be specified a class that extends:\\
 prover.plugins.IProverTopLevel.\\
 
-
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %\subsection{component use via Java APIs}
 
 
 %=====================================================================
 \section{Current Plugins}
+\label{sec:current-plugins}
 
 We have made right now several plugins:
 \begin{itemize}
@@ -331,7 +372,11 @@ to do static program verification on Java programs annotated with JML.
 
 \item the PVS plugin which is well... finished?
 \end{itemize}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{The Coq plugin}
+\label{subsec:coq-plugin}
+
 This plugin is made to do interaction with Coq. The core features
 are inside 3 classes. The mandatory plugin class for Eclipse (Eclipse
 needs a plugin class in order to consider it has a plugin. This class
@@ -362,7 +407,11 @@ and one to end them ({\tt End m.} or {\tt End s.}).\\
   \caption{The editor customized for Coq}
   \label{editor}
 \end{figure}
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{The Coq sugar-coated plugin}
+\label{subsec:coq-sugar-coated}
+
 We have made another plugin which add lots of useless things to the basic plugin,
 indeed things that can easily be made over the basic implementation.
 The purpose of this plugin is only to ease the use of Coq within ProverEditor.
@@ -377,9 +426,15 @@ method gives an array of String with the different variable names.
 In Jack we mainly use this API to pretty print the proof obligations with Coq in order
 to have clearer / more user-readable proof obligations.
 
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{The PVS plugin}
+\label{subsec:pvs-plugin}
+
+Some intro text.
+
 %=====================================================================
 \section{Conclusion}
+\label{sec:conclusion}
 
 We have implemented a lightweight theorem prover within, based on the extensions
 facilities provided by Eclipse. To have done it lightweight and minimal in its mandatory
@@ -392,6 +447,8 @@ plugins and their extensions.
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Practical Next Steps}
+\label{subsec:practical-next-steps}
+
 The next step will be to have real API plugins for provers. It has already begun
 through Coq's Sugar plugin which only aim is to provide this kind of API.
 It will be done later on for PVS. Other features that should be added
@@ -403,15 +460,22 @@ is pointed its doc or the nearest documentation from it should appear.
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Graphical Representation of Proof Trees}
+\label{subsec:graph-repr-proof}
+
 Now we use the outline to get an idea of the file structures for Coq and PVS.
 We plan to do an enhanced outline that could give a representation
 of the proof tree. This structure more akin of the Proof by Pointing \cite{bertot94proof}.
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Integrating Other Provers}
+\label{subsec:integr-other-prov}
+
 We plan to include Isabelle/HOL in a near future.
+
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Open Research Questions and Challenges}
+\label{subsec:open-rese-quest}
 
+Some intro text.
 
 %======================================================================
 
