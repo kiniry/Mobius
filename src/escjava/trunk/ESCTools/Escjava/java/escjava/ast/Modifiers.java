@@ -22,7 +22,7 @@ public class Modifiers extends javafe.ast.Modifiers {
   }
 
   //@ ensures \result != null;
-  public static String toString(int modifiers) {
+  public static /*@non_null*/ String toString(int modifiers) {
     String s = javafe.ast.Modifiers.toString(modifiers);
     if (isModel(modifiers)) s = "model " + s;
     // FIXME if (Utils.isPure(modifiers)) s = "pure " + s;

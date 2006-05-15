@@ -87,9 +87,9 @@ public class PvsProver extends ProverType {
 
     }
 
-    /*@
-     @ ensures pvs != null;
-     @*/
+    /* @
+       @ ensures pvs != null;
+       @ */
     private void pvsRename(VariableInfo caller) {
 
         // definitions of different regexp used.
@@ -142,7 +142,7 @@ public class PvsProver extends ProverType {
 
         // <case 2>, capturing |y:8.31|
         else if (m1.matches()) {
-            //@ assert m.groupCount() == 3;
+            //@ assert m1.groupCount() == 3;
 
             if (m1.groupCount() != 3)
                 TDisplay.err(this, "pvsRename()", "m.groupCount() != 3");
@@ -196,9 +196,9 @@ public class PvsProver extends ProverType {
         return caller.def;
     }
 
-    /*@
-     @ ensures pvs != null;
-     @*/
+    /* @
+       @ ensures pvs != null;
+       @ */
     private void pvsRename(TypeInfo caller) {
 
         if (caller.old.equals("null"))
@@ -268,7 +268,7 @@ public class PvsProver extends ProverType {
         return tree;
     }
 
-	public void generateDeclarations(Writer s, HashMap variablesName) throws IOException {
+	public void generateDeclarations(/*@ non_null */ Writer s, HashMap variablesName) throws IOException {
         Set keySet = variablesName.keySet();
 
         Iterator iter = keySet.iterator();

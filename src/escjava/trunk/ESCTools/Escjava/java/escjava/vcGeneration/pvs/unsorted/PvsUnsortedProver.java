@@ -20,9 +20,7 @@ public class PvsUnsortedProver extends escjava.vcGeneration.pvs.PvsProver {
     }
 
     // fixme, does nothing atm
-    /*@
-     @ ensures unsortedPvs != null;
-     @*/
+    /* xxx ensures unsortedPvs != null; */ //prj 15may2006 unsortedPvs not defined
     private void unsortedPvsRename(VariableInfo caller) {
         caller.def = caller.old;
     }
@@ -35,9 +33,7 @@ public class PvsUnsortedProver extends escjava.vcGeneration.pvs.PvsProver {
     }
 
     // fixme, does nothing atm
-    /*@
-     @ ensures unsortedPvs != null;
-     @*/
+    /* xxx ensures unsortedPvs != null; */ //prj 15may2006 unsortedPvs not defined
     private void unsortedPvsRename(TypeInfo caller) {
         caller.def = caller.old;
     }

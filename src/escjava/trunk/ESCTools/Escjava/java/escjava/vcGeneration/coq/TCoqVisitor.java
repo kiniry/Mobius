@@ -251,11 +251,11 @@ class TCoqVisitor extends ANotHandledVisitor {
     	out.appendN(" null");
     }
 
-	public void visitTMethodCall(TMethodCall call) throws IOException {
+	public void visitTMethodCall(/*@non_null*/TMethodCall call) throws IOException {
 		genericFun(p.getVariableInfo(call.getName()), call);
 	}
 
-	public void visitTUnset(TUnset n) throws IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
 		genericFun("unset", n);
 	}
 

@@ -533,7 +533,7 @@ public class TypeSig extends Type
     /**
      * Returns a String that represents the value of this Object.
      */
-    public String toString() {
+    public /*@non_null*/ String toString() {
 	return getExternalName();
     }
 

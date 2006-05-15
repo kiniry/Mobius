@@ -374,17 +374,17 @@ class TDotVisitor extends TVisitor {
 	out.write("\\nnull\"];\n");
     }
 
-	public void visitTMethodCall(TMethodCall call)  throws java.io.IOException{
+	public void visitTMethodCall(/*@non_null*/TMethodCall call)  throws java.io.IOException{
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTUnset(TUnset n) throws java.io.IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) throws java.io.IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTIntegralSub(TIntegralSub sub) throws java.io.IOException {
+	public void visitTIntegralSub(/*@non_null*/TIntegralSub sub) throws java.io.IOException {
 		// TODO Auto-generated method stub
 		
 	}

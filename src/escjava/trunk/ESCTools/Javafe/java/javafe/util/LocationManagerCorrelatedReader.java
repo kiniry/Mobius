@@ -486,7 +486,7 @@ public abstract class LocationManagerCorrelatedReader
    *                                                 *
    * ************************************************/
 
-  public String toString() {
+  public /*@non_null*/String toString() {
     StringBuffer r = new StringBuffer("LocationManagerCorrelatedReader: \"");
     r.append(getFile().getHumanName());
     r.append("\" ");

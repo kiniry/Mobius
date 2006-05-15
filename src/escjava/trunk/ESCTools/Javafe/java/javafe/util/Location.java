@@ -156,7 +156,7 @@ public class Location
    * whole file, or dummy location).
    *********************************************************************/
 
-  public static String toString(int loc) {
+  public static /*@non_null*/String toString(int loc) {
 
     if( loc == NULL )
       return "<dummy location>";

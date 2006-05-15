@@ -107,14 +107,14 @@ public class EscOptions extends JPanel implements ActionListener {
 	//warningsHeader.add(Box.createHorizontalGlue());
 	warningsHeader.add(jb = new JButton("Disable All"));
 	jb.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSUME);
 		init(GUI.gui.options());
 	    }
 	});
 	warningsHeader.add(jb = new JButton("Enable All"));
 	jb.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		NoWarn.setAllChkStatus(TagConstants.CHK_AS_ASSERT);
 		init(GUI.gui.options());
 	    }
@@ -127,7 +127,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	//simplifyHeader.add(Box.createHorizontalGlue());
 	simplifyHeader.add(jb = new JButton("Browse"));
 	jb.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 	        JFileChooser fc = new JFileChooser();
 		fc.setApproveButtonText("Select");
 		int returnVal = fc.showOpenDialog(EscOptions.this);
@@ -150,7 +150,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	misc.add(simplify);
 	simplify.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    System.setProperty("simplify",simplify.getText());
 	        }
 	    });
@@ -221,7 +221,7 @@ public class EscOptions extends JPanel implements ActionListener {
 
     	//@ also
     	//@   requires e != null;
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(/*@non_null*/ActionEvent e) {
 	// write back out to the Options structure
 
 	Object source = e.getSource();
@@ -263,7 +263,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	static private /*@non_null*/ String[] temp = new String[1];
 	//@ also
 	//@   requires e != null;
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(/*@non_null*/ActionEvent e) {
 	    Object o = e.getSource();
 	    if (o instanceof JCheckBox) {
 		JCheckBox cb = (JCheckBox)o;

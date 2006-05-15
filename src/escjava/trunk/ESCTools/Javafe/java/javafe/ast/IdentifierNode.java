@@ -41,7 +41,7 @@ public class IdentifierNode extends ASTNode {
     public int childCount(){ return 0; }
     public Object childAt(int i) { return null; }
     public int getTag() { return 0; }
-    public String toString() { return id.toString(); }
+    public /*@non_null*/String toString() { return id.toString(); }
     public void accept(Visitor v) { }
     public Object accept(VisitorArgResult v, Object o)
         { return this; }

@@ -361,7 +361,7 @@ public final class StackVector
         return vec;
     }
 
-    public String toString() {
+    public /*@non_null*/String toString() {
 	StringBuffer sb = new StringBuffer();
 	sb.append("StackVector[");
 	for (int i=0; i<elementCount; ++i) {

@@ -19,7 +19,7 @@ public class Harvey extends NewProver {
     Harvey.debug = debug;
   }
   
-  public ProverResponse start_prover() {
+  public /*@non_null*/ProverResponse start_prover() {
     
     //++
     if(debug) System.out.println("Harvey::start_prover");
@@ -31,7 +31,7 @@ public class Harvey extends NewProver {
     
   }
   
-  public ProverResponse set_prover_resource_flags(Properties properties) {
+  public /*@non_null*/ProverResponse set_prover_resource_flags(/*@non_null*/Properties properties) {
     
     //++
     if(debug) System.out.println("Harvey::set_prover_resource_flags");
@@ -40,7 +40,7 @@ public class Harvey extends NewProver {
     return null;
   }
   
-  public ProverResponse signature(Signature signature) {
+  public /*@non_null*/ProverResponse signature(/*@non_null*/Signature signature) {
     
     //++
     if(debug)
@@ -50,17 +50,17 @@ public class Harvey extends NewProver {
     return null;
   }
   
-  public ProverResponse declare_axiom(Formula formula) {
+  public /*@non_null*/ProverResponse declare_axiom(/*@non_null*/Formula formula) {
     
     return null;
   }
   
-  public ProverResponse make_assumption(Formula formula) {
+  public /*@non_null*/ProverResponse make_assumption(/*@non_null*/Formula formula) {
     
     return null;
   }
   
-  public ProverResponse retract_assumption(int count) {
+  public /*@non_null*/ProverResponse retract_assumption(int count) {
     
     return null;
   }
@@ -69,7 +69,7 @@ public class Harvey extends NewProver {
    * Everything here is just for demo,
    * but it's ultra lame even compared to interacting with simplify
    */
-  public ProverResponse is_valid(Formula formula,
+  public /*@non_null*/ProverResponse is_valid(/*@non_null*/Formula formula,
       Properties properties) {
     
     PrintWriter file = null;
@@ -124,7 +124,7 @@ public class Harvey extends NewProver {
     return null;
   }
   
-  public ProverResponse stop_prover() {
+  public /*@non_null*/ProverResponse stop_prover() {
     
     //++
     if(debug) System.out.println("Harvey::stop_prover");

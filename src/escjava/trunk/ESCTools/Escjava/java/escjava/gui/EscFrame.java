@@ -115,7 +115,7 @@ public class EscFrame extends JFrame {
 	topFilesPanel.add(new JLabel("CLASSPATH:"));
 	topFilesPanel.add(classpathText = new JTextField(escjava.Main.options.userPath,50));
 	classpathText.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		String s = classpathText.getText();
 		if (s.equals(escjava.Main.options.userPath)) return;
 		escjava.Main.options.userPath = s;
@@ -136,7 +136,7 @@ public class EscFrame extends JFrame {
 	topFilesPanel.add(new JLabel("Specs path:"));
 	topFilesPanel.add(specspathText = new JTextField(escjava.Main.options().specspath,50));
 	specspathText.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		String s = specspathText.getText();
 		if (s.equals(escjava.Main.options().specspath)) return;
 		escjava.Main.options().specspath = s;
@@ -180,24 +180,24 @@ public class EscFrame extends JFrame {
 	JButton button = new JButton("Reload");
 	buttonPanel.add(button);
 	button.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) { 
+	    public void actionPerformed(/*@non_null*/ActionEvent e) { 
 		GUI.processTasks.addTask(new Integer(GUI.RELOAD));
 	} });
 
 	button = new JButton("Clear");
 	buttonPanel.add(button);
 	button.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) { escAction(GUI.CLEAR); } });
+	    public void actionPerformed(/*@non_null*/ActionEvent e) { escAction(GUI.CLEAR); } });
 
 	button = new JButton("Check");
 	button.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) { escAction(GUI.CHECK); } });
+	    public void actionPerformed(/*@non_null*/ActionEvent e) { escAction(GUI.CHECK); } });
 	buttonPanel.add(button);
 
 	button = new JButton("Stop");
 	buttonPanel.add(button);
 	button.addActionListener(new ActionListener() {
-	    public void actionPerformed(ActionEvent e) { 
+	    public void actionPerformed(/*@non_null*/ActionEvent e) { 
 		synchronized (GUI.processTasks) {
 		    GUI.processTasks.clear();
 		    GUI.gui.stop = true; 
@@ -313,7 +313,7 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem("New Project"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    Project.init();
 		}
 	    });
@@ -321,7 +321,7 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem(addDots("Open Project")));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    fc.addChoosableFileFilter(
 			new FileFilter() {
 			    public boolean accept(File f) {
@@ -343,7 +343,7 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem("Save Project"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    if (Project.currentProject != null)
 			Project.write();
 		    else {
@@ -368,7 +368,7 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem(addDots("SaveAs Project")));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    int returnVal = fc.showSaveDialog(frame);
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
@@ -389,14 +389,14 @@ public class EscFrame extends JFrame {
 	if (!runningOnMac) {
 	    menu.add(mi = new JMenuItem("Exit"));
 	    mi.addActionListener( new ActionListener() {
-		public void actionPerformed(ActionEvent e) { System.exit(0); }
+		public void actionPerformed(/*@non_null*/ActionEvent e) { System.exit(0); }
 	    } );
 	}
 
 	menubar.add(menu = new JMenu("View"));
 	menu.add(mi = new JMenuItem("Error window"));
 	mi.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		TreePath[] paths = tree.getSelectionPaths();
 		for (int i=0; i<paths.length; ++i) {
 		    Object o = ((DefaultMutableTreeNode)paths[i].
@@ -408,7 +408,7 @@ public class EscFrame extends JFrame {
 	});
 	menu.add(mi = new JMenuItem("Editor window"));
 	mi.addActionListener( new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		TreePath[] paths = tree.getSelectionPaths();
 		for (int i=0; i<paths.length; ++i) {
 		    Object o = ((DefaultMutableTreeNode)paths[i].
@@ -427,70 +427,70 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem("Check All"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    GUI.processTasks.addTask(new Integer(GUI.CHECK));
 		}});
 
 	menu.add(mi = new JMenuItem("Check Selected"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    if (!tree.isSelectionEmpty()) escAction(GUI.CHECK);
 		}});
 
 	menu.add(mi = new JMenuItem("TypeCheck All"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    GUI.processTasks.addTask(new Integer(GUI.TYPECHECK));
 		}});
 
 	menu.add(mi = new JMenuItem("TypeCheck Selected"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    if (!tree.isSelectionEmpty()) escAction(GUI.TYPECHECK);
 		}});
 
 	menu.add(mi = new JMenuItem("Parse All"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    GUI.processTasks.addTask(new Integer(GUI.PARSE));
 		}});
 
 	menu.add(mi = new JMenuItem("Parse Selected"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    if (!tree.isSelectionEmpty()) escAction(GUI.PARSE);
 		}});
 
 	menu.add(mi = new JMenuItem("Resolve All"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    GUI.processTasks.addTask(new Integer(GUI.RESOLVE));
 		}});
 
 	menu.add(mi = new JMenuItem("Resolve Selected"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    if (!tree.isSelectionEmpty()) escAction(GUI.RESOLVE);
 		}});
 
 	menu.add(mi = new JMenuItem("Clear All"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    GUI.processTasks.addTask(new Integer(GUI.CLEAR));
 		}});
 
 	menu.add(mi = new JMenuItem("Clear Selected"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    if (!tree.isSelectionEmpty()) escAction(GUI.CLEAR);
 		}});
 
@@ -500,7 +500,7 @@ public class EscFrame extends JFrame {
 
 	menu.add(mi = new JMenuItem("Garbage Collect"));
 	mi.addActionListener( new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    System.gc();
 		}
 	});
@@ -538,7 +538,7 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem("Documentation"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    WindowThread.windowTasks.addTask(new WindowThread.HtmlTask("Documentation",
 				"escjava/gui/escjava2gui.html"));
 		}
@@ -547,7 +547,7 @@ public class EscFrame extends JFrame {
 	menu.add(mi = new JMenuItem("Issues/Bugs"));
 	mi.addActionListener(
 	    new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    WindowThread.windowTasks.addTask(new WindowThread.HtmlTask(
 				"Issues & Notes","escjava/gui/issues.html"));
 		}
@@ -561,7 +561,7 @@ public class EscFrame extends JFrame {
 	    super(laf.getName());
 	    this.laf = laf;
 	}
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(/*@non_null*/ActionEvent e) {
 	    try {
 		UIManager.setLookAndFeel(laf.getClassName());
 		SwingUtilities.updateComponentTreeUI(GUI.gui.escframe);
@@ -603,7 +603,7 @@ public class EscFrame extends JFrame {
 
     static /*@non_null*/ ActionListener notimp(final /*@non_null*/ JFrame parent) {
 	return new ActionListener() {
-	    public void actionPerformed(ActionEvent e) {
+	    public void actionPerformed(/*@non_null*/ActionEvent e) {
 		//System.out.println("NOT IMPLEMENTED");
 		JOptionPane.showMessageDialog(parent,"Menu item not implemented");
 	    }

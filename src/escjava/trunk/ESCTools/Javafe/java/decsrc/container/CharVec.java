@@ -96,7 +96,7 @@ public final class CharVec
 
 
     // Operations specific to vectors of characters
-    public String toString() {
+    public /*@non_null*/String toString() {
         return new String(elements, 0, count);
     }
 

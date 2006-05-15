@@ -45,7 +45,7 @@ public class TriggerlessQuantWarning extends SimplifyResult
     //@ also
     //@ normal_behavior
     //@   ensures \result != null;
-    public /*@ pure @*/ String toString() {
+    public /*@ non_null pure @*/ String toString() {
         return super.toString() + " e0=" + e0 + " n=" + n + " e1=" + e1;
     }
 

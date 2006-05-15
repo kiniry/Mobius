@@ -166,7 +166,7 @@ public class ZipGenericFile implements GenericFile {
      * In cases where the notion of "containing directory" makes no
      * sense (e.g., streams or root directories), null is returned.
      */
-    public GenericFile getSibling(String n) { 
+    public GenericFile getSibling(/*@non_null*/String n) { 
 	String name = underlyingZipEntry.getName();
 
 	// Root directory (never appears in real zipfiles) has no siblings:

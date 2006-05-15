@@ -113,7 +113,7 @@ public class Set implements Cloneable
     }
 
 
-    public String toString() {
+    public /*@non_null*/String toString() {
 	return "[SET: "+ht.toString()+"]";
     }
 

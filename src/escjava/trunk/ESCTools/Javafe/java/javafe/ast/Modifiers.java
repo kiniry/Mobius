@@ -32,7 +32,7 @@ public class Modifiers {
   // ----------------------------------------------------------------------
   
   //@ ensures \result != null;
-  public static String toString(int modifiers) {
+  public static /*@non_null*/String toString(int modifiers) {
     String s = "";
 
     for (int i = 0; i < ParseUtil.modifierKeywords.length; i++) {

@@ -194,7 +194,7 @@ abstract public class TNode {
     /**
      * return the {@link VariableInfo} object associated with this name
      */
-    //@ requires variablesName.contains(s);
+    // xxx requires variablesName.contains(s);  //prj 15may2006 s not defined in this context
     static public/*@ non_null @*/VariableInfo getVariableInfo(/*@ non_null @*/String name) {
         return (VariableInfo) variablesName.get(name);
     }
@@ -203,7 +203,7 @@ abstract public class TNode {
      * return the {@link VariableInfo} object associated of the caller which
      * must be an instance of TName.
      */
-    //@ requires variablesName.contains(s);
+    // xxx requires variablesName.contains(s); //prj 15may2006 s not defined in this context
     /*@ non_null @*/VariableInfo getVariableInfo() {
 
         //@ assert this instanceof TName;
@@ -450,7 +450,7 @@ abstract public class TNode {
 
     }
 
-    public String toString() {
+    public /*@non_null*/ String toString() {
         if (type != null)
             return getShortName() + id + ", " + type.old;
         else

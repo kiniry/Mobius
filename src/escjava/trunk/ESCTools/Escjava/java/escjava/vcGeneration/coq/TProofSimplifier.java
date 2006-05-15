@@ -117,8 +117,8 @@ public class TProofSimplifier extends TVisitor {
     /*
      * Methods used to simplify the proof
      */
+//      @ requires indexOfSons >= 0 & indexOfSons <= n.sons.size() - 1;
     /*@
-      @ requires indexOfSons >= 0 & indexOfSons <= n.sons.size() - 1;
       @ requires n.sons.contains(m);
       @*/
     public void simplify(/*@ non_null @*/ TBoolRes n, TNode m){
@@ -165,12 +165,12 @@ public class TProofSimplifier extends TVisitor {
      * Node m is replaced by o in the list of sons of n.
      * Note that after the operation, \old(n.indexOf(m)) == n.indexOf(o);
      */
+//      @ requires m.sons.contains(o);
+//      @ ensures \old(n.indexOf(m)) == n.indexOf(o);
     /*@
       @ requires n.sons.contains(m);
-      @ requires m.sons.contains(o);
       @ ensures n.sons.contains(o);
       @ ensures !n.sons.contains(m);
-      @ ensures \old(n.indexOf(m)) == n.indexOf(o);
       @*/
     public void simplify(TFunction n, TNode m, TNode o){
 	
@@ -462,14 +462,14 @@ public class TProofSimplifier extends TVisitor {
     public void visitTDouble(/*@ non_null @*/ TDouble n) throws IOException{}
     public void visitTNull(/*@ non_null @*/ TNull n) throws IOException{}
 
-	public void visitTMethodCall(TMethodCall call) throws IOException {}
+	public void visitTMethodCall(/*@non_null*/TMethodCall call) throws IOException {}
 
-	public void visitTUnset(TUnset n) throws IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTIntegralSub(TIntegralSub sub) throws IOException {
+	public void visitTIntegralSub(/*@non_null*/TIntegralSub sub) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

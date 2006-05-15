@@ -101,7 +101,7 @@ public class NormalGenericFile extends File implements GenericFile {
    * cases where the notion of "containing directory" makes no sense
    * (e.g., streams or root directories), null is returned.
    */
-  public GenericFile getSibling(String n) { 
+  public GenericFile getSibling(/*@non_null*/String n) { 
     String dir = super.getParent();
     if (dir==null)
       return null;

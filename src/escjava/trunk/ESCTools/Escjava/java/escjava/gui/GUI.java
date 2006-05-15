@@ -106,7 +106,7 @@ public class GUI extends escjava.Main {
 	escframe.init();
     }
 
-    public javafe.Options makeOptions() {
+    public /*@non_null*/javafe.Options makeOptions() {
 	return new Options();
     }
 
@@ -398,11 +398,11 @@ public class GUI extends escjava.Main {
 	        }
 	    }
 	}
-	public String getStatusText() {
+	public /*@non_null*/String getStatusText() {
 	    return type() + (outOfDate ? " (OUT OF DATE) " : "" )
 		+ infoString() + ": " + Status.toString(status);
 	}
-	public String infoString() { return toString(); }
+	public /*@non_null*/String infoString() { return toString(); }
 	public String outputText = null;
 	public DefaultMutableTreeNode holder;
         public int action; // so this can double as a process task
@@ -431,7 +431,7 @@ public class GUI extends escjava.Main {
 		}
 	    }
 	}
-	public String combinedString() { return toString(); }
+	public /*@non_null*/String combinedString() { return toString(); }
 
 	// Recursively processes the given action for everything below
 	// this node in the tree
@@ -541,7 +541,7 @@ public class GUI extends escjava.Main {
 	}
 	public InputEntry ie;
 	public String type() { return "Input Entry (" + ie.type() + ") "; }
-	public String toString() {
+	public /*@non_null*/String toString() {
 	    return ie.name;
 	}
 	public String getFilename() {
@@ -603,10 +603,10 @@ public class GUI extends escjava.Main {
 	public GenericFile gf;
 	public CompilationUnit cu;
 	public String type() { return "Compilation Unit "; }
-	public String toString() {
+	public /*@non_null*/String toString() {
 	    return gf.getHumanName();
 	}
-	public String infoString() {
+	public /*@non_null*/String infoString() {
 	    if (cu == null) return toString();
 	    if (!(cu instanceof escjava.RefinementSequence)) return toString();
 	    ArrayList a = ((escjava.RefinementSequence)cu).refinements();
@@ -682,7 +682,7 @@ public class GUI extends escjava.Main {
 	public InitialState initState;
 	public FindContributors scope;
 	public String type() { return "Type Declaration "; }
-	public String toString() {
+	public /*@non_null*/String toString() {
 	    return TypeSig.getSig(td).toString();
 	}
         public void clearCheck() {
@@ -715,7 +715,7 @@ public class GUI extends escjava.Main {
 	}
 	public RoutineDecl rd;
 	public String type() { return "Routine Declaration "; }
-	public String toString() {
+	public /*@non_null*/String toString() {
 	    return sig;
 	    //return rd.id().toString();
 	}
@@ -724,7 +724,7 @@ public class GUI extends escjava.Main {
         public void clearCheck() {
 	    if (Status.parsingComplete(status)) setStatus(Status.NOTPROCESSED,null);
 	}
-	public String combinedString() { return getParent() + "." + toString(); }
+	public /*@non_null*/String combinedString() { return getParent() + "." + toString(); }
 	public int actualAction(int action) {
 	    if (action != CHECK) return -10;
 	    return action;

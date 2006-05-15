@@ -232,8 +232,8 @@ class ASTClassFileParser extends ClassFileParser
     /**
      * Call back from ClassFileParser.
      */
-    protected void set_class_attribute(String aname,
-				       DataInput stream, int n)
+    protected void set_class_attribute(/*@non_null*/String aname,
+				       /*@non_null*/DataInput stream, int n)
 	throws IOException, ClassFormatError
     {
 	if (aname.equals("Synthetic")) {

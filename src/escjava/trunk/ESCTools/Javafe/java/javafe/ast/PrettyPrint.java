@@ -252,7 +252,7 @@ public abstract class PrettyPrint {
    * ((tag==TagConstants.CHARLIT) ==> (val instanceof Integer)) );
    */
   //@ ensures \result != null;
-  public static String toCanonicalString(int tag, Object val) {
+  public static /*@non_null*/ String toCanonicalString(int tag, Object val) {
     if (tag == TagConstants.BOOLEANLIT) return val.toString();
     if (tag == TagConstants.DOUBLELIT) return val.toString() + "D";
     if (tag == TagConstants.FLOATLIT) return val.toString() + "F";
@@ -326,76 +326,76 @@ public abstract class PrettyPrint {
   }
   
   //@ ensures \result != null;
-  public String toString(int tag) {
+  public /*@non_null*/ String toString(int tag) {
     // Best version available in the front end:
     return javafe.tc.TagConstants.toString(tag);
   }
   
   //@ ensures \result != null;
-  public final String toString(TypeNameVec tns) {
+  public final /*@non_null*/ String toString(TypeNameVec tns) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, tns);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(FormalParaDeclVec fps) {
+  public final /*@non_null*/ String toString(FormalParaDeclVec fps) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, fps);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(ExprVec es) {
+  public final /*@non_null*/ String toString(ExprVec es) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, es);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(GenericVarDecl d) {
+  public final /*@non_null*/ String toString(GenericVarDecl d) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, d);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(LocalVarDecl d, boolean showBody) {
+  public final /*@non_null*/ String toString(LocalVarDecl d, boolean showBody) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, d, showBody);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(FieldDecl d, boolean showBody) {
+  public final /*@non_null*/ String toString(FieldDecl d, boolean showBody) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, d, showBody);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(Type t) {
+  public final /*@non_null*/ String toString(Type t) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, t);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(Name n) {
+  public final /*@non_null*/ String toString(Name n) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, n);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(VarInit e) {
+  public final /*@non_null*/ String toString(VarInit e) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, e);
     return result.toString();
   }
   
   //@ ensures \result != null;
-  public final String toString(ObjectDesignator od) {
+  public final /*@non_null*/ String toString(ObjectDesignator od) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, od);
     return result.toString();

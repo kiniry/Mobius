@@ -313,7 +313,7 @@ public final class ATarget {
 	}
     }
 
-    public String toString() {
+    public /*@non_null*/String toString() {
 	StringBuffer s = new StringBuffer("[aTarget: x =" + x.id + "\n");
 
 	for (int i = 0; i < indices.length; i++) {

@@ -7,7 +7,7 @@ public class Formula {
     this.formula = formula;
   }
 
-  public String toString() {
+  public /*@non_null*/String toString() {
     return formula;
   }
 }

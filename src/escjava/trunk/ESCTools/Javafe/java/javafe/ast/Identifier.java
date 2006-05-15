@@ -181,7 +181,7 @@ public final class Identifier
 
   /** Return a string containing the symbol associated with
     <code>this</code>. */
-  public String toString() {
+  public /*@non_null*/String toString() {
     if (equiv == null) equiv = String.valueOf(chars);
     return equiv;
   }

@@ -9,7 +9,7 @@ public class TagConstants extends javafe.parser.TagConstants
     public static final int LAST_TAG = TYPESIG;
 
     //@ ensures \result != null;
-    public static String toString(int tag) {
+    public static /*@non_null*/String toString(int tag) {
 	switch (tag) {
 	    case TYPESIG:
 		return "TYPESIG";

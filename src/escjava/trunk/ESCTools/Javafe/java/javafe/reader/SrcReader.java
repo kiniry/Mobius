@@ -71,7 +71,7 @@ public class SrcReader extends Reader
      *
      * Target must be non-null.<p>
      */
-    public CompilationUnit read(GenericFile target, boolean avoidSpec) {
+    public CompilationUnit read(/*@non_null*/GenericFile target, boolean avoidSpec) {
 	javafe.util.Info.out("[parsing "
 			     + (avoidSpec ? "" : "spec from ")
 			     + target.getHumanName() + "]");

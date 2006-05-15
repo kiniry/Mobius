@@ -52,7 +52,7 @@ public class GuiOptionsPanel extends JPanel implements ActionListener {
 	}
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(/*@non_null*/ActionEvent e) {
 	// write back out to the Options structure
 
 	Object source = e.getSource();

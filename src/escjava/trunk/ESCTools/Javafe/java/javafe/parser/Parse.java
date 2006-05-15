@@ -423,7 +423,7 @@ VariableDeclarator:
 */
 
   protected TypeDeclElem
-  parseTypeDeclElemIntoSeqTDE(Lex l, int keyword, Identifier containerId,
+  parseTypeDeclElemIntoSeqTDE(Lex l, int keyword, /*@non_null*/Identifier containerId,
 				   boolean specOnly)			
   {
     int loc = l.startingLoc;

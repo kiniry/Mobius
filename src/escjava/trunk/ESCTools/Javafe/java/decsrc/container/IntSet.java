@@ -109,7 +109,7 @@ public abstract class IntSet {
     }
 
     /** Return string representation. */
-    public String toString() {
+    public /*@non_null*/String toString() {
 	CharVec vec = new CharVec();
 	int iter = -1;
 	String prefix = "";

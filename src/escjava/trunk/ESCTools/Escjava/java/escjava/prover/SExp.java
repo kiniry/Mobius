@@ -165,7 +165,7 @@ public abstract class SExp
     //@ also
     //@ public normal_behavior
     //@   ensures \result != null;
-    public /*@ pure @*/ String toString() {
+    public /*@ non_null pure @*/ String toString() {
 	ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	PrintStream ps = new PrintStream(baos);
 	print(ps);

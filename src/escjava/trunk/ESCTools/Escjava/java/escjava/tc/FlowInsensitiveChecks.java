@@ -2944,7 +2944,7 @@ System.out.println("FOUND " + t);
 
   //alx: dw overridden, so javafe handels pure methods correctly
   //TODO: what other specs?
-  protected boolean isPure(/*@ non_null @*/ RoutineDecl rd) {
+  protected boolean isPure( RoutineDecl rd) {
   	return Utils.isPure(rd);
   }
   //alx-end

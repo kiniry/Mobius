@@ -125,7 +125,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(TypeSig caller, Identifier id, int loc) {
+    public TypeSig lookupSimpleTypeName(TypeSig caller, /*@non_null*/Identifier id, int loc) {
 	    return parent.lookupSimpleTypeName(caller, id, loc);
     }
 
@@ -153,12 +153,12 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      *
      * In the field case, id disambiguates to C[.this].id.<p>
      */
-    public ASTNode locateFieldOrLocal(Identifier id) {
+    public ASTNode locateFieldOrLocal(/*@non_null*/Identifier id) {
 	// we bind no fields or local variables/formals ourselves:
 	return parent.locateFieldOrLocal(id);
     }
 
-    public boolean isDuplicate(Identifier id) {
+    public boolean isDuplicate(/*@non_null*/Identifier id) {
 	return false;
     }
 
@@ -173,7 +173,7 @@ public class EnvForEnclosedScope extends Env implements/*privately*/ Cloneable {
      *
      * id disambiguates to C[.this].id.<p>
      */
-    public TypeSig locateMethod(Identifier id) {
+    public TypeSig locateMethod(/*@non_null*/Identifier id) {
 	// we bind no methods ourselves:
 	return parent.locateMethod(id);
     }

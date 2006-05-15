@@ -10,7 +10,7 @@ public class InputEntry {
   public String name;
   public ArrayList contents;
   public boolean auto = false;
-  public String toString() { return name; }
+  public /*@non_null*/String toString() { return name; }
   public String type() { return ""; }
   public String typeOption() { return ""; }
   public String verify() { return null; }

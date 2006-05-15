@@ -366,7 +366,7 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
   public TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
 
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
@@ -466,7 +466,7 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
   }
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
 
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
@@ -532,7 +532,7 @@ public class InitBlock extends ASTNode implements TypeDeclElem
   //# BlockStmt block
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
 
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
@@ -551,7 +551,7 @@ public abstract class TypeDeclElemPragma
   public TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
   public void decorate(ModifierPragmaVec modifierPragmas) {}
 
   abstract public int getTag();
@@ -631,7 +631,7 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem
   }
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
   public ModifierPragmaVec getPModifiers() { return null; }
 
   public int getEndLoc() {

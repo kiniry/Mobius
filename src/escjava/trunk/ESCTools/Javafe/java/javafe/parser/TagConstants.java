@@ -121,7 +121,7 @@ public class TagConstants extends javafe.ast.TagConstants
      */
 
     //@ ensures \result != null;
-    public static String toString(int code) {
+    public static /*@non_null*/ String toString(int code) {
         if (FIRST_KEYWORD <= code && code <= LAST_KEYWORD)
             return getString(code - FIRST_KEYWORD);
         for(int i = 1 + LAST_KEYWORD - FIRST_KEYWORD; i < noTokens; i++)

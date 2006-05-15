@@ -7,7 +7,7 @@ public class Signature {
     this.signature = signature;
   }
 
-  public String toString() {
+  public /*@non_null*/String toString() {
     return signature;
   }
 }

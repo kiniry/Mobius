@@ -15,7 +15,7 @@ public class StandardPrettyPrint extends PrettyPrint {
     //@ requires self != null;
     public StandardPrettyPrint(PrettyPrint self) { super(self); }
 
-    public void print(OutputStream o, CompilationUnit cu) {
+    public void print(/*@non_null*/OutputStream o, CompilationUnit cu) {
         if (cu == null) {
             writeln(o, "<null CompilationUnit>");
             return;
@@ -53,7 +53,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
 
-    public void printnoln(OutputStream o, int ind, TypeDecl d) {
+    public void printnoln(/*@non_null*/OutputStream o, int ind, TypeDecl d) {
         if (d == null) {
             write(o, "<null TypeDecl>");
             return;
@@ -138,7 +138,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         write(o, "}");
     }
 
-    public void print(OutputStream o, int ind, Stmt s) {
+    public void print(/*@non_null*/OutputStream o, int ind, Stmt s) {
         if (s == null) {
             writeln(o, "<null Stmt>");
             return;
@@ -463,7 +463,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
 
-    public void print(OutputStream o, int ind, TypeDeclElem d, 
+    public void print(/*@non_null*/OutputStream o, int ind, TypeDeclElem d, 
                       Identifier classId, boolean showBody) {
         if (d == null) {
             writeln(o, "<null TypeDeclElem>");
@@ -568,7 +568,7 @@ public class StandardPrettyPrint extends PrettyPrint {
 
 
     //@ requires o != null;
-    void displayBody(OutputStream o, int ind, BlockStmt body,
+    void displayBody(/*@non_null*/OutputStream o, int ind, BlockStmt body,
 		     boolean showBody, boolean specOnly, String kind) {
 	if (!showBody || body==null) {
 	    writeln(o, ";");
@@ -591,7 +591,7 @@ public class StandardPrettyPrint extends PrettyPrint {
     }
 
      
-    public void print(OutputStream o, TypeNameVec tns) {
+    public void print(/*@non_null*/OutputStream o, TypeNameVec tns) {
         if (tns == null) write(o, "<null TypeNameVec>");
         else
             for( int i=0; i<tns.size(); i++ ) {
@@ -600,7 +600,7 @@ public class StandardPrettyPrint extends PrettyPrint {
             }
     }
 
-    public void print(OutputStream o, int ind, FormalParaDeclVec fps) {
+    public void print(/*@non_null*/OutputStream o, int ind, FormalParaDeclVec fps) {
         if (fps == null) write(o, "<null FormalParaDeclVec>");
         else {
             write(o, '(');
@@ -620,7 +620,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
 
-    public void print(OutputStream o, int ind, ExprVec es) {
+    public void print(/*@non_null*/OutputStream o, int ind, ExprVec es) {
         if (es == null) write(o, "<null ExprVec>");
         else {
             write(o, '(');
@@ -632,7 +632,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
 
-    public void print(OutputStream o, GenericVarDecl d) {
+    public void print(/*@non_null*/OutputStream o, GenericVarDecl d) {
         if (d == null) write(o, "<null GenericVarDecl>");
         else {
             self.print(o, d.type);
@@ -641,7 +641,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
   
-    public void print(OutputStream o, int ind, LocalVarDecl d,
+    public void print(/*@non_null*/OutputStream o, int ind, LocalVarDecl d,
                       boolean showBody) {
         if (d == null) write(o, "<null VarDecl>");
         else {
@@ -660,7 +660,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
   
-    public void print(OutputStream o, int ind, FieldDecl d, boolean showBody) {
+    public void print(/*@non_null*/OutputStream o, int ind, FieldDecl d, boolean showBody) {
         if (d == null) write(o, "<null VarDecl>");
         else {
             boolean specOnly = d.getParent().specOnly;
@@ -680,7 +680,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
   
-    public void print(OutputStream o, Type t) {
+    public void print(/*@non_null*/OutputStream o, Type t) {
         if (t == null) { write(o, "<null Type>"); return; }
         switch (t.getTag()) {
             case TagConstants.BOOLEANTYPE: write(o, "boolean"); break;
@@ -707,7 +707,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         print(o, 2, t.tmodifiers);
     }
   
-    public void print(OutputStream o, Name n) {
+    public void print(/*@non_null*/OutputStream o, Name n) {
         if (n == null) write(o, "<null Name>");
         else write(o, n.printName());
     }
@@ -717,7 +717,7 @@ public class StandardPrettyPrint extends PrettyPrint {
 	System.out.println("");
     }
 
-    public void print(OutputStream o, int ind, VarInit e) {
+    public void print(/*@non_null*/OutputStream o, int ind, VarInit e) {
         if (e == null) {
             write(o, "<null expression>");
             return;
@@ -943,7 +943,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
 
-    public void print(OutputStream o, int ind, ObjectDesignator od) {
+    public void print(/*@non_null*/OutputStream o, int ind, ObjectDesignator od) {
         if (od == null) { write(o, "<null object designator>"); return; }
         switch (od.getTag()) {
             case TagConstants.EXPROBJECTDESIGNATOR:
@@ -1082,37 +1082,37 @@ public class StandardPrettyPrint extends PrettyPrint {
         return null; // Dummy
     }
 
-    public void print(OutputStream o, LexicalPragma lp) {
+    public void print(/*@non_null*/OutputStream o, LexicalPragma lp) {
         write(o, "// Lexical pragma at " + lp.getStartLoc() + " ");
         writeln(o, lp.toString());
     }
 
-    public void print(OutputStream o, int ind, TypeDeclElemPragma tp) {
+    public void print(/*@non_null*/OutputStream o, int ind, TypeDeclElemPragma tp) {
         spaces(o, ind);
         write(o, "// TypeDeclElemPragma pragma at " + tp.getStartLoc() + " ");
         write(o, tp.toString());
     }
 
-    public void print(OutputStream o, int ind, ModifierPragma mp) {
+    public void print(/*@non_null*/OutputStream o, int ind, ModifierPragma mp) {
         write(o, "// ModifierPragma pragma at " + mp.getStartLoc() + " ");
         write(o, mp.toString());
     }
 
-    public void print(OutputStream o, int ind, StmtPragma sp) {
+    public void print(/*@non_null*/OutputStream o, int ind, StmtPragma sp) {
         spaces(o, ind);
         write(o, "// StmtPragma pragma at " + sp.getStartLoc() + " ");
         write(o, sp.toString());
     }
 
 
-    public void print(OutputStream o, int ind, TypeModifierPragma tp) {
+    public void print(/*@non_null*/OutputStream o, int ind, TypeModifierPragma tp) {
         spaces(o, ind);
         write(o, "// TypeModifierPragma pragma at " + tp.getStartLoc() + " ");
         write(o, tp.toString());
     }
   
     //@ requires o != null;
-    public void print(OutputStream o, int ind, TypeModifierPragmaVec t) {
+    public void print(/*@non_null*/OutputStream o, int ind, TypeModifierPragmaVec t) {
         if (t != null) {
             for (int i = 0; i < t.size(); i++) {
                 write(o, ' ');

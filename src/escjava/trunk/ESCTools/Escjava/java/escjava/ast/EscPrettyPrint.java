@@ -16,14 +16,14 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   
   //@ requires self != null;
   //@ requires del != null;
-  public EscPrettyPrint(PrettyPrint self, PrettyPrint del) {
+  public EscPrettyPrint(/*@non_null*/PrettyPrint self, /*@non_null*/PrettyPrint del) {
     super(self, del);
   }
   
   //@ also
   //@ requires o != null;
   //@ requires lp != null;
-  public void print(OutputStream o, LexicalPragma lp) {
+  public void print(/*@non_null*/OutputStream o, LexicalPragma lp) {
     if (lp.getTag() == TagConstants.NOWARNPRAGMA) {
       write(o, "//@ ");
       write(o, TagConstants.toString(TagConstants.NOWARN));
@@ -39,7 +39,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   }
   
   //@ requires o != null; // note that d can be null
-  public void exsuresPrintDecl(OutputStream o, GenericVarDecl d) {
+  public void exsuresPrintDecl(/*@non_null*/OutputStream o, GenericVarDecl d) {
     if (d == null)
       write(o, "<null GenericVarDecl>");
     else {
@@ -54,7 +54,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ also
   //@ requires o != null;
   //@ requires tp != null;
-  public void print(OutputStream o, int ind, TypeDeclElemPragma tp) {
+  public void print(/*@non_null*/OutputStream o, int ind, TypeDeclElemPragma tp) {
     int tag = tp.getTag();
     int otag = tag; if (tp.isRedundant()) otag = TagConstants.makeRedundant(tag);
     switch (tag) {
@@ -130,7 +130,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   
   //@ requires o != null;
   //@ requires v != null;
-  public void print(OutputStream o, int ind, ModifierPragmaVec v) {
+  public void print(/*@non_null*/OutputStream o, int ind, /*@non_null*/ModifierPragmaVec v) {
     int n = v.size();
     for (int i=0; i<n; ++i) {
       print(o,ind,v.elementAt(i));
@@ -140,7 +140,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ also
   //@ requires o != null;
   //@ requires mp != null;
-  public void print(OutputStream o, int ind, ModifierPragma mp) {
+  public void print(/*@non_null*/OutputStream o, int ind, ModifierPragma mp) {
     int tag = mp.getTag();
     switch (tag) {
     case TagConstants.ALSO:
@@ -374,7 +374,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ also
   //@ requires o != null;
   //@ requires sp != null;
-  public void print(OutputStream o, int ind, StmtPragma sp) {
+  public void print(/*@non_null*/OutputStream o, int ind, StmtPragma sp) {
     int tag = sp.getTag();
     int otag = sp.originalTag();
     switch (tag) {
@@ -447,7 +447,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   
   //@ requires o != null; 
   // g can be null
-  public void print(OutputStream o, int ind, GuardedCmd g) {
+  public void print(/*@non_null*/OutputStream o, int ind, GuardedCmd g) {
     if (g == null) {
       writeln(o, "<null Stmt>");
       return;
@@ -695,7 +695,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   
   //@ requires o != null;
   //@ requires vars != null;
-  private void printVarVec(OutputStream o, GenericVarDeclVec vars) {
+  private void printVarVec(/*@non_null*/OutputStream o, /*@non_null*/GenericVarDeclVec vars) {
     for (int i = 0; i < vars.size(); i++) {
       GenericVarDecl vd = vars.elementAt(i);
       write(o, ' ');
@@ -720,7 +720,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   
   //@ requires o != null;
   //@ requires spec != null;
-  public void printSpec(OutputStream o, int ind, Spec spec) {
+  public void printSpec(/*@non_null*/OutputStream o, int ind, /*@non_null*/Spec spec) {
     write(o, "SPEC ");
     
     ModifierPragmaVec local = spec.dmd.original.pmodifiers;
@@ -773,8 +773,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ requires o != null;
   //@ requires cv != null;
   //@ requires name != null;
-  public void printCondVec(OutputStream o, int ind, ConditionVec cv,
-                           String name) {
+  public void printCondVec(/*@non_null*/OutputStream o, int ind, /*@non_null*/ConditionVec cv,
+                           /*@non_null*/String name) {
     for(int i=0; i<cv.size(); i++)
       {
         spaces(o, ind);
@@ -787,8 +787,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ requires o != null;
   //@ requires div != null;
   //@ requires name != null;
-  public void printDecrInfoVec(OutputStream o, int ind,
-                               DecreasesInfoVec div, String name) {
+  public void printDecrInfoVec(/*@non_null*/OutputStream o, int ind,
+                               /*@non_null*/DecreasesInfoVec div, /*@non_null*/String name) {
     for (int i = 0; i < div.size(); i++) {
       spaces(o, ind);
       write(o, name+" ");
@@ -799,7 +799,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   
   //@ requires o != null;
   //@ requires cond != null;
-  public void printCond(OutputStream o, int ind, Condition cond) {
+  public void printCond(/*@non_null*/OutputStream o, int ind, /*@non_null*/Condition cond) {
     write(o, TagConstants.toString(cond.label)+": ");
     print(o, ind, cond.pred );
   }
@@ -807,7 +807,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ also
   //@ requires o != null;
   //@ requires e != null;
-  public void print(OutputStream o, int ind, VarInit e) {
+  public void print(/*@non_null*/OutputStream o, int ind, VarInit e) {
     int tag = e.getTag();
     switch (tag) {
       
@@ -1156,7 +1156,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
   //@ also
   //@ requires o != null;
   //@ requires t != null;
-  public void print(OutputStream o, Type t) {
+  public void print(/*@non_null*/OutputStream o, Type t) {
     
     switch ( t.getTag()) {
     case TagConstants.ANY:

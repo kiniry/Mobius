@@ -34,7 +34,7 @@ public class TypeCheck extends javafe.tc.TypeCheck
      * Override {@link javafe.tc.TypeCheck#canAccess} to account for
      * <code>spec_public</code>.
      */
-    public boolean canAccess(TypeSig from, TypeSig target,
+    public boolean canAccess(/*@non_null*/TypeSig from, /*@non_null*/TypeSig target,
                              int modifiers,
                              ModifierPragmaVec pmodifiers) {
 	if (super.canAccess(from, target, modifiers, pmodifiers))

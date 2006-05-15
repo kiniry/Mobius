@@ -41,7 +41,7 @@ public class TypeSig extends javafe.tc.TypeSig {
     	//@ also
     	//@   requires caller != null;
     public FieldDecl lookupField(Identifier id, 
-                                 javafe.tc.TypeSig caller) 
+                                 /*@non_null*/javafe.tc.TypeSig caller) 
     		throws LookupException {
 	FieldDecl r = null;
 	prep();

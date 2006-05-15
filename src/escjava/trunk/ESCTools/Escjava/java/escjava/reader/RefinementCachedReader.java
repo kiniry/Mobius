@@ -101,7 +101,7 @@ public class RefinementCachedReader extends CachedReader
      *
      * Target must be non-null.<p>
      */
-    public CompilationUnit read(GenericFile target, boolean avoidSpec) {
+    public CompilationUnit read(/*@non_null*/GenericFile target, boolean avoidSpec) {
 	// Note - reading has the side effect of caching
 	CompilationUnit cu = (CompilationUnit)get(target);
 	if (cu != null) {

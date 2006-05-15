@@ -642,7 +642,7 @@ public class ModelDeclPragma extends TypeDeclElemPragma
   //# FieldDecl decl
   //# int loc
 
-  public void setParent(TypeDecl p) {
+  public void setParent(/*@non_null*/TypeDecl p) {
     super.setParent(p);
     if (decl != null)
 	decl.setParent(p);
@@ -681,7 +681,7 @@ public class ModelConstructorDeclPragma extends TypeDeclElemPragma
   //# int loc
   //# SimpleName id
 
-  public void setParent(TypeDecl p) {
+  public void setParent(/*@non_null*/TypeDecl p) {
     super.setParent(p);
     if (decl != null) 
 	decl.setParent(p);
@@ -704,7 +704,7 @@ public class ModelTypePragma extends TypeDeclElemPragma
   //# TypeDecl decl
   //# int loc
 
-  public void setParent(TypeDecl p) {
+  public void setParent(/*@non_null*/TypeDecl p) {
     super.setParent(p);
     if (decl != null) 
 	decl.setParent(p);
@@ -727,7 +727,7 @@ public class ModelMethodDeclPragma extends TypeDeclElemPragma
   //# MethodDecl decl
   //# int loc
 
-  public void setParent(TypeDecl p) {
+  public void setParent(/*@non_null*/TypeDecl p) {
     super.setParent(p);
     if (decl != null) 
 	decl.setParent(p);
@@ -750,7 +750,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma
   //# FieldDecl decl
   //# int loc
 
-  public void setParent(TypeDecl p) {
+  public void setParent(/*@non_null*/TypeDecl p) {
     super.setParent(p);
     if (decl != null)
 	decl.setParent(p);

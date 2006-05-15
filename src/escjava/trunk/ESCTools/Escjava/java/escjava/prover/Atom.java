@@ -117,7 +117,7 @@ final public class Atom extends SExp {
    ** Return the interned <code>String</code> for the symbol we
    ** represent.
    **/
-  public String toString() {
+  public /*@non_null*/String toString() {
     return value;
   }
   
@@ -197,7 +197,7 @@ final public class Atom extends SExp {
    ** Note: This routine will take a <code>PrintWriter</code> instead
    ** when we switch to a more recent version of JDK.<p>
    **/
-  public void print(PrintStream out) {
+  public void print(/*@non_null*/PrintStream out) {
     out.print(printableVersion(value));
   }
   
@@ -209,7 +209,7 @@ final public class Atom extends SExp {
    ** Note: This routine will take a <code>PrintWriter</code> instead
    ** when we switch to a more recent version of JDK.<p>
    **/
-  public void prettyPrint(PrintStream out) {
+  public void prettyPrint(/*@non_null*/PrintStream out) {
     out.print(value);
   }
   

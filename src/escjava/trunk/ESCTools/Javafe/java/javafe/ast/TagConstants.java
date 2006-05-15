@@ -60,7 +60,7 @@ public class TagConstants extends OperatorTags
 
     //@ requires tag <= LAST_TAG;
     //@ ensures \result != null;
-    public static String toString(int tag) {
+    public static /*@non_null*/String toString(int tag) {
         if (IDENT <= tag && tag <= LAST_TAG)
             return tags[tag - IDENT];
 

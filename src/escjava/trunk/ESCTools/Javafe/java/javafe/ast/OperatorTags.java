@@ -67,7 +67,7 @@ public class OperatorTags extends GeneratedTags
      * example, return the string "=" for the tag {@link #ASSIGN}.
      */
     //@ ensures \result != null;
-    public static String toString(int opTag) {
+    public static /*@non_null*/String toString(int opTag) {
         if (FIRST_TAG <= opTag && opTag <= LAST_TAG)
             return opStrings[opTag - FIRST_TAG];
 

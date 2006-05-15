@@ -114,7 +114,7 @@ public class ASTDecoration {
     /**
      * Return the name associated with <code>this</code>. 
      */
-    public String toString() {
+    public /*@non_null*/String toString() {
       return name;
     }
 
@@ -123,7 +123,7 @@ public class ASTDecoration {
      * decoration value for this <code>ASTNode</code>.
      */
     //@ requires n != null;
-    public String toString(ASTNode n) {
+    public /*@non_null*/ String toString(/*@non_null*/ASTNode n) {
 	Object val = get(n);
 	return "[Decoration "+name+" "+ ( val==null? "" : val.toString() )
 		+"]";

@@ -346,7 +346,7 @@ jmlc1:
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d $(JMLC_CLASSFILES_DIR) \
-	  -a -A --purity \
+	  -a -A --purity -n \
 	  --keepGoing --source 1.4 --Quiet --recursive \
 	  $(FILE) \
 	  && touch .jmlc

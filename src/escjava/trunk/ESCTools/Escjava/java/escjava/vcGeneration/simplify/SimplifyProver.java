@@ -102,7 +102,7 @@ public class SimplifyProver extends ProverType {
         return tree;
     }
 
-	public void generateDeclarations(Writer s, HashMap variablesName) throws IOException {
+	public void generateDeclarations(/*@non_null*/Writer s, HashMap variablesName) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

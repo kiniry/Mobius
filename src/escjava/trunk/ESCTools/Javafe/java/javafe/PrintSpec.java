@@ -29,7 +29,7 @@ public class PrintSpec extends SrcTool
 
   class PrintSpecPrettyPrint extends StandardPrettyPrint {
 
-    public void printnoln(OutputStream o, int ind, TypeDecl d) {
+    public void printnoln(/*@non_null*/OutputStream o, int ind, TypeDecl d) {
       if (d != null && d.getTag() == javafe.ast.TagConstants.CLASSDECL) {
         ClassDecl cd = (ClassDecl)d;
         if (Character.isDigit((cd.id.toString().charAt(0)))) {

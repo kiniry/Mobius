@@ -289,7 +289,7 @@ public class CoqProver extends ProverType {
 
 		// <case 2>, capturing |y:8.31|
 		else if(m1.matches()){
-		    //@ assert m.groupCount() == 3;
+		    //@ assert m1.groupCount() == 3;
 
 		    if(m1.groupCount() != 3)
 		    	System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : m.groupCount() != 3");

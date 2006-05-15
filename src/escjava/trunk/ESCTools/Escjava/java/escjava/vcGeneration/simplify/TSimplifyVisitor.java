@@ -354,19 +354,19 @@ class TSimplifyVisitor extends TVisitor {
     }
 
 
-	public void visitTUnset(TUnset n) throws IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
-	public void visitTMethodCall(TMethodCall call) throws IOException {
+	public void visitTMethodCall(/*@non_null*/TMethodCall call) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
 
-	public void visitTIntegralSub(TIntegralSub sub) throws IOException {
+	public void visitTIntegralSub(/*@non_null*/TIntegralSub sub) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}

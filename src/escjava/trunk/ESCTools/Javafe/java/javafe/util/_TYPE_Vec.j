@@ -192,7 +192,7 @@ public class  _TYPE_Vec {
     public final int size() { return count; }
 
     //@ pure
-    public final String toString() {
+    public final /*@non_null*/String toString() {
 	StringBuffer b = new StringBuffer();
 	b.append("{_TYPE_Vec");
 	for(int i = 0; i < count; i++) {

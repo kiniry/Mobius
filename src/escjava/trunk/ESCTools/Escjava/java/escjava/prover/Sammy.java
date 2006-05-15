@@ -41,7 +41,7 @@ public class Sammy extends NewProver {
    @ also
    @ assignable serverInstance, parameters;
    @*/
-  public ProverResponse start_prover() {
+  public /*@non_null*/ProverResponse start_prover() {
     
     //++
     if(debug) System.out.println("Sammy::start_prover");
@@ -72,7 +72,7 @@ public class Sammy extends NewProver {
     
   }
   
-  public ProverResponse set_prover_resource_flags(Properties properties) {
+  public /*@non_null*/ProverResponse set_prover_resource_flags(/*@non_null*/Properties properties) {
     
     //++
     if(debug) System.out.println("Sammy::set_prover_resource_flags");
@@ -120,7 +120,7 @@ public class Sammy extends NewProver {
     return res;
   }
   
-  public ProverResponse signature(Signature signature) {
+  public /*@non_null*/ProverResponse signature(/*@non_null*/Signature signature) {
     
     //++
     if(debug)
@@ -180,7 +180,7 @@ public class Sammy extends NewProver {
     return null;
   }
   
-  public ProverResponse declare_axiom(Formula formula) {
+  public /*@non_null*/ProverResponse declare_axiom(/*@non_null*/Formula formula) {
     
     /*
      * Is an axiom a declaration of a predicate ?
@@ -189,7 +189,7 @@ public class Sammy extends NewProver {
     return null;
   }
   
-  public ProverResponse make_assumption(Formula formula) {
+  public /*@non_null*/ProverResponse make_assumption(/*@non_null*/Formula formula) {
     
     /*
      * Does it correspond to 'add_assertion' in sammy's interface ?
@@ -199,7 +199,7 @@ public class Sammy extends NewProver {
     return null;
   }
   
-  public ProverResponse retract_assumption(int count) {
+  public /*@non_null*/ProverResponse retract_assumption(int count) {
     
     /*
      * == 'backtrack' in sammy's interface ?
@@ -208,7 +208,7 @@ public class Sammy extends NewProver {
     return null;
   }
   
-  public ProverResponse is_valid(Formula formula,
+  public /*@non_null*/ProverResponse is_valid(/*@non_null*/Formula formula,
       Properties properties) {
     
     /*
@@ -221,7 +221,7 @@ public class Sammy extends NewProver {
   
     //@ also
     //@ assignable parameters, signature_defined, started;
-  public ProverResponse stop_prover() {
+  public /*@non_null*/ProverResponse stop_prover() {
     
     //++
     if(debug) System.out.println("Sammy::stop_prover");

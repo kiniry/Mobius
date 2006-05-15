@@ -88,5 +88,5 @@ public class UnopenableFile implements GenericFile {
 
     public long lastModified() { return 0L; }
 
-    public GenericFile getSibling(String n) { return null; }
+    public GenericFile getSibling(/*@non_null*/String n) { return null; }
 }

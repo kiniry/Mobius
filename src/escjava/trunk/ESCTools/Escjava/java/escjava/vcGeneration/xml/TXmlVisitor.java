@@ -384,15 +384,15 @@ class TXmlVisitor extends TVisitor {
         xmlValue("Object", null);
     }
 
-	public void visitTUnset(TUnset n) throws IOException {
+	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
 		term(null, "unset", n);
 	}
 
-	public void visitTMethodCall(TMethodCall call) throws IOException {
+	public void visitTMethodCall(/*@non_null*/TMethodCall call) throws IOException {
 		term("Method", TNode.prover.getVariableInfo(call.getName()), call);
 	}
 
-	public void visitTIntegralSub(TIntegralSub sub) throws IOException {
+	public void visitTIntegralSub(/*@non_null*/TIntegralSub sub) throws IOException {
 		term("int", "SUB", sub);
 	}
 

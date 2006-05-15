@@ -52,7 +52,7 @@ public abstract class AIntegralVisitor extends ABasicCoqVisitor {
     	binOp("*", n);
     }
 
-	public void visitTIntegralSub(TIntegralSub n) throws IOException {
+	public void visitTIntegralSub(/*@non_null*/TIntegralSub n) throws IOException {
 		binOp("-", n);
 	}
     public void visitTInt(/*@ non_null @*/ TInt n) throws IOException{

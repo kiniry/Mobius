@@ -58,7 +58,7 @@ public class EscEditor extends JFrame implements ActionListener {
 	    if (f != null) {
 		jp.add(jb = new JButton("Save"));
 		jb.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
+		    public void actionPerformed(/*@non_null*/ActionEvent e) {
 			try {
 			EscEditor.this.editor.write(new FileWriter(f));
 			} catch (IOException ee) {} // FIXME
@@ -66,7 +66,7 @@ public class EscEditor extends JFrame implements ActionListener {
 		});
 		jp.add(jb = new JButton("Reload"));
 		jb.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
+		    public void actionPerformed(/*@non_null*/ActionEvent e) {
 			try {
 			EscEditor.this.editor.read(new FileReader(f),null);
 			} catch (IOException ee) {} // FIXME
@@ -79,7 +79,7 @@ public class EscEditor extends JFrame implements ActionListener {
 	    jt.setColumns(10);
 	    jt.setMaximumSize(jt.getPreferredSize());
 	    jt.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    String s = jt.getText();
 		    try {
 			    int i = Integer.parseInt(s.trim());
@@ -150,7 +150,7 @@ public class EscEditor extends JFrame implements ActionListener {
 	if (line>0 && editor != null) scrollToLine(line);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(/*@non_null*/ActionEvent e) {
 	if (e.getSource() == fileChoice) {
 	    int i = fileChoice.getSelectedIndex();
 	    String filename = files[i];

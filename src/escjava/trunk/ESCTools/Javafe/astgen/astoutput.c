@@ -144,7 +144,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     fprintf(o, "/** Return a string representation of <code>this</code>.\n");
     indent(o, ind);
     fprintf(o, "Meant for debugging use only, not for presentation. */\n");
-    indent(o, ind); fprintf(o, "public abstract String toString();\n\n");
+    indent(o, ind); fprintf(o, "public abstract /*@non_null*/ String toString();\n\n");
 
     indent(o, ind);
     fprintf(o,"/** Accept a visit from <code>v</code>.  This method simply\n");
@@ -236,7 +236,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     indent(o, ind); fprintf(o, "}   //@ nowarn Exception;\n\n");
 
     /* Output toString */
-    indent(o, ind); fprintf(o, "public final String toString() {\n");
+    indent(o, ind); fprintf(o, "public final /*@non_null*/String toString() {\n");
     indent(o, ind+3); fprintf(o, "return \"[%s\"\n", class->name);
     FOREACHFIELD(c,d,classlist) {
       char *n = d->i.f.name;

@@ -3050,7 +3050,7 @@ public class EscPragmaParser extends Parse
   }
 
   protected TypeDeclElem parseTypeDeclElemIntoSeqTDE(Lex l, int keyword,
-      Identifier containerId, boolean specOnly) {
+      /*@non_null*/Identifier containerId, boolean specOnly) {
 
     ModifierPragmaVec mpv = ModifierPragmaVec.make();
     ModifierPragma ghostModel = null;
@@ -3439,7 +3439,7 @@ public class EscPragmaParser extends Parse
     return false; // No semicolon, or it is already eaten
   }
 
-  public FieldDecl isPragmaDecl(Token l) {
+  public FieldDecl isPragmaDecl(/*@non_null*/Token l) {
     if (l.auxVal == null) return null;
     TypeDeclElemPragma smp = (TypeDeclElemPragma)l.auxVal;
     int loc = smp.getStartLoc();

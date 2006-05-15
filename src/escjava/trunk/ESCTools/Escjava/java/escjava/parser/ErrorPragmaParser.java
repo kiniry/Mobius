@@ -33,7 +33,7 @@ public class ErrorPragmaParser implements PragmaParser
     }
 
     /** Report an error for each annotation comment **/
-    public void restart(CorrelatedReader in, boolean eolComment) {
+    public void restart(/*@non_null*/CorrelatedReader in, boolean eolComment) {
 	try {
 	    in.read();
 	} catch (IOException e) {
@@ -44,12 +44,12 @@ public class ErrorPragmaParser implements PragmaParser
     }
 
     /** Produce no actual pragmas. */
-    public boolean getNextPragma(Token dst) { return false; }
+    public boolean getNextPragma(/*@non_null*/Token dst) { return false; }
 
     /** No work to close us. */
     public void close() {}
 
-    public javafe.ast.FieldDecl isPragmaDecl(javafe.parser.Token l) { return null; }
+    public javafe.ast.FieldDecl isPragmaDecl(/*@non_null*/javafe.parser.Token l) { return null; }
 
 } // end of class ErrorPragmaParser
 

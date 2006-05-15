@@ -254,7 +254,7 @@ public class XmlProver extends ProverType {
         return tree;
     }
 
-	public void generateDeclarations(Writer s, HashMap variableNames) throws IOException {
+	public void generateDeclarations(/*@non_null*/Writer s, HashMap variableNames) throws IOException {
         Set keySet = variableNames.keySet();
         Iterator iter = keySet.iterator();
         String keyTemp = null;
