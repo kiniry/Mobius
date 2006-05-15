@@ -1,47 +1,55 @@
 
 \section{Introduction}
-The Java Modeling Language (JML) is a widely used specification language used to annotate Java programs 
-for both runtime verification and static verification. It has a vast syntax defined in its manual and most 
-of the tools only implement a part of its syntax. The part of JML we will be interested to in this paper
-is one that is common in most of the tools using JML \cite{BurdyEtAl05:STTT}: pure methods,  
-ghost variables and  model fields. 
+The Java Modeling Language (JML) is a widely used specification language 
+used to annotate Java programs for both runtime verification and static 
+verification. It has a vast syntax defined in its manual and most of the 
+tools only implement a part of its syntax. The part of JML we will be 
+interested to in this paper is one that is common in most of the tools 
+using JML \cite{BurdyEtAl05:STTT}: pure methods, ghost variables and  
+model fields. 
 
 When doing program verification with JML, one of the difficulty that appears
-is to handle the connection between the specifications and the interpreted program specifications.
-We have decided to add the keyword {\tt native}
-to specify some specification-only methods and types that would be directly defined to
-the environment to which specification are interpreted. This keyword can be used in dynamic 
-verification of programs, but it is in a static verification context, that it can be the most helpful.
-It can be used to define predicates, as well as give a real definition to which lemmas can
-be proven upon.
+is to handle the connection between the specifications and the interpreted 
+program specifications.We have decided to add the keyword \code{native}
+to specify some specification-only methods and types that would be 
+directly defined to the environment to which specification are interpreted. 
+This keyword can be used in dynamic verification of programs, 
+but it is in a static verification context, that it can be the most helpful.
+It can be used to define predicates, as well as give a real definition 
+to which lemmas can be proven upon.
 
-In order to test our new construct and our modifications of the JML language we have used
-a tool that do static program verification,  Jack 
+In order to test our new construct and our modifications of the JML language 
+we have used a tool that do static program verification,  Jack 
 (the Java Applet Correctness Kit)\cite{BRL-03-JACK,Jack-Web}. 
 Jack takes as an entry Java programs annotated with JML. 
-The proof obligations are generated to an intermediate language called JPOL (the Java
-Proof Obligation Language) and afterward are translated into proof languages, like Coq, Simplify, AtelierB 
-and PVS. 
-Jack handles most of JML constructs, and is integrated as a plugin within Eclipse \cite{Eclipse-Web}.
-%and has already a custom JML keyword:  {\tt loop\_modify} 
+The proof obligations are generated to an intermediate language called JPOL 
+(the Java Proof Obligation Language) and afterward are translated into 
+proof languages, like Coq, Simplify, AtelierB and PVS. 
+Jack handles most of JML constructs, and is integrated as a plugin within 
+Eclipse \cite{Eclipse-Web}.
+%and has already a custom JML keyword:  \code{ loop\_modify} 
 % which permits to specify which variables are modified within a loop.
 
 The latest developments in Jack concern its Coq output. 
-The interest of this output is that it permits to prove interactively some proof 
-obligations that would not be provable automatically in a first order 
+The interest of this output is that it permits to prove interactively some 
+proof obligations that would not be provable automatically in a first order 
 prover like Simplify \cite{simplify}.
 Together with the Simplify output this is the output which is used the most.
 
-Coq is a proof assistant based on the calculus of inductive construction \cite{BC-04-COQ}. 
+Coq is a proof assistant based on the calculus of inductive construction 
+\cite{BC-04-COQ}. 
 It can express 
-higher-order logic which first-order automatic provers cannot. In Jack's Coq output, the logic of 
-Java is  expressed through Coq as axioms, definitions, inductive definitions as well as recursive 
+higher-order logic which first-order automatic provers cannot. In Jack's Coq 
+output, the logic of Java is  expressed through Coq as axioms, definitions, 
+inductive definitions as well as recursive 
 functions (in more sparse cases).
 
-In section 2,  we will discuss of the pure methods and their interpretation in Jack. We will then introduce
-the {\tt native} keyword and its use to define predicates.
+In section 2,  we will discuss of the pure methods and their interpretation 
+in Jack. We will then introduce
+the \code{native} keyword and its use to define predicates.
 % as well as to define special types in section 3. 
-In section 3, we will define the {\tt native} types and we will see the application of these constructs 
+In section 3, we will define the \code{native} types and we will see the 
+application of these constructs 
 as a way to implement JML's model classes.
 Finally, in section 4, we will show applications of the native libraries with 
  ghost variables and model fields.

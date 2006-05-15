@@ -1,16 +1,19 @@
 \section{Native types}
-One of the interest of these native methods would be to use them to define  specification-only libraries.
-But to do so, native methods are not expressive enough: primitive Java types and
-object types as defined in JML are not really good to handle some Coq native functions and expressions.
-A good thing would be to be able to use directly some Coq types within our specifications.
-A solution can be to embed some Coq types within a Java type (like {\tt Reference}).
+One of the interest of these native methods would be to use them to define  
+specification-only libraries. But to do so, native methods are not expressive 
+enough: primitive Java types and object types as defined in JML are not 
+really good to handle some Coq native functions and expressions.
+A good thing would be to be able to use directly some Coq types within our 
+specifications.
+A solution can be to embed some Coq types within a Java type 
+(like \code{Reference}).
 First we need some new axioms to get and set the Coq special values, together with a reduction rule. 
 For instance if we want to manage a list type
-we would need the relation {\tt setList}:
+we would need the relation \code{setList}:
 \btab
 Variable setList: Reference \rarrow \ list \rarrow \ Reference.
 \etab
-and the relation {\tt getList}:
+and the relation \code{getList}:
 \btab
 Variable getList:  Reference \rarrow \ list.
 \etab
@@ -36,7 +39,7 @@ The syntax is the same as for the 'native' pure methods:
    @ \> public native static MyNativeType myStaticMethod1();\\
    ...
 \etab
-The {\tt native} keyword is mandatory for native methods inside the native classes 
+The \code{native} keyword is mandatory for native methods inside the native classes 
 since static verification tools (notably Krakatoa) usually allow defining specification only 
 methods, which are pure methods defined only by their specifications.
 
@@ -60,16 +63,16 @@ For instance we can have this kind of calls:
 \btab
 //@ assert MyNativeType.my\=StaticMethod1() !=\\ \>MyNativeType.myStaticMethod2();
 \etab
-where {\tt myStaticMethod1()} and  {\tt myStaticMethod2()} return  values of type {\tt MyNativeType}, 
+where \code{myStaticMethod1()} and  \code{myStaticMethod2()} return  values of type \code{MyNativeType}, 
 and are two native static methods.
 \item the instance call, where the variable on which the native method is called is passed as a 
 parameter. For instance:
 \btab
 //@ assert MyNativeType.myStaticMethod1().myNativeMethod();
 \etab
-which correspond to a call to {\tt myNativeMethod()}, with only one argument passed to the method: the
-result of {\tt myStaticMethod1()} call. This is a valid for JML assertion since the method 
-{\tt myNativeMethod()} is
+which correspond to a call to \code{myNativeMethod()}, with only one argument passed to the method: the
+result of \code{myStaticMethod1()} call. This is a valid for JML assertion since the method 
+\code{myNativeMethod()} is
 pure (native in fact) and returns a boolean.
 \end{itemize}
 \subsection{Soundness of the method}
@@ -117,19 +120,19 @@ Definition ObjectSet\_add (os: ObjectSet) (o: Reference) :=  set\_add o os.\\
  ....
 \etab
 
-First we define the Coq type on which the {\tt ObjectSet} native type will be bound,
-it is a set of objects. For Jack, objects are seen as {\tt Reference}, hence the first definition
-where {\tt ObjectSet} is defined by {\tt set Reference}.
-Then we define the method {\tt create} by the definition {\tt ObjectSet\_create}, 
+First we define the Coq type on which the \code{ObjectSet} native type will be bound,
+it is a set of objects. For Jack, objects are seen as \code{Reference}, hence the first definition
+where \code{ObjectSet} is defined by \code{set Reference}.
+Then we define the method \code{create} by the definition \code{ObjectSet\_create}, 
 which is static and takes no argument. When it is created the set is empty.
-The {\tt add} method is defined by {\tt ObjectSet\_add} in Coq it is directly bound to the 
-{\tt set\_add method} of the library {\tt ListSet} of Coq. It returns a new {\tt ObjectSet} where 
-{\tt o} has been added to
-the preexisting {\tt ObjectSet} {\tt os}.
-The {\tt member} method is an instance method, it tells if the {\tt ObjectSet} 
+The \code{add} method is defined by \code{ObjectSet\_add} in Coq it is directly bound to the 
+\code{set\_add method} of the library \code{ListSet} of Coq. It returns a new \code{ObjectSet} where 
+\code{o} has been added to
+the preexisting \code{ObjectSet} \code{os}.
+The \code{member} method is an instance method, it tells if the \code{ObjectSet} 
 on which it is called rightly
-contain the argument {\tt o} which is an object. It is mapped directly to the 
-{\tt set\_mem method} of the {\tt ListSet} library.
+contain the argument \code{o} which is an object. It is mapped directly to the 
+\code{set\_mem method} of the \code{ListSet} library.
 
 
 In fact when we define a library this way, there are two distinct sort of methods:
@@ -143,11 +146,11 @@ This way of defining the libraries forces the programmer to make a clear distinc
 between modifiers and observers.
 
    
- It gives a way to have a Set library in JML a bit like what is done for {\tt JMLObjectSet}
+ It gives a way to have a Set library in JML a bit like what is done for \code{JMLObjectSet}
 \cite{LPCCR-03-JML}, but with differences: modifiers here are all static
-(which is not the case for  {\tt JMLObjectSet}),
- the {\tt ObjectSet} type is outside the Java class hirarchy since it is a native type,
+(which is not the case for  \code{JMLObjectSet}),
+ the \code{ObjectSet} type is outside the Java class hirarchy since it is a native type,
 so it does not have 
 to define all the inherited methods from the class Object 
-(namely {\tt equals(Object obj)}, {\tt hashCode()} or 
-{\tt wait()}...) and are not interesting when defining a library to use sets within specifications.
+(namely \code{equals(Object obj)}, \code{hashCode()} or 
+\code{wait()}...) and are not interesting when defining a library to use sets within specifications.

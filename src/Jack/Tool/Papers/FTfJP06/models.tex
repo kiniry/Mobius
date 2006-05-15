@@ -69,7 +69,7 @@ abstracted to a native type using a native abstraction function that will link
 \btab
 //@ public native static MyNativeType translate(MyJavaType var);
 \etab
-Once defined we can use it smoothly within the {\tt represents} clause.
+Once defined we can use it smoothly within the \code{represents} clause.
 \subsubsection{Modeling an array with sets}
 One of the immediate applications would be to implement such a translation function to 
 model a Java array of Objects with sets, using the sets defined as a native library 
@@ -79,7 +79,7 @@ an abstraction function from array to sets. This function would have this declar
 \btab
 //@ public static native ObjectSet toSet(Object [] tab);
 \etab
-Translated through Jack it would be linked with an {\tt ObjectSet\_toSet} definition in Coq:
+Translated through Jack it would be linked with an \code{ObjectSet\_toSet} definition in Coq:
 \btab
 Fix\=point\= \ toSet\_intern (tab: Reference)\\ 
 \>(refelements: Reference \rarrow \ Z  \rarrow \ Reference)\+\\
@@ -100,10 +100,10 @@ $|$ Zpos p =$>$ toSet\_intern tab refelements (nat\_of\_P p)\\
 $|$ \_ =$>$ empty\_set\\
 end.
 \etab
-where {\tt refelements} is a dereferencing relation and {\tt arraylength} the relation to get the length of an array. This translation function is built around 2 functions:
+where \code{refelements} is a dereferencing relation and \code{arraylength} the relation to get the length of an array. This translation function is built around 2 functions:
 \begin{itemize}
-\item a first one ({\tt ObjectSet\_toSet}) determining the value of the result if the {\tt tab} parameter is {\tt null} 
-\item a recursive function ({\tt toSet\_intern}) that add to the set each element from the array
+\item a first one (\code{ObjectSet\_toSet}) determining the value of the result if the \code{tab} parameter is \code{null} 
+\item a recursive function (\code{toSet\_intern}) that add to the set each element from the array
 \end{itemize}
 The only thing missing from these definition are the lemmas to ease the proofs. 
 Typical examples are: 
@@ -117,7 +117,7 @@ tab $<>$ null \rarrow \+\\
 (ObjectSet\_toSet tab refelements arraylength) \\
 (refelements tab i)). 
 \etab
-each element in the array {\tt tab} is a member of the corresponding set defined by the translation
+each element in the array \code{tab} is a member of the corresponding set defined by the translation
 function.
 \item
 \btab

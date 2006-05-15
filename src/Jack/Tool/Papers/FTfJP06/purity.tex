@@ -56,7 +56,7 @@ the method call will be directly replaced in the weakest precondition calculus b
 (tab $!=$ null) \rarrow \ (0 $\le$ i) \conj \ (i $\le$ tab.length)
 \etab
 Since the specification
-of the method has an {\tt exsures false} clause, there is no exceptional case.
+of the method has an \code{exsures false} clause, there is no exceptional case.
 In a way, this method will be replaced by its specifications like for a macro.
 
 
@@ -93,9 +93,9 @@ Now a functional definition is generated of the form:
 mypurefun\_norm  Args Result := (requires Args) \rarrow \ (ensures Args Result)\\
 mypurefun\_exc  Args Result := (requires Args) \rarrow \ (exsures Args Result)
 \etab
-where {\tt requires} is a predicate that is on the arguments of the pure function and 
-which correspond to JML {\tt requires} clause the same for {\tt ensures} and {\tt exsures} 
-which are predicates that correspond to JML's {\tt ensures} and {\tt exsures} clause respectively.
+where \code{requires} is a predicate that is on the arguments of the pure function and 
+which correspond to JML \code{requires} clause the same for \code{ensures} and \code{exsures} 
+which are predicates that correspond to JML's \code{ensures} and \code{exsures} clause respectively.
 These functions are then called within the hypothesis at the places where they were used in the code. 
 
 It is nearly what is done in Krakatoa\cite{MPMU-04-JLAP}, as
@@ -105,7 +105,7 @@ The axiomatisation is done in 3 parts: the pure method is first declared as a va
 there is some hypothesis  using it and giving it its properties (which correspond to its
 specifications), and then the variable
 is used within the lemma which has to be proved (for more detailed comparison between 
-the different technique see: \cite{COK-04-METH, DarvasMueller-05}).
+the different technique see: \cite{COK-04-METH,DarvasMueller-05}).
 
 This way of defining Definition/Hypothesis doesn't change anything for automatic 
 proof of the proof obligations with prover like Simplify. 
@@ -123,7 +123,7 @@ relations over  variables without specifying any property on the relation.
 
 So we decided to be able to define pure methods directly within the language in which the proof 
 obligations are generated or the JML annotations are interpreted. 
-We added a new keyword to JML in order to allow it: the {\tt native} keyword. 
+We added a new keyword to JML in order to allow it: the \code{native} keyword. 
 If a method is declared within a specification as native, the method will not be defined nor specified
  in JML at all, it will only be declared. Its specifications will be to the target prover or environment 
 discretion.
@@ -134,7 +134,7 @@ create new objects, they have to be terminating. But native is
 more restrictive than pure: a native method must not throw any exception.
 
 
-For instance we can have the property {\tt withinBounds} declared as native, inside the specification:
+For instance we can have the property \code{withinBounds} declared as native, inside the specification:
 \btab
 //@ public native static boolean withinBounds(int [] tab, int i); 
 \etab
@@ -154,11 +154,11 @@ fun \= (tab i) =>\+\\
 \etab
 In Simplify it will be seen as an uninterpreted function symbol, just a relation on the arguments.
 
-In Jack, the binding from the JML declaration to the {\tt native} language is done automatically.
+In Jack, the binding from the JML declaration to the \code{native} language is done automatically.
 The arguments passed to the method are the same as the one whose the method was declared with
 except:
 \begin{itemize}
-\item if the method is an instance method, an extra argument {\tt this} is added by Jack 
+\item if the method is an instance method, an extra argument \code{this} is added by Jack 
   at the beginning of the method when it is translated
 \item if one of the argument is an array, the array dereferencing relation
 (to do array access) and its length relation are also given
@@ -177,8 +177,8 @@ In  ESC/Java or Krakatoa it is permitted to define a pure method in
 specifications only, but its definition/specifications must be written in Java.
 Krakatoa is indeed a front-end for Java and JML to the Why tool \cite{Why-Tool}. 
 In this tool there exists a mechanism 
-which allow similar definitions as the native keyword: the {\tt parameter} construct.
-The main difference with the native keyword is that {\tt parameter} is more tool dependent, 
+which allow similar definitions as the native keyword: the \code{parameter} construct.
+The main difference with the native keyword is that \code{parameter} is more tool dependent, 
  it is used implicitly within annotations and it is not used on the JML level.
 
 
