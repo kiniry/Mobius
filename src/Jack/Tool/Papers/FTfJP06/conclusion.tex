@@ -1,0 +1,47 @@
+\section{Conclusion}
+We have added the {\tt native} keyword inside of Jack to help solve the different 
+proofs. It can be used to build  native libraries that could replace or 
+at least complete elegantly the model classes, adding more expressiveness
+to define such types and  simplifying their definitions.
+
+Defining abstractions over program variables with model fields and native types
+ enable one to refine Coq data structures to Java programs. 
+The proof obligations using these abstractions are not so easy to prove using Jack. 
+One needs lots of intermediate lemmas to do so. 
+With this methodology, one must first prove some properties on the library, 
+like that the translation function {\tt toSet} has the same number 
+of elements as the originating array, if each element in the array
+was different otherwise it will have less elements.
+
+We have done the same kind of work over a list library to help implement a QuickSort. The size of the 
+library that only binds the Coq constructs with the JML native methods and types is 251 lines long,
+the lemmas proved to help do the proof obligations are 569 lines long. 
+With Jack, around 230 proof obligation are generated, half of them are solved automatically, 
+and the proof scripts of each solved interactively range from 2 or 3 lines (most of the proofs) to 20. 
+Here with the model
+variables about just as much are solved automatically, and afterward the longest proof takes around 
+10 lines.
+First we have to prove properties on the library, and after the proof is easier to do. 
+For multiple use,
+it is really good to have such JML libraries, fully proven, enabling faster proof and program developments.
+
+Jack doesn't check yet if the defined native method or type well-fit with the declared ones.
+It will be an interesting development to add this verification.
+
+
+Another work would be to do  refinement from the 
+target language not only on the data level but also on the program
+level. A nice way to handle this would be to use JML's model program construct
+together with the native methods and types. We could imagine 
+to implement a program with our favorite prover, then bind it
+to JML's model program construct using the native methods and types,
+ and finally have to prove that the program behave the same
+as the model program which is in fact the prover-implemented program.
+
+The only problem is that the model program construct is not implemented at
+all inside the main static program verification tools, neither in ESC/Java2 nor
+ in Krakatoa nor in Jack. 
+
+
+
+

@@ -1,0 +1,100 @@
+\begin{thebibliography}{10}
+
+\bibitem{simplify}
+Simplify.
+\newblock Its 'official' website:
+  \url{http://research.compaq.com/SRC/esc/Simplify.html}.
+
+\bibitem{BC-04-COQ}
+Bertot and Y.~P.~Cast\'eran.
+\newblock {\em Interactive Theorem Proving and Program Development; Coq'Art:
+  The Calculus of Inductive Constructions}.
+\newblock Series: Texts in Theoretical Computer Science. An EATCS Series.
+  Springer, 2004.
+
+\bibitem{breunesse03verifying}
+C.~Breunesse and E.~Poll.
+\newblock Verifying {JML} specifications with model fields, 2003.
+\newblock In Formal Techniques for Java-like Programs. Proceedings of the
+  ECOOP'2003.
+
+\bibitem{Jack-Web}
+L.~Burdy~et al.
+\newblock The {J}ack website, 2004-2006.
+\newblock \url{http://www-sop.inria.fr/everest/soft/Jack}.
+
+\bibitem{BurdyEtAl05:STTT}
+L.~Burdy{,} Y. Cheon {,} D. Cok{,} M. Ernst{,} J. Kiniry{,} G. Leavens{,} K.
+  Rustan{,} M. Leino~et Erik~Poll.
+\newblock An overview of {JML} tools and applications.
+\newblock {\em Software Tools for Technology Transfer}, 2005.
+
+\bibitem{COKK-04-ESCJ}
+Cok and D.~J.~Kiniry.
+\newblock {ESC}/{J}ava2: Uniting {ESC}/{J}ava and {JML}.
+\newblock In {\em CASSIS}, volume 3362 of {\em Lecture Notes in Computer
+  Science}, pages 108--128. Springer, 2004.
+
+\bibitem{COK-04-METH}
+D.~Cok.
+\newblock Reasoning with specifications containing method calls and model
+  fields.
+\newblock In {\em Special Issue: ECOOP 2004 Workshop FTfJP}, volume~4 of {\em
+  Journal of Object Technology}, pages 77--103, 2005.
+
+\bibitem{Eclipse-Web}
+The~Eclipse Consortium.
+\newblock The {E}clipse website.
+\newblock \url{http://www.eclipse.org/}.
+
+\bibitem{DarvasMueller-05}
+\'A. Darvas and P.~M\"uller.
+\newblock Reasoning {A}bout {M}ethod {C}alls in {JML} {S}pecifications.
+\newblock In {\em Formal Techniques for {J}ava-like Programs}, 2005.
+
+\bibitem{Why-Tool}
+J.-C. Filli\^atre.
+\newblock The {W}hy {T}ool.
+\newblock \url{http://why.lri.fr/}.
+
+\bibitem{LPCCR-03-JML}
+G.~Leavens{,} E. Poll{,} C. Clifton{,} Y. Cheon{,} C. Ruby{,} D. Cok~et
+  J.~Kiniry.
+\newblock {JML} reference manual.
+\newblock Department of Computer Science, Iowa State University. Available
+  here: {\url{http://www.jmlspecs.org}}, 2006.
+
+\bibitem{LeinoMueller06}
+K.~R.~M. Leino and P.~M\"uller.
+\newblock A verification methodology for model fields.
+\newblock In {\em European Symposium on Programming (ESOP)}, Lecture Notes in
+  Computer Science. Springer-Verlag, 2006.
+
+\bibitem{MPMU-04-JLAP}
+Claude March{\'e}, Christine Paulin-Mohring, and Xavier Urbain.
+\newblock The \textsc{Krakatoa} tool for certification of
+  \textsc{Java/JavaCard} programs annotated in \textsc{JML}.
+\newblock {\em Journal of Logic and Algebraic Programming}, 58(1--2):89--106,
+  2004.
+
+\bibitem{naumann05}
+David~A. Naumann.
+\newblock Observational purity and encapsulation.
+\newblock volume 3442 of {\em Lecture Notes in Computer Science}, pages
+  190--204. Springer-Verlag, 2005.
+
+\bibitem{BRL-03-JACK}
+Burdy{,}~A. Requet and L.~J.-L.~Lanet.
+\newblock Java applet correctness: A developer-oriented approach.
+\newblock In K.~Araki, S.~Gnesi, and D.~Mandrioli, editors, {\em FME 2003:
+  Formal Methods: International Symposium of Formal Methods Europe}, volume
+  2805 of {\em Lecture Notes in Computer Science}, pages 422--439.
+  Springer-Verlag, 2003.
+
+\bibitem{salcianu05}
+A.~Salcianu and M.~Rinard.
+\newblock Purity and side effect analysis for java programs.
+\newblock volume 3385 of {\em Lecture Notes in Computer Science}, pages
+  199--215. Springer-Verlag, 2005.
+
+\end{thebibliography}

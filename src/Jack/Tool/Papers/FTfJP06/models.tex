@@ -1,0 +1,131 @@
+\section{Application of the native libraries}
+\subsection{Ghost variables}
+The direct application of native libraries is their use with  ghost variables. 
+In JML ghost variables are specification-only variables.
+In the Jack implementation as well as for all the other JML tools, 
+these variables are treated as normal variables
+except they can only be used in specifications and they can only be modified 
+using the JML set construct.
+ 
+Since they are only defined within the specifications, ghost variables can have a native type. 
+To use our ObjectSet library we could have for instance a variable mySet. It would be 
+declared as followed in a Java program:
+\btab
+ //@ ghost \=ObjectSet mySet = ObjectSet.create(); // native types variables\\
+\>  must be initialized since they have no default initializer
+ \etab
+ We could add elements to our ObjectSet using JML's set instruction (with the static modifier):
+ \btab
+ //@ set mySet = ObjectSet.add(mySet, new Object());
+ \etab
+and  finally we could then use it within an assertion (with the instance accessor):
+\btab
+ //@ assert mySet.member(new Object());
+ \etab
+The only difference in the use of native types for ghost variables instead of Java types 
+is the reduced number of properties and proof obligations we have on them. For instance 
+there's no point for the assertion to generate a proof obligation  to verify that the program 
+is not dereferencing a null pointer. We had to initialize the ghost variable 
+with a first value, for which we have {\it a priori} no hypothesis  (except if we now the
+ implementation  of the natives, which is prover or target system dependent).
+
+The native types add some expressiveness to JML annotations and are a way to implement 
+easily the JML model classes libraries.
+Ghost variables are useful when specifying a program, but sometimes we would like to be
+sure specifcation variables model real program behaviours. That's why we used our native
+construct with JML's model variables.
+
+
+
+\subsection{Model fields}
+\subsubsection{Definition}
+Model fields are specification variables defined by a representation function or with a 
+representation relation that maps a program variable to a model variable. Here we will 
+only interest ourselves in defining the model field by a representation function (detailed
+hints on the implementation of model fields for static verification can be found in
+ \cite{LeinoMueller06,breunesse03verifying}). One must 
+use 3 constructs in JML to declare a model field:
+\begin{itemize}
+\item first it must be declared with the model keyword: 
+\btab 
+//@ model MyType myModel
+\etab
+\item then it must be linked to a program variable with an abstraction function:
+\btab
+//@ represents myModel $\leftarrow$ myFun(progVar);
+\etab
+\item finally we must specify that when the program field is modified the model field is modified too.
+\btab
+//@ depends myModel $\leftarrow$ progVar;
+\etab
+\end{itemize}
+The represents and depends clauses are strong invariants: they must not be broken 
+in any way in any state of the program.
+
+Since one of the aims of model fields is to gain abstraction from the program, 
+we could do this abstraction with a native construct. Program variables can be 
+abstracted to a native type using a native abstraction function that will link
+ the native type with the Java type. The native method would have this signature inside of JML:
+\btab
+//@ public native static MyNativeType translate(MyJavaType var);
+\etab
+Once defined we can use it smoothly within the {\tt represents} clause.
+\subsubsection{Modeling an array with sets}
+One of the immediate applications would be to implement such a translation function to 
+model a Java array of Objects with sets, using the sets defined as a native library 
+(as defined in subsection 3.3).
+To be able to model an array with our native sets, the only thing missing is
+an abstraction function from array to sets. This function would have this declaration:
+\btab
+//@ public static native ObjectSet toSet(Object [] tab);
+\etab
+Translated through Jack it would be linked with an {\tt ObjectSet\_toSet} definition in Coq:
+\btab
+Fix\=point\= \ toSet\_intern (tab: Reference)\\ 
+\>(refelements: Reference \rarrow \ Z  \rarrow \ Reference)\+\\
+\>(len: nat) \{struct len\} : set Reference :=\\
+match len with\\
+$|$ S n =$>$ set\_add \=(intelements tab (Z\_of\_nat n)) \\\>(toSet\_intern tab refelements n)\\
+$|$ S0 =$>$ empty\_set\\
+end.\-\\
+Definition ObjectSet\_toSet :=\+\\ 
+fun\= \ (tab\=: Reference) 
+(refelements: Reference \rarrow \ Z  \rarrow \ Reference) \+\\ \>
+(arraylength: Reference \rarrow \ Z) =$>$ \\
+if \=(tab = null)\\
+ \> empty\_set\\
+  else \+\\
+match (arraylength tab) with\\
+$|$ Zpos p =$>$ toSet\_intern tab refelements (nat\_of\_P p)\\
+$|$ \_ =$>$ empty\_set\\
+end.
+\etab
+where {\tt refelements} is a dereferencing relation and {\tt arraylength} the relation to get the length of an array. This translation function is built around 2 functions:
+\begin{itemize}
+\item a first one ({\tt ObjectSet\_toSet}) determining the value of the result if the {\tt tab} parameter is {\tt null} 
+\item a recursive function ({\tt toSet\_intern}) that add to the set each element from the array
+\end{itemize}
+The only thing missing from these definition are the lemmas to ease the proofs. 
+Typical examples are: 
+\begin{itemize}
+\item
+\btab
+forall \=tab arraylength,
+tab $<>$ null \rarrow \+\\
+(forall \=i, 0 $\le$ i \conj i $<$ (arraylength tab) \rarrow \+\\
+(forall \=refelements, ObjectSet\_member  \+\\
+(ObjectSet\_toSet tab refelements arraylength) \\
+(refelements tab i)). 
+\etab
+each element in the array {\tt tab} is a member of the corresponding set defined by the translation
+function.
+\item
+\btab
+forall \=tab arraylength,\+\\
+(forall \=ref,  ObjectSet\_member \+\\(ObjectSet\_toSet tab intelements arraylength)  ref
+\rarrow \\
+exists i, (refelements tab i) = ref). 
+\etab
+for each element of the result set of the translation, there exist an element in the 
+array from which the set was translated.
+\end{itemize}

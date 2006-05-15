@@ -1,0 +1,59 @@
+This is BibTeX, Version 0.99c (Web2C 7.4.5)
+The top-level auxiliary file: natives.aux
+The style file: plain.bst
+Database file #1: natives.bib
+Warning--string name "october" is undefined
+--line 88 of file natives.bib
+Warning--string name "january" is undefined
+--line 353 of file natives.bib
+Warning--string name "january" is undefined
+--line 366 of file natives.bib
+A bad cross reference---entry "COKK-04-ESCJ"
+refers to entry "CASSIS-04", which doesn't exist
+Warning--I didn't find a database entry for "CASSIS-04"
+Warning--to sort, need author or key in simplify
+Warning--can't use both volume and number fields in COK-04-METH
+Warning--empty booktitle in naumann05
+Warning--empty booktitle in salcianu05
+You've used 16 entries,
+            2118 wiz_defined-function locations,
+            595 strings with 6561 characters,
+and the built_in function-call counts, 4925 in all, are:
+= -- 487
+> -- 170
+< -- 10
++ -- 73
+- -- 51
+* -- 275
+:= -- 761
+add.period$ -- 53
+call.type$ -- 16
+change.case$ -- 71
+chr.to.int$ -- 0
+cite$ -- 20
+duplicate$ -- 218
+empty$ -- 449
+format.name$ -- 51
+if$ -- 1097
+int.to.chr$ -- 0
+int.to.str$ -- 16
+missing$ -- 11
+newline$ -- 82
+num.names$ -- 32
+pop$ -- 113
+preamble$ -- 1
+purify$ -- 56
+quote$ -- 0
+skip$ -- 170
+stack$ -- 0
+substring$ -- 255
+swap$ -- 74
+text.length$ -- 10
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 62
+warning$ -- 4
+while$ -- 46
+width$ -- 18
+write$ -- 173
+(There was 1 error message)

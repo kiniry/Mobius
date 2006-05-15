@@ -1,0 +1,153 @@
+\section{Native types}
+One of the interest of these native methods would be to use them to define  specification-only libraries.
+But to do so, native methods are not expressive enough: primitive Java types and
+object types as defined in JML are not really good to handle some Coq native functions and expressions.
+A good thing would be to be able to use directly some Coq types within our specifications.
+A solution can be to embed some Coq types within a Java type (like {\tt Reference}).
+First we need some new axioms to get and set the Coq special values, together with a reduction rule. 
+For instance if we want to manage a list type
+we would need the relation {\tt setList}:
+\btab
+Variable setList: Reference \rarrow \ list \rarrow \ Reference.
+\etab
+and the relation {\tt getList}:
+\btab
+Variable getList:  Reference \rarrow \ list.
+\etab
+and the rewriting rule:
+\btab
+Axiom getsetList: forall r l, getList (setList r l) = l.
+\etab 
+This method is bad because we have to add many axioms, and this is not really 
+done in a natural way.
+To properly do this kind of manipulation we would need some types directly defined 
+in the target environment,  some 'native' types.
+
+\subsection{Definition}
+We have extended the native construct to the type definitions, in order to be able to map
+existing libraries well defined in the target prover language to some specification written in
+JML. With this construct we can declare a type and some operations on it (with the native methods)
+that will be entirely defined in the target language.
+
+The syntax is the same as for the 'native' pure methods:
+\btab
+/*\=@ pub\=lic native class MyNativeType \{\+\\
+   @ \> public native boolean myNativeMethod();\\
+   @ \> public native static MyNativeType myStaticMethod1();\\
+   ...
+\etab
+The {\tt native} keyword is mandatory for native methods inside the native classes 
+since static verification tools (notably Krakatoa) usually allow defining specification only 
+methods, which are pure methods defined only by their specifications.
+
+These native types are not standard Java/JML classes, they are more akin of a functional type:
+\begin{itemize}
+\item they do not inherit from the Object class, they are outside the Java type hierarchy, and they do not
+subtype one another;
+\item they are not instances, in fact they are not even some references but 
+they could be binded to a reference type in the target language;
+\item they have no default initializer: if a specification variable is declared with this type it must
+be initialized to a value returned by a method or taken from another variable of the same type;
+\item it has no constructors: since constructors are used in Java to initialize the object (they return 
+nothing) there is no semantic in initializing the newly created 'object' from a native type
+\end{itemize}
+On the opposite they allow method calls \`a la Java on them. There are two kind of method
+calls on these types:
+\begin {itemize}
+\item the static call, which is just a normal method call from a method defined 
+inside a specification library.\\
+For instance we can have this kind of calls:
+\btab
+//@ assert MyNativeType.my\=StaticMethod1() !=\\ \>MyNativeType.myStaticMethod2();
+\etab
+where {\tt myStaticMethod1()} and  {\tt myStaticMethod2()} return  values of type {\tt MyNativeType}, 
+and are two native static methods.
+\item the instance call, where the variable on which the native method is called is passed as a 
+parameter. For instance:
+\btab
+//@ assert MyNativeType.myStaticMethod1().myNativeMethod();
+\etab
+which correspond to a call to {\tt myNativeMethod()}, with only one argument passed to the method: the
+result of {\tt myStaticMethod1()} call. This is a valid for JML assertion since the method 
+{\tt myNativeMethod()} is
+pure (native in fact) and returns a boolean.
+\end{itemize}
+\subsection{Soundness of the method}
+Defined this way, the native types are sound with respect to the way they are implemented in the 
+target environment. 
+
+In Jack, for the Simplify output, the native types and methods are just uninterpreted function
+symbols. There is no axioms on them,
+ so there is less chances to be able to  prove automatically the proof obligations 
+using these types. So the proof obligations are as sound as it would have been without these
+new constructs. Jack logic for Simplify could be extendable, in order to allow to add axioms on the
+native methods and types, but it has not been implemented yet.
+
+In Coq the native types, just like the native methods are defined in a library.
+Jack's Coq plugin was modified in order to call the user defined type every\-time  a variable tagged as 
+native is translated from Jack to Coq. Letting the user define by himself the type and the properties 
+over them can lead to unsoundness. One way to avoid this is to encourage the user to only use only 
+functional definitions, like definitions or fixpoints to define the native types 
+and the operations over them. 
+ The aim is to allow to use mostly executable 
+constructs of Coq which will not modify the logic of Jack for Coq, and not add
+unnecessary axioms.
+
+If we do runtime verification the native types can be mapped to a Java implementation. The only 
+requirement is for every native methods defined to be pure and that it does not throw any exception. 
+The definition will be sound with respect to JML and Java interpretation.
+\subsection{Native libraries}
+The native construct in JML enables to easily declare libraries 
+that will be used within the specifications like JML's model classes. 
+For instance, if we want to have a library on sets we could define it this way:
+\btab
+/*\=@ pub\=lic native class ObjectSet \{\+\\
+  @\> public native static ObjectSet create();\\
+   @\> public native static ObjectSet add(ObjectSet os, Object o);\\
+   @\> public native boolean member(Object o);\\
+   @ ....\\
+   @*/
+\etab
+On the Coq level an easy way to bind this to a library, is to map it to the Coq library ListSet:
+\btab
+Definition ObjectSet := set Reference. \\
+Definition ObjectSet\_create := empty\_set.\\
+Definition ObjectSet\_add (os: ObjectSet) (o: Reference) :=  set\_add o os.\\
+ Definition ObjectSet\_member (this: ObjectSet) (o: Reference) := set\_mem o this.\\
+ ....
+\etab
+
+First we define the Coq type on which the {\tt ObjectSet} native type will be bound,
+it is a set of objects. For Jack, objects are seen as {\tt Reference}, hence the first definition
+where {\tt ObjectSet} is defined by {\tt set Reference}.
+Then we define the method {\tt create} by the definition {\tt ObjectSet\_create}, 
+which is static and takes no argument. When it is created the set is empty.
+The {\tt add} method is defined by {\tt ObjectSet\_add} in Coq it is directly bound to the 
+{\tt set\_add method} of the library {\tt ListSet} of Coq. It returns a new {\tt ObjectSet} where 
+{\tt o} has been added to
+the preexisting {\tt ObjectSet} {\tt os}.
+The {\tt member} method is an instance method, it tells if the {\tt ObjectSet} 
+on which it is called rightly
+contain the argument {\tt o} which is an object. It is mapped directly to the 
+{\tt set\_mem method} of the {\tt ListSet} library.
+
+
+In fact when we define a library this way, there are two distinct sort of methods:
+\begin{itemize}
+\item the modifiers which are implemented solely as static methods. 
+Since native types are of a functional nature (all their methods must be without any side-effect), 
+each time we want to modify a data of this type we must create a new object.
+\item the observers which can be instance methods or static methods.
+\end{itemize}
+This way of defining the libraries forces the programmer to make a clear distinction 
+between modifiers and observers.
+
+   
+ It gives a way to have a Set library in JML a bit like what is done for {\tt JMLObjectSet}
+\cite{LPCCR-03-JML}, but with differences: modifiers here are all static
+(which is not the case for  {\tt JMLObjectSet}),
+ the {\tt ObjectSet} type is outside the Java class hirarchy since it is a native type,
+so it does not have 
+to define all the inherited methods from the class Object 
+(namely {\tt equals(Object obj)}, {\tt hashCode()} or 
+{\tt wait()}...) and are not interesting when defining a library to use sets within specifications.
