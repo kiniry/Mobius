@@ -4,6 +4,7 @@
 package umbra.instructions;
 
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.BranchInstruction;
@@ -103,10 +104,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
 	
 	private void printInstructionList(InstructionList il) {
 		InstructionHandle ih = il.getStart();
-		while (ih != il.getEnd()) {
-			System.out.println(ih.getInstruction().getName());
+		System.out.println(ih.getInstruction().getName());
+		do {
 			ih = ih.getNext();
+			System.out.println(ih.getInstruction().getName());
 		}
+		while (ih != il.getEnd());
 	}
 	
 	/**
@@ -230,6 +233,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		updateMethod(cg);
 		System.out.println("I am here");
 		instructions.remove(off);
+		printInstructionList(il);
 		System.out.println("Done");
 	}
 
