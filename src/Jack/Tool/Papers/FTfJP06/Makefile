@@ -1,4 +1,4 @@
-all:  natives.ps 
+all:  llncs.ps 
 
 %.tex: %.java
 	tiny_c2l < $< > $@ 

@@ -1,0 +1,75 @@
+% This is LLNCS.DEM the demonstration file of
+% the LaTeX macro package from Springer-Verlag
+% for Lecture Notes in Computer Science,
+% version 2.2 for LaTeX2e
+%
+\documentclass{llncs}
+%
+\usepackage{makeidx}  % allows for indexgeneration
+%
+
+\newcommand{\rarrow}{$\rightarrow$}
+\newcommand{\conj}{$\wedge$}
+\newcommand{\disjonc}{$\vee$}
+\newcommand{\s}{\,}
+\newcommand{\btab}{\begin{small} \begin{tt}\begin{tabbing}}
+\newcommand{\etab}{\end{tabbing}\end{tt}\end{small}}
+
+\begin{document}
+%
+%\mainmatter          
+%
+\pagestyle{headings}  % switches on printing of running heads
+
+%
+% second contribution with nearly identical text,
+% slightly changed contribution head (all entries
+% appear as defaults), and modified bibliography
+%
+\title{Adding native specifications to JML}
+
+\author{Julien Charles }
+
+\institute{INRIA Sophia-Antipolis, France \\
+  {\tt\email{Julien.Charles@sophia.inria.fr}}}
+
+\maketitle
+
+\begin{abstract}
+In the specification language JML we can see pure methods as a way to 
+express user-defined predicates that will simplify the annotations. 
+We take this idea a step further in allowing 
+to only declare these predicates in JML without giving an explicit definition.
+The explicit definition is done directly in the language
+to which the Java program and the specifications are 
+translated. To this end we introduce a new keyword to JML, the keyword {\tt native}. 
+To facilitate these definitions we have enabled the user to define 
+also {\tt native} types in the same way.
+In this paper we will describe these new constructs as well as their implementation in Jack, 
+ and their application to JML's libraries and model fields.
+\end{abstract}
+%
+
+
+\input{jack}
+\input{purity}
+\input{types}
+\input{models}
+\input{conclusion}
+\ \\
+\begin{small}
+\begin{it}
+{\bf Acknowledgements:} I thank Lilian Burdy for having coined the 'native' keyword and 
+for his valuable help on Jack, 
+I also thank Gilles Barthe, Benjamin Gr\'egoire, Marieke Huisman, Mariela Pavlova, Erik Poll,
+Sylvain Boulm\'e and Christine Paulin-Mohring for their helpful comments.
+\end{it}
+\end{small} 
+
+
+%
+% ---- Bibliography ----
+%
+\bibliography{natives}
+\bibliographystyle{plain}
+\end{document}
