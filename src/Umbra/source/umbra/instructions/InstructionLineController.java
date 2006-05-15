@@ -4,7 +4,6 @@
 package umbra.instructions;
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.BranchInstruction;

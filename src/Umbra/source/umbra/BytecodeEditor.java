@@ -138,8 +138,9 @@ public class BytecodeEditor extends TextEditor {
 		}
 		try {
 			JavaClass jc = classGen.getJavaClass();
-			System.out.println("Path1: " + getPath(active) + lastSegment);
-			jc.dump(getPath(active) + "\\" + lastSegment);
+			String path3 = getPath(active).append(lastSegment).toOSString(); 
+			System.out.println("Path3: " + path3);
+			jc.dump(path3);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -184,7 +185,7 @@ public class BytecodeEditor extends TextEditor {
 		SyntheticRepository strin = SyntheticRepository.getInstance(cp);
 		JavaClass jc = strin.loadClass(clname);
 		strin.removeClass(jc);
-		//controlPrint(jc);
+		controlPrint(jc);
 		Method[] methods = jc.getMethods();
 		byte[][] names = new byte[methods.length][256];
 		byte[][] code = new byte[methods.length][4096];
