@@ -199,11 +199,13 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			IFile fileFrom = root.getFile(new Path(fnameFrom));
 			IPath pathTo = new Path(fnameTo);
 			IFile fileTo = root.getFile(pathTo);
-			try {
-				fileTo.delete(true, null);
-				fileFrom.copy(pathTo, true, null);
-			} catch (CoreException e) {
-				e.printStackTrace();
+			if (fileFrom.exists()) {
+				try {
+					fileTo.delete(true, null);
+					fileFrom.copy(pathTo, true, null);
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
 			}
 			try {
 				((BytecodeEditor)editor).refreshBytecode(active, null);
