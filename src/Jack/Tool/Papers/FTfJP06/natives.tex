@@ -1,27 +1,56 @@
-\documentclass[a4paper, 10pt]{article}
-\usepackage[english]{babel}
-\usepackage{url}
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{a4wide}
+% This is LLNCS.DEM the demonstration file of
+% the LaTeX macro package from Springer-Verlag
+% for Lecture Notes in Computer Science,
+% version 2.2 for LaTeX2e
+%
+\documentclass{llncs}
+%
+\usepackage{makeidx}  % allows for indexgeneration
+%
+
 \newcommand{\rarrow}{$\rightarrow$}
 \newcommand{\conj}{$\wedge$}
 \newcommand{\disjonc}{$\vee$}
 \newcommand{\s}{\,}
 \newcommand{\btab}{\begin{small} \begin{tt}\begin{tabbing}}
 \newcommand{\etab}{\end{tabbing}\end{tt}\end{small}}
-%\usepackage{listings}
-%\lstset{language=Java}
 
 \begin{document}
-\begin{center}
-\begin{bf}
-{\LARGE Adding native specifications to JML}\\[1cm]
-\end{bf}
-{\large Julien Charles}\\
-{\large INRIA Sophia-Antipolis, France}\\
-{\tt Julien.Charles@sophia.inria.fr}\\[1cm]
-\end{center}
+%
+%\mainmatter          
+%
+\pagestyle{headings}  % switches on printing of running heads
+
+%
+% second contribution with nearly identical text,
+% slightly changed contribution head (all entries
+% appear as defaults), and modified bibliography
+%
+\title{Adding native specifications to JML}
+
+\author{Julien Charles }
+
+\institute{INRIA Sophia-Antipolis, France \\
+  {\tt\email{Julien.Charles@sophia.inria.fr}}}
+
+\maketitle
+
+\begin{abstract}
+In the specification language JML we can see pure methods as a way to 
+express user-defined predicates that will simplify the annotations. 
+We take this idea a step further in allowing 
+to only declare these predicates in JML without giving an explicit definition.
+The explicit definition is done directly in the language
+to which the Java program and the specifications are 
+translated. To this end we introduce a new keyword to JML, the keyword {\tt native}. 
+To facilitate these definitions we have enabled the user to define 
+also {\tt native} types in the same way.
+In this paper we will describe these new constructs as well as their implementation in Jack, 
+ and their application to JML's libraries and model fields.
+\end{abstract}
+%
+
+
 \input{jack}
 \input{purity}
 \input{types}
@@ -37,9 +66,10 @@ Sylvain Boulm\'e and Christine Paulin-Mohring for their helpful comments.
 \end{it}
 \end{small} 
 
-\begin{small}
+
+%
+% ---- Bibliography ----
+%
 \bibliography{natives}
 \bibliographystyle{plain}
-\end{small} 
-
 \end{document}

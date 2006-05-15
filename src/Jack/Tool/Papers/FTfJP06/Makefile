@@ -1,4 +1,4 @@
-all:  llncs.ps 
+all:  natives.ps 
 
 %.tex: %.java
 	tiny_c2l < $< > $@ 
@@ -37,7 +37,7 @@ add:
 
 clean :
 	@echo Cleaning.
-	@rm -f *.html *.pdf *.dvi *~ *.ps
+	@rm -f *.html *.pdf *.dvi *~ *.ps *.log *.aux *.bbl *.blg
 
 
 
