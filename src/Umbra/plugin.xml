@@ -63,13 +63,13 @@
                menubarPath="umbra.bytecodeMenu/showGroup"
                id="umbra.synchrAction"/>
          <action
-               toolbarPath="showGroup"
-               label="Change Path"
-               tooltip="Change Path"
+               class="umbra.CommitAction"
                icon="icons/sample.gif"
-               class="umbra.ChangePath"
+               id="umbra.commit"
+               label="Commit"
                menubarPath="umbra.bytecodeMenu/showGroup"
-               id="umbra.changePath"/>
+               style="push"
+               toolbarPath="showGroup"/>
       </editorContribution>
       <editorContribution
             targetID="umbra.BytecodeEditor"
