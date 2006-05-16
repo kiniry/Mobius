@@ -7,9 +7,10 @@ these variables are treated as normal variables
 except they can only be used in specifications and they can only be modified 
 using the JML set construct.
  
-Since they are only defined within the specifications, ghost variables can have a native type. 
-To use our ObjectSet library we could have for instance a variable mySet. It would be 
-declared as followed in a Java program:
+Since they are only defined within the specifications, ghost variables 
+can have a native type. 
+To use our ObjectSet library we could have for instance a variable mySet. 
+It would be declared as followed in a Java program:
 \btab
  //@ ghost \=ObjectSet mySet = ObjectSet.create(); // native types variables\\
 \>//  must be initialized since they have no default initializer
@@ -53,42 +54,49 @@ One must use 3 constructs in JML to declare a model field:
 \btab 
 //@ model MyType myModel
 \etab
-\item then it must be linked to a program variable with an abstraction function:
+\item then it must be linked to a program variable with an abstraction 
+function:
 \btab
 //@ represents myModel $\leftarrow$ myFun(progVar);
 \etab
-\item finally we must specify that when the program field is modified the model field is modified too.
+\item finally we must specify that when the program field is modified 
+the model field is modified too.
 \btab
 //@ depends myModel $\leftarrow$ progVar;
 \etab
 \end{itemize}
-The represents and depends clauses are strong invariants: they must not be broken 
-in any way in any state of the program.
+The \code{represents} and \code{depends} clauses are strong invariants: 
+they must not be broken in any way in any state of the program.
 
 Since one of the aims of model fields is to gain abstraction from the program, 
 we could do this abstraction with a native construct. Program variables can be 
 abstracted to a native type using a native abstraction function that will link
- the native type with the Java type. The native method would have this signature inside of JML:
+ the native type with the Java type. 
+The native method would have this signature inside of JML:
 \btab
 //@ public native static MyNativeType translate(MyJavaType var);
 \etab
 Once defined we can use it smoothly within the \code{represents} clause.
 \subsubsection{Modeling an array with sets}
-One of the immediate applications would be to implement such a translation function to 
-model a Java array of Objects with sets, using the sets defined as a native library 
+One of the immediate applications would be to implement such 
+a translation function to model a Java array of Objects with sets, 
+using the sets defined as a native library 
 (as defined in subsection 3.3).
 To be able to model an array with our native sets, the only thing missing is
-an abstraction function from array to sets. This function would have this declaration:
+an abstraction function from array to sets. 
+This function would have this declaration:
 \btab
 //@ public static native ObjectSet toSet(Object [] tab);
 \etab
-Translated through Jack it would be linked with an \code{ObjectSet\_toSet} definition in Coq:
+Translated through Jack it would be linked with an \code{ObjectSet\_toSet} 
+definition in Coq:
 \btab
 Fix\=point\= \ toSet\_intern (tab: Reference)\\ 
 \>(refelements: Reference \rarrow \ Z  \rarrow \ Reference)\+\\
 \>(len: nat) \{struct len\} : set Reference :=\\
 match len with\\
-$|$ S n =$>$ set\_add \=(intelements tab (Z\_of\_nat n)) \\\>(toSet\_intern tab refelements n)\\
+$|$ S n =$>$ set\_add \=(intelements tab (Z\_of\_nat n)) \\
+\>(toSet\_intern tab refelements n)\\
 $|$ S 0 =$>$ empty\_set\\
 end.\-\\
 Definition ObjectSet\_toSet :=\+\\ 
@@ -103,13 +111,17 @@ $|$ Zpos p =$>$ toSet\_intern tab refelements (nat\_of\_P p)\\
 $|$ \_ =$>$ empty\_set\\
 end.
 \etab
-where \code{refelements} is a dereferencing relation and \code{arraylength} the relation to get the length of an array. This translation function is built around 2 functions:
+where \code{refelements} is a dereferencing relation and \code{arraylength} 
+the relation to get the length of an array. 
+This translation function is built around 2 functions:
 \begin{itemize}
-\item a first one (\code{ObjectSet\_toSet}) determining the value of the result if the \code{tab} parameter is \code{null} 
-\item a recursive function (\code{toSet\_intern}) that add to the set each element from the array
+\item a first one (\code{ObjectSet\_toSet}) determining the value of 
+the result if the \code{tab} parameter is \code{null} 
+\item a recursive function (\code{toSet\_intern}) that add to 
+the set each element from the array
 \end{itemize}
-The only thing missing from these definition are the lemmas to ease the proofs. 
-Typical examples are: 
+The only thing missing from these definition are the lemmas to ease 
+the proofs. Typical examples are: 
 \begin{itemize}
 \item
 \btab
@@ -120,8 +132,8 @@ tab $<>$ null \rarrow \+\\
 (ObjectSet\_toSet tab refelements arraylength) \\
 (refelements tab i)). 
 \etab
-each element in the array \code{tab} is a member of the corresponding set defined by the translation
-function.
+each element in the array \code{tab} is a member of the corresponding set 
+defined by the translation function.
 \item
 \btab
 forall \=tab arraylength,\+\\
