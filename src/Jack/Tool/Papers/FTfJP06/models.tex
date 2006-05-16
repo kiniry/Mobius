@@ -12,7 +12,7 @@ To use our ObjectSet library we could have for instance a variable mySet. It wou
 declared as followed in a Java program:
 \btab
  //@ ghost \=ObjectSet mySet = ObjectSet.create(); // native types variables\\
-\>  must be initialized since they have no default initializer
+\>//  must be initialized since they have no default initializer
  \etab
  We could add elements to our ObjectSet using JML's set instruction (with the static modifier):
  \btab
@@ -22,29 +22,32 @@ and  finally we could then use it within an assertion (with the instance accesso
 \btab
  //@ assert mySet.member(new Object());
  \etab
-The only difference in the use of native types for ghost variables instead of Java types 
-is the reduced number of properties and proof obligations we have on them. For instance 
-there's no point for the assertion to generate a proof obligation  to verify that the program 
-is not dereferencing a null pointer. We had to initialize the ghost variable 
-with a first value, for which we have {\it a priori} no hypothesis  (except if we now the
+The only difference in the use of native types for ghost variables instead 
+of Java types is the reduced number of properties and proof obligations 
+we have on them. For instance there's no point for the assertion to generate 
+a proof obligation  to verify that the program is not dereferencing a 
+null pointer. We had to initialize the ghost variable with a first value, 
+for which we have {\it a priori} no hypothesis  (except if we know the
  implementation  of the natives, which is prover or target system dependent).
 
-The native types add some expressiveness to JML annotations and are a way to implement 
-easily the JML model classes libraries.
-Ghost variables are useful when specifying a program, but sometimes we would like to be
-sure specifcation variables model real program behaviours. That's why we used our native
-construct with JML's model variables.
+The native types add some expressiveness to JML annotations and are a way 
+to implement easily the JML model classes libraries.
+Ghost variables are useful when specifying a program, but sometimes 
+we would like to be sure specifcation variables model real program behaviours.
+That's why we used our native construct with JML's model variables.
 
 
 
 \subsection{Model fields}
 \subsubsection{Definition}
-Model fields are specification variables defined by a representation function or with a 
-representation relation that maps a program variable to a model variable. Here we will 
-only interest ourselves in defining the model field by a representation function (detailed
-hints on the implementation of model fields for static verification can be found in
- \cite{LeinoMueller06,breunesse03verifying}). One must 
-use 3 constructs in JML to declare a model field:
+Model fields are specification variables defined by a representation 
+function or with a representation relation that maps a program variable 
+to a model variable. 
+Here we will only interest ourselves in defining the model field by 
+a representation function (detailed hints on the implementation of 
+model fields for static verification can be found in 
+ \cite{LeinoMueller06,breunesse03verifying}). 
+One must use 3 constructs in JML to declare a model field:
 \begin{itemize}
 \item first it must be declared with the model keyword: 
 \btab 
@@ -86,7 +89,7 @@ Fix\=point\= \ toSet\_intern (tab: Reference)\\
 \>(len: nat) \{struct len\} : set Reference :=\\
 match len with\\
 $|$ S n =$>$ set\_add \=(intelements tab (Z\_of\_nat n)) \\\>(toSet\_intern tab refelements n)\\
-$|$ S0 =$>$ empty\_set\\
+$|$ S 0 =$>$ empty\_set\\
 end.\-\\
 Definition ObjectSet\_toSet :=\+\\ 
 fun\= \ (tab\=: Reference) 
