@@ -78,8 +78,8 @@ is\_sorted(tab)
 \etab
 instead of:
 \btab
- $\backslash$forall \=int i; 0 $\le$ i \&\& i $<$ tab.length;\+\\ 
- $\backslash$forall int j; \=0 $\le$ j \&\& j $<$ tab.length; \+\\(i $<$ j) ==$>$ tab[i] $\le$ tab[j];
+ ($\backslash$forall \=int i; 0 $\le$ i \&\& i $<$ tab.length;\+\\ 
+ ($\backslash$forall int j; \=0 $\le$ j \&\& j $<$ tab.length; \+\\(i $<$ j) ==$>$ tab[i] $\le$ tab[j]));
 \etab
 This method makes the annotations clearer, but as annotations 
 grows big, proof obligations grows big too. In order to ease the readability 
