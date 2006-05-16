@@ -124,16 +124,16 @@ The only thing missing from these definition are the lemmas to ease
 the proofs. Typical examples are: 
 \btab
 $\forall$ \=tab arraylength,
-tab $<>$ null \rarrow \+\\
-($\forall$ \=i, 0 $\le$ i \conj i $<$ (arraylength tab) \rarrow \+\\
+tab $<>$ null \rarrow 
+($\forall$ \=i, 0 $\le$ i \conj \ i $<$ (arraylength tab) \rarrow \+\\
 ($\forall$ \=refelements, ObjectSet\_member  \+\\
-(ObjectSet\_toSet tab refelements arraylength) \\
+(ObjectSet\_toSet tab refelements arraylength) 
 (refelements tab i)). 
 \etab
 each element in the array \code{tab} is a member of the corresponding set 
 defined by the translation function.
 \btab
-$\forall$ \=tab arraylength,\+\\
+$\forall$ \=tab arraylength,
 ($\forall$ \=ref,  ObjectSet\_member \+\\(ObjectSet\_toSet tab intelements arraylength)  ref
 \rarrow \\
 $\exists$ i, (refelements tab i) = ref). 

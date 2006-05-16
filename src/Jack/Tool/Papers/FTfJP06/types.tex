@@ -35,8 +35,8 @@ that will be entirely defined in the target language.
 The syntax is the same as for the 'native' pure methods:
 \btab
 /*\=@ pub\=lic native class MyNativeType \{\+\\
-   @ \> public native boolean myNativeMethod();\\
-   @ \> public native static MyNativeType myStaticMethod1();\\
+   @ \> public native boolean nativeMethod();\\
+   @ \> public native static MyNativeType staticMethod1();\\
    ...
 \etab
 The \code{native} keyword is mandatory for native methods inside the native classes 
@@ -70,18 +70,18 @@ There are two kind of method calls on these types:
 method defined inside a specification library.\\
 For instance we can have this kind of calls:
 \btab
-//@ assert MyNativeType.my\=StaticMethod1() !=\\ \>MyNativeType.myStaticMethod2();
+//@ assert MyNativeType.staticMethod1() != MyNativeType.staticMethod2();
 \etab
-where \code{myStaticMethod1()} and  \code{myStaticMethod2()} return  values of type \code{MyNativeType}, 
+where \code{staticMethod1()} and  \code{staticMethod2()} return  values of type \code{MyNativeType}, 
 and are two native static methods.
 \item the instance call, where the variable on which the native method is called is passed as a 
 parameter. For instance:
 \btab
-//@ assert MyNativeType.myStaticMethod1().myNativeMethod();
+//@ assert MyNativeType.staticMethod1().nativeMethod();
 \etab
-which correspond to a call to \code{myNativeMethod()}, with only one argument passed to the method: the
-result of \code{myStaticMethod1()} call. This is a valid for JML assertion since the method 
-\code{myNativeMethod()} is
+which correspond to a call to \code{nativeMethod()}, with only one argument passed to the method: the
+result of \code{staticMethod1()} call. This is a valid for JML assertion since the method 
+\code{nativeMethod()} is
 pure (native in fact) and returns a boolean.
 \end{itemize}
 %\subsection{Soundness of the method}
