@@ -122,25 +122,21 @@ the set each element from the array
 \end{itemize}
 The only thing missing from these definition are the lemmas to ease 
 the proofs. Typical examples are: 
-\begin{itemize}
-\item
 \btab
-forall \=tab arraylength,
+$\forall$ \=tab arraylength,
 tab $<>$ null \rarrow \+\\
-(forall \=i, 0 $\le$ i \conj i $<$ (arraylength tab) \rarrow \+\\
-(forall \=refelements, ObjectSet\_member  \+\\
+($\forall$ \=i, 0 $\le$ i \conj i $<$ (arraylength tab) \rarrow \+\\
+($\forall$ \=refelements, ObjectSet\_member  \+\\
 (ObjectSet\_toSet tab refelements arraylength) \\
 (refelements tab i)). 
 \etab
 each element in the array \code{tab} is a member of the corresponding set 
 defined by the translation function.
-\item
 \btab
-forall \=tab arraylength,\+\\
-(forall \=ref,  ObjectSet\_member \+\\(ObjectSet\_toSet tab intelements arraylength)  ref
+$\forall$ \=tab arraylength,\+\\
+($\forall$ \=ref,  ObjectSet\_member \+\\(ObjectSet\_toSet tab intelements arraylength)  ref
 \rarrow \\
-exists i, (refelements tab i) = ref). 
+$\exists$ i, (refelements tab i) = ref). 
 \etab
 for each element of the result set of the translation, there exist an element in the 
 array from which the set was translated.
-\end{itemize}

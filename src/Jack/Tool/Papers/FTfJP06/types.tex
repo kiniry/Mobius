@@ -19,7 +19,7 @@ Variable getList:  Reference \rarrow \ list.
 \etab
 and the rewriting rule:
 \btab
-Axiom getsetList: forall r l, getList (setList r l) = l.
+Axiom getsetList: $\forall$ r l, getList (setList r l) = l.
 \etab 
 This method is bad because we have to add many axioms, and this is not really 
 done in a natural way.
@@ -57,6 +57,11 @@ another variable of the same type;
 \item it has no constructors: since constructors are used in Java to 
 initialize the object (they return nothing) there is no semantic in 
 initializing the newly created 'object' from a native type
+\item the equality (\code{==}) and inequality (\code{!=}) are the
+same as for Java object. So it is mapped to a Leibniz
+equality (in Coq, it is mapped to \code{eq}). The 2 object compared
+should be of the same type.
+\item they forbids Java cast operations
 \end{itemize}
 On the other hand they allow method calls \`a la Java on them. 
 There are two kind of method calls on these types:
@@ -79,35 +84,36 @@ result of \code{myStaticMethod1()} call. This is a valid for JML assertion since
 \code{myNativeMethod()} is
 pure (native in fact) and returns a boolean.
 \end{itemize}
-\subsection{Soundness of the method}
-Defined this way, the native types are sound with respect to the way they are implemented in the 
-target environment. 
+%\subsection{Soundness of the method}
+%Defined this way, the native types are sound with respect to the way they 
+%are implemented in the target environment. 
 
-In Jack, for the Simplify output, the native types and methods are 
-just uninterpreted function symbols. There is no axioms on them,
- so there is less chances to be able to  prove automatically the 
-proof obligations using these types. 
-So the proof obligations are as sound as it would have been without these
-new constructs. 
-Jack logic for Simplify could be extendable, in order to allow to add 
-axioms on the native methods and types, but it has not been implemented yet.
+%In Jack, for the Simplify output, the native types and methods are 
+%just uninterpreted function symbols. There is no axioms on them,
+% so there is less chances to be able to  prove automatically the 
+%proof obligations using these types. 
+%So the proof obligations are as sound as it would have been without these
+%new constructs. 
+%Jack logic for Simplify could be extendable, in order to allow to add 
+%axioms on the native methods and types, but it has not been implemented yet.
 
-In Coq the native types, just like the native methods are defined in a library.
-Jack's Coq plugin was modified in order to call the user defined type 
-every\-time  a variable tagged as native is translated from Jack to Coq. 
-Letting the user define by himself the type and the properties over them 
-can lead to unsoundness. One way to avoid this is to encourage the user 
-to use only functional definitions, like definitions or fixpoints to define 
-the native types and the operations over them. 
- The aim is to allow to use mostly executable 
-constructs of Coq which will not modify the logic of Jack for Coq, and not add
-unnecessary axioms.
+%In Coq the native types, just like the native methods are defined in a 
+%library.
+%Jack's Coq plugin was modified in order to call the user defined type 
+%every\-time  a variable tagged as native is translated from Jack to Coq. 
+%Letting the user define by himself the type and the properties over them 
+%can lead to unsoundness. One way to avoid this is to encourage the user 
+%to use only functional definitions, like definitions or fixpoints to define 
+%the native types and the operations over them. 
+% The aim is to allow to use mostly executable 
+%constructs of Coq which will not modify the logic of Jack for Coq, and not add
+%unnecessary axioms.
 
-If we do runtime verification the native types can be mapped to a Java 
-implementation. 
-The only requirement is for every native methods defined to be pure and 
-that it does not throw any exception. 
-The definition will be sound with respect to JML and Java interpretation.
+%If we do runtime verification the native types can be mapped to a Java 
+%implementation. 
+%The only requirement is for every native methods defined to be pure and 
+%that it does not throw any exception. 
+%The definition will be sound with respect to JML and Java interpretation.
 
 
 \subsection{Native libraries}
@@ -119,16 +125,14 @@ For instance, if we want to have a library on sets we could define it this way:
   @\> public native static ObjectSet create();\\
    @\> public native static ObjectSet add(ObjectSet os, Object o);\\
    @\> public native boolean member(Object o);\\
-   @ ....\\
-   @*/
+    ....  
 \etab
 On the Coq level an easy way to bind this to a library, is to map it to the Coq library ListSet:
 \btab
 Definition ObjectSet := set Reference. \\
 Definition ObjectSet\_create := empty\_set.\\
 Definition ObjectSet\_add (os: ObjectSet) (o: Reference) :=  set\_add o os.\\
- Definition ObjectSet\_member (this: ObjectSet) (o: Reference) := set\_mem o this.\\
- ....
+ Definition ObjectSet\_member (this: ObjectSet) (o: Reference) := set\_mem o this.
 \etab
 
 First we define the Coq type on which the \code{ObjectSet} native type 
