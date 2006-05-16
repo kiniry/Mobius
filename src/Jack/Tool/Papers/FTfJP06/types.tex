@@ -45,20 +45,24 @@ methods, which are pure methods defined only by their specifications.
 
 These native types are not standard Java/JML classes, they are more akin of a functional type:
 \begin{itemize}
-\item they do not inherit from the Object class, they are outside the Java type hierarchy, and they do not
+\item they do not inherit from the Object class, 
+they are outside the Java type hierarchy, and they do not
 subtype one another;
 \item they are not instances, in fact they are not even some references but 
-they could be binded to a reference type in the target language;
-\item they have no default initializer: if a specification variable is declared with this type it must
-be initialized to a value returned by a method or taken from another variable of the same type;
-\item it has no constructors: since constructors are used in Java to initialize the object (they return 
-nothing) there is no semantic in initializing the newly created 'object' from a native type
+they could be bound to a reference type in the target language;
+\item they have no default initializer: 
+if a specification variable is declared with this type it must
+be initialized to a value returned by a method or taken from 
+another variable of the same type;
+\item it has no constructors: since constructors are used in Java to 
+initialize the object (they return nothing) there is no semantic in 
+initializing the newly created 'object' from a native type
 \end{itemize}
-On the opposite they allow method calls \`a la Java on them. There are two kind of method
-calls on these types:
+On the other hand they allow method calls \`a la Java on them. 
+There are two kind of method calls on these types:
 \begin {itemize}
-\item the static call, which is just a normal method call from a method defined 
-inside a specification library.\\
+\item the static call, which is just a normal method call from a 
+method defined inside a specification library.\\
 For instance we can have this kind of calls:
 \btab
 //@ assert MyNativeType.my\=StaticMethod1() !=\\ \>MyNativeType.myStaticMethod2();

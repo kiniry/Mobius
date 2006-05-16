@@ -12,21 +12,21 @@ can be found in \cite{salcianu05}.
 
 
 
-In dynamic program verification pure methods are usually built from their source code. 
-The method is first thought on the Java level, without side effects, and afterward
-the user writes its specifications on the JML level; in order to be able
-to use it in JML annotations.
+In dynamic program verification pure methods are usually built from 
+their source code. 
+The method is first thought on the Java level, without side effects, 
+and afterward the user writes its specifications on the JML level; 
+in order to be able to use it in JML annotations.
 
 In static program verification,  pure methods can be built directly
-from their specifications, since most of the tools replace  pure method's calls 
- by the instanciation of the pure method's specifications.
+from their specifications, since most of the tools replace pure method's calls 
+ by the instantiation of the pure method's specifications.
 
 
 \subsection{Jack's implementation}
-In Jack the notion of purity used is as in JML a kind of observational purity \cite{naumann05}, 
-but a constructor that
-only modifies the fields of the newly created objects is not considered 
-as pure.
+In Jack the notion of purity used is as in JML a kind of observational 
+purity \cite{naumann05}, but a constructor that modifies the fields 
+of the newly created objects is not considered as pure.
 In Jack's weakest precondition calculus the specifications are considered 
 as lightweight: the method calls are replaced by their specifications 
 inside the calculus.
@@ -38,11 +38,11 @@ For a method defined in a Java file:
 \btab
  /*\=@ requires tab != null;\+\\
   @  modifies $\backslash$nothing;\\
-  @ ensures   $\backslash$result == (0 $\le$ i) \&\& (i $\le$ tab.length);\\
+  @ ensures   $\backslash$result == (0 $\le$ i \&\& i $\le$ tab.length);\\
   @ exsures false;\\
   @*/\-\\
 publi\=c static /*@ pure @*/  withinBounds(int[] tab, int i) \{\+\\
-       return (0 $\le$ i) \&\& (i $\le$ tab.length);\-\\
+       return 0 $\le$ i \&\& i $\le$ tab.length;\-\\
 \}
 \etab
 
@@ -64,7 +64,7 @@ In a way, this method will be replaced by its specifications like for a macro.
 \subsection{Specification macros}
 
 
-When specifying a program with JML one of the main problem is the 
+When specifying a program with JML one of the main problems is the 
 growth of the size of the annotations. 
 The way static verification tools usually define the handling 
 of pure methods, we can use them to do some specification macros.
@@ -128,10 +128,11 @@ If a method is declared within a specification as native, the method will not be
  in JML at all, it will only be declared. Its specifications will be to the target prover or environment 
 discretion.
 
-Since the native methods are declared within the specifications they must be pure:
-they must not have any side-effect, they can only
-create new objects, they have to be terminating. But native is
-more restrictive than pure: a native method must not throw any exception.
+Since the native methods are declared within the specifications they must 
+be pure: they must not have any side-effect, they can only create objects, 
+they have to be terminating. 
+But native is more restrictive than pure: 
+a native method must not throw any exception.
 
 
 For instance we can have the property \code{withinBounds} declared as native, inside the specification:
