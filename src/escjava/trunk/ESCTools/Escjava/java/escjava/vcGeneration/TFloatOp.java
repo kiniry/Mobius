@@ -13,7 +13,7 @@ abstract class TFloatOp extends TBoolRes {
 	    TNode nodeTemp = getChildAt(i);
 
 	    if(nodeTemp.type  != null){
-		if(!nodeTemp.type.equals($float)) {
+		if(!nodeTemp.type.equals(_float)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
@@ -28,7 +28,7 @@ abstract class TFloatOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType($float, true);
+		nodeTemp.setType(_float, true);
 
 	    nodeTemp.typeTree();
 	}

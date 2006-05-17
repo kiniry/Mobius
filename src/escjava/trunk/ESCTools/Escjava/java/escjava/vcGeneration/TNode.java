@@ -8,11 +8,11 @@ import java.util.Set;
 abstract public class TNode {
 
     /*@
-     @ protected invariant (\forall TNode i,j ; i != j; i.id != j.id) &&
-     @ (lastType >= 0) &&
-     @ (typeProofSet ==> (lastType <= 1 && lastType <= 3)) &&
-     @ (isroot ==> (this instanceof TRoot)) &&
-     @ (parent != null || this instanceof TRoot);
+     @ protected invariant (\forall TNode i,j ; i != j; i.id != j.id);
+     @ protected invariant lastType >= 0 &&
+     @   (typeProofSet ==> (lastType <= 1 && lastType <= 3)) &&
+     @   (isroot ==> (this instanceof TRoot)) && // you probably want this to be <==> [Chalin]
+     @   (parent != null || this instanceof TRoot); // ditto
      @*/
 
     // FIXME explain it in the doc
@@ -70,31 +70,31 @@ abstract public class TNode {
      * We add some types that we know will be used to avoid looking
      * at the map typesName when we want to add it.
      */
-    static public TypeInfo $Reference = null;
+    static public TypeInfo _Reference = null;
 
-    static public TypeInfo $Type = null;
+    static public TypeInfo _Type = null;
 
-    static public TypeInfo $DOUBLETYPE = null;
+    static public TypeInfo _DOUBLETYPE = null;
 
-    static public TypeInfo $boolean = null;
+    static public TypeInfo _boolean = null;
 
-    static public TypeInfo $char = null;
+    static public TypeInfo _char = null;
 
-    static public TypeInfo $double = null;
+    static public TypeInfo _double = null;
 
-    static public TypeInfo $Field = null;
+    static public TypeInfo _Field = null;
 
-    static public TypeInfo $INTTYPE = null;
+    static public TypeInfo _INTTYPE = null;
 
-    static public TypeInfo $integer = null;
+    static public TypeInfo _integer = null;
 
-    static public TypeInfo $float = null;
+    static public TypeInfo _float = null;
 
-    static public TypeInfo $String = null;
+    static public TypeInfo _String = null;
 
-    static public TypeInfo $Time = null;
+    static public TypeInfo _Time = null;
 
-    static public TypeInfo $Path = null;
+    static public TypeInfo _Path = null;
 
     public TNode() {
 
@@ -380,7 +380,7 @@ abstract public class TNode {
                 /*
                  * Handle double type here
                  */
-                if (ti == $Field) { // variables may have a second type;
+                if (ti == _Field) { // variables may have a second type;
                     if (vi.getSecondType() != null) {
 
                         /*

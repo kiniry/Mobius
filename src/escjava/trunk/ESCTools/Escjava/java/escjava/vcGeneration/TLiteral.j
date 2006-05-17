@@ -6,7 +6,7 @@ public class TString extends TLiteral{
 
     protected TString (String value){
 	this.value = value;
-	type = $String;
+	type = _String;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -21,7 +21,7 @@ public class TBoolean extends TLiteral{
 
     protected TBoolean (boolean value){
 	this.value = value;
-	type = $boolean;
+	type = _boolean;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -36,7 +36,7 @@ public class TChar extends TLiteral{
 
     protected TChar (int value){
 	this.value = (char)value;
-	type = $char;
+	type = _char;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -51,7 +51,7 @@ public class TInt extends TLiteral {
     
     protected TInt(int value){
 	this.value = value;
-	type = $integer;
+	type = _integer;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -66,7 +66,7 @@ public class TFloat extends TLiteral {
     
     protected TFloat(float value){
 	this.value = value;
-	type = $float;
+	type = _float;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -81,7 +81,7 @@ public class TDouble extends TLiteral {
     
     protected TDouble(double value){
 	this.value = value;
-	type = $float;
+	type = _float;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -95,7 +95,7 @@ public class TNull extends TLiteral {
     protected Object value = null;
     
     protected TNull(){
-	type = $Reference;
+	type = _Reference;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{

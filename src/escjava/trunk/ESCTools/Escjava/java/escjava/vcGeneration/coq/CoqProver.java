@@ -111,20 +111,20 @@ public class CoqProver extends ProverType {
      */
     public void init() {
         // Predefined types
-        TNode.$Reference = TNode.addType("%Reference", "Reference");
-        TNode.$Time = TNode.addType("%Time", "Time");
-        TNode.$Type = TNode.addType("%Type", "Types");
-        TNode.$boolean = TNode.addType("boolean", "bool");
-        TNode.$char = TNode.addType("char", "t_char");
-        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "t_double"); 
-        TNode.$double = TNode.addType("double", "t_double"); 
-        TNode.$Field = TNode.addType("%Field", "Field"); 
-        TNode.$INTTYPE = TNode.addType("INTTYPE", "t_int");
-        TNode.$integer = TNode.addType("integer", "t_int"); 
-        TNode.$float = TNode.addType("float", "t_float");
-        TNode.$Path = TNode.addType("%Path", "Path"); 
+        TNode._Reference = TNode.addType("%Reference", "Reference");
+        TNode._Time = TNode.addType("%Time", "Time");
+        TNode._Type = TNode.addType("%Type", "Types");
+        TNode._boolean = TNode.addType("boolean", "bool");
+        TNode._char = TNode.addType("char", "t_char");
+        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "t_double"); 
+        TNode._double = TNode.addType("double", "t_double"); 
+        TNode._Field = TNode.addType("%Field", "Field"); 
+        TNode._INTTYPE = TNode.addType("INTTYPE", "t_int");
+        TNode._integer = TNode.addType("integer", "t_int"); 
+        TNode._float = TNode.addType("float", "t_float");
+        TNode._Path = TNode.addType("%Path", "Path"); 
         // of terminating a function
-        //$String = addType("String" "String"); fixme, does this type appears in original proof ?
+        //_String = addType("String" "String"); fixme, does this type appears in original proof ?
 
         // Predefined variables name
         // variables used by the old proof system and that we still need
@@ -183,7 +183,7 @@ public class CoqProver extends ProverType {
      * @param vi the variable info to analyse.
      */
     public /*@ non_null @*/ String getVariableInfo(VariableInfo vi){ 	
-    	if(vi.type != TNode.$Type){
+    	if(vi.type != TNode._Type){
     		if(vi.def == null)
     			coqRename(vi);
     		
@@ -265,7 +265,7 @@ public class CoqProver extends ProverType {
 		if(m2.matches() || m3.matches() || vi.old.equals("brokenObj")) { // variable is not handled yet, ask David Cok about
 		    // some things
 		    coq = "(* %NotHandled *) brokenObj"; 
-		    vi.type = TNode.$Reference;
+		    vi.type = TNode._Reference;
 		    
 		}
 
@@ -279,7 +279,7 @@ public class CoqProver extends ProverType {
 		  Since '?' isn't a valid character in the java notation and is Ok for pvs,
 		  we use it to make the difference.
 		*/
-		else if(vi.type == TNode.$Type){
+		else if(vi.type == TNode._Type){
 		    System.err.println("Warning in escjava.java.vcGeneration.VariableInfo.coqRename() : considering "+vi.old+" as a user defined type.");
 
 		    // renaming done here

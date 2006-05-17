@@ -4,7 +4,7 @@ package escjava.vcGeneration;
 abstract class TIntFun extends TFunction {
 
     public TIntFun(){
-	type = $integer;
+	type = _integer;
     }
 
     protected void typeTree(){
@@ -17,7 +17,7 @@ abstract class TIntFun extends TFunction {
 	    TNode nodeTemp = getChildAt(i);
 
 	    if(nodeTemp.type  != null){
-		if(!nodeTemp.type.equals($integer)) {
+		if(!nodeTemp.type.equals(_integer)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
@@ -32,7 +32,7 @@ abstract class TIntFun extends TFunction {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType($integer, true);
+		nodeTemp.setType(_integer, true);
 
 	    nodeTemp.typeTree();
 	}

@@ -4,7 +4,7 @@ package escjava.vcGeneration;
 abstract class TFloatFun extends TFunction {
 
     public TFloatFun(){
-	type = $float;
+	type = _float;
     }
 
     protected void typeTree(){
@@ -17,7 +17,7 @@ abstract class TFloatFun extends TFunction {
 	    TNode nodeTemp = getChildAt(i);
 
 	    if(nodeTemp.type  != null) {
-		if(!nodeTemp.type.equals($float)) {
+		if(!nodeTemp.type.equals(_float)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
@@ -32,7 +32,7 @@ abstract class TFloatFun extends TFunction {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType($float, true);
+		nodeTemp.setType(_float, true);
 	    
 	    nodeTemp.typeTree();
 	}

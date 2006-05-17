@@ -50,7 +50,7 @@ public class TBoolNE extends TBoolOp {
 }
 
 // allocation comparisons
-// $Time * $Time -> boolean
+// _Time * _Time -> boolean
 public class TAllocLT extends TBoolRes {
 
     public void typeTree(){
@@ -66,8 +66,8 @@ public class TAllocLT extends TBoolRes {
 	    TNode n2 = getChildAt(1);
 
 	    // we are sure about the type of the sons
-	    n1.setType($Time,true);
-	    n2.setType($Time,true);
+	    n1.setType(_Time,true);
+	    n2.setType(_Time,true);
 
 	    n1.typeTree();
 	    n2.typeTree();
@@ -81,7 +81,7 @@ public class TAllocLT extends TBoolRes {
 
 }
 
-// $Time * $Time -> boolean
+// _Time * _Time -> boolean
 public class TAllocLE extends TBoolRes {
 
     public void typeTree(){
@@ -97,8 +97,8 @@ public class TAllocLE extends TBoolRes {
 	    TNode n2 = getChildAt(1);
 
 	    // we are sure about the type of the sons
-	    n1.setType($Time,true);
-	    n2.setType($Time,true);
+	    n1.setType(_Time,true);
+	    n2.setType(_Time,true);
 
 	    n1.typeTree();
 	    n2.typeTree();
@@ -424,7 +424,7 @@ public class TIs extends TBoolRes { // %Reference | double | char etc ..., type 
 	     * we can't guess it here. We just know that the second son should
 	     * be a type.
 	     */
-	    n2.setType($Type,true);
+	    n2.setType(_Type,true);
 
 	    n1.typeTree();
 	    n2.typeTree();
@@ -454,7 +454,7 @@ public class TSelect extends TFunction {
 	     * we can't guess it here. We just know that the second son should
 	     * be a %Reference.
 	     */
-	    n2.setType($Reference,true);
+	    n2.setType(_Reference,true);
 
 	    n1.typeTree();
 	    n2.typeTree();
@@ -481,8 +481,8 @@ public class TStore extends TFunction {
 	    TNode n2 = getChildAt(1);
 	    TNode n3 = getChildAt(2);
 
-	    n1.setType($Field, true);
-	    n2.setType($Reference,true);
+	    n1.setType(_Field, true);
+	    n2.setType(_Reference,true);
 
 	    n1.typeTree();
 	    n2.typeTree();
@@ -501,7 +501,7 @@ public class TStore extends TFunction {
 public class TTypeOf extends TFunction {
     
     public TTypeOf(){
-	type = $Type;
+	type = _Type;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -541,8 +541,8 @@ public class TIsAllocated extends TBoolOp {
 	    TNode n2 = getChildAt(1);
 
 	    // we are sure about the type of the sons
-	    n1.setType($Reference,true);
-	    n2.setType($Time,true);
+	    n1.setType(_Reference,true);
+	    n2.setType(_Time,true);
 
 	    n1.typeTree();
 	    n2.typeTree();
@@ -560,7 +560,7 @@ public class TIsAllocated extends TBoolOp {
 public class TEClosedTime extends TFunction {
 
     protected TEClosedTime(){
-	type = $Time;
+	type = _Time;
     }
 
     public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
@@ -573,7 +573,7 @@ public class TEClosedTime extends TFunction {
 public class TFClosedTime extends TFunction {
 
     protected TFClosedTime(){
-	type = $Time;
+	type = _Time;
     }
 
     public void typeTree(){
@@ -584,7 +584,7 @@ public class TFClosedTime extends TFunction {
 	    TNode n1 = getChildAt(0);
 
 	    // we are sure about the type of the sons
-	    n1.setType($Field,true);
+	    n1.setType(_Field,true);
 
 	    n1.typeTree();
 	}
@@ -620,11 +620,11 @@ public class TAsField extends TFunction {
 	     * The types of the second son is set first, thus
 	     * we can use it for the first one.
 	     */
-	    n2.setType($Type,true);
+	    n2.setType(_Type,true);
 	    n2.typeTree();
 	    
 	    // we say this is a field
-	    n1.setType($Field,true);
+	    n1.setType(_Field,true);
 	    // we add his own type too
 	    VariableInfo vi = n1.getVariableInfo();
 
@@ -710,8 +710,8 @@ public class TUnset extends TFunction {
 	    TNode n2 = getChildAt(1);
 	    TNode n3 = getChildAt(2);
 
-	    n1.setType($Field, true);
-	    n2.setType($Reference,true);
+	    n1.setType(_Field, true);
+	    n2.setType(_Reference,true);
 
 	    n1.typeTree();
 	    n2.typeTree();

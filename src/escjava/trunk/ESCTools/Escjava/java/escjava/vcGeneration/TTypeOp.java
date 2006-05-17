@@ -13,14 +13,14 @@ abstract class TTypeOp extends TBoolRes {
 	    TNode nodeTemp = getChildAt(i);
 
 	    if(nodeTemp.type  != null) {
-		if(!nodeTemp.type.equals($Type)) {
+		if(!nodeTemp.type.equals(_Type)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
 		     * Print all sons
 		     */
 		    System.err.println("Node : "+this.toString());
-		    System.err.println("should have all sons with type $Type");
+		    System.err.println("should have all sons with type _Type");
 		    System.err.println("List of sons :");
 
 		    for(int j = 0; j <= sons.size() - j; j++)

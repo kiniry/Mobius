@@ -8,7 +8,7 @@ public class TName extends TVariable {
 
     /**
      * type is supposed to be one of the object that is statically
-     * initialized in TNode, like $Reference, $Type etc...
+     * initialized in TNode, like _Reference, _Type etc...
      */
     protected TName(/*@ non_null @*/String name) {
         this.name = name;
@@ -46,7 +46,7 @@ public class TName extends TVariable {
 			    if(vi.typeSure) // we don't change it
 			    	TDisplay.err(this, "setType(TypeInfo, boolean)", "Variable named "+m.name+", has type "+vi.type.old+" yet you try to change it to "+type.old);
 			    else {
-			    	if(type == $Reference) {
+			    	if(type == _Reference) {
 			    		// no we won't change it !!!
 			    		TDisplay.warn(this, "setType(TypeInfo, boolean)", "I won't change the type of "+m.name+" (which was "+vi.type.old+") to this silly type : "+type.old);
 			    	}

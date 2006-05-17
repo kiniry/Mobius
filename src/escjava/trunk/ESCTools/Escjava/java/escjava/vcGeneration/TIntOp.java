@@ -13,7 +13,7 @@ abstract class TIntOp extends TBoolRes {
 	    TNode nodeTemp = getChildAt(i);
 
 	    if(nodeTemp.type  != null) {
-		if(!nodeTemp.type.equals($integer)) {
+		if(!nodeTemp.type.equals(_integer)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
@@ -28,7 +28,7 @@ abstract class TIntOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType($integer, true);
+		nodeTemp.setType(_integer, true);
 
 	    nodeTemp.typeTree();
 	    

@@ -21,7 +21,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     	genericFun("arrayLength", n);
     }
     public void visitTArrayFresh(/*@ non_null @*/ TArrayFresh n) throws IOException{
-    	if(TNode.$boolean.equals(n.getChildAt(6).type)) {
+    	if(TNode._boolean.equals(n.getChildAt(6).type)) {
     		String s= "arrayFreshBool";
     	
 	    	out.appendI("("+ s+" ");
@@ -58,14 +58,14 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
 	  
     public void visitTSelect(/*@ non_null @*/ TSelect n) throws IOException{
     	String pre = "";
-    	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
+    	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
-    	if((TNode.$integer.equals(n.type))||
-    			(TNode.$INTTYPE.equals(n.type)) ||
+    	if((TNode._integer.equals(n.type))||
+    			(TNode._INTTYPE.equals(n.type)) ||
     			n.parent instanceof TIntegralEQ) {
     		genericFun("IntHeap." + pre +"select ", n);
     		
-    	} else if (TNode.$boolean.equals(n.type)) 
+    	} else if (TNode._boolean.equals(n.type)) 
     		genericFun("BoolHeap." + pre +"select ", n);
     	else
     		genericFun("RefHeap." +pre +"select ", n);
@@ -78,15 +78,15 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     	if(val instanceof TName) {
     		tval = TNode.getVariableInfo(((TName)val).name).type;
     	}
-    	if(TNode.$integer.equals(index.type))
+    	if(TNode._integer.equals(index.type))
     		pre = "arr";
     	
-    	if((TNode.$integer.equals(tval)) ||
-    			(TNode.$INTTYPE.equals(tval))) {
+    	if((TNode._integer.equals(tval)) ||
+    			(TNode._INTTYPE.equals(tval))) {
     		
     		genericFun("IntHeap." + pre + "store ", n);
     	}
-    	else if(TNode.$boolean.equals(tval))
+    	else if(TNode._boolean.equals(tval))
     		genericFun("BoolHeap." + pre +"store ", n);
     	else {
     		if(val instanceof TName) {

@@ -14,7 +14,7 @@ abstract class TRefOp extends TBoolRes {
 
 	    if(nodeTemp.type != null){
 		
-		if(!nodeTemp.type.equals($Reference)) {
+		if(!nodeTemp.type.equals(_Reference)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
@@ -29,7 +29,7 @@ abstract class TRefOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType($Reference,true);
+		nodeTemp.setType(_Reference,true);
 	    
 	    nodeTemp.typeTree();
 	}

@@ -217,19 +217,19 @@ public class XmlProver extends ProverType {
      */
     public void init() {
         // Predefined types
-        TNode.$Reference = TNode.addType("%Reference", "%Reference");
-        TNode.$Time = TNode.addType("%Time", "%Time");
-        TNode.$Type = TNode.addType("%Type", "%Type");
-        TNode.$boolean = TNode.addType("boolean", "boolean");
-        TNode.$char = TNode.addType("char", "char");
-        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "DOUBLETYPE");
-        TNode.$double = TNode.addType("double", "double");
-        TNode.$Field = TNode.addType("%Field", "%Field");
-        TNode.$INTTYPE = TNode.addType("INTTYPE", "INTTYPE");
-        TNode.$integer = TNode.addType("integer", "integer");
-        TNode.$float = TNode.addType("float", "float");
-        TNode.$Path = TNode.addType("%Path", "%Path");
-        //TNode.$String = addType("String", "String"); FIXME, does this type appears in original proof ?
+        TNode._Reference = TNode.addType("%Reference", "%Reference");
+        TNode._Time = TNode.addType("%Time", "%Time");
+        TNode._Type = TNode.addType("%Type", "%Type");
+        TNode._boolean = TNode.addType("boolean", "boolean");
+        TNode._char = TNode.addType("char", "char");
+        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "DOUBLETYPE");
+        TNode._double = TNode.addType("double", "double");
+        TNode._Field = TNode.addType("%Field", "%Field");
+        TNode._INTTYPE = TNode.addType("INTTYPE", "INTTYPE");
+        TNode._integer = TNode.addType("integer", "integer");
+        TNode._float = TNode.addType("float", "float");
+        TNode._Path = TNode.addType("%Path", "%Path");
+        //TNode._String = addType("String", "String"); FIXME, does this type appears in original proof ?
 
         // Predefined variables name
         // variables used by the old proof system and that we still need

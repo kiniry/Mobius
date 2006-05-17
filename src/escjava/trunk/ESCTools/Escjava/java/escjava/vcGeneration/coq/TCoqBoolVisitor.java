@@ -56,7 +56,7 @@ public class TCoqBoolVisitor extends TCoqVisitor {
 	 
 	 public void visitTSelect(/*@ non_null @*/ TSelect n) throws IOException{
 	    	String pre = "";
-	    	if(TNode.$integer.equals(((TNode)n.sons.get(1)).type))
+	    	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
 	    		pre = "arr";
 	    	genericFun("BoolHeap." + pre +"select ", n);
 	    	out.appendN(" = true");

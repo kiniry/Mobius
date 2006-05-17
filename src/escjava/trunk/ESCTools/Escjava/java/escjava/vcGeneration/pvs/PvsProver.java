@@ -37,7 +37,7 @@ public class PvsProver extends ProverType {
 
     public String getVariableInfo(VariableInfo caller) {
 
-        if (caller.type != TNode.$Type) {
+        if (caller.type != TNode._Type) {
             if (caller.def == null)
                 pvsRename(caller);
 
@@ -131,7 +131,7 @@ public class PvsProver extends ProverType {
          Since '?' isn't a valid character in the java notation and is Ok for pvs,
          we use it to make the difference.
          */
-        else if (caller.type == TNode.$Type) {
+        else if (caller.type == TNode._Type) {
             TDisplay.warn(this, "pvsRename()", "Considering " + caller.old
                     + " as a user defined type.");
 
@@ -221,20 +221,20 @@ public class PvsProver extends ProverType {
     public void init() {
         // Predefined types
 
-        TNode.$Reference = TNode.addType("%Reference", "Reference");
-        TNode.$Time = TNode.addType("%Time", "Time");
-        TNode.$Type = TNode.addType("%Type", "ReferenceType");
-        TNode.$boolean = TNode.addType("boolean", "Boolean");
-        TNode.$char = TNode.addType("char", "T_char");
-        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "ContinuousNumber"); // fixme, is it JavaNumber or BaseType ?
-        TNode.$double = TNode.addType("double", "ContinuousNumber"); //fixme
-        TNode.$Field = TNode.addType("%Field", "Field"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
-        TNode.$INTTYPE = TNode.addType("INTTYPE", "T_int"); //fixme like DOUBLETYPE
-        TNode.$integer = TNode.addType("integer", "DiscreteNumber"); //fixme
-        TNode.$float = TNode.addType("float", "ContinuousNumber");
-        TNode.$Path = TNode.addType("%Path", "Path"); // used to modelize different ways
+        TNode._Reference = TNode.addType("%Reference", "Reference");
+        TNode._Time = TNode.addType("%Time", "Time");
+        TNode._Type = TNode.addType("%Type", "ReferenceType");
+        TNode._boolean = TNode.addType("boolean", "Boolean");
+        TNode._char = TNode.addType("char", "T_char");
+        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "ContinuousNumber"); // fixme, is it JavaNumber or BaseType ?
+        TNode._double = TNode.addType("double", "ContinuousNumber"); //fixme
+        TNode._Field = TNode.addType("%Field", "Field"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
+        TNode._INTTYPE = TNode.addType("INTTYPE", "T_int"); //fixme like DOUBLETYPE
+        TNode._integer = TNode.addType("integer", "DiscreteNumber"); //fixme
+        TNode._float = TNode.addType("float", "ContinuousNumber");
+        TNode._Path = TNode.addType("%Path", "Path"); // used to modelize different ways
         // of terminating a function
-        //$String = addType("String" "String"); fixme, does this type appears in original proof ?
+        //_String = addType("String" "String"); fixme, does this type appears in original proof ?
 
         // Predefined variables name
         // variables used by the old proof system and that we still need

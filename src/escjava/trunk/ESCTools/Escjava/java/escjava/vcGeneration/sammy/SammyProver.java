@@ -25,7 +25,7 @@ public class SammyProver extends ProverType {
     
     public/*@ non_null @*/String getVariableInfo(VariableInfo caller) {
 
-        if (caller.type != TNode.$Type) {
+        if (caller.type != TNode._Type) {
             if (caller.def == null)
                 sammyRename(caller);
 
@@ -56,20 +56,20 @@ public class SammyProver extends ProverType {
     public void init() {
         // Predefined types
 
-        TNode.$Reference = TNode.addType("%Reference", "?");
-        TNode.$Time = TNode.addType("%Time", "?");
-        TNode.$Type = TNode.addType("%Type", "?");
-        TNode.$boolean = TNode.addType("boolean", "?");
-        TNode.$char = TNode.addType("char", "?");
-        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "?"); // fixme, is it JavaNumber or BaseType ?
-        TNode.$double = TNode.addType("double", "?"); //fixme
-        TNode.$Field = TNode.addType("%Field", "?"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
-        TNode.$INTTYPE = TNode.addType("INTTYPE", "?"); //fixme like DOUBLETYPE
-        TNode.$integer = TNode.addType("integer", "?"); //fixme
-        TNode.$float = TNode.addType("float", "?");
-        TNode.$Path = TNode.addType("%Path", "?"); // used to modelize different ways
+        TNode._Reference = TNode.addType("%Reference", "?");
+        TNode._Time = TNode.addType("%Time", "?");
+        TNode._Type = TNode.addType("%Type", "?");
+        TNode._boolean = TNode.addType("boolean", "?");
+        TNode._char = TNode.addType("char", "?");
+        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "?"); // fixme, is it JavaNumber or BaseType ?
+        TNode._double = TNode.addType("double", "?"); //fixme
+        TNode._Field = TNode.addType("%Field", "?"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
+        TNode._INTTYPE = TNode.addType("INTTYPE", "?"); //fixme like DOUBLETYPE
+        TNode._integer = TNode.addType("integer", "?"); //fixme
+        TNode._float = TNode.addType("float", "?");
+        TNode._Path = TNode.addType("%Path", "?"); // used to modelize different ways
         // of terminating a function
-        //$String = addType("String", "?"); fixme, does this type appears in original proof ?
+        //_String = addType("String", "?"); fixme, does this type appears in original proof ?
 
         // Predefined variables name
         // variables used by the old proof system and that we still need

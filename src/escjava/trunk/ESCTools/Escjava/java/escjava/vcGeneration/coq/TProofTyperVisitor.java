@@ -34,7 +34,7 @@ public class TProofTyperVisitor extends TVisitor {
 	public boolean sonsAreBool(TFunction f) {
 		for(int i = 0; i < f.sons.size(); i++) {
 			TNode t = f.getChildAt(i);
-			if(TNode.$boolean.equals(t.type))
+			if(TNode._boolean.equals(t.type))
 				return true;
 		}
 		return false;
@@ -48,33 +48,33 @@ public class TProofTyperVisitor extends TVisitor {
 	}
 
 	public void visitTBoolImplies(/*@non_null*/TBoolImplies n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$boolean);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._boolean);
 	}
 
 	public void visitTBoolAnd(/*@non_null*/TBoolAnd n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$boolean);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._boolean);
 	}
 
 	public void visitTBoolOr(/*@non_null*/TBoolOr n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$boolean);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._boolean);
 	}
 
 	public void visitTBoolNot(/*@non_null*/TBoolNot n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$boolean);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._boolean);
 	}
 
 	public void visitTBoolEQ(/*@non_null*/TBoolEQ n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$boolean);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._boolean);
 	}
 
 	public void visitTBoolNE(/*@non_null*/TBoolNE n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$boolean);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._boolean);
 	}
 
 	public void visitTAllocLT(/*@non_null*/TAllocLT n) throws IOException {
@@ -103,113 +103,113 @@ public class TProofTyperVisitor extends TVisitor {
 			parent.sons.setElementAt(beq, ind);
 			beq.accept(this);
 		} else {
-			n.type = TNode.$boolean;
+			n.type = TNode._boolean;
 		}
 		
 	}
 
 	public void visitTAnyNE(/*@non_null*/TAnyNE n) throws IOException {
 		visitSons(n);
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTIntegralEQ(/*@non_null*/TIntegralEQ n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTIntegralGE(/*@non_null*/TIntegralGE n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTIntegralGT(/*@non_null*/TIntegralGT n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTIntegralLE(/*@non_null*/TIntegralLE n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
 		
 	}
 
 	public void visitTIntegralLT(/*@non_null*/TIntegralLT n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
 		
 	}
 
 	public void visitTIntegralNE(/*@non_null*/TIntegralNE n) throws IOException {
-		n.type = TNode.$boolean;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._boolean;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTIntegralAdd(/*@non_null*/TIntegralAdd n) throws IOException {
-		n.type = TNode.$integer;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._integer;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTIntegralDiv(/*@non_null*/TIntegralDiv n) throws IOException {
-		n.type = TNode.$integer;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._integer;
+		setAllTypesTo(n, TNode._integer);
 		
 	}
 
 	public void visitTIntegralMod(/*@non_null*/TIntegralMod n) throws IOException {
-		n.type = TNode.$integer;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._integer;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTIntegralMul(/*@non_null*/TIntegralMul n) throws IOException {
-		n.type = TNode.$integer;
-		setAllTypesTo(n, TNode.$integer);	
+		n.type = TNode._integer;
+		setAllTypesTo(n, TNode._integer);	
 	}
 	
 	public void visitTIntegralSub(/*@non_null*/TIntegralSub n) throws IOException {
-		n.type = TNode.$integer;
-		setAllTypesTo(n, TNode.$integer);
+		n.type = TNode._integer;
+		setAllTypesTo(n, TNode._integer);
 	}
 
 	public void visitTFloatEQ(/*@non_null*/TFloatEQ n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTFloatGE(/*@non_null*/TFloatGE n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTFloatGT(/*@non_null*/TFloatGT n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTFloatLE(/*@non_null*/TFloatLE n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTFloatLT(/*@non_null*/TFloatLT n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTFloatNE(/*@non_null*/TFloatNE n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
@@ -266,12 +266,12 @@ public class TProofTyperVisitor extends TVisitor {
 			beq.accept(this);
 		}
 		else {
-			n.type = TNode.$boolean;
+			n.type = TNode._boolean;
 		}
 	}
 
 	public void visitTRefNE(/*@non_null*/TRefNE n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
@@ -292,19 +292,19 @@ public class TProofTyperVisitor extends TVisitor {
 			beq.accept(this);
 		}
 		else {
-			n.type = TNode.$boolean;
+			n.type = TNode._boolean;
 		}
 	}
 
 	public void visitTTypeNE(/*@non_null*/TTypeNE n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void visitTTypeLE(/*@non_null*/TTypeLE n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		// TODO Auto-generated method stub
 		
@@ -341,12 +341,12 @@ public class TProofTyperVisitor extends TVisitor {
 	}
 
 	public void visitTForAll(/*@non_null*/TForAll n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);	
 	}
 
 	public void visitTExist(/*@non_null*/TExist n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		visitSons(n);
 		
 	}
@@ -428,34 +428,34 @@ public class TProofTyperVisitor extends TVisitor {
 	}
 	
 	public void visitTString(/*@non_null*/TString n) throws IOException {
-		n.type = TNode.$String;
+		n.type = TNode._String;
 	}
 
 	public void visitTBoolean(/*@non_null*/TBoolean n) throws IOException {
-		n.type = TNode.$boolean;
+		n.type = TNode._boolean;
 		
 	}
 
 	public void visitTChar(/*@non_null*/TChar n) throws IOException {
-		n.type = TNode.$char;
+		n.type = TNode._char;
 	}
 
 	public void visitTInt(/*@non_null*/TInt n) throws IOException {
-		n.type = TNode.$integer;
+		n.type = TNode._integer;
 	}
 
 	public void visitTFloat(/*@non_null*/TFloat n) throws IOException {
-		n.type = TNode.$float;
+		n.type = TNode._float;
 		
 	}
 
 	public void visitTDouble(/*@non_null*/TDouble n) throws IOException {
-		n.type = TNode.$double;
+		n.type = TNode._double;
 		
 	}
 
 	public void visitTNull(/*@non_null*/TNull n) throws IOException {
-		n.type = TNode.$Reference;
+		n.type = TNode._Reference;
 		
 	}
 

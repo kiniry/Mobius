@@ -7,7 +7,7 @@ package escjava.vcGeneration;
 abstract public class TBoolRes extends TFunction {
 
     public TBoolRes() {
-        type = $boolean;
+        type = _boolean;
     }
 
 }

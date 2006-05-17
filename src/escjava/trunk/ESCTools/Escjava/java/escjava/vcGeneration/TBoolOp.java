@@ -4,7 +4,7 @@ package escjava.vcGeneration;
 abstract class TBoolOp extends TBoolRes {
 
     public TBoolOp(){
-	type = $boolean;
+	type = _boolean;
     }
 
     protected void typeTree(){
@@ -17,7 +17,7 @@ abstract class TBoolOp extends TBoolRes {
 	    TNode nodeTemp = getChildAt(i);
 
 	    if(nodeTemp.type  != null) {
-		if(!nodeTemp.type.equals($boolean)) {
+		if(!nodeTemp.type.equals(_boolean)) {
 		    System.err.println("*** Typecheck error in the tree of ifpvc");
 
 		    /*
@@ -32,7 +32,7 @@ abstract class TBoolOp extends TBoolRes {
 		}
 	    }
 	    else // type has not been set, setting it
-		nodeTemp.setType($boolean, true);
+		nodeTemp.setType(_boolean, true);
 	    
 	    nodeTemp.typeTree();
 	}
