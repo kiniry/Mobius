@@ -328,11 +328,28 @@ jmlc_javafe_1b1:
 	for f in `find Javafe/java -name *.java ! -name "*/jcheck/*"`; do \
 		${MAKE} JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} FILE=$$f jmlc1; \
 	done;
+	${MAKE} jmlc_javafe_cleanup
 
 jmlc_escjava_1b1:
 	@echo "ESCJAVA============================================================"
 	for f in `find Escjava/java -name *.java`; do \
 		${MAKE} JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} FILE=$$f jmlc1; \
+	done
+	${MAKE} jmlc_escjava_cleanup
+
+# Next three `cleanup' targets will remove zero-sized class files that JMLc 
+# leaves hanging around when it dies during the compilation of a file.
+jmlc_javafe_cleanup:
+	${MAKE} JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} post_jmlc_cleanup
+jmlc_escjava_cleanup:
+	${MAKE} JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} post_jmlc_cleanup
+
+post_jmlc_cleanup:
+	@for f in `find $(JMLC_CLASSFILES_DIR) -name *.class`; do \
+		if [ ! -s $$f ]; then \
+			echo "  removing zero-sized class file: $$f"; \
+			rm $$f; \
+		fi; \
 	done
 
 ${JAVAFE_CLASSFILES4RAC}:
