@@ -22,7 +22,7 @@ An instruction can also have one or more successors.
 This relation is represented by a field which is the list of the successors of the instruction.  
 One of the other aspects is the fact that on associate to each instruction a boolean field to determine if it has been modified or not.
 
-Several propreties of the bytecode verifier are for;alised in this class.
+Several properties of the bytecode verifier are formalised in this class.
 First of all one verifies that the successors of the instruction are well included in the others instructions of the program. 
 If these successors pointed towards external instructions, an verification error would be returned. 
 
@@ -31,13 +31,13 @@ This function builds the typing state of the execution of an instruction  on the
 This construction can fail if the instruction tries for example to pop an element when the stack is empty.
 If it succeeds, a new non null state is build.
 
-Around ten instructions have been implementeds:  {\tt load} and {\tt blind} for the access to local variables, {\tt push} and {\ ttpop}   to obtain or put element on the stack, {\tt op1} and {\ ttop2} which is two operators who consume both the two top element of the stack and which replaces them by a eesultat of a certain type, {\tt ifle} and {\tt jump} instructions of jump towards another instruction successor, {\tt nop}  the instruction which does not do anything   and finally {\tt stop} which is an instruction which does not have a successor.
+Around ten instructions have been implemented:  {\tt load} and {\tt blind} for the access to local variables, {\tt push} and {\tt pop}   to obtain or put element on the stack, {\tt op1} and {\tt op2} which is two operators who consume both the two top element of the stack and which replaces them by a result of a certain type, {\tt ifle} and {\tt jump} instructions of jump towards another instruction successor, {\tt nop}  the instruction which does not do anything   and finally {\tt stop} which is an instruction which does not have a successor.
 These instructions have an associated type in the OperandType class,
 who can be None, Type1 or Type2.  Those are the minimal instructions to have a Java-like program.  
 \subsubsection {The main loop}
-The main loop is implementes in the Verifier class.
+The main loop is implemented in the Verifier class.
 It is not an abstract class because it uses the properties of the State and Instruction abstract classes  to verify an instruction set on particular states.
-This class provides two functions, the function  {\ tt verify} in which the loop is written and the function {\ tt check} which verify an instruction.
+This class provides two functions, the function  {\tt verify} in which the loop is written and the function {\tt check} which verify an instruction.
 
 %The m \ 'ethode check ensures that all \ 'states of the successors of an instruction donn \ 'ee,    are larger or \ 'equal that the \ 'states before the ex \ 'ecution of the m \ 'ethode. This   propri \ 'and \ 'E seems simple \ `has to express but it implies several Pr \ 'erequis.  First of all it should be guaranteed that the successors of the instructions point all worms of   valid instructions. Then that all the instructions are diff \ 'erentes of no one and that theirs  \ 'states are too diff \ 'erents of no one them.    The Pr \ calculation weaker 'econdition of Jack forces us \ `has to add these propri \ 'and \ 'be    Li \ 'ees \ `with the S \ 'emantic of the language Java.  .   %Pour to facilitate the evidence I have \ 'and \ 'E oblig \ 'E  %de to add a certain number of assertions.    
 
@@ -70,7 +70,7 @@ Thus at each loop iteration, the integer associated with the state either increa
 \end{figure}    
 \subsection{Proofs}
 The first proofs are relatively easy. 
-The State class is proven almost automatically; 
+The State class is proved almost automatically; 
 except for the constructor where it is necessary to break a disjunction ({\tt instance S $\vee$ S = null}) to prove the invariants.
 
 The Instruction class has also been relatively easy to prove. 
@@ -82,7 +82,7 @@ The lemmas were containing too many hypotheses to be automatically proved.
 Around 500 proof obligations have to be resolved manually.
 Some of them was obvious and were resolved with quite the same script, but the script cannot be automated.
 Some of them was complex: the proof script became little large (an average of 30 steps).
-The lemmas conerning the loop invariant of the verify method and its initialisation were the most difficult.
+The lemmas concerning the loop invariant of the verify method and its initialization were the most difficult.
 \section{Low-Footprint Java-to-Native Compilation}
 \input{cardis05/cardis05}
 \section{Memory consumption}
@@ -90,7 +90,7 @@ The lemmas conerning the loop invariant of the verify method and its initialisat
 \input{memory/intro}
 %\subsection{Preliminaries}\label{sec:prelim}
 %\input{memory/prelim}
-\subsection{Modelling Memory Consumption}\label{sec:verif}
+\subsection{Modeling Memory Consumption}\label{sec:verif}
 \input{memory/technical}
 \subsection{Inferring Memory Allocation}\label{sec:infer}
 \input{memory/infer}

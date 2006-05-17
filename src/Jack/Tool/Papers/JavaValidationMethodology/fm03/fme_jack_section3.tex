@@ -67,13 +67,13 @@ quantify the loop invariant with those variables, and since they cannot be autom
 specify them.
  
  The two main drawbacks of the WP calculus are the loss of information and
- potential exponentional explosion.  After lemmas have been generated,
+ potential exponential explosion.  After lemmas have been generated,
  it is often difficult to understand from which part of the code they
  are derived.  To bypass this issue, program flow information is
  associated to each lemma.  This information is used in the viewer
  to associate an execution path to each lemma. This feature is described in the next section.
 
- Exponentional explosion remains a problem.  Different solutions exist
+ Exponential explosion remains a problem.  Different solutions exist
  to avoid it.  As the WP calculus can be considered as a brute
  force concept, trying to expand all the path of the methods,
  solutions are always based on interaction to reduce this brute force
@@ -84,7 +84,7 @@ specify them.
  interaction during generation, another solution is to allow to add
  special annotations in the source code to introduce formulas that are
  taken into account at generation to simplify the lemmas.
- The solution adopted in \JACK\ is to allow to specify blocks. An exponentional explosion usually occurs
+ The solution adopted in \JACK\ is to allow to specify blocks. An exponential explosion usually occurs
 in a method with many sequenced branched statement ({\tt if, switch}, etc.) Such methods usually perform
 different distinct sequenced treatments.
  Figure \ref{Specified_block} presents the skeleton of such a method. Specifying a block (here the second part

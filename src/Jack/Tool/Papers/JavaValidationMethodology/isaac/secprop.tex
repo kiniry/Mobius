@@ -17,12 +17,12 @@ annotations exist.
 \paragraph {Applet life cycle}
 
 A typical applet life cycle defines phases as {\it loading},
-{\it installation}, {\it personalisation}, {\it selectable},
+{\it installation}, {\it personalization}, {\it selectable},
 {\it blocked} and {\it dead}
 (see \emph{e.g.}~\/\cite{MarletLM01}).  Each phase corresponds to a
 different moment in the applet's life. First an applet is loaded on
 the card, then it is properly installed and registered with the Java
-Card Runtime Environment. Next the card is personalised,
+Card Runtime Environment. Next the card is personalized,
 \emph{i.e.}~all information about the card owner, permissions, keys
 \emph{etc.} is stored. After this, the applet is selectable, which means
 that it can be repeatedly selected, executed, and deselected. However,
@@ -36,14 +36,14 @@ actions, or on which actions can be performed. These restrictions give
 rise to different security properties, to be obeyed by the applet.
 
 \begin{quote}
-\textbf{Authenticated initialisation} Loading, installing and 
-personalising the applet can only be done by an authenticated
+\textbf{Authenticated initialization} Loading, installing and 
+personalizing the applet can only be done by an authenticated
 authority.\smallskip\\
 \textbf{Authenticated unblocking} When the card is blocked,
 only an authenticated authority can execute commands and possibly
 unblock it.\smallskip\\
-\textbf{Single personalisation} An applet can be
-personalised only once.
+\textbf{Single personalization} An applet can be
+personalized only once.
 \end{quote}
 
 
@@ -53,7 +53,7 @@ A smart card does not include a power supply, thus a brutal retrieval
 from the terminal could interrupt a computation and bring the system in
 an incoherent state. To avoid this, the Java Card
 specification prescribes the use of a transaction mechanism to
-control synchronised updates of sensitive data. A 
+control synchronized updates of sensitive data. A 
 statement block surrounded by the methods \texttt{beginTransaction()} and
 \texttt{commitTransaction()} can be considered atomic.
 If something happens while executing the transaction (or if
@@ -88,7 +88,7 @@ be rolled back, in general one has to check this kind of properties.
 \paragraph{Exceptions}
 
 Raising an exception at the top level can reveal
-information about the behaviour of the application and in principle it
+information about the behavior of the application and in principle it
 should be forbidden. However, sometimes it is necessary to pass on
 information about a problem that occurred. Therefore, the Java
 Card standard defines so-called ISO exceptions, where a pre-defined

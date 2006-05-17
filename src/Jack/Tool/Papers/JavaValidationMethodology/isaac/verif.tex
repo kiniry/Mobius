@@ -6,7 +6,7 @@ single method or class, but that guarantee the overall
 well-functioning of an application. Writing appropriate JML
 annotations for such properties is tedious and error-prone, as they
 have to be spread all over the application. Therefore, we propose a
-way to construct such annotations automatically. First we synthesise
+way to construct such annotations automatically. First we synthesize
 core-annotations for methods directly involved in the property.  For
 example, when specifying that no nested transactions are allowed, we
 annotate the methods \texttt{beginTransaction},
@@ -71,7 +71,7 @@ body, respectively.
 All functions are defined as mutual recursive functions on method
 names, statements and expressions. When a method call is encountered,
 the implementation will check whether annotations already have been
-generated for this method (either by synthesising or weaving). If not
+generated for this method (either by synthesizing or weaving). If not
 it will recursively generate appropriate annotations. Java Card
 applets typically do not contain (mutually) recursive method calls,
 therefore this does not cause any problems. Generating appropriate

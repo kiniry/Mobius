@@ -1,5 +1,5 @@
 In the previous section, we have described how the memory consumption
-of a program can be modelled in BCSL and verified using an appropriate
+of a program can be modeled in BCSL and verified using an appropriate
 verification environment. While our examples illustrate the benefits
 of our approach, especially regarding the precision of the analysis,
 the applicability of our method is hampered by the cost of providing
@@ -17,7 +17,7 @@ provide annotations about the memory required to create objects of the
 given classes. 
 
 Second, it inserts pre- and postconditions for each method. In this case, variants for loops and recursive methods may be given by the user or be
-synthesised through appropriate mechanisms.  Based on this
+synthesized through appropriate mechanisms.  Based on this
 information, the annotation assistant recursively computes the memory
 allocated on each loop and method. Essentially, it finds the maximal
 memory that can be allocated in a method by exploring all its possible
@@ -98,12 +98,12 @@ the memory allocated along each execution path.
 %\label{fig:loopPath}
 %\end{figure}
 
-The annotation assistant currently synthesises only simple memory
+The annotation assistant currently synthesizes only simple memory
 policies (i.e., whenever the memory consumption policy does not depend
 on the input).  Furthermore, it does not deal with arrays,
 subroutines, nor exceptions, and is restricted to loops with a unique
 entry point. The latter restriction is not critical because it
-accommodates code produced by non-optimising compilers. However, a
+accommodates code produced by non-optimizing compilers. However, a
 pre-analysis could give us all the entry points of more general loops,
 for instance by the algorithms given in \cite{CJPS05cmu}; our approach
 may be thus applied straightforwardly. How to treat arrays is

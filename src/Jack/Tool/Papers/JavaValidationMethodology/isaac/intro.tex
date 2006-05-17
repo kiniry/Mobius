@@ -1,23 +1,23 @@
 
 While JML is easily accessible to Java developers and tools exist
 to manage the annotations, actually writing
-the specifications of a Java application is labour-intensive and
+the specifications of a Java application is labor-intensive and
 error-prone, as it is easy to forget some annotations. There
 exist tools which assist in writing these annotations,
 \emph{e.g.}~Daikon~\cite{ErnstCGN2001:TSE} and Houdini~\cite{FlanaganL01}
 use heuristic methods to produce annotations for simple safety and
 functional invariants.  However, these tools cannot be guided by the
 user---they do not require any user input---and in particular cannot
-be used to synthesise annotations from realistic security policies.
+be used to synthesize annotations from realistic security policies.
 
 We describe here, a method that, given a security policy,
 automatically annotates a Java (Card) application, in such a way that
 if the application respects the annotations then it also respects the
 security policy. The generation of annotations proceeds in two phases:
-synthesising and weaving.
+synthesizing and weaving.
 \begin{enumerate}
-\item Based on the security policy we \emph{synthesise} core annotations, 
-specifying the behaviour of the methods directly involved.
+\item Based on the security policy we \emph{synthesize} core annotations, 
+specifying the behavior of the methods directly involved.
 \item Next we propagate these annotations to all methods directly or
 indirectly invoking the methods that form the core of the security
 policy, thus \emph{weaving} the security policy throughout the
@@ -29,7 +29,7 @@ several realistic examples of smart card applications. When doing
 this, we actually found violations against the security policies
 documented for some of these applications.
 
-This section is organised as follows. Subsection~\ref{SecHighLevelSecProp}
+This section is organized as follows. Subsection~\ref{SecHighLevelSecProp}
 introduces several typical high-level security properties. Next,
 Subsection~\ref{SecVerif} presents the process to weave these properties
 throughout applications. Subsequently, Subsection~\ref{SecResults}
