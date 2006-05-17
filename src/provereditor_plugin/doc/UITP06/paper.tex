@@ -118,12 +118,14 @@ Some intro text. % JRK
 \subsection{Command-line Interfaces}
 \label{subsec:comm-line-interf}
 
-All the provers we are targeting (Coq, PVS, Isabelle), have command line interfaces as 
+All the provers we are targeting (Coq, PVS, Isabelle), 
+have command line interfaces as 
 some top-level. These top-level are all alike. It allows to send some commands
 to the prover and receive its answers. Usually the standard output is
 used for the dialog and the error ouput used to show the prompt.
 
-One of the typical interaction with a top-level can be to have an open text file
+One of the typical interaction with a top-level can be to have 
+an open text file
 where one can stock all the command steps involved and cut and paste its 
 content to the top-level and await its results. This user-active kind of 
 interaction is somewhat unnatural. That's why usually these basic interactions
@@ -193,20 +195,23 @@ since .
 \subsubsection{Plugins in Eclipse}
 \label{subsubsec:plugins-eclipse}
 
-In Eclipse the plugin architecture is based upon extension point by
-extending or providing them. 
+In Eclipse the plugin architecture is based upon extension points.
+A plugin can extend or provide some extension points. 
 Extension points are defined by a unique identifier which is link
 to a definition of a XML tag. Programmers wanting to extend
 this extension point just have to write an XML file ({\tt plugin.xml}) 
 and provide the right parameters to the tag.
 The plugin providing the extension point inspects at runtime what was 
 specified with the XML tag. One can find the name of a class to load
-and afterward instanciate, the name of a resource or a simple String.
+and afterward instanciate, the name of a resource or a simple {\tt String}.
 
 Eclipse provides many extension points. Editors for specific files can be
 added, binding together a specific icon, an highlighting, the extension of a
-file. There are also parts in Eclipse called ViewParts used
-
+file. There are also parts in Eclipse called ViewParts used to add panels to 
+the Eclipse IDE.
+The main problem with extension point is their static nature.
+They can only be provided/extended through the addition of a
+new plugin, and not in a programmaticaly way.
 %---------------------------------------------------------------------
 \subsubsection{Plugins in plugins in plugins...}
 \label{subsubsec:plug-plug-plug}
@@ -250,8 +255,9 @@ a Coq top-level, called the CoqSugar plugin.
   \label{scrs1}
 \end{figure}
 The main features are taken from the above extensions descriptions.
-ProverEditor is formed of 4 parts (\ref{scrs1}): the editor part, the top-level view
-which is the output from the top-level, the outline and the toolbar (as well as the keyboard 
+ProverEditor is formed of 4 parts 
+(\ref{scrs1}): the editor part, the top-level view which is the output 
+from the top-level, the outline and the toolbar (as well as the keyboard 
 shortcuts to trigger the actions within the toolbar).
 
 The actions associated with the buttons (\ref{tb}) are:
@@ -264,12 +270,15 @@ The actions associated with the buttons (\ref{tb}) are:
 \item cancel an action
 \end{itemize}
 
-These actions are standard and are just like the ones implemented in ProofGeneral
+These actions are standard and are just like the ones implemented in 
+ProofGeneral
 or CoqIde. In fact the general organisation of the view for ProverEditor is 
-really near the one found in those two tools. One of the the main feature it adds
-is the syntax highlighting of the top-level output. So ProverEditor is basically a simplified
-version of ProofGeneral and CoqIde (with less feature like apply a specific tactic).
-Instead it relies on a light-weight and easy to extend for new provers API integrated in Eclipse.
+really near the one found in those two tools. One of the the main feature 
+it adds is the syntax highlighting of the top-level output. 
+So ProverEditor is basically a simplified version of ProofGeneral 
+and CoqIde (with less feature like apply a specific tactic).
+Instead it relies on a light-weight and easy to extend for 
+new provers API integrated in Eclipse.
 
 \begin{figure}
 \begin{center}
@@ -367,12 +376,16 @@ prover.plugins.IProverTopLevel.\\
 
 We have made right now several plugins:
 \begin{itemize}
-\item the core plugin, containing all the basic features which was described above.
-\item the Coq plugin: to handle the interactions with Coq, send parts of a file to Coq
+\item the core plugin, containing all the basic features which was 
+described above.
+\item the Coq plugin: to handle the interactions with Coq, send parts of a 
+file to Coq
 and give an outline of the current edited file.
-\item the Coq 'Sugar' plugin, which is used to give a proper API for the Coq top-level.
-It is already used in Jack \cite{Jack-Web} (the Java Applet Correctness Kit) an Eclipse plugin
-to do static program verification on Java programs annotated with JML.
+\item the Coq 'Sugar' plugin, which is used to give a proper API for the 
+Coq top-level.
+It is already used in Jack \cite{Jack-Web} (the Java Applet Correctness Kit) 
+an Eclipse plugin to do static program verification on Java programs 
+annotated with JML.
 
 \item the PVS plugin which is well... finished?
 \end{itemize}
@@ -416,19 +429,22 @@ and one to end them ({\tt End m.} or {\tt End s.}).\\
 \subsection{The Coq sugar-coated plugin}
 \label{subsec:coq-sugar-coated}
 
-We have made another plugin which add lots of useless things to the basic plugin,
+We have made another plugin which add lots of useless things to the 
+basic plugin,
 indeed things that can easily be made over the basic implementation.
 The purpose of this plugin is only to ease the use of Coq within ProverEditor.
 
-We have mainly added a more complete API to handle Coq. It has more high-level
-'macros'. It subclasses the prover.exec.toplevel.TopLevel to have a real top-level
-targeted at Coq. It add some facilities like methods to declare lemmas, do a particular
-standard command or parse the output from Coq to give a parsed result of the command
-instead of the standard output. For instance, in Coq there is a command {\tt Show Intros} which
-is used to know which variable name Coq would use with its  intros command. Here the
-method gives an array of String with the different variable names.
-In Jack we mainly use this API to pretty print the proof obligations with Coq in order
-to have clearer / more user-readable proof obligations.
+We have mainly added a more complete API to handle Coq. 
+It has more high-level 'macros'. 
+It subclasses the prover.exec.toplevel.TopLevel to have a real top-level
+targeted at Coq. It add some facilities like methods to declare lemmas, 
+do a particular standard command or parse the output from Coq to give 
+a parsed result of the command instead of the standard output. 
+For instance, in Coq there is a command {\tt Show Intros} which
+is used to know which variable name Coq would use with its  intros command. 
+Here the method gives an array of String with the different variable names.
+In Jack we mainly use this API to pretty print the proof obligations with 
+Coq in order to have clearer / more user-readable proof obligations.
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{The PVS plugin}
@@ -440,26 +456,31 @@ Some intro text. % JRK
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have implemented a lightweight theorem prover within, based on the extensions
-facilities provided by Eclipse. To have done it lightweight and minimal in its mandatory
-fatures has allowed us to extend it quite fast for the theorem provers like Coq or PVS.
-What will follow is the extension of these basic feature toward more prover specific features.
+We have implemented a lightweight theorem prover within, 
+based on the extensions facilities provided by Eclipse. 
+To have done it lightweight and minimal in its mandatory
+fatures has allowed us to extend it quite fast for the theorem 
+provers like Coq or PVS.
+What will follow is the extension of these basic features toward more prover 
+specific features.
 One of the main idea would be to extend it in a component based approach.
-Instead of having as in the proof general toolkit one single mediator communicating
-through lighweight protocols to other plugins, we will have separated lightweight
-plugins and their extensions.
+Instead of having as in the proof general toolkit one single 
+mediator communicating through lighweight protocols to other plugins, 
+we will have separated lightweight plugins and their extensions.
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Practical Next Steps}
 \label{subsec:practical-next-steps}
 
-The next step will be to have real API plugins for provers. It has already begun
-through Coq's Sugar plugin which only aim is to provide this kind of API.
+The next step will be to have real API plugins for provers. 
+It has already begun through Coq's Sugar plugin which only aim 
+is to provide this kind of API.
 It will be done later on for PVS. Other features that should be added
-as separate plugins are the projects and file wizard to creat new prover specific
-files or projects dedicated to a single prover.
-Hints like for Java could also be added, like what is done in Eclipse, when a variable
-is pointed its doc or the nearest documentation from it should appear. 
+as separate plugins are the projects and file wizard to creat 
+new prover specific files or projects dedicated to a single prover.
+Hints like for Java could also be added, like what is done in Eclipse, 
+when a variable is pointed its doc or the nearest documentation 
+from it should appear. 
 
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
