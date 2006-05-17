@@ -240,14 +240,6 @@ public abstract class ASTNode implements Cloneable
     decorations = d;
   }
     
-  /**
-   * Used to remind callers of ASTNode subclass constructors that they
-   * must manually establish any required invariants after calling an
-   * AST constructor.  (AST constructors do not establish any class
-   * invariants.)
-   */
-  //@ ghost public static boolean I_will_establish_invariants_afterwards;
-
   //$$
   static public int dotCounter = 0 ;
   public int dotId;
@@ -366,7 +358,7 @@ public abstract class TypeDecl extends ASTNode implements TypeDeclElem
   public TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
 
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
@@ -466,7 +458,7 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
   }
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
 
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
@@ -532,7 +524,7 @@ public class InitBlock extends ASTNode implements TypeDeclElem
   //# BlockStmt block
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
 
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
@@ -551,8 +543,9 @@ public abstract class TypeDeclElemPragma
   public TypeDecl parent;
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
   public void decorate(ModifierPragmaVec modifierPragmas) {}
+  protected TypeDeclElemPragma() {}
 
   abstract public int getTag();
   public int getModifiers() { return 0; }
@@ -631,7 +624,7 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem
   }
 
   public TypeDecl getParent() { return parent; }
-  public void setParent(/*@non_null*/TypeDecl p) { parent = p; }
+  public void setParent(/*@non_null*/ TypeDecl p) { parent = p; }
   public ModifierPragmaVec getPModifiers() { return null; }
 
   public int getEndLoc() {
@@ -978,6 +971,7 @@ public abstract class StmtPragma extends Stmt
   public int originalTag() {
     return (originalTag == 0) ? getTag() : originalTag;
   }
+  protected StmtPragma() {}
 }
 
 /**
@@ -1047,14 +1041,13 @@ public class ConstructorInvocation extends Stmt
                                            int locKeyword, 
                                            int locOpenParen, 
                                            /*@ non_null @*/ ExprVec args) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     ConstructorInvocation result = new ConstructorInvocation();
-     result.superCall = superCall;
-     result.enclosingInstance = enclosingInstance;
-     result.locDot = locDot;
-     result.locKeyword = locKeyword;
-     result.locOpenParen = locOpenParen;
-     result.args = args;
+     ConstructorInvocation result = new ConstructorInvocation(
+                                          superCall,
+                                          enclosingInstance,
+                                          locDot,
+                                          locKeyword,
+                                          locOpenParen,
+                                          args);
      return result;
   }
 }
@@ -1260,11 +1253,7 @@ public class LiteralExpr extends Expr
   //@ requires loc != javafe.util.Location.NULL;
   //@ ensures \result != null;
   public static LiteralExpr make(int tag, Object value, int loc) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     LiteralExpr result = new LiteralExpr();
-     result.tag = tag;
-     result.value = value;
-     result.loc = loc;
+     LiteralExpr result = new LiteralExpr(tag,value,loc);
      return result;
   }
 
@@ -1390,15 +1379,14 @@ public class NewInstanceExpr extends Expr
                                      ClassDecl anonDecl, 
                                      int loc, 
                                      int locOpenParen) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     NewInstanceExpr result = new NewInstanceExpr();
-     result.enclosingInstance = enclosingInstance;
-     result.locDot = locDot;
-     result.type = type;
-     result.args = args;
-     result.anonDecl = anonDecl;
-     result.loc = loc;
-     result.locOpenParen = locOpenParen;
+     NewInstanceExpr result = new NewInstanceExpr(
+                                  enclosingInstance,
+                                  locDot,
+                                  type,
+                                  args,
+                                  anonDecl,
+                                  loc,
+                                  locOpenParen);
      return result;
   }
 }
@@ -1483,13 +1471,12 @@ public class NewArrayExpr extends Expr
                                   ArrayInit init, 
                                   int loc, 
                                   /*@ non_null @*/ int[] locOpenBrackets) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     NewArrayExpr result = new NewArrayExpr();
-     result.type = type;
-     result.dims = dims;
-     result.init = init;
-     result.loc = loc;
-     result.locOpenBrackets = locOpenBrackets;
+     NewArrayExpr result = new NewArrayExpr(
+                               type,
+                               init,
+                               dims,
+                               loc,
+                               locOpenBrackets);
      return result;
   }
 }
@@ -1607,12 +1594,11 @@ public class BinaryExpr extends Expr
                                 /*@ non_null @*/ Expr left,
 			        /*@ non_null @*/ Expr right, 
                                 int locOp) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     BinaryExpr result = new BinaryExpr();
-     result.op = op;
-     result.left = left;
-     result.right = right;
-     result.locOp = locOp;
+     BinaryExpr result = new BinaryExpr(
+                             op,
+                             left,
+                             right,
+                             locOp);
      return result;
   }
 }
@@ -1666,11 +1652,7 @@ public class UnaryExpr extends Expr
   //@ requires locOp != javafe.util.Location.NULL;
   //@ ensures \result != null;
   public static UnaryExpr make(int op, /*@ non_null @*/ Expr expr, int locOp) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     UnaryExpr result = new UnaryExpr();
-     result.op = op;
-     result.expr = expr;
-     result.locOp = locOp;
+     UnaryExpr result = new UnaryExpr(op, expr, locOp);
      return result;
   }
 }
@@ -1726,11 +1708,8 @@ public class VariableAccess extends Expr
   public static VariableAccess make(/*@ non_null @*/ Identifier id, 
                                     int loc,
 				    /*@ non_null @*/ GenericVarDecl decl) {
-        //@ set I_will_establish_invariants_afterwards = true;
-	VariableAccess result = new VariableAccess();
-	result.id = id;
-	result.loc = loc;
-	result.decl = decl;
+	VariableAccess result = new VariableAccess(id, loc);
+        result.decl=decl;
 	return result;
   }
 
@@ -1772,12 +1751,11 @@ public class FieldAccess extends Expr
   public static FieldAccess make(/*@ non_null @*/ ObjectDesignator od, 
                                  /*@ non_null @*/ Identifier id, 
                                  int locId) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     FieldAccess result = new FieldAccess();
-     result.od = od;
-     result.id = id;
-     result.locId = locId;
-     result.decl = null;  // Easier than puting an ensures on constructor
+     FieldAccess result = new FieldAccess(
+                              od,
+                              id,
+                              locId);
+     result.decl = null; // Easier than puting an ensures on constructor
      return result;
   }
 }
@@ -1855,15 +1833,14 @@ public class MethodInvocation extends Expr
                                       int locId, 
                                       int locOpenParen, 
                                       /*@ non_null @*/ ExprVec args) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     MethodInvocation result = new MethodInvocation();
-     result.od = od;
-     result.id = id;
-     result.locId = locId;
-     result.locOpenParen = locOpenParen;
-     result.args = args;
+     MethodInvocation result = new MethodInvocation(
+                                   od,
+                                   id,
+                                   tmodifiers,
+                                   locId,
+                                   locOpenParen,
+                                   args);
      result.decl = null;  // Easier than puting an ensures on constructor
-     result.tmodifiers = tmodifiers;
      return result;
   }
 }
@@ -1953,10 +1930,7 @@ public class TypeObjectDesignator extends ObjectDesignator
   //@ ensures \result != null;
   public static TypeObjectDesignator make(int locDot, 
                                           /*@ non_null @*/ Type type) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     TypeObjectDesignator result = new TypeObjectDesignator();
-     result.locDot = locDot;
-     result.type = type;
+     TypeObjectDesignator result = new TypeObjectDesignator(locDot, type);
      return result;
   }
 }
@@ -1992,7 +1966,7 @@ public abstract class Type extends ASTNode
     //@ ghost public boolean syntax;
 
     //# TypeModifierPragma* tmodifiers NullOK
-
+    protected Type() {}
 }
 
 
@@ -2004,11 +1978,11 @@ public abstract class Type extends ASTNode
 public class ErrorType extends Type
 {
   public int getStartLoc() { return Location.NULL; }
+  protected ErrorType() {}
 
   //@ ensures \result != null;
   //@ ensures !\result.syntax;
   public static ErrorType make() {
-    //@ set I_will_establish_invariants_afterwards = true;
     ErrorType result = new ErrorType();
     //@ set result.syntax = false;
     return result;
@@ -2056,11 +2030,10 @@ public class PrimitiveType extends Type
   //@ ensures \result != null;
   public static PrimitiveType make(TypeModifierPragmaVec tmodifiers,
 				   int tag, int loc) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     PrimitiveType result = new PrimitiveType();
-     result.tag = tag;
-     result.loc = loc;
-     result.tmodifiers = tmodifiers;
+     PrimitiveType result = new PrimitiveType(
+                                tmodifiers,
+                                tag,
+                                loc);
      //@ set result.syntax = true;
      return result;
   }
@@ -2077,11 +2050,10 @@ public class PrimitiveType extends Type
   //@ ensures !\result.syntax;
   //@ ensures \result != null;
   public static PrimitiveType makeNonSyntax(int tag) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     PrimitiveType result = new PrimitiveType();
-     result.tag = tag;
-     result.loc = Location.NULL;
-     result.tmodifiers = null;
+     PrimitiveType result = new PrimitiveType(
+                                 null,
+                                 tag,
+                                 Location.NULL);
      //@ set result.syntax = false;
      return result;
   }
@@ -2150,12 +2122,9 @@ public class ArrayType extends Type
   //@ ensures \result != null;
   public static ArrayType make(/*@ non_null @*/ Type elemType,
                                int locOpenBracket) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     ArrayType result = new ArrayType();
+     ArrayType result = new ArrayType(null, elemType, locOpenBracket);
      // Can't fix this since elemType is *not* injective:
      //@ assume (\forall ArrayType a; a.elemType != result);
-     result.elemType = elemType;
-     result.locOpenBracket = locOpenBracket;
      //@ set result.syntax = elemType.syntax;
      return result;
   }
@@ -2561,12 +2530,9 @@ public class CompoundName extends Name
   public static CompoundName make(/*@ non_null @*/ IdentifierVec ids, 
                                   /*@ non_null @*/ int[] locIds, 
                                   /*@ non_null @*/ int[] locDots) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     CompoundName result = new CompoundName();
+     CompoundName result = new CompoundName(ids, locIds, locDots);
+    
      //@ set result.length = ids.count;
-     result.ids = ids;
-     result.locIds = locIds;
-     result.locDots = locDots;
      result.postMake();
      return result;
   }
@@ -2587,6 +2553,7 @@ public abstract class ModifierPragma extends ASTNode
   public int originalTag() {
     return (originalTag == 0) ? getTag() : originalTag;
   }
+  protected ModifierPragma() {}
 }
 
 public abstract class LexicalPragma extends ASTNode

@@ -69,6 +69,184 @@ static boolean isJavaPrimitiveType(const char *s)
   for((C) = (CLASSLIST); (C); (C) = (C)->next) \
     FOREACHLOCALFIELD(D, (C)->c->directives) \
 
+static boolean hasField(Class *class, const char *fieldName)
+{
+    ClassListNode *c;
+    DirectiveListNode *d;
+    ClassListNode *classlist;
+    boolean retVal;
+
+    if (class==NULL) {
+           return FALSE;
+    }
+    classlist = superclassList(class);
+    retVal=FALSE;
+    FOREACHFIELD(c, d, classlist) {
+       if (strcmp(d->i.f.name, fieldName) == 0) {
+          retVal=TRUE;
+          break;
+       }
+    }
+    freeClassList(classlist);
+    return retVal;
+}
+
+static int getFieldCount(ClassListNode *classlist)
+{
+    ClassListNode *c;
+    DirectiveListNode *d;
+    int fieldCount = 0;
+    FOREACHFIELD(c,d,classlist) {
+        fieldCount++;
+    }
+    return fieldCount;
+}
+
+
+/* new  constructor that initializes fields */
+static void outputConstructor(FILE *o, int ind, Class *class,
+                              ClassListNode *classlist)
+{
+
+  /*
+   * Output protected constructor
+   */
+    int i;
+    ClassListNode *c;
+    DirectiveListNode *d;
+    int fieldCount=getFieldCount(classlist);
+    Class *superclass=class->superclass;
+    boolean first=TRUE;
+
+    fprintf(o, "\n\n// Generated boilerplate constructors:\n\n");
+
+    indent(o, ind);
+    fprintf(o, "protected %s(", class->name);
+
+    /* Output declarations of formals */
+    i = fieldCount;
+    FOREACHFIELD(c, d, classlist) {
+      fprintf(o, "%s%s%s %s",
+	      ((d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type))
+	       ? "/*@ non_null @*/ " : ""),
+	      d->i.f.type,
+	      (d->i.f.sequence ? VECTORSUFFIX : ""),
+	      d->i.f.name);
+      if (--i) fputs(", ", o);
+    }
+    fprintf(o, ") {\n");
+
+    /* call super class's constructor */
+    if (superclass!=NULL) { 
+       indent(o, ind+3);
+       fprintf(o, "super(");
+       first=TRUE;
+       FOREACHFIELD(c, d, classlist) {
+           if (hasField(superclass, d->i.f.name)) {
+              if (first) {
+                 first=FALSE;
+              } else {
+                 fprintf(o, ", ");
+              }
+                 fprintf(o, "%s", d->i.f.name);
+           }
+       }
+    fprintf(o, ");\n");
+    }
+    /* initialize this object's fields of constructor*/
+    FOREACHFIELD(c, d, classlist) {
+        if (superclass==NULL || !hasField(superclass, d->i.f.name)) {
+           indent(o, ind+3);
+           fprintf(o, "this.%s = %s;\n", d->i.f.name, d->i.f.name);
+        }
+     }
+    indent(o, ind);
+    fprintf(o, "}\n");
+}
+
+static void outputMaker(FILE *o, int ind, Class *class, 
+                        ClassListNode *classlist, boolean postmakecall) 
+{
+  /* Output maker */
+    int fieldCount;
+    boolean haveName;
+    char rname[32];
+    int i, j;
+    ClassListNode *c;
+    DirectiveListNode *d;
+
+    /* Find fresh name for result */
+    strcpy(rname, "result");
+    for(haveName = FALSE, j = 0; ! haveName; j++) {
+      haveName = TRUE;
+      fieldCount = 0;
+      FOREACHFIELD(c,d,classlist) {
+	fieldCount++;
+	if (strcmp(rname, d->i.f.name) == 0) {
+	  haveName = FALSE;
+	  sprintf(rname, "r%d", j);
+	  goto retry;
+	}
+      }
+    retry: ;
+    }
+
+    /* Output annotations for make */
+    FOREACHFIELD(c, d, classlist) {
+      if (d->i.f.notnullloc) {
+//        indent(o, ind); 
+//        fprintf(o, "//@ requires %s != javafe.util.Location.NULL;\n",
+//		d->i.f.name);
+      }
+      if (d->i.f.syntax) {
+        indent(o, ind); 
+        fprintf(o, "//@ requires (%s instanceof PrimitiveType) || %s.syntax;\n",
+		d->i.f.name, d->i.f.name);
+      }
+    }
+
+    FOREACHDIRECTIVE(d, class->directives) {
+      if (d->tag == MAKERSPECDIRECTIVE) {
+        indent(o, ind);
+        fprintf(o, "//@ %s", d->i.ms.pragma);
+      }
+    }
+    indent(o, ind); 
+    fprintf(o, "//@ ensures \\result != null;\n");
+
+    indent(o, ind); 
+    fprintf(o, "public static %s make(", class->name);
+
+    /* Output declarations of formals */
+    i = fieldCount;
+    FOREACHFIELD(c, d, classlist) {
+      fprintf(o, "%s%s%s %s",
+	      ((d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type))
+	       ? "/*@ non_null @*/ " : ""),
+	      d->i.f.type,
+	      (d->i.f.sequence ? VECTORSUFFIX : ""),
+	      d->i.f.name);
+      if (--i) fputs(", ", o);
+    }
+    fprintf(o, ") {\n");
+
+
+    /* Output body of maker*/
+    indent(o, ind+3);
+    fprintf(o, "%s %s = new %s(", class->name, rname, class->name);
+    i = fieldCount;
+    FOREACHFIELD(c, d, classlist) {
+      fprintf(o, "%s", d->i.f.name);
+      if (--i) fputs(", ", o);
+    }
+    fprintf(o, ");\n");
+    if (postmakecall)
+      { indent(o, ind+3); fprintf(o, "%s.postMake();\n", rname); }
+    indent(o, ind+3); fprintf(o, "return %s;\n", rname);
+    indent(o, ind); fputs("}\n", o);
+}
+
+
 void outputEndClass(FILE *o, Class *class, const char *text, int len,
 		    const char *visitorRoot)
 {
@@ -89,34 +267,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
   ind = (class->directives ? class->directives->indent : 3);
 
 
-  /*
-   * Output protected constructor
-   */
-
-/* We always output the constructor here so we have a place to put the needed
-   annotation. */
-/*  if (! class->abstract) { */
-    fprintf(o, "\n\n// Generated boilerplate constructors:\n\n");
-
-    indent(o, ind);
-    fprintf(o, "/**\n");
-    indent(o, ind);
-
-    fprintf(o, " * Construct a raw %s whose class invariant(s) have not\n",
-	    class->name);
-    indent(o, ind);
-    fprintf(o, " * yet been established.  It is the caller's job to\n");
-    indent(o, ind);
-    fprintf(o, " * initialize the returned node's fields so that any\n");
-    indent(o, ind);
-    fprintf(o, " * class invariants hold.\n");
-    indent(o, ind);
-    fprintf(o, " */\n");
-    indent(o, ind);
-    fprintf(o, "//@ requires I_will_establish_invariants_afterwards;\n");
-    indent(o, ind);
-    fprintf(o, "protected %s() {}    //@ nowarn Invariant,NonNullInit;\n\n", class->name);
-/*  } */
+  outputConstructor(o, ind, class, classlist);
 
 
   /* For root, abstract classes, output signatures of boilerplate methods. */
@@ -328,82 +479,8 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     { indent(o, ind+3); fputs("postCheck();\n", o); }
   indent(o, ind); fputs("}\n\n", o);
 
-  /* Output maker */
   if (! class->abstract && ! nomaker) {
-    int fieldCount;
-    boolean haveName;
-    char rname[32];
-
-    /* Find fresh name for result */
-    strcpy(rname, "result");
-    for(haveName = FALSE, j = 0; ! haveName; j++) {
-      haveName = TRUE;
-      fieldCount = 0;
-      FOREACHFIELD(c,d,classlist) {
-	fieldCount++;
-	if (strcmp(rname, d->i.f.name) == 0) {
-	  haveName = FALSE;
-	  sprintf(rname, "r%d", j);
-	  goto retry;
-	}
-      }
-    retry: ;
-    }
-
-    /* Output annotations for make */
-    FOREACHFIELD(c, d, classlist) {
-      if (d->i.f.notnullloc) {
-        indent(o, ind); 
-        fprintf(o, "//@ requires %s != javafe.util.Location.NULL;\n",
-		d->i.f.name);
-      }
-      if (d->i.f.syntax) {
-        indent(o, ind); 
-        fprintf(o, "//@ requires %s.syntax;\n",
-		d->i.f.name);
-      }
-    }
-
-    FOREACHDIRECTIVE(d, class->directives) {
-      if (d->tag == MAKERSPECDIRECTIVE) {
-        indent(o, ind);
-        fprintf(o, "//@ %s", d->i.ms.pragma);
-      }
-    }
-    indent(o, ind); 
-    fprintf(o, "//@ ensures \\result != null;\n");
-
-    indent(o, ind); 
-    fprintf(o, "public static %s make(", class->name);
-
-    /* Output declarations of formals */
-    i = fieldCount;
-    FOREACHFIELD(c, d, classlist) {
-      fprintf(o, "%s%s%s %s",
-	      ((d->i.f.notnull && !isJavaPrimitiveType(d->i.f.type))
-	       ? "/*@ non_null @*/ " : ""),
-	      d->i.f.type,
-	      (d->i.f.sequence ? VECTORSUFFIX : ""),
-	      d->i.f.name);
-      if (--i) fputs(", ", o);
-    }
-    fprintf(o, ") {\n");
-
-
-    /* Output body of maker*/
-    indent(o, ind+3);
-    fprintf(o, "//@ set I_will_establish_invariants_afterwards = true;\n");
-    indent(o, ind+3);
-    fprintf(o, "%s %s = new %s();\n", class->name,
-	    rname, class->name);
-    FOREACHFIELD(c, d, classlist) {
-      indent(o, ind+3);
-      fprintf(o, "%s.%s = %s;\n", rname, d->i.f.name, d->i.f.name);
-    }
-    if (postmakecall)
-      { indent(o, ind+3); fprintf(o, "%s.postMake();\n", rname); }
-    indent(o, ind+3); fprintf(o, "return %s;\n", rname);
-    indent(o, ind); fputs("}\n", o);
+     outputMaker(o, ind, class, classlist, postmakecall);
   }
 
   freeClassList(classlist);

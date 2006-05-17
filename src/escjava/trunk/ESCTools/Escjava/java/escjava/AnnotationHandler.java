@@ -1254,17 +1254,16 @@ public class AnnotationHandler {
 
   static public class NonNullExpr extends BinaryExpr {
 
+    protected NonNullExpr(int op, /*@ non_null @*/ Expr left, /*@ non_null @*/ Expr right, int locOp) { 
+      super(op, left, right, locOp);
+    }
     static NonNullExpr make(FormalParaDecl arg, int locNN) {
-      NonNullExpr e = new NonNullExpr();
       int loc = arg.getStartLoc();
       Expr v = VariableAccess.make(arg.id, loc, arg);
       javafe.tc.FlowInsensitiveChecks.setType(v, arg.type);
       Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
       javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
-      e.op = TagConstants.NE;
-      e.left = v;
-      e.right = n;
-      e.locOp = locNN;
+      NonNullExpr e = new NonNullExpr(TagConstants.NE, v, n, locNN);
       javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
       return e;
     }
@@ -1274,6 +1273,9 @@ public class AnnotationHandler {
    * @todo kiniry Write this class.
    */
   static public class NullableExpr extends BinaryExpr {
+    protected NullableExpr(int op, /*@ non_null @*/ Expr left, /*@ non_null @*/ Expr right, int locOp) { 
+      super(op, left, right, locOp);
+    }
     static NullableExpr make(FormalParaDecl arg, int locNN) {
       assert false;
       return null;

@@ -62,6 +62,10 @@ public class RefinementSequence extends CompilationUnit {
       ArrayList refinements, // list of CompilationUnit
       CompilationUnit javacu,
       AnnotationHandler ah) {
+	  // this call to super needed to be added because CompilationUnit no lonver has a default constructor.
+	  // the fields that are set will be overridden by the end of the body of this constructor.
+    super((javacu==null?(CompilationUnit)refinements.get(refinements.size()-1):javacu).pkgName, LexicalPragmaVec.make(), ImportDeclVec.make(), TypeDeclVec.make(), 0, TypeDeclElemVec.make());
+
     //dw init useUniverses
     useUniverses = (Tool.options!=null) && 
 	           (Tool.options.useUniverseTypeSystem);

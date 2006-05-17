@@ -4,6 +4,9 @@ import javafe.ast.*;
 
 public class OldVarDecl extends javafe.ast.LocalVarDecl {
 
+  protected OldVarDecl(int modifiers, ModifierPragmaVec pmodifiers, /*@ non_null @*/ Identifier id, /*@ non_null @*/ Type type, int locId, VarInit init, int locAssignOp) {
+        super(modifiers, pmodifiers, id, type, locId, init, locAssignOp);
+    }
 
     public static OldVarDecl make(/*@ non_null */ Identifier id,
 			/*@ non_null */ Type type,
@@ -11,14 +14,14 @@ public class OldVarDecl extends javafe.ast.LocalVarDecl {
 			/*@ non_null */ VarInit init,
 			int locAssignOp
 			) {
-	OldVarDecl result = new OldVarDecl();
-	result.modifiers = Modifiers.NONE;
-	result.pmodifiers = null;
-	result.id = id;
-	result.type = type;
-	result.locId = locId;
-	result.init = init;
-	result.locAssignOp = locAssignOp;
+	OldVarDecl result = new OldVarDecl(
+                                Modifiers.NONE,
+                                null,
+                                id,
+                                type,
+                                locId,
+                                init,
+                                locAssignOp);
 	return result;
     }
 

@@ -979,11 +979,11 @@ public class ModifiesGroupPragma extends ModifierPragma
     public int getStartLoc() { return clauseLoc; }
 
     static public ModifiesGroupPragma make(int tag, int loc) {
-	ModifiesGroupPragma t = new ModifiesGroupPragma();
-	t.tag = tag;
-	t.clauseLoc = loc;
-	t.precondition = null;
-	t.items = CondExprModifierPragmaVec.make();
+	ModifiesGroupPragma t = new ModifiesGroupPragma(
+                                    tag,
+                                    CondExprModifierPragmaVec.make(),
+                                    null,
+                                    loc);
 	return t;
     }
 
