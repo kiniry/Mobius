@@ -323,6 +323,8 @@ jml: .jml
 # Run jmlc on each file one by one (which seems to give us the best results for now)
 jmlc1b1: build jmlc_javafe_1b1 jmlc_escjava_1b1
 
+jmlc1b1_2: build jmlc_javafe_1b1 .jmlc_ej .jmlc_utils
+
 jmlc_javafe_1b1:
 	@echo "JAVAFE============================================================"
 	for f in `find Javafe/java -name *.java ! -name "*/jcheck/*"`; do \
@@ -383,6 +385,7 @@ jmlc: .jmlc_fe .jmlc_ej .jmlc_utils
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d $(JMLC_CLASSFILES) \
 	  -a -A --purity \
+	  -n \
 	  --keepGoing --source 1.4 --Quiet --recursive \
 	  $(JMLC_FLAGS) \
 	  javafe \
@@ -394,6 +397,7 @@ jmlc: .jmlc_fe .jmlc_ej .jmlc_utils
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d jmlc_classfiles \
 	  -a -A --purity \
+	  -n \
 	  --keepGoing --source 1.4 --Quiet --recursive \
 	  $(JMLC_FLAGS) \
 	  escjava \
@@ -405,6 +409,7 @@ jmlc: .jmlc_fe .jmlc_ej .jmlc_utils
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 	  -d $(JMLC_CLASSFILES) \
 	  -a -A --purity \
+	  -n \
 	  --keepGoing --source 1.4 --Quiet --recursive \
 	  $(JMLC_FLAGS) \
 	  junitutils \

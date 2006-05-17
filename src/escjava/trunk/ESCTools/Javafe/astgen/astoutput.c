@@ -25,7 +25,7 @@ void outputExpansion(FILE *o, Class *c, DirectiveListNode *d)
     }
     if (d->i.f.syntax) {
       indent(o, d->indent);
-      fprintf(o, "//@ invariant %s.syntax;\n", d->i.f.name);
+      fprintf(o, "//@ invariant (%s instanceof javafe.ast.PrimitiveType) || %s.syntax;\n", d->i.f.name, d->i.f.name);
     }
     indent(o, d->indent);
     fprintf(o, "public %s%s%s %s;\n\n",
@@ -194,9 +194,9 @@ static void outputMaker(FILE *o, int ind, Class *class,
     /* Output annotations for make */
     FOREACHFIELD(c, d, classlist) {
       if (d->i.f.notnullloc) {
-//        indent(o, ind); 
-//        fprintf(o, "//@ requires %s != javafe.util.Location.NULL;\n",
-//		d->i.f.name);
+        indent(o, ind); 
+        fprintf(o, "//@ requires %s != javafe.util.Location.NULL;\n",
+		d->i.f.name);
       }
       if (d->i.f.syntax) {
         indent(o, ind); 
