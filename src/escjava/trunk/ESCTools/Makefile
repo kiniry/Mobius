@@ -324,17 +324,17 @@ jml: .jml
 ## JMLc targets:
 
 jmlc: jmlc_with_new_semantics
-	$(MAKE) JMLC_CLASSFILES=Utils/junitutils \
+	$(MAKE) JMLC_CLASSFILES_DIR=Utils/junitutils \
 		TARGET=junitutils \
-		.jmlc2
-	$(MAKE) JMLC_CLASSFILES=${JAVAFE_CLASSFILES4RAC} \
+		jmlc1
+	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET=javafe \
 		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
-		.jmlc2
-	$(MAKE) JMLC_CLASSFILES=${ESCJAVA_CLASSFILES4RAC} \
+		jmlc1
+	$(MAKE) JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} \
 		TARGET=escjava \
 		JMLC_FLAGS='--excludefiles "^(SammyProver|PvsUnsortedProver|TBoolImplies|Main|SPVC)\.java"' \
-		.jmlc2
+		jmlc1
 
 # Some files cannot be compiled under the current/old semantics, hence we compile them
 # separately using the new semantics.
@@ -345,6 +345,7 @@ jmlc_with_new_semantics:
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET='Javafe/java/javafe/ast/TypeDeclElem.java' \
 		JMLC_FLAGS='-T' jmlc1
+	# !!FIXME!! add the prover files
 
 ${JAVAFE_CLASSFILES4RAC}:
 	mkdir ${JAVAFE_CLASSFILES4RAC}
