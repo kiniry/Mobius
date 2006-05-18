@@ -329,7 +329,7 @@ clean_escjava: clean_escjava_ast clean_escjava_backpred
 	rm -f ${VERSION_FILE} ${VERSION_TEMP}
 
 clean_tests:
-	${MAKE} -C ${TOP_ESCJAVA_TEST_DIR} clean
+	${MAKE} -C ${TESTSOURCEDIRECTORY} clean
 
 clean_classfiles:
 	rm -rf ${CLASSDIRECTORY}
