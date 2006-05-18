@@ -1,7 +1,10 @@
+## $Id$
+##
 ## This file is part of ESC/Java2 from 2003 onward.
 ##
 ## author: David Cok
 ## author: Joe Kiniry
+## author: Patrice Chalin
 ##
 
 export TOP = .
@@ -320,24 +323,72 @@ jml: .jml
 #===============================================================================
 ## JMLc targets:
 
+jmlc: jmlc_with_new_semantics
+	$(MAKE) JMLC_CLASSFILES=Utils/junitutils \
+		TARGET=junitutils \
+		.jmlc2
+	$(MAKE) JMLC_CLASSFILES=${JAVAFE_CLASSFILES4RAC} \
+		TARGET=javafe \
+		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
+		.jmlc2
+	$(MAKE) JMLC_CLASSFILES=${ESCJAVA_CLASSFILES4RAC} \
+		TARGET=escjava \
+		JMLC_FLAGS='--excludefiles "^(SammyProver|PvsUnsortedProver|TBoolImplies|Main|SPVC)\.java"' \
+		.jmlc2
+
+# Some files cannot be compiled under the current/old semantics, hence we compile them
+# separately using the new semantics.
+jmlc_with_new_semantics:
+	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
+		TARGET='Javafe/java/javafe/ast/ASTNode.java' \
+		JMLC_FLAGS='-T' jmlc1
+	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
+		TARGET='Javafe/java/javafe/ast/TypeDeclElem.java' \
+		JMLC_FLAGS='-T' jmlc1
+
+${JAVAFE_CLASSFILES4RAC}:
+	mkdir ${JAVAFE_CLASSFILES4RAC}
+${ESCJAVA_CLASSFILES4RAC}:
+	mkdir ${ESCJAVA_CLASSFILES4RAC}
+
+JMLC_CLASSFILES=jmlc_classfiles
+
+${JMLC_CLASSFILES}:
+	mkdir ${JMLC_CLASSFILES}
+
+#..............................................................................
 # Run jmlc on each file one by one (which seems to give us the best results for now)
 jmlc1b1: build jmlc_javafe_1b1 jmlc_escjava_1b1
-
-jmlc1b1_2: build jmlc_javafe_1b1 .jmlc_ej .jmlc_utils
 
 jmlc_javafe_1b1:
 	@echo "JAVAFE============================================================"
 	for f in `find Javafe/java -name *.java ! -name "*/jcheck/*"`; do \
-		${MAKE} JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} FILE=$$f jmlc1; \
+		${MAKE} JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} TARGET=$$f jmlc1; \
 	done;
 	${MAKE} jmlc_javafe_cleanup
 
 jmlc_escjava_1b1:
 	@echo "ESCJAVA============================================================"
 	for f in `find Escjava/java -name *.java`; do \
-		${MAKE} JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} FILE=$$f jmlc1; \
+		${MAKE} JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} TARGET=$$f jmlc1; \
 	done
 	${MAKE} jmlc_escjava_cleanup
+
+# Apply jmlc to one TARGET at a time; class files are to be saved in JMLC_CLASSFILES_DIR.
+jmlc1:
+	$(JMLC) \
+	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
+	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+	  -d $(JMLC_CLASSFILES_DIR) \
+	  -a -A --purity \
+	  -n \
+	  --keepGoing --source 1.4 --Quiet --recursive \
+	  $(JMLC_FLAGS) \
+	  $(TARGET) \
+	  && touch .jmlc
+
+# If the new jmlc target works, then the following three targets will no longer be
+# necessary. --PC
 
 # Next three `cleanup' targets will remove zero-sized class files that JMLc 
 # leaves hanging around when it dies during the compilation of a file.
@@ -353,67 +404,6 @@ post_jmlc_cleanup:
 			rm $$f; \
 		fi; \
 	done
-
-${JAVAFE_CLASSFILES4RAC}:
-	mkdir ${JAVAFE_CLASSFILES4RAC}
-${ESCJAVA_CLASSFILES4RAC}:
-	mkdir ${ESCJAVA_CLASSFILES4RAC}
-
-# Apply jmlc to one file named by FILE (value to be supplied on the command line).
-jmlc1:
-	$(JMLC) \
-	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
-	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -d $(JMLC_CLASSFILES_DIR) \
-	  -a -A --purity -n \
-	  --keepGoing --source 1.4 --Quiet --recursive \
-	  $(FILE) \
-	  && touch .jmlc
-
-# Note that the following rules put the class files under JMLC_CLASSFILES.
-
-JMLC_CLASSFILES=jmlc_classfiles
-
-${JMLC_CLASSFILES}:
-	mkdir ${JMLC_CLASSFILES}
-
-jmlc: .jmlc_fe .jmlc_ej .jmlc_utils
-
-.jmlc_fe: build
-	$(JMLC) \
-	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
-	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -d $(JMLC_CLASSFILES) \
-	  -a -A --purity \
-	  -n \
-	  --keepGoing --source 1.4 --Quiet --recursive \
-	  $(JMLC_FLAGS) \
-	  javafe \
-	  && touch .jmlc
-
-.jmlc_ej: build
-	$(JMLC) \
-	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
-	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -d jmlc_classfiles \
-	  -a -A --purity \
-	  -n \
-	  --keepGoing --source 1.4 --Quiet --recursive \
-	  $(JMLC_FLAGS) \
-	  escjava \
-	  && touch .jmlc
-
-.jmlc_utils: build
-	$(JMLC) \
-	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
-	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -d $(JMLC_CLASSFILES) \
-	  -a -A --purity \
-	  -n \
-	  --keepGoing --source 1.4 --Quiet --recursive \
-	  $(JMLC_FLAGS) \
-	  junitutils \
-	  && touch .jmlc
 
 ################################################################################
 ## Rules to build various release types
@@ -784,3 +774,5 @@ ifdef COMSPEC
 	@echo `cygpath -m $(ESCJ_SIMPLIFY_DIR)`
 	@echo ${foo}
 endif
+
+# End of Makefile
