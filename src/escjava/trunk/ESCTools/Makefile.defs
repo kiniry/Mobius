@@ -133,6 +133,7 @@ export JAVADOC ?= javadoc -J-mx200m -source 1.4 -breakiterator -quiet
 export JMLDOC ?= jmldoc
 export JML ?= jml
 export JMLC ?= jmlc
+export JMLC_FLAGS ?=-Q
 
 export DEBUGGER_FLAGS ?= -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y
 export JAVA_REMOTE_DEBUG = $(JAVA) $(DEBUGGER_FLAGS)
