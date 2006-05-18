@@ -14,11 +14,13 @@ CP = ${call canonicalize,${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:$(ESCJAVA2_SPECS)}
 
 #------------------------------------------------------------------------------
 
-.PHONY: clean test build esctest compile
+.PHONY: clean test build esctest compile buildall compileall
 
-build: checkjunitjar compile
+build:    checkjunitjar compile
+buildall: checkjunitjar compileall
 
 compile: ${CLASSESSTAMP}
+compileall: clean compile
 
 ${CLASSESSTAMP}: ${SOURCEFILES}
 ifdef USE_JMLC
