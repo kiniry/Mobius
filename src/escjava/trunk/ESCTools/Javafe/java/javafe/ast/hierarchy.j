@@ -572,12 +572,23 @@ public abstract class GenericVarDecl extends ASTNode
   //# int modifiers
   //# ModifierPragma* pmodifiers NullOK
   //# Identifier id NoCheck
-  //# Type type Syntax
-  //# int locId NotNullLoc
+  //# Type type
+  //# int locId
+  //@ invariant isInternal() == !type.syntax;
+  public boolean isInternal() { return locId == javafe.util.Location.NULL; }
   public int getStartLoc() { return type.getStartLoc(); }
   public int getEndLoc() { return type.getEndLoc(); }
   public int getModifiers() { return modifiers; }
   public void setModifiers(int m) { modifiers = m; }
+
+  protected GenericVarDecl(int modifiers, ModifierPragmaVec pmodifiers, /*@ non_null @*/ Identifier id, /*@ non_null @*/ Type type) {
+     super();
+     this.modifiers = modifiers;
+     this.pmodifiers = pmodifiers;
+     this.id = id;
+     this.type = type;
+     this.locId = Location.NULL;
+  }
 }
 
 /** Represents a LocalVariableDeclarationStatement.
@@ -587,6 +598,7 @@ public abstract class GenericVarDecl extends ASTNode
 public class LocalVarDecl extends GenericVarDecl
 {
   //# VarInit init NullOK
+  //@ invariant !isInternal();
 
   // The "locAssignOp" field is used only if "init" is non-null
   //# int locAssignOp
@@ -633,6 +645,19 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem
 
     return init.getEndLoc();
   }
+  protected FieldDecl(int modifiers, ModifierPragmaVec pmodifiers, /*@ non_null @*/ Identifier id, /*@ non_null @*/ Type type, VarInit init)
+  {
+     super(modifiers, pmodifiers, id, type);
+     this.init = init;
+     this.locAssignOp = Location.NULL;
+  }
+
+  //@ requires (type instanceof PrimitiveType);
+  //@ ensures \result != null;
+  public static FieldDecl makeInternal(int modifiers, ModifierPragmaVec pmodifiers, /*@ non_null @*/ Identifier id, /*@ non_null @*/ Type type, VarInit init) {
+     FieldDecl result = new FieldDecl(modifiers, pmodifiers, id, type, init);
+     return result;
+  }
 }
 
 /**
@@ -640,7 +665,9 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem
  */
 
 public class FormalParaDecl extends GenericVarDecl
-{ }
+{
+  //@ invariant !isInternal();
+}
 
 /* ---------------------------------------------------------------------- */
 
@@ -2005,7 +2032,9 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
+); */
+   //    || tag == TagConstants.ERRORTYPE); */
   //# ManualTag
   //# int tag
 
@@ -2024,7 +2053,9 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
+);*/
+//       || tag == TagConstants.ERRORTYPE); */
   //@ requires loc != javafe.util.Location.NULL;
   //@ ensures \result.syntax;
   //@ ensures \result != null;
@@ -2046,7 +2077,9 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
+);*/
+//       || tag == TagConstants.ERRORTYPE); */
   //@ ensures !\result.syntax;
   //@ ensures \result != null;
   public static PrimitiveType makeNonSyntax(int tag) {
@@ -2065,7 +2098,9 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE);
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
+);
+  //     || tag == TagConstants.ERRORTYPE);
     Assert.notFalse(goodtag); 
   }
  
@@ -2075,7 +2110,9 @@ public class PrimitiveType extends Type
        || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
        || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
        || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
+       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
+);*/
+//       || tag == TagConstants.ERRORTYPE); */
   //@ requires loc != javafe.util.Location.NULL;
   //@ ensures \result.syntax;
   //@ ensures \result != null;

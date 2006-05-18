@@ -1005,15 +1005,11 @@ public class Types
   
     //@ invariant lengthFieldDecl.id == lenId;
     public static /*@ non_null */ FieldDecl lengthFieldDecl
-            = FieldDecl.make(Modifiers.ACC_PUBLIC|Modifiers.ACC_FINAL,
+            = FieldDecl.makeInternal(Modifiers.ACC_PUBLIC|Modifiers.ACC_FINAL,
                              null,
                              lenId,
                              Types.intType,
-                             Location.NULL,  // ERROR!!
-                             null,
-                             Location.NULL);
-  
-
+                             null);
 
     //@ requires t != null && caller != null;
     //@ ensures \result != null;
