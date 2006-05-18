@@ -327,7 +327,7 @@ jml: .jml
 # so that the build target's behavior is altered when USE_JMLC is defined.
 
 jmlc: jmlc_with_new_semantics
-	$(MAKE) USE_JMLC=1 -C Utils build
+	$(MAKE) USE_JMLC=1 -C Utils buildall
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET=javafe \
 		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
