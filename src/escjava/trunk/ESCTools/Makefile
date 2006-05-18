@@ -322,11 +322,12 @@ jml: .jml
 
 #===============================================================================
 ## JMLc targets:
+#
+# FIXME: Javafe and Escjava Makefiles should be adapted like the Utils Makefile
+# so that the build target's behavior is altered when USE_JMLC is defined.
 
 jmlc: jmlc_with_new_semantics
-	$(MAKE) JMLC_CLASSFILES_DIR=Utils/junitutils \
-		TARGET=junitutils \
-		jmlc1
+	$(MAKE) USE_JMLC=1 -C Utils build
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET=javafe \
 		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
@@ -345,7 +346,7 @@ jmlc_with_new_semantics:
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET='Javafe/java/javafe/ast/TypeDeclElem.java' \
 		JMLC_FLAGS='-T' jmlc1
-	# !!FIXME!! add the prover files
+	@# !!FIXME!! add the prover files
 
 ${JAVAFE_CLASSFILES4RAC}:
 	mkdir ${JAVAFE_CLASSFILES4RAC}
