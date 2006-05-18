@@ -1,3 +1,4 @@
+# $Id$
 
 export TOP = ..
 include ${TOP}/Makefile.defs
@@ -19,3 +20,4 @@ checkjunitjar:
 docs:
 	@true
 
+# End of file
