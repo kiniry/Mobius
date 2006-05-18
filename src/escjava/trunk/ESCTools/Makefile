@@ -308,17 +308,16 @@ jmldoc: build
 ################################################################################
 ## JML checker targets:
 
-jml: .jml
+JML_PACKAGES=junitutils javafe escjava
 
 # TODO: Add package decsrc
-.jml: build
+jml: build
 	$(JML) \
 	  --sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS))" \
 	  --classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	  -a -A --purity \
+	  -a -A --purity -n \
 	  --keepGoing --source 1.4 --Quiet --recursive \
-	  javafe escjava \
-	  && touch .jml
+	  $(JML_PACKAGES)
 
 #===============================================================================
 ## JMLc targets:
@@ -328,6 +327,7 @@ jml: .jml
 
 jmlc: jmlc_with_new_semantics
 	$(MAKE) USE_JMLC=1 -C Utils buildall
+	export JMLC_XMX=512M; \
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET=javafe \
 		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
