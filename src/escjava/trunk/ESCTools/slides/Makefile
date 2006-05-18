@@ -64,8 +64,11 @@ cleanup:
 clean:
 	make -C ETAPSTutorial clean;
 	make -C ECOOPTutorial-cok clean;
+	$(MAKE) -C fmco05 clean;
 	rm -rf auto _region_* \
 		$(SLIDES) \
 		*.aux *.log *~ *.dvi *.ps *.pdf *.brf *.txt \
 		*.bbl *.blg *.toc *.thm *.out *.cb \
 		*.lof *.lot *.gz *.Z #*
+
+# End of Makefile
