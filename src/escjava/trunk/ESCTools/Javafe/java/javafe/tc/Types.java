@@ -1,4 +1,8 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
+/* $Id$
+ *
+ * Copyright 2000, 2001, Compaq Computer Corporation; 
+ * 2006 dsrg.org.
+ */
 
 package javafe.tc;
 
