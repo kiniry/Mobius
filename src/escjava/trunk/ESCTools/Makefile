@@ -322,23 +322,33 @@ jml: build
 #===============================================================================
 ## JMLc targets:
 #
+.PHONY: jmlc jmlc_utils jmlc_fe jmlc_ej jmlc_with_new_semantics
+
 # FIXME: Javafe and Escjava Makefiles should be adapted like the Utils Makefile
 # so that the build target's behavior is altered when USE_JMLC is defined.
 
-jmlc: jmlc_with_new_semantics
+jmlc: jmlc_utils jmlc_fe jmlc_ej jmlc_with_new_semantics
+
+jmlc_utils:
 	$(MAKE) USE_JMLC=1 -C Utils buildall
+
+jmlc_fe: ${JAVAFE_CLASSFILES4RAC}
 	export JMLC_XMX=512M; \
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET=javafe \
 		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
 		jmlc1
+
+jmlc_ej: ${ESCJAVA_CLASSFILES4RAC}
+	export JMLC_XMX=512M; \
 	$(MAKE) JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} \
 		TARGET=escjava \
-		JMLC_FLAGS='--excludefiles "^(SammyProver|PvsUnsortedProver|TBoolImplies|Main|SPVC)\.java"' \
+		JMLC_FLAGS='--excludefiles "^(SPVC)\.java"' \
 		jmlc1
 
-# Some files cannot be compiled under the current/old semantics, hence we compile them
-# separately using the new semantics.
+# Some files cannot be compiled under the current/old semantics because the generated code
+# has a try/catch block that is beyond the limits of the VM.  Hence, we compile these files
+# separately using the new semantics (-T).
 jmlc_with_new_semantics:
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET='Javafe/java/javafe/ast/ASTNode.java' \
@@ -346,7 +356,9 @@ jmlc_with_new_semantics:
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET='Javafe/java/javafe/ast/TypeDeclElem.java' \
 		JMLC_FLAGS='-T' jmlc1
-	@# !!FIXME!! add the prover files
+	$(MAKE) JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} \
+		TARGET='Escjava/java/escjava/sp/SPVC.java' \
+		JMLC_FLAGS='-T' jmlc1
 
 ${JAVAFE_CLASSFILES4RAC}:
 	mkdir ${JAVAFE_CLASSFILES4RAC}
