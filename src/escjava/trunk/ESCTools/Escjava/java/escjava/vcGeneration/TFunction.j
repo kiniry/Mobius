@@ -3,7 +3,7 @@ package escjava.vcGeneration;
 // TBoolOp = return a boolean and sons are boolean : list(boolean) -> boolean
 public class TBoolImplies extends TBoolOp {
 
-    public void accept(TVisitor v) throws java.io.IOException{
+    public void accept(/*@ non_null @*/ TVisitor v) throws java.io.IOException{
 	v.visitTBoolImplies(this);
     }
     
