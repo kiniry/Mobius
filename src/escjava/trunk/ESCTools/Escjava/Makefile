@@ -333,6 +333,7 @@ clean_tests:
 
 clean_classfiles:
 	rm -rf ${CLASSDIRECTORY}
+	-rm -rf ${ESCJAVA_CLASSFILES4RAC}
 
 clean_docs: 
 	rm -f doc/escjava.html doc/escjava-public.html doc/man1/*.1
