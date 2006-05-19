@@ -1,4 +1,16 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
+/**
+ ** _TYPE_Vec: A Vector of _TYPE_'s. <p>
+ **
+ ** The interface to this class follows java.util.Vector, where
+ ** appropriate. <p>
+ **
+ **
+ ** This class was automatically created from the template
+ ** javafe.util/_<tt>TYPE</tt>_Vec.j.<p>, i.e.
+ ** $Id$
+ **
+ ** DO NOT EDIT!!<p>
+ **/
 
 /*
  * File: _TYPE_Vec.java <p>
@@ -25,21 +37,6 @@
  * hold nulls is desired, remove all lines with "// @@@@" on them.<p>
  */
 
-
-
-
-/**
- ** _TYPE_Vec: A Vector of _TYPE_'s. <p>
- **
- ** The interface to this class follows java.util.Vector, where
- ** appropriate. <p>
- **
- **
- ** This class was automatically created from the template
- ** javafe.util/_<tt>TYPE</tt>_Vec.j.<p>
- **
- ** DO NOT EDIT!!<p>
- **/
 
 package _PKG_;
 
@@ -191,7 +188,6 @@ public class  _TYPE_Vec {
     //@ pure
     public final int size() { return count; }
 
-    //@ pure
     public final /*@non_null*/String toString() {
 	StringBuffer b = new StringBuffer();
 	b.append("{_TYPE_Vec");
@@ -323,3 +319,5 @@ public class  _TYPE_Vec {
       addElement( vec.elementAt(i) );
   }
 }
+
+/* Copyright 2000, 2001, Compaq Computer Corporation */
