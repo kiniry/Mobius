@@ -9,7 +9,7 @@ public class PvsUnsortedProver extends escjava.vcGeneration.pvs.PvsProver {
     
     public String getVariableInfo(VariableInfo caller) {
 
-        if (caller.type != TNode.$Type) {
+        if (caller.type != TNode._Type) {
             if (caller.def == null)
                 unsortedPvsRename(caller);
 
@@ -41,20 +41,20 @@ public class PvsUnsortedProver extends escjava.vcGeneration.pvs.PvsProver {
     public void init() {
         // Predefined types
 
-        TNode.$Reference = TNode.addType("%Reference", "S");
-        TNode.$Time = TNode.addType("%Time", "S");
-        TNode.$Type = TNode.addType("%Type", "S");
-        TNode.$boolean = TNode.addType("boolean", "S");
-        TNode.$char = TNode.addType("char", "S");
-        TNode.$DOUBLETYPE = TNode.addType("DOUBLETYPE", "S"); // fixme, is it JavaNumber or BaseType ?
-        TNode.$double = TNode.addType("double", "S"); //fixme
-        TNode.$Field = TNode.addType("%Field", "S"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
-        TNode.$INTTYPE = TNode.addType("INTTYPE", "S"); //fixme like DOUBLETYPE
-        TNode.$integer = TNode.addType("integer", "S"); //fixme
-        TNode.$float = TNode.addType("float", "S");
-        TNode.$Path = TNode.addType("%Path", "S"); // used to modelize different ways
+        TNode._Reference = TNode.addType("%Reference", "S");
+        TNode._Time = TNode.addType("%Time", "S");
+        TNode._Type = TNode.addType("%Type", "S");
+        TNode._boolean = TNode.addType("boolean", "S");
+        TNode._char = TNode.addType("char", "S");
+        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "S"); // fixme, is it JavaNumber or BaseType ?
+        TNode._double = TNode.addType("double", "S"); //fixme
+        TNode._Field = TNode.addType("%Field", "S"); // fixme there's a lot of different fields in the pvs logic, I need to capture that
+        TNode._INTTYPE = TNode.addType("INTTYPE", "S"); //fixme like DOUBLETYPE
+        TNode._integer = TNode.addType("integer", "S"); //fixme
+        TNode._float = TNode.addType("float", "S");
+        TNode._Path = TNode.addType("%Path", "S"); // used to modelize different ways
         // of terminating a function
-        //$String = addType("String", "S"); fixme, does this type appears in original proof ?
+        //_String = addType("String", "S"); fixme, does this type appears in original proof ?
 
         // Predefined variables name
         // variables used by the old proof system and that we still need
