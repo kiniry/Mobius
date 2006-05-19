@@ -1,3 +1,4 @@
+// $Id$
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package javafe.tc;
@@ -577,10 +578,13 @@ public class TypeSig extends Type
     }
 */
 
+    //@ public represents startLoc <- getTypeDecl().getStartLoc();
     public int getStartLoc() {
 	return getTypeDecl().getStartLoc();
     }
 
+    //@ also public normal_behavior
+    //@ ensures \result == getTypeDecl().getEndLoc();
     public int getEndLoc() {
 	return getTypeDecl().getEndLoc();
     }

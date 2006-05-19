@@ -154,8 +154,13 @@ public abstract class GCExpr extends Expr
   //# int sloc
   //# int eloc
 
-  public int getStartLoc() { return sloc; }
-  public int getEndLoc() { return eloc; }
+  //@ public represents startLoc <- sloc;
+  public /*@ pure @*/ int getStartLoc() { return sloc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == eloc;
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return eloc; }
 }
 
 public class NaryExpr extends GCExpr
@@ -163,6 +168,8 @@ public class NaryExpr extends GCExpr
   //# int op
   //# Identifier methodName
   //# Expr* exprs
+
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
 
   //# ManualTag
   public final int getTag() { return op; }
@@ -203,6 +210,8 @@ public class QuantifiedExpr extends GCExpr
   //# Expr* nopats NullOK
   //# Expr* pats NullOK
 
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
+
   //# ManualTag
   public final int getTag() { return quantifier; }
 
@@ -224,6 +233,8 @@ public class GeneralizedQuantifiedExpr extends GCExpr
   //# Expr expr
   //# Expr rangeExpr
   //# Expr* nopats NullOK
+
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
 
   //# ManualTag
   public final int getTag() { return quantifier; }
@@ -248,6 +259,8 @@ public class NumericalQuantifiedExpr extends GCExpr
   //# Expr expr
   //# Expr* nopats NullOK
 
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
+
   //# ManualTag
   public final int getTag() { return quantifier; }
 
@@ -264,6 +277,8 @@ public class SubstExpr extends GCExpr
   //# GenericVarDecl var
   //# Expr val
   //# Expr target
+
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
 }
 
 /**
@@ -275,6 +290,8 @@ public class SubstExpr extends GCExpr
 public class TypeExpr extends GCExpr
 {
   //# Type type
+
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
 }
 
 public class LabelExpr extends GCExpr
@@ -282,6 +299,8 @@ public class LabelExpr extends GCExpr
   //# boolean positive
   //# Identifier label
   //# Expr expr
+
+  //@ public represents startLoc <- sloc; //FIXME should not have to repeat this (because its in GCExpr)
 }
 
 public class WildRefExpr extends Expr
@@ -289,8 +308,13 @@ public class WildRefExpr extends Expr
   //# Expr var
   //# ObjectDesignator od
 
-  public int getStartLoc() { return od != null ? od.getStartLoc() : var.getStartLoc(); }
-  public int getEndLoc() { return od != null ? od.getEndLoc() : var.getEndLoc(); }
+  //@ public represents startLoc <- od != null ? od.getStartLoc() : var.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return od != null ? od.getStartLoc() : var.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == (od != null ? od.getEndLoc() : var.getEndLoc());
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return od != null ? od.getEndLoc() : var.getEndLoc(); }
 }
 
 public class GuardExpr extends Expr
@@ -298,15 +322,21 @@ public class GuardExpr extends Expr
   //# Expr expr
   //# int locPragmaDecl
 
-  public int getStartLoc() { return expr.getStartLoc(); }
-  public int getEndLoc() { return expr.getEndLoc(); }
+  //@ public represents startLoc <- expr.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return expr.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == expr.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class ResExpr extends Expr
 {
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class SetCompExpr extends Expr
@@ -315,35 +345,40 @@ public class SetCompExpr extends Expr
   //# FormalParaDecl fp
   //# Expr expr
 
-  public int getStartLoc() { return fp.getStartLoc(); }
+  //@ public represents startLoc <- fp.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return fp.getStartLoc(); }
 }
 
 public class LockSetExpr extends Expr
 {
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class EverythingExpr extends Expr
 {
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class NothingExpr extends Expr
 {
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class NotSpecifiedExpr extends Expr
 {
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class NotModifiedExpr extends Expr
@@ -351,7 +386,8 @@ public class NotModifiedExpr extends Expr
   //# int loc
   //# Expr expr
  
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class ArrayRangeRefExpr extends Expr
@@ -361,7 +397,10 @@ public class ArrayRangeRefExpr extends Expr
   //# Expr lowIndex	NullOK
   //# Expr highIndex	NullOK
 
-  public int getStartLoc() { return locOpenBracket; }
+  //@ public represents startLoc <- locOpenBracket;
+  public /*@ pure @*/ int getStartLoc() { return locOpenBracket; }
+
+  public void bogusMethod() { int i = bogusField; }
 }
 
 public class DefPredLetExpr extends Expr
@@ -369,7 +408,8 @@ public class DefPredLetExpr extends Expr
     //# DefPred* preds
     //# Expr body
 
-    public int getStartLoc() { return body.getStartLoc(); }
+  //@ public represents startLoc <- body.getStartLoc();
+    public /*@ pure @*/ int getStartLoc() { return body.getStartLoc(); }
 }
 
 public class DefPredApplExpr extends Expr
@@ -377,7 +417,8 @@ public class DefPredApplExpr extends Expr
     //# Identifier predId
     //# Expr* args
 
-    public int getStartLoc() { return Location.NULL; }
+  //@ public represents startLoc <- Location.NULL;
+    public /*@ pure @*/ int getStartLoc() { return Location.NULL; }
 }
 
 //// Guarded commands
@@ -401,7 +442,8 @@ public class SimpleCmd extends GuardedCmd
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class ExprCmd extends GuardedCmd
@@ -421,7 +463,8 @@ public class ExprCmd extends GuardedCmd
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public abstract class AssignCmd extends GuardedCmd
@@ -431,8 +474,13 @@ public abstract class AssignCmd extends GuardedCmd
   //# VariableAccess v
   //# Expr rhs
 
-  public int getStartLoc() { return v.getStartLoc(); }
-  public int getEndLoc() { return rhs.getEndLoc(); }
+  //@ public represents startLoc <- v.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return v.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == rhs.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return rhs.getEndLoc(); }
 }
 
 public class GetsCmd extends AssignCmd
@@ -466,8 +514,13 @@ public class VarInCmd extends GuardedCmd
   //# GenericVarDecl* v
   //# GuardedCmd g
 
-  public int getStartLoc() { return g.getStartLoc(); }
-  public int getEndLoc() { return g.getEndLoc(); }
+  //@ public represents startLoc <- g.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return g.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == g.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return g.getEndLoc(); }
 }
 
 public class DynInstCmd extends GuardedCmd
@@ -476,8 +529,13 @@ public class DynInstCmd extends GuardedCmd
   //# String s NoCheck
   //# GuardedCmd g
 
-  public int getStartLoc() { return g.getStartLoc(); }
-  public int getEndLoc() { return g.getEndLoc(); }
+  //@ public represents startLoc <- g.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return g.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == g.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return g.getEndLoc(); }
 }
 
 public class SeqCmd extends GuardedCmd
@@ -490,8 +548,13 @@ public class SeqCmd extends GuardedCmd
     Assert.notFalse(1 < cmds.size());
   }
 
-  public int getStartLoc() { return cmds.elementAt(0).getStartLoc(); }
-  public int getEndLoc() { return cmds.elementAt(cmds.size()-1).getEndLoc(); }
+  //@ public represents startLoc <- cmds.elementAt(0).getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return cmds.elementAt(0).getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == cmds.elementAt(cmds.size()-1).getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return cmds.elementAt(cmds.size()-1).getEndLoc(); }
 }
 
 public class DecreasesInfo extends ASTNode {
@@ -503,8 +566,13 @@ public class DecreasesInfo extends ASTNode {
   // a local variable storing the previous value of expr "f"
   //# VariableAccess fOld
 
-  public int getStartLoc() { return locStart; }
-  public int getEndLoc() { return locEnd; }
+  //@ public represents startLoc <- locStart;
+  public /*@ pure @*/ int getStartLoc() { return locStart; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == locEnd;
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return locEnd; }
 }
 
 public class LoopCmd extends GuardedCmd
@@ -523,8 +591,13 @@ public class LoopCmd extends GuardedCmd
 
   public GuardedCmd desugared;
   
-  public int getStartLoc() { return locStart; }
-  public int getEndLoc() { return locEnd; }
+  //@ public represents startLoc <- locStart;
+  public /*@ pure @*/ int getStartLoc() { return locStart; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == locEnd;
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return locEnd; }
 }
  
 
@@ -545,8 +618,13 @@ public class CmdCmdCmd extends GuardedCmd
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return g1.getStartLoc(); }
-  public int getEndLoc() { return g2.getEndLoc(); }
+  //@ public represents startLoc <- g1.getStartLoc(); 
+  public /*@ pure @*/ int getStartLoc() { return g1.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == g2.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return g2.getEndLoc(); }
 }
 
 public class Call extends GuardedCmd
@@ -564,8 +642,13 @@ public class Call extends GuardedCmd
   public Spec spec;
   public GuardedCmd desugared;
 
-  public int getStartLoc() { return scall; }
-  public int getEndLoc() { return ecall; }
+  //@ public represents startLoc <- scall;
+  public /*@ pure @*/ int getStartLoc() { return scall; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == ecall;
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return ecall; }
 }
 
 //// Pragmas
@@ -589,8 +672,13 @@ public class ExprDeclPragma extends TypeDeclElemPragma
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return expr.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == expr.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
 }
@@ -608,8 +696,13 @@ public class IdExprDeclPragma extends TypeDeclElemPragma
   public final int getTag() { return tag; }
   public int getModifiers() { return modifiers; }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return expr.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == expr.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class NamedExprDeclPragma extends TypeDeclElemPragma 
@@ -630,8 +723,13 @@ public class NamedExprDeclPragma extends TypeDeclElemPragma
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return expr.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == expr.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
   public int getModifiers() { return modifiers; }
   public boolean isRedundant() { return redundant; }
   public void setRedundant(boolean v) { redundant = v; }
@@ -648,8 +746,13 @@ public class ModelDeclPragma extends TypeDeclElemPragma
 	decl.setParent(p);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return decl.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == decl.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return decl.getEndLoc(); }
   public void decorate(ModifierPragmaVec modifierPragmas) {
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
@@ -671,8 +774,13 @@ public class DependsPragma extends TypeDeclElemPragma
   //# ManualTag
   public final int getTag() { return tag; }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return exprs.elementAt(exprs.size()-1).getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == exprs.elementAt(exprs.size()-1).getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return exprs.elementAt(exprs.size()-1).getEndLoc(); }
 }
 
 public class ModelConstructorDeclPragma extends TypeDeclElemPragma
@@ -687,8 +795,13 @@ public class ModelConstructorDeclPragma extends TypeDeclElemPragma
 	decl.setParent(p);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return decl.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == decl.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return decl.getEndLoc(); }
   public void decorate(ModifierPragmaVec modifierPragmas) {
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
@@ -710,8 +823,13 @@ public class ModelTypePragma extends TypeDeclElemPragma
 	decl.setParent(p);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return decl.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == decl.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return decl.getEndLoc(); }
   public void decorate(ModifierPragmaVec modifierPragmas) {
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
@@ -733,8 +851,13 @@ public class ModelMethodDeclPragma extends TypeDeclElemPragma
 	decl.setParent(p);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return decl.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == decl.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return decl.getEndLoc(); }
   public void decorate(ModifierPragmaVec modifierPragmas) {
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
@@ -756,8 +879,13 @@ public class GhostDeclPragma extends TypeDeclElemPragma
 	decl.setParent(p);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return decl.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == decl.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return decl.getEndLoc(); }
   public void decorate(ModifierPragmaVec modifierPragmas) {
     if (decl.pmodifiers == null) {
 	decl.pmodifiers = modifierPragmas;
@@ -775,7 +903,8 @@ public class StillDeferredDeclPragma extends TypeDeclElemPragma
   //# int loc
   //# int locId
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class SimpleStmtPragma extends StmtPragma
@@ -792,7 +921,8 @@ public class SimpleStmtPragma extends StmtPragma
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class IdentifierModifierPragma extends ModifierPragma
@@ -808,7 +938,8 @@ public class IdentifierModifierPragma extends ModifierPragma
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class ExprStmtPragma extends StmtPragma
@@ -833,8 +964,13 @@ public class ExprStmtPragma extends StmtPragma
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return expr.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == expr.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class SetStmtPragma extends StmtPragma
@@ -846,8 +982,13 @@ public class SetStmtPragma extends StmtPragma
   //# Expr value
   //# int loc
 
-  public int getStartLoc() { return loc; }
-  public int getEndLoc() { return value.getEndLoc(); }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == value.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return value.getEndLoc(); }
 }
 
 public class SkolemConstantPragma extends StmtPragma
@@ -855,8 +996,14 @@ public class SkolemConstantPragma extends StmtPragma
   //# LocalVarDecl* decls
   //# int sloc
   //# int eloc
-  public int getStartLoc() { return sloc; }
-  public int getEndLoc() { return eloc; }
+
+  //@ public represents startLoc <- sloc;
+  public /*@ pure @*/ int getStartLoc() { return sloc; }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == eloc;
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return eloc; }
 }
 
 public class ModelProgamModifierPragma extends ModifierPragma
@@ -867,7 +1014,8 @@ public class ModelProgamModifierPragma extends ModifierPragma
   //# ManualTag
   public final int getTag() { return tag; }
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class NestedModifierPragma extends ModifierPragma
@@ -878,8 +1026,11 @@ public class NestedModifierPragma extends ModifierPragma
   //# ManualTag
   public final int getTag() { return TagConstants.NESTEDMODIFIERPRAGMA; }
 
-	// FIXME - need more robust settingn of this
-  public int getStartLoc() { return ((ModifierPragmaVec)list.get(0)).elementAt(0).getStartLoc(); }
+  // FIXME - need more robust setting of this
+  //@ public represents startLoc <- ((ModifierPragmaVec)list.get(0)).elementAt(0).getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { 
+      return ((ModifierPragmaVec)list.get(0)).elementAt(0).getStartLoc(); 
+  }
 }
 
 public class ParsedSpecs extends ModifierPragma
@@ -890,7 +1041,8 @@ public class ParsedSpecs extends ModifierPragma
   //# ManualTag
   public final int getTag() { return TagConstants.PARSEDSPECS; }
 
-  public int getStartLoc() { return decl.locId; }
+  //@ public represents startLoc <- decl.locId;
+  public /*@ pure @*/ int getStartLoc() { return decl.locId; }
 }
 
 public class SimpleModifierPragma extends ModifierPragma
@@ -928,7 +1080,8 @@ public class SimpleModifierPragma extends ModifierPragma
     Assert.notFalse(goodtag);
   }
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class ExprModifierPragma extends ModifierPragma
@@ -965,8 +1118,13 @@ public class ExprModifierPragma extends ModifierPragma
             || tag == TagConstants.POSTCONDITION;
     }
 
-    public int getStartLoc() { return loc; }
-    public int getEndLoc() { return expr.getEndLoc(); }
+    //@ public represents startLoc <- loc;
+    public /*@ pure @*/ int getStartLoc() { return loc; }
+    /*@ also
+      @ public normal_behavior
+      @ ensures \result == expr.getEndLoc();
+      @*/
+    public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class ModifiesGroupPragma extends ModifierPragma
@@ -976,7 +1134,8 @@ public class ModifiesGroupPragma extends ModifierPragma
     //# Expr precondition
     //# int clauseLoc
 
-    public int getStartLoc() { return clauseLoc; }
+    //@ public represents startLoc <- clauseLoc;
+    public /*@ pure @*/ int getStartLoc() { return clauseLoc; }
 
     static public ModifiesGroupPragma make(int tag, int loc) {
 	ModifiesGroupPragma t = new ModifiesGroupPragma(
@@ -1027,8 +1186,13 @@ public class CondExprModifierPragma extends ModifierPragma
                 tag == TagConstants.MODIFIABLE);
     }
 
-    public int getStartLoc() { return loc; }
-    public int getEndLoc() { return cond.getEndLoc(); }
+    //@ public represents startLoc <- loc;
+    public /*@ pure @*/ int getStartLoc() { return loc; }
+    /*@ also
+      @ public normal_behavior
+      @ ensures \result == cond.getEndLoc();
+      @*/
+    public /*@ pure @*/ int getEndLoc() { return cond.getEndLoc(); }
 }
 
 public class MapsExprModifierPragma extends ModifierPragma
@@ -1052,8 +1216,13 @@ public class MapsExprModifierPragma extends ModifierPragma
     }
 
     public Identifier id() { return id; }
-    public int getStartLoc() { return loc; }
-    public int getEndLoc() { return expr.getEndLoc(); }
+    //@ public represents startLoc <- loc;
+    public /*@ pure @*/ int getStartLoc() { return loc; }
+    /*@ also
+      @ public normal_behavior
+      @ ensures \result == expr.getEndLoc();
+      @*/
+    public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class ReachModifierPragma extends ModifierPragma
@@ -1063,7 +1232,8 @@ public class ReachModifierPragma extends ModifierPragma
     //# Identifier* storerefs
     //# int loc
 
-    public int getStartLoc() { return loc; }
+    //@ public represents startLoc <- loc;
+    public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class VarDeclModifierPragma extends ModifierPragma
@@ -1076,7 +1246,8 @@ public class VarDeclModifierPragma extends ModifierPragma
     //# ManualTag
     public int getTag() { return tag; }
 
-    public int getStartLoc() { return loc; }
+    //@ public represents startLoc <- loc;
+    public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class VarExprModifierPragma extends ModifierPragma
@@ -1100,8 +1271,13 @@ public class VarExprModifierPragma extends ModifierPragma
         Assert.notFalse(goodtag);
     }
 
-    public int getStartLoc() { return loc; }
-    public int getEndLoc() { return expr.getEndLoc(); }
+    //@ public represents startLoc <- loc;
+    public /*@ pure @*/ int getStartLoc() { return loc; }
+    /*@ also
+      @ public normal_behavior
+      @ ensures \result == expr.getEndLoc();
+      @*/
+    public /*@ pure @*/ int getEndLoc() { return expr.getEndLoc(); }
 }
 
 public class NowarnPragma extends LexicalPragma
@@ -1109,7 +1285,8 @@ public class NowarnPragma extends LexicalPragma
   //# Identifier* checks NoCheck
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class ImportPragma extends LexicalPragma
@@ -1117,7 +1294,8 @@ public class ImportPragma extends LexicalPragma
   //# ImportDecl decl
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class RefinePragma extends LexicalPragma
@@ -1125,7 +1303,8 @@ public class RefinePragma extends LexicalPragma
   //# String filename NoCheck
   //# int loc
 
-  public int getStartLoc() { return loc; }
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
 }
 
 public class Spec extends ASTNode
@@ -1141,8 +1320,13 @@ public class Spec extends ASTNode
   //# boolean modifiesEverything
   //# Set postconditionLocations  NoCheck
 
-  public int getStartLoc() { return dmd.original.getStartLoc(); }
-  public int getEndLoc() { return dmd.original.getEndLoc(); }
+  //@ public represents startLoc <- dmd.original.getStartLoc();
+  public /*@ pure @*/ int getStartLoc() { return dmd.original.getStartLoc(); }
+  /*@ also
+    @ public normal_behavior
+    @ ensures \result == dmd.original.getEndLoc();
+    @*/
+  public /*@ pure @*/ int getEndLoc() { return dmd.original.getEndLoc(); }
 }
 
 public class Condition extends ASTNode
@@ -1151,7 +1335,8 @@ public class Condition extends ASTNode
   //# Expr pred
   //# int locPragmaDecl
 
-  public int getStartLoc() { return locPragmaDecl; }
+  //@ public represents startLoc <- locPragmaDecl;
+  public /*@ pure @*/ int getStartLoc() { return locPragmaDecl; }
 
   public String prettyPrint() {
 	return "Condition: label = " + TagConstants.toString(label) + "\n"
@@ -1166,5 +1351,6 @@ public class DefPred extends ASTNode
     //# GenericVarDecl* args
     //# Expr body
 
-    public int getStartLoc() { return body.getStartLoc(); }
+    //@ public represents startLoc <- body.getStartLoc();
+    public /*@ pure @*/ int getStartLoc() { return body.getStartLoc(); }
 }

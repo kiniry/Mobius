@@ -36,29 +36,27 @@ public class Types extends javafe.tc.Types
     }
 
 
-    public static PrimitiveType
-            anyType = PrimitiveType.make(TagConstants.ANY, Location.NULL);
+    public static final PrimitiveType
+	anyType = PrimitiveType.makeNonSyntax(TagConstants.ANY);
 
-    public static PrimitiveType
-            typecodeType = PrimitiveType.make(TagConstants.TYPECODE, Location.NULL);
+    public static final PrimitiveType
+	typecodeType = PrimitiveType.makeNonSyntax(TagConstants.TYPECODE);
     //public static Type typecodeType = javaLangClass();
 
-    public static PrimitiveType
-            locksetType = PrimitiveType.make(TagConstants.LOCKSET, Location.NULL);
+    public static final PrimitiveType
+	locksetType = PrimitiveType.makeNonSyntax(TagConstants.LOCKSET);
 
-    public static PrimitiveType
-            objectsetType = PrimitiveType.make(TagConstants.OBJECTSET, Location.NULL);
+    public static final PrimitiveType
+	objectsetType = PrimitiveType.makeNonSyntax(TagConstants.OBJECTSET);
 
-    public static PrimitiveType
-	    rangeType = PrimitiveType.make(TagConstants.DOTDOT, Location.NULL);
+    public static final PrimitiveType
+	rangeType = PrimitiveType.makeNonSyntax(TagConstants.DOTDOT);
 
-    //@ invariant bigintType != null;
-    public static PrimitiveType 
-            bigintType = PrimitiveType.make( TagConstants.BIGINTTYPE, Location.NULL );
+    public static final PrimitiveType 
+	bigintType = PrimitiveType.makeNonSyntax( TagConstants.BIGINTTYPE);
 
-    //@ invariant realType != null;
-    public static PrimitiveType 
-            realType = PrimitiveType.make( TagConstants.REALTYPE, Location.NULL );
+    public static final PrimitiveType 
+	realType = PrimitiveType.makeNonSyntax( TagConstants.REALTYPE);
 
 
     public static boolean isTypeType(Type t) {

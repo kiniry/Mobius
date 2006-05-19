@@ -1,3 +1,5 @@
+// $Id$
+
 package javafe.ast;
 
 import java.util.HashMap;
@@ -37,6 +39,7 @@ public class IdentifierNode extends ASTNode {
       return t;
     }
     
+    //@ public represents startLoc <- Location.NULL;
     public int getStartLoc() { return Location.NULL; }
     public int childCount(){ return 0; }
     public Object childAt(int i) { return null; }
