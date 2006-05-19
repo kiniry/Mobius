@@ -1,4 +1,6 @@
-# Copyright 2003 ...
+# $Id$
+#
+# Copyright 2003-2006 dsrg.org
 #
 
 export TOP = ../../../..
@@ -12,10 +14,12 @@ PARSER_TEST_DIR = ${TESTSOURCEDIRECTORY}/escjava/parser/test
 ## specification files that came with the original release.
 ESC_SPECS = ${ESCTOOLS_ROOT}/original-specs
 
+CLASSDIRECTORY ?=${ESCJAVA_CLASSFILES}
+
 ###########################################################################
 
 compile_escjava_parser_test_programs:
-	${JAVAC} ${JAVAC_FLAGS} \
+	@${JAVAC} ${JAVAC_FLAGS} \
 		-classpath ${ESC_CLASSPATH} \
 		-d $(call canonicalize,${CLASSDIRECTORY}) \
 		$(call canonicalize,${PARSER_TEST_DIR}/TestLex.java) \
@@ -42,16 +46,16 @@ CD_AND_JAVA_DEBUG = cd $(PARSER_TEST_DIR); $(JAVA) $(DEBUGGER_FLAGS) -classpath 
 
 test_lexer: compile_escjava_parser_test_programs
 	@echo "TESTING Escjava: test_lexer"
-	$(CD_AND_JAVA).TestLex GoodPragmas.j | tee GoodPragmas.out | ${DIFF} - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex GoodSpecExpr.j | tee GoodSpecExpr.out | ${DIFF} - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | tee GoodJmlPragmas.out | ${DIFF} - GoodJmlPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | tee GoodPragmas-lookahead.out | ${DIFF} - GoodPragmas.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j | tee GoodSpecExpr-lookahead.out  | ${DIFF} - GoodSpecExpr.ans
-	$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | tee GoodJmlPragmas-lookahead.out | ${DIFF} - GoodJmlPragmas.ans
+	@$(CD_AND_JAVA).TestLex GoodPragmas.j | tee GoodPragmas.out | ${DIFF} - GoodPragmas.ans
+	@$(CD_AND_JAVA).TestLex GoodSpecExpr.j | tee GoodSpecExpr.out | ${DIFF} - GoodSpecExpr.ans
+	@$(CD_AND_JAVA).TestLex GoodJmlPragmas.j | tee GoodJmlPragmas.out | ${DIFF} - GoodJmlPragmas.ans
+	@$(CD_AND_JAVA).TestLex lookahead GoodPragmas.j | tee GoodPragmas-lookahead.out | ${DIFF} - GoodPragmas.ans
+	@$(CD_AND_JAVA).TestLex lookahead GoodSpecExpr.j | tee GoodSpecExpr-lookahead.out  | ${DIFF} - GoodSpecExpr.ans
+	@$(CD_AND_JAVA).TestLex lookahead GoodJmlPragmas.j | tee GoodJmlPragmas-lookahead.out | ${DIFF} - GoodJmlPragmas.ans
 
 test_parser: compile_escjava_parser_test_programs
 	@echo "TESTING Escjava: test_parser"
-	$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
+	@$(CD_AND_JAVA).TestEscPragmaParser print TypeDeclElemPragmas1.java | \
 		tee TypeDeclElemPragmas1.out | \
 		${DIFF} - TypeDeclElemPragmas1.ans
 
