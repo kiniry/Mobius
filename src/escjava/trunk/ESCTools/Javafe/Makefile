@@ -107,6 +107,7 @@ clean: cleanclasses
 # Erase ${CLASSDIRECTORY}
 cleanclasses:
 	rm -rf ${CLASSDIRECTORY}
+	-rm -rf ${JAVAFE_CLASSFILES4RAC}
 
 ###########################################################################
 ## docs targets
@@ -171,7 +172,8 @@ test-release:
 
 ## This builds tests; presumes that the build has been made
 javafe_test:
-	( cd test; \
+	@echo "building: ${JAVAFETESTTARGETS}"
+	@( cd test; \
 	  ${JAVAC} -classpath $(call canonicalize,${JAVAFE_CLASSPATH}:${TESTSOURCEDIRECTORY}) \
 	  -d $(call canonicalize,${CLASSDIRECTORY}) \
 	  ${JAVAFETESTTARGETS} )
