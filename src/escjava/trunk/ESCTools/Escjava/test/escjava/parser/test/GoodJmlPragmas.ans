@@ -61,8 +61,8 @@ GoodJmlPragmas.j:132: /*@ modifies a[*]; @*/
 GoodJmlPragmas.j:133: /*@ modifies a, b[*], c[1]; @*/
 GoodJmlPragmas.j:137: /*@ post_redundantly predicate; */
 GoodJmlPragmas.j:139: /*@ pre_redundantly predicate; */
-GoodJmlPragmas.j:140: /*@ represents_redundantly store_ref_expression == spec_expression; */
-GoodJmlPragmas.j:141: /*@ represents_redundantly store_ref_expression == spec_expression; */
+GoodJmlPragmas.j:140: /*@ represents_redundantly store_ref_expression <- spec_expression; */
+GoodJmlPragmas.j:141: /*@ represents_redundantly store_ref_expression <- spec_expression; */
 GoodJmlPragmas.j:142: /*@ represents_redundantly predicate; */
 GoodJmlPragmas.j:144: /*@ requires_redundantly predicate; */
 GoodJmlPragmas.j:149: /*@ signals_redundantly (Exception) \not_specified; */

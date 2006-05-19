@@ -60,11 +60,8 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     switch (tag) {
     case TagConstants.AXIOM:
     case TagConstants.INVARIANT:
-    case TagConstants.REPRESENTS:
     case TagConstants.CONSTRAINT: {
-      Expr e = tag == TagConstants.REPRESENTS ?
-        ((NamedExprDeclPragma)tp).expr :
-        ((ExprDeclPragma)tp).expr;
+      Expr e = ((ExprDeclPragma)tp).expr;
       write(o, "/*@ "); 
       write(o, TagConstants.toString(otag));
       write(o, ' ');
@@ -73,6 +70,26 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
       break;
     }
       
+    case TagConstants.REPRESENTS: {
+      Expr e = ((NamedExprDeclPragma)tp).expr;
+      write(o, "/*@ "); 
+      write(o, TagConstants.toString(otag));
+      write(o, ' ');
+      if(e instanceof BinaryExpr) {
+	  BinaryExpr be = (BinaryExpr)e;
+	  self.print(o, ind, be.left);
+	  write(o, ' ');
+	  write(o, TagConstants.toString(TagConstants.LEFTARROW));
+	  write(o, ' ');
+	  self.print(o, ind, be.right);
+      } else {
+	  // System.err.println("\tEscPrettyPrint: unexpected type: " + e);
+	  self.print(o, ind, e);
+      }
+      write(o, "; */");
+      break;
+    }
+
     case TagConstants.MODELTYPEPRAGMA: {
       ModelTypePragma mtp = (ModelTypePragma)tp;
       write(o, "/*@ model ");
