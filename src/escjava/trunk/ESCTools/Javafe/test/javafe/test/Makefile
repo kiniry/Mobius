@@ -1,3 +1,4 @@
+# $Id$
 # Copyright 2000, 2001, Compaq Computer Corporation
 
 export TOP=../../../..
@@ -5,8 +6,8 @@ include ${TOP}/Makefile.defs
 
 runtest:
 	@echo "TESTING Javafe: test/javafe/test"
-	cd lex; ${MAKE} runtest
-	cd fe; ${MAKE} runtest
+	@cd lex; ${MAKE} runtest
+	@cd fe; ${MAKE} runtest
 
 clean: 
 	cd lex; ${MAKE} clean
@@ -56,14 +57,19 @@ typecheckJDK14:
 .PHONY: typecheckJavafe
 typecheckJavafe:
 	@echo "===== type checking the Javafe package ====="
-	cd ${ESCTOOLS_ROOT}/Javafe/java && \
+	@cd ${ESCTOOLS_ROOT}/Javafe/java && \
 		for d in ast parser tc util filespace reader decsrc genericfile ; do \
-		echo -n $${d} ;\
+		echo -n "$${d}	" ;\
 		echo `find javafe/$${d} -name '*.java'` | xargs -n 300 \
 			${JAVA} -classpath ../classfiles javafe.test.Print \
 			-classpath "${call canonicalize,.:../../Utils}" \
 			-typecheck -noprint  ;\
-		done && \
-			${JAVA} -classpath ../classfiles javafe.test.Print \
-			-classpath "${call canonicalize,.:../../Utils}" \
-			-typecheck -noprint  javafe/*.java ;\
+		done 
+	@echo -n "javafe/.	"
+	@cd ${ESCTOOLS_ROOT}/Javafe/java && \
+		${JAVA} -classpath ../classfiles javafe.test.Print \
+		-classpath "${call canonicalize,.:../../Utils}" \
+		-typecheck -noprint  javafe/*.java ;\
+
+
+# End of Makefile

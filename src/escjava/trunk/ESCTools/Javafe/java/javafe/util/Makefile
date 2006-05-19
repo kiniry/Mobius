@@ -1,12 +1,12 @@
-# Copyright 2000, 2001, Compaq Computer Corporation
+# $Id$
+# Copyright 2000, 2001, Compaq Computer Corporation; 2006 dsrg.org.
 
 runtest:
-	@echo "TESTING Javafe: java/javafe/util"
-	${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest subreader < CorrelatedReader.java
-	${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest reset < CorrelatedReader.java
+	@echo "TESTING Javafe: java/javafe/util (note some tests have been disabled -- see Makefile)"
+	@${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest subreader < CorrelatedReader.java
+	@${JAVA} -classpath ${CLASSPATH} javafe.util.CorrelatedReaderTest reset < CorrelatedReader.java
 
-
-	#
+diabled_tests:
 	# below tests removed because they exceeds CorrelatedReaderTest max
 	# file size:
 	#${JAVA} javafe.util.CorrelatedReaderTest subreader <../parser/test/compare-exprs-big.j
