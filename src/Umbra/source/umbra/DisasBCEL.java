@@ -59,7 +59,7 @@ public class DisasBCEL implements IEditorActionDelegate {
 			try {
 				IWorkbenchPage page = editor.getEditorSite().getPage();
 				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "umbra.BytecodeEditor", true);
-				bcEditor.refreshBytecode(active, null);
+				bcEditor.refreshBytecode(active, null, null);
 				input = new FileEditorInput(file);
 				JavaClass jc = bcEditor.getJavaClass();
 				Composition.startDisas();

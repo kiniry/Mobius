@@ -36,7 +36,7 @@ import umbra.IBytecodeStrings;
 public class BytecodeController {
 	
 	private LinkedList all, instructions, incorrect;
-	private Hashtable comments;
+	private Hashtable comments, interline;
 	private boolean[] modified;
 
 	public BytecodeController() {
@@ -45,6 +45,7 @@ public class BytecodeController {
 		instructions = new LinkedList();
 		incorrect = new LinkedList();
 		comments = new Hashtable();
+		interline = new Hashtable();
 	}
 
 	public void showInstructionList()
@@ -76,6 +77,7 @@ public class BytecodeController {
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
 		ConstantPoolGen cpg = cg.getConstantPool();
 		Method[] methods = cg.getMethods();
+		String partComment = "";
 		boolean metEnd = true;
 		MethodGen mg = null;
 		InstructionList il = null;
@@ -99,6 +101,10 @@ public class BytecodeController {
 			if (lc.addHandle(ih, il, mg, i - 1)) {
 				instructions.add(ic, lc);
 				if (comment != null) comments.put(lc, comment);
+				if (partComment.compareTo("") != 0) {
+					interline.put(lc, partComment);
+					partComment = "";
+				}
 				ic++;
 				if (ih == end) {
 					metEnd = true;
@@ -107,6 +113,7 @@ public class BytecodeController {
 					ih = ih.getNext();
 				}
 			}
+			else if (comment != null) partComment.concat("\n" + comment);
 		}
 		int methodNum = ((BytecodeLineController)instructions.getLast()).getIndex() + 1;
 		modified = new boolean[methodNum];
@@ -164,6 +171,9 @@ public class BytecodeController {
 					if (ins != null) {
 						//System.out.println(ins.getName());
 						lc.setTarget(nextLine.getList(), ins);
+					}
+					else {
+						if (comment != null) interline.put(nextLine, comment);
 					}
 					//System.out.println("After target");
 					if (i >= startRem && i <= stopRem) {
@@ -447,6 +457,16 @@ public class BytecodeController {
 		for (int i = 0; i < instructions.size(); i++) {
 			Object lc = instructions.get(i);
 			String com = (String)comments.get(lc);
+			commentTab[i] = com;
+		}
+		return commentTab;
+	}
+	
+	public String[] getInterline() {
+		String[] commentTab = new String[instructions.size()];
+		for (int i = 0; i < instructions.size(); i++) {
+			Object lc = instructions.get(i);
+			String com = (String)interline.get(lc);
 			commentTab[i] = com;
 		}
 		return commentTab;

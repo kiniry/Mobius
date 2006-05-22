@@ -170,12 +170,13 @@ public class BytecodeEditor extends TextEditor {
 	 * 
 	 * @param path			The relative path of the input file
 	 * @param commentTab	Table of comments to be inserted
+	 * @param interlineTab 	Table of comments between instructions to be also inserted
 	 * @throws ClassNotFoundException
 	 * @throws CoreException
 	 * @throws IOException
 	 */
 	
-	public void refreshBytecode(IPath path, String[] commentTab) throws ClassNotFoundException, CoreException, IOException {
+	public void refreshBytecode(IPath path, String[] commentTab, String[] interlineTab) throws ClassNotFoundException, CoreException, IOException {
 		String pathName = getPath(path).toOSString(); 	
 		FileEditorInput input = (FileEditorInput)getEditorInput();
 		IFile file = input.getFile();
@@ -199,7 +200,7 @@ public class BytecodeEditor extends TextEditor {
 				codeLen[i] = methods[i].getCode().toString().length();
 				String bareCode = methods[i].getCode().toString();
 //				code[i] = addComment(bareCode, commentTab, off).getBytes();
-				String c = addComment(bareCode, commentTab, off);
+				String c = addComment(bareCode, commentTab, interlineTab, off);
 				code[i] = c.getBytes();
 				codeLen[i] = c.length();
 				off += getOffset(bareCode);
@@ -239,22 +240,24 @@ public class BytecodeEditor extends TextEditor {
 	 */
 	private int nextLineOff(String code, int pos) {
 		// pozycja nastêpnego dwukropka
-		int p = 0;
-		int l = code.length();
+		boolean nline = false;
+		int len = code.length();
+		int res = -1;
 		char c;
 		for(;;) {
-			if (pos >= l)
-				return -1;
+			if (pos >= len)
+				break;
 			c = code.charAt(pos);
-			if ((c == ':') && (p == 1))
+			if ((c == ':') && (nline))
 				break;
 			if ((c < '0') || (c > '9'))
-				p = 0;
+				nline = false;
 			if (c == '\n')
-				p = 1;
+				nline = true;
+				res = pos;
 			pos++;
 		};
-		return pos;
+		return res;
 	}
 	
 	/**
@@ -280,27 +283,35 @@ public class BytecodeEditor extends TextEditor {
 	 * @param bareCode		one method of the Bytecode (as a String with no comments)
 	 * @param commentTab	array of comments (as Strings, without leading slashes)
 	 * 						for each line of bytecode
+	 * @param interlineTab 	array of comments between lines
 	 * @param off			position of bareCode's first line's comment in commentTab
 	 * @return				bareCode with inserted comments from commentTab
 	 */
-	private String addComment(String bareCode, String[] commentTab, int off) {
-		if (commentTab == null) return bareCode;
+	private String addComment(String bareCode, String[] commentTab, String[] interlineTab, int off) {
+		if ((commentTab == null) || (interlineTab == null)) return bareCode;
+		int len = commentTab.length;
+		if (interlineTab.length != len) return bareCode;
 		int n = 0;
 		String newCode = "";
 		System.out.println("off=" + off);
 		for(;;) {
 			int i = nextLineOff(bareCode, 0);
-			if (i == bareCode.indexOf("Attribute(s)"));
 			if (i == -1)
 				i = bareCode.length() - 1;
 			String line = bareCode.substring(0, i);
+			System.out.println("line = <<" + line + ">>");
 			bareCode = bareCode.substring(i, bareCode.length()) + " ";
-			if (n + off - 1 >= commentTab.length)
+			if (n + off - 1 >= len)
 				break;
-			if (n > 0)
+			if (n > 0){
 				if (commentTab[n + off - 1] != null) {
 					line = line.replaceFirst("\n", " //" + commentTab[n + off - 1] + "\n");
 				}
+				if ((interlineTab[n + off - 1] != null)
+					&& (interlineTab[n + off - 1].compareTo("") != 0)) {
+					line = "//" + interlineTab[n + off - 1] + "\n" + line;
+				}
+			}
 			newCode = newCode + line;
 			n++;
 		};

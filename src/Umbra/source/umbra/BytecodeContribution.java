@@ -173,4 +173,8 @@ public class BytecodeContribution extends ControlContribution {
 	public String[] getCommentTab() {
 		return bcc.getComments();
 	}
+	
+	public String[] getInterlineTab() {
+		return bcc.getInterline();
+	}
 }

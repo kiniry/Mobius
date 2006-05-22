@@ -143,10 +143,11 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			try {
 				String[] commentTab = bytecodeContribution.getCommentTab();
-				for (int i = 0; i < commentTab.length; i++) {
-					System.out.println("" + i + ". " + commentTab[i]);
+				String[] interlineTab = bytecodeContribution.getInterlineTab();
+				for (int i = 0; i < interlineTab.length; i++) {
+					System.out.println("" + i + ". " + interlineTab[i]);
 				}
-				((BytecodeEditor)editor).refreshBytecode(active, commentTab);
+				((BytecodeEditor)editor).refreshBytecode(active, commentTab, interlineTab);
 				FileEditorInput input = new FileEditorInput(file);
 				boolean[] modified = bytecodeContribution.getModified();
 				bytecodeContribution.setModTable(modified);
@@ -208,7 +209,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 				}
 			}
 			try {
-				((BytecodeEditor)editor).refreshBytecode(active, null);
+				((BytecodeEditor)editor).refreshBytecode(active, null, null);
 				IEditorInput input = new FileEditorInput(file);
 				refreshEditor(editor, input);
 			} catch (ClassNotFoundException e1) {
@@ -305,7 +306,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 				String fullName = ((BytecodeEditor)editor).getPath(path).toOSString();
 				jc.dump(fullName + "\\" + lastSegment);
 				//System.out.println("WARNING: " + fullName + "\\" + lastSegment + " D:\\smieci\\eclipse" + fnameFrom);
-				((BytecodeEditor)editor).refreshBytecode(path, null);
+				((BytecodeEditor)editor).refreshBytecode(path, null, null);
 				IEditorInput input = new FileEditorInput(file);
 				refreshEditor(editor, input);
 			} catch (ClassNotFoundException e) {
@@ -387,7 +388,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 				e.printStackTrace();
 			}
 			try {
-				((BytecodeEditor)editor).refreshBytecode(active, null);
+				((BytecodeEditor)editor).refreshBytecode(active, null, null);
 				IEditorInput input = new FileEditorInput(file);
 				boolean[] modified = bytecodeContribution.getModified();
 				bytecodeContribution.setModTable(modified);
