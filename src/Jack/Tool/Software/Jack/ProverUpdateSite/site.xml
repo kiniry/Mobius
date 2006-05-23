@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/ProverFeature_1.0.0.jar" id="ProverFeature" version="1.0.0"/>
+   <feature url="features/ProverFeature_1.0.1.jar" id="ProverFeature" version="1.0.1"/>
+   <feature url="features/ProverFeature_1.0.2.jar" id="ProverFeature" version="1.0.2"/>
+   <feature url="features/ProverFeature_1.0.3.jar" id="ProverFeature" version="1.0.3"/>
+   <feature url="features/ProverEditorFeature_1.0.0.jar" id="ProverEditorFeature" version="1.0.0"/>
+</site>
