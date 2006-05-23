@@ -1,0 +1,7 @@
+AuthName "JACK Update Site"
+AuthUserFile /var/www/html/Jack/.htpasswd
+AuthGroupFile /dev/null
+AuthType Basic
+<limit GET POST>
+require valid-user
+</limit>
