@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="IJack"
+      label="IJack"
+      version="1.8.4"
+      provider-name="INRIA Sophia - Everest project"
+      nl="en">
+
+   <license>
+      ARTICLE 1 - DEFINITIONS
+
+Dans le contrat ci-après, les mots suivants seront employés avec le sens défini au présent article :
+
+Logiciel : désigne le logiciel Jack concédé au Bénéficiaire par la présente licence.
+ Le logiciel est concédé sous forme de code exécutable.
+
+Utilisateur : toute personne, membre du personnel du Bénéficiaire, ou tout tiers travaillant pour le compte et sur le site du Bénéficiaire, et qui a régulièrement obtenu du responsable désigné le droit d&apos;utiliser le logiciel conformément aux stipulations du présent contrat.
+
+Erreur : tout incident, anomalie ou bogue intervenant lors de l&apos;utilisation des logiciels.
+
+ARTICLE 2 – DROITS CONCEDES
+
+2.1 L&apos;INRIA concède au Bénéficiaire, pour la durée prévue à l’article 3 ci-après, une licence non-exclusive et non-transférable d&apos;utilisation du logiciel, l&apos;autorisant à exécuter le programme contenu dans le logiciel uniquement à des fins de recherche, et à l’exclusion notamment de toute exploitation commerciale.
+
+2.2 La présente licence ne peut être cédée à un tiers par le Bénéficiaire ni donner lieu à sous-licence, que ce soit à titre onéreux ou gracieux. 
+
+2.3 Le Bénéficiaire s’engage à ne communiquer à quiconque, hormis les utilisateurs régulièrement désignés par lui, le logiciel, que ce soit à titre onéreux ou gracieux.
+
+2.4 Toute autre utilisation du logiciel nécessitera l&apos;autorisation expresse et préalable de GEMPLUS et de l&apos;INRIA, qui sera formalisée par la conclusion d&apos;un contrat séparé fixant les conditions d’une telle utilisation.
+
+ARTICLE 3 - DUREE
+
+3.1 Le présent contrat est conclu pour une durée de neuf (9) mois.
+
+3.2 Il entrera en vigueur à la signature des présentes par chacune des parties, avec prise d&apos;effet à la remise du logiciel, constatée dans les formes prévues à l&apos;article 4 ci-après.
+
+3.3 Cette durée initiale pourra être renouvelée sur demande écrite du Bénéficiaire formulée avant le terme de la présente licence, et confirmée par écrit par l&apos;INRIA.
+
+3.4 Les dispositions prévues aux articles 2, 5, 7 et 8 resteront en vigueur en tant que de besoin nonobstant l’expiration ou la résiliation des présentes.
+ARTICLE 4 - REMISE DES LOGICIELS
+
+4.1 L&apos;INRIA s&apos;engage à remettre au Bénéficiaire un exemplaire du code exécutable du logiciel. 
+
+4.2 Cette remise aura lieu dans les meilleurs délais à compter de la signature de la présente licence, soit par courrier électronique ou CD-rom adressé au correspondant technique du Bénéficiaire désigné à l’article 6 ci-après, soit par tout autre moyen convenu entre les parties.
+
+4.3 Le Bénéficiaire s&apos;engage à accuser réception du logiciel par courrier électronique adressé au correspondant technique de l’INRIA, dans un délai de 48 heures à compter de sa réception.
+ARTICLE 5 - PROPRIETE INTELLECTUELLE
+
+5.1 Le Bénéficiaire reconnaît que les droits patrimoniaux sur le logiciel sont détenus par l&apos;INRIA, sous réserve des droits de GEMPLUS sur le logiciel initial « Jack ».
+Le présent contrat n&apos;entraîne aucun transfert de propriété au profit du Bénéficiaire. Ce dernier prendra toutes les mesures nécessaires à la protection des droits de l’INRIA et de GEMPLUS.
+
+5.2 Le Bénéficiaire s’engage à laisser figurer les mentions de copyright de GEMPLUS et de l&apos;INRIA, ainsi que le nom des auteurs, tels qu’ils apparaissent, dans le code binaire du logiciel ou les copies de sauvegarde.
+
+5.3 Le Bénéficiaire s’engage à citer l’origine GEMPLUS et INRIA du logiciel lors d’éventuelles actions de communication relatives à ses recherches sur le logiciel.
+
+5.4 Le Bénéficiaire reconnaît que, conformément aux dispositions des articles L.122.4 et L.335.3 du Code de la Propriété Intellectuelle, toute utilisation du logiciel non conforme aux stipulations de la présente licence, et notamment aux droits expressément consentis par l’article 2 ci-avant, constituerait un acte illicite et un délit de contrefaçon, contre lesquels GEMPLUS ou l’INRIA seraient fondés à se pourvoir en justice.
+
+5.5 En cas de tentative de saisie du logiciel, le Bénéficiaire s&apos;engage à en aviser immédiatement l&apos;INRIA, par lettre recommandée avec accusé de réception et à élever toute contestation contre la saisie.
+
+5.6 Le Bénéficiaire informera l&apos;INRIA de toute perte ou destruction du logiciel.
+
+ARTICLE 6 - CORRESPONDANTS TECHNIQUES
+
+6.1 Les correspondants techniques sont chargés de l’exécution de la présente licence. En particulier, le logiciel sera utilisé par le Bénéficiaire sous la responsabilité du correspondant désigné ci-dessous.
+
+ARTICLE 7 - RESPONSABILITE - GARANTIE – MAINTENANCE
+
+7.1 Le Bénéficiaire utilisera le logiciel sous sa seule et entière responsabilité.
+ En aucun cas, l&apos;INRIA ne saurait être déclaré responsable de tout dommage direct ou indirect subi par le Bénéficiaire du fait de l&apos;utilisation du logiciel, de difficultés survenues dans son utilisation ou de l&apos;impossibilité de l’utiliser.
+
+7.2 Le Bénéficiaire reconnaît que le logiciel est un prototype de recherche, qui peut par conséquent comporter des imperfections ou bogues, pour lesquels l’INRIA n’est tenu à aucune prestation de garantie ou de maintenance.
+Cependant, l’INRIA communiquera au Bénéficiaire toute information sur les erreurs portées à sa connaissance du fait de son utilisation propre ou de celle d’un tiers.
+
+7.3 Le Bénéficiaire indiquera à l&apos;INRIA, pour information, les erreurs ou toute autre défaillance du logiciel qu&apos;il viendrait à constater lors de son utilisation.
+
+7.4 L’INRIA déclare au Bénéficiaire :
+
+qu’à sa connaissance, il dispose sur le logiciel des droits nécessaires à la concession de la présente licence
+que le logiciel n’a pas fait, à la date de signature du contrat, l’objet d’une revendication d’un droit de propriété intellectuelle de la part d&apos;un tiers et
+que le logiciel n’a pas été délivré au Bénéficiaire en violation d’une obligation de confidentialité.
+ARTICLE 8 - CONFIDENTIALITE
+
+8.1 Chaque partie s&apos;engage à garder strictement confidentielles, ne pas publier, ne pas divulguer à des tiers et ne pas utiliser à des fins personnelles et/ou à d&apos;autres fins que celles de l&apos;exécution de la présente convention les informations confidentielles qui lui auront été communiquées par l’autre partie à l’occasion de la dite convention.
+
+8.2 Seront considérées comme informations confidentielles toutes informations qui auront clairement été identifiées comme telles lors de leur communication, quels que soient leur nature (données, documents, méthodes, savoir-faire, logiciels,…), leur objet, leur support, leur mode de transmission, leur origine, et qu&apos;elles soient ou non protégées par un titre ou un droit de propriété intellectuelle.
+
+8.3 Chacune des parties s&apos;engage à ne communiquer ces informations confidentielles qu&apos;à ses seuls employés, ou aux tiers travaillant pour son compte, qui en ont besoin pour la réalisation de leur mission, et à prendre toutes mesures appropriées auprès de ceux-ci pour garantir le respect du présent article.
+
+Les dispositions ci-dessus ne s&apos;appliqueront pas aux informations :
+
+- entrées dans le domaine public préalablement à leur divulgation ou postérieurement mais, dans ce dernier cas, en l&apos;absence de toute faute imputable à la Partie réceptrice, ou
+- déjà connues de celle-ci, cela pouvant être démontré par l’existence de documents appropriés dans ses dossiers, ou
+- reçues d’un tiers libre d’en disposer, 
+- dont l’utilisation ou la divulgation ont été autorisées par écrit par la Partie dont elles émanent.
+
+8.4 La durée de confidentialité est de cinq ans à compter de la date de communication de chaque information confidentielle.
+
+ARTICLE 9 - DESTRUCTION DU LOGICIEL
+
+A l’expiration ou en cas de résiliation pour quelque cause que ce soit de la présente licence d&apos;utilisation, le Bénéficiaire s&apos;engage à détruire immédiatement le logiciel, quelle que soit la forme sous laquelle il est détenu.
+
+ARTICLE 10 - RESILIATION
+
+10.1 Sauf cas de force majeure, tout manquement grave de l&apos;une des parties à ses obligations, qui ne serait pas réparé dans un délai de trente (30) jours à compter de la notification écrite dudit manquement par l&apos;autre partie, pourra entraîner de plein droit la résiliation par la partie victime du manquement, de la présente licence, sans indemnité et sans préjudice de tous les dommages et intérêts auxquels cette partie pourrait prétendre.
+
+10.2 Le fait pour l’une des parties de ne pas se prévaloir d’un manquement de l’autre partie, à l’une quelconque des obligations visées dans les présentes, ne saurait être interprété pour l’avenir comme une renonciation à l’obligation en cause.
+
+ARTICLE 11 - FORCE MAJEURE
+
+De façon expresse, sont considérés comme cas de force majeure ou cas fortuits, outre ceux habituellement retenus par la jurisprudence des cours et des tribunaux français, les évènements suivants : restrictions gouvernementales ou réglementaires des formes de commercialisation, pannes d’ordinateur, blocage des télécommunications, et tout autre cas indépendant de la volonté expresse des parties et empêchant l’exécution normale de la présente licence.
+
+ARTICLE 12 - NULLITE
+
+Si une ou plusieurs stipulations du présent contrat sont tenues pour non valides ou déclarées telles en application d’une loi, d’un règlement ou à la suite d’une décision définitive d’une juridiction compétente, les autres garderont toute leur force et leur portée.
+
+ARTICLE 13 - TITRES
+
+En cas de difficultés d’interprétation entre l’un quelconque des titres figurant en tête des clauses, et l’une quelconque de ces clauses, les titres seront déclarés inexistants.
+
+ARTICLE 14 - LOI ET ATTRIBUTION DE COMPETENCE
+
+La présente licence est soumise à la loi française. 
+
+Tout litige non résolu à l&apos;amiable dans un délai de 60 jours calendaires à compter de la notification écrite décrivant l’objet du litige effectuée par l’une des parties à l’autre partie, sera porté par la partie la plus diligente devant le tribunal compétent.
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="2.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.compare"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
+
+   <plugin
+         id="grl.jml"
+         download-size="252"
+         install-size="292"
+         version="0.0.0"/>
+
+   <plugin
+         id="jack.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="ClassFileAnnotation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="bcel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="Annotationpropagation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="Bytecode_to_JPO"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+</feature>
