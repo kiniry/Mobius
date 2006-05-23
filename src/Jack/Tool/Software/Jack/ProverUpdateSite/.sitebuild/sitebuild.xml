@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-build
+      autobuild="false"
+      scrub-output="false"
+      use-console="true">
+   <feature id="PVSfeature" version="1.2.5"/>
+   <feature id="Simplifyfeature" version="1.2.7"/>
+   <feature id="Coqfeature" version="1.1.14"/>
+   <feature id="Coqfeature" version="1.1.15"/>
+   <feature id="PVSfeature" version="1.2.6"/>
+   <feature id="Simplifyfeature" version="1.2.8"/>
+   <feature id="Coqfeature" version="1.1.16"/>
+</site-build>
