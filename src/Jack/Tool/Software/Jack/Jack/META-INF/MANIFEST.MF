@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jack Plugin
 Bundle-SymbolicName: jack.plugin; singleton:=true
-Bundle-Version: 1.8.5
+Bundle-Version: 1.8.6
 Bundle-Activator: jack.plugin.JackPlugin
 Bundle-Vendor: INRIA Sophia - Everest project
 Bundle-Localization: plugin
