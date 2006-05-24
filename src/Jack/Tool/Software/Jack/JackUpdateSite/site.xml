@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/IJack_1.8.1.jar" id="IJack" version="1.8.1" nl="en">
-      <category name="Jack"/>
-   </feature>
-   <feature url="features/IJack_1.8.2.jar" id="IJack" version="1.8.2" nl="en">
-      <category name="Jack"/>
-   </feature>
-   <feature url="features/IJack_1.8.3.jar" id="IJack" version="1.8.3" nl="en">
-      <category name="Jack"/>
-   </feature>
-   <feature url="features/IJack_1.8.4.jar" id="IJack" version="1.8.4" nl="en">
+   <feature url="features/IJack_1.8.5.jar" id="IJack" version="1.8.5" nl="en">
       <category name="Jack"/>
    </feature>
    <category-def name="Jack" label="Jack"/>
