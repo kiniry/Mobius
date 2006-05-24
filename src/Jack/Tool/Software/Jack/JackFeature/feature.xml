@@ -140,11 +140,6 @@ Tout litige non résolu à l&apos;amiable dans un délai de 60 jours calendaires
       <import plugin="org.eclipse.core.resources"/>
    </requires>
 
-   <plugin
-         id="grl.jml"
-         download-size="252"
-         install-size="292"
-         version="0.0.0"/>
 
    <plugin
          id="jack.plugin"
@@ -152,28 +147,5 @@ Tout litige non résolu à l&apos;amiable dans un délai de 60 jours calendaires
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
-         id="ClassFileAnnotation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="bcel"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="Annotationpropagation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="Bytecode_to_JPO"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
 </feature>
