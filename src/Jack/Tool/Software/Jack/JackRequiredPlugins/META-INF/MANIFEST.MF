@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JackRequiredPlugins Plug-in
 Bundle-SymbolicName: JackRequiredPlugins
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: jack.required.plugins.JackRequiredPluginsPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
@@ -46,3 +46,7 @@ Export-Package: antlr,
  org.gjt.jclasslib.structures.constants,
  org.gjt.jclasslib.structures.jmlattributes,
  org.gjt.jclasslib.util
+Bundle-ClassPath: jar/antlr.jar,
+ jar/bcel-5.1.jar,
+ jar/jml.jar,
+ jar/jmlclasslib.jar
