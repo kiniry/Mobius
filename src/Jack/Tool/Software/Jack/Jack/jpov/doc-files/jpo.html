@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+-->
+</head>
+<body bgcolor="white">
+
+
+The JPO file are used to store informations from the lemma generator to the viewer.
+<p>
+<font face="Courier New" size="2">
+JPO {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int JPO_FILE_FORMAT_VERSION </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String absolutePath </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbClasses </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Class classes[nbClasses] </p>
+}
+</font>
+</p>
+<p>
+The JPO_FILE_FORMAT_VERSION value for this version is 12.
+absolutePath corresponds to the absolute path of the .java file corresponding to this
+jpo file.
+</p>
+
+<p>  
+<font face="Courier New" size="2">
+Class {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String name </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; ProofObligations staticInitialization </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbConstructors </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Method constructors[nbConstructors] </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbMethods </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Method methods[nbMethods] </p>
+}
+</font>
+</p>
+  
+<p>  
+<font face="Courier New" size="2">
+Method {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String name </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String signature </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String pmiName </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int firstLine </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; ProofObligations proofObligations </p>
+}
+</font>
+</p>
+  
+<p>  
+<font face="Courier New" size="2">
+ProofObligations {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbHypothesis </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; VirtualFormula hypothesis[nbHypothesis] </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbLemmas </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Lemma lemmas[nbLemmas]    </p> 
+}
+</font>
+</p>
+  
+<p>  
+<font face="Courier New" size="2">
+Lemma {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String name </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbHypothesis </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int hypothesisIndex[nbHypothesis] </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbGoals </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Goal goals[nbGoals] </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nnBox </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Box boxes[nbBox] </p>
+}
+</font>
+</p>
+  
+<p>  
+<font face="Courier New" size="2">
+Goal {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int number </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; byte proofState </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; byte proofForce </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String methodList </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; VirtualFormula goal </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Formula originalFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int nbSubstitution </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Substitution substitutions[nbSubstitution] </p>
+}
+</font>
+</p>
+  
+<p>  
+<font face="Courier New" size="2">
+Substitution {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; byte token </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; union { </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { String elements </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula newElements </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subElements </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula newArrayLength </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subArrayLength </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula old </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula new </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula newInstances </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subInstances </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { String tmpVar </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula newTmpVar </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subTmpVar </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula typeofLeft </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula typeofRight </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subTypeof </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula old </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula b </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula c </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula d </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } subMemberField </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; } </p>
+}
+</font>
+</p>
+
+<p>  
+<font face="Courier New" size="2">
+VirtualFormula {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int index </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; byte origin </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Formula f </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Box b </p>
+}
+</font>
+</p>
+
+<p>  
+<font face="Courier New" size="2">
+Box {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int line </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int column </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int length </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; byte comment </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; String info </p>
+}
+</font>
+</p>
+
+<p>  
+<font face="Courier New" size="2">
+Formula {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; int token </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; union { </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula left </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula right </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } binaryFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { QuantifiedVarForm qantifiedVariables </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula body </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } quantifiedFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula cond </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula left </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; Formula right </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } questionFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { String BText </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; String JavaText </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } terminalFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { String BText </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; &nbsp; String JavaText </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } typeFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { Formula f </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } unaryFormula </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; } </p>
+}
+</font>
+</p>
+
+<p>  
+<font face="Courier New" size="2">
+QuantifiedVarForm {
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Formula variable </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; Formula type </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; boolean hasNext </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; union { </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { QuantifiedVarForm next </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; { </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; &nbsp; } </p>
+<p style="margin-top: 0; margin-bottom: 0">&nbsp; } </p>
+}
+</font>
+</p>
+
+</body>
+</html>

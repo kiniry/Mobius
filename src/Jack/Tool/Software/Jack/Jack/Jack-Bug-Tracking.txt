@@ -1,0 +1,1083 @@
+Next one
+
+Bug#: 			last++  
+Product: 		Jack  
+Version: 		  
+Platform: 		PC / Linux / Unix  
+Status: 		NEW / ASSIGNED / RESOLVED / CLOSED
+Severity: 		blocker / critical / major / normal / minor / trivial / enhancement
+Resolution:  	 / FIXED / INVALID
+Assigned To: 	
+Reported By: 	
+Component: 		
+Description:  
+
+--------------------------------------------------------------------------------
+Add a proof customizer (transfer pmm from Windows to Unix).
+
+Bug#: 			62 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+Add a pragma /*@ BOUNDED ARITHMETIC OPERATOR */ to generate arithmetic operator lemma with a modulo.
+
+Bug#: 			61 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform:	 	PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+Link the PatchProver when creating a AtelierB project.
+
+Bug#: 			60 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		Jab 
+Description: 
+  
+--------------------------------------------------------------------------------
+Parse and treat the \fresh pragma.
+
+Bug#: 			59 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+The Jack actions (compile, edit, prove, etc...) should be available for .spec files, and not only for .java files.
+
+Bug#: 			58 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	ARE
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+Translate goals into Coq.
+
+Bug#: 			55 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+Allow reading of .spec files located in jar or zip files.
+
+Bug#: 			53 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU
+Reported By: 	LBU 
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+Constraint clause is not parsed
+
+Bug#: 			52 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+Should add internalisation support
+
+Bug#: 			51 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		eclipse plugin 
+Description: 
+	Add support for additional language (at least, French).
+
+--------------------------------------------------------------------------------
+Proof view should provide an estimated remaining time or end date
+
+Bug#: 			50 
+Product: 		Jack 
+Version: 		unspecified 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+The Atelier B licence could be retrieved just after the launch of a task.
+
+Bug#: 			49 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		Jab 
+Description: 
+
+--------------------------------------------------------------------------------
+The compilation phase should not be a blocking phase. The resulting tasks (errors) have to be associated with a compilation action.
+
+Bug#: 			48 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+The parser could be rewritten and give directly as result the structure defined in the tool rather than an AST.
+
+Bug#: 			45 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform:		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+Add the current project as the first entry of the JML path.
+
+Bug#: 			44 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+Treat jml clauses : helper method, diverges, decreases, reach, max, min, sum, product, num_of, set comprehension, invariant_for, lblneg, lblpos
+
+Bug#: 			43 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		jml2b 
+Description: 
+
+--------------------------------------------------------------------------------
+Clarify semantics of \old
+
+Bug#: 			40 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform:		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 
+Assigned To: 	LBU 
+Reported By: 	ARE 
+Component: 		jml2b 
+Description: 
+	It is currently not clear wether it is necessary to add \old when referencing 
+	variables in the requires clause.
+	Ideally, \old should be implicitely added when variables are referenced within 
+	requires. However, this would mean that variables referenced in requires and 
+	ensures clauses are not the same.
+
+--------------------------------------------------------------------------------
+Refactor ProofTask class
+
+Bug#:	 		39
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		ASSIGNED 
+Severity: 		enhancement 
+Resolution: 	
+Assigned To: 	LBU 
+Reported By: 	ARE 
+Component: 		eclipse plugin 
+Description: 
+	The original ProofTask class was tailored to the AtelierB prover. When 
+	preliminary support for Simplify has been added, ProofTask has been modified 
+	into an abstract class, with AtelierB and Simplify subclasses.
+	This abstract class probably needs a few refactoring, since it is not clear 
+	what the role of each of the abstract methods is.
+
+--------------------------------------------------------------------------------
+Add default behavior
+
+Bug#: 			37  
+Product: 		Jack  
+Version: 		  
+Platform: 		PC 
+Status: 		ASSIGNED
+Severity: 		enhancement
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jack plugin
+Description:  
+	Add a menu to add a default behaviour to a method.
+
+--------------------------------------------------------------------------------
+In the Java view, \old operator should be displayed
+
+Bug#: 			31
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC
+Status: 		ASSIGNED
+Severity: 		normal
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		
+Description:  
+
+--------------------------------------------------------------------------------
+Warm for old in ensures clause, without mentionning it in modifies
+
+Bug#: 			30 
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC 
+Status: 		ASSIGNED
+Severity: 		enhancement
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		
+Description:  
+
+--------------------------------------------------------------------------------
+Incompatibility in invariant
+
+Bug#: 			29 
+Product: 		Jack  
+Version: 		v1.3.6    
+Platform: 		PC
+Status: 		ASSIGNED
+Severity: 		enhancement
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		jml2b
+Description:
+	Change the message and propose an option for the default invariant modifier.
+
+--------------------------------------------------------------------------------
+scrollbar for list of different AtelierB projects
+
+Bug#: 			25  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC
+Status: 		NEW
+Severity: 		enhancement
+Resolution:  	 
+Assigned To: 	
+Reported By:	MHU
+Component: 		eclipse plugin
+Description:	add scrollbar for list of different AtelierB projects
+
+--------------------------------------------------------------------------------
+The PMI parser is not complete, it does not parse the complete tactic language.
+ 
+Bug#: 			23  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		ASSIGNED  
+Severity: 		minor  
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jpov  
+Description:  
+
+--------------------------------------------------------------------------------
+The lemma corresponding to the proof of the invariant when a method call is 
+performed must be generated. 
+
+Bug#: 			20  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		ASSIGNED  
+Severity: 		major  
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b
+Description:  
+
+--------------------------------------------------------------------------------
+When a proof task is killed, it cannot be re-run without re-running the server 
+
+Bug#: 			18  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		ASSIGNED  
+Severity: 		normal  
+Resolution:  	
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jab  
+Description:  
+
+--------------------------------------------------------------------------------
+The log directory is not a parameter of the server application 
+
+Bug#: 			7  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+OS/Version: 	Windows 2000  
+Status: 		ASSIGNED  
+Severity: 		normal  
+Priority: 		P2  
+Resolution:  
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jab 
+Description:  
+	One should be able to define the log directory in the property file
+
+--------------------------------------------------------------------------------
+Add a button for Atelier B server
+
+Bug#: 			36
+Product: 		Jack  
+Version: 		  
+Platform: 		PC 
+Status: 		RESOLVED
+Severity: 		enhancement
+Resolution:  	OBSOLETE
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jack plugin
+Description:  
+	Add a button to select if an Atelier B server has to be searched.
+
+--------------------------------------------------------------------------------
+Allow to plug new prover with new proof language
+
+Bug#: 			46 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		RESOLVED 
+Severity: 		enhancement 
+Resolution: 	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+Provide more information on checked lemmas.
+
+Bug#: 			54 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		RESOLVED 
+Severity: 		enhancement 
+Resolution: 	FIXED
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		Jpov 
+Description: 
+	Currently, checked lemmas are not differentiated from unproved lemmas. Instead 
+	of having the percentage of proved and unproved lemmas, it could be interesting 
+	to have three percentage: 
+		proved lemmas 
+		unproved lemmas 
+		checked lemmas 
+	This would provide information on the percentage of lemmas that are 100% sure 
+	(proved), but also give an indication of the number of lemmas in which we have 
+	confidence.
+
+--------------------------------------------------------------------------------
+Problem when linking overridden methods with parameters with changed names. 
+
+Bug#: 			22  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		major  
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b  
+Description:  
+
+--------------------------------------------------------------------------------
+The cancel button should stop the compilation
+
+Bug#: 			41 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		RESOLVED 
+Severity: 		enhancement 
+Resolution: 	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+The JPO file must be locked when a compilation or a proof task is running. 
+
+Bug#: 			19  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		eclipse plugin
+Description:  
+
+-------------------------------------------------------------------------------- 
+Some lemmas are not well defined 
+
+Bug#: 			5  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		major  
+Resolution:     FIXED
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: jml2b  
+Description:  
+	Lemma(Method c, case 2, Goal 1) is not well defined due to the fact that 
+constructors do not modify member fieds. One should have substituted A by A <+ 
+{ newObject_0 , newValue} with the property coming from the exsures close of 
+the constructor newValue == 3. 
+
+ public class c5 {
+
+  int A;
+
+  //@ ensures A == 3;
+  c5() {
+   A = 3;
+  }
+
+  //@ requires A == 3;
+  //@ modifies A;
+  void setA(int a) {
+   A = a;
+  }
+
+  void c() {
+   c5 a = new c5();
+   a.setA(1);
+  }
+ }
+
+--------------------------------------------------------------------------------
+Type-check the JML expressions
+
+Bug#: 			28  
+Product: 		Jack  
+Version: 		v1.3.6    
+Platform: 		PC
+Status: 		RESOLVED
+Severity: 		major
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		jml2b
+Description:  
+
+--------------------------------------------------------------------------------
+Add a metrics view
+
+Bug#: 			47 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		RESOLVED 
+Severity: 		enhancement 
+Resolution: 	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU 
+Component: 		eclipse plugin 
+Description: 
+
+--------------------------------------------------------------------------------
+Cut and past functionnality in the jack viewer window.
+
+Bug#: 			56 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		RESOLVED 
+Severity: 		enhancement 
+Resolution:		FIXED 
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		Jpov 
+Description: 
+
+--------------------------------------------------------------------------------
+Add Java syntax highlighting to the jack lemma view.
+
+Bug#: 			57 
+Product: 		Jack 
+Version: 		v1.2.0 
+Platform: 		PC 
+Status: 		RESOLVED 
+Severity: 		enhancement 
+Resolution: 	FIXED
+Assigned To: 	LBU 
+Reported By: 	LBU 
+Component: 		Jpov 
+Description: 
+
+--------------------------------------------------------------------------------
+Add options for file generation
+
+Bug#: 			38  
+Product: 		Jack  
+Version: 		  
+Platform: 		PC
+Status: 		RESOLVED
+Severity: 		enhancement
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jack plugin
+Description:  
+	Add buttons to choose if mch, coq and simplify file have to be generated.
+
+--------------------------------------------------------------------------------
+Jack requires simplify executable to be located in plugin install directory
+
+Bug#: 			42 
+Product: 		Jack 
+Version: 		v1.3.6 
+Platform: 		PC 
+Status: 		RESOLVED
+Severity: 		enhancement 
+Resolution: 	FIXED
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		eclipse plugin 
+Description: 
+	If jack cannot start simplify from the plugin isntall directory, it should try 
+	to start it from the default system path.
+	This would simplifies the development, as well as allow users not to install 
+	simplify if they already have it.
+
+--------------------------------------------------------------------------------
+Display the complete file in the Jpov viewer
+
+Bug#: 			35  
+Product: 		Jack  
+Version: 		  
+Platform: 		PC 
+Status: 		RESOLVED
+Severity: 		major
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jpov viewer
+Description:  
+When the source is too long, it is not displayed completly.
+
+--------------------------------------------------------------------------------
+Find an explicit name for modified fields
+
+Bug#: 			34
+Product: 		Jack  
+Version: 		v1.3.6   
+Platform: 		PC
+Status: 		RESOLVED
+Severity: 		normal
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		
+Description:  
+	this.f_test_x_0 is not explicit at all.
+	
+--------------------------------------------------------------------------------
+Show the Java goal by default
+
+Bug#: 			33
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC
+Status: 		RESOLVED
+Severity: 		minor
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		
+Description:  
+
+--------------------------------------------------------------------------------
+ask to recompile when editing a non upto date file
+
+Bug#: 			32  
+Product: 		Jack  
+Version: 		v1.3.6    
+Platform: 		PC   
+Status: 		RESOLVED
+Severity: 		enhancement
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		
+Description:  
+	Add the possibility to not ask and to do it automatically
+
+--------------------------------------------------------------------------------
+possibility to see goals and hypotheses at the same time
+
+Bug#: 			27  
+Product: 		Jack  
+Version: 		v1.3.6    
+Platform: 		PC
+Status: 		RESOLVED
+Severity: 		enhancement
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		jpov
+Description:  
+
+--------------------------------------------------------------------------------
+Save automatically before compiling
+
+Bug#: 			26  
+Product: 		Jack  
+Version: 		v1.3.6    
+Platform: 		PC
+Status: 		RESOLVED
+Severity: 		enhancement
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	MHU
+Component: 		eclipse plugin
+Description:  
+
+--------------------------------------------------------------------------------
+Check problems with minus sign and spaces with simplify prover 
+
+Bug#: 			24  
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution:  	INVALID
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		eclipse plugin  
+Description:  
+
+--------------------------------------------------------------------------------
+The lemma concerning a method call is not correctly quantified when the method 
+declares to modify everything. 
+
+Bug#: 			21
+Product: 		Jack  
+Version: 		v1.3.6  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution:  	FIXED
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b
+Description:  
+
+--------------------------------------------------------------------------------
+Some temporay variables remain in lemmas 
+
+Bug#: 			17  
+Product: 		Jack  
+Version: 		v1.3.3  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b  
+Description:  
+public class Square {
+
+	//@ ensures \result == x *x;
+	static /*@ pure */ int sqr(int x) {
+		return x*x;
+	}
+	
+	/*@
+	  @ normal_behavior
+	  @ requires x >= 0;
+	  @ ensures \result >= 0 && sqr(\result) <= x && x < sqr(\result+1);
+	  @*/
+	static int sqrt(int x) {
+		int c = 0;
+		int s = 1;
+		//@ loop_modifies c,s;
+		//@ loop_invariant c >= 0 && x >= sqr(c) && s == sqr(c+1);
+		while (s <= x) {
+			c++;
+			s += 2*c + 1;
+		}
+		return c;
+	}	
+
+}
+
+--------------------------------------------------------------------------------
+Class defined in the default package can not be edited 
+
+Bug#: 			16  
+Product: 		Jack  
+Version: 		unspecified  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	ARE
+Reported By: 	ARE
+Component: 		eclipse plugin  
+Description:  
+Classes defined in the default package cannot be edited: The Jack viewer 
+indicates that the file should be compiled, event if it is already.
+
+--------------------------------------------------------------------------------
+NullPointerException in Package.getDirectory() 
+
+Bug#: 			15  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	ARE
+Reported By: 	ARE
+Component: 		jml2b  
+Description:  
+NullPointerExceptions somteimes occurs in Package.getDirectory().
+It seems that those exceptions occurs when a link error is corrected: running 
+Jack on a file that has a link error, correcting the error and then running 
+Jack again on this file should trigger a NullPointerException in 
+Package.getDirectory().
+
+--------------------------------------------------------------------------------
+Problem with native or ghost methods 
+
+Bug#: 			14  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		Jpov  
+Description:  
+The PO generator aborts on a NamedNode.getBName() - 1 error when generating 
+proof obligations on ghost native methods.
+Removing the ghost and native qualifier as well as adding a default body for 
+the method (return 0; return null, etc...) supress the error.
+
+--------------------------------------------------------------------------------
+Error markers should be added to files belonging to another project 
+
+Bug#: 			13
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	ARE
+Reported By: 	ARE
+Component: 		eclipse plugin  
+Description:  
+Currenlty, error markers are only added to files that belongs to the same 
+project than the project used to generate proof obligations. However, in some 
+cases, error can occur in files belonging to other projects. In those cases, it 
+would be better to add markers to those files.
+
+--------------------------------------------------------------------------------
+getBName error on temporary fields 
+
+Bug#: 			12  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b  
+Description:  
+
+------- Additional Comments From LBU 2002-10-28 -------
+Add TemporaryField class with a getBName() method that does not throw an 
+exception when the field has no nameIndex.
+
+--------------------------------------------------------------------------------
+keywords everything and nothing are not parsed 
+
+Bug#: 			11  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		jml2b  
+Description:  
+
+--------------------------------------------------------------------------------
+NullPointerException when generating POs and no B project 
+
+Bug#: 			10  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		jml2b  
+Description:  
+	NullPointerExceptions occurs when generating proof obligations for files that 
+have no associated B project.
+
+------- Additional Comments From ARE 2002-10-28 -------
+
+Maybe invalid bug report (The fact that there were no B project may be a 
+coincidence with the NullPointerException encountered).
+
+--------------------------------------------------------------------------------
+NullPointerException when using ghost methods 
+
+Bug#: 			9
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal 
+Resolution: 	FIXED 
+Assigned To: 	LBU  
+Reported By: 	ARE
+Component: 		jml2b
+Description:  
+	Jack generates a NullPointerException when generating the proof obligations of 
+files defining ghost methods that are not abstract.
+
+------- Additional Comments From ARE 2002-10-23 -------
+Fixed in Method during parsing, by adding the ABSTRACT flag to methods that 
+already have the GHOST flag (the ABSTRACT flag as already added to native 
+methods for similar reasons).
+
+--------------------------------------------------------------------------------
+Proof obligations not correctly generated for Java boolean operators 
+
+Bug#: 			8  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	ARE
+Component: 		jml2b  
+Description:  
+
+--------------------------------------------------------------------------------
+Some lemmas are not correct. 
+
+Bug#: 			6  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b  
+Description:  
+
+t1 <: t2 is translated in t1 : subtypes~[{t2}]
+rather than being translated t1 : subtypes[{t2}].
+
+--------------------------------------------------------------------------------
+link error with size() method. 
+
+Bug#: 			4  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	ARE
+Reported By: 	LBU
+Component: 		jml2b 
+Description:  
+	The method size() is linked with java.util.AbstractCollection.size(); 
+	it should be linked with java.util.Vector.size() 
+
+ import java.util.Vector;
+
+ public class c11 {
+
+  Vector a;
+
+  int c() {
+   int i = a.size();
+   Object o = a.elementAt(i);
+   return i/i;
+  }
+ }
+
+--------------------------------------------------------------------------------
+It is impossible to edit a jpo when the server is unreachable. 
+
+Bug#:		 	3  
+Product: 		Jack  
+Version: 		v1.2.0  
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED 
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		Jpov  
+Description:  
+
+--------------------------------------------------------------------------------
+Constructors should not generate modifies lemma on super class fields. 
+
+Bug#:			2
+Product:		Jack  
+Version:		v1.2.0
+Platform:		PC  
+Status: 		RESOLVED  
+Severity: 		normal
+Resolution: 	INVALID 
+Assigned To: 	LBU
+Reported By: 	LBU
+Component: 		jml2b
+Description:  
+
+--------------------------------------------------------------------------------
+Test
+
+Bug#:			1  
+Product: 		Jack  
+Version: 		
+Platform: 		PC  
+Status: 		RESOLVED  
+Severity: 		normal  
+Resolution: 	FIXED
+Assigned To: 	ARE
+Reported By: 	ARE
+Component: 		eclipse plugin  
+Description:  
+	test of bugzilla
+--------------------------------------------------------------------------------
+

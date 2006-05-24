@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Programmers Guide"> 
+	<topic label="API Reference" href="doc/apidocs/overview-summary.html">
+	<topic label="jab" href="doc/apidocs/jab/package-summary.html"/>
+	<topic label="jack.plugin" href="doc/apidocs/jack/plugin/package-summary.html">
+	</topic>
+	<topic label="jml2b" href="doc/apidocs/jml2b/package-summary.html">
+	</topic>
+	<topic label="jml2b.exceptions" href="doc/apidocs/jml2b/exceptions/package-summary.html">
+	</topic>
+	<topic label="jml2b.formula" href="doc/apidocs/jml2b/formula/package-summary.html">
+	</topic>
+	<topic label="jml2b.link" href="doc/apidocs/jml2b/link/package-summary.html">
+	</topic>
+	<topic label="jml2b.pog" href="doc/apidocs/jml2b/pog/package-summary.html">
+	</topic>
+	<topic label="jml2b.pog.substitution" href="doc/apidocs/jml2b/pog/substitution/package-summary.html">
+	</topic>
+	<topic label="jml2b.structure.java" href="doc/apidocs/jml2b/structure/java/package-summary.html">
+	</topic>
+	<topic label="jml2b.structure.jml" href="doc/apidocs/jml2b/structure/jml/package-summary.html">
+	</topic>
+	<topic label="jml2b.structure.statement" href="doc/apidocs/jml2b.structure/statement/package-summary.html">
+	</topic>
+	<topic label="jml2b.util" href="doc/apidocs/jml2b/util/package-summary.html">
+	</topic>
+	<topic label="jpov" href="doc/apidocs/jpov/package-summary.html">
+	</topic>
+	<topic label="jpov.formula" href="doc/apidocs/jpov/formula/package-summary.html">
+	</topic>
+	<topic label="jpov.structure" href="doc/apidocs/jpov/structure/package-summary.html">
+	</topic>
+	<topic label="jpov.substitution" href="doc/apidocs/jpov/substitution/package-summary.html">
+	</topic>
+	<topic label="jpov.viewer" href="doc/apidocs/jpov/viewer/package-summary.html">
+	</topic>
+	<topic label="jpov.viewer.lemma" href="doc/apidocs/jpov/viewer/lemma/package-summary.html">
+	</topic>
+	<topic label="jpov.viewer.source" href="doc/apidocs/jpov/viewer/source/package-summary.html">
+	</topic>
+	<topic label="jpov.viewer.tree" href="doc/apidocs/jpov/viewer/tree/package-summary.html">
+	</topic>
+	</topic>
+</toc>

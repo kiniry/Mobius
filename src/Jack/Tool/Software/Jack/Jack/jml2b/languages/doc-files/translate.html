@@ -1,0 +1,53 @@
+<h1>Formula</h1>
+<h2>BinaryForm</h2>
+<ul>
+<li> B_APPLICATION
+<li> B_COUPLE
+<li> B_IN
+<li> B_INTERSECTION
+<li> B_INTERVAL
+<li> B_OVERRIDING<br>
+The right part can be:
+<ul>
+<li> B_COUPLE
+<li> CONSTANT_FUNCTION
+<li> CONSTANT_FUNCTION_FUNCTION
+<li> B_OVERRIDING
+<li> Ja_IDENT
+</ul>
+<li> B_SET_EQUALS
+<li> B_SUBSTRACTION_DOM<br>
+This formula allows to formulate lemmas associated to assignable clause. It allows to formulate that a field is modified only on some instances.<br>
+The left part corresponds to a set of modifiable instances.<br>
+The right part can be:
+<ul>
+<li> B_FUNCTION_EQUALS<br>
+The left and the right parts correspond to two functions that have to be identical excepted on some subset of their domain corresponding to the modifiable instances.
+<li> EQUALS_ON_OLD_INSTANCES<br>
+The left part and the right parts correspond to two functions that have to identical only on the current instances set and excepted on some subset of their domain corresponding to the modifiable instances.
+<li> B_SUBSTRACTION_DOM<br>
+In this case, they are mutliple set of modifiable instances, the defintion is recursive.
+</ul>
+<li> B_TOTALFUNCTION
+<li> B_TOTALINJECTION
+<li> B_UNION
+<li> CONSTANT_FUNCTION
+<li> EQUALS_ON_OLD_INSTANCES
+<li> GUARDED_SET
+<li> LOCAL_VAR_DECL
+<li> Ja_COMMA
+<li> Ja_ADD_OP
+<li> Ja_MOD
+<li> Ja_NEGATIVE_OP
+<li> Ja_MUL_OP
+<li> Ja_DIV_OP
+<li> Ja_EQUAL_OP
+<li> Ja_DIFFERENT_OP
+<li> Ja_AND_OP
+<li> Ja_OR_OP
+<li> Ja_LE_OP
+<li> Ja_LESS_OP
+<li> Ja_GE_OP
+<li> Ja_GREATER_OP
+<li> Jm_IMPLICATION_OP
+</ul>

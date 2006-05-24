@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin id="jack.plugin"
+        name="Jack plug-in"
+   version="1.8.5"
+   provider-name="INRIA Sophia - Everest project"
+   class="jack.plugin.JackPlugin">
+   <runtime>
+      <library name="jack.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+     <extension-point id="Prover" name="prover" schema="schema/Prover.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Jack"
+            icon="jpov/icons/jack_perspective.gif"
+            class="jack.plugin.perspective.JackPerspective"
+            id="jack.plugin.perspective.JackPerspective">
+      </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml"
+            primary="true">
+      </toc>
+      <toc
+            file="tocgs.xml">
+      </toc>
+      <toc
+            file="tocconcepts.xml">
+      </toc>
+      <toc
+            file="tocapi.xml">
+      </toc>
+   </extension>
+<!--   
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+      </perspectiveExtension>
+   </extension>
+-->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="jack.plugin.compile.CompileAction">
+         <menu
+               label="Jack"
+               path="additions"
+               id="jack_menu">
+            <separator
+                  name="slot1">
+            </separator>
+         </menu>
+         <action
+               label="Metrics"
+               class="jack.plugin.metrics.MetricsAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.MetricsAction">
+         </action>
+         <menu
+               label="Source"
+               path="jack_menu/slot1"
+               id="source">
+            <separator
+                  name="source_slot">
+            </separator>
+         </menu>
+         <menu
+               label="Prove"
+               path="jack_menu/slot1"
+               id="prover">
+            <separator
+                  name="prover_slot">
+            </separator>
+         </menu>
+         <menu
+               label="Bytecode"
+               path="jack_menu/slot1"
+               id="bytecode">
+            <separator
+                  name="bytecode_slot">
+            </separator>
+         </menu>
+          <menu
+               label="Prove"
+               path="jack_menu/bytecode/bytecode_slot"
+               id="prover_jpo">
+            <separator
+                  name="prover_slot_jpo">
+            </separator>
+         </menu>
+        <action
+               label="Edit"
+               class="jack.plugin.edit.EditJpoAction"
+               menubarPath="jack_menu/bytecode/bytecode_slot"
+               id="jack.plugin.openAction">
+         </action>
+         <action
+               label="Compute specification clause"
+               class="jack.plugin.source.AddJmlAction"
+               menubarPath="jack_menu/source/source_slot"
+               id="jack.plugin.addModifiesAction">
+         </action>
+         <action
+               label="Edit"
+               class="jack.plugin.edit.EditAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.openAction">
+         </action>
+<!--         
+         <action
+               label="Verify bytecode"
+               class="jack.plugin.compile.VerifyBytecodeAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.newAction">
+         </action>
+-->
+         <action
+               label="Verify source"
+               class="jack.plugin.compile.VerifySourceAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.newAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.jpo"
+            id="prove.edit.jpo">
+         <menu
+               label="Jack"
+               path="additions"
+               id="jack_menu_jpo">
+            <separator
+                  name="slot1">
+            </separator>
+         </menu>
+         <menu
+               label="Prove"
+               path="jack_menu_jpo/slot1"
+               id="prover_jpo">
+            <separator
+                  name="prover_slot_jpo">
+            </separator>
+         </menu>
+         <action
+               label="Edit"
+               class="jack.plugin.edit.EditAction"
+               menubarPath="jack_menu_jpo/slot1"
+               id="jack.plugin.openAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.spec"
+            id="propagate.annotation">
+         <menu
+               label="Jack"
+               path="additions"
+               id="jack_menu">
+            <separator
+                  name="slot1">
+            </separator>
+         </menu>
+         <action
+               label="Verify source"
+               class="jack.plugin.compile.VerifySourceAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.newAction1">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.prop"
+            id="propagate.annotation1">
+         <menu
+               label="Jack"
+               path="additions"
+               id="jack_menu">
+            <separator
+                  name="slot1">
+            </separator>
+         </menu>
+         <action
+               label="Verify source"
+               class="jack.plugin.compile.VerifySourceAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.newAction2">
+         </action>
+      </objectContribution>
+   </extension>
+<!--
+  <extension point="org.eclipse.ui.editors"> 
+      <editor 
+         id="jack.plugin.perspective.CaseEditor" 
+         icon="jpov/icons/jml_compile.gif"
+         name="Case Editor" 
+         class="jack.plugin.perspective.CaseEditor"
+         default="false"> 
+      </editor> 
+   </extension> 
+-->
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Jack"
+            class="jack.plugin.JackPreferencePage"
+            id="jack.plugin.JackPreferencePage">
+      </page>
+      <page
+            name="compiler"
+            category="jack.plugin.JackPreferencePage"
+            class="jack.plugin.JackPreferencePageCompiler"
+            id="jack.plugin.JackPreferencePageCompiler">
+      </page>
+      <page
+            name="lemma viewer"
+            category="jack.plugin.JackPreferencePage"
+            class="jack.plugin.JackPreferencePageEditor"
+            id="jack.plugin.JackPreferencePageEditor">
+      </page>
+      <page
+            name="provers"
+            category="jack.plugin.JackPreferencePage"
+            class="jack.plugin.JackPreferencePageProvers"
+            id="jack.plugin.JackPreferencePageProvers">
+      </page>
+   </extension>
+   <extension
+         id="jack.plugin.views"
+         name="Jack views"
+         point="org.eclipse.ui.views">
+      <category
+            name="Jack"
+            id="jack.category">
+      </category>
+      <view
+            name="Jack Proof View"
+            icon="jpov/icons/proof_task.gif"
+            category="jack.category"
+            class="jack.plugin.prove.ProofView"
+            id="jack.plugin.proofview">
+      </view>
+      <view
+            name="Jack Metrics View"
+            icon="jpov/icons/jack_metrics.gif"
+            category="jack.category"
+            class="jack.plugin.metrics.MetricsView"
+            id="jack.plugin.metricsview">
+      </view>
+      <view
+            name="Lemma viewer"
+            icon="jpov/icons/lemma_view.gif"
+            category="jack.category"
+            class="jack.plugin.perspective.LemmaViewer"
+            id="jack.plugin.perspective.LemmaViewer">
+      </view>
+      <view
+            name="Case Explorer"
+            icon="jpov/icons/case_explorer.gif"
+            category="jack.category"
+            class="jack.plugin.perspective.CaseExplorer"
+            id="jack.plugin.perspective.CaseExplorer">
+      </view>
+      <view
+            name="Case Viewer"
+            icon="jpov/icons/case_viewer.gif"
+            category="jack.category"
+            class="jack.plugin.perspective.SourceCaseViewer"
+            id="jack.plugin.perspective.SourceCaseViewer">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            name="Jack"
+            class="jack.plugin.JackProjectPropertyPage"
+            id="jack.plugin.projectproperty">
+      </page>
+   </extension>
+   <extension
+         id="jackproblem"
+         name="jack.plugin.jackproblem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Jack Buttons"
+            visible="true"
+            id="jack.plugin.actionSet">
+         <action
+               label="JML Edit"
+               icon="jpov/icons/jml_edit.gif"
+               tooltip="Edit the selected JML file in the viewer"
+               class="jack.plugin.edit.EditButton"
+               toolbarPath="Normal/Jack"
+               id="jack.plugin.toolbar.editAction">
+            <selection
+                  class="org.eclipse.jdt.core.ICompilationUnit">
+            </selection>
+         </action>
+         <action
+               label="JML Compile"
+               icon="jpov/icons/jml_compile.gif"
+               tooltip="Compile the selected JML file(s)"
+               class="jack.plugin.compile.CompileButton"
+               toolbarPath="Normal/Jack"
+               id="jack.plugin.toolbar.compileAction">
+            <selection
+                  class="org.eclipse.jdt.core.ICompilationUnit">
+            </selection>
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            lightweight="true"
+            location="TOP_RIGHT"
+            label="Jml Compiled Decorator"
+            state="false"
+            class="jack.plugin.compile.CompilationUnitDecorator"
+            id="jack.plugin.jmlcompileddecorator">
+         <enablement>
+            <objectClass
+                  name="org.eclipse.core.resources.IResource">
+            </objectClass>
+         </enablement>
+      </decorator>
+   </extension>
+
+</plugin>
