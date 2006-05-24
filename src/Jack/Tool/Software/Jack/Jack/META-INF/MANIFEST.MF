@@ -136,3 +136,4 @@ Export-Package: jack.plugin,
  jpov.viewer.lemma,
  jpov.viewer.source,
  jpov.viewer.tree
+Bundle-ClassPath: jack.jar
