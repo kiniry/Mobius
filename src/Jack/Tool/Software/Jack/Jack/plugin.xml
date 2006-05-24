@@ -24,17 +24,17 @@
    <extension
          point="org.eclipse.help.toc">
       <toc
-            file="toc.xml"
+            file="help/toc.xml"
             primary="true">
       </toc>
       <toc
-            file="tocgs.xml">
+            file="help/tocgs.xml">
       </toc>
       <toc
-            file="tocconcepts.xml">
+            file="help/tocconcepts.xml">
       </toc>
       <toc
-            file="tocapi.xml">
+            file="help/tocapi.xml">
       </toc>
    </extension>
 <!--   
