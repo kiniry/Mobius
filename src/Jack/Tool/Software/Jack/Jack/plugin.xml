@@ -16,7 +16,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             name="Jack"
-            icon="jpov/icons/jack_perspective.gif"
+            icon="imgs/icons/jack_perspective.gif"
             class="jack.plugin.perspective.JackPerspective"
             id="jack.plugin.perspective.JackPerspective">
       </perspective>
@@ -251,35 +251,35 @@
       </category>
       <view
             name="Jack Proof View"
-            icon="jpov/icons/proof_task.gif"
+            icon="imgs/icons/proof_task.gif"
             category="jack.category"
             class="jack.plugin.prove.ProofView"
             id="jack.plugin.proofview">
       </view>
       <view
             name="Jack Metrics View"
-            icon="jpov/icons/jack_metrics.gif"
+            icon="imgs/icons/jack_metrics.gif"
             category="jack.category"
             class="jack.plugin.metrics.MetricsView"
             id="jack.plugin.metricsview">
       </view>
       <view
             name="Lemma viewer"
-            icon="jpov/icons/lemma_view.gif"
+            icon="imgs/icons/lemma_view.gif"
             category="jack.category"
             class="jack.plugin.perspective.LemmaViewer"
             id="jack.plugin.perspective.LemmaViewer">
       </view>
       <view
             name="Case Explorer"
-            icon="jpov/icons/case_explorer.gif"
+            icon="imgs/icons/case_explorer.gif"
             category="jack.category"
             class="jack.plugin.perspective.CaseExplorer"
             id="jack.plugin.perspective.CaseExplorer">
       </view>
       <view
             name="Case Viewer"
-            icon="jpov/icons/case_viewer.gif"
+            icon="imgs/icons/case_viewer.gif"
             category="jack.category"
             class="jack.plugin.perspective.SourceCaseViewer"
             id="jack.plugin.perspective.SourceCaseViewer">
@@ -310,7 +310,7 @@
             id="jack.plugin.actionSet">
          <action
                label="JML Edit"
-               icon="jpov/icons/jml_edit.gif"
+               icon="imgs/icons/jml_edit.gif"
                tooltip="Edit the selected JML file in the viewer"
                class="jack.plugin.edit.EditButton"
                toolbarPath="Normal/Jack"
@@ -321,7 +321,7 @@
          </action>
          <action
                label="JML Compile"
-               icon="jpov/icons/jml_compile.gif"
+               icon="imgs/icons/jml_compile.gif"
                tooltip="Compile the selected JML file(s)"
                class="jack.plugin.compile.CompileButton"
                toolbarPath="Normal/Jack"
