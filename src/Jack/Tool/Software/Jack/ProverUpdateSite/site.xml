@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/ProverFeature_1.0.0.jar" id="ProverFeature" version="1.0.0"/>
-   <feature url="features/ProverFeature_1.0.1.jar" id="ProverFeature" version="1.0.1"/>
-   <feature url="features/ProverFeature_1.0.2.jar" id="ProverFeature" version="1.0.2"/>
-   <feature url="features/ProverFeature_1.0.3.jar" id="ProverFeature" version="1.0.3"/>
-   <feature url="features/ProverEditorFeature_1.0.0.jar" id="ProverEditorFeature" version="1.0.0"/>
-   <feature url="features/ProverFeature_1.0.4.jar" id="ProverFeature" version="1.0.4"/>
-   <feature url="features/ProverFeature_1.0.5.jar" id="ProverFeature" version="1.0.5"/>
+   <feature url="features/ProverFeature_1.0.4.jar" id="ProverFeature" version="1.0.4">
+      <category name="provers"/>
+   </feature>
+   <category-def name="provers" label="Jack Provers"/>
 </site>
