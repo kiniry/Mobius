@@ -6,9 +6,7 @@ import javafe.ast.Identifier;
 import javafe.util.Assert;
 
 
-public class TagConstants
-    extends javafe.tc.TagConstants
-    implements GeneratedTags
+public class TagConstants extends GeneratedTags
 {
                 
     //// keywords

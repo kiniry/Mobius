@@ -8,6 +8,11 @@ import java.util.Hashtable;
 import javafe.ast.*;
 
 import javafe.ast.Expr;
+import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
+import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
+import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
+import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
+import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 
@@ -27,27 +32,27 @@ public class GenericParameterPragma extends TypeModifierPragma {
 
   public int loc;
 
-                        
-        public int getStartLoc() { return loc; }
-        public int getEndLoc() { 
-                if (args.size()==0)
-            return super.getEndLoc();
-                
-                FormalParaDecl e= args.elementAt(args.size()-1);
-                return e.getEndLoc();
-        }
+			
+	public int getStartLoc() { return loc; }
+	public int getEndLoc() { 
+		if (args.size()==0)
+	    return super.getEndLoc();
+		
+		FormalParaDecl e= args.elementAt(args.size()-1);
+		return e.getEndLoc();
+	}
 
 
 // Generated boilerplate constructors:
 
  /**
-  ** Construct a raw GenericParameterPragma whose class invariant(s) have not
-  ** yet been established.  It is the caller's job to
-  ** initialize the returned node's fields so that any
-  ** class invariants hold.
-  **/
- //@ requires I_will_establish_invariants_afterwards
- protected GenericParameterPragma() {}    //@ nowarn Invariant,NonNullInit
+  * Construct a raw GenericParameterPragma whose class invariant(s) have not
+  * yet been established.  It is the caller's job to
+  * initialize the returned node's fields so that any
+  * class invariants hold.
+  */
+ //@ requires I_will_establish_invariants_afterwards;
+ protected GenericParameterPragma() {}    //@ nowarn Invariant,NonNullInit;
 
 
 // Generated boilerplate methods:
@@ -72,7 +77,7 @@ public class GenericParameterPragma extends TypeModifierPragma {
     else index -= sz;
 
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
- }   //@ nowarn Exception
+ }   //@ nowarn Exception;
 
  public final String toString() {
     return "[GenericParameterPragma"
@@ -98,9 +103,9 @@ public class GenericParameterPragma extends TypeModifierPragma {
        this.args.elementAt(i).check();
  }
 
- //@ ensures \result!=null
+ //@ ensures \result != null;
  public static GenericParameterPragma make(/*@ non_null @*/ FormalParaDeclVec args, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true
+    //@ set I_will_establish_invariants_afterwards = true;
     GenericParameterPragma result = new GenericParameterPragma();
     result.args = args;
     result.loc = loc;

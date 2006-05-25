@@ -8,6 +8,11 @@ import java.util.Hashtable;
 import javafe.ast.*;
 
 import javafe.ast.Expr;
+import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
+import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
+import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
+import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
+import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 
@@ -26,21 +31,21 @@ public class NowarnPragma extends LexicalPragma {
 
         public int loc;
 
-        boolean triggered = false;
+	boolean triggered = false;
 
-        public int getStartLoc() { return loc; }
+	public int getStartLoc() { return loc; }
 
 
 // Generated boilerplate constructors:
 
  /**
-  ** Construct a raw NowarnPragma whose class invariant(s) have not
-  ** yet been established.  It is the caller's job to
-  ** initialize the returned node's fields so that any
-  ** class invariants hold.
-  **/
- //@ requires I_will_establish_invariants_afterwards
- protected NowarnPragma() {}    //@ nowarn Invariant,NonNullInit
+  * Construct a raw NowarnPragma whose class invariant(s) have not
+  * yet been established.  It is the caller's job to
+  * initialize the returned node's fields so that any
+  * class invariants hold.
+  */
+ //@ requires I_will_establish_invariants_afterwards;
+ protected NowarnPragma() {}    //@ nowarn Invariant,NonNullInit;
 
 
 // Generated boilerplate methods:
@@ -65,7 +70,7 @@ public class NowarnPragma extends LexicalPragma {
     else index -= sz;
 
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
- }   //@ nowarn Exception
+ }   //@ nowarn Exception;
 
  public final String toString() {
     return "[NowarnPragma"
@@ -90,9 +95,9 @@ public class NowarnPragma extends LexicalPragma {
     if (this.checks == null) throw new RuntimeException();
  }
 
- //@ ensures \result!=null
+ //@ ensures \result != null;
  public static NowarnPragma make(/*@ non_null @*/ IdentifierVec checks, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true
+    //@ set I_will_establish_invariants_afterwards = true;
     NowarnPragma result = new NowarnPragma();
     result.checks = checks;
     result.loc = loc;

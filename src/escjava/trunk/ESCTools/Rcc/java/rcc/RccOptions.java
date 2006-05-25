@@ -16,6 +16,9 @@ import javafe.util.UsageError;
 
 /**
  * @author rgrig
+ * 
+ * TODO: This should be a singleton to provide a simple way for the rest
+ * of the application to access options.
  */
 public class RccOptions extends SrcToolOptions {
 
@@ -231,10 +234,5 @@ public class RccOptions extends SrcToolOptions {
 
     }
 
-}
-
-/** Boolean option */
-class BO {
-    
 }
 

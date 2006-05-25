@@ -8,6 +8,11 @@ import java.util.Hashtable;
 import javafe.ast.*;
 
 import javafe.ast.Expr;
+import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
+import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
+import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
+import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
+import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 
@@ -23,20 +28,20 @@ import javafe.util.Location;
 public class ReadOnlyModifierPragma extends ModifierPragma {
   public int loc;
 
-                        
-        public int getStartLoc() { return loc; }
+			
+	public int getStartLoc() { return loc; }
 
 
 // Generated boilerplate constructors:
 
   /**
-   ** Construct a raw ReadOnlyModifierPragma whose class invariant(s) have not
-   ** yet been established.  It is the caller's job to
-   ** initialize the returned node's fields so that any
-   ** class invariants hold.
-   **/
-  //@ requires I_will_establish_invariants_afterwards
-  protected ReadOnlyModifierPragma() {}    //@ nowarn Invariant,NonNullInit
+   * Construct a raw ReadOnlyModifierPragma whose class invariant(s) have not
+   * yet been established.  It is the caller's job to
+   * initialize the returned node's fields so that any
+   * class invariants hold.
+   */
+  //@ requires I_will_establish_invariants_afterwards;
+  protected ReadOnlyModifierPragma() {}    //@ nowarn Invariant,NonNullInit;
 
 
 // Generated boilerplate methods:
@@ -54,7 +59,7 @@ public class ReadOnlyModifierPragma extends ModifierPragma {
      int sz;
 
      throw new IndexOutOfBoundsException("AST child index " + indexPre);
-  }   //@ nowarn Exception
+  }   //@ nowarn Exception;
 
   public final String toString() {
      return "[ReadOnlyModifierPragma"
@@ -77,9 +82,9 @@ public class ReadOnlyModifierPragma extends ModifierPragma {
   public void check() {
   }
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public static ReadOnlyModifierPragma make(int loc) {
-     //@ set I_will_establish_invariants_afterwards = true
+     //@ set I_will_establish_invariants_afterwards = true;
      ReadOnlyModifierPragma result = new ReadOnlyModifierPragma();
      result.loc = loc;
      return result;

@@ -21,6 +21,14 @@ import java.io.IOException;
 public class ErrorPragmaParser implements PragmaParser {
   
 
+    /**
+     * rgrig: No idea what this should do. The documentation 
+     * in the PragmaParser interface says "todo: document this".
+     */
+    public javafe.ast.FieldDecl isPragmaDecl(/*@ non_null @*/ Token l) {
+        return null;
+    }
+
     /** The error message to report **/
     public String msg;
 

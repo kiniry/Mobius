@@ -251,7 +251,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                     typeParametersDecoration.set(currentSig, pp.args);
                     for (int i = 0; i<pp.args.size(); i++) {
                         FormalParaDecl parameter = pp.args.elementAt(i);
-                        env.resolveType(parameter.type);
+                        env.resolveType(currentSig, parameter.type); // TODO: check (rgrig)
                         FieldDecl decl
                           = FieldDecl.make(parameter.modifiers  | Modifiers.ACC_FINAL, 
                                              parameter.pmodifiers,

@@ -26,7 +26,7 @@ prot:
 	chmod -fR a+rwX .
 
 doc:	
-	javadoc
+	javadoc -d doc rcc
 	cd java/rcc; ${MAKE} doc
 
 javadoc: source
@@ -91,6 +91,7 @@ rcc:	source
 	${JAVAC} -d ${CLASSDIRECTORY} \
 	./rcc/Main.java \
 	./rcc/RccOptions.java \
+	./rccwizard/RccOptions.java \
 	./rcc/ast/CloneWithSubstitution.java\
 	./rcc/ast/EqualsAST.java\
 	./rccwizard/Main.java\

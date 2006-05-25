@@ -6,6 +6,7 @@ package rccwizard;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javafe.Options;
 import javafe.ast.*;
 
 import javafe.reader.StandardTypeReader;
@@ -31,68 +32,36 @@ import javafe.util.*;
  **/
 
 public class Main extends javafe.SrcTool {
+    
+    public static Main inst = null;
+    
+    public Main() {
+        //assert (inst == null);
+        inst = this;
+    }
 
-     /** Our version number **/
-     public final String version = "0.0 based on fwdwizard 1.0.0, 14 July 1999";
+    /** Our version number **/
+    public final String version = "0.0 based on fwdwizard 1.0.0, 14 July 1999";
 
-    public static boolean pmnr  = false; //  public methods have no requires
-    public static boolean readonly  = false; //  only insert readonly annot.
-    public static boolean guessnull  = true; 
- 
-
-    /***************************************************
-     *                                                 *
-     * Generating an options message:                       *
-     *                                                 *
-     ***************************************************/
-
+    // === Options processing ===
     /**
-     ** Return the name of this tool.  E.g., "ls" or "cp".<p>
-     **
-     ** Used in usage and error messages.<p>
-     **/
+     * rgrig: The following two functions follow the ESC/Java2 convention.
+     */
+    
+    
+    public /*@ non_null */ Options makeOptions() {
+        return new RccOptions();
+    }
+    
+    public RccOptions options() {
+        return (RccOptions)options;
+    }
+
+
+    /** My name is... */
     public String name() { return "rccwizard annotation generator"; }
 
-    /**
-     ** Print option option information to
-     ** <code>System.err</code>. <p>
-     **/
-    public void showOptions() {
-        System.err.println(" -pmnr \t\t\t public methods cannot have requires clauses   ");
-        System.err.println(" -noguessnull \t\t\t don't guess null as guarding lock  ");
-        System.err.println(" -readonly \t\t\t only guess readonly annotations");
-        super.showOptions();
-    }
-
   
-    /***************************************************
-     *                                                 *
-     * Option processing:                               *
-     *                                                 *
-     ***************************************************/
-
-
-    /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **/
-    public int processOption(String option, String[] args, int offset) {
-        if (option.equals("-pmnr")) {
-            pmnr = true;
-            return offset;
-        } else if (option.equals("-readonly")) {
-            readonly = true;
-            return offset;
-        } else if (option.equals("-noguessnull")) {
-            guessnull = false;
-            return offset;
-        }
-        return super.processOption(option, args, offset);
-    }
-
-
     /**
      ** This method is called on each <code>CompilationUnit</code>
      ** that this tool processes.  This method overrides the implementation

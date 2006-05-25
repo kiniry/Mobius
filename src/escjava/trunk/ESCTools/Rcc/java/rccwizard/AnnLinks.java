@@ -5,7 +5,6 @@ package rccwizard;
 /*
  * Change history:
  * 28 Sep 2000  flanagan           Created
- 
  */
 
 import java.util.Enumeration;
@@ -45,35 +44,7 @@ public class AnnLinks extends javafe.SrcTool {
      **/
     public String name() { return "annotation linker"; }
     
-    /**
-     ** Print option option information to
-     ** <code>System.err</code>. <p>
-     **/
-    public void showOptions() {
-        super.showOptions();
-        System.err.println("");
-    }
-    
-    
-    /***************************************************
-     *                                                 *
-     * Option processing:                               *
-     *                                                 *
-     ***************************************************/
-    
-    /**
-     ** Process next tool option. <p>
-     **
-     ** See <code>Tool.processOption</code> for the complete
-     ** specification of this routine.<p>
-     **/
-    public int processOption(String option, String[] args, int offset) {
-        
-        // Pass on unrecognized options:
-        return super.processOption(option, args, offset);
-    }
-    
-    
+   
     /**
      ** This method is called on each <code>CompilationUnit</code>
      ** that this tool processes.  This method overrides the implementation
@@ -87,7 +58,7 @@ public class AnnLinks extends javafe.SrcTool {
     
     /***************************************************
      *                                                 *
-     *  Front-end setup: Use ESC stuff                       *
+     *  Front-end setup: Use ESC stuff                 *
      *                                                 *
      ***************************************************/
     

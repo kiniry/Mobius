@@ -51,12 +51,12 @@ public class EnvForInstantiation extends GhostEnv {
     
     public javafe.tc.TypeSig lookupSimpleTypeName(Identifier id, int loc) {
         // Check for a definition in peer:
-        javafe.tc.TypeSig result = peer.lookupType(id, loc);
+        javafe.tc.TypeSig result = peer.lookupType(null, id, loc); // TODO: check
         if (result!=null)
             return result;
         
         // Otherwise, look to enclosing scopes...
-        return parent.lookupSimpleTypeName(id, loc);
+        return parent.lookupSimpleTypeName(null, id, loc); // TODO: check
     }
     
     

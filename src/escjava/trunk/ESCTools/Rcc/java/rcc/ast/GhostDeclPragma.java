@@ -8,6 +8,11 @@ import java.util.Hashtable;
 import javafe.ast.*;
 
 import javafe.ast.Expr;
+import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
+import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
+import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
+import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
+import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
 import javafe.util.Assert;
 import javafe.util.Location;
 
@@ -31,7 +36,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
   public void setParent(TypeDecl p) {
     super.setParent(p);
     if (decl!=null)
-        decl.setParent(p);
+	decl.setParent(p);
   }
 
   public int getStartLoc() { return loc; }
@@ -41,13 +46,13 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
 // Generated boilerplate constructors:
 
   /**
-   ** Construct a raw GhostDeclPragma whose class invariant(s) have not
-   ** yet been established.  It is the caller's job to
-   ** initialize the returned node's fields so that any
-   ** class invariants hold.
-   **/
-  //@ requires I_will_establish_invariants_afterwards
-  protected GhostDeclPragma() {}    //@ nowarn Invariant,NonNullInit
+   * Construct a raw GhostDeclPragma whose class invariant(s) have not
+   * yet been established.  It is the caller's job to
+   * initialize the returned node's fields so that any
+   * class invariants hold.
+   */
+  //@ requires I_will_establish_invariants_afterwards;
+  protected GhostDeclPragma() {}    //@ nowarn Invariant,NonNullInit;
 
 
 // Generated boilerplate methods:
@@ -68,7 +73,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
      else index--;
 
      throw new IndexOutOfBoundsException("AST child index " + indexPre);
-  }   //@ nowarn Exception
+  }   //@ nowarn Exception;
 
   public final String toString() {
      return "[GhostDeclPragma"
@@ -93,9 +98,9 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
      this.decl.check();
   }
 
-  //@ ensures \result!=null
+  //@ ensures \result != null;
   public static GhostDeclPragma make(/*@ non_null @*/ FieldDecl decl, int loc) {
-     //@ set I_will_establish_invariants_afterwards = true
+     //@ set I_will_establish_invariants_afterwards = true;
      GhostDeclPragma result = new GhostDeclPragma();
      result.decl = decl;
      result.loc = loc;

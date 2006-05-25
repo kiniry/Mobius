@@ -71,7 +71,7 @@ public final class ErrorMsg {
             Assert.fail("unreachable");
         }
         
-        if (rcc.Main.tse) {
+        if (rcc.Main.inst.options().tse) {
             try {
                 throw new Exception();
             } catch(Exception e) {
@@ -90,7 +90,7 @@ public final class ErrorMsg {
             ErrorSet.displayColumn(declLoc);
         }
 
-        if (rcc.Main.suggest) {
+        if (rcc.Main.inst.options().suggest) {
             System.out.println("Suggestion [" + 
                                Location.toLineNumber(loc)+
                                "," + Location.toColumn(loc) + 
