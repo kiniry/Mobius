@@ -258,8 +258,8 @@ public class BytecodeEditor extends TextEditor {
 			}
 			pos++;
 		};
-		if ((res >= len) || (res < 0)) System.out.println("the end");
-		else System.out.println("<" + code.charAt(res) + ">");
+		//if ((res >= len) || (res < 0)) System.out.println("the end");
+		//else System.out.println("<" + code.charAt(res) + ">");
 		return res;
 	}
 	
