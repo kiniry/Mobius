@@ -252,11 +252,14 @@ public class BytecodeEditor extends TextEditor {
 				break;
 			if ((c < '0') || (c > '9'))
 				nline = false;
-			if (c == '\n')
+			if (c == '\n') {
 				nline = true;
-				res = pos;
+				res = pos + 1;
+			}
 			pos++;
 		};
+		if ((res >= len) || (res < 0)) System.out.println("the end");
+		else System.out.println("<" + code.charAt(res) + ">");
 		return res;
 	}
 	
