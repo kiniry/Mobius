@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="jar/jml.jar"/>
 	<classpathentry exported="true" kind="lib" path="jar/bcel-5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="jar/jmlclasslib.jar"/>
+	<classpathentry kind="lib" path="jar/pmi.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

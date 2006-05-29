@@ -10,9 +10,7 @@ Require-Bundle: org.eclipse.ui,
 Eclipse-AutoStart: true
 Export-Package: antlr,
  antlr.actions.cpp,
- antlr.actions.csharp,
  antlr.actions.java,
- antlr.build,
  antlr.collections,
  antlr.collections.impl,
  antlr.debug,
@@ -45,8 +43,10 @@ Export-Package: antlr,
  org.gjt.jclasslib.structures.attributes,
  org.gjt.jclasslib.structures.constants,
  org.gjt.jclasslib.structures.jmlattributes,
- org.gjt.jclasslib.util
+ org.gjt.jclasslib.util,
+ pmi
 Bundle-ClassPath: jar/antlr.jar,
+ jar/pmi.jar,
  jar/bcel-5.1.jar,
  jar/jml.jar,
  jar/jmlclasslib.jar
