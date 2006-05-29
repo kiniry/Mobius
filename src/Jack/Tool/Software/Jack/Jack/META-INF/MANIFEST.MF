@@ -6,8 +6,7 @@ Bundle-Version: 1.8.6
 Bundle-Activator: jack.plugin.JackPlugin
 Bundle-Vendor: INRIA Sophia - Everest project
 Bundle-Localization: plugin
-Require-Bundle: JackRequiredPlugins,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,
  org.eclipse.ui.editors,
@@ -18,7 +17,8 @@ Require-Bundle: JackRequiredPlugins,
  org.eclipse.compare,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ JackRequiredPlugins
 Eclipse-AutoStart: true
 Export-Package: jack.plugin
 Export-Package: jack.plugin,
