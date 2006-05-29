@@ -54,6 +54,9 @@ public class JmlParser extends antlr.LLkParser       implements JavaTokenTypes
 
   // an initializer, to set the tree type
   {
+	  if(getASTFactory() == null) {
+		  setASTFactory(new ASTFactory());
+	  }
       setASTNodeClass("jml.LineAST");
   }
 
@@ -400,6 +403,7 @@ protected JmlParser(TokenBuffer tokenBuf, int k) {
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
   astFactory = new ASTFactory(getTokenTypeToASTClassMap());
+  setASTNodeClass("jml.LineAST");
 }
 
 public JmlParser(TokenBuffer tokenBuf) {
@@ -411,6 +415,7 @@ protected JmlParser(TokenStream lexer, int k) {
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
   astFactory = new ASTFactory(getTokenTypeToASTClassMap());
+  setASTNodeClass("jml.LineAST");
 }
 
 public JmlParser(TokenStream lexer) {
@@ -422,6 +427,7 @@ public JmlParser(ParserSharedInputState state) {
   tokenNames = _tokenNames;
   buildTokenTypeASTClassMap();
   astFactory = new ASTFactory(getTokenTypeToASTClassMap());
+  setASTNodeClass("jml.LineAST");
 }
 
 	public final void compilation_unit() throws RecognitionException, TokenStreamException {
@@ -1801,6 +1807,7 @@ public JmlParser(ParserSharedInputState state) {
 				modifier_AST = (AST)currentAST.root;
 				modifier_AST.setType(JAVA_MODIFIER);
 				r = new Modifier(modifier_AST.getText());
+//				System.out.println(modifier_AST.getClass());
 				((LineAST)modifier_AST).type = new Modifiers(r);
 				
 			}

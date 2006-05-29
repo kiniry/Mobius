@@ -31,6 +31,7 @@ package jml;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 
+import antlr.ASTFactory;
 import antlr.ASTPair;
 import antlr.NoViableAltException;
 import antlr.ParserSharedInputState;
@@ -50,6 +51,9 @@ public class DocCommentParser extends antlr.LLkParser
 
     // an initializer, to set the tree type
     {
+    	if(getASTFactory() == null) {
+    		setASTFactory(new ASTFactory());
+    	}
         setASTNodeClass("jml.LineAST");
     }
     
