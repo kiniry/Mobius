@@ -118,11 +118,6 @@ public DocCommentParser(ParserSharedInputState state) {
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		AST documentationCommentBody_AST = null;
-		AST j_AST = null;
-		
-			//    Debug.msg(debugOn, "entering documentationCommentBody ");
-		
-		
 		try {      // for error handling
 			{
 			_loop3:
@@ -155,7 +150,6 @@ public DocCommentParser(ParserSharedInputState state) {
 			case DOC_PRE_JML:
 			{
 				jml_specs();
-				j_AST = (AST)returnAST;
 				astFactory.addASTChild(currentAST, returnAST);
 				break;
 			}
@@ -169,8 +163,7 @@ public DocCommentParser(ParserSharedInputState state) {
 			}
 			}
 			}
-			AST tmp1_AST = null;
-			tmp1_AST = (AST)astFactory.create(LT(1));
+			astFactory.create(LT(1));
 			match(Token.EOF_TYPE);
 			documentationCommentBody_AST = (AST)currentAST.root;
 		}
