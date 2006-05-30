@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="coq.plugin"
+   name="Coq plug-in"
+   version="1.3.5"
+   provider-name="INRIA Sophia - Everest project"
+   class="coqPlugin.CoqPlugin">
+
+   <runtime>
+      <library name="Coqplugin.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="jack.plugin"/>
+      <import plugin="prover.editor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="coq.editor"/>
+      <import plugin="coq.sugar"/>
+      <import plugin="JackRequiredPlugins"/>
+   </requires>
+
+
+   <extension
+         point="jack.plugin.Prover">
+      <language
+            translationResultClass="coqPlugin.CoqTranslationResult"
+            proverStatusClass="coqPlugin.ProverCoqStatus"
+            languageClass="coqPlugin.CoqLanguage"
+            proofTaskClass="coqPlugin.prooftask.CoqLightProofTask"
+            printerClass="coqPlugin.CoqPrinter"
+            interactiveProverClass="coqPlugin.CoqInteractive"
+            name="Coq"
+            id="prover.coq">
+      </language>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Coq prover"
+            category="jack.plugin.JackPreferencePageProvers"
+            class="coqPlugin.PreferencePage"
+            id="coqplugin.CoqPreferencePage">
+      </page>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="jack.plugin.compile.CompileAction">
+         <action
+               label="Prove with Coq"
+               icon="icons/coq.gif"
+               class="coqPlugin.prooftask.action.ProveCoqToughAction"
+               menubarPath="jack_menu/prover/prover_slot"
+               id="jack.plugin.proveCoqLightAction">
+         </action>
+         <action
+               label="Prove with Coq"
+               icon="icons/coq.gif"
+               class="coqPlugin.prooftask.action.ProveCoqLightAction"
+               menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo"
+               id="jack.plugin.proveCoqLightAction">
+         </action>
+       </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.jpo"
+            id="jack.plugin.compile.CompileAction">
+         <action
+               label="Prove with Coq"
+               icon="icons/coq.gif"
+               class="coqPlugin.prooftask.action.AProveAction"
+               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
+               id="jack.plugin.proveCoqAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Jack Buttons"
+            visible="true"
+            id="coqPlugin.actionSet">
+         <action
+               class="coqPlugin.prooftask.button.EvaluateAllButton"
+               icon="icons/reevaluate.gif"
+               id="Coq.reevaluate"
+               label="Reevaluate"
+               style="push"
+               toolbarPath="/Normal/Jack/2"
+               tooltip="Reevaluate proofs from the files"/>
+         <action
+               class="coqPlugin.prooftask.action.EvaluateAction"
+               icon="icons/evaluate.gif"
+               id="Coq.evaluate"
+               label="Evaluate"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/Jack/2"
+               tooltip="Evaluate the vernacular file"/>
+         <action
+               toolbarPath="Normal/Jack/2"
+               label="JML Coq Tough Prove"
+               tooltip="Prove with Coq (Tough)"
+               class="coqPlugin.prooftask.button.ProveCoqButton"
+               icon="icons/coq2.gif"
+               style="push"
+               id="coqPlugin.toolbar.proveToughAction">
+            <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+         </action>
+         <action
+               toolbarPath="Normal/Jack/2"
+               label="JML Coq Light Prove"
+               class="coqPlugin.prooftask.button.ProveCoqLightButton"
+               tooltip="Prove with Coq (Light)"
+               icon="icons/coq.gif"
+               style="push"
+               id="coqPlugin.toolbar.proveLightAction">
+            <selection
+                  class="org.eclipse.jdt.core.ICompilationUnit">
+            </selection>
+         </action>
+      </actionSet>
+   </extension>
+</plugin>
