@@ -548,7 +548,7 @@ public class JackPlugin extends AbstractUIPlugin {
 					JackPlugin.getDefault().getBundle().getEntry("/");
 			//System.out.println(install_url);
 			//getDescriptor().getInstallURL();
-			return new URL(install_url, "jpov/icons/");
+			return new URL(install_url, "imgs/icons/");
 		} catch (MalformedURLException e) {
 			return null;
 		}
