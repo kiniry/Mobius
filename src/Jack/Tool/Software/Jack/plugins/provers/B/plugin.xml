@@ -1,34 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="Bplugin"
-   name="BPlug-in"
-   version="1.2.3"
-   provider-name="INRIA - Everest team"
-   class="bPlugin.BPlugin">
+<plugin>
 
-   <runtime>
-      <library name="Bplugin.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-   <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="jack.plugin"/>
-      <import plugin="JackRequiredPlugins"/>
-      <import plugin="org.eclipse.jface.text"/>
-   </requires>
-
-
-   <extension
+     <extension
          point="jack.plugin.Prover">
       <language
             translationResultClass="bPlugin.BTranslationResult"
