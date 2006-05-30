@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -41,6 +42,10 @@ public class BPlugin extends AbstractUIPlugin {
 
 	public BPlugin() {
 		plugin = this;
+	}
+	
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		// set defaults for preferences
 		IPreferenceStore store = getPreferenceStore();
 		store.setDefault(JAB_RMI_URL, "rmi://yapok/JabService_v1_3");
