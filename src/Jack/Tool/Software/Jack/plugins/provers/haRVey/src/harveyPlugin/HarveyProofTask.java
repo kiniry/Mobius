@@ -184,7 +184,7 @@ public class HarveyProofTask extends ProofTask {
 	}
 
 	public String getProverName() {
-		return "haRVey";
+		return "Harvey";
 	}
 
 	/* (non-Javadoc)

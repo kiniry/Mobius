@@ -104,7 +104,7 @@ public class HarveyLanguage extends ALanguage {
 
 
 	public String getName() {
-		return "haRVey";
+		return "Harvey";
 	}
 
 }
