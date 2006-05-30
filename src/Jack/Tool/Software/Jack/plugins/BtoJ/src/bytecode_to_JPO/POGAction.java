@@ -10,6 +10,7 @@ package bytecode_to_JPO;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -17,15 +18,18 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Action allowing openning the selection in the Jack PO viewer view.
  * 
  * @author L. Burdy
  */
-public class POGAction implements IObjectActionDelegate {
+public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 	/** The current selection. */
-	IStructuredSelection selection;
+	Object selection;
 
 	/** the current active part */
 	IWorkbenchPart activePart;
@@ -34,8 +38,8 @@ public class POGAction implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		ProgressMonitorDialog pmd = new ProgressMonitorDialog(activePart.getSite().getShell());
-		POGGenerator pg = new POGGenerator(selection.getFirstElement());
+		ProgressMonitorDialog pmd = new ProgressMonitorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart().getSite().getShell());
+		POGGenerator pg = new POGGenerator(selection);
 		try {
 			pmd.run(false, false, pg);
 		} catch (InterruptedException ie) {
@@ -57,7 +61,16 @@ public class POGAction implements IObjectActionDelegate {
 	 */
 	public void selectionChanged(IAction action, ISelection sel) {
 		if (sel instanceof IStructuredSelection) {
-			this.selection = (IStructuredSelection) sel;
+			IStructuredSelection iss = (IStructuredSelection) sel;
+			if(iss != null)
+				selection = iss.getFirstElement();
+			if((selection instanceof ICompilationUnit) && 
+					((ICompilationUnit)selection).getPath().toString().endsWith(".java")) {
+				action.setEnabled(true);
+			}
+			else {
+				action.setEnabled(false);
+			}
 		} else {
 			// should never happen
 			MessageDialog.openError(activePart.getSite().getShell(),
@@ -66,6 +79,12 @@ public class POGAction implements IObjectActionDelegate {
 			+ sel.getClass().getName());
 		}
 
+	}
+
+	public void dispose() {
+	}
+
+	public void init(IWorkbenchWindow window) {
 	}
 
 }

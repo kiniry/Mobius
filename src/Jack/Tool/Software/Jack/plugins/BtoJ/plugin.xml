@@ -26,21 +26,6 @@
   <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
-            objectClass="org.eclipse.core.resources.IFile"
-            nameFilter="*.class"
-            id="b2J.pogation">
-         <action
-               label="JML Compile"
-               class="bytecode_to_JPO.POGAction"
-               menubarPath="additions"
-               enablesFor="1"
-               id="b2J.POGActionClass">
-         </action>
-      </objectContribution>
-   </extension>
-  <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="proveAction">
          <action
@@ -57,5 +42,29 @@
          </action>
       </objectContribution>
    </extension>
+  <extension
+        point="org.eclipse.ui.actionSets">
+     <actionSet
+           id="BtoJ"
+           label="BtoJ"
+           visible="true">
+        <action
+              allowLabelUpdate="true"
+              class="bytecode_to_JPO.POGAction"
+              id="BtoJ.compile"
+              label="JML Compile"
+              state="false"
+              style="push"
+              toolbarPath="/Normal/bytecode"/>
+        <action
+              allowLabelUpdate="true"
+              class="jack.plugin.edit.EditJpoAction"
+              id="BtoJ.edit"
+              label="Edit"
+              state="false"
+              style="push"
+              toolbarPath="/Normal/bytecode"/>
+     </actionSet>
+  </extension>
 
 </plugin>
