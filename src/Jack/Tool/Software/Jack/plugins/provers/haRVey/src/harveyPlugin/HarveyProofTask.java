@@ -199,8 +199,7 @@ public class HarveyProofTask extends ProofTask {
 	 * @see jack.plugin.prove.ProofTask#factory()
 	 */
 	public ProveAction factory() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ProveHarveyAction();
 	}
 
 }
