@@ -1,4 +1,0 @@
-
-1. the hypothesis and goals generated for modifies clauses are different:
-on source level : \forall( o: REF) (instances o ) ==> P
-on bytecode level: \forall( o: REF) (instances o ) /\ ( subtype    typeof(o) T ) ==> P
