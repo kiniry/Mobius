@@ -18,12 +18,14 @@ import jml2b.structure.java.JavaLoader;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 
 //TODO message d'erreur en cas d'abscence de la clause decreases
 
@@ -31,20 +33,22 @@ import org.eclipse.ui.IWorkbenchPart;
  * Action allowing openning the selection in the Jack PO viewer view.
  * @author L. Burdy
  */
-public class AnnotationAction implements IObjectActionDelegate {
+public class AnnotationAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 	/** The current selection. */
-	IStructuredSelection selection;
-	/** the current active part */
-	IWorkbenchPart activePart;
+	ICompilationUnit icu;
+
 
 	/**
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
+		IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
 		ProgressMonitorDialog pmd =
 			new ProgressMonitorDialog(activePart.getSite().getShell());
 		try {
-			ICompilationUnit icu = (ICompilationUnit) selection.getFirstElement();
+			if(icu == null)
+				return;
+//			ICompilationUnit icu = (ICompilationUnit) selection.getFirstElement();
 			AnnotationGenerator ag = new AnnotationGenerator(
 															 new JackJml2bConfiguration(icu.getJavaProject(), new JavaLoader()),
 															 icu);
@@ -60,29 +64,46 @@ public class AnnotationAction implements IObjectActionDelegate {
 		}
 	}
 
-	/**
-	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		activePart = targetPart;
-	}
+
 
 	/**
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection sel) {
 		if (sel instanceof IStructuredSelection) {
-			this.selection = (IStructuredSelection) sel;
-		} else {
-			// should never happen
-			MessageDialog.openError(
-				activePart.getSite().getShell(),
-				"Jack Error",
-				"Unexpected selection type: expected StructuredSelection, "
-					+ "got "
-					+ sel.getClass().getName());
-		}
+			IStructuredSelection selection = (IStructuredSelection) sel;
+			Object o = selection.getFirstElement();
+			if(o instanceof ICompilationUnit) {
+				icu =  (ICompilationUnit) o;
+		
+				if(icu == null) {
+					action.setEnabled(false);
+					return;
+				}
+				else {
+					//System.out.println(icu.toString());
+					if(icu.getPath().toString().endsWith(".java")) {
+						action.setEnabled(true);
+					}
+					else {
+						action.setEnabled(false);
+					}
+				}
+			}
+			else {
+				action.setEnabled(false);
+			}
+		} 
 
+	}
+
+	public void dispose() {	}
+
+	public void init(IWorkbenchWindow window) {}
+
+
+
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
 }

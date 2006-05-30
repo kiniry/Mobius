@@ -33,13 +33,31 @@
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="classFile.annotation">
          <action
-               label="Class file annotation"
                class="annotation.AnnotationAction"
-               menubarPath="jack_menu/bytecode/bytecode_slot"
                enablesFor="1"
-               id="classFile.annotation">
+               id="classFile.annotation"
+               label="Class file annotation"
+               menubarPath="jack_menu/bytecode/bytecode_slot"
+               state="false">
          </action>
       </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="ClassfileAnnotation"
+            label="Classfile Annotation"
+            visible="true">
+         <action
+               class="annotation.AnnotationAction"
+               enablesFor="1"
+               id="ClassFileAnnotation.action"
+               label="Classfile Annotation"
+               retarget="true"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/bytecode"/>
+      </actionSet>
    </extension>
 
 </plugin>
