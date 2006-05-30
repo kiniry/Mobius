@@ -245,6 +245,7 @@ public class TopLevel implements ITopLevel {
 	 * coming from the,
 	 */
 	public void sendCommand(String command) throws AProverException {
+//		System.out.println(command);
 		fProverTopLevel.sendCommand(this, command);
 	}
 

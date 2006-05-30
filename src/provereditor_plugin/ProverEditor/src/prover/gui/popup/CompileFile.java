@@ -100,13 +100,32 @@ public class CompileFile implements IActionDelegate {
 		 * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
 		 */
 		protected IStatus run(IProgressMonitor monitor) {
-			try {					
+			try {
+				System.out.println("here");
 				Process p = Runtime.getRuntime().exec(fCmd);
 				LineNumberReader in = new LineNumberReader( new InputStreamReader(p.getInputStream()));
 				String s;
 				String res = "";
+				try {
+					p.waitFor();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				while((s = in.readLine()) != null){
 					res += s + "\n";
+//					System.out.println("1" + res);
+					if (fProver.isErrorMsg(s)) {
+						while((s = in.readLine()) != null)
+							res += s + "\n";
+						return ProverStatus.getErrorStatus("The fFile " + fFile.getName() + " was not compiled.", 
+											res);  			
+					}
+					 			
+				}in = new LineNumberReader( new InputStreamReader(p.getErrorStream()));
+				while((s = in.readLine()) != null){
+					res += s + "\n";
+//					System.out.println("1" + res);
 					if (fProver.isErrorMsg(s)) {
 						while((s = in.readLine()) != null)
 							res += s + "\n";
