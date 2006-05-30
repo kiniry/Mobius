@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="Simplifyplugin"
+   name="Simplify plug-in"
+   version="1.3.0"
+   provider-name="INRIA - Everest team"
+   class="simplifyPlugin.SimplifyPlugin">
+
+   <runtime>
+      <library name="Simplifyplugin.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+
+      <import plugin="jack.plugin"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="JackRequiredPlugins"/>
+
+   </requires>
+
+
+   <extension
+         point="jack.plugin.Prover">
+      <language
+            translationResultClass="simplifyPlugin.SimplifyTranslationResult"
+            name="Simplify"
+            languageClass="simplifyPlugin.SimplifyLanguage"
+            printerClass="simplifyPlugin.SimplifyPrinter"
+            obviousProverClass="simplifyPlugin.SimplifyObviousProver"
+            proverStatusClass="simplifyPlugin.ProverSimplifyStatus"
+			proofTaskClass = "simplifyPlugin.SimplifyProofTask"
+            id="prover.simplify">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="jack.plugin.compile.CompileAction">
+         <action
+               label="Prove with Simplify"
+               class="simplifyPlugin.ProveSimplifyAction"
+               menubarPath="jack_menu/prover/prover_slot"
+               id="jack.plugin.proveSimplifyAction">
+         </action>
+        <action
+               label="Prove with Simplify"
+               class="simplifyPlugin.ProveSimplifyBytecodeAction"
+               menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo"
+               id="jack.plugin.proveSimplifyJpoFileAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.jpo"
+            id="jack.plugin.compile.CompileAction">
+         <action
+               label="Prove with Simplify"
+               class="simplifyPlugin.ProveSimplifyAction"
+               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
+               id="jack.plugin.proveSimplifyAction">
+         </action>
+      </objectContribution>
+   </extension>
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Simplify prover"
+            category="jack.plugin.JackPreferencePageProvers"
+            class="simplifyPlugin.SimplifyPreferencePage"
+            id="Simplifyplugin.SimplifyPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Simplify prover Buttons"
+            visible="true"
+            id="simplifyplugin.actionSet">
+         <action
+               label="JML Prove"
+               icon="icons/jml_prove.gif"
+               tooltip="Prove with Simplify"
+               class="simplifyPlugin.ProveSimplifyButton"
+               toolbarPath="Normal/SimplifyProver"
+               id="simplifyplugin.toolbar.proveAction">
+            <selection
+                  class="org.eclipse.jdt.core.ICompilationUnit">
+            </selection>
+         </action>
+      </actionSet>
+   </extension>
+
+</plugin>
