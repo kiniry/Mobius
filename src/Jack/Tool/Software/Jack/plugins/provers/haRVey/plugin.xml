@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="Harveyplugin"
+   name="Harvey plug-in"
+   version="1.0.1"
+   provider-name="INRIA - Everest team"
+   class="harveyPlugin.HarveyPlugin">
+
+   <runtime>
+      <library name="Harveyplugin.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="jack.plugin"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="JackRequiredPlugins"/>
+   </requires>
+
+
+   <extension
+         point="jack.plugin.Prover">
+      <language
+            translationResultClass="harveyPlugin.HarveyTranslationResult"
+            name="Harvey"
+            languageClass="harveyPlugin.HarveyLanguage"
+            printerClass="harveyPlugin.HarveyPrinter"
+            proverStatusClass="harveyPlugin.HarveyProverStatus"
+			proofTaskClass = "harveyPlugin.HarveyProofTask"
+            id="prover.harvey">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="proveAction">
+         <action
+               label="prove with haRVey"
+               class="harveyPlugin.ProveHarveyAction"
+               menubarPath="jack_menu/prover/prover_slot"
+               id="jack.plugin.proveFileAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
