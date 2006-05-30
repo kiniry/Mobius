@@ -47,7 +47,7 @@ public class CoqTop extends TopLevel {
 	 * @throws ProverException if there is an unexpected problem.
 	 */
 	public void startSection(String name) throws AProverException {
-		sections.addFirst(name);
+//		sections.addFirst(name);
 		sendCommand("Section " + name + ".");
 	}
 	
@@ -60,13 +60,13 @@ public class CoqTop extends TopLevel {
 	 *                      if it is asked to close the wrong section.
 	 */
 	public void endSection(String name) throws AProverException {
-		String s = (String) sections.removeFirst();
-		if (s.equals(name)) {
+//		String s = (String) sections.removeFirst();
+//		if (s.equals(name)) {
 			sendCommand("End " + name + ".");
-		} else {
-			sections.addFirst(s);
-			throw new ProverException("Bad section close operation: you should have closed section " + s + ".");
-		}
+//		} else {
+//			sections.addFirst(s);
+//			throw new ProverException("Bad section close operation: you should have closed section " + s + ".");
+//		}
 	}
 	
 	/**
@@ -77,13 +77,14 @@ public class CoqTop extends TopLevel {
 	 *                      if it is asked to reset the wrong section.
 	 */
 	public void resetSection(String name) throws AProverException {
-		String s = (String) sections.removeFirst();
-		if (s.equals(name)) {
-			sendCommand("Reset " + name + ".");
-		} else {
-			sections.addFirst(s);
-			throw new ProverException("Bad section reset operation: you should have closed section " + s + ".");
-		}
+		sendCommand("Reset " + name + ".");
+//		String s = (String) sections.removeFirst();
+//		if (s.equals(name)) {
+//			sendCommand("Reset " + name + ".");
+//		} else {
+//			sections.addFirst(s);
+//			throw new ProverException("Bad section reset operation: you should have closed section " + s + ".");
+//		}
 	}
 	
 	/**
@@ -247,7 +248,10 @@ public class CoqTop extends TopLevel {
 		al.add(curr);
 		String [] arr = new String [al.size()];
 		Object[] t = al.toArray();
-		for(int i = 0; i < t.length; i++) arr[i] = (String)t[i];
+		for(int i = 0; i < t.length; i++) {
+			arr[i] = (String)t[i];
+			//System.out.println(arr[i]);
+		}
 		return arr;
 	}
 	

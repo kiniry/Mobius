@@ -11,6 +11,12 @@ public class CoqUtils {
 	public static String getCoqTop() {
 		return ProverEditorPlugin.getInstance().getProver("Coq").getTop();
 	}
+	public static String getCoqC() {
+		return ProverEditorPlugin.getInstance().getProver("Coq").getCompiler();
+	}
+	public static String [] getCommand(String [] path, String file) {
+		return ProverEditorPlugin.getInstance().getProver("Coq").getTranslator().getCompilingCommand(getCoqC(), path, file);
+	}
 	public static String getCoqIde() {
 		return ProverEditorPlugin.getInstance().getProver("Coq").getIde();
 	}
