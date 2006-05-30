@@ -16,6 +16,8 @@ public class PreludeClasses extends Printer{
 
 	private String[] builtinNames = IPrinter.builtinNames;
 	private String outDir;
+
+	private boolean fHasObject;
 	
 	public PreludeClasses(File output_directory, String name, IClassResolver printer, IJml2bConfiguration config)
 		throws IOException {
@@ -64,17 +66,24 @@ public class PreludeClasses extends Printer{
 		stream.println("(* Class Definitions *)");
 		stream.println("Inductive Class : Set");
 		stream.print("   := ");
-
+		fHasObject = false;
+		
 		// print builtin types
 		for (int i = 0; i < builtinNames.length; ++i) {
 			if (i != 0)
 				stream.print("\n      | ");
+			if(builtinNames[i].equals("c_Object"))
+				fHasObject = true;
 			stream.print(builtinNames[i] + " : Class");
 		}
 
-		// print classes     
+		// print classes
 		defineClasses(stream, printer.getClasses());
 		defineClasses(stream, printer.getInterfaces());
+		if(!fHasObject) {
+			stream.print("\n      | ");
+			stream.print("c_Object : Class");
+		}
 		stream.println(".\n");
 	}
 
@@ -87,6 +96,8 @@ public class PreludeClasses extends Printer{
 			AClass c = e.nextElement();
 			if(!c.getModifiers().isNative()) {
 				stream.print("\n      | ");
+				if(c.getBName().equals("c_Object"))
+					fHasObject = true;
 				stream.print(c.getBName() + " : Class");
 			}
 		}
