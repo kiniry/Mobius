@@ -96,12 +96,6 @@
                   name="prover_slot_jpo">
             </separator>
          </menu>
-        <action
-               label="Edit"
-               class="jack.plugin.edit.EditJpoAction"
-               menubarPath="jack_menu/bytecode/bytecode_slot"
-               id="jack.plugin.openAction">
-         </action>
          <action
                label="Compute specification clause"
                class="jack.plugin.source.AddJmlAction"
