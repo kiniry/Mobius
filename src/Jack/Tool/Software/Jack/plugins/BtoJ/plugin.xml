@@ -49,6 +49,12 @@
                menubarPath="jack_menu/bytecode/bytecode_slot"
                id="jb2J.POGAction">
          </action>
+         <action
+               label="Edit"
+               class="jack.plugin.edit.EditJpoAction"
+               menubarPath="jack_menu/bytecode/bytecode_slot"
+               id="jack.plugin.openAction">
+         </action>
       </objectContribution>
    </extension>
 
