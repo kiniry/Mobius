@@ -78,13 +78,13 @@ public class HypContentProvider implements IStructuredContentProvider {
 		String [] stab = toLanguage(vftab);	
 		//Count the line numbers
 		int count = 0;
-		for (int i = 0; i < vftab.length; i++)
+		for (int i = 0; i < stab.length; i++)
 			count += jml2b.util.Util.countTokens(stab[i], "\n");
 
 		// create the array            
 		res = new HypLine[count];
 		count = 0;
-		for (int i = 0; i < vftab.length; i++) {
+		for (int i = 0; i < stab.length; i++) {
 			// each hypothese is cut in line
 			String[] s =
 				jml2b.util.Util.tokenize(stab[i], "\n");
