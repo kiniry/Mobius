@@ -166,13 +166,13 @@ public class ClassFile extends AClass implements IModifiers, Serializable {
 					(type == org.apache.bcel.generic.Type.INT && t == Type.getInteger()) ||
 					(type == org.apache.bcel.generic.Type.SHORT && t == Type.getShort()));
 		}
-		else if (type instanceof ObjectType) {
-			return (t.isRef() && t.getRefType().getFullyQualifiedName().equals(((ObjectType) type).getClassName()));
-			
-		}
 		else if (type instanceof ArrayType) {
 			return (t.isArray() && t.getDimension() == ((ArrayType) type).getDimensions() &&
 					matchingType(config, t.getElemType(), ((ArrayType) type).getElementType()));
+			
+		}
+		else if (type instanceof ObjectType) {
+			return (t.isRef() && !t.isArray() && t.getRefType().getFullyQualifiedName().equals(((ObjectType) type).getClassName()));
 			
 		}
 		return false;
