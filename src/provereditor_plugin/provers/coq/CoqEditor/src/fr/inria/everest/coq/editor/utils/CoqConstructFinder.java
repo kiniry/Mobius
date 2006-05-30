@@ -114,6 +114,7 @@ public class CoqConstructFinder implements ICoqColorConstants{
 				new SingleLineRule("\"", "\"", string),
 				new MultiLineRule("Declare ", ".", declare),
 				new MultiLineRule("Variable ", ".", declare),
+				new MultiLineRule("Hypothesis ", ".", declare),
 				new MultiLineRule("Record ", ".", declare),
 				new PatternRuleTaboo("Module ", ".", module),
 				new PatternRuleTaboo("Section ", ".", module),
