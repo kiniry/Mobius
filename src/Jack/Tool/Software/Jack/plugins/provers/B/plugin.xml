@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="Bplugin"
+   name="BPlug-in"
+   version="1.2.3"
+   provider-name="INRIA - Everest team"
+   class="bPlugin.BPlugin">
+
+   <runtime>
+      <library name="Bplugin.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="jack.plugin"/>
+      <import plugin="JackRequiredPlugins"/>
+      <import plugin="org.eclipse.jface.text"/>
+   </requires>
+
+
+   <extension
+         point="jack.plugin.Prover">
+      <language
+            translationResultClass="bPlugin.BTranslationResult"
+            name="B"
+            languageClass="bPlugin.BLanguage"
+            printerClass="bPlugin.BPrinter"
+            proverStatusClass="bPlugin.ProverBStatus"
+            proofTaskClass = "bPlugin.AtelierBProofTask"
+            interactiveProverClass="bPlugin.BInteractive"
+             id="language.B">
+      </language>
+      <language
+            translationResultClass="bPlugin.BTranslationResult"
+            name="BDisplayed"
+            languageClass="bPlugin.BDisplayedLanguage"
+            id="language.displayedB">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="proveAction">
+         <action
+               label="Prove with AtelierB"
+               class="bPlugin.ProveBAction"
+               menubarPath="jack_menu/prover/prover_slot"
+               id="jack.plugin.proveBFileAction">
+         </action>
+        <action
+               label="Prove with AtelierB"
+               class="bPlugin.ProveBBytecodeAction"
+               menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo"
+               id="jack.plugin.proveBJpoFileAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.jpo"
+           id="proveJpoAction">
+         <action
+               label="Prove with AtelierB"
+               class="bPlugin.ProveBAction"
+               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
+               id="jack.plugin.proveJpoFileAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="B prover Buttons"
+            visible="true"
+            id="bplugin.actionSet">
+         <action
+               label="JML Prove"
+               icon="icons/jml_prove.gif"
+               tooltip="Prove with the Atelier B"
+               class="bPlugin.ProveBButton"
+               toolbarPath="Normal/BProver"
+               id="bplugin.toolbar.proveAction">
+            <selection
+                  class="org.eclipse.jdt.core.ICompilationUnit">
+            </selection>
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="B prover"
+            category="jack.plugin.JackPreferencePageProvers"
+            class="bPlugin.BPreferencePage"
+            id="bplugin.BPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            name="B prover"
+            class="bPlugin.BProjectPropertyPage"
+            id="bplugin.BPropertyPage">
+      </page>
+   </extension>
+
+</plugin>
