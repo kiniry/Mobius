@@ -39,9 +39,13 @@ public class BasicCoqTop implements IProverTopLevel  {
 	 * @throws ProverException if there is an unexpected problem
 	 */
 	public void sendCommand(ITopLevel itl, String s) throws AProverException {
-//		System.out.println(s);
-		itl.sendToProver(s);
-	
+		try {
+			itl.sendToProver(s);
+		}
+		catch (AProverException e){
+			e.printStackTrace();
+			throw e;
+		}
 		while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
 			itl.waitForErrorInput();
 		if(itl.getStdBuffer().trim().equals(""))
@@ -145,7 +149,6 @@ public class BasicCoqTop implements IProverTopLevel  {
 			cmds = new String[1];
 		}
 		cmds[0] = top;
-		//cmds[cmds.length - 1] = "-emacs";
 		return cmds;
 	}
 }
