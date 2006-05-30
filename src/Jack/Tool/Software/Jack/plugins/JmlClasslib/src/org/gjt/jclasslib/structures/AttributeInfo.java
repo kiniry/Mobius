@@ -1,0 +1,271 @@
+/*
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the license, or (at your option) any later version.
+*/
+
+package org.gjt.jclasslib.structures;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.gjt.jclasslib.structures.attributes.CodeAttribute;
+import org.gjt.jclasslib.structures.attributes.ConstantValueAttribute;
+import org.gjt.jclasslib.structures.attributes.DeprecatedAttribute;
+import org.gjt.jclasslib.structures.attributes.ExceptionsAttribute;
+import org.gjt.jclasslib.structures.attributes.InnerClassesAttribute;
+import org.gjt.jclasslib.structures.attributes.LineNumberTableAttribute;
+import org.gjt.jclasslib.structures.attributes.LocalVariableTableAttribute;
+import org.gjt.jclasslib.structures.attributes.SourceFileAttribute;
+import org.gjt.jclasslib.structures.attributes.SyntheticAttribute;
+import org.gjt.jclasslib.structures.constants.ConstantUtf8Info;
+import org.gjt.jclasslib.structures.jmlattributes.AssertAttribute;
+import org.gjt.jclasslib.structures.jmlattributes.BlockSpecificationAttribute;
+import org.gjt.jclasslib.structures.jmlattributes.ClassInvariantAttribute;
+import org.gjt.jclasslib.structures.jmlattributes.ConstraintAttribute;
+import org.gjt.jclasslib.structures.jmlattributes.LoopSpecificationAttribute;
+import org.gjt.jclasslib.structures.jmlattributes.MethodSpecificationAttribute;
+import org.gjt.jclasslib.structures.jmlattributes.ModelFieldAttribute;
+import org.gjt.jclasslib.structures.iflowattributes.SecLevelFieldAttribute;
+import org.gjt.jclasslib.structures.iflowattributes.SecLevelMethodAttribute;
+import org.gjt.jclasslib.structures.iflowattributes.ExceptionSafeAttribute;
+
+/**
+    Base class for all attribute structures in the <tt>attribute</tt> package.
+
+    @author <a href="mailto:jclasslib@ej-technologies.com">Ingo Kegel</a>
+    @version $Revision: 1.3 $ $Date: 2005/03/24 10:29:57 $
+*/
+public class AttributeInfo extends AbstractStructureWithAttributes {
+
+	/**
+	    Set this JVM System property to true to skip reading of all attributes.
+	    Some class file operations may fail in this case.
+	 */
+	public static final String SYSTEM_PROPERTY_SKIP_ATTRIBUTES =
+		"jclasslib.io.skipAttributes";
+
+	private int attributeNameIndex;
+	private int attributeLength;
+	private byte[] info;
+
+	/**
+	    Factory method for creating <tt>AttributeInfo</tt> structures. <p>
+	    An <tt>AttributeInfo</tt> of the appropriate subtype from the <tt>attributes</tt> package
+	    is created unless the type of the attribute is unknown in which case an instance of
+	    <tt>AttributeInfo</tt> is returned. <p>
+	
+	    Attributes are skipped if the environment variable <tt>SYSTEM_PROPERTY_SKIP_ATTRIBUTES</tt>
+	    is set to true.
+	
+	    @param in the <tt>DataInput</tt> from which to read the <tt>AttributeInfo</tt> structure
+	    @param classFile the parent class file of the structure to be created
+	    @return the new <tt>AttributeInfo</tt> structure
+	    @throws InvalidByteCodeException if the byte code is invalid
+	    @throws IOException if an exception occurs with the <tt>DataInput</tt>
+	*/
+	public static AttributeInfo createOrSkip(DataInput in, ClassFile classFile)
+		throws InvalidByteCodeException, IOException {
+
+		AttributeInfo attributeInfo = null;
+
+		if (Boolean.getBoolean(SYSTEM_PROPERTY_SKIP_ATTRIBUTES)) {
+			in.skipBytes(2);
+			in.skipBytes(in.readInt());
+		} else {
+			int attributeNameIndex = in.readUnsignedShort();
+			int attributeLength = in.readInt();
+			ConstantUtf8Info cpInfoName =
+				classFile.getConstantPoolUtf8Entry(attributeNameIndex);
+			String attributeName = null;
+
+			if (cpInfoName == null) {
+				return null;
+			}
+
+			attributeName = cpInfoName.getString();
+			
+
+			if (ConstantValueAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new ConstantValueAttribute();
+
+			} else if (CodeAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new CodeAttribute();
+
+			} else if (
+				ExceptionsAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new ExceptionsAttribute();
+
+			} else if (
+				InnerClassesAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new InnerClassesAttribute();
+
+			} else if (
+				SyntheticAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new SyntheticAttribute();
+
+			} else if (
+				SourceFileAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new SourceFileAttribute();
+
+			} else if (
+				LineNumberTableAttribute.ATTRIBUTE_NAME.equals(
+					attributeName)) {
+				attributeInfo = new LineNumberTableAttribute();
+
+			} else if (
+				LocalVariableTableAttribute.ATTRIBUTE_NAME.equals(
+					attributeName)) {
+				attributeInfo = new LocalVariableTableAttribute();
+
+			} else if (
+				DeprecatedAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new DeprecatedAttribute();
+			} else if (
+				MethodSpecificationAttribute.ATTRIBUTE_NAME.equals(
+					attributeName)) {
+				attributeInfo =
+					new MethodSpecificationAttribute(attributeLength);
+			} else if (AssertAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new AssertAttribute(attributeLength);
+			} else if (
+				LoopSpecificationAttribute.ATTRIBUTE_NAME.equals(
+					attributeName)) {
+				attributeInfo = new LoopSpecificationAttribute(attributeLength);
+			} else if (
+				BlockSpecificationAttribute.ATTRIBUTE_NAME.equals(
+					attributeName)) {
+				attributeInfo =
+					new BlockSpecificationAttribute(attributeLength);
+			} else if (
+				ModelFieldAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+			    attributeInfo = new ModelFieldAttribute(attributeLength);
+			} else if (
+				ClassInvariantAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new ClassInvariantAttribute(attributeLength);
+			} else if (
+				ConstraintAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+				attributeInfo = new ConstraintAttribute(attributeLength);
+			} else if (SecLevelFieldAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+			    attributeInfo = new SecLevelFieldAttribute(attributeLength);
+			} else if (SecLevelMethodAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+			    attributeInfo = new SecLevelMethodAttribute(attributeLength);
+			} else if (ExceptionSafeAttribute.ATTRIBUTE_NAME.equals(attributeName)) {
+			    attributeInfo = new ExceptionSafeAttribute(attributeLength);
+			} else {
+				attributeInfo = new AttributeInfo(attributeLength);
+			}
+			attributeInfo.setAttributeNameIndex(attributeNameIndex);
+			attributeInfo.setClassFile(classFile);
+			attributeInfo.read(in);
+		}
+
+		return attributeInfo;
+	}
+
+	/**
+	    Constructor.
+	 */
+	protected AttributeInfo() {
+	}
+
+	protected AttributeInfo(int attributeLength) {
+		this.attributeLength = attributeLength;
+	}
+
+	/**
+	    Get the constant pool index for the name of the attribute.
+	    @return the index
+	 */
+	public int getAttributeNameIndex() {
+		return attributeNameIndex;
+	}
+
+	/**
+	    Set the constant pool index for the name of the attribute.
+	    @param attributeNameIndex the new index
+	 */
+	public void setAttributeNameIndex(int attributeNameIndex) {
+		this.attributeNameIndex = attributeNameIndex;
+	}
+
+	/**
+	    Get the raw bytes of the attribute. <p>
+	
+	    Is non-null only if attribute is of unknown type.
+	    @return the byte array
+	 */
+	public byte[] getInfo() {
+		return info;
+	}
+
+	/**
+	    Set the raw bytes of the attribute. <p>
+	
+	    Works only if attribute is an instance of <tt>AttributeInfo</tt>.
+	    @param info the new byte array
+	 */
+	public void setInfo(byte[] info) {
+		this.info = info;
+	}
+
+	/**
+	    Get the name of the attribute.
+	    @return the name
+	    @throws InvalidByteCodeException if the byte code is invalid
+	 */
+	public String getName() throws InvalidByteCodeException {
+		return classFile
+			.getConstantPoolUtf8Entry(attributeNameIndex)
+			.getString();
+	}
+
+	public void read(DataInput in)
+		throws InvalidByteCodeException, IOException {
+
+		info = new byte[attributeLength];
+		in.readFully(info);
+
+		if (debug)
+			debug("read " + getDebugMessage());
+	}
+
+	public void write(DataOutput out)
+		throws InvalidByteCodeException, IOException {
+
+		out.writeShort(attributeNameIndex);
+		out.writeInt(getAttributeLength());
+		if (getClass().equals(AttributeInfo.class)) {
+			out.write(info);
+			if (debug)
+				debug("wrote " + getDebugMessage());
+		}
+	}
+
+	/**
+	    Get the length of this attribute as a number of bytes.
+	    @return the length
+	 */
+	public int getAttributeLength() {
+		return getLength(info);
+	}
+
+	// cannot override debug because subclasses will call super.debug
+	// and expect to call the implementation in AbstractStructure
+	private String getDebugMessage() {
+		String type;
+		try {
+			type =
+				classFile
+					.getConstantPoolUtf8Entry(attributeNameIndex)
+					.getString();
+		} catch (InvalidByteCodeException ex) {
+			type = "(unknown)";
+		}
+
+		return "uninterpreted attribute of reported type " + type;
+	}
+
+}
