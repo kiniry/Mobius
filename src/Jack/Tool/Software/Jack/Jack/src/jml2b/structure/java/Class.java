@@ -65,7 +65,7 @@ extends AClass
 	/** 
 	 * The modifiers of the class (i.e. public, protected, etc...). 
 	 */
-	private Modifiers modifiers;
+	private Modifiers modifiers = new Modifiers(0);
 
 	/** 
 	 * (short) name of the class. 
