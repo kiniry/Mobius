@@ -25,6 +25,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
@@ -34,7 +36,7 @@ import org.eclipse.ui.WorkbenchException;
  * 
  * @author L. Burdy
  */
-public class EditAction implements IObjectActionDelegate {
+public class EditAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 	/** The current selection. */
 	IStructuredSelection selection;
 	/** the current active part */
@@ -191,6 +193,10 @@ public class EditAction implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection sel) {
 		if (sel instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) sel;
+			Object o;
+			action.setEnabled((selection != null) &&
+					((o = selection.getFirstElement()) instanceof ICompilationUnit)
+					&& ((ICompilationUnit) o).getPath().toString().endsWith(".java"));
 		} else {
 			// should never happen
 			MessageDialog.openError(activePart.getSite().getShell(),
@@ -199,6 +205,16 @@ public class EditAction implements IObjectActionDelegate {
 						+ "got " + sel.getClass().getName());
 		}
 
+	}
+
+	public void dispose() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void init(IWorkbenchWindow window) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
