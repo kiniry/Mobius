@@ -94,22 +94,21 @@ public class BinaryForm extends Formula {
 	/**
 	 * The left part of the binary formula.
 	 **/
-	protected Formula left;
+	protected Formula /*@ non_null @*/ left;
 
 	/**
 	 * The right part of the binary formula.
 	 **/
-	protected Formula right;
+	protected Formula /*@ non_null @*/ right;
 
-	/*@ 
-	  @ private invariant left != null;
-	  @                && right != null;
-	  @*/
+
 
 	public BinaryForm(BinaryForm f) {
 		super(f.getNodeType());
 		this.left = f.left;
 		this.right = f.right;
+		if(left == null || right == null)
+			throw new NullPointerException();
 	}
 
 	/**
@@ -125,6 +124,8 @@ public class BinaryForm extends Formula {
 		super(nodeType);
 		this.left = left;
 		this.right = right;
+		if(left == null || right == null)
+			throw new NullPointerException();
 	}
 
 	/**
@@ -148,6 +149,8 @@ public class BinaryForm extends Formula {
 		super(nodeType);
 		left = Formula.create(config, s, fi);
 		right = Formula.create(config, s, fi);
+		if(left == null || right == null)
+			throw new NullPointerException();
 	}
 
 	/**
@@ -171,6 +174,8 @@ public class BinaryForm extends Formula {
 	public Formula instancie(Formula b) {
 		left = left.instancie(b);
 		right = right.instancie(b);
+		if(left == null || right == null)
+			throw new NullPointerException();
 		return this;
 	}
 
@@ -410,8 +415,16 @@ public class BinaryForm extends Formula {
 	}
 
 	public void garbageIdent() {
-		left.garbageIdent();
-		right.garbageIdent();
+		//// TODO: fix it properly
+		if(left != null) {
+			left.garbageIdent();
+		}
+		else {
+			System.out.println("Fixin'");
+		}
+		if(right != null) {
+			right.garbageIdent();
+		}
 	}
 
 	public Vector toVector() {
