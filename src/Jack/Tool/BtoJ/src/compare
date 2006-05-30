@@ -1,0 +1,18 @@
+ An example for simplification
+ The disappeared part of wp from 9. () :
+ && ( ( ! ([test.C.a (local(1)) <+   ( WITH St(c) <- local(1)) ] == NULL)) ==> (([test.C.i ([test.C.a (local(1)) <+   ( WITH St(c) <- local(1)) ]) <+   ( WITH local(1) <- 2) ] + 2) == 4) ) ) ) ) ) ) )
+ 
+ 
+ the wp for instr 9:
+ wp instr :  9 :  aload_1[43](1)  = ( ( ( ! (St(c) == NULL)) ==> 
+ 											( ( ( ! (local(1) == NULL)) ==> 
+ 														( ( (local(1) == NULL) ==> FALSE ) && ( ( ! (local(1) == NULL)) ==>
+ 																	 ( ( (local(1) == NULL) ==> FALSE ) && ( ( ! (local(1) == NULL)) ==> 
+ 																	 		( ( ([test.C.a (local(1)) <+   ( WITH St(c) <- local(1)) ] == NULL) ==> FALSE )  && 
+ 																	 		( (local(1) == NULL) ==> FALSE ) ) ) && ( (St(c) == NULL) ==> FALSE ) )
+the wp for instr 8:
+ wp instr :  8 :  aload_1[43](1)  = ( ( ( ! (local(1) == NULL)) ==>
+ 											 ( ( ( ! (local(1) == NULL)) ==> 
+ 											 				( ( (local(1) == NULL) ==> FALSE ) && ( ( ! (local(1) == NULL)) ==>
+ 											 						 ( ( (local(1) == NULL) ==> FALSE ) && ( ( ( ! (local(1) == NULL)) && (local(1) == NULL) ) ==> FALSE ) ) ) ) ) 
+ 											 						 	&& ( (local(1) == NULL) ==> FALSE ) ) ) && ( (local(1) == NULL) ==> FALSE ) )
