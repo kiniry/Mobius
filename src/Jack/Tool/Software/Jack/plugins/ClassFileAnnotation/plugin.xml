@@ -38,7 +38,8 @@
                id="classFile.annotation"
                label="Class file annotation"
                menubarPath="jack_menu/bytecode/bytecode_slot"
-               state="false">
+               state="false"
+               style="push">
          </action>
       </objectContribution>
    </extension>
@@ -50,10 +51,8 @@
             visible="true">
          <action
                class="annotation.AnnotationAction"
-               enablesFor="1"
                id="ClassFileAnnotation.action"
                label="Classfile Annotation"
-               retarget="true"
                state="false"
                style="push"
                toolbarPath="/Normal/bytecode"/>
