@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="Bytecode_to_JPO"
+   name="Bytecode_to_JPO Plug-in"
+   version="1.1.2"
+   provider-name=""
+   class="bytecode_to_JPO.Bytecode_to_JPOPlugin">
+
+   <runtime>
+      <library name="Bytecode_to_JPO.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="jack.plugin"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.jface"/> 
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="JackRequiredPlugins"/>
+   </requires>
+
+  <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.class"
+            id="b2J.pogation">
+         <action
+               label="JML Compile"
+               class="bytecode_to_JPO.POGAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="b2J.POGActionClass">
+         </action>
+      </objectContribution>
+   </extension>
+  <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="proveAction">
+         <action
+               label="JML Compile"
+               class="bytecode_to_JPO.POGAction"
+               menubarPath="jack_menu/bytecode/bytecode_slot"
+               id="jb2J.POGAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
