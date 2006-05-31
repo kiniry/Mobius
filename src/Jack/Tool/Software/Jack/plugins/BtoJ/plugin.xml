@@ -21,6 +21,7 @@
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="JackRequiredPlugins"/>
+      <import plugin="ClassFileAnnotation"/>
    </requires>
 
   <extension
@@ -50,20 +51,29 @@
            visible="true">
         <action
               allowLabelUpdate="true"
-              class="bytecode_to_JPO.POGAction"
-              id="BtoJ.compile"
-              label="JML Compile"
-              state="false"
-              style="push"
-              toolbarPath="/Normal/bytecode"/>
-        <action
-              allowLabelUpdate="true"
               class="jack.plugin.edit.EditJpoAction"
               id="BtoJ.edit"
               label="Edit"
               state="false"
               style="push"
               toolbarPath="/Normal/bytecode"/>
+        <action
+              allowLabelUpdate="true"
+              class="bytecode_to_JPO.POGAction"
+              id="BtoJ.compile"
+              label="JML Compile"
+              state="false"
+              style="push"
+              toolbarPath="/Normal/bytecode"/>
+         <action
+               class="annotation.AnnotationToolbarAction"
+               icon="icons/Annotation.gif"
+               id="ClassFileAnnotation.action"
+               label="Classfile Annotation"
+               state="false"
+               style="push"
+               toolbarPath="/Normal/bytecode"
+               tooltip="Annotate a classfile"/>  
      </actionSet>
   </extension>
 
