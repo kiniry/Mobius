@@ -9,7 +9,9 @@
  /******************************************************************************/
 package bytecode_to_JPO;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.Vector;
 
@@ -27,6 +29,7 @@ import bytecode_wp.bcexpression.Expression;
 import bytecode_wp.bcexpression.ValueAtState;
 import bytecode_wp.bcexpression.javatype.JavaBasicType;
 import bytecode_wp.bcexpression.ref.Reference;
+import bytecode_wp.constants.ArrayLengthConstant;
 import bytecode_wp.constants.BCConstantFieldRef;
 import bytecode_wp.constants.BCConstantRef;
 
@@ -42,18 +45,21 @@ public class B2JTheorem extends Theorem {
 
 	Vector decl;
 
-	public static Formula declLocVar(IJml2bConfiguration config, Reference f,
+	public static Collection declLocVar(IJml2bConfiguration config, Reference f,
 			Set declaredVatAtState, Vector decl) throws Jml2bException {
-		return new BinaryForm(Ja_AND_OP, new BinaryForm(LOCAL_VAR_DECL,
-				B2JProofs.toExpression(config, f, declaredVatAtState, decl),
-				TerminalForm.REFERENCES), new BinaryForm(Ja_AND_OP,
-				new BinaryForm(B_IN, B2JProofs.toExpression(config, f,
-						declaredVatAtState, decl), TerminalForm.instances),
-				new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(
+		LinkedList ll = new LinkedList();
+		
+		ll.add(new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(
 						IFormToken.B_APPLICATION, TerminalForm.typeof,
 						B2JProofs.toExpression(config, f, declaredVatAtState,
 								decl)), B2JProofs.toExpression(config, f
-						.getType(), declaredVatAtState, decl))));
+						.getType(), declaredVatAtState, decl)));
+		ll.add(new BinaryForm(B_IN, B2JProofs.toExpression(config, f,
+				declaredVatAtState, decl), TerminalForm.instances));
+		ll.add(new BinaryForm(LOCAL_VAR_DECL,
+				B2JProofs.toExpression(config, f, declaredVatAtState, decl),
+				TerminalForm.REFERENCES));
+		return ll;
 	}
 
 	public static Formula declLocVar(IJml2bConfiguration config, Expression f,
@@ -103,7 +109,6 @@ public class B2JTheorem extends Theorem {
 				.getConstant()).isStatic())
 				|| f.getConstant() instanceof BCLocalVariable) {
 			if (f.getType() instanceof JavaBasicType) {
-
 				return new BinaryForm(LOCAL_VAR_DECL, B2JProofs.toExpression(
 						config, f, declaredVatAtState, decl), B2JProofs
 						.toExpression(config, f.getType(), declaredVatAtState,
@@ -154,19 +159,27 @@ public class B2JTheorem extends Theorem {
 														decl)))));
 			}
 		} else {
-			return new BinaryForm(LOCAL_VAR_DECL, B2JProofs.toExpression(
-					config, f, declaredVatAtState, decl), new BinaryForm(
-					IS_MEMBER_FIELD, B2JProofs.toExpression(config,
-							((BCConstantFieldRef) f.getConstant())
-									.getClassWhereDeclared(),
-							declaredVatAtState, decl), B2JProofs.toExpression(
-							config, f.getType(), declaredVatAtState, decl)));
+			//System.out.println(f.getClass().toString() + ", " + f + ", " + f.getConstant().getClass());
+			if ((f.getConstant() instanceof ArrayLengthConstant) && (f.getConstant().getType() instanceof JavaBasicType)) {
+				return new BinaryForm(LOCAL_VAR_DECL, B2JProofs.toExpression(
+						config, f, declaredVatAtState, decl), B2JProofs
+						.toExpression(config, f.getType(), declaredVatAtState,
+								decl));
+			}
+			return new BinaryForm(LOCAL_VAR_DECL, 
+					B2JProofs.toExpression(config, f, declaredVatAtState, decl), 
+					new BinaryForm(IS_MEMBER_FIELD, 
+							B2JProofs.toExpression(config, 
+									((BCConstantFieldRef) f.getConstant()).getClassWhereDeclared(),
+									declaredVatAtState, decl), 
+							B2JProofs.toExpression(config, f.getType(), declaredVatAtState, decl)));
 		}
 	}
 
 	public B2JTheorem(IJml2bConfiguration config, BCMethod m, Vector hyp, int i) {
 		bcm = m;
 		BCLocalVariable[] bclva = m.getLocalVariables();
+		
 		decl = hyp;
 		for (int j = 0; j < bclva.length; j++) {
 			jml2b.formula.Formula decll = null;

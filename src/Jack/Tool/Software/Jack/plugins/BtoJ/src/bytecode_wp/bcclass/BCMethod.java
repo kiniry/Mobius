@@ -10,7 +10,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import jml2b.IJml2bConfiguration;
-import jml2b.structure.java.Invariant;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.LineNumber;
@@ -19,7 +18,6 @@ import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.*;
 
 import bytecode_to_JPO.B2JPackage;
-import bytecode_wp.application.JavaClassLoader;
 import bytecode_wp.bc.io.AttributeReader;
 import bytecode_wp.bc.io.ReadAttributeException;
 import bytecode_wp.bcclass.attributes.Assert;
@@ -45,7 +43,6 @@ import bytecode_wp.bcexpression.Expression;
 import bytecode_wp.bcexpression.ExpressionConstants;
 import bytecode_wp.bcexpression.FieldAccess;
 import bytecode_wp.bcexpression.NumberLiteral;
-import bytecode_wp.bcexpression.StaticFieldAccess;
 import bytecode_wp.bcexpression.ValueAtState;
 import bytecode_wp.bcexpression.javatype.JavaArrType;
 import bytecode_wp.bcexpression.javatype.JavaObjectType;
@@ -101,9 +98,9 @@ import bytecode_wp.bytecode.conversioninstruction.BCI2S;
 import bytecode_wp.bytecode.conversioninstruction.BCL2I;
 import bytecode_wp.bytecode.loadstoreinstruction.BCACONST_NULL;
 import bytecode_wp.bytecode.loadstoreinstruction.BCBIPUSH;
-import bytecode_wp.bytecode.loadstoreinstruction.BCTypeCONST;
 import bytecode_wp.bytecode.loadstoreinstruction.BCIINC;
 import bytecode_wp.bytecode.loadstoreinstruction.BCSIPUSH;
+import bytecode_wp.bytecode.loadstoreinstruction.BCTypeCONST;
 import bytecode_wp.bytecode.loadstoreinstruction.BCTypeLOAD;
 import bytecode_wp.bytecode.loadstoreinstruction.BCTypeSTORE;
 import bytecode_wp.bytecode.objectmanipulation.BCANEWARRAY;
@@ -145,7 +142,6 @@ import bytecode_wp.memory.allocation.MethodAllocation;
 import bytecode_wp.modifexpression.ModifiesExpression;
 import bytecode_wp.modifexpression.ModifiesIdent;
 import bytecode_wp.utils.Util;
-import bytecode_wp.vcg.VC;
 import bytecode_wp.vcg.VCGPath;
 import bytecode_wp.vcg.VcType;
 

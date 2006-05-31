@@ -7,6 +7,7 @@
 package bytecode_wp.constants;
 
 import bytecode_wp.bcexpression.Expression;
+import bytecode_wp.bcexpression.javatype.JavaType;
 
 /**
  * @author mpavlova
@@ -42,5 +43,8 @@ public class ArrayLengthConstant  extends BCConstantFieldRef {
 	public boolean isStatic() {
 		return false;
 	}
+    public Expression getType() {
+        return JavaType.JavaINT;
+    }
 
 }

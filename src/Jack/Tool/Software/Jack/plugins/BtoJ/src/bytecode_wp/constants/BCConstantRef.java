@@ -59,6 +59,10 @@ public class BCConstantRef extends BCConstant {
 	
 	public JavaReferenceType getClassWhereDeclared() {
 		BCConstantClass classConstant = getConstantClass();
+//		assert (classConstant != null);
+		if ( classConstant == null ) {
+			return null;
+		}
 		JavaReferenceType classTypeWhereDeclared = JavaReferenceType.getJavaRefType(classConstant.getName());
 		return classTypeWhereDeclared;
 	}

@@ -95,7 +95,6 @@ public class BCConstantFieldRef extends BCConstantRef implements RefFunction {
     public Expression getType() {
         if (type == JavaType.JavaBOOLEAN) {
             return JavaType.JavaINT;
-
         }
         return type;
     }
