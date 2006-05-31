@@ -1,0 +1,341 @@
+(DEFPRED (<: subtype supertype))
+(BG_PUSH (AND
+(DISTINCT 
+   c_int
+   c_short
+   c_char
+   c_byte
+   c_boolean
+ c_java_lang_Object
+ c_fr_Loop
+)
+(FORALL (x) (IFF (<: x (ref c_int)) (EQ x (ref c_int))))
+(FORALL (x) (IFF (<: x (ref c_short)) (EQ x (ref c_short))))
+(FORALL (x) (IFF (<: x (ref c_char)) (EQ x (ref c_char))))
+(FORALL (x) (IFF (<: x (ref c_byte)) (EQ x (ref c_byte))))
+(FORALL (x) (IFF (<: x (ref c_boolean)) (EQ x (ref c_boolean))))
+(FORALL (x y z) (IFF (<: x (array y z)) (EQ x (array y z))))
+(FORALL (x) (<: x (ref c_java_lang_Object)))
+(FORALL (x) (IFF (<: x (ref c_fr_Loop)) (OR (EQ x (ref c_fr_Loop))
+)))
+)
+)
+(DEFPRED (BOOL arg1))
+(DEFPRED (t_long arg1))
+(DEFPRED (t_int arg1))
+(DEFPRED (t_short arg1))
+(DEFPRED (t_byte arg1))
+(DEFPRED (t_char arg1))
+(BG_PUSH (AND (NOT (EQ |@true| |@false|))
+(FORALL (x) (IFF (BOOL x) (OR (EQ x |@true|) (EQ x |@false|))))
+(FORALL (x) (IFF (t_int x) (AND (<= c_minlong x) (<= x c_maxlong))))
+(FORALL (x) (IFF (t_int x) (AND (<= c_minint x) (<= x c_maxint))))
+(FORALL (x) (IFF (t_short x) (AND (<= c_minshort x) (<= x c_maxshort))))
+(FORALL (x) (IFF (t_byte x) (AND (<= c_minbyte x) (<= x c_maxbyte))))
+(FORALL (x) (IFF (t_char x) (AND (<= c_minchar x) (<= x c_maxchar))))
+(EQ c_minbyte -128) (EQ c_maxbyte 127) (EQ c_minchar 0) (EQ c_maxchar 65535) (EQ c_minshort -32768) (EQ c_maxshort 32767)
+(<= c_minint c_minshort) (<= c_maxshort c_maxint) (<= c_minlong c_minint) (<= c_maxint c_maxlong)
+(FORALL (a b) (EQ (j_add a b) (+ a b))) (FORALL (a b) (EQ (j_sub a b) (- a b))) (FORALL (a b) (EQ (j_mul a b) (* a b)))
+(FORALL (x) (IMPLIES (AND (>= x c_minbyte) (<= x c_maxbyte)) (EQ x (j_int2byte x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minchar) (<= x c_maxchar)) (EQ x (j_int2char x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minshort) (<= x c_maxshort)) (EQ x (j_int2short x))))
+)
+)
+(DEFPRED (REFERENCES arg1))
+(DEFPRED (instances arg1))
+(BG_PUSH (AND
+(FORALL (x) (EQ (select elemtype (array x 1)) (ref x)))
+(FORALL (x y) (IMPLIES (< 1 y) (EQ (select elemtype (array x y)) (array x (- y 1)))))
+(FORALL (c) (IMPLIES (EQ (|instances| c) |@true|) (REFERENCES c)))(NOT (EQ (|instances| null) |@true|))
+(FORALL (x) (<= 0 (select |arraylength| x)))
+(FORALL (x y) (IFF (EQ x y) (EQ (ref x) (ref y))))
+(FORALL (x y z) (NEQ (ref x) (array y z)))
+(FORALL (x y) (<: (select typeof (select (select |refelements| x) y)) (select elemtype (select typeof x))))
+)) 
+
+;---Lemma doLoop_Th0---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ |arrayReference_15| |null|))
+(< |local_1_16| 3)
+(>= |local_1_16| 0)
+(< |local_1_16| 3)
+(NOT (EQ |arrayReference_15| |null|))
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l11|) (IFF (EQ (|@l10| |@l11|) |@true|)(EQ |@l11| |null|)))(FORALL (|@l9|) (IFF (EQ (|@l8| |@l9|) |@true|)(OR (EQ (|instances| |@l9|) |@true|) (EQ (|@l10| |@l9|) |@true|))))(AND TRUE (EQ (|@l8| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l15|) (IFF (EQ (|@l14| |@l15|) |@true|)(EQ |@l15| |null|)))(FORALL (|@l13|) (IFF (EQ (|@l12| |@l13|) |@true|)(OR (EQ (|instances| |@l13|) |@true|) (EQ (|@l14| |@l13|) |@true|))))(AND TRUE (EQ (|@l12| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(<= 0 (+ |local_1_16| 1))
+(BG_POP)
+
+;---Lemma doLoop_Th1---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ |arrayReference_15| |null|))
+(< |local_1_16| 3)
+(>= |local_1_16| 0)
+(< |local_1_16| 3)
+(NOT (EQ |arrayReference_15| |null|))
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l27|) (IFF (EQ (|@l26| |@l27|) |@true|)(EQ |@l27| |null|)))(FORALL (|@l25|) (IFF (EQ (|@l24| |@l25|) |@true|)(OR (EQ (|instances| |@l25|) |@true|) (EQ (|@l26| |@l25|) |@true|))))(AND TRUE (EQ (|@l24| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l31|) (IFF (EQ (|@l30| |@l31|) |@true|)(EQ |@l31| |null|)))(FORALL (|@l29|) (IFF (EQ (|@l28| |@l29|) |@true|)(OR (EQ (|instances| |@l29|) |@true|) (EQ (|@l30| |@l29|) |@true|))))(AND TRUE (EQ (|@l28| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(<= (+ |local_1_16| 1) 3)
+(BG_POP)
+
+;---Lemma doLoop_Th2---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ |arrayReference_15| |null|))
+(< |local_1_16| 3)
+(>= |local_1_16| 0)
+(< |local_1_16| 3)
+(NOT (EQ |arrayReference_15| |null|))
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l43|) (IFF (EQ (|@l42| |@l43|) |@true|)(EQ |@l43| |null|)))(FORALL (|@l41|) (IFF (EQ (|@l40| |@l41|) |@true|)(OR (EQ (|instances| |@l41|) |@true|) (EQ (|@l42| |@l41|) |@true|))))(AND TRUE (EQ (|@l40| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l47|) (IFF (EQ (|@l46| |@l47|) |@true|)(EQ |@l47| |null|)))(FORALL (|@l45|) (IFF (EQ (|@l44| |@l45|) |@true|)(OR (EQ (|instances| |@l45|) |@true|) (EQ (|@l46| |@l45|) |@true|))))(AND TRUE (EQ (|@l44| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(IMPLIES (FORALL (|@l48|) (EQ (select |@l49| |@l48|) (select (select |intelements| |arrayReference_15|) |@l48|))) 
+(FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| (+ |local_1_16| 1))) (EQ (select (select (store |intelements| |arrayReference_15| (store |@l49| |local_1_16| 0)) |arrayReference_15|) |var_0z|) 0)))
+
+)
+(BG_POP)
+
+;---Lemma doLoop_Th3---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ |arrayReference_15| |null|))
+(< |local_1_16| 3)
+(>= |local_1_16| 0)
+(< |local_1_16| 3)
+(NOT (EQ |arrayReference_15| |null|))
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l61|) (IFF (EQ (|@l60| |@l61|) |@true|)(EQ |@l61| |null|)))(FORALL (|@l59|) (IFF (EQ (|@l58| |@l59|) |@true|)(OR (EQ (|instances| |@l59|) |@true|) (EQ (|@l60| |@l59|) |@true|))))(AND TRUE (EQ (|@l58| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l65|) (IFF (EQ (|@l64| |@l65|) |@true|)(EQ |@l65| |null|)))(FORALL (|@l63|) (IFF (EQ (|@l62| |@l63|) |@true|)(OR (EQ (|instances| |@l63|) |@true|) (EQ (|@l64| |@l63|) |@true|))))(AND TRUE (EQ (|@l62| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(< (- 3 (+ |local_1_16| 1)) (- (select |arraylength_16| |local_2_16|) |local_1_16|))
+(BG_POP)
+
+;---Lemma doLoop_Th4---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (OR (>= |local_1_16| 3) (< |local_1_16| 0))
+(< |local_1_16| 3)
+(NOT (EQ |arrayReference_15| |null|))
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l77|) (IFF (EQ (|@l76| |@l77|) |@true|)(EQ |@l77| |null|)))(FORALL (|@l75|) (IFF (EQ (|@l74| |@l75|) |@true|)(OR (EQ (|instances| |@l75|) |@true|) (EQ (|@l76| |@l75|) |@true|))))(AND TRUE (EQ (|@l74| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l81|) (IFF (EQ (|@l80| |@l81|) |@true|)(EQ |@l81| |null|)))(FORALL (|@l79|) (IFF (EQ (|@l78| |@l79|) |@true|)(OR (EQ (|instances| |@l79|) |@true|) (EQ (|@l80| |@l79|) |@true|))))(AND TRUE (EQ (|@l78| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(NOT TRUE)
+(BG_POP)
+
+;---Lemma doLoop_Th5---
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (EQ |arrayReference_15| |null|)
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l93|) (IFF (EQ (|@l92| |@l93|) |@true|)(EQ |@l93| |null|)))(FORALL (|@l91|) (IFF (EQ (|@l90| |@l91|) |@true|)(OR (EQ (|instances| |@l91|) |@true|) (EQ (|@l92| |@l91|) |@true|))))(AND TRUE (EQ (|@l90| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l97|) (IFF (EQ (|@l96| |@l97|) |@true|)(EQ |@l97| |null|)))(FORALL (|@l95|) (IFF (EQ (|@l94| |@l95|) |@true|)(OR (EQ (|instances| |@l95|) |@true|) (EQ (|@l96| |@l95|) |@true|))))(AND TRUE (EQ (|@l94| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(NOT TRUE)
+(BG_POP)
+
+;---Lemma doLoop_Th6---
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+(EQ (select |arraylength| |arrayReference_15|) 3)
+(NEQ |null| |arrayReference_15|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l109|) (IFF (EQ (|@l108| |@l109|) |@true|)(EQ |@l109| |null|)))(FORALL (|@l107|) (IFF (EQ (|@l106| |@l107|) |@true|)(OR (EQ (|instances| |@l107|) |@true|) (EQ (|@l108| |@l107|) |@true|))))(AND TRUE (EQ (|@l106| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l113|) (IFF (EQ (|@l112| |@l113|) |@true|)(EQ |@l113| |null|)))(FORALL (|@l111|) (IFF (EQ (|@l110| |@l111|) |@true|)(OR (EQ (|instances| |@l111|) |@true|) (EQ (|@l112| |@l111|) |@true|))))(AND TRUE (EQ (|@l110| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| 0)) (EQ ( select ( select |intelements| |arrayReference_15|) |var_0z|) 0)))
+
+(BG_POP)
+
+;---Lemma doLoop_Th7---
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (EQ |arrayReference_24| |null|)
+(AND (<= 0 |local_1_16|) (<= |local_1_16| 3) (FORALL (|var_0z|) (IMPLIES (AND (<= 0 |var_0z|) (< |var_0z| |local_1_16|)) (EQ ( select ( select |intelements| |arrayReference_24|) |var_0z|) 0)))
+)
+(>= (- 3 |local_1_16|) 0)
+TRUE
+TRUE
+(EQ (select |arraylength| |arrayReference_24|) 3)
+(NEQ |null| |arrayReference_24|)
+(NOT (EQ |local_0| |null|))
+(<: (select |typeof| |local_0|) (ref c_fr_Loop))
+(FORALL (|@l125|) (IFF (EQ (|@l124| |@l125|) |@true|)(EQ |@l125| |null|)))(FORALL (|@l123|) (IFF (EQ (|@l122| |@l123|) |@true|)(OR (EQ (|instances| |@l123|) |@true|) (EQ (|@l124| |@l123|) |@true|))))(AND TRUE (EQ (|@l122| |local_0|) |@true|) (IMPLIES (NEQ |local_0| |null|) (<: (select |typeof| |local_0|) (ref c_fr_Loop))))
+TRUE
+(FORALL (|@l129|) (IFF (EQ (|@l128| |@l129|) |@true|)(EQ |@l129| |null|)))(FORALL (|@l127|) (IFF (EQ (|@l126| |@l127|) |@true|)(OR (EQ (|instances| |@l127|) |@true|) (EQ (|@l128| |@l127|) |@true|))))(AND TRUE (EQ (|@l126| |local_2|) |@true|) (IMPLIES (NEQ |local_2| |null|) (<: (select |typeof| |local_2|) (array c_pd_int 1))))
+))
+;--End of hypothesis--
+(NOT TRUE)
+(BG_POP)

@@ -1,0 +1,115 @@
+Loop_prelude : THEORY
+
+BEGIN
+
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+
+Classes : TYPE = {
+   c_int,
+   c_short,
+   c_char,
+   c_byte,
+   c_boolean,
+   c_java_lang_Object,
+   c_fr_Loop}
+
+
+c_minint : integer = -2147483648
+c_maxint : integer = 2147483647
+c_maxshort : integer = 32767
+c_minshort : integer = -32768
+c_maxbyte : integer = 127
+c_minbyte : integer = -128
+c_minchar : integer = 0
+c_maxchar : integer = 65535
+
+t_int : TYPE = {x: integer | c_minint <= x AND x <= c_maxint} CONTAINING 0
+t_short : TYPE = {x: integer | c_minshort <= x AND x <= c_maxshort} CONTAINING 0
+t_byte : TYPE = {x: integer | c_minbyte <= x AND x <= c_maxbyte} CONTAINING 0
+t_char : TYPE = {x: integer | c_minchar <= x AND x <= c_maxchar} CONTAINING 0
+j_add : [integer, integer -> integer] = (LAMBDA (x,y:integer): x + y)
+j_sub : [integer, integer -> integer] = (LAMBDA (x,y:integer): x - y)
+j_mul : [integer, integer -> integer] = (LAMBDA (x,y:integer): x * y)
+j_div : [integer, nonzero_integer -> integer] = (LAMBDA (x:integer,y:nonzero_integer): div(x,y))
+j_rem : [integer, nonzero_integer -> integer] = (LAMBDA (x:integer,y:nonzero_integer): rem(x,y))
+j_neg : [integer -> integer] = (LAMBDA (x:integer): -x)
+j_shl : [integer, integer -> integer]
+j_shr : [integer, integer -> integer]
+j_ushr : [integer, integer -> integer]
+j_and : [integer, integer -> integer]
+j_or : [integer, integer -> integer]
+j_xor : [integer, integer -> integer]
+
+j_int2char : [t_int -> t_char]
+j_int2charId : AXIOM (FORALL (n:t_char): j_int2char(n) = n)
+
+j_int2byte : [t_int -> t_byte]
+j_int2byteId : AXIOM (FORALL (n:t_byte): j_int2byte(n) = n)
+
+j_int2short : [t_int -> t_short]
+j_int2shortId : AXIOM (FORALL (n:t_int): j_int2short(n) = n)
+
+Types : DATATYPE
+    BEGIN
+      class (c: Classes) : class?
+      arrays (c: Classes, n : posnat) : arrays?
+    END Types
+
+REFERENCES : DATATYPE
+    BEGIN
+      null : null?
+      instances (typeof : Types) : instances?
+    END REFERENCES
+
+STRING : NONEMPTY_TYPE
+j_string : [STRING -> REFERENCES]
+
+elemtype : [{t:Types | arrays?(t)} -> Types] =
+   (LAMBDA (t:{t:Types | arrays?(t)}): CASES t OF
+      arrays(c,n) : IF n > 1 THEN arrays(c, n-1) ELSE class(c) ENDIF
+     ENDCASES)
+
+arraylength : [{x:REFERENCES | instances?(x) AND arrays?(typeof(x))} -> nat]
+intelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+shortelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+charelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+byteelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+booleanelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+refelements : [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+
+subtype : [Types ,Types -> bool] =
+   (LAMBDA (t1,t2:Types):
+      CASES t2 OF
+         class(c) :
+            CASES c OF
+            c_int : t1 = t2,
+
+
+            c_short : t1 = t2,
+
+
+            c_char : t1 = t2,
+
+
+            c_byte : t1 = t2,
+
+
+            c_boolean : t1 = t2,
+
+            c_java_lang_Object : true,
+
+            c_fr_Loop : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_fr_Loop: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES
+            ENDCASES,
+
+         arrays(s,t) : t1 = t2
+      ENDCASES)
+
+END Loop_prelude
+

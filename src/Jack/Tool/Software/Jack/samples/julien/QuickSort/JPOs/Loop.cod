@@ -1,0 +1,21 @@
+doLoop:()V
+   0: iconst_3
+   1: newarray int
+   3: astore_2
+   4: iconst_0
+   5: istore_1
+   6: goto -> 16
+   9: aload_2
+  10: iload_1
+  11: iconst_0
+  12: iastore
+  13: iinc 1 1
+  16: iload_1
+  17: aload_2
+  18: arraylength
+  19: if_icmplt -> 9
+  22: return
+<init>:()V
+   0: aload_0
+   1: invokespecial 9
+   4: return

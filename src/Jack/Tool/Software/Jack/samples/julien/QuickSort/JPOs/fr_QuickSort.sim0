@@ -1,0 +1,3429 @@
+(DEFPRED (<: subtype supertype))
+(BG_PUSH (AND
+(DISTINCT 
+   c_int
+   c_short
+   c_char
+   c_byte
+   c_boolean
+ c_WeakReference
+ c_Reference
+ c_Reference_Lock
+ c_Reference_1
+ c_ReferenceQueue
+ c_ReferenceQueue_Lock
+ c_ReferenceQueue_1
+ c_SoftReference
+ c_Constructor
+ c_AccessibleObject
+ c_Field
+ c_Method
+ c_Object
+ c_Exception
+ c_Throwable
+ c_String
+ c_StringBuffer
+ c_Class
+ c_ClassLoader
+ c_AssertionStatusDirectives
+ c_Package
+ c_SecurityManager
+ c_Thread
+ c_ThreadGroup
+ c_Integer
+ c_Number
+ c_ThreadLocal
+ c_ThreadLocal_ThreadLocalMap
+ c_ThreadLocal_1
+ c_ThreadLocal_ThreadLocalMap_Entry
+ c_Package_1
+ c_ClassNotFoundException
+ c_Long
+ c_StackTraceElement
+ c_NullPointerException
+ c_RuntimeException
+ c_ArithmeticException
+ c_ArrayIndexOutOfBoundsException
+ c_IndexOutOfBoundsException
+ c_NegativeArraySizeException
+ c_ClassCastException
+ c_ArrayStoreException
+ c_ObjectOutputStream
+ c_OutputStream
+ c_ObjectInputStream
+ c_InputStream
+ c_SerializablePermission
+ c_IOException
+ c_ObjectInputStream_GetField
+ c_ObjectStreamClass
+ c_ObjectStreamClass_ClassDataSlot
+ c_ObjectStreamField
+ c_FileDescriptor
+ c_PrintStream
+ c_FilterOutputStream
+ c_OutputStreamWriter
+ c_Writer
+ c_BufferedWriter
+ c_DataOutputStream
+ c_FilterInputStream
+ c_File
+ c_FileSystem
+ c_InvalidClassException
+ c_ObjectStreamException
+ c_ObjectStreamClass_FieldReflector
+ c_ObjectInputStream_BlockDataInputStream
+ c_ObjectInputStream_PeekInputStream
+ c_DataInputStream
+ c_ObjectInputStream_HandleTable
+ c_ObjectInputStream_HandleTable_HandleList
+ c_ObjectInputStream_ValidationList
+ c_ObjectInputStream_ValidationList_Callback
+ c_ObjectInputStream_GetFieldImpl
+ c_ObjectOutputStream_PutField
+ c_ObjectOutputStream_BlockDataOutputStream
+ c_ObjectOutputStream_HandleTable
+ c_ObjectOutputStream_ReplaceTable
+ c_ObjectOutputStream_PutFieldImpl
+ c_PrintWriter
+ c_Certificate
+ c_BasicPermission
+ c_Permission
+ c_PermissionCollection
+ c_AccessControlContext
+ c_ProtectionDomain
+ c_CodeSource
+ c_Manifest
+ c_Attributes
+ c_Manifest_FastInputStream
+ c_Attributes_Name
+ c_Locale
+ c_ResourceBundle
+ c_Vector
+ c_AbstractList
+ c_AbstractCollection
+ c_ResourceBundle_ResourceCacheKey
+ c_ResourceBundle_1
+ c_Hashtable
+ c_Dictionary
+ c_Hashtable_Entry
+ c_Hashtable_EmptyEnumerator
+ c_Hashtable_EmptyIterator
+ c_AbstractMap
+ c_LinkedHashMap
+ c_HashMap
+ c_HashMap_Entry
+ c_LinkedHashMap_Entry
+ c_Random
+ c_Stack
+ c_ArrayList
+ c_URL
+ c_SocketPermission
+ c_InetAddress
+ c_InetAddress_Cache
+ c_InetAddress_CacheEntry
+ c_URLConnection
+ c_ContentHandler
+ c_URLStreamHandler
+ c_URI
+ c_CharsetProvider
+ c_Charset
+ c_CharsetDecoder
+ c_CodingErrorAction
+ c_CoderResult
+ c_CoderResult_1
+ c_CoderResult_Cache
+ c_CharsetEncoder
+ c_CharBuffer
+ c_Buffer
+ c_ByteOrder
+ c_ByteBuffer
+ c_DoubleBuffer
+ c_FloatBuffer
+ c_IntBuffer
+ c_LongBuffer
+ c_ShortBuffer
+ c_MessageFormat
+ c_Format
+ c_AttributedCharacterIterator_Attribute
+ c_ParsePosition
+ c_FieldPosition
+ c_Format_Field
+ c_BigInteger
+ c_MutableBigInteger
+ c_SoftCache
+ c_AtomicLong
+ c_URLClassPath
+ c_URLClassPath_Loader
+ c_Resource
+ c_Unsafe
+ c_StreamEncoder
+ c_StreamEncoder_1
+ c_Debug
+ c_ReflectionFactory
+ c_fr_QuickSort
+ c_Member
+ c_Comparable
+ c_CharSequence
+ c_Runnable
+ c_Cloneable
+ c_Serializable
+ c_ObjectOutput
+ c_DataOutput
+ c_ObjectInput
+ c_DataInput
+ c_ObjectStreamConstants
+ c_FileFilter
+ c_FilenameFilter
+ c_ObjectInputValidation
+ c_Externalizable
+ c_Guard
+ c_PrivilegedAction
+ c_DomainCombiner
+ c_PublicKey
+ c_Key
+ c_Principal
+ c_Enumeration
+ c_Map
+ c_Collection
+ c_Iterator
+ c_Set
+ c_SortedMap
+ c_Comparator
+ c_List
+ c_ListIterator
+ c_RandomAccess
+ c_Map_Entry
+ c_InetAddressImpl
+ c_ContentHandlerFactory
+ c_FileNameMap
+ c_URLStreamHandlerFactory
+ c_WritableByteChannel
+ c_Channel
+ c_AttributedCharacterIterator
+ c_CharacterIterator
+ c_Format_FieldDelegate
+ c_Interruptible
+ c_NameService
+ c_LangReflectAccess
+ c_FieldAccessor
+ c_MethodAccessor
+ c_ConstructorAccessor
+)
+(FORALL (x) (IFF (<: x (ref c_int)) (EQ x (ref c_int))))
+(FORALL (x) (IFF (<: x (ref c_short)) (EQ x (ref c_short))))
+(FORALL (x) (IFF (<: x (ref c_char)) (EQ x (ref c_char))))
+(FORALL (x) (IFF (<: x (ref c_byte)) (EQ x (ref c_byte))))
+(FORALL (x) (IFF (<: x (ref c_boolean)) (EQ x (ref c_boolean))))
+(FORALL (x y z) (IFF (<: x (array y z)) (EQ x (array y z))))
+(FORALL (x) (IFF (<: x (ref c_WeakReference)) (OR (EQ x (ref c_WeakReference))
+(EQ x (ref c_ThreadLocal_ThreadLocalMap_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_Reference)) (OR (EQ x (ref c_WeakReference))
+(EQ x (ref c_Reference))
+(EQ x (ref c_SoftReference))
+(EQ x (ref c_ThreadLocal_ThreadLocalMap_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_Reference_Lock)) (OR (EQ x (ref c_Reference_Lock))
+)))
+(FORALL (x) (IFF (<: x (ref c_Reference_1)) (OR (EQ x (ref c_Reference_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_ReferenceQueue)) (OR (EQ x (ref c_ReferenceQueue))
+)))
+(FORALL (x) (IFF (<: x (ref c_ReferenceQueue_Lock)) (OR (EQ x (ref c_ReferenceQueue_Lock))
+)))
+(FORALL (x) (IFF (<: x (ref c_ReferenceQueue_1)) (OR (EQ x (ref c_ReferenceQueue_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_SoftReference)) (OR (EQ x (ref c_SoftReference))
+)))
+(FORALL (x) (IFF (<: x (ref c_Constructor)) (OR (EQ x (ref c_Constructor))
+)))
+(FORALL (x) (IFF (<: x (ref c_AccessibleObject)) (OR (EQ x (ref c_Constructor))
+(EQ x (ref c_AccessibleObject))
+(EQ x (ref c_Field))
+(EQ x (ref c_Method))
+)))
+(FORALL (x) (IFF (<: x (ref c_Field)) (OR (EQ x (ref c_Field))
+)))
+(FORALL (x) (IFF (<: x (ref c_Method)) (OR (EQ x (ref c_Method))
+)))
+(FORALL (x) (<: x (ref c_Object)))
+(FORALL (x) (IFF (<: x (ref c_Exception)) (OR (EQ x (ref c_Exception))
+(EQ x (ref c_ClassNotFoundException))
+(EQ x (ref c_NullPointerException))
+(EQ x (ref c_RuntimeException))
+(EQ x (ref c_ArithmeticException))
+(EQ x (ref c_ArrayIndexOutOfBoundsException))
+(EQ x (ref c_IndexOutOfBoundsException))
+(EQ x (ref c_NegativeArraySizeException))
+(EQ x (ref c_ClassCastException))
+(EQ x (ref c_ArrayStoreException))
+(EQ x (ref c_IOException))
+(EQ x (ref c_InvalidClassException))
+(EQ x (ref c_ObjectStreamException))
+)))
+(FORALL (x) (IFF (<: x (ref c_Throwable)) (OR (EQ x (ref c_Exception))
+(EQ x (ref c_Throwable))
+(EQ x (ref c_ClassNotFoundException))
+(EQ x (ref c_NullPointerException))
+(EQ x (ref c_RuntimeException))
+(EQ x (ref c_ArithmeticException))
+(EQ x (ref c_ArrayIndexOutOfBoundsException))
+(EQ x (ref c_IndexOutOfBoundsException))
+(EQ x (ref c_NegativeArraySizeException))
+(EQ x (ref c_ClassCastException))
+(EQ x (ref c_ArrayStoreException))
+(EQ x (ref c_IOException))
+(EQ x (ref c_InvalidClassException))
+(EQ x (ref c_ObjectStreamException))
+)))
+(FORALL (x) (IFF (<: x (ref c_String)) (OR (EQ x (ref c_String))
+)))
+(FORALL (x) (IFF (<: x (ref c_StringBuffer)) (OR (EQ x (ref c_StringBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_Class)) (OR (EQ x (ref c_Class))
+)))
+(FORALL (x) (IFF (<: x (ref c_ClassLoader)) (OR (EQ x (ref c_ClassLoader))
+)))
+(FORALL (x) (IFF (<: x (ref c_AssertionStatusDirectives)) (OR (EQ x (ref c_AssertionStatusDirectives))
+)))
+(FORALL (x) (IFF (<: x (ref c_Package)) (OR (EQ x (ref c_Package))
+)))
+(FORALL (x) (IFF (<: x (ref c_SecurityManager)) (OR (EQ x (ref c_SecurityManager))
+)))
+(FORALL (x) (IFF (<: x (ref c_Thread)) (OR (EQ x (ref c_Thread))
+)))
+(FORALL (x) (IFF (<: x (ref c_ThreadGroup)) (OR (EQ x (ref c_ThreadGroup))
+)))
+(FORALL (x) (IFF (<: x (ref c_Integer)) (OR (EQ x (ref c_Integer))
+)))
+(FORALL (x) (IFF (<: x (ref c_Number)) (OR (EQ x (ref c_Integer))
+(EQ x (ref c_Number))
+(EQ x (ref c_Long))
+(EQ x (ref c_BigInteger))
+)))
+(FORALL (x) (IFF (<: x (ref c_ThreadLocal)) (OR (EQ x (ref c_ThreadLocal))
+)))
+(FORALL (x) (IFF (<: x (ref c_ThreadLocal_ThreadLocalMap)) (OR (EQ x (ref c_ThreadLocal_ThreadLocalMap))
+)))
+(FORALL (x) (IFF (<: x (ref c_ThreadLocal_1)) (OR (EQ x (ref c_ThreadLocal_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_ThreadLocal_ThreadLocalMap_Entry)) (OR (EQ x (ref c_ThreadLocal_ThreadLocalMap_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_Package_1)) (OR (EQ x (ref c_Package_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_ClassNotFoundException)) (OR (EQ x (ref c_ClassNotFoundException))
+)))
+(FORALL (x) (IFF (<: x (ref c_Long)) (OR (EQ x (ref c_Long))
+)))
+(FORALL (x) (IFF (<: x (ref c_StackTraceElement)) (OR (EQ x (ref c_StackTraceElement))
+)))
+(FORALL (x) (IFF (<: x (ref c_NullPointerException)) (OR (EQ x (ref c_NullPointerException))
+)))
+(FORALL (x) (IFF (<: x (ref c_RuntimeException)) (OR (EQ x (ref c_NullPointerException))
+(EQ x (ref c_RuntimeException))
+(EQ x (ref c_ArithmeticException))
+(EQ x (ref c_ArrayIndexOutOfBoundsException))
+(EQ x (ref c_IndexOutOfBoundsException))
+(EQ x (ref c_NegativeArraySizeException))
+(EQ x (ref c_ClassCastException))
+(EQ x (ref c_ArrayStoreException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ArithmeticException)) (OR (EQ x (ref c_ArithmeticException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ArrayIndexOutOfBoundsException)) (OR (EQ x (ref c_ArrayIndexOutOfBoundsException))
+)))
+(FORALL (x) (IFF (<: x (ref c_IndexOutOfBoundsException)) (OR (EQ x (ref c_ArrayIndexOutOfBoundsException))
+(EQ x (ref c_IndexOutOfBoundsException))
+)))
+(FORALL (x) (IFF (<: x (ref c_NegativeArraySizeException)) (OR (EQ x (ref c_NegativeArraySizeException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ClassCastException)) (OR (EQ x (ref c_ClassCastException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ArrayStoreException)) (OR (EQ x (ref c_ArrayStoreException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutputStream)) (OR (EQ x (ref c_ObjectOutputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_OutputStream)) (OR (EQ x (ref c_ObjectOutputStream))
+(EQ x (ref c_OutputStream))
+(EQ x (ref c_PrintStream))
+(EQ x (ref c_FilterOutputStream))
+(EQ x (ref c_DataOutputStream))
+(EQ x (ref c_ObjectOutputStream_BlockDataOutputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream)) (OR (EQ x (ref c_ObjectInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_InputStream)) (OR (EQ x (ref c_ObjectInputStream))
+(EQ x (ref c_InputStream))
+(EQ x (ref c_FilterInputStream))
+(EQ x (ref c_ObjectInputStream_BlockDataInputStream))
+(EQ x (ref c_ObjectInputStream_PeekInputStream))
+(EQ x (ref c_DataInputStream))
+(EQ x (ref c_Manifest_FastInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_SerializablePermission)) (OR (EQ x (ref c_SerializablePermission))
+)))
+(FORALL (x) (IFF (<: x (ref c_IOException)) (OR (EQ x (ref c_IOException))
+(EQ x (ref c_InvalidClassException))
+(EQ x (ref c_ObjectStreamException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_GetField)) (OR (EQ x (ref c_ObjectInputStream_GetField))
+(EQ x (ref c_ObjectInputStream_GetFieldImpl))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectStreamClass)) (OR (EQ x (ref c_ObjectStreamClass))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectStreamClass_ClassDataSlot)) (OR (EQ x (ref c_ObjectStreamClass_ClassDataSlot))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectStreamField)) (OR (EQ x (ref c_ObjectStreamField))
+)))
+(FORALL (x) (IFF (<: x (ref c_FileDescriptor)) (OR (EQ x (ref c_FileDescriptor))
+)))
+(FORALL (x) (IFF (<: x (ref c_PrintStream)) (OR (EQ x (ref c_PrintStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_FilterOutputStream)) (OR (EQ x (ref c_PrintStream))
+(EQ x (ref c_FilterOutputStream))
+(EQ x (ref c_DataOutputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_OutputStreamWriter)) (OR (EQ x (ref c_OutputStreamWriter))
+)))
+(FORALL (x) (IFF (<: x (ref c_Writer)) (OR (EQ x (ref c_OutputStreamWriter))
+(EQ x (ref c_Writer))
+(EQ x (ref c_BufferedWriter))
+(EQ x (ref c_PrintWriter))
+(EQ x (ref c_StreamEncoder))
+)))
+(FORALL (x) (IFF (<: x (ref c_BufferedWriter)) (OR (EQ x (ref c_BufferedWriter))
+)))
+(FORALL (x) (IFF (<: x (ref c_DataOutputStream)) (OR (EQ x (ref c_DataOutputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_FilterInputStream)) (OR (EQ x (ref c_FilterInputStream))
+(EQ x (ref c_DataInputStream))
+(EQ x (ref c_Manifest_FastInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_File)) (OR (EQ x (ref c_File))
+)))
+(FORALL (x) (IFF (<: x (ref c_FileSystem)) (OR (EQ x (ref c_FileSystem))
+)))
+(FORALL (x) (IFF (<: x (ref c_InvalidClassException)) (OR (EQ x (ref c_InvalidClassException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectStreamException)) (OR (EQ x (ref c_InvalidClassException))
+(EQ x (ref c_ObjectStreamException))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectStreamClass_FieldReflector)) (OR (EQ x (ref c_ObjectStreamClass_FieldReflector))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_BlockDataInputStream)) (OR (EQ x (ref c_ObjectInputStream_BlockDataInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_PeekInputStream)) (OR (EQ x (ref c_ObjectInputStream_PeekInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_DataInputStream)) (OR (EQ x (ref c_DataInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_HandleTable)) (OR (EQ x (ref c_ObjectInputStream_HandleTable))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_HandleTable_HandleList)) (OR (EQ x (ref c_ObjectInputStream_HandleTable_HandleList))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_ValidationList)) (OR (EQ x (ref c_ObjectInputStream_ValidationList))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_ValidationList_Callback)) (OR (EQ x (ref c_ObjectInputStream_ValidationList_Callback))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputStream_GetFieldImpl)) (OR (EQ x (ref c_ObjectInputStream_GetFieldImpl))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutputStream_PutField)) (OR (EQ x (ref c_ObjectOutputStream_PutField))
+(EQ x (ref c_ObjectOutputStream_PutFieldImpl))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutputStream_BlockDataOutputStream)) (OR (EQ x (ref c_ObjectOutputStream_BlockDataOutputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutputStream_HandleTable)) (OR (EQ x (ref c_ObjectOutputStream_HandleTable))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutputStream_ReplaceTable)) (OR (EQ x (ref c_ObjectOutputStream_ReplaceTable))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutputStream_PutFieldImpl)) (OR (EQ x (ref c_ObjectOutputStream_PutFieldImpl))
+)))
+(FORALL (x) (IFF (<: x (ref c_PrintWriter)) (OR (EQ x (ref c_PrintWriter))
+)))
+(FORALL (x) (IFF (<: x (ref c_Certificate)) (OR (EQ x (ref c_Certificate))
+)))
+(FORALL (x) (IFF (<: x (ref c_BasicPermission)) (OR (EQ x (ref c_SerializablePermission))
+(EQ x (ref c_BasicPermission))
+)))
+(FORALL (x) (IFF (<: x (ref c_Permission)) (OR (EQ x (ref c_SerializablePermission))
+(EQ x (ref c_BasicPermission))
+(EQ x (ref c_Permission))
+(EQ x (ref c_SocketPermission))
+)))
+(FORALL (x) (IFF (<: x (ref c_PermissionCollection)) (OR (EQ x (ref c_PermissionCollection))
+)))
+(FORALL (x) (IFF (<: x (ref c_AccessControlContext)) (OR (EQ x (ref c_AccessControlContext))
+)))
+(FORALL (x) (IFF (<: x (ref c_ProtectionDomain)) (OR (EQ x (ref c_ProtectionDomain))
+)))
+(FORALL (x) (IFF (<: x (ref c_CodeSource)) (OR (EQ x (ref c_CodeSource))
+)))
+(FORALL (x) (IFF (<: x (ref c_Manifest)) (OR (EQ x (ref c_Manifest))
+)))
+(FORALL (x) (IFF (<: x (ref c_Attributes)) (OR (EQ x (ref c_Attributes))
+)))
+(FORALL (x) (IFF (<: x (ref c_Manifest_FastInputStream)) (OR (EQ x (ref c_Manifest_FastInputStream))
+)))
+(FORALL (x) (IFF (<: x (ref c_Attributes_Name)) (OR (EQ x (ref c_Attributes_Name))
+)))
+(FORALL (x) (IFF (<: x (ref c_Locale)) (OR (EQ x (ref c_Locale))
+)))
+(FORALL (x) (IFF (<: x (ref c_ResourceBundle)) (OR (EQ x (ref c_ResourceBundle))
+)))
+(FORALL (x) (IFF (<: x (ref c_Vector)) (OR (EQ x (ref c_Vector))
+(EQ x (ref c_Stack))
+)))
+(FORALL (x) (IFF (<: x (ref c_AbstractList)) (OR (EQ x (ref c_Vector))
+(EQ x (ref c_AbstractList))
+(EQ x (ref c_Stack))
+(EQ x (ref c_ArrayList))
+)))
+(FORALL (x) (IFF (<: x (ref c_AbstractCollection)) (OR (EQ x (ref c_Vector))
+(EQ x (ref c_AbstractList))
+(EQ x (ref c_AbstractCollection))
+(EQ x (ref c_Stack))
+(EQ x (ref c_ArrayList))
+)))
+(FORALL (x) (IFF (<: x (ref c_ResourceBundle_ResourceCacheKey)) (OR (EQ x (ref c_ResourceBundle_ResourceCacheKey))
+)))
+(FORALL (x) (IFF (<: x (ref c_ResourceBundle_1)) (OR (EQ x (ref c_ResourceBundle_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_Hashtable)) (OR (EQ x (ref c_Hashtable))
+)))
+(FORALL (x) (IFF (<: x (ref c_Dictionary)) (OR (EQ x (ref c_Hashtable))
+(EQ x (ref c_Dictionary))
+)))
+(FORALL (x) (IFF (<: x (ref c_Hashtable_Entry)) (OR (EQ x (ref c_Hashtable_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_Hashtable_EmptyEnumerator)) (OR (EQ x (ref c_Hashtable_EmptyEnumerator))
+)))
+(FORALL (x) (IFF (<: x (ref c_Hashtable_EmptyIterator)) (OR (EQ x (ref c_Hashtable_EmptyIterator))
+)))
+(FORALL (x) (IFF (<: x (ref c_AbstractMap)) (OR (EQ x (ref c_AbstractMap))
+(EQ x (ref c_LinkedHashMap))
+(EQ x (ref c_HashMap))
+(EQ x (ref c_SoftCache))
+)))
+(FORALL (x) (IFF (<: x (ref c_LinkedHashMap)) (OR (EQ x (ref c_LinkedHashMap))
+)))
+(FORALL (x) (IFF (<: x (ref c_HashMap)) (OR (EQ x (ref c_LinkedHashMap))
+(EQ x (ref c_HashMap))
+)))
+(FORALL (x) (IFF (<: x (ref c_HashMap_Entry)) (OR (EQ x (ref c_HashMap_Entry))
+(EQ x (ref c_LinkedHashMap_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_LinkedHashMap_Entry)) (OR (EQ x (ref c_LinkedHashMap_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_Random)) (OR (EQ x (ref c_Random))
+)))
+(FORALL (x) (IFF (<: x (ref c_Stack)) (OR (EQ x (ref c_Stack))
+)))
+(FORALL (x) (IFF (<: x (ref c_ArrayList)) (OR (EQ x (ref c_ArrayList))
+)))
+(FORALL (x) (IFF (<: x (ref c_URL)) (OR (EQ x (ref c_URL))
+)))
+(FORALL (x) (IFF (<: x (ref c_SocketPermission)) (OR (EQ x (ref c_SocketPermission))
+)))
+(FORALL (x) (IFF (<: x (ref c_InetAddress)) (OR (EQ x (ref c_InetAddress))
+)))
+(FORALL (x) (IFF (<: x (ref c_InetAddress_Cache)) (OR (EQ x (ref c_InetAddress_Cache))
+)))
+(FORALL (x) (IFF (<: x (ref c_InetAddress_CacheEntry)) (OR (EQ x (ref c_InetAddress_CacheEntry))
+)))
+(FORALL (x) (IFF (<: x (ref c_URLConnection)) (OR (EQ x (ref c_URLConnection))
+)))
+(FORALL (x) (IFF (<: x (ref c_ContentHandler)) (OR (EQ x (ref c_ContentHandler))
+)))
+(FORALL (x) (IFF (<: x (ref c_URLStreamHandler)) (OR (EQ x (ref c_URLStreamHandler))
+)))
+(FORALL (x) (IFF (<: x (ref c_URI)) (OR (EQ x (ref c_URI))
+)))
+(FORALL (x) (IFF (<: x (ref c_CharsetProvider)) (OR (EQ x (ref c_CharsetProvider))
+)))
+(FORALL (x) (IFF (<: x (ref c_Charset)) (OR (EQ x (ref c_Charset))
+)))
+(FORALL (x) (IFF (<: x (ref c_CharsetDecoder)) (OR (EQ x (ref c_CharsetDecoder))
+)))
+(FORALL (x) (IFF (<: x (ref c_CodingErrorAction)) (OR (EQ x (ref c_CodingErrorAction))
+)))
+(FORALL (x) (IFF (<: x (ref c_CoderResult)) (OR (EQ x (ref c_CoderResult))
+)))
+(FORALL (x) (IFF (<: x (ref c_CoderResult_1)) (OR (EQ x (ref c_CoderResult_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_CoderResult_Cache)) (OR (EQ x (ref c_CoderResult_1))
+(EQ x (ref c_CoderResult_Cache))
+)))
+(FORALL (x) (IFF (<: x (ref c_CharsetEncoder)) (OR (EQ x (ref c_CharsetEncoder))
+)))
+(FORALL (x) (IFF (<: x (ref c_CharBuffer)) (OR (EQ x (ref c_CharBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_Buffer)) (OR (EQ x (ref c_CharBuffer))
+(EQ x (ref c_Buffer))
+(EQ x (ref c_ByteBuffer))
+(EQ x (ref c_DoubleBuffer))
+(EQ x (ref c_FloatBuffer))
+(EQ x (ref c_IntBuffer))
+(EQ x (ref c_LongBuffer))
+(EQ x (ref c_ShortBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_ByteOrder)) (OR (EQ x (ref c_ByteOrder))
+)))
+(FORALL (x) (IFF (<: x (ref c_ByteBuffer)) (OR (EQ x (ref c_ByteBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_DoubleBuffer)) (OR (EQ x (ref c_DoubleBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_FloatBuffer)) (OR (EQ x (ref c_FloatBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_IntBuffer)) (OR (EQ x (ref c_IntBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_LongBuffer)) (OR (EQ x (ref c_LongBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_ShortBuffer)) (OR (EQ x (ref c_ShortBuffer))
+)))
+(FORALL (x) (IFF (<: x (ref c_MessageFormat)) (OR (EQ x (ref c_MessageFormat))
+)))
+(FORALL (x) (IFF (<: x (ref c_Format)) (OR (EQ x (ref c_MessageFormat))
+(EQ x (ref c_Format))
+)))
+(FORALL (x) (IFF (<: x (ref c_AttributedCharacterIterator_Attribute)) (OR (EQ x (ref c_AttributedCharacterIterator_Attribute))
+(EQ x (ref c_Format_Field))
+)))
+(FORALL (x) (IFF (<: x (ref c_ParsePosition)) (OR (EQ x (ref c_ParsePosition))
+)))
+(FORALL (x) (IFF (<: x (ref c_FieldPosition)) (OR (EQ x (ref c_FieldPosition))
+)))
+(FORALL (x) (IFF (<: x (ref c_Format_Field)) (OR (EQ x (ref c_Format_Field))
+)))
+(FORALL (x) (IFF (<: x (ref c_BigInteger)) (OR (EQ x (ref c_BigInteger))
+)))
+(FORALL (x) (IFF (<: x (ref c_MutableBigInteger)) (OR (EQ x (ref c_MutableBigInteger))
+)))
+(FORALL (x) (IFF (<: x (ref c_SoftCache)) (OR (EQ x (ref c_SoftCache))
+)))
+(FORALL (x) (IFF (<: x (ref c_AtomicLong)) (OR (EQ x (ref c_AtomicLong))
+)))
+(FORALL (x) (IFF (<: x (ref c_URLClassPath)) (OR (EQ x (ref c_URLClassPath))
+)))
+(FORALL (x) (IFF (<: x (ref c_URLClassPath_Loader)) (OR (EQ x (ref c_URLClassPath_Loader))
+)))
+(FORALL (x) (IFF (<: x (ref c_Resource)) (OR (EQ x (ref c_Resource))
+)))
+(FORALL (x) (IFF (<: x (ref c_Unsafe)) (OR (EQ x (ref c_Unsafe))
+)))
+(FORALL (x) (IFF (<: x (ref c_StreamEncoder)) (OR (EQ x (ref c_StreamEncoder))
+)))
+(FORALL (x) (IFF (<: x (ref c_StreamEncoder_1)) (OR (EQ x (ref c_StreamEncoder_1))
+)))
+(FORALL (x) (IFF (<: x (ref c_Debug)) (OR (EQ x (ref c_Debug))
+)))
+(FORALL (x) (IFF (<: x (ref c_ReflectionFactory)) (OR (EQ x (ref c_ReflectionFactory))
+)))
+(FORALL (x) (IFF (<: x (ref c_fr_QuickSort)) (OR (EQ x (ref c_fr_QuickSort))
+)))
+(FORALL (x) (IFF (<: x (ref c_Member)) (OR (EQ x (ref c_Member))
+)))
+(FORALL (x) (IFF (<: x (ref c_Comparable)) (OR (EQ x (ref c_Comparable))
+)))
+(FORALL (x) (IFF (<: x (ref c_CharSequence)) (OR (EQ x (ref c_CharSequence))
+)))
+(FORALL (x) (IFF (<: x (ref c_Runnable)) (OR (EQ x (ref c_Runnable))
+)))
+(FORALL (x) (IFF (<: x (ref c_Cloneable)) (OR (EQ x (ref c_Cloneable))
+)))
+(FORALL (x) (IFF (<: x (ref c_Serializable)) (OR (EQ x (ref c_Serializable))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectOutput)) (OR (EQ x (ref c_ObjectOutput))
+)))
+(FORALL (x) (IFF (<: x (ref c_DataOutput)) (OR (EQ x (ref c_DataOutput))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInput)) (OR (EQ x (ref c_ObjectInput))
+)))
+(FORALL (x) (IFF (<: x (ref c_DataInput)) (OR (EQ x (ref c_DataInput))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectStreamConstants)) (OR (EQ x (ref c_ObjectStreamConstants))
+)))
+(FORALL (x) (IFF (<: x (ref c_FileFilter)) (OR (EQ x (ref c_FileFilter))
+)))
+(FORALL (x) (IFF (<: x (ref c_FilenameFilter)) (OR (EQ x (ref c_FilenameFilter))
+)))
+(FORALL (x) (IFF (<: x (ref c_ObjectInputValidation)) (OR (EQ x (ref c_ObjectInputValidation))
+)))
+(FORALL (x) (IFF (<: x (ref c_Externalizable)) (OR (EQ x (ref c_Externalizable))
+)))
+(FORALL (x) (IFF (<: x (ref c_Guard)) (OR (EQ x (ref c_Guard))
+)))
+(FORALL (x) (IFF (<: x (ref c_PrivilegedAction)) (OR (EQ x (ref c_PrivilegedAction))
+)))
+(FORALL (x) (IFF (<: x (ref c_DomainCombiner)) (OR (EQ x (ref c_DomainCombiner))
+)))
+(FORALL (x) (IFF (<: x (ref c_PublicKey)) (OR (EQ x (ref c_PublicKey))
+)))
+(FORALL (x) (IFF (<: x (ref c_Key)) (OR (EQ x (ref c_Key))
+)))
+(FORALL (x) (IFF (<: x (ref c_Principal)) (OR (EQ x (ref c_Principal))
+)))
+(FORALL (x) (IFF (<: x (ref c_Enumeration)) (OR (EQ x (ref c_Enumeration))
+)))
+(FORALL (x) (IFF (<: x (ref c_Map)) (OR (EQ x (ref c_Map))
+)))
+(FORALL (x) (IFF (<: x (ref c_Collection)) (OR (EQ x (ref c_Collection))
+)))
+(FORALL (x) (IFF (<: x (ref c_Iterator)) (OR (EQ x (ref c_Iterator))
+)))
+(FORALL (x) (IFF (<: x (ref c_Set)) (OR (EQ x (ref c_Set))
+)))
+(FORALL (x) (IFF (<: x (ref c_SortedMap)) (OR (EQ x (ref c_SortedMap))
+)))
+(FORALL (x) (IFF (<: x (ref c_Comparator)) (OR (EQ x (ref c_Comparator))
+)))
+(FORALL (x) (IFF (<: x (ref c_List)) (OR (EQ x (ref c_List))
+)))
+(FORALL (x) (IFF (<: x (ref c_ListIterator)) (OR (EQ x (ref c_ListIterator))
+)))
+(FORALL (x) (IFF (<: x (ref c_RandomAccess)) (OR (EQ x (ref c_RandomAccess))
+)))
+(FORALL (x) (IFF (<: x (ref c_Map_Entry)) (OR (EQ x (ref c_Map_Entry))
+)))
+(FORALL (x) (IFF (<: x (ref c_InetAddressImpl)) (OR (EQ x (ref c_InetAddressImpl))
+)))
+(FORALL (x) (IFF (<: x (ref c_ContentHandlerFactory)) (OR (EQ x (ref c_ContentHandlerFactory))
+)))
+(FORALL (x) (IFF (<: x (ref c_FileNameMap)) (OR (EQ x (ref c_FileNameMap))
+)))
+(FORALL (x) (IFF (<: x (ref c_URLStreamHandlerFactory)) (OR (EQ x (ref c_URLStreamHandlerFactory))
+)))
+(FORALL (x) (IFF (<: x (ref c_WritableByteChannel)) (OR (EQ x (ref c_WritableByteChannel))
+)))
+(FORALL (x) (IFF (<: x (ref c_Channel)) (OR (EQ x (ref c_Channel))
+)))
+(FORALL (x) (IFF (<: x (ref c_AttributedCharacterIterator)) (OR (EQ x (ref c_AttributedCharacterIterator))
+)))
+(FORALL (x) (IFF (<: x (ref c_CharacterIterator)) (OR (EQ x (ref c_CharacterIterator))
+)))
+(FORALL (x) (IFF (<: x (ref c_Format_FieldDelegate)) (OR (EQ x (ref c_Format_FieldDelegate))
+)))
+(FORALL (x) (IFF (<: x (ref c_Interruptible)) (OR (EQ x (ref c_Interruptible))
+)))
+(FORALL (x) (IFF (<: x (ref c_NameService)) (OR (EQ x (ref c_NameService))
+)))
+(FORALL (x) (IFF (<: x (ref c_LangReflectAccess)) (OR (EQ x (ref c_LangReflectAccess))
+)))
+(FORALL (x) (IFF (<: x (ref c_FieldAccessor)) (OR (EQ x (ref c_FieldAccessor))
+)))
+(FORALL (x) (IFF (<: x (ref c_MethodAccessor)) (OR (EQ x (ref c_MethodAccessor))
+)))
+(FORALL (x) (IFF (<: x (ref c_ConstructorAccessor)) (OR (EQ x (ref c_ConstructorAccessor))
+)))
+)
+)
+(DEFPRED (BOOL arg1))
+(DEFPRED (t_long arg1))
+(DEFPRED (t_int arg1))
+(DEFPRED (t_short arg1))
+(DEFPRED (t_byte arg1))
+(DEFPRED (t_char arg1))
+(BG_PUSH (AND (NOT (EQ |@true| |@false|))
+(FORALL (x) (IFF (BOOL x) (OR (EQ x |@true|) (EQ x |@false|))))
+(FORALL (x) (IFF (t_int x) (AND (<= c_minlong x) (<= x c_maxlong))))
+(FORALL (x) (IFF (t_int x) (AND (<= c_minint x) (<= x c_maxint))))
+(FORALL (x) (IFF (t_short x) (AND (<= c_minshort x) (<= x c_maxshort))))
+(FORALL (x) (IFF (t_byte x) (AND (<= c_minbyte x) (<= x c_maxbyte))))
+(FORALL (x) (IFF (t_char x) (AND (<= c_minchar x) (<= x c_maxchar))))
+(EQ c_minbyte -128) (EQ c_maxbyte 127) (EQ c_minchar 0) (EQ c_maxchar 65535) (EQ c_minshort -32768) (EQ c_maxshort 32767)
+(<= c_minint c_minshort) (<= c_maxshort c_maxint) (<= c_minlong c_minint) (<= c_maxint c_maxlong)
+(FORALL (a b) (EQ (j_add a b) (+ a b))) (FORALL (a b) (EQ (j_sub a b) (- a b))) (FORALL (a b) (EQ (j_mul a b) (* a b)))
+(FORALL (x) (IMPLIES (AND (>= x c_minbyte) (<= x c_maxbyte)) (EQ x (j_int2byte x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minchar) (<= x c_maxchar)) (EQ x (j_int2char x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minshort) (<= x c_maxshort)) (EQ x (j_int2short x))))
+)
+)
+(DEFPRED (REFERENCES arg1))
+(DEFPRED (instances arg1))
+(BG_PUSH (AND
+(FORALL (x) (EQ (select elemtype (array x 1)) (ref x)))
+(FORALL (x y) (IMPLIES (< 1 y) (EQ (select elemtype (array x y)) (array x (- y 1)))))
+(FORALL (c) (IMPLIES (EQ (|instances| c) |@true|) (REFERENCES c)))(NOT (EQ (|instances| null) |@true|))
+(FORALL (x) (<= 0 (select |arraylength| x)))
+(FORALL (x y) (IFF (EQ x y) (EQ (ref x) (ref y))))
+(FORALL (x y z) (NEQ (ref x) (array y z)))
+(FORALL (x y) (<: (select typeof (select (select |refelements| x) y)) (select elemtype (select typeof x))))
+)) 
+(BG_PUSH (AND
+(FORALL (x) (IMPLIES (EQ (|instances| x) |@true|)(IMPLIES (<: (select typeof x) (ref c_fr_QuickSort)) (IMPLIES (NEQ (select f_tab x) null) (EQ (|instances| (select f_tab x)) |@true|)))))
+(FORALL (x) (IMPLIES (EQ (|instances| x) |@true|)(IMPLIES (<: (select typeof x) (ref c_fr_QuickSort)) (IMPLIES (NEQ (select f_tab x) null) (<: (select typeof (select f_tab x)) (array c_pd_int 1))))))
+))
+
+;---Lemma c_fr_QuickSort_method_1_sort---
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT ((> (select |arraylength| (select |f_tab| |this|)) 0)))
+(NOT (EQ (select |f_tab| |this|) |null|))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+(NEQ (select |f_tab| |this|) |null|)
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j23|) (IMPLIES (AND (<= 0 |l_i0|) (<= |l_i0| (- (select |arraylength| (select |f_tab| |this|)) 1))) (IMPLIES (AND (<= 0 |l_j23|) (<= |l_j23| (- (select |arraylength| (select |f_tab| |this|)) 1))) (IMPLIES (< |l_i0| |l_j23|) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_j23|))))))
+
+(FORALL (|l_i25|) (IMPLIES (AND (<= 0 |l_i25|) (<= |l_i25| (- (select |arraylength| (select |f_tab| |this|)) 1))) (EXISTS (|l_j25|) (AND (<= 0 |l_j25|) (<= |l_j25| (- (select |arraylength| (select |f_tab| |this|)) 1)) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j25|) ( select ( select |intelements| (select |f_tab| |this|)) |l_i25|))))
+))
+
+(IMPLIES (FORALL (|@l1|) (EQ (|@l0| |@l1|) |@true|)) 
+(IMPLIES (FORALL (|@l6|) (IFF (EQ (|@l5| |@l6|) |@true|)(AND (<= 0 |@l6|) (<= |@l6| (- (select |arraylength| (select |f_tab| |this|)) 1))))) 
+(IMPLIES (FORALL (|@l8|) (IFF (EQ (|@l7| |@l8|) |@true|)(EQ |@l8| (select |f_tab| |this|)))) 
+(IMPLIES (FORALL (|@l4|) (IFF (EQ (|@l3| |@l4|) |@true|)(AND (EQ (|@l5| |@l4|) |@true|) (EQ (|@l7| |T0|) |@true|)))) 
+(FORALL (|T0|) (IMPLIES (EQ (|instances| |T0|) |@true|) (IMPLIES (EQ (|@l0| |T0|) |@true|) (FORALL (|@l2|) (IMPLIES (NOT (EQ (|@l3| |@l2|) |@true|)) (EQ (select (select |intelements| |T0|) |@l2|) (select (select |intelements| |T0|) |@l2|)))))))
+
+)
+)
+)
+)
+(IMPLIES (FORALL (|@l10|) (EQ (|@l9| |@l10|) |@true|)) 
+(FORALL (|T1|) (IMPLIES (EQ (|instances| |T1|) |@true|) (IMPLIES (EQ (|@l9| |T1|) |@true|) (FORALL (|@l11|) (EQ (select (select |shortelements| |T1|) |@l11|) (select (select |shortelements| |T1|) |@l11|))))))
+
+)
+(IMPLIES (FORALL (|@l13|) (EQ (|@l12| |@l13|) |@true|)) 
+(FORALL (|T2|) (IMPLIES (EQ (|instances| |T2|) |@true|) (IMPLIES (EQ (|@l12| |T2|) |@true|) (FORALL (|@l14|) (EQ (select (select |byteelements| |T2|) |@l14|) (select (select |byteelements| |T2|) |@l14|))))))
+
+)
+(IMPLIES (FORALL (|@l16|) (EQ (|@l15| |@l16|) |@true|)) 
+(FORALL (|T3|) (IMPLIES (EQ (|instances| |T3|) |@true|) (IMPLIES (EQ (|@l15| |T3|) |@true|) (FORALL (|@l17|) (EQ (select (select |booleanelements| |T3|) |@l17|) (select (select |booleanelements| |T3|) |@l17|))))))
+
+)
+(IMPLIES (FORALL (|@l19|) (EQ (|@l18| |@l19|) |@true|)) 
+(FORALL (|T4|) (IMPLIES (EQ (|instances| |T4|) |@true|) (IMPLIES (EQ (|@l18| |T4|) |@true|) (FORALL (|@l20|) (EQ (select (select |charelements| |T4|) |@l20|) (select (select |charelements| |T4|) |@l20|))))))
+
+)
+(IMPLIES (FORALL (|@l22|) (EQ (|@l21| |@l22|) |@true|)) 
+(FORALL (|T5|) (IMPLIES (EQ (|instances| |T5|) |@true|) (IMPLIES (EQ (|@l21| |T5|) |@true|) (FORALL (|@l23|) (EQ (select (select |refelements| |T5|) |@l23|) (select (select |refelements| |T5|) |@l23|))))))
+
+)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_1_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l34|) (IFF (EQ (|@l33| |@l34|) |@true|)(EQ |@l34| (select |f_tab| |this|))))(FORALL (|@l32|) (IMPLIES (NOT (EQ (|@l33| |@l32|) |@true|)) (EQ (select |intelements_1| |@l32|) (select |intelements| |@l32|))))
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= 0 |l_i0|) (<= |l_i0| (- (select |arraylength| (select |f_tab| |this|)) 1))) (IMPLIES (AND (<= 0 |l_j35|) (<= |l_j35| (- (select |arraylength| (select |f_tab| |this|)) 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_1| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_1| (select |f_tab| |this|)) |l_j35|))))))
+
+(FORALL (|@l36|) (IFF (EQ (|@l35| |@l36|) |@true|)(EQ |@l36| (select |f_tab| |this|))))(FORALL (|@l39|) (IFF (EQ (|@l38| |@l39|) |@true|)(AND (<= 0 |@l39|) (<= |@l39| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(FORALL (|T66|) (IMPLIES (EQ (|@l35| |T66|) |@true|) (FORALL (|@l37|) (IMPLIES (NOT (EQ (|@l38| |@l37|) |@true|)) (EQ (select (select |intelements_1| |T66|) |@l37|) (select (select |intelements| |T66|) |@l37|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= 0 |l_i37|) (<= |l_i37| (- (select |arraylength| (select |f_tab| |this|)) 1))) (EXISTS (|l_j37|) (AND (<= 0 |l_j37|) (<= |l_j37| (- (select |arraylength| (select |f_tab| |this|)) 1)) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_1| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(> (select |arraylength| (select |f_tab| |this|)) 0)
+(NOT (EQ (select |f_tab| |this|) |null|))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+(NEQ (select |f_tab| |this|) |null|)
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j23|) (IMPLIES (AND (<= 0 |l_i0|) (<= |l_i0| (- (select |arraylength| (select |f_tab| |this|)) 1))) (IMPLIES (AND (<= 0 |l_j23|) (<= |l_j23| (- (select |arraylength| (select |f_tab| |this|)) 1))) (IMPLIES (< |l_i0| |l_j23|) (<= ( select ( select |intelements_1| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_1| (select |f_tab| |this|)) |l_j23|))))))
+
+(FORALL (|l_i25|) (IMPLIES (AND (<= 0 |l_i25|) (<= |l_i25| (- (select |arraylength| (select |f_tab| |this|)) 1))) (EXISTS (|l_j25|) (AND (<= 0 |l_j25|) (<= |l_j25| (- (select |arraylength| (select |f_tab| |this|)) 1)) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j25|) ( select ( select |intelements_1| (select |f_tab| |this|)) |l_i25|))))
+))
+
+(IMPLIES (FORALL (|@l42|) (IFF (EQ (|@l41| |@l42|) |@true|)(EQ |@l42| (select |f_tab| |this|)))) 
+(FORALL (|@l40|) (IMPLIES (NOT (EQ (|@l41| |@l40|) |@true|)) (FORALL (|@l43|) (IMPLIES (EQ (instances |@l40|) |@true|) (EQ (select (select |intelements_1| |@l40|) |@l43|) (select (select |intelements| |@l40|) |@l43|))))))
+)
+(IMPLIES (FORALL (|@l45|) (EQ (|@l44| |@l45|) |@true|)) 
+(IMPLIES (FORALL (|@l50|) (IFF (EQ (|@l49| |@l50|) |@true|)(AND (<= 0 |@l50|) (<= |@l50| (- (select |arraylength| (select |f_tab| |this|)) 1))))) 
+(IMPLIES (FORALL (|@l52|) (IFF (EQ (|@l51| |@l52|) |@true|)(EQ |@l52| (select |f_tab| |this|)))) 
+(IMPLIES (FORALL (|@l48|) (IFF (EQ (|@l47| |@l48|) |@true|)(AND (EQ (|@l49| |@l48|) |@true|) (EQ (|@l51| |T0|) |@true|)))) 
+(FORALL (|T0|) (IMPLIES (EQ (|instances| |T0|) |@true|) (IMPLIES (EQ (|@l44| |T0|) |@true|) (FORALL (|@l46|) (IMPLIES (NOT (EQ (|@l47| |@l46|) |@true|)) (EQ (select (select |intelements_1| |T0|) |@l46|) (select (select |intelements| |T0|) |@l46|)))))))
+
+)
+)
+)
+)
+(IMPLIES (FORALL (|@l54|) (EQ (|@l53| |@l54|) |@true|)) 
+(FORALL (|T1|) (IMPLIES (EQ (|instances| |T1|) |@true|) (IMPLIES (EQ (|@l53| |T1|) |@true|) (FORALL (|@l55|) (EQ (select (select |shortelements| |T1|) |@l55|) (select (select |shortelements| |T1|) |@l55|))))))
+
+)
+(IMPLIES (FORALL (|@l57|) (EQ (|@l56| |@l57|) |@true|)) 
+(FORALL (|T2|) (IMPLIES (EQ (|instances| |T2|) |@true|) (IMPLIES (EQ (|@l56| |T2|) |@true|) (FORALL (|@l58|) (EQ (select (select |byteelements| |T2|) |@l58|) (select (select |byteelements| |T2|) |@l58|))))))
+
+)
+(IMPLIES (FORALL (|@l60|) (EQ (|@l59| |@l60|) |@true|)) 
+(FORALL (|T3|) (IMPLIES (EQ (|instances| |T3|) |@true|) (IMPLIES (EQ (|@l59| |T3|) |@true|) (FORALL (|@l61|) (EQ (select (select |booleanelements| |T3|) |@l61|) (select (select |booleanelements| |T3|) |@l61|))))))
+
+)
+(IMPLIES (FORALL (|@l63|) (EQ (|@l62| |@l63|) |@true|)) 
+(FORALL (|T4|) (IMPLIES (EQ (|instances| |T4|) |@true|) (IMPLIES (EQ (|@l62| |T4|) |@true|) (FORALL (|@l64|) (EQ (select (select |charelements| |T4|) |@l64|) (select (select |charelements| |T4|) |@l64|))))))
+
+)
+(IMPLIES (FORALL (|@l66|) (EQ (|@l65| |@l66|) |@true|)) 
+(FORALL (|T5|) (IMPLIES (EQ (|instances| |T5|) |@true|) (IMPLIES (EQ (|@l65| |T5|) |@true|) (FORALL (|@l67|) (EQ (select (select |refelements| |T5|) |@l67|) (select (select |refelements| |T5|) |@l67|))))))
+
+)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_1_sort---
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(> (select |arraylength| (select |f_tab| |this|)) 0)
+(NOT (EQ (select |f_tab| |this|) |null|))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+(NEQ (select |f_tab| |this|) |null|)
+))
+;--End of hypothesis--
+(<= 0 0)
+(< 0 (select |arraylength| (select |f_tab| |this|)))
+(<= 0 (- (select |arraylength| (select |f_tab| |this|)) 1))
+(< (- (select |arraylength| (select |f_tab| |this|)) 1) (select |arraylength| (select |f_tab| |this|)))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_1_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+TRUE
+TRUE
+TRUE
+TRUE
+TRUE
+(NOT (EQ (|instances| |newObject_4|) |@true|))
+(NEQ |newObject_4| |null|)
+TRUE
+(EQ (select |f_tab| |this|) |null|)
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+(NEQ (select |f_tab| |this|) |null|)
+))
+;--End of hypothesis--
+(EQ |@false| |@true|)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i112|))))
+))
+
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l96|) (IFF (EQ (|@l95| |@l96|) |@true|)(EQ |@l96| (select |f_tab| |this|))))(FORALL (|@l94|) (IMPLIES (NOT (EQ (|@l95| |@l94|) |@true|)) (EQ (select |intelements_7| |@l94|) (select |intelements_8| |@l94|))))
+(FORALL (|@l98|) (IFF (EQ (|@l97| |@l98|) |@true|)(EQ |@l98| (select |f_tab| |this|))))(FORALL (|@l101|) (IFF (EQ (|@l100| |@l101|) |@true|)(EQ |@l101| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l97| |T121|) |@true|) (FORALL (|@l99|) (IMPLIES (NOT (EQ (|@l100| |@l99|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l99|) (select (select |intelements_8| |T121|) |@l99|))))))
+
+(FORALL (|@l104|) (IFF (EQ (|@l103| |@l104|) |@true|)(EQ |@l104| (select |f_tab| |this|))))(FORALL (|@l102|) (IMPLIES (NOT (EQ (|@l103| |@l102|) |@true|)) (EQ (select |intelements_8| |@l102|) (select |intelements_20| |@l102|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l107|) (IFF (EQ (|@l106| |@l107|) |@true|)(EQ |@l107| (select |f_tab| |this|))))(FORALL (|@l105|) (IMPLIES (NOT (EQ (|@l106| |@l105|) |@true|)) (EQ (select |intelements_20| |@l105|) (select |intelements| |@l105|))))
+(FORALL (|@l109|) (IFF (EQ (|@l108| |@l109|) |@true|)(EQ |@l109| (select |f_tab| |this|))))(FORALL (|@l112|) (IFF (EQ (|@l111| |@l112|) |@true|)(AND (<= |l_lo| |@l112|) (<= |@l112| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l108| |T216|) |@true|) (FORALL (|@l110|) (IMPLIES (NOT (EQ (|@l111| |@l110|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l110|) (select (select |intelements| |T216|) |@l110|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(NOT ((< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))))
+(NOT ((> |l_left40_3| 0)))
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l114|) (IFF (EQ (|@l113| |@l114|) |@true|)(EQ |@l114| (select |f_tab| |this|))))(FORALL (|@l117|) (IFF (EQ (|@l116| |@l117|) |@true|)(EQ |@l117| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l113| |T122|) |@true|) (FORALL (|@l115|) (IMPLIES (NOT (EQ (|@l116| |@l115|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l115|) (select (select |intelements_20| |T122|) |@l115|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l119|) (IFF (EQ (|@l118| |@l119|) |@true|)(AND (<= 0 |@l119|) (<= |@l119| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l118| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j35|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(IMPLIES (FORALL (|@l122|) (IFF (EQ (|@l121| |@l122|) |@true|)(EQ |@l122| (select |f_tab| |this|)))) 
+(FORALL (|@l120|) (IMPLIES (NOT (EQ (|@l121| |@l120|) |@true|)) (FORALL (|@l123|) (IMPLIES (EQ (instances |@l120|) |@true|) (EQ (select (select |intelements_7| |@l120|) |@l123|) (select (select |intelements| |@l120|) |@l123|))))))
+)
+(IMPLIES (FORALL (|@l125|) (EQ (|@l124| |@l125|) |@true|)) 
+(IMPLIES (FORALL (|@l130|) (IFF (EQ (|@l129| |@l130|) |@true|)(AND (<= |l_lo| |@l130|) (<= |@l130| |l_hi|)))) 
+(IMPLIES (FORALL (|@l132|) (IFF (EQ (|@l131| |@l132|) |@true|)(EQ |@l132| (select |f_tab| |this|)))) 
+(IMPLIES (FORALL (|@l128|) (IFF (EQ (|@l127| |@l128|) |@true|)(AND (EQ (|@l129| |@l128|) |@true|) (EQ (|@l131| |T12|) |@true|)))) 
+(FORALL (|T12|) (IMPLIES (EQ (|instances| |T12|) |@true|) (IMPLIES (EQ (|@l124| |T12|) |@true|) (FORALL (|@l126|) (IMPLIES (NOT (EQ (|@l127| |@l126|) |@true|)) (EQ (select (select |intelements_7| |T12|) |@l126|) (select (select |intelements| |T12|) |@l126|)))))))
+
+)
+)
+)
+)
+(IMPLIES (FORALL (|@l134|) (EQ (|@l133| |@l134|) |@true|)) 
+(FORALL (|T13|) (IMPLIES (EQ (|instances| |T13|) |@true|) (IMPLIES (EQ (|@l133| |T13|) |@true|) (FORALL (|@l135|) (EQ (select (select |shortelements| |T13|) |@l135|) (select (select |shortelements| |T13|) |@l135|))))))
+
+)
+(IMPLIES (FORALL (|@l137|) (EQ (|@l136| |@l137|) |@true|)) 
+(FORALL (|T14|) (IMPLIES (EQ (|instances| |T14|) |@true|) (IMPLIES (EQ (|@l136| |T14|) |@true|) (FORALL (|@l138|) (EQ (select (select |byteelements| |T14|) |@l138|) (select (select |byteelements| |T14|) |@l138|))))))
+
+)
+(IMPLIES (FORALL (|@l140|) (EQ (|@l139| |@l140|) |@true|)) 
+(FORALL (|T15|) (IMPLIES (EQ (|instances| |T15|) |@true|) (IMPLIES (EQ (|@l139| |T15|) |@true|) (FORALL (|@l141|) (EQ (select (select |booleanelements| |T15|) |@l141|) (select (select |booleanelements| |T15|) |@l141|))))))
+
+)
+(IMPLIES (FORALL (|@l143|) (EQ (|@l142| |@l143|) |@true|)) 
+(FORALL (|T16|) (IMPLIES (EQ (|instances| |T16|) |@true|) (IMPLIES (EQ (|@l142| |T16|) |@true|) (FORALL (|@l144|) (EQ (select (select |charelements| |T16|) |@l144|) (select (select |charelements| |T16|) |@l144|))))))
+
+)
+(IMPLIES (FORALL (|@l146|) (EQ (|@l145| |@l146|) |@true|)) 
+(FORALL (|T17|) (IMPLIES (EQ (|instances| |T17|) |@true|) (IMPLIES (EQ (|@l145| |T17|) |@true|) (FORALL (|@l147|) (EQ (select (select |refelements| |T17|) |@l147|) (select (select |refelements| |T17|) |@l147|))))))
+
+)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l176|) (IFF (EQ (|@l175| |@l176|) |@true|)(EQ |@l176| (select |f_tab| |this|))))(FORALL (|@l174|) (IMPLIES (NOT (EQ (|@l175| |@l174|) |@true|)) (EQ (select |intelements_7| |@l174|) (select |intelements_8| |@l174|))))
+(FORALL (|@l178|) (IFF (EQ (|@l177| |@l178|) |@true|)(EQ |@l178| (select |f_tab| |this|))))(FORALL (|@l181|) (IFF (EQ (|@l180| |@l181|) |@true|)(EQ |@l181| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l177| |T121|) |@true|) (FORALL (|@l179|) (IMPLIES (NOT (EQ (|@l180| |@l179|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l179|) (select (select |intelements_8| |T121|) |@l179|))))))
+
+(FORALL (|@l184|) (IFF (EQ (|@l183| |@l184|) |@true|)(EQ |@l184| (select |f_tab| |this|))))(FORALL (|@l182|) (IMPLIES (NOT (EQ (|@l183| |@l182|) |@true|)) (EQ (select |intelements_8| |@l182|) (select |intelements_20| |@l182|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l187|) (IFF (EQ (|@l186| |@l187|) |@true|)(EQ |@l187| (select |f_tab| |this|))))(FORALL (|@l185|) (IMPLIES (NOT (EQ (|@l186| |@l185|) |@true|)) (EQ (select |intelements_20| |@l185|) (select |intelements| |@l185|))))
+(FORALL (|@l189|) (IFF (EQ (|@l188| |@l189|) |@true|)(EQ |@l189| (select |f_tab| |this|))))(FORALL (|@l192|) (IFF (EQ (|@l191| |@l192|) |@true|)(AND (<= |l_lo| |@l192|) (<= |@l192| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l188| |T216|) |@true|) (FORALL (|@l190|) (IMPLIES (NOT (EQ (|@l191| |@l190|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l190|) (select (select |intelements| |T216|) |@l190|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(NOT ((< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))))
+(NOT ((> |l_left40_3| 0)))
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l194|) (IFF (EQ (|@l193| |@l194|) |@true|)(EQ |@l194| (select |f_tab| |this|))))(FORALL (|@l197|) (IFF (EQ (|@l196| |@l197|) |@true|)(EQ |@l197| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l193| |T122|) |@true|) (FORALL (|@l195|) (IMPLIES (NOT (EQ (|@l196| |@l195|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l195|) (select (select |intelements_20| |T122|) |@l195|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l199|) (IFF (EQ (|@l198| |@l199|) |@true|)(AND (<= 0 |@l199|) (<= |@l199| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l198| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i112|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i112|))))
+))
+
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l236|) (IFF (EQ (|@l235| |@l236|) |@true|)(EQ |@l236| (select |f_tab| |this|))))(FORALL (|@l234|) (IMPLIES (NOT (EQ (|@l235| |@l234|) |@true|)) (EQ (select |intelements_4| |@l234|) (select |intelements_7| |@l234|))))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l239|) (IFF (EQ (|@l238| |@l239|) |@true|)(EQ |@l239| (select |f_tab| |this|))))(FORALL (|@l237|) (IMPLIES (NOT (EQ (|@l238| |@l237|) |@true|)) (EQ (select |intelements_7| |@l237|) (select |intelements_8| |@l237|))))
+(FORALL (|@l241|) (IFF (EQ (|@l240| |@l241|) |@true|)(EQ |@l241| (select |f_tab| |this|))))(FORALL (|@l244|) (IFF (EQ (|@l243| |@l244|) |@true|)(EQ |@l244| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l240| |T121|) |@true|) (FORALL (|@l242|) (IMPLIES (NOT (EQ (|@l243| |@l242|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l242|) (select (select |intelements_8| |T121|) |@l242|))))))
+
+(FORALL (|@l247|) (IFF (EQ (|@l246| |@l247|) |@true|)(EQ |@l247| (select |f_tab| |this|))))(FORALL (|@l245|) (IMPLIES (NOT (EQ (|@l246| |@l245|) |@true|)) (EQ (select |intelements_8| |@l245|) (select |intelements_20| |@l245|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l250|) (IFF (EQ (|@l249| |@l250|) |@true|)(EQ |@l250| (select |f_tab| |this|))))(FORALL (|@l248|) (IMPLIES (NOT (EQ (|@l249| |@l248|) |@true|)) (EQ (select |intelements_20| |@l248|) (select |intelements| |@l248|))))
+(FORALL (|@l252|) (IFF (EQ (|@l251| |@l252|) |@true|)(EQ |@l252| (select |f_tab| |this|))))(FORALL (|@l255|) (IFF (EQ (|@l254| |@l255|) |@true|)(AND (<= |l_lo| |@l255|) (<= |@l255| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l251| |T216|) |@true|) (FORALL (|@l253|) (IMPLIES (NOT (EQ (|@l254| |@l253|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l253|) (select (select |intelements| |T216|) |@l253|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j35|))))))
+
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(NOT ((> |l_left40_3| 0)))
+(FORALL (|@l257|) (IFF (EQ (|@l256| |@l257|) |@true|)(EQ |@l257| (select |f_tab| |this|))))(FORALL (|@l260|) (IFF (EQ (|@l259| |@l260|) |@true|)(AND (<= (+ |l_left40_3| 1) |@l260|) (<= |@l260| |l_hi|))))(FORALL (|T90|) (IMPLIES (EQ (|@l256| |T90|) |@true|) (FORALL (|@l258|) (IMPLIES (NOT (EQ (|@l259| |@l258|) |@true|)) (EQ (select (select |intelements_4| |T90|) |@l258|) (select (select |intelements_7| |T90|) |@l258|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= (+ |l_left40_3| 1) |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l262|) (IFF (EQ (|@l261| |@l262|) |@true|)(EQ |@l262| (select |f_tab| |this|))))(FORALL (|@l265|) (IFF (EQ (|@l264| |@l265|) |@true|)(EQ |@l265| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l261| |T122|) |@true|) (FORALL (|@l263|) (IMPLIES (NOT (EQ (|@l264| |@l263|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l263|) (select (select |intelements_20| |T122|) |@l263|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l267|) (IFF (EQ (|@l266| |@l267|) |@true|)(AND (<= 0 |@l267|) (<= |@l267| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l266| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j35|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(IMPLIES (FORALL (|@l270|) (IFF (EQ (|@l269| |@l270|) |@true|)(EQ |@l270| (select |f_tab| |this|)))) 
+(FORALL (|@l268|) (IMPLIES (NOT (EQ (|@l269| |@l268|) |@true|)) (FORALL (|@l271|) (IMPLIES (EQ (instances |@l268|) |@true|) (EQ (select (select |intelements_4| |@l268|) |@l271|) (select (select |intelements| |@l268|) |@l271|))))))
+)
+(IMPLIES (FORALL (|@l273|) (EQ (|@l272| |@l273|) |@true|)) 
+(IMPLIES (FORALL (|@l278|) (IFF (EQ (|@l277| |@l278|) |@true|)(AND (<= |l_lo| |@l278|) (<= |@l278| |l_hi|)))) 
+(IMPLIES (FORALL (|@l280|) (IFF (EQ (|@l279| |@l280|) |@true|)(EQ |@l280| (select |f_tab| |this|)))) 
+(IMPLIES (FORALL (|@l276|) (IFF (EQ (|@l275| |@l276|) |@true|)(AND (EQ (|@l277| |@l276|) |@true|) (EQ (|@l279| |T12|) |@true|)))) 
+(FORALL (|T12|) (IMPLIES (EQ (|instances| |T12|) |@true|) (IMPLIES (EQ (|@l272| |T12|) |@true|) (FORALL (|@l274|) (IMPLIES (NOT (EQ (|@l275| |@l274|) |@true|)) (EQ (select (select |intelements_4| |T12|) |@l274|) (select (select |intelements| |T12|) |@l274|)))))))
+
+)
+)
+)
+)
+(IMPLIES (FORALL (|@l282|) (EQ (|@l281| |@l282|) |@true|)) 
+(FORALL (|T13|) (IMPLIES (EQ (|instances| |T13|) |@true|) (IMPLIES (EQ (|@l281| |T13|) |@true|) (FORALL (|@l283|) (EQ (select (select |shortelements| |T13|) |@l283|) (select (select |shortelements| |T13|) |@l283|))))))
+
+)
+(IMPLIES (FORALL (|@l285|) (EQ (|@l284| |@l285|) |@true|)) 
+(FORALL (|T14|) (IMPLIES (EQ (|instances| |T14|) |@true|) (IMPLIES (EQ (|@l284| |T14|) |@true|) (FORALL (|@l286|) (EQ (select (select |byteelements| |T14|) |@l286|) (select (select |byteelements| |T14|) |@l286|))))))
+
+)
+(IMPLIES (FORALL (|@l288|) (EQ (|@l287| |@l288|) |@true|)) 
+(FORALL (|T15|) (IMPLIES (EQ (|instances| |T15|) |@true|) (IMPLIES (EQ (|@l287| |T15|) |@true|) (FORALL (|@l289|) (EQ (select (select |booleanelements| |T15|) |@l289|) (select (select |booleanelements| |T15|) |@l289|))))))
+
+)
+(IMPLIES (FORALL (|@l291|) (EQ (|@l290| |@l291|) |@true|)) 
+(FORALL (|T16|) (IMPLIES (EQ (|instances| |T16|) |@true|) (IMPLIES (EQ (|@l290| |T16|) |@true|) (FORALL (|@l292|) (EQ (select (select |charelements| |T16|) |@l292|) (select (select |charelements| |T16|) |@l292|))))))
+
+)
+(IMPLIES (FORALL (|@l294|) (EQ (|@l293| |@l294|) |@true|)) 
+(FORALL (|T17|) (IMPLIES (EQ (|instances| |T17|) |@true|) (IMPLIES (EQ (|@l293| |T17|) |@true|) (FORALL (|@l295|) (EQ (select (select |refelements| |T17|) |@l295|) (select (select |refelements| |T17|) |@l295|))))))
+
+)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l332|) (IFF (EQ (|@l331| |@l332|) |@true|)(EQ |@l332| (select |f_tab| |this|))))(FORALL (|@l330|) (IMPLIES (NOT (EQ (|@l331| |@l330|) |@true|)) (EQ (select |intelements_4| |@l330|) (select |intelements_7| |@l330|))))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l335|) (IFF (EQ (|@l334| |@l335|) |@true|)(EQ |@l335| (select |f_tab| |this|))))(FORALL (|@l333|) (IMPLIES (NOT (EQ (|@l334| |@l333|) |@true|)) (EQ (select |intelements_7| |@l333|) (select |intelements_8| |@l333|))))
+(FORALL (|@l337|) (IFF (EQ (|@l336| |@l337|) |@true|)(EQ |@l337| (select |f_tab| |this|))))(FORALL (|@l340|) (IFF (EQ (|@l339| |@l340|) |@true|)(EQ |@l340| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l336| |T121|) |@true|) (FORALL (|@l338|) (IMPLIES (NOT (EQ (|@l339| |@l338|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l338|) (select (select |intelements_8| |T121|) |@l338|))))))
+
+(FORALL (|@l343|) (IFF (EQ (|@l342| |@l343|) |@true|)(EQ |@l343| (select |f_tab| |this|))))(FORALL (|@l341|) (IMPLIES (NOT (EQ (|@l342| |@l341|) |@true|)) (EQ (select |intelements_8| |@l341|) (select |intelements_20| |@l341|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l346|) (IFF (EQ (|@l345| |@l346|) |@true|)(EQ |@l346| (select |f_tab| |this|))))(FORALL (|@l344|) (IMPLIES (NOT (EQ (|@l345| |@l344|) |@true|)) (EQ (select |intelements_20| |@l344|) (select |intelements| |@l344|))))
+(FORALL (|@l348|) (IFF (EQ (|@l347| |@l348|) |@true|)(EQ |@l348| (select |f_tab| |this|))))(FORALL (|@l351|) (IFF (EQ (|@l350| |@l351|) |@true|)(AND (<= |l_lo| |@l351|) (<= |@l351| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l347| |T216|) |@true|) (FORALL (|@l349|) (IMPLIES (NOT (EQ (|@l350| |@l349|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l349|) (select (select |intelements| |T216|) |@l349|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j35|))))))
+
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(NOT ((> |l_left40_3| 0)))
+(FORALL (|@l353|) (IFF (EQ (|@l352| |@l353|) |@true|)(EQ |@l353| (select |f_tab| |this|))))(FORALL (|@l356|) (IFF (EQ (|@l355| |@l356|) |@true|)(AND (<= (+ |l_left40_3| 1) |@l356|) (<= |@l356| |l_hi|))))(FORALL (|T90|) (IMPLIES (EQ (|@l352| |T90|) |@true|) (FORALL (|@l354|) (IMPLIES (NOT (EQ (|@l355| |@l354|) |@true|)) (EQ (select (select |intelements_4| |T90|) |@l354|) (select (select |intelements_7| |T90|) |@l354|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= (+ |l_left40_3| 1) |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l358|) (IFF (EQ (|@l357| |@l358|) |@true|)(EQ |@l358| (select |f_tab| |this|))))(FORALL (|@l361|) (IFF (EQ (|@l360| |@l361|) |@true|)(EQ |@l361| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l357| |T122|) |@true|) (FORALL (|@l359|) (IMPLIES (NOT (EQ (|@l360| |@l359|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l359|) (select (select |intelements_20| |T122|) |@l359|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l363|) (IFF (EQ (|@l362| |@l363|) |@true|)(AND (<= 0 |@l363|) (<= |@l363| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l362| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i112|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l392|) (IFF (EQ (|@l391| |@l392|) |@true|)(EQ |@l392| (select |f_tab| |this|))))(FORALL (|@l390|) (IMPLIES (NOT (EQ (|@l391| |@l390|) |@true|)) (EQ (select |intelements_7| |@l390|) (select |intelements_8| |@l390|))))
+(FORALL (|@l394|) (IFF (EQ (|@l393| |@l394|) |@true|)(EQ |@l394| (select |f_tab| |this|))))(FORALL (|@l397|) (IFF (EQ (|@l396| |@l397|) |@true|)(EQ |@l397| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l393| |T121|) |@true|) (FORALL (|@l395|) (IMPLIES (NOT (EQ (|@l396| |@l395|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l395|) (select (select |intelements_8| |T121|) |@l395|))))))
+
+(FORALL (|@l400|) (IFF (EQ (|@l399| |@l400|) |@true|)(EQ |@l400| (select |f_tab| |this|))))(FORALL (|@l398|) (IMPLIES (NOT (EQ (|@l399| |@l398|) |@true|)) (EQ (select |intelements_8| |@l398|) (select |intelements_20| |@l398|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l403|) (IFF (EQ (|@l402| |@l403|) |@true|)(EQ |@l403| (select |f_tab| |this|))))(FORALL (|@l401|) (IMPLIES (NOT (EQ (|@l402| |@l401|) |@true|)) (EQ (select |intelements_20| |@l401|) (select |intelements| |@l401|))))
+(FORALL (|@l405|) (IFF (EQ (|@l404| |@l405|) |@true|)(EQ |@l405| (select |f_tab| |this|))))(FORALL (|@l408|) (IFF (EQ (|@l407| |@l408|) |@true|)(AND (<= |l_lo| |@l408|) (<= |@l408| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l404| |T216|) |@true|) (FORALL (|@l406|) (IMPLIES (NOT (EQ (|@l407| |@l406|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l406|) (select (select |intelements| |T216|) |@l406|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(NOT ((> |l_left40_3| 0)))
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l410|) (IFF (EQ (|@l409| |@l410|) |@true|)(EQ |@l410| (select |f_tab| |this|))))(FORALL (|@l413|) (IFF (EQ (|@l412| |@l413|) |@true|)(EQ |@l413| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l409| |T122|) |@true|) (FORALL (|@l411|) (IMPLIES (NOT (EQ (|@l412| |@l411|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l411|) (select (select |intelements_20| |T122|) |@l411|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l415|) (IFF (EQ (|@l414| |@l415|) |@true|)(AND (<= 0 |@l415|) (<= |@l415| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l414| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(<= 0 (+ |l_left40_3| 1))
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l444|) (IFF (EQ (|@l443| |@l444|) |@true|)(EQ |@l444| (select |f_tab| |this|))))(FORALL (|@l442|) (IMPLIES (NOT (EQ (|@l443| |@l442|) |@true|)) (EQ (select |intelements_7| |@l442|) (select |intelements_8| |@l442|))))
+(FORALL (|@l446|) (IFF (EQ (|@l445| |@l446|) |@true|)(EQ |@l446| (select |f_tab| |this|))))(FORALL (|@l449|) (IFF (EQ (|@l448| |@l449|) |@true|)(EQ |@l449| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l445| |T121|) |@true|) (FORALL (|@l447|) (IMPLIES (NOT (EQ (|@l448| |@l447|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l447|) (select (select |intelements_8| |T121|) |@l447|))))))
+
+(FORALL (|@l452|) (IFF (EQ (|@l451| |@l452|) |@true|)(EQ |@l452| (select |f_tab| |this|))))(FORALL (|@l450|) (IMPLIES (NOT (EQ (|@l451| |@l450|) |@true|)) (EQ (select |intelements_8| |@l450|) (select |intelements_20| |@l450|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l455|) (IFF (EQ (|@l454| |@l455|) |@true|)(EQ |@l455| (select |f_tab| |this|))))(FORALL (|@l453|) (IMPLIES (NOT (EQ (|@l454| |@l453|) |@true|)) (EQ (select |intelements_20| |@l453|) (select |intelements| |@l453|))))
+(FORALL (|@l457|) (IFF (EQ (|@l456| |@l457|) |@true|)(EQ |@l457| (select |f_tab| |this|))))(FORALL (|@l460|) (IFF (EQ (|@l459| |@l460|) |@true|)(AND (<= |l_lo| |@l460|) (<= |@l460| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l456| |T216|) |@true|) (FORALL (|@l458|) (IMPLIES (NOT (EQ (|@l459| |@l458|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l458|) (select (select |intelements| |T216|) |@l458|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(NOT ((> |l_left40_3| 0)))
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l462|) (IFF (EQ (|@l461| |@l462|) |@true|)(EQ |@l462| (select |f_tab| |this|))))(FORALL (|@l465|) (IFF (EQ (|@l464| |@l465|) |@true|)(EQ |@l465| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l461| |T122|) |@true|) (FORALL (|@l463|) (IMPLIES (NOT (EQ (|@l464| |@l463|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l463|) (select (select |intelements_20| |T122|) |@l463|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l467|) (IFF (EQ (|@l466| |@l467|) |@true|)(AND (<= 0 |@l467|) (<= |@l467| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l466| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i112|))))
+))
+
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i106|))))
+))
+
+TRUE
+(FORALL (|@l504|) (IFF (EQ (|@l503| |@l504|) |@true|)(EQ |@l504| (select |f_tab| |this|))))(FORALL (|@l502|) (IMPLIES (NOT (EQ (|@l503| |@l502|) |@true|)) (EQ (select |intelements_6| |@l502|) (select |intelements_7| |@l502|))))
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l507|) (IFF (EQ (|@l506| |@l507|) |@true|)(EQ |@l507| (select |f_tab| |this|))))(FORALL (|@l505|) (IMPLIES (NOT (EQ (|@l506| |@l505|) |@true|)) (EQ (select |intelements_7| |@l505|) (select |intelements_8| |@l505|))))
+(FORALL (|@l509|) (IFF (EQ (|@l508| |@l509|) |@true|)(EQ |@l509| (select |f_tab| |this|))))(FORALL (|@l512|) (IFF (EQ (|@l511| |@l512|) |@true|)(EQ |@l512| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l508| |T121|) |@true|) (FORALL (|@l510|) (IMPLIES (NOT (EQ (|@l511| |@l510|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l510|) (select (select |intelements_8| |T121|) |@l510|))))))
+
+(FORALL (|@l515|) (IFF (EQ (|@l514| |@l515|) |@true|)(EQ |@l515| (select |f_tab| |this|))))(FORALL (|@l513|) (IMPLIES (NOT (EQ (|@l514| |@l513|) |@true|)) (EQ (select |intelements_8| |@l513|) (select |intelements_20| |@l513|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l518|) (IFF (EQ (|@l517| |@l518|) |@true|)(EQ |@l518| (select |f_tab| |this|))))(FORALL (|@l516|) (IMPLIES (NOT (EQ (|@l517| |@l516|) |@true|)) (EQ (select |intelements_20| |@l516|) (select |intelements| |@l516|))))
+(FORALL (|@l520|) (IFF (EQ (|@l519| |@l520|) |@true|)(EQ |@l520| (select |f_tab| |this|))))(FORALL (|@l523|) (IFF (EQ (|@l522| |@l523|) |@true|)(AND (<= |l_lo| |@l523|) (<= |@l523| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l519| |T216|) |@true|) (FORALL (|@l521|) (IMPLIES (NOT (EQ (|@l522| |@l521|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l521|) (select (select |intelements| |T216|) |@l521|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(NOT ((< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))))
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| (- |l_left40_3| 1))) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| (- |l_left40_3| 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(> |l_left40_3| 0)
+(FORALL (|@l525|) (IFF (EQ (|@l524| |@l525|) |@true|)(EQ |@l525| (select |f_tab| |this|))))(FORALL (|@l528|) (IFF (EQ (|@l527| |@l528|) |@true|)(AND (<= |l_lo| |@l528|) (<= |@l528| (- |l_left40_3| 1)))))(FORALL (|T110|) (IMPLIES (EQ (|@l524| |T110|) |@true|) (FORALL (|@l526|) (IMPLIES (NOT (EQ (|@l527| |@l526|) |@true|)) (EQ (select (select |intelements_6| |T110|) |@l526|) (select (select |intelements_7| |T110|) |@l526|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| (- |l_left40_3| 1))) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| (- |l_left40_3| 1)) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l530|) (IFF (EQ (|@l529| |@l530|) |@true|)(EQ |@l530| (select |f_tab| |this|))))(FORALL (|@l533|) (IFF (EQ (|@l532| |@l533|) |@true|)(EQ |@l533| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l529| |T122|) |@true|) (FORALL (|@l531|) (IMPLIES (NOT (EQ (|@l532| |@l531|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l531|) (select (select |intelements_20| |T122|) |@l531|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l535|) (IFF (EQ (|@l534| |@l535|) |@true|)(AND (<= 0 |@l535|) (<= |@l535| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l534| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(IMPLIES (FORALL (|@l538|) (IFF (EQ (|@l537| |@l538|) |@true|)(EQ |@l538| (select |f_tab| |this|)))) 
+(FORALL (|@l536|) (IMPLIES (NOT (EQ (|@l537| |@l536|) |@true|)) (FORALL (|@l539|) (IMPLIES (EQ (instances |@l536|) |@true|) (EQ (select (select |intelements_6| |@l536|) |@l539|) (select (select |intelements| |@l536|) |@l539|))))))
+)
+(IMPLIES (FORALL (|@l541|) (EQ (|@l540| |@l541|) |@true|)) 
+(IMPLIES (FORALL (|@l546|) (IFF (EQ (|@l545| |@l546|) |@true|)(AND (<= |l_lo| |@l546|) (<= |@l546| |l_hi|)))) 
+(IMPLIES (FORALL (|@l548|) (IFF (EQ (|@l547| |@l548|) |@true|)(EQ |@l548| (select |f_tab| |this|)))) 
+(IMPLIES (FORALL (|@l544|) (IFF (EQ (|@l543| |@l544|) |@true|)(AND (EQ (|@l545| |@l544|) |@true|) (EQ (|@l547| |T12|) |@true|)))) 
+(FORALL (|T12|) (IMPLIES (EQ (|instances| |T12|) |@true|) (IMPLIES (EQ (|@l540| |T12|) |@true|) (FORALL (|@l542|) (IMPLIES (NOT (EQ (|@l543| |@l542|) |@true|)) (EQ (select (select |intelements_6| |T12|) |@l542|) (select (select |intelements| |T12|) |@l542|)))))))
+
+)
+)
+)
+)
+(IMPLIES (FORALL (|@l550|) (EQ (|@l549| |@l550|) |@true|)) 
+(FORALL (|T13|) (IMPLIES (EQ (|instances| |T13|) |@true|) (IMPLIES (EQ (|@l549| |T13|) |@true|) (FORALL (|@l551|) (EQ (select (select |shortelements| |T13|) |@l551|) (select (select |shortelements| |T13|) |@l551|))))))
+
+)
+(IMPLIES (FORALL (|@l553|) (EQ (|@l552| |@l553|) |@true|)) 
+(FORALL (|T14|) (IMPLIES (EQ (|instances| |T14|) |@true|) (IMPLIES (EQ (|@l552| |T14|) |@true|) (FORALL (|@l554|) (EQ (select (select |byteelements| |T14|) |@l554|) (select (select |byteelements| |T14|) |@l554|))))))
+
+)
+(IMPLIES (FORALL (|@l556|) (EQ (|@l555| |@l556|) |@true|)) 
+(FORALL (|T15|) (IMPLIES (EQ (|instances| |T15|) |@true|) (IMPLIES (EQ (|@l555| |T15|) |@true|) (FORALL (|@l557|) (EQ (select (select |booleanelements| |T15|) |@l557|) (select (select |booleanelements| |T15|) |@l557|))))))
+
+)
+(IMPLIES (FORALL (|@l559|) (EQ (|@l558| |@l559|) |@true|)) 
+(FORALL (|T16|) (IMPLIES (EQ (|instances| |T16|) |@true|) (IMPLIES (EQ (|@l558| |T16|) |@true|) (FORALL (|@l560|) (EQ (select (select |charelements| |T16|) |@l560|) (select (select |charelements| |T16|) |@l560|))))))
+
+)
+(IMPLIES (FORALL (|@l562|) (EQ (|@l561| |@l562|) |@true|)) 
+(FORALL (|T17|) (IMPLIES (EQ (|instances| |T17|) |@true|) (IMPLIES (EQ (|@l561| |T17|) |@true|) (FORALL (|@l563|) (EQ (select (select |refelements| |T17|) |@l563|) (select (select |refelements| |T17|) |@l563|))))))
+
+)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i106|))))
+))
+
+TRUE
+(FORALL (|@l600|) (IFF (EQ (|@l599| |@l600|) |@true|)(EQ |@l600| (select |f_tab| |this|))))(FORALL (|@l598|) (IMPLIES (NOT (EQ (|@l599| |@l598|) |@true|)) (EQ (select |intelements_6| |@l598|) (select |intelements_7| |@l598|))))
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l603|) (IFF (EQ (|@l602| |@l603|) |@true|)(EQ |@l603| (select |f_tab| |this|))))(FORALL (|@l601|) (IMPLIES (NOT (EQ (|@l602| |@l601|) |@true|)) (EQ (select |intelements_7| |@l601|) (select |intelements_8| |@l601|))))
+(FORALL (|@l605|) (IFF (EQ (|@l604| |@l605|) |@true|)(EQ |@l605| (select |f_tab| |this|))))(FORALL (|@l608|) (IFF (EQ (|@l607| |@l608|) |@true|)(EQ |@l608| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l604| |T121|) |@true|) (FORALL (|@l606|) (IMPLIES (NOT (EQ (|@l607| |@l606|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l606|) (select (select |intelements_8| |T121|) |@l606|))))))
+
+(FORALL (|@l611|) (IFF (EQ (|@l610| |@l611|) |@true|)(EQ |@l611| (select |f_tab| |this|))))(FORALL (|@l609|) (IMPLIES (NOT (EQ (|@l610| |@l609|) |@true|)) (EQ (select |intelements_8| |@l609|) (select |intelements_20| |@l609|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l614|) (IFF (EQ (|@l613| |@l614|) |@true|)(EQ |@l614| (select |f_tab| |this|))))(FORALL (|@l612|) (IMPLIES (NOT (EQ (|@l613| |@l612|) |@true|)) (EQ (select |intelements_20| |@l612|) (select |intelements| |@l612|))))
+(FORALL (|@l616|) (IFF (EQ (|@l615| |@l616|) |@true|)(EQ |@l616| (select |f_tab| |this|))))(FORALL (|@l619|) (IFF (EQ (|@l618| |@l619|) |@true|)(AND (<= |l_lo| |@l619|) (<= |@l619| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l615| |T216|) |@true|) (FORALL (|@l617|) (IMPLIES (NOT (EQ (|@l618| |@l617|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l617|) (select (select |intelements| |T216|) |@l617|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(NOT ((< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))))
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| (- |l_left40_3| 1))) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| (- |l_left40_3| 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(> |l_left40_3| 0)
+(FORALL (|@l621|) (IFF (EQ (|@l620| |@l621|) |@true|)(EQ |@l621| (select |f_tab| |this|))))(FORALL (|@l624|) (IFF (EQ (|@l623| |@l624|) |@true|)(AND (<= |l_lo| |@l624|) (<= |@l624| (- |l_left40_3| 1)))))(FORALL (|T110|) (IMPLIES (EQ (|@l620| |T110|) |@true|) (FORALL (|@l622|) (IMPLIES (NOT (EQ (|@l623| |@l622|) |@true|)) (EQ (select (select |intelements_6| |T110|) |@l622|) (select (select |intelements_7| |T110|) |@l622|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| (- |l_left40_3| 1))) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| (- |l_left40_3| 1)) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l626|) (IFF (EQ (|@l625| |@l626|) |@true|)(EQ |@l626| (select |f_tab| |this|))))(FORALL (|@l629|) (IFF (EQ (|@l628| |@l629|) |@true|)(EQ |@l629| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l625| |T122|) |@true|) (FORALL (|@l627|) (IMPLIES (NOT (EQ (|@l628| |@l627|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l627|) (select (select |intelements_20| |T122|) |@l627|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l631|) (IFF (EQ (|@l630| |@l631|) |@true|)(AND (<= 0 |@l631|) (<= |@l631| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l630| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i112|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i112|))))
+))
+
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l676|) (IFF (EQ (|@l675| |@l676|) |@true|)(EQ |@l676| (select |f_tab| |this|))))(FORALL (|@l674|) (IMPLIES (NOT (EQ (|@l675| |@l674|) |@true|)) (EQ (select |intelements_4| |@l674|) (select |intelements_6| |@l674|))))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i106|))))
+))
+
+TRUE
+(FORALL (|@l679|) (IFF (EQ (|@l678| |@l679|) |@true|)(EQ |@l679| (select |f_tab| |this|))))(FORALL (|@l677|) (IMPLIES (NOT (EQ (|@l678| |@l677|) |@true|)) (EQ (select |intelements_6| |@l677|) (select |intelements_7| |@l677|))))
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l682|) (IFF (EQ (|@l681| |@l682|) |@true|)(EQ |@l682| (select |f_tab| |this|))))(FORALL (|@l680|) (IMPLIES (NOT (EQ (|@l681| |@l680|) |@true|)) (EQ (select |intelements_7| |@l680|) (select |intelements_8| |@l680|))))
+(FORALL (|@l684|) (IFF (EQ (|@l683| |@l684|) |@true|)(EQ |@l684| (select |f_tab| |this|))))(FORALL (|@l687|) (IFF (EQ (|@l686| |@l687|) |@true|)(EQ |@l687| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l683| |T121|) |@true|) (FORALL (|@l685|) (IMPLIES (NOT (EQ (|@l686| |@l685|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l685|) (select (select |intelements_8| |T121|) |@l685|))))))
+
+(FORALL (|@l690|) (IFF (EQ (|@l689| |@l690|) |@true|)(EQ |@l690| (select |f_tab| |this|))))(FORALL (|@l688|) (IMPLIES (NOT (EQ (|@l689| |@l688|) |@true|)) (EQ (select |intelements_8| |@l688|) (select |intelements_20| |@l688|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l693|) (IFF (EQ (|@l692| |@l693|) |@true|)(EQ |@l693| (select |f_tab| |this|))))(FORALL (|@l691|) (IMPLIES (NOT (EQ (|@l692| |@l691|) |@true|)) (EQ (select |intelements_20| |@l691|) (select |intelements| |@l691|))))
+(FORALL (|@l695|) (IFF (EQ (|@l694| |@l695|) |@true|)(EQ |@l695| (select |f_tab| |this|))))(FORALL (|@l698|) (IFF (EQ (|@l697| |@l698|) |@true|)(AND (<= |l_lo| |@l698|) (<= |@l698| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l694| |T216|) |@true|) (FORALL (|@l696|) (IMPLIES (NOT (EQ (|@l697| |@l696|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l696|) (select (select |intelements| |T216|) |@l696|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j35|))))))
+
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(FORALL (|@l700|) (IFF (EQ (|@l699| |@l700|) |@true|)(EQ |@l700| (select |f_tab| |this|))))(FORALL (|@l703|) (IFF (EQ (|@l702| |@l703|) |@true|)(AND (<= (+ |l_left40_3| 1) |@l703|) (<= |@l703| |l_hi|))))(FORALL (|T90|) (IMPLIES (EQ (|@l699| |T90|) |@true|) (FORALL (|@l701|) (IMPLIES (NOT (EQ (|@l702| |@l701|) |@true|)) (EQ (select (select |intelements_4| |T90|) |@l701|) (select (select |intelements_6| |T90|) |@l701|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= (+ |l_left40_3| 1) |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| (- |l_left40_3| 1))) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| (- |l_left40_3| 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(> |l_left40_3| 0)
+(FORALL (|@l705|) (IFF (EQ (|@l704| |@l705|) |@true|)(EQ |@l705| (select |f_tab| |this|))))(FORALL (|@l708|) (IFF (EQ (|@l707| |@l708|) |@true|)(AND (<= |l_lo| |@l708|) (<= |@l708| (- |l_left40_3| 1)))))(FORALL (|T110|) (IMPLIES (EQ (|@l704| |T110|) |@true|) (FORALL (|@l706|) (IMPLIES (NOT (EQ (|@l707| |@l706|) |@true|)) (EQ (select (select |intelements_6| |T110|) |@l706|) (select (select |intelements_7| |T110|) |@l706|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| (- |l_left40_3| 1))) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| (- |l_left40_3| 1)) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l710|) (IFF (EQ (|@l709| |@l710|) |@true|)(EQ |@l710| (select |f_tab| |this|))))(FORALL (|@l713|) (IFF (EQ (|@l712| |@l713|) |@true|)(EQ |@l713| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l709| |T122|) |@true|) (FORALL (|@l711|) (IMPLIES (NOT (EQ (|@l712| |@l711|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l711|) (select (select |intelements_20| |T122|) |@l711|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l715|) (IFF (EQ (|@l714| |@l715|) |@true|)(AND (<= 0 |@l715|) (<= |@l715| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l714| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j35|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(IMPLIES (FORALL (|@l718|) (IFF (EQ (|@l717| |@l718|) |@true|)(EQ |@l718| (select |f_tab| |this|)))) 
+(FORALL (|@l716|) (IMPLIES (NOT (EQ (|@l717| |@l716|) |@true|)) (FORALL (|@l719|) (IMPLIES (EQ (instances |@l716|) |@true|) (EQ (select (select |intelements_4| |@l716|) |@l719|) (select (select |intelements| |@l716|) |@l719|))))))
+)
+(IMPLIES (FORALL (|@l721|) (EQ (|@l720| |@l721|) |@true|)) 
+(IMPLIES (FORALL (|@l726|) (IFF (EQ (|@l725| |@l726|) |@true|)(AND (<= |l_lo| |@l726|) (<= |@l726| |l_hi|)))) 
+(IMPLIES (FORALL (|@l728|) (IFF (EQ (|@l727| |@l728|) |@true|)(EQ |@l728| (select |f_tab| |this|)))) 
+(IMPLIES (FORALL (|@l724|) (IFF (EQ (|@l723| |@l724|) |@true|)(AND (EQ (|@l725| |@l724|) |@true|) (EQ (|@l727| |T12|) |@true|)))) 
+(FORALL (|T12|) (IMPLIES (EQ (|instances| |T12|) |@true|) (IMPLIES (EQ (|@l720| |T12|) |@true|) (FORALL (|@l722|) (IMPLIES (NOT (EQ (|@l723| |@l722|) |@true|)) (EQ (select (select |intelements_4| |T12|) |@l722|) (select (select |intelements| |T12|) |@l722|)))))))
+
+)
+)
+)
+)
+(IMPLIES (FORALL (|@l730|) (EQ (|@l729| |@l730|) |@true|)) 
+(FORALL (|T13|) (IMPLIES (EQ (|instances| |T13|) |@true|) (IMPLIES (EQ (|@l729| |T13|) |@true|) (FORALL (|@l731|) (EQ (select (select |shortelements| |T13|) |@l731|) (select (select |shortelements| |T13|) |@l731|))))))
+
+)
+(IMPLIES (FORALL (|@l733|) (EQ (|@l732| |@l733|) |@true|)) 
+(FORALL (|T14|) (IMPLIES (EQ (|instances| |T14|) |@true|) (IMPLIES (EQ (|@l732| |T14|) |@true|) (FORALL (|@l734|) (EQ (select (select |byteelements| |T14|) |@l734|) (select (select |byteelements| |T14|) |@l734|))))))
+
+)
+(IMPLIES (FORALL (|@l736|) (EQ (|@l735| |@l736|) |@true|)) 
+(FORALL (|T15|) (IMPLIES (EQ (|instances| |T15|) |@true|) (IMPLIES (EQ (|@l735| |T15|) |@true|) (FORALL (|@l737|) (EQ (select (select |booleanelements| |T15|) |@l737|) (select (select |booleanelements| |T15|) |@l737|))))))
+
+)
+(IMPLIES (FORALL (|@l739|) (EQ (|@l738| |@l739|) |@true|)) 
+(FORALL (|T16|) (IMPLIES (EQ (|instances| |T16|) |@true|) (IMPLIES (EQ (|@l738| |T16|) |@true|) (FORALL (|@l740|) (EQ (select (select |charelements| |T16|) |@l740|) (select (select |charelements| |T16|) |@l740|))))))
+
+)
+(IMPLIES (FORALL (|@l742|) (EQ (|@l741| |@l742|) |@true|)) 
+(FORALL (|T17|) (IMPLIES (EQ (|instances| |T17|) |@true|) (IMPLIES (EQ (|@l741| |T17|) |@true|) (FORALL (|@l743|) (EQ (select (select |refelements| |T17|) |@l743|) (select (select |refelements| |T17|) |@l743|))))))
+
+)
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l788|) (IFF (EQ (|@l787| |@l788|) |@true|)(EQ |@l788| (select |f_tab| |this|))))(FORALL (|@l786|) (IMPLIES (NOT (EQ (|@l787| |@l786|) |@true|)) (EQ (select |intelements_4| |@l786|) (select |intelements_6| |@l786|))))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i106|))))
+))
+
+TRUE
+(FORALL (|@l791|) (IFF (EQ (|@l790| |@l791|) |@true|)(EQ |@l791| (select |f_tab| |this|))))(FORALL (|@l789|) (IMPLIES (NOT (EQ (|@l790| |@l789|) |@true|)) (EQ (select |intelements_6| |@l789|) (select |intelements_7| |@l789|))))
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l794|) (IFF (EQ (|@l793| |@l794|) |@true|)(EQ |@l794| (select |f_tab| |this|))))(FORALL (|@l792|) (IMPLIES (NOT (EQ (|@l793| |@l792|) |@true|)) (EQ (select |intelements_7| |@l792|) (select |intelements_8| |@l792|))))
+(FORALL (|@l796|) (IFF (EQ (|@l795| |@l796|) |@true|)(EQ |@l796| (select |f_tab| |this|))))(FORALL (|@l799|) (IFF (EQ (|@l798| |@l799|) |@true|)(EQ |@l799| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l795| |T121|) |@true|) (FORALL (|@l797|) (IMPLIES (NOT (EQ (|@l798| |@l797|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l797|) (select (select |intelements_8| |T121|) |@l797|))))))
+
+(FORALL (|@l802|) (IFF (EQ (|@l801| |@l802|) |@true|)(EQ |@l802| (select |f_tab| |this|))))(FORALL (|@l800|) (IMPLIES (NOT (EQ (|@l801| |@l800|) |@true|)) (EQ (select |intelements_8| |@l800|) (select |intelements_20| |@l800|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l805|) (IFF (EQ (|@l804| |@l805|) |@true|)(EQ |@l805| (select |f_tab| |this|))))(FORALL (|@l803|) (IMPLIES (NOT (EQ (|@l804| |@l803|) |@true|)) (EQ (select |intelements_20| |@l803|) (select |intelements| |@l803|))))
+(FORALL (|@l807|) (IFF (EQ (|@l806| |@l807|) |@true|)(EQ |@l807| (select |f_tab| |this|))))(FORALL (|@l810|) (IFF (EQ (|@l809| |@l810|) |@true|)(AND (<= |l_lo| |@l810|) (<= |@l810| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l806| |T216|) |@true|) (FORALL (|@l808|) (IMPLIES (NOT (EQ (|@l809| |@l808|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l808|) (select (select |intelements| |T216|) |@l808|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_j35|) (<= |l_j35| |l_hi|)) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j35|))))))
+
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(FORALL (|@l812|) (IFF (EQ (|@l811| |@l812|) |@true|)(EQ |@l812| (select |f_tab| |this|))))(FORALL (|@l815|) (IFF (EQ (|@l814| |@l815|) |@true|)(AND (<= (+ |l_left40_3| 1) |@l815|) (<= |@l815| |l_hi|))))(FORALL (|T90|) (IMPLIES (EQ (|@l811| |T90|) |@true|) (FORALL (|@l813|) (IMPLIES (NOT (EQ (|@l814| |@l813|) |@true|)) (EQ (select (select |intelements_4| |T90|) |@l813|) (select (select |intelements_6| |T90|) |@l813|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= (+ |l_left40_3| 1) |l_i37|) (<= |l_i37| |l_hi|)) (EXISTS (|l_j37|) (AND (<= (+ |l_left40_3| 1) |l_j37|) (<= |l_j37| |l_hi|) (EQ ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| (- |l_left40_3| 1))) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| (- |l_left40_3| 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(> |l_left40_3| 0)
+(FORALL (|@l817|) (IFF (EQ (|@l816| |@l817|) |@true|)(EQ |@l817| (select |f_tab| |this|))))(FORALL (|@l820|) (IFF (EQ (|@l819| |@l820|) |@true|)(AND (<= |l_lo| |@l820|) (<= |@l820| (- |l_left40_3| 1)))))(FORALL (|T110|) (IMPLIES (EQ (|@l816| |T110|) |@true|) (FORALL (|@l818|) (IMPLIES (NOT (EQ (|@l819| |@l818|) |@true|)) (EQ (select (select |intelements_6| |T110|) |@l818|) (select (select |intelements_7| |T110|) |@l818|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| (- |l_left40_3| 1))) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| (- |l_left40_3| 1)) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l822|) (IFF (EQ (|@l821| |@l822|) |@true|)(EQ |@l822| (select |f_tab| |this|))))(FORALL (|@l825|) (IFF (EQ (|@l824| |@l825|) |@true|)(EQ |@l825| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l821| |T122|) |@true|) (FORALL (|@l823|) (IMPLIES (NOT (EQ (|@l824| |@l823|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l823|) (select (select |intelements_20| |T122|) |@l823|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l827|) (IFF (EQ (|@l826| |@l827|) |@true|)(AND (<= 0 |@l827|) (<= |@l827| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l826| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j110|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| |l_hi|)) (IMPLIES (AND (<= |l_lo| |l_j110|) (<= |l_j110| |l_hi|)) (IMPLIES (< |l_i0| |l_j110|) (<= ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_j110|))))))
+
+(FORALL (|l_i112|) (IMPLIES (AND (<= |l_lo| |l_i112|) (<= |l_i112| |l_hi|)) (EXISTS (|l_j112|) (AND (<= |l_lo| |l_j112|) (<= |l_j112| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j112|) ( select ( select |intelements_4| (select |f_tab| |this|)) |l_i112|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i106|))))
+))
+
+TRUE
+(FORALL (|@l864|) (IFF (EQ (|@l863| |@l864|) |@true|)(EQ |@l864| (select |f_tab| |this|))))(FORALL (|@l862|) (IMPLIES (NOT (EQ (|@l863| |@l862|) |@true|)) (EQ (select |intelements_6| |@l862|) (select |intelements_7| |@l862|))))
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l867|) (IFF (EQ (|@l866| |@l867|) |@true|)(EQ |@l867| (select |f_tab| |this|))))(FORALL (|@l865|) (IMPLIES (NOT (EQ (|@l866| |@l865|) |@true|)) (EQ (select |intelements_7| |@l865|) (select |intelements_8| |@l865|))))
+(FORALL (|@l869|) (IFF (EQ (|@l868| |@l869|) |@true|)(EQ |@l869| (select |f_tab| |this|))))(FORALL (|@l872|) (IFF (EQ (|@l871| |@l872|) |@true|)(EQ |@l872| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l868| |T121|) |@true|) (FORALL (|@l870|) (IMPLIES (NOT (EQ (|@l871| |@l870|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l870|) (select (select |intelements_8| |T121|) |@l870|))))))
+
+(FORALL (|@l875|) (IFF (EQ (|@l874| |@l875|) |@true|)(EQ |@l875| (select |f_tab| |this|))))(FORALL (|@l873|) (IMPLIES (NOT (EQ (|@l874| |@l873|) |@true|)) (EQ (select |intelements_8| |@l873|) (select |intelements_20| |@l873|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l878|) (IFF (EQ (|@l877| |@l878|) |@true|)(EQ |@l878| (select |f_tab| |this|))))(FORALL (|@l876|) (IMPLIES (NOT (EQ (|@l877| |@l876|) |@true|)) (EQ (select |intelements_20| |@l876|) (select |intelements| |@l876|))))
+(FORALL (|@l880|) (IFF (EQ (|@l879| |@l880|) |@true|)(EQ |@l880| (select |f_tab| |this|))))(FORALL (|@l883|) (IFF (EQ (|@l882| |@l883|) |@true|)(AND (<= |l_lo| |@l883|) (<= |@l883| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l879| |T216|) |@true|) (FORALL (|@l881|) (IMPLIES (NOT (EQ (|@l882| |@l881|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l881|) (select (select |intelements| |T216|) |@l881|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| (- |l_left40_3| 1))) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| (- |l_left40_3| 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(> |l_left40_3| 0)
+(FORALL (|@l885|) (IFF (EQ (|@l884| |@l885|) |@true|)(EQ |@l885| (select |f_tab| |this|))))(FORALL (|@l888|) (IFF (EQ (|@l887| |@l888|) |@true|)(AND (<= |l_lo| |@l888|) (<= |@l888| (- |l_left40_3| 1)))))(FORALL (|T110|) (IMPLIES (EQ (|@l884| |T110|) |@true|) (FORALL (|@l886|) (IMPLIES (NOT (EQ (|@l887| |@l886|) |@true|)) (EQ (select (select |intelements_6| |T110|) |@l886|) (select (select |intelements_7| |T110|) |@l886|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| (- |l_left40_3| 1))) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| (- |l_left40_3| 1)) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l890|) (IFF (EQ (|@l889| |@l890|) |@true|)(EQ |@l890| (select |f_tab| |this|))))(FORALL (|@l893|) (IFF (EQ (|@l892| |@l893|) |@true|)(EQ |@l893| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l889| |T122|) |@true|) (FORALL (|@l891|) (IMPLIES (NOT (EQ (|@l892| |@l891|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l891|) (select (select |intelements_20| |T122|) |@l891|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l895|) (IFF (EQ (|@l894| |@l895|) |@true|)(AND (<= 0 |@l895|) (<= |@l895| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l894| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(<= 0 (+ |l_left40_3| 1))
+(< (+ |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+(FORALL (|@l932|) (IFF (EQ (|@l931| |@l932|) |@true|)(EQ |@l932| (select |f_tab| |this|))))(FORALL (|@l930|) (IMPLIES (NOT (EQ (|@l931| |@l930|) |@true|)) (EQ (select |intelements_6| |@l930|) (select |intelements_7| |@l930|))))
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l935|) (IFF (EQ (|@l934| |@l935|) |@true|)(EQ |@l935| (select |f_tab| |this|))))(FORALL (|@l933|) (IMPLIES (NOT (EQ (|@l934| |@l933|) |@true|)) (EQ (select |intelements_7| |@l933|) (select |intelements_8| |@l933|))))
+(FORALL (|@l937|) (IFF (EQ (|@l936| |@l937|) |@true|)(EQ |@l937| (select |f_tab| |this|))))(FORALL (|@l940|) (IFF (EQ (|@l939| |@l940|) |@true|)(EQ |@l940| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l936| |T121|) |@true|) (FORALL (|@l938|) (IMPLIES (NOT (EQ (|@l939| |@l938|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l938|) (select (select |intelements_8| |T121|) |@l938|))))))
+
+(FORALL (|@l943|) (IFF (EQ (|@l942| |@l943|) |@true|)(EQ |@l943| (select |f_tab| |this|))))(FORALL (|@l941|) (IMPLIES (NOT (EQ (|@l942| |@l941|) |@true|)) (EQ (select |intelements_8| |@l941|) (select |intelements_20| |@l941|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l946|) (IFF (EQ (|@l945| |@l946|) |@true|)(EQ |@l946| (select |f_tab| |this|))))(FORALL (|@l944|) (IMPLIES (NOT (EQ (|@l945| |@l944|) |@true|)) (EQ (select |intelements_20| |@l944|) (select |intelements| |@l944|))))
+(FORALL (|@l948|) (IFF (EQ (|@l947| |@l948|) |@true|)(EQ |@l948| (select |f_tab| |this|))))(FORALL (|@l951|) (IFF (EQ (|@l950| |@l951|) |@true|)(AND (<= |l_lo| |@l951|) (<= |@l951| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l947| |T216|) |@true|) (FORALL (|@l949|) (IMPLIES (NOT (EQ (|@l950| |@l949|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l949|) (select (select |intelements| |T216|) |@l949|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(FORALL (|l_i0| |l_j35|) (IMPLIES (AND (<= |l_lo| |l_i0|) (<= |l_i0| (- |l_left40_3| 1))) (IMPLIES (AND (<= |l_lo| |l_j35|) (<= |l_j35| (- |l_left40_3| 1))) (IMPLIES (< |l_i0| |l_j35|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j35|))))))
+
+(> |l_left40_3| 0)
+(FORALL (|@l953|) (IFF (EQ (|@l952| |@l953|) |@true|)(EQ |@l953| (select |f_tab| |this|))))(FORALL (|@l956|) (IFF (EQ (|@l955| |@l956|) |@true|)(AND (<= |l_lo| |@l956|) (<= |@l956| (- |l_left40_3| 1)))))(FORALL (|T110|) (IMPLIES (EQ (|@l952| |T110|) |@true|) (FORALL (|@l954|) (IMPLIES (NOT (EQ (|@l955| |@l954|) |@true|)) (EQ (select (select |intelements_6| |T110|) |@l954|) (select (select |intelements_7| |T110|) |@l954|))))))
+
+(FORALL (|l_i37|) (IMPLIES (AND (<= |l_lo| |l_i37|) (<= |l_i37| (- |l_left40_3| 1))) (EXISTS (|l_j37|) (AND (<= |l_lo| |l_j37|) (<= |l_j37| (- |l_left40_3| 1)) (EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j37|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i37|))))
+))
+
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l958|) (IFF (EQ (|@l957| |@l958|) |@true|)(EQ |@l958| (select |f_tab| |this|))))(FORALL (|@l961|) (IFF (EQ (|@l960| |@l961|) |@true|)(EQ |@l961| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l957| |T122|) |@true|) (FORALL (|@l959|) (IMPLIES (NOT (EQ (|@l960| |@l959|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l959|) (select (select |intelements_20| |T122|) |@l959|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l963|) (IFF (EQ (|@l962| |@l963|) |@true|)(AND (<= 0 |@l963|) (<= |@l963| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l962| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j100|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (IMPLIES (AND (<= |l_lo| |l_j100|) (< |l_j100| |l_left40_3|)) (IMPLIES (< |l_i0| |l_j100|) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j100|))))))
+
+(FORALL (|l_i102|) (IMPLIES (AND (<= |l_lo| |l_i102|) (< |l_i102| |l_left40_3|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i102|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j104|) (IMPLIES (AND (< |l_left40_3| |l_j104|) (<= |l_j104| |l_hi|)) (<= ( select ( select |intelements_6| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_j104|))))
+
+(FORALL (|l_i106|) (IMPLIES (AND (<= |l_lo| |l_i106|) (<= |l_i106| |l_hi|)) (EXISTS (|l_j106|) (AND (<= |l_lo| |l_j106|) (<= |l_j106| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j106|) ( select ( select |intelements_6| (select |f_tab| |this|)) |l_i106|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+TRUE
+TRUE
+(FORALL (|@l992|) (IFF (EQ (|@l991| |@l992|) |@true|)(EQ |@l992| (select |f_tab| |this|))))(FORALL (|@l990|) (IMPLIES (NOT (EQ (|@l991| |@l990|) |@true|)) (EQ (select |intelements_7| |@l990|) (select |intelements_8| |@l990|))))
+(FORALL (|@l994|) (IFF (EQ (|@l993| |@l994|) |@true|)(EQ |@l994| (select |f_tab| |this|))))(FORALL (|@l997|) (IFF (EQ (|@l996| |@l997|) |@true|)(EQ |@l997| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l993| |T121|) |@true|) (FORALL (|@l995|) (IMPLIES (NOT (EQ (|@l996| |@l995|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l995|) (select (select |intelements_8| |T121|) |@l995|))))))
+
+(FORALL (|@l1000|) (IFF (EQ (|@l999| |@l1000|) |@true|)(EQ |@l1000| (select |f_tab| |this|))))(FORALL (|@l998|) (IMPLIES (NOT (EQ (|@l999| |@l998|) |@true|)) (EQ (select |intelements_8| |@l998|) (select |intelements_20| |@l998|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1003|) (IFF (EQ (|@l1002| |@l1003|) |@true|)(EQ |@l1003| (select |f_tab| |this|))))(FORALL (|@l1001|) (IMPLIES (NOT (EQ (|@l1002| |@l1001|) |@true|)) (EQ (select |intelements_20| |@l1001|) (select |intelements| |@l1001|))))
+(FORALL (|@l1005|) (IFF (EQ (|@l1004| |@l1005|) |@true|)(EQ |@l1005| (select |f_tab| |this|))))(FORALL (|@l1008|) (IFF (EQ (|@l1007| |@l1008|) |@true|)(AND (<= |l_lo| |@l1008|) (<= |@l1008| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l1004| |T216|) |@true|) (FORALL (|@l1006|) (IMPLIES (NOT (EQ (|@l1007| |@l1006|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l1006|) (select (select |intelements| |T216|) |@l1006|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(> |l_left40_3| 0)
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l1010|) (IFF (EQ (|@l1009| |@l1010|) |@true|)(EQ |@l1010| (select |f_tab| |this|))))(FORALL (|@l1013|) (IFF (EQ (|@l1012| |@l1013|) |@true|)(EQ |@l1013| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l1009| |T122|) |@true|) (FORALL (|@l1011|) (IMPLIES (NOT (EQ (|@l1012| |@l1011|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l1011|) (select (select |intelements_20| |T122|) |@l1011|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1015|) (IFF (EQ (|@l1014| |@l1015|) |@true|)(AND (<= 0 |@l1015|) (<= |@l1015| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1014| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(<= 0 (- |l_left40_3| 1))
+(< (- |l_left40_3| 1) (select |arraylength| (select |f_tab| |this|)))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+TRUE
+(FORALL (|@l1044|) (IFF (EQ (|@l1043| |@l1044|) |@true|)(EQ |@l1044| (select |f_tab| |this|))))(FORALL (|@l1042|) (IMPLIES (NOT (EQ (|@l1043| |@l1042|) |@true|)) (EQ (select |intelements_7| |@l1042|) (select |intelements_8| |@l1042|))))
+(FORALL (|@l1046|) (IFF (EQ (|@l1045| |@l1046|) |@true|)(EQ |@l1046| (select |f_tab| |this|))))(FORALL (|@l1049|) (IFF (EQ (|@l1048| |@l1049|) |@true|)(EQ |@l1049| |l_hi|)))(FORALL (|T121|) (IMPLIES (EQ (|@l1045| |T121|) |@true|) (FORALL (|@l1047|) (IMPLIES (NOT (EQ (|@l1048| |@l1047|) |@true|)) (EQ (select (select |intelements_7| |T121|) |@l1047|) (select (select |intelements_8| |T121|) |@l1047|))))))
+
+(FORALL (|@l1052|) (IFF (EQ (|@l1051| |@l1052|) |@true|)(EQ |@l1052| (select |f_tab| |this|))))(FORALL (|@l1050|) (IMPLIES (NOT (EQ (|@l1051| |@l1050|) |@true|)) (EQ (select |intelements_8| |@l1050|) (select |intelements_20| |@l1050|))))
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1055|) (IFF (EQ (|@l1054| |@l1055|) |@true|)(EQ |@l1055| (select |f_tab| |this|))))(FORALL (|@l1053|) (IMPLIES (NOT (EQ (|@l1054| |@l1053|) |@true|)) (EQ (select |intelements_20| |@l1053|) (select |intelements| |@l1053|))))
+(FORALL (|@l1057|) (IFF (EQ (|@l1056| |@l1057|) |@true|)(EQ |@l1057| (select |f_tab| |this|))))(FORALL (|@l1060|) (IFF (EQ (|@l1059| |@l1060|) |@true|)(AND (<= |l_lo| |@l1060|) (<= |@l1060| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l1056| |T216|) |@true|) (FORALL (|@l1058|) (IMPLIES (NOT (EQ (|@l1059| |@l1058|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l1058|) (select (select |intelements| |T216|) |@l1058|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(<= |l_lo| |l_left40_3|)
+(FORALL (|@l1062|) (IFF (EQ (|@l1061| |@l1062|) |@true|)(EQ |@l1062| (select |f_tab| |this|))))(FORALL (|@l1065|) (IFF (EQ (|@l1064| |@l1065|) |@true|)(EQ |@l1065| |l_left40_3|)))(FORALL (|T122|) (IMPLIES (EQ (|@l1061| |T122|) |@true|) (FORALL (|@l1063|) (IMPLIES (NOT (EQ (|@l1064| |@l1063|) |@true|)) (EQ (select (select |intelements_8| |T122|) |@l1063|) (select (select |intelements_20| |T122|) |@l1063|))))))
+
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_hi|))
+(EQ ( select ( select |intelements_7| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_left40_3|))
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1067|) (IFF (EQ (|@l1066| |@l1067|) |@true|)(AND (<= 0 |@l1067|) (<= |@l1067| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1066| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j91|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|))))
+
+(FORALL (|l_j93|) (IMPLIES (AND (< |l_left40_3| |l_j93|) (<= |l_j93| |l_hi|)) (<= ( select ( select |intelements_7| (select |f_tab| |this|)) |l_left40_3|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_j93|))))
+
+(FORALL (|l_i95|) (IMPLIES (AND (<= |l_lo| |l_i95|) (<= |l_i95| |l_hi|)) (EXISTS (|l_j95|) (AND (<= |l_lo| |l_j95|) (<= |l_j95| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j95|) ( select ( select |intelements_7| (select |f_tab| |this|)) |l_i95|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1080|) (IFF (EQ (|@l1079| |@l1080|) |@true|)(EQ |@l1080| (select |f_tab| |this|))))(FORALL (|@l1078|) (IMPLIES (NOT (EQ (|@l1079| |@l1078|) |@true|)) (EQ (select |intelements_20| |@l1078|) (select |intelements| |@l1078|))))
+(FORALL (|@l1082|) (IFF (EQ (|@l1081| |@l1082|) |@true|)(EQ |@l1082| (select |f_tab| |this|))))(FORALL (|@l1085|) (IFF (EQ (|@l1084| |@l1085|) |@true|)(AND (<= |l_lo| |@l1085|) (<= |@l1085| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l1081| |T216|) |@true|) (FORALL (|@l1083|) (IMPLIES (NOT (EQ (|@l1084| |@l1083|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l1083|) (select (select |intelements| |T216|) |@l1083|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(<= |l_lo| |l_left40_3|)
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1087|) (IFF (EQ (|@l1086| |@l1087|) |@true|)(AND (<= 0 |@l1087|) (<= |@l1087| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1086| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(<= 0 |l_left40_3|)
+(< |l_left40_3| (select |arraylength| (select |f_tab| |this|)))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1100|) (IFF (EQ (|@l1099| |@l1100|) |@true|)(EQ |@l1100| (select |f_tab| |this|))))(FORALL (|@l1098|) (IMPLIES (NOT (EQ (|@l1099| |@l1098|) |@true|)) (EQ (select |intelements_20| |@l1098|) (select |intelements| |@l1098|))))
+(FORALL (|@l1102|) (IFF (EQ (|@l1101| |@l1102|) |@true|)(EQ |@l1102| (select |f_tab| |this|))))(FORALL (|@l1105|) (IFF (EQ (|@l1104| |@l1105|) |@true|)(AND (<= |l_lo| |@l1105|) (<= |@l1105| (- |l_hi| 1)))))(FORALL (|T216|) (IMPLIES (EQ (|@l1101| |T216|) |@true|) (FORALL (|@l1103|) (IMPLIES (NOT (EQ (|@l1104| |@l1103|) |@true|)) (EQ (select (select |intelements_20| |T216|) |@l1103|) (select (select |intelements| |T216|) |@l1103|))))))
+
+TRUE
+(<= |l_right40_3| |l_hi|)
+TRUE
+(<= |l_lo| |l_left40_3|)
+(NOT (< |l_left40_3| |l_right40_3|))
+(<= |l_left40_3| |l_right40_3|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_3| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_right40_3|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1107|) (IFF (EQ (|@l1106| |@l1107|) |@true|)(AND (<= 0 |@l1107|) (<= |@l1107| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1106| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_i0| |l_j83|) (IMPLIES (AND (<= |l_lo| |l_i0|) (< |l_i0| |l_left40_3|)) (<= ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i0|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_j85|) (IMPLIES (AND (< |l_left40_3| |l_j85|) (<= |l_j85| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_j85|))))
+
+(FORALL (|l_i87|) (IMPLIES (AND (<= |l_lo| |l_i87|) (<= |l_i87| |l_hi|)) (EXISTS (|l_j87|) (AND (<= |l_lo| |l_j87|) (<= |l_j87| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j87|) ( select ( select |intelements_20| (select |f_tab| |this|)) |l_i87|))))
+))
+
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND TRUE
+TRUE
+(FORALL (|@l1140|) (IFF (EQ (|@l1139| |@l1140|) |@true|)(EQ |@l1140| (select |f_tab| |this|))))(FORALL (|@l1138|) (IMPLIES (NOT (EQ (|@l1139| |@l1138|) |@true|)) (EQ (select |intelements_9| |@l1138|) (select |intelements_10| |@l1138|))))
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l1142|) (IFF (EQ (|@l1141| |@l1142|) |@true|)(EQ |@l1142| (select |f_tab| |this|))))(FORALL (|@l1145|) (IFF (EQ (|@l1144| |@l1145|) |@true|)(EQ |@l1145| |l_right40_1|)))(FORALL (|T131|) (IMPLIES (EQ (|@l1141| |T131|) |@true|) (FORALL (|@l1143|) (IMPLIES (NOT (EQ (|@l1144| |@l1143|) |@true|)) (EQ (select (select |intelements_9| |T131|) |@l1143|) (select (select |intelements_10| |T131|) |@l1143|))))))
+
+(FORALL (|@l1147|) (IFF (EQ (|@l1146| |@l1147|) |@true|)(AND (<= 0 |@l1147|) (<= |@l1147| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1146| |l_right40_1|) |@true|)
+(<= |l_right40_1| |l_hi|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(< |l_left40_1| |l_right40_1|)
+(< |l_left40_1| |l_right40_1|)
+(<= |l_left40_1| |l_right40_1|)
+(FORALL (|@l1149|) (IFF (EQ (|@l1148| |@l1149|) |@true|)(AND (<= 0 |@l1149|) (<= |@l1149| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1148| |l_left40_1|) |@true|)
+(<= |l_lo| |l_left40_1|)
+TRUE
+(FORALL (|@l1152|) (IFF (EQ (|@l1151| |@l1152|) |@true|)(EQ |@l1152| (select |f_tab| |this|))))(FORALL (|@l1150|) (IMPLIES (NOT (EQ (|@l1151| |@l1150|) |@true|)) (EQ (select |intelements_10| |@l1150|) (select |intelements_19| |@l1150|))))
+(FORALL (|@l1154|) (IFF (EQ (|@l1153| |@l1154|) |@true|)(EQ |@l1154| (select |f_tab| |this|))))(FORALL (|@l1157|) (IFF (EQ (|@l1156| |@l1157|) |@true|)(EQ |@l1157| |l_left40_1|)))(FORALL (|T132|) (IMPLIES (EQ (|@l1153| |T132|) |@true|) (FORALL (|@l1155|) (IMPLIES (NOT (EQ (|@l1156| |@l1155|) |@true|)) (EQ (select (select |intelements_10| |T132|) |@l1155|) (select (select |intelements_19| |T132|) |@l1155|))))))
+
+(EQ ( select ( select |intelements_9| (select |f_tab| |this|)) |l_left40_1|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_1|))
+(EQ ( select ( select |intelements_9| (select |f_tab| |this|)) |l_right40_1|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_left40_1|))
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1160|) (IFF (EQ (|@l1159| |@l1160|) |@true|)(EQ |@l1160| (select |f_tab| |this|))))(FORALL (|@l1158|) (IMPLIES (NOT (EQ (|@l1159| |@l1158|) |@true|)) (EQ (select |intelements_19| |@l1158|) (select |intelements| |@l1158|))))
+(FORALL (|@l1162|) (IFF (EQ (|@l1161| |@l1162|) |@true|)(EQ |@l1162| (select |f_tab| |this|))))(FORALL (|@l1165|) (IFF (EQ (|@l1164| |@l1165|) |@true|)(AND (<= |l_lo| |@l1165|) (<= |@l1165| (- |l_hi| 1)))))(FORALL (|T213|) (IMPLIES (EQ (|@l1161| |T213|) |@true|) (FORALL (|@l1163|) (IMPLIES (NOT (EQ (|@l1164| |@l1163|) |@true|)) (EQ (select (select |intelements_19| |T213|) |@l1163|) (select (select |intelements| |T213|) |@l1163|))))))
+
+TRUE
+(< |l_left40_1| |l_right40_2|)
+(<= |l_left40_1| |l_right40_2|)
+(<= |l_right40_1| |l_right40_2|)
+(IMPLIES (< |l_left40_1| |l_right40_1|) (< |l_right40_1| |l_right40_2|))
+(<= |l_right40_2| |l_hi|)
+TRUE
+(<= |l_left40_2| |l_left40_1|)
+(<= |l_left40_2| |l_left40_1|)
+(<= |l_lo| |l_left40_2|)
+(< |l_left40_2| |l_right40_2|)
+(<= |l_left40_2| |l_right40_2|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_k76|) (IMPLIES (AND (< |l_right40_1| |l_k76|) (<= |l_k76| |l_hi|)) (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k76|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(NOT (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|)))
+(FORALL (|l_k70|) (IMPLIES (AND (< |l_right40_1| |l_k70|) (<= |l_k70| |l_hi|)) (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k70|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_k75|) (IMPLIES (AND (<= |l_lo| |l_k75|) (< |l_k75| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k75|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_k69|) (IMPLIES (AND (<= |l_lo| |l_k69|) (< |l_k69| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k69|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(NOT (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_left40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|)))
+(FORALL (|l_k62|) (IMPLIES (AND (<= |l_lo| |l_k62|) (< |l_k62| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k62|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_2| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_2|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_2|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1167|) (IFF (EQ (|@l1166| |@l1167|) |@true|)(AND (<= 0 |@l1167|) (<= |@l1167| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1166| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_1|)) (<= ( select ( select |intelements_9| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_1| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_9| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_9| (select |f_tab| |this|)) |l_right40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_9| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(>= (- |l_right40_1| |l_left40_1|) 0)
+(< (- |l_right40_1| |l_left40_1|) (- |l_right40_2| |l_left40_2|))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l1183|) (IFF (EQ (|@l1182| |@l1183|) |@true|)(AND (<= 0 |@l1183|) (<= |@l1183| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1182| |l_right40_1|) |@true|)
+(<= |l_right40_1| |l_hi|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(< |l_left40_1| |l_right40_1|)
+(< |l_left40_1| |l_right40_1|)
+(<= |l_left40_1| |l_right40_1|)
+(FORALL (|@l1185|) (IFF (EQ (|@l1184| |@l1185|) |@true|)(AND (<= 0 |@l1185|) (<= |@l1185| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1184| |l_left40_1|) |@true|)
+(<= |l_lo| |l_left40_1|)
+TRUE
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1188|) (IFF (EQ (|@l1187| |@l1188|) |@true|)(EQ |@l1188| (select |f_tab| |this|))))(FORALL (|@l1186|) (IMPLIES (NOT (EQ (|@l1187| |@l1186|) |@true|)) (EQ (select |intelements_19| |@l1186|) (select |intelements| |@l1186|))))
+(FORALL (|@l1190|) (IFF (EQ (|@l1189| |@l1190|) |@true|)(EQ |@l1190| (select |f_tab| |this|))))(FORALL (|@l1193|) (IFF (EQ (|@l1192| |@l1193|) |@true|)(AND (<= |l_lo| |@l1193|) (<= |@l1193| (- |l_hi| 1)))))(FORALL (|T213|) (IMPLIES (EQ (|@l1189| |T213|) |@true|) (FORALL (|@l1191|) (IMPLIES (NOT (EQ (|@l1192| |@l1191|) |@true|)) (EQ (select (select |intelements_19| |T213|) |@l1191|) (select (select |intelements| |T213|) |@l1191|))))))
+
+TRUE
+(< |l_left40_1| |l_right40_2|)
+(<= |l_left40_1| |l_right40_2|)
+(<= |l_right40_1| |l_right40_2|)
+(IMPLIES (< |l_left40_1| |l_right40_1|) (< |l_right40_1| |l_right40_2|))
+(<= |l_right40_2| |l_hi|)
+TRUE
+(<= |l_left40_2| |l_left40_1|)
+(<= |l_left40_2| |l_left40_1|)
+(<= |l_lo| |l_left40_2|)
+(< |l_left40_2| |l_right40_2|)
+(<= |l_left40_2| |l_right40_2|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|l_k76|) (IMPLIES (AND (< |l_right40_1| |l_k76|) (<= |l_k76| |l_hi|)) (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k76|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(NOT (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|)))
+(FORALL (|l_k70|) (IMPLIES (AND (< |l_right40_1| |l_k70|) (<= |l_k70| |l_hi|)) (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k70|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_k75|) (IMPLIES (AND (<= |l_lo| |l_k75|) (< |l_k75| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k75|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_k69|) (IMPLIES (AND (<= |l_lo| |l_k69|) (< |l_k69| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k69|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(NOT (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_left40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|)))
+(FORALL (|l_k62|) (IMPLIES (AND (<= |l_lo| |l_k62|) (< |l_k62| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k62|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_2| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_2|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_2|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1195|) (IFF (EQ (|@l1194| |@l1195|) |@true|)(AND (<= 0 |@l1195|) (<= |@l1195| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1194| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(<= 0 |l_left40_1|)
+(< |l_left40_1| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_right40_1|)
+(< |l_right40_1| (select |arraylength| (select |f_tab| |this|)))
+(BG_POP)
+
+;---Lemma c_fr_QuickSort_method_2_sort---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(BG_PUSH (AND (NOT (EQ (select |f_tab| |this|) |null|))
+(FORALL (|@l1211|) (IFF (EQ (|@l1210| |@l1211|) |@true|)(AND (<= 0 |@l1211|) (<= |@l1211| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1210| |l_right40_1|) |@true|)
+(<= |l_right40_1| |l_hi|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(< |l_left40_1| |l_right40_1|)
+(<= |l_left40_1| |l_right40_1|)
+(FORALL (|@l1213|) (IFF (EQ (|@l1212| |@l1213|) |@true|)(AND (<= 0 |@l1213|) (<= |@l1213| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1212| |l_left40_1|) |@true|)
+(<= |l_lo| |l_left40_1|)
+TRUE
+(FORALL (|l_i51|) (IMPLIES (AND (<= |l_lo| |l_i51|) (<= |l_i51| (- |l_hi| 1))) (EXISTS (|l_j51|) (AND (<= |l_lo| |l_j51|) (<= |l_j51| |l_hi|) (EQ ( select ( select |intelements| (select |f_tab| |this|)) |l_j51|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_i51|))))
+))
+
+(FORALL (|@l1216|) (IFF (EQ (|@l1215| |@l1216|) |@true|)(EQ |@l1216| (select |f_tab| |this|))))(FORALL (|@l1214|) (IMPLIES (NOT (EQ (|@l1215| |@l1214|) |@true|)) (EQ (select |intelements_19| |@l1214|) (select |intelements| |@l1214|))))
+(FORALL (|@l1218|) (IFF (EQ (|@l1217| |@l1218|) |@true|)(EQ |@l1218| (select |f_tab| |this|))))(FORALL (|@l1221|) (IFF (EQ (|@l1220| |@l1221|) |@true|)(AND (<= |l_lo| |@l1221|) (<= |@l1221| (- |l_hi| 1)))))(FORALL (|T213|) (IMPLIES (EQ (|@l1217| |T213|) |@true|) (FORALL (|@l1219|) (IMPLIES (NOT (EQ (|@l1220| |@l1219|) |@true|)) (EQ (select (select |intelements_19| |T213|) |@l1219|) (select (select |intelements| |T213|) |@l1219|))))))
+
+TRUE
+(< |l_left40_1| |l_right40_2|)
+(<= |l_left40_1| |l_right40_2|)
+(<= |l_right40_1| |l_right40_2|)
+(IMPLIES (< |l_left40_1| |l_right40_1|) (< |l_right40_1| |l_right40_2|))
+(<= |l_right40_2| |l_hi|)
+TRUE
+(<= |l_left40_2| |l_left40_1|)
+(<= |l_left40_2| |l_left40_1|)
+(<= |l_lo| |l_left40_2|)
+(< |l_left40_2| |l_right40_2|)
+(<= |l_left40_2| |l_right40_2|)
+TRUE
+(NOT (EQ (select |f_tab| |this|) |null|))
+(NOT (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|)))
+(FORALL (|l_k70|) (IMPLIES (AND (< |l_right40_1| |l_k70|) (<= |l_k70| |l_hi|)) (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k70|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_k69|) (IMPLIES (AND (<= |l_lo| |l_k69|) (< |l_k69| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k69|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(NOT (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_left40_1|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|)))
+(FORALL (|l_k62|) (IMPLIES (AND (<= |l_lo| |l_k62|) (< |l_k62| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k62|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_n|) (IMPLIES (AND (< |l_right40_2| |l_n|) (<= |l_n| |l_hi|)) (<= ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|) ( select ( select |intelements_19| (select |f_tab| |this|)) |l_n|))))
+
+(>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_right40_2|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))
+(FORALL (|l_m|) (IMPLIES (AND (<= |l_lo| |l_m|) (< |l_m| |l_left40_2|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_m|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|@l1223|) (IFF (EQ (|@l1222| |@l1223|) |@true|)(AND (<= 0 |@l1223|) (<= |@l1223| (- (select |arraylength| (select |f_tab| |this|)) 1)))))(EQ (|@l1222| |l_hi|) |@true|)
+(NOT ((NOT ((< |l_lo| |l_hi|)))))
+TRUE
+(EQ (|instances| |this|) |@true|)
+(<: (select |typeof| |this|) (ref c_fr_QuickSort))
+TRUE
+TRUE
+(NEQ (select |f_tab| |this|) |null|)
+(<= 0 |l_lo|)
+(< |l_lo| (select |arraylength| (select |f_tab| |this|)))
+(<= 0 |l_hi|)
+(< |l_hi| (select |arraylength| (select |f_tab| |this|)))
+))
+;--End of hypothesis--
+(FORALL (|l_k75|) (IMPLIES (AND (<= |l_lo| |l_k75|) (< |l_k75| |l_left40_1|)) (<= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k75|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(FORALL (|l_k76|) (IMPLIES (AND (< |l_right40_1| |l_k76|) (<= |l_k76| |l_hi|)) (>= ( select ( select |intelements_19| (select |f_tab| |this|)) |l_k76|) ( select ( select |intelements| (select |f_tab| |this|)) |l_hi|))))
+
+(BG_POP)

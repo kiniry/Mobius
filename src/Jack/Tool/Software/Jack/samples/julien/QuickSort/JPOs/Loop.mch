@@ -1,0 +1,177 @@
+MACHINE
+   Loop
+
+SETS
+   REFERENCES;
+   t_float;
+  NAMES = {c_int
+,c_short
+,c_char
+,c_byte
+,c_boolean
+,c_java_lang_Object
+,c_fr_Loop
+}
+
+ABSTRACT_CONSTANTS
+c_minint,
+c_maxint,
+c_minshort,
+c_maxshort,
+c_minbyte,
+c_maxbyte,
+c_minchar,
+c_maxchar,
+c_minlong,
+c_maxlong,
+t_int,
+t_short,
+t_byte,
+t_char,
+t_long,
+j_add,
+j_sub,
+j_mul,
+j_div,
+j_rem,
+j_neg,
+j_shl,
+j_shr,
+j_ushr,
+j_and,
+j_or,
+j_xor,
+j_int2char,
+j_int2byte,
+j_int2short,
+null,
+subtypes,
+instances,
+typeof,
+arraylength,
+intelements,
+charelements,
+shortelements,
+byteelements,
+booleanelements,
+refelements,
+flatran,
+elemtype
+
+PROPERTIES
+c_minint: INTEGER & 
+c_maxint: INTEGER & 
+c_minshort: INTEGER & 
+c_maxshort: INTEGER & 
+c_minbyte: INTEGER & 
+c_maxbyte: INTEGER & 
+c_minchar: INTEGER & 
+c_maxchar: INTEGER & 
+c_minlong: INTEGER & 
+c_maxlong: INTEGER & 
+c_minint = -2147483647-1 & 
+c_maxint = 2147483647 & 
+c_maxshort = 32767 & 
+c_minshort = -32768 & 
+c_maxbyte = 127 & 
+c_minbyte = -128 & 
+c_minchar = 0 & 
+c_maxchar = 65535 & 
+t_int = -2147483647-1..2147483647 & 
+t_short = -32768..32767 & 
+t_byte = -128..127 & 
+t_char = 0..65535 & 
+t_long = c_minlong..c_maxlong & 
+j_add: t_int*t_int +-> t_int & 
+dom(j_add) = t_int*t_int & 
+j_sub: t_int*t_int +-> t_int & 
+dom(j_sub) = t_int*t_int & 
+j_mul: t_int*t_int +-> t_int & 
+dom(j_mul) = t_int*t_int & 
+j_div: t_int*(t_int-{0}) +-> t_int & 
+dom(j_div) = t_int*(t_int-{0}) & 
+j_rem: t_int*(t_int-{0}) +-> t_int & 
+dom(j_rem) = t_int*(t_int-{0}) & 
+j_neg: t_int +-> t_int & 
+dom(j_neg) = t_int & 
+j_shl: t_int*t_int +-> t_int & 
+dom(j_shl) = t_int*t_int & 
+j_shr: t_int*t_int +-> t_int & 
+dom(j_shr) = t_int*t_int & 
+j_ushr: t_int*t_int +-> t_int & 
+dom(j_ushr) = t_int*t_int & 
+j_and: t_int*t_int +-> t_int & 
+dom(j_and) = t_int*t_int & 
+j_or: t_int*t_int +-> t_int & 
+dom(j_or) = t_int*t_int & 
+j_xor: t_int*t_int +-> t_int & 
+dom(j_xor) = t_int*t_int & 
+j_int2char: t_int +-> t_char & 
+dom(j_int2char) = t_int & 
+j_int2byte: t_int +-> t_byte & 
+dom(j_int2byte) = t_int & 
+j_int2short: t_int +-> t_short & 
+dom(j_int2short) = t_int & 
+t_char<|j_int2char = id(t_char) & 
+t_byte<|j_int2byte = id(t_byte) & 
+t_short<|j_int2short = id(t_short) & 
+!ii.(ii: t_int => (0<=ii => (ii mod 256<=127 => j_int2byte(ii) = ii mod 256) & (not(ii mod 256<=127) => j_int2byte(ii) = ii mod 256-256)) & (not(0<=ii) => j_int2byte(ii) = j_int2byte(ii+((-ii)/256+1)*256))) & 
+!ii.(ii: t_int => (0<=ii => (ii mod 65536<=32767 => j_int2short(ii) = ii mod 65536) & (not(ii mod 65536<=32767) => j_int2short(ii) = ii mod 65536-65536)) & (not(0<=ii) => j_int2short(ii) = j_int2short(ii+((-ii)/65536+1)*65536))) & 
+j_int2char = %ii.(ii: t_int & 0<=ii | ii mod 65536)<+%ii.(ii: t_int & not(0<=ii) | (ii+((-ii)/65536+1)*65536) mod 65536) & 
+null: REFERENCES & 
+subtypes: (1..7)*{NAMES}*NATURAL <-> (1..7)*{NAMES}*NATURAL & 
+instances: POW(REFERENCES) & 
+not(null: instances) & 
+typeof: instances +-> (1..7)*{NAMES}*NATURAL & 
+dom(typeof) = instances & 
+elemtype: (1..7)*{NAMES}*(NATURAL-{0}) +-> (1..7)*{NAMES}*NATURAL & 
+dom(elemtype) = (1..7)*{NAMES}*(NATURAL-{0}) & 
+arraylength: typeof~[(1..7)*{NAMES}*(NATURAL-{0})] +-> NATURAL & 
+dom(arraylength) = typeof~[(1..7)*{NAMES}*(NATURAL-{0})] & 
+intelements: typeof~[{1 |-> NAMES|->1}] +-> (t_int +-> t_int) &
+dom(intelements) = typeof~[{1 |-> NAMES|->1}] & 
+!array.(array: dom(intelements) => dom(intelements(array)) = 0..arraylength(array)-1) & 
+charelements:typeof~[{3 |-> NAMES|->1}] +-> (t_int +-> t_char) &
+dom(charelements) = typeof~[{3 |-> NAMES|->1}] & 
+!array.(array: dom(charelements) => dom(charelements(array)) = 0..arraylength(array)-1) & 
+shortelements:typeof~[{2 |-> NAMES|->1}] +-> (t_int +-> t_short) &
+dom(shortelements) = typeof~[{2 |-> NAMES|->1}] & 
+!array.(array: dom(shortelements) => dom(shortelements(array)) = 0..arraylength(array)-1) & 
+byteelements: typeof~[{4 |-> NAMES|->1}] +-> (t_int +-> t_byte) &
+dom(byteelements) = typeof~[{4 |-> NAMES|->1}] & 
+!array.(array: dom(byteelements) => dom(byteelements(array)) = 0..arraylength(array)-1) & 
+booleanelements: typeof~[{5 |-> NAMES|->1}] +-> (t_int +-> BOOL) &
+dom(booleanelements) = typeof~[{5 |-> NAMES|->1}] & 
+!array.(array: dom(booleanelements) => dom(booleanelements(array)) = 0..arraylength(array)-1) & 
+refelements: typeof~[(1..7)*{NAMES}*(NATURAL-{0})-({1 |-> NAMES}\/{3 |-> NAMES}\/{2 |-> NAMES}\/{4 |-> NAMES}\/{5 |-> NAMES})*{1}] +-> (t_int +-> instances\/{null}) &
+dom(refelements) = typeof~[(1..7)*{NAMES}*(NATURAL-{0})-({1 |-> NAMES}\/{3 |-> NAMES}\/{2 |-> NAMES}\/{4 |-> NAMES}\/{5 |-> NAMES})*{1}] & 
+!array.(array: dom(refelements) => dom(refelements(array)) = 0..arraylength(array)-1 & 
+ran(refelements(array)): POW(typeof~[subtypes[{elemtype(typeof(array))}]]\/{null})) & 
+!(name,dim).(name: (1..7)*{NAMES} & (dim: INTEGER & 0<=dim & not(dim = 0)) => subtypes[{name|->dim}] = {cc,dd | cc: (1..7)*{NAMES} & (dd: INTEGER & 0<=dd & not(dd = 0)) & cc|->dd-1: subtypes[{name|->dim-1}]}) & 
+flatran = %xx.(xx: REFERENCES +-> (t_int +-> REFERENCES) | {yy | yy: REFERENCES & #zz.(zz: dom(xx) & yy: ran(xx(zz)))}) & 
+elemtype = %(name,dim).(name: (1..7)*{NAMES} & (dim: INTEGER & 0<=dim & not(dim = 0)) | name|->dim-1)
+ & subtypes[{1 |-> NAMES |-> 0 }] = { 1 |-> NAMES |-> 0 }
+ & subtypes[{2 |-> NAMES |-> 0 }] = { 2 |-> NAMES |-> 0 }
+ & subtypes[{3 |-> NAMES |-> 0 }] = { 3 |-> NAMES |-> 0 }
+ & subtypes[{4 |-> NAMES |-> 0 }] = { 4 |-> NAMES |-> 0 }
+ & subtypes[{5 |-> NAMES |-> 0 }] = { 5 |-> NAMES |-> 0 }
+ & subtypes[{0|->NAMES |-> 0}] = (1..7)*{NAMES}*NATURAL - {1 |-> NAMES,2 |-> NAMES,3 |-> NAMES,4 |-> NAMES,5 |-> NAMES} * {0}
+ & subtypes[{0|->NAMES |-> 0}] = {(0|->NAMES |-> 0)
+}
+
+DEFINITIONS
+f_2 == (0 <= local_1_16 + 1);
+f_3 == (local_1_16 + 1 <= 3);
+f_4 == (!(var_0z).(var_0z : t_int => (0 <= var_0z
+& var_0z + 1 <= local_1_16 + 1
+=> (intelements <+ {arrayReference_15 |-> (intelements(arrayReference_15) <+ {local_1_16 |-> (0)})})(arrayReference_15)(var_0z) = 0)));
+f_5 == (3 - (local_1_16 + 1) + 1 <= arraylength_16(local_2_16) - local_1_16);
+f_6 == (not());
+f_7 == (not());
+f_8 == (!(var_0z).(var_0z : t_int => (0 <= var_0z
+& var_0z + 1 <= 0
+=> intelements(arrayReference_15)(var_0z) = 0)))
+
+ASSERTIONS
+
+END

@@ -1,0 +1,468 @@
+
+%--- Method doLoop_Th0
+%--- Case 1
+%--- Goal 1
+T0: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t0: CONJECTURE
+NOT arrayReference_15 = null =>
+local_1_16 < 3 =>
+local_1_16 >= 0 =>
+local_1_16 < 3 =>
+NOT arrayReference_15 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_15)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x0:REFERENCES): instances?(x0) OR (LAMBDA (x:REFERENCES): x = null)(x0))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x1:REFERENCES): instances?(x1) OR (LAMBDA (x:REFERENCES): x = null)(x1))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+0 <= local_1_16 + 1
+
+END T0
+
+%--- Method doLoop_Th1
+%--- Case 2
+%--- Goal 1
+T1: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t1: CONJECTURE
+NOT arrayReference_15 = null =>
+local_1_16 < 3 =>
+local_1_16 >= 0 =>
+local_1_16 < 3 =>
+NOT arrayReference_15 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_15)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x4:REFERENCES): instances?(x4) OR (LAMBDA (x:REFERENCES): x = null)(x4))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x5:REFERENCES): instances?(x5) OR (LAMBDA (x:REFERENCES): x = null)(x5))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+local_1_16 + 1 <= 3
+
+END T1
+
+%--- Method doLoop_Th2
+%--- Case 3
+%--- Goal 1
+T2: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t2: CONJECTURE
+NOT arrayReference_15 = null =>
+local_1_16 < 3 =>
+local_1_16 >= 0 =>
+local_1_16 < 3 =>
+NOT arrayReference_15 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_15)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x8:REFERENCES): instances?(x8) OR (LAMBDA (x:REFERENCES): x = null)(x8))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x9:REFERENCES): instances?(x9) OR (LAMBDA (x:REFERENCES): x = null)(x9))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+(FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16 + 1
+=> intelements WITH [(arrayReference_15) := intelements(arrayReference_15) WITH [(local_1_16) := 0]](arrayReference_15)(var_0z) = 0)
+
+END T2
+
+%--- Method doLoop_Th3
+%--- Case 4
+%--- Goal 1
+T3: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t3: CONJECTURE
+NOT arrayReference_15 = null =>
+local_1_16 < 3 =>
+local_1_16 >= 0 =>
+local_1_16 < 3 =>
+NOT arrayReference_15 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_15)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x12:REFERENCES): instances?(x12) OR (LAMBDA (x:REFERENCES): x = null)(x12))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x13:REFERENCES): instances?(x13) OR (LAMBDA (x:REFERENCES): x = null)(x13))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+3 - (local_1_16 + 1) < arraylength_16(local_2_16) - local_1_16
+
+END T3
+
+%--- Method doLoop_Th4
+%--- Case 5
+%--- Goal 1
+T4: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t4: CONJECTURE
+local_1_16 >= 3 OR local_1_16 < 0 =>
+local_1_16 < 3 =>
+NOT arrayReference_15 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_15)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x16:REFERENCES): instances?(x16) OR (LAMBDA (x:REFERENCES): x = null)(x16))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x17:REFERENCES): instances?(x17) OR (LAMBDA (x:REFERENCES): x = null)(x17))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+NOT true
+
+END T4
+
+%--- Method doLoop_Th5
+%--- Case 6
+%--- Goal 1
+T5: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t5: CONJECTURE
+arrayReference_15 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_15)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x20:REFERENCES): instances?(x20) OR (LAMBDA (x:REFERENCES): x = null)(x20))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x21:REFERENCES): instances?(x21) OR (LAMBDA (x:REFERENCES): x = null)(x21))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+NOT true
+
+END T5
+
+%--- Method doLoop_Th6
+%--- Case 7
+%--- Goal 1
+T6: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t6: CONJECTURE
+true =>
+arraylength(arrayReference_15) = 3 =>
+null /= arrayReference_15 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x24:REFERENCES): instances?(x24) OR (LAMBDA (x:REFERENCES): x = null)(x24))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x25:REFERENCES): instances?(x25) OR (LAMBDA (x:REFERENCES): x = null)(x25))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+(FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < 0
+=> intelements(arrayReference_15)(var_0z) = 0)
+
+END T6
+
+%--- Method doLoop_Th7
+%--- Case 8
+%--- Goal 1
+T7: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+local_2: VAR REFERENCES
+local_1: VAR t_int
+local_0: VAR REFERENCES
+
+t7: CONJECTURE
+arrayReference_24 = null =>
+0 <= local_1_16
+& local_1_16 <= 3
+& ((FORALL (var_0z: t_int): 0 <= var_0z
+& var_0z < local_1_16
+=> intelements(arrayReference_24)(var_0z) = 0)) =>
+3 - local_1_16 >= 0 =>
+true =>
+true =>
+arraylength(arrayReference_24) = 3 =>
+null /= arrayReference_24 =>
+NOT local_0 = null =>
+subtype(typeof(local_0),class(c_fr_Loop)) =>
+true % local_0: VAR REFERENCES
+
+& ((LAMBDA (x28:REFERENCES): instances?(x28) OR (LAMBDA (x:REFERENCES): x = null)(x28))(local_0)
+& (local_0 /= null
+=> subtype(typeof(local_0),class(c_fr_Loop)))) =>
+true % local_1: VAR t_int
+ =>
+true % local_2: VAR REFERENCES
+
+& ((LAMBDA (x29:REFERENCES): instances?(x29) OR (LAMBDA (x:REFERENCES): x = null)(x29))(local_2)
+& (local_2 /= null
+=> subtype(typeof(local_2),arrays( c_int,1))))=>
+NOT true
+
+END T7

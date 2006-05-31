@@ -1,0 +1,749 @@
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 1
+%--- Goal 1
+T0: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_1: VAR t_int
+intelements_6: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+newObject_7: VAR REFERENCES
+refelements_4: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+charelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+booleanelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+byteelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+shortelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+intelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t0: CONJECTURE
+true % intelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+true % shortelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+ =>
+true % byteelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+ =>
+true % booleanelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+ =>
+true % charelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+ =>
+true % refelements_4: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+ =>
+newObject_7 /= null =>
+true % newObject_7: VAR REFERENCES
+ =>
+true % intelements_6: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_1 =>
+true % l_i16_1: VAR t_int
+ =>
+newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_1
+=> intelements_6(newObject_9)(l_j) = 0) =>
+NOT (LAMBDA (x0:REFERENCES): instances?(x0) OR (LAMBDA (x:REFERENCES): x = newObject_9)(x0))(newObject_7) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x1:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x1)) => intelements_6(x1) = (LAMBDA (x2: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x2) THEN (LAMBDA (x3: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x3) THEN 0 ELSE intelements(x2)(x3) ENDIF) ELSE intelements(x2) ENDIF)(x1)) =>
+l_i16_1 <= (LAMBDA (x4: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x4) THEN 3 ELSE arraylength(x4) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+false = true
+
+END T0
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 2
+%--- Goal 1
+T1: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t1: CONJECTURE
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+NOT newObject_9 = null =>
+NOT newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x10:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x10)) => intelements_4(x10) = (LAMBDA (x11: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x11) THEN (LAMBDA (x12: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x12) THEN 0 ELSE intelements(x11)(x12) ENDIF) ELSE intelements(x11) ENDIF)(x10)) =>
+(LAMBDA (x:integer): 0 <= x AND x <= (LAMBDA (x13: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x13) THEN 3 ELSE arraylength(x13) ENDIF)(newObject_9) - 1)(l_i16_0) =>
+l_i16_0 < (LAMBDA (x14: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x14) THEN 3 ELSE arraylength(x14) ENDIF)(newObject_9) =>
+l_i16_0 <= (LAMBDA (x15: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x15) THEN 3 ELSE arraylength(x15) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+0 <= l_i16_0 + 1
+
+END T1
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 2
+%--- Goal 2
+T2: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t2: CONJECTURE
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+NOT newObject_9 = null =>
+NOT newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x10:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x10)) => intelements_4(x10) = (LAMBDA (x11: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x11) THEN (LAMBDA (x12: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x12) THEN 0 ELSE intelements(x11)(x12) ENDIF) ELSE intelements(x11) ENDIF)(x10)) =>
+(LAMBDA (x:integer): 0 <= x AND x <= (LAMBDA (x13: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x13) THEN 3 ELSE arraylength(x13) ENDIF)(newObject_9) - 1)(l_i16_0) =>
+l_i16_0 < (LAMBDA (x14: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x14) THEN 3 ELSE arraylength(x14) ENDIF)(newObject_9) =>
+l_i16_0 <= (LAMBDA (x15: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x15) THEN 3 ELSE arraylength(x15) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+l_i16_0 + 1 <= (LAMBDA (x22: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x22) THEN 3 ELSE arraylength(x22) ENDIF)(newObject_9)
+
+END T2
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 2
+%--- Goal 3
+T3: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t3: CONJECTURE
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+NOT newObject_9 = null =>
+NOT newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x10:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x10)) => intelements_4(x10) = (LAMBDA (x11: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x11) THEN (LAMBDA (x12: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x12) THEN 0 ELSE intelements(x11)(x12) ENDIF) ELSE intelements(x11) ENDIF)(x10)) =>
+(LAMBDA (x:integer): 0 <= x AND x <= (LAMBDA (x13: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x13) THEN 3 ELSE arraylength(x13) ENDIF)(newObject_9) - 1)(l_i16_0) =>
+l_i16_0 < (LAMBDA (x14: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x14) THEN 3 ELSE arraylength(x14) ENDIF)(newObject_9) =>
+l_i16_0 <= (LAMBDA (x15: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x15) THEN 3 ELSE arraylength(x15) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0 + 1
+=> intelements_4(newObject_9) WITH [(l_i16_0) := 0](l_j) = 0)
+
+END T3
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 2
+%--- Goal 4
+T4: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t4: CONJECTURE
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+NOT newObject_9 = null =>
+NOT newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x10:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x10)) => intelements_4(x10) = (LAMBDA (x11: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x11) THEN (LAMBDA (x12: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x12) THEN 0 ELSE intelements(x11)(x12) ENDIF) ELSE intelements(x11) ENDIF)(x10)) =>
+(LAMBDA (x:integer): 0 <= x AND x <= (LAMBDA (x13: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x13) THEN 3 ELSE arraylength(x13) ENDIF)(newObject_9) - 1)(l_i16_0) =>
+l_i16_0 < (LAMBDA (x14: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x14) THEN 3 ELSE arraylength(x14) ENDIF)(newObject_9) =>
+l_i16_0 <= (LAMBDA (x15: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x15) THEN 3 ELSE arraylength(x15) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+(LAMBDA (x23: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x23) THEN 3 ELSE arraylength(x23) ENDIF)(newObject_9) - (l_i16_0 + 1) >= 0
+
+END T4
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 2
+%--- Goal 5
+T5: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t5: CONJECTURE
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+NOT newObject_9 = null =>
+NOT newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x10:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x10)) => intelements_4(x10) = (LAMBDA (x11: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x11) THEN (LAMBDA (x12: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x12) THEN 0 ELSE intelements(x11)(x12) ENDIF) ELSE intelements(x11) ENDIF)(x10)) =>
+(LAMBDA (x:integer): 0 <= x AND x <= (LAMBDA (x13: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x13) THEN 3 ELSE arraylength(x13) ENDIF)(newObject_9) - 1)(l_i16_0) =>
+l_i16_0 < (LAMBDA (x14: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x14) THEN 3 ELSE arraylength(x14) ENDIF)(newObject_9) =>
+l_i16_0 <= (LAMBDA (x15: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x15) THEN 3 ELSE arraylength(x15) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+(LAMBDA (x24: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x24) THEN 3 ELSE arraylength(x24) ENDIF)(newObject_9) - (l_i16_0 + 1) < (LAMBDA (x25: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x25) THEN 3 ELSE arraylength(x25) ENDIF)(newObject_9) - l_i16_0
+
+END T5
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 3
+%--- Goal 1
+T6: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+newObject_1: VAR REFERENCES
+refelements_1: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+charelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+booleanelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+byteelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+shortelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+intelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t6: CONJECTURE
+true % intelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+true % shortelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+ =>
+true % byteelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+ =>
+true % booleanelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+ =>
+true % charelements_1: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+ =>
+true % refelements_1: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+ =>
+newObject_1 /= null =>
+true % newObject_1: VAR REFERENCES
+ =>
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+NOT newObject_9 = null =>
+NOT newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT (LAMBDA (x26:REFERENCES): instances?(x26) OR (LAMBDA (x:REFERENCES): x = newObject_9)(x26))(newObject_1) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x27:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x27)) => intelements_4(x27) = (LAMBDA (x28: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x28) THEN (LAMBDA (x29: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x29) THEN 0 ELSE intelements(x28)(x29) ENDIF) ELSE intelements(x28) ENDIF)(x27)) =>
+NOT (LAMBDA (x:integer): 0 <= x AND x <= (LAMBDA (x30: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x30) THEN 3 ELSE arraylength(x30) ENDIF)(newObject_9) - 1)(l_i16_0) =>
+l_i16_0 < (LAMBDA (x31: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x31) THEN 3 ELSE arraylength(x31) ENDIF)(newObject_9) =>
+l_i16_0 <= (LAMBDA (x32: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x32) THEN 3 ELSE arraylength(x32) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+false = true
+
+END T6
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 4
+%--- Goal 1
+T7: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+l_i16_0: VAR t_int
+intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+newObject_5: VAR REFERENCES
+refelements_3: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+charelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+booleanelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+byteelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+shortelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+intelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t7: CONJECTURE
+true % intelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+true % shortelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+ =>
+true % byteelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+ =>
+true % booleanelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+ =>
+true % charelements_3: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+ =>
+true % refelements_3: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+ =>
+newObject_5 /= null =>
+true % newObject_5: VAR REFERENCES
+ =>
+true % intelements_4: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+0 <= l_i16_0 =>
+true % l_i16_0: VAR t_int
+ =>
+newObject_9 = null =>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < l_i16_0
+=> intelements_4(newObject_9)(l_j) = 0) =>
+NOT (LAMBDA (x40:REFERENCES): instances?(x40) OR (LAMBDA (x:REFERENCES): x = newObject_9)(x40))(newObject_5) =>
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+(FORALL (x41:REFERENCES): NOT ((LAMBDA (x:REFERENCES): x = newObject_9)(x41)) => intelements_4(x41) = (LAMBDA (x42: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x42) THEN (LAMBDA (x43: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x43) THEN 0 ELSE intelements(x42)(x43) ENDIF) ELSE intelements(x42) ENDIF)(x41)) =>
+l_i16_0 <= (LAMBDA (x44: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x44) THEN 3 ELSE arraylength(x44) ENDIF)(newObject_9) =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+false = true
+
+END T7
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 5
+%--- Goal 1
+T8: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+
+t8: CONJECTURE
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+0 <= 0
+
+END T8
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 5
+%--- Goal 2
+T9: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+
+t9: CONJECTURE
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+0 <= (LAMBDA (x50: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x50) THEN 3 ELSE arraylength(x50) ENDIF)(newObject_9)
+
+END T9
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 5
+%--- Goal 3
+T10: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+
+t10: CONJECTURE
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+(FORALL (l_j: t_int): 0 <= l_j
+& l_j < 0
+=> (LAMBDA (x51: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x51) THEN (LAMBDA (x52: t_int): IF (LAMBDA (x:integer): 0 <= x AND x <= 3 - 1)(x52) THEN 0 ELSE intelements(x51)(x52) ENDIF) ELSE intelements(x51) ENDIF)(newObject_9)(l_j) = 0)
+
+END T10
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 5
+%--- Goal 4
+T11: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_9: VAR REFERENCES
+
+t11: CONJECTURE
+NOT instances?(newObject_9) =>
+newObject_9 /= null =>
+true % newObject_9: VAR REFERENCES
+ =>
+0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+(LAMBDA (x53: REFERENCES): IF (LAMBDA (x:REFERENCES): x = newObject_9)(x53) THEN 3 ELSE arraylength(x53) ENDIF)(newObject_9) - 0 >= 0
+
+END T11
+
+%--- Method c_fr_Loop_method_1_doLoop
+%--- Case 6
+%--- Goal 1
+T12: THEORY
+BEGIN
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+IMPORTING fr_Loop_prelude
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+this: VAR REFERENCES
+newObject_10: VAR REFERENCES
+refelements_5: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+charelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+booleanelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+byteelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+shortelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+intelements_7: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+
+t12: CONJECTURE
+true % intelements_7: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+ =>
+true % shortelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+ =>
+true % byteelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+ =>
+true % booleanelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+ =>
+true % charelements_5: VAR [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+ =>
+true % refelements_5: VAR [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+ =>
+NOT instances?(newObject_10) =>
+newObject_10 /= null =>
+true % newObject_10: VAR REFERENCES
+ =>
+NOT 0 <= 3 =>
+true % this: VAR REFERENCES
+ =>
+instances?(this) =>
+subtype(typeof(this),class(c_fr_Loop))=>
+false = true
+
+END T12

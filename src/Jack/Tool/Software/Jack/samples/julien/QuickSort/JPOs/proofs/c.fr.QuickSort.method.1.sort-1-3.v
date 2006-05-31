@@ -1,0 +1,52 @@
+Require Import Bool.
+Require Import ZArith.
+Require Import Classical.
+Require Import "/user/jcharles/home/runtime-workspace/QuickSort/JPOs/fr_QuickSort".
+
+Load "/user/jcharles/home/runtime-workspace/QuickSort/JPOs/userTactics.v".
+
+Open Scope Z_scope.
+Open Scope J_Scope.
+Section JackProof.
+Variable intelements_1 : REFERENCES -> t_int -> t_int.
+Variable this : REFERENCES.
+Hypothesis req1 : f_tab this <> null /\ true = true.
+Hypothesis hyp1 : f_tab this <> null.
+Hypothesis hyp2 : forall x0 : REFERENCES,
+            ~ singleton REFERENCES (f_tab this) x0 ->
+            intelements_1 x0 = intelements x0.
+Hypothesis hyp3 : forall T65 : REFERENCES,
+            singleton REFERENCES (f_tab this) T65 ->
+            forall x0 : t_int,
+            ~ interval 0 (j_sub (arraylength (f_tab this)) 1) x0 ->
+            intelements_1 T65 x0 = intelements T65 x0.
+Hypothesis hyp4 : (forall l_i0 : t_int,
+             t_int ->
+             forall l_j35 : t_int,
+             0 <= l_i0 /\ l_i0 <= arraylength (f_tab this) - 1 ->
+             0 <= l_j35 /\ l_j35 <= arraylength (f_tab this) - 1 ->
+             l_i0 < l_j35 ->
+             intelements_1 (f_tab this) l_i0 <=
+             intelements_1 (f_tab this) l_j35) /\
+            (forall l_i36 : t_int,
+             0 <= l_i36 /\ l_i36 <= arraylength (f_tab this) - 1 ->
+             exists l_j36 : t_int,
+               (0 <= l_j36 /\ l_j36 <= arraylength (f_tab this) - 1) /\
+               intelements (f_tab this) l_j36 =
+               intelements_1 (f_tab this) l_i36).
+Hypothesis hyp5 : instances this.
+Hypothesis hyp6 : subtypes (typeof this) (class c_fr_QuickSort).
+
+Ltac autoJ := autoJack; arrtac.
+
+Lemma l: 
+   forall x15 : REFERENCES,
+   ~ singleton REFERENCES (f_tab this) x15 ->
+   forall x16 : t_int,
+   instances x15 -> intelements_1 x15 x16 = intelements x15 x16.
+Proof with autoJ.
+(* Write your proof here *)
+startJack.
+rewrite hyp2...
+Qed.
+End JackProof.

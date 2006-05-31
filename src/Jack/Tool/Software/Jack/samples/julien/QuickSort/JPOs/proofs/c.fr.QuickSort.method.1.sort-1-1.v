@@ -1,0 +1,38 @@
+Require Import Bool.
+Require Import ZArith.
+Require Import Classical.
+Add LoadPath "/home/jcharles/sources/runtime-workspace/QuickSort/JPOs".
+Require Import "fr_QuickSort_classes".
+Load "user_extensions.v".
+Require Import "fr_QuickSort".
+Import JackLogic.
+Open Scope Z_scope.
+Open Scope J_Scope.
+
+Section JackProof.
+
+Variable this : Reference.
+Hypothesis req1 : f_tab this <> null.
+Hypothesis hyp1 : ~ 0 < arraylength (f_tab this).
+Hypothesis hyp2 : f_tab this <> null.
+Hypothesis hyp3 : instances this.
+Hypothesis hyp4 : subtypes (typeof this) (class c_fr_QuickSort).
+
+Ltac autoJ := autoJack; arrtac.
+Ltac purify := simpl_pure.
+
+Lemma l: 
+   forall l_i : t_int,
+   t_int ->
+   forall l_j2 : t_int,
+   0 <= l_i /\ l_i <= arraylength (f_tab this) - 1 ->
+   0 <= l_j2 /\ l_j2 <= arraylength (f_tab this) - 1 ->
+   l_i < l_j2 ->
+   intelements (f_tab this) l_i <= intelements (f_tab this) l_j2.
+Proof with autoJ.
+(* Write your proof here *)
+startJack.
+
+
+Qed.
+End JackProof.

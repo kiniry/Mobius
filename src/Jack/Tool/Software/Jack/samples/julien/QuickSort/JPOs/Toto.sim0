@@ -1,0 +1,57 @@
+(DEFPRED (<: subtype supertype))
+(BG_PUSH (AND
+(DISTINCT 
+   c_int
+   c_short
+   c_char
+   c_byte
+   c_boolean
+ c_java_lang_Object
+ c_fr_Toto
+)
+(FORALL (x) (IFF (<: x (ref c_int)) (EQ x (ref c_int))))
+(FORALL (x) (IFF (<: x (ref c_short)) (EQ x (ref c_short))))
+(FORALL (x) (IFF (<: x (ref c_char)) (EQ x (ref c_char))))
+(FORALL (x) (IFF (<: x (ref c_byte)) (EQ x (ref c_byte))))
+(FORALL (x) (IFF (<: x (ref c_boolean)) (EQ x (ref c_boolean))))
+(FORALL (x y z) (IFF (<: x (array y z)) (EQ x (array y z))))
+(FORALL (x) (<: x (ref c_java_lang_Object)))
+(FORALL (x) (IFF (<: x (ref c_fr_Toto)) (OR (EQ x (ref c_fr_Toto))
+)))
+)
+)
+(DEFPRED (BOOL arg1))
+(DEFPRED (t_long arg1))
+(DEFPRED (t_int arg1))
+(DEFPRED (t_short arg1))
+(DEFPRED (t_byte arg1))
+(DEFPRED (t_char arg1))
+(BG_PUSH (AND (NOT (EQ |@true| |@false|))
+(FORALL (x) (IFF (BOOL x) (OR (EQ x |@true|) (EQ x |@false|))))
+(FORALL (x) (IFF (t_int x) (AND (<= c_minlong x) (<= x c_maxlong))))
+(FORALL (x) (IFF (t_int x) (AND (<= c_minint x) (<= x c_maxint))))
+(FORALL (x) (IFF (t_short x) (AND (<= c_minshort x) (<= x c_maxshort))))
+(FORALL (x) (IFF (t_byte x) (AND (<= c_minbyte x) (<= x c_maxbyte))))
+(FORALL (x) (IFF (t_char x) (AND (<= c_minchar x) (<= x c_maxchar))))
+(EQ c_minbyte -128) (EQ c_maxbyte 127) (EQ c_minchar 0) (EQ c_maxchar 65535) (EQ c_minshort -32768) (EQ c_maxshort 32767)
+(<= c_minint c_minshort) (<= c_maxshort c_maxint) (<= c_minlong c_minint) (<= c_maxint c_maxlong)
+(FORALL (a b) (EQ (j_add a b) (+ a b))) (FORALL (a b) (EQ (j_sub a b) (- a b))) (FORALL (a b) (EQ (j_mul a b) (* a b)))
+(FORALL (x) (IMPLIES (AND (>= x c_minbyte) (<= x c_maxbyte)) (EQ x (j_int2byte x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minchar) (<= x c_maxchar)) (EQ x (j_int2char x))))
+(FORALL (x) (IMPLIES (AND (>= x c_minshort) (<= x c_maxshort)) (EQ x (j_int2short x))))
+)
+)
+(DEFPRED (REFERENCES arg1))
+(DEFPRED (instances arg1))
+(BG_PUSH (AND
+(FORALL (x) (EQ (select elemtype (array x 1)) (ref x)))
+(FORALL (x y) (IMPLIES (< 1 y) (EQ (select elemtype (array x y)) (array x (- y 1)))))
+(FORALL (c) (IMPLIES (EQ (|instances| c) |@true|) (REFERENCES c)))(NOT (EQ (|instances| null) |@true|))
+(FORALL (x) (<= 0 (select |arraylength| x)))
+(FORALL (x y) (IFF (EQ x y) (EQ (ref x) (ref y))))
+(FORALL (x y z) (NEQ (ref x) (array y z)))
+(FORALL (x y) (<: (select typeof (select (select |refelements| x) y)) (select elemtype (select typeof x))))
+)) 
+(BG_PUSH (AND
+(FORALL (x) (IMPLIES (instances x) (IMPLIES (<: (select typeof x) (ref c_fr_Toto)) ( t_int (select FieldRef_c_fr_Toto_size x)))))
+(FORALL (x) (IMPLIES (EQ (|instances| x) |@true|)(IMPLIES (<: (select typeof x) (ref c_fr_Toto)) (IMPLIES (NEQ (select FieldRef_c_fr_Toto_elems x) null) (EQ (|instances| (select FieldRef_c_fr_Toto_elems x)) |@true|)))))

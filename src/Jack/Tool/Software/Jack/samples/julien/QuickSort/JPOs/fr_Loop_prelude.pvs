@@ -1,0 +1,2010 @@
+fr_Loop_prelude : THEORY
+
+BEGIN
+
+mylib : LIBRARY = "file:/home/jcharles/sources/Jack-workspace/PVS/div"
+IMPORTING mylib@div, mylib@rem
+
+Classes : TYPE = {
+   c_int,
+   c_short,
+   c_char,
+   c_byte,
+   c_boolean,
+   c_WeakReference,
+   c_Reference,
+   c_Reference_Lock,
+   c_Reference_1,
+   c_ReferenceQueue,
+   c_ReferenceQueue_Lock,
+   c_ReferenceQueue_1,
+   c_SoftReference,
+   c_Constructor,
+   c_AccessibleObject,
+   c_Field,
+   c_Method,
+   c_Object,
+   c_Exception,
+   c_Throwable,
+   c_String,
+   c_StringBuffer,
+   c_Class,
+   c_ClassLoader,
+   c_AssertionStatusDirectives,
+   c_Package,
+   c_SecurityManager,
+   c_Thread,
+   c_ThreadGroup,
+   c_Integer,
+   c_Number,
+   c_ThreadLocal,
+   c_ThreadLocal_ThreadLocalMap,
+   c_ThreadLocal_1,
+   c_ThreadLocal_ThreadLocalMap_Entry,
+   c_Package_1,
+   c_ClassNotFoundException,
+   c_Long,
+   c_StackTraceElement,
+   c_NullPointerException,
+   c_RuntimeException,
+   c_ArithmeticException,
+   c_ArrayIndexOutOfBoundsException,
+   c_IndexOutOfBoundsException,
+   c_NegativeArraySizeException,
+   c_ClassCastException,
+   c_ArrayStoreException,
+   c_ObjectOutputStream,
+   c_OutputStream,
+   c_ObjectInputStream,
+   c_InputStream,
+   c_SerializablePermission,
+   c_IOException,
+   c_ObjectInputStream_GetField,
+   c_ObjectStreamClass,
+   c_ObjectStreamClass_ClassDataSlot,
+   c_ObjectStreamField,
+   c_FileDescriptor,
+   c_PrintStream,
+   c_FilterOutputStream,
+   c_OutputStreamWriter,
+   c_Writer,
+   c_BufferedWriter,
+   c_DataOutputStream,
+   c_FilterInputStream,
+   c_File,
+   c_FileSystem,
+   c_InvalidClassException,
+   c_ObjectStreamException,
+   c_ObjectStreamClass_FieldReflector,
+   c_ObjectInputStream_BlockDataInputStream,
+   c_ObjectInputStream_PeekInputStream,
+   c_DataInputStream,
+   c_ObjectInputStream_HandleTable,
+   c_ObjectInputStream_HandleTable_HandleList,
+   c_ObjectInputStream_ValidationList,
+   c_ObjectInputStream_ValidationList_Callback,
+   c_ObjectInputStream_GetFieldImpl,
+   c_ObjectOutputStream_PutField,
+   c_ObjectOutputStream_BlockDataOutputStream,
+   c_ObjectOutputStream_HandleTable,
+   c_ObjectOutputStream_ReplaceTable,
+   c_ObjectOutputStream_PutFieldImpl,
+   c_PrintWriter,
+   c_Certificate,
+   c_BasicPermission,
+   c_Permission,
+   c_PermissionCollection,
+   c_AccessControlContext,
+   c_ProtectionDomain,
+   c_CodeSource,
+   c_Manifest,
+   c_Attributes,
+   c_Manifest_FastInputStream,
+   c_Attributes_Name,
+   c_Locale,
+   c_ResourceBundle,
+   c_Vector,
+   c_AbstractList,
+   c_AbstractCollection,
+   c_ResourceBundle_ResourceCacheKey,
+   c_ResourceBundle_1,
+   c_Hashtable,
+   c_Dictionary,
+   c_Hashtable_Entry,
+   c_Hashtable_EmptyEnumerator,
+   c_Hashtable_EmptyIterator,
+   c_AbstractMap,
+   c_LinkedHashMap,
+   c_HashMap,
+   c_HashMap_Entry,
+   c_LinkedHashMap_Entry,
+   c_Random,
+   c_Stack,
+   c_ArrayList,
+   c_URL,
+   c_SocketPermission,
+   c_InetAddress,
+   c_InetAddress_Cache,
+   c_InetAddress_CacheEntry,
+   c_URLConnection,
+   c_ContentHandler,
+   c_URLStreamHandler,
+   c_URI,
+   c_CharsetProvider,
+   c_Charset,
+   c_CharsetDecoder,
+   c_CodingErrorAction,
+   c_CoderResult,
+   c_CoderResult_1,
+   c_CoderResult_Cache,
+   c_CharsetEncoder,
+   c_CharBuffer,
+   c_Buffer,
+   c_ByteOrder,
+   c_ByteBuffer,
+   c_DoubleBuffer,
+   c_FloatBuffer,
+   c_IntBuffer,
+   c_LongBuffer,
+   c_ShortBuffer,
+   c_MessageFormat,
+   c_Format,
+   c_AttributedCharacterIterator_Attribute,
+   c_ParsePosition,
+   c_FieldPosition,
+   c_Format_Field,
+   c_BigInteger,
+   c_MutableBigInteger,
+   c_SoftCache,
+   c_AtomicLong,
+   c_URLClassPath,
+   c_URLClassPath_Loader,
+   c_Resource,
+   c_Unsafe,
+   c_StreamEncoder,
+   c_StreamEncoder_1,
+   c_Debug,
+   c_ReflectionFactory,
+   c_fr_Loop,
+   c_Member,
+   c_Comparable,
+   c_CharSequence,
+   c_Runnable,
+   c_Cloneable,
+   c_Serializable,
+   c_ObjectOutput,
+   c_DataOutput,
+   c_ObjectInput,
+   c_DataInput,
+   c_ObjectStreamConstants,
+   c_FileFilter,
+   c_FilenameFilter,
+   c_ObjectInputValidation,
+   c_Externalizable,
+   c_Guard,
+   c_PrivilegedAction,
+   c_DomainCombiner,
+   c_PublicKey,
+   c_Key,
+   c_Principal,
+   c_Enumeration,
+   c_Map,
+   c_Collection,
+   c_Iterator,
+   c_Set,
+   c_SortedMap,
+   c_Comparator,
+   c_List,
+   c_ListIterator,
+   c_RandomAccess,
+   c_Map_Entry,
+   c_InetAddressImpl,
+   c_ContentHandlerFactory,
+   c_FileNameMap,
+   c_URLStreamHandlerFactory,
+   c_WritableByteChannel,
+   c_Channel,
+   c_AttributedCharacterIterator,
+   c_CharacterIterator,
+   c_Format_FieldDelegate,
+   c_Interruptible,
+   c_NameService,
+   c_LangReflectAccess,
+   c_FieldAccessor,
+   c_MethodAccessor,
+   c_ConstructorAccessor}
+
+
+c_minint : integer = -2147483648
+c_maxint : integer = 2147483647
+c_maxshort : integer = 32767
+c_minshort : integer = -32768
+c_maxbyte : integer = 127
+c_minbyte : integer = -128
+c_minchar : integer = 0
+c_maxchar : integer = 65535
+
+t_int : TYPE = {x: integer | c_minint <= x AND x <= c_maxint} CONTAINING 0
+t_short : TYPE = {x: integer | c_minshort <= x AND x <= c_maxshort} CONTAINING 0
+t_byte : TYPE = {x: integer | c_minbyte <= x AND x <= c_maxbyte} CONTAINING 0
+t_char : TYPE = {x: integer | c_minchar <= x AND x <= c_maxchar} CONTAINING 0
+j_add : [integer, integer -> integer] = (LAMBDA (x,y:integer): x + y)
+j_sub : [integer, integer -> integer] = (LAMBDA (x,y:integer): x - y)
+j_mul : [integer, integer -> integer] = (LAMBDA (x,y:integer): x * y)
+j_div : [integer, nonzero_integer -> integer] = (LAMBDA (x:integer,y:nonzero_integer): div(x,y))
+j_rem : [integer, nonzero_integer -> integer] = (LAMBDA (x:integer,y:nonzero_integer): rem(x,y))
+j_neg : [integer -> integer] = (LAMBDA (x:integer): -x)
+j_shl : [integer, integer -> integer]
+j_shr : [integer, integer -> integer]
+j_ushr : [integer, integer -> integer]
+j_and : [integer, integer -> integer]
+j_or : [integer, integer -> integer]
+j_xor : [integer, integer -> integer]
+
+j_int2char : [t_int -> t_char]
+j_int2charId : AXIOM (FORALL (n:t_char): j_int2char(n) = n)
+
+j_int2byte : [t_int -> t_byte]
+j_int2byteId : AXIOM (FORALL (n:t_byte): j_int2byte(n) = n)
+
+j_int2short : [t_int -> t_short]
+j_int2shortId : AXIOM (FORALL (n:t_int): j_int2short(n) = n)
+
+Types : DATATYPE
+    BEGIN
+      class (c: Classes) : class?
+      arrays (c: Classes, n : posnat) : arrays?
+    END Types
+
+REFERENCES : DATATYPE
+    BEGIN
+      null : null?
+      instances (typeof : Types) : instances?
+    END REFERENCES
+
+STRING : NONEMPTY_TYPE
+j_string : [STRING -> REFERENCES]
+
+elemtype : [{t:Types | arrays?(t)} -> Types] =
+   (LAMBDA (t:{t:Types | arrays?(t)}): CASES t OF
+      arrays(c,n) : IF n > 1 THEN arrays(c, n-1) ELSE class(c) ENDIF
+     ENDCASES)
+
+arraylength : [{x:REFERENCES | instances?(x) AND arrays?(typeof(x))} -> nat]
+intelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_int,1)} -> [below(arraylength(y)) -> t_int]]
+shortelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_short,1)} -> [below(arraylength(y)) -> t_short]]
+charelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_char,1)} -> [below(arraylength(y)) -> t_char]]
+byteelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_byte,1)} -> [below(arraylength(y)) -> t_byte]]
+booleanelements : [y:{x : REFERENCES | instances?(x) AND typeof(x) = arrays(c_boolean, 1)} -> [below(arraylength(y)) -> bool]]
+refelements : [y:{x:REFERENCES | instances?(x) AND arrays?(typeof(x)) AND typeof(x) /= arrays(c_boolean,1) AND typeof(x) /= arrays(c_byte,1) AND typeof(x) /= arrays(c_char,1) AND typeof(x) /= arrays(c_short,1) AND typeof(x) /= arrays(c_int,1)} -> [below(arraylength(y)) -> REFERENCES]]
+
+subtype : [Types ,Types -> bool] =
+   (LAMBDA (t1,t2:Types):
+      CASES t2 OF
+         class(c) :
+            CASES c OF
+            c_int : t1 = t2,
+
+
+            c_short : t1 = t2,
+
+
+            c_char : t1 = t2,
+
+
+            c_byte : t1 = t2,
+
+
+            c_boolean : t1 = t2,
+
+            c_WeakReference : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_WeakReference: true,
+                  c_ThreadLocal_ThreadLocalMap_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Reference : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_WeakReference: true,
+                  c_Reference: true,
+                  c_SoftReference: true,
+                  c_ThreadLocal_ThreadLocalMap_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Reference_Lock : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Reference_Lock: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Reference_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Reference_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ReferenceQueue : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ReferenceQueue: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ReferenceQueue_Lock : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ReferenceQueue_Lock: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ReferenceQueue_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ReferenceQueue_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_SoftReference : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SoftReference: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Constructor : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Constructor: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AccessibleObject : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Constructor: true,
+                  c_AccessibleObject: true,
+                  c_Field: true,
+                  c_Method: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Field : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Field: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Method : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Method: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Object : true,
+
+            c_Exception : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Exception: true,
+                  c_ClassNotFoundException: true,
+                  c_NullPointerException: true,
+                  c_RuntimeException: true,
+                  c_ArithmeticException: true,
+                  c_ArrayIndexOutOfBoundsException: true,
+                  c_IndexOutOfBoundsException: true,
+                  c_NegativeArraySizeException: true,
+                  c_ClassCastException: true,
+                  c_ArrayStoreException: true,
+                  c_IOException: true,
+                  c_InvalidClassException: true,
+                  c_ObjectStreamException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Throwable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Exception: true,
+                  c_Throwable: true,
+                  c_ClassNotFoundException: true,
+                  c_NullPointerException: true,
+                  c_RuntimeException: true,
+                  c_ArithmeticException: true,
+                  c_ArrayIndexOutOfBoundsException: true,
+                  c_IndexOutOfBoundsException: true,
+                  c_NegativeArraySizeException: true,
+                  c_ClassCastException: true,
+                  c_ArrayStoreException: true,
+                  c_IOException: true,
+                  c_InvalidClassException: true,
+                  c_ObjectStreamException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_String : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_String: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_StringBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_StringBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Class : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Class: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ClassLoader : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ClassLoader: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AssertionStatusDirectives : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_AssertionStatusDirectives: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Package : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Package: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_SecurityManager : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SecurityManager: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Thread : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Thread: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ThreadGroup : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ThreadGroup: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Integer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Integer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Number : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Integer: true,
+                  c_Number: true,
+                  c_Long: true,
+                  c_BigInteger: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ThreadLocal : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ThreadLocal: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ThreadLocal_ThreadLocalMap : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ThreadLocal_ThreadLocalMap: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ThreadLocal_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ThreadLocal_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ThreadLocal_ThreadLocalMap_Entry : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ThreadLocal_ThreadLocalMap_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Package_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Package_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ClassNotFoundException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ClassNotFoundException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Long : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Long: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_StackTraceElement : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_StackTraceElement: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_NullPointerException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_NullPointerException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_RuntimeException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_NullPointerException: true,
+                  c_RuntimeException: true,
+                  c_ArithmeticException: true,
+                  c_ArrayIndexOutOfBoundsException: true,
+                  c_IndexOutOfBoundsException: true,
+                  c_NegativeArraySizeException: true,
+                  c_ClassCastException: true,
+                  c_ArrayStoreException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ArithmeticException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ArithmeticException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ArrayIndexOutOfBoundsException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ArrayIndexOutOfBoundsException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_IndexOutOfBoundsException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ArrayIndexOutOfBoundsException: true,
+                  c_IndexOutOfBoundsException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_NegativeArraySizeException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_NegativeArraySizeException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ClassCastException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ClassCastException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ArrayStoreException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ArrayStoreException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_OutputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream: true,
+                  c_OutputStream: true,
+                  c_PrintStream: true,
+                  c_FilterOutputStream: true,
+                  c_DataOutputStream: true,
+                  c_ObjectOutputStream_BlockDataOutputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_InputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream: true,
+                  c_InputStream: true,
+                  c_FilterInputStream: true,
+                  c_ObjectInputStream_BlockDataInputStream: true,
+                  c_ObjectInputStream_PeekInputStream: true,
+                  c_DataInputStream: true,
+                  c_Manifest_FastInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_SerializablePermission : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SerializablePermission: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_IOException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_IOException: true,
+                  c_InvalidClassException: true,
+                  c_ObjectStreamException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_GetField : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_GetField: true,
+                  c_ObjectInputStream_GetFieldImpl: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectStreamClass : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectStreamClass: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectStreamClass_ClassDataSlot : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectStreamClass_ClassDataSlot: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectStreamField : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectStreamField: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FileDescriptor : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FileDescriptor: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_PrintStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_PrintStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FilterOutputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_PrintStream: true,
+                  c_FilterOutputStream: true,
+                  c_DataOutputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_OutputStreamWriter : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_OutputStreamWriter: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Writer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_OutputStreamWriter: true,
+                  c_Writer: true,
+                  c_BufferedWriter: true,
+                  c_PrintWriter: true,
+                  c_StreamEncoder: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_BufferedWriter : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_BufferedWriter: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_DataOutputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_DataOutputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FilterInputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FilterInputStream: true,
+                  c_DataInputStream: true,
+                  c_Manifest_FastInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_File : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_File: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FileSystem : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FileSystem: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_InvalidClassException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_InvalidClassException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectStreamException : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_InvalidClassException: true,
+                  c_ObjectStreamException: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectStreamClass_FieldReflector : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectStreamClass_FieldReflector: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_BlockDataInputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_BlockDataInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_PeekInputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_PeekInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_DataInputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_DataInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_HandleTable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_HandleTable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_HandleTable_HandleList : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_HandleTable_HandleList: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_ValidationList : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_ValidationList: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_ValidationList_Callback : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_ValidationList_Callback: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputStream_GetFieldImpl : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputStream_GetFieldImpl: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutputStream_PutField : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream_PutField: true,
+                  c_ObjectOutputStream_PutFieldImpl: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutputStream_BlockDataOutputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream_BlockDataOutputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutputStream_HandleTable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream_HandleTable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutputStream_ReplaceTable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream_ReplaceTable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutputStream_PutFieldImpl : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutputStream_PutFieldImpl: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_PrintWriter : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_PrintWriter: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Certificate : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Certificate: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_BasicPermission : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SerializablePermission: true,
+                  c_BasicPermission: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Permission : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SerializablePermission: true,
+                  c_BasicPermission: true,
+                  c_Permission: true,
+                  c_SocketPermission: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_PermissionCollection : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_PermissionCollection: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AccessControlContext : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_AccessControlContext: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ProtectionDomain : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ProtectionDomain: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CodeSource : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CodeSource: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Manifest : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Manifest: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Attributes : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Attributes: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Manifest_FastInputStream : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Manifest_FastInputStream: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Attributes_Name : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Attributes_Name: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Locale : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Locale: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ResourceBundle : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ResourceBundle: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Vector : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Vector: true,
+                  c_Stack: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AbstractList : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Vector: true,
+                  c_AbstractList: true,
+                  c_Stack: true,
+                  c_ArrayList: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AbstractCollection : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Vector: true,
+                  c_AbstractList: true,
+                  c_AbstractCollection: true,
+                  c_Stack: true,
+                  c_ArrayList: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ResourceBundle_ResourceCacheKey : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ResourceBundle_ResourceCacheKey: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ResourceBundle_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ResourceBundle_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Hashtable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Hashtable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Dictionary : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Hashtable: true,
+                  c_Dictionary: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Hashtable_Entry : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Hashtable_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Hashtable_EmptyEnumerator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Hashtable_EmptyEnumerator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Hashtable_EmptyIterator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Hashtable_EmptyIterator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AbstractMap : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_AbstractMap: true,
+                  c_LinkedHashMap: true,
+                  c_HashMap: true,
+                  c_SoftCache: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_LinkedHashMap : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_LinkedHashMap: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_HashMap : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_LinkedHashMap: true,
+                  c_HashMap: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_HashMap_Entry : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_HashMap_Entry: true,
+                  c_LinkedHashMap_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_LinkedHashMap_Entry : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_LinkedHashMap_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Random : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Random: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Stack : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Stack: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ArrayList : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ArrayList: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URL : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URL: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_SocketPermission : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SocketPermission: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_InetAddress : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_InetAddress: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_InetAddress_Cache : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_InetAddress_Cache: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_InetAddress_CacheEntry : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_InetAddress_CacheEntry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URLConnection : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URLConnection: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ContentHandler : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ContentHandler: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URLStreamHandler : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URLStreamHandler: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URI : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URI: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CharsetProvider : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharsetProvider: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Charset : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Charset: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CharsetDecoder : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharsetDecoder: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CodingErrorAction : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CodingErrorAction: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CoderResult : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CoderResult: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CoderResult_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CoderResult_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CoderResult_Cache : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CoderResult_1: true,
+                  c_CoderResult_Cache: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CharsetEncoder : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharsetEncoder: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CharBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Buffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharBuffer: true,
+                  c_Buffer: true,
+                  c_ByteBuffer: true,
+                  c_DoubleBuffer: true,
+                  c_FloatBuffer: true,
+                  c_IntBuffer: true,
+                  c_LongBuffer: true,
+                  c_ShortBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ByteOrder : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ByteOrder: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ByteBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ByteBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_DoubleBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_DoubleBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FloatBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FloatBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_IntBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_IntBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_LongBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_LongBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ShortBuffer : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ShortBuffer: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_MessageFormat : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_MessageFormat: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Format : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_MessageFormat: true,
+                  c_Format: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AttributedCharacterIterator_Attribute : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_AttributedCharacterIterator_Attribute: true,
+                  c_Format_Field: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ParsePosition : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ParsePosition: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FieldPosition : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FieldPosition: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Format_Field : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Format_Field: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_BigInteger : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_BigInteger: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_MutableBigInteger : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_MutableBigInteger: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_SoftCache : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SoftCache: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AtomicLong : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_AtomicLong: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URLClassPath : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URLClassPath: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URLClassPath_Loader : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URLClassPath_Loader: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Resource : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Resource: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Unsafe : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Unsafe: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_StreamEncoder : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_StreamEncoder: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_StreamEncoder_1 : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_StreamEncoder_1: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Debug : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Debug: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ReflectionFactory : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ReflectionFactory: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_fr_Loop : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_fr_Loop: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Member : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Member: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Comparable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Comparable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CharSequence : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharSequence: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Runnable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Runnable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Cloneable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Cloneable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Serializable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Serializable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectOutput : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectOutput: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_DataOutput : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_DataOutput: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInput : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInput: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_DataInput : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_DataInput: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectStreamConstants : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectStreamConstants: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FileFilter : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FileFilter: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FilenameFilter : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FilenameFilter: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ObjectInputValidation : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ObjectInputValidation: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Externalizable : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Externalizable: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Guard : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Guard: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_PrivilegedAction : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_PrivilegedAction: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_DomainCombiner : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_DomainCombiner: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_PublicKey : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_PublicKey: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Key : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Key: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Principal : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Principal: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Enumeration : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Enumeration: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Map : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Map: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Collection : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Collection: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Iterator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Iterator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Set : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Set: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_SortedMap : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_SortedMap: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Comparator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Comparator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_List : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_List: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ListIterator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ListIterator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_RandomAccess : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_RandomAccess: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Map_Entry : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Map_Entry: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_InetAddressImpl : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_InetAddressImpl: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ContentHandlerFactory : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ContentHandlerFactory: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FileNameMap : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FileNameMap: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_URLStreamHandlerFactory : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_URLStreamHandlerFactory: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_WritableByteChannel : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_WritableByteChannel: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Channel : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Channel: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_AttributedCharacterIterator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_AttributedCharacterIterator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_CharacterIterator : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_CharacterIterator: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Format_FieldDelegate : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Format_FieldDelegate: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_Interruptible : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_Interruptible: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_NameService : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_NameService: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_LangReflectAccess : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_LangReflectAccess: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_FieldAccessor : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_FieldAccessor: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_MethodAccessor : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_MethodAccessor: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES,
+
+            c_ConstructorAccessor : CASES t1 OF
+               class(c1): CASES c1 OF
+                  c_ConstructorAccessor: true
+                  ELSE false
+               ENDCASES
+               ELSE false
+            ENDCASES
+            ENDCASES,
+
+         arrays(s,t) : t1 = t2
+      ENDCASES)
+
+END fr_Loop_prelude
+

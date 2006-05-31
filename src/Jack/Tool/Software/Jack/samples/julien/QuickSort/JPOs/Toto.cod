@@ -1,0 +1,26 @@
+push:(I)I
+   0: aload_0
+   1: getfield 20
+   4: aload_0
+   5: dup
+   6: getfield 18
+   9: dup_x1
+  10: iconst_1
+  11: iadd
+  12: putfield 18
+  15: iload_1
+  16: iastore
+  17: aload_0
+  18: getfield 18
+  21: ireturn
+<init>:()V
+   0: aload_0
+   1: invokespecial 16
+   4: aload_0
+   5: iconst_0
+   6: putfield 18
+   9: aload_0
+  10: bipush 10
+  12: newarray int
+  14: putfield 20
+  17: return
