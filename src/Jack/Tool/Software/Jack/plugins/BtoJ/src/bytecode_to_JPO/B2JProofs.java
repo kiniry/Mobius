@@ -174,7 +174,7 @@ public class B2JProofs extends Proofs {
 		}
 		e1 = decl.elements();
 		//Iterator e2 = hs.iterator();
-		System.out.println("h3");
+		
 		while (e1.hasMoreElements()) {
 			Object o = e1.nextElement();
 			if(o instanceof	jml2b.formula.Formula) {
