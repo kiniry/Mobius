@@ -57,7 +57,12 @@
               state="false"
               style="push"
               toolbarPath="/Normal/bytecode"
-              tooltip="POs edit"/>
+              tooltip="POs edit">
+           <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+           <enablement>
+              <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+           </enablement>
+        </action>
         <action
               class="bytecode_to_JPO.POGAction"
               icon="icons/jml_compile.gif"
@@ -66,7 +71,12 @@
               state="false"
               style="push"
               toolbarPath="/Normal/bytecode"
-              tooltip="BML compile"/>
+              tooltip="BML compile">
+           <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+           <enablement>
+              <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+           </enablement>
+        </action>
          <action
                class="annotation.AnnotationToolbarAction"
                icon="icons/Annotation.gif"
@@ -75,7 +85,12 @@
                state="false"
                style="push"
                toolbarPath="/Normal/bytecode"
-               tooltip="Annotate a classfile"/>  
+               tooltip="Annotate a classfile">
+           <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+           <enablement>
+              <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+           </enablement>
+         </action>  
      </actionSet>
   </extension>
 

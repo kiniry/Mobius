@@ -62,22 +62,12 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	public void selectionChanged(IAction action, ISelection sel) {
 		if (sel instanceof IStructuredSelection) {
 			IStructuredSelection iss = (IStructuredSelection) sel;
-			if(iss != null)
-				selection = iss.getFirstElement();
-			if((selection instanceof ICompilationUnit) && 
-					((ICompilationUnit)selection).getPath().toString().endsWith(".java")) {
-				action.setEnabled(true);
-			}
-			else {
-				action.setEnabled(false);
-			}
-		} else {
-			// should never happen
-			MessageDialog.openError(activePart.getSite().getShell(),
-									"Jack Error",
-									"Unexpected selection type: expected StructuredSelection, " + "got "
-			+ sel.getClass().getName());
-		}
+			selection = iss.getFirstElement();
+			action.setEnabled((selection != null) &&
+				(selection instanceof ICompilationUnit) && 
+					((ICompilationUnit)selection).getPath().toString().endsWith(".java"));
+		
+		} 
 
 	}
 
