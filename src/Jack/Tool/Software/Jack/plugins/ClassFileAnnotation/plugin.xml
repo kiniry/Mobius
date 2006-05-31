@@ -1,33 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="ClassFileAnnotation"
-   name="ClassFile Annotation Plug-in"
-   version="1.0.5"
-   provider-name=""
-   class="classFileAnnotation.ClassFileAnnotationPlugin">
+<plugin>
 
-   <runtime>
-      <library name="ClassFileAnnotation.jar"/>
-   </runtime>
-   <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="jack.plugin"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jdt.ui"/>
-      <import plugin="org.eclipse.compare"/>
-      <import plugin="JackRequiredPlugins"/>
-   </requires>
-
-
-   <extension
+     <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
@@ -35,6 +10,7 @@
          <action
                class="annotation.AnnotationAction"
                enablesFor="1"
+               icon="icons/Annotation.gif"
                id="classFile.annotation"
                label="Class file annotation"
                menubarPath="jack_menu/bytecode/bytecode_slot"
@@ -43,20 +19,6 @@
          </action>
       </objectContribution>
    </extension>
-   <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="ClassfileAnnotation"
-            label="Classfile Annotation"
-            visible="true">
-         <action
-               class="annotation.AnnotationAction"
-               id="ClassFileAnnotation.action"
-               label="Classfile Annotation"
-               state="false"
-               style="push"
-               toolbarPath="/Normal/bytecode"/>
-      </actionSet>
-   </extension>
+
 
 </plugin>
