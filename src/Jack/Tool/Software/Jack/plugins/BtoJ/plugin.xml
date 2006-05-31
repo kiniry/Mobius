@@ -50,21 +50,23 @@
            label="BtoJ"
            visible="true">
         <action
-              allowLabelUpdate="true"
               class="jack.plugin.edit.EditJpoAction"
+              icon="icons/jml_edit.gif"
               id="BtoJ.edit"
               label="Edit"
               state="false"
               style="push"
-              toolbarPath="/Normal/bytecode"/>
+              toolbarPath="/Normal/bytecode"
+              tooltip="POs edit"/>
         <action
-              allowLabelUpdate="true"
               class="bytecode_to_JPO.POGAction"
+              icon="icons/jml_compile.gif"
               id="BtoJ.compile"
               label="JML Compile"
               state="false"
               style="push"
-              toolbarPath="/Normal/bytecode"/>
+              toolbarPath="/Normal/bytecode"
+              tooltip="BML compile"/>
          <action
                class="annotation.AnnotationToolbarAction"
                icon="icons/Annotation.gif"
