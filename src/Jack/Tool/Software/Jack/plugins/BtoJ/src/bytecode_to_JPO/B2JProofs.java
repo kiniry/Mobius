@@ -419,7 +419,7 @@ public class B2JProofs extends Proofs {
 			}
 			BinaryForm bf = new BinaryForm(op, toExpression(config, p.getLeftExpr(), declaredVarAtState, decl),
 					toExpression(config, p.getRightExpr(), declaredVarAtState, decl));
-			String str = bf.toLangDefault(0);
+//			String str = bf.toLangDefault(0);
 			
 			return bf;
 		}
