@@ -34,7 +34,9 @@ public class VCGPath extends Expression {
 	/**
 	 * the offset of the instruction to which this verification conditions belong
 	 */
-	private  int instrIndex; 
+	private  int instrIndex;
+
+	
 	
 	public static final Integer TRUE_AS_HYPOTHESIS = new Integer(-1);
 
@@ -63,9 +65,10 @@ public class VCGPath extends Expression {
 	}
 
 	/**
-	 * adds a new goal <code>goal</code> of type <code>type</code> The method adds the new goal in the internal vector goals
-	 * and creates a new VC for this goal which is added in the internal list of
-	 * vcs. 
+	 * adds a new goal <code>goal</code> of type <code>type</code> 
+	 * The method adds the new goal in the internal vector goals
+	 * and creates a new VC for this goal which is added in the 
+	 * internal list of vcs. 
 	 * 
 	 * @param type - the type of the goal @see <code>vcg.VcType</code>
 	 * @param goal
@@ -83,6 +86,31 @@ public class VCGPath extends Expression {
 		return vc;
 	}
 
+	public VC addGoal(byte type, Formula goal, int position) {
+		if (goal == Predicate0Ar.TRUE ) {			
+			return null;
+		}
+		initGoals();
+		Integer key = IDGenerator.getInt();
+		goalPool.put(key, goal);
+		VC vc = new VC(type, key, position);
+		initVCS();
+		vcs.add(vc);
+		return vc;
+	}
+	
+	public VC addGoal(byte type, Formula goal, String exc) {
+		if (goal == Predicate0Ar.TRUE ) {			
+			return null;
+		}
+		initGoals();
+		Integer key = IDGenerator.getInt();
+		goalPool.put(key, goal);
+		VC vc = new VC(type, key, exc);
+		initVCS();
+		vcs.add(vc);
+		return vc;
+	}
 	/**
 	 * adds an additional  hypothesis only to the modifies goals concerning newly created objects 
 	 * For example, the following method is legal:
@@ -329,6 +357,10 @@ public class VCGPath extends Expression {
 		return vcs;
 	}
 
+	/**
+	 * @param vcgs
+	 * @return
+	 */
 	public static VCGPath mergeAll(Vector vcgs) {
 		Enumeration en = vcgs.elements();
 		VCGPath merge = new VCGPath();
@@ -628,7 +660,17 @@ public class VCGPath extends Expression {
 			} else if ( vc.getType() == VcType.PRE_METH_CALL) {
 				typeGoal = "PRE_METH_CALL";
 			} 
-			String goalString = "Goal:" + typeGoal  + ":" + goal;
+			
+			String goalString = null;
+			if (vc.getPosition() == -1) {
+				goalString = "Goal:" + typeGoal ;
+			} else {
+				goalString = "Goal:" + typeGoal  + " atInd : "  + vc.getPosition() ;
+			}
+			if (vc.getExc() != null )  {
+				goalString = goalString + " exc : "	 + vc.getExc();
+			}
+			goalString = goalString + " : " + goal;
 			thm = hyps + goalString + "\n";
 			ths = ths + thm;
 		}
@@ -717,6 +759,8 @@ public class VCGPath extends Expression {
 			//to be removed////////////////
 */			
 			//new code add also checkIfInHypothesis(hypF, f );
+			//if(h.getFormula().equals(Predicate0Ar.TRUE))
+			//	continue;
 			hypF.add( h);
 		}
 		return  hypF;
@@ -833,6 +877,8 @@ public class VCGPath extends Expression {
 		}
 		return this;
 	}
+
+	
 	
 	
 }

@@ -667,7 +667,8 @@ public class ControlFlowGraph {
 				VCGPath vcgPathLoop = new VCGPath();
 				while (en.hasMoreElements()) {
 					Formula f = (Formula) en.nextElement();
-					vcgPathLoop.addGoal(VcType.LOOPPRESERV, f);
+					vcgPathLoop.addGoal(VcType.LOOPPRESERV, f, b.getLast().getPosition());
+					
 				}
 				b.calculateRecursively(config, vcgPathLoop, exsures);
 			} else if (b.getLast() instanceof BCATHROW) {

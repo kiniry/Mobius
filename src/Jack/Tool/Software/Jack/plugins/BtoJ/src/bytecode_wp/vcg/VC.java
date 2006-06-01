@@ -14,7 +14,10 @@ public class VC {
 
 	private Integer goal;
 
-	//comment about the goal - e.g. the method for which the requires is proven
+	/** the offset of the instruction to which this verification condition refers */ 
+	private int position = -1;
+	
+	/**comment about the goal - e.g.: " the method for which the requires is proven"*/
 	private String comment = "";
 	/**
 	 * the type of this vc
@@ -22,12 +25,37 @@ public class VC {
 	 */
 	private byte type;
 
+	private String exc = null;
+
 	public VC(byte type, Integer goalId) {
 		this.goal = goalId;
 		this.type = type;
 
 	}
+	
+	public VC(byte type, Integer goalId, int position) {
+		this( type, goalId);
+		this.position = position;
+		
+	}
 
+	public VC(byte type, Integer goalId, String exc) {
+		this( type, goalId);
+		this.exc  = exc;
+	}
+
+	/**
+	 * this constructor is used when for copying the object
+	 * 
+	 * @param type
+	 * @param goal
+	 * @param hyps
+	 */
+	public VC(byte type, Integer goalId, Integer hypId) {
+		this( type, goalId);
+		addHyp(hypId);
+
+	}
 	/**
 	 * this constructor is used when for copying the object
 	 * 
@@ -42,19 +70,8 @@ public class VC {
 
 	}
 
-	/**
-	 * this constructor is used when for copying the object
-	 * 
-	 * @param type
-	 * @param goal
-	 * @param hyps
-	 */
-	public VC(byte type, Integer goalId, Integer hypId) {
-		this.goal = goalId;
-		this.type = type;
-		addHyp(hypId);
+	
 
-	}
 
 	public void addHyp(Integer hypId) {
 		if (hypId == VCGPath.TRUE_AS_HYPOTHESIS) {
@@ -127,4 +144,13 @@ public class VC {
 	public String getComment() {
 		return comment;
 	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public String getExc() {
+		return exc;
+	}
+
 }

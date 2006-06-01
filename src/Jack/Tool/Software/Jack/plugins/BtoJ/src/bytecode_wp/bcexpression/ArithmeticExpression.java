@@ -471,6 +471,9 @@ public class ArithmeticExpression extends Expression {
 		if (arithmetic_op == ExpressionConstants.REM) {
 			op = " % ";
 		}
+		if (arithmetic_op == ExpressionConstants.NEG) {
+			op = " - ";
+		}
 		Expression[] subExpr = getSubExpressions();
 		if (getSubExpressions().length == 1) {
 			return op + subExpr[0];

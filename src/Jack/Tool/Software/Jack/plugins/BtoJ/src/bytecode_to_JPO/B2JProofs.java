@@ -91,21 +91,18 @@ import bytecode_wp.vcg.VCGPath;
  */
 public class B2JProofs extends Proofs {
 
-	/**
-	 * 
-	 */
+	/** */
 	private static final long serialVersionUID = 1L;
 
-	Vector pos;
-
-	BCMethod bcm;
-
-	IJml2bConfiguration config;
-
+	private Vector fPos;
+	private BCMethod fBcm;
+	private IJml2bConfiguration fConfig;
+	private AlreadyCalculatedHypos fHyps = new AlreadyCalculatedHypos();
+	
 	public B2JProofs(IJml2bConfiguration config, BCMethod m, Vector proofObligation) {
-		bcm = m;
-		pos = proofObligation;
-		this.config = config;
+		fBcm = m;
+		fPos = proofObligation;
+		fConfig = config;
 	}
 
 	public Vector getLocFlow() {
@@ -114,7 +111,7 @@ public class B2JProofs extends Proofs {
 
 	public int nbTheorems() {
 		int i = 0;
-		Enumeration e = pos.elements();
+		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
 			i += f.getNumVc();
@@ -124,22 +121,23 @@ public class B2JProofs extends Proofs {
 
 	public void saveThl(IJml2bConfiguration config, JpoOutputStream s, jml2b.structure.java.JmlFile jf)
 			throws IOException {
-		int hypNum = bcm.getLocalVariables().length;
-		Enumeration e = pos.elements();
+		int hypNum = fBcm.getLocalVariables().length;
+		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
 			for (int i = 0; i < f.getNumVc(); i++) {
 				save(f, i, hypNum, s, jf);
-				hypNum += f.getHypothesisAt(i).size();
+				hypNum += getHypAsVirtualFormula(f, i).size();//f.getHypothesisAt(i).size();
 			}
 		}
 	}
 
 	public void garbageIdent() {
-		if (pos == null) {
+		if (fPos == null) {
 			return;
 		}
-		Enumeration e = pos.elements();
+		Enumeration e = fPos.elements();
+		fHyps = new AlreadyCalculatedHypos();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
 			for (int i = 0; i < f.getNumVc(); i++) {
@@ -158,25 +156,34 @@ public class B2JProofs extends Proofs {
 			}
 		}
 	}
-
+	
 	public Collection getHypAsVirtualFormula(VCGPath f, int n) {
+		if(fHyps.contains(f, n))
+			return fHyps.get(f, n);
 		LinkedList res = new LinkedList();
-		Enumeration e1 = f.getHypothesisAt(n).elements();
+
 		Vector decl = new Vector();
 		HashSet hs = new HashSet();
-		while (e1.hasMoreElements()) {
-			Hypothesis h = (Hypothesis) e1.nextElement();
+		//System.out.println("\nlemme");
+		Enumeration e = f.getHypothesisAt(n).elements();
+		while (e.hasMoreElements()) {
+			Hypothesis h = (Hypothesis) e.nextElement();
+			//System.out.println(h);
 			try {				
-				res.addLast(new VirtualFormula((byte) h.getPos(), toFormula(h.getFormula(), hs, decl), new Vector()));
+				jml2b.formula.Formula form = toFormula(h.getFormula(), hs, decl);
+				//System.out.println(form.toLangDefault(0));
+				res.addLast(new VirtualFormula(VirtualFormula.LOCALES, form, new Vector()));
+				
 			} catch (Jml2bException je) {
 				throw new InternalError(je.getMessage());
 			}
 		}
-		e1 = decl.elements();
-		//Iterator e2 = hs.iterator();
+
 		
-		while (e1.hasMoreElements()) {
-			Object o = e1.nextElement();
+		// variables declarations
+		e = decl.elements();
+		while (e.hasMoreElements()) {
+			Object o = e.nextElement();
 			if(o instanceof	jml2b.formula.Formula) {
 				jml2b.formula.Formula form = (jml2b.formula.Formula)o;
 				res.addFirst(new VirtualFormula(VirtualFormula.LOCALES, form, new Vector()));
@@ -190,30 +197,39 @@ public class B2JProofs extends Proofs {
 							new Vector()));
 				}
 			}
-			//System.out.println(e2.next());
 		}
-
+		
+//		// on affiche
+//		System.out.println("\nlemme bis");
+//		Iterator iter = res.iterator();
+//		while(iter.hasNext()) {
+//			VirtualFormula vf = (VirtualFormula)iter.next();
+//			System.out.println(vf.getFormula().toLangDefault(0));
+//		}
+//		System.out.println("-----------------------------");
+		fHyps.add(f, n, res);
 		return res;
 	}
 
 	public Vector findUsedLocHyp() {
 		Vector res = new Vector();
-		BCLocalVariable[] bclva = bcm.getLocalVariables();
+		BCLocalVariable[] bclva = fBcm.getLocalVariables();
 		for (int i = 0; i < bclva.length; i++)
 			try {
 				res.add(new VirtualFormula(VirtualFormula.REQUIRES, 
 							new BinaryForm(IFormToken.LOCAL_VAR_DECL,
 								new TerminalForm("local_" + bclva[i].getIndex()), 
 								new TTypeForm(IFormToken.T_TYPE, 
-										toType(config, (JavaType) bclva[i].getType()))), 
+										toType(fConfig, (JavaType) bclva[i].getType()))), 
 							new Vector()));
 			} catch (Jml2bException je) {
 			}
-		Enumeration e = pos.elements();
+		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
-			for (int i = 0; i < f.getNumVc(); i++)
+			for (int i = 0; i < f.getNumVc(); i++) {
 				res.addAll(getHypAsVirtualFormula(f, i));
+			}
 		}
 		return res;
 	}
@@ -224,13 +240,13 @@ public class B2JProofs extends Proofs {
 
 	public SimpleLemma getLemma(int i) {
 		int n = 0;
-		Enumeration e = pos.elements();
+		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
 			for (int j = 0; j < f.getNumVc(); j++) {
 				if (n == i)
 					try {
-						return new B2JSimpleLemma(config, f.getGoalsAt(j));
+						return new B2JSimpleLemma(fConfig, f.getGoalsAt(j));
 					} catch (Jml2bException j2be) {
 						System.err.println(j2be.getMessage());
 						return null;
@@ -243,12 +259,12 @@ public class B2JProofs extends Proofs {
 
 	public Theorem getTheorem(int i) {
 		int n = 0;
-		Enumeration e = pos.elements();
+		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
 			for (int j = 0; j < f.getNumVc(); j++) {
 				if (n == i)
-					return new B2JTheorem(config, bcm, new Vector(getHypAsVirtualFormula(f, j)), i);
+					return new B2JTheorem(fConfig, fBcm, new Vector(getHypAsVirtualFormula(f, j)), i);
 				n++;
 			}
 		}
@@ -257,7 +273,7 @@ public class B2JProofs extends Proofs {
 
 	public int nbPo() {
 		int i = 0;
-		Enumeration e = pos.elements();
+		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
 			for (int j=0; j < f.getNumVc(); j++)
@@ -277,10 +293,13 @@ public class B2JProofs extends Proofs {
 	private void save(VCGPath f, int n, int hypNum, JpoOutputStream s, IJmlFile jf) throws IOException {
 		s.writeUTF(""); // name
 		s.writeUTF(""); // caseNum
-		s.writeInt(f.getHypothesisAt(n).size() + bcm.getLocalVariables().length); // hyp.length
-		for (int i = 0; i < bcm.getLocalVariables().length; i++)
+//		s.writeInt(f.getHypothesisAt(n).size() + bcm.getLocalVariables().length); // hyp.length
+		s.writeInt(getHypAsVirtualFormula(f, n).size() + fBcm.getLocalVariables().length);
+		for (int i = 0; i < fBcm.getLocalVariables().length; i++)
 			s.writeInt(i);
-		for (int i = 0; i < f.getHypothesisAt(n).size(); i++)
+//		for (int i = 0; i < f.getHypothesisAt(n).size(); i++)
+//			s.writeInt(hypNum + i);
+		for (int i = 0; i < getHypAsVirtualFormula(f, n).size(); i++)
 			s.writeInt(hypNum + i);
 		s.writeInt(f.getGoalsAt(n).size()); // goals.length
 		Enumeration e = f.getGoalsAt(n).elements();
@@ -296,9 +315,9 @@ public class B2JProofs extends Proofs {
 			s.writeByte(0); // goal.vf.origin
 			try {
 				jml2b.formula.Formula fo = toFormula(g, new HashSet());
-				fo.save(config, s, jf);
+				fo.save(fConfig, s, jf);
 				s.writeInt(0); // goal.vf.flow.size()
-				toFormula(Predicate0Ar.TRUE, new HashSet()).save(config, s, jf); // goal.original
+				toFormula(Predicate0Ar.TRUE, new HashSet()).save(fConfig, s, jf); // goal.original
 			} catch (Jml2bException j2be) {
 				System.err.println(j2be.getMessage());
 			}
@@ -330,7 +349,7 @@ public class B2JProofs extends Proofs {
 		return res;
 	}
 	jml2b.formula.Formula toFormula(Formula f, Set declaredVarAtState, Vector decl) throws Jml2bException {
-		jml2b.formula.Formula res = toFormula(config, f, declaredVarAtState, decl);
+		jml2b.formula.Formula res = toFormula(fConfig, f, declaredVarAtState, decl);
 		return res;
 	}
 
@@ -398,8 +417,11 @@ public class B2JProofs extends Proofs {
 					op = IFormToken.Jm_IS_SUBTYPE;
 					break;
 			}
-			return new BinaryForm(op, toExpression(config, p.getLeftExpr(), declaredVarAtState, decl),
+			BinaryForm bf = new BinaryForm(op, toExpression(config, p.getLeftExpr(), declaredVarAtState, decl),
 					toExpression(config, p.getRightExpr(), declaredVarAtState, decl));
+			String str = bf.toLangDefault(0);
+			
+			return bf;
 		}
 
 		switch (f.getConnector()) {

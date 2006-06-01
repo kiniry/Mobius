@@ -34,7 +34,7 @@ import bytecode_wp.vcg.VCGPath;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class Util {
-	public static boolean DUMP = true;
+	public static boolean DUMP = false;
 	
 	/**
 	 * updates the instruction - some of the instructions are wrapped in other objects , e.g. -loop starts and ends, and start of exception handlers

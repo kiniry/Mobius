@@ -125,7 +125,7 @@ public class BCATHROW extends BCExceptionThrower {
 		FormulaOverride wp = new FormulaOverride(config, getTrace(), typeOfTopStack,
 				this);
 		VCGPath _vcs = new VCGPath();
-		vcs.addGoal( VcType.INSTR_THROW_EXC , wp);
+		vcs.addGoal( VcType.INSTR_THROW_EXC , wp, getPosition());
 		return _vcs;
 	}
 
