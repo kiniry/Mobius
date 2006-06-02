@@ -27,6 +27,9 @@ import bytecode_wp.bytecode.BCInstruction;
  **/
 public class B2JMethod extends Method {
 
+	/** */
+	private static final long serialVersionUID = 1L;
+
 	B2JProofs lemmas;
 	
 	public boolean isStatic() {

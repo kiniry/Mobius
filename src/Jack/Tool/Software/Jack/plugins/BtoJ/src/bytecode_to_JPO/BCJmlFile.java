@@ -21,6 +21,9 @@ import jml2b.structure.IPackage;
  **/
 public class BCJmlFile extends jml2b.structure.java.JmlFile {
 
+	/** */
+	private static final long serialVersionUID = 1L;
+
 	public int getNbPo() {
 		return classzz.getNbPo();
 	}

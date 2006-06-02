@@ -30,6 +30,9 @@ import bytecode_wp.constants.BCConstantFieldRef;
  */
 public class B2JClass extends jml2b.structure.java.Class {
 
+	/** */
+	private static final long serialVersionUID = 1L;
+
 	/** The corresponding class in the bcel framework * */
 	BCClass classzz;
 

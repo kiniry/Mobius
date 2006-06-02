@@ -24,6 +24,8 @@ import jml2b.pog.lemma.SimpleLemma;
  **/
 public class B2JSimpleLemma extends SimpleLemma {
 
+	/** */
+	private static final long serialVersionUID = 1L;
 	Vector goals;
 	
 	/**

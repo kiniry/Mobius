@@ -1,6 +1,5 @@
 package bytecode_to_JPO;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 

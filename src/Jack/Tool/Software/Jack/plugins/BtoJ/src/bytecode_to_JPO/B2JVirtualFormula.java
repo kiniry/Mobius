@@ -18,6 +18,8 @@ import jml2b.pog.lemma.VirtualFormula;
  **/
 public class B2JVirtualFormula extends VirtualFormula {
 
+	/** */
+	private static final long serialVersionUID = 1L;
 	Formula formula;
 	/**
 	 * @param decl

@@ -26,6 +26,8 @@ import bytecode_wp.constants.BCConstantFieldRef;
  */
 public class B2JField extends Field implements IModifiers {
 
+	/** */
+	private static final long serialVersionUID = 1L;
 	BCField f;
 	//BCConstantFieldRef fcp;
 	String name;
