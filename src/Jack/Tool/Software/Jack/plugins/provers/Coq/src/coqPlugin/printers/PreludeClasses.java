@@ -47,11 +47,11 @@ public class PreludeClasses extends Printer{
 		stream.println("Definition ByteClass := c_byte.");
 		stream.println("Definition CharClass := c_char.");
 		stream.println("Definition BooleanClass := c_boolean.");
-		IClass cl = config.getPackage().getJavaLangString();
-		if(cl != null) {
-			stream.println("Definition StringClass := " + cl.getBName() + ".");
-		}
-		else
+//		IClass cl = config.getPackage().getJavaLangString();
+//		if(cl != null) {
+//			stream.println("Definition StringClass := " + cl.getBName() + ".");
+//		}
+//		else
 			stream.println("Definition StringClass := c_Object.");
 		
 		stream.println("End " + getModule() + ".\n");
