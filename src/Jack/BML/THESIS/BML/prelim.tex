@@ -5,13 +5,28 @@
 %Simplify, Coq, PVS ) \todo{references}. We have upgraded the tool with implementations of the JML compiler and the bytecode verification condition generator. Jack has a user-friendly interface which makes it easy for use by developers that do not have a large background in formal methods.
 
 
-\subsection{A quick overview of JML} \label{BCSLprelim}
+\section{A quick overview of JML} \label{BCSLprelim}
 JML~\cite{JMLRefMan} (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications. JML 
-follows the design-by-contract approach (see~\cite{M97oos}), where classes are annotated with class invariants and method pre- and postconditions. Specification
-inside methods is also possible; for example one can specify loop invariants, or assertions  predicates that must hold at specific program points. 
+follows the design-by-contract approach (see~\cite{M97oos}), where classes are annotated with class invariants and method
+ with pre- and postconditions. Specification inside methods is also possible; for example one can specify loop invariants,
+ or assertions that must hold at specific program points. 
+
+Over the last few years, JML has become the de facto specification language for Java source code programs. Different
+ tools exist to verify or generate JML specifications (see for an overview \cite{BurdyCCEKLLP03} ).  
+ Several case studies have demonstrated that JML can be used to specify realistic
+industrial examples, and that the different tools allow to find errors
+in the implementations (see~\emph{e.g.}\/~\cite{BreunesseCHJ04}). One
+of the reasons for its success is that JML uses a Java-like
+syntax. Specifications are written using preconditions, postcondition,
+class invariants and other annotations, where the different predicates
+are side-effect free Java expressions, extended with
+specification-specific keywords (\emph{e.g.}\ logical quantifiers and a
+keyword to refer to the return value of a method). Other important
+factors for the success of JML are its expressiveness and
+flexibility.
 
 JML specifications are written as comments so they are not visible by Java compilers. The JML syntax is close to the 
- Java syntax: JML extends Java with few keywords and operators.
+ Java syntax: JML extends the Java  syntax with few keywords and operators.
  For introducing method precondition and postcondition one has to use the keywords \jmlKey{requires} and \jmlKey{ensures} 
   respectively,  \jmlKey{modifies} keyword is followed by all the locations that can be modified by the method, 
   \jmlKey{loop\_invariant}, not surprisingly, stands for loop invariants, \jmlKey{loop\_modifies} keyword gives the locations modified by loop invariants etc. 
