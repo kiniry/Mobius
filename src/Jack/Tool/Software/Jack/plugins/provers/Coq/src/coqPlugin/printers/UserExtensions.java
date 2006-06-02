@@ -25,8 +25,8 @@ public class UserExtensions extends Printer {
 	protected void writeToFile(PrintStream stream, IJml2bConfiguration config){
 		stream.println("Add LoadPath \"" + output_directory + "\".\n");
 		stream.println("(* I am the fourth and final little helper. *)");
-		stream.println("Require Import \"jack.arith\".");
-		stream.println("Require Import \"jack.references\".\n");
+		stream.println("Require Import \"" + StaticPrelude1.fileName + "\".");
+		stream.println("Require Import \"" + StaticPrelude2.fileName + "\".\n");
 		stream.println("(** * The User Extensions Library *)\n");
 		stream.println("Module UserExtensions (Arg: JackClasses).");
 

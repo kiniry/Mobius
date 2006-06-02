@@ -15,9 +15,12 @@ import jml2b.IJml2bConfiguration;
  *
  */
 public class StaticPrelude2 extends Printer {
+	/** the file containing the module: jack_references */
+	public static final String fileName = "jack_references";
 	
-	public static final String fileName = "jack_references";	
-	public static final String moduleName = "JackReferences";	
+	/** the module contained in the file: JackReferences */
+	public static final String moduleName = "JackReferences";
+	
 	private String outDir;
 	
 	public StaticPrelude2(File output_directory, IJml2bConfiguration config) {

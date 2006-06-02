@@ -14,9 +14,13 @@ import jml2b.IJml2bConfiguration;
  */
 public class StaticPrelude1 extends Printer {
 	// On definit les types primitifs (calques sur Z)
-	String[] typesmall = {"byte","short","int", "char", "long"};
-	String[] type = {"t_byte","t_short","t_int", "t_char", "t_long"};
+	private final static String[] typesmall = {"byte","short","int", "char", "long"};
+	private final static String[] type = {"t_byte","t_short","t_int", "t_char", "t_long"};
+	
+	/** the file containing the module: jack_arith */
 	public static final String fileName ="jack_arith";
+	
+	/** the module contained in the file: JackArith */
 	public static final String moduleName ="JackArith";
 	
 	public StaticPrelude1(File output_directory, IJml2bConfiguration config) {
