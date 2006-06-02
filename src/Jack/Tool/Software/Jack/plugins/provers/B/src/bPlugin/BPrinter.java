@@ -469,7 +469,9 @@ public class BPrinter implements IPrinter {
 		IClass string = config.getPackage().getJavaLangString();
 		if (string != null) {
 			try {
-			stream.println("j_string : STRING +-> typeof~[{" + getBClass(getBClass(string)) + "}] &");
+				BClass bclss = getBClass(string);
+				if (bclss != null)
+					stream.println("j_string : STRING +-> typeof~[{" + getBClass(getBClass(string)) + "}] &");
 			}
 			catch (LanguageException le) {}
 			stream.println("dom(j_string) = STRING &");

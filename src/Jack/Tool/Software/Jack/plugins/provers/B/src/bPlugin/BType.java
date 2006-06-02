@@ -87,9 +87,13 @@ public class BType extends Type implements ITranslatable {
 			case T_TYPE :
 				return BPrinter.TYPES;
 			case Type.T_REF :
-				return getBType(
-					BPrinter.getBClass(refType).enumerationRank + "|->" + BPrinter.NAMES,
-					dimension);
+				BClass clzz = BPrinter.getBClass(refType);
+				if(clzz == null) {
+					// ...and we print the warning
+					System.err.println("Type unknown");
+					return BPrinter.TYPES;
+				}
+				return getBType(clzz.enumerationRank + "|->" + BPrinter.NAMES, dimension);
 			case Type.T_ARRAY :
 				return new BType(elemType).getBType(dimension + 1);
 			default :
