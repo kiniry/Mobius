@@ -1,0 +1,513 @@
+ 
+
+
+
+
+
+
+\section{Weakest precondition calculus} \label{wpRules}
+
+In what follows, we assume that the bytecode has passed the bytecode verifier, thus it is well typed and well structured. Actually, our calculus is concerned only
+with functional properties of programs leaving the problem of code well structuredness and welltypedness to the bytecode verification techniques 
+
+\subsection{Intermediate predicates}
+First, we define the function $\interOnly$ that for two instructions that may execute one 
+after another in a control graph determines the predicate $\inter{k}{j}$ which must hold in between them.
+This predicate depends on the execution relation between the two instructions $\ins{k}$ and $\ins{j}$.
+ 
+\begin{defInter}[intermediate predicate between two instructions ]\label{inter} 
+
+Assume that $\ins{k} \execRel \ins{j}$. The predicate $\inter{k}{j}$ must hold after the execution of $\ins{k}$ and before the execution of 
+$\ins{j}$ and is defined as follows:
+\begin{itemize}
+\item if $\ins{j}$ is a loop entry instruction and $\ins{k} \execRel^l \ins{j}$
+then the corresponding loop invariant $ \invariant^{\ins{j}}$  must hold
+$$
+\inter{k}{j} \equiv  \loopInv
+$$
+
+\item else if $\ins{j}$ is a loop entry then the corresponding loop invariant \loopInv  \ must hold before $\ins{j}$ is executed, 
+i.e. after the execution of $\ins{k}$. We also require that $\invariant^{\ins{j}}$ implies the weakest precondition of the loop entry instruction. 
+The implication is quantified over the locations $ \loopMod = \{ mod_i \mid i= 1..s \} $ that may be modified in the loop
+
+$$\inter{k}{j} \equiv \loopInv \ \wedge \ \forall_{i = 1..s} mod_i.(
+\loopInv \Rightarrow \wpi{\ins{j}}{j}{ \excPost })$$
+
+\item else 
+
+$$\inter{k}{j} \equiv \wpi{ \ins{j} }{j}{\excPost}{\normalPost}$$
+\end{itemize}
+\end{defInter}
+
+
+
+\subsection{Weakest precondition in the presence of exceptions}\label{wpExc} 
+
+For every method \methodd \  we define also the function $ \methodd.\excPost $ \ with signature:
+$$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \formulaBc  $$
+ 
+$ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
+returns the predicate that must hold in the poststate of the instruction at index \textit{i} if this instruction throws an exception of
+type \texttt{Exc}.
+Thus, $\methodd.\excPost$ will either return the weakest precondition of the exception handler that protects the instruction from the thrown exception \texttt{Exc},
+if such an exception handler exists. Otherwise, the function will return the exceptional postcondition if method \methodd \ terminates on
+an exception  \texttt{Exc}. Note that in the second case the specification variable \EXC, which stands for the thrown object in exceptional postocnditions, is substituted with the reference to the thrown object.
+
+The formal definition is given hereafter.
+
+\begin{defExc}[Postcondition in case of throwing an exception]\label{defExc}
+The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}} ) $ is defined as follows:
+ \begin{itemize}
+      \item if $  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHH} = \pcHandler  $ then 
+      $$ \begin{array}{l}
+           \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
+           \wpi{\methodd.\body[\pcHandler]}{\pcHandler}{\methodd.\excPost}{\methodd.\normalPost} \\
+                      \begin{array}{l}
+                        \subst{\counter}{0} \\
+			\subst{\stack{\counter}}{\referenceOnly} \\
+                         \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
+                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } 
+                       \end{array} 
+        \end{array}$$   
+
+      \item else if $\findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
+            $$\begin{array}{l}
+                    \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\ \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
+                     \begin{array}{l}
+                          
+                          \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
+			   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
+                          \subst{ \EXC }{\referenceOnly  }
+                    \end{array}  
+             \end{array} $$
+\end{itemize}
+\end{defExc}
+
+
+\subsection{Rules for single instruction}
+The weakest precondition predicate transformer function which for any instruction of the Java sequential fragment
+determines the predicate that must hold in the prestate of the instruction has the following signature:
+
+$$ \fwpi :  \bcIns \longrightarrow  int  \longrightarrow ( int \longrightarrow  \excType \longrightarrow  \formulaBc) \longrightarrow \formulaBc \longrightarrow \formulaBc $$
+The function \fwpi \ takes four arguments : the kind of the instruction \textit{ins}, the position of the instruction in the body of the method \methodd \ to which the
+instruction belongs \textit{pos},
+an exceptional function $\methodd.\excPost$ as described in the previous subsection \ref{wpExc}, 
+the postcondition predicate \methodd.\normalPost.
+The function will return a predicate $\wpi{ins}{pos}{\methodd.\excPost}{\methodd.\normalPost}$ such that  if it holds in the prestate of the method \methodd \  and if the
+\methodd \ terminates normally then the normal postcondition \methodd.\normalPost \ holds when  \methodd \ terminates execution, otherwise if \methodd \ terminates on an exception
+  \mbox{ \rm \texttt{Exc}} the exceptional postcondition  $ \methodd.\excPost( \mbox{ \rm \texttt{Exc}} )$ holds. 
+Thus, the \fwpi \ function takes into account both normal and exceptional program termination. Note however, that \fwpi \ deals only with partial correctness, i.e.
+ it cannot guarantee program termination.
+
+%\begin{itemize}
+%%	\item either the precondition  of the exception handler, if an exception handler that protects the instruction at index $i$ from exception of type \texttt{Exc } exists
+%	\item or  $\methodd.\excPostSpec( \tt{Exc})$
+%\end{itemize}
+
+%Also, every time an exception of type \texttt{Exc} is thrown a new object of type  \texttt{Exc} is allocated on the current heap \heap \
+%resulting in the heap \heap'  
+%$  \newRef{\heap}{ \mbox{ \rm \texttt{Exc} } } = (\heap', \Ref{ \mbox{ \rm \texttt{Exc} } }) $
+% and the reference $ \Ref{ \mbox{ \rm \texttt{Exc} }$ is put on the stack top. 
+
+
+Note that in what follows we ignore the  Java virtual machine errors. Thus, we deal only with user defined exceptions and
+ \texttt{JavaRuntimeException} subclasses.
+
+ In the following, we give the definition of the weakest precondition function for every instruction.
+
+
+\begin{itemize}	
+\item Control transfer instructions
+\begin{enumerate}
+ \item unconditional jumps \\
+  $$\begin{array}{l} \wpi{\goto \  n }{i} {\excPost}{\normalPost} =   \inter{i}{n}  \end{array} $$
+  The rule says that an unconditional jump does not modify the program state and thus, the postcondition and the precondition of this instruction
+  are the same
+
+\item conditional jumps
+  $$ \begin{array}{l}
+          \wpi{ \ifCond  \  n }{i}{\excPost}{\normalPost} =\\
+	   \begin{array}{l} 
+                  \mbox{ \rm \texttt{ cond}} ( \stack{\counter}, \stack{\counter - 1} ) \Rightarrow \\
+                  \Myspace \inter{i}{n}\subst{\counter}{ \counter - 2 } \\
+			 \wedge  \\
+		  not(\mbox{ \rm \texttt{ cond}})( \stack{\counter},\stack{\counter - 1} ))  \Rightarrow \\
+		  \Myspace \inter{i}{i+1}\subst{\counter}{\counter - 2} 
+           \end{array}
+  \end{array}$$
+   In case of a conditional jump, the weakest precondition depends on if  the condition of the jump is satisfied
+   by the two stack top elements. %Note, that the instruction does not modify the program state except for the stack counter.
+   If the condition of the instruction evaluates to true then the predicate between the current instruction and
+   the instruction at index $n$ must hold  where the stack counter is decremented with 2 $\inter{i}{n}\subst{\counter}{ \counter - 2} $ 
+   If the condition evaluates to false then the predicate between the current instruction and its next instruction holds where once again the stack counter
+   is decremented with two $ \inter{i}{i+1}\subst{\counter}{\counter - 2} $. 
+
+ \item return 
+ 
+ $$\wpi{\return}{i}{\excPost}{\normalPost}  = \normalPost \subst{ \result }{\stack{\counter}}$$
+ As the instruction \return \ marks the end of the execution path, we require that its postcondition is the normal method postcondition \normalPost.
+ Thus, the weakest precondition of the instruction is \normalPost \ where the specification variable \result \  is substituted with the stack top
+ element.
+
+\end{enumerate}
+
+
+%\item subroutines\\
+%Subroutines are treated by inlining, thus every the precondition of every jsr instruction depends on the subroutine code which is executed after it.
+%\begin{enumerate}
+
+%\item $ \wpi{\instr{jsr \ n}}{i}{\excPost}{\normalPost} =  \inter{i}{n} $\\
+
+%\item$ \wpi{\instr{ret \ n}}{i}{\excPost}{\normalPost} =  \inter{i}{k} $
+%for any instruction $\ins{k}$ which follows a \texttt{jsr} instruction, that jumps to the subroutine ending with $\ins{i}$
+%\end{enumerate}
+
+
+\item  load and store instructions
+	\begin{enumerate}
+		\item load a local variable on the operand stack \\
+		 $$ \begin{array}{l}
+                          \wpi{\load \  \mbox{ \rm j}} {i} {\excPost}{\normalPost}  =  \\
+			  \inter{i}{i+1}\begin{array}{l} 
+                                              \subst{\counter}{\counter +1} \\
+					      \subst{  \stack{ \counter  + 1}}{\locVar{j}} 
+					\end{array}
+                    \end{array} $$ 
+                
+                The weakest precondition of the instruction then is the predicate that must hold between the current instruction
+                and its successor, but where the stack counter is incremented and the stack top is substituted with $\locVar{j}$.
+                For instance, if we have that the predicate $\inter{i}{i+1} $ is equal to $ \stack{counter} == 3$ then we get that the precondition of
+                instruction is $\locVar{j} == 3$:               
+		$$
+		\begin{array}{l}
+		    \left\{ \begin{array}{l} (\stack{\counter} == 3)\begin{array}{l} 
+                                              \subst{\counter}{\counter +1} \\
+					      \subst{  \stack{ \counter  + 1}}{\locVar{j}} 
+					\end{array} \\
+		                     \equiv\\
+				     \locVar{j} == 3
+		      \end{array}\right\} \\
+		     i:  \load  \ \mbox{ \rm j} \\
+                     \{ \stack{\counter} == 3 \} \\
+                     i+1: \ldots 
+		 \end{array}
+		$$
+ 		
+		\item store the stack top element in a local variable	 \\	 
+		$$ \begin{array}{l}
+                          \wpi{\store \ \mbox{ \rm j} } {i} {\excPost}{\normalPost}  =   \\ 
+		\inter{i}{i+1}\begin{array}{l} 
+                                    \subst{\counter}{\counter   - 1} \\
+				    \subst{\locVar{j} }{\stack{ \counter}}  
+			       \end{array}
+                   \end{array} $$ \\
+		  
+		  Contrary to the previous instruction, the instruction $\store \ \mbox{\rm j}$ will take the stack top element
+		  and will store its contents in the local variable $\locVar{j}$.
+
+		\item push an integer constant on the operand stack  \\
+			$$\begin{array}{l}
+                          \wpi{\push  \  \mbox{ \rm j} } {i} {\excPost}{\normalPost}  =   \\
+			  \inter{i}{i+1}\begin{array}{l}  
+                                    \subst{\counter}{ \counter   + 1} \\ 
+                                    \subst{\stack{ \counter +1 }}{ \mbox{ \rm j }}
+			         \end{array}			
+			\end{array} $$ \\
+		   The predicate that holds after the instruction holds in the prestate of the instruction but where the stack counter \counter \
+		   is incremented and the constant \mbox{ \rm j } is stored in the stack top element
+	
+		\item incrementing a local variable 
+				$$ \begin{array}{l}
+                                          \wpi{\iinc \   \mbox{ \rm j} } {i} {\excPost}{\normalPost}   =  \\
+				          \inter{i}{i+1} \subst{ \locVar{  j} }{  \locVar{j} + 1 } 
+                                   \end{array}$$
+		  
+	\end{enumerate}
+	
+\item arithmetic instructions
+	\begin{enumerate}
+		\item instructions that cannot  cause exception throwing    (\texttt{arithOp} =  \instr{add}, \instr{sub}, \instr{mult}, 
+				\instr{and}, \instr{or}, \instr{xor} , \instr{ishr}, \instr{ishl},     )\\
+				$$ \begin{array}{l} 
+                                          \wpi{\arithOp } {i} {\excPost}{\normalPost}   =  \\
+					  \inter{i}{i+1}
+                                          \begin{array}{l}
+                                                \subst{\counter}{\counter   - 1} \\
+                                                \subst{ \stack{\counter - 1} } {  \stack{\counter}   \texttt{op} \ \stack{\counter -1} }
+				          \end{array}
+                                     \end{array} $$
+
+	
+						
+		\item instructions that may throw exceptions ( \texttt{arithOp} =  \instr{rem}, \instr{div} )\\
+				$$ \begin{array}{l}
+                                         \wpi{\instr{arithOp } } {i} {\excPost}{\normalPost}  = \\
+					 \begin{array}{l}
+				                \stack{\counter} \neq \Mynull \Rightarrow \\
+						\Myspace  \inter{i}{i+1} \begin{array}{l}
+                                                                               \subst{\counter}{ \counter   - 1} \\
+						                               \subst{\stack{\counter - 1}} { \stack{\counter} \ \texttt{op}  \ \stack{\counter -1}} 
+                                                                          \end{array}\\
+						\\
+					        \wedge \\				
+						\\
+						\stack{\counter} = \Mynull \Rightarrow 	\excPost(i, \NullPointerExc)             
+                               	\end{array} 
+				 \end{array}$$
+	\end{enumerate}
+
+\item  object creation and manipulation 
+	\begin{enumerate}
+		\item create a new object \\
+		$$ \begin{array}{l}
+                         \wpi{\instr{new  \ \clazz }} {i} {\excPost}{\normalPost}  =  \\
+			\inter{i}{i+1} 
+			\begin{array}{l} 
+                               \subst{ \counter}{ \counter + 1 } \\
+			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
+		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+		       \end{array}
+              \end{array}$$
+		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. Then the precondition is the same predicate but in which the stack
+		  counter is incremented, the stack top is substituted by a fresh reference \referenceOnly \ and the fields for the 
+		  \referenceOnly are initialized with their default values 
+	
+		
+		\item array creation 
+	
+				 $$\begin{array}{l}
+                                         \wpi{\newarray  \ \anyType } {i} {\excPost}{\normalPost}  =  \\
+					 \stack{\counter} \ge 0 \Rightarrow  \\
+						\Myspace  \inter{i}{i+1} \\
+                                                 \Myspace \begin{array}{l}        
+						        \subst{\stack{\counter} }{ \referenceOnly } \\
+							\subst{ \arrayAccessOnly }{ \update{\arrayAccessOnly}
+                                                                                           {(\referenceOnly, j ) }
+                                                                                         {\defaultValue{\anyType} } }_{ { \small \forall j , 0 \leq  j < \stack{\counter} } } \\
+                                                          \subst{\length}{\update{\length}{\referenceOnly}{\stack{\counter} } }     
+						   \end{array} \\
+							\wedge \\
+						\stack{\counter} < 0 \Rightarrow  \\
+								\Myspace  \excPost( i, \NegativeArraySizeExc) \\
+                                    \end{array} $$
+		  Here, the rule for array creation is similar to the rule for object creation.
+		  However, creation of an array might terminate exceptionally in case the length of the array stored 
+		  in the stack top element \stack{\counter} is smaller than $0$. In this case, function $\excPost$ will search for the corresponding postcondition 
+		  of the instruction at position $i$ and the exception \NegativeArraySizeExc
+		
+			\item field access  \\
+				 $$ 	\begin{array}{l} \wpi{\getfield  \ \fieldd } {i} {\excPost}{\normalPost}  =  \\
+				 		\stack{\counter } \ne \Mynull \Rightarrow \\
+						      \Myspace	\inter{i}{i+1}[ \stack{\counter } \leftarrow \fieldd ( \stack{\counter } ) ] \\
+									 \wedge \\
+						\stack{\counter } = \Mynull \Rightarrow \\
+								\Myspace     \excPost( i, \NullPointerExc) 
+					\end{array} 
+					$$
+			  The instruction for accessing a field value takes as postcondition the predicate that must hold between it and its next instruction
+			  $\inter{i}{i+1}$.  This instruction may terminate normally or on an exception.
+			  In case the stack top element is not \Mynull, the precondition of \getfield \ is its postcondition where the stack 
+			  top element is substituted by the field access expression $\fieldd ( \stack{\counter }$.
+			  If the stack top element is \Mynull, then the instruction will terminate on  a \NullPointerExc exception. In this case the precondition
+			  of the instruction is the predicate returned by the function $\excPost$ for position $i$ in the bytecode and exception \NullPointerExc
+			  
+			\item  field update \\
+			$$\begin{array}{l}
+                                  \wpi{\putfield  \ \fieldd } {i}{\excPost}{\normalPost}  =  \\
+				 		\stack{\counter } \ne \Mynull \Rightarrow \\
+						 \Myspace \inter{i}{i+1}
+                                                     \begin{array}{l}
+                                                              \subst{ \counter }{  \counter -2 } \\
+							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter} } }
+						       \end{array} 
+						        \\
+							\wedge \\
+							\stack{\counter } = \Mynull \Rightarrow   \excPost( i, \NullPointerExc ) \\
+					  \end{array} 
+					$$
+			                
+			                This instruction  also may terminate normally or exceptionally. The termination depends on the value of the stack 
+					top element in the prestate of the instruction. If the top stack element is not \Mynull \ then in the precondition
+					of the instruction $\inter{i}{i+1}$ must hold where the stack counter is decremented with two elements and
+					the \fieldd object is substituted with an updated version $\update{\fieldd}{ \stack{\counter - 2}}{  \stack{\counter  -1} } $
+					For example, let us have the instruction \putfield \ \fieldd \ and its postcondition be
+					$ \inter{i}{i+1} \equiv \fieldd( \locVar{1})  \neq \Mynull $. The function \fwpi \ will return : 
+					 
+					$$
+					 (\fieldd( \locVar{1})  \neq \Mynull  )
+					          \begin{array}{l} 
+					                     \subst{ \counter }{  \counter -2 } \\
+							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter } } }
+                                             	  \end{array}
+					$$
+					After applying the substitution following the rules 
+					described in Section \ref{subst}, we obtain that the precondition is 
+					$$ \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull  $$
+					
+					Finally, we give the instruction \putfield its postcondition and the respective precondition:
+					$$
+					\begin{array}{l}
+					 \left\{\begin{array}{l} 
+					       (\fieldd( \locVar{1})  \neq \Mynull  )
+					          \begin{array}{l} 
+					                     \subst{ \counter }{  \counter -2 } \\
+							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter } } }
+                                             	  \end{array}\\
+					      \equiv \\
+					      \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull \\
+					   \end{array}\right\}   \\
+					  i: \putfield  \ \fieldd\\
+					  \{\fieldd( \locVar{1})  \neq \Mynull \} \\
+					  i+1: \ldots 
+					\end{array}
+					$$
+					
+					\item access the length of an array 
+					$$\begin{array}{l}
+					        \wpi{\arraylength } {i} {\excPost}{\normalPost}  =  \\
+					 				\stack{\counter } \ne \Mynull \Rightarrow \\
+									\Myspace \inter{i}{i+1}
+									 \subst{ \stack{\counter } }{ \length(\stack{\counter } )  } \\
+									 \wedge \\
+								\stack{\counter } = \Mynull \Rightarrow \\
+								\Myspace   \excPost( i, \NullPointerExc) \\
+					  \end{array} $$
+					  The semantics of \arraylength is that it takes the stack top element which must be an array reference
+					  and puts on the operand stack the length of the array referenced by this reference. This instruction
+					  may terminate either normally or exceptionally. The termination depends on if the stack top element is 
+					  \Mynull or not. In case $\stack{\counter} \neq \Mynull$ the predicate  $\inter{i}{i+1}$ must hold where
+					  the stack top element is substituted with its length. The case when a \NullPointerExc is thrown is similar
+					  to the previous cases with exceptional termination
+					  
+					  
+					\item checkcast 
+						$$ \begin{array}{l} 
+						\wpi{\checkcast  \ \clazz } {i} {\excPost}{\normalPost}  = \\
+							\typeof{\stack{\counter}}  \subtypeSpec  \clazz \vee  \stack{\counter} = \Mynull \Rightarrow \\
+							     	\Myspace   \inter{i}{i+1}\\
+							
+							 \wedge \\
+							
+							not(  \typeof{\stack{\counter}} \subtypeSpec  \clazz  ) \Rightarrow  \\
+							\Myspace    \excPost( i, \ClassCastExc) \\
+						\end{array}$$  
+					  The instruction checks if the stack top element can be cast to the class \clazz. 
+					  Two termination of the instruction  are possible. If the stack top element \stack{\counter} is of type 
+					  which is a subtype of class \clazz \  or is \Mynull then the predicate $ \inter{i}{i+1} $ holds in the prestate.
+					  Otherwise, if   \stack{\counter} is not of type which is a subtype of class \clazz, the instruction terminates
+					  on \ClassCastExc \ and the predicate returned by $\excPost$ for the position $i$ and exception \ClassCastExc  \
+					  must hold 
+					  
+						\item instanceof
+						$$ \begin{array}{l}
+                                                    \wpi{\instanceof  \clazz } {i} {\excPost}{\normalPost}  = \\
+							 \typeof{ \stack{\counter}} \subtypeSpec \clazz  \Rightarrow \\
+								\Myspace  	 \inter{i}{i+1} \subst{ \stack{\counter } } {  1  } \\
+									 \wedge \\
+								not(  \typeof{\stack{\counter}} \subtypeSpec  \clazz  )  \vee  \stack{\counter} = \Mynull \Rightarrow \\
+								\Myspace   \inter{i}{i+1} \subst{  \stack{\counter } }{ 0 } \\	  
+						\end{array} 	$$
+						  This instruction, depending on if the stack top element can be cast to the class type \clazz \ pushes on the stack 
+						  top either 0 or 1.
+						  Thus, the rule is almost the same as the previous instruction \checkcast.
+					
+	\end{enumerate}
+%	\item Stack management
+%		         \begin{itemize}
+%						 \item pop  \\
+%	  							$\wpi{\instr{pop}} {i} {\excPost}{\normalPost}  =  \inter{i}{i+1}[ \counter \leftarrow \counter -1]$ \\
+%%	  					\item dup \\
+%	  							$$
+%	  							\begin{array}{l}\wpi{\instr{dup}} {i} {\excPost}{\normalPost}  =  \inter{i}{i+1}[ \counter \leftarrow \counter + 1] \\
+%	  							\Myspace \Myspace \Myspace \Myspace \Myspace   [ \stack{\counter + 1} \leftarrow  \stack{\counter}]
+%	  							 \end{array}
+%	  							 $$
+%	 				 	\item swap 
+%	 				 			$\wpi{\instr{swap}} {i} {\excPost}{\normalPost}  =  $ \\
+%	 				 			$$ 
+%	 				 			\begin{array}{l}
+%	 				 					\inter{i}{i+1}[  \stack{\counter} \leftarrow var ] \\
+%	 				 						\Myspace \Myspace \Myspace [  \stack{\counter + 1} \leftarrow  \stack{\counter}  ] \\
+%	 				 						\Myspace \Myspace \Myspace [  var  \leftarrow  \stack{\counter + 1}  ] \\
+%	 				 			\end{array}
+%	 				 			$$ \\
+%\end{itemize} 
+	 				 	\item method invocation  (only the case for non void instance method is given). 
+	 				 			$$\begin{array}{l}
+								 \wpi{\invoke  \   \methodd} {i} {\excPost}{\normalPost}  =   \\
+	 				 		 \methodd.\pre[ \locVar{s} \leftarrow \stack{\counter + s -\methodd.\numArgs}]_{s = 0}^{\methodd.\numArgs }  \\
+	 				 			\wedge \\
+								\begin{array}{l}
+	 				 			       \forall  mod ,  ( mod \in \method.\modif ), \forall freshVar (  \\ 
+	 				 				              \Myspace \methodd.\normalPost \begin{array}{l}
+									                                    \subst{\result}{  freshVar } \\
+													    \subst{ \locVar{s}}{\stack{\counter + s - numArgs(m)}}_{s = 0}^{ \methodd.\numArgs }                                                                                                	\end{array}  \Rightarrow \\ 
+										      \\
+										      \Myspace  \Myspace  \inter{i}{i+1 } \begin{array}{l}
+										                                   \subst{\counter}{ \counter -  \methodd.\numArgs}\\
+														   \subst{ \stack{\counter -  \methodd.\numArgs  }}{ freshVar }																	\end{array}																									
+	 				 			 )	\end{array}  \\
+	 				 			\wedge_{j = 0 }^{\methodd.\exceptions.length -1} \\
+	 				 			%\forall \tt{e_m} ( m =1 .. k  )
+                                                               ( \methodd. \excPostSpec ( \methodd.\exceptions[j]) \Rightarrow 
+                                                                    \excPost(i,   \methodd.\exceptions[j] )  ) \\		
+	 				 			\end{array}
+	 				 			$$ 
+	 			
+
+						This rule is may be the more complicated one.
+						First, note that because we are following a contract based approach 
+						the caller, i.e. the current method must establish several facts.
+						First, we require that 
+						the precondition \methodd.\pre \ of the invoked method \methodd \ holds where the formal 
+						parameters are correctly initialized with the
+						first \methodd.\numArgs \ elements from the operand stack.
+						
+						Second, we get a logical statement which guarantees the correctness of the method invokation
+						in case of normal termination.
+						On the other hand, its postcondition  \methodd.\normalPost \ is assumed to hold and thus, we want to establish that 
+						under the assumption that \methodd.\normalPost holds \ with \result \ substituted with a fresh bound variable $freshVar$
+						and correctly initialized formal parameters
+						is true we want to establish that the predicate   \inter{i}{i+1 } \
+						holds . This implication is quantified over the locations  \method.\modif \ that a method may modify
+						and the variable $freshVar$ which stands for the result that the invoked method \methodd \ returns.  
+						
+						The third part of the rule deals with the exceptional termination of the method invokation.
+						In this case, if the invoked method terminates on any exception which belongs to the array of 
+						exceptions \methodd.\exceptions \ that \methodd \ may throw, its exceptional postcondition
+						for the corresponding exception
+						must guarantee the predicate returned by the function $\excPost$ of the current method
+
+						
+						
+						
+					
+\item throw exception instruction \\
+				
+							$$ \begin{array}{l}
+							          \wpi{\instr{athrow }} {i} {\excPost}{\normalPost}  = \\
+							          \stack{\counter} \neq \Mynull \Rightarrow  \excPost( i, \typeof{\stack{\counter}}) \\
+								  \wedge \\
+								  \stack{\counter} = \Mynull \Rightarrow  \excPost( i, \NullPointerExc) \\
+							   \end{array}
+							$$ \\
+						The thrown object is on the top of the stack \stack{\counter}. If the thrown object is not \Mynull, then
+						the function $\excPost$ will return the precondition of the handler that may handle exceptions of type 
+						$\typeof{\stack{\counter} } $ on position $i$ in the bytecode, otherwise if such a handler does not exist 
+						$\excPost$ will return the exceptional postcondition that must hold if the current method throws an exception
+						$\typeof{\stack{\counter} } $. 
+						If the stack top object \stack{\counter} \ is \Mynull, then the instruction \athrow will terminate on an exception
+						\NullPointerExc where the predicate returned by the function $ \excPost$ must hold.
+						
+	 			
+\end{itemize}
+
+
+Supposing the execution of a method always terminates, the verification condition for a method \methodd \ with a
+ precondition $\methodd.\pre$ is defined in the following way:
+$$ \methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd.\excPost}{\methodd.\normalPost}$$
+
+
+
+
+

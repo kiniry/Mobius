@@ -1,0 +1,24 @@
+
+\subsection{Extending program objects with BML specification} \label{extend}
+
+BML is tailored to bytecode programs thus, in this section we shall 
+look at how this specification information is introduced in the basic
+ program components: class and method objects.
+
+
+
+ $$ \begin{array}{l}  \forall \methodd: \MethodSet, \\
+                                                          \methodd  = \left\{\begin{array}{ll}  \methodName & :\MethodName\\
+							  \retType      & :\JavaType\\
+							  \args	        &  : (name * \JavaType) [] \\
+							  \numArgs	& : nat \\
+							  \body	        &  : \bcIns [] \\
+							  \entryPoint   &  : \bcIns\\
+							  \excHandlerTable & : \ExcHandler [] \\
+							  \pre & : \formulaBc  \\
+							  \post  & : \formulaBc  \\
+							  \postExc  & : list \excType * \formulaBc 
+								   
+                                     \end{array}  \right\}
+     \end{array} $$
+  

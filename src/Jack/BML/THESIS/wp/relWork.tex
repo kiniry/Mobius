@@ -1,0 +1,69 @@
+\section{Related work} \label{relWorkWp}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+There exist several formal techniques for establishing that a program respects certain property.
+
+ Bytecode verification is concerned with establishing that a bytecode is well typed 
+(every instruction is applied to operands of the correct type) and well formed 
+(e.g. no jumps to an un-existing bytecode index), differently from the goals of the present
+work where program correctness is defined in terms of functional correctness. The JVM, for example, 
+is provided with a bytecode verifier. There is a lot of research work done in the domain 
+and for a detailed overview of the state of the art one can look at~\cite{Ljbc}.  
+
+Floyd is among the first to work on program verification using logic methods for unstructured languages (see \cite{F67amp}).
+Following the Floyd's approach, T.Hoare gives a formal logic for program verification in \cite{Hoare69ABC} known
+ today under the name Hoare logic.
+Dijkstra \cite{WPCDS} proposes then an efficient way for applying Hoare logic in program verification, i.e. he comes up with a
+ weakest precondition (wp) and strongest postcondition (sp) calculi. 
+
+The nineties upto nowadays give rise to several verification tools based on Hoare logic. Among the ones that gained most popularity are
+esc/java developed at Compaq \cite{escjava}, the Loop tool \cite{jacobs03java}, Krakatoa, Jack \cite{BRL-JACK} etc.   
+
+Few works have been dedicated to the definition of a bytecode logic. May be the earliest work in the field of bytecode verification 
+is the thesis of C.Quigley  \cite{Quigley03PLJ} in which Hoare logic rules are given for a bytecode like language. This work is limited 
+to a subset of the Java virtual machine instructions and does not treat for example method calls,
+ neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph,
+ which gives an issue to complex and weak rules.
+
+The work by Nick Benton \cite{B04tlsj} gives a  typed logic for a bytecode language with stacks and jumps. 
+The technique that he proposes checks at the same time types and specifications.
+The language is simple and supports basically stack and arithmetic operations. Finally, a proof of correctness
+w.r.t. an operational semantics is given.
+
+Following the work of Nick Benton, Bannwart and Muller \cite{BM05plb} give  a Hoare logic rules
+for a bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
+As in our work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
+express functional properties. Invariants are inferred by fixpoint calculation.
+However, inferring invariants is not a decidable problem.
+
+
+In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode 
+against arithmetic overflow.  The annotation is written manually, which is not comfortable, especially on bytecode. 
+Here we propose a way to compile a specification written in a high level language, allowing specification to be written
+ at source level, which we consider as more convenient. \todo{not well explained the verification technique they have}
+
+ The Spec\# (\cite{BLS04sp}) programming system developed at Microsoft proposes a static verification framework where 
+ the method and class contracts  (pre, post conditions, exceptional postconditions, class invariants) are inserted in the intermediate code . 
+ Spec\# is a superset of the C\# programming language, with a built-in  specification language, 
+ which proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
+ The static verification procedure  involves translation of the contract specification into metadata which is attached to the intermediate code. 
+ The verification procedure \cite{leinoWPUP} that is performed includes several stages of processing the bytecode program:  
+ elimination of irreducible loops, transformation into an acyclic control flow graph,
+ translation of the bytecode into a guarded passive command language program. Despite that here in our implementation we also
+ do a transformation in the graph into an acyclic program, we consider that in a mobile code scenario one should limit the number of transformations for several reasons.
+ First, we need a verification procedure as simple as possible, and then every transformation must be proven correct which is not always trivial.      
+
+Another topic related to the present work is PCC.
+ PCC and the certifying compiler were proposed by Necula (see \cite{Necula97,ComNec,DesNecLee98}). PCC is an architecture for establishing trust in untrusted code 
+in which the code producer supplies a proof for correctness with the code. 
+The initial idea for PCC  was that the producer automatically infers annotation for properties like well typedness, 
+correct read/writes and automatically generates the proof for their correctness using the certifying compiler. 
+However, such properties guarantee that a program executes correctly w.r.t. to the semantics of the 
+abstract machine, but cannot guarantee if a program executes correctly w.r.t to a functional specification.
+The verification condition generator presented in the following is tailored to deal with functional properties.
+
+
+ 
+
+
+ 

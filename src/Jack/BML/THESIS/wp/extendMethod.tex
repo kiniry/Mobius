@@ -1,0 +1,67 @@
+\section{Extending method declarations with specification}\label{methExtend}
+
+In the following section, we propose an extension of method formalization given in Section \ref{clazz} which takes into account
+the method specification. The extended method structure is given below:
+
+$$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
+                     \MethodSet  = \left\{\begin{array}{ll}  
+                                                          \methodName & :\MethodName\\
+						          \retType & :\JavaType\\
+							  \args &  : (name * \JavaType) [] \\
+							  \numArgs & : nat \\
+							  \body &  : \bcIns [] \\
+							  \entryPoint  &  : \bcIns \\
+							  \excHandlerTable & : \ExcHandler [] \\
+							  \exceptions &  : \ClassSet_{exc}[] \\
+							  \pre & : \formulaBc \\
+							  \modif & : locations\lbrack \ \rbrack  \\
+							  \excPostSpec & : \excType \longrightarrow \formulaBc \\
+							  \normalPost & : \formulaBc \\
+                                                          \loopSpecTable & : \LoopSpecSet \lbrack \ \rbrack  
+							  
+                                     \end{array}  \right\} 
+     \end{array} $$
+
+Let's see the meaning of the new elements in the method data structure.
+\begin{itemize}
+     \item \methodd.\pre \ gives the precondition of the method, i.e. the predicate that must hold
+           whenever \methodd \  is called
+     \item \methodd.\normalPost \ is the postcondition of the method in case \methodd terminates normally  
+     
+     \item \methodd.\modif \ is also called the method frame condition. It is a list of locations that the method
+            may modify during its execution    
+     
+     \item \methodd.\excPostSpec \ is a function from exception types to formulas which returns the predicate
+           \methodd.\excPostSpec(\texttt{Exc})  that must hold in the method's poststate 
+	   if the method \methodd \ terminates by throwing an exception of type \mbox{ \rm \texttt{Exc}} 
+     \item \methodd.\loopSpecTable \ is an array of \LoopSpecSet \ data structures which give the specifcication information 
+           for a particular loop in the bytecode         
+\end{itemize}
+
+ 
+The contents of a \LoopSpecSet \ data structure is given hereafter:
+$$ \begin{array}{l}
+      \LoopSpecSet = \left\{\begin{array}{ll}  
+                                       \loopPos   & : nat \\
+                                       \loopInv   & : \formulaBc \\                 
+	                               \loopMod   & : locations\lbrack \ \rbrack  
+                            \end{array}  \right\} 
+     \end{array} $$ \todo{define modifies locations in the grammar }
+
+
+For any method \methodd \ for any $ k $ such that $ 0 \leq k < \methodd.\loopSpecTable.length$ 
+          \begin{itemize}
+                \item the field $\methodd.\loopSpecTable[k].\loopPos$ is a valid index in the body of \methodd:\\
+                      $ 0 \leq   \methodd.\loopSpecTable[k].\loopPos < \methodd.\body.length$ and is a loop entry
+                      instruction in the sense of Def.\ref{defLoop}
+
+	        \item $\methodd.\loopSpecTable[k].\loopInv$ is the predicate that must hold whenever the instruction 
+		      $\methodd.\body[ \methodd.\loopSpecTable[k].\loopPos]$ 
+                      is  reached in the execution of the method \methodd
+
+                \item $\methodd.\loopSpecTable[k].\loopMod$ are the locations such that for any two states
+                      $state_1, state_2 $  in which the instruction $\methodd.\body[ \methodd.\loopSpecTable[k].\loopPos]$ 
+		      executes agree on local variables and the heap modulo the locations that are in the list \loopMod.
+                      We denote the equality between  $state_1, state_2 $   modulo the modifies locations like this 
+                      $ state_1 =^{\loopMod} state_2$
+	  \end{itemize}
