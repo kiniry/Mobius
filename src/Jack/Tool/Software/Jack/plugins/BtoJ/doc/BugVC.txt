@@ -1,0 +1,46 @@
+1. the check for the modifies clause does not work well. For the moment only the fields of the current
+class are verified to be not modified. Should add also the fields from other classes that are used in the
+current class.
+
+2. Lilian - parenthesage pas bonne , example (challenge tests )  SideEffect pog not well  translated 
+(example documented in testWellParenForSideEffect)
+
+
+3. B2JClass - le champ 	Vector fields est initializee avec les FieldRef de constant pool. 
+Je crois que le field doit etre initialise avec les fied  de la class plus tot. 
+Voir quand il est appelle dans  B2JProofs.toExpression -> REsolved 
+
+4. 23.0.05 example Compressor.output the specification
+of do... while cannot be compiled, because the LineNumberTable gives 
+an index of the loop start which is strange - > Resolved 
+
+5. crypt.BuildTestData OutOfMemory - once the pogs are generated (the origin of the bug
+is not very clear )
+
+6. 05/09/2005  
+bc vc gen doesnot generate a vc aboput the invariant
+in an exceptional case
+
+
+7. 11/10/05 
+native methods in the bytecode does not have a Local Variable Table ! This is the reason
+for certain NullPointerExceptions
+
+
+8. 12/10/05
+class invariants of the other classes are not added as assumptions when verifying
+a  method, neither are proven to hold at the end of the method 
+
+
+9. 13/10/05 
+les hypotheses sur les variables modifiees dans les boucles doivent etre decoupees>>>>>>> 1.5
+
+  
+10 . 14/10/05 
+  bug in the bytecode vc found when generating vcs for TCPIP jits.net.JKernel
+  
+  
+11. 9/11/05
+ NB: bug in the verification of modifies clauses (on bytecode and source level) -  
+  by definition newly created objects  are allowed to be modified. STill the vcs on bc and src do it.
+ 
