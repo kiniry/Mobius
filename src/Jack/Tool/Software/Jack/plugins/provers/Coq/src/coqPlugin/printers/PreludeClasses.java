@@ -8,7 +8,6 @@ import jml2b.IJml2bConfiguration;
 import jml2b.pog.printers.AClassEnumeration;
 import jml2b.pog.printers.IClassResolver;
 import jml2b.pog.printers.IPrinter;
-import jml2b.structure.IClass;
 import jml2b.structure.java.AClass;
 
 public class PreludeClasses extends Printer{
@@ -52,7 +51,7 @@ public class PreludeClasses extends Printer{
 //			stream.println("Definition StringClass := " + cl.getBName() + ".");
 //		}
 //		else
-			stream.println("Definition StringClass := c_Object.");
+		stream.println("Definition StringClass := c_Object.");
 		
 		stream.println("End " + getModule() + ".\n");
 	}
