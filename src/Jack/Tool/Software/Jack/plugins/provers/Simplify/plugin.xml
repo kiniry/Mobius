@@ -90,11 +90,14 @@
                icon="icons/jml_prove.gif"
                tooltip="Prove with Simplify"
                class="simplifyPlugin.ProveSimplifyButton"
-               toolbarPath="Normal/SimplifyProver"
+               toolbarPath="jack.plugin.actionSet/simplify"
                id="simplifyplugin.toolbar.proveAction">
             <selection
                   class="org.eclipse.jdt.core.ICompilationUnit">
             </selection>
+            <enablement>
+              <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+           </enablement>
          </action>
       </actionSet>
    </extension>
