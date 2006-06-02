@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[book,10pt]{book}
 \input cmd.tex
 \usepackage{url}
 \usepackage{amssymb}
@@ -12,46 +12,69 @@
 
 \maketitle
 \tableofcontents
-\newpage
+
 %1
-\section{Introduction}
+\chapter{Introduction}
 
 %2
-\section{ Java Bytecode Language and its Operational semantics}
-   \input prelim/operational_sem.tex
+\chapter{ Java bytecode language and its operational semantics} \label{opSem}
+ \input{prelim/intro.tex}   
+ \input{prelim/relWork.tex} 
+ \input{prelim/notation.tex} 
+ \input{prelim/classAndMeths.tex} 
+ \input{prelim/progTypes.tex} 
+ \input{prelim/config.tex} 
+ \input{prelim/heap.tex} 
+ \input{prelim/registers.tex} 
+ \input{prelim/stack.tex} 
+ \input{prelim/pc.tex} 
+ \input{prelim/exceptions.tex} 
+ \input{prelim/operational_sem.tex } 
 
 
-   
 %4
-\section{ Specification language for Java Bytecode programs} 
-   \input BML/JML2BC.tex
+\chapter{Specification language for Java bytecode programs} \label{bcsl}
+  \input{BML/intro.tex} 
+  \input{BML/prelim.tex}
+  \input{BML/bml.tex}
+  \input{BML/typeChecker.tex}
+  \input{BML/constantPool.tex}
+  \input{BML/compiler.tex}
+
 
 %5
-\section{ Weakest Precondition Calculus for Java Bytecode} \label{wpGeneral}
-     \input wpbc.tex
+\chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
+ \input{wp/intro.tex} 
+ \input{wp/relWork.tex} 
+ \input{wp/prelim.tex} 
+ \input{wp/extendMethod.tex} 
+ \input{wp/wpbc.tex} 
+\section{Example}
 
 
 
-\section{ Verification Condition Genarator for Java Bytecode Programs}
-
+\chapter{Correctness of the verification condition generator}\label{proofGeneral}
+  \input{proof/intro.tex}
+  \input{proof/interpretation.tex}
+  \input{proof/proof.tex}
 %6
-\section{ Equivalence between Java Source and Bytecode Proof Obligations}
+\chapter{Equivalence between Java source and bytecode proof Obligations}
 
 
 
 
 
 %8
-\section{ Fitting a verification condition generator on a small device}
+\chapter{A compact verification condition generator}
 
 
 
 %9
-\section{ Applications} 
+\chapter{Applications} 
 
  
 %10
-\section{ Conclusion}
+\chapter{Conclusion}
 
 \bibliographystyle{plain}
 \bibliography{biblio,specification}

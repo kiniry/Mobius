@@ -1,29 +1,52 @@
-\contentsline {section}{\numberline {1}Introduction}{2}
-\contentsline {section}{\numberline {2} Java Bytecode Language and its Operational semantics}{2}
-\contentsline {subsection}{\numberline {2.1}Related Work}{2}
-\contentsline {subsection}{\numberline {2.2}Notation}{3}
-\contentsline {subsection}{\numberline {2.3}Classes, Fields and Methods}{3}
-\contentsline {subsection}{\numberline {2.4}Program Types}{4}
-\contentsline {subsection}{\numberline {2.5}Expressions}{5}
-\contentsline {subsubsection}{\numberline {2.5.1}Substitution}{6}
-\contentsline {subsection}{\numberline {2.6}Modeling the Object Heap}{6}
-\contentsline {subsection}{\numberline {2.7}State configuration}{8}
-\contentsline {subsection}{\numberline {2.8}Bytecode Language and its Operational Semantics}{10}
-\contentsline {section}{\numberline {3} Specification language for Java Bytecode programs}{18}
-\contentsline {subsection}{\numberline {3.1}Introduction}{18}
-\contentsline {subsection}{\numberline {3.2}A quick overview of JML}{19}
-\contentsline {subsection}{\numberline {3.3}Features of BCSL}{20}
-\contentsline {subsection}{\numberline {3.4}Compiling JML into bytecode specification language}{23}
-\contentsline {section}{\numberline {4} Weakest Precondition Calculus for Java Bytecode}{25}
-\contentsline {subsection}{\numberline {4.1}Bytecode Programs. Background}{25}
-\contentsline {subsection}{\numberline {4.2}WP for a Java bytecode }{26}
-\contentsline {subsubsection}{\numberline {4.2.1}Definitions}{26}
-\contentsline {subsubsection}{\numberline {4.2.2}Weakest Precondition Calculus Rules}{27}
-\contentsline {subsection}{\numberline {4.3}Example}{31}
-\contentsline {subsubsection}{\numberline {4.3.1}Weakest Precondition in the Presence of Loop }{31}
-\contentsline {subsection}{\numberline {4.4}Correctness}{36}
-\contentsline {section}{\numberline {5} Verification Condition Genarator for Java Bytecode Programs}{37}
-\contentsline {section}{\numberline {6} Equivalence between Java Source and Bytecode Proof Obligations}{37}
-\contentsline {section}{\numberline {7} Fitting a verification condition generator on a small device}{37}
-\contentsline {section}{\numberline {8} Applications}{37}
-\contentsline {section}{\numberline {9} Conclusion}{37}
+\contentsline {chapter}{\numberline {1}Introduction}{5}
+\contentsline {chapter}{\numberline {2} Java bytecode language and its operational semantics}{7}
+\contentsline {paragraph}{The features supported}{7}
+\contentsline {paragraph}{The features not supported}{8}
+\contentsline {section}{\numberline {2.1}Related Work}{9}
+\contentsline {section}{\numberline {2.2}Notation}{9}
+\contentsline {section}{\numberline {2.3}Classes, Fields and Methods}{10}
+\contentsline {section}{\numberline {2.4}Program types and values}{11}
+\contentsline {section}{\numberline {2.5}State configuration}{12}
+\contentsline {subsection}{\numberline {2.5.1}Modeling the Object Heap}{14}
+\contentsline {subsection}{\numberline {2.5.2}Registers}{17}
+\contentsline {subsection}{\numberline {2.5.3}The operand stack}{17}
+\contentsline {subsection}{\numberline {2.5.4}Program counter}{17}
+\contentsline {section}{\numberline {2.6}Throwing and handling exceptions}{17}
+\contentsline {section}{\numberline {2.7}Bytecode Language and its Operational Semantics}{19}
+\contentsline {chapter}{\numberline {3}Specification language for Java bytecode programs}{27}
+\contentsline {section}{\numberline {3.1}A quick overview of JML}{28}
+\contentsline {section}{\numberline {3.2}BML}{29}
+\contentsline {subsection}{\numberline {3.2.1}Notation convention}{29}
+\contentsline {subsection}{\numberline {3.2.2}BML Grammar}{30}
+\contentsline {subsection}{\numberline {3.2.3}Interpretation of the BML grammar}{32}
+\contentsline {subsubsection}{BML expressions}{32}
+\contentsline {subsubsection}{BML predicates}{33}
+\contentsline {subsubsection}{Class Specification}{33}
+\contentsline {subsubsection}{Inter --- method specification}{34}
+\contentsline {subsubsection}{Method specification case}{34}
+\contentsline {subsubsection}{Intra --- method specification}{35}
+\contentsline {subsubsection}{Frame conditions}{37}
+\contentsline {section}{\numberline {3.3}BML type checker}{38}
+\contentsline {section}{\numberline {3.4}Background information of the class file format}{38}
+\contentsline {subsection}{\numberline {3.4.1}The \unhbox \voidb@x \hbox {\rm \textbf {Constant\_pool\_table}}}{38}
+\contentsline {subsection}{\numberline {3.4.2}Representation of method in the class file format}{40}
+\contentsline {subsubsection}{The \unhbox \voidb@x \hbox {\rm \textbf {Local\_variable\_table}}\ attribute }{40}
+\contentsline {subsubsection}{The \unhbox \voidb@x \hbox {\rm \textbf {Line\_Number\_Table}}\ attribute}{40}
+\contentsline {section}{\numberline {3.5}Compiling JML into BML}{40}
+\contentsline {chapter}{\numberline {4}Verification condition generator for Java bytecode }{45}
+\contentsline {section}{\numberline {4.1}Related work}{46}
+\contentsline {section}{\numberline {4.2}Representing bytecode programs as control flow graphs}{47}
+\contentsline {section}{\numberline {4.3}Extending method declarations with specification}{49}
+\contentsline {section}{\numberline {4.4}Weakest precondition calculus}{50}
+\contentsline {subsection}{\numberline {4.4.1}Intermediate predicates}{50}
+\contentsline {subsection}{\numberline {4.4.2}Weakest precondition in the presence of exceptions}{51}
+\contentsline {subsection}{\numberline {4.4.3}Rules for single instruction}{52}
+\contentsline {section}{\numberline {4.5}Example}{58}
+\contentsline {chapter}{\numberline {5}Correctness of the verification condition generator}{61}
+\contentsline {section}{\numberline {5.1}Substitution}{61}
+\contentsline {section}{\numberline {5.2}Interpretation of assertions in a state}{62}
+\contentsline {section}{\numberline {5.3}Proof of Correctness }{65}
+\contentsline {chapter}{\numberline {6}Equivalence between Java source and bytecode proof Obligations}{71}
+\contentsline {chapter}{\numberline {7}A compact verification condition generator}{73}
+\contentsline {chapter}{\numberline {8}Applications}{75}
+\contentsline {chapter}{\numberline {9}Conclusion}{77}
