@@ -56,7 +56,7 @@
               label="Edit"
               state="false"
               style="push"
-              toolbarPath="/Normal/bytecode"
+              toolbarPath="jack.plugin.actionSet/bytecode"
               tooltip="POs edit">
            <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
            <enablement>
@@ -70,7 +70,7 @@
               label="JML Compile"
               state="false"
               style="push"
-              toolbarPath="/Normal/bytecode"
+              toolbarPath="jack.plugin.actionSet/bytecode"
               tooltip="BML compile">
            <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
            <enablement>
@@ -84,7 +84,7 @@
                label="Classfile Annotation"
                state="false"
                style="push"
-               toolbarPath="/Normal/bytecode"
+               toolbarPath="jack.plugin.actionSet/bytecode"
                tooltip="Annotate a classfile">
            <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
            <enablement>
