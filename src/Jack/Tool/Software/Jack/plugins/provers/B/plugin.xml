@@ -65,11 +65,14 @@
                icon="icons/jml_prove.gif"
                tooltip="Prove with the Atelier B"
                class="bPlugin.ProveBButton"
-               toolbarPath="Normal/BProver"
+               toolbarPath="jack.plugin.actionSet/bprover"
                id="bplugin.toolbar.proveAction">
             <selection
                   class="org.eclipse.jdt.core.ICompilationUnit">
             </selection>
+            <enablement>
+                    <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+            </enablement>
          </action>
       </actionSet>
    </extension>
