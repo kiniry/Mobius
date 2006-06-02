@@ -441,8 +441,9 @@ public class TheoremList extends Profiler {
 
 	Vector getHyp() {
 		Vector res = th.getHyp();
-		if (next != null)
+		if (next != null) {
 			res.addAll(next.getHyp());
+		}
 		return res;
 
 	}
