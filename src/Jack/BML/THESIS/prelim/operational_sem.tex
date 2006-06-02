@@ -1,38 +1,7 @@
-\newtheorem{StateTransition}{Definition}[section]
-\newtheorem{transClosStateTrans}[StateTransition]{Definition}
 
-%\section{Logic, Language and Operational Semantics}\label{opSem}
 
- The purpose of this section is to introduce the fundamental concepts of the
- present thesis. In particular, we present a language of bytecode instructions
- and a language of expressions that the bytecode manipulates.
- The bytecode language supports the basic features of the Java Virtual Machine \cite{VMSpec}(JVM for short),
- namely method invokations, object manipulation and creation as well as exceptions.
-Finally, we give a big step operational semantics of the bytecode language in terms of program state transitions. 
- 
 
- 
- In the following,
- %subsection \ref{subst} discusses briefly how the substitution is defined,
- %subsection \ref{formulas} gives the language of predicates in which the program properties will be expressed,
- subsection \ref{relWork} is an overview of existing formalisations of the JVM semantics,
- subsection \ref{notation} gives some particular notations that will be used from now on along the thesis,
- subsection \ref{clazz} introduces the structures classes, fields and methods  used in the virtual machine, 
- subsection \ref{types} gives the type system which is supported by the bytecode language,
- subsection \ref{lang} describes the expressions that our bytecode language manipulates,
- subsection \ref{heap} gives the modelisation of the memory heap,
- subsection \ref{def} introduces the notion of state configuration,
- subsection \ref{opSem} gives the operational semantics of our language.
-
- \input prelim/relWork.tex
- \input prelim/notation.tex
- \input prelim/classAndMeths.tex
- \input prelim/progTypes.tex
- \input prelim/expressions.tex 
- \input prelim/heap.tex
- \input prelim/config.tex
-
-\subsection{Bytecode Language and its Operational Semantics} \label{opSem}
+\section{Bytecode Language and its Operational Semantics} \label{opSem}
  The bytecode language that we introduce here corresponds to a representative subset of the Java bytecode language. 
  In particular, it supports object manipulation and creation, method invokation, as well as exception throwing and handling.
  In fig. \ref{opSem:bclang}, we give the list of instructions that constitute our bytecode
@@ -71,16 +40,7 @@ Finally, we give a big step operational semantics of the bytecode language in te
  Note that the instruction \arithOp stands for any arithmetic instruction in the list  \instr{add}, \instr{sub}, \instr{mult}, 
  \instr{and}, \instr{or}, \instr{xor} , \instr{ishr}, \instr{ishl}, \instr{div}, \instr{rem} ).
  
- JVM is stack based and a new method is called a new method frame is pushed on the frame stack and the execution continues on this new frame.
- A method frame contains the method operand stack, the array of registers and the constant pool of the class the method belongs to.
- When a method terminates its execution normally, the result, if any, is popped from the method operand stack, the method frame is
- popped from the frame stack and the method result (if any) is pushed on the operand stack
- of its caller. If the method terminates with an exception, it does not return any result and the exception object is propagated back to its callers.
- 
- Our formalization considers only single method execution abstracting from the method frame stack as it is sufficient for
- the proof of correctness of the definition of the weakest precondition calculus. This abstraction is possible as the proposed verification procedure is modular - 
- when verifying a method we assume that all the other methods are correct and we are concerned
- only with establishing the correctness of the current method.
+
 
 % We introduce two special value for the program counter $\botNorm$ and  $\botExc$. 
 % The program counter \pc is set to $\bottom^{norm}$ whenever the method execution 
@@ -107,21 +67,21 @@ Finally, we give a big step operational semantics of the bytecode language in te
 
  \begin{StateTransition}[State Transition] \label{stateTrans} 
  If an instruction \bcIns in the body of method \methodd \ starts execution in a state with configuration  
- $\config{ \heap}{\counter}{\stackOnly}{\locVarOnly}{ \pc}$ and
-  terminates execution in state with configuration  $\config{ \heap'}{\counter'}{\stackOnly'}{\locVarOnly'}{\pc'}$ we denote this by
+ $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc}$ and
+  terminates execution in state with configuration  $\config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'}$ we denote this by
 
-  $$ \methodd \vdash \bcIns : \config{ \heap}{\counter}{\stackOnly}{\locVarOnly}{ \pc }   \stateTrans \config{ \heap'}{\counter'}{\stackOnly'}{\locVarOnly'}{\pc'} $$
+  $$  {\scriptsize \methodd \vdash \bcIns : \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc }   \stateTrans \config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'} } $$
  \end{StateTransition}
 
  We also define how the execution of a list of instructions change the state configuration in  which their execution starts.
  
  \begin{transClosStateTrans}[Transitive closure of a state transition relation] \label{stateTransClos}
     If the body of the method \methodd \ \methodd.\body starts execution in a state
-    with configuration \\ $\config{ \heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}$ and there is an execution
+    with configuration \\ $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$ and there is an execution
     path from \method.\entryPoint \ to an instruction \method.\body[k] which is either a \return \ instruction or an 
     instruction which terminates execution with an uncaught exception and the configuration after its execution is 
-    $\configFinal{ \heap'}{\Final}$  we denote it with 
-    $$ \methodd \vdash \methodd.\body: \config{ \heap}{\counter}{\stackOnly}{\locVarOnly}{ \pc } \stateTrans^{*} \configFinal{ \heap'}{Final} $$
+    $\configFinal{ \heap'}{\locVarOnly}{\Final}$  we denote it with 
+    $$ {\scriptsize \methodd \vdash \methodd.\body: \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTrans^{*} \configFinal{ \heap'}{\locVarOnly'}{\Final} }$$
  \end{transClosStateTrans}
  
 
@@ -131,60 +91,17 @@ Finally, we give a big step operational semantics of the bytecode language in te
  is the execution of its body upto reaching a final state configuration:
  
  $$
-  \frac{\begin{array}{l}
-               \methodd.\body :  
-	                    \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \configFinal{\heap'}{\Final}\\
+ {\scriptsize  \frac{\begin{array}{l}
+          \methodd \vdash  \methodd.\body :  
+	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \configFinal{\heap'}{\locVarOnly'}{\Final}\\
 	\end{array}	 
        }
-       {\methodd :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+       {\methodd :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		   \stateTrans 
-                   \configFinal{\heap'}{\Final} }$$ \\
+                   \configFinal{\heap'}{\locVarOnly'} {\Final} }}$$ \\
 
 
  
- The function \getStateAfterExc \ deals with bytecode instructions that may throw exceptions. The function returns the state 
- configuration after the current instruction during the execution of \methodd \ throws an exception of type $E$. If the method
- \methodd \ has an  exception handler which can handle  exceptions of type $E$ thrown at the index of the current instruction,
- the execution is not stuck and thus, the state configuration is an intermediate state configuration.
- If the method \methodd \ does not have an exception handler for dealing with exceptions of type $E$ 
- at the current index, the execution of \methodd \ terminates exceptionally and the current instruction
- causes the method exceptional termination:
-
- 
- $$\begin{array}{l}
-          \getStateAfterExc : \SetConfigInterm * \excType * \ExcHandler[] \rightarrow \SetConfigInterm \cup \SetConfigFinalExc  \\
-	  \\
-	  \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, E, \pc, \excHH[] ) = \\
-          \left\{\begin{array}{ll}
-	        \config{\heap'}{0}{\update{\stackOnly}{0}{\Ref{E}}}{\locVarOnly}{\pcHandler} &  \mbox{\rm if \findExcHandler{E}{\pc}{\excHH[]}= \pcHandler } \\
-		& \\
-		\configFinalExc{\heap'}{\Ref{E}} &  \mbox{\rm  if \ \findExcHandler{E}{\pc}{\excHH[]}= } \bottom  \\
-	  \end{array}\right.\\
-	  \\
-        \mbox{\rm where }\\
-	(\heap', \Ref{E} )= \newRef{\heap}{E}
-    \end{array}
- $$
-
- If an exception $E$ is thrown by instruction at position $i$ while executing the method \methodd,
- the exception handler table  \methodd.\excHandlerTable \ will be searched for the first exception handler that can handle the exception. 
- The search is done by the function \findExcHandlerOnly. If there is found
- such a handler the function returns the index of the instruction at which the exception handler starts, otherwise it returns $\bottom$:
- $$ \begin{array}{l}
-        \findExcHandlerOnly : \excType * nat * \ExcHandler[] \rightarrow nat \\
-	\\
-	\findExcHandler{E}{\pc}{\excHH[]} = \\
-	 \left\{\begin{array}{ll}
-	     \pcHandler &  \left\{\begin{array}{l}
-	                       \exists k,  min(k): \excHH[k] = (\pcStart,\pcEnd,\pcHandler, E' ) \wedge  \\
-			       \pcStart \leq \pc < \pcEnd \wedge \\
-			       \subtype{E}{E'}
-			   \end{array}\right.	 \\
-			   & \\
-	     \bottom & \mbox{ \rm else} 
-	 \end{array}\right.
-   \end{array}	  
- $$
 
    
  Next, we define the operational semantics of every instruction. The operational semantics
@@ -199,61 +116,62 @@ Finally, we give a big step operational semantics of the bytecode language in te
             \item Conditional jumps : \ifCond
 
 
-        $$ \begin{array}{l}
-                 \frac{ \mbox{ \rm \texttt{ cond}}( \stack{\topStack}, \stack{\topStack - 1}) } 			       		               
-                      {\method \vdash \ifCond \ n : \config{\heap }{\counter}{\stackOnly}{\locVarOnly}{\pc}
+        $$ 
+           {\scriptsize \frac{ \mbox{ \rm \texttt{ cond}}( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1}) } 			       		               
+                      {\method \vdash \ifCond \ n : \config{\heap }{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}
 		                      \stateTrans 
-				      \config{\heap}{\counter - 2}{\stackOnly}{\locVarOnly}{\pc + n}} 
-                \\
-                \\
-		\\
-                 \frac{  not (\mbox{ \rm \texttt{ cond}}( \stack{\topStack}, \stack{\topStack - 1})) }		                             
-                     {\method \vdash \ifCond \ n : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+				      \config{\heap}{\counterOnly - 2}{\stackOnly}{\locVarOnly}{n}} 
+            }    $$
+		$$ {\scriptsize
+                 \frac{  not (\mbox{ \rm \texttt{ cond}}( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1})) }		                             
+                     {\methodd \vdash \ifCond \ n : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                    \stateTrans 
-                                    \config{\heap}{\counter - 2}{\stackOnly}{\locVarOnly}{\pc + 1}} 
-          \end{array} $$
+                                    \config{\heap}{\counterOnly - 2}{\stackOnly}{\locVarOnly}{\pc + 1}} }
+           $$
             
 
-	    The condition \texttt{cond} is applied to the stack top and zero. If the condition is true then the control is transfered to the instruction
-	    at index \texttt{n}, otherwise the control continues at the instruction following the current instruction. The top two elements \stack{\topStack} and
-            \stack{\topStack - 1}  of the stack top are popped from the operand stack.
+	    The condition \texttt{cond} = $\{ =, \neq, \le, <, >, \ge \} $ is applied to the stack top  \stackOnlyParam{\counterOnly} and the element below the stack top
+	     \stackOnlyParam{\counterOnly -1}which must be of type \Myint. If the condition is true then the control is transfered to the instruction
+	    at index \texttt{n}, otherwise the control continues at the instruction following the current instruction. The top two elements \stackOnlyParam{\counterOnly} and
+            \stackOnlyParam{\counterOnly - 1}  of the stack top are popped from the operand stack.
  
         \item Unconditional jumps: \goto \\
-            $$ \frac{  }
-	          {\method \vdash \goto \ n: \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+            $${\scriptsize \frac{  }
+	            {\methodd \vdash \goto \ n: \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                    \stateTrans 
-                                    \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc + n}} $$
+                                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ n}} }$$
 				    
    
              Transfers control to the instruction at position \textit{n}.
 
 
       \item \return
-        $$ \frac{ } 
-            {\method \vdash \return :\config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+        $$ {\scriptsize \frac{ } 
+            {\methodd \vdash \return :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                    \stateTrans 
-                                    \configFinalNorm{\heap}{\stack{\counter}}}     $$
+                                    \configFinalNorm{\heap}{\locVarOnly}{\stackOnlyParam{\counterOnly}}}   }  $$
 
 	    The instruction causes the normal termination of the execution of the current method \methodd.
 	    The instruction does not affect changes on the heap \heap and the return result is contained in
-	    the stack top element \stack{\counter}
+	    the stack top element \stackOnlyParam{\counterOnly}
       \end{enumerate}
 
   \item Arithmetic operations 	
         
-	   $$ \frac{ \begin{array}{l}
-	                   \counter' = \counter - 1 \\
-			   \stackOnly' = \update{\stackOnly} {\counter-1}{\stack{\counter-1} \ \rm{op} \ \stack{\counter}} \\
-			   \pc' = \pc + 1
-	             \end{array}}
-		   {\method \vdash  \op :\config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	   $${\scriptsize \frac{ 
+	   \begin{array}{l}
+	   \counterOnly' = \counterOnly - 1 \\
+	   \stackOnly' = \update{\stackOnly} {\counterOnly-1}{\stackOnlyParam{\counterOnly} \ \rm{op} \ \stackOnlyParam{\counterOnly-1}} \\
+	   \pc' = \pc + 1
+	   \end{array}}
+		   {\method \vdash  \op :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		          \stateTrans 
-                          \config{\heap}{\counter'}{\stackOnly' }{\locVarOnly}{\pc'} }  $$ 
+                          \config{\heap}{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'} } } $$ 
 		 
  
-       Pops the values which are on the stack top \stack{\topStack}  and \stack{\topStack - 1}  at the position below and applies the arithmetic operation \texttt{op}
-       on them. The stack counter is decremented and  the resulting  value on the stack top \stack{\topStack - 1} \ \rm{op} \ \stack{\topStack} is pushed on the stack
-       top  \stack{\topStack - 1}. 
+       Pops the values which are on the stack top \stackOnlyParam{\counterOnly}  and \stackOnlyParam{\counterOnly - 1}  at the position below and applies the arithmetic operation \texttt{op}
+       on them. The stack counter is decremented and  the resulting  value on the stack top \stackOnlyParam{\counterOnly - 1} \ \rm{op} \ \stackOnlyParam{\counterOnly} is pushed on the stack
+       top  \stackOnlyParam{\counterOnly - 1}. 
 	\todo{case for arithmetic instructions that throw exception }
 
   \item Load Store instructions
@@ -261,61 +179,61 @@ Finally, we give a big step operational semantics of the bytecode language in te
       \begin{enumerate}
     
 	\item \load
-	$$ \frac{ \begin{array}{l}
-	                \counter' = \counter + 1\\
-			\stackOnly' = \update{\stackOnly}{\counter +  1}{ \locVar{i} } \\
+	$${\scriptsize \frac{ \begin{array}{l}
+	                \counterOnly' = \counterOnly + 1\\
+			\stackOnly' = \update{\stackOnly}{\counterOnly +  1}{ \locVar{i} } \\
 			\pc' = \pc + 1
 	          \end{array}
 	    } 
-	    {\method \vdash \load \ \mbox{ \rm i}  : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	    {\method \vdash \load \ \mbox{ \rm i}  : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		  \stateTrans 
-                  \config{\heap}{\counter'}{\stackOnly'}{\locVarOnly}{\pc'}  } $$ 
-            The instruction loads increments the stack counter  \topStack and pushes
-	    the content of the local variable $\locVar{i}$ on the stack top \stack{\topStack + 1}
+                  \config{\heap}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'}  } } $$ 
+            The instruction increments the stack counter  \counterOnly and pushes
+	    the content of the local variable $\locVar{i}$ on the stack top \stackOnlyParam{\counterOnly + 1}
 	    
         \item \store
-        $$ \frac{  \begin{array}{l}
-	                \counter' = \counter- 1\\
-			\locVarOnly' =	\update{\locVarOnly}{ \mbox{ \rm i} } { \stack{\counter}} \\
+        $$ {\scriptsize \frac{  \begin{array}{l}
+	                \counterOnly' = \counterOnly- 1\\
+			\locVarOnly' =	\update{\locVarOnly}{ \mbox{ \rm i} } { \stackOnlyParam{\counterOnly}} \\
 			\pc' = \pc + 1
 	          \end{array} }
-                {\method \vdash  \store \ \mbox{ \rm i} :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+                {\method \vdash  \store \ \mbox{ \rm i} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		  \stateTrans 
-                  \config{\heap}{\counter'}{\stackOnly }{\locVarOnly' }{\pc'} }  $$ 
+                  \config{\heap}{\counterOnly'}{\stackOnly }{\locVarOnly' }{\pc'} } } $$ 
 
-	     Pops the stack top element \stack{\topStack}  and stores it into local variable $\locVar{\mbox{ \rm i}}$ and  decrements the stack counter 
-	     \topStack  
+	     Pops the stack top element \stackOnlyParam{\counterOnly}  and stores it into local variable $\locVar{\mbox{ \rm i}}$ and  decrements the stack counter 
+	     \counterOnly  
 	
         \item  \instr{iinc}
 
-                $$\frac{ \begin{array}{l}	               
+                $${\scriptsize  \frac{ \begin{array}{l}	               
 			\locVarOnly' =  \update{\locVarOnly}{\mbox{ \rm i} }{ \locVar{\mbox{ \rm i} } + 1}\\
 			\pc' = \pc + 1
 	          \end{array} } 
-	        {\method \vdash \instr{iinc } \ \mbox{ \rm i}  :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	        {\method \vdash \instr{iinc } \ \mbox{ \rm i}  :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		  \stateTrans 
-                  \config{\heap}{\counter}{\stackOnly}{\locVarOnly' }{\pc'}  } $$ 
+                  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly' }{\pc'}  }  } $$ 
             Increments the value of the local variable $\locVar{i}$ 
 	
 	\item \push
-	       $$\frac{\begin{array}{l}
-	                \counter' = \counter + 1\\
-			\stackOnly' = \update{\stackOnly}{\counter +  1}{\mbox{ \rm i}  }\\
+	       $${\scriptsize \frac{\begin{array}{l}
+	                \counterOnly' = \counterOnly + 1\\
+			\stackOnly' = \update{\stackOnly}{\counterOnly +  1}{\mbox{ \rm i}  }\\
 			\pc' = \pc + 1
 	          \end{array}  } 
-	        {\method \vdash \instr{push} \ \mbox{ \rm i}  :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	        {\method \vdash \instr{push} \ \mbox{ \rm i}  :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                  \stateTrans  
-						  \config{\heap}{\counter + 1}{\stackOnly' }
+						  \config{\heap}{\counterOnly + 1}{\stackOnly' }
 						  {\locVarOnly}
-						  {\pc'}  }  $$
+						  {\pc'}  } } $$
      
       \item \instr{pop} 
-       $$\frac{ } 
-	        {\method \vdash \instr{pop}   :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+       $${\scriptsize \frac{ } 
+	        {\method \vdash \instr{pop}   :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                  \stateTrans  
-						  \config{\heap}{\counter + 1}{\stackOnly}
+						  \config{\heap}{\counterOnly + 1}{\stackOnly}
 						  {\locVarOnly}
-						  {\pc + 1}  }  $$
+						  {\pc + 1}  } } $$
     \end{enumerate}
 
 
@@ -324,112 +242,111 @@ Finally, we give a big step operational semantics of the bytecode language in te
      \begin{enumerate}
 
       \item \new \texttt{Cl}
-            $$ \frac{\begin{array}{l}
-			(\heap',\Ref{\clazz}) = \newRef{\heap}{\clazz} \\ 
-			\counter' = \counter + 1\\
-			\stackOnly' = \update{\stackOnly}{\counter +  1}{ \Ref{\clazz}  } \\
+            $${\scriptsize \frac{\begin{array}{l}
+			(\heap',\referenceOnly) = \newRef{\heap}{\clazz} \\ 
+			\counterOnly' = \counterOnly + 1\\
+			\stackOnly' = \update{\stackOnly}{\counterOnly +  1}{ \referenceOnly  } \\
 			\pc' = \pc + 1
 	          \end{array}}
-              {\method \vdash \new \ \clazz :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+              {\method \vdash \new \ \clazz :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		               \stateTrans  
 			       \config{\heap'}
-			              {\counter'}
+			              {\counterOnly'}
 				      {\stackOnly' }
 				      {\locVarOnly}
-				      {\pc'}  }  $$
+				      {\pc'}  } } $$
 	      
-	      A new fresh location $\Ref{\clazz}$ is added in the memory heap, the  
-	      stack counter \topStack is incremented.
-	      and $\Ref{\clazz}$ is put on the stack top \stack{\topStack + 1}. 
+	      A new fresh location $\referenceOnly$ is added in the memory heap \heap \ of type \\
+               \clazz, the  stack counter \counterOnly is incremented.
+	      The reference $\referenceOnly$ is put on the stack top \stackOnlyParam{\counterOnly + 1}. 
 	
 
 
 	\item \putfield  
            
-	   $$\frac{ \begin{array}{l}
-	               \stack{\topStack - 1} \neq \Mynull \Rightarrow  \\
-		       \\
-                       \left\{\begin{array}{l}
-		              \heap' = \update{\heap}{\fieldd }{\update{\heap(\fieldd)}{\stack{\topStack}}{\stack{\topStack - 2}}} \\
-			      \counter' = \counter - 2 \\
+	   $${\scriptsize \frac{ \begin{array}{l}
+	               \stackOnlyParam{\counterOnly - 1} \neq \Mynull   \\
+                       %\left\{\begin{array}{l}
+		              \heap' = \update{\heap}{\fieldd }{\update{\fieldd}{\stackOnlyParam{\counterOnly - 1}}{\stackOnlyParam{\counterOnly }}} \\
+			      \counterOnly' = \counterOnly - 2 \\
 			      \pc' = \pc + 1
-	               \end{array}\right. \\
+	               %\end{array}\right. \\
 		      \end{array}   
 		   }
-                   { \methodd \vdash  \putfield \ \fieldd:  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+                   { \methodd \vdash  \putfield \ \fieldd:  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
                                                \stateTrans  
-					       \config{\heap'}{\counter'}{\stackOnly}{\locVarOnly}{\pc'} } $$   
+					       \config{\heap'}{\counterOnly'}{\stackOnly}{\locVarOnly}{\pc'} } } $$   
 
 		     
 	    
-           $$\frac{\begin{array}{l}
-	                 \stack{\topStack - 1} == \Mynull  \Rightarrow \\
-		         \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc, \methodd.\excHandlerTable ) =  \configVar			                  \end{array}
+           $${\scriptsize \frac{ \begin{array}{l}
+	                 \stackOnlyParam{\counterOnly - 1} = \Mynull   \\
+		         \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc, \methodd.\excHandlerTable ) =  \configVar			                  \end{array}
                       }
-		      {\methodd \vdash  \putfield \ \fieldd:  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		      {\methodd \vdash  \putfield \ \fieldd:  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 					          \stateTrans  
-						  \configVar } $$
+						  \configVar }} $$
 						        
-        The top value contained on the stack top \stack{\counter} and the reference contained in \stack{\counter - 1} 
-	are popped from the operand stack. If \stack{\counter - 1} is not \Mynull \footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
-	for instance, \stack{\counter - 1} contains certainly a reference        of type \texttt{C}  } , the value of its field 
+        The top value contained on the stack top \stackOnlyParam{\counterOnly} and the reference contained in \stackOnlyParam{\counterOnly - 1} 
+	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull \footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
+	for instance, \stackOnlyParam{\counterOnly - 1} contains certainly a reference        of type \texttt{C}  } , the value of its field 
 	\texttt{f} for the object  is updated 
-	with the value\stack{\counter} and the counter \counter is decremented.
-	If the reference in \stack{\counter - 1} is \Mynull then a \NullPointerExc~ is thrown
+	with the value\stackOnlyParam{\counterOnly} and the counter \counterOnly is decremented.
+	If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull then a \NullPointerExc~ is thrown
           
         \item \getfield  
         	  
-         $$ \frac{ \begin{array}{l}
-                               \stack{\topStack} \neq \Mynull \Rightarrow \\
-	                       \left\{\begin{array}{l}             
-			             \stackOnly' =  \update{\stackOnly}{\counter}{ \fieldd(\stack{\topStack} ) }\\
+         $$ {\scriptsize \frac{ \begin{array}{l}
+                               \stackOnlyParam{\counterOnly} \neq \Mynull \\
+	                       %\left\{\begin{array}{l}             
+			             \stackOnly' =  \update{\stackOnly}{\counterOnly}{ \heap(\fieldd)(\stackOnlyParam{\counterOnly} ) }\\
 			             \pc' = \pc + 1
-	                       \end{array}\right.
+	                       %\end{array}\right.
 	             \end{array}
                  }   
-		 {\methodd \vdash  \getfield \ \field{c}{f}  :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		 {\methodd \vdash  \getfield \ \fieldd  :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \config{\heap}{\counter}{\stackOnly'}{\locVarOnly}{\pc'}} $$
+						 \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}} } $$
 			
 
 
-        $$  \frac{ \begin{array}{l}
-	                      \stack{\topStack} == \Mynull \Rightarrow \\
-			       \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc, \methodd.\excHandlerTable ) =  \configVar                              \end{array}}
-		  {\methodd \vdash  \getfield \ \field{c}{f}  :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+        $${\scriptsize  \frac{ \begin{array}{l}
+	                      \stackOnlyParam{\counterOnly} = \Mynull \\
+			       \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc, \methodd.\excHandlerTable ) =  \configVar                              \end{array}}
+		  {\methodd \vdash  \getfield \ \fieldd  :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \configVar} $$
+						 \configVar} }$$
 	 
-	The top stack element \stack{\topStack}  is popped from the stack. If \stack{\topStack} is not \Mynull the value of the field \texttt{f}
-	in the object referenced by the reference contained in \stack{\topStack}, is fetched and pushed onto the operand stack \stack{\topStack}.
-        If \stack{\topStack} is \Mynull then a \texttt{NullPointerExc} is thrown, i.e. the stack counter is set to 0, a new object of type
+	The top stack element \stackOnlyParam{\counterOnly}  is popped from the stack. If \stackOnlyParam{\counterOnly} is not \Mynull the value of the field \texttt{f}
+	in the object referenced by the reference contained in \stackOnlyParam{\counterOnly}, is fetched and pushed onto the operand stack \stackOnlyParam{\counterOnly}.
+        If \stackOnlyParam{\counterOnly} is \Mynull then a \texttt{NullPointerExc} is thrown, i.e. the stack counter is set to 0, a new object of type
 	\texttt{NullPointerExc} is created in the memory heap store \heap and a reference to it $\Ref{NullPointerExc}$ is pushed onto the operand stack					 
 			
         \item  \newarray  \ \anyType \\
-	        $$ \frac{\begin{array}{l}
-		               \stack{\counter} \geq 0 \Rightarrow \\
-			       \left\{\begin{array}{l}
-			                    (\heap',\RefArr{type} ) = \newArrRef{\heap}{type}{\stack{\counter}}\\
-					    \counter' = \counter + 1\\
-					    \stackOnly' = \update{\stackOnly}{\counter +  1}{\RefArr{type}} \\
+	        $${\scriptsize \frac{\begin{array}{l}
+		               \stackOnlyParam{\counterOnly} \geq 0  \\
+			        %\left\{\begin{array}{l}
+			                    (\heap',\referenceOnly ) = \newArrRef{\heap}{type}{\stackOnlyParam{\counterOnly}}\\
+					    \counterOnly' = \counterOnly + 1\\
+					    \stackOnly' = \update{\stackOnly}{\counterOnly +  1}{\referenceOnly } \\
 					    \pc' = \pc + 1
-			               \end{array}\right.
+			               % \end{array}\right.
 			       \end{array}  }
-                {\methodd \vdash  \newarray \ \anyType :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+                {\methodd \vdash  \newarray \ \anyType :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		               \stateTrans  
 			       \config{\heap'}
-			              {\counter'}
+			              {\counterOnly'}
 				      {\stackOnly' }
 				      {\locVarOnly}
-				      {\pc'}  }  $$
+				      {\pc'}  } } $$
 
 	  
-	        $$ \frac{\begin{array}{l}
-		               \stack{\counter} < 0 \Rightarrow \\
-			       \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \NegativeArraySizeExc,\methodd.\excHandlerTable ) =  \configVar                	        \end{array}  }
-                {\methodd \vdash  \newarray \ \anyType :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	        $${\scriptsize \frac{\begin{array}{l}
+		               \stackOnlyParam{\counterOnly} < 0 \\
+			       \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NegativeArraySizeExc,\methodd.\excHandlerTable ) =  \configVar                	        \end{array}  }
+                {\methodd \vdash  \newarray \ \anyType :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                      \stateTrans  
-					      \configVar }  $$
+					      \configVar } } $$
 	  
 	A new array whose components are of type \anyType \ and whose length is the stack top value is allocated on the heap.
 	The array elements are initialised to the default value of  \anyType \ and a reference to it is put on the stack top. 
@@ -440,44 +357,43 @@ Finally, we give a big step operational semantics of the bytecode language in te
 
 
       
-	 $$ \frac{ \begin{array}{l} 
-	             \stack{\counter - 2} \neq \Mynull \wedge \\
-		     0 \leq \stack{\counter - 1  } < \length( \stack{\counter - 2} ) \Rightarrow \\
-		     \left\{\begin{array}{l}
-		                    \heap' = \update{\heap}{( \stack{\counter - 2},\stack{\counter - 1} ) }{ \stack{\counter}} \\
-			            \counter' = \counter - 3 \\
-				    \pc'  =  \pc + 1
-		     \end{array}\right.
+	 $${\scriptsize \frac{ \begin{array}{l} 
+	             \stackOnlyParam{\counterOnly - 2} \neq \Mynull  \\
+		     0 \leq \stackOnlyParam{\counterOnly - 1  } < \length( \stackOnlyParam{\counterOnly - 2} )   \\
+                     \heap' = \update{\heap}{( \stackOnlyParam{\counterOnly - 2},\stackOnlyParam{\counterOnly - 1} ) }{ \stackOnlyParam{\counterOnly}} \\
+		     \counterOnly' = \counterOnly - 3 \\
+		     \pc'  =  \pc + 1
 		\end{array}}
-		{\methodd \vdash  \arrstore \ :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		{\methodd \vdash  \arrstore \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \config{\heap'}{\counter'}{\stackOnly}{\locVarOnly}{\pc'}} $$
+						 \config{\heap'}{\counterOnly'}{\stackOnly}{\locVarOnly}{\pc'}} } $$
 
 
-       $$\frac{ \begin{array}{l}
-	                      \stack{\topStack - 1} == \Mynull  \Rightarrow \\
-			      \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} , \NullPointerExc,\methodd.\excHandlerTable ) =  \configVar  \\  
+       $${\scriptsize \frac{ \begin{array}{l}
+	                      \stackOnlyParam{\counterOnly - 2} = \Mynull \\
+			      \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} , \NullPointerExc,\methodd.\excHandlerTable ) =  \configVar  \\  
 		   \end{array}}
-		 {\methodd \vdash  \arrstore \ :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		 {\methodd \vdash  \arrstore \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } $$ 
-        $$\frac{ \begin{array}{l}
-			  	( \stack{\counter - 1} < 0 	\vee  \\
-			       \stack{\counter - 1} \geq \length (  \stack{\counter - 2 }  ) ) \Rightarrow \\
-			        \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \ArrIndexOutOfBoundExc ,\methodd.\excHandlerTable ) =  \configVar 
+						 \configVar } } $$ 
+        $${\scriptsize \frac{ \begin{array}{l} 
+                                \stackOnlyParam{\counterOnly - 2} \neq \Mynull  \\
+			  	( \stackOnlyParam{\counterOnly - 1} < 0 	\vee  \\
+			       \stackOnlyParam{\counterOnly - 1} \geq \length (  \stackOnlyParam{\counterOnly - 2 }  ) ) \Rightarrow \\
+			        \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \ArrIndexOutOfBoundExc ,\methodd.\excHandlerTable ) =  \configVar 
 		    \end{array}}
-		 {\methodd \vdash  \arrstore \ :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		 {\methodd \vdash  \arrstore \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } $$ 
-	%Stores a value \stack{\counter} \ at index \stack{\counter - 1} \ in  the array component \stack{\counter - 2}. 
-	The three top stack elements \stack{\counter}, \stack{\counter - 1} \  and \stack{\counter - 2} 
-	are popped from the operand stack. The type value contained in \stack{\counter} must be assignment 
+						 \configVar } } $$ 
+	%Stores a value \stackOnlyParam{\counterOnly} \ at index \stackOnlyParam{\counterOnly - 1} \ in  the array component \stackOnlyParam{\counterOnly - 2}. 
+	The three top stack elements \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1} \  and \stackOnlyParam{\counterOnly - 2} 
+	are popped from the operand stack. The type value contained in \stackOnlyParam{\counterOnly} must be assignment 
 	compatible\todo{say what assignment compatible is} with the type
-	of the elements of the array reference contained in \stack{\counter - 2},  \stack{\counter - 1} \  must be of type int. 
+	of the elements of the array reference contained in \stackOnlyParam{\counterOnly - 2},  \stackOnlyParam{\counterOnly - 1} \  must be of type int. 
 
-	The value \stack{\counter} \ is stored in the component at index \stack{\counter - 1} \  of the array  in  \stack{\counter - 2}.
-	If \stack{\counter - 2} \ is \Mynull a \NullPointerExc is thrown. If \stack{\counter - 1}  \  is not in the bounds of the array 
-	in \stack{\counter - 2}  \ an \ArrIndexOutOfBoundExc exception is thrown. If \stack{\counter} \ is not assignment 
+	The value \stackOnlyParam{\counterOnly} \ is stored in the component at index \stackOnlyParam{\counterOnly - 1} \  of the array  in  \stackOnlyParam{\counterOnly - 2}.
+	If \stackOnlyParam{\counterOnly - 2} \ is \Mynull a \NullPointerExc is thrown. If \stackOnlyParam{\counterOnly - 1}  \  is not in the bounds of the array 
+	in \stackOnlyParam{\counterOnly - 2}  \ an \ArrIndexOutOfBoundExc exception is thrown. If \stackOnlyParam{\counterOnly} \ is not assignment 
 	compatible with the type of the components of the array, then \ArrStoreExc  is thrown 
 
 					 						 
@@ -486,155 +402,150 @@ Finally, we give a big step operational semantics of the bytecode language in te
 
 	\item \arrload       
 	      
-	     $$ \frac{ \begin{array}{l}
-	                      \left.\begin{array}{l}
-                                           \stack{\topStack - 1} \neq \Mynull  \wedge \\
-					   \stack{\topStack} \geq 0 \wedge  \\
-					   \stack{\topStack} < \length (  \stack{\topStack - 1}  )
-			            \end{array}\right\}   \Rightarrow \\
-			       \\
-			       \left\{\begin{array}{l}
-			                     \counter' = \counter - 1\\
-					     \stackOnly' = \update{\stackOnly}{\counter - 1} { \arrayAccess{ \stack{ \topStack -1 }}{\stack{ \topStack} } } \\
+	     $${\scriptsize \frac{ \begin{array}{l}  \stackOnlyParam{\counterOnly - 1} \neq \Mynull  \ \\
+					 \stackOnlyParam{\counterOnly} \geq 0   \\
+					 \stackOnlyParam{\counterOnly} < \length (  \stackOnlyParam{\counterOnly - 1}  )  \\
+			       			       %\left\{\begin{array}{l}
+			                     \counterOnly' = \counterOnly - 1\\
+					     \stackOnly' = \update{\stackOnly}{\counterOnly - 1} {  \heap(\stackOnlyParam{ \counterOnly -1 }{\stackOnlyParam{ \counterOnly} } ) } \\
 					     \pc'  =  \pc + 1
-			              \end{array} \right.
+			        %      \end{array} \right.
 			 \end{array}}
-			  {\methodd \vdash  \arrload \ :       \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+			  {\methodd \vdash  \arrload \ :       \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \config{\heap}{\counter'}{\stackOnly'}{\locVarOnly}{\pc'}} $$
+						 \config{\heap}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'}} } $$
 						 
 
-	  $$ \frac{ \begin{array}{l}
-	                      \stack{\topStack - 1} == \Mynull  \Rightarrow \\
-			      \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} , \NullPointerExc,\methodd.\excHandlerTable ) =  \configVar  \\  
+	  $${\scriptsize \frac{ \begin{array}{l}
+	                      \stackOnlyParam{\counterOnly - 1} = \Mynull   \\
+			      \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} , \NullPointerExc,\methodd.\excHandlerTable ) =  \configVar  \\  
 		 \end{array}}
-		 {\methodd \vdash  \arrload \ :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		 {\methodd \vdash  \arrload \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } $$
+						 \configVar } } $$
 
-                $$   \frac{ \begin{array}{l}   
-			      \stack{\topStack - 1} \neq \Mynull  \wedge\\
-			      ( \stack{\counter} < 0 	\vee  \\
-			       \stack{\counter} \geq \length (  \stack{\counter - 1}  ) ) \Rightarrow \\
-			        \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \ArrIndexOutOfBoundExc ,\methodd.\excHandlerTable ) =  \configVar  
+                $$  {\scriptsize \frac{ \begin{array}{l}   
+			      \stackOnlyParam{\counterOnly - 1} \neq \Mynull  \\
+			      ( \stackOnlyParam{\counterOnly} < 0 	\vee  \\
+			       \stackOnlyParam{\counterOnly} \geq \length (  \stackOnlyParam{\counterOnly - 1}  ) )   \\
+			        \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \ArrIndexOutOfBoundExc ,\methodd.\excHandlerTable ) =  \configVar  
 		    \end{array}}
-		 {\methodd \vdash  \arrload \ :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		 {\methodd \vdash  \arrload \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } $$					 						 
+						 \configVar } } $$					 						 
 			
 	       
 	 
 
-               Loads a value from an array. The top stack element \stack{\topStack} and the element below it \stack{\topStack -1 }
-	       are popped from the operand stack.  \stack{\topStack} must be of type \Myint. The value in \stack{\topStack -1 } must be 
+               Loads a value from an array. The top stack element \stackOnlyParam{\counterOnly} and the element below it \stackOnlyParam{\counterOnly -1 }
+	       are popped from the operand stack.  \stackOnlyParam{\counterOnly} must be of type \Myint. The value in \stackOnlyParam{\counterOnly -1 } must be 
                of type \reff \ whose components are of type \textrm{type}. The value in the component of the array  \texttt{arrRef} 
 	       at index \texttt{ind} is retrieved and pushed onto the operand stack.
-	       If \stack{\topStack -1 } contains the value \Mynull a \NullPointerExc is thrown. If \stack{\topStack}  is
-	       not in the bounds of the array object referenced by \stack{\topStack -1 }  a \ArrIndexOutOfBoundExc is thrown
+	       If \stackOnlyParam{\counterOnly -1 } contains the value \Mynull a \NullPointerExc is thrown. If \stackOnlyParam{\counterOnly}  is
+	       not in the bounds of the array object referenced by \stackOnlyParam{\counterOnly -1 }  a \ArrIndexOutOfBoundExc is thrown
 
 
     \item \arraylength
-          $$\frac{ \begin{array}{l}
-			   \stack{ \counter } \neq \Mynull \Rightarrow \\
-			    \left\{\begin{array}{l}
+          $${\scriptsize \frac{ \begin{array}{l}
+			   \stackOnlyParam{ \counterOnly } \neq \Mynull  \\
+			    %\left\{\begin{array}{l}
 			          \heap' = \heap \\ 
-				  \counter'= \counter \\
-				  \stackOnly'= \update{\stackOnly}{\counter}{ \length( {\stack{\counter} } )  } \\ 
+				  \counterOnly'= \counterOnly \\
+				  \stackOnly'= \update{\stackOnly}{\counterOnly}{ \heap(\length)( {\stackOnlyParam{\counterOnly} } )  } \\ 
 				  \pc' = \pc+ 1
-                           \end{array}\right.      
+                          % \end{array}\right.      
 		    \end{array}
 	        }
-	        {\methodd \vdash \arraylength :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	        {\methodd \vdash \arraylength :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                  \stateTrans  
-				  \config{\heap'}{\counter'}{\stackOnly'}{\locVarOnly}{\pc'} }  $$
+				  \config{\heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'} } } $$
 		     
 	 
 
-	  $$ 	 \frac{ \begin{array}{l}
-			       \stack{ \counter } == \Mynull \Rightarrow  \\
-			        \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc ,\methodd.\excHandlerTable ) =  \configVar  
+	  $$ {\scriptsize	 \frac{ \begin{array}{l}
+			       \stackOnlyParam{ \counterOnly } = \Mynull    \\
+			        \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc ,\methodd.\excHandlerTable ) =  \configVar  
 			\end{array}
 		      }
-		      {\methodd \vdash \arraylength : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		      {\methodd \vdash \arraylength : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                      \stateTrans  
-						      \configVar}  $$
+						      \configVar} } $$
 	The stack top element is popped from the stack. It must be a 
-	reference that points to an array. If the stack top element \stack{\counter} is not \Mynull  the length of the array  
-	\length{\stack{\counter} } is fetched and pushed on the stack.
-	If the stack top element \stack{\counter} is \Mynull then a \NullPointerExc is thrown.
+	reference that points to an array. If the stack top element \stackOnlyParam{\counterOnly} is not \Mynull  the length of the array  
+	\length{\stackOnlyParam{\counterOnly} } is fetched and pushed on the stack.
+	If the stack top element \stackOnlyParam{\counterOnly} is \Mynull then a \NullPointerExc is thrown.
 
 
 	\item \instanceof
-	      $$ \frac{ \begin{array}{l}
-                            \subtype{\stack{\counter}}{\clazz} \Rightarrow \\	
-		            \begin{array}{l}    
-			          \stackOnly' = \update{\stackOnly}{\counter}{1}   \\
-                 		  \pc' :=  \pc +1 
-		            \end{array}
+	      $${\scriptsize \frac{ \begin{array}{l}
+                            \subtype{\heap.\heapTypeOf(\stackOnlyParam{\counterOnly})}{\clazz}  \\	
+		           % \begin{array}{l}    
+			          \stackOnly' = \update{\stackOnly}{\counterOnly}{1}   \\
+                 		  \pc' =  \pc +1 
+		           % \end{array}
 			\end{array} 
 	              }
-                      {\instanceof  \ \clazz : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+                      {\instanceof  \ \clazz : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                   \stateTrans  
-						   \config{\heap}{\counter}{\stackOnly'}{\locVarOnly}{\pc'}}  $$
+						   \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}} } $$
               
 	      $$
-		\frac{ \begin{array}{l}
-                             not( \subtype{\stack{\counter}}{\clazz} \vee \stack{\counter} == \Mynull  \Rightarrow  \\
-			         \begin{array}{l}
-			                \stackOnly' = \update{\stackOnly}{\counter}{0}   \\
-					\pc' :=  \pc +1 
-			     \end{array}
+	{\scriptsize	\frac{ \begin{array}{l}
+                             not( \subtype{ \heap.\heapTypeOf( \stackOnlyParam{\counterOnly} ) }{\clazz}) \vee \stackOnlyParam{\counterOnly} = \Mynull  \\
+			       %   \begin{array}{l}
+			                \stackOnly' = \update{\stackOnly}{\counterOnly}{0}   \\
+					\pc' =  \pc +1 
+			  %    \end{array}
 		        \end{array} }
-		     {\methodd \vdash \instanceof  \ \tt{C} : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		     {\methodd \vdash \instanceof  \ \tt{C} : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                   \stateTrans  
-						   \config{\heap}{\counter}{\stackOnly'}{\locVarOnly}{\pc'}}  $$
+						   \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}}}  $$
 		
 	      
 	      The stack top is popped from the stack. If it is of subtype \clazz or
 	      is \Mynull, then the   \texttt{1} is pushed on the stack, otherwise \texttt{0}. 
          
        	\item \checkcast
-          $$ \frac{\begin{array}{l}
-		               \subtype{\stack{\counter}}{\texttt{C}}  \vee \stack{\counter} == \Mynull  \Rightarrow \\
+          $${\scriptsize \frac{\begin{array}{l}
+		               \subtype{\heap.\heapTypeOf( \stackOnlyParam{\counterOnly})}{\clazz }   \vee \stackOnlyParam{\counterOnly} = \Mynull  \\
 			      \pc' =  \pc  +1 
 		 \end{array}}
-		  {\methodd \vdash \checkcast \ \clazz :     \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+		  {\methodd \vdash \checkcast \ \clazz :     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                             \stateTrans  
-					     \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc'}} 
+					     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc'}} }
 	  $$	      
-	  $$\frac{\begin{array}{l}	
-			       not(\subtype{\stack{\counter}}{\clazz} \Rightarrow \\
-			       \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \ClassCastExc,\methodd.\excHandlerTable ) =  \configVar                                \end{array}}
-		  {\methodd \vdash \checkcast \ \clazz :     \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	  $${\scriptsize \frac{\begin{array}{l}	
+			       not(\subtype{\heap.\heapTypeOf(  \stackOnlyParam{\counterOnly} ) }{\clazz} )  \\
+			       \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \ClassCastExc,\methodd.\excHandlerTable ) =  \configVar                                              \end{array}}
+		  {\methodd \vdash \checkcast \ \clazz :     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                             \stateTrans  
-					     \configVar} 
-	  $$
+					     \configVar} }  $$
 
 
 
-	   The stack top is popped from the stack. If it is not of subtype \texttt{C} an exception of type \ClassCastExc is thrown.
+	   The stack top is popped from the stack. If it is not of subtype \clazz \ an exception of type \ClassCastExc is thrown.
 
 	 
    \end{enumerate}
 
    \item Throw exception instruction. \athrow
-            $$ \frac{ \begin{array}{l}	 
-		             \stack{\counter} \neq \Mynull \Rightarrow\\
-			     \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc},typeof( \stack{\counter} )  ,\methodd.\excHandlerTable ) =  \configVar
+            $${\scriptsize \frac{ \begin{array}{l}	 
+		             \stackOnlyParam{\counterOnly} \neq \Mynull   \\
+			     \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},typeof( \stackOnlyParam{\counterOnly} )  ,\methodd.\excHandlerTable ) =  \configVar
 		    \end{array}	     
 	      }
-              {\methodd \vdash \athrow :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+              {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                         \stateTrans  
-					 \configVar}$$
+					 \configVar} } $$
 
-	     $$ \frac{ \begin{array}{l}	 
-	                     \stack{\counter}  == \Mynull \Rightarrow \\
-			     \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc  ,\methodd.\excHandlerTable ) =  \configVar
+	     $${\scriptsize \frac{ \begin{array}{l}	 
+	                     \stackOnlyParam{\counterOnly}  = \Mynull   \\
+			     \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc  ,\methodd.\excHandlerTable ) =  \configVar
       		    \end{array}	     
 	      }
-              {\methodd \vdash \athrow :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+              {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                         \stateTrans  
-					 \configFinalExc{\heap' }{\Exc}}$$ 				 
+					  \configVar} } $$ 				 
 
            The stack top element  must be a reference of an object of type \\ \Throwable. 
 	  If there is a handler that protects this bytecode instruction from the exception thrown, the control is transfered
@@ -645,65 +556,66 @@ Finally, we give a big step operational semantics of the bytecode language in te
 
  \item Method Invokation. \invoke \footnote{ only the case when  the invoked method returns a value}
       
-         $$ \frac{\begin{array}{l}
+         $$ {\scriptsize \frac{\begin{array}{l} \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
 	                         meth : %\begin{array}{l} 
 			                        \config{\heap}       
                                                        {0}
 						       {\newStack }
-                                                       {\lbrack \stack{ \counter - meth.\numArgs },\ldots ,\stack{ \counter} \rbrack }
+                                                       {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTrans 
-						\configFinalNorm{\heap'}{\Res}\\
+						\configFinalNorm{\heap'}{\locVarOnly'}{\Res}\\
 				                %\end{array}  
-                                                \Rightarrow  \\
+                                                   \\
 			  			 \\
 			\left\{\begin{array}{l}
-			       \counter' = \counter - \methodd.\numArgs + 1 \\
-			       \stackOnly' = \update{\stackOnly}{\counter'}{\Res} \\
+			       \counterOnly' = \counterOnly - \methodd.\numArgs + 1 \\
+			       \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
 			       \pc' = \pc + 1
 			\end{array}\right. 
 	         \end{array} 	      
 	         }	         
-	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\config{\heap' }{\counter'}{\stackOnly' }{\locVarOnly}{\pc'}}$$
+					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} } $$
 	  
-	  $$ \frac{\begin{array}{l}
+	  $${\scriptsize \frac{\begin{array}{l}
+	                        \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
 	                         meth: %\begin{array}{l} 
 			                        \config{\heap}       
                                                        {0}
 						       {\newStack }
-                                                       {\lbrack \stack{ \counter - meth.\numArgs },\ldots ,\stack{ \counter} \rbrack }
+                                                       {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTrans
-						       \configFinalExc{\heap'}{\Exc}\\
+						       \configFinalExc{\heap'}{\locVarOnly'}{\Exc}\\
 				           %\end{array} \\
 					   \Rightarrow \\
-					  \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc}, typeof(\Exc)  ,\methodd.\excHandlerTable ) =  \configVar
+					  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, typeof(\Exc)  ,\methodd.\excHandlerTable ) =  \configVar
 	         \end{array} 	      
 	         }	         
-	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\configVar}$$
+					\configVar} } $$
 
 
-	  $$ \frac{\begin{array}{l}
-	                         \stack{ \counter - meth.\numArgs } == \Mynull \Rightarrow \\ 
-				 \getStateAfterExc( \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc},\NullPointerExc,\methodd.\excHandlerTable ) =  \configVar
+	  $${\scriptsize \frac{\begin{array}{l}
+	                         \stackOnlyParam{ \counterOnly - meth.\numArgs } = \Mynull   \\ 
+				 \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},\NullPointerExc,\methodd.\excHandlerTable ) =  \configVar
 	         \end{array} 	      
 	         }	         
-	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\configVar}$$					
+					\configVar} } $$					
 	  
 
 	 The first top $meth.\numArgs$ \ elements in the operand stack \stackOnly \ are popped from the operand stack. If 
-         \stack{ \counter - meth.\numArgs } is not \Mynull, the invoked method is executed on the object   \stack{ \counter - meth.\numArgs } 
+         \stackOnlyParam{ \counterOnly - meth.\numArgs } is not \Mynull, the invoked method is executed on the object   \stackOnlyParam{ \counterOnly - meth.\numArgs } 
 	 and where the first \numArgs + 1 elements of the list of its of local variables is initialised with \\
-         \stack{ \counter - meth.\numArgs } \ldots \stack{\counter}. In case that the execution of method $meth$
+         \stackOnlyParam{ \counterOnly - meth.\numArgs } \ldots \stackOnlyParam{\counterOnly}. In case that the execution of method $meth$
 	 terminates normally, the return value \Res \  of its execution is stored on the operand stack of the invoker. 
 	 If the execution of of method $meth$ terminates because of an exception \Exc, then the exception handler of the invoker is searched for
-	 a handler that can handle the exception. In case the object  \stack{ \counter - meth.\numArgs } \  on which the  method $meth$ must be 
+	 a handler that can handle the exception. In case the object  \stackOnlyParam{ \counterOnly - meth.\numArgs } \  on which the  method $meth$ must be 
 	 called is \Mynull, a \NullPointerExc is thrown.  			
 
 
@@ -713,19 +625,19 @@ Finally, we give a big step operational semantics of the bytecode language in te
 %    \begin{enumerate}
 %          \item \jsr
 % 	         $$\frac{ \begin{array}{l}
-% 		                 \pc' :=  \pc  + \it{ind} \\
+% 		                 \pc' =  \pc  + \it{ind} \\
 % 				 pushJsr(\pc + 1)
 %                            \end{array}  
 % 		        } 
-% 		     {\jsr \ \it{ind} : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+% 		     {\jsr \ \it{ind} : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 % 		                        \stateTrans  
-% 					\config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc'}}$$
+% 					\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc'}}$$
 % 	 \item  \ret
-% 	        $$\frac{  \pc' :=  getJsr() 
+% 	        $$\frac{  \pc' =  getJsr() 
 % 		          } 
-% 			  {\ret : \config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc} 
+% 			  {\ret : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 % 		                        \stateTrans  
-% 					\config{\heap}{\counter}{\stackOnly}{\locVarOnly}{\pc'}}$$
+% 					\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc'}}$$
 %    \end{enumerate}
 
 \end{itemize}

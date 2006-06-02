@@ -1,0 +1,75 @@
+\newtheorem{StateTransition}{Definition}[subsection]
+\newtheorem{transClosStateTrans}[StateTransition]{Definition}
+
+ The purpose of this section is to introduce the fundamental concepts of the
+ present thesis. In particular, we present a bytecode language 
+ and its operational semantics. Those concepts will be used later in Chapter \ref{wpGeneral}
+ for the definition of the verification
+ procedure as well as for establishing 
+ its correctnes w.r.t. the operational semantics
+ given in this section. As our verification procedure is tailored to Java bytecode 
+ the bytecode language introduced hereafter is close to the Java Virtual Machine 
+ language \cite{VMSpec}(JVM for short). However, it abstracts from some of the JVM language
+ features while supporting others. Thus, we can concentrate on the part of the JVM which we consider
+ the most typical. We now look closer at what are the characteristic of our bytecode language. 
+
+\paragraph{The features supported}  by our bytecode language are 
+\begin{itemize} 
+   \item  arithmetic operations like multiplication, division, addition and substruction 
+   \item  stack manipulation. Similarly to the JVM  our abstract machine is stack based, i.e. instructions
+          get their arguments from the operand stack and push their result on the  operand stack
+   \item  method invokation. Our bytecode language is modular and thus, methods are the basic execution units.
+          In our formalization methods always return a value
+   \item  object manipulation and creation. We support field access and update as well as object creation 
+   \item  exception throwing and handling. Our bytecode language supports exceptions which are thrown if the program execution 
+          does not respect the language semantics like for example, dereferencing a null object reference                 
+
+   \item  classes and class inheritance. Like in the JVM language, our bytecode language supports  a tree class hierarchy in which every class 
+          has a super class except the class \texttt{Object} 
+   \item  basic types. The unique basic type that we support is the integer type. This is not so unrealistic as the JVM supports only few instructions
+          for dealing with the other integral types, like byte, short and long. On the other hand, supporting floating point numbers is not in the scope
+	  of the current thesis   
+\end{itemize} 
+ 
+% what is not supported?
+
+
+ Our bytecode language omits some of the features of Java, in order to concentrate on the features listed above.
+\paragraph{The features not supported}  by our bytecode language are 
+\begin{itemize} 
+   \item void methods, still this is not a major restriction for our bytecode language  as it can be extended easily to support
+         this feature
+   \item static fields and methods. This kind of data is shared between all the instances of the class
+         where the data is declared. This restriction can be overcome easily by    
+   \item static initialization. \todo{we do not know how to verify programs in presence of static initialization }
+   \item subroutines. The basic reason that our bytecode language does not support subroutines is that 
+         in the implementation of our bytecode verification condition generator we inline them and thus, there is no need
+	 of supporting them in the language.
+   \item interface types   
+   \item floating point arithmetic
+ \end{itemize}
+
+ 
+
+ %JVM operational semantics 
+ In what follows, we give a big step operational semantics of the bytecode language whose major difference with most of the formalizations
+ of the JVM is that it abstracts from the method frame stack. 
+ JVM is stack based and when a new method is called a new method frame is pushed on the frame stack and the execution continues on this new frame.
+ A method frame contains the method operand stack, the array of registers and the constant pool of the class the method belongs to.
+ When a method terminates its execution normally, the result, if any, is popped from the method operand stack, the method frame is
+ popped from the frame stack and the method result (if any) is pushed on the operand stack
+ of its caller. If the method terminates with an exception, it does not return any result and the exception object is propagated back to its callers.
+ This is different from most of the existing formalization of the JVM (or JVM like languages), and is due to its big step nature. However, this semantics
+ is sufficient for our purposes which are to prove the correctness of our verification calculus.  
+
+
+  
+ The rest of this chapter is organized as follows:
+ subsection \ref{relWork} is an overview of existing formalisations of the JVM semantics,
+ subsection \ref{notation} gives some particular notations that will be used from now on along the thesis,
+ subsection \ref{clazz} introduces the structures classes, fields and methods  used in the virtual machine, 
+ subsection \ref{types} gives the type system which is supported by the bytecode language,
+ subsection \ref{def} introduces the notion of state configuration,
+ subsection \ref{heap} gives the modelisation of the memory heap,
+ subsection \ref{opSem} gives the operational semantics of our language.
+

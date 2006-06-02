@@ -1,0 +1,28 @@
+
+\newtheorem{assertion}{Definition}[subsection]
+
+\subsection{Assertions} \label{formulas}
+
+Our assertion language is the first order predicate logic.
+
+The set $\predicates$  is the set of relation symbols:
+ $$\predicates = \{  ==, \neq, \leq, \le, \geq, >, subtype  \}$$
+ 
+Formally the set of formulas is:
+\begin{assertion}[The grammar of the assertion language]
+The set of formulas is defined inductively as follows
+	$$
+	\begin{array}{ll}
+	\formulaBc & ::= \psi( \expression_1, \expression_2) , \psi \in \predicates  \\
+	  & \mid \true \\
+	  & \mid  \false \\	
+	  & \mid \formulaBc  \wedge  \formulaBc \\
+	  & \mid \formulaBc \vee  \formulaBc \\
+	  & \mid \formulaBc  \Rightarrow \formulaBc \\
+	  & \mid \forall x : T  . \ \formulaBc(x) , \ T :  \JavaType \\
+	  & \mid \exists x  : T . \ \formulaBc(x) , \ T :  \JavaType
+	\end{array}
+	$$ 
+\end{assertion}
+
+%\input prelim/interpretation.tex

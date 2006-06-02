@@ -1,14 +1,15 @@
 
- \subsection{Notation}\label{notation}
- In the following, if we have a function $f$ with  domain type  $A$ and range type $B$
- we note it with $f : A \rightarrow B$. If the function receives n arguments of type $A1 \ \ldots \ A2$ respectively
+ \section{Notation}\label{notation}
+ Here we give the semantics of several notations used in the rest of this chapter.
+ If we have a function $f$ with  domain type  $A$ and range type $B$
+ we note it with $f : A \rightarrow B$. If the function receives n arguments of type $A_1 \ \ldots \ A_n$ respectively
  and maps them to elements of type $B$
- we note the function signature with $f : A1 * ...*A2 \rightarrow B$.   
- Function updates of function $f$ with n arguments is denoted with $ \update{f}{x1 \ldots xn}{y} $ and the definition of such function is :
- $$  \update{f}{x1 \ldots xn }{y}(z1 \ldots zn) = 
+ we note the function signature with $f : A_1 * ...*A_n \rightarrow B$.   
+ Function updates of function $f$ with n arguments is denoted with $ \update{f}{x_1 \ldots x_n}{y} $ and the definition of such function is :
+ $$  \update{f}{x_1 \ldots x_n }{y}(z_1 \ldots z_n) = 
     \left\{\begin{array}{ll}
-                  y & if \ x1 = z1 \wedge ...\wedge xn = zn \\
-		  f(z1 \ldots zn ) & else
+                  y & if \ x_1 = z_1 \wedge ...\wedge x_n = z_n \\
+		  f(z_1 \ldots z_n ) & else
            \end{array}\right.$$
  
  The function \isInListOnly  takes as arguments any list and an object and  returns \textit{true} if the object is in the 
@@ -16,8 +17,9 @@
  $$ \isInListOnly : list \ A * A \rightarrow \mbox{ \rm \textit{bool}}$$
  
 
- For any type $A$, the function \addInListOnly takes as argument any list $l: list \ A$ and an object 
+The empty list is denoted with $\lbrack \ \rbrack$. For any type $A$, the function \addInListOnly takes as argument any list $l: list \ A$ and an object 
 $o: A$ and returns a list $l1 $ such that $l1.head = o \wedge l1.tail = l$: 
- $$
-  \addInListOnly : list \ \AllRefs * \AllRefs \rightarrow  list \ \AllRefs 
- $$
+ 
+$$ \addInListOnly : list \ A * A \rightarrow  list \ A $$
+
+The function $\textit{inDom}(f, e )$ determines if the element $e$ is in the domain of the function $f$.
