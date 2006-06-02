@@ -90,28 +90,11 @@ public class BCI2S extends BCConversionInstruction  {
 
 	public VCGPath wp(IJml2bConfiguration config, VCGPath vcs, ExsuresTable _exc) {
 		Formula  positive = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
-		BitExpression pMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFF), ExpressionConstants.BITWISEAND);
-	/*	VCGPath pCopy = (VCGPath) vcs.copy();*/
+		BitExpression pMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
 		vcs.substitute(new Stack(Expression.COUNTER), pMask);
 		Integer hPos = vcs.addHyp( getPosition(), positive);
 		//add the hypothesis for all goals
 		vcs.addHypsToVCs( hPos);
-		
-		
-		
-
-		/*
-		 * Formula neg = new Predicate2Ar(new Stack(Expression.COUNTER), new
-		 * NumberLiteral(0), PredicateSymbol.LESS); BitExpression nMask = new
-		 * BitExpression(new Stack(Expression.COUNTER), new
-		 * NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND); BitExpression
-		 * nExtend = new BitExpression(nMask, new NumberLiteral(0xFFFF0000),
-		 * ExpressionConstants.BITWISEOR); //Formula nCopy =
-		 * (Formula)_normal_Postcondition.copy(); vcs.substitute(new
-		 * Stack(Expression.COUNTER), nExtend); Integer hNeg = vcs.addHyp(
-		 * getPosition(), neg); vcs.addHypsToVCs( hNeg);
-		 */
-
 		return vcs;
 	}
 
