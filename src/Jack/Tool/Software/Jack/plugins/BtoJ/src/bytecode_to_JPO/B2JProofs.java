@@ -164,14 +164,18 @@ public class B2JProofs extends Proofs {
 
 		Vector decl = new Vector();
 		HashSet hs = new HashSet();
-		//System.out.println("\nlemme");
 		Enumeration e = f.getHypothesisAt(n).elements();
+		
+		// we first collect the hypothesis...
 		while (e.hasMoreElements()) {
 			Hypothesis h = (Hypothesis) e.nextElement();
-			//System.out.println(h);
+			if (h.getFormula().equals(Predicate0Ar.TRUE)) {
+				// we remove 'true' hypothesis, no?
+				continue;
+			}
+			
 			try {				
 				jml2b.formula.Formula form = toFormula(h.getFormula(), hs, decl);
-				//System.out.println(form.toLangDefault(0));
 				res.addLast(new VirtualFormula(VirtualFormula.LOCALES, form, new Vector()));
 				
 			} catch (Jml2bException je) {
@@ -214,16 +218,22 @@ public class B2JProofs extends Proofs {
 	public Vector findUsedLocHyp() {
 		Vector res = new Vector();
 		BCLocalVariable[] bclva = fBcm.getLocalVariables();
-		for (int i = 0; i < bclva.length; i++)
+		
+		HashSet hs = new HashSet();
+		for (int i = 0; i < bclva.length; i++) {
+			//System.out.println(bclva[i]);
 			try {
-				res.add(new VirtualFormula(VirtualFormula.REQUIRES, 
-							new BinaryForm(IFormToken.LOCAL_VAR_DECL,
+				if(!hs.contains(new Integer(bclva[i].getIndex()))) {
+					res.add(new VirtualFormula(VirtualFormula.REQUIRES, 
+								new BinaryForm(IFormToken.LOCAL_VAR_DECL,
 								new TerminalForm("local_" + bclva[i].getIndex()), 
 								new TTypeForm(IFormToken.T_TYPE, 
 										toType(fConfig, (JavaType) bclva[i].getType()))), 
-							new Vector()));
+										new Vector()));
+				}
 			} catch (Jml2bException je) {
 			}
+		}
 		Enumeration e = fPos.elements();
 		while (e.hasMoreElements()) {
 			VCGPath f = (VCGPath) e.nextElement();
@@ -291,16 +301,21 @@ public class B2JProofs extends Proofs {
 	}
 
 	private void save(VCGPath f, int n, int hypNum, JpoOutputStream s, IJmlFile jf) throws IOException {
+		// the header or so they say?
 		s.writeUTF(""); // name
 		s.writeUTF(""); // caseNum
-//		s.writeInt(f.getHypothesisAt(n).size() + bcm.getLocalVariables().length); // hyp.length
+		
+		// the total size
 		s.writeInt(getHypAsVirtualFormula(f, n).size() + fBcm.getLocalVariables().length);
+
+		// we write each variables number?
 		for (int i = 0; i < fBcm.getLocalVariables().length; i++)
 			s.writeInt(i);
-//		for (int i = 0; i < f.getHypothesisAt(n).size(); i++)
-//			s.writeInt(hypNum + i);
-		for (int i = 0; i < getHypAsVirtualFormula(f, n).size(); i++)
+		// we write each hypo number
+        for (int i = 0; i < getHypAsVirtualFormula(f, n).size(); i++)
 			s.writeInt(hypNum + i);
+        
+        
 		s.writeInt(f.getGoalsAt(n).size()); // goals.length
 		Enumeration e = f.getGoalsAt(n).elements();
 		while (e.hasMoreElements()) {
@@ -782,8 +797,9 @@ public class B2JProofs extends Proofs {
 
 		else if (e instanceof ArrayReference) {
 			jml2b.formula.Formula fo = new TerminalForm("arrayReference_" + ((ArrayReference) e).getId());
-			if (!declaredVarAtState.contains(((TerminalForm) fo).getNodeText())) {
-				declaredVarAtState.add(((TerminalForm) fo).getNodeText());
+			String str = ((TerminalForm) fo).getNodeText();
+			if (!declaredVarAtState.contains(str)) {
+				declaredVarAtState.add(str);
 				if (decl != null)
 					decl.add(B2JTheorem.declLocVar(config, (ArrayReference) e, 
 							declaredVarAtState, null));
@@ -793,8 +809,9 @@ public class B2JProofs extends Proofs {
 
 		else if (e instanceof Reference) {
 			jml2b.formula.Formula fo = new TerminalForm("reference_" + ((Reference) e).getId());
-			if (!declaredVarAtState.contains(((TerminalForm) fo).getNodeText())) {
-				declaredVarAtState.add(((TerminalForm) fo).getNodeText());
+			String str = ((TerminalForm) fo).getNodeText();
+			if (!declaredVarAtState.contains(str)) {
+				declaredVarAtState.add(str);
 				// commented by Mariela
 				if (decl != null)
 					decl.add(B2JTheorem.declLocVar(config, (Reference) e, 
@@ -815,10 +832,9 @@ public class B2JProofs extends Proofs {
 						declaredVarAtState,	decl)).getNonAmbiguousName();
 			jml2b.formula.Formula fo =
 				new TerminalForm(varname + "_" + ((ValueAtState) e).getAtInstruction());
-			if (!declaredVarAtState.contains(((TerminalForm) fo).getNodeText())) {
-				declaredVarAtState.add(((TerminalForm) fo).getNodeText());
-				// commented by Mariela - this code quantifies every formula containing ValueofConstant v, with v, but v is a global variable
-				// in the context 
+			String str = ((TerminalForm) fo).getNodeText();
+			if (!declaredVarAtState.contains(str)) {
+				declaredVarAtState.add(str);
 				if (decl != null)
 					decl.add(B2JTheorem.declValueOfConstantAtState(	config,
 																	(ValueAtState) e,
@@ -902,7 +918,7 @@ public class B2JProofs extends Proofs {
 						toExpression(config, element.getValue(), declaredVarAtState, decl)));
 		}
 		return res;
-		/*
+		/* fascinating...
 		 * if (st.getLeft() instanceof SubstitutionUnit) return new
 		 * BinaryForm(IFormToken.B_OVERRIDING, f, new
 		 * BinaryForm(IFormToken.B_COUPLE, toExpression(config,

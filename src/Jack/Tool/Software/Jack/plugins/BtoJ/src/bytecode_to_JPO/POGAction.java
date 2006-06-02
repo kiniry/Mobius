@@ -33,7 +33,7 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	/** the current active part */
 	IWorkbenchPart activePart;
 
-	/**
+	/*
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
@@ -47,7 +47,7 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 
 	}
 
-	/**
+	/*
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(IAction,
 	 *          IWorkbenchPart)
 	 */
@@ -55,7 +55,7 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 		activePart = targetPart;
 	}
 
-	/**
+	/*
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection sel) {
@@ -70,9 +70,17 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+	 */
 	public void dispose() {
 	}
 
+	/*
+	 *  (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+	 */
 	public void init(IWorkbenchWindow window) {
 	}
 
