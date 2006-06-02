@@ -565,8 +565,13 @@ public class BCMethod extends AccessFlags {
 
 		for (int i = 0; i < locVarTable.length; i++) {
 			JavaType type = JavaType.getJavaType(locVarTable[i].getType());
+			int indLV = locVarTable[i].getIndex();
+			if ( localVariables.searchForDuplicate(indLV) ) {
+				continue;
+			}
 			BCLocalVariable lv = new BCLocalVariable(locVarTable[i]
 					.getLocalVariable(cpGen), type, this);
+			
 			localVariables.addRegister(lv);
 		}
 	}
