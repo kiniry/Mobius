@@ -32,12 +32,13 @@ import bytecode_wp.vcg.VCGPath;
  *  ..., value === >..., result
  * 
  * The value on the top of the operand stack must be of type int. 
- * It is popped from the operand stack, truncated to a byte, then sign-extended to an int result. 
+ * It is popped from the operand stack, truncated to a byte, 
+ * then sign-extended to an int result. 
  * That result is pushed onto the operand stack.
  * 
- * S(t) >= 0 => psi^n[S(t) <-- (S(t) &0xFFFF)] 
+ * S(t) >= 0 => psi^n[S(t) <-- (S(t) &0xFF)] 
  * &&
- * S(t) >= 0 => psi^n[S(t) <-- (S(t) &0xFFFF) | 0x11110000] 
+ * S(t) < 0 => psi^n[S(t) <-- (S(t) &0xFF) | 0x11110000] 
  */
 public class BCI2S extends BCConversionInstruction  {
 
@@ -89,7 +90,7 @@ public class BCI2S extends BCConversionInstruction  {
 
 	public VCGPath wp(IJml2bConfiguration config, VCGPath vcs, ExsuresTable _exc) {
 		Formula  positive = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.GRTEQ);
-		BitExpression pMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
+		BitExpression pMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFF), ExpressionConstants.BITWISEAND);
 	/*	VCGPath pCopy = (VCGPath) vcs.copy();*/
 		vcs.substitute(new Stack(Expression.COUNTER), pMask);
 		Integer hPos = vcs.addHyp( getPosition(), positive);
@@ -98,15 +99,19 @@ public class BCI2S extends BCConversionInstruction  {
 		
 		
 		
-/*		Formula  neg = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
-		BitExpression nMask = new BitExpression(new Stack(Expression.COUNTER), new NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND);
-		BitExpression nExtend = new BitExpression(nMask, new NumberLiteral(0xFFFF0000), ExpressionConstants.BITWISEOR);
-		//Formula nCopy = (Formula)_normal_Postcondition.copy();
-		vcs.substitute(new Stack(Expression.COUNTER), nExtend);
-		Integer hNeg = vcs.addHyp( getPosition(), neg);
-		vcs.addHypsToVCs( hNeg);
-		
-		vcs.merge(pCopy);*/
+
+		/*
+		 * Formula neg = new Predicate2Ar(new Stack(Expression.COUNTER), new
+		 * NumberLiteral(0), PredicateSymbol.LESS); BitExpression nMask = new
+		 * BitExpression(new Stack(Expression.COUNTER), new
+		 * NumberLiteral(0xFFFF), ExpressionConstants.BITWISEAND); BitExpression
+		 * nExtend = new BitExpression(nMask, new NumberLiteral(0xFFFF0000),
+		 * ExpressionConstants.BITWISEOR); //Formula nCopy =
+		 * (Formula)_normal_Postcondition.copy(); vcs.substitute(new
+		 * Stack(Expression.COUNTER), nExtend); Integer hNeg = vcs.addHyp(
+		 * getPosition(), neg); vcs.addHypsToVCs( hNeg);
+		 */
+
 		return vcs;
 	}
 
