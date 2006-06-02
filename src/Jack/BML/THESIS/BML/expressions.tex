@@ -1,0 +1,163 @@
+
+\newtheorem{Expression}{Definition}[section]
+
+
+
+\subsection{Expressions}\label{lang}
+
+We are now going to look at the expressions that our bytecode language manipulates. 
+Similarly to the Java Bytecode language, the values of our language are of primitive data 
+type\footnote{ we support only the integer primitive data type, which is sufficient for the purposes of this document} or references
+where  references can be either references to class instance objects or to array objects. 
+The special reference \Mynull \ does not point to any object.  
+$$ \begin{array}{ll}
+             \Values & := i, i \in \  \Myint \mbox{\rm literal } \mid \RefValues \\
+	     \RefValues & := Ref : \AllRefs \mid \Mynull 
+  \end{array} $$
+
+
+ We introduce several notations which will be used in the following.
+ If we want to say explicitely that a reference points to a class instance object of type \clazz \ we denote this with $\reference{\clazz}$ and if
+ a reference points to a location of an array object whose elements are of type \anyType \ we denote this
+ with $\RefArr{\anyType \lbrack \ \rbrack}$.
+ 
+
+% The field with unique name  $i$  in a class \clazz is denoted by the function $\field{i}{C}$ and its domain is the set of
+% references of class \clazz and has the following signature:
+% $$ \begin{array}{l}
+%           \field{i}{\clazz}: \reff \rightarrow \Values \\
+%	   \dom{\field{i}{\clazz}} = \{ \Ref{\clazz} \}
+%   \end{array} $$
+
+ Our language supports field access expressions $\fieldd(\expression)$, where \fieldd \ is of type \FieldSet (see the previous subsection \ref{clazz}).
+ When assigning value $v$ to the object field \fieldd \ of the object pointed by the reference $r$,
+ the  corresponding field is updated resulting in a new field function $\fieldd[ \oplus r \longrightarrow v]: \AllRefs \longrightarrow \Values $.
+ Next, our language supports arrays
+ and the access to the $\rm{i^{th}}$ element in the array \textrm{arr} is denoted with $ \arrayAccess{\rm{arr}}{\rm{i}}$.
+ Similarly, we use update functions for array access expressions  $ \update{\arrayAccess{\rm{arr}}{\rm{i}}}{ (ref, ind)  } { val}$.
+
+The list of registers is denoted with \locVarOnly. The $\rm{i^{th}}$ element of \textrm{reg} is denoted by 
+$\locVar{i}$. Note that $\locVar{0}$ will stand for the current object, 
+which corresponds to \texttt{this} in the Java language. 
+ The language deals also with arithmetic expressions that evaluate to an integer value and have the form $\expression_1 \ \op \ \expression_2 $,
+ where  $ \expression_1$ and $\expression_2$ are also arithmetic expressions and $op$ is an arithmetic operation symbol
+ ranging in $+, - , div, rem , xor, xand $. 
+
+As the Java virtual machine is stack based we will also 
+need expressions that model respectively the operand stack and the stack counter.
+Thus, the expressions $\counter$ and  \textrm{stack} stand respectively for the stack counter and the stack. 
+With \stack{i}, we denote the expression at the \textrm{i}-th position 
+on the stack is. 
+
+
+The following definition gives the formal grammar for the expressions of the bytecode language.
+\begin{Expression}[Formal Grammar of Expressions] \label{expr}
+    
+\end{Expression}
+
+  $$ 
+  \begin{array}{ll}  
+    \op             & ::= + \mid - \mid div \mid rem \mid xor \mid xand  \\
+		    &                                                \\
+		    &                                                \\
+    \expression     & ::= \\
+                    &  \Values \\
+	            &  \mid  \fieldd(\expression), \fieldd : \FieldSet \\
+		    &  \mid  \update{\fieldd}{ \expression}{\expression}(\expression) \\
+		    &  \mid  \arrayAccess{\expression} {\expression} \\	   
+		    &  \mid \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression) \\	
+		    &  \mid  \locVar{i} \\ 
+		    &  \mid  \expression \ \op \ \expression   \\
+		    &  \mid  \counter \\
+		    &  \mid  \stack{ \expression} \\
+		  %  &  \mid  \result 		 
+ \end{array} 
+ $$
+
+
+
+
+
+
+\subsubsection{Substitution} \label{subst}
+ Expression substitution is defined inductively in a standard way over the expression structure. Still, we allow also
+ substitution over objects that are not from our language, i.e. we apply substitution over field objects which results 
+ in an update version of the field. 
+ This is done by establishing the substitution rule for field access as follows:
+ $$  \substitution{\fieldd (o)}{R_1}{R_2} =\substitution{\fieldd}{R_1}{R_2} (  \substitution{o}{R_1}{R_2}) $$
+
+
+ In the next, we define a substitution over field function objects:
+$$  
+\begin{array}{l}
+\substitution{\fieldd}{R_1}{R_2} = \\
+\left\{\begin{array}{ll}
+\fieldd  & if \ R_1 \neq \fieldd\\ 
+&\\ 
+
+R_2  &  if \  R_1 = \fieldd \wedge \\
+               &  R_2 = \fieldd[ \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } ]
+\end{array}
+\right. \\
+\\
+\\
+\substitution {\update{\fieldd}{ \mbox{ \rm \texttt{r} }}{ \mbox{  \rm \texttt{v} } }} {R_1}{R_2} = \\
+\left\{\begin{array}{ll}
+\update{\fieldd}{ \substitution{\mbox{ \rm \texttt{r'} }}{ R_1 }{ R_2}}{ \substitution{\mbox{ \rm \texttt{v'} }}{ R_1 }{ R_2}  } 
+
+ & if \ R_1 \neq \fieldd\\
+& \\ 
+\fieldd \begin{array}{l}
+             \lbrack \oplus \substitution{ \mbox{ \rm \texttt{r'}}}{R_1}{R_2} \longrightarrow  \substitution{ \mbox{ \rm \texttt{v'}} }{R_1}{R_2} \rbrack \\
+	     \lbrack \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } \rbrack
+	     \end{array}
+&  
+
+                if \   R_1 = \fieldd \wedge \\
+               &  R_2 = \fieldd[ \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } ]
+
+\end{array}
+\right. 
+\end{array}
+$$ 
+
+
+For example, consider the following substitution  
+$$ \substitution{\fieldd(o)}{\fieldd}{\update{\fieldd}{e }{v }} $$
+This results in the new expression : 
+$$\update{\fieldd}{ e}{ v} (\substitution{o}{ \fieldd}{ \update{ \fieldd}{ e}{ v }}) $$
+
+
+The same kind of substitution is allowed for array access expressions, where the array object \arrayAccessOnly \  can be updated. 
+$$  
+\begin{array}{l}
+\substitution{\arrayAccessOnly}{R_1}{R_2} = \\
+\left\{\begin{array}{ll}
+\arrayAccessOnly  & if \ R_1 \neq \arrayAccessOnly \\ 
+&\\ 
+
+R_2  &  if \  R_1 = \arrayAccessOnly \wedge \\
+               &  R_2 = \arrayAccessOnly  [ \oplus \mbox{ \rm \texttt{r} , ind } \longrightarrow \mbox{  \rm \texttt{v} } ]
+\end{array}
+\right. \\
+\\
+\\
+\substitution {\update{\arrayAccessOnly}{ \mbox{ \rm \texttt{r} }}{ \mbox{  \rm \texttt{v} } }} {R_1}{R_2} = \\
+\left\{\begin{array}{ll}
+\update{\arrayAccessOnly}{ \substitution{\mbox{ \rm \texttt{r'} }}{ R_1 }{ R_2}}{ \substitution{\mbox{ \rm \texttt{v'} }}{ R_1 }{ R_2}  } 
+
+ & if \ R_1 \neq \arrayAccessOnly \\
+& \\ 
+\arrayAccessOnly  \begin{array}{l}
+                        \lbrack \oplus \substitution{ \mbox{ \rm \texttt{r'}}}{R_1}{R_2} \longrightarrow  \substitution{ \mbox{ \rm \texttt{v'}} }{R_1}{R_2} \rbrack \\
+	                \lbrack \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } \rbrack
+	     \end{array}
+&  
+
+                if \   R_1 = \arrayAccessOnly \wedge \\
+               &  R_2 = \arrayAccessOnly[ \oplus \mbox{ \rm \texttt{r} } \longrightarrow \mbox{  \rm \texttt{v} } ]
+
+\end{array}
+\right. 
+\end{array}
+$$ 

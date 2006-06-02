@@ -1,0 +1,100 @@
+\section{Background information of the class file format}
+This section is not obligatory if the reader is familiar with the class file format.
+However, for those who do not know much about it, this chapter is useful for 
+understanding the JML compiler presented in the next section \ref{BCSLcompile}.
+% we will need a background information about the class file format. 
+
+
+ In particular, our specification compiler will make use of the \\
+ \constantPool \ data structure as well as of several optional data structures
+ contained in the  class file: the \localVariableTable \ and the \lineNumberTable. 
+In what follows, we give a consize description of these class file data structures. 
+
+
+\subsection{The \constantPool}
+ Recall that a class file defines
+a single class or interface and contains information about  the class name, interfaces implemented by the class, super class, methods
+ and fields declared in the class and references. The JVM  \cite{VMSpec} mandates that the class
+ file contains data structure usually referred as the \constantPool \ which is used to construct the runtime constant pool upon class or 
+interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class.
+
+%Java virtual machine instructions do not rely on the runtime layout of classes, interfaces,
+% class instances, or arrays. Instead, instructions refer to symbolic information contained
+%in a data structure named  \constantPool. The data structures that may appear in the \constantPool \
+%are defined by the JVM specification.
+
+Thus, the \constantPool \ contains elements describing :
+\begin{itemize}
+  \item every field which is dereferenced in any of the methods
+of the current class. The corresponding data structure which stands for a particular field constant reference is 
+ \textbf{CONSTANT\_Fieldref\_info}. Its structure is given in Fig.\ref{fldConstant}. The figure shows that
+ a constant  field reference data structure contains information about the class or interface where the field is declared ( the second element of the data structure, \textbf{class\_index}  )
+ as well a description of its name and type (the field \textbf{name\_and\_type\_index}~)
+   \item every class referenced in the current class.  A class constant is stored in the constant pool
+         in a  \textbf{CONSTANT\_Class\_info} data structure 
+     \item every method which is called in any of the methods
+of the current class. It is represented by a  \textbf{CONSTANT\_Method\_info} data structure
+      \item every string constant that appears in the current class file.
+	\item etc...
+\end{itemize}
+
+ 
+
+
+\begin{figure}
+ \textbf{     
+\begin{tabbing}
+CO\=NSTANT\_Fieldref\_info \{\\
+%\> ...\\
+\> \hspace{3 mm}\=  u1 tag; \\
+\> \>   u2 class\_index;\\
+\> \>   u2 name\_and\_type\_index;\\
+\}
+\end{tabbing}
+}
+
+\begin{itemize}
+\item \textbf{tag} is a tag of one byte  whose value is 7 and determines without 
+       ambiguity that the current attribute describes a field reference constant
+
+\item \textbf{class\_index} The value of this item must be a valid index into the \constantPool table. 
+                            The \constantPool entry at that index must be a \textbf{CONSTANT\_Class\_info} structure
+			    representing the class or interface type that contains the declaration of the field or method.
+
+\item \textbf{name\_and\_type\_index}   The value of the item must be a valid index into the \constantPool table.
+                                        The \constantPool entry at that index must be a \textbf{CONSTANT\_NameAndType\_info } (see for more detailed explanation \cite{VMSpec}, section 4.4) 
+					structure. This \constantPool entry indicates the name and descriptor of the field.
+
+\end{itemize}
+\caption{ { \sc Structure of the } \textbf{CONSTANT\_Fieldref\_info} { \sc attribute }  }
+\label{fldConstant}
+\end{figure}
+
+\subsection{Representation of method in the class file format}
+
+Each method, including each instance initialization method and the class or interface initialization method, is described by a special data structure
+called \textbf{method\_info}. Every \textbf{method\_info} structure is supplied with obligatory and optional attributes.
+For instance,  an obligatory attribute is  the data structure called  \textbf{Code}.
+A \textbf{Code} attribute contains the Java virtual machine instructions and auxiliary information for a single method, instance initialization method,
+ or class or interface initialization method.
+The \textbf{Code} attribute has a list of optional  attributes which should be ignored by the JVM but which can be used by other tools, as for instance debuggers.
+The JVM specification defines two attributes --- the \localVariableTable \ and the \lineNumberTable,  which may appear
+ as attributes in the  \textbf{Code} data structure.
+We give hereafter a description of the last two data structures as they will play a role in the JML2BML compilation process. 
+
+\subsubsection{The \localVariableTable \ attribute } \label{locVarTab}
+The \localVariableTable \  attribute is an optional variable-length attribute of a method \textbf{Code}  attribute. 
+It may be used by debuggers to determine the value of a given local variable during the execution of a method.
+ There may be no more than one \localVariableTable \ attribute per local variable in the Code attribute.
+
+\todo{give the data structure and explain what are the assumptions?}
+
+\subsubsection{The \lineNumberTable \ attribute}\label{lineNumTab}
+
+The LineNumberTable attribute is an optional variable-length attribute in the attributes table of a method \textbf{Code} attribute. 
+It may be used by debuggers to determine which part of the Java virtual machine code array corresponds to a given line number in the original source file.
+ If \lineNumberTable \ attributes are present in the attributes table of a given \textbf{Code} attribute, then they may appear in any order.
+ Furthermore, multiple \lineNumberTable \ attributes may together represent a given line of a source file;
+ that is, \lineNumberTable \  attributes need not be one-to-one with source lines.
+
+
