@@ -312,6 +312,9 @@
             <selection
                   class="org.eclipse.jdt.core.ICompilationUnit">
             </selection>
+            <enablement>
+               <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+            </enablement>
          </action>
          <action
                label="JML Compile"
@@ -323,6 +326,9 @@
             <selection
                   class="org.eclipse.jdt.core.ICompilationUnit">
             </selection>
+            <enablement>
+               <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+            </enablement>
          </action>
       </actionSet>
    </extension>
