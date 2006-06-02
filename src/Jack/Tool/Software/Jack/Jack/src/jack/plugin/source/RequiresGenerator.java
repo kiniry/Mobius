@@ -82,11 +82,12 @@ public class RequiresGenerator extends JmlClauseGenerator {
 					Enumeration e = th.getHyp().elements();
 					while (e.hasMoreElements()) {
 						VirtualFormula vf = (VirtualFormula) e.nextElement();
-						if (vf.getsFlow(ColoredInfo.IS_NULL) && reqNullPointer)
+						if (vf.getsFlow(ColoredInfo.IS_NULL) && reqNullPointer) {
 							allVfNP.add(vf);
 						if (vf.getsFlow(ColoredInfo.IS_OUT_OF_BOUNDS)
 							&& reqArryOutOfBounds)
 							allVfOOB.add(vf);
+						}
 					}
 				}
 			}
