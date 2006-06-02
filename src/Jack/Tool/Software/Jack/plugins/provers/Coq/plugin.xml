@@ -101,8 +101,13 @@
                id="Coq.reevaluate"
                label="Reevaluate"
                style="push"
-               toolbarPath="/Normal/Jack/2"
-               tooltip="Reevaluate proofs from the files"/>
+               toolbarPath="jack.plugin.actionSet/coq"
+               tooltip="Reevaluate proofs from the files">
+               <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+               <enablement>
+                    <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+               </enablement>
+         </action>
          <action
                class="coqPlugin.prooftask.action.EvaluateAction"
                icon="icons/evaluate.gif"
@@ -110,10 +115,11 @@
                label="Evaluate"
                state="false"
                style="push"
-               toolbarPath="/Normal/Jack/2"
-               tooltip="Evaluate the vernacular file"/>
+               toolbarPath="jack.plugin.actionSet/coq"
+               tooltip="Evaluate the vernacular file">
+         </action>
          <action
-               toolbarPath="Normal/Jack/2"
+               toolbarPath="jack.plugin.actionSet/coq"
                label="JML Coq Tough Prove"
                tooltip="Prove with Coq (Tough)"
                class="coqPlugin.prooftask.button.ProveCoqButton"
@@ -121,9 +127,12 @@
                style="push"
                id="coqPlugin.toolbar.proveToughAction">
             <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+            <enablement>
+               <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+            </enablement>
          </action>
          <action
-               toolbarPath="Normal/Jack/2"
+               toolbarPath="jack.plugin.actionSet/coq"
                label="JML Coq Light Prove"
                class="coqPlugin.prooftask.button.ProveCoqLightButton"
                tooltip="Prove with Coq (Light)"
@@ -133,6 +142,9 @@
             <selection
                   class="org.eclipse.jdt.core.ICompilationUnit">
             </selection>
+            <enablement>
+               <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+            </enablement>
          </action>
       </actionSet>
    </extension>
