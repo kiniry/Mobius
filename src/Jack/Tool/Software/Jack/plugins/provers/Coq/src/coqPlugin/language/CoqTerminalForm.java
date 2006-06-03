@@ -45,14 +45,14 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 				if (getNodeText() != null) {
 	
 					res = getNodeText();
-//					System.out.println(res);
+//					Logger.get().println(res);
 				}
 				
 				if (ident != null)
 					switch (ident.idType) {
 						case Identifier.ID_CLASS :
 							res += ident.cl.getBName();
-//							System.out.println(res);
+//							Logger.get().println(res);
 							break;
 						case Identifier.ID_FIELD :
 							// the case for field and local variable translation.
@@ -67,7 +67,7 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 							break;
 						case Identifier.ID_METHOD :
 							res += ident.mth.getBName();
-//							System.out.println(res);
+//							Logger.get().println(res);
 							break;
 						default :
 							throw new jml2b.exceptions.InternalError(
@@ -81,7 +81,7 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 				}
 				if (getNodeText().startsWith("arraylength"))
 					return new CoqTranslationResult("arraylength");
-				//System.out.println(res);
+				//Logger.get().println(res);
 				return new CoqTranslationResult(res);
 			case B_BTRUE :
 				return new CoqTranslationResult("(* 0 = 0 *)True");

@@ -9,6 +9,7 @@
 
 package coqPlugin.language;
 
+import jack.util.Logger;
 import coqPlugin.CoqTranslationResult;
 import jml2b.exceptions.LanguageException;
 import jml2b.formula.QuantifiedForm;
@@ -61,7 +62,7 @@ public class CoqQuantifiedForm
 					+ ctr.getForAllDecl() + ")";
 //				ctr.clearPropPart();
 				if(-1 != res.indexOf("arraylength_1")) {
-					System.out.println("gotcha");
+					Logger.get().println("gotcha");
 				}
 				break;
 			case Jm_EXISTS :

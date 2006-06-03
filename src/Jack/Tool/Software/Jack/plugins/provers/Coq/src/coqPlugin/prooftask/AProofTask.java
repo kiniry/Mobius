@@ -10,6 +10,7 @@ package coqPlugin.prooftask;
 
 import jack.plugin.perspective.ICaseExplorer;
 import jack.plugin.prove.ProofTask;
+import jack.util.Logger;
 
 import java.io.File;
 import java.util.HashMap;
@@ -193,9 +194,9 @@ public abstract class AProofTask extends ProofTask {
 						 * do is but terminate and restart it.
 						 */
 						// We terminate the proof
-						System.err.print(name + "_" + (i +1) + " >> ");
-						System.err.println(e);
-						System.out.print("Reanimating Coq...");
+						Logger.err.print(name + "_" + (i +1) + " >> ");
+						Logger.err.println(e);
+						Logger.get().print("Reanimating Coq...");
 						try {
 							coq.stop();
 						}
@@ -225,7 +226,7 @@ public abstract class AProofTask extends ProofTask {
 								bUnrecoverableState = true;
 							}
 						}
-						System.out.println("done.");
+						Logger.get().println("done.");
 						res = false;
 						//bUnrecoverableState = true;
 					}
@@ -240,7 +241,7 @@ public abstract class AProofTask extends ProofTask {
 			}
 		} catch (Exception e) {
 			addError("Hypothesis " + cpt +":\n" + e.toString());
-			System.err.println("Hypothesis " + cpt +":\n" + e.toString());
+			Logger.err.println("Hypothesis " + cpt +":\n" + e.toString());
 			increaseTried(goals.length);
 		}
 
@@ -266,7 +267,7 @@ public abstract class AProofTask extends ProofTask {
 			coq.sendCommand("Open Scope J_Scope.");
 			//coq.resetSection("JackProof");
 		} catch (AProverException e1) {
-			//System.out.println(e1);
+			//Logger.get().println(e1);
 		}
 	}
 
@@ -326,14 +327,14 @@ public abstract class AProofTask extends ProofTask {
 		try {
 			for (int i = 0; i < tactic.length; i++) {
 				coq.sendCommand(tactic[i]);
-				System.out.println(coq.getStdBuffer());
+				Logger.get().println(coq.getStdBuffer());
 			}
 			coq.qed();
 			
 			coq.clearBuffer();
 			result = true;
 		}catch (ToplevelException e) {
-			//System.out.println("I am so broken in the realm of maldoror.");
+			//Logger.get().println("I am so broken in the realm of maldoror.");
 			coq.doBreak();
 			result = false;
 			coq.restart();

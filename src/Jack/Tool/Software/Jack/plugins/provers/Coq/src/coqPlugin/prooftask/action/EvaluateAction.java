@@ -1,6 +1,7 @@
 package coqPlugin.prooftask.action;
 
 import jack.plugin.prove.CaseViewerUpdateJob;
+import jack.util.Logger;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,7 +44,7 @@ public class EvaluateAction implements IWorkbenchWindowActionDelegate {
 	private IEditorPart ed;
 	public void run(IAction action) {
 //		cmdCoqC = (CoqUtils.getCoqTop() + " -batch -l " + fei.getFile().getLocation()).replaceAll(" +", " ").split(" ");
-		//System.out.println("ici");
+		//Logger.get().println("ici");
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("CoqEditor.coqtopview");
 		} catch (PartInitException e) {	}
@@ -74,7 +75,7 @@ public class EvaluateAction implements IWorkbenchWindowActionDelegate {
 							boolean bWasProved = true;
 							//in.wait();
 							while((s = in.readLine()) != null){
-								//System.out.println(s);
+								//Logger.get().println(s);
 								if (s.matches("Error.*")) {
 									bWasProved = false;
 									return new Status(IStatus.ERROR, Platform.PI_RUNTIME, IStatus.OK, 
@@ -97,7 +98,7 @@ public class EvaluateAction implements IWorkbenchWindowActionDelegate {
 							job.schedule();
 							//CoqIdeThread.getInteractive(file).notifyResult(bWasProved);
 						} catch (IOException e) {
-							System.err.println("I was unable to find the path to coqtop. Check the path.");
+							Logger.err.println("I was unable to find the path to coqtop. Check the path.");
 						} 		
 						return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 					}
@@ -105,7 +106,7 @@ public class EvaluateAction implements IWorkbenchWindowActionDelegate {
 				};
 				
 				job.schedule();
-				//System.out.println(fei.getFile());
+				//Logger.get().println(fei.getFile());
 			}
 		}
 	}

@@ -4,6 +4,8 @@
  */
 package coqPlugin.printers;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -86,7 +88,7 @@ public abstract class Printer {
 			String s;
 			while((s = in.readLine()) != null){
 				res += s;
-				System.out.println(res);
+				Logger.get().println(res);
 				if (s.matches("Error.*")) 
 					bWasCompiled = false;
 			}
@@ -94,12 +96,12 @@ public abstract class Printer {
 			while((s = in.readLine()) != null){
 				res += s;
 
-				System.out.println(res);
+				Logger.get().println(res);
 				if (s.matches("Error.*")) 
 					bWasCompiled = false;
 			}
 		} catch (IOException e) {
-			System.err.println("I was unable to find the path to coqc. Check the path.");
+			Logger.err.println("I was unable to find the path to coqc. Check the path.");
 			e.printStackTrace();
 		}
 		if (!bWasCompiled) {

@@ -204,7 +204,7 @@ public class CoqLanguage extends ALanguage {
 //			}
 //		}
 //		catch(Exception e) {
-//			System.out.println(e);
+//			Logger.get().println(e);
 //			e.printStackTrace();
 			return super.displayHyp(vfs);
 //		}

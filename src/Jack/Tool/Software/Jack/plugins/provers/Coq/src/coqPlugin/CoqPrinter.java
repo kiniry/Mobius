@@ -9,6 +9,8 @@
 /******************************************************************************/
 package coqPlugin;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -41,7 +43,7 @@ public class CoqPrinter implements IPrinter {
 			try {
 				prelude.compile();
 			} catch (ProverException e) {
-				System.out.println(e);
+				Logger.get().println(e);
 				e.printStackTrace();
 			}
 		}

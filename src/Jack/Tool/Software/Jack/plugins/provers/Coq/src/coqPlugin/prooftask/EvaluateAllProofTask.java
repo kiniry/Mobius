@@ -4,6 +4,7 @@ import java.io.File;
 
 import jack.plugin.prove.ProofTask;
 import jack.plugin.prove.ProveAction;
+import jack.util.Logger;
 import jpov.structure.Goal;
 
 import org.eclipse.core.resources.IFile;
@@ -53,7 +54,7 @@ public class EvaluateAllProofTask extends AProofTask {
 		if(f.exists()) {
 			CoqFile c = new CoqFile(f);
 			tac[0][0] = c.getProof();
-			System.out.println(f +" " + tac[0][0]);
+			Logger.get().println(f +" " + tac[0][0]);
 			return super.proveLemma(name,g);
 		}
 		return false;

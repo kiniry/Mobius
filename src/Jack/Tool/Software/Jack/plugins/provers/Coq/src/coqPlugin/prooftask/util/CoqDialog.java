@@ -170,7 +170,7 @@ public class CoqDialog extends Dialog{
 		 
 		File f= new File(PreferencePage.getCoqSemiAuto());
 		try {
-			//System.out.println(f.getAbsolutePath());
+			//Logger.get().println(f.getAbsolutePath());
 			PrintStream out = new PrintStream(new FileOutputStream(f));
 			for (int i = 0; i < str.length; i++){
 				if((!str[i].equals("lightAutoJack.")) &&

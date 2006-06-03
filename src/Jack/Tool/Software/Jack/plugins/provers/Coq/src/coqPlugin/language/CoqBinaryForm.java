@@ -63,7 +63,7 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 		String fun1 = ctr1.getFunPart();
 		String fun2 = ctr2.getFunPart();
 		//if(fun1.toString().startsWith("c_Mem"))
-		//	System.out.println("fetched !");
+		//	Logger.get().println("fetched !");
 		Formula tmp;
 		CoqType leftType = new CoqType(); 
 		CoqType rightType = new CoqType(); 
@@ -295,7 +295,7 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 					fun1 + " " + fun2);
 			case LOCAL_VAR_DECL :
 				//if(fun1.toString().startsWith("c_Mem"))
-				//	System.out.println("fetched !");
+				//	Logger.get().println("fetched !");
 				return new CoqTranslationResult(this);
 			case LOCAL_ELEMENTS_DECL:
 				CoqTranslationResult varDecl = new CoqTranslationResult(this);
