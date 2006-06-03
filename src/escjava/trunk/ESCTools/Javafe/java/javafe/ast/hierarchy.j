@@ -189,7 +189,7 @@ public abstract class ASTNode implements Cloneable
    */
 
   //@ invariant decorations != null ==> (\typeof(decorations) == \type(Object[]));
-  Object[] decorations;  
+  private Object[] decorations;  
 
     public int bogusField;
     //@ public model int startLoc;

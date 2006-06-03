@@ -85,7 +85,7 @@ public class ASTDecoration {
     //@ ensures \typeof(\result) <: decorationType;
     public Object get(ASTNode n) {
 	Assert.notNull(n);
-	Object[] v=n.decorations;
+	Object[] v=n.getDecorations();
 	if( v != null && my_slot < v.length )
 	    return v[my_slot];
 	else
@@ -99,13 +99,15 @@ public class ASTDecoration {
     //@ requires n != null;
     //@ requires \typeof(val) <: decorationType;
     public void set(ASTNode n, Object val) {
-	Object[] v = n.decorations;
+	Object[] v = n.getDecorations();
 	if (v==null) {
-	    v = n.decorations = new Object[allocated];
+	    v = new Object[allocated];
+	    n.setDecorations(v);
 	} else if (my_slot >= v.length) {
 	    Object[] _new = new Object[allocated];
 	    System.arraycopy( v, 0, _new, 0, v.length );
-	    v = n.decorations = _new;
+	    v = _new;
+	    n.setDecorations(v);
 	}
 	v[my_slot] = val;
     }
