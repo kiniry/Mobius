@@ -21,7 +21,7 @@ public class ResetAction extends AProverAction{
 	 */
 	public void run(IAction action) {
 		try {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("CoqEditor.coqtopview");
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
 		} catch (PartInitException e) {	}
 		IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		IEditorPart ed = ap.getActiveEditor();

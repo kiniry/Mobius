@@ -15,7 +15,7 @@
                id="ProverEditor.break"
                label="Break"
                style="push"
-               toolbarPath="/Normal/ProverEditor"/>
+               toolbarPath="ProverEditor.actions"/>
          <action
                class="prover.gui.actions.ResetAction"
                definitionId="ProverEditor.reset_command"
@@ -24,7 +24,7 @@
                label="Reset"
                state="false"
                style="push"
-               toolbarPath="/Normal/ProverEditor"/>
+               toolbarPath="ProverEditor.actions"/>
          <action
                class="prover.gui.actions.ProgressEndAction"
                definitionId="ProverEditor.eval_all_command"
@@ -33,7 +33,7 @@
                label="Evaluate to the end"
                state="false"
                style="push"
-               toolbarPath="/Normal/ProverEditor"/>
+               toolbarPath="ProverEditor.actions"/>
          <action
                class="prover.gui.actions.BackAction"
                definitionId="ProverEditor.back_command"
@@ -42,7 +42,7 @@
                label="Back"
                state="false"
                style="push"
-               toolbarPath="/Normal/ProverEditor"/>
+               toolbarPath="ProverEditor.actions"/>
          <action
                class="prover.gui.actions.ProgressAction"
                definitionId="ProverEditor.progress_command"
@@ -51,7 +51,7 @@
                label="Progress"
                state="false"
                style="push"
-               toolbarPath="/Normal/ProverEditor"/>
+               toolbarPath="ProverEditor.actions"/>
          <action
                class="prover.gui.actions.BeginAction"
                icon="icons/icon_lego.gif"
@@ -59,7 +59,7 @@
                label="Respawn Prover"
                state="true"
                style="push"
-               toolbarPath="/Normal/ProverEditor"/>
+               toolbarPath="ProverEditor.actions"/>
       </actionSet>
    </extension>
 
@@ -152,6 +152,7 @@
       <view
             category="Prover"
             class="prover.gui.TopLevelManager"
+            icon="icons/icon_lego_gray.gif"
             id="ProverEditor.topview"
             name="Prover Editor Toplevel"/>
    </extension>
