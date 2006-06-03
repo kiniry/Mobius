@@ -27,6 +27,11 @@ import org.apache.bcel.classfile.ConstantPool;
  **/
 public class ConstraintAttribute extends JmlAttributes {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static byte[] getByteArray(
 		IJml2bConfiguration config,
 		JmlConstantPool jcp,

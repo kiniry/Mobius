@@ -23,6 +23,11 @@ import org.apache.bcel.classfile.ConstantPool;
  **/
 public class ModelFieldAttribute extends JmlAttributes {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static byte[] getByteArray(IJml2bConfiguration config, Vector ann, JmlConstantPool jcp) {
 		byte fields_count = (byte) ann.size();
 		byte[] tmp = new byte[2 + 6 * fields_count];

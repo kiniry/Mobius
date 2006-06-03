@@ -29,6 +29,10 @@ import util.ByteArray;
  */
 public class LoopSpecificationAttribute extends JmlAttributes {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static byte[] getByteArray(IJml2bConfiguration config, JmlConstantPool jcp, Method m,
 			org.apache.bcel.classfile.Method methodzz) throws PogException, Jml2bException {
 		byte[] res = null;

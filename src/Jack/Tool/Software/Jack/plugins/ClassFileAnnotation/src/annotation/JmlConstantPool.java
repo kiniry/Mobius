@@ -207,7 +207,7 @@ public class JmlConstantPool {
 		if (ca != null) {
 			for (short i = 0; i < ca.length; i++)
 				/*
-				 * if ( i >= ca.length) { System.out.println("herreeee"); }
+				 * if ( i >= ca.length) { Logger.get().println("herreeee"); }
 				 */
 				if (isFieldRef(config, field, ca[i]))
 					return i;

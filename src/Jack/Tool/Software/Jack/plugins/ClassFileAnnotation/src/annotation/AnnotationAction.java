@@ -81,7 +81,7 @@ public class AnnotationAction implements IObjectActionDelegate, IWorkbenchWindow
 					return;
 				}
 				else {
-					//System.out.println(icu.toString());
+					//Logger.get().println(icu.toString());
 					if(icu.getPath().toString().endsWith(".java")) {
 						action.setEnabled(true);
 					}

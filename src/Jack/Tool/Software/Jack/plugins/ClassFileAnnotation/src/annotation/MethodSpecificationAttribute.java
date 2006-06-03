@@ -28,6 +28,11 @@ import util.ByteArray;
  **/
 public class MethodSpecificationAttribute extends JmlAttributes {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static byte[] getByteArray(
 		IJml2bConfiguration config,
 		JmlConstantPool jcp,

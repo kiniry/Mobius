@@ -60,6 +60,10 @@ import util.ByteArray;
  */
 public class JmlAttributes extends Attribute {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	static byte[] getByteArray(IJml2bConfiguration config, JmlConstantPool jcp, Expression e, boolean old,
 			Vector parameters, LocalVariableTable lvt) throws Jml2bException {
 		switch (e.getNodeType()) {

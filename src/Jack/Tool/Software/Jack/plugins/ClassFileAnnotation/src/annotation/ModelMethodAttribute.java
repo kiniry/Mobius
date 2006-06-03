@@ -24,6 +24,10 @@ import org.apache.bcel.classfile.ConstantPool;
 public class ModelMethodAttribute extends JmlAttributes {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	IJml2bConfiguration config;
 	
 	private static byte getByteArrayLength(Vector ann, JmlConstantPool jcp) {

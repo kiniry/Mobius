@@ -10,6 +10,7 @@ package annotation;
 
 import jack.plugin.Generator;
 import jack.plugin.JackJml2bConfiguration;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -161,22 +162,22 @@ public class AnnotationGenerator extends Generator {
 									configuration.getSubdirectory(),
 									(createdClass = clazz.getClassName().replace('.',File.separatorChar)) + ".class"));
 						} catch (IOException ioe) {
-							System.err.println(ioe.getMessage());
+							Logger.err.println(ioe.getMessage());
 						}
 					} catch (ClassNotFoundException cnfe) {
-						System.out.println("Class not found");
+						Logger.get().println("Class not found");
 						//TODO Remonter un message d'erreur
 					} catch (JavaModelException cnfe) {
-						System.out.println(cnfe.getMessage());
+						Logger.get().println(cnfe.getMessage());
 					}
-					System.out.println("Done");
+					Logger.get().println("Done");
 				}
 			}
 		} catch (Jml2bException e) {
 			ErrorHandler.error((JmlFile) files.get(0), -1, -1, e.toString());
 		} catch (RuntimeException re) {
-			System.err.println(re.getStackTrace()[0].toString());
-			System.err.println(re.toString());
+			Logger.err.println(re.getStackTrace()[0].toString());
+			Logger.err.println(re.toString());
 		} finally {
 			// free memory allocated for packages.
 //			Package.clearAll();
