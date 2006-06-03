@@ -9,6 +9,8 @@
 /*******************************************************************************/
 package simplifyPlugin;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -82,7 +84,7 @@ public class Simplify {
 					got_gt = false;
 					buff.append((char) b);
 					if (echo) {
-						System.out.print((char) b);
+						Logger.get().print((char) b);
 					}
 			}
 
@@ -102,7 +104,7 @@ public class Simplify {
 			try {
 				b = s.read();
 			} catch (IOException e) {
-				System.err.println(Messages.getString("Simplify.IOException_catched____6") + e.toString()); //$NON-NLS-1$
+				Logger.err.println(Messages.getString("Simplify.IOException_catched____6") + e.toString()); //$NON-NLS-1$
 				return;
 			}
 			switch (b) {
@@ -120,7 +122,7 @@ public class Simplify {
 				default :
 					got_gt = false;
 					if (echo) {
-						System.out.print((char) b);
+						Logger.get().print((char) b);
 					}
 			}
 
@@ -140,7 +142,7 @@ public class Simplify {
 			try {
 				b = s.read();
 			} catch (IOException e) {
-				System.err.println(Messages.getString("Simplify.IOException_catched____8") + e.toString()); //$NON-NLS-1$
+				Logger.err.println(Messages.getString("Simplify.IOException_catched____8") + e.toString()); //$NON-NLS-1$
 				return 0;
 			}
 			switch (b) {
@@ -155,7 +157,7 @@ public class Simplify {
 				//					try {
 				//						return s.read();
 				//					} catch (IOException e) {
-				//						System.err.println(
+				//						Logger.err.println(
 				//							"IOException catched : " + e.toString());
 				//						return 0;
 				//					}
@@ -185,8 +187,8 @@ public class Simplify {
 		input.println(command);
 		input.flush();
 		if (echo) {
-			System.out.println(Messages.getString("Simplify.Sending_command___10")); //$NON-NLS-1$
-			System.out.println(command);
+			Logger.get().println(Messages.getString("Simplify.Sending_command___10")); //$NON-NLS-1$
+			Logger.get().println(command);
 		}
 		waitForPrompt();
 	}
@@ -283,8 +285,8 @@ public class Simplify {
 		input.println(")");
 		input.flush();
 		if (echo) {
-			System.out.println(Messages.getString("Simplify.Sending_background_predicate___18")); //$NON-NLS-1$
-			System.out.println(bg);
+			Logger.get().println(Messages.getString("Simplify.Sending_background_predicate___18")); //$NON-NLS-1$
+			Logger.get().println(bg);
 		}
 		waitForPrompt();
 	}
@@ -307,7 +309,7 @@ public class Simplify {
 		try {
 			simplify.waitFor();
 		} catch (InterruptedException e) {
-			System.err.println(
+			Logger.err.println(
 				Messages.getString("Simplify.InterruptedException_catched____20") + e.toString()); //$NON-NLS-1$
 		}
 		input = null;
@@ -326,11 +328,11 @@ public class Simplify {
 	//		try {
 	//			boolean result = prove(formula);
 	//			if (result == expected) {
-	//				System.err.println(
+	//				Logger.err.println(
 	//					"OK: " + formula + " = " + expected + ", as expected");
 	//				return true;
 	//			} else {
-	//				System.err.println(
+	//				Logger.err.println(
 	//					"**ERROR: "
 	//						+ formula
 	//						+ " = "
@@ -340,7 +342,7 @@ public class Simplify {
 	//				return false;
 	//			}
 	//		} catch (SimplifyException e) {
-	//			System.err.println("**EXCEPTION: " + formula + ": " + e.toString());
+	//			Logger.err.println("**EXCEPTION: " + formula + ": " + e.toString());
 	//			return false;
 	//		}
 	//	}
@@ -353,10 +355,10 @@ public class Simplify {
 	boolean checkException() {
 		try {
 			boolean res = prove();
-			System.err.println(Messages.getString("Simplify.ERROR__expected_exception,_got__21") + res); //$NON-NLS-1$
+			Logger.err.println(Messages.getString("Simplify.ERROR__expected_exception,_got__21") + res); //$NON-NLS-1$
 			return false;
 		} catch (SimplifyException e) {
-			System.err.println(Messages.getString("Simplify.OK__catched_exception__22") + e.toString()); //$NON-NLS-1$
+			Logger.err.println(Messages.getString("Simplify.OK__catched_exception__22") + e.toString()); //$NON-NLS-1$
 		}
 		return true;
 	}

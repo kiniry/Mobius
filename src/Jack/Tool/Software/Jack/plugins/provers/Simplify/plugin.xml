@@ -43,16 +43,18 @@
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="jack.plugin.compile.CompileAction">
          <action
-               label="Prove with Simplify"
                class="simplifyPlugin.ProveSimplifyAction"
-               menubarPath="jack_menu/prover/prover_slot"
-               id="jack.plugin.proveSimplifyAction">
+               icon="icons/jml_prove.gif"
+               id="jack.plugin.proveSimplifyAction"
+               label="Prove with Simplify"
+               menubarPath="jack_menu/prover/prover_slot">
          </action>
         <action
-               label="Prove with Simplify"
-               class="simplifyPlugin.ProveSimplifyBytecodeAction"
-               menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo"
-               id="jack.plugin.proveSimplifyJpoFileAction">
+              class="simplifyPlugin.ProveSimplifyBytecodeAction"
+              icon="icons/jml_prove_bc.gif"
+              id="jack.plugin.proveSimplifyJpoFileAction"
+              label="Prove with Simplify"
+              menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo">
          </action>
       </objectContribution>
    </extension>
@@ -63,10 +65,11 @@
             nameFilter="*.jpo"
             id="jack.plugin.compile.CompileAction">
          <action
-               label="Prove with Simplify"
                class="simplifyPlugin.ProveSimplifyAction"
-               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
-               id="jack.plugin.proveSimplifyAction">
+               icon="icons/jml_prove.gif"
+               id="jack.plugin.proveSimplifyAction"
+               label="Prove with Simplify"
+               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo">
          </action>
       </objectContribution>
    </extension>

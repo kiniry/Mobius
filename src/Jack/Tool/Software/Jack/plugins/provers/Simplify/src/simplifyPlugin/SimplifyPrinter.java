@@ -9,6 +9,8 @@
 /******************************************************************************/
 package simplifyPlugin;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -600,7 +602,7 @@ public class SimplifyPrinter implements IPrinter {
 		try {
 			ostream.close();
 		} catch (IOException e) {
-			System.err.println("Error closing file: " + ostream.toString());
+			Logger.err.println("Error closing file: " + ostream.toString());
 		}
 	}
 
@@ -609,7 +611,7 @@ public class SimplifyPrinter implements IPrinter {
 			ostream.close();
 			initFile(config, i + 1);
 		} catch (IOException e) {
-			System.err.println("Error closing file: " + ostream.toString());
+			Logger.err.println("Error closing file: " + ostream.toString());
 		}
 	}
 
@@ -622,7 +624,7 @@ public class SimplifyPrinter implements IPrinter {
 		try {
 			printBGPredicate(config);
 		} catch (LanguageException le) {
-			System.err.println(le.getMessage());
+			Logger.err.println(le.getMessage());
 		}
 
 	}
