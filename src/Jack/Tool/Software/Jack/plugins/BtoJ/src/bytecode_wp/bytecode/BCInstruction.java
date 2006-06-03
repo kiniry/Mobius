@@ -7,6 +7,8 @@
 package bytecode_wp.bytecode;
 
 
+import jack.util.Logger;
+
 import java.util.Vector;
 
 import org.apache.bcel.generic.InstructionHandle;
@@ -217,7 +219,7 @@ public abstract  class BCInstruction  implements ByteCode {
 	
 	public void dump(String _s) {
 		if (true ) {
-			System.out.println(_s);
+			Logger.get().println(_s);
 		}
 	}
 

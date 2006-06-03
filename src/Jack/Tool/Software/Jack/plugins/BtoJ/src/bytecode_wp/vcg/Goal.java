@@ -2,7 +2,6 @@ package bytecode_wp.vcg;
 
 import java.util.Vector;
 
-import bytecode_wp.formula.Connector;
 import bytecode_wp.formula.Formula;
 
 public class Goal {

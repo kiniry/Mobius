@@ -4,7 +4,8 @@
  * the class represents a whole java application
  */
 package bytecode_wp.application;
-import java.util.Enumeration;
+import jack.util.Logger;
+
 import java.util.Hashtable;
 
 import jml2b.structure.IClass;
@@ -49,7 +50,7 @@ public class JavaClassLoader implements IPackage {
 			}
 			_class = addClass(_name);
 		} catch (ReadAttributeException exc) {
-			System.err.print(exc.getMessage());
+			Logger.err.print(exc.getMessage());
 		}
 		return _class;
 	}

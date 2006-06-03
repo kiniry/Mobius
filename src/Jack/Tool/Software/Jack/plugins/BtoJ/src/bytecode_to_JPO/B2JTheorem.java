@@ -9,6 +9,8 @@
  /******************************************************************************/
 package bytecode_to_JPO;
 
+import jack.util.Logger;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -159,7 +161,7 @@ public class B2JTheorem extends Theorem {
 														decl)))));
 			}
 		} else {
-			//System.out.println(f.getClass().toString() + ", " + f + ", " + f.getConstant().getClass());
+			//Logger.get().println(f.getClass().toString() + ", " + f + ", " + f.getConstant().getClass());
 			if ((f.getConstant() instanceof ArrayLengthConstant) && (f.getConstant().getType() instanceof JavaBasicType)) {
 				return new BinaryForm(LOCAL_VAR_DECL, B2JProofs.toExpression(
 						config, f, declaredVatAtState, decl), B2JProofs
@@ -186,7 +188,7 @@ public class B2JTheorem extends Theorem {
 			try {
 				decll = declLocVar(config, bclva[j], new HashSet(), null);
 			} catch (Jml2bException j2be) {
-				System.err.println(j2be.getMessage());
+				Logger.err.println(j2be.getMessage());
 			}
 			decl.add(new B2JVirtualFormula(decll));
 		}

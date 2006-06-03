@@ -64,7 +64,7 @@ public class BCTypeLOAD extends BCLocalVariableInstruction {
 	public VCGPath wp(IJml2bConfiguration config, VCGPath vcs, ExsuresTable _exc) {
 
 /*		if (getPosition() == 63) {
-			System.out.println("coucou");
+			Logger.get().println("coucou");
 			vcs.toStringHyps(); 
 			vcs.toStringGoals();
 		}*/

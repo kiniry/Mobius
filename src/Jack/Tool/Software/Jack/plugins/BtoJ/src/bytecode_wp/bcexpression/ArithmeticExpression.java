@@ -4,6 +4,8 @@
  */
 package bytecode_wp.bcexpression;
 
+import jack.util.Logger;
+
 import java.util.Vector;
 
 import bytecode_wp.bcexpression.javatype.JavaBasicType;
@@ -545,7 +547,7 @@ public class ArithmeticExpression extends Expression {
 
 	public static void dump(String str) {
 		if (Util.DUMP) {
-			System.out.println(str);
+			Logger.get().println(str);
 		}
 	}
 

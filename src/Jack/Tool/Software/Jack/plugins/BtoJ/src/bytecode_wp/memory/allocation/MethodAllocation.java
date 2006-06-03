@@ -6,6 +6,8 @@
  */
 package bytecode_wp.memory.allocation;
 
+import jack.util.Logger;
+
 import java.util.Vector;
 
 import bytecode_wp.bc.io.ReadAttributeException;
@@ -58,7 +60,7 @@ public class MethodAllocation {
 		int alloc = getMethodAllocated(bcodeAlloc[0], bcodeAlloc, instrs,
 				method);
 		method.setAllocations(alloc);
-		System.out.println("*************** method " + method.toString()
+		Logger.get().println("*************** method " + method.toString()
 				+ " allocated " + method.getAllocations() + " units");
 
 		return method.getAllocations();
@@ -271,7 +273,7 @@ public class MethodAllocation {
 							instrs, backEdge);
 		}
 		bcalloc.setLoopConsumptionPerIteration(allocatedInLoop);
-		System.out.println("in method " + method + " loop starting at "
+		Logger.get().println("in method " + method + " loop starting at "
 				+ loopEntry + " allocates " + allocatedInLoop);
 	}
 

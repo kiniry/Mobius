@@ -6,6 +6,8 @@
  */
 package bytecode_wp.bcclass;
 
+import jack.util.Logger;
+
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -1079,7 +1081,7 @@ public class BCMethod extends AccessFlags {
 			addToProveObligations();
 			Util.dump(clazz.getName() + " " + getName() + " " + getSignature());
 			Util.dump(proofObligation);
-			System.out.println(getName() + " < num POgs "
+			Logger.get().println(getName() + " < num POgs "
 					+ proofObligation.size() + ">");
 			return;
 		}
@@ -1113,7 +1115,7 @@ public class BCMethod extends AccessFlags {
 
 		Util.dump(clazz.getName() + " " + getName() + " " + getSignature());
 		Util.dump(proofObligation);
-		System.out.println(getName() + " < num POgs " + proofObligation.size()
+		Util.out.println(getName() + " < num POgs " + proofObligation.size()
 				+ ">");
 		System.gc();
 
@@ -1177,7 +1179,7 @@ public class BCMethod extends AccessFlags {
 
 			}
 
-			/* System.out.println(wp); */
+			/* Logger.get().println(wp); */
 		}
 	}
 

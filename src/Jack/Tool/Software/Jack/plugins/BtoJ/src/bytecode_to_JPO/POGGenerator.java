@@ -37,6 +37,7 @@ import bytecode_wp.application.JavaClassLoader;
 import bytecode_wp.bc.io.ReadAttributeException;
 import bytecode_wp.bcclass.BCClass;
 import bytecode_wp.bytecode.block.IllegalLoopException;
+import bytecode_wp.utils.Util;
 
 /**
  * 
@@ -129,8 +130,8 @@ public class POGGenerator implements IRunnableWithProgress {
 			  long startTime = System.currentTimeMillis();
 			clazz.wp(config);
 			
-			  long endTime = System.currentTimeMillis();
-			  System.out.println("WP done " + ( endTime - startTime));
+			long endTime = System.currentTimeMillis();
+			Util.out.println("WP done " + ( endTime - startTime));
 			// IdentifierResolver.init(config);
 			B2JClass bjc = ((B2JPackage) config.getPackage()).addB2JClass(
 					config, clazz, true);
@@ -161,7 +162,7 @@ public class POGGenerator implements IRunnableWithProgress {
 			MessageDialog.openInformation(site.getShell(),
 					JackPlugin.DIALOG_TITLE, e.getMessage());
 			// } catch (Jml2bException rea) {
-			// System.err.println(rea.getMessage());
+			// Logger.err.println(rea.getMessage());
 		}
 		if (firstElement instanceof ICompilationUnit) {
 			ICompilationUnit icu = (ICompilationUnit) firstElement;
@@ -180,7 +181,7 @@ public class POGGenerator implements IRunnableWithProgress {
 		monitor.done();
 		/*
 		 * long endTime = System.currentTimeMillis(); long execTime = endTime -
-		 * startTime; System.out.println("WP done " + execTime + "ms");
+		 * startTime; Logger.get().println("WP done " + execTime + "ms");
 		 */
 
 	}

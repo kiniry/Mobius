@@ -1,11 +1,12 @@
 package bytecode_wp.vcg;
 
+import jack.util.Logger;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import bytecode_wp.bcexpression.Expression;
-import bytecode_wp.bcexpression.QuantifiedExpression;
 import bytecode_wp.bcexpression.javatype.JavaReferenceType;
 import bytecode_wp.bcexpression.javatype.JavaType;
 import bytecode_wp.bcexpression.ref.Reference;
@@ -682,7 +683,7 @@ public class VCGPath extends Expression {
 		Enumeration en = hypPool.elements() ;
 		while (en.hasMoreElements()) {
 			Hypothesis h = (Hypothesis)en.nextElement();
-			System.out.println(h.toString());
+			Logger.get().println(h.toString());
 		}
 	}
 	
@@ -690,7 +691,7 @@ public class VCGPath extends Expression {
 		Enumeration en = goalPool.elements() ;
 		while (en.hasMoreElements()) {
 			Formula h = (Formula)en.nextElement();
-			System.out.println(h.toString());
+			Logger.get().println(h.toString());
 		}
 	}
 	

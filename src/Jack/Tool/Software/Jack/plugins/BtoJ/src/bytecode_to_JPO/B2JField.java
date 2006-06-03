@@ -9,6 +9,7 @@
  /******************************************************************************/
 package bytecode_to_JPO;
 
+import jack.util.Logger;
 import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.Jml2bException;
 import jml2b.structure.AField;
@@ -97,7 +98,7 @@ public class B2JField extends Field implements IModifiers {
 		}
 		catch (Jml2bException j2be) 
 		{
-			System.err.println(j2be.getMessage());
+			Logger.err.println(j2be.getMessage());
 			return null;
 			}
 		}
@@ -156,7 +157,7 @@ public class B2JField extends Field implements IModifiers {
 			c = (B2JClass) c.getSuperClass();
 		}
 //		if (af == null) {
-//			System.out.println(" HERE");
+//			Logger.get().println(" HERE");
 //			af =c.search(fieldR);
 //		}
 		return af;

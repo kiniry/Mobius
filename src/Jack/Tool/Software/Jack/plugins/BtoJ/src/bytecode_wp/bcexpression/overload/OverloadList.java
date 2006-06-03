@@ -6,6 +6,8 @@
  */
 package bytecode_wp.bcexpression.overload;
 
+import jack.util.Logger;
+
 import java.util.Vector;
 
 import bytecode_wp.bcexpression.ArrayAccessExpression;
@@ -123,7 +125,7 @@ public class OverloadList {
 	 */
 	public OverloadList copy() {
 		if (overloads == null) {
-			System.err.println("Warning : a null list of overloads ");
+			Logger.err.println("Warning : a null list of overloads ");
 			return null;
 		}
 		OverloadList overLoadCopy = new OverloadList();

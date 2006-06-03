@@ -41,7 +41,7 @@ public class OverloadEqUnit extends OverloadUnit {
 		}
 		if (expr.equals( getObject()) ) {
 			if (expr instanceof ArrayAccessExpression){
-					System.out.println("coucou");
+					Logger.get().println("coucou");
 			}
 			return getValue();
 		}
@@ -55,7 +55,7 @@ public class OverloadEqUnit extends OverloadUnit {
 		}
 		if (expr.equals( getObject()) ) {
 		/*	if (expr instanceof ArrayAccessExpression){
-					System.out.println("coucou");
+					Logger.get().println("coucou");
 			}*/
 			return this;
 		}

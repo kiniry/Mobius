@@ -1,10 +1,7 @@
 package bytecode_wp.vcg;
 
 
-import java.util.Vector;
-
 import bytecode_wp.bcexpression.Expression;
-import bytecode_wp.bcexpression.ExpressionConstants;
 import bytecode_wp.formula.Formula;
 
 public class Hypothesis {

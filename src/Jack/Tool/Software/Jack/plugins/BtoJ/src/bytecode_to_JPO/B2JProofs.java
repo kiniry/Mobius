@@ -9,6 +9,8 @@
  /******************************************************************************/
 package bytecode_to_JPO;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -204,13 +206,13 @@ public class B2JProofs extends Proofs {
 		}
 		
 //		// on affiche
-//		System.out.println("\nlemme bis");
+//		Logger.get().println("\nlemme bis");
 //		Iterator iter = res.iterator();
 //		while(iter.hasNext()) {
 //			VirtualFormula vf = (VirtualFormula)iter.next();
-//			System.out.println(vf.getFormula().toLangDefault(0));
+//			Logger.get().println(vf.getFormula().toLangDefault(0));
 //		}
-//		System.out.println("-----------------------------");
+//		Logger.get().println("-----------------------------");
 		fHyps.add(f, n, res);
 		return res;
 	}
@@ -221,7 +223,7 @@ public class B2JProofs extends Proofs {
 		
 		HashSet hs = new HashSet();
 		for (int i = 0; i < bclva.length; i++) {
-			//System.out.println(bclva[i]);
+			//Logger.get().println(bclva[i]);
 			try {
 				if(!hs.contains(new Integer(bclva[i].getIndex()))) {
 					res.add(new VirtualFormula(VirtualFormula.REQUIRES, 
@@ -258,7 +260,7 @@ public class B2JProofs extends Proofs {
 					try {
 						return new B2JSimpleLemma(fConfig, f.getGoalsAt(j));
 					} catch (Jml2bException j2be) {
-						System.err.println(j2be.getMessage());
+						Logger.err.println(j2be.getMessage());
 						return null;
 					}
 				n++;
@@ -334,7 +336,7 @@ public class B2JProofs extends Proofs {
 				s.writeInt(0); // goal.vf.flow.size()
 				toFormula(Predicate0Ar.TRUE, new HashSet()).save(fConfig, s, jf); // goal.original
 			} catch (Jml2bException j2be) {
-				System.err.println(j2be.getMessage());
+				Logger.err.println(j2be.getMessage());
 			}
 			s.writeInt(0); // subs.length
 		}
@@ -845,10 +847,10 @@ public class B2JProofs extends Proofs {
 		} else if (e instanceof Variable)
 			return new TerminalForm(e.toString().replace('(', '_').replace(')', 'z'));
 		if(e == null) {
-			System.err.println("ToExpression: type not handled " + e);
+			Logger.err.println("ToExpression: type not handled " + e);
 		}
 		else {
-			System.err.println("ToExpression: type not handled " + e.getClass().toString());
+			Logger.err.println("ToExpression: type not handled " + e.getClass().toString());
 		}
 		return null;
 	}

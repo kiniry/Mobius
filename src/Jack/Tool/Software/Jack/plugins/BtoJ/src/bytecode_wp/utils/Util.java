@@ -5,6 +5,7 @@
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 package bytecode_wp.utils;
+import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
@@ -35,14 +36,14 @@ import bytecode_wp.vcg.VCGPath;
  */
 public class Util {
 	public static boolean DUMP = false;
-	
+	public final static PrintStream out = System.out;
 	/**
 	 * updates the instruction - some of the instructions are wrapped in other objects , e.g. -loop starts and ends, and start of exception handlers
 	 * @param _bc
 	 * @param update
 	 */
 	public static void update(BCInstruction[] _bc, BCInstruction update) {
-		int positionToUpdateWith = update.getPosition();
+		//int positionToUpdateWith = update.getPosition();
 		int bcIndexToUpdate = update.getBCIndex();
 		// if it is the same object no need to update
 		if (_bc[ bcIndexToUpdate ] != update) {
@@ -85,7 +86,7 @@ public class Util {
 			return;
 		}
 		for (int i =0; i < instrs.length; i++) {
-			System.out.println(instrs[i]);
+			out.println(instrs[i]);
 		}
 	
 	}	
@@ -95,25 +96,25 @@ public class Util {
 			return;
 		}
 		for (int i =0; i < instrs.length; i++) {
-			System.out.println(instrs[i]);
+			out.println(instrs[i]);
 		}
 	
 	}	
 	public static void dump(String s) {
 		if (DUMP) {
-			System.out.println(s);
+			out.println(s);
 		}
 	}
 	
 	public static void   dump(Vector v ) {
-		System.out.println("===============VCGS num" + v.size() + "=====================================" );
+		out.println("===============VCGS num" + v.size() + "=====================================" );
 		Enumeration en = v.elements();
 		VCGPath b;
 		while (en.hasMoreElements()) {
 			b =(VCGPath)en.nextElement();
-			System.out.println(b.toString());
+			out.println(b.toString());
 		}
-		System.out.println(" ===============VCGS=====================================" );
+		out.println(" ===============VCGS=====================================" );
 	} 
 	
 	public static void dumpMethods(BCClass clazz) {

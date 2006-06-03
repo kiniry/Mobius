@@ -92,7 +92,7 @@ public class Main {
 		while (miter.hasNext()) {
 			BCMethod m = (BCMethod) miter.next();
 			/*
-			 * System.out.println(" search allocations for method " +
+			 * Logger.get().println(" search allocations for method " +
 			 * m.getName() );
 			 */
 			int memoryAllocated = MethodAllocation.getMethodAllocates(m);

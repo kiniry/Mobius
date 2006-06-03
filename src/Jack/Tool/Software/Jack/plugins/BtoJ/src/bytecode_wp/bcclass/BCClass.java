@@ -6,6 +6,8 @@
  */
 package bytecode_wp.bcclass;
 
+import jack.util.Logger;
+
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ import bytecode_wp.bytecode.block.IllegalLoopException;
 import bytecode_wp.formula.Formula;
 import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.vcg.VCGPath;
+import bytecode_wp.utils.Util;
 
 /**
  * @author mpavlova
@@ -292,7 +295,7 @@ public class BCClass implements IClass {
 		setConfig(config);
 		while (miter.hasNext()) {
 			BCMethod m = (BCMethod) miter.next();
-			System.out.println("wp for Method " + m.getName());
+			Util.out.println("wp for Method " + m.getName());
 			m.initMethod();
 			m.wp(config);
 
