@@ -11,6 +11,7 @@ package bPlugin;
 
 import jab.eJab;
 import jack.plugin.JackPlugin;
+import jack.util.Logger;
 
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -53,7 +54,7 @@ public class BProjectPropertyPage extends PropertyPage {
 		try {
 			return resource.getPersistentProperty(BPlugin.AB_PROJECT_PROPERTY);
 		} catch (CoreException e) {
-			System.err.println("Exception catched: " + e.toString());
+			Logger.err.println("Exception catched: " + e.toString());
 			return null;
 		}
 
@@ -78,14 +79,14 @@ public class BProjectPropertyPage extends PropertyPage {
 							BPlugin.AB_PROJECT_PROPERTY,
 							new_value);
 					} catch (CoreException e) {
-						System.err.println(
+						Logger.err.println(
 							"Exception catched: " + e.toString());
 						return false;
 					}
 					return true;
 				}
 			} catch (java.rmi.RemoteException re) {
-				System.err.println(re.getMessage());
+				Logger.err.println(re.getMessage());
 			}
 		return false;
 	}

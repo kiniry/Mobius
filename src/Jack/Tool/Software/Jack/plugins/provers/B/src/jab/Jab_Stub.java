@@ -7,42 +7,8 @@ public final class Jab_Stub
     extends java.rmi.server.RemoteStub
     implements jab.eJab, java.rmi.Remote
 {
-    private static final java.rmi.server.Operation[] operations = {
-	new java.rmi.server.Operation("boolean addFile(java.lang.String, java.lang.String)"),
-	new java.rmi.server.Operation("boolean beginReadPmi(java.lang.String, java.lang.String)"),
-	new java.rmi.server.Operation("boolean browse(java.lang.String, java.lang.String)"),
-	new java.rmi.server.Operation("boolean checkProject(java.lang.String)"),
-	new java.rmi.server.Operation("boolean closePmi()"),
-	new java.rmi.server.Operation("boolean closePo()"),
-	new java.rmi.server.Operation("boolean endReadPmi()"),
-	new java.rmi.server.Operation("boolean fh(java.lang.String, int, java.lang.String)"),
-	new java.rmi.server.Operation("int getCptProvedRunning()"),
-	new java.rmi.server.Operation("int getCptUnprovedRunning()"),
-	new java.rmi.server.Operation("jab.eJab getNewAb()"),
-	new java.rmi.server.Operation("java.lang.String getProjectList()[]"),
-	new java.rmi.server.Operation("boolean getProofRunning()"),
-	new java.rmi.server.Operation("boolean getStatus(java.lang.String, java.lang.String, int)[]"),
-	new java.rmi.server.Operation("void initialize(boolean)"),
-	new java.rmi.server.Operation("boolean isPmiAvailable()"),
-	new java.rmi.server.Operation("boolean isProved(java.lang.String, int)"),
-	new java.rmi.server.Operation("void killProofProcess()"),
-	new java.rmi.server.Operation("void newProject(java.lang.String)"),
-	new java.rmi.server.Operation("boolean openPmi(java.lang.String, java.lang.String)"),
-	new java.rmi.server.Operation("boolean openPo(java.lang.String)"),
-	new java.rmi.server.Operation("boolean pr(java.lang.String, int, java.lang.String)"),
-	new java.rmi.server.Operation("void prove(java.lang.String, java.lang.String, int)"),
-	new java.rmi.server.Operation("void q()"),
-	new java.rmi.server.Operation("void quitinteractiveprover()"),
-	new java.rmi.server.Operation("byte read()[]"),
-	new java.rmi.server.Operation("java.lang.String removeProject(java.lang.String)"),
-	new java.rmi.server.Operation("boolean send(byte[])")
-    };
-    
-    private static final long interfaceHash = 3239873465304449000L;
-    
     private static final long serialVersionUID = 2;
     
-    private static boolean useNewInvoke;
     private static java.lang.reflect.Method $method_addFile_0;
     private static java.lang.reflect.Method $method_beginReadPmi_1;
     private static java.lang.reflect.Method $method_browse_2;
@@ -74,14 +40,6 @@ public final class Jab_Stub
     
     static {
 	try {
-	    java.rmi.server.RemoteRef.class.getMethod("invoke",
-		new java.lang.Class[] {
-		    java.rmi.Remote.class,
-		    java.lang.reflect.Method.class,
-		    java.lang.Object[].class,
-		    long.class
-		});
-	    useNewInvoke = true;
 	    $method_addFile_0 = jab.eJab.class.getMethod("addFile", new java.lang.Class[] {java.lang.String.class, java.lang.String.class});
 	    $method_beginReadPmi_1 = jab.eJab.class.getMethod("beginReadPmi", new java.lang.Class[] {java.lang.String.class, java.lang.String.class});
 	    $method_browse_2 = jab.eJab.class.getMethod("browse", new java.lang.Class[] {java.lang.String.class, java.lang.String.class});
@@ -111,14 +69,12 @@ public final class Jab_Stub
 	    $method_removeProject_26 = jab.eJab.class.getMethod("removeProject", new java.lang.Class[] {java.lang.String.class});
 	    $method_send_27 = jab.eJab.class.getMethod("send", new java.lang.Class[] {byte[].class});
 	} catch (java.lang.NoSuchMethodException e) {
-	    useNewInvoke = false;
+	    throw new java.lang.NoSuchMethodError(
+		"stub class initialization failed");
 	}
     }
     
     // constructors
-    public Jab_Stub() {
-	super();
-    }
     public Jab_Stub(java.rmi.server.RemoteRef ref) {
 	super(ref);
     }
@@ -130,30 +86,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_addFile_0, new java.lang.Object[] {$param_String_1, $param_String_2}, 5245086822542956048L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 0, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeObject($param_String_2);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_addFile_0, new java.lang.Object[] {$param_String_1, $param_String_2}, 5245086822542956048L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -168,30 +102,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_beginReadPmi_1, new java.lang.Object[] {$param_String_1, $param_String_2}, 5745359002446322212L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 1, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeObject($param_String_2);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_beginReadPmi_1, new java.lang.Object[] {$param_String_1, $param_String_2}, 5745359002446322212L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -206,30 +118,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_browse_2, new java.lang.Object[] {$param_String_1, $param_String_2}, 7098870451493669672L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 2, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeObject($param_String_2);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_browse_2, new java.lang.Object[] {$param_String_1, $param_String_2}, 7098870451493669672L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -244,29 +134,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_checkProject_3, new java.lang.Object[] {$param_String_1}, -4931426869207108641L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 3, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_checkProject_3, new java.lang.Object[] {$param_String_1}, -4931426869207108641L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -281,23 +150,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_closePmi_4, null, -6571912864424101487L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 4, interfaceHash);
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_closePmi_4, null, -6571912864424101487L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -312,23 +166,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_closePo_5, null, -4565342415526609202L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 5, interfaceHash);
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_closePo_5, null, -4565342415526609202L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -343,23 +182,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_endReadPmi_6, null, 7198378289140020038L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 6, interfaceHash);
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_endReadPmi_6, null, 7198378289140020038L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -374,31 +198,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_fh_7, new java.lang.Object[] {$param_String_1, new java.lang.Integer($param_int_2), $param_String_3}, -6054834294597473936L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 7, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeInt($param_int_2);
-		    out.writeObject($param_String_3);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_fh_7, new java.lang.Object[] {$param_String_1, new java.lang.Integer($param_int_2), $param_String_3}, -6054834294597473936L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -413,23 +214,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getCptProvedRunning_8, null, 823062973722712937L);
-		return ((java.lang.Integer) $result).intValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 8, interfaceHash);
-		ref.invoke(call);
-		int $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readInt();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_getCptProvedRunning_8, null, 823062973722712937L);
+	    return ((java.lang.Integer) $result).intValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -444,23 +230,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getCptUnprovedRunning_9, null, -936221374158210809L);
-		return ((java.lang.Integer) $result).intValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 9, interfaceHash);
-		ref.invoke(call);
-		int $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readInt();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_getCptUnprovedRunning_9, null, -936221374158210809L);
+	    return ((java.lang.Integer) $result).intValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -475,25 +246,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getNewAb_10, null, -833827889384956681L);
-		return ((jab.eJab) $result);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 10, interfaceHash);
-		ref.invoke(call);
-		jab.eJab $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = (jab.eJab) in.readObject();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} catch (java.lang.ClassNotFoundException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_getNewAb_10, null, -833827889384956681L);
+	    return ((jab.eJab) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -508,25 +262,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getProjectList_11, null, 3636908275960869120L);
-		return ((java.lang.String[]) $result);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 11, interfaceHash);
-		ref.invoke(call);
-		java.lang.String[] $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = (java.lang.String[]) in.readObject();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} catch (java.lang.ClassNotFoundException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_getProjectList_11, null, 3636908275960869120L);
+	    return ((java.lang.String[]) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -541,23 +278,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getProofRunning_12, null, -8229988436656555120L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 12, interfaceHash);
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_getProofRunning_12, null, -8229988436656555120L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -572,33 +294,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_getStatus_13, new java.lang.Object[] {$param_String_1, $param_String_2, new java.lang.Integer($param_int_3)}, 7331336796695526408L);
-		return ((boolean[]) $result);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 13, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeObject($param_String_2);
-		    out.writeInt($param_int_3);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean[] $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = (boolean[]) in.readObject();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} catch (java.lang.ClassNotFoundException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_getStatus_13, new java.lang.Object[] {$param_String_1, $param_String_2, new java.lang.Integer($param_int_3)}, 7331336796695526408L);
+	    return ((boolean[]) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -613,19 +310,7 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		ref.invoke(this, $method_initialize_14, new java.lang.Object[] {new java.lang.Boolean($param_boolean_1)}, -7946685958231776282L);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 14, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeBoolean($param_boolean_1);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		ref.done(call);
-	    }
+	    ref.invoke(this, $method_initialize_14, new java.lang.Object[] {new java.lang.Boolean($param_boolean_1)}, -7946685958231776282L);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -640,23 +325,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_isPmiAvailable_15, null, -6212553197052488038L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 15, interfaceHash);
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_isPmiAvailable_15, null, -6212553197052488038L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -671,30 +341,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_isProved_16, new java.lang.Object[] {$param_String_1, new java.lang.Integer($param_int_2)}, -53678776900371279L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 16, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeInt($param_int_2);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_isProved_16, new java.lang.Object[] {$param_String_1, new java.lang.Integer($param_int_2)}, -53678776900371279L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -709,13 +357,7 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		ref.invoke(this, $method_killProofProcess_17, null, 1821907697464485882L);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 17, interfaceHash);
-		ref.invoke(call);
-		ref.done(call);
-	    }
+	    ref.invoke(this, $method_killProofProcess_17, null, 1821907697464485882L);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -730,19 +372,7 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		ref.invoke(this, $method_newProject_18, new java.lang.Object[] {$param_String_1}, -2717403647842216458L);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 18, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		ref.done(call);
-	    }
+	    ref.invoke(this, $method_newProject_18, new java.lang.Object[] {$param_String_1}, -2717403647842216458L);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -757,30 +387,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_openPmi_19, new java.lang.Object[] {$param_String_1, $param_String_2}, -2995958289460920514L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 19, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeObject($param_String_2);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_openPmi_19, new java.lang.Object[] {$param_String_1, $param_String_2}, -2995958289460920514L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -795,29 +403,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_openPo_20, new java.lang.Object[] {$param_String_1}, 5340959733864307727L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 20, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_openPo_20, new java.lang.Object[] {$param_String_1}, 5340959733864307727L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -832,31 +419,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_pr_21, new java.lang.Object[] {$param_String_1, new java.lang.Integer($param_int_2), $param_String_3}, 8892091475393889308L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 21, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeInt($param_int_2);
-		    out.writeObject($param_String_3);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_pr_21, new java.lang.Object[] {$param_String_1, new java.lang.Integer($param_int_2), $param_String_3}, 8892091475393889308L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -871,21 +435,7 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		ref.invoke(this, $method_prove_22, new java.lang.Object[] {$param_String_1, $param_String_2, new java.lang.Integer($param_int_3)}, 8843573161742053354L);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 22, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		    out.writeObject($param_String_2);
-		    out.writeInt($param_int_3);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		ref.done(call);
-	    }
+	    ref.invoke(this, $method_prove_22, new java.lang.Object[] {$param_String_1, $param_String_2, new java.lang.Integer($param_int_3)}, 8843573161742053354L);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -900,13 +450,7 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		ref.invoke(this, $method_q_23, null, 162627051254736313L);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 23, interfaceHash);
-		ref.invoke(call);
-		ref.done(call);
-	    }
+	    ref.invoke(this, $method_q_23, null, 162627051254736313L);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -921,13 +465,7 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		ref.invoke(this, $method_quitinteractiveprover_24, null, -3356067509311412074L);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 24, interfaceHash);
-		ref.invoke(call);
-		ref.done(call);
-	    }
+	    ref.invoke(this, $method_quitinteractiveprover_24, null, -3356067509311412074L);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -942,25 +480,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_read_25, null, -852970867388823748L);
-		return ((byte[]) $result);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 25, interfaceHash);
-		ref.invoke(call);
-		byte[] $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = (byte[]) in.readObject();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} catch (java.lang.ClassNotFoundException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_read_25, null, -852970867388823748L);
+	    return ((byte[]) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -975,31 +496,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_removeProject_26, new java.lang.Object[] {$param_String_1}, 6588153618071382264L);
-		return ((java.lang.String) $result);
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 26, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_String_1);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		java.lang.String $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = (java.lang.String) in.readObject();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} catch (java.lang.ClassNotFoundException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_removeProject_26, new java.lang.Object[] {$param_String_1}, 6588153618071382264L);
+	    return ((java.lang.String) $result);
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {
@@ -1014,29 +512,8 @@ public final class Jab_Stub
 	throws java.rmi.RemoteException
     {
 	try {
-	    if (useNewInvoke) {
-		Object $result = ref.invoke(this, $method_send_27, new java.lang.Object[] {$param_arrayOf_byte_1}, 7616950781885259020L);
-		return ((java.lang.Boolean) $result).booleanValue();
-	    } else {
-		java.rmi.server.RemoteCall call = ref.newCall((java.rmi.server.RemoteObject) this, operations, 27, interfaceHash);
-		try {
-		    java.io.ObjectOutput out = call.getOutputStream();
-		    out.writeObject($param_arrayOf_byte_1);
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.MarshalException("error marshalling arguments", e);
-		}
-		ref.invoke(call);
-		boolean $result;
-		try {
-		    java.io.ObjectInput in = call.getInputStream();
-		    $result = in.readBoolean();
-		} catch (java.io.IOException e) {
-		    throw new java.rmi.UnmarshalException("error unmarshalling return", e);
-		} finally {
-		    ref.done(call);
-		}
-		return $result;
-	    }
+	    Object $result = ref.invoke(this, $method_send_27, new java.lang.Object[] {$param_arrayOf_byte_1}, 7616950781885259020L);
+	    return ((java.lang.Boolean) $result).booleanValue();
 	} catch (java.lang.RuntimeException e) {
 	    throw e;
 	} catch (java.rmi.RemoteException e) {

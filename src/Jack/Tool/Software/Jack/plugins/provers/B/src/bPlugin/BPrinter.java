@@ -11,6 +11,8 @@
 
 package bPlugin;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -116,7 +118,7 @@ public class BPrinter implements IPrinter {
 	 */
 	String getBClass(BClass c) {
 		if (c.enumerationRank == 0)
-			System.err.println("");
+			Logger.warn.println("enumeration rank == 0");
 		return c.enumerationRank + "|->" + NAMES + " |-> 0";
 	}
 
@@ -358,7 +360,7 @@ public class BPrinter implements IPrinter {
 			poprinter.printTheoryFormulas(config, fi);
 			poprinter.printTheoryProofList(fi);
 		} catch (LanguageException le) {
-			System.err.println(le.getMessage());
+			Logger.err.println(le.getMessage());
 		} finally {
 			// close the file after printing (even if an exception is
 			// thrown)
@@ -366,7 +368,7 @@ public class BPrinter implements IPrinter {
 				try {
 					ostream.close();
 				} catch (IOException e) {
-					System.err.println("Error closing file: " + ostream.toString());
+					Logger.err.println("Error closing file: " + ostream.toString());
 				}
 			}
 		}
@@ -406,7 +408,7 @@ public class BPrinter implements IPrinter {
 			mchPrinter.printProperties(config, fi);
 			mchPrinter.printAssertions(fi);
 		} catch (LanguageException le) {
-			System.err.println(le.getMessage());
+			Logger.err.println(le.getMessage());
 		} finally {
 			// close the file after printing (even if an exception is
 			// thrown)
@@ -414,7 +416,7 @@ public class BPrinter implements IPrinter {
 				try {
 					ostream.close();
 				} catch (IOException e) {
-					System.err.println("Error closing file: " + ostream.toString());
+					Logger.err.println("Error closing file: " + ostream.toString());
 				}
 			}
 		}

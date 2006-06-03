@@ -7,6 +7,7 @@
 package bPlugin;
 
 import jab.eJab;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +47,7 @@ public class AbB4Free2_0 extends Ab {
 	int i = res.indexOf(printingProjectList) 
 	    + printingProjectList.length() + 1;
         while (i+1 < res.length()) {
-	    System.out.println("--> " + res.substring(i, res.length()));
+	    Logger.get().println("--> " + res.substring(i, res.length()));
 	    projectList.add(res.substring(i, i = res.indexOf('\n', i+1)));
 	}
         String[] result = new String[projectList.size()-6];

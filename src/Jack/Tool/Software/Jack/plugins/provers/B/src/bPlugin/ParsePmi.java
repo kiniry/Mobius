@@ -8,6 +8,8 @@
 /******************************************************************************/
 package bPlugin;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class ParsePmi {
 		String node_text = tree.getText();
 
 		// affiche le contenu du noeud dans un format lisible (?).
-		System.out.println(
+		Logger.get().println(
 			tabs.toString()
 				+ "| "
 				+ token_names[node_type]
@@ -69,7 +71,7 @@ public class ParsePmi {
 		try {
 			fs = new FileInputStream(f);
 		} catch (IOException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return;
 		}
 		try {
@@ -86,26 +88,26 @@ public class ParsePmi {
 			try {
 				fs.close();
 			} catch (IOException ioe) {
-				System.err.println("Error closing file: " + ioe.toString());
+				Logger.err.println("Error closing file: " + ioe.toString());
 
 			}
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return;
 		} catch (antlr.TokenStreamException e) {
 			try {
 				fs.close();
 			} catch (IOException ioe) {
-				System.err.println("Error closing file: " + ioe.toString());
+				Logger.err.println("Error closing file: " + ioe.toString());
 
 			}
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return;
 		}
 
 		try {
 			fs.close();
 		} catch (IOException e) {
-			System.err.println("Error closing file: " + e.toString());
+			Logger.err.println("Error closing file: " + e.toString());
 			return;
 		}
 
@@ -114,7 +116,7 @@ public class ParsePmi {
 		}
 
 		AST tree = parser.getAST();
-		System.err.println("Parse OK");
+		Logger.err.println("Parse OK");
 
 		// r�cup�re la table de conversion token -> chaine de charact�re 
 		// correspondante.
@@ -127,8 +129,8 @@ public class ParsePmi {
 	}
 
 	private static void displayUsage() {
-		System.out.println("Usage:");
-		System.out.println(" ParsePmi <Pmi file>");
+		Logger.get().println("Usage:");
+		Logger.get().println(" ParsePmi <Pmi file>");
 	}
 
 	public static void main(String[] args) {
@@ -143,7 +145,7 @@ public class ParsePmi {
 			if (f.exists()) {
 				checkFile(f);
 			} else {
-				System.out.println("File does not exists : " + args[0]);
+				Logger.get().println("File does not exists : " + args[0]);
 			}
 		} catch (/*IOException */
 			Exception e) {

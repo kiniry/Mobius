@@ -7,6 +7,7 @@
 package bPlugin;
 
 import jab.eJab;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -137,7 +138,7 @@ public abstract class Ab implements eJab {
 	int i = res.indexOf(printingProjectList) 
 	    + printingProjectList.length() + 1;
         while (i+1 < res.length()) {
-	    System.out.println("--> " + res.substring(i+7, res.length()));
+	    Logger.get().println("--> " + res.substring(i+7, res.length()));
 	    projectList.add(res.substring(i+7, i = res.indexOf('\n', i+7)));
 	}
         String[] result = new String[projectList.size()-2];
@@ -199,7 +200,7 @@ public abstract class Ab implements eJab {
 	 * @see jab.eJab#openPmi(java.lang.String, java.lang.String)
 	 */
 	public boolean openPmi(String name, String project) throws RemoteException {
-		System.out.println("Opening " + directory 
+		Logger.get().println("Opening " + directory 
 						   + "/" 
 						   + name 
 						   + ".pmi");
@@ -328,7 +329,7 @@ public abstract class Ab implements eJab {
 	 */
 	public boolean getProofRunning() throws RemoteException {
 		if (!proofRunning) {
-		    System.out.println(toString() + " proof no longer running.");
+		    Logger.get().println(toString() + " proof no longer running.");
 		}
 		return proofRunning;
 	 	}
@@ -360,7 +361,7 @@ public abstract class Ab implements eJab {
 		    }
 		}
 		if (atelierb != null) {
-		    System.out.println("Kill proof process. " + atelierb.toString());
+		    Logger.get().println("Kill proof process. " + atelierb.toString());
 		    atelierb.destroy();
 		}
 		if (proveThread != null)
@@ -473,7 +474,7 @@ public abstract class Ab implements eJab {
     	    f.flush();
     	    os.flush();
     	    f.close();
-    	    System.out.println("Command " + command + "\nq\n" + " sent");
+    	    Logger.get().println("Command " + command + "\nq\n" + " sent");
     	    
     	    Object sync = new Object();
     	    
@@ -618,7 +619,7 @@ class Reader extends Thread {
 		return;
 	    }
 	    catch (IOException ioe) {
-		System.out.println("reader IOException : "
+		Logger.get().println("reader IOException : "
 				   + ioe.toString());
 		ie = ioe;
 	    }
@@ -652,7 +653,7 @@ class ProveThread extends Thread {
     }
     
     public void run() {
-	System.err.println(toString() + " is running.");
+	Logger.err.println(toString() + " is running.");
 	try {
 	    ab.sendCommand("op " + project + "\n"
 			   + "pr " + name + " " + force + "\n");
@@ -660,7 +661,7 @@ class ProveThread extends Thread {
 	catch (RemoteException re) {
 	    remoteExc = re;
 	}
-	System.err.println(toString() + " is finished.");
+	Logger.err.println(toString() + " is finished.");
 	ab.proofRunning = false;
     }
 

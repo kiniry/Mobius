@@ -13,6 +13,7 @@ import jack.plugin.JpovUtil;
 import jack.plugin.edit.EditedFile;
 import jack.plugin.prove.ProofTask;
 import jack.plugin.prove.ProveAction;
+import jack.util.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -182,7 +183,7 @@ public class AtelierBProofTask extends ProofTask {
 							increaseProved(proved - currentProved);
 							current = proved + unproved;
 							currentProved = proved;
-							//				System.err.print(".");
+							//				Logger.err.print(".");
 							changed();
 						}
 					}
@@ -268,7 +269,7 @@ public class AtelierBProofTask extends ProofTask {
 				try {
 					ostream.close();
 				} catch (IOException e) {
-					System.err.println(
+					Logger.err.println(
 						"Error closing file: " + ostream.toString());
 				}
 			}
@@ -291,7 +292,7 @@ public class AtelierBProofTask extends ProofTask {
 		try {
 			fs = new FileInputStream(f);
 		} catch (IOException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return null;
 		}
 		try {
@@ -305,16 +306,16 @@ public class AtelierBProofTask extends ProofTask {
 			parser.compilation_unit();
 			parser.errors += lexer.errors;
 		} catch (antlr.RecognitionException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return null;
 		} catch (antlr.TokenStreamException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return null;
 		} finally {
 			try {
 				fs.close();
 			} catch (IOException e) {
-				System.err.println("Error closing file: " + e.toString());
+				Logger.err.println("Error closing file: " + e.toString());
 				return null;
 			}
 		}

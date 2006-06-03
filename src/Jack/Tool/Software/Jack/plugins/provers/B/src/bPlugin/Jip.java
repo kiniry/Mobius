@@ -8,6 +8,8 @@
 //*******************************************************************************/
 package bPlugin;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,7 +43,7 @@ public class Jip {
 		isLaunched = true;
 	}
 	catch (IOException e) {
-	    System.err.println("Cannot execute Atelier B.");
+	    Logger.err.println("Cannot execute Atelier B.");
 	    System.exit(1);
 	}
     }
@@ -56,7 +58,7 @@ public class Jip {
 	    f.flush();
 	    os.flush();
 	    //	    f.close();
-	    System.out.println("Command " + command + " sent");
+	    Logger.get().println("Command " + command + " sent");
 	    
 	    int i;
 	    lab : do {
@@ -66,7 +68,7 @@ public class Jip {
 		    b = new byte[i];
 		    is.read(b, 0, i);
 		    res += new String(b);
-		     if (debug) System.out.println("AA : " + res);
+		     if (debug) Logger.get().println("AA : " + res);
 		     for (int k=0;k < response.length; k++)
 		    if (res.length() >= response[k].length()) {
 			if (res.substring(res.length()-response[k].length(), 
@@ -78,14 +80,14 @@ public class Jip {
 		    b = new byte[i];
 		    er.read(b, 0, i);
 		    res += new String(b);
-		    if (debug) System.out.println("BB : " + res);
+		    if (debug) Logger.get().println("BB : " + res);
 		    System.exit(1);
 		}
 	    }
 		  while (true);
 	}
 	catch (IOException e) {
-	    System.err.println("Cannot read buffer.");
+	    Logger.err.println("Cannot read buffer.");
 	    System.exit(1);
 	}
 	return res;

@@ -10,6 +10,7 @@
 package bPlugin;
 
 import jab.eJab;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -307,7 +308,7 @@ public class AbServer {
 				connected = false;
 				throw re;
 			} catch (IOException re) {
-				System.out.println(re.toString());
+				Logger.get().println(re.toString());
 			}
 		}
 	}

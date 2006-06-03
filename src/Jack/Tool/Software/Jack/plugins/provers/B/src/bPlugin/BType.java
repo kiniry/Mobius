@@ -9,6 +9,7 @@
 
 package bPlugin;
 
+import jack.util.Logger;
 import jml2b.exceptions.LanguageException;
 import jml2b.languages.ITranslatable;
 import jml2b.languages.ITranslationResult;
@@ -90,7 +91,7 @@ public class BType extends Type implements ITranslatable {
 				BClass clzz = BPrinter.getBClass(refType);
 				if(clzz == null) {
 					// ...and we print the warning
-					System.err.println("Type unknown");
+					Logger.err.println("Type unknown");
 					return BPrinter.TYPES;
 				}
 				return getBType(clzz.enumerationRank + "|->" + BPrinter.NAMES, dimension);

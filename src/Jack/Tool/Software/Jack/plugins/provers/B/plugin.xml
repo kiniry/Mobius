@@ -27,16 +27,18 @@
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="proveAction">
          <action
-               label="Prove with AtelierB"
                class="bPlugin.ProveBAction"
-               menubarPath="jack_menu/prover/prover_slot"
-               id="jack.plugin.proveBFileAction">
+               icon="icons/jml_prove.gif"
+               id="jack.plugin.proveBFileAction"
+               label="Prove with AtelierB"
+               menubarPath="jack_menu/prover/prover_slot">
          </action>
         <action
-               label="Prove with AtelierB"
-               class="bPlugin.ProveBBytecodeAction"
-               menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo"
-               id="jack.plugin.proveBJpoFileAction">
+              class="bPlugin.ProveBBytecodeAction"
+              icon="icons/jml_prove_bc.gif"
+              id="jack.plugin.proveBJpoFileAction"
+              label="Prove with AtelierB"
+              menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo">
          </action>
       </objectContribution>
    </extension>
@@ -47,10 +49,11 @@
             nameFilter="*.jpo"
            id="proveJpoAction">
          <action
-               label="Prove with AtelierB"
                class="bPlugin.ProveBAction"
-               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
-               id="jack.plugin.proveJpoFileAction">
+               icon="icons/jml_prove.gif"
+               id="jack.plugin.proveJpoFileAction"
+               label="Prove with AtelierB"
+               menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo">
          </action>
       </objectContribution>
    </extension>
