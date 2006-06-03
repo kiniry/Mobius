@@ -331,6 +331,10 @@ public final class ErrorMsg
 	    r = ("Read of variable when its value may be meaningless");
 	    Assert.notFalse(hasAssocDecl);
 	    break;
+	case TagConstants.CHKEXPRDEFINEDNESS:
+	    r = ("Assertion expression may be undefined (e.g. due to use of an operator or method when its precondition could be violated)");
+	    Assert.notFalse(hasAssocDecl);
+	    break;
 	case TagConstants.CHKINDEXNEGATIVE:
 	    r = ("Possible negative array index");
 	    Assert.notFalse(!hasAssocDecl);
