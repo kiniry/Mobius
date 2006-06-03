@@ -12,6 +12,7 @@ import jack.plugin.JackJml2bConfiguration;
 import jack.plugin.JackPlugin;
 import jack.plugin.source.JmlMergeViewer;
 import jack.plugin.source.JmlMergeViewerContentProvider;
+import jack.util.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -203,7 +204,7 @@ public class PropagationWizard extends Wizard {
 				getContainer().run(true, true, pg);
 			} catch (InvocationTargetException e) {
 				Throwable t = e.getTargetException();
-				System.err.println(
+				Logger.get().printlnError(this, 
 					"InvocationTargetException : " + t.toString());
 				t.printStackTrace();
 			} catch (InterruptedException e) {
@@ -251,7 +252,7 @@ public class PropagationWizard extends Wizard {
 					for (int i = 0; i < jes.length; i++)
 						collectCompilationUnit(jes[i], res);
 				} catch (JavaModelException jme) {
-					System.err.println(jme.getMessage());
+					Logger.get().printlnError(this, jme.getMessage());
 				}
 			}
 		}

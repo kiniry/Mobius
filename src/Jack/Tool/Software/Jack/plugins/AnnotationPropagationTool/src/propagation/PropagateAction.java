@@ -8,6 +8,8 @@
 /******************************************************************************/
 package propagation;
 
+import jack.util.Logger;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,7 +37,7 @@ public class PropagateAction implements IObjectActionDelegate {
 		try {
 			return (IFile) selection.getFirstElement();
 		} catch (ClassCastException e) {
-			System.err.println(
+			Logger.get().printlnError(this, 
 				"OpenViewAction.getCompilationUnit: "
 					+ "error casting selection to ICompilationUnit");
 			return null;

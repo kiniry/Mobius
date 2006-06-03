@@ -172,7 +172,7 @@ public class PropClass extends Class {
 		//			os.writeUTF(s);
 		//			os.close();
 		//		} catch (IOException ioe) {
-		//			System.err.println(ioe.getMessage());
+		//			Logger.get().printlnError(this, ioe.getMessage());
 		//		}
 		return fileUpdates;
 	}
