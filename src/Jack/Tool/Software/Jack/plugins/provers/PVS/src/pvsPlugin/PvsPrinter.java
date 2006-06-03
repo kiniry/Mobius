@@ -9,6 +9,8 @@
  /******************************************************************************/
 package pvsPlugin;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -657,7 +659,7 @@ public class PvsPrinter implements IPrinter {
 		try {
 			printPvs(config, fi);
 		} catch (LanguageException le) {
-			System.err.println(le.getMessage());
+			Logger.err.println(le.getMessage());
 		} finally {
 			// close the file after printing (even if an exception is
 			// thrown)
@@ -665,7 +667,7 @@ public class PvsPrinter implements IPrinter {
 				try {
 					ostream.close();
 				} catch (IOException e) {
-					System.err.println("Error closing file: "
+					Logger.err.println("Error closing file: "
 							+ ostream.toString());
 				}
 			}
@@ -684,7 +686,7 @@ public class PvsPrinter implements IPrinter {
 			try {
 				ostream.close();
 			} catch (IOException e) {
-				System.err.println("Error closing file: " + ostream.toString());
+				Logger.err.println("Error closing file: " + ostream.toString());
 			}
 		}
 

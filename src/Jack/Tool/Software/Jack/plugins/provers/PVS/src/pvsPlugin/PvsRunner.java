@@ -10,6 +10,8 @@
 /*******************************************************************************/
 package pvsPlugin;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.io.PrintStream;
 
@@ -81,7 +83,7 @@ public class PvsRunner {
 //					got_gt = false;
 //					buff.append((char) b);
 //					if (echo) {
-//						System.out.print((char) b);
+//						Logger.get().print((char) b);
 //					}
 //			}
 //
@@ -101,7 +103,7 @@ public class PvsRunner {
 //			try {
 //				b = s.read();
 //			} catch (IOException e) {
-//				System.err.println("IOException_catched" + e.toString()); //$NON-NLS-1$
+//				Logger.err.println("IOException_catched" + e.toString()); //$NON-NLS-1$
 //				return;
 //			}
 //			switch (b) {
@@ -119,7 +121,7 @@ public class PvsRunner {
 //				default :
 //					got_gt = false;
 //					if (echo) {
-//						System.out.print((char) b);
+//						Logger.get().print((char) b);
 //					}
 //			}
 //
@@ -139,7 +141,7 @@ public class PvsRunner {
 //			try {
 //				b = s.read();
 //			} catch (IOException e) {
-//				System.err.println("IOException_catched" + e.toString()); //$NON-NLS-1$
+//				Logger.err.println("IOException_catched" + e.toString()); //$NON-NLS-1$
 //				return 0;
 //			}
 //			switch (b) {
@@ -154,7 +156,7 @@ public class PvsRunner {
 //				//					try {
 //				//						return s.read();
 //				//					} catch (IOException e) {
-//				//						System.err.println(
+//				//						Logger.err.println(
 //				//							"IOException catched : " + e.toString());
 //				//						return 0;
 //				//					}
@@ -184,8 +186,8 @@ public class PvsRunner {
 //		input.println(command);
 //		input.flush();
 //		if (echo) {
-//			System.out.println("Sending_command"); //$NON-NLS-1$
-//			System.out.println(command);
+//			Logger.get().println("Sending_command"); //$NON-NLS-1$
+//			Logger.get().println(command);
 //		}
 //		waitForPrompt();
 //	}
@@ -278,7 +280,7 @@ public class PvsRunner {
 //		input.println(")");
 //		input.flush();
 //		if (echo) {
-//			System.out.println(bg);
+//			Logger.get().println(bg);
 //		}
 //		waitForPrompt();
 //	}
@@ -301,7 +303,7 @@ public class PvsRunner {
 		try {
 			pvs.waitFor();
 		} catch (InterruptedException e) {
-			System.err.println("InterruptedException_catched" + e.toString()); //$NON-NLS-1$
+			Logger.err.println("InterruptedException_catched" + e.toString()); //$NON-NLS-1$
 		}
 		input = null;
 		pvs = null;
@@ -319,11 +321,11 @@ public class PvsRunner {
 	//		try {
 	//			boolean result = prove(formula);
 	//			if (result == expected) {
-	//				System.err.println(
+	//				Logger.err.println(
 	//					"OK: " + formula + " = " + expected + ", as expected");
 	//				return true;
 	//			} else {
-	//				System.err.println(
+	//				Logger.err.println(
 	//					"**ERROR: "
 	//						+ formula
 	//						+ " = "
@@ -333,7 +335,7 @@ public class PvsRunner {
 	//				return false;
 	//			}
 	//		} catch (SimplifyException e) {
-	//			System.err.println("**EXCEPTION: " + formula + ": " + e.toString());
+	//			Logger.err.println("**EXCEPTION: " + formula + ": " + e.toString());
 	//			return false;
 	//		}
 	//	}
@@ -346,10 +348,10 @@ public class PvsRunner {
 //	boolean checkException() {
 //		try {
 //			boolean res = prove();
-//			System.err.println("ERROR__expected_exception,_got" + res); //$NON-NLS-1$
+//			Logger.err.println("ERROR__expected_exception,_got" + res); //$NON-NLS-1$
 //			return false;
 //		} catch (PvsException e) {
-//			System.err.println("OK__catched_exception" + e.toString()); //$NON-NLS-1$
+//			Logger.err.println("OK__catched_exception" + e.toString()); //$NON-NLS-1$
 //		}
 //		return true;
 //	}
