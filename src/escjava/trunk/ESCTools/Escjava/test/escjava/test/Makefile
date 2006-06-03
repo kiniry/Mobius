@@ -20,7 +20,7 @@ CLASSDIRECTORY ?=${ESCJAVA_CLASSFILES}
 
 compile_escjava_parser_test_programs:
 	@${JAVAC} ${JAVAC_FLAGS} \
-		-classpath ${ESC_CLASSPATH} \
+		-classpath "$(call canonicalize,${ESC_CLASSPATH})" \
 		-d $(call canonicalize,${CLASSDIRECTORY}) \
 		$(call canonicalize,${PARSER_TEST_DIR}/TestLex.java) \
 		$(call canonicalize,${PARSER_TEST_DIR}/TestEscPragmaParser.java)
@@ -41,8 +41,8 @@ test_escjava:
 %-run:
 	env CLASSPATH=. ./rtest $* || ${DIFF} $*/out $*/ans
 
-CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath $(ESC_CLASSPATH) $(PARSER_TEST_PACKAGE)
-CD_AND_JAVA_DEBUG = cd $(PARSER_TEST_DIR); $(JAVA) $(DEBUGGER_FLAGS) -classpath $(ESC_CLASSPATH) $(PARSER_TEST_PACKAGE)
+CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath "$(call canonicalize,${ESC_CLASSPATH})" $(PARSER_TEST_PACKAGE)
+CD_AND_JAVA_DEBUG = cd $(PARSER_TEST_DIR); $(JAVA) $(DEBUGGER_FLAGS) -classpath "$(call canonicalize,${ESC_CLASSPATH})" $(PARSER_TEST_PACKAGE)
 
 test_lexer: compile_escjava_parser_test_programs
 	@echo "TESTING Escjava: test_lexer"
