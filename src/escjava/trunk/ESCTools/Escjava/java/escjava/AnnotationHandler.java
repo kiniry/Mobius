@@ -1007,6 +1007,20 @@ public class AnnotationHandler {
   }
 
   /**
+   * Produces an expression which is the negation of the given expression. If
+   * the input is null, then null is returned. Constant folding is performed.
+   */
+    static public Expr not(Expr e) {
+	if(e == null)
+	    return null;
+	if(isFalse(e)) return T;
+	if(isTrue(e)) return F;
+	Expr notE = javafe.ast.UnaryExpr.make(TagConstants.NOT, e, e.getStartLoc());
+	javafe.tc.FlowInsensitiveChecks.setType(notE, Types.booleanType);
+	return notE;
+    }
+
+  /**
    * Produces an expression which is the conjunction of the two expressions. If
    * either input is null, the other is returned. If either input is literally
    * true or false, the appropriate constant folding is performed.
@@ -1155,7 +1169,7 @@ public class AnnotationHandler {
    * Returns true if the argument is literally true, and returns false if it is
    * not a literal or is literally false.
    */
-  static boolean isTrue(/* @ non_null */Expr e) {
+  public static boolean isTrue(/* @ non_null */Expr e) {
     return e == T
         || (e instanceof LiteralExpr && ((LiteralExpr)e).value.equals(T.value));
   }
@@ -1164,7 +1178,7 @@ public class AnnotationHandler {
    * Returns true if the argument is literally false, and returns false if it is
    * not a literal or is literally true.
    */
-  static boolean isFalse(/* @ non_null */Expr e) {
+  public static boolean isFalse(/* @ non_null */Expr e) {
     return e == F
         || (e instanceof LiteralExpr && ((LiteralExpr)e).value.equals(F.value));
   }
