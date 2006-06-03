@@ -75,9 +75,9 @@ do%: testclasses
 		export TOOL="${TOOL} -classpath ." ; \
 		./run 2>&1 | sed "s|`pwd`|<TEST>|g" > out)
 	@if [ -e $*/ans${SUFFIX} ]; then \
-		diff $*/out $*/ans${SUFFIX} || echo Test $* failed ;\
+		$(DIFF) $*/out $*/ans${SUFFIX} || echo Test $* failed ;\
 	else \
-		diff $*/out $*/ans || echo Test $* failed ;\
+		$(DIFF) $*/out $*/ans || echo Test $* failed ;\
 	fi
 #endif
 
