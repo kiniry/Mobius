@@ -597,6 +597,16 @@ public final class GetSpec {
         axsToAdd.addAll(TrAnExpr.trSpecAuxAxiomsNeeded);
         TrAnExpr.closeForClause();
       }
+
+      if(Main.options().idc){ // add is-defined conditions
+	  Expr e = expr2IsDefExpr(expr);
+	  if(!escjava.AnnotationHandler.isTrue(e)) {
+	      Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
+					    TrAnExpr.trSpecExpr(e, map, null),
+					    e.getStartLoc());
+	      pre.addElement(cond);
+	  }
+      }
       Condition cond = GC.condition(TagConstants.CHKPRECONDITION, pred, loc);
       
       pre.addElement(cond);
@@ -606,9 +616,104 @@ public final class GetSpec {
     
     return pre;
   }
-  
+
+    /** Returns a boolean Expr that characterizes when <code>expr</code> is
+     * defined. E.g. when called on an expression like "x/y" it would yield
+     * the Expr (label Zero:n.m y != 0).
+     */
+    private static /*@ non_null */ Expr expr2IsDefExpr(Expr expr) {
+	// System.err.println("\texpr2IsDefExpr(" + expr + ")");
+	Expr result = null;
+	if(expr instanceof LabelExpr) {
+	    LabelExpr labelExpr =(LabelExpr)expr;
+	    result = expr2IsDefExpr(labelExpr.expr);
+	    /*
+	    result = LabelExpr.make(labelExpr.getStartLoc(),
+				    labelExpr.getEndLoc(), 
+				    labelExpr.positive,
+				    labelExpr.label,
+				    result);
+	    */
+	} else if(expr instanceof LiteralExpr ||
+		  expr instanceof VariableAccess ||
+		  expr instanceof ThisExpr
+		  ) {
+	    result = escjava.AnnotationHandler.T;
+	} else if(expr instanceof InstanceOfExpr) {
+	    InstanceOfExpr e = (InstanceOfExpr)expr;
+	    result = expr2IsDefExpr(e);
+	} else if(expr instanceof BinaryExpr) {
+	    BinaryExpr bExpr = (BinaryExpr)expr;
+	    Expr leftIsDefExpr = expr2IsDefExpr(bExpr.left);
+	    Expr rightIsDefExpr = expr2IsDefExpr(bExpr.right);
+	    Type t = javafe.tc.FlowInsensitiveChecks.getType(bExpr);
+
+	    switch(expr.getTag()) {
+	    case TagConstants.DIV:
+		LiteralExpr zero = (LiteralExpr)escjava.tc.FlowInsensitiveChecks
+		    .setType(LiteralExpr.make(TagConstants.INTLIT, 
+					      new Integer(0), 
+					      bExpr.getStartLoc()), 
+			     t); // Types.intType);
+		Expr ne = BinaryExpr.make(TagConstants.NE, 
+					 bExpr.right, 
+					 zero, 
+					 bExpr.getStartLoc());
+		javafe.tc.FlowInsensitiveChecks.setType(ne, Types.booleanType);
+		result = LabelExpr.make(bExpr.getStartLoc(), 
+					bExpr.getEndLoc(), 
+					false,
+					escjava.translate.
+					GC.makeFullLabel("Zero",
+							 bExpr.locOp,
+							 Location.NULL),
+					ne);
+		javafe.tc.FlowInsensitiveChecks.setType(result, Types.booleanType);
+		break;
+
+	    case TagConstants.AND:
+		Expr impPart = escjava.AnnotationHandler.implies(bExpr.left,
+								 rightIsDefExpr);
+		result = escjava.AnnotationHandler.and(leftIsDefExpr, impPart);
+		break;
+
+	    case TagConstants.OR:
+		Expr notLeft = escjava.AnnotationHandler.not(bExpr.left);
+		result = escjava.AnnotationHandler.implies(notLeft,rightIsDefExpr);
+		break;
+
+	    default:
+		result = escjava.AnnotationHandler.and(leftIsDefExpr, rightIsDefExpr);
+		break;
+	    }
+	} else if(expr instanceof CondExpr) {
+	    CondExpr cExpr = (CondExpr)expr;
+	    Expr testIsDefExpr = expr2IsDefExpr(cExpr.test);
+	    Expr thnIsDefExpr = expr2IsDefExpr(cExpr.thn);
+	    Expr elsIsDefExpr = expr2IsDefExpr(cExpr.els);
+
+	    Expr impThen = escjava.AnnotationHandler.implies(cExpr.test, 
+							     thnIsDefExpr);
+	    Expr notTest = escjava.AnnotationHandler.not(cExpr.test);
+	    javafe.tc.FlowInsensitiveChecks.setType(notTest, Types.booleanType);
+	    Expr impElse = escjava.AnnotationHandler.implies(notTest,
+							     elsIsDefExpr);
+	    result = escjava.AnnotationHandler.
+		and(testIsDefExpr,
+		    escjava.AnnotationHandler.and(impThen, impElse));
+	} else {
+	    if(true) throw new NullPointerException(expr.toString());
+	    switch(expr.getTag()) {
+	    default:
+		if(true) throw new NullPointerException(expr.toString());
+		break;
+	    }
+	}
+	// System.err.println("\texpr2IsDefExpr =" + result);
+	return result == null ? escjava.AnnotationHandler.T : result;
+    }
+
   /** Computes the postconditions, according to section 7.2.2 of ESCJ 16. */
-  
   //@ ensures \result != null;
   private static ConditionVec trMethodDeclPostcondition(
       /*@ non_null */DerivedMethodDecl dmd,
@@ -1866,7 +1971,14 @@ public final class GetSpec {
   {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
-      code.addElement(GC.assumeAnnotation(cond.locPragmaDecl, cond.pred));
+      if(cond.label == TagConstants.CHKEXPRDEFINEDNESS
+	 /* || cond.label == TagConstants.CHKARITHMETIC */
+	 ) {
+	  GuardedCmd gc = GC.check(cond.locPragmaDecl, cond);
+	  code.addElement(gc);
+      } else {
+	  code.addElement(GC.assumeAnnotation(cond.locPragmaDecl, cond.pred));
+      }
     }
   }
   
