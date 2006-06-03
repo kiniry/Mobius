@@ -35,7 +35,7 @@ endif
 ## cygpath is complaining about having too many arguments.
 ifdef COMSPEC
   canonicalize = `cygpath -pwa "$(1)"`
-  canonicalizeLots = `echo "$(1)" | xargs -e cygpath -pwa`
+  canonicalizeLots = `echo "$(1)" | xargs -e cygpath -w`
 else
   canonicalize = $(1)
   canonicalizeLots = $(1)

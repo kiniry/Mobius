@@ -1,3 +1,5 @@
+# $Id$
+
 export TOP = ../../..
 include ${TOP}/Makefile.defs
 
@@ -5,9 +7,7 @@ include ${TOP}/Makefile.defs
 # ESCJAVA is (only) used for standalone tests
 ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
 
-##_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
-    ## FIXME - the following line does not properly concatenate
-_ECLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
+_ECLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
 _CLASSPATH = $(call canonicalize,:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
@@ -51,9 +51,9 @@ CHUNK = 40
 
 .PHONY: lists
 lists: Test*.java skip
-	@rm -f listtests listfiles
+	@-rm -f listtests listfiles
 	@touch listtests
-	@(ls Test*.java | grep -v -f skip > listfiles)
+	@-(ls Test*.java | grep -v -f skip > listfiles)
 ifdef COMSPEC
 	@for f in `cat listfiles `; do \
 	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \

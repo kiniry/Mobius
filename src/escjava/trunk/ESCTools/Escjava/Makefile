@@ -156,13 +156,10 @@ really-compile: ${STAMPFILE}
 ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
 	@#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
-	if [ -e .files ]; then rm -f .files; fi
-	@echo $(call canonicalizeLots,$?) > .files
 	${JAVAC} ${JAVAC_FLAGS} \
 		-classpath $(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}) \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
-		-d ${CLASSDIRECTORY} \
-		`cat .files`
+		-d $(call canonicalize,${CLASSDIRECTORY}) $?
 	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
 	touch $@
 
