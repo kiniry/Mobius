@@ -8,6 +8,8 @@
 //*******************************************************************************/
 package jml2b;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
@@ -45,7 +47,7 @@ public class Serializer extends Profiler {
 
 	public static void displayUsage() {
 		for (int i = 0; i < usage.length; ++i) {
-			System.out.println(usage[i]);
+			Logger.get().println(usage[i]);
 		}
 	}
 
@@ -65,7 +67,7 @@ public class Serializer extends Profiler {
 				// package => get the package, or create it if it does not
 				// exists yet.
 				String pkg_name = fqn.substring(last_index, current_index);
-				//		System.out.println("Package : " + pkg_name);
+				//		Logger.get().println("Package : " + pkg_name);
 				Package new_current = current.getPackage(pkg_name);
 
 				if (new_current == null) {
@@ -79,7 +81,7 @@ public class Serializer extends Profiler {
 
 		// get the name of the class from the last index
 		class_name = fqn.substring(last_index);
-		//	System.out.println("Class : " + class_name);
+		//	Logger.get().println("Class : " + class_name);
 
 		// at this point, the packages have been added. Load the class.
 		if (current.getAndLoadClass(config, class_name) == null) {
@@ -111,7 +113,7 @@ public class Serializer extends Profiler {
 		File output_file = new File(argv[extra_classes_count]);
 
 		try {
-			System.out.println("Loading default classes");
+			Logger.get().println("Loading default classes");
 			// get the Object type. This forces the loading, parsing
 			// and linking of the Object class, as well as all the
 			// classes it references
@@ -121,13 +123,13 @@ public class Serializer extends Profiler {
 			linking_time = System.currentTimeMillis();
 
 			// finalize the loading of the objects.
-			System.out.println("Linking remaining statements");
+			Logger.get().println("Linking remaining statements");
 			JmlLoader.linkStatements(config);
 
 			end_time = System.currentTimeMillis();
 		} catch (Jml2bException e) {
-			System.err.println("Catched exception:");
-			System.err.println(e.toString());
+			Logger.err.println("Catched exception:");
+			Logger.err.println(e.toString());
 			System.exit(1);
 		}
 
@@ -136,7 +138,7 @@ public class Serializer extends Profiler {
 			try {
 				loadClass(config, argv[i]);
 			} catch (Jml2bException e) {
-				System.err.println("Exception catched : " + e.toString());
+				Logger.err.println("Exception catched : " + e.toString());
 			}
 		}
 
@@ -145,12 +147,12 @@ public class Serializer extends Profiler {
 			JmlLoader.linkStatements(config);
 
 			// print informations.
-			System.out.println("Loading time : " + (linking_time - start_time));
-			System.out.println(
+			Logger.get().println("Loading time : " + (linking_time - start_time));
+			Logger.get().println(
 				"JML Parser time : " + JmlFile.getJmlParserTime());
-			System.out.println(
+			Logger.get().println(
 				"Statement Linking time : " + (end_time - linking_time));
-			System.out.println("Total time : " + (end_time - start_time));
+			Logger.get().println("Total time : " + (end_time - start_time));
 
 			FileOutputStream stream = new FileOutputStream(output_file);
 			ObjectOutputStream ostream = new ObjectOutputStream(stream);
@@ -159,8 +161,8 @@ public class Serializer extends Profiler {
 			ostream.close();
 		} catch (Exception e) {
 			// catch Jml2bExceptions as well as IOExceptions.
-			System.err.println("Exception catched");
-			System.err.println("    " + e.toString());
+			Logger.err.println("Exception catched");
+			Logger.err.println("    " + e.toString());
 		}
 	}
 }

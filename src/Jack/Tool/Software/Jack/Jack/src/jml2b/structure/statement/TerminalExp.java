@@ -9,6 +9,8 @@
 /******************************************************************************/
 package jml2b.structure.statement;
 
+import jack.util.Logger;
+
 import java.util.Set;
 import java.util.Vector;
 
@@ -225,7 +227,7 @@ public class TerminalExp extends Expression {
 					"Sorry, this version does not treat float.",
 					this);
 			default :
-				System.err.println("TerminalExp.exprToForm() " + getNodeType());
+				Logger.err.println("TerminalExp.exprToForm() " + getNodeType());
 				break;
 		}
 		if (pred) {

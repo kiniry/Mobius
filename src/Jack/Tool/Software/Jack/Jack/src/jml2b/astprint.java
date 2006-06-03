@@ -8,6 +8,8 @@
 //*******************************************************************************/
 package jml2b;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,7 +45,7 @@ public class astprint {
 		String node_text = tree.getText();
 
 		// affiche le contenu du noeud dans un format lisible (?).
-		System.out.println(
+		Logger.get().println(
 			tabs.toString()
 				+ "| "
 				+ token_names[node_type]
@@ -85,7 +87,7 @@ public class astprint {
 		try {
 			fs = new FileInputStream(f);
 		} catch (IOException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return;
 		}
 		try {
@@ -104,26 +106,26 @@ public class astprint {
 			try {
 				fs.close();
 			} catch (IOException ioe) {
-				System.err.println("Error closing file: " + ioe.toString());
+				Logger.err.println("Error closing file: " + ioe.toString());
 
 			}
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return;
 		} catch (antlr.TokenStreamException e) {
 			try {
 				fs.close();
 			} catch (IOException ioe) {
-				System.err.println("Error closing file: " + ioe.toString());
+				Logger.err.println("Error closing file: " + ioe.toString());
 
 			}
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return;
 		}
 
 		try {
 			fs.close();
 		} catch (IOException e) {
-			System.err.println("Error closing file: " + e.toString());
+			Logger.err.println("Error closing file: " + e.toString());
 			return;
 		}
 
@@ -133,7 +135,7 @@ public class astprint {
 
 		AST tree = parser.getAST();
 
-		// récupère la table de conversion token -> chaine de charactère 
+		// rï¿½cupï¿½re la table de conversion token -> chaine de charactï¿½re 
 		// correspondante.
 		String[] tokens = parser.getTokenNames();
 
@@ -146,8 +148,8 @@ public class astprint {
 	}
 
 	public static void displayUsage() {
-		System.out.println("Usage:");
-		System.out.println(" Jml2b <Java file>");
+		Logger.get().println("Usage:");
+		Logger.get().println(" Jml2b <Java file>");
 	}
 
 	public static void main(String[] args) {
@@ -162,7 +164,7 @@ public class astprint {
 			if (f.exists()) {
 				checkFile(f);
 			} else {
-				System.out.println("File does not exists : " + args[0]);
+				Logger.get().println("File does not exists : " + args[0]);
 			}
 		} catch (/*IOException */
 			Exception e) {

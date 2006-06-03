@@ -9,6 +9,8 @@
 /******************************************************************************/
 package jml2b.structure.java;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
@@ -365,7 +367,7 @@ public class Method
 					// currently ignored
 					break;
 				default :
-					System.err.println(
+					Logger.err.println(
 						"Method.fillCasesFromContent: token "
 							+ a.getType()
 							+ " encountered");
@@ -442,7 +444,7 @@ public class Method
 		}
 
 		if (a.getType() != SPEC_CASE) {
-			System.err.println("Method.parseBehaviorSpec: unexpected token");
+			Logger.err.println("Method.parseBehaviorSpec: unexpected token");
 			throw new TokenException(
 				file,
 				(LineAST) a,
@@ -541,7 +543,7 @@ public class Method
 				return a.getNextSibling();
 
 			case EXT_AND :
-				System.err.println(
+				Logger.err.println(
 					"Warning: skipping and keyword (not implemented)");
 				return a.getNextSibling();
 		}

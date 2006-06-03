@@ -9,6 +9,8 @@
 /******************************************************************************/
 package jml2b.structure.java;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -212,7 +214,7 @@ extends AClass
 
 		modifiers = mods;
 //		if(modifiers != null && modifiers.isNative())
-//			System.out.println(this.getName() + ": I am native");
+//			Logger.get().println(this.getName() + ": I am native");
 		classPackage = class_package;
 		interfaceModifier = false;
 		externalClass = external;
@@ -406,7 +408,7 @@ extends AClass
 	 */
 	/*@ ensures \result != null; */
 	public Enumeration getStaticInvariants() {
-		//	System.err.println("    getStaticInvariant for: " + getName());
+		//	Logger.err.println("    getStaticInvariant for: " + getName());
 		return staticInvariants.elements();
 	}
 
@@ -543,7 +545,7 @@ extends AClass
 	public AST parse(JmlFile jmlFile, AST tree) throws Jml2bException {
 		AST current = tree;
 		if (current == null) {
-			System.err.println("Error : null AST encountered");
+			Logger.err.println("Error : null AST encountered");
 			return null;
 		}
 
@@ -798,7 +800,7 @@ extends AClass
 					} catch (ParseException e) {
 						//  ErrorHandler.error(jmlFile, -1, -1, e.toString());
 						// print error
-						System.err.println(e.toString());
+						Logger.err.println(e.toString());
 						// advance to next
 						current = current.getNextSibling();
 					}
@@ -819,7 +821,7 @@ extends AClass
 					  break;
 					*/
 				default :
-					//System.err.println("Ignoring : " + current.toString());
+					//Logger.err.println("Ignoring : " + current.toString());
 					current = current.getNextSibling();
 					break;
 			}
@@ -1211,7 +1213,7 @@ extends AClass
 			return c.getPackage() == getPackage()
 				|| c.getModifiers().isExternalVisible();
 		} catch (NullPointerException npe) {
-			System.err.println("NullPointerException canSee " + c.getName());
+			Logger.err.println("NullPointerException canSee " + c.getName());
 			throw npe;
 		}
 	}

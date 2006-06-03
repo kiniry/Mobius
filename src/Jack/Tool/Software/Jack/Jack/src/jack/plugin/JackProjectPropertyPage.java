@@ -9,6 +9,8 @@
 /*******************************************************************************/
 package jack.plugin;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
@@ -92,7 +94,7 @@ public class JackProjectPropertyPage extends PropertyPage {
 				new_value ? "true" : "false");
 			return true;
 		} catch (CoreException e) {
-			System.err.println("Exception catched: " + e.toString());
+			Logger.err.println("Exception catched: " + e.toString());
 			return false;
 		}
 	}
@@ -110,7 +112,7 @@ public class JackProjectPropertyPage extends PropertyPage {
 			}
 			return true;
 		} catch (CoreException e) {
-			System.err.println("CoreException catched: " + e.toString());
+			Logger.err.println("CoreException catched: " + e.toString());
 			return false;
 		}
 	}
@@ -200,7 +202,7 @@ public class JackProjectPropertyPage extends PropertyPage {
 			dlg.run(true, true, generator);
 		} catch (InvocationTargetException e) {
 			Throwable t = e.getTargetException();
-			System.err.println("InvocationTargetException : " + t.toString());
+			Logger.err.println("InvocationTargetException : " + t.toString());
 			t.printStackTrace();
 			MessageDialog.openInformation(
 				getShell(),

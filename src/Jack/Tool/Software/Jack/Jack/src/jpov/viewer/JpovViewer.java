@@ -11,6 +11,7 @@ package jpov.viewer;
 import jack.plugin.perspective.ICaseExplorer;
 import jack.plugin.perspective.ILemmaViewer;
 import jack.plugin.perspective.ISourceCaseViewer;
+import jack.util.Logger;
 
 import java.io.IOException;
 
@@ -373,7 +374,7 @@ public class JpovViewer
 				text.setStyleRange(styleRange);
 				return true;
 			} catch (Exception iae) {
-				System.err.println(
+				Logger.err.println(
 					iae.toString()
 						+ "Bad style range. start : "
 						+ start

@@ -10,6 +10,7 @@
 package jack.plugin.compile;
 
 import jack.plugin.JackPlugin;
+import jack.util.Logger;
 
 import java.io.File;
 
@@ -141,7 +142,7 @@ public class PoGeneratorErrorHandler extends ErrorHandler {
 			// create the marker
 			IMarker marker = resource.createMarker(PoGenerator.PROBLEM_MARKER_TYPE);
 			if(marker == null) {
-				System.err.println("Warning: could not create marker");
+				Logger.err.println("Warning: could not create marker");
 				return;
 			}
 
@@ -153,7 +154,7 @@ public class PoGeneratorErrorHandler extends ErrorHandler {
 			marker.setAttribute(IMarker.SEVERITY, severity);
 		} catch(CoreException e) {
 			// should never happen
-			System.err.println("Warning: catched : " + e.toString());
+			Logger.err.println("Warning: catched : " + e.toString());
 		}		
 	}
 }

@@ -1,5 +1,7 @@
 package jml2b.structure.java;
 
+import jack.util.Logger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -85,14 +87,14 @@ public class JavaLoader implements IPackage {
 			ObjectInputStream os = new ObjectInputStream(is);
 			root = (Package) os.readObject();
 		} catch (IOException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return false;
 		} catch (ClassCastException e) {
 			// error when casting to package
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return false;
 		} catch (ClassNotFoundException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return false;
 		}
 

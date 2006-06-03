@@ -8,6 +8,8 @@
 /******************************************************************************/
 package jpov.viewer.source;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -136,7 +138,7 @@ public class SourceView {
 				sourceText.append(new String(buff, 0, nch));
 			}
 		} catch (IOException e) {
-			System.err.println(e.toString());
+			Logger.err.println(e.toString());
 		}
 	}
 

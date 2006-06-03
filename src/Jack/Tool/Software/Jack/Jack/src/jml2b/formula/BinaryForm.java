@@ -415,12 +415,8 @@ public class BinaryForm extends Formula {
 	}
 
 	public void garbageIdent() {
-		//// TODO: fix it properly
 		if(left != null) {
 			left.garbageIdent();
-		}
-		else {
-			System.out.println("Fixin'");
 		}
 		if(right != null) {
 			right.garbageIdent();

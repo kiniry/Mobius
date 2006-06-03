@@ -6,6 +6,8 @@
  */
 package jml2b.util;
 
+import jack.util.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -106,7 +108,7 @@ public abstract class JmlSourceEntryFile extends JmlFileEntry {
 		try {
 			fs = getInputStream();
 		} catch (IOException e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return null;
 		}
 		try {
@@ -128,26 +130,26 @@ public abstract class JmlSourceEntryFile extends JmlFileEntry {
 			try {
 				fs.close();
 			} catch (IOException ioe) {
-				System.err.println("Error closing file: " + ioe.toString());
+				Logger.err.println("Error closing file: " + ioe.toString());
 
 			}
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return null;
 		} catch (antlr.TokenStreamException e) {
 			try {
 				fs.close();
 			} catch (IOException ioe) {
-				System.err.println("Error closing file: " + ioe.toString());
+				Logger.err.println("Error closing file: " + ioe.toString());
 
 			}
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			return null;
 		}
 
 		try {
 			fs.close();
 		} catch (IOException e) {
-			System.err.println("Error closing file: " + e.toString());
+			Logger.err.println("Error closing file: " + e.toString());
 			return null;
 		}
 

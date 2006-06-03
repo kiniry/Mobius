@@ -8,6 +8,8 @@
 //*******************************************************************************/
 package jml2b.util;
 
+import jack.util.Logger;
+
 //import java.util.Enumeration;
 //import java.util.Hashtable;
 
@@ -34,8 +36,8 @@ public class Profiler {
 	//		//			&& Runtime.getRuntime().freeMemory() % 10000 == 0) ||
 	//		//            counter % 100000 == 0) {
 	//		//			display();
-	//		//            System.out.println("Counter " + counter);
-	//		//            System.out.println(
+	//		//            Logger.get().println("Counter " + counter);
+	//		//            Logger.get().println(
 	//		//                "Mem "
 	//		//                    + Runtime.getRuntime().freeMemory()
 	//		//                    + "/"
@@ -59,7 +61,7 @@ public class Profiler {
 	//		while (e.hasMoreElements()) {
 	//			java.lang.Class c = (java.lang.Class) e.nextElement();
 	//			try {
-	//				System.out.println(
+	//				Logger.get().println(
 	//					c.toString()
 	//						+ ": "
 	//						+ ht.get(c).toString());
@@ -104,9 +106,9 @@ public class Profiler {
 	//		long heap2 = usedMemory(); // Take an after heap snapshot:
 	//
 	//		final int size = Math.round(((float) (heap2 - heap1)) / count);
-	//		//        System.out.println ("'before' heap: " + heap1 +
+	//		//        Logger.get().println ("'before' heap: " + heap1 +
 	//		//                            ", 'after' heap: " + heap2);
-	//		//        System.out.println ("heap delta: " + (heap2 - heap1) +
+	//		//        Logger.get().println ("heap delta: " + (heap2 - heap1) +
 	//		//            ", {" + objects [0].getClass () + "} size = " + size + " bytes");
 	//
 	//		for (int i = 0; i < count; ++i)
@@ -120,7 +122,7 @@ public class Profiler {
 		// using several method calls:
 		for (int r = 0; r < 4; ++r)
 			_runGC();
-		System.err.println("Used memory: " + usedMemory());
+		Logger.err.println("Used memory: " + usedMemory());
 	}
 
 	private static void _runGC() {

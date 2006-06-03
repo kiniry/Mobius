@@ -10,6 +10,8 @@
 /******************************************************************************/
 package jml2b.structure.statement;
 
+import jack.util.Logger;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -123,10 +125,10 @@ public abstract class Expression
 			parser.errors += lexer.errors;
 		} catch (antlr.RecognitionException e) {
 			error_vector.add(new ErrorMessage(e.toString(), -1, -1));
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 		} catch (antlr.TokenStreamException e) {
 			error_vector.add(new ErrorMessage(e.toString(), -1, -1));
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 		} catch (NullPointerException e) {
 			// catch NullPointerExceptions, since as the parser is initialised in
 			// a non classical manner, errors may trigger exceptions.

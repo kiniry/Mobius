@@ -9,11 +9,14 @@
 
 package jml2b.util;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 import jml2b.Jml2b;
 import jml2b.Jml2bConfig;
@@ -28,10 +31,13 @@ public class Emitter {
 	 * Displays the usage
 	 **/
 	public static void displayUsage() {
-		System.out.println("Usage:");
-		System.out.println(
+		displayUsage(System.out);
+	}
+	public static void displayUsage(PrintStream out) {
+		out.println("Usage:");
+		out.println(
 			" java jml2b/util/Emitter ast_files output_directory");
-		System.out.println();
+		out.println();
 	}
 
 	public static void main(String[] args) {
@@ -48,7 +54,7 @@ public class Emitter {
 		try {
 			Jml2b.loadProperties();
 		} catch (IOException e) {
-			System.err.println("Error loading property file");
+			Logger.err.println("Error loading property file");
 		}
 
 		// get the file_in property first, since if it is nonnull, then
@@ -69,7 +75,7 @@ public class Emitter {
 		JmlFile[] files;
 		Jml2bConfig config = new Jml2bConfig(jmlPath, obviousPo);
 
-		System.err.print("Loading ast file...");
+		Logger.err.print("Loading ast file...");
 		files = Jml2b.loadAstImage(config, args[0]);
 		output_directory = Jml2b.getOutputDir(args[args.length - 1]);
 		if (output_directory == null) {

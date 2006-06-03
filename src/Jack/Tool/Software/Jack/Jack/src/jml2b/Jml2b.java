@@ -9,12 +9,15 @@
 /******************************************************************************/
 package jml2b;
 
+import jack.util.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.util.Properties;
 
 import jml.LineAST;
@@ -70,44 +73,49 @@ public class Jml2b extends Profiler {
 	 * Displays the usage
 	 **/
 	public static void displayUsage() {
-		System.out.println("Usage:");
-		System.out.println(" java jml2b/Jml2b -ast ast_files output_directory");
-		System.out.println(" java jml2b/Jml2b Java_files output_directory");
-		System.out.println(" java jml2b/Jml2b java_file");
-		System.out.println(" If only one file is given on command line,");
-		System.out.println(" this file is parsed and the corresponding B");
-		System.out.println(" machine is printed to stdout");
-		System.out.println(" Otherwise, the n-1 first parameters correspond");
-		System.out.println(" to java source files, and the last parameter");
-		System.out.println(" correspond to the destination directory where");
-		System.out.println(" the generated files are stored");
-		System.out.println();
-		System.out.println(
+		displayUsage(System.out);
+	}
+	
+	
+	public static void displayUsage(PrintStream out) {
+		out.println("Usage:");
+		out.println(" java jml2b/Jml2b -ast ast_files output_directory");
+		out.println(" java jml2b/Jml2b Java_files output_directory");
+		out.println(" java jml2b/Jml2b java_file");
+		out.println(" If only one file is given on command line,");
+		out.println(" this file is parsed and the corresponding B");
+		out.println(" machine is printed to stdout");
+		out.println(" Otherwise, the n-1 first parameters correspond");
+		out.println(" to java source files, and the last parameter");
+		out.println(" correspond to the destination directory where");
+		out.println(" the generated files are stored");
+		out.println();
+		out.println(
 			" Properties recognised (java -Dflags jml2b/Jml2b):");
-		System.out.println("    -D" + baseFileProperty + "=file_name");
-		System.out.println(
+		out.println("    -D" + baseFileProperty + "=file_name");
+		out.println(
 			"       Allow using the given file as serialized image of default packages");
-		System.out.println("    -D" + jmlPathProperty + "=file_list");
-		System.out.println(
+		out.println("    -D" + jmlPathProperty + "=file_list");
+		out.println(
 			"       Use the given list of directories as Jml search path");
-		System.out.println(
+		out.println(
 			"       The list should contain directories separated by "
 				+ java.io.File.pathSeparator);
-		System.out.println("    -D" + inFileProperty + "=file");
-		System.out.println(
+		out.println("    -D" + inFileProperty + "=file");
+		out.println(
 			"       Use the given file as a serialised image of");
-		System.out.println("       the parsed files");
-		System.out.println(
+		out.println("       the parsed files");
+		out.println(
 			"       In this case, a parameter can be given on the");
-		System.out.println(
+		out.println(
 			"       command line corresponding to the destination");
-		System.out.println("       directory");
-		System.out.println("    -D" + outFileProperty + "=file");
-		System.out.println(
+		out.println("       directory");
+		out.println("    -D" + outFileProperty + "=file");
+		out.println(
 			"       Save the parsed files as well as the classes they references");
-		System.out.println("       to file.");
-		System.out.println("    -D" + propertyFileProperty + "=file");
-		System.out.println(
+		out.println("       to file.");
+		out.println("    -D" + propertyFileProperty + "=file");
+		out.println(
 			"        use file as file containing the different properties");
 	}
 
@@ -138,7 +146,7 @@ public class Jml2b extends Profiler {
 		String base_bin_file = System.getProperty(baseFileProperty);
 		if (base_bin_file != null) {
 			if (!((JavaLoader) config.getPackage()).initFromFile(base_bin_file)) {
-				System.err.println(
+				Logger.err.println(
 					"Unable to initialize from file \"" + base_bin_file + "\"");
 				System.exit(1);
 			}
@@ -159,11 +167,11 @@ public class Jml2b extends Profiler {
 				if (f.exists()) {
 					files[i] = new JmlEntryFile(f).loadFile(config, false);
 					if (files[i] == null) {
-						System.err.println("Error loading " + f.toString());
+						Logger.err.println("Error loading " + f.toString());
 						System.exit(1);
 					}
 				} else {
-					System.err.println("File does not exists : " + args[0]);
+					Logger.err.println("File does not exists : " + args[0]);
 					System.exit(1);
 				}
 			} catch (Exception /* IOException */
@@ -173,7 +181,7 @@ public class Jml2b extends Profiler {
 				// thrown within the block
 				// => catch Exception instead
 
-				System.err.println(
+				Logger.err.println(
 					"Error loading file " + args[i] + ": " + e.toString());
 				System.exit(1);
 			}
@@ -187,7 +195,7 @@ public class Jml2b extends Profiler {
 
 		// stop if errors where encountered when parsing files
 		if (error_count > 0) {
-			System.err.println(
+			Logger.err.println(
 				Integer.toString(error_count)
 					+ " errors encountered while parsing files");
 			System.exit(1);
@@ -196,11 +204,11 @@ public class Jml2b extends Profiler {
 		// link each of the loaded files
 		for (int i = 0; i < file_count; ++i) {
 			//	    Debug.print(Debug.LINKING, "Linking : " + args[i] + "...");
-			System.err.println("Linking : " + args[i] + "...");
+			Logger.err.println("Linking : " + args[i] + "...");
 			try {
 				files[i].link(config);
 			} catch (Jml2bException e) {
-				System.err.println("Catched : " + e.toString());
+				Logger.err.println("Catched : " + e.toString());
 				System.exit(1);
 			}
 		}
@@ -208,12 +216,12 @@ public class Jml2b extends Profiler {
 		// link statements from each of the loaded files.
 		for (int i = 0; i < file_count; ++i) {
 			//Debug.print(Debug.LINKING, "Linking statements: " + args[i] + "...");
-			System.err.println("Linking statements: " + args[i] + "...");
+			Logger.err.println("Linking statements: " + args[i] + "...");
 			try {
 				if (files[i].linkStatements(config) == 0)
 					files[i].typeCheck(config);
 			} catch (Jml2bException e) {
-				System.err.println("Catched : " + e.toString());
+				Logger.err.println("Catched : " + e.toString());
 				System.exit(1);
 			}
 		}
@@ -224,7 +232,7 @@ public class Jml2b extends Profiler {
 		try {
 			JmlLoader.linkStatements(config);
 		} catch (Jml2bException e) {
-			System.err.println("Catched : " + e.toString());
+			Logger.err.println("Catched : " + e.toString());
 			System.exit(1);
 		}
 		return files;
@@ -263,7 +271,7 @@ public class Jml2b extends Profiler {
 
 			return files;
 		} catch (Exception e) {
-			System.err.println("Exception catched : " + e.toString());
+			Logger.err.println("Exception catched : " + e.toString());
 			System.exit(1);
 			return null;
 		}
@@ -278,14 +286,14 @@ public class Jml2b extends Profiler {
 		// checks that the directory exists
 		if (f.exists()) {
 			if (!f.isDirectory()) {
-				System.err.println(dir_name + " exists but isn't a directory");
+				Logger.err.println(dir_name + " exists but isn't a directory");
 				// if the file exists, but isn't a directory, return null
 				f = null;
 			}
 		} else {
 			// create the directory if it does not exists
 			if (!f.mkdirs()) {
-				System.err.println("Could not create directory: " + dir_name);
+				Logger.err.println("Could not create directory: " + dir_name);
 				f = null;
 			}
 		}
@@ -301,7 +309,7 @@ public class Jml2b extends Profiler {
 			if (result.exists()) {
 				return result;
 			}
-			System.err.println(
+			Logger.err.println(
 				"The property file " + cmd_line_file + " does not exists");
 			System.exit(1);
 		}
@@ -348,7 +356,7 @@ public class Jml2b extends Profiler {
 		String base_bin_file = System.getProperty(baseFileProperty);
 		if (base_bin_file != null) {
 			if (!((JavaLoader) config.getPackage()).initFromFile(base_bin_file)) {
-				System.err.println(
+				Logger.err.println(
 					"Unable to initialize from file \"" + base_bin_file + "\"");
 				System.exit(1);
 			}
@@ -382,7 +390,7 @@ public class Jml2b extends Profiler {
 			// thrown within the block
 			// => catch Exception instead
 
-			System.err.println(
+			Logger.err.println(
 				"Error loading file "
 					+ file_count
 					+ " "
@@ -399,7 +407,7 @@ public class Jml2b extends Profiler {
 
 		// stop if errors where encountered when parsing files
 		if (error_count > 0) {
-			System.err.println(
+			Logger.err.println(
 				Integer.toString(error_count)
 					+ " errors encountered while parsing files");
 			System.exit(1);
@@ -408,11 +416,11 @@ public class Jml2b extends Profiler {
 		// link each of the loaded files
 		for (int i = 0; i < file_count; ++i) {
 			//	    Debug.print(Debug.LINKING, "Linking : " + args[i] + "...");
-			//System.err.println("Linking : " + args[i] + "...");
+			//Logger.err.println("Linking : " + args[i] + "...");
 			try {
 				files[i].link(config);
 			} catch (Jml2bException e) {
-				System.err.println("Catched : " + e.toString());
+				Logger.err.println("Catched : " + e.toString());
 				System.exit(1);
 			}
 		}
@@ -420,12 +428,12 @@ public class Jml2b extends Profiler {
 		// link statements from each of the loaded files.
 		for (int i = 0; i < file_count; ++i) {
 			//Debug.print(Debug.LINKING, "Linking statements: " + args[i] + "...");
-			//System.err.println("Linking statements: " + args[i] + "...");
+			//Logger.err.println("Linking statements: " + args[i] + "...");
 			try {
 				if (files[i].linkStatements(config) == 0)
 					files[i].typeCheck(config);
 			} catch (Jml2bException e) {
-				System.err.println("Catched : " + e.toString());
+				Logger.err.println("Catched : " + e.toString());
 				System.exit(1);
 			}
 		}
@@ -436,7 +444,7 @@ public class Jml2b extends Profiler {
 		try {
 			JmlLoader.linkStatements(config);
 		} catch (Jml2bException e) {
-			System.err.println("Catched : " + e.toString());
+			Logger.err.println("Catched : " + e.toString());
 			System.exit(1);
 		}
 
@@ -461,7 +469,7 @@ public class Jml2b extends Profiler {
 		try {
 			loadProperties();
 		} catch (IOException e) {
-			System.err.println("Error loading property file");
+			Logger.err.println("Error loading property file");
 		}
 
 		// get the file_in property first, since if it is nonnull, then
@@ -491,9 +499,9 @@ public class Jml2b extends Profiler {
 
 		if (file_in != null) {
 			// load the files from the given image
-			System.err.print("Restoring files from " + file_in + "...");
+			Logger.err.print("Restoring files from " + file_in + "...");
 			files = loadFileImage(config, file_in);
-			System.err.println("Done");
+			Logger.err.println("Done");
 
 			if (args.length > 0) {
 				// in this case, the argument should be the destination
@@ -508,24 +516,24 @@ public class Jml2b extends Profiler {
 			// if only one argument is given, then it is the input file.
 			// otherwise, the last argument is the destination directory
 			if (args.length == 1) {
-				System.err.print("Loading " + args[0]);
+				Logger.err.print("Loading " + args[0]);
 				files = loadFiles(config, args);
 			} else if (args[0].equals("-ast")) {
-				System.err.print("Loading ast file...");
+				Logger.err.print("Loading ast file...");
 				files = loadAstImage(config, args[1]);
 				output_directory = getOutputDir(args[args.length - 1]);
 				if (output_directory == null) {
 					System.exit(1);
 				}
 			} else {
-				System.err.print("Loading files...");
+				Logger.err.print("Loading files...");
 				files = loadFiles(config, args, args.length - 1);
 				output_directory = getOutputDir(args[args.length - 1]);
 				if (output_directory == null) {
 					System.exit(1);
 				}
 			}
-			System.err.println("Done");
+			Logger.err.println("Done");
 		}
 
 		config.setOutputDir(output_directory);
@@ -534,11 +542,11 @@ public class Jml2b extends Profiler {
 		String file_out = System.getProperty(outFileProperty);
 		if (file_out != null) {
 			try {
-				System.err.println("Writing to file: " + file_out);
+				Logger.err.println("Writing to file: " + file_out);
 				saveFileImage(config, files, file_out);
-				System.err.println("Done");
+				Logger.err.println("Done");
 			} catch (IOException e) {
-				System.err.println("Exception catched: " + e.toString());
+				Logger.err.println("Exception catched: " + e.toString());
 			}
 		}
 
@@ -546,13 +554,13 @@ public class Jml2b extends Profiler {
 		try {
 			new Pog().pog(files, config);
 		} catch (IOException e) {
-			System.err.println(e.toString());
+			Logger.err.println(e.toString());
 		} catch (PogException e) {
-			System.err.println(e.toString());
+			Logger.err.println(e.toString());
 		} catch (Jml2bException e) {
-			System.err.println(e.toString());
+			Logger.err.println(e.toString());
 		} catch (InternalError e) {
-			System.err.println(e.toString());
+			Logger.err.println(e.toString());
 		}
 
 	}

@@ -11,6 +11,7 @@ package jml2b.languages;
 
 import jack.plugin.JackPlugin;
 import jack.plugin.prove.ProofTask;
+import jack.util.Logger;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -172,7 +173,7 @@ public class Languages {
 									         iop,
 									         pt);
 								} catch (Exception ce) {
-									System.err.println(ce.getMessage());
+									Logger.err.println(ce.getMessage());
 								}
 						}
 					}

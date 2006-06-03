@@ -12,6 +12,7 @@ package jack.plugin.compile;
 import jack.plugin.JackPlugin;
 import jack.plugin.ToolbarButton;
 import jack.plugin.edit.SaveMessageDialog;
+import jack.util.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -64,7 +65,7 @@ public class CompileButton extends ToolbarButton {
 			dlg.run(true, true, pog);
 		} catch (InvocationTargetException e) {
 			Throwable t = e.getTargetException();
-			System.err.println("InvocationTargetException : " + t.toString());
+			Logger.err.println("InvocationTargetException : " + t.toString());
 			t.printStackTrace();
 			MessageDialog.openInformation(
 				sh,

@@ -9,6 +9,7 @@
 package jack.plugin.source;
 
 import jack.plugin.JackJml2bConfiguration;
+import jack.util.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -159,7 +160,7 @@ public class AddJmlClauseWizard extends Wizard {
 				getContainer().run(true, true, loadAndlinkAction);
 			} catch (InvocationTargetException e) {
 				Throwable t = e.getTargetException();
-				System.err.println(
+				Logger.err.println(
 					"InvocationTargetException : " + t.toString());
 				t.printStackTrace();
 			} catch (Exception e) {
@@ -241,7 +242,7 @@ public class AddJmlClauseWizard extends Wizard {
 
 			} catch (InvocationTargetException e) {
 				Throwable t = e.getTargetException();
-				System.err.println(
+				Logger.err.println(
 					"InvocationTargetException : " + t.toString());
 				t.printStackTrace();
 			} catch (Exception e) {

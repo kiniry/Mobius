@@ -10,6 +10,8 @@
  /******************************************************************************/
 package jml2b.structure.statement;
 
+import jack.util.Logger;
+
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -243,9 +245,9 @@ public class MethodCallExp extends Expression {
 			else {
 				e1 = new Vector();
 				IAParameters cp = (IAParameters) par;
-				System.out.println(cp.nparams());
-				System.out.println(par.getClass());
-//				System.out.println();
+				Logger.get().println(cp.nparams());
+				Logger.get().println(par.getClass());
+//				Logger.get().println();
 			}
 
 			Formula coqMethodParam = null;
@@ -615,7 +617,7 @@ public class MethodCallExp extends Expression {
 //			}
 //		}
 //		if(al.size()> 0)
-//			System.out.println(m.getBName() + " Contains models ");
+//			Logger.get().println(m.getBName() + " Contains models ");
 //		
 		// Loop on all the cases in the specification of the called
 		// method.

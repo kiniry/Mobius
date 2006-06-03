@@ -32,7 +32,7 @@ public class JmlPathDirectory extends JmlPathEntry {
 
 	public JmlFileEntry checkFile(File file) {
 		File f = new File(dir, file.getPath());
-		//System.out.println(f.toString() + " " + f.exists());
+		//Logger.get().println(f.toString() + " " + f.exists());
 		if (f.exists()) {
 			return new JmlEntryFile(f);
 		}

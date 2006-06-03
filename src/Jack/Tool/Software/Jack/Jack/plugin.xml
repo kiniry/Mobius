@@ -59,10 +59,11 @@
             </separator>
          </menu>
          <action
-               label="Metrics"
                class="jack.plugin.metrics.MetricsAction"
-               menubarPath="jack_menu/slot1"
-               id="jack.plugin.MetricsAction">
+               icon="imgs/icons/jack_metrics.gif"
+               id="jack.plugin.MetricsAction"
+               label="Metrics"
+               menubarPath="jack_menu/slot1">
          </action>
          <menu
                label="Source"
@@ -103,10 +104,11 @@
                id="jack.plugin.addModifiesAction">
          </action>
          <action
-               label="Edit"
                class="jack.plugin.edit.EditAction"
-               menubarPath="jack_menu/slot1"
-               id="jack.plugin.openAction">
+               icon="imgs/icons/jml_edit.gif"
+               id="jack.plugin.openAction"
+               label="Edit"
+               menubarPath="jack_menu/slot1">
          </action>
 <!--         
          <action
@@ -117,10 +119,11 @@
          </action>
 -->
          <action
-               label="Verify source"
                class="jack.plugin.compile.VerifySourceAction"
-               menubarPath="jack_menu/slot1"
-               id="jack.plugin.newAction">
+               icon="imgs/icons/jml_compile.gif"
+               id="jack.plugin.newAction"
+               label="Verify source"
+               menubarPath="jack_menu/slot1">
          </action>
       </objectContribution>
    </extension>

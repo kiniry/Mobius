@@ -11,6 +11,7 @@
 package jack.plugin;
 
 import jack.plugin.compile.CompilationUnitDecorator;
+import jack.util.Logger;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -344,7 +345,7 @@ public class JackPlugin extends AbstractUIPlugin {
 
 			return result;
 		} catch (CoreException e) {
-			System.err.println("Exception catched: " + e.toString());
+			Logger.err.println("Exception catched: " + e.toString());
 			return getPreferenceStore().getString(preference_name);
 		}
 	}
@@ -546,7 +547,7 @@ public class JackPlugin extends AbstractUIPlugin {
 		try {
 			URL install_url =
 					JackPlugin.getDefault().getBundle().getEntry("/");
-			//System.out.println(install_url);
+			//Logger.get().println(install_url);
 			//getDescriptor().getInstallURL();
 			return new URL(install_url, "imgs/icons/");
 		} catch (MalformedURLException e) {
@@ -579,7 +580,7 @@ public class JackPlugin extends AbstractUIPlugin {
 		try {
 			pkg = compilation_unit.getPackageDeclarations();
 		} catch (JavaModelException e) {
-			System.err.println(
+			Logger.err.println(
 				"JackPlugin.getJpoFile: JavaModelException catched: "
 					+ e.toString());
 			return null;
@@ -702,7 +703,7 @@ class MyResourceChangeReporter implements IResourceChangeListener {
 					break;
 			}
 		} catch (CoreException ce) {
-			System.err.println(ce.getMessage());
+			Logger.err.println(ce.getMessage());
 		}
 	}
 

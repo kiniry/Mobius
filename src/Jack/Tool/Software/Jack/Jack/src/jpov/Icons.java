@@ -9,6 +9,8 @@
 /*******************************************************************************/
 package jpov;
 
+import jack.util.Logger;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -257,7 +259,7 @@ public class Icons {
 				}
 			}
 		} catch (MalformedURLException e) {
-			System.err.println("Cannot find images :" + e.toString());
+			Logger.err.println("Cannot find images :" + e.toString());
 		}
 	}
 

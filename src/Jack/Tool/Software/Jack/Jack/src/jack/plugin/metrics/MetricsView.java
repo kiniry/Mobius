@@ -8,6 +8,7 @@
 package jack.plugin.metrics;
 
 import jack.plugin.JackPlugin;
+import jack.util.Logger;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -491,10 +492,10 @@ class PrinterAction extends Action {
 	public void run() {
 		PrinterData data = pd.open();
 		if (data == null) {
-			System.out.println("Warning: No default printer.");
+			Logger.get().println("Warning: No default printer.");
 			return;
 		}
-		System.out.println(data.toString());
+		Logger.get().println(data.toString());
 		Printer printer = new Printer();
 		if (printer.startJob("SWT Printing Snippet")) {
 			Color black = printer.getSystemColor(SWT.COLOR_BLACK);

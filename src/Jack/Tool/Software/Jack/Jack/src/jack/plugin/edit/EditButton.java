@@ -11,6 +11,7 @@ package jack.plugin.edit;
 
 import jack.plugin.JackPlugin;
 import jack.plugin.ToolbarButton;
+import jack.util.Logger;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.ui.JavaUI;
@@ -38,7 +39,7 @@ public class EditButton extends ToolbarButton {
 		try {
 			return (ICompilationUnit) selection.getFirstElement();
 		} catch (ClassCastException e) {
-			System.err.println(
+			Logger.err.println(
 				"OpenViewAction.getCompilationUnit: "
 					+ "error casting selection to ICompilationUnit");
 			return null;

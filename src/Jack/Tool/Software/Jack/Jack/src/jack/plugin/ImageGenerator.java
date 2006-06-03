@@ -128,7 +128,7 @@ public class ImageGenerator
 				// package => get the package, or create it if it does not
 				// exists yet.
 				String pkg_name = fqn.substring(last_index, current_index);
-				//		System.out.println("Package : " + pkg_name);
+				//		Logger.get().println("Package : " + pkg_name);
 				Package new_current = current.getPackage(pkg_name);
 
 				if (new_current == null) {
@@ -142,7 +142,7 @@ public class ImageGenerator
 
 		// get the name of the class from the last index
 		class_name = fqn.substring(last_index);
-		//	System.out.println("Class : " + class_name);
+		//	Logger.get().println("Class : " + class_name);
 
 		// at this point, the packages have been added. Load the class.
 		try {

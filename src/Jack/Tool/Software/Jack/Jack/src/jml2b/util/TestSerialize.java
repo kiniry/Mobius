@@ -8,6 +8,8 @@
 //*******************************************************************************/
 package jml2b.util;
 
+import jack.util.Logger;
+
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
@@ -36,9 +38,9 @@ public class TestSerialize extends Profiler
 
 	String base_file = System.getProperty("jml2b.basefile");
 	if(base_file != null) {
-	    System.out.println("Restoring from : " + base_file);
+	    Logger.get().println("Restoring from : " + base_file);
 	} else {
-	    System.out.println("Using file given on command line");
+	    Logger.get().println("Using file given on command line");
 	}
 
 	try {
@@ -48,10 +50,10 @@ public class TestSerialize extends Profiler
 	    p = (Package)ostream.readObject();
 	    end_time = System.currentTimeMillis();
 	} catch(Exception e) {
-	    System.err.println("Exception catched:");
-	    System.err.println(e.toString());
+	    Logger.err.println("Exception catched:");
+	    Logger.err.println(e.toString());
 	} 
-	System.out.println("Classes loaded : " + p.getClassCount(true));
-	System.out.println("Loading time : " + (end_time - start_time));
+	Logger.get().println("Classes loaded : " + p.getClassCount(true));
+	Logger.get().println("Loading time : " + (end_time - start_time));
     }
 }

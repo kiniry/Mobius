@@ -10,6 +10,8 @@
  /******************************************************************************/
 package jml2b.pog;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -685,12 +687,12 @@ public class Pog extends Profiler
 				jpoF.close();
 
 			} catch (LoadException e) {
-				System.err.println("   LoadException " + e.toString());
-				System.err.println(file.getFlatName(config.getPackage()) + ".jpo is ignored");
+				Logger.err.println("   LoadException " + e.toString());
+				Logger.err.println(file.getFlatName(config.getPackage()) + ".jpo is ignored");
 				addedDepends.addAll(file.getDepends());
 			} catch (IOException e) {
-				System.err.println("    " + e.toString());
-				System.err.println(file.getFlatName(config.getPackage()) + ".jpo is ignored");
+				Logger.err.println("    " + e.toString());
+				Logger.err.println(file.getFlatName(config.getPackage()) + ".jpo is ignored");
 				addedDepends.addAll(file.getDepends());
 			} finally {
 				if (ostr_jpo != null)

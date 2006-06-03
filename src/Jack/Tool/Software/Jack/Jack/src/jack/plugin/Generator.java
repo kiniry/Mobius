@@ -10,6 +10,7 @@
 package jack.plugin;
 
 import jack.plugin.compile.PoGeneratorErrorHandler;
+import jack.util.Logger;
 
 import java.io.File;
 import java.util.Iterator;
@@ -155,7 +156,7 @@ public abstract class Generator
 				return null;
 			}
 		} catch (CoreException e) {
-			System.err.println("CoreException catched: " + e.toString());
+			Logger.err.println("CoreException catched: " + e.toString());
 			return null;
 		}
 
@@ -459,7 +460,7 @@ public abstract class Generator
 		// was not canceled.
 		monitor.setCanceled(false);
 		monitor.done();
-		System.err.println("   " + (System.currentTimeMillis() - time) + " ms");
+		Logger.err.println("   " + (System.currentTimeMillis() - time) + " ms");
 
 	}
 

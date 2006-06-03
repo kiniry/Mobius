@@ -8,6 +8,7 @@
 //*******************************************************************************/
 package jml2b.exceptions;
 
+import jack.util.Logger;
 import jml2b.structure.java.JmlFile;
 
 /**
@@ -30,13 +31,13 @@ public class StderrHandler extends ErrorHandler {
         int column,
         String description) {
         if (f != null) {
-            System.err.println(f.fileName + ":" + line + ":" + description);
+            Logger.err.println(f.fileName + ":" + line + ":" + description);
         } else {
-            System.err.print(description);
+            Logger.err.print(description);
             if (line >= 0) {
-                System.err.print(" (line " + line + ")");
+                Logger.err.print(" (line " + line + ")");
             }
-            System.err.println();
+            Logger.err.println();
         }
     }
 
@@ -53,14 +54,14 @@ public class StderrHandler extends ErrorHandler {
         int column,
         String description) {
         if (f != null) {
-            System.err.println(
+            Logger.err.println(
                 "" + f.fileName + ": warning:" + line + ":" + description);
         } else {
-            System.err.print(description);
+            Logger.err.print(description);
             if (line >= 0) {
-                System.err.print(" (line " + line + ")");
+                Logger.err.print(" (line " + line + ")");
             }
-            System.err.println();
+            Logger.err.println();
         }
     }
 }

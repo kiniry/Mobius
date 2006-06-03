@@ -15,6 +15,7 @@ import jack.plugin.compile.PoGenerator;
 import jack.plugin.edit.EditAction;
 import jack.plugin.edit.EditedFile;
 import jack.plugin.perspective.ICaseExplorer;
+import jack.util.Logger;
 
 import java.io.IOException;
 import java.util.Date;
@@ -310,7 +311,7 @@ public abstract class ProofTask extends Thread {
 			jpov.save();
 		} catch (IOException ex) {
 			String str = ex.toString();
-			System.err.println(str);
+			Logger.err.println(str);
 			setError("I/O Error", str);
 		}
 		this.changed();
@@ -458,7 +459,7 @@ public abstract class ProofTask extends Thread {
 	 * @param c
 	 */
 	public ProofTask(ICaseExplorer c) {
-		System.out.println(c.getTreeSelection());
+		Logger.get().println(c.getTreeSelection());
 	}
 
 	/**

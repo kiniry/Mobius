@@ -15,6 +15,7 @@ import jack.plugin.edit.EditedFile;
 import jack.plugin.edit.IEditedFile;
 import jack.plugin.prove.ProofTask;
 import jack.plugin.prove.ProveAction;
+import jack.util.Logger;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -218,7 +219,7 @@ public class CaseExplorer extends ViewPart implements ICaseExplorer {
 		while (e.hasMoreElements()) {
 
 			ProofTask pt = (ProofTask) e.nextElement(); 
-			//System.out.println(pt);
+			//Logger.get().println(pt);
 			if (pt != null) {
 				prove.add(new ProofAction(pt.factory(), this));
 			}
@@ -253,7 +254,7 @@ public class CaseExplorer extends ViewPart implements ICaseExplorer {
 		while (e.hasMoreElements()) {
 
 			ProofTask pt = (ProofTask) e.nextElement(); 
-			//System.out.println(pt);
+			//Logger.get().println(pt);
 
 			if (pt != null) {
 				ProveAction p = pt.factory();
@@ -641,7 +642,7 @@ class CheckAction extends Action {
 		try {
 			explorer.save();
 		} catch (IOException ex) {
-			System.err.println(ex.toString());
+			Logger.err.println(ex.toString());
 		}
 	}
 }
@@ -670,7 +671,7 @@ class UncheckAction extends Action {
 		try {
 			explorer.save();
 		} catch (IOException ex) {
-			System.err.println(ex.toString());
+			Logger.err.println(ex.toString());
 		}
 	}
 }

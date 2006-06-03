@@ -9,6 +9,7 @@
 package jack.plugin.metrics;
 
 import jack.plugin.JackPlugin;
+import jack.util.Logger;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jface.action.IAction;
@@ -39,7 +40,7 @@ public class MetricsAction implements IObjectActionDelegate {
 		try {
 			return (ICompilationUnit) selection.getFirstElement();
 		} catch (ClassCastException e) {
-			System.err.println(
+			Logger.err.println(
 				"OpenViewAction.getCompilationUnit: "
 					+ "error casting selection to ICompilationUnit");
 			return null;
