@@ -1,3 +1,5 @@
+# $Id$
+
 TOP = ../../..
 include ${TOP}/Makefile.defs
 
@@ -5,9 +7,7 @@ include ${TOP}/Makefile.defs
 # ESCJAVA is (only) used for standalone tests
 ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
 
-##_CLASSPATH = $(call canonicalize,${ESCTOOLS_ROOT}/Escjava/java/daikon-instrumented:${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.:/home/cok/Daikon/daikon/daikon.jar:/home/cok/Daikon/daikon/java/ajax-ship/ajax.jar)
-  ## FIXME - the following line does not properly concatenate
-_CLASSPATH = ${ESC_CLASSPATH}$(call canonicalize,:${JUNIT_UTILS_PATH}:.)
+_CLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
 _SPECS = $(call canonicalize,.:${ESC_SPECS})
@@ -54,18 +54,6 @@ dotests-nolist:
 .PHONY: swtests
 swtests: lists
 	$(JUNITSW) TestSuite
-
-.PHONY: canonicalize_paths
-canonicalize_paths:
-ifdef COMSPEC
-	@if [ ! -f .canonicalized ]; then \
-		for i in *-expected; do \
-			cat $${i} | sed -e "s/\\.\\//\\.\\\\/" > tmp-expected; \
-			rm $${i}; mv tmp-expected $${i}; \
-		done; \
-	fi
-	@touch .canonicalized
-endif
 
 ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath "${_SPECS}"
 
@@ -182,3 +170,4 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 clean:
 	@rm -f `cat .cvsignore` core*
 
+# End of file
