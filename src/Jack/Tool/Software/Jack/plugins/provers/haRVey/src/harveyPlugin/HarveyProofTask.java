@@ -11,6 +11,7 @@ package harveyPlugin;
 
 import jack.plugin.prove.ProofTask;
 import jack.plugin.prove.ProveAction;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -162,10 +163,10 @@ public class HarveyProofTask extends ProofTask {
 				goal.setStatus("Harvey", new HarveyProverStatus(false));
 			changed();
 		} catch (InterruptedException ie) {
-			System.err.println("Exception " + ie.getMessage());
+			Logger.err.println("Exception " + ie.getMessage());
 			return;
 		} catch (IOException e) {
-			System.out.println(
+			Logger.get().println(
 				"Error running haRVey on: " + string + ": " + e.toString());
 		}
 	}

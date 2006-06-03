@@ -10,6 +10,8 @@
 /******************************************************************************/
 package harveyPlugin;
 
+import jack.util.Logger;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -415,7 +417,7 @@ public class HarveyPrinter implements IPrinter {
 				try {
 					ostream.close();
 				} catch (IOException e) {
-					System.err.println(
+					Logger.err.println(
 						"Error closing file: " + ostream.toString());
 				}
 			}
