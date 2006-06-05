@@ -43,9 +43,9 @@
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="proveAction">
          <action
-               label="prove with haRVey"
+               label="with haRVey (experimental)"
                class="harveyPlugin.ProveHarveyAction"
-               menubarPath="jack_menu/prover/prover_slot"
+               menubarPath="jack_source_menu/prover/prover_slot"
                id="jack.plugin.proveFileAction">
          </action>
       </objectContribution>
