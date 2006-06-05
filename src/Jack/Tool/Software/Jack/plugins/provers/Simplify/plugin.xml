@@ -46,15 +46,15 @@
                class="simplifyPlugin.ProveSimplifyAction"
                icon="icons/jml_prove.gif"
                id="jack.plugin.proveSimplifyAction"
-               label="Prove with Simplify"
-               menubarPath="jack_menu/prover/prover_slot">
+               label="with Simplify"
+               menubarPath="jack_source_menu/prover/prover_slot">
          </action>
         <action
               class="simplifyPlugin.ProveSimplifyBytecodeAction"
               icon="icons/jml_prove_bc.gif"
               id="jack.plugin.proveSimplifyJpoFileAction"
-              label="Prove with Simplify"
-              menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo">
+              label="with Simplify"
+              menubarPath="bytecode/prover_jpo/prover_slot_jpo">
          </action>
       </objectContribution>
    </extension>
@@ -68,7 +68,7 @@
                class="simplifyPlugin.ProveSimplifyAction"
                icon="icons/jml_prove.gif"
                id="jack.plugin.proveSimplifyAction"
-               label="Prove with Simplify"
+               label="with Simplify"
                menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo">
          </action>
       </objectContribution>
@@ -86,15 +86,14 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="Simplify prover Buttons"
-            visible="true"
-            id="simplifyplugin.actionSet">
+            visible="false"
+            id="jack.provers.simplify">
          <action
-               label="JML Prove"
-               icon="icons/jml_prove.gif"
-               tooltip="Prove with Simplify"
                class="simplifyPlugin.ProveSimplifyButton"
-               toolbarPath="jack.plugin.actionSet/simplify"
-               id="simplifyplugin.toolbar.proveAction">
+               icon="icons/jml_prove.gif"
+               id="simplifyplugin.toolbar.proveAction"
+               label="Prove with Simplify"
+               tooltip="Prove with Simplify">
             <selection
                   class="org.eclipse.jdt.core.ICompilationUnit">
             </selection>
