@@ -2,7 +2,7 @@
 <feature
       id="IJack"
       label="IJack"
-      version="1.8.7"
+      version="1.8.8"
       provider-name="INRIA Sophia - Everest project"
       nl="en">
 
@@ -159,13 +159,13 @@ Tout litige non résolu à l&apos;amiable dans un délai de 60 jours calendaires
          version="0.0.0"/>
 
    <plugin
-         id="Bytecode_to_JPO"
+         id="ClassFileAnnotation"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="ClassFileAnnotation"
+         id="Bplugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

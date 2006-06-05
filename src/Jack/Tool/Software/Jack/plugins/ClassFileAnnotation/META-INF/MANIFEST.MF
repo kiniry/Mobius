@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ClassFile Annotation Plug-in
 Bundle-SymbolicName: ClassFileAnnotation; singleton:=true
-Bundle-Version: 1.0.5
+Bundle-Version: 1.0.6
 Bundle-ClassPath: ClassFileAnnotation.jar
 Bundle-Activator: classFileAnnotation.ClassFileAnnotationPlugin
 Bundle-Localization: plugin

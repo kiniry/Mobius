@@ -2,7 +2,7 @@
 <feature
       id="ProverFeature"
       label="ProverFeature"
-      version="1.0.4"
+      version="1.0.5"
       provider-name="INRIA Sophia - Everest project">
    <install-handler/>
 
@@ -179,5 +179,17 @@ Tout litige non résolu à l&apos;amiable dans un délai de 60 jours calendaires
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="Harveyplugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="Bytecode_to_JPO"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

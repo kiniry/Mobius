@@ -9,5 +9,8 @@
    <feature url="features/IJack_1.8.7.jar" id="IJack" version="1.8.7" nl="en">
       <category name="Jack"/>
    </feature>
+   <feature url="features/IJack_1.8.8.jar" id="IJack" version="1.8.8" nl="en">
+      <category name="Jack"/>
+   </feature>
    <category-def name="Jack" label="Jack"/>
 </site>

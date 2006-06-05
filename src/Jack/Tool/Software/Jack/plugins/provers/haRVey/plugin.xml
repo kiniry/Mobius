@@ -3,7 +3,7 @@
 <plugin
    id="Harveyplugin"
    name="Harvey plug-in"
-   version="1.0.1"
+   version="1.0.2"
    provider-name="INRIA - Everest team"
    class="harveyPlugin.HarveyPlugin">
 

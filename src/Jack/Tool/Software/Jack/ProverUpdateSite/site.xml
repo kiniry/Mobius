@@ -3,5 +3,8 @@
    <feature url="features/ProverFeature_1.0.4.jar" id="ProverFeature" version="1.0.4">
       <category name="provers"/>
    </feature>
+   <feature url="features/ProverFeature_1.0.5.jar" id="ProverFeature" version="1.0.5">
+      <category name="provers"/>
+   </feature>
    <category-def name="provers" label="Jack Provers"/>
 </site>

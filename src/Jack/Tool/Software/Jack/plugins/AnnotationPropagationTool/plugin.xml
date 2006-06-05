@@ -3,7 +3,7 @@
 <plugin
    id="Annotationpropagation"
    name="Annotation propagation Plug-in"
-   version="1.0.6"
+   version="1.0.7"
    provider-name=""
    class="Annotationpropagation.AnnotationpropagationPlugin">
 

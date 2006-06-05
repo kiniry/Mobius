@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BPlug-in
 Bundle-SymbolicName: Bplugin; singleton:=true
-Bundle-Version: 1.2.3
+Bundle-Version: 1.2.4
 Bundle-ClassPath: Bplugin.jar
 Bundle-Activator: bPlugin.BPlugin
 Bundle-Vendor: INRIA - Everest team
