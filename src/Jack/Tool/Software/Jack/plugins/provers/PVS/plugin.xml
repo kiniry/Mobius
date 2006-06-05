@@ -47,9 +47,9 @@
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="jack.plugin.compile.CompileAction">
          <action
-               label="Prove with PVS"
+               label="with PVS"
                class="pvsPlugin.PvsProveAction"
-               menubarPath="jack_menu/prover/prover_slot"
+               menubarPath="jack_source_menu/prover/prover_slot"
                id="jack.plugin.provePVSAction">
          </action>
       </objectContribution>
@@ -62,7 +62,7 @@
             nameFilter="*.jpo"
             id="jack.plugin.compile.CompileAction">
          <action
-               label="Prove with PVS"
+               label="with PVS"
                class="pvsPlugin.PvsProveAction"
                menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
                id="jack.plugin.provePVSAction">
