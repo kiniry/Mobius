@@ -295,7 +295,7 @@ public class BCClass implements IClass {
 		setConfig(config);
 		while (miter.hasNext()) {
 			BCMethod m = (BCMethod) miter.next();
-			Util.out.println("wp for Method " + m.getName());
+			Logger.out.println("wp for Method " + m.getName());
 			m.initMethod();
 			m.wp(config);
 

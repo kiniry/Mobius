@@ -34,14 +34,14 @@
                icon="icons/jml_edit.gif"
                id="jack.plugin.openAction"
                label="Edit"
-               menubarPath="jack_menu/bytecode/bytecode_slot">
+               menubarPath="bytecode/bytecode_slot">
          </action>
          <action
                class="bytecode_to_JPO.POGAction"
                icon="icons/jml_compile.gif"
                id="jb2J.POGAction"
                label="JML Compile"
-               menubarPath="jack_menu/bytecode/bytecode_slot">
+               menubarPath="bytecode/bytecode_slot">
          </action>
       </objectContribution>
    </extension>
