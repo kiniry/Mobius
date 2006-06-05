@@ -37,7 +37,7 @@ public class PropagateAction implements IObjectActionDelegate {
 		try {
 			return (IFile) selection.getFirstElement();
 		} catch (ClassCastException e) {
-			Logger.get().printlnError(this, 
+			Logger.get().println(this, 
 				"OpenViewAction.getCompilationUnit: "
 					+ "error casting selection to ICompilationUnit");
 			return null;

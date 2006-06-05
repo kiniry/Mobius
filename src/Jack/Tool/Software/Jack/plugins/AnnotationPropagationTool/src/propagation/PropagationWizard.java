@@ -204,7 +204,7 @@ public class PropagationWizard extends Wizard {
 				getContainer().run(true, true, pg);
 			} catch (InvocationTargetException e) {
 				Throwable t = e.getTargetException();
-				Logger.get().printlnError(this, 
+				Logger.err.println( 
 					"InvocationTargetException : " + t.toString());
 				t.printStackTrace();
 			} catch (InterruptedException e) {
@@ -252,7 +252,7 @@ public class PropagationWizard extends Wizard {
 					for (int i = 0; i < jes.length; i++)
 						collectCompilationUnit(jes[i], res);
 				} catch (JavaModelException jme) {
-					Logger.get().printlnError(this, jme.getMessage());
+					Logger.err.println(jme.getMessage());
 				}
 			}
 		}

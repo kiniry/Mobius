@@ -34,11 +34,12 @@
             nameFilter="*.prop"
             id="propagate.annotation">
          <action
-               label="Propagate annotations"
                class="propagation.PropagateAction"
-               menubarPath="additions"
                enablesFor="1"
-               id="propagation.propagateAction">
+               icon="icons/filter_ps.gif"
+               id="propagation.propagateAction"
+               label="Propagate annotations"
+               menubarPath="additions">
          </action>
       </objectContribution>
    </extension>
