@@ -10,10 +10,10 @@
          <action
                class="annotation.AnnotationAction"
                enablesFor="1"
-               icon="icons/Annotation.gif"
+               icon="icons/Annotation_bc.gif"
                id="classFile.annotation"
                label="Class file annotation"
-               menubarPath="jack_menu/bytecode/bytecode_slot"
+               menubarPath="bytecode/bytecode_slot"
                state="false"
                style="push">
          </action>
