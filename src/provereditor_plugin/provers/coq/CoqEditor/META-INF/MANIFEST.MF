@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CoqEditor Plug-in
 Bundle-SymbolicName: coq.editor; singleton:=true
-Bundle-Version: 0.9.0
+Bundle-Version: 0.9.1
 Bundle-Activator: fr.inria.everest.coq.editor.CoqEditorPlugin
 Bundle-Vendor: Inria - Everest Team
 Bundle-Localization: plugin
