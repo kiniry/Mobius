@@ -29,6 +29,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Base class for toolbar buttons.
@@ -37,14 +38,14 @@ import org.eclipse.ui.PartInitException;
  * @author A. Requet, L. Burdy
  */
 public abstract class ToolbarButton implements IWorkbenchWindowActionDelegate {
-	private IWorkbenchWindow window;
+
 	private IStructuredSelection selection;
 	private ICompilationUnit cmp_units = null;
 	/**
 	 * Returns the <code>IWorkbenchWindow</code> associated to this action.
 	 */
 	public IWorkbenchWindow getWindow() {
-		return window;
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 	}
 
 	/**
@@ -70,7 +71,6 @@ public abstract class ToolbarButton implements IWorkbenchWindowActionDelegate {
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(IWorkbenchWindow)
 	 */
 	public void init(IWorkbenchWindow window) {
-		this.window = window;
 	}
 
 	/**

@@ -22,19 +22,20 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * Action allowing to generate JML specification.
  * 
  * @author L. Burdy
  */
-public class AddJmlAction implements IObjectActionDelegate {
+public class AddJmlAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 
 	/** The current selection. */
 	IStructuredSelection selection;
 
-	/** the current active part */
-	IWorkbenchPart activePart;
 
 	/**
 	 * Constructor for Action1.
@@ -43,22 +44,6 @@ public class AddJmlAction implements IObjectActionDelegate {
 		super();
 	}
 
-	/**
-	 * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
-	 *		Sets the active part for the delegate.  
-		 * The active part is commonly used to get a working context for the action,
-		 * such as the shell for any dialog which is needed.
-	 * <p>
-	 * This method will be called every time the action appears in a popup menu.  The
-	 * targetPart may change with each invocation.
-	 * </p>
-	 *
-	 * @param action the action proxy that handles presentation portion of the action
-	 * @param targetPart the new part target
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		activePart = targetPart;
-	}
 
 	/**
 	 * Generates JML specifications for the selected compilation units.
@@ -66,6 +51,7 @@ public class AddJmlAction implements IObjectActionDelegate {
 	 * @see IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
+		IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
 		IWorkbenchPartSite site = activePart.getSite();
 
 		if (selection == null) {
@@ -110,14 +96,20 @@ public class AddJmlAction implements IObjectActionDelegate {
 	public void selectionChanged(IAction action, ISelection selection) {
 		if (selection instanceof IStructuredSelection) {
 			this.selection = (IStructuredSelection) selection;
-		} else {
-			MessageDialog.openError(
-				activePart.getSite().getShell(),
-				"Jack Error",
-				"Unexpected selection type: expected StructuredSelection, "
-					+ "got "
-					+ selection.getClass().getName());
-		}
+		} 
+	}
+
+	public void dispose() {
+		
+	}
+
+	public void init(IWorkbenchWindow window) {
+		
+	}
+
+
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+
 	}
 
 }

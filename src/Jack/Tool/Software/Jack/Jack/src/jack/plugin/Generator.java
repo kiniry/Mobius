@@ -460,7 +460,7 @@ public abstract class Generator
 		// was not canceled.
 		monitor.setCanceled(false);
 		monitor.done();
-		Logger.err.println("   " + (System.currentTimeMillis() - time) + " ms");
+		Logger.warn.println("   " + (System.currentTimeMillis() - time) + " ms");
 
 	}
 
