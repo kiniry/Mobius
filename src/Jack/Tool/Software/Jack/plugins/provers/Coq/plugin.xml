@@ -58,17 +58,17 @@
             objectClass="org.eclipse.jdt.core.ICompilationUnit"
             id="jack.plugin.compile.CompileAction">
          <action
-               label="Prove with Coq"
+               label="with Coq"
                icon="icons/coq.gif"
                class="coqPlugin.prooftask.action.ProveCoqToughAction"
-               menubarPath="jack_menu/prover/prover_slot"
+               menubarPath="jack_source_menu/prover/prover_slot"
                id="jack.plugin.proveCoqLightAction">
          </action>
          <action
-               label="Prove with Coq"
+               label="with Coq"
                icon="icons/coq_bc.gif"
                class="coqPlugin.prooftask.action.ProveCoqLightAction"
-               menubarPath="jack_menu/bytecode/prover_jpo/prover_slot_jpo"
+               menubarPath="bytecode/prover_jpo/prover_slot_jpo"
                id="jack.plugin.proveCoqLightAction">
          </action>
        </objectContribution>
@@ -80,7 +80,7 @@
             nameFilter="*.jpo"
             id="jack.plugin.compile.CompileAction">
          <action
-               label="Prove with Coq"
+               label="with Coq"
                icon="icons/coq.gif"
                class="coqPlugin.prooftask.action.AProveAction"
                menubarPath="jack_menu_jpo/prover_jpo/prover_slot_jpo"
@@ -102,7 +102,7 @@
                label="Reevaluate"
                style="push"
                toolbarPath="jack.plugin.actionSet/coq"
-               tooltip="Reevaluate proofs from the files">
+               tooltip="(Coq) Reevaluate proofs from the files">
                <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
                <enablement>
                     <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
@@ -116,24 +116,16 @@
                state="false"
                style="push"
                toolbarPath="jack.plugin.actionSet/coq"
-               tooltip="Evaluate the vernacular file">
+               tooltip="(Coq) Evaluate the vernacular file">
          </action>
+
+      </actionSet>
+      <actionSet
+            id="jack.provers.coq"
+            label="Jack Prove Buttons">
          <action
-               toolbarPath="jack.plugin.actionSet/coq"
-               label="JML Coq Tough Prove"
-               tooltip="Prove with Coq (Tough)"
-               class="coqPlugin.prooftask.button.ProveCoqButton"
-               icon="icons/coq2.gif"
-               style="push"
-               id="coqPlugin.toolbar.proveToughAction">
-            <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
-            <enablement>
-               <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
-            </enablement>
-         </action>
-         <action
-               toolbarPath="jack.plugin.actionSet/coq"
-               label="JML Coq Light Prove"
+               toolbarPath="Normal/coq"
+               label="Prove with Coq (light)"
                class="coqPlugin.prooftask.button.ProveCoqLightButton"
                tooltip="Prove with Coq (Light)"
                icon="icons/coq.gif"
@@ -146,6 +138,19 @@
                <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
             </enablement>
          </action>
-      </actionSet>
+                     <action
+               toolbarPath="Normal/coq"
+               label="Prove with Coq (tough)"
+               tooltip="Prove with Coq (Tough)"
+               class="coqPlugin.prooftask.button.ProveCoqButton"
+               icon="icons/coq2.gif"
+               style="push"
+               id="coqPlugin.toolbar.proveToughAction">
+            <selection class="org.eclipse.jdt.core.ICompilationUnit"/>
+            <enablement>
+               <objectClass name="org.eclipse.jdt.core.ICompilationUnit"/>
+            </enablement>
+         </action>
+         </actionSet>
    </extension>
 </plugin>
