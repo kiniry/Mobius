@@ -687,8 +687,8 @@ public class Pog extends Profiler
 				jpoF.close();
 
 			} catch (LoadException e) {
-				Logger.err.println("   LoadException " + e.toString());
-				Logger.err.println(file.getFlatName(config.getPackage()) + ".jpo is ignored");
+				Logger.err.println("LoadException " + e.toString() + "\n" +
+						file.getFlatName(config.getPackage()) + ".jpo is ignored");
 				addedDepends.addAll(file.getDepends());
 			} catch (IOException e) {
 				Logger.err.println("    " + e.toString());
