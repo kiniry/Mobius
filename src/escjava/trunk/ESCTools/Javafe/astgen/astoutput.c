@@ -102,6 +102,19 @@ static int getFieldCount(ClassListNode *classlist)
     return fieldCount;
 }
 
+/* output a list of light-weight clauses for the constructor's contract 
+ * nullity is handled in the formal parameters 
+ */
+static void outputConstructorSpecification(FILE *o, int ind, Class *class, ClassListNode *classlist, int fieldCount)
+{
+    /* Output ensure that field == formal */
+    ClassListNode *c;
+    DirectiveListNode *d;
+    FOREACHFIELD(c, d, classlist) {
+      indent(o, ind);
+      fprintf(o, "//@ ensures this.%s == %s;\n", d->i.f.name, d->i.f.name);
+    }
+}
 
 /* new  constructor that initializes fields */
 static void outputConstructor(FILE *o, int ind, Class *class,
@@ -119,6 +132,8 @@ static void outputConstructor(FILE *o, int ind, Class *class,
     boolean first=TRUE;
 
     fprintf(o, "\n\n// Generated boilerplate constructors:\n\n");
+
+    outputConstructorSpecification(o, ind, class, classlist, fieldCount);
 
     indent(o, ind);
     fprintf(o, "protected %s(", class->name);
