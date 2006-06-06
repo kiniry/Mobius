@@ -1,4 +1,5 @@
 
+
 % CHANGED - the example o compilation of loop specification
 
 \newtheorem{bml}{Definition}[section]
@@ -13,6 +14,7 @@ BML corresponds to a representative subset of JML and is expressive enough for m
 \begin{itemize}
      \item Nonterminals are written with a \nonterminal font
      \item Terminals are written with a \terminal font
+    % \item Keywords are writtem with a \keyWord font
      \item brackets  $\lbrack \ \rbrack $ surround optional text.
 \end{itemize}
 
@@ -34,11 +36,11 @@ $$\begin{array}{ll}
 
      & \\
      
-     \digit & ::=  0 \mid \nonZeroDigit \\
+     \digit & ::=  \mbox{\rm\textbf{0}} \mid \nonZeroDigit \\
      
      & \\
 
-     \nonZeroDigit &::= 1 \mid \ldots \mid 9  \\
+     \nonZeroDigit &::= \mbox{\rm\textbf{1}}  \mid \ldots \mid \mbox{\rm\textbf{9}}   \\
      
      & \\
      
@@ -48,12 +50,13 @@ $$\begin{array}{ll}
      
      \boundVar & ::= \# \ \bound\_\intLiteral \\ 
 
-    % & \\
+     & \\
     % \RefValuesSpec    & ::=  Ref \mid \Mynull \\
     & \\
     \expression      & ::= \Constants \\
                      &  \mid  \locVar{ \digits } \\ 
        	             &  \mid  \fieldAccess{\expression}{\ident} \\
+		     &  \mid \ident \\
 		  %  &  \mid  \update{\fieldd}{ \expression}{\expression}(\expression) \\
 		     &  \mid  \arrayAccess{\expression} {\expression} \\	   
 		 %   &  \mid \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression) \\	
@@ -73,7 +76,7 @@ $$\begin{array}{ll}
  
 
     & \\
- \predicates & ::=  \  == \mid  \neq \mid \leq \mid \le \mid \geq \mid > \mid \subtypeSpec    \\
+ \predicates & ::=  \  = \mid  \neq \mid \leq \mid \le \mid \geq \mid > \mid \subtypeSpec    \\
 
 
 
@@ -90,12 +93,13 @@ $$\begin{array}{ll}
 	  & \mid \formulaBc  \wedge  \formulaBc \\
 	  & \mid \formulaBc \vee  \formulaBc \\
 	  & \mid \formulaBc  \Rightarrow \formulaBc \\
+          & \mid \formulaBc \iff  \formulaBc \\
 	  & \mid \forall \ \boundVar , \formulaBc\\
 	  & \mid \exists \ \boundVar  , \formulaBc	 \\
     & \\
   \ClassSpec & ::=  \ClassInv \ \formulaBc  \\
                  & \mid \ClassHistoryConstr  \ \formulaBc   \\
-                 & \mid \declare \ \ghost \ \ident \ Name \\ 
+                 & \mid \declare \ \ghost \ \ident \ \ident \\ 
 
     & \\
   \intraMethodSpec & ::=  \begin{array}{l}  \atIndex \ nat; \\
@@ -125,8 +129,6 @@ $$\begin{array}{ll}
 		     \end{array} \\
  & \\ 
  \exsuresList & ::=   [ ] \mid  \exsures \ ( \ident )  \ \formulaBc  ; \exsuresList  \\
-                
-                 
  & \\
   \modifiesLoc & ::=  \fieldAccess{\expression}{\ident} \\
                     & \mid \locVar{i} \\ 
@@ -135,8 +137,32 @@ $$\begin{array}{ll}
 		    & \mid \nothing \\
               
  & \\
- \specIndex & ::= \all \mid i_1 .. i_2 \mid i  \\ 
+ \specIndex & ::= \all \mid i_1 .. i_2 \mid i  
+\end{array}                
+$$
+
+$$ 
+\begin{array}{ll}                
+
  
+       & \\
+       \bmlKeyWords & ::= \requires \\
+                       & \mid   \ensures \\
+		       & \mid   \modifies \\
+		       & \mid   \assert \\
+		       & \mid   \set \\
+		       & \mid   \exsures \\
+		       & \mid   \also \\
+		       & \mid  \ClassInv \\
+		       & \mid \ClassHistoryConstr \\
+		       & \mid \atIndex \\ 
+		       & \mid \loopInv \\
+		       & \mid \loopDecreases \\
+		       & \mid \loopMod \\
+		       & \mid \jmlKey{$\backslash$ typeof} \\
+		       & \mid \jmlKey{$\backslash$ elemtype}\\
+		       & \mid \TYPE\\
+		       & \mid \result 
 \end{array}
 $$
 
@@ -168,7 +194,7 @@ Let's look now in more detail at the BML expressions that can be translated in J
 	    
 
       \item  $\arrayAccess{\expression_1} {\expression_2} $ stands for an access to the element at index $ \expression_2$ 
-             in the array denoted by the expression $ \expression_1$ 
+             in the array denoted by the expression $ \expression_1$. This corresponds to the Java notation $\expression_1[\expression_2 ]  $ 
 
   
 
@@ -177,8 +203,8 @@ Let's look now in more detail at the BML expressions that can be translated in J
 
       \item  $ \typeof{\expression}$  denotes the dynamic type of the expression $\expression$ 
 
-      \item $ \type{ClassName} $  denotes the class with class name $ClassName$
-
+      \item $ \type{ \ident } $  denotes the class  described at index $\ident$ in the constant pool of the corresponding class file
+ 
       \item $\elemtype{\expression}$ denotes the type of the elements of the array $\expression$
 
       \item $\old{\expression}$  denotes the value of $\expression$ in the pre state of a method. This expression is usually used in the postcondition of a
@@ -232,7 +258,7 @@ class C {
    int a ;
 
    invariant a > 0; 
-   historyConstraint a >= old(a);
+   historyConstraint old(a) >= a;
    
    public void decrease(int b) {
       ...
@@ -297,27 +323,27 @@ variable {\verb a }.
 \begin{verbatim}
 class C {
    int a ;
-
+  
    invariant a > 0; 
-   historyConstraint a >= old(a);
-
-      {| 
-         requires a > b;
-         modifies a;
-         ensures  a == \old(a) - b;  
-         exsures (Exception) false;
+   historyConstraint  old(a) >= a;
+  
+   {| 
+     requires a > b;
+     modifies a;
+     ensures  a == \old(a) - b;  
+     exsures (Exception) false;
      
-         also
-         requires a <= b;
-         modifies nothing;
-         ensures  a == \old(a);
-         exsures (Exception) false;
-      |}   
-       public void decrease(int b) {
-          if ( a > b) {
-          a = a - b;
-      }
+     also
+     requires a <= b;
+     modifies nothing;
+     ensures  a == \old(a);
+     exsures (Exception) false;
+   |}   
+   public void decrease(int b) {
+     if ( a > b) {
+       a = a - b;
    }
+ }
 }
 \end{verbatim}
 \caption{\sc An example for an intra method specification } \label{bcSpec}
@@ -379,9 +405,10 @@ $  \modifiesLoc$. We now look more closely what a modified expression can be:
       \item  $ \fieldAccess{\expression}{\ident} $ states that the method / loop modifies the value of the field at index $\ident$ 
              in the constant pool for the reference denoted by  $\expression$ 
       \item $\locVar{i}$ states that the local variable may modified by a loop. Note that this kind of modified
-            expression does not make sense for a method frame condition, as methods in Java are called by value, and
+            expression makes sense only for expressions modified in a loop.
+	    However a modification of a local variable does not make sense for a method frame condition, as methods in Java are called by value, and
 	    thus, a method can not cause a modification of a local variable that is observable by the rest of the program.
-	     However, for loops this is not the case. 
+	    
       \item  $\arrayAccessMod{\expression}{\specIndex}$ states that the components at the indexes specified by $\specIndex$ in
             the array denoted by $\expression$ may be modified. The indexes of the array components that may be modified $\specIndex$
 	    have the following syntax:

@@ -35,22 +35,22 @@ class C {
    int a ;
 
    invariant a > 0; 
-   historyConstraint a >= old(a);
+   historyConstraint  old(a) >= a;
 
-      /*@ public_behaviour
-        @ requires a > b;
-        @ modifies a;
-        @ ensures  a == \old(a) - b;  
-        @
-        @ also
-        @ requires a <= b;
-        @ ensures  a == \old(a);
-        @*/
-       public void decrease(int b) {
-          if ( a > b) {
-          a = a - b;
-      }
-   }
+   /*@ public_behaviour
+     @ requires a > b;
+     @ modifies a;
+     @ ensures  a == \old(a) - b;  
+     @
+     @ also
+     @ requires a <= b;
+     @ ensures  a == \old(a);
+     @*/
+     public void decrease(int b) {
+        if ( a > b) {
+           a = a - b;
+        }
+     }
 }
 \end{verbatim}
 \caption{\sc An example for a method with two normal behaviours specified in JML} \label{JmlSpec}
@@ -104,10 +104,10 @@ index of the constant pool table
          \result = 1 \\
           \\ 
          \iff \\ 
-         \exists  var(0) .
-           \biggl(\begin{array}{l} \ 0 \leq var(0) \wedge\\ 
-             var(0) < len(\#19(\register{0})) \wedge \\
-             \#19(\register{0})[var(0)] = \register{1} 
+         \exists    \bound\_{\mbox{\rm \textsf{0}}}, 
+           \biggl(\begin{array}{l} \ 0 \leq  \bound\_{\mbox{\rm \textsf{0}}} \wedge\\ 
+             \bound\_{\mbox{\rm \textsf{0}}} < len(\#19(\locVar{0})) \wedge \\
+             \arrayAccess{\#19(\locVar{0})}{\bound\_{\mbox{\rm \textsf{0}}} } = \locVar{1} 
          \end{array} \biggr) 
    \end{array}
 $$

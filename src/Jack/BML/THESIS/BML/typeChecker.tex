@@ -1,7 +1,33 @@
+
+\newcommand{\getType}{\mbox{\rm\textsf{getType}}}
+\newcommand{\getClassName}{\mbox{\rm\textsf{getClassName}}} 
 \section{BML type checker}
-In the previous section, we described the BML syntax.
-However, we are going to accept a strict subset of 
-the specifications that can be written in BML.
-In particular, we define here a typechecker for the BML specifications 
+In Section \ref{BCSLgrammar}, we gave the formal grammar of BML.
+However, we are interested in a strict subset of 
+the specifications that can be generated from this grammar.
+
+In what follows, we scatch the rules of a typechecker which 
+recognizes a well formed specification
+
+\subsection{Well formed BML expressions}
+We now turn to few rules which check if a BML expression is correct.
+We first need to define several functions that will be used by the type checker.
+
+
+Note that it is a partial function and is defined 
+ 
+
+
+$$\begin{array}{l}
+  \frac{ \begin{array}{l}
+          \constantPool , \locVarTab \vdash   \expression \\
+	   0 \le \ident < \constantPool.length \\
+	  \constantPool(\ident ) = \mbox{\rm\textbf{CONSTANT\_Fieldref}}  \\   
+	   \getType(\expression) =  \constantPool ( \constantPool (\ident).class\_index )   
+	 \end{array} 
+  }{ \constantPool , \locVarTab \vdash \expression.\ident  }_{wf \ field \ access}
+  %\frac{   }{ } \\
+\end{array}
+$$
 
      
