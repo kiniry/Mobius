@@ -44,6 +44,7 @@ InitBlock.java
 InstanceOfExpr.java
 IntegerVec.java
 InterfaceDecl.java
+JavafePrimitiveType.java
 LabelStmt.java
 LexicalPragma.java
 LexicalPragmaVec.java
