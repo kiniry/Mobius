@@ -15,6 +15,7 @@ DefPredLetExpr.java
 DefPredVec.java
 DependsPragma.java
 DynInstCmd.java
+EscPrimitiveType.java
 EverythingExpr.java
 EverythingExpr.java
 ExprCmd.java
