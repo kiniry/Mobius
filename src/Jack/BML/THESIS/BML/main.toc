@@ -1,0 +1,20 @@
+\contentsline {chapter}{\numberline {1}Specification language for Java bytecode programs}{5}
+\contentsline {section}{\numberline {1.1}A quick overview of JML}{6}
+\contentsline {section}{\numberline {1.2}BML}{7}
+\contentsline {subsection}{\numberline {1.2.1}Notation convention}{7}
+\contentsline {subsection}{\numberline {1.2.2}BML Grammar}{8}
+\contentsline {subsection}{\numberline {1.2.3}Interpretation of the BML grammar}{10}
+\contentsline {subsubsection}{BML expressions}{10}
+\contentsline {subsubsection}{BML predicates}{11}
+\contentsline {subsubsection}{Class Specification}{11}
+\contentsline {subsubsection}{Inter --- method specification}{12}
+\contentsline {subsubsection}{Method specification case}{13}
+\contentsline {subsubsection}{Intra --- method specification}{14}
+\contentsline {subsubsection}{Frame conditions}{15}
+\contentsline {section}{\numberline {1.3}BML type checker}{17}
+\contentsline {section}{\numberline {1.4}Background information of the class file format}{17}
+\contentsline {subsection}{\numberline {1.4.1}The \unhbox \voidb@x \hbox {\rm \textbf {Constant\_pool\_table}}}{17}
+\contentsline {subsection}{\numberline {1.4.2}Representation of method in the class file format}{18}
+\contentsline {subsubsection}{The \unhbox \voidb@x \hbox {\rm \textbf {Local\_variable\_table}}\ attribute }{18}
+\contentsline {subsubsection}{The \unhbox \voidb@x \hbox {\rm \textbf {Line\_Number\_Table}}\ attribute}{19}
+\contentsline {section}{\numberline {1.5}Compiling JML into BML}{19}

@@ -1,0 +1,26 @@
+\documentclass[book,10pt]{book}
+\input{../cmd.tex}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{epsfig}
+
+\title{Bytecode Verification and its Applications}
+\begin{document}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.75}
+
+\maketitle
+\tableofcontents
+
+\chapter{Specification language for Java bytecode programs} \label{bcsl}
+  \input{intro.tex} 
+  \input{prelim.tex}
+  \input{bml.tex}
+  \input{typeChecker.tex}
+  \input{constantPool.tex}
+  \input{compiler.tex}
+\bibliographystyle{plain}
+\bibliography{../biblio,../specification}
+
+\end{document}

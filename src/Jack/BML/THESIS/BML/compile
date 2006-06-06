@@ -1,0 +1,4 @@
+latex main.tex
+latex main.tex
+dvips main.dvi -o 
+ps2pdf main.ps
