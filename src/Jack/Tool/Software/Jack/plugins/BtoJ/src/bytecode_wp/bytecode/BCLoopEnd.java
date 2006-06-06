@@ -103,7 +103,7 @@ public class BCLoopEnd extends BCInstruction {
 		} else {
 			wp = ((BCConditionalBranch) loopEndInstruction)
 					.wp(config, wp, _exc);
-		}
+		} 
 		return wp;
 	}
 
