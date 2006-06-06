@@ -317,7 +317,7 @@ public class ParseType extends ParseUtil
     
         int loc = l.startingLoc;
         l.getNextToken();
-        return PrimitiveType.make( tag, loc );
+        return JavafePrimitiveType.make( tag, loc );
     }
   
     /**

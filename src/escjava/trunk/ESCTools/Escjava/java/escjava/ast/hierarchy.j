@@ -61,6 +61,9 @@ import escjava.ParsedRoutineSpecs;
  *         + DefPredLetExpr (DefPred* preds, Expr body)
  *         + DefPredApplExpr (Identifier predId, Expr* args)
  *	   + ArrayRangeRefExpr(Expr, Expr, Expr)
+ *    - Type ()
+ *      - PrimitiveType (tag)
+ *        + EscPrimitiveType ()
  *    + GuardedCmd
  *      + SimpleCmd (int cmd) // Skip, Raise
  *      + ExprCmd (int cmd, Expr pred) // Assert, Assume
@@ -421,6 +424,67 @@ public class DefPredApplExpr extends Expr
     public /*@ pure @*/ int getStartLoc() { return Location.NULL; }
 }
 
+//// Types
+
+public class EscPrimitiveType extends PrimitiveType
+{
+  //# ManualTag
+    /*@ public normal_behavior
+      @   ensures  \result <==> JavafePrimitiveType.isValidTag(tag)
+      @                         || tag == TagConstants.ANY
+      @                         || tag == TagConstants.TYPECODE
+      @                         || tag == TagConstants.LOCKSET
+      @                         || tag == TagConstants.OBJECTSET
+      @                         || tag == TagConstants.DOTDOT
+      @                         || tag == TagConstants.BIGINTTYPE
+      @                         || tag == TagConstants.REALTYPE;
+      @   ensures_redundantly JavafePrimitiveType.isValidTag(tag) ==> \result;
+      @*/
+    public static /*@pure*/ boolean isValidTag(int tag) {
+	return JavafePrimitiveType.isValidTag(tag)
+	    || tag == TagConstants.ANY
+            || tag == TagConstants.TYPECODE
+            || tag == TagConstants.LOCKSET
+            || tag == TagConstants.OBJECTSET
+            || tag == TagConstants.DOTDOT
+            || tag == TagConstants.BIGINTTYPE
+            || tag == TagConstants.REALTYPE;
+    }
+
+    /*@ also
+      @ public normal_behavior
+      @   ensures  \result == EscPrimitiveType.isValidTag(tag);
+      @*/
+    public /*@pure*/ boolean isValidTag() {
+	return EscPrimitiveType.isValidTag(tag);
+    }
+
+    //# NoMaker
+    /*@ public normal_behavior
+      @   requires EscPrimitiveType.isValidTag(tag);
+      @*/
+    public static /*@pure non_null*/ EscPrimitiveType make(int tag) {
+	EscPrimitiveType result = new EscPrimitiveType(null, tag, Location.NULL);
+	return result;
+    }
+
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag = EscPrimitiveType.isValidTag(tag);
+    Assert.notFalse(goodtag); 
+  }
+
+    /*@ protected normal_behavior
+      @   requires EscPrimitiveType.isValidTag(tag);
+      @   ensures  this.tmodifiers == tmodifiers;
+      @   ensures  this.tag == tag;
+      @   ensures  this.loc == loc;
+      @*/
+    protected /*@pure*/ EscPrimitiveType(TypeModifierPragmaVec tmodifiers, int tag, int loc) {
+	super(tmodifiers, tag, loc);
+    }
+ }
+
 //// Guarded commands
 
 public abstract class GuardedCmd extends ASTNode
@@ -637,7 +701,7 @@ public class Call extends GuardedCmd
 
   // This is a backedge, so it can't be a child:
   //@ invariant rd != null;
-  public RoutineDecl rd;
+  public /*@non_null*/ RoutineDecl rd;
 
   public Spec spec;
   public GuardedCmd desugared;

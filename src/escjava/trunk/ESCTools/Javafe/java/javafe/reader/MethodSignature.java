@@ -31,7 +31,7 @@ class MethodSignature
   MethodSignature(int classLocation)
   {
     this.parameters = new Vector();
-    this.return_    = PrimitiveType.make(TagConstants.VOIDTYPE, classLocation);
+    this.return_    = JavafePrimitiveType.make(TagConstants.VOIDTYPE, classLocation);
 
     //@ set parameters.elementType = \type(Type);
     //@ set parameters.containsNull = false;

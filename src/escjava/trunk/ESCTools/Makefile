@@ -327,6 +327,8 @@ jml: build
 # FIXME: Javafe and Escjava Makefiles should be adapted like the Utils Makefile
 # so that the build target's behavior is altered when USE_JMLC is defined.
 
+racescj: jmlc
+	racescj
 jmlc: jmlc_utils jmlc_fe jmlc_ej jmlc_with_new_semantics
 
 jmlc_utils:

@@ -104,7 +104,7 @@ public class Types
      || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
     //@ ensures \result != null;
     private static final PrimitiveType makePrimitiveType(int tag) {
-        return PrimitiveType.makeNonSyntax(tag);
+        return JavafePrimitiveType.makeNonSyntax(tag);
     }
 
     //@ invariant voidType != null;

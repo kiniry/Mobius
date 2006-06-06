@@ -172,27 +172,27 @@ class DescriptorParser
     {
     case 'B':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.BYTETYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.BYTETYPE, classLocation);
 
     case 'C':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.CHARTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.CHARTYPE, classLocation);
 
     case 'D':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.DOUBLETYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.DOUBLETYPE, classLocation);
 
     case 'F':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.FLOATTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.FLOATTYPE, classLocation);
 
     case 'I':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.INTTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.INTTYPE, classLocation);
 
     case 'J':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.LONGTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.LONGTYPE, classLocation);
 
     case 'L':
       {
@@ -210,11 +210,11 @@ class DescriptorParser
 
     case 'S':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.SHORTTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.SHORTTYPE, classLocation);
 
     case 'Z':
       scanner.index++;
-      return PrimitiveType.make(TagConstants.BOOLEANTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.BOOLEANTYPE, classLocation);
 
     case '[':
       // parse the element type and construct an array type from it
@@ -251,7 +251,7 @@ class DescriptorParser
     if (s.charAt(index)=='V')
     {
       scanner.index++;
-      return PrimitiveType.make(TagConstants.VOIDTYPE, classLocation);
+      return JavafePrimitiveType.make(TagConstants.VOIDTYPE, classLocation);
     }
 
     return parseType(scanner);

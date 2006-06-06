@@ -2551,7 +2551,7 @@ public class EscPragmaParser extends Parse
 
     int loc = l.startingLoc;
     l.getNextToken();
-    return PrimitiveType.make(tag, loc);
+    return JavafePrimitiveType.make(tag, loc);
   }
 
   /**
@@ -2691,7 +2691,7 @@ public class EscPragmaParser extends Parse
     // get here => tag is defined
     int loc = l.startingLoc;
     l.getNextToken();
-    return PrimitiveType.make(tag, loc);
+    return JavafePrimitiveType.make(tag, loc);
   }
 
   /**

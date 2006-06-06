@@ -168,6 +168,7 @@ import javafe.util.ErrorSet;
  *    Type ()
  *       ErrorType() // was previously represented as a PrimitiveType
  *       PrimitiveType (int tag)
+ *         JavafePrimitiveType  ()  // this is a new type introduced to allow for other (e.g., esc) primitive types
  *       TypeName (Name name)
  *       ArrayType (Type elemType)
  *    Name ()
@@ -189,7 +190,7 @@ public abstract class ASTNode implements Cloneable
    */
 
   //@ invariant decorations != null ==> (\typeof(decorations) == \type(Object[]));
-  private Object[] decorations;  
+  /*@spec_public*/ private Object[] decorations;  
 
     public int bogusField;
     //@ public model int startLoc;
@@ -681,7 +682,6 @@ public class FieldDecl extends GenericVarDecl implements TypeDeclElem
   }
 
   //@ requires (type instanceof PrimitiveType);
-  //@ ensures \result != null;
   public static FieldDecl makeInternal(int modifiers, ModifierPragmaVec pmodifiers, /*@ non_null @*/ Identifier id, /*@ non_null @*/ Type type, VarInit init) {
      FieldDecl result = new FieldDecl(modifiers, pmodifiers, id, type, init);
      return result;
@@ -1141,13 +1141,11 @@ public class ConstructorInvocation extends Stmt
   }
 
   //# NoMaker
-  //@ requires enclosingInstance != null && superCall ==> locDot != Location.NULL;
-  //
+  //@ requires superCall ==> locDot != Location.NULL;
   //@ requires locKeyword != javafe.util.Location.NULL;
   //@ requires locOpenParen != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static ConstructorInvocation make(boolean superCall, 
-                                           Expr enclosingInstance, 
+  public static /*@non_null*/ ConstructorInvocation make(boolean superCall, 
+                                           /*@non_null*/ Expr enclosingInstance, 
                                            int locDot, 
                                            int locKeyword, 
                                            int locOpenParen, 
@@ -1378,8 +1376,7 @@ public class LiteralExpr extends Expr
       ); */
   //
   //@ requires loc != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static LiteralExpr make(int tag, Object value, int loc) {
+  public static /*@non_null*/ LiteralExpr make(int tag, Object value, int loc) {
      LiteralExpr result = new LiteralExpr(tag,value,loc);
      return result;
   }
@@ -1505,8 +1502,7 @@ public class NewInstanceExpr extends Expr
   //
   //@ requires loc != javafe.util.Location.NULL;
   //@ requires locOpenParen != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static NewInstanceExpr make(Expr enclosingInstance, 
+  public static /*@non_null*/ NewInstanceExpr make(Expr enclosingInstance, 
                                      int locDot, 
                                      /*@ non_null @*/ TypeName type, 
                                      /*@ non_null @*/ ExprVec args, 
@@ -1600,8 +1596,7 @@ public class NewArrayExpr extends Expr
   //
   //@ requires type.syntax;
   //@ requires loc != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static NewArrayExpr make(/*@ non_null @*/ Type type, 
+  public static /*@non_null*/ NewArrayExpr make(/*@ non_null @*/ Type type, 
                                   /*@ non_null @*/ ExprVec dims, 
                                   ArrayInit init, 
                                   int loc, 
@@ -1739,8 +1734,7 @@ public class BinaryExpr extends Expr
        || op == TagConstants.ASGURSHIFT || op == TagConstants.ASGBITAND); */
   //
   //@ requires locOp != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static BinaryExpr make(int op, 
+  public static /*@non_null*/ BinaryExpr make(int op, 
                                 /*@ non_null @*/ Expr left,
 			        /*@ non_null @*/ Expr right, 
                                 int locOp) {
@@ -1803,8 +1797,7 @@ public class UnaryExpr extends Expr
        || op == TagConstants.POSTFIXINC || op == TagConstants.POSTFIXDEC); */
   //
   //@ requires locOp != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static UnaryExpr make(int op, /*@ non_null @*/ Expr expr, int locOp) {
+  public static /*@non_null*/ UnaryExpr make(int op, /*@ non_null @*/ Expr expr, int locOp) {
      UnaryExpr result = new UnaryExpr(op, expr, locOp);
      return result;
   }
@@ -1867,8 +1860,7 @@ public class VariableAccess extends Expr
   //@ requires decl.id == id;
   //
   //@ requires loc != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static VariableAccess make(/*@ non_null @*/ Identifier id, 
+  public static /*@non_null*/ VariableAccess make(/*@ non_null @*/ Identifier id, 
                                     int loc,
 				    /*@ non_null @*/ GenericVarDecl decl) {
 	VariableAccess result = new VariableAccess(id, loc);
@@ -1913,8 +1905,7 @@ public class FieldAccess extends Expr
 
   //# NoMaker
   //@ requires locId != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static FieldAccess make(/*@ non_null @*/ ObjectDesignator od, 
+  public static /*@non_null*/ FieldAccess make(/*@ non_null @*/ ObjectDesignator od, 
                                  /*@ non_null @*/ Identifier id, 
                                  int locId) {
      FieldAccess result = new FieldAccess(
@@ -2000,8 +1991,7 @@ public class MethodInvocation extends Expr
   //# NoMaker
   //@ requires locId != javafe.util.Location.NULL;
   //@ requires locOpenParen != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static MethodInvocation make(/*@ non_null @*/ ObjectDesignator od, 
+  public static /*@non_null*/ MethodInvocation make(/*@ non_null @*/ ObjectDesignator od, 
                                       /*@ non_null @*/ Identifier id, 
                                       TypeModifierPragmaVec tmodifiers, 
                                       int locId, 
@@ -2104,8 +2094,7 @@ public class TypeObjectDesignator extends ObjectDesignator
   //@ requires type instanceof TypeName || type instanceof javafe.tc.TypeSig;
   //
   //@ requires locDot != javafe.util.Location.NULL;
-  //@ ensures \result != null;
-  public static TypeObjectDesignator make(int locDot, 
+  public static /*@non_null*/ TypeObjectDesignator make(int locDot, 
                                           /*@ non_null @*/ Type type) {
      TypeObjectDesignator result = new TypeObjectDesignator(locDot, type);
      return result;
@@ -2173,6 +2162,34 @@ public class ErrorType extends Type
 
 /**
  * Represents a PrimitiveType syntactic unit. 
+ * Subtypes determing the range of a valid tags
+ *
+ * @warning This AST node has associated locations only if syntax is
+ * true.
+ *
+ * for backwards compatibility, the PrimitiveType makers make calls to the JavafePrimitiveType
+ */
+public abstract class PrimitiveType extends Type
+{
+
+    //@ invariant isValidTag();
+    public abstract /*@pure*/ boolean isValidTag();
+  //# ManualTag
+  //# int tag
+
+  //# int loc
+
+    //@ also ensures \result == this.tag;
+    public final /*@pure*/ int getTag() { return this.tag; }
+
+  //@ public represents startLoc <- loc;
+  public /*@ pure @*/ int getStartLoc() { return loc; }
+  protected PrimitiveType() {throw new RuntimeException("this sould never be called");}
+ 
+}
+
+/**
+ * Represents a Java Front End PrimitiveType syntactic unit. 
  * The tag should be one of the *TYPE constants defined in TagConstants
  * (e.g., INTTYPE).
  *
@@ -2180,42 +2197,43 @@ public class ErrorType extends Type
  * true.
  */
 
-public class PrimitiveType extends Type
+public class JavafePrimitiveType extends PrimitiveType
 {
-
-  /*@ invariant (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
-       || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
-       || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
-       || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
-); */
-   //    || tag == TagConstants.ERRORTYPE); */
   //# ManualTag
-  //# int tag
+    /*@ public normal_behavior
+      @   ensures  \result == (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
+      @  || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
+      @  || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
+      @  || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
+      @  || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE);
+      @*/
+    public static /*@pure*/ boolean isValidTag(int tag) {
+	return (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
+		|| tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
+		|| tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
+		|| tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
+		|| tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE);
+    }
 
-  //# int loc
-
-  //@ public represents startLoc <- loc;
-  public /*@ pure @*/ int getStartLoc() { return loc; }
-
-  public final int getTag() { return this.tag; }
-
+    /*@ also
+      @ public normal_behavior
+      @   ensures  \result == JavafePrimitiveType.isValidTag(tag);
+      @*/
+    public /*@pure*/ boolean isValidTag() {
+	return JavafePrimitiveType.isValidTag(tag);
+    }
   //# NoMaker
   /**
    * Normal maker that produces syntax, but requires a non-NULL location.
    */
-  /*@ requires (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
-       || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
-       || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
-       || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
-);*/
-//       || tag == TagConstants.ERRORTYPE); */
-  //@ requires loc != javafe.util.Location.NULL;
-  //@ ensures \result.syntax;
-  public static /*@ non_null */ PrimitiveType make(TypeModifierPragmaVec tmodifiers,
+    /*@ public normal_behavior
+      @   requires  JavafePrimitiveType.isValidTag(tag);
+      @   requires loc != javafe.util.Location.NULL;
+      @   ensures \result.syntax;
+      @*/
+  public static /*@ non_null */ JavafePrimitiveType make(TypeModifierPragmaVec tmodifiers,
 				   int tag, int loc) {
-     PrimitiveType result = new PrimitiveType(
+     JavafePrimitiveType result = new JavafePrimitiveType(
                                 tmodifiers,
                                 tag,
                                 loc);
@@ -2226,52 +2244,33 @@ public class PrimitiveType extends Type
    * Special maker for producing non-syntax, which does not require a
    * location.
    */
-  /*@ requires (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
-       || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
-       || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
-       || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
-);*/
-//       || tag == TagConstants.ERRORTYPE); */
-  //@ ensures !\result.syntax;
-  //@ ensures \result != null;
-  public static PrimitiveType makeNonSyntax(int tag) {
-     PrimitiveType result = new PrimitiveType(
+    /*@ public normal_behavior
+      @   requires  JavafePrimitiveType.isValidTag(tag);
+      @   ensures !\result.syntax;
+      @*/
+  public static /*@non_null*/ JavafePrimitiveType makeNonSyntax(int tag) {
+     JavafePrimitiveType result = new JavafePrimitiveType(
                                  null,
                                  tag,
                                  Location.NULL);
      return result;
   }
 
-  //# PostCheckCall
-  private void postCheck() {
-    boolean goodtag =
-      (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
-       || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
-       || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
-       || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
-);
-  //     || tag == TagConstants.ERRORTYPE);
-    Assert.notFalse(goodtag); 
-  }
- 
- 
   // manual override for backwards compatibility
-  /*@ requires (tag == TagConstants.BOOLEANTYPE || tag == TagConstants.INTTYPE
-       || tag == TagConstants.LONGTYPE || tag == TagConstants.CHARTYPE
-       || tag == TagConstants.FLOATTYPE || tag == TagConstants.DOUBLETYPE
-       || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
-       || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE
-);*/
-//       || tag == TagConstants.ERRORTYPE); */
-  //@ requires loc != javafe.util.Location.NULL;
-  //@ ensures \result.syntax;
-  //@ ensures \result != null;
-  static public PrimitiveType make(int tag, int loc) {
-    return PrimitiveType.make(null, tag, loc);
+    /*@ public normal_behavior
+      @   requires  JavafePrimitiveType.isValidTag(tag);
+      @   requires loc != javafe.util.Location.NULL;
+      @   ensures \result.syntax;
+      @*/
+  static public /*@non_null*/ JavafePrimitiveType make(int tag, int loc) {
+    return JavafePrimitiveType.make(null, tag, loc);
   }
 
+  //# PostCheckCall
+  private void postCheck() {
+    boolean goodtag = JavafePrimitiveType.isValidTag(tag);
+    Assert.notFalse(goodtag); 
+  }
 }
 
 public class TypeName extends Type
@@ -2313,8 +2312,7 @@ public class ArrayType extends Type
   // Generate this manually to add condition about syntax:
   //@ requires locOpenBracket != javafe.util.Location.NULL;
   //@ ensures elemType.syntax ==> \result.syntax;
-  //@ ensures \result != null;
-  public static ArrayType make(/*@ non_null @*/ Type elemType,
+  public static /*@non_null*/ ArrayType make(/*@ non_null @*/ Type elemType,
                                int locOpenBracket) {
      ArrayType result = new ArrayType(null, elemType, locOpenBracket);
      // Can't fix this since elemType is *not* injective:
@@ -2324,8 +2322,7 @@ public class ArrayType extends Type
 
   //@ requires locOpenBracket != javafe.util.Location.NULL;
   //@ ensures elemType.syntax ==> \result.syntax;
-  //@ ensures \result != null;
-  public static ArrayType make(TypeModifierPragmaVec tmodifiers,
+  public static /*@non_null*/ ArrayType make(TypeModifierPragmaVec tmodifiers,
 			       /*@ non_null @*/ Type elemType,
                                int locOpenBracket) {
 	ArrayType at = ArrayType.make(elemType, locOpenBracket);
@@ -2348,9 +2345,8 @@ public abstract class Name extends ASTNode
      * Return our printname, which will be of one of the forms X, X.Y,
      * X.Y.Z, ...
      */
-    //@ ensures \result != null;
     //@ pure
-    public abstract String printName();
+    public abstract /*@non_null*/ String printName();
 
     /**
      * Return a hash code for <code>this</code> such that two
@@ -2380,9 +2376,8 @@ public abstract class Name extends ASTNode
      * Return the ith identifier of <code>this</code>.
      */
     //@ requires 0 <= i && i<length;
-    //@ ensures \result != null;
     //@ pure
-    public abstract Identifier identifierAt(int i);
+    public abstract /*@non_null*/ Identifier identifierAt(int i);
 
     /**
      * Return the location of the ith identifier of <code>this</code>.
@@ -2427,16 +2422,14 @@ public abstract class Name extends ASTNode
      * locations.  Caller must forget about the Vecs/arrays passed
      * here.
      */
-    //@ requires ids != null && locIds != null && locDots != null;
     //@ requires ids.count>0;
     //@ requires ids.count==locIds.length && ids.count==locDots.length+1;
     /*@ requires (\forall int i; (0 <= i && i<locIds.length)
 			==> locIds[i] != Location.NULL); */
     /*@ requires (\forall int i; (0 <= i && i<locDots.length)
 			==> locDots[i] != Location.NULL); */
-    //@ ensures \result != null;
     //@ pure
-    public static Name make(int[] locIds, int[] locDots, IdentifierVec ids) {
+    public static /*@non_null*/ Name make(/*@non_null*/ int[] locIds, /*@non_null*/ int[] locDots, /*@non_null*/ IdentifierVec ids) {
 	int sz = ids.size();
 	Assert.precondition(sz > 0 && locIds.length == sz
 			&& locDots.length + 1 == sz);
@@ -2455,12 +2448,10 @@ public abstract class Name extends ASTNode
      * 
      * precondition: <code>N.length()>0</code><p>
      */
-    //@ requires N != null;
     //@ requires N.length()>0;
     //@ requires loc != Location.NULL;
-    //@ ensures \result != null;
     //@ pure
-    public static Name make(String N, int loc) {
+    public static /*@non_null*/ Name make(/*@non_null*/ String N, int loc) {
 	// Convert N to a list of its components:
 	String[] components = javafe.filespace.StringUtil.parseList(N, '.');
 	int sz = components.length;
@@ -2491,9 +2482,8 @@ public abstract class Name extends ASTNode
      * equal to the length of <code>this</code>.
      */
     //@ requires 0<len && len <= length;
-    //@ ensures \result != null;
     //@ pure
-    public abstract Name prefix(int len);
+    public abstract /*@non_null*/ Name prefix(int len);
 
     /**
      * Override getEndLoc so it refers to the actual end of us.
@@ -2524,7 +2514,7 @@ public class SimpleName extends Name
    * @return a String representation of <code>this</code> in Java's
    * syntax.
    */
-  public String printName() {
+  public /*@non_null*/ String printName() {
     return id.toString();
   }
 
@@ -2535,7 +2525,7 @@ public class SimpleName extends Name
 	    return false;
     }
 
-  public Name prefix(int len) {
+  public /*@non_null*/ Name prefix(int len) {
     Assert.precondition(len == 1);
     return make(id, loc);
   }
@@ -2564,7 +2554,7 @@ public class SimpleName extends Name
   public int size() { return 1; }
 
   /** Return the ith identifier of <code>this</code>. */
-  public Identifier identifierAt(int i) {
+  public /*@non_null*/ Identifier identifierAt(int i) {
     if (i != 0) throw new ArrayIndexOutOfBoundsException();
     return id;
   }
@@ -2622,7 +2612,7 @@ public class CompoundName extends Name
    * @return a String representation of <code>this</code> in Java's
    * syntax.
    */
-  public String printName() {
+  public /*@non_null*/ String printName() {
     int sz = ids.size();
     StringBuffer result = new StringBuffer(10*sz);
     for(int i = 0; i < sz; i++) {
@@ -2653,7 +2643,7 @@ public class CompoundName extends Name
     <code>len</code> is greater than zero and less than the length of
     <code>this</code>. */
 
-  public Name prefix(int len) {
+  public /*@non_null*/ Name prefix(int len) {
     Assert.precondition(len > 0 && len <= ids.size());
     if (len == 1)
       return SimpleName.make(ids.elementAt(0), locIds[0]);
@@ -2696,7 +2686,7 @@ public class CompoundName extends Name
   public int size() { return ids.size(); }
 
   /** Return the ith identifier of <code>this</code>. */
-  public Identifier identifierAt(int i)
+  public /*@non_null*/ Identifier identifierAt(int i)
 	/*throws ArrayIndexOutOfBoundsException*/ {
     return ids.elementAt(i);
   }
@@ -2720,8 +2710,7 @@ public class CompoundName extends Name
   /*@ requires (\forall int i; (0 <= i && i<locDots.length)
 			==> locDots[i] != Location.NULL); */
   //
-  //@ ensures \result != null;
-  public static CompoundName make(/*@ non_null @*/ IdentifierVec ids, 
+  public static /*@non_null*/ CompoundName make(/*@ non_null @*/ IdentifierVec ids, 
                                   /*@ non_null @*/ int[] locIds, 
                                   /*@ non_null @*/ int[] locDots) {
      CompoundName result = new CompoundName(ids, locIds, locDots);

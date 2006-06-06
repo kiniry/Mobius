@@ -238,7 +238,7 @@ public class InlineConstructor {
     private static Type copyType(Type t, RoutineDecl rd) {
 	if (t instanceof PrimitiveType) {
 	    PrimitiveType pt = (PrimitiveType) t;
-	    return PrimitiveType.make(pt.tag, rd.loc);
+	    return JavafePrimitiveType.make(pt.tag, rd.loc);
 	}
 	else if (t instanceof TypeName) {
 	    return copyTypeName((TypeName) t, rd);

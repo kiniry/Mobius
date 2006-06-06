@@ -4,6 +4,7 @@ package escjava.tc;
 
 import javafe.ast.*;
 import escjava.ast.TagConstants;
+import escjava.ast.EscPrimitiveType;
 
 import javafe.tc.*;
 
@@ -37,26 +38,26 @@ public class Types extends javafe.tc.Types
 
 
     public static final PrimitiveType
-	anyType = PrimitiveType.makeNonSyntax(TagConstants.ANY);
+	anyType = EscPrimitiveType.make(TagConstants.ANY);
 
     public static final PrimitiveType
-	typecodeType = PrimitiveType.makeNonSyntax(TagConstants.TYPECODE);
+	typecodeType = EscPrimitiveType.make(TagConstants.TYPECODE);
     //public static Type typecodeType = javaLangClass();
 
     public static final PrimitiveType
-	locksetType = PrimitiveType.makeNonSyntax(TagConstants.LOCKSET);
+	locksetType = EscPrimitiveType.make(TagConstants.LOCKSET);
 
     public static final PrimitiveType
-	objectsetType = PrimitiveType.makeNonSyntax(TagConstants.OBJECTSET);
+	objectsetType = EscPrimitiveType.make(TagConstants.OBJECTSET);
 
     public static final PrimitiveType
-	rangeType = PrimitiveType.makeNonSyntax(TagConstants.DOTDOT);
+	rangeType = EscPrimitiveType.make(TagConstants.DOTDOT);
 
-    public static final PrimitiveType 
-	bigintType = PrimitiveType.makeNonSyntax( TagConstants.BIGINTTYPE);
+    public static final PrimitiveType
+	bigintType = EscPrimitiveType.make( TagConstants.BIGINTTYPE);
 
-    public static final PrimitiveType 
-	realType = PrimitiveType.makeNonSyntax( TagConstants.REALTYPE);
+    public static final PrimitiveType
+	realType = EscPrimitiveType.make( TagConstants.REALTYPE);
 
 
     public static boolean isTypeType(Type t) {
