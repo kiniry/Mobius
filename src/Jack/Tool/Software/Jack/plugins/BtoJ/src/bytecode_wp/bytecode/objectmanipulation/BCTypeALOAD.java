@@ -87,6 +87,7 @@ public class BCTypeALOAD
 	}
 
 	public VCGPath wp(IJml2bConfiguration config, VCGPath vcs, ExsuresTable _exc) {
+	
 //		normal execution 
 		//Stack _stackTop = new Stack(Expression.COUNTER);
 		//Stack _stackTop_minus_1 = new Stack(Expression.COUNTER_MINUS_1);
@@ -128,11 +129,13 @@ public class BCTypeALOAD
 			new Predicate2Ar( new Stack(Expression.COUNTER),_arrlength.copy(), PredicateSymbol.GRTEQ);
 		Formula _index_less_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
 		Formula _index_out_of_bounds  = Formula.getFormula( _index_grt_eq_len, _index_less_0, Connector.OR);
-		
+		if (getPosition() == 72) {
+			System.out.println("here");
+		}
 		VCGPath _wp_arr_out_of_bounds =
 			getWpForException(config,
 				(JavaObjectType) JavaType.getJavaRefType(
-					"Ljava/lang/IndexOutOfBoundsException;"));
+					"Ljava/lang/ArrayIndexOutOfBoundsException;") );
 		
 		_wp_arr_out_of_bounds.setInstrIndex( getPosition());
 		Integer key3 = _wp_arr_out_of_bounds.addHyp(getPosition(),_index_out_of_bounds );
