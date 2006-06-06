@@ -89,21 +89,21 @@ public class CoqVar {
 	}
 	
 	
-	private String name = null;
-	private CoqType type = null;
-	private CoqVar next = null;
+	private final String name;
+	private final CoqType type;
+	private final CoqVar next;
 	
 	public CoqVar() {
+		this(null);
 	}
 	
 	public CoqVar(CoqVar next) {
-		this.next = next;
+		this(next, null);
 	}
 	
 	
 	public CoqVar(CoqVar next, String name) {
-		this.next = next;
-		this.name = name;
+		this(next, name, null);
 	}
 	
 	
@@ -114,16 +114,15 @@ public class CoqVar {
 	}
 	
 	public CoqVar(String name, Formula type) throws LanguageException {
-		this.type = CoqType.getType(type);
-		this.name = name;
-		
+		this.name = name;	
 		if(isMemberField(name, type)) {
 			String typeName = name.substring(0, name.lastIndexOf("_")+1) + "type";
 			this.type = new CoqType(typeName);
-		}
-		if (name.startsWith("arraylength")) {
+		} else if (name.startsWith("arraylength")) {
 			this.type = CoqType.arraylength;
-		}		
+		} else {
+			this.type = CoqType.getType(type);
+		}
 		next = vide;
 	}
 	public static boolean isMemberField(Formula cbf) {
