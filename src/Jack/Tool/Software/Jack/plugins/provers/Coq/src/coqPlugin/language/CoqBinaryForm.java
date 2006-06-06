@@ -9,8 +9,6 @@
 
 package coqPlugin.language;
 
-import coqPlugin.CoqLanguage;
-import coqPlugin.CoqTranslationResult;
 import jml2b.exceptions.LanguageException;
 import jml2b.exceptions.TranslationException;
 import jml2b.formula.BinaryForm;
@@ -20,6 +18,8 @@ import jml2b.formula.TriaryForm;
 import jml2b.formula.UnaryForm;
 import jml2b.languages.ITranslatable;
 import jml2b.languages.ITranslationResult;
+import coqPlugin.CoqLanguage;
+import coqPlugin.CoqTranslationResult;
 
 /**
  * @author lburdy
@@ -27,7 +27,7 @@ import jml2b.languages.ITranslationResult;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class CoqBinaryForm extends BinaryForm implements ITranslatable {
+public class CoqBinaryForm implements ITranslatable, IFormToken {
 
 	private static final String COQ_ID = "Coq";
 	/**
@@ -35,11 +35,23 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 	 */
 	private static final long serialVersionUID = -2364899840285398562L;
 
+	private final Formula left;
+	private final Formula right;
+	private final byte nodetype;
 	/**
 	 * @param form
 	 */
 	public CoqBinaryForm(BinaryForm form) {
-		super(form);
+		left = form.getLeft();
+		right = form.getRight();
+		nodetype = form.getNodeType();
+		
+	}
+	
+	public CoqBinaryForm(byte f, Formula left, Formula right) {
+		this.left = left;
+		this.right = right;
+		nodetype = f;
 	}
 
 	public CoqTranslationResult binOp(String op, int indent)
@@ -62,9 +74,6 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 		ctr2 = (CoqTranslationResult) right.toLang(COQ_ID, indent);
 		String fun1 = ctr1.getFunPart();
 		String fun2 = ctr2.getFunPart();
-		//if(fun1.toString().startsWith("c_Mem"))
-		//	Logger.get().println("fetched !");
-		Formula tmp;
 		CoqType leftType = new CoqType(); 
 		CoqType rightType = new CoqType(); 
 		if(left.getBasicType() != null) {
@@ -73,7 +82,7 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 		}
 
 		//String strCtr2;
-		switch (getNodeType()) {
+		switch (nodetype) {
 			case ALL_ARRAY_ELEMS:
 				String x1 = CoqLanguage.newName();
 				String y1 = CoqLanguage.newName();
@@ -142,9 +151,12 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 						(((BinaryForm) right).getRight().getNodeType() == 1) &&
 						(((BinaryForm)((BinaryForm) right).getRight()).getLeft().getNodeType() == 6)) {
 					Formula var = ((BinaryForm)((BinaryForm) right).getRight()).getLeft();
-					left = new BinaryForm(LOCAL_VAR_DECL, var, ((BinaryForm)left).getRight());
-					ctr1 = (CoqTranslationResult) left.toLang(COQ_ID, indent);
-					fun1 = ctr1.getFunPart();
+//					left = new BinaryForm(LOCAL_VAR_DECL, var, ((BinaryForm)left).getRight());
+//					ctr1 = (CoqTranslationResult) left.toLang(COQ_ID, indent);
+//					fun1 = ctr1.getFunPart();
+					return new CoqBinaryForm(Jm_IMPLICATION_OP,  
+								new BinaryForm(LOCAL_VAR_DECL, var, ((BinaryForm)left).getRight()),
+								right).toLang(indent);
 				} 
 				if ((left.getNodeType() == Ja_DIFFERENT_OP) &&
 						(right.getNodeType() == Jm_IS_SUBTYPE) &&
@@ -201,8 +213,7 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 					res.clearPropPart();
 					return res;
 				}
-			case B_APPLICATION :
-				
+			case B_APPLICATION :			
 				return new CoqTranslationResult(ctr1, ctr2, "(" + fun1 +" "+ fun2 + ")");
 			case ARRAY_ACCESS :
 				return new CoqTranslationResult(ctr1, ctr2, "(" + fun1 +" "+ fun2 + ")");
@@ -260,15 +271,9 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 			case Ja_LESS_OP :
 				return binOp("j_lt", indent);
 			case Ja_GE_OP :
-				tmp = left;
-				left = right;
-				right = tmp;
-				return binOp("j_le", indent);
+				return new CoqBinaryForm(Ja_LE_OP, right, left).toLang(indent);
 			case Ja_GREATER_OP :
-				tmp = left;
-				left = right;
-				right = tmp;
-				return binOp("j_lt", indent);
+				return new CoqBinaryForm(Ja_LESS_OP, right, left).toLang(indent);
 			case Ja_ADD_OP :
 				return binOp("j_add", indent);
 			case Ja_NEGATIVE_OP :
@@ -455,7 +460,7 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 					default :
 						throw new jml2b.exceptions.InternalError(
 							"CoqBinaryForm.toLang: unhandled case: "
-								+ toString[getNodeType()]);
+								+ toString[nodetype]);
 				}
 			case EQUALS_ON_OLD_INSTANCES :
 				{
@@ -544,7 +549,7 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 			default :
 				throw new TranslationException(
 						"CoqBinaryForm.toLang: unhandled case: "
-						+ toString[getNodeType()]);			
+						+ toString[nodetype]);			
 		}
 	}
 
@@ -561,13 +566,13 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 
 	private CoqTranslationResult equalsSubsDomToCoq(String x, int indent)
 		throws LanguageException {
-		switch (getNodeType()) {
+		switch (nodetype) {
 			case B_FUNCTION_EQUALS :
 				{
 					CoqTranslationResult ctr2 =
-						(CoqTranslationResult) getLeft().toLang(COQ_ID, indent);
+						(CoqTranslationResult) left.toLang(COQ_ID, indent);
 					CoqTranslationResult ctr3 =
-						(CoqTranslationResult) getRight().toLang(COQ_ID, indent);
+						(CoqTranslationResult) right.toLang(COQ_ID, indent);
 					return new CoqTranslationResult(
 						ctr2,
 						ctr3,
@@ -577,9 +582,9 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 			case EQUALS_ON_OLD_INSTANCES :
 				{
 					CoqTranslationResult ctr2 =
-						(CoqTranslationResult) getLeft().toLang(COQ_ID, indent);
+						(CoqTranslationResult) left.toLang(COQ_ID, indent);
 					CoqTranslationResult ctr3 =
-						(CoqTranslationResult) getRight().toLang(COQ_ID, indent);
+						(CoqTranslationResult) right.toLang(COQ_ID, indent);
 					ctr2.addPropPart(ctr3);
 					String prop = ctr2.getPropPart();
 					CoqTranslationResult res = new CoqTranslationResult(
@@ -595,9 +600,9 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 				CoqType leftType = CoqType.basicType(left.getBasicType().getRtype().getLtype());
 					String y = CoqLanguage.newName();
 					CoqTranslationResult ctr2 =
-						(CoqTranslationResult) getLeft().toLang(COQ_ID, indent);
+						(CoqTranslationResult) left.toLang(COQ_ID, indent);
 					CoqTranslationResult ctr3 =
-						(CoqTranslationResult) getRight().toLang(COQ_ID, indent);
+						(CoqTranslationResult) right.toLang(COQ_ID, indent);
 					ctr2.addPropPart(ctr3);
 					String prop = ctr2.getPropPart();
 					CoqTranslationResult res = new CoqTranslationResult(
@@ -637,6 +642,14 @@ public class CoqBinaryForm extends BinaryForm implements ITranslatable {
 					"CoqBinaryForm.equalsSubsDomToCoq(String) bad node type: "
 						+ right.getNodeType());
 		}
+	}
+
+	public Formula getLeft() {
+		return left;
+	}
+
+	public Formula getRight() {
+		return right;
 	}
 
 }
