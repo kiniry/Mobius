@@ -58,13 +58,13 @@ public class TerminalForm extends Formula {
 	 * The formula <code>instances</code>. In the B lemmas,
 	 * <code>instances</code> is the set of all current class instances.
 	 */
-	public static TerminalForm instances = new TerminalForm("instances");
+	public final static TerminalForm instances = new TerminalForm("instances");
 
 	/**
 	 * The formula <code>typeof</code>. In the B lemmas, <code>typeof</code>
 	 * is a function that assign a type to an instance.
 	 */
-	public static TerminalForm typeof = new TerminalForm("typeof");
+	public final static TerminalForm typeof = new TerminalForm("typeof");
 
 	/**
 	 * The formula <code>arraylength</code>. In the B lemmas,
@@ -85,33 +85,33 @@ public class TerminalForm extends Formula {
 	 * <code>REFERENCES</code> is the set of all existing or potential
 	 * instances.
 	 */
-	public static TerminalForm REFERENCES = new TerminalForm(FINAL_IDENT, "REFERENCES");
+	public final static TerminalForm REFERENCES = new TerminalForm(FINAL_IDENT, "REFERENCES");
 
 	/**
 	 * The constant formula <code>elemtype</code>, In the B lemmas,
 	 * <code>elemtype</code> is a function that assign the type of its element
 	 * to an array instance.
 	 */
-	public static TerminalForm elemtype = new TerminalForm(FINAL_IDENT, "elemtype");
+	public final static TerminalForm elemtype = new TerminalForm(FINAL_IDENT, "elemtype");
 
 	/**
 	 * The constant formula <code>j_int2short</code>, In the B lemmas,
 	 * <code>j_int2short</code> is a function that converts an int into a
 	 * short.
 	 */
-	public static TerminalForm j_int2short = new TerminalForm(FINAL_IDENT, "j_int2short");
+	public final static TerminalForm j_int2short = new TerminalForm(FINAL_IDENT, "j_int2short");
 
 	/**
 	 * The constant formula <code>j_int2byte</code>, In the B lemmas,
 	 * <code>j_int2byte</code> is a function that converts an int into a byte.
 	 */
-	public static TerminalForm j_int2byte = new TerminalForm(FINAL_IDENT, "j_int2byte");
+	public final static TerminalForm j_int2byte = new TerminalForm(FINAL_IDENT, "j_int2byte");
 
 	/**
 	 * The constant formula <code>j_int2char</code>, In the B lemmas,
 	 * <code>j_int2char</code> is a function that converts an int into a char.
 	 */
-	public static TerminalForm j_int2char = new TerminalForm(FINAL_IDENT, "j_int2char");
+	public final static TerminalForm j_int2char = new TerminalForm(FINAL_IDENT, "j_int2char");
 
 	/**
 	 * Parsed item corresponding to the terminal formula.

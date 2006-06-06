@@ -21,7 +21,7 @@ public class ModifiedFieldForm extends TerminalForm {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected IModifiesField m;
+	protected final IModifiesField m;
 
 	public ModifiedFieldForm(ModifiedFieldForm f) {
 		super(IFormToken.MODIFIED_FIELD);

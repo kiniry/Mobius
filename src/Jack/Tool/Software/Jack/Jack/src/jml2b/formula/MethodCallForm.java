@@ -29,9 +29,9 @@ public class MethodCallForm extends Formula {
 
 	protected Formula instance;
 
-	protected String result;
+	protected final String result;
 	
-	protected Formula resultType;
+	protected final Formula resultType;
 
 	public MethodCallForm(String m, Formula p, Formula i, String ww, Formula rt) {
 		super(IFormToken.METHOD_CALL);
