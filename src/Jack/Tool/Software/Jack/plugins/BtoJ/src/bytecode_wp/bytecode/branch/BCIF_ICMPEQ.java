@@ -42,7 +42,6 @@ public class BCIF_ICMPEQ extends BCConditionalBranch {
 		IJml2bConfiguration config,
 		Formula _normal_Postcondition, ExsuresTable _exc_Postcondition) {
 		Formula wp;
-
 				/////////////////////////////////////////////	
 		//top two stack values are not equal
 		//S(t)!= S(t-1)
