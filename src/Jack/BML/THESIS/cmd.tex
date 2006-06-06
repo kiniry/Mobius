@@ -48,8 +48,8 @@
 \newcommand{\counter}{\mbox{\rm\textbf{cntr}} }
 \newcommand{\counterOnly}{\mbox{\rm Cntr} }
 \newcommand{\topStack}{\mbox{\rm cntr} }
-\newcommand{\true}{\mbox{\rm\textit{true}} } % true from the assertion language
-\newcommand{\false}{\mbox{\rm\textit{false}}} % false from the assertion language
+\newcommand{\true}{\mbox{\rm\textbf{true}} } % true from the assertion language
+\newcommand{\false}{\mbox{\rm\textbf{false}}} % false from the assertion language
 
 
 \newcommand{\fwpi}{\mbox{\rm \textit{wp}}}
@@ -91,12 +91,12 @@
 
 
 \newcommand{\integer}{\texttt{int} }
-\newcommand{\register}[1]{reg_{#1}}
+\newcommand{\register}[1]{\mbox{\rm\textbf{reg}}(#1)}
 
 \newcommand{\Mynull}{\jmlKey{null}}
 \newcommand{\this}{\texttt{this}}
 \newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
-\newcommand{\arrayAccess}[2]{ #1 [#2] }  %{\mbox{\rm arrAccess}(#1, #2)}
+\newcommand{\arrayAccess}[2]{\mbox{\rm\textbf{arrayAccess}}( #1, #2) }  %{\mbox{\rm arrAccess}(#1, #2)}
 \newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
 
 
@@ -158,7 +158,7 @@
 \newcommand{\pc}{\mbox{\rm Pc}}
 \newcommand{\field}[2]{\texttt{f}_{#2}^{#1}}
 \newcommand{\Values}{\rm{Values} }
-\newcommand{\locVar}[1]{\rm{reg(#1)} }
+\newcommand{\locVar}[1]{\mbox{\rm{\textbf{reg}}}(#1) }
 \newcommand{\locVarOnly}{\mbox{\rm Reg}}
 
 
@@ -291,16 +291,13 @@
 \newcommand{\modif}{\mbox{\rm\textit{modif}}}
 
 %%%%%%%%%%%%%%%%%Loop attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\loopSpec}{\mbox{\rm\textbf{loopSpec}}}
+\newcommand{\loopSpec}{\mbox{\rm\textit{loopSpec}}}
 
-\newcommand{\loopInv}{\mbox{\rm \textit{loopInv}}}
-\newcommand{\loopMod}{\mbox{\rm \textit{loopModif}}}
-\newcommand{\loopPos}{\mbox{\rm \textit{pos}}}
-\newcommand{\loopDecreases}{\mbox{\rm \textit{loopDecreases}}}
+
 
 %%%%%%%%%%%%%%%%%Intra spec attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\intraSpec}{\mbox{\rm\textbf{assertion}}}
-\newcommand{\atIndex}{\mbox{\rm\textit{atIndex}}}
+\newcommand{\intraSpec}{\mbox{\rm\textit{assertion}}}
+\newcommand{\atIndex}{\mbox{\rm\textbf{atIndex}}}
 
 
 %%%%%%%%%%%%%%%%Exception handler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -367,15 +364,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%constant pool%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\newcommand{\constantPool}{ \mbox{\rm\textbf{Constant\_pool\_table}}}
-\newcommand{\localVariableTable}{\mbox{\rm\textbf{Local\_variable\_table}}} 
+\newcommand{\constantPool}{ \mbox{\rm\textbf{CP}}}
+\newcommand{\localVariableTable}{\mbox{\rm\textbf{LV}}} 
+\newcommand{\locVarEls}{\mbox{\rm\textbf{localVarTableElem}}}% an element of the local variable table
 \newcommand{\lineNumberTable}{\mbox{\rm\textbf{Line\_Number\_Table}}} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newcommand{\nonterminal}{ \mbox{\rm\textit{italics}} }
 \newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
-
+\newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
 \newcommand{\expression}{ \mathcal{E} }
 \newcommand{\Constants}{\mbox{\rm\textit{constants}}}
@@ -387,7 +385,7 @@
 \newcommand{\digits}{\mbox{\rm\textit{digits}}}
 \newcommand{\nonZeroDigit}{\mbox{\rm\textit{nonZerodigit}}}
 \newcommand{\boundVar}{\mbox{\rm\textit{boundVar}}}
-\newcommand{\bound}{\mbox{\rm\textit{bv}}}
+\newcommand{\bound}{\mbox{\rm\textbf{bv}}}
 \newcommand{\unsignedInt}{\mbox{\rm\textit{unsignedInt}}}
 \newcommand{\RefValuesSpec}{\mbox{\rm\textit{refVal}}}
 \newcommand{\ClassSpec}{\mbox{\rm\textit{classSpec}}}
@@ -405,25 +403,37 @@
 \newcommand{\plus}{\mbox{\rm\textbf{+}}}
 \newcommand{\minus}{\mbox{\rm\textbf{-}}}
 
-
-
+\newcommand{\bmlKeyWords}{ \mbox{\rm\textit{bmlKeyWords}} }
+\newcommand{\loopPos}{\mbox{\rm\textit{pos}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%% BML keywords%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newcommand{\ClassInv}{\mbox{\rm\textbf{ClassInv}}}
 \newcommand{\ClassHistoryConstr}{\mbox{\rm\textbf{ClassHistoryConstr}}}
 \newcommand{\declare}{\mbox{\rm \textbf{declare}} }
-\newcommand{\ghost}{\mbox{\rm \textbf{ghost}} }
-\newcommand{\locations}{\mbox{\rm{locations}}}
-\newcommand{\also}{also}
+\newcommand{\ghost}{\mbox{\rm\textbf{ghost}}}
+\newcommand{\locations}{\mbox{\textbf{locations}}}
+\newcommand{\also}{ \mbox{\rm\textbf{also}}}
 \newcommand{\requires}{\mbox{\rm\textbf{requires}}}
 \newcommand{\ensures}{\mbox{\rm\textbf{ensures}}}
 \newcommand{\exsures}{\mbox{\rm\textbf{exsures}}}
 \newcommand{\modifies}{\mbox{\rm\textbf{modifies}}}
+\newcommand{\assert}{\mbox{\rm \textbf{assert}}}
+\newcommand{\set}{\rm\textbf{set}}
+\newcommand{\loopInv}{\mbox{\rm\textbf{loopInv}}}
+\newcommand{\loopMod}{\mbox{\rm\textbf{loopModif}}}
+
+\newcommand{\loopDecreases}{\mbox{\rm\textbf{loopDecreases}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
 \newcommand{\jmlStmt}[1]{\textrm{#1}}
 \newcommand{\specExpression}{\mathcal{E}^{spec}}
 
-\newcommand{\EXC}{\mbox{\rm\texttt{EXC}}} % SPEC the spec variable used in exceptional postconditions to denote the thrown exception object
-\newcommand{\set}{\rm{set}}
+\newcommand{\EXC}{ \mbox{$\backslash$\rm\textbf{EXC}}} % SPEC the spec variable used in exceptional postconditions to denote the thrown exception object
 
-\newcommand{\assert}{assert}
+
+
 
 \newcommand{\ArithExpr}{\texttt{ArithmeticExpr} }
 
@@ -431,7 +441,7 @@
 
 \newcommand{\everything}{\mbox{\rm \textbf{everything}}}
 \newcommand{\nothing}{\mbox{\rm  \textbf{nothing}}}
-\newcommand{\arrayAccessMod}[2]{#1[#2]}
+\newcommand{\arrayAccessMod}[2]{\mbox{\rm\textit{arrayModAt}}(#1,#2)}
 
 \newcommand{\all}{ \mbox{\rm all}}
 
