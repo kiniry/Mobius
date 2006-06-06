@@ -3,6 +3,7 @@ package prover.gui.popup;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -31,18 +32,26 @@ public class LaunchIde implements IActionDelegate {
 		    		  IFile f = (IFile) o;
 		    		  String rawloc = f.getRawLocation().toString(); 
 		    		  Prover prover = Prover.findProverFromFile(rawloc);
-		    		  String [] path = {f.getProject().getLocation().toString(), f.getParent().getRawLocation().toString()}; 
+		    		  IPath parent = f.getParent().getRawLocation();
+		    		  String [] path = null; 
+		    		  if(parent != null) {
+		    			  path = new String[2];
+		    			  path[1] = parent.toString();
+		    		  } else {
+		    			  path = new String[1]; 
+		    		  }
+		    		  path[0] = f.getProject().getLocation().toString();
 		    		  String [] cmds = prover.getTranslator().getIdeCommand(prover.getIde(), path,rawloc);
 		    				  
 		    			
 		    		  try {
-		    				Process p = Runtime.getRuntime().exec(cmds);
-		    				p.waitFor();
-		    			} catch (IOException e) {
-		    				System.err.println("I was unable to find an ide for TopLevel. Check the path.");
-		    			} catch (InterruptedException e2) {
-		    				e2.printStackTrace();
-		    			}
+		    			  Process p = Runtime.getRuntime().exec(cmds);
+		    					p.waitFor();
+		    		  } catch (IOException e) {
+		    			  System.err.println("I was unable to find an ide for TopLevel. Check the path.");
+		    		  } catch (InterruptedException e2) {
+		    			  e2.printStackTrace();
+		    		  }
 		    	  }
 		      }
 		   };
