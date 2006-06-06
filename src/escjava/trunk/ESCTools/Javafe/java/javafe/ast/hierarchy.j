@@ -1257,67 +1257,21 @@ public class ThisExpr extends Expr
 
 public class LiteralExpr extends Expr
 {
-  /*@ invariant (
-	(tag==TagConstants.BOOLEANLIT) ||
-	(tag==TagConstants.BYTELIT) ||
-	(tag==TagConstants.SHORTLIT) ||
-	(tag==TagConstants.INTLIT) ||
-	(tag==TagConstants.LONGLIT) ||
-	(tag==TagConstants.FLOATLIT) ||
-	(tag==TagConstants.DOUBLELIT) ||
-	(tag==TagConstants.STRINGLIT) ||
-	(tag==TagConstants.NULLLIT) ||
-	(tag==TagConstants.CHARLIT)
-      ); */
+  //@ invariant isValidTag(tag);
   //# ManualTag
   //# int tag
 
-  /*@ invariant (
-	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
-	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
-	((tag==TagConstants.BYTELIT) ==> (value instanceof Byte)) &&
-	((tag==TagConstants.SHORTLIT) ==> (value instanceof Short)) &&
-	((tag==TagConstants.INTLIT) ==> (value instanceof Integer)) &&
-	((tag==TagConstants.LONGLIT) ==> (value instanceof Long)) &&
-	((tag==TagConstants.FLOATLIT) ==> (value instanceof Float)) &&
-	((tag==TagConstants.DOUBLELIT) ==> (value instanceof Double)) &&
-	((tag==TagConstants.STRINGLIT) ==> (value instanceof String)) &&
-	((tag==TagConstants.CHARLIT) ==> (value instanceof Integer))
-      ); */
+  //@ invariant isValidValue(tag, value);
   //# Object value NullOK NoCheck
 
-  //# int loc NotNullLoc
+  final
+  //# int loc 
   public final int getTag() { return this.tag; }
 
   //# PostCheckCall
   private void postCheck() {
-    boolean goodtag =
-      (tag == TagConstants.BOOLEANLIT || tag == TagConstants.INTLIT
-       || tag == TagConstants.LONGLIT || tag == TagConstants.CHARLIT
-       || tag == TagConstants.FLOATLIT || tag == TagConstants.DOUBLELIT
-       || tag == TagConstants.BYTELIT || tag == TagConstants.SHORTLIT
-       || tag == TagConstants.STRINGLIT 
-       || tag == TagConstants.NULLLIT);
-    Assert.notFalse(goodtag);
-    if (tag == TagConstants.BOOLEANLIT && value != null)
-      Assert.notFalse(value instanceof Boolean);
-    if (tag == TagConstants.BYTELIT && value != null)
-      Assert.notFalse(value instanceof Byte);
-    if (tag == TagConstants.SHORTLIT && value != null)
-      Assert.notFalse(value instanceof Short);
-    if (tag == TagConstants.INTLIT && value != null)
-      Assert.notFalse(value instanceof Integer);
-    if (tag == TagConstants.LONGLIT && value != null)
-      Assert.notFalse(value instanceof Long);
-    if (tag == TagConstants.CHARLIT && value != null)
-      Assert.notFalse(value instanceof Integer);
-    if (tag == TagConstants.FLOATLIT && value != null)
-      Assert.notFalse(value instanceof Float);
-    if (tag == TagConstants.DOUBLELIT && value != null)
-      Assert.notFalse(value instanceof Double);
-    if (tag == TagConstants.STRINGLIT && value != null)
-      Assert.notFalse(value instanceof String);
-    if (tag == TagConstants.NULLLIT) Assert.notFalse(value == null);
+    Assert.notFalse(isValidTag(tag));
+    Assert.notFalse(isValidValue(tag, value));
   }
   //@ public represents startLoc <- loc;
   public /*@ pure @*/ int getStartLoc() { return loc; }
@@ -1328,18 +1282,18 @@ public class LiteralExpr extends Expr
   static public LiteralExpr cast(LiteralExpr lit, int t) {
 	if (!(lit.value instanceof Number)) return lit;
 	Number num = (Number)lit.value;
-	if (t == TagConstants.DOUBLELIT) {
-	    return LiteralExpr.make(t,new Double(num.doubleValue()),lit.getStartLoc());
-	} else if (t == TagConstants.FLOATLIT) {
-	    return LiteralExpr.make(t,new Float(num.floatValue()),lit.getStartLoc());
-	} else if (t == TagConstants.LONGLIT) {
-	    return LiteralExpr.make(t,new Long(num.longValue()),lit.getStartLoc());
-	} else if (t == TagConstants.INTLIT) {
-	    return LiteralExpr.make(t,new Integer(num.intValue()),lit.getStartLoc());
+	if (t == TagConstants.BYTELIT) {
+	    return LiteralExpr.make(t,new Integer(num.byteValue()),lit.getStartLoc());
 	} else if (t == TagConstants.SHORTLIT) {
 	    return LiteralExpr.make(t,new Short(num.shortValue()),lit.getStartLoc());
-	} else if (t == TagConstants.BYTELIT) {
-	    return LiteralExpr.make(t,new Integer(num.byteValue()),lit.getStartLoc());
+	} else if (t == TagConstants.INTLIT) {
+	    return LiteralExpr.make(t,new Integer(num.intValue()),lit.getStartLoc());
+	} else if (t == TagConstants.LONGLIT) {
+	    return LiteralExpr.make(t,new Long(num.longValue()),lit.getStartLoc());
+	} else if (t == TagConstants.FLOATLIT) {
+	    return LiteralExpr.make(t,new Float(num.floatValue()),lit.getStartLoc());
+	} else if (t == TagConstants.DOUBLELIT) {
+	    return LiteralExpr.make(t,new Double(num.doubleValue()),lit.getStartLoc());
 	} else return lit;
 	// FIXME - what about casts to character values ???
   }
@@ -1349,88 +1303,76 @@ public class LiteralExpr extends Expr
   // cast to other types, e.g. (short)0, as a literal of the target type
   // FIXME - short and byte are included for completeness, but I'm not sure they actually ever get used that way
 
+     /*@ ensures \result <==> tag==TagConstants.NULLLIT    ||
+       @                      tag==TagConstants.BOOLEANLIT ||
+       @                      tag==TagConstants.BYTELIT    ||
+       @                      tag==TagConstants.SHORTLIT   ||
+       @                      tag==TagConstants.CHARLIT    ||
+       @                      tag==TagConstants.INTLIT     ||
+       @                      tag==TagConstants.LONGLIT    ||
+       @                      tag==TagConstants.FLOATLIT   ||
+       @                      tag==TagConstants.DOUBLELIT  ||
+       @                      tag==TagConstants.STRINGLIT;
+       @*/
+      public static boolean isValidTag(int tag)
+      {
+          return tag==TagConstants.NULLLIT    ||
+                 tag==TagConstants.BOOLEANLIT ||
+                 tag==TagConstants.BYTELIT    ||
+                 tag==TagConstants.SHORTLIT   ||
+                 tag==TagConstants.CHARLIT    ||
+                 tag==TagConstants.INTLIT     ||
+                 tag==TagConstants.LONGLIT    ||
+                 tag==TagConstants.FLOATLIT   ||
+                 tag==TagConstants.DOUBLELIT  ||
+                 tag==TagConstants.STRINGLIT;
+      }
+     /*@ requires isValidTag(tag);
+       @ ensures \result <==> (tag==TagConstants.NULLLIT    ==> value == null) &&
+       @                      (tag==TagConstants.BOOLEANLIT ==> value instanceof Boolean) &&
+       @                      (tag==TagConstants.BYTELIT    ==> value instanceof Byte) &&
+       @                      (tag==TagConstants.SHORTLIT   ==> value instanceof Short) &&
+       @                      (tag==TagConstants.CHARLIT    ==> value instanceof Integer) &&
+       @                      (tag==TagConstants.INTLIT     ==> value instanceof Integer) &&
+       @                      (tag==TagConstants.LONGLIT    ==> value instanceof Long) &&
+       @                      (tag==TagConstants.FLOATLIT   ==> value instanceof Float) &&
+       @                      (tag==TagConstants.DOUBLELIT  ==> value instanceof Double) &&
+       @                      (tag==TagConstants.STRINGLIT  ==> value instanceof String);
+       @*/
+      public static boolean isValidValue(int tag, Object value)
+      {
+          if (tag == TagConstants.NULLLIT)    return value == null;
+          if (tag == TagConstants.BOOLEANLIT) return value instanceof Boolean;
+          if (tag == TagConstants.BYTELIT)    return value instanceof Byte;
+          if (tag == TagConstants.SHORTLIT)   return value instanceof Short;
+          if (tag == TagConstants.CHARLIT)    return value instanceof Integer;
+          if (tag == TagConstants.INTLIT)     return value instanceof Integer;
+          if (tag == TagConstants.LONGLIT)    return value instanceof Long;
+          if (tag == TagConstants.FLOATLIT)   return value instanceof Float;
+          if (tag == TagConstants.DOUBLELIT)  return value instanceof Double;
+          if (tag == TagConstants.STRINGLIT)  return value instanceof String;
+	  return false; //should be unreachable
+      } 
+
   //# NoMaker
-  /*@ requires (
-	(tag==TagConstants.BOOLEANLIT) ||
-	(tag==TagConstants.INTLIT) ||
-	(tag==TagConstants.LONGLIT) ||
-	(tag==TagConstants.FLOATLIT) ||
-	(tag==TagConstants.DOUBLELIT) ||
-	(tag==TagConstants.BYTELIT) ||
-	(tag==TagConstants.SHORTLIT) ||
-	(tag==TagConstants.STRINGLIT) ||
-	(tag==TagConstants.NULLLIT) ||
-	(tag==TagConstants.CHARLIT)
-      ); */
-  /*@ requires (
-	((tag==TagConstants.BOOLEANLIT) ==> (value instanceof Boolean)) &&
-	((tag==TagConstants.NULLLIT) ==> (value == null)) &&
-	((tag==TagConstants.BYTELIT) ==> (value instanceof Byte)) &&
-	((tag==TagConstants.SHORTLIT) ==> (value instanceof Short)) &&
-	((tag==TagConstants.INTLIT) ==> (value instanceof Integer)) &&
-	((tag==TagConstants.LONGLIT) ==> (value instanceof Long)) &&
-	((tag==TagConstants.FLOATLIT) ==> (value instanceof Float)) &&
-	((tag==TagConstants.DOUBLELIT) ==> (value instanceof Double)) &&
-	((tag==TagConstants.STRINGLIT) ==> (value instanceof String)) &&
-	((tag==TagConstants.CHARLIT) ==> (value instanceof Integer))
-      ); */
-  //
+  //@ requires isValidTag(tag);
+  //@ requires isValidValue(tag, value);
   //@ requires loc != javafe.util.Location.NULL;
   public static /*@non_null*/ LiteralExpr make(int tag, Object value, int loc) {
      LiteralExpr result = new LiteralExpr(tag,value,loc);
      return result;
   }
 
-  //$$
-  public /*@ non_null @*/ String getInfoNewTree(){
-    String r;
-
-    if(tag==TagConstants.BOOLEANLIT){ // 
-      Boolean valueTemp = (Boolean) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.INTLIT) {
-      Integer valueTemp = (Integer) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.LONGLIT){
-      Long valueTemp = (Long) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.FLOATLIT){
-      Float valueTemp = (Float) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.DOUBLELIT){
-      Double valueTemp = (Double) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.BYTELIT){
-      Byte valueTemp = (Byte) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.SHORTLIT){
-      Short valueTemp = (Short) value;
-      r = value.toString();
-    }
-    else if(tag==TagConstants.STRINGLIT){
-      r = value.toString();
-    }
-    else if(tag==TagConstants.NULLLIT)
-      r = "null";
-    else if(tag==TagConstants.CHARLIT){ // according to the comments
-      // in this case, value has type Integer
-      Integer valueTemp = (Integer) value;
-      r = value.toString();
-    }
-    else { // according to Clement's experiment, the type here is String
-      // Error in LiteralExpr::getInfoNewTree(), it seems that the ast tree of the guarded commands isn't well typed, try to continue with a trick");
-      r = value.toString();
-    }
-
-    return r;
+  //@ requires isValidTag(tag);
+  //@ requires isValidValue(tag, value);
+  public static /*@non_null*/ LiteralExpr makeNonSyntax(int tag, Object value) {
+     LiteralExpr result = new LiteralExpr(tag,value,Location.NULL);
+     return result;
   }
-  //$$
+
+  public /*@ non_null @*/ String getInfoNewTree(){
+	  return (value==null ? "null" : value.toString());
+  }
 }
 
 public class ArrayRefExpr extends Expr

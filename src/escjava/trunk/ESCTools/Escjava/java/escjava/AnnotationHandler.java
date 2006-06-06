@@ -1184,12 +1184,12 @@ public class AnnotationHandler {
   }
 
   public final static LiteralExpr T = (LiteralExpr)FlowInsensitiveChecks
-      .setType(LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.TRUE,
-          Location.NULL), Types.booleanType);
+      .setType(LiteralExpr.makeNonSyntax(TagConstants.BOOLEANLIT, Boolean.TRUE), 
+               Types.booleanType);
 
   public final static LiteralExpr F = (LiteralExpr)FlowInsensitiveChecks
-      .setType(LiteralExpr.make(TagConstants.BOOLEANLIT, Boolean.FALSE,
-          Location.NULL), Types.booleanType);
+      .setType(LiteralExpr.makeNonSyntax(TagConstants.BOOLEANLIT, Boolean.FALSE),
+               Types.booleanType);
 
   static public class Context {
     public Expr expr;
