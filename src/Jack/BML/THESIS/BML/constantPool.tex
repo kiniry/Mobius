@@ -1,7 +1,7 @@
 \newcommand{\cpLength}{\mbox{\rm\textsf{cpLength}}}
 \newcommand{\cpElems}{\mbox{\rm\textsf{cpElems}}}
 \newcommand{\classConst}{\mbox{\rm\textbf{cpConst}}}
-\newcommand{\locVarTab}{\mbox{\rm\textsf{}}}
+
 
 \section{Background information of the class file format}
 In this section,  we introduce few data structures of the class file format which are important
@@ -12,7 +12,7 @@ for the understanding of the coming sections.
 % we will need a background information about the class file format. 
 
 
- In particular, we will focus on the \\
+ In particular, we will focus on the 
  \constantPool \ data structure as well as of several optional data structures
  contained in the  class file: the \localVariableTable \ and \\
 the \lineNumberTable. 
@@ -36,10 +36,10 @@ $$
 	                        \end{array} \right\}
    \end{array} 
 $$
-The first field \cpLength \  contains the length of the second component \cpElems. \cpElems
-is an array containing the class constants.
-The JVM specification defines seven kinds of data structures that can be elements of the constant pool.
-However, here   we will look only on the following elements
+The first field \cpLength \  contains the length of the second component \cpElems. \cpElems \
+is an array containing a data structure for every constant used in the class. The JVM specification defines
+ seven kinds of data structures that can be elements of the constant pool.
+However, here we will look only on the following elements:
 $$ \begin{array}{ll}\classConst & ::=   \mbox{\rm\textbf{CONSTANT\_Fieldref\_info}} \\
 		     & \mid \mbox{\rm\textbf{CONSTANT\_Class\_info}} \\
 		     & \mid \mbox{\rm\textbf{CONSTANT\_Method\_info}}\\
@@ -60,10 +60,52 @@ of the current class. The corresponding data structure which stands for a partic
  a constant  field reference data structure contains information about the class or interface where the field is declared 
 ( the second element of the data structure, \textbf{class\_index}  )
  as well a description of its name and type (the field \textbf{name\_and\_type\_index}~)
-   
+   \begin{figure}
+$$
+\mbox{\rm\textbf{CONSTANT\_Fieldref\_info}} =  \left\{\begin{array}{ll} 
+                                                   \mbox{\rm\textsf{tag}}    & :   nat \\
+                                                   \mbox{\rm\textsf{class\_index}}     & :   nat \\
+						   \mbox{\rm\textsf{name\_and\_type\_index}} & : nat
+	                        \end{array} \right\}$$
+
+\begin{itemize}
+\item \textsf{tag} is a tag of one byte  whose value is 9 and  determines without 
+       ambiguity that the current attribute describes a field reference constant
+
+\item \textsf{class\_index} The value of this item must be a valid index into the \constantPool \ table. 
+                            The \constantPool \ entry at that index must be a \textsf{CONSTANT\_Class\_info} structure
+			    representing the class or interface type that contains the declaration of the field or method.
+
+\item \textsf{name\_and\_type\_index}   The value of the item must be a valid index into the \constantPool \ table.
+                                        The \constantPool \ entry at that index must be a \textsf{CONSTANT\_NameAndType\_info }
+					structure. This \constantPool \ entry indicates the name and descriptor of the field.
+
+\end{itemize}
+\caption{ { \sc Structure of the } \textbf{CONSTANT\_Fieldref\_info} { \sc attribute }  }
+\label{fldConstant}
+\end{figure}
+
 \item every class referenced in the current class.  A class constant is stored in the constant pool
-         in a  \textbf{CONSTANT\_Class\_info} data structure 
-    
+         in a  \textbf{CONSTANT\_Class\_info} data structure. The data structure is described in Fig. \ref{clsConstant} 
+  \begin{figure}
+$$
+\mbox{\rm\textbf{CONSTANT\_Class\_info}} =  \left\{\begin{array}{ll} 
+                                                   \mbox{\rm\textsf{tag}}    & :   nat \\
+                                                   \mbox{\rm\textsf{ name\_index}}     & :   nat \\
+						  
+	                        \end{array} \right\}$$
+
+\begin{itemize}
+\item \textsf{tag} is a tag of one byte  whose value is 7 and  determines without 
+       ambiguity that the current attribute describes a class  reference constant
+
+\item \textsf{name\_index} The value of this item must be a valid index into the \constantPool \ table. The \constantPool \ entry at that index must be a
+       \textbf{ CONSTANT\_Utf8\_info} data structure representing the name of the class described by the data structure 
+ \end{itemize}
+\caption{ { \sc Structure of the } \textbf{CONSTANT\_Class\_info} { \sc attribute }  }
+\label{clsConstant}
+\end{figure}
+  
  \item every method which is called in any of the methods
 of the current class. It is represented by a  \textbf{CONSTANT\_Method\_info} data structure
       
@@ -77,30 +119,7 @@ of the current class. It is represented by a  \textbf{CONSTANT\_Method\_info} da
 
  
 
-\begin{figure}
-$$
-\mbox{\rm\textbf{CONSTANT\_Fieldref\_info}} =  \left\{\begin{array}{ll} 
-                                                   \mbox{\rm\textbf{tag}}    & :   nat \\
-                                                   \mbox{\rm\textbf{class\_index}}     & :   nat \\
-						   \mbox{\rm\textbf{name\_and\_type\_index}} & : nat
-	                        \end{array} \right\}$$
 
-\begin{itemize}
-\item \textbf{tag} is a tag of one byte  whose value  determines without 
-       ambiguity that the current attribute describes a field reference constant
-
-\item \textbf{class\_index} The value of this item must be a valid index into the \constantPool \ table. 
-                            The \constantPool \ entry at that index must be a \textbf{CONSTANT\_Class\_info} structure
-			    representing the class or interface type that contains the declaration of the field or method.
-
-\item \textbf{name\_and\_type\_index}   The value of the item must be a valid index into the \constantPool \ table.
-                                        The \constantPool \ entry at that index must be a \textbf{CONSTANT\_NameAndType\_info }
-					structure. This \constantPool \ entry indicates the name and descriptor of the field.
-
-\end{itemize}
-\caption{ { \sc Structure of the } \textbf{CONSTANT\_Fieldref\_info} { \sc attribute }  }
-\label{fldConstant}
-\end{figure}
 
 \subsection{Representation of method in the class file format}
 
@@ -118,78 +137,81 @@ We give hereafter a description of the last two data structures as they will pla
 The local variable table attribute is an optional variable-length attribute of a method \textbf{Code}  attribute. 
 We will denote this data structure as  \localVariableTable.
 It may be used by debuggers to determine the value of a given local variable during the execution of a method.
-In Fig. \ref{locVarTab} we give a modelization of this attribute specified by the JVM specification as well as the meaning of its components.
-Note that the JVM allows that  there might be more than one \localVariableTable \ attribute per local variable in the \textbf{Code} attribute.
-This means that a bytecode local variable might contain even values from incompatible types at different places of the program.  
-Note, that in our compiler presented later in Section \ref{BCSLcompile}, we assume that every source method local variable and parameter is compiled to a unique
-bytecode local variable which is different from the compilation of any other local variable or parameter in the method.
-% This is not a major restriction as 
-The structure of \localVariableTable \ follows hereafter:
+In the following, we give a modelization of this attribute specified by the JVM specification as well as the meaning of its components.
 
 
-$$\localVariableTable = \left\{\begin{array}{ll} \mbox{\rm\textsf{attribute\_name\_index}}   & :   nat \\
-                                                \mbox{\rm\textsf{attribute\_length}}   & :  nat\\
-						\mbox{\rm\textsf{local\_variable\_table }} & : \locVarEls []
+
+$$\localVariableTable = \left\{\begin{array}{ll} \nameInd  & :   nat \\
+                                                    \attLen & : nat \\
+                                                \lvLength   & :  nat\\
+						\lvTab  & : \locVarEls []
 	                        \end{array} \right\} $$
 
 
 Let us see what is the meaning of the components of this data structure:
 \begin{itemize}
-\item \textbf{attribute\_name\_index}
+\item  \nameInd \\
     The value of this item must be a valid index into the \constantPool \ table.
       %The constant_pool entry at that index must be a CONSTANT_Utf8_info (§4.4.7) structure representing the string "LocalVariableTable".
 
- \item \textbf{attribute\_length}.
+ \item \attLen \\
     The value of the item indicates the length of the attribute, excluding the initial six bytes.
 
- \item \textbf{local\_variable\_table\_length}.
-    The value of the item indicates the number of entries in the \textbf{local\_variable\_table} array.
+ \item \lvLength \\
+    The value of the item indicates the number of entries in the  \lvTab \  array.
 
-\item \textbf{local\_variable\_table[]}.
-    Each entry in the \textbf{local\_variable\_table} array indicates a range of code array
+\item \lvTab\\
+    Each entry in the \lvTab \  array indicates a range of code array
     offsets within which a local variable has a value. It also indicates the index into the
     local variable array of the current frame at which that local variable can be found.
     Each entry is of type  \locVarEls
 \end{itemize}
 
+
+
 The data structure \locVarEls has the following structure:
-$$\locVarEls  = \left\{\begin{array}{ll} \mbox{\rm\textsf{start\_pc}}   & :   nat \\
-                                                \mbox{\rm\textsf{length}}   & :  nat \\
-						\mbox{\rm\textsf{name\_index }} & : nat \\
-						\mbox{\rm\textsf{descriptor\_index }} & : nat \\
-						 \mbox{\rm\textsf{index }} & : nat \\
+$$\locVarEls  = \left\{\begin{array}{ll}  \lvElStart  & :   nat \\
+                                          \lvElLen  & :  nat \\
+					  \nameInd  & : nat \\
+					 \descrInd & : nat \\
+					\lvElInd & : nat \\
 	                        \end{array} \right\} $$
 
 The meaning of the elements of \locVarEls is the following:
 \begin{itemize}
 
-\item \textbf{start\_pc},  \textbf{length}.
-    The given local variable must have a value at indices into the code array in the interval [\textbf{start\_pc},  \textbf{length}],
-    that is, between \textbf{start\_pc} and  \textbf{start\_pc} + \textbf{length} inclusive. 
-    The value of \textbf{start\_pc} must be a valid index into the code array of this \textbf{Code}
-    attribute and must be the index of the opcode of an instruction. Either the value of \textbf{start\_pc} + \textbf{length}  must
+\item \lvElStart, \lvElLen \\ 
+    The given local variable must have a value at indices into the code array in the interval [\lvElStart, \lvElLen],
+    that is, between \lvElStart \ and  \lvElStart +\lvElLen  \ inclusive. 
+    The value of \lvElStart \ must be a valid index into the code array of this \textbf{Code}
+    attribute and must be the index of the opcode of an instruction. Either the value of \lvElStart +\lvElLen \  must
      be a valid index into the code array of this \textbf{Code} attribute and be the index of the opcode of an instruction,
     or it must be the first index beyond the end of that code array.
 
-\item \textbf{name\_index},\textbf{descriptor\_index}.
-    The value of the \textbf{name\_index} item must be a valid index into the \constantPool \ table. 
+\item \nameInd,\descrInd \\
+    The value of the \nameInd \ item must be a valid index into the \constantPool \ table. 
     The \constantPool \ entry at that index must contain a data structure representing a valid local variable name 
 
-    The value of the \textbf{descriptor\_index} item must be a valid index into the \constantPool \ table. 
+    The value of the \descrInd \ item must be a valid index into the \constantPool \ table. 
     The \constantPool \ entry at that index must contain a data structure representing a field descriptor encoding the type of a local variable in the source program.
 
-\item \textbf{index}.
+\item \lvElInd \\
     The given local variable must be at index in the local variable array of the current frame.
-    If the local variable at index is of type double or long, it occupies both index and index+1.
+    If the local variable at index is of type double or long, it occupies both \lvElInd \ and \lvElInd +1.
 
 \end{itemize}
+Note that the JVM allows that  there might be more than one \localVariableTable \ attribute per local variable in the \textbf{Code} attribute.
+This means that a bytecode local variable might contain even values from incompatible types at different places of the program.  
+Note, that in our compiler presented later in Section \ref{BCSLcompile}, we assume that every source method local variable and parameter is compiled to a unique
+bytecode local variable which is different from the compilation of any other local variable or parameter in the method.
 
 
 \subsubsection{The line number table attribute}\label{lineNumTab}
 
-The Line number table attribute is an optional variable-length attribute in the attributes table of a method \textbf{Code} attribute. 
+The Line number table attribute is an optional variable-length attribute in the attributes table of a method \textbf{Code} attribute and we call it 
+for short \lineNumberTable.  
 It may be used by debuggers to determine which part of the Java virtual machine code array corresponds to a given line number in the original source file.
- If \lineNumberTable \ attributes are present in the attributes table of a given \textbf{Code} attribute, then they may appear in any order.
+ If a \lineNumberTable \ attribute is present in the attributes table of a given \textbf{Code} attribute, then they may appear in any order.
  Furthermore, multiple \lineNumberTable \ attributes may together represent a given line of a source file;
  that is, \lineNumberTable \  attributes need not be one-to-one with source lines.
 
