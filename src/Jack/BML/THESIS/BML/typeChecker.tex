@@ -1,33 +1,128 @@
 
 \newcommand{\getType}{\mbox{\rm\textsf{getType}}}
-\newcommand{\getClassName}{\mbox{\rm\textsf{getClassName}}} 
-\section{BML type checker}
+\newcommand{\constType}{\mbox{\rm\textsf{constType}}}
+\newcommand{\getClass}{\mbox{\rm\textsf{getClass}}}
+\newcommand{\application}{\mbox{\rm\textbf{CLS}}}
+ 
+\section{Well formed BML specification}
 In Section \ref{BCSLgrammar}, we gave the formal grammar of BML.
 However, we are interested in a strict subset of 
-the specifications that can be generated from this grammar.
+the specifications that can be generated from this grammar. In particular, we want that a
+BML specification is well typed and respects some structural constraints, for instance that a
+ field identifier is a valid index in the constant pool. 
 
-In what follows, we scatch the rules of a typechecker which 
-recognizes a well formed specification
+To do this  in subsection \ref{wpNotion},  we first introduce several extensions of the class and field method structures introduced earlier.   
+In subsection \ref{wfBML} we proceed with  the rules which validate a BML method specification. 
 
-\subsection{Well formed BML expressions}
-We now turn to few rules which check if a BML expression is correct.
-We first need to define several functions that will be used by the type checker.
+\subsection{Extension of the class and method }\label{wpNotion}
+First, we need to introduce few extensions to the data structures defined in Section \ref{clazz}.
+The data structure \ClassSet \ is extended  with
+a constant pool \constantPool \ field, as shown hereafter:  %in Fig. \ref{classExt}:
+%\begin{figure}
 
-
-Note that it is a partial function and is defined 
  
-
-
-$$\begin{array}{l}
-  \frac{ \begin{array}{l}
-          \constantPool , \locVarTab \vdash   \expression \\
-	   0 \le \ident < \constantPool.length \\
-	  \constantPool(\ident ) = \mbox{\rm\textbf{CONSTANT\_Fieldref}}  \\   
-	   \getType(\expression) =  \constantPool ( \constantPool (\ident).class\_index )   
-	 \end{array} 
-  }{ \constantPool , \locVarTab \vdash \expression.\ident  }_{wf \ field \ access}
-  %\frac{   }{ } \\
-\end{array}
+ $$ \begin{array}{l}
+          %\forall  \clazz : \ClassSet , \\
+         \ClassSet = \left\{\begin{array}{l}\ldots \\ 
+	                                 % \fields    & :    list \ \FieldSet \\
+                                         % \methods    & :    list \ \MethodSet\\
+					%  \className  & :   \ClassName \\
+					%  \superClass & :   \ClassSet \cup \{ \bottom \}\\
+					  \classCP  : \constantPool
+					  
+                    \end{array} \right\}
+   \end{array}
 $$
 
-     
+%\caption{\sc Extension of the \ClassSet \  data structure with a constant pool}
+%\label{classExt} 
+%\end{figure}
+
+The data structure \MethodSet \ is also extended and contains a field   \methodLocVar  \  with a local variable table: %as shown in Fig. \ref{methExt}
+
+%\begin{figure}
+
+ 
+ $$ \begin{array}{l}
+          %\forall  \clazz : \ClassSet , \\
+         \MethodSet = \left\{\begin{array}{l} \ldots \\
+				              \methodLocVar : \localVariableTable 	  
+                    \end{array} \right\}
+   \end{array}
+$$
+
+
+\subsection{Well formed BML method specification} \label{wfBML}
+Now we turn our attention to the inference rules which check if a BML specification
+is well formed. The inference rules are given in Fig. \ref{typeCheck}. The checking is done w.r.t.
+a context which is a triple of:
+
+\begin{itemize}
+\item   \application\\
+This is a list  of  data structures \ClassSet \ every of which have the extensions just described above.
+It stands for the whole set of classes which are  specified and to which refers the specification that is checked for well formedness.
+
+ \item  \constantPool \\
+       This is the constant pool of the class in which the specification is declared
+ 
+\item  \localVariableTable \\
+This component of the context contains the local variable table of the method in which the specification is declared
+\end{itemize}
+
+Let us look in more detail at the rules in Fig.  \ref{typeCheck}.
+
+The rule $ wp \ field \ access $ states that the  a field access specification expression $ \expression.\ident $ is well typed
+w.r.t. the context $\constantPool , \localVariableTable  $ if
+ \begin{itemize}
+   \item the expression  $ \expression$ is well typed in the same context 
+   \item the identifier $ \ident $ is a valid index in the \constantPool, i.e. it represents a positive integer smaller than \constantPool.\cpLength 
+   \item the component in the array of the \constantPool at index $\ident$ is a \\
+         \mbox{\rm\textbf{CONSTANT\_Fieldref\_info}} data structure and thus, the field \textsf{tag}  has valu  9 (see Fig. \ref{fldConstant})
+   \item the type of the expression $ \expression$ is a subclass of the class where the field described in $ \constantPool .\cpElems[\ident]$
+         is declared 
+
+\end{itemize}
+
+
+
+The rule $wf \ local \ var \ access$ states that the expression $ \locVar{i}$ is well formed in context  
+$\constantPool , \localVariableTable$ if the index $i$ is a valid index in the array of local variables.
+
+
+The rule $ wf \ type \ expression $ states that the expression $\type{\ident}  $ is valid if the $\ident$ represents a valid
+index in the constant pool \constantPool \ and if at the index  $ \ident $ in \constantPool \ there is a data structure of type \textbf{CONSTANT\_Class\_info}, i.e.
+ the \textsf{tag} field has value 7.
+
+\begin{figure}
+$$\begin{array}{c}
+  \frac{ \begin{array}{c}
+         \application, \constantPool ,\localVariableTable   \vdash   \expression \\
+	   0 \le \ident < \constantPool.\cpLength  \\
+	   \constantPool.\cpElems[\ident].\mbox{\rm\textsf{tag}}  = \mbox{ \rm 9 } \\
+	   \subtype{ \getType( \expression ) }{  \getClass ( \constantPool .\cpElems[\ident] . \mbox{\rm\textsf{class\_index}} )} \\
+	 \end{array} 
+  } {\application, \ClassSet, \constantPool , \localVariableTable \vdash \expression.\ident  }_{wf \ field \ access}
+\\\\
+\frac{ \exists k .  0 \le k <  \localVariableTable. \lvLength \  \wedge \   \localVariableTable. \lvTab [k]. \lvElInd = i  }{\application, \constantPool , \localVariableTable \vdash \locVar{i} }_{wf \ local \ var \ access} \\
+\\\\
+\frac{\begin{array}{c} 
+             \getType ( \expression_2 ) = \Myint \\
+	    \getType ( \expression_1 ) =  \reffArr \\
+       \end{array}  }{\application,  \constantPool , \localVariableTable \vdash \arrayAccess{\expression_1} {\expression_2}   }_{wf \ array \ access} \\
+
+\\\\
+\frac{  \getType ( \expression_2 ) = \Myint   }{\application,  \constantPool , \localVariableTable \vdash \stack{\expression}  }_{wf \ stack \ expression} \\
+
+\\\\
+\frac{ 
+\begin{array}{c}
+	   0 \le \ident < \constantPool.\cpLength  \\
+	   \constantPool.\cpElems[\ident].\mbox{\rm\textsf{tag}}  = \mbox{ \rm 7 }
+\end{array}
+}{\application,  \constantPool , \localVariableTable \vdash \type{\ident}  }_{wf \ type \ expression} \\
+
+\end{array}
+$$
+\caption{\sc Type checking rules for BML expressions}
+\label{typeCheck}
+\end{figure}
