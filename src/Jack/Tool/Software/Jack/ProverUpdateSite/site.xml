@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/ProverFeature_1.0.4.jar" id="ProverFeature" version="1.0.4">
-      <category name="provers"/>
+      <category name="Provers"/>
    </feature>
    <feature url="features/ProverFeature_1.0.5.jar" id="ProverFeature" version="1.0.5">
-      <category name="provers"/>
+      <category name="Provers"/>
    </feature>
-   <category-def name="provers" label="Jack Provers"/>
+   <category-def name="Provers" label="Jack Provers">
+      <description>
+         Jack provers are Coq, B, Simplify, PVS
+      </description>
+   </category-def>
 </site>
