@@ -1,6 +1,6 @@
 \chapter{Introduction}
-Providing high quality on applet development is becoming a crucial issue, 
-especially when those applets are aimed to be loaded and executed in secure device like smart cards.  
+Providing high quality applet is becoming a crucial issue, 
+especially when those applets are aimed to be loaded and executed in trusted personal device like smart cards.  
 Actually, the card remains a specific domain where post issuance corrections are very expensive due to the deployment process and the mass production.
 Currently, the quality is ensured by costly test campaigns, 
 whenever tests are technically possible. 
@@ -18,3 +18,85 @@ All the tools and results presented in this document were developed with this go
 Using those techniques, Java developers should be able to validate their code, or at least to get a good assurance on its correctness.
 
 This document is organized as follows, the next chapter introduce the assertion language JML, chapter 3 describes the JACK tool with its extension feature, chapter 4 presents some evaluations done with the tools and the last chapter concludes.
+
+
+\section{Java and JavaCard}
+ Formal validation of Java programs is a growing research
+ field.  As Java has become a reference language, many technologies are
+ emerging to help Java program validation.  Java can also be
+ considered as a good support for formal techniques, as it has precise 
+semantics \cite{Gosl00a}.
+
+JavaCard is a popular programming language for multiple
+application smart cards.  According to the JavaCard Forum \footnote{http://www.javacardforum.org},
+which involves key players in the field of smart cards, 
+including smart card manufacturers and banks, the JavaCard language has two
+important features that make it the ideal choice for smart cards: 
+\begin{itemize}
+\item JavaCard programs are written in a subset of Java, using
+the JavaCard APIs (Application Programming Interfaces). JavaCard
+developers can therefore benefit from the well-established Java technology; 
+
+\item the JavaCard security model enables multiple applications to
+coexist  on the same card and communicate securely, and in principle,
+enables new applications to be loaded on the card after its issuance.
+\end{itemize}
+Yet recent research has unveiled several problems in the JavaCard
+security model, most notably with object sharing and the associated
+mechanism of shareable interfaces.
+This has  emphasized the necessity to develop environments for
+verifying the security of the JavaCard platform and of JavaCard
+programs.  Thus far JavaCard security (and also Java security) has
+been studied  mainly at two levels:    
+\begin{itemize}
+\item  platform level: here the goal is to prove safety properties of
+the language, in particular type safety and properties related to
+memory management; 
+\item  application level: here the goal is to prove that a specific
+program obeys a given property, and in particular that it satisfies a
+security policy, for example based on information flow. 
+\end{itemize}
+We are focusing at the application level, developing tools and methodologies based on JML to reach this goal.
+\section{JML}
+JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the
+``Java Modeling Language'', is a behavioral interface
+specification language for Java; that is, it specifies both the behavior
+and the syntactic interface of Java code.  The syntactic interface of
+a Java class or interface consists of its method signatures,
+the names and types of its fields, etc.
+This is what is commonly meant by an application programming
+interface (API).
+The behavior of such an API can be precisely documented in JML annotations;
+these describe the intended way that programmers should
+use the API.  In terms of behavior, JML can detail, for example, the
+preconditions and postconditions for methods as well as class
+invariants.
+
+An important goal for the design of JML is that it should be easily
+understandable by Java programmers. This is achieved by staying as
+close as possible to Java syntax and semantics.  Another important
+design goal is that JML {\em not} impose any particular design method
+on users; instead, JML should be able to document Java programs
+designed in any manner \cite{Leavens-Baker-Ruby03}.
+
+JML uses Java's expression syntax in assertions,
+thus JML's notation is easy for programmers to learn.  
+Because JML supports quantifiers such as
+\verb_\forall_ and \verb_\exists_, and because JML allows ``model''
+(i.e., specification-only) fields and methods, specifications can
+easily be made precise and complete.
+JML assertions are written as special
+annotation comments in Java code,
+so that they are ignored by Java compilers but can be used
+by tools that support JML\@.  Within annotation comments JML extends the
+Java syntax with several keywords.  It also extends Java's expression syntax with several
+operators.
+The central ingredients of a JML specification are preconditions
+(given in {\tt requires} clauses), postconditions (given in {\tt
+  ensures} clauses), and (class and interface) invariants.  These are
+all expressed as boolean expressions in JML's extension to Java's
+expression syntax.
+In addition to ``normal'' postconditions, the language also supports
+``exceptional'' postconditions, specified in {\tt signals} clauses.
+These can be used to specify what must be true when a method throws an
+exception. 

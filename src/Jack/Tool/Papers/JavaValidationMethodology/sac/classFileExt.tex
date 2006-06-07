@@ -1,26 +1,26 @@
 \subsection{Bytecode Specification Language}\label{bcSpecLg}
 
-In this section, we introduce a bytecode specification language which we call BCSL (short for ByteCode Specification Language).
- BCSL is based on the design principles of JML (Java Modeling Language)~\cite{JMLRefMan}, which is a behavioral interface specification 
+In this section, we introduce a bytecode specification language which we call BML (short for ByteCode Specification Language).
+ BML is based on the design principles of JML (Java Modeling Language)~\cite{JMLRefMan}, which is a behavioral interface specification 
 language following the design by contract approach \cite{M97oos}.
 
-In the following, we give the grammar of BCSL and sketch the compiler from JML to BCSL. 
+In the following, we give the grammar of BML and sketch the compiler from JML to BML. 
 
 \subsubsection{Grammar} \label{grammar}
 
 
-BCSL corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and security properties.
+BML corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and security properties.
 
 
- Specification clauses in BCSL that are taken from JML and inherit their semantics directly from JML include:
+ Specification clauses in BML that are taken from JML and inherit their semantics directly from JML include:
 class specification, i.e. class invariants and history constraints, 
   method preconditions, normal and exceptional postconditions, method frame conditions (the locations that may be modified by the method), inter method specification, as for instance loop invariants and loop frame conditions(this is not a standard feature of JML but we were inspired for this by the JML extensions in JACK ~\cite{BRL-JACK}). 
-We also support specification inheritance and thus behavioral subtyping as described in \cite{Dhara-Leavens96}. Most of the Java expressions like field access expressions, local variables, etc can be mentioned in the BCSL specification.
-BCSL supports the standard JML specification operators as for example, $\old{\expression}$ which is used in method postconditions and
+We also support specification inheritance and thus behavioral subtyping as described in \cite{Dhara-Leavens96}. Most of the Java expressions like field access expressions, local variables, etc can be mentioned in the BML specification.
+BML supports the standard JML specification operators as for example, $\old{\expression}$ which is used in method postconditions and
  designates the value of the expression $\expression$ in the prestate of a method, $ \result$ which stands for the value the method
 returns if it is not void,  $\typeof{\expression}$ which stands for type of $\expression$ etc.  
 
-\subsection{Compiling JML into BCSL}\label{comJML}
+\subsection{Compiling JML into BML}\label{comJML}
 
 
 We now turn to explaining how JML specifications are compiled into user defined attributes for Java class files. Recall that a class file defines

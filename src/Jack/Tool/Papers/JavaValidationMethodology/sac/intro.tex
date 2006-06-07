@@ -14,9 +14,9 @@ For instance, its dialect JavaCard is largely used in smart card applications an
 %In this article, we propose a static verification technique using formal methods for sequential Java bytecode programs.
 
 The proposed scheme is composed of several components.
- We define a bytecode specification language, called BCSL, and supply a compiler from 
- the high level Java specification language JML~\cite{JMLRefMan} to BCSL. 
- BCSL supports a JML subset which is expressive enough to specify rich functional properties. 
+ We define a bytecode specification language, called BML, and supply a compiler from 
+ the high level Java specification language JML~\cite{JMLRefMan} to BML. 
+ BML supports a JML subset which is expressive enough to specify rich functional properties. 
 The specification is inserted in the class file format in newly defined attributes and thus makes not
  only the code mobile but also its specification. These class
  file extensions do not affect the JVM performance.
@@ -24,14 +24,14 @@ We define a bytecode logic in terms of weakest precondition calculus for the seq
 The logic gives rules for almost all Java bytecode instructions and supports the Java specific features such as
 exceptions, references, method calls and subroutines.  
  We have implementations of a verification condition generator based on the weakest precondition calculus and of
- the JML specification compiler. Both are integrated in the Java Applet Correctness Kit tool (JACK)~\cite{BRL-JACK}.
+ the JML specification compiler. Both are part of JACK.
 
   The full specifications of the JML compiler, the weakest precondition predicate transformer definition and its proof of correctness can be found in~\cite{JBL05MP}.
   
 The remainder of this section is organized as follows: 
 Subsection~\ref{architecture_s} reviews scenarios in which the architecture may be appropriate to use; 
- Subsection~\ref{bcSpecLg} presents the bytecode specification language BCSL and the JML compiler; Subsection~\ref{wpbc} discusses the main
-features of the \wpi (short for weakest precondition calculus); Subsection~\ref{pogEquiv} discusses the relationship between the verification conditions for JML annotated source and BCSL annotated bytecode.
+ Subsection~\ref{bcSpecLg} presents the bytecode specification language BML and the JML compiler; Subsection~\ref{wpbc} discusses the main
+features of the \wpi (short for weakest precondition calculus); Subsection~\ref{pogEquiv} discusses the relationship between the verification conditions for JML annotated source and BML annotated bytecode.
 
 
 

@@ -1,6 +1,6 @@
 \subsection{Weakest Precondition Calculus For Java Bytecode}\label{wpbc}
 In this section, we define a bytecode logic in terms of a weakest precondition calculus. The proposed weakest precondition \wpi \ supports all Java bytecode sequential instructions except for floating point arithmetic instructions and 64 bit data (\java{long} and \java{double} types), including exceptions, object creation,
- references and subroutines. The calculus is defined over the method control flow graph and supports BCSL annotation,
+ references and subroutines. The calculus is defined over the method control flow graph and supports BML annotation,
  i.e. bytecode method's specification like preconditions, normal and exceptional postconditions, class invariants,
  assertions at particular program point among which loop invariants. The verification condition generator applied to a method 
 bytecode generates a proof obligation for every execution path
