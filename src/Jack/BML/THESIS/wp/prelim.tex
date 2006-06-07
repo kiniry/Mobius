@@ -8,7 +8,7 @@ on unstructured programs. In particular, source loops in a method body correspon
 case for loops in methods on bytecode level. In order to discover a loop in a bytecode program we first need to define 
 what is a bytecode program. Note that in the following, by a  bytecode program we mean a method body.
 
-Every method \methodd \ has an array of bytecode instructions \method.\body \  which we already introduced in Section \ref{clazz}.
+Every method \methodd \ has an array of bytecode instructions \methodd.\body \  which we already introduced in Section \ref{clazz}.
 The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $\methodd.\body[k]$.
  We assume that the method body has exactly one entry point
  (an entry point instruction is the instruction at which an execution of a method starts) which is the first
@@ -17,7 +17,7 @@ $\methodd.\body[0]$.
 The array of bytecode instructions of a method \methodd \ determine an oriented graph $G( V , \execRel ) $ in which the vertices are the instructions of the method body,
 i.e. $$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
 The set of edges $\execRel$ is a relation between the vertices elements
-$$ \execRel : V * V $$ and is defined  in the following way:
+$$ \execRel : V * V $$ and is defined  as follows:
 $$ (\methodd.\body[j], \methodd.\body[k]) \in \execRel \iff 
    \begin{array}{l} \methodd.\body[j] \neq \return \wedge( \\
                     \methodd.\body[j] = \ifCond \ k \vee \\

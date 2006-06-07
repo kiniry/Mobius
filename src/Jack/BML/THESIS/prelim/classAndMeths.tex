@@ -43,9 +43,9 @@
  A method has a unique method id ( \methodName), a return type (\retType),
  a list containing the formal parameter names and their types(\args), 
  the number of its formal parameters (\numArgs),
- list of bytecode instructions representing its body (\body)
- and the entry point instruction of the method (\entryPoint)
- (the instruction at which every execution of the method starts), 
+ list of bytecode instructions representing its body (\body),
+% and the entry point instruction of the method (\entryPoint)
+% (the instruction at which every execution of the method starts), 
  the exception handler table (\excHandlerTable) and the list of exceptions
  (\exceptions) that the method may throw
 
@@ -55,7 +55,7 @@
 							  \args &  : (name * \JavaType) [] \\
 							  \numArgs & : nat \\
 							  \body &  : \bcIns [] \\
-							  \entryPoint  &  : \bcIns \\
+							  %\entryPoint  &  : \bcIns \\
 							  \excHandlerTable & : \ExcHandler []\\
 							  \exceptions & : \ClassSet_{exc}[]
                                      \end{array}  \right\}

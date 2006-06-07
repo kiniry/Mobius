@@ -1,8 +1,17 @@
 \section{Related work} \label{relWorkWp}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-There exist several formal techniques for establishing that a program respects certain property.
+In the following, we review briefly the existing work related to program verification
+ and more particularly program verification related to Java programs. 
 
+
+ Floyd is among the first to work on program verification using logic methods for unstructured program
+ languages (see \cite{F67amp}). Following the Floyd's approach, T.Hoare gives a formal logic for program verification in \cite{Hoare69ABC} known
+ today under the name Hoare logic. Dijkstra \cite{WPCDS} proposes then an efficient way for applying Hoare logic in
+ program verification, i.e. he comes up with a weakest precondition (wp) and strongest postcondition (sp) calculi. 
+
+Concerning bytecode validation, there exists several approaches depending on the kind of properties that one want to check for.
+ 
  Bytecode verification is concerned with establishing that a bytecode is well typed 
 (every instruction is applied to operands of the correct type) and well formed 
 (e.g. no jumps to an un-existing bytecode index), differently from the goals of the present
@@ -10,13 +19,10 @@ work where program correctness is defined in terms of functional correctness. Th
 is provided with a bytecode verifier. There is a lot of research work done in the domain 
 and for a detailed overview of the state of the art one can look at~\cite{Ljbc}.  
 
-Floyd is among the first to work on program verification using logic methods for unstructured languages (see \cite{F67amp}).
-Following the Floyd's approach, T.Hoare gives a formal logic for program verification in \cite{Hoare69ABC} known
- today under the name Hoare logic.
-Dijkstra \cite{WPCDS} proposes then an efficient way for applying Hoare logic in program verification, i.e. he comes up with a
- weakest precondition (wp) and strongest postcondition (sp) calculi. 
-
-The nineties upto nowadays give rise to several verification tools based on Hoare logic. Among the ones that gained most popularity are
+As Java has been gaining popularity in industry since the nineties of the twentieth century,
+it also attracted the research interest.   
+Thus the nineties upto nowadays give rise to several verification tools tailored to Java
+ based on Hoare logic. Among the ones that gained most popularity are
 esc/java developed at Compaq \cite{escjava}, the Loop tool \cite{jacobs03java}, Krakatoa, Jack \cite{BRL-JACK} etc.   
 
 Few works have been dedicated to the definition of a bytecode logic. May be the earliest work in the field of bytecode verification 
@@ -50,17 +56,18 @@ Here we propose a way to compile a specification written in a high level languag
  The verification procedure \cite{leinoWPUP} that is performed includes several stages of processing the bytecode program:  
  elimination of irreducible loops, transformation into an acyclic control flow graph,
  translation of the bytecode into a guarded passive command language program. Despite that here in our implementation we also
- do a transformation in the graph into an acyclic program, we consider that in a mobile code scenario one should limit the number of transformations for several reasons.
- First, we need a verification procedure as simple as possible, and then every transformation must be proven correct which is not always trivial.      
+ do a transformation in the graph into an acyclic program, we consider that in a mobile code scenario
+ one should limit the number of program transformations for several reasons.
+ First, we need a verification procedure as simple as possible, and second every transformation must be proven correct which is not always trivial.      
 
-Another topic related to the present work is PCC.
- PCC and the certifying compiler were proposed by Necula (see \cite{Necula97,ComNec,DesNecLee98}). PCC is an architecture for establishing trust in untrusted code 
-in which the code producer supplies a proof for correctness with the code. 
-The initial idea for PCC  was that the producer automatically infers annotation for properties like well typedness, 
-correct read/writes and automatically generates the proof for their correctness using the certifying compiler. 
-However, such properties guarantee that a program executes correctly w.r.t. to the semantics of the 
-abstract machine, but cannot guarantee if a program executes correctly w.r.t to a functional specification.
-The verification condition generator presented in the following is tailored to deal with functional properties.
+% Another topic related to the present work is PCC.
+%  PCC and the certifying compiler were proposed by Necula (see \cite{Necula97,ComNec,DesNecLee98}). PCC is an architecture for establishing trust in untrusted code 
+% in which the code producer supplies a proof for correctness with the code. 
+% The initial idea for PCC  was that the producer automatically infers annotation for properties like well typedness, 
+% correct read/writes and automatically generates the proof for their correctness using the certifying compiler. 
+% However, such properties guarantee that a program executes correctly w.r.t. to the semantics of the 
+% abstract machine, but cannot guarantee if a program executes correctly w.r.t to a functional specification.
+% The verification condition generator presented in the following is tailored to deal with functional properties.
 
 
  

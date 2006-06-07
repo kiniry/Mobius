@@ -8,7 +8,7 @@
 \contentsline {section}{\numberline {2.4}Program types and values}{11}
 \contentsline {section}{\numberline {2.5}State configuration}{12}
 \contentsline {subsection}{\numberline {2.5.1}Modeling the Object Heap}{14}
-\contentsline {subsection}{\numberline {2.5.2}Registers}{17}
+\contentsline {subsection}{\numberline {2.5.2}Registers}{16}
 \contentsline {subsection}{\numberline {2.5.3}The operand stack}{17}
 \contentsline {subsection}{\numberline {2.5.4}Program counter}{17}
 \contentsline {section}{\numberline {2.6}Throwing and handling exceptions}{17}
@@ -26,28 +26,22 @@
 \contentsline {subsubsection}{Method specification case}{35}
 \contentsline {subsubsection}{Intra --- method specification}{36}
 \contentsline {subsubsection}{Frame conditions}{37}
-\contentsline {section}{\numberline {3.3}Background information of the class file format}{39}
-\contentsline {subsection}{\numberline {3.3.1}The constant pool table}{39}
-\contentsline {subsection}{\numberline {3.3.2}Representation of method in the class file format}{40}
-\contentsline {subsubsection}{The local variable table attribute }{41}
-\contentsline {subsubsection}{The line number table attribute}{42}
-\contentsline {section}{\numberline {3.4}BML type checker}{42}
-\contentsline {subsection}{\numberline {3.4.1}Well formed BML expressions}{42}
-\contentsline {section}{\numberline {3.5}Compiling JML into BML}{43}
-\contentsline {chapter}{\numberline {4}Verification condition generator for Java bytecode }{47}
-\contentsline {section}{\numberline {4.1}Related work}{48}
-\contentsline {section}{\numberline {4.2}Representing bytecode programs as control flow graphs}{49}
-\contentsline {section}{\numberline {4.3}Extending method declarations with specification}{51}
-\contentsline {section}{\numberline {4.4}Weakest precondition calculus}{52}
-\contentsline {subsection}{\numberline {4.4.1}Intermediate predicates}{52}
-\contentsline {subsection}{\numberline {4.4.2}Weakest precondition in the presence of exceptions}{53}
-\contentsline {subsection}{\numberline {4.4.3}Rules for single instruction}{54}
-\contentsline {section}{\numberline {4.5}Example}{60}
-\contentsline {chapter}{\numberline {5}Correctness of the verification condition generator}{63}
-\contentsline {section}{\numberline {5.1}Substitution}{63}
-\contentsline {section}{\numberline {5.2}Interpretation of assertions in a state}{64}
-\contentsline {section}{\numberline {5.3}Proof of Correctness }{67}
-\contentsline {chapter}{\numberline {6}Equivalence between Java source and bytecode proof Obligations}{73}
-\contentsline {chapter}{\numberline {7}A compact verification condition generator}{75}
-\contentsline {chapter}{\numberline {8}Applications}{77}
-\contentsline {chapter}{\numberline {9}Conclusion}{79}
+\contentsline {section}{\numberline {3.3}Well formed BML specification}{39}
+\contentsline {section}{\numberline {3.4}Compiling JML into BML}{39}
+\contentsline {chapter}{\numberline {4}Verification condition generator for Java bytecode }{45}
+\contentsline {section}{\numberline {4.1}Related work}{46}
+\contentsline {section}{\numberline {4.2}Representing bytecode programs as control flow graphs}{47}
+\contentsline {section}{\numberline {4.3}Extending method declarations with specification}{49}
+\contentsline {section}{\numberline {4.4}Weakest precondition calculus}{50}
+\contentsline {subsection}{\numberline {4.4.1}Intermediate predicates}{50}
+\contentsline {subsection}{\numberline {4.4.2}Weakest precondition in the presence of exceptions}{51}
+\contentsline {subsection}{\numberline {4.4.3}Rules for single instruction}{51}
+\contentsline {section}{\numberline {4.5}Example}{58}
+\contentsline {chapter}{\numberline {5}Correctness of the verification condition generator}{61}
+\contentsline {section}{\numberline {5.1}Substitution}{61}
+\contentsline {section}{\numberline {5.2}Interpretation of assertions in a state}{62}
+\contentsline {section}{\numberline {5.3}Proof of Correctness }{65}
+\contentsline {chapter}{\numberline {6}Equivalence between Java source and bytecode proof Obligations}{71}
+\contentsline {chapter}{\numberline {7}A compact verification condition generator}{73}
+\contentsline {chapter}{\numberline {8}Applications}{75}
+\contentsline {chapter}{\numberline {9}Conclusion}{77}

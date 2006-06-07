@@ -26,7 +26,7 @@ a single class or interface and contains information about  the class name, inte
  file contains data structure usually referred as the constant pool table  which is used to construct the runtime constant pool upon class or 
 interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class.
 In the rest of the chapter we will denote the constant pool with \constantPool.
-The \constantPool has the following structure:
+The \constantPool \  has the following structure:
 
 $$ 
 \begin{array}{l}
@@ -38,14 +38,26 @@ $$
 $$
 The first field \cpLength \  contains the length of the second component \cpElems. \cpElems \
 is an array containing a data structure for every constant used in the class. The JVM specification defines
- seven kinds of data structures that can be elements of the constant pool.
-However, here we will look only on the following elements:
+eleven kinds of entries of the constant pool.
+However, here we will look only at the following elements:
 $$ \begin{array}{ll}\classConst & ::=   \mbox{\rm\textbf{CONSTANT\_Fieldref\_info}} \\
 		     & \mid \mbox{\rm\textbf{CONSTANT\_Class\_info}} \\
 		     & \mid \mbox{\rm\textbf{CONSTANT\_Method\_info}}\\
 		      & \mid \mbox{\rm \textbf{CONSTANT\_Utf8\_info}} \\
 		      & \mid \mbox{\rm \textbf{CONSTANT\_NameAndType\_info}}
                     \end{array}$$
+
+All \constantPool \ table entries have the following general format:
+
+
+   $$ 
+     \mbox{\rm\textbf{cp\_info}} =  \left\{\begin{array}{ll} 
+    \mbox{\rm\textsf{tag}} & : 1 \  byte; \\ 	
+       \mbox{\rm\textsf{info}} & : byte[];
+    \end{array} \right\} 
+   $$
+Each item in the \constantPool \  table must begin with a 1-byte tag indicating the kind of \textbf{cp\_info} entry. 
+The contents of the info array vary with the value of tag.
 
 %Java virtual machine instructions do not rely on the runtime layout of classes, interfaces,
 % class instances, or arrays. Instead, instructions refer to symbolic information contained
@@ -63,7 +75,7 @@ of the current class. The corresponding data structure which stands for a partic
    \begin{figure}
 $$
 \mbox{\rm\textbf{CONSTANT\_Fieldref\_info}} =  \left\{\begin{array}{ll} 
-                                                   \mbox{\rm\textsf{tag}}    & :   nat \\
+                                                   \mbox{\rm\textsf{tag}}    & :  1 \ byte \\
                                                    \mbox{\rm\textsf{class\_index}}     & :   nat \\
 						   \mbox{\rm\textsf{name\_and\_type\_index}} & : nat
 	                        \end{array} \right\}$$
@@ -90,7 +102,7 @@ $$
   \begin{figure}
 $$
 \mbox{\rm\textbf{CONSTANT\_Class\_info}} =  \left\{\begin{array}{ll} 
-                                                   \mbox{\rm\textsf{tag}}    & :   nat \\
+                                                   \mbox{\rm\textsf{tag}}    & :  1 \ byte \\
                                                    \mbox{\rm\textsf{ name\_index}}     & :   nat \\
 						  
 	                        \end{array} \right\}$$

@@ -5,6 +5,17 @@ AV, Sethi R, and Ullman JD.
 \newblock {\em Compilers-Principles, Techniques and Tools}.
 \newblock Addison-Wesley: Reading, 1986.
 
+\bibitem{BM05plb}
+Fabian Bannwart and Peter Muller.
+\newblock A program logic for bytecode.
+\newblock In {\em Bytecode 2005}, ENTCS, 2005.
+
+\bibitem{BLS04sp}
+Mike Barnett, K.~Rustan~M. Leino, and Wolfram Schulte.
+\newblock The {Spec}\# programming system: An overview.
+\newblock In "G.Barthe, L.Burdy, M.Huisman, J.Lanet, and T.Muntean", editors,
+  {\em CASSIS workshop proceedings}, {LNCS}, pages 49--69. Springer, 2004.
+
 \bibitem{barthe02formal}
 Gilles Barthe, Guillaume Dufay, Line Jakubiec, and Simao~Melo de~Sousa.
 \newblock A formal correspondence between offensive and defensive javacard
@@ -17,10 +28,21 @@ Gilles Barthe, Guillaume Dufay, Line Jakubiec, Bernard Serpette, and
 \newblock A formal executable semantics of the {JavaCard} platform.
 \newblock {\em Lecture Notes in Computer Science}, 2028:302+, 2001.
 
+\bibitem{B04tlsj}
+Nick Benton.
+\newblock A typed logic for stack and jumps.
+\newblock DRAFT, 2004.
+
 \bibitem{M97oos}
 B.Meyer.
 \newblock {\em Object-Oriented Software Construction}.
 \newblock Prentice Hall, second revised edition edition, 1997.
+
+\bibitem{BreunesseCHJ04}
+C.~Breunesse, N.~Cata{\~n}o, M.~Huisman, and B.~Jacobs.
+\newblock Formal methods for smart cards: an experience report.
+\newblock {\em Science of Computer Programming}, 2004.
+\newblock To appear.
 
 \bibitem{BurdyCCEKLLP03}
 L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.T. Leavens, K.R.M. Leino,
@@ -43,6 +65,11 @@ Yoonsik Cheon and Gary~T. Leavens.
 \newblock In {\em Software Engineering Research and Practice (SERP'02)}, CSREA
   Press, pages 322--328, June 2002.
 
+\bibitem{WPCDS}
+Edsger~W. Dijkstra and Carel~S. Scholten.
+\newblock {\em Predicate Calculus and Program Semantics}.
+\newblock Springer, 1990.
+
 \bibitem{FM99FFJ}
 Stephen~N. Freund and John~C. Mitchell.
 \newblock A formal framework for the java bytecode language and verifier.
@@ -56,6 +83,16 @@ G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
 \newblock {\em JML Reference Manual}.
 \newblock technical report.
 
+\bibitem{Hoare69ABC}
+C.~A.~R. Hoare.
+\newblock An axiomatic basis for computer programming.
+\newblock {\em Commun. ACM}, 12(10):576--580, 1969.
+
+\bibitem{jacobs03java}
+B.~Jacobs and E.~Poll.
+\newblock Java program verification at nijmegen: Developments and perspective,
+  2003.
+
 \bibitem{KleinN04}
 Gerwin Klein and Tobias Nipkow.
 \newblock A machine-checked model for a {Java}-like language, virtual machine
@@ -68,10 +105,19 @@ R.K. Leino.
 \newblock escjava.
 \newblock \url{http://secure.ucd.ie/products/opensource/ESCJava2/docs.html}.
 
+\bibitem{Ljbc}
+Xavier Leroy.
+\newblock {Java} bytecode verification: Algorithms and formalizations.
+\newblock In {\em Journal of Automated Reasoning 2003}, 2003.
+
 \bibitem{VMSpec}
 Tim Lindholm and Frank Yellin.
 \newblock Java virtual machine specification.
 \newblock Technical report, Java Software, Sun Microsystems, Inc., 2004.
+
+\bibitem{leinoWPUP}
+M.Barnett and K.~Rustan~M. Leino.
+\newblock Weakest-precondition of unstructured programs.
 
 \bibitem{pusch98proving}
 Cornelia Pusch.
@@ -83,5 +129,35 @@ Zhenyu Qian.
 \newblock A formal specification of java virtual machine instructions for
   objects, methods and subrountines.
 \newblock In {\em Formal Syntax and Semantics of Java}, pages 271--312, 1999.
+
+\bibitem{Quigley03PLJ}
+C.L. Quigley.
+\newblock A programming logic for {Java} bytecode programs.
+\newblock In {\em Proceedings of the 16th International Conference on Theorem
+  Proving in Higher Order Logics}, volume 2758 of {\em Lecture Notes in
+  Computer Science}. Springer-Verlag, 2003.
+
+\bibitem{RT03djml}
+A.D. Raghavan and G.T. Leavens.
+\newblock Desugaring {JML} method specification.
+\newblock Report 00-03d, Iowa State University, Department of Computer Science,
+  2003.
+
+\bibitem{F67amp}
+R.W.Floyd.
+\newblock Assigning meaning to programs.
+\newblock In J.~T. Schwartz, editor, {\em volume 19 of Proceedings of Symposia
+  in Applied Mathematics}, pages 19--32, 1967.
+
+\bibitem{siveroni04operational}
+I.~Siveroni.
+\newblock Operational semantics of the java card virtual machine, 2004.
+
+\bibitem{WildmoserN-ESOP05}
+Martin Wildmoser and Tobias Nipkow.
+\newblock Asserting bytecode safety.
+\newblock In {\em Proceedings of the 15th European Symposium on Programming
+  (ESOP05)}, 2005.
+\newblock to appear.
 
 \end{thebibliography}
