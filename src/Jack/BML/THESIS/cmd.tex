@@ -157,14 +157,14 @@
 
 \newcommand{\pc}{\mbox{\rm Pc}}
 \newcommand{\field}[2]{\texttt{f}_{#2}^{#1}}
-\newcommand{\Values}{\rm{Values} }
+\newcommand{\Values}{\mbox{\rm\textit{Values}}}
 \newcommand{\locVar}[1]{\mbox{\rm{\textbf{reg}}}(#1) }
 \newcommand{\locVarOnly}{\mbox{\rm Reg}}
 
 
-\newcommand{\AllRefs}{\mbox{\rm RefType}} % the set all references  - reff \cup \reffArr  
-\newcommand{\reff}{\mbox{\rm RefCl }} % the type of simple reference
-\newcommand{\reffArr}{\mbox{\rm RefArr}}
+\newcommand{\AllRefs}{\mbox{\rm\textit{RefType}}} % the set all references  - reff \cup \reffArr  
+\newcommand{\reff}{\mbox{\rm\textit{RefClType} }} % the type of simple reference
+\newcommand{\reffArr}{\mbox{\rm\textit{RefArrType}}}
 \newcommand{\Ref}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
 \newcommand{\reference}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
 \newcommand{\referenceOnly}{\mbox{ \rm \texttt{ref}} \ } 
@@ -175,7 +175,7 @@
 \newcommand{\nextState}[1]{next(#1)}
 
 
-\newcommand{\RefValuesArr}{\mbox{ \rm RefValArr}}
+\newcommand{\RefValuesArr}{\mbox{\rm\textit{RefValArr}}}
 
 \newcommand{\comment}[1]{ \{ \textit{ #1} \} }
 
@@ -211,7 +211,7 @@
 
 \newcommand{\bottom}{\bot}
 %\newcommand{\pstate}[2]{<#1,#2> }
-\newcommand{\RefValues}{\mbox{\rm RefVal}}
+\newcommand{\RefValues}{\mbox{\rm\textit{RefVal}}}
 \newcommand{\retValue}[1]{\textrm{returnVal}(#1)} % designates the result of the method
 \newcommand{\objCl}[1]{\tt{Obj}_{#1}}% object representing a class instance 
 \newcommand{\objArr}[2]{\tt{ObjArr}_{#1}^{#2}} % obj_{type}^{length} object representing an array instance
@@ -223,7 +223,7 @@
 
 
 %classFileExt.tex
-\newcommand{\Myint}{\mbox{ \rm int}}
+\newcommand{\Myint}{\mbox{\rm\textbf{int}}}
 %\newcommand{\intLiteral}{\texttt{int\_const} }
 \newcommand{\predicates}{ \mathcal{R} }
 
@@ -250,45 +250,46 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  \newcommand{\class}{\mbox{ \rm Cl } }
 
- \newcommand{\FieldSet}{\mbox{\rm\textit{Field}} } % the set of fields
- \newcommand{\FieldName}{\mbox{\rm\textit{FieldName}}}
- \newcommand{\MethodSet}{\mbox{\rm\textit{Method}} }
- \newcommand{\LoopSpecSet}{\mbox{\rm\textit{LoopSpec}} }
- \newcommand{\MethodName}{\mbox{\rm\textit{MethodName}} }
- \newcommand{\isField}[2]{\mbox{\rm\textit{isfield}}(#1,#2)}
- \newcommand{\ClassSet}{\mbox{\rm\textit{Class}}} % the  set of fields
- \newcommand{\ClassName}{\mbox{\rm\textit{ClassName}}} % the set of fields
+ \newcommand{\FieldSet}{\mbox{\rm\textbf{Field}} } % the set of fields
+ \newcommand{\FieldName}{\mbox{\rm\textbf{FieldName}}}
+ \newcommand{\MethodSet}{\mbox{\rm\textbf{Method}} }
+ \newcommand{\LoopSpecSet}{\mbox{\rm\textbf{LoopSpec}} }
+ \newcommand{\MethodName}{\mbox{\rm\textbf{MethodName}} }
+ \newcommand{\isField}[2]{\mbox{\rm\textsf{isfield}}(#1,#2)}
+ \newcommand{\ClassSet}{\mbox{\rm\textbf{Class}}} % the  set of fields
+ \newcommand{\ClassName}{\mbox{\rm\textbf{ClassName}}} % the set of fields
  
  \newcommand{\clazz}{\mbox{\rm \textit{C}}}
  \newcommand{\fieldd}{\mbox{\rm \textit{f}} }
  \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
 
  %%%%%%%%%%%%%%%%%Class attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
- \newcommand{\fields}{\mbox{\rm \textit{fields}}}
- \newcommand{\methods}{\mbox{\rm \textit{methods}}}
- \newcommand{\className}{\mbox{\rm \textit{className}}}
- \newcommand{\superClass}{\mbox{\rm \textit{superClass}}}
-
+ \newcommand{\fields}{\mbox{\rm \textsf{fields}}}
+ \newcommand{\methods}{\mbox{\rm \textsf{methods}}}
+ \newcommand{\className}{\mbox{\rm \textsf{className}}}
+ \newcommand{\superClass}{\mbox{\rm \textsf{superClass}}}
+ \newcommand{\classCP}{\mbox{\rm \textsf{constantPool}}}
  %%%%%%%%%%%%%%%%%Field attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
- \newcommand{\fieldName}{\mbox{\rm \textit{Name}}}
- \newcommand{\fieldType}{\mbox{\rm \textit{Type}}}
- \newcommand{\declaredIn}{\mbox{\rm \textit{declaredIn}}}
+ \newcommand{\fieldName}{\mbox{\rm \textsf{Name}}}
+ \newcommand{\fieldType}{\mbox{\rm \textsf{Type}}}
+ \newcommand{\declaredIn}{\mbox{\rm \textsf{declaredIn}}}
 
  %%%%%%%%%%%%%%%%%Method attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
- \newcommand{\methodName}{\mbox{\rm \textit{Name}}}
- \newcommand{\retType}{\mbox{\rm \textit{retType}}}
- \newcommand{\args}{\mbox{\rm \textit{args}}}
- \newcommand{\numArgs}{\mbox{\rm \textit{nArgs}}}
- \newcommand{\body}{\mbox{\rm \textit{body}}}
- \newcommand{\entryPoint}{\mbox{\rm \textit{entryPnt}}}
- \newcommand{\excHandlerTable}{\mbox{\rm \textit{excHndlS}}}
- \newcommand{\exceptions}{\mbox{\rm \textit{exceptions}}}
+ \newcommand{\methodName}{\mbox{\rm\textsf{Name}}}
+ \newcommand{\retType}{\mbox{\rm\textsf{retType}}}
+ \newcommand{\args}{\mbox{\rm\textsf{args}}}
+ \newcommand{\numArgs}{\mbox{\rm\textsf{nArgs}}}
+ \newcommand{\body}{\mbox{\rm\textsf{body}}}
+ \newcommand{\entryPoint}{\mbox{\rm\textsf{entryPnt}}}
+ \newcommand{\excHandlerTable}{\mbox{\rm\textsf{excHndlS}}}
+ \newcommand{\exceptions}{\mbox{\rm\textsf{exceptions}}}
+\newcommand{\methodLocVar}{\mbox{\rm\textsf{locVars}}}
 
-\newcommand{\excPostSpec}{\mbox{\rm\textit{excPost}}} % the postcondition that is specified in case the method ends with an exception exc 
-\newcommand{\loopSpecTable}{\mbox{\rm\textit{loopSpecS}}}
-\newcommand{\normalPost}{\mbox{\rm\textit{normalPost}}}
-\newcommand{\pre}{\mbox{\rm\textit{pre}}}
-\newcommand{\modif}{\mbox{\rm\textit{modif}}}
+\newcommand{\excPostSpec}{\mbox{\rm\textsf{excPost}}} % the postcondition that is specified in case the method ends with an exception exc 
+\newcommand{\loopSpecTable}{\mbox{\rm\textsf{loopSpecS}}}
+\newcommand{\normalPost}{\mbox{\rm\textsf{normalPost}}}
+\newcommand{\pre}{\mbox{\rm\textsf{pre}}}
+\newcommand{\modif}{\mbox{\rm\textsf{modif}}}
 
 %%%%%%%%%%%%%%%%%Loop attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\loopSpec}{\mbox{\rm\textit{loopSpec}}}
@@ -301,12 +302,12 @@
 
 
 %%%%%%%%%%%%%%%%Exception handler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\ExcHandler}{\mbox{\rm \textit{ExcHandler}}}
- \newcommand{\excHH}{\mbox{\rm\textit{excH}}} % stands for an instance of an ExceptioHandler type 
- \newcommand{\pcStart}{\mbox{\rm \textit{startPc}}} 
- \newcommand{\pcEnd}{\mbox{\rm \textit{endPc}}}
- \newcommand{\pcHandler}{\mbox{\rm \textit{handlerPc}}}
-  \newcommand{\exc}{\mbox{\rm \textit{exc}}}
+ \newcommand{\ExcHandler}{\mbox{\rm \textbf{ExcHandler}}}
+ \newcommand{\excHH}{\mbox{\rm\textsf{excH}}} % stands for an instance of an ExceptioHandler type 
+ \newcommand{\pcStart}{\mbox{\rm \textsf{startPc}}} 
+ \newcommand{\pcEnd}{\mbox{\rm \textsf{endPc}}}
+ \newcommand{\pcHandler}{\mbox{\rm \textsf{handlerPc}}}
+  \newcommand{\exc}{\mbox{\rm \textsf{exc}}}
 
 
 
@@ -367,7 +368,7 @@
 \newcommand{\constantPool}{ \mbox{\rm\textbf{CP}}}
 \newcommand{\localVariableTable}{\mbox{\rm\textbf{LV}}} 
 \newcommand{\locVarEls}{\mbox{\rm\textbf{localVarTableElem}}}% an element of the local variable table
-\newcommand{\lineNumberTable}{\mbox{\rm\textbf{Line\_Number\_Table}}} 
+\newcommand{\lineNumberTable}{\mbox{\rm\textbf{LN}}} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -453,7 +454,7 @@
 \newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
 \newcommand{\subtypeSpec}{<:}
 \newcommand{\type}[1]{\jmlKey{$\backslash$type(}#1 \jmlKey{)}}
-\newcommand{\TYPE}{\jmlKey{TYPE} }
+\newcommand{\TYPE}{\jmlKey{$\backslash$TYPE} }
 \newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
 %\newcommand{\excPost}{\psi^{exc}}
 
@@ -472,3 +473,19 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\modifLoop}{\mbox{\rm \textit{modifLoop}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% local variable table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\nameInd}{\mbox{\rm\textsf{nameIndex}}}
+\newcommand{\attLen}{\mbox{\rm\textsf{attrLen}}}
+\newcommand{\lvLength}{\mbox{\rm\textsf{lvLength}}}
+\newcommand{\lvTab}{\mbox{\rm\textsf{lvTable}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% element in the array of local variable table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\lvElStart}{\mbox{\rm\textsf{startPc}}}
+\newcommand{\lvElLen}{\mbox{\rm\textsf{length}}}
+\newcommand{\descrInd}{\mbox{\rm\textsf{descrInd}}}
+\newcommand{\lvElInd}{\mbox{\rm\textsf{index}}}
