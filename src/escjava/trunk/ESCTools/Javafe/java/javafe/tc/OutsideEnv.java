@@ -157,7 +157,9 @@ public final class OutsideEnv {
   /**
    * The {@link TypeReader} for our underlying Java file space.
    */
-  public static/*@ non_null @*/TypeReader reader;
+  public static TypeReader reader;
+  //@ public static model boolean initialized;
+  //@   public static represents initialized <- reader!=null;
 
   /**
    * When we load in types, do we prefer to read specs or non-specs?
@@ -193,8 +195,6 @@ public final class OutsideEnv {
 
   // Initialization
 
-  //@ public static ghost boolean initialized;
-
   //* No constructors available:
   //@ requires false;
   private OutsideEnv() {
@@ -209,24 +209,18 @@ public final class OutsideEnv {
    * <code>init</code> method for this class has previously been
    * called.
    */
-  //@ requires R != null;
   //@ requires !initialized;
-  //@ requires reader == null;
   //@ ensures reader == R;
+  //@ ensures_redundantly initialized;
   public static void init(/*@ non_null @*/TypeReader R) {
-    Assert.precondition(R != null);
-    Assert.precondition(reader == null); //@ nowarn Pre;
-
     reader = R;
-    //@ set initialized=true;
   }
 
-  //@ ensures reader == null;
+  //@ ensures !initialized;
   //@ ensures filesRead == 0;
   //@ ensures listener == null;
   //@ ensures !eagerRead;
   //@ ensures avoidSpec;
-  //  @todo should we also add "ensures !initialized"?
   public static void clear() {
     reader = null;
     filesRead = 0;

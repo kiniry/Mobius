@@ -446,8 +446,7 @@ public abstract class PrettyPrint {
     }
   }
   
-  //@ private invariant _spaces != null;
-  private static byte[] _spaces = { (byte)' ', (byte)' ', (byte)' ', (byte)' ',
+  private static /*@non_null*/ byte[] _spaces = { (byte)' ', (byte)' ', (byte)' ', (byte)' ',
                                     (byte)' ', /* 5 spaces */
                                     (byte)' ', (byte)' ', (byte)' ', (byte)' ',
                                     (byte)' ', /* 5 spaces */

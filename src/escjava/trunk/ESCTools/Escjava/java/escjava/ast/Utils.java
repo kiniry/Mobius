@@ -155,7 +155,7 @@ public final class Utils
     if (m != null) return m;
     if (rd instanceof MethodDecl) {
       MethodDecl md = (MethodDecl)rd;
-      Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+      Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
       Enumeration e = direct.elements();
       while (e.hasMoreElements()) {
         MethodDecl directMD = (MethodDecl)e.nextElement();

@@ -2332,10 +2332,16 @@ public class FlowInsensitiveChecks
     /**
      * Decorates <code>VarInit</code> nodes to point to <code>Type</code> objects.
      */
-    //@ private invariant typeDecoration != null;
-    //@ private invariant typeDecoration.decorationType == \type(Type);
-    private static ASTDecoration typeDecoration
+    //@ private static invariant typeDecoration.decorationType == \type(Type);
+    private static /*@non_null*/ ASTDecoration typeDecoration
         = new ASTDecoration("typeDecoration");
+    static { 
+      initTypeDecoration();
+    }
+    private /*@helper*/ static void initTypeDecoration()
+    {
+      //@ set typeDecoration.decorationType = \type(Type);
+    }
 
     //@ requires i != null && t != null;
     public static VarInit setType(VarInit i, Type t) {

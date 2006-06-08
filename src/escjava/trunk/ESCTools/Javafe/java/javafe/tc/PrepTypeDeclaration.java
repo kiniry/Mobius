@@ -19,13 +19,17 @@ import java.util.Enumeration;
 public class PrepTypeDeclaration {
 
     /** A (possibly extended) instance of PrepTypeDeclaration. */
-    public /*@ non_null @*/ static PrepTypeDeclaration inst;
+    /*@spec_public*/ protected static PrepTypeDeclaration inst;
+    //@ public invariant inst!=null; //this is not meant to be a static invariant
+
+    public static /*@non_null*/ PrepTypeDeclaration getInst() {
+       return inst;
+    }
 
   /** */
 
   public PrepTypeDeclaration() {
     inst = this;
-
     //@ set methodSeq.elementType      = \type(MethodDecl);
     //@ set methodSeq.owner = this;
 

@@ -339,7 +339,7 @@ System.out.println("FOUND " + t);
           try {
             env.resolveType(sig, x.type);
             checkTypeModifiers(env, x.type);
-            javafe.tc.PrepTypeDeclaration.inst.
+            javafe.tc.PrepTypeDeclaration.getInst().
               checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
                              x.locId, "local ghost variable");
             checkModifierPragmaVec(x.pmodifiers, x, env);
@@ -2062,7 +2062,7 @@ System.out.println("FOUND " + t);
             LocalVarDecl x = vd.decl;
             env.resolveType( sig, vd.decl.type );
             checkTypeModifiers(env, x.type);
-            javafe.tc.PrepTypeDeclaration.inst.
+            javafe.tc.PrepTypeDeclaration.getInst().
               checkModifiers(x.modifiers, Modifiers.NONE,
                              x.locId, "local specification variable");
 
@@ -2743,7 +2743,7 @@ System.out.println("FOUND " + t);
   //@ ensures \result != null;
   //@ ensures \result.elementType == \type(MethodDecl);
   public static Set getAllOverrides(MethodDecl md) {
-    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+    Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
     Set result = new Set();
 
     Enumeration e = direct.elements();
@@ -2757,7 +2757,7 @@ System.out.println("FOUND " + t);
   }
 
   public static javafe.util.Set getDirectOverrides(MethodDecl md) {
-    return javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+    return javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
   }
 
   /**
@@ -2770,7 +2770,7 @@ System.out.println("FOUND " + t);
   public static MethodDecl getSuperClassOverride(MethodDecl md) {
     MethodDecl classOverride = null;
     MethodDecl interfaceOverride = null;
-    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+    Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
     Enumeration e = direct.elements();
     while (e.hasMoreElements()) {
       MethodDecl directMD = (MethodDecl)(e.nextElement());
@@ -2842,7 +2842,7 @@ System.out.println("FOUND " + t);
     }
     MethodDecl md = (MethodDecl)rd;
 
-    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+    Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
     if (direct.size() == 0) {
       return MSTATUS_NEW_ROUTINE;
     }
@@ -2875,7 +2875,7 @@ System.out.println("FOUND " + t);
     }
     MethodDecl md = (MethodDecl)rd;
 
-    Set direct = javafe.tc.PrepTypeDeclaration.inst.getOverrides(md.parent, md);
+    Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md.parent, md);
     if (direct.size() == 0) {
       return null;
     }
