@@ -177,14 +177,14 @@ public final class Class implements java.io.Serializable {
 
     public /*@ pure @*/ Field[] getFields() throws SecurityException;
 
-    public /*@ pure @*/ Method[] getMethods() throws SecurityException;
+    public /*@ pure non_null @*/ Method[] getMethods() throws SecurityException;
 
     public /*@ pure non_null @*/ Constructor[] getConstructors() throws SecurityException;
 
     public /*@ pure @*/ Field getField(String name)
         throws NoSuchFieldException, SecurityException;
 
-    public /*@ pure @*/ Method getMethod(String name, Class[] parameterTypes)
+    public /*@ pure non_null @*/ Method getMethod(String name, Class[] parameterTypes)
         throws NoSuchMethodException, SecurityException;
 
     public /*@ pure non_null @*/ Constructor getConstructor(Class[] parameterTypes)
