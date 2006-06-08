@@ -86,7 +86,10 @@ public class TestFilesTestSuite  extends TestSuite {
                         method will be applied to, with the filename added on
 	@param cls	The class in which to find the static compile method
     */
-    //@ ensures initialized;
+    /*@ public behavior
+      @   ensures initialized;
+      @   signals_only RuntimeException;
+      @*/
     public TestFilesTestSuite(/*@ non_null */ String testName, 
 				/*@ non_null */ String fileOfTestFilenames,
 				String[] args, // Ignored! FIXME
