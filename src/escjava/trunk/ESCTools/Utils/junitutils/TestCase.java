@@ -31,7 +31,8 @@ public class TestCase extends junit.framework.TestCase {
      *			difference along with Unicode values of the
      *			two characters, otherwise just compare strings
      *			for equality */
-    protected void assertEquals( String expected, String actual, 
+    protected void assertEquals( /*@ non_null */ String expected, 
+				 /*@ non_null */ String actual, 
 				 boolean detailed )
     {
 	if( detailed ) {
@@ -41,7 +42,7 @@ public class TestCase extends junit.framework.TestCase {
 	}
     }
 
-    protected void assertDiff( String expected, String actual ) {
+    protected void assertDiff(/*@ non_null */ String expected, /*@ non_null */ String actual ) {
 	Diff diff = new Diff( "expected", expected, "actual", actual );
 	if (diff.areDifferent()) {
 	    fail( diff.result() );
