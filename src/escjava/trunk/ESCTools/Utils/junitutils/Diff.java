@@ -45,12 +45,11 @@ public class Diff {
    * @param newTextLabel a label for the <code>newText</code> parameter
    * @param newText a value to be compared
    */
-  //@ requires oldTextLabel != null;
-  //@ requires oldText != null;
-  //@ requires newTextLabel != null;
-  //@ requires newText != null;
-  public Diff(String oldTextLabel, String oldText, String newTextLabel,
-      String newText) {
+  public Diff(/*@ non_null */ String oldTextLabel, 
+	      /*@ non_null */ String oldText, 
+	      /*@ non_null */ String newTextLabel,
+	      /*@ non_null */ String newText) 
+  {
     this.oldText = oldText;
     this.newText = newText;
     calculate(oldTextLabel, newTextLabel);
@@ -61,18 +60,35 @@ public class Diff {
   //---------------------------------------------------------------------
 
   /**
-   * Sets the values of areDifferent and result according to a comparison
+   * Sets the values of _areDifferent and differences according to a comparison
    * between oldText and newText
    * 
    * @param oldTextLabel a label for the <code>oldText</code> parameter
    * @param newTextLabel a label for the <code>newText</code> parameter
    */
-  //@ requires oldTextLabel != null;
-  //@ requires newTextLabel != null;
-  private void calculate(String oldTextLabel, String newTextLabel) {
-    // Accumulate the diff in resultSB
-    StringBuffer resultSB = new StringBuffer(newText.length());
+  //@ ensures _areDifferent == areDifferent;
+  private /*@ helper */ void calculate(/*@ non_null */ String oldTextLabel, 
+				       /*@ non_null */ String newTextLabel) {
+    // Accumulate the diff in differencesSB
+    StringBuffer differencesSB = new StringBuffer(newText.length());
 
+    calculateDiffs(differencesSB);
+    if (differencesSB.length() > 0) {
+      // Some diffs accumulated, so the strings are different
+      _areDifferent = true;
+
+      // Prepend a key to the results.
+      differences = NEWLINE + OLD_CH + oldTextLabel + NEWLINE + NEW_CH
+          + newTextLabel + NEWLINE + NEWLINE + differencesSB.toString();
+    } else {
+      // No diffs accumulated, so the strings must be the same
+      _areDifferent = false;
+      differences = "";
+    }
+  }
+
+  //@ ensures _areDifferent == areDifferent;
+  private /*@ helper */ void calculateDiffs(/*@ non_null */ StringBuffer differencesSB) {
     String[] oldTextLines = splitByLine(oldText);
     String[] newTextLines = splitByLine(newText);
 
@@ -93,9 +109,9 @@ public class Diff {
         if (oldTextLines[i].equals(newTextLines[nPos])) {
           // Got a match
           for (int j=lastOldMatch+1; j<i; ++j)
-            resultSB.append((j+1) + OLD_CH + oldTextLines[j] + NEWLINE);
+            differencesSB.append((j+1) + OLD_CH + oldTextLines[j] + NEWLINE);
           for (int j=lastNewMatch+1; j<nPos; ++j)
-            resultSB.append((j+1) + NEW_CH + newTextLines[j] + NEWLINE);
+            differencesSB.append((j+1) + NEW_CH + newTextLines[j] + NEWLINE);
           lastOldMatch = i;
           lastNewMatch = nPos;
           oPos = i+1;
@@ -109,9 +125,9 @@ public class Diff {
         if (newTextLines[i].equals(oldTextLines[oPos])) {
           // Got a match
           for (int j=lastOldMatch+1; j<oPos; ++j)
-            resultSB.append((j+1) + OLD_CH + oldTextLines[j] + NEWLINE);
+            differencesSB.append((j+1) + OLD_CH + oldTextLines[j] + NEWLINE);
           for (int j=lastNewMatch+1; j<i; ++j)
-            resultSB.append((j+1) + NEW_CH + newTextLines[j] + NEWLINE);
+            differencesSB.append((j+1) + NEW_CH + newTextLines[j] + NEWLINE);
           lastOldMatch = oPos;
           lastNewMatch = i;
           oPos++;
@@ -126,24 +142,11 @@ public class Diff {
     // If we reached the end of one array before the other, then this
     // will print the remainders.
     for (oPos=lastOldMatch+1; oPos < oldTextLines.length; oPos++) {
-      resultSB.append((oPos + 1) + OLD_CH + oldTextLines[oPos] + NEWLINE);
+      differencesSB.append((oPos + 1) + OLD_CH + oldTextLines[oPos] + NEWLINE);
     } // end of for ()
     for (nPos=lastNewMatch+1; nPos < newTextLines.length; nPos++) {
-      resultSB.append((nPos + 1) + NEW_CH + newTextLines[nPos] + NEWLINE);
+      differencesSB.append((nPos + 1) + NEW_CH + newTextLines[nPos] + NEWLINE);
     } // end of for ()
-
-    if (resultSB.length() > 0) {
-      // Some diffs accumulated, so the strings are different
-      areDifferent = true;
-
-      // Prepend a key to the results.
-      result = NEWLINE + OLD_CH + oldTextLabel + NEWLINE + NEW_CH
-          + newTextLabel + NEWLINE + NEWLINE + resultSB.toString();
-    } else {
-      // No diffs accumulated, so the strings must be the same
-      areDifferent = false;
-      result = "";
-    }
   }
 
   //@ requires text != null;
@@ -166,10 +169,11 @@ public class Diff {
   /**
    * Returns true if strings on which this was constructed are different.
    */
-  //@ private behavior
-  //@ ensures \result == areDifferent;
+  /*@ public normal_behavior
+    @ ensures \result == areDifferent;
+    @*/
   public /*@ pure @*/ boolean areDifferent() {
-    return areDifferent;
+    return _areDifferent;
   }
 
   /**
@@ -177,10 +181,10 @@ public class Diff {
    *  
    */
   //@ private normal_behavior
-  //@ ensures \result == result;
+  //@ ensures \result == differences;
   //@ pure
   public String result() {
-    return result;
+    return differences;
   }
 
   //---------------------------------------------------------------------
@@ -196,16 +200,18 @@ public class Diff {
   private String newText;
 
   /** This is set to true if the oldText and newText are not the same */
-  private boolean areDifferent = false;
+  private boolean _areDifferent;
 
   /**
    * This output String holds the description of the differences between the old
    * and new text.
    */
-  //@ non_null
-  private String result = "";
+  /*@ spec_public */ private /*@ non_null */ String differences;
 
-  //@ private invariant areDifferent <=!=> result.equals("");
+  //@ public model boolean areDifferent;
+  //@ public represents areDifferent <- !differences.equals("");
+
+  //@ private invariant _areDifferent == areDifferent;
 
   /** This string holds line delimiters */
   //@ non_null
