@@ -265,8 +265,7 @@ public class Utils {
   // FIXME - can we check that the file is too long without losing the efficiency benefits?
   //@ requires filename != null;
   //@ requires cb != null;
-  //@ ensures \result != null;
-  static public String readFile(String filename, byte[] cb) 
+  static public /*@ non_null */ String readFile(String filename, byte[] cb) 
   throws java.io.IOException {
     int i = 0;
     int j = 0;
@@ -309,8 +308,7 @@ public class Utils {
    @throws IOException
    */
   //@ requires filename != null;
-  //@ ensures \result != null;
-  static public String readFile(String filename) throws java.io.IOException {
+  static public /*@ non_null */ String readFile(String filename) throws java.io.IOException {
     StringBuffer sb = new StringBuffer(10000);
     char[] cb = new char[10000];  // This hard-coded value can be anything;
                 // smaller numbers will be less efficient since more reads
@@ -413,7 +411,7 @@ public class Utils {
    * @return The Diff structure that contains the comparison
    * @throws java.io.IOException
    */
-  static public Diff compareStringToFile(String s, String rootname) 
+  static public Diff compareStringToFile(/*@ non_null */ String s, String rootname) 
                                                throws java.io.IOException {
     String ss = Utils.readFile(rootname+ORACLE_SUFFIX);
     Diff df = new Diff( "expected", ss, "actual", s );
