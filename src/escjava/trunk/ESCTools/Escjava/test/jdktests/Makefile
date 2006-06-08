@@ -53,7 +53,7 @@ CHUNK = 40
 lists: Test*.java skip
 	@-rm -f listtests listfiles
 	@touch listtests
-	@-(ls Test*.java | grep -v -f skip > listfiles)
+	@(ls Test*.java | grep -v -f skip > listfiles)
 ifdef COMSPEC
 	@for f in `cat listfiles `; do \
 	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \

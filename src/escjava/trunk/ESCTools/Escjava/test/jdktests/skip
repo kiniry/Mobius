@@ -1,3 +1,4 @@
+## $Id$
 TestSystem3.java
 ## Tests with Simplify problems
 TestThrowable.java
@@ -16,4 +17,5 @@ TestSet2.java
 TestCollection.java
 ## Turn this test back on once we have new/good specs for ByteArrayInputStream.
 TestByteArrayInputStream.java
-
+##
+## End of file - DO NOT LEAVE BLANK LINES BEYOND THIS POINT
