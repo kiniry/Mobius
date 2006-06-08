@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2000-2001 Iowa State University
+ * Copyright (C) 2000-2006 Iowa State University
  *
  * This file is part of mjc, the MultiJava Compiler.
  *
@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  * $Id$
- * Author: David R. Cok
  */
 package junitutils;
 
@@ -33,59 +32,60 @@ import java.util.Iterator;
 */
 public class LineIterator implements Iterator {
 
-    //@ represents moreElements <- nextLine != null;
+    //@ public invariant elementType == \type(String);
+    //@ public invariant !returnsNull;
+
+    //@ public represents moreElements <- nextLine != null;
 
     /** A reader that reads lines from the file. */
-    //@ non_null
-    private BufferedReader r;
+    private /*@ non_null */ BufferedReader r;
     
     /** The next value to be returned by the iterator.  We read ahead one so
 	that we know the value of hasNext() when asked.
     */
-    //@ spec_public
-    private String nextLine;
+    /*@ spec_public */ private String nextLine; //@ in objectState;
 
     /** Starts an iterator reading from the given external process. 
 	@param filename The name of the file to be read
      */
-    //@ requires filename != null;
     //@ ensures (* file is readable *);
     //@ signals (java.io.IOException) (* file is not readable *);
-    public LineIterator(String filename) throws java.io.IOException  {
+    public LineIterator(/*@ non_null */ String filename) throws java.io.IOException  {
 	r = new BufferedReader(new FileReader(filename)); 
 	nextLine = r.readLine();
 	//System.out.println("READ " + nextLine);
+	//@ set elementType = \type(String);
+	//@ set returnsNull = false;
     }
 
-    //@ represents moreElements <- nextLine != null;
-
     /** Per a standard iterator, returns true if there is another value waiting. */
-    public boolean hasNext() throws RuntimeException {
-	try {
-	    if (nextLine == null) {
+    public boolean hasNext() throws Error {
+	if (nextLine == null) {
+	    try {
 		r.close();
+	    } catch (java.io.IOException e) {
+		throw new Error("EXCEPTION in hasNext - " + e); 
 	    }
-	    return nextLine != null;
-	} catch (java.io.IOException e) {
-	    throw new RuntimeException("EXCEPTION in hasNext - " + e); 
 	}
+	return nextLine != null;
     }
 
     /** Per a standard iterator, returns the next value - and throws 
 	java.util.NoSuchElementException if the list has been exhausted 
 	(hasNext() returns false).
     */
-    //@ also modifies nextLine;
-    public Object next() throws java.util.NoSuchElementException, RuntimeException {
+    public Object next() throws java.util.NoSuchElementException, Error {
+	//@ set remove_called_since = false;
 	if (nextLine == null) 
 	    throw new java.util.NoSuchElementException();
+
 	try {
 	    String n = nextLine;
 	    nextLine = r.readLine();
 	    //System.out.println("READ " + nextLine);
 	    return n;
 	} catch (java.io.IOException e) {
-	    throw new RuntimeException("EXCEPTION in next - " + e); 
+	    throw new Error("EXCEPTION in next - " + e); 
 	}
     }
 
