@@ -71,7 +71,6 @@ public interface Iterator {
 
     /*@  public normal_behavior
       @     requires moreElements;
-      @     requires_redundantly hasNext(0);
       @     assignable objectState, remove_called_since, moreElements;
       @     ensures !remove_called_since;
       @     ensures (\result == null) || \typeof(\result) <: elementType;
