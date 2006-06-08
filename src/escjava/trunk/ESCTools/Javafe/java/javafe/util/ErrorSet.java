@@ -453,7 +453,6 @@ public class ErrorSet
    */
   //@ requires loc != Location.NULL;
   //@ modifies \nothing;
-  //@ ensures true;
   //@ ensures \fresh(\result);
   //@ signals_only \nothing;
   private static String getLine(int loc) {
@@ -477,7 +476,7 @@ public class ErrorSet
 
       // FIXME - this seems awfully inefficient
       StringBuffer line = new StringBuffer(100);
-      for (int c=i.read(); c != 10/*newline*/ && c!= -1/*EOF*/; c=i.read())
+      for (int c=i.read(); c != '\r' && c != '\n' && c!= -1/*EOF*/; c=i.read())
         line.append((char)c);
 
       i.close();
