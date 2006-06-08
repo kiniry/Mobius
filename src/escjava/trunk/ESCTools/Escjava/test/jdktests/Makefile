@@ -31,7 +31,6 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 buildtests: lists
 	$(JAVAC) -classpath "${_ECLASSPATH}" -source 1.4 `cat listfiles` \
 		AllTests.java Suite.java LocalTestCase.java
-	@echo "abc" > testfile
 
 .PHONY: test runtests
 test runtests: extests separate_java_tests
@@ -121,8 +120,9 @@ separate_java_tests:
 ## This target (X-test) runs escjava against X.java, using any flags specified
 ## in X.java and comparing the output against the contents of X.java-expected.
 ## The actual output is stored in X.java-ckd if it is different.
-%-test: 
+%-test:
 	@echo Testing $* 
+	@echo "s@${_ESCROOT}@ESCTOOLSROOT@" | tr '\\' '/' > .sedScript
 	@if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
@@ -130,9 +130,8 @@ separate_java_tests:
 		`grep '//#FLAGS:' $* | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$* 2>&1 \
-	        | sed -e "s#${_ESCROOT}#ESCTOOLSROOT#" \
-                | tr '\\' '/'  \
-	        | sed -e "s#${_ESCROOT}#ESCTOOLSROOT#" \
+		| tr '\\' '/'  \
+		| sed -f .sedScript \
 	        > $*-ckd ) || exit 0; \
 	if [ -e $*-expected ] ; then \
 		${DIFF} $*-ckd $*-expected  \
@@ -149,5 +148,6 @@ separate_java_tests:
 
 .PHONY: clean
 clean:
-	@rm -f `cat .cvsignore` core*
+	@rm -f `cat .cvsignore` core* .sedScript
 
+# End of file

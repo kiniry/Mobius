@@ -1,6 +1,7 @@
 *.class
 *.java-ckd
-listtests
+.sedScript
 listfiles
+listtests
 testfile
 tests_built
