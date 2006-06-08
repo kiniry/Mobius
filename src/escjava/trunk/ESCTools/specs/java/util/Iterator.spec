@@ -61,7 +61,7 @@ public interface Iterator {
       @*/
     boolean hasNext();
 
-    //@ public invariant moreElements == hasNext(0);
+    //+@ public invariant moreElements == hasNext(0);
 
     /*@ public normal_behavior
       @     requires n >= 0;
