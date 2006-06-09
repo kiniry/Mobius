@@ -27,7 +27,7 @@ import coqPlugin.CoqTranslationResult;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class CoqBinaryForm implements ITranslatable, IFormToken {
+public class CoqBinaryForm extends CoqFormula implements ITranslatable {
 
 	private static final String COQ_ID = "Coq";
 	/**
@@ -37,21 +37,20 @@ public class CoqBinaryForm implements ITranslatable, IFormToken {
 
 	private final Formula left;
 	private final Formula right;
-	private final byte nodetype;
 	/**
 	 * @param form
 	 */
 	public CoqBinaryForm(BinaryForm form) {
+		super(form.getNodeType());
 		left = form.getLeft();
 		right = form.getRight();
-		nodetype = form.getNodeType();
 		
 	}
 	
 	public CoqBinaryForm(byte f, Formula left, Formula right) {
+		super(f);
 		this.left = left;
 		this.right = right;
-		nodetype = f;
 	}
 
 	public CoqTranslationResult binOp(String op, int indent)

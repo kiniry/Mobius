@@ -12,6 +12,7 @@ package coqPlugin.language;
 import coqPlugin.CoqTranslationResult;
 import jml2b.exceptions.LanguageException;
 import jml2b.exceptions.TranslationException;
+import jml2b.formula.IFormToken;
 import jml2b.formula.TerminalForm;
 import jml2b.languages.ITranslatable;
 import jml2b.languages.ITranslationResult;
@@ -23,7 +24,7 @@ import jml2b.structure.java.Identifier;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class CoqTerminalForm extends TerminalForm implements ITranslatable {
+public class CoqTerminalForm extends CoqFormula implements ITranslatable, IFormToken {
 
 	/**
 	 * 
@@ -33,18 +34,25 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 	/**
 	 * @param form
 	 */
+	private final String text;
+	private final Identifier ident;
+	private final boolean postfix;
+	
 	public CoqTerminalForm(TerminalForm form) {
-		super(form);
+		super(form.getNodeType());
+		ident = form.getIdent();
+		text = form.getNodeText();
+		postfix = form.isPostfix();		
 	}
 
 	public ITranslationResult toLang(int indent) throws LanguageException {
-		switch (getNodeType()) {
+		switch (nodetype) {
 			case Ja_IDENT :
 				String res = "";
 				
-				if (getNodeText() != null) {
+				if (text != null) {
 	
-					res = getNodeText();
+					res = text;
 //					Logger.get().println(res);
 				}
 				
@@ -79,7 +87,7 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 				if (postfix) {
 					res += "_an_instance";
 				}
-				if (getNodeText().startsWith("arraylength"))
+				if (text.startsWith("arraylength"))
 					return new CoqTranslationResult("arraylength");
 				//Logger.get().println(res);
 				return new CoqTranslationResult(res);
@@ -94,18 +102,18 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 				//TODO: String translation?
 				//throw new TranslationException("Coq Translator: Strings are not handle");
 			case Ja_NUM_INT :
-				String str = getNodeText();
+				String str = text;
 				if(str.charAt(0) == '-') {
 					str = "(j_neg" +str.replace('-', ' ') + ")";
 				}
 				return new CoqTranslationResult(str);
 			case FINAL_IDENT :
-				if (getNodeText().startsWith("arraylength"))
+				if (text.startsWith("arraylength"))
 					return new CoqTranslationResult("arraylength");
 			case Ja_LITERAL_null :
 			case Ja_LITERAL_this :
 			case Ja_LITERAL_super :
-				String name = getNodeText();
+				String name = text;
 				CoqVar.putName(name);
 				name = CoqVar.getCoqName(name);
 				return new CoqTranslationResult(name);
@@ -119,7 +127,7 @@ public class CoqTerminalForm extends TerminalForm implements ITranslatable {
 			case Ja_JAVA_BUILTIN_TYPE :
 			default :
 				throw new TranslationException(
-					"CoqTerminalForm.toLang " + getNodeType());
+					"CoqTerminalForm.toLang " + nodetype);
 		}
 	}
 }

@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import jml2b.exceptions.LanguageException;
 import jml2b.exceptions.TranslationException;
-import jml2b.formula.BasicType;
 import jml2b.formula.BinaryForm;
 import jml2b.formula.DeclPureMethodForm;
 import jml2b.formula.Formula;
@@ -150,14 +149,14 @@ public class CoqLanguage extends ALanguage {
 	}
 
 	
-	/**
-	 * @deprecated
-	 * @param bt
-	 * @return
-	 */
-	public static String basicType(BasicType bt) {
-		return CoqType.basicType(bt).toString();
-	}
+//	/**
+//	 * @deprecated
+//	 * @param bt
+//	 * @return
+//	 */
+//	public static String basicType(BasicType bt) {
+//		return CoqType.basicType(bt).toString();
+//	}
 
 	public String getName() {
 		return "Coq";
