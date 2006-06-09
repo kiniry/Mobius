@@ -43,6 +43,8 @@ public class StaticPrelude2 extends Printer {
 		stream.println("  Parameter BooleanClass : Classes.");
 		stream.println("End JackClasses.\n");
 
+		stream.println("Variable "+ CoqType.Reference +" : Set.");
+		stream.println("Variable null : "+ CoqType.Reference +".");
 		stream.println("Module JackReferences (Arg: JackClasses).");
 		stream.println("Definition Classes := Arg.Classes.");
 		stream.println("Definition StringClass := Arg.StringClass.");
@@ -51,7 +53,7 @@ public class StaticPrelude2 extends Printer {
 		stream.println("Definition CharClass := Arg.CharClass.");
 		stream.println("Definition ByteClass := Arg.ByteClass.");
 		stream.println("Definition BooleanClass := Arg.BooleanClass.");
-		stream.println("Variable "+ CoqType.Reference +" : Set.");
+
 		defineObjects(stream);
 		stream.println();
 		defineArrays(stream);
@@ -70,7 +72,6 @@ public class StaticPrelude2 extends Printer {
 		stream.println("|   array : Types -> Z -> Types.\n");
 		stream.println("");
 		
-		stream.println("Variable null : "+ CoqType.Reference +".");
 		stream.println("Variable instanceof : "+ CoqType.Reference +" -> Types -> Prop.\n");
 
 		stream.println("");
