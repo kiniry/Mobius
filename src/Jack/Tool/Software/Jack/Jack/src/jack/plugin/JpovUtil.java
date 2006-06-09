@@ -11,6 +11,7 @@ package jack.plugin;
 
 import jack.plugin.compile.PoGeneratorErrorHandler;
 import jack.plugin.edit.IEditedFile;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.IOException;

@@ -703,7 +703,9 @@ class MyResourceChangeReporter implements IResourceChangeListener {
 					break;
 			}
 		} catch (CoreException ce) {
-			Logger.err.println(ce.getMessage());
+			// it seems like a normal behavior not to find some resources
+			Logger.warn.println(ce.getMessage());
+			//ce.printStackTrace();
 		}
 	}
 
