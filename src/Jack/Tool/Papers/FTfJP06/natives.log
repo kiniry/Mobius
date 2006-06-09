@@ -1,9 +1,12 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2003.8.8)  4 APR 2006 10:35
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2006.5.31)  8 JUN 2006 22:27
 **natives.tex
 (./natives.tex
 LaTeX2e <2001/06/01>
 Babel <v3.7h> and hyphenation patterns for american, french, german, ngerman, n
 ohyphenation, loaded.
+(/user/jcharles/home/lib/latex/llncs.cls
+Document Class: llncs 2004/08/17 v2.14 
+ LaTeX document class for Lecture Notes in Computer Science
 (/usr/share/texmf/tex/latex/base/article.cls
 Document Class: article 2001/04/21 v1.4e Standard LaTeX document class
 (/usr/share/texmf/tex/latex/base/size10.clo
@@ -21,123 +24,173 @@ File: size10.clo 2001/04/21 v1.4e Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(/usr/share/texmf/tex/generic/babel/babel.sty
-Package: babel 2001/03/01 v3.7h The Babel package
-
-(/usr/share/texmf/tex/generic/babel/english.ldf
-Language: english 2001/04/15 v3.3l English support from the babel system
-
-(/usr/share/texmf/tex/generic/babel/babel.def
-File: babel.def 2001/03/01 v3.7h Babel common definitions
-\babel@savecnt=\count87
-\U@D=\dimen103
+(/usr/share/texmf/tex/latex/tools/multicol.sty
+Package: multicol 2000/07/10 v1.5z multicolumn formatting (FMi)
+\c@tracingmulticols=\count87
+\mult@box=\box26
+\multicol@leftmargin=\dimen103
+\c@unbalance=\count88
+\c@collectmore=\count89
+\doublecol@number=\count90
+\multicoltolerance=\count91
+\multicolpretolerance=\count92
+\full@width=\dimen104
+\page@free=\dimen105
+\premulticols=\dimen106
+\postmulticols=\dimen107
+\multicolsep=\skip43
+\multicolbaselineskip=\skip44
+\partial@page=\box27
+\last@line=\box28
+\mult@rightbox=\box29
+\mult@grightbox=\box30
+\mult@gfirstbox=\box31
+\mult@firstbox=\box32
+\@tempa=\box33
+\@tempa=\box34
+\@tempa=\box35
+\@tempa=\box36
+\@tempa=\box37
+\@tempa=\box38
+\@tempa=\box39
+\@tempa=\box40
+\@tempa=\box41
+\@tempa=\box42
+\@tempa=\box43
+\@tempa=\box44
+\@tempa=\box45
+\@tempa=\box46
+\@tempa=\box47
+\@tempa=\box48
+\@tempa=\box49
+\c@columnbadness=\count93
+\c@finalcolumnbadness=\count94
+\last@try=\dimen108
+\multicolovershoot=\dimen109
+\multicolundershoot=\dimen110
+\mult@nat@firstbox=\box50
+\colbreak@box=\box51
 )
-\l@canadian = a dialect from \language\l@english 
-))
-(/usr/share/texmf/tex/latex/html/url.sty
-Package: url 1999/03/02  ver 1.4  Verb mode for urls, email addresses, and file
- names
+\c@chapter=\count95
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 360.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 361.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 362.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 363.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 364.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 365.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 366.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 367.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 368.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 369.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 370.
+\tocchpnum=\dimen111
+\tocsecnum=\dimen112
+\tocsectotal=\dimen113
+\tocsubsecnum=\dimen114
+\tocsubsectotal=\dimen115
+\tocsubsubsecnum=\dimen116
+\tocsubsubsectotal=\dimen117
+\tocparanum=\dimen118
+\tocparatotal=\dimen119
+\tocsubparanum=\dimen120
+\@tempcntc=\count96
+\fnindent=\dimen121
+\c@@inst=\count97
+\c@@auth=\count98
+\c@auco=\count99
+\instindent=\dimen122
+\authrun=\box52
+\authorrunning=\toks14
+\tocauthor=\toks15
+\titrun=\box53
+\titlerunning=\toks16
+\toctitle=\toks17
+\c@theorem=\count100
+\c@case=\count101
+\c@conjecture=\count102
+\c@corollary=\count103
+\c@definition=\count104
+\c@example=\count105
+\c@exercise=\count106
+\c@lemma=\count107
+\c@note=\count108
+\c@problem=\count109
+\c@property=\count110
+\c@proposition=\count111
+\c@question=\count112
+\c@solution=\count113
+\c@remark=\count114
+\headlineindent=\dimen123
 )
-(/usr/share/texmf/tex/latex/graphics/graphicx.sty
-Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
-
-(/usr/share/texmf/tex/latex/graphics/keyval.sty
-Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
-\KV@toks@=\toks14
-)
-(/usr/share/texmf/tex/latex/graphics/graphics.sty
-Package: graphics 2001/07/07 v1.0n Standard LaTeX Graphics (DPC,SPQR)
-
-(/usr/share/texmf/tex/latex/graphics/trig.sty
-Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
-)
-(/usr/share/texmf/tex/latex/config/graphics.cfg
-File: graphics.cfg 2001/08/31 v1.1 graphics configuration of teTeX/TeXLive
-)
-Package graphics Info: Driver file: dvips.def on input line 80.
-
-(/usr/share/texmf/tex/latex/graphics/dvips.def
-File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
-))
-\Gin@req@height=\dimen104
-\Gin@req@width=\dimen105
-)
-(/usr/share/texmf/tex/latex/misc/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count88
-\float@exts=\toks15
-\float@box=\box26
-\@float@everytoks=\toks16
-\@floatcapt=\box27
-)
-(/usr/share/texmf/tex/latex/misc/a4wide.sty
-Package: a4wide 1994/08/30
-
-(/usr/share/texmf/tex/latex/ntgclass/a4.sty
-Package: a4 1999/03/03 v1.2f A4 based page layout
-)) (./natives.aux)
+(/usr/share/texmf/tex/latex/base/makeidx.sty
+Package: makeidx 2000/03/29 v1.0m Standard LaTeX package
+) (./natives.aux)
 \openout1 = `natives.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 29.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 29.
  (./jack.tex
+[1
+
+]) (./purity.tex
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 16.
+(Font)              <9> on input line 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 16.
-
-Underfull \hbox (badness 10000) in paragraph at lines 17--18
-
- []
-
-) (./purity.tex [1
-
-]
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 40.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 40.
-LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 44.
-
-LaTeX Font Info:    No file OMScmtt.fd. on input line 44.
+(Font)              <6> on input line 5.
+ [2]
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 144
+.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 144.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 44.
+(Font)              for symbol `textbraceleft' on input line 144.
 
-[2]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 161.
+[3]) (./types.tex [4]
+Overfull \hbox (11.51881pt too wide) in paragraph at lines 75--77
+\OT1/cmr/m/n/10 where \OT1/cmtt/m/n/9 staticMethod1() \OT1/cmr/m/n/10 and \OT1/
+cmtt/m/n/9 staticMethod2() \OT1/cmr/m/n/10 re-turn val-ues of type \OT1/cmtt/m/
+n/9 MyNativeType\OT1/cmr/m/n/10 ,
+ []
 
- (/usr/share/texmf/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 161.
- [3]) (./types.tex [4] [5])
-(./models.tex [6] [7]) (./conclusion.tex [8]) (./natives.bbl [9]) [10]
-(./natives.aux)
+[5]) (./models.tex [6] [7] [8]) (./conclusion.tex [9]) (./natives.bbl
+Overfull \hbox (2.68364pt too wide) in paragraph at lines 8--11
+[]\OT1/cmr/m/n/9 Simplify.  Its 'of-fi-cial' web-site: http://research.compaq.c
+om/SRC/esc/Simplify.html. 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 19--22
+[]\OT1/cmr/m/n/9 L. Burdy et al.  The Jack web-site, 2004-2006.  http://www-
+ []
+
+) [10] (./natives.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 1023 strings out of 95847
- 11909 string characters out of 1193875
- 63362 words of memory out of 1000001
- 3955 multiletter control sequences out of 10000+50000
- 8923 words of font info for 32 fonts, out of 500000 for 1000
+ 668 strings out of 95847
+ 7160 string characters out of 1195948
+ 60551 words of memory out of 1000001
+ 3639 multiletter control sequences out of 10000+50000
+ 8616 words of font info for 31 fonts, out of 500000 for 1000
  14 hyphenation exceptions out of 1000
- 25i,4n,19p,217b,327s stack positions out of 1500i,500n,5000p,200000b,5000s
+ 29i,5n,21p,236b,435s stack positions out of 1500i,500n,5000p,200000b,5000s
 
-Output written on natives.dvi (10 pages, 40956 bytes).
+Output written on natives.dvi (10 pages, 36544 bytes).

@@ -18,75 +18,67 @@ their source code.
 The method is first thought on the Java level, without side effects, 
 and afterward the user writes its specifications on the JML level; 
 in order to be able to use it in JML annotations.
-
 In static program verification,  pure methods can be built directly
 from their specifications, since most of the tools replace pure method's calls 
  by the instantiation of the pure method's specifications.
 
 
-\subsection{Jack's implementation}
-In Jack the notion of purity used is as in JML a kind of observational 
-purity \cite{naumann05}, but a constructor that modifies the fields 
-of the newly created objects is not considered as pure.
-In Jack's weakest precondition calculus the specifications are considered 
-as lightweight: the method calls are replaced by their specifications 
-inside the calculus.
-The replacement with its specifications is done with the normal 
-specifications in case the method terminated normally or with the 
-exceptional specification if the pure method terminated on an exception.
+%\subsection{Jack's implementation}
+%In Jack the notion of purity used is as in JML a kind of observational 
+%purity \cite{naumann05}, but a constructor that modifies the fields 
+%of the newly created objects is not considered as pure.
+%In Jack's weakest precondition calculus the specifications are considered 
+%as lightweight: the method calls are replaced by their specifications 
+%inside the calculus.
+%The replacement with its specifications is done with the normal 
+%specifications in case the method terminated normally or with the 
+%exceptional specification if the pure method terminated on an exception.
  
-For a method defined in a Java file: 
-\btab
- /*\=@ requires tab != null;\+\\
-  @  modifies $\backslash$nothing;\\
-  @ ensures   $\backslash$result == (0 $\le$ i \&\& i $\le$ tab.length);\\
+%For a method defined in a Java file: 
+%\btab
+% /*\=@ requires tab != null;\+\\
+%  @  modifies $\backslash$nothing;\\
+%  @ ensures   $\backslash$result == (0 $\le$ i \&\& i $\le$ tab.length);\\
 %  @ exsures false;\\
-  @*/\-\\
-publi\=c static /*@ pure @*/  withinBounds(int[] tab, int i) \{\+\\
-       return 0 $\le$ i \&\& i $\le$ tab.length;\-\\
-\}
-\etab
-with this method call within the annotations: 
-\btab
-withinBounds(tab,i)
-\etab
-the method call will be replaced in the weakest precondition calculus by:
-\btab
-(tab $!=$ null) \rarrow \ (0 $\le$ i) \conj \ (i $\le$ tab.length)
-\etab
-Since the specification
-of the method has an \code{exsures false} clause, there is no exceptional case.
-In a way, this method will be replaced by its specifications like for a macro.
+%  @*/\-\\
+%publi\=c static /*@ pure @*/  withinBounds(int[] tab, int i) \{\+\\
+%       return 0 $\le$ i \&\& i $\le$ tab.length;\-\\
+%\}
+%\etab
+%with this method call within the annotations: 
+%\btab
+%withinBounds(tab,i)
+%\etab
+%the method call will be replaced in the weakest precondition calculus by:
+%\btab
+%(tab $!=$ null) \rarrow \ (0 $\le$ i) \conj \ (i $\le$ tab.length)
+%\etab
+%Since the specification
+%of the method has an \code{exsures false} clause, there is no exceptional case.
+%In a way, this method will be replaced by its specifications like for a macro.
 
 
 
 \subsection{Specification macros}
-
 
 When specifying a program with JML one of the main problems is the 
 growth of the size of the annotations. 
 The way static verification tools usually define the handling 
 of pure methods, we can use them to do some specification macros.
 The method calls will be replaced by their specifications when the 
-annotations will be interpreted. It is useful to avoid the growth.
-
+annotations will be interpreted by the tool. It is useful to avoid the growth.
 If we have for instance a property to tell an array is sorted we would 
-prefer read the annotation:
-\btab is\_sorted(tab)\etab
-instead of:
-\btab
- ($\backslash$forall \=int i; 0 $\le$ i \&\& i $<$ tab.length;\+\\ 
- ($\backslash$forall int j; \=0 $\le$ j \&\& j $<$ tab.length; \+\\
-(i $<$ j) ==$>$ tab[i] $\le$ tab[j]));
-\etab
+prefer to read the annotation
+{\tt withinBounds(tab, i)}
+instead of: {\tt (0 $\le$ i \&\& i $<$ tab.length)}.
+
 This method makes the annotations clearer, but as annotations 
 grows big, proof obligations grows big too. In order to ease the readability 
 of the proof obligations, we would like to keep track of the pure method name
 that was used as the macro in order to see what part of the specification we 
-are proving. That's why we changed the pure method's substitution in Jack.
-
-In Jack, we decided to have a couple Definition / hypothesis.
-Now a functional definition is generated of the form:
+are proving. That's why we do pure method's substitution in Jack.
+We have a couple Definition / hypothesis.
+A functional definition is generated of the form:
 \btab
 mypurefun\_norm  Args Result := (requires Args) \rarrow 
 \ (ensures Args Result)\\
@@ -124,15 +116,15 @@ Some of the properties we have to express are not so easy to deal with
 on the JML level. 
 We want to be able to prove lemmas concerning pure methods, and also have 
 relations over  variables without specifying any property on the relation. 
-
 So we decided to be able to define pure methods directly within 
 the language in which the proof 
 obligations are generated or the JML annotations are interpreted. 
-We added a new keyword to JML in order to allow it: the \code{native} keyword. 
-If a method is declared within a specification as native, the method 
-will not be defined nor specified
- in JML at all, it will only be declared. Its specifications will be 
-to the target prover or environment discretion.
+We added a new keyword to JML in order to allow it explicitly: 
+the \code{native} keyword. 
+If a method is declared within a specification as {\tt native}, 
+it will be an uninterpreted symbol function.
+%the method will not be defined nor specified in JML at all, it will only be declared. 
+Its specifications will be to the target prover or environment discretion.
 
 Since the native methods are declared within the specifications they must 
 be pure: they must not have any side-effect, they can only create objects, 
@@ -154,7 +146,7 @@ public \= static boolean withinBounds(int [] tab, int i) \{\+\\
 \}
 \etab
 If interpreted with a static program verification tool,
-it can be defined this way in Coq:
+it can be defined this way in Coq, within a library file:
 \btab
 Def\=inition withinBounds := \+\\
 fun \= (tab i) =>\+\\
@@ -162,7 +154,6 @@ fun \= (tab i) =>\+\\
 \etab
 In Simplify it will be seen as an uninterpreted function symbol, 
 just a relation on the arguments.
-
 In Jack, the binding from the JML declaration to the \code{native} 
 language is done automatically.
 The arguments passed to the method are the same as the one whose the method 
@@ -178,22 +169,30 @@ is added by Jack
 
 For static program verification, this construct can be really useful, 
 especially if it is used in the pure macro fashion. 
-Even though we lose the ability to express JML's behaviour
-with these specification macros, 
-we can now easily prove properties over specifications in the target 
-prover language. 
+%Even though we lose the ability to express JML's behaviour
+%with these specification macros, 
+We can also easily prove properties over specifications in the target prover language. 
 Once these properties are proved, they can be added as a help
 to ease the automatic solving to some of the proofs of the proof obligations.
 
 In  ESC/Java or Krakatoa it is permitted to define a pure method in
-specifications only, but its definition/specifications must be written in Java.
-Krakatoa is indeed a front-end for Java and JML to the Why tool 
-\cite{Why-Tool}. 
-In this tool there exists a mechanism 
-which allow similar definitions as the native keyword: the 
-\code{parameter} construct.
-The main difference with the native keyword is that \code{parameter} 
-is more tool dependent, 
- it is used implicitly within annotations and it is not used on the JML level.
+specifications only, but the methods declared this way are defined by the 
+tools in their prover output. The native keyword for methods is more 
+similar to other constructs of these tools.
+%Krakatoa is indeed a front-end for Java and JML to the. 
+%In these tool there exists  mechanisms 
+%which allow similar definitions as the native keyword for specification
+%methods, but they are more tool dependent. 
+In Krakatoa, we can find 
+the \code{parameter} construct  but it is not used on the JML level, it is used on the
+ Why tool \cite{Why-Tool} level. 
+In ESC/Java, the \code{dttfsa} construct 
+is a way to call prover defined function symbols, but these function symbols are not declared 
+on the JML level.
+
+% the former not being and the later
+%being just a way to call prover defined function symbols, with 
+%the return type, the method name and the function parameters passed as parameters
+%to the keyword.
 
 

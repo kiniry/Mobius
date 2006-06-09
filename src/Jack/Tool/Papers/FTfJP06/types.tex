@@ -36,8 +36,8 @@ The syntax is the same as for the 'native' pure methods:
 \btab
 /*\=@ pub\=lic native class MyNativeType \{\+\\
    @ \> public native boolean nativeMethod();\\
-   @ \> public native static MyNativeType staticMethod1();\\
-   ...
+   @ \> public native static MyNativeType staticMethod1();
+%  ...
 \etab
 The \code{native} keyword is mandatory for native methods inside the native classes 
 since static verification tools (notably Krakatoa) usually allow defining specification only 
@@ -124,8 +124,7 @@ For instance, if we want to have a library on sets we could define it this way:
 /*\=@ pub\=lic native class ObjectSet \{\+\\
   @\> public native static ObjectSet create();\\
    @\> public native static ObjectSet add(ObjectSet os, Object o);\\
-   @\> public native boolean member(Object o);\\
-    ....  
+   @\> public native boolean member(Object o);
 \etab
 On the Coq level an easy way to bind this to a library, is to map it to the Coq library ListSet:
 \btab
