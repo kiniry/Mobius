@@ -522,6 +522,9 @@ public class TerminalForm extends Formula {
 		return ident;
 	}
 
+	public boolean isPostfix() {
+		return this.postfix;
+	}
 	/**
 	 *  
 	 */
