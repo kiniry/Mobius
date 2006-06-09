@@ -682,7 +682,8 @@ public class B2JProofs extends Proofs {
 
 		else if (e instanceof JavaBasicType) {
 			if (e == JavaType.JavaBOOLEAN)
-				return new TTypeForm(IFormToken.T_TYPE, Type.getBoolean());
+				return new TTypeForm(IFormToken.T_TYPE, Type.getInteger());
+						// Type.getBoolean()); no! INT! 
 			else if (e == JavaType.JavaBYTE)
 				return new TTypeForm(IFormToken.T_TYPE, Type.getByte());
 			else if (e == JavaType.JavaCHAR)
@@ -951,7 +952,9 @@ public class B2JProofs extends Proofs {
 
 		else if (e instanceof JavaBasicType) {
 			if (e == JavaType.JavaBOOLEAN)
-				return Type.getBoolean();
+				//return Type.getBoolean();
+				// no! INT!
+				return Type.getInteger();
 			else if (e == JavaType.JavaBYTE)
 				return Type.getByte();
 			else if (e == JavaType.JavaCHAR)
