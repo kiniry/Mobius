@@ -1,0 +1,89 @@
+<project name="umbra1" default="all" basedir=".">
+
+	<!-- ustawic sciezki do eclipsow:			-->
+	<!-- * do kompilacji (eclipse1)				-->
+	<!-- * do testowania - runtime (eclipse2)		-->
+	<property name="eclipse1" location="D:\studia\IV\inne\eclipse"/>
+	<property name="eclipse2" location="C:\Documents and Settings\i\Desktop\zpp\eclipse-runtime"/>
+
+	<property name="src.dir" value="${basedir}/source/umbra"/>
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="bcel" value="org.apache.bcel_5.1.0"/>
+	<property name="umbra" value="umbra1.0.0"/>
+
+    <path id="project.classpath">
+      	<fileset dir="${eclipse1}/plugins/">
+          <include name="**/*.jar"/>
+      	</fileset>
+        <pathelement location="bin"/>
+    </path>
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${eclipse2}/plugins/${umbra}"/>
+		<delete dir="${eclipse2}/plugins/${bcel}"/>
+	</target>
+	
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${build.dir}/${umbra}"/>
+		<mkdir dir="${build.dir}/${bcel}"/>
+		<mkdir dir="${build.dir}/${umbra}/icons"/>
+		<mkdir dir="${build.dir}/classes"/>
+		<mkdir dir="${build.dir}/classes/umbra"/>
+	</target>
+
+	<target name="compile" depends="prepare">
+			<javac destdir="${build.dir}/classes">
+	            <src path="${src.dir}"/>
+	            <classpath refid="project.classpath"/>
+	        </javac>
+	</target>
+	
+	<!-- FIXME! uzyc zamiast kompilacji, gdyby ta nie dzialala -->
+	<target name="copy-classes" depends="prepare">
+		<copy todir="${build.dir}/classes/umbra">
+			<fileset dir="${basedir}/bin/umbra">
+				<include name="**/*.class"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar destfile="${build.dir}/${umbra}/umbra.jar">
+			<fileset dir="${build.dir}/classes">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="copy-files" depends="jar">
+		<copy todir="${build.dir}/${umbra}">
+			<fileset dir="${basedir}">
+				<include name="plugin.xml"/>
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/${bcel}">
+			<fileset dir="${basedir}/libs/${bcel}"/>
+		</copy>
+		<copy todir="${build.dir}/${umbra}/icons">
+			<fileset dir="${basedir}/icons"/>
+		</copy>
+	</target>
+
+	<target name="deploy">
+		<copy todir="${eclipse2}/plugins">
+			<fileset dir="${build.dir}">
+				<include name="${umbra}/**"/>
+				<include name="${bcel}/**"/>
+			</fileset>
+		</copy>
+		<exec executable="${eclipse2}/eclipse.exe"/>
+	</target>
+	
+	<target name="all">
+		<antcall target="clean"/>
+		<antcall target="copy-files"/>
+		<antcall target="deploy"/>
+	</target>
+</project>
