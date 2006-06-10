@@ -634,6 +634,9 @@ public final class GetSpec {
 				    labelExpr.label,
 				    result);
 	    */
+	} else if(expr instanceof ParenExpr){
+	    ParenExpr parenExpr=(ParenExpr)expr;
+	    result = expr2IsDefExpr(parenExpr.expr);
 	} else if(expr instanceof LiteralExpr ||
 		  expr instanceof VariableAccess ||
 		  expr instanceof ThisExpr
@@ -660,7 +663,7 @@ public final class GetSpec {
 					 zero, 
 					 bExpr.getStartLoc());
 		javafe.tc.FlowInsensitiveChecks.setType(ne, Types.booleanType);
-		result = LabelExpr.make(bExpr.getStartLoc(), 
+		result = LabelExpr.make(bExpr.locOp, 
 					bExpr.getEndLoc(), 
 					false,
 					escjava.translate.
