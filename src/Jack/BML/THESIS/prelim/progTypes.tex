@@ -18,17 +18,19 @@ $$ \begin{array}{ll}
 
 Our language supports two kinds of values : values of the basic type \Myint  \ and reference values
 $$ \begin{array}{ll}
-             \Values &       ::= i, i \in \  \Myint \mbox{\rm literal } \mid \RefValues \\
+             \Values &       ::= i, i \in \  \Myint \  \mbox{\rm literal } \mid \RefValues \\
 	     \RefValues &    ::= ref: C , C \in \reff \mid \RefValuesArr  \mid   \Mynull \\
 	     \RefValuesArr & ::= refArr   : C\lbrack \rbrack,  C\lbrack \rbrack \in \reffArr
   \end{array} $$
 
 
+
 Every type has an associated default value which can be accessed via
-the function \defaultValueOnly. The function is defined as follows
+the function \defaultValueOnly. The function is defined as follows:
+$$\mbox{\rm\textsf{defVal}} :   \AllRefs    \rightarrow   \Values $$
 $$ \defaultValue{\anyType} = 
            \left\{\begin{array}{ll}
-	      \Mynull & \anyType \in \RefValues \\
+	      \Mynull & \anyType \in \AllRefs  \\
 	       0 &  \anyType = \Myint
 	    \end{array}\right. $$
 

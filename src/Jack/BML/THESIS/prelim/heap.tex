@@ -18,9 +18,8 @@
        \item  a component \heapArrays \ which maps the components of arrays  into their values
 
        \item  a component  \heapLocs  \ which stands for the  list of references that the heap has allocated  
-       
-       \item  a component  \heapTypeOf  \ which is a partial function mapping references of the heap
-	       into their dynamic types 
+              
+       \item  a component \heapTypeOf   \ is a total function  which maps any reference to a type 
  \end{itemize}
 
 
@@ -30,10 +29,10 @@
 
   $$ \begin{array}{l}
          \forall  \heap : \HeapSet , \\
-         \heap = \left\{\begin{array}{ll}  \heapFields &  : \FieldSet \rightharpoonup (  \RefValues \rightharpoonup \Values) \\
-                                           \heapArrays &  : \RefValuesArr * nat \rightharpoonup \Values \\
-					   \heapLocs   &  : list \ \RefValues \\
-					   \heapTypeOf     &  : \RefValues \rightharpoonup \JavaType
+         \heap = \left\{\begin{array}{ll}  \heapFields  &  : \FieldSet \rightharpoonup (  \RefValues \rightharpoonup \Values) \\
+                                           \heapArrays  &  : \RefValuesArr * nat \rightharpoonup \Values \\
+					   \heapLocs    &  : list \ \RefValues \\
+					   \heapTypeOf  &    : \RefValues \rightarrow \AllRefs
                     \end{array} \right\}
    \end{array} $$
 
@@ -82,14 +81,14 @@
 
  Formally, the operation is defined as follows: 
  $$ \begin{array}{l}
-           \addNewLocation{\heap}{\referenceOnly_{new}} = \heap' \iff^{def} \\
+           \addNewLocation{\heap}{\referenceOnly} = \heap' \iff^{def} \\
 	      \\
               \heap.\heapLocs = l \wedge \\
    	      \isInList{l}{\referenceOnly} = \mbox{ \rm \textit{false}} \wedge \\
 	      \heap'.\heapLocs = \addInList{l}{\referenceOnly}  \wedge \\ 
 	      \heap.\heapFields = \heap'.\heapFields \wedge \\
 	      \heap.\heapArrays = \heap'.\heapArrays \wedge \\
-	      \heap.\heapTypeOf = \heap'.\heapTypeOf
+	      % \heap.\heapTypeOf = \heap'.\heapTypeOf
 	   %   \begin{array}{l}
             %  %        \forall \fieldd : \FieldSet, \ \forall \referenceOnly : \clazz,  \\
             %                \Myspace \isInList{l}{\mbox{ \rm \texttt{r}}} = \mbox{ \rm \textit{true}}  \wedge \\
@@ -144,8 +143,8 @@ $$
 	           \forall  \fieldd : \FieldSet, &\instanceFlds{\fieldd}{\clazz} \Rightarrow \\
                                                  & \heap'.\heapFields := 
 			                           \update{\heap'.\heapFields}{\fieldd}{\update{\fieldd}{\referenceOnly}{ \defaultValue{\fieldd.\fieldType }}}\\
-			                        & \heap'.\heapTypeOf := 
-                                                \update{ \heap'.\heapTypeOf}{ \referenceOnly}{\clazz}            
+			                        & \heap.\heapTypeOf( \referenceOnly) = \clazz 
+                                                
       \end{array}\right\}
 	  
      \end{array} $$
@@ -164,8 +163,8 @@ $$ \newArrRefOnly :  \heap \rightarrow  \reffArr \rightarrow  \heap * refArr $$
             \heap'.\heapFields :=  \update{\heap'.\heapFields}{\length}{\update{\length}{ \referenceOnly}{ l }} \wedge  \\
 	    \forall i, 0 \geq i < l  \Rightarrow   \heap'.\heapArrays :=
             \update{\heap'.\heapArrays}{(\referenceOnly , i)}{ \defaultValue{\anyType }  } \\
-            \heap'.\heapTypeOf := 
-                            \update{ \heap'.\heapTypeOf}{ \referenceOnly}{\anyType\lbrack \ \rbrack  }         
+            \heap. \heapTypeOf(\referenceOnly ) = \anyType\lbrack \ \rbrack
+                            
      \end{array} $$
 
 
