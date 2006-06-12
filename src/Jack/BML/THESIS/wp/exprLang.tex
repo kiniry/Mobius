@@ -1,0 +1,62 @@
+
+
+\newtheorem{deepExpr}{Definition}[section]
+
+\section{The expression language}
+
+In the following, we will introduce a deep encoding of the expressions and
+predicates over which the \fwpi \ calculus will be defined. 
+Most of the expressions are directly taken from the specification language BML introduced
+in Chapter \ref{bcsl}. However, there are several construct which does not belong to the
+BML grammar. We keep the same  set of predicates as in BML. 
+The next definition gives the set of expressions and formulas.
+
+\begin{deepExpr}[Language of expressions]\label{deepExpr}
+$$\begin{array}{ll}
+\Constants   & ::= \intLiteral  \mid \signedInt  \mid \Mynull  \mid \refWp \\
+& \\
+\refWp & ::= \refWp\_\intLiteral \\
+& \\
+  \exprWp      & ::= \ConstantsWp \\
+                     &  \mid  \locVar{ \digits } \\ 
+       	             &  \mid  \fieldAccess{\exprWp}{\fieldd}, \fieldd :\FieldSet\\
+		     &  \mid \ident \\
+		     &  \mid  \update{\fieldd}{ \exprWp}{\exprWp}(\exprWp) \\
+		     &  \mid  \arrayAccess{\exprWp} {\exprWp} \\	   
+		     &  \mid \update{ \arrayAccessOnly}{ (\exprWp , \exprWp)}{ \exprWp} (\exprWp,\exprWp) \\	
+		     &  \mid  \exprWp \ \op \ \exprWp   \\
+		     &  \mid  \counter \\
+		     &  \mid  \stack{ \exprWp} \\
+                     &  \mid \EXC    \\
+		     &  \mid  \result \\
+		     &  \mid  \boundVar \\
+    & \\
+
+    \typeExpWp       & :: =  \typeof{ \exprWp} \\
+                     &  \mid \type{\ident} \\
+                     &  \mid \elemtype{\exprWp  }\\
+		     &  \mid \TYPE\\   
+   & \\ 
+   \expressionsWp    & :: = \exprWp \mid  \typeExpWp  \\
+   & \\
+
+ \predWp  & ::=   \expressionsWp \ \predicates \  \expressionsWp    \\
+	  & \mid  \true \\
+	  & \mid  \false  \\	
+          & \mid not \ \predWp  \\
+	  & \mid \predWp  \wedge  \predWp \\
+	  & \mid \predWp \vee  \predWp \\
+	  & \mid \predWp  \Rightarrow \predWp \\
+          & \mid \predWp \iff  \predWp \\
+	  & \mid \forall \ \boundVar , \predWp\\
+	  & \mid \exists \ \boundVar  , \predWp	
+\end{array}$$
+\end{deepExpr}
+
+From the above definition, we can notice that field expressions are defined this time by using an identifier.
+The deep expression language also supports
+ update expressions for field and array access.  These expressions appear in the intermediate states of \fwpi \ calculus.
+We also get a special syntactic construct for references \refWp \ which is not part of BML. \refWp \ expressions stand 
+for the reference values and are used basically in cases when a new reference is created.
+ In the following, we will proceed with a subsection which establishes some particularities of the substitution. 
+ In section \ref{interpret}, we give a meaning of formulas from our assertion language in a state.

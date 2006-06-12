@@ -1,0 +1,348 @@
+\newtheorem{interpExpr}{Definition}[subsection]
+\newtheorem{interpTypeExpr}[interpExpr]{Definition} 
+\newtheorem{interpPred}[interpExpr]{Definition}
+\newtheorem{valid}[interpExpr]{Definition}
+
+\newtheorem{substHeap}{Lemma}[subsection]
+\newtheorem{newHeap}[substHeap]{Lemma}
+\newtheorem{substStack}[substHeap]{Lemma}
+\newtheorem{substCntr}[substHeap]{Lemma}
+\newtheorem{substLv}[substHeap]{Lemma}
+\newtheorem{substRet}[substHeap]{Lemma}
+
+
+
+
+\subsection{Interpretation }\label{interpret}
+
+We discuss the evaluation of expressions and interpretation of predicates  in a particular program state configuration.
+Thus, we need a function for expression evaluation, a function for interpretation of predicates. 
+The function $eval$ will evaluate expressions in a given state:
+$$
+eval : \expressionsWp \rightarrow \SetConfigs \rightarrow \Values \cup \JavaType
+$$
+
+
+
+
+\begin{interpExpr}[Evaluation of expressions] \label{interpExpr} 
+The evaluation in a state \\
+$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expressionsWp$
+ is denoted with $\evalExp{\expressionsWp}{s}$  and is defined inductively on the grammar of expressions $\expressionsWp$ \  as follows:
+ 
+$$
+\begin{array}{l}
+\evalExp{ v  }{s } = v\\
+  where \  v \in \  \Myint   \ \vee  \  v \in  \RefValues \\
+\\
+ \evalExp{\fieldd(\expressionsWp ) }{s} = \\
+ = \heap(\fieldd) (\evalExp{ \expressionsWp}{ s } ) \\
+\\
+
+ \evalExp{\update{\fieldd}{\expressionsWp_1}{\expressionsWp_2}(\expressionsWp_3)}{ s } = \\
+=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expressionsWp_1}{s } }{ \evalExp{\expressionsWp_2}{s }  }} (\fieldd)
+                                            (  \evalExp{\expressionsWp_3}{ s } ) \\
+ \\
+
+
+ \evalExp{\arrayAccess{\expressionsWp_1} {\expressionsWp_2}  }{ s } = \\
+ = \heap (\evalExp{ \expressionsWp_1}{ s } ,\evalExp{ \expressionsWp_2}{ s } )   \\
+\\
+
+ \evalExp{ \update{ \arrayAccessOnly}{ (\expressionsWp_1 , \expressionsWp_2)}{ \expressionsWp_3} (\expressionsWp_4,\expressionsWp_5)  } { s } = \\
+ = \update{\heap}{ ( \evalExp{\expressionsWp_1}{s } ,  \evalExp{\expressionsWp_2}{s } ) }  
+                 { \evalExp{\expressionsWp_3}{s }}
+                 ( \evalExp{\expressionsWp_4}{s } ,  \evalExp{\expressionsWp_5}{ s  } ) \\
+\\
+ \evalExp{ \locVar{i} } { s } = \locVarOnly(i) \\
+\\
+
+ \evalExp{\expressionsWp_1 \ \op \ \expressionsWp_2   } { s } =   \evalExp{\expressionsWp_1}{s} \op  \evalExp{\expressionsWp_2}{s}  \\
+
+\\
+\evalExp{ \typeof{\expressionsWp}}{s } = 
+\left\{\begin{array}{ll}
+      \Myint  & \evalExp{\expressionsWp}{s} \in \Myint \\
+      \heap. \heapTypeOf(\evalExp{\expressionsWp}{s} ) & else 
+\end{array}\right. \\
+
+\\ 
+\evalExp{ \elemtype{\expressionsWp}}{s } = 
+
+            \mbox{ \rm \texttt{T} }     \ if \   \heap. \heapTypeOf(\evalExp{\expressionsWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } \\
+
+
+\\
+
+\evalExp{ \TYPE }{s } = \mbox{ \rm \texttt{java.lang.Class}} 
+\end{array}
+$$
+
+The evaluation of stack expressions can be done only in intermediate state configurations $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ :
+$$
+\begin{array}{ll}
+ \evalExp{ \counter   } { s } = \counterOnly \\
+\\
+
+ \evalExp{ \stack{ \expressionsWp}   } { s } = \stackOnly ( \evalExp{\expressionsWp}{s} ) \\
+\\
+
+\end{array}
+$$
+The evaluation of the following expressions can be done only in a final state $s = \configFinal{\heap}{\locVarOnly}{\Final }$:
+$$
+\begin{array}{ll}
+\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\locVarOnly}{\Res} \\
+\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\locVarOnly}{\Exc}
+\end{array}
+$$
+  
+
+\end{interpExpr}
+
+
+
+ 
+The relation $\vDash$ that we define next, gives a meaning to the formulas from our
+ assertion language $\predWp$.
+%$$ \vDash :  \SetConfigs *  \predWp  $$
+ 
+\begin{interpPred}[Interpretation of predicates] \label{interpPred} 
+The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s$ is defined inductively as follows:
+$$
+\begin{array}{l}
+\interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
+\\
+\interp{\false}{s} \ is \ false \ in \ any \ state \ s \\
+\\
+
+\interp{\predWp_1  \wedge  \predWp_2 }{s} \ iff \ \interp{\predWp_1}{s} \ and \ \interp{\predWp_2}{s}  \\
+\\
+
+\interp{\predWp_1  \vee  \predWp_2 }{s} \ iff \ \interp{\predWp_1}{s} \ or \ \interp{\predWp_2}{s}  \\
+\\
+\interp{\predWp_1  \Rightarrow  \predWp_2 }{s} \ iff \ if \ \interp{\predWp_1}{s} \ then \ \interp{\predWp_2}{s}  \\
+\\
+\interp{\forall x : T .  \predWp(x)   }{s} \ iff \ forall \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
+\\
+
+\interp{\exists x : T .  \predWp(x)   }{s} \ iff \ a \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ exists \ such \ that \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
+\\
+\interp{\exprWp_1 \  \predicates \  \exprWp_2 }{s} \ iff \evalExp{\exprWp_1 }{s} \evalRel{\predicates }  \evalExp{\exprWp_2 }{s} \ is  \ true
+\end{array}
+$$   
+\end{interpPred}
+
+
+The following lemmas estasblish that substitution over state configurations or expressions / formulas result in the same evaluation
+
+
+\begin{substLv}[Update  a local variable]\label{substLv}
+For any expressions $ \expressionsWp_1, \expressionsWp_2 $ 
+if we have that the states $s_1$ and $s_2$ are such that
+$ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+$ s_2 =   \config{\heap}{\counterOnly }{ \stackOnly }{\update{\locVarOnly}{i}{ \evalExp{ \expressionsWp_2}{ s_1 } }}{\pc }  $ then 
+the following holds:
+\begin{enumerate}
+      \item $\evalExp{\substitution{\expressionsWp_1}{ \locVar{i} }{ \expressionsWp_2 }}{ s_1 } = \evalExp{\expressionsWp_1}{s_2} $
+      \item $\interp{\substitution{\psi}{ \locVar{i} }{ \expressionsWp_2 }}{ s_1 } \iff \interp{\psi}{s_2} $
+\end{enumerate}
+\end{substLv}
+Proof : by structural induction on the structure of $\expressionsWp_1$ 
+\begin{enumerate}
+\item we look at the first part of the lemme about the expression evaluation
+
+\begin{itemize}
+   \item    $ \expressionsWp_1 = \locVar{i} $ 
+           $$
+	    \begin{array}{l}
+	          ( left ) \  \substitution{\locVar{i}  }{ \locVar{i} }{ \expressionsWp_2 }    = \expressionsWp_2 \\
+		  \Rightarrow \\
+		\numConclusion{1} \  \evalExp{\substitution { \locVar{i} }{ \locVar{i} }{ \expressionsWp_2 }}{ s_1 } =   \evalExp{\expressionsWp_2}{s_1} \\
+		  \\
+		  (right ) \  \evalExp{\locVar{i}}{s_2} = \\
+		  \mbox{\rm\comment{by Def.\ref{interpExpr} of the evaluation  for local variables  }} \\
+		\numConclusion{2} \  =  \evalExp{\expressionsWp_2}{s_1} \\
+		 \mbox{\rm\comment{from \numConclusion{1} \  and \numConclusion{2} \ we get that the lemma holds in this case  }}
+	    \end{array} 
+	   $$
+   \item $\expressionsWp_1 = \fieldAccess{\expressionsWp_3}{\fieldd}$
+         $$\begin{array}{l} 
+	      \substitution{\fieldAccess{\expressionsWp_3}{\fieldd}}{ \locVar{i} }{ \expressionsWp_2 } = \\
+	      \mbox{\rm\comment{by definition of the substitution }} \\ 
+	      = \fieldAccess{\substitution{\expressionsWp_3}{ \locVar{i} }{ \expressionsWp_2 } }{\fieldd} \\
+	      
+	      \mbox{\rm\comment{by induction hypothesis }} \\
+	     	\numConclusion{1} \evalExp{\substitution{\expressionsWp_3}{ \locVar{i} }{ \expressionsWp_2 }}{ s_1 } = \evalExp{\expressionsWp_3}{s_2} \\
+              \\
+	      \mbox{\rm\comment{by  Def.\ref{interpExpr} of the evaluation  for field access expressions }} \\
+	      ( left ) \  \evalExp{\substitution{\fieldAccess{\expressionsWp_3}{\fieldd  }{ \locVar{i} }{ \expressionsWp_2 }}}{s_1} = 
+	                \heap(\fieldd)( \evalExp{\substitution{\expressionsWp_3}{ \locVar{i} }{ \expressionsWp_2 }}{s_1}   ) \\
+	      \\
+		
+	       (right ) \   \evalExp{  \fieldAccess{\expressionsWp_3}{\fieldd} }{s_2} = 
+	                   \heap(\fieldd) ( \evalExp{\expressionsWp_3 }{s_2}) \\
+	      \\ 
+              \mbox{\rm\comment{ from \numConclusion{1},( left ) and    (right ) we get that the lemma holds in this case }}
+	      
+	  \end{array} 
+	 $$
+    \item the rest of the cases proceed in a similar way by appluing the induction hypothesis
+\end{itemize}
+
+ \item second case of the lemma 
+   \begin{itemize} 
+            \item $ \psi = \exprWp' \  \predicates \  \exprWp' $
+	    $$
+	    \begin{array}{l} 
+ \mbox{\rm\comment{from the first part of the lemma we get  }} \\
+              	\numConclusion{1} \ \evalExp{\substitution{ \expressionsWp'}{ \locVar{i} }{ \expressionsWp_2 } }{s_1} =   \evalExp{\expressionsWp'}{s_2}\\
+		 \numConclusion{2} \ \evalExp{\substitution{ \expressionsWp''}{ \locVar{i} }{ \expressionsWp_2 } }{s_1} =   \evalExp{\expressionsWp''}{s_2}\\
+		 
+\\
+	    
+               \interp{\substitution{\psi}{ \locVar{i} }{ \expressionsWp_2 }}{ s_1 }   \\
+	      \mbox{\rm\comment{definition of substitution }} \\
+	     \numConclusion{3}  \equiv \\
+	       \interp{\substitution{ \expressionsWp'}{ \locVar{i} }{ \expressionsWp_2 } \  \predicates \ \substitution{ \expressionsWp'' }{ \locVar{i} }{ \expressionsWp_2 }  }{ s_1 }\\
+	        \mbox{\rm\comment{by  Def.\ref{interpPred}  we get  }} \\
+		\iff \\
+		\evalExp{\substitution{ \expressionsWp'}{ \locVar{i} }{ \expressionsWp_2 } }{s_1}
+                  \evalRel{\predicates }
+		   \evalExp{ \substitution{ \expressionsWp'' }{ \locVar{i} }{ \expressionsWp_2 } }{s_1} \ is \ true \\
+		
+		\mbox{\rm\comment{from  \numConclusion{1} , \numConclusion{2} and   \numConclusion{3}    }} \\
+		\iff \\
+		\evalExp{\expressionsWp'}{s_2} \evalRel{\predicates } \evalExp{\expressionsWp''}{s_2} \\
+		\equiv \\
+		\interp{\psi}{s_2}
+	      \end{array} 
+	 $$
+	 \item the rest of the cases are by structural induction
+   \end{itemize}
+\end{enumerate}
+
+\begin{substHeap}[Update of the heap]\label{substHeap}
+For any expressions $ \expressionsWp_1, \expressionsWp_2, \expressionsWp_3 $ and any field \fieldd
+if we have that the states $s_1$ and $s_2$ are such that
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+  $s_2 =  \config{ \update{\heap}{\fieldd }{\update{\fieldd}
+                                                   {\evalExp{\expressionsWp_2}{ s_1 } }
+                                                   {\evalExp{ \expressionsWp_3}{ s_1 } } } }
+                                          {\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }   $  the following holds
+\begin{enumerate}
+  \item $ \evalExp{\substitution{\expressionsWp_1}{\fieldd}{ \update{ \fieldd  }{\expressionsWp_2}{\expressionsWp_3} }}{ s_1 } =  \evalExp{\expressionsWp_1}{ s_2  }  $
+  \item $ \interp{\substitution{\psi}{\fieldd}{ \update{ \fieldd  }{\expressionsWp_2}{\expressionsWp_3} }}{ s_1 } \iff  \interp{\psi}{ s_2  }  $
+\end{enumerate}
+\end{substHeap}
+
+% \begin{newHeap}[Update of the heap with a newly allocated object]\label{newHeap}
+%For any expressions $ \expressionsWp_1$  \todo{pas sur que ca c'est bon}
+%if we have that the states $s_1$ and $s_2$ are such that
+%% $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+%  $s_2 =  \config{\heap'}{\counterOnly}{ \update{\stackOnly}{\counterOnly}{\evalExp{\referenceOnly}{s_1}} }{\locVarOnly}{\pc } $ where
+% $  \newRef{\heap}{\clazz} = (\heap', \referenceOnly)   $  the following holds
+%\begin{enumerate}
+%%  \item \[ \begin{array}{l}   \evalExp{\expressionsWp_1 \begin{array}{l}
+%                             \subst{ \stack{\counter}}{ \referenceOnly} \\
+%			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
+%                             \rbrack_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
+%                             \end{array}}{s_1} \\
+%			     = \\
+ %                            \evalExp{\expressionsWp_1}{ s_2  } 
+%			     \end{array}  \]
+%
+%    \item \[\begin{array}{l}  \interp{\psi \begin{array}{l}
+%                             \lbrack \expressionsWp_2 \leftarrow \referenceOnly \rbrack \\
+%			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
+%                             \rbrack_{  \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz}   }
+%                             \end{array}}{s_1}\\
+%			      \iff \\ 
+%			     \interp{\psi}{ s_2  } 
+%			     \end{array}  \]
+%
+%
+%\end{enumerate}
+%\end{newHeap}
+
+%Proof : by structural induction on the structure of $\expressionsWp_1$ 
+%\begin{enumerate}
+%\item we consider the first case of the lemma 
+%\begin{itemize}
+%	  
+ %    \item $\expressionsWp_1 = \stack{\counter} $
+%      
+%      $$
+%	    \begin{array}{l}
+%	          ( left ) \  \substitution{\stack{\counter}  }{ \stack{\counter} }{ \referenceOnly }    = \referenceOnly \\
+%		  \Rightarrow \\
+%		\numConclusion{1} \  \evalExp{\substitution {\stack{\counter}  }{ \referenceOnly }{ \expressionsWp_2 }}{ s_1 } =   \evalExp{\referenceOnly}{s_1} \\
+%		  \\
+%		  (right ) \  \evalExp{\locVar{i}}{s_2} = \\
+%		  \mbox{\rm\comment{by Def.\ref{interpExpr} of the evaluation  for local variables  }} \\
+%		\numConclusion{2} \  =  \evalExp{\expressionsWp_2}{s_1} \\
+%		 \mbox{\rm\comment{from \numConclusion{1} \  and \numConclusion{2} \ we get that the lemma holds in this case  }}
+%	    \end{array} 
+%	   $$
+
+%\end{itemize}
+%%\item by structural induction over the structure of the formula $\psi$
+%\end{enumerate}
+
+\begin{substStack}[Update the stack]\label{substStack} 
+For any expressions $ \expressionsWp_1, \expressionsWp_2, \expressionsWp_3 $ 
+if we have that the states $s_1$ and $s_2$ are such that
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+  $s_2 = \config{\heap}{\counterOnly}{ \update{\stackOnly}
+                                                                 {\evalExp{\expressionsWp_2}{ s_1 } }
+                                                                 { \evalExp{\expressionsWp_3}{ s_1  } } }{\locVarOnly}{\pc }$ then
+ the following holds:
+\begin{enumerate}
+      \item  $     \evalExp{\substitution{\expressionsWp_1}{\stack{\expressionsWp_2}}{\expressionsWp_3}}{s_1 } = 
+      \evalExp{\expressionsWp_1}{s_2 }$
+      \item  $     \interp{\substitution{\psi}{\stack{\expressionsWp_2}}{\expressionsWp_3}}{s_1 } \iff
+      \interp{\psi}{s_2 }$
+\end{enumerate}
+\end{substStack}
+
+\begin{substCntr}[Update the stack counter]\label{substCntr}
+For any expressions $ \expressionsWp_1, \expressionsWp_2 $ 
+if we have that the states $s_1$ and $s_2$ are such that
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+$s_2 =  \config{\heap}{\evalExp{ \expressionsWp_2}{ s_1  } }{ \stackOnly }{\locVarOnly}{\pc }  $ then 
+the following holds:
+\begin{enumerate}
+      \item $\evalExp{\substitution{\expressionsWp_1}{ \counter }{ \expressionsWp_2 }}{ s_1 } = \evalExp{\expressionsWp_1}{s_2} $
+      \item $\interp{\substitution{\psi}{ \counter }{ \expressionsWp_2 }}{ s_1 } \iff \interp{\psi}{s_2} $
+\end{enumerate}
+\end{substCntr} 
+
+
+
+
+\begin{substRet}[Return value property]\label{substRet} 
+For any expression $\expressionsWp_1$ and $\expressionsWp_2$,
+for any two states $s_1$ and $s_2$  such that
+$ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and \\
+$ s_2 =   \configFinalNorm{\heap}{\locVarOnly}{\evalExp{\expressionsWp_2}{s_1} } $ then 
+the following holds:
+\begin{enumerate}
+      \item $\evalExp{\substitution{\expressionsWp_1}{ \result }{ \expressionsWp_2 }}{ s_1 } = \evalExp{\expressionsWp_1}{s_2} $
+      \item $\interp{\substitution{\psi}{ \result}{ \expressionsWp_2 }}{ s_1 } \iff \interp{\psi}{s_2} $
+\end{enumerate}
+\end{substRet}
+
+
+The next definition defines a particular set of assertion formulas which we call valid formulas.
+\begin{valid}[Valid formulas]
+  If an assertion formula  $ f \in \\predWp $ holds in all states we say that this is a valid formula and we note it with :
+  $ \interp{f}{}$
+\end{valid}
+
+% In the following, we adopt a lighter notation for the update  configuration expressions of the form:
+
+%  $$\substitution{ state }{ E }{ \interp{\exprWp}{ state  }  }   , \ E \in \{ \heap, \counterOnly, \stackOnly, \locVarOnly, \pc \} $$
+% and instead, we write 
+% $$\substitution{ state }{ E }{ \exprWp }$$
+
+

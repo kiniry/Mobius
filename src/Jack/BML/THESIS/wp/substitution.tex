@@ -1,0 +1,54 @@
+\subsection{Substitution} \label{subst}
+ Expression substitution is defined inductively in a standard way over the expression structure. Still, we allow also
+ substitution over objects that are not from our language, i.e. we apply substitution over field objects which results 
+ in an update version of the field. 
+ This is done by establishing the substitution rule for field access as follows:
+ $$  \substitution{\fieldd (o )}{ \expressionsWp^1}{ \expressionsWp^2} =\substitution{\fieldd}{ \expressionsWp^1}{ \expressionsWp^2} (  \substitution{o}{ \expressionsWp^1}{ \expressionsWp^2}) $$
+
+
+ In the next, we define a substitution over field function objects:
+$$  
+\begin{array}{l}
+\substitution{\fieldd^1}{\fieldd^2}{ \fieldd^2[ \oplus  \expressionsWp^1 \longrightarrow  \expressionsWp^2 ] } = \\\\
+\left\{\begin{array}{l}
+ if \ \fieldd^1 \neq \fieldd^2 \ then \\ 
+\fieldd^1  \\
+
+\\ 
+ else \ if \  \fieldd^1 = \fieldd^2 \ then \\ 
+\fieldd^2[ \oplus  \expressionsWp^1 \longrightarrow  \expressionsWp^2 ]   \\
+
+           
+\end{array}
+\right. \\
+\\
+\\
+\substitution {\update{\fieldd^1}{  \expressionsWp^1 }{  \expressionsWp^2}} {\fieldd^2}{  \update{\fieldd^2}{  \expressionsWp^3 }{  \expressionsWp^4}       } = \\\\
+\left\{\begin{array}{l}  
+if \ \fieldd^1 \neq \fieldd^2 \ then \\
+\update{\fieldd^1}{ \substitution { \expressionsWp^1}{\fieldd^2}{  \update{\fieldd^2}{  \expressionsWp^3 }{  \expressionsWp^4}}  }{ \substitution { \expressionsWp^2}{\fieldd^2}{  \update{\fieldd^2}{  \expressionsWp^3 }{  \expressionsWp^4}} } \\
+
+%\fieldd[ \oplus \mbox{ \rm \texttt{r} }\substitution{ \expressionsWp^1}{ \expressionsWp^2} \longrightarrow  \mbox{ \rm \texttt{v} }\substitution{ \expressionsWp^1}{ \expressionsWp^2} ] 
+
+ \\ 
+ else \   \fieldd^1 = \fieldd^2  \ then \\ 
+\fieldd^1 \begin{array}{l}
+             \lbrack \oplus  \substitution { \expressionsWp^1}{\fieldd^2}{  \update{\fieldd^2}{  \expressionsWp^3 }{  \expressionsWp^4}}  \longrightarrow  
+                 \substitution { \expressionsWp^2}{\fieldd^2}{  \update{\fieldd^2}{  \expressionsWp^3 }{  \expressionsWp^4}}       \rbrack \\
+	     \lbrack \oplus  \expressionsWp^2 \longrightarrow  \expressionsWp^3 \rbrack
+	     \end{array} \\
+
+               
+
+\end{array}
+\right. 
+\end{array}$$ 
+
+
+For example, consider the following  substitution expression:  
+$$ \substitution{\fieldd(  \expressionsWp^1)}{\fieldd}{\update{\fieldd}{ \expressionsWp^2 }{  \expressionsWp^3 }} $$
+This results in the new expression : 
+$$\update{\fieldd}{ \expressionsWp^2  }{ \expressionsWp^3 } (\substitution{  \expressionsWp^1}{ \fieldd}{ \update{ \fieldd}{   \expressionsWp^2  }{  \expressionsWp^3 }}) $$
+
+
+The same kind of substitution is allowed for array access expressions, where the array object \arrayAccessOnly  can be updated. 

@@ -1,0 +1,45 @@
+
+\subsection{Intermediate predicates} \label{wp:interPred}
+In this subsection, we define a function $\interOnly$ which for two instructions that may execute one 
+after another in a control graph  of a method \methodd \ determines the predicate $\inter{j}{k}$ which must hold in between them.
+The function has the signature:
+$$ \interOnly: nat \longrightarrow nat  \longrightarrow \MethodSet \longrightarrow \predWp $$ 
+
+
+The predicate $\inter{j}{k}$ will be used for determining the weakest predicate that must hold in the prestate of the instruction
+$\ins{j}$ if the execution path after passes through the instruction $\ins{k}$.
+
+This predicate depends on the execution relation between the two instructions $\ins{j}$ and $\ins{k}$ as the next definition shows.
+ 
+\begin{defInter}[Intermediate predicate between two instructions ]\label{inter} 
+
+Assume that $\ins{j} \execRel \ins{k}$. The predicate $\inter{j}{k}$ must hold after the execution of $\ins{j}$ and before the execution of 
+$\ins{k}$ and is defined as follows:
+\begin{itemize}
+\item if $\ins{k}$ is a loop entry instruction,  $\ins{j} \execRel^l \ins{k}$ and  $ \methodd.\loopSpecTable[s].\posL = k $
+then the corresponding loop invariant  must hold:
+$$
+\inter{k}{j} \equiv  \methodd.\loopSpecTable[s].\invL
+$$
+
+
+\item else if $\ins{k}$  is a loop entry  and  $ \methodd.\loopSpecTable[s].\posL = k $ 
+then the corresponding loop invariant $ \methodd.\loopSpecTable[s].\invL$  must hold before $\ins{k}$ is executed, 
+i.e. after the execution of $\ins{j}$. We also require that \\
+$\methodd.\loopSpecTable[s].\invL$ implies the weakest precondition of the loop entry instruction. 
+The implication is quantified over the locations $ \methodd.\loopSpecTable[s].\modifL $ that may be modified in the loop body:
+
+$$\begin{array}{l} \inter{j}{k} \equiv \\ \begin{array}{l}
+          \methodd.\loopSpecTable[s].\invL \ \wedge \\
+          \forall i , i = 1.. \methodd.\loopSpecTable[s].\modifL.length ,\\
+          \forall  \methodd.\loopSpecTable[s].\modifL[i], (\\
+	  \phantom{ \methodd.\loopSpecTable[s] }  \methodd.\loopSpecTable[s].\invL \Rightarrow \\
+	  \phantom{ \methodd.\loopSpecTable[s]  \methodd.\loopSpecTable[s] } \wpi{\ins{k}}{ \methodd }{k} ) 
+ \end{array}
+ \end{array}  $$
+
+\item else 
+
+$$\inter{j}{k} \equiv \wpi{ \ins{k }}{\methodd}{k}$$
+\end{itemize}
+\end{defInter}

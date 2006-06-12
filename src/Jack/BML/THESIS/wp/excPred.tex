@@ -1,0 +1,63 @@
+
+
+\subsection{Weakest precondition in the presence of runtime exceptions}\label{wp:interExc} 
+
+For every method \methodd \  we define also the function $ \methodd.\excPost $ \ with signature:
+$$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \predWp  $$
+ 
+$ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
+returns the predicate that must hold in the poststate of the instruction at index \textit{i} if this instruction throws an exception of
+type \texttt{Exc}.
+
+The formal definition follows.
+\begin{defExc}[Postcondition in case of throwing an exception]\label{defExc}
+The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}} )   $ is defined as follows:
+ \begin{itemize}
+    \item if $  \ins{i} \neq \athrow \wedge  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \wedge \pcHandler \neq \bottom    $ then 
+      $$ \begin{array}{l}
+           \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
+           \inter{i}{\pcHandler}\\
+                      \begin{array}{l}
+                        \subst{\counter}{0} \\
+			\subst{\stack{0}}{\referenceOnly} \\
+                         \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
+                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } 
+                       \end{array} 
+        \end{array}$$   
+	where \referenceOnly \ is a fresh variable
+
+   
+
+
+    \item else if $\ins{i} \neq \athrow \wedge    \findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
+            $$\begin{array}{l}
+                    \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
+                        \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
+                     \begin{array}{l}
+		           \subst{ \EXC }{\referenceOnly  }\\
+                          \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
+			   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
+                    \end{array}  
+             \end{array} $$
+	where \referenceOnly \ is a fresh variable
+    
+
+
+
+
+\end{itemize}
+\end{defExc}
+Note that the definition does not take into account programmatic exceptions thrown by the instruction \athrow.
+We consider two cases depending on if  the thrown exception   is handled or not.
+
+The function $\methodd.\excPost$ will return the weakest precondition of the exception handler that protects the instruction from the thrown exception \texttt{Exc},
+if such an exception handler exists ( $  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHH} $ $ \neq \bottom $ ). 
+Otherwise, the function will return the exceptional postcondition if method \methodd \ terminates on
+an exception  \texttt{Exc}.
+  
+ If the thrown exception is not catched  and the exceptional postcondition must hold, the specification variable \EXC, which stands for the thrown object in exceptional 
+postocnditions, is substituted with the reference to the thrown object.
+
+
+Note that in what follows we do not treat the Java virtual machine errors. Thus, we deal only with user defined exceptions and
+ \texttt{JavaRuntimeException} subclasses.
