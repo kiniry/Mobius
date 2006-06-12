@@ -10,109 +10,42 @@
 In what follows, we assume that the bytecode has passed the bytecode verifier, thus it is well typed and well structured. Actually, our calculus is concerned only
 with functional properties of programs leaving the problem of code well structuredness and welltypedness to the bytecode verification techniques 
 
-\subsection{Intermediate predicates}
-First, we define the function $\interOnly$ that for two instructions that may execute one 
-after another in a control graph determines the predicate $\inter{k}{j}$ which must hold in between them.
-This predicate depends on the execution relation between the two instructions $\ins{k}$ and $\ins{j}$.
- 
-\begin{defInter}[intermediate predicate between two instructions ]\label{inter} 
-
-Assume that $\ins{k} \execRel \ins{j}$. The predicate $\inter{k}{j}$ must hold after the execution of $\ins{k}$ and before the execution of 
-$\ins{j}$ and is defined as follows:
-\begin{itemize}
-\item if $\ins{j}$ is a loop entry instruction and $\ins{k} \execRel^l \ins{j}$
-then the corresponding loop invariant $ \invariant^{\ins{j}}$  must hold
-$$
-\inter{k}{j} \equiv  \loopInv
-$$
-
-\item else if $\ins{j}$ is a loop entry then the corresponding loop invariant \loopInv  \ must hold before $\ins{j}$ is executed, 
-i.e. after the execution of $\ins{k}$. We also require that $\invariant^{\ins{j}}$ implies the weakest precondition of the loop entry instruction. 
-The implication is quantified over the locations $ \loopMod = \{ mod_i \mid i= 1..s \} $ that may be modified in the loop
-
-$$\inter{k}{j} \equiv \loopInv \ \wedge \ \forall_{i = 1..s} mod_i.(
-\loopInv \Rightarrow \wpi{\ins{j}}{j}{ \excPost })$$
-
-\item else 
-
-$$\inter{k}{j} \equiv \wpi{ \ins{j} }{j}{\excPost}{\normalPost}$$
-\end{itemize}
-\end{defInter}
 
 
 
-\subsection{Weakest precondition in the presence of exceptions}\label{wpExc} 
-
-For every method \methodd \  we define also the function $ \methodd.\excPost $ \ with signature:
-$$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \formulaBc  $$
- 
-$ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
-returns the predicate that must hold in the poststate of the instruction at index \textit{i} if this instruction throws an exception of
-type \texttt{Exc}.
-Thus, $\methodd.\excPost$ will either return the weakest precondition of the exception handler that protects the instruction from the thrown exception \texttt{Exc},
-if such an exception handler exists. Otherwise, the function will return the exceptional postcondition if method \methodd \ terminates on
-an exception  \texttt{Exc}. Note that in the second case the specification variable \EXC, which stands for the thrown object in exceptional postocnditions, is substituted with the reference to the thrown object.
-
-The formal definition is given hereafter.
-
-\begin{defExc}[Postcondition in case of throwing an exception]\label{defExc}
-The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}} ) $ is defined as follows:
- \begin{itemize}
-      \item if $  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHH} = \pcHandler  $ then 
-      $$ \begin{array}{l}
-           \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
-           \wpi{\methodd.\body[\pcHandler]}{\pcHandler}{\methodd.\excPost}{\methodd.\normalPost} \\
-                      \begin{array}{l}
-                        \subst{\counter}{0} \\
-			\subst{\stack{\counter}}{\referenceOnly} \\
-                         \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
-                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } 
-                       \end{array} 
-        \end{array}$$   
-
-      \item else if $\findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
-            $$\begin{array}{l}
-                    \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\ \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
-                     \begin{array}{l}
-                          
-                          \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
-			   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
-                          \subst{ \EXC }{\referenceOnly  }
-                    \end{array}  
-             \end{array} $$
-\end{itemize}
-\end{defExc}
 
 
-\subsection{Rules for single instruction}
+
+
+%\subsection{Rules for single instruction}
 The weakest precondition predicate transformer function which for any instruction of the Java sequential fragment
 determines the predicate that must hold in the prestate of the instruction has the following signature:
 
-$$ \fwpi :  \bcIns \longrightarrow  int  \longrightarrow ( int \longrightarrow  \excType \longrightarrow  \formulaBc) \longrightarrow \formulaBc \longrightarrow \formulaBc $$
-The function \fwpi \ takes four arguments : the kind of the instruction \textit{ins}, the position of the instruction in the body of the method \methodd \ to which the
-instruction belongs \textit{pos},
-an exceptional function $\methodd.\excPost$ as described in the previous subsection \ref{wpExc}, 
-the postcondition predicate \methodd.\normalPost.
-The function will return a predicate $\wpi{ins}{pos}{\methodd.\excPost}{\methodd.\normalPost}$ such that  if it holds in the prestate of the method \methodd \  and if the
+$$ \fwpi :  \bcIns \longrightarrow \MethodSet   \longrightarrow  nat \longrightarrow \predWp $$
+The function \fwpi \ takes three arguments : 
+ the kind of the instruction (for instance  \putfield),
+the method \methodd \ to which the  instruction belongs
+and finally the position of the instruction in the body of  \methodd.
+
+The function will return a predicate $\wpi{ins}{\methodd}{pos}$ such that  if it holds in the prestate of the method \methodd \  and if the
 \methodd \ terminates normally then the normal postcondition \methodd.\normalPost \ holds when  \methodd \ terminates execution, otherwise if \methodd \ terminates on an exception
   \mbox{ \rm \texttt{Exc}} the exceptional postcondition  $ \methodd.\excPost( \mbox{ \rm \texttt{Exc}} )$ holds. 
 Thus, the \fwpi \ function takes into account both normal and exceptional program termination. Note however, that \fwpi \ deals only with partial correctness, i.e.
- it cannot guarantee program termination.
+ it does not guarantee program termination.
 
-%\begin{itemize}
-%%	\item either the precondition  of the exception handler, if an exception handler that protects the instruction at index $i$ from exception of type \texttt{Exc } exists
-%	\item or  $\methodd.\excPostSpec( \tt{Exc})$
-%\end{itemize}
-
-%Also, every time an exception of type \texttt{Exc} is thrown a new object of type  \texttt{Exc} is allocated on the current heap \heap \
-%resulting in the heap \heap'  
-%$  \newRef{\heap}{ \mbox{ \rm \texttt{Exc} } } = (\heap', \Ref{ \mbox{ \rm \texttt{Exc} } }) $
-% and the reference $ \Ref{ \mbox{ \rm \texttt{Exc} }$ is put on the stack top. 
+In order to define the \fwpi \ function, we will need two other notions.
+ The first one is a function which will determine the predicate between two instructions that are in execution relation as defined in Def. \ref{defEdge}. 
+Note that this is not necessary for structured programs. However, for unstructured programs with loops annotated with invariants and frame conditions,
+this is a necessary step.  The definition of the intermediate predicate is given in the next subsection \ref{wp:interPred}.
+We will also see how the weakest precondition is defined in presence of exceptions. This is done in subsection \ref{wp:interExc}.
+\input{wp/intermPred.tex}
+\input{wp/excPred.tex} 
 
 
-Note that in what follows we ignore the  Java virtual machine errors. Thus, we deal only with user defined exceptions and
- \texttt{JavaRuntimeException} subclasses.
 
+
+
+\subsection{Rules for single instruction}
  In the following, we give the definition of the weakest precondition function for every instruction.
 
 
@@ -120,13 +53,13 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 \item Control transfer instructions
 \begin{enumerate}
  \item unconditional jumps \\
-  $$\begin{array}{l} \wpi{\goto \  n }{i} {\excPost}{\normalPost} =   \inter{i}{n}  \end{array} $$
+  $$\begin{array}{l} \wpi{\goto \  n }{\methodd}{i} =   \inter{i}{n}  \end{array} $$
   The rule says that an unconditional jump does not modify the program state and thus, the postcondition and the precondition of this instruction
   are the same
 
 \item conditional jumps
   $$ \begin{array}{l}
-          \wpi{ \ifCond  \  n }{i}{\excPost}{\normalPost} =\\
+          \wpi{ \ifCond  \  n }{\methodd}{i} =\\
 	   \begin{array}{l} 
                   \mbox{ \rm \texttt{ cond}} ( \stack{\counter}, \stack{\counter - 1} ) \Rightarrow \\
                   \Myspace \inter{i}{n}\subst{\counter}{ \counter - 2 } \\
@@ -144,7 +77,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 
  \item return 
  
- $$\wpi{\return}{i}{\excPost}{\normalPost}  = \normalPost \subst{ \result }{\stack{\counter}}$$
+ $$\wpi{\return}{i}{\methodd}  = \methodd.\normalPost \subst{ \result }{\stack{\counter}}$$
  As the instruction \return \ marks the end of the execution path, we require that its postcondition is the normal method postcondition \normalPost.
  Thus, the weakest precondition of the instruction is \normalPost \ where the specification variable \result \  is substituted with the stack top
  element.
@@ -167,7 +100,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 	\begin{enumerate}
 		\item load a local variable on the operand stack \\
 		 $$ \begin{array}{l}
-                          \wpi{\load \  \mbox{ \rm j}} {i} {\excPost}{\normalPost}  =  \\
+                          \wpi{\load \  \mbox{ \rm j}}{ \methodd }{i} =  \\
 			  \inter{i}{i+1}\begin{array}{l} 
                                               \subst{\counter}{\counter +1} \\
 					      \subst{  \stack{ \counter  + 1}}{\locVar{j}} 
@@ -180,13 +113,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
                 instruction is $\locVar{j} == 3$:               
 		$$
 		\begin{array}{l}
-		    \left\{ \begin{array}{l} (\stack{\counter} == 3)\begin{array}{l} 
-                                              \subst{\counter}{\counter +1} \\
-					      \subst{  \stack{ \counter  + 1}}{\locVar{j}} 
-					\end{array} \\
-		                     \equiv\\
-				     \locVar{j} == 3
-		      \end{array}\right\} \\
+		    \{  \locVar{j} == 3 \} \\
 		     i:  \load  \ \mbox{ \rm j} \\
                      \{ \stack{\counter} == 3 \} \\
                      i+1: \ldots 
@@ -195,7 +122,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
  		
 		\item store the stack top element in a local variable	 \\	 
 		$$ \begin{array}{l}
-                          \wpi{\store \ \mbox{ \rm j} } {i} {\excPost}{\normalPost}  =   \\ 
+                          \wpi{\store \ \mbox{ \rm j} } { \methodd}{i}  =   \\ 
 		\inter{i}{i+1}\begin{array}{l} 
                                     \subst{\counter}{\counter   - 1} \\
 				    \subst{\locVar{j} }{\stack{ \counter}}  
@@ -207,7 +134,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 
 		\item push an integer constant on the operand stack  \\
 			$$\begin{array}{l}
-                          \wpi{\push  \  \mbox{ \rm j} } {i} {\excPost}{\normalPost}  =   \\
+                          \wpi{\push  \  \mbox{ \rm j} }  {\methodd} {i} =   \\
 			  \inter{i}{i+1}\begin{array}{l}  
                                     \subst{\counter}{ \counter   + 1} \\ 
                                     \subst{\stack{ \counter +1 }}{ \mbox{ \rm j }}
@@ -218,7 +145,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 	
 		\item incrementing a local variable 
 				$$ \begin{array}{l}
-                                          \wpi{\iinc \   \mbox{ \rm j} } {i} {\excPost}{\normalPost}   =  \\
+                                          \wpi{\iinc \   \mbox{ \rm j} } {i} {\methodd}   =  \\
 				          \inter{i}{i+1} \subst{ \locVar{  j} }{  \locVar{j} + 1 } 
                                    \end{array}$$
 		  
@@ -229,7 +156,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 		\item instructions that cannot  cause exception throwing    (\texttt{arithOp} =  \instr{add}, \instr{sub}, \instr{mult}, 
 				\instr{and}, \instr{or}, \instr{xor} , \instr{ishr}, \instr{ishl},     )\\
 				$$ \begin{array}{l} 
-                                          \wpi{\arithOp } {i} {\excPost}{\normalPost}   =  \\
+                                          \wpi{\arithOp }{\methodd} {i}    =  \\
 					  \inter{i}{i+1}
                                           \begin{array}{l}
                                                 \subst{\counter}{\counter   - 1} \\
@@ -237,11 +164,22 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 				          \end{array}
                                      \end{array} $$
 
-	
+				We illustrate this rule with an example. Let us have  the arithmetic instruction  \instr{add} at index $i$ such that the predicate
+				$\inter{i}{i+1} \equiv \stack{\counter } \geq 0 $. In this case, applying the rule we get that the weakest precondition 
+				is $\stack{\counter - 1} +  \stack{\counter } \geq 0$ :
+				
+				$$
+				\begin{array}{l}
+				 \{ \stack{\counter - 1} +  \stack{\counter } \geq 0 \}   \\
+				   i : \instr{add} \\
+				   \{ \stack{\counter } \geq 0 \} 
+				 \end{array}
+				$$
+				
 						
 		\item instructions that may throw exceptions ( \texttt{arithOp} =  \instr{rem}, \instr{div} )\\
 				$$ \begin{array}{l}
-                                         \wpi{\instr{arithOp } } {i} {\excPost}{\normalPost}  = \\
+                                         \wpi{\instr{arithOp } }{\methodd}{i}   = \\
 					 \begin{array}{l}
 				                \stack{\counter} \neq \Mynull \Rightarrow \\
 						\Myspace  \inter{i}{i+1} \begin{array}{l}
@@ -251,7 +189,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 						\\
 					        \wedge \\				
 						\\
-						\stack{\counter} = \Mynull \Rightarrow 	\excPost(i, \NullPointerExc)             
+						\stack{\counter} = \Mynull \Rightarrow 	\methodd.\excPost(i, \NullPointerExc)             
                                	\end{array} 
 				 \end{array}$$
 	\end{enumerate}
@@ -260,8 +198,9 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 	\begin{enumerate}
 		\item create a new object \\
 		$$ \begin{array}{l}
-                         \wpi{\instr{new  \ \clazz }} {i} {\excPost}{\normalPost}  =  \\
-			\inter{i}{i+1} 
+                         \wpi{\instr{new  \ \clazz }} {\methodd}{i}  =  \\
+		\typeof{\referenceOnly} = \type{\clazz} \Rightarrow \\
+		     \Myspace \inter{i}{i+1} 
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
@@ -269,15 +208,15 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 		       \end{array}
               \end{array}$$
 		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. Then the precondition is the same predicate but in which the stack
-		  counter is incremented, the stack top is substituted by a fresh reference \referenceOnly \ and the fields for the 
-		  \referenceOnly are initialized with their default values 
+		  counter is incremented, the stack top is substituted by a fresh reference variable \referenceOnly \ and the fields for the 
+		  \referenceOnly \ are initialized with their default values 
 	
 		
 		\item array creation 
 	
 				 $$\begin{array}{l}
-                                         \wpi{\newarray  \ \anyType } {i} {\excPost}{\normalPost}  =  \\
-					 \stack{\counter} \ge 0 \Rightarrow  \\
+                                         \wpi{\newarray  \ \anyType } {\methodd}{i}  =  \\
+				\typeof{\referenceOnly} = \type{\anyType[ ]} \wedge \stack{\counter} \ge 0 \Rightarrow  \\
 						\Myspace  \inter{i}{i+1} \\
                                                  \Myspace \begin{array}{l}        
 						        \subst{\stack{\counter} }{ \referenceOnly } \\
@@ -288,20 +227,20 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 						   \end{array} \\
 							\wedge \\
 						\stack{\counter} < 0 \Rightarrow  \\
-								\Myspace  \excPost( i, \NegativeArraySizeExc) \\
+								\Myspace  \methodd.\excPost( i, \NegativeArraySizeExc) \\
                                     \end{array} $$
 		  Here, the rule for array creation is similar to the rule for object creation.
 		  However, creation of an array might terminate exceptionally in case the length of the array stored 
-		  in the stack top element \stack{\counter} is smaller than $0$. In this case, function $\excPost$ will search for the corresponding postcondition 
+		  in the stack top element \stack{\counter} is smaller than $0$. In this case, function $\methodd.\excPost$ will search for the corresponding postcondition 
 		  of the instruction at position $i$ and the exception \NegativeArraySizeExc
 		
 			\item field access  \\
-				 $$ 	\begin{array}{l} \wpi{\getfield  \ \fieldd } {i} {\excPost}{\normalPost}  =  \\
+				 $$ 	\begin{array}{l} \wpi{\getfield  \ \fieldd } {\methodd}{i}  =  \\
 				 		\stack{\counter } \ne \Mynull \Rightarrow \\
 						      \Myspace	\inter{i}{i+1}[ \stack{\counter } \leftarrow \fieldd ( \stack{\counter } ) ] \\
 									 \wedge \\
 						\stack{\counter } = \Mynull \Rightarrow \\
-								\Myspace     \excPost( i, \NullPointerExc) 
+								\Myspace     \methodd.\excPost( i, \NullPointerExc) 
 					\end{array} 
 					$$
 			  The instruction for accessing a field value takes as postcondition the predicate that must hold between it and its next instruction
@@ -309,11 +248,11 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 			  In case the stack top element is not \Mynull, the precondition of \getfield \ is its postcondition where the stack 
 			  top element is substituted by the field access expression $\fieldd ( \stack{\counter }$.
 			  If the stack top element is \Mynull, then the instruction will terminate on  a \NullPointerExc exception. In this case the precondition
-			  of the instruction is the predicate returned by the function $\excPost$ for position $i$ in the bytecode and exception \NullPointerExc
+			  of the instruction is the predicate returned by the function $\methodd.\excPost$ for position $i$ in the bytecode and exception \NullPointerExc
 			  
 			\item  field update \\
 			$$\begin{array}{l}
-                                  \wpi{\putfield  \ \fieldd } {i}{\excPost}{\normalPost}  =  \\
+                                  \wpi{\putfield  \ \fieldd } {\methodd}{i}  =  \\
 				 		\stack{\counter } \ne \Mynull \Rightarrow \\
 						 \Myspace \inter{i}{i+1}
                                                      \begin{array}{l}
@@ -322,7 +261,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 						       \end{array} 
 						        \\
 							\wedge \\
-							\stack{\counter } = \Mynull \Rightarrow   \excPost( i, \NullPointerExc ) \\
+							\stack{\counter } = \Mynull \Rightarrow   \methodd.\excPost( i, \NullPointerExc ) \\
 					  \end{array} 
 					$$
 			                
@@ -345,17 +284,9 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 					$$ \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull  $$
 					
 					Finally, we give the instruction \putfield its postcondition and the respective precondition:
-					$$
-					\begin{array}{l}
-					 \left\{\begin{array}{l} 
-					       (\fieldd( \locVar{1})  \neq \Mynull  )
-					          \begin{array}{l} 
-					                     \subst{ \counter }{  \counter -2 } \\
-							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter } } }
-                                             	  \end{array}\\
-					      \equiv \\
-					      \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull \\
-					   \end{array}\right\}   \\
+					$$ \begin{array}{l}
+					  \{ \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull \}  \\
+					   
 					  i: \putfield  \ \fieldd\\
 					  \{\fieldd( \locVar{1})  \neq \Mynull \} \\
 					  i+1: \ldots 
@@ -364,43 +295,43 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 					
 					\item access the length of an array 
 					$$\begin{array}{l}
-					        \wpi{\arraylength } {i} {\excPost}{\normalPost}  =  \\
+					        \wpi{\arraylength } {\methodd}{i}  =  \\
 					 				\stack{\counter } \ne \Mynull \Rightarrow \\
 									\Myspace \inter{i}{i+1}
 									 \subst{ \stack{\counter } }{ \length(\stack{\counter } )  } \\
 									 \wedge \\
 								\stack{\counter } = \Mynull \Rightarrow \\
-								\Myspace   \excPost( i, \NullPointerExc) \\
+								\Myspace   \methodd.\excPost( i, \NullPointerExc) \\
 					  \end{array} $$
 					  The semantics of \arraylength is that it takes the stack top element which must be an array reference
 					  and puts on the operand stack the length of the array referenced by this reference. This instruction
 					  may terminate either normally or exceptionally. The termination depends on if the stack top element is 
-					  \Mynull or not. In case $\stack{\counter} \neq \Mynull$ the predicate  $\inter{i}{i+1}$ must hold where
+					  \Mynull \ or not. In case $\stack{\counter} \neq \Mynull$ the predicate  $\inter{i}{i+1}$ must hold where
 					  the stack top element is substituted with its length. The case when a \NullPointerExc is thrown is similar
 					  to the previous cases with exceptional termination
 					  
 					  
 					\item checkcast 
 						$$ \begin{array}{l} 
-						\wpi{\checkcast  \ \clazz } {i} {\excPost}{\normalPost}  = \\
+						\wpi{\checkcast  \ \clazz } {\methodd}{i}  = \\
 							\typeof{\stack{\counter}}  \subtypeSpec  \clazz \vee  \stack{\counter} = \Mynull \Rightarrow \\
 							     	\Myspace   \inter{i}{i+1}\\
 							
 							 \wedge \\
 							
 							not(  \typeof{\stack{\counter}} \subtypeSpec  \clazz  ) \Rightarrow  \\
-							\Myspace    \excPost( i, \ClassCastExc) \\
+							\Myspace    \methodd.\excPost( i, \ClassCastExc) \\
 						\end{array}$$  
 					  The instruction checks if the stack top element can be cast to the class \clazz. 
 					  Two termination of the instruction  are possible. If the stack top element \stack{\counter} is of type 
-					  which is a subtype of class \clazz \  or is \Mynull then the predicate $ \inter{i}{i+1} $ holds in the prestate.
+					  which is a subtype of class \clazz \  or is \Mynull \ then the predicate $ \inter{i}{i+1} $ holds in the prestate.
 					  Otherwise, if   \stack{\counter} is not of type which is a subtype of class \clazz, the instruction terminates
-					  on \ClassCastExc \ and the predicate returned by $\excPost$ for the position $i$ and exception \ClassCastExc  \
+					  on \ClassCastExc \ and the predicate returned by $\methodd.\excPost$ for the position $i$ and exception \ClassCastExc  \
 					  must hold 
 					  
 						\item instanceof
 						$$ \begin{array}{l}
-                                                    \wpi{\instanceof  \clazz } {i} {\excPost}{\normalPost}  = \\
+                                                    \wpi{\instanceof \  \clazz } {\methodd}{i}  = \\
 							 \typeof{ \stack{\counter}} \subtypeSpec \clazz  \Rightarrow \\
 								\Myspace  	 \inter{i}{i+1} \subst{ \stack{\counter } } {  1  } \\
 									 \wedge \\
@@ -415,15 +346,15 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 %	\item Stack management
 %		         \begin{itemize}
 %						 \item pop  \\
-%	  							$\wpi{\instr{pop}} {i} {\excPost}{\normalPost}  =  \inter{i}{i+1}[ \counter \leftarrow \counter -1]$ \\
+%	  							$\wpi{\instr{pop}} {\methodd}{i}  =  \inter{i}{i+1}[ \counter \leftarrow \counter -1]$ \\
 %%	  					\item dup \\
 %	  							$$
-%	  							\begin{array}{l}\wpi{\instr{dup}} {i} {\excPost}{\normalPost}  =  \inter{i}{i+1}[ \counter \leftarrow \counter + 1] \\
+%	  							\begin{array}{l}\wpi{\instr{dup}} {\methodd}{i}  =  \inter{i}{i+1}[ \counter \leftarrow \counter + 1] \\
 %	  							\Myspace \Myspace \Myspace \Myspace \Myspace   [ \stack{\counter + 1} \leftarrow  \stack{\counter}]
 %	  							 \end{array}
 %	  							 $$
 %	 				 	\item swap 
-%	 				 			$\wpi{\instr{swap}} {i} {\excPost}{\normalPost}  =  $ \\
+%	 				 			$\wpi{\instr{swap}} {\methodd}{i}  =  $ \\
 %	 				 			$$ 
 %	 				 			\begin{array}{l}
 %	 				 					\inter{i}{i+1}[  \stack{\counter} \leftarrow var ] \\
@@ -434,29 +365,29 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 %\end{itemize} 
 	 				 	\item method invocation  (only the case for non void instance method is given). 
 	 				 			$$\begin{array}{l}
-								 \wpi{\invoke  \   \methodd} {i} {\excPost}{\normalPost}  =   \\
+								 \wpi{\invoke  \   \mbox{\rm\texttt{n} } } {\methodd}{i}  =   \\
 	 				 		 \methodd.\pre[ \locVar{s} \leftarrow \stack{\counter + s -\methodd.\numArgs}]_{s = 0}^{\methodd.\numArgs }  \\
 	 				 			\wedge \\
 								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \method.\modif ), \forall freshVar (  \\ 
+	 				 			       \forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall freshVar (  \\ 
 	 				 				              \Myspace \methodd.\normalPost \begin{array}{l}
-									                                    \subst{\result}{  freshVar } \\
-													    \subst{ \locVar{s}}{\stack{\counter + s - numArgs(m)}}_{s = 0}^{ \methodd.\numArgs }                                                                                                	\end{array}  \Rightarrow \\ 
+									               \subst{\result}{  freshVar } \\
+											\subst{ \locVar{s}}{\stack{\counter + s - numArgs(m)}}_{s = 0}^{ \mbox{\rm\texttt{n} }. \numArgs }                                                                                                	\end{array}  \Rightarrow \\ 
 										      \\
 										      \Myspace  \Myspace  \inter{i}{i+1 } \begin{array}{l}
-										                                   \subst{\counter}{ \counter -  \methodd.\numArgs}\\
-														   \subst{ \stack{\counter -  \methodd.\numArgs  }}{ freshVar }																	\end{array}																									
+										                                   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs}\\
+														   \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ freshVar }																	\end{array}																									
 	 				 			 )	\end{array}  \\
-	 				 			\wedge_{j = 0 }^{\methodd.\exceptions.length -1} \\
+	 				 			\wedge_{j = 0 }^{\mbox{\rm\texttt{n} } .\exceptions.length -1} \\
 	 				 			%\forall \tt{e_m} ( m =1 .. k  )
-                                                               ( \methodd. \excPostSpec ( \methodd.\exceptions[j]) \Rightarrow 
+                                                               (\mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \Rightarrow 
                                                                     \excPost(i,   \methodd.\exceptions[j] )  ) \\		
 	 				 			\end{array}
 	 				 			$$ 
 	 			
 
-						This rule is may be the more complicated one.
-						First, note that because we are following a contract based approach 
+						Let us look in detail what is the meaning of the weakest precondition for method invokation.
+						Because we are following a contract based approach 
 						the caller, i.e. the current method must establish several facts.
 						First, we require that 
 						the precondition \methodd.\pre \ of the invoked method \methodd \ holds where the formal 
@@ -466,7 +397,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 						Second, we get a logical statement which guarantees the correctness of the method invokation
 						in case of normal termination.
 						On the other hand, its postcondition  \methodd.\normalPost \ is assumed to hold and thus, we want to establish that 
-						under the assumption that \methodd.\normalPost holds \ with \result \ substituted with a fresh bound variable $freshVar$
+						under the assumption that \methodd.\normalPost \  holds \ with \result \ substituted with a fresh bound variable $freshVar$
 						and correctly initialized formal parameters
 						is true we want to establish that the predicate   \inter{i}{i+1 } \
 						holds . This implication is quantified over the locations  \method.\modif \ that a method may modify
@@ -476,7 +407,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 						In this case, if the invoked method terminates on any exception which belongs to the array of 
 						exceptions \methodd.\exceptions \ that \methodd \ may throw, its exceptional postcondition
 						for the corresponding exception
-						must guarantee the predicate returned by the function $\excPost$ of the current method
+						must guarantee the predicate returned by the function $\methodd.\excPost$ of the current method
 
 						
 						
@@ -485,19 +416,36 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 \item throw exception instruction \\
 				
 							$$ \begin{array}{l}
-							          \wpi{\instr{athrow }} {i} {\excPost}{\normalPost}  = \\
-							          \stack{\counter} \neq \Mynull \Rightarrow  \excPost( i, \typeof{\stack{\counter}}) \\
-								  \wedge \\
-								  \stack{\counter} = \Mynull \Rightarrow  \excPost( i, \NullPointerExc) \\
+							          \wpi{\instr{athrow }} {\methodd}{i}  = \\
+								    \stack{\counter} = \Mynull \Rightarrow  \methodd.\excPost( i, \NullPointerExc) \\  
+								     \wedge \\
+							          \stack{\counter} \neq \Mynull \Rightarrow \\
+								    \begin{array}{l}  
+								      \forall n, 0 \le n < \methodd. \exceptions.length \\  
+								      \typeof{\stack{\counter}} <:  \methodd.\exceptions[n] \Rightarrow \\
+								      \Myspace \methodd.\excPostSpec( \methodd.\exceptions[n]  )\subst{ \EXC }{\stack{\counter}  } \\
+								      \wedge \\
+								      \forall n, 0 \le n < \methodd.\excHandlerTable.length \\  
+								      \typeof{\stack{\counter}} <: \methodd. \excHandlerTable[n].\exc \Rightarrow \\
+								      \Myspace  \wpi{\methodd.\body[\methodd. \excHH[n].\pcHandler]}{\methodd}{\pcHandler}
+								    \end{array} 
 							   \end{array}
 							$$ \\
-						The thrown object is on the top of the stack \stack{\counter}. If the thrown object is not \Mynull, then
-						the function $\excPost$ will return the precondition of the handler that may handle exceptions of type 
-						$\typeof{\stack{\counter} } $ on position $i$ in the bytecode, otherwise if such a handler does not exist 
-						$\excPost$ will return the exceptional postcondition that must hold if the current method throws an exception
-						$\typeof{\stack{\counter} } $. 
+						The thrown object is on the top of the stack \stack{\counter}.
 						If the stack top object \stack{\counter} \ is \Mynull, then the instruction \athrow will terminate on an exception
-						\NullPointerExc where the predicate returned by the function $ \excPost$ must hold.
+						\NullPointerExc \ where the predicate returned by the function $ \methodd.\excPost$ must hold.
+						The case when  the thrown object is not \Mynull \  should consider all the possible exceptions that
+						might be thrown by the current instruction. This is because we do not know the type of the thrown object which is
+						on the stack top. Thus, the rule takes into account the case when the exception thrown is a not handled exception,
+						i.e. the type    of \stack{\counter} is a subtype of any  of the exceptions \methodd.\exceptions \ that might be thrown
+						by the current method \methodd. Thus, if  \athrow \ instruction throws a not handled exception \texttt{Exc} 
+						the weakest precondition of the instruction is the exceptional postcondition as the Def. \ref{defExc} states.
+ 						The \fwpi \ considers also the case when the thrown exception object  might be handled by any of the
+						exception handlers \methodd.\excHandlerTable \ of method \ \methodd. 
+						In that case, once again the rule takes into account all the possible exception handler types
+						
+					
+					
 						
 	 			
 \end{itemize}
@@ -505,7 +453,7 @@ Note that in what follows we ignore the  Java virtual machine errors. Thus, we d
 
 Supposing the execution of a method always terminates, the verification condition for a method \methodd \ with a
  precondition $\methodd.\pre$ is defined in the following way:
-$$ \methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd.\excPost}{\methodd.\normalPost}$$
+$$ \methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{0}$$
 
 
 

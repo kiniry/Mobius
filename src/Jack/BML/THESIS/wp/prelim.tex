@@ -1,3 +1,11 @@
+\newtheorem{defEdge}{Definition}[section]
+\newtheorem{defLoop}[defEdge]{Definition}
+\newtheorem{defInter}[defEdge]{Definition}
+\newtheorem{defExc}[defEdge]{Definition}
+\newtheorem{defInv}[defEdge]{Definition}
+\newtheorem{defModif}[defEdge]{Definition}
+
+\newtheorem{propPath}{Lemma}[section]
 
 \section{Representing bytecode programs as control flow graphs}\label{prelim}
 
@@ -16,16 +24,44 @@ The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $
 $\methodd.\body[0]$.
 The array of bytecode instructions of a method \methodd \ determine an oriented graph $G( V , \execRel ) $ in which the vertices are the instructions of the method body,
 i.e. $$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
-The set of edges $\execRel$ is a relation between the vertices elements
+The following definition defines the set of edges in the control flow graph.
+\begin{defEdge}[Definition of an edge in a control flow graph]\label{defEdge} 
+ The set of edges $\execRel$ is a relation between the vertices elements
 $$ \execRel : V * V $$ and is defined  as follows:
-$$ (\methodd.\body[j], \methodd.\body[k]) \in \execRel \iff 
+$$ \begin{array}{l} (\methodd.\body[j], \methodd.\body[k]) \in \execRel \\
+   \iff \\
    \begin{array}{l} \methodd.\body[j] \neq \return \wedge( \\
                     \methodd.\body[j] = \ifCond \ k \vee \\
 		    \methodd.\body[j] = \goto \ k \ \vee \\
-		    \methodd.\body[j] \neq \goto \Rightarrow  k = j+1)
-   \end{array}$$
- i.e. there is an edge between two vertices $\methodd.\body[j]$ and  $\methodd.\body[k]$ if they may execute immediately one after another.
+		    \methodd.\body[j] \neq \goto \wedge  k = j+1 \ \vee \\ 
+		    \methodd.\body[j] = \putfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
+		    \methodd.\body[j] = \getfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
+		    \methodd.\body[j] = \arrstore \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
+                    \methodd.\body[j] = \arrstore \wedge \findExcHandler{\ArrIndexOutOfBoundExc  }{j}{\methodd.\excHandlerTable} = k \ \vee \\
+		    
+		    \methodd.\body[j] = \arrload \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
+                    \methodd.\body[j] = \arrload \wedge \findExcHandler{\ArrIndexOutOfBoundExc  }{j}{\methodd.\excHandlerTable} = k \ \vee \\
+		    \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}} \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k \ \vee \\
+		     \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}} \wedge \forall \mbox{\rm\texttt{Exc}}, \exists s , \mbox{\rm \texttt{n}}.\exceptions[s ] = \mbox{\rm\texttt{Exc}} \wedge  \\
+	\phantom{\methodd.\body[j] = \invoke } \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k \ \vee \\	    
+		    \methodd.\body[j] = \athrow  \wedge \forall \mbox{\rm\texttt{Exc}}, \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k \ \vee \\
+		    %\methodd.\body[j] = \athrow  \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k \vee 
+		    
+		    )
+   \end{array} 
+\end{array}$$
+\end{defEdge}
+From the Def. \ref{defEdge} follows that there is an edge between two vertices $\methodd.\body[j]$ and  $\methodd.\body[k]$ if they may execute immediately one after another.
+ We say that $\methodd.\body[j]$ is a predecessor of $\methodd.\body[k]$ and that  $\methodd.\body[k]$ is a successor of  $\methodd.\body[j]$.
+ The definition states the \return \  instruction  does not have successors.
+If  $\methodd.\body[j ]$ is the jump instruction $ \ifCond \ k $ then  its successors are the instruction at index $k$ in the method body   
+$\methodd.\body[k]$ and the instruction and the instruction $\methodd.\body[j + 1 ]$. 
+From the definition, we also get that every instruction which potentially may throw an exception of type \texttt{Exc}
+has as successor the first instruction of the exception handler that may handle the exception type \texttt{Exc}. For instance, a successor
+of the instruction $\putfield$ is the exception handler entry point which can handle  the \NullPointerExc \ exception. 
+The possible successors of the instruction $\athrow$ are the entry point of any  exception handler  in the method \methodd.
 In the following, we will rather use the infix notation $\methodd.\body[j] \execRel \methodd.\body[k]$.
+% We will also use the notation $\next{\methodd.\body[j] }$ for denoting the successor of   $\methodd.\body[j]$ in a given execution path.
 
 
 We assume that the control flow graph of every method is reducible, i.e. every loop has exactly one entry point. This actually is admissible
@@ -42,8 +78,10 @@ the vertice  $\methodd.\body[0]$ does not have predecessors and any path that re
 passes through $\methodd.\body[0]$. In such a graph $G$, we say that $\ins{loopEntry}$ is a loop entry instruction and $\ins{f}$ is a loop end instruction
  of the same loop if the following conditions hold:
 \begin{itemize}
-\item every path in the control flow graph starting at the entry point $\methodd.\body[0]$  that reaches $\ins{f}$, passes before reaching $\ins{f}$
- through  $\ins{loopEntry}$ 
+\item for every execution path $P$ from $\methodd.\body[0]$ to  $\ins{f}$:   $P~=~\methodd.\body[0] \execRel^{+} \ins{f}$
+ there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{f} \notin  \ subP  $
+%every path in the control flow graph starting at the entry point $\methodd.\body[0]$  that reaches $\ins{f}$, passes before reaching $\ins{f}$
+% through  $\ins{loopEntry}$ 
 \item there is a path in which $\ins{loopEntry}$  is executed immediately after the execution of $\ins{f}$ ( $\ins{f} \execRel \ins{loopEntry}$)
 \end{itemize}
 We denote the execution relation between $\ins{f}$ and  $\ins{loopEntry}$ with \\
@@ -54,7 +92,13 @@ In the figure, we rather show the execution relation between basic blocks (a sta
 only the last one may be a jump and the first may be a target of a jump) the execution relation between the 
 intstructions in a block being evident.
 
+% Note that from now on, we are interested in  control flow graphs with the following properties:
 
+% \begin{itemize}
+%  \item the control flow graph is reducible
+ % \item an exception handler cannot be n
+% \end{itemize}
+ 
 \begin{figure}[ht!]
 \begin{center}
 \epsfig{file=bytecode.eps, width=\linewidth}
@@ -63,14 +107,14 @@ intstructions in a block being evident.
 \end{center}
 \end{figure}
 
-The next lemma states a property about execution paths in a control flow graph that contains backedges. This lemma will be used in the proof of correctness
-of our calculus in section \ref{proof}.
-\begin{propPath} \label{propPath}
- Let's have a control flow graph with an entry point instruction $\methodd.\body[0]$ and two instructions $\ins{loopEntry}$ and  
- $\ins{f}$ such that  \\
- $\ins{f}~\execRel^l~\ins{loopEntry}$. If there exists an execution path $P$ from $\methodd.\body[0]$ to  $\ins{f}$:   $P~=~\methodd.\body[0] \execRel^{+} \ins{f}$
- then there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{f} \notin  \ subP  $ 
- \end{propPath} 
+%The next lemma states a property about execution paths in a control flow graph that contains backedges. This lemma will be used in the proof of correctness
+%of our calculus in section \ref{proof}.
+%\begin{propPath} \label{propPath}
+% Let's have a control flow graph with an entry point instruction $\methodd.\body[0]$ and two instructions $\ins{loopEntry}$ and  
+% $\ins{f}$ such that  \\
+% $\ins{f}~\execRel^l~\ins{loopEntry}$. If there exists an execution path $P$ from $\methodd.\body[0]$ to  $\ins{f}$:   $P~=~\methodd.\body[0] \execRel^{+} \ins{f}$
+% then there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{f} \notin  \ subP  $ 
+% \end{propPath} 
 
 
 %Once we have defined what a loop means in a control flow graph, we want also to define what a loop invariant means. 
