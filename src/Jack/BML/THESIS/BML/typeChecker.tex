@@ -13,11 +13,11 @@ BML specification is well typed and respects few structural constraints.
 
 Let's see few examples of type constraints that  a valid BML specification must respect : 
 \begin{itemize}
-    \item  the array expression $\arrayAccess{\expression_1}{\expression_2}$ must be such that 
-$\expression_1$ is of array type and $\expression_2$  is of integer type
+    \item  the array expression $\arrayAccess{\expression^1}{\expression^2}$ must be such that 
+$\expression^1$ is of array type and $\expression^2$  is of integer type
     \item the field access expression  $\fieldAccess{\expression}{\ident}$ is such that $\expression$ is of subtype
     of the class where the field described by the constant pool element at index $\ident$ is declared
-    \item For any expression $ \expression_1 \op \expression_2$,  $ \expression_1$ and $ \expression_2$ must be of
+    \item For any expression $ \expression^1 \op \expression^2$,  $ \expression^1$ and $ \expression^2$ must be of
           a numeric type
 
     \item \ldots
@@ -35,7 +35,7 @@ Example for structural constraint are :
 
 Actually, an extension of the bytecode verifier may perform the checks
  if a BML specification  respects this kind of structural and type constraints.
-However, we are not going farther in this subject as it is not the main issue of the present thesis. 
+However, we are not going farther in this subject as it is out of the scope of the present thesis.
 For the curious reader, it will be certainly of interest to turn to the Java Virtual Machine specification  \cite{VMSpec} 
 or to the existing literature on bytecode verification (see the overview article ~\cite{Ljbc} )
  

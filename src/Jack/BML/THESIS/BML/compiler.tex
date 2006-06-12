@@ -121,7 +121,7 @@ $$
 
 \item Encoding BML specification  into user defined attributes\\
  Method specifications, class invariants, loop invariants are newly defined attributes in the class file.
- For example, the specifications of all the loops in a method are compiled to a unique method attribute: whose syntax is
+ For example, the specifications of all the loops in a method are compiled to a unique method attribute whose syntax is
  given in Fig.~\ref{loopAttribute}. This attribute is an array of data structures each describing a single loop from the method source code.
  Also for each loop in the source code there must be a corresponding element in the array. 
 More precisely, every element contains information about the instruction where the loop starts as specified in the
@@ -161,8 +161,8 @@ JML\=Loop\_specification\_attribute \{\\
 
 The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debugging information,
 namely the presence of the \textbf{Line\_Number\_Table} attribute for the correct compilation of inter method
- specification, i.e. loops and assertions. We think that this is an acceptable restriction for the compiler. The
- most problematic part of the compilation is to identify which source loop corresponds to which bytecode loop in the control flow
+ specification, i.e. loops and assertions. We think that this is an acceptable restriction as few bytecode programs even handwritten are not reducible.
+ The most problematic part of the compilation is to identify which source loop corresponds to which bytecode loop in the control flow
  graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}), i.e. there are no
  jumps from outside a loop inside it; graph reducibility allows to establish the same order between loops in the
  bytecode and source code level and to compile the invariants to the correct places in the bytecode.
