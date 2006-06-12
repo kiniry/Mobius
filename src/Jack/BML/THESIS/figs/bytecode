@@ -1,0 +1,32 @@
+
+0 iconst_0
+1 istore_3
+2 iconst_0
+3 istore_3
+4 goto 19 (+25)
+
+5 aload_0
+6 getfield list
+7 iload_3
+8 aaload
+9 aload_1
+10 if_acmpne 18
+
+11 aload_0
+12 getfield list
+13 iload_3
+14 aload_2
+15 aastore
+16 iconst_1
+17 ireturn
+
+18 iinc 3 by 1
+
+19 iload_3
+20 aload_0
+21 getfield list
+22 arraylength
+23 if_icmplt 5 
+
+24 iconst_0
+25 ireturn
