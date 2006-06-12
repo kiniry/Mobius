@@ -14,8 +14,12 @@
  Another point which deserves our attention, is that we will prove the partial correctness of our methodology, i.e.
  we suppose that our programs always terminate.
 
- In the following, we will proceed with a section which establishes how we define substitution. 
- In section \ref{interpret}, we give a meaning of formulas from our assertion language in a state.
- The last section \ref{proof} skatches the proof of correctness of the verification condition generator.  
+ We now proceed with the proof of the correctness of the weakest precondition calculus.
+ First we will formulate what does it mean for a method to be correct. Then, we establish the correctness
+of a single instruction (lemma \ref{lemma0}). The next step of the proof  is to establish that if all the steps
+in an execution path establish the intermediate predicates then the execution can either proceed by establishing
+the next weakest precondition predicate or will terminate in a state which respects the adequate postcondition.
+  
+
 
 
