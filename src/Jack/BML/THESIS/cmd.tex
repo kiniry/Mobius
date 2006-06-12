@@ -52,7 +52,7 @@
 \newcommand{\false}{\mbox{\rm\textbf{false}}} % false from the assertion language
 
 
-\newcommand{\fwpi}{\mbox{\rm \textit{wp}}}
+
 \newcommand{\instr}[1]{\mbox{  \rm #1} }
 
 %\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
@@ -132,7 +132,7 @@
 %\newcommand{\wpExeWithLoops}[1]{ \rm{Wp''}\rm{(#1)} }
 %\newcommand{\wpExe}[1]{ \rm{Wp'}\rm{(#1)} }
 
-\newcommand{\wpi}[4]{\mbox{ \rm \textit{wp}}( #1, #2 , #3, #4) }
+
 
 
 \newcommand{\excPost}{\psi^{exc}}
@@ -140,8 +140,12 @@
 \newcommand{\length}{\mbox{\rm arrLength}} % stands for array length
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP functions%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\newcommand{\inter}[2]{\mbox{ \rm \textit{inter}}(#1, #2)} % predicate that holds between two bytecode blocks
+\newcommand{\wpi}[3]{\mbox{\rm\textit{wp}}( #1, #2 , #3) }
+\newcommand{\fwpi}{\mbox{\rm\textit{wp}}}
+\newcommand{\inter}[2]{\mbox{ \rm \textit{inter}}(#1, #2, \methodd)} % predicate that holds between two bytecode blocks
 \newcommand{\interOnly}{\mbox{ \rm \textit{inter}}} % the name of the function that calculates predicate that holds between two bytecode blocks
 \newcommand{\objects}{\texttt{Objects}}
 
@@ -230,7 +234,7 @@
 \newtheorem{Formula}{Formulas}
 \newtheorem{Predicate}{Predicates}
 
-\newcommand{\formulaBc}{\mathcal{F}^{bc}}
+\newcommand{\formulaBc}{\mathcal{P}_{bml}}
 
 
 
@@ -338,7 +342,7 @@
  \newcommand{\getLocationsOnly}{\mbox{\rm getLoc} \ } 
  \newcommand{\addNewLocation}[2]{\mbox{\rm allocator}(#1,#2) \ }
  \newcommand{\addNewLocationOnly}{\mbox{\rm allocator} \ }
- \newcommand{\defaultValue}[1]{\mbox{\rm \textit{defVal}}(#1)} % default value for a type
+ \newcommand{\defaultValue}[1]{\mbox{\rm\textsf{defVal}}(#1)} % default value for a type
  \newcommand{\defaultValueOnly}{\mbox{\rm \textit{defVal}}}
  \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
  \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
@@ -376,8 +380,11 @@
 \newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
 \newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
-\newcommand{\expression}{ \mathcal{E} }
-\newcommand{\Constants}{\mbox{\rm\textit{constants}}}
+\newcommand{\expression}{\mbox{\rm\textit{E}}_{bml} }
+\newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
+\newcommand{\expressions}{\mbox{\rm\textit{SpecExp}}_{bml}}
+
+\newcommand{\Constants}{\mbox{\rm\textit{constants}}_{bml}}
 \newcommand{\intLiteral}{\mbox{\rm\textit{intLiteral}}}
 \newcommand{\signedInt}{\mbox{\rm\textit{signedIntLiteral}}}
 \newcommand{\ident}{\mbox{\rm\textit{ident}}}
@@ -405,7 +412,13 @@
 \newcommand{\minus}{\mbox{\rm\textbf{-}}}
 
 \newcommand{\bmlKeyWords}{ \mbox{\rm\textit{bmlKeyWords}} }
-\newcommand{\loopPos}{\mbox{\rm\textit{pos}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%% method extension%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newcommand{\posL}{\mbox{\rm\textsf{pos}}}
+\newcommand{\invL}{\mbox{\rm\textsf{invariant}}}
+\newcommand{\modifL}{\mbox{\rm\textsf{modif}}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%% BML keywords%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -466,9 +479,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\evalExp}[2]{\mbox{ \rm \textit{eval}}( #1,#2 )} % evaluation of an expression #1 in  a state configuration #2
+\newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
+
 \newcommand{\interp}[2]{#2 \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
 \newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2  \vDash \\ 
-                                 \Myspace  #1 
+				         #1 
 				  \end{array}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -489,3 +504,14 @@
 \newcommand{\lvElLen}{\mbox{\rm\textsf{length}}}
 \newcommand{\descrInd}{\mbox{\rm\textsf{descrInd}}}
 \newcommand{\lvElInd}{\mbox{\rm\textsf{index}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% the deep expression language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\exprWp}{\mbox{\rm\textit{E}}}
+\newcommand{\predWp}{\mbox{\rm\textit{P}}}
+\newcommand{\constantsWp}{\mbox{\rm\textit{constants}}}
+\newcommand{\expressionsWp}{\mbox{\rm\textit{Expr}}}
+\newcommand{\typeExpWp}{\mbox{\rm\textit{T}}}
+\newcommand{\refWp}{\mbox{\rm\textbf{ref}}}
+\newcommand{\ConstantsWp}{\mbox{\rm\textit{constants}}}
