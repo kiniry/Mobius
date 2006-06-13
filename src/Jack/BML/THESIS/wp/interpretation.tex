@@ -150,7 +150,7 @@ the following holds:
 \end{substLv}
 Proof : by structural induction on the structure of $\expressionsWp_1$ 
 \begin{enumerate}
-\item we look at the first part of the lemme about the expression evaluation
+\item we look at the first part of the lemma concerning expression evaluation
 
 \begin{itemize}
    \item    $ \expressionsWp_1 = \locVar{i} $ 
@@ -176,7 +176,7 @@ Proof : by structural induction on the structure of $\expressionsWp_1$
 	     	\numConclusion{1} \evalExp{\substitution{\expressionsWp_3}{ \locVar{i} }{ \expressionsWp_2 }}{ s_1 } = \evalExp{\expressionsWp_3}{s_2} \\
               \\
 	      \mbox{\rm\comment{by  Def.\ref{interpExpr} of the evaluation  for field access expressions }} \\
-	      ( left ) \  \evalExp{\substitution{\fieldAccess{\expressionsWp_3}{\fieldd  }{ \locVar{i} }{ \expressionsWp_2 }}}{s_1} = 
+	      ( left ) \  \evalExp{\substitution{\fieldAccess{\expressionsWp_3}{\fieldd  }}{ \locVar{i} }{ \expressionsWp_2 }}{s_1} = 
 	                \heap(\fieldd)( \evalExp{\substitution{\expressionsWp_3}{ \locVar{i} }{ \expressionsWp_2 }}{s_1}   ) \\
 	      \\
 		
