@@ -28,8 +28,8 @@
 \newlabel{def}{{2.5}{12}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Modeling the Object Heap}{14}}
 \newlabel{heap}{{2.5.1}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Registers}{16}}
-\newlabel{register}{{2.5.2}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Registers}{17}}
+\newlabel{register}{{2.5.2}{17}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}The operand stack}{17}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5.4}Program counter}{17}}
 \newlabel{pc}{{2.5.4}{17}}
@@ -54,7 +54,7 @@
 \citation{BurdyCCEKLLP03}
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}A quick overview of JML}{28}}
 \newlabel{BCSLprelim}{{3.1}{28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces class \texttt  {ListArray} with JML annotations}}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces \sc  class \unhbox \voidb@x \hbox {\rm  \texttt  {ListArray}} with JML annotations}}{29}}
 \newlabel{replaceSrc}{{3.1}{29}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}BML}{29}}
 \newlabel{BCSLgrammar}{{3.2}{29}}
@@ -64,29 +64,29 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Interpretation of the BML grammar}{32}}
 \@writefile{toc}{\contentsline {subsubsection}{BML expressions}{32}}
 \@writefile{toc}{\contentsline {subsubsection}{BML predicates}{33}}
-\@writefile{toc}{\contentsline {subsubsection}{Class Specification}{33}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces \sc  An example for class specification}}{34}}
 \newlabel{classSpec}{{3.2}{34}}
+\@writefile{toc}{\contentsline {subsubsection}{Class Specification}{34}}
 \@writefile{toc}{\contentsline {subsubsection}{Inter --- method specification}{34}}
 \@writefile{toc}{\contentsline {subsubsection}{Method specification case}{35}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces \sc  An example for an intra method specification }}{36}}
 \newlabel{bcSpec}{{3.3}{36}}
-\@writefile{toc}{\contentsline {subsubsection}{Intra --- method specification}{36}}
-\@writefile{toc}{\contentsline {subsubsection}{Frame conditions}{37}}
+\@writefile{toc}{\contentsline {subsubsection}{Intra --- method specification}{37}}
+\@writefile{toc}{\contentsline {subsubsection}{Frame conditions}{38}}
 \citation{VMSpec}
 \citation{Ljbc}
 \citation{VMSpec}
-\citation{VMSpec}
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}Well formed BML specification}{39}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Compiling JML into BML}{39}}
-\newlabel{BCSLcompile}{{3.4}{39}}
+\citation{VMSpec}
 \citation{JMLRefMan}
 \citation{RT03djml}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Compiling JML into BML}{40}}
+\newlabel{BCSLcompile}{{3.4}{40}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces \sc  An example for a method with two normal behaviours specified in JML}}{41}}
 \newlabel{JmlSpec}{{3.4}{41}}
-\citation{ARUCom1986}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces \sc  The compilation of the postcondition in Fig. 3.1\hbox {}}}{42}}
 \newlabel{postCompile}{{3.5}{42}}
+\citation{ARUCom1986}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces \sc  Structure of the Loop Attribute}}{43}}
 \newlabel{loopAttribute}{{3.6}{43}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {4}Verification condition generator for Java bytecode }{45}}
@@ -108,59 +108,62 @@
 \citation{WildmoserN-ESOP05}
 \citation{BLS04sp}
 \citation{leinoWPUP}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Representing bytecode programs as control flow graphs}{47}}
-\newlabel{prelim}{{4.2}{47}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}The expression language}{47}}
+\newlabel{deepExpr}{{4.2.1}{47}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Substitution}{49}}
+\newlabel{subst}{{4.2.1}{49}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Interpretation }{49}}
+\newlabel{interpret}{{4.2.2}{49}}
+\newlabel{interpExpr}{{4.2.2.1}{50}}
+\newlabel{interpPred}{{4.2.2.2}{51}}
+\newlabel{substLv}{{4.2.2.1}{51}}
+\newlabel{substHeap}{{4.2.2.2}{52}}
+\newlabel{substStack}{{4.2.2.3}{53}}
+\newlabel{substCntr}{{4.2.2.4}{53}}
+\newlabel{substRet}{{4.2.2.5}{53}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Representing bytecode programs as control flow graphs}{53}}
+\newlabel{prelim}{{4.3}{53}}
 \citation{ARUCom1986}
-\newlabel{defLoop}{{4.2.1}{48}}
-\newlabel{propPath}{{4.2.1}{49}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Extending method declarations with specification}{49}}
-\newlabel{methExtend}{{4.3}{49}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Weakest precondition calculus}{50}}
-\newlabel{wpRules}{{4.4}{50}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Intermediate predicates}{50}}
-\newlabel{inter}{{4.4.1}{50}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Weakest precondition in the presence of exceptions}{51}}
-\newlabel{wpExc}{{4.4.2}{51}}
-\newlabel{defExc}{{4.4.2}{51}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.3}Rules for single instruction}{51}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Example}{58}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces The control flow graph of the source program from Fig.3.1\hbox {} }}{59}}
-\newlabel{ctrlflow}{{4.1}{59}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Correctness of the verification condition generator}{61}}
+\newlabel{defEdge}{{4.3.1}{54}}
+\newlabel{defLoop}{{4.3.2}{55}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Extending method declarations with specification}{55}}
+\newlabel{methExtend}{{4.4}{55}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces { \sc  The control flow graph of the source program from Fig.3.1\hbox {}} }}{56}}
+\newlabel{ctrlflow}{{4.1}{56}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Weakest precondition calculus}{58}}
+\newlabel{wpRules}{{4.5}{58}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Intermediate predicates}{58}}
+\newlabel{wp:interPred}{{4.5.1}{58}}
+\newlabel{inter}{{4.5.1}{58}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Weakest precondition in the presence of runtime exceptions}{59}}
+\newlabel{wp:interExc}{{4.5.2}{59}}
+\newlabel{defExc}{{4.5.2}{59}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Rules for single instruction}{60}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}Example}{67}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Correctness of the verification condition generator}{69}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{proofGeneral}{{5}{61}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Substitution}{61}}
-\newlabel{subst}{{5.1}{61}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Interpretation of assertions in a state}{62}}
-\newlabel{interpret}{{5.2}{62}}
-\newlabel{interpExpr}{{5.2.1}{62}}
-\newlabel{interpPred}{{5.2.2}{63}}
-\newlabel{substHeap}{{5.2.1}{64}}
-\newlabel{newHeap}{{5.2.2}{64}}
-\newlabel{substStack}{{5.2.3}{65}}
-\newlabel{substCntr}{{5.2.4}{65}}
-\newlabel{substLv}{{5.2.5}{65}}
-\newlabel{substRet}{{5.2.6}{65}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Proof of Correctness }{65}}
-\newlabel{proof}{{5.3}{65}}
-\newlabel{defCorrect}{{5.3.1}{65}}
+\newlabel{proofGeneral}{{5}{69}}
 \citation{M97oos}
-\newlabel{lemma0}{{1}{66}}
-\newlabel{lemma1}{{2}{67}}
-\newlabel{vcGenCorrect}{{3}{70}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Equivalence between Java source and bytecode proof Obligations}{71}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Proof of Correctness }{70}}
+\newlabel{proof}{{5.1}{70}}
+\newlabel{defCorrect}{{5.1.1}{70}}
+\newlabel{lemma0}{{5.1.1}{70}}
+\newlabel{lemma1}{{5.1.2}{73}}
+\newlabel{lemma2}{{5.1.3}{76}}
+\newlabel{vcGenCorrect}{{5.1.4}{76}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Equivalence between Java source and bytecode proof Obligations}{77}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}A compact verification condition generator}{73}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}A compact verification condition generator}{79}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Applications}{75}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Applications}{81}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibstyle{plain}
 \bibdata{biblio,specification}
-\@writefile{toc}{\contentsline {chapter}{\numberline {9}Conclusion}{77}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {9}Conclusion}{83}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{ARUCom1986}{1}

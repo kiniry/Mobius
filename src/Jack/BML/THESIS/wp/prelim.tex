@@ -88,9 +88,10 @@ We denote the execution relation between $\ins{f}$ and  $\ins{loopEntry}$ with \
 $\ins{f} \execRel^l \ins{loopEntry}$ and we say that $  \execRel^l $  is a backedge. 
 \end{defLoop}
 We illustrate the upper definition with the control flow graph of the example from Fig. \ref{replaceSrc} in Fig. \ref{ctrlflow}.
-In the figure, we rather show the execution relation between basic blocks (a standard notion denoting a sequence of instructions where
-only the last one may be a jump and the first may be a target of a jump) the execution relation between the 
-intstructions in a block being evident.
+In the figure, we rather show the execution relation between basic blocks which is a standard notion denoting a sequence of instructions which execute sequentially
+and  where only the last one may be a jump and the first may be a target of a jump. 
+The black edges represent a sequential execution relation, while the intermitent edge represent a backedge, i.e. the edge which stands for the execution
+relation between a final instruction (instruction at index \texttt{18}) in the bytecode loop and the entry instruction of the loop (instruction at index \texttt{19}).  
 
 % Note that from now on, we are interested in  control flow graphs with the following properties:
 
@@ -102,7 +103,7 @@ intstructions in a block being evident.
 \begin{figure}[ht!]
 \begin{center}
 %\includegraphics{bc.eps}
-\epsfig{file=figs/bc.eps, height=5in,  width=2in}
+\epsfig{file=figs/bc.eps, height=5in,  width=1.5in}
 \caption{{ \sc The control flow graph of the source program from Fig.\ref{replaceSrc}} }
 \label{ctrlflow}
 \end{center}

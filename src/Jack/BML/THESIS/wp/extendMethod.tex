@@ -14,7 +14,7 @@ $$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
 							  \excHandlerTable & : \ExcHandler [] \\
 							  \exceptions &  : \ClassSet_{exc}[] \\
 							  \pre & : \predWp \\
-							  \modif & : locations\lbrack \ \rbrack  \\
+							  \modif & :   \expressionsWp \lbrack \ \rbrack  \\
 							  \excPostSpec & : \excType \rightharpoonup \predWp \\
 							  \normalPost & : \predWp \\
                                                           \loopSpecTable & : \LoopSpecSet \lbrack \ \rbrack  
@@ -28,7 +28,7 @@ Let's see the meaning of the new elements in the method data structure.
            whenever \methodd \  is called
      \item \methodd.\normalPost \ is the postcondition of the method in case \methodd terminates normally  
      
-     \item \methodd.\modif \ is also called the method frame condition. It is a list of locations that the method
+     \item \methodd.\modif \ is also called the method frame condition. It is a list of expressions that the method
             may modify during its execution    
      
      \item \methodd.\excPostSpec \ is a partial function from exception types to formulas which returns the predicate
@@ -49,7 +49,7 @@ $$ \begin{array}{l}
       \LoopSpecSet = \left\{\begin{array}{ll}  
                                        \posL   & : nat \\
                                        \invL   & : \predWp \\                 
-	                               \modifL   & : locations\lbrack \ \rbrack  
+	                               \modifL   & :  \expressionsWp  \lbrack \ \rbrack  
                             \end{array}  \right\} 
      \end{array} $$ \todo{define modifies locations in the grammar }
 

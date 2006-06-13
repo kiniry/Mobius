@@ -366,13 +366,14 @@ We will also see how the weakest precondition is defined in presence of exceptio
 	 				 	\item method invocation  (only the case for non void instance method is given). 
 	 				 			$$\begin{array}{l}
 								 \wpi{\invoke  \   \mbox{\rm\texttt{n} } } {\methodd}{i}  =   \\
-	 				 		 \methodd.\pre[ \locVar{s} \leftarrow \stack{\counter + s -\methodd.\numArgs}]_{s = 0}^{\methodd.\numArgs }  \\
+	 				 	 \mbox{\rm\texttt{n} } .\pre[ \locVar{s} \leftarrow \stack{\counter + s -\methodd.\numArgs}]_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }  \\
 	 				 			\wedge \\
 								\begin{array}{l}
 	 				 			       \forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall freshVar (  \\ 
-	 				 				              \Myspace \methodd.\normalPost \begin{array}{l}
+	 				 				              \Myspace \mbox{\rm\texttt{n} } .\normalPost \begin{array}{l}
 									               \subst{\result}{  freshVar } \\
-											\subst{ \locVar{s}}{\stack{\counter + s - numArgs(m)}}_{s = 0}^{ \mbox{\rm\texttt{n} }. \numArgs }                                                                                                	\end{array}  \Rightarrow \\ 
+											\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } }.\numArgs }_{s = 0}^
+{ \mbox{\rm\texttt{n} }. \numArgs }                                                                                                	\end{array}  \Rightarrow \\ 
 										      \\
 										      \Myspace  \Myspace  \inter{i}{i+1 } \begin{array}{l}
 										                                   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs}\\
@@ -381,7 +382,7 @@ We will also see how the weakest precondition is defined in presence of exceptio
 	 				 			\wedge_{j = 0 }^{\mbox{\rm\texttt{n} } .\exceptions.length -1} \\
 	 				 			%\forall \tt{e_m} ( m =1 .. k  )
                                                                (\mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \Rightarrow 
-                                                                    \excPost(i,   \methodd.\exceptions[j] )  ) \\		
+                                                                    \methodd.\excPost(i,   \methodd.\exceptions[j] )  ) \\		
 	 				 			\end{array}
 	 				 			$$ 
 	 			
