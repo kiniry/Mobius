@@ -19,7 +19,7 @@
 
        \item  a component  \heapLocs  \ which stands for the  list of references that the heap has allocated  
               
-       \item  a component \heapTypeOf   \ is a total function  which maps any reference to a type 
+       \item  a component \heapTypeOf   \ is a partial function  which maps references to their dynamic type 
  \end{itemize}
 
 
@@ -32,7 +32,7 @@
          \heap = \left\{\begin{array}{ll}  \heapFields  &  : \FieldSet \rightharpoonup (  \RefValues \rightharpoonup \Values) \\
                                            \heapArrays  &  : \RefValuesArr * nat \rightharpoonup \Values \\
 					   \heapLocs    &  : list \ \RefValues \\
-					   \heapTypeOf  &    : \RefValues \rightarrow \AllRefs
+					   \heapTypeOf  &  : \RefValues \rightharpoonup \AllRefs
                     \end{array} \right\}
    \end{array} $$
 
