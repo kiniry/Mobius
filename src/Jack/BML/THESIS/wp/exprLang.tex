@@ -13,15 +13,17 @@ The next definition gives the set of expressions and formulas.
 
 \begin{deepExpr}[Language of expressions]\label{deepExpr}
 $$\begin{array}{ll}
-\Constants   & ::= \intLiteral  \mid \signedInt  \mid \Mynull  \mid \refWp \\
+\ConstantsWp           & ::=  \Values \mid \ClassSet \\
+% & \\
+%\refWp               & ::= \refWp\_\intLiteral \\
+%& \\
+%\boundVar            & ::= \bound\_\intLiteral \\ 
 & \\
-\refWp & ::= \refWp\_\intLiteral \\
-& \\
-  \exprWp      & ::= \ConstantsWp \\
-                     &  \mid  \locVar{ \digits } \\ 
+  \exprWp            & ::= \ConstantsWp \\
+                     &  \mid  \locVar{nat} \\ 
        	             &  \mid  \fieldAccess{\exprWp}{\fieldd}, \fieldd :\FieldSet\\
-		     &  \mid \ident \\
-		     &  \mid  \update{\fieldd}{ \exprWp}{\exprWp}(\exprWp) \\
+		%     &  \mid \ident \\
+		     &  \mid  \update{\fieldd}{ \exprWp}{\exprWp}(\exprWp), \fieldd :\FieldSet\\
 		     &  \mid  \arrayAccess{\exprWp} {\exprWp} \\	   
 		     &  \mid \update{ \arrayAccessOnly}{ (\exprWp , \exprWp)}{ \exprWp} (\exprWp,\exprWp) \\	
 		     &  \mid  \exprWp \ \op \ \exprWp   \\
@@ -29,11 +31,11 @@ $$\begin{array}{ll}
 		     &  \mid  \stack{ \exprWp} \\
                      &  \mid \EXC    \\
 		     &  \mid  \result \\
-		     &  \mid  \boundVar \\
+	%	     &  \mid  \var \\
     & \\
 
     \typeExpWp       & :: =  \typeof{ \exprWp} \\
-                     &  \mid \type{\ident} \\
+                     &  \mid \type{\exprWp} \\
                      &  \mid \elemtype{\exprWp  }\\
 		     &  \mid \TYPE\\   
    & \\ 
@@ -48,15 +50,15 @@ $$\begin{array}{ll}
 	  & \mid \predWp \vee  \predWp \\
 	  & \mid \predWp  \Rightarrow \predWp \\
           & \mid \predWp \iff  \predWp \\
-	  & \mid \forall \ \boundVar , \predWp\\
-	  & \mid \exists \ \boundVar  , \predWp	
+	  & \mid \forall \ x , \predWp\\
+	  & \mid \exists \ x  , \predWp	
 \end{array}$$
 \end{deepExpr}
 
-From the above definition, we can notice that field expressions are defined this time by using an identifier.
-The deep expression language also supports
- update expressions for field and array access.  These expressions appear in the intermediate states of \fwpi \ calculus.
-We also get a special syntactic construct for references \refWp \ which is not part of BML. \refWp \ expressions stand 
-for the reference values and are used basically in cases when a new reference is created.
- In the following, we will proceed with a subsection which establishes some particularities of the substitution. 
+From the above definition, that the constants in the language are the values as defined in Chapter \ref{opSem},  section \ref{types} as well 
+the set of classes \ClassSet.
+Note that the expression language also supports update expressions for field and array access.
+ These expressions appear in the intermediate states of the \fwpi \ calculus.
+ 
+ In the following, we will proceed with subsection \ref{subst} which establishes some particularities of the substitution. 
  In section \ref{interpret}, we give a meaning of formulas from our assertion language in a state.

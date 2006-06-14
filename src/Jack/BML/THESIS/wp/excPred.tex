@@ -13,7 +13,7 @@ The formal definition follows.
 \begin{defExc}[Postcondition in case of throwing an exception]\label{defExc}
 The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}} )   $ is defined as follows:
  \begin{itemize}
-    \item if $  \ins{i} \neq \athrow \wedge  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \wedge \pcHandler \neq \bottom    $ then 
+    \item if $  \ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \wedge   \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \wedge \pcHandler \neq \bottom    $ then 
       $$ \begin{array}{l}
            \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
            \inter{i}{\pcHandler}\\
@@ -29,7 +29,7 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
    
 
 
-    \item else if $\ins{i} \neq \athrow \wedge    \findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
+    \item else if $\ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \wedge   \findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
             $$\begin{array}{l}
                     \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
                         \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
@@ -47,8 +47,10 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
 
 \end{itemize}
 \end{defExc}
-Note that the definition does not take into account programmatic exceptions thrown by the instruction \athrow.
-We consider two cases depending on if  the thrown exception   is handled or not.
+Note that the definition does not take into account programmatic exceptions thrown by the instruction \athrow, neither exception caused by a method invokation
+(execution of instruction \invoke). Those two cases are handled in a different way as we shall see later in the definition of the \fwpi \ function in Section
+\ref{wpRules}.
+The above definition considers two cases depending on if  the thrown exception   is handled or not.
 
 The function $\methodd.\excPost$ will return the weakest precondition of the exception handler that protects the instruction from the thrown exception \texttt{Exc},
 if such an exception handler exists ( $  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHH} $ $ \neq \bottom $ ). 
@@ -59,5 +61,5 @@ an exception  \texttt{Exc}.
 postocnditions, is substituted with the reference to the thrown object.
 
 
-Note that in what follows we do not treat the Java virtual machine errors. Thus, we deal only with user defined exceptions and
- \texttt{JavaRuntimeException} subclasses.
+%Note that in what follows we do not treat the Java virtual machine errors.
+%x Thus, we deal only with user defined exceptions and \texttt{JavaRuntimeException} subclasses.

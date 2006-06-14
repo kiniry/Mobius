@@ -200,11 +200,10 @@ We will also see how the weakest precondition is defined in presence of exceptio
 		$$ \begin{array}{l}
                          \wpi{\instr{new  \ \clazz }} {\methodd}{i}  =  \\
 		\typeof{\referenceOnly} = \type{\clazz} \Rightarrow \\
-		     \Myspace \inter{i}{i+1} 
-			\begin{array}{l} 
-                               \subst{ \counter}{ \counter + 1 } \\
-			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
-		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+		   \Myspace 	\begin{array}{l}   \inter{i}{i+1} \\
+		                                   \subst{ \counter}{ \counter + 1 } \\
+						   \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
+						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
 		       \end{array}
               \end{array}$$
 		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. Then the precondition is the same predicate but in which the stack
@@ -226,8 +225,7 @@ We will also see how the weakest precondition is defined in presence of exceptio
                                                           \subst{\length}{\update{\length}{\referenceOnly}{\stack{\counter} } }     
 						   \end{array} \\
 							\wedge \\
-						\stack{\counter} < 0 \Rightarrow  \\
-								\Myspace  \methodd.\excPost( i, \NegativeArraySizeExc) \\
+						\stack{\counter} < 0 \Rightarrow    \methodd.\excPost( i, \NegativeArraySizeExc) \\
                                     \end{array} $$
 		  Here, the rule for array creation is similar to the rule for object creation.
 		  However, creation of an array might terminate exceptionally in case the length of the array stored 
@@ -239,15 +237,14 @@ We will also see how the weakest precondition is defined in presence of exceptio
 				 		\stack{\counter } \ne \Mynull \Rightarrow \\
 						      \Myspace	\inter{i}{i+1}[ \stack{\counter } \leftarrow \fieldd ( \stack{\counter } ) ] \\
 									 \wedge \\
-						\stack{\counter } = \Mynull \Rightarrow \\
-								\Myspace     \methodd.\excPost( i, \NullPointerExc) 
+						\stack{\counter } = \Mynull \Rightarrow \methodd.\excPost( i, \NullPointerExc) 
 					\end{array} 
 					$$
 			  The instruction for accessing a field value takes as postcondition the predicate that must hold between it and its next instruction
 			  $\inter{i}{i+1}$.  This instruction may terminate normally or on an exception.
 			  In case the stack top element is not \Mynull, the precondition of \getfield \ is its postcondition where the stack 
 			  top element is substituted by the field access expression $\fieldd ( \stack{\counter }$.
-			  If the stack top element is \Mynull, then the instruction will terminate on  a \NullPointerExc exception. In this case the precondition
+			  If the stack top element is \Mynull, then the instruction will terminate on  a \NullPointerExc \ exception. In this case the precondition
 			  of the instruction is the predicate returned by the function $\methodd.\excPost$ for position $i$ in the bytecode and exception \NullPointerExc
 			  
 			\item  field update \\
@@ -300,8 +297,7 @@ We will also see how the weakest precondition is defined in presence of exceptio
 									\Myspace \inter{i}{i+1}
 									 \subst{ \stack{\counter } }{ \length(\stack{\counter } )  } \\
 									 \wedge \\
-								\stack{\counter } = \Mynull \Rightarrow \\
-								\Myspace   \methodd.\excPost( i, \NullPointerExc) \\
+								\stack{\counter } = \Mynull \Rightarrow  \methodd.\excPost( i, \NullPointerExc) \\
 					  \end{array} $$
 					  The semantics of \arraylength is that it takes the stack top element which must be an array reference
 					  and puts on the operand stack the length of the array referenced by this reference. This instruction
@@ -319,8 +315,8 @@ We will also see how the weakest precondition is defined in presence of exceptio
 							
 							 \wedge \\
 							
-							not(  \typeof{\stack{\counter}} \subtypeSpec  \clazz  ) \Rightarrow  \\
-							\Myspace    \methodd.\excPost( i, \ClassCastExc) \\
+							not(  \typeof{\stack{\counter}} \subtypeSpec  \clazz  ) \Rightarrow  
+							 \methodd.\excPost( i, \ClassCastExc) \\
 						\end{array}$$  
 					  The instruction checks if the stack top element can be cast to the class \clazz. 
 					  Two termination of the instruction  are possible. If the stack top element \stack{\counter} is of type 
@@ -363,11 +359,11 @@ We will also see how the weakest precondition is defined in presence of exceptio
 %	 				 			\end{array}
 %	 				 			$$ \\
 %\end{itemize} 
-	 				 	\item method invocation  (only the case for non void instance method is given). 
+	 		\item method invocation  (only the case for non void instance method is given). 
 	 				 			$$\begin{array}{l}
 								 \wpi{\invoke  \   \mbox{\rm\texttt{n} } } {\methodd}{i}  =   \\
-	 				 	 \mbox{\rm\texttt{n} } .\pre[ \locVar{s} \leftarrow \stack{\counter + s -\methodd.\numArgs}]_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }  \\
-	 				 			\wedge \\
+	 				 	 \mbox{\rm\texttt{n} } .\pre[ \locVar{s} \leftarrow \stack{\counter + s -\methodd.\numArgs}]_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }  \\ \\
+	 				 			\wedge \\\\
 								\begin{array}{l}
 	 				 			       \forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall freshVar (  \\ 
 	 				 				              \Myspace \mbox{\rm\texttt{n} } .\normalPost \begin{array}{l}
@@ -378,12 +374,26 @@ We will also see how the weakest precondition is defined in presence of exceptio
 										      \Myspace  \Myspace  \inter{i}{i+1 } \begin{array}{l}
 										                                   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs}\\
 														   \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ freshVar }																	\end{array}																									
-	 				 			 )	\end{array}  \\
-	 				 			\wedge_{j = 0 }^{\mbox{\rm\texttt{n} } .\exceptions.length -1} \\
+	 				 			 )	\end{array}  \\\\
+	 				 			\wedge_{j = 0 }^{\mbox{\rm\texttt{n} } .\exceptions.length -1} \\ \\
 	 				 			%\forall \tt{e_m} ( m =1 .. k  )
-                                                               (\mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \Rightarrow 
-                                                                    \methodd.\excPost(i,   \methodd.\exceptions[j] )  ) \\		
-	 				 			\end{array}
+							\begin{array}{l}
+	 				 		\forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \\
+	 				 		\Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = \bottom \Rightarrow \\  
+					 \Myspace \forall \bound_i (  \\ 
+						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
+                                                 \Myspace\Myspace\Myspace  \methodd.\excPostSpec(i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound_i }    ) ) \\
+						 \Myspace \wedge \\
+						 \Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k    \Rightarrow \\ 
+ \Myspace \forall \bound_i (  \\ 
+						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
+                                                 \Myspace\Myspace\Myspace  \inter{i}{k}\begin{array}{l}
+						                                           \subst{\counter}{0} \\
+                                                                                           \subst{\stack{0} }{\bound_i }  
+						                                        \end{array}) )
+							
+	 				 		\end{array}
+							\end{array}
 	 				 			$$ 
 	 			
 
@@ -398,18 +408,31 @@ We will also see how the weakest precondition is defined in presence of exceptio
 						Second, we get a logical statement which guarantees the correctness of the method invokation
 						in case of normal termination.
 						On the other hand, its postcondition  \methodd.\normalPost \ is assumed to hold and thus, we want to establish that 
-						under the assumption that \methodd.\normalPost \  holds \ with \result \ substituted with a fresh bound variable $freshVar$
+						under the assumption that \methodd.\normalPost \  holds \ with \result \ substituted with a fresh bound variable $ \bound_i$
 						and correctly initialized formal parameters
 						is true we want to establish that the predicate   \inter{i}{i+1 } \
 						holds . This implication is quantified over the locations  \method.\modif \ that a method may modify
-						and the variable $freshVar$ which stands for the result that the invoked method \methodd \ returns.  
+						and the variable $ \bound_i$ which stands for the result that the invoked method \methodd \ returns.  
 						
 						The third part of the rule deals with the exceptional termination of the method invokation.
-						In this case, if the invoked method terminates on any exception which belongs to the array of 
-						exceptions \methodd.\exceptions \ that \methodd \ may throw, its exceptional postcondition
-						for the corresponding exception
-						must guarantee the predicate returned by the function $\methodd.\excPost$ of the current method
-
+						In this case, if the invoked method \texttt{n} terminates on any exception which belongs to the array of 
+						exceptions \texttt{n}.\exceptions \ that \texttt{n} may throw. Two cases are considered - either the thrown
+						exception can be handled by \methodd \ or not. If the thrown exception  \texttt{Exc} can not be handled
+						by the method \methodd \
+						(i.e. $\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}
+						{\methodd.\excHandlerTable} = \bottom $) then if the exceptional postcondition predicate
+						$ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{Exc} })  $ of \texttt{n} holds
+						then  	$ \methodd.\excPostSpec ( \mbox{\rm\texttt{Exc} })  $ for any value of the thrown exception
+						object. 
+						In case the thrown  exception\texttt{Exc} is handled by \methodd, i.e. \\
+						$ \findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec 
+						  ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k $   then if 
+						the exceptional postcondition $ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{Exc} })  $ 
+						of \texttt{n} holds then the intermediate predicate $\inter{i}{k}$ 
+						that must hold after $\ins{i}$ and before   $\ins{k}$ must hold once again for any value
+						of thrown exception. 
+						
+						
 						
 						
 						
@@ -428,7 +451,8 @@ We will also see how the weakest precondition is defined in presence of exceptio
 								      \wedge \\
 								      \forall n, 0 \le n < \methodd.\excHandlerTable.length \\  
 								      \typeof{\stack{\counter}} <: \methodd. \excHandlerTable[n].\exc \Rightarrow \\
-								      \Myspace  \wpi{\methodd.\body[\methodd. \excHH[n].\pcHandler]}{\methodd}{\pcHandler}
+								      \Myspace  \inter{i}{\methodd. \excHH[n].\pcHandler}
+								                     
 								    \end{array} 
 							   \end{array}
 							$$ \\
@@ -440,10 +464,12 @@ We will also see how the weakest precondition is defined in presence of exceptio
 						on the stack top. Thus, the rule takes into account the case when the exception thrown is a not handled exception,
 						i.e. the type    of \stack{\counter} is a subtype of any  of the exceptions \methodd.\exceptions \ that might be thrown
 						by the current method \methodd. Thus, if  \athrow \ instruction throws a not handled exception \texttt{Exc} 
-						the weakest precondition of the instruction is the exceptional postcondition as the Def. \ref{defExc} states.
+						then  the exceptional postcondition for  \texttt{Exc} must hold where the special exception variable \EXC \ 
+						is substituted for the stack counter \stack{\counter}. 
  						The \fwpi \ considers also the case when the thrown exception object  might be handled by any of the
 						exception handlers \methodd.\excHandlerTable \ of method \ \methodd. 
-						In that case, once again the rule takes into account all the possible exception handler types
+						In that case, once again the rule takes into account all the possible exception handler types as the type of the
+						thrown exception is unknown.
 						
 					
 					

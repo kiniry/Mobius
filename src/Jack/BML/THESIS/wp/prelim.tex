@@ -25,7 +25,7 @@ $\methodd.\body[0]$.
 The array of bytecode instructions of a method \methodd \ determine an oriented graph $G( V , \execRel ) $ in which the vertices are the instructions of the method body,
 i.e. $$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
 The following definition defines the set of edges in the control flow graph.
-\begin{defEdge}[Definition of an edge in a control flow graph]\label{defEdge} 
+\begin{defEdge}[Edge in control flow graph]\label{defEdge} 
  The set of edges $\execRel$ is a relation between the vertices elements
 $$ \execRel : V * V $$ and is defined  as follows:
 $$ \begin{array}{l} (\methodd.\body[j], \methodd.\body[k]) \in \execRel \\
