@@ -151,8 +151,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
                   	\mbox{\rm \comment{ we get three cases }}
 		    \end{array}	$$
                    \begin{enumerate}
-		           \item the dereferenced reference on the stack top is \Mynull \ and an exception handler starting at instruction $k$ exists for \NullPointerExc \ 
-			          and $\ins{s} $ is in its scope   
+		           \item the dereferenced reference on the stack top is \Mynull \ and an exception handler starting at 
+                                 instruction $k$ exists for \NullPointerExc \  and $\ins{s} $ is in its scope   
 			           $$ \begin{array}{l}   
 				              \mbox{\rm\comment{thus, we get  the hypothesis   } } \\
 				              \interp{ \stack{\counter } = \Mynull }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } \\
@@ -167,7 +167,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
                          \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
                          \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } 
                        \end{array} } {\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
-		       	\mbox{\rm \comment{ from lemmas \ref{substCntr},  \ref{newHeap}  and the operational semantics of  \putfield  }}\\
+		       	\mbox{\rm\textit{\{ from lemmas \ref{substCntr},  \ref{substHeap} and \ref{substStack}}}\\
+			\mbox{\rm\textit{ and the operational semantics of  \putfield \} }}\\
                         
 				\interp{ \inter{i}{k}}{ state_2 }
              \end{array}	$$
@@ -180,7 +181,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
                           \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
 			   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
                     \end{array} }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc } }   \\  
-		 	\mbox{\rm \textit{\{ from lemmas   \ref{substStack}, \ref{substHeap}   and the operational semantics of \putfield }}\\
+		 	\mbox{\rm \textit{\{ from lemmas   \ref{substStack}, \ref{substHeap}   and}}\\
+			\mbox{\rm \textit{ the operational semantics of \putfield \}}}\\
 			\interp{  \methodd.\excPostSpec(\NullPointerExc  )}{state_2}		    
 \end{array}	$$
                  \item the reference on the stack top is not \Mynull 
@@ -195,7 +197,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
                                                               \subst{ \counter }{  \counter -2 } \\
 							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter} } }
 						       \end{array} }{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
-			 \mbox{\rm\comment{ applying lemmas \ref{substCntr} and \ref{substHeap}  and of the operational semantics of \putfield } } \\
+			 \mbox{\rm\textit{\{ applying lemmas \ref{substCntr} and \ref{substHeap}  and }}\\
+			\mbox{\rm\textit{ of the operational semantics of \putfield \}} } \\
 			\interp{ \inter{i}{i+1}}{state_2}			       
 						       
 	           \end{array}	$$
@@ -301,8 +304,6 @@ $$ \begin{array}{l}
 					\end{array} 
 					\end{array} 	
                          }{state_n} \\
-\end{array}$$
-$$ \begin{array}{l}
 		\mbox{\rm\comment{from lemmas \ref{substCntr} and \ref{substStack}} }	 \\
                          \iff \\
                  \interpTwoLines{ \begin{array}{l}
@@ -311,39 +312,47 @@ $$ \begin{array}{l}
                                       \end{array}} 
                                     {     state_n 
                                               \begin{array}{l}      
-					                \subst{\counter}{\counter + 1}\\
-							\subst{\stackOnly{\counter + 1} }{ \locVar{i}  }
+					                \subst{\counterOnly}{\evalExp{\counter + 1}{state_n} }\\
+							\subst{\stackOnly} { \update{\stackOnly}{ ( \evalExp{\counter + 1}{state_n} ) }{ \evalExp{ \locVar{i} } {state_n} }}
+							%\subst{\counterOnly}{\evalExp{\counter}{state_n} +1} \\
+						                   %\update{\stackOnly}{\evalExp{\counter}{state_n}  + 1}{ \evalExp{ \locVar{i}}{state_n} }  
+					\end{array}  
+                                    } \\
+\end{array}$$
+
+$$ \begin{array}{l}
+ \mbox{\rm\comment{from the Def. \ref{interpret}  of the evaluation function  }}\\				    
+            \equiv \\
+                 \interpTwoLines{ \begin{array}{l}
+		                             \invariant \  \wedge\\
+                                             \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd}) 
+                                      \end{array}} 
+                                    {     state_n 
+                                              \begin{array}{l}      
+					                \subst{\counterOnly}{\counterOnly + 1} \\
+							\subst{\stackOnly} { \update{\stackOnly}{\counterOnly + 1  }{  \locVarOnly(i)}  }
 							%\subst{\counterOnly}{\evalExp{\counter}{state_n} +1} \\
 						                   %\update{\stackOnly}{\evalExp{\counter}{state_n}  + 1}{ \evalExp{ \locVar{i}}{state_n} }  
 					\end{array}  
                                     } \\
   %  \end{array} \\
- 
+ \mbox{\rm\comment{from the operational semantics of \load }}\\
+
+ \interp{ 
+\begin{array}{l}   \invariant \  \wedge\\
+                  \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd}) 
+\end{array}}{state_{n+1}}  \\
+
+
 \mbox{\rm \comment{we can get from the last formulation}}\\
-  \numConclusion{1} \ %\begin{array}{l}
-                             \interp{\invariant} 
-                                    {state_n  \begin{array}{l} 
-                                                     \subst{\counter}{\counter +1} \\
-						     \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
-					       \end{array}  
-                                    } \\
+  \numConclusion{1} \   \interp{\invariant}   {state_{n+1} } \\
                               \\
-                 \numConclusion{2}               \interpTwoLines{ \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }
-                                     {state_n  \begin{array}{l} 
-                                                      \subst{\counter}{\counter +1}\\
-						      \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
-					       \end{array}  
-                                     } \\
+                 \numConclusion{2}  \interp{ \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }
+                                     {state_{n+1}  } \\
    % \end{array} 
 \mbox{\rm \comment{ from \numConclusion{1}  and \numConclusion{2}  }}\\
-  \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }{state_n  \begin{array}{l} 
-                                                     \subst{\counter}{\counter +1} \\
-						     \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
-					       \end{array}  
-                                    }\\
-\mbox{\rm\comment{from the operational semantics of \load }}\\
+  \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }{state_{n+1}  }\\
 
-  \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }{state_{n+1}  }
 \end{array} $$
 \item $\ins{\pc_n} $ is an end of a cycle \ and the next instruction to be executed is a loop entry 
 instruction at index $loopEntry $ in the array of bytecode instructions of the method \methodd
@@ -399,7 +408,7 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{state_{n + 1}}  \e
 Qed.
 
 
-\begin{lemma2}\label{lemma2}
+\begin{lemma2}[Validity of \fwpi \ for a method implies that postcondition holds]\label{lemma2}
 Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
 Assume that every execution of the method \methodd \ terminates.
  Assume that  execution of methodd \methodd \ starts in state $state_0$ 
@@ -419,8 +428,10 @@ By applying lemma \ref{lemma1} at every execution step of the execution path we 
 
 
 
+Now, we are ready to state the theorem which expresses the correctness of our verification condition generator
+w.r.t. the operational semantics of our language
 \begin{vcGenCorrect}\label{vcGenCorrect}
-For any  method \methodd \  if the verification condition 
+For any  method \methodd \  if the verification condition is valid:
 $$ \interp{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd}}{} $$
  then \methodd \ is correct in the sense of the definition \ref{defCorrect}. 
 \end{vcGenCorrect}
