@@ -48,7 +48,7 @@ $$\begin{array}{ll}
      
      & \\
      
-     \boundVar & ::= \# \ \bound\_\intLiteral \\ 
+     \boundVar & ::= \ \bound\_\intLiteral \\ 
 
      & \\
     % \RefValuesSpec    & ::=  Ref \mid \Mynull \\
@@ -187,8 +187,8 @@ in JML :
 \begin{itemize}
       \item  $ \Constants$ represents the constants in BML. 
              A constant is either a signed or unsigned integer, or an identificator.  
-             Integers and identificators are defined as usually.  Identificators correspond 
-	     to indexes in the constant pool of a Java class. 
+             Integers are defined in a standard way. Identificators correspond 
+	     to indexes in the constant pool of a Java class and are always prefixed by the symbol $\#$. 
       
       \item  $ \locVar{i}$ a local variable in the array of local variables of a method at index $i$. Note that the array of local variables of a method on bytecode level
              is the list of formal parameters of the variables declared locally in the method.
