@@ -3,9 +3,17 @@
 \usepackage{url}
 \usepackage{amssymb}
 \usepackage{epsfig}
+\usepackage{listings}
+
+\def\lstlanguagefiles{Jml.sty}
+\lstloadlanguages{Jml}
+\lstset{language=Jml,flexiblecolumns=false}
 
 \title{Bytecode Verification and its Applications}
 \begin{document}
+\lstset{language=Jml}
+%\lstset{commentstyle=\textsf}
+
 \renewcommand{\topfraction}{0.9}
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\floatpagefraction}{0.75}
@@ -52,7 +60,8 @@
  \input{wp/prelim.tex} 
  \input{wp/extendMethod.tex} 
  \input{wp/wpbc.tex} 
-\section{Example}
+ \input{wp/smallExample.tex}
+
 
 
 
