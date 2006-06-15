@@ -1,0 +1,131 @@
+BML Reference Manual
+<inspired by the outline of the JML reference manual>
+
+* Introduction
+  - specification and verification of byte code
+    why do you want to specify and verify bytecode
+    source code not always available
+  - relation with JML
+    compilation of specifications 
+    the difference between BML and JML-runtime checking (adding specifications
+    vs. adding code to the byte code)
+    connection with assert in Java 1.5
+  - knowledge of JML assumed
+  - motivation: PCC infrastructure
+    compilation of proofs
+  - status and plans for BML
+  - related work
+  - acknowledgements
+
+* Fundamental concepts (copied from JML - and probably much of the
+contents could be similar as well - or this could be left out
+Maybe it would be better to leave this out here and refer to the JML
+reference manual - this also holds for some points later like
+'invariants and exceptions' as they are not BML specific)
+  - model and ghost
+  - lightweight and heavyweight specifications
+  - privacy modifiers and visibility
+  - instance vs static
+  - locations and aliasing
+  - expression evaluation and undefinedness
+  - is null the default, yes or no? (TBD)
+  - relation with JML language levels
+
+* Notations used
+  - for grammar
+  - for class file attributes
+
+* Do we need to talk about lexical (or any other) conventions?
+
+* The class file format
+  What information do the different components of the class file contain
+  - Constant Pool
+  - Method data structure
+    Local variable table
+    Line number table
+
+* Class (and interface) specifications
+  (In JML reference manual two separate chapters: type definitions and
+type specifications)
+  - Modifiers
+    suggested modifier ordering
+    spec public/spec protected
+    pure
+    model
+    ghost
+    instance
+    helper
+  - Field declarations 
+  - Invariants
+    static vs. instance invariants
+    invariants and exceptions
+    access modifiers for invariants
+    invariants and inheritance
+  - Constraints
+    static vs. instance constraints
+    access modifiers for constraints
+    constraints and inheritance
+  - Represents clauses (restricted to functional clauses)
+  - Initially clauses
+
+* Method specifications
+  (In JML reference manual two separate chapters: class/interface member declarations and method specifications)
+  - Method and constructor declarations
+  - lightweight vs. heavyweight
+  - behaviour cases
+  - method specification clauses
+    requires
+    ensures
+    signals
+    signals-only
+    assignable clause
+
+* Predicates and specification expressions
+  - predicates = specification expressions = expressions
+  - BML primary expressions
+    (no \ needed, since stored as special code)
+    references in the constant pool
+    local variable
+    result
+    array length
+    counter of the operand stack
+    stack expressions
+    old
+    fresh
+    nonnullelements
+    typeof
+    elemtype
+    type
+    universal and existential quantifiers
+  - BML operators
+    subtype operator
+    equivalence and inequivalence operators
+    forward and reverse implication operators
+  - store refs
+   
+* Annotation (of) statements
+  - Loop statements
+    loop invariants
+    loop variant functions
+    loop modifies
+  - Assert statements
+  - Set statements
+
+* Encoding of BML in class file format
+  - type specifications
+  - method specifications
+  - loops and annotation statements
+  - predicates and specification expressions   
+
+* Typechecking BML
+  Link with BCV  
+
+* JML to BML compiler
+
+Appendix
+
+* Grammar
+* Attribute formats
+* Table with code for BML keywords
+* WP definition
+* Rules JML to BML compiler 
