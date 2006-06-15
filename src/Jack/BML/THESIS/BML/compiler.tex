@@ -30,29 +30,30 @@ Those attributes are important for the next phase of the JML compilation.
       Its desugared form corresponds to the method given in Fig. \ref{bcSpec}
 
 \begin{figure}
-\begin{verbatim}
-class C {
+\begin{lstlisting}
+
+public class C {
    int a ;
 
    invariant a > 0; 
    historyConstraint  old(a) >= a;
 
-   /*@ public_behaviour
-     @ requires a > b;
-     @ modifies a;
-     @ ensures  a == \old(a) - b;  
-     @
-     @ also
-     @ requires a <= b;
-     @ ensures  a == \old(a);
-     @*/
+   /@* public_behaviour
+     * requires a > b;
+     * modifies a;
+     * ensures  a == \old(a) - b;  
+     *
+     * also
+     * requires a <= b;
+     * ensures  a == \old(a);
+     *@/
      public void decrease(int b) {
         if ( a > b) {
            a = a - b;
         }
      }
 }
-\end{verbatim}
+\end{lstlisting}
 \caption{\sc An example for a method with two normal behaviours specified in JML} \label{JmlSpec}
 \end{figure}
 

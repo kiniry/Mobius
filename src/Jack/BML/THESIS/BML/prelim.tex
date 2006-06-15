@@ -31,8 +31,8 @@ JML specifications are written as comments so they are not visible by Java compi
   respectively,  \jmlKey{modifies} keyword is followed by all the locations that can be modified by the method, 
   \jmlKey{loop\_invariant}, not surprisingly, stands for loop invariants, \jmlKey{loop\_modifies} keyword gives the locations modified by loop invariants etc. 
   The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}. Special JML operators are, for instance, \jmlKey{$\backslash$result} which stands for the value that a method returns if it is not void, the \jmlKey{$\backslash$old(expression)} operator 
-  designates the value of \texttt{expression} in the prestate of a method and is usually used in the method's postcondition. 
-  JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+  designates the value of \texttt{expression} in the prestate of a method and is usually
+ used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
 These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
 
 JML can be used for either static checking of Java programs by tools such as JACK, the Loop tool, 
@@ -44,23 +44,27 @@ The method \texttt{replace} will search in the array for the first occurence of 
 that the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
 
 \begin{figure}[ht!]
-\begin{verbatim}
+\begin{lstlisting} 
+
 public class ListArray {
+
   private Object[] list;
 
-  //@requires list != null;
-  //@ensures \result ==(\exists int i; 
-  //@ 0 <= i && i < list.length && 
-  //@ \old(list[i]) == obj1 && list[i] == obj2); 
-  public boolean replace(Object obj1,Object obj2)
-  {
+  /@*
+    * requires list != null;
+    * ensures \result ==(\exists int i; 
+    * 0 <= i && i < list.length && 
+    * \old(list[i]) == obj1 && list[i] == obj2);
+    *@/
+  public boolean replace(Object obj1,Object obj2){
     int i = 0;
-    //@loop_modifies i, list[*];
-    //@loop_invariant i <= list.length && i >=0 
-    //@  && (\forall int k;0 <= k && k < i ==> 
-    //@  list[k] != obj1); 
-    for (i = 0; i < list.length; i++ ) {
-      if ( list[i] == obj1) {
+    /@*
+      * loop_modifies i, list[*];
+      * loop_invariant i <= list.length && i >=0 
+      * && (\forall int k;0 <= k && k < i ==> list[k] != obj1);
+      *@/
+    for (i = 0; i < list.length; i++ ){
+      if ( list[i] == obj1){
         list[i] = obj2;
         return true;	
       }
@@ -68,8 +72,8 @@ public class ListArray {
     return false;
   }
 }
-\end{verbatim}
-\caption{\sc class \mbox{\rm\texttt{ListArray}} with JML annotations} 
+\end{lstlisting}
+\caption{\sc class \mbox{\rm \lstinline!ListArray!} with JML annotations} 
 \label{replaceSrc}
 \end{figure}
 

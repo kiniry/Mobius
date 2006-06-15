@@ -10,13 +10,19 @@
 BML corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and 
  security properties. The following Def. \ref{BCSL} gives the formal grammar of BML. The formal grammar of BML is given in the next definition.
 
-\subsection{Notation convention} 
+\subsection{Notation convention}
+
+
 \begin{itemize}
      \item Nonterminals are written with a \nonterminal font
      \item Terminals are written with a \terminal font
     % \item Keywords are writtem with a \keyWord font
      \item brackets  $\lbrack \ \rbrack $ surround optional text.
 \end{itemize}
+
+
+
+
 
 
 \subsection{BML Grammar}\label{BCSL}
@@ -266,18 +272,19 @@ In the example we also have specified a history constraint which states that the
 of any method of class  {\verb C }  must be greater or equal to its value in the state when the method terminates execution. For instance, 
 the history constraint is established by the method  {\verb decrease }
 \begin{figure}
-\begin{verbatim}
+\begin{lstlisting}
 class C {
    int a ;
 
-   invariant a > 0; 
-   historyConstraint old(a) >= a;
-   
+   /@*
+     * invariant a > 0; 
+     * historyConstraint old(a) >= a;
+     *@/
    public void decrease(int b) {
       ...
    }
 }
-\end{verbatim}
+\end{lstlisting}
 \caption{\sc An example for class specification} \label{classSpec}
 \end{figure}
 
@@ -333,32 +340,34 @@ variable {\verb a }.
 
 
 \begin{figure}
-\begin{verbatim}
+\begin{lstlisting}
 class C {
    int a ;
   
-   invariant a > 0; 
-   historyConstraint  old(a) >= a;
-  
-   {| 
-     requires a > b;
-     modifies a;
-     ensures  a == \old(a) - b;  
-     exsures (Exception) false;
-     
-     also
-     requires a <= b;
-     modifies nothing;
-     ensures  a == \old(a);
-     exsures (Exception) false;
-   |}   
+   /@* 
+     * invariant a > 0; 
+     * historyConstraint  old(a) >= a;
+     *@/
+
+   /@*  
+     * requires a > b;
+     * modifies a;
+     * ensures  a == \old(a) - b;  
+     * exsures (Exception) false;
+     *
+     * also
+     * requires a <= b;
+     * modifies nothing;
+     * ensures  a == \old(a);
+     * exsures (Exception) false;
+     *@/   
    public void decrease(int b) {
      if ( a > b) {
        a = a - b;
    }
  }
 }
-\end{verbatim}
+\end{lstlisting}
 \caption{\sc An example for an intra method specification } \label{bcSpec}
 \end{figure}
 
