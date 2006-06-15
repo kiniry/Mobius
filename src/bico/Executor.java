@@ -33,7 +33,7 @@ public class Executor {
 		//test with path with no .class inside - > ok only object class
 		//dealing with args
 		String pathname = "";
-		if (args.length == 0) {pathname = System.getProperty("user.dir");} else 
+		if (args.length == 0) {pathname = System.getProperty("user.dir");pathname = pathname.concat("\\test");} else 
 		if (args[0].toString().compareTo("help") == 0) {
 			System.out.println("Version of the program - 0.1");
 			System.out.println("Program coverts *.class files into special Coq format");
