@@ -1,0 +1,30 @@
+\section{Example}\label{wp:example}
+In the following, we will consider an example of the application of the verification procedure 
+with \fwpi.
+In Fig. \ref{wp:example:square}, we give an example of a Java method which calculates the square of its input which is stated in its postcondition.
+The calculation of the square of the parameter {\verb i} is done with an iteration which sums all the impair numbers  {\verb 2*s + 1, 0<=s <=i } in the local variable
+{\verb sqr}. The invariant states that whenever the loop entry is reached the variable {\verb sqr} will contain the square of the local variable  {\verb s} and that 
+  {\verb 0 <=s <=i}. 
+
+
+
+\begin{figure}
+\begin{verbatim}
+//@ ensures \result == i*i; 
+public int square( int i ) { 
+  int sqr  = 0;
+  if ( i < 0) {
+    i = -i;
+  }
+  //@ loop_modifies s, sqr;
+  //@ loop_invariant (0 <= s) && (s <= i) && sqr == s*s ;
+  for (int s = 0 ; s < i; s++ ) {
+    sqr = sqr + 2*s + 1;
+  }
+  return sqr;
+}
+
+\end{verbatim}
+\caption{\sc Java method which calculates the square of its input  }
+\label{wp:example:square}
+\end{figure}
