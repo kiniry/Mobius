@@ -10,6 +10,7 @@ import jml2b.IJml2bConfiguration;
 import bytecode_wp.bcclass.BCMethod;
 import bytecode_wp.bcclass.attributes.ExsuresTable;
 import bytecode_wp.bcclass.attributes.ModifiesSet;
+import bytecode_wp.bcexpression.BCLocalVariable;
 import bytecode_wp.bcexpression.Expression;
 import bytecode_wp.bcexpression.NumberLiteral;
 import bytecode_wp.bytecode.branch.BCConditionalBranch;
@@ -17,6 +18,11 @@ import bytecode_wp.formula.Connector;
 import bytecode_wp.formula.Formula;
 import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
+import bytecode_wp.modifexpression.ModifiesArray;
+import bytecode_wp.modifexpression.ModifiesDOT;
+import bytecode_wp.modifexpression.ModifiesExpression;
+import bytecode_wp.modifexpression.ModifiesIdent;
+import bytecode_wp.modifexpression.ModifiesLocalVariable;
 import bytecode_wp.vcg.VCGPath;
 import bytecode_wp.vcg.VcType;
 
@@ -92,7 +98,7 @@ public class BCLoopEnd extends BCInstruction {
 	}
 
 	public VCGPath wp(IJml2bConfiguration config, VCGPath vcs, ExsuresTable _exc) {
-		VCGPath wp = _wp(vcs, _exc);
+		VCGPath wp = _wp(config, vcs, _exc);
 		
 		if (!(loopEndInstruction instanceof BCConditionalBranch)) {
 			wp = loopEndInstruction.wp(config, wp, _exc);
@@ -115,17 +121,17 @@ public class BCLoopEnd extends BCInstruction {
 	 * @param _exc_Postcondition
 	 * @return
 	 */
-	private VCGPath _wp(VCGPath vcs, ExsuresTable _exc_Postcondition) {
+	private VCGPath _wp(IJml2bConfiguration config,VCGPath vcs, ExsuresTable _exc_Postcondition) {
 		// loop variant - check for termination
 		if (decreases.equals(new NumberLiteral(1))) {
 			return vcs;
 		}
 		Expression decreasesCopy = decreases.copy();
 		Expression decreasesAtLoopStart = decreases.copy();
-		decreasesAtLoopStart = decreasesAtLoopStart.atState(loopEntry);
+		decreasesAtLoopStart = atStateDec(config, decreasesAtLoopStart, loopEntry);
 
 		Predicate2Ar terminationConditionDecreases = new Predicate2Ar(
-				decreasesCopy.copy(), decreasesAtLoopStart,
+				decreasesCopy, decreasesAtLoopStart,
 				PredicateSymbol.LESS);
 
 	
@@ -133,7 +139,47 @@ public class BCLoopEnd extends BCInstruction {
 		
 		return vcs;
 	}
+	/**
+	 * the method "freezes" the expressions in the decrease statement
+	 * @param config
+	 * @param dec
+	 * @return
+	 */
+	private Expression atStateDec(IJml2bConfiguration config, Expression dec, int loopEntry) {
+		ModifiesExpression[] modifExpr = modifies.getModifiesExpressions();
+		for (int i = 0; i < modifExpr.length; i++) {
+			if (modifExpr[i] == null) {
+				continue;
+			}
+			
+			if (modifExpr[i] instanceof ModifiesLocalVariable) {
+				BCLocalVariable lVar = ((ModifiesLocalVariable) modifExpr[i])
+						.getLocalVariable();
 
+				dec =  dec.atState(loopEntry, lVar);
+			} else if (modifExpr[i] instanceof ModifiesDOT) {
+				Expression modified = modifExpr[i].getExpressionModifies();
+				dec = dec.atState(loopEntry , modified);
+
+				
+			} else if (modifExpr[i] instanceof ModifiesIdent) {
+				Expression modified = modifExpr[i].getExpressionModifies();
+				/* Expression atState = modified.atState(getPosition()); */
+				dec = dec.atState(loopEntry, modified);
+				
+			} else if (modifExpr[i] instanceof ModifiesArray) {
+				Expression modified = modifExpr[i].getModifies();
+				// Expression modified = modifExpr[i].getExpressionModifies();
+				// Expression atState = modified.atState(getPosition());
+				dec = dec
+						.loopModifArrayAtState(loopEntry, modified);
+				
+			}
+		}
+		return dec;
+	}
+	
+	
 	public String toString() {
 		return "LOOPEND :  " + super.toString();
 	}
