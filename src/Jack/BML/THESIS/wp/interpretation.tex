@@ -10,11 +10,12 @@
 We discuss the evaluation of expressions and interpretation of predicates  in a particular program state configuration.
 Thus, we first define a function for expression evaluation, as well as a function which for a given state and predicate returns the interpretation
 of the given predicate in the given state. 
-The function $eval$ will evaluate expressions in a given state:
+The function $eval$ which evaluates expressions in a state has the following signature:
 $$
-eval : \expressionsWp \rightarrow \SetConfigs \rightarrow \Values \cup \JavaType
+eval : \expressionsWp \rightarrow \SetConfigs \rightarrow \Values \cup \JavaType \cup \bottom
 $$
-
+%The function $eval$ associates a value to expressions from  \expressionsWp  \  if they have a value in the state.
+%For instance, a reference which is not in the domain of the  
 
 
 

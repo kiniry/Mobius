@@ -6,8 +6,13 @@ For every method \methodd \  we define also the function $ \methodd.\excPost $ \
 $$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \predWp  $$
  
 $ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
-returns the predicate that must hold in the poststate of the instruction at index \textit{i} if this instruction throws an exception of
-type \texttt{Exc}.
+returns the predicate that must hold in the poststate of the instruction at index \textit{i} if the
+ instruction throws a runtime exception of type \texttt{Exc}.
+Note that the function $\methodd.\excPost$  does not deal with programmatic exceptions thrown by the instruction \athrow,
+ neither exception caused by a method invokation
+(execution of instruction \invoke). Those two cases are handled in a different way as we
+ shall see later in the definition of the \fwpi \ function in Section
+\ref{wpRules}.  
 
 The formal definition follows.
 \begin{defExc}[Postcondition in case of throwing an exception]\label{defExc}
@@ -47,9 +52,7 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
 
 \end{itemize}
 \end{defExc}
-Note that the definition does not take into account programmatic exceptions thrown by the instruction \athrow, neither exception caused by a method invokation
-(execution of instruction \invoke). Those two cases are handled in a different way as we shall see later in the definition of the \fwpi \ function in Section
-\ref{wpRules}.
+
 The above definition considers two cases depending on if  the thrown exception   is handled or not.
 
 The function $\methodd.\excPost$ will return the weakest precondition of the exception handler that protects the instruction from the thrown exception \texttt{Exc},
@@ -57,7 +60,7 @@ if such an exception handler exists ( $  \findExcHandler{\mbox{ \rm \texttt{Exc}
 Otherwise, the function will return the exceptional postcondition if method \methodd \ terminates on
 an exception  \texttt{Exc}.
   
- If the thrown exception is not catched  and the exceptional postcondition must hold, the specification variable \EXC, which stands for the thrown object in exceptional 
+ If the thrown exception is not caught  and the exceptional postcondition must hold, the specification variable \EXC, which stands for the thrown object in exceptional 
 postocnditions, is substituted with the reference to the thrown object.
 
 

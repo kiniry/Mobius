@@ -266,24 +266,42 @@ We will also see how the weakest precondition is defined in presence of exceptio
 					top element in the prestate of the instruction. If the top stack element is not \Mynull \ then in the precondition
 					of the instruction $\inter{i}{i+1}$ must hold where the stack counter is decremented with two elements and
 					the \fieldd object is substituted with an updated version $\update{\fieldd}{ \stack{\counter - 2}}{  \stack{\counter  -1} } $
-					For example, let us have the instruction \putfield \ \fieldd \ and its postcondition be
-					$ \inter{i}{i+1} \equiv \fieldd( \locVar{1})  \neq \Mynull $. The function \fwpi \ will return : 
+				
+					For example, let us have the instruction \putfield \ \fieldd in method \methodd. Its normal postcondition is
+					$ \inter{i}{i+1} \equiv \fieldd( \locVar{1})  \neq \Mynull $. Assume that \methodd \ does not have exception
+					handler for \NullPointerExc \ exception for the region in which the \putfield \ instruction. Let the exceptional postcondition
+					of \methodd \ for \NullPointerExc \ be \Myfalse, i.e. \methodd.\excPostSpec(\NullPointerExc ) = \Myfalse
+					If all these conditions hold, the function \fwpi \ will return for the \putfield \ instruction the following formula : 
 					 
-					$$
-					 (\fieldd( \locVar{1})  \neq \Mynull  )
+					$$\begin{array}{l}
+					 \stack{\counter} \ne  \Mynull \Rightarrow \\ 
+					  	 \Myspace (\fieldd( \locVar{1})  \neq \Mynull  )
 					          \begin{array}{l} 
 					                     \subst{ \counter }{  \counter -2 } \\
 							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter } } }
-                                             	  \end{array}
+                                             	  \end{array} \\
+                                           \wedge \\
+					   \stack{\counter } = \Mynull \Rightarrow \Myfalse
+					  \end{array} 
 					$$
 					After applying the substitution following the rules 
 					described in Section \ref{subst}, we obtain that the precondition is 
-					$$ \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull  $$
+					$$\begin{array}{l}
+					 \stack{\counter} \ne  \Mynull \Rightarrow \\  
+                                                \Myspace  \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull \\
+                                          \wedge \\
+					  \stack{\counter } = \Mynull \Rightarrow \Myfalse
+					\end{array} 
+					$$
 					
-					Finally, we give the instruction \putfield its postcondition and the respective precondition:
+					Finally, we give the instruction \putfield its postcondition and the respective weakest precondition:
 					$$ \begin{array}{l}
-					  \{ \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull \}  \\
-					   
+					  \{ \begin{array}{l}
+					           \stack{\counter} \ne  \Mynull \Rightarrow \\  
+                                                   \update{\fieldd}{ \stack{\counter - 1} }{\stack{\counter} }( \locVar{1})  \neq \Mynull \}  \\
+					           \wedge \\
+						   \stack{\counter } = \Mynull \Rightarrow \Myfalse
+					        \end{array}  \}\\
 					  i: \putfield  \ \fieldd\\
 					  \{\fieldd( \locVar{1})  \neq \Mynull \} \\
 					  i+1: \ldots 
@@ -471,13 +489,7 @@ We will also see how the weakest precondition is defined in presence of exceptio
 						In that case, once again the rule takes into account all the possible exception handler types as the type of the
 						thrown exception is unknown.
 						
-					
-					
-						
-	 			
-\end{itemize}
-
-
+	 		\end{itemize}
 Supposing the execution of a method always terminates, the verification condition for a method \methodd \ with a
  precondition $\methodd.\pre$ is defined in the following way:
 $$ \methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{0}$$
