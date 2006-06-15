@@ -50,16 +50,24 @@ public class ArithmeticExpression extends Expression {
 	 */
 	public static ArithmeticExpression getArithmeticExpression(
 			Expression _subExpr1, byte _op) {
-		Expression e = _subExpr1;
+		ArithmeticExpression e = null;
 		if (!(_subExpr1 instanceof ArithmeticExpression)) {
 			e = new ArithmeticExpression(_subExpr1, _op);
+			
+		} else {
+			e = simplify((ArithmeticExpression) _subExpr1, _op);
+			if ( e == null) {
+				e = new ArithmeticExpression(_subExpr1, _op);
+			} 
 		}
-		ArithmeticExpression simplify = simplify((ArithmeticExpression) e, _op);
-		if (simplify != null) {
+		return e;
+	    /*if (simplify != null) {
 			return simplify;
-		}
-		return new ArithmeticExpression(e, _op);
-	}
+		} else if ( e )
+		
+		
+		return e; //new ArithmeticExpression(e, _op);
+*/	}
 
 	public ArithmeticExpression() {
 	}
