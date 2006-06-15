@@ -1,0 +1,340 @@
+Require Import ImplemProgramWithList.
+
+Import P.
+
+Module TheProgram.
+
+  Definition java_langPackageName := 2%positive.
+
+Module java_lang_Object.
+    Definition <init>Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition _init_Instructions : list (PC*Instruction) :=
+(return)::nil)
+
+    Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		0
+
+    Definition _init_Method : Method := METHOD.Build_t
+	_init_Signature
+	(_init_Body)
+	false
+	false
+	public
+
+
+    Definition registerNativesSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition registerNativesInstructions : list (PC*Instruction) :=
+
+    Definition registerNativesBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		0
+
+    Definition registerNativesMethod : Method := METHOD.Build_t
+	registerNativesSignature
+	(registerNativesBody)
+	false
+	true
+	private
+
+
+    Definition getClassSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition getClassInstructions : list (PC*Instruction) :=
+
+    Definition getClassBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		0
+
+    Definition getClassMethod : Method := METHOD.Build_t
+	getClassSignature
+	(getClassBody)
+	true
+	false
+	public
+
+
+    Definition hashCodeSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition hashCodeInstructions : list (PC*Instruction) :=
+
+    Definition hashCodeBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		0
+
+    Definition hashCodeMethod : Method := METHOD.Build_t
+	hashCodeSignature
+	(hashCodeBody)
+	false
+	false
+	public
+
+
+    Definition equalsSignature : MethodSignature := METHODSIGNATURE.Build_t
+!!! java_lang_Object::nil) !!!
+
+    Definition equalsInstructions : list (PC*Instruction) :=
+(aload_0)::(aload_1)::(if_acmpne)::(iconst_1)::(goto)::(iconst_0)::(ireturn)::nil)
+
+    Definition equalsBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		2
+		2
+
+    Definition equalsMethod : Method := METHOD.Build_t
+	equalsSignature
+	(equalsBody)
+	false
+	false
+	public
+
+
+    Definition cloneSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition cloneInstructions : list (PC*Instruction) :=
+
+    Definition cloneBody : BytecodeMethod := Build_BytecodeMethod_
+java_lang_CloneNotSupportedException::nil)
+		0
+		0
+
+    Definition cloneMethod : Method := METHOD.Build_t
+	cloneSignature
+	(cloneBody)
+	false
+	false
+	protected
+
+
+    Definition toStringSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition toStringInstructions : list (PC*Instruction) :=
+(new)::(dup)::(invokespecial)::(aload_0)::(invokevirtual)::(invokevirtual)::(invokevirtual)::(ldc)::(invokevirtual)::(aload_0)::(invokevirtual)::(invokestatic)::(invokevirtual)::(invokevirtual)::(areturn)::nil)
+
+    Definition toStringBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		2
+
+    Definition toStringMethod : Method := METHOD.Build_t
+	toStringSignature
+	(toStringBody)
+	false
+	false
+	public
+
+
+    Definition notifySignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition notifyInstructions : list (PC*Instruction) :=
+
+    Definition notifyBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		0
+
+    Definition notifyMethod : Method := METHOD.Build_t
+	notifySignature
+	(notifyBody)
+	true
+	false
+	public
+
+
+    Definition notifyAllSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition notifyAllInstructions : list (PC*Instruction) :=
+
+    Definition notifyAllBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		0
+
+    Definition notifyAllMethod : Method := METHOD.Build_t
+	notifyAllSignature
+	(notifyAllBody)
+	true
+	false
+	public
+
+
+    Definition waitSignature : MethodSignature := METHODSIGNATURE.Build_t
+!!! long::nil) !!!
+
+    Definition waitInstructions : list (PC*Instruction) :=
+
+    Definition waitBody : BytecodeMethod := Build_BytecodeMethod_
+java_lang_InterruptedException::nil)
+		0
+		0
+
+    Definition waitMethod : Method := METHOD.Build_t
+	waitSignature
+	(waitBody)
+	true
+	false
+	public
+
+
+    Definition waitSignature : MethodSignature := METHODSIGNATURE.Build_t
+!!! long::int::nil) !!!
+
+    Definition waitInstructions : list (PC*Instruction) :=
+(lload_1)::(lconst_0)::(lcmp)::(ifge)::(new)::(dup)::(ldc)::(invokespecial)::(athrow)::(iload_3)::(iflt)::(iload_3)::(ldc)::(if_icmple)::(new)::(dup)::(ldc)::(invokespecial)::(athrow)::(iload_3)::(ldc)::(if_icmpge)::(iload_3)::(ifeq)::(lload_1)::(lconst_0)::(lcmp)::(ifne)::(lload_1)::(lconst_1)::(ladd)::(lstore_1)::(aload_0)::(lload_1)::(invokevirtual)::(return)::nil)
+
+    Definition waitBody : BytecodeMethod := Build_BytecodeMethod_
+java_lang_InterruptedException::nil)
+		4
+		4
+
+    Definition waitMethod : Method := METHOD.Build_t
+	waitSignature
+	(waitBody)
+	true
+	false
+	public
+
+
+    Definition waitSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition waitInstructions : list (PC*Instruction) :=
+(aload_0)::(lconst_0)::(invokevirtual)::(return)::nil)
+
+    Definition waitBody : BytecodeMethod := Build_BytecodeMethod_
+java_lang_InterruptedException::nil)
+		1
+		3
+
+    Definition waitMethod : Method := METHOD.Build_t
+	waitSignature
+	(waitBody)
+	true
+	false
+	public
+
+
+    Definition finalizeSignature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition finalizeInstructions : list (PC*Instruction) :=
+(return)::nil)
+
+    Definition finalizeBody : BytecodeMethod := Build_BytecodeMethod_
+java_lang_Throwable::nil)
+		1
+		0
+
+    Definition finalizeMethod : Method := METHOD.Build_t
+	finalizeSignature
+	(finalizeBody)
+	false
+	false
+	protected
+
+
+    Definition <clinit>Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition _clinit_Instructions : list (PC*Instruction) :=
+(invokestatic)::(return)::nil)
+
+    Definition _clinit_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		0
+
+    Definition _clinit_Method : Method := METHOD.Build_t
+	_clinit_Signature
+	(_clinit_Body)
+	false
+	true
+
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		nil
+		(_init_::registerNatives::getClass::hashCode::equals::clone::toString::notify::notifyAll::wait::wait::wait::finalize::_clinit_::nil)
+		false
+		true
+		false
+End java_lang_Object.
+
+  Definition EmptyPackageName := 2%positive.
+
+Module factorial.
+    Definition <init>Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+
+    Definition _init_Instructions : list (PC*Instruction) :=
+(aload_0)::(invokespecial)::(return)::nil)
+
+    Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		1
+
+    Definition _init_Method : Method := METHOD.Build_t
+	_init_Signature
+	(_init_Body)
+	false
+	false
+	public
+
+
+    Definition mainSignature : MethodSignature := METHODSIGNATURE.Build_t
+!!! java_lang_String[]::nil) !!!
+
+    Definition mainInstructions : list (PC*Instruction) :=
+(getstatic)::(ldc)::(invokevirtual)::(bipush)::(istore_1)::(aload_0)::(arraylength)::(ifne)::(getstatic)::(ldc)::(invokevirtual)::(goto)::(aload_0)::(iconst_0)::(aaload)::(invokevirtual)::(istore_1)::(iconst_1)::(istore_2)::(iconst_1)::(istore_3)::(goto)::(iload_2)::(iload_3)::(imul)::(istore_2)::(iinc)::(iload_3)::(iload_1)::(if_icmplt)::(getstatic)::(iload_2)::(invokevirtual)::(return)::nil)
+
+    Definition mainBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		4
+		2
+
+    Definition mainMethod : Method := METHOD.Build_t
+	mainSignature
+	(mainBody)
+	false
+	true
+	public
+
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		nil
+		(_init_::main::nil)
+		false
+		true
+		false
+End factorial.
+
+  Definition AllClasses : list Class := java_lang_Object :: factorial.class :: nil.
+
+  Definition AllInterfaces : list Interface := nil.
+
+  Definition program : Program := PROG.Build_t
+	AllClasses
+	AllInterfaces
+
+End TheProgram.
+
