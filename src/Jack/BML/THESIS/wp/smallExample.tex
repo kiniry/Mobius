@@ -1,15 +1,20 @@
 \section{Example}\label{wp:example}
 In the following, we will consider an example of the application of the verification procedure 
 with \fwpi.
-In Fig. \ref{wp:example:square}, we give an example of a Java method which calculates the square of its input which is stated in its postcondition.
-The calculation of the square of the parameter {\verb i} is done with an iteration which sums all the impair numbers  {\verb 2*s + 1, 0<=s <=i } in the local variable
-{\verb sqr}. The invariant states that whenever the loop entry is reached the variable {\verb sqr} will contain the square of the local variable  {\verb s} and that 
-  {\verb 0 <=s <=i}. 
+Consider Fig. \ref{wp:example:sqrSrc}, which gives an example of a Java method which calculates the square of its input which is stated in its postcondition.
+The calculation of the square of the parameter  \lstinline!i!  is done with an iteration which sums all the impair numbers  \lstinline! 2*s + 1, 0<=s <=i! 
+ in the local variable \lstinline!sqr!. The invariant states that whenever the loop entry is reached the variable 
+  \lstinline!sqr! will contain the square of the local variable  \lstinline!s! and that \lstinline!0 <=s <=i!. 
+In Fig.\ref{wp:example:sqrBc}, we show the bytecode of method \lstinline!square!. \todo{create the figure and then explain}
+
+
+We next show the weakest preconditions of the basic block containing the 
+\return \ instruction as well the block containing the loop end instruction. \todo{make the example}
 
 
 
 \begin{figure}
-\begin{verbatim}
+\begin{lstlisting}[frame=trbl]
 //@ ensures \result == i*i; 
 public int square( int i ) { 
   int sqr  = 0;
@@ -24,7 +29,15 @@ public int square( int i ) {
   return sqr;
 }
 
-\end{verbatim}
+\end{lstlisting} 
 \caption{\sc Java method which calculates the square of its input  }
-\label{wp:example:square}
+\label{wp:example:sqrSrc}
+\end{figure}
+
+\begin{figure}
+\begin{lstlisting}[frame=trbl]
+
+\end{lstlisting} 
+\caption{\sc  bytecode of method \lstinline!square!}
+\label{wp:example:sqrBc}
 \end{figure}
