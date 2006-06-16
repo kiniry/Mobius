@@ -93,7 +93,13 @@
 \thispagestyle{empty}
 \begin{abstract}
 
-  An abstract  
+  A major deliverable of the EU FP6 FET program MOBIUS project is the
+  development of an Integrated Verification Environment (IVE)---the
+  synthesis of a programming-centric Integrated Development
+  Environment (IDE) with a proving-centric Interactive Theorem Prover
+  (ITP).  The IVE is an environment specifically designed for what we
+  call ``verification-centric software engineering,'' thus has a
+  unusual set of requirements.  In particular, the IVE must be 
 
 \end{abstract}
 \begin{keyword}
@@ -118,19 +124,20 @@ Some intro text. % JRK
 \subsection{Command-line Interfaces}
 \label{subsec:comm-line-interf}
 
-All the provers we are targeting (Coq, PVS, Isabelle), 
-have command line interfaces as 
-some top-level. These top-level are all alike. It allows to send some commands
-to the prover and receive its answers. Usually the standard output is
-used for the dialog and the error ouput used to show the prompt.
+The provers we are targeting (\eg Coq, PVS, and Isabelle) have command
+line interfaces as some top-level.  These top-levels have many
+similaritites.  Each allows one to send commands to the prover and
+receive its answers using ASCII byte sequences and simple syntaxes.
+Usually the standard output file descriptor is used for the dialog and
+the standard error file descriptor is used to show the prompt.
 
-One of the typical interaction with a top-level can be to have 
-an open text file
-where one can stock all the command steps involved and cut and paste its 
-content to the top-level and await its results. This user-active kind of 
-interaction is somewhat unnatural. That's why usually these basic interactions
-are wrapped up in a graphical environment like in Emacs or for Coq
-in its own IDE Coqide.
+A typical interaction at a top-level is to open a text file where one
+stores all the command steps involved in a given interaction and
+cut-and-paste its content to the top-level and await results from the
+prover.  This ``user-active'' kind of interaction is somewhat
+unnatural.  Such is why these basic interactions are usually wrapped
+up in a graphical environment like in Emacs, or for Coq, \eg, its own
+IDE ``Coqide.''
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \subsection{Emacs}
@@ -151,9 +158,9 @@ in its own IDE Coqide.
 \subsection{Eclipse}
 \label{subsec:eclipse}
 
-The Eclipse main project can be used like emacs, as a front-end 
-for an integrated development environment, or more generally as
-a Rich Client Platform \cite{eclipse-rcp}. 
+The Eclipse main project can be used like Emacs as a front-end for an
+integrated development environment or, more generally, as a Rich
+Client Platform~\cite{eclipse-rcp}.
 
 %---------------------------------------------------------------------
 \subsubsection{Proof General Toolkit}
@@ -163,10 +170,12 @@ a Rich Client Platform \cite{eclipse-rcp}.
 sure what to put in what follows...}\\
 
 %=====================================================================
-\section{Design}
+\section{Analysis and Design}
 \label{sec:design}
 
-Motivations - IDE and IVE integration % JRK
+Some intro text.
+
+Motivations - IDE and IVE integration
 
 Requirements - maintain and extend current interface modality % JRK
 
@@ -178,18 +187,17 @@ Some intro text. % JRK
 \subsection{Plugin architecture}
 \label{subsec:plugin-architecture}
 
-The main architecture is based on an Eclipse plugin hosting several other
-plugins. Eclipse, itself is plugin based. This modularity is useful to 
-combine its subversion facilities together with CVS to checkout some 
-CVS or/and SVN projects made in Coq. Eclipse also permits to manage 
-Java programs together with prover interactions really 
-if doing some formal program verification.
+The main architecture is based on an Eclipse plugin which hosts
+several other plugins.  Eclipse itself is plugin based.  This
+modularity is useful to combine its subversion facilities together
+with CVS to checkout some CVS or/and SVN projects made in Coq.
+Eclipse also permits to manage Java programs together with prover
+interactions really if doing some formal program verification.
 
-The interest of this plugin architecture lies also in the extension points 
- in Eclipse. It easily allows to adapt some of the modern 
-IDE features to use with the provers a thing which was not the case
-with the extensions for Emacs, which are in a way less restrictive
-since .
+The interest of this plugin architecture lies also in the extension
+points in Eclipse.  It easily allows adaption of some of the modern
+IDE features for use with provers.  Such adaption is more difficult
+with extensions for Emacs, which are in a way less restrictive since .
 
 %---------------------------------------------------------------------
 \subsubsection{Plugins in Eclipse}
