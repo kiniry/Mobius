@@ -160,6 +160,65 @@ public class Executor {
 		out.write("  Module " + converttocoq(jc.getClassName()) + ".");
 		out.newLine();out.newLine();
 		
+		//TODO check all positives and set correct values
+		//classname
+		String str777 = "    Definition className : ClassName := (";
+		str777 = str777.concat(str71+", 11%positive). ");
+		out.write(str777);out.newLine();out.newLine();
+		
+		//fields
+		Field[] ifield = jc.getFields();
+		if (ifield.length == 0) {
+			//there are no fields
+			out.newLine();
+		} else	{
+			String strf;
+			for (int i=0;i<ifield.length;i++) {
+				strf = "    Definition ";
+				strf = strf.concat(converttocoq(ifield[i].getName()));
+				strf = strf.concat("FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t ");
+				out.write(strf);out.newLine();
+				//!!! here positives
+				strf = "      (className, 12%positive)";
+				out.write(strf);out.newLine();
+				//!!! here will be conversion
+				strf = "      (PrimitiveType ";
+				strf = strf.concat(converttocoq(ifield[i].getType().toString())+")");
+				out.write(strf);out.newLine();
+				out.write("      .");out.newLine();out.newLine();
+				
+				strf = "    Definition ";
+				strf = strf.concat(converttocoq(ifield[i].getName()));
+				strf = strf.concat("Field : Field := FIELD.Build_t");
+				out.write(strf);out.newLine();
+				strf = "      ";
+				strf = strf.concat(converttocoq(ifield[i].getName())+"FieldSignature");
+				out.write(strf);out.newLine();
+				strf = "      "+ifield[i].isFinal();
+				out.write(strf);out.newLine();
+				strf = "      "+ifield[i].isStatic();
+				out.write(strf);out.newLine();
+				if (ifield[i].isPrivate()) {
+					out.write("      Private");out.newLine();
+				}
+				if (ifield[i].isProtected()) {
+					out.write("      Protected");out.newLine();
+				}
+				if (ifield[i].isPublic()) {
+					out.write("      Public");out.newLine();
+				}
+				//FIXME current solution
+				strf = "      FIELD.UNDEF";
+				out.write(strf);out.newLine();
+				out.write("      .");out.newLine();
+				out.newLine();
+								
+				
+			}
+			
+		}
+		
+		
 		
 //		Method[] methods = jc.getMethods();
 		for (int i = 0; i<methods.length;i++){
@@ -208,7 +267,7 @@ public class Executor {
 		}
 		
 		//fields
-		Field[] ifield = jc.getFields();
+
 		String str2 ="		(";
 		if (ifield.length == 0) {
 			//System.out.println("		nil");
