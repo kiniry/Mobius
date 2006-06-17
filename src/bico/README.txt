@@ -10,3 +10,10 @@ There will be errors in project to deal with them we must provide bcle.jar
 a) add jars -> umbra->libs->org.apache.bcel_5.1.0
 b) add external jars->YOURLOCATION
 ->bcel.jar->ok->ok
+
+5 While executing if you want to work on ready examples - 
+check if Addition.class and/or factorial.class are there 
+in your bico/test(programs shows default path on console;
+you can run program with 1 argument - path[to change default]
+or "help" to view brief info on console) - 
+sometimes I must put them manually from svn.

@@ -157,8 +157,8 @@ public class Executor {
 		out.newLine();
 		
 		//System.out.println("Module " + converttocoq(jc.getClassName()) + ".");
-		out.write("Module " + converttocoq(jc.getClassName()) + ".");
-		out.newLine();
+		out.write("  Module " + converttocoq(jc.getClassName()) + ".");
+		out.newLine();out.newLine();
 		
 		
 //		Method[] methods = jc.getMethods();
@@ -186,7 +186,8 @@ public class Executor {
 		}
 		else {
 			//System.out.println(converttocoq(supclassname));
-			out.write(converttocoq(supclassname));
+			//TODO ok??
+			out.write("		(Some"+converttocoq(supclassname)+")");
 			out.newLine();
 		}
 		//no interfaces now but...
@@ -248,7 +249,8 @@ public class Executor {
 		out.write("		" + jc.isFinal());out.newLine();
 		out.write("		" + jc.isPublic());out.newLine();
 		out.write("		" + jc.isAbstract());out.newLine();
-		out.write("End " + converttocoq(jc.getClassName()) + ".");out.newLine();
+		out.write("    .");out.newLine();out.newLine();
+		out.write("  End " + converttocoq(jc.getClassName()) + ".");out.newLine();
 		out.newLine();
 	}
 	
@@ -259,7 +261,7 @@ public class Executor {
 		//InstructionHandle ih[] = il.getInstructionHandles();
 		//signature
 		String str = "    Definition ";
-		str = str.concat(method.getName());
+		str = str.concat(converttocoq(method.getName()));
 		str = str.concat("Signature : MethodSignature := METHODSIGNATURE.Build_t");
 		//System.out.println(str);
 		out.write(str);out.newLine();
@@ -274,18 +276,20 @@ public class Executor {
 				}
 				str = str.concat("nil)");
 				//System.out.println("jdhfjh "+str+" jdhfjdhkvh ");
-				out.write("!!! "+str+" !!!");out.newLine();
+				out.write("      !!! "+str+" !!!");out.newLine();
 		}
 		//FIXME finish it
 		//System.out.println();
+		out.write("    .");out.newLine();
 		out.newLine();
+		
+		
 		//instructions
 		str = "    Definition ";
 		str = str.concat(converttocoq(method.getName()));
 		str = str.concat("Instructions : list (PC*Instruction) :=");
 		//System.out.println(str);
 		out.write(str);out.newLine();		
-		
 		InstructionList il = mg.getInstructionList();
 		//FIXME add numbers and convert ex.aload_0
 		if (il != null) {
@@ -295,14 +299,15 @@ public class Executor {
 			out.write("		nil");out.newLine();
 		} else
 		{ 		for (int i=0;i<listins.length;i++) {
-					str = str.concat("("+converttocoq(listins[i].getName())+")" + "::");
+					str = str.concat("        ("+converttocoq(listins[i].getName())+")" + "::");
 				}
-				str = str.concat("nil)");
+				str = str.concat("        nil)");
 				//System.out.println(str);
 				out.write(str);out.newLine();
 		}
 		}
 		//System.out.println();
+		out.write("    .");out.newLine();
 		out.newLine();
 		
 		//body
@@ -328,7 +333,7 @@ public class Executor {
 					}
 					str = str.concat("nil)");
 					//System.out.println(str);
-					out.write(str);out.newLine();
+					out.write("		"+str);out.newLine();
 			}
 		}
 		int j;
@@ -339,7 +344,12 @@ public class Executor {
 		//System.out.println("		"+j);
 		out.write("		"+j);out.newLine();
 		//System.out.println();
+		out.write("    .");out.newLine();
 		out.newLine();
+		
+		
+		
+		
 		//method
 		str = "    Definition ";
 		str = str.concat(converttocoq(method.getName()));
@@ -363,18 +373,20 @@ public class Executor {
 		out.write("	"+method.isStatic());out.newLine();
 		if (method.isPrivate()) {
 			//System.out.println("	private");
-			out.write("	private");out.newLine();
+			out.write("	Private");out.newLine();
 		}
 		if (method.isProtected()) {
 			//System.out.println("	protected");
-			out.write("	protected");out.newLine();
+			out.write("	Protected");out.newLine();
 		}
 		if (method.isPublic()) {
 			//System.out.println("	public");
-			out.write("	public");out.newLine();
+			out.write("	Public");out.newLine();
 		}
 		//System.out.println();System.out.println();
-		out.newLine();out.newLine();
+		out.newLine();
+		out.write("    .");out.newLine();
+		out.newLine();
 		
 		
 	}
