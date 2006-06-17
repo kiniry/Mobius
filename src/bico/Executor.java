@@ -1,8 +1,12 @@
 
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ConstantPool;
@@ -225,9 +229,12 @@ public class Executor {
 //		Method[] methods = jc.getMethods();
 		for (int i = 0; i<methods.length;i++){
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
+			domethodsignatures(methods[i],mg,out);
+		}
+		for (int i = 0; i<methods.length;i++){
+			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
 			domethod(methods[i],mg,out);
 		}
-		
 		
 		//System.out.println("	    Definition class : Class := CLASS.Build_t");
 		//System.out.println("		className");
@@ -317,10 +324,8 @@ public class Executor {
 	
 
 
-
-	private static void domethod(Method method, MethodGen mg, BufferedWriter out) throws IOException {
-		
-		
+	//for recursion
+	private static void domethodsignatures(Method method, MethodGen mg, BufferedWriter out) throws IOException {
 		//InstructionList il = mg.getInstructionList();
 		//InstructionHandle ih[] = il.getInstructionHandles();
 		//signature
@@ -340,16 +345,22 @@ public class Executor {
 				}
 				str = str.concat("nil)");
 				//System.out.println("jdhfjh "+str+" jdhfjdhkvh ");
-				out.write("      !!! "+str+" !!!");out.newLine();
+				out.write("      "+str);out.newLine();
 		}
 		//FIXME finish it
 		//System.out.println();
 		out.write("    .");out.newLine();
 		out.newLine();
 		
+	}
+
+
+	private static void domethod(Method method, MethodGen mg, BufferedWriter out) throws IOException {
 		
+		
+	
 		//instructions
-		str = "    Definition ";
+		String str = "    Definition ";
 		str = str.concat(converttocoq(method.getName()));
 		str = str.concat("Instructions : list (PC*Instruction) :=");
 		//System.out.println(str);
@@ -362,8 +373,10 @@ public class Executor {
 			//System.out.println("		nil");
 			out.write("		nil");out.newLine();
 		} else
-		{ 		for (int i=0;i<listins.length;i++) {
-					str = str.concat("        ("+"("+converttocoq(listins[i].getName())+")" + "::");
+		{ 		int pos = 0;
+				for (int i=0;i<listins.length;i++) {
+					str = str.concat("        ("+"("+converttocoq(dealwithinstr(listins[i],pos))+")" + "::");
+					pos = pos + listins[i].getLength();
 				}
 				str = str.concat("        nil)");
 				//System.out.println(str);
@@ -588,7 +601,23 @@ private static String checkfield(Field field) {
 	}
 	return checktype(field.getType());
 }
-
+private static String dealwithinstr(Instruction ins, int pos) {
+	String ret = "" + pos + ", ";
+	String name = ins.getName();
+	int j,k,ok;
+	String[] s1 = TypesInCoq.notsosingle;
+	ok = 0;
+	for (j = 0; j < s1.length; j++) {
+		if (name.equalsIgnoreCase(s1[j])) {
+			k = name.lastIndexOf("_");
+			ret = (ret.concat(name.substring(0,k))).concat(", "+name.substring(k+1));
+			ok = 1;
+		};
+	}
+	//FIXME add other options for parameter instructions
+	if (ok==0) {ret = ret.concat(name);}
+	return ret;
+}
 
 
 }
