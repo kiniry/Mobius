@@ -82,9 +82,20 @@ public interface TypesInCoq {
 		"dcmpg", "dcmpl", "dconst", "fcmpg", "fcmpl", "fconst", "iconst", "impdep1", "impdep2", 
 		"lconst", "nop", "ret"};
 	
-	
-	
-	
+	//object->number all will be type int
+	public static String[] typeint = new String[] {
+		"AtomicInteger", "AtomicLong","BigDecimal","BigInteger",
+		"Double","Float","Integer","Long"
+	};
+	public static String[] typebyte = new String[] {
+		"Byte"
+	};
+	public static String[] typeshort = new String[] {
+		"Short"
+	};
+	public static String[] typebool = new String[] {
+		"boolean"
+	};	
 	
 	
 	

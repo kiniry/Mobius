@@ -6,257 +6,316 @@ Module TheProgram.
 
   Definition java_langPackageName := 2%positive.
 
-Module java_lang_Object.
-    Definition <init>Signature : MethodSignature := METHODSIGNATURE.Build_t
+  Module java_lang_Object.
+
+    Definition className : ClassName := (  Definition java_langPackageName := 2%positive., 11%positive). 
+
+
+    Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition _init_Instructions : list (PC*Instruction) :=
-(return)::nil)
+        ((return)::        nil)
+    .
 
     Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		1
 		0
+    .
 
     Definition _init_Method : Method := METHOD.Build_t
 	_init_Signature
 	(_init_Body)
 	false
 	false
-	public
+	Public
 
+    .
 
     Definition registerNativesSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition registerNativesInstructions : list (PC*Instruction) :=
+    .
 
     Definition registerNativesBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		0
 		0
+    .
 
     Definition registerNativesMethod : Method := METHOD.Build_t
 	registerNativesSignature
 	(registerNativesBody)
 	false
 	true
-	private
+	Private
 
+    .
 
     Definition getClassSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition getClassInstructions : list (PC*Instruction) :=
+    .
 
     Definition getClassBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		0
 		0
+    .
 
     Definition getClassMethod : Method := METHOD.Build_t
 	getClassSignature
 	(getClassBody)
 	true
 	false
-	public
+	Public
 
+    .
 
     Definition hashCodeSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition hashCodeInstructions : list (PC*Instruction) :=
+    .
 
     Definition hashCodeBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		0
 		0
+    .
 
     Definition hashCodeMethod : Method := METHOD.Build_t
 	hashCodeSignature
 	(hashCodeBody)
 	false
 	false
-	public
+	Public
 
+    .
 
     Definition equalsSignature : MethodSignature := METHODSIGNATURE.Build_t
-!!! java_lang_Object::nil) !!!
+      !!! 		((ReferenceType (ClassType java_lang_Object)::nil) !!!
+    .
 
     Definition equalsInstructions : list (PC*Instruction) :=
-(aload_0)::(aload_1)::(if_acmpne)::(iconst_1)::(goto)::(iconst_0)::(ireturn)::nil)
+        ((aload_0)::        ((aload_1)::        ((if_acmpne)::        ((iconst_1)::        ((goto)::        ((iconst_0)::        ((ireturn)::        nil)
+    .
 
     Definition equalsBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		2
 		2
+    .
 
     Definition equalsMethod : Method := METHOD.Build_t
 	equalsSignature
 	(equalsBody)
 	false
 	false
-	public
+	Public
 
+    .
 
     Definition cloneSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition cloneInstructions : list (PC*Instruction) :=
+    .
 
     Definition cloneBody : BytecodeMethod := Build_BytecodeMethod_
-java_lang_CloneNotSupportedException::nil)
+				(java_lang_CloneNotSupportedException::nil)
 		0
 		0
+    .
 
     Definition cloneMethod : Method := METHOD.Build_t
 	cloneSignature
 	(cloneBody)
 	false
 	false
-	protected
+	Protected
 
+    .
 
     Definition toStringSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition toStringInstructions : list (PC*Instruction) :=
-(new)::(dup)::(invokespecial)::(aload_0)::(invokevirtual)::(invokevirtual)::(invokevirtual)::(ldc)::(invokevirtual)::(aload_0)::(invokevirtual)::(invokestatic)::(invokevirtual)::(invokevirtual)::(areturn)::nil)
+        ((new)::        ((dup)::        ((invokespecial)::        ((aload_0)::        ((invokevirtual)::        ((invokevirtual)::        ((invokevirtual)::        ((ldc)::        ((invokevirtual)::        ((aload_0)::        ((invokevirtual)::        ((invokestatic)::        ((invokevirtual)::        ((invokevirtual)::        ((areturn)::        nil)
+    .
 
     Definition toStringBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		1
 		2
+    .
 
     Definition toStringMethod : Method := METHOD.Build_t
 	toStringSignature
 	(toStringBody)
 	false
 	false
-	public
+	Public
 
+    .
 
     Definition notifySignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition notifyInstructions : list (PC*Instruction) :=
+    .
 
     Definition notifyBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		0
 		0
+    .
 
     Definition notifyMethod : Method := METHOD.Build_t
 	notifySignature
 	(notifyBody)
 	true
 	false
-	public
+	Public
 
+    .
 
     Definition notifyAllSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition notifyAllInstructions : list (PC*Instruction) :=
+    .
 
     Definition notifyAllBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		0
 		0
+    .
 
     Definition notifyAllMethod : Method := METHOD.Build_t
 	notifyAllSignature
 	(notifyAllBody)
 	true
 	false
-	public
+	Public
 
+    .
 
     Definition waitSignature : MethodSignature := METHODSIGNATURE.Build_t
-!!! long::nil) !!!
+      !!! 		((PrimitiveType INT)::nil) !!!
+    .
 
     Definition waitInstructions : list (PC*Instruction) :=
+    .
 
     Definition waitBody : BytecodeMethod := Build_BytecodeMethod_
-java_lang_InterruptedException::nil)
+				(java_lang_InterruptedException::nil)
 		0
 		0
+    .
 
     Definition waitMethod : Method := METHOD.Build_t
 	waitSignature
 	(waitBody)
 	true
 	false
-	public
+	Public
 
+    .
 
     Definition waitSignature : MethodSignature := METHODSIGNATURE.Build_t
-!!! long::int::nil) !!!
+      !!! 		((PrimitiveType INT)::		((ReferenceType (ClassType int)::nil) !!!
+    .
 
     Definition waitInstructions : list (PC*Instruction) :=
-(lload_1)::(lconst_0)::(lcmp)::(ifge)::(new)::(dup)::(ldc)::(invokespecial)::(athrow)::(iload_3)::(iflt)::(iload_3)::(ldc)::(if_icmple)::(new)::(dup)::(ldc)::(invokespecial)::(athrow)::(iload_3)::(ldc)::(if_icmpge)::(iload_3)::(ifeq)::(lload_1)::(lconst_0)::(lcmp)::(ifne)::(lload_1)::(lconst_1)::(ladd)::(lstore_1)::(aload_0)::(lload_1)::(invokevirtual)::(return)::nil)
+        ((lload_1)::        ((lconst_0)::        ((lcmp)::        ((ifge)::        ((new)::        ((dup)::        ((ldc)::        ((invokespecial)::        ((athrow)::        ((iload_3)::        ((iflt)::        ((iload_3)::        ((ldc)::        ((if_icmple)::        ((new)::        ((dup)::        ((ldc)::        ((invokespecial)::        ((athrow)::        ((iload_3)::        ((ldc)::        ((if_icmpge)::        ((iload_3)::        ((ifeq)::        ((lload_1)::        ((lconst_0)::        ((lcmp)::        ((ifne)::        ((lload_1)::        ((lconst_1)::        ((ladd)::        ((lstore_1)::        ((aload_0)::        ((lload_1)::        ((invokevirtual)::        ((return)::        nil)
+    .
 
     Definition waitBody : BytecodeMethod := Build_BytecodeMethod_
-java_lang_InterruptedException::nil)
+				(java_lang_InterruptedException::nil)
 		4
 		4
+    .
 
     Definition waitMethod : Method := METHOD.Build_t
 	waitSignature
 	(waitBody)
 	true
 	false
-	public
+	Public
 
+    .
 
     Definition waitSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition waitInstructions : list (PC*Instruction) :=
-(aload_0)::(lconst_0)::(invokevirtual)::(return)::nil)
+        ((aload_0)::        ((lconst_0)::        ((invokevirtual)::        ((return)::        nil)
+    .
 
     Definition waitBody : BytecodeMethod := Build_BytecodeMethod_
-java_lang_InterruptedException::nil)
+				(java_lang_InterruptedException::nil)
 		1
 		3
+    .
 
     Definition waitMethod : Method := METHOD.Build_t
 	waitSignature
 	(waitBody)
 	true
 	false
-	public
+	Public
 
+    .
 
     Definition finalizeSignature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition finalizeInstructions : list (PC*Instruction) :=
-(return)::nil)
+        ((return)::        nil)
+    .
 
     Definition finalizeBody : BytecodeMethod := Build_BytecodeMethod_
-java_lang_Throwable::nil)
+				(java_lang_Throwable::nil)
 		1
 		0
+    .
 
     Definition finalizeMethod : Method := METHOD.Build_t
 	finalizeSignature
 	(finalizeBody)
 	false
 	false
-	protected
+	Protected
 
+    .
 
-    Definition <clinit>Signature : MethodSignature := METHODSIGNATURE.Build_t
+    Definition _clinit_Signature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition _clinit_Instructions : list (PC*Instruction) :=
-(invokestatic)::(return)::nil)
+        ((invokestatic)::        ((return)::        nil)
+    .
 
     Definition _clinit_Body : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		0
 		0
+    .
 
     Definition _clinit_Method : Method := METHOD.Build_t
 	_clinit_Signature
@@ -264,6 +323,7 @@ java_lang_Throwable::nil)
 	false
 	true
 
+    .
 
 	    Definition class : Class := CLASS.Build_t
 		className
@@ -274,48 +334,406 @@ java_lang_Throwable::nil)
 		false
 		true
 		false
-End java_lang_Object.
+    .
+
+  End java_lang_Object.
 
   Definition EmptyPackageName := 2%positive.
 
-Module factorial.
-    Definition <init>Signature : MethodSignature := METHODSIGNATURE.Build_t
+  Module Addition.
+
+    Definition className : ClassName := (  Definition EmptyPackageName := 2%positive., 11%positive). 
+
+    Definition zFieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (ReferenceType (ClassType int))
+      .
+
+    Definition zField : Field := FIELD.Build_t
+      zFieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
 		nil
+    .
 
     Definition _init_Instructions : list (PC*Instruction) :=
-(aload_0)::(invokespecial)::(return)::nil)
+        ((aload_0)::        ((invokespecial)::        ((return)::        nil)
+    .
 
     Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		1
 		1
+    .
 
     Definition _init_Method : Method := METHOD.Build_t
 	_init_Signature
 	(_init_Body)
 	false
 	false
-	public
+	Public
 
+    .
+
+    Definition addSignature : MethodSignature := METHODSIGNATURE.Build_t
+      !!! 		((ReferenceType (ClassType int)::nil) !!!
+    .
+
+    Definition addInstructions : list (PC*Instruction) :=
+        ((iload_0)::        ((getstatic)::        ((iadd)::        ((istore_1)::        ((iload_1)::        ((ireturn)::        nil)
+    .
+
+    Definition addBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		2
+		2
+    .
+
+    Definition addMethod : Method := METHOD.Build_t
+	addSignature
+	(addBody)
+	false
+	true
+	Public
+
+    .
+
+    Definition _clinit_Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+    .
+
+    Definition _clinit_Instructions : list (PC*Instruction) :=
+        ((bipush)::        ((putstatic)::        ((return)::        nil)
+    .
+
+    Definition _clinit_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		1
+    .
+
+    Definition _clinit_Method : Method := METHOD.Build_t
+	_clinit_Signature
+	(_clinit_Body)
+	false
+	true
+
+    .
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		(z::nil)
+		(_init_::add::_clinit_::nil)
+		false
+		true
+		false
+    .
+
+  End Addition.
+
+  Definition EmptyPackageName := 2%positive.
+
+  Module factorial$ala.
+
+    Definition className : ClassName := (  Definition EmptyPackageName := 2%positive., 11%positive). 
+
+
+    Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+    .
+
+    Definition _init_Instructions : list (PC*Instruction) :=
+        ((aload_0)::        ((invokespecial)::        ((return)::        nil)
+    .
+
+    Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		1
+    .
+
+    Definition _init_Method : Method := METHOD.Build_t
+	_init_Signature
+	(_init_Body)
+	false
+	false
+
+    .
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		nil
+		(_init_::nil)
+		false
+		false
+		false
+    .
+
+  End factorial$ala.
+
+  Definition EmptyPackageName := 2%positive.
+
+  Module factorial$makota.
+
+    Definition className : ClassName := (  Definition EmptyPackageName := 2%positive., 11%positive). 
+
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		nil
+		nil
+		false
+		false
+		true
+    .
+
+  End factorial$makota.
+
+  Definition EmptyPackageName := 2%positive.
+
+  Module factorial.
+
+    Definition className : ClassName := (  Definition EmptyPackageName := 2%positive., 11%positive). 
+
+    Definition z1FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (ReferenceType (ClassType int))
+      .
+
+    Definition z1Field : Field := FIELD.Build_t
+      z1FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z2FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (PrimitiveType INT))
+      .
+
+    Definition z2Field : Field := FIELD.Build_t
+      z2FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z3FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (PrimitiveType INT))
+      .
+
+    Definition z3Field : Field := FIELD.Build_t
+      z3FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z4FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (PrimitiveType BOOLEAN))
+      .
+
+    Definition z4Field : Field := FIELD.Build_t
+      z4FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z6FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (ReferenceType (ArrayType java_lang_String[]))
+      .
+
+    Definition z6Field : Field := FIELD.Build_t
+      z6FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z7FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (ReferenceType (ArrayType int[]))
+      .
+
+    Definition z7Field : Field := FIELD.Build_t
+      z7FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z8FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (ReferenceType (ClassType File1))
+      .
+
+    Definition z8Field : Field := FIELD.Build_t
+      z8FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition z9FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t 
+      (className, 12%positive)
+      (PrimitiveType (ReferenceType (ClassType File2))
+      .
+
+    Definition z9Field : Field := FIELD.Build_t
+      z9FieldSignature
+      false
+      true
+      FIELD.UNDEF
+      .
+
+    Definition _clinit_Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+    .
+
+    Definition _clinit_Instructions : list (PC*Instruction) :=
+        ((bipush)::        ((putstatic)::        ((ldc2_w)::        ((putstatic)::        ((ldc)::        ((putstatic)::        ((iconst_1)::        ((putstatic)::        ((return)::        nil)
+    .
+
+    Definition _clinit_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		0
+		2
+    .
+
+    Definition _clinit_Method : Method := METHOD.Build_t
+	_clinit_Signature
+	(_clinit_Body)
+	false
+	true
+
+    .
+
+    Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+    .
+
+    Definition _init_Instructions : list (PC*Instruction) :=
+        ((aload_0)::        ((invokespecial)::        ((return)::        nil)
+    .
+
+    Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		1
+    .
+
+    Definition _init_Method : Method := METHOD.Build_t
+	_init_Signature
+	(_init_Body)
+	false
+	false
+	Public
+
+    .
 
     Definition mainSignature : MethodSignature := METHODSIGNATURE.Build_t
-!!! java_lang_String[]::nil) !!!
+      !!! 		((ReferenceType (ArrayType java_lang_String[])::nil) !!!
+    .
 
     Definition mainInstructions : list (PC*Instruction) :=
-(getstatic)::(ldc)::(invokevirtual)::(bipush)::(istore_1)::(aload_0)::(arraylength)::(ifne)::(getstatic)::(ldc)::(invokevirtual)::(goto)::(aload_0)::(iconst_0)::(aaload)::(invokevirtual)::(istore_1)::(iconst_1)::(istore_2)::(iconst_1)::(istore_3)::(goto)::(iload_2)::(iload_3)::(imul)::(istore_2)::(iinc)::(iload_3)::(iload_1)::(if_icmplt)::(getstatic)::(iload_2)::(invokevirtual)::(return)::nil)
+        ((getstatic)::        ((ldc)::        ((invokevirtual)::        ((bipush)::        ((istore_1)::        ((aload_0)::        ((arraylength)::        ((ifne)::        ((getstatic)::        ((ldc)::        ((invokevirtual)::        ((goto)::        ((aload_0)::        ((iconst_0)::        ((aaload)::        ((invokevirtual)::        ((istore_1)::        ((iconst_1)::        ((istore_2)::        ((iconst_1)::        ((istore_3)::        ((goto)::        ((iload_2)::        ((iload_3)::        ((imul)::        ((istore_2)::        ((iinc)::        ((iload_3)::        ((iload_1)::        ((if_icmplt)::        ((getstatic)::        ((iload_2)::        ((invokevirtual)::        ((return)::        nil)
+    .
 
     Definition mainBody : BytecodeMethod := Build_BytecodeMethod_
 		nil
 		4
 		2
+    .
 
     Definition mainMethod : Method := METHOD.Build_t
 	mainSignature
 	(mainBody)
 	false
 	true
-	public
+	Public
 
+    .
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		(z1::z2::z3::z4::z6::z7::z8::z9::nil)
+		(_clinit_::_init_::main::nil)
+		false
+		true
+		false
+    .
+
+  End factorial.
+
+  Definition EmptyPackageName := 2%positive.
+
+  Module File1.
+
+    Definition className : ClassName := (  Definition EmptyPackageName := 2%positive., 11%positive). 
+
+
+    Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
+		nil
+    .
+
+    Definition _init_Instructions : list (PC*Instruction) :=
+        ((aload_0)::        ((invokespecial)::        ((return)::        nil)
+    .
+
+    Definition _init_Body : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		1
+    .
+
+    Definition _init_Method : Method := METHOD.Build_t
+	_init_Signature
+	(_init_Body)
+	false
+	false
+	Public
+
+    .
+
+    Definition mainSignature : MethodSignature := METHODSIGNATURE.Build_t
+      !!! 		((ReferenceType (ArrayType java_lang_String[])::nil) !!!
+    .
+
+    Definition mainInstructions : list (PC*Instruction) :=
+        ((return)::        nil)
+    .
+
+    Definition mainBody : BytecodeMethod := Build_BytecodeMethod_
+		nil
+		1
+		0
+    .
+
+    Definition mainMethod : Method := METHOD.Build_t
+	mainSignature
+	(mainBody)
+	false
+	true
+	Public
+
+    .
 
 	    Definition class : Class := CLASS.Build_t
 		className
@@ -326,9 +744,31 @@ Module factorial.
 		false
 		true
 		false
-End factorial.
+    .
 
-  Definition AllClasses : list Class := java_lang_Object :: factorial.class :: nil.
+  End File1.
+
+  Definition EmptyPackageName := 2%positive.
+
+  Module File2.
+
+    Definition className : ClassName := (  Definition EmptyPackageName := 2%positive., 11%positive). 
+
+
+	    Definition class : Class := CLASS.Build_t
+		className
+		None
+		nil
+		nil
+		nil
+		false
+		true
+		true
+    .
+
+  End File2.
+
+  Definition AllClasses : list Class := java_lang_Object :: Addition.class :: factorial$ala.class :: factorial$makota.class :: factorial.class :: File1.class :: File2.class :: nil.
 
   Definition AllInterfaces : list Interface := nil.
 

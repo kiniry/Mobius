@@ -21,6 +21,8 @@ import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
 
+
+
 public class Executor {
 
 	
@@ -183,7 +185,7 @@ public class Executor {
 				out.write(strf);out.newLine();
 				//!!! here will be conversion
 				strf = "      (PrimitiveType ";
-				strf = strf.concat(converttocoq(ifield[i].getType().toString())+")");
+				strf = strf.concat(converttocoq(checkfield(ifield[i]))+")");
 				out.write(strf);out.newLine();
 				out.write("      .");out.newLine();out.newLine();
 				
@@ -313,6 +315,9 @@ public class Executor {
 		out.newLine();
 	}
 	
+
+
+
 	private static void domethod(Method method, MethodGen mg, BufferedWriter out) throws IOException {
 		
 		
@@ -331,7 +336,7 @@ public class Executor {
 			out.write("		nil");out.newLine();
 		} else
 		{ 		for (int i=0;i<atrr.length;i++) {
-					str = str.concat(converttocoq(atrr[i].toString()) + "::");
+					str = str.concat("		("+converttocoq(checktype(atrr[i])) + "::");
 				}
 				str = str.concat("nil)");
 				//System.out.println("jdhfjh "+str+" jdhfjdhkvh ");
@@ -358,7 +363,7 @@ public class Executor {
 			out.write("		nil");out.newLine();
 		} else
 		{ 		for (int i=0;i<listins.length;i++) {
-					str = str.concat("        ("+converttocoq(listins[i].getName())+")" + "::");
+					str = str.concat("        ("+"("+converttocoq(listins[i].getName())+")" + "::");
 				}
 				str = str.concat("        nil)");
 				//System.out.println(str);
@@ -388,7 +393,7 @@ public class Executor {
 				out.write("		nil");out.newLine();
 			} else
 			{ 		for (int i=0;i<etabnames.length;i++) {
-						str = str.concat(converttocoq(etabnames[i]) + "::");
+						str = str.concat("		("+converttocoq(etabnames[i]) + "::");
 					}
 					str = str.concat("nil)");
 					//System.out.println(str);
@@ -533,15 +538,56 @@ private static void doending(String[] files, String[] others, BufferedWriter out
 private static String converttocoq(String strin) {
 	String strout = strin;
 	strout = strin.replace(".","_");
-	strout = strout.replace("(","_");
-	strout = strout.replace(")","_");
+//	strout = strout.replace("(","_");
+//	strout = strout.replace(")","_");
 	strout = strout.replace(">","_");
 	strout = strout.replace("<","_");
 	return strout;
 }
 
-
-
+//TODO dont know how to extract class of field
+private static String checktype(Type t) {
+	String type = t.toString();
+	String Coqtype = "";
+	if (type.contains("[]")) {
+		Coqtype="(ReferenceType (ArrayType " + converttocoq(type) + ")";
+		return Coqtype;
+	}
+	int j;
+	String[] s1 = TypesInCoq.typeint;
+	String[] s2 = TypesInCoq.typeshort;
+	String[] s3 = TypesInCoq.typebyte;
+	String[] s4 = TypesInCoq.typebool;
+	for (j = 0; j < s1.length; j++) {
+		if (type.equalsIgnoreCase(s1[j])) {Coqtype="INT";};
+	}
+	for (j = 0; j < s2.length; j++) {
+		if (type.equalsIgnoreCase(s2[j])) {Coqtype="SHORT";};
+	}
+	for (j = 0; j < s3.length; j++) {
+		if (type.equalsIgnoreCase(s3[j])) {Coqtype="BYTE";};
+	}
+	for (j = 0; j < s4.length; j++) {
+		if (type.equalsIgnoreCase(s4[j])) {Coqtype="BOOLEAN";};
+	}
+	//TODO all not standard types are classtypes
+	if (Coqtype.length()==0) {
+		Coqtype="(ReferenceType (ClassType " + converttocoq(type) + ")";
+		return Coqtype;
+	}	
+	Coqtype = "(PrimitiveType " + Coqtype + ")";
+	
+	return Coqtype;
+}
+//FIXME not variables className temporary shows name of class
+private static String checkfield(Field field) {
+	//FIXME not returning interface for Field1
+	//and ala and makota are compiled to different .class-files
+	if (field.isInterface()){
+		return "(ReferenceType (InterfaceType " + converttocoq(field.getType().toString()) + ")";
+	}
+	return checktype(field.getType());
+}
 
 
 
