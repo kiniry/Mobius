@@ -96,7 +96,7 @@ public interface TypesInCoq {
 	public static String[] typebool = new String[] {
 		"boolean"
 	};	
-	
+	//FIXME deal with lconst_0
 	
 	
 }

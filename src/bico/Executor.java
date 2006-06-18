@@ -19,6 +19,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.ClassPath;
@@ -39,7 +40,6 @@ public class Executor {
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		
-		//FIXME check dots
 		//test with path with no .class inside - > ok only object class
 		//dealing with args
 		String pathname = "";
@@ -146,7 +146,6 @@ public class Executor {
 		
 		Method[] methods = cg.getMethods();
 
-		//FIXME zField handle with it
 		//delete all dots in names and wrong chars - are all ok ??
 		//FIXME what numbers are correct/are names ok - packages
 		String str71 = "  Definition ";
@@ -178,14 +177,15 @@ public class Executor {
 			//there are no fields
 			out.newLine();
 		} else	{
-			String strf;
+			String strf;int jjjj;
 			for (int i=0;i<ifield.length;i++) {
 				strf = "    Definition ";
 				strf = strf.concat(converttocoq(ifield[i].getName()));
 				strf = strf.concat("FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t ");
 				out.write(strf);out.newLine();
 				//!!! here positives
-				strf = "      (className, 12%positive)";
+				jjjj = 100 + i;
+				strf = "      (className, "+jjjj+"%positive)";
 				out.write(strf);out.newLine();
 				//!!! here will be conversion
 				strf = "      (PrimitiveType ";
@@ -229,7 +229,7 @@ public class Executor {
 //		Method[] methods = jc.getMethods();
 		for (int i = 0; i<methods.length;i++){
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-			domethodsignatures(methods[i],mg,out);
+			domethodsignatures(methods[i],mg,out,i);
 		}
 		for (int i = 0; i<methods.length;i++){
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
@@ -325,16 +325,18 @@ public class Executor {
 
 
 	//for recursion
-	private static void domethodsignatures(Method method, MethodGen mg, BufferedWriter out) throws IOException {
+	private static void domethodsignatures(Method method, MethodGen mg, BufferedWriter out, int i2) throws IOException {
 		//InstructionList il = mg.getInstructionList();
 		//InstructionHandle ih[] = il.getInstructionHandles();
 		//signature
+		int u = i2+10;
 		String str = "    Definition ";
 		str = str.concat(converttocoq(method.getName()));
 		str = str.concat("Signature : MethodSignature := METHODSIGNATURE.Build_t");
 		//System.out.println(str);
 		out.write(str);out.newLine();
-		
+		str = "        (className, " +u+"%positive)";
+		out.write(str);out.newLine();
 		Type[] atrr = method.getArgumentTypes();str="";
 		if (atrr.length == 0) {
 			//System.out.println("		nil");
@@ -347,8 +349,10 @@ public class Executor {
 				//System.out.println("jdhfjh "+str+" jdhfjdhkvh ");
 				out.write("      "+str);out.newLine();
 		}
-		//FIXME finish it
+		Type t = null; t = method.getReturnType();
+		if (null != t) {str="";str = str.concat("		"+converttocoq(checktype(t)));out.write(str);out.newLine();}
 		//System.out.println();
+
 		out.write("    .");out.newLine();
 		out.newLine();
 		
@@ -357,14 +361,18 @@ public class Executor {
 
 	private static void domethod(Method method, MethodGen mg, BufferedWriter out) throws IOException {
 		
+//		LocalVariableGen[] aa = mg.getLocalVariables();
+////		aa[i].toString();
+//		System.out.println(aa.length);
+//		if (aa.length != 0) {System.out.println(aa[0].toString());}
+
 		
-	
 		//instructions
 		String str = "    Definition ";
 		str = str.concat(converttocoq(method.getName()));
 		str = str.concat("Instructions : list (PC*Instruction) :=");
 		//System.out.println(str);
-		out.write(str);out.newLine();		
+		out.write(str);out.newLine();	
 		InstructionList il = mg.getInstructionList();
 		//FIXME add numbers and convert ex.aload_0
 		if (il != null) {
@@ -603,6 +611,7 @@ private static String checkfield(Field field) {
 }
 private static String dealwithinstr(Instruction ins, int pos) {
 	String ret = "" + pos + ", ";
+	
 	String name = ins.getName();
 	int j,k,ok;
 	String[] s1 = TypesInCoq.notsosingle;
