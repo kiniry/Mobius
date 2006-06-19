@@ -1,0 +1,297 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+% \usepackage[english]{babel}
+% \usepackage[latin1]{inputenc}
+% \usepackage{times}
+% \usepackage[T1]{fontenc}
+% \usepackage{tikz}
+
+% \usepackage{thumbpdf}
+% \usepackage{hyperref}
+\newcommand\yellow[1]{{\color{yellow}{#1}}} 
+\newcommand\red[1]{{\color{red}{#1}}} 
+
+% \usecolortheme{albatross}
+% \setbeamertemplate{background canvas}[vertical shading][bottom=blue!100,top=blue!100]
+
+
+% \setbeamercolor{normal text}{fg=white}
+% \setbeamercolor{structured text}{fg=green}
+
+\title{MOBIUS Tools Overview}
+\author[J. Kiniry (UCD)]{Presented by Joseph Kiniry}
+
+
+
+\institute{INRIA, RUN, UCD, UW\\[1ex]
+  \includegraphics[width=3cm]{../../../TexInputs/mobius_transparent}}
+
+\date{19 June 2006}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}\frametitle{The MOBIUS Interactive Verification Environment}
+  \begin{itemize}
+  \item mandatory goals:
+    \begin{itemize}
+    \item develop an Eclipse-based interactive verification environment
+      for reasoning about Java
+    \item reason about MIDP \& JavaCard programs at the source and
+      bytecode level
+    \item VC generation for MOBIUS logic
+    \item certificate generation
+    \end{itemize}
+  \item optional goals:
+    \begin{itemize}
+    \item integrated support for provers of interest
+    \item VC generation for other logics
+    \item generalized hybrid certificate generation
+    \item MOBIUS component model and tool-bus
+    \end{itemize}
+  \item tertiary goals:
+    \begin{itemize}
+    \item formalized literate programming environment
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Task 3.6 Overview}
+  \begin{itemize}
+  \item responsible for core MOBIUS tool analysis, design, and
+    development
+  \item participants: INRIA, RUN, UCD (leader), WU
+  \item start date: T0+6 months
+  \item end date: T0+45 months (an onward)
+  \item resources: 70 man-months
+  \item first deliverable: alpha version of IVE to MOBIUS partners
+    at T0+12 that supports reasoning about single-threaded programs at
+    the source level
+    \begin{itemize}
+    \item and regular component releases thereafter
+    \item automatic binary and source upgrades via the Eclipse update
+      manager
+    \end{itemize}
+  \item expect a beta version at T0+18 that supports both source and
+    bytecode level reasoning about concurrent programs, certificate
+    generation, and initial integrated interfaces to different proof
+    assistants
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Context of Ongoing Work}
+  \begin{itemize}
+  \item initial component development ongoing at INRIA, RUN, UCD, and WU
+  \item tight coordination with North American partners to leverage tool
+    development resources
+  \item independent and joint development between MOBIUS partners
+  \item physical site visits for intense, focused collaboration
+  \item tool and infrastructure ``working case study'' at UCD
+  \item future continued virtual design and development sessions using
+    VoIP, vidconf, and VNC
+  \item physical collaboration in the form of site visits, tutorials
+    on IVE use, component development, etc.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{The MOBIUS Process}
+  \begin{itemize}
+  \item a \emph{MOBIUS software development process} is being
+    developed, documented and refined
+    \begin{enumerate}
+    \item identify an unrealized requirement(s)
+    \item identify existing components that (potentially, partially)
+      fulfill these requirements(s)
+    \item perform a critical, detailed artifact review (measure code
+      size; code complexity; documentation, specification, and unit
+      test quality and coverage; design quality; etc.)
+    \item decide which (sub)components to reuse for MOBIUS work
+    \item update component to conform to the MOBIUS code standard
+    \item add to the MOBIUS artifact repository
+    \end{enumerate}
+  \item once a component is part of the MOBIUS repository, evolve and
+    maintain that component at a high quality level
+    \begin{enumerate}
+    \item automatic code standard conformance checking
+    \item version control repository triggers
+    \item automatic documentation generation with LP techniques
+    \item PMD MOBIUS plugins (discussed later)
+    \item use the MOBIUS components to develop MOBIUS components
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{The MOBIUS Component Model}
+  \begin{itemize}
+  \item goals
+    \begin{itemize}
+    \item PCC component identification, search, retrieval
+    \item dynamically compose PCC components
+    \item use formal specifications to specify and reason about
+      component properties
+    \end{itemize}
+  \item methodology
+    \begin{itemize}
+    \item evolving existing standard component model (from Eclipse) to
+      include formal specifications and PCC
+    \item use redesign and refactoring of existing tool as a case study
+      in the evaluation of this new component model (RCC, discussed
+      later)
+    \item develop a verification component ``tool-bus'' architecture that
+      incorporates PCC as a first order concept
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Existing Components}
+  \begin{itemize}
+  \item JML tool suite
+    \begin{itemize}
+    \item type checker, compiler, runtime assertion checker, unit
+      documentation generation, unit test generator
+    \end{itemize}
+  \item ESC/Java2
+    \begin{itemize}
+    \item extended static checker supporting Java 1.4 on using two
+      versions of an ESC logic (unsorted $ESC_1$ and $ESC_2$) with the Simplify
+      theorem prover
+    \end{itemize}
+  \item Jack
+    \begin{itemize}
+    \item type checker, VC generator for one logic and multiple provers
+    \end{itemize}
+  \item several provers
+    \begin{itemize}
+    \item Coq, PVS, Isabelle, Simplify, SMT-LIB/CVC3
+    \end{itemize}
+  \item American tools: Bogor, Bandara, Indus, Daikon, etc.
+  \item Eclipse plugins: CodeStyle, FindBugs, PMD
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Components Under Development}
+  \begin{itemize}
+  \item new version of JML2 - compiler with (dramatically
+    simplified) assertion semantics, improved unit test generation
+  \item JML3 - type checker and compiler for Java 1.5 based upon the
+    Eclipse compiler framework
+  \item ESC/Java3 as a general-purpose verification framework
+    \begin{itemize}
+    \item specification soundness checker
+    \item soundness and completeness warning system
+    \item new assertion semantics for ESC
+    \item logic- and prover-independent VC library
+    \item new ESC logics - $ESC_2$ in PVS and Coq, $ESC_3$ in PVS and SMT-LIB
+    \item VC generators for these logics
+    \item (formalized, specified) prover interaction framework
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Components Under Development (II)}
+  \begin{itemize}
+  \item verification-centric JML model classes
+  \item ``reviving'' other SRC tools
+    \begin{enumerate}
+    \item Houdini - revived by RUN
+    \item RCC - being revived by UCD
+    \end{enumerate}
+  \item BML library and VC generator
+  \item Umbra bytecode library/editor
+  \item Bico bytecode to logic translator
+  \item INRIA Jack work integrating BML VC generator and support for
+    some new provers
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Planned Components}
+  \begin{itemize}
+  \item (possibly multiple) VC generators for the MOBIUS logic(s)
+  \item FLOSS Boogie library
+  \item Jack interface extraction and reuse
+  \item type checker(s) for WP2 type system(s)
+  \item immutability checker
+  \item correct concurrency conformance checker
+  \item proof transforming compiler
+  \item generalized hybrid PCC certificate library
+  \item off-device checker for MOBIUS logic
+  \item annotation generation framework
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Planned Components (II)}
+  \begin{itemize}
+  \item tertiary components
+    \begin{itemize}
+    \item Trusted Logic tool work (non-FLOSS)
+    \item on-device checker for MOBIUS logic
+    \item alternative abstract program representations (DSA, GC, graph
+      representation, etc.)
+    \item PMD MOBIUS plugins that summarize PCC component development
+      status, quality, etc.
+    \item PCC publication framework (perhaps as a Wiki plugin)
+    \item formalized literate programming tool
+    \item on-device checker for SMT-LIB provers and ESC logics
+    \end{itemize}
+  \item case studies
+    \begin{itemize}
+    \item MIDP applets identified in Tasks 1.3, 1.4, 3.3, etc.
+    \item MOBIUS TCB components
+    \item incorporation of MOBIUS PCC infrastructure into ConStruct
+      pervasive framework and KOA remote voting system
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Coordination on New Development}
+  \begin{itemize}
+  \item follow the MOBIUS process found (soon) in the the MOBIUS tool
+    wiki closely
+    \begin{enumerate}
+    \item publish requirements document on MOBIUS tool wiki
+    \item announce intentions on MOBIUS tool mailing list (TBC)
+    \item find appropriate partners
+    \item use MOBIUS IVE to develop new MOBIUS component(s)
+    \item identify and encourage maintainer
+    \item \emph{publish case study on tool work}
+    \end{enumerate}
+  \item questions or problems?
+    \begin{enumerate}
+    \item coordinate with UCD to ensure appropriate reuse and
+      communication
+    \item ask questions on the MOBIUS tool mailing list
+    \item document best practices in the MOBIUS tool wiki
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Long-Term MOBIUS Tool Impact}
+  \begin{itemize}
+  \item this work has a lifespan much longer than the MOBIUS project
+  \item we already have users and developers working with various
+    components and many Universities using tools for instruction and
+    research
+  \item we eat our own dog-food to guarantee that components are
+    usable and compelling
+  \item we are working to ``expose'' the Science that is inherent in
+    tool building of this kind to change community attitudes to
+    systems-building in (applied) formal methods
+  \item we are setting a high quality bar to help ensure that this
+    community continues to grow and inspire others in the community
+    (this is our mandate, according to Hoare)
+  \end{itemize}
+\end{frame}
+
+\end{document}
