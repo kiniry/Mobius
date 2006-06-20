@@ -1,15 +1,9 @@
 
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
 
-import org.apache.bcel.classfile.Attribute;
-import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ExceptionTable;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
@@ -19,7 +13,6 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.ClassPath;
@@ -59,15 +52,16 @@ public class Executor {
 		System.out.println(pathname);
 
 		//creating file for output
-		File ff = new File(pathname + "\\out.txt");
-		FileWriter fwr = new FileWriter(pathname + "\\out.txt");
-		BufferedWriter out = new BufferedWriter(fwr);
+	    //current solution - only one output file	
+		String slash = System.getProperty("file.separator");
+		File ff = new File(pathname + slash + "out.txt");		
 		boolean exists = ff.exists();
-	    //current solution - only one output file
 		if (exists) {
 	    	ff.delete();
 	    } 
 		ff.createNewFile();
+		FileWriter fwr = new FileWriter(ff);
+		BufferedWriter out = new BufferedWriter(fwr);		
 		//sysouts are // becouse they may be useful
 
 		
@@ -383,10 +377,10 @@ public class Executor {
 		} else
 		{ 		int pos = 0;
 				for (int i=0;i<listins.length;i++) {
-					str = str.concat("        ("+"("+converttocoq(dealwithinstr(listins[i],pos))+")" + "::");
+					str = str.concat("        "+"("+converttocoq(dealwithinstr(pos,listins[i]))+")" + "::");
 					pos = pos + listins[i].getLength();
 				}
-				str = str.concat("        nil)");
+				str = str.concat("        nil");
 				//System.out.println(str);
 				out.write(str);out.newLine();
 		}
@@ -609,17 +603,22 @@ private static String checkfield(Field field) {
 	}
 	return checktype(field.getType());
 }
-private static String dealwithinstr(Instruction ins, int pos) {
+private static String dealwithinstr(int pos, Instruction ins) {
 	String ret = "" + pos + ", ";
 	
 	String name = ins.getName();
+	
+	// capitalize name
+	char c1=Character.toUpperCase(name.charAt(0));
+	name=Character.toString(c1)+name.substring(1);
+	
 	int j,k,ok;
 	String[] s1 = TypesInCoq.notsosingle;
 	ok = 0;
 	for (j = 0; j < s1.length; j++) {
 		if (name.equalsIgnoreCase(s1[j])) {
 			k = name.lastIndexOf("_");
-			ret = (ret.concat(name.substring(0,k))).concat(", "+name.substring(k+1));
+			ret = ret.concat(name.substring(0,k)+" "+name.substring(k+1));
 			ok = 1;
 		};
 	}
