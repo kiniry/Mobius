@@ -4,17 +4,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.ExceptionTable;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.Instruction;
-import org.apache.bcel.generic.InstructionHandle;
-import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.*;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
@@ -227,7 +222,7 @@ public class Executor {
 		}
 		for (int i = 0; i<methods.length;i++){
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-			domethod(methods[i],mg,out);
+			domethod(methods[i],mg,cpg,out);
 		}
 		
 		//System.out.println("	    Definition class : Class := CLASS.Build_t");
@@ -353,7 +348,7 @@ public class Executor {
 	}
 
 
-	private static void domethod(Method method, MethodGen mg, BufferedWriter out) throws IOException {
+	private static void domethod(Method method, MethodGen mg, ConstantPoolGen cpg, BufferedWriter out) throws IOException {
 		
 //		LocalVariableGen[] aa = mg.getLocalVariables();
 ////		aa[i].toString();
@@ -377,10 +372,11 @@ public class Executor {
 		} else
 		{ 		int pos = 0;
 				for (int i=0;i<listins.length;i++) {
-					str = str.concat("        "+"("+converttocoq(dealwithinstr(pos,listins[i]))+")" + "::");
+					str = str.concat("        "+converttocoq(dealwithinstr(pos,listins[i],cpg))+"::");
 					pos = pos + listins[i].getLength();
+					out.write(str);out.newLine();str="";
 				}
-				str = str.concat("        nil");
+				str = "        nil";
 				//System.out.println(str);
 				out.write(str);out.newLine();
 		}
@@ -603,28 +599,297 @@ private static String checkfield(Field field) {
 	}
 	return checktype(field.getType());
 }
-private static String dealwithinstr(int pos, Instruction ins) {
-	String ret = "" + pos + ", ";
+
+//@return s with the first char toUpperCase
+private static String Upcase(String s) {
+	if (s!=null && s.length()>0)
+	{
+		char c1 = Character.toUpperCase(s.charAt(0));
+		return Character.toString(c1) + s.substring(1);
+	}
+	else return null;
+}
+
+private static String Unhandled(Instruction ins) {
+	return Unhandled("Instruction",ins);
+}
+
+private static String Unhandled(String instruction, Instruction ins) {
+	String name=ins.getName();
+	System.out.println("Unhandled "+instruction+": "+name);
+	return "Nop (* "+name+" *)";
+}
+
+private static String Unknown(String instruction, Instruction ins) {
+	String name=ins.getName();
+	System.out.println("Unknown "+instruction+": "+name);
+	return "Nop (* "+name+" *)";
+}
+
+private static String dealwithinstr(int pos, Instruction ins, ConstantPoolGen cpg) {
+	String ret=null;
 	
 	String name = ins.getName();
-	
 	// capitalize name
-	char c1=Character.toUpperCase(name.charAt(0));
-	name=Character.toString(c1)+name.substring(1);
+	if (name!=null && name.length()>0)
+	{
+		name=Upcase(name);
+	}
+	else
+	{
+		System.out.println("Empty instruction name?");
+		name="Nop";
+	}
 	
-	int j,k,ok;
+	if (ins instanceof ACONST_NULL) ret=name; 
+	else if (ins instanceof ArithmeticInstruction)
+	{
+		char c=name.charAt(0);
+				
+		if (c=='I')
+		{
+			// e.g. Isub -> Ibinop SubInt
+			ret="Ibinop "+Upcase(name.substring(1))+"Int";
+		}
+		else if (c=='D' || c=='F' || c=='L')
+		{
+			ret=Unhandled("ArithmeticInstruction",ins);
+		}
+		else
+		{
+			ret=Unknown("ArithmeticInstruction",ins);
+		}
+	}
+	else if (ins instanceof ArrayInstruction)
+	{
+		char c=name.charAt(0);
+		
+		if (c=='A' || c=='B' || c=='I' || c=='S')
+		{
+			ret=name;
+		}
+		else if (c=='C' || c=='D' || c=='F' || c=='L')
+		{
+			ret=Unhandled("ArrayInstruction",ins);
+		}
+		else 
+		{
+			ret=Unknown("ArrayInstruction",ins);
+		}
+	}
+	else if (ins instanceof ARRAYLENGTH) ret=name;
+	else if (ins instanceof ATHROW) ret=name;
+	else if (ins instanceof BIPUSH)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof BranchInstruction)
+	{
+		int index=((BranchInstruction)ins).getIndex();
+		
+		if (ins instanceof GOTO)
+		{
+			ret=name+" "+index+"%N";
+		} 
+		else if (ins instanceof GOTO_W)
+		{
+			ret="Goto "+index+"%N";
+		}
+		else if (ins instanceof IfInstruction)
+		{
+			String op;
+				
+			if (name.endsWith("null"))
+			{
+				if (name.contains("non"))
+				{
+					op="Ne";
+				}
+				else
+				{
+					op="Eq";
+				}
+				ret="Ifnull "+op+"Ref "+index+"%N";
+			}
+			else if (name.charAt(2)!='_')
+			{
+				// Ifgt -> GtInt
+				op=Upcase(name.substring(2));
+				ret="If0 "+op+"Int "+index+"%N";
+			}
+			else 
+			{
+				op=Upcase(name.substring(7));
+				if (name.charAt(3)=='i')
+				{
+					ret="If_icmp "+op+"Int "+index+"%N";
+				}
+				else
+				{
+					ret="If_acmp "+op+"Ref "+index+"%N";
+				}
+			}
+		}
+	}
+	else if (ins instanceof BREAKPOINT)
+	{
+	ret=Unhandled(ins);
+	}
+	else if (ins instanceof ConversionInstruction)
+	{
+		switch(ins.getOpcode()) {
+			case Constants.I2B:
+			case Constants.I2S:
+				ret=name;	
+			default:	
+				ret=Unhandled(ins);
+		}
+	}
+	else if (ins instanceof CPInstruction)
+	{
+		if (ins instanceof ANEWARRAY)
+			ret=name+" ("+checktype(((CPInstruction)ins).getType(cpg))+")";
+		else
+			ret=name;
+		//TODO: a lot to do here!!!
+	}
+	else if (ins instanceof DCMPG)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof DCMPL)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof DCONST)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof FCMPG)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof FCMPL)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof FCONST)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof ICONST)
+	{
+		ret="Const INT "+((ICONST)ins).getValue();
+	}
+	else if (ins instanceof IMPDEP1)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof IMPDEP2)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof LCMP)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof LCONST)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof LocalVariableInstruction)
+	{
+		int index=((LocalVariableInstruction)ins).getIndex();
+		
+		if (ins instanceof IINC)
+		{
+			ret=name+" "+index+"%N "+((IINC)ins).getIncrement()+"%Z";
+		} 
+		else 
+		{
+			char c=name.charAt(0);
+			
+			if (c=='A' || c=='I')
+			{
+				//Aload_0 -> Aload
+				int under=name.lastIndexOf('_');
+				if (under!=-1)
+				{
+					name=name.substring(0,under);
+				}
+				ret=name+" "+index+"%N";
+			}
+			else if (c=='D' || c=='F' || c=='L')
+			{
+				ret=Unhandled("LocalVariableInstruction",ins);
+			}
+			else
+			{
+				ret=Unknown("LocalVariableInstruction",ins);
+			}
+		}
+	}
+	else if (ins instanceof MONITORENTER)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof MONITOREXIT)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof NEWARRAY)
+	{
+		String type=checktype(BasicType.getType(((NEWARRAY)ins).getTypecode()));
+		ret=name+" "+type;		
+	}
+	else if (ins instanceof NOP) ret=name;
+	else if (ins instanceof RET)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof ReturnInstruction)
+	{
+		char c=name.charAt(0);
+		if (c=='A' || c=='I' || c=='R' /*nothing returned*/)
+		{
+			ret=name;
+		}
+		else if (c=='D' || c=='F' || c=='L')
+		{
+			ret=Unhandled("ReturnInstruction",ins);
+		}
+		else
+		{
+			ret=Unknown("ReturnInstruction",ins);
+		}
+	}
+	else if (ins instanceof SIPUSH)
+	{
+		ret=Unhandled(ins);
+	}
+	else if (ins instanceof StackInstruction)
+	{
+		ret=name;
+	}
+	else
+	{
+		ret=Unknown("Instruction",ins);
+	}
+	
+/*	int j,k,ok;
 	String[] s1 = TypesInCoq.notsosingle;
 	ok = 0;
 	for (j = 0; j < s1.length; j++) {
 		if (name.equalsIgnoreCase(s1[j])) {
 			k = name.lastIndexOf("_");
-			ret = ret.concat(name.substring(0,k)+" "+name.substring(k+1));
+			ret = name.substring(0,k)+" "+name.substring(k+1);
 			ok = 1;
 		};
 	}
 	//FIXME add other options for parameter instructions
-	if (ok==0) {ret = ret.concat(name);}
-	return ret;
+	if (ok==0) {ret=name;}
+*/
+	return "("+pos+"%N, "+ret+")";
 }
 
 

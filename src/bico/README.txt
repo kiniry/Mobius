@@ -13,7 +13,8 @@ b) add external jars->YOURLOCATION
 
 5. While executing if you want to work on ready examples - 
 check if Addition.class and/or factorial.class are there 
-in your bico/test(programs shows default path on console;
+in your bico/test (programs shows default path on console;
 you can run program with 1 argument - path[to change default]
 or "help" to view brief info on console) - 
-sometimes I must put them manually from svn.
+sometimes I must put them manually from svn. Looks like Eclipse 
+sometimes removes "orphane" .class files.
