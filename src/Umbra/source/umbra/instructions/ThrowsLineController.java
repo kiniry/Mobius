@@ -9,17 +9,27 @@ package umbra.instructions;
  * This is a class for a special Bytecode lines related to
  * thrown exceptions, not to be edited by a user. 
  * 
- * @author Tomek Batkiewicz i Jaros³aw Paszek
+ * @author Tomek Batkiewicz i Jarosï¿½aw Paszek
  *
  */
 public class ThrowsLineController extends BytecodeLineController {
 	
-	public ThrowsLineController(String l) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     */    
+    public ThrowsLineController(String l) {
 		super(l);
 	}
 
 	
-	public boolean correct()
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public boolean correct()
 	{
 		//tez niezbyt - patrz przy wyborze typu - nie za bardzo wiemy jak wyglada
 		return true;

@@ -23,17 +23,31 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * form source code to bytecode. It is available with the standard
  * Java editor.
  * 
- * @author Wojtek W¹s
+ * @author Wojtek Wï¿½s
  * @see DocumentProvider
  */
 public class SynchrSBAction implements IEditorActionDelegate {
-	private AbstractTextEditor editor;
+    /**
+     * TODO write description
+     */
+    private AbstractTextEditor editor;
 	
-	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+    /**
+     * TODO write description
+     * 
+     * @param action TODO write description
+     * @param targetEditor TODO write description
+     */
+    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = (AbstractTextEditor)targetEditor;
 	}
 
-	public void run(IAction action) {
+    /**
+     * TODO write description
+     * 
+     * @param action TODO write description
+     */
+    public void run(IAction action) {
 		ITextSelection selection = (ITextSelection)editor.getSelectionProvider().getSelection();
 		int off = selection.getOffset();
 		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();	
@@ -64,7 +78,13 @@ public class SynchrSBAction implements IEditorActionDelegate {
 		}
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
+    /**
+     * TODO write description
+     * 
+     * @param action TODO write description
+     * @param selection TODO write description
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
 
 	}
 

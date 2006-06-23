@@ -4,12 +4,26 @@ import org.eclipse.jface.text.rules.*;
 
 public class TagRule extends MultiLineRule {
 	
-	int loop = 0;
+    /**
+     * TODO write description
+     */
+    int loop = 0;
 
-	public TagRule(IToken token) {
+    /**
+     * TODO write description
+     * 
+     * @param token TODO write description
+     */
+    public TagRule(IToken token) {
 		super("<", ">", token);
 	}
-	protected boolean sequenceDetected(
+
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */
+    protected boolean sequenceDetected(
 		ICharacterScanner scanner,
 		char[] sequence,
 		boolean eofAllowed) {
@@ -31,7 +45,13 @@ public class TagRule extends MultiLineRule {
 		return super.sequenceDetected(scanner, sequence, eofAllowed);
 	}
 	
-	protected IToken doEvaluate(ICharacterScanner scanner, boolean resume) {
+    /**
+     * TODO write description
+     * 
+     * @param scanner TODO write description
+     * @param resume TODO write description
+     */
+    protected IToken doEvaluate(ICharacterScanner scanner, boolean resume) {
 		
 		if (resume) {
 			

@@ -17,17 +17,28 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * These instruction are dealing with long data.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  *
  */
 public class LdcInstruction extends OtherInstruction {
 
 		
-	public LdcInstruction(String l, String n) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     * @param n TODO write description
+     */    
+    public LdcInstruction(String l, String n) {
 		super(l, n);
 	}
 	
-	private int getInd() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    private int getInd() {
 		boolean isd;
 		String licznik = "0123456789";
 		int liczba;
@@ -51,10 +62,10 @@ public class LdcInstruction extends OtherInstruction {
 		}
 		return 0;
 	}
+    
 	/**
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 	int index;
 	
@@ -80,6 +91,7 @@ public class LdcInstruction extends OtherInstruction {
 	 * as well as a string in "" and another one that
 	 * is a number in ().
 	 * 
+     * @return TODO write description
 	 *@see InstructionLineController#correct() 
 	 */
 

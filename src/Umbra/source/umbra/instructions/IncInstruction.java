@@ -14,13 +14,19 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * This is only dealing with iinc instruction.
  * 
- * @author Jaros³aw Paszek i Tomasz Batkiewicz 
+ * @author Jarosï¿½aw Paszek i Tomasz Batkiewicz 
  */
 public class IncInstruction extends NumInstruction {
 
 	
 	
-	public IncInstruction(String l, String n) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     * @param n TODO write description
+     */    
+    public IncInstruction(String l, String n) {
 		super(l, n);
 	}
 
@@ -29,6 +35,7 @@ public class IncInstruction extends NumInstruction {
 	 * Inc instruction line is correct if it has 
 	 * two simple number parameters (first preceded with %).
 	 * 
+     * @return TODO write description
 	 *@see InstructionLineController#correct()
 	 *@see InstructionLineController#chkcorr(String, String) 
 	 */
@@ -36,7 +43,12 @@ public class IncInstruction extends NumInstruction {
 		return super.chkcorr(line, "W%DW?-D?W");
 	}
 	
-	public boolean correct0()
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public boolean correct0()
 	{
 		String s;
 		s = extractPoint(line);
@@ -81,7 +93,12 @@ public class IncInstruction extends NumInstruction {
 		return false;
 	}
 
-	private int getInd1() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    private int getInd1() {
 		boolean isd;
 		String licznik = "0123456789";
 		int liczba = 0;
@@ -104,7 +121,12 @@ public class IncInstruction extends NumInstruction {
 		return 0;
 	}
 	
-	private int getInd2() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    private int getInd2() {
 		boolean isd;
 		String licznik = "0123456789";
 		int liczba = 0;
@@ -153,7 +175,6 @@ public class IncInstruction extends NumInstruction {
 	/**
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 		
 		if (!correct())
@@ -171,6 +192,4 @@ public class IncInstruction extends NumInstruction {
 		return null;
 		
 		}
-	
-	
 }

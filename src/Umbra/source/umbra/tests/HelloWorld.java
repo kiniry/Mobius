@@ -7,10 +7,9 @@ package umbra.tests;
  */
 
 /**
- * @author Wojtek W¹s
+ * @author Wojtek Wï¿½s
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * TODO write description
  */
 
 public class HelloWorld {

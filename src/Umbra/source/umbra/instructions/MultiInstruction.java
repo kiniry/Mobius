@@ -8,12 +8,18 @@ package umbra.instructions;
  * This is abstract class for all instructions with at least one
  * parameter.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  *
  */
 public class MultiInstruction extends InstructionLineController {
 
-	public MultiInstruction(String l, String n) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     * @param n TODO write description
+     */    
+    public MultiInstruction(String l, String n) {
 		super(l, n);
 	}
 

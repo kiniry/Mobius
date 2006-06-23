@@ -19,6 +19,8 @@ import org.apache.bcel.generic.TargetLostException;
 import org.eclipse.jface.text.Document;
 
 /**
+ * TODO write description
+ * 
  * @author Wojtek & Tomek & Jarek
  */
 public class BcelTestRun {
@@ -100,7 +102,7 @@ public class BcelTestRun {
 	public static void main(String[] args)
 	{
 		JavaClass jc = Repository.lookupClass(HWClName);
-		System.out.println("----- przed zmian¹ -----");
+		System.out.println("----- przed zmianï¿½ -----");
 		wypisz(jc);
 		jc = zmien_jc(jc);
 		System.out.println("-----  po zmianie  -----");

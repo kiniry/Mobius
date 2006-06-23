@@ -19,12 +19,17 @@ import umbra.IBytecodeStrings;
  * This is a set of various instructions with class name
  * as a parameter.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  *
  */
 public class NewInstruction extends StringInstruction {
 
-		
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     * @param n TODO write description
+     */
 	public NewInstruction(String l, String n) {
 		super(l, n);
 	}
@@ -35,6 +40,7 @@ public class NewInstruction extends StringInstruction {
 	 * one parameter that is a class name and
 	 * another one that is a number in ().
 	 * 
+     * @param TODO write description
 	 *@see InstructionLineController#correct() 
 	 */
 	public boolean correct()
@@ -70,6 +76,11 @@ public class NewInstruction extends StringInstruction {
 		return false;
 	}
 	
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */
 	private int getInd() {
 		boolean isd;
 		String licznik = "0123456789";
@@ -93,10 +104,10 @@ public class NewInstruction extends StringInstruction {
 		}
 		return 0;
 	}
+    
 	/**
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 	int index;
 	if (!correct())

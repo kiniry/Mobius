@@ -20,22 +20,52 @@ import org.apache.bcel.generic.TargetLostException;
  * This class defines a structure that describes a single Bytecode
  * instruction and contains related BCEL structures
  * 
- * @author Wojciech W¹s, Tomek Batkiewicz
+ * @author Wojciech Wï¿½s, Tomek Batkiewicz
  */
 public abstract class InstructionLineController extends BytecodeLineController {
 
-	protected InstructionList il;
-	protected InstructionHandle ih;
-	protected MethodGen mg;
-	protected String name; 
+    /**
+     * TODO write description
+     */    
+    protected InstructionList il;
+    /**
+     * TODO write description
+     */    
+    protected InstructionHandle ih;
+    /**
+     * TODO write description
+     */    
+    protected MethodGen mg;
+    /**
+     * TODO write description
+     */    
+    protected String name; 
 	
-	public InstructionLineController(String l, String n) {
+    /**
+     * TODO write description
+     * 
+     * @param l write description
+     * @param n write description
+     */    
+    public InstructionLineController(String l, String n) {
 		super(l);
 		name = n;
 		// tu moze w podklasach gdzie w podklasach instrukcje sie tworzy odpowiednio
 	}
 	
-	public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
+    /**
+     * TODO write description
+     * 
+     * @param ih TODO write description 
+     * @param il TODO write description
+     * @param mg TODO write description
+     * @param i TODO write description
+     * @return TODO write description
+     */    
+    public boolean addHandle(InstructionHandle ih, 
+                             InstructionList il, 
+                             MethodGen mg, 
+                             int i) {
 		this.ih = ih;
 		this.il = il;
 		this.mg = mg;
@@ -88,7 +118,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		}
 	}
 	
-	private void controlPrint(BytecodeLineController line) {
+    /**
+     * TODO write description
+     * 
+     * @param line TODO write description
+     */    
+    private void controlPrint(BytecodeLineController line) {
 		System.out.println("Init: next line");
 		if (line == null) System.out.println("Null");
 		else {
@@ -101,7 +136,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		}
 	}
 	
-	private void printInstructionList(InstructionList il) {
+    /**
+     * TODO write description
+     * 
+     * @param il TODO write description
+     */    
+    private void printInstructionList(InstructionList il) {
 		InstructionHandle ih = il.getStart();
 		System.out.println(ih.getInstruction().getName());
 		do {
@@ -179,15 +219,30 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		//System.out.println(cg.getMethodAt(index).getCode().toString());
 	}	
 	
-	public InstructionHandle getHandle() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public InstructionHandle getHandle() {
 		return ih;
 	}
 	
-	public InstructionList getList() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public InstructionList getList() {
 		return il;
 	}
 
-	public MethodGen getMethod() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public MethodGen getMethod() {
 		return mg;
 	}
 	

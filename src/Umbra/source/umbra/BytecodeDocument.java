@@ -20,34 +20,62 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * This class is related to document structure of bytecode
  * file and supplies it with synchronization tools (in both directions).
  * 
- * @author Tomasz Batkiewicz, Wojciech W¹s
+ * @author Tomasz Batkiewicz, Wojciech Wï¿½s
  */
 public class BytecodeDocument extends Document {
+
+    /**
+     * TODO write description
+     */
 	private AbstractDecoratedTextEditor fRelatedEditor;
-	private JavaClass fJavaClass;
-	private ClassGen classGen;
+    /**
+     * TODO write description
+     */
+    private JavaClass fJavaClass;
+    /**
+     * TODO write description
+     */
+    private ClassGen classGen;
 	
-	public void setRelatedEditor(AbstractDecoratedTextEditor editor) {
+    /**
+     * TODO write description
+     */
+    public void setRelatedEditor(AbstractDecoratedTextEditor editor) {
 		fRelatedEditor = editor;
 	}
 	
-	public AbstractDecoratedTextEditor getRelatedEditor() {
+    /**
+     * TODO write description
+     */
+    public AbstractDecoratedTextEditor getRelatedEditor() {
 		return fRelatedEditor;
 	}
 	
-	public void setJavaClass(JavaClass jc) {
+    /**
+     * TODO write description
+     */
+    public void setJavaClass(JavaClass jc) {
 		fJavaClass = jc;
 	}
 	
-	public JavaClass getJavaClass() {
+    /**
+     * TODO write description
+     */
+    public JavaClass getJavaClass() {
 		return fJavaClass;
 	}
 	
-	public void setClassGen(ClassGen cg) {
+    /**
+     * TODO write description
+     */
+    public void setClassGen(ClassGen cg) {
 		classGen = cg;
 	}
 	
-	public ClassGen getClassGen() {
+    /**
+     * TODO write description
+     */
+    public ClassGen getClassGen() {
 		return classGen;
 	}
 
@@ -123,11 +151,11 @@ public class BytecodeDocument extends Document {
 						break;
 					}
 				} while (getLineOfOffset(pos-1) == getLineOfOffset(pos));
-				// "<pc>:" musi byæ znalezione na pocz¹tku linii.
+				// "<pc>:" musi byï¿½ znalezione na poczï¿½tku linii.
 				if (pos == -1) {
 					if (l_od != 0)
 						l_do = l_od;
-					System.out.println("syncBS: b³¹d -- nie znaleziono kolejnej pozycji z LineNumberTable!");
+					System.out.println("syncBS: bï¿½ï¿½d -- nie znaleziono kolejnej pozycji z LineNumberTable!");
 					break;
 				}
 				posln = getLineOfOffset(pos);

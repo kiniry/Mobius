@@ -10,12 +10,18 @@ package umbra.instructions;
  * This is abstract class for all instructions with a string (in or without <>, always without "")
  * as a parameter.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  *
  */
 public class StringInstruction extends MultiInstruction {
 
-	public StringInstruction(String l, String n) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     * @param n TODO write description
+     */    
+    public StringInstruction(String l, String n) {
 		super(l, n);
 	}
 

@@ -8,29 +8,82 @@ package umbra;
 /**
  * The interface defining colors used in particular coloring styles
  * 
- * @author Wojtek W¹s
+ * @author Wojtek Wï¿½s
  */
 public interface IColorValues {
-	static int PARTS = 16;
+    /**
+     * TODO write description
+     */
+    static int PARTS = 16;
+    /**
+     * TODO write description
+     */
+    static int STRING = 0;
+    /**
+     * TODO write description
+     */
+    static int COMMENT = 1;
+    /**
+     * TODO write description
+     */
+    static int DEFAULT = 2;
+    /**
+     * TODO write description
+     */
+    static int ERROR = 3;
+    /**
+     * TODO write description
+     */
+    static int HEADER = 4;
+    /**
+     * TODO write description
+     */
+    static int TAG = 5;
+    /**
+     * TODO write description
+     */
+    static int CLASS = 6;
+    /**
+     * TODO write description
+     */
+    static int BTC_INSTR = 7;
+    /**
+     * TODO write description
+     */
+    static int KEY = 8;
+    /**
+     * TODO write description
+     */
+    static int LINE = 9;
+    /**
+     * TODO write description
+     */
+    static int THROWS = 10;
+    /**
+     * TODO write description
+     */
+    static int SQUARE = 11;
+    /**
+     * TODO write description
+     */
+    static int NUMBER = 12;
+	/**
+     * TODO write description
+     */
+    static int POSITION = 13;
+    /**
+     * TODO write description
+     */
+    static int HASH = 14;
+    /**
+     * TODO write description
+     */
+    static int ATTR = 15;
 	
-	static int STRING = 0;
-	static int COMMENT = 1;
-	static int DEFAULT = 2;
-	static int ERROR = 3;
-	static int HEADER = 4;
-	static int TAG = 5;
-	static int CLASS = 6;
-	static int BTC_INSTR = 7;
-	static int KEY = 8;
-	static int LINE = 9;
-	static int THROWS = 10;
-	static int SQUARE = 11;
-	static int NUMBER = 12;
-	static int POSITION = 13;
-	static int HASH = 14;
-	static int ATTR = 15;
-	
-	static int[][] models = new int[][] {new int[] {0, 0, 255, 0,
+    /**
+     * TODO write description
+     */
+    static int[][] models = new int[][] {new int[] {0, 0, 255, 0,
 		0, 0, 0, 2, 0, 0, 0, 0, 255, 0, 0, 0, 
 		0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 
 		0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 

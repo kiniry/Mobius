@@ -13,11 +13,19 @@ package umbra.instructions;
  */
 public class HeaderLineController extends BytecodeLineController {
 
-	public HeaderLineController(String l) {
+    /**
+     * TODO write description
+     * 
+     * @param TODO write description
+     */    
+    public HeaderLineController(String l) {
 		super(l);
 	}
 	
-	public boolean correct()
+    /**
+     * TODO write description
+     */    
+    public boolean correct()
 	{
 		//niz za bardzo mozna ustalic zaleznosci
 		//zbior wyrazow przed innym niektore opcjonalne
@@ -27,8 +35,9 @@ public class HeaderLineController extends BytecodeLineController {
 	/**
 	 * The method index of the header is equal to
 	 * the previous line's one increased by one.
+     * 
+     * @param index2 write description
 	 */
-	
 	public void setIndex(int index2) {
 		this.index = index2 + 1;
 	}

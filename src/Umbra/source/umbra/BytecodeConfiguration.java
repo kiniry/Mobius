@@ -17,22 +17,58 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
  */
 
 public class BytecodeConfiguration extends SourceViewerConfiguration {
+    
+    /**
+     * TODO write description
+     */    
 	private BytecodeDoubleClickStrategy doubleClickStrategy;
-	private BytecodeTagScanner tagScanner;
-	private BytecodeScanner scanner;
+    /**
+     * TODO write description
+     */    
+    private BytecodeTagScanner tagScanner;
+    /**
+     * TODO write description
+     */
+    private BytecodeScanner scanner;
+    /**
+     * TODO write description
+     */        
 	private ColorManager colorManager;
+    /**
+     * TODO write description
+     */    
 	private int mod;
-	
+
+    /**
+     * TODO write description
+     * 
+     * @param colorManager TODO write description
+     * @param mod TODO write description
+     */
 	public BytecodeConfiguration(ColorManager colorManager, int mod) {
 		this.colorManager = colorManager;
 		this.mod = mod;
 	}
+    
+    /**
+     * TODO write description
+     * 
+     * @param sourceViewer TODO write description
+     * @return  TODO write description
+     */    
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] {
 			IDocument.DEFAULT_CONTENT_TYPE,
 			BytecodePartitionScanner.HEAD,
 			BytecodePartitionScanner.TAG };
 	}
+    
+    /**
+     * TODO write description
+     * 
+     * @param  TODO write description
+     * @return TODO write description
+     */    
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
 		ISourceViewer sourceViewer,
 		String contentType) {
@@ -41,6 +77,11 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		return doubleClickStrategy;
 	}
 
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
 	protected BytecodeScanner getBytecodeScanner() {
 		if (scanner == null) {
 			scanner = new BytecodeScanner(colorManager, mod);
@@ -49,6 +90,12 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		}
 		return scanner;
 	}
+    
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
 	protected BytecodeTagScanner getBytecodeTagScanner() {
 		if (tagScanner == null) {
 			tagScanner = new BytecodeTagScanner(colorManager, mod);
@@ -58,6 +105,12 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		return tagScanner;
 	}
 
+    /**
+     * TODO write description
+     * 
+     * @param sourceViewer TODO write description
+     * @return TODO write description
+     */
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 

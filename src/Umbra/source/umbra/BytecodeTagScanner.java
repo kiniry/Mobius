@@ -15,7 +15,13 @@ import org.eclipse.jface.text.rules.WordRule;
 
 public class BytecodeTagScanner extends RuleBasedScanner {
 
-	public BytecodeTagScanner(ColorManager manager, int mod) {
+    /**
+     * TODO write description
+     * 
+     * @param manager TODO write description
+     * @param mod TODO write description
+     */
+    public BytecodeTagScanner(ColorManager manager, int mod) {
 		
 		IToken[] tokens = TokenGetter.getTokenTab(manager, mod);
 		

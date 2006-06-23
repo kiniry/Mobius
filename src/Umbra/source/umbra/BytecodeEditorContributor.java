@@ -53,31 +53,72 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * synchronization of cursor's positions from Bytecode to Java code,
  * color changing and checking syntax correctness. 
  * 
- * @author Wojtek W¹s
+ * @author Wojtek Wï¿½s
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
-	private BytecodeContribution bytecodeContribution;
-	private BytecodeEditorAction actionPlus;
-	private BytecodeEditorAction actionMinus;
-	private BytecodeRefreshAction refreshAction;
-	private BytecodeRebuildAction rebuildAction;
-	private BytecodeCombineAction combineAction;
-	private BytecodeRestoreAction restoreAction;
-	private BytecodeSynchrAction synchrAction;
-	private boolean needRefresh = false;
-	private int mod;
+    /**
+     * TODO write description
+     */
+    private BytecodeContribution bytecodeContribution;
+    /**
+     * TODO write description
+     */
+    private BytecodeEditorAction actionPlus;
+    /**
+     * TODO write description
+     */
+    private BytecodeEditorAction actionMinus;
+    /**
+     * TODO write description
+     */
+    private BytecodeRefreshAction refreshAction;
+    /**
+     * TODO write description
+     */
+    private BytecodeRebuildAction rebuildAction;
+    /**
+     * TODO write description
+     */
+    private BytecodeCombineAction combineAction;
+    /**
+     * TODO write description
+     */
+    private BytecodeRestoreAction restoreAction;
+    /**
+     * TODO write description
+     */
+    private BytecodeSynchrAction synchrAction;
+    /**
+     * TODO write description
+     */
+    private boolean needRefresh = false;
+    /**
+     * TODO write description
+     */
+    private int mod;
 	
 	/**
 	 *	This class defines an action of changing coloring style. It is used
 	 *  in two instances: one changes colors clockwise and the other counter-clockwise.  
 	 */
 	class BytecodeEditorAction extends Action {
-		private Shell shell;
-		private IEditorPart activeEditor;
-		private int change;
+        /**
+         * TODO write description
+         */
+        private Shell shell;
+        /**
+         * TODO write description
+         */
+        private IEditorPart activeEditor;
+        /**
+         * TODO write description
+         */
+        private int change;
 		
 		/**
+         * TODO write description
+         * 
 		 * @param change	+1 for clockwise changing -1 otherwise.
 		 */
 		public BytecodeEditorAction(int change) {
@@ -85,7 +126,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			this.change = change;
 		}
 		
-		public void setShell(Shell shell) {
+        /**
+         * TODO write description
+         * 
+         * @param shell TODO description
+         */
+        public void setShell(Shell shell) {
 			this.shell = shell;
 		}
 		
@@ -108,7 +154,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			}
 		}
 		
-		public void setActiveEditor(IEditorPart part) {
+        /**
+         * TODO write description
+         * 
+         * @param part TODO write description
+         */
+        public void setActiveEditor(IEditorPart part) {
 			activeEditor = part;
 		}
 	}
@@ -121,13 +172,24 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * Java code after saving binary file.
 	 */
 	public class BytecodeRefreshAction extends Action {
-		private IEditorPart editor;
+        /**
+         * TODO write description
+         */
+        private IEditorPart editor;
 		
-		public BytecodeRefreshAction() {
+        /**
+         * TODO write description
+         */
+        public BytecodeRefreshAction() {
 			super("Refresh");
 		}
 
-		public void setActiveEditor(IEditorPart targetEditor) {
+        /**
+         * TODO write description
+         * 
+         * @param targetEditor TODO write description
+         */
+        public void setActiveEditor(IEditorPart targetEditor) {
 			editor = targetEditor;
 		}
 
@@ -173,13 +235,24 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	public class BytecodeRebuildAction extends Action {
 		
-		private IEditorPart editor;
+        /**
+         * TODO write description
+         */
+        private IEditorPart editor;
 		
-		public void setActiveEditor(IEditorPart targetEditor) {
+        /**
+         * TODO write description
+         * 
+         * @param targetEditor TODO write description
+         */
+        public void setActiveEditor(IEditorPart targetEditor) {
 			editor = targetEditor;
 		}
 		
-		public BytecodeRebuildAction() {
+        /**
+         * TODO write description
+         */
+        public BytecodeRebuildAction() {
 			super("Rebuild");
 		}
 		
@@ -232,14 +305,28 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	
 	class BytecodeCombineAction extends Action {
-		private Shell shell;
-		private IEditorPart editor;
+        /**
+         * TODO write description
+         */
+        private Shell shell;
+        /**
+         * TODO write description
+         */
+        private IEditorPart editor;
 		
-		public BytecodeCombineAction() {
+        /**
+         * TODO write description
+         */
+        public BytecodeCombineAction() {
 			super("Combine");
 		}
 		
-		public void setShell(Shell shell) {
+        /**
+         * TODO write description
+         * 
+         * @param shell write description
+         */
+        public void setShell(Shell shell) {
 			this.shell = shell;
 		}
 		
@@ -320,11 +407,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 				e.printStackTrace();
 			}
 			synchrAction.setEnabled(true);
-			
-			
 		}
 		
-		public void setActiveEditor(IEditorPart part) {
+        /**
+         * TODO write description
+         * 
+         * @param part TODO write description
+         */
+        public void setActiveEditor(IEditorPart part) {
 			editor = part;
 		}
 	}
@@ -336,14 +426,28 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	
 	class BytecodeRestoreAction extends Action {
-		private Shell shell;
-		private IEditorPart editor;
+        /**
+         * TODO write description
+         */
+        private Shell shell;
+        /**
+         * TODO write description
+         */
+        private IEditorPart editor;
 		
-		public BytecodeRestoreAction() {
+        /**
+         * TODO write description
+         */
+        public BytecodeRestoreAction() {
 			super("Restore");
 		}
 		
-		public void setShell(Shell shell) {
+        /**
+         * TODO write description
+         * 
+         * @param shell write description
+         */
+        public void setShell(Shell shell) {
 			this.shell = shell;
 		}
 		
@@ -353,7 +457,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		 * appropriate historical version and new input is
 		 * generated and put into the editor window.
 		 */
-		
 		public void run() {		
 			String strnum = JOptionPane.showInputDialog("Input version number (0 to 2):", "0");
 			int num = 0;
@@ -403,7 +506,12 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			synchrAction.setEnabled(true);
 		}
 		
-		public void setActiveEditor(IEditorPart part) {
+        /**
+         * TODO write description
+         * 
+         * @param part write description
+         */
+        public void setActiveEditor(IEditorPart part) {
 			editor = part;
 		}
 	}
@@ -416,17 +524,31 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	class BytecodeSynchrAction extends Action {
 		
-		private AbstractTextEditor editor;
+        /**
+         * TODO write description
+         */
+        private AbstractTextEditor editor;
 		
-		public BytecodeSynchrAction() {
+        /**
+         * TODO write description
+         */
+        public BytecodeSynchrAction() {
 			super("Synchronize");
 		}
 		
-		public void setActiveEditor(IEditorPart targetEditor) {
+        /**
+         * TODO write description
+         * 
+         * @param targetEditor write description
+         */
+        public void setActiveEditor(IEditorPart targetEditor) {
 			editor = (AbstractTextEditor)targetEditor;
 		}
 
-		public void run() {
+        /**
+         * TODO write description
+         */
+        public void run() {
 			ITextSelection selection = (ITextSelection)editor.getSelectionProvider().getSelection();
 			int off = selection.getOffset();
 			BytecodeDocument bDoc = (BytecodeDocument)editor.getDocumentProvider().getDocument(editor.getEditorInput());
@@ -438,7 +560,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * The constructor is performed when the editor is started.
 	 * It includes creating all actions and provide them with their icons.
 	 * 
-	 * @throws MalformedURLException
+	 * @throws MalformedURLException TODO write description
 	 */
 	public BytecodeEditorContributor() throws MalformedURLException {
 		super();
@@ -477,8 +599,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	
 	/**
 	 * New buttons for the actions are added to the toolbar.
+     * 
+     * @param toolBarManager TODO write description
 	 */
-	
 	public void contributeToToolBar(IToolBarManager toolBarManager) {
 		// Run super.
 		super.contributeToToolBar(toolBarManager);
@@ -495,8 +618,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	
 	/**
 	 * New items for the actions are added to the menu.
+     * 
+     * @param menuManager TODO write description
 	 */
-	
 	public void contributeToMenu(IMenuManager menuManager) {
 		// Run super.
 		super.contributeToMenu(menuManager);
@@ -517,7 +641,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * 
 	 * @param editor	the current editor window
 	 */
-	
 	public void setActiveEditor(IEditorPart editor) {
 		super.setActiveEditor(editor);
 		if (editor instanceof BytecodeEditor) {
@@ -546,6 +669,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	/**
 	 * The same as below with input obtained from the current editor window.
 	 * 
+     * @param editor TODO write description
+     * @throws PartInitException TODO write description
 	 * @see #refreshEditor(IEditorPart, IEditorInput)
 	 */
 	private void refreshEditor(IEditorPart editor) throws PartInitException {
@@ -560,7 +685,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * 
 	 * @param editor		current editor to be closed
 	 * @param input			input file to be displayed in new editor
-	 * @throws PartInitException
+	 * @throws PartInitException TODO write description
 	 */
 	private void refreshEditor(IEditorPart editor, IEditorInput input) throws PartInitException {
 		IWorkbenchPage page = editor.getEditorSite().getPage();
@@ -582,11 +707,20 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		if (proper) Composition.stopDisas();
 	}
 	
-	public void synchrDisable() {
+    /**
+     * TODO write description
+     */
+    public void synchrDisable() {
 		synchrAction.setEnabled(false);
 	}
 	
-	private void controlPrint(JavaClass jc, int i) {
+    /**
+     * TODO write description
+     * 
+     * @param jc TODO write description
+     * @param i TODO write description
+     */
+    private void controlPrint(JavaClass jc, int i) {
 		Method meth = jc.getMethods()[i];
 		System.out.println(meth.getCode().toString());
 	}

@@ -19,15 +19,35 @@ import org.apache.bcel.generic.MethodGen;
  */
 public abstract class BytecodeLineController {
 
-	protected String line;
-	protected int index;
+    /**
+     * TODO write description
+     */    
+    protected String line;
+    /**
+     * TODO write description
+     */    
+    protected int index;
 
-	public BytecodeLineController(String l) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     */    
+    public BytecodeLineController(String l) {
 		super();
 		line = l;
 	}
 	
-	public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
+    /**
+     * TODO write description
+     * 
+     * @param ih TODO write description
+     * @param il TODO write description
+     * @param mg TODO write description
+     * @param i TODO write description
+     * @return TODO write description
+     */    
+    public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
 		index = i;
 		return false;
 	}
@@ -45,37 +65,90 @@ public abstract class BytecodeLineController {
 		return null;
 	}
 	
-	public void setTarget(InstructionList il, Instruction ins) {
+    /**
+     * TODO write description
+     * 
+     * @param il TODO write description
+     * @param ins TODO write description
+     */    
+    public void setTarget(InstructionList il, Instruction ins) {
 		
 	}
 	
-	public void initHandle(BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, LinkedList instructions, int off) {	
+    /**
+     * TODO write description
+     * 
+     * @param nextLine TODO write description
+     * @param cg TODO write description
+     * @param ins TODO write description
+     * @param metEnd TODO write description
+     * @param instructions TODO write description
+     * @param off TODO write description
+     */    
+    public void initHandle(BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, LinkedList instructions, int off) {	
 	}
 	
-	public void update(BytecodeLineController oldLine, BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, boolean theLast, LinkedList instructions, int off) {
+    /**
+     * TODO write description
+     * 
+     * @param oldLine TODO write description
+     * @param nextLine TODO write description
+     * @param cg TODO write description
+     * @param ins TODO write description
+     * @param metEnd TODO write description
+     * @param theLast TODO write description
+     * @param instructions TODO write description
+     * @param off TODO write description
+     */    
+    public void update(BytecodeLineController oldLine, BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, boolean theLast, LinkedList instructions, int off) {
 		if (oldLine.getHandle() != null) {
 			oldLine.dispose(nextLine, cg, theLast, instructions, off);
 		}
 	}
 	
-	public InstructionHandle getHandle() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public InstructionHandle getHandle() {
 		return null;
 	}
 	
-	public InstructionList getList() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public InstructionList getList() {
 		return null;
 	}
 	
-	public MethodGen getMethod() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public MethodGen getMethod() {
 		return null;
 	}
 	
-	public int getIndex() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public int getIndex() {
 		return index;
 	}
 	
 	//&*zmiana nazwy! usuwam z podklas!
-	protected String extractPoint(String l) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     */    
+    protected String extractPoint(String l) {
 		String s;
 		s = "";
 		int ii = 0;
@@ -100,11 +173,25 @@ public abstract class BytecodeLineController {
 		return false;
 	}
 	
-	public void dispose(BytecodeLineController nextLine, ClassGen cg, boolean theLast, LinkedList instructions, int off) {
+    /**
+     * TODO write description
+     * 
+     * @param nextLine TODO write description
+     * @param cg TODO write description
+     * @param theLast TODO write description
+     * @param instructions TODO write description
+     * @param off TODO write description
+     */    
+    public void dispose(BytecodeLineController nextLine, ClassGen cg, boolean theLast, LinkedList instructions, int off) {
 		
 	}
 
-	public void setIndex(int index2) {
+    /**
+     * TODO write description
+     * 
+     * @param index2 TODO write description
+     */    
+    public void setIndex(int index2) {
 		this.index = index2;		
 	}
 

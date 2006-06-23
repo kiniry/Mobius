@@ -16,12 +16,18 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * Here are two instructions resposible for pushing onto the stack.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  *
  */
 public class PushInstruction extends NumInstruction {
 	
-	public PushInstruction(String l, String n) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     * @param n TODO write description
+     */    
+    public PushInstruction(String l, String n) {
 		super(l, n);
 	}
 	
@@ -29,6 +35,7 @@ public class PushInstruction extends NumInstruction {
 	 * Push instruction line is correct if it has 
 	 * one simple number parameter.
 	 * 
+     * @return TODO write description
 	 *@see InstructionLineController#correct() 
 	 */
 	public boolean correct()
@@ -59,7 +66,12 @@ public class PushInstruction extends NumInstruction {
 		return false;
 	}
 	
-	private int getInd() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    private int getInd() {
 		boolean isd;
 		String licznik = "0123456789";
 		int liczba;
@@ -81,10 +93,10 @@ public class PushInstruction extends NumInstruction {
 		}
 		return 0;
 	}
+    
 	/**
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 		int index = 0;
 		if (!correct())

@@ -16,11 +16,14 @@ import umbra.NonRuleBasedDamagerRepairer;
  * This method collects array of colors from IColorValues interface
  * and returns them as a token array
  * 
- * @author Wojtek W¹s
+ * @author Wojtek Wï¿½s
  */
 public class TokenGetter {
 
-	static int CN = 4;
+    /**
+     * TODO write description
+     */
+    static int CN = 4;
 	
 	/**
 	 * @param manager	Color manager related to the editor
@@ -28,7 +31,6 @@ public class TokenGetter {
 	 * @param i			Position in array of color values
 	 * @return			Color value as a token
 	 */
-	
 	static public IToken getToken(ColorManager manager, int mod, int i) {
 		return new Token(getTextAttribute(manager, mod, i));
 	}
@@ -39,7 +41,6 @@ public class TokenGetter {
 	 * @return			Array of tokens for each color value
 	 * 					(for each window element to be coloured)
 	 */
-	
 	static public IToken[] getTokenTab(ColorManager manager, int mod) {
 		IToken[] tokens = new IToken[IColorValues.PARTS];
 		for (int i = 0; i < IColorValues.PARTS; i++) {
@@ -48,7 +49,15 @@ public class TokenGetter {
 		return tokens;
 	}
 	
-	static public NonRuleBasedDamagerRepairer getRepairer(ColorManager manager, int mod, int i) {
+    /**
+     * TODO write description
+     * 
+     * @param manager TODO write description
+     * @param mod TODO write description
+     * @param i TODO write description
+     * @return TODO write description
+     */
+    static public NonRuleBasedDamagerRepairer getRepairer(ColorManager manager, int mod, int i) {
 		return new NonRuleBasedDamagerRepairer(getTextAttribute(manager, mod, i));
 	}
 	
@@ -58,7 +67,6 @@ public class TokenGetter {
 	 * @param i			Position in array of color values
 	 * @return			Particular color as an attribute 					
 	 */
-	
 	private static TextAttribute getTextAttribute(ColorManager manager, int mod, int i) {
 		return new TextAttribute(manager.getColor(new RGB(IColorValues.models[mod][CN * i], 
 				IColorValues.models[mod][(CN * i) + 1], IColorValues.models[mod][(CN * i) + 2])), 

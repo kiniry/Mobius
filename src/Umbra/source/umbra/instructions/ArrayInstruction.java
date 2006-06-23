@@ -16,22 +16,34 @@ import umbra.IBytecodeStrings;
  * There is only one array instruction used to create new
  * array of a particular type.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  */
 public class ArrayInstruction extends StringInstruction {
 
-	private final String names[] =
+    /**
+     * TODO write description
+     */    
+    private final String names[] =
 	{"VOID", "BOOLEAN","INT", "SHORT", "BYTE", "LONG",
 		"DOUBLE", "FLOAT", "CHAR"};
 
-	private final Type types[] =
+    /**
+     * TODO write description
+     */    
+    private final Type types[] =
 	{Type.VOID, Type.BOOLEAN, Type.INT, Type.SHORT,
 			Type.BYTE, Type.LONG, Type.DOUBLE,
 			Type.FLOAT, Type.CHAR};
 	
-	private final int typeCount = types.length;
+    /**
+     * TODO write description
+     */    
+    private final int typeCount = types.length;
 
-	private Type getType(String insName) {
+    /**
+     * TODO write description
+     */    
+    private Type getType(String insName) {
 		for (int i = 0; i < typeCount; i++) {
 			if ((names[i].startsWith(insName)) && (insName.startsWith(names[i])))
 				return types[i];
@@ -39,14 +51,16 @@ public class ArrayInstruction extends StringInstruction {
 		return null;
 	}
 		
-	public ArrayInstruction(String l, String n) {
+    /**
+     * TODO write description
+     */    
+    public ArrayInstruction(String l, String n) {
 		super(l, n);
 	}
 
 	/**
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 		//System.out.println("ArrayInstruction->getInstruction...");
 		String insType = line.substring(line.indexOf("<") + 1, line.indexOf(">"));
@@ -73,7 +87,6 @@ public class ArrayInstruction extends StringInstruction {
 	 * 
 	 *@see InstructionLineController#correct() 
 	 */
-
 	public boolean correct()
 	{
 		String s;

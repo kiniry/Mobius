@@ -14,14 +14,26 @@ import org.eclipse.swt.widgets.Display;
 
 public class ColorManager {
 
-	protected Map fColorTable = new HashMap(10);
+    /**
+     * TODO write description
+     */
+    protected Map fColorTable = new HashMap(10);
 
-	public void dispose() {
+    /**
+     * TODO write description
+     */
+    public void dispose() {
 		Iterator e = fColorTable.values().iterator();
 		while (e.hasNext())
 			 ((Color) e.next()).dispose();
 	}
-	public Color getColor(RGB rgb) {
+
+    /**
+     * TODO write description
+     * 
+     * @param rgb TODO write description
+     */
+    public Color getColor(RGB rgb) {
 		Color color = (Color) fColorTable.get(rgb);
 		if (color == null) {
 			color = new Color(Display.getCurrent(), rgb);
