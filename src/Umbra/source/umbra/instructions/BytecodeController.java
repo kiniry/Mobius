@@ -31,31 +31,60 @@ import umbra.IBytecodeStrings;
  * modified (in case of combining changes) and what comments
  * are added to Bytecode
  * 
- * @author Wojciech W¹s, Tomek Batkiewicz i Jaros³aw Paszek
+ * @author Wojciech Wï¿½s, Tomek Batkiewicz i Jarosï¿½aw Paszek
  */
 public class BytecodeController {
 	
-	private LinkedList all, instructions, incorrect;
-	private Hashtable comments, interline;
-	private boolean[] modified;
+    /**
+     * TODO write description
+     */    
+    private LinkedList all;
+    /**
+     * TODO write description
+     */    
+    private LinkedList instructions;
+    /**
+     * TODO write description
+     */    
+    private LinkedList incorrect;
+    /**
+     * TODO write description
+     */    
+    private Hashtable comments;
+    /**
+     * TODO write description
+     */    
+    private Hashtable interline;
+    /**
+     * TODO write description
+     */    
+    private boolean[] modified;
 
-	public BytecodeController() {
+    /**
+     * TODO write description
+     */    
+    public BytecodeController() {
 		super();
 		all = new LinkedList();
 		instructions = new LinkedList();
 		incorrect = new LinkedList();
 		comments = new Hashtable();
-		interline = new Hashtable();
 	}
 
-	public void showInstructionList()
+    /**
+     * TODO write description
+     */    
+    public void showInstructionList()
 	{
 		for (int i = 0; i < all.size(); i++) {
 			System.out.print(((BytecodeLineController)(all.get(i))).line);
 		}
 	}
 
-	public void showAllIncorrectLines()
+    /**
+     * TODO write description
+     */    
+    public void showAllIncorrectLines()
 	{   
 	    System.out.println("" + incorrect.size() + " incorrects:");
 		for (int i = 0; i < incorrect.size(); i++) {
@@ -77,7 +106,6 @@ public class BytecodeController {
 		ClassGen cg = ((BytecodeDocument)doc).getClassGen();
 		ConstantPoolGen cpg = cg.getConstantPool();
 		Method[] methods = cg.getMethods();
-		String partComment = "";
 		boolean metEnd = true;
 		MethodGen mg = null;
 		InstructionList il = null;
@@ -101,10 +129,6 @@ public class BytecodeController {
 			if (lc.addHandle(ih, il, mg, i - 1)) {
 				instructions.add(ic, lc);
 				if (comment != null) comments.put(lc, comment);
-				if (partComment.compareTo("") != 0) {
-					interline.put(lc, partComment);
-					partComment = "";
-				}
 				ic++;
 				if (ih == end) {
 					metEnd = true;
@@ -113,14 +137,19 @@ public class BytecodeController {
 					ih = ih.getNext();
 				}
 			}
-			else if (comment != null) partComment.concat("\n" + comment);
 		}
 		int methodNum = ((BytecodeLineController)instructions.getLast()).getIndex() + 1;
 		modified = new boolean[methodNum];
 		for (int i = 0; i < modified.length; i++) modified[i] = false;
 	}
 
-	public void removeIncorrects(int start, int stop) {
+    /**
+     * TODO write description
+     * 
+     * @param start TODO write description
+     * @param stop TODO write description
+     */    
+    public void removeIncorrects(int start, int stop) {
 		for (int i = start; i <= stop; i++) {
 			BytecodeLineController line = (BytecodeLineController)all.get(i); 
 			if (incorrect.contains(line)) incorrect.remove(line);
@@ -171,9 +200,6 @@ public class BytecodeController {
 					if (ins != null) {
 						//System.out.println(ins.getName());
 						lc.setTarget(nextLine.getList(), ins);
-					}
-					else {
-						if (comment != null) interline.put(nextLine, comment);
 					}
 					//System.out.println("After target");
 					if (i >= startRem && i <= stopRem) {
@@ -356,7 +382,12 @@ public class BytecodeController {
 		return l;
 	}
 	
-	protected String removeColonFromLine(String l) {
+    /**
+     * TODO write description
+     * 
+     * @param l TODO write description
+     */    
+    protected String removeColonFromLine(String l) {
 		int i = 0;
 		while ((i < l.length()) && (Character.isDigit(l.charAt(i))))
 			i++;
@@ -382,6 +413,8 @@ public class BytecodeController {
 	}
 	
 	/**
+     * TODO write description
+     * 
 	 * @return true if there is no incorrect line within whole document
 	 */
 	public boolean allCorrect() {
@@ -389,6 +422,8 @@ public class BytecodeController {
 	}
 
 	/**
+     * TODO write description
+     * 
 	 * @return Number of a line that the first error occurs
 	 * (not necessarily: number of the first line that an error occurs) 
 	 */
@@ -414,6 +449,8 @@ public class BytecodeController {
 	}
 	
 	/**
+     * TODO write description
+     * 
 	 * @param lineNum Numebr of line (including all lines)
 	 * @return true if the line is the last instruction in a method
 	 * 	or is a non-istruction one located after 
@@ -428,6 +465,8 @@ public class BytecodeController {
 	}
 	
 	/**
+     * TODO write description
+     * 
 	 * @param lineNum Numebr of line (including all lines)
 	 * @return true if the line is located before the first instruction in a method
 	 */
@@ -439,11 +478,21 @@ public class BytecodeController {
 		return (index1 != index2);
 	}
 	
-	public boolean[] getModified() {
+    /**
+     * TODO write description
+     * 
+     * @return TODO write description
+     */    
+    public boolean[] getModified() {
 		return modified;
 	}
 	
-	public void setModified(boolean[] modified) {
+    /**
+     * TODO write description
+     * 
+     * @param modified TODO write description
+     */    
+    public void setModified(boolean[] modified) {
 		this.modified = modified;
 	}
 	
@@ -462,17 +511,12 @@ public class BytecodeController {
 		return commentTab;
 	}
 	
-	public String[] getInterline() {
-		String[] commentTab = new String[instructions.size()];
-		for (int i = 0; i < instructions.size(); i++) {
-			Object lc = instructions.get(i);
-			String com = (String)interline.get(lc);
-			commentTab[i] = com;
-		}
-		return commentTab;
-	}
-	
-	private void controlPrint(int index) {
+    /**
+     * TODO write description
+     * 
+     * @param index TODO write description
+     */    
+    private void controlPrint(int index) {
 		System.out.println();
 		System.out.println("Control print of bytecode modification (" + index + "):");
 		for (int i = 0; i < instructions.size(); i++) {
