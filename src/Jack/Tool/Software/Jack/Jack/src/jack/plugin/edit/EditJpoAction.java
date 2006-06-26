@@ -72,9 +72,10 @@ public class EditJpoAction extends EditAction {
 							+ e.toString());
 				return;
 			}
-			jv.setViewedFile(new EditedFile(/*JackPlugin.getOutputDir(cu.getJavaProject().getProject()).getLocation().toFile().getAbsolutePath() + File.separatorChar +  */jpo + ".jpo",
-											cu.getJavaProject().getProject()), 
-							 editor);
+			jv.setViewedFile(new EditedFile(/*JackPlugin.getOutputDir(cu.getJavaProject().getProject()).getLocation().toFile().getAbsolutePath() + File.separatorChar +  */
+					jpo + ".jpo",
+					cu.getJavaProject().getProject()), 
+					editor);
 	}
 
 	/**

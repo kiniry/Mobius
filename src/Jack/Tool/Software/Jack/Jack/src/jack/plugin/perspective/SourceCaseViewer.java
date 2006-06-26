@@ -10,9 +10,9 @@
 package jack.plugin.perspective;
 
 import jack.plugin.JackPlugin;
-import jack.plugin.edit.BCScanner;
 import jack.plugin.edit.JavaLineStyler;
 import jack.plugin.edit.JavaScanner;
+import jack.plugin.edit.bc.BCScanner;
 
 import java.io.BufferedInputStream;
 import java.io.File;

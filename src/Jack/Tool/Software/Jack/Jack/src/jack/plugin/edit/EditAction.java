@@ -197,13 +197,14 @@ public class EditAction implements IObjectActionDelegate, IWorkbenchWindowAction
 			action.setEnabled((selection != null) &&
 					((o = selection.getFirstElement()) instanceof ICompilationUnit)
 					&& ((ICompilationUnit) o).getPath().toString().endsWith(".java"));
-		} else {
-			// should never happen
-			MessageDialog.openError(activePart.getSite().getShell(),
-				"Jack Error",
-				"Unexpected selection type: expected StructuredSelection, "
-						+ "got " + sel.getClass().getName());
 		}
+//		} else { // can happen
+//			// should never happen
+//			MessageDialog.openError(activePart.getSite().getShell(),
+//				"Jack Error",
+//				"Unexpected selection type: expected StructuredSelection, "
+//						+ "got " + sel.getClass().getName());
+//		}
 
 	}
 

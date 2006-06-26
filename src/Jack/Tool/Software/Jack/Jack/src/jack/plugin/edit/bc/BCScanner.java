@@ -4,7 +4,9 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package jack.plugin.edit;
+package jack.plugin.edit.bc;
+
+import jack.plugin.edit.JavaScanner;
 
 
 /**
