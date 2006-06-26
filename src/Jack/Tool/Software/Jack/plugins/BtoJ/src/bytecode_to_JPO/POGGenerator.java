@@ -7,18 +7,22 @@
 package bytecode_to_JPO;
 
 import jack.plugin.JackPlugin;
+import jack.util.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import jml2b.pog.Pog;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,15 +49,67 @@ import bytecode_wp.utils.Util;
  */
 public class POGGenerator implements IRunnableWithProgress {
 
-	Object firstElement;
+	private static final String TRANSLATION_TABLE_EXTENSION = ".trans";
+	private static final  String BYTECODE_SOURCE_EXTENSION = ".cod";
 
-	/**
-	 * @param firstElement
-	 */
-	public POGGenerator(Object firstElement) {
-		this.firstElement = firstElement;
+
+	private String mchName = null;	
+	private String absoluteName = null;
+	private IProject project= null;
+	private IResource resource=null;
+	
+	public POGGenerator() {}
+	public POGGenerator(Object selection) {
+		if(selection instanceof IFile) {
+			init((IFile) selection);
+		}
+		else if (selection instanceof ICompilationUnit){
+			init((ICompilationUnit) selection);
+		}
+		else {
+			throw new IllegalArgumentException("Bad argument type: " + selection.getClass());
+		}
 	}
-
+	private void init(ICompilationUnit icu) {
+		IWorkbenchPart activePart = PlatformUI.getWorkbench()
+		.getActiveWorkbenchWindow().getActivePage().getActivePart();
+				IWorkbenchPartSite site = activePart.getSite();	
+		project = icu.getJavaProject().getProject();
+		
+		try {
+			absoluteName = icu.getResource().getPersistentProperty(
+					JackPlugin.ANNOTATED_CLASS);
+		} catch (CoreException ce) {
+			MessageDialog.openError(site.getShell(),
+					JackPlugin.DIALOG_TITLE,
+					"Error opening annotated class file: " + ce.toString());
+			return;
+		}
+		if (absoluteName == null) {
+			MessageDialog.openError(site.getShell(),
+					JackPlugin.DIALOG_TITLE,
+					"Class file has not been annotated.");
+			return;
+		}
+		absoluteName = absoluteName.replace(File.separatorChar, '.');
+		mchName = icu.getElementName().substring(0,
+				icu.getElementName().indexOf('.'));
+		resource = icu.getResource();
+	}
+	
+	private void init(IFile file) {
+		project = file.getProject();
+		String directory = file.getProjectRelativePath().toFile()
+				.getParentFile().getPath();
+		directory = directory
+				.substring(directory.indexOf(File.separator) + 1);
+		String name = file.getName();
+		mchName = name.substring(0, name.lastIndexOf('.'));
+		absoluteName = directory + "." + mchName;
+	}
+	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -61,48 +117,15 @@ public class POGGenerator implements IRunnableWithProgress {
 	 */
 	public void run(IProgressMonitor monitor) throws InvocationTargetException,
 			InterruptedException {
+		
 		monitor.beginTask("Generating proof obligations",
 				IProgressMonitor.UNKNOWN);
 		IWorkbenchPart activePart = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage().getActivePart();
 		IWorkbenchPartSite site = activePart.getSite();
-		IProject project;
-		String absoluteName;
-		String mchName = null;
-		if (firstElement instanceof ICompilationUnit) {
-			ICompilationUnit icu = (ICompilationUnit) firstElement;
-			project = icu.getJavaProject().getProject();
-			// directory =
-			// icu.getJavaProject().getProject().getProjectRelativePath().toFile().getParentFile().getPath();
-			try {
-				absoluteName = icu.getResource().getPersistentProperty(
-						JackPlugin.ANNOTATED_CLASS);
-			} catch (CoreException ce) {
-				MessageDialog.openError(site.getShell(),
-						JackPlugin.DIALOG_TITLE,
-						"Error opening annotated class file: " + ce.toString());
-				return;
-			}
-			if (absoluteName == null) {
-				MessageDialog.openError(site.getShell(),
-						JackPlugin.DIALOG_TITLE,
-						"Class file has not been annotated.");
-				return;
-			}
-			absoluteName = absoluteName.replace(File.separatorChar, '.');
-			mchName = icu.getElementName().substring(0,
-					icu.getElementName().indexOf('.'));
-		} else {
-			IFile icu = (IFile) firstElement;
-			project = icu.getProject();
-			String directory = icu.getProjectRelativePath().toFile()
-					.getParentFile().getPath();
-			directory = directory
-					.substring(directory.indexOf(File.separator) + 1);
-			String name = icu.getName();
-			mchName = name.substring(0, name.lastIndexOf('.'));
-			absoluteName = directory + "." + mchName;
-		}
+		
+		
+		
 
 		B2JConfig config = new B2JConfig(project);
 
@@ -124,10 +147,10 @@ public class POGGenerator implements IRunnableWithProgress {
 		config.setJavaApplication(new B2JPackage(new JavaClassLoader(cl)));
 		BCClass clazz = ((B2JPackage) config.getPackage())
 				.getClass(absoluteName);
-		BCJmlFile bcjm = null;
+		
 		try {
 			monitor.subTask("Generating proof obligations");
-			  long startTime = System.currentTimeMillis();
+			long startTime = System.currentTimeMillis();
 			clazz.wp(config);
 			
 			long endTime = System.currentTimeMillis();
@@ -135,17 +158,35 @@ public class POGGenerator implements IRunnableWithProgress {
 			// IdentifierResolver.init(config);
 			B2JClass bjc = ((B2JPackage) config.getPackage()).addB2JClass(
 					config, clazz, true);
-			bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
-			File fjpo = new File(config.getSubdirectory(), bcjm.getFlatName()
-					+ ".cod");
-			PrintStream pt = new PrintStream(new FileOutputStream(fjpo));
-			bjc.saveCode(pt);
-			pt.close();
+			BCJmlFile bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
+			File bcSource = new File(config.getSubdirectory(), bcjm.getFlatName()
+					+ BYTECODE_SOURCE_EXTENSION);
+			File translationTable = new File(config.getSubdirectory(), bcjm.getFlatName()
+					+ TRANSLATION_TABLE_EXTENSION);
+			PrintStream sBcSource = new PrintStream(new FileOutputStream(bcSource));
+			ObjectOutputStream sTranslation = new ObjectOutputStream(new FileOutputStream(translationTable));
+			HashMap hm = new HashMap();
+			bjc.saveCode(sBcSource, hm);
+			sTranslation.writeObject(hm);
+			sTranslation.close();
+			sBcSource.close();
 			Pog.garbageIdent(bcjm);
 			Pog.saveFiles(config, bcjm, monitor, new Vector(), new Vector(),
 					new B2JClassResolver(config, (B2JPackage) config
 							.getPackage(), clazz));
 
+			if (resource != null) {
+				try {
+					resource.setPersistentProperty(
+							JackPlugin.JPO_FROM_CLASS, 
+							bcjm.getFlatName());
+					resource.setPersistentProperty(
+							JackPlugin.JML_BYTECODE_COMPILED,
+							"true");
+				} catch (CoreException ce) {
+					Logger.err.println(ce);
+				}
+			}
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			MessageDialog.openInformation(site.getShell(),
@@ -164,19 +205,7 @@ public class POGGenerator implements IRunnableWithProgress {
 			// } catch (Jml2bException rea) {
 			// Logger.err.println(rea.getMessage());
 		}
-		if (firstElement instanceof ICompilationUnit) {
-			ICompilationUnit icu = (ICompilationUnit) firstElement;
-			if (bcjm != null)
-				try {
-					icu.getResource().setPersistentProperty(
-							JackPlugin.JPO_FROM_CLASS, bcjm.getFlatName());
-					icu.getResource().setPersistentProperty(
-											JackPlugin.JML_BYTECODE_COMPILED,
-											"true");
-				} catch (CoreException ce) {
-
-				}
-		}
+		
 		monitor.setCanceled(false);
 		monitor.done();
 		/*
@@ -186,7 +215,7 @@ public class POGGenerator implements IRunnableWithProgress {
 
 	}
 
-	public IPath getClassPath(IProject iproject) {
+	private static IPath getClassPath(IProject iproject) {
 		// IFile icu = (IFile) selection.getFirstElement();
 		IJavaProject project = JavaCore.create(iproject);
 
@@ -196,8 +225,7 @@ public class POGGenerator implements IRunnableWithProgress {
 		try {
 			out = project.getOutputLocation();
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.err.println(e);
 		}
 
 		return out;

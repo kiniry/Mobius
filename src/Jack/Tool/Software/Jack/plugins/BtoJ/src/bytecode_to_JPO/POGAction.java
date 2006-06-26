@@ -8,6 +8,8 @@
  /******************************************************************************/
 package bytecode_to_JPO;
 
+import jack.util.Logger;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -28,21 +30,22 @@ import org.eclipse.ui.PlatformUI;
  */
 public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
 	/** The current selection. */
-	Object selection;
-
-	/** the current active part */
-	IWorkbenchPart activePart;
+	private Object selection;
 
 	/*
 	 * @see org.eclipse.ui.IActionDelegate#run(IAction)
 	 */
 	public void run(IAction action) {
-		ProgressMonitorDialog pmd = new ProgressMonitorDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart().getSite().getShell());
-		POGGenerator pg = new POGGenerator(selection);
+		ProgressMonitorDialog pmd = new ProgressMonitorDialog(
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getPartService().getActivePart()
+						.getSite().getShell());
 		try {
-			pmd.run(false, false, pg);
+			pmd.run(false, false, new POGGenerator(selection));
 		} catch (InterruptedException ie) {
+			Logger.err.println(ie);
 		} catch (InvocationTargetException ie) {
+			Logger.err.println(ie);
 		}
 
 	}
@@ -51,9 +54,7 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(IAction,
 	 *          IWorkbenchPart)
 	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		activePart = targetPart;
-	}
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {}
 
 	/*
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(IAction, ISelection)
@@ -74,14 +75,12 @@ public class POGAction implements IObjectActionDelegate, IWorkbenchWindowActionD
 	 *  (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
 	 */
-	public void dispose() {
-	}
+	public void dispose() {}
 
 	/*
 	 *  (non-Javadoc)
 	 * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
 	 */
-	public void init(IWorkbenchWindow window) {
-	}
+	public void init(IWorkbenchWindow window) {}
 
 }

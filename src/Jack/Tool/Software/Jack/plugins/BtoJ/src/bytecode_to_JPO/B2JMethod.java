@@ -10,6 +10,7 @@
 package bytecode_to_JPO;
 
 import java.io.PrintStream;
+import java.util.HashMap;
 
 import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.Jml2bException;
@@ -109,17 +110,23 @@ public class B2JMethod extends Method {
 		return bcm.getName();
 	}
 	/**
-	 * @param pt
+	 * Save the code some where
+	 * @param codfile The file in which to output the bytecode pretty print
+	 * @param cpt instruction counter to indicate the instruction to print
+	 * @param transfile The file in which to print the translation table from
+	 * 			the byte code position to the codfile position 
 	 */
-	public int saveCode(PrintStream pt, int cpt) {
+	public int saveCode(PrintStream codfile, HashMap transfile, int cpt) {
 		line = cpt + 1;
 		BCInstruction[] bcia = bcm.getBytecode();
 		if (bcia == null) {
 			return 0;
 		}
-		pt.println(bcm.getName() + ":" + bcm.getSignature());
+		codfile.println(bcm.getName() + ":" + bcm.getSignature());
 		for (int i = 0; i < bcia.length; i++) {
-			pt.println(bcia[i].instructionHandle.toString(false));
+			
+			codfile.println(bcia[i].instructionHandle.toString(false));
+			transfile.put(new Integer(bcia[i].getPosition()), new Integer(cpt));
 		}
 		return  bcia.length+1;
 	}

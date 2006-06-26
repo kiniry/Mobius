@@ -11,6 +11,7 @@ package bytecode_to_JPO;
 
 import java.io.PrintStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
 import jml2b.IJml2bConfiguration;
@@ -162,14 +163,16 @@ public class B2JClass extends jml2b.structure.java.Class {
 	}
 
 	/**
-	 * @param pt
+	 * @param codfile the file in which to save the pretty printing of the bytecode class file
+	 * @param transfile the file in which to save the translation datastructure
+	 * 			which translate the offset to a position in codfile
 	 */
-	public void saveCode(PrintStream pt) {
+	public void saveCode(PrintStream codfile, HashMap transfile) {
 		int cpt = 0;
 			Enumeration e =methods.elements();
 			while (e.hasMoreElements()) {
 				B2JMethod m = (B2JMethod) e.nextElement();
-				cpt += m.saveCode(pt, cpt);
+				cpt += m.saveCode(codfile, transfile, cpt);
 			}
 	}
 
