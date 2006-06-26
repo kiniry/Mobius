@@ -1,12 +1,12 @@
 ///******************************************************************************
-//* Copyright (c) 2002, 2003 GEMPLUS Software Research Labs. All Rights Reserved.
+//* Copyright (c) 2002, 2006 INRIA, GEMPLUS Software Research Labs. All Rights Reserved.
 //*------------------------------------------------------------------------------
 //* Name: EclipseJpov.java
 //*
 //********************************************************************************
 //* Warnings/Remarks:
 //*******************************************************************************/
-package jack.plugin.edit;
+package jack.deprecated;
 
 import jack.util.Logger;
 
@@ -24,33 +24,38 @@ import org.eclipse.swt.graphics.Image;
  */
 public class EclipseJpov extends JpovViewer {
 	// Image descriptors corresponding to the loaded images.
-	static ImageDescriptor PROVED_DESCRIPTOR;
-	static ImageDescriptor UNPROVED_DESCRIPTOR;
-	static ImageDescriptor PROVE_DESCRIPTOR;
-	static ImageDescriptor SAVE_DESCRIPTOR;
-	static ImageDescriptor ONLINE_DESCRIPTOR;
-	static ImageDescriptor OFFLINE_DESCRIPTOR;
-	public static ImageDescriptor FILTER_DESCRIPTOR;
-	public static ImageDescriptor PRINTER_DESCRIPTOR;
-	static ImageDescriptor INVARIANT_DESCRIPTOR;
-	static ImageDescriptor LOCALES_DESCRIPTOR;
-	static ImageDescriptor ENSURES_DESCRIPTOR;
-	static ImageDescriptor EXSURES_DESCRIPTOR;
-	static ImageDescriptor ASSERT_DESCRIPTOR;
-	static ImageDescriptor REQUIRES_DESCRIPTOR;
-	static ImageDescriptor LOOP_INVARIANT_DESCRIPTOR;
-	static ImageDescriptor LOOP_EXSURES_DESCRIPTOR;
-	public static ImageDescriptor REMOVE_TASK_DESCRIPTOR;
-	public static ImageDescriptor REMOVE_ALL_TASKS_DESCRIPTOR;
-	public static ImageDescriptor TASK_RUNNING_DESCRIPTOR;
-	static ImageDescriptor TASK_WAITING_DESCRIPTOR;
-	static ImageDescriptor TASK_FINISHED_DESCRIPTOR;
-	static ImageDescriptor CHECKED_DESCRIPTOR;
-	public static ImageDescriptor COMPILED_DESCRIPTOR;
+	private static ImageDescriptor PROVED_DESCRIPTOR;
+	private static ImageDescriptor UNPROVED_DESCRIPTOR;
+	private static ImageDescriptor PROVE_DESCRIPTOR;
+	private static ImageDescriptor SAVE_DESCRIPTOR;
+	private static ImageDescriptor ONLINE_DESCRIPTOR;
+	private static ImageDescriptor OFFLINE_DESCRIPTOR;
+	
+	
+	private static ImageDescriptor FILTER_DESCRIPTOR;
+	private static ImageDescriptor INVARIANT_DESCRIPTOR;
+	private static ImageDescriptor LOCALES_DESCRIPTOR;
+	private static ImageDescriptor ENSURES_DESCRIPTOR;
+	private static ImageDescriptor EXSURES_DESCRIPTOR;
+	private static ImageDescriptor ASSERT_DESCRIPTOR;
+	private static ImageDescriptor REQUIRES_DESCRIPTOR;
+	private static ImageDescriptor LOOP_INVARIANT_DESCRIPTOR;
+	private static ImageDescriptor LOOP_EXSURES_DESCRIPTOR;
 
-	public static Image TASK_RUNNING;
-	public static Image TASK_WAITING;
-	public static Image TASK_FINISHED;
+
+	private static ImageDescriptor TASK_WAITING_DESCRIPTOR;
+	private static ImageDescriptor TASK_FINISHED_DESCRIPTOR;
+	private static ImageDescriptor CHECKED_DESCRIPTOR;
+
+	private static ImageDescriptor PRINTER_DESCRIPTOR;
+	
+	private static ImageDescriptor COMPILED_DESCRIPTOR;
+	private static ImageDescriptor REMOVE_TASK_DESCRIPTOR;
+	private static ImageDescriptor REMOVE_ALL_TASKS_DESCRIPTOR;
+	private static ImageDescriptor TASK_RUNNING_DESCRIPTOR;
+	private static Image TASK_RUNNING;
+	private static Image TASK_WAITING;
+	private static Image TASK_FINISHED;
 
 	private static ImageDescriptor imgDesc(
 		URL image_location,
@@ -72,7 +77,7 @@ public class EclipseJpov extends JpovViewer {
 	  @ ensures PROVE    != null;
 	  @ ensures SAVE     != null;
 	  @*/
-	public static void initImages(URL images_location) {
+	private static void initImages(URL images_location) {
 		try {
 			if (PROVED == null) {
 				PROVED_DESCRIPTOR = imgDesc(images_location, "proof_ok.gif");

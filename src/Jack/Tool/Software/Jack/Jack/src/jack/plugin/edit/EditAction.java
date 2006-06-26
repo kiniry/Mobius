@@ -208,14 +208,8 @@ public class EditAction implements IObjectActionDelegate, IWorkbenchWindowAction
 
 	}
 
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void dispose() {	}
 
-	public void init(IWorkbenchWindow window) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void init(IWorkbenchWindow window) { }
 
 }
