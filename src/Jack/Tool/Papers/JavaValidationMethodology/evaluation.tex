@@ -1,6 +1,62 @@
 \chapter{Evaluations}
 \section{Industrial evaluation: Oberthur}
 \section{Industrial evaluation: Axalto}
+The new version of Jack (i.e. 1.8, then 1.8.1) has been evaluated on the 
+Payflex case study with the automatic mode using Simplify combined with 
+the interactive mode using Coq.\\
+
+Relevant changes on the Coq mode include :
+\begin{itemize}
+\item the transitivity relation for subtypes is now explicit :
+      as a result, proofs about the payflex file system are better handled
+      when one must decide whether a file of type T is also of type T' 
+or not.
+  \item  the display of proof obligation hypothesis is clearer and more 
+readable than on previous version
+  \item an prototype editor for coq inside Eclipse has been developed. It 
+can be used as an   
+      alternative to ProofGeneral or CoqIDE.
+  \item the use of pure (i.e. side-effect free) method calls in JML 
+annotations  is better handled:
+      the method call is no longer automatically replaced by its 
+postcondition, instead it is    
+      displayed as a Java method call and the user can unfold it when 
+desired (as is done in the
+      Krakatoa tool for instance)
+  \item JML model variables (i.e. used for specification purpose only) are 
+now well supported.
+\end{itemize}
+
+\noindent Other add-in :
+one can use some methods declared with the keyword 'native' (it is 
+not standard JML) in annotations.These methods are native with respect to a particular prover, that is they must be defined directly in the prover.\\
+      That is a way to develop some 'specification libraries' to reuse 
+when needed.\\ 
+      This is still very experimental and only works for Coq for the 
+moment. No way to exploit this feature in our case
+     study has been found yet.\\
+
+It seems no improvement has been done on the Simplify mode as the rate 
+of proof obligations fulfilled
+ automatically in our case study did not change.
+
+\paragraph{JML}
+Another aspect is the work we continue on the JML specification of the
+JC applet in general (as the tool uses as input the JML
+specification). Some theoretical results on the verification of
+specific properties have been obtained, and a paper has been issued on
+the subject\cite{Rousset}. We start the development of a tool with
+graphical interface to assist the writing of annotations:\\ From an
+UML class diagram or the code itself of an application, it proposes
+some specification patterns to the user (non-null by default for
+references, ranges for variable of integer type and arrays length),
+then translation to adequate class invariants and method preconditions
+is performed. In practice, annotations generated in that manner reveal
+sufficient to prove that each method 'does not go wrong' (i.e. is
+runtime error free) and all the verification conditions are filled in
+automatic mode with Simplify using tools like Krakatoa or Jack.
+
+
 \section{Bytecode Verifier}
 The tools have also been tested on a bytecode verifier java implementation. A termination proof has been provided.
 A specific implementation has been coded with on one hand the main loop which remain unchanged whatever the specifications of the virtual machine Java chosen, and other instructions and memory states which depends on selected model.

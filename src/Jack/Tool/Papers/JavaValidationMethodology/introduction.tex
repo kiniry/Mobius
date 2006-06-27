@@ -1,62 +1,100 @@
 \chapter{Introduction}
-Providing high quality applet is becoming a crucial issue, 
-especially when those applets are aimed to be loaded and executed in trusted personal device like smart cards.  
-Actually, the card remains a specific domain where post issuance corrections are very expensive due to the deployment process and the mass production.
-Currently, the quality is ensured by costly test campaigns, 
-whenever tests are technically possible. 
-We consider that using formal techniques is a solution that allows to increase the quality, but also to reduce validation costs.
+
+
+Smart cards are trusted personal devices whose characteristics are
+regulated by the ISO 7816 standard. As other trusted personal devices,
+smartcards are designed to store and process confidential data, and
+can act as tokens to provide users with a secure electronic
+representation in a large network. They are widely deployed and used
+in application areas such as mobile telecommunications, banking,
+transportation, electronic identity, and digital rights management
+(DRM). Further, they hold the promise to play a key role in the
+e-society, especially as a means to guarantee users a personalized,
+global, and secure access to applications and services.
+
+
+The prominent role played by trusted personal devices in security
+sensitive applications make them an ideal target for
+attacks. Traditionally, the main concern with smartcards has been with
+hardware attacks in which the attacker gains access to confidential
+information or disturbs the functioning of the card through
+observation (e.g. of power or electro-magnetic radiations) or invasion
+(e.g. overriding sensors or attaching probes).
+
+
+With new generation smartcards and trusted personal devices
+increasingly connected to networks and providing execution support for
+complex programs, the prospect of logical attacks has urged the
+trusted personal devices industry to improve the quality of their
+software, as logical attacks are potentially easier to launch than
+physical attacks (for example they do not require physical access to
+the device, and are easier to replicate from one device to the other),
+and may have a much wider impact. In particular, a malicious attacker
+spreading over the network and disconnecting or disrupting devices
+massively could have deep economic and social consequences. In
+particular, the trusted personal device remains a specific domain
+where post issuance corrections are very expensive due to the
+deployment process and the mass production.
+
+This deliverable reports on the development of methodologies and tools
+that increase confidence in applications.  For concreteness, we focus 
+on Java applications that can be executed on devices that embed Java
+Virtual Machines (JVM) or their variants, in particular Java Card
+Virtual Machines (JCVM). Java enabled devices are a natural choice for
+formal methods because:
+\begin{inparaenum}[i)]
+\item they are widely deployed in the field;
+\item they feature mechanisms that contribute to the security of the
+platform and the applications that execute over it;
+\item detailed informal specifications of the Java platform are publicly
+available, and can be scrutinized.
+\end{inparaenum}
+However, it should be clear that the methods presented in this paper
+are relevant to other execution platforms for trusted personal devices.
+
+
+
+
+\section{Formal validation}
+To date, testing campaigns remain the primary means to ensure the
+quality of applications. However, testing campaigns are expensive
+and only provide partial guarantees with regard to the reliability
+of software. We therefore advocate an integrated approach where
+validation techniques of increasing strength are used, starting
+from automated techniques such as testing and moving towards formal
+validation using a combination of automated and interactive tools.
+
+
+Providing high quality applet is becoming a crucial issue, especially
+when those applets are aimed to be loaded and executed in trusted
+personal device like smart cards.  Actually,  Currently, the
+quality is ensured by costly test campaigns, whenever tests are
+technically possible. We consider that using formal techniques is a
+solution that allows to increase the quality, but also to reduce
+validation costs.
 
 Nevertheless, proving program correctness, and more generally using
-formal methods, is traditionally an activity reserved for experts.  
-This restriction is usually caused by the mathematical nature of the concepts involved.
-This explains why formal techniques are difficult to introduce in industrial processes, even if they are now widely used in research and teaching activities.
-However, we believe that this restriction can be reduced by providing notations and tools hiding the mathematical formalisms.
-Therefore, formal tools should be developed to fit into classical developers environment.
-We strongly believe that efforts should be done to allow users to benefit from formal techniques without having to learn new formalisms and to become experts.
+formal methods, is traditionally an activity reserved for experts.
+This restriction is usually caused by the mathematical nature of the
+concepts involved.  This explains why formal techniques are difficult
+to introduce in industrial processes, even if they are now widely used
+in research and teaching activities.  However, we believe that this
+restriction can be reduced by providing notations and tools hiding the
+mathematical formalisms.  Therefore, formal tools should be developed
+to fit into classical developers environment.  We strongly believe
+that efforts should be done to allow users to benefit from formal
+techniques without having to learn new formalisms and to become
+experts.
 
-All the tools and results presented in this document were developed with this goal in mind, notably the choose of JML as assertion language and the development of JACK and its associated feature.
-Using those techniques, Java developers should be able to validate their code, or at least to get a good assurance on its correctness.
+All the tools and results presented in this document were developed
+with this goal in mind, notably the choose of JML as assertion
+language and the development of JACK and its associated feature.
+Using those techniques, Java developers should be able to validate
+their code, or at least to get a good assurance on its correctness.
 
-This document is organized as follows, the next chapter introduce the assertion language JML, chapter 3 describes the JACK tool with its extension feature, chapter 4 presents some evaluations done with the tools and the last chapter concludes.
 
 
-\section{Java and JavaCard}
- Formal validation of Java programs is a growing research
- field.  As Java has become a reference language, many technologies are
- emerging to help Java program validation.  Java can also be
- considered as a good support for formal techniques, as it has precise 
-semantics \cite{Gosl00a}.
 
-JavaCard is a popular programming language for multiple
-application smart cards.  According to the JavaCard Forum \footnote{http://www.javacardforum.org},
-which involves key players in the field of smart cards, 
-including smart card manufacturers and banks, the JavaCard language has two
-important features that make it the ideal choice for smart cards: 
-\begin{itemize}
-\item JavaCard programs are written in a subset of Java, using
-the JavaCard APIs (Application Programming Interfaces). JavaCard
-developers can therefore benefit from the well-established Java technology; 
-
-\item the JavaCard security model enables multiple applications to
-coexist  on the same card and communicate securely, and in principle,
-enables new applications to be loaded on the card after its issuance.
-\end{itemize}
-Yet recent research has unveiled several problems in the JavaCard
-security model, most notably with object sharing and the associated
-mechanism of shareable interfaces.
-This has  emphasized the necessity to develop environments for
-verifying the security of the JavaCard platform and of JavaCard
-programs.  Thus far JavaCard security (and also Java security) has
-been studied  mainly at two levels:    
-\begin{itemize}
-\item  platform level: here the goal is to prove safety properties of
-the language, in particular type safety and properties related to
-memory management; 
-\item  application level: here the goal is to prove that a specific
-program obeys a given property, and in particular that it satisfies a
-security policy, for example based on information flow. 
-\end{itemize}
-We are focusing at the application level, developing tools and methodologies based on JML to reach this goal.
 \section{JML}
 JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the
 ``Java Modeling Language'', is a behavioral interface
@@ -100,3 +138,10 @@ In addition to ``normal'' postconditions, the language also supports
 ``exceptional'' postconditions, specified in {\tt signals} clauses.
 These can be used to specify what must be true when a method throws an
 exception. 
+
+
+\section{Contents of the deliverable}
+This document is organized as follows, the next chapter introduce the
+assertion language JML, chapter 3 describes the JACK tool with its
+extension feature, chapter 4 presents some evaluations done with the
+tools and the last chapter concludes.
