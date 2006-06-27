@@ -15,11 +15,13 @@
 \usepackage{listings}
 \usepackage{latexsym,pstricks,pst-node,pst-tree,boxedminipage,stmaryrd}
 \usepackage{alltt}
-
+\lstset{language=Java,flexiblecolumns=false,mathescape=true}
+\lstset{commentstyle=\sl,basicstyle=\normalfont\ttfamily\small}
+\newcommand{\mjvm}[1]{{\sf #1}}
 \input {preamble}          % input user-defined commands
 
 \begin{document}
-\maketitle	
+\maketitle      
 \pagenumbering{roman}
 \tableofcontents
 \listoffigures
@@ -37,7 +39,6 @@
 %\include{jml}
 \include{methodology}        
 \include{evaluation}
-
 \include{conclusion}
 %\appendix
 %\include{appendix}

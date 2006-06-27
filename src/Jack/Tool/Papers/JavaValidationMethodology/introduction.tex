@@ -53,38 +53,86 @@ However, it should be clear that the methods presented in this paper
 are relevant to other execution platforms for trusted personal devices.
 
 
+\section{Security issues}
+While the focus of the deliverable is on application validation,
+security is a holistic property of a system, and formal techniques
+must therefore be employed at different levels to provide strong
+guarantees about the security of a TPD and its applications.
+Essentially, the three levels are: the platform, the libraries,
+and the applications.
+
+The Java security architecture guarantees that downloaded
+applications are innocuous and comply with some basic policies related
+to typing, initialization or access control. Such basic policies are
+the cornerstones upon which the overall security of the smartcard will
+rely. Therefore it is important to verify that the security
+architecture does enforce these basic policies as intended. Thus, an
+important application of formal methods to TPD security is
+platform verification, which aims at providing an abstract model of
+the Java platform and security architecture, and at proving that
+the security functions play their expected role.  However, it is not
+sufficient to show that security functions are correctly designed. In
+particular, one also has to ensure that other components of the
+infrastructure are correctly designed: the Java API and the
+Global Platform API constitute two prominent components of the
+infrastructure whose correct design is central to security. Thus,
+another important aspect of platform verification is to show the API
+are correctly designed.
+
+Platform verification is a fundamental step towards guaranteeing the
+security of smartcards, and a prerequisite for Common Criteria
+evaluations at the highest levels. Nevertheless, the guarantees
+offered by the Java security architecture are limited, and
+further verifications must be performed to verify that applications
+make a legitimate use of the infrastructure, and do not attempt any
+hostile action. 
+
+Thus, application validation is another important application of
+formal methods to TPD security. To date, testing campaigns remain the
+primary means to ensure the quality of applications. However, testing
+campaigns are expensive and only provide partial guarantees with
+regard to the reliability of software. Therefore, it is important to
+develop other advanced techniques for applet validation.
+
+There are many facets to applet validation, each with its own
+objectives and techniques:
+\begin{itemize}
+\item one can enhance existing security architectures to enforce
+security properties not addressed by current architectures, in
+particular confidentiality and availability.  Verification can be
+performed by enhanced bytecode verification mechanisms;
 
 
-\section{Formal validation}
-To date, testing campaigns remain the primary means to ensure the
-quality of applications. However, testing campaigns are expensive
-and only provide partial guarantees with regard to the reliability
-of software. We therefore advocate an integrated approach where
-validation techniques of increasing strength are used, starting
-from automated techniques such as testing and moving towards formal
-validation using a combination of automated and interactive tools.
+\item one can abandon the realm of type systems and its associated
+benefits and choose develop logical methods for specifying and
+verifying either automatically or efficiently a specific class of
+security properties. Verification can be performed by (possibly
+efficient and hence incomplete) logic-based proof inference
+mechanisms;
 
 
-Providing high quality applet is becoming a crucial issue, especially
-when those applets are aimed to be loaded and executed in trusted
-personal device like smart cards.  Actually,  Currently, the
-quality is ensured by costly test campaigns, whenever tests are
-technically possible. We consider that using formal techniques is a
-solution that allows to increase the quality, but also to reduce
-validation costs.
 
-Nevertheless, proving program correctness, and more generally using
-formal methods, is traditionally an activity reserved for experts.
-This restriction is usually caused by the mathematical nature of the
-concepts involved.  This explains why formal techniques are difficult
-to introduce in industrial processes, even if they are now widely used
-in research and teaching activities.  However, we believe that this
-restriction can be reduced by providing notations and tools hiding the
-mathematical formalisms.  Therefore, formal tools should be developed
-to fit into classical developers environment.  We strongly believe
-that efforts should be done to allow users to benefit from formal
-techniques without having to learn new formalisms and to become
-experts.
+
+\item one can exploit the expressive power of logical methods to
+require that applications, or at least sensitive fragments of
+applications, are subjected to functional verification, i.e. to
+verifications that establish their correctness in terms of
+functionality as well as security.
+\end{itemize}
+
+
+\section{Logical verification of security properties using JML}
+In order to provide precise analyzes with a limited overhead, we
+advocate an integrated approach where validation techniques of
+increasing strength are used, starting from automated techniques such
+as testing and moving towards formal validation using a combination of
+automated and interactive tools. In addition, we aim at overcoming the
+difficulty of introducing formal techniques in industrial processes by
+providing notations and tools hiding the mathematical formalisms.
+Therefore, formal tools should be developed to fit into classical
+developers environment.  We strongly believe that efforts should be
+done to allow users to benefit from formal techniques without having
+to learn new formalisms and to become experts.
 
 All the tools and results presented in this document were developed
 with this goal in mind, notably the choose of JML as assertion
@@ -93,22 +141,42 @@ Using those techniques, Java developers should be able to validate
 their code, or at least to get a good assurance on its correctness.
 
 
-
-
-\section{JML}
-JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the
-``Java Modeling Language'', is a behavioral interface
-specification language for Java; that is, it specifies both the behavior
-and the syntactic interface of Java code.  The syntactic interface of
-a Java class or interface consists of its method signatures,
-the names and types of its fields, etc.
-This is what is commonly meant by an application programming
-interface (API).
-The behavior of such an API can be precisely documented in JML annotations;
-these describe the intended way that programmers should
-use the API.  In terms of behavior, JML can detail, for example, the
-preconditions and postconditions for methods as well as class
-invariants.
+\subsection{JML}
+JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the ``Java
+Modeling Language'', is a behavioral interface specification language
+for Java; that is, it specifies both the behavior and the syntactic
+interface of Java code.  The syntactic interface of a Java class or
+interface consists of its method signatures, the names and types of
+its fields, etc.  This is what is commonly meant by an application
+programming interface (API).  The behavior of such an API can be
+precisely documented in JML annotations; these describe the intended
+way that programmers should use the API.  In terms of behavior, JML
+can detail, for example, the preconditions and postconditions for
+methods as well as class invariants. These specifications are given as
+annotations of the Java source file. More precisely, they are included
+as special Java comments, either after the symbols \lstinline!//@! or
+enclosed between \lstinline!/*@! and
+\lstinline[basicstyle=\normalfont\ttfamily\small\sl]!@*/!. For example,
+the general schema for the annotation of a method is the following:
+\begin{lstlisting}
+/*@ behavior
+  @   requires <precondition>;
+  @   ensures <postcondition if no exception raised>;
+  @   signals(E) <postcondition when exception E raised>;
+  @   assignable <modified fields and variables>;
+  @*/
+\end{lstlisting}
+where \lstinline!requires! specifies the conditions on variables, fields
+and method parameters at the beginning of the method call so that the
+conditions after \lstinline!ensures! hold at the end of the method
+call and the conditions after \lstinline!signals(E)! hold if an
+exception is raised and not caught inside the analyzed method.  The
+underlying model is a an extension of Hoare-Floyd logic: if the
+precondition holds at the beginning of the method call, then
+postconditions (with and without exceptions) will hold after the
+call. The \lstinline!assignable! clause specifies side-effect affected
+variables and is used during the weakest precondition calculus for
+method invocations.
 
 An important goal for the design of JML is that it should be easily
 understandable by Java programmers. This is achieved by staying as
@@ -138,6 +206,59 @@ In addition to ``normal'' postconditions, the language also supports
 ``exceptional'' postconditions, specified in {\tt signals} clauses.
 These can be used to specify what must be true when a method throws an
 exception. 
+
+\paragraph*{Styles of specification}
+Due to its expressiveness and versatility, the JML specification
+language supports several styles of specifications; the choice of one
+style of specification over the others depends on the purpose of the
+verification effort. In a nutshell, one can either opt for lightweight
+specifications in which one introduces enough annotations to reason
+about some specific safety property, such as the absence of
+exceptions, or heavyweight specifications where functional behavior is
+considered. There is of course a great liberty in how \lq\lq
+lightweight\rq\rq\ or \lq\lq heavyweight\rq\rq\ a specification should
+be, and different styles can be used in different parts of an
+application.
+
+In addition, one may opt for defensive specifications, in which methods
+are annotated with preconditions that prevent exceptions to occur, or
+offensive specifications, which use appropriate clauses to specify 
+exceptional postconditions.
+
+\subsection{Verification techniques and tools}
+
+JML specifications correctness can be verified either during runtime
+or statically~\cite{jml:sttt}. To be verified during runtime, the
+source code must have been compiled using \texttt{jmlc}, which is a
+enhanced Java compiler for JML annotated code. This compiler adds to
+the generated program assertions checking instructions corresponding
+to the JML specifications of the program: preconditions, postconditions 
+and loop or class invariants. An exception is raised during the execution 
+if a JML condition fails. The JML runtime assertion checker can be used
+for unit testing~\cite{CL02:ecoop}.
+
+
+For the static verification of Java programs, several tools are
+available using (variations of) JML as specification language. These
+tools adopt different compromises between soundness and automation,
+and thus it is useful to use them in combination, starting from
+automatic but unsound tools, and pursuing with sound but interactive
+tools.  Among these tools, ESC/Java2~\cite{CK04:cassis} offers the higher
+level of automation as it does not require any user interaction and
+relies on the Simplify automatic prover. It is particularly useful for
+checking null pointers or array bounds limits; however it is unsound
+and incomplete. Other static verification tools such as
+JACK~\cite{BRL03:fme}, Jive~\cite{jive}, Krakatoa~\cite{MPU03:jlap}
+and Loop~\cite{vdBJ01:tacas} generate proof obligations that can be
+discharged using proof assistants or automatic provers. These tools
+are sound but require user interaction.
+
+Model-checking techniques provide yet another means to verify the
+correctness of Java programs against their JML
+annotations. Bogor~\cite{robby+04:tacas} exploits such techniques to 
+provide automatic verification of concurrent Java programs
+with JML annotations.
+
 
 
 \section{Contents of the deliverable}
