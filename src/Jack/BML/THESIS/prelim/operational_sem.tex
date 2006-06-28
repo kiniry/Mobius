@@ -1,4 +1,7 @@
 
+\newtheorem{StateTransition}{Definition}[section]
+\newtheorem{transClosStateTrans0}[StateTransition]{Definition}
+\newtheorem{transClosStateTrans1}[StateTransition]{Definition}
 
 
 
@@ -76,14 +79,21 @@
 
  We also define how the execution of a list of instructions change the state configuration in  which their execution starts.
  
- \begin{transClosStateTrans}[Transitive closure of a state transition relation] \label{stateTransClos}
-    If the body of the method \methodd \ \methodd.\body starts execution in a state
-    with configuration \\ $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$ and there is an execution
-    path from \method.\entryPoint \ to an instruction \method.\body[k] which is either a \return \ instruction or an 
+
+ \begin{transClosStateTrans0}[Transitive closure of a method state transition relation]\label{stateTransit}
+ If  the method \methodd \  starts execution in a state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$ with \methodd.\body[0] \  
+ and there exists  a transitive state transition  to the state $\config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'}$ we denote this with:
+$$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'}  $$ 
+\end{transClosStateTrans0}
+
+ \begin{transClosStateTrans1}[Termination  of method execution] \label{stateTransClos}
+   If  the method \methodd \  starts execution in a state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$   with \methodd.\body[0] 
+   and there is a transitive state transition to  $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{k}$ 
+    such that the instruction \methodd.\body[k] is either a \return \ instruction or an 
     instruction which terminates execution with an uncaught exception and the configuration after its execution is 
-    $\configFinal{ \heap'}{\locVarOnly}{\Final}$  we denote it with 
-    $$ {\scriptsize \methodd \vdash \methodd.\body: \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTrans^{*} \configFinal{ \heap'}{\locVarOnly'}{\Final} }$$
- \end{transClosStateTrans}
+    $\configFinal{ \heap'}{\locVarOnly'}{\Final}$ then   we denote this  with: 
+    $$ {\scriptsize \methodd \vdash \methodd.\body: \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTransTerm \configFinal{ \heap'}{\locVarOnly'}{\Final} }$$
+ \end{transClosStateTrans1}
  
 
 
@@ -94,11 +104,11 @@
  $$
  {\scriptsize  \frac{\begin{array}{l}
           \methodd \vdash  \methodd.\body :  
-	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \configFinal{\heap'}{\locVarOnly'}{\Final}\\
+	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  \stateTrans^{*} \configFinal{\heap'}{\locVarOnly'}{\Final}\\
 	\end{array}	 
        }
        {\methodd :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
-		   \stateTrans 
+		    \stateTransTerm
                    \configFinal{\heap'}{\locVarOnly'} {\Final} }}$$ \\
 
 
@@ -564,17 +574,14 @@
 						       {\newStack }
                                                        {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
-						         \stateTrans 
-						\configFinalNorm{\heap'}{\locVarOnly'}{\Res}\\
+						         \stateTransTerm 
+							 \configFinalNorm{\heap'}{\locVarOnly'}{\Res}\\
 				                %\end{array}  
                                                    \\
-			  			 \\
-			\left\{\begin{array}{l}
-			       \counterOnly' = \counterOnly - \methodd.\numArgs + 1 \\
-			       \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
-			       \pc' = \pc + 1
-			\end{array}\right. 
-	         \end{array} 	      
+						   \counterOnly' = \counterOnly - \methodd.\numArgs + 1 \\
+						   \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
+						   \pc' = \pc + 1
+			         \end{array} 	      
 	         }	         
 	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
@@ -588,7 +595,7 @@
 						       {\newStack }
                                                        {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
-						         \stateTrans
+						         \stateTransTerm 
 						       \configFinalExc{\heap'}{\locVarOnly'}{\Exc}\\
 				           %\end{array} \\
 					   \Rightarrow \\
