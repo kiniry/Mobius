@@ -7,7 +7,7 @@
 \newtheorem{substRet}[substHeap]{Lemma}
 
 
-
+\newtheorem{valid}{Definition}[section]
 
 \section{Substitution properties}\label{substProp}
 
@@ -213,8 +213,9 @@ the following holds:
 
 The next definition defines a particular set of assertion formulas which we call valid formulas.
 \begin{valid}[Valid formulas]
-  If an assertion formula  $ f \in \predWp $ holds in all states we say that this is a valid formula and we note it with :
-  $ \interp{f}{}$
+  If an assertion formula  $ f \in \predWp $ holds in any current state and any initial state, i.e.
+$\forall state, state_{init}, \interp{f}{state} $ we say that this is a valid formula and we note it with :
+  $\validFormula{f} $ 
 \end{valid}
 
 % In the following, we adopt a lighter notation for the update  configuration expressions of the form:

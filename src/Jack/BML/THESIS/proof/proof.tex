@@ -56,19 +56,22 @@ instruction holds in the prestate then in the poststate of the instruction the p
 
 
 \begin{lemma0}[Single execution step correctness] \label{lemma0}
-For every instruction $\ins{s}$, for every state $state_0 =\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc } $ 
-    belonging to the bytecode of method \methodd \  if the following conditions hold: 
+For every instruction $\ins{s}$, for every state $state_0 =\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{s } $ and
+initial state $state_{init} =\config{\heap_{init}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly }{ 0 } $ 
+   of the execution of method \methodd \  if the following conditions hold: 
  \begin{itemize}
-         \item $ \ins{s} : state_0 \rightarrow state_1$
+         \item $ \methodd.\body[0] : state_{init} \stateTrans^{*} state_0$
+         \item $ \methodd.\body[s] : state_0 \rightarrow state_1$
          \item $ \interp{\wpi{\ins{s}}{s}{\methodd}}{state_0} $
-	 \item  $\ins{k} = next( \ins{s} ) $
+	 %\item  $\ins{k} = next( \ins{s} ) $
          \item    $ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$ is correct w.r.t. its specification
  \end{itemize}
   
   then : 
  \begin{itemize}
          \item if  $ \ins{s} \neq \return $ and the instruction does not terminate on exception,
-	       then  $ \interp{\inter{s}{k}}{state_1}  $   holds
+	      $ state_1 = \config{\heap_1 }{\counterOnly_1 }{ \stackOnly_1}{\locVarOnly_1 }{ k }  $
+	       then  $ \interp{\inter{s}{k}}{state_1}  $   holds 
         \item if  $ \ins{s} = \return $ then  $ \interp{\methodd.\normalPost}{state_1}  $   holds
 	\item else if $ \ins{s} \neq \return $ and the instruction terminates on a not handled exception \mbox{ \rm\texttt{Exc }}, then
 	      $ \interp{\methodd.\excPostSpec( \mbox{ \rm\texttt{Exc }} )}{state_1}  $ 
@@ -122,14 +125,54 @@ We are going to see only the proofs for the instructions \return , \load and \in
                          \interp{\wpi{\new \ \clazz }{\pc  }{\methodd}}{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
 			  \mbox{\rm\comment{definition of the wp function} } \\
 			 \equiv \\  
-			\interpTwoLines{	\typeof{\referenceOnly} = \type{\clazz} \Rightarrow \\ \inter{i}{i+1} 
+		\numConclusion{1} \	\interpTwoLines{
+		      \begin{array}{l}
+			\forall \referenceOnly,  not \ \instances(\referenceOnly )\wedge \\
+			 \phantom{\forall}       \referenceOnly \neq \Mynull \Rightarrow \\
+                          %\phantom{\forall}      \typeof{\referenceOnly} = \type{\clazz} \Rightarrow \\ 
+			\phantom{\forall} \phantom{\forall} \inter{i}{i+1} 
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
 		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
-		       \end{array} } {\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
-                       \mbox{\rm\comment{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap} and the operational semantics of the instruction \new }} \\  
-		        \interp{ \inter{i}{i+1} }{state_2}
+		       \end{array} \end{array}} {\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
+		       \\
+		       \mbox{\rm\comment{from the operational semantics of \new \ in section \ref{opSem}}} \\
+		       \\
+		      \numConclusion{2} state_2 = \config{\heap'}{\counterOnly +1  }{\update{\stackOnly}{\counterOnly +  1}{ \referenceOnly  } }{\locVarOnly }{\pc +1} \\
+		       \\
+		      \numConclusion{3} \newRef{\heap}{\clazz} = (\heap',\referenceOnly' ) \\
+		       \\
+		       \mbox{\rm\comment{following Def. \ref{interpPred} instantiate \numConclusion{1} with \mbox{\rm\referenceOnly'}  }} \\
+		       \numConclusion{4}  	 \interpTwoLines{\begin{array}{l}
+			 not \ \instances(\referenceOnly' ) \wedge \\
+			  \referenceOnly' \neq \Mynull \Rightarrow \\  
+			  %\typeof{\referenceOnly'} = \type{\clazz} \Rightarrow \\ 
+			\phantom{\forall}	\inter{i}{i+1} 
+			\begin{array}{l} 
+                               \subst{ \counter}{ \counter + 1 } \\
+			       \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
+		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+		       \end{array}\end{array} } {\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
+		       \mbox{\rm\comment{ from     \numConclusion{3}   }} \\
+		       \numConclusion{5} 
+		       \interp{ \begin{array}{l}
+			              not \ \instances(\referenceOnly' ) \wedge \\
+				      \referenceOnly' \neq \Mynull \\
+				      %\typeof{\referenceOnly'} = \type{\clazz} 
+				\end{array}} { \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } \\
+		
+		       \mbox{\rm\comment{ from     \numConclusion{4} and   \numConclusion{5} and Def. \ref{interpPred}  }} \\	  
+                         \interpTwoLines{\inter{i}{i+1} 
+			      \begin{array}{l} 
+                            \subst{ \counter}{ \counter + 1 } \\
+			    \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
+		            \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+			    \end{array} }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } \\
+		       
+		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap} }} \\
+		       \mbox{\rm\textit{ and the operational semantics of the instruction \new \} }} \\  
+		       \interp{ \inter{i}{i+1} }{state_2}
 		\end{array}	$$
 \item  $\ins{\pc } = \putfield   \ \fieldd $ \\
 
@@ -432,7 +475,7 @@ Now, we are ready to state the theorem which expresses the correctness of our ve
 w.r.t. the operational semantics of our language
 \begin{vcGenCorrect}\label{vcGenCorrect}
 For any  method \methodd \  if the verification condition is valid:
-$$ \interp{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd}}{} $$
+$$ \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd}} $$
  then \methodd \ is correct in the sense of the definition \ref{defCorrect}. 
 \end{vcGenCorrect}
 Proof: From lemma \ref{lemma2} and the initial hypothesis that the weakest precondition of the 
