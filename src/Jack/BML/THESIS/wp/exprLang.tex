@@ -2,7 +2,7 @@
 
 \newtheorem{deepExpr}{Definition}[section]
 
-\section{The expression language}
+\section{The expression language} \label{exprLang}
 
 In the following, we will introduce a deep encoding of the expressions and
 predicates over which the \fwpi \ calculus will be defined. 
@@ -14,10 +14,16 @@ The next definition gives the set of expressions and formulas.
 \begin{deepExpr}[Language of expressions]\label{deepExpr}
 $$\begin{array}{ll}
 \ConstantsWp           & ::=  \Values \mid \ClassSet \\
-% & \\
-%\refWp               & ::= \refWp\_\intLiteral \\
-%& \\
-%\boundVar            & ::= \bound\_\intLiteral \\ 
+
+ & \\
+ \Values & ::=  i, i \in \  \Myint \  \mbox{\rm literal } \mid \RefValues \\
+
+ & \\
+\RefValues &    ::= ref \mid \RefValuesArr  \mid   \Mynull \\
+
+& \\
+\RefValuesArr & ::= refArr \\
+
 & \\
   \exprWp            & ::= \ConstantsWp \\
                      &  \mid  \locVar{nat} \\ 
@@ -31,9 +37,10 @@ $$\begin{array}{ll}
 		     &  \mid  \stack{ \exprWp} \\
                      &  \mid \EXC    \\
 		     &  \mid  \result \\
+		     & \mid \old{\exprWp} \\
 	%	     &  \mid  \var \\
-    & \\
 
+    & \\
     \typeExpWp       & :: =  \typeof{ \exprWp} \\
                      &  \mid \type{\exprWp} \\
                      &  \mid \elemtype{\exprWp  }\\
@@ -41,24 +48,33 @@ $$\begin{array}{ll}
    & \\ 
    \expressionsWp    & :: = \exprWp \mid  \typeExpWp  \\
    & \\
+ \op & ::=  \plus \mid \minus \mid \mult \mid \divis \mid  \modulo \\
+ 
 
- \predWp  & ::=   \expressionsWp \ \predicates \  \expressionsWp    \\
-	  & \mid  \true \\
-	  & \mid  \false  \\	
-          & \mid not \ \predWp  \\
-	  & \mid \predWp  \wedge  \predWp \\
-	  & \mid \predWp \vee  \predWp \\
-	  & \mid \predWp  \Rightarrow \predWp \\
-          & \mid \predWp \iff  \predWp \\
-	  & \mid \forall \ x , \predWp\\
-	  & \mid \exists \ x  , \predWp	
+    & \\
+ \predicates & ::=  \  = \mid  \neq \mid \leq \mid \le \mid \geq \mid > \mid \subtypeSpec    \\
+  & \\
+   \predWp  & ::=   \expressionsWp \ \predicates \  \expressionsWp    \\
+            & \mid \instances(\RefValues) \\
+	    & \mid  \true \\
+	    & \mid  \false  \\	
+	    & \mid not \ \predWp  \\
+	    & \mid \predWp  \wedge  \predWp \\
+	    & \mid \predWp \vee  \predWp \\
+	    & \mid \predWp  \Rightarrow \predWp \\
+	    & \mid \predWp \iff  \predWp \\
+	    & \mid \forall \ x , \predWp\\
+	    & \mid \exists \ x  , \predWp	
 \end{array}$$
 \end{deepExpr}
 
 From the above definition, that the constants in the language are the values as defined in Chapter \ref{opSem},  section \ref{types} as well 
 the set of classes \ClassSet.
-Note that the expression language also supports update expressions for field and array access.
+Note that the expression language also supports update expressions  $  \update{\fieldd}{ \exprWp}{\exprWp}(\exprWp) $ and
+ $\update{ \arrayAccessOnly}{ (\exprWp , \exprWp)}{ \exprWp} (\exprWp,\exprWp) $  for field and array access.
  These expressions appear in the intermediate states of the \fwpi \ calculus.
- 
- In the following, we will proceed with subsection \ref{subst} which establishes some particularities of the substitution. 
+In the grammar for formulas which corresponds to the nonterminal $\predWp $, we can see that we introduce 
+ the predicate $\instances$ over reference values. Informally,  $\instances(r)$ means that $r$ corresponds to an object which
+ is allocated in the heap in the initial state of the  method execution.  
+ In the following, we will proceed with subsection \ref{subst} which discusses how substitution is done. 
  In section \ref{interpret}, we give a meaning of formulas from our assertion language in a state.

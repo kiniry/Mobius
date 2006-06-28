@@ -199,15 +199,23 @@ We will also see how the weakest precondition is defined in presence of exceptio
 		\item create a new object \\
 		$$ \begin{array}{l}
                          \wpi{\instr{new  \ \clazz }} {\methodd}{i}  =  \\
-		\typeof{\referenceOnly} = \type{\clazz} \Rightarrow \\
-		   \Myspace 	\begin{array}{l}   \inter{i}{i+1} \\
+		 
+		    \forall \referenceOnly,\\
+                      \Myspace    not \ \instances(\referenceOnly) \wedge \\
+		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
+		      % \Myspace  \typeof{\referenceOnly} = \type{\clazz} \Rightarrow	\\
+			                 \Myspace   \Myspace     
+					 \begin{array}{l}   \inter{i}{i+1} \\
 		                                   \subst{ \counter}{ \counter + 1 } \\
 						   \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
 						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
 		       \end{array}
               \end{array}$$
-		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. Then the precondition is the same predicate but in which the stack
-		  counter is incremented, the stack top is substituted by a fresh reference variable \referenceOnly \ and the fields for the 
+		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. The weakest precondition 
+		  of the instruction says that for any reference $\referenceOnly$ 
+		  if $\referenceOnly$ was not instantiated in the initial state of the execution of \methodd \ then
+		  the precondition is the same predicate but in which the stack
+		  counter is incremented and \referenceOnly  \ is pushed on the stack top  where the fields for the 
 		  \referenceOnly \ are initialized with their default values 
 	
 		
@@ -215,9 +223,13 @@ We will also see how the weakest precondition is defined in presence of exceptio
 	
 				 $$\begin{array}{l}
                                          \wpi{\newarray  \ \anyType } {\methodd}{i}  =  \\
-				\typeof{\referenceOnly} = \type{\anyType[ ]} \wedge \stack{\counter} \ge 0 \Rightarrow  \\
-						\Myspace  \inter{i}{i+1} \\
-                                                 \Myspace \begin{array}{l}        
+			\forall \referenceOnly,\\
+                        \Myspace    not \ \instances(\referenceOnly) \wedge \\
+			 \Myspace \referenceOnly \neq \Mynull \wedge \\
+			% \Myspace \typeof{\referenceOnly} =\type{\anyType[ ]}
+			 	\Myspace \stack{\counter} \ge 0 \Rightarrow  \\
+					 \Myspace     \Myspace  \inter{i}{i+1} \\
+                                           \Myspace      \Myspace \begin{array}{l}        
 						        \subst{\stack{\counter} }{ \referenceOnly } \\
 							\subst{ \arrayAccessOnly }{ \update{\arrayAccessOnly}
                                                                                            {(\referenceOnly, j ) }
@@ -400,7 +412,7 @@ We will also see how the weakest precondition is defined in presence of exceptio
 	 				 		\Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = \bottom \Rightarrow \\  
 					 \Myspace \forall \bound_i (  \\ 
 						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
-                                                 \Myspace\Myspace\Myspace  \methodd.\excPostSpec(i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound_i }    ) ) \\
+                                                 \Myspace\Myspace\Myspace  \methodd.\excPost(i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound_i }    ) ) \\
 						 \Myspace \wedge \\
 						 \Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k    \Rightarrow \\ 
  \Myspace \forall \bound_i (  \\ 

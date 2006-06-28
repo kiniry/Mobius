@@ -3,7 +3,7 @@
 \newtheorem{interpExpr}{Definition}[subsection]
 \newtheorem{interpTypeExpr}[interpExpr]{Definition} 
 \newtheorem{interpPred}[interpExpr]{Definition}
-\newtheorem{valid}[interpExpr]{Definition}
+
 
 \subsection{Interpretation }\label{interpret}
 
@@ -12,8 +12,10 @@ Thus, we first define a function for expression evaluation, as well as a functio
 of the given predicate in the given state. 
 The function $eval$ which evaluates expressions in a state has the following signature:
 $$
-eval : \expressionsWp \rightarrow \SetConfigs \rightarrow \Values \cup \JavaType \cup \bottom
+eval : \expressionsWp \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightarrow \Values \cup \JavaType \cup \bottom
 $$
+Note that the evaluation function takes as arguments an expression ($\expressionsWp$ ) of the assertion language presented in the previuos Section 
+\ref{exprLang}, the current state as well as the initial state of the current method and returns a value as defined in Section \ref{types}.
 %The function $eval$ associates a value to expressions from  \expressionsWp  \  if they have a value in the state.
 %For instance, a reference which is not in the domain of the  
 
@@ -22,50 +24,55 @@ $$
 \begin{interpExpr}[Evaluation of expressions] \label{interpExpr} 
 The evaluation in a state \\
 $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expressionsWp$
- is denoted with $\evalExp{\expressionsWp}{s}$  and is defined inductively on the grammar of expressions $\expressionsWp$ \  as follows:
+w.r.t. an initial state $ s_{init} = \config{\heap_{init}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $  s.t. 
+$s_{init} \stateTrans^{*} s $ 
+is denoted with $\evalExp{\expressionsWp}{s}$  and is defined inductively on the grammar of expressions $\expressionsWp$ \  as follows:
  
 $$
 \begin{array}{l}
 \evalExp{ v  }{s } = v\\
   where \  v \in \  \Myint   \ \vee  \  v \in  \RefValues \\
 \\
- \evalExp{\fieldd(\expressionsWp ) }{s} = \\
- = \heap(\fieldd) (\evalExp{ \expressionsWp}{ s } ) \\
+ \evalExp{\fieldd(\exprWp ) }{s} = \\
+ = \heap(\fieldd) (\evalExp{ \exprWp}{ s } ) \\
 \\
 
- \evalExp{\update{\fieldd}{\expressionsWp_1}{\expressionsWp_2}(\expressionsWp_3)}{ s } = \\
-=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expressionsWp_1}{s } }{ \evalExp{\expressionsWp_2}{s }  }} (\fieldd)
-                                            (  \evalExp{\expressionsWp_3}{ s } ) \\
+ \evalExp{\update{\fieldd}{\exprWp_1}{\exprWp_2}(\exprWp_3)}{ s } = \\
+=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\exprWp_1}{s } }{ \evalExp{\exprWp_2}{s }  }} (\fieldd)
+                                            (  \evalExp{\exprWp_3}{ s } ) \\
  \\
 
 
- \evalExp{\arrayAccess{\expressionsWp_1} {\expressionsWp_2}  }{ s } = \\
+ \evalExp{\arrayAccess{\exprWp_1} {\exprWp_2}  }{ s } = \\
 
- = \heap (\evalExp{ \expressionsWp_1}{ s } ,\evalExp{ \expressionsWp_2}{ s } )   \\
+ = \heap (\evalExp{ \exprWp_1}{ s } ,\evalExp{ \exprWp_2}{ s } )   \\
 \\
 
- \evalExp{ \update{ \arrayAccessOnly}{ (\expressionsWp_1 , \expressionsWp_2)}{ \expressionsWp_3} (\expressionsWp_4,\expressionsWp_5)  } { s } = \\
- = \update{\heap}{ ( \evalExp{\expressionsWp_1}{s } ,  \evalExp{\expressionsWp_2}{s } ) }  
-                 { \evalExp{\expressionsWp_3}{s }}
-                 ( \evalExp{\expressionsWp_4}{s } ,  \evalExp{\expressionsWp_5}{ s  } ) \\
+ \evalExp{ \update{ \arrayAccessOnly}{ (\exprWp_1 , \exprWp_2)}{ \exprWp_3} (\exprWp_4,\exprWp_5)  } { s } = \\
+ = \update{\heap}{ ( \evalExp{\exprWp_1}{s } ,  \evalExp{\exprWp_2}{s } ) }  
+                 { \evalExp{\exprWp_3}{s }}\\
+                 \Myspace ( \evalExp{\exprWp_4}{s } ,  \evalExp{\exprWp_5}{ s  } ) \\
 \\
- \evalExp{ \locVar{i} } { s } = \locVarOnly(i) \\
-\\
+ \evalExp{ \locVar{i} } { s } = \locVarOnly(i) 
+\end{array}$$
 
- \evalExp{\expressionsWp_1 \ \op \ \expressionsWp_2   } { s } =   \evalExp{\expressionsWp_1}{s} \op  \evalExp{\expressionsWp_2}{s}  \\
+$$\begin{array}{l}
+ \evalExp{ \old{\exprWp} } { s } =\evalExp{ \exprWp }{  s_{init}} \\
+\\ 
+ \evalExp{\exprWp_1 \ \op \ \exprWp_2   } { s } =   \evalExp{\exprWp_1}{s} \op  \evalExp{\exprWp_2}{s}  \\
 
 \\
-\evalExp{ \typeof{\expressionsWp}}{s } = \\
+\evalExp{ \typeof{\exprWp}}{s } = \\
 \left\{\begin{array}{ll}
-      \Myint                                           & \evalExp{\expressionsWp}{s} \in \Myint \\
-      \heap. \heapTypeOf(\evalExp{\expressionsWp}{s} ) & else \\
+      \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
+      \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
 	   
 \end{array}\right. \\
 
 \\ 
-\evalExp{ \elemtype{\expressionsWp}}{s } = \\  
+\evalExp{ \elemtype{\exprWp}}{s } = \\  
 \left\{\begin{array}{ll}
-            \mbox{ \rm \texttt{T} }  & if \   \heap. \heapTypeOf(\evalExp{\expressionsWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
+            \mbox{ \rm \texttt{T} }  & if \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
 \end{array}\right. \\					    
 \\
 
@@ -79,7 +86,7 @@ $$
  \evalExp{ \counter   } { s } = \counterOnly \\
 \\
 
- \evalExp{ \stack{ \expressionsWp}   } { s } = \stackOnly ( \evalExp{\expressionsWp}{s} ) \\
+ \evalExp{ \stack{ \exprWp}   } { s } = \stackOnly ( \evalExp{\exprWp}{s} ) \\
 \\
 
 \end{array}
@@ -103,7 +110,9 @@ The relation $\vDash$ that we define next, gives a meaning to the formulas from 
 %$$ \vDash :  \SetConfigs *  \predWp  $$
  
 \begin{interpPred}[Interpretation of predicates] \label{interpPred} 
-The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s$ is defined inductively as follows:
+The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
+w.r.t. an initial state  $ s_{init} = \config{\heap_{init}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ s.t. 
+$s_{init} \stateTrans^{*} s $   is defined inductively as follows:
 $$
 \begin{array}{l}
 \interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
@@ -129,7 +138,11 @@ $$
                                                               \evalExp{\exprWp_1 }{s} \neq \bottom \wedge \\
 							       \evalExp{\exprWp_2 }{s}\neq \bottom \wedge \\
                                                              \evalExp{\exprWp_1 }{s} \evalRel{\predicates }  \evalExp{\exprWp_2 }{s} \ is  \ true
-							     \end{array}
+
+							     \end{array} \\
+\\
+
+\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ iff \    \isInList{\referenceOnly }{ \getLocations{\heap_{init}}}  
 \end{array}
 $$   
 \end{interpPred}
