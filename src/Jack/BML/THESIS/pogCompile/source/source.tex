@@ -1,0 +1,140 @@
+
+\newtheorem{Expression}{Definition}[section]
+\newtheorem{ExpressionRel}[Expression]{Definition}
+\newtheorem{Statement}[Expression]{Definition}
+
+\section{Source} \label{source}
+
+
+We present a source Java-like programming language which supports the following features:
+object manipulation and creation, method invokation, throwing and handling exceptions, subroutines etc.  
+The first definition that we give hereafter presents all the constructs of our language which evaluate
+to a value.
+
+\begin{Expression}[Expression]\label{exprSrc}
+    The grammar for source expressions  is defined as follows
+    $$ \begin{array} {ll}    \expressionSrc ::=       
+       		         	& \constantInt  \\
+				& \mid \Mytrue \\ 
+				& \mid \Myfalse \\
+			%	& \mid \constantRef \\
+				& \mid \expressionSrc \ op \ \expressionSrc \\  
+				& \mid \expressionSrc.f \\
+				& \mid \var \\
+  			        & \mid (Class) \ \expressionSrc \\
+                                & \mid \Mynull  \\
+				& \mid \this \\
+              	        	& \mid \expressionSrcRel \\
+				& \mid \expressionSrc.m( \expressionSrc ) \\
+				& \mid  \newSrc \ Class  ( \expressionSrc  ) \\ 
+                                & \\
+				& \\
+        
+
+     \expressionSrcRel ::=      & \expressionSrc \ \rel \ \expressionSrc \\
+				& \mid \expressionSrc \ \instanceofSrc \ Class\\
+				& \\   
+				& \rel \in \{ \le, < ,  \ge, >, = , \neq \}                   
+    \end{array} 
+    $$
+\end{Expression}
+
+
+    
+We now  a give an informal description of the meaning of the expressions of the above grammar:
+\begin{itemize}
+   
+   \item $ \constantInt  $ is any integer literal 
+   
+
+   \item  $ \Mytrue$ and $\Myfalse$ are the unique boolean  constants 
+
+   \item \constantRef \ is a reference to an object in the memory heap
+   
+   \item  $\expressionSrc \ op \ \expressionSrc$ which stands for an arithmetic expression with any of the arithmetic 
+          operators $ + , - , div , rem, * $
+	   
+   
+   
+   \item $ \expressionSrc.f $ is a field access expression where the field with name $f$ is accessed
+
+   \item the cast expression $(Class) \expressionSrc$  which is applied only to expressions from a reference type
+   
+   \item the expression \Mynull \ stands for the null reference which does not point to any location in the heap
+  
+   \item \this \ refers to the current object 
+   \item $ \expressionSrc.m(\expressionSrc)  $ stands for a method invokation expression. Note that here we consider
+         only methods with one argument which return a value
+   \item $\newSrc \ Class(\expressionSrc )$ stands for an object creation expression of class $Class$. We consider only constructors which take
+         only one argument for the sake of readability 
+ 
+
+%   \item $\rel \in \{ \le, < ,  \ge, >, = , \neq \} $ 
+   
+\end{itemize}
+
+
+
+
+The language is also provided with relational expressions, which evaluate to the boolean values: 
+
+\begin{itemize}
+   
+   \item $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \} $ stands for the relation between two expressions 
+   
+   \item  $\expressionSrc \ \instanceofSrc \ Class $ states that $\expressionSrc$ has as type the class $Class $ or one of its subclasses 
+\end{itemize}
+
+
+
+
+
+
+The expressions can be of object types or basic types. Formally the types are 
+
+$$
+\JavaType ::= Class, \ Class \in \ClassTypes \mid \Myint \mid \Mybool
+$$ 
+
+\todo{est-ce que je dois dire qu'on considere un sousensemble de Class qui represente les exceptions ?}
+
+The next definition gives the control flow constructs of our language as well as the expressions that have a side 
+effect  
+\begin{Statement}[Statement]
+    The grammar for expressions  is defined as follows :
+\end{Statement}
+    $$ \begin{array} {ll}    \stmt ::=  
+                                & \stmt;\stmt \\
+                                & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
+			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \} \\
+		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+				& \mid \try  \ \{ \stmt \} \ \catch \ ( Class )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+				& \mid \throw \ \expressionSrc  \\
+                                & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} \\
+				& \mid \returnSrc \  \expressionSrc \\
+				& \mid \returnSrc \\
+                   		& \mid \expressionSrc = \expressionSrc \\
+				& \mid \expressionSrc \\
+			
+			 \end{array} 
+    $$
+
+
+% informal description 
+
+From the definition we can see that the language supports also the following constructs :
+
+\begin{itemize}
+   \item $\stmt;\stmt$, i.e. statements that execute sequentially 
+   \item $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  $ which stands for
+         an if statement. The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
+	 evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
+	 $ \Myelse$ branch is executed
+   \item  \todo{give the complete explanation}
+   \item 
+   \item 
+   \item 
+   \item 
+  
+ 
+\end{itemize}

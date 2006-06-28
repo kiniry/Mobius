@@ -1,0 +1,32 @@
+
+
+\newtheorem{Compiler}{Definition}
+
+\section{Compiler} \label{compile}
+
+We now turn to specify a simple compiler from the source language presented in Section
+\ref{source} into the bytecode language. The compiler does not perform any optimizations. 
+
+
+
+% \subsection{Compilation of source values}
+%In our modelisation, the source language presented in Section~\ref{source} keeps close to the Java 
+%language semantics and the bytecode language defined in \ref{P05BSV} is close to the 
+%Java Virtual Machine \cite{VMSpec}. This implies that our source language supports booleans while the bytecode
+%language does not support them. In particular, values of type boolean on source level
+% are represented as values of type integer. That's we formalise this fact by defining a compiler from source values 
+%to bytecode values :
+%
+%$$
+%\compile{\eval{\expressionSrc} } = 
+%\left\{ \begin{array}{ll}
+%1 &  if \expressionSrc == \Mytrue \\
+%& \\
+%0 &  if \expressionSrc == \Myfalse \\
+%& \\
+%\eval{\expressionSrc}  & else
+%\end{array} \right.
+%$$
+
+\todo{the exception handler function}
+

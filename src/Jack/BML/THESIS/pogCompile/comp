@@ -1,0 +1,4 @@
+latex pogComp.tex
+latex pogComp.tex
+dvips pogComp.dvi -o
+ps2pdf pogComp.ps 

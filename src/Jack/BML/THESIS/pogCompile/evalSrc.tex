@@ -1,0 +1,38 @@
+
+\subsection{Evaluating expressions }
+
+An expression in our source language can be evaluated either to an object reference, to an integer value  or to a boolean value. We denote the set of object references with \Refs. We denote the set of values with \Values
+$$ 
+\Values := \Refs \mid \Myint \mid \Mybool
+$$
+
+Thus, the evaluation function \textrm{eval} has the following signature:
+
+$$\textrm{eval}: \expressionSrc \rightarrow Values $$
+
+ 
+For the purposes of this study we do not need the definition of the function eval.
+
+ % \[ \eval{\expressionSrc} =
+ % \begin{array}{l}
+ %  \constant  	& if \ \expressionSrc in \{  \constantInt , \Mytrue , \Myfalse
+ % , \constantRef \} \\
+ %    
+ % \eval{\expressionSrc_1}         &  \expressionSrc = ( \expressionSrc_1 = \expressionSrc_2) \\
+ % 				&  m(\expressionSrc_1 \ldots \expressionSrc_k ) \\
+ % 				&  \expressionSrc.\expressionSrc \\
+ % 				&  id \\
+ %   				
+ %                                 &  \expressionSrc \ op \ \expressionSrc \\  
+ % \eval{	\expressionSrc}		&  (Class) \ \expressionSrc  \\
+ %                                 &  \expressionSrc \ instanceof \ Class \\
+ %            		        & \mid  \expressionSrc = \Mynull  \\
+ % 				& \mid \this \\
+ %               	                & \mid  \newSrc \ Class  ( \expressionSrc_1 \ldots \expressionSrc_k   ) \\
+ %  %                                 & \mid \expressionSrc \ \rel \ \expressionSrc  
+ % 
+ % \end{array} 
+ % \]
+
+
+

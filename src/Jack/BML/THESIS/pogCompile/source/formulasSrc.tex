@@ -1,0 +1,68 @@
+%\newcommand{\predicate}[1]{\psi_{#1} }
+%\newcommand{\predicates}{ \mathbb{P} }
+%\newtheorem{Formula}{Formulas}
+%\newtheorem{Predicate}{Predicates}
+
+\subsection{Source assertion language} \label{formulasSrc}
+The properties that our predicate calculus treats are from first order predicate logic.
+In the following, we give the formal definition of the assertion language into which 
+the properties are encoded.
+
+ 
+
+\begin{Formula}[Definition]
+The set of formulas is defined inductively as follows
+	$$
+	\begin{array}{ll}
+	\formulaSrc ::= & \psi(\expressionSpecSrc,  \expressionSpecSrc )\\
+	  & \vert \true \\
+	  & \vert  \false \\	
+	  & \vert \formulaSrc \wedge \formulaSrc \\
+	  & \vert \formulaSrc \vee  \formulaSrc \\
+	  & \vert \formulaSrc \Rightarrow \formulaSrc \\
+	  & \vert \forall x  (  \formulaSrc(x) ) \\
+	  & \vert \exists x  ( \formulaSrc (x))	 \\
+      
+          & \\
+	  & \\
+	  \predicates ::=  &   == \mid \neq \mid \leq \mid \le \mid \geq \mid > \mid  <: \\
+	  & \\
+	  & \\
+	  \expressionSpecSrc  ::= & \constantInt  \\
+	                          & \mid \Mytrue \\ 
+	                          & \mid \Myfalse \\
+	                          & \mid \freshVar \\
+				  & \mid \expressionSpecSrc \ op \ \expressionSpecSrc \\  
+				  & \mid \expressionSpecSrc.f \\
+				  & \mid \var \\
+  			          & \mid \Mynull  \\
+				  & \mid \this \\
+	                          & \mid \typeof{\expressionSpecSrc} \\
+	                          & \mid \result
+                                  
+	\end{array}
+	$$ 
+\end{Formula}
+
+Note that the expressions in the assertion language are very similar to the expression  in the programming language presented in subsection \ref{source}.
+
+We define a function which maps expressions from the programming language into the expressions of the assertion language which 
+is denoted and is typed as follows: 
+
+$$\ulcorner . \urcorner^{\tiny{src2spec}} : \expressionSrc \rightarrow \expressionSpecSrc $$
+The function is defined as follows:
+
+$$ \begin{array}{lll}
+      \compileSrcSpec{\constantInt} & = &  \constantInt\\
+      \compileSrcSpec{\Mytrue} & = &  \Mytrue \\
+      \compileSrcSpec{\Myfalse} & = &  \Myfalse \\
+      \compileSrcSpec{\expressionSrc \ op \ \expressionSrc  } & = & \compileSrcSpec{\expressionSrc} \ op \ \compileSrcSpec{\expressionSrc  }  \\
+      \compileSrcSpec{(Class)\expressionSrc } & = & \compileSrcSpec{\expressionSrc } \\
+      \compileSrcSpec{\expressionSrc.m(\expressionSrc)} & = & \freshVar \\
+      \compileSrcSpec{\expressionSrc.f }  & = & \compileSrcSpec{\expressionSrc }.f \\
+      \compileSrcSpec{\this}  & = & \this \\
+      \compileSrcSpec{  \newSrc \ Class  ( \expressionSrc  ) } & = &  \freshVar \\
+      \compileSrcSpec{ \expressionSrc \ \instanceofSrc \ Class  } & = &  \typeof{\compileSrcSpec{ \expressionSrc} } <:  Class \wedge \compileSrcSpec{ \expressionSrc} \neq \Mynull  \\
+      \compileSrcSpec{ \expressionSrc \ \rel \ \expressionSrc  } & = & \compileSrcSpec{  \expressionSrc } \rel \compileSrcSpec{  \expressionSrc } \\
+      \end{array}
+  $$

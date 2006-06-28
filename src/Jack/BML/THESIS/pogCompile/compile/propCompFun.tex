@@ -1,0 +1,14 @@
+\subsection{Properties of the compiler function}
+
+A property that can be established for the compiler is the following: 
+
+\newtheorem{compProp1}{Property} 
+
+\begin{compProp1}
+  For any statement $\stmt$, the compilation $\compile{\stmt}$ does not contain jump instructions ( \mbox{ \rm \instr{goto}, \instr{if\_cond} }) outside $\compile{\stmt}$ except possibly for the last
+instruction in  $\compile{\stmt}$.
+\end{compProp1}
+The property can be established by structural induction of the compilation $\compile{\stmt}$
+
+
+

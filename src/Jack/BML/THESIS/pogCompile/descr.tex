@@ -1,0 +1,18 @@
+\section{Introduction}
+% 1. security involves more and more complex policies
+% 2. evolution of the techniques 
+This documents studies the relationship between
+the verification conditions generated for a Java like source 
+language and the verification conditions generated for the bytecode language 
+defined in \cite{P05BSV}. We establish an equivalence which we name $\eqModNames$
+ modulo names and boolean values of the proof obligations on source and bytecode level.
+ This result may have an impact on the application on PCC techniques for 
+complex functional and security properties where full automatisation is not possible.
+
+The traditional PCC architecture comes along with a certifying compiler. The basic idea is that the certifying compiler  infers automatically annotations,
+automatically generates verification conditions, proves them automatically and then sends both the code and the proof certificate to the 
+counterpart that will run the code. The receiver then, generates the verification conditions and  type checks the generated formulas against the proof certificate.
+This architecture works for properties like well typedness and safe memory read/write but it is not applicable for complex policies where the specification and the proof 
+cannot be done automatically. 
+
+... 

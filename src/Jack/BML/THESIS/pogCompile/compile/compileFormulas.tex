@@ -1,0 +1,78 @@
+\newtheorem{formulaComp}{Definition}
+\newtheorem{formulaCompProp0}{Property}
+\newtheorem{formulaCompProp1}[formulaCompProp0]{Property}
+\newtheorem{formulaCompProp2}[formulaCompProp0]{Property}
+
+
+
+\subsection{Compiling source formulas }
+In the previous section, we have seen how source statements are compiled into a sequence of bytecode instructions.
+ We now look at how formulas referring to source expressions are compiled into formulas that ``talk'' about bytecode expressions. 
+These formulae appear in the specification of  a source component. 
+The compiler function is $\compile{.} $ and has the signature :
+$$ \compile{.} : \formulaSrc \rightarrow \formulaBc$$ 
+
+\begin{formulaComp}[Formula compiler]
+\end{formulaComp} 
+$$
+\compile{ \formulaSrc } =
+\begin{array}{ll}
+ \psi(\compileSynt{\expressionSrc_1},\compileSynt{\expressionSrc_2} ) & \psi \in \predicates, \  \expressionSrc_1 ,  \expressionSrc_2 \in \expressionSrc \\ 
+\true & if \  \formulaSrc = \true \\
+\false & if \  \formulaSrc = \false \\
+\compile{ \formulaSrc_1 } \wedge \compile{ \formulaSrc_2 } & if \  \formulaSrc = \formulaSrc_1 \wedge \formulaSrc_2 \\
+\compile{ \formulaSrc_1 } \vee \compile{ \formulaSrc_2 } & if \  \formulaSrc = \formulaSrc_1 \vee \formulaSrc_2 \\
+ \compile{ \formulaSrc_1 } \Rightarrow \compile{ \formulaSrc_2 } & if \  \formulaSrc = \formulaSrc_1 \Rightarrow \formulaSrc_2 \\
+ \forall \ x \ . \compile{ \formulaSrc_1 } & if \  \formulaSrc = \forall \ x: JavaType . ( \formulaSrc_1)  \\
+ \exists \ x \ . \compile{ \formulaSrc_1 } & if \  \formulaSrc = \exists \ x: JavaType . ( \formulaSrc_1)  
+
+\end{array} 
+$$
+ 
+Note that in the compilation of atomic predicates we compile the expressions with $ \compileSynt{.}$ 
+which compiles the identifiers in the expressions
+to the corresponding identifier in the bytecode. The function $ \compileSynt{.}$ is described in \cite{JML2BCSpec}.
+We illustrate the effect of  $ \compileSynt{.}$ with an example: 
+
+\begin{verbatim}
+public class B{
+  //@ requires a.b != null
+  public int m (A a) {
+    ...
+  }
+}
+\end{verbatim}
+
+The application of  $ \compileSynt{.}$  to the precondition is of the form 
+\[ \compileSynt{ a.b != null} = \locVar{1}.\tt{cpIndex(b)} != null \]
+ where $\locVar{1}$ is a register of method \texttt{m} 
+in which the parameter \texttt{a} is stored and \texttt{cpIndex(b)} is the index of the field \texttt{b} of class \texttt{A} in the constant pool of class \texttt{B}. 
+
+
+
+An easy  to see property is the following property (the proof can be done inductively over the formula structure ) :
+\begin{formulaCompProp1}[Compiler Property 1] \label{formulaCompProp1}
+$$   \formulaSrc \eqModNames \compile{ \formulaSrc} $$
+\end{formulaCompProp1}
+
+Also, as the source language does not contain stack expressions ( $\stack{\counter}$ 
+ and $\counter$) and because of the definition of
+$\formulaSrc$ no formula $\psi \in \formulaSrc $ contains
+stack expressions. From the compiler function, we can then obtain the second property about the compiler :
+\begin{formulaCompProp1}[Compiler Property 2] \label{formulaCompProp2}
+$   \forall \psi \in  \formulaSrc . \ \compile{ \psi } $ does not contain
+stack expressions
+\end{formulaCompProp1}
+
+Another evdient point is that the set of formulas on bytecode level
+ $\formulaBc$ is larger than the set of source formulas and thus not all
+bytecode formulas have their corresponding image in $\formulaSrc$. This is due to the fact that in  
+$\formulaBc$ there are formulas that mention stack expressions but those expressions do not have a counterpart on source level. 
+Thus, we can characterise the domain of $ \compile{.}$ with the following property:
+
+\begin{formulaCompProp0}[Compiler Property 3]
+$\formulaBcNoStack$  is the subset of formulas $ \psi^{bc} \in \formulaBc$
+ that do not contain stack expressions.  $\forall \psi^{bc} \in  \formulaBcNoStack $ 
+$\exists \psi^{src} \in \formulaSrc \ . \compile{\psi^{src}} = \psi^{bc} $ 
+\end{formulaCompProp0}
+

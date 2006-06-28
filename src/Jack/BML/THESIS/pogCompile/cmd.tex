@@ -1,0 +1,261 @@
+
+
+\newcommand{\fig}[1]{ Fig.#1}
+\newcommand{\jmlKey}[1]{\texttt{#1}}% wrapping jml keywords
+\newcommand{\java}[1]{\texttt{#1}}
+\newcommand{\stack}[1]{\mbox{\rm\texttt{st(#1)} }}% element on top stack 
+\newcommand{\counter}{\mbox{\rm\texttt{cntr} }}
+\newcommand{\topStack}{\mbox{ \rm \texttt{cntr} }}
+\newcommand{\true}{T }
+\newcommand{\false}{\bottom}
+
+
+\newcommand{\fwpi}{ \rm{wp} }
+\newcommand{\instr}[1]{ \texttt{ #1 } }
+
+%\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
+%\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
+%\newcommand{\invariant}[1]{\it{I}_{\tt{#1}}}
+%\newcommand{\boucle}[1]{\texttt{#1}}
+%\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
+
+\newcommand{\ins}[1]{\texttt{instr}_#1}
+
+% the grammar for the bytecode specification language
+\newcommand{\ClassSpec}{\rm{ClassSpec}}
+\newcommand{\MethodSpec}{\rm{MethodSpec}}
+\newcommand{\SpecCase}{\textrm{SpecCase}}
+\newcommand{\jmlStmt}[1]{\textrm{#1}}
+\newcommand{\interMethodSpec}{\rm{InterMethodSpec}}
+\newcommand{\loopSpec}{\rm{LoopSpec}}
+\newcommand{\assert}{\rm{Assert}}  
+
+\newcommand{\ArithExpr}{\texttt{ArithmeticExp} }
+\newcommand{\expression}{\mathcal{E} }
+\newcommand{\JMLExpr }{\texttt{JmlExp} }
+
+
+\newcommand{\integer}{\texttt{int} }
+\newcommand{\register}[1]{reg_{#1}}
+\newcommand{\reference}[1]{\tt{ref_{#1}} }
+\newcommand{\Refs}[1]{\texttt{Refs} } % denotes the set of references
+\newcommand{\Mynull}{\mbox{\rm\textbf{null}}}
+
+
+\newcommand{\fieldAccess}[1]{\texttt{Cl.fld(}#1 \texttt{)}}
+\newcommand{\arrayAccess}[2]{#1[#2] }
+
+
+
+\newcommand{\result}{\jmlKey{ \mbox{ \rm $\backslash$result} }}
+\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
+\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
+\newcommand{\TYPE}{\jmlKey{TYPE} }
+\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
+
+
+\newcommand{\Myspace}{\phantom{aaa}}
+\newcommand{\predicate}{ \mathcal{P}} 
+\newcommand{\Myfalse}{ \mbox{\rm\textbf{false}} }
+\newcommand{\Mytrue}{ \mbox{\rm\textbf{true}} }
+\newcommand{\var}{ \mbox{\rm\textbf{var}} }
+\newtheorem{defn}{Definition} 
+
+
+% abstractCtrlFlow.tex
+\newcommand{\execRel}{\rightarrow} % the execution relation
+\newcommand{\blockm}[1]{ \tt{b^{#1}} }
+\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
+\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
+\newcommand{\instrPost}[1]{ post(\instr{#1} )}
+
+\newcommand{\excPostSpec}{exc^{bc}}
+
+%from wp.tex
+%\newcommand{\wpExeWithLoops}[1]{ \rm{Wp''}\rm{(#1)} }
+%\newcommand{\wpExe}[1]{ \rm{Wp'}\rm{(#1)} }
+\newcommand{\wpi}[3]{ \textrm{wp}^{bc}( #1, #2, #3) }
+\newcommand{\pre}{\psi^{pre}}
+\newcommand{\normalPost}{\psi^{postN}}
+\newcommand{\excPost}{\psi^{bc}_{exc}}
+\newcommand{\javaNull}{null}
+\newcommand{\arrayLength}{\texttt{length}}
+\newcommand{\entryPoint}{i_{\tt{entry}}}
+
+\newcommand{\inter}[2]{inter(#1, #2)} % predicate that holds between two blocks
+
+\newcommand{\objects}{\texttt{Objects}}
+\newcommand{\heap}{\texttt{Heap}}
+\newcommand{\pc}{\texttt{pc}}
+\newcommand{\reff}{\tt{REF}} % the type reference
+\newcommand{\field}[2]{f_{#2}^{#1}}
+\newcommand{\Values}{\textit{Values} }
+\newcommand{\locVar}[1]{ \tt{reg_{#1}} }
+
+\newcommand{\Ref}[1]{ref_{#1} }
+\newcommand{\substitution}[2]{[#1 \leftarrow #2]}
+\newcommand{\prevState}[1]{prev(#1)}
+\newcommand{\nextState}[1]{next(#1)}
+
+
+
+
+\newcommand{\comment}[1]{ \{ \textit{ #1} \} }
+
+
+
+\newcommand{\numConclusion}[1]{\textit{(#1)}}
+\newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
+
+\newcommand{\stateTrans}{\longrightarrow}
+\newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
+
+\newcommand{\config}[2]{\tt{<#1, #2>}} % <\tau , \pc>
+\newcommand{\conf}[1]{\tt{<#1>}} % <\tau>
+
+\newcommand{\bottom}{\bot}
+%\newcommand{\pstate}[2]{<#1,#2> }
+
+\newcommand{\retValue}[1]{\textrm{returnVal}(#1)} % designates the result of the method
+\newcommand{\objCl}[1]{\tt{Obj_{#1}}}
+\newcommand{\modExp}{modExp}% stands for modfied locations by loops and methods
+
+
+\newcommand{\method}{\texttt{m}}
+\newcommand{\excIndex}[2]{excIndex(#1,#2 )}
+
+
+%classFileExt.tex
+\newcommand{\intLiteral}{\texttt{int\_const} }
+\newcommand{\EXC}{\texttt{EXC}}
+\newcommand{\predicates}{ \mathbb{P} }
+
+\newtheorem{Formula}{Formulas}
+\newtheorem{Predicate}{Predicates}
+
+
+% for denoting a weakest precondition over sequence of instructions
+\newcommand{\wpBcSeq}[3]{ \textrm{wp}^{bc}( \mbox{ \rm $ #1 $ }, #2, #3) } 
+
+\newcommand{\formulaBc}{\mathcal{F}^{bc}}
+ \newcommand{\formulaBcNoStack} { \formulaBc_{\tiny{ no \ stack}} }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pogComp.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%source expressions
+
+\newcommand{\formulaSrc}{\mathcal{F}^{src}}
+\newcommand{\expressionSrc}{\mathcal{E}^{src}}
+\newcommand{\expressionSrcRel}{\mathcal{E}^{srcRel}}
+\newcommand{\constantInt}{\mbox{\rm\textbf{constInt}}}
+\newcommand{\constantBool}{\mbox{\rm\textbf{constBool}}}
+\newcommand{\constantRef}{\mbox{\rm\textbf{constRef}}}
+
+\newcommand{\newSrc}{\mbox{\rm\textbf{new}}}
+\newcommand{\local}{\texttt{locVar}} 
+\newcommand{\this}{\mbox{\rm\textbf{this}}}
+\newcommand{\rel}{\mathcal{R}}
+%statements
+\newcommand{\stmt}{\mathcal{STMT}} 
+\newcommand{\Myif}{\mbox{\rm\texttt{if}}}
+\newcommand{\Mythen}{\mbox{\rm\texttt{then}}} 
+\newcommand{\Myelse}{\mbox{\rm\texttt{else}}}
+\newcommand{\while}{\mbox{\rm\texttt{while}}}
+\newcommand{\invariant}{\mbox{\rm\texttt{INV}}}
+\newcommand{\modLoop}{\mbox{\rm\texttt{modif}}}
+\newcommand{\do}{\mbox{\rm\texttt{do}}}
+\newcommand{\try}{\mbox{\rm\texttt{try}}}
+\newcommand{\catch}{\mbox{\rm\texttt{catch}}}
+\newcommand{\finally}{\mbox{\rm\texttt{finally}}}
+\newcommand{\throw}{\mbox{\rm\texttt{throw}}} 
+\newcommand{\returnSrc}{\mbox{\rm\texttt{return}}}
+
+ \newcommand{\instanceofSrc}{\mbox{\rm\textbf{instanceof}}}
+
+\newcommand{\compileSynt}[1]{  \ulcorner #1 \urcorner^{\tiny{spec}}  } % this for the syntactic compilation of source expressions into bytecode expressions as is defined % in the JML compiler 
+\newcommand{\compile}[1]{ \ulcorner  #1 \urcorner }
+\newcommand{\compileRev}[1]{ \ulcorner #1 \urcorner^{-1} }
+
+\newcommand{\compileExp}[2]{ \compile{ #1} }
+
+\newcommand{\eval}[1]{ \textrm{eval}(#1) }
+\newcommand{\stR}[1]{\textrm{startInd}(#1 ) } %startRegion
+\newcommand{\enR}[1]{\textrm{endInd}(#1 ) } %endRegion
+
+ % param1 - start protect region,param2 - end protect region, param3 - start exc handler, param4 - exception type
+\newcommand{\addExceptionTable}[4]{\textrm{addExcHandler}(#1, \ #2, \ #3, \ #4)}
+
+\newcommand{\wpiSrc}[3]{ \textrm{wp}^{src}( \mbox{ \rm $ #1 $ } , #2, #3) }
+\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}}
+\newcommand{\excPostSrc}{\mbox{\rm\textsf{ePost}}^{src}}
+\newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{exc}}^{src}}
+\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}}
+\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}}
+\newcommand{\next}[1]{\textrm{next}(#1)}
+\newcommand{\mod}{\mbox{\rm\textsf{modif}}^{src}}
+
+
+
+\newcommand{\eqModNames}{ =^{mod \ Names \ and \ bools } }
+\newcommand{\spaceWpBc}{ \phantom{ \textrm{wp}^{bc} }}
+\newcommand{\spaceWpSrc}{ \phantom{ \textrm{wp}^{src} }}
+\newcommand{\body}[1]{ \texttt{body}(#1) }
+\newcommand{\JavaType}{ \texttt{ JavaType} }
+\newcommand{\ClassTypes}{ \texttt{ ClassTypes} }
+\newcommand{\Myint}{ \texttt{int} }
+\newcommand{\Mybool}{ \texttt{boolean} }
+
+
+\newcommand{ \freshVar}{ \mbox{\rm\textbf{ref}} }
+
+
+\newcommand{\Constructor}[1]{\mbox{\rm\textsf{constr}}(#1) }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%the assertion language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+ \newcommand{\expressionSpecSrc}{\mathcal{E}^{spec}}  % a mapping from source expressions to expressions in the assertion language 
+ \newcommand{\compileSrcSpec}[1]{\ulcorner #1 \urcorner^{\tiny{src2spec}}}
+
+
+
+\newcommand{\returnType}{\mbox{\rm\textsf{retType}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
+\newcommand{\ClassCastExc}{\mbox{\rm \texttt{CastExc}}}
+\newcommand{\NullPointerExc}{\mbox{ \rm \texttt{NullPntrExc}}}
+\newcommand{\todo}[1]{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
+\newcommand{\referenceOnly}{\mbox{ \rm \texttt{ref}} \ } 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ \newcommand{\bcIns}{\mbox{ \rm I} }
+ \newcommand{\instrs}{\mbox{ \rm IS} }
+ \newcommand{\ifCond}{ \instr{if\_cond } }
+ \newcommand{\goto}{ \instr{goto } }
+ \newcommand{\return}{ \instr{return } }
+ \newcommand{\arithOp}{ \instr{arith\_op} }
+ \newcommand{\load}{ \instr{load} }
+ \newcommand{\store}{ \instr{store} }
+ \newcommand{\push}{ \instr{push} }
+ \newcommand{\pop}{\instr{pop}}
+ \newcommand{\dup}{\instr{dup}}
+ \newcommand{\iinc}{\instr{iinc}}
+ \newcommand{\new}{\instr{new}}
+ \newcommand{\newarray}{\instr{newarray}}
+ \newcommand{\putfield}{\instr{putfield}} 
+ \newcommand{\getfield}{\instr{getfield}}
+ \newcommand{\arrstore}{\instr{type\_astore}} 
+ \newcommand{\arrload}{\instr{type\_aload}}
+ \newcommand{\arraylength}{\instr{arraylength}}
+ \newcommand{\instanceof}{\instr{instanceof}} 
+ \newcommand{\checkcast}{\instr{checkcast}} 
+ \newcommand{\athrow}{\instr{athrow}}
+ \newcommand{\invoke}{\instr{invoke}}
+ \newcommand{\jsr}{\instr{jsr}}
+ \newcommand{\ret}{\instr{ret}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

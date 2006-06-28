@@ -1,0 +1,143 @@
+
+
+\subsection{Compiling expressions in bytecode instructions} \label{compExpr}
+We now turn to the definition of the compiler from the source language defined in Section \ref{source}.
+The compiler function is denoted with $\compile{}$ and its signature is :
+$$ \compile{ } : \stmt \longrightarrow bytecode $$
+
+ Although expressions on source level can be atomic, this is not the case for their bytecode compilation, i.e.
+an expression can be compiled in several instructions.
+% As the target language is interpreted by a stack based virtual machine,
+%the evaluation of  expressions is stored on the stack.
+%Thus, for every compilation we give how the compiled
+%subexpressions affect the stack. The stack counter is denoted with \counter and the element at position \texttt{k} 
+%from the stack top is denoted with $\stack{\counter - k}$ 
+%and so for expressions the compiler function is denoted with $$ \compileExp{ \expression }{\stack{ind}}$$
+%which means that after evaluating expression  $\expression$, its evaluation $ \compile{ \eval{\expression}}$
+% is stored at index $\stack{ind}$ on the stack.
+
+\begin{itemize}
+  \item  integer or boolean constant access 
+     \begin{itemize}
+            \item  integer constant access 
+	         $$\compile{\constantInt} = \instr{push }\  \constantInt $$
+	    \item boolean constant access
+	          $$\compile{\Mytrue} = \instr{push } \ 1 $$
+                   
+                  $$\compile{\Myfalse} = \instr{push } \ 0 $$
+		  \textit{Note}: the source boolean expressions are compiled down to integers 
+     \end{itemize}
+      %  where the execution of the compilation changes the stack : \counter = \counter + 1  \stack{\counter + 1} = \const
+  \item  method invokation
+     $$\compile{ \expressionSrc_1.m(\expressionSrc_2)} = 
+           \begin{array}{l}  
+                 \compileExp{\expressionSrc_1}{\stack{\counter - k + 1}};\\ 
+		 \compileExp{\expressionSrc_2}{\stack{\counter - k + 2}};\\
+		                  
+		 
+                 \instr{invoke} \ m
+            \end{array}     
+    $$
+  
+  %  where the execution of the compilation of $\expressionSrc$ affects the stack: \\
+   %     $$\begin{array}{l}
+      %          %\counter = \counter + 1 \\
+    %            \stack{\counter} = \compile{\eval{ \expressionSrc }}
+      %     \end{array}
+   %     $$
+
+%\textit{Note}: in order to keep simplicity, we consider here only methods without parameters the case of methods with parameters being similar 
+
+
+
+
+
+  \item field access
+     $$\compile{ \expressionSrc.f} =   
+         \begin{array}{l}
+              \compileExp{\expressionSrc}{   }; \\ 
+              \getfield  \ f
+           \end{array}   
+     $$ 
+ %  where the execution of the compilation of $\expressionSrc$ affects the stack: 
+  %    $$ \begin{array}{l}
+           %\counter = \counter + 1 \\
+   %          \stack{\counter } = \compile{\eval{ \expressionSrc }}
+  %       \end{array}
+ %     $$
+
+   \item local variable access
+     $$\compile{ \var } =  \instr{load} \ \locVar{i} $$ 
+   where $\locVar{i} $ is the local variable at index $i$
+
+
+                
+   \item arithmetic expressions
+     
+     $$\compile{ \expressionSrc_1 \ op \ \expressionSrc_2 } = 
+                 \begin{array}{l}
+                       \compileExp{ \expressionSrc_1}{  \stack{\counter -1 }  } ; \\
+                       \compileExp{ \expressionSrc_2}{ \stack{\counter }  }; \\
+                       \instr{op}
+                 \end{array}     
+                $$ 
+               %      where after the execution of $\compile{ \expressionSrc_1}$ and $\compile{ \expressionSrc_2}$ the stack changes: 
+                       
+	   %	$$
+	   %	  \begin{array}{l}
+	   %	        %\counter = \counter + 2 \\
+	   %		 \stack{\counter } =  \compile{\eval{ \expressionSrc_1} } \\
+	   %		 \stack{\counter - 1} = \compile{\eval{ \expressionSrc_2} }
+	       %      \end{array} 
+	   %	$$  
+
+   \item cast expression 
+     $$ \compile{ (\mbox{ \rm \texttt{Class}}   ) \ \expressionSrc } = 
+              \begin{array}{l}  
+                 \compileExp{\expressionSrc}{\stack{\counter}};\\
+                   \instr{checkCast } \ \mbox{ \rm \texttt{Class }} ;
+              \end{array}
+$$
+	       \textit{Note} : for Java Sun compiler, this compilation is done if this is a down cast (in case this is an up cast no checkcast is generated).
+ 	     where the execution of the compilation of $\expressionSrc$ affects the stack :         
+		   %	$$
+	   %		  \begin{array}{l} 
+		   %	        % \counter = \counter  + 1 \\
+		   %	        \stack{\counter} = \compile{\eval{ \expressionSrc }}
+		   %	 \end{array}
+	   	   %   $$
+
+  \item instanceof expression
+    $$ \compile{\expressionSrc \ \instanceofSrc \ Class } = 
+         \begin{array}{l}
+              \compileExp{\expressionSrc}{\stack{\counter}};\\
+                \instr{instanceof} \ Class;
+         \end{array} $$
+ % after the execution of $ \compile{\expressionSrc}$, the stack and the stack counter are changed as follows: 
+ % %		$$
+ %		  \begin{array}{l} 
+ %		        %\counter = \counter + 1 \\
+ %		        \stack{\counter } = \compile{\eval{ \expressionSrc }}
+ %		 \end{array}
+ %	      $$
+  \item null expression
+    $$ \compile{\Mynull } = \instr{push} \ \Mynull$$
+          
+ 
+ \item object creation
+    
+   $$\compile{ \newSrc \ Class (\expressionSrc ) } =
+                 \begin{array}{l}
+ \instr{new} \ Class; \\ 
+		       \instr{dup}; \\
+		       \compileExp{\expressionSrc}{\stack{\counter - k}};\\
+	               
+		       \instr{invoke } \Constructor{Class};     
+	       \end{array}$$
+ 		        
+\item this instance
+  $$\compile{\this} = \instr{load} \ \locVar{0}$$
+              	              
+\end{itemize}
+
+

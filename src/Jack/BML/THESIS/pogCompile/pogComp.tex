@@ -1,0 +1,41 @@
+
+
+\documentclass[a4paper]{article}
+
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{url}
+
+\input cmd.tex
+
+
+\title{Compiling Proof Obligations }
+\author{Mariela Pavlova}
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage 
+   \input descr.tex
+   \input source/source.tex
+   %\input evalSrc.tex
+         \input source/formulasSrc.tex 
+         \input source/srcWp.tex
+  
+   \input bytecode/intro.tex      
+          \input bytecode/bcLang.tex
+	  \input bytecode/bcWp.tex
+ 
+  \input compile/compile.tex
+         \input compile/compileFormulas.tex
+         \input compile/compExpr.tex 
+	 \input compile/compCtrlStmt.tex
+   	 \input compile/propCompFun.tex
+      
+
+  
+   \input compilePOGS.tex
+
+\bibliographystyle{plain}
+\bibliography{biblio,specification}
+
+\end{document}

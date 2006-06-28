@@ -1,0 +1,2054 @@
+
+
+%\newtheorem{excProp}[interProp]{Lemme}
+\newtheorem{pogEquiv}{Theorem}
+\newtheorem{postProp}{Lemme} % states that the implicite postconditions for any compile(stmt ) does not contain stack expressions
+
+
+% For keeping font inside a mathematical environment : \mbox{\rm \texttt{Exc}  }
+\section{Compiling Proof Obligations} \label{proofPogEq}
+
+We turn now to study the relationship between the proof obligations on source and bytecode level. 
+We show that syntactically the proof obligations are the same modulo names and some types.
+
+\input aux.tex
+
+
+
+\subsection{ Proof obligation equivalence}
+
+
+
+% We also need to establish that the exceptional postcondition function for any method \method \  
+%  $\excPostSrc$ for every source expression(statement) $\texttt{exp}$ and exception \texttt{Exc} returns
+%   the same formula (modulo names and types) as the exceptional postcondition function for the 
+%  $\compile{\texttt{exp}}$ and the exception \texttt{Exc}. 
+
+%  \begin{excProp} \label{excProp}
+%  Let's have a source expression(statement) exp and let's the expression(statement) may terminate abruptly on an exception \mbox{\rm \texttt{Exc}}. 
+%  The exceptional postcondition for the expression exp  has the following property:
+%  $$
+ % \excPostSrc(\mbox{\rm \texttt{Exc}},exp ) =^{mod \ names} \excPost(\mbox{\rm \texttt{Exc}},\compile{ exp})
+%  $$
+%  \end{excProp}
+%
+%  Proof. 
+%  By definition\footnote{we take the semantics of exception handling as described in the Java Language Specification} it is the inner most exception handler that encloses\texttt{exp} that can handle \texttt{Exc} that will manage the thrown exception \texttt{Exc} from \texttt{exp}.
+%  So, we take the inner most try catch statement such that :
+
+%  $ \try \{ \ \ldots  \texttt{exp} \ldots \} \ \catch ( \texttt{Exc} \ )\ \{ \texttt{handler} \}$
+
+
+%  \comment{by definition}
+
+%  $$ \numConclusion{1} $$
+%  $$
+ % \begin{array}{l}
+%  \wpiSrc{\try\{  \ \ldots \texttt{exp} \ldots \} \ \catch (\texttt{Exc} \ )\ \{ \texttt{handler} \}}{\psi}{\excPostSrc}\\
+ %  =\\
+%  \wpiSrc{\ldots \texttt{exp} \ldots }{\psi}
+ %  {\excPostSrc \oplus [ \texttt{Exc}  \longleftarrow \wpiSrc{\texttt{handler} }{ \psi}{ \excPostSrc} ]}
+%  \end{array}
+%  $$ 
+%
+%  \comment{by definition}
+ % $$\numConclusion{2} $$
+%  $$
+ % \excPostSrc \oplus [ \texttt{Exc}  \longleftarrow \wpiSrc{\texttt{handler} }{ \psi}{ \excPostSrc} ](\texttt{Exc}) = \wpiSrc{\texttt{handler} }{ \psi}{ \excPostSrc}
+%  $$
+
+  
+%  \comment{by definition of the compiler function }
+%  $$
+%  \numConclusion{3}
+ % $$
+%  $$
+ % \begin{array}{l}
+%    \compile{\try \{ \ \ldots \texttt{exp} \ldots \} \ \catch ( \texttt{Exc} \ )\ \{ \texttt{handler} \} } \\
+ %     = \\
+%        \compile{\ldots \texttt{exp} \ldots  } ;\\
+%      goto \ l; \\
+   %  \compile{handler}; \\
+%     goto \ l;\\
+%     ... \\
+%     l: \\ 
+%  	\addExceptionTable{ \stR{\compile{\stmt_1} }}{ \enR{  \compile{ \stmt_1 }  }}{ \compile{\stmt_2} }{ Class} )
+%    \end{array}
+%  $$
+%
+ % \comment{by definition the exceptional postcondition for \mbox{ \rm  $ \compile{\texttt{exp}}$ } for exception \mbox{ \rm \texttt{Exc}} is}
+%
+%  $$
+%  \numConclusion{4}
+%  $$
+%  $$
+ % \begin{array}{l}
+ %  \excPost(ind, \texttt{Exc}) = \wpi{\compile{handler}; goto \ l }{ \compile{\psi}}{\excPost} \\
+ % where \  ind \in \compile{ \texttt{exp}}
+ % \end{array}
+%  $$
+%  \comment{from lemme  and \numConclusion{4} }
+%  
+%  $$
+%    \numConclusion{5}
+ % $$
+%  $$
+ % \excPost(ind, \texttt{Exc}) = \wpi{\compile{handler} }{ \compile{\psi}}{\excPost}
+%  $$
+
+
+
+
+%\todo{say that $\psi$ and $\compile{\psi}$ do not contain stack expressions } 
+\begin{pogEquiv}
+ 
+  For every statement $\stmt $ from the source language, any formula $\psi \in \formulaSrc$   and any exceptional postcondition
+function $\excPostSrc$ and $\excPost$ such that
+ $\excPostSrc ( \mbox{ \rm \texttt{Exc}} , \expressionSrc ) \eqModNames  \excPost ( \mbox{ \rm \texttt{Exc}}  , \compile{\expressionSrc}  ) $ we have that
+\begin{itemize}
+     \item  $$\wpBcSeq{ \compile{ \stmt}} { \compile{\psi}} {\excPost}$$  does not contain subexpressions of the form 
+     \mbox{ \rm ~\stack{ind} } and\mbox{ \rm  \counter } 
+
+     \item  $$\wpiSrc{ \stmt } { \psi} {\excPostSrc} \eqModNames \wpBcSeq{ \compile{ \stmt }} { \compile{\psi}} {\excPost}  $$ 
+  
+\end{itemize}
+
+
+Proof: \\
+By structural induction over the structure of the source expressions and statements 
+
+\textit{Note:} in the following, we are using the following property  of the \textrm{wp} predicate transformer, namely   
+$$\rm{wp}( \stmt, \psi, \excPost) \wedge \rm{wp}( \stmt, \phi, \excPost ) = \rm{wp}( \stmt, \psi \wedge \phi, \excPost )    $$
+which is easy to establish.
+\begin{description}
+
+
+\item \textbf{Expressions}
+
+\begin{description}
+  \item  \textbf{integer constant access}
+
+  \comment{by definition }
+  $$\wpiSrc{const}{\normalPostSrc }{ \excPostSrc } = \normalPostSrc $$
+
+  \comment{from the definition of the compiler function and the weakest precondition over bytecode} 
+
+\[
+\begin{array}{l}
+  \wpBcSeq{ \compile{ const}} { \compile{\normalPostSrc }}{ \excPost } \\
+  \\
+  =  \\
+ \\
+  \wpBcSeq{\instr{push }\ \compileSynt{const}}{ \compile{\normalPostSrc }}{ \excPost } \\
+\end{array}
+\]
+  
+\comment{from the definition of the weakest precondition function of \mbox{ \rm \instr{push}} } 
+
+$$
+\begin{array}{l}
+  \wpBcSeq{\instr{push }\ \compile{ \eval{ const}}}{ \compile{\normalPostSrc }}{ \excPost } \\
+= \\
+
+ \compile{\normalPostSrc } \substitution{ \counter } { \counter + 1 }  \substitution{ \stack{\counter + 1  } } { const } 
+\end{array}
+$$
+ 
+\comment{ $ \compile{\normalPostSrc }  $ does not contain stack and stack counter expressions from Property \ref{formulaCompProp2} 
+on page \pageref{formulaCompProp2} }
+
+$$\begin{array}{l}
+ \compile{\normalPostSrc } \substitution{ \counter } { \counter + 1 }  \substitution{ \stack{\counter + 1  } } { const } \\
+ = \\
+ \compile{\normalPostSrc }
+\end{array}
+$$
+ 
+
+\comment{from the compiler for formulas we know that $\forall \psi \ . \ \psi  \eqModNames \compile{\psi}$ }
+$$\normalPostSrc = \compile{\normalPostSrc }  $$
+
+ \item \textbf{ method invocation }
+
+
+
+ \item \textbf{ assignment expressions } 
+ \begin{description}
+    \item \textbf{ local variable assignment} \\
+    \comment{by definition of the weakest precondition for assignment }
+
+  $$ \begin{array}{l} 
+                \wpiSrc{ \expressionSrc_1 = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = \\
+                \\
+                \wpiSrc{\expressionSrc_2}{ \normalPostSrc\substitution{\expressionSrc_1 }{\eval{\expressionSrc_2 }} }{\excPostSrc}
+      \end{array}$$  
+
+\comment{by defintion of the compiler } 
+
+$$\numConclusion{1} $$
+$$
+\begin{array}{l}
+
+ \wpBcSeq{ \compile{ \expressionSrc_1 = \expressionSrc_2 }}{ \compile{\normalPostSrc} }{ \excPost } \\
+=\\
+ \wpBcSeq{   \begin{array}{l}
+                        \compileExp{\expressionSrc_2 }{\stack{\counter}};\\
+			\instr{store} \ \compile{\expressionSrc_1};
+             \end{array} }{ \compile{\normalPostSrc} }{ \excPost } \\
+\end{array}
+$$
+
+
+
+   \comment{by defintion of the weakest precondition function for \mbox{ \rm \instr{store}} }  
+
+
+$$\begin{array}{l}
+ \wpBcSeq{   \begin{array}{l}
+                      \compileExp{\expressionSrc_2 }{\stack{\counter}};\\
+                     \instr{store} \ \compile{\expressionSrc_1};
+             \end{array} }{ \compile{\normalPostSrc} }{ \excPost }\\
+
+= \\
+
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} } {  \compile{\normalPostSrc}
+                                           \begin{array}{l}
+                                               \substitution{ \counter}{ \counter -1}  \\
+                                               \substitution{ \compileSynt{ \expressionSrc_1} }{ \stack{\counter} }    
+                                           \end{array} } { \excPost }
+
+ \end{array}
+$$
+
+\comment{ as \mbox{ \rm $ \compile{\normalPost} $} does not contain stack counter expressions  from Property \ref{formulaCompProp2} 
+on page \pageref{formulaCompProp2}  }
+
+$$\numConclusion{2}    $$
+$$
+\begin{array}{l} 
+
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} } {  \compile{\normalPostSrc}
+                                           \begin{array}{l}
+                                               \substitution{ \counter}{ \counter -1}  \\
+                                               \substitution{ \compileSynt{ \expressionSrc_1} }{ \stack{\counter} }    
+                                           \end{array} } { \excPost } \\
+=\\
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }
+ \end{array} $$
+
+\comment{from \numConclusion{2} }
+$$\numConclusion{3} $$
+$$
+\begin{array}{l} 
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost } \\
+\\
+=\\
+\\
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }  \wedge \Mytrue
+ \end{array} $$
+
+
+\comment{from Lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack}  and \numConclusion{3} }
+$$\numConclusion{4} $$
+
+$$
+\begin{array}{l} 
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }\wedge \Mytrue  \\
+\\
+=\\
+\\
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }\\
+  \wedge \\
+   \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \stack{\counter} = \compile{\eval{\expressionSrc}}  } { \excPost } 
+ \end{array} $$
+
+\comment{from the properties of \mbox{ \rm \textrm{wp}}   and \numConclusion{4}}
+
+$$\numConclusion{5}$$
+
+$$
+\begin{array}{l} 
+
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost } \\
+     \wedge \\
+   \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \stack{\counter} = \compile{\eval{\expressionSrc}}  } { \excPost }  \\
+\\
+= \\
+\\
+\wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{ 
+\begin{array}{l} 
+     \compile{\normalPostSrc} \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} } \\
+\\
+\wedge \\
+\\
+  \stack{\counter} = \compile{\eval{\expressionSrc}}
+\end{array}  } { \excPost }
+\\
+= \\
+\\
+\wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{ 
+\compile{\normalPostSrc} \substitution{ \compileSynt{ \expressionSrc_1} }{  \compile{\eval{\expressionSrc}} } \\  } { \excPost }
+\end{array} $$
+
+
+\comment{ \mbox{ \rm $ \compile{\normalPostSrc}  $} does not contain stack expressions and so does 
+\mbox{ \rm $\compile{\normalPostSrc} \substitution{ \compileSynt{ \expressionSrc_1}} {  \compile{\eval{\expressionSrc}} }   $ }  and from \numConclusion{1}  and  \numConclusion{5}  by induction hypthesis we have } 
+
+
+$$\numConclusion{6}   $$
+$$
+\begin{array}{l}
+
+
+ \wpiSrc{\expressionSrc_2}{ \normalPostSrc\substitution{\expressionSrc_1 }{\eval{\expressionSrc_2} } }{\excPostSrc} \\
+ \eqModNames \\
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc} 
+\substitution{ \compileSynt{ \expressionSrc_1} }{ \compile{ \eval{\expressionSrc_2 }}  }} { \excPost }
+ \end{array} $$
+
+\comment{from \numConclusion{6} we conclude that this case holds }
+
+
+
+
+
+    \item \textbf{instance field assignment} \\ 
+
+  
+  \comment{by definition of the weakest precondition function for field assignment}
+   
+$$ \numConclusion{1}  $$
+
+  $$ \begin{array}{l} \wpiSrc{ \expressionSrc_1.f = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = \\
+               \\
+  \wpiSrc{\expressionSrc_1}{  
+\begin{array}{l}
+         \Mynull \neq \eval{\expressionSrc_1} \Rightarrow \normalPostSrc \substitution{f}{f \oplus [ \eval{\expressionSrc_1} \rightarrow \eval{\expressionSrc_2}]}   \\
+          \wedge \\
+        \Mynull = \eval{\expressionSrc_1} \Rightarrow  \excPostSrc(\mbox{ \rm  \texttt{NullPointerExc} } ,  \expressionSrc_1.f = \expressionSrc_2 ) 
+  \end{array}
+}{\excPostSrc} \\
+
+
+          \end{array}
+	$$  
+
+
+\comment{by the definition of the compiler function }
+
+
+
+$$\begin{array}{l}
+\wpBcSeq{ \compile{\expressionSrc_1.f = \expressionSrc_2}}{\normalPostSrc }{ \excPostSrc } \\
+= \\
+\wpBcSeq{ \begin{array}{l}
+                        \compileExp{\expressionSrc_1}{\stack{\counter}};\\
+			\compileExp{\expressionSrc_2}{\stack{\counter - 1}};\\
+			\instr{putfield} \ f;
+             \end{array}  }{ \compile{\normalPostSrc} }{ \excPost } 
+\end{array}
+$$
+
+
+
+\comment{by the definition of the weakest precondition for  \mbox{ \rm \instr{putfield} } } 
+
+$$
+\begin{array}{l}
+= \\
+\wpBcSeq{ \begin{array}{l}
+                          \compileExp{\expressionSrc_1}{\stack{\counter}};\\
+			\compileExp{\expressionSrc_2}{\stack{\counter - 1}};\\
+			\end{array}}  { \\ 
+    \spaceWpBc     \Mynull =  \stack{\counter -1}  \Rightarrow \compile{ \normalPostSrc} \begin{array}{l}
+                    \substitution{\counter}{ \counter -2}  \\
+                    \substitution{f}{ f\oplus [ \stack{\counter -1 } \rightarrow \stack{\counter}  ] } \end{array} \\
+    \spaceWpBc    \wedge \\		    
+    \spaceWpBc    \Mynull =  \stack{\counter -1}  \Rightarrow  \excPost( \mbox{ \rm  \texttt{NullPointerExc} } ,  \mbox{ \rm  \instr{putfield} \ f } ) 
+
+
+ } {\\
+      \spaceWpBc     \excPost } 
+\end{array}
+$$
+
+
+
+\comment{ $\compile{\normalPostSrc}$ does not contain stack counter expressions from Property \ref{formulaCompProp2} 
+on page \pageref{formulaCompProp2} }
+
+$$
+\begin{array}{l}
+= \\
+\wpBcSeq{ \begin{array}{l}
+                          \compileExp{\expressionSrc_1}{\stack{\counter}};\\
+			\compileExp{\expressionSrc_2}{\stack{\counter - 1}};\\
+			\end{array}}  { \\ 
+    \spaceWpBc   \Mynull =  \stack{\counter -1}  \Rightarrow \compile{ \normalPostSrc}
+                 
+                    \substitution{f}{ f\oplus [ \stack{\counter -1 } \rightarrow \stack{\counter}  ] }  \\
+    \spaceWpBc    \wedge \\		    
+    \spaceWpBc  \Mynull =  \stack{\counter -1}  \Rightarrow  \excPost( \mbox{ \rm  \texttt{NullPointerExc} } ,  \mbox{ \rm  \instr{putfield} \ f } ) 
+
+
+ } {\\
+      \spaceWpBc     \excPost } 
+\end{array}
+$$
+
+
+
+
+
+\comment{by definition of the weakest precondition function for a sequence of bytecode instructions }
+$$ \numConclusion{2}  $$
+$$
+\begin{array}{l}
+ = \\
+\wpBcSeq{  \compileExp{\expressionSrc_1}{\stack{\counter - 1}} }
+	{ \\
+          \spaceWpBc   \wpBcSeq{\compileExp{\expressionSrc_2}{\stack{\counter }} } { \\
+
+    \spaceWpBc \spaceWpBc  \Mynull \neq \stack{\counter -1} \Rightarrow \compile{ \normalPostSrc}
+                 
+                    \substitution{f}{ f\oplus [ \stack{ \counter - 1 } } \rightarrow \stack{\counter}   ]   \\
+    \spaceWpBc  \spaceWpBc   \wedge \\		    
+    \spaceWpBc  \spaceWpBc   \Mynull = \stack{\counter -1} \Rightarrow  \excPost( \mbox{ \rm  \texttt{NullPointerExc} } ,  \mbox{ \rm  \instr{putfield} \ f } ) 
+     } { \\  
+                         \spaceWpBc \spaceWpBc  \excPost }} {  \\ 
+        \spaceWpBc \excPost}
+
+\end{array}
+$$
+
+\comment{applying twice the lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack}  }
+
+$$\numConclusion{3}  $$
+
+$$
+\begin{array}{l}
+ = \\
+\wpBcSeq{  \compileExp{\expressionSrc_1}{\stack{\counter - 1}} }
+	{ \\
+          \spaceWpBc   \wpBcSeq{\compileExp{\expressionSrc_2}{\stack{\counter }} } { \\
+
+    \spaceWpBc \spaceWpBc  \Mynull \neq  \stack{\counter -1} \Rightarrow \compile{ \normalPostSrc}
+                 
+                    \substitution{f}{ f\oplus[\stack{ \counter - 1 }}\rightarrow\stack{\counter}]  \\
+    \spaceWpBc  \spaceWpBc   \wedge \\		    
+    \spaceWpBc  \spaceWpBc   \Mynull =\stack{\counter-1}\Rightarrow\excPost( \mbox{ \rm  \texttt{NullPointerExc} } ,  \mbox{ \rm  \instr{putfield} \ f } ) \\
+       \spaceWpBc  \spaceWpBc   \wedge \\	
+       \spaceWpBc  \spaceWpBc \stack{\counter} = \compile{\eval{\expressionSrc_2}}   
+     } { \\  
+                         \spaceWpBc \spaceWpBc  \excPost } \\
+     \spaceWpBc   \wedge \\
+      \spaceWpBc  \stack{\counter} = \compile{\eval{\expressionSrc_1}} } {  \\ 
+        \spaceWpBc \excPost}
+
+\end{array}
+$$
+
+
+\comment{from lemma \ref{stackCounter} on page \pageref{stackCounter} }
+$$\numConclusion{4}  $$
+$$
+\begin{array}{l}
+ = \\
+\wpBcSeq{  \compileExp{\expressionSrc_1}{\stack{\counter - 1}} }
+	{ \\
+          \spaceWpBc   \wpBcSeq{\compileExp{\expressionSrc_2}{\stack{\counter }} } { \\
+
+    \spaceWpBc \spaceWpBc  \Mynull \neq  \stack{\counter -1} \Rightarrow \compile{ \normalPostSrc}
+                 
+                    \substitution{f}{ f\oplus[\stack{ \counter - 1 }}\rightarrow\stack{\counter}]  \\
+    \spaceWpBc  \spaceWpBc   \wedge \\		    
+    \spaceWpBc  \spaceWpBc   \Mynull =\stack{\counter-1}\Rightarrow\excPost( \mbox{ \rm  \texttt{NullPointerExc} } ,  \mbox{ \rm  \instr{putfield} \ f } ) \\
+    \spaceWpBc  \spaceWpBc   \wedge \\	
+    \spaceWpBc  \spaceWpBc \stack{\counter} = \compile{\eval{\expressionSrc_2}}   \\
+    \spaceWpBc  \spaceWpBc     \wedge \\
+    \spaceWpBc  \spaceWpBc  \stack{\counter - 1} = \compile{\eval{\expressionSrc_1}}    
+     } { \\  
+                         \spaceWpBc \spaceWpBc  \excPost } \\
+       } {  \\ 
+        \spaceWpBc \excPost}
+
+\end{array}
+$$
+
+$$
+\begin{array}{l}
+= \\
+\\
+\wpBcSeq{  \compileExp{\expressionSrc_1}{\stack{\counter - 1}} }
+	{ \\
+          \spaceWpBc   \wpBcSeq{\compileExp{\expressionSrc_2}{\stack{\counter }} } { \\
+
+    \spaceWpBc \spaceWpBc  \Mynull \neq \compile{\eval{\expressionSrc_1}}  \Rightarrow \compile{ \normalPostSrc}
+                 
+                    \substitution{f}{ f\oplus[\compile{\eval{\expressionSrc_1}} \rightarrow \compile{\eval{\expressionSrc_2}} ]}  \\
+    \spaceWpBc  \spaceWpBc   \wedge \\		    
+    \spaceWpBc  \spaceWpBc   \Mynull = \compile{\eval{\expressionSrc_1}} \Rightarrow\excPost( \mbox{ \rm  \texttt{NullPointerExc} } ,  \mbox{ \rm  \instr{putfield} \ f } ) \\
+     } { \\  
+        \spaceWpBc \spaceWpBc  \excPost } }
+        {  \\ 
+        \spaceWpBc \excPost}
+\end{array}
+$$
+
+\comment{ from \numConclusion{1}  and \numConclusion{4} applying the induction hypothesis we obtain that the theorem holds in the case
+of instance field assignment   }
+
+        
+
+\end{description}
+
+
+ \item \textbf{field access}
+
+ \item \textbf{arithmetic expressions }
+
+\comment{by definition of the weakest precondition function for arithmetic expressions}
+$$ \begin{array}{l}
+	              \wpiSrc{ \expressionSrc_1 \ op \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc } =  \\
+		      \wpiSrc{ \expressionSrc_1  }{\wpiSrc{\expressionSrc_2 }{ \normalPostSrc }{ \excPostSrc }  }{ \excPostSrc }
+		\end{array}
+             $$
+\comment{by defintition of the compiler in section \ref{compile} } 
+$$ \numConclusion{0}$$
+$$
+\begin{array}{l}
+\wpBcSeq{ \compile{\expressionSrc_1 \ op \ \expressionSrc_2 } }{ \compile{ \normalPostSrc } }{ \compile{ \excPostSrc} } \\
+= \\ 
+\wpBcSeq{ \begin{array}{l}
+                       \compileExp{ \expressionSrc_1}{\stack{\counter - 1}}; \\
+                       \compileExp{ \expressionSrc_2}{\stack{\counter}}; \\
+                       \instr{op}
+                 \end{array}         }{ \\
+            \spaceWpBc       \compile{ \normalPostSrc } }{ \\
+       \spaceWpBc    \excPost } 
+
+\end{array}
+$$
+
+
+\comment{from the definition of the weakest precondition of the \mbox{ \rm \instr{op}} instruction }
+$$ \numConclusion{1}$$
+$$ 
+\begin{array}{l}
+
+= \\
+ \wpBcSeq{ \begin{array}{l}
+                        \compileExp{ \expressionSrc_1}{\stack{\counter - 1}}; \\
+                       \compileExp{ \expressionSrc_2}{\stack{\counter}}; \\
+                    
+                      
+            \end{array}         }{ \\
+                      \spaceWpBc     \compile{ \normalPostSrc } \begin{array}{l}
+								       \substitution{ \counter}{\counter -1} \\ 
+								       \substitution{\stack{\counter - 1}  } { \stack{\counter } \ op \ \stack{\counter - 1 }  }
+								   \end{array}}{ \\
+                 \spaceWpBc     \compile{ \excPostSrc} }
+\end{array}
+ $$
+
+
+%\comment{ by the definition of section \ref{compile}, before the execution of the instruction \mbox{ \rm $\instr{op}$} the first two stack top elements are  }
+%$$ \numConclusion{2}$$
+%$$
+%\begin{array}{l}
+%\stack{\counter} = \compile{\eval{ \expressionSrc_2}} \\
+%\stack{\counter - 1 } = \compile{\eval{ \expressionSrc_1}}
+%\end{array}
+%$$
+
+% \comment{ from  \numConclusion{2} and \numConclusion{1}  }
+% $$ 
+% \begin{array}{l}
+%= \\
+% \wpBcSeq{ \begin{array}{l}
+%                       \compile{ \expressionSrc_1}; \\
+%                       \compile{ \expressionSrc_2}; \\
+%            \end{array}         }{  \compile{ \normalPostSrc } 
+%                                   \begin{array}{l}
+%				        \substitution{ \counter}{\counter -1} \\ 
+%                                        \substitution{\stack{\counter - 1}  } { \compile{\eval{ \expressionSrc_2}}  \ op \  \compile{\eval{ \expressionSrc_1}} }  
+%                                   \end{array} }  { \compile{ \excPostSrc} } 
+%\end{array}
+% $$
+
+\comment{ the formula \mbox{ \rm $\compile{\psi}$} does not contain \mbox{ \rm \counter } and \mbox{ \rm \stack{ \counter} }   expressions from Property \ref{formulaCompProp2} 
+on page \pageref{formulaCompProp2}  } 
+
+$$ \numConclusion{2}$$
+
+$$
+\begin{array}{l}
+= \\
+ \wpBcSeq{ \begin{array}{l} 
+                       \compileExp{ \expressionSrc_1}{\stack{\counter - 1}}; \\
+                       \compileExp{ \expressionSrc_2}{\stack{\counter}}; \\
+                                              
+            \end{array}         }{ \\
+              \spaceWpBc   \compile{ \normalPostSrc } }  { \\
+              \spaceWpBc  \excPostSrc } 
+\end{array}
+$$
+
+\comment{from \numConclusion{2}, as \mbox{ \rm $\compile{ \expressionSrc_1}  $} and \mbox{ \rm $\compile{ \expressionSrc_2}  $}  execute   sequentially} 
+
+$$ \numConclusion{3}$$
+$$
+\begin{array}{l}
+= \\
+ \wpBcSeq{\compile{ \expressionSrc_1} }{ \wpBcSeq{\compile{ \expressionSrc_2} }{ \compile{ \normalPostSrc } }{ \excPost }  }  {  \excPost } 
+\end{array}
+$$
+
+\comment{by induction hypothesis over the structure of the source statements }
+
+$$ \numConclusion{4}$$
+
+$$
+\begin{array}{l}
+\wpiSrc{\expressionSrc_2 }{ \normalPostSrc }{ \excPostSrc } \\
+\eqModNames \\ 
+\wpBcSeq{\compileExp{\expressionSrc_2}{\stack{\counter - 1}}}{\compile{\normalPostSrc} }{ \excPost}  \\
+\end{array}
+$$
+
+\comment{by induction hypothesis over the structure of the source statements and \numConclusion{5}}
+
+$$ \numConclusion{5}$$
+
+$$
+\begin{array}{l}
+ \wpiSrc{ \expressionSrc_1  }{\wpiSrc{\expressionSrc_2 }{ \normalPostSrc }{ \excPostSrc }  }{ \excPostSrc } \\
+\eqModNames \\ 
+ \wpBcSeq{\compileExp{ \expressionSrc_1}{\stack{\counter}} }{ \\
+     \spaceWpBc        \wpBcSeq{\compile{ \expressionSrc_2} }{ \\
+                       \spaceWpBc    \spaceWpBc  \compile{ \normalPostSrc } }{ \\
+     \spaceWpBc  \spaceWpBc    \excPost }  }  
+{ \\
+ \spaceWpBc \excPost } 
+\end{array}
+$$
+
+
+\comment{ from \numConclusion{0}, \numConclusion{3} and  \numConclusion{5} the property holds in the case of arithmetic expression }
+
+ \item \textbf{cast expressions}
+
+\comment{by definition of the weakest precondition function for cast expressions}
+
+ $$ \begin{array}{l} \wpiSrc{ ( \mbox { \rm \texttt{Class} } ) \ \expressionSrc  }{\normalPostSrc }{ \excPostSrc } = \\
+	           \wpiSrc{ \expressionSrc } {  
+                    \begin{array}{l}
+                     \typeof{\expressionSrc }  <:  \texttt{Class}  \Rightarrow   \\
+ \spaceWpBc     \spaceWpBc \wpiSrc{ \expressionSrc  }{ \normalPostSrc }{ \excPostSrc } \\
+		     \wedge \\
+		  \neg  \typeof{ \expressionSrc } <:   \texttt{Class}  \Rightarrow  \\ 
+ \spaceWpBc     \spaceWpBc  \excPostSrc( \mbox{ \rm \tt{ClassCastException} }, \mbox{ \rm \tt{Class} }  \ \expressionSrc  )
+                    \end{array}  } { \excPostSrc }  
+\end{array} $$
+
+\comment{by the definition of the compiler }
+
+
+
+$$
+\begin{array}{l}
+\wpBcSeq{\compile{ ( \mbox{ \rm \texttt{Class} } ) \ \expressionSrc  } }{\compile{\normalPostSrc  } }{\excPost } \\
+=\\
+\wpBcSeq{  \begin{array}{l}  
+                 \compileExp{\expressionSrc}{\stack{\counter}};\\
+                   \instr{checkCast } \ \mbox{ \rm \texttt{Class }};
+              \end{array}  }{ \\
+        \spaceWpBc       \compile{\normalPostSrc  } }{\\
+         \spaceWpBc   \excPost }\end{array}$$
+
+\comment{from the definition of the weakest precondition function for \mbox{ \rm  \instr{checkCast} } }
+
+$$\numConclusion{1}$$
+$$ \begin{array}{l} \wpBcSeq{\compileExp{\expressionSrc}{\stack{\counter}} } 
+           { \\
+          \spaceWpBc  \begin{array}{l}
+		    \typeof{\stack{\counter}} <: \mbox{ \rm \texttt{Class }} \Rightarrow \\
+                        \spaceWpBc     \spaceWpBc    \compile{\normalPostSrc  }  \\
+		    \wedge \\
+                   \neg ( \typeof{\stack{\counter}} <: \mbox{ \rm \texttt{Class } } ) \Rightarrow \\ 
+                      \spaceWpBc      \spaceWpBc    \excPost( \mbox{\rm \texttt{ClassCastException}}, 
+\mbox{ \rm \instr{checkCast}})) 
+             \end{array} }
+           { \\
+           \spaceWpBc   \excPost }
+\end{array} $$
+
+\comment{ from lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack} and \numConclusion{1} }
+$$\numConclusion{2}$$
+
+$$ \begin{array}{l} 
+
+=\\
+ \wpBcSeq{\compileExp{\expressionSrc}{\stack{\counter}} } 
+           { \\
+          \spaceWpBc  \begin{array}{l}
+		    \typeof{\stack{\counter}} <: \mbox{ \rm \texttt{Class }} \Rightarrow \\
+                        \spaceWpBc \spaceWpBc    \compile{\normalPostSrc  }  \\
+		    \wedge \\
+                   \neg ( \typeof{\stack{\counter}} <: \mbox{ \rm \texttt{Class } } ) \Rightarrow \\ 
+                      \spaceWpBc  \spaceWpBc  \excPost( \mbox{\rm \texttt{ClassCastException}}, 
+\mbox{ \rm \instr{checkCast}})) \\
+                 \wedge \\ 
+                  \stack{\counter} = \compile{\eval{\expressionSrc_1}}
+             \end{array} }
+           { \\
+           \spaceWpBc   \excPost }
+\end{array} $$
+
+$$\numConclusion{3}$$
+$$ \begin{array}{l} 
+= \\
+\wpBcSeq{\compileExp{\expressionSrc}{\stack{\counter}} } 
+           { \\
+          \spaceWpBc  \begin{array}{l}
+		    \typeof{\compile{\eval{\expressionSrc_1}} } <: \mbox{ \rm \texttt{Class }} \Rightarrow \\
+                        \spaceWpBc \spaceWpBc    \compile{\normalPostSrc  }  \\
+		    \wedge \\
+                   \neg ( \typeof{\compile{\eval{\expressionSrc_1}}  } <: \mbox{ \rm \texttt{Class } } ) \Rightarrow \\ 
+                      \spaceWpBc  \spaceWpBc  \excPost( \mbox{\rm \texttt{ClassCastException}}, 
+\mbox{ \rm \instr{checkCast}})) \\
+                
+                
+             \end{array} }
+           { \\
+           \spaceWpBc   \excPost }
+\end{array} $$
+
+\comment{ from the induction hypothesis  }
+
+
+$$
+\begin{array}{l}
+ \wpiSrc{ \expressionSrc } { \\ 
+                    \begin{array}{l}
+                    \typeof{\expressionSrc } <:\mbox { \rm \texttt{Class} }  \Rightarrow  \\
+                \spaceWpBc     \spaceWpBc  \wpiSrc{ \expressionSrc  }{ \normalPostSrc }{ \excPostSrc } \\
+		     \wedge \\
+		    \neg \   \typeof{ \expressionSrc } <:  \mbox { \rm \texttt{Class} } \Rightarrow \\
+                  \spaceWpBc     \spaceWpBc     \excPostSrc( \mbox{ \rm \texttt{ClassCastException}, \instr{checkCast}} )
+                    \end{array}  } { \\ \excPostSrc } \\
+	            
+ 
+\eqModNames \\
+\wpBcSeq{\compileExp{\expressionSrc}{\stack{\counter}}  } 
+           { \\ 
+       \spaceWpBc       \begin{array}{l}
+		    \typeof{\stack{\counter}} <:  \texttt{Class } \Rightarrow  \\
+                   \spaceWpBc     \spaceWpBc      \compile{\normalPostSrc  }  \\
+		    \wedge \\
+                   \neg ( \typeof{  \compile{\eval{\expressionSrc }} } <:\texttt{Class }  ) \Rightarrow  \\
+ \spaceWpBc     \spaceWpBc \excPost( \mbox{ \rm \tt{ClassCastException} , \instr{checkCast} } ) 
+             \end{array} }
+           { \\         \spaceWpBc   \excPost }
+\end{array}$$ 
+
+\comment{ we can conclude that this case holds  }
+
+
+\end{description}
+
+
+
+
+\item \textbf{Statements}
+     \begin{description}
+
+
+           \item\textbf{  compositional statements}
+	      $$\wpiSrc{ \stmt_1;\stmt_2} { \psi} {\excPostSrc} = $$
+	      \comment{by defintition}
+              $$ \wpiSrc{\stmt_1 }{\wpiSrc{\stmt_2 }{\psi}{ \excPostSrc}} { \excPostSrc} =  $$
+	      \comment{applying the induction hypothesis}
+
+	     \begin{itemize}
+	     \item $ \wpBcSeq{\compile{\stmt_2}}{ \compile{\psi}} {\excPost} $ does not contain stack expressions
+	      \item $$ \numConclusion{1} \  \wpiSrc{\stmt_2 }{\psi }{ \excPostSrc}\eqModNames 
+\wpBcSeq{\compile{\stmt_2}}{ \compile{\psi}} {\excPost}  $$
+              \end{itemize}
+	      
+	      \comment{applying the induction hypothesis and from \numConclusion{1} we conclude  }
+	      $$ \numConclusion{2}$$
+	      $$
+	      \begin{array}{l}
+		      \wpiSrc{\stmt_1 }{\wpiSrc{\stmt_2 }{\psi}{ \excPostSrc}} { \excPostSrc}\\  \eqModNames  \\
+		       \wpBcSeq{\compile{\stmt_1} }{\wpBcSeq{\compile{\stmt_2} }{\compile{\psi}}{ \excPost}} {\compile{ \excPostSrc}}
+                 \end{array}$$
+	    
+
+
+
+
+	    
+
+
+
+	    \item \textbf{ conditional statement}
+
+We suppose here that the condition of the statement is a boolean variable or constant (the case
+ when the condition is a relation expression is similar) 
+ $$ \wpiSrc{\Myif \ (\expressionSrc) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \} } { \psi} {\excPostSrc} = $$
+   \comment{by definition}
+  $$ \numConclusion{0} \wpiSrc{ \expressionSrc }{ 
+       \begin{array}{l}  
+	 \eval{\expressionSrc } = \Mytrue \Rightarrow \wpiSrc{\stmt_1 }{\normalPostSrc }{ \excPost } \\
+	 \wedge \\
+	 \eval{\expressionSrc } = \Myfalse \Rightarrow \wpiSrc{\stmt_2 }{\normalPostSrc }{ \excPost } \\
+	 \end{array}
+     } {\excPostSrc }
+     $$
+
+
+\comment{by induction hypothesis}
+$$\numConclusion{1} $$
+
+\begin{itemize}
+	     \item $ \wpBcSeq{\compile{\stmt_1}}{ \compile{\psi}} {\excPost} $ does not contain stack expressions
+\item $$ 
+ \begin{array}{l}
+      \wpiSrc{\stmt_1 }{\normalPostSrc }{ \excPost }\\  
+      \eqModNames  \\ 
+      \wpBcSeq{\compile{\stmt_1} }{\compile{\normalPostSrc} }{
+\compile{ \excPost} }
+  \end{array}
+$$
+\end{itemize}
+\comment{ from \numConclusion{1}  }
+
+$$\numConclusion{1.1}$$
+$$ 
+ \begin{array}{l}
+      \wpiSrc{\stmt_1 }{\normalPostSrc }{ \excPost }\\  
+      \eqModNames  \\ 
+      \wpBcSeq{\compile{\stmt_1} }{\compile{\normalPostSrc} }{
+\compile{ \excPost} }\substitution{\counter}{ \counter - 1}
+  \end{array}
+$$
+
+\comment{from \numConclusion{1.1}}
+$$\numConclusion{1.2}$$
+$$ 
+  \begin{array}{l}
+     \eval{\expressionSrc } = \Mytrue \Rightarrow \wpiSrc{\stmt_1 }{\normalPostSrc }{ \excPostSrc }\\  
+      \eqModNames  \\ 
+      \compile{\eval{\expressionSrc }} = \compile{\Mytrue} \Rightarrow \wpBcSeq{\compile{\stmt_1} }{\compile{\normalPostSrc} }{
+ \excPost }\substitution{\counter}{ \counter - 1}
+  \end{array}
+$$
+
+
+
+\comment{by induction hypothesis}
+$$\numConclusion{2} $$
+$$
+\begin{array}{l}
+       \wpiSrc{\stmt_2 }{\normalPostSrc }{ \excPostSrc }\\ 
+       \eqModNames  \\ 
+       \wpBcSeq{\compile{\stmt_2} }{\compile{\normalPostSrc} }{
+ \excPost }
+  \end{array} $$
+
+
+\comment{from lemme \ref{interProp} on page \pageref{interProp}} 
+
+$$\numConclusion{2.1} $$
+$$
+\begin{array}{l}
+       \wpiSrc{\stmt_2 }{\normalPostSrc }{ \excPostSrc }\\ 
+       =  \\ 
+       \wpBcSeq{\compile{\stmt_2;}\instr{ goto } \ l }{\compile{\normalPostSrc} }{ \excPost }
+  \end{array} $$
+
+ 
+
+\comment{ from \numConclusion{2.1} as  \mbox{ \rm $ \wpBcSeq{\compile{\stmt_2};\instr{ goto } \ l }{\compile{\normalPostSrc} } $} does not contain the \mbox{ \rm $ \counter $} expression from Property \ref{formulaCompProp2} 
+on page \pageref{formulaCompProp2}  }
+
+$$\numConclusion{2.2}$$
+$$\begin{array}{l}
+       \wpiSrc{\stmt_2 }{\normalPostSrc }{ \excPostSrc }\\ 
+       =  \\ 
+       \wpBcSeq{\compile{\stmt_2;}\instr{goto} \ l }{\compile{\normalPostSrc} }{\excPost } \\
+           \Myspace \Myspace  \Myspace \Myspace     \Myspace \Myspace  \substitution{\counter}{ \counter - 1}
+  \end{array} $$
+
+
+
+
+
+
+
+$$\numConclusion{2.3}$$
+$$
+\begin{array}{l}
+     \eval{\expressionSrc } = \Myfalse \Rightarrow   \wpiSrc{\stmt_2 }{\normalPostSrc}{\excPostSrc } \\  
+     \eqModNames  \\ 
+      \compile{\eval{\expressionSrc }} = \compile{\Myfalse} \Rightarrow   \wpBcSeq{\compile{\stmt_2}\instr{ goto } \ l }{\compile{\normalPostSrc} }{
+ \excPost } \\
+\Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1}
+  \end{array} $$
+
+
+
+\comment{from \numConclusion{2.3} and \numConclusion{1.2}  }
+$$\numConclusion{3}$$
+$$
+  \begin{array}{l}
+      \eval{\expressionSrc } = \Myfalse \Rightarrow   \wpiSrc{\stmt_2 }{\normalPostSrc }{
+\excPostSrc } \\  \wedge   \\
+   \eval{\expressionSrc } = \Mytrue \Rightarrow   \wpiSrc{\stmt_1}{\normalPostSrc }{ \excPost } \\
+\\
+     \eqModNames  \\ 
+\\  
+    \compile{\eval{\expressionSrc }} = \compile{\Myfalse} \Rightarrow   \wpBcSeq{\compile{\stmt_2}\instr{ goto } \ l }{\compile{\normalPostSrc} }{
+\compile{ \excPost} } \\
+\Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1}  \\
+\wedge \\  
+   \compile{\eval{\expressionSrc }} = \compile{\Mytrue} \Rightarrow   
+\wpBcSeq{\compile{\stmt_1}}{\compile{\normalPostSrc} }{\compile{ \excPost} } \\
+\Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1}
+
+  \end{array} $$
+
+\comment{from the definitions of the predicate transformer for the bytecode instruction \instr{ if\_cond}  }
+
+$$ \numConclusion{4} $$
+$$
+\begin{array}{l}
+  \begin{array}{l}  \wpBcSeq{
+      \begin{array}{l}
+          \compileExp{ \expressionSrc}{\stack{\counter}};\\
+           \instr{ if\_cond \ l };\\
+            \compile{\stmt_2};\\
+	    goto \ l; \\
+	    \compile{\stmt1}; \\
+	    l: \ldots \\
+      \end{array}}{\compile{\normalPostSrc} }{ \excPost } \\  
+
+
+  \end{array}  \\
+\\
+= \\
+\\
+  \begin{array}{l}  \wpBcSeq{  \compileExp{ \expressionSrc}{\stack{\counter}}} {\\
+     \spaceWpBc 
+     \begin{array}{l}
+     \compile{\stack{\counter}} = \compile{\Mytrue} \Rightarrow \wpBcSeq{\compile{\stmt_1} } { \compile{\normalPostSrc} }{
+     \compile{ \excPost} } \\
+     \Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1} \\
+     \wedge \\
+     \compile{\stack{\counter}}  = \compile{\Myfalse} \Rightarrow \wpBcSeq{\compile{\stmt_2;} goto \ l }{\compile{\normalPostSrc} }{
+     \compile{ \excPost} } \\
+     \Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1} 
+     \end{array}   } {\\
+     \spaceWpBc \excPost}
+  
+  \end{array}
+\end{array}
+$$
+
+
+\comment{ from \numConclusion{4} and lemma \ref{exprValueOnStack}  on page \pageref{exprValueOnStack} }
+$$ \numConclusion{5} $$
+$$\begin{array}{l}
+= \\
+\\
+  \begin{array}{l}  \wpBcSeq{  \compileExp{ \expressionSrc}{\stack{\counter}}} {\\
+     \spaceWpBc 
+     \begin{array}{l}
+     \compile{\stack{\counter}} = \compile{\Mytrue} \Rightarrow \wpBcSeq{\compile{\stmt_1} } { \compile{\normalPostSrc} }{ \excPost} \\
+     \Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{\counter - 1} \\
+     \wedge \\
+     \compile{\stack{\counter}}  = \compile{\Myfalse} \Rightarrow \wpBcSeq{\compile{\stmt_2;} goto \ l }{\compile{\normalPostSrc} }{\excPost } \\
+     \Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{\counter - 1} \\
+     \wedge \\
+     \stack{\counter} = \compile{\eval{\expressionSrc}}
+     \end{array}   } {\\
+     \spaceWpBc \excPost}
+  \end{array}
+\end{array}
+$$
+
+
+$$ \numConclusion{6} $$
+
+$$\begin{array}{l}
+= \\
+\\  \wpBcSeq{  \compileExp{ \expressionSrc}{ \stack{\counter}};}{ \\
+\spaceWpBc
+\begin{array}{l}
+ \compile{\eval{\expressionSrc } } = \compile{\Mytrue} \Rightarrow \wpBcSeq{\compile{\stmt_1} } {\compile{\normalPostSrc} }{
+\compile{ \excPost} } \\
+\Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1} \\
+\wedge \\
+\compile{\eval{\expressionSrc } }  = \compile{\Myfalse} \Rightarrow \wpBcSeq{\compile{\stmt_2;} goto \ l }{\compile{\normalPostSrc} }{
+\compile{ \excPost} } \\
+\Myspace \Myspace \Myspace\Myspace \Myspace \Myspace \Myspace  \substitution{\counter}{ \counter - 1} 
+\end{array}} { \\
+ \spaceWpBc \excPost }  
+ \end{array}$$
+
+
+
+\comment{ from \numConclusion{0}, \numConclusion{6}  and \numConclusion{3} applying the induction hypothesis}
+
+$$\begin{array}{l}
+\wpiSrc{\Myif \ (\expressionSrc) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  }{\normalPostSrc }{\excPost } \\
+\eqModNames \\ 
+ \wpBcSeq{  \compile{ \Myif \ (\expressionSrc) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}    }      }{\compile{\normalPostSrc} }{\compile{ \excPost} } 
+\end{array} $$
+
+\item \textbf{ try catch statement}
+
+   $$ \begin{array}{l}   
+              \wpiSrc{ \try \ \{ \stmt_1 \} \ \catch (Class \ )\ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} = \\
+              \\
+	      \wpiSrc{ \stmt_1}{ \normalPostSrc}{ \excPostSrc \oplus [Class, \stmt_1   \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ] }
+       \end{array} 
+   $$
+
+\comment{We now show that for every exception the function \\
+\mbox{ \rm $\excPostSrc \oplus [Class \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ] (\stmt_1, \mbox{ \rm \texttt{Exc}})$}
+ is syntactically equivalent to \mbox{ \rm  $\excPost (\compile{\stmt_1}, \mbox{ \rm \texttt{Exc}}) $ }.
+By definition, if an exception of type \mbox{ \rm \texttt{Exc}} is thrown  during the execution of \mbox{ \rm $\stmt_1$}, we have the following:  }  
+
+$$\numConclusion{1} \   $$
+$$ \begin{array}{l}
+\excPostSrc \oplus [\texttt{Class} \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ]  (\stmt_1 , \mbox{ \rm \texttt{Exc}})  =\\
+\left\{\begin{array}{ll} 
+     \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc} & if \ \texttt{Exc} <: \texttt{Class} \\
+& \\
+     \wpiSrc{ \mbox{ \rm handler } }{ \normalPostSrc}{\excPostSrc} & if \  \neg \mbox{ \rm (\texttt{Exc}} <: \texttt{Class} ) \ and \ \\
+                                                    & \mbox{ \rm \texttt{Exc}} \ is \ handled \ by \  \mbox{ \rm handler} \\
+& \\
+      \excPostSpecSrc_{\tt{m}}(\texttt{Exc} )        & else  
+\end{array} \right.
+\end{array}  $$
+
+\textit{\{ by definition, if an exception of type \mbox{\rm \texttt{Exc}} is thrown  during the execution of $\compile{\stmt_1}$ at instruction at index $ind$ as we know that
+an exception handler $\compile{\stmt_2}$ for this exception exists \} }  
+$$ \numConclusion{2} $$
+$$\excPost ( \mbox{\rm \texttt{Exc}}, ind ) =
+\left\{\begin{array}{ll} 
+\wpi{\compile{\stmt_2}}{ \compile{\normalPostSrc}}{\excPost}  & if \ \mbox{\rm \texttt{Exc}}  <: \mbox{\rm \texttt{Class}} \\
+& \\
+\wpi{\compile{\mbox{ \rm handler} }}{ \compile{\normalPostSrc}}{\excPost}  & if \ \neg ( \mbox{\rm \texttt{Exc}} <: \mbox{\rm \texttt{Class}} ) \ and \ \\
+                                                              &  \mbox{\rm \texttt{Exc}} \ is \ handled \ by \  \compile{\mbox{ \rm handler} }  \\
+& \\
+ \excPostSpec_{\tt{m}}( \mbox{\rm \texttt{Exc}}  )        & else  
+\end{array}\right.   $$
+
+
+\comment{by induction hypothesis } 
+ $$\numConclusion{3}  $$
+$$
+\begin{array}{l}
+ \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc} \\
+\eqModNames \\
+
+\wpi{\compile{\stmt_2}}{ \compile{\normalPostSrc}}{\excPost} \\
+\end{array}
+$$
+
+
+\comment{from  \numConclusion{1},\numConclusion{2} and \numConclusion{3} } 
+ $$\numConclusion{4}  $$
+$$
+\begin{array}{l}
+\forall  \mbox{\rm \texttt{Exc} } \\
+      \excPostSrc \oplus [ \mbox{\rm \texttt{Class}} \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ] 
+(\mbox{\rm \texttt{Exc}}  , \stmt_1)\\
+ \\
+      =^{mod \ names} \\
+\\   
+  \excPost( \mbox{\rm \texttt{Exc} }, \compile{ \stmt_1}   )
+\end{array}
+ $$
+
+\comment{from \numConclusion{4} and by induction hypothesis }
+
+$$\numConclusion{5}   $$
+$$\begin{array}{l} 
+
+ \wpiSrc{ \stmt_1}{ \normalPostSrc}{ \excPostSrc \oplus [Class, \stmt_1 \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ] } \\
+  \eqModNames   \\
+ \wpBcSeq{ \begin{array}{l}
+                   \compile{\stmt_1} \\
+		   goto \ l; \\
+		       ...\\
+		       l: 
+           \end{array} } { \compile{\normalPostSrc}}{\excPost}
+\end{array} $$
+
+\comment{from \numConclusion{5} and the definition of the weakest precondition} 
+
+
+$$\begin{array}{l} 
+ \wpiSrc{ \try \{ \stmt_1 \} \catch (\mbox{ \rm \texttt{Class}} ) \{ \stmt_2 \} }{ \normalPostSrc}{ \excPostSrc  } \\
+  \eqModNames   \\
+ \wpBcSeq{ \begin{array}{l}
+                   \compile{\stmt_1} \\
+		   goto \ l; \\
+                   \compile{\stmt_2} \\
+                    goto \ l; \\ 
+		    ...\\
+		    l: 
+           \end{array} } { \compile{\normalPostSrc}}{\excPost}
+\end{array} $$
+
+
+
+ \item \textbf{try finally statement}
+
+\comment{by definition  }
+
+
+$$
+\begin{array}{l}
+\wpiSrc{ \try \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} }{\normalPost}{ \excPostSrc} \\
+\\ 
+= \\
+\\
+ \wpiSrc{ \stmt_1}{ \wpiSrc{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{aaaaaaa} \excPostSrc \oplus [Exception \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ] }
+       \end{array}$$
+
+\textit{Note}: $exc$ is the exception object thrown by $\stmt_2$
+
+\comment{from the definition of the weakest precondition and the definition of the compiler function for\\
+ \mbox{ \rm $\try \ \{ \stmt \} \ \finally \ \{ \stmt \} $ } statements  }
+
+$$
+\begin{array}{l}
+\wpBcSeq{\compile{  \try \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \}  } } {\compile{\normalPost}}{\excPost} \\
+=\\
+\wpBcSeq{ \begin{array}{l}
+       \compile{\stmt_1}; \\
+       \instr{jsr} \ s;\\
+        \instr{goto } \ l ;\\
+       \\ 
+      
+      h: \instr{astore} \ e; \\
+       \instr{jsr} \ s; \\
+       \instr{aload} \ e;\\
+       \instr{athrow};\\
+
+       \\      
+       s: \instr{astore} \ k; \\
+       \compile{\stmt_2}; \\ 
+       \instr{ret} \ k \\
+       l:
+
+	%	\addExceptionTable{ \stR{\compile{\stmt_1} }}{ \enR{  \compile{ \stmt_1 }  }}{ h }{ Exception} )
+   \end{array}
+     } {\compile{\normalPost}}{\excPost} 
+\end{array}$$
+
+\comment{ from the definition of the weakest precondition \mbox{ \rm \instr{goto} } instruction }
+
+$$
+\begin{array}{l}
+
+=\\
+\wpBcSeq{ \begin{array}{l}
+       \compile{\stmt_1}; \\
+       \instr{jsr} \ s;\\
+       
+       \\      
+       s: \instr{astore} \ k; \\
+       \compile{\stmt_2}; \\ 
+       \instr{ret} \ k \\
+       
+
+	%	\addExceptionTable{ \stR{\compile{\stmt_1} }}{ \enR{  \compile{ \stmt_1 }  }}{ h }{ Exception} )
+   \end{array}
+     } {\compile{\normalPost}}{\excPost} 
+\end{array}$$
+
+\comment{from the definition  of the weakest precondition \mbox{ \rm \instr{jsr} } instruction  }
+$$
+\begin{array}{l}
+=\\
+\wpBcSeq{  \compile{\stmt_1}} { \wpBcSeq{\begin{array}{l}   s: \instr{astore} \ k; \\
+                                     \compile{\stmt_2}; \\ 
+				     \instr{ret} \ k \\
+	         \end{array}
+                }{\compile{\normalPost} } {\excPost}  }{\excPost} 
+\end{array}$$
+
+
+\comment{from the definition  of the weakest precondition \mbox{ \rm \instr{ret} } instruction  }
+$$
+\begin{array}{l}
+=\\
+\wpBcSeq{  \compile{\stmt_1}} { \wpBcSeq{\begin{array}{l}   s: \instr{astore} \ k; \\
+                                     \compile{\stmt_2}; \\ 
+			                  \end{array}  }{\compile{\normalPost} } {\excPost}  }{\excPost} 
+\end{array}$$
+
+\comment{as the instructions \mbox{ \rm $ s: \instr{astore} \ k; \   \compile{\stmt_2} $} execute sequentially }
+
+ 
+$$
+\begin{array}{l}
+=\\
+\wpBcSeq{  \compile{\stmt_1}} { \\
+    \spaceWpBc  \wpBcSeq{  s: \instr{astore} \ k }{ \\
+   \spaceWpBc  \spaceWpBc  \wpBcSeq{\compile{\stmt_2} } { \\
+   \spaceWpBc   \spaceWpBc \compile{\normalPost}}{ \\
+        \spaceWpBc \spaceWpBc  \excPost} } {\\ 
+        \spaceWpBc \excPost}  }{\\
+        \excPost} 
+\end{array}$$ 
+
+\comment{from the definition  of the weakest precondition \mbox{ \rm \instr{astore} } instruction  }
+$$
+\begin{array}{l}
+=\\
+\wpBcSeq{  \compile{\stmt_1} }
+        { 
+              \wpBcSeq{\compile{\stmt_2} } { 
+              \compile{\normalPost}}  { 
+              \excPost} \begin{array}{l}
+                           \substitution{\counter}{ \counter - 1}\\
+		            \substitution{ \locVar{k}}{ \stack{ \counter } } 
+			     \end{array} } 		    
+			     {  \excPost} 
+\end{array}$$ 
+
+\comment{ by induction hypothesis there are no \mbox{ \rm \counter} expressions in \mbox{ \rm $ \wpBcSeq{\compile{\stmt_2} } { \compile{\normalPost}} {\excPost}  $}  }
+
+
+
+$$
+\begin{array}{l}
+=\\
+\wpBcSeq{  \compile{\stmt_1} } 
+        { \wpBcSeq{\compile{\stmt_2} } { 
+              \compile{\normalPost}}  { 
+              \excPost} \substitution{ \locVar{k}}{ \stack{ \counter} }} 		    
+        {  \excPost} 
+\end{array}$$ 
+
+\comment{there \mbox{ \rm $  \locVar{k}  $}  does not appear in the specification, neither is used in \mbox{ \rm $ \stmt_1$} by hypothesis, see Section \ref{compile} }
+$$
+\begin{array}{l}
+=\\
+\wpBcSeq{  \compile{\stmt_1} } 
+        { \wpBcSeq{\compile{\stmt_2} } { 
+              \compile{\normalPost}}  { \excPost}} 		    
+        {  \excPost} 
+\end{array}$$ 
+
+
+\item \textbf{throw statement}
+
+\comment{by definition } 
+
+	$$ \begin{array}{l}   
+              \wpiSrc{ \throw \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} \\
+              = \\
+	      \\ \numConclusion{1} \\
+	      \wpiSrc{\expressionSrc}{
+                  \begin{array}{l}
+		         \eval{\expressionSrc} \neq \Mynull \Rightarrow \excPostSrc( \typeof{ \eval{\expressionSrc} }, \expressionSrc ) \\
+			 \wedge \\
+	                   \eval{\expressionSrc} = \Mynull \Rightarrow \excPostSrc( \mbox{ \rm \texttt{NullPointerExc} }, \expressionSrc ) 
+	          \end{array}}   
+		     { \excPostSrc} 
+	   \end{array}        $$
+
+\comment{by definition of the compiler function }
+	$$ \begin{array}{l}   
+              \wpBcSeq{\compile{ \throw \ \expressionSrc } }{ \compile{\normalPostSrc}}{\excPost} \\
+        = \\
+	      
+            \begin{array}{l}
+	      \wpBcSeq{     \begin{array}{l}
+	               \compileExp{\expressionSrc} {\stack{ \counter}} \\
+		       \instr{athrow}
+		       \end{array}}
+				           { \\
+	\spaceWpBc	   \compile{ \normalPost}}
+		     { \\
+        \spaceWpBc \excPost}
+		     \end{array} 
+	   \end{array}        $$
+\comment{by definition of the function \mbox{ \rm $\textrm{wp}^{bc}$ } for  \mbox{ \rm \instr{athrow}}  }
+
+      $$\numConclusion{2}$$
+	$$  \begin{array}{l}   
+             =  \\
+	      \wpBcSeq{    
+	               \compileExp{\expressionSrc} {\stack{ \counter}} 
+		   
+		      }   { \\
+	\spaceWpBc \stack{\counter} \neq \Mynull \Rightarrow \\
+	\spaceWpBc	\spaceWpBc \excPost(\typeof{\expressionSrc}, \compile{\expressionSrc} ) \\
+	\spaceWpBc \wedge
+		\spaceWpBc \stack{\counter} = \Mynull \Rightarrow \\
+	\spaceWpBc	\spaceWpBc	 \excPost( \mbox{ \rm \texttt{NullPointerExc}} , \compile{\expressionSrc} ) \\
+	
+	} { \\
+        \spaceWpBc \excPost}
+		     \end{array}    $$
+\comment{by initial hypothesis \mbox{ \rm $ \forall \texttt{Exc} , \expression . \excPostSrc(\texttt{Exc} , \expression ) \eqModNames \excPost(\texttt{Exc} , \compile{\expression} )  $} }
+
+$$\numConclusion{3}$$
+$$
+\begin{array}{l}
+    \begin{array}{l}
+		         \eval{\expressionSrc} \neq \Mynull \Rightarrow \excPostSrc( \typeof{ \eval{\expressionSrc} }, \expressionSrc ) \\
+			 \wedge
+	                   \eval{\expressionSrc} = \Mynull \Rightarrow \excPostSrc( \mbox{ \rm \texttt{NullPointerExc} }, \expressionSrc ) 
+	          \end{array} \\
+    \eqModNames \\
+     \begin{array}{l}
+   	\stack{\counter} \neq \Mynull \Rightarrow 	 \excPost(\typeof{\expressionSrc}, \compile{\expressionSrc} ) \\
+	 \wedge \\
+		 \stack{\counter} = \Mynull \Rightarrow 		 \excPost( \mbox{ \rm \texttt{NullPointerExc}} , \compile{\expressionSrc} )
+    \end{array}
+\end{array}
+$$
+
+\comment{from \numConclusion{3} we can apply the induction hypothesis }
+
+
+$$\numConclusion{1} \eqModNames \numConclusion{2}$$
+\comment{and we can conclude that the hypothesis hold}
+
+
+ \item  \textbf{ loop statement}\\
+      \comment{we name the loop invariant   \invariant } 
+   
+      $$\wpiSrc{ \while \ (\expressionSrc) \ \do \ \{ \stmt \} } { \psi} {\excPostSrc}  $$
+	      \comment{by defintition \ref{wpSrc} }
+      $$ \numConclusion{0} $$
+$$  
+          \begin{array}{l}
+	  = \\
+	       \invariant \ \wedge\\
+	       \forall \  m_i .  i = 1 .. k \\
+	       \Myspace \invariant \Rightarrow \\
+	 	     \Myspace    \Myspace \wpiSrc{\expressionSrc}{
+		                 \begin{array}{l}  		
+		                      \Myspace \eval{\expressionSrc } = \Mytrue \Rightarrow \\
+				     	\phantom{aaaaa}    \wpiSrc{ \stmt }{\invariant} {\excPostSrc}  \\ 
+				       \Myspace \eval{\expressionSrc } = \Myfalse  \Rightarrow  \normalPostSrc
+			         \end{array}
+	      }{ \excPostSrc} 
+	      
+        \end{array}
+     $$     
+
+	      \comment{by definition \ref{compile} of the compiler from source language to bytecode language  }
+
+	     
+	      $$ \numConclusion{1} $$
+$$  
+	      \begin{array}{l}
+               \wpBcSeq{\compile{ \while \ (\expressionSrc) \ \do \ \{ \stmt \} } }{\compile{\psi}}{ \excPostSrc} \\
+	      \\
+               = \\
+              \\
+	      \wpBcSeq{ \begin{array}{l}
+			   \instr{goto} \ loopEntry; \\
+			   loopBody: \compile{\stmt}; \\
+			   \compile{\invariant}; \\
+			   loopEntry:\compileExp{\expressionSrc}{\stack{\counter}};\\
+			   \instr{if\_cond} \ loopBody; 
+		       \end{array} }{\compile{\psi}}{ \excPost} 
+		\end{array}
+		       $$
+	      
+	      \comment{ \todo{Say why is it like this ?} }
+	      $$  \numConclusion{2}$$
+	      $$ \begin{array}{l} 
+	      = \\
+                      \wpBcSeq{\begin{array}{l}
+				         \instr{goto}\ loopEntry; \\
+					  \compile{\invariant \ }; \\
+					   loopEntry:\compileExp{\expressionSrc}{\stack{\counter}};\\
+				   \end{array}  }{ \\
+        \\
+                   \spaceWpBc \begin{array}{l}
+					   \stack{\counter} == \compile{ \Mytrue} \Rightarrow \wpBcSeq{ \compile{ \stmt}} { \compile{\invariant \ }}{ \excPost}       \\                                                                                   \wedge \\
+                                           \stack{\counter} == \compile{ \Myfalse} \Rightarrow  \compile{\psi}\\
+		              \end{array} } { \\
+               \\
+		 \spaceWpBc \excPost }
+		 \end{array}
+              $$
+
+	      \comment{from lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack}  and from \numConclusion{2}}
+	      $$\numConclusion{3} $$
+$$\begin{array}{l}
+= \\	  \wpBcSeq{\begin{array}{l}
+				         \instr{goto} \ loopEntry; \\
+					  \compile{\invariant \ }; \\
+					   loopEntry:\compileExp{\expressionSrc}{\stack{ \counter}};\\
+				   \end{array}  }{\\
+	\spaceWpBc  \begin{array}{l}
+					          \compile{\expressionSrc} == \compile{ \Mytrue} \Rightarrow \wpBcSeq{ \compile{ \stmt}} { \compile{\invariant \ }}{ \excPostSrc} \\
+                                                  \wedge \\
+                                                   \compile{\expressionSrc} == \compile{ \Myfalse} \Rightarrow  \compile{\psi} \\
+						   \wedge 
+						   \stack{\counter} = \compile{ \eval{ \expressionSrc}}
+							        \end{array} } {\\
+         	\spaceWpBc      \excPost }      
+		\end{array}
+	      $$
+	    
+	    \comment{by definition of the weakest precondition for loop entry instructions }
+	    $$
+\begin{array}{l}
+= \\	  \wpBcSeq{ \instr{goto} \  loopEntry}{ \\
+\spaceWpBc
+	    \begin{array}{l}
+	       \compile{ \invariant \ } \ \wedge\\
+	       \forall \  m_i .  i = 1 .. k \\
+	       \compile{  \invariant \ } \Rightarrow \\
+	       \begin{array}{l}
+	 	     \wpBcSeq{\compileExp{\expressionSrc}{\stack{\counter}}}{ \\
+		     \spaceWpBc 
+                                                 \begin{array}{l}
+					            \compile{\expressionSrc} == \compile{ \Mytrue} \Rightarrow  \\
+					  \spaceWpBc	   \wpBcSeq{ \compile{ \stmt}} { \compile{\invariant \ }}{ \excPost} \\
+                                                    \wedge \\
+                                                    \compile{\expressionSrc} == \compile{ \Myfalse} \Rightarrow \\
+					\spaceWpBc	    \compile{\psi}\\
+				                 \end{array} }{ \\
+						 \spaceWpBc \excPost  }
+		\end{array}
+	    \end{array}}{\\
+\spaceWpBc \excPost}
+\end{array}
+	    $$
+	 \comment{by definition of the weakest precondition for \mbox{ \rm \instr{goto}} instructions  } 
+
+	 
+
+	 $$\numConclusion{4} $$
+$$  =  \begin{array}{l}
+	       \compile{ \invariant \ }  \ \wedge\\
+	       \forall \  m_i .  i = 1 .. k \\
+	       \compile{ \invariant \ } \Rightarrow \\
+	       \begin{array}{l}
+	 	     \wpBcSeq{\compileExp{\expressionSrc}{\stack{\counter}}} { \\ 
+                               \spaceWpBc                   \begin{array}{l}
+					            \compile{\expressionSrc} == \compile{ \Mytrue} \Rightarrow  \\
+					 \spaceWpBc 	   \wpBcSeq{ \compile{ \stmt}} { \compile{\invariant \ }}{ \excPost} \\
+                                                    \wedge \\
+                                                    \compile{\expressionSrc} == \compile{ \Myfalse} \Rightarrow \\
+						  \spaceWpBc    \compile{\psi}\\
+				                 \end{array} }{ \\ \spaceWpBc \excPost  }
+ \end{array} 
+	    \end{array} $$
+
+\comment{from \numConclusion{0} and  \numConclusion{4}  applying the structural induction hypothesis we can conclude }
+$$
+\begin{array}{l}
+      \wpiSrc{ \while \ (\expressionSrc) \ \do \ \{ \stmt \} } { \psi} {\excPostSrc}  = \numConclusion{0} \\
+       \\
+       \eqModNames\\
+       \\
+            \wpBcSeq{\compile{  \while \ (\expressionSrc) \ \do \ \{ \stmt \} } }{\compile{\psi}}{ \excPost} = \numConclusion{4} 
+\end{array}
+$$
+
+
+  %				& \mid \throw \ \expressionSrc  \\
+    %                              & \mid \while \ (\expressionSrc) \ \do \ \{ \stmt \} \\
+  %				& \mid \returnSrc \expressionSrc \\
+  %				& \mid \returnSrc
+
+  \item \textbf{Return statements}
+We consider only the case of a non void return
+
+  \comment{ by definition of the weakest precondition for \mbox{ \rm $ \returnSrc \ \expressionSrc $ }  }
+$$ \numConclusion{0}$$
+$$
+\begin{array}{l}
+  \wpiSrc{ \returnSrc \  \expressionSrc }{ \normalPostSrc}{\excPostSrc} \\
+ = \\
+  \wpiSrc{  \expressionSrc } {\normalPostSrc \substitution{\result }{ \eval{ \expressionSrc } } }  {\excPostSrc}
+\end{array}
+$$
+
+\comment{by definition of the compiler in Section \ref{compile}}
+
+$$\begin{array}{l}
+\wpBcSeq{\compile{\returnSrc \  \expressionSrc }} {\compile{\psi}}{ \excPost } \\
+\\
+= \\
+\\
+\wpBcSeq{ \begin{array}{l}
+          \compileExp{\expressionSrc }{\stack{\counter}};\\ 
+	  \instr{return}
+          \end{array}
+        }  {\compile{\psi}}{ \excPost} 
+
+\end{array}
+$$
+
+
+\comment{by definition of the weakest predicate transformer function for the \mbox{ \rm \instr{return}}  instruction}
+
+$$
+\begin{array}{l}
+= \\
+\\
+\wpBcSeq{  \compileExp{\expressionSrc }{\stack{\counter}} } { \\
+\spaceWpBc \compile{\psi}  \substitution{ \result}{\stack{\counter} }}{ \\
+                          \spaceWpBc \excPost } 
+\end{array}
+$$
+
+\comment{from lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack} }
+$$ \numConclusion{1} $$
+$$\begin{array}{l}
+= \\
+\\
+\wpBcSeq{\compile{\expressionSrc } } { \begin{array}{l}
+                                        \compile{\psi} \substitution{ \result}{\stack{\counter } } \\
+					\wedge \\
+					\stack{\counter} = \compile{ \eval{ \expressionSrc}}
+					\end{array} }{ \excPost} 
+\end{array}
+$$
+
+
+
+
+
+	        
+
+$$ \numConclusion{2} $$
+
+$$ \begin{array}{l}
+       = \\
+       \wpBcSeq{  \compileExp{\expressionSrc }{ \stack{\counter}} } { \\
+        \spaceWpBc \compile{\psi}\substitution{ \result}{   \compile{\eval{ \expressionSrc} }  }  }{ \\
+         \spaceWpBc \excPost} 
+  \end{array}
+ $$
+
+\comment{as \mbox{\rm$\compile{\psi} \substitution{ \result}{   \compile{\eval{ \expressionSrc} }  }  $} does  not contain stack expressions, we can apply the induction hypothesis }
+$$ \numConclusion{4} $$ 
+$$ \begin{array}{l}
+        \wpiSrc{  \expressionSrc } {\normalPostSrc \substitution{\result }{ \eval{ \expressionSrc} } }  {\excPostSrc} \\
+ \\
+       \eqModNames \\
+\\   
+\begin{array}{l}
+    \wpBcSeq{\compileExp{\expressionSrc }{ \stack{\counter}}  } { \\
+\spaceWpBc \compile{\psi} \begin{array}{l} 
+                                                        \substitution{ \result}{   \compile{\eval{ \expressionSrc} }  } 
+                                                    \end{array} }{ \\
+\spaceWpBc \excPost}   
+\end{array}
+  \end{array}
+ $$
+
+\comment{from \numConclusion{0} and \numConclusion{3}  and \numConclusion{4} this case holds  }   
+$$\begin{array}{l}
+      \wpiSrc{ \returnSrc \  \expressionSrc }{ \normalPostSrc}{\excPostSrc} \\
+ \\
+        \eqModNames \\
+\\  
+   \wpBcSeq{\compile{ \returnSrc \  \expressionSrc }} {\compile{\psi}}{ \excPost} 
+\end{array}
+$$
+ \item \textbf{Instance Creation expressions}
+We will consider only the case when the constructor takes one argument for reasons of readability. The general case is straightforward.
+
+\comment{from the definition of the weakest precondition for instance creation in the source language in section \ref{wpSrc}}
+  
+$$ \numConclusion{1} $$
+$$ \begin{array}{l} 
+    \wpiSrc{ \newSrc \ Class  ( \expressionSrc   ) } {\normalPostSrc }{ \excPostSrc  }\\
+   = \\
+
+	\wpiSrc{   \expressionSrc }{ \\
+               \spaceWpSrc     \pre(ConsClass)  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \this}{ \Ref{Class} } \\
+                                                       \substitution{ arg_1}{ \eval{\expressionSrc}} 
+					     	\end{array} \right. \\
+                           \spaceWpSrc        \wedge \\
+                           \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                           \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                                \normalPostSrc(ConsClass)  \left\{    
+                                          \begin{array}{l} 
+					        \substitution{ \this}{ \Ref{Class}} \\
+                                                \substitution{ arg_1}{ \eval{\expressionSrc}} \\
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right.
+           } {\\
+       \spaceWpSrc     \excPostSrc}   \substitution{\heap}{\heap \oplus[ \Ref{Class} \rightarrow \objCl{Class} ] }  
+	            \end{array}
+	          $$
+
+
+\comment{by definition of the compiler function}
+
+$$
+\begin{array}{l}
+  \wpBcSeq{ \compile{ \newSrc \ Class  ( \expressionSrc   )} } { \compile{ \normalPostSrc} }{ \excPost  }\\
+ = \\
+  \wpBcSeq{  \begin{array}{l}
+                       \instr{new} \ Class; \\ 
+		       \instr{dup}; \\
+		       \compileExp{\expressionSrc}{\stack{\counter - k}};\\
+		          \instr{invoke } ConsClass;     
+	       \end{array} } { \compile{ \normalPostSrc} }{ \excPost  }
+\end{array}
+$$
+
+\comment{apply the rule for method invocation}
+$$
+\begin{array}{l}
+  
+ = \\
+
+  \wpBcSeq{  \begin{array}{l}
+ \instr{new} \ Class; \\ 
+		       \instr{dup}; \\
+		       \compileExp{\expressionSrc}{\stack{\counter - k}};\\
+	            
+	       \end{array} } { \\       
+
+        \spaceWpSrc    \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}} 
+					     	\end{array} \right. \\
+                           \spaceWpSrc        \wedge \\
+                           \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                           \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                       \compileSynt{ \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                         \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. }{ \\
+         \spaceWpSrc     \excPost  }\\
+\end{array}
+$$
+
+\comment{applying the weakest precondition rule for a sequential list of instructions }
+
+$$
+\begin{array}{l}
+  
+ = \\
+
+  \wpBcSeq{  \begin{array}{l}
+                     \instr{new} \ Class; \\ 
+		       \instr{dup}; \\
+	     \end{array} } { \\       
+     \spaceWpSrc  \wpBcSeq{ \compileExp{\expressionSrc}{\stack{\counter - k}}} { \\
+          \spaceWpSrc   \spaceWpSrc    \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}} 
+					     	\end{array} \right. \\
+                            \spaceWpSrc     \spaceWpSrc        \wedge \\
+                            \spaceWpSrc     \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                             \spaceWpSrc   \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                               \compileSynt{ \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                         \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. }{ \\    
+                   \spaceWpSrc    \spaceWpSrc \excPost   }} { \\
+         \spaceWpSrc     \excPost  }\\
+\end{array}
+$$
+
+\comment{applying lemmas \ref{exprValueOnStack} on page \pageref{exprValueOnStack}, \ref{dupProp} on \pageref{dupProp}   }
+$$
+\begin{array}{l}
+  
+ = \\
+
+  \wpBcSeq{  \begin{array}{l}
+                     \instr{new} \ Class; \\ 
+		       \instr{dup}; \\
+	     \end{array} } { \\       
+     \spaceWpSrc  \wpBcSeq{ \compileExp{\expressionSrc}{\stack{\counter - k}}}{ \\
+          \spaceWpSrc   \spaceWpSrc       \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}} 
+					     	\end{array} \right. \\
+                            \spaceWpSrc     \spaceWpSrc        \wedge \\
+                            \spaceWpSrc     \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                             \spaceWpSrc   \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                                 \compileSynt{  \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                         \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. \\
+                   \spaceWpSrc   \spaceWpSrc \wedge \\
+		     \spaceWpSrc   \spaceWpSrc \stack{\counter} = \compile{ \eval{ \expressionSrc}}     }{ \\    
+                   \spaceWpSrc    \spaceWpSrc \excPost   } \\ 
+		   \spaceWpSrc  \wedge\\
+                   \spaceWpSrc \stack{\counter} = \stack{\counter-1} } { \\
+         \spaceWpSrc     \excPost  }\\
+\end{array}
+$$
+
+\comment{applying the lemma \ref{stackCounter} on page \pageref{stackCounter} }
+
+
+$$
+\begin{array}{l}
+  
+ = \\
+
+  \wpBcSeq{  \begin{array}{l}
+                     \instr{new} \ Class; \\ 
+		       \instr{dup}; \\
+	     \end{array} } { \\       
+     \spaceWpSrc  \wpBcSeq{ \compileExp{\expressionSrc}{\stack{\counter - k}}}{ \\
+          \spaceWpSrc   \spaceWpSrc       \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}} 
+					     	\end{array} \right. \\
+                            \spaceWpSrc     \spaceWpSrc        \wedge \\
+                            \spaceWpSrc     \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                             \spaceWpSrc   \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                                 \compileSynt{  \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                       \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. \\
+                   \spaceWpSrc   \spaceWpSrc \wedge \\
+		     \spaceWpSrc   \spaceWpSrc \stack{\counter} = \compile{ \eval{ \expressionSrc}} \\
+                       \spaceWpSrc  \spaceWpSrc  \wedge\\
+                      \spaceWpSrc  \spaceWpSrc \stack{\counter-1} = \stack{\counter-2}     }{ \\    
+                   \spaceWpSrc    \spaceWpSrc \excPost   } \\ 
+		   } { \\
+         \spaceWpSrc     \excPost  }\\
+\end{array}
+$$
+
+\comment{apply the weakest precondition calculus for sequential instructions and lemma \ref{newProp} on page \pageref{newProp}}
+ $$
+\begin{array}{l}
+   = \\
+ \wpBcSeq{ \instr{new} \ Class  } { \\      
+	    \spaceWpSrc       \wpBcSeq{\instr{dup}; } { \\ 
+     \spaceWpSrc    \spaceWpSrc  \wpBcSeq{ \compileExp{\expressionSrc}{\stack{\counter - k}}} {  \\
+      \spaceWpSrc        \spaceWpSrc   \spaceWpSrc       \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}} 
+					     	\end{array} \right. \\
+                             \spaceWpSrc   \spaceWpSrc     \spaceWpSrc        \wedge \\
+                            \spaceWpSrc    \spaceWpSrc     \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                            \spaceWpSrc     \spaceWpSrc   \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                                 \compileSynt{  \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                       \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. \\
+                    \spaceWpSrc   \spaceWpSrc   \spaceWpSrc \wedge \\
+		      \spaceWpSrc   \spaceWpSrc   \spaceWpSrc \stack{\counter} = \compile{ \eval{ \expressionSrc}} \\
+                      \spaceWpSrc     \spaceWpSrc  \spaceWpSrc  \wedge\\
+               \spaceWpSrc           \spaceWpSrc  \spaceWpSrc \stack{\counter-1} = \stack{\counter-2}     }{ \\    
+                  \spaceWpSrc     \spaceWpSrc    \spaceWpSrc \excPost   } \\ 
+		   }  { \\
+         \spaceWpSrc    \spaceWpSrc     \excPost  } \\ 
+	  \spaceWpSrc   \wedge \\
+          \spaceWpSrc    \stack{\counter} = \Ref{Class}  } { \\
+          \spaceWpSrc     \excPost   } 
+\end{array}$$
+
+\comment{applying twice the lemma \ref{stackCounter} on page \pageref{stackCounter}}
+$$
+\begin{array}{l}
+   = \\
+ \wpBcSeq{ \instr{new} \ Class  } { \\      
+	    \spaceWpSrc       \wpBcSeq{\instr{dup}; } { \\ 
+     \spaceWpSrc    \spaceWpSrc  \wpBcSeq{ \compileExp{\expressionSrc}{\stack{\counter - k}}} {  \\
+      \spaceWpSrc        \spaceWpSrc   \spaceWpSrc       \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}} 
+					     	\end{array} \right. \\
+                             \spaceWpSrc   \spaceWpSrc     \spaceWpSrc        \wedge \\
+                            \spaceWpSrc    \spaceWpSrc     \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                            \spaceWpSrc     \spaceWpSrc   \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                                 \compileSynt{  \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                       \substitution{ \compileSynt{\this}}{ \stack{\counter - 1} } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \stack{\counter}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. \\
+                    \spaceWpSrc   \spaceWpSrc   \spaceWpSrc \wedge \\
+		      \spaceWpSrc  \spaceWpSrc   \spaceWpSrc \stack{\counter} = \compile{ \eval{ \expressionSrc}} \\
+                      \spaceWpSrc  \spaceWpSrc  \spaceWpSrc  \wedge\\
+                      \spaceWpSrc   \spaceWpSrc  \spaceWpSrc \stack{\counter-1} = \stack{\counter-2}   \\
+                 \spaceWpSrc   \spaceWpSrc  \spaceWpSrc   \wedge \\
+           \spaceWpSrc   \spaceWpSrc  \spaceWpSrc    \stack{\counter - 2} = \Ref{Class}   }{ \\    
+                  \spaceWpSrc     \spaceWpSrc    \spaceWpSrc \excPost   } \\ 
+		   }  { \\
+         \spaceWpSrc    \spaceWpSrc     \excPost  }  
+	   }{ \\
+          \spaceWpSrc     \excPost   } 
+\end{array}
+$$
+
+
+$$ \numConclusion{2} $$
+$$
+\begin{array}{l} 
+= \\
+\\
+\wpBcSeq{ \instr{new} \ Class  } { \\      
+	    \spaceWpSrc       \wpBcSeq{\instr{dup}; } { \\ 
+     \spaceWpSrc    \spaceWpSrc  \wpBcSeq{ \compileExp{\expressionSrc}{\stack{\counter - k}}} {  \\
+      \spaceWpSrc        \spaceWpSrc   \spaceWpSrc       \compileSynt{ \pre(ConsClass)}  \left\{    
+                                               \begin{array}{l} 
+                                                      \substitution{ \compileSynt{\this}}{ \Ref{Class}  } \\
+                                                       \substitution{\compileSynt{ arg_1}}{ \compile{ \eval{ \expressionSrc}} } 
+					     	\end{array} \right. \\
+                             \spaceWpSrc   \spaceWpSrc     \spaceWpSrc        \wedge \\
+                            \spaceWpSrc    \spaceWpSrc     \spaceWpSrc   \forall \  mod_i .  i = 1 .. n  \\
+                            \spaceWpSrc     \spaceWpSrc   \spaceWpSrc  \left\{  \begin{array}{l}
+                        
+                                 \compileSynt{  \normalPostSrc(ConsClass)}  \left\{    
+                                          \begin{array}{l} 
+                                                       \substitution{ \compileSynt{\this}}{ \Ref{Class}  } \\
+                                                       \substitution{\compileSynt{ arg_1}}{\compile{ \eval{ \expressionSrc}}}   
+					    \end{array} \right.  \Rightarrow   \normalPostSrc \begin{array}{l} 
+                             \end{array}  \\
+                     
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                   \wedge \\   
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                       	\excPostSpec_{ConsClass}( \tt{Exc_1} ) \Rightarrow
+                                    %\spaceWpSrc     \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots }    
+                              \excPostSrc(\tt{Exc_1}, new Class ( \expressionSrc   ))  \\
+				   %\spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                                 	 \wedge \\ 
+				 %  \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 
+                          	\ldots \\
+				%   \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                  \wedge \\ 
+				  % \spaceWpSrc \spaceWpSrc \spaceWpSrc \phantom{\ldots } 	
+                                \excPostSpec_{ConsClass}( \tt{Exc_s} ) \Rightarrow 
+                            	%\spaceWpSrc \spaceWpSrc  	\spaceWpSrc   \spaceWpSrc \phantom{\ldots }     
+                              \excPostSrc(\tt{Exc_s}, new Class( \expressionSrc ))   
+                   \end{array} \right. \\
+                    }{ \\    
+                  \spaceWpSrc     \spaceWpSrc    \spaceWpSrc \excPost   } \\ 
+	         } { \\ \spaceWpSrc    \spaceWpSrc     \excPost  }  
+	 }{ \\
+         \spaceWpSrc     \excPost   }
+\end{array}
+$$
+
+\comment{ applying the induction hypothesis we can conclude that the proposition holds for this case } 
+
+ 
+ \end{description}
+\end{description}
+
+\end{pogEquiv}
+
+
+
+The previous lemme gives us the relation between the precondition of a source statement $\stmt$ and its
+compilation $\compile{\stmt} $ given that the precondition does not contain any stack expressions. Still, 
+our initial definition of $\rm{wp^{bc}}$
+ (see the discussion in Section \ref{bcwp}) works with implicite postconditions ( the function $inter$ defined in \cite{P05BSV})
+ which depend on the instructions executed before.
+In order to establish that the initial definition that we gave of the weakest predicate transformer preserves the proof obligations 
+w.r.t. to the source language  we have to establish first the following property:
+
+
+\todo{remind the definition of $inter$} 
+\begin{postProp}
+
+For any method ~\method \  with precondition Pre and postcondition Post,
+ for any statement $\stmt in \ \body{\method}$
+the function $\inter{ last{\compile{\stmt} } }{ \next{ last{\compile{\stmt}} }} \in \formulaBcNoStack$ 
+
+\end{postProp}
+The proof is by structural induction over the structure of a source statement.
+ This lemme means that the postconditions determined by the function $inter$ for the compilation
+ $\compile{\expressionSrc}$ of an expression $\expressionSrc$ is in $\formulaBcNoStack$.  
+From property \ref{formulaCompProp2} on page \pageref{formulaCompProp2} we conclude that for any statement
+$\expression$ there exists a formula
+$\psi \in \formulaSrc$ such that  $\inter{ last{\compile{\stmt} } }{ \next{ last{\compile{\stmt}} }} = \compile{\psi} $.
+
+Thus, we can conclude that:
+$$ 
+\begin{array}{l}
+\forall \stmt . \exists \ \psi \ \in \formulaSrc \\
+\inter{ last{\compile{\stmt} } }{ \next{ last{\compile{\stmt}} }} = \compile{\psi} \\
+\wedge \\
+
+\Myspace   \wpiSrc{\stmt}{ \psi }{\excPost} \\
+\Myspace \eqModNames \\
+\Myspace \wpBcSeq{\compile{ \stmt} } {\inter{ last{\compile{\stmt} } }{ \next{ last{\compile{\stmt}} }}  }{\excPost}
+\end{array}$$
+
+
+
+This establishes the equivalence of the preconditions modulo names over source and bytecode programs.
