@@ -134,7 +134,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
-		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
+			       	\subst{ \typeof{\referenceOnly}}{ \clazz } 
 		       \end{array} \end{array}} {\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
 		       \\
 		       \mbox{\rm\comment{from the operational semantics of \new \ in section \ref{opSem}}} \\
@@ -152,7 +153,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
-		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
+			       	\subst{ \typeof{\referenceOnly}}{ \clazz } 
 		       \end{array}\end{array} } {\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
 		       \mbox{\rm\comment{ from     \numConclusion{3}   }} \\
 		       \numConclusion{5} 
