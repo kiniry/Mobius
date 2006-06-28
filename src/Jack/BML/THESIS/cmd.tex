@@ -35,7 +35,8 @@
 
 
 
-\newcommand{\todo}[1]{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
+\newcommand{\todo}[1]{}
+%{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
 \newcommand{\fig}[1]{ Fig.#1}
 \newcommand{\jmlKey}[1]{\mbox{\rm\textbf{#1}}}% wrapping jml keywords
 \newcommand{\java}[1]{\texttt{#1}}
@@ -189,6 +190,7 @@
 \newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
 
 \newcommand{\stateTrans}{\hookrightarrow}
+\newcommand{\stateTransTerm}{\Rightarrow }
 \newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -231,9 +233,9 @@
 %\newcommand{\intLiteral}{\texttt{int\_const} }
 \newcommand{\predicates}{ \mathcal{R} }
 
+
 \newtheorem{Formula}{Formulas}
 \newtheorem{Predicate}{Predicates}
-
 \newcommand{\formulaBc}{\mathcal{P}_{bml}}
 
 
@@ -346,7 +348,8 @@
  \newcommand{\defaultValueOnly}{\mbox{\rm \textit{defVal}}}
  \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
  \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
- \newcommand{\InDom}[2]{\mbox{\rm\textit{inDom} } (#1,#2)} 
+ \newcommand{\InDom}[2]{\mbox{\rm\textit{inDom} } (#1,#2)}
+ \newcommand{\InRan}[2]{\mbox{\rm\textit{inRan} } (#1,#2)} 
  \newcommand{\anyType}{\mbox{\rm \texttt{T}}} % represents any Java Type
  \newcommand{\Arrays}{\mbox{\rm ARR}} % an abstraction for all arrays in the heap
 
@@ -478,14 +481,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\evalExp}[2]{\mbox{ \rm \textit{eval}}( #1,#2 )} % evaluation of an expression #1 in  a state configuration #2
+\newcommand{\evalExp}[2]{\mbox{ \rm \textit{eval}}( #1,#2, s_{init} )} % evaluation of an expression #1 in  a state configuration #2
 \newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
 
-\newcommand{\interp}[2]{#2 \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
-\newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2  \vDash \\ 
+\newcommand{\interp}[2]{#2 , s_{init} \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
+\newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2, s_{init}  \vDash \\ 
 				         #1 
 				  \end{array}}
 
+\newcommand{\validFormula}[1]{\vDash #1 }
 %%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\modifLoop}{\mbox{\rm \textit{modifLoop}}}
 
@@ -510,8 +514,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\exprWp}{\mbox{\rm\textit{E}}}
 \newcommand{\predWp}{\mbox{\rm\textit{P}}}
+
 \newcommand{\constantsWp}{\mbox{\rm\textit{constants}}}
 \newcommand{\expressionsWp}{\mbox{\rm\textit{Expr}}}
 \newcommand{\typeExpWp}{\mbox{\rm\textit{T}}}
 \newcommand{\var}{\mbox{\rm\textbf{var}}}
+\newcommand{\instances}{\mbox{\rm\textbf{instances}}}
+
 \newcommand{\ConstantsWp}{\mbox{\rm\textit{constants}}}
