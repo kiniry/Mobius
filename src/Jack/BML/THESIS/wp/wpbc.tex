@@ -208,7 +208,8 @@ We will also see how the weakest precondition is defined in presence of exceptio
 					 \begin{array}{l}   \inter{i}{i+1} \\
 		                                   \subst{ \counter}{ \counter + 1 } \\
 						   \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
-						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
+				\subst{ \typeof{\referenceOnly}}{ \clazz } \\		   
 		       \end{array}
               \end{array}$$
 		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. The weakest precondition 
