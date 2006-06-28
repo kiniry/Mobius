@@ -93,7 +93,7 @@ exceptional termination.
                                                                  \substitution{\mbox{\rm arg}}{ \expressionSrc_2} \\
 					                  \end{array}  \\
                                           \Myspace   \Myspace \wedge \\
-					  \Myspace   \Myspace \forall \ m \in m. \mod \\ %, \forall \mbox{\rm\texttt{r}} \\
+					  \Myspace   \Myspace \forall \freshVar, \ \forall \ m \in m. \mod \\ %, \forall \mbox{\rm\texttt{r}} \\
 					  
                                           \Myspace   \Myspace  \left\{\begin{array}{l}  
 					  \typeof{\freshVar} <: m.\returnType \wedge \\ 
@@ -102,7 +102,8 @@ exceptional termination.
 					                                    \substitution{\result}{\freshVar } \\
 									    \substitution{ \this}{ \expressionSrc_1} \\
 									    \substitution{\mbox{\rm arg} }{ \expressionSrc_2}
-					                                 \end{array}  \Rightarrow \normalPostSrc \\ 
+					                                 \end{array}   \\
+                                             \Myspace \Rightarrow \normalPostSrc  \substitution{ \compileSrcSpec{\expressionSrc_1.m( \expressionSrc_2) } }{ \freshVar }  \\ 
 					                       \end{array}\right.\\
 					  \Myspace   \Myspace \wedge \\
 					  \Myspace   \Myspace	 \forall \mbox{\rm \texttt{E}} \in m.\exceptionSrc, \\
