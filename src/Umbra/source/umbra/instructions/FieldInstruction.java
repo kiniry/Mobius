@@ -18,17 +18,11 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * This subset is similar to ordinary Java subset.
  * 
- * @author Jarosï¿½aw Paszek
+ * @author Jaros³aw Paszek
  */
 public class FieldInstruction extends StringInstruction {
 
-    /**
-     * TODO write description
-     * 
-     * @param l TODO write description
-     * @param n TODO write description
-     */    
-    public FieldInstruction(String l, String n) {
+	public FieldInstruction(String l, String n) {
 		super(l, n);
 	}
 	
@@ -39,6 +33,8 @@ public class FieldInstruction extends StringInstruction {
 	 * 
 	 *@see InstructionLineController#correct() 
 	 */
+
+	
 	public boolean correct()
 	{
 		String s;
@@ -66,12 +62,7 @@ public class FieldInstruction extends StringInstruction {
 		return false;
 	}
 	
-    /**
-     * TODO write description
-     * 
-     * @return TODO write description
-     */    
-    private int getInd() {
+	private int getInd() {
 		boolean isd;
 		String licznik = "0123456789";
 		int liczba;

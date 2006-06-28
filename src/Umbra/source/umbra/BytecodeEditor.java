@@ -39,38 +39,18 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 public class BytecodeEditor extends TextEditor {
 	
-    /**
-     * TODO write description
-     */
-    private ColorManager colorManager;
-    /**
-     * TODO write description
-     */
-    private int mod;
-    /**
-     * TODO write description
-     */
-    private boolean updated = true;
-    /**
-     * TODO write description
-     */
-    private AbstractDecoratedTextEditor relatedEditor;
-    /**
-     * TODO write description
-     */
-    private JavaClass javaClass;
-    /**
-     * TODO write description
-     */
-    private ClassGen classGen;
-    /**
-     * TODO write description
-     */
-    private int historyNum = -1;
+	private ColorManager colorManager;
+	private int mod;
+	private boolean updated = true;
+	private AbstractDecoratedTextEditor relatedEditor;
+	private JavaClass javaClass;
+	private ClassGen classGen;
+	private int historyNum = -1;
 	
 	/**
 	 * A constructor with no Bytecode-related specificity
 	 */
+	
 	public BytecodeEditor() {
 		super();
 		mod = Composition.getMod();
@@ -82,42 +62,34 @@ public class BytecodeEditor extends TextEditor {
 	/**
 	 * Default function used while closing editor
 	 */
+	
 	public void dispose() {
 		colorManager.dispose();
 		super.dispose();
 	}
 	
-    /**
-     * TODO write description
-     */
-    public boolean isUpdated() {
+	public boolean isUpdated() {
 		return updated;
 	}
 	
-    /**
-     * TODO write description
-     */
-    public void leave() {
+	public void leave() {
 		updated = false;
 	}
 	
 	/**
-     * The method returns an editor the Java code has been
-     * generated from.
-     * 
-	 * @return Java code editor that Bytecode has been generated from
+	 * @return Java code editor 
+	 * that Bytecode has been generated from
 	 */
+	
 	public AbstractDecoratedTextEditor getRelatedEditor() {
 		return relatedEditor;
 	}
 	
 	/**
-     * The method returns the BCEL structure that allows to obtain
-     * the instructions of the byte-code
-     * 
-	 * @return BCEL structure related to byte-code that allows to obtain 
-     *         its particular instructions
+	 * @return BCEL structure related to Bytecode
+	 * that allows obtaining its particular instructions
 	 */
+	
 	public JavaClass getJavaClass() {
 		return javaClass;
 	}
@@ -146,9 +118,7 @@ public class BytecodeEditor extends TextEditor {
 	 * while executing. The original binary file is saved with the name
 	 * with '_' at the beginning in case later rebuilding (if there has
 	 * not existed such yet, the binary file is simply rewritten, otherwise
-	 * it is saved unchanged).
-     * 
-     * @param prograssMonitor TODO write description
+	 * it is saved unchanged). 
 	 */
 	
 	public void doSave(IProgressMonitor progressMonitor) {
@@ -182,6 +152,7 @@ public class BytecodeEditor extends TextEditor {
 	 * @param path		relative path
 	 * @return			absolute path
 	 */
+	
 	public IPath getPath(IPath path) {
 		return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getProject().getLocation();
 	}
@@ -268,7 +239,7 @@ public class BytecodeEditor extends TextEditor {
 	 * @return		index of first ":" in the next instruction line.
 	 */
 	private int nextLineOff(String code, int pos) {
-		// pozycja nastï¿½pnego dwukropka
+		// pozycja nastêpnego dwukropka
 		boolean nline = false;
 		int len = code.length();
 		int res = -1;
@@ -299,7 +270,7 @@ public class BytecodeEditor extends TextEditor {
 	 * @return		number of instructions in bareCode
 	 */
 	private int getOffset(String bareCode) {
-		/* ile dwukropkï¿½w? */
+		/* ile dwukropków? */
 		int p = 0;
 		int ile = 0;
 		while (p >= 0) {
@@ -374,12 +345,7 @@ public class BytecodeEditor extends TextEditor {
 		historyNum = -1;
 	}
 	
-    /**
-     * TODO write description
-     * 
-     * @param jc TODO write description
-     */
-    private void controlPrint(JavaClass jc) {
+	private void controlPrint(JavaClass jc) {
 		System.out.println();
 		System.out.println("Control print of instruction list:");
 		ClassGen cg = new ClassGen(jc);

@@ -20,31 +20,17 @@ import org.eclipse.ui.part.FileEditorInput;
  * This class defines an action that adds current bytecode
  * to history.
  * 
- * @author Wojtek Wï¿½s
+ * @author Wojtek W¹s
  */
 public class HistoryAction implements IEditorActionDelegate {
 
-    /**
-     * TODO write description
-     */
-    private IEditorPart editor;
+	private IEditorPart editor;
 	
-    /**
-     * TODO write description
-     * 
-     * @param action TODO write description
-     * @param targetEditor TODO write description
-     */
-    public void setActiveEditor(IAction action, IEditorPart targetEditor) {
+	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
-    /**
-     * TODO write description
-     * 
-     * @param action write description
-     */
-    public void run(IAction action) { 
+	public void run(IAction action) { 
 		int num = ((BytecodeEditor)editor).newHistory();
 		if (num == -1) {
 			MessageDialog.openInformation(editor.getEditorSite().getShell(), "History", "History is already full.");
@@ -77,13 +63,7 @@ public class HistoryAction implements IEditorActionDelegate {
 		}
 	}
 
-    /**
-     * TODO write description
-     * 
-     * @param action TODO write description
-     * @param selection TODO write description
-     */
-    public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(IAction action, ISelection selection) {
 	
 	}
 

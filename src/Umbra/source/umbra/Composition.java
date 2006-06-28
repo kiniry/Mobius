@@ -8,22 +8,14 @@ package umbra;
  * This class keeps the value of current coloring style
  * that is obtained after each refreshing.
  * 
- * @author Wojtek Wï¿½s
+ * @author Wojtek W¹s
  */
 public class Composition {
 	
-    /**
-     * TODO write description
-     */
-    static int mod = 1;
-    /**
-     * TODO write description
-     */
-    static boolean disas = false;
+	static int mod = 1;
+	static boolean disas = false;
 	
 	/**
-     * TODO write description
-     * 
 	 * @return if called during disassembling - the current
 	 * coloring style value;
 	 * otherwise - it means that bytecode editor is open
@@ -34,26 +26,15 @@ public class Composition {
 		return mod;
 	}
 	
-    /**
-     * TODO write description
-     * 
-     * @param TODO write description
-     */
-    static public void setMod(int i) {
+	static public void setMod(int i) {
 		mod = i;
 	}
 		
-    /**
-     * TODO write description
-     */
-    static public void startDisas() {
+	static public void startDisas() {
 		disas = true;
 	}
 	
-    /**
-     * TODO write description
-     */
-    static public void stopDisas() {
+	static public void stopDisas() {
 		disas = false;
 	}
 

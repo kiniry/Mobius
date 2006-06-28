@@ -14,17 +14,11 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * Various instructions with no parameter.
  * 
- * @author Jarosï¿½aw Paszek
+ * @author Jaros³aw Paszek
  */
 public class SingleInstruction extends InstructionLineController {
 	
-    /**
-     * TODO write description
-     * 
-     * @param l TODO write description
-     * @param n TODO write description
-     */    
-    public SingleInstruction(String l, String n) {
+	public SingleInstruction(String l, String n) {
 		super(l, n);
 	}
 	
@@ -160,7 +154,6 @@ public class SingleInstruction extends InstructionLineController {
 	 * Simple instruction line is correct if it has 
 	 * no parameter
 	 * 
-     * @return TODO write description
 	 *@see InstructionLineController#correct() 
 	 */
 	public boolean correct()

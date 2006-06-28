@@ -10,14 +10,10 @@ import org.osgi.framework.BundleContext;
 public class UmbraPlugin extends AbstractUIPlugin {
 
 	//The shared instance.
-    /**
-     * TODO write description
-     */
-    private static UmbraPlugin plugin;
+	private static UmbraPlugin plugin;
 	
 	/**
 	 * The constructor.
-     * TODO extend the description
 	 */
 	public UmbraPlugin() {
 		plugin = this;
@@ -25,9 +21,6 @@ public class UmbraPlugin extends AbstractUIPlugin {
 
 	/**
 	 * This method is called upon plug-in activation
-     * 
-     * @param TODO write description
-     * @throws TODO write description (more specific Exception?)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -35,9 +28,6 @@ public class UmbraPlugin extends AbstractUIPlugin {
 
 	/**
 	 * This method is called when the plug-in is stopped
-     * 
-     * @param TODO write description
-     * @throws TODO write description (more specific Exception?)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
@@ -46,8 +36,6 @@ public class UmbraPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance.
-     * 
-     * @return TODO write description
 	 */
 	public static UmbraPlugin getDefault() {
 		return plugin;

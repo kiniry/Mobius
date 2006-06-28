@@ -15,19 +15,13 @@ import umbra.IBytecodeStrings;
  * Instructions of this class are responsible for jumping in code. 
  * Their specificity is having target.
  * 
- * @author Jarosï¿½aw Paszek
+ * @author Jaros³aw Paszek
  */
 public class JumpInstruction extends NumInstruction {
 
 	
 	
-    /**
-     * TODO write description
-     * 
-     * @param l TODO write description
-     * @param n TODO write description
-     */    
-    public JumpInstruction(String l, String n) {
+	public JumpInstruction(String l, String n) {
 		super(l, n);
 	}
 	
@@ -37,9 +31,10 @@ public class JumpInstruction extends NumInstruction {
 	 * Jump instruction line is correct if it has 
 	 * one number parameter preceded by #.
 	 * 
-     * @return TODO write description
 	 *@see InstructionLineController#correct() 
 	 */
+
+	
 	public boolean correct()
 	{
 		String s;
@@ -76,11 +71,6 @@ public class JumpInstruction extends NumInstruction {
 		return false;
 	}
 
-    /**
-     * TODO write description
-     * 
-     * @return write description
-     */
 	private int getInd() {
 		boolean isd;
 		String counter = "0123456789";
@@ -185,8 +175,6 @@ public class JumpInstruction extends NumInstruction {
 	 * for setting such a number. The case that target line 
 	 * does not exist is not completely solved yet.
 	 * 
-     * @param il TODO write description
-     * @param ins TODO write description
 	 */
 	
 	public void setTarget(InstructionList il, Instruction ins) {

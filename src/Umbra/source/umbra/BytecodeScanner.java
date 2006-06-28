@@ -14,22 +14,16 @@ import org.eclipse.jface.text.rules.WordRule;
  * editor window according to some special 9 rules.
  * Colors are chosen as a token array with a particular style (param 'mod').
  * 
- * @author Wojciech Wï¿½s
+ * @author Wojciech W¹s
  */
 
 public class BytecodeScanner extends RuleBasedScanner {
 	
-    /**
-     * TODO write description
-     * 
-     * @param manager TODO write description
-     * @param mod TODO write description
-     */
-    public BytecodeScanner(ColorManager manager, int mod) {
+	public BytecodeScanner(ColorManager manager, int mod) {
 
-        IToken[] tokens = TokenGetter.getTokenTab(manager, mod); 
+		IToken[] tokens = TokenGetter.getTokenTab(manager, mod); 
 				
-        WordRule insrule = new WordRule(new BytecodeWordDetector(), tokens[IColorValues.DEFAULT]);
+		WordRule insrule = new WordRule(new BytecodeWordDetector(), tokens[IColorValues.DEFAULT]);
 		for (int i = 0; i < IBytecodeStrings.instructions.length; i++) {
 			insrule.addWord(IBytecodeStrings.instructions[i], tokens[IColorValues.BTC_INSTR]);
 		}

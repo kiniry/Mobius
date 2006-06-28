@@ -10,18 +10,12 @@ package umbra.instructions;
  * correct with number parameter as well as with a string 
  * one (in "").
  * 
- * @author Jarosï¿½aw Paszek
+ * @author Jaros³aw Paszek
  *
  */
 public class OtherInstruction extends MultiInstruction {
 
-    /**
-     * TODO write description
-     * 
-     * @param l TODO write description
-     * @param n TODO write description 
-     */    
-    public OtherInstruction(String l, String n) {
+	public OtherInstruction(String l, String n) {
 		super(l, n);
 	}
 

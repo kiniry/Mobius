@@ -8,18 +8,13 @@ import org.eclipse.jface.text.ITextViewer;
  * double clicking in Bytecode editor window. Synchronization
  * to Java code window is then made.
  * 
- * @author 	Wojciech Wï¿½s
+ * @author 	Wojciech W¹s
  * @see		BytecodeDocument
  */
 
 public class BytecodeDoubleClickStrategy implements ITextDoubleClickStrategy {
 
-    /**
-     * TODO write description
-     * 
-     * @param part TODO write description
-     */
-    public void doubleClicked(ITextViewer part) {
+	public void doubleClicked(ITextViewer part) {
 		int pos = part.getSelectedRange().x;
 
 		if (pos < 0)

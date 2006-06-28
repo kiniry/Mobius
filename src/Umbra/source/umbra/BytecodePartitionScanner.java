@@ -3,13 +3,7 @@ package umbra;
 import org.eclipse.jface.text.rules.*;
 
 /**
- * TODO write description 
- * 
- * @author TODO Generated automatically 
- *           - by which tool?
- *           - when?
- *           - when should be regenerated?
- *           - can/should it be modified by hand?
+ * @author Generated automatically
  */
 
 public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
