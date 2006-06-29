@@ -6,13 +6,13 @@
 \contentsline {subsubsection}{\numberline {2.2.2}Expressions}{6}
 \contentsline {subsubsection}{\numberline {2.2.3}Statements}{8}
 \contentsline {section}{\numberline {3}Bytecode}{10}
-\contentsline {subsection}{\numberline {3.1}Bytecode language}{10}
+\contentsline {subsection}{\numberline {3.1}Introduction}{10}
 \contentsline {subsection}{\numberline {3.2}Weakest predicate transformer for Bytecode language}{10}
 \contentsline {section}{\numberline {4}Compiler}{10}
-\contentsline {subsection}{\numberline {4.1}Compiling source formulas }{10}
-\contentsline {subsection}{\numberline {4.2}Compiling expressions in bytecode instructions}{11}
-\contentsline {subsection}{\numberline {4.3}Compiling control statements in bytecode instructions}{12}
-\contentsline {subsection}{\numberline {4.4}Properties of the compiler function}{15}
-\contentsline {section}{\numberline {5}Compiling Proof Obligations}{15}
-\contentsline {subsection}{\numberline {5.1}Auxiliary Properties}{15}
-\contentsline {subsection}{\numberline {5.2} Proof obligation equivalence}{18}
+\contentsline {subsection}{\numberline {4.1}Compiling source formulas }{11}
+\contentsline {subsection}{\numberline {4.2}Compiling expressions in bytecode instructions}{12}
+\contentsline {subsection}{\numberline {4.3}Compiling control statements in bytecode instructions}{13}
+\contentsline {subsection}{\numberline {4.4}Properties of the compiler function}{16}
+\contentsline {section}{\numberline {5}Compiling Proof Obligations}{16}
+\contentsline {subsection}{\numberline {5.1}Auxiliary Properties}{16}
+\contentsline {subsection}{\numberline {5.2} Proof obligation equivalence}{19}

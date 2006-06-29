@@ -166,7 +166,7 @@ $$
  
 
 \comment{from the compiler for formulas we know that $\forall \psi \ . \ \psi  \eqModNames \compile{\psi}$ }
-$$\normalPostSrc = \compile{\normalPostSrc }  $$
+$$\normalPostSrc \eqModNames \compile{\normalPostSrc }  $$
 
  \item \textbf{ method invocation }
 
@@ -176,11 +176,11 @@ $$\normalPostSrc = \compile{\normalPostSrc }  $$
  \begin{description}
     \item \textbf{ local variable assignment} \\
     \comment{by definition of the weakest precondition for assignment }
-
+$$\numConclusion{0} $$
   $$ \begin{array}{l} 
                 \wpiSrc{ \expressionSrc_1 = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = \\
                 \\
-                \wpiSrc{\expressionSrc_2}{ \normalPostSrc\substitution{\expressionSrc_1 }{\eval{\expressionSrc_2 }} }{\excPostSrc}
+                \wpiSrc{\expressionSrc_2}{ \normalPostSrc\substitution{\expressionSrc_1 }{\compileSynt{\expressionSrc_2 }} }{\excPostSrc}
       \end{array}$$  
 
 \comment{by defintion of the compiler } 
@@ -213,7 +213,7 @@ $$\begin{array}{l}
 
  \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} } {  \compile{\normalPostSrc}
                                            \begin{array}{l}
-                                               \substitution{ \counter}{ \counter -1}  \\
+                                               \substitution{ \counter}{ \counter - 1}  \\
                                                \substitution{ \compileSynt{ \expressionSrc_1} }{ \stack{\counter} }    
                                            \end{array} } { \excPost }
 
@@ -229,90 +229,53 @@ $$
 
  \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} } {  \compile{\normalPostSrc}
                                            \begin{array}{l}
-                                               \substitution{ \counter}{ \counter -1}  \\
-                                               \substitution{ \compileSynt{ \expressionSrc_1} }{ \stack{\counter} }    
+                                               \substitution{ \counter}{ \counter - 1}  \\
+                                               \substitution{ \compileSynt{ \expressionSrc_1} }{ \stack{\counter } }    
                                            \end{array} } { \excPost } \\
 =\\
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
-     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }
- \end{array} $$
-
-\comment{from \numConclusion{2} }
-$$\numConclusion{3} $$
-$$
-\begin{array}{l} 
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
-     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost } \\
-\\
-=\\
-\\
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
-     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }  \wedge \Mytrue
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter + 1} }  } { \excPost }
  \end{array} $$
 
 
-\comment{from Lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack}  and \numConclusion{3} }
+
+
+
+\comment{from Lemma \ref{exprValueOnStack} on page \pageref{exprValueOnStack}, \numConclusion{2} and \numConclusion{0}   }
 $$\numConclusion{4} $$
 
-$$
-\begin{array}{l} 
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
-     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }\wedge \Mytrue  \\
+
+$$ \begin{array}{l}
+\exists P, Q : \formulaSrc, \\ 
+\numConclusion{4.1} \\ 
+\wpiSrc{ \expressionSrc_1 = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc }  \\
+                \\
+  = \wpiSrc{\expressionSrc_2}{ \normalPostSrc\substitution{\expressionSrc_1 }{\compileSynt{\expressionSrc_2 }} }{\excPostSrc}  \\
+ = P \Rightarrow \normalPostSrc\substitution{\expressionSrc_1 }{\compileSynt{\expressionSrc_2 }}  \wedge R 
 \\
+\\\\
+\numConclusion{4.2} \\ 
+\wpBcSeq{ \compile{ \expressionSrc_1 = \expressionSrc_2 }}{ \compile{\normalPostSrc} }{ \excPost } \\
+  =\\
+ \wpBcSeq{  \compileExp{\expressionSrc_2 } {} }{  \compile{\normalPostSrc}
+     \substitution{ \compileSynt{ \expressionSrc_1} }{  }  } { \excPost } \\
+  = \\
+  \compile{P} \Rightarrow  \compileSynt{ \expressionSrc_1}   \begin{array}{l}
+                                              
+                                               \substitution{ \compileSynt{ \expressionSrc_1} }{ \stack{\counter } }    \\
+					        \substitution{ \counter}{ \counter + 1}  \\
+						\substitution{\stack{ \counter +1}}{ \compileSynt{\expressionSrc_2 } }  \\
+                                           \end{array}   \\
+					   \wedge \compile{R}\\
+
+\mbox{\rm\textit{\{ as there are no stack expressions in $\compileSynt{ \expressionSrc_1}$ }}\\
+\mbox{\rm\textit{ and applying  properties of substitution \} }} \\
 =\\
-\\
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
-     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost }\\
-  \wedge \\
-   \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \stack{\counter} = \compile{\eval{\expressionSrc}}  } { \excPost } 
- \end{array} $$
+\compile{P} \Rightarrow  \compileSynt{ \normalPostSrc } \substitution{ \compileSynt{ \expressionSrc_1} }{ \compileSynt{\expressionSrc_2 }    }    
+\mbox{\rm\comment{ from \numConclusion{4.1} and  \numConclusion{4.2} this case holds }} \\
 
-\comment{from the properties of \mbox{ \rm \textrm{wp}}   and \numConclusion{4}}
-
-$$\numConclusion{5}$$
-
+\end{array} 
 $$
-\begin{array}{l} 
-
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc}
-     \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} }  } { \excPost } \\
-     \wedge \\
-   \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \stack{\counter} = \compile{\eval{\expressionSrc}}  } { \excPost }  \\
-\\
-= \\
-\\
-\wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{ 
-\begin{array}{l} 
-     \compile{\normalPostSrc} \substitution{ \compileSynt{ \expressionSrc_1} }{  \stack{\counter} } \\
-\\
-\wedge \\
-\\
-  \stack{\counter} = \compile{\eval{\expressionSrc}}
-\end{array}  } { \excPost }
-\\
-= \\
-\\
-\wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{ 
-\compile{\normalPostSrc} \substitution{ \compileSynt{ \expressionSrc_1} }{  \compile{\eval{\expressionSrc}} } \\  } { \excPost }
-\end{array} $$
-
-
-\comment{ \mbox{ \rm $ \compile{\normalPostSrc}  $} does not contain stack expressions and so does 
-\mbox{ \rm $\compile{\normalPostSrc} \substitution{ \compileSynt{ \expressionSrc_1}} {  \compile{\eval{\expressionSrc}} }   $ }  and from \numConclusion{1}  and  \numConclusion{5}  by induction hypthesis we have } 
-
-
-$$\numConclusion{6}   $$
-$$
-\begin{array}{l}
-
-
- \wpiSrc{\expressionSrc_2}{ \normalPostSrc\substitution{\expressionSrc_1 }{\eval{\expressionSrc_2} } }{\excPostSrc} \\
- \eqModNames \\
- \wpBcSeq{  \compileExp{\expressionSrc_2 } {\stack{\counter}} }{  \compile{\normalPostSrc} 
-\substitution{ \compileSynt{ \expressionSrc_1} }{ \compile{ \eval{\expressionSrc_2 }}  }} { \excPost }
- \end{array} $$
-
-\comment{from \numConclusion{6} we conclude that this case holds }
 
 
 
