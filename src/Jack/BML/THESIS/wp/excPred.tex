@@ -21,15 +21,20 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
     \item if $  \ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \wedge   \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \wedge \pcHandler \neq \bottom    $ then 
       $$ \begin{array}{l}
            \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
-           \inter{i}{\pcHandler}\\
+                     \forall \referenceOnly,\\
+                      \Myspace    not \ \instances(\referenceOnly) \wedge \\
+		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
+
+       \Myspace    \Myspace    \inter{i}{\pcHandler}\\
                       \begin{array}{l}
                         \subst{\counter}{0} \\
 			\subst{\stack{0}}{\referenceOnly} \\
                          \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
-                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } 
+                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } \\
+			  \subst{ \typeof{\referenceOnly}}{  \mbox{ \rm \texttt{Exc}} } \\
                        \end{array} 
         \end{array}$$   
-	where \referenceOnly \ is a fresh variable
+
 
    
 
@@ -37,14 +42,20 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
     \item else if $\ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \wedge   \findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
             $$\begin{array}{l}
                     \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
-                        \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
+
+                     \forall \referenceOnly,\\
+                      \Myspace    not \ \instances(\referenceOnly) \wedge \\
+		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
+
+                 \Myspace    \Myspace      \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
                      \begin{array}{l}
 		           \subst{ \EXC }{\referenceOnly  }\\
-                          \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
+                           \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
 			   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
+			   \subst{ \typeof{\referenceOnly}}{  \mbox{ \rm \texttt{Exc}} } \\
                     \end{array}  
              \end{array} $$
-	where \referenceOnly \ is a fresh variable
+	
     
 
 
@@ -60,7 +71,7 @@ if such an exception handler exists ( $  \findExcHandler{\mbox{ \rm \texttt{Exc}
 Otherwise, the function will return the exceptional postcondition if method \methodd \ terminates on
 an exception  \texttt{Exc}.
   
- If the thrown exception is not caught  and the exceptional postcondition must hold, the specification variable \EXC, which stands for the thrown object in exceptional 
+ If the thrown exception is not caught  then the exceptional postcondition predicate must hold, where the specification variable \EXC, which stands for the thrown object in exceptional 
 postocnditions, is substituted with the reference to the thrown object.
 
 

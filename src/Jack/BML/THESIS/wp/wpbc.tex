@@ -21,13 +21,13 @@ with functional properties of programs leaving the problem of code well structur
 The weakest precondition predicate transformer function which for any instruction of the Java sequential fragment
 determines the predicate that must hold in the prestate of the instruction has the following signature:
 
-$$ \fwpi :  \bcIns \longrightarrow \MethodSet   \longrightarrow  nat \longrightarrow \predWp $$
-The function \fwpi \ takes three arguments : 
- the kind of the instruction (for instance  \putfield),
-the method \methodd \ to which the  instruction belongs
-and finally the position of the instruction in the body of  \methodd.
+$$ \fwpi :   (nat,\bcIns)  \longrightarrow   \MethodSet   \longrightarrow \predWp $$
+The function \fwpi \ takes two arguments : 
+the second argument is the method \methodd \ to which the  instruction belongs
+and  the first argument is  the instruction (for instance  \putfield) along with its position in \methodd.
+%and finally the position of the instruction in the body of  \methodd.
 
-The function will return a predicate $\wpi{ins}{\methodd}{pos}$ such that  if it holds in the prestate of the method \methodd \  and if the
+The function \fwpi \  returns a predicate $\wpi{ins}{\methodd}{pos}$ such that  if it holds in the prestate of the method \methodd \  and if the
 \methodd \ terminates normally then the normal postcondition \methodd.\normalPost \ holds when  \methodd \ terminates execution, otherwise if \methodd \ terminates on an exception
   \mbox{ \rm \texttt{Exc}} the exceptional postcondition  $ \methodd.\excPost( \mbox{ \rm \texttt{Exc}} )$ holds. 
 Thus, the \fwpi \ function takes into account both normal and exceptional program termination. Note however, that \fwpi \ deals only with partial correctness, i.e.
