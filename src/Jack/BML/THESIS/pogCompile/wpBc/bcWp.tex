@@ -1,0 +1,210 @@
+\newtheorem{wpSeq}{Definition}[section]
+\newtheorem{wpExpr}[wpSeq]{Definition}
+
+
+\section{Weakest predicate transformer for Bytecode language} \label{pog:wpBc}
+In the following, we introduce a new formulation of the \wpName \ function 
+which will be based on the compiler from source to bytecode  language.
+The motivation for this new definition is that it will allow to reason about the
+ relation between source and bytecode proof
+obligations. 
+Of course, it is also important to see what is the relation between the new definition
+of the \wpName \ introduced here and the definition  given earlier in Chapter \ref{wpGeneral}, section \ref{wpRules}. 
+We will argue under what conditions both formulations of the \wpName \ function produce the same formulas.
+
+
+
+
+% single instruction
+We give now a definition of the \wpName \ function for a single instruction which takes
+explicitely the postcondition and the exceptional postcondition function 
+upon which the precondition will be calculated. Its signature is the following:
+
+$$ \mbox{\rm\textrm{wp}}^{bc} : \bcIns \rightarrow \formulaBc \rightarrow ( \mbox{ \rm \texttt{Exc}} \rightarrow \formulaBc ) \rightarrow \formulaBc$$
+
+For instance, the \wpName \ definition for \getfield \ is :
+$$ \begin{array}{l} \wpExpl{\getfield \ f }{ \psi  }{ \excPost} = \\
+		         \stack{\counter -1 } \neq \Mynull \Rightarrow 
+			                \psi   \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})} 		                    
+			  \wedge \\
+			  \stack{\counter -1 }  = \Mynull  \Rightarrow   \excPost( \NullPointerExc )
+			  \end{array}$$ 
+
+Note that this differs from the definition of the \wpName \  given in Chapter \ref{wpGeneral}, section \ref{wpRules} where the postcondition 
+is a function of the successor of the current instruction. We do not give the rest of the rules because they the same as the rules presented in \ref{wpRules} except
+for the fact that the local postconditions are given explicitely.
+
+% sequence of instructions
+We also define the weakest predicate transformer function  for a sequence of instruction that always execute sequentially as follows:
+
+\begin{wpSeq}[\wpName \ for a block of instructions]\label{wpSeq}
+     $$ \begin{array}{l} 
+              \wpBcSeq{ \ins{1};...;\ins{k}}{ \psi  } { \excPost } =\\
+              \wpBcSeq{\ins{1};...;\ins{k -1} }{ \wpExpl{ \ins{k} }{ \psi }{ \excPost} }{\excPost} 
+        \end{array}$$ 
+
+\end{wpSeq}
+
+
+% wp for compiled expressions 
+
+We turn now to the rules for compiled expressions. Note that from Property \ref{compProp2} it follows that 
+the compilation of any expression is a sequence of instructions of instructions that execute sequentially and there is no jump from outside inside 
+the sequence. Thus, we use 
+the predicate transformer  for a sequence of bytecode instructions defined above in order to define 
+the predicate transformer for  expressions. 
+
+\begin{wpExpr}[\wpName \ for compiled expressions] \label{wpExpr}
+               For any expression $\expressionSrc$, postcondition $\psi$ and exceptional postcondition function
+               $\excPost$ the \wpName \ function for the compilation $\compile{\expression}$  is
+               $ \wpBcSeq{\compile{\expression} }{ \psi  } { \excPost }  $
+ \end{wpExpr}
+
+For instance, the  rule of the \wpName  \ for the compilation of access  field expression $\expressionSrc.\fieldd $ 
+where its compilation is 
+$$\begin{array}{l}
+     \expressionSrc_1;\\
+     \getfield \ \fieldd \\
+ \end{array}
+$$
+  produce the following formula 
+
+$$  \wpBcSeq{\begin{array}{l}
+	              \compile{\expressionSrc } ;\\
+	             \getfield \ \fieldd 
+	           \end{array} }{ \psi  } { \excPost } $$	
+
+This is equivalent to :
+  $$\wpBcSeq{\compile{\expressionSrc}}{\wpExpl{\getfield \ \fieldd }{\psi}{\excPost} }{\excPost} $$  
+
+
+% wp for compiled statements
+
+
+The function which calculates the \wpName \ predicate of a compiled statement is called $\wpNameStmt$ and has the following signature :
+$$\wpNameStmt : Set(\bcIns) \rightarrow  \formulaBc \rightarrow  ( \mbox{ \rm \texttt{Exc}}  \rightarrow \formulaBc ) \rightarrow \formulaBc$$ 
+The definition of $\wpNameStmt$ uses the compiler function defined in Section \ref{compCtrlStmt}
+
+\begin{itemize}
+    \item sequential statement compilation $\compile{\stmt_1;\stmt_2} $ which by definition is 
+         % $$ \begin{array}{l}
+         %                           \compile{\stmt_1};\\
+          %                          \goto \ l;\\
+	  %                          l: \compile{\stmt_2}
+	 %	             \end{array}    $$
+         % By definition the $\wpNameStmt$ for compiled sequental statements is 
+       $$ \begin{array}{l} \wpStmt{ \compile{\stmt_1;\stmt_2 }}{ \psi}{\excPost} =\bydef \\
+                    
+	 	   \wpStmt{\compile{\stmt_1};}
+                          {\\
+                           \phantom{wp^{stmt}} \wpStmt{ \compile{\stmt_2}}{ \psi}{\excPost}}
+			  {\\ 
+                           \phantom{wp^{stmt}} \excPost} 
+          \end{array}  $$ 
+     \item if statement compilation $\compile{   \Myif \ (\expressionSrcRel) \  \Mythen \ \{ \stmt_1 \} \    \Myelse \ \{ \stmt_2 \} }$   
+           % which by definition is  equal to
+           % $$ \begin{array}{l}
+	     %                           \compile{\expressionSrcRel}; \\
+	 % %			        \ifCond\_\rel \ l_{true} ;\\
+	 %			       \compile{\stmt_2)}\\
+	 %			       \goto \ l; \\
+	 %			       l_{true}: \ \compile{\stmt_1} \\ 
+	 %			       l:
+	    %                       \end{array} $$
+
+%By definition the $\wpNameStmt$ \  in this case is defined as follows:
+    $$ \begin{array}{l} \wpStmt{   \compile{ \begin{array}{l} \Myif \ (\expressionSrcRel) \\
+                                                               \Mythen \ \{ \stmt_1 \} \\  
+							       \Myelse \ \{ \stmt_2 \}   
+                                              \end{array}}}{\psi}{\excPost} =\bydef \\\\
+                     
+                        \wpBcSeq{%   \begin{array}{l}
+                      	                    \compile{\expressionSrcRel}; \\
+					    %\ifCond\_\rel \ l_{true} ;\\
+				%     \end{array}
+			    } {\\
+                             \phantom{wp^{bc}_{seq}}	 \begin{array}{l}
+			              \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compile{\stmt_1} }{\psi}{\excPost} \substitution{t}{t-2} \\
+			               \wedge \\
+				       \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compile{\stmt_2} }{\psi}{\excPost} \substitution{t}{t-2} 
+			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPost} 
+     \end{array} $$ 
+       \item assignment expression. We will look only at the case for  compiled   field assignment 
+	 expressions $\compile{\expressionSrc_1.\fieldd= \expressionSrc_2 }$.
+          %    By definition of the compiler function is compiled down to 
+	 %		$$\begin{array}{l} \compile{\expressionSrc_1};\\
+	 %		                   \compile{\expressionSrc_2}; \\
+	 %				   \putfield \ \fieldd 
+	 %		 \end{array}  		   
+	 %		$$
+	 	      
+		       $$\begin{array}{l}
+		              \wpStmt{ \compile{\expressionSrc_1.\fieldd= \expressionSrc_2}}{\psi}{\excPost} =\bydef \\
+	
+			      \wpBcSeq{ \compile{\expressionSrc_1}}
+				      { \\
+			              \phantom{wp^{bc}_{seq}}  \wpBcSeq{\begin{array}{l}
+                                                                              \compile{\expressionSrc_2}; \\
+                                                                              \putfield \ \fieldd 
+				                                        \end{array}}{\psi}{\excPost}  }
+                                      { \\
+			              \phantom{wp^{bc}_{seq}} \excPost}                     
+		        \end{array} $$ 
+          
+
+     \item try catch statement compilation 
+
+	   % $$  \begin{array}{l}
+             %           \compile{\stmt_1}; \\
+           %             goto \ l; \\
+	 %	  
+             %           \compile{\stmt_2};\\
+	 %	       goto \ l; \\
+	 %	       ...\\
+	 %	       l: \\ 
+               %         \\  
+                    
+	 %		\addExceptionTable{ \stR{\compile{\stmt_1} }}{ \enR{  \compile{ \stmt_1 }  }}{ \stR{\compile{\stmt_2}} }{ \excType} ) 
+             %    \end{array}$$
+			
+          
+    $$ \begin{array}{l}
+	     \wpStmt{ \compile{  \begin{array}{l}
+		                      \try \ \{ \stmt_1 \} \\ 
+				      \catch \ (\excType \  \var)\{ \stmt_2 \}
+	                         \end{array}   }}{\psi}{\excPost} =\bydef \\
+	          \wpStmt{ 
+	                 \compile{\stmt_1}}
+                         { \\
+	                 \phantom{wp^{bc}_{stmt}} \psi}
+			 { \\
+	                  \phantom{wp^{bc}_{stmt}}  \update{\excPost}{\excType}{ \wpStmt{\compile{\stmt_2} }{\psi}{\excPost }} }
+	\end{array}$$	
+
+	 \item try finally statement compilation $\compile{\try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \}}   $
+
+	      
+	       $$ \begin{array}{l}
+	     \wpStmt{ \compile{\begin{array}{l}  
+					  \try \ \{ \stmt_1 \} \\
+					  \finally \ \{ \stmt_2 \} 
+	                                  \end{array}}}{\psi }{\excPost} =\bydef \\
+	     \wpStmt{\compile{\stmt_1} }
+                   {\\
+                      \phantom{wp^{bc}_{stmt}}  \wpStmt{\compile{\stmt_2}}{\psi}{\excPost} }
+		   {\\
+                      \phantom{wp^{bc}_{stmt}} \update{\excPost}{\excType}{ \wpStmt{\compile{\stmt_2} }{\psi}{\excPost }} }
+               	\end{array}$$
+
+
+   \item throw exception compilation $\compile{\throw \ \expressionSrc }$
+        
+	 $$ \begin{array}{l} 
+	         \wpStmt{ \compile{\throw \ \expressionSrc }   }{\psi}{\excPost} =\bydef \\ 
+		 \wpBcSeq{ \expressionSrc }{ \wpExpl{\athrow}{\psi}{\excPost}}{\excPost} 
+	 \end{array}
+	 $$
+   \item  loop statement
+\end{itemize}

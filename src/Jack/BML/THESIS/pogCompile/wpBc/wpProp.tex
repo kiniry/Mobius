@@ -1,0 +1,40 @@
+\newtheorem{wpBlock}{Lemma}[subsection]
+\newtheorem{relWpExpr}[wpBlock]{Lemma}
+\newtheorem{relWpStmt}[wpBlock]{Lemma}
+
+\subsection{Properties of the \wpName \ functions}
+    The previous subsection introduced a new formulation of the 
+    \wpName \ function for bytecode which takes into account 
+    the source statement from which it is compiled. 
+    However, it is important to establish a relation between this new definition
+    and  the \wpName \ formulation given in  Chapter wp\ref{wpGeneral}.
+    The following two statements give the formalization of the relation between 
+    the two calculus.
+
+
+
+\begin{wpBlock}[\wpName  \  for a block of instructions]\label{wpBlock}
+  For every block of instructions $i_1; \dots;i_k $    in  method \methodd  \
+  if $\psi = \inter{i_k}{\next{i_k}}$ then the following holds
+     $$   \wpBcSeq{i_1; \dots;i_k }{\psi }{\excPost} = \wpi{}{\methodd}{i_1}$$        
+\end{wpBlock} 
+
+The proof is done by induction on the length of the sequence of instructions.
+\textit{Proof:}
+
+$$
+\begin{array}{l}
+\end{array}
+$$
+
+\begin{relWpExpr}[\wpName  \  for compiled expressions ]\label{relWpExpr}
+     For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \
+     if $\psi = \wpi{  }{\methodd }{ \next{\ins{e} } }$ then the following holds
+     $$   \wpBcSeq{\compileLabel{s}{\expressionSrc}{e}   }{\psi }{\excPost} = \wpi{}{\methodd}{\ins{s}}$$        
+
+\end{relWpExpr}
+
+\textit{Proof}: From Property \ref{compProp1} of the compiler it follows that for every expression
+ $\expressionSrc$, start label $s$  and  end label $e$,
+  the resulting compilation   $\compileLabel{s}{\expressionSrc}{e}$ is a block of instructions. We can apply 
+ the previous lemma  \ref{wpBlock} and we get the result.
