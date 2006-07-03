@@ -61,8 +61,9 @@
 %\newcommand{\invariant}[1]{\it{I}_{\tt{#1}}}
 %\newcommand{\boucle}[1]{\texttt{#1}}
 %\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
+\newcommand{\ins}[1]{#1 : \mbox{\rm\texttt{instr}}}
 
-\newcommand{\ins}[1]{instr_{#1}}
+
 \newcommand{\insOnly}{\texttt{instr}}
 
 % the grammar for the bytecode specification language
@@ -144,7 +145,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP functions%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\newcommand{\wpi}[3]{\mbox{\rm\textit{wp}}( #1, #2 , #3) }
+\newcommand{\wpi}[3]{\mbox{\rm\textit{wp}}(#3 \  #1, #2) }
 \newcommand{\fwpi}{\mbox{\rm\textit{wp}}}
 \newcommand{\inter}[2]{\mbox{ \rm \textit{inter}}(#1, #2, \methodd)} % predicate that holds between two bytecode blocks
 \newcommand{\interOnly}{\mbox{ \rm \textit{inter}}} % the name of the function that calculates predicate that holds between two bytecode blocks
@@ -172,7 +173,7 @@
 \newcommand{\reffArr}{\mbox{\rm\textit{RefArrType}}}
 \newcommand{\Ref}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
 \newcommand{\reference}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
-\newcommand{\referenceOnly}{\mbox{ \rm \texttt{ref}} \ } 
+\newcommand{\referenceOnly}{\mbox{\rm\texttt{ref}}} 
 \newcommand{\RefArr}[1]{\tt{refArr}_{#1} } % a reference to an array  ref_{type}^{length}
 \newcommand{\substitution}[3]{#1 \lbrack #2 \leftarrow #3 \rbrack }
 \newcommand{\subst}[2]{ \lbrack #1 \leftarrow #2 \rbrack }
