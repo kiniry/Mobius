@@ -62,7 +62,7 @@ initial state $state_{init} =\config{\heap_{init}  }{ 0 }{\lbrack \ \rbrack }{\l
  \begin{itemize}
          \item $ \methodd.\body[0] : state_{init} \stateTrans^{*} state_0$
          \item $ \methodd.\body[s] : state_0 \rightarrow state_1$
-         \item $ \interp{\wpi{\ins{s}}{s}{\methodd}}{state_0} $
+         \item $ \interp{\wpi{\ins{s}}{\methodd}{s}}{state_0} $
 	 %\item  $\ins{k} = next( \ins{s} ) $
          \item    $ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$ is correct w.r.t. its specification
  \end{itemize}
@@ -105,7 +105,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 	                  
 			  $$ \begin{array}{l}
 			  	\mbox{\rm\comment{by initial hypothesis }} \\
-			 \interp{\wpi{\load \ i}{\pc  }{\methodd}}{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }}$$ \\
+			 \interp{\wpi{\load \ i}{\methodd}{\pc  }}{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }}$$ \\
 			 \mbox{\rm\comment{definition of the wp function} } \\
 			  \equiv \\ 
 			   \interp{  \inter{\pc }{\pc  +1 } \begin{array}{l} \subst{\topStack}{\topStack + 1} \\
@@ -114,7 +114,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 			\mbox{\rm\comment{applying the substitution properties \ref{substCntr} and \ref{substStack} }}\\
 		
 		       \iff \\ 
-		       \interpTwoLines{ \wpi{\ins{\pc  +1 }}{ \pc  + 1}{\methodd}  }
+		       \interpTwoLines{ \wpi{\ins{\pc  +1 }}{\methodd}{ \pc  + 1}  }
                                   { \config{\heap }{\counterOnly  + 1}{ \update{\stackOnly }{\counterOnly  + 1 }{\locVarOnly (i) } }{\locVarOnly }{\pc } }
 		    \end{array}	$$
 		 \comment{from the operational semantics of the \load instruction in section \ref{opSem} the lemma holds in this case } 
@@ -122,7 +122,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 	\item  $\new  \ \clazz $ 
 	        $$ \begin{array}{l}  
 		      	\mbox{\rm\comment{by initial hypothesis }} \\ 
-                         \interp{\wpi{\new \ \clazz }{\pc  }{\methodd}}{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
+                         \interp{\wpi{\new \ \clazz }{\methodd}{\pc  }}{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
 			  \mbox{\rm\comment{definition of the wp function} } \\
 			 \equiv \\  
 		\numConclusion{1} \	\interpTwoLines{
@@ -144,7 +144,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 		       \\
 		      \numConclusion{3} \newRef{\heap}{\clazz} = (\heap',\referenceOnly' ) \\
 		       \\
-		       \mbox{\rm\comment{following Def. \ref{interpPred} instantiate \numConclusion{1} with \mbox{\rm\referenceOnly'}  }} \\
+		       \mbox{\rm\comment{following Def. \ref{interpPred} instantiate \numConclusion{1} with \mbox{\rm\referenceOnly}$'$  }} \\
 		       \numConclusion{4}  	 \interpTwoLines{\begin{array}{l}
 			 not \ \instances(\referenceOnly' ) \wedge \\
 			  \referenceOnly' \neq \Mynull \Rightarrow \\  
@@ -167,9 +167,10 @@ We are going to see only the proofs for the instructions \return , \load and \in
 		       \mbox{\rm\comment{ from     \numConclusion{4} and   \numConclusion{5} and Def. \ref{interpPred}  }} \\	  
                          \interpTwoLines{\inter{i}{i+1} 
 			      \begin{array}{l} 
-                            \subst{ \counter}{ \counter + 1 } \\
-			    \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
-		            \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } 
+                                    \subst{ \counter}{ \counter + 1 } \\
+			            \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
+		                    \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
+                                    \subst{ \typeof{\referenceOnly}}{ \clazz } 
 			    \end{array} }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } \\
 		       
 		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap} }} \\
