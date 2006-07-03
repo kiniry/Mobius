@@ -1,0 +1,333 @@
+
+\subsection{Weakest Predicate Transformer for the Source Language } \label{pog:wpSrc}
+
+The weakest precondition calculates for every statement $\stmt$ from our source language,
+for any normal postcondition $Post$ and exceptional postcondition function $\excPostSrc$ ($ \mbox{ \rm \texttt{Exc}} \rightarrow \stmt \rightarrow \formulaSrc $),
+ the predicate $Pre$ such that if it holds in the pre state of $\stmt$ and   if $\stmt$ terminates normally then $Post$ holds in the poststate and
+ if $\stmt$ terminates on exception $Exc$ then $\excPostSrc(Exc, \stmt)$ holds.
+The weakest precondition function has the following signature:
+$$ \textrm{wp}^{src} : \stmt \rightarrow \formulaSrc \rightarrow ( \mbox{ \rm \texttt{Exc}} \rightarrow  \formulaSrc ) \rightarrow \formulaSrc$$
+Before looking at the definition of the weakest predicate transformer we define the exceptional postcondition function $\excPostSrc$.
+
+
+\subsubsection{Exceptional Postcondition Function}
+
+
+We now look at how the exceptional postconditions for expressions(statements) are managed. 
+As we said the weakest predicate transformer takes into account the normal and exceptional termination of 
+an expression(statement). 
+In both cases the expression(statement) has to satisfy some condition : 
+the normal postcondition in case of normal termination and the exceptional postcondition
+for exception $\texttt{Exc}$ if it terminates on exception $\texttt{Exc}$
+
+
+We introduce a function $\excPostSrc$  which maps exception types to predicates  
+
+$$ \excPostSrc :  \mbox{\rm \texttt{ ETypes  }}  \longrightarrow   Predicate $$ 
+
+
+
+The function $\excPostSrc$ \ returns the predicate $\excPostSrc (\texttt{Exc}) $ that must hold in a particular program point if
+ at this point an exception of type \texttt{Exc} is thrown.
+
+%The function $\excPostSpecSrc $ returns for any exception \texttt{Exc}  thrown by the method the predicate that must hold in the 
+% method exceptional termination state caused by throwing an exception of type \texttt{Exc}.
+
+
+
+
+We also use  function updates for $\excPostSrc$ which are defined in the usual way
+
+
+$$
+\update{\excPostSrc}{\texttt{Exc'} }{ P }(\texttt{Exc}, exp)  = 
+       \left\{\begin{array}{ll} 
+         P & if \texttt{Exc} <: \texttt{Exc'}  \\
+         \excPostSrc(\texttt{Exc}, exp ) & else 
+     \end{array}\right.$$
+
+
+\subsubsection{Expressions}\label{wpExpr}
+
+We define the weakest precondition predicate transformer function over 
+expressions. As we will see in the definition below this definition allows us to 
+get the side effect conditions of the expression evaluationm, namely the conditions for normal and
+exceptional termination. 
+
+
+\begin{itemize}
+
+      \item integer and boolean constant access \\
+	  ( $const \in \{  \constantInt , \Mytrue , \Myfalse, \constantRef  \}$ )
+	$$ \wpiSrc{const}{\normalPostSrc }{ \excPostSrc } = \normalPostSrc $$
+	
+    \item field access expression
+	         $$ \begin{array}{l} 
+             \wpiSrc{\expressionSrc_1.f  }{\normalPostSrc }{ \excPostSrc } = \\
+	                        \wpiSrc{\expressionSrc_1 }{\\
+			                   \phantom{wpiSr} \begin{array}{l} \compileSrcSpec{\expressionSrc_1} \neq \Mynull \Rightarrow \normalPostSrc\\
+			                           \wedge \\
+						  \compileSrcSpec{ \expressionSrc_1} = \Mynull \Rightarrow \excPostSrc(\texttt{ NullPointerExc} ,\expressionSrc_1 ) 
+		                                   \end{array}}{\\ \phantom{wpiSrc} \excPostSrc } 
+                     		  
+                  
+	    \end{array} $$
+
+	 \item arithmetic expressions 
+             $$ \begin{array}{l}
+	              \wpiSrc{ \expressionSrc_1 \ op \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc } =  \\
+		      \wpiSrc{ \expressionSrc_1  }{\wpiSrc{\expressionSrc_2 }{ \normalPostSrc }{ \excPostSrc }  }{ \excPostSrc }
+		\end{array}$$
+
+	\item method invocation
+
+  $$ \begin{array}{l} \wpiSrc{ \expressionSrc_1.m( \expressionSrc_2)  }{\normalPostSrc }{ \excPostSrc } = \\
+	     \wpiSrc{\expressionSrc_1 }{ 
+                          
+                              \wpiSrc{\expressionSrc_2} { \\
+			    \phantom{ wpiSrc\expressionSrc_2 } \left\{ \begin{array}{l}
+			      \expressionSrc_1  \neq \mbox{ \rm \Mynull }  \Rightarrow     \\
+			      
+                                         \Myspace    \Myspace    m.\preSrc  \begin{array}{l} 
+					                         \substitution{\this}{ \expressionSrc_1} \\
+                                                                 \substitution{\mbox{\rm arg}}{ \expressionSrc_2} \\
+					                  \end{array}  \\
+                                          \Myspace   \Myspace \wedge \\
+					  \Myspace   \Myspace \forall \freshVar, \ \forall \ m \in m. \mod \\ %, \forall \mbox{\rm\texttt{r}} \\
+					  
+                                          \Myspace   \Myspace  \left\{\begin{array}{l}  
+					  \typeof{\freshVar} <: m.\returnType \wedge \\ 
+					  m.\normalPostSrc
+					                                \begin{array}{l} 
+					                                    \substitution{\result}{\freshVar } \\
+									    \substitution{ \this}{ \expressionSrc_1} \\
+									    \substitution{\mbox{\rm arg} }{ \expressionSrc_2}
+					                                 \end{array}   \\
+                                             \Myspace \Rightarrow \normalPostSrc  \substitution{ \compileSrcSpec{\expressionSrc_1.m( \expressionSrc_2) } }{ \freshVar }  \\ 
+					                       \end{array}\right.\\
+					  \Myspace   \Myspace \wedge \\
+					  \Myspace   \Myspace	 \forall \mbox{\rm \texttt{E}} \in m.\exceptionSrc, \\
+					  \Myspace   \Myspace	 \forall \ m \in m. \mod\\
+					  \Myspace   \Myspace  
+					  \begin{array}{l}
+					         m.\excPostSpecSrc( \mbox{\rm \texttt{E}} ) \Rightarrow \excPostSrc( \mbox{\rm \texttt{E}} )
+					  \end{array} \\ 
+			                \expressionSrc_1 = \mbox{ \rm \Mynull }  \Rightarrow    \excPostSrc( \NullPointerExc )
+                           \end{array}\right. 
+       } { \\  \phantom{ wpisrc \expressionSrc_1 } \excPostSrc  } 
+	      } { \\   \excPostSrc  } \\\\
+ where \  \compileSrcSpec{ \expressionSrc_1.m( \expressionSrc_2)  } = \freshVar 
+            \end{array} $$	 
+
+
+
+	  \item Cast expression \todo{may be give an example}
+	       $$ \begin{array}{l} \wpiSrc{ ( \mbox { \rm \texttt{Class} } ) \ \expressionSrc  }{\normalPostSrc }{ \excPostSrc } = \\
+	           \wpiSrc{ \expressionSrc } { \\ 
+                      
+                    \phantom{wpSr} \begin{array}{l}
+                    \typeof{\compileSrcSpec{\expressionSrc } } <:\mbox { \rm \texttt{Class} }  \Rightarrow    \\
+		      \phantom{wpSr} \phantom{wpSr}   \wpiSrc{ \expressionSrc  }{ \normalPostSrc }{ \excPostSrc } \\
+		     \wedge \\
+		    \neg \   \typeof{\compileSrcSpec{\expressionSrc } } <:  \mbox { \rm \texttt{Class} } \Rightarrow  \\ 
+                     \phantom{wpSr} \phantom{wpSr}  \excPostSrc( \mbox{ \rm \ClassCastExc } ,\expressionSrc )
+                    \end{array}  } { \\ \phantom{wpSrc}  \excPostSrc }
+	            \end{array} 
+	          $$
+				
+                               
+	   
+            
+	    \item Null expression
+
+		    $$ \wpiSrc{\Mynull  }{\normalPostSrc }{ \excPostSrc } = \normalPostSrc $$
+           
+	    \item this 
+
+		    $$ \wpiSrc{\this  }{\normalPostSrc }{ \excPostSrc } = \normalPostSrc $$
+           	       
+	 \item instance creation
+
+%\todo{may the precondition of a class constructor talk about this? I would say no } 
+
+  $$ \begin{array}{l} 
+    \wpiSrc{ \newSrc \ Class  ( \expressionSrc  ) } {\normalPostSrc }{ \excPostSrc  }= \\
+	  
+	             \wpiSrc{\expressionSrc} { \\ \\
+		                \phantom{wpSr}\left\{ \begin{array}{l}
+                                     \Constructor{Class}.\preSrc
+				                 \begin{array}{l} 
+                                                    %  \substitution{ \this}{ \Ref{Class} } \\
+                                                      \substitution{ arg}{ \compileSrcSpec{\expressionSrc}} \\
+					     	\end{array} \\
+					       \wedge \\
+					     \forall \freshVar, 
+					      % , \\
+					       
+					          \\
+					       \Myspace  \wedge \\
+					       \Myspace  not \ \instances(\freshVar ) \wedge \\
+					       \Myspace  \instances(\freshVar ) \neq \Mynull \wedge \\
+					       \Myspace  \forall \ m \in \Constructor{Class}. \mod , \\
+					       \Myspace  \Myspace    \Constructor{Class}.\normalPostSrc \Rightarrow   \normalPostSrc
+					             \begin{array}{l}   
+						       \substitution{ \this}{ \freshVar  } \\
+							\substitution{ arg}{ \compileSrcSpec{\expressionSrc}} \\
+							\substitution{	\typeof{\freshVar}}{ Class} 
+						     \end{array}  \\
+					          \wedge \\
+						   \forall \mbox{\rm \texttt{Exc}} \in  \Constructor{Class}.\exceptionSrc, \\
+						   \forall \ m \in \Constructor{Class}. \mod, \\
+						 \Constructor{Class}.\excPostSpecSrc ( \mbox{\rm\texttt{Exc}}) \Rightarrow \excPostSrc( \mbox{\rm\texttt{Exc}})
+		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }  \\\\
+		      where \  \compileSrcSpec{ \newSrc \ Class  ( \expressionSrc  ) } = \freshVar 
+            \end{array}  $$ 
+
+\end{itemize}
+
+%\subsection{Relational expressions}
+Let us see the relational expressions supported in the source programming language
+
+\begin{itemize} 
+     \item Instanceof expression
+	        $$ \begin{array}{l} \wpiSrc{ \expressionSrc \ instanceof \ Class }{\normalPostSrc }{ \excPostSrc } = \\
+	                \wpiSrc{ \expressionSrc  }{ \normalPostSrc }{ \excPostSrc }
+	            \end{array} $$
+
+     \item Binary relation over expressions
+            $$ \begin{array}{l} \wpiSrc{ \expressionSrc_1 \ \rel \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc } = \\
+	                \wpiSrc{ \expressionSrc_1  }{  \wpiSrc{ \expressionSrc_2  }{ \normalPostSrc }{ \excPostSrc }  }{ \excPostSrc }
+	            \end{array} $$
+\end{itemize}
+
+
+\subsubsection{Statements}
+\begin{itemize}
+
+\item integer and boolean constant access 
+  $$ \begin{array}{l}
+           \wpiSrc{ \stmt_1;\stmt_2}{\normalPostSrc }{ \excPostSrc } = \\
+	   \\
+	   \wpiSrc{\stmt_1 }{\wpiSrc{\stmt_2 }{\normalPostSrc }{ \excPostSrc}} { \excPostSrc} 
+     \end{array}
+  $$
+  
+ \item assignment
+       \begin{itemize}
+	 \item local variable assignemnt
+	  $$ \begin{array}{l} \wpiSrc{ \expressionSrc_1 = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = \\
+               \\
+                \wpiSrc{\expressionSrc_2}{\\ \phantom{wpiSr} \wpiSrc{\expressionSrc_1}
+		                                 {\normalPostSrc\substitution{\compileSrcSpec{\expressionSrc_1} }
+                                                 {\compileSrcSpec{\expressionSrc_2}}}{\excPostSrc}  }
+		                         {\\\phantom{wpiSr} \excPostSrc}
+          \end{array}
+	$$  
+            
+      \item instance field assignemnt
+
+
+  $$ \begin{array}{l} \wpiSrc{ \expressionSrc_1.f = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = \\
+               \\
+  \wpiSrc{\expressionSrc_1}{  \\
+   \phantom{wpiSr} \wpiSrc{\expressionSrc_2 }{
+ \begin{array}{l}
+         \Mynull \neq \compileSrcSpec{\expressionSrc_1} \Rightarrow \\
+	         \phantom{wpiSr}  \normalPostSrc \substitution{f}{f \oplus [ \compileSrcSpec{\expressionSrc_1} \rightarrow \compileSrcSpec{\expressionSrc_2}]}   \\
+          \wedge \\
+        \Mynull = \compileSrcSpec{\expressionSrc_1} \Rightarrow  \\
+	  \phantom{wpiSr}   \excPostSrc(\texttt{NullPointerExc}) 
+  \end{array}}{ \\ \phantom{wpiSr}  \excPostSrc} 
+}{ \\ \phantom{wpiSr}  \excPostSrc} \\
+
+
+          \end{array}
+	$$  
+\end{itemize}
+		                         
+\item if statement
+ $$ \begin{array}{l}\wpiSrc{ \begin{array}{l} \Myif \  (\expressionSrc)\\  \Mythen  \{ \stmt_1 \} \\  \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } = \\
+     \\ 
+
+    \wpiSrc{ \expressionSrcRel }{ \\
+       \phantom{wpiSr}  \begin{array}{l}  
+	 \compileSrcSpec{\expressionSrcRel}   \Rightarrow \wpiSrc{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
+	 \wedge \\
+	   \neg \  \compileSrcSpec{\expressionSrcRel}  \Rightarrow \wpiSrc{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
+	 \end{array}
+     } {\\  \phantom{wpiSr}  \excPostSrc }
+    
+    \end{array}
+ $$
+  
+				
+
+
+\item throw exceptions 
+	$$ \begin{array}{l}   
+              \wpiSrc{ \throw \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} = \\
+	      \\
+	      \wpiSrc{\expressionSrc}{\\ \phantom{wpiSr} 
+                  \begin{array}{l}
+		        \compileSrcSpec{\expressionSrc} \neq \Mynull \Rightarrow \excPostSrc( \typeof{ \expressionSrc }  ) \\
+	                  \compileSrcSpec{\expressionSrc} = \Mynull \Rightarrow \excPostSrc( \texttt{NullPointerExc} ) 
+	          \end{array}}   
+		     { \\ \phantom{wpiSr}  \excPostSrc} 
+	   \end{array}        $$
+
+
+ \item try catch statement
+   $$ \begin{array}{l}   
+              \wpiSrc{ \try \ \{ \stmt_1 \} \ \catch (\texttt{Exc} \ c )\ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} = \\
+              \\
+	      \wpiSrc{ \stmt_1}{ \\ \phantom{wpiSr} \normalPostSrc}{ \\ \phantom{wpiSr} \excPostSrc \oplus [\texttt{Exc} \longrightarrow \wpiSrc{\stmt_2}{ \normalPostSrc}{\excPostSrc}  ] }
+       \end{array} 
+   $$
+
+\item try finally 
+
+  $$   \begin{array}{l}   
+              \wpiSrc{ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} = \\
+              \\
+	 \wpiSrc{ \stmt_1}{\\ \phantom{wpiSr} \wpiSrc{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{wpiSr}
+          \excPostSrc \oplus [\mbox{\rm\texttt{Exception}}  \longrightarrow \wpiSrc{\stmt_2}{ \excPostSrc( \mbox{\rm\texttt{Exception}}  )}{\excPostSrc}  ] }
+       \end{array} $$
+
+where $exc$ is the exception object thrown by $\stmt_1$.
+
+
+\item try catch  finally 
+  $$   \begin{array}{l}   
+              \wpiSrc{ \begin{array}{l} \try \ \{ \stmt_1 \} \\ \catch( Class \ c)  \ \{ \stmt_2 \} \\  \finally \ \{ \stmt_3 \} \end{array} } { \normalPostSrc}{\excPostSrc} \\
+              = \\
+              
+	 \wpiSrc{\begin{array}{l}  \try \ \{ \try \ \{ \stmt_1 \} \catch(Class \ c) \ \{ \stmt_2 \} \}  \\ \finally \ \{ \stmt_3 \} \end{array}  }{ \normalPostSrc}{\excPostSrc} 
+       \end{array} $$
+
+
+\item loop   statement
+     $$\begin{array}{l}   
+              \wpiSrc{ \while \ (\expressionSrc) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc} = \\
+	      \\
+	       \invariant \ \wedge\\
+	       \forall \  m, m \in \modLoop , \\
+	       \Myspace \invariant \Rightarrow \\
+	 	     \Myspace    \Myspace \wpiSrc{\expressionSrc}{\\\phantom{wpiSr}
+		     \begin{array}{l}  		
+		           \Myspace \compileSrcSpec{\expressionSrc } = \Mytrue \Rightarrow \  \wpiSrc{ \stmt }{\invariant} {\excPostSrc}  \\ 
+		           \Myspace \compileSrcSpec{\expressionSrc } = \Myfalse  \Rightarrow  \normalPostSrc
+		     \end{array}
+	      }{ \\ \phantom{wpiSr} \excPostSrc} 
+	      
+        \end{array}
+     $$
+
+
+\item return statement
+      $$ \begin{array}{l}  
+               \wpiSrc{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} = \\
+               \wpiSrc{ \expressionSrc}{ \normalPostSrc \substitution{\result }{ \compileSrcSpec{ \expressionSrc} } } { \excPostSrc} 
+         \end{array} $$
+where \result is a specification variable that can be met in the postcondition and denotes to the value returned of a non void method
+\end{itemize}
+
