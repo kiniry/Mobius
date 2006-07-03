@@ -1,14 +1,151 @@
+%\newtheorem{compProp0}{Property}[subsection]
+\newtheorem{compProp1}{Property}[subsection] % control flow statement property 
+\newtheorem{compProp2}[compProp1]{Property} % control flow statement property  
+\newtheorem{compProp3}[compProp1]{Property} % expression property
+\newtheorem{seqInstr}{Definition}[subsection]
+
+ 
+\newcommand{\isStartExc}[1]{\mbox{\rm\textit{isExcHandlerStart}}(#1)}
 \subsection{Properties of the compiler function}
 
-A property that can be established for the compiler is the following: 
+In this last subsection, we will look at the properties of the
+ bytecode  programs produced by the compiler.
 
-\newtheorem{compProp1}{Property} 
 
-\begin{compProp1}
-  For any statement $\stmt$, the compilation $\compile{\stmt}$ does not contain jump instructions ( \mbox{ \rm \instr{goto}, \instr{if\_cond} }) outside $\compile{\stmt}$ except possibly for the last
-instruction in  $\compile{\stmt}$.
+
+
+
+\begin{compProp1}[Compilation of statements]\label{compProp1}
+    For any expression $\stmt$, start label $s$ and end label $e$,
+    the compiler will produce a sequence of bytecode instruction $\compileLabel{s}{\stmt}{e}$ such that: 
+           $$ \begin{array}{l} 
+                             \forall i, ( \isInList{\compileLabel{s}{\stmt}{e}}{\ins{i}} ) \wedge \\
+			     \Myspace ( \ins{i} \execRel \ins{k}) \wedge \\
+			     \Myspace \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}     \Rightarrow   \\
+                             \Myspace \Myspace k = e + 1
+              \end{array}$$ 
 \end{compProp1}
-The property can be established by structural induction of the compilation $\compile{\stmt}$
+The following property states that  if there are instructions inside the compiled statetement 
+ $\compileLabel{s}{\stmt}{e}$ which are in execution relation\footnote{see Def. \ref{defEdge}} ( but not with the start of an exception handler) with an instruction 
+$\ins{k}$ outside it then the targetted instruction is  $\ins{e +1}$. 
+ The conditions  $ \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} )$ and 
+$\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
+ $\compileLabel{s}{\stmt}{e}$ which may throw an exception and the start instruction of the proper handler exception handler.
+
+ The proof is done by induction on the structure of the compiled statement. 
+
+\textit{Proof:} 
+$$
+\begin{array}{l}
+            \mbox{\rm\textit{We scatch the proof for the compilation of the if statement. }}\\
+            \\
+            \mbox{\rm\comment{by definition of the compiler function for if statements in section \ref{compCtrlStmt} }} \\
+            \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e} =  \\
+        
+	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
+            e' + 1: \ifCond \ e'' + 2;\\
+            \compileLabel{e' + 2}{\stmt_2}{e''}\\
+             e'' + 1: \goto \ e +  1; \\
+            \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
+	    %e: \goto   e + 1  \\
+            \\
+	    \mbox{\rm\comment{ induction hypothesis for $\expressionSrcRel$ and  $\stmt_1$ and $\stmt_2$ }} \\
+
+	    \numConclusion{1} \  \forall i ,  s \ge i \le e' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
+			     \Myspace \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
+                             \Myspace \Myspace k = e' + 1 \\ \\
+    
+	    \numConclusion{2} \  \forall i ,  e' + 2 \ge i \le e'' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
+			     \Myspace \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
+                             \Myspace \Myspace k = e'' + 1\\\\
+	
+	    \numConclusion{3} \  \forall i ,  e'' + 2 \ge i \le e ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
+			     \Myspace \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
+                             \Myspace \Myspace k = e + 1	     \\\\
+       
+     \numConclusion{4} \  \mbox{\rm\textit{\{ from \numConclusion{1},\numConclusion{2}   and  \numConclusion{3} we get that  }} \\  
+       \mbox{\rm\textit{ jumps from  $\expressionSrcRel$ and  $\stmt_1$ go inside the compilation of  }} \\
+       \mbox{\rm\textit{ $ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}  $  }} \\
+       \mbox{\rm\textit{ as $ e' + 1$ and  $e'' + 1$ are labels in the compilation of the statement  and  }}	\\
+       \mbox{\rm\textit{ and that jumps from $\stmt_2$ go to $e + 1$   \} }}\\
+
+        \\ 
+        \numConclusion{5} \  \mbox{\rm\textit{\{the instruction $   e' + 1: \ifCond \ e'' + 2; $ may jump}} \\
+                               \mbox{\rm\textit{ to $e'' + 2$ which is inside the compilation of the if statement \}  }} \\\\
+	  \numConclusion{6} \ \mbox{\rm\comment{the instruction $   e'' + 1: \goto \ e +  1; $ may jump to $e + 1$ }} \\\\
+	 \mbox{from \numConclusion{4},  \numConclusion{5} and \numConclusion{6} the lemma holds in that case   }
+\end{array}
+$$
+
+Before proceeding with the properties of the bytecode resulting from the expression compilation, we introduce the notion of block
+of bytecode instructions.  
+
+
+\begin{seqInstr}[Block of instructions] \label{seqInstr}
+If the list of  instructions $l  = \lbrack \ins{i_1} \ldots \ins{i_k} \rbrack$ is such that 
+ \begin{itemize}
+      \item none of the instructions in the set is a jump instruction, i.e. $\forall m, m = 1..k \Rightarrow \neg( \ins{i_m} \in  \{\goto, \ifCond\} )  $ 
+           
+      \item   none of the instructions is a target of an instruction $\ins{i_j}$ which does not belong to $l$
+
+ \end{itemize}
+
+We denote such a list of instruction with $\ins{i_1};...;\ins{i_k}$
+
+\end{seqInstr}
+
+
+The next lemma establishes that the compilation of an expression $\expressionSrc$ results in
+ a block of bytecode instructions.  
+\begin{compProp3}[Compilation of expressions]\label{compProp3}
+    For any expression $\expressionSrc$, starting label $s$ and end label $e$,
+    the compiler will produce a block of bytecode instruction $\compileLabel{s}{\expressionSrc}{e}$ such that
+    $\ins{s};...;\ins{e}$           
+\end{compProp3}
+The property states that there are no jump instructions  in the list of instructions representing the  compilation of an expression. 
+The proof is done by induction over the structure of the expression.
+
+
+\todo{give the definition of the function  $\isStartExc{\ins{k}}$   }
+\todo{this is not sufficient. There must be established a property that the $\execRel^l$ is only in the compilation of while statements} 
+ In the following, we  abstract
+ from the labeling done by the compiler and we  will denote the compiler function with $ \lbrack \ \rbrack $.
+ We assume that the compiler function $ \lbrack \ \rbrack $ does a labeling which has the above properties.
+ Also, the notation for labeled instructions used here $ \ins{i} $ will be sometimes abbreviated just to the index of the instruction $ i $. 
+
+
+%\begin{compProp2}[Compilation of statements ] \label{compProp2}
+%  For any statement $\stmt$, the compiler will produce a sequence of bytecode instruction 
+%  $\compileLabel{s}{\stmt}{e}$ such that
+%  there may be no more than one instruction $ \ins{j} \in \compileLabel{s}{\stmt}{e}$, such that 
+%  $ \ins{k} \execRel \ins{j} \wedge \neg ( \ins{k}  \ \in \  \compileLabel{s}{\stmt}{e} ) $
+%\end{compProp2}
+%The property states that 
+%no more than one instruction in the compilation $\compileLabel{s}{\stmt}{e}$
+%of the statement $\stmt$ may be targeted by an instruction 
+%which does not belong to  $\compileLabel{s}{\stmt}{e}$.
 
 
 
+
+
+
+
+%Another property of the compiler is that compilation of expressions result always 
+%in a block of sequential instructions as defined in the above def. \ref{seqInstr}
+
+%\begin{compProp3}[Compilation of expressions] \label{compProp3}
+%  For any expression $\expressionSrc$,
+%  starting label $s$ and end label $e$, the compiler
+%  will produce a sequence of bytecode instructions
+%  $ \compileLabel{s}{\expressionSrc}{e} =  \ins{s} ;...; \ins{e} $
+%\end{compProp3}
+
+
+%The property can be established by structural induction of the compilation $\compile{\expression}$
+
+ 

@@ -1,18 +1,15 @@
 \contentsline {section}{\numberline {1}Introduction}{2}
 \contentsline {section}{\numberline {2}Source}{2}
-\contentsline {subsection}{\numberline {2.1}Source assertion language}{4}
-\contentsline {subsection}{\numberline {2.2}Weakest Predicate Transformer for the Source Language }{5}
-\contentsline {subsubsection}{\numberline {2.2.1}Exceptional Postcondition Function}{5}
-\contentsline {subsubsection}{\numberline {2.2.2}Expressions}{6}
-\contentsline {subsubsection}{\numberline {2.2.3}Statements}{8}
-\contentsline {section}{\numberline {3}Bytecode}{10}
-\contentsline {subsection}{\numberline {3.1}Introduction}{10}
-\contentsline {subsection}{\numberline {3.2}Weakest predicate transformer for Bytecode language}{10}
-\contentsline {section}{\numberline {4}Compiler}{10}
-\contentsline {subsection}{\numberline {4.1}Compiling source formulas }{11}
-\contentsline {subsection}{\numberline {4.2}Compiling expressions in bytecode instructions}{12}
-\contentsline {subsection}{\numberline {4.3}Compiling control statements in bytecode instructions}{13}
-\contentsline {subsection}{\numberline {4.4}Properties of the compiler function}{16}
-\contentsline {section}{\numberline {5}Compiling Proof Obligations}{16}
-\contentsline {subsection}{\numberline {5.1}Auxiliary Properties}{16}
-\contentsline {subsection}{\numberline {5.2} Proof obligation equivalence}{19}
+\contentsline {section}{\numberline {3}Compiler}{4}
+\contentsline {subsection}{\numberline {3.1}Compiling expressions in bytecode instructions}{4}
+\contentsline {subsection}{\numberline {3.2}Compiling control statements in bytecode instructions}{5}
+\contentsline {subsection}{\numberline {3.3}Properties of the compiler function}{8}
+\contentsline {section}{\numberline {4}Weakest precondition calculus for source programs}{10}
+\contentsline {subsection}{\numberline {4.1}Source assertion language}{10}
+\contentsline {subsection}{\numberline {4.2}Weakest Predicate Transformer for the Source Language }{11}
+\contentsline {subsubsection}{\numberline {4.2.1}Exceptional Postcondition Function}{11}
+\contentsline {subsubsection}{\numberline {4.2.2}Expressions}{12}
+\contentsline {subsubsection}{\numberline {4.2.3}Statements}{14}
+\contentsline {section}{\numberline {5}Weakest predicate transformer for Bytecode language}{16}
+\contentsline {subsection}{\numberline {5.1}Properties of the \unhbox \voidb@x \hbox {\rm \textit {wp}}\ functions}{18}
+\contentsline {section}{\numberline {6}Auxiliary Properties}{18}

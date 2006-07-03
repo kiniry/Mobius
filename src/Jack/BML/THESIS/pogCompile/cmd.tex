@@ -11,7 +11,7 @@
 
 
 \newcommand{\fwpi}{ \rm{wp} }
-\newcommand{\instr}[1]{ \texttt{ #1 } }
+%\newcommand{\instr}[1]{\mbox{\rm\texttt{#1}}}
 
 %\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
 %\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
@@ -19,7 +19,8 @@
 %\newcommand{\boucle}[1]{\texttt{#1}}
 %\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
 
-\newcommand{\ins}[1]{\texttt{instr}_#1}
+\newcommand{\ins}[1]{#1 : \mbox{\rm\texttt{instr}}}
+\newcommand{\insOnly}{\mbox{\rm\texttt{instr}}}
 
 % the grammar for the bytecode specification language
 \newcommand{\ClassSpec}{\rm{ClassSpec}}
@@ -74,7 +75,7 @@
 %from wp.tex
 %\newcommand{\wpExeWithLoops}[1]{ \rm{Wp''}\rm{(#1)} }
 %\newcommand{\wpExe}[1]{ \rm{Wp'}\rm{(#1)} }
-\newcommand{\wpi}[3]{ \textrm{wp}^{bc}( #1, #2, #3) }
+
 \newcommand{\pre}{\psi^{pre}}
 \newcommand{\normalPost}{\psi^{postN}}
 \newcommand{\excPost}{\psi^{bc}_{exc}}
@@ -133,12 +134,19 @@
 \newtheorem{Formula}{Formulas}
 \newtheorem{Predicate}{Predicates}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP commands%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% for denoting a weakest precondition over sequence of instructions
-\newcommand{\wpBcSeq}[3]{ \textrm{wp}^{bc}( \mbox{ \rm $ #1 $ }, #2, #3) } 
+\newcommand{\wpName}{\mbox{\rm\textit{wp}}}
+\newcommand{\wpNameStmt}{\wpName^{bc}_{stmt}}
+\newcommand{\wpNameExpl}{\wpName^{bc}}
+\newcommand{\wpBcSeq}[3]{ \wpName^{bc}_{seq}(#1, #2, #3, \methodd) } % for denoting a weakest precondition over sequence of instructions
+\newcommand{\wpExpl}[3]{\wpName^{bc}( #1, #2, #3, \methodd) } % wp for a single instruction with  explicite postconditions
+\newcommand{\wpStmt}[3]{\wpName^{bc}_{stmt}( #1, #2, #3, \methodd) } % for a single instruction
+
+
 
 \newcommand{\formulaBc}{\mathcal{F}^{bc}}
- \newcommand{\formulaBcNoStack} { \formulaBc_{\tiny{ no \ stack}} }
+\newcommand{\formulaBcNoStack} { \formulaBc_{\tiny{ no \ stack}} }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pogComp.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -147,7 +155,7 @@
 
 \newcommand{\formulaSrc}{\mathcal{F}^{src}}
 \newcommand{\expressionSrc}{\mathcal{E}^{src}}
-\newcommand{\expressionSrcRel}{\mathcal{E}^{srcRel}}
+\newcommand{\expressionSrcRel}{\mathcal{E}^{\rel}}
 \newcommand{\constantInt}{\mbox{\rm\textbf{constInt}}}
 \newcommand{\constantBool}{\mbox{\rm\textbf{constBool}}}
 \newcommand{\constantRef}{\mbox{\rm\textbf{constRef}}}
@@ -175,7 +183,8 @@
 
 \newcommand{\compileSynt}[1]{  \ulcorner #1 \urcorner^{\tiny{spec}}  } % this for the syntactic compilation of source expressions into bytecode expressions as is defined % in the JML compiler 
 \newcommand{\compile}[1]{ \ulcorner  #1 \urcorner }
-\newcommand{\compileRev}[1]{ \ulcorner #1 \urcorner^{-1} }
+\newcommand{\compileLabel}[3]{ \ulcorner  #1,#2,#3 \urcorner }
+
 
 \newcommand{\compileExp}[2]{ \compile{ #1} }
 
@@ -192,7 +201,8 @@
 \newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{exc}}^{src}}
 \newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}}
 \newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}}
-\newcommand{\next}[1]{\textrm{next}(#1)}
+\newcommand{\next}[1]{\mbox{\rm\textit{next}}(#1)}
+\newcommand{\prev}[1]{\mbox{\rm\textit{prev}}(#1)}
 \newcommand{\mod}{\mbox{\rm\textsf{modif}}^{src}}
 
 
@@ -221,24 +231,40 @@
 
 \newcommand{\returnType}{\mbox{\rm\textsf{retType}}}
 
+
+\newcommand{\bydef}{^{\mbox{\rm{\textit{def}}}}}
+\newcommand{\excType}{\mbox{\rm{\texttt{ExcClass}}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
 \newcommand{\ClassCastExc}{\mbox{\rm \texttt{CastExc}}}
 \newcommand{\NullPointerExc}{\mbox{ \rm \texttt{NullPntrExc}}}
 \newcommand{\todo}[1]{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
 \newcommand{\referenceOnly}{\mbox{ \rm \texttt{ref}} \ } 
+\newcommand{\instances}{\mbox{\rm\textbf{instances}}}
+\newcommand{\fieldd}{\mbox{\rm \textit{f}} } 
+\newcommand{\wpi}[3]{\mbox{\rm\textit{wp}}(#3 \  #1, #2) }
+\newcommand{\isInList}[2]{\mbox{\rm \textit{inList}}(#1, #2)}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\bcIns}{\mbox{ \rm I} }
- \newcommand{\instrs}{\mbox{ \rm IS} }
- \newcommand{\ifCond}{ \instr{if\_cond } }
- \newcommand{\goto}{ \instr{goto } }
- \newcommand{\return}{ \instr{return } }
- \newcommand{\arithOp}{ \instr{arith\_op} }
- \newcommand{\load}{ \instr{load} }
- \newcommand{\store}{ \instr{store} }
- \newcommand{\push}{ \instr{push} }
+ \newcommand{\instr}[1]{\mbox{  \rm #1} }
+ \newcommand{\bcIns}{\mbox{ \rm I}}
+ \newcommand{\instrs}{\mbox{ \rm IS}}
+ \newcommand{\ifCond}{\instr{if}}
+ \newcommand{\goto}{\instr{goto }}
+ \newcommand{\return}{\instr{return}}
+ \newcommand{\arithOp}{\instr{arith\_op}}
+ \newcommand{\load}{\instr{load}}
+ \newcommand{\store}{\instr{store} }
+ \newcommand{\push}{\instr{push}}
  \newcommand{\pop}{\instr{pop}}
  \newcommand{\dup}{\instr{dup}}
  \newcommand{\iinc}{\instr{iinc}}
@@ -255,6 +281,8 @@
  \newcommand{\invoke}{\instr{invoke}}
  \newcommand{\jsr}{\instr{jsr}}
  \newcommand{\ret}{\instr{ret}}
+ \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

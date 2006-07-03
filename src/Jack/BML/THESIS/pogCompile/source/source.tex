@@ -106,13 +106,13 @@ effect
     $$ \begin{array} {ll}    \stmt ::=  
                                 & \stmt;\stmt \\
                                 & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
-			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \} \\
+			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
 		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
-				& \mid \try  \ \{ \stmt \} \ \catch \ ( Class )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+				& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
 				& \mid \throw \ \expressionSrc  \\
                                 & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} \\
 				& \mid \returnSrc \  \expressionSrc \\
-				& \mid \returnSrc \\
+			%	& \mid \returnSrc \\
                    		& \mid \expressionSrc = \expressionSrc \\
 				& \mid \expressionSrc \\
 			
@@ -126,15 +126,23 @@ From the definition we can see that the language supports also the following con
 
 \begin{itemize}
    \item $\stmt;\stmt$, i.e. statements that execute sequentially 
+
    \item $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  $ which stands for
          an if statement. The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
 	 evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
 	 $ \Myelse$ branch is executed
-   \item  \todo{give the complete explanation}
-   \item 
-   \item 
-   \item 
-   \item 
-  
+
+   \item $ \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \}  $ which states that if the
+            statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
+	    the exception will be caught by the statement following the  $ \catch $ keyword
+	        
+   \item  $ \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} $ 
+   \item $ \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \}   $
+   \item $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body statement
+         $ \stmt$ will be executed until the relational expression  $\expressionSrcRel$ evaluates to true.
+   \item  $ \mid \returnSrc \  \expressionSrc $ is the statement by which the execution will be finished
+   \item $ \expressionSrc = \expressionSrc$ stands for an assignment expression, where the value of the left expression is updated with the value   
+         of the right expression  
+    \item finally, every expression $\expressionSrc$ is a statement 
  
 \end{itemize}

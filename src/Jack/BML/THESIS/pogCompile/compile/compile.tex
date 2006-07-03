@@ -7,6 +7,12 @@
 We now turn to specify a simple compiler from the source language presented in Section
 \ref{source} into the bytecode language. The compiler does not perform any optimizations. 
 
+The compiler function is denoted with $\compile{}$ and its signature is :
+$$ \compile{ } : nat * \stmt * nat \longrightarrow list \ \bcIns $$
+The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation of $\stmt$ starts,
+ the compiled   statement $\stmt$ and a natural number which is the greatest label in the compilation of  $\stmt$ 
+and returns a list of bytecode instructions.
+
 
 
 % \subsection{Compilation of source values}

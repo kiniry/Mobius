@@ -1,12 +1,9 @@
 
 
 \subsection{Compiling expressions in bytecode instructions} \label{compExpr}
-We now turn to the definition of the compiler from the source language defined in Section \ref{source}.
-The compiler function is denoted with $\compile{}$ and its signature is :
-$$ \compile{ } : \stmt \longrightarrow bytecode $$
 
- Although expressions on source level can be atomic, this is not the case for their bytecode compilation, i.e.
-an expression can be compiled in several instructions.
+
+ 
 % As the target language is interpreted by a stack based virtual machine,
 %the evaluation of  expressions is stored on the stack.
 %Thus, for every compilation we give how the compiled
@@ -20,22 +17,20 @@ an expression can be compiled in several instructions.
   \item  integer or boolean constant access 
      \begin{itemize}
             \item  integer constant access 
-	         $$\compile{\constantInt} = \instr{push }\  \constantInt $$
+	         $$\compileLabel{s}{\constantInt}{s} = s : \push \  \constantInt $$
 	    \item boolean constant access
-	          $$\compile{\Mytrue} = \instr{push } \ 1 $$
+	          $$\compileLabel{s}{\Mytrue}{s} = s: \push  \ 1 $$
                    
-                  $$\compile{\Myfalse} = \instr{push } \ 0 $$
+                  $$\compileLabel{s}{\Myfalse}{s} = s: \push \ 0 $$
 		  \textit{Note}: the source boolean expressions are compiled down to integers 
      \end{itemize}
       %  where the execution of the compilation changes the stack : \counter = \counter + 1  \stack{\counter + 1} = \const
   \item  method invokation
-     $$\compile{ \expressionSrc_1.m(\expressionSrc_2)} = 
+     $$\compileLabel{s}{ \expressionSrc_1.m(\expressionSrc_2)}{e} = 
            \begin{array}{l}  
-                 \compileExp{\expressionSrc_1}{\stack{\counter - k + 1}};\\ 
-		 \compileExp{\expressionSrc_2}{\stack{\counter - k + 2}};\\
-		                  
-		 
-                 \instr{invoke} \ m
+                 \compileLabel{s}{\expressionSrc_1}{e'};\\
+		 \compileLabel{e'}{\expressionSrc_2}{e - 1};\\
+		  e  :\invoke \ m
             \end{array}     
     $$
   
@@ -50,93 +45,75 @@ an expression can be compiled in several instructions.
 
 
 
-
-
-  \item field access
-     $$\compile{ \expressionSrc.f} =   
+\item field access
+     $$\compileLabel{s}{ \expressionSrc.f}{e} =   
          \begin{array}{l}
-              \compileExp{\expressionSrc}{   }; \\ 
-              \getfield  \ f
+              \compileLabel{s}{\expressionSrc}{e - 1}; \\ 
+              e : \getfield  \ f
            \end{array}   
      $$ 
- %  where the execution of the compilation of $\expressionSrc$ affects the stack: 
-  %    $$ \begin{array}{l}
-           %\counter = \counter + 1 \\
-   %          \stack{\counter } = \compile{\eval{ \expressionSrc }}
-  %       \end{array}
- %     $$
 
+
+
+  
    \item local variable access
-     $$\compile{ \var } =  \instr{load} \ \locVar{i} $$ 
+     $$\compileLabel{s}{ \var }{s} =  s: \load \ \locVar{i} $$ 
    where $\locVar{i} $ is the local variable at index $i$
 
 
                 
    \item arithmetic expressions
      
-     $$\compile{ \expressionSrc_1 \ op \ \expressionSrc_2 } = 
+     $$\compileLabel{s}{ \expressionSrc_1 \ op \ \expressionSrc_2 }{e} = 
                  \begin{array}{l}
-                       \compileExp{ \expressionSrc_1}{  \stack{\counter -1 }  } ; \\
-                       \compileExp{ \expressionSrc_2}{ \stack{\counter }  }; \\
-                       \instr{op}
+                       \compileLabel{s}{ \expressionSrc_1}{  e'  } ; \\
+                       \compileLabel{e'}{ \expressionSrc_2}{ e - 1  }; \\
+                       e:\arithOp
                  \end{array}     
                 $$ 
-               %      where after the execution of $\compile{ \expressionSrc_1}$ and $\compile{ \expressionSrc_2}$ the stack changes: 
+               %      where after the execution of $\compileLabel{ \expressionSrc_1}$ and $\compileLabel{ \expressionSrc_2}$ the stack changes: 
                        
 	   %	$$
 	   %	  \begin{array}{l}
 	   %	        %\counter = \counter + 2 \\
-	   %		 \stack{\counter } =  \compile{\eval{ \expressionSrc_1} } \\
-	   %		 \stack{\counter - 1} = \compile{\eval{ \expressionSrc_2} }
+	   %		 \stack{\counter } =  \compileLabel{\eval{ \expressionSrc_1} } \\
+	   %		 \stack{\counter - 1} = \compileLabel{\eval{ \expressionSrc_2} }
 	       %      \end{array} 
 	   %	$$  
 
    \item cast expression 
-     $$ \compile{ (\mbox{ \rm \texttt{Class}}   ) \ \expressionSrc } = 
+     $$ \compileLabel{s}{ (\mbox{ \rm \texttt{Class}}   ) \ \expressionSrc }{e} = 
               \begin{array}{l}  
-                 \compileExp{\expressionSrc}{\stack{\counter}};\\
-                   \instr{checkCast } \ \mbox{ \rm \texttt{Class }} ;
+                 \compileLabel{s}{\expressionSrc}{e  - 1};\\
+                  e : \checkcast \ \mbox{ \rm \texttt{Class }} ;
               \end{array}
 $$
-	       \textit{Note} : for Java Sun compiler, this compilation is done if this is a down cast (in case this is an up cast no checkcast is generated).
- 	     where the execution of the compilation of $\expressionSrc$ affects the stack :         
-		   %	$$
-	   %		  \begin{array}{l} 
-		   %	        % \counter = \counter  + 1 \\
-		   %	        \stack{\counter} = \compile{\eval{ \expressionSrc }}
-		   %	 \end{array}
-	   	   %   $$
+	      
 
   \item instanceof expression
-    $$ \compile{\expressionSrc \ \instanceofSrc \ Class } = 
+    $$ \compileLabel{s}{\expressionSrc \ \instanceofSrc \ Class }{e} = 
          \begin{array}{l}
-              \compileExp{\expressionSrc}{\stack{\counter}};\\
-                \instr{instanceof} \ Class;
+              \compileLabel{s}{\expressionSrc}{ e  -1 };\\
+               e : \instanceof \ Class;
          \end{array} $$
- % after the execution of $ \compile{\expressionSrc}$, the stack and the stack counter are changed as follows: 
- % %		$$
- %		  \begin{array}{l} 
- %		        %\counter = \counter + 1 \\
- %		        \stack{\counter } = \compile{\eval{ \expressionSrc }}
- %		 \end{array}
- %	      $$
+
   \item null expression
-    $$ \compile{\Mynull } = \instr{push} \ \Mynull$$
+    $$ \compileLabel{s}{\Mynull }{s } = s: \push \ \Mynull$$
           
  
  \item object creation
     
-   $$\compile{ \newSrc \ Class (\expressionSrc ) } =
+   $$\compileLabel{s}{ \newSrc \ Class (\expressionSrc ) }{e} =
                  \begin{array}{l}
- \instr{new} \ Class; \\ 
-		       \instr{dup}; \\
-		       \compileExp{\expressionSrc}{\stack{\counter - k}};\\
+                       s :    \new \ Class; \\ 
+		       s + 1: \dup; \\
+		       \compileLabel{s+2}{\expressionSrc}{e - 1 };\\
 	               
-		       \instr{invoke } \Constructor{Class};     
+		       e : \invoke \ \Constructor{Class};     
 	       \end{array}$$
  		        
 \item this instance
-  $$\compile{\this} = \instr{load} \ \locVar{0}$$
+  $$\compileLabel{s}{\this}{s } = s:  \load \ \locVar{0}$$
               	              
 \end{itemize}
 
