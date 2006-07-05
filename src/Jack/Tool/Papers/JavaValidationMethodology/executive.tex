@@ -1,5 +1,11 @@
 \documentclass[a4paper, 11pt]{article}
 
 \begin{document}
-toto
+This report presents results of the Inspired project on Java application validation. The focus of the project was Java Card application and by validation, we meen program properties proof.
+
+The main result is the Jack validation framework that has been developed during the project. The tool allows to prove properties on Java program in a user-friendly environment. Java program ammotated with JML assertions can be proved correct at source or at bytecode level. Many phases of the validation are automated: annotation generation, anotation propogation, verification condition generation, proof. The proof part is and cannot be fully automated and different interactive provers are linked to the tool allowing to prove remaining lemmas. The tool is fully integrated in the eclipse IDE. A Coq proof environment has also been developped as an eclipse plugin in order to have a uniq interface in all the validation phases.
+
+Benefiting from users feedback, the tools have also been improved along the project. They have also been used in industrial or academic project for different purposes such that security properties verification, functional properties verification, code optimization, ressource consumption verification,...
+
+The Jack tool is now ready to be used on real industrial project to validate Java Card application. The main remaining work is to improve it in order to deal with real J2me applications. 
 \end{document}
