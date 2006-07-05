@@ -139,17 +139,46 @@ Around 500 proof obligations have to be resolved manually.
 Some of them was obvious and were resolved with quite the same script, but the script cannot be automated.
 Some of them was complex: the proof script became little large (an average of 30 steps).
 The lemmas concerning the loop invariant of the verify method and its initialization were the most difficult.
+\section{JavaCard applet security properties}\
+To show the usefulness of the security property propagation, we applied it to
+several realistic examples of smart card applications. When doing
+this, we actually found violations against the security policies
+documented for some of these applications.
+\input{isaac/secprop}
+\subsection{Automatic Verification of Security Properties}\label{SecVerif}
+As explained above, we are interested in the verification of
+high-level security properties that are not directly related to a
+single method or class, but that guarantee the overall
+well-functioning of an application. Writing appropriate JML
+annotations for such properties is tedious and error-prone, as they
+have to be spread all over the application. Therefore, we propose a
+way to construct such annotations automatically. First we synthesize
+core-annotations for methods directly involved in the property.  For
+example, when specifying that no nested transactions are allowed, we
+annotate the methods \texttt{beginTransaction},
+\texttt{commitTransaction} and
+\texttt{abortTransaction}. Subsequently, we propagate the necessary 
+annotations to all methods (directly or indirectly) invoking these
+core-methods.  The generated annotations are sufficient to respect the
+security properties, \emph{i.e.}~if the applet does not violate the
+annotations, it respects the corresponding high-level security
+property.
+
+Whether the applet respects its annotations can be established with
+JACK~\cite{BRL-JACK}.
+Since
+for most security properties the annotations are relatively
+simple---but there are many---it is important that these verifications
+are done automatically, without any user interaction. The results in
+Section~\ref{SecResults} show that for the generated annotations all
+correct proof obligations can indeed be automatically discharged.
+\input{isaac/results}
 \section{Low-Footprint Java-to-Native Compilation}
 \input{cardis05/cardis05}
 \section{Memory consumption}
-%\subsection{Introduction}
 \input{memory/intro}
-%\subsection{Preliminaries}\label{sec:prelim}
-%\input{memory/prelim}
 \subsection{Modeling Memory Consumption}\label{sec:verif}
 \input{memory/technical}
 \subsection{Inferring Memory Allocation}\label{sec:infer}
 \input{memory/infer}
-%\subsection{Conclusion}\label{sec:conc}
-%\input{memory/conclusion}
-%\section{Test coverage}
+
