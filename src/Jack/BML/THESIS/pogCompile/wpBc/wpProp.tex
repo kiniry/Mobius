@@ -103,13 +103,13 @@ $$
  the previous lemma  \ref{wpBlock} and we get the result.
 
 
-\begin{relWpStmt}
+\begin{relWpStmt}\label{relWpStmt}
      For every compiled statement $\compileLabel{s}{\stmt}{e}$  in  method \methodd, formula $\psi$ and 
     function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
       \begin{itemize}
             \item $\psi = \inter{e}{e+1}$
-	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
+	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) $ 
       \end{itemize} then the following holds: \
      if $\psi = \inter{e}{e+1}$ then the following holds
      $$   \wpStmt{\compileLabel{s}{\stmt}{e} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   

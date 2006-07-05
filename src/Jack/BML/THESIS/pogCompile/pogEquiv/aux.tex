@@ -3,20 +3,22 @@
 \newtheorem{interProp}{Lemma} % states that the postcondition doesnot change by adding a goto
 
 \newtheorem{exprValueOnStack}[interProp]{Lemma}
-\newtheorem{stackCounter}[interProp]{Lemma}
-\newtheorem{dupProp}[interProp]{Lemma}
-\newtheorem{newProp}[interProp]{Lemma}
+\newtheorem{wpStmtBcSrc1}[interProp]{Lemma}
+\newtheorem{wpStmtBcSrc2}[interProp]{Lemma}
+%\newtheorem{stackCounter}[interProp]{Lemma}
+%\newtheorem{dupProp}[interProp]{Lemma}
+%\newtheorem{newProp}[interProp]{Lemma}
 
 
 \section{Auxiliary Properties}
 
 Before stating the main theorem we need some auxiliary properties.
- First, we establish that adding a \instr{goto} instruction  to a sequence of instructions does not change the weakest predicate of the
+ First, we establish that adding a \instr{goto} \ instruction  to a bytecode of instructions does not change the weakest predicate of the
  augmented bytecode sequence.  
 
 
 \begin{interProp} \label{interProp}
-Assume that we have the block of bytecode instructions $i_1;...;i_k$ where $ \next{i_k} = i_{k+1}$
+Assume that we have the block of bytecode instructions $i_1;...;i_k$ 
      $$ \wpBcSeq{ i_1;...;i_k}{ \psi  }  { \excPost } = 
 \wpBcSeq{i_1;...;i_k; \goto \  l }{\psi }{\excPost} $$
 
@@ -225,3 +227,43 @@ Proof :
 
 
 
+The next lemma establishes  a relation between the source and bytecode\wpName w.r.t. to the same weakest precondition. 
+
+$\excPost $ 
+\begin{wpStmtBcSrc1}[Proof obligation equivalence on statements ] \label{wpStmtBcSrc1}
+ 
+$$ 
+    \begin{array}{l}
+    \forall \stmt, \psi, \excPostSrc , \\
+       \Myspace  \wpStmt{\compileLabel{s}{\stmt}{e}}{ \psi }{ \compile{\excPostSrc} }  = \\
+       \Myspace   \wpiSrc{\stmt  }{\psi }{ \excPostSrc }  
+	 
+    \end{array}
+ $$
+\end{wpStmtBcSrc1}
+
+This follows from the previous lemma (which establishes the relation between the \wpName over source and the \wpName \ over bytecode that takes into account the compilation structure  )
+and lemma \ref{relWpStmt} (which establishes the relation between the \wpName \ over bytecode that takes into account the compilation structure  and the original \wpName which does 
+not consider the properties of the compiler )
+
+
+The next statement establishes under what conditions
+ the \wpName \  over source and the \wpName defined in the previous Chapter are equivalent.
+ 
+\begin{wpStmtBcSrc2}[Proof obligation equivalence on statements ] \label{wpStmtBcSrc2}
+For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and 
+   exceptional postcondition  function $\excPostExpl $ such that :
+ 
+  \begin{itemize}
+         \item $\psi = \inter{e}{e+1}$
+	 \item$\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
+  \end{itemize}
+      then it holds 
+$$ \wpiSrc{\stmt}{\psi }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
+\end{wpStmtBcSrc2}
+
+
+From the last lemma follows that if the body of the  method \methodd is $\stmt$, and its compilation is $\compileLabel{s}{\stmt}{e}$, then 
+the proof obligations generated over $\stmt$ upon postcondition $\method.\normalPost$ and exceptional
+postcondition function  $\method.\excPostSpec$     and its compilation $\compileLabel{s}{\stmt}{e}$ are the same 
+$$ \wpiSrc{\stmt}{\normalPost }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
