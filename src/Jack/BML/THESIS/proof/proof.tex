@@ -2,6 +2,7 @@
 %\newtheorem{lemma_1}{Lemma}[section] 
 \newtheorem{lemma0}{Lemma}[section] % one step sequential execution
 \newtheorem{lemma1}[lemma0]{Lemma} % progress
+\newtheorem{lemma3}[lemma0]{Lemma} % progress
 \newtheorem{lemma2}[lemma0]{Lemma} % if the wp holds of \methodd.\body[0] there exists n such that
 % \pc_n = \return or  \ins{\pc_n }  throws a not handled exception E and 
 %\pc_n = \return  then  in state_n holds post
@@ -24,14 +25,14 @@ We first give a definition that a ``method is correct w.r.t its specification''
 \begin{defCorrect}[A method is correct w.r.t. its specification] \label{defCorrect}
 For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost
 and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd \ respects its specification if 
-for every two states $state_0$ and $state_1$ such that :
+for every two states $s_0$ and $s_1$ such that :
 \begin{itemize}
-      \item   $\methodd : state_0 \execRel state_1   $
-      \item   $ \interp{\methodd.\pre }{ state_0 }$
+      \item   $\methodd : s_0  \stateTransTerm s_1   $
+      \item   $ \interp{\methodd.\pre }{ s_0 }$
 \end{itemize}
-Then if \methodd \ terminates normally then the normal postcondition holds in the final state $state_1 $:  $\interp{\methodd.\normalPost}{state_1}$. 
-Otherwise, if  \methodd \ terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $state_1 $
-$ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{state_1} $
+Then if \methodd \ terminates normally then the normal postcondition holds in the final state $s_1 $:  $\interp{\methodd.\normalPost}{s_1}$. 
+Otherwise, if  \methodd \ terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $s_1 $
+$ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $
 \end{defCorrect}
  
  The next issue that is important for understanding our approach is that we follow the design by 
@@ -56,13 +57,13 @@ instruction holds in the prestate then in the poststate of the instruction the p
 
 
 \begin{lemma0}[Single execution step correctness] \label{lemma0}
-For every instruction $\ins{s}$, for every state $state_0 =\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{s } $ and
-initial state $state_{init} =\config{\heap_{init}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly }{ 0 } $ 
+For every instruction $\ins{s}$, for every state $s_0 =\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{s } $ and
+initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly }{ 0 } $ 
    of the execution of method \methodd \  if the following conditions hold: 
  \begin{itemize}
-         \item $ \methodd.\body[0] : state_{init} \stateTrans^{*} state_0$
-         \item $ \methodd.\body[s] : state_0 \rightarrow state_1$
-         \item $ \interp{\wpi{\ins{s}}{\methodd}{s}}{state_0} $
+         \item $ \methodd.\body[0] : s_{0} \stateTrans^{*} s_0$
+         \item $ \methodd.\body[s] : s_0 \stateTrans s_1$
+         \item $ \interp{\wpi{\ins{s}}{\methodd}{s}}{s_0} $
 	 %\item  $\ins{k} = next( \ins{s} ) $
          \item    $ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$ is correct w.r.t. its specification
  \end{itemize}
@@ -70,11 +71,11 @@ initial state $state_{init} =\config{\heap_{init}  }{ 0 }{\lbrack \ \rbrack }{\l
   then : 
  \begin{itemize}
          \item if  $ \ins{s} \neq \return $ and the instruction does not terminate on exception,
-	      $ state_1 = \config{\heap_1 }{\counterOnly_1 }{ \stackOnly_1}{\locVarOnly_1 }{ k }  $
-	       then  $ \interp{\inter{s}{k}}{state_1}  $   holds 
-        \item if  $ \ins{s} = \return $ then  $ \interp{\methodd.\normalPost}{state_1}  $   holds
+	      $ s_1 = \config{\heap_1 }{\counterOnly_1 }{ \stackOnly_1}{\locVarOnly_1 }{ k }  $
+	       then  $ \interp{\inter{s}{k}}{s_1}  $   holds 
+        \item if  $ \ins{s} = \return $ then  $ \interp{\methodd.\normalPost}{s_1}  $   holds
 	\item else if $ \ins{s} \neq \return $ and the instruction terminates on a not handled exception \mbox{ \rm\texttt{Exc }}, then
-	      $ \interp{\methodd.\excPostSpec( \mbox{ \rm\texttt{Exc }} )}{state_1}  $ 
+	      $ \interp{\methodd.\excPostSpec( \mbox{ \rm\texttt{Exc }} )}{s_1}  $ 
 	
   \end{itemize} 
 \end{lemma0}
@@ -140,7 +141,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 		       \\
 		       \mbox{\rm\comment{from the operational semantics of \new \ in section \ref{opSem}}} \\
 		       \\
-		      \numConclusion{2} state_2 = \config{\heap'}{\counterOnly +1  }{\update{\stackOnly}{\counterOnly +  1}{ \referenceOnly  } }{\locVarOnly }{\pc +1} \\
+		      \numConclusion{2} s_2 = \config{\heap'}{\counterOnly +1  }{\update{\stackOnly}{\counterOnly +  1}{ \referenceOnly  } }{\locVarOnly }{\pc +1} \\
 		       \\
 		      \numConclusion{3} \newRef{\heap}{\clazz} = (\heap',\referenceOnly' ) \\
 		       \\
@@ -175,7 +176,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 		       
 		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap} }} \\
 		       \mbox{\rm\textit{ and the operational semantics of the instruction \new \} }} \\  
-		       \interp{ \inter{i}{i+1} }{state_2}
+		       \interp{ \inter{i}{i+1} }{s_2}
 		\end{array}	$$
 \item  $\ins{\pc } = \putfield   \ \fieldd $ \\
 
@@ -216,7 +217,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 		       	\mbox{\rm\textit{\{ from lemmas \ref{substCntr},  \ref{substHeap} and \ref{substStack}}}\\
 			\mbox{\rm\textit{ and the operational semantics of  \putfield \} }}\\
                         
-				\interp{ \inter{i}{k}}{ state_2 }
+				\interp{ \inter{i}{k}}{ s_2 }
              \end{array}	$$
 		 \item the reference on the stack top is \Mynull \ and and the exception thrown is not handled.
 		       In this case, we obtain following the same way of reasoning as the previous case :
@@ -229,7 +230,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
                     \end{array} }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc } }   \\  
 		 	\mbox{\rm \textit{\{ from lemmas   \ref{substStack}, \ref{substHeap}   and}}\\
 			\mbox{\rm \textit{ the operational semantics of \putfield \}}}\\
-			\interp{  \methodd.\excPostSpec(\NullPointerExc  )}{state_2}		    
+			\interp{  \methodd.\excPostSpec(\NullPointerExc  )}{s_2}		    
 \end{array}	$$
                  \item the reference on the stack top is not \Mynull 
 
@@ -245,7 +246,7 @@ We are going to see only the proofs for the instructions \return , \load and \in
 						       \end{array} }{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} \\
 			 \mbox{\rm\textit{\{ applying lemmas \ref{substCntr} and \ref{substHeap}  and }}\\
 			\mbox{\rm\textit{ of the operational semantics of \putfield \}} } \\
-			\interp{ \inter{i}{i+1}}{state_2}			       
+			\interp{ \inter{i}{i+1}}{s_2}			       
 						       
 	           \end{array}	$$
 
@@ -265,16 +266,17 @@ another step can be made and the \fwpi \ of the next instruction holds.
 
 \begin{lemma1}[Progress] \label{lemma1}
 Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
-Assume that the  execution starts in state $ \config{\heap_0}{\counterOnly_0}{\stackOnly_0}{\locVarOnly_0}{\pc_0}$
+Assume that the  execution starts in state \\
+ $ \config{\heap_{0}}{\counterOnly_{0}}{\stackOnly_{0}}{\locVarOnly_{0}}{\pc_{0}}$
 and the there are made  n execution steps causing the transitive state transition 
-$ \config{\heap_0}{\counterOnly_0}{\stackOnly_0}{\locVarOnly_0}{\pc_0} \execRel^{n} \config{\heap_n}{\counterOnly_n}{\stackOnly_n}{\locVarOnly_n}{\pc_n} $.
+$ \config{\heap_0}{\counterOnly_0}{\stackOnly_0}{\locVarOnly_0}{\pc_0} \stateTrans^{n} \config{\heap_n}{\counterOnly_n}{\stackOnly_n}{\locVarOnly_n}{\pc_n} $.
 Assume that \\
- $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \pc_{i} }{ \methodd } }{ state_i } $  
+ $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $  
 holds then
 \begin{enumerate}
 	\item if $\ins{\pc_n} = \return$  then $\interp{\methodd.\normalPost} {\configFinalNorm{\heap_n}{\locVarOnly_n} {\stackOnly_n( \counterOnly_n )}} $ holds.  
 	
-	\item if $\ins{\pc_n} \neq \athrow $ throws a not handled exception of type $\Exc$ \\
+	\item if $\ins{\pc_n}\neq \athrow  $ throws a not handled exception of type $\Exc$ \\
 	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   }{\locVarOnly_n} } $ holds 
 	where $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$.
 	
@@ -282,8 +284,8 @@ holds then
 	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   }{\locVarOnly_n} } $ holds 
 	
 	
-	\item else exists a state $state_{n+1}$ such that another execution step can be done 
-	 $state_n  \execRel state_{n+1}$ and  $\interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1} }{\methodd} } { state_{n+1} } $  holds
+	\item else exists a state $s_{n+1}$ such that another execution step can be done 
+	 $s_n  \stateTrans s_{n+1}$ and  $\interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{  } } { s_{n+1} } $  holds
 \end{enumerate}
 \end{lemma1}
 
@@ -302,11 +304,11 @@ and the case when the current instruction is not a loop end and the next instruc
 	      \mbox{\rm \comment{following Def. \ref{inter} of the function \interOnly \ in this case }}\\
               \numConclusion{1} \ \inter{\pc_n}{\pc_{n+1}} = \wpi{ \ins{\pc_{n+1} }}{\pc_{n+1}}{\methodd}\\
 	      \mbox{\rm \comment{ by initial hypothesis}} \\
-	      \numConclusion{2} \ \interp{\wpi{\ins{\pc_{n}} }{ \pc_{n} }{ \methodd } }{ state_n }\\
+	      \numConclusion{2} \ \interp{\wpi{\ins{\pc_{n}} }{ \pc_{n} }{ \methodd } }{ s_n }\\
 	      \mbox{\rm \comment{from the previous lemma \ref{lemma0} and \numConclusion{2} , we know that}}\\
-	      \numConclusion{3} \   \interp{\inter{\pc_n}{\pc_{n+1}} }{ state_{n+1} }\\
+	      \numConclusion{3} \   \interp{\inter{\pc_n}{\pc_{n+1}} }{ s_{n+1} }\\
 	      \mbox{\rm \comment{from \numConclusion{1} and  \numConclusion{3} }}\\
-	      \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1} }{\methodd} }{ state_{n+1} }
+	      \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1} }{\methodd} }{ s_{n+1} }
 	      \end{array}$$
 
  
@@ -320,12 +322,12 @@ instruction at index $loopEntry $ in the array of bytecode instructions of the m
 We look only at the case when the current instruction is a \load  instruction\\
 $$ \begin{array}{l}
 \mbox{\rm\comment{by initial hypothesis}} \\
-\interp{ \wpi{\load \ i }{\pc_n}{\methodd}}{state_n} \\
+\interp{ \wpi{\load \ i }{\pc_n}{\methodd}}{s_n} \\
 \mbox{\rm \comment{by defintion of  the wp function in section \ref{wpRules} of the previous chapter} } \\
  \interp{ \inter{\pc_n}{ \pc_n + 1} \begin{array}{l} 
                                               \subst{\counter}{\counter +1} \\
 					      \subst{  \stack{ \counter  + 1}}{\locVar{j}} 
-					\end{array}  }{state_n}  \\
+					\end{array}  }{s_n}  \\
  
 \mbox{\rm \textit{\{by the definition  \ref{inter} for the case when}} \\
 \mbox{\rm \textit{ the execution step is not a backedge but the target instruction is a loop entry \} } }\\
@@ -333,7 +335,7 @@ $$ \begin{array}{l}
  % \interp{\invariant\begin{array}{l} 
  %                                              \subst{\counter}{\counter +1} \\
  %					      \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
- %					\end{array}   }{state_n} \\
+ %					\end{array}   }{s_n} \\
  %					\\
      
                                \interpTwoLines{\begin{array}{l}
@@ -349,19 +351,19 @@ $$ \begin{array}{l}
 					      \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
 					\end{array} 
 					\end{array} 	
-                         }{state_n} \\
+                         }{s_n} \\
 		\mbox{\rm\comment{from lemmas \ref{substCntr} and \ref{substStack}} }	 \\
                          \iff \\
                  \interpTwoLines{ \begin{array}{l}
 		                             \invariant \  \wedge\\
                                              \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd}) 
                                       \end{array}} 
-                                    {     state_n 
+                                    {     s_n 
                                               \begin{array}{l}      
-					                \subst{\counterOnly}{\evalExp{\counter + 1}{state_n} }\\
-							\subst{\stackOnly} { \update{\stackOnly}{ ( \evalExp{\counter + 1}{state_n} ) }{ \evalExp{ \locVar{i} } {state_n} }}
-							%\subst{\counterOnly}{\evalExp{\counter}{state_n} +1} \\
-						                   %\update{\stackOnly}{\evalExp{\counter}{state_n}  + 1}{ \evalExp{ \locVar{i}}{state_n} }  
+					                \subst{\counterOnly}{\evalExp{\counter + 1}{s_n} }\\
+							\subst{\stackOnly} { \update{\stackOnly}{ ( \evalExp{\counter + 1}{s_n} ) }{ \evalExp{ \locVar{i} } {s_n} }}
+							%\subst{\counterOnly}{\evalExp{\counter}{s_n} +1} \\
+						                   %\update{\stackOnly}{\evalExp{\counter}{s_n}  + 1}{ \evalExp{ \locVar{i}}{s_n} }  
 					\end{array}  
                                     } \\
 \end{array}$$
@@ -373,12 +375,12 @@ $$ \begin{array}{l}
 		                             \invariant \  \wedge\\
                                              \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd}) 
                                       \end{array}} 
-                                    {     state_n 
+                                    {     s_n 
                                               \begin{array}{l}      
 					                \subst{\counterOnly}{\counterOnly + 1} \\
 							\subst{\stackOnly} { \update{\stackOnly}{\counterOnly + 1  }{  \locVarOnly(i)}  }
-							%\subst{\counterOnly}{\evalExp{\counter}{state_n} +1} \\
-						                   %\update{\stackOnly}{\evalExp{\counter}{state_n}  + 1}{ \evalExp{ \locVar{i}}{state_n} }  
+							%\subst{\counterOnly}{\evalExp{\counter}{s_n} +1} \\
+						                   %\update{\stackOnly}{\evalExp{\counter}{s_n}  + 1}{ \evalExp{ \locVar{i}}{s_n} }  
 					\end{array}  
                                     } \\
   %  \end{array} \\
@@ -387,17 +389,17 @@ $$ \begin{array}{l}
  \interp{ 
 \begin{array}{l}   \invariant \  \wedge\\
                   \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd}) 
-\end{array}}{state_{n+1}}  \\
+\end{array}}{s_{n+1}}  \\
 
 
 \mbox{\rm \comment{we can get from the last formulation}}\\
-  \numConclusion{1} \   \interp{\invariant}   {state_{n+1} } \\
+  \numConclusion{1} \   \interp{\invariant}   {s_{n+1} } \\
                               \\
                  \numConclusion{2}  \interp{ \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }
-                                     {state_{n+1}  } \\
+                                     {s_{n+1}  } \\
    % \end{array} 
 \mbox{\rm \comment{ from \numConclusion{1}  and \numConclusion{2}  }}\\
-  \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }{state_{n+1}  }\\
+  \interp{ \wpi{\ins{\pc_{n+1}}}{\pc_{n+1}}{\methodd} }{s_{n+1}  }\\
 
 \end{array} $$
 \item $\ins{\pc_n} $ is an end of a cycle \ and the next instruction to be executed is a loop entry 
@@ -410,16 +412,16 @@ We consider the case when the current instruction is a sequential instruction. T
 is a jump instruction are similar.   \\ 
 		
 \comment{by hypothesis we get} \\
- $$ \interp{ \wpi{\ins{\pc_n} }{\pc_n}{\methodd}}{state_n}$$
+ $$ \interp{ \wpi{\ins{\pc_n} }{\pc_n}{\methodd}}{s_n}$$
 
 \comment{ from Def. \ref{inter} and transformation over the above statement} 
-$$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{state_{n + 1}}  \end{array}$$
+$$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{s_{n + 1}}  \end{array}$$
 \comment{by hypothesis,  $loopEntry = \pc_{n +1}$.
          From def. \ref{defLoop}, we
          conclude that there is a prefix  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$  of the current execution path which does not pass through
 	 $\ins{\pc_n}$. We can conclude that the transition between   $\ins{loopEntry}$ and its predecessor  $ \ins{k} $ ( which is at index $k$ in \methodd.\body)
 	  in the path $subP$ is not a backedge. By hypothesis we know that 
-           $ \forall i , 0 \le i \le  n, \interp{\wpi{\ins{\pc_i}}{\pc_i }{\methodd}}{state_i}$.  From def.\ref{inter} and
+           $ \forall i , 0 \le i \le  n, \interp{\wpi{\ins{\pc_i}}{\pc_i }{\methodd}}{s_i}$.  From def.\ref{inter} and
 	 lemma \ref{lemma0} we conclude }
           
    $$  \numConclusion{2 } \  
@@ -433,19 +435,19 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{state_{n + 1}}  \e
 	                                                           \invariant \Rightarrow \\
 	                                                           \wpi{\ins{loopEntry}}{loopEntry}{\methodd} 
 							      \end{array})
-				 \end{array} }{state_k}  \\
+				 \end{array} }{s_k}  \\
          \\  
-	 \Myspace    state_k =^{\modifL} state_{n+1} 
+	 \Myspace    s_k =^{\modifL} s_{n+1} 
        \end{array}
     $$
    \comment{ by we have $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$  and    from \numConclusion{2}    }
- $$  \numConclusion{3} \ \interp { \invariant \Rightarrow \wpi{\ins{loopEntry}}{loopEntry}{\methodd}} {state_{n+1}}    $$
+ $$  \numConclusion{3} \ \interp { \invariant \Rightarrow \wpi{\ins{loopEntry}}{loopEntry}{\methodd}} {s_{n+1}}    $$
  \comment{from \numConclusion{1} and  \numConclusion{3} }
    
  $$ \begin{array}{l} 
-           \interp{ \wpi{\ins{loopEntry}}{loopEntry}{\methodd}}{state_{n+1}} \\
+           \interp{ \wpi{\ins{loopEntry}}{loopEntry}{\methodd}}{s_{n+1}} \\
 	    \iff \\
-	      \interp{ \wpi{\ins{\pc_{n+1}}}{ \pc_{n+1} }{\methodd} }{state_{n+1}} 
+	      \interp{ \wpi{\ins{\pc_{n+1}}}{ \pc_{n+1} }{\methodd} }{s_{n+1}} 
     \end{array}$$
          
 
@@ -453,24 +455,52 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{state_{n + 1}}  \e
 
 Qed.
 
+\begin{lemma3}[\fwpi \ of method entry point instruction]\label{lemma3}
+Assume we have a method \methodd. Assume that  execution of method  \methodd \ starts execution
+ in state $s_{0}$ and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ s_{0}}$ where 
+and makes $n$ steps to reach state $s_n$: $s_{0} \stateTrans^{n} s_{n} $, then
+  
+$$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$
+
+\end{lemma3}
+Proof : Induction over the number of execution steps $n$
+\begin{enumerate}
+    \item  $s_{0} \stateTrans s_{1}$. From the initial hypothesis   we can apply lemma \ref{lemma1}, we get that 
+             $\interp{ \wpi{\ins{\pc_{1}}}{\methodd}{  } } { s_{1} }  $ and thus, the  case when one step is made from the initial state
+             $s_0$  holds   
+    \item Induction hypothesis:   $s_{0} \stateTrans^{n - 1} s_{n - 1}$ and \\
+           $\forall i,  0 < i \le n - 1, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{\pc_i}}{ s_{i}} $
+           and there can be made one step $s_{n- 1} \stateTrans s_n$.  Lemma \ref{lemma1} can be applied and we get that
+	    
+           $\numConclusion{1} \ \interp{ \wpi{\methodd.\body[\pc_n] } {\methodd}{ } }{ s_{n}} $. 
+	   From the induction hypothesis and \numConclusion{1} follows that 
+	   $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$
+            
+\end{enumerate}
+
+
 
 \begin{lemma2}[Validity of \fwpi \ for a method implies that postcondition holds]\label{lemma2}
+
 Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
-Assume that every execution of the method \methodd \ terminates.
- Assume that  execution of methodd \methodd \ starts in state $state_0$ 
-and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ state_0}$
-Then there exists a state $state_n$ such that $\ins{\pc_n} = \return $ or $\ins{\pc_n}$ throws an unhandled 
-exception of type \mbox{\rm\texttt{Exc}} such that
+
+%Assume that every execution of the method \methodd \ terminates.
+ Assume that  execution of methodd \methodd \ starts in state $_{0}$ 
+and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ s_{0}}$
+Then if the method \methodd \ terminates, i.e. there exists a  state $s_n$, $s_0 \stateTrans^{*} s_n $ such that $\ins{\pc_n} = \return $ or
+ $\ins{\pc_n}$ throws an unhandled 
+exception of type \mbox{\rm\texttt{Exc}} the following holds:
 \begin{itemize}
-    \item if $\ins{\pc_n} = \return $ then $\interp{ \methodd.\normalPost}{state_n}$
+    \item if $\ins{\pc_n} = \return $ then $\interp{ \methodd.\normalPost}{s_{n+1}}$
     \item  if $\ins{\pc_n}$ throws a not handled exception of type \texttt{Exc} then 
-             $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{state_n}$
+             $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
 \end{itemize}
 \end{lemma2}
 Proof: 
-By hypothesis the execution of method \methodd \ always terminates, i.e. there exists $n$ steps such that
-$ state_0 \execRel^n state_n$ reaches a \return \ instruction or an instruction that throws an exception.
-By applying lemma \ref{lemma1} at every execution step of the execution path we obtain that the present lemma holds.
+%By hypothesis the execution of method \methodd \ always terminates, i.e. there exists $n$ steps such that
+Let $ \ s_{0} \stateTrans^{*} s_n $ and $\methodd.\body[\pc_n]$ is a \return \ or an instruction that throws a  not handled exception.
+ Applying lemma \ref{lemma3}, we can get that $  \interp{ \wpi{\methodd.\body[\pc_n] } {\methodd}{ } }{ s_{n}}$. We apply lemma \ref{lemma0}
+for the case for a \return \ or instruction that throws an unhandled exception which allows to conclude that the current statement holds.
 
 
 
