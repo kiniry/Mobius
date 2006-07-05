@@ -6,7 +6,7 @@
       
             \compileLabel{s}{\stmt_1}{e'};\\
 	    
-	    \compileLabel{e'}{\stmt_2}{e}
+	    \compileLabel{e'+1}{\stmt_2}{e}
        \end{array}$$
     
   \item   if statement
@@ -86,7 +86,7 @@
                        e' + 1: \goto \ e + 1; \\
 		  
                        \compileLabel{e' + 2 }{\stmt_2}{e - 1};\\
-		        e: \goto \ e + 1; \\
+		       % e: \goto \ e + 1; \\
 		       \\ \\
                     
 			\addExceptionTable{ s }{ e'  }{ e' + 2 }{ Class} )

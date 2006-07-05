@@ -29,7 +29,7 @@
      $$\compileLabel{s}{ \expressionSrc_1.m(\expressionSrc_2)}{e} = 
            \begin{array}{l}  
                  \compileLabel{s}{\expressionSrc_1}{e'};\\
-		 \compileLabel{e'}{\expressionSrc_2}{e - 1};\\
+		 \compileLabel{e' + 1}{\expressionSrc_2}{e - 1};\\
 		  e  :\invoke \ m
             \end{array}     
     $$
@@ -67,7 +67,7 @@
      $$\compileLabel{s}{ \expressionSrc_1 \ op \ \expressionSrc_2 }{e} = 
                  \begin{array}{l}
                        \compileLabel{s}{ \expressionSrc_1}{  e'  } ; \\
-                       \compileLabel{e'}{ \expressionSrc_2}{ e - 1  }; \\
+                       \compileLabel{e' + 1}{ \expressionSrc_2}{ e - 1  }; \\
                        e:\arithOp
                  \end{array}     
                 $$ 

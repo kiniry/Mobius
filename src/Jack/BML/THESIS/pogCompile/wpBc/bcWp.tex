@@ -1,3 +1,4 @@
+
 \newtheorem{wpSeq}{Definition}[section]
 \newtheorem{wpExpr}[wpSeq]{Definition}
 
@@ -14,20 +15,25 @@ We will argue under what conditions both formulations of the \wpName \ function 
 
 
 
+ 
+
 
 % single instruction
+
 We give now a definition of the \wpName \ function for a single instruction which takes
+
+
 explicitely the postcondition and the exceptional postcondition function 
 upon which the precondition will be calculated. Its signature is the following:
 
-$$ \mbox{\rm\textrm{wp}}^{bc} : \bcIns \rightarrow \formulaBc \rightarrow ( \mbox{ \rm \texttt{Exc}} \rightarrow \formulaBc ) \rightarrow \formulaBc$$
+$$ \mbox{\rm\textrm{wp}}^{bc} : \bcIns \rightarrow \formulaBc \rightarrow ( \mbox{ \rm \texttt{ExcType}} \rightarrow \formulaBc ) \rightarrow \formulaBc$$
 
 For instance, the \wpName \ definition for \getfield \ is :
-$$ \begin{array}{l} \wpExpl{\getfield \ f }{ \psi  }{ \excPost} = \\
-		         \stack{\counter -1 } \neq \Mynull \Rightarrow 
+$$ \begin{array}{l} \wpExpl{\getfield \ f }{ \psi  }{ \excPostExpl} = \\
+		         \stack{\counter } \neq \Mynull \Rightarrow 
 			                \psi   \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})} 		                    
 			  \wedge \\
-			  \stack{\counter -1 }  = \Mynull  \Rightarrow   \excPost( \NullPointerExc )
+			  \stack{\counter }  = \Mynull  \Rightarrow   \excPostExpl( \NullPointerExc )
 			  \end{array}$$ 
 
 Note that this differs from the definition of the \wpName \  given in Chapter \ref{wpGeneral}, section \ref{wpRules} where the postcondition 
@@ -39,8 +45,8 @@ We also define the weakest predicate transformer function  for a sequence of ins
 
 \begin{wpSeq}[\wpName \ for a block of instructions]\label{wpSeq}
      $$ \begin{array}{l} 
-              \wpBcSeq{ \ins{1};...;\ins{k}}{ \psi  } { \excPost } =\\
-              \wpBcSeq{\ins{1};...;\ins{k -1} }{ \wpExpl{ \ins{k} }{ \psi }{ \excPost} }{\excPost} 
+              \wpBcSeq{ \ins{1};...;\ins{k}}{ \psi  } { \excPostExpl } =\\
+              \wpBcSeq{\ins{1};...;\ins{k -1} }{ \wpExpl{ \ins{k} }{ \psi }{ \excPostExpl} }{\excPostExpl} 
         \end{array}$$ 
 
 \end{wpSeq}
@@ -56,8 +62,8 @@ the predicate transformer for  expressions.
 
 \begin{wpExpr}[\wpName \ for compiled expressions] \label{wpExpr}
                For any expression $\expressionSrc$, postcondition $\psi$ and exceptional postcondition function
-               $\excPost$ the \wpName \ function for the compilation $\compile{\expression}$  is
-               $ \wpBcSeq{\compile{\expression} }{ \psi  } { \excPost }  $
+               $\excPostExpl$ the \wpName \ function for the compilation $\compile{\expression}$  is
+               $ \wpBcSeq{\compile{\expression} }{ \psi  } { \excPostExpl }  $
  \end{wpExpr}
 
 For instance, the  rule of the \wpName  \ for the compilation of access  field expression $\expressionSrc.\fieldd $ 
@@ -70,12 +76,12 @@ $$
   produce the following formula 
 
 $$  \wpBcSeq{\begin{array}{l}
-	              \compile{\expressionSrc } ;\\
-	             \getfield \ \fieldd 
-	           \end{array} }{ \psi  } { \excPost } $$	
+	              \compileLabel{s}{\expressionSrc }{e - 1} ;\\
+	              e \ \getfield \ \fieldd 
+	           \end{array} }{ \psi  } { \excPostExpl } $$	
 
 This is equivalent to :
-  $$\wpBcSeq{\compile{\expressionSrc}}{\wpExpl{\getfield \ \fieldd }{\psi}{\excPost} }{\excPost} $$  
+  $$\wpBcSeq{\compileLabel{s}{\expressionSrc}{e - 1}}{\wpExpl{\getfield \ \fieldd }{\psi}{\excPostExpl} }{\excPostExpl} $$  
 
 
 % wp for compiled statements
@@ -86,124 +92,146 @@ $$\wpNameStmt : Set(\bcIns) \rightarrow  \formulaBc \rightarrow  ( \mbox{ \rm \t
 The definition of $\wpNameStmt$ uses the compiler function defined in Section \ref{compCtrlStmt}
 
 \begin{itemize}
-    \item sequential statement compilation $\compile{\stmt_1;\stmt_2} $ which by definition is 
+    \item sequential statement compilation $\compileLabel{s}{\stmt_1;\stmt_2}{e} $ which by definition is 
          % $$ \begin{array}{l}
-         %                           \compile{\stmt_1};\\
+         %                           \compileLabel{s}{\stmt_1};\\
           %                          \goto \ l;\\
-	  %                          l: \compile{\stmt_2}
+	  %                          l: \compileLabel{s}{\stmt_2}
 	 %	             \end{array}    $$
          % By definition the $\wpNameStmt$ for compiled sequental statements is 
-       $$ \begin{array}{l} \wpStmt{ \compile{\stmt_1;\stmt_2 }}{ \psi}{\excPost} =\bydef \\
+       $$ \begin{array}{l} \wpStmt{ \compileLabel{s}{\stmt_1;\stmt_2 }{e}}{ \psi}{\excPostExpl} =\bydef \\
                     
-	 	   \wpStmt{\compile{\stmt_1};}
+	 	   \wpStmt{\compileLabel{s}{\stmt_1}{e'};}
                           {\\
-                           \phantom{wp^{stmt}} \wpStmt{ \compile{\stmt_2}}{ \psi}{\excPost}}
+                           \phantom{wp^{stmt}} \wpStmt{ \compileLabel{e' + 1}{\stmt_2}{s}}{ \psi}{\excPostExpl}}
 			  {\\ 
-                           \phantom{wp^{stmt}} \excPost} 
+                           \phantom{wp^{stmt}} \excPostExpl} 
           \end{array}  $$ 
-     \item if statement compilation $\compile{   \Myif \ (\expressionSrcRel) \  \Mythen \ \{ \stmt_1 \} \    \Myelse \ \{ \stmt_2 \} }$   
+     \item if statement compilation $\compileLabel{s}{   \Myif \ (\expressionSrcRel) \  \Mythen \ \{ \stmt_1 \} \    \Myelse \ \{ \stmt_2 \} }{e}$   
            % which by definition is  equal to
            % $$ \begin{array}{l}
-	     %                           \compile{\expressionSrcRel}; \\
+	     %                           \compileLabel{s}{\expressionSrcRel}; \\
 	 % %			        \ifCond\_\rel \ l_{true} ;\\
-	 %			       \compile{\stmt_2)}\\
+	 %			       \compileLabel{s}{\stmt_2)}\\
 	 %			       \goto \ l; \\
-	 %			       l_{true}: \ \compile{\stmt_1} \\ 
+	 %			       l_{true}: \ \compileLabel{s}{\stmt_1} \\ 
 	 %			       l:
 	    %                       \end{array} $$
 
 %By definition the $\wpNameStmt$ \  in this case is defined as follows:
-    $$ \begin{array}{l} \wpStmt{   \compile{ \begin{array}{l} \Myif \ (\expressionSrcRel) \\
+    $$ \begin{array}{l} \wpStmt{   \compileLabel{s}{ \begin{array}{l} \Myif \ (\expressionSrcRel) \\
                                                                \Mythen \ \{ \stmt_1 \} \\  
 							       \Myelse \ \{ \stmt_2 \}   
-                                              \end{array}}}{\psi}{\excPost} =\bydef \\\\
+                                              \end{array}}{e}}{\psi}{\excPostExpl} =\bydef \\\\
                      
                         \wpBcSeq{%   \begin{array}{l}
-                      	                    \compile{\expressionSrcRel}; \\
+                      	                    \compileLabel{s}{\expressionSrcRel}{e'}; \\
 					    %\ifCond\_\rel \ l_{true} ;\\
 				%     \end{array}
 			    } {\\
                              \phantom{wp^{bc}_{seq}}	 \begin{array}{l}
 			              \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
-				           \phantom{wp^{bc}_{seq}} \wpStmt{\compile{\stmt_1} }{\psi}{\excPost} \substitution{t}{t-2} \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \substitution{t}{t-2} \\
 			               \wedge \\
 				       \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
-				           \phantom{wp^{bc}_{seq}} \wpStmt{\compile{\stmt_2} }{\psi}{\excPost} \substitution{t}{t-2} 
-			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPost} 
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \substitution{t}{t-2} 
+			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPostExpl} 
      \end{array} $$ 
        \item assignment expression. We will look only at the case for  compiled   field assignment 
-	 expressions $\compile{\expressionSrc_1.\fieldd= \expressionSrc_2 }$.
+	 expressions $\compileLabel{s}{\expressionSrc_1.\fieldd= \expressionSrc_2 }{e}$.
           %    By definition of the compiler function is compiled down to 
-	 %		$$\begin{array}{l} \compile{\expressionSrc_1};\\
-	 %		                   \compile{\expressionSrc_2}; \\
+	 %		$$\begin{array}{l} \compileLabel{s}{\expressionSrc_1};\\
+	 %		                   \compileLabel{s}{\expressionSrc_2}; \\
 	 %				   \putfield \ \fieldd 
 	 %		 \end{array}  		   
 	 %		$$
 	 	      
 		       $$\begin{array}{l}
-		              \wpStmt{ \compile{\expressionSrc_1.\fieldd= \expressionSrc_2}}{\psi}{\excPost} =\bydef \\
+		              \wpStmt{ \compileLabel{s}{\expressionSrc_1.\fieldd= \expressionSrc_2}{e}}{\psi}{\excPostExpl} =\bydef \\
 	
-			      \wpBcSeq{ \compile{\expressionSrc_1}}
+			      \wpBcSeq{ \compileLabel{s}{\expressionSrc_1}{e'}}
 				      { \\
 			              \phantom{wp^{bc}_{seq}}  \wpBcSeq{\begin{array}{l}
-                                                                              \compile{\expressionSrc_2}; \\
-                                                                              \putfield \ \fieldd 
-				                                        \end{array}}{\psi}{\excPost}  }
+                                                                              \compileLabel{e'+1}{\expressionSrc_2}{e - 1}; \\
+                                                                              e \ \putfield \ \fieldd 
+				                                        \end{array}}{\psi}{\excPostExpl}  }
                                       { \\
-			              \phantom{wp^{bc}_{seq}} \excPost}                     
+			              \phantom{wp^{bc}_{seq}} \excPostExpl}                     
 		        \end{array} $$ 
           
 
      \item try catch statement compilation 
 
 	   % $$  \begin{array}{l}
-             %           \compile{\stmt_1}; \\
+             %           \compileLabel{s}{\stmt_1}; \\
            %             goto \ l; \\
 	 %	  
-             %           \compile{\stmt_2};\\
+             %           \compileLabel{s}{\stmt_2};\\
 	 %	       goto \ l; \\
 	 %	       ...\\
 	 %	       l: \\ 
                %         \\  
                     
-	 %		\addExceptionTable{ \stR{\compile{\stmt_1} }}{ \enR{  \compile{ \stmt_1 }  }}{ \stR{\compile{\stmt_2}} }{ \excType} ) 
+	 %		\addExceptionTable{ \stR{\compileLabel{s}{\stmt_1} }}{ \enR{  \compileLabel{s}{ \stmt_1 }  }}{ \stR{\compileLabel{s}{\stmt_2}} }{ \excType} ) 
              %    \end{array}$$
 			
           
     $$ \begin{array}{l}
-	     \wpStmt{ \compile{  \begin{array}{l}
+	     \wpStmt{ \compileLabel{s}{  \begin{array}{l}
 		                      \try \ \{ \stmt_1 \} \\ 
 				      \catch \ (\excType \  \var)\{ \stmt_2 \}
-	                         \end{array}   }}{\psi}{\excPost} =\bydef \\
-	          \wpStmt{ 
-	                 \compile{\stmt_1}}
+	                         \end{array}   }{e}}{\psi}{\excPostExpl} =\bydef \\
+	          \wpStmt{ \begin{array}{l}
+	                 \compileLabel{s}{\stmt_1}{e'};
+			  e' + 1: \goto \ e + 1;
+			 \end{array} 
+                           }
                          { \\
 	                 \phantom{wp^{bc}_{stmt}} \psi}
 			 { \\
-	                  \phantom{wp^{bc}_{stmt}}  \update{\excPost}{\excType}{ \wpStmt{\compile{\stmt_2} }{\psi}{\excPost }} }
+	                  \phantom{wp^{bc}_{stmt}}  \update{\excPostExpl}{\excType}{ \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} }
 	\end{array}$$	
 
-	 \item try finally statement compilation $\compile{\try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \}}   $
+	 \item try finally statement compilation
+ $\compileLabel{s}{\try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \}}{e}   $
 
 	      
 	       $$ \begin{array}{l}
-	     \wpStmt{ \compile{\begin{array}{l}  
+	     \wpStmt{ \compileLabel{s}{\begin{array}{l}  
 					  \try \ \{ \stmt_1 \} \\
 					  \finally \ \{ \stmt_2 \} 
-	                                  \end{array}}}{\psi }{\excPost} =\bydef \\
-	     \wpStmt{\compile{\stmt_1} }
+	                                  \end{array}}{e}}{\psi }{\excPostExpl} =\bydef \\
+	     \wpStmt{   \begin{array}{l}
+                               \compileLabel{s}{\stmt_1}{e'} \\
+			        e'+1  : \jsr \ e' + 7;\\
+				e' + 2 : \goto \ e +  1;\\
+			   \end{array}    }
                    {\\
-                      \phantom{wp^{bc}_{stmt}}  \wpStmt{\compile{\stmt_2}}{\psi}{\excPost} }
+                      \phantom{wp^{bc}_{stmt}}  \wpStmt{ 
+                             \begin{array}{l}
+                                     e'  + 7 : \store \ k; \\
+				     \compileLabel{e' + 8}{\stmt_2}{e  - 1 } \\ 
+				     e : \ret \ k
+			     \end{array} 
+			  }{\psi}{\excPostExpl} }
 		   {\\
-                      \phantom{wp^{bc}_{stmt}} \update{\excPost}{\excType}{ \wpStmt{\compile{\stmt_2} }{\psi}{\excPost }} }
+                      \phantom{wp^{bc}_{stmt}} \update{\excPostExpl}{\excType}{ \wpStmt{  \begin{array}{l} 
+		                                                                                 e' +  3: \store \ l; \\
+                                                                                                 e' +  4: \jsr \ e' + 7; \\
+												 e' +  5:\load \ l;\\
+												 e' +  6: \athrow;\\
+                                                                                                
+												
+                                                                                        \end{array} 
+                                                                                       }{\psi}{\excPostExpl }} }
                	\end{array}$$
 
 
-   \item throw exception compilation $\compile{\throw \ \expressionSrc }$
+   \item throw exception compilation $\compileLabel{s}{\throw \ \expressionSrc }{e}$
         
 	 $$ \begin{array}{l} 
-	         \wpStmt{ \compile{\throw \ \expressionSrc }   }{\psi}{\excPost} =\bydef \\ 
-		 \wpBcSeq{ \expressionSrc }{ \wpExpl{\athrow}{\psi}{\excPost}}{\excPost} 
+	         \wpStmt{ \compileLabel{s}{\throw \ \expressionSrc }{e}   }{\psi}{\excPostExpl} =\bydef \\ 
+		 \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e - 1} }{ \wpExpl{e / \athrow}{\psi}{\excPostExpl}}{\excPostExpl} 
 	 \end{array}
 	 $$
    \item  loop statement

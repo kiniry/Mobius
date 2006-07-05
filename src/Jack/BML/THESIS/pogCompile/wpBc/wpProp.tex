@@ -1,6 +1,7 @@
-\newtheorem{wpBlock}{Lemma}[subsection]
-\newtheorem{relWpExpr}[wpBlock]{Lemma}
-\newtheorem{relWpStmt}[wpBlock]{Lemma}
+\newtheorem{wpIns}{Lemma}[subsection]
+\newtheorem{wpBlock}[wpIns]{Lemma}
+\newtheorem{relWpExpr}[wpIns]{Lemma}
+\newtheorem{relWpStmt}[wpIns]{Lemma}
 
 \subsection{Properties of the \wpName \ functions}
     The previous subsection introduced a new formulation of the 
@@ -8,15 +9,68 @@
     the source statement from which it is compiled. 
     However, it is important to establish a relation between this new definition
     and  the \wpName \ formulation given in  Chapter wp\ref{wpGeneral}.
-    The following two statements give the formalization of the relation between 
-    the two calculus.
+    The following statements establish the relation between 
+    the two versions of the \wpName \  calculus.
 
 
 
-\begin{wpBlock}[\wpName  \  for a block of instructions]\label{wpBlock}
-  For every block of instructions $i_1; \dots;i_k $    in  method \methodd  \
-  if $\psi = \inter{i_k}{\next{i_k}}$ then the following holds
-     $$   \wpBcSeq{i_1; \dots;i_k }{\psi }{\excPost} = \wpi{}{\methodd}{i_1}$$        
+\begin{wpIns}[Equivalence of the formulations for single instructions ]\label{wpIns}
+For all instructions 
+ $i_j$ and $i_k$ which belong to method \methodd,  formula
+ $\psi$,and  function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that
+\begin{itemize}
+   \item  $i_j \execRel i_k$
+   \item  $\psi = \inter{i_j}{i_k}$  
+   \item  $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
+\end{itemize}
+
+the following holds 
+
+   $\wpExpl{ i_j}{ \psi  }{ \excPostExpl} = \wpi{}{\methodd}{i_j} $
+\end{wpIns}
+The proof is done by case analysis on the instruction $i_j$
+In the following, we scatch the case for a \getfield \  instruction 
+\todo{note that the current formulation is not true because of the exceptions }
+\textit{Proof:}
+
+$$
+\begin{array}{l}
+  \mbox{\rm\comment{by hypothesis }} \\
+    i_j = \getfield \ \fieldd \\
+   \mbox{\rm\comment{by definition of the \wpName \  function }} \\
+    \numConclusion{1} \  \wpExpl{\getfield \ \fieldd }{\psi}{\excPostExpl} = \\
+    
+        \stack{\counter } \neq \Mynull \Rightarrow 
+			                \psi   \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
+			  \wedge \\
+			  \stack{\counter }  = \Mynull  \Rightarrow   \excPostExpl( \NullPointerExc ) \\\\
+
+
+  \mbox{\rm\comment{by definition of the \fwpi \  function }} \\
+\numConclusion{2} \  \wpi{}{\methodd}{ \getfield \ \fieldd} = \\
+                           \stack{\counter } \neq \Mynull \Rightarrow 
+			         \inter{i_j}{i_k}   \  \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
+			  \wedge \\
+			  \stack{\counter }  = \Mynull  \Rightarrow   \excPost( \NullPointerExc,j ) \\\\
+
+  \mbox{\rm\comment{ from the initial hypothesis, \numConclusion{1}  and \numConclusion{2} the lemma holds in that case   }}
+    
+
+\end{array}
+$$
+
+
+ \begin{wpBlock}[\wpName  \  for a block of instructions]\label{wpBlock}
+  For every block of instructions $\ins{1}; \dots;\ins{j} $  and instruction $\ins{k}$  in  method \methodd, formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $  such that
+ \begin{itemize} 
+    \item $\ins{j} \execRel \ins{k}$
+    \item  $\psi = \inter{\ins{j}}{\ins{k}}$
+    \item  $ \forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $
+    \item   $\forall 1 \le i,k \le j, \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = $ \\
+            $\findExcHandler{\mbox{ \rm \texttt{Exc}} }{k}{\methodd.\excHandlerTable}   $
+\end{itemize}
+then the following holds
+     $$   \wpBcSeq{\ins{1}; \dots;\ins{j} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{1} }$$        
 \end{wpBlock} 
 
 The proof is done by induction on the length of the sequence of instructions.
@@ -28,9 +82,18 @@ $$
 $$
 
 \begin{relWpExpr}[\wpName  \  for compiled expressions ]\label{relWpExpr}
-     For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \
-     if $\psi = \wpi{  }{\methodd }{ \next{\ins{e} } }$ then the following holds
-     $$   \wpBcSeq{\compileLabel{s}{\expressionSrc}{e}   }{\psi }{\excPost} = \wpi{}{\methodd}{\ins{s}}$$        
+     For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \,  formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
+
+      \begin{itemize}
+            \item $\psi = \inter{e}{e+1}$ then the following holds
+	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
+                  $ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
+             \item   $ \forall 1 \le i,k \le j, \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = $ \\
+                     $ \findExcHandler{\mbox{ \rm \texttt{Exc}} }{k}{\methodd.\excHandlerTable}   $
+
+      \end{itemize} then the following holds:
+
+     $$   \wpBcSeq{\compileLabel{s}{\expressionSrc}{e}   }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$        
 
 \end{relWpExpr}
 
@@ -38,3 +101,16 @@ $$
  $\expressionSrc$, start label $s$  and  end label $e$,
   the resulting compilation   $\compileLabel{s}{\expressionSrc}{e}$ is a block of instructions. We can apply 
  the previous lemma  \ref{wpBlock} and we get the result.
+
+
+\begin{relWpStmt}
+     For every compiled statement $\compileLabel{s}{\stmt}{e}$  in  method \methodd, formula $\psi$ and 
+    function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
+
+      \begin{itemize}
+            \item $\psi = \inter{e}{e+1}$
+	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
+      \end{itemize} then the following holds: \
+     if $\psi = \inter{e}{e+1}$ then the following holds
+     $$   \wpStmt{\compileLabel{s}{\stmt}{e} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   
+\end{relWpStmt}

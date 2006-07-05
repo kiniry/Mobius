@@ -115,8 +115,8 @@ exceptional termination.
 			                \expressionSrc_1 = \mbox{ \rm \Mynull }  \Rightarrow    \excPostSrc( \NullPointerExc )
                            \end{array}\right. 
        } { \\  \phantom{ wpisrc \expressionSrc_1 } \excPostSrc  } 
-	      } { \\   \excPostSrc  } \\\\
- where \  \compileSrcSpec{ \expressionSrc_1.m( \expressionSrc_2)  } = \freshVar 
+	      } { \\   \excPostSrc  }
+ 
             \end{array} $$	 
 
 
@@ -161,13 +161,12 @@ exceptional termination.
                                                       \substitution{ arg}{ \compileSrcSpec{\expressionSrc}} \\
 					     	\end{array} \\
 					       \wedge \\
-					     \forall \freshVar, 
+					     \forall \freshVar, \\
 					      % , \\
 					       
-					          \\
-					       \Myspace  \wedge \\
+					        
 					       \Myspace  not \ \instances(\freshVar ) \wedge \\
-					       \Myspace  \instances(\freshVar ) \neq \Mynull \wedge \\
+					       \Myspace  \freshVar  \neq \Mynull \wedge \\
 					       \Myspace  \forall \ m \in \Constructor{Class}. \mod , \\
 					       \Myspace  \Myspace    \Constructor{Class}.\normalPostSrc \Rightarrow   \normalPostSrc
 					             \begin{array}{l}   
@@ -179,8 +178,8 @@ exceptional termination.
 						   \forall \mbox{\rm \texttt{Exc}} \in  \Constructor{Class}.\exceptionSrc, \\
 						   \forall \ m \in \Constructor{Class}. \mod, \\
 						 \Constructor{Class}.\excPostSpecSrc ( \mbox{\rm\texttt{Exc}}) \Rightarrow \excPostSrc( \mbox{\rm\texttt{Exc}})
-		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }  \\\\
-		      where \  \compileSrcSpec{ \newSrc \ Class  ( \expressionSrc  ) } = \freshVar 
+		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }  
+		     
             \end{array}  $$ 
 
 \end{itemize}

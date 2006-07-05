@@ -16,11 +16,11 @@ Before stating the main theorem we need some auxiliary properties.
 
 
 \begin{interProp} \label{interProp}
-Let's have the sequence of bytecode instructions $i_1;...;i_k$ where $ \next{i_k} = i_l$
+Assume that we have the block of bytecode instructions $i_1;...;i_k$ where $ \next{i_k} = i_{k+1}$
      $$ \wpBcSeq{ i_1;...;i_k}{ \psi  }  { \excPost } = 
-\wpBcSeq{i_1;...;i_k; \instr{goto} l }{\psi }{\excPost} $$
+\wpBcSeq{i_1;...;i_k; \goto \  l }{\psi }{\excPost} $$
 
-The proof is based on the fact that the instruction \instr{goto} does not have side effects and thus,
+The proof is based on the fact that the instruction \goto \ does not have side effects and thus,
 the following holds: $ \wpBcSeq{ \instr{goto l}}{\psi}{\excPost} = \psi $
 \end{interProp}
 
@@ -41,18 +41,18 @@ exist $ Q, R : \formulaSrc$ such that the following holds
 
 
 \begin{itemize}
-\item   
+\item 
 $$ \begin{array}{l}
       \wpiSrc{  \expressionSrc }{ \psi }{ \excPost} \  \equiv \\ 
           Q \Rightarrow \psi \\
           \wedge \\ 
-	  R  
-  \end{array}$$
+	  R  \\
+  \\
+\leftrightarrow \\
+ \\
 
-
-\item  
-      $$ \begin{array}{l}
-	    \wpBcSeq{ \compile{\expressionSrc} }{ \psi }{\compile{\excPost}} \  \equiv \\ 
+  
+	    \wpBcSeq{ \compile{\expressionSrc} }{ \phi }{\compile{\excPost}} \  \equiv \\ 
               \compileSynt{Q} \Rightarrow \phi \begin{array}{l}
                                        \substitution{\counter}{\counter + 1}\\
 			               \substitution{\stack{\counter +1}}{ \compileSynt{ \expressionSrc}}
@@ -60,6 +60,31 @@ $$ \begin{array}{l}
           \wedge \\ 
 	  \compileSynt{R}
   \end{array}$$
+
+
+
+\item 
+$$ \begin{array}{l}
+      \wpiSrc{  \expressionSrc[\expressionSrc_1]  }{ \psi }{ \excPost} \  \equiv \\ 
+         \forall \freshVar ,  Q \Rightarrow \psi \substitution{ \compileSrcSpec{\expressionSrc_1} }{ \freshVar }  \\
+          \wedge \\ 
+	  R  \\
+  \\
+\leftrightarrow \\
+ \\
+
+  
+	    \wpBcSeq{ \compile{\expressionSrc} }{ \psi }{\compile{\excPost}} \  \equiv \\ 
+            \forall \freshVar ,   \compileSynt{Q} \Rightarrow \phi \begin{array}{l}
+                                       \substitution{\counter}{\counter + 1}\\
+			               \substitution{\stack{\counter +1}}{ \compileSynt{ \expressionSrc[\freshVar]}}
+                         \end{array} \\ \\
+          \wedge \\ 
+	  \compileSynt{R}
+  \end{array}$$
+
+
+
 \end{itemize}
 \end{exprValueOnStack}
 
