@@ -92,7 +92,7 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
     such that the instruction \methodd.\body[k] is either a \return \ instruction or an 
     instruction which terminates execution with an uncaught exception and the configuration after its execution is 
     $\configFinal{ \heap'}{\locVarOnly'}{\Final}$ then   we denote this  with: 
-    $$ {\scriptsize \methodd \vdash \methodd.\body: \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTransTerm \configFinal{ \heap'}{\locVarOnly'}{\Final} }$$
+    $$ {\scriptsize \methodd : \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTransTerm \configFinal{ \heap'}{\locVarOnly'}{\Final} }$$
  \end{transClosStateTrans1}
  
 
@@ -103,7 +103,7 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
  
  $$
  {\scriptsize  \frac{\begin{array}{l}
-          \methodd \vdash  \methodd.\body :  
+          \methodd \vdash  \methodd.\body[0] :  
 	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  \stateTrans^{*} \configFinal{\heap'}{\locVarOnly'}{\Final}\\
 	\end{array}	 
        }
