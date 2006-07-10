@@ -1470,7 +1470,7 @@ public class Method
 		return getParams().hasSameTypes(param_types);
 	}
 
-	public boolean isCoqDef() {
+	public boolean isNative() {
 		return getModifiers().isNative();//coqDef;
 	}
 

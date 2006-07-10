@@ -23,7 +23,7 @@ import jml2b.formula.IModifiesField;
 import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Goal;
 import jml2b.pog.lemma.GoalOrigin;
 import jml2b.pog.lemma.Proofs;
@@ -122,14 +122,14 @@ public class ModifiesNothing extends ModifiesClause {
 				// for the static fields, add the goal f == \old(f)
 				res.addGoal(
 					new Goal(
-						new FormulaWithPureMethodDecl(new BinaryForm(Ja_EQUALS_OP, fo, oldF)),
+						new FormulaWithSpecMethodDecl(new BinaryForm(Ja_EQUALS_OP, fo, oldF)),
 						new GoalOrigin(GoalOrigin.MODIFIES, f)));
 			} else {
 				// for the member fields, add the goal 
 				// \old(instances) <| f == \old(instances) <| \old(f)
 				res.addGoal(
 					new Goal(
-						new FormulaWithPureMethodDecl(new BinaryForm(EQUALS_ON_OLD_INSTANCES, fo, oldF)),
+						new FormulaWithSpecMethodDecl(new BinaryForm(EQUALS_ON_OLD_INSTANCES, fo, oldF)),
 						new GoalOrigin(GoalOrigin.MODIFIES, f)));
 			}
 		}
@@ -143,7 +143,7 @@ public class ModifiesNothing extends ModifiesClause {
 			// == \old(instances) <| \old(xxxelements)
 			res.addGoal(
 				new Goal(
-					new FormulaWithPureMethodDecl(new BinaryForm(EQUALS_ON_OLD_INSTANCES_ARRAY, fo, oldF)),
+					new FormulaWithSpecMethodDecl(new BinaryForm(EQUALS_ON_OLD_INSTANCES_ARRAY, fo, oldF)),
 					new GoalOrigin(GoalOrigin.MODIFIES)));
 		}
 		return res;

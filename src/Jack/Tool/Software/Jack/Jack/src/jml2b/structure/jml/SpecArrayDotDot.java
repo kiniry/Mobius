@@ -17,7 +17,7 @@ import jml2b.exceptions.PogException;
 import jml2b.formula.BinaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.ParsedItem;
@@ -44,12 +44,12 @@ public class SpecArrayDotDot extends SpecArray {
 	/**
 	 * The low boundary mark as a formula
 	 **/
-	private transient FormulaWithPureMethodDecl f1;
+	private transient FormulaWithSpecMethodDecl f1;
 
 	/**
 	 * The high boundary mark as a formula
 	 **/
-	private transient FormulaWithPureMethodDecl f2;
+	private transient FormulaWithSpecMethodDecl f2;
 
 	/**
 	 * Constructs an empty interval corresponding to a parsed item.
@@ -69,7 +69,7 @@ public class SpecArrayDotDot extends SpecArray {
 	 * @param pi The parsed item
 	 * @param f The formula
 	 **/
-	SpecArrayDotDot(ParsedItem pi, FormulaWithPureMethodDecl f1, FormulaWithPureMethodDecl f2) {
+	SpecArrayDotDot(ParsedItem pi, FormulaWithSpecMethodDecl f1, FormulaWithSpecMethodDecl f2) {
 		super(pi);
 		this.f1 = f1;
 		this.f2 = f2;
@@ -97,8 +97,8 @@ public class SpecArrayDotDot extends SpecArray {
 		else {
 			return new SpecArrayDotDot(
 					this,
-					(FormulaWithPureMethodDecl) f1.clone(),
-					(FormulaWithPureMethodDecl) f2.clone());
+					(FormulaWithSpecMethodDecl) f1.clone(),
+					(FormulaWithSpecMethodDecl) f2.clone());
 		}
 	}
 
@@ -116,19 +116,19 @@ public class SpecArrayDotDot extends SpecArray {
 	/**
 	 * @throws InternalError since this represents a set of modified indexes
 	 */
-	FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config) {
+	FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config) {
 		throw new InternalError("SpecArrayDotDot.getFormula");
 	}
 
 	/**
 	 * @return <code>e1 .. e2</code>
 	 **/
-	FormulaWithPureMethodDecl getSet(IJml2bConfiguration config, Modifies m)
+	FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config, Modifies m)
 		throws PogException {
-		FormulaWithPureMethodDecl fwp1 = getF1(config);
-			FormulaWithPureMethodDecl fwp2 = getF2(config);
+		FormulaWithSpecMethodDecl fwp1 = getF1(config);
+			FormulaWithSpecMethodDecl fwp2 = getF2(config);
 			
-		return new FormulaWithPureMethodDecl(fwp1, fwp2, new BinaryForm(B_INTERVAL, fwp1.getFormula(), fwp2.getFormula()));
+		return new FormulaWithSpecMethodDecl(fwp1, fwp2, new BinaryForm(B_INTERVAL, fwp1.getFormula(), fwp2.getFormula()));
 	}
 
 	/**
@@ -178,7 +178,7 @@ public class SpecArrayDotDot extends SpecArray {
 	/**
 	 * Returns the low boundary mark
 	 **/
-	FormulaWithPureMethodDecl getF1(IJml2bConfiguration config) throws PogException {
+	FormulaWithSpecMethodDecl getF1(IJml2bConfiguration config) throws PogException {
 		try {
 
 			if (f1 == null)
@@ -193,7 +193,7 @@ public class SpecArrayDotDot extends SpecArray {
 	/**
 	 * Returns the high boundary mark
 	 **/
-	FormulaWithPureMethodDecl getF2(IJml2bConfiguration config) throws PogException {
+	FormulaWithSpecMethodDecl getF2(IJml2bConfiguration config) throws PogException {
 		try {
 			if (f2 == null)
 				f2 = e2.exprToForm(config);

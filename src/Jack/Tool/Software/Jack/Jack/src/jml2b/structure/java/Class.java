@@ -29,7 +29,7 @@ import jml2b.link.LinkUtils;
 import jml2b.link.Linkable;
 import jml2b.link.TypeCheckable;
 import jml2b.pog.Pog;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.SimpleLemma;
 import jml2b.structure.AField;
@@ -1402,9 +1402,9 @@ extends AClass
 //		return current;
 //	}
 	
-	private FormulaWithPureMethodDecl addGlobalMemberInvariant(
+	private FormulaWithSpecMethodDecl addGlobalMemberInvariant(
 		IJml2bConfiguration config,
-		FormulaWithPureMethodDecl current,
+		FormulaWithSpecMethodDecl current,
 		AClass c)
 		throws Jml2bException, PogException {
 		// ensures that the class is visible
@@ -1432,10 +1432,10 @@ extends AClass
 			// quantify on the member invariant, if needed and add it 
 			// to the current Expression.
 			if (member.size() > 0) {
-				FormulaWithPureMethodDecl memberf = Pog.quantify(config, c, member);
+				FormulaWithSpecMethodDecl memberf = Pog.quantify(config, c, member);
 
 				current =
-					(current != null) ? FormulaWithPureMethodDecl.and(current, memberf) : memberf;
+					(current != null) ? FormulaWithSpecMethodDecl.and(current, memberf) : memberf;
 			}
 		}
 		return current;
@@ -1514,9 +1514,9 @@ extends AClass
 		}
 	}
 
-	private FormulaWithPureMethodDecl addGlobalMemberInvariant(
+	private FormulaWithSpecMethodDecl addGlobalMemberInvariant(
 		IJml2bConfiguration config,
-		FormulaWithPureMethodDecl current,
+		FormulaWithSpecMethodDecl current,
 		Package p)
 		throws Jml2bException, PogException {
 		Enumeration e;
@@ -1605,7 +1605,7 @@ extends AClass
 		return fqn.equals(getFullyQualifiedName());
 	}
 
-	public FormulaWithPureMethodDecl getGlobalMemberInvariant(IJml2bConfiguration config)
+	public FormulaWithSpecMethodDecl getGlobalMemberInvariant(IJml2bConfiguration config)
 		throws Jml2bException, PogException {
 		return addGlobalMemberInvariant(config, null, ((JavaLoader) config.getPackage()).getRoot());
 	}

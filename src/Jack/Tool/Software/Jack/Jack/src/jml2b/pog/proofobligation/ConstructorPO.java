@@ -18,7 +18,7 @@ import jml2b.formula.TTypeForm;
 import jml2b.formula.TerminalForm;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
 import jml2b.pog.lemma.ExceptionalProofs;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.Theorem;
 import jml2b.pog.substitution.SubInstancesSingle;
@@ -60,8 +60,8 @@ public class ConstructorPO extends MethodPO {
 		Class c,
 		String s,
 		Method m,
-		FormulaWithPureMethodDecl h1,
-		FormulaWithPureMethodDecl h2,
+		FormulaWithSpecMethodDecl h1,
+		FormulaWithSpecMethodDecl h2,
 		ColoredInfo box,
 		Statement b,
 		Theorem p1,
@@ -101,7 +101,7 @@ public class ConstructorPO extends MethodPO {
 			new BinaryForm(
 				LOCAL_VAR_DECL,
 				new TerminalForm(Ja_LITERAL_this, "this"),
-				TerminalForm.REFERENCES));
+				TerminalForm.$References));
 
 		finalizePog(config);
 	}

@@ -22,7 +22,7 @@ import jml2b.formula.IFormToken;
 import jml2b.formula.TerminalForm;
 import jml2b.formula.UnaryForm;
 import jml2b.pog.lemma.ExceptionalLemma;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.SimpleLemma;
 import jml2b.pog.lemma.Theorem;
 import jml2b.pog.lemma.TheoremList;
@@ -234,7 +234,7 @@ public class RequiresGenerator extends JmlClauseGenerator {
 					new MethodPO(
 						a,
 						m,
-						new FormulaWithPureMethodDecl(new TerminalForm(IFormToken.B_BTRUE)),
+						new FormulaWithSpecMethodDecl(new TerminalForm(IFormToken.B_BTRUE)),
 						m.getNormalizedRequires(config).predToForm(config),
 						new ColoredInfo(m),
 						m.getBody(config),

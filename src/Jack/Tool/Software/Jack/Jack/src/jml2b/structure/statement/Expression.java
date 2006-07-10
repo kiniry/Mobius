@@ -40,7 +40,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.LabeledProofsVector;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubArrayElement;
@@ -613,7 +613,7 @@ public abstract class Expression
 	/*@
 	  @ requires parsed;
 	  @*/
-	public final FormulaWithPureMethodDecl exprToForm(IJml2bConfiguration config)
+	public final FormulaWithSpecMethodDecl exprToForm(IJml2bConfiguration config)
 		throws Jml2bException, PogException {
 		return exprToForm(config, new Vector(), false);
 	}
@@ -627,7 +627,7 @@ public abstract class Expression
 	/*@
 	  @ requires parsed;
 	  @*/
-	public final FormulaWithPureMethodDecl predToForm(IJml2bConfiguration config)
+	public final FormulaWithSpecMethodDecl predToForm(IJml2bConfiguration config)
 		throws Jml2bException, PogException {
 		return exprToForm(config, new Vector(), true) /*.exprToBool()*/;
 	}
@@ -644,7 +644,7 @@ public abstract class Expression
 	/*@
 	  @ requires parsed;
 	  @*/
-	final FormulaWithPureMethodDecl exprToForm(
+	final FormulaWithSpecMethodDecl exprToForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)
@@ -894,7 +894,7 @@ public abstract class Expression
 	  @       && methods != null 
 	  @       && methods.elementType <: \type(Method);
 	  @*/
-	abstract FormulaWithPureMethodDecl exprToContextForm(
+	abstract FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)

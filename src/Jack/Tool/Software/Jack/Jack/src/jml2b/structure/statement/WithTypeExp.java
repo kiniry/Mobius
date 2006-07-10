@@ -32,7 +32,7 @@ import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.VirtualFormula;
 import jml2b.pog.substitution.SubArrayElement;
@@ -286,29 +286,20 @@ public class WithTypeExp extends Expression {
 				if (srcType.getTag() == Type.T_CHAR)
 					return f;
 				else
-					return new BinaryForm(
-						IFormToken.B_APPLICATION,
-						TerminalForm.j_int2char,
-						f);
+					return Formula.apply(TerminalForm.$int2char, f);
 
 			case Type.T_SHORT :
 				if (srcType.getTag() == Type.T_BYTE
 					|| srcType.getTag() == Type.T_SHORT)
 					return f;
 				else
-					return new BinaryForm(
-						IFormToken.B_APPLICATION,
-						TerminalForm.j_int2short,
-						f);
+					return Formula.apply(TerminalForm.$int2short, f);
 
 			case Type.T_BYTE :
 				if (srcType.getTag() == Type.T_BYTE)
 					return f;
 				else
-					return new BinaryForm(
-						IFormToken.B_APPLICATION,
-						TerminalForm.j_int2byte,
-						f);
+					return  Formula.apply(TerminalForm.$int2byte, f);
 		}
 		throw new jml2b.exceptions.InternalError(
 			"WithTypeExp.cast: Impossible cast "
@@ -333,7 +324,7 @@ public class WithTypeExp extends Expression {
 		// get appropriate initialiser 
 		switch (t.getTag()) {
 			case Type.T_BOOLEAN :
-				initialiser = Formula.getFalse();
+				initialiser = Formula.$false;
 				break;
 			case Type.T_INT :
 			case Type.T_SHORT :
@@ -348,7 +339,7 @@ public class WithTypeExp extends Expression {
 				break;
 			case Type.T_REF :
 			case Type.T_ARRAY :
-				initialiser = Formula.getNull();
+				initialiser = Formula.$null;
 				break;
 			default :
 				throw new InternalError(
@@ -453,13 +444,13 @@ public class WithTypeExp extends Expression {
 	 * <code>e instanceof t</code> is converted into 
 	 * <code>typeof(e) <: \type(t)</code>
 	 **/
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)
 		throws Jml2bException, PogException {
 		Formula res;
-		FormulaWithPureMethodDecl c = exp.exprToContextForm(config, methods, false);
+		FormulaWithSpecMethodDecl c = exp.exprToContextForm(config, methods, false);
 		switch (getNodeType()) {
 			case CAST :
 				if (type.isBuiltin())
@@ -475,14 +466,14 @@ public class WithTypeExp extends Expression {
 							Jm_IS_SUBTYPE,
 							new BinaryForm(
 								IFormToken.B_APPLICATION,
-								TerminalForm.typeof,
+								TerminalForm.$typeof,
 								c.getFormula()),
 							new TTypeForm(IFormToken.Jm_T_TYPE, type)));
 				break;
 			default :
 				return null;
 		}
-		return new FormulaWithPureMethodDecl(c, res);
+		return new FormulaWithSpecMethodDecl(c, res);
 	}
 
 	public String toJava(int indent) {
@@ -1036,7 +1027,7 @@ public class WithTypeExp extends Expression {
 				}
 				return p.quantify(
 					oo,
-					TerminalForm.REFERENCES,
+					TerminalForm.$References,
 					new ColoredInfo(type, ColoredInfo.NEW, oo));
 			case NEWARRAY :
 				oo = freshObject();
@@ -1066,7 +1057,7 @@ public class WithTypeExp extends Expression {
 					dimExpr,
 					v.quantify(
 						new TerminalForm(oo),
-						TerminalForm.REFERENCES,
+						TerminalForm.$References,
 						new ColoredInfo(type, ColoredInfo.NEW, oo)),
 					exceptionalBehaviour);
 
@@ -1096,7 +1087,7 @@ public class WithTypeExp extends Expression {
 								Jm_IS_SUBTYPE,
 								new BinaryForm(
 									IFormToken.B_APPLICATION,
-									TerminalForm.typeof,
+									TerminalForm.$typeof,
 									new TerminalForm(result)),
 								new TTypeForm(IFormToken.Jm_T_TYPE, type)));
 					Proofs lv =
@@ -1122,8 +1113,7 @@ public class WithTypeExp extends Expression {
 				Formula s =
 					new UnaryForm(
 						B_BOOL,
-						new BinaryForm(
-							Ja_AND_OP,
+						Formula.and(
 							new BinaryForm(
 								Ja_DIFFERENT_OP,
 								new TerminalForm(vv),
@@ -1132,7 +1122,7 @@ public class WithTypeExp extends Expression {
 								Jm_IS_SUBTYPE,
 								new BinaryForm(
 									IFormToken.B_APPLICATION,
-									TerminalForm.typeof,
+									TerminalForm.$typeof,
 									new TerminalForm(vv)),
 								new TTypeForm(IFormToken.Jm_T_TYPE, type))));
 				return exp.wp(

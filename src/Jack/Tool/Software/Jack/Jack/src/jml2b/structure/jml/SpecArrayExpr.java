@@ -17,7 +17,7 @@ import jml2b.exceptions.PogException;
 import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.ParsedItem;
@@ -39,7 +39,7 @@ public class SpecArrayExpr extends SpecArray {
 	/**
 	 * The formula corresponding to the index
 	 **/
-	private transient FormulaWithPureMethodDecl f;
+	private transient FormulaWithSpecMethodDecl f;
 
 	/**
 	 * Constructs an empty index corresponding to a parsed item.
@@ -57,7 +57,7 @@ public class SpecArrayExpr extends SpecArray {
 	 * @param pi The parsed item
 	 * @param f The formula
 	 **/
-	SpecArrayExpr(ParsedItem pi, FormulaWithPureMethodDecl f) {
+	SpecArrayExpr(ParsedItem pi, FormulaWithSpecMethodDecl f) {
 		super(pi);
 		this.f = f;
 	}
@@ -68,7 +68,7 @@ public class SpecArrayExpr extends SpecArray {
 	 * @param e The expression
 	 * @param f The formula
 	 **/
-	private SpecArrayExpr(ParsedItem pi, Expression e, FormulaWithPureMethodDecl f) {
+	private SpecArrayExpr(ParsedItem pi, Expression e, FormulaWithSpecMethodDecl f) {
 		super(pi);
 		this.e = e;
 		this.f = f;
@@ -78,7 +78,7 @@ public class SpecArrayExpr extends SpecArray {
 		return new SpecArrayExpr(
 			this,
 			e == null ? null : (Expression) e.clone(),
-			f == null ? null : (FormulaWithPureMethodDecl) f.clone());
+			f == null ? null : (FormulaWithSpecMethodDecl) f.clone());
 	}
 
 	Vector getParsedItems() {
@@ -92,7 +92,7 @@ public class SpecArrayExpr extends SpecArray {
 	/**
 	 * @return <code>f</code>
 	 **/
-	FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config) throws PogException {
+	FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config) throws PogException {
 		try {
 			if (f == null)
 				return f = e.exprToForm(config);
@@ -106,10 +106,10 @@ public class SpecArrayExpr extends SpecArray {
 	/**
 	 * @return <code>{f}</code>
 	 **/
-	FormulaWithPureMethodDecl getSet(IJml2bConfiguration config, Modifies m)
+	FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config, Modifies m)
 		throws PogException {
-		FormulaWithPureMethodDecl fwp = getFormula(config);
-		return new FormulaWithPureMethodDecl(fwp, new UnaryForm(B_ACCOLADE, fwp.getFormula()));
+		FormulaWithSpecMethodDecl fwp = getFormula(config);
+		return new FormulaWithSpecMethodDecl(fwp, new UnaryForm(B_ACCOLADE, fwp.getFormula()));
 	}
 
 	/**

@@ -17,7 +17,7 @@ import jml2b.exceptions.PogException;
 import jml2b.formula.BinaryForm;
 import jml2b.formula.Formula;
 import jml2b.formula.IFormToken;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.AField;
 import jml2b.structure.java.Field;
 import jml2b.structure.statement.Expression;
@@ -36,7 +36,7 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	/**
 	 * The guard of the modifies clause as a formula
 	 **/
-	private FormulaWithPureMethodDecl guardF;
+	private FormulaWithSpecMethodDecl guardF;
 
 	/*@
 	  @ private invariant guardF != null;
@@ -50,7 +50,7 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	/*@
 	  @ requires f != null;
 	  @*/
-	NormalizedGuardedModifies(Modifies m, FormulaWithPureMethodDecl f) {
+	NormalizedGuardedModifies(Modifies m, FormulaWithSpecMethodDecl f) {
 		super(m, (Expression) null);
 		guardF = f;
 	}
@@ -64,10 +64,10 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	/*@
 	  @ requires f != null;
 	  @*/
-	private NormalizedGuardedModifies(NormalizedGuardedModifies gm, FormulaWithPureMethodDecl f)
+	private NormalizedGuardedModifies(NormalizedGuardedModifies gm, FormulaWithSpecMethodDecl f)
 		throws PogException {
 		super(gm.getM(), (Expression) null);
-		guardF = FormulaWithPureMethodDecl.and(gm.guardF, f);
+		guardF = FormulaWithSpecMethodDecl.and(gm.guardF, f);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	/*@
 	  @ requires f != null;
 	  @*/
-	NormalizedGuardedModifies(Modifies m, Expression e, FormulaWithPureMethodDecl f) {
+	NormalizedGuardedModifies(Modifies m, Expression e, FormulaWithSpecMethodDecl f) {
 		super(m, e);
 		guardF = f;
 	}
@@ -92,7 +92,7 @@ class NormalizedGuardedModifies extends GuardedModifies {
 		return new NormalizedGuardedModifies(
 			(Modifies) getM().clone(),
 			getGuardE() == null ? null : (Expression) getGuardE().clone(),
-			(FormulaWithPureMethodDecl) guardF.clone());
+			(FormulaWithSpecMethodDecl) guardF.clone());
 	}
 
 	/**
@@ -159,9 +159,9 @@ class NormalizedGuardedModifies extends GuardedModifies {
 		throws PogException {
 		getM().instancie(b);
 		try {
-			FormulaWithPureMethodDecl fwp = b.predToForm(config);
-			FormulaWithPureMethodDecl fwp1 = guardF.instancie(fwp.getFormula());
-			guardF = new FormulaWithPureMethodDecl(fwp, fwp1, fwp1.getFormula());
+			FormulaWithSpecMethodDecl fwp = b.predToForm(config);
+			FormulaWithSpecMethodDecl fwp1 = guardF.instancie(fwp.getFormula());
+			guardF = new FormulaWithSpecMethodDecl(fwp, fwp1, fwp1.getFormula());
 		} catch (Jml2bException je) {
 			throw new jml2b.exceptions.InternalError(je.toString());
 		}
@@ -183,14 +183,14 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	 * @param f The field to restrict.
 	 * @return the restriction to applied to the domain of the member field.
 	 **/
-	FormulaWithPureMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f)
+	FormulaWithSpecMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f)
 		throws PogException {
-		FormulaWithPureMethodDecl fo = getM().getModifiedInstances(config, f);
+		FormulaWithSpecMethodDecl fo = getM().getModifiedInstances(config, f);
 		if (fo == null || !hasRelevantGuard())
 			return fo;
 		else {
 			
-			return new FormulaWithPureMethodDecl(fo, guardF, new BinaryForm(IFormToken.GUARDED_SET, fo.getFormula(), guardF.getFormula()));
+			return new FormulaWithSpecMethodDecl(fo, guardF, new BinaryForm(IFormToken.GUARDED_SET, fo.getFormula(), guardF.getFormula()));
 	}
 	}
 
@@ -202,13 +202,13 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	 * xxxelements variable.
 	 * @throws PogException
 	 **/
-	FormulaWithPureMethodDecl restrictElement(IJml2bConfiguration config, int tag)
+	FormulaWithSpecMethodDecl restrictElement(IJml2bConfiguration config, int tag)
 		throws PogException {
-		FormulaWithPureMethodDecl fo = getM().restrictElement(config, tag);
+		FormulaWithSpecMethodDecl fo = getM().restrictElement(config, tag);
 		if (fo == null || !hasRelevantGuard())
 			return fo;
 		else
-			return new FormulaWithPureMethodDecl(fo, guardF, new BinaryForm(IFormToken.GUARDED_SET, fo.getFormula(), guardF.getFormula()));
+			return new FormulaWithSpecMethodDecl(fo, guardF, new BinaryForm(IFormToken.GUARDED_SET, fo.getFormula(), guardF.getFormula()));
 	}
 
 	/**
@@ -219,20 +219,20 @@ class NormalizedGuardedModifies extends GuardedModifies {
 	 * <code>xxxelements(f)</code>.
 	 * @throws PogException
 	 **/
-	FormulaWithPureMethodDecl getModifiedIndexes(IJml2bConfiguration config, int tag, Formula q)
+	FormulaWithSpecMethodDecl getModifiedIndexes(IJml2bConfiguration config, int tag, Formula q)
 		throws PogException {
-		FormulaWithPureMethodDecl fo = getM().getModifiedIndexes(config, tag, q);
+		FormulaWithSpecMethodDecl fo = getM().getModifiedIndexes(config, tag, q);
 		if (fo == null || !hasRelevantGuard())
 			return fo;
 		else
-			return new FormulaWithPureMethodDecl(fo, guardF, new BinaryForm(IFormToken.GUARDED_SET, fo.getFormula(), guardF.getFormula()));
+			return new FormulaWithSpecMethodDecl(fo, guardF, new BinaryForm(IFormToken.GUARDED_SET, fo.getFormula(), guardF.getFormula()));
 	}
 
 	/**
 	 * Returns the guard.
 	 * @return <code>guardF</code>
 	 */
-	FormulaWithPureMethodDecl getGuardF() {
+	FormulaWithSpecMethodDecl getGuardF() {
 		return guardF;
 	}
 

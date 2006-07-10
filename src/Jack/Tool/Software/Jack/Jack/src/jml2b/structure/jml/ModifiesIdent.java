@@ -25,7 +25,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubForm;
 import jml2b.pog.util.IdentifierResolver;
@@ -109,16 +109,16 @@ public class ModifiesIdent extends Modifies {
 	/**
 	 * @return <code>ident</code>
 	 **/
-	FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config) {
-		return new FormulaWithPureMethodDecl(new TerminalForm(ident));
+	FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config) {
+		return new FormulaWithSpecMethodDecl(new TerminalForm(ident));
 	}
 
 	/**
 	 * @return <code>{ident}</code>
 	 **/
-	FormulaWithPureMethodDecl getSet(IJml2bConfiguration config) {
-		FormulaWithPureMethodDecl fwp = getFormula(config);
-		return new FormulaWithPureMethodDecl(fwp, new UnaryForm(B_ACCOLADE, fwp.getFormula()));
+	FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config) {
+		FormulaWithSpecMethodDecl fwp = getFormula(config);
+		return new FormulaWithSpecMethodDecl(fwp, new UnaryForm(B_ACCOLADE, fwp.getFormula()));
 	}
 
 	/**
@@ -194,11 +194,11 @@ public class ModifiesIdent extends Modifies {
 						new TerminalForm(Ja_LITERAL_null, "null")),
 					new BinaryForm(
 						Jm_IS_SUBTYPE,
-						new BinaryForm(B_APPLICATION, TerminalForm.typeof, mff),
+						new BinaryForm(B_APPLICATION, TerminalForm.$typeof, mff),
 						new TTypeForm(
 							IFormToken.Jm_T_TYPE,
 							ident.field.getType()))));
-			return res.quantify(mff, TerminalForm.REFERENCES);
+			return res.quantify(mff, TerminalForm.$References);
 		}
 	}
 
@@ -214,12 +214,12 @@ public class ModifiesIdent extends Modifies {
 	 * Applies no restriction to a static member field nor to local fields, 
 	 * if it is member, restricts to its domain.
 	 **/
-	FormulaWithPureMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f) {
+	FormulaWithSpecMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f) {
 		if (ident.field.getModifiers() == null
 			|| ident.field.getModifiers().isStatic())
 			return null;
 		else
-			return new FormulaWithPureMethodDecl(new UnaryForm(B_DOM, new TerminalForm(ident)));
+			return new FormulaWithSpecMethodDecl(new UnaryForm(B_DOM, new TerminalForm(ident)));
 	}
 
 	/**
@@ -227,7 +227,7 @@ public class ModifiesIdent extends Modifies {
 	 * function.
 	 * @return <code>null</code>
 	 **/
-	FormulaWithPureMethodDecl getModifiedIndexes(
+	FormulaWithSpecMethodDecl getModifiedIndexes(
 		IJml2bConfiguration config,
 		int tag,
 		Formula q) {
@@ -238,7 +238,7 @@ public class ModifiesIdent extends Modifies {
 	 * Apply no restriction to <code>xxxelements</code> variable.
 	 * @return <code>null</code>
 	 **/
-	FormulaWithPureMethodDecl restrictElement(IJml2bConfiguration config, int tag) {
+	FormulaWithSpecMethodDecl restrictElement(IJml2bConfiguration config, int tag) {
 		return null;
 	}
 

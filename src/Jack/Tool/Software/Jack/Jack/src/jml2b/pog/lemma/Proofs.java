@@ -166,7 +166,7 @@ public class Proofs implements JmlDeclParserTokenTypes, Serializable, IFormToken
 	 *            the ColoredInfo associated to the requires clause.
 	 */
 	public void finalize(IJml2bConfiguration config, Formula param, Expression invStaticFinalFields,
-			FormulaWithPureMethodDecl hyp, FormulaWithPureMethodDecl req, String name, ColoredInfo b, ColoredInfo method)
+			FormulaWithSpecMethodDecl hyp, FormulaWithSpecMethodDecl req, String name, ColoredInfo b, ColoredInfo method)
 			throws Jml2bException, PogException {
 		if (param != null)
 			addHyp(param);
@@ -374,14 +374,14 @@ public class Proofs implements JmlDeclParserTokenTypes, Serializable, IFormToken
 					b,
 					VirtualFormula.ENSURES);
 		else {
-			addHyp(	new BinaryForm(LOCAL_VAR_DECL, new TerminalForm(var), TerminalForm.REFERENCES),
+			addHyp(	new BinaryForm(LOCAL_VAR_DECL, new TerminalForm(var), TerminalForm.$References),
 					b,
 					VirtualFormula.ENSURES);
-			addHyp(new BinaryForm(B_IN, new TerminalForm(var), new BinaryForm(B_UNION, TerminalForm.instances,
+			addHyp(new BinaryForm(B_IN, new TerminalForm(var), new BinaryForm(B_UNION, TerminalForm.$instances,
 					new UnaryForm(B_ACCOLADE, new TerminalForm(Ja_LITERAL_null, "null")))), b, VirtualFormula.ENSURES);
 			addHyp(new BinaryForm(Jm_IMPLICATION_OP, new BinaryForm(Ja_DIFFERENT_OP, new TerminalForm(var),
 					new TerminalForm(Ja_LITERAL_null, "null")), new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(
-					B_APPLICATION, TerminalForm.typeof, new TerminalForm(var)), new TTypeForm(IFormToken.Jm_T_TYPE,
+					B_APPLICATION, TerminalForm.$typeof, new TerminalForm(var)), new TTypeForm(IFormToken.Jm_T_TYPE,
 					type))), b, VirtualFormula.ENSURES);
 		}
 		return this;
@@ -503,7 +503,7 @@ public class Proofs implements JmlDeclParserTokenTypes, Serializable, IFormToken
 			addHyp(new VirtualFormula(origin, f, b));
 	}
 	
-	public void addHyp(FormulaWithPureMethodDecl f, ColoredInfo b, byte origin) {
+	public void addHyp(FormulaWithSpecMethodDecl f, ColoredInfo b, byte origin) {
 		addHyp(f.getFormula(),b,origin);
 		Enumeration e = f.getPureMethodDef().elements();
 		while (e.hasMoreElements()) {
@@ -553,7 +553,7 @@ public class Proofs implements JmlDeclParserTokenTypes, Serializable, IFormToken
 		addHyp(f, (ColoredInfo) null, VirtualFormula.LOCALES);
 	}
 	
-	public void addHyp(FormulaWithPureMethodDecl f) {
+	public void addHyp(FormulaWithSpecMethodDecl f) {
 		addHyp(f, (ColoredInfo) null, VirtualFormula.LOCALES);
 	}
 
@@ -574,7 +574,7 @@ public class Proofs implements JmlDeclParserTokenTypes, Serializable, IFormToken
 //		// addHyp(new VirtualFormula(origin, f, (ColoredInfo) null));
 //	}
 
-	private void addOneHyp(FormulaWithPureMethodDecl f, byte origin) {
+	private void addOneHyp(FormulaWithSpecMethodDecl f, byte origin) {
 		addHyp(f, (ColoredInfo) null, origin);
 		// addHyp(new VirtualFormula(origin, f, (ColoredInfo) null));
 	}

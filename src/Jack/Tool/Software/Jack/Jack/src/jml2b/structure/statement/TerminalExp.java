@@ -26,7 +26,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubTmpVar;
 import jml2b.pog.util.ColoredInfo;
@@ -178,7 +178,7 @@ public class TerminalExp extends Expression {
 					&& ident.equals(((TerminalExp) e).ident)));
 	}
 
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)
@@ -236,12 +236,12 @@ public class TerminalExp extends Expression {
 					Ja_EQUALS_OP,
 					new TerminalForm(n, getNodeText(), ident, subident),
 					new TerminalForm(IFormToken.Ja_LITERAL_true));
-			return new FormulaWithPureMethodDecl(res);
+			return new FormulaWithSpecMethodDecl(res);
 		} else {
 			TerminalForm res =
 				new TerminalForm(n, getNodeText(), ident, subident);
 			res.setBox((ParsedItem) this);
-			return new FormulaWithPureMethodDecl(res);
+			return new FormulaWithSpecMethodDecl(res);
 		}
 	}
 

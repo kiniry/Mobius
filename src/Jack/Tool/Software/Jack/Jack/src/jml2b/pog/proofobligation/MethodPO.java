@@ -21,7 +21,7 @@ import jml2b.formula.TTypeForm;
 import jml2b.formula.TerminalForm;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
 import jml2b.pog.lemma.ExceptionalProofs;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.GoalOrigin;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.SimpleLemma;
@@ -50,12 +50,12 @@ public class MethodPO extends SourceProofObligation {
 	/**
 	 * The invariant to respect
 	 */
-	private FormulaWithPureMethodDecl invariant;
+	private FormulaWithSpecMethodDecl invariant;
 
 	/**
 	 * The requires of the current method
 	 */
-	private FormulaWithPureMethodDecl requires;
+	private FormulaWithSpecMethodDecl requires;
 
 	/*
 	 * @ @ private invariant method != null @ && invariant != null @ && requires !=
@@ -87,7 +87,7 @@ public class MethodPO extends SourceProofObligation {
 	/*
 	 * @ @ requires m != null && h1 != null && h2 != null; @
 	 */
-	MethodPO(String name, Class c, Method m, FormulaWithPureMethodDecl h1, FormulaWithPureMethodDecl h2, ColoredInfo box, Statement b, Theorem p1,
+	MethodPO(String name, Class c, Method m, FormulaWithSpecMethodDecl h1, FormulaWithSpecMethodDecl h2, ColoredInfo box, Statement b, Theorem p1,
 			Theorem p7) {
 		super(name, b, p1, p7, c, box);
 		method = m;
@@ -119,7 +119,7 @@ public class MethodPO extends SourceProofObligation {
 	/*
 	 * @ @ requires m != null && h1 != null && h2 != null; @
 	 */
-	public MethodPO(Class c, Method m, FormulaWithPureMethodDecl h1, FormulaWithPureMethodDecl h2, ColoredInfo box, Statement b, Theorem p1, Theorem p7) {
+	public MethodPO(Class c, Method m, FormulaWithSpecMethodDecl h1, FormulaWithSpecMethodDecl h2, ColoredInfo box, Statement b, Theorem p1, Theorem p7) {
 		this(c.getBName() + "_method_" + ++methodCount + "_" + m.getName(), c, m, h1, h2, box, b, p1, p7);
 	}
 
@@ -132,15 +132,20 @@ public class MethodPO extends SourceProofObligation {
 		ExceptionalBehaviourStack ebs = new ExceptionalBehaviourStack(new ExceptionalProofs(getPhi7()));
 
 		// Processes the WP calculus for the method body
-		method.lemmas = getBody().ensures(config, getPhi1(), ebs, ((Parameters) method.getParams()).signature);
-
+		if(getBody() != null) {
+			method.lemmas = getBody().ensures(config, getPhi1(), ebs, ((Parameters) method.getParams()).signature);
+		}
+		else {//specification method case
+			method.lemmas = new Proofs();
+		}
+		
 		// Adds the hypothese this : instances
 		method.lemmas.addHyp(new BinaryForm(LOCAL_VAR_DECL, new TerminalForm(Ja_LITERAL_this, "this"),
-				TerminalForm.REFERENCES));
-		method.lemmas.addHyp(new BinaryForm(B_IN, new TerminalForm(Ja_LITERAL_this, "this"), TerminalForm.instances));
+				TerminalForm.$References));
+		method.lemmas.addHyp(new BinaryForm(B_IN, new TerminalForm(Ja_LITERAL_this, "this"), TerminalForm.$instances));
 
 		// Adds the hypothese typeof(this) <: class
-		method.lemmas.addHyp(new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(B_APPLICATION, TerminalForm.typeof,
+		method.lemmas.addHyp(new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(B_APPLICATION, TerminalForm.$typeof,
 				new TerminalForm(Ja_LITERAL_this, "this")), new TTypeForm(IFormToken.Jm_T_TYPE, new Type(method
 				.getDefiningClass()))));
 
@@ -204,7 +209,7 @@ public class MethodPO extends SourceProofObligation {
 			if (res == null) {
 				res = fo;
 			} else
-				res = new BinaryForm(Ja_AND_OP, res, fo);
+				res = Formula.and(res, fo);
 		}
 		return res;
 	}

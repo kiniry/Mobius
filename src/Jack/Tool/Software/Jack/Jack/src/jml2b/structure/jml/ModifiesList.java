@@ -30,7 +30,7 @@ import jml2b.formula.TriaryForm;
 import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Goal;
 import jml2b.pog.lemma.GoalOrigin;
 import jml2b.pog.lemma.Proofs;
@@ -249,7 +249,7 @@ public class ModifiesList
 		throws PogException {
 		Vector c = new Vector();
 
-		FormulaWithPureMethodDecl r =
+		FormulaWithSpecMethodDecl r =
 			((NormalizedGuardedModifies) gm).restrictElement(config, tag);
 
 		if (r != null)
@@ -274,7 +274,7 @@ public class ModifiesList
 		throws PogException {
 		Vector c = new Vector();
 
-		FormulaWithPureMethodDecl r =
+		FormulaWithSpecMethodDecl r =
 			((NormalizedGuardedModifies) gm).getModifiedInstances(config, fi);
 
 		if (r != null)
@@ -302,7 +302,7 @@ public class ModifiesList
 		throws PogException {
 		Vector c = new Vector();
 
-		FormulaWithPureMethodDecl r =
+		FormulaWithSpecMethodDecl r =
 			((NormalizedGuardedModifies) gm).getModifiedIndexes(config, tag, q);
 
 		if (r != null)
@@ -448,17 +448,17 @@ public class ModifiesList
 					if (guards.size() > 0) {
 						// The field is declared to be modified under relevant 
 						// guards
-						FormulaWithPureMethodDecl g = null;
+						FormulaWithSpecMethodDecl g = null;
 						// Concat the guards
 						Enumeration e1 = guards.elements();
 						while (e1.hasMoreElements()) {
-							FormulaWithPureMethodDecl element = (FormulaWithPureMethodDecl) e1.nextElement();
+							FormulaWithSpecMethodDecl element = (FormulaWithSpecMethodDecl) e1.nextElement();
 							if (g == null)
-								g = FormulaWithPureMethodDecl.not(element);
+								g = FormulaWithSpecMethodDecl.not(element);
 							else
-								g = FormulaWithPureMethodDecl.and(g, FormulaWithPureMethodDecl.not(element));
+								g = FormulaWithSpecMethodDecl.and(g, FormulaWithSpecMethodDecl.not(element));
 						}
-						g = new FormulaWithPureMethodDecl(g, new BinaryForm(
+						g = new FormulaWithSpecMethodDecl(g, new BinaryForm(
 						                									Jm_IMPLICATION_OP,
 						                									g.getFormula(),
 						                									new BinaryForm(Ja_EQUALS_OP, fo, oldF)));
@@ -473,7 +473,7 @@ public class ModifiesList
 					// Adds the goal f == \old(f)
 					l.addGoal(
 						new Goal(
-							new FormulaWithPureMethodDecl(new BinaryForm(Ja_EQUALS_OP, fo, oldF)),
+							new FormulaWithSpecMethodDecl(new BinaryForm(Ja_EQUALS_OP, fo, oldF)),
 							new GoalOrigin(GoalOrigin.MODIFIES, f)));
 				}
 			} else {
@@ -508,10 +508,10 @@ public class ModifiesList
 					q,
 					ElementsForm.elements[i],
 					oldF);
-			FormulaWithPureMethodDecl fwp= tf.domainRestrict(domainRestriction);
-			fwp = new FormulaWithPureMethodDecl(fwp, new QuantifiedForm(
+			FormulaWithSpecMethodDecl fwp= tf.domainRestrict(domainRestriction);
+			fwp = new FormulaWithSpecMethodDecl(fwp, new QuantifiedForm(
 			                                    						Jm_FORALL,
-			                                    						new QuantifiedVarForm(q, TerminalForm.REFERENCES),
+			                                    						new QuantifiedVarForm(q, TerminalForm.$References),
 			                                    						new BinaryForm(
 			                                    							Jm_IMPLICATION_OP,
 			                                    							new BinaryForm(
@@ -519,7 +519,7 @@ public class ModifiesList
 			                                    								q,
 			                                    								new UnaryForm(
 			                                    									Jm_T_OLD,
-			                                    									TerminalForm.instances)),
+			                                    									TerminalForm.$instances)),
 			                                    							new BinaryForm(
 			                                    								Jm_IMPLICATION_OP,
 			                                    								new BinaryForm(

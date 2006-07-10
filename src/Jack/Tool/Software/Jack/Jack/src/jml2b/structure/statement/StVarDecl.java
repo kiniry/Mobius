@@ -174,7 +174,7 @@ public class StVarDecl extends Statement {
 					s =
 						s.quantify(
 							u,
-							TerminalForm.REFERENCES,
+							TerminalForm.$References,
 							new ColoredInfo(type, ColoredInfo.NEW, oo));
 				} catch (LanguageException le) {
 					;
@@ -208,7 +208,7 @@ public class StVarDecl extends Statement {
 					s =
 						s.quantify(
 							u,
-							TerminalForm.REFERENCES,
+							TerminalForm.$References,
 							new ColoredInfo(type, ColoredInfo.NEW, oo));
 				} catch (LanguageException le) {
 					;

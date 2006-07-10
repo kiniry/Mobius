@@ -21,7 +21,7 @@ import jml2b.exceptions.InternalError;
 import jml2b.exceptions.*;
 import jml2b.languages.ITranslationResult;
 import jml2b.languages.Languages;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.IAParameters;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.IJmlFile;
@@ -41,17 +41,23 @@ abstract public class Formula
 	extends Profiler
 	implements IFormToken, Serializable {
 
+	
+	public static final Formula $null = new TerminalForm(Ja_LITERAL_null, "null");
+	public static final Formula $false = new TerminalForm(Ja_LITERAL_false);
+	
 	/**
 	 * Returns the formula <code>null</code>.
 	 * @return the formula <code>null</code>
+	 * @deprecated
 	 **/
 	public static Formula getNull() {
-		return new TerminalForm(Ja_LITERAL_null, "null");
+		return $null;
 	}
 
 	/**
 	 * Returns the formula <code>false</code>.
 	 * @return the formula <code>false</code>
+	 * @deprecated
 	 **/
 	public static Formula getFalse() {
 		return new TerminalForm(Ja_LITERAL_false);
@@ -63,10 +69,20 @@ abstract public class Formula
 	 * @param s2 right disjonctive formula
 	 * @return the formula <code>s1 || s2</code>
 	 **/
-	public static BinaryForm or(Formula s1, Formula s2) {
+	public static Formula or(Formula s1, Formula s2) {
 		return new BinaryForm(Ja_OR_OP, s1, s2);
+//		return new MethodCallForm("or", comma(s1, s2), null, "", 
+//				new TTypeForm(IFormToken.T_TYPE, new Type(Type.T_BOOLEAN)));
+	}
+	
+	public static Formula diff(Formula s1, Formula s2) {
+		return new BinaryForm(Ja_DIFFERENT_OP, s1, s2);
 	}
 
+	public static Formula apply(Formula s1, Formula s2) {
+		return new BinaryForm(
+				IFormToken.B_APPLICATION, s1, s2);
+	}
 	/**
 	 * Returns the formula corresponding to a field declaration.
 	 * @param f Field to declare.
@@ -79,34 +95,28 @@ abstract public class Formula
 				new TerminalForm(new Identifier(f)),
 				new TTypeForm(IFormToken.T_TYPE, f.getType()));
 		else
-			return new BinaryForm(
-				Ja_AND_OP,
-				new BinaryForm(
-					LOCAL_VAR_DECL,
-					new TerminalForm(new Identifier(f)),
-					TerminalForm.REFERENCES),
-				new BinaryForm(
-					Ja_AND_OP,
+			return and(
+					new BinaryForm(
+							LOCAL_VAR_DECL,
+							new TerminalForm(new Identifier(f)),
+							TerminalForm.$References),
+							and(
 					new BinaryForm(
 						B_IN,
 						new TerminalForm(new Identifier(f)),
 						new BinaryForm(
 							B_UNION,
-							TerminalForm.instances,
+							TerminalForm.$instances,
 							new UnaryForm(
 								B_ACCOLADE,
-								new TerminalForm(Ja_LITERAL_null, "null")))),
-					new BinaryForm(
-						Jm_IMPLICATION_OP,
-						new BinaryForm(
-							Ja_DIFFERENT_OP,
-							new TerminalForm(new Identifier(f)),
-							new TerminalForm(Ja_LITERAL_null, "null")),
+								$null))),
+					implies(
+						diff(
+							new TerminalForm(new Identifier(f)), $null),
 						new BinaryForm(
 							Jm_IS_SUBTYPE,
-							new BinaryForm(
-								B_APPLICATION,
-								TerminalForm.typeof,
+							apply(
+								TerminalForm.$typeof,
 								new TerminalForm(new Identifier(f))),
 							new TTypeForm(
 								IFormToken.Jm_T_TYPE,
@@ -120,10 +130,18 @@ abstract public class Formula
 	 * @param s2 right conjonctive formula
 	 * @return the formula <code>s1 && s2</code>
 	 **/
-	public static BinaryForm and(Formula s1, Formula s2) {
+	public static Formula and(Formula s1, Formula s2) {
+//		return new MethodCallForm("and", comma(s1, s2), null, "", 
+//				new TTypeForm(IFormToken.T_TYPE, new Type(Type.T_BOOLEAN)));
 		return new BinaryForm(Ja_AND_OP, s1, s2);
 	}
 
+	
+	public static Formula comma(Formula s1, Formula s2) {
+		return new BinaryForm(Ja_COMMA, s1, s2);
+	}
+	
+	
 	/**
 	 * Returns the negation of the parameter.
 	 * @param s1 negated formula
@@ -139,7 +157,7 @@ abstract public class Formula
 	 * @param s2 right implicative formula
 	 * @return the formula <code>s1 ==> s2</code>
 	 **/
-	public static BinaryForm implies(Formula s1, Formula s2) {
+	public static Formula implies(Formula s1, Formula s2) {
 		return new BinaryForm(Jm_IMPLICATION_OP, s1, s2);
 	}
 
@@ -231,9 +249,9 @@ abstract public class Formula
 					String tmp = s.readUTF();
 					BasicType bt = new BasicType(s);
 					if (tmp.equals("typeof"))
-						return TerminalForm.typeof;
+						return TerminalForm.$typeof;
 					else if (tmp.equals("instances"))
-						return TerminalForm.instances;
+						return TerminalForm.$instances;
 					//					else if (tmp.equals("arraylength"))
 					//						return TerminalForm.getArraylength(config);
 					else if (tmp.indexOf("intelements") == 0)
@@ -256,15 +274,15 @@ abstract public class Formula
 					String tmp = s.readUTF();
 					BasicType bt = new BasicType(s);
 					if (tmp.equals("REFERENCES"))
-						return TerminalForm.REFERENCES;
+						return TerminalForm.$References;
 					else if (tmp.equals("elemtype"))
-						return TerminalForm.elemtype;
+						return TerminalForm.$elemtype;
 					else if (tmp.equals("j_int2short"))
-						return TerminalForm.j_int2short;
+						return TerminalForm.$int2short;
 					else if (tmp.equals("j_int2byte"))
-						return TerminalForm.j_int2byte;
+						return TerminalForm.$int2byte;
 					else if (tmp.equals("j_int2char"))
-						return TerminalForm.j_int2char;
+						return TerminalForm.$int2char;
 					else
 						return new LoadedTerminalForm(fi, nodeType, tmp, bt, s);
 				}
@@ -568,7 +586,8 @@ abstract public class Formula
 	/** 
 	 * Returns whether a formula matches with an equality with 
 	 * <code>null</code>
-	 * @return <code>true</code> if the formula matches with 
+	 * @return <code>true</code> if th
+							new TerminalForm(Ja_LITERAL_null, "null")e formula matches with 
 	 * <code>a == null</code>, <code>false</code> otherwise.
 	 **/
 	public boolean matchAEqualsNull() {
@@ -593,12 +612,12 @@ abstract public class Formula
 	 * @return the formula with domain restricted with the set of given 
 	 * formulas
 	 **/
-	public FormulaWithPureMethodDecl domainRestrict(Vector df) {
-		FormulaWithPureMethodDecl res = new FormulaWithPureMethodDecl(this);
+	public FormulaWithSpecMethodDecl domainRestrict(Vector df) {
+		FormulaWithSpecMethodDecl res = new FormulaWithSpecMethodDecl(this);
 		Enumeration e = df.elements();
 		while (e.hasMoreElements()) {
-			FormulaWithPureMethodDecl f = (FormulaWithPureMethodDecl) e.nextElement();
-			res = new FormulaWithPureMethodDecl(f, res, new BinaryForm(B_SUBSTRACTION_DOM, f.getFormula(), res.getFormula()));
+			FormulaWithSpecMethodDecl f = (FormulaWithSpecMethodDecl) e.nextElement();
+			res = new FormulaWithSpecMethodDecl(f, res, new BinaryForm(B_SUBSTRACTION_DOM, f.getFormula(), res.getFormula()));
 		}
 		return res;
 	}
@@ -610,7 +629,9 @@ abstract public class Formula
 	public byte getNodeType() {
 		return nodeType;
 	}
-
+	public String toString() {
+		return toLangDefault(0);
+	}
 	static final long serialVersionUID = 2912250853358401101L;
 
 }

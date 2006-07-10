@@ -12,7 +12,7 @@ package jml2b.structure.jml;
 import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.Jml2bException;
 import jml2b.exceptions.PogException;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Class;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.Modifiers;
@@ -77,7 +77,7 @@ class RepresentsSuchThat extends Represents {
     /**
      * @return <code>gluingInvariant</code>
      */
-	public FormulaWithPureMethodDecl predToForm(IJml2bConfiguration config) throws PogException {
+	public FormulaWithSpecMethodDecl predToForm(IJml2bConfiguration config) throws PogException {
 		try {
 			return getGluingInvariant().predToForm(config);
 		} catch (Jml2bException je) {

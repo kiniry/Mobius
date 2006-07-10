@@ -147,10 +147,10 @@ public class ModifiesEverything extends ModifiesClause {
 							Jm_IS_SUBTYPE,
 							new BinaryForm(
 								B_APPLICATION,
-								TerminalForm.typeof,
+								TerminalForm.$typeof,
 								mff),
 							new TTypeForm(IFormToken.Jm_T_TYPE, f.getType()))));
-				s = s.quantify(mff, TerminalForm.REFERENCES);
+				s = s.quantify(mff, TerminalForm.$References);
 			}
 			else {
 				s = s.quantify(

@@ -215,15 +215,15 @@ public class JavaBinaryForm extends BinaryForm implements ITranslatable {
 						JavaLanguage.priority[getNodeType()]);
 
 			case B_APPLICATION :
-				if (left == TerminalForm.j_int2short)
+				if (left == TerminalForm.$int2short)
 					return new JavaTranslationResult(
 						"(short) " + r,
 						JavaLanguage.priority[Ja_UNARY_NUMERIC_OP]);
-				if (left == TerminalForm.j_int2byte)
+				if (left == TerminalForm.$int2byte)
 					return new JavaTranslationResult(
 						"(byte) " + r,
 						JavaLanguage.priority[Ja_UNARY_NUMERIC_OP]);
-				if (left == TerminalForm.j_int2char)
+				if (left == TerminalForm.$int2char)
 					return new JavaTranslationResult(
 						"(char) " + r,
 						JavaLanguage.priority[Ja_UNARY_NUMERIC_OP]);
@@ -236,7 +236,7 @@ public class JavaBinaryForm extends BinaryForm implements ITranslatable {
 				//							+ "]");
 				if (left instanceof ElementsForm)
 					return r;
-				if (left == TerminalForm.arraylength)
+				if (left == TerminalForm.$arraylength)
 					return new JavaTranslationResult(
 						right.toLangDefault(indent) + ".length",
 						JavaLanguage.priority[Ja_IDENT]);
@@ -281,7 +281,7 @@ public class JavaBinaryForm extends BinaryForm implements ITranslatable {
 				if (left.getBasicType().getTag() == BasicType.FUNC
 					&& left.getBasicType().getRtype().getTag() == BasicType.FUNC)
 					return new JavaTranslationResult(r + "" + l, 0);
-				if (left != TerminalForm.typeof)
+				if (left != TerminalForm.$typeof)
 					return new JavaTranslationResult(
 						r + "." + l,
 						JavaLanguage.priority[Ja_IDENT]);

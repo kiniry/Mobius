@@ -229,7 +229,7 @@ public class ExceptionalBehaviourStack extends Profiler implements IFormToken {
 
 			Expression ens = (Expression) sc.getEnsures().clone();
 			ens.old();
-			FormulaWithPureMethodDecl ensures = ens.predToForm(config).sub(s2, s1, false);
+			FormulaWithSpecMethodDecl ensures = ens.predToForm(config).sub(s2, s1, false);
 
 			Theorem localExsures =
 				new Theorem(
@@ -269,7 +269,7 @@ public class ExceptionalBehaviourStack extends Profiler implements IFormToken {
 				new TTypeForm(IFormToken.Jm_T_TYPE, new Type(c))));
 
 		res.addHyp(BinaryForm.getDefaultRefDecl(new TerminalForm(oo)));
-		return res.quantify(oo, TerminalForm.REFERENCES);
+		return res.quantify(oo, TerminalForm.$References);
 	}
 
 	/**

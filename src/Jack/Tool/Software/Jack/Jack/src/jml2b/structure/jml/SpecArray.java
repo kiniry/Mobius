@@ -19,7 +19,7 @@ import jml2b.formula.IFormToken;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.link.TypeCheckable;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.ParsedItem;
@@ -88,7 +88,7 @@ public abstract class SpecArray
 	 * Returns the formula corresponding to this indexes set but not as a set.
 	 * @return the formula corresponding to the set.
 	 **/
-	abstract FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config)
+	abstract FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config)
 		throws PogException;
 
 	/**
@@ -97,7 +97,7 @@ public abstract class SpecArray
 	 * corresponding to all the index of an array)
 	 * @return the formula corresponding to the set with type set.
 	 **/
-	abstract FormulaWithPureMethodDecl getSet(IJml2bConfiguration config, Modifies m)
+	abstract FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config, Modifies m)
 		throws PogException;
 
 	/**

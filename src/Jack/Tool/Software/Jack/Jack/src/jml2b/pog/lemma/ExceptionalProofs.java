@@ -195,10 +195,9 @@ public class ExceptionalProofs extends Proofs {
 		throws Jml2bException, PogException {
 		String vv = Statement.fresh();
 		// s = typeof(vv)
-		BinaryForm s =
-			new BinaryForm(
-				IFormToken.B_APPLICATION,
-				TerminalForm.typeof,
+		Formula s =
+			Formula.apply(
+				TerminalForm.$typeof,
 				new TerminalForm(vv));
 		Proofs p =
 			body.wp(

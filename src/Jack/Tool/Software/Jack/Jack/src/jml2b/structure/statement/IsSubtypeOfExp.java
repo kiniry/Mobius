@@ -24,7 +24,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubTmpVar;
 import jml2b.pog.util.ColoredInfo;
@@ -104,19 +104,19 @@ public class IsSubtypeOfExp extends Expression {
 			&& subType.equals(((IsSubtypeOfExp) e).subType);
 	}
 
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)
 		throws Jml2bException, PogException {
-		FormulaWithPureMethodDecl s =
+		FormulaWithSpecMethodDecl s =
 			subType.exprToContextForm(config, methods, false);
-		FormulaWithPureMethodDecl t =
+		FormulaWithSpecMethodDecl t =
 			type.exprToContextForm(config, methods, false);
 		BinaryForm res =
 			new BinaryForm(Jm_IS_SUBTYPE, s.getFormula(), t.getFormula());
 		// res.box = (ParsedItem) this;
-		return new FormulaWithPureMethodDecl(s, t, res);
+		return new FormulaWithSpecMethodDecl(s, t, res);
 
 	}
 

@@ -118,7 +118,7 @@ public class SimpleLemma extends Lemma implements Serializable {
 					((BinaryExp) f).getRight(),
 					origin).goals);
 		} else {
-			FormulaWithPureMethodDecl s = f.predToForm(config);
+			FormulaWithSpecMethodDecl s = f.predToForm(config);
 			if (s.getFormula().getNodeType() == IFormToken.B_BTRUE
 				|| (s.getFormula().getNodeType() == IFormToken.Ja_EQUALS_OP
 					&& ((BinaryForm) s.getFormula()).getLeft().getNodeType()
@@ -142,7 +142,7 @@ public class SimpleLemma extends Lemma implements Serializable {
 	 * @param f The formula
 	 * @param origin The origin to assign to created goals
 	 **/
-	public SimpleLemma(FormulaWithPureMethodDecl f, GoalOrigin origin) {
+	public SimpleLemma(FormulaWithSpecMethodDecl f, GoalOrigin origin) {
 		this();
 		goals.add(
 			new Goal(
@@ -164,7 +164,7 @@ public class SimpleLemma extends Lemma implements Serializable {
 		Enumeration e = v.elements();
 		while (e.hasMoreElements()) {
 			JmlExpression je = (JmlExpression) e.nextElement();
-			FormulaWithPureMethodDecl f = je.predToForm(config);
+			FormulaWithSpecMethodDecl f = je.predToForm(config);
 			if (f.getFormula().getNodeType() == IFormToken.B_BTRUE
 				|| (f.getFormula().getNodeType() == IFormToken.Ja_EQUALS_OP
 					&& ((BinaryForm) f.getFormula()).getLeft().getNodeType()
@@ -205,7 +205,7 @@ public class SimpleLemma extends Lemma implements Serializable {
 	  @*/
 	public SimpleLemma(Lemma l) {
 		this();
-		FormulaWithPureMethodDecl tmp;
+		FormulaWithSpecMethodDecl tmp;
 		if (l instanceof SimpleLemma) {
 			SimpleLemma sl = (SimpleLemma) l;
 			Enumeration e = sl.getGoals();
@@ -414,18 +414,18 @@ public class SimpleLemma extends Lemma implements Serializable {
 	/**
 	 * @return the formula corresponding to the conjonction of all the goals
 	 **/
-	public FormulaWithPureMethodDecl getFormula() {
-		FormulaWithPureMethodDecl res = null;
+	public FormulaWithSpecMethodDecl getFormula() {
+		FormulaWithSpecMethodDecl res = null;
 		boolean first = true;
 		Enumeration e = getGoals();
 		while (e.hasMoreElements()) {
 			Goal element = (Goal) e.nextElement();
-			FormulaWithPureMethodDecl tmp = element.getFormulaWithPureMethodDecl();
+			FormulaWithSpecMethodDecl tmp = element.getFormulaWithPureMethodDecl();
 			if (first) {
 				first = false;
 				res = tmp;
 			} else
-				res = FormulaWithPureMethodDecl.and(res, tmp);
+				res = FormulaWithSpecMethodDecl.and(res, tmp);
 		}
 		return res;
 	}

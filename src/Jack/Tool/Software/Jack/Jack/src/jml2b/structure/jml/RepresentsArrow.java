@@ -15,7 +15,7 @@ import jml2b.exceptions.Jml2bException;
 import jml2b.exceptions.PogException;
 import jml2b.formula.BinaryForm;
 import jml2b.formula.IFormToken;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Class;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.Modifiers;
@@ -75,11 +75,11 @@ class RepresentsArrow extends Represents {
 	/**
 	 * @return <code>depend == gluingInvariant</code>
 	 */
-	public FormulaWithPureMethodDecl predToForm(IJml2bConfiguration config) throws PogException {
+	public FormulaWithSpecMethodDecl predToForm(IJml2bConfiguration config) throws PogException {
 		try {
-			FormulaWithPureMethodDecl fwp1 = getDepend().getFormula(config);
-			FormulaWithPureMethodDecl fwp2 = getGluingInvariant().exprToForm(config);
-			return new FormulaWithPureMethodDecl(fwp1, fwp2,  new BinaryForm(
+			FormulaWithSpecMethodDecl fwp1 = getDepend().getFormula(config);
+			FormulaWithSpecMethodDecl fwp2 = getGluingInvariant().exprToForm(config);
+			return new FormulaWithSpecMethodDecl(fwp1, fwp2,  new BinaryForm(
 				IFormToken.Ja_EQUALS_OP,
 				fwp1.getFormula(),
 				fwp2.getFormula()));

@@ -15,7 +15,7 @@ import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.Jml2bException;
 import jml2b.exceptions.PogException;
 import jml2b.link.TypeCheckable;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.statement.Expression;
 
 /**
@@ -48,7 +48,7 @@ public interface JmlExpression extends TypeCheckable {
 	 * @return the translated expression
 	 * @throws PogException
 	 **/
-	FormulaWithPureMethodDecl predToForm(IJml2bConfiguration config)
+	FormulaWithSpecMethodDecl predToForm(IJml2bConfiguration config)
 		throws Jml2bException, PogException;
 
 	/**

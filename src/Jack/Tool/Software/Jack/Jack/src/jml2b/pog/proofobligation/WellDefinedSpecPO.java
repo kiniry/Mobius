@@ -109,12 +109,12 @@ public class WellDefinedSpecPO extends SourceProofObligation {
 			new BinaryForm(
 				LOCAL_VAR_DECL,
 				new TerminalForm(Ja_LITERAL_this, "this"),
-				TerminalForm.REFERENCES));
+				TerminalForm.$References));
 		method.wellDefinednessLemmas.addHyp(
 			new BinaryForm(
 				B_IN,
 				new TerminalForm(Ja_LITERAL_this, "this"),
-				TerminalForm.instances));
+				TerminalForm.$instances));
 
 		// Adds the hypothese typeof(this) <: class
 		method.wellDefinednessLemmas.addHyp(
@@ -122,7 +122,7 @@ public class WellDefinedSpecPO extends SourceProofObligation {
 				Jm_IS_SUBTYPE,
 				new BinaryForm(
 					B_APPLICATION,
-					TerminalForm.typeof,
+					TerminalForm.$typeof,
 					new TerminalForm(Ja_LITERAL_this, "this")),
 				new TTypeForm(
 					IFormToken.Jm_T_TYPE,

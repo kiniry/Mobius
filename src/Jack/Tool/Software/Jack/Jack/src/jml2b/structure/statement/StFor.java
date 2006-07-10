@@ -23,7 +23,7 @@ import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
 import jml2b.pog.lemma.ExceptionalProofs;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.GoalOrigin;
 import jml2b.pog.lemma.LabeledProofsVector;
 import jml2b.pog.lemma.Proofs;
@@ -203,7 +203,7 @@ class StFor extends StLoops {
 
 		Expression invariantE = (Expression) getLoop_invariant().clone();
 		invariantE.old();
-		FormulaWithPureMethodDecl invariantF = invariantE.predToForm(config);
+		FormulaWithSpecMethodDecl invariantF = invariantE.predToForm(config);
 
 		// The lemma corresponding to the invariant of the loop.
 		SimpleLemma invariant =

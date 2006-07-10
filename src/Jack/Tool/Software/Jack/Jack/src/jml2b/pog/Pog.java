@@ -36,7 +36,7 @@ import jml2b.formula.TTypeForm;
 import jml2b.formula.TerminalForm;
 import jml2b.languages.Languages;
 import jml2b.pog.lemma.ExceptionalLemma;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.GoalOrigin;
 import jml2b.pog.lemma.SimpleLemma;
 import jml2b.pog.lemma.Theorem;
@@ -196,10 +196,10 @@ public class Pog extends Profiler
 				GoalOrigin.MEMBER_INVARIANT));
 		sl.addImplicToGoal(declare(c), VirtualFormula.INVARIANT);
 		sl.addImplicToGoal(new BinaryForm(B_IN, new TerminalForm(
-				new Identifier(c), "_an_instance"), TerminalForm.instances),
+				new Identifier(c), "_an_instance"), TerminalForm.$instances),
 			VirtualFormula.INVARIANT);
 		sl.addImplicToGoal(new BinaryForm(LOCAL_VAR_DECL, new TerminalForm(
-				new Identifier(c), "_an_instance"), TerminalForm.REFERENCES),
+				new Identifier(c), "_an_instance"), TerminalForm.$References),
 			VirtualFormula.INVARIANT);
 		return sl;
 
@@ -216,7 +216,7 @@ public class Pog extends Profiler
 	private static Formula declare(AClass c) {
 		// \typeof(c_an_instance) <: \type(c)
 		return new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(B_APPLICATION,
-				TerminalForm.typeof, new TerminalForm(new Identifier(c),
+				TerminalForm.$typeof, new TerminalForm(new Identifier(c),
 						"_an_instance")), new TTypeForm(IFormToken.Jm_T_TYPE,
 				new Type(c)));
 	}
@@ -237,29 +237,29 @@ public class Pog extends Profiler
 	 *         been replaced with a free identifier: <code>c_an_instance</code>.
 	 * @throws PogException
 	 */
-	public static FormulaWithPureMethodDecl quantify(IJml2bConfiguration config, AClass c, Vector i)
+	public static FormulaWithSpecMethodDecl quantify(IJml2bConfiguration config, AClass c, Vector i)
 			throws Jml2bException, PogException {
 		TerminalExp var = new TerminalExp(new Identifier(c), "_an_instance");
 
-		FormulaWithPureMethodDecl prop = null;
+		FormulaWithSpecMethodDecl prop = null;
 		Enumeration e = i.elements();
 		while (e.hasMoreElements()) {
 			JmlExpression je = (JmlExpression) e.nextElement();
 			JmlExpression i1 = (JmlExpression) je.instancie().clone();
 			i1 = i1.instancie(var);
-			FormulaWithPureMethodDecl i2 = i1.predToForm(config);
-			FormulaWithPureMethodDecl prop1 = FormulaWithPureMethodDecl.implies(declare(c), i2);
-			FormulaWithPureMethodDecl prop2 = FormulaWithPureMethodDecl.implies(new BinaryForm(B_IN,
+			FormulaWithSpecMethodDecl i2 = i1.predToForm(config);
+			FormulaWithSpecMethodDecl prop1 = FormulaWithSpecMethodDecl.implies(declare(c), i2);
+			FormulaWithSpecMethodDecl prop2 = FormulaWithSpecMethodDecl.implies(new BinaryForm(B_IN,
 					(TerminalForm) var.exprToForm(config).getFormula(),
-					TerminalForm.instances), prop1);
-			FormulaWithPureMethodDecl prop3 = new FormulaWithPureMethodDecl(prop2, new QuantifiedForm(Jm_FORALL,
+					TerminalForm.$instances), prop1);
+			FormulaWithSpecMethodDecl prop3 = new FormulaWithSpecMethodDecl(prop2, new QuantifiedForm(Jm_FORALL,
 					new QuantifiedVarForm(
 							(TerminalForm) var.exprToForm(config).getFormula(),
-							TerminalForm.REFERENCES), prop2.getFormula()));
+							TerminalForm.$References), prop2.getFormula()));
 			if (prop == null)
 				prop = prop3;
 			else
-				prop = FormulaWithPureMethodDecl.and(prop, prop3);
+				prop = FormulaWithSpecMethodDecl.and(prop, prop3);
 		}
 		return prop;
 	}
@@ -350,7 +350,7 @@ public class Pog extends Profiler
 			Vector staticInvariant;
 
 			// Member invariant of all viewed classes.
-			FormulaWithPureMethodDecl memberInvariant;
+			FormulaWithSpecMethodDecl memberInvariant;
 			
 			// Pure method declarations of all viewed classes.
 //			Formula pureMethodDecl;
@@ -361,14 +361,14 @@ public class Pog extends Profiler
 			if ((staticInvariant = a.getGlobalStaticInvariant((JavaLoader) config.getPackage())) == null)
 				staticInvariant = new Vector();
 			if ((memberInvariant = a.getGlobalMemberInvariant(config)) == null)
-				memberInvariant = new FormulaWithPureMethodDecl(new TerminalForm(B_BTRUE, "(0=0)"));
+				memberInvariant = new FormulaWithSpecMethodDecl(new TerminalForm(B_BTRUE, "(0=0)"));
 
 			// Static + member invariants of all viewed classes.
-			FormulaWithPureMethodDecl globalInvariant = memberInvariant;
+			FormulaWithSpecMethodDecl globalInvariant = memberInvariant;
 			Enumeration en = staticInvariant.elements();
 			while (en.hasMoreElements()) {
 				JmlExpression element = (JmlExpression) en.nextElement();
-				globalInvariant = FormulaWithPureMethodDecl.and(globalInvariant, element
+				globalInvariant = FormulaWithSpecMethodDecl.and(globalInvariant, element
 						.predToForm(config));
 			}
 			globalInvariant.processIdent();

@@ -16,7 +16,7 @@ import jml2b.exceptions.PogException;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.JmlFile;
@@ -103,7 +103,7 @@ public class StarElemExp extends Expression {
 	/* (non-Javadoc)
 	 * @see jml2b.structure.statement.Expression#exprToContextForm(jml2b.IJml2bConfiguration, java.util.Vector, boolean)
 	 */
-	FormulaWithPureMethodDecl exprToContextForm(IJml2bConfiguration config, Vector methods, boolean pred)
+	FormulaWithSpecMethodDecl exprToContextForm(IJml2bConfiguration config, Vector methods, boolean pred)
 			throws Jml2bException, PogException {
 		return null;//new ContextFromPureMethod(new TerminalForm(IFormToken.ALL_ARRAY_ELEMS));
 	}

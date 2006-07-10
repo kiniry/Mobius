@@ -28,7 +28,7 @@ import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubTmpVar;
 import jml2b.pog.util.ColoredInfo;
@@ -122,7 +122,7 @@ public class QuantifiedExp extends Expression {
 	 * \typeof(var) <: type) ==> body</code> if not. The same conversion applies
 	 * for <code>\exists type var; body</code>.
 	 **/
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)
@@ -130,7 +130,7 @@ public class QuantifiedExp extends Expression {
 		Formula res;
 		QuantifiedVar v = vars;
 		QuantifiedVarForm w = null;
-		FormulaWithPureMethodDecl b = body.exprToForm(config, methods, true);
+		FormulaWithSpecMethodDecl b = body.exprToForm(config, methods, true);
 
 		while (v != null) {
 			if (v.getField().getType().isBuiltin())
@@ -145,12 +145,12 @@ public class QuantifiedExp extends Expression {
 				w =
 					new QuantifiedVarForm(
 						new TerminalForm(new Identifier(v.getField())),
-						TerminalForm.REFERENCES,
+						TerminalForm.$References,
 						w);
 
 				// b = (v != null ==> \typeof(v) <: type) ==> b 
 				b =
-					new FormulaWithPureMethodDecl(b,
+					new FormulaWithSpecMethodDecl(b,
 					new BinaryForm(
 						Jm_IMPLICATION_OP,
 						new BinaryForm(
@@ -163,7 +163,7 @@ public class QuantifiedExp extends Expression {
 								Jm_IS_SUBTYPE,
 								new BinaryForm(
 									IFormToken.B_APPLICATION,
-									TerminalForm.typeof,
+									TerminalForm.$typeof,
 									new TerminalForm(
 										new Identifier(v.getField()))),
 								new TTypeForm(
@@ -181,7 +181,7 @@ public class QuantifiedExp extends Expression {
 		if (!pred)
 			res = new UnaryForm(B_BOOL, res);
 
-		return new FormulaWithPureMethodDecl(b, res);
+		return new FormulaWithSpecMethodDecl(b, res);
 	}
 
 	public String toJava(int indent) {

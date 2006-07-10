@@ -28,7 +28,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubArrayElementSingle;
 import jml2b.pog.substitution.SubArrayLength;
@@ -317,7 +317,7 @@ public class ArrayInitializer extends Expression {
 	 * @throws InternalError since an array initializer appears only in 
 	 * expression with side effects.
 	 **/
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred) {
@@ -469,7 +469,7 @@ public class ArrayInitializer extends Expression {
 
 		p.addHyp(BinaryForm.getDefaultRefDecl(new TerminalForm(newField)));
 
-		return p.quantify(newField, TerminalForm.REFERENCES);
+		return p.quantify(newField, TerminalForm.$References);
 	}
 
 	/**

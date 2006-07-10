@@ -28,7 +28,7 @@ import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.SimpleLemma;
 import jml2b.pog.lemma.VirtualFormula;
@@ -231,9 +231,9 @@ public class BinaryExp extends Expression {
 	 * <li><code>a ==> b</code> is converted identically
 	 * </UL>
 	 */
-	FormulaWithPureMethodDecl exprToContextForm(IJml2bConfiguration config, Vector methods, boolean pred)
+	FormulaWithSpecMethodDecl exprToContextForm(IJml2bConfiguration config, Vector methods, boolean pred)
 			throws Jml2bException, PogException {
-		FormulaWithPureMethodDecl r, l;
+		FormulaWithSpecMethodDecl r, l;
 		switch (getNodeType()) {
 			case LOGICAL_OP :
 			case IMPLICATION_OP :
@@ -269,7 +269,7 @@ public class BinaryExp extends Expression {
 								res = new BinaryForm(IFormToken.B_APPLICATION, r.getFormula(), l.getFormula());
 								if (pred)
 									res = new BinaryForm(Ja_EQUALS_OP, res, new TerminalForm(Ja_LITERAL_true));
-								return new FormulaWithPureMethodDecl(r, l, res);
+								return new FormulaWithSpecMethodDecl(r, l, res);
 							}
 						case Identifier.ID_METHOD :
 							throw new InternalError("BinaryExp.exprToForm : bad idType in DOT "
@@ -286,7 +286,7 @@ public class BinaryExp extends Expression {
 					if (pred)
 						res = new BinaryForm(Ja_EQUALS_OP, res, new TerminalForm(Ja_LITERAL_true));
 
-					return new FormulaWithPureMethodDecl(l, res);
+					return new FormulaWithSpecMethodDecl(l, res);
 				}
 				
 				else {
@@ -295,7 +295,7 @@ public class BinaryExp extends Expression {
 				if (pred)
 					res = new BinaryForm(Ja_EQUALS_OP, res, new TerminalForm(Ja_LITERAL_true));
 
-				return new FormulaWithPureMethodDecl(r, l, res);
+				return new FormulaWithSpecMethodDecl(r, l, res);
 				}
 			case BITWISE_OP :
 				if (left.getStateType().isBoolean()) {
@@ -311,18 +311,19 @@ public class BinaryExp extends Expression {
 					res = new BinaryForm(token, l.getFormula(), r.getFormula());
 					if (!pred)
 						res = new UnaryForm(B_BOOL, res);
-					return new FormulaWithPureMethodDecl(r, l, res);
+					return new FormulaWithSpecMethodDecl(r, l, res);
 				}
 			case SHIFT_OP :
 				res = new BinaryForm(IFormToken.B_APPLICATION, new TerminalForm(getJFunction(getNodeText())),
 						new BinaryForm(Ja_COMMA, l.getFormula(), r.getFormula()));
-				return new FormulaWithPureMethodDecl(r, l, res);
+				return new FormulaWithSpecMethodDecl(r, l, res);
 			case LOGICAL_OP :
-					res = new BinaryForm((getNodeText().equals("&&") ? Ja_AND_OP : Ja_OR_OP), l.getFormula(), r
-							.getFormula());
+					res = (getNodeText().equals("&&") ? 
+							Formula.and(l.getFormula(), r.getFormula()) :
+								Formula.or(l.getFormula(), r.getFormula()));
 					if (!pred) 
 					res = new UnaryForm(B_BOOL, res);
-					return new FormulaWithPureMethodDecl(l, r, res);
+					return new FormulaWithSpecMethodDecl(l, r, res);
 //				} else {
 //					return new FormulaWithPureMethodDecl(new BinaryForm(
 //							(getNodeText().equals("&&") ? Ja_AND_OP : Ja_OR_OP), l.getFormulaWithContext(), r
@@ -332,7 +333,7 @@ public class BinaryExp extends Expression {
 					res = new BinaryForm(Jm_IMPLICATION_OP, l.getFormula(), r.getFormula());
 					if (!pred) 
 					res = new UnaryForm(B_BOOL, res);
-					return new FormulaWithPureMethodDecl(l, r, res);
+					return new FormulaWithSpecMethodDecl(l, r, res);
 //				} else {
 //					return new ContextFromPureMethod(l, new BinaryForm(Jm_IMPLICATION_OP, l.getFormula(), r
 //							.getFormulaWithContext()));
@@ -370,7 +371,7 @@ public class BinaryExp extends Expression {
 						res = new BinaryForm(n, l.getFormula(), r.getFormula());
 						if (!pred)
 							res = new UnaryForm(B_BOOL, res);
-						return new FormulaWithPureMethodDecl(r, l, res);
+						return new FormulaWithSpecMethodDecl(r, l, res);
 					case EQUALITY_OP :
 						if (getNodeText().equals("=="))
 							n = Ja_EQUALS_OP;
@@ -379,13 +380,13 @@ public class BinaryExp extends Expression {
 						res = new BinaryForm(n, l.getFormula(), r.getFormula());
 						if (!pred)
 							res = new UnaryForm(B_BOOL, res);
-						return new FormulaWithPureMethodDecl(r, l, res);
+						return new FormulaWithSpecMethodDecl(r, l, res);
 					default :
 						throw new InternalError("BinaryExp.exprToForm : bad node type  "
 												+ MyToken.nodeString[getNodeType()] + " (" + getNodeType() + ")");
 				}
 				res = new BinaryForm(n, l.getFormula(), r.getFormula());
-				return new FormulaWithPureMethodDecl(r, l, res);
+				return new FormulaWithSpecMethodDecl(r, l, res);
 		}
 	}
 
@@ -1075,9 +1076,9 @@ public class BinaryExp extends Expression {
 					//        : subtypes[{elemtype(typeof(vv))}]
 					Formula u = new BinaryForm(Ja_OR_OP, new BinaryForm(Ja_EQUALS_OP, new TerminalForm(result),
 							new TerminalForm(Ja_LITERAL_null, "null")), new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(
-							IFormToken.B_APPLICATION, TerminalForm.typeof, new TerminalForm(result)), new BinaryForm(
-							IFormToken.B_APPLICATION, TerminalForm.elemtype, new BinaryForm(IFormToken.B_APPLICATION,
-									TerminalForm.typeof, new TerminalForm(vv)))));
+							IFormToken.B_APPLICATION, TerminalForm.$typeof, new TerminalForm(result)), new BinaryForm(
+							IFormToken.B_APPLICATION, TerminalForm.$elemtype, new BinaryForm(IFormToken.B_APPLICATION,
+									TerminalForm.$typeof, new TerminalForm(vv)))));
 
 					Proofs lv = normalProof.addBox(new ColoredInfo(this)).sub(new SubArrayElementSingle(elements,
 							new TerminalForm(vv), new TerminalForm(ww), new TerminalForm(result)));

@@ -18,7 +18,7 @@ import jml2b.formula.BinaryForm;
 import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.ParsedItem;
@@ -64,7 +64,7 @@ public class SpecArrayStar extends SpecArray {
 	 * @throws InternalError a set of indexes cannot be converted in a formula
 	 * that is not a set.
 	 **/
-	FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config) {
+	FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config) {
 		throw new InternalError("SpecArrayStar.getFormula()");
 	}
 
@@ -72,11 +72,11 @@ public class SpecArrayStar extends SpecArray {
 	 * Returns the interval corresponding to the domain of the array.
 	 * @return <code>0 .. arraylength(m)-1</code>
 	 **/
-	FormulaWithPureMethodDecl getSet(IJml2bConfiguration config, Modifies m)
+	FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config, Modifies m)
 		throws PogException {
 		try {
-			FormulaWithPureMethodDecl fwp = m.getFormula(config);
-			return new FormulaWithPureMethodDecl(fwp, new BinaryForm(
+			FormulaWithSpecMethodDecl fwp = m.getFormula(config);
+			return new FormulaWithSpecMethodDecl(fwp, new BinaryForm(
 				B_INTERVAL,
 				new TerminalForm(0),
 				new BinaryForm(

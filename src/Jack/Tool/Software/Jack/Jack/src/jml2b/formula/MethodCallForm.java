@@ -23,21 +23,26 @@ public class MethodCallForm extends Formula {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	/** method name */
 	protected Formula m;
 
+	/** method parameter */
 	protected Formula param;
 
+	/** instance ? */
 	protected Formula instance;
 
+	/** a name for the result */
 	protected final String result;
 	
+	/** the result type */
 	protected final Formula resultType;
 
-	public MethodCallForm(String m, Formula p, Formula i, String ww, Formula rt) {
+	public MethodCallForm(String m, Formula param, Formula instance, String ww, Formula rt) {
 		super(IFormToken.METHOD_CALL);
 		this.m = new TerminalForm(m);
-		param = p;
-		instance = i;
+		this.param = param;
+		this.instance = instance;
 		result = ww;
 		resultType = rt;
 	}

@@ -117,7 +117,7 @@ public class Goal extends Profiler implements MyToken, ILemma, IFormToken {
 	 * @param f The formula corresponding to this goal.
 	 * @param origin The origin of this goal
 	 **/
-	public Goal(FormulaWithPureMethodDecl f, GoalOrigin origin) {
+	public Goal(FormulaWithSpecMethodDecl f, GoalOrigin origin) {
 		this(
 		     f.getPureMethodDef(),
 			new VirtualFormula(VirtualFormula.GOAL, f.getFormula(), new ColoredInfo()),
@@ -282,8 +282,8 @@ public class Goal extends Profiler implements MyToken, ILemma, IFormToken {
 	 * Returns the goal
 	 * @return the formula corresponding to the goal
 	 **/
-	public FormulaWithPureMethodDecl getFormulaWithPureMethodDecl() {
-		return new FormulaWithPureMethodDecl(pureMethodDecl, vf.getFormula());
+	public FormulaWithSpecMethodDecl getFormulaWithPureMethodDecl() {
+		return new FormulaWithSpecMethodDecl(pureMethodDecl, vf.getFormula());
 	}
 
 	/**

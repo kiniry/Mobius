@@ -26,7 +26,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubForm;
 import jml2b.structure.AField;
@@ -55,7 +55,7 @@ public class ModifiesDot extends Modifies {
 	/**
 	 * The instance on which the member field is applied.
 	 **/
-	private transient FormulaWithPureMethodDecl leftF;
+	private transient FormulaWithSpecMethodDecl leftF;
 
 	/**
 	 * The member field.
@@ -104,7 +104,7 @@ public class ModifiesDot extends Modifies {
 	/*@
 	  @ requires m != null;
 	  @*/
-	public ModifiesDot(ParsedItem pi, Type t, FormulaWithPureMethodDecl f, ModifiesIdent m) {
+	public ModifiesDot(ParsedItem pi, Type t, FormulaWithSpecMethodDecl f, ModifiesIdent m) {
 		super(pi, t);
 		leftF = f;
 		this.m = m;
@@ -144,10 +144,10 @@ public class ModifiesDot extends Modifies {
 	 * Returns the formula corresponding to this modified variable
 	 * @return the formula as an application: <code>m(leftF)</code>
 	 **/
-	FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config) {
-		FormulaWithPureMethodDecl f = getleftF(config);
-		FormulaWithPureMethodDecl f1 =m.getFormula(config);
-		return new FormulaWithPureMethodDecl(f,f1,
+	FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config) {
+		FormulaWithSpecMethodDecl f = getleftF(config);
+		FormulaWithSpecMethodDecl f1 =m.getFormula(config);
+		return new FormulaWithSpecMethodDecl(f,f1,
 		new BinaryForm(
 			IFormToken.B_APPLICATION,
 			f1.getFormula(),
@@ -157,15 +157,15 @@ public class ModifiesDot extends Modifies {
 	/**
 	 * @return <code>{m(leftF)}</code>
 	 **/
-	FormulaWithPureMethodDecl getSet(IJml2bConfiguration config) {
-		FormulaWithPureMethodDecl f = getFormula(config);
-		return new FormulaWithPureMethodDecl(f, new UnaryForm(B_ACCOLADE, f.getFormula()));
+	FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config) {
+		FormulaWithSpecMethodDecl f = getFormula(config);
+		return new FormulaWithSpecMethodDecl(f, new UnaryForm(B_ACCOLADE, f.getFormula()));
 	}
 
 	/**
 	 * Returns the instance on which the member field is applied.
 	 **/
-	FormulaWithPureMethodDecl getleftF(IJml2bConfiguration config) {
+	FormulaWithSpecMethodDecl getleftF(IJml2bConfiguration config) {
 		try {
 			if (leftF == null)
 				return leftF = leftE.exprToForm(config);
@@ -242,10 +242,10 @@ public class ModifiesDot extends Modifies {
 		Proofs res = s.sub(new SubForm(new TerminalForm(m.getIdent()), mff));
 
 		
-		FormulaWithPureMethodDecl fwp = getleftF(config);
+		FormulaWithSpecMethodDecl fwp = getleftF(config);
 		// u = {left} <<| newName ==  {left} <<| m           
-		FormulaWithPureMethodDecl u =
-			new FormulaWithPureMethodDecl(fwp,
+		FormulaWithSpecMethodDecl u =
+			new FormulaWithSpecMethodDecl(fwp,
 			new BinaryForm(
 				B_SUBSTRACTION_DOM,
 				fwp.getFormula().getNodeType() == ALL_ARRAY_ELEMS ?
@@ -286,13 +286,13 @@ public class ModifiesDot extends Modifies {
 	/**
 	 * @return <code>{leftF}</code> if <code>f</code> is the modified field
 	 */
-	FormulaWithPureMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f) {
+	FormulaWithSpecMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f) {
 		if (m.is(f)) {
-			FormulaWithPureMethodDecl fwp = getleftF(config);
+			FormulaWithSpecMethodDecl fwp = getleftF(config);
 			if (fwp.getFormula().getNodeType() == ALL_ARRAY_ELEMS )
 				return getleftF(config);
 				else
-			return new FormulaWithPureMethodDecl(fwp, new UnaryForm(B_ACCOLADE, fwp.getFormula()));
+			return new FormulaWithSpecMethodDecl(fwp, new UnaryForm(B_ACCOLADE, fwp.getFormula()));
 		
 		}
 		else
@@ -302,14 +302,14 @@ public class ModifiesDot extends Modifies {
 	/**
 	 * @return <code>null</code>
 	 */
-	FormulaWithPureMethodDecl restrictElement(IJml2bConfiguration config, int tag) {
+	FormulaWithSpecMethodDecl restrictElement(IJml2bConfiguration config, int tag) {
 		return null;
 	}
 
 	/**
 	 * @return <code>null</code>
 	 */
-	FormulaWithPureMethodDecl getModifiedIndexes(
+	FormulaWithSpecMethodDecl getModifiedIndexes(
 		IJml2bConfiguration config,
 		int tag,
 		Formula q) {
@@ -347,12 +347,12 @@ public class ModifiesDot extends Modifies {
 				while (e.hasMoreElements()) {
 					Modifies mo =
 						(Modifies) ((Modifies) e.nextElement()).clone();
-					FormulaWithPureMethodDecl fwp = getleftF(config);
-					FormulaWithPureMethodDecl fwp1 = ((ModifiesDot) m).getleftF(config);
+					FormulaWithSpecMethodDecl fwp = getleftF(config);
+					FormulaWithSpecMethodDecl fwp1 = ((ModifiesDot) m).getleftF(config);
 					res.add(
 						new NormalizedGuardedModifies(
 							mo,
-							new FormulaWithPureMethodDecl(fwp, fwp1,
+							new FormulaWithSpecMethodDecl(fwp, fwp1,
 							new BinaryForm(
 								IFormToken.B_SET_EQUALS,
 								fwp.getFormula(),
@@ -365,7 +365,7 @@ public class ModifiesDot extends Modifies {
 	}
 
 	Modifies sub(IJml2bConfiguration config, Field a, Field b) {
-		FormulaWithPureMethodDecl newL = getleftF(config).sub(a, b, true);
+		FormulaWithSpecMethodDecl newL = getleftF(config).sub(a, b, true);
 		return new ModifiesDot(
 			this,
 			getStateType(),

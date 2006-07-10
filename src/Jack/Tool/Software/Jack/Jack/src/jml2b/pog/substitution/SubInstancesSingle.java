@@ -47,7 +47,7 @@ public class SubInstancesSingle extends SubInstances {
 			"instances",
 			new BinaryForm(
 				B_UNION,
-				TerminalForm.instances,
+				TerminalForm.$instances,
 				new UnaryForm(B_ACCOLADE, getF())));
 	}
 

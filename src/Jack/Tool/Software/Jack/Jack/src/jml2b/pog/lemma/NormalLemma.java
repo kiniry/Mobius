@@ -123,17 +123,17 @@ public class NormalLemma extends BehaviourLemma {
 	 * contained in this lemma.
 	 * @return the goal to prove to valid this lemma
 	 **/
-	FormulaWithPureMethodDecl getFormula() {
-		FormulaWithPureMethodDecl res = null;
+	FormulaWithSpecMethodDecl getFormula() {
+		FormulaWithSpecMethodDecl res = null;
 		Enumeration e = ensuresLemmas.elements();
 		while (e.hasMoreElements()) {
 			EnsuresLabelledLemma element =
 				(EnsuresLabelledLemma) e.nextElement();
-			FormulaWithPureMethodDecl tmp = element.getFormula();
+			FormulaWithSpecMethodDecl tmp = element.getFormula();
 			if (res == null) {
 				res = tmp;
 			} else if (tmp != null)
-				res = new FormulaWithPureMethodDecl(res, tmp, new BinaryForm(Jm_OR_ELSE, res.getFormula(), tmp.getFormula()));
+				res = new FormulaWithSpecMethodDecl(res, tmp, new BinaryForm(Jm_OR_ELSE, res.getFormula(), tmp.getFormula()));
 		}
 		return res;
 	}

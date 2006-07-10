@@ -28,7 +28,7 @@ import jml2b.formula.UnaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.VirtualFormula;
 import jml2b.pog.substitution.SubArrayElementSingle;
@@ -144,28 +144,28 @@ public class UnaryExp extends Expression {
 	 * <code>elemtype(e)</code>
 	 * </UL>
 	 */
-	FormulaWithPureMethodDecl exprToContextForm(IJml2bConfiguration config, Vector methods, boolean pred)
+	FormulaWithSpecMethodDecl exprToContextForm(IJml2bConfiguration config, Vector methods, boolean pred)
 			throws Jml2bException, PogException {
 		byte n = -1;
 		exp.exprToContextForm(config, methods, false);
 		switch (getNodeType()) {
 			case T_FRESH :
-				return new FormulaWithPureMethodDecl(new UnaryForm(Ja_LNOT, new BinaryForm(B_IN, exp
+				return new FormulaWithSpecMethodDecl(new UnaryForm(Ja_LNOT, new BinaryForm(B_IN, exp
 						.exprToContextForm(config, methods, false).getFormula(), new UnaryForm(Jm_T_OLD,
-						TerminalForm.instances))));
+						TerminalForm.$instances))));
 			case PRE_INCREMENT_OP :
-				return new FormulaWithPureMethodDecl(new BinaryForm((getNodeText().equals("--")
+				return new FormulaWithSpecMethodDecl(new BinaryForm((getNodeText().equals("--")
 						? Ja_ADD_OP
 						: Ja_NEGATIVE_OP), exp.exprToContextForm(config, methods, false).getFormula(),
 						new TerminalForm(1)));
 			case POST_INCREMENT_OP :
-				return new FormulaWithPureMethodDecl(exp.exprToContextForm(config, methods, false).getFormula());
+				return new FormulaWithSpecMethodDecl(exp.exprToContextForm(config, methods, false).getFormula());
 			case LNOT : {
-				FormulaWithPureMethodDecl l = exp.exprToContextForm(config, methods, true);
+				FormulaWithSpecMethodDecl l = exp.exprToContextForm(config, methods, true);
 //				if (!pred) {
 					UnaryForm res = new UnaryForm(Ja_LNOT, l.getFormula());
 					res = new UnaryForm(B_BOOL, res);
-					return new FormulaWithPureMethodDecl(l, res);
+					return new FormulaWithSpecMethodDecl(l, res);
 //				} else {
 //					UnaryForm res = new UnaryForm(Ja_LNOT, l.getFormulaWithContext());
 //					return new FormulaWithPureMethodDecl(res);
@@ -175,13 +175,13 @@ public class UnaryExp extends Expression {
 				n = Ja_UNARY_NUMERIC_OP;
 				break;
 			case T_OLD :
-				FormulaWithPureMethodDecl l = exp.exprToContextForm(config, methods, pred);
+				FormulaWithSpecMethodDecl l = exp.exprToContextForm(config, methods, pred);
 				l.old();
 				
 				UnaryForm res = new UnaryForm(Jm_T_OLD, l.getFormula());
 				//			if (!pred)
 				//				res = new UnaryForm(B_BOOL, res);
-				return new FormulaWithPureMethodDecl(l,res);
+				return new FormulaWithSpecMethodDecl(l,res);
 			case MyToken.T_CALLED_OLD :
 				n = IFormToken.T_CALLED_OLD;
 				break;
@@ -189,17 +189,17 @@ public class UnaryExp extends Expression {
 				n = IFormToken.T_VARIANT_OLD;
 				break;
 			case T_ELEMTYPE :
-				return new FormulaWithPureMethodDecl(new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.elemtype, exp
+				return new FormulaWithSpecMethodDecl(new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.$elemtype, exp
 						.exprToContextForm(config, methods, false).getFormula()));
 			case T_TYPEOF :
-				return new FormulaWithPureMethodDecl(new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.typeof, exp
+				return new FormulaWithSpecMethodDecl(new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.$typeof, exp
 						.exprToContextForm(config, methods, false).getFormula()));
 			default :
 				throw new InternalError("UnaryExp.exprToForm " + getNodeType() + "\n" + "UnaryExp.exprToForm "
 										+ nodeString[getNodeType()]);
 		}
 		UnaryForm res = new UnaryForm(n, exp.exprToContextForm(config, methods, false).getFormula());
-		return new FormulaWithPureMethodDecl(res);
+		return new FormulaWithSpecMethodDecl(res);
 	}
 
 	public String toJava(int indent) {
@@ -544,13 +544,13 @@ public class UnaryExp extends Expression {
 			}
 			case T_TYPEOF : {
 				String v2 = fresh();
-				Formula s = new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.typeof, new TerminalForm(v2));
+				Formula s = new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.$typeof, new TerminalForm(v2));
 				return exp.wp(config, v2, ((Proofs) normalProof.clone()).addBox(new ColoredInfo(this))
 						.sub(new SubTmpVar(result, s)), exceptionalProof);
 			}
 			case T_ELEMTYPE :
 				String v2 = fresh();
-				Formula s = new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.elemtype, new TerminalForm(v2));
+				Formula s = new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.$elemtype, new TerminalForm(v2));
 				return exp.wp(config, v2, ((Proofs) normalProof.clone()).addBox(new ColoredInfo(this))
 						.sub(new SubTmpVar(result, s)), exceptionalProof);
 

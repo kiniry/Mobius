@@ -26,7 +26,7 @@ import jml2b.formula.TriaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.VirtualFormula;
 import jml2b.pog.util.ColoredInfo;
@@ -121,21 +121,21 @@ public class QuestionExp extends Expression {
 		return res;
 	}
 
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred)
 		throws Jml2bException, PogException {
-		FormulaWithPureMethodDecl l = left.exprToContextForm(config, methods, pred);
-		FormulaWithPureMethodDecl r = right.exprToContextForm(config, methods, pred);
-		FormulaWithPureMethodDecl c = cond.exprToContextForm(config, methods, true);
+		FormulaWithSpecMethodDecl l = left.exprToContextForm(config, methods, pred);
+		FormulaWithSpecMethodDecl r = right.exprToContextForm(config, methods, pred);
+		FormulaWithSpecMethodDecl c = cond.exprToContextForm(config, methods, true);
 		TriaryForm res =
 			new TriaryForm(
 				Ja_QUESTION,
 				c.getFormula(),
 				l.getFormula(),
 				r.getFormula());
-		return new FormulaWithPureMethodDecl(c, l, r, res);
+		return new FormulaWithSpecMethodDecl(c, l, r, res);
 
 	}
 

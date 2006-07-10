@@ -169,7 +169,7 @@ public class StControlFlowBreak extends Statement {
 					BinaryForm s =
 						new BinaryForm(
 							IFormToken.B_APPLICATION,
-							TerminalForm.typeof,
+							TerminalForm.$typeof,
 							new TerminalForm(vv));
 
 					// T is the proof obligation resulting from the throw of

@@ -24,7 +24,7 @@ import jml2b.formula.IModifiesField;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.link.TypeCheckable;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.structure.AField;
 import jml2b.structure.java.Field;
@@ -126,7 +126,7 @@ public abstract class Modifies
 	 * @param f The field to restrict.
 	 * @return the restriction to applied to the domain of the member field.
 	 **/
-	abstract FormulaWithPureMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f);
+	abstract FormulaWithSpecMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f);
 
 	/**
 	 * Returns the formula corresponding to the restriction to be applied to 
@@ -137,7 +137,7 @@ public abstract class Modifies
 	 * xxxelements variable.
 	 * @throws PogException
 	 **/
-	abstract FormulaWithPureMethodDecl restrictElement(IJml2bConfiguration config, int tag)
+	abstract FormulaWithSpecMethodDecl restrictElement(IJml2bConfiguration config, int tag)
 		throws PogException;
 
 	/**
@@ -148,7 +148,7 @@ public abstract class Modifies
 	 * <code>xxxelements(q)</code>.
 	 * @throws PogException
 	 **/
-	abstract FormulaWithPureMethodDecl getModifiedIndexes(
+	abstract FormulaWithSpecMethodDecl getModifiedIndexes(
 		IJml2bConfiguration config,
 		int tag,
 		Formula q)
@@ -221,7 +221,7 @@ public abstract class Modifies
 	 * Returns the formula corresponding to this modified store-ref
 	 * @param config The current configuration
 	 **/
-	abstract FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config)
+	abstract FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config)
 		throws PogException;
 
 	/**
@@ -230,7 +230,7 @@ public abstract class Modifies
 	 * @return the set of modifies instances corresponding to this store-ref
 	 * @throws PogException
 	 **/
-	abstract FormulaWithPureMethodDecl getSet(IJml2bConfiguration config) throws PogException;
+	abstract FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config) throws PogException;
 
 	/**
 	  * Returns the set of parsed items that correspond to this expression

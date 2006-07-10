@@ -47,7 +47,7 @@ public class SubTypeofSet extends SubTypeof {
 			"typeof",
 			new BinaryForm(
 				B_OVERRIDING,
-				TerminalForm.typeof,
+				TerminalForm.$typeof,
 				new BinaryForm(CONSTANT_FUNCTION, getF(), getT())));
 	}
 

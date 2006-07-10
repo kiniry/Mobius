@@ -20,7 +20,7 @@ import jml2b.formula.TTypeForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.substitution.SubTmpVar;
 import jml2b.structure.java.Field;
@@ -73,12 +73,12 @@ public class TTypeExp extends Expression {
 			&& type.equals(((TTypeExp) e).type);
 	}
 
-	FormulaWithPureMethodDecl exprToContextForm(
+	FormulaWithSpecMethodDecl exprToContextForm(
 		IJml2bConfiguration config,
 		Vector methods,
 		boolean pred) {
 		TTypeForm res = new TTypeForm(IFormToken.Jm_T_TYPE, type);
-		return new FormulaWithPureMethodDecl(res);
+		return new FormulaWithSpecMethodDecl(res);
 	}
 
 	public String toJava(int indent) {

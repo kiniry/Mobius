@@ -58,26 +58,26 @@ public class TerminalForm extends Formula {
 	 * The formula <code>instances</code>. In the B lemmas,
 	 * <code>instances</code> is the set of all current class instances.
 	 */
-	public final static TerminalForm instances = new TerminalForm("instances");
+	public final static TerminalForm $instances = new TerminalForm("instances");
 
 	/**
 	 * The formula <code>typeof</code>. In the B lemmas, <code>typeof</code>
 	 * is a function that assign a type to an instance.
 	 */
-	public final static TerminalForm typeof = new TerminalForm("typeof");
+	public final static Formula $typeof = new TerminalForm("typeof");
 
 	/**
 	 * The formula <code>arraylength</code>. In the B lemmas,
 	 * <code>arraylength</code> is a function that assign the length to an
 	 * array instance.
 	 */
-	public static TerminalForm arraylength;
+	public static Formula $arraylength;
 
-	public static TerminalForm getArraylength(IJml2bConfiguration config) throws Jml2bException {
-		if (arraylength == null)
-			return arraylength = new TerminalForm(new Identifier((Field) config.getArray().fields.get(0)));
+	public static Formula getArraylength(IJml2bConfiguration config) throws Jml2bException {
+		if ($arraylength == null)
+			return $arraylength = new TerminalForm(new Identifier((Field) config.getArray().fields.get(0)));
 		else
-			return arraylength;
+			return $arraylength;
 	}
 
 	/**
@@ -85,33 +85,33 @@ public class TerminalForm extends Formula {
 	 * <code>REFERENCES</code> is the set of all existing or potential
 	 * instances.
 	 */
-	public final static TerminalForm REFERENCES = new TerminalForm(FINAL_IDENT, "REFERENCES");
+	public final static TerminalForm $References = new TerminalForm(FINAL_IDENT, "REFERENCES");
 
 	/**
 	 * The constant formula <code>elemtype</code>, In the B lemmas,
 	 * <code>elemtype</code> is a function that assign the type of its element
 	 * to an array instance.
 	 */
-	public final static TerminalForm elemtype = new TerminalForm(FINAL_IDENT, "elemtype");
+	public final static TerminalForm $elemtype = new TerminalForm(FINAL_IDENT, "elemtype");
 
 	/**
 	 * The constant formula <code>j_int2short</code>, In the B lemmas,
 	 * <code>j_int2short</code> is a function that converts an int into a
 	 * short.
 	 */
-	public final static TerminalForm j_int2short = new TerminalForm(FINAL_IDENT, "j_int2short");
+	public final static Formula $int2short = new TerminalForm(FINAL_IDENT, "j_int2short");
 
 	/**
 	 * The constant formula <code>j_int2byte</code>, In the B lemmas,
 	 * <code>j_int2byte</code> is a function that converts an int into a byte.
 	 */
-	public final static TerminalForm j_int2byte = new TerminalForm(FINAL_IDENT, "j_int2byte");
+	public final static Formula $int2byte = new TerminalForm(FINAL_IDENT, "j_int2byte");
 
 	/**
 	 * The constant formula <code>j_int2char</code>, In the B lemmas,
 	 * <code>j_int2char</code> is a function that converts an int into a char.
 	 */
-	public final static TerminalForm j_int2char = new TerminalForm(FINAL_IDENT, "j_int2char");
+	public final static TerminalForm $int2char = new TerminalForm(FINAL_IDENT, "j_int2char");
 
 	/**
 	 * Parsed item corresponding to the terminal formula.
@@ -228,8 +228,8 @@ public class TerminalForm extends Formula {
 	}
 
 	public Object clone() {
-		if (!(this instanceof ElementsForm) && getNodeType() == IFormToken.Ja_IDENT && this != instances
-			&& this != typeof && this != arraylength) {
+		if (!(this instanceof ElementsForm) && getNodeType() == IFormToken.Ja_IDENT && this != $instances
+			&& this != $typeof && this != $arraylength) {
 			TerminalForm res = new TerminalForm(getNodeType(), nodeText, ident, postfix);
 			res.box = box;
 			return res;
@@ -345,12 +345,12 @@ public class TerminalForm extends Formula {
 
 		switch (getNodeType()) {
 			case Ja_IDENT :
-				if (this == TerminalForm.typeof || this == TerminalForm.instances)
+				if (this == TerminalForm.$typeof || this == TerminalForm.$instances)
 					return;
 			case FINAL_IDENT :
-				if (this == TerminalForm.REFERENCES || this == TerminalForm.elemtype
-					|| this == TerminalForm.j_int2short || this == TerminalForm.j_int2byte
-					|| this == TerminalForm.j_int2char)
+				if (this == TerminalForm.$References || this == TerminalForm.$elemtype
+					|| this == TerminalForm.$int2short || this == TerminalForm.$int2byte
+					|| this == TerminalForm.$int2char)
 					return;
 		}
 		Enumeration e = Languages.getLanguagesNames();
@@ -364,7 +364,7 @@ public class TerminalForm extends Formula {
 					throw new InternalError(le.getMessage());
 				else
 					try {
-						Languages.getLanguageClass(element).save(s, TerminalForm.instances);
+						Languages.getLanguageClass(element).save(s, TerminalForm.$instances);
 					} catch (LanguageException le1) {
 						throw new InternalError(le1.getMessage());
 					}

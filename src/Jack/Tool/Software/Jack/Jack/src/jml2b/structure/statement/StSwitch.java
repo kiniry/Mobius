@@ -22,7 +22,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
 import jml2b.pog.lemma.ExceptionalBehaviourStack;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.LabeledProofsVector;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.VirtualFormula;
@@ -191,9 +191,9 @@ class CasesList extends Profiler implements Serializable, IFormToken {
 		ExceptionalBehaviourStack exceptionalBehaviour)
 		throws Jml2bException, PogException {
 
-		FormulaWithPureMethodDecl fwp = exp.exprToForm(config);
-		FormulaWithPureMethodDecl s =
-			new FormulaWithPureMethodDecl(fwp,
+		FormulaWithSpecMethodDecl fwp = exp.exprToForm(config);
+		FormulaWithSpecMethodDecl s =
+			new FormulaWithSpecMethodDecl(fwp,
 			new BinaryForm(
 				Ja_EQUALS_OP,
 				new TerminalForm(vv),
@@ -256,9 +256,9 @@ class CasesList extends Profiler implements Serializable, IFormToken {
 		LabeledProofsVector finishOnContinueLab,
 		ExceptionalBehaviourStack exceptionalBehaviour)
 		throws Jml2bException, PogException {
-		FormulaWithPureMethodDecl fwp = exp.exprToForm(config);
-		FormulaWithPureMethodDecl s =
-			new FormulaWithPureMethodDecl(fwp,
+		FormulaWithSpecMethodDecl fwp = exp.exprToForm(config);
+		FormulaWithSpecMethodDecl s =
+			new FormulaWithSpecMethodDecl(fwp,
 			new BinaryForm(
 				Ja_EQUALS_OP,
 				new TerminalForm(vv),
@@ -353,17 +353,17 @@ public class StSwitch extends Statement {
 	 * @param cases1 The list of cases
 	 * @return the disjonction of all the cases expression equality with vv.
 	 **/
-	private static FormulaWithPureMethodDecl switchDefault(
+	private static FormulaWithSpecMethodDecl switchDefault(
 		IJml2bConfiguration config,
 		String vv,
 		CasesList cases1)
 		throws Jml2bException, PogException {
-		FormulaWithPureMethodDecl tmp;
+		FormulaWithSpecMethodDecl tmp;
 		if (cases1 == null)
 			return null;
-		FormulaWithPureMethodDecl fwp = cases1.getExp().exprToForm(config);
-		FormulaWithPureMethodDecl s =
-			new FormulaWithPureMethodDecl(fwp,
+		FormulaWithSpecMethodDecl fwp = cases1.getExp().exprToForm(config);
+		FormulaWithSpecMethodDecl s =
+			new FormulaWithSpecMethodDecl(fwp,
 			new BinaryForm(
 				Ja_EQUALS_OP,
 				new TerminalForm(vv),
@@ -371,7 +371,7 @@ public class StSwitch extends Statement {
 		if ((tmp = switchDefault(config, vv, cases1.getNext())) == null)
 			return s;
 		else
-			return FormulaWithPureMethodDecl.or(s, tmp);
+			return FormulaWithSpecMethodDecl.or(s, tmp);
 	}
 
 	/**
@@ -382,18 +382,18 @@ public class StSwitch extends Statement {
 	 * @param cases2 list of cases
 	 * @return the disjonction of all the cases expression equality with vv.
 	 **/
-	private static FormulaWithPureMethodDecl switchDefault(
+	private static FormulaWithSpecMethodDecl switchDefault(
 		IJml2bConfiguration config,
 		String vv,
 		CasesList cases1,
 		CasesList cases2)
 		throws Jml2bException, PogException {
-		FormulaWithPureMethodDecl tmp;
+		FormulaWithSpecMethodDecl tmp;
 		if (cases1 == null)
 			return switchDefault(config, vv, cases2);
-		FormulaWithPureMethodDecl fwp =cases1.getExp().exprToForm(config);
-		FormulaWithPureMethodDecl s =
-			new FormulaWithPureMethodDecl(fwp,
+		FormulaWithSpecMethodDecl fwp =cases1.getExp().exprToForm(config);
+		FormulaWithSpecMethodDecl s =
+			new FormulaWithSpecMethodDecl(fwp,
 			new BinaryForm(
 				Ja_EQUALS_OP,
 				new TerminalForm(vv),
@@ -402,7 +402,7 @@ public class StSwitch extends Statement {
 			== null)
 			return s;
 		else
-			return FormulaWithPureMethodDecl.or(s, tmp);
+			return FormulaWithSpecMethodDecl.or(s, tmp);
 	}
 
 	/**
@@ -630,11 +630,11 @@ public class StSwitch extends Statement {
 
 		// Add hypothesis concerning the negation of all existing cases
 		if (switchCase1 != null || switchCase2 != null) {
-			FormulaWithPureMethodDecl tmp = switchDefault(config, vv, switchCase1, switchCase2);
+			FormulaWithSpecMethodDecl tmp = switchDefault(config, vv, switchCase1, switchCase2);
 			//@ assert tmp != null;
 
 			lv1.addHyp(
-				FormulaWithPureMethodDecl.not(tmp),
+				FormulaWithSpecMethodDecl.not(tmp),
 				new ColoredInfo(switchDefault),
 				VirtualFormula.LOCALES);
 		}

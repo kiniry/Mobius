@@ -97,7 +97,7 @@ class EnsuresLabelledLemma extends LabelledLemma {
 
 		if (main.nbPo() > 0/*
 			&& !(sc.getModifies() instanceof ModifiesNothing)*/) {
-			FormulaWithPureMethodDecl mainF = main.getFormula();
+			FormulaWithSpecMethodDecl mainF = main.getFormula();
 
 			boolean modelElements = false;
 
@@ -157,7 +157,7 @@ class EnsuresLabelledLemma extends LabelledLemma {
 					TerminalForm newF = (TerminalForm) e1.nextElement();
 					if (f.getModifiers().isStatic()) {
 						mainF =
-							new FormulaWithPureMethodDecl(mainF,
+							new FormulaWithSpecMethodDecl(mainF,
 							new QuantifiedForm(
 								Jm_EXISTS,
 								new QuantifiedVarForm(
@@ -168,7 +168,7 @@ class EnsuresLabelledLemma extends LabelledLemma {
 								mainF.getFormula()));
 					} else {
 						mainF =
-							new FormulaWithPureMethodDecl(mainF,
+							new FormulaWithSpecMethodDecl(mainF,
 							new QuantifiedForm(
 								Jm_EXISTS,
 								new QuantifiedVarForm(
@@ -199,7 +199,7 @@ class EnsuresLabelledLemma extends LabelledLemma {
 				if (modelElements)
 					for (int i = 0; i < ElementsForm.elements.length; i++) {
 						mainF =
-							new FormulaWithPureMethodDecl(mainF,
+							new FormulaWithSpecMethodDecl(mainF,
 							new QuantifiedForm(
 								Jm_EXISTS,
 								new QuantifiedVarForm(
@@ -274,39 +274,39 @@ class EnsuresLabelledLemma extends LabelledLemma {
 	 * corresponding to the <i>requires</i>, <i>ensures</i> and 
 	 * <i>modifies</i> clauses.
 	 **/
-	FormulaWithPureMethodDecl getFormula() {
-		FormulaWithPureMethodDecl res1 = null;
+	FormulaWithSpecMethodDecl getFormula() {
+		FormulaWithSpecMethodDecl res1 = null;
 		Enumeration e = getRequires().getGoals();
 		while (e.hasMoreElements()) {
 			Goal element = (Goal) e.nextElement();
-			FormulaWithPureMethodDecl tmp = element.getFormulaWithPureMethodDecl();
-			res1 = (res1 == null ? tmp : FormulaWithPureMethodDecl.and(res1, tmp));
+			FormulaWithSpecMethodDecl tmp = element.getFormulaWithPureMethodDecl();
+			res1 = (res1 == null ? tmp : FormulaWithSpecMethodDecl.and(res1, tmp));
 		}
-		FormulaWithPureMethodDecl res = null;
+		FormulaWithSpecMethodDecl res = null;
 		e = main.getGoals();
 		while (e.hasMoreElements()) {
 			Goal element = (Goal) e.nextElement();
-			FormulaWithPureMethodDecl tmp = element.getFormulaWithPureMethodDecl();
-			res = (res == null ? tmp : FormulaWithPureMethodDecl.and(res, tmp));
+			FormulaWithSpecMethodDecl tmp = element.getFormulaWithPureMethodDecl();
+			res = (res == null ? tmp : FormulaWithSpecMethodDecl.and(res, tmp));
 		}
 		e = getRespectInv().getGoals();
 		while (e.hasMoreElements()) {
 			Goal element = (Goal) e.nextElement();
-			FormulaWithPureMethodDecl tmp = element.getFormulaWithPureMethodDecl();
-			res = (res == null ? tmp : FormulaWithPureMethodDecl.and(res, tmp));
+			FormulaWithSpecMethodDecl tmp = element.getFormulaWithPureMethodDecl();
+			res = (res == null ? tmp : FormulaWithSpecMethodDecl.and(res, tmp));
 		}
 		e = getDoNotModify().getGoals();
 		while (e.hasMoreElements()) {
 			Goal element = (Goal) e.nextElement();
-			FormulaWithPureMethodDecl tmp = element.getFormulaWithPureMethodDecl();
-			res = (res == null ? tmp : FormulaWithPureMethodDecl.and(res, tmp));
+			FormulaWithSpecMethodDecl tmp = element.getFormulaWithPureMethodDecl();
+			res = (res == null ? tmp : FormulaWithSpecMethodDecl.and(res, tmp));
 		}
 		if (res1 == null)
 			return res;
 		else if (res == null)
 			return res1;
 		else
-			return new FormulaWithPureMethodDecl(res1, res, new BinaryForm(Jm_AND_THEN, res1.getFormula(), res.getFormula()));
+			return new FormulaWithSpecMethodDecl(res1, res, new BinaryForm(Jm_AND_THEN, res1.getFormula(), res.getFormula()));
 	}
 
 	/**

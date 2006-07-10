@@ -47,7 +47,7 @@ public class SubTypeofSingle extends SubTypeof {
 			"typeof",
 			new BinaryForm(
 				B_OVERRIDING,
-				TerminalForm.typeof,
+				TerminalForm.$typeof,
 				new BinaryForm(
 						B_COUPLE,
 						getF(),

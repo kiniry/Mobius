@@ -72,23 +72,21 @@ public class BinaryForm extends Formula {
 	public static BinaryForm getDefaultRefDecl() {
 		return new BinaryForm(
 			Ja_NEGATIVE_OP,
-			TerminalForm.REFERENCES,
+			TerminalForm.$References,
 			new BinaryForm(
 				B_UNION,
-				TerminalForm.instances,
+				TerminalForm.$instances,
 				new UnaryForm(
 					B_ACCOLADE,
-					new TerminalForm(Ja_LITERAL_null, "null"))));
+					$null)));
 	}
 
-	public static BinaryForm getDefaultRefDecl(Formula x) {
-		return new BinaryForm(
-			Ja_AND_OP,
-			not(new BinaryForm(B_IN, x, TerminalForm.instances)),
-			new BinaryForm(
-				Ja_DIFFERENT_OP,
-				x,
-				new TerminalForm(Ja_LITERAL_null, "null")));
+	public static Formula getDefaultRefDecl(Formula x) {
+		return and( not(new BinaryForm(B_IN, x, TerminalForm.$instances)),
+					new BinaryForm(
+							Ja_DIFFERENT_OP,
+							x,
+							$null));
 	}
 
 	/**

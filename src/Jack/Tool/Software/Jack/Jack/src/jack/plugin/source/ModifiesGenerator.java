@@ -19,7 +19,7 @@ import jml2b.formula.Formula;
 import jml2b.formula.IFormToken;
 import jml2b.formula.TerminalForm;
 import jml2b.pog.lemma.ExceptionalLemma;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Goal;
 import jml2b.pog.lemma.SimpleLemma;
 import jml2b.pog.lemma.Theorem;
@@ -105,7 +105,7 @@ public class ModifiesGenerator extends JmlClauseGenerator {
 									new ModifiesDot(
 										fi,
 										fi.getType(),
-										new FormulaWithPureMethodDecl(inst),
+										new FormulaWithSpecMethodDecl(inst),
 										new ModifiesIdent(
 											fi,
 											((TerminalForm) f).getIdent())));
@@ -199,7 +199,7 @@ public class ModifiesGenerator extends JmlClauseGenerator {
 					new MethodPO(
 						a,
 						m,
-						new FormulaWithPureMethodDecl(new TerminalForm(IFormToken.B_BTRUE)),
+						new FormulaWithSpecMethodDecl(new TerminalForm(IFormToken.B_BTRUE)),
 						m.getNormalizedRequires(config).predToForm(config),
 						new ColoredInfo(m),
 						m.getBody(config),

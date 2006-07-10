@@ -195,7 +195,7 @@ class ExsuresLabelledLemma extends LabelledLemma {
 				return new EnsuresLabelledLemma(
 				                    			getLabels(),
 				                    			new SimpleLemma(),
-				                    			new SimpleLemma(new FormulaWithPureMethodDecl(new TerminalForm(Ja_LITERAL_false, "FALSE")),
+				                    			new SimpleLemma(new FormulaWithSpecMethodDecl(new TerminalForm(Ja_LITERAL_false, "FALSE")),
 				                    			                new GoalOrigin(GoalOrigin.EXSURES)),
 				                    			new SimpleLemma(),
 				                    			new SimpleLemma());
@@ -229,7 +229,7 @@ class ExsuresLabelledLemma extends LabelledLemma {
 				return new EnsuresLabelledLemma(
 				                    			getLabels(),
 				                    			new SimpleLemma(),
-				                    			new SimpleLemma(new FormulaWithPureMethodDecl(new BinaryForm(
+				                    			new SimpleLemma(new FormulaWithSpecMethodDecl(new BinaryForm(
 				                    			           					Ja_EQUALS_OP,
 				                    			           					new TerminalForm(Ja_LITERAL_false, "FALSE"),
 				                    			        					new TerminalForm(IFormToken.Ja_LITERAL_true))),

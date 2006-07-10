@@ -201,7 +201,7 @@ public final class ElementsForm extends TerminalForm {
 				f = new TTypeForm(IFormToken.T_TYPE, new Type(tag));
 				break;
 			case Type.T_REF :
-				f = TerminalForm.REFERENCES;
+				f = TerminalForm.$References;
 				break;
 		}
 

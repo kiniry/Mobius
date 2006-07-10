@@ -27,7 +27,7 @@ import jml2b.formula.TerminalForm;
 import jml2b.formula.TriaryForm;
 import jml2b.link.LinkContext;
 import jml2b.link.LinkInfo;
-import jml2b.pog.lemma.FormulaWithPureMethodDecl;
+import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.pog.lemma.Proofs;
 import jml2b.pog.lemma.VirtualFormula;
 import jml2b.pog.substitution.SubForm;
@@ -126,11 +126,11 @@ public class ModifiesLbrack extends Modifies {
 	 * @throws InternalError when <code>m</code> or <code>sa</code> cannot be
 	 * converted into singleton.
 	 **/
-	FormulaWithPureMethodDecl getFormula(IJml2bConfiguration config) throws PogException {
+	FormulaWithSpecMethodDecl getFormula(IJml2bConfiguration config) throws PogException {
 		if (sa instanceof SpecArrayExpr) {
-			FormulaWithPureMethodDecl fwp = m.getFormula(config);
-			FormulaWithPureMethodDecl fwp1 = sa.getFormula(config);
-			return new FormulaWithPureMethodDecl(fwp, fwp1,
+			FormulaWithSpecMethodDecl fwp = m.getFormula(config);
+			FormulaWithSpecMethodDecl fwp1 = sa.getFormula(config);
+			return new FormulaWithSpecMethodDecl(fwp, fwp1,
 		new BinaryForm(
 			IFormToken.ARRAY_ACCESS,
 			new BinaryForm(
@@ -140,9 +140,9 @@ public class ModifiesLbrack extends Modifies {
 			fwp1.getFormula()));
 		}
 		else {
-			FormulaWithPureMethodDecl fwp = m.getSet(config);
-			FormulaWithPureMethodDecl fwp1 = sa.getSet(config, m);
-			return new FormulaWithPureMethodDecl(fwp, fwp1,
+			FormulaWithSpecMethodDecl fwp = m.getSet(config);
+			FormulaWithSpecMethodDecl fwp1 = sa.getSet(config, m);
+			return new FormulaWithSpecMethodDecl(fwp, fwp1,
 			new TriaryForm(
 									ARRAY_RANGE,
 									ElementsForm.getElementsName(m.getStateType().getElemType()),
@@ -154,10 +154,10 @@ public class ModifiesLbrack extends Modifies {
 	/**
 	 * @return <code>UNION(x).(x : m | elements(x)[sa])</code>
 	 **/
-	FormulaWithPureMethodDecl getSet(IJml2bConfiguration config) throws PogException {
-		FormulaWithPureMethodDecl fwp = m.getSet(config);
-		FormulaWithPureMethodDecl fwp1 = sa.getSet(config, m);
-		return new FormulaWithPureMethodDecl(fwp, fwp1, new TriaryForm(
+	FormulaWithSpecMethodDecl getSet(IJml2bConfiguration config) throws PogException {
+		FormulaWithSpecMethodDecl fwp = m.getSet(config);
+		FormulaWithSpecMethodDecl fwp1 = sa.getSet(config, m);
+		return new FormulaWithSpecMethodDecl(fwp, fwp1, new TriaryForm(
 			ARRAY_RANGE,
 			ElementsForm.getElementsName(m.getStateType().getElemType()),
 			fwp.getFormula(),
@@ -214,11 +214,11 @@ public class ModifiesLbrack extends Modifies {
 			ElementsForm.getElementsName(getStateType());
 		TerminalForm newName = new ElementsForm(elements);
 
-		FormulaWithPureMethodDecl fwp = m.getSet(config);
+		FormulaWithSpecMethodDecl fwp = m.getSet(config);
 		// f2 = dom(newName) == dom(elements) && 
 		//      {m} <<| newName == {m} <<| elements
-		FormulaWithPureMethodDecl f2 =
-			new FormulaWithPureMethodDecl(fwp,
+		FormulaWithSpecMethodDecl f2 =
+			new FormulaWithSpecMethodDecl(fwp,
 			new BinaryForm(
 				B_SUBSTRACTION_DOM,
 				fwp.getFormula(),
@@ -232,14 +232,14 @@ public class ModifiesLbrack extends Modifies {
 
 		if (!(sa instanceof SpecArrayStar)) {
 			fwp = m.getSet(config);
-			FormulaWithPureMethodDecl fwp1 = sa.getSet(config, m);
+			FormulaWithSpecMethodDecl fwp1 = sa.getSet(config, m);
 			// f3 = !xx.(xx : REFERENCES && xx : m 
 			//           ==> right <<| newName(xx) == right <<| elements(xx)
-			FormulaWithPureMethodDecl f3 =
-				new FormulaWithPureMethodDecl(fwp, fwp1,
+			FormulaWithSpecMethodDecl f3 =
+				new FormulaWithSpecMethodDecl(fwp, fwp1,
 				new QuantifiedForm(
 					Jm_FORALL,
-					new QuantifiedVarForm(xx, TerminalForm.REFERENCES),
+					new QuantifiedVarForm(xx, TerminalForm.$References),
 					new BinaryForm(
 						Jm_IMPLICATION_OP,
 						new BinaryForm(B_IN, xx, fwp.getFormula()),
@@ -267,14 +267,14 @@ public class ModifiesLbrack extends Modifies {
 	/**
 	 * @return <code>null</code>
 	 **/
-	FormulaWithPureMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f) {
+	FormulaWithSpecMethodDecl getModifiedInstances(IJml2bConfiguration config, AField f) {
 		return null;
 	}
 
 	/**
 	 * @return m if the modified array has the searched for tag.
 	 **/
-	FormulaWithPureMethodDecl restrictElement(IJml2bConfiguration config, int tag)
+	FormulaWithSpecMethodDecl restrictElement(IJml2bConfiguration config, int tag)
 		throws PogException {
 		if (getStateType().getTag() == tag) {
 			return m.getSet(config);
@@ -282,12 +282,12 @@ public class ModifiesLbrack extends Modifies {
 			return null;
 	}
 
-	FormulaWithPureMethodDecl getModifiedIndexes(IJml2bConfiguration config, int tag, Formula q)
+	FormulaWithSpecMethodDecl getModifiedIndexes(IJml2bConfiguration config, int tag, Formula q)
 		throws PogException {
 		if (getStateType().getTag() == tag) {
-			FormulaWithPureMethodDecl fwp = getRange(config);
-			FormulaWithPureMethodDecl fwp1 = m.getSet(config);
-			return new FormulaWithPureMethodDecl(fwp, fwp1,
+			FormulaWithSpecMethodDecl fwp = getRange(config);
+			FormulaWithSpecMethodDecl fwp1 = m.getSet(config);
+			return new FormulaWithSpecMethodDecl(fwp, fwp1,
 			 new BinaryForm(
 				IFormToken.GUARDED_SET,
 				fwp.getFormula(),
@@ -302,7 +302,7 @@ public class ModifiesLbrack extends Modifies {
 	 * @return the formula correspondig to the set of mmodified index
 	 * @throws PogException
 	 */
-	private FormulaWithPureMethodDecl getRange(IJml2bConfiguration config) throws PogException {
+	private FormulaWithSpecMethodDecl getRange(IJml2bConfiguration config) throws PogException {
 		return sa.getSet(config, m);
 	}
 
@@ -325,21 +325,21 @@ public class ModifiesLbrack extends Modifies {
 				while (e.hasMoreElements()) {
 					Modifies mo =
 						(Modifies) ((Modifies) e.nextElement()).clone();
-					FormulaWithPureMethodDecl fwp1 =this.m.getSet(config);
-					FormulaWithPureMethodDecl fwp2 =((ModifiesLbrack) m).getM().getSet(config);
-					FormulaWithPureMethodDecl fwp3 =getRange(config);
-					FormulaWithPureMethodDecl fwp4 =((ModifiesLbrack) m).getRange(config);
+					FormulaWithSpecMethodDecl fwp1 =this.m.getSet(config);
+					FormulaWithSpecMethodDecl fwp2 =((ModifiesLbrack) m).getM().getSet(config);
+					FormulaWithSpecMethodDecl fwp3 =getRange(config);
+					FormulaWithSpecMethodDecl fwp4 =((ModifiesLbrack) m).getRange(config);
 					// m/\m' != {} && sa/\sa' != {} 
 					res.add(
 						new NormalizedGuardedModifies(
 							mo,
-							FormulaWithPureMethodDecl.and(
-								new FormulaWithPureMethodDecl(fwp1, fwp2,
+							FormulaWithSpecMethodDecl.and(
+								new FormulaWithSpecMethodDecl(fwp1, fwp2,
 								new BinaryForm(
 									INTERSECTION_IS_NOT_EMPTY,
 									fwp1.getFormula(),
 									fwp2.getFormula())),
-									new FormulaWithPureMethodDecl(fwp3, fwp4,
+									new FormulaWithSpecMethodDecl(fwp3, fwp4,
 								new BinaryForm(
 									INTERSECTION_IS_NOT_EMPTY,
 									fwp3.getFormula(),
@@ -357,20 +357,20 @@ public class ModifiesLbrack extends Modifies {
 						mo = mo.instancie();
 						mo.instancie(ex);
 						// 
-						FormulaWithPureMethodDecl fwp1 =this.m.getSet(config);
-						FormulaWithPureMethodDecl fwp2 =((ModifiesLbrack) m).getM().getSet(config);
-						FormulaWithPureMethodDecl fwp3 =getRange(config);
-						FormulaWithPureMethodDecl fwp4 =((ModifiesLbrack) m).getRange(config);
+						FormulaWithSpecMethodDecl fwp1 =this.m.getSet(config);
+						FormulaWithSpecMethodDecl fwp2 =((ModifiesLbrack) m).getM().getSet(config);
+						FormulaWithSpecMethodDecl fwp3 =getRange(config);
+						FormulaWithSpecMethodDecl fwp4 =((ModifiesLbrack) m).getRange(config);
 						res.add(
 							new NormalizedGuardedModifies(
 								mo,
-								FormulaWithPureMethodDecl.and(
-								                              new FormulaWithPureMethodDecl(fwp1, fwp2,
+								FormulaWithSpecMethodDecl.and(
+								                              new FormulaWithSpecMethodDecl(fwp1, fwp2,
 									new BinaryForm(
 										INTERSECTION_IS_NOT_EMPTY,
 										fwp1.getFormula(),
 										fwp2.getFormula())),
-										new FormulaWithPureMethodDecl(fwp3, fwp4,
+										new FormulaWithSpecMethodDecl(fwp3, fwp4,
 									new BinaryForm(
 										INTERSECTION_IS_NOT_EMPTY,
 										fwp3.getFormula(),
