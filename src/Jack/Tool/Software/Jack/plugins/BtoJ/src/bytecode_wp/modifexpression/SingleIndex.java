@@ -30,7 +30,7 @@ public class SingleIndex extends SpecArray {
 	 */
 	public String toString() {
 		String s = "" + getSubExpressions()[0];   
-		return null;
+		return s;
 	}
 	
 }

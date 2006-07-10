@@ -378,10 +378,10 @@ public class ModifiesArray extends ModifiesExpression {
 	public Expression getConditionForAll(int state) {
 		// check if the array modified is not a static field
 
-		Expression array = getModifies().getExpression();
-		Expression ind1 = new NumberLiteral(0);
-		Expression ind2 = new FieldAccess(
-				ArrayLengthConstant.ARRAYLENGTHCONSTANT, array);
+//		Expression array = getModifies().getExpression();
+//		Expression ind1 = new NumberLiteral(0);
+//		Expression ind2 = new FieldAccess(
+//				ArrayLengthConstant.ARRAYLENGTHCONSTANT, array);
 		// forall i :int( i1=< i <i2). ref.a[i]
 		QuantifiedExpression arrayModified = (QuantifiedExpression) getExpression();
 		// ref.a[i]

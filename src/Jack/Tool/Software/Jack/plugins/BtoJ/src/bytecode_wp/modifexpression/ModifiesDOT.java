@@ -119,7 +119,7 @@ public class ModifiesDOT extends ModifiesExpression {
 	 */
 	public String toString() {
 		String s = getModifies()  + "( " + getSubExpressions()[1]  + ")"; 
-		return null;
+		return s;
 	}
 
 }
