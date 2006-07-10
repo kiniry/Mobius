@@ -14,15 +14,12 @@ import bytecode_wp.bcclass.attributes.ModifiesSet;
 import bytecode_wp.bcexpression.FieldAccess;
 import bytecode_wp.bcexpression.StaticFieldAccess;
 import bytecode_wp.bcexpression.Variable;
-
-import bytecode_wp.bcexpression.javatype.JavaReferenceType;
 import bytecode_wp.bcexpression.jml.OLD;
 import bytecode_wp.bcexpression.jml.TYPEOF;
 import bytecode_wp.constants.BCConstantClass;
 import bytecode_wp.constants.BCConstantFieldRef;
 import bytecode_wp.formula.Connector;
 import bytecode_wp.formula.Formula;
-import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
 import bytecode_wp.formula.Quantificator;
