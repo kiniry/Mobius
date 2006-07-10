@@ -55,9 +55,9 @@ public class PvsTranslationResult implements ITranslationResult {
 	}
 
 	private String getEnclosedType(Formula f) throws LanguageException {
-		if (f == TerminalForm.REFERENCES)
+		if (f == TerminalForm.$References)
 			return "REFERENCES";
-		else if (f == TerminalForm.instances)
+		else if (f == TerminalForm.$instances)
 			return "(instances)";
 		else if (f instanceof TTypeForm) {
 			switch (((TTypeForm) f).getTag()) {
