@@ -78,7 +78,6 @@ import bytecode_wp.constants.ArrayLengthConstant;
 import bytecode_wp.constants.BCCONSTANT_Integer;
 import bytecode_wp.constants.BCConstantFieldRef;
 import bytecode_wp.formula.Connector;
-import bytecode_wp.formula.Formula;
 import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
@@ -86,6 +85,7 @@ import bytecode_wp.formula.Quantificator;
 import bytecode_wp.formula.QuantifiedFormula;
 import bytecode_wp.vcg.Hypothesis;
 import bytecode_wp.vcg.VCGPath;
+import jml2b.formula.Formula;
 
 /**
  * 
@@ -151,7 +151,7 @@ public class B2JProofs extends Proofs {
 					}
 					e1 = f.getGoalsAt(i).elements();
 					while (e1.hasMoreElements())
-						toFormula((Formula) e1.nextElement(), new HashSet()).garbageIdent();
+						toFormula((bytecode_wp.formula.Formula) e1.nextElement(), new HashSet()).garbageIdent();
 				} catch (Jml2bException je) {
 					;
 				}
@@ -190,8 +190,8 @@ public class B2JProofs extends Proofs {
 		e = decl.elements();
 		while (e.hasMoreElements()) {
 			Object o = e.nextElement();
-			if(o instanceof	jml2b.formula.Formula) {
-				jml2b.formula.Formula form = (jml2b.formula.Formula)o;
+			if(o instanceof	Formula) {
+				Formula form = (Formula)o;
 				res.addFirst(new VirtualFormula(VirtualFormula.LOCALES, form, new Vector()));
 			}
 			else {
@@ -321,7 +321,7 @@ public class B2JProofs extends Proofs {
 		s.writeInt(f.getGoalsAt(n).size()); // goals.length
 		Enumeration e = f.getGoalsAt(n).elements();
 		while (e.hasMoreElements()) {
-			Formula g = (Formula) e.nextElement();
+			bytecode_wp.formula.Formula g = (bytecode_wp.formula.Formula) e.nextElement();
 			s.writeInt(0); // goal.number
 			GoalStatus state = new GoalStatus();
 			state.setUnproved();
@@ -343,7 +343,7 @@ public class B2JProofs extends Proofs {
 		s.writeInt(0); // flow.length
 	}
 
-	static jml2b.formula.Formula toFormula(IJml2bConfiguration config, Formula f, Set declaredVarAtState)
+	static jml2b.formula.Formula toFormula(IJml2bConfiguration config, bytecode_wp.formula.Formula f, Set declaredVarAtState)
 			throws Jml2bException {
 		Vector decl = new Vector();
 		jml2b.formula.Formula res = toFormula(config, f, declaredVarAtState, decl);
@@ -355,7 +355,7 @@ public class B2JProofs extends Proofs {
 		return res;
 	}
 
-	jml2b.formula.Formula toFormula(Formula f, Set declaredVarAtState) throws Jml2bException {
+	jml2b.formula.Formula toFormula(bytecode_wp.formula.Formula f, Set declaredVarAtState) throws Jml2bException {
 		Vector decl = new Vector();
 		jml2b.formula.Formula res = toFormula(f, declaredVarAtState, decl);
 //		Enumeration e = decl.elements();
@@ -365,26 +365,26 @@ public class B2JProofs extends Proofs {
 //		}
 		return res;
 	}
-	jml2b.formula.Formula toFormula(Formula f, Set declaredVarAtState, Vector decl) throws Jml2bException {
+	Formula toFormula(bytecode_wp.formula.Formula f, Set declaredVarAtState, Vector decl) throws Jml2bException {
 		jml2b.formula.Formula res = toFormula(fConfig, f, declaredVarAtState, decl);
 		return res;
 	}
 
-	static jml2b.formula.Formula toFormula(IJml2bConfiguration config, Formula f, Set declaredVarAtState, Vector decl)
+	static jml2b.formula.Formula toFormula(IJml2bConfiguration config, bytecode_wp.formula.Formula f, Set declaredVarAtState, Vector decl)
 			throws Jml2bException {
 		if (f == Predicate0Ar.TRUE) {
-			return new TerminalForm(IFormToken.B_BTRUE);
+			return Formula.$true;
 		}
 
 		if (f == Predicate0Ar.FALSE) {
-			return new UnaryForm(IFormToken.Ja_LNOT, new TerminalForm(IFormToken.B_BTRUE));
+			return Formula.$false;
 		}
 
 		if (f instanceof QuantifiedFormula) {
-			jml2b.formula.Formula fo = toFormula(	config,
-													(Formula) ((QuantifiedFormula) f).getSubExpressions()[0],
-													declaredVarAtState,
-													decl);
+			Formula fo = toFormula(config,
+								(bytecode_wp.formula.Formula) ((QuantifiedFormula) f).getSubExpressions()[0],
+								declaredVarAtState,
+								decl);
 			Quantificator[] qa = ((QuantifiedFormula) f).getQuantificators();
 			for (int i = qa.length - 1; i >= 0; i--) {
 				byte nodeType = 0;
@@ -443,35 +443,44 @@ public class B2JProofs extends Proofs {
 
 		switch (f.getConnector()) {
 			case Connector.AND :
-				return new BinaryForm(IFormToken.Ja_AND_OP, toFormula(	config,
-																		(Formula) f.getSubExpressions()[0],
-																		declaredVarAtState,
-																		decl), toFormula(config, (Formula) f
-						.getSubExpressions()[1], declaredVarAtState, decl));
+				return Formula.and(
+						toFormula(config,
+								(bytecode_wp.formula.Formula) f.getSubExpressions()[0],
+								declaredVarAtState,
+								decl), 
+						toFormula(config, 
+								(bytecode_wp.formula.Formula) f.getSubExpressions()[1], 
+								declaredVarAtState, decl));
 			case Connector.EQUIV :
 				return new BinaryForm(IFormToken.Ja_EQUALS_OP, new UnaryForm(IFormToken.B_BOOL,
-						toFormula(config, (Formula) f.getSubExpressions()[0], declaredVarAtState, decl)),
+						toFormula(config, (bytecode_wp.formula.Formula) f.getSubExpressions()[0], declaredVarAtState, decl)),
 						new UnaryForm(IFormToken.B_BOOL, toFormula(	config,
-																	(Formula) f.getSubExpressions()[1],
+																	(bytecode_wp.formula.Formula) f.getSubExpressions()[1],
 																	declaredVarAtState,
 																	decl)));
 			case Connector.OR :
-				return new BinaryForm(IFormToken.Ja_OR_OP, toFormula(	config,
-																		(Formula) f.getSubExpressions()[0],
-																		declaredVarAtState,
-																		decl), toFormula(config, (Formula) f
-						.getSubExpressions()[1], declaredVarAtState, decl));
+				return Formula.or(
+						toFormula(config,
+								(bytecode_wp.formula.Formula) f.getSubExpressions()[0],
+								declaredVarAtState,
+								decl), 
+						toFormula(config, 
+								(bytecode_wp.formula.Formula) f.getSubExpressions()[1], 
+								declaredVarAtState, decl));
 			case Connector.IMPLIES :
-				return new BinaryForm(IFormToken.Jm_IMPLICATION_OP, toFormula(	config,
-																				(Formula) f.getSubExpressions()[0],
-																				declaredVarAtState,
-																				decl), toFormula(config, (Formula) f
-						.getSubExpressions()[1], declaredVarAtState, decl));
+				return Formula.implies(
+						toFormula(config,
+								(bytecode_wp.formula.Formula) f.getSubExpressions()[0],
+								declaredVarAtState,
+								decl), 
+						toFormula(config, 
+								(bytecode_wp.formula.Formula) f.getSubExpressions()[1], 
+								declaredVarAtState, decl));
 			case Connector.NOT :
-				return new UnaryForm(IFormToken.Ja_LNOT, toFormula(	config,
-																	(Formula) f.getSubExpressions()[0],
-																	declaredVarAtState,
-																	decl));
+				return Formula.not(toFormula(config,
+						(bytecode_wp.formula.Formula) f.getSubExpressions()[0],
+						declaredVarAtState,
+						decl));
 		}
 		return null;
 	}
@@ -479,11 +488,11 @@ public class B2JProofs extends Proofs {
 	static jml2b.formula.Formula toExpression(IJml2bConfiguration config, Expression e, Set declaredVarAtState,
 			Vector decl) throws Jml2bException {
 		if (e == Expression._NULL) {
-			return new TerminalForm(IFormToken.Ja_LITERAL_null, "null");
+			return Formula.$null;
 		}
 
 		if (e == Expression._RESULT)
-			return new TerminalForm(IFormToken.Jm_T_RESULT);
+			return Formula.$result;
 
 		if (e instanceof NumberLiteral) {
 			return new TerminalForm(IFormToken.Ja_NUM_INT, ((NumberLiteral) e).getLiteral() + "");
@@ -540,7 +549,7 @@ public class B2JProofs extends Proofs {
 
 		else if (e instanceof BCConstantFieldRef) {
 			if (e == ArrayLengthConstant.ARRAYLENGTHCONSTANT) {
-				return new TerminalForm("arraylength");
+				return TerminalForm.$arraylength;
 			} else
 				// TODO AAA Retourner toujours le meme field !!!!!
 				return new TerminalForm(new Identifier(B2JField.search(config, (BCConstantFieldRef) e)));// "f_"
@@ -627,8 +636,8 @@ public class B2JProofs extends Proofs {
 														decl), ((FieldOverride) e).getWith(), declaredVarAtState, decl),
 					toExpression(config, ((FieldOverride) e).getObject(), declaredVarAtState, decl));
 
-		else if (e instanceof Formula)
-			return toFormula(config, (Formula) e, declaredVarAtState, decl);
+		else if (e instanceof bytecode_wp.formula.Formula)
+			return toFormula(config, (bytecode_wp.formula.Formula) e, declaredVarAtState, decl);
 
 		else if (e instanceof FunctionOverload) {
 			RefFunction function = ((FunctionOverload) e).getFunction();
@@ -787,7 +796,7 @@ public class B2JProofs extends Proofs {
 			return toExpression(config, ((OLD) e).getSubExpressions()[0], declaredVarAtState, decl);
 
 		else if (e instanceof RESULT)
-			return new TerminalForm(IFormToken.Jm_T_RESULT);
+			return Formula.$result;
 
 		else if (e instanceof TYPEOF)
 			return new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.$typeof, toExpression(config, e
@@ -796,7 +805,7 @@ public class B2JProofs extends Proofs {
 		// TODO ModifiesExpression
 
 		else if (e instanceof NULL)
-			return new TerminalForm(IFormToken.Ja_LITERAL_null);
+			return Formula.$null;
 
 		else if (e instanceof ArrayReference) {
 			jml2b.formula.Formula fo = new TerminalForm("arrayReference_" + ((ArrayReference) e).getId());
@@ -815,7 +824,7 @@ public class B2JProofs extends Proofs {
 			String str = ((TerminalForm) fo).getNodeText();
 			if (!declaredVarAtState.contains(str)) {
 				declaredVarAtState.add(str);
-				// commented by Mariela
+				// jgc: at some point was commented by Mariela
 				if (decl != null)
 					decl.add(B2JTheorem.declLocVar(config, (Reference) e, 
 							declaredVarAtState, null));
