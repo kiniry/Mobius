@@ -21,15 +21,39 @@ public class CoqDeclPureMethodForm extends DeclPureMethodForm implements ITransl
 	public ITranslationResult toLang(int indent) throws LanguageException {
 		//String i = CoqLanguage.newName("i");
 		TTypeForm ct = (TTypeForm)this.instanceType;
-		String strParams = ((params == null) ?"" : (" "+ new CoqTranslationResult(params)));
-		strParams = removeType(strParams);
+		String this_type = "";
+		if (ct != null) {
+			if(ct.isNative()) {
+				this_type = " (this : " + ct.toLang("Coq", 0).toString() + ")";
+			}
+			else {
+				this_type = " (this : " + CoqType.Reference + ")";
+			}
+		}
+		String res_str = "";
+		if(result != null)  {
+			if(resultType.isNative()) {
+				res_str = " ("+ new CoqTranslationResult(result) + ": " + resultType.toLang("Coq", 0)+ ")";
+			}
+			else if (resultType.isRef()) {
+				res_str =  " ("+ new CoqTranslationResult(result) + ": " + 
+									CoqType.Reference + ")";
+			}
+			else {
+				res_str =  " ("+ new CoqTranslationResult(result) + ": " + 
+					resultType.toLang("Coq", 0) + ")";
+			}
+		}
 		
-		return new CoqTranslationResult("", method.toLang("Coq", 0).toString(),
+		String strParams = ((params == null) ?"" : (" "+ new CoqTranslationResult(params)));
+		//strParams = removeType(strParams);
+		String strMethodName = method.toLang("Coq", 0).toString();
+		return new CoqTranslationResult("", strMethodName,
 				"Definition " +
-				method.toLang("Coq", 0) + " := fun " +
-				((ct == null) ?"" : ("this")) +
+				strMethodName + " := fun" +
+				this_type +
 				strParams +
-				((result == null) ?"" : (" "+ new CoqTranslationResult(result))) +" => "	+ 
+				res_str +" => "	+ 
 				this.ensures.toLang("Coq", 0));
 	}
 	

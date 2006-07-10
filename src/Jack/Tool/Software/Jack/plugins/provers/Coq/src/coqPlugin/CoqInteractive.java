@@ -40,6 +40,7 @@ import org.eclipse.ui.progress.UIJob;
 import prover.exec.AProverException;
 import prover.gui.jobs.ProverStatus;
 import coqPlugin.language.CoqVar;
+import coqPlugin.printers.StaticPrelude2;
 import coqPlugin.prooftask.util.CoqIdeThread;
 import coqPlugin.prooftask.util.CoqPrintStream;
 
@@ -169,6 +170,7 @@ public class CoqInteractive extends Action implements IInteractiveProver {
 //			stream.println(
 //					"Module UserExt := UserExtensions "+ name + "Classes.");
 //			stream.println("Import UserExt.");
+			stream.println("Require Import \"" + StaticPrelude2.fileName + "\".");
 			stream.println("Require Import \"" + name + "\".");
 
 			stream.println("Import JackLogic.");

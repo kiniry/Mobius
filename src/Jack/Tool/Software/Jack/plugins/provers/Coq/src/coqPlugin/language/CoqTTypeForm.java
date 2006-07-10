@@ -38,7 +38,13 @@ public class CoqTTypeForm extends TTypeForm implements ITranslatable {
 	public ITranslationResult toLang(int indent) throws LanguageException {
 		if (type == null)
 			return new CoqTranslationResult(nodeText);
-		else
-			return type.toLang("Coq");
+		else {
+			if(isNative()) {
+				return new CoqTranslationResult(getRefType().getBName());
+			}
+			else {
+				return type.toLang("Coq");
+			}
+		}
 	}
 }

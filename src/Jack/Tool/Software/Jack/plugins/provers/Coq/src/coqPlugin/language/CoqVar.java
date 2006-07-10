@@ -114,7 +114,7 @@ public class CoqVar {
 	}
 	
 	public CoqVar(String name, Formula type) throws LanguageException {
-		this.name = name;	
+		this.name = name;
 		if(isMemberField(name, type)) {
 			String typeName = name.substring(0, name.lastIndexOf("_")+1) + "type";
 			this.type = new CoqType(typeName);

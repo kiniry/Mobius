@@ -26,6 +26,10 @@ import jml2b.structure.java.Identifier;
  */
 public class CoqTerminalForm extends CoqFormula implements ITranslatable, IFormToken {
 
+	public final static CoqTranslationResult $null = new CoqTranslationResult("null");
+	public final static CoqTranslationResult $true = new CoqTranslationResult("true");
+	public final static CoqTranslationResult $false = new CoqTranslationResult("false");
+	
 	/**
 	 * 
 	 */
@@ -94,11 +98,11 @@ public class CoqTerminalForm extends CoqFormula implements ITranslatable, IFormT
 			case B_BTRUE :
 				return new CoqTranslationResult("(* 0 = 0 *)True");
 			case Ja_LITERAL_false :
-				return new CoqTranslationResult("false");
+				return $false;
 			case Ja_LITERAL_true :
-				return new CoqTranslationResult("true");
+				return $true;
 			case Ja_STRING_LITERAL :
-				return new CoqTranslationResult("null");
+				return $null;
 				//TODO: String translation?
 				//throw new TranslationException("Coq Translator: Strings are not handle");
 			case Ja_NUM_INT :

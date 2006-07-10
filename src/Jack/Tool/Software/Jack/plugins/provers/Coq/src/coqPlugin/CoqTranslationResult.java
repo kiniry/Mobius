@@ -55,6 +55,7 @@ public class CoqTranslationResult extends Translation implements ITranslationRes
 			CoqTranslationResult ctr =
 				(CoqTranslationResult) f.getVar().toLang("Coq", 0);
 			CoqVar var = new CoqVar(ctr.toString(), f.getType());
+			
 			CoqTranslationResult ctr2 =
 				(CoqTranslationResult) f.getType().toLang("Coq", 0);
 			localDecl += var;
