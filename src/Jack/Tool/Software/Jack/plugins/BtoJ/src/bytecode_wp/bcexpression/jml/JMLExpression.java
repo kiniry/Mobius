@@ -7,7 +7,6 @@
 package bytecode_wp.bcexpression.jml;
 
 import bytecode_wp.bcexpression.Expression;
-import bytecode_wp.bcexpression.javatype.JavaType;
 
 
 
@@ -19,7 +18,7 @@ import bytecode_wp.bcexpression.javatype.JavaType;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public  abstract class JMLExpression extends Expression {
-	private JavaType type;
+	//private JavaType type;
 	
 	
 

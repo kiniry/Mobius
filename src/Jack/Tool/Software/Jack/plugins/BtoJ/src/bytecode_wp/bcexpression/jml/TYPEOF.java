@@ -35,7 +35,7 @@ public class TYPEOF extends JMLExpression implements RefFunction {
 		}
 		Expression[] subExpr = getSubExpressions();
 		subExpr[0] = subExpr[0].substitute(_e1, _e2);
-		Expression type = subExpr[0].getType();
+		//Expression type = subExpr[0].getType();
 		Expression expr = simplify();
 		if (expr != this ) {
 			return expr;

@@ -7,7 +7,6 @@
 package bytecode_wp.bcexpression.jml;
 
 import bytecode_wp.bcexpression.Expression;
-import bytecode_wp.bcexpression.javatype.JavaType;
 
 /**
  * @author mpavlova
@@ -23,7 +22,7 @@ import bytecode_wp.bcexpression.javatype.JavaType;
 public class OLD_LOOP extends JMLExpression {
 	private int loopStartPos;
 
-	private JavaType type;
+	//private JavaType type;
 
 	public OLD_LOOP(Expression _left, int _loopStartPos) {
 		super(_left);

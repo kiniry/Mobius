@@ -5,8 +5,6 @@
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 package bytecode_wp.bcexpression.jml;
-import java.util.Vector;
-
 import bytecode_wp.bcexpression.Expression;
 
 
@@ -17,7 +15,7 @@ import bytecode_wp.bcexpression.Expression;
  * Preferences - Java - Code Generation - Code and Comments
  */
 public class RESULT extends JMLExpression {
-	private Vector with;
+	//private Vector with;
 
 	private static RESULT result = new RESULT();
 

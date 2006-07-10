@@ -21,7 +21,7 @@ import bytecode_wp.bcexpression.ref.ArrayReference;
 public class ELEMTYPE extends JMLExpression implements RefFunction{
 
 	
-	private JML_CONST_TYPE type;
+	//private JML_CONST_TYPE type;
 	
 	public ELEMTYPE(Expression _subExpr) {
 		super(_subExpr);
