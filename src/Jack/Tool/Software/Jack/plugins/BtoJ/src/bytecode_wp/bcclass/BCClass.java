@@ -277,7 +277,7 @@ public class BCClass implements IClass {
 		for (int i = 0; i < _methods.length; i++) {
 			MethodGen mg = new MethodGen(_methods[i], className, cp);
 			BCMethod bcm = new BCMethod(mg, this, cp);
-			String signature = mg.getSignature();
+			//String signature = mg.getSignature();
 			String key = MethodSignature.getSignature(bcm.getName(), bcm
 					.getArgTypes(), bcm.getReturnType());
 			/* Util.dump(" add method " + key + " in class " + getName() ); */
