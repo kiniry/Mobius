@@ -134,8 +134,8 @@ public class MethodAllocation {
 			
 			allocatedFromNowOn = getMethodAllocates(m);
 			Util.dump(""+ m.getAllocations());
-			BCInstruction next = instr.getNext();
-			int nextPos = next.getBCIndex();
+			//BCInstruction next = instr.getNext();
+			//int nextPos = next.getBCIndex();
 		}
 		bcalloc.setChecked();
 		BCInstruction next = instr.getNext();
@@ -255,13 +255,29 @@ public class MethodAllocation {
 		}
 	}
 
+	
+	/**
+	 * Calculate the loop consumption per iteration.
+	 * Modifies the value stored in bcalloc by calling 
+	 * {@link BCInstructionAlloc#setLoopConsumptionPerIteration(int)}.
+	 * Also write the result in the command line.
+	 * @param bcalloc 
+	 * @param bc
+	 * @param instrs
+	 * @param method
+	 * @throws ReadAttributeException
+	 * @throws IllegalLoopException
+	 * @throws MalformedException
+	 */
+	//@ modifies bcalloc.loopConsumption;
 	private static void calculateForLoop(BCInstructionAlloc bcalloc,
 			BCInstructionAlloc[] bc, BCInstruction[] instrs, BCMethod method)
 			throws ReadAttributeException, IllegalLoopException, MalformedException {
 		BCLoopStart loopEntry = (BCLoopStart) bcalloc.getInstruction();
 		Vector loopEnds = loopEntry.getLoopEndPositions();
-		int iters = bcalloc.getMaxIterations();
+//		int iters = bcalloc.getMaxIterations();
 		int allocatedInLoop = 0;
+
 		for (int i = 0; i < loopEnds.size(); i++) {
 			int offset = ((Integer) loopEnds.elementAt(i)).intValue();
 			BCInstruction loopEnd = (BCLoopEnd) Util
