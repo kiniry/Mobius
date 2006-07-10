@@ -351,7 +351,7 @@ public class BPrinter implements IPrinter {
 			stream = new PrintStream(ostream);
 		} else {
 			// if no output directory is given, print to stream
-			stream = System.out;
+			stream = Logger.out;
 		}
 		// ensure that the file will be closed in case of error
 		try {
@@ -398,7 +398,7 @@ public class BPrinter implements IPrinter {
 			stream = new PrintStream(ostream);
 		} else {
 			// if no output directory is given, print to stream
-			stream = System.out;
+			stream = Logger.out;
 		}
 		// ensure that the file will be closed in case of error
 		try {
