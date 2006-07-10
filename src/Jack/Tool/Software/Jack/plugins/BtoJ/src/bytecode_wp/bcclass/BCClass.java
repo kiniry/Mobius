@@ -38,7 +38,6 @@ import bytecode_wp.bytecode.block.IllegalLoopException;
 import bytecode_wp.formula.Formula;
 import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.vcg.VCGPath;
-import bytecode_wp.utils.Util;
 
 /**
  * @author mpavlova
