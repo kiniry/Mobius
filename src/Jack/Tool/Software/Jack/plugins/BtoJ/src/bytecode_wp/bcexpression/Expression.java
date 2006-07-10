@@ -5,7 +5,6 @@
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 package bytecode_wp.bcexpression;
-import bytecode_wp.bcexpression.javatype.JavaType;
 import bytecode_wp.bcexpression.jml.OLD;
 import bytecode_wp.bcexpression.jml.RESULT;
 import bytecode_wp.bcexpression.jml.TYPEOF;
@@ -424,7 +423,10 @@ public abstract class Expression {
             return Predicate0Ar.TRUE;
         }
         Formula condition = Predicate0Ar.TRUE;
-        Expression[] subExprAtState = new Expression[subExpr.length];
+        
+        //jgc: mmmm... interesting...
+       // Expression[] subExprAtState = new Expression[subExpr.length];
+        
         for ( int i = 0; i < subExpr.length; i++ ) {
             Formula f = subExpr[i].generateBoolExpressionConditions();
             if ( f != Predicate0Ar.TRUE) {
