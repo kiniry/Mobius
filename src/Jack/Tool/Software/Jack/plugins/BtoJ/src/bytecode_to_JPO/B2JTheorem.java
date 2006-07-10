@@ -52,15 +52,15 @@ public class B2JTheorem extends Theorem {
 		LinkedList ll = new LinkedList();
 		
 		ll.add(new BinaryForm(Jm_IS_SUBTYPE, new BinaryForm(
-						IFormToken.B_APPLICATION, TerminalForm.typeof,
+						IFormToken.B_APPLICATION, TerminalForm.$typeof,
 						B2JProofs.toExpression(config, f, declaredVatAtState,
 								decl)), B2JProofs.toExpression(config, f
 						.getType(), declaredVatAtState, decl)));
 		ll.add(new BinaryForm(B_IN, B2JProofs.toExpression(config, f,
-				declaredVatAtState, decl), TerminalForm.instances));
+				declaredVatAtState, decl), TerminalForm.$instances));
 		ll.add(new BinaryForm(LOCAL_VAR_DECL,
 				B2JProofs.toExpression(config, f, declaredVatAtState, decl),
-				TerminalForm.REFERENCES));
+				TerminalForm.$References));
 		return ll;
 	}
 
@@ -76,11 +76,11 @@ public class B2JTheorem extends Theorem {
 			return new BinaryForm(Ja_AND_OP,
 					new BinaryForm(LOCAL_VAR_DECL, B2JProofs.toExpression(
 							config, f, declaredVatAtState, decl),
-							TerminalForm.REFERENCES), new BinaryForm(Ja_AND_OP,
+							TerminalForm.$References), new BinaryForm(Ja_AND_OP,
 							new BinaryForm(B_IN, B2JProofs.toExpression(config,
 									f, declaredVatAtState, decl),
 									new BinaryForm(B_UNION,
-											TerminalForm.instances,
+											TerminalForm.$instances,
 											new UnaryForm(B_ACCOLADE,
 													new TerminalForm(
 															Ja_LITERAL_null,
@@ -92,7 +92,7 @@ public class B2JTheorem extends Theorem {
 									new TerminalForm(Ja_LITERAL_null, "null")),
 									new BinaryForm(Jm_IS_SUBTYPE,
 											new BinaryForm(B_APPLICATION,
-													TerminalForm.typeof,
+													TerminalForm.$typeof,
 													B2JProofs.toExpression(
 															config, f,
 															declaredVatAtState,
@@ -120,7 +120,7 @@ public class B2JTheorem extends Theorem {
 						Ja_AND_OP,
 						new BinaryForm(LOCAL_VAR_DECL, B2JProofs.toExpression(
 								config, f, declaredVatAtState, decl),
-								TerminalForm.REFERENCES),
+								TerminalForm.$References),
 						new BinaryForm(
 								Ja_AND_OP,
 								new BinaryForm(
@@ -129,7 +129,7 @@ public class B2JTheorem extends Theorem {
 												declaredVatAtState, decl),
 										new BinaryForm(
 												B_UNION,
-												TerminalForm.instances,
+												TerminalForm.$instances,
 												new UnaryForm(
 														B_ACCOLADE,
 														new TerminalForm(
@@ -148,7 +148,7 @@ public class B2JTheorem extends Theorem {
 												Jm_IS_SUBTYPE,
 												new BinaryForm(
 														B_APPLICATION,
-														TerminalForm.typeof,
+														TerminalForm.$typeof,
 														B2JProofs
 																.toExpression(
 																		config,

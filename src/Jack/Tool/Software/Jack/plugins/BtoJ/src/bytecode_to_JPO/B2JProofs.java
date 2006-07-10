@@ -634,7 +634,7 @@ public class B2JProofs extends Proofs {
 			RefFunction function = ((FunctionOverload) e).getFunction();
 			if (function instanceof TYPEOF) {
 				return new BinaryForm(IFormToken.B_APPLICATION, toExpression(	config,
-																				TerminalForm.typeof,
+																				TerminalForm.$typeof,
 																				((FunctionOverload) e).getMap(),
 																				declaredVarAtState,
 																				decl),
@@ -642,7 +642,7 @@ public class B2JProofs extends Proofs {
 			}
 			if (function instanceof ELEMTYPE) {
 				return new BinaryForm(IFormToken.B_APPLICATION, toExpression(	config,
-																				TerminalForm.elemtype,
+																				TerminalForm.$elemtype,
 																				((FunctionOverload) e).getMap(),
 																				declaredVarAtState,
 																				decl),
@@ -790,7 +790,7 @@ public class B2JProofs extends Proofs {
 			return new TerminalForm(IFormToken.Jm_T_RESULT);
 
 		else if (e instanceof TYPEOF)
-			return new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.typeof, toExpression(config, e
+			return new BinaryForm(IFormToken.B_APPLICATION, TerminalForm.$typeof, toExpression(config, e
 					.getSubExpressions()[0], declaredVarAtState, decl));
 
 		// TODO ModifiesExpression
