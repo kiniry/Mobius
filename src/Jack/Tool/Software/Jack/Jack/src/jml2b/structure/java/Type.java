@@ -114,12 +114,18 @@ public class Type
 	 */
 	protected /*@ spec_public */
 	AClass refType;
-
+	
+	public void setRefType (AClass clazz){
+		if(tag == T_REF)
+			refType = clazz;
+	}
+	
 	/**
 	 * Type of elements stored in a reference array.
 	 */
 	protected /*@ spec_public */
 	Type elemType;
+
 
 	public Type() {
 		super();
@@ -1233,4 +1239,6 @@ public class Type
 
 
 	static final long serialVersionUID = -3537023320146708719L;
+
+
 }

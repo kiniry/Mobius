@@ -41,22 +41,29 @@ public class TTypeForm extends Formula implements IType {
 	/**
 	 * Type corresponding to this formula.
 	 */
-	protected Type type;
+	protected final /*@ non_null @*/  Type type;
+	
+	protected boolean bNative = false;
+	
+	public boolean isNative() {
+		return bNative;
+	}
 
 	/*
 	 * @ @ private ghost boolean comesFromLoad; @ private invariant
 	 * comesFromLoad == (type == null); @ private invariant comesFromLoad ==
 	 * !(nodeText == null); @ private invariant nodeType == Enum.E_B_T_TYPE; @
 	 */
-
-	TTypeForm(byte nodeType) {
-		super(nodeType);
-	}
+//
+//	private TTypeForm(byte nodeType) {
+//		super(nodeType);
+//	}
 
 	public TTypeForm(TTypeForm f) {
 		super(f.getNodeType());
 		nodeText = f.nodeText;
 		type = f.type;
+		bNative = f.bNative;
 	}
 
 	/**
@@ -69,6 +76,9 @@ public class TTypeForm extends Formula implements IType {
 		//@ set comesFromLoad = false;
 		super(nodeType);
 		this.type = type;
+		if(type != null && type.getRefType() != null && type.getRefType().getModifiers() != null) {
+			this.bNative = type.getRefType().getModifiers().isNative();
+		}
 	}
 
 	/*
@@ -77,6 +87,7 @@ public class TTypeForm extends Formula implements IType {
 	public Object clone() {
 		TTypeForm res = new TTypeForm(getNodeType(), type);
 		//        res.stateType = stateType;
+		res.bNative = bNative;
 		return res;
 	}
 
@@ -148,6 +159,7 @@ public class TTypeForm extends Formula implements IType {
 			throw new InternalError(le.getMessage());
 		}
 		s.writeInt(type.getTag());
+		s.writeBoolean(bNative);
 		Enumeration e = Languages.getLanguagesNames();
 		while (e.hasMoreElements()) {
 			element = (String) e.nextElement();
@@ -183,6 +195,10 @@ public class TTypeForm extends Formula implements IType {
 	public jml2b.structure.java.Type getElemType() {
 		if (type == null) return null;
 		return type.getElemType();
+	}
+	
+	public boolean isRef() {
+		return getRefType() != null || getElemType() != null;
 	}
 	/**
 	 * @return

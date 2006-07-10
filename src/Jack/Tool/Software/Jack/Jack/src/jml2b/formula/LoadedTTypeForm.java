@@ -17,6 +17,8 @@ import jml2b.exceptions.LanguageException;
 import jml2b.languages.ITranslationResult;
 import jml2b.languages.Languages;
 import jml2b.structure.java.IJmlFile;
+import jml2b.structure.java.JavaLoader;
+import jml2b.structure.java.Type;
 import jml2b.util.IOutputStream;
 import jml2b.util.JpoInputStream;
 
@@ -43,22 +45,24 @@ final class LoadedTTypeForm extends TTypeForm {
 	 * formula has been read
 	 * @throws LoadException if the stream has not a good format.
 	 **/
-	public LoadedTTypeForm(
+	public LoadedTTypeForm(IJml2bConfiguration config,
 		IJmlFile fi,
 		byte nodeType,
 		String nodeText,
 		JpoInputStream s)
 		throws IOException {
 		//@ set comesFromLoad = true;
-		super(nodeType);
+		super(nodeType, null);
 		this.nodeText = nodeText;
 		tag = s.readInt();
+		bNative = s.readBoolean();
 		int nbLang = fi.getLangNames().length;
 		for (int i = 0; i < nbLang; i++) {
 			//			String lang = s.readUTF();
 			String text = s.readUTF();
 			languagesText.put(fi.getLangNames()[i], text);
 		}
+		
 
 	}
 
@@ -73,7 +77,7 @@ final class LoadedTTypeForm extends TTypeForm {
 		s.writeByte(getNodeType());
 		s.writeUTF(nodeText);
 		s.writeInt(tag);
-		
+		s.writeBoolean(bNative);
 		for (int i = 0; i < jf.getLangNames().length; i++) {
 			String lang = jf.getLangNames()[i];
 				s.writeUTF((String) languagesText.get(lang));
@@ -83,5 +87,6 @@ final class LoadedTTypeForm extends TTypeForm {
 	public int getTag() {
 		return tag;
 	}
+
 
 }

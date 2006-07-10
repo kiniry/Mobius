@@ -292,7 +292,7 @@ abstract public class Formula
 				}
 			case Jm_T_TYPE :
 			case T_TYPE :
-				return new LoadedTTypeForm(fi, nodeType, s.readUTF(), s);
+				return new LoadedTTypeForm(config, fi, nodeType, s.readUTF(), s);
 			default :
 				throw new LoadException("Formula.create " + nodeType);
 		}
