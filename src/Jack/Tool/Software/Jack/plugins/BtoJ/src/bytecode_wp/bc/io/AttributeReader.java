@@ -52,7 +52,6 @@ import bytecode_wp.bcexpression.vm.Counter;
 import bytecode_wp.bcexpression.vm.Stack;
 import bytecode_wp.constants.ArrayLengthConstant;
 import bytecode_wp.constants.BCConstant;
-import bytecode_wp.constants.BCConstantClass;
 import bytecode_wp.constants.BCConstantFieldRef;
 import bytecode_wp.constants.BCConstantMethodRef;
 import bytecode_wp.constants.BCConstantUtf8;
@@ -84,18 +83,35 @@ public class AttributeReader {
 
 	private static BCClass clazz;
 
-	private static BCLineNumber[] lineNumberTable;
+	
+	//private static BCLineNumber[] lineNumberTable;
 
 	private static BCLocalVariable[] localVariables;
 
 	public static final int ERROR_READING_OUT_OF_ARR = -1;
 
+	
+	/**
+	 * @deprecated use {@link #readAttribute(Unknown, BCClass, BCLocalVariable[])}
+	 *  	instead
+	 */
 	public static BCAttribute readAttribute(Unknown privateAttr,
 			BCClass _clazz, BCLineNumber[] _lineNumberTable,
 			BCLocalVariable[] _localVariables) throws ReadAttributeException {
+		
+		// Commented by jgc: lineNumberTable useless?
+		//lineNumberTable = _lineNumberTable;
+		return readAttribute(privateAttr, _clazz, _localVariables);
+		
+	}
+	
+	public static BCAttribute readAttribute(Unknown privateAttr,
+			BCClass _clazz, BCLocalVariable[] _localVariables) 
+				throws ReadAttributeException {
 		clazz = _clazz;
 		/* constantPool = _clazz.getConstantPool(); */
-		lineNumberTable = _lineNumberTable;
+		
+
 		localVariables = _localVariables;
 		String name = privateAttr.getName();
 		if (name.equals(BCAttribute.ASSERT)) {
@@ -353,10 +369,11 @@ public class AttributeReader {
 	// //////////////// start : method specification
 	// /////////////////////////////////////////////////
 
-	private static MethodInvocation readMethodInvocation(byte[] bytes)
-			throws ReadAttributeException {
-		return null;
-	}
+//use undetermined...	
+//	private static MethodInvocation readMethodInvocation(byte[] bytes)
+//			throws ReadAttributeException {
+//		return null;
+//	}
 
 	private static MethodSpecification readMethodSpecification(byte[] bytes)
 			throws ReadAttributeException {
@@ -509,10 +526,11 @@ public class AttributeReader {
 	// ////////////////////////////////Expressions and Formulas
 	// ///////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private static int readAttributeLength(byte[] bytes) {
-		int attribute_length = readInt(bytes);
-		return attribute_length;
-	}
+// jgc: use undetermined...
+//	private static int readAttributeLength(byte[] bytes) {
+//		int attribute_length = readInt(bytes);
+//		return attribute_length;
+//	}
 
 	private static int readAttributeCount(byte[] bytes) {
 		int attribute_count = readShort(bytes);
@@ -696,8 +714,9 @@ public class AttributeReader {
 			for (int i = 0; i < numberArgs; i++) {
 				subExpr[i + 1] = readExpression(bytes);
 			}
-			String clazz_name = ((BCConstantClass) (clazz.getConstantPool()
-					.getConstant(mRef.getClassIndex()))).getName();
+//		commented by jgc: what's its use?
+//			String clazz_name = ((BCConstantClass) (clazz.getConstantPool()
+//					.getConstant(mRef.getClassIndex()))).getName();
 
 			MethodInvocation methInv = new MethodInvocation(mRef, subExpr);
 			return methInv;
