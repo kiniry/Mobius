@@ -14,10 +14,8 @@ import bytecode_wp.bcclass.BCMethod;
 import bytecode_wp.bytecode.block.IllegalLoopException;
 
 /**
- * @author mpavlova
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
+ * @author M. Pavlova
+ *
  */
 public class Main {
 
@@ -73,10 +71,18 @@ public class Main {
 	}
 */
 	
+	/**
+	 * Basically calls {@link MethodAllocation#getMethodAllocates(BCMethod)}
+	 * with <code>m</code> as a parameter.
+	 * @param m
+	 */
+	//@ modifies \nothing;
 	public static void getMemoryForMethodsInParticularMathod(BCMethod m) throws ReadAttributeException, IllegalLoopException, MalformedException {
-		int memoryAllocated = MethodAllocation.getMethodAllocates(m);
+		//int memoryAllocated = 
+			MethodAllocation.getMethodAllocates(m);
 	}
 
+	
 	public static void initMethodAlloc(BCClass _class)
 			throws ReadAttributeException, IllegalLoopException {
 		Iterator miter = _class.getMethods().iterator();
@@ -85,6 +91,7 @@ public class Main {
 			m.initMethod();
 		}
 	}
+
 
 	public static void getMemoryForMethodsInClass(BCClass _class)
 			throws ReadAttributeException, IllegalLoopException, MalformedException {
@@ -95,7 +102,8 @@ public class Main {
 			 * Logger.get().println(" search allocations for method " +
 			 * m.getName() );
 			 */
-			int memoryAllocated = MethodAllocation.getMethodAllocates(m);
+			//int memoryAllocated = 
+			MethodAllocation.getMethodAllocates(m);
 
 		}
 	}
