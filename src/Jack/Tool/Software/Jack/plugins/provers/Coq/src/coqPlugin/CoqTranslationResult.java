@@ -59,7 +59,7 @@ public class CoqTranslationResult extends Translation implements ITranslationRes
 				(CoqTranslationResult) f.getType().toLang("Coq", 0);
 			localDecl += var;
 			
-			if (f.getType() != TerminalForm.REFERENCES) {
+			if (f.getType() != TerminalForm.$References) {
 				// la verification de domaine pour les entiers par ex.
 				funPart += "(" + ctr2 + " " + ctr + ")";
 			}

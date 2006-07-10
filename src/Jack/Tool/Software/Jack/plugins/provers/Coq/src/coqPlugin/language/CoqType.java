@@ -170,11 +170,11 @@ public class CoqType extends Type implements ITranslatable {
 	
 	private static CoqType getEnclosedType(Formula f) throws LanguageException {
 		CoqType type = null;
-		if (f == TerminalForm.REFERENCES)
+		if (f == TerminalForm.$References)
 			type = basicType(BasicType.RefType);
-		else if (f == TerminalForm.instances)
+		else if (f == TerminalForm.$instances)
 			type = basicType(BasicType.RefType);
-		else if (f == TerminalForm.arraylength) {
+		else if (f == TerminalForm.$arraylength) {
 			type = CoqType.arraylength;
 		}
 		else if (f instanceof TTypeForm) {		
