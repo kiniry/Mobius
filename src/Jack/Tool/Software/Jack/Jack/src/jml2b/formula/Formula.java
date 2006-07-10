@@ -41,27 +41,14 @@ abstract public class Formula
 	extends Profiler
 	implements IFormToken, Serializable {
 
-	
+	/** the formula for <code>null</code> */
 	public static final Formula $null = new TerminalForm(Ja_LITERAL_null, "null");
+	/** the formula for <code>false</code> */
 	public static final Formula $false = new TerminalForm(Ja_LITERAL_false);
-	
-	/**
-	 * Returns the formula <code>null</code>.
-	 * @return the formula <code>null</code>
-	 * @deprecated
-	 **/
-	public static Formula getNull() {
-		return $null;
-	}
-
-	/**
-	 * Returns the formula <code>false</code>.
-	 * @return the formula <code>false</code>
-	 * @deprecated
-	 **/
-	public static Formula getFalse() {
-		return new TerminalForm(Ja_LITERAL_false);
-	}
+	/** the formula for <code>true</code> */
+	public static final Formula $true = new TerminalForm(IFormToken.B_BTRUE);
+	/** the formula for expressing the result of a method */
+	public static final Formula $result = new TerminalForm(IFormToken.Jm_T_RESULT);
 
 	/**
 	 * Returns the disjunctive formula between the two parameters.

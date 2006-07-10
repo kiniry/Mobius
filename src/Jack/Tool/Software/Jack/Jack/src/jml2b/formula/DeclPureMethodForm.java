@@ -40,6 +40,10 @@ public class DeclPureMethodForm extends Formula {
 		this.ensures = ensures;
 	}
 
+	/**
+	 * Construct a shallow copy of f.
+	 * @param f The object to copy.
+	 */
 	public DeclPureMethodForm(DeclPureMethodForm f) {
 		super(f.getNodeType());
 		method = f.method;
