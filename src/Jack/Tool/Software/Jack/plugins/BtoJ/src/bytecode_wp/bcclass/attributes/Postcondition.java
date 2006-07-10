@@ -11,9 +11,7 @@ import java.util.Vector;
 
 import bytecode_wp.formula.Connector;
 import bytecode_wp.formula.Formula;
-import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.vcg.VCGPath;
-import bytecode_wp.vcg.VcType;
 
 /**
  * @author mpavlova
