@@ -23,7 +23,7 @@ import bytecode_wp.bytecode.block.IllegalLoopException;
  * CONSTANT_Fieldref_info, CONSTANT_MethodRef_info, CONSTANT_Class_info 
  */
 public class BCConstantRef extends BCConstant {
-	private int classIndex;
+	//private int classIndex;
 	
 	private int CONSTANT_class_Index;
 	
