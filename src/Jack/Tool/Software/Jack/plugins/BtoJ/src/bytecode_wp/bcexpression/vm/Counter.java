@@ -9,7 +9,6 @@ package bytecode_wp.bcexpression.vm;
 
 import bytecode_wp.bcexpression.ArithmeticExpression;
 import bytecode_wp.bcexpression.Expression;
-import bytecode_wp.bcexpression.javatype.JavaBasicType;
 import bytecode_wp.bcexpression.javatype.JavaType;
 
 
@@ -22,7 +21,7 @@ import bytecode_wp.bcexpression.javatype.JavaType;
  */
 public class Counter  extends ArithmeticExpression {
 
-	private final JavaBasicType type = JavaType.JavaINT ; 
+	//private final JavaBasicType type = JavaType.JavaINT ; 
 	private static Counter counter ;
 	
 	private  Counter() {
