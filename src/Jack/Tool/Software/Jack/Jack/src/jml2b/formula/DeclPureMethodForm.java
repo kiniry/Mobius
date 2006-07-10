@@ -18,10 +18,10 @@ import jml2b.util.JpoInputStream;
 
 public class DeclPureMethodForm extends Formula {
 
-	/**
-	 * 
-	 */
+	/**  */
 	private static final long serialVersionUID = 1L;
+	
+	
 	protected Formula method;
 	protected Formula instanceType;
 	protected QuantifiedVarForm params;
@@ -29,25 +29,28 @@ public class DeclPureMethodForm extends Formula {
 	protected TTypeForm resultType;
 	protected Formula ensures;
 
-	public DeclPureMethodForm(Formula form, Formula form2, QuantifiedVarForm w, String ww, TTypeForm rt,Formula f) {
+	public DeclPureMethodForm(Formula method, Formula instanceType, QuantifiedVarForm params, 
+			String result, TTypeForm resultType, Formula ensures) {
 		super(DECL_PURE_METHOD);
-		method = form;
-		instanceType = form2;
-		params = w;
-		result = ww;
-		resultType = rt;
-		ensures = f;
+		this.method = method;
+		this.instanceType = instanceType;
+		this.params = params;
+		this.result = result;
+		this.resultType = resultType;
+		this.ensures = ensures;
 	}
 
 	public DeclPureMethodForm(DeclPureMethodForm f) {
 		super(f.getNodeType());
-		this.method = f.method;
-		this.instanceType = f.instanceType;
-		this.params = f.params;
-		this.result = f.result;
-		this.resultType = f.resultType;
-		this.ensures = f.ensures;
+		method = f.method;
+		instanceType = f.instanceType;
+		params = f.params;
+		result = f.result;
+		resultType = f.resultType;
+		ensures = f.ensures;
 	}
+	
+	
 	public DeclPureMethodForm(IJml2bConfiguration config, IJmlFile fi, JpoInputStream s) throws LoadException, IOException {
 		super(IFormToken.DECL_PURE_METHOD);
 		method = Formula.create(config, s, fi);
@@ -67,10 +70,15 @@ public class DeclPureMethodForm extends Formula {
 	}
 
 	public Object clone() {
-		return new DeclPureMethodForm((Formula) method.clone(),
-		                              instanceType == null ? null : (Formula) instanceType
-				.clone(), 
-				params == null ? null : (QuantifiedVarForm) params.clone(), result, resultType, (Formula) ensures.clone());
+		return new DeclPureMethodForm(
+				(Formula) method.clone(),
+				instanceType == null ? null : 
+					(Formula) instanceType.clone(), 
+				params == null ? null : 
+					(QuantifiedVarForm) params.clone(), 
+				result, 
+				resultType, 
+				(Formula) ensures.clone());
 	}
 
 	public void processIdent() {
