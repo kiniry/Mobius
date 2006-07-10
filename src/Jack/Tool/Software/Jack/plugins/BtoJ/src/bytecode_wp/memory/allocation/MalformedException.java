@@ -7,19 +7,19 @@
 package bytecode_wp.memory.allocation;
 
 /**
- * @author mpavlova
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author M. Pavlova
  */
-public class MalformedException extends Throwable {
+public class MalformedException extends Exception {
+
+	/** */
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @param string
+	 * Create the exception
+	 * @param string The message
 	 */
 	public MalformedException(String string) {
-		
-		// TODO Auto-generated constructor stub
+		super(string);
 	}
 	
 	
