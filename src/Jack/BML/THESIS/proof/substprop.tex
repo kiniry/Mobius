@@ -114,34 +114,36 @@ if we have that the states $s_1$ and $s_2$ are such that
 \end{enumerate}
 \end{substHeap}
 
-% \begin{newHeap}[Update of the heap with a newly allocated object]\label{newHeap}
-%For any expressions $ \expressionsWp_1$  \todo{pas sur que ca c'est bon}
-%if we have that the states $s_1$ and $s_2$ are such that
-%% $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
-%  $s_2 =  \config{\heap'}{\counterOnly}{ \update{\stackOnly}{\counterOnly}{\evalExp{\referenceOnly}{s_1}} }{\locVarOnly}{\pc } $ where
-% $  \newRef{\heap}{\clazz} = (\heap', \referenceOnly)   $  the following holds
-%\begin{enumerate}
-%%  \item \[ \begin{array}{l}   \evalExp{\expressionsWp_1 \begin{array}{l}
-%                             \subst{ \stack{\counter}}{ \referenceOnly} \\
-%			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
-%                             \rbrack_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
-%                             \end{array}}{s_1} \\
-%			     = \\
- %                            \evalExp{\expressionsWp_1}{ s_2  } 
-%			     \end{array}  \]
-%
-%    \item \[\begin{array}{l}  \interp{\psi \begin{array}{l}
-%                             \lbrack \expressionsWp_2 \leftarrow \referenceOnly \rbrack \\
-%			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
-%                             \rbrack_{  \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz}   }
-%                             \end{array}}{s_1}\\
-%			      \iff \\ 
-%			     \interp{\psi}{ s_2  } 
-%			     \end{array}  \]
-%
-%
-%\end{enumerate}
-%\end{newHeap}
+ \begin{newHeap}[Update of the heap with a newly allocated object]\label{newHeap}
+For any expressions $ \expressionsWp_1$  
+if we have that the states $s_1$ and $s_2$ are such that
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+  $s_2 =  \config{\heap'}{\counterOnly}{ \update{\stackOnly}{\counterOnly}{\evalExp{\referenceOnly}{s_1}} }{\locVarOnly}{\pc } $ where
+ $  \newRef{\heap}{\clazz} = (\heap', \referenceOnly)   $  the following holds
+\begin{enumerate}
+  \item \[ \begin{array}{l}   \evalExp{\expressionsWp_1 \begin{array}{l}
+                             \subst{ \stack{\counter}}{ \referenceOnly} \\
+			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
+                             \rbrack_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
+                             \end{array}}{s_1} \\
+			     = \\
+                            \evalExp{\expressionsWp_1}{ s_2  } 
+			     \end{array}  \]
+
+     \item \[\begin{array}{l}  \interp{\psi \begin{array}{l}
+                              \subst{\stack{\counter}}{\referenceOnly }\\
+ 			      \subst{\fieldd }{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType)}} _{  \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz}   }
+                              \end{array}}{s_1}\\
+ 			      \iff \\ 
+ 			     \interp{\psi}{s_2} 
+ 			     \end{array}  \]
+ 
+ 
+ \end{enumerate}
+ \end{newHeap}
+
+
+
 
 %Proof : by structural induction on the structure of $\expressionsWp_1$ 
 %\begin{enumerate}
