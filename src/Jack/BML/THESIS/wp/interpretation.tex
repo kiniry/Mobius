@@ -24,9 +24,8 @@ Note that the evaluation function takes as arguments an expression ($\expression
 \begin{interpExpr}[Evaluation of expressions] \label{interpExpr} 
 The evaluation in a state \\
 $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expressionsWp$
-w.r.t. an initial state $ s_{init} = \config{\heap_{init}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $  s.t. 
-$s_{init} \stateTrans^{*} s $ 
-is denoted with $\evalExp{\expressionsWp}{s}$  and is defined inductively on the grammar of expressions $\expressionsWp$ \  as follows:
+w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
+is denoted with $\evalExp{\expressionsWp}{s}$  and is defined inductively over the grammar of expressions $\expressionsWp$ \  as follows:
  
 $$
 \begin{array}{l}
@@ -57,7 +56,7 @@ $$
 \end{array}$$
 
 $$\begin{array}{l}
- \evalExp{ \old{\exprWp} } { s } =\evalExp{ \exprWp }{  s_{init}} \\
+ \evalExp{ \old{\exprWp} } { s } =\evalExp{ \exprWp }{  s_{0}} \\
 \\ 
  \evalExp{\exprWp_1 \ \op \ \exprWp_2   } { s } =   \evalExp{\exprWp_1}{s} \op  \evalExp{\exprWp_2}{s}  \\
 
@@ -111,13 +110,14 @@ The relation $\vDash$ that we define next, gives a meaning to the formulas from 
  
 \begin{interpPred}[Interpretation of predicates] \label{interpPred} 
 The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
-w.r.t. an initial state  $ s_{init} = \config{\heap_{init}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ s.t. 
-$s_{init} \stateTrans^{*} s $   is defined inductively as follows:
+w.r.t. an initial state  $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ is defined inductively as follows:
 $$
 \begin{array}{l}
 \interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
 \\
 \interp{\false}{s} \ is \ false \ in \ any \ state \ s \\
+\\
+\interp{  \neg \ \predWp  }{s} \ iff \  not \ \interp{\predWp}{s} \\ 
 \\
 
 \interp{\predWp_1  \wedge  \predWp_2 }{s} \ iff \ \interp{\predWp_1}{s} \ and \ \interp{\predWp_2}{s}  \\
@@ -142,7 +142,7 @@ $$
 							     \end{array} \\
 \\
 
-\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ iff \    \isInList{\referenceOnly }{ \getLocations{\heap_{init}}}  
+\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ iff \    \isInList{\referenceOnly }{ \getLocations{\heap_{0}}}  
 \end{array}
 $$   
 \end{interpPred}
