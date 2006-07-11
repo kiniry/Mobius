@@ -410,15 +410,18 @@ We will also see how the weakest precondition is defined in presence of exceptio
 	 				 			%\forall \tt{e_m} ( m =1 .. k  )
 							\begin{array}{l}
 	 				 		\forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \\
-	 				 		\Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = \bottom \Rightarrow \\  
+
+
+
+	 		\Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\exceptions[j] }{i}{\methodd.\excHandlerTable} = \bottom \Rightarrow \\  
 					 \Myspace \forall \bound_i (  \\ 
 						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
-                                                 \Myspace\Myspace\Myspace  \methodd.\excPost(i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound_i }    ) ) \\
+                                                 \Myspace\Myspace\Myspace  \methodd.\getExcPost (i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound_i }    ) ) \\
 						 \Myspace \wedge \\
-						 \Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k    \Rightarrow \\ 
+						 \Myspace (\findExcHandler{ \mbox{\rm\texttt{m} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k    \Rightarrow \\ 
  \Myspace \forall \bound_i (  \\ 
 						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
-                                                 \Myspace\Myspace\Myspace  \inter{i}{k}\begin{array}{l}
+                                                 \Myspace\Myspace\Myspace  \methodd.\getExcPost \begin{array}{l}
 						                                           \subst{\counter}{0} \\
                                                                                            \subst{\stack{0} }{\bound_i }  
 						                                        \end{array}) )
@@ -430,20 +433,20 @@ We will also see how the weakest precondition is defined in presence of exceptio
 
 						Let us look in detail what is the meaning of the weakest precondition for method invokation.
 						Because we are following a contract based approach 
-						the caller, i.e. the current method must establish several facts.
+						the caller, i.e. the current method  \methodd \ must establish several facts.
 						First, we require that 
-						the precondition \methodd.\pre \ of the invoked method \methodd \ holds where the formal 
+						the precondition \mbox{\rm\texttt{n}}.\pre \ of the invoked method \mbox{\rm\texttt{n}}  \ holds where the formal 
 						parameters are correctly initialized with the
-						first \methodd.\numArgs \ elements from the operand stack.
+						first \mbox{\rm\texttt{n}}.\numArgs \ elements from the operand stack.
 						
 						Second, we get a logical statement which guarantees the correctness of the method invokation
 						in case of normal termination.
-						On the other hand, its postcondition  \methodd.\normalPost \ is assumed to hold and thus, we want to establish that 
+						On the other hand, its postcondition \mbox{\rm\texttt{n}}.\normalPost \ is assumed to hold and thus, we want to establish that 
 						under the assumption that \methodd.\normalPost \  holds \ with \result \ substituted with a fresh bound variable $ \bound_i$
 						and correctly initialized formal parameters
-						is true we want to establish that the predicate   \inter{i}{i+1 } \
-						holds . This implication is quantified over the locations  \method.\modif \ that a method may modify
-						and the variable $ \bound_i$ which stands for the result that the invoked method \methodd \ returns.  
+						is true we want to establish that the predicate \inter{i}{i+1 } \
+						holds . This implication is quantified over the locations \mbox{\rm\texttt{n}}.\modif \ that a method may modify
+						and the variable $ \bound_i$ which stands for the result that the invoked method \mbox{\rm\texttt{n}} \ returns.  
 						
 						The third part of the rule deals with the exceptional termination of the method invokation.
 						In this case, if the invoked method \texttt{n} terminates on any exception which belongs to the array of 
@@ -472,17 +475,17 @@ We will also see how the weakest precondition is defined in presence of exceptio
 				
 							$$ \begin{array}{l}
 							          \wpi{\instr{athrow }} {\methodd}{i}  = \\
-								    \stack{\counter} = \Mynull \Rightarrow  \methodd.\excPost( i, \NullPointerExc) \\  
+								    \stack{\counter} = \Mynull \Rightarrow  \methodd.\getExcPost( i, \NullPointerExc) \\  
 								     \wedge \\
 							          \stack{\counter} \neq \Mynull \Rightarrow \\
 								    \begin{array}{l}  
-								      \forall n, 0 \le n < \methodd. \exceptions.length \\  
-								      \typeof{\stack{\counter}} <:  \methodd.\exceptions[n] \Rightarrow \\
-								      \Myspace \methodd.\excPostSpec( \methodd.\exceptions[n]  )\subst{ \EXC }{\stack{\counter}  } \\
-								      \wedge \\
-								      \forall n, 0 \le n < \methodd.\excHandlerTable.length \\  
-								      \typeof{\stack{\counter}} <: \methodd. \excHandlerTable[n].\exc \Rightarrow \\
-								      \Myspace  \inter{i}{\methodd. \excHH[n].\pcHandler}
+								       \forall  \mbox{\rm\texttt{Exc}}, \\  
+								        \typeof{\stack{\counter}} <: \mbox{\rm\texttt{Exc}}   \Rightarrow \\
+								        \Myspace \methodd.\getExcPost( i, \mbox{\rm\texttt{Exc}}    )\subst{ \EXC }{\stack{\counter}  } 
+								       % \wedge \\
+								       % \forall n, 0 \le n < \methodd.\excHandlerTable.length,  \\  
+								       % \typeof{\stack{\counter}} <: \methodd. \excHandlerTable[n].\exc \Rightarrow \\
+								       % \Myspace   \methodd.\getExcPost(i,\excHandlerTable[n].\exc  ) 
 								                     
 								    \end{array} 
 							   \end{array}
@@ -492,15 +495,19 @@ We will also see how the weakest precondition is defined in presence of exceptio
 						\NullPointerExc \ where the predicate returned by the function $ \methodd.\excPost$ must hold.
 						The case when  the thrown object is not \Mynull \  should consider all the possible exceptions that
 						might be thrown by the current instruction. This is because we do not know the type of the thrown object which is
-						on the stack top. Thus, the rule takes into account the case when the exception thrown is a not handled exception,
-						i.e. the type    of \stack{\counter} is a subtype of any  of the exceptions \methodd.\exceptions \ that might be thrown
-						by the current method \methodd. Thus, if  \athrow \ instruction throws a not handled exception \texttt{Exc} 
-						then  the exceptional postcondition for  \texttt{Exc} must hold where the special exception variable \EXC \ 
-						is substituted for the stack counter \stack{\counter}. 
- 						The \fwpi \ considers also the case when the thrown exception object  might be handled by any of the
-						exception handlers \methodd.\excHandlerTable \ of method \ \methodd. 
-						In that case, once again the rule takes into account all the possible exception handler types as the type of the
-						thrown exception is unknown.
+						on the stack top.
+						The part of the \fwpi \ when the thrown object on the stack top  \stack{\counter} \ is not \Mynull \ considers all the possible types
+						of the exception thrown. In any of 
+						
+						%Thus, the rule takes into account the case when the exception thrown is a not handled exception,
+						%	i.e. the type    of \stack{\counter} is a subtype of any  of the exceptions \methodd.\exceptions \ that might be thrown
+						%	by the current method \methodd. Thus, if  \athrow \ instruction throws a not handled exception \texttt{Exc} 
+						%	then  the exceptional postcondition for  \texttt{Exc} must hold where the special exception variable \EXC \ 
+						%	is substituted for the stack counter \stack{\counter}. 
+ 						%	The \fwpi \ considers also the case when the thrown exception object  might be handled by any of the
+						%	exception handlers \methodd.\excHandlerTable \ of method \ \methodd. 
+						%	In that case, once again the rule takes into account all the possible exception handler types as the type of the
+						%	thrown exception is unknown.
 						
 	 		\end{itemize}
 Supposing the execution of a method always terminates, the verification condition for a method \methodd \ with a

@@ -31,14 +31,17 @@ Let's see the meaning of the new elements in the method data structure.
      \item \methodd.\modif \ is also called the method frame condition. It is a list of expressions that the method
             may modify during its execution    
      
-     \item \methodd.\excPostSpec \ is a partial function from exception types to formulas which returns the predicate
+     \item \methodd.\excPostSpec \ is a total function from exception types to formulas which returns the predicate
            \methodd.\excPostSpec(\texttt{Exc})  that must hold in the method's poststate 
 	   if the method \methodd \ terminates on an exception of type \mbox{ \rm \texttt{Exc}}. 
-	   Note that this function is usually constructed from the \exsures \ clause of a method introduced in  Chapter \ref{bcsl},
-	   section \ref{BCSLgrammar}. For instance, if method \methodd has an exsures clause:
-	   $$ \exsures \  ( \mbox{ \rm \texttt{Exc}}) \ \false$$
+	   Note that this function is constructed from the \exsures \ clause of a method introduced in  Chapter \ref{bcsl},
+	   section \ref{BCSLgrammar}. For instance, if method \methodd \ has an exsures clause:
+	   $$ \exsures \  ( \mbox{ \rm \texttt{Exc}}) \ \locVar{1} = \Mynull $$
 	   then for every exception type $\mbox{ \rm \texttt{SExc}} $ such that \subtype{\texttt{SExc} }{\texttt{Exc}}
-	   the function \methodd.\excPostSpec(\texttt{SExc} ) = \false
+	   the function  the result of the function \methodd.\excPostSpec \  for  \texttt{SExc} 
+           is $\methodd.\excPostSpec(\texttt{SExc} ) = \locVar{1} = \Mynull$. If for an exception \texttt{Exc} there is not specified exsures
+	   clause then the function \excPostSpec \ returns the default exceptional postcondition predicate \Myfalse, i.e.
+	   $\methodd.\excPostSpec(\texttt{Exc} ) = \Myfalse$
      \item \methodd.\loopSpecTable \ is an array of \LoopSpecSet \ data structures which give the specifcication information 
            for a particular loop in the bytecode         
 \end{itemize}

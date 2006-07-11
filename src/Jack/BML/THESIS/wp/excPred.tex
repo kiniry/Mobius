@@ -1,32 +1,54 @@
+\subsection{Weakest precondition in the presence of exceptions } \label{wp:Exc} % this section describes a function which decides what is the exceptional postcondition if an instruction throws an exception
+Our weakest precondition calculus deals with exceptional termination and thus, we need
+some mechanism for providing the exceptional postcondition predicate of an instruction 
+when it throws an exception. 
+For this, we define the function \getExcPost \  with signature :
+ $$\getExcPost : int   \longrightarrow \excType \longrightarrow  \predWp  $$
+The function \methodd.\getExcPost \ 
+takes as arguments an index $i$ in the array of instructions of method \methodd \ and an exception type
+ \mbox{ \rm \texttt{Exc}}  and returns the predicate \methodd.\getExcPost($i$, \mbox{ \rm \texttt{Exc}}   )
+  that must hold after the instruction at index $i$ throws an exception. We give a formal definition hereafter.
 
+\begin{defExc}[Postcondition in case of a thrown exception]\label{defExc}
+$$  \begin{array}{l}
+           \methodd.\getExcPost(i, \mbox{ \rm \texttt{Exc}}   ) = \\
+   \left\{\begin{array}{ll}
+        \inter{i}{\pcHandler}   & if \  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \\
+	\methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) & \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \bottom 
+  \end{array}\right.
+\end{array}
+$$
+\end{defExc}
 
-\subsection{Weakest precondition in the presence of runtime exceptions}\label{wp:interExc} 
-
-For every method \methodd \  we define also the function $ \methodd.\excPost $ \ with signature:
+%\subsection{Weakest precondition in the presence of runtime exceptions}\label{wp:interExc} 
+Note, that we introduce a shortcut which will be used in the definition of the \fwpi \ function for instructions
+that may throw runtime exceptions.
+Thus, for every method \methodd \  we define  the auxiliary function $ \methodd.\excPost $ \ with signature:
 $$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \predWp  $$
  
 $ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
-returns the predicate that must hold in the poststate of the instruction at index \textit{i} if the
- instruction throws a runtime exception of type \texttt{Exc}.
+returns the predicate that must hold in the preststate of the instruction at index \textit{i}  which may throw a runtime exception of type \texttt{Exc}.
 Note that the function $\methodd.\excPost$  does not deal with programmatic exceptions thrown by the instruction \athrow,
  neither exception caused by a method invokation
-(execution of instruction \invoke). Those two cases are handled in a different way as we
+(execution of instruction \invoke) as those instructions may potentially throw exceptions which are not runtime exceptions.
+ Those two cases are handled in a different way as we
  shall see later in the definition of the \fwpi \ function in Section
 \ref{wpRules}.  
 
-The formal definition follows.
-\begin{defExc}[Postcondition in case of throwing an exception]\label{defExc}
+
+
+
 The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}} )   $ is defined as follows:
- \begin{itemize}
-    \item if $  \ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \wedge   \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \wedge \pcHandler \neq \bottom    $ then 
+   
       $$ \begin{array}{l}
+            \ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \Rightarrow  \\
            \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
                      \forall \referenceOnly,\\
                       \Myspace    not \ \instances(\referenceOnly) \wedge \\
 		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
 
-       \Myspace    \Myspace    \inter{i}{\pcHandler}\\
-                      \begin{array}{l}
+       \Myspace    \Myspace    \methodd.\getExcPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})\\
+         \Myspace    \Myspace                \begin{array}{l}
                         \subst{\counter}{0} \\
 			\subst{\stack{0}}{\referenceOnly} \\
                          \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
@@ -39,41 +61,15 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
    
 
 
-    \item else if $\ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \wedge   \findExcHandler{ \mbox{ \rm \texttt{Exc}}   }{i}{\methodd.\excHH} = \bottom $ then 
-            $$\begin{array}{l}
-                    \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
-
-                     \forall \referenceOnly,\\
-                      \Myspace    not \ \instances(\referenceOnly) \wedge \\
-		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
-
-                 \Myspace    \Myspace      \methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) \\
-                     \begin{array}{l}
-		           \subst{ \EXC }{\referenceOnly  }\\
-                           \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
-			   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
-			   \subst{ \typeof{\referenceOnly}}{  \mbox{ \rm \texttt{Exc}} } \\
-                    \end{array}  
-             \end{array} $$
-	
-    
+ 
 
 
 
 
-\end{itemize}
-\end{defExc}
-
-The above definition considers two cases depending on if  the thrown exception   is handled or not.
-
-The function $\methodd.\excPost$ will return the weakest precondition of the exception handler that protects the instruction from the thrown exception \texttt{Exc},
-if such an exception handler exists ( $  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHH} $ $ \neq \bottom $ ). 
-Otherwise, the function will return the exceptional postcondition if method \methodd \ terminates on
-an exception  \texttt{Exc}.
-  
- If the thrown exception is not caught  then the exceptional postcondition predicate must hold, where the specification variable \EXC, which stands for the thrown object in exceptional 
-postocnditions, is substituted with the reference to the thrown object.
+The function $\methodd.\excPost$ will return a predicate which states that for every newly created exception reference  
+the predicate returned by the function \getExcPost \ must hold.
 
 
+ 
 %Note that in what follows we do not treat the Java virtual machine errors.
 %x Thus, we deal only with user defined exceptions and \texttt{JavaRuntimeException} subclasses.
