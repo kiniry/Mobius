@@ -1,4 +1,4 @@
-\section{Throwing and handling exceptions}
+\section{Throwing and handling exceptions}\label{opSem:exc}
 
 As the JVM specification states \textit{exception are thrown if a program violates the semantic constraints of the Java programming language,
  the Java virtual machine signals this error to the program as an exception. An example of such a violation is an 
@@ -8,8 +8,8 @@ attempt to index outside the bounds of an array. The Java programming language s
  caught at the point to which control is transferred. A method invocation that completes because an exception causes transfer of
  control to a point outside the method is said to complete abruptly. Programs can also throw exceptions explicitly, using throw statements \ldots }
 
-Our language supports also an exception handling mechanism similar to the JVM one.
- More particularly, it supports Runtime exceptions: 
+Our language supports an exception handling mechanism similar to the JVM one.
+ More particularly, it supports  Runtime exceptions: 
  \begin{itemize}
    \item \NullPointerExc \ thrown if a null pointer is dereferenced
    \item \NegativeArraySizeExc \ thrown if an array is accessed out of its bounds
@@ -19,14 +19,13 @@ Our language supports also an exception handling mechanism similar to the JVM on
    \item \ArrStoreExc \ thrown if an object is tried to be stored in an array and the object is of incompatible type with type of the  array elements
 \end{itemize}
 
-The language also supports programming exceptions. Those exceptions are forced by the programmer, by a special intruction.
-
-We have several functions which model the exception handling mechanism. 
+The language also supports programming exceptions. Those exceptions are forced by the programmer, by a special intruction called \athrow. 
+The modelization of the exception handling mechanism involves several functions. 
  The function \getStateAfterExc \ deals with bytecode instructions that may throw exceptions. The function returns the state 
- configuration after the current instruction during the execution of \methodd \ throws an exception of type $E$. If the  method
- \methodd \ has an  exception handler which can handle  exceptions of type $E$ thrown at the index of the current  instruction,
+ configuration after the current instruction during the execution of \methodd \ throws an exception of type $\mbox{\rm\texttt{E}}$. If the  method
+ \methodd \ has an  exception handler which can handle  exceptions of type $\mbox{\rm\texttt{E}}$ thrown at the index of the current  instruction,
  the execution is not stuck and thus, the state configuration is an intermediate state configuration.
- If the method \methodd \ does not have an exception handler for dealing with exceptions of type $E$ 
+ If the method \methodd \ does not have an exception handler for dealing with exceptions of type $\mbox{\rm\texttt{E}}$ 
  at the current index, the execution of \methodd \ terminates exceptionally and the current instruction
  causes the method exceptional termination:
 
@@ -34,26 +33,26 @@ We have several functions which model the exception handling mechanism.
  $$\begin{array}{l}
           \getStateAfterExc : \SetConfigInterm * \excType * \ExcHandler[] \rightarrow \SetConfigInterm \cup \SetConfigFinalExc  \\
 	  \\
-	  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, E, \pc, \excHH[] ) = \\
+	  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \mbox{\rm\texttt{E}}, \pc, \excHH[] ) = \\
           \left\{\begin{array}{ll}
 	        \config{\heap'}{0}{\update{\stackOnly}{0}{\referenceOnly}}{\locVarOnly}{\pcHandler} & \begin{array}{l}  
-                                                                                                           \mbox{\rm if \ \findExcHandler{E}{\pc}{\excHH[]}} \\
+                                                                                                           \mbox{\rm if \ \findExcHandler{\mbox{\rm\texttt{E}}}{\pc}{\excHH[]}} \\
 													   =\pcHandler 
 												      \end{array}	   
 													   \\
 		& \\
 		\configFinalExc{\heap'}{\locVarOnly}{\referenceOnly} & \begin{array}{l}     
-		                                                             \mbox{\rm  if \ \findExcHandler{E}{\pc}{\excHH[]} } \\
+		                                                             \mbox{\rm  if \ \findExcHandler{\mbox{\rm\texttt{E}}}{\pc}{\excHH[]} } \\
 		                                                             = \bottom  
 		                                                        \end{array}
 	  \end{array}\right.\\
 	  \\
         \mbox{\rm where }\\
-	(\heap', \referenceOnly )= \newRef{\heap}{E}
+	(\heap', \referenceOnly )= \newRef{\heap}{\mbox{\rm\texttt{E}}}
     \end{array}
  $$
 
- If an exception $E$ is thrown by instruction at position $i$ while executing the method \methodd,
+ If an exception $\mbox{\rm\texttt{E}}$ is thrown by instruction at position $i$ while executing the method \methodd,
  the exception handler table  \methodd.\excHandlerTable \ will be searched for the first exception handler that can handle the exception. 
  The search is done by the function \findExcHandlerOnly. If there is found
  such a handler the function returns the index of the instruction at which the exception handler starts, otherwise it returns $\bottom$:
@@ -72,9 +71,9 @@ We have several functions which model the exception handling mechanism.
 \\ 
  \rm{where } \\  
   hExc = \{ k  \mid  \begin{array}{l} 
-                        \excHH[k] = (\pcStart,\pcEnd,\pcHandler, E' ) \wedge  \\
+                        \excHH[k] = (\pcStart,\pcEnd,\pcHandler, \mbox{\rm\texttt{E}}' ) \wedge  \\
                         \pcStart \leq \pc < \pcEnd \wedge \\
-			 \subtype{E}{E'} 
+			 \subtype{\mbox{\rm\texttt{E}}}{\mbox{\rm\texttt{E}}'} 
                     \end{array} \}
    \end{array}	  
  $$
