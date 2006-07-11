@@ -19,7 +19,8 @@ execution in a state where its precondition holds then
 \item if it terminates normally ( without throwing exception ) its normal  postcondition holds
 \item if it terminates with an exception then the specified exceptional postcondition must hold.
 \end{enumerate}
-As we stated earlier, we assume that the bytecode programs are well structured and well typed, as we are concerned with higher level functional properties. 
+As we stated earlier, we assume that the bytecode programs are well structured and well typed, as we are more concerned
+ with higher level functional properties. 
 
 
  First, we prove an auxiliary lemma that establishes that until the execution can go on, the weakest precondition of the next instruction to be executed holds in the prestate and that if an instruction causes returning the control to the caller, then the respective postcondition holds after this instruction execution ( if a \instr{return} instruction then the normal postcondition holds, if an \instr{athrow} instruction then the corresponding exceptional postcondition holds).
@@ -44,7 +45,7 @@ Assume we have a program $\Pi$ and its normal postcondition  $\normalPost$ and t
 Assume that for execution path the first n - 1 instructions are executed $\ins{0} \execRel^*  \ins{n-1} $ 
 causing the state transitions 
 $\config{\state{0}}{\pc_0}  \longrightarrow_{n} \config{\state{n}}{\pc_{n}}  $.
-Assume that  $ \forall i (\ 0 \leq i \leq n ) \ \wpi{\ins{i}}{ \pc_i }{\excPost}$  holds in 
+Assume that  $ \forall i (\ 0 \leq i \leq n ) \ \wpi{\ins{i}}{ \pc_i }{\methodd}$  holds in 
 $\config{\state{i}}{\pc_{i} } $ and
 \begin{enumerate}
 	\item if $\ins{{\pc_n}}$ is a \instr{return} instruction then $\normalPost (\config{\state{n+1}}{\pc_{n+1}})$ holds.  
@@ -52,7 +53,7 @@ $\config{\state{i}}{\pc_{i} } $ and
 	\item if $\ins{{\pc_n}}$ throws a not handled exception of type $E$ \\
 	$\excPost(E) (\config{\state{n+1}}{\pc_{n+1}} )$ holds. 
  
-	\item else $\wpi{instr_{n+1}}{\pc_{n+1} }{\excPost}  (\config{\state{n+1}}{\pc_{n+1}} ) $ holds
+	\item else $\wpi{instr_{n+1}}{\pc_{n+1} }{\methodd}  (\config{\state{n+1}}{\pc_{n+1}} ) $ holds
 \end{enumerate}
 \end{lemma1}
 
@@ -73,7 +74,7 @@ case when the current instruction is a loop end and the next instruction to be e
 		    	\textit{ As we assume that the bytecode programs are well formed after the execution of this instruction
  			the method execution will terminate and so the value of the program counter after the execution of a return
 			instruction is} $\pc_n = \bottom$ \\
-			$$\wpi{ \instr{return}}{\pc_n}{\excPost}(\conf{\state{n}}) $$\\
+			$$\wpi{ \instr{return}}{\pc_n}{\methodd}(\conf{\state{n}}) $$\\
 			\comment{by definition the weakest precondition for \instr{return} }\\
 			 
                         $$ normalPost \substitution{ \result }{\stack{\topStack} } (\conf{\state{n}}) $$\\
@@ -89,11 +90,11 @@ case when the current instruction is a loop end and the next instruction to be e
 		\end{array} $$\\
 		%	and case 1 proved
 
-		\item Let's $\tt{i_{pc_n}}$ = \instr{op}\\
+		\item Let's $\tt{i_{pc_n}}$ =\arithOp\\
 	
 				
 			\comment{by definition of the postcondition for sequential instructions}\\
-					$$ \wpi{ \instr{op}}{\pc_n  }{\excPost}(\conf{\state{n}}) $$ \\
+					$$ \wpi{ \instr{op}}{\pc_n  }{\methodd}(\conf{\state{n}}) $$ \\
             \comment{from the definition of \mbox{ \rm wp } for $\instr{type\_op}$  } \\
 				
                                         $$ \inter{\pc_n}{\pc_{n}+1}   
@@ -104,20 +105,20 @@ case when the current instruction is a loop end and the next instruction to be e
 					(\conf{\state{n}}$$ \\
 				 \comment{from the assumption for $\ins{{\pc_n}}$  and $\ins{{\pc_{n +1}}}$ and Def. \ref{inter} from Section \ref{wpHelp} } \\
 		
-                        $$ \wpi{next( \ins{{\pc_n}})} {\pc_{n}+1} {\excPost}
+                        $$ \wpi{next( \ins{{\pc_n}})} {\pc_{n}+1} {\methodd}
 			\begin{array}{l}
 			    \substitution{\topStack}{\topStack - 1}\\
 			    \substitution{ \stack{\topStack - 1} }{\stack{\topStack} \ op \  \stack{\topStack -1}}
 			 \end{array}  (\conf{\state{n}})$$\\
 				\comment{ by the substitution property \ref{substProp} from section ~\ref{def} }\\
-				$$ \wpi{ next(\ins{{\pc_n }} )} {\pc_n+1 }{\excPost}
+				$$ \wpi{ next(\ins{{\pc_n }} )} {\pc_n+1 }{\methodd}
 			 ( \conf{\state{n} 
 			 		\begin{array}{l}
 			 			\substitution{\topStack}{\topStack - 1} \\
 			 			\substitution { \stack{\topStack - 1} }{\stack{\topStack} \ op \  \stack{\topStack -1}} 
 			 		\end{array}
 			 			} )   $$\\
-				\comment{ from the operational semantics of $ \rm{op}$ } \\ 
+				\comment{ from the operational semantics of \arithOp  } \\ 
 				
 				$$  \begin{array}{l} 
 							\state{n + 1} = \state{n} 
@@ -130,21 +131,21 @@ case when the current instruction is a loop end and the next instruction to be e
 				$$ 
 				\comment{and this case holds}\\
 			
-			%	$ \wpi{i_{pc_{\state{n}+ 1}}}{\instrPost{i_{pc_{\state{n}+ 1}}}}{ \excPost} (\state{n + 1})$ \\
+			%	$ \wpi{i_{pc_{\state{n}+ 1}}}{\instrPost{i_{pc_{\state{n}+ 1}}}}{ \methodd} (\state{n + 1})$ \\
 
 
     \item  $\tt{i_{\pc_n}}$ = \instr{load} \textit{ind} \\
 
-		 $$ \wpi{\instr{load} \ ind}{\pc_n }{\excPost}(\conf{\state{n}})$$ \\
+		 $$ \wpi{\instr{load} \ ind}{\pc_n }{\methodd}(\conf{\state{n}})$$ \\
 		 \comment{by definition of $wp$ for sequential instruction \instr{load} and as the execution step is not loop itertation, 
 		i.e. it is not of the kind $\execRel_l$ } \\
-	$$ \wpi{ next( \ins{ {\pc_n}} )} {\pc_{n}+1 }{\excPost } 
+	$$ \wpi{ next( \ins{ {\pc_n}} )} {\pc_{n}+1 }{\methodd } 
 	\begin{array}{l} \substitution{\topStack}{\topStack + 1} \\
 		\substitution{\stack{\topStack + 1} } {\locVar{ind} }
 	\end{array}
 		(\conf{\state{n}})$$ \\
 		\comment{  by the substitution property \ref{substProp} from section ~\ref{def} } \\
-	$$ \wpi{ next(\ins{{\pc_n}} )  }{\pc_n + 1}{\excPost }(\conf {\state{n}
+	$$ \wpi{ next(\ins{{\pc_n}} )  }{\pc_n + 1}{\methodd }(\conf {\state{n}
 	\begin{array}{l} 
 		\substitution{\topStack}{\topStack + 1} \\
 		\substitution{\stack{\topStack + 1} } {\locVar{ind} } 
@@ -164,22 +165,22 @@ case when the current instruction is a loop end and the next instruction to be e
  		
  		\textit{and the proposition holds } \\
 
-			% $\wpi{i_{pc_{\state{n + 1}}}}{\instrPost{ i_{pc_{\state{n+1}}}  } }{\excPost }(\state{n + 1}) $ \\
+			% $\wpi{i_{pc_{\state{n + 1}}}}{\instrPost{ i_{pc_{\state{n+1}}}  } }{\methodd }(\state{n + 1}) $ \\
         
 \item  $\tt{i_{\pc_n}}$ = \instr{if\_cond } \textit{s} \\
 
-		$\wpi{ \instr{if\_cond } \ s } {\pc_n  }{\excPost}  (\conf{\state{n}}$  \\
+		$\wpi{ \instr{if\_cond } \ s } {\pc_n  }{\methodd}  (\conf{\state{n}}$  \\
 		\comment{ by  definition of $wp$ for \instr{if\_cond} and the assumption for non loop iteration step } \\
 	$  \ cond( \stack{\topStack}, \stack{\topStack - 1} ) \Rightarrow $  \\
-\Myspace \Myspace $\wpi{ i_{\pc_n + s}}{\pc_n + s}{\excPost} \substitution{\topStack}{\topStack - 2} (\conf{\state{n}})$ \\ 
+\Myspace \Myspace $\wpi{ i_{\pc_n + s}}{\pc_n + s}{\methodd} \substitution{\topStack}{\topStack - 2} (\conf{\state{n}})$ \\ 
 		$\wedge$\\
 		$not(cond( \stack{\topStack}, \stack{\topStack - 1} )) \Rightarrow $ \\
-\Myspace \Myspace $\wpi{i_{pc_{n} + 1} }{\pc_n + 1 }{\excPost} \substitution{\topStack}{\topStack - 2} (\conf{\state{n}} ) $\\
+\Myspace \Myspace $\wpi{i_{pc_{n} + 1} }{\pc_n + 1 }{\methodd} \substitution{\topStack}{\topStack - 2} (\conf{\state{n}} ) $\\
 		\comment{assuming that $cond(\stack{\topStack}, \stack{\topStack - 1} )$ holds in state 
 		$\conf{\state{n}}$ and applying implication elimination}\\
-  		$ \wpi{ i_{\pc_n + s } }{\pc_n + s}{\excPost} \substitution{\topStack}{\topStack - 2}(\conf{\state{n}} )$ \\
+  		$ \wpi{ i_{\pc_n + s } }{\pc_n + s}{\methodd} \substitution{\topStack}{\topStack - 2}(\conf{\state{n}} )$ \\
   		\\
- 		$ \wpi{ i_{\pc_n + s } }{\pc_n + s }{\excPost}(\conf{\state{n} \substitution{\topStack}{\topStack - 2} }  )$ \\
+ 		$ \wpi{ i_{\pc_n + s } }{\pc_n + s }{\methodd}(\conf{\state{n} \substitution{\topStack}{\topStack - 2} }  )$ \\
 		 \textit{ from the definition of the operational semantics of }\instr{if\_cond s} \textit{ when the condition holds it  follows that:} \\
 		
 $\state{n + 1} = \conf{\state{n} \substitution{\topStack }{\topStack - 2}}$ \\	
@@ -194,7 +195,7 @@ $\state{n + 1} = \conf{\state{n} \substitution{\topStack }{\topStack - 2}}$ \\
 		            
 		               \comment{ by hypothesis the exception is not handled and applying the definition of \textit{wp} for \instr{athrow} } \\
 		               $$
-		               \excPost(class(\stack{\topStack}))
+		               \methodd. \excPost( \typeof{\stack{\topStack}})
 		                \begin{array}{l} 
 		                	\substitution{\topStack}{0}\\
 					 \substitution{\stack{0} } { \Ref{E} } \\
