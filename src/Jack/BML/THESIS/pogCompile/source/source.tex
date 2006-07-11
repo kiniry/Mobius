@@ -3,7 +3,7 @@
 \newtheorem{ExpressionRel}[Expression]{Definition}
 \newtheorem{Statement}[Expression]{Definition}
 
-\section{Source} \label{source}
+\section{Source language} \label{source}
 
 
 We present a source Java-like programming language which supports the following features:
@@ -25,7 +25,7 @@ to a value.
                                 & \mid \Mynull  \\
 				& \mid \this \\
               	        	& \mid \expressionSrcRel \\
-				& \mid \expressionSrc.m( \expressionSrc ) \\
+				& \mid \expressionSrc.m( ) \\
 				& \mid  \newSrc \ Class  ( \expressionSrc  ) \\ 
                                 & \\
 				& \\
@@ -63,8 +63,8 @@ We now  a give an informal description of the meaning of the expressions of the 
    \item the expression \Mynull \ stands for the null reference which does not point to any location in the heap
   
    \item \this \ refers to the current object 
-   \item $ \expressionSrc.m(\expressionSrc)  $ stands for a method invokation expression. Note that here we consider
-         only methods with one argument which return a value
+   \item $ \expressionSrc.m()  $ stands for a method invokation expression. Note that here we consider
+         only methods without arguments which return a value
    \item $\newSrc \ Class(\expressionSrc )$ stands for an object creation expression of class $Class$. We consider only constructors which take
          only one argument for the sake of readability 
  
@@ -108,13 +108,13 @@ effect
                                 & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
 			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
 		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
-				& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+			%	& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
 				& \mid \throw \ \expressionSrc  \\
-                                & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} \\
+                                & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \}\ \\
 				& \mid \returnSrc \  \expressionSrc \\
 			%	& \mid \returnSrc \\
                    		& \mid \expressionSrc = \expressionSrc \\
-				& \mid \expressionSrc \\
+			
 			
 			 \end{array} 
     $$
@@ -137,10 +137,10 @@ From the definition we can see that the language supports also the following con
 	    the exception will be caught by the statement following the  $ \catch $ keyword
 	        
    \item  $ \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} $ 
-   \item $ \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \}   $
+  % \item $ \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \}   $
    \item $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body statement
          $ \stmt$ will be executed until the relational expression  $\expressionSrcRel$ evaluates to true.
-   \item  $ \mid \returnSrc \  \expressionSrc $ is the statement by which the execution will be finished
+   \item  $ \returnSrc \  \expressionSrc $ is the statement by which the execution will be finished
    \item $ \expressionSrc = \expressionSrc$ stands for an assignment expression, where the value of the left expression is updated with the value   
          of the right expression  
     \item finally, every expression $\expressionSrc$ is a statement 

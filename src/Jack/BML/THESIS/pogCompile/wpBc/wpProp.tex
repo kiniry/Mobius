@@ -3,7 +3,7 @@
 \newtheorem{relWpExpr}[wpIns]{Lemma}
 \newtheorem{relWpStmt}[wpIns]{Lemma}
 
-\subsection{Properties of the \wpName \ functions}
+\subsection{Properties of the \wpName \ functions}\label{pog:wpBcProp}
     The previous subsection introduced a new formulation of the 
     \wpName \ function for bytecode which takes into account 
     the source statement from which it is compiled. 
@@ -16,7 +16,7 @@
 
 \begin{wpIns}[Equivalence of the formulations for single instructions ]\label{wpIns}
 For all instructions 
- $i_j$ and $i_k$ which belong to method \methodd,  formula
+ $i_j  \in \bcIns \backslash \{ \goto , \ifCond, \jsr, \ret \}$ and  $i_k$ which belong to method \methodd,  formula
  $\psi$,and  function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that
 \begin{itemize}
    \item  $i_j \execRel i_k$
@@ -30,7 +30,7 @@ the following holds
 \end{wpIns}
 The proof is done by case analysis on the instruction $i_j$
 In the following, we scatch the case for a \getfield \  instruction 
-\todo{note that the current formulation is not true because of the exceptions }
+%\todo{note that the current formulation is not true because of the exceptions }
 \textit{Proof:}
 
 $$
@@ -61,13 +61,17 @@ $$
 
 
  \begin{wpBlock}[\wpName  \  for a block of instructions]\label{wpBlock}
-  For every block of instructions $\ins{1}; \dots;\ins{j} $  and instruction $\ins{k}$  in  method \methodd, formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $  such that
+  For every block of instructions $\ins{1}; \dots;\ins{j} $  and instruction $\ins{k}$  in  method \methodd,
+  formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $  such that
  \begin{itemize} 
     \item $\ins{j} \execRel \ins{k}$
-    \item  $\psi = \inter{\ins{j}}{\ins{k}}$
-    \item  $ \forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $
-    \item   $\forall 1 \le i,k \le j, \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = $ \\
-            $\findExcHandler{\mbox{ \rm \texttt{Exc}} }{k}{\methodd.\excHandlerTable}   $
+    \item  $\psi = \inter{\ins{j}}{\ins{j+1}}$
+
+     \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall i, 1 \le i \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
+                  $ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i ) $ 
+
+
+   
 \end{itemize}
 then the following holds
      $$   \wpBcSeq{\ins{1}; \dots;\ins{j} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{1} }$$        
@@ -78,6 +82,19 @@ The proof is done by induction on the length of the sequence of instructions.
 
 $$
 \begin{array}{l}
+  \numConclusion{1} \ \wpBcSeq{\ins{1}; \dots;\ins{j} }{\psi }{\excPostExpl} = \\
+   \comment{by Def. \ref{pog:wpBc:wpSeq} for \wpName \ of block of instructions } \\
+   \wpBcSeq{\ins{1}; \ldots;\ins{j -1 } }{\wpExpl{ \ins{j} }{ \psi }{ \excPostExpl}  }{\excPostExpl } \\
+   \comment{by initial hypothesis we can apply lemma \ref{wpIns} from which it follows } \\
+   \wpExpl{ \ins{j} }{ \psi }{ \excPostExpl}  = \wpi{\ins{j}}{\methodd}{} \\
+   \mbox{\rm\textit{\{by definition \ref{seqInstr} ,  $\ins{j}$ is not a loop entry }} \\
+   \mbox{\rm\textit{ and from Def. \ref{wp:interPred} \}}} \\
+   \numConclusion{2} \ \inter{j}{j+1} =\wpi{\ins{j}}{\methodd}{} \\
+   \mbox{\rm\textit{\{apply the induction hypothesis over $\ins{1}; \ldots;\ins{j -1 } $  , }}\\
+   \mbox{\rm\textit{ \numConclusion{2} and the initial hypothesis for exception handlers \}}}\\
+   \numConclusion{3} \ \wpBcSeq{\ins{1}; \dots;\ins{j -1 } }{\wpExpl{ \ins{j} }{ \psi }{ \excPostExpl}  }{\excPostExpl } = \\
+   \wpi{\ins{1}}{\methodd}{} \\  
+   \comment{from  \numConclusion{1} and \numConclusion{3} the proposition holds}
 \end{array}
 $$
 
@@ -85,11 +102,10 @@ $$
      For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \,  formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
       \begin{itemize}
-            \item $\psi = \inter{e}{e+1}$ then the following holds
-	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
-                  $ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
-             \item   $ \forall 1 \le i,k \le j, \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = $ \\
-                     $ \findExcHandler{\mbox{ \rm \texttt{Exc}} }{k}{\methodd.\excHandlerTable}   $
+            \item $\psi = \inter{e}{e+1}$ 
+	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall 1 \le i,k \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
+                  $ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i ) $ 
+            
 
       \end{itemize} then the following holds:
 
@@ -97,7 +113,7 @@ $$
 
 \end{relWpExpr}
 
-\textit{Proof}: From Property \ref{compProp1} of the compiler it follows that for every expression
+\textit{Proof}: From Property \ref{compile:prop:compProp3} of the compiler it follows that for every expression
  $\expressionSrc$, start label $s$  and  end label $e$,
   the resulting compilation   $\compileLabel{s}{\expressionSrc}{e}$ is a block of instructions. We can apply 
  the previous lemma  \ref{wpBlock} and we get the result.
@@ -114,3 +130,141 @@ $$
      if $\psi = \inter{e}{e+1}$ then the following holds
      $$   \wpStmt{\compileLabel{s}{\stmt}{e} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   
 \end{relWpStmt}
+
+Proof : the proof is  by induction on the compilation of a statement. We scatch here the proof of few cases 
+
+
+\begin{itemize}
+      \item if statement 
+            $$
+	    \begin{array}{l}
+	     \wpStmt{   \compileLabel{s}{ \begin{array}{l} \Myif \ (\expressionSrcRel) \\
+                                                               \Mythen \ \{ \stmt_1 \} \\  
+							       \Myelse \ \{ \stmt_2 \}   
+                                              \end{array}}{e}}{\psi}{\excPostExpl} =\bydef \\\\
+                     
+                        \wpBcSeq{    \compileLabel{s}{\expressionSrcRel}{e'}; \\
+				} {\\
+                             \phantom{wp^{bc}_{seq}}	 \begin{array}{l}
+			              \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \substitution{t}{t-2} \\
+			               \wedge \\
+				       \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \substitution{t}{t-2} 
+			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPostExpl}   \\ \\
+				
+
+				\mbox{\comment{\rm by initial hypothesis, we have   } }\\
+				\numConclusion{1.1} \ \psi = \inter{e}{e+1}  \\ 
+			         \mbox{\comment{\rm by the compiler definition $ \ins{e'' + 1} = \goto \ e +  1; $  } }\\
+				\numConclusion{1.2} \ \ins{e'' + 1} \execRel \ins{e + 1} \\
+				
+				
+                               	
+				\mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp5} which states that every instruction inside }} \\
+				\mbox{\rm\textit{the compilation of $\compileLabel{s}{\stmt}{e}$ , }} \\
+                        	\mbox{\rm\textit{is in the same execution relation with $\ins{e+1}$, }} \\
+
+	 \end{array}$$
+	 $$ \begin{array}{l}
+			        \mbox{\rm\textit{    Def. \ref{inter} for \interOnly, \numConclusion{1.1} and \numConclusion{1.2}   we conclude that \} } }\\
+				\numConclusion{1.3}  \ \inter{e'' + 1}{e+1} = \inter{e}{e+1} = \psi\\
+				\mbox{\rm\textit{\{From property \ref{compile:prop:compProp4} the edge between  $e''$ and $e'' + 1$}}\\
+				\mbox{\rm\textit{ is not a loop edge and from Def. \ref{inter} \}  }} \\
+				\numConclusion{1.4} \ \inter{e''}{e'' +1} = \wpi{e'' + 1}{m}{} \\
+				\mbox{\rm \comment{ From the definition of the \wpName  \ for \goto \ instructions and \numConclusion{1.4}  }}\\
+				\numConclusion{1.5}  \ \wpi{e'' + 1}{m}{} = \inter{e'' + 1}{e+1} \\
+				\mbox{\rm \comment{ From \numConclusion{1.4}, \numConclusion{1.3}	and \numConclusion{1.5}}}	\\
+				\numConclusion{1.6}	\  \inter{e''}{e'' +1} = \inter{e}{e+1}	= \psi	\\
+				
+
+				
+
+				\mbox{\rm\comment{From  \ref{compile:prop:compProp8}  } } \\
+                               
+                                \numConclusion{1.7}  \ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) =  \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
+				\mbox{\rm\comment{apply the induction hypothesis over \numConclusion{1.6} and  \numConclusion{1.7}  } }\\ 
+				\numConclusion{1.8} \	\wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} = \wpi{e'+2}{m}{} \\
+
+				\comment{ apply the induction hypothesis over the initial hypothesis  }\\
+				\numConclusion{1.9} \ \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e}   }{\psi}{\excPostExpl} = \wpi{e''+2}{m}{} \\
+
+				\comment{by definition of \ifCond \ function }\\
+			        \numConclusion{1.10} \ 	\wpi{  e' + 1: \ifCond \ e'' + 2; }{m}{ } = \\
+			         \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\
+				 \wedge \\
+				 \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \wpi{e'+2}{m}{} \\
+				 \comment{from \numConclusion{1.8},  \numConclusion{1.9}  and \numConclusion{1.10}}\\
+				 \numConclusion{1.11} \ \wpi{  e' + 1: \ifCond \ e'' + 2; }{m}{ } = \\
+			         \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \\
+				  \Myspace  \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e}   }{\psi}{\excPostExpl} \\ 
+				 \wedge \\
+				 \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \\
+				 \Myspace  \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl}  \\
+				 
+				 \comment{From Property \ref{compile:prop:compProp5}  }\\
+				 \numConclusion{1.12} \ \inter{e'}{e'+1} =	\wpi{  e' + 1: \ifCond \ e'' + 2; }{m}{ }\\
+				 
+				 \comment{From the initial hypothesis   }  \\
+                               
+                                 \numConclusion{1.13}  \ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) =  \excPostExpl( \mbox{\rm\texttt{Exc}} )\\
+				 
+                                  \comment{From Property \ref{compile:prop:compProp9} and  \numConclusion{1.13}}\\
+				 \numConclusion{1.14} \ \forall \mbox{\rm\texttt{Exc}} ,  \forall s \le i \le e',  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \\
+                                                          \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i )  \\
+                                 
+				 \comment{apply Lemma \ref{relWpExpr}  over hypothesis  \numConclusion{1.11}, \numConclusion{1.12}, \numConclusion{1.14} } \\
+				 
+				 \wpBcSeq{    \compileLabel{s}{\expressionSrcRel}{e'}; \\
+				         }    
+					 {\\
+					 \phantom{wp^{bc}_{seq}}	 
+					           \begin{array}{l}
+			                                \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
+							\phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \substitution{t}{t-2} \\
+							\wedge \\
+							\neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
+							 \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \substitution{t}{t-2} 
+			                           \end{array}  }
+                                          { \\ \phantom{wp^{bc}_{seq}} \excPostExpl} = \wpi{s}{m}{}   \\ \\
+					  \comment{and this case holds}
+	    \end{array}
+	    $$
+  \item try catch statement 
+        $$
+	  \begin{array}{l}
+	    \numConclusion{1} \    \wpStmt{   \compileLabel{s}{ \begin{array}{l} \try \ \{ \stmt_1 \} \\
+		                                              \catch \ (\excType \ \var )\{ \stmt_2 \} 
+                                              \end{array}}{e}}{\psi}{\excPostExpl} =\bydef \\
+			\comment{Def. of $\wpNameStmt$ in the previous Section \ref{pog:wpBc} }	\\	      
+	        \wpStmt{
+	                 \compileLabel{s}{\stmt_1}{e'};
+	
+                           }
+                         { \\
+	                 \phantom{wp^{bc}_{stmt}} \psi}
+			 { \\
+	                  \phantom{wp^{bc}_{stmt}}   \update{\excPostExpl}{\excType}{ \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} } \\
+			  
+              \comment{apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} \\
+	      \numConclusion{2} \   \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} \\ 
+	      \comment{from the definition of \excPost \ and property \ref{compile:prop:compProp10}} \\
+	      \numConclusion{3} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = \\ 
+              \phantom{\forall \mbox{\rm\texttt{Exc}} ,}     \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e' )\\
+	      \comment{we can also conclude from Prop.  \ref{compile:prop:compProp5} and  \ref{compile:prop:compProp4}  } \\
+	      \numConclusion{4} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1} \\
+	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{3} and  \numConclusion{4}    } \\
+	       \wpStmt{
+	                 \compileLabel{s}{\stmt_1}{e'};
+	
+                           }
+                         { \\
+	                 \phantom{wp^{bc}_{stmt}} \psi}
+			 { \\
+	                  \phantom{wp^{bc}_{stmt}}   \update{\excPostExpl}{\excType}{ \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} } =\\
+			  \wpi{s}{\methodd}{}
+	      
+	   \end{array}
+	$$
+\end{itemize}
+

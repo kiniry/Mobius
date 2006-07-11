@@ -16,7 +16,7 @@
 \tableofcontents
 \newpage 
    \input{intro.tex}
-v
+   \input{relatedWork/relWork.tex}
    \input{source/source.tex}
    %\input evalSrc.tex
    
@@ -29,21 +29,26 @@ v
 
    \input{compile/compile.tex}
  %        \input compile/compileFormulas.tex
-	 \input compile/compExpr.tex 
-	 \input compile/compCtrlStmt.tex
-	 \input compile/propCompFun.tex
+         \input{compile/compExcH.tex} 
+	 \input{compile/compLoopInv.tex} 
+	 \input{compile/compExpr.tex} 
+	 \input{compile/compCtrlStmt.tex}
+	 \input{compile/propCompFun.tex}
 
-   
-   \section{Weakest precondition calculus for source programs}
+
+	 
+   \section{Weakest precondition calculus for source programs}\label{pog:wpSrcGeneral}
    \input{wpSrc/formulasSrc.tex} 
    \input{wpSrc/srcWp.tex}	  
-   
-   
+   \input{wpSrc/wpSrcExpr.tex}
+   \input{wpSrc/wpSrcStmt.tex}
+
+   \section{Weakest precondition calculus for bytecode programs}\label{pog:wpBcGeneral}
    \input{wpBc/bcWp.tex}
    \input{wpBc/wpProp.tex}
   
-   %\input compilePOGS.tex
-   \input{pogEquiv/aux.tex} 
+  
+    \input{pogEquiv/aux.tex} 
 \bibliographystyle{plain}
 \bibliography{biblio,specification}
 

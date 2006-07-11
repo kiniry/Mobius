@@ -1,8 +1,13 @@
 
 
-\subsection{Compiling expressions in bytecode instructions} \label{compExpr}
+\subsection{Compiling expressions in bytecode instructions} \label{pogEq:compile:compExpr}
 
-
+As we stated in the beginning the function for compiling statements in bytecode instruction is named $\compile{}$
+$$ \compile{ } : nat * (\stmt \cup \expressionSrc )* nat \longrightarrow  \bcIns [ \ ]  $$
+The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation of $\stmt$ starts,
+ the statement $\stmt$ to be compiled and a natural number which is the greatest label in the compilation of  $\stmt$ 
+and returns an array of bytecode instructions.
+In the next we look at the definition of the compiler over expressions.
  
 % As the target language is interpreted by a stack based virtual machine,
 %the evaluation of  expressions is stored on the stack.

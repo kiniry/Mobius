@@ -1,9 +1,9 @@
 
-\newtheorem{wpSeq}{Definition}[section]
+\newtheorem{wpSeq}{Definition}[subsection]
 \newtheorem{wpExpr}[wpSeq]{Definition}
 
 
-\section{Weakest predicate transformer for Bytecode language} \label{pog:wpBc}
+\subsection{Weakest predicate transformer over compiled statements and expressions} \label{pog:wpBc}
 In the following, we introduce a new formulation of the \wpName \ function 
 which will be based on the compiler from source to bytecode  language.
 The motivation for this new definition is that it will allow to reason about the
@@ -20,13 +20,11 @@ We will argue under what conditions both formulations of the \wpName \ function 
 
 % single instruction
 
-We give now a definition of the \wpName \ function for a single instruction which takes
-
-
+We give now a definition of the \wpName \ function for a single sequential instruction (instructions different from \goto, \ifCond, \jsr, \ret  ) which takes
 explicitely the postcondition and the exceptional postcondition function 
 upon which the precondition will be calculated. Its signature is the following:
 
-$$ \mbox{\rm\textrm{wp}}^{bc} : \bcIns \rightarrow \formulaBc \rightarrow ( \mbox{ \rm \texttt{ExcType}} \rightarrow \formulaBc ) \rightarrow \formulaBc$$
+$$ \mbox{\rm\textrm{wp}}^{bc} : \bcIns \backslash \{ \goto , \ifCond \}  \rightarrow \formulaBc \rightarrow ( \mbox{ \rm \texttt{ExcType}} \rightarrow \formulaBc ) \rightarrow \formulaBc$$
 
 For instance, the \wpName \ definition for \getfield \ is :
 $$ \begin{array}{l} \wpExpl{\getfield \ f }{ \psi  }{ \excPostExpl} = \\
@@ -41,9 +39,9 @@ is a function of the successor of the current instruction. We do not give the re
 for the fact that the local postconditions are given explicitely.
 
 % sequence of instructions
-We also define the weakest predicate transformer function  for a sequence of instruction that always execute sequentially as follows:
+We also define the weakest predicate transformer function  for a block of instruction that always execute sequentially as follows:
 
-\begin{wpSeq}[\wpName \ for a block of instructions]\label{wpSeq}
+\begin{wpSeq}[\wpName \ for a block of instructions]\label{pog:wpBc:wpSeq}
      $$ \begin{array}{l} 
               \wpBcSeq{ \ins{1};...;\ins{k}}{ \psi  } { \excPostExpl } =\\
               \wpBcSeq{\ins{1};...;\ins{k -1} }{ \wpExpl{ \ins{k} }{ \psi }{ \excPostExpl} }{\excPostExpl} 
@@ -54,7 +52,7 @@ We also define the weakest predicate transformer function  for a sequence of ins
 
 % wp for compiled expressions 
 
-We turn now to the rules for compiled expressions. Note that from Property \ref{compProp2} it follows that 
+We turn now to the rules for compiled expressions. Note that from Property \ref{compile:prop:compProp2} it follows that 
 the compilation of any expression is a sequence of instructions of instructions that execute sequentially and there is no jump from outside inside 
 the sequence. Thus, we use 
 the predicate transformer  for a sequence of bytecode instructions defined above in order to define 
@@ -69,12 +67,12 @@ the predicate transformer for  expressions.
 For instance, the  rule of the \wpName  \ for the compilation of access  field expression $\expressionSrc.\fieldd $ 
 where its compilation is 
 $$\begin{array}{l}
-     \expressionSrc_1;\\
-     \getfield \ \fieldd \\
+    \compileLabel{s}{ \expressionSrc_1;}{e - 1}\\
+     e \ \getfield \ \fieldd \\
  \end{array}
 $$
   produce the following formula 
-
+ 
 $$  \wpBcSeq{\begin{array}{l}
 	              \compileLabel{s}{\expressionSrc }{e - 1} ;\\
 	              e \ \getfield \ \fieldd 
@@ -147,15 +145,15 @@ The definition of $\wpNameStmt$ uses the compiler function defined in Section \r
 	 %		$$
 	 	      
 		       $$\begin{array}{l}
-		              \wpStmt{ \compileLabel{s}{\expressionSrc_1.\fieldd= \expressionSrc_2}{e}}{\psi}{\excPostExpl} =\bydef \\
+		              \wpStmt{ \compileLabel{s}{\expressionSrc_1.\fieldd= \expressionSrc_2}{e}}{\psi}{\excPostExpl} =\bydef \\\\
 	
 			      \wpBcSeq{ \compileLabel{s}{\expressionSrc_1}{e'}}
-				      { \\
+				      { \\\\
 			              \phantom{wp^{bc}_{seq}}  \wpBcSeq{\begin{array}{l}
                                                                               \compileLabel{e'+1}{\expressionSrc_2}{e - 1}; \\
                                                                               e \ \putfield \ \fieldd 
 				                                        \end{array}}{\psi}{\excPostExpl}  }
-                                      { \\
+                                      { \\\\
 			              \phantom{wp^{bc}_{seq}} \excPostExpl}                     
 		        \end{array} $$ 
           
@@ -180,16 +178,17 @@ The definition of $\wpNameStmt$ uses the compiler function defined in Section \r
 	     \wpStmt{ \compileLabel{s}{  \begin{array}{l}
 		                      \try \ \{ \stmt_1 \} \\ 
 				      \catch \ (\excType \  \var)\{ \stmt_2 \}
-	                         \end{array}   }{e}}{\psi}{\excPostExpl} =\bydef \\
+	                         \end{array}   }{e}}{\psi}{\excPostExpl} =\bydef \\\\
 	          \wpStmt{ \begin{array}{l}
-	                 \compileLabel{s}{\stmt_1}{e'};
+	                 \compileLabel{s}{\stmt_1}{e'};\\
 			  e' + 1: \goto \ e + 1;
 			 \end{array} 
                            }
-                         { \\
+                         { \\\\
 	                 \phantom{wp^{bc}_{stmt}} \psi}
-			 { \\
-	                  \phantom{wp^{bc}_{stmt}}  \update{\excPostExpl}{\excType}{ \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} }
+			 { \\\\
+	                  \phantom{wp^{bc}_{stmt}}  \update{\excPostExpl}{\excType}{ 
+                                                                                       \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} }
 	\end{array}$$	
 
 	 \item try finally statement compilation
@@ -200,28 +199,21 @@ The definition of $\wpNameStmt$ uses the compiler function defined in Section \r
 	     \wpStmt{ \compileLabel{s}{\begin{array}{l}  
 					  \try \ \{ \stmt_1 \} \\
 					  \finally \ \{ \stmt_2 \} 
-	                                  \end{array}}{e}}{\psi }{\excPostExpl} =\bydef \\
-	     \wpStmt{   \begin{array}{l}
-                               \compileLabel{s}{\stmt_1}{e'} \\
-			        e'+1  : \jsr \ e' + 7;\\
-				e' + 2 : \goto \ e +  1;\\
-			   \end{array}    }
-                   {\\
+	                                  \end{array}}{e}}{\psi }{\excPostExpl} =\bydef \\\\
+	     \wpStmt{ \compileLabel{s}{\stmt_1}{e'} \\
+		    }
+                    {\\\\
                       \phantom{wp^{bc}_{stmt}}  \wpStmt{ 
-                             \begin{array}{l}
-                                     e'  + 7 : \store \ k; \\
-				     \compileLabel{e' + 8}{\stmt_2}{e  - 1 } \\ 
-				     e : \ret \ k
-			     \end{array} 
+                             
+                                     \compileLabel{e'+1}{\stmt_2}{e''};
+				     
 			  }{\psi}{\excPostExpl} }
-		   {\\
+		   {\\\\
                       \phantom{wp^{bc}_{stmt}} \update{\excPostExpl}{\excType}{ \wpStmt{  \begin{array}{l} 
-		                                                                                 e' +  3: \store \ l; \\
-                                                                                                 e' +  4: \jsr \ e' + 7; \\
-												 e' +  5:\load \ l;\\
-												 e' +  6: \athrow;\\
-                                                                                                
-												
+		                                                                                 e'' +  2: \store \ l; \\
+												 \compileLabel{e'' + 3}{\stmt_2}{e - 2}; \\	                
+												 e - 1 :\load \ l;\\
+												 e: \athrow 	
                                                                                         \end{array} 
                                                                                        }{\psi}{\excPostExpl }} }
                	\end{array}$$
@@ -235,4 +227,32 @@ The definition of $\wpNameStmt$ uses the compiler function defined in Section \r
 	 \end{array}
 	 $$
    \item  loop statement
+
+  
+	 $$ \begin{array}{l} 
+	         \wpStmt{ \compileLabel{s}{\begin{array}{l}
+		                                \while \ (\expressionSrcRel) \\
+						\lbrack \invariant, \modLoop \rbrack \\
+						 \do \ \{ \stmt \}  
+		                           \end{array} }{e}   }{\psi}{\excPostExpl} =\bydef \\ 
+		  			   
+		 \invariant  \\ 
+		    \wedge \\ 
+                       \forall mod \in   \modLoop,\\
+		        \invariant \Rightarrow \\ 			   
+		 \wpBcSeq{ \compileLabel{e'+1}{\expressionSrcRel}{e - 1} }{\\
+                 \phantom{wp^{bc}_{seq}} \begin{array}{l}   
+		           \begin{array}{l} 
+			                \rel ( \stack{\counter}, \stack{\counter - 1 } )  \Rightarrow  \\
+                                               \Myspace \wpStmt{\compileLabel{s +  1}{\stmt}{e' } }{\invariant  }{\excPostExpl }\\
+					       \wedge \\
+					\neg   \rel ( \stack{\counter}, \stack{\counter - 1 } )  \Rightarrow   \psi 
+					      
+		                     \end{array}   
+		 \end{array}  
+                         }{\\
+                 \phantom{wp^{bc}_{seq}}\excPostExpl} 
+	 \end{array}
+	 $$
+ 
 \end{itemize}

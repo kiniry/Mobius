@@ -43,8 +43,7 @@
 \newcommand{\Mynull}{\mbox{\rm\textbf{null}}}
 
 
-\newcommand{\fieldAccess}[1]{\texttt{Cl.fld(}#1 \texttt{)}}
-\newcommand{\arrayAccess}[2]{#1[#2] }
+
 
 
 
@@ -101,7 +100,7 @@
 
 
 
-\newcommand{\comment}[1]{ \{ \textit{ #1} \} }
+\newcommand{\comment}[1]{\mbox{\rm\{ \textit{ #1}\}}}
 
 
 
@@ -134,26 +133,53 @@
 \newtheorem{Formula}{Formulas}
 \newtheorem{Predicate}{Predicates}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP commands%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\class}{\mbox{ \rm \texttt{Class} }} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP names%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\wpName}{\mbox{\rm\textit{wp}}}
+\newcommand{\wpNameSrcExpr}{\wpName^{src}}
 \newcommand{\wpNameStmt}{\wpName^{bc}_{stmt}}
+\newcommand{\wpNameBcSeq}{\wpName^{bc}_{seq}}
 \newcommand{\wpNameExpl}{\wpName^{bc}}
 \newcommand{\wpBcSeq}[3]{ \wpName^{bc}_{seq}(#1, #2, #3, \methodd) } % for denoting a weakest precondition over sequence of instructions
 \newcommand{\wpExpl}[3]{\wpName^{bc}( #1, #2, #3, \methodd) } % wp for a single instruction with  explicite postconditions
 \newcommand{\wpStmt}[3]{\wpName^{bc}_{stmt}( #1, #2, #3, \methodd) } % for a single instruction
 
-
-
 \newcommand{\formulaBc}{\mathcal{F}^{bc}}
-\newcommand{\formulaBcNoStack} { \formulaBc_{\tiny{ no \ stack}} }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ % param1 - start protect region,param2 - end protect region, param3 - start exc handler, param4 - exception type
+
+
+\newcommand{\wpSrcExpr}[4]{ \textrm{wp}^{src}( #1 , #2, #3, \methodd )_{#4} }
+
+\newcommand{\wpSrcStmt}[3]{ \textrm{wp}^{src}( #1 , #2, #3, \methodd ) }
+
+\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}}
+\newcommand{\excPostSrc}{\mbox{\rm\textsf{excPost}}^{src}}
+\newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{excPostSpec}}^{src}}
+\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}}
+\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%end wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pogComp.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %source expressions
 
-\newcommand{\formulaSrc}{\mathcal{F}^{src}}
+\newcommand{\formulaSrc}{\mathcal{F}}
 \newcommand{\expressionSrc}{\mathcal{E}^{src}}
 \newcommand{\expressionSrcRel}{\mathcal{E}^{\rel}}
 \newcommand{\constantInt}{\mbox{\rm\textbf{constInt}}}
@@ -165,6 +191,7 @@
 \newcommand{\this}{\mbox{\rm\textbf{this}}}
 \newcommand{\rel}{\mathcal{R}}
 %statements
+
 \newcommand{\stmt}{\mathcal{STMT}} 
 \newcommand{\Myif}{\mbox{\rm\texttt{if}}}
 \newcommand{\Mythen}{\mbox{\rm\texttt{then}}} 
@@ -178,10 +205,21 @@
 \newcommand{\finally}{\mbox{\rm\texttt{finally}}}
 \newcommand{\throw}{\mbox{\rm\texttt{throw}}} 
 \newcommand{\returnSrc}{\mbox{\rm\texttt{return}}}
-
  \newcommand{\instanceofSrc}{\mbox{\rm\textbf{instanceof}}}
 
+
+%%%%%%%%%%%%%%expressions and statements
+\newcommand{\ExprStmt}{\mathcal{S}}
+ 
 \newcommand{\compileSynt}[1]{  \ulcorner #1 \urcorner^{\tiny{spec}}  } % this for the syntactic compilation of source expressions into bytecode expressions as is defined % in the JML compiler 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Compiler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\addExceptionTableOnly}{\mbox{\rm\textsf{addExcHandler}}}
+\newcommand{\addExceptionTable}[4]{\mbox{\rm\textsf{addExcHandler}}(#1, \ #2, \ #3, \ #4 , \methodd)}
+
+\newcommand{\addLoopTableOnly}{\mbox{\rm\textsf{addLoopSpec}}}
+\newcommand{\addLoopTable}[3]{\mbox{\rm\textsf{addLoopSpec}}(#1, \ #2, \ #3,  \methodd)}
 \newcommand{\compile}[1]{ \ulcorner  #1 \urcorner }
 \newcommand{\compileLabel}[3]{ \ulcorner  #1,#2,#3 \urcorner }
 
@@ -191,21 +229,7 @@
 \newcommand{\eval}[1]{ \textrm{eval}(#1) }
 \newcommand{\stR}[1]{\textrm{startInd}(#1 ) } %startRegion
 \newcommand{\enR}[1]{\textrm{endInd}(#1 ) } %endRegion
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- % param1 - start protect region,param2 - end protect region, param3 - start exc handler, param4 - exception type
-\newcommand{\addExceptionTable}[4]{\textrm{addExcHandler}(#1, \ #2, \ #3, \ #4)}
 
-\newcommand{\wpiSrc}[3]{ \textrm{wp}^{src}( \mbox{ \rm $ #1 $ } , #2, #3, \methodd ) }
-\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}}
-\newcommand{\excPostSrc}{\mbox{\rm\textsf{excPost}}^{src}}
-\newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{excPostSpec}}^{src}}
-\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}}
-\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%end wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\next}[1]{\mbox{\rm\textit{next}}(#1)}
 \newcommand{\prev}[1]{\mbox{\rm\textit{prev}}(#1)}
@@ -216,7 +240,7 @@
 \newcommand{\eqModNames}{ =^{mod \ Names \ and \ bools } }
 \newcommand{\spaceWpBc}{ \phantom{ \textrm{wp}^{bc} }}
 \newcommand{\spaceWpSrc}{ \phantom{ \textrm{wp}^{src} }}
-\newcommand{\body}[1]{ \texttt{body}(#1) }
+\newcommand{\body}{ \mbox{\rm\textsf{body}} }
 \newcommand{\JavaType}{ \texttt{ JavaType} }
 \newcommand{\ClassTypes}{ \texttt{ ClassTypes} }
 \newcommand{\Myint}{ \texttt{int} }
@@ -240,7 +264,7 @@
 
 \newcommand{\bydef}{^{\mbox{\rm{\textit{def}}}}}
 \newcommand{\excType}{\mbox{\rm{\texttt{ExcClass}}}}
-
+\newcommand{\Exception}{\mbox{\rm{\texttt{Exception}}}}% stands for the super class of all Java exceptions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%to be discarded when put in the thesis %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -259,7 +283,16 @@
 \newcommand{\isInList}[2]{\mbox{\rm \textit{inList}}(#1, #2)}
 \newcommand{\excPost}{\mbox{\rm\textsf{excPost}}}
 \newcommand{\findExcHandler}[3]{\mbox{\rm \textit{findExcHandler}}(#1,#2,#3)} % #1 = exception, #2 = pc , #3 = exception handler table 
+ \newcommand{\findExcHandlerOnly}{\mbox{\rm\textit{findExcHandler}}\ } 
 \newcommand{\excHandlerTable}{\mbox{\rm\textsf{excHndlS}}}
+ \newcommand{\MethodSet}{\mbox{\rm\textbf{Method}} }
+\newcommand{\interOnly}{\mbox{ \rm \textit{inter}}}
+ \newcommand{\ClassSet}{\mbox{\rm\textbf{Class}}} % the
+\newcommand{\loopSpecTable}{\mbox{\rm\textsf{loopSpecS}}}
+\newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
+\newcommand{\arrayAccess}[2]{\mbox{\rm\textbf{arrayAccess}}( #1, #2) }  %{\mbox{\rm arrAccess}(#1, #2)}
+\newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

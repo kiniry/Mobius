@@ -7,11 +7,20 @@
 We now turn to specify a simple compiler from the source language presented in Section
 \ref{source} into the bytecode language. The compiler does not perform any optimizations. 
 
-The compiler function is denoted with $\compile{}$ and its signature is :
-$$ \compile{ } : nat * \stmt * nat \longrightarrow list \ \bcIns $$
-The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation of $\stmt$ starts,
- the compiled   statement $\stmt$ and a natural number which is the greatest label in the compilation of  $\stmt$ 
-and returns a list of bytecode instructions.
+The compiler is the triple
+ $$< \compileLabel{*}{*}{*}, \addExceptionTableOnly , \addLoopTableOnly >$$
+ The first element in the triple is a  function $\compile{}$ which transforms statements and expressions
+ into a sequence of bytecode instructions, the second element is the procedure 
+ \addExceptionTableOnly \ which  keeps track of the exception handlers. The third element of the compiler is the procedure
+  \addLoopTableOnly \ which manages the compilation of loop
+specification, namely loop invariants and the modified expressions.
+
+In the following, in the next Section \ref{pogEq:compile:excHandlers} we define the procedure for exception handlers,
+ in Section \ref{pogEq:compile:loopInv},  we will present the procedure for compiling loops and in  Sections 
+\ref{pqogE:compile:compExpr} and  \ref{pogEq:compile:compCtrlStmt}
+we will proceed with the definition of the function $\compile{}$ for exressions and statements.
+
+
 
 
 
