@@ -25,8 +25,9 @@ public class CoqMethodCallForm extends MethodCallForm implements ITranslatable{
 		String para = "";
 		String loc = result;
 		if(instance != null) {
+			
 			CoqTranslationResult ctrInst = (CoqTranslationResult)instance.toLang("Coq", 0);
-			loc += " " + CoqDeclPureMethodForm.removeType(ctrInst.getLocalDecl());
+			loc += " " + ctrInst.getLocalDecl();//CoqDeclPureMethodForm.removeType(ctrInst.getLocalDecl());
 			
 			loc = loc.trim();
 			inst = " " + ctrInst.getFunPart();
@@ -36,7 +37,7 @@ public class CoqMethodCallForm extends MethodCallForm implements ITranslatable{
 		}
 		if(param != null) {
 			CoqTranslationResult ctrParam = (CoqTranslationResult) param.toLang("Coq", 0);
-			loc += " " + CoqDeclPureMethodForm.removeType(ctrParam.getLocalDecl());
+			loc += " " + ctrParam.getLocalDecl();//CoqDeclPureMethodForm.removeType(ctrParam.getLocalDecl());
 			loc = loc.trim();
 			para = " " + ctrParam.getFunPart();
 			String prop =ctrParam.getPropPart();

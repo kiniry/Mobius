@@ -27,8 +27,7 @@ public class CoqTranslationResult extends Translation implements ITranslationRes
 
 
 	
-	public CoqTranslationResult() {
-	}
+
 
 
 	
@@ -70,19 +69,38 @@ public class CoqTranslationResult extends Translation implements ITranslationRes
 		}
 		
 	}
-
-	public CoqTranslationResult(String string) {
-		localDecl = "";
-		funPart = string;
+	public static CoqTranslationResult buildFromLocalProp(String loc, String prop) {
+		return new CoqTranslationResult(loc, prop, "");
 	}
+	public static CoqTranslationResult buildFromLocal(String loc) {
+		return buildFromLocalProp(loc, "");
+	}
+	public CoqTranslationResult() {
+		this("");
+	}
+	public CoqTranslationResult(String funPart) {
+		this("", funPart);
+	}
+	
+	public CoqTranslationResult(String prop,  String fun) {
+		this("", prop, fun);
+	}
+	
 	public CoqTranslationResult(String loc, String prop,  String fun) {
 		localDecl = loc;
 		funPart = fun;
 		addPropPart(prop);
 	}
+	
 	public CoqTranslationResult(CoqTranslationResult r1, String string) {
 		addLocalDecl(r1);
 		funPart = string;
+		addPropPart(r1);
+	}
+	public CoqTranslationResult(CoqTranslationResult r1, String prop, String fun) {
+		addLocalDecl(r1);
+		funPart = fun;
+		addPropPart(prop);
 		addPropPart(r1);
 	}
 
