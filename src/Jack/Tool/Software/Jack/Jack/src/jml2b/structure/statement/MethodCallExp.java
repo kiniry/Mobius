@@ -10,8 +10,6 @@
  /******************************************************************************/
 package jml2b.structure.statement;
 
-import jack.util.Logger;
-
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -339,9 +337,6 @@ public class MethodCallExp extends Expression {
 			c = new FormulaWithSpecMethodDecl(
 					instanceWpmd, p, ensuresInstanciated, methodCall, 
 					pureMethDecl);
-			if(instanciatedMethodName.indexOf("equals_") != -1) {
-				Logger.out.println("we're at it");
-			}
 		}
 
 		// Removes the method from the already met method set.
