@@ -119,6 +119,7 @@ public abstract class IAParameters {
 	 * @return
 	 */
 	public abstract int nparams();
+	public abstract Vector getSignature();
 
 	/** return true if the parameters are compatibles with the given vector 
 	 *  of Type. (that is, the types stored in types could be used as 

@@ -14,11 +14,10 @@ import java.util.Hashtable;
 
 import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.LanguageException;
+import jml2b.exceptions.LoadException;
 import jml2b.languages.ITranslationResult;
 import jml2b.languages.Languages;
 import jml2b.structure.java.IJmlFile;
-import jml2b.structure.java.JavaLoader;
-import jml2b.structure.java.Type;
 import jml2b.util.IOutputStream;
 import jml2b.util.JpoInputStream;
 

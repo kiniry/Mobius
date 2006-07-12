@@ -28,6 +28,8 @@ import antlr.collections.AST;
  */
 public class ParsedItem extends Profiler implements Serializable {
 
+	public final static ParsedItem $empty = new ParsedItem();
+	
 	/**
 	 * Line number where is located the item.
 	 **/

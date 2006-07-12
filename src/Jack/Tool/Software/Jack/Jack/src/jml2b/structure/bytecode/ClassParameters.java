@@ -7,10 +7,15 @@
 package jml2b.structure.bytecode;
 
 import java.io.Serializable;
+import java.util.Vector;
 
 import jml2b.IJml2bConfiguration;
+import jml2b.pog.util.IdentifierResolver;
 import jml2b.structure.IAParameters;
+import jml2b.structure.java.Field;
+import jml2b.structure.java.ParsedItem;
 import jml2b.structure.java.Type;
+import jml2b.structure.statement.Statement;
 
 import org.apache.bcel.classfile.Method;
 
@@ -23,7 +28,7 @@ public class ClassParameters extends  IAParameters implements Serializable{
 	static final long serialVersionUID = 5004872031444756772L;
 
 	Type[] params;
-	
+	Vector fields = new Vector();
 	/**
 	 * @param m
 	 */
@@ -42,6 +47,18 @@ public class ClassParameters extends  IAParameters implements Serializable{
 
 	public Type getType(int i) {
 		return params[i];
+	}
+	
+	public /*@ pure @*/ Vector getSignature() {
+		if(fields.size() != params.length) {// lazy style
+			fields = new Vector();
+			for (int i= 0; i < params.length; i++) {
+				Field fi = new Field(ParsedItem.$empty, params[i], Statement.fresh());
+				fields.add(fi);
+				fi.nameIndex = IdentifierResolver.addIdent(fi);
+			}
+		} 
+		return fields;
 	}
 	
 	public int nparams() {

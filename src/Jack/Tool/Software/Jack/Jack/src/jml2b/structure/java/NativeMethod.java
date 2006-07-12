@@ -9,7 +9,7 @@ package jml2b.structure.java;
 import jml2b.pog.util.IdentifierResolver;
 
 
-public class CoqDefinedMethod extends Method {
+public class NativeMethod extends Method {
 
 	/**
 	 * 
@@ -17,7 +17,7 @@ public class CoqDefinedMethod extends Method {
 	private static final long serialVersionUID = 1L;
 	Method m;
 	
-	public CoqDefinedMethod(Method m) {
+	public NativeMethod(Method m) {
 		this.m = m;
 	}
 

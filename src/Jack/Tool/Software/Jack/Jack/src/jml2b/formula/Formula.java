@@ -46,10 +46,15 @@ abstract public class Formula
 	/** the formula for <code>false</code> */
 	public static final Formula $false = new TerminalForm(Ja_LITERAL_false);
 	/** the formula for <code>true</code> */
-	public static final Formula $true = new TerminalForm(IFormToken.B_BTRUE);
+	public static final Formula $true = new TerminalForm(IFormToken.Ja_LITERAL_true);
+	/** the formula for <code>True</code> */
+	public static final Formula $True = new TerminalForm(IFormToken.B_BTRUE);
 	/** the formula for expressing the result of a method */
 	public static final Formula $result = new TerminalForm(IFormToken.Jm_T_RESULT);
+	/** the formula for <code>this</code> */
+	public static final Formula $this = new TerminalForm(IFormToken.Ja_LITERAL_this, "this");
 
+	
 	/**
 	 * Returns the disjunctive formula between the two parameters.
 	 * @param s1 left disjonctive formula
@@ -69,6 +74,9 @@ abstract public class Formula
 	public static Formula apply(Formula s1, Formula s2) {
 		return new BinaryForm(
 				IFormToken.B_APPLICATION, s1, s2);
+	}
+	public static Formula equals(Formula s1, Formula s2) {
+		return new BinaryForm(IFormToken.Ja_EQUALS_OP, s1, s2);
 	}
 	/**
 	 * Returns the formula corresponding to a field declaration.
@@ -123,11 +131,32 @@ abstract public class Formula
 		return new BinaryForm(Ja_AND_OP, s1, s2);
 	}
 
-	
+	/**
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return the binary form of type comma containing s1 and s2
+	 */
 	public static Formula comma(Formula s1, Formula s2) {
 		return new BinaryForm(Ja_COMMA, s1, s2);
 	}
-	
+	/**
+	 * The same as {@link #comma(Formula, Formula)}, but test if one of the formula is null.
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return the binary form of type comma containing s1 and s2, 
+	 * 		otherwise s1 if s2 is null or s2 if s1 is null
+	 */
+	public static Formula comma_safe(Formula s1, Formula s2) {
+		if(s1 == null) {
+			return s2;
+		}
+		else if (s2 == null) {
+			return s1;
+		}
+		return new BinaryForm(Ja_COMMA, s1, s2);
+	}
 	
 	/**
 	 * Returns the negation of the parameter.

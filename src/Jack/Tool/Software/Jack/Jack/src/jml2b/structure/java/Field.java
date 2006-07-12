@@ -69,7 +69,7 @@ public class Field extends AField implements Serializable {
 		}
 	}
 
-	//@ requires t != null;
+	//@ requires (pi != null) && (t != null);
 	public Field(ParsedItem pi, Type t, String n) {
 		super(pi, (Modifiers) null);
 		type = t;
@@ -200,7 +200,7 @@ public class Field extends AField implements Serializable {
 	public String getBName() {
 		if (nameIndex < 0) {
 			throw new jml2b.exceptions.InternalError(
-				"NamedNode.getBName() " + nameIndex + " " + getName());
+				"Field.getBName() " + nameIndex + " " + getName());
 		}
 		return IdentifierResolver.bName(nameIndex);
 	}

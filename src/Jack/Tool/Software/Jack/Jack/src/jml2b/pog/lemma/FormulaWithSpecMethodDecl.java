@@ -76,8 +76,7 @@ public class FormulaWithSpecMethodDecl {
 	 * method call or from a expression that is a predicate.
 	 **/
 	public FormulaWithSpecMethodDecl(Formula f) {
-		this.f = f;
-		specMethodDefs = new Vector();
+		this(new Vector(), f);
 	}
 
 	/** Constructs a context from an existing context and a formula.
@@ -86,28 +85,37 @@ public class FormulaWithSpecMethodDecl {
 	 * method call or from a expression that is a predicate.
 	 **/
 	public FormulaWithSpecMethodDecl(FormulaWithSpecMethodDecl c, Formula f) {
-		this(f);
-		specMethodDefs = c.specMethodDefs;
+		this(c, f, null);
 	}
 
 	public FormulaWithSpecMethodDecl(FormulaWithSpecMethodDecl c, Formula call, Formula decl) {
-		this(c, call);
-		specMethodDefs.add(decl);
+		this(c, null, call, decl);	
 	}
 
 	public FormulaWithSpecMethodDecl(FormulaWithSpecMethodDecl c1,
 			FormulaWithSpecMethodDecl c2, Formula call, Formula decl) {
-		this(c1, call);
-		specMethodDefs.addAll(c2.specMethodDefs);
-		specMethodDefs.add(decl);
+		this(c1, c2, null, call, decl);
+		
 	}
 	
 	public FormulaWithSpecMethodDecl(FormulaWithSpecMethodDecl c1,
 			FormulaWithSpecMethodDecl c2, FormulaWithSpecMethodDecl c3, Formula call, Formula decl) {
-		this(c1, call);
-		specMethodDefs.addAll(c2.specMethodDefs);
-		specMethodDefs.addAll(c3.specMethodDefs);
-		specMethodDefs.add(decl);
+		f = call;
+		specMethodDefs = new Vector();
+		if(c1 != null) {
+			specMethodDefs.addAll(c1.specMethodDefs);
+		}
+		if(c2 != null) {
+			specMethodDefs.addAll(c2.specMethodDefs);
+		}
+		if(c3 != null) {
+			specMethodDefs.addAll(c3.specMethodDefs);
+		}
+		if(decl != null) {
+			specMethodDefs.add(decl);
+		}
+		
+		
 	}
 
 
@@ -121,9 +129,7 @@ public class FormulaWithSpecMethodDecl {
 			FormulaWithSpecMethodDecl c1,
 			FormulaWithSpecMethodDecl c2,
 		Formula f) {
-		this(f);
-		specMethodDefs.addAll(c1.specMethodDefs);
-		specMethodDefs.addAll(c2.specMethodDefs);
+		this(c1, c2, f, null);
 	}
 
 	/**
@@ -138,8 +144,7 @@ public class FormulaWithSpecMethodDecl {
 			FormulaWithSpecMethodDecl c2,
 			FormulaWithSpecMethodDecl c3,
 		Formula f) {
-		this(c1, c2, f);
-		specMethodDefs.addAll(c3.specMethodDefs);
+		this(c1, c2, c3, f, null);
 	}
 
 	public Object clone() {
@@ -237,14 +242,26 @@ public class FormulaWithSpecMethodDecl {
 				return (FormulaWithSpecMethodDecl) clone();
 		}
 
+	/**
+	 * Instanciate the parameters
+	 * @param signature
+	 * @param newSignature
+	 * @return the rightly instanciated formula with 
+	 * 		parameters or this if newSignature is <code>null</code>
+	 * @throws PogException
+	 */
+	//@ modifies \nothing;
 	public FormulaWithSpecMethodDecl renameParam(IAParameters signature, Vector newSignature)
-	throws PogException {
-	if (signature instanceof Parameters)
-	return renameParam(
-		((Parameters) signature).signature.elements(),
-		newSignature.elements());
-	else
-		return this;
-}
+		throws PogException {
+		if ((signature instanceof Parameters) && newSignature != null) {
+			
+			return renameParam(
+					((Parameters) signature).signature.elements(),
+					newSignature.elements());
+		}
+		else {
+			return this;
+		}
+	}
 
 }
