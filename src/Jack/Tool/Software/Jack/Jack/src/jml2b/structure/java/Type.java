@@ -95,7 +95,7 @@ public class Type
 		if (t2.tag == T_LONG)
 			return t2;
 		else
-			return integerType;
+			return $int;
 	}
 
 	/**
@@ -699,7 +699,7 @@ public class Type
 			case T_SHORT :
 			case T_CHAR :
 			case T_BYTE :
-				return integerType;
+				return $int;
 			case T_DOUBLE :
 			case T_FLOAT :
 			case T_LONG :
@@ -1069,7 +1069,7 @@ public class Type
 	 *     type.
 	 */
 	public static Type getBoolean() {
-		return booleanType;
+		return $boolean;
 	}
 
 	/**
@@ -1083,7 +1083,7 @@ public class Type
 	 *     type.
 	 */
 	public static Type getInteger() {
-		return integerType;
+		return $int;
 	}
 
 	/**
@@ -1097,15 +1097,15 @@ public class Type
 	 *     type.
 	 */
 	public static Type getChar() {
-		return charType;
+		return $char;
 	}
 
 	public static Type getByte() {
-		return byteType;
+		return $byte;
 	}
 
 	public static Type getShort() {
-		return shortType;
+		return $short;
 	}
 
 	/**
@@ -1119,7 +1119,7 @@ public class Type
 	 *     type.
 	 */
 	public static Type getType() {
-		return typeType;
+		return $type;
 	}
 
 	public String toString() {
@@ -1216,26 +1216,26 @@ public class Type
 	 * Instance of the <code>boolean</code> type returned by the 
 	 * <code>getBoolean()</code> method.
 	 */
-	private static final Type booleanType = new Type(T_BOOLEAN);
+	private static final Type $boolean = new Type(T_BOOLEAN);
 	/**
 	 * Instance of the <code>int</code> type returned by the 
 	 * <code>getInteger()</code> method.
 	 */
-	private static final Type integerType = new Type(T_INT);
+	public static final Type $int = new Type(T_INT);
 	/**
 	 * Instance of the <code>char</code> type returned by the 
 	 * <code>getChar()</code> method.
 	 */
-	private static final Type charType = new Type(T_CHAR);
+	public static final Type $char = new Type(T_CHAR);
 
-	private static final Type byteType = new Type(T_BYTE);
-	private static final Type shortType = new Type(T_SHORT);
+	public static final Type $byte = new Type(T_BYTE);
+	public static final Type $short = new Type(T_SHORT);
 
 	/**
 	 * Instance of the <code>type</code> type returned by the 
 	 * <code>getType()</code> method.
 	 */
-	private static final Type typeType = new Type(T_TYPE);
+	public static final Type $type = new Type(T_TYPE);
 
 
 	static final long serialVersionUID = -3537023320146708719L;

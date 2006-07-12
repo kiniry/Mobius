@@ -38,22 +38,22 @@ public class MethodCallForm extends Formula {
 	/** the result type */
 	protected final Formula resultType;
 
-	public MethodCallForm(String m, Formula param, Formula instance, String ww, Formula rt) {
+	public MethodCallForm(String m, Formula param, Formula instance, String resultName, Formula resultType) {
 		super(IFormToken.METHOD_CALL);
 		this.m = new TerminalForm(m);
 		this.param = param;
 		this.instance = instance;
-		result = ww;
-		resultType = rt;
+		result = resultName;
+		this.resultType = resultType;
 	}
 
 	private MethodCallForm(Formula m, Formula p, Formula i, String ww, Formula rt) {
 		super(IFormToken.METHOD_CALL);
 		this.m = m;
-		param = p;
-		instance = i;
-		result = ww;
-		resultType = rt;
+		this.param = p;
+		this.instance = i;
+		this.result = ww;
+		this.resultType = rt;
 	}
 
 	public MethodCallForm(IJml2bConfiguration config, IJmlFile fi,

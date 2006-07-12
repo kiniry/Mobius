@@ -75,6 +75,23 @@ abstract public class Formula
 		return new BinaryForm(
 				IFormToken.B_APPLICATION, s1, s2);
 	}
+	
+	/**
+	 * The same as {@link #apply(Formula, Formula)}, but
+	 * s2 can be <code>null</code>.
+	 * @param s1 
+	 * @param s2
+	 * @return s1 applied to s2 or s1 if s2 is null.
+	 */
+	public static Formula apply_safe(Formula s1, Formula s2) {
+		if(s2 == null) {
+			return s1;
+		}
+		else {
+			return new BinaryForm(
+					IFormToken.B_APPLICATION, s1, s2);
+		}
+	}
 	public static Formula equals(Formula s1, Formula s2) {
 		return new BinaryForm(IFormToken.Ja_EQUALS_OP, s1, s2);
 	}

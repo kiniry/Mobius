@@ -78,5 +78,5 @@ public abstract class AMethod extends Declaration implements IModifiesField {
 	public abstract Expression getRequires() ;
 	
 	public abstract Vector getClonedSpecCases(ParsedItem pi);
-
+	public abstract boolean isNative();
 }

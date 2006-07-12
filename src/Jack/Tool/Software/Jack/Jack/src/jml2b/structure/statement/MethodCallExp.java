@@ -172,46 +172,42 @@ public class MethodCallExp extends Expression {
 		switch (left.getNodeType()) {
 			case DOT :
 				m = ((TerminalExp) ((BinaryExp) left).getRight()).getIdent().mth;
-
-				f = (Expression) m.getNormalizedEnsures(config).clone();
-				f.old();
 				instance = ((BinaryExp) left).getLeft();
-				// f = (Expression) f.instancie();
 				break;
 			case IDENT :
 			case LITERAL_super :
 			case LITERAL_this :
 				m = ((TerminalExp) left).getIdent().mth;
-				f = (Expression) m.getNormalizedEnsures(config).clone();
-				f.old();
 				break;
 			default :
 				throw new jml2b.exceptions.InternalError("exprToForm : bad node type in METHOD_CALL "
 															+ left.getNodeType());
 		}
-
+		f = (Expression) m.getNormalizedEnsures(config).clone();
+		f.old();
 		// instanciatedResultName represents the result of the operation call.
 		String instanciatedResultName = freshResult(m.getName());
 		String resultName = "Result";
-		TerminalForm resultId = new TerminalForm(resultName);
 		String instanciatedMethodName = freshMethod(m.getName());
-		TerminalForm instanciatedMethodId = new TerminalForm(instanciatedMethodName);
 		
+		if(!methods.contains(m)){
+			methods.add(m);
+		}
 		
 
 		// The method parameters are converted.
 		// param is the set of converted parameter formula
 		// p is the result of the convertion, it possibly corresponds to a
 		// context
-		Vector param = null;
+		Vector paramVector = null;
+		
 		FormulaWithSpecMethodDecl p = null;
 		if (right != null) {
 			p = right.exprToContextForm(config, methods, false);
-			param = p.getFormula().toVector();
+			paramVector = p.getFormula().toVector();
 		}
 
-		// Adds the method to the already met method set.
-		methods.add(m);
+		
 
 		FormulaWithSpecMethodDecl c;
 
@@ -220,26 +216,33 @@ public class MethodCallExp extends Expression {
 			if (instance != null)
 				f.instancie(instance);
 			//The ensures of the method match with \result == a.
-			if (param == null){	
+			if (paramVector == null){	
 				c = ((BinaryExp) f).getRight().exprToForm(config, methods, pred);
 			}
 			else {
 				FormulaWithSpecMethodDecl fwp = ((BinaryExp) f).getRight().exprToForm(config, methods, pred)
-						.renameParam((Parameters) m.getParams(), param);
+						.renameParam(m.getParams(), paramVector);
 				c = new FormulaWithSpecMethodDecl(fwp, p, fwp.getFormula());
 			}
-			return c;
-			//return exprToContext_simpleResult(instance, f, param, config,  methods, pred, p, m);
 		} else {
 			f = f.subResult(resultName);
-			QuantifiedVarForm methodParameters = null;
-			IAParameters par = m.getParams();
-			Vector e1 = par.getSignature();;
 			
-
-			Formula natMethodParam = null;
+			IAParameters par = m.getParams();
+			Vector e1 = par.getSignature();
+			
+			QuantifiedVarForm methodParameters = null;
+			Formula allMethodParam = null; // really all the params (with this + result)
+			Formula params = null; // just the method parameters
+			Vector instanciatedParameters = paramVector == null ? new Vector(): paramVector;
 			boolean inte = false, refe = false, shorte = false, bytee = false, chare = false, boole = false;
-
+			boolean [] bTab = {
+					inte, refe, shorte,
+					bytee, chare, boole	
+			};
+			ElementsForm [] efTab = {
+					ElementsForm.intelements, ElementsForm.refelements, ElementsForm.shortelements,
+					ElementsForm.byteelements, ElementsForm.charelements, ElementsForm.booleanelements
+			};
 			
 			// Adding method parameters
 			for (int i=e1.size()-1; i >= 0; i--) {
@@ -247,47 +250,34 @@ public class MethodCallExp extends Expression {
 				methodParameters = new QuantifiedVarForm(new TerminalForm(new Identifier(fi)), 
 						new TTypeForm(IFormToken.T_TYPE, fi.getType()), methodParameters);
 				
-				natMethodParam = Formula.comma_safe(new TerminalForm(new Identifier(fi)), 
-						natMethodParam);
-				
+				allMethodParam = Formula.comma_safe(new TerminalForm(new Identifier(fi)), 
+						allMethodParam);
+				params = Formula.comma_safe((Formula)instanciatedParameters.get(i), //new TerminalForm(new Identifier(fi)), 
+							params);
 				// method modifiers test
 				if (fi.getType().isArray()) {
-					inte = inte || fi.getType().getElemType().equals(Type.getInteger());
-					refe = refe || fi.getType().getElemType().isRef();
-					shorte= shorte || fi.getType().getElemType().equals(Type.getShort());
-					bytee = bytee || fi.getType().getElemType().equals(Type.getByte());
-					chare = chare || fi.getType().getElemType().equals(Type.getChar());
-					boole  = boole || fi.getType().getElemType().isBoolean();
+					Type elemType = fi.getType().getElemType();
+					inte = elemType.equals(Type.$int);
+					refe = elemType.isRef();
+					shorte= elemType.equals(Type.$short);
+					bytee = elemType.equals(Type.$byte);
+					chare = elemType.equals(Type.$char);
+					boole  = elemType.isBoolean();
+					for(int j =0; j < bTab.length; j++) {
+						if (bTab[j]) {
+							methodParameters = new QuantifiedVarForm(efTab[j], efTab[j].getType(), methodParameters);
+							params = Formula.comma(efTab[j], params);
+							allMethodParam = Formula.comma(efTab[j], allMethodParam);
+						}
+					}
 				}
 			}
 			
 			//adding this
 			if(!m.isStatic()) {
-				natMethodParam = Formula.comma_safe(Formula.$this, natMethodParam);
+				allMethodParam = Formula.comma_safe(Formula.$this, allMethodParam);
 			}
-			
-			
-			//the accessors are added here
-			Formula pf = null;
-			if(p != null) {
-				pf = p.getFormula();
-				boolean [] bTab = {
-						inte, refe, shorte,
-						bytee, chare, boole	
-				};
-				ElementsForm [] efTab = {
-						ElementsForm.intelements, ElementsForm.refelements, ElementsForm.shortelements,
-						ElementsForm.byteelements, ElementsForm.charelements, ElementsForm.booleanelements
-				};
-				for(int i =0; i < bTab.length; i++) {
-					if (bTab[i]) {
-						methodParameters = new QuantifiedVarForm(efTab[i], efTab[i].getType(), methodParameters);
-						pf = Formula.comma(efTab[i], pf);
-						natMethodParam = Formula.comma(efTab[i], natMethodParam);
-					}
-				}
-			}
-			
+					
 			
 			Formula instanceWp = null;
 			FormulaWithSpecMethodDecl instanceWpmd = null;
@@ -298,42 +288,19 @@ public class MethodCallExp extends Expression {
 			}
 			Formula methodCall = new MethodCallForm(
 					instanciatedMethodName, 
-					pf, instanceWp, 
+					params, instanceWp, 
 					instanciatedResultName, 
 					new TTypeForm(IFormToken.T_TYPE, m.getReturnType()));
 			if (pred) {
 				methodCall = Formula.equals(methodCall, Formula.$true);
 			}
-			FormulaWithSpecMethodDecl ensures;
-			if ((m instanceof Method) && ((Method) m).isNative()) {	
-				TerminalForm nativeId = new TerminalForm(new Identifier(new NativeMethod((Method) m)));
-				
-				if(natMethodParam != null) {
-					ensures = new FormulaWithSpecMethodDecl(
-						Formula.equals(resultId, 
-							Formula.apply(nativeId, natMethodParam)));
-				}
-				else {
-					ensures = new FormulaWithSpecMethodDecl(
-							Formula.equals(resultId, nativeId));
-				}
-			} 
-			else {
-				ensures = f.exprToForm(config, methods, true);//.getFormula();
-			}
 			
-			FormulaWithSpecMethodDecl ensuresInstanciated = f.exprToForm(config, methods, true).renameParam(m.getParams(), param);	
-			TTypeForm instanceType = null;
-			if(!m.isStatic()) {
-				instanceType = new TTypeForm(IFormToken.T_TYPE, new Type(m.getDefiningClass())); 
-			}
-			TTypeForm resultType = new TTypeForm(IFormToken.T_TYPE, m.getReturnType());
-			DeclPureMethodForm pureMethDecl = 
-				new DeclPureMethodForm(
-					instanciatedMethodId, instanceType, 
-					methodParameters, 
-					resultName, resultType, 
-					ensures.getFormula());
+			FormulaWithSpecMethodDecl ensures = f.exprToForm(config, methods, true);	
+			FormulaWithSpecMethodDecl ensuresInstanciated = f.exprToForm(config, methods, true).renameParam(m.getParams(), paramVector);	
+			
+			DeclPureMethodForm pureMethDecl = getMethodDeclaration(m, 
+						instanciatedMethodName,  methodParameters, resultName,
+						allMethodParam, ensures);
 			c = new FormulaWithSpecMethodDecl(
 					instanceWpmd, p, ensuresInstanciated, methodCall, 
 					pureMethDecl);
@@ -345,6 +312,37 @@ public class MethodCallExp extends Expression {
 		return c;
 	}
 
+	public DeclPureMethodForm getMethodDeclaration(AMethod m, 
+			String instanciatedMethodName, 
+			QuantifiedVarForm methodParameters, 
+			String resultName,
+			Formula allMethodParameters, 
+			FormulaWithSpecMethodDecl defaultEnsures) {
+		DeclPureMethodForm pureMethDecl;
+		TerminalForm resultId = new TerminalForm(resultName);
+		TerminalForm instanciatedMethodId = new TerminalForm(instanciatedMethodName);
+		FormulaWithSpecMethodDecl ensures = defaultEnsures;
+		if (m.isNative()) {	
+			TerminalForm nativeId = new TerminalForm(new Identifier(new NativeMethod((Method) m)));
+			ensures = new FormulaWithSpecMethodDecl(
+				Formula.equals(resultId, 
+					Formula.apply_safe(nativeId, allMethodParameters)));
+		} 
+		
+		TTypeForm instanceType = null;
+		if(!m.isStatic()) {
+			instanceType = new TTypeForm(IFormToken.T_TYPE, new Type(m.getDefiningClass())); 
+		}
+		TTypeForm resultType = new TTypeForm(IFormToken.T_TYPE, m.getReturnType());
+		
+		pureMethDecl = 
+			new DeclPureMethodForm(
+				instanciatedMethodId, instanceType, 
+				methodParameters, 
+				resultName, resultType, 
+				ensures.getFormula());
+		return pureMethDecl;
+	}
 	
 	
 	public String toJava(int indent) {
