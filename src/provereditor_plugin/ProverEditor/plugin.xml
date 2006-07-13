@@ -134,7 +134,7 @@
          <menu
                id="ProverEditor_menu"
                label="Prover Editor"
-               />
+               />  
          <action
                class="prover.gui.popup.CompileFile"
                id="ProverEditor.compile"
@@ -145,6 +145,17 @@
                id="ProverEditor.launchide"
                label="Launch an IDE"
                menubarPath="ProverEditor_menu/s"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="ProverEditor.foldercontribution"
+            nameFilter="*"
+            objectClass="org.eclipse.core.resources.IFolder">
+           <action
+               class="prover.gui.popup.AddToLoadPath"
+               id="ProverEditor.addtopath"
+               label="ProverEditor: Add to loadpath"
+               />  
       </objectContribution>
    </extension>
    <extension
