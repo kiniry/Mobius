@@ -1,9 +1,12 @@
 package prover.gui.popup;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -41,9 +44,19 @@ public class CompileFile implements IActionDelegate {
 		if(prover == null)
 			return;
 		String name =  f.getLocation().toString();
-		String [] path = {f.getProject().getLocation().toString(),
-				f.getLocation().removeLastSegments(1).toString()
-		};
+		HashSet hsPath;
+		try {
+			hsPath = AddToLoadPath.getPaths(f.getProject().getLocation().toString());
+		} catch (IOException e) {
+			hsPath = new HashSet();
+		}
+		String [] path = new String[hsPath.size() + 2];
+		path [0]= f.getProject().getLocation().toString();
+		path [1] = f.getLocation().removeLastSegments(1).toString();
+		Iterator iter = hsPath.iterator();
+		for(int i = 2; i < path.length; i++) {
+			path[i] = path[0] + File.separator + iter.next().toString();
+		}
 		String[] cmd = prover.getTranslator().getCompilingCommand(prover.getCompiler().trim(), path, name);
 		Job job = new CompilationJob(prover, f, cmd);
 		job.schedule();
@@ -71,7 +84,6 @@ public class CompileFile implements IActionDelegate {
 
 	/**
 	 * This class represents the Job used to compile a file.
-	
 	 */
 	private static class CompilationJob extends Job {
 		/** The file to compile */
@@ -101,7 +113,7 @@ public class CompileFile implements IActionDelegate {
 		 */
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
-				System.out.println("here");
+				//System.out.println("here");
 				Process p = Runtime.getRuntime().exec(fCmd);
 				LineNumberReader in = new LineNumberReader( new InputStreamReader(p.getInputStream()));
 				String s;
