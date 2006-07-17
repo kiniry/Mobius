@@ -1,5 +1,9 @@
 package prover.gui;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
@@ -32,6 +36,7 @@ import prover.gui.editor.IColorConstants;
 import prover.gui.editor.LimitRuleScanner;
 import prover.gui.jobs.AppendJob;
 import prover.gui.jobs.ColorAppendJob;
+import prover.gui.popup.AddToLoadPath;
 import prover.gui.preference.PreferencePage;
 import prover.plugins.AProverTranslator;
 import prover.plugins.IProverTopLevel;
@@ -357,13 +362,28 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 		String [] tab = null;
 		
 		if(path != null) {
-			if(path.getParent().getRawLocation() == null) {
-				tab = new String [0];
+			
+//			if(path.getParent().getRawLocation() == null) {
+//				tab = new String [0];
+//			}
+//			else {
+//				tab = new String [1];
+//				tab[0] = path.getParent().getRawLocation().toString();
+//			}
+			HashSet hsPath;
+			try {
+				hsPath = AddToLoadPath.getPaths(path.getProject().getLocation().toString());
+			} catch (IOException e) {
+				hsPath = new HashSet();
 			}
-			else {
-				tab = new String [1];
-				tab[0] = path.getParent().getRawLocation().toString();
+			tab = new String[hsPath.size() + 2];
+			tab [0]= path.getProject().getLocation().toString();
+			tab [1] = path.getLocation().removeLastSegments(1).toString();
+			Iterator iter = hsPath.iterator();
+			for(int i = 2; i < tab.length; i++) {
+				tab[i] = tab[0] + File.separator + iter.next().toString();
 			}
+
 		}
 		new ColorAppendJob(fStatePres, "\nEditing file: \n" + path.getName() + "\n", DARKRED).prepare();
 		
