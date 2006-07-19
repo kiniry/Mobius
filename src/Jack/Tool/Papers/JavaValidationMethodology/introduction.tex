@@ -21,20 +21,18 @@ information or disturbs the functioning of the card through
 observation (e.g. of power or electro-magnetic radiations) or invasion
 (e.g. overriding sensors or attaching probes).
 
-
-With new generation smartcards and trusted personal devices
-increasingly connected to networks and providing execution support for
-complex programs, the prospect of logical attacks has urged the
-trusted personal devices industry to improve the quality of their
-software, as logical attacks are potentially easier to launch than
-physical attacks (for example they do not require physical access to
-the device, and are easier to replicate from one device to the other),
-and may have a much wider impact. In particular, a malicious attacker
-spreading over the network and disconnecting or disrupting devices
-massively could have deep economic and social consequences. In
-particular, the trusted personal device remains a specific domain
-where post issuance corrections are very expensive due to the
-deployment process and the mass production.
+The trusted personal device remains a specific domain where post
+issuance corrections are very expensive due to the deployment process
+and the mass production. Furthermore, the emergence of new generation
+trusted personal devices increasingly connected to networks and
+providing execution support for complex programs and the prospect of
+logical attacks has urged the trusted personal devices industry to
+improve the quality of their software, as logical attacks are
+potentially easier to launch than physical attacks (for example they
+do not require physical access to the device, and are easier to
+replicate from one device to the other), and may have a huge impact.
+In particular, a malicious attacker spreading over the network and
+disconnecting or disrupting devices massively could have deep consequences.
 
 This deliverable reports on the development of methodologies and tools
 that increase confidence in applications.  For concreteness, we focus 
@@ -49,7 +47,7 @@ platform and the applications that execute over it;
 \item detailed informal specifications of the Java platform are publicly
 available, and can be scrutinized.
 \end{inparaenum}
-However, it should be clear that the methods presented in this paper
+However, it should be clear that the methods presented in this document
 are relevant to other execution platforms for trusted personal devices.
 
 
@@ -61,31 +59,34 @@ guarantees about the security of a TPD and its applications.
 Essentially, the three levels are: the platform, the libraries,
 and the applications.
 
-The Java security architecture guarantees that downloaded
-applications are innocuous and comply with some basic policies related
-to typing, initialization or access control. Such basic policies are
-the cornerstones upon which the overall security of the smartcard will
-rely. Therefore it is important to verify that the security
-architecture does enforce these basic policies as intended. Thus, an
-important application of formal methods to TPD security is
-platform verification, which aims at providing an abstract model of
-the Java platform and security architecture, and at proving that
-the security functions play their expected role.  However, it is not
+\paragraph*{Platform} The Java security architecture guarantees that
+downloaded applications are innocuous and comply with some basic
+policies related to typing, initialization or access control. Such
+basic policies are the cornerstones upon which the overall security of
+the smartcard will rely. Therefore it is important to verify that the
+security architecture does enforce these basic policies as
+intended. Thus, an important application of formal methods to TPD
+security is platform verification, which aims at providing an abstract
+model of the Java platform and security architecture, and at proving
+that the security functions play their expected role.
+
+\paragraph*{Libraries} However, it is not
 sufficient to show that security functions are correctly designed. In
 particular, one also has to ensure that other components of the
-infrastructure are correctly designed: the Java API and the
-Global Platform API constitute two prominent components of the
-infrastructure whose correct design is central to security. Thus,
-another important aspect of platform verification is to show the API
-are correctly designed.
+infrastructure are correctly designed: the Java API and the Global
+Platform API constitute two prominent components of the infrastructure
+whose correct design is central to security. Thus, another important
+aspect of platform verification is to show the API are correctly
+designed.
 
-Platform verification is a fundamental step towards guaranteeing the
-security of smartcards, and a prerequisite for Common Criteria
-evaluations at the highest levels. Nevertheless, the guarantees
-offered by the Java security architecture are limited, and
+\paragraph*{Applications} 
+Platform and libraries verification is a fundamental step towards
+guaranteeing the security of smartcards, and a prerequisite for Common
+Criteria evaluations at the highest levels. Nevertheless, the
+guarantees offered by the Java security architecture are limited, and
 further verifications must be performed to verify that applications
 make a legitimate use of the infrastructure, and do not attempt any
-hostile action. 
+hostile action.
 
 Thus, application validation is another important application of
 formal methods to TPD security. To date, testing campaigns remain the
@@ -128,14 +129,13 @@ increasing strength are used, starting from automated techniques such
 as testing and moving towards formal validation using a combination of
 automated and interactive tools. In addition, we aim at overcoming the
 difficulty of introducing formal techniques in industrial processes by
-providing notations and tools hiding the mathematical formalisms.
-Therefore, formal tools should be developed to fit into classical
-developers environment.  We strongly believe that efforts should be
-done to allow users to benefit from formal techniques without having
+providing notations and tools hiding the mathematical formalisms and
+by integrating formal techniques into classical developers environment
+so as to allow users to benefit from formal techniques without having
 to learn new formalisms and to become experts.
 
 All the tools and results presented in this document were developed
-with this goal in mind, notably the choose of JML as assertion
+with this goal in mind, notably the choice of JML as assertion
 language and the development of JACK and its associated feature.
 Using those techniques, Java developers should be able to validate
 their code, or at least to get a good assurance on its correctness.
@@ -247,19 +247,12 @@ tools.  Among these tools, ESC/Java2~\cite{CK04:cassis} offers the higher
 level of automation as it does not require any user interaction and
 relies on the Simplify automatic prover. It is particularly useful for
 checking null pointers or array bounds limits; however it is unsound
-and incomplete. Other static verification tools such as
-JACK~\cite{BRL03:fme}, Jive~\cite{jive}, Krakatoa~\cite{MPU03:jlap}
-and Loop~\cite{vdBJ01:tacas} generate proof obligations that can be
-discharged using proof assistants or automatic provers. These tools
-are sound but require user interaction.
+and incomplete.
 
-Model-checking techniques provide yet another means to verify the
-correctness of Java programs against their JML
-annotations. Bogor~\cite{robby+04:tacas} exploits such techniques to 
-provide automatic verification of concurrent Java programs
-with JML annotations.
-
-
+In order to further increase the level of reliability of applications,
+we propose a methodology based on static verification using
+JACK~\cite{BRL03:fme}, a tool that generates proof obligations that
+can be discharged using proof assistants or automatic provers.
 
 \section{Contents of the deliverable}
 This document is organized as follows, the next chapter introduce the

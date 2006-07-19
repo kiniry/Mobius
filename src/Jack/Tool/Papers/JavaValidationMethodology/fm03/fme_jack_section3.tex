@@ -49,22 +49,26 @@ This section presents the tool architecture and its principles.
  integer.  From those translated annotations and the methods code,
  lemmas can be generated automatically.
 
- From the start, taking into account
- experiences in lemma generation for B machines, we have implemented a Weakest Precondition (WP) calculus to automate lemma
- generation.  Huisman, in \cite{Huisman:PhD}, presents how the
- classical Hoare logic can be completed to allow the generation of
- lemmas in the context of Java.  The Java statements contain different
- features like control-flow breaks.  So, the classical WP calculus
- should be completed to deal with them.
+ From the start, taking into account experiences in lemma generation
+ for B machines, we have implemented a Weakest Precondition (WP)
+ calculus to automate lemma generation.  Huisman, in
+ \cite{Huisman:PhD}, presents how the classical Hoare logic can be
+ completed to allow the generation of lemmas in the context of Java.
+ The Java statements contain different features like control-flow
+ breaks.  So, the classical WP calculus should be completed to deal
+ with them.
 
- Moreover, JML should be lightly upgraded to allow fully automated proof obligation generation.
- Notably, to
- automate lemma generation for the loops, we have had to extend
- the JML language with new keywords: \texttt{loop\_modifies}.
- The \texttt{loop\_modifies} keyword allows us to declare the variables modified in
-the body of the loop, as it is done for the methods. During the WP calculus, it is necessary to universally
-quantify the loop invariant with those variables, and since they cannot be automatically calculated, one has to
-specify them.
+
+ Moreover, JML should be lightly upgraded to allow fully automated
+ proof obligation generation.  Notably, to automate lemma generation
+ for the loops, we have had to extend the JML language with new
+ keywords: \texttt{loop\_modifies}.  The \texttt{loop\_modifies}
+ keyword allows us to declare the variables modified in the body of
+ the loop, as it is done for the methods. During the WP calculus, it
+ is necessary to universally quantify the loop invariant with those
+ variables, and since they cannot be automatically calculated, one has
+ to specify them.
+
  
  The two main drawbacks of the WP calculus are the loss of information and
  potential exponential explosion.  After lemmas have been generated,

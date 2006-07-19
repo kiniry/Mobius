@@ -1,16 +1,21 @@
-\subsection{Weakest Precondition Calculus For Java Bytecode}\label{wpbc}
-In this section, we define a bytecode logic in terms of a weakest precondition calculus. The proposed weakest precondition \wpi \ supports all Java bytecode sequential instructions except for floating point arithmetic instructions and 64 bit data (\java{long} and \java{double} types), including exceptions, object creation,
- references and subroutines. The calculus is defined over the method control flow graph and supports BML annotation,
- i.e. bytecode method's specification like preconditions, normal and exceptional postconditions, class invariants,
- assertions at particular program point among which loop invariants. The verification condition generator applied to a method 
-bytecode generates a proof obligation for every execution path
- by applying first the weakest predicate transformer to every \instr{return} instruction,
- \instr{athrow} instruction and end of a loop instruction and then following in a backwards direction the control
- flow up to reaching the entry point instruction.
-%The function $\wpi$ must satisfy the following property: if the instruction $\instr{ins}$ starts execution in a state where the predicate
-%$\wpi(\instr{ins}, \ \psi, \ \excPost)$ holds then if it terminates normally then the poststate must satisfy the predicate $\psi$  
-%and if terminates on exception \texttt{Exc} then  the poststate must satisfy $\excPost(\texttt{Exc})$.
- In an extended version of the present paper \cite{JBL05MP}, we show that the $\wpi$ function is correct.
+\subsection{Weakest Precondition Calculus For Java
+Bytecode}\label{wpbc} In this section, we define a bytecode logic in
+terms of a weakest precondition calculus. The proposed weakest
+precondition \wpi \ supports all Java bytecode sequential instructions
+except for floating point arithmetic instructions and 64 bit data
+(\java{long} and \java{double} types), including exceptions, object
+creation, references and subroutines. The calculus is defined over the
+method control flow graph and supports BML annotation, i.e. bytecode
+method's specification like preconditions, normal and exceptional
+postconditions, class invariants, assertions at particular program
+point among which loop invariants. The verification condition
+generator applied to a method bytecode generates a proof obligation
+for every execution path by applying first the weakest predicate
+transformer to every \instr{return} instruction, \instr{athrow}
+instruction and end of a loop instruction and then following in a
+backwards direction the control flow up to reaching the entry point
+instruction. In a related document \cite{JBL05MP}, we show that the
+$\wpi$ function is correct.
 
 %We give here the \wpi \ rule of the  \instr{Type\_load i} instruction:
 %\begin{frameit}
@@ -47,20 +52,20 @@ corresponding exceptional postcondition $\excPost(\texttt{Exc}, \tt{ind})$. One 
 \\
  \wpi(\instr{putField} \ \texttt{Cl.f}, \ \psi, \ \excPost)  = \\
 \begin{array}{l}
-   		\stack{\counter -1} \not= \Mynull\Rightarrow   
-	 \psi\begin{array}{l} \substitution{\counter}{ \counter-2 } \\[0 mm] 
-   	                   \substitution{\texttt{Cl.f} }{ \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] } \\
-		\end{array}\\
+                \stack{\counter -1} \not= \Mynull\Rightarrow   
+         \psi\begin{array}{l} \substitution{\counter}{ \counter-2 } \\[0 mm] 
+                           \substitution{\texttt{Cl.f} }{ \texttt{Cl.f}\oplus [\stack{\counter -1} \rightarrow \stack{\counter}] } \\
+                \end{array}\\
 
    \wedge \\
-   	\stack{\counter-1} = \Mynull 	\Rightarrow \excPost(\tt{NullPointerExc})
+        \stack{\counter-1} = \Mynull    \Rightarrow \excPost(\tt{NullPointerExc})
         \begin{array}{l}
           \substitution{ \counter }{ 0} \\
           \substitution{\stack{0}}{ \stack{\counter}} 
-	\end{array}
+        \end{array}
     \end{array} %\biggr. & \\
 \end{array}
- \]	  
+ \]       
 \caption{\sc Examples for bytecode wp rules}
  \label{instrWP}
 

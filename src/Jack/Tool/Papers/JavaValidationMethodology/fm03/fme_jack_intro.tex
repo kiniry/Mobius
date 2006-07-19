@@ -1,24 +1,35 @@
-  This section presents the Java Applet Correctness Kit
- (or \JACK).  This tool, already briefly described in
- \cite{BR-gdc2002,BRL-JACK}, is a formal tool that allows one to prove properties on
- Java programs using the Java Modeling Language \cite{Leavens-Baker-Ruby03} (JML).
- It generates proof obligations
- allowing to prove that the Java code conforms to its JML
- specification.  The lemmas are translated into an internal formula language called JPOL. Then JPOL verification conditions are translated into different prover language, namely Coq, PVS, Simplify and the B language \cite{bbook},
- allowing to use the automatic provers Simplify and the provers developed within the B method and interactive provers like the Coq proof assistant, PVS or Click'n'Prove .
+This section presents the Java Applet Correctness Kit (or \JACK).
+This tool, already briefly described in \cite{BR-gdc2002,BRL-JACK}, is
+a formal tool that allows one to prove properties on Java programs
+using the Java Modeling Language \cite{Leavens-Baker-Ruby03} (JML).
+It has been developed initially by Gemplus, and since 2003 by INRIA
+in the context of a bilateral collaboration with Gemplus, and then
+in the context of the INSPIRED project.
 
- But the tool is not yet another lemma generator for Java, since it also provides a lemma
- viewer integrated in the eclipse
- IDE\footnote{\texttt{http://www.eclipse.org}}.  This allows to
- hide the formalisms used behind a graphical interface.  Lemmas are
- presented to users in a way they can understand them easier, by using the Java syntax and highlighting code portions to help
- the understanding. Using \JACK, one does not have to learn a formal language to be confident on
-code correctness.
 
- The remainder of the section is organized as follow.  Subsection \ref{JavaAppletCorrectnessKit} presents the
- architecture and the main principles of the tool we have
- developed.
-Subsection~\ref{JPOL} presents the Java/Jack Proof Obligation Language (JPOL).
-Subsection~\ref{Industrialisation} describes more precisely
- the innovative parts of the tool and explains why we consider it as
+It generates proof obligations allowing to prove that the Java code
+conforms to its JML specification.  The lemmas are translated into an
+internal formula language called JPOL (Java/Jack Proof Obligation
+Language). Then JPOL verification conditions are translated into
+different prover language, namely Coq, PVS, Simplify and the B
+language \cite{bbook}, allowing to use the automatic provers Simplify
+and the provers developed within the B method and interactive provers
+like the Coq proof assistant, PVS or Click'n'Prove.
+
+ But the tool is not yet another lemma generator for Java, since it
+ also provides a lemma viewer integrated in the eclipse
+ IDE\footnote{\texttt{http://www.eclipse.org}}, which is one of the
+ most commonly used IDE for Java developers.  This allows to hide the
+ formalisms used behind a graphical interface.  Lemmas are presented
+ to users in a way they can understand them easier, by using the Java
+ syntax and highlighting code portions to help the
+ understanding. Using \JACK, one does not have to learn a formal
+ language to be confident on code correctness.
+
+ The remainder of the section is organized as follows.  Subsection
+ \ref{JavaAppletCorrectnessKit} presents the architecture and the main
+ principles of the tool we have developed.  Subsection~\ref{JPOL}
+ presents the Java/Jack Proof Obligation Language (JPOL).
+ Subsection~\ref{Industrialisation} describes more precisely the
+ innovative parts of the tool and explains why we consider it as
  accessible to any developers.

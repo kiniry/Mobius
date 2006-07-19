@@ -52,10 +52,7 @@ transaction is in progress.
 public boolean check(byte[] pin, short offset, byte length);
 \end{verbatim}
 
-%Finally, although it is a requirement of the JavaCard specification that if a pin check is
-%done during transaction the pin data doesnot participate in the transaction , i.e. pin data is not rollbacked if abort
-%of transaction occurs. Anyway being a question of good programming practice not to do authentification during transaction 
-%we can verify it with this specification. 
+
 \subsection{Checking atomicity}
 The method of Section~\ref{sec:highlevel} has been applied on
 industrial examples of TPD applications to check that atomicity
@@ -97,11 +94,4 @@ security policy as described in
 Section~\ref{SecHighLevelSecProp}. After propagating the
 core-annotations, and computing the appropriate proof obligations,
 this violation is found automatically, without any problems.
-%Notice that since the possibility to throw an exception is
-%hidden inside a method call, it is not completely obvious to find the
-%violation of the security policy using manual code-inspection only.
 
-%Concerning nested transactions, even if proof obligations are obvious,
-%the precondition propagation generates annotations for 23 methods among 5 classes.
-%It can be really time-saving to generate those annotations rather than writing them
-%manually.

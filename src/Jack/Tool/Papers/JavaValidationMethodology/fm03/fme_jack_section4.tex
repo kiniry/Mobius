@@ -20,23 +20,24 @@ that the underlying mathematical formalism is not exposed to the
 user.
 \subsubsection{Integration in developers environment}
  Java developers are used to develop using integrated development
-environments (IDE).  Those IDEs provide many features useful during
-the development process.  Integrating the tool in such IDEs allows the
-user to work in a familiar environment.  This leads both to better
-acceptance of the tool, and to a reduced learning curve.  Currently,
-\JACK\ is integrated within the eclipse IDE.  It could however be ported
-to other IDEs, and a standalone version that does not require an IDE
-also exists.
+ environments (IDE).  Those IDEs provide many features useful during
+ the development process.  Integrating the tool in such IDEs allows
+ the user to work in a familiar environment.  This leads both to
+ better acceptance of the tool, and to a reduced learning curve.
+ Currently, \JACK\ is integrated within the eclipse IDE.  It could
+ however be ported to other IDEs, and a standalone version that does
+ not require an IDE also exists.
 
  Another constraint has to be taken into account to obtain developer
- agreement: it is the tool's responsiveness.  The tool has to be used interactively, with a
- debugger spirit: it should not require the developer to wait for a
- long time.  Lemma generation takes, in realistic examples, less
+ agreement: it is the tool's responsiveness.  The tool has to be used
+ interactively, with a debugger spirit: it should not require the
+ developer to wait for a long time.  Lemma generation takes, in
+ realistic examples, less
  than one minute. %(see Section \ref{Case Study} for metrics).
- Nevertheless, the automatic proof of lemmas is not such a  reactive
- activity. Thus, the tool provides a feature that allows to schedule proof
- tasks in order to optimize proof time (see paragraph \ref{Support for
- automatic proof}).
+ Nevertheless, the automatic proof of lemmas is not such a reactive
+ activity. Thus, the tool provides a feature that allows to schedule
+ proof tasks in order to optimize proof time (see paragraph
+ \ref{Support for automatic proof}).
 
 
 %Several other minor features are available to integrate within the
@@ -115,7 +116,7 @@ have no Java or JML equivalent constructs are used.
 
 \subsection{Support for verification}
 Apart from displaying the generated proof obligations, \JACK\ also
-provides support for validating those proof, as detailed hereafter.
+provides support for validating those proofs, as detailed hereafter.
 \paragraph{Support for automatic proof}
 \label{Support for automatic proof}
  A point that should not be taken lightly is the time taken by
@@ -125,9 +126,11 @@ applications will generate thousands of proof obligations.
 Typically, those proofs can be quite lengthy, and it is necessary that
 the user is not obliged to wait for proofs to finish.
 
-To achieve this, \JACK\ provides an independent proof view, where files can be queued in order to be submitted to
-the prover. Thus, the proofs are performed as soon as possible, possibly during the night, allowing the user to
-focus on cases inspection.
+To achieve this, \JACK\ provides an independent proof view, where
+files can be queued in order to be submitted to the prover. Thus, the
+proofs are performed as soon as possible, possibly during the night,
+allowing the user to focus on cases inspection.
+
 \paragraph{Support for interactive proof}
 Although the automatic prover allows discharging many proof
 obligations, it cannot discharge all the proof obligations. Thus, the
@@ -135,7 +138,9 @@ remaining proof obligations have to be verified manually.
 
 Currently, developers are not supposed to handle this task, but to
 delegate it to a team of experts that would perform the proofs using
-the interactive prover of the \texttt{Atelier B} tool, emacs with PVS or the Coq editor.
+the interactive prover of the \texttt{Atelier B} tool, emacs with PVS
+or the Coq editor.
+
 
 \paragraph{Checking proof obligations}
 Additionally to the ``\textit{proved}'' and ``\textit{unproved}''
@@ -143,7 +148,7 @@ states, \JACK\ can also differentiate ``\textit{checked}'' proof
 obligations. Checked proof obligations correspond to proof obligations
 that are not formally proved, but have been manually verified.
 
-Checking a proof obligations is performed by the user to indicate that
+Checking proof obligations is performed by the user to indicate that
 he has read and understood the proof obligation and has confidence
 that it is correct. Although the checked state provides no formal
 guarantee on the correctness of the proof obligations, it still
@@ -159,3 +164,9 @@ ways:
    formally proved. In that case, it may however, be required that all
    the proof obligations have been checked.
 \end{itemize}
+In order to minimize verification time, one can assure that checked
+proof obligations remain unchanged through subsequents runs of the
+proof obligation generator---otherwise the time spent to inspect the
+proof obligation and to ensure manually that it is correct would be
+lost. 
+
