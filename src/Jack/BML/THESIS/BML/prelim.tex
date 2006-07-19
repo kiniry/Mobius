@@ -100,4 +100,39 @@ normally the normal postcondition holds, or otherwise the respective postconditi
 it is false. For instance, a light weight specification is the specification of method  \texttt{replace}  in Fig. \ref{replaceSrc}.
 
 It is also possible to give a more detailed specification of a method. This style of specification is called heavy weight specification.
- It is introduced by the JML keywords \jmlKey{normal\_behavior} and \jmlKey{exceptional\_behavior}. \todo{continue here}
+ It is introduced by the JML keywords \jmlKey{normal\_behavior} and \jmlKey{exceptional\_behavior}. As the keywords
+suggest every of them specifies a specific normal or exceptional behavior of a method.  (see \ref{PD06LBR}). The keyword 
+ \jmlKey{normal\_behavior} introduces a precondition which if it holds in the prestate of the method execution then
+the method will terminate normally and the postcondition introduced by the keyword \jmlKey{requires} will hold.
+ Note that this clause guarantees that the method will not terminate on an exception and thus the exceptional postcondition 
+for any kind of exception (i.e. for the exception class  \texttt{Exception}) is  \jmlKey{false}.
+An example for a heavy weight specification is given in Fig. \ref{bml:heavySp}. \todo{continue here}
+  
+\begin{figure}
+\begin{lstlisting}[frame=trbl]
+public class C {
+   int a ;
+
+   invariant a > 0; 
+   historyConstraint  old(a) >= a;
+
+   /@* normal_behaviour
+     * requires a > b;
+     * modifies a;
+     * ensures  a == \old(a) - b;  
+     *
+     * exceptional_behavior
+     * requires a <= b;
+     * exsures (ArithmeticException e)  a == \old(a) / 2;
+     *@/
+     public void divide(int b) {
+        try {
+           a = a / b;
+        } catch (ArithmeticException e ) { 
+	   a = a / 2;
+	}
+     }
+}
+\end{lstlisting}
+\caption{\sc An example for a method with two normal behaviours specified in JML} \label{bml:heavySp}
+\end{figure}
