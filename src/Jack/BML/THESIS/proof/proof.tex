@@ -216,8 +216,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
 			\forall \referenceOnly,\\
 			\Myspace \neg \ \instances(\referenceOnly) \wedge \\
 			\Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
-                        \Myspace \Myspace  \inter{\pc_n}{\pc_{n+1}} 
-					         \begin{array}{l}
+                        \Myspace \Myspace  \inter{\pc_n}{\pc_{n+1}} \\
+			\Myspace \Myspace		         \begin{array}{l}
 					           \subst{\counter}{0} \\
 						   \subst{\stack{0}}{\referenceOnly} \\
 						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
@@ -285,7 +285,7 @@ another step can be made and the \fwpi \ of the next instruction holds.
 Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
 Assume that the  execution starts in state \\
  $ \config{\heap_{0}}{\counterOnly_{0}}{\stackOnly_{0}}{\locVarOnly_{0}}{\pc_{0}}$
-and the there are made  n execution steps causing the transitive state transition 
+and the there are made  n execution steps causing the transitive state transition \\
 $ \config{\heap_0}{\counterOnly_0}{\stackOnly_0}{\locVarOnly_0}{\pc_0} \stateTrans^{n} \config{\heap_n}{\counterOnly_n}{\stackOnly_n}{\locVarOnly_n}{\pc_n} $.
 Assume that \\
  $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $  
