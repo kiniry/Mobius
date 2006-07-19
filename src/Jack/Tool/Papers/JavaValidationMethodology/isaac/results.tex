@@ -1,12 +1,13 @@
-\subsection{Results}\label{SecResults}
+\section{Checking High-Level Security Properties}\label{SecResults} 
 
-For several realistic examples of Java Card applications, we checked
-whether they respect the security properties presented in
-Section~\ref{SecHighLevelSecProp}, and actually found some violations.
-This section presents these results, focusing on the atomicity
-properties.
+Using the techniques of Section~\ref{sec:highlevel}, we checked for
+several realistic applications whether they respect the security
+properties presented in Section~\ref{SecHighLevelSecProp}, and
+actually found some violations.  This section presents these results
+for the PACAP case study of Gemplus, focusing on the atomicity properties.
 
-\subsubsection{Core-annotations for Atomicity Properties}
+
+\subsection{Core-annotations for Atomicity Properties}
 
 The core-annotations related to the atomicity properties specify the
 methods related to the transaction mechanism declared in class
@@ -55,20 +56,15 @@ public boolean check(byte[] pin, short offset, byte length);
 %done during transaction the pin data doesnot participate in the transaction , i.e. pin data is not rollbacked if abort
 %of transaction occurs. Anyway being a question of good programming practice not to do authentification during transaction 
 %we can verify it with this specification. 
-\subsubsection{Checking the Atomicity Properties}
+\subsection{Checking atomicity}
+The method of Section~\ref{sec:highlevel} has been applied on
+industrial examples of TPD applications to check that atomicity
+properties are respected.
 
 
-As mentioned above, we tested our method on realistic examples of
-industrial smart card applications, including the so-called Demoney
-case study, developed as a research prototype by Trusted
-Logic\footnote{{\tt http://www.trusted-logic.fr}}, and the PACAP case
-study\footnote{{\tt
-http://www.gemplus.com/smart/r\_d/publications/case-study}}, developed
-by Gemplus. Both examples have been explicitly developed as test cases
-for different formal techniques, illustrating the different issues
-involved when writing smart card applications. We used the
-core-annotations as presented above, and propagated these throughout
-the applications.
+
+ We used the core-annotations as presented above, and
+propagated these throughout the applications.
 
 For both applications we found that they contained no nested
 transactions, and that they did not contain attempts to verify pin

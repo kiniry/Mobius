@@ -20,22 +20,20 @@ annotated file, JACK generates appropriate proof obligations to check
 whether the applet respects the security property.
 
 \subsection{Automatic Generation of Annotations}
-
-The propogation consists mainly on a weaving phase,
-\emph{i.e.}~how the core-annotations are propagated throughout the
-applet. We define functions \textsf{mod}, \textsf{pre}, \textsf{post} and
-\textsf{exc\-post}, propagating assignable clauses, preconditions, 
-postconditions and exceptional postconditions, respectively. These
-functions have been defined and implemented for the full Java Card
-language, but to present our ideas, we only give the definitions for a
-representative subset of statements: statement composition, method
-calls, conditional and \texttt{try}-\texttt{catch} statements and
-special set-annotations. We assume the existence of domains
-\textsf{MethName} of method names, \textsf{Stmt} of Java Card
+The purpose of this section is to provide a brief description of the
+weaving phase, \emph{i.e.}~how the core-annotations are propagated
+throughout the applet. We define functions \textsf{mod}, \textsf{pre},
+\textsf{post} and \textsf{exc\-post}, propagating assignable clauses,
+preconditions, postconditions and exceptional postconditions,
+respectively. These functions have been defined and implemented for
+the full Java Card language, but to present our ideas, we only give
+the definitions for a representative subset of statements: statement
+composition, method calls, conditional and \texttt{try}-\texttt{catch}
+statements and special set-annotations. We assume the existence of
+domains \textsf{MethName} of method names, \textsf{Stmt} of Java Card
 statements, \textsf{Expr} of Java Card expressions, and \textsf{Var}
-of static ghost variables, and functions
-\textsf{call} and \textsf{body}, denoting a method call and 
-body, respectively.
+of static ghost variables, and functions \textsf{call} and
+\textsf{body}, denoting a method call and body, respectively.
 
 All functions are defined as mutual recursive functions on method
 names, statements and expressions. When a method call is encountered,
@@ -46,4 +44,5 @@ applets typically do not contain (mutually) recursive method calls,
 therefore this does not cause any problems. Generating appropriate
 annotations for recursive methods would require more care (and in
 general it might not be possible to do without any user interaction).
+
 
