@@ -73,7 +73,7 @@ $$
 
 \begin{interpExpr}[Evaluation of expressions] \label{interpExpr} 
 The evaluation in a state \\
-$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expression$
+$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\Final }$  of an expression $\expression$
  is denoted with $\evalExp{\expression}{s}$  and is defined inductively on the grammar of expressions as follows:
  
 $$
@@ -119,11 +119,11 @@ $$
 
 \end{array}
 $$
-The evaluation of the following expressions can be done only in a final state $s = \configFinal{\heap}{\locVarOnly}{\Final }$:
+The evaluation of the following expressions can be done only in a final state $s = \configFinal{\heap}{\Final }$:
 $$
 \begin{array}{ll}
-\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\locVarOnly}{\Res} \\
-\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\locVarOnly}{\Exc}
+\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\Res} \\
+\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\Exc}
 \end{array}
 $$
   
@@ -252,7 +252,7 @@ the following holds:
 For any expression $\expression_1$ and $\expression_2$,
 for any two states $s_1$ and $s_2$  such that
 $ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and \\
-$ s_2 =   \configFinalNorm{\heap}{\locVarOnly}{\evalExp{\expression_2}{s_1} } $ then 
+$ s_2 =   \configFinalNorm{\heap}{\evalExp{\expression_2}{s_1} } $ then 
 the following holds:
 \begin{itemize}
       \item $\evalExp{\substitution{\expression_1}{ \result }{ \expression_2 }}{ s_1 } = \evalExp{\expression_1}{s_2} $

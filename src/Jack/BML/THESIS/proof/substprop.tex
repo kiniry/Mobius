@@ -204,7 +204,7 @@ the following holds:
 For any expression $\expressionsWp_1$ and $\expressionsWp_2$,
 for any two states $s_1$ and $s_2$  such that
 $ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and \\
-$ s_2 =   \configFinalNorm{\heap}{\locVarOnly}{\evalExp{\expressionsWp_2}{s_1} } $ then 
+$ s_2 =   \configFinalNorm{\heap}{\evalExp{\expressionsWp_2}{s_1} } $ then 
 the following holds:
 \begin{enumerate}
       \item $\evalExp{\substitution{\expressionsWp_1}{ \result }{ \expressionsWp_2 }}{ s_1 } = \evalExp{\expressionsWp_1}{s_2} $

@@ -93,13 +93,11 @@ We are going to see only the proofs for the instructions \return , \load and \in
 			\mbox{\rm\comment{by the substitution property \ref{substRet}  }}\\
 			 \iff \\
                           \interp { \normalPost} { \configFinalNorm{\heap_n  }
-				                                            {\locVarOnly_n  }
-                                                                            { \evalExp{ \stack{\topStack}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } }
+				                                   { \evalExp{ \stack{\topStack}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } }
                          }\\
 			 \mbox{\rm \comment{by definition of the evaluation function \mbox{ \rm \textit{eval}}  } }\\
 			 \iff \\ 
-				   \interp{ \normalPost} { \configFinalNorm{\heap_n  }
-                                                            {\locVarOnly_n  }   
+				   \interp{ \normalPost} { \configFinalNorm{\heap_n  }  
 							    { \stackOnly_n ( \counterOnly_n  )  } } 
 			\end{array} $$
 	\item   $\ins{\pc_n } = \load \ i $ 
@@ -293,14 +291,14 @@ Assume that \\
  $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $  
 holds then
 \begin{enumerate}
-	\item if $\ins{\pc_n} = \return$  then $\interp{\methodd.\normalPost} {\configFinalNorm{\heap_n}{\locVarOnly_n} {\stackOnly_n( \counterOnly_n )}} $ holds.  
+	\item if $\ins{\pc_n} = \return$  then $\interp{\methodd.\normalPost} {\configFinalNorm{\heap_n}{\stackOnly_n( \counterOnly_n )}} $ holds.  
 	
 	\item if $\ins{\pc_n}\neq \athrow  $ throws a not handled exception of type $\Exc$ \\
-	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   }{\locVarOnly_n} } $ holds 
+	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds 
 	where $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$.
 	
 	 \item if $\ins{\pc_n} = \athrow $ throws a not handled exception of type $\Exc$ \\
-	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   }{\locVarOnly_n} } $ holds 
+	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $ holds 
 	
 	
 	\item else exists a state $s_{n+1}$ such that another execution step can be done 
