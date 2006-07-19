@@ -15,9 +15,9 @@
 
 
 \section{State configuration}\label{def}
- In this section, we introduce the notion of state configuration.
+ In this section, we introduce the notion of program state.
  A state configuration \SetConfigs models the program state in particular execution
- program point by specifying what is the state of the memory heap, the stack and the stack counter, the values of the
+ program point by specifying what is the memory heap in the state, the stack and the stack counter, the values of the
  local variables of the currently executed method  and what is the instruction which is executed next. Note that, as we stated before our 
  semantics ignores the method call stack and so, state configurations also omit the call frames stack. 
  
@@ -52,20 +52,20 @@
  A method may terminate either normally (by reaching a return instruction) or exceptionally (by throwing an exception).
  
  \begin{itemize}
-        \item  $\configFinalNorm{\heap}{\locVarOnly}{\Res} \in \SetConfigFinalNorm $ which describes a \textit{normal final state}, i.e.
+        \item  $\configFinalNorm{\heap}{\Res} \in \SetConfigFinalNorm $ which describes a \textit{normal final state}, i.e.
 	       the method execution terminates normally. The normal termination configuration has the following components :
                \begin{itemize}
                       \item the function \heap : \HeapSet \ which reflects what is the heap state after the method terminated
-		      \item \locVarOnly \  is the array of local variables of a method 
+		      
 		      \item \Res \ stands for the return value  of the method
 	       \end{itemize}
 
-	\item  $\configFinalExc{\heap}{\locVarOnly}{\Exc} \in \SetConfigFinalExc $ which stands for an 
+	\item  $\configFinalExc{\heap}{\Exc} \in \SetConfigFinalExc $ which stands for an 
                \textit{exceptional final state} of a method,
 	       i.e. the method terminates by throwing an exception. The exceptional configuration has the following components:
                \begin{itemize}
                       \item the heap \heap 
-		      \item \locVarOnly \ is the array of local variables of a method
+		      %\item \locVarOnly \ is the array of local variables of a method
 		      \item \Exc \ is a reference to the uncaught exception that caused the method termination
                \end{itemize}
 
@@ -74,7 +74,7 @@
  When an element of a state configuration $\config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc}$ is updated 
  we use the notation: 
  $$ \substitution{\configVar}{ E}{ V}   , \ E \in \{ \heap, \counterOnly, \stackOnly, \locVarOnly, \pc \} $$   
- We will denote with $\configFinal{\heap}{\locVarOnly}{\Final}$ for any configuration which belongs to the set  $\SetConfigFinal$. 
+ We will denote with $\configFinal{\heap}{\Final}$ for any configuration which belongs to the set  $\SetConfigFinal$. 
  Later on in this chapter, we define in terms of state configuration transition relation the operational semantics of
  our bytecode programming language.
  In the following, we focus in more detail on the heap modelization and the operand stack. 

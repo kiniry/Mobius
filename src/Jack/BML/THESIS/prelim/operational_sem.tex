@@ -560,9 +560,9 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 
            The stack top element  must be a reference of an object of type \\ \Throwable. 
 	  If there is a handler that protects this bytecode instruction from the exception thrown, the control is transfered
-	  to the instruction at which the exception handler starts\footnote{for every method the ExceptionHandler
-	  table describes the corresponding exception handler by the limits of the 
-	  region it protects, the Exception that it catches, and the instruction at which it starts}.
+	  to the instruction at which the exception handler starts. %\footnote{for every method the ExceptionHandler
+	  % table describes the corresponding exception handler by the limits of the 
+	  % region it protects, the Exception that it catches, and the instruction at which it starts}.
 	  If the object on the stack top is \Mynull, a \NullPointerExc \ is thrown. 
 
  \item Method Invokation. \invoke \footnote{ only the case when  the invoked method returns a value}

@@ -19,12 +19,13 @@ Our language supports an exception handling mechanism similar to the JVM one.
    \item \ArrStoreExc \ thrown if an object is tried to be stored in an array and the object is of incompatible type with type of the  array elements
 \end{itemize}
 
-The language also supports programming exceptions. Those exceptions are forced by the programmer, by a special intruction called \athrow. 
+The language also supports programming exceptions. Those exceptions are forced by the programmer, by a special bytecode 
+intruction as we shall see later in the coming section. 
 The modelization of the exception handling mechanism involves several functions. 
  The function \getStateAfterExc \ deals with bytecode instructions that may throw exceptions. The function returns the state 
  configuration after the current instruction during the execution of \methodd \ throws an exception of type $\mbox{\rm\texttt{E}}$. If the  method
  \methodd \ has an  exception handler which can handle  exceptions of type $\mbox{\rm\texttt{E}}$ thrown at the index of the current  instruction,
- the execution is not stuck and thus, the state configuration is an intermediate state configuration.
+ the execution will proceed and thus, the state is an intermediate state configuration.
  If the method \methodd \ does not have an exception handler for dealing with exceptions of type $\mbox{\rm\texttt{E}}$ 
  at the current index, the execution of \methodd \ terminates exceptionally and the current instruction
  causes the method exceptional termination:
@@ -33,7 +34,7 @@ The modelization of the exception handling mechanism involves several functions.
  $$\begin{array}{l}
           \getStateAfterExc : \SetConfigInterm * \excType * \ExcHandler[] \rightarrow \SetConfigInterm \cup \SetConfigFinalExc  \\
 	  \\
-	  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \mbox{\rm\texttt{E}}, \pc, \excHH[] ) = \\
+	  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \mbox{\rm\texttt{E}},  \excHH[] ) = \\
           \left\{\begin{array}{ll}
 	        \config{\heap'}{0}{\update{\stackOnly}{0}{\referenceOnly}}{\locVarOnly}{\pcHandler} & \begin{array}{l}  
                                                                                                            \mbox{\rm if \ \findExcHandler{\mbox{\rm\texttt{E}}}{\pc}{\excHH[]}} \\
@@ -41,7 +42,7 @@ The modelization of the exception handling mechanism involves several functions.
 												      \end{array}	   
 													   \\
 		& \\
-		\configFinalExc{\heap'}{\locVarOnly}{\referenceOnly} & \begin{array}{l}     
+		\configFinalExc{\heap'}{\referenceOnly} & \begin{array}{l}     
 		                                                             \mbox{\rm  if \ \findExcHandler{\mbox{\rm\texttt{E}}}{\pc}{\excHH[]} } \\
 		                                                             = \bottom  
 		                                                        \end{array}
@@ -62,11 +63,11 @@ The modelization of the exception handling mechanism involves several functions.
 	\findExcHandler{ \mbox{ \rm \texttt{E}} }{\pc}{\excHH[]} = \\
 	 \left\{\begin{array}{ll}
 	     \excHH[m].\pcHandler & \begin{array}{l}
-	          		          hExc \neq emptySet \Rightarrow
-					  min( hExc ) = m
+	          		         if  \  hExc \neq emptySet \\
+					 where \  m = min( hExc ) 
 			            \end{array}	 \\
 			   & \\
-	     \bottom &  hExc = emptySet
+	     \bottom &  else %hExc = emptySet
 	 \end{array}\right. \\
 \\ 
  \rm{where } \\  

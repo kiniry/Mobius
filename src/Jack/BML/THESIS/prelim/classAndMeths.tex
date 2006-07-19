@@ -22,25 +22,35 @@
                     \end{array} \right\}
    \end{array} $$
 
- A field object is a tuple that contains the unique field id and a field type and the class where it is declared :  
+ A field object is a tuple that contains the unique field id (\fieldName) and a field type (\fieldType) and
+ the class where it is declared (\declaredIn):  
  $$ \begin{array}{l}
-          % \forall \fieldd : \FieldSet, \\
-                                     \FieldSet = \left\{\begin{array}{ll}  \fieldName  &  : \FieldName;\\
-                                                                          \fieldType   &  : \JavaType; \\
-									  \declaredIn  &  : \ClassSet \cup \{ \bottom \}
+         \FieldSet = \left\{\begin{array}{ll}   
+		                               \fieldName  &  : \FieldName;\\
+                                               \fieldType   &  : \JavaType; \\
+					       \declaredIn  &  : \ClassSet \cup \{ \bottom \}
                      \end{array} \right\}
    \end{array} $$
- We introduce a special field which stands for the number of components of any reference pointing to an array object and which does not belong to any class
- (the name of the object and its field  \fieldName \ have the same name ):
+  From the above definition, we can notice that the field \declaredIn \ may have a value $\bottom$. This is because we model 
+  the length of a reference pointing to an array object as an element from the set \FieldSet. Because the length of 
+  an array is not declared in any class, 
+  we assign to its attribute \declaredIn \ the value $\bottom$.  
+  The special field which stands for the array length  
+ (the name of the object and its field  \fieldName \ have the same name ) is the following:
  $$  \length =  \left\{\begin{array}{ll} \fieldName & = \length;\\
 			                 \fieldType  & = int; \\
 					 \declaredIn & = \bottom
                      \end{array} \right\}$$
- 
+
+ Note that there are other possible approaches for modeling the array length. For instance,
+ the array length can be part of the array reference. We consider that both of the choices are equivalent.
+ However, the current formalization follows closely our implementation  of the verification condition 
+ generator which is necessary if we want to do a proof of correctness of the implementation.
+
 % We assume that for any two different fields $\fieldd_1$ and $\fieldd_2$ their names are different : 
 % $$\fieldd_1 \neq \fieldd_2 \Rightarrow \fieldd_1.fieldName \neq  \fieldd_2.fieldName  $$
 
- A method has a unique method id ( \methodName), a return type (\retType),
+ A method has a unique method id (\methodName), a return type (\retType),
  a list containing the formal parameter names and their types(\args), 
  the number of its formal parameters (\numArgs),
  list of bytecode instructions representing its body (\body),
@@ -52,17 +62,17 @@
  $$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
                      \MethodSet  = \left\{\begin{array}{ll}  \methodName & :\MethodName\\
 						          \retType & :\JavaType\\
-							  \args &  : (name * \JavaType) [] \\
+							  \args &  : list \ (name * \JavaType) \\
 							  \numArgs & : nat \\
-							  \body &  : \bcIns [] \\
+							  \body &  : list \ \bcIns \\
 							  %\entryPoint  &  : \bcIns \\
-							  \excHandlerTable & : \ExcHandler []\\
-							  \exceptions & : \ClassSet_{exc}[]
+							  \excHandlerTable & : list \ \ExcHandler \\
+							  \exceptions & : list \ \ClassSet_{exc}
                                      \end{array}  \right\}
      \end{array} $$
   
- We assume that for every method \methodd the entrypoint is the first instruction in the array of instructions 
- of which its body consists, i.e. $ \methodd.\entryPoint =\methodd.\body[0]$.
+ We assume that for every method \methodd \ the entrypoint is the first instruction in the list of instructions 
+ of which the method body consists, i.e. $ \methodd.\entryPoint =\methodd.\body[0]$.
 
  An object of type \ExcHandler \ contains information about the region in the method body that it protects, i.e. the start
  position (\pcStart) of the region and the end position (\pcEnd), about the exception it protects from (\exc),
@@ -76,7 +86,9 @@
 							  \exc & : \ClassSet_{exc} 
                                         \end{array}  \right\}
      \end{array} $$
-   We impose the following constraints about \pcStart, \pcEnd \ and \pcHandler:
+   We require that \pcStart, \pcEnd \ and \pcHandler \ fields in any exception handler attribute \methodd.\excHandlerTable \ for any method \methodd \
+   are valid indexes in the list  of instructions of the method body  \methodd.\body :
+ 
 $$ \begin{array}{l}  \forall \methodd: \MethodSet,  \\
                       \forall i:nat, 0 \le i <  \methodd.\excHandlerTable.length,  \\
                             \Myspace 0 \le \methodd.\excHandlerTable[i].\pcEnd <  \methodd.\body.length \wedge  \\
@@ -84,6 +96,7 @@ $$ \begin{array}{l}  \forall \methodd: \MethodSet,  \\
 			    \Myspace 0 \le \methodd.\excHandlerTable[i].\pcHandler <  \methodd.\body.length  
     \end{array}
  $$
+
 
  
 % For getting the value of any of the attributes in a class, method or field object we use the notation \textit{ name of the object . name of the attribute }

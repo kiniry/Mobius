@@ -16,13 +16,13 @@ $$ \begin{array}{ll}
    \end{array}  $$
 
 
-Our language supports two kinds of values : values of the basic type \Myint  \ and reference values   \RefValues. \RefValues may be either references to
+Our language supports two kinds of values : values of the basic type \Myint  \ and reference values   \RefValues. \RefValues \  may be either references to
 class objects or references to array objects. The set of references of class objects is denoted with $ref$ and the set of references to array 
 objects is represented with $refArr$. The following  definition gives the  formal grammar of values:
  
 $$\begin{array}{ll}
-             \Values &       ::= i, i \in \  \Myint \  \mbox{\rm literal } \mid \RefValues \\
-	     \RefValues &    ::= ref \mid \RefValuesArr  \mid   \Mynull \\  %: C , C \in \reff \mid \RefValuesArr  \mid   \Mynull \\
+             \Values &       ::= i \mid \RefValues \\
+	     \RefValues &    ::= \Ref \mid \RefValuesArr  \mid   \Mynull \\  %: C , C \in \reff \mid \RefValuesArr  \mid   \Mynull \\
 	     \RefValuesArr & ::= refArr   %: C\lbrack \rbrack,  C\lbrack \rbrack \in \reffArr
  \end{array}$$
 

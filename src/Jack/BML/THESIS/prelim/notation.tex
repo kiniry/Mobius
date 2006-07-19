@@ -1,10 +1,14 @@
 
  \section{Notation}\label{notation}
- Here we give the semantics of several notations used in the rest of this chapter.
+ Here we introduce several notations used in the rest of this chapter.
  If we have a function $f$ with  domain type  $A$ and range type $B$
- we note it with $f : A \rightarrow B$. If the function receives n arguments of type $A_1 \ \ldots \ A_n$ respectively
+ we note it with $f : A \rightarrow B$. If the function receives $n$ arguments of type $A_1 \ \ldots \ A_n$ respectively
  and maps them to elements of type $B$
- we note the function signature with $f : A_1 * ...*A_n \rightarrow B$.   
+ we note the function signature with $f : A_1 * ...*A_n \rightarrow B$.
+ The set of elements which  represent the domain of the  function $f$
+ is given by the function $\Dom(f)$ and the elements in its range are given
+ by $\Range(f)$. 
+
  Function updates of function $f$ with n arguments is denoted with $ \update{f}{x_1 \ldots x_n}{y} $ and the definition of such function is :
  $$  \update{f}{x_1 \ldots x_n }{y}(z_1 \ldots z_n) = 
     \left\{\begin{array}{ll}
@@ -12,15 +16,15 @@
 		  f(z_1 \ldots z_n ) & else
            \end{array}\right.$$
  
- The function \isInListOnly  takes as arguments any list and an object and  returns \textit{true} if the object is in the 
- list and \textit{false} otherwise:
- $$ \isInListOnly : list \ A * A \rightarrow \mbox{ \rm \textit{bool}}$$
- 
 
-The empty list is denoted with $\lbrack \ \rbrack$. For any type $A$, the function \addInListOnly takes as argument any list $l: list \ A$ and an object 
-$o: A$ and returns a list $l1 $ such that $l1.head = o \wedge l1.tail = l$: 
- 
-$$ \addInListOnly : list \ A * A \rightarrow  list \ A $$
+ The type $list$ \ is used to represent a sequence of elements. The empty list is denoted with $\emptyList$.
+ If it is true that the element $e$ is in the  list $l$, we use the notation $e \in l$.
+ The function \assocList \ receives two arguments an element $e$ and a list $l$ and returns a new list 
+ $e \assocList l$ whose head and tail are respectively $e$ and $l$. The number of elements in a list $l$ is denoted with  $l.\listLen$.
+ The $i$-th element in a list $l$  is denoted with $l[i]$. Note that the indexing in a list $l$ starts at $0$, thus the last
+ index in  $l$ being $l.\listLen - 1$.
 
-The function $\InDom{f}{ e }$ determines if the element $e$ is in the domain of the function $f$.
-The function $\InRan{f}{e}$ determines if the element $e$ is in the range of the function $f$
+
+
+
+ 

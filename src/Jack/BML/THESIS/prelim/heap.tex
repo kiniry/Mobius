@@ -2,11 +2,11 @@
 
  \subsection{Modeling the Object Heap} \label{heap}
  An important issue for the modelization of an object oriented programming language and its operational semantics
- is the garbage collected memory heap. As the JVM specification states, the heap is the
+ is the memory heap. The heap is the
  runtime data area from which memory  for all class instances and arrays is allocated. Whenever a new instance
  is allocated, the JVM returns a reference value that points to the newly created object. 
  We introduce a record type \HeapSet \ which models the memory heap. We do not take into account 
- garbage collection and thus, we assume that heap objects has an infinite space memory. 
+ garbage collection and thus, we assume that heap objects has an infinite memory space. 
  
  In our modelization, a heap consists of the following components:
  \begin{itemize}
@@ -38,39 +38,42 @@
 
 
  Another possibility is to model the heap as partial function from locations to objects where objects contain a function from 
- fields to values. Both formalizations are equivalent, still we have chosen this model as it follows closely our implementation
- of the verification condition generator.
+ fields to values. Both formalizations are equivalent, still we have chosen this model as it follows closely the
+ verification condition generator   implementation.
 
  In the following, we are interested only in  heap objects \heap \ which guarantee that the value of the components
  \heap.\heapFields \ and \heap.\heapArrays \ are functions which are defined only for references from the proper
  type and which are in the list of references of the heap \heap.\heapLocs: 
 
- \ as well as that if a field function
- returns a reference value then this reference value is once again in \heap.\heapLocs :
+% \ as well as that if a field function
+% returns a reference value then this reference value is once again in \heap.\heapLocs :
  $$\begin{array}{ll}
-          \forall  \fieldd : \FieldSet, \forall \referenceOnly \in \RefValues, &  \InDom{ \heap.\heapFields(\fieldd)}{\referenceOnly } \Rightarrow \\
-	  & \isInList{ \heap.\heapLocs  }{\referenceOnly} \wedge \\
-	  & \subtype{ \heap.\typeof{\referenceOnly }}{\fieldd.\declaredIn} \\
+          \forall  \fieldd : \FieldSet, \forall \referenceOnly \in \RefValues, &  \referenceOnly \in \Dom( \heap.\heapFields(\fieldd)) \Rightarrow \\
+	  &  \referenceOnly  \in \heap.\heapLocs  \wedge \\
+	  & \subtype{ \heap.\heapTypeOf(\referenceOnly ) }{\fieldd.\declaredIn} \\
 	  \wedge &  \\
-	  \forall \referenceOnly \in  \RefValuesArr, &  \InDom{ \heap.\heapArrays}{(\referenceOnly  , i )} \Rightarrow \\
-	  & \isInList{\heap.\heapLocs}{  \referenceOnly }\wedge \\
+	  \forall \referenceOnly \in  \RefValuesArr, &  (\referenceOnly  , i ) \in \Dom (\heap.\heapArrays) \Rightarrow \\
+	  &  \referenceOnly  \in  \heap.\heapLocs \wedge \\
 	  & 0 \leq i < \heap.\heapFields( \length)( \referenceOnly)  
 	 
    \end{array}
   $$
 
-Also, we assume that the heap must contain well formed values. By this, we mean that the heap    maps any field object
+Also, we assume that the heap must contain well formed values. By this, we mean that the heap  maps any field object
  \fieldd : \FieldSet \ which has a reference  type (i.e. the component \fieldd.\fieldType \ contains a reference type  )  
-into a function which may only return references which are already defined in the heap : 
+into a function which may only return references which are already defined in the heap. The same condition is required for array references whose elements
+are references, i.e. the value of an array elements is either a reference defined in the heap or \Mynull. The next formalization expresses the restriction for field 
+functions : 
 
  $$\begin{array}{ll}
           \forall  \fieldd : \FieldSet, & \forall \referenceOnly \in \RefValues, \\ 
           & \fieldd.\fieldType \in \AllRefs  \wedge \\
-	  & \InRan{ \heap.\heapFields(\fieldd)}{\referenceOnly } \Rightarrow \\
-	  & \Myspace \isInList{ \heap.\heapLocs  }{\referenceOnly} \vee \referenceOnly = \Mynull \\	  
+	  & \referenceOnly  \in  \Range( \heap.\heapFields(\fieldd))  \Rightarrow \\
+	  & \Myspace  \referenceOnly \in \heap.\heapLocs \vee \referenceOnly = \Mynull \\	  
    \end{array}
   $$
  
+
 % The function $\intersectOnly$ takes two lists $l1$ and $l2$ and returns a list of
 % their common elements:
 % $$\intersectOnly : list \ \AllRefs *  list \ \AllRefs \rightarrow  list \ \AllRefs   $$
@@ -84,7 +87,7 @@ into a function which may only return references which are already defined in th
 
  %$$ \getFreshRef{l}{C} = \Ref{C} \Rightarrow \isInList{l}{\Ref{C}} = \mbox{ \rm \textit{false}} $$
 
- We define an operation \addNewLocationOnly \  which add a new reference to the list of references in a heap.
+ We define an operation \addNewLocationOnly \  which adds a new reference to the list of references in a heap.
  The only change that the operation will cause to the heap \heap \ is to add
  a new reference $\referenceOnly$ to the list of references of the heap \heap.\heapLocs:   
 
@@ -94,9 +97,8 @@ into a function which may only return references which are already defined in th
  $$ \begin{array}{l}
            \addNewLocation{\heap}{\referenceOnly} = \heap' \iff^{def} \\
 	      \\
-              \heap.\heapLocs = l \wedge \\
-   	      \isInList{l}{\referenceOnly} = \mbox{ \rm \textit{false}} \wedge \\
-	      \heap'.\heapLocs = \addInList{l}{\referenceOnly}  \wedge \\ 
+   	      \referenceOnly \notin \heap.\heapLocs   \\ 
+	      \heap'.\heapLocs = \referenceOnly \assocList \heap.\heapLocs \wedge \\ 
 	      \heap.\heapFields = \heap'.\heapFields \wedge \\
 	      \heap.\heapArrays = \heap'.\heapArrays \wedge \\
 	      % \heap.\heapTypeOf = \heap'.\heapTypeOf
@@ -137,9 +139,9 @@ $$
  a fresh reference $\referenceOnly$  which points to the newly created object is added in the heap \heap \ 
  and all the values of the field functions that correspond to the fields in class $\clazz$ 
  are updated for the new reference with the default values for their corresponding types.
- The function which for a heap \heap and a class type \clazz returns the same heap but with a fresh reference of
+ The function which for a heap \heap \ and a class type \clazz \ returns the same heap but with a fresh reference of
  type \clazz \ has the following name and signature:
- $$ \newRefOnly :  \heap \rightarrow \reff \rightarrow  \heap * ref $$
+ $$ \newRefOnly :  \heap \rightarrow \reff \rightarrow  \heap * \Ref $$
 
  The formalization of the resulting heap and the new reference is the following:
 
@@ -203,7 +205,7 @@ $ \heap . \heapArrays (\referenceOnly, i )$ becomes $ \heap(\referenceOnly, i )$
  $\referenceOnly$ is updated  with the value \textit{val},
  the component \heap.\heapFields \ is updated:
  $$ \heap.\heapFields := \update{\heap.\heapFields}{\fieldd}{\update{\heap.\heapFields(\fieldd)}{\referenceOnly}{val}} $$  
- In the following for the sake of clarity, we will use another lighter notation for a field update which do not imply any ambiguities:
+ In the following, for the sake of clarity, we will use another lighter notation for a field update which do not imply any ambiguities:
  $$ 
   \update{\heap}{\fieldd}{\update{\fieldd}{\referenceOnly}{val}} 
  $$ 
