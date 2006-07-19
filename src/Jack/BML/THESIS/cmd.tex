@@ -35,8 +35,7 @@
 
 
 
-\newcommand{\todo}[1]{}
-%{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
+\newcommand{\todo}[1]{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
 \newcommand{\fig}[1]{ Fig.#1}
 \newcommand{\jmlKey}[1]{\mbox{\rm\textbf{#1}}}% wrapping jml keywords
 \newcommand{\java}[1]{\texttt{#1}}
@@ -169,9 +168,9 @@
 
 
 \newcommand{\AllRefs}{\mbox{\rm\textit{RefType}}} % the set all references  - reff \cup \reffArr  
-\newcommand{\reff}{\mbox{\rm\textit{RefClType} }} % the type of simple reference
-\newcommand{\reffArr}{\mbox{\rm\textit{RefArrType}}}
-\newcommand{\Ref}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
+\newcommand{\reff}{\mbox{\rm\textit{RefTypeCl} }} % the type of simple reference
+\newcommand{\reffArr}{\mbox{\rm\textit{RefTypeArr}}}
+
 \newcommand{\reference}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
 \newcommand{\referenceOnly}{\mbox{\rm\texttt{ref}}} 
 \newcommand{\RefArr}[1]{\tt{refArr}_{#1} } % a reference to an array  ref_{type}^{length}
@@ -182,7 +181,7 @@
 
 
 \newcommand{\RefValuesArr}{\mbox{\rm\textit{RefValArr}}}
-
+\newcommand{\Ref}{\mbox{\rm\textit{RefValCl}}}
 \newcommand{\comment}[1]{ \{ \textit{ #1} \} }
 
 
@@ -197,17 +196,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%STATE CONFIGURATION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\configVar}{\mbox{\rm \textit{K}}}
+\newcommand{\configVar}{\mbox{\rm \textit{S}}}
 \newcommand{\config}[5]{<{#1},{#2},{#3},{#4},{#5}>} % <\heap, \counter, \stackOnly, \locVarOnly , \pc>
-\newcommand{\configFinalNorm}[3]{<{#1},{#2},{#3}>^{norm} }% the final configuration for a method's operational semantics   <\heap, RetValue> 
-\newcommand{\configFinalExc}[3]{<{#1},{#2},{#3}>^{exc}}% the final configuration for a method's operational semantics   <\heap, excValue> 
-\newcommand{\configFinal}[3]{<{#1},{#2},{#3}>^{final}} % config^final = config^exc + config^norm
+\newcommand{\configFinalNorm}[2]{<{#1},{#2}>^{norm} }% the final configuration for a method's operational semantics   <\heap, RetValue> 
+\newcommand{\configFinalExc}[2]{<{#1},{#2}>^{exc}}% the final configuration for a method's operational semantics   <\heap, excValue> 
+\newcommand{\configFinal}[2]{<{#1},{#2}>^{final}} % config^final = config^exc + config^norm
 \newcommand{\Final}{\mbox{\rm \textit{Final}}} % stands for result or the thrown exception
-\newcommand{\SetConfigs}{\mbox{\rm \textit{K}}}
-\newcommand{\SetConfigInterm}{\mbox{\rm \textit{K}}^{interm}}
-\newcommand{\SetConfigFinal}{\mbox{\rm \textit{K}}^{final}}
-\newcommand{\SetConfigFinalNorm}{\mbox{\rm \textit{K}}^{norm}}
-\newcommand{\SetConfigFinalExc}{\mbox{\rm \textit{K}}^{exc}}
+\newcommand{\SetConfigs}{\mbox{\rm \textit{S}}}
+\newcommand{\SetConfigInterm}{\mbox{\rm \textit{S}}^{interm}}
+\newcommand{\SetConfigFinal}{\mbox{\rm \textit{S}}^{final}}
+\newcommand{\SetConfigFinalNorm}{\mbox{\rm \textit{S}}^{norm}}
+\newcommand{\SetConfigFinalExc}{\mbox{\rm \textit{S}}^{exc}}
 
 \newcommand{\termination}{\mbox{\rm End}}
 \newcommand{\Res}{\mbox{\rm Res}}
@@ -320,16 +319,21 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%HEAP%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
  \newcommand{\referenceDef}{\mbox{\rm ! }} % a function that decides if a reference exists and points to an existing object
  \newcommand{\referenceType}{\mbox{\rm isOfType} } % a function that decides that the reference is of some type 
  \newcommand{\JavaClass}{\mbox{\rm \textit{JClass}}} % the set of Java classes
  \newcommand{\JavaType}{\mbox{\rm\textit{JType}}} % the set of Java classes
-
  
- \newcommand{\isInList}[2]{\mbox{\rm \textit{inList}}(#1, #2)\ }
+ %\newcommand{\list}{\mbox{\rm\textit{list}}}
+%%%%%%%%%%%%%%%%%% List %%%%%%%%%%%%%%%%%%%
+ \newcommand{\assocList}{\mbox{\rm\textsf{::}}}
+ \newcommand{\emptyList}{\lbrack \ \rbrack}
+ \newcommand{\listLen}{\mbox{\rm\textit{length}}}
+ \newcommand{\isInList}[2]{\mbox{\rm\textit{inList}}(#1, #2)\ }
  \newcommand{\isInListOnly}{\mbox{\rm \textit{inList}}  }
- \newcommand{\addInList}[2]{\mbox{\rm cons}(#2, #1) } 
+ \newcommand{\addInList}[2]{\mbox{\rm cons}(#2, #1) }
+ 
  \newcommand{\addInListOnly}{\mbox{\rm cons} } 
  \newcommand{\intersectOnly}{ \cap }
  \newcommand{\intersect}[2]{#1 \cap #2}
@@ -349,15 +353,15 @@
  \newcommand{\defaultValueOnly}{\mbox{\rm \textit{defVal}}}
  \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
  \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
- \newcommand{\InDom}[2]{\mbox{\rm\textit{inDom} } (#1,#2)}
- \newcommand{\InRan}[2]{\mbox{\rm\textit{inRan} } (#1,#2)} 
+ \newcommand{\Dom}{\mbox{\rm\textsf{Dom}}}
+ \newcommand{\Range}{\mbox{\rm\textsf{Range}}}
  \newcommand{\anyType}{\mbox{\rm \texttt{T}}} % represents any Java Type
  \newcommand{\Arrays}{\mbox{\rm ARR}} % an abstraction for all arrays in the heap
 
  %%%%%%%%%%%%%%%%%%% the state after  exception is thrown %%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\getStateAfterExc}{\mbox{\rm \textit{getStateOnExc}\ }} 
+ \newcommand{\getStateAfterExc}{\mbox{\rm \textit{getStateOnExc}}} 
  \newcommand{\findExcHandler}[3]{\mbox{\rm \textit{findExcHandler}}(#1,#2,#3)} % #1 = exception, #2 = pc , #3 = exception handler table 
- \newcommand{\findExcHandlerOnly}{\mbox{\rm\textit{findExcHandler}}\ } % #1 = exception, #2 = pc , #3 = exception handler table 
+ \newcommand{\findExcHandlerOnly}{\mbox{\rm\textit{findExcHandler}}} % #1 = exception, #2 = pc , #3 = exception handler table 
 
 
 
