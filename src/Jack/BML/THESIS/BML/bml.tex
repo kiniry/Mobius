@@ -4,13 +4,14 @@
 
 \newtheorem{bml}{Definition}[section]
 
-\section{BML} \label{BCSLgrammar}
+\section{The subset of JML supported in BML} \label{BCSLgrammar}
 
 
 BML corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and 
- security properties. The following Def. \ref{BCSL} gives the formal grammar of BML. The formal grammar of BML is given in the next definition.
+ security properties. The following Section \ref{bml:notation} gives the notation conventions adopted here and 
+Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal description of its semantics. 
 
-\subsection{Notation convention}
+\subsection{Notation convention}\label{bml:notation}
 
 
 \begin{itemize}
@@ -382,16 +383,7 @@ particular program point inside a method body. The nonterminal which describes t
 
 \begin{itemize}
   \item $\atIndex \ nat$ specifies the index of the instruction which identifies the instruction
-        to which the specification refers. We would like to note here that the style of specification in BML
-        is slightly different from the JML style. First, JML specification is written directly in the source code in comments
-	at the point in the program text where the specification must hold. Second, as the Java source language is structured, JML allows
-	to specify a particular program structure. For instance, in Fig. \ref{replaceSrc} the reader may notice that the loop specification
-	refers to the control structure which follows after the specification and which corresponds to the loop. However, on bytecode level we
-	could not write ditrectly in the bytecode of a method body, as this will corrupt the performance of any standard Java Virtual Machine.
-	That's why specification is written outside the bytecode text and contains also information about the instruction to which the specification
-	refers. Then, as bytecode does not have control structures specification will always refer to a particular instruction in the bytecode. 
-        For instance, loops on bytecode are identified by a unique loop entry instruction and thus, a loop invariant must hold basically every time
-	the corresponding loop entry instruction is reached. 
+        to which the specification refers. 
   \item  $\intraSpec$ specifies the property that must hold in  every  state that reaches the instruction at the index  specified by $ \atIndex \ nat$.
          We allow the following local assertions:  
 	 

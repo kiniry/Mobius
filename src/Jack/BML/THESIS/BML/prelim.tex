@@ -6,38 +6,49 @@
 
 
 \section{A quick overview of JML} \label{BCSLprelim}
-JML~\cite{JMLRefMan} (short for Java Modeling Language) is a behavioral interface specification language tailored to Java applications. JML 
-follows the design-by-contract approach (see~\cite{M97oos}), where classes are annotated with class invariants and method
- with pre- and postconditions. Specification inside methods is also possible; for example one can specify loop invariants,
- or assertions that must hold at specific program points. 
-
-Over the last few years, JML has become the de facto specification language for Java source code programs. Different
- tools exist to verify or generate JML specifications (see for an overview \cite{BurdyCCEKLLP03} ).  
- Several case studies have demonstrated that JML can be used to specify realistic
-industrial examples, and that the different tools allow to find errors
-in the implementations (see~\emph{e.g.}\/~\cite{BreunesseCHJ04}). One
-of the reasons for its success is that JML uses a Java-like
-syntax. Specifications are written using preconditions, postcondition,
+% what is JML
+JML~\cite{JMLRefMan} (short for Java Modeling Language) is a behavioral interface specification 
+language tailored to Java applications which follows the design-by-contract approach (see~\cite{M97oos}).
+Specifications are written using preconditions, postcondition,
 class invariants and other annotations, where the different predicates
 are side-effect free Java expressions, extended with
-specification-specific keywords (\emph{e.g.}\ logical quantifiers and a
-keyword to refer to the return value of a method). Other important
-factors for the success of JML are its expressiveness and
+specification-specific keywords. % (\emph{e.g.}\ logical quantifiers and a keyword to refer to the return value of a method).
+
+% useful language
+Over the last few years, JML has become the de facto specification language for
+ Java source code programs. Several case studies have demonstrated that JML can be used to specify realistic
+industrial examples, and that the different tools allow to find errors
+in the implementations (see~e.g. \/~\cite{BreunesseCHJ04}). One
+of the reasons for its success is that JML uses a Java-like
+syntax.  Other important factors for the success of JML are its expressiveness and
 flexibility.
 
-JML specifications are written as comments so they are not visible by Java compilers. The JML syntax is close to the 
- Java syntax: JML extends the Java  syntax with few keywords and operators.
- For introducing method precondition and postcondition one has to use the keywords \jmlKey{requires} and \jmlKey{ensures} 
-  respectively,  \jmlKey{modifies} keyword is followed by all the locations that can be modified by the method, 
-  \jmlKey{loop\_invariant}, not surprisingly, stands for loop invariants, \jmlKey{loop\_modifies} keyword gives the locations modified by loop invariants etc. 
-  The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}. Special JML operators are, for instance, \jmlKey{$\backslash$result} which stands for the value that a method returns if it is not void, the \jmlKey{$\backslash$old(expression)} operator 
-  designates the value of \texttt{expression} in the prestate of a method and is usually
- used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
-These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
+% tool support 
+JML is supported by several verification tools.
+ Originally, it has been designed as a language of the runtime assertion checker~\cite{jmlrac} created by G.T. Leavens and \todo{who are the others}. 
+The JML rac compiles both the Java code and the JML specification into executable bytecode and thus, 
+in this case, the verification consists in executing the resulting bytecode. Several static checkers based 
+on formal logic exist which use JML as a language for expressing functional properties. Esc/java~\cite{escjava}  whose first version used a subset 
+ of JML \footnote{the current version of the tool esc/java 2  supports almost all JML constructs} is among the first tools supporting JML.
+Among the static checkers with JML  are
+the Loop tool developed by the Formal group at the University of Nijmegen,
+the Jack tool developed at Gemplus, the Krakatoa tool created by the Coq group at Inria France. A more detailed overview of the JML tools can  be found in~\cite{BurdyCCEKLLP03}.
 
-JML can be used for either static checking of Java programs by tools such as JACK, the Loop tool, 
-ESC/Java~\cite{escjava} or dynamic checking by tools such as the assertion checker jmlrac~\cite{jmlrac}. An overview of the JML tools can 
-be found in~\cite{BurdyCCEKLLP03}.
+
+
+% technical details
+JML specifications are written as comments so they are not visible by Java compilers. The JML syntax is close to the 
+     Java syntax: JML extends the Java  syntax with few keywords and operators.
+   For introducing method precondition and postcondition one has to use the keywords \jmlKey{requires} and \jmlKey{ensures} 
+    respectively,  \jmlKey{modifies} keyword is followed by all the locations that can be modified by the method, 
+    \jmlKey{loop\_invariant}, not surprisingly, stands for loop invariants, \jmlKey{loop\_modifies} keyword gives the locations modified by loop invariants etc. 
+    The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}. Special JML operators are, for instance, \jmlKey{$\backslash$result} which stands for the value that a method returns if it is not void, the \jmlKey{$\backslash$old(expression)} operator 
+    designates the value of \texttt{expression} in the prestate of a method and is usually
+   used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+  These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
+
+
+
      
 Figure~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
 The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj1}. The loop specification also states
@@ -79,3 +90,14 @@ public class ListArray {
 \end{figure}
 
 
+
+% light and heavy weight specification
+Another useful feature of JML is that it allows a very detailed specification of
+a method behaviour. Particularly, the user may specify in a light or heavy weight style a method.
+Light weight specification specifies what is the precondition, the normal and exceptional postconditions
+of a method. This means that the method can be entered only if the light weight precondition holds and then if the method terminates
+normally the normal postcondition holds, or otherwise the respective postcondition holds. If the exceptional postcondition is ommitted by defauly
+it is false. For instance, a light weight specification is the specification of method  \texttt{replace}  in Fig. \ref{replaceSrc}.
+
+It is also possible to give a more detailed specification of a method. This style of specification is called heavy weight specification.
+ It is introduced by the JML keywords \jmlKey{normal\_behavior} and \jmlKey{exceptional\_behavior}. \todo{continue here}
