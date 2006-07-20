@@ -25,11 +25,11 @@ automatically.
 \paragraph{API annotation}
 While the proof obligation generator is largely independent of the
 underlying dialect of Java and of the underlying profile, it relies on
-annotated APIs. In our work, we have found convenient to focus on
-smartcard case studies and thus we have been unable to use annotated
+annotated APIs. In our work, we have found it convenient to focus on
+smartcard case studies and thus we have been able to use annotated
 JavaCard APIs that were developed by the University of Nijmegen.
 However, there are no comprehensively annotated API outside of the
-JavaCard API, even if previous work on GlobalPlatform security
+Java\-Card API, even if previous work on GlobalPlatform security
 requirements done at INRIA could be used to annotate a Java
 implementation of GlobalPlatform. A major issue in adapting our method
 to Trusted Personal Devices will be to annotate the APIs provided by
@@ -57,7 +57,15 @@ reasoning on complex data-structures such as linked-lists or trees
 because no global property on these structures can be stated in JML.
 This limitation of JML is related to the first-order logic on which
 JML is based and that prevents complex quantification over structures
-or predicates. Another severe restriction of current JML verification
+or predicates. Related to this is the lack of mathematical abstraction
+of JML specifications. For example, to use sets of objects in a
+specification, one has to use a model class, providing a functional Java
+implementation of a set. However, recently we have proposed to add a
+\texttt{native} keyword to JML, which allows to link a JML
+specification directly with a specification in the logic of a theorem
+prover~\cite{Charles06}. 
+
+Another severe restriction of current JML verification
 tools is the limited support they provide for reasoning about
 concurrent programs.  There are some ongoing efforts at Iowa, Kansas,
 and Santa Cruz to extend JML with support for reasoning about
@@ -84,4 +92,16 @@ annotations according to the results of testing.
 
 \paragraph{Support for refinement}
 
-
+In the software development process, one often wishes to use
+refinement to derive an implementation from a high level
+specification. If the refinement is security preserving, this means
+that one only has to show the security of the high level
+specification, and security of the implementation follows by
+construction. JML provides a very basic support for refinement,
+allowing to first specify the public interface of a class, and then to
+refine this into more detailed specifications and
+implementations. However, there is currently no tool support for
+proving a JML refinement correct. An alternative approach is to do the
+complete refinement using a theorem prover, and then to use the
+\texttt{native} construct~\cite{Charles06} to link the lowest level in
+the refinement chain with a Java implementation.
