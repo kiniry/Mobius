@@ -1,4 +1,4 @@
-\subsection{Bytecode Specification Language}\label{bcSpecLg}
+\subsubsection{Bytecode Specification Language}\label{bcSpecLg}
 
 In this section, we introduce a bytecode specification language which we call BML (short for ByteCode Specification Language).
  BML is based on the design principles of JML (Java Modeling Language)~\cite{JMLRefMan}, which is a behavioral interface specification 
@@ -6,7 +6,7 @@ language following the design by contract approach \cite{M97oos}.
 
 In the following, we give the grammar of BML and sketch the compiler from JML to BML. 
 
-\subsubsection{Grammar} \label{grammar}
+\paragraph{Grammar} \label{grammar}
 
 
 BML corresponds to a representative subset of JML and is expressive enough for most purposes including the description of non trivial functional and security properties.
@@ -20,7 +20,7 @@ BML supports the standard JML specification operators as for example, $\old{\exp
  designates the value of the expression $\expression$ in the prestate of a method, $ \result$ which stands for the value the method
 returns if it is not void,  $\typeof{\expression}$ which stands for type of $\expression$ etc.  
 
-\subsection{Compiling JML into BML}\label{comJML}
+\subsubsection{Compiling JML into BML}\label{comJML}
 
 
 We now turn to explaining how JML specifications are compiled into user defined attributes for Java class files. Recall that a class file defines
@@ -105,7 +105,7 @@ JML\=Loop\_specification\_attribute \{ \\
 \end{figure}
  The most problematic part of the specification compilation is the identification of
  which loop in the source corresponds to which bytecode loop in the control flow
- graph. To do this, we assume that the control flow graph is reducible (see~\cite{ARUCom1986}), 
+ graph. To do this, we assume that the control flow graph is reducible, 
 i.e. there are no jumps into the middle of the loops from outside; graph reducibility allows to establish the same order between loops in the
  bytecode and source code level and to find the right places in the bytecode where the loop invariants must hold.
 

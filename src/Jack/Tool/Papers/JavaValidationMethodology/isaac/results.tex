@@ -1,4 +1,4 @@
-\section{Checking High-Level Security Properties}\label{SecResults} 
+\subsection{Checking High-Level Security Properties}\label{SecResults} 
 
 Using the techniques of Section~\ref{sec:highlevel}, we checked for
 several realistic applications whether they respect the security
@@ -7,7 +7,7 @@ actually found some violations.  This section presents these results
 for the PACAP case study of Gemplus, focusing on the atomicity properties.
 
 
-\subsection{Core-annotations for Atomicity Properties}
+\subsubsection{Core-annotations for Atomicity Properties}
 
 The core-annotations related to the atomicity properties specify the
 methods related to the transaction mechanism declared in class
@@ -54,7 +54,7 @@ public boolean check(byte[] pin, short offset, byte length);
 Note: one could enforce a weaker property than not checking
 PIN in transactions, but it is good practice to do so.
 
-\subsection{Checking atomicity}
+\subsubsection{Checking atomicity}
 The method of Section~\ref{sec:highlevel} has been applied on
 industrial examples of TPD applications to check that atomicity
 properties are respected.

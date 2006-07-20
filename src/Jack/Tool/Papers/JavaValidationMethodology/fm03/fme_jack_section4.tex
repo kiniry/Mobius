@@ -18,7 +18,7 @@ the user interface and integration within the development
 environment is probably the main strength of \JACK, as is the fact
 that the underlying mathematical formalism is not exposed to the
 user.
-\subsubsection{Integration in developers environment}
+\paragraph{Integration in developers environment}
  Java developers are used to develop using integrated development
  environments (IDE).  Those IDEs provide many features useful during
  the development process.  Integrating the tool in such IDEs allows
@@ -43,7 +43,7 @@ user.
 %Several other minor features are available to integrate within the
 %development cycle, for example, reports on the status of the project
 %can be generated as Microsoft Excel files.
-\subsubsection{Lemma Viewer}
+\paragraph{Lemma Viewer}
 \begin{figure}[p]
  \psfig{file=fm03/preferences-editor.eps,width=14cm}
  \caption{\sc \JACK\ lemma viewer preferences page}
@@ -66,7 +66,7 @@ Instead, we provide the user with a graphical view (Figure \ref{Viewer image}) o
  Possibly, several lemmas are associated to each case.
  When a case is selected, the corresponding execution path is highlighted.
  When a lemma is selected, its views are displayed.
-\paragraph{Path highlighting}
+\subparagraph{Path highlighting}
 The source code of the program considered is displayed, and the
 path within the program that leads to the generated proof obligation
 is highlighted.
@@ -96,7 +96,7 @@ involved in the current lemma is also highlighted.  Highlighting the
 part of the source code involved in the proof obligation allows to
 quickly understand the proof obligation, and allows the user to treat
 the proof obligations as execution scenarios of the program.
-\paragraph{Java presentation of lemmas}
+\subparagraph{Java presentation of lemmas}
 The hypothesis and goals of the current lemma are also displayed. As
 the conversion mechanism into provers language may be hard to follow, especially by
 non-experts, the internal representation used by the tool is used to
@@ -114,10 +114,10 @@ have no Java or JML equivalent constructs are used.
  translated, and for which a Java notation is hard to define. For
  instance some set operators cannot be translated in a generic way.
 
-\subsection{Support for verification}
+\subsubsection{Support for verification}
 Apart from displaying the generated proof obligations, \JACK\ also
 provides support for validating those proofs, as detailed hereafter.
-\paragraph{Support for automatic proof}
+\subparagraph{Support for automatic proof}
 \label{Support for automatic proof}
  A point that should not be taken lightly is the time taken by
 automatic proof: generating proof obligations for industrial size
@@ -131,7 +131,7 @@ files can be queued in order to be submitted to the prover. Thus, the
 proofs are performed as soon as possible, possibly during the night,
 allowing the user to focus on cases inspection.
 
-\paragraph{Support for interactive proof}
+\subparagraph{Support for interactive proof}
 Although the automatic prover allows discharging many proof
 obligations, it cannot discharge all the proof obligations. Thus, the
 remaining proof obligations have to be verified manually.
@@ -142,7 +142,7 @@ the interactive prover of the \texttt{Atelier B} tool, emacs with PVS
 or the Coq editor.
 
 
-\paragraph{Checking proof obligations}
+\subparagraph{Checking proof obligations}
 Additionally to the ``\textit{proved}'' and ``\textit{unproved}''
 states, \JACK\ can also differentiate ``\textit{checked}'' proof
 obligations. Checked proof obligations correspond to proof obligations

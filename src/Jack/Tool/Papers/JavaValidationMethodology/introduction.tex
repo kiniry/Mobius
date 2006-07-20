@@ -1,4 +1,4 @@
-\chapter{Introduction}
+\section{Introduction}
 
 
 Smart cards are trusted personal devices whose characteristics are
@@ -52,7 +52,7 @@ However, it should be clear that the methods presented in this document
 are relevant to other execution platforms for trusted personal devices.
 
 
-\section{Security issues}
+\subsection{Security issues}
 While the focus of the deliverable is on application validation,
 security is a holistic property of a system, and formal techniques
 must therefore be employed at different levels to provide strong
@@ -131,7 +131,7 @@ functionality as well as security.
 
 
 
-\section{Logical verification of security properties using JML}
+\subsection{Logical verification of security properties using JML}
 In order to provide precise analyzes with a limited overhead, we
 advocate an integrated approach where validation techniques of
 increasing strength are used, starting from automated techniques such
@@ -150,7 +150,7 @@ Using those techniques, Java developers should be able to validate
 their code, or at least to get a good assurance on its correctness.
 
 
-\subsection{JML}
+\subsubsection{JML}
 JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the ``Java
 Modeling Language'', is a behavioral interface specification language
 for Java; that is, it specifies both the behavior and the syntactic
@@ -234,7 +234,7 @@ are annotated with preconditions that prevent exceptions to occur, or
 offensive specifications, which use appropriate clauses to specify 
 exceptional postconditions.
 
-\subsection{Verification techniques and tools}
+\subsubsection{Verification techniques and tools}
 
 JML specifications correctness can be verified either during runtime
 or statically~\cite{BurdyCCEKLLP03}. To be verified during runtime, the
@@ -260,11 +260,11 @@ and incomplete.
 
 In order to further increase the level of reliability of applications,
 we propose a methodology based on static verification using
-JACK~\cite{BRL03:fme}, a tool that generates proof obligations that
+JACK~\cite{BRL-JACK}, a tool that generates proof obligations that
 can be discharged using proof assistants or automatic provers.
 
 
-\section{Main contributions}
+\subsection{Main contributions}
 The work reported in this deliverable builds upon the JACK tool,
 that was initially developed within Gemplus. The tool development
 was transferred to INRIA at the beginning of the project, with
@@ -283,7 +283,7 @@ It is not in the scope of the present document to describe these
 improvements.
 
 
-\section{Contents of the deliverable}
+\subsection{Contents of the deliverable}
 This document is organized as follows, the next chapter introduce the
 assertion language JML, chapter 2 describes the JACK tool with its
 extension feature, chapter 3 presents some evaluations done with the

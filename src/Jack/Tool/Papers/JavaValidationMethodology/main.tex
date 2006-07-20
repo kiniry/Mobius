@@ -1,4 +1,4 @@
-\documentclass[a4paper, 10pt]{article}
+\documentclass[fullpage,10pt]{article}
 \usepackage{times}
 \usepackage{epsfig}
 \usepackage{enumerate}
@@ -15,37 +15,60 @@
 \usepackage{listings}
 \usepackage{latexsym,pstricks,pst-node,pst-tree,boxedminipage,stmaryrd}
 \usepackage{alltt}
+\usepackage{fancyhdr}
+\usepackage{fullpage}
+
+%\markboth{INSPIRED}{INSPIRED}
+
+%\pagestyle{myheadings}
+\fancypagestyle{plain}{
+\fancyhf{}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\headrulewidth}{0pt}
+\lhead{{\scriptsize \begin{tabular}{l}
+DEVELOPER ORIENTED APPROACH TO APPLET CORRECTNESS \\
+INSPIRED\_INR\_WP2.6\_D9.1\_R1.0
+\end{tabular}}}
+
+\rhead{{\scriptsize \begin{tabular}{r}
+INSPIRED IST-2003-507894 \\
+30 JUNE 2006
+\end{tabular}
+}}
+\fancyfoot[LE,RO]{\thepage}
+}
+\pagestyle{plain}
+
 \lstset{language=Java,flexiblecolumns=false,mathescape=true}
-\lstset{commentstyle=\sl,basicstyle=\normalfont\ttfamily\small}
+\lstset{commentstyle=\sl,basicstyle=\normalfont\ttfamily\footnotesize}
 \newcommand{\mjvm}[1]{{\sf #1}}
 \input {preamble}          % input user-defined commands
 
 \begin{document}
-\maketitle      
-\pagenumbering{roman}
+%\maketitle      
 \tableofcontents
-\listoffigures
+%\listoffigures
 %\listoftables
-%\chapter*{Preface}\normalsize
+%\section*{Preface}\normalsize
 % \addcontentsline{toc}{chapter}{Preface}
 %\input{preface}
 
 
 
  
-\mainmatter
-\include{executive}    
-\include{introduction}        
-%\include{jml}
-\include{methodology}        
-\include{evaluation}
-\include{conclusion}
+%%%\mainmatter
+\input{executive}    
+\input{introduction}        
+%\input{jml}
+\input{methodology}        
+\input{evaluation}
+\input{conclusion}
 %\appendix
-%\include{appendix}
-\backmatter
+%\input{appendix}
+%%\backmatter
 
 \bibliographystyle{plain}
-\bibliography{cardis05/biblio,memory/bib_mem-wpc,sttt/sttt,sac/specification,sac/bibliography,fm03/jack,../specification.bib,/net/home/gbarthe/bib/string,/net/home/gbarthe/bib/gilles,/net/home/gbarthe/bib/article,/net/home/gbarthe/bib/book,/net/home/gbarthe/bib/lncs,/net/home/gbarthe/bib/misc,/net/home/gbarthe/bib/proceedings,/net/home/gbarthe/bib/techrep,/net/home/gbarthe/bib/thesis,/net/home/gbarthe/bib/software,/net/home/gbarthe/bib/web,main}
+\bibliography{cardis05/biblio,memory/bib_mem-wpc,sttt/sttt,sac/specification,sac/bibliography,fm03/jack,../specification.bib,/net/home/gbarthe/bib/string,/net/home/gbarthe/bib/gilles,/net/home/gbarthe/bib/article,/net/home/gbarthe/bib/book,/net/home/gbarthe/bib/lncs,/net/home/gbarthe/bib/misc,/net/home/gbarthe/bib/proceedings,/net/home/gbarthe/bib/techrep,/net/home/gbarthe/bib/thesis,/net/home/gbarthe/bib/software,/net/home/gbarthe/bib/web}
 
 \end{document}
 

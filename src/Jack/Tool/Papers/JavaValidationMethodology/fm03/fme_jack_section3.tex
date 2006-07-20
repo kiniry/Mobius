@@ -18,7 +18,7 @@ ensure the correctness of the applet but the tool is designed in this way;
 
 
 This section presents the tool architecture and its principles.
-\subsection{Architecture}
+\subsubsection{Architecture}
 \begin{figure}[tp]
  \psfig{file=fm03/image002.eps,width=14cm}
  \caption{\sc \JACK\ architecture}
@@ -51,12 +51,12 @@ This section presents the tool architecture and its principles.
 
  From the start, taking into account experiences in lemma generation
  for B machines, we have implemented a Weakest Precondition (WP)
- calculus to automate lemma generation.  Huisman, in
- \cite{Huisman:PhD}, presents how the classical Hoare logic can be
- completed to allow the generation of lemmas in the context of Java.
- The Java statements contain different features like control-flow
- breaks.  So, the classical WP calculus should be completed to deal
- with them.
+ calculus to automate lemma generation. This involves extending the
+ classical Hoare logic to allow the generation of lemmas in the
+ context of Java.  The Java statements contain different features like
+ control-flow breaks.  So, the classical WP calculus should be
+ completed to deal with them.
+
 
 
  Moreover, JML should be lightly upgraded to allow fully automated

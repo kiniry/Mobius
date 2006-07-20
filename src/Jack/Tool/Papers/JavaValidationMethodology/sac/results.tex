@@ -1,5 +1,5 @@
 
- \subsection{Relation between verification conditions on source and
+ \subsubsection{Relation between verification conditions on source and
  bytecode level } \label{pogEquiv} 
 
 In order to establish the validity of source level verification, we
@@ -263,7 +263,7 @@ scenarios for TPD with dynamic loading of program and components.
 
 
 
-%\subsubsection{Example}
+%\paragraph{Example}
 % We give a simple example of how the \wpi \ works. Block $\blockm{6}$ (starts at instr. \texttt{6}) in Fig.~\ref{blockBC} ends with a branching instruction and in the case when the condition is true (the current element of the array is not equal to the first parameter of the method \texttt{replace}) the execution will continue at $\blockm{19}$. Below we give the part of the wp for block $\blockm{6}$ in case the control flows to block $\blockm{19}$( the condition of its last instruction holds and in this case 
 %the predicate $pre(b^{6}, b^{19})$ is $\wpi(\blockm{19})$).  The implications with conclusion \Myfalse \ stand for the possible exceptions \texttt{NullPointer} and \texttt{ArrayIndexOutOfBound} exceptions that may be thrown (as no postcondition is specified explicitly for these cases of abnormal termination, the one by default is taken). 
 

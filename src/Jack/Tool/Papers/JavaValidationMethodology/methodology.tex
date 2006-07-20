@@ -1,4 +1,4 @@
-\chapter{Tools and Methodologies}
+\section{Tools and Methodologies}
 Traditionally, applications for trusted personal devices undergo
 extensive testing and code review in order to avoid programming 
 errors and security flaws. However, test campaigns and code review
@@ -26,31 +26,67 @@ about the proof facilities in JACK, section 5 describes Jack features
 at bytecode level and section 6 concludes with some perspectives in
 Java application validation tool development.
 
-\section{JACK}
+\subsection{JACK}
 \input{fm03/fme_jack_intro}
-\subsection{Foundations}
+\subsubsection{Foundations}
 \input{fm03/fme_jack_section3}
-\subsection{Jack Proof Obligation Language}
+\subsubsection{Jack Proof Obligation Language}
 \input{fm03/jpol}
-\subsection{User Interface}
+\subsubsection{User Interface}
 \input{fm03/fme_jack_section4}
-%\subsection{Case study}
+%\subsubsection{Case study}
 %\input{fm03/fme_jack_section5}
-%\subsection{Conclusion}
+%\subsubsection{Conclusion}
 %\input{fm03/fme_jack_concl}
 
-\section{Security property propagation}\label{sec:highlevel}
+\subsection{Security property propagation}\label{sec:highlevel}
 \input{isaac/intro}
-\input{isaac/verif}
 
+
+\subsection{JavaCard applet security properties}
+To show the usefulness of the security property propagation, we applied it to
+several realistic examples of smart card applications. When doing
+this, we actually found violations against the security policies
+documented for some of these applications.
+\input{isaac/secprop}
+
+
+\subsubsection{Automatic Verification of Security Properties}\label{SecVerif}
+As explained above, we are interested in the verification of
+high-level security properties that are not directly related to a
+single method or class, but that guarantee the overall
+well-functioning of an application. Writing appropriate JML
+annotations for such properties is tedious and error-prone, as they
+have to be spread all over the application. Therefore, we propose a
+way to construct such annotations automatically. First we synthesize
+core-annotations for methods directly involved in the property.  For
+example, when specifying that no nested transactions are allowed, we
+annotate the methods \texttt{beginTransaction},
+\texttt{commitTransaction} and
+\texttt{abortTransaction}. Subsequently, we propagate the necessary 
+annotations to all methods (directly or indirectly) invoking these
+core-methods.  The generated annotations are sufficient to respect the
+security properties, \emph{i.e.}~if the applet does not violate the
+annotations, it respects the corresponding high-level security
+property.
+
+Whether the applet respects its annotations can be established with
+JACK~\cite{BRL-JACK}. Since for most security properties the
+annotations are relatively simple---but there are many---it is
+important that these verifications are done automatically, without any
+user interaction. The results in Section~\ref{SecResults} show that
+for the generated annotations all correct proof obligations can indeed
+be automatically discharged.
+
+\input{isaac/verif}
 %\input{isaac/results}
 
 %\input{isaac/related}
 %\input{isaac/conclusion}
-\subsection{Properties as automata}
+\subsubsection{Properties as automata}
 \input{thibault}
 
-\section{Bytecode validation}
+\subsection{Bytecode validation}
 \input{sac/intro}
 \input{sac/architecture}
 \input{sac/classFileExt}
@@ -59,6 +95,6 @@ Java application validation tool development.
 \input{sac/results}
 %\input{sac/conclusion}
 
-%\section{Perspectives}
+%\subsection{Perspectives}
 %\input{fm03/fme_jack_section6}
 

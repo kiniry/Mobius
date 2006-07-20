@@ -1,11 +1,11 @@
-%\subsection{Weakest Precondition Function for bytecode \\instructions}\label{wpInstr}
+%\subsubsection{Weakest Precondition Function for bytecode \\instructions}\label{wpInstr}
 %We define a weakest precondition (\wpi) predicate transformer function which takes into account normal and exceptional termination. 
 %\wpi \ takes three arguments: an instruction, a predicate that is the instruction's normal postcondition $\psi$, and a function
 %from exception types to predicates $\excPost$ (it returns the specified postcondition in the \jmlKey{exsures} clause for a given exception; see section~\ref{grammar}).
 %The \wpi \ function returns the weakest predicate such that if it holds in the state when the instruction starts its execution the following conditions are met: 
 %\begin{enumerate}
-	% \item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
-	% \item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
+        % \item if the instruction terminates its execution normally the predicate $\psi$ holds in the poststate 
+        % \item if it terminates with an exception \texttt{E} then the predicate $\excPost(\tt{E})$ holds in the poststate.
 %\end{enumerate}
 
 
@@ -24,8 +24,8 @@
 
 %\begin{itemize}
 %\item 
-\paragraph*{Manipulating object fields}
-%\subsection{Manipulating object fields}
+\subparagraph*{Manipulating object fields}
+%\subsubsection{Manipulating object fields}
 Instance fields are treated as functions, where the domain of a field \texttt{f} 
 declared in the class \texttt{Cl} is the set of objects of class \texttt{Cl} and its subclasses.
 We are using function updates when assigning a value to a field reference as, for instance in~\cite{B00ppp}.
@@ -71,7 +71,7 @@ Note that the rule takes in account the possible exceptional termination of the 
 %                                 \begin{array}{l}
 %                                       \substitution{ \counter}{  0} \\
 %                                        \substitution{\stack{0}}{ \stack{\counter}}   
-%              		\end{array}   \biggr)   \\
+%                       \end{array}   \biggr)   \\
 %\end{array} \\[15 mm]
 %\end{array}$$
 %$\psi^{pre}(\texttt{m})$ -  the specified  precondition of  method \texttt{m} \\
@@ -86,12 +86,12 @@ Note that the rule takes in account the possible exceptional termination of the 
 
 
 
-\paragraph*{Loops}
-%\subsection{Loops}
+\subparagraph*{Loops}
+%\subsubsection{Loops}
 Identifying loops on bytecode and source programs is different because of their different nature --- 
 the first one lacks while the second has structure. While on source level loops correspond to loop statements,  
 on bytecode level we have to analyze the control flow graph in order to find them.
- The analysis consists in looking for the backedges in the control flow graph using standard techniques, see~\cite{ARUCom1986}. 
+ The analysis consists in looking for the backedges in the control flow graph using standard compiler techniques. 
   
  We assume that a method's bytecode is provided with sufficient specification and in particular loop invariants.
  Under this assumption, we build an abstract control flow graph where the backedges are replaced by
@@ -101,7 +101,7 @@ preservation and initialization of every invariant in the abstraction graph.
 
      
 
-\paragraph*{Exceptions and Subroutines}
+\subparagraph*{Exceptions and Subroutines}
 Exception handlers are treated by identifying the instruction at which the handler compilation starts. The JVM specification mandates 
 that a Java compiler must supply for every method an \textbf{Exception\_Table} attribute that contains data structures describing the compilation of every implicit (in the presence of subroutines) or explicit exception handler: the instruction at which the compiled exception handler starts,
  the protected region (its start and end instruction indexes), and the exception type the exception handler protects from. Thus, 

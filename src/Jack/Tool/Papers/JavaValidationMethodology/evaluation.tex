@@ -1,22 +1,24 @@
-\chapter{Evaluations}
+\section{Evaluations}
 \input{industrial}
+
 
 \input{isaac/results}
 
-\section{Bytecode Verifier}
+
+\subsection{Bytecode Verifier}
 The tools have also been tested on a bytecode verifier java implementation. A termination proof has been provided.
 A specific implementation has been coded with on one hand the main loop which remain unchanged whatever the specifications of the virtual machine Java chosen, and other instructions and memory states which depends on selected model.
-\subsection{Implementation and Modelisation}
+\subsubsection{Implementation and Modelisation}
 The main loop is in a package which contains abstract classes: 
 the instructions and the states are implemented in a more generic way.
 The package containing the implementation is composed from the instructions for the standard Java types and of the states of memory typing. 
-\subsubsection {Memory states}
+\paragraph {Memory states}
 The memory states are represented by the State class, which is an abstract class.  It does not contain any precise definition of the memory: 
 one has no information on the stack or on the local variables table. 
 The implementation is relatively simple: 
 it is a class which contains a type stack and a table of the types of the local variables. 
 Functions allowing to read simply these structures and to generate verification error in the cases of misuse are defined.   
-\subsubsection{Instructions}
+\paragraph{Instructions}
 The instructions are also represented by an abstract class: 
 the class Instruction.  
 Since in the Kildall algorithm each instruction is associated to a memory state,  the Instruction class has a field of the State type. 
@@ -47,7 +49,7 @@ instructions have an associated type in the OperandType class, who can
 be None, Type1 or Type2.  Those are the minimal instructions to have a
 Java-like program.
 
-\subsubsection {The main loop}
+\paragraph {The main loop}
 The main loop is implemented in the Verifier class.  It is not an
 abstract class because it uses the properties of the State and
 Instruction abstract classes to verify an instruction set on
@@ -88,7 +90,7 @@ or preserve the same value; and it exists a maximum value.
 \caption{Some statistics on proof}  
 \label{stats}  
 \end{figure}    
-\subsection{Proofs}
+\subsubsection{Proofs}
 The first proofs are relatively easy.  The State class is proved
 almost automatically; these proofs are not due to the code of the
 methods but some standard verification Jack adds to each methods,
@@ -150,46 +152,13 @@ difficult to prove.
 %Some of them was complex: the proof script became little large (an average of 30 steps).
 %The lemmas concerning the loop invariant of the verify method and its initialization were the most difficult.
 
-\section{JavaCard applet security properties}
-To show the usefulness of the security property propagation, we applied it to
-several realistic examples of smart card applications. When doing
-this, we actually found violations against the security policies
-documented for some of these applications.
-\input{isaac/secprop}
-\subsection{Automatic Verification of Security Properties}\label{SecVerif}
-As explained above, we are interested in the verification of
-high-level security properties that are not directly related to a
-single method or class, but that guarantee the overall
-well-functioning of an application. Writing appropriate JML
-annotations for such properties is tedious and error-prone, as they
-have to be spread all over the application. Therefore, we propose a
-way to construct such annotations automatically. First we synthesize
-core-annotations for methods directly involved in the property.  For
-example, when specifying that no nested transactions are allowed, we
-annotate the methods \texttt{beginTransaction},
-\texttt{commitTransaction} and
-\texttt{abortTransaction}. Subsequently, we propagate the necessary 
-annotations to all methods (directly or indirectly) invoking these
-core-methods.  The generated annotations are sufficient to respect the
-security properties, \emph{i.e.}~if the applet does not violate the
-annotations, it respects the corresponding high-level security
-property.
 
-Whether the applet respects its annotations can be established with
-JACK~\cite{BRL-JACK}. Since for most security properties the
-annotations are relatively simple---but there are many---it is
-important that these verifications are done automatically, without any
-user interaction. The results in Section~\ref{SecResults} show that
-for the generated annotations all correct proof obligations can indeed
-be automatically discharged.
-
-\input{isaac/results}
-\section{Low-Footprint Java-to-Native Compilation}
+\subsection{Low-Footprint Java-to-Native Compilation}
 \input{cardis05/cardis05}
-\section{Memory consumption}
+\subsection{Memory consumption}
 \input{memory/intro}
-\subsection{Modeling Memory Consumption}\label{sec:verif}
+\subsubsection{Modeling Memory Consumption}\label{sec:verif}
 \input{memory/technical}
-\subsection{Inferring Memory Allocation}\label{sec:infer}
+\subsubsection{Inferring Memory Allocation}\label{sec:infer}
 \input{memory/infer}
 

@@ -6,7 +6,7 @@ how it can be applied to non-trivial examples involving recursive
 methods and exceptions.
 
 
-\subsubsection{Principles}
+\paragraph{Principles}
 Let us begin with a very simple memory consumption policy which aims
 at enforcing that  programs do not consume more than
 some fixed amount of memory \Max . To enforce this policy, we first
@@ -17,7 +17,7 @@ check that the application respects the policy.
 
 
 
-\paragraph{The precondition} of the method \method\ should ensure
+\subparagraph{The precondition} of the method \method\ should ensure
 that there must be enough free memory for the method
 execution. Suppose that we know an upper bound of the allocations done
 by method \method\ in any execution. We will denote this upper
@@ -32,7 +32,7 @@ method from which an application may start its execution) should
 also give the initial memory used by the virtual machine, i.e.
 require that variable \Mem\ is equal to some fixed constant.
 
-\paragraph{The normal postcondition} of the method $\method$ must
+\subparagraph{The normal postcondition} of the method $\method$ must
 guarantee that the memory allocated during a normal execution of
 $\method$ is not more than some fixed number \allocMethod{\method}\
 of memory units. Thus for the method $\method$ the postcondition is:
@@ -42,7 +42,7 @@ $$
 %\end{array}
 $$
 
-\paragraph{The exceptional postcondition} of the method $\method$ must
+\subparagraph{The exceptional postcondition} of the method $\method$ must
 specify that the memory allocated during an execution of $\method$ 
 terminating by throwing an exception \texttt{Exception} is not more
 than \allocMethod{\method} units. Thus for the method $\method$ the
@@ -57,7 +57,7 @@ $$
 
 
 
-\paragraph{For every instruction that allocates memory} the ghost
+\subparagraph{For every instruction that allocates memory} the ghost
 variable \Mem\ must be updated accordingly. For the purpose of
 this document, we only consider dynamic object creation with the 
 bytecode \new; arrays are left for future work and briefly discussed 
@@ -76,7 +76,7 @@ $$
 %\end{array}
 $$
 
-\subsubsection{Correctness} An important question is whether our approach
+\paragraph{Correctness} An important question is whether our approach
 guarantees that the memory allocated by a given program conforms to
 the memory consumption policy imposed by BML annotations. We can
 prove that our approach is correct by instrumenting the operational
@@ -93,11 +93,11 @@ instrumented operational semantics, under the proviso that ghost
 assignments triggered by object creation are compatible with the
 instrumented operational semantics. 
 
-%\subsubsection{Examples}
+%\paragraph{Examples}
 %We illustrate hereafter our approach by several examples, coping with
 %recursive and overridden methods and with exceptions.
 
-%\paragraph{Inheritance and overridden methods} Overriding methods
+%\subparagraph{Inheritance and overridden methods} Overriding methods
 %are treated as follows: whenever a call to a method \method\ is
 %performed, we require that there is enough free memory space for the
 %maximal consumption by all the methods that override or are overridden
@@ -152,7 +152,7 @@ instrumented operational semantics.
 %\end{figure}
 
 
-%\paragraph{Recursive Methods} In Fig. \ref{recMeth} the bytecode
+%\subparagraph{Recursive Methods} In Fig. \ref{recMeth} the bytecode
 %of the recursive method $m$ and its specification are shown. For
 %simplicity we show only a simplified version of the bytecode; we
 %assume that the constructors for the class \srcCode{A} and \srcCode{C}
@@ -239,7 +239,7 @@ instrumented operational semantics.
 %using its standard tactics.
 
 
-%\paragraph{Loops} must also be annotated with appropriate invariants,
+%\subparagraph{Loops} must also be annotated with appropriate invariants,
 %and with variants that guarantee their termination. If we know that
 %some expression $e$ bound by \verb!0! decreases at every
 %iteration of the loop, and that each loop iteration will not allocate
@@ -256,7 +256,7 @@ instrumented operational semantics.
 %loop \progLoop{l}. At every iteration the consumed memory must not go
 %beyond the upper bound given for the body of loop.
 
-%\paragraph{More precise specification} We can be more precise in
+%\subparagraph{More precise specification} We can be more precise in
 %specifying the precondition of a method by considering the field
 %values of an instance, for example. Let \method\ be the method shown
 %in Fig. \ref{excMeth} and assume no allocations are done in the

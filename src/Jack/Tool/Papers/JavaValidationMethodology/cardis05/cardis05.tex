@@ -12,12 +12,12 @@ Several studies proposed to factorize these checks or in some case to eliminate 
 
 More details can be found in a companion document~\cite{mariela06:cardis}.
 
-\subsection{Java and Ahead-of-Time Compilation}
+\subsubsection{Java and Ahead-of-Time Compilation}
 \label{sec:sota}
 
 Compiling Java into native code common on embedded devices. This section gives an overview of the different compilation techniques of Java programs, and points out the issue of runtime exceptions.
 
-\subsubsection{Ahead-of-Time \& Just-in-Time Compilation}
+\paragraph{Ahead-of-Time \& Just-in-Time Compilation}
 
 % JIT & AOT compilations
 Ahead-of-Time (AOT) compilation is a common way to improve the efficiency of Java programs. It is related to Just-in-Time (JIT) compilation by the fact that both processes take Java bytecode as input and produce native code that the architecture running the virtual machine can directly execute. AOT and JIT compilation differ by the time at which the compilation occurs. JIT compilation is done, as its name states, just-in-time by the virtual machine, and must therefore be performed within a short period of time which leaves little room for optimizations. The output of JIT compilation is machine-language. On the contrary, AOT compilation compiles the Java bytecode way before the program is run, and links the native code with the virtual machine. In other words, it translates non-native methods into native methods (usually C code) prior to the whole system execution. AOT compilers either compile the Java program entirely, resulting in a 100\% native program without a Java interpreter, or can just compile a few important methods. In the latter case, the native code is usually linked with the virtual machine. AOT compilation have no or few time constraints, and can generate optimized code. Moreover, the generated code can take advantage of the C compiler's own optimizations.
@@ -28,7 +28,7 @@ JIT compilation in interesting by several points. For instance, there is no prio
 % Runtime exceptions
 Both JIT and AOT compilers must produce code that exactly mimics the behavior of the Java virtual machine. In particular, the safety checks performed on some bytecode must also be performed in the generated code.
 
-\subsubsection{Java Runtime Exceptions}
+\paragraph{Java Runtime Exceptions}
 \label{sec:runtimeexceptions}
 % Why runtime exceptions
 The JVM (Java Virtual Machine)~\cite{VMSpec} specifies a safe execution environment for Java programs. Contrary to native execution, which does not automatically control the safety of the program's operations, the Java virtual machine ensures that every instruction operates safely. The Java environment may throw predefined runtime exceptions at runtime, like the following ones:
@@ -37,7 +37,7 @@ If the JVM detects that executing the next instruction will result in an inconsi
 
 Of the 202 bytecodes defined by the Java virtual machine specification, we noticed that 43 require at least one runtime exception check before being executed. While these checks are implicitly performed by the bytecode interpreter in the case of interpreted code, they must explicitly be issued every time such a bytecode is compiled into native code, which leads to a code size explosion. Ishizaki et al. measured that bytecodes requiring runtime checks are frequent in Java programs: for instance, the natively-compiled version of the SPECjvm98 \texttt{compress} benchmark has 2964 exception check sites for a size of 23598 bytes. As for the \texttt{mpegaudio} benchmark, it weights 38204 bytes and includes 6838 exception sites~\cite{Ishizaki1999}. The exception check sites therefore make a non-neglectable part of the compiled code.
 
-\subsection{Optimizing Ahead-of-Time Compiled Java Code}
+\subsubsection{Optimizing Ahead-of-Time Compiled Java Code}
 \label{sec:method}
 
 %verification procedure
@@ -53,7 +53,7 @@ Our approach benefits from the accurateness of the JML specification and from th
 
 In the rest of this section, we explain in detail all the stages of the optimization procedure.
 
-\subsubsection{Methodology for Writing Specification Against Runtime Exception}
+\paragraph{Methodology for Writing Specification Against Runtime Exception}
 
 We now illustrate with an example which annotations must be generated in order to check if a method may throw an exception. Figure~\ref{fig:jmlexample}\footnote{although the analysis that we describe is on bytecode level, for the sake of readability, the examples are also given on source level} shows a Java method annotated with a JML specification. The method \verb!clear! declared in class \verb!Code_Table! receives an integer parameter \verb!size! and assigns \verb!0! to all the elements in the array field \verb!tab! whose indexes are smaller than the value of the parameter \verb!size!. The specification of the method guarantees that if every caller respects the method precondition and if every execution of the method guarantees its postcondition then the method \verb!clear! never throws an exception of type or subtype \verb!java.lang.Exception!\footnote{Note that every Java runtime exception is a subclass of \texttt{java.lang.Exception}}. This is expressed by the class and method specification contracts.
 First, a class invariant is declared which states that once an instance of type \verb!Code_Table! is created, its array field \verb!tab! is not null. The class invariant guarantees that no method will throw a \verb!NullPointerException! when dereferencing (directly or indirectly) \verb!tab!.
@@ -91,13 +91,13 @@ Once the source code is completed by the JML specification, the Java source is c
 
 For generating the verification conditions, we use a bytecode verification condition generator (vcGen) based on a bytecode weakest precondition calculus~\cite{JBL05MP}. 
 
-\subsubsection{From Program Proofs to Program Optimizations }
+\paragraph{From Program Proofs to Program Optimizations }
 \label{proofs}
 In this phase, the bytecode instructions that can safely be executed without runtime checks are identified. Depending on the complexity of the verification conditions, Jack can discharge them to the fully automatic prover Simplify, or to the Coq and AtelierB interactive theorem prover assistants.
 There are several conditions to be met for a bytecode instruction to be optimized safely -- the precondition of the method the instruction belongs to must hold every time the method is invoked, and the verification condition related to the exceptional termination must also hold.
 Once identified, proved instructions can be marked in user-defined attributes of the class file so that the compiler can find them.
 
-\subsubsection{More Precise Optimizations}
+\paragraph{More Precise Optimizations}
 
 \label{section:optimprecise}
 
@@ -138,12 +138,12 @@ public void setTo0(int k,int[] buff)
 \label{fig:jmlpreciseex}
 \end{figure}
 
-\subsection{Experimental Results}
+\subsubsection{Experimental Results}
 \label{sec:experiments}
 
 This section presents an application and evaluation of our method on various Java programs.
 
-\subsubsection{Methodology}
+\paragraph{Methodology}
 
 We have measured the efficiency of our method on two kinds of programs, that implement features commonly met in restrained and embedded devices. \benchname{crypt} and \benchname{banking} are two smartcard-range applications. \benchname{crypt} is a cryptography benchmark from the Java Grande benchmarks suite, and \benchname{banking} is a little banking application with full JML annotations used in~\cite{BRL-JACK}. \benchname{scheduler} and \benchname{tcpip} are two embeddable system components written in Java, which are actually used in the JITS~\cite{JITSWebsite} platform. \benchname{scheduler} implements a threads scheduling mechanism, where scheduling policies are Java classes. \benchname{tcpip} is a TCP/IP stack entirely written in Java, that implements the TCP, UDP, IP, SLIP and ICMP protocols. These two components are written with low-footprint in mind ; however, the overall system performance would greatly benefit from having them available in native form, provided the memory footprint cost is not too important.
 
@@ -165,7 +165,7 @@ is the number of runtime exception check sites that remains in the
 final binary - our measurements on the native code memory footprint
 are just here to evaluate the size impact of exception check sites.
 
-\subsubsection{Results}
+\paragraph{Results}
 \label{results}
 Table \ref{tab:nbexcsites} shows the results obtained on the four tested programs. The three first columns indicate the number of check sites present in the bytecode, the number of explicit check sites emitted by JC, and the number of check sites that we were unable to prove useless and that must be present in our optimized AOT code. The last columns give the memory footprints of the bytecode, unoptimized native code, and native code from which all proved exception check sites are removed.
 
