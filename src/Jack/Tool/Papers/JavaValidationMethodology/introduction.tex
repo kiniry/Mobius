@@ -19,7 +19,8 @@ attacks. Traditionally, the main concern with smartcards has been with
 hardware attacks in which the attacker gains access to confidential
 information or disturbs the functioning of the card through
 observation (e.g. of power or electro-magnetic radiations) or invasion
-(e.g. overriding sensors or attaching probes).
+(e.g. overriding sensors or attaching probes). This issue is studied in
+Deliverable D8.1.
 
 The trusted personal device remains a specific domain where post
 issuance corrections are very expensive due to the deployment process
@@ -56,10 +57,17 @@ While the focus of the deliverable is on application validation,
 security is a holistic property of a system, and formal techniques
 must therefore be employed at different levels to provide strong
 guarantees about the security of a TPD and its applications.
-Essentially, the three levels are: the platform, the libraries,
+Essentially, the levels are: the hardware, platform, the libraries,
 and the applications.
 
-\paragraph*{Platform} The Java security architecture guarantees that
+The need to consider security at those levels is illustrated for
+example by the case study described on Page 55 in Deliverable D8.2,
+which is concerned with secure platforms. The development of secure
+API is discussed in Deliverables D7.1 and D7.2. As previously mentioned,
+hardware security is discussed in Deliverable D8.1.
+
+
+\paragraph*{Platform} The TPD security architecture guarantees that
 downloaded applications are innocuous and comply with some basic
 policies related to typing, initialization or access control. Such
 basic policies are the cornerstones upon which the overall security of
@@ -70,14 +78,14 @@ security is platform verification, which aims at providing an abstract
 model of the Java platform and security architecture, and at proving
 that the security functions play their expected role.
 
-\paragraph*{Libraries} However, it is not
-sufficient to show that security functions are correctly designed. In
-particular, one also has to ensure that other components of the
-infrastructure are correctly designed: the Java API and the Global
-Platform API constitute two prominent components of the infrastructure
-whose correct design is central to security. Thus, another important
-aspect of platform verification is to show the API are correctly
-designed.
+\paragraph*{Libraries} However, it is not sufficient to show that
+security functions are correctly designed. In particular, one also has
+to ensure that other components of the infrastructure, in particular
+API, are correctly designed and implemented. For the purpose of this
+deliverable, where the focus is on Java based TPD, the Java API and
+the Global Platform API constitute two prominent components of the
+infrastructure whose correct design is central to security. 
+
 
 \paragraph*{Applications} 
 Platform and libraries verification is a fundamental step towards
@@ -120,6 +128,7 @@ applications, are subjected to functional verification, i.e. to
 verifications that establish their correctness in terms of
 functionality as well as security.
 \end{itemize}
+
 
 
 \section{Logical verification of security properties using JML}
@@ -253,6 +262,26 @@ In order to further increase the level of reliability of applications,
 we propose a methodology based on static verification using
 JACK~\cite{BRL03:fme}, a tool that generates proof obligations that
 can be discharged using proof assistants or automatic provers.
+
+
+\section{Main contributions}
+The work reported in this deliverable builds upon the JACK tool,
+that was initially developed within Gemplus. The tool development
+was transferred to INRIA at the beginning of the project, with
+the objective to improve and increase its functionalities so as
+to address the needs of INSPIRED. The main contributions of the
+work carried within INSPIRED are:
+\begin{itemize}
+\item support for verifying high-level security properties
+\item support for verifying bytecode programs
+\item validation of the methodology for estimating resource
+usage and optimizing code for low-footprint.
+\end{itemize}
+In order to carry the above tasks and evaluations, it has also
+been necessary to make many improvements to the tool itself.
+It is not in the scope of the present document to describe these 
+improvements.
+
 
 \section{Contents of the deliverable}
 This document is organized as follows, the next chapter introduce the

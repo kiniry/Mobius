@@ -51,7 +51,8 @@ transaction is in progress.
 /*@ requires TRANS == 0; @*/
 public boolean check(byte[] pin, short offset, byte length);
 \end{verbatim}
-
+Note: one could enforce a weaker property than not checking
+PIN in transactions, but it is good practice to do so.
 
 \subsection{Checking atomicity}
 The method of Section~\ref{sec:highlevel} has been applied on
