@@ -7,7 +7,7 @@
 package bytecode_wp.bcclass.attributes;
 
 /**
- * @author io
+ * @author mpavlova
  *
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
