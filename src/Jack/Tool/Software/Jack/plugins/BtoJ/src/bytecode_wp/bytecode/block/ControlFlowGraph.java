@@ -387,10 +387,14 @@ public class ControlFlowGraph {
 		Vector wp = null;
 		ExceptionHandler excH = getExceptionHandlerForExceptionThrownAt(
 				excThrownType, excThrownAtPos);
-		// if there is no then
-		// take the exceptional postcondition from the exsures table
+		// if there is no exception handler then 
+		// take the exceptional postcondition from 
+		// the exsures table of the current specification case
 		if (excH == null) {
-			return method.getExsuresForException(excThrownType);
+			VCGPath vcg = new VCGPath();
+			exsTable.getExsPostconditionThrow(excThrownType.getSignature(), vcg);
+			return vcg;
+			///method.getExsuresForException(excThrownType);
 		}
 		// in case there is an exception handler then calculate over the code of
 		// the
@@ -626,7 +630,7 @@ public class ControlFlowGraph {
 
 	public void wp(IJml2bConfiguration config, VCGPath vcgPath,
 			ExsuresTable _exsTable) {
-
+		exsTable = _exsTable;
 		wp(config, vcgPath, exsTable, normalComponent);
 	}
 
