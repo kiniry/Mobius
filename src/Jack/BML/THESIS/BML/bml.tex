@@ -22,10 +22,6 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
 \end{itemize}
 
 
-
-
-
-
 \subsection{BML Grammar}\label{BCSL}
 
 %\begin{bml}[Formal grammar of BML]\label{BCSL} 
@@ -54,41 +50,30 @@ $$\begin{array}{ll}
      \ident & ::= \# \ \intLiteral \\    
      
      & \\
-     
+ 
      \boundVar & ::= \ \bound\_\intLiteral \\ 
 
      & \\
     % \RefValuesSpec    & ::=  Ref \mid \Mynull \\
     & \\
     \expression      & ::= \Constants \\
-                     &  \mid  \locVar{ \digits } \\ 
-       	             &  \mid  \fieldAccess{\expression}{\ident} \\
+                     &  \mid \locVar{ \digits } \\ 
+       	             &  \mid \fieldAccess{\expression}{\ident} \\
 		     &  \mid \ident \\
 		  %  &  \mid  \update{\fieldd}{ \expression}{\expression}(\expression) \\
-		     &  \mid  \arrayAccess{\expression} {\expression} \\	   
+		     &  \mid \arrayAccess{\expression} {\expression} \\	   
 		 %   &  \mid \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression) \\	
-		     &  \mid  \expression \ \op \ \expression   \\
-		     &  \mid  \counter \\
-		     &  \mid  \stack{ \expression} \\
+		     &  \mid \expression \ \op \ \expression   \\
+		     &  \mid \counter \\
+		     &  \mid \stack{ \expression} \\
                      &  \mid \old{ \expression  } \\
                      &  \mid \EXC    \\
-		     &  \mid  \result \\
-		     &  \mid  \boundVar \\
-   
-     
- \end{array}$$
-%\end{bml}
-
-$$\begin{array}{ll}
- % & \\
-    \typeExp         & :: =  \typeof{ \expression} \\
+		     &  \mid \result \\
+		     &  \mid \boundVar \\
+		     &  \mid \typeof{ \expression} \\
                      &  \mid \type{\ident} \\
                      &  \mid \elemtype{\expression  }\\
-		     &  \mid \TYPE\\   
-   & \\ 
-                  
- \expressions        & :: = 	\expression \\
- 	     	     & \mid \typeExp   \\
+		     &  \mid \TYPE\\  
   & \\
  \op & ::=  \plus \mid \minus \mid \mult \mid \divis \mid  \modulo \\
  
@@ -126,18 +111,24 @@ $$\begin{array}{ll}
 			\loopMod \ list; \\ 
                         \loopDecreases \ \expression; 
 	         \end{array}\\
+    \end{array}$$
 
-    & \\ 
-  \MethodSpec & ::=   \specCase \\     
-                  & \mid  \specCase \ \also \ \MethodSpec \\
+
+$$\begin{array}{ll} 
+ %   & \\ 
+  \MethodSpec & ::= \specCase \\     
+                    & \mid  \specCase \ \also \ \MethodSpec \\
 
  & \\
-  \specCase & ::=  \begin{array}{l}  
-                                 \requires  \ \formulaBc; \\
+  \specCase & ::=    \{| \\
+                    & \phantom{aaa} \begin{array}{l}  
+                              \requires  \ \formulaBc; \\
                                  \modifies  \ list \   \modifiesLoc;  \\
 				 \ensures \ \formulaBc; \\
-				 \exsuresList 
-		     \end{array} \\
+				 \exsuresList\\
+				 
+		     \end{array}  \\
+                    &\phantom{aaa} |\} \\
  & \\ 
  \exsuresList & ::=   [ ] \mid  \exsures \ ( \ident )  \ \formulaBc  ; \exsuresList  \\
  & \\
@@ -148,22 +139,22 @@ $$\begin{array}{ll}
 		    & \mid \nothing \\
               
  & \\
- \specIndex & ::= \all \mid i_1 .. i_2 \mid i  
-\end{array}                
-$$
+ \specIndex & ::= \all \mid i_1 .. i_2 \mid i  \\
+            
+%\end{array}                
+%$$
 
-$$ 
-\begin{array}{ll}                
-
+%$$ 
+%\begin{array}{ll}    
  
        & \\
        \bmlKeyWords & ::= \requires \\
-                       & \mid   \ensures \\
-		       & \mid   \modifies \\
-		       & \mid   \assert \\
-		       & \mid   \set \\
-		       & \mid   \exsures \\
-		       & \mid   \also \\
+                       & \mid \ensures \\
+		       & \mid \modifies \\
+		       & \mid \assert \\
+		       & \mid \set \\
+		       & \mid \exsures \\
+		       & \mid  \also \\
 		       & \mid  \ClassInv \\
 		       & \mid \ClassHistoryConstr \\
 		       & \mid \atIndex \\ 
@@ -178,75 +169,154 @@ $$
 $$
 
 
-\subsection{Informal semantics of BML}
+\subsection{Syntax and semantics of BML}
 
-In the following, we will discuss informally the interpretation of the syntax structures of BML.
+In the following, we will discuss informally the semantics of the syntax structures of BML.
+Note that most of them are identical with construction from JML. In the following, we will concentrate more on
+ the specific features of BML and will just briefly comment the BML features which it inherits from JML like preconditions 
+and which we have not mentioned already\footnote{because we have already discussed  in Section \ref{BCSLprelim}
+ the JML constructs for pre and postconditions, loop invariants, operators like \jmlKey{old}, \result, etc. we would not 
+return to them anymore as their semantics is exactly the same as the one of JML}.  
+
 
 \subsubsection{BML expressions}
-Most of the expressions supported in BML have their counterpart in JML. As we will see hereafter, BML allows
-to express field access, array access, method parameters and local variables, stack expressions etc.
-The rule that produces the BML expression corresponds to the nonterminal   $\expressions$.
-As we can see from the rule, we divide the expressions into two categories : $\expression$ \ and \ $\typeExp$.
+Among the common features of BML and JML are the following expressions:
+field access expressions $\fieldAccess{ \expression}{\ident}$, array access  
+($\arrayAccess{\expression^1} {\expression^2} $),  arithmetic expressions
+($\expression \ \op \ \expression$ ). Like JML, BML may talk about expression types.
+As the BML grammar shows,  $ \typeof{\expression}$  denotes the dynamic type of the expression $\expression$, 
+ $ \type{ \ident } $  is the class  described at index $\ident$ in the constant pool of the corresponding class file.
+The construction $\elemtype{\expression}$ denotes the type of the elements of the array $\expression$,
+and \TYPE, like in JML, stands for the Java type \texttt{java.lang.Class}. 
 
-Note that few of the expressions that are generated by the nonterminal $ \expression$ \  do not have analogs in JML.
- We first focus on the expressions produced by $\expression$ \  and particularly those that have a translation
-in JML :
+A difference between JML and BML expressions is the syntax of identifiers, i.e. the syntax
+for local variables, method parameters, field and class identifiers. In JML, all these constructs
+ are represented syntactically by their names in the Java source file. This is not the case in BML.
 
+ We first look at the syntax of method local variables and parameters.
+ The class file format stores information for them in the array of local variables.
+ That is why, both method parameters and local variables are represented in BML 
+ with the construct  $\locVar{i}$ which refers to the local variable in the array of local
+ variables of a method at index $i$. Note that the \texttt{this} expression in BML is encoded
+ as $\locVar{0}$. This is because the reference to the current object is stored at index 0 in the array of local variables.
 
-\begin{itemize}
-      \item  $ \Constants$ represents the constants in BML. 
-             A constant is either a signed or unsigned integer, or an identificator.  
-             Integers are defined in a standard way. Identificators correspond 
-	     to indexes in the constant pool of a Java class and are always prefixed by the symbol $\#$. 
-      
-      \item  $ \locVar{i}$ a local variable in the array of local variables of a method at index $i$. Note that the array of local variables of a method on bytecode level
-             is the list of formal parameters of the variables declared locally in the method.
-             This is slightly different from the Java language where difference is made between method parameters and variables declared locally to a method.	     
-     
-      \item  $\fieldAccess{ \expression}{\ident}$ stands for accessing the field which is at index $ \ident $  in the class constant pool.
-             for the reference denoted by the expression
-             $ \expression $. 
-	     
-	    
+ 
+ Field and class identifiers in BML are encoded by the respective number in the constant pool table of the class file.
+ For instance, the syntax of field access expressions  in BML is $\fieldAccess{\expression}{\ident}$ which 
+ stands for the value in the field at index $\ident$ in the class constant pool of the class 
+ for the reference denoted by the expression  $ \expression $. 
 
-      \item  $\arrayAccess{\expression^1} {\expression^2} $ stands for an access to the element at index $ \expression^2$ 
-             in the array denoted by the expression $ \expression^1$. This corresponds to the Java notation $\expression^1[\expression^2 ]  $ 
+ The BML grammar defines the syntax of identifiers differently from their usual syntax.
+ Particularly, in BML those are positive numbers preceded by the symbol \# while usually
+ the syntax of identifiers is a chain of characters which always starts with a letter. 
+ The reason for this choice in BML  is that identifiers in BML are indexes in the constant
+ pool table of the corresponding class.     
 
-  
+ Fig.\ref{bml:heavySpecBML} gives the bytecode as well as the BML specification
+ of the code presented in   Fig.\ref{bml:heavySp}. As we can see, the names of the local variables, field and class names  
+ are compiled as described above.
+ For instance, at line 2 we can see the precondition of the specification case.
+ It talks about $\locVar{1}$ which is the element in the array of local variables
+ of the method which corresponds to the unique method parameter. 
 
-      \item  $\expression \ \op \ \expression$ stands for the usual arithmetic operations.
-             $\op$ ranges over the standard  arithmetic operations $ + , - , * , div ,  rem $ 
+About the syntax of class names,  after the
+ \exsures \ clause at line 5 follows a BML identifier (\#25) enclosed in parenthesis.
+ This is the constant pool index at which the Java exception  type \texttt{java.lang.Exception} is declared.
+ 
+\begin{figure}
+\begin{lstlisting}[frame=trbl]
 
-   
-      \item $\old{\expression}$  denotes the value of $\expression$ in the pre state of a method. This expression is usually used in the postcondition of a
-            method and thus, allows that the postcondition predicate relate to the prestate
+   ...
 
-      \item $\EXC$ is a special specification identifier which denotes the thrown exception object in exceptional postconditions
- \end{itemize}
+1. //@ {| 
+2. //@  requires lv(1) > 0;
+3. //@  modifies lv(0).#19;
+4. //@  ensures  lv(0).#19 == \old( lv(0).#19 ) / lv(1);
+5. //@  exsures  ( #25 ) false;  
+6. //@ |}
+7. //@ also 
+8. //@ {|
+9. //@  requires lv(1) == 0;
+10.//@  modifies \nothing;
+11.//@  ensures false;
+12.//@  exsures ( #26 ) lv(0).#19  == \old(lv(0).#19);
+13.//@ |}
+   public void divide(int lv(1)) 
+      0 aload 0
+      1 dup
+      2 getfield #19 // instance field a
+      3 iload 1
+      4 idiv
+      5 putfield #19 // instance field a
+      6 return
+\end{lstlisting}
+\caption{\sc An example for a heavy weight specification in BML} \label{bml:heavySpBML}
+\end{figure}
 
-The expressions that are produced by the nonterminal $\expression$ and which cannot be translated in JML are related to
+%\begin{itemize}
+%      \item  constants with the nonterminal 
+%             $\Constants$. 
+%             A constant is either a signed or unsigned integer, or an identier.  
+%             Integers are defined in a standard way. Identifiers correspond 
+%	     to indexes in the constant pool of a Java class and are always prefixed by the symbol $\#$. 
+%             
+%      \item  $\locVar{i}$ a local variable in the array of local variables of a method at index $i$.
+%             Note that the array of local variables of a method in a class file
+%             is the list containing both the formal parameters of the method and
+%	     the variables declared locally in the method.
+%             
+%             
+%      \item  field access expressions where $\fieldAccess{ \expression}{\ident}$ stands for accessing the field which 
+%             is at index $\ident$ in the class constant pool of the class 
+%             for the reference denoted by the expression  $ \expression $. 
+%	      	    
+%               
+ %     \item  array access expression where $\arrayAccess{\expression^1} {\expression^2} $ stands for an access to the element at index $ \expression^2$ 
+%             in the array denoted by the expression $ \expression^1$. This corresponds to the Java notation $\expression^1[\expression^2 ]  $ 
+%             
+%              
+%      \item  $\expression \ \op \ \expression$ stands for the usual arithmetic operations 
+%%             where $\op$ ranges over the standard  arithmetic operations $ + , - , * , div ,  rem $ 
+%
+%   
+%      \item $\old{\expression}$  denotes the value of $\expression$ in the initial state of a method.
+%            This expression makes sense in the postcondition of a
+%            method and thus, allows that the postcondition predicate relate to the initial value of expressions.
+%
+%      \item $\EXC$ is a special specification identifier which denotes the thrown exception object in
+%            exceptional postconditions
+% \end{itemize}
+%
+A particular feature of BML is that it supports stack expressions which do not have a counterpart in JML.
+These expressions are related to
  the way in which the virtual machine works, i.e. we refer to the stack and the stack counter.
 Because intermediate calculations are done by using the stack, often we will need stack expressions in order to characterise the states before and after an instruction
-execution. Let's see how stack expressions are represented in BML:
+execution. Stack expressions are represented in BML as follows:
 \begin{itemize}
       \item  $\counter$ represents the stack counter.
-  \item  $\stack{ \expression}$ stands for the element in the operand stack at position $\expression$
-             Differently from the JML, our bytecode specification language has to take into 
-             account the operand stack and its counter. Of course, those expressions may appear in predicates that refer to intermediate instructions
-	     in the bytecode. 
-	     For instance, the element below the stack top is represented with $\stack{\counter - 1}$ 
+      \item  $\stack{ \expression}$ stands for the element in the operand stack at position $\expression$.   
+             For instance, the element below the stack top is represented with $\stack{\counter - 1}$ 
+             % Differently from the JML, our bytecode specification language has to take into 
+             % account the operand stack and its counter. 
+	     Note that those expressions may appear in predicates that refer to intermediate instructions in the bytecode. 
+	   
  \end{itemize}
 
-Finally, the expressions generated by the nonterminal $\typeExp$ \ are:
-\begin{itemize}
-   \item  $ \typeof{\expression}$  denotes the dynamic type of the expression $\expression$ 
 
-      \item $ \type{ \ident } $  denotes the class  described at index $\ident$ in the constant pool of the corresponding class file
- 
-      \item $\elemtype{\expression}$ denotes the type of the elements of the array $\expression$
-      \item \TYPE \todo{explain what does it mean}
+%Finally, type expressions are given by the nonterminal $\typeExp$. 
+%Note that all of these expressions have their analogue in JML and have the following meaning:
+%\begin{itemize}
+%   \item  $ \typeof{\expression}$  denotes the dynamic type of the expression $\expression$ 
+%
+%%      \item $ \type{ \ident } $  denotes the class  described at index $\ident$ in the constant pool of the corresponding class file
+% 
+%      \item $\elemtype{\expression}$ denotes the type of the elements of the array $\expression$
+%      \item \TYPE.  This keyword stands for the Java type \texttt{java.lang.Class}\footnote{In the Java Application Programming Interface (API), 
+%            instances of the class \texttt{java.lang.Class} represent Java classes, interfaces or basic types}. Notice that expressions
+%	    $ \typeof{\expression}$, $\type{\ident}$ and $\elemtype{ \expression }$ are of type \TYPE.     
+%
+% \end{itemize}
 
- \end{itemize}
 \subsubsection{BML predicates}
  The properties that our bytecode language can express are from first order predicate logic. The formal grammar of the predicates is
  given by the nonterminal $\formulaBc$. From the formal syntax, we can notice that BML supports the standard logical connectors
@@ -254,132 +324,106 @@ Finally, the expressions generated by the nonterminal $\typeExp$ \ are:
  the  expressions of our language like $\neq, = , \leq, \le \ldots$  
  
 
-\subsubsection{Class Specification} 
-Class specifications refer to properties that must hold in every visible state of a class. Thus, we have
-two kind of properties concerning classes: 
-\begin{itemize}
-      \item \ClassInv. Class invariants are predicates that must hold in every visible state of a class.
-                       This means that they must hold at the beginning and end of every method as well as whenever a method is called.
-      \item \ClassHistoryConstr. Class history constraints is a property which states a relation between the pre state and poststate of every 
-                                method in the corresponding class. 
-      \item  $\declare \ \ghost \ \ident  \ \ident$ declares a special specification variable which we call ghost variable.
-             These variables do not change the program behaviour although they might be assigned to as we shall see later in this section.
-	     Ghost variables are used only for specification purposes and  are not ``seen'' by the Java Virtual Machine.   
-\end{itemize}
- 
-We give in Fig.\ref{classSpec} an example of a class specification in Java source code.
- Note, that we give these examples on source code for the sake of clarity. The specification from the example declares one  invariant 
-which states that the field {\verb a } must always be greater than  {\verb 0 }. This means for instance, that whenever the
- method  {\verb decrease } is called the invariant must hold and when the method terminates execution the invariant once again should hold. 
-In the example we also have specified a history constraint which states that the  value of the instance variable  {\verb a } in the prestate 
-of any method of class  {\verb C }  must be greater or equal to its value in the state when the method terminates execution. For instance, 
-the history constraint is established by the method  {\verb decrease }
-\begin{figure}
-\begin{lstlisting}[frame=trbl]
-class C {
-   int a ;
+\subsubsection{Class Specification}
+ The nonterminal  \ClassSpec \ in the BML grammar defines syntax constructs for the
+ support of class specification. Note that these specification features exist in JML
+ and have exactly the same semantics. 
+ However, we give a brief description of the syntax. 
+ Class invariants are introduced by the terminal
+ \ClassInv, history constraints are introduced by the terminal \ClassHistoryConstr. 
+ BML allows the declaration of specification variables which are not visible by
+ the JVM. Their syntax in the grammar is $\declare \ \ghost \ \ident  \ \ident$. 
+ These variables do not change the program behaviour although they might be
+ assigned to as we shall see later in this section.
 
-   /@*
-     * invariant a > 0; 
-     * historyConstraint old(a) >= a;
-     *@/
-   public void decrease(int b) {
-      ...
-   }
-}
-\end{lstlisting}
-\caption{\sc An example for class specification} \label{classSpec}
-\end{figure}
+%\todo{HERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRE} 
+%Class specifications refer to properties that must hold in every visible state of a class. Thus, we have
+%two kind of properties concerning classes: 
+%\begin{itemize}
+%      \item \ClassInv. Class invariants are predicates that must hold in every visible state of a class.
+%                       This means that they must hold at the beginning and end of every method as well as whenever a method is called.
+%      \item \ClassHistoryConstr. 
+%      \item  $\declare \ \ghost \ \ident  \ \ident$ declares a special specification variable which we call ghost variable.
+%             These variables do not change the program behaviour although they might be assigned to as we shall see later in this section.
+%	     Ghost variables are used only for specification purposes and  are not ``seen'' by the Java Virtual Machine.   
+%\end{itemize}
+ 
+
 
 \subsubsection{Inter --- method specification}
-In this subsection, we will focus on the method specification which is visible by the other methods in the program.
-We call this kind of method specification an inter method specification as it exports to the outside the method contracts.
-In particular, a method exports a precondition, a normal postcondition, a list of exceptional postconditions for every possible exception that the method may throw
- and the list of locations that it may modify. Those four components is one specification case, i.e. they describe a particular behaviour of the method, i.e. that if in the
-prestate of the method the specified precondition holds, then when the method terminates normally, the specified normal postcondition holds and if 
-it terminates on an exception \texttt{E} then the specified exceptional postcondition for  \texttt{E} will hold in the poststate of the method.
+
+ In this subsection, we will focus on the method specification which is visible by the other methods in the program
+ or in other words the method pre, post and frame conditions. 
+ The syntax of those constructs is given by the nonterminal
+ \MethodSpec. As their meaning is exactly the same as in JML which we have already discussed
+  in Section \ref{BCSLprelim} dedicated to JML, we shall not spend more lines here on those.
+
+ The part of the method specification which deserves more attention 
+ is the syntax of heavy weight method specification. 
+ In Section \ref{BCSLprelim}, we saw that JML supports syntactic sugar for
+ the definition of the normal and exceptional behavior of a method. 
+ The syntax BML does not
+ support these syntactic constructs but rather supports their desugared version
+ (see \cite{RT03djml} for a detailed specification of the JML desugaring process).
+ A specification in BML may declare several method specification cases using.
+ The syntactic structure of a specification case is defined by the nonterminal \specCase.
+ We illustrate this by the example in Fig. \ref{bml:heavySpBML}.
+% which gives the specification in BML of the method \texttt{divide} from Fig. \ref{bml:heavySp}.
+ In the example, we can see that in BML the keywords \jmlKey{normal\_behavior} and \jmlKey{normal\_behavior} are not used. 
+ On the contrary, the specification cases now explicitely declare their behavior. 
+ The first specification case (the first bunch of specification enclosed in $\{|$ $ |\}$  ) corresponds to the
+ \jmlKey{normal\_behavior} specification case in the code from Fig. \ref{bml:heavySp}.
+ It states that the method always terminates normally
+ and thus, the exceptional postcondition is declared \false \ for any exceptional termination.
+ The second specification case in Fig.\ref{bml:heavySpBML}  corresponds to the \jmlKey{exceptional\_behavior} case of the source code
+ specification in Fig.\ref{bml:heavySp}. It also specifies explicitely the expected behavior of the method, i.e. the method postcondition
+ is declared to be \false. 
+ 
+
+
+
   
-We also allow that a method might have several specification cases. 
-Note that the specification cases that BML supports is actually the desugared version 
-of the different behaviours of a method as well as its inherited specification.
-\todo{reference to JML desugaring}
+ 
 
-\subsubsection{Method specification case}
-A specification case \specCase \  consists of the following specification units:
-
- \begin{itemize}
-      \item $\requires \ \formulaBc$ which represent the   precondition of the specification case. If such a clause is not explicitely written
-            in the specification, then the default precondition  \Mytrue \ is implicite
-      \item $\ensures \ \formulaBc$   which stands for the normal postcondition of the method in case the precondition held in the prestate.
-            In case this clause is not written in the specification explicitely, then the default postcondition   \Mytrue \  must hold.
-      \item $\modifies \ list \ \modifiesLoc $   which is the frame condition of the specification case and denotes the 
-            the locations that may be modified by the method if the precondition of this specification case holds in the prestate.
-	    This in particular means that a location that is not mentioned in the \modifies \  clause may be modified. 
-	    If the modifies clause is omitted, then the default modifies specification is \modifies \ \everything
-      \item \exsuresList \  is the list of the exceptional postconditions that should hold in this specification case. In particular,
-            every element in the list of exceptional postconditions has the following structure 
-	    $ \exsures \ ( \ident )  $ $\ \formulaBc$. 
-	    Note that  at index $\ident$  there is a constant which stands for some exception class  $\mbox{\rm\texttt{Exc}}$.
-	    The semantics of such a specification expression is that if the method 
-	    containing the exceptional postcondition terminates on an exception of type   $\mbox{\rm\texttt{Exc}}$
-	    then the predicate denoted by $\formulaBc$ must hold in the poststate. Note that the list of exceptional postcondition may be empty.
-	    Also the list of exceptional postconditions might not be complete w.r.t. exceptions that may be thrown  by the method.
-	    In both cases, for every
-	    exception that might be thrown by the method for which no explicite exceptional postcondition is given,
-	     we take the default exceptional postcondition
-	    \Myfalse
-\end{itemize}
-If a method has only one specification case this means that the precondition of the method is always the precondition of the unique 
-specification case. If a method has several specification cases then, when the method is invoked at least the precondition of one 
-of the specification cases must hold. If the precondition of a particular specification case holds in the prestate this requires
-that in the poststate the postcondition of the same specification case holds and only the locations mentioned in the frame condition
-of this specification case may be modified during method execution.
-For instance, the example in Fig. \ref{bcSpec} shows the method {\verb decrease } which is now specified with two specification cases.
-The specification cases describe two different behaviours of the method. The first specification case states that if the method is invoked 
-with parameter smaller than the instance variable   {\verb a } then the method will modify  {\verb a } by decreasing it with the value of the parameter
-{\verb b }. The other specification case describes the behavior of the method in case the actual parameter of the method is greater than the instance
-variable {\verb a }. 
+%\subsubsection{Method specification case}
+%A specification case \specCase \  consists of the following specification units:
+%
+% \begin{itemize}
+%      \item $\requires \ \formulaBc$ which represent the   precondition of the specification case. If such a clause is not explicitely written
+%            in the specification, then the default precondition  \Mytrue \ is implicite
+%      \item $\ensures \ \formulaBc$   which stands for the normal postcondition of the method in case the precondition held in the prestate.
+%%            In case this clause is not written in the specification explicitely, then the default postcondition   \Mytrue \  must hold.
+ %     \item $\modifies \ list \ \modifiesLoc $   which is the frame condition of the specification case and denotes the 
+%            the locations that may be modified by the method if the precondition of this specification case holds in the prestate.
+%	    This in particular means that a location that is not mentioned in the \modifies \  clause may be modified. 
+%	    If the modifies clause is omitted, then the default modifies specification is \modifies \ \everything
+%      \item \exsuresList \  is the list of the exceptional postconditions that should hold in this specification case. In particular,
+ %           every element in the list of exceptional postconditions has the following structure 
+%	    $ \exsures \ ( \ident )  $ $\ \formulaBc$. 
+%	    Note that  at index $\ident$  there is a constant which stands for some exception class  $\mbox{\rm\texttt{Exc}}$.
+%	    The semantics of such a specification expression is that if the method 
+%	    containing the exceptional postcondition terminates on an exception of type   $\mbox{\rm\texttt{Exc}}$
+%	    then the predicate denoted by $\formulaBc$ must hold in the poststate. Note that the list of exceptional postcondition may be empty.
+%	    Also the list of exceptional postconditions might not be complete w.r.t. exceptions that may be thrown  by the method.
+%	    In both cases, for every
+%	    exception that might be thrown by the method for which no explicite exceptional postcondition is given,
+%	     we take the default exceptional postcondition
+%	    \Myfalse
+%\end{itemize}
+%\todo{give the bytecode version of the example with heavy weight specification}
 
 
 
-\begin{figure}
-\begin{lstlisting}[frame=trbl]
-class C {
-   int a ;
-  
-   /@* 
-     * invariant a > 0; 
-     * historyConstraint  old(a) >= a;
-     *@/
-
-   /@*  
-     * requires a > b;
-     * modifies a;
-     * ensures  a == \old(a) - b;  
-     * exsures (Exception) false;
-     *
-     * also
-     * requires a <= b;
-     * modifies nothing;
-     * ensures  a == \old(a);
-     * exsures (Exception) false;
-     *@/   
-   public void decrease(int b) {
-     if ( a > b) {
-       a = a - b;
-   }
- }
-}
-\end{lstlisting}
-\caption{\sc An example for an intra method specification } \label{bcSpec}
-\end{figure}
 
 
 
 \subsubsection{Intra --- method specification}
 As we can see from the formal  grammar in subsection \ref{BCSL}, BML allows to specify a property that must hold at 
 particular program point inside a method body. The nonterminal which describes the grammar of assertions is
- \intraMethodSpec. Let us see in detail what kind of specifications can be supported in BML:
+ \intraMethodSpec.  
+ Note that every intra --- method specification, i.e. loop specification or assertion at particular program point
+ contains information about the point in the method body at which it refers.
+ In the following, we give the meaning of the syntactic constructs of the intra---method specification: 
 
 \begin{itemize}
   \item $\atIndex \ nat$ specifies the index of the instruction which identifies the instruction
@@ -404,17 +448,19 @@ particular program point inside a method body. The nonterminal which describes t
 
   \item  $ \set \ \expression \  \expression $ is a special expression that allows to set the value of a specification ghost variable. This means
          that the first argument must denote a reference to a ghost variable, while the second expression is the new value that this 
-	 ghost variable is assigned to.
+	 ghost variable is assigned to. \todo{what about assigning nonghost value to a ghost field of reference type}
 \end{itemize}
-
-
 \end{itemize}
 
 \subsubsection{Frame conditions} 
-As we already saw, method or loop specifications  might declare the locations that are modified 
-by the method / loop. We use the same syntax in both of the cases where the modified expressions for methods or loops are
- specified with $  \modifies  \ list \   \modifiesLoc;$. The semantics of such a specification clause is that 
-all the locations that are not mentioned in the $\modifies$ list must be unchanged.
+BML supports frame conditions for methods and loops. These have exactly the same semantics as in JML. 
+The nonterminal that defines the syntax for frameconditions is 
+We look now what are the syntax constructs that may appear in the frame condition:
+
+%As we already saw, method or loop specifications  might declare the locations that are modified 
+%by the method / loop. We use the same syntax in both of the cases where the modified expressions for methods or loops are
+% specified with $  \modifies  \ list \   \modifiesLoc;$. The semantics of such a specification clause is that 
+%all the locations that are not mentioned in the $\modifies$ list must be unchanged.
 The syntax of the expressions that might be modified by a method is determined by the nonterminal
 $  \modifiesLoc$. We now look more closely what a modified expression can be:
 \begin{itemize}
@@ -422,31 +468,24 @@ $  \modifiesLoc$. We now look more closely what a modified expression can be:
              in the constant pool for the reference denoted by  $\expression$ 
       \item $\locVar{i}$ states that the local variable may modified by a loop. Note that this kind of modified
             expression makes sense only for expressions modified in a loop.
-	    However a modification of a local variable does not make sense for a method frame condition, as methods in Java are called by value, and
-	    thus, a method can not cause a modification of a local variable that is observable by the rest of the program.
+	    Indeed, a modification of a local variable does not make sense for a method frame condition, 
+	    as methods in Java are called by value, and
+	    thus, a method can not cause a modification of a local variable that is observable from the outside of the method.
 	    
       \item  $\arrayAccessMod{\expression}{\specIndex}$ states that the components at the indexes specified by $\specIndex$ in
             the array denoted by $\expression$ may be modified. The indexes of the array components that may be modified $\specIndex$
 	    have the following syntax:
 	    \begin{itemize}
 	          \item $i$ is the index of the component at index $i$. For instance, \\
-		        $\arrayAccessMod{\expression}{i}$ means that the array component at index $i$ might be modified. Of course, in order that
-			such a specification make sense the following must hold:
-			$ 0  \le i < \length(\expression )   $
+		        $\arrayAccessMod{\expression}{i}$ means that the array component at index $i$ might be modified.
 	          \item \all \ specifies that all the components of the array may be modified, i.e. the expression 
-		         $\arrayAccessMod{\expression}{\all}$ is a syntactic sugar for 
-                       $$ \forall \ i ,   0  \le i < \length(\expression ) \Rightarrow \arrayAccessMod{\expression}{i }$$
+		         $\arrayAccessMod{\expression}{\all}$ means that any element in the array may potentially be modified.
+                       % $$ \forall \ i ,   0  \le i < \length(\expression ) \Rightarrow \arrayAccessMod{\expression}{i }$$
 		       
 		  \item $ i_1 .. i_2$ specifies the interval of array components between the index $i_1$  and $i_2$.  
-		        Thus, the modified expression  $\arrayAccessMod{\expression}{i_1 .. i_2}$ is a syntactic sugar for 
-			  $$ \forall \ i ,  i_1 \leq i \wedge  i \leq i_2 \Rightarrow \arrayAccessMod{\expression}{i }$$
-			  Here, once again the following conditions must hold, otherwise the expression does not
-			  make sense :
-			  $$ \begin{array}{l}
-			           0  \le i_1 \\
-				   i_2  < \length(\expression )
-			     \end{array}
-			  $$
+		        %Thus, the modified expression  $\arrayAccessMod{\expression}{i_1 .. i_2}$ is a syntactic sugar for 
+			%  $$ \forall \ i ,  i_1 \leq i \wedge  i \leq i_2 \Rightarrow \arrayAccessMod{\expression}{i }$$
+			 
 	    \end{itemize}
 
       \item $\everything $ states that every location might be modified by the method / loop

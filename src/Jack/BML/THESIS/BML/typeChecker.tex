@@ -8,20 +8,32 @@
 In the previous Section \ref{BCSLgrammar}, we gave the formal grammar of BML.
 However, we are interested in a strict subset of 
 the specifications that can be generated from this grammar. In particular, we want that a
-BML specification is well typed and respects few structural constraints.
+BML specification is well typed and respects structural constraints.
+The constraints that we impose here are similar to the type and structural constraints
+that the bytecode verifier imposes over the class file format.
 
-
-Let's see few examples of type constraints that  a valid BML specification must respect : 
+Examples for type constraints that  a valid BML specification must respect : 
 \begin{itemize}
     \item  the array expression $\arrayAccess{\expression^1}{\expression^2}$ must be such that 
-$\expression^1$ is of array type and $\expression^2$  is of integer type
+$\expression^1$ is of array type and $\expression^2$  is of integer type.
+
     \item the field access expression  $\fieldAccess{\expression}{\ident}$ is such that $\expression$ is of subtype
     of the class where the field described by the constant pool element at index $\ident$ is declared
     \item For any expression $ \expression^1 \op \expression^2$,  $ \expression^1$ and $ \expression^2$ must be of
-          a numeric type
+          a numeric type.
     
-    \item \ldots
-\end{itemize}
+    \item in the predicate $\expression^1 r \expression^2$ where $r =  \leq,<,\geq, >$  the expressions  $\expression^1$ and 
+          $\expression^2$ must be of numerical type.
+
+     \item  in the predicate $\expression^1  \subtypeSpec \expression^2$, the expressions $\expression^1$
+            and  $\expression^2$ must be of type \TYPE (which is the same as \texttt{java.lang.Class}).
+
+     \item the expression $\elemtype{\expression}$ must be such that $\expression$ has an array type.
+	    
+     \item  etc.  	   
+
+	  
+ \end{itemize}
 
 Example for structural constraint are :
 \begin{itemize}
@@ -29,14 +41,18 @@ Example for structural constraint are :
           the field access expression  $\fieldAccess{\expression}{\ident}$ is such that the
 	  $\ident$ must reference a field in the constant pool; or for the expression $\type{\ident}$, \ident
 	  must be a reference to a constant class in the constant pool
+    
     \item every $\ident$ in a BML specification must be a correct index in the constant pool table. 
     
+    \item if the  expression $\locVar{i}$ appears in a method BML specification, then
+          $i$ must be a valid index in the array of local variables of the method
 \end{itemize}
 
-Actually, an extension of the bytecode verifier may perform the checks
+An extension of the bytecode verifier may perform the checks
  if a BML specification  respects this kind of structural and type constraints.
-However, we are not going farther in this subject as it is out of the scope of the present thesis.
-For the curious reader, it will be certainly of interest to turn to the Java Virtual Machine specification \cite{VMSpec} which contains the official
+However, we have not worked on this problem and is a good candidate for a future work.
+For the curious reader, it will be certainly of interest to turn to the Java Virtual Machine 
+specification \cite{VMSpec} which contains the official
  specification of the Java bytecode verifier    
 or to the existing literature on bytecode verification (see the overview article ~\cite{Ljbc} )
  

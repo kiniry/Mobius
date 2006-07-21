@@ -32,12 +32,11 @@ as how they are achieved:
 \item \textbf{JVM compatibility } \\
             The class files augmented with the BML specification must be executable by any implementation of the JVM specification. 
             Because of this, BML specification is stored separately from the method body (the list of bytecode instructions which represent its body).
-	    This is like this, as inlining BML annotations in between bytecode instructions will corrupt 
-	    the performance of the JVM. 
-	    % This is different from the encoding of source specifications which 
-	    %  is directly written in the source code. This is not possible in the class file format 
-	    %  because inserting specification in between the method instructions will corrupt 
-	    %  the performance of the JVM. 
+	    % why do we do so?
+	    Inlining BML annotations in between bytecode instructions will corrupt 
+	    the performance of the JVM as it will violate the JVM specification. 
+	    
+	    % how
 	    In particular, the BML specification is written in the so
 	    called user defined attributes in the class file.
 	    The JVM specification defines the format of those attributes and mandates that any
@@ -46,7 +45,7 @@ as how they are achieved:
 	    information about the index of this instruction. For instance,  loop invariants in BML are stored
 	    in a user defined attribute which  contains the invariant expressed in BML as well as
 	    the index of the entry point instruction of the loop.
- 
+	    %comparison
 	    Thus, BML encoding is different from the encoding of   JML specification where
 	    annotations are written directly in the source text as comments
 	    at a particular point in the program text or accompanies a particular program structure.
@@ -65,24 +64,24 @@ as how they are achieved:
 	    %  For instance, loops on bytecode are identified by a unique loop entry instruction and thus, a loop invariant must hold basically every time
 	    %  the corresponding loop entry instruction is reached.
 
-\item \textbf{Compact class}. \textbf{Efficient verification}\\
-      Although opposite, we consider those two features as they depend one on the other. 
-      The first point requires that the class files augmented with BML should be as compact as possible.  
-      
-      The second point states that the BML specification should be such that 
-      verification is not expensive in resources, e.g. time, memory, calculation. 
-      This is an important condition if the BML specification is done  on devices
+\item \textbf{Compactness} and \textbf{Efficiency}\\
+      Although opposite, we consider those two features together because they are mutually dependent. 
+      By the first, we mean that the class files augmented with BML should be as compact as possible.  
+      The second feature refers to that tools supporting BML should not be slowed down by processing
+      the BML specification where more particularly we refer to verification condition generators.
+      This is an important condition if verification is done  on devices
       with limited resources.
 
-      We have designed BML as a subset of the desugared version of JML.
+      For fulfilling these conditions, BML is designed to correspond to a subset of the desugared version of JML.
       In particular, it brings a relative compactness of the class
       file as well as makes the verification procedure more efficient. 
 	   
       We first see in what sense this allows the class file compactness. 
       Because every kind of BML specification clause is
       stored in a different user defined attribute, supporting all constructs of JML would 
-      mean that class files contain a large number of attributes which would increase considerably the class file size.
-      Note, however that the BML specification size depends also on how much the source file has been annotated. 
+      mean that class files may contain a large number of attributes which would increase
+      considerably the class file size. However, the size of the BML specification depends
+      also on how much the source file has been annotated. 
       
       Because BML corresponds to a desugared version of JML, this means that on verification time the BML specification need not
       be processed more and it can be easily translated to the data structures used in the verification scheme.
@@ -91,14 +90,15 @@ as how they are achieved:
 
 
 
-As the attentive reader has noticed, we impose some restrictions on the structure of the class file format and the bytecode programs:
+As the attentive reader has noticed, we impose some restrictions on the structure of the class file format and the bytecode programs.
+These restrictions are the following:
  
 
 
 \begin{itemize}
   \item \textbf{Debug Information} \\ 
-       A requirement to the class the class file format is that it must contain a debug information, more particularly
-       \textbf{Line\_Number\_Table} \\ 
+       A requirement to the class file format is that it must contain a debug information, more particularly
+       the \textbf{Line\_Number\_Table} \\ 
        and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
        these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
        The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  

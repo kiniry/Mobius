@@ -17,39 +17,54 @@ and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class 
 these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
 The \textbf{Line\_Number\_Table} describes the link between the source line and the bytecode of a method.  
 The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method. 
-Those attributes are important for the next phase of the JML compilation.
+Those attributes are important for the next phases of the JML compilation.
 
 \item Desugaring of the JML specification \\
-      BML supports less specification clauses than JML for the sake of keeping compact the class file format.
-      In particular BML does not support heavy weight behaviour specification clauses or nested specification, neither an incomplete
-      method specification(see  \cite{JMLRefMan}).
-      Thus, a step in the compilation of JML specification into BML specification is the desugaring of the JML heavy weight
-      behaviours and the expanding of a light - weight non complete specification into its full default format.
-      This corresponds to the standard JML desugaring as described  in \cite{RT03djml}
-      For instance, a Java method which has two normal behaviours is given in Fig. \ref{JmlSpec}. 
-      Its desugared form corresponds to the method given in Fig. \ref{bcSpec}
+      %BML supports less specification clauses than JML for the sake of keeping compact the class file format.
+     % In particular BML does not support heavy weight behaviour specification clauses or nested specification, neither an incomplete
+     % method specification(see  \cite{JMLRefMan}).
+      % Thus, a step in the compilation of JML specification into BML specification is the desugaring of the JML heavy weight
+      This phase consists in converting the method  behaviours and the light - weight non complete
+      specification into BML specification cases.
+      This corresponds to part of the standard JML desugaring as described  in \cite{RT03djml}
+     % For instance, the BML compiler will produce from the specification in Fig.\ref{bml:heavySp} the BML specification 
+     % given in Fig.\ref{bml:heavySpBML} 
+      
 
 
 
 \item Linking with source data structures \\
       When the JML specification is desugared, we are ready for the linking and resolving phases.
       In this stage, the JML specification gets into an intermediate format in which 
-      the identifiers are resolved to data structures standing for the data that it represents. For instance, 
-      consider once again the example in Fig. \ref{JmlSpec} and particularly, let's look at the first specification
-      case of method {\verb m }  whose precondition { \verb a > b }  contains the identifier {\verb a }. In the linking phase, this identifier
-      is resolved to the field  named {\verb a } which is declared in the same class as shown in the figure. 
-      Also in this precondition, the identifier {\verb b } which is resolved to the parameter of method  {\verb m }.
+      the identifiers are resolved to data structures standing for the data that it represents.
+      The Java and JML source identifiers are linked with their identifiers on bytecode level, 
+      namely with the corresponding indexes either from the constant pool or the array of 
+      local variables described in the \textbf{Local\_Variable\_Table} attribute. 
+      
+      If, in the JML specification a field
+      identifier appears for which no constant pool (cp) index exists, it is added in the constant pool and the identifier in question
+      is compiled to the new cp index. This may happen in case of ghost fields. Note that because JML specification is invisible by the 
+      Java compilers, if JML ghost fields appear in the specification they will not have their corresponding element in the class constant
+      pool. That is why it is the responsibility of the JML2BML compiler to do this work.
+       
+      For instance, consider once again the example in Fig. \ref{bml:heavySp} and more particularly  the first specification
+      case of method \texttt{divide}  whose precondition \texttt{ b > 0 }  contains the method parameter identifier \texttt{b}.
+      In the linking phase, the identifier \texttt{b} is resolved to the local variable $\locVar{1}$  in the array of
+      local variables for the method \texttt{divide}.
+      We have a similar situation with the postcondition \texttt{ a == \old{a} / b }  which mentions also the field \texttt{a} of the current object.
+      The field name \texttt{a} is compiled to the index in the class constant pool  which describes the field constant field reference.
+      The result of the linking process is in Fig.\ref{bml:heavySpBML}.
 
-
-
+\item Locating the points for the intra ---method specification
+      In this phase the specification parts like the loop invariants and the assertions
+      which should hold at a certain point in the source program must be associated to the
+      respective program point on bytecode level. For this, the 
+      \textbf{Local\_Variable\_Table} attribute is used.
       
 \item Compilation of the JML specification into BML \\
-   In this stage, the desugared JML specification from the source file is compiled into BML specification.
-The Java and JML source identifiers are linked with their identifiers on bytecode level, namely with the corresponding indexes either from the constant pool or the array of 
-local variables described in the \textbf{Local\_Variable\_Table} attribute. If, in the JML specification a field
-identifier appears for which no constant pool (cp) index exists, it is added in the constant pool and the identifier in question
-is compiled to the new cp index. It is also in this phase that the specification parts like the loop invariants and the assertions which should hold at a certain point in the source program must be associated to the respective program point on bytecode level. The specification
-is compiled in binary form using tags in the standard way. The compilation of an expression is a tag followed by the compilation of its subexpressions. 
+      
+      The specification
+      is compiled in binary form using tags in the standard way. The compilation of an expression is a tag followed by the compilation of its subexpressions. 
 
 
 Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
