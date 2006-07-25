@@ -480,3 +480,4 @@ escjava2_logic : THEORY
               escjava2_jml_semantics,
               escjava2_lock_semantics
   END escjava2_logic
+

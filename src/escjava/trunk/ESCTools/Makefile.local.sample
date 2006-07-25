@@ -83,3 +83,21 @@ export ANT_LIB ?= ${ESCTOOLS_ROOT}/Utils/ant.jar
 
 ## Name of the executable to generate javadoc html (must be on the PATH)
 #export JAVADOC ?= javadoc
+
+## Defines and paths necessary for JNI wrappers (CVC)
+## JNI header file location
+export JDK_INCLUDE_DIR ?= ${JAVA_HOME}/include
+## OS-specific JNI header files
+export JDK_INCLUDE_OS ?= ${JDK_INCLUDE}/linux
+## JNI javah binary location
+export JAVAH ?= ${JAVA_HOME}/bin/javah
+## Preferred C++ compiler
+export CC ?= g++
+## Library directory of CVC installed
+export CVC_LIB_DIR ?= /usr/local/lib
+## Include directory of CVC install
+export CVC_INCLUDE_DIR ?= /usr/local/include/cvcl
+## Compilation flags for CVC (generally needed to resolve STL locations)
+## This may need to be changed, depending on local cvc installation.
+export CVC_FLAGS ?= -DHAVE___GNU_CXX__EXT_HASH_MAP -DHAVE___GNU_CXX__EXT_HASH_SET
+

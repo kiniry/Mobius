@@ -34,6 +34,7 @@ ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/backpred/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/gui/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/parser/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/prover/jniw/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/prover/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/reader/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sp/*.java) \
@@ -154,6 +155,7 @@ compileall: rm-stampfile compile
 really-compile: ${STAMPFILE}
 
 ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
+	cd java/escjava/prover/jniw; ${MAKE} TARGET=all
 	@#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
 	${JAVAC} ${JAVAC_FLAGS} \
@@ -323,6 +325,7 @@ clean: clean_classfiles clean_docs clean_escjava clean_tests \
 	clean_mocha
 
 clean_escjava: clean_escjava_ast clean_escjava_backpred 
+	cd java/escjava/prover/jniw; ${MAKE} TARGET=clean
 	rm -f ${VERSION_FILE} ${VERSION_TEMP}
 
 clean_tests:

@@ -343,7 +343,7 @@ export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${
 export MOCHA_ROOT = ${ESCJAVA_ROOT}/mochalib
 export MOCHA_SOURCE_DIR = ${MOCHA_ROOT}/java
 export MOCHA_TWO_ROOT = /usr/local/Java/j-mocha.2.0/mocha
-export LD_LIBRARY_PATH = ${MOCHA_TWO_ROOT}/platform/linux
+export MOCHA_LIBRARY_PATH = ${MOCHA_TWO_ROOT}/platform/linux:
 export MOCHA_CLASSES = ${MOCHA_SOURCE_DIR}:${JAR_FILES}/mochalib.jar
 
 ################################################################################
@@ -387,6 +387,28 @@ ESCJAVA_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_CLASSPATH}
 ESCJAVA_BUILD_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_BUILD_CLASSPATH}
 endif
 
+
+################################################################################
+## Paths and parameters necessary for CVC JNI compillation
+## Variables should be (re)defined in Makefile.local
+## JNI header file location
+export JDK_INCLUDE_DIR ?= ${JAVA_HOME}/include
+## OS-specific JNI header files
+export JDK_INCLUDE_OS ?= ${JDK_INCLUDE}/linux
+## JNI javah binary location
+export JAVAH ?= ${JAVA_HOME}/bin/javah
+## Preferred C++ compiler
+export CC ?= g++
+## Library directory of CVC installed
+export CVC_LIB_DIR ?= /usr/local/lib
+## Include directory of CVC install (default)
+export CVC_INCLUDE_DIR ?= /usr/local/include/cvcl
+## Compilation flags for CVC (generally needed to resolve STL locations)
+## This may need to be changed, depending on local cvc installation.
+export CVC_FLAGS ?= -DHAVE___GNU_CXX__EXT_HASH_MAP -DHAVE___GNU_CXX__EXT_HASH_SET
+export LD_LIBRARY_PATH = ${MOCHA_LIBRARY_PATH}:${CVC_LIB_DIR}:${ESCTOOLS_ROOT}/libs
+
 # End of file
 
 export TEXINPUTS := .:${TEXINPUTS}
+
