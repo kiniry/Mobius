@@ -32,6 +32,7 @@ public class ProverManager {
   public static boolean useSimplify = false;
   public static boolean useSammy = false;
   public static boolean useHarvey = false;
+  public static boolean useCvc3 = false;
 
   //@ ensures isStarted && prover != null;
   synchronized
@@ -63,6 +64,26 @@ public class ProverManager {
       simplify.sendCommands("");
       
     }
+
+    if (useCvc3 && (cvc3 == null || !cvc3.started)) {
+      long startTime = java.lang.System.currentTimeMillis();
+      if (cvc3 == null)
+        cvc3 = new Cvc3(false);
+
+      if (!Main.options().quiet) 
+        System.out.println("  Prover started:" + Main.timeUsed(startTime));
+
+      // set any flags here (-tcc and timeout, for example)
+      Properties flags = new Properties();
+      flags.setProperty(" ","-timeout 0");
+      cvc3.set_prover_resource_flags(flags);
+
+      cvc3.start_prover();
+/*
+      cvc3.make_assumption(XXX);
+      escjava.backpred.Backpred.genUnivBackPred(XXX);
+*/
+    } 
     
     if (listener != null) listener.stateChanged(1);
     isStarted = true;
@@ -90,6 +111,11 @@ public class ProverManager {
     if(useSammy) {
       sammy.stop_prover();
       sammy = null;
+    }
+
+    if(useCvc3) {
+      cvc3.stop_prover();
+      cvc3 = null;
     }
     
     if (listener != null) 
@@ -203,5 +229,10 @@ public class ProverManager {
   public static Sammy sammy;
   //@ public static model Object prover;
   //@ static represents prover <- sammy;
-  
+
+  /*
+   * Our Cvc3 instance.
+   */
+  public static Cvc3 cvc3;
+ 
 }
