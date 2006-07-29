@@ -19,7 +19,7 @@ class TCvc3Visitor extends TVisitor {
 
     public void genericOp(/*@ non_null @*/String s, TFunction n) throws IOException {
                                                                                 
-        lib.appendI("");
+//        lib.appendI("(");
                                                                                 
         int i = 0;
         for (; i < n.sons.size(); i++) {
@@ -35,6 +35,7 @@ class TCvc3Visitor extends TVisitor {
                                                                                 
             lib.appendN(" ");
         }
+//        lib.appendI(")");
                                                                                 
         lib.reduceI();
 
@@ -65,7 +66,17 @@ class TCvc3Visitor extends TVisitor {
         lib.reduceI();
 
     }
-    
+
+    /*
+     * Pretty print for unsupported operators (comments)
+     */
+    public void noOp(/*@ non_null @*/String s, TNode n) {
+     try {
+       lib.append("% "+s +"\n");
+     } catch (Exception e) {
+       System.out.println(e.getMessage());
+     }
+   }
     
     public void visitTName(/*@ non_null @*/TName n) throws IOException {
         /*
@@ -84,36 +95,42 @@ class TCvc3Visitor extends TVisitor {
      * class created using the perl script
      */
     public void visitTBoolImplies(/*@ non_null @*/TBoolImplies n) throws IOException {
-        genericOp("=>", n);
+//        prefixOp("boolImplies", n);
+          genericOp("=>",n);
     }
 
     public void visitTBoolAnd(/*@ non_null @*/TBoolAnd n) throws IOException {
-        genericOp("AND",n);
+//        prefixOp("boolAnd",n);
+          genericOp("AND",n);
     }
 
     public void visitTBoolOr(/*@ non_null @*/TBoolOr n) throws IOException {
-        genericOp("OR", n);
+//        prefixOp("boolOr", n);
+          genericOp("OR",n);
     }
 
     public void visitTBoolNot(/*@ non_null @*/TBoolNot n) throws IOException {
-        prefixOp("NOT", n);
+//        prefixOp("boolNot", n);
+          prefixOp("NOT",n);
     }
 
     public void visitTBoolEQ(/*@ non_null @*/TBoolEQ n) throws IOException {
-        genericOp("<=>", n);
+//        prefixOp("boolEq", n);
+          genericOp("<=>",n);
     }
 
     public void visitTBoolNE(/*@ non_null @*/TBoolNE n) throws IOException {
-        genericOp("XOR", n);
+//        prefixOp("boolNE", n);
+          genericOp("XOR",n);
     }
 
     public void visitTAllocLT(/*@ non_null @*/TAllocLT n) throws IOException {
-        genericOp("<", n);
+        noOp("AllocLT", n);
 // ??
     }
 
     public void visitTAllocLE(/*@ non_null @*/TAllocLE n) throws IOException {
-        genericOp("<=", n);
+        noOp("AllocLE", n);
 // ??
     }
 
@@ -156,11 +173,13 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTIntegralDiv(/*@ non_null @*/TIntegralDiv n) throws IOException {
+noOp("IntegralDiv",n);
 		// TODO Auto-generated method stub
 // cvc currently does not support non-linear functions
     }
 
     public void visitTIntegralMod(/*@ non_null @*/TIntegralMod n) throws IOException {
+noOp("IntegralMod",n);
 		// TODO Auto-generated method stub
 // cvc currently does not support non-linear functions
     }
@@ -202,6 +221,7 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTFloatMod(/*@ non_null @*/TFloatMod n) throws IOException {
+noOp("FloatMod",n);
 		// TODO Auto-generated method stub
 // cvc currently does not support non-linear functions
     }
@@ -246,87 +266,115 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTIs(/*@ non_null @*/TIs n) throws IOException {
-		// TODO Auto-generated method stub
+       // break up based on type
+       String t = n.getChildAt(0).getType();
+       if (t.equals("Boolean")) {
+         prefixOp("is_Boolean",n);
+       } 
+       else if (t.equals("Reference")) {
+         prefixOp("is_Reference",n);
+       }
+       else {
+         prefixOp("is_Number",n);
+       }
     }
 
     public void visitTSelect(/*@ non_null @*/TSelect n) throws IOException {
+noOp("Select",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTStore(/*@ non_null @*/TStore n) throws IOException {
+noOp("Store",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTTypeOf(/*@ non_null @*/TTypeOf n) throws IOException {
+noOp("TypeOf",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTForAll(/*@ non_null @*/TForAll n) throws IOException {
+noOp("ForAll",n);
       // out format is FORALL (x:t1,y:t2): formula
       // TODO Not sure how quantifier nodes are put together
     }
 
     public void visitTExist(/*@ non_null @*/TExist n) throws IOException {
+noOp("Exist",n);
       // out format is EXISTS (x:t1,y:t2): formula
       // TODO Not sure how quantifier nodes are put together
     }
 
     public void visitTIsAllocated(/*@ non_null @*/TIsAllocated n) throws IOException {
+noOp("IsAllocated",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTEClosedTime(/*@ non_null @*/TEClosedTime n) throws IOException {
+noOp("EClosedTime",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTFClosedTime(/*@ non_null @*/TFClosedTime n) throws IOException {
+noOp("FClosedTime",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTAsElems(/*@ non_null @*/TAsElems n) throws IOException {
+noOp("AsElems",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTAsField(/*@ non_null @*/TAsField n) throws IOException {
+noOp("AsField",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTAsLockSet(/*@ non_null @*/TAsLockSet n) throws IOException {
+noOp("AsLockSet",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTArrayLength(/*@ non_null @*/TArrayLength n) throws IOException {
+noOp("ArrayLength",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTArrayFresh(/*@ non_null @*/TArrayFresh n) throws IOException {
+noOp("ArrayFresh",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTArrayShapeOne(/*@ non_null @*/TArrayShapeOne n) throws IOException {
+noOp("ArrayShapeOne",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTArrayShapeMore(/*@ non_null @*/TArrayShapeMore n) throws IOException {
+noOp("ArrayShapeMore",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTIsNewArray(/*@ non_null @*/TIsNewArray n) throws IOException {
+noOp("IsNewArray",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTString(/*@ non_null @*/TString n) throws IOException {
+noOp("String",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTBoolean(/*@ non_null @*/TBoolean n) throws IOException {
         if (n.value)
-            lib.append(" TRUE");
+            lib.append(" TRUE ");
         else
-            lib.append(" FALSE");
+            lib.append(" FALSE ");
     }
 
     public void visitTChar(/*@ non_null @*/TChar n) throws IOException {
+noOp("Char",n);
 	// CVC does not support string manipulation
     }
 
@@ -335,6 +383,7 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTFloat(/*@ non_null @*/TFloat n) throws IOException {
+// is this a variable or a literal?
         // cvc only supports rationals!
         // so we need to figure out what the denominator should be...
         long d = 1;
@@ -351,6 +400,7 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTDouble(/*@ non_null @*/TDouble n) throws IOException {
+// is this a variable or a literal?
     // as visitTFloat, above
         long d = 1;
         double f = n.value;
@@ -366,28 +416,32 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTNull(/*@ non_null @*/TNull n) throws IOException {
-		// TODO Auto-generated method stub
+       lib.append("Null");
     }
 
 
 	public void visitTUnset(/*@non_null*/TUnset n) throws IOException {
+noOp("Unset",n);
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	public void visitTMethodCall(/*@non_null*/TMethodCall call) throws IOException {
+noOp("MethodCall",call);
 		// TODO Auto-generated method stub
 		
 	}
 
 
 	public void visitTIntegralSub(/*@non_null*/TIntegralSub sub) throws IOException {
+noOp("IntegralSub",sub);
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void visitTSum(TSum s) {
+	public void visitTSum(TSum s) { 
+noOp("Sum",s);
 		// TODO Auto-generated method stub
 		
 	}

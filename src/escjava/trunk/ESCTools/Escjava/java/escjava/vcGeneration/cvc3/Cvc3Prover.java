@@ -45,6 +45,7 @@ public class Cvc3Prover extends ProverType {
     
     // turn the ast into a cvc formula to be asserted/queried
     public void getProof(Writer out, String proofName, TNode term) throws IOException {
+        out.write("INCLUDE \"header.cvc3\";\n");
         generateDeclarations(out,term);
         generateTerm(out,term);
     }
@@ -68,7 +69,7 @@ public class Cvc3Prover extends ProverType {
     // or contain [%|.]
     // we map % -> ?
     //        . -> '
-    //        | -> \
+    //        : -> \
     // and add 'x' to the beginning of all names that start with either a
     // non-letter or 'x' (so there is no conflict with names already 
     // starting with 'x')
@@ -77,8 +78,9 @@ public class Cvc3Prover extends ProverType {
     private String cvc3idRename (String s) {
       s = s.replace('%','?');
       s = s.replace('.','\'');
-      s = s.replace('|','\\');
+      s = s.replace(':', '\'');
       // replace other characters with underscores (could be done better)
+      s = s.replace('|','_');
       s = s.replace('@', '_');
       s = s.replace('#', '_');
       s = s.replace('-', '_');
@@ -88,7 +90,7 @@ public class Cvc3Prover extends ProverType {
       s = s.replace(']', '_');
       s = s.replace('!', '_');
 
-      Pattern p0 = Pattern.compile("^([x0-9'?_$\\])");
+      Pattern p0 = Pattern.compile("^[x0-9\\\'?_$].*");
       Matcher m0 = p0.matcher(s);
       if (m0.matches()) {
         s = "x"+s;
@@ -185,9 +187,9 @@ public class Cvc3Prover extends ProverType {
          if (vitmp.type != null) {
            s.write(vitmp.getVariableInfo() + " : "
              + vitmp.type.getTypeInfo());
-           s.write(";");
+           s.write(";\n");
          } else {
-           s.write(vitmp.getVariableInfo() + " : S;");
+           s.write(vitmp.getVariableInfo() + " : S;\n");
            TDisplay.warn(this,
                          "generateDeclarations",
                          "Type of variable " + keytmp

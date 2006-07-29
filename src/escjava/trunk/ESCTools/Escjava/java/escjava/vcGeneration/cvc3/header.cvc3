@@ -1,0 +1,218 @@
+% This presents the types and functions used in cvc3 proofs,
+% based on the pvs esc/java2 logic in 
+% docs/Escjava2-Logics/pvs/escjava2.pvs
+
+% Currently is used in Cvc3Prover.getProof(), so this file should
+% be local relative to the escj executable.
+
+% looks like we need to do the Boolean = 0/1 trick again...
+
+S : TYPE;
+Boolean : TYPE = INT;
+
+subpredIntegralNumber : INT -> BOOLEAN;
+IntegralNumber : TYPE = SUBTYPE(subpredIntegralNumber);
+
+subpredFloatingPointNumber : REAL -> BOOLEAN;
+FloatingPointNumber : TYPE = SUBTYPE(subpredFloatingPointNumber);
+
+subpredBigIntNumber : INT -> BOOLEAN;
+BigIntNumber : TYPE = SUBTYPE(subpredBigIntNumber);
+
+subpredRealNumber : REAL -> BOOLEAN;
+RealNumber : TYPE = SUBTYPE(subpredRealNumber);
+
+Number : TYPE = REAL;
+
+BasicValue : TYPE = Number;
+
+Reference : TYPE;
+
+subpredArrayReference : Reference -> BOOLEAN;
+ArrayReference : TYPE = SUBTYPE(subpredArrayReference);
+
+
+JMLNumber : TYPE = REAL;
+
+Field : TYPE;
+subpredBooleanField : Field -> BOOLEAN;
+BooleanField : TYPE = SUBTYPE(subpredBooleanField);
+subpredNumberField : Field -> BOOLEAN;
+NumberField : TYPE = SUBTYPE(subpredNumberField);
+subpredReferenceField : Field -> BOOLEAN;
+ReferenceField : TYPE = SUBTYPE(subpredReferenceField);
+
+JavaType : TYPE;
+subpredPrimitiveType : JavaType -> BOOLEAN;
+PrimitiveType: TYPE = SUBTYPE(subpredPrimitiveType);
+subpredReferenceType : JavaType -> BOOLEAN;
+ReferenceType: TYPE = SUBTYPE(subpredReferenceType);
+subpredArrayType : ReferenceType -> BOOLEAN;
+ArrayType: TYPE = SUBTYPE(subpredArrayType);
+
+subpredTime : INT -> BOOLEAN;
+Time : TYPE = SUBTYPE(subpredTime);
+
+Lock : TYPE;
+
+Object : TYPE;
+
+
+ArrayStore: TYPE;
+ArrayName: TYPE;
+
+% MAP THEORY HERE  <======================= !!!
+
+% typesystem
+
+typeLT : (ReferenceType, ReferenceType) -> BOOLEAN;
+typeLE : (ReferenceType, ReferenceType) -> BOOLEAN;
+
+% reflexive
+%ASSERT FORALL(t : ReferenceType, u : ReferenceType) :
+%  typeLE(t,u) <=> t=u;
+% transitive
+%ASSERT FORALL(t : ReferenceType, u : ReferenceType, v : ReferenceType) :
+%  typeLE(t,u) AND typeLE(u,v) => typeLE(t,v);
+% antisymmetric
+%ASSERT FORALL(t : ReferenceType, u : ReferenceType) :
+%  typeLE(t,u) AND typeLE(u,t) => t=u;
+% comparison is a strict order
+%ASSERT FORALL(t : ReferenceType, u : ReferenceType) :
+%             typeLE(t,u) <=> typeLT(t,u) OR t = u;
+
+T_java_lang_Object : ReferenceType;
+T_boolean, T_char, T_byte, T_short, T_int, T_long, T_float, T_double : 
+  PrimitiveType;
+extends? : (ReferenceType,ReferenceType) -> BOOLEAN;
+
+% extends is irreflexive
+%ASSERT FORALL(t:ReferenceType,u:ReferenceType): t=u => NOT extends?(t,u);
+
+%subtype includes extends
+%ASSERT FORALL(t : ReferenceType, u : ReferenceType) :
+%        extends?(t, u) => typeLE(t,u);
+
+% subtype is a relation that contains extends
+%ASSERT FORALL(t : ReferenceType, u : ReferenceType) :
+%        typeLE(t,u) AND t /= u =>
+%        EXISTS(v : ReferenceType) : extends?(t, v) AND typeLE(v,u);
+
+% subtype is the smallest relation that contains extends
+%%% higher-order, cannot be translated
+
+% primitive types are final
+%ASSERT FORALL (t : JavaType, p : PrimitiveType): typeLE(t,p) => t = p;
+
+% primative types have no proper supertypes
+%ASSERT FORALL (p : PrimitiveType, t : JavaType): typeLE(p,t) => p = t;
+                                                                                
+% java_lang_Object_is_Top
+%ASSERT FORALL (t : ReferenceType): typeLE(t,T_java_lang_Object);
+
+typeOf : Reference -> ReferenceType;
+NULL : Reference;
+                                                                                
+isa? : (Reference, ReferenceType) -> BOOLEAN = 
+  LAMBDA (r : Reference, t : ReferenceType): ((r = NULL) OR typeOf(r) = t);
+
+T_java_lang_Cloneable : ReferenceType;
+                                                                                
+elemtype : ArrayType -> JavaType;
+array_constructor : JavaType -> ArrayType;
+                                                                                
+% arrays_are_cloneable : AXIOM
+%ASSERT FORALL (t : JavaType): typeLE(array_constructor(t),T_java_lang_Cloneable);
+% elemtype_definition : AXIOM
+%ASSERT FORALL (t : JavaType): elemtype(array_constructor(t)) = t;
+% array_subtyping : AXIOM
+%ASSERT FORALL (t0 : ArrayType, t1 : JavaType): 
+%  typeLE(t0,array_constructor(t1)) <=> typeLE(elemtype(t0),t1)
+                                                                                
+% no identifier overloading in cvc!
+% === ESCJ 8: Section 2.1
+is_Boolean : (Boolean, JavaType) -> BOOLEAN;
+is_Number : (Number, JavaType) -> BOOLEAN;
+is_Reference : (Reference, JavaType) -> BOOLEAN;
+                                                                                
+% cast is dealt with the same way.
+cast_Boolean : (Boolean, PrimitiveType) -> Boolean;
+cast_Number : (Number, PrimitiveType) -> Number;
+cast_Reference : (Reference, ReferenceType) -> Reference;
+                                                                                
+% redundant_cast_removal_boolean : AXIOM
+%ASSERT FORALL (x : Boolean, t : JavaType):  
+%  is_Boolean(x, t) => cast_Boolean(x, t) = x;
+% redundant_cast_removal_number : AXIOM
+%ASSERT FORALL (x : Number, t : JavaType): 
+%  is_Number(x, t) => cast_Number(x, t) = x;
+% redundant_cast_removal_reference : AXIOM
+%ASSERT FORALL (x : Reference, t : JavaType): 
+%  is_Reference(x, t) => cast_Reference(x, t) = x;
+                                                                                
+% Not in ESCJ8, but should be
+refEQ: (Reference,Reference) -> BOOLEAN = LAMBDA (x, y : Reference): x = y;
+refNE: (Reference,Reference) -> BOOLEAN = LAMBDA (x, y : Reference): x /= y;
+
+% escjava2 java boolean ops
+% just use straight BOOLEAN ops
+boolAnd: (Boolean,Boolean) -> Boolean = 
+  LAMBDA (a, b : Boolean): IF a=1 AND b=1 THEN 1 ELSE 0 ENDIF;
+boolEq: (Boolean,Boolean) -> Boolean = 
+  LAMBDA (a, b : Boolean): IF a = b THEN 1 ELSE 0 ENDIF;
+boolImplies: (Boolean,Boolean) -> Boolean = 
+  LAMBDA (a, b : Boolean): IF a=0 OR b=1 THEN 1 ELSE 0 ENDIF;
+boolNE: (Boolean,Boolean) -> Boolean = 
+  LAMBDA (a, b : Boolean): IF a /= b THEN 1 ELSE 0 ENDIF;
+boolNot: Boolean -> Boolean = 
+  LAMBDA (a : Boolean): IF a=0 THEN 1 ELSE 0 ENDIF;
+boolOr: (Boolean,Boolean) -> Boolean = 
+  LAMBDA (a, b : Boolean): IF a+b>0 THEN 1 ELSE 0 ENDIF;
+
+% === ESCJ 8: Section 5.3
+% Java's ternary 'conditional' operator (? :)
+% just use straight ITE expressions
+termConditional_Boolean: (Boolean,Boolean,Boolean) -> Boolean = 
+  LAMBDA (b : Boolean, x, y : Boolean): IF b=1 THEN x ELSE y ENDIF;
+termConditional_Number: (Boolean,Number,Number) -> Number =
+  LAMBDA (b : Boolean, x, y : Number): IF b=1 THEN x ELSE y ENDIF;
+termConditional_Reference: (Boolean,Reference,Reference) -> Reference =
+  LAMBDA (b : Boolean, x, y : Reference): IF b=1 THEN x ELSE y ENDIF;
+                                                                                
+% java integral types
+% === ESCJ 8: Section 2.2.1
+                                                                                
+% Axioms to express the size of the basic types.
+% range_of_char : AXIOM
+%ASSERT FORALL (x : Number): is_Number(x, T_char) <=> 0 <= x AND x <= 65535;
+% range_of_byte : AXIOM
+%ASSERT FORALL (x : Number): is_Number(x, T_byte) <=> -128 <= x AND x <= 127;
+% range_of_short : AXIOM
+%ASSERT FORALL (x : Number): 
+%  is_Number(x, T_short) <=> -32768 <= x AND x <= 32767;
+% range_of_int : AXIOM (2^31)
+%ASSERT FORALL (x : Number): 
+%  is_Number(x, T_int) <=> (-2147483648) <= x AND x <= (2147483648-1);
+% range_of_long : AXIOM
+%ASSERT FORALL (x : Number): 
+%  is_Number(x, T_long) <=> -(2*2147483648*2147483648) <= x 
+%    AND x <= (2*2147483648*2147483648-1);
+% range_of_float : AXIOM
+%%% CALCULATE THIS!   <============= !!!
+%ASSERT FORALL (x : Number): is_Number(x, T_float) <=> -(2-(2^-23))*(2^127) <= x AND x <= (2-(2^-23))*(2^127);
+% range_of_double : AXIOM
+%%% CALCULATE THIS!
+%ASSERT FORALL (x : Number): is_Number(x, T_double) <=> -(2-(2^-52))*(2^1023) <= x AND x <= (2-(2^-52))*(2^1023);
+                                                                                
+% === ESCJ 8: Section 5.1
+                                                                                
+% Define using modulo_arithmetic theory. <=========== !!!
+                                                                                
+% use builtins for arithmetic ops
+
+% bitwise operations  <================== !!!
+%conversion to/from bitvectors 
+
+% arrays <========================= !!!
+
+Null:Reference;
