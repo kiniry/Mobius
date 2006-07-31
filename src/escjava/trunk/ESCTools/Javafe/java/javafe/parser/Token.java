@@ -61,14 +61,14 @@ public class Token
     }
 
     /** The location of the first character of the token. */
-    //@ invariant startingLoc != Location.NULL;
+    //@ invariant ttype != CLEAR ==> startingLoc != Location.NULL;
     public int startingLoc;
 
     /**
      * The location of the last character of the token.  (This value
      * isn't "off-by-one" right now.)
      */
-    //@ invariant endingLoc != Location.NULL;
+    //@ invariant ttype != CLEAR ==> endingLoc != Location.NULL;
     public int endingLoc;
 
 
