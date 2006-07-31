@@ -598,14 +598,31 @@ public final class GetSpec {
         TrAnExpr.closeForClause();
       }
 
+      // [GKS]
       if(Main.options().idc){ // add is-defined conditions
-	  Expr e = expr2IsDefExpr(expr);
-	  if(!escjava.AnnotationHandler.isTrue(e)) {
-	      Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
-					    TrAnExpr.trSpecExpr(e, map, null),
-					    e.getStartLoc());
-	      pre.addElement(cond);
+	//Expr e = expr2IsDefExpr(expr);
+	if(!escjava.AnnotationHandler.isTrue(expr)) {
+	  if (expr instanceof LabelExpr && ((LabelExpr)expr).expr instanceof InstanceOfExpr) 
+	  {
+	    // [FIXME] This is a temporary solution.
+	    // Filter out LabelExpr nodes with their first node being InstanceOfExpr because
+	    // those are the precondition of client methods that we do not want to handle.
 	  }
+	  else 
+	  {
+	    // Note: the expression argument to the CHECK-DEFINEDNESS
+	    // command is the requires clause assertion expression
+	    // untranslated -- i.e. not translated into the equivalent
+	    // GC expression form.  The translation is not later when
+	    // the CHECK-DEFINEDNESS command is desugared.
+	    if(DefGCmd.debug)
+	      System.err.println("GK-Trace-IDC: " + expr);
+	    Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
+					  expr,//TrAnExpr.trSpecExpr(e, map, null),
+					  expr.getStartLoc());
+	    pre.addElement(cond);
+	  }
+	}
       }
       Condition cond = GC.condition(TagConstants.CHKPRECONDITION, pred, loc);
       
@@ -1974,11 +1991,18 @@ public final class GetSpec {
   {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
-      if(cond.label == TagConstants.CHKEXPRDEFINEDNESS
-	 /* || cond.label == TagConstants.CHKARITHMETIC */
-	 ) {
-	  GuardedCmd gc = GC.check(cond.locPragmaDecl, cond);
-	  code.addElement(gc);
+      //[GKS]
+      if(Main.options().idc && cond.label == TagConstants.CHKEXPRDEFINEDNESS)
+      {
+	if(DefGCmd.debug)
+	  System.err.println("GK-Trace-DEF: "+ cond);
+
+	DefGCmd oDefGCs=new DefGCmd();
+ 	oDefGCs.generate(cond.pred);
+	GuardedCmd gc=oDefGCs.popFromCode();
+	//GuardedCmd gc = GC.check(cond.locPragmaDecl, cond);
+	code.addElement(gc);
+	//[GKE]
       } else {
 	  code.addElement(GC.assumeAnnotation(cond.locPragmaDecl, cond.pred));
       }
