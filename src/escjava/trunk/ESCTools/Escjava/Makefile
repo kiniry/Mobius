@@ -1,3 +1,4 @@
+# $Id$
 # Copyright 2000, 2001, Compaq Computer Corporation
 # Copyright 2003 University of Nijmegen
 # Copyright 2003 David R. Cok
@@ -152,10 +153,9 @@ compile: ${CLASSDIRECTORY} generate_files mocha really-compile
 # we can reuse the compile target.
 compileall: rm-stampfile compile
 
-really-compile: ${STAMPFILE}
+really-compile: ${STAMPFILE}  build_jniw
 
 ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
-	cd java/escjava/prover/jniw; ${MAKE} TARGET=all
 	@#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
 	${JAVAC} ${JAVAC_FLAGS} \
@@ -164,6 +164,11 @@ ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
 		-d $(call canonicalize,${CLASSDIRECTORY}) $?
 	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
 	touch $@
+
+build_jniw:
+ifdef JNIW
+	${MAKE} -C java/escjava/prover/jniw all
+endif
 
 VERSION_FILE = ${ESCJAVA_SOURCE_DIR}/escjava/Version.java
 VERSION_TEMP = ${VERSION_FILE}-temp
@@ -324,8 +329,7 @@ clean: clean_classfiles clean_docs clean_escjava clean_tests \
 	clean_misc clean_archives \
 	clean_mocha
 
-clean_escjava: clean_escjava_ast clean_escjava_backpred 
-	cd java/escjava/prover/jniw; ${MAKE} TARGET=clean
+clean_escjava: clean_escjava_ast clean_escjava_backpred clean_jniw
 	rm -f ${VERSION_FILE} ${VERSION_TEMP}
 
 clean_tests:
@@ -347,6 +351,11 @@ clean_misc:
 clean_archives:
 	rm -f ${CLASSDIRECTORY}/escjava.zip ${CLASSDIRECTORY}/javafe.zip
 	rm -f ${CLASSDIRECTORY}/compiled.zip
+
+clean_jniw:
+ifdef JNIW
+	${MAKE} -C java/escjava/prover/jniw clean
+endif
 
 ###########################################################################
 # Deliverable generation targets.
