@@ -122,15 +122,24 @@ public class DefGCmd
     } else if (x instanceof ThisExpr)
     {
       ThisExpr te=(ThisExpr)x;
-      result = te;
       this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
 					GC.truelit,
 					te.loc));
+      // VERIFYME: recheck the validity of this and try to
+      // understand what is going on in TrAnExpr.trSpecExprI
+      // for ThisExpr.
+      result=TrAnExpr.makeVarAccess(GC.thisvar.decl,
+				    x.getStartLoc());
     }
     else if (x instanceof LabelExpr)
     {
       LabelExpr le = (LabelExpr)x;
-      result=this.generate(le.expr);
+      // Return a LabelExpr with LabelExpr.expr=this.generate(le.expr)
+      result=LabelExpr.make(le.getStartLoc(),
+			    le.getEndLoc(),
+			    le.positive,
+			    le.label,
+			    this.generate(le.expr));
     }
     else if (x instanceof BinaryExpr)
     {
@@ -144,13 +153,17 @@ public class DefGCmd
 	{
 	  Expr leftExpr  = this.generate(be.left);
 	  Expr rightExpr = this.generate(be.right);
-	  result=GC.nary(TagConstants.INTEGRALNE,
-			 be.right, GC.zerolit);
+	  Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
+				  be.right,
+				  GC.zerolit);
 	  GuardedCmd gc=GC.check(be.locOp,
 				 TagConstants.CHKARITHMETIC,
-				 result,
+				 neZeroExpr,
 				 Location.NULL);
 	  this.code.addElement(gc);
+	  int newtag= TrAnExpr.getGCTagForBinary(be);
+	  result=GC.nary(x.getStartLoc(), x.getEndLoc(),
+			 newtag, leftExpr, rightExpr);
 	}
 	break;
       case TagConstants.AND:
@@ -160,7 +173,7 @@ public class DefGCmd
 	  Expr rightExpr = this.generate(be.right);
 	  GuardedCmd rightGC=this.popFromCode();
 	  GuardedCmd leftGC=GC.assume(leftExpr);
-	  GuardedCmd notLeftGC=GC.assume(GC.truelit);//GC.not(leftExpr));
+	  GuardedCmd notLeftGC=GC.assume(GC.truelit);
  	  this.code.
 	    addElement(GC.ifcmd(leftExpr,rightGC,notLeftGC));
 	  result=GC.nary(x.getStartLoc(),x.getEndLoc(),
@@ -211,74 +224,109 @@ public class DefGCmd
 //       this.code.addElement(GC.ifcmd(tstExpr,thnGC,elsGC));
 //       result = ??;
     }
-    else if (x instanceof FieldAccess)
-    {
-      FieldAccess fia = (FieldAccess)x;
-      if (fia.od instanceof ExprObjectDesignator)
-      {
-	ExprObjectDesignator eod=(ExprObjectDesignator)fia.od;
-	if (eod.expr instanceof ThisExpr) 
-	{
-	  result=GC.truelit;
-	}
-	else
-	{
-	  Expr odExpr=this.generate(eod.expr);
-	  result=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-	  GuardedCmd gc = GC.check(eod.locDot,
-				   TagConstants.CHKNULLPOINTER,
-				   result,
-				   Location.NULL);
-	  this.code.addElement(gc);
-	}
-      }
-      else 
-      {
-	// super. and type. are not handled.
-	if (true) throw new RuntimeException(x.toString());
-      }
-    }
-    else if (x instanceof MethodInvocation)
-    {
-      MethodInvocation mi = (MethodInvocation)x;
-      if (mi.od instanceof ExprObjectDesignator) 
-      {
-	ExprObjectDesignator eod=(ExprObjectDesignator)mi.od;
-	if (eod.expr instanceof ThisExpr) 
-	{
-	  result=GC.truelit;
-	}
-	else
-	{
-	  Expr odExpr=this.generate(eod.expr);
-	  result=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-	  GuardedCmd gc = GC.check(eod.locDot,
-				   TagConstants.CHKNULLPOINTER,
-				   result,
-				   Location.NULL);
-	  this.code.addElement(gc);
-	}
-      }
-      else 
-      {
-	// super. and type. are not handled.
-	if (true) throw new RuntimeException(x.toString());
-      }
-    }
+//     else if (x instanceof FieldAccess)
+//     {
+//       FieldAccess fa = (FieldAccess)e;
+//       VariableAccess va = makeVarAccess(fa.decl, fa.locId);
+//       boolean treatLikeAField = false;
+//       if (Utils.isModel(va.decl.pmodifiers))
+//       {
+	
+//       }
+//       if (Modifiers.isStatic(fa.decl.modifiers))
+//       {
+// 	result=va;
+//       }
+//       else
+//       {
+// 	Expr lhs;
+// 	switch (fa.od.getTag())
+// 	{
+// 	case TagConstants.EXPROBJECTDESIGNATOR: 
+// 	  {
+// 	    ExprObjectDesignator eod = 
+// 	      (ExprObjectDesignator)fa.od;
+// 	    lhs = this.generate(eod.expr);
+// 	  }
+// 	  break;
+	  
+// 	case TagConstants.SUPEROBJECTDESIGNATOR:
+// 	  {
+// 	  }
+// 	  break;
+            
+// 	}
+//       }
+
+
+//       if (fia.od instanceof ExprObjectDesignator)
+//       {
+// 	ExprObjectDesignator eod=(ExprObjectDesignator)fia.od;
+// 	if (eod.expr instanceof ThisExpr) 
+// 	{
+// 	  result=GC.truelit;
+// 	}
+// 	else
+// 	{
+// 	  Expr odExpr=this.generate(eod.expr);
+// 	  result=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+// 	  GuardedCmd gc = GC.check(eod.locDot,
+// 				   TagConstants.CHKNULLPOINTER,
+// 				   result,
+// 				   Location.NULL);
+// 	  this.code.addElement(gc);
+// 	}
+//       }
+//       else 
+//       {
+// 	// super. and type. are not handled.
+// 	if (true) throw new RuntimeException(x.toString());
+//       }
+//     }
+//     else if (x instanceof MethodInvocation)
+//     {
+//       MethodInvocation mi = (MethodInvocation)x;
+//       if (mi.od instanceof ExprObjectDesignator) 
+//       {
+// 	ExprObjectDesignator eod=(ExprObjectDesignator)mi.od;
+// 	if (eod.expr instanceof ThisExpr) 
+// 	{
+// 	  result=GC.truelit;
+// 	}
+// 	else
+// 	{
+// 	  Expr odExpr=this.generate(eod.expr);
+// 	  result=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+// 	  GuardedCmd gc = GC.check(eod.locDot,
+// 				   TagConstants.CHKNULLPOINTER,
+// 				   result,
+// 				   Location.NULL);
+// 	  this.code.addElement(gc);
+// 	}
+//       }
+//       else 
+//       {
+// 	// super. and type. are not handled.
+// 	if (true) throw new RuntimeException(x.toString());
+//       }
+//     }
     else if (x instanceof InstanceOfExpr)
     {
-      InstanceOfExpr ioe=(InstanceOfExpr)x;
-      Expr expr=this.generate(ioe.expr);
-      // FIXME: not sure how to handle instanceof expressions.
-      // For the time being return a GC.truelit so that when
-      // we encounter such an expression we do not generate
-      // ASSERT this but ASSERT true, which IMHO is/seems more
-      // natural :).  Comments are welcomed/encouraged :).
-      result=GC.truelit;
+      InstanceOfExpr ie=(InstanceOfExpr)x;
+      Expr expr=this.generate(ie.expr);
+      Expr isOfType = GC.nary(ie.getStartLoc(),ie.getEndLoc(),
+			      TagConstants.IS,expr,
+			      TrAnExpr.trType(ie.type));
+      Expr notNull = GC.nary(ie.getStartLoc(), ie.getEndLoc(),
+			     TagConstants.REFNE, expr,
+			     GC.nulllit);
+      result=GC.and(ie.getStartLoc(), ie.getEndLoc(),
+		    isOfType, notNull);
     }
     else if (x instanceof ParenExpr)
     {
       ParenExpr pe=(ParenExpr)x;
+      // TrAnExpr.trSpecExpr drops the parenthesis, so do I :).
       result = this.generate(pe.expr);
     }
     else
