@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" sourcepath="/home/chrzaszcz/workspace/umbra/libs/bcel-5.1-src.zip" path="/home/chrzaszcz/workspace/umbra/libs/org.apache.bcel_5.1.0/bcel.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/home/chrzaszcz/workspace/umbra/libs/bcel-5.1.zip!/bcel-5.1/docs"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path=""/>
+</classpath>
