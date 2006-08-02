@@ -257,13 +257,17 @@ public class DefGCmd
 	// super. and type. are not handled.
 	if (true) throw new RuntimeException(x.toString());
       }
-
     }
     else if (x instanceof InstanceOfExpr)
     {
       InstanceOfExpr ioe=(InstanceOfExpr)x;
       Expr expr=this.generate(ioe.expr);
-      result=expr;
+      // FIXME: not sure how to handle instanceof expressions.
+      // For the time being return a GC.truelit so that when
+      // we encounter such an expression we do not generate
+      // ASSERT this but ASSERT true, which IMHO is/seems more
+      // natural :).  Comments are welcomed/encouraged :).
+      result=GC.truelit;
     }
     else if (x instanceof ParenExpr)
     {
