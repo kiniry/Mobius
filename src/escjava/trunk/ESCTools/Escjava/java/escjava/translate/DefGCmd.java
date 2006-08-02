@@ -1,3 +1,8 @@
+/* @(#)$Id$
+ *
+ * Copyright (C) 2006, Dependable Software Research Group, Concordia University
+ */
+
 package escjava.translate;
 
 import javafe.util.StackVector;
@@ -15,6 +20,7 @@ import javafe.ast.InstanceOfExpr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.MethodInvocation;
 
+import escjava.Main;
 import escjava.ast.GuardedCmd;
 import escjava.ast.GuardedCmdVec;
 import escjava.ast.ExprCmd;
@@ -55,7 +61,7 @@ public class DefGCmd
    * debug messages.
    *
    */
-  public static boolean debug=true;
+  public static boolean debug = Main.options().debug;
 
   /**
    * Creates a new <code>DefGCmd</code> instance.
@@ -63,6 +69,7 @@ public class DefGCmd
    */
   public DefGCmd()
   {
+    // debug = Main.options().debug;
     if (debug) System.err.println(this.traceMethod());
     this.code=new StackVector();
     this.code.push();
