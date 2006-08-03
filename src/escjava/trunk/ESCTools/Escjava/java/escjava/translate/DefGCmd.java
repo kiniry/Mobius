@@ -5,6 +5,8 @@
 
 package escjava.translate;
 
+import java.util.Hashtable;
+
 import javafe.util.StackVector;
 import javafe.util.Location;
 
@@ -19,6 +21,7 @@ import javafe.ast.FieldAccess;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.MethodInvocation;
+import escjava.ast.Modifiers;
 
 import escjava.Main;
 import escjava.ast.GuardedCmd;
@@ -27,6 +30,7 @@ import escjava.ast.ExprCmd;
 import escjava.ast.TagConstants;
 import escjava.ast.GCExpr;
 import escjava.ast.LabelExpr;
+import escjava.ast.Spec;
 
 /**
  * Class <code>DefGCmd</code> implements the definedness guarded commands
@@ -39,7 +43,7 @@ import escjava.ast.LabelExpr;
  *  - Dereferrencing is partially supported.  Still working on this.
  * Usage:
  *  - DefGCmd defGCmd=new DefGCmd();
- *  - defGCmd.generate(expr); // expr is an untranslated expression.
+ *  - defGCmd.trAndGen(expr); // expr is an untranslated expression.
  *  - GuardedCmd gc=defGCmd.popFromCode();
  * NOTE: This is work inprogress and its fairly experimental, 
  * so bear with us for the time being :). Use at your own risk.
@@ -62,6 +66,15 @@ public class DefGCmd
    *
    */
   public static boolean debug = Main.options().debug;
+
+  /**
+   * <code>spec</code> holds the <code>Spec</code> object for this routine.
+   * This is needed because calls to TrAnExpr.trSpecExpr() require more
+   * information that are only accessible through this object.  For example,
+   * whether the method we are dealing with is a constructor, whether its static,
+   * etc.  Spec should be set before the call trAndGen() is made.
+   */
+  public static Spec spec=null;
 
   /**
    * Creates a new <code>DefGCmd</code> instance.
@@ -96,7 +109,7 @@ public class DefGCmd
    * its not set as GCExpr so that we do not get type mismatch between client
    * methods.
    */
-  public Expr generate(Expr x)
+  public Expr trAndGen(Expr x)
   {
     Expr result=null;
     if (debug)
@@ -105,6 +118,7 @@ public class DefGCmd
       System.err.println("\t\t"+x.getClass());
     }
 
+    // VariableAccess
     if (x instanceof VariableAccess)
     {
       VariableAccess va=(VariableAccess)x;
@@ -112,35 +126,47 @@ public class DefGCmd
       this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
 					GC.truelit,
 					va.loc));
-    } else if (x instanceof LiteralExpr)
+    } 
+    
+    // LiteralExpr
+    else if (x instanceof LiteralExpr)
     {
       LiteralExpr le=(LiteralExpr)x;
       result = le;
       this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
 					GC.truelit,
 					le.loc));
-    } else if (x instanceof ThisExpr)
+    } 
+    
+    // ThisExpr
+    else if (x instanceof ThisExpr)
     {
       ThisExpr te=(ThisExpr)x;
       this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
 					GC.truelit,
 					te.loc));
-      // VERIFYME: recheck the validity of this and try to
-      // understand what is going on in TrAnExpr.trSpecExprI
-      // for ThisExpr.
-      result=TrAnExpr.makeVarAccess(GC.thisvar.decl,
-				    x.getStartLoc());
+      Hashtable map = null;
+      if (spec.dmd.isConstructor())
+      {
+        map = new Hashtable();
+        map.put(GC.thisvar.decl, GC.resultvar);
+      }
+      result=TrAnExpr.trSpecExpr(x,map,null);
     }
+
+    // LabelExpr
     else if (x instanceof LabelExpr)
     {
       LabelExpr le = (LabelExpr)x;
-      // Return a LabelExpr with LabelExpr.expr=this.generate(le.expr)
+      // Return a LabelExpr with LabelExpr.expr=this.trAndGen(le.expr)
       result=LabelExpr.make(le.getStartLoc(),
 			    le.getEndLoc(),
 			    le.positive,
 			    le.label,
-			    this.generate(le.expr));
+			    this.trAndGen(le.expr));
     }
+    
+    // BinaryExpr
     else if (x instanceof BinaryExpr)
     {
       BinaryExpr be=(BinaryExpr)x;
@@ -148,11 +174,12 @@ public class DefGCmd
 	System.err.println("GK-Trace-TAG: "+TagConstants.toString(be.getTag()));
       switch (be.getTag())
       {
+	// DIV/MOD
       case TagConstants.DIV:
       case TagConstants.MOD:
 	{
-	  Expr leftExpr  = this.generate(be.left);
-	  Expr rightExpr = this.generate(be.right);
+	  Expr leftExpr  = this.trAndGen(be.left);
+	  Expr rightExpr = this.trAndGen(be.right);
 	  Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
 				  be.right,
 				  GC.zerolit);
@@ -166,11 +193,12 @@ public class DefGCmd
 			 newtag, leftExpr, rightExpr);
 	}
 	break;
+	// Conditional AND.
       case TagConstants.AND:
 	{
-	  Expr leftExpr  = this.generate(be.left);
+	  Expr leftExpr  = this.trAndGen(be.left);
 	  this.code.push();
-	  Expr rightExpr = this.generate(be.right);
+	  Expr rightExpr = this.trAndGen(be.right);
 	  GuardedCmd rightGC=this.popFromCode();
 	  GuardedCmd leftGC=GC.assume(leftExpr);
 	  GuardedCmd notLeftGC=GC.assume(GC.truelit);
@@ -181,11 +209,12 @@ public class DefGCmd
 			 leftExpr,rightExpr);
 	}
 	break;
+	// Conditional OR
       case TagConstants.OR:
 	{
-	  Expr leftExpr = this.generate(be.left);
+	  Expr leftExpr = this.trAndGen(be.left);
 	  this.code.push();
-	  Expr rightExpr = this.generate(be.right);
+	  Expr rightExpr = this.trAndGen(be.right);
 	  GuardedCmd rightGC=this.popFromCode();
 	  GuardedCmd leftGC=GC.assume(GC.truelit);
 	  GuardedCmd notleftGC=GC.assume(rightExpr);
@@ -198,137 +227,137 @@ public class DefGCmd
 			 leftExpr,rightExpr);
 	}
 	break;
+	// Remaining operators.
       default:
 	{
-	  Expr leftExpr  = this.generate(be.left);
-	  Expr rightExpr = this.generate(be.right);
+	  Expr leftExpr  = this.trAndGen(be.left);
+	  Expr rightExpr = this.trAndGen(be.right);
 	  int newtag= TrAnExpr.getGCTagForBinary(be);
 	  result=GC.nary(x.getStartLoc(), x.getEndLoc(),
 			 newtag, leftExpr, rightExpr);
 	}
 	break;
       }
-
     }
+
+    // Conditional Expr ( P ? x : y )
     else if (x instanceof CondExpr)
     {
       CondExpr ce=(CondExpr)x;
-      if (true) throw new RuntimeException(x.toString());
-//       Expr tstExpr=this.generate(ce.test);
-//       this.code.push();
-//       Expr thnExpr=this.generate(ce.thn);
-//       GuardedCmd thnGC=this.popFromCode();
-//       this.code.push();
-//       Expr elsExpr=this.generate(ce.els);
-//       GuardedCmd elsGC=this.popFromCode();
-//       this.code.addElement(GC.ifcmd(tstExpr,thnGC,elsGC));
-//       result = ??;
+      Expr tstExpr=this.trAndGen(ce.test);
+      this.code.push();
+      Expr thnExpr=this.trAndGen(ce.thn);
+      GuardedCmd thnGC=this.popFromCode();
+      this.code.push();
+      Expr elsExpr=this.trAndGen(ce.els);
+      GuardedCmd elsGC=this.popFromCode();
+      this.code.addElement(GC.ifcmd(tstExpr,thnGC,elsGC));
+      Hashtable map = null;
+      if (spec.dmd.isConstructor())
+      {
+        map = new Hashtable();
+        map.put(GC.thisvar.decl, GC.resultvar);
+      }
+      result=TrAnExpr.trSpecExpr(x,map,null);
     }
-//     else if (x instanceof FieldAccess)
-//     {
-//       FieldAccess fa = (FieldAccess)e;
-//       VariableAccess va = makeVarAccess(fa.decl, fa.locId);
-//       boolean treatLikeAField = false;
-//       if (Utils.isModel(va.decl.pmodifiers))
-//       {
-	
-//       }
-//       if (Modifiers.isStatic(fa.decl.modifiers))
-//       {
-// 	result=va;
-//       }
-//       else
-//       {
-// 	Expr lhs;
-// 	switch (fa.od.getTag())
-// 	{
-// 	case TagConstants.EXPROBJECTDESIGNATOR: 
-// 	  {
-// 	    ExprObjectDesignator eod = 
-// 	      (ExprObjectDesignator)fa.od;
-// 	    lhs = this.generate(eod.expr);
-// 	  }
-// 	  break;
-	  
-// 	case TagConstants.SUPEROBJECTDESIGNATOR:
-// 	  {
-// 	  }
-// 	  break;
-            
-// 	}
-//       }
 
+    // FieldAccess
+    else if (x instanceof FieldAccess)
+    {
+      FieldAccess fa = (FieldAccess)x;
+      // FIXME: Only object methods are handled.
+      if (!Modifiers.isStatic(fa.decl.modifiers))
+      {
+	switch (fa.od.getTag())
+	{
+	  // FIXME: Only ExprObjectDesignator objects are treated.
+	  //        anything else will generate an exception.
+	  //        Still is needed to decide what to do for the others.
+	case TagConstants.EXPROBJECTDESIGNATOR:
+	  {
+	    ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
+	    Expr odExpr=this.trAndGen(eod.expr);
+	    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+	    GuardedCmd gc = GC.check(eod.locDot,
+				     TagConstants.CHKNULLPOINTER,
+				     refNEExpr,
+				     Location.NULL);
+	    this.code.addElement(gc);
+	    // Prepare the result
+	    Hashtable map = null;
+	    if (spec.dmd.isConstructor())
+	    {
+	      map = new Hashtable();
+	      map.put(GC.thisvar.decl, GC.resultvar);
+	    }
+	    result=TrAnExpr.trSpecExpr(x,map,null);
+	  }
+	  break;
+	default:
+	  if (true) throw new RuntimeException(fa.od.toString());
+	}
+      }
+    }
 
-//       if (fia.od instanceof ExprObjectDesignator)
-//       {
-// 	ExprObjectDesignator eod=(ExprObjectDesignator)fia.od;
-// 	if (eod.expr instanceof ThisExpr) 
-// 	{
-// 	  result=GC.truelit;
-// 	}
-// 	else
-// 	{
-// 	  Expr odExpr=this.generate(eod.expr);
-// 	  result=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-// 	  GuardedCmd gc = GC.check(eod.locDot,
-// 				   TagConstants.CHKNULLPOINTER,
-// 				   result,
-// 				   Location.NULL);
-// 	  this.code.addElement(gc);
-// 	}
-//       }
-//       else 
-//       {
-// 	// super. and type. are not handled.
-// 	if (true) throw new RuntimeException(x.toString());
-//       }
-//     }
-//     else if (x instanceof MethodInvocation)
-//     {
-//       MethodInvocation mi = (MethodInvocation)x;
-//       if (mi.od instanceof ExprObjectDesignator) 
-//       {
-// 	ExprObjectDesignator eod=(ExprObjectDesignator)mi.od;
-// 	if (eod.expr instanceof ThisExpr) 
-// 	{
-// 	  result=GC.truelit;
-// 	}
-// 	else
-// 	{
-// 	  Expr odExpr=this.generate(eod.expr);
-// 	  result=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-// 	  GuardedCmd gc = GC.check(eod.locDot,
-// 				   TagConstants.CHKNULLPOINTER,
-// 				   result,
-// 				   Location.NULL);
-// 	  this.code.addElement(gc);
-// 	}
-//       }
-//       else 
-//       {
-// 	// super. and type. are not handled.
-// 	if (true) throw new RuntimeException(x.toString());
-//       }
-//     }
+    // MethodInvocation
+    else if (x instanceof MethodInvocation)
+    {
+      MethodInvocation mi = (MethodInvocation)x;
+      // FIXME: Only object methods are handled.
+      if (!Modifiers.isStatic(mi.decl.modifiers))
+      {
+	switch (mi.od.getTag())
+	{
+	  // FIXME: Only ExprObjectDesignator objects are treated.
+	  //        anything else will generate an exception.
+	  //        Still is needed to decide what to do for the others.
+	case TagConstants.EXPROBJECTDESIGNATOR:
+	  {
+	    ExprObjectDesignator eod = (ExprObjectDesignator)mi.od;
+	    Expr odExpr=this.trAndGen(eod.expr);
+	    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+	    GuardedCmd gc = GC.check(eod.locDot,
+				     TagConstants.CHKNULLPOINTER,
+				     refNEExpr,
+				     Location.NULL);
+	    this.code.addElement(gc);
+	    // Prepare the result
+	    Hashtable map = null;
+	    if (spec.dmd.isConstructor())
+	    {
+	      map = new Hashtable();
+	      map.put(GC.thisvar.decl, GC.resultvar);
+	    }
+	    result=TrAnExpr.trSpecExpr(x,map,null);
+	  }
+	  break;
+	default:
+	  if (true) throw new RuntimeException(mi.od.toString());
+	}
+      }
+    }
+
+    // InstanceOfExpr
     else if (x instanceof InstanceOfExpr)
     {
-      InstanceOfExpr ie=(InstanceOfExpr)x;
-      Expr expr=this.generate(ie.expr);
-      Expr isOfType = GC.nary(ie.getStartLoc(),ie.getEndLoc(),
-			      TagConstants.IS,expr,
-			      TrAnExpr.trType(ie.type));
-      Expr notNull = GC.nary(ie.getStartLoc(), ie.getEndLoc(),
-			     TagConstants.REFNE, expr,
-			     GC.nulllit);
-      result=GC.and(ie.getStartLoc(), ie.getEndLoc(),
-		    isOfType, notNull);
+      Hashtable map = null;
+      if (spec.dmd.isConstructor())
+      {
+        map = new Hashtable();
+        map.put(GC.thisvar.decl, GC.resultvar);
+      }
+      result=TrAnExpr.trSpecExpr(x,map,null);
     }
+
+    // ParenExpr
     else if (x instanceof ParenExpr)
     {
       ParenExpr pe=(ParenExpr)x;
       // TrAnExpr.trSpecExpr drops the parenthesis, so do I :).
-      result = this.generate(pe.expr);
+      result = this.trAndGen(pe.expr);
     }
+    
+    // Generate an exception for all remaining cases.
     else
     {
       if (true) throw new RuntimeException(x.toString());
