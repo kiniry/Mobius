@@ -30,7 +30,6 @@ import escjava.ast.ExprCmd;
 import escjava.ast.TagConstants;
 import escjava.ast.GCExpr;
 import escjava.ast.LabelExpr;
-import escjava.ast.Spec;
 
 /**
  * Class <code>DefGCmd</code> implements the definedness guarded commands
@@ -66,15 +65,6 @@ public class DefGCmd
    *
    */
   public static boolean debug = Main.options().debug;
-
-  /**
-   * <code>spec</code> holds the <code>Spec</code> object for this routine.
-   * This is needed because calls to TrAnExpr.trSpecExpr() require more
-   * information that are only accessible through this object.  For example,
-   * whether the method we are dealing with is a constructor, whether its static,
-   * etc.  Spec should be set before the call trAndGen() is made.
-   */
-  public static Spec spec=null;
 
   /**
    * Creates a new <code>DefGCmd</code> instance.
@@ -145,12 +135,7 @@ public class DefGCmd
       this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
 					GC.truelit,
 					te.loc));
-      Hashtable map = null;
-      if (spec.dmd.isConstructor())
-      {
-        map = new Hashtable();
-        map.put(GC.thisvar.decl, GC.resultvar);
-      }
+      Hashtable map = this.minHMap4Tr();
       result=TrAnExpr.trSpecExpr(x,map,null);
     }
 
@@ -252,12 +237,7 @@ public class DefGCmd
       Expr elsExpr=this.trAndGen(ce.els);
       GuardedCmd elsGC=this.popFromCode();
       this.code.addElement(GC.ifcmd(tstExpr,thnGC,elsGC));
-      Hashtable map = null;
-      if (spec.dmd.isConstructor())
-      {
-        map = new Hashtable();
-        map.put(GC.thisvar.decl, GC.resultvar);
-      }
+      Hashtable map = this.minHMap4Tr();
       result=TrAnExpr.trSpecExpr(x,map,null);
     }
 
@@ -284,12 +264,7 @@ public class DefGCmd
 				     Location.NULL);
 	    this.code.addElement(gc);
 	    // Prepare the result
-	    Hashtable map = null;
-	    if (spec.dmd.isConstructor())
-	    {
-	      map = new Hashtable();
-	      map.put(GC.thisvar.decl, GC.resultvar);
-	    }
+	    Hashtable map = this.minHMap4Tr();
 	    result=TrAnExpr.trSpecExpr(x,map,null);
 	  }
 	  break;
@@ -322,12 +297,7 @@ public class DefGCmd
 				     Location.NULL);
 	    this.code.addElement(gc);
 	    // Prepare the result
-	    Hashtable map = null;
-	    if (spec.dmd.isConstructor())
-	    {
-	      map = new Hashtable();
-	      map.put(GC.thisvar.decl, GC.resultvar);
-	    }
+	    Hashtable map = this.minHMap4Tr();
 	    result=TrAnExpr.trSpecExpr(x,map,null);
 	  }
 	  break;
@@ -340,12 +310,7 @@ public class DefGCmd
     // InstanceOfExpr
     else if (x instanceof InstanceOfExpr)
     {
-      Hashtable map = null;
-      if (spec.dmd.isConstructor())
-      {
-        map = new Hashtable();
-        map.put(GC.thisvar.decl, GC.resultvar);
-      }
+      Hashtable map = this.minHMap4Tr();
       result=TrAnExpr.trSpecExpr(x,map,null);
     }
 
@@ -363,6 +328,13 @@ public class DefGCmd
       if (true) throw new RuntimeException(x.toString());
     }
     return(result==null ? GC.truelit : result);
+  }
+
+  private Hashtable minHMap4Tr()
+  {
+    Hashtable map = new Hashtable();
+    map.put(GC.thisvar.decl, GC.resultvar);
+    return(map);
   }
 
   private String traceMethod()

@@ -1961,10 +1961,6 @@ public final class GetSpec {
   {
     StackVector code = new StackVector();
     code.push();
-    // [GKS]
-    if(Main.options().idc)
-      DefGCmd.spec=spec;
-    // [GKE]
     addAssumptions(spec.preAssumptions, code);
     assumeConditions(spec.pre, code);
     code.addElement(body);
