@@ -10,28 +10,18 @@ import java.util.Hashtable;
 import javafe.util.StackVector;
 import javafe.util.Location;
 
-import javafe.ast.Expr;
-import javafe.ast.VariableAccess;
-import javafe.ast.ThisExpr;
-import javafe.ast.LiteralExpr;
-import javafe.ast.BinaryExpr;
-import javafe.ast.CondExpr;
-import javafe.ast.ParenExpr;
-import javafe.ast.FieldAccess;
-import javafe.ast.InstanceOfExpr;
-import javafe.ast.ExprObjectDesignator;
-import javafe.ast.MethodInvocation;
+import javafe.ast.*;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
-import escjava.ast.Modifiers;
 
 import escjava.Main;
+import escjava.ast.ExprCmd;
+import escjava.ast.GCExpr;
 import escjava.ast.GuardedCmd;
 import escjava.ast.GuardedCmdVec;
-import escjava.ast.ExprCmd;
-import escjava.ast.TagConstants;
-import escjava.ast.GCExpr;
 import escjava.ast.LabelExpr;
+import escjava.ast.NaryExpr;
+import escjava.ast.TagConstants;
 
 /**
  * Class <code>DefGCmd</code> implements the definedness guarded commands
@@ -140,8 +130,21 @@ public class DefGCmd
 	}
       
 	case TagConstants.FIELDACCESS: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    // <expr>.id
+	    FieldAccess fa = (FieldAccess)e;
+	    if (!Modifiers.isStatic(fa.decl.modifiers)
+		&& fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR)
+		{
+		    ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
+		    Expr odExpr = trAndGen(eod.expr);
+		    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+		    GuardedCmd gc = GC.check(eod.locDot,
+					     TagConstants.CHKNULLPOINTER,
+					     refNEExpr,
+					     Location.NULL);
+		this.code.addElement(gc);
+		break;
+	    }
 	}
       
 	case TagConstants.ARRAYREFEXPR: {
@@ -155,7 +158,9 @@ public class DefGCmd
 	}
       
 	case TagConstants.PARENEXPR: {
-	    break;
+	    ParenExpr pe = (ParenExpr)e;
+	    // TrAnExpr.trSpecExpr drops the parenthesis, so do I :).
+	    return trAndGen(pe.expr);
 	}
       
 	    // Unary operator expressions
@@ -163,30 +168,41 @@ public class DefGCmd
 	case TagConstants.UNARYSUB: 
 	case TagConstants.NOT: 
 	case TagConstants.BITNOT: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    UnaryExpr ue = (UnaryExpr)e;
+	    int newtag = TrAnExpr.getGCTagForUnary(ue);
+	    return GC.nary(ue.getStartLoc(), ue.getEndLoc(), newtag, 
+			   trAndGen(ue.expr));
 	}
       
 	case TagConstants.UNARYADD: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    UnaryExpr ue = (UnaryExpr)e;
+	    return trAndGen(ue.expr);
 	}
       
 	case TagConstants.TYPEOF:
 	case TagConstants.ELEMTYPE:
 	case TagConstants.MAX: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    NaryExpr ne = (NaryExpr)e;
+	    int n = ne.exprs.size();
+	    ExprVec exprs = ExprVec.make(n);
+	    for (int i = 0; i < n; i++) {
+		exprs.addElement(trAndGen(ne.exprs.elementAt(i)));
+	    }
+	    return GC.nary(ne.getStartLoc(), ne.getEndLoc(), ne.getTag(), exprs);
 	}
 
 	case TagConstants.DTTFSA: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    // take this expr as atomic -- could to more (see
+	    // TrAnExpr.trSpecExpr), but probably isn't worth it
+	    break;
 	}
       
 	case TagConstants.ELEMSNONNULL: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    NaryExpr ne = (NaryExpr)e;
+	    VariableAccess elems = TrAnExpr.makeVarAccess(GC.elemsvar.decl,
+							  e.getStartLoc());
+	    return GC.nary(ne.getStartLoc(), ne.getEndLoc(), ne.getTag(),
+			   trAndGen(ne.exprs.elementAt(0)), elems);
 	}
       
 	    // Binary operator expressions
@@ -228,27 +244,15 @@ public class DefGCmd
 	case TagConstants.NIFF:
 	case TagConstants.BITOR:
 	case TagConstants.BITAND:
-	case TagConstants.BITXOR: {
-	    BinaryExpr be = (BinaryExpr)e;
-	    Expr leftExpr  = this.trAndGen(be.left);
-	    Expr rightExpr = this.trAndGen(be.right);
-	    int newtag= TrAnExpr.getGCTagForBinary(be);
-	    return GC.nary(e.getStartLoc(), e.getEndLoc(),
-			   newtag, leftExpr, rightExpr);
-	}
-      
+	case TagConstants.BITXOR:
+	    // fall through to the next group ...
+    
 	case TagConstants.EQ:
 	case TagConstants.NE:
 	case TagConstants.LSHIFT:
 	case TagConstants.RSHIFT:
-	case TagConstants.URSHIFT: {
-	    BinaryExpr be = (BinaryExpr)e;
-	    Expr leftExpr  = this.trAndGen(be.left);
-	    Expr rightExpr = this.trAndGen(be.right);
-	    int newtag= TrAnExpr.getGCTagForBinary(be);
-	    return GC.nary(e.getStartLoc(), e.getEndLoc(),
-			   newtag, leftExpr, rightExpr);
-	}
+	case TagConstants.URSHIFT:
+	    // fall through to the next group ...
       
 	case TagConstants.GE:
 	case TagConstants.GT:
