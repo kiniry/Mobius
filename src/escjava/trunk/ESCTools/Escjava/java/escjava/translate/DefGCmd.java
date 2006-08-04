@@ -21,6 +21,8 @@ import javafe.ast.FieldAccess;
 import javafe.ast.InstanceOfExpr;
 import javafe.ast.ExprObjectDesignator;
 import javafe.ast.MethodInvocation;
+import javafe.util.Assert;
+import javafe.util.ErrorSet;
 import escjava.ast.Modifiers;
 
 import escjava.Main;
@@ -99,254 +101,585 @@ public class DefGCmd
    * its not set as GCExpr so that we do not get type mismatch between client
    * methods.
    */
-  public Expr trAndGen(Expr x)
-  {
-    Expr result=null;
-    if (debug)
-    {
-      System.err.println(this.traceMethod());
-      System.err.println("\t\t"+x.getClass());
-    }
 
-    // VariableAccess
-    if (x instanceof VariableAccess)
-    {
-      VariableAccess va=(VariableAccess)x;
-      result = va;
-      this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
-					GC.truelit,
-					va.loc));
-    } 
-    
-    // LiteralExpr
-    else if (x instanceof LiteralExpr)
-    {
-      LiteralExpr le=(LiteralExpr)x;
-      result = le;
-      this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
-					GC.truelit,
-					le.loc));
-    } 
-    
-    // ThisExpr
-    else if (x instanceof ThisExpr)
-    {
-      ThisExpr te=(ThisExpr)x;
-      this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
-					GC.truelit,
-					te.loc));
-      Hashtable map = this.minHMap4Tr();
-      result=TrAnExpr.trSpecExpr(x,map,null);
-    }
+    /** (new trAndGent)
+     */
 
-    // LabelExpr
-    else if (x instanceof LabelExpr)
-    {
-      LabelExpr le = (LabelExpr)x;
-      // Return a LabelExpr with LabelExpr.expr=this.trAndGen(le.expr)
-      result=LabelExpr.make(le.getStartLoc(),
-			    le.getEndLoc(),
-			    le.positive,
-			    le.label,
-			    this.trAndGen(le.expr));
-    }
-    
-    // BinaryExpr
-    else if (x instanceof BinaryExpr)
-    {
-      BinaryExpr be=(BinaryExpr)x;
-      if (debug)
-	System.err.println("GK-Trace-TAG: "+TagConstants.toString(be.getTag()));
-      switch (be.getTag())
-      {
-	// DIV/MOD
-      case TagConstants.DIV:
-      case TagConstants.MOD:
-	{
-	  Expr leftExpr  = this.trAndGen(be.left);
-	  Expr rightExpr = this.trAndGen(be.right);
-	  Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
-				  be.right,
-				  GC.zerolit);
-	  GuardedCmd gc=GC.check(be.locOp,
-				 TagConstants.CHKARITHMETIC,
-				 neZeroExpr,
-				 Location.NULL);
-	  this.code.addElement(gc);
-	  int newtag= TrAnExpr.getGCTagForBinary(be);
-	  result=GC.nary(x.getStartLoc(), x.getEndLoc(),
-			 newtag, leftExpr, rightExpr);
+    public Expr trAndGen(Expr e) {
+	int tag = e.getTag();
+	switch (tag) {
+	case TagConstants.THISEXPR: {
+	    break;
+        }
+      
+	    // Literals (which are already GCExpr's)
+	case TagConstants.BOOLEANLIT: 
+	case TagConstants.CHARLIT:
+	case TagConstants.DOUBLELIT: 
+	case TagConstants.FLOATLIT:
+	case TagConstants.INTLIT:
+	case TagConstants.LONGLIT:
+	case TagConstants.NULLLIT: {
+	    break;
 	}
-	break;
-	// Conditional AND.
-      case TagConstants.AND:
-	{
-	  Expr leftExpr  = this.trAndGen(be.left);
-	  this.code.push();
-	  Expr rightExpr = this.trAndGen(be.right);
-	  GuardedCmd rightGC=this.popFromCode();
-	  GuardedCmd leftGC=GC.assume(leftExpr);
-	  GuardedCmd notLeftGC=GC.assume(GC.truelit);
- 	  this.code.
-	    addElement(GC.ifcmd(leftExpr,rightGC,notLeftGC));
-	  result=GC.nary(x.getStartLoc(),x.getEndLoc(),
-			 TagConstants.BOOLAND,
-			 leftExpr,rightExpr);
-	}
-	break;
-	// Conditional OR
-      case TagConstants.OR:
-	{
-	  Expr leftExpr = this.trAndGen(be.left);
-	  this.code.push();
-	  Expr rightExpr = this.trAndGen(be.right);
-	  GuardedCmd rightGC=this.popFromCode();
-	  GuardedCmd leftGC=GC.assume(GC.truelit);
-	  GuardedCmd notleftGC=GC.assume(rightExpr);
- 	  this.code.
-	    addElement(GC.ifcmd(leftExpr,
-				GC.assume(GC.truelit),
-				rightGC));
-	  result=GC.nary(x.getStartLoc(),x.getEndLoc(),
-			 TagConstants.BOOLOR,
-			 leftExpr,rightExpr);
-	}
-	break;
-	// Remaining operators.
-      default:
-	{
-	  Expr leftExpr  = this.trAndGen(be.left);
-	  Expr rightExpr = this.trAndGen(be.right);
-	  int newtag= TrAnExpr.getGCTagForBinary(be);
-	  result=GC.nary(x.getStartLoc(), x.getEndLoc(),
-			 newtag, leftExpr, rightExpr);
-	}
-	break;
-      }
-    }
 
-    // Conditional Expr ( P ? x : y )
-    else if (x instanceof CondExpr)
-    {
-      CondExpr ce=(CondExpr)x;
-      Expr tstExpr=this.trAndGen(ce.test);
-      this.code.push();
-      Expr thnExpr=this.trAndGen(ce.thn);
-      GuardedCmd thnGC=this.popFromCode();
-      this.code.push();
-      Expr elsExpr=this.trAndGen(ce.els);
-      GuardedCmd elsGC=this.popFromCode();
-      this.code.addElement(GC.ifcmd(tstExpr,thnGC,elsGC));
-      Hashtable map = this.minHMap4Tr();
-      result=TrAnExpr.trSpecExpr(x,map,null);
-    }
+	case TagConstants.STRINGLIT: {
+	    break;
+	}
+      
+	case TagConstants.RESEXPR: {
+	    break;
+	}
+      
+	case TagConstants.LOCKSETEXPR: {
+	    break;
+	}      
 
-    // FieldAccess
-    else if (x instanceof FieldAccess)
-    {
-      FieldAccess fa = (FieldAccess)x;
-      // FIXME: Only object methods are handled.
-      if (!Modifiers.isStatic(fa.decl.modifiers))
-      {
-	switch (fa.od.getTag())
-	{
-	  // FIXME: Only ExprObjectDesignator objects are treated.
-	  //        anything else will generate an exception.
-	  //        Still is needed to decide what to do for the others.
-	case TagConstants.EXPROBJECTDESIGNATOR:
-	  {
-	    ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
-	    Expr odExpr=this.trAndGen(eod.expr);
-	    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-	    GuardedCmd gc = GC.check(eod.locDot,
-				     TagConstants.CHKNULLPOINTER,
-				     refNEExpr,
-				     Location.NULL);
+	case TagConstants.VARIABLEACCESS: {
+	    VariableAccess va = (VariableAccess)e;
+	    break;
+	}
+      
+	case TagConstants.FIELDACCESS: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.ARRAYREFEXPR: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.ARRAYRANGEREFEXPR:
+	case TagConstants.WILDREFEXPR: {
+	    break;
+	}
+      
+	case TagConstants.PARENEXPR: {
+	    break;
+	}
+      
+	    // Unary operator expressions
+      
+	case TagConstants.UNARYSUB: 
+	case TagConstants.NOT: 
+	case TagConstants.BITNOT: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.UNARYADD: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.TYPEOF:
+	case TagConstants.ELEMTYPE:
+	case TagConstants.MAX: {
+	    notImpl(e);
+	    return null;
+	}
+
+	case TagConstants.DTTFSA: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.ELEMSNONNULL: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	    // Binary operator expressions
+      
+	case TagConstants.OR: {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr = this.trAndGen(be.left);
+	    this.code.push();
+	    Expr rightExpr = this.trAndGen(be.right);
+	    GuardedCmd rightGC=this.popFromCode();
+	    GuardedCmd leftGC=GC.assume(GC.truelit);
+	    GuardedCmd notleftGC=GC.assume(rightExpr);
+	    this.code.
+		addElement(GC.ifcmd(leftExpr,
+				    GC.assume(GC.truelit),
+				    rightGC));
+	    return GC.nary(e.getStartLoc(),e.getEndLoc(),
+			   TagConstants.BOOLOR,
+			   leftExpr,rightExpr);
+	}
+
+	case TagConstants.AND: {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr  = this.trAndGen(be.left);
+	    this.code.push();
+	    Expr rightExpr = this.trAndGen(be.right);
+	    GuardedCmd rightGC=this.popFromCode();
+	    GuardedCmd leftGC=GC.assume(leftExpr);
+	    GuardedCmd notLeftGC=GC.assume(GC.truelit);
+	    this.code.
+		addElement(GC.ifcmd(leftExpr,rightGC,notLeftGC));
+	    return GC.nary(e.getStartLoc(),e.getEndLoc(),
+			   TagConstants.BOOLAND,
+			   leftExpr,rightExpr);
+	}
+
+	case TagConstants.IMPLIES:
+	case TagConstants.IFF:
+	case TagConstants.NIFF:
+	case TagConstants.BITOR:
+	case TagConstants.BITAND:
+	case TagConstants.BITXOR: {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr  = this.trAndGen(be.left);
+	    Expr rightExpr = this.trAndGen(be.right);
+	    int newtag= TrAnExpr.getGCTagForBinary(be);
+	    return GC.nary(e.getStartLoc(), e.getEndLoc(),
+			   newtag, leftExpr, rightExpr);
+	}
+      
+	case TagConstants.EQ:
+	case TagConstants.NE:
+	case TagConstants.LSHIFT:
+	case TagConstants.RSHIFT:
+	case TagConstants.URSHIFT: {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr  = this.trAndGen(be.left);
+	    Expr rightExpr = this.trAndGen(be.right);
+	    int newtag= TrAnExpr.getGCTagForBinary(be);
+	    return GC.nary(e.getStartLoc(), e.getEndLoc(),
+			   newtag, leftExpr, rightExpr);
+	}
+      
+	case TagConstants.GE:
+	case TagConstants.GT:
+	case TagConstants.LE:
+	case TagConstants.LT:
+	case TagConstants.ADD:
+	case TagConstants.SUB:
+	case TagConstants.STAR: {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr  = this.trAndGen(be.left);
+	    Expr rightExpr = this.trAndGen(be.right);
+	    int newtag= TrAnExpr.getGCTagForBinary(be);
+	    return GC.nary(e.getStartLoc(), e.getEndLoc(),
+			   newtag, leftExpr, rightExpr);
+	}
+
+	case TagConstants.DIV:
+	case TagConstants.MOD: {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr  = this.trAndGen(be.left);
+	    Expr rightExpr = this.trAndGen(be.right);
+	    Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
+				    be.right,
+				    GC.zerolit);
+	    GuardedCmd gc=GC.check(be.locOp,
+				   TagConstants.CHKARITHMETIC,
+				   neZeroExpr,
+				   Location.NULL);
 	    this.code.addElement(gc);
-	    // Prepare the result
-	    Hashtable map = this.minHMap4Tr();
-	    result=TrAnExpr.trSpecExpr(x,map,null);
-	  }
-	  break;
-	default:
-	  if (true) throw new RuntimeException(fa.od.toString());
+	    int newtag= TrAnExpr.getGCTagForBinary(be);
+	    return GC.nary(e.getStartLoc(), e.getEndLoc(),
+			   newtag, leftExpr, rightExpr);
 	}
-      }
-    }
-
-    // MethodInvocation
-    else if (x instanceof MethodInvocation)
-    {
-      MethodInvocation mi = (MethodInvocation)x;
-      // FIXME: Only object methods are handled.
-      if (!Modifiers.isStatic(mi.decl.modifiers))
-      {
-	switch (mi.od.getTag())
-	{
-	  // FIXME: Only ExprObjectDesignator objects are treated.
-	  //        anything else will generate an exception.
-	  //        Still is needed to decide what to do for the others.
-	case TagConstants.EXPROBJECTDESIGNATOR:
-	  {
-	    ExprObjectDesignator eod = (ExprObjectDesignator)mi.od;
-	    Expr odExpr=this.trAndGen(eod.expr);
-	    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-	    GuardedCmd gc = GC.check(eod.locDot,
-				     TagConstants.CHKNULLPOINTER,
-				     refNEExpr,
-				     Location.NULL);
-	    this.code.addElement(gc);
-	    // Prepare the result
-	    Hashtable map = this.minHMap4Tr();
-	    result=TrAnExpr.trSpecExpr(x,map,null);
-	  }
-	  break;
-	default:
-	  if (true) throw new RuntimeException(mi.od.toString());
+      
+	case TagConstants.NEWINSTANCEEXPR: {
+	    notImpl(e);
+	    return null;
 	}
-      }
+      
+	case TagConstants.METHODINVOCATION: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.NEWARRAYEXPR: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.EXPLIES: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.SUBTYPE: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	    // Other expressions
+      
+	case TagConstants.CONDEXPR: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.INSTANCEOFEXPR: {
+	    break;
+	}
+      
+	case TagConstants.CASTEXPR: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.CLASSLITERAL: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.TYPEEXPR:
+	    return e;
+      
+	case TagConstants.REACH: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.NUM_OF:
+	case TagConstants.SUM:
+	case TagConstants.PRODUCT: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.MIN:
+	case TagConstants.MAXQUANT: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.FORALL:
+	case TagConstants.EXISTS: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.SETCOMPEXPR: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.LABELEXPR: {
+	    LabelExpr le = (LabelExpr)e;
+	    return LabelExpr.make(le.getStartLoc(),
+				  le.getEndLoc(),
+				  le.positive,
+				  le.label,
+				  this.trAndGen(le.expr));
+	}
+      
+	case TagConstants.PRE: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.FRESH: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.DOTDOT: {
+	    notImpl(e);
+	    return null;
+	}      
+
+	case TagConstants.NOWARN_OP:
+	case TagConstants.WACK_NOWARN:
+	case TagConstants.WARN_OP:
+	case TagConstants.WARN: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.IS_INITIALIZED:
+	case TagConstants.INVARIANT_FOR: {
+	    notImpl(e);
+	    return null;
+	} 
+      
+	case TagConstants.SPACE:
+	case TagConstants.WACK_WORKING_SPACE:
+	case TagConstants.WACK_DURATION: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	case TagConstants.NOTHINGEXPR:
+	case TagConstants.EVERYTHINGEXPR:
+	    return null;
+      
+	case TagConstants.NOTMODIFIEDEXPR: {
+	    notImpl(e);
+	    return null;
+	}
+      
+	default:
+	    Assert.fail("UnknownTag<"+e.getTag()+","+
+			TagConstants.toString(e.getTag())+"> on "+e+ " " +
+			Location.toString(e.getStartLoc()));
+	    return null; // dummy return
+	}
+
+	// In all cases that fall through, simply translate e into a GC expr.
+	return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
     }
 
-    // InstanceOfExpr
-    else if (x instanceof InstanceOfExpr)
-    {
-      Hashtable map = this.minHMap4Tr();
-      result=TrAnExpr.trSpecExpr(x,map,null);
+    private void notImpl(Expr e) {
+	ErrorSet.notImplemented(!Main.options().noNotCheckedWarnings,
+				e.getStartLoc(), e.toString());
     }
 
-    // ParenExpr
-    else if (x instanceof ParenExpr)
-    {
-      ParenExpr pe=(ParenExpr)x;
-      // TrAnExpr.trSpecExpr drops the parenthesis, so do I :).
-      result = this.trAndGen(pe.expr);
+    private Hashtable minHMap4Tr() {
+	// such a map is only neede for constructors, but since general type checking will have been done,
+	// we can simply use the same map in all cases (constructor or not).
+	Hashtable map = new Hashtable();
+	map.put(GC.thisvar.decl, GC.resultvar);
+	return(map);
     }
+
+    private String traceMethod() {
+	Throwable t=new Throwable();
+	StackTraceElement [] stes=t.getStackTrace();
+	if (stes!=null || stes.length!=0)
+	    {
+		return("GK-Trace : " + stes[1]);
+	    }
+	return("GK-Trace : NA");
+    }
+
+
+  /** prev impl. of trAndGen ... to be removed soon 
+   */
+    public Expr trAndGenPrev(Expr x)
+    {
+	Expr result=null;
+	if (debug) {
+	    System.err.println(this.traceMethod());
+	    System.err.println("\t\t"+x.getClass());
+	}
+
+	// VariableAccess
+	if (x instanceof VariableAccess)
+	    {
+		VariableAccess va=(VariableAccess)x;
+		result = va;
+		this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
+						  GC.truelit,
+						  va.loc));
+	    } 
     
-    // Generate an exception for all remaining cases.
-    else
-    {
-      if (true) throw new RuntimeException(x.toString());
+	// LiteralExpr
+	else if (x instanceof LiteralExpr)
+	    {
+		LiteralExpr le=(LiteralExpr)x;
+		result = le;
+		this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
+						  GC.truelit,
+						  le.loc));
+	    } 
+    
+	// ThisExpr
+	else if (x instanceof ThisExpr)
+	    {
+		ThisExpr te=(ThisExpr)x;
+		this.code.addElement(ExprCmd.make(TagConstants.ASSERTCMD,
+						  GC.truelit,
+						  te.loc));
+		Hashtable map = this.minHMap4Tr();
+		result=TrAnExpr.trSpecExpr(x,map,null);
+	    }
+
+	// LabelExpr
+	else if (x instanceof LabelExpr)
+	    {
+		LabelExpr le = (LabelExpr)x;
+		// Return a LabelExpr with LabelExpr.expr=this.trAndGen(le.expr)
+		result=LabelExpr.make(le.getStartLoc(),
+				      le.getEndLoc(),
+				      le.positive,
+				      le.label,
+				      this.trAndGen(le.expr));
+	    }
+    
+	// BinaryExpr
+	else if (x instanceof BinaryExpr)
+	    {
+		BinaryExpr be=(BinaryExpr)x;
+		if (debug)
+		    System.err.println("GK-Trace-TAG: "+TagConstants.toString(be.getTag()));
+		switch (be.getTag())
+		    {
+			// DIV/MOD
+		    case TagConstants.DIV:
+		    case TagConstants.MOD:
+			{
+			    Expr leftExpr  = this.trAndGen(be.left);
+			    Expr rightExpr = this.trAndGen(be.right);
+			    Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
+						    be.right,
+						    GC.zerolit);
+			    GuardedCmd gc=GC.check(be.locOp,
+						   TagConstants.CHKARITHMETIC,
+						   neZeroExpr,
+						   Location.NULL);
+			    this.code.addElement(gc);
+			    int newtag= TrAnExpr.getGCTagForBinary(be);
+			    result=GC.nary(x.getStartLoc(), x.getEndLoc(),
+					   newtag, leftExpr, rightExpr);
+			}
+			break;
+			// Conditional AND.
+		    case TagConstants.AND:
+			{
+			    Expr leftExpr  = this.trAndGen(be.left);
+			    this.code.push();
+			    Expr rightExpr = this.trAndGen(be.right);
+			    GuardedCmd rightGC=this.popFromCode();
+			    GuardedCmd leftGC=GC.assume(leftExpr);
+			    GuardedCmd notLeftGC=GC.assume(GC.truelit);
+			    this.code.
+				addElement(GC.ifcmd(leftExpr,rightGC,notLeftGC));
+			    result=GC.nary(x.getStartLoc(),x.getEndLoc(),
+					   TagConstants.BOOLAND,
+					   leftExpr,rightExpr);
+			}
+			break;
+			// Conditional OR
+		    case TagConstants.OR:
+			{
+			    Expr leftExpr = this.trAndGen(be.left);
+			    this.code.push();
+			    Expr rightExpr = this.trAndGen(be.right);
+			    GuardedCmd rightGC=this.popFromCode();
+			    GuardedCmd leftGC=GC.assume(GC.truelit);
+			    GuardedCmd notleftGC=GC.assume(rightExpr);
+			    this.code.
+				addElement(GC.ifcmd(leftExpr,
+						    GC.assume(GC.truelit),
+						    rightGC));
+			    result=GC.nary(x.getStartLoc(),x.getEndLoc(),
+					   TagConstants.BOOLOR,
+					   leftExpr,rightExpr);
+			}
+			break;
+			// Remaining operators.
+		    default:
+			{
+			    Expr leftExpr  = this.trAndGen(be.left);
+			    Expr rightExpr = this.trAndGen(be.right);
+			    int newtag= TrAnExpr.getGCTagForBinary(be);
+			    result=GC.nary(x.getStartLoc(), x.getEndLoc(),
+					   newtag, leftExpr, rightExpr);
+			}
+			break;
+		    }
+	    }
+
+	// Conditional Expr ( P ? x : y )
+	else if (x instanceof CondExpr)
+	    {
+		CondExpr ce=(CondExpr)x;
+		Expr tstExpr=this.trAndGen(ce.test);
+		this.code.push();
+		Expr thnExpr=this.trAndGen(ce.thn);
+		GuardedCmd thnGC=this.popFromCode();
+		this.code.push();
+		Expr elsExpr=this.trAndGen(ce.els);
+		GuardedCmd elsGC=this.popFromCode();
+		this.code.addElement(GC.ifcmd(tstExpr,thnGC,elsGC));
+		Hashtable map = this.minHMap4Tr();
+		result=TrAnExpr.trSpecExpr(x,map,null);
+	    }
+
+	// FieldAccess
+	else if (x instanceof FieldAccess)
+	    {
+		FieldAccess fa = (FieldAccess)x;
+		// FIXME: Only object methods are handled.
+		if (!Modifiers.isStatic(fa.decl.modifiers))
+		    {
+			switch (fa.od.getTag())
+			    {
+				// FIXME: Only ExprObjectDesignator objects are treated.
+				//        anything else will generate an exception.
+				//        Still is needed to decide what to do for the others.
+			    case TagConstants.EXPROBJECTDESIGNATOR:
+				{
+				    ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
+				    Expr odExpr=this.trAndGen(eod.expr);
+				    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+				    GuardedCmd gc = GC.check(eod.locDot,
+							     TagConstants.CHKNULLPOINTER,
+							     refNEExpr,
+							     Location.NULL);
+				    this.code.addElement(gc);
+				    // Prepare the result
+				    Hashtable map = this.minHMap4Tr();
+				    result=TrAnExpr.trSpecExpr(x,map,null);
+				}
+				break;
+			    default:
+				if (true) throw new RuntimeException(fa.od.toString());
+			    }
+		    }
+	    }
+
+	// MethodInvocation
+	else if (x instanceof MethodInvocation)
+	    {
+		MethodInvocation mi = (MethodInvocation)x;
+		// FIXME: Only object methods are handled.
+		if (!Modifiers.isStatic(mi.decl.modifiers))
+		    {
+			switch (mi.od.getTag())
+			    {
+				// FIXME: Only ExprObjectDesignator objects are treated.
+				//        anything else will generate an exception.
+				//        Still is needed to decide what to do for the others.
+			    case TagConstants.EXPROBJECTDESIGNATOR:
+				{
+				    ExprObjectDesignator eod = (ExprObjectDesignator)mi.od;
+				    Expr odExpr=this.trAndGen(eod.expr);
+				    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+				    GuardedCmd gc = GC.check(eod.locDot,
+							     TagConstants.CHKNULLPOINTER,
+							     refNEExpr,
+							     Location.NULL);
+				    this.code.addElement(gc);
+				    // Prepare the result
+				    Hashtable map = this.minHMap4Tr();
+				    result=TrAnExpr.trSpecExpr(x,map,null);
+				}
+				break;
+			    default:
+				if (true) throw new RuntimeException(mi.od.toString());
+			    }
+		    }
+	    }
+
+	// InstanceOfExpr
+	else if (x instanceof InstanceOfExpr)
+	    {
+		Hashtable map = this.minHMap4Tr();
+		result=TrAnExpr.trSpecExpr(x,map,null);
+	    }
+
+	// ParenExpr
+	else if (x instanceof ParenExpr)
+	    {
+		ParenExpr pe=(ParenExpr)x;
+		// TrAnExpr.trSpecExpr drops the parenthesis, so do I :).
+		result = this.trAndGen(pe.expr);
+	    }
+    
+	// Generate an exception for all remaining cases.
+	else
+	    {
+		if (true) throw new RuntimeException(x.toString());
+	    }
+	return(result==null ? GC.truelit : result);
     }
-    return(result==null ? GC.truelit : result);
-  }
-
-  private Hashtable minHMap4Tr()
-  {
-    Hashtable map = new Hashtable();
-    map.put(GC.thisvar.decl, GC.resultvar);
-    return(map);
-  }
-
-  private String traceMethod()
-  {
-    Throwable t=new Throwable();
-    StackTraceElement [] stes=t.getStackTrace();
-    if (stes!=null || stes.length!=0)
-    {
-      return("GK-Trace : " + stes[1]);
-    }
-    return("GK-Trace : NA");
-  }
-
-
 }
