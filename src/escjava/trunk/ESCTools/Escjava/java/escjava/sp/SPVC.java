@@ -264,7 +264,8 @@ public class SPVC
                         }
                         return true;
                     } else {
-                        Assert.fail("Unexpected expr in SPVC.isSimpleExpr: "+e);
+                        Assert.fail("Unexpected expr in SPVC.isSimpleExpr: " + e
+				    /* EscPrettyPrint.inst.toString(e) */);
                         return false; // dummy return
                     }
                 }
