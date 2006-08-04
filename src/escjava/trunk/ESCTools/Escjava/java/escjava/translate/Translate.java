@@ -3881,6 +3881,12 @@ public final class Translate
     for(int i=0; i<spec.pre.size(); i++) {
       Condition cond = spec.pre.elementAt(i);
       int label = cond.label;
+      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
+	  // We do not need to check for definedness of the precondition of a called
+	  // method since such a definedness check will be done when the called
+	  // method spec is checked.
+	  continue;
+      }
       Expr p = cond.pred;
       if (cond.label == TagConstants.CHKPRECONDITION) {
         p = mapLocation(p,locOpenParen);
