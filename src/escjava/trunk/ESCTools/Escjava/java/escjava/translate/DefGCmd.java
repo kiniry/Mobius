@@ -132,8 +132,8 @@ public class DefGCmd
 	case TagConstants.FIELDACCESS: {
 	    // <expr>.id
 	    FieldAccess fa = (FieldAccess)e;
-	    if (!Modifiers.isStatic(fa.decl.modifiers)
-		&& fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR)
+	    if (!Modifiers.isStatic(fa.decl.modifiers) &&
+		fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) 
 		{
 		    ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
 		    Expr odExpr = trAndGen(eod.expr);
@@ -142,9 +142,9 @@ public class DefGCmd
 					     TagConstants.CHKNULLPOINTER,
 					     refNEExpr,
 					     Location.NULL);
-		this.code.addElement(gc);
-		break;
-	    }
+		    this.code.addElement(gc);
+		}
+	    break;
 	}
       
 	case TagConstants.ARRAYREFEXPR: {
@@ -288,13 +288,44 @@ public class DefGCmd
 	}
       
 	case TagConstants.NEWINSTANCEEXPR: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    NewInstanceExpr me = (NewInstanceExpr)e;
+	    // ensure that definedness cond are generated
+	    // for arguments to constructor ...
+	    for (int i=0; i<me.args.size(); ++i) {
+		trAndGen(me.args.elementAt(i));
+	    }
+	    // but then let TrAnExpr actually do the translation ...
+	    break;
 	}
       
 	case TagConstants.METHODINVOCATION: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	    MethodInvocation me = (MethodInvocation)e;
+
+	    // ensure that definedness cond are generated
+	    // for arguments to method ...
+
+	    // (eventually we will want to save the result so that we can use
+	    // the translated actual param in a call to test the precondition of 
+	    // the method)
+
+	    for (int i=0; i<me.args.size(); ++i) {
+		trAndGen(me.args.elementAt(i));
+	    }
+
+	    if (!Modifiers.isStatic(me.decl.modifiers) &&
+		me.od instanceof ExprObjectDesignator) 
+		{
+		    // Expr ex = ((ExprObjectDesignator)me.od).expr;
+		    ExprObjectDesignator eod = (ExprObjectDesignator)me.od;
+		    Expr odExpr = trAndGen(eod.expr);
+		    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+		    GuardedCmd gc = GC.check(eod.locDot,
+					     TagConstants.CHKNULLPOINTER,
+					     refNEExpr,
+					     Location.NULL);
+		    this.code.addElement(gc);
+		}
+	    break;
 	}
       
 	case TagConstants.NEWARRAYEXPR: {
