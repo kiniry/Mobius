@@ -601,10 +601,11 @@ public final class GetSpec {
       }
 
       // [GKS]
-      if(Main.options().idc){ // add is-defined conditions
+      if(Main.options().idc) { // add is-defined conditions
 	//Expr e = expr2IsDefExpr(expr);
 	if(!escjava.AnnotationHandler.isTrue(expr)) {
-	  if (expr instanceof LabelExpr && ((LabelExpr)expr).expr instanceof InstanceOfExpr) 
+	if (false // DISABLE THIS FOR NOW 
+	      && expr instanceof LabelExpr && ((LabelExpr)expr).expr instanceof InstanceOfExpr) 
 	  {
 	    // [FIXME] This is a temporary solution.
 	    // Filter out LabelExpr nodes with their first node being InstanceOfExpr because
@@ -1998,7 +1999,12 @@ public final class GetSpec {
 	if(DefGCmd.debug)
 	  System.err.println("GK-Trace-DEF: "+ cond);
 
-	DefGCmd oDefGCs=new DefGCmd();
+	DefGCmd oDefGCs = new DefGCmd();
+	if(DefGCmd.debug) {
+	    System.err.println("\tAbout to trAndGen:" +
+			       EscPrettyPrint.inst.toString(cond.pred));
+	    System.err.println("\tI.e.:" + cond.pred);
+	}
  	oDefGCs.trAndGen(cond.pred);
 	GuardedCmd gc=oDefGCs.popFromCode();
 	//GuardedCmd gc = GC.check(cond.locPragmaDecl, cond);
