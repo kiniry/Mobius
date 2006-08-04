@@ -1961,7 +1961,10 @@ public final class GetSpec {
   {
     StackVector code = new StackVector();
     code.push();
-    
+    // [GKS]
+    if(Main.options().idc)
+      DefGCmd.spec=spec;
+    // [GKE]
     addAssumptions(spec.preAssumptions, code);
     assumeConditions(spec.pre, code);
     code.addElement(body);
@@ -2000,7 +2003,7 @@ public final class GetSpec {
 	  System.err.println("GK-Trace-DEF: "+ cond);
 
 	DefGCmd oDefGCs=new DefGCmd();
- 	oDefGCs.generate(cond.pred);
+ 	oDefGCs.trAndGen(cond.pred);
 	GuardedCmd gc=oDefGCs.popFromCode();
 	//GuardedCmd gc = GC.check(cond.locPragmaDecl, cond);
 	code.addElement(gc);
