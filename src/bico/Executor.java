@@ -177,8 +177,7 @@ public class Executor {
 			for (int i = 0; i < ifield.length; i++) {
 				strf = "    Definition ";
 				strf = strf.concat(converttocoq(ifield[i].getName()));
-				strf = strf
-						.concat("FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t ");
+				strf = strf.concat("FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t ");
 				out.write(strf);
 				out.newLine();
 				// !!! here positives
@@ -187,8 +186,8 @@ public class Executor {
 				out.write(strf);
 				out.newLine();
 				// !!! here will be conversion
-				strf = "      (PrimitiveType ";
-				strf = strf.concat(converttocoq(checkfield(ifield[i])) + ")");
+				strf = "      ";
+				strf = strf.concat(convertType(ifield[i].getType()));
 				out.write(strf);
 				out.newLine();
 				out.write("      .");
@@ -361,7 +360,7 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < atrr.length; i++) {
-				str = str.concat("		(" + converttocoq(checktype(atrr[i]))
+				str = str.concat("		(" + convertType(atrr[i])
 						+ "::");
 			}
 			str = str.concat("nil)");
@@ -370,13 +369,10 @@ public class Executor {
 		}
 		Type t = null;
 		t = method.getReturnType();
-		if (null != t) {
-			str = "";
-			str = str.concat("		" + converttocoq(checktype(t)));
-			out.write(str);
-			out.newLine();
-		}
-		// System.out.println();
+		str = "";
+		str = str.concat("		" + convertType(t));
+		out.write(str);
+		out.newLine();
 
 		out.write("    .");
 		out.newLine();
@@ -615,6 +611,8 @@ public class Executor {
 		out.newLine();
 		out.write("	AllInterfaces");
 		out.newLine();
+		out.write("  .");
+		out.newLine();
 		out.newLine();
 		out.write("End TheProgram.");
 		out.newLine();
@@ -632,62 +630,61 @@ public class Executor {
 		return strout;
 	}
 
-	// TODO dont know how to extract class of field
-	private static String checktype(Type t) {
-		String type = t.toString();
-		String Coqtype = "";
-		if (type.contains("[]")) {
-			Coqtype = "(ReferenceType (ArrayType " + converttocoq(type) + ")";
-			return Coqtype;
+   /**
+    * 
+    * @return Coq value of t of type primitiveType
+    */
+	private static String convertPrimitiveType(BasicType t) {
+		if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
+			|| t == Type.INT) {
+			return (t.toString().toUpperCase());
+		} else {
+			System.out.println("Unhandled BasicType: "+t.toString());
+			return ("INT (* "+t.toString()+" *)");
 		}
-		int j;
-		String[] s1 = TypesInCoq.typeint;
-		String[] s2 = TypesInCoq.typeshort;
-		String[] s3 = TypesInCoq.typebyte;
-		String[] s4 = TypesInCoq.typebool;
-		for (j = 0; j < s1.length; j++) {
-			if (type.equalsIgnoreCase(s1[j])) {
-				Coqtype = "INT";
-			}
-			;
-		}
-		for (j = 0; j < s2.length; j++) {
-			if (type.equalsIgnoreCase(s2[j])) {
-				Coqtype = "SHORT";
-			}
-			;
-		}
-		for (j = 0; j < s3.length; j++) {
-			if (type.equalsIgnoreCase(s3[j])) {
-				Coqtype = "BYTE";
-			}
-			;
-		}
-		for (j = 0; j < s4.length; j++) {
-			if (type.equalsIgnoreCase(s4[j])) {
-				Coqtype = "BOOLEAN";
-			}
-			;
-		}
-		// TODO all not standard types are classtypes
-		if (Coqtype.length() == 0) {
-			Coqtype = "(ReferenceType (ClassType " + converttocoq(type) + ")";
-			return Coqtype;
-		}
-		Coqtype = "(PrimitiveType " + Coqtype + ")";
-
-		return Coqtype;
 	}
 
-	// FIXME not variables className temporary shows name of class
-	private static String checkfield(Field field) {
-		// FIXME not returning interface for Field1
-		// and ala and makota are compiled to different .class-files
-		if (field.isInterface()) {
-			return "(ReferenceType (InterfaceType "
-					+ converttocoq(field.getType().toString()) + ")";
+	   /**
+	    * 
+	    * @return Coq value of t of type refType
+	    */
+	private static String convertReferenceType(ReferenceType t) {
+		if (t instanceof ArrayType) {
+			return "(ArrayType "+convertType(((ArrayType)t).getElementType())+")";
+		} else if (t instanceof ObjectType) {
+			ObjectType ot = (ObjectType)t;
+			if (ot.referencesClass()) { // does thik work?
+			    return "(ClassType " + converttocoq(ot.getClassName())+".className)";
+			} else if (ot.referencesInterface()) { // does this work?
+				//TODO: adjust to the structure of "interface" modules
+				return "(InterfaceType " + converttocoq(ot.getClassName())+".interfaceName)";
+			} else {
+				System.out.println("Unknown ObjectType: "+t.toString());	
+				return "(ObjectType javaLangObject (* "+t.toString()+" *) )";	
+			}
+		} else {
+			System.out.println("Unhandled ReferenceType: "+t.toString());
+			return "(ObjectType javaLangObject (* "+t.toString()+" *) )";		
 		}
-		return checktype(field.getType());
+	}
+	
+	// TODO dont know how to extract class of field
+	private static String convertType(Type t) {
+		if (t  instanceof BasicType) {
+			return "(PrimitiveType " + convertPrimitiveType((BasicType)t) + ")"; 
+		} else if (t instanceof ReferenceType) {
+			return "(ReferenceType " + convertReferenceType((ReferenceType)t) + ")";
+		} else {
+			System.out.println("Unhandled Type: "+t.toString());
+			return "(ReferenceType (ObjectType javaLangObject (* "+t.toString()+" *) )";	
+		}
+	}
+
+	private static String convertTypeOption(Type t) {
+		if (t==Type.VOID || t==null) {
+			return "None";
+		}
+		return "(Some " + convertType(t) + ")";
 	}
 
 	// @return s with the first char toUpperCase
@@ -723,14 +720,14 @@ public class Executor {
 		return "Nop (* " + name + " *)";
 	}
 
-	/**
-	 * for instruction which are not implemented (yet) in Bico
-	 */
-	private static String Unimplemented(String instruction, Instruction ins) {
-		String name = ins.getName();
-		System.out.println("Unimplemented " + instruction + ": " + name);
-		return Upcase(name) + " (* Unimplemented *)";
-	}
+//	/**
+//	 * for instruction which are not implemented (yet) in Bico
+//	 */
+//	private static String Unimplemented(String instruction, Instruction ins) {
+//		String name = ins.getName();
+//		System.out.println("Unimplemented " + instruction + ": " + name);
+//		return Upcase(name) + " (* Unimplemented *)";
+//	}
 
 	private static String dealwithinstr(int pos, Instruction ins,
 			ConstantPoolGen cpg) {
@@ -775,12 +772,12 @@ public class Executor {
 		else if (ins instanceof BIPUSH) {
 			ret = Unhandled(ins);
 		} else if (ins instanceof BranchInstruction) {
-			int index = ((BranchInstruction) ins).getIndex();
+			String index = printIndex(((BranchInstruction) ins).getIndex());
 
 			if (ins instanceof GOTO) {
-				ret = name + " " + index + "%N";
+				ret = name + " " + index;
 			} else if (ins instanceof GOTO_W) {
-				ret = "Goto " + index + "%N";
+				ret = "Goto " + index;
 			} else if (ins instanceof IfInstruction) {
 				String op;
 
@@ -790,17 +787,17 @@ public class Executor {
 					} else {
 						op = "Eq";
 					}
-					ret = "Ifnull " + op + "Ref " + index + "%N";
+					ret = "Ifnull " + op + "Ref " + index;
 				} else if (name.charAt(2) != '_') {
 					// Ifgt -> GtInt
 					op = Upcase(name.substring(2));
-					ret = "If0 " + op + "Int " + index + "%N";
+					ret = "If0 " + op + "Int " + index;
 				} else {
 					op = Upcase(name.substring(7));
 					if (name.charAt(3) == 'i') {
-						ret = "If_icmp " + op + "Int " + index + "%N";
+						ret = "If_icmp " + op + "Int " + index;
 					} else {
-						ret = "If_acmp " + op + "Ref " + index + "%N";
+						ret = "If_acmp " + op + "Ref " + index;
 					}
 				}
 			}
@@ -817,9 +814,9 @@ public class Executor {
 		} else if (ins instanceof CPInstruction) {
 			Type type = ((CPInstruction) ins).getType(cpg);
 			if (ins instanceof ANEWARRAY) {
-				ret = name + " " + checktype(type);
+				ret = name + " " + convertType(type);
 			} else if (ins instanceof CHECKCAST) {
-				ret = name + " " + checktype(type);
+				ret = name + " " + convertType(type);
 			} else if (ins instanceof FieldOrMethod) {
 				String className = ((FieldOrMethod) ins).getClassName(cpg);
 				String fmName = ((FieldOrMethod) ins).getName(cpg);
@@ -833,16 +830,16 @@ public class Executor {
 					ret = Unknown("FieldOrMethod", ins);
 				}
 			} else if (ins instanceof INSTANCEOF) {
-				ret = name + " " + checktype(type);
+				ret = name + " " + convertType(type);
 			} else if (ins instanceof LDC) {
 				ret = Unhandled(ins);
 			} else if (ins instanceof LDC2_W) {
 				ret = Unhandled(ins);
 			} else if (ins instanceof MULTIANEWARRAY) {
 				short d = ((MULTIANEWARRAY) ins).getDimensions();
-				ret = name + " " + checktype(type) + d + "%Z";
+				ret = name + " " + convertType(type) + d + "%Z";
 			} else if (ins instanceof NEW) {
-				ret = name + " " + checktype(type);
+				ret = name + " " + convertType(type);
 			} else 
 				ret = Unknown("CPInstruction", ins);
 		} else if (ins instanceof DCMPG) {
@@ -894,7 +891,7 @@ public class Executor {
 		} else if (ins instanceof MONITOREXIT) {
 			ret = Unhandled(ins);
 		} else if (ins instanceof NEWARRAY) {
-			String type = checktype(BasicType.getType(((NEWARRAY) ins)
+			String type = convertType(BasicType.getType(((NEWARRAY) ins)
 					.getTypecode()));
 			ret = name + " " + type;
 		} else if (ins instanceof NOP)
@@ -926,6 +923,19 @@ public class Executor {
 		 * parameter instructions if (ok==0) {ret=name;}
 		 */
 		return "(" + pos + "%N, " + ret + ")";
+	}
+
+	/**
+	 * 
+	 * @param index
+	 * @return i%Z or (-i)%Z
+	 */
+	private static String printIndex(int index) {
+		if (index<0) {
+			return "("+index+")%Z";
+		} else {
+			return String.valueOf(index)+"%Z";
+		}
 	}
 
 }
