@@ -136,17 +136,16 @@ public class DefGCmd
 	}      
 
 	case TagConstants.VARIABLEACCESS: {
-	    VariableAccess va = (VariableAccess)e;
 	    break;
 	}
       
 	case TagConstants.FIELDACCESS: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.ARRAYREFEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
@@ -164,29 +163,29 @@ public class DefGCmd
 	case TagConstants.UNARYSUB: 
 	case TagConstants.NOT: 
 	case TagConstants.BITNOT: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.UNARYADD: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.TYPEOF:
 	case TagConstants.ELEMTYPE:
 	case TagConstants.MAX: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
 
 	case TagConstants.DTTFSA: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.ELEMSNONNULL: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
@@ -269,10 +268,10 @@ public class DefGCmd
 	case TagConstants.DIV:
 	case TagConstants.MOD: {
 	    BinaryExpr be = (BinaryExpr)e;
-	    Expr leftExpr  = this.trAndGen(be.left);
-	    Expr rightExpr = this.trAndGen(be.right);
+	    Expr leftExpr  = trAndGen(be.left);
+	    Expr rightExpr = trAndGen(be.right);
 	    Expr neZeroExpr=GC.nary(TagConstants.INTEGRALNE,
-				    be.right,
+				    rightExpr,
 				    GC.zerolit);
 	    GuardedCmd gc=GC.check(be.locOp,
 				   TagConstants.CHKARITHMETIC,
@@ -285,34 +284,34 @@ public class DefGCmd
 	}
       
 	case TagConstants.NEWINSTANCEEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.METHODINVOCATION: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.NEWARRAYEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.EXPLIES: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.SUBTYPE: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	    // Other expressions
       
 	case TagConstants.CONDEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
@@ -321,44 +320,45 @@ public class DefGCmd
 	}
       
 	case TagConstants.CASTEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.CLASSLITERAL: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
-	case TagConstants.TYPEEXPR:
-	    return e;
+	case TagConstants.TYPEEXPR: {
+	    break;
+	}
       
 	case TagConstants.REACH: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.NUM_OF:
 	case TagConstants.SUM:
 	case TagConstants.PRODUCT: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.MIN:
 	case TagConstants.MAXQUANT: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.FORALL:
 	case TagConstants.EXISTS: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.SETCOMPEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
@@ -372,17 +372,17 @@ public class DefGCmd
 	}
       
 	case TagConstants.PRE: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.FRESH: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.DOTDOT: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}      
 
@@ -390,20 +390,20 @@ public class DefGCmd
 	case TagConstants.WACK_NOWARN:
 	case TagConstants.WARN_OP:
 	case TagConstants.WARN: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
 	case TagConstants.IS_INITIALIZED:
 	case TagConstants.INVARIANT_FOR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	} 
       
 	case TagConstants.SPACE:
 	case TagConstants.WACK_WORKING_SPACE:
 	case TagConstants.WACK_DURATION: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
@@ -412,7 +412,7 @@ public class DefGCmd
 	    return null;
       
 	case TagConstants.NOTMODIFIEDEXPR: {
-	    notImpl(e);
+	    if(true) { break; } else { notImpl(e); }
 	    return null;
 	}
       
@@ -433,8 +433,9 @@ public class DefGCmd
     }
 
     private Hashtable minHMap4Tr() {
-	// such a map is only neede for constructors, but since general type checking will have been done,
-	// we can simply use the same map in all cases (constructor or not).
+	// The returned map is only needed for constructors, but since
+	// general type checking will have been done, we can simply
+	// use the same map in all cases (constructor or not).
 	Hashtable map = new Hashtable();
 	map.put(GC.thisvar.decl, GC.resultvar);
 	return(map);
