@@ -2866,23 +2866,29 @@ public class EscPragmaParser extends Parse
         int typeLoc = l.startingLoc;
         Type type = parseType(l);
         Identifier id = null;
-        if (argListInAnnotation
-            && type instanceof TypeName
-            && ((TypeName)type).name.printName().equals("non_null")
-            && !(l.ttype == TagConstants.IDENT && (l.lookahead(1) == TagConstants.COMMA || l
-                .lookahead(1) == TagConstants.RPAREN))) {
-          // The non_null is a modifier, not a type
-          // [ A model method or constructor does not need to 
-          //   enclose the 'non_null' in annotation markers; hence
-          //   we can have either 'non_null i' in which non_null
-          //   is a type or 'non_null int i' in which non_null is
-          //   a modifier.]
-          type = parseType(l);
-          if (modifierPragmas == null)
-              modifierPragmas = ModifierPragmaVec.make();
-          modifierPragmas.addElement(SimpleModifierPragma.make(
-              TagConstants.NON_NULL, typeLoc));
-        }
+        if (argListInAnnotation && type instanceof TypeName) {
+	    String typeName = ((TypeName)type).name.printName();
+	    if(("non_null".equals(typeName) || "nullable".equals(typeName))
+	       && !(l.ttype == TagConstants.IDENT 
+		    && (l.lookahead(1) == TagConstants.COMMA 
+			|| l.lookahead(1) == TagConstants.RPAREN)))
+		{
+		    // The non_null and nullable are modifiers, not a types
+		    // [ A model method or constructor does not need to 
+		    //   enclose the 'non_null' in annotation markers; hence
+		    //   we can have either 'non_null i' in which non_null
+		    //   is a type or 'non_null int i' in which non_null is
+		    //   a modifier.]
+		    type = parseType(l);
+		    if (modifierPragmas == null)
+			modifierPragmas = ModifierPragmaVec.make();
+		    modifierPragmas
+			.addElement(SimpleModifierPragma
+				    .make("non_null".equals(typeName) ? TagConstants.NON_NULL
+					  : TagConstants.NULLABLE,
+					  typeLoc));
+		}
+	}
         int locId = l.startingLoc;
         id = parseIdentifier(l);
         type = parseBracketPairs(l, type);

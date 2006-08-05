@@ -3338,6 +3338,7 @@ public final class Translate
       int tag= prag.getTag();
       switch (tag) {
       case TagConstants.NON_NULL:
+      case TagConstants.NULLABLE:
       case TagConstants.SPEC_PUBLIC:
       case TagConstants.SPEC_PROTECTED:
       case TagConstants.WRITABLE_IF:

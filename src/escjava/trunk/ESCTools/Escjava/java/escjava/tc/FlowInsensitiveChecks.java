@@ -1897,6 +1897,7 @@ System.out.println("FOUND " + t);
             break;
           }
 
+	case TagConstants.NULLABLE:
         case TagConstants.NON_NULL:
           // NOTE:  Part of the NON_NULL check is found in checkTypeDeclElem()
           // above, since there's not enough context information here to
@@ -1909,7 +1910,8 @@ System.out.println("FOUND " + t);
             GenericVarDecl vd = (GenericVarDecl)ctxt;
             if (! Types.isReferenceType(vd.type)) {
               ErrorSet.error(vd.locId,
-                             "The non_null pragma can be applied only to "+
+                             "The " + TagConstants.toString(tag) + 
+			     " pragma can be applied only to "+
                              "variables, fields, and parameters of "+
                              "reference types");
             }
@@ -1919,14 +1921,15 @@ System.out.println("FOUND " + t);
             MethodDecl md = (MethodDecl) ctxt;
             if (!Types.isReferenceType(md.returnType)) {
               ErrorSet.error(md.getStartLoc(),
-                             "'non_null' can only be used with methods whose "+
+                             "'" + TagConstants.toString(tag) + 
+			     "' can only be used with methods whose "+
                              "result type is a reference type");
             }
             break;
           }
           default:
             ErrorSet.error(p.getStartLoc(),
-                           "The non_null pragma can be applied only to "+
+                           "The " + TagConstants.toString(tag) + " pragma can be applied only to "+
                            "variables, fields, parameters, and methods");
             break;
           }

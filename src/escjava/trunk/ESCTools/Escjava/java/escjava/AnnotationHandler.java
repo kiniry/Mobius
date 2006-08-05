@@ -1435,7 +1435,8 @@ public class AnnotationHandler {
           || tag == TagConstants.SPEC_PROTECTED || tag == TagConstants.HELPER
           || tag == TagConstants.GHOST || // Actually should not occur
           tag == TagConstants.MODEL || tag == TagConstants.MONITORED
-          || tag == TagConstants.FUNCTION || tag == TagConstants.NON_NULL;
+          || tag == TagConstants.FUNCTION || tag == TagConstants.NON_NULL
+          || tag == TagConstants.NULLABLE;
     }
 
     static public boolean isEndingModifier(int tag) {
