@@ -43,7 +43,7 @@ public class LineIterator implements Iterator {
     /** The next value to be returned by the iterator.  We read ahead one so
 	that we know the value of hasNext() when asked.
     */
-    /*@ spec_public */ private String nextLine; //@ in objectState;
+    /*@ spec_public */ private /*@ nullable */ String nextLine; //@ in objectState;
 
     /** Starts an iterator reading from the given external process. 
 	@param filename The name of the file to be read
