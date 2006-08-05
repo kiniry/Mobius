@@ -134,12 +134,12 @@ public class Token
      **************************************************/
 
     /*
-     * This is not really safe since violates invariants... !!!!
+     * (This used to violate invariants ... but it should not any more.)
      *
      * NOTE: This is not a helper; we use invalid tokens in TokenQueue and
      *       Lex.savedState.
      */
-    public Token() {}	//@ nowarn Invariant;  // produces invalid Token
+    public Token() {}
 
 
     /**
