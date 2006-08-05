@@ -66,7 +66,7 @@ public class PrintStream extends FilterOutputStream {
     //@   ensures outputText.equals(\old(outputText) + eol);
     public void println();
 
-    /*@ public normal_behavior
+    /*@ protected normal_behavior
       @   modifies error;
       @   ensures error;
       @*/
@@ -156,6 +156,7 @@ public class PrintStream extends FilterOutputStream {
       @   ensures error;
       @ also
       @ public exceptional_behavior
+      @   modifies output, error;
       @   signals (IOException) false;
       @*/
     public void flush();
@@ -175,6 +176,7 @@ public class PrintStream extends FilterOutputStream {
       @   ensures error;
       @ also
       @ public exceptional_behavior
+      @   modifies output, error;
       @   signals (IOException) false;
       @*/
     public void close();
