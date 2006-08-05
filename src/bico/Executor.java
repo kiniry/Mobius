@@ -522,40 +522,6 @@ public class Executor {
 
 	}
 
-	private static void controlPrint(JavaClass jc) {
-		System.out.println();
-		System.out.println("Control print of instruction list:");
-		ClassGen cg = new ClassGen(jc);
-		ConstantPoolGen cpg = cg.getConstantPool();
-		Method[] methods = cg.getMethods();
-		MethodGen mg = new MethodGen(methods[1], cg.getClassName(), cpg);
-		InstructionList il = mg.getInstructionList();
-		InstructionHandle ih[] = il.getInstructionHandles();
-		System.out.println("" + il.getLength() + " " + ih.length);
-		for (int i = 0; i < il.getLength(); i++) {
-			System.out.print("" + i + ". ");
-			if (ih[i] == null)
-				System.out.println("Null");
-			else {
-				System.out.println("(" + ih[i].getPosition() + ")");
-				Instruction ins = ih[i].getInstruction();
-				if (ins == null)
-					System.out.println("Null instruction");
-				else
-					System.out.print(ins.getName());
-				if (ih[i].getNext() == null)
-					System.out.print(" next: null");
-				else
-					System.out.print(" next: " + ih[i].getNext().getPosition());
-				if (ih[i].getPrev() == null)
-					System.out.println(" prev: null");
-				else
-					System.out.println(" prev: "
-							+ ih[i].getPrev().getPosition());
-			}
-		}
-	}
-
 	private static void dobeginning(BufferedWriter out) throws IOException {
 		// System.out.println("Require Import ImplemProgramWithList.");
 		// System.out.println();
