@@ -61,14 +61,14 @@ typecheckJavafe:
 		for d in ast parser tc util filespace reader decsrc genericfile ; do \
 		echo -n "$${d}	" ;\
 		echo `find javafe/$${d} -name '*.java'` | xargs -n 300 \
-			${JAVA} -classpath ../classfiles javafe.test.Print \
-			-classpath "${call canonicalize,.:../../Utils}" \
+			${JAVA} -classpath ../classfiles${EXTRA_CP} javafe.test.Print \
+			-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}}" \
 			-typecheck -noprint  ;\
 		done 
 	@echo -n "javafe/.	"
 	@cd ${ESCTOOLS_ROOT}/Javafe/java && \
-		${JAVA} -classpath ../classfiles javafe.test.Print \
-		-classpath "${call canonicalize,.:../../Utils}" \
+		${JAVA} -classpath ../classfiles${EXTRA_CP} javafe.test.Print \
+		-classpath "${call canonicalize,.:../../Utils${EXTRA_CP}}" \
 		-typecheck -noprint  javafe/*.java ;\
 
 

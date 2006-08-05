@@ -7,8 +7,8 @@ include ${TOP}/Makefile.defs
 # ESCJAVA is (only) used for standalone tests
 ESCJAVA = ${ESCTOOLS_ROOT}/Escjava/escj 
 
-_ECLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.)
-_CLASSPATH = $(call canonicalize,:${JUNIT_UTILS_PATH}:.)
+_ECLASSPATH = $(call canonicalize,${ESC_CLASSPATH}:${JUNIT_UTILS_PATH}:.${EXTRA_CP})
+_CLASSPATH = $(call canonicalize,:${JUNIT_UTILS_PATH}:.${EXTRA_CP})
 _TMP = $(call canonicalize,/tmp)
 _SIMP = $(call canonicalize,${ESCJ_SIMPLIFY})
 
