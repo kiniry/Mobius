@@ -41,6 +41,8 @@ public class PrepTypeDeclaration {
 
     //@ set constructorSeq.elementType = \type(ConstructorDecl);
     //@ set constructorSeq.owner = this;
+
+    //@ set overridesDecoration.decorationType = \type(Set);
   }
 
   /** 
