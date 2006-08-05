@@ -74,7 +74,7 @@ test: build
 
 # Use the following target if you have *some* files that were compiled with jmlc (e.g. Utils)
 test1: build
-	${MAKE} dmake EXTRA_CP=":$(JML_CLASSROOT)/bin/jmlruntime.jar" test
+	${MAKE} EXTRA_CP=":$(JML_CLASSROOT)/bin/jmlruntime.jar" test
 
 javafetests: build
 	$(MAKE) -C Javafe test || exit 1;
