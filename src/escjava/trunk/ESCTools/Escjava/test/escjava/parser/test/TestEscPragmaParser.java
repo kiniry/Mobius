@@ -1,5 +1,5 @@
+/* $Id$ */
 /* Copyright 2000, 2001, Compaq Computer Corporation */
-
 
 package escjava.parser.test;
 
@@ -21,9 +21,9 @@ public class TestEscPragmaParser {
     escjava.Main.options().noSemicolonWarnings = true;
 
     // DelegatingPrettyPrint p = new javafe.tc.TypePrint();
-    // p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));
+    // p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
     DelegatingPrettyPrint p = new EscPrettyPrint();
-    p.del = new StandardPrettyPrint(p);
+    p.setDel(new StandardPrettyPrint(p));
     PrettyPrint.inst = p;
 
     TestParse.lexer = new Lex(new EscPragmaParser(), true);

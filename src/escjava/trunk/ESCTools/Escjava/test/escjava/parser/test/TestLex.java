@@ -1,3 +1,4 @@
+/* $Id$ */
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package escjava.parser.test;
@@ -29,7 +30,7 @@ public class TestLex
 {
   public static void main(String[] argv) throws IOException {
     EscPrettyPrint p = new EscPrettyPrint();
-    p.del = new StandardPrettyPrint(p);
+    p.setDel(new StandardPrettyPrint(p));
     PrettyPrint.inst = p;
     escjava.Main.options = new escjava.Options();
 

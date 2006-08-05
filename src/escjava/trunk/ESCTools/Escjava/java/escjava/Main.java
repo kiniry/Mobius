@@ -125,7 +125,7 @@ public class Main extends javafe.SrcTool
      */
     public /*@ non_null @*/ PrettyPrint makePrettyPrint() {
         DelegatingPrettyPrint p = new EscPrettyPrint();
-        p.del = new StandardPrettyPrint(p);
+        p.setDel(new StandardPrettyPrint(p));
         return p;
     }
 
@@ -484,7 +484,7 @@ public class Main extends javafe.SrcTool
 	    if (options().pjt) {
 		// Create a pretty-printer that shows types
 		DelegatingPrettyPrint p = new javafe.tc.TypePrint();
-		p.del = new EscPrettyPrint(p, new StandardPrettyPrint(p));
+		p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
 
 		System.out.println("\n**** Source code with types:");
 		p.print(System.out, 0, td);

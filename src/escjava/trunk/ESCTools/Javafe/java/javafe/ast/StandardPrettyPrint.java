@@ -1,4 +1,7 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
+/* $Id$
+ * Copyright 2000, 2001, Compaq Computer Corporation .
+ * Copyright 2006, DSRG, Concordia University and others.
+ */
 
 package javafe.ast;
 
@@ -10,12 +13,13 @@ import javafe.util.Location;
 
 public class StandardPrettyPrint extends PrettyPrint {
 
+    //@ ensures this.self == this;
     public StandardPrettyPrint() { }
 
-    //@ requires self != null;
-    public StandardPrettyPrint(PrettyPrint self) { super(self); }
+  //@ ensures this.self == self;
+    public StandardPrettyPrint(/*@ non_null */ PrettyPrint self) { super(self); }
 
-    public void print(/*@non_null*/OutputStream o, CompilationUnit cu) {
+    public void print(/*@non_null*/OutputStream o, /*@ nullable */ CompilationUnit cu) {
         if (cu == null) {
             writeln(o, "<null CompilationUnit>");
             return;
@@ -463,8 +467,12 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
 
-    public void print(/*@non_null*/OutputStream o, int ind, TypeDeclElem d, 
-                      Identifier classId, boolean showBody) {
+    public void print(/*@non_null*/OutputStream o, 
+		      int ind, 
+		      /*@ nullable */ TypeDeclElem d, 
+                      /*@ non_null */ Identifier classId, 
+		      boolean showBody) 
+    {
         if (d == null) {
             writeln(o, "<null TypeDeclElem>");
             return;
@@ -680,7 +688,7 @@ public class StandardPrettyPrint extends PrettyPrint {
         }
     }
   
-    public void print(/*@non_null*/OutputStream o, Type t) {
+    public void print(/*@non_null*/OutputStream o, /*@ non_null */ Type t) {
         if (t == null) { write(o, "<null Type>"); return; }
         switch (t.getTag()) {
             case TagConstants.BOOLEANTYPE: write(o, "boolean"); break;
@@ -1082,37 +1090,36 @@ public class StandardPrettyPrint extends PrettyPrint {
         return null; // Dummy
     }
 
-    public void print(/*@non_null*/OutputStream o, LexicalPragma lp) {
+    public void print(/*@non_null*/OutputStream o, /*@ non_null */ LexicalPragma lp) {
         write(o, "// Lexical pragma at " + lp.getStartLoc() + " ");
         writeln(o, lp.toString());
     }
 
-    public void print(/*@non_null*/OutputStream o, int ind, TypeDeclElemPragma tp) {
+    public void print(/*@non_null*/OutputStream o, int ind, /*@ non_null */ TypeDeclElemPragma tp) {
         spaces(o, ind);
         write(o, "// TypeDeclElemPragma pragma at " + tp.getStartLoc() + " ");
         write(o, tp.toString());
     }
 
-    public void print(/*@non_null*/OutputStream o, int ind, ModifierPragma mp) {
+    public void print(/*@non_null*/OutputStream o, int ind, /*@ non_null */ ModifierPragma mp) {
         write(o, "// ModifierPragma pragma at " + mp.getStartLoc() + " ");
         write(o, mp.toString());
     }
 
-    public void print(/*@non_null*/OutputStream o, int ind, StmtPragma sp) {
+    public void print(/*@non_null*/OutputStream o, int ind, /*@ non_null */ StmtPragma sp) {
         spaces(o, ind);
         write(o, "// StmtPragma pragma at " + sp.getStartLoc() + " ");
         write(o, sp.toString());
     }
 
 
-    public void print(/*@non_null*/OutputStream o, int ind, TypeModifierPragma tp) {
+    public void print(/*@non_null*/OutputStream o, int ind, /*@ non_null */ TypeModifierPragma tp) {
         spaces(o, ind);
         write(o, "// TypeModifierPragma pragma at " + tp.getStartLoc() + " ");
         write(o, tp.toString());
     }
   
-    //@ requires o != null;
-    public void print(/*@non_null*/OutputStream o, int ind, TypeModifierPragmaVec t) {
+    public void print(/*@non_null*/OutputStream o, int ind, /*@ nullable */ TypeModifierPragmaVec t) {
         if (t != null) {
             for (int i = 0; i < t.size(); i++) {
                 write(o, ' ');
@@ -1124,17 +1131,14 @@ public class StandardPrettyPrint extends PrettyPrint {
     /**
      * Generate text to describe a ASTNote with an unknown tag
      */
-    //@ requires n != null;
-    //@ ensures \result != null;
-    public String unknownTag(ASTNode n) {
+    public /*@ non_null */ String unknownTag(/*@ non_null */ ASTNode n) {
         return unknownTagMsg(n.getTag());
     }
   
     /**
      * Generate text to describe a given unknown tag
      */
-    //@ ensures \result != null;
-    public String unknownTagMsg(int tag) {
+    public /*@ non_null */ String unknownTagMsg(int tag) {
         return "UnknownTag<" + tag + ":"
             + PrettyPrint.inst.toString(tag) + ">";
     }

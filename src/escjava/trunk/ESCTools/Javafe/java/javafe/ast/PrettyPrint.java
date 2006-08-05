@@ -1,4 +1,7 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
+/* $Id$
+ * Copyright 2000, 2001, Compaq Computer Corporation.
+ * Copyright 2006, DSRG, Concordia University and others.
+ */
 
 package javafe.ast;
 
@@ -24,7 +27,7 @@ public abstract class PrettyPrint {
    * StandardPrettyPrint. Extensions should replace with an instance that
    * understands how to pretty print the extensions.
    */
-  public static/*@ non_null */PrettyPrint inst = new StandardPrettyPrint();
+  public static /*@ non_null */ PrettyPrint inst = new StandardPrettyPrint();
   
   /**
    * When an instance of PrettyPrint wishes to call itself recursively, it does
@@ -36,12 +39,13 @@ public abstract class PrettyPrint {
    * by compile-time static subclassing) using the DelegatingPrettyPrint class.
    * See javafe.tc.TypePrint for an example of how this may be done.
    */
-  public /*@ non_null */ PrettyPrint self;
+  /*@ spec_public */ protected /*@ non_null */ PrettyPrint self;
   
   /**
    * Create a normal instance of PrettyPrint that does not have a runtime
    * extension.
    */
+  //@ ensures this.self == this;
   protected PrettyPrint() {
     this.self = this;
   }
@@ -53,6 +57,7 @@ public abstract class PrettyPrint {
    * Self should be an instance of DelegatingPrettyPrint that eventually calls
    * us after some amount of filtering.
    */
+  //@ ensures this.self == self;
   protected PrettyPrint(/*@ non_null */ PrettyPrint self) {
     this.self = self;
   }
@@ -119,10 +124,12 @@ public abstract class PrettyPrint {
    * at the start of a new-line.
    */
   
-  //@ requires o != null && classId != null;
   //@ requires d != null ==> d.hasParent;
-  public abstract void print(/*@ non_null */ OutputStream o, int ind, TypeDeclElem d,
-      Identifier classId, boolean showBody);
+  public abstract void print(/*@ non_null */ OutputStream o, 
+			     int ind, 
+			     /*@ nullable */ TypeDeclElem d,
+			     /*@ non_null */ Identifier classId, 
+			     boolean showBody);
   
   public abstract void print(/*@ non_null */ OutputStream o, TypeNameVec tns);
   
@@ -138,7 +145,7 @@ public abstract class PrettyPrint {
   public abstract void print(/*@ non_null */ OutputStream o, int ind, FieldDecl d,
       boolean showBody);
   
-  public abstract void print(/*@ non_null */ OutputStream o, Type t);
+  public abstract void print(/*@ non_null */ OutputStream o, /*@ non_null */ Type t);
   
   public abstract void print(/*@ non_null */ OutputStream o, Name n);
   
@@ -151,11 +158,11 @@ public abstract class PrettyPrint {
    * line; should leave <code>o</code> at the start of a new line.
    */
   
-  //@ requires o != null && lp != null;
-  public abstract void print(/*@ non_null */ OutputStream o, LexicalPragma lp);
+  public abstract void print(/*@ non_null */ OutputStream o, /*@ non_null */ LexicalPragma lp);
   
-  //@ requires o != null && tp != null;
-  public abstract void print(/*@ non_null */ OutputStream o, int ind, TypeDeclElemPragma tp);
+  public abstract void print(/*@ non_null */ OutputStream o, 
+			     int ind, 
+			     /*@ non_null */ TypeDeclElemPragma tp);
   
   /**
    * TODO Fill in class description
@@ -172,14 +179,9 @@ public abstract class PrettyPrint {
    * at the start of a new-line.
    */
   
-  //@ requires o != null && mp != null;
-  public abstract void print(/*@ non_null */ OutputStream o, int ind, ModifierPragma mp);
-  
-  //@ requires o != null && sp != null;
-  public abstract void print(/*@ non_null */ OutputStream o, int ind, StmtPragma sp);
-  
-  //@ requires o != null && tp != null;
-  public abstract void print(/*@ non_null */ OutputStream o, int ind, TypeModifierPragma tp);
+  public abstract void print(/*@ non_null */ OutputStream o, int ind, /*@ non_null */ ModifierPragma mp);
+  public abstract void print(/*@ non_null */ OutputStream o, int ind, /*@ non_null */ StmtPragma sp);
+  public abstract void print(/*@ non_null */ OutputStream o, int ind, /*@ non_null */ TypeModifierPragma tp);
   
   /**
    * Writes an Object (a type of ASTNode) to the given PrintStream, followed by
@@ -251,7 +253,6 @@ public abstract class PrettyPrint {
    * ((tag==TagConstants.STRINGLIT) ==> (val instanceof String)) &&
    * ((tag==TagConstants.CHARLIT) ==> (val instanceof Integer)) );
    */
-  //@ ensures \result != null;
   public static /*@non_null*/ String toCanonicalString(int tag, Object val) {
     if (tag == TagConstants.BOOLEANLIT) return val.toString();
     if (tag == TagConstants.DOUBLELIT) return val.toString() + "D";
@@ -325,76 +326,65 @@ public abstract class PrettyPrint {
     return null; // Dummy
   }
   
-  //@ ensures \result != null;
   public /*@non_null*/ String toString(int tag) {
     // Best version available in the front end:
     return javafe.tc.TagConstants.toString(tag);
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(TypeNameVec tns) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, tns);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(FormalParaDeclVec fps) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, fps);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(ExprVec es) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, es);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(GenericVarDecl d) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, d);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(LocalVarDecl d, boolean showBody) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, d, showBody);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(FieldDecl d, boolean showBody) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, d, showBody);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(Type t) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, t);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(Name n) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, n);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(VarInit e) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, e);
     return result.toString();
   }
   
-  //@ ensures \result != null;
   public final /*@non_null*/ String toString(ObjectDesignator od) {
     ByteArrayOutputStream result = new ByteArrayOutputStream(20);
     print(result, 0, od);
@@ -403,19 +393,16 @@ public abstract class PrettyPrint {
   
   //// Helper methods
   
-  //@ requires o != null;
-  public static void writeln(OutputStream o) {
+  public static void writeln(/*@ non_null */ OutputStream o) {
     write(o, '\n');
   }
   
-  //@ requires o != null && s != null;
-  public static void writeln(OutputStream o, String s) {
+  public static void writeln(/*@ non_null */ OutputStream o, /*@ non_null */ String s) {
     write(o, s);
     write(o, '\n');
   }
   
-  //@ requires o != null;
-  public static void write(OutputStream o, char c) {
+  public static void write(/*@ non_null */ OutputStream o, char c) {
     try {
       o.write((byte)c);
     } catch (IOException e) {
@@ -423,8 +410,7 @@ public abstract class PrettyPrint {
     }
   }
   
-  //@ requires o != null && s != null;
-  public static void write(OutputStream o, String s) {
+  public static void write(/*@ non_null */ OutputStream o, /*@ non_null */ String s) {
     byte[] outBuf = s.getBytes();
     try {
       o.write(outBuf);
@@ -433,7 +419,6 @@ public abstract class PrettyPrint {
     }
   }
   
-  //@ requires o != null;
   public static void spaces(/*@ non_null */ OutputStream o, int number) {
     try {
       while (number > 0) {

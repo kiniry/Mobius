@@ -111,9 +111,9 @@ public class Print extends SrcTool {
     super.setup();
     
     if (options().printType) {
-      TypePrint T = new TypePrint();	//@ nowarn Pre;
+      TypePrint T = new TypePrint();
       PrettyPrint.inst = new StandardPrettyPrint(T);
-      T.del = PrettyPrint.inst;		// Establish del != null
+      T.setDel(PrettyPrint.inst);
       // as required by TypePrint()
     }
   }

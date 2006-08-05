@@ -1,5 +1,7 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
-
+/* $Id$
+ * Copyright 2000, 2001, Compaq Computer Corporation 
+ * Copyright 2006, DSRG, Concordia University
+ */
 
 package javafe.ast;
 
@@ -10,19 +12,35 @@ import javafe.util.Assert;
 import javafe.util.Location;
 
 public class DelegatingPrettyPrint extends PrettyPrint {
+
+  /*@ spec_public */protected /*@ non_null */ PrettyPrint del;
+
+  /** The contract for the default constructor does not say what del
+   * is initialied to, hence strongly hinting to clients that they
+   * need to initialize it explicitly. 
+   */
+  //@ ensures this.self == this;
+  //@ ensures_redundantly this.del != null;
+  protected DelegatingPrettyPrint() {
+      // del needs to be non-null and PrettyPrint.inst happens to be a
+      // meaningful value so use it as a filler until the client
+      // explicitly initialized del.
+      del = PrettyPrint.inst;
+  }
   
-  //@ invariant del != null;
-  public PrettyPrint del;
-  
-  // Caller must establish del != null!
-  //@ requires false;
-  protected DelegatingPrettyPrint() { }
-  
-  //@ requires del != null;
-  //@ requires self != null;
-  protected DelegatingPrettyPrint(PrettyPrint self, PrettyPrint del) { 
+  //@ requires del != this;
+  //@ ensures this.self == self;
+  //@ ensures this.del == del;
+  protected DelegatingPrettyPrint(/*@ non_null */ PrettyPrint self, 
+				  /*@ non_null */ PrettyPrint del) { 
     super(self); 
     this.del = del; 
+  }
+
+  //@ requires del != this;
+  //@ ensures this.del == del;
+  public void setDel(PrettyPrint del) {
+      this.del = del;
   }
   
   public void print(/*@ non_null @*/ OutputStream o, CompilationUnit cu) {
@@ -37,8 +55,11 @@ public class DelegatingPrettyPrint extends PrettyPrint {
     del.print(o, ind, s);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, int ind, TypeDeclElem d, 
-		    Identifier classId, boolean showBody) {
+  public void print(/*@ non_null @*/ OutputStream o, 
+		    int ind, 
+		    /*@ nullable */ TypeDeclElem d, 
+		    /*@ non_null */ Identifier classId, 
+		    boolean showBody) {
     del.print(o, ind, d, classId, showBody);
   }
   
@@ -67,7 +88,7 @@ public class DelegatingPrettyPrint extends PrettyPrint {
     del.print(o, ind, d, showBody);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, Type t) {
+  public void print(/*@ non_null @*/ OutputStream o, /*@ non_null */ Type t) {
     del.print(o, t);
   }
   
@@ -83,23 +104,23 @@ public class DelegatingPrettyPrint extends PrettyPrint {
     del.print(o, ind, od);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, LexicalPragma lp) {
+  public void print(/*@ non_null @*/ OutputStream o, /*@ non_null */ LexicalPragma lp) {
     del.print(o, lp);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, int ind, TypeDeclElemPragma tp) {
+  public void print(/*@ non_null @*/ OutputStream o, int ind, /*@ non_null */ TypeDeclElemPragma tp) {
     del.print(o, ind, tp);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, int ind, ModifierPragma mp) {
+  public void print(/*@ non_null @*/ OutputStream o, int ind, /*@ non_null */ ModifierPragma mp) {
     del.print(o, ind, mp);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, int ind, StmtPragma sp) {
+  public void print(/*@ non_null @*/ OutputStream o, int ind, /*@ non_null */ StmtPragma sp) {
     del.print(o, ind, sp);
   }
   
-  public void print(/*@ non_null @*/ OutputStream o, int ind, TypeModifierPragma tp) {
+  public void print(/*@ non_null @*/ OutputStream o, int ind, /*@ non_null */ TypeModifierPragma tp) {
     del.print(o, ind, tp);
   }
   

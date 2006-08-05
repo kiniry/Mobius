@@ -1,4 +1,7 @@
-/* Copyright 2000, 2001, Compaq Computer Corporation */
+/* $Id$
+ * Copyright 2000, 2001, Compaq Computer Corporation 
+ * Copyright 2006, DSRG, Concordia University
+ */
 
 package escjava.reader;
 
@@ -62,8 +65,7 @@ public class EscTypeReader extends StandardTypeReader
      * source reader, and a binary reader.  All arguments must be
      * non-null.
      */
-    //@ ensures \result != null;
-    public static StandardTypeReader make(/*@ non_null @*/ Query engine, 
+    public static /*@ non_null */ StandardTypeReader make(/*@ non_null @*/ Query engine, 
 					  /*@ non_null @*/ Query srcEngine, 
 					  /*@ non_null @*/ CachedReader srcReader,
 					  /*@ non_null @*/ CachedReader binReader) {
@@ -74,11 +76,13 @@ public class EscTypeReader extends StandardTypeReader
      * Create a <code>EscTypeReader</code> from a non-null query
      * engine and a pragma parser.  The pragma parser may be null.
      */
-    //@ requires Q != null;
     //    pragmaP can be null && ah doesn't appear to be used.
-    //@ ensures \result != null;
-    public static StandardTypeReader make(Query Q, Query sourceQ,
-			PragmaParser pragmaP, AnnotationHandler ah) {
+    public static /*@ non_null */ StandardTypeReader 
+	make(/*@ non_null */ Query Q, 
+	     Query sourceQ,
+	     PragmaParser pragmaP, 
+	     AnnotationHandler ah) 
+    {
 	Assert.precondition(Q != null);
 
 	return make(Q, sourceQ, new RefinementCachedReader(
@@ -95,8 +99,7 @@ public class EscTypeReader extends StandardTypeReader
      * <p> A fatal error will be reported via <code>ErrorSet</code> if
      * an I/O error occurs while initially scanning the filesystem.
      */
-    //@ ensures \result != null;
-    public static StandardTypeReader make(
+    public static /*@ non_null */ StandardTypeReader make(
             String classPath, String srcPath, PragmaParser pragmaP, AnnotationHandler ah) {
         // Plug in default values for parameters
 	if (classPath == null) {
@@ -135,8 +138,7 @@ public class EscTypeReader extends StandardTypeReader
      * <p> A fatal error will be reported via <code>ErrorSet</code> if
      * an I/O error occurs while initially scanning the filesystem.
      */
-    //@ ensures \result != null;
-    public static StandardTypeReader make() {
+    public static /*@ non_null */ StandardTypeReader make() {
 	return make((PragmaParser) null);
     }
 
@@ -157,24 +159,19 @@ public class EscTypeReader extends StandardTypeReader
 	return false;
     }
 
-    //@ requires P != null;
-    //@ requires T != null;
-    // can return null
-    public GenericFile findFirst(String[] P, String T) {
+    public /*@ nullable */ GenericFile 
+	findFirst(/*@ non_null */ String[] P, /*@ non_null */ String T) {
 	return javaSrcFileSpace.findFile(P,T,activeSuffixes);
     }
 
-    //@ requires P != null;
-    //@ requires filename != null;
-    // can return null
-    public GenericFile findSrcFile(String[] P, String filename) {
+    public /*@ nullable */ GenericFile 
+	findSrcFile(/*@ non_null */ String[] P, 
+		    /*@ non_null */ String filename) {
 	return javaSrcFileSpace.findFile(P,filename);
     }
 
-    //@ requires P != null;
-    //@ requires filename != null;
-    // can return null
-    public GenericFile findBinFile(String[] P, String filename) {
+    public /*@ nullable */ GenericFile 
+	findBinFile(/*@ non_null */ String[] P, /*@ non_null */ String filename) {
 	return javaFileSpace.findFile(P,filename);
     }
 
@@ -184,7 +181,6 @@ public class EscTypeReader extends StandardTypeReader
         if (gf == null) gf = javaFileSpace.findFile(P, T, "class");
         return gf;
     }
-
 
 
     public /*@ non_null @*/ FilenameFilter filter() {
@@ -250,8 +246,7 @@ public class EscTypeReader extends StandardTypeReader
     /**
      * Does a CompilationUnit contain a specOnly TypeDecl?
      */
-    //@ requires cu != null;
-    boolean containsSpecOnly(CompilationUnit cu) {
+    boolean containsSpecOnly(/*@ non_null */ CompilationUnit cu) {
 	for (int i=0; i<cu.elems.size(); i++) {
 	    TypeDecl d = cu.elems.elementAt(i);
 	    //@ assume d != null;
@@ -266,9 +261,8 @@ public class EscTypeReader extends StandardTypeReader
 
     // Test methods
 
-    //@ requires args != null;
     //@ requires \nonnullelements(args);
-    public static void main(String[] args)
+    public static void main(/*@ non_null */ String[] args)
             throws java.io.IOException {
 	if (args.length<2 || args.length>3
 	    || (args.length==3 && !args[2].equals("avoidSpec"))) {
@@ -283,9 +277,8 @@ public class EscTypeReader extends StandardTypeReader
 	StandardTypeReader R = make(new escjava.parser.EscPragmaParser());
 
 	DelegatingPrettyPrint p = new EscPrettyPrint();
-	p.del = new StandardPrettyPrint(p);
+	p.setDel(new StandardPrettyPrint(p));
 	PrettyPrint.inst = p;
-
 
 	CompilationUnit cu = R.read(P, args[1], args.length==3);
 	if (cu==null) {
