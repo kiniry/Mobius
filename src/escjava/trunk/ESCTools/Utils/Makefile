@@ -12,6 +12,8 @@ CLASSDIRECTORY=.
 
 CP = ${call canonicalize,${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:$(ESCJAVA2_SPECS)}
 
+PROVER_KILL_TIME?=7
+
 #------------------------------------------------------------------------------
 
 .PHONY: clean test build esctest compile buildall compileall
@@ -42,8 +44,14 @@ checkjunitjar:
 
 test: build
 
-esctest:
-	${ESCJ} -classpath ${CP} ${SOURCEFILES}
+self_test:
+	@echo PROVER_KILL_TIME=$(PROVER_KILL_TIME)
+	${ESCJ} -classpath ${CP} \
+		${ESCJ_FLAGS} \
+		${SOURCEFILES}
+
+self_test0:
+	${MAKE} PROVER_KILL_TIME=7 self_test
 
 clean:
 	@-rm -f junitutils/*.class ${CLASSESSTAMP}
