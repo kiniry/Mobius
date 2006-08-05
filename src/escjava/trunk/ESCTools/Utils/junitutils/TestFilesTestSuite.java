@@ -46,9 +46,7 @@ import java.lang.reflect.Method;
 */
 public class TestFilesTestSuite  extends TestSuite {
 
-    //@ ghost public boolean initialized = false;
-
-    //@ ensures !initialized;
+    //@ ensures_redundantly !initialized;
     protected TestFilesTestSuite() {}
 
     /*
@@ -64,13 +62,19 @@ public class TestFilesTestSuite  extends TestSuite {
     // DATA MEMBERS
     // -------------------------------------------------------------
 
+    //@ public model boolean initialized;
+    // Here is a good enough approximation for initialized:
+    /*@ protected represents initialized <-
+      @ 		testName != null && method != null;
+      @*/
+
     /** The name of this test suite. */
-    //@ protected invariant initialized ==> (testName != null);
-    protected String testName;
+    protected String testName; //@ in initialized;
+    //@ protected invariant_redundantly initialized ==> (testName != null);
 
     /** The method that is to be executed on the command-line arguments. */
-    //@ protected invariant initialized ==> (method != null);
-    protected Method method;
+    protected Method method; //@ in initialized;
+    //@ protected invariant_redundantly initialized ==> (method != null);
 
     final static String SAVED_SUFFIX = "-ckd";
     final static String ORACLE_SUFFIX = "-expected";
@@ -87,14 +91,15 @@ public class TestFilesTestSuite  extends TestSuite {
 	@param cls	The class in which to find the static compile method
     */
     /*@ public behavior
-      @   ensures initialized;
+      @   assignable initialized;
+      @   ensures_redundantly initialized;
       @   signals_only RuntimeException;
       @*/
     public TestFilesTestSuite(/*@ non_null */ String testName, 
-				/*@ non_null */ String fileOfTestFilenames,
-				String[] args, // Ignored! FIXME
-				/*@ non_null */ Class cls
-				) { 
+			      /*@ non_null */ String fileOfTestFilenames,
+			      String[] args, // Ignored! FIXME
+			      /*@ non_null */ Class cls
+			      ) { 
 	super(testName);
 	this.testName = testName;
 	try {
@@ -109,18 +114,22 @@ public class TestFilesTestSuite  extends TestSuite {
 	    while (i.hasNext()) {
 		String s = (String)i.next();
 		String[] allargs = Utils.parseLine(s);
-		s = allargs[allargs.length-1];
-		addTest(makeHelper(s,allargs));	    
+		if(allargs.length > 0) {
+		    s = allargs[allargs.length-1];
+		    addTest(makeHelper(s,allargs));
+		}
 	    }
 	} catch (java.io.IOException e) {
 	    throw new RuntimeException(e.toString());
 	}
-	//@ set initialized = true;
     }
 
 
     /** Factory method for the helper class object. */
-    protected Helper makeHelper(String filename, String[] args) {
+    //@ assignable \nothing;
+    protected Helper makeHelper(/*@ non_null */ String filename, 
+				/*@ non_null */ String[] args) 
+    {
 	return new Helper(filename,args);
     }
 
@@ -138,69 +147,66 @@ public class TestFilesTestSuite  extends TestSuite {
 	    The first argument is used as the name of the test as well as 
 	    the name of the file to be tested.
 	*/
-	public Helper(String testname, String[] args) {
+	public Helper(/*@ non_null */ String testname, /*@ non_null */ String[] args) {
 	    super(testname);
 	    this.fileToTest = testname;
 	    this.args = args;
 	}
 	
 	/** Filename of comparison files */
-	protected String fileToTest;
+	protected /*@ non_null */ String fileToTest;
 
 	/** Result of test */
 	protected Object returnedObject;
 
 	/** Command-line arguments (including filename) for this test. */
-	protected String[] args;
+	protected /*@ non_null */ String[] args;
     
 	/** This is the framework around the test.  It sets up the streams to
 	    capture output, and catches all relevant exceptions.
 	*/
-        //@ also
+	//@ also
         //@ requires initialized;
 	public void runTest() throws java.io.IOException {
+	    // Due to behavioral subtyping this method might be called
+	    // when !initialized ... hence test
+	    if(testName == null || method == null) // i.e. !initialized
+		return;
+
+	    //@ assert initialized; // now ESCJ can prove this assertion
+
 	    //System.out.println("\nTest suite " + testName + ": "  + fileToTest);
 	    //for (int kk=0; kk<args.length; ++kk) System.out.println(args[kk]);
 	    //System.out.println();
-    
-	    PrintStream ps = null;
-	    ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
+
+	    ByteArrayOutputStream ba = Utils.setStreams();
 	    try {
-		// Redirect the output to a file, and then do the compile
-		ps = new PrintStream(ba);
-		Utils.setStreams(ps);
-		
 		returnedObject = dotest(fileToTest,args);
-		
 	    } catch (IllegalAccessException e) {
-		Utils.restoreStreams(); // FIXME - One might think that the
-					// argument to this and other calls
-					// should be true - but for some reason
-					// that makes the junittests take a long
-					// time to run and to abort prematurely
+		Utils.restoreStreams(true);
 		fail(e.toString());
 	    } catch (IllegalArgumentException e) {
-		Utils.restoreStreams();
+		Utils.restoreStreams(true);
 		fail(e.toString());
 	    } catch (java.lang.reflect.InvocationTargetException e) {
-		Utils.restoreStreams();
+		Utils.restoreStreams(true);
 		java.io.StringWriter sw = new StringWriter();
 		sw.write(e.toString());
 		e.printStackTrace(new PrintWriter(sw));
 		fail(sw.toString());
-	    } catch (Throwable e) {  // THIS JUST FOR DEBUG
-		Utils.restoreStreams(); // Have to have this before the use of System.out on the next line
+	  /* } catch (Throwable e) {  // THIS JUST FOR DEBUG
+		Utils.restoreStreams(true); // must restore before use of System.out on the next line
 		System.out.println(e);
 		e.printStackTrace();
+	  */
 	    } finally {
-		Utils.restoreStreams();
-		if (ps != null) ps.close();
+		Utils.restoreStreams(true);
 	    }
 	    String err = doOutputCheck(fileToTest,ba.toString(),returnedObject);
 	    if (err != null) fail(err);
 	    //System.out.println("COMPLETED: " + fileToTest);
 	}
-    }
+    } // end of class Helper
      
     /** This is the actual test; it compiles the given file and compares its 
 	output to the expected result (in fileToTest+ORACLE_SUFFIX); the 
@@ -212,8 +218,8 @@ public class TestFilesTestSuite  extends TestSuite {
     //@ requires initialized;
     protected Object dotest(String fileToTest, String[] args) 
 	    throws IllegalAccessException, IllegalArgumentException, 
-			    java.lang.reflect.InvocationTargetException {
-					    
+			    java.lang.reflect.InvocationTargetException 
+    {
 	return method.invoke(null,new Object[]{args});
     }
 	    
@@ -252,11 +258,10 @@ public class TestFilesTestSuite  extends TestSuite {
     }
 
     //@ requires initialized;
-    //@ requires fileToTest != null;
-    //@ requires expectedOutput != null;
-    //@ requires returnedValue != null;
-    public String checkReturnValue(String fileToTest, String expectedOutput,
-					Object returnedValue) {
+    public /*@ nullable */ String checkReturnValue(/*@ non_null */ String fileToTest, 
+						   /*@ non_null */ String expectedOutput,
+						   /*@ non_null */ Object returnedValue) 
+    {
 	if (returnedValue instanceof Boolean) {
 		return expectedStatusReport(fileToTest,
 				((Boolean)returnedValue).booleanValue(),
@@ -274,20 +279,20 @@ public class TestFilesTestSuite  extends TestSuite {
 
     /** Returns null if ok, otherwise returns failure message. */
     //@ requires initialized;
-    //@ requires fileToTest != null;
-    //@ requires expectedOutput != null;
-    public String expectedStatusReport(String fileToTest,
-				int ecode, String expectedOutput) {
+    public /*@ nullable */ String expectedStatusReport(/*@ non_null */ String fileToTest,
+						       int ecode, 
+						       /*@ non_null */ String expectedOutput) 
+    {
 	int ret = expectedIntegerStatus(fileToTest,expectedOutput);
 	if (ecode == ret) return null;
 	return "The compile produced an invalid return value.  It should be " + ret + " but instead is " + ecode;
     }
 
     //@ requires initialized;
-    //@ requires fileToTest != null;
-    //@ requires expectedOutput != null;
-    public String expectedStatusReport(String fileToTest,
-				boolean b, String expectedOutput) {
+    public /*@ nullable */ String expectedStatusReport(/*@ non_null */ String fileToTest,
+						       boolean b, 
+						       /*@ non_null */ String expectedOutput) 
+    {
 	boolean status = expectedBooleanStatus(fileToTest,expectedOutput);
 	if (status == b) return null;
 	return ("The compile produced an invalid return value.  It should be "
@@ -296,16 +301,16 @@ public class TestFilesTestSuite  extends TestSuite {
     }
 
     //@ requires initialized;
-    //@ requires fileToTest != null;
-    //@ requires expectedOutput != null;
-    public boolean expectedBooleanStatus(String fileToTest, String expectedOutput) {
+    public boolean expectedBooleanStatus(/*@ non_null */ String fileToTest, 
+					 /*@ non_null */ String expectedOutput) 
+    {
 	return expectedOutput.length()==0;
     }
 
     //@ requires initialized;
-    //@ requires fileToTest != null;
-    //@ requires expectedOutput != null;
-    public int expectedIntegerStatus(String fileToTest, String expectedOutput) {
+    public int expectedIntegerStatus(/*@ non_null */ String fileToTest, 
+				     /*@ non_null */ String expectedOutput) 
+    {
 	return 0;
     }
 

@@ -1,6 +1,6 @@
 // @(#)$Id$
 
-// Copyright (C) 2004 Iowa State University
+// Copyright (C) 2006 Iowa State University
 
 // This file is part of JML
 
@@ -23,6 +23,7 @@ package java.io;
 /** JML's specification of PrintStream
  * @author David Cok
  * @author Gary T. Leavens
+ * @author Patrice Chalin
  */
 public class PrintStream extends FilterOutputStream {
 
@@ -30,26 +31,31 @@ public class PrintStream extends FilterOutputStream {
     //@ model public boolean endsInNewLine; in outputBytes;
     //@ ghost public non_null static final String eol;
 
-    //@ public normal_behavior
-    //@   ensures outputText.equals("");
-    //@   ensures !endsInNewLine;
-    //@   ensures out.isOpen ==> isOpen;
-    //@ pure
-    public PrintStream(OutputStream out);
+    //@ public model boolean error;
 
     //@ public normal_behavior
     //@   ensures outputText.equals("");
     //@   ensures !endsInNewLine;
-    //@   ensures out.isOpen ==> isOpen;
+    //@   ensures os.isOpen ==> isOpen;
+    //@   ensures underlyingStream == os;
     //@ pure
-    public PrintStream(OutputStream out, boolean autoFlush);
+    public PrintStream(OutputStream os);
 
     //@ public normal_behavior
     //@   ensures outputText.equals("");
     //@   ensures !endsInNewLine;
-    //@   ensures out.isOpen ==> isOpen;
+    //@   ensures os.isOpen ==> isOpen;
+    //@   ensures underlyingStream == os;
     //@ pure
-    public PrintStream(OutputStream out, boolean autoFlush, String enoding)
+    public PrintStream(OutputStream os, boolean autoFlush);
+
+    //@ public normal_behavior
+    //@   ensures outputText.equals("");
+    //@   ensures !endsInNewLine;
+    //@   ensures os.isOpen ==> isOpen;
+    //@   ensures underlyingStream == os;
+    //@ pure
+    public PrintStream(OutputStream os, boolean autoFlush, String enoding)
         throws java.io.UnsupportedEncodingException;
 
 
@@ -60,8 +66,18 @@ public class PrintStream extends FilterOutputStream {
     //@   ensures outputText.equals(\old(outputText) + eol);
     public void println();
 
+    /*@ public normal_behavior
+      @   modifies error;
+      @   ensures error;
+      @*/
     protected void setError();
 
+    /*@ public normal_behavior
+      @   requires !isOpen;
+      @   modifies error;
+      @   ensures error;
+      @   ensures \result == error;
+      @*/
     public boolean checkError();
 
     //@ public normal_behavior
@@ -133,6 +149,15 @@ public class PrintStream extends FilterOutputStream {
 
     public void println(long Param0);
 
+    /*@ also
+      @ public normal_behavior
+      @   requires !isOpen;
+      @   modifies error;
+      @   ensures error;
+      @ also
+      @ public exceptional_behavior
+      @   signals (IOException) false;
+      @*/
     public void flush();
 
     public void print(char[] Param0);
@@ -143,5 +168,14 @@ public class PrintStream extends FilterOutputStream {
 
     public void write(byte[] b, int off, int len);
 
+    /*@ also
+      @ public normal_behavior
+      @   requires !isOpen;
+      @   modifies error;
+      @   ensures error;
+      @ also
+      @ public exceptional_behavior
+      @   signals (IOException) false;
+      @*/
     public void close();
 }

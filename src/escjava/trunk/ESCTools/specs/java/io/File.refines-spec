@@ -105,9 +105,16 @@ public class File implements Serializable, Comparable {
     //@ ensures \result != null;
     public File getParentFile();
 
-    //@ ensures \result != null;
-    //@ pure
-    public File[] listFiles();
+    /*@ public normal_behavior
+      @   requires isDirectory();
+      @   ensures \result != null;
+      @   ensures \nonnullelements(\result);
+      @ also
+      @ public normal_behavior
+      @   requires !isDirectory();
+      @   ensures \result == null;
+      @*/
+    public /*@ pure */ File[] listFiles();
 
     //@ ensures \result != null;
     //@ pure

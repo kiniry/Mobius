@@ -87,7 +87,6 @@ public class Diff {
     }
   }
 
-  //@ ensures _areDifferent == areDifferent;
   private /*@ helper */ void calculateDiffs(/*@ non_null */ StringBuffer differencesSB) {
     String[] oldTextLines = splitByLine(oldText);
     String[] newTextLines = splitByLine(newText);
@@ -149,10 +148,8 @@ public class Diff {
     } // end of for ()
   }
 
-  //@ requires text != null;
-  //@ ensures \result != null;
   //@ ensures \nonnullelements(\result);
-  private String[] splitByLine(String text) {
+  private /*@ helper non_null */ String[] splitByLine(/*@ non_null */ String text) {
     // thanks to Windows ridiculous two character newlines it is
     // hard to detect blank lines, so we don't bother trying
     StringTokenizer toker = new StringTokenizer(text, DELIM, false);

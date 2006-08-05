@@ -39,7 +39,7 @@ public class Utils {
   /** A cached value of the usual System out stream. */
   //@ non_null spec_public
   final private static PrintStream pso = System.out;
-  
+
   /** A cached value of the usual System err stream. */
   //@ non_null spec_public
   final private static PrintStream pse = System.err;
@@ -52,12 +52,21 @@ public class Utils {
    
    @param ps The stream that is the new output and error stream
    */
-  //@ requires ps != null;
-  //@ ensures System.out == ps && System.err == ps;
-  static public void setStreams(PrintStream ps) {
+    /*@ public normal_behavior
+      @   requires disable;
+      @   assignable \nothing;
+      @ also
+      @ public normal_behavior
+      @   requires !disable;
+      @   requires ps.isOpen;
+      @   assignable System.out, System.err;
+      @   ensures System.out == ps 
+      @        && System.err == ps;
+      @*/
+  static public void setStreams(/*@ non_null */ PrintStream ps) {
     if (disable) return;
-    pso.flush();
-    pse.flush();
+    System.out.flush();
+    System.err.flush();
     System.setOut(ps);
     System.setErr(ps);
   }
@@ -68,8 +77,21 @@ public class Utils {
    @return an output stream into which standard and error output 
    is captured
    */
-  //@ ensures \result != null;
-  static public ByteArrayOutputStream setStreams() {
+    /*@ public normal_behavior
+      @   requires disable;
+      @   assignable \nothing;
+      @   ensures \fresh(\result);
+      @ also
+      @ public normal_behavior
+      @   requires !disable;
+      @   assignable System.out, System.err;
+      @   ensures \fresh(\result);
+      @   ensures \result.isOpen;
+      @   ensures System.out.underlyingStream == \result;
+      @   ensures System.err.underlyingStream == \result;
+      @   ensures System.err == System.out;
+      @*/
+  static public /*@ non_null */ ByteArrayOutputStream setStreams() {
     ByteArrayOutputStream ba = new ByteArrayOutputStream(10000);
     PrintStream ps = new PrintStream(ba);
     setStreams(ps);
@@ -88,7 +110,16 @@ public class Utils {
    are not synchronized - you will need to take care of any
    race conditions if you utilize these in more than one thread.
    */
-  //@ ensures System.out == pso && System.err == pse;
+    /*@ public normal_behavior
+      @   requires disable;
+      @   assignable \nothing;
+      @ also
+      @ public normal_behavior
+      @   requires !disable;
+      @   assignable System.out, System.err;
+      @   ensures System.out == pso
+      @        && System.err == pse;
+      @*/
   static public void restoreStreams() {
     restoreStreams(false);
   }
@@ -106,11 +137,23 @@ public class Utils {
    *   are closed before being reset (if they are not currently the
    *   System output and error streams)
    */
+    /*@ public normal_behavior
+      @   requires disable;
+      @   assignable \nothing;
+      @ also
+      @ public normal_behavior
+      @   requires !disable;
+      @   assignable System.out, System.err;
+      @   ensures System.out == pso
+      @        && System.err == pse;
+      @   ensures (close && \old(System.out) != pso) ==> \old(System.out).wasClosed;
+      @   ensures (close && \old(System.err) != pse) ==> \old(System.err).wasClosed;
+      @*/
   static public void restoreStreams(boolean close) {
     if (disable) return;
     if (close) {
-      if (pso != System.out) pso.close();
-      if (pse != System.err) pse.close();
+      if (pso != System.out) System.out.close();
+      if (pse != System.err) System.err.close();
     }
     System.setOut(pso);
     System.setErr(pse);
@@ -124,10 +167,8 @@ public class Utils {
    @param s The String to parse
    @return The input string parsed into command-line arguments
    */
-  //@ requires s != null;
-  //@ ensures \result != null;
-  //@ ensures !\nonnullelements(\result);
-  static public String[] parseLine(String s) {
+  //@ ensures \nonnullelements(\result);
+  static public /*@ non_null */ String[] parseLine(/*@ non_null */String s) {
     QuoteTokenizer q = new QuoteTokenizer(s);
     java.util.ArrayList args = new java.util.ArrayList();
     while (q.hasMoreTokens()) {
@@ -152,52 +193,78 @@ public class Utils {
     /*@ non_null spec_public */ final private char[] cc;
     
     /** The position in the char array */
-    /*@ spec_public */
-    private int pos = 0;        /*@ invariant pos >= 0;
-                                    invariant pos <= cc.length;
-                                 */
+    /*@ spec_public */ private int pos = 0;
+    /*@ invariant pos >= 0;
+      @ invariant pos <= cc.length;
+      @*/
     
     /** Initializes the tokenizer with the given String
      * @param s the String to be tokenized
      */
-    //@ requires s != null;
     //@ modifies ss,cc;
     //@ ensures s == ss;
-    public QuoteTokenizer(String s) {
+    public QuoteTokenizer(/*@ non_null */ String s) {
       ss = s;
       cc = s.toCharArray();
     }
-    
-    /*@ 
-     ensures \result ==> (pos < cc.length);
-     ensures \result == !(\forall int i; pos<=i && i < cc.length;
-                                   Character.isWhitespace(cc[i]));
-     model public pure boolean moreTokens();
-     */
-    
+
+      /*@ public model boolean moreTokens;
+	@ public represents moreTokens <-
+	@ 	(\exists int i; pos <= i && i < cc.length;
+	@		Character.isWhitespace(cc[i]));
+	@*/
+
+      /*@ public model boolean moreChar;
+	@ public represents moreChar <- pos < cc.length;
+	@*/
+
+      /*@ public invariant_redundantly 
+	@ moreChar && !Character.isWhitespace(cc[pos]) ==> moreTokens;
+	@*/
+
     /**
      * @return true if there are more tokens to be returned
      */
-    //@ modifies pos;
-    //@ ensures \result == \old(moreTokens());
-    //@ ensures \result ==> !Character.isWhitespace(cc[pos]);
-    //@ ensures moreTokens() == \old(moreTokens());
+      // IDC should catch error in the original spec too
+      //xx@ modifies pos;
+      //xx@ ensures \result == \old(moreTokens());
+      //xx@ ensures \result ==> !Character.isWhitespace(cc[pos]);
+      //xx@ ensures moreTokens() == \old(moreTokens());
+      //
+      //@ public normal_behavior
+      //@ modifies pos;
+      //@ ensures \result == moreChar;
+      //@ ensures \result ==> !Character.isWhitespace(cc[pos]);
+      //@ ensures_redundantly \result ==> moreTokens;
+      //+@ ensures \result == moreTokens;		// true but esc cannot prove
+      //+@ ensures moreTokens == \old(moreTokens);	// true but esc cannot prove
     public boolean hasMoreTokens() {
-      while (pos < cc.length && Character.isWhitespace(cc[pos])) ++pos;
+      while (pos < cc.length && Character.isWhitespace(cc[pos])) pos++;
       return pos < cc.length;
     }
 
     /**
      * @return the next token if there is one, otherwise null
      */
-    //@ public normal_behavior
-    //@ 	requires moreTokens();
-    //@   modifies pos;
-    //@	  ensures \result != null;
-    //@ also public normal_behavior
-    //@	  requires !moreTokens();
-    //@   modifies pos;
-    //@	  ensures \result == null;
+      /*@ public normal_behavior
+	@  requires moreChar;
+	@  modifies pos;
+	@  ensures  pos > \old(pos);
+	@ also public normal_behavior
+	@  requires !moreChar;
+	@  modifies \nothing;
+	@  ensures \result == null;
+	@*/
+     /*+@ also
+	@ public normal_behavior
+	@   requires moreTokens;
+	@   modifies pos;
+	@   ensures \result != null;
+	@ also public normal_behavior
+	@   requires !moreTokens;
+	@   modifies pos;
+	@   ensures \result == null;
+	@*/
     public String nextToken() {
       String res = null;
       while (pos < cc.length && Character.isWhitespace(cc[pos])) ++pos;
@@ -230,8 +297,7 @@ public class Utils {
    @return  false if something could not be deleted; 
    true if everything was successfully deleted
    */
-  //@ requires d != null;
-  static public boolean recursivelyRemoveDirectory(File d, 
+  static public boolean recursivelyRemoveDirectory(/*@ non_null */ File d, 
       boolean removeDirectoryItself) {
     if (!d.exists()) return true;
     boolean success = true;
@@ -263,9 +329,7 @@ public class Utils {
    @throws java.io.IOException
    */
   // FIXME - can we check that the file is too long without losing the efficiency benefits?
-  //@ requires filename != null;
-  //@ requires cb != null;
-  static public /*@ non_null */ String readFile(String filename, byte[] cb) 
+  static public /*@ non_null */ String readFile(/*@ non_null */ String filename, /*@ non_null */ byte[] cb) 
   throws java.io.IOException {
     int i = 0;
     int j = 0;
@@ -288,8 +352,7 @@ public class Utils {
    * @return the contents of the file as a String, or null if the
    *      file could not be read
    */
-  //@ requires filename != null;
-  static public String readFileX(String filename) {
+  static public String readFileX(/*@ non_null */ String filename) {
     try {
       return readFile(filename);
     } catch (Exception e ) {
@@ -307,8 +370,7 @@ public class Utils {
    @return 				The contents of the file
    @throws IOException
    */
-  //@ requires filename != null;
-  static public /*@ non_null */ String readFile(String filename) throws java.io.IOException {
+  static public /*@ non_null */ String readFile(/*@ non_null */ String filename) throws java.io.IOException {
     StringBuffer sb = new StringBuffer(10000);
     char[] cb = new char[10000];  // This hard-coded value can be anything;
                 // smaller numbers will be less efficient since more reads
@@ -333,10 +395,9 @@ public class Utils {
    * @param args   The String[] argument of the method
    * @return The standard output and error output of the invocation
    */
-  //@ requires cls != null;
-  //@ requires args != null;
-  //@ requires !\nonnullelements(args);
-  static public String executeCompile(Class cls, String[] args) {
+  //@ requires \nonnullelements(args);
+  static public String executeCompile(/*@ non_null */ Class cls, 
+				      /*@ non_null */ String[] args) {
     return executeMethod(cls,"compile",args);
   }
   
@@ -348,11 +409,10 @@ public class Utils {
    * @param args		The argument of the method
    * @return  The standard output and error output of the invocation
    */
-  //@ requires cls != null;
-  //@ requires methodname != null;
-  //@ requires args != null;
-  //@ requires !\nonnullelements(args);
-  static public String executeMethod(Class cls, String methodname, String[] args) {
+  //@ requires \nonnullelements(args);
+  static public String executeMethod(/*@ non_null */ Class cls, 
+				     /*@ non_null */ String methodname, 
+				     /*@ non_null */ String[] args) {
     try {
       Method method = cls.getMethod(methodname, new Class[] { String[].class });
       return executeMethod(method,args);
@@ -370,18 +430,15 @@ public class Utils {
    * @param args	The argument of the method
    * @return		The standard output and error output of the method
    */
-  //@ requires method != null;
-  //@ requires args != null;
-  //@ requires !\nonnullelements(args);
-  static public String executeMethod(Method method, String[] args) {
+  //@ requires \nonnullelements(args);
+  static public String executeMethod(/*@ non_null */ Method method, 
+				     /*@ non_null */ String[] args) {
     try {
-      ByteArrayOutputStream ba = new ByteArrayOutputStream(10000); // FIXME - hardcoded size
-      PrintStream ps = new PrintStream(ba);
-      Utils.setStreams(ps);
-      boolean b = ((Boolean)(method.invoke(null,new Object[]{args}))).booleanValue();
-      ps.close(); 
-      String s = ba.toString();
-      return s;
+	ByteArrayOutputStream ba = setStreams();
+	Object result = method.invoke(null,new Object[]{args});
+	// The following line might cause a cast error, but since b is not used it is comment out.
+	// boolean b = ((Boolean)result).booleanValue();
+	return ba.toString();
     } catch (Exception e) {
       Utils.restoreStreams(); // FIXME - see comment in TestFilesTestSuite.java
       // Need the above restore before we try to print something
@@ -441,8 +498,7 @@ public class Utils {
    an RE library.
    * @param pattern the pattern to match against filenames
    */
-  //@ requires pattern != null;
-  static public void removeFiles(String pattern) {
+  static public void removeFiles(/*@ non_null */ String pattern) {
     File[] list;
     int k = pattern.indexOf("*");
     if (k == -1) {
