@@ -182,15 +182,15 @@ public class Executor {
 				out.newLine();
 				// !!! here positives
 				jjjj = 100 + i;
-				strf = "      (className, " + jjjj + "%positive)";
+				strf = "        (className, " + jjjj + "%positive)";
 				out.write(strf);
 				out.newLine();
 				// !!! here will be conversion
-				strf = "      ";
+				strf = "        ";
 				strf = strf.concat(convertType(ifield[i].getType()));
 				out.write(strf);
 				out.newLine();
-				out.write("      .");
+				out.write("    .");
 				out.newLine();
 				out.newLine();
 
@@ -199,7 +199,7 @@ public class Executor {
 				strf = strf.concat("Field : Field := FIELD.Build_t");
 				out.write(strf);
 				out.newLine();
-				strf = "      ";
+				strf = "        ";
 				strf = strf.concat(converttocoq(ifield[i].getName())
 						+ "FieldSignature");
 				out.write(strf);
@@ -207,26 +207,26 @@ public class Executor {
 				strf = "      " + ifield[i].isFinal();
 				out.write(strf);
 				out.newLine();
-				strf = "      " + ifield[i].isStatic();
+				strf = "        " + ifield[i].isStatic();
 				out.write(strf);
 				out.newLine();
 				if (ifield[i].isPrivate()) {
-					out.write("      Private");
+					out.write("        Private");
 					out.newLine();
 				}
 				if (ifield[i].isProtected()) {
-					out.write("      Protected");
+					out.write("        Protected");
 					out.newLine();
 				}
 				if (ifield[i].isPublic()) {
-					out.write("      Public");
+					out.write("        Public");
 					out.newLine();
 				}
 				// FIXME current solution
-				strf = "      FIELD.UNDEF";
+				strf = "        FIELD.UNDEF";
 				out.write(strf);
 				out.newLine();
-				out.write("      .");
+				out.write("   .");
 				out.newLine();
 				out.newLine();
 
@@ -246,7 +246,7 @@ public class Executor {
 
 		// System.out.println(" Definition class : Class := CLASS.Build_t");
 		// System.out.println(" className");
-		out.write("	    Definition class : Class := CLASS.Build_t");
+		out.write("    Definition class : Class := CLASS.Build_t");
 		out.newLine();
 		out.write("		className");
 		out.newLine();
@@ -291,7 +291,7 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < ifield.length; i++) {
-				str2 = str2.concat(converttocoq(ifield[i].getName()) + "::");
+				str2 = str2.concat(converttocoq(ifield[i].getName()) + "Field::");
 			}
 			str2 = str2.concat("nil)");
 			// System.out.println(str2);
@@ -307,7 +307,7 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < imeth.length; i++) {
-				str1 = str1.concat(converttocoq(imeth[i].getName()) + "::");
+				str1 = str1.concat(converttocoq(imeth[i].getName()) + "Method::");
 			}
 			str1 = str1.concat("nil)");
 			// System.out.println(str1);
@@ -360,17 +360,14 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < atrr.length; i++) {
-				str = str.concat("		(" + convertType(atrr[i])
-						+ "::");
+				str = str.concat("(" + convertType(atrr[i]) + "::");
 			}
 			str = str.concat("nil)");
-			out.write("      " + str);
+			out.write("        " + str);
 			out.newLine();
 		}
-		Type t = null;
-		t = method.getReturnType();
-		str = "";
-		str = str.concat("		" + convertType(t));
+		Type t = method.getReturnType();
+		str = "		" + convertTypeOption(t);
 		out.write(str);
 		out.newLine();
 
@@ -388,131 +385,137 @@ public class Executor {
 		// System.out.println(aa.length);
 		// if (aa.length != 0) {System.out.println(aa[0].toString());}
 
-		// instructions
-		String str = "    Definition ";
-		str = str.concat(converttocoq(method.getName()));
-		str = str.concat("Instructions : list (PC*Instruction) :=");
-		// System.out.println(str);
-		out.write(str);
-		out.newLine();
-		InstructionList il = mg.getInstructionList();
-		// FIXME add numbers and convert ex.aload_0
-		if (il != null) {
-			Instruction[] listins = il.getInstructions();
-			str = "";
-			if (listins.length == 0) {
-				// System.out.println(" nil");
-				out.write("		nil");
-				out.newLine();
-			} else {
-				int pos = 0;
-				for (int i = 0; i < listins.length; i++) {
-					str = str.concat("        "
-							+ dealwithinstr(pos, listins[i], cpg)
-							+ "::");
-					pos = pos + listins[i].getLength();
+		String name = converttocoq(method.getName());
+		String str;
+		
+		if (!method.isAbstract()) {
+			// instructions
+			str = "    Definition ";
+			str = str.concat(name+"Instructions : list (PC*Instruction) :=");
+			// System.out.println(str);
+			out.write(str);
+			out.newLine();
+			InstructionList il = mg.getInstructionList();
+			if (il != null) {
+				Instruction[] listins = il.getInstructions();
+				str = "";
+				if (listins.length == 0) {
+					// System.out.println(" nil");
+					out.write("		nil");
+					out.newLine();
+				} else {
+					int pos = 0;
+					for (int i = 0; i < listins.length; i++) {
+						str = str.concat("        "
+								+ dealwithinstr(pos, listins[i], cpg)
+								+ "::");
+						pos = pos + listins[i].getLength();
+						out.write(str);
+						out.newLine();
+						str = "";
+					}
+					str = "        nil";
+					// System.out.println(str);
 					out.write(str);
 					out.newLine();
-					str = "";
 				}
-				str = "        nil";
-				// System.out.println(str);
-				out.write(str);
-				out.newLine();
 			}
-		}
-		// System.out.println();
-		out.write("    .");
-		out.newLine();
-		out.newLine();
-
-		// body
-		str = "    Definition ";
-		str = str.concat(converttocoq(method.getName()));
-		str = str.concat("Body : BytecodeMethod := Build_BytecodeMethod_");
-		// System.out.println(str);
-		out.write(str);
-		out.newLine();
-		// exception names not handlers now
-		ExceptionTable etab = method.getExceptionTable();
-		if (etab == null) {
-			// System.out.println(" nil");
-			out.write("		nil");
+			// System.out.println();
+			out.write("    .");
 			out.newLine();
-		} else {
-			String[] etabnames = etab.getExceptionNames();
-			str = "";
-			if (etabnames.length == 0) {
+			out.newLine();
+			
+			// body
+			str = "    Definition ";
+			str = str.concat(name+"Body : BytecodeMethod := Build_BytecodeMethod_");
+			// System.out.println(str);
+			out.write(str);
+			out.newLine();
+			out.write("		"+name+"Instructions");
+			out.newLine();
+			// exception names not handlers now
+			ExceptionTable etab = method.getExceptionTable();
+			if (etab == null) {
 				// System.out.println(" nil");
 				out.write("		nil");
 				out.newLine();
 			} else {
-				for (int i = 0; i < etabnames.length; i++) {
-					str = str.concat("		(" + converttocoq(etabnames[i]) + "::");
+				String[] etabnames = etab.getExceptionNames();
+				str = "";
+				if (etabnames.length == 0) {
+					// System.out.println(" nil");
+					out.write("		nil");
+					out.newLine();
+				} else {
+					for (int i = 0; i < etabnames.length; i++) {
+						str = str.concat("		(" + converttocoq(etabnames[i]) + "::");
+					}
+					str = str.concat("nil)");
+					// System.out.println(str);
+					out.write("		" + str);
+					out.newLine();
 				}
-				str = str.concat("nil)");
-				// System.out.println(str);
-				out.write("		" + str);
-				out.newLine();
 			}
+			int j;
+			j = mg.getMaxLocals();
+			// System.out.println(" "+j);
+			out.write("		" + j);
+			out.newLine();
+			j = mg.getMaxStack();
+			// System.out.println(" "+j);
+			out.write("		" + j);
+			out.newLine();
+			// System.out.println();
+			out.write("    .");
+			out.newLine();
+			out.newLine();
 		}
-		int j;
-		j = mg.getMaxLocals();
-		// System.out.println(" "+j);
-		out.write("		" + j);
-		out.newLine();
-		j = mg.getMaxStack();
-		// System.out.println(" "+j);
-		out.write("		" + j);
-		out.newLine();
-		// System.out.println();
-		out.write("    .");
-		out.newLine();
-		out.newLine();
-
+		
 		// method
 		str = "    Definition ";
-		str = str.concat(converttocoq(method.getName()));
-		str = str.concat("Method : Method := METHOD.Build_t");
+		str = str.concat(name+"Method : Method := METHOD.Build_t");
 		// System.out.println(str);
 		out.write(str);
 		out.newLine();
-		str = "	";
-		str = str.concat(converttocoq(method.getName()));
-		str = str.concat("Signature");
+		str = "	    ";
+		str = str.concat(name+"Signature");
 		// System.out.println(str);
 		out.write(str);
 		out.newLine();
-		// always that???
-		str = "	(";
-		str = str.concat(converttocoq(method.getName()));
-		str = str.concat("Body)");
+		if (method.isAbstract()) {
+			str = "        None";
+		} else {
+			str = "        (Some ";
+			str = str.concat(name+"Body)");
+		}
 		// System.out.println(str);
 		out.write(str);
 		out.newLine();
 		// System.out.println(" "+method.isFinal());
-		out.write("	" + method.isFinal());
+		out.write("	    " + method.isFinal());
 		out.newLine();
 		// System.out.println(" "+method.isStatic());
-		out.write("	" + method.isStatic());
+		out.write("	    " + method.isStatic());
 		out.newLine();
+		str="        ";
 		if (method.isPrivate()) {
 			// System.out.println(" private");
-			out.write("	Private");
-			out.newLine();
-		}
-		if (method.isProtected()) {
+			str = str.concat("Private");
+		} else if (method.isProtected()) {
 			// System.out.println(" protected");
-			out.write("	Protected");
-			out.newLine();
-		}
-		if (method.isPublic()) {
+			str = str.concat("Protected");
+		} else if (method.isPublic()) {
 			// System.out.println(" public");
-			out.write("	Public");
-			out.newLine();
+			str = str.concat("Public");
+		} else {
+			String attr="0x"+Integer.toHexString(method.getAccessFlags());
+			System.out.println("Unknown modifier of method "+name+" : "+attr);
+			str = str.concat("Package (* "+attr+" *)");
 		}
-		// System.out.println();System.out.println();
+		
+		out.write(str);
 		out.newLine();
+		// System.out.println();System.out.println();
 		out.write("    .");
 		out.newLine();
 		out.newLine();
@@ -578,8 +581,7 @@ public class Executor {
 		// all classes
 		String str = "  Definition AllClasses : list Class := ";
 		for (int i = 0; i < others.length; i++) {
-			// ??here maybe without +".class"
-			str = str.concat(converttocoq(others[i]) + " :: ");
+			str = str.concat(converttocoq(others[i]) + ".class :: ");
 		}
 		for (int i = 0; i < files.length; i++) {
 			str = str.concat(converttocoq(files[i]) + ".class :: ");
@@ -818,8 +820,8 @@ public class Executor {
 			} else if (ins instanceof CHECKCAST) {
 				ret = name + " " + convertType(type);
 			} else if (ins instanceof FieldOrMethod) {
-				String className = ((FieldOrMethod) ins).getClassName(cpg);
-				String fmName = ((FieldOrMethod) ins).getName(cpg);
+				String className = converttocoq(((FieldOrMethod) ins).getClassName(cpg));
+				String fmName = converttocoq(((FieldOrMethod) ins).getName(cpg));
 				if (ins instanceof FieldInstruction) {
 					String fs = className + "." + fmName + "FieldSignature";
 					ret = name + " " + fs;
