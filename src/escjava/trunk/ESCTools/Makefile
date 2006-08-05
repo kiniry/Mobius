@@ -56,7 +56,7 @@ jars: $(ESCJAVA2_SPECS_JAR) jar srcjar
 ## Top-level build and test rules
 
 .PHONY: build buildall test javafetests escjavatests alltests \
-	javafealltests escjavaalltests findbugs self_typecheck
+	javafealltests escjavaalltests findbugs self_typecheck test1
 
 build buildall: fix-perms
 	for d in $(SUBDIRS) ; do \
@@ -71,6 +71,10 @@ test: build
 	for d in $(SUBDIRS) ; do \
 	    $(MAKE) -C $$d $@ || exit 1; \
 	done
+
+# Use the following target if you have *some* files that were compiled with jmlc (e.g. Utils)
+test1: build
+	${MAKE} dmake EXTRA_CP=":$(JML_CLASSROOT)/bin/jmlruntime.jar" test
 
 javafetests: build
 	$(MAKE) -C Javafe test || exit 1;
