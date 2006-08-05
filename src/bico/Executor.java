@@ -28,15 +28,14 @@ public class Executor {
 		// test with path with no .class inside - > ok only object class
 		// dealing with args
 		String pathname = "";
+		String slash = System.getProperty("file.separator");
 		if (args.length == 0) {
 			pathname = System.getProperty("user.dir");
-			pathname = pathname.concat("\\test");
+			pathname = pathname.concat(slash+"bico_test");
 		} else if (args[0].toString().compareTo("help") == 0) {
 			System.out.println("Version of the program - 0.1");
-			System.out
-					.println("Program coverts *.class files into special Coq format");
-			System.out
-					.println("When used with no argument - it converts all class files from *user.dir* folder");
+			System.out.println("Program coverts *.class files into special Coq format");
+			System.out.println("When used with no argument - it converts all class files from *user.dir* folder");
 			System.out.println("One argument: ");
 			System.out.println("help - displays this info");
 			System.out.println("dir  - sets folder to *user.dir*");
@@ -53,7 +52,6 @@ public class Executor {
 
 		// creating file for output
 		// current solution - only one output file
-		String slash = System.getProperty("file.separator");
 		File ff = new File(pathname + slash + "out.txt");
 		boolean exists = ff.exists();
 		if (exists) {
@@ -71,7 +69,7 @@ public class Executor {
 		otherslib[0] = "java.lang.Object";
 		// ??maybe later others updated while files??
 
-		dobeginning(out);
+		doBeginning(out);
 
 		File f = new File(pathname);
 		String[] list = f.list();
@@ -94,19 +92,21 @@ public class Executor {
 		}
 
 		for (int i = 0; i < otherslib.length; i++) {
-			handlewithlibclass(otherslib[i], out);
+			handleLibraryClass(otherslib[i], out);
 		}
 
 		for (int i = 0; i < files.length; i++) {
-			handlewithclass(files[i], pathname, out);
+			handleDiskClass(files[i], pathname, out);
 		}
 
-		doending(files, otherslib, out);
+		doEnding(files, otherslib, out);
 
 		out.close(); // closing output file
 	}
-
-	private static void handlewithlibclass(String libname, BufferedWriter out)
+	/**
+	 * Handle one class from library files
+	 */
+	private static void handleLibraryClass(String libname, BufferedWriter out)
 			throws ClassNotFoundException, IOException {
 
 		SyntheticRepository strin = SyntheticRepository.getInstance();
@@ -114,11 +114,14 @@ public class Executor {
 		strin.removeClass(jc);
 		ClassGen cg = new ClassGen(jc);
 		ConstantPoolGen cpg = cg.getConstantPool();
-		doclass(jc, cg, cpg, out);
+		doClass(jc, cg, cpg, out);
 
 	}
-
-	private static void handlewithclass(String clname, String pathname,
+	
+	/**
+	 * Handle one class read from disk
+	 */
+	private static void handleDiskClass(String clname, String pathname,
 			BufferedWriter out) throws ClassNotFoundException, IOException {
 
 		ClassPath cp = new ClassPath(pathname);
@@ -127,11 +130,14 @@ public class Executor {
 		strin.removeClass(jc);
 		ClassGen cg = new ClassGen(jc);
 		ConstantPoolGen cpg = cg.getConstantPool();
-		doclass(jc, cg, cpg, out);
+		doClass(jc, cg, cpg, out);
 
 	}
 
-	private static void doclass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg,
+	/**
+	 * Real handling of one class in jc
+	 */
+	private static void doClass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg,
 			BufferedWriter out) throws IOException {
 
 		Method[] methods = cg.getMethods();
@@ -144,7 +150,7 @@ public class Executor {
 		if (str7.length() == 0) {
 			str71 = str71.concat("EmptyPackageName");
 		} else {
-			str71 = str71.concat(converttocoq(str7) + "PackageName");
+			str71 = str71.concat(coqify(str7) + "PackageName");
 		}
 		str71 = str71.concat(" := 2%positive."); // ??always ????
 		// System.out.println(str71);
@@ -153,8 +159,8 @@ public class Executor {
 		out.newLine();
 		out.newLine();
 
-		System.out.println("Module " + converttocoq(jc.getClassName()) + ".");
-		out.write("  Module " + converttocoq(jc.getClassName()) + ".");
+		System.out.println("Module " + coqify(jc.getClassName()) + ".");
+		out.write("  Module " + coqify(jc.getClassName()) + ".");
 		out.newLine();
 		out.newLine();
 
@@ -176,7 +182,7 @@ public class Executor {
 			int jjjj;
 			for (int i = 0; i < ifield.length; i++) {
 				strf = "    Definition ";
-				strf = strf.concat(converttocoq(ifield[i].getName()));
+				strf = strf.concat(coqify(ifield[i].getName()));
 				strf = strf.concat("FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t ");
 				out.write(strf);
 				out.newLine();
@@ -195,12 +201,12 @@ public class Executor {
 				out.newLine();
 
 				strf = "    Definition ";
-				strf = strf.concat(converttocoq(ifield[i].getName()));
+				strf = strf.concat(coqify(ifield[i].getName()));
 				strf = strf.concat("Field : Field := FIELD.Build_t");
 				out.write(strf);
 				out.newLine();
 				strf = "        ";
-				strf = strf.concat(converttocoq(ifield[i].getName())
+				strf = strf.concat(coqify(ifield[i].getName())
 						+ "FieldSignature");
 				out.write(strf);
 				out.newLine();
@@ -237,11 +243,11 @@ public class Executor {
 		// Method[] methods = jc.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-			domethodsignatures(methods[i], mg, out, i);
+			doMethodSignature(methods[i], mg, out, i);
 		}
 		for (int i = 0; i < methods.length; i++) {
 			MethodGen mg = new MethodGen(methods[i], cg.getClassName(), cpg);
-			domethod(methods[i], mg, cpg, out);
+			doMethod(methods[i], mg, cpg, out);
 		}
 
 		// System.out.println(" Definition class : Class := CLASS.Build_t");
@@ -251,18 +257,16 @@ public class Executor {
 		out.write("		className");
 		out.newLine();
 
-		// ??assumption one superclass if exists
-		String supclassname = jc.getSuperclassName();
-		// ??assume that all classes have supclass object even object??how to
+		String superClassName = coqify(jc.getSuperclassName());
+		// TODO: ??assume that all classes have supclass object even object??how to
 		// treat this
-		if (supclassname.compareTo("java.lang.Object") == 0) {
+		if (superClassName==null || superClassName.compareTo("java.lang.Object") == 0) {
 			// System.out.println(" None");
 			out.write("		None");
 			out.newLine();
 		} else {
 			// System.out.println(converttocoq(supclassname));
-			// TODO ok??
-			out.write("		(Some" + converttocoq(supclassname) + ")");
+			out.write("		(Some " + superClassName + ".className)");
 			out.newLine();
 		}
 		// no interfaces now but...
@@ -274,7 +278,7 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < inames.length; i++) {
-				str = str.concat(converttocoq(inames[i]) + "::");
+				str = str.concat(coqify(inames[i]) + "::");
 			}
 			str = str.concat("nil)");
 			// System.out.println(str);
@@ -291,7 +295,7 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < ifield.length; i++) {
-				str2 = str2.concat(converttocoq(ifield[i].getName()) + "Field::");
+				str2 = str2.concat(coqify(ifield[i].getName()) + "Field::");
 			}
 			str2 = str2.concat("nil)");
 			// System.out.println(str2);
@@ -307,7 +311,7 @@ public class Executor {
 			out.newLine();
 		} else {
 			for (int i = 0; i < imeth.length; i++) {
-				str1 = str1.concat(converttocoq(imeth[i].getName()) + "Method::");
+				str1 = str1.concat(coqify(imeth[i].getName()) + "Method::");
 			}
 			str1 = str1.concat("nil)");
 			// System.out.println(str1);
@@ -330,20 +334,22 @@ public class Executor {
 		out.write("    .");
 		out.newLine();
 		out.newLine();
-		out.write("  End " + converttocoq(jc.getClassName()) + ".");
+		out.write("  End " + coqify(jc.getClassName()) + ".");
 		out.newLine();
 		out.newLine();
 	}
 
-	// for recursion
-	private static void domethodsignatures(Method method, MethodGen mg,
+	/**
+	 * write the method signature
+	 */
+	private static void doMethodSignature(Method method, MethodGen mg,
 			BufferedWriter out, int i2) throws IOException {
 		// InstructionList il = mg.getInstructionList();
 		// InstructionHandle ih[] = il.getInstructionHandles();
 		// signature
 		int u = i2 + 10;
 		String str = "    Definition ";
-		str = str.concat(converttocoq(method.getName()));
+		str = str.concat(coqify(method.getName()));
 		str = str
 				.concat("Signature : MethodSignature := METHODSIGNATURE.Build_t");
 		// System.out.println(str);
@@ -377,7 +383,10 @@ public class Executor {
 
 	}
 
-	private static void domethod(Method method, MethodGen mg,
+	/**
+	 * write the method body
+	 */
+	private static void doMethod(Method method, MethodGen mg,
 			ConstantPoolGen cpg, BufferedWriter out) throws IOException {
 
 		// LocalVariableGen[] aa = mg.getLocalVariables();
@@ -385,7 +394,7 @@ public class Executor {
 		// System.out.println(aa.length);
 		// if (aa.length != 0) {System.out.println(aa[0].toString());}
 
-		String name = converttocoq(method.getName());
+		String name = coqify(method.getName());
 		String str;
 		
 		if (!method.isAbstract()) {
@@ -407,7 +416,7 @@ public class Executor {
 					int pos = 0;
 					for (int i = 0; i < listins.length; i++) {
 						str = str.concat("        "
-								+ dealwithinstr(pos, listins[i], cpg)
+								+ doInstruction(pos, listins[i], cpg)
 								+ "::");
 						pos = pos + listins[i].getLength();
 						out.write(str);
@@ -448,7 +457,7 @@ public class Executor {
 					out.newLine();
 				} else {
 					for (int i = 0; i < etabnames.length; i++) {
-						str = str.concat("		(" + converttocoq(etabnames[i]) + "::");
+						str = str.concat("		(" + coqify(etabnames[i]) + "::");
 					}
 					str = str.concat("nil)");
 					// System.out.println(str);
@@ -522,7 +531,10 @@ public class Executor {
 
 	}
 
-	private static void dobeginning(BufferedWriter out) throws IOException {
+	/**
+	 * write the file preable
+	 */
+	private static void doBeginning(BufferedWriter out) throws IOException {
 		// System.out.println("Require Import ImplemProgramWithList.");
 		// System.out.println();
 		// System.out.println("Import P.");
@@ -541,16 +553,21 @@ public class Executor {
 
 	}
 
-	private static void doending(String[] files, String[] others,
+	/**
+	 * write the file ending
+	 * @param files - names of classes read from disk
+	 * @param others - names of classes from the library
+	 */
+	private static void doEnding(String[] files, String[] others,
 			BufferedWriter out) throws IOException {
 
 		// all classes
 		String str = "  Definition AllClasses : list Class := ";
 		for (int i = 0; i < others.length; i++) {
-			str = str.concat(converttocoq(others[i]) + ".class :: ");
+			str = str.concat(coqify(others[i]) + ".class :: ");
 		}
 		for (int i = 0; i < files.length; i++) {
-			str = str.concat(converttocoq(files[i]) + ".class :: ");
+			str = str.concat(coqify(files[i]) + ".class :: ");
 		}
 		str = str.concat("nil.");
 		// System.out.println(str);
@@ -560,16 +577,6 @@ public class Executor {
 		out.newLine();
 
 		// FIXME no interfaces possible now
-		// System.out.println(" Definition AllInterfaces : list Interface :=
-		// nil.");
-		// System.out.println();
-		// ??ensure is that always the same
-		// System.out.println(" Definition program : Program := PROG.Build_t");
-		// System.out.println(" AllClasses");
-		// System.out.println(" AllInterfaces");
-		// System.out.println();
-		// System.out.println("End TheProgram.");
-
 		out.write("  Definition AllInterfaces : list Interface := nil.");
 		out.newLine();
 		out.newLine();
@@ -588,20 +595,9 @@ public class Executor {
 
 	}
 
-	private static String converttocoq(String strin) {
-		String strout = strin;
-		strout = strin.replace(".", "_");
-		// strout = strout.replace("(","_");
-		// strout = strout.replace(")","_");
-		strout = strout.replace(">", "_");
-		strout = strout.replace("<", "_");
-		return strout;
-	}
-
-   /**
-    * 
-    * @return Coq value of t of type primitiveType
-    */
+	/**
+	 * @return Coq value of t of type primitiveType
+	 */
 	private static String convertPrimitiveType(BasicType t) {
 		if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
 			|| t == Type.INT) {
@@ -612,20 +608,19 @@ public class Executor {
 		}
 	}
 
-	   /**
-	    * 
-	    * @return Coq value of t of type refType
-	    */
+	/**
+	 * @return Coq value of t of type refType
+	 */
 	private static String convertReferenceType(ReferenceType t) {
 		if (t instanceof ArrayType) {
 			return "(ArrayType "+convertType(((ArrayType)t).getElementType())+")";
 		} else if (t instanceof ObjectType) {
 			ObjectType ot = (ObjectType)t;
 			if (ot.referencesClass()) { // does thik work?
-			    return "(ClassType " + converttocoq(ot.getClassName())+".className)";
+			    return "(ClassType " + coqify(ot.getClassName())+".className)";
 			} else if (ot.referencesInterface()) { // does this work?
 				//TODO: adjust to the structure of "interface" modules
-				return "(InterfaceType " + converttocoq(ot.getClassName())+".interfaceName)";
+				return "(InterfaceType " + coqify(ot.getClassName())+".interfaceName)";
 			} else {
 				System.out.println("Unknown ObjectType: "+t.toString());	
 				return "(ObjectType javaLangObject (* "+t.toString()+" *) )";	
@@ -636,7 +631,9 @@ public class Executor {
 		}
 	}
 	
-	// TODO dont know how to extract class of field
+	/**
+	 * @return Coq value of t of type type
+	 */
 	private static String convertType(Type t) {
 		if (t  instanceof BasicType) {
 			return "(PrimitiveType " + convertPrimitiveType((BasicType)t) + ")"; 
@@ -648,6 +645,10 @@ public class Executor {
 		}
 	}
 
+	/**
+	 * Handles type or void
+	 * @return (Some "coq type t") or None
+	 */
 	private static String convertTypeOption(Type t) {
 		if (t==Type.VOID || t==null) {
 			return "None";
@@ -655,52 +656,15 @@ public class Executor {
 		return "(Some " + convertType(t) + ")";
 	}
 
-	// @return s with the first char toUpperCase
-	private static String Upcase(String s) {
-		if (s != null && s.length() > 0) {
-			char c1 = Character.toUpperCase(s.charAt(0));
-			return Character.toString(c1) + s.substring(1);
-		} else
-			return null;
-	}
-
 	/**
-	 * for instructions not handled by Bicolano
+	 * Handles one instruction ins at position pos
+	 * @param cpg - constant pool of the method
+	 * @return "(pos%N, ins)" in Coq syntax
 	 */
-	private static String Unhandled(Instruction ins) {
-		return Unhandled("Instruction", ins);
-	}
-
-	// variant with some more information about instruction kind
-	private static String Unhandled(String instruction, Instruction ins) {
-		String name = ins.getName();
-		System.out.println("Unhandled " + instruction + ": " + name);
-		return "Nop (* " + name + " *)";
-	}
-
-	/**
-	 * for instructions which should not exist - this is probably an error in
-	 * Bico
-	 */
-	private static String Unknown(String instruction, Instruction ins) {
-		String name = ins.getName();
-		System.out.println("Unknown " + instruction + ": " + name);
-		return "Nop (* " + name + " *)";
-	}
-
-//	/**
-//	 * for instruction which are not implemented (yet) in Bico
-//	 */
-//	private static String Unimplemented(String instruction, Instruction ins) {
-//		String name = ins.getName();
-//		System.out.println("Unimplemented " + instruction + ": " + name);
-//		return Upcase(name) + " (* Unimplemented *)";
-//	}
-
-	private static String dealwithinstr(int pos, Instruction ins,
+	private static String doInstruction(int pos, Instruction ins,
 			ConstantPoolGen cpg) {
-		String ret = null;
-
+		String ret;
+	
 		String name = ins.getName();
 		// capitalize name
 		if (name != null && name.length() > 0) {
@@ -709,12 +673,12 @@ public class Executor {
 			System.out.println("Empty instruction name?");
 			name = "Nop";
 		}
-
+	
 		if (ins instanceof ACONST_NULL)
 			ret = name;
 		else if (ins instanceof ArithmeticInstruction) {
 			char c = name.charAt(0);
-
+	
 			if (c == 'I') {
 				// e.g. Isub -> Ibinop SubInt
 				ret = "Ibinop " + Upcase(name.substring(1)) + "Int";
@@ -725,7 +689,7 @@ public class Executor {
 			}
 		} else if (ins instanceof ArrayInstruction) {
 			char c = name.charAt(0);
-
+	
 			if (c == 'A' || c == 'B' || c == 'I' || c == 'S') {
 				ret = name;
 			} else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
@@ -741,14 +705,14 @@ public class Executor {
 			ret = Unhandled(ins);
 		} else if (ins instanceof BranchInstruction) {
 			String index = printIndex(((BranchInstruction) ins).getIndex());
-
+	
 			if (ins instanceof GOTO) {
 				ret = name + " " + index;
 			} else if (ins instanceof GOTO_W) {
 				ret = "Goto " + index;
 			} else if (ins instanceof IfInstruction) {
 				String op;
-
+	
 				if (name.endsWith("null")) {
 					if (name.contains("non")) {
 						op = "Ne";
@@ -768,6 +732,13 @@ public class Executor {
 						ret = "If_acmp " + op + "Ref " + index;
 					}
 				}
+			} else if (ins instanceof JsrInstruction) {
+				ret = Unhandled("JsrInstruction",ins);
+			} else if (ins instanceof Select) {
+				// TODO: Select
+				ret = Unimplemented("Select",ins);
+			} else {
+				ret = Unknown("BranchInstruction",ins);
 			}
 		} else if (ins instanceof BREAKPOINT) {
 			ret = Unhandled(ins);
@@ -786,8 +757,8 @@ public class Executor {
 			} else if (ins instanceof CHECKCAST) {
 				ret = name + " " + convertType(type);
 			} else if (ins instanceof FieldOrMethod) {
-				String className = converttocoq(((FieldOrMethod) ins).getClassName(cpg));
-				String fmName = converttocoq(((FieldOrMethod) ins).getName(cpg));
+				String className = coqify(((FieldOrMethod) ins).getClassName(cpg));
+				String fmName = coqify(((FieldOrMethod) ins).getName(cpg));
 				if (ins instanceof FieldInstruction) {
 					String fs = className + "." + fmName + "FieldSignature";
 					ret = name + " " + fs;
@@ -834,13 +805,13 @@ public class Executor {
 			ret = Unhandled(ins);
 		} else if (ins instanceof LocalVariableInstruction) {
 			int index = ((LocalVariableInstruction) ins).getIndex();
-
+	
 			if (ins instanceof IINC) {
 				ret = name + " " + index + "%N " + ((IINC) ins).getIncrement()
 						+ "%Z";
 			} else {
 				char c = name.charAt(0);
-
+	
 				if (c == 'A' || c == 'I') {
 					// Aload_0 -> Aload
 					int under = name.lastIndexOf('_');
@@ -882,20 +853,45 @@ public class Executor {
 		} else {
 			ret = Unknown("Instruction", ins);
 		}
-
-		/*
-		 * int j,k,ok; String[] s1 = TypesInCoq.notsosingle; ok = 0; for (j = 0;
-		 * j < s1.length; j++) { if (name.equalsIgnoreCase(s1[j])) { k =
-		 * name.lastIndexOf("_"); ret = name.substring(0,k)+"
-		 * "+name.substring(k+1); ok = 1; }; } //FIXME add other options for
-		 * parameter instructions if (ok==0) {ret=name;}
-		 */
+	
 		return "(" + pos + "%N, " + ret + ")";
 	}
 
 	/**
-	 * 
-	 * @param index
+	 * for instructions not handled by Bicolano
+	 */
+	private static String Unhandled(Instruction ins) {
+		return Unhandled("Instruction", ins);
+	}
+
+	// variant with some more information about instruction kind
+	private static String Unhandled(String instruction, Instruction ins) {
+		String name = ins.getName();
+		System.out.println("Unhandled " + instruction + ": " + name);
+		return "Nop (* " + name + " *)";
+	}
+
+	/**
+	 * for instructions which should not exist - this is probably an error in
+	 * Bico
+	 */
+	private static String Unknown(String instruction, Instruction ins) {
+		String name = ins.getName();
+		System.out.println("Unknown " + instruction + ": " + name);
+		return "Nop (* " + name + " *)";
+	}
+
+	/**
+	 * for instruction which are not implemented (yet) in Bico
+	 */
+	private static String Unimplemented(String instruction, Instruction ins) {
+		String name = ins.getName();
+		System.out.println("Unimplemented " + instruction + ": " + name);
+		return Upcase(name) + " (* Unimplemented *)";
+	}
+
+	/**
+	 * for printing offsets
 	 * @return i%Z or (-i)%Z
 	 */
 	private static String printIndex(int index) {
@@ -903,6 +899,35 @@ public class Executor {
 			return "("+index+")%Z";
 		} else {
 			return String.valueOf(index)+"%Z";
+		}
+	}
+
+	/**
+	 * @return s with the first char toUpperCase
+	 */
+	private static String Upcase(String s) {
+		if (s != null && s.length() > 0) {
+			char c1 = Character.toUpperCase(s.charAt(0));
+			return Character.toString(c1) + s.substring(1);
+		} else
+			return null;
+	}
+
+	/**
+	 * Replaces all chars not accepted by coq by "_"
+	 * @return null only if strin==null
+	 */
+	private static String coqify(String strin) {
+		if (strin==null) {
+			return null;
+		} else {
+			String strout = strin;
+			strout = strin.replace(".", "_");
+			// strout = strout.replace("(","_");
+			// strout = strout.replace(")","_");
+			strout = strout.replace(">", "_");
+			strout = strout.replace("<", "_");
+			return strout;
 		}
 	}
 
