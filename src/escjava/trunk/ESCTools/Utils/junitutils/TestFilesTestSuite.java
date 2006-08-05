@@ -202,7 +202,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	    } finally {
 		Utils.restoreStreams(true);
 	    }
-	    String err = doOutputCheck(fileToTest,ba.toString(),returnedObject);
+	    /*@ nullable */ String err = doOutputCheck(fileToTest,ba.toString(),returnedObject);
 	    if (err != null) fail(err);
 	    //System.out.println("COMPLETED: " + fileToTest);
 	}
@@ -216,7 +216,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	 
     */
     //@ requires initialized;
-    protected Object dotest(String fileToTest, String[] args) 
+    protected /*@ non_null */ Object dotest(String fileToTest, String[] args) 
 	    throws IllegalAccessException, IllegalArgumentException, 
 			    java.lang.reflect.InvocationTargetException 
     {
@@ -225,11 +225,9 @@ public class TestFilesTestSuite  extends TestSuite {
 	    
     
     //@ requires initialized;
-    //@ requires fileToTest != null;
-    //@ requires output != null;
-    //@ requires returnedValue != null;
-    protected String doOutputCheck(String fileToTest, String output, 
-				Object returnedValue) {
+    protected /*@ nullable */ String doOutputCheck(/*@ non_null */ String fileToTest, 
+						   /*@ non_null */ String output, 
+						   /*@ non_null */ Object returnedValue) {
       try {
 	String expectedOutput = Utils.readFile(fileToTest+ORACLE_SUFFIX);
 	Diff df = new Diff("expected", expectedOutput, "actual", output);
