@@ -148,8 +148,31 @@ public class DefGCmd
 	}
       
 	case TagConstants.ARRAYREFEXPR: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
+	  ArrayRefExpr are=(ArrayRefExpr)e;
+	  Expr array=this.trAndGen(are.array);
+	  Expr index=this.trAndGen(are.index);
+	  // Null check
+	  Expr refNEExpr=GC.nary(TagConstants.REFNE,
+				 array,GC.nulllit);
+	  GuardedCmd gc = GC.check(are.locOpenBracket,
+				   TagConstants.CHKNULLPOINTER,
+				   refNEExpr,Location.NULL);
+	  this.code.addElement(gc);
+	  // Negative index check
+	  Expr indexNeg=GC.nary(TagConstants.INTEGRALLE,
+				GC.zerolit, index);
+	  GuardedCmd gc1=GC.check(are.locOpenBracket,
+				  TagConstants.CHKINDEXNEGATIVE,
+				  indexNeg,Location.NULL);
+	  this.code.addElement(gc1);
+	  // Index too big check
+	  Expr length= GC.nary(TagConstants.ARRAYLENGTH, array);
+	  Expr index2Big=GC.nary(TagConstants.INTEGRALLT, 
+				 index, length);
+	  GuardedCmd gc2=GC.check(are.locOpenBracket,
+				  TagConstants.CHKINDEXTOOBIG,
+				  index2Big,Location.NULL);
+	  this.code.addElement(gc2);
 	}
       
 	case TagConstants.ARRAYRANGEREFEXPR:
