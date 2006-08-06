@@ -340,14 +340,14 @@ jmlc_fe: ${JAVAFE_CLASSFILES4RAC}
 	export JMLC_XMX=512M; \
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET=javafe \
-		JMLC_FLAGS='--excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
+		JMLC_FLAGS+=' --excludefiles "^(ASTNode|TypeDeclElem)\.java"' \
 		jmlc1
 
 jmlc_ej: ${ESCJAVA_CLASSFILES4RAC}
 	export JMLC_XMX=512M; \
 	$(MAKE) JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} \
 		TARGET=escjava \
-		JMLC_FLAGS='--excludefiles "^(SPVC)\.java"' \
+		JMLC_FLAGS+=' --excludefiles "^(SPVC)\.java"' \
 		jmlc1
 
 # Some files cannot be compiled under the current/old semantics because the generated code
@@ -356,13 +356,13 @@ jmlc_ej: ${ESCJAVA_CLASSFILES4RAC}
 jmlc_with_new_semantics:
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET='Javafe/java/javafe/ast/ASTNode.java' \
-		JMLC_FLAGS='-T' jmlc1
+		JMLC_FLAGS+=' --efficientRAC' jmlc1
 	$(MAKE) JMLC_CLASSFILES_DIR=${JAVAFE_CLASSFILES4RAC} \
 		TARGET='Javafe/java/javafe/ast/TypeDeclElem.java' \
-		JMLC_FLAGS='-T' jmlc1
+		JMLC_FLAGS+=' --efficientRAC' jmlc1
 	$(MAKE) JMLC_CLASSFILES_DIR=${ESCJAVA_CLASSFILES4RAC} \
 		TARGET='Escjava/java/escjava/sp/SPVC.java' \
-		JMLC_FLAGS='-T' jmlc1
+		JMLC_FLAGS+=' --efficientRAC' jmlc1
 
 ${JAVAFE_CLASSFILES4RAC}:
 	mkdir ${JAVAFE_CLASSFILES4RAC}
