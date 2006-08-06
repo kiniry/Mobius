@@ -1,3 +1,4 @@
+/* $Id $*/
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package javafe.parser;
@@ -562,6 +563,7 @@ public class Lex extends Token
                         ttype = _SpecialParserInterface.getTokenType(identifierVal);
                     else ttype = TagConstants.IDENT;
                 } else ttype = TagConstants.IDENT;
+		endingLoc = m_in.getLocation(); // Chalin: trying to satisfy Token inv.
                 return ttype;
             }
             ttype = Token.CLEAR;      // keep Token invariants happy
