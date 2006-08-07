@@ -332,9 +332,9 @@ and the case when the current instruction is not a loop end and the next instruc
   
 \item $\ins{\pc_n} $ is not a loop end and the next instruction to be executed is a loop entry 
 instruction at index $loopEntry $ in the array of bytecode instructions of the method \methodd
- (i.e. the execution step is of kind $\execRel^l$ ).
+ (i.e. the execution step is of kind $\execRel^l$, see Def.\ref{defLoop}  ).
  Thus, there exists a natural number  $ i , 0 \le i < \methodd.\loopSpecTable.length   $   such that
- $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = \invariant $ and
+ $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = I $ and
    $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$.
 We look only at the case when the current instruction is a \load  instruction\\
 $$ \begin{array}{l}
@@ -349,7 +349,7 @@ $$ \begin{array}{l}
 \mbox{\rm \textit{\{by the definition  \ref{inter} for the case when}} \\
 \mbox{\rm \textit{ the execution step is not a backedge but the target instruction is a loop entry \} } }\\
 
- % \interp{\invariant\begin{array}{l} 
+ % \interp{I\begin{array}{l} 
  %                                              \subst{\counter}{\counter +1} \\
  %					      \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
  %					\end{array}   }{s_n} \\
@@ -357,12 +357,12 @@ $$ \begin{array}{l}
      
                                \interpTwoLines{\begin{array}{l}
 
-                                    \invariant\begin{array}{l} 
+                                    I\begin{array}{l} 
                                               \subst{\counter}{\counter +1} \\
 					      \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
 					\end{array} \\
 					\wedge \\
-                         \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
+                         \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
                                       \begin{array}{l} 
                                               \subst{\counter}{\counter +1} \\
 					      \subst{  \stack{ \counter  + 1}}{\locVar{i}} 
@@ -372,8 +372,8 @@ $$ \begin{array}{l}
 		\mbox{\rm\comment{from lemmas \ref{substCntr} and \ref{substStack}} }	 \\
                          \iff \\
                  \interpTwoLines{ \begin{array}{l}
-		                             \invariant \  \wedge\\
-                                             \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
+		                             I \  \wedge\\
+                                             \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
                                       \end{array}} 
                                     {     s_n 
                                               \begin{array}{l}      
@@ -383,14 +383,14 @@ $$ \begin{array}{l}
 						                   %\update{\stackOnly}{\evalExp{\counter}{s_n}  + 1}{ \evalExp{ \locVar{i}}{s_n} }  
 					\end{array}  
                                     } \\
-\end{array}$$
+%\end{array}$$
 
-$$ \begin{array}{l}
+%$$ \begin{array}{l}
  \mbox{\rm\comment{from the Def. \ref{interpret}  of the evaluation function  }}\\				    
             \equiv \\
                  \interpTwoLines{ \begin{array}{l}
-		                             \invariant \  \wedge\\
-                                             \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
+		                             I \  \wedge\\
+                                             \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
                                       \end{array}} 
                                     {     s_n 
                                               \begin{array}{l}      
@@ -404,15 +404,15 @@ $$ \begin{array}{l}
  \mbox{\rm\comment{from the operational semantics of \load }}\\
 
  \interp{ 
-\begin{array}{l}   \invariant \  \wedge\\
-                  \forall mod_i ,  i = 1..s ( \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
+\begin{array}{l}   I \  \wedge\\
+                  \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
 \end{array}}{s_{n+1}}  \\
 
 
 \mbox{\rm \comment{we can get from the last formulation}}\\
-  \numConclusion{1} \   \interp{\invariant}   {s_{n+1} } \\
+  \numConclusion{1} \   \interp{I}   {s_{n+1} } \\
                               \\
-                 \numConclusion{2}  \interp{ \invariant \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} }
+                 \numConclusion{2}  \interp{ I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} }
                                      {s_{n+1}  } \\
    % \end{array} 
 \mbox{\rm \comment{ from \numConclusion{1}  and \numConclusion{2}  }}\\
@@ -423,7 +423,7 @@ $$ \begin{array}{l}
 instruction at index $loopEntry $ in the array of bytecode instructions of the method \methodd
  (i.e. the execution step is of kind $\execRel^l$ ).
  Thus, there exists a natural number  $ i , 0 \le i < \methodd.\loopSpecTable.length   $   such that
- $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = \invariant $ and
+ $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = I $ and
    $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$.
 We consider the case when the current instruction is a sequential instruction. The cases when the current instruction 
 is a jump instruction are similar.   \\ 
@@ -432,7 +432,7 @@ is a jump instruction are similar.   \\
  $$ \interp{ \wpi{\ins{\pc_n} }{\methodd}{}}{s_n}$$
 
 \comment{ from Def. \ref{inter} and transformation over the above statement} 
-$$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{s_{n + 1}}  \end{array}$$
+$$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 \comment{by hypothesis,  $loopEntry = \pc_{n +1}$.
          From def. \ref{defLoop}, we
          conclude that there is a prefix  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$  of the current execution path which does not pass through
@@ -445,21 +445,21 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{s_{n + 1}}  \end{a
         \begin{array}{l}   \exists k, 0 \le k \le n \Rightarrow \\
 	
 	 \\
-	 \Myspace \interpTwoLines{ \begin{array}{l}
-	                                    \invariant \\
+ 	 \Myspace \interpTwoLines{ \begin{array}{l}
+	                                    I \\
 					    \wedge
                                            \forall mod_i ,  i = 1..s ( \begin{array}{l } 
-	                                                           \invariant \Rightarrow \\
+	                                                           I \Rightarrow \\
 	                                                           \wpi{\ins{loopEntry}}{\methodd}{} 
 							      \end{array})
 				 \end{array} }{s_k}  \\
          \\  
-	 \Myspace    s_k =^{\modifL} s_{n+1} 
+ \numConclusion{3} \ 	 \Myspace    s_k =^{\modifL} s_{n+1} 
        \end{array}
     $$
-   \comment{ by we have $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$  and    from \numConclusion{2}    }
- $$  \numConclusion{3} \ \interp { \invariant \Rightarrow \wpi{\ins{loopEntry}}{\methodd}{}} {s_{n+1}}    $$
- \comment{from \numConclusion{1} and  \numConclusion{3} }
+   \comment{because $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$  and    from \numConclusion{2} and  \numConclusion{3}     }
+ $$  \numConclusion{4} \ \interp { I \Rightarrow \wpi{\ins{loopEntry}}{\methodd}{}} {s_{n+1}}    $$
+ \comment{from \numConclusion{1} and  \numConclusion{4} }
    
  $$ \begin{array}{l} 
            \interp{ \wpi{\ins{loopEntry}}{\methodd}{}}{s_{n+1}} \\
@@ -470,7 +470,7 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ \invariant}{s_{n + 1}}  \end{a
 
 \end{enumerate}
 
-Qed.
+\Qed
 
 \begin{lemma3}[\fwpi \ of method entry point instruction]\label{lemma3}
 Assume we have a method \methodd. Assume that  execution of method  \methodd \ starts execution
