@@ -29,7 +29,7 @@ $$ \mbox{\rm\textrm{wp}}^{bc} : \bcIns \backslash \{ \goto , \ifCond \}  \righta
 For instance, the \wpName \ definition for \getfield \ is :
 $$ \begin{array}{l} \wpExpl{\getfield \ f }{ \psi  }{ \excPostExpl} = \\
 		         \stack{\counter } \neq \Mynull \Rightarrow 
-			                \psi   \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})} 		                    
+			                \psi   \subst{ \stack{\counter} }{ \fieldd(\stack{\counter})} 		                    
 			  \wedge \\
 			  \stack{\counter }  = \Mynull  \Rightarrow   \excPostExpl( \NullPointerExc )
 			  \end{array}$$ 
@@ -129,32 +129,27 @@ The definition of $\wpNameStmt$ uses the compiler function defined in Section \r
 			    } {\\
                              \phantom{wp^{bc}_{seq}}	 \begin{array}{l}
 			              \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
-				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \substitution{t}{t-2} \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \subst{t}{t-2} \\
 			               \wedge \\
 				       \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
-				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \substitution{t}{t-2} 
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \subst{t}{t-2} 
 			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPostExpl} 
      \end{array} $$ 
        \item assignment expression. We will look only at the case for  compiled   field assignment 
 	 expressions $\compileLabel{s}{\expressionSrc_1.\fieldd= \expressionSrc_2 }{e}$.
-          %    By definition of the compiler function is compiled down to 
-	 %		$$\begin{array}{l} \compileLabel{s}{\expressionSrc_1};\\
-	 %		                   \compileLabel{s}{\expressionSrc_2}; \\
-	 %				   \putfield \ \fieldd 
-	 %		 \end{array}  		   
-	 %		$$
+
 	 	      
 		       $$\begin{array}{l}
 		              \wpStmt{ \compileLabel{s}{\expressionSrc_1.\fieldd= \expressionSrc_2}{e}}{\psi}{\excPostExpl} =\bydef \\\\
 	
-			      \wpBcSeq{ \compileLabel{s}{\expressionSrc_1}{e'}}
-				      { \\\\
-			              \phantom{wp^{bc}_{seq}}  \wpBcSeq{\begin{array}{l}
-                                                                              \compileLabel{e'+1}{\expressionSrc_2}{e - 1}; \\
-                                                                              e \ \putfield \ \fieldd 
-				                                        \end{array}}{\psi}{\excPostExpl}  }
-                                      { \\\\
-			              \phantom{wp^{bc}_{seq}} \excPostExpl}                     
+			%      \wpBcSeq{ \compileLabel{s}{\expressionSrc_1}{e'}}
+				%      { \\\\
+			     %         \phantom{wp^{bc}_{seq}}  \wpBcSeq{\begin{array}{l}
+                             %                                                  \compileLabel{e'+1}{\expressionSrc_2}{e - 1}; \\
+                              %                                                 e \ \putfield \ \fieldd 
+			 %	                                        \end{array}}{\psi}{\excPostExpl}  }
+                             %          { \\\\
+			      %         \phantom{wp^{bc}_{seq}} \excPostExpl}                     
 		        \end{array} $$ 
           
 

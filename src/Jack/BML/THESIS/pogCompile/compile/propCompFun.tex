@@ -23,13 +23,20 @@
 \newcommand{\isStartExc}[1]{\mbox{\rm\textit{isExcHandlerStart}}(#1)}
 \subsection{Properties of the compiler function}\label{compile:prop}
 
-In this last subsection, we will look at the properties of the compiled statements.
+In this subsection, we will focus on the properties of the  bytecode produced by the compiler.
+These properties although a straightforward consequence of the compiler definition
+ are actually important for establishing formally the equivalence between source and bytecode 
+proof obligations. Note also that those properties are respected by any non optimizing compiler.
+
+
 In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and $\expressionSrc$.
  
-The first property that we observe is that the last instruction $\ins{e}$ in the compilation $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$
-is always in execution relation with the  instruction $\ins{e + 1}$
+The first property that we observe is that the last instruction $\ins{e}$ in the compilation
+ $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation with the
+  instruction $\ins{e + 1}$.
+
 \begin{compProp0}[Compilation of statements and expressions]\label{compile:prop:compProp0}
- For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
+ For any statement or expression $\ExprStmt$ which does not terminate on \return, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\stmt}{e}$ such that 
      $$ \ins{e} \execRel \ins{e+1}$$
 \end{compProp0}
@@ -40,7 +47,7 @@ Informally, the following property states  that  if there are instructions insid
  $\compileLabel{s}{\ExprStmt}{e}$ which are in execution relation\footnote{see Def. \ref{defEdge}}  with an instruction 
 $\ins{k}$ which is not the start of an exception handler and which is outside $\compileLabel{s}{\ExprStmt }{e}$
  then   $ k  = e +1$. 
- The conditions  $ \neg (  \isInList{\compileLabel{s}{\ExprStmt}{e} }{\ins{k}} )$ and \\
+ The conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and \\
 $\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
  $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper handler exception handler.
 
@@ -48,24 +55,24 @@ $\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is b
     For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
            $$ \begin{array}{l} 
-                             \forall i, ( \isInList{\compileLabel{s}{\ExprStmt }{e}}{\ins{i}} ) \wedge \\
+                             \forall i, ( \ins{i} \in \compileLabel{s}{\ExprStmt }{e} ) \wedge \\
 			     \Myspace ( \ins{i} \execRel \ins{k}) \wedge \\
-			     \Myspace \neg (  \isInList{\compileLabel{s}{\ExprStmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg (\ins{k} \in   \compileLabel{s}{\ExprStmt}{e}  ) \\
 			     \Myspace \neg \isStartExc{\ins{k}}     \Rightarrow   \\
-                             \Myspace \Myspace k = e + 1 \wedge \\
+                             \Myspace \Myspace k = e + 1  \\
 			     
               \end{array}$$ 
 \end{compProp1}
 
 
  The proof is done by induction on the structure of the compiled statement. 
-We scatch the proof for the compilation of the if statement, the rest of the cases being similar 
+We scatch the proof for the compilation of the if statement, the rest of the cases being similar \\
 \textit{Proof:} 
 $$
 \begin{array}{l}
-            \comment{Assume that $\exists, s \le  i \le e, \exists k ,   k \notin [s \ldots e + 1] \wedge \ins{i} \execRel \ins{k}    $  }\\
+            \comment{Assume that $\exists i, i \in [  s \ldots e ], \exists k ,   k \notin [s \ldots e + 1] \wedge \ins{i} \execRel \ins{k}    $  }\\
             \\
-            \mbox{\rm\comment{by definition of the compiler function for if statements in section \ref{compCtrlStmt} }} \\
+            \mbox{\rm\comment{by definition of the compiler function for if statements in section \ref{pogEq:compile:compCtrlStmt} }} \\
             \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e} =  \\
         
 	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
@@ -80,21 +87,21 @@ $$
 	   \comment{by induction hypothesis for $\expressionSrcRel$ we get } \\
 
 	    \numConclusion{2}   \forall  i ,  s \le i \le e' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg  (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg  ( \ins{k} \in  \compileLabel{s}{\stmt}{e} ) \\
 			     \Myspace \neg  \isStartExc{\ins{k}}   \Rightarrow   \\
                              \Myspace \Myspace  k = e' + 1 \\ 
 	    \comment{ From	\numConclusion{1} and 	 \numConclusion{2}  we get a contradiction in this case} \\\\
         
 	    \numConclusion{3} \ \comment{Assume that $ e'+2 \le i  \le e''$ } \\			 
 	    \numConclusion{4} \  \forall i ,  e' + 2 \ge i \le e'' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e} ) \\
 			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
                              \Myspace \Myspace k = e'' + 1\\
 	    \comment{ From	\numConclusion{3} and 	 \numConclusion{4}  we get a contradiction in this case} \\\\
 	    
 	    \numConclusion{5} \ \comment{Assume that $ e'' +2 \le i  \le e $ } \\
 	    \numConclusion{6} \  \forall i ,  e'' + 2 \ge i \le e ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg (  \isInList{\compileLabel{s}{\stmt}{e} }{\ins{k}} ) \\
+			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e}  ) \\
 			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
                              \Myspace \Myspace k = e + 1	     \\\\
        \comment{ From	\numConclusion{5} and 	 \numConclusion{6}  we get a contradiction in this case} \\\\
@@ -107,7 +114,7 @@ $$
    \mbox{\rm\textit{ \{ as $ e''  + 1 \ \goto \ e+ 1$ we get a contradiction once again }}\\
 \end{array}
 $$
-
+\Qed \\
 
 
 Another property of the compiler is that any statement or expression   is
@@ -126,9 +133,9 @@ the control flow can reach the instructions representing the compilation $\compi
 \end{itemize}
 then :
 $$\begin{array}{l} \neg (\exists i_j, \exists i_k,  \\   
-                       \Myspace \isInList{\compileLabel{s}{\ExprStmt[\ExprStmt']}{e} }{i_j} \wedge\\
-		       \Myspace \neg \isInList{\compileLabel{s'}{\ExprStmt'}{e'} }{i_j}   \wedge \\
-		       \Myspace  \isInList{\compileLabel{s'}{\ExprStmt'}{e'} }{i_k} \wedge \\
+                       \Myspace   i_j \in \compileLabel{s}{\ExprStmt[\ExprStmt']}{e} \wedge\\
+		       \Myspace \neg (i_j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge \\
+		       \Myspace  i_k \in \compileLabel{s'}{\ExprStmt'}{e'}  \wedge \\
 		       \Myspace s' \neq k   \wedge 
 		       \Myspace i_j \execRel i_k )
 
@@ -191,7 +198,7 @@ handlers by adding them in the exception handler table. We now establish that th
 in the source language.
 
 \begin{compProp7}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
-Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable 
+Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable  \
   is such that exists a statement $\stmt$ such that $\compileLabel{s}{\stmt}{e}$
 
 

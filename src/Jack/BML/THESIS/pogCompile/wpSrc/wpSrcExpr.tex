@@ -45,8 +45,8 @@ In the following, we give the rules of $\wpNameSrcExpr$.
 			      v'  \neq \mbox{ \rm \Mynull }  \Rightarrow     \\
 			      
                                          \Myspace    \Myspace    m.\preSrc  %\begin{array}{l} 
-					                         \substitution{\this}{ v'} \\
-                                                                 %\substitution{\mbox{\rm arg}}{ v_2} \\
+					                         \subst{\this}{ v'} \\
+                                                                 %\subst{\mbox{\rm arg}}{ v_2} \\
 					                  %\end{array}  \\
                                           \Myspace   \Myspace \wedge \\
 					  \Myspace   \Myspace \forall \freshVar, \ \forall \ m \in m. \mod \\ 
@@ -55,11 +55,11 @@ In the following, we give the rules of $\wpNameSrcExpr$.
 					  \typeof{\freshVar} <: m.\returnType \wedge \\ 
 					  m.\normalPostSrc
 					                                \begin{array}{l} 
-					                                    \substitution{\result}{\freshVar } \\
-									    \substitution{ \this}{ v' } \\
-									   % \substitution{\mbox{\rm arg} }{ \expressionSrc_2}
+					                                    \subst{\result}{\freshVar } \\
+									    \subst{ \this}{ v' } \\
+									   % \subst{\mbox{\rm arg} }{ \expressionSrc_2}
 					                                 \end{array}   \\
-                                             \Myspace \Rightarrow \normalPostSrc  \substitution{ v }{ \freshVar }  \\ 
+                                             \Myspace \Rightarrow \normalPostSrc  \subst{ v }{ \freshVar }  \\ 
 					                       \end{array}\right.\\
 					     \Myspace   \Myspace \wedge \\
 					     \Myspace   \Myspace	 \forall \mbox{\rm \texttt{E}} \in m.\exceptionSrc, \\
@@ -108,43 +108,37 @@ In the following, we give the rules of $\wpNameSrcExpr$.
 
   $$ \begin{array}{l} 
     \wpSrcExpr{ \newSrc \ \class  ( \expressionSrc  ) } {\normalPostSrc }{ \excPostSrc  }{v} = \\
-	  
-	             \wpSrcExpr{\expressionSrc} { \\ \\
-		                \phantom{wpSr}\left\{ \begin{array}{l}
-                                   \forall \freshVar, \\
-				   \Myspace  not \ \instances(\freshVar ) \wedge \\
-					       \Myspace  \freshVar  \neq \Mynull \Rightarrow \\ 
-				   \Myspace  \Myspace  \Constructor{\class}.\preSrc
-				                 \begin{array}{l} 
-                                                    %  \substitution{ \this}{ \Ref{Class} } \\
-                                                      \substitution{ arg}{ v' } \\
-					     	\end{array} \\
-					\Myspace  \Myspace	       \wedge \\
-					     
-					      % , \\
-					       
-					        
-					       
-					       \Myspace  \Myspace  \forall \ m \in \Constructor{Class}. \mod , \\
-					       \Myspace  \Myspace  \Myspace    \Constructor{Class}.\normalPostSrc       
-					            \begin{array}{l}   
-						        \substitution{ \this}{ \freshVar  } \\
-							\substitution{ arg}{ v' } \\
-							\substitution{	\typeof{\freshVar}}{ Class} 
-						     \end{array}  \\
-                                                 \Myspace  \Myspace   \Myspace      \Rightarrow   \normalPostSrc \substitution{ v }{ \freshVar  } 
-					      
-					           \Myspace  \Myspace \wedge \\
-						   \Myspace  \Myspace  \forall \mbox{\rm \texttt{Exc}} \in  \Constructor{Class}.\exceptionSrc, \\
-						    \Myspace \Myspace  \forall \ m \in \Constructor{Class}. \mod, \\
-						 \Myspace  \Myspace  \Myspace \Constructor{Class}.\excPostSpecSrc ( \mbox{\rm\texttt{Exc}}) \Rightarrow \excPostSrc( \mbox{\rm\texttt{Exc}})
-		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }{v'}  
-		     
-            \end{array}  $$ 
+ 	  
+ 	             \wpSrcExpr{\expressionSrc} { \\ \\
+ 		                \phantom{wpSr}\left\{ \begin{array}{l}
+                                    \forall \freshVar, \\
+ 				   \Myspace  not \ \instances(\freshVar ) \wedge \\
+ 					       \Myspace  \freshVar  \neq \Mynull \Rightarrow \\ 
+ 				   \Myspace  \Myspace  \Constructor{\class}.\preSrc
+ 				                \begin{array}{l} 
+                                                       \subst{ \this}{ \Ref{Class} } \\
+                                                       \subst{ arg}{ v' } \\
+  					     	\end{array} \\
+  					\Myspace  \Myspace	       \wedge \\
+  					\Myspace  \Myspace  \forall \ m \in \Constructor{Class}. \mod , \\
+  					       \Myspace  \Myspace  \Myspace    \Constructor{Class}.\normalPostSrc       
+  					             \begin{array}{l}   
+  						          \subst{ \this}{ \freshVar  } \\
+  						          \subst{ arg}{ v' } \\
+  						       	  \subst{	\typeof{\freshVar}}{ Class} 
+  						     \end{array}  \\
+                                                   \Myspace  \Myspace   \Myspace      \Rightarrow   \normalPostSrc \subst{ v }{ \freshVar  } \\ 
+  					          \Myspace  \Myspace \wedge \\
+  						   \Myspace  \Myspace  \forall \mbox{\rm \texttt{Exc}} \in  \Constructor{Class}.\exceptionSrc, \\
+  						    \Myspace \Myspace  \forall \ m \in \Constructor{Class}. \mod, \\
+  						 \Myspace  \Myspace  \Myspace \Constructor{Class}.\excPostSpecSrc ( \mbox{\rm\texttt{Exc}}) \Rightarrow \excPostSrc( \mbox{\rm\texttt{Exc}})
+  		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }{v'}  
+  		     
+              \end{array}  $$ 
+  
+  \end{itemize}
 
-\end{itemize}
 
-%\subsection{Relational expressions}
 Let us see the relational expressions supported in the source programming language
 
 \begin{itemize} 

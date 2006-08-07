@@ -1,4 +1,4 @@
-\subsection{Related Work}\label{pog:relWork}
+\section{Related Work}\label{pog:relWork}
 
 Several works dealing with the relation between 
 source and its compilation verification condition generated.
@@ -7,14 +7,20 @@ Barthe, Rezk and Saabas in \ref{} also argue that proof obligations produced
 over source code and
 bytecode produced by a nonoptimizing compiler   are equivalent.
 The source language supports method invokation, exception throwing and handling.They do not consider instructions that may throw
-runtime exceptions. Note that because of this 
+runtime exceptions. Note that because of this  However, in their work they do not discuss  what are the compiler assumptions
+and properties  which will guarantee this equivalence. We claim that their proof for
+ the verification condition preserving compilation holds only if their non optimizing compiler has the properties discussed here in Section
+ \ref{compile}.
 
- However, in the article they do not discuss at all what are the assumptions
-or properties of the compiler which will guarantee this equivalence. We claim that their proof for the verification condition preserving compilation holds only if their non optimizing compiler has the properties discussed here in Section
- \ref{compile}. \todo{because they do not expose those conditions, 
-they cannot use the induction hypothesis because they have not proven that the condition to apply the induction hold}
+% \todo{because they do not expose those conditions, 
+%they cannot use the induction hypothesis because they have not proven that the condition to apply the induction hold}
 
 % Peter Mueller
+ In \cite{FB04LBT}, F.Bannwart and P.Muller show how to transform a Hoare style logic derivation on source Java like
+ program into a Hoare style logic derivation of a Java bytecode like program. This solution however has the shortcoming
+that the certificate (in this case it is the Hoare style logic derivation) can be potentially large. In particular, this means that
+applying this technique in scenarios like PCC could be hard because of the large size of the certificate. 
+    
 
 
 % see what are the others 

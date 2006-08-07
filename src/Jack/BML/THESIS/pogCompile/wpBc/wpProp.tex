@@ -5,17 +5,24 @@
 
 \subsection{Properties of the \wpName \ functions}\label{pog:wpBcProp}
     The previous subsection introduced a new formulation of the 
-    \wpName \ function for bytecode which takes into account 
+    \wpName \ function for bytecode which is defined over
     the source statement from which it is compiled. 
     However, it is important to establish a relation between this new definition
-    and  the \wpName \ formulation given in  Chapter wp\ref{wpGeneral}.
+    and  the \wpName \ formulation given in  Chapter \ref{wpGeneral}.
     The following statements establish the relation between 
     the two versions of the \wpName \  calculus.
 
 
+The first lemma states that the $\wpNameExpl$ \ function defined in the previous subsection \ref{pog:wpBc}
+ for a single bytecode instruction
+ will return the same result as the \fwpi \ function defined in Chapter \ref{wpGeneral}.  In particular, the explicite
+ weakest precondition function for a single bytecode instruction 
+  $\wpExpl{ i_j}{ \psi  }{ \excPostExpl} $ \ is equivalent to $\wpi{}{\methodd}{i_j}$ only if 
+$\psi$  is the intermediate predicate between $\ins{j}$ and the next instruction $\ins{k}$ to be executed. A similar condition we get for the function
+ $\excPostExpl$.
 
 \begin{wpIns}[Equivalence of the formulations for single instructions ]\label{wpIns}
-For all instructions 
+For all instructions  
  $i_j  \in \bcIns \backslash \{ \goto , \ifCond, \jsr, \ret \}$ and  $i_k$ which belong to method \methodd,  formula
  $\psi$,and  function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that
 \begin{itemize}
@@ -28,11 +35,11 @@ the following holds
 
    $\wpExpl{ i_j}{ \psi  }{ \excPostExpl} = \wpi{}{\methodd}{i_j} $
 \end{wpIns}
-The proof is done by case analysis on the instruction $i_j$
-In the following, we scatch the case for a \getfield \  instruction 
+The proof is done by case analysis on the instruction $i_j$\\
+
 %\todo{note that the current formulation is not true because of the exceptions }
 \textit{Proof:}
-
+We scatch the case for a \getfield \  instruction.
 $$
 \begin{array}{l}
   \mbox{\rm\comment{by hypothesis }} \\
@@ -41,7 +48,7 @@ $$
     \numConclusion{1} \  \wpExpl{\getfield \ \fieldd }{\psi}{\excPostExpl} = \\
     
         \stack{\counter } \neq \Mynull \Rightarrow 
-			                \psi   \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
+			                \psi   \subst{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
 			  \wedge \\
 			  \stack{\counter }  = \Mynull  \Rightarrow   \excPostExpl( \NullPointerExc ) \\\\
 
@@ -49,7 +56,7 @@ $$
   \mbox{\rm\comment{by definition of the \fwpi \  function }} \\
 \numConclusion{2} \  \wpi{}{\methodd}{ \getfield \ \fieldd} = \\
                            \stack{\counter } \neq \Mynull \Rightarrow 
-			         \inter{i_j}{i_k}   \  \substitution{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
+			         \inter{i_j}{i_k}   \  \subst{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
 			  \wedge \\
 			  \stack{\counter }  = \Mynull  \Rightarrow   \excPost( \NullPointerExc,j ) \\\\
 
@@ -58,6 +65,12 @@ $$
 
 \end{array}
 $$
+\Qed\\
+
+The following lemma establishes 
+that calculating the \fwpi \ predicate of the first instruction of a block of bytecode 
+instructions and calculating it by using a $\wpNameBcSeq$ \ is the same under several conditions about the postcondition predicates.
+
 
 
  \begin{wpBlock}[\wpName  \  for a block of instructions]\label{wpBlock}
@@ -97,7 +110,10 @@ $$
    \comment{from  \numConclusion{1} and \numConclusion{3} the proposition holds}
 \end{array}
 $$
+\Qed \\
 
+
+The same property is established for compilation of expressions. 
 \begin{relWpExpr}[\wpName  \  for compiled expressions ]\label{relWpExpr}
      For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \,  formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
@@ -117,8 +133,9 @@ $$
  $\expressionSrc$, start label $s$  and  end label $e$,
   the resulting compilation   $\compileLabel{s}{\expressionSrc}{e}$ is a block of instructions. We can apply 
  the previous lemma  \ref{wpBlock} and we get the result.
+\Qed \\
 
-
+The next lemma states the same property but this time for the compilation of statements.
 \begin{relWpStmt}\label{relWpStmt}
      For every compiled statement $\compileLabel{s}{\stmt}{e}$  in  method \methodd, formula $\psi$ and 
     function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
@@ -126,8 +143,8 @@ $$
       \begin{itemize}
             \item $\psi = \inter{e}{e+1}$
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) $ 
-      \end{itemize} then the following holds: \
-     if $\psi = \inter{e}{e+1}$ then the following holds
+      \end{itemize} then the following holds: 
+  %   if $\psi = \inter{e}{e+1}$ then the following holds
      $$   \wpStmt{\compileLabel{s}{\stmt}{e} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   
 \end{relWpStmt}
 
@@ -136,8 +153,9 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 
 \begin{itemize}
       \item if statement 
-            $$
-	    \begin{array}{l}
+           
+	    %\begin{longtable}{>{$}c<{$}}
+	     $$\begin{array}{l}
 	     \wpStmt{   \compileLabel{s}{ \begin{array}{l} \Myif \ (\expressionSrcRel) \\
                                                                \Mythen \ \{ \stmt_1 \} \\  
 							       \Myelse \ \{ \stmt_2 \}   
@@ -147,10 +165,10 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				} {\\
                              \phantom{wp^{bc}_{seq}}	 \begin{array}{l}
 			              \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
-				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \substitution{t}{t-2} \\
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \subst{t}{t-2} \\
 			               \wedge \\
 				       \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
-				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \substitution{t}{t-2} 
+				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \subst{t}{t-2} 
 			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPostExpl}   \\ \\
 				
 
@@ -165,8 +183,8 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				\mbox{\rm\textit{the compilation of $\compileLabel{s}{\stmt}{e}$ , }} \\
                         	\mbox{\rm\textit{is in the same execution relation with $\ins{e+1}$, }} \\
 
-	 \end{array}$$
-	 $$ \begin{array}{l}
+	 %\end{array}$$
+	 %$$ \begin{array}{l}
 			        \mbox{\rm\textit{    Def. \ref{inter} for \interOnly, \numConclusion{1.1} and \numConclusion{1.2}   we conclude that \} } }\\
 				\numConclusion{1.3}  \ \inter{e'' + 1}{e+1} = \inter{e}{e+1} = \psi\\
 				\mbox{\rm\textit{\{From property \ref{compile:prop:compProp4} the edge between  $e''$ and $e'' + 1$}}\\
@@ -221,15 +239,15 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 					 \phantom{wp^{bc}_{seq}}	 
 					           \begin{array}{l}
 			                                \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow   \\
-							\phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \substitution{t}{t-2} \\
+							\phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e} }{\psi}{\excPostExpl} \subst{t}{t-2} \\
 							\wedge \\
 							\neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow  \\
-							 \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \substitution{t}{t-2} 
+							 \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \subst{t}{t-2} 
 			                           \end{array}  }
                                           { \\ \phantom{wp^{bc}_{seq}} \excPostExpl} = \wpi{s}{m}{}   \\ \\
 					  \comment{and this case holds}
-	    \end{array}
-	    $$
+	    \end{array}$$
+	  
   \item try catch statement 
         $$
 	  \begin{array}{l}
@@ -267,4 +285,4 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 	   \end{array}
 	$$
 \end{itemize}
-
+\Qed \\

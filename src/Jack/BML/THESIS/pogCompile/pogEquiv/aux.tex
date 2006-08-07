@@ -2,9 +2,9 @@
 
 %\newtheorem{interProp}{Lemma} % states that the postcondition doesnot change by adding a goto
 \newtheorem{wpExprSrc}{Lemma}[section]
-\newtheorem{exprValueOnStack1}[wpExprSrc]{Lemma}[section]
-\newtheorem{exprSrcBcWp1}[wpExprSrc]{Lemma}[section]
-\newtheorem{exprSrcBcWp2}[wpExprSrc]{Lemma}[section]
+\newtheorem{exprValueOnStack1}[wpExprSrc]{Lemma}
+\newtheorem{exprSrcBcWp1}[wpExprSrc]{Lemma}
+\newtheorem{exprSrcBcWp2}[wpExprSrc]{Lemma}
 \newtheorem{wpStmtBcSrc1}[wpExprSrc]{Lemma}
 \newtheorem{wpStmtBcSrc2}[wpExprSrc]{Lemma}
 %\newtheorem{stackCounter}[interProp]{Lemma}
@@ -36,9 +36,9 @@ $$ \begin{array}{l}
  \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  \equiv \\
       \forall \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \psi 
                                                                              \begin{array}{l}
-									        \substitution{v_1 }{ \freshVar_1 }  \\
+									        \subst{v_1 }{ \freshVar_1 }  \\
 										\ldots \\
-										\substitution{v_k}{ \freshVar_k } 
+										\subst{v_k}{ \freshVar_k } 
 									     \end{array}
           \wedge \\ 
 	  R  
@@ -99,8 +99,8 @@ $$ \begin{array}{l}
   
 	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  \equiv \\ 
               Q \Rightarrow \phi \begin{array}{l}
-                                       \substitution{\counter}{\counter + 1}\\
-			               \substitution{\stack{\counter +1}}{ v }
+                                       \subst{\counter}{\counter + 1}\\
+			               \subst{\stack{\counter +1}}{ v }
                          \end{array} \\ \\
           \wedge \\ 
 	  R 
@@ -135,8 +135,8 @@ Proof :
 			       \equiv \wpExpl{s \ \push const }{\phi}{ \compile{\excPost}}  \\
 			       \mbox{\rm\comment{following the definition of the wp function for bytecode in subsection \ref{pog:wpSrc:wpExpr}  }} \\
 			       \equiv \phi \begin{array}{l}
-                                                \substitution{ \counter }{ \counter + 1}\\
-						\substitution{\stack{ \counter +1} }{const  }
+                                                \subst{ \counter }{ \counter + 1}\\
+						\subst{\stack{ \counter +1} }{const  }
 					    \end{array} \\
 			        \\
 				\\
@@ -172,7 +172,7 @@ Proof :
 			        \equiv \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e-1}}{\\
                                                                           \phantom{wp^{bc}} \begin{array}{l} 
 				                                                 \stack{\counter} \neq \Mynull \Rightarrow  \\
-										    \phi \substitution{\stack{ \counter} }{ \fieldAccess {\stack{\counter}}{\fieldd} } \\
+										    \phi \subst{\stack{ \counter} }{ \fieldAccess {\stack{\counter}}{\fieldd} } \\
 										    \wedge \\
 										    \stack{\counter} = \Mynull   \Rightarrow   \excPost (\NullPointerExc)  
 										 
@@ -200,7 +200,7 @@ Proof :
 			        \wpBcSeq{ \compile{\expressionSrc}}{\\
                                                                           \phantom{wp^{bc}} \begin{array}{l} 
 				                                                 \stack{\counter} \neq \Mynull \Rightarrow  \\
-										    \phi \substitution{\stack{ \counter} }{ \fieldAccess {\stack{\counter}}{\fieldd} }\\
+										    \phi \subst{\stack{ \counter} }{ \fieldAccess {\stack{\counter}}{\fieldd} }\\
 										    \wedge \\
 										    \stack{\counter} = \Mynull   \Rightarrow   \excPost (\NullPointerExc)  
 										 
@@ -211,13 +211,13 @@ Proof :
 $$\begin{array}{l}
 
 				Q'  \Rightarrow \begin{array}{ll}
-				                                \begin{array}{l} \stack{\counter} \neq \Mynull \Rightarrow \phi\substitution{\stack{ \counter}}{\fieldAccess {\stack{\counter}}{\fieldd}}\\
+				                                \begin{array}{l} \stack{\counter} \neq \Mynull \Rightarrow \phi\subst{\stack{ \counter}}{\fieldAccess {\stack{\counter}}{\fieldd}}\\
 								\wedge \\
 								\stack{\counter} = \Mynull \Rightarrow \excPost(\NullPointerExc) 
 							  \end{array} &
 							  \begin{array}{l}   
-						                \substitution{\counter}{\counter + 1} \\
-								 \substitution{\stack{\counter + 1}}{v }
+						                \subst{\counter}{\counter + 1} \\
+								 \subst{\stack{\counter + 1}}{v }
 						          \end{array}
 				               \end{array} \\	
 			        \wedge \\
@@ -229,8 +229,8 @@ $$\begin{array}{l}
  				 Q'  \Rightarrow \begin{array}{l}
 				                                 v \neq \Mynull \Rightarrow \phi
                                                                  \begin{array}{l}
-								   \substitution{\counter}{\counter + 1} \\
-								   \substitution{\stack{\counter + 1}}{\fieldAccess{v}{\fieldd} }
+								   \subst{\counter}{\counter + 1} \\
+								   \subst{\stack{\counter + 1}}{\fieldAccess{v}{\fieldd} }
 								   \end{array}  \\
 								\wedge \\
 								v = \Mynull \Rightarrow \excPost(\NullPointerExc) 
@@ -257,9 +257,9 @@ $$ \begin{array}{l}
  \forall \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \\
  \Myspace \psi 
                                                                              \begin{array}{l}
-									        \substitution{v_1 }{ \freshVar_1 }  \\
+									        \subst{v_1 }{ \freshVar_1 }  \\
 										\ldots \\
-										\substitution{v_k}{ \freshVar_k } 
+										\subst{v_k}{ \freshVar_k } 
 									     \end{array}
           \wedge \\ 
 	  R  
@@ -273,11 +273,11 @@ $$ \begin{array}{l}
 	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \psi }{\excPost} \  \equiv \\ 
             \forall \freshVar_1, \ldots  \freshVar_k ,   Q \Rightarrow \\
 	                      \Myspace \phi \begin{array}{l}
-                                       \substitution{\counter}{\counter + 1}\\
-			               \substitution{\stack{\counter +1}}{ v }\\
-				       \substitution{v_1 }{ \freshVar_1 }  \\
+                                       \subst{\counter}{\counter + 1}\\
+			               \subst{\stack{\counter +1}}{ v }\\
+				       \subst{v_1 }{ \freshVar_1 }  \\
 				       \ldots \\
-				       \substitution{v_k}{ \freshVar_k } 
+				       \subst{v_k}{ \freshVar_k } 
                          \end{array} \\ \\
           \wedge \\ 
 	  R 

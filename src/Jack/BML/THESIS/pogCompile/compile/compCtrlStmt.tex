@@ -148,9 +148,8 @@ at the places where a \jsr \ to the subroutine is done.
 The  last remark that we would like to make is that subroutines and their compilation via \ret \ and \jsr has always presented a problem for Java.
 First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work \todo{verify this}.
 Second, the analysis performed by the  bytecode verifier in  the JVM becomes rather complex because  (and its first version was erroneus ) 
-of the Java subroutines.   
-In the last version of Java compiler~\todo{say the name of the compiler}~, subroutines has become obsolete 
- where they are compiled by inlining. Thus, the compiler presented here  represents a realistic approximation of the Java Sun compiler.
+of the Java subroutines. In the last version of Java Sun compiler, subroutines has become obsolete 
+ where they are compiled by inlining. Thus, the compiler presented here represents a realistic approximation of the Java Sun compiler.
 %The compiler adds a default exception handler whose 
 %implementation guarantees that in exceptional termination case, the subroutine is also executed. The exception handler is added in the exception handler table. 
 %It protects the instructions of the statement $ \compileLabel{\stmt_1} $ against any thrown exception of type or subtype $Exception$.     
