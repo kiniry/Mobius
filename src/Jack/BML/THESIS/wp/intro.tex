@@ -13,6 +13,12 @@ mobile computing becomes a reality. Thus in mobile code scenarios, performing ve
 The vcGen is tailored to the bytecode language introduced in Section \ref{opSem} and thus, it deals
 with stack manipulation, object creation and manipulation, field access and update, as well as exception throwing and handling.
 
+% discussion about the choice for the vcgen algorithm
+Different ways of generating verification conditions exist. The verification condition
+ generator presented  propagates the weakest precondition and exploits the information 
+about the modified locations by methods and loops. 
+In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choice done here.
+
 %related work
 Bytecode verification has become lately quite fashionable, thus several works exist on bytecode verification. Section \ref{relWorkWp}
 is an overview of the existing work in the domain.
@@ -21,7 +27,7 @@ is an overview of the existing work in the domain.
 
 %what is different w.r.t source
 Performing Hoare style logic verification over an unstructured program like bytecode programs has few particularities which
-verification of structured programs lacks. For example loops on source level correspond to a syntactic structure in the source language and thus, identifying
+verification of structured programs lacks. For example, loops on source level correspond to a syntactic structure in the source language and thus, identifying
 a loop in a source program is not difficult.  However, this is not the case for unstructured programs. 
 As we saw in the previous section \ref{bcsl}, our approach consists in compiling source specification into
 bytecode specification. When compiling a loop invariant, we need to know where exactly in the bytecode the invariant must hold.
@@ -31,6 +37,8 @@ Section \ref{prelim} introduces the notion of a loop in an unstructured program.
 As we stated earlier, our verification condition generator is based on a weakest precondition (wp) calculus. As we shall see in Section  \ref{wpRules}
 a wp function for bytecode is similar to a wp function for source code. However, a logic tailored to stack based bytecode should take into account 
 particular bytecode features as for example the operand stack.
+
+
 
 % proof of correctness
 %An important question is the correctness of our methodology, i.e. what guarantees that if the verification procedure succeeds on a program then 

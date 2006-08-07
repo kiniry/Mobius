@@ -4,20 +4,20 @@
 In the following, we review briefly the existing work related to program verification
  and more particularly program verification tailored to Java and Java bytecode programs. 
 
-
+\todo{gilles: what do you mean by giving a title to every section}
  Floyd is among the first to work on program verification using logic methods for unstructured program
  languages (see \cite{F67amp}). Following the Floyd's approach, T.Hoare gives a formal logic for program verification in \cite{Hoare69ABC} known
  today under the name Hoare logic. Dijkstra \cite{WPCDS} proposes then an efficient way for applying Hoare logic in
  program verification, i.e. he comes up with a weakest precondition (wp) and strongest postcondition (sp) calculi. 
 
-Concerning bytecode validation, there exists several approaches depending on the kind of properties that one want to check for.
+% Concerning bytecode validation, there exists several approaches depending on the kind of properties that one want to check for.
  
- Bytecode verification is concerned with establishing that a bytecode is well typed 
-(every instruction is applied to operands of the correct type) and well formed 
-(e.g. no jumps to an un-existing bytecode index), differently from the goals of the present
-work where program correctness is defined in terms of functional correctness. The JVM, for example, 
-is provided with a bytecode verifier. There is a lot of research work done in the domain 
-and for a detailed overview of the state of the art one can look at~\cite{Ljbc}.  
+% Bytecode verification is concerned with establishing that a bytecode is well typed 
+%(every instruction is applied to operands of the correct type) and well formed 
+%(e.g. no jumps to an un-existing bytecode index), differently from the goals of the present
+%work where program correctness is defined in terms of functional correctness. The JVM, for example, 
+%is provided with a bytecode verifier. There is a lot of research work done in the domain 
+%and for a detailed overview of the state of the art one can look at~\cite{Ljbc}.  
 
 As Java has been gaining popularity in industry since the nineties of the twentieth century,
 it also attracted the research interest.   
@@ -25,7 +25,7 @@ Thus the nineties upto nowadays give rise to several verification tools tailored
  based on Hoare logic. Among the ones that gained most popularity are
 esc/java developed at Compaq \cite{escjava}, the Loop tool \cite{jacobs03java}, Krakatoa, Jack \cite{BRL-JACK} etc.   
 
-Few works have been dedicated to the definition of a bytecode logic. May be the earliest work in the field of bytecode verification 
+Few works have been dedicated to the definition of a bytecode logic. Among the earliest work in the field of bytecode verification 
 is the thesis of C.Quigley  \cite{Quigley03PLJ} in which Hoare logic rules are given for a bytecode like language. This work is limited 
 to a subset of the Java virtual machine instructions and does not treat for example method calls,
  neither exceptional termination. The logic is defined by searching a structure in the bytecode control flow graph,
@@ -43,10 +43,9 @@ express functional properties. Invariants are inferred by fixpoint calculation.
 However, inferring invariants is not a decidable problem.
 
 
-In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode 
-against arithmetic overflow.  The annotation is written manually, which is not comfortable, especially on bytecode. 
-Here we propose a way to compile a specification written in a high level language, allowing specification to be written
- at source level, which we consider as more convenient. \todo{not well explained the verification technique they have}
+% In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode 
+% against arithmetic overflow.   They provide an implemenation in the interactive theorem prover Isabelle.
+% In this work, we have implemented a 
 
  The Spec\# (\cite{BLS04sp}) programming system developed at Microsoft proposes a static verification framework where 
  the method and class contracts  (pre, post conditions, exceptional postconditions, class invariants) are inserted in the intermediate code . 
