@@ -1,9 +1,10 @@
 \documentclass[book,10pt]{book}
-\input cmd.tex
+\input{cmd.tex}
 \usepackage{url}
 \usepackage{amssymb}
 \usepackage{epsfig}
 \usepackage{listings}
+\usepackage{longtable}
 
 \def\lstlanguagefiles{Jml.sty}
 \lstloadlanguages{Jml}
@@ -39,11 +40,11 @@
  \input{prelim/stack.tex} 
  \input{prelim/pc.tex} 
  \input{prelim/exceptions.tex} 
- \input{prelim/operational_sem.tex } 
-
+ \input{prelim/operational_sem.tex} 
+ \input{prelim/ctrlFlowGraph.tex}
 
 %4
-\chapter{Specification language for Java bytecode programs} \label{bcsl}
+\chapter{Bytecode modeling language} \label{bcsl}
   \input{BML/intro.tex} 
   \input{BML/prelim.tex}
   \input{BML/designBml.tex}
@@ -52,15 +53,19 @@
   \input{BML/compiler.tex}
 
 
+\chapter{Assertion language for the verification condition generator}\label{assertLang}
+  \input{assertLangVC/assertionLang.tex}
+  \input{assertLangVC/BMLfragment.tex}
+  \input{assertLangVC/substitution.tex}
+  \input{assertLangVC/interpretation.tex}
+  \input{assertLangVC/extendMethod.tex} 
 %5
 \chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
  \input{wp/intro.tex} 
+ \input{wp/discussionVC.tex}
  \input{wp/relWork.tex}
- \input{wp/exprLang.tex} 
- \input{wp/substitution.tex}
- \input{wp/interpretation.tex}
- \input{wp/prelim.tex} 
- \input{wp/extendMethod.tex} 
+% \input{wp/exprLang.tex} 
+% \input{wp/prelim.tex} 
  \input{wp/wpbc.tex} 
  \input{wp/smallExample.tex}
 
@@ -73,9 +78,40 @@
   \input{proof/proof.tex}
 %6
 \chapter{Equivalence between Java source and bytecode proof Obligations}
+       %\input{pogCompile/cmdPogComp.tex}
+       \input{pogCompile/intro.tex}
+       \input{pogCompile/relatedWork/relWork.tex}
+
+       \input{pogCompile/source/source.tex}
+       %\input evalSrc.tex
+   
+   
+  % may be we do not need this section as in the intro of the chapter
+  % we will say that the target language is already introduced in Chapter 2  
+  % \input bytecode/intro.tex      
+  %    \input bytecode/bcLang.tex
+	 
+
+       \input{pogCompile/compile/compile.tex}
+       \input{pogCompile/compile/compExcH.tex} 
+       \input{pogCompile/compile/compLoopInv.tex} 
+       \input{pogCompile/compile/compExpr.tex} 
+       \input{pogCompile/compile/compCtrlStmt.tex}
+       \input{pogCompile/compile/propCompFun.tex}
 
 
+	 
+       \section{Weakest precondition calculus for source programs}\label{pog:wpSrcGeneral}
+          \input{pogCompile/wpSrc/formulasSrc.tex} 
+	  \input{pogCompile/wpSrc/srcWp.tex}	  
+	  \input{pogCompile/wpSrc/wpSrcExpr.tex}
+	  \input{pogCompile/wpSrc/wpSrcStmt.tex}
 
+       \section{Weakest precondition calculus for bytecode programs}\label{pog:wpBcGeneral}
+          \input{pogCompile/wpBc/bcWp.tex}
+	  \input{pogCompile/wpBc/wpProp.tex}
+	
+	  \input{pogCompile/pogEquiv/aux.tex} 
 
 
 %8
