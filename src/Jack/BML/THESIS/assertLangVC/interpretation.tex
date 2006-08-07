@@ -1,0 +1,148 @@
+
+
+\newtheorem{interpExpr}{Definition}[subsection]
+\newtheorem{interpTypeExpr}[interpExpr]{Definition} 
+\newtheorem{interpPred}[interpExpr]{Definition}
+
+
+\section{Interpretation}\label{interpret}
+
+We discuss the evaluation of expressions and interpretation of predicates  in a particular program state configuration.
+Thus, we first define a function for expression evaluation, as well as a function which for a given state and predicate returns the interpretation
+of the given predicate in the given state. 
+The function $eval$ which evaluates expressions in a state has the following signature:
+$$
+eval : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup \Values \cup \JavaType
+$$
+Note that the evaluation function is partial and  takes as arguments an expression of the assertion language presented in the previuos Section 
+\ref{assertLang:lang} and two states (see Section \ref{def})  and returns a value as defined in Section \ref{types}. \todo{what is the impact of the evaluation partiallity}
+%The function $eval$ associates a value to expressions from  \expression  \  if they have a value in the state.
+%For instance, a reference which is not in the domain of the  
+
+
+
+\begin{interpExpr}[Evaluation of expressions] \label{interpExpr} 
+The evaluation in a state \\
+$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expression$
+w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
+is denoted with $\evalExp{\expression}{s}$  and is defined inductively over the grammar of expressions $\expression$ \  as follows:
+ 
+$$
+\begin{array}{l}
+\evalExp{ v  }{s } = v\\
+  where \  v \in \  \Myint   \ \vee  \  v \in  \RefValues \\
+\\
+ \evalExp{\fieldd(\exprWp ) }{s} = \\
+ = \heap(\fieldd) (\evalExp{ \exprWp}{ s } ) \\
+\\
+
+ \evalExp{\update{\fieldd}{\expression^1}{\expression^2}(\expression^3)}{ s } = \\
+=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expression^1}{s } }{ \evalExp{\expression^2}{s }  }} (\fieldd)
+                                            (  \evalExp{\expression^3}{ s } ) \\
+ \\
+
+
+ \evalExp{\arrayAccess{\expression^1} {\expression^2}  }{ s } = \\
+
+ = \heap (\evalExp{ \expression^1}{ s } ,\evalExp{ \expression^2}{ s } )   \\
+\\
+
+ \evalExp{ \update{ \arrayAccessOnly}{ (\expression^1 , \expression^2)}{ \expression^3} (\expression^4,\expression^5)  } { s } = \\
+ = \update{\heap}{ ( \evalExp{\expression^1}{s } ,  \evalExp{\expression^2}{s } ) }  
+                 { \evalExp{\expression^3}{s }}\\
+                 \Myspace ( \evalExp{\expression^4}{s } ,  \evalExp{\expression^5}{ s  } ) \\
+\\
+ \evalExp{ \locVar{i} } { s } = \locVarOnly(i) 
+\end{array}$$
+
+$$\begin{array}{l}
+ \evalExp{ \old{\exprWp} } { s } =\evalExp{ \exprWp }{  s_{0}} \\
+\\ 
+ \evalExp{\expression^1 \ \op \ \expression^2   } { s } =   \evalExp{\expression^1}{s} \op  \evalExp{\expression^2}{s}  \\
+
+\\
+\evalExp{ \typeof{\exprWp}}{s } = \\
+\left\{\begin{array}{ll}
+      \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
+      \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
+	   
+\end{array}\right. \\
+
+\\ 
+\evalExp{ \elemtype{\exprWp}}{s } = \\  
+\left\{\begin{array}{ll}
+            \mbox{ \rm \texttt{T} }  & if \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
+\end{array}\right. \\					    
+\\
+
+\evalExp{ \TYPE }{s } = \mbox{ \rm \texttt{java.lang.Class}} 
+\end{array}
+$$
+
+The evaluation of stack expressions can be done only in intermediate state configurations $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ :
+$$
+\begin{array}{ll}
+ \evalExp{ \counter   } { s } = \counterOnly \\
+\\
+
+ \evalExp{ \stack{ \exprWp}   } { s } = \stackOnly ( \evalExp{\exprWp}{s} ) \\
+\\
+
+\end{array}
+$$
+The evaluation of the following expressions can be done only in a final state $s = \configFinal{\heap}{\locVarOnly}{\Final }$:
+$$
+\begin{array}{ll}
+\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\locVarOnly}{\Res} \\
+\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\locVarOnly}{\Exc}
+\end{array}
+$$
+  
+
+\end{interpExpr}
+
+
+
+ 
+The relation $\vDash$ that we define next, gives a meaning to the formulas from our
+ assertion language $\predWp$.
+%$$ \vDash :  \SetConfigs *  \predWp  $$
+ 
+\begin{interpPred}[Interpretation of predicates] \label{interpPred} 
+The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
+w.r.t. an initial state  $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ is defined inductively as follows:
+$$
+\begin{array}{l}
+\interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
+\\
+\interp{\false}{s} \ is \ false \ in \ any \ state \ s \\
+\\
+\interp{  \neg \ \predWp  }{s} \ if \ and \ only \ if  \  not \ \interp{\predWp}{s} \\ 
+\\
+
+\interp{\predWp_1  \wedge  \predWp_2 }{s} \ if \ and \ only \ if  \ \interp{\predWp_1}{s} \ and \ \interp{\predWp_2}{s}  \\
+\\
+
+\interp{\predWp_1  \vee  \predWp_2 }{s} \ if \ and \ only \ if  \ \interp{\predWp_1}{s} \ or \ \interp{\predWp_2}{s}  \\
+\\
+\interp{\predWp_1  \Rightarrow  \predWp_2 }{s} \ if \ and \ only \ if  \ if \ \interp{\predWp_1}{s} \ then \ \interp{\predWp_2}{s}  \\
+\\
+\interp{\predWp_1  \ if \ and \ only \ if  \predWp_2 }{s} \ if \ and \ only \ if  \  \interp{\predWp_1}{s} \ if \ and \ only \ if  \ \interp{\predWp_2}{s}  \\
+\\
+\interp{\forall x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ forall \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
+\\
+
+\interp{\exists x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ a \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ exists \ such \ that \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
+\\
+\interp{\expression^1 \  \predicates \  \expression^2 }{s} \ if \ and \ only \ if  \begin{array}{l}
+                                                              \evalExp{\expression^1 }{s} \neq \bottom \wedge \\
+							       \evalExp{\expression^2 }{s}\neq \bottom \wedge \\
+                                                             \evalExp{\expression^1 }{s} \evalRel{\predicates }  \evalExp{\expression^2 }{s} \ is  \ true
+
+							     \end{array} \\
+\\
+
+\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ if \ and \ only \ if  \    \isInList{\referenceOnly }{ \getLocations{\heap_{0}}}  
+\end{array}
+$$   
+\end{interpPred}

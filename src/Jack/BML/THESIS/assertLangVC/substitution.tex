@@ -1,0 +1,64 @@
+\section{Substitution} \label{subst}
+In this section we focus on how substitution is defined in our assertion language. Basically, it is is defined inductively 
+in a standard way over the expression structure. Still, we
+extend substitution to deal with field and array update as follows:
+
+$$ \substitution{\expression}{ \fieldd }{ \update{\fieldd}{\expression}{\expression} } $$
+This substitution does not affect any of the ground expressions,, i.e. it does not affect 
+local variables ($\locVar{i}$), the constants of our language (\ConstantsWp),  the stack counter (\counter), the result expression
+(\result), the thrown exception instance variable (\EXC). For instance, the following substitution does not change $\locVar{1}$: 
+$$
+ \substitution{\locVar{1}}{ \fieldd }{ \update{\fieldd}{\expression}{\expression} } = \locVar{1}
+$$   
+
+Field substitution affects only field objects as we see in the following: 
+
+
+
+ 
+ %This is done by establishing the substitution rule for field access as follows:
+ %$$  \substitution{\fieldd ( \expression^1)}{ \expression^2}{ \expression^3} =
+ %\substitution{\fieldd}{ \expression^2}{ \expression^3} (  \substitution{ \expression^1  }{ \expression^2}{ \expression^3}) $$
+
+
+% Let us see how we define  substitution over field objects:
+$$  
+\begin{array}{l}
+\substitution{\fieldAccess{\expression}{\fieldd^1}}{\fieldd^2}{ \fieldd^2[ \oplus  \expression^1 \longrightarrow  \expression^2 ] } = \\\\
+\left\{\begin{array}{ll}
+       \fieldAccess{\expression}{\fieldd^1}    & if \ \fieldd^1 \neq \fieldd^2 \\
+       & \\
+       \fieldAccess{\expression} {\fieldd^2[ \oplus  \expression^1 \longrightarrow  \expression^2 ]} & else 
+ \end{array}
+\right. \\
+\\
+\\
+\substitution {\update{\fieldAccess{\expression}{\fieldd^1}}{  \expression^1 }{  \expression^2}} {\fieldd^2}{  \update{\fieldd^2}{  \expression^3 }{  \expression^4}       } = \\\\
+\left\{\begin{array}{ll}  
+
+\update{\fieldd^1}{ \substitution { \expression^1}{\fieldd^2}{  \update{\fieldd^2}{  \expression^3 }{  \expression^4}}  }{ \substitution { \expression^2}{\fieldd^2}{  \update{\fieldd^2}{  \expression^3 }{  \expression^4}} } & if \ \fieldd^1 \neq \fieldd^2  \\
+
+%\fieldd[ \oplus \mbox{ \rm \texttt{r} }\substitution{ \expression^1}{ \expression^2} \longrightarrow  \mbox{ \rm \texttt{v} }\substitution{ \expression^1}{ \expression^2} ] 
+
+ \\ 
+% else \   \fieldd^1 = \fieldd^2  \ then \\ 
+\fieldd^1 \begin{array}{l}
+             \lbrack \oplus  \substitution { \expression^1}{\fieldd^2}{  \update{\fieldd^2}{  \expression^3 }{  \expression^4}}  \longrightarrow  
+                 \substitution { \expression^2}{\fieldd^2}{  \update{\fieldd^2}{  \expression^3 }{  \expression^4}}       \rbrack \\
+	     \lbrack \oplus  \expression^3 \longrightarrow  \expression^4 \rbrack
+	     \end{array} & else \\
+
+               
+
+\end{array}
+\right. 
+\end{array}$$ 
+
+
+For example, consider the following  substitution expression:  
+$$ \substitution{\fieldAccess{\locVar{1}}{ \fieldd}}{\fieldd}{\update{\fieldd}{ \locVar{2} }{  3 }} $$
+This results in the new expression : 
+$$\update{\fieldAccess{\locVar{1}}{ \fieldd}}{ \locVar{2}  }{ 3} $$ 
+
+
+The same kind of substitution is allowed for array access expressions, where the array object \arrayAccessOnly  \ can be updated. 

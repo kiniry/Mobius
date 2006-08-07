@@ -1,0 +1,55 @@
+\section{The assertion language} \label{assertLang:lang}
+The assertion language in which we are interested corresponds to the
+BML  expressions (nonterminal $\expression$) and predicates 
+(nonterminal $\formulaBc$) extended with several new constructs.
+ The extensions that we add are the following:
+\begin{itemize}
+    \item Extensions to expressions. 
+         The assertion language that we present here must be suitable for the verification condition calculus.
+	 Because the verification calculus talks about updated field and array access
+	 we should be able  to express  them in the assertion language. Thus we extend the grammar of BML expression
+	 with the following constructs concerning update of fields and arrays :
+
+        \begin{itemize}
+	       \item update field access expression 
+		  $\update{\fieldd}{ \expression}{\expression}(\expression)$.
+
+	       \item update array access expression \\
+                   $ \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression)$
+	\end{itemize}
+
+	The verification calculus will need to talk about reference values. Thus we extend the BML expression grammar to  support
+	reference values \RefValues. Note that in the following integers \Myint\  and \RefValues \ will be referred to with \Values.
+    \item Extensions to predicates. Our bytecode language is object oriented and thus supports new object creation. Thus we
+          will need a means for expressing that a new object has been created during the method execution. 
+
+	  We extend the language of BML  formulas
+	  with a new user defined predicate $ \instances(\RefValues)$. Informally, the semantics of the predicate \\
+	  $\instances(\referenceOnly)$ where $\referenceOnly \in \RefValues$
+	  means that the reference $\referenceOnly  $  has been allocated when the current method started execution.
+        
+\end{itemize}
+
+The assertion language will use the names of fields and classes for the sake of readability instead of their corresponding indexes
+in the constant pool as is in BML.
+
+We would like to discuss in the following how and why BML constructs like class invariants and history constraints can be expressed as 
+method pre and postconditions:
+
+\begin{itemize}
+  \item Class invariants. A class invariant (\ClassInv)  is a property that must hold at every visible state of the class. This means that a
+        class invariant must hold when a method is called and also must be established at the end of a method execution. 
+	A class invariant must be established in the poststate 
+	of the constructor of this class.
+	Thus the semantics of
+	a class invariant is part of the pre and  postcondition of every method and is a part of the postcondition of the constructor of the class.
+  \item History constraints. A class history constraint (\ClassHistoryConstr) gives a relation between the pre and poststate of every method in the class. 
+        A class history constraint thus can be expressed as a postcondition of every method in the class.
+        
+\end{itemize}
+
+ % why do we discard the rest. 
+% We abstract from the rest of the BML grammar, as it boils down to BML
+% expressions and  predicates. 
+
+
