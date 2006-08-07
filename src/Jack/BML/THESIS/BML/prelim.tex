@@ -22,52 +22,61 @@ flexibility.
 % tool support 
 JML is supported by several verification tools.
  Originally, it has been designed as a language of the runtime assertion checker~\cite{jmlrac} created by G.T. Leavens and \todo{who are the others}. 
-The JML rac compiles both the Java code and the JML specification into executable bytecode and thus, 
+The JML runtime assertion checker compiles both the Java code and the JML specification into executable bytecode and thus, 
 in this case, the verification consists in executing the resulting bytecode. Several static checkers based 
 on formal logic exist which use JML as a specification language. Esc/java~\cite{escjava}  whose first version used a subset 
  of JML \footnote{the current version of the tool esc/java 2  supports almost all JML constructs} is among the first tools supporting JML.
 Among the static checkers with JML  are
 the Loop tool developed by the Formal group at the University of Nijmegen,
-the Jack tool developed at Gemplus, the Krakatoa tool created by the Coq group at Inria France.
+the Jack tool developed at Gemplus, the Krakatoa tool created by the Coq group at Inria, France.
 The tool Daikon \cite{ECG01DDL}  tool uses a subset of JML for detecting loop invariants by run of programs.
  A  detailed overview of the tools which support JML can  be found in~\cite{BurdyCCEKLLP03}.
 
 
 
 % technical details
-    Specifications are written using different predicates
+    Specifications in JML are written using different predicates
     which are side-effect free Java expressions, extended with
     specification-specific keywords. JML specifications are written as comments so they are not
     visible by Java compilers. The JML syntax is close to the Java syntax: JML extends the Java
     syntax with few keywords and operators. 
     For introducing method precondition and postcondition the keywords \jmlKey{requires} and \jmlKey{ensures} are used  
-    respectively,  \jmlKey{modifies} keyword is followed by all the locations that can be modified by the method, 
-    \jmlKey{loop\_invariant}, stands for loop invariants, the \jmlKey{loop\_modifies} keyword gives the 
-    locations modified by loop invariants etc. The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}.
+    respectively,  \jmlKey{modifies} keyword introduces the locations that can be modified by the method, 
+    \jmlKey{loop\_invariant} stands for a loop invariant, the \jmlKey{loop\_modifies} keyword gives the 
+    locations modified by a loop etc. The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}.
     Special JML operators are, for instance, \jmlKey{$\backslash$result} which stands for the value that a method returns if it is not
     void, the \jmlKey{$\backslash$old(expression)} operator 
     designates the value of \jmlKey{expression} in the prestate of a method and is usually
-    used in the method's postcondition. JML also allows the declaration of special JML variables, that are used only for specification purposes. 
-    These variables are declared in comments with the \jmlKey{model} modificator and may be used only in specification clauses. 
-
+    used in the method's postcondition.
 
 
      
 Figure~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
-The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it returns false. The loop in the method body has an invariant which states that all the elements of the list that are inspected up to now are different from the parameter object \texttt{obj1}. The loop specification also states
-that the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
+The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument
+ and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it 
+returns false. Thus the method  specification between lines 5 and 9 which exposes the method contract states the following.
+First the precondition (line 5 ) requires from any caller to assure that the instance variable \texttt{list} is not \texttt{null}.
+The frame condition (line  6) states that the method may only
+modify any of the elements in the instance field \texttt{list}. The method postcondition (lines 7---9) states the method will return 
+\texttt{true} only if  the replacement has been done.
+The method body contains a loop (lines 17---22) which is specified with a loop fame condition and a loop invariant (lines 13---16).
+  The loop invariant (lines 14---16) says that all the elements of the list that are inspected up to now are 
+different from the parameter object \texttt{obj1} as well as the local variable \texttt{i}  is a valid index in the array \texttt{list}.
+The loop frame condition (line 13)  states that only
+ the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
 
+\lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
 \begin{figure}[ht!]
 \begin{lstlisting}[frame=trbl] 
-
 public class ListArray {
-
+  
   private Object[] list;
   
   //@ requires list != null;
+  //@ modifies list[*];
   //@ ensures \result ==(\exists int i; 
-  //@ 0 <= i && i < list.length && 
-  //@ \old(list[i]) == obj1 && list[i] == obj2);
+  //@         0 <= i && i < list.length && 
+  //@         \old(list[i]) == obj1 && list[i] == obj2);
   public boolean replace(Object obj1,Object obj2){
     int i = 0;
     
@@ -89,30 +98,72 @@ public class ListArray {
 \label{replaceSrc}
 \end{figure}
 
+ JML also allows the declaration of special JML variables, that are used only for specification purposes. 
+ These variables are declared in comments with the \jmlKey{ghost} modificator and may be used only in specification clauses. Those variables 
+ can also be assigned. Ghost variables are usually used  for expressing properties which can not be expressed with the program variables.
 
+ Fig. \ref{bml:ghost} is an example for how ghost variables are used. The example shows the class \texttt{Transaction}
+ which manages transactions in the program. The class is provided with a method for opening transactions \texttt{beginTransaction } and 
+ a method for closing transactions (\texttt{commitTransaction}).  The specification declares a ghost variable
+ \texttt{TRANS} (line 3) which keeps track if there is  a running transaction or not, i.e. if the value of  \texttt{TRANS} is 0
+ then there is no running transaction and if it has value 1 then there is
+ a running transaction. The specification of the methods \texttt{beginTransaction } and \texttt{commitTransaction}
+ models the property for no nested transactions. Thus, when the method  \texttt{beginTransaction } is invoked the precondition (line 5) requires
+ that there should be no running transaction and when the method is terminated the postcondition guarantees (line 6) that there is already a transaction running.
+ We can also remark that the variable  \texttt{TRANS} is set to its new value (line 8) in the  body  \texttt{beginTransaction}.
+ Note that this high level property is difficult to express without the presence
+ of the ghost variable \texttt{TRANS}.  
+
+\begin{figure}[ht!]
+\begin{lstlisting}[frame=trbl] 
+public class Transaction {
+
+  //@ ghost static private int TRANS = 0; 
+  
+  //@ requires TRANS == 0;
+  //@ ensures TRANS == 1;
+  public void  beginTransaction() {
+    //@ set TRANS = 1;
+     ...
+  }
+
+  //@ requires TRANS == 1;
+  //@ ensures TRANS == 0;
+  public void  commitTransaction() {
+    //@ set TRANS = 0; 
+     ...
+  }
+  
+}
+\end{lstlisting}
+\caption{\sc specifying No Nested Transaction property with ghost variable} 
+\label{bml:ghost}
+\end{figure}
 
 % light and heavy weight specification
 A useful feature of JML is that it allows two kinds of method specification, a \light  \ and \heavy \ weight specification. 
-An example for a \light \  specification is the annotation of method \texttt{replace} in Fig. \ref{replaceSrc}. The specification in 
-the example states what is the expected behavior of the method and under what desired conditions it might be called.
-The user, however, has also the possibility
-to write very detailed method specifications in JML. This style of specification is called a heavy weight specification.
+An example for a \light \  specification is the annotation of method \texttt{replace} (lines 5---9) in Fig. \ref{replaceSrc}. The specification in 
+the example states what is the expected behavior of the method and under what conditions it might be called.
+The user, however in JML, has also the possibility
+to write very detailed method specifications. This style of specification is called a \heavy  \ weight specification.
  It is introduced by the JML keywords \jmlKey{normal\_behavior} and \jmlKey{exceptional\_behavior}. As the keywords
 suggest every of them specifies a specific normal or exceptional behavior of a method.  (see \cite{PD06LBR}). 
-The keyword  \jmlKey{normal\_behavior} introduces a precondition which guarantees that if it holds in the prestate of the
- method execution then the method will terminate normally and the postcondition introduced by the keyword \jmlKey{ensures} will hold.
+
+The keyword  \jmlKey{normal\_behavior} introduces a precondition, frame condition and postcondition 
+such that if the precondition holds in the prestate of the
+ method then the method will terminate normally and the postcondition will hold in the poststate.
  Note that this clause guarantees that the method will not terminate on an exception and thus the exceptional postcondition 
 for any kind of exception (i.e. for the exception class  \texttt{Exception}) is  \jmlKey{false}.
 % example for heavy weight specification
-An example for a \heavy \ weight specification is given in Fig. \ref{bml:heavySp}. In the example, method \texttt{divide} has 
-two behaviors, one in case the method terminates normally and the other in case the method terminates by throwing an object reference of
- \texttt{ArithmeticException}. The exceptional postcondition is ommitted in the normal behavior specification clause as by default
-if the precondition \texttt{ b > 0} holds this assures that no exceptional termination is possible. 
-Another observation over the example is that the exceptional behavior is introduced with the JML keyword \jmlKey{also}. 
-The keyword  \texttt{also} serves for introducing every new behavior of a method. Note that the keyword \jmlKey{also} is used in case a  method overrides
-a method from the super class.
- In this case, the method specification is preceded by the keyword \jmlKey{also} to indicate that the method should respect also the specification 
-of the super method.
+An example for a \heavy \ weight specification is given in Fig. \ref{bml:heavySp}. In the figure, method \texttt{divide} has 
+two behaviors, one in case the method terminates normally (lines 11---14) and the other (lines 17---20) in case the method
+ terminates by throwing an object reference of \texttt{ArithmeticException}.
+ In the normal behavior case, the exceptional postcondition is ommitted  specification as by default if the precondition (line 12 )
+ holds this assures that no exceptional
+ termination is possible. Another observation over the example is that the exceptional behavior is introduced with the JML keyword \jmlKey{also}. 
+ The keyword  \jmlKey{also} serves for introducing every new behavior of a method except the first one. Note that the keyword \jmlKey{also} 
+ is used in case a  method overrides a method from the super class. In this case, the method specification (\heavy \ or \light \ weight) is preceded by the keyword \jmlKey{also} 
+ to indicate that the method should respect also the specification of the super method.
 
 
    
@@ -148,9 +199,10 @@ public class C {
 
 JML can be used to specify not only methods but also properties of a class or interfaces. 
 A Java class may be specified with an invariant or history constraints. An invariant of a class is a predicate which holds at all visible states of
-  every object of this class (see for the definition of visible state in the JML reference manual \cite{december-jml}). 
+  every object of this class (see for the definition of visible state in the JML reference manual \cite{december-jml}). An invariant may be either static 
+ (i.e. talks only about static fields) or instance (talks about instance fields).
   A Class history constraints is a property which relates the initial and terminal state of every method in the corresponding class. 
- The class \texttt{C}  in Fig.\ref{bml:heavySp} has also an invariant which states that the instance variable \texttt{a} is
+ The class \texttt{C}  in Fig.\ref{bml:heavySp} has also an instance invariant which states that the instance variable \texttt{a} is
  always greater than \texttt{0}.
 
 
