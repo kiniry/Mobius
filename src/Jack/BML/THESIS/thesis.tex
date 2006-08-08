@@ -1,6 +1,7 @@
 \documentclass[book,10pt]{book}
 \input{cmd.tex}
 \usepackage{url}
+\usepackage{alltt}
 \usepackage{amssymb}
 \usepackage{epsfig}
 \usepackage{listings}
@@ -121,6 +122,27 @@
 
 %9
 \chapter{Applications} 
+\input{applications/memory/mydefThesis}
+
+\section{Introduction}
+\input{applications/memory/intro}
+
+\section{Preliminaries}\label{sec:prelim}
+\input{applications/memory/prelim}
+
+\section{Modeling memory consumption}\label{sec:verif}
+\input{applications/memory/technical}
+
+\section{Inferring memory allocation for methods}\label{sec:infer}
+\input{applications/memory/infer}
+
+\section{Related work}\label{sec:rel}
+\input{applications/memory/relatedworks}
+
+\section{Conclusion}\label{sec:conc}
+\input{applications/memory/conclusion}
+
+
 
  
 %10
@@ -130,6 +152,6 @@
  \addcontentsline{toc}{chapter}{Appendices}
 
 \bibliographystyle{plain}
-\bibliography{biblio,specification}
+\bibliography{biblio,specification,xbib_mem-wpc}
 
 \end{document}
