@@ -1,0 +1,166 @@
+
+
+// invariant initialization
+{ not ( lv(1) > = 0 ) ==>   
+   0 <= 0 && 
+   0 <= - lv(1) && 
+   0 = 0 * 0 } 
+// invariant implies the loop postcondition 
+{ not ( lv(1) > = 0 ) ==> 
+    forall lv(3), forall lv(2),
+    not( lv(3) < st(cntr) ) && 
+    0 <= lv(3) && 
+    lv(3) <= - lv(1)  && 
+    st(cntr) = lv(3) * lv(3) &&
+    st(cntr) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+0  iconst 0
+// invariant initialization
+{ not ( lv(1) > = 0 ) ==>   
+   0 <= 0 && 
+   0 <= - lv(1) && 
+   st(cntr) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{ not ( lv(1) > = 0 ) ==> 
+    forall lv(3), forall lv(2),
+    not( lv(3) < st(cntr) ) && 
+    0 <= lv(3) && 
+    lv(3) <= - lv(1)  && 
+    st(cntr) = lv(3) * lv(3) &&
+    st(cntr) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+1  istore 2
+// invariant initialization
+{ not ( lv(1) > = 0 ) ==>   
+   0 <= 0 && 
+   0 <= - lv(1) && 
+   lv(2) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{ not ( lv(1) > = 0 ) ==> 
+    forall lv(3), forall lv(2),
+    not( lv(3) < - lv(1) ) && 
+    0 <= lv(3) && 
+    lv(3) <= - lv(1)  && 
+    lv(2) = lv(3) * lv(3) &&
+    - lv(1) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+2  iload 1
+// invariant initialization
+{ not ( st(cntr) > = 0 ) ==>   
+   0 <= 0 && 
+   0 <= - lv(1) && 
+   lv(2) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{ not ( st(cntr) > = 0 ) ==> 
+    forall lv(3), forall lv(2),
+    not( lv(3) < - lv(1) ) && 
+    0 <= lv(3) && 
+    lv(3) <= - lv(1) && 
+    lv(2) = lv(3) * lv(3) &&
+    -lv(1) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+3  ifge 7 
+// invariant initialization
+{  0 <= 0 && 
+   0 <= - lv(1) && 
+   lv(2) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{forall lv(3), forall lv(2),
+    not( lv(3) < - lv(1) ) && 
+    0 <= lv(3) && 
+    lv(3) <= - lv(1)  && 
+    lv(2) = lv(3) * lv(3) &&
+    - lv(1) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+4  iload 1
+// invariant initialization
+{  0 <= 0 && 
+   0 <= - st(cntr) && 
+   lv(2) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{forall lv(3), forall lv(2),
+    not( lv(3) < - st(cntr) ) && 
+    0 <= lv(3) && 
+    lv(3) <= - st(cntr)  && 
+    lv(2) = lv(3) * lv(3) &&
+    - st(cntr) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+5  ineg
+// invariant initialization
+{  0 <= 0 && 
+   0 <= st(cntr) && 
+   lv(2) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{forall lv(3), forall lv(2),
+    not( lv(3) < st(cntr) ) && 
+    0 <= lv(3) && 
+    lv(3) <= st(cntr)  && 
+    lv(2) = lv(3) * lv(3) &&
+    st(cntr) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+6  istore 1
+// invariant initialization
+{  0 <= 0 && 
+   0 <= lv(1) && 
+    lv(2) = 0 * 0 } 
+// invariant implies the loop postcondition 
+{ forall lv(3), forall lv(2),
+    not( lv(3) < lv(1) ) && 
+    0 <= lv(3) && 
+    lv(3) <= lv(1)  && 
+    lv(2) = lv(3) * lv(3) &&
+    lv(1) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+7  iconst 0
+// invariant initialization
+{  0 <= st(cntr) && 
+   st(cntr) <= lv(1) && 
+   lv(2) = st(cntr) * st(cntr) } 
+// invariant implies the loop postcondition 
+{ forall lv(3), forall lv(2),
+    not( lv(3) < lv(1) ) && 
+    0 <= lv(3) && 
+    lv(3) <= lv(1) && 
+    lv(2) = lv(3) * lv(3) &&
+    lv(1) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+8  istore 3
+// invariant initialization
+{  0 <= lv(3) && 
+    lv(3) <= lv(1) && 
+    lv(2) = lv(3) * lv(3) } 
+// invariant implies the loop postcondition 
+{ forall lv(3), forall lv(2),
+    not( lv(3) < lv(1) ) && 
+    0 <= lv(3) && 
+    lv(3) <= lv(1) && 
+    lv(2) = lv(3) * lv(3) &&
+    lv(1) - lv(3) >= 0  ==> 
+       lv(2) = old(lv(1)) * old(lv(1)) }
+9  goto 19 
+10 iload 2
+11 iconst 2
+12 iload 3
+13 imul
+14 iadd
+15 iconst 1
+16 iadd
+17 istore 2
+\begin{figure}
+\begin{lstlisting}[frame=trbl]
+18 iinc 3
+{ not (lv(3) < lv(1))  ==>  lv(2) == lv(1)*lv(1) }
+19 iload 3 //loop start
+{ not (st(cntr) < lv(1))  ==>  lv(2) == lv(1)*lv(1) }
+20 iload 1
+{not ( st(cntr - 1) < st(cntr) )  ==>  lv(2) == lv(1)*lv(1)  }
+21 if_icmplt 10
+{lv(2) == lv(1)*lv(1)   }
+22 iload 2
+{st(cntr) == lv(1)*lv(1) }
+23 ireturn
+{ \result == lv(1)*lv(1) }
+\end{lstlisting} 
+\caption{\sc  bytecode of method \lstinline!square! and weakest preconditions for the execution path which reaches the method end}
+\label{wp:example:sqrBc}
+\end{figure}
