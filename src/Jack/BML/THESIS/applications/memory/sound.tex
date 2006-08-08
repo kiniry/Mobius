@@ -1,0 +1,33 @@
+
+In the verification mechanism there are two points that are not trusted
+- the first one is the weakest precondition calculus -what guarantees
+that the truthfulness of the formulas generated implies the program
+correctness w.r.t. to its specification and the second one is the
+specification - what guarantees that it expresses the property that we
+have in mind.
+
+
+We discuss now the first point. We have a proof of correctness of the
+wp calculus which is in a draft version. The proof establishes that the
+predicate transformer has the property stated in ~\ref{verification}. 
+The proof is done over the operational semantics of our language. The operational semantics in terms of program states; a program state is a vector of the values of
+the program variables and the program counter.  
+Assume that we have a  bytecode \srcCode{bc}  and its operational semantics is
+\srcCode{bc}:  $\tau_0 \rightarrow \tau_1 $ and we have a predicate $\psi$ that must hold in the state after its execution.  
+What the proof of correctness establishes is that if \textit{wp(\srcCode{bc}, $\psi$) } holds in state$\tau_0$ then $\psi$
+holds in state $\tau_1$. The proof is done inductively by cases for all the instructions for which
+we have a rule, and the case for \srcCode{return} instruction gives us
+that when the execution terminates the postcondition holds.
+
+
+The other question is our methodology ( the specification that
+we prescribe in section modeling constraint memory use policy )
+for specifying the policy in question. Actually as we see in the chapter
+for modeling the policy in question we use a special variable called
+\Mem. We can instrument the operational semantics with the variable
+\Mem / $\{ \tau_0, Heap, \Mem\}$ and what we can prove is the
+following property : $\{ \tau_0, Heap, \Mem \} \rightarrow \{ \tau_1,
+Heap' ,\Mem' \} , \ then \ Heap - Heap' \le \Mem - \Mem' $.This is due
+to the fact that whenever there is an allocation in the heap - in our
+language this is the instruction \srcCode{\new},i.e. the heap grows
+the variable \Mem also grows.

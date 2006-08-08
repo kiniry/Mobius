@@ -1,0 +1,46 @@
+% related work
+The use of type systems has been a useful tool for guaranteeing that well typed programs run within stated space-bounds. Previous work along these lines defined typed assembly languages, inspired on \cite{MWCG99tal} while others emphasised the use of type systems for functional languages \cite{AH02ats,Hofmann00tsb,HP99rdd}. 
+
+
+For instance in~\cite{AC03hba} the authors present a first-order linearly typed assembly language which allows the safe reuse of heap space for elements of different types. The idea is to design a family of assembly languages which have high-level typing features (e.g. the use of a special {\em diamond} resource type) which are used to express resource bound constraints. Closely related to the previous-mentioned paper, \cite{VC04fta} describes a type theory for certified code, in which type safety guarantees cooperation with a mechanism to limit the CPU usage of untrusted code. Another recent work is \cite{ACDJ04fsb} where the resource bounds problem is studied in a simple stack machine. The authors show how to perform type, size and termination verifications at the level of the byte-code.
+
+An automatic heap space usage static analysis for first-order functional programs is given in \cite{HJ03sph}. The analysis both determines the amount of free cells necessary before execution as well as a safe (under)-estimate of the size of a \emph{free-list} after successful execution of a
+function.  These numbers are obtained as solutions to a set of linear
+programming (LP) constraints derived from the program text. Automatic
+inference is obtained by using standard polynomial-time algorithms for
+solving LP constraints. The correctness of the analysis is proved
+with respect to an operational semantics that explicitly keeps track of
+the memory structure and the number of free cells.
+
+A logic for reasoning
+about resource consumption certificates of higher-order functions is defined in \cite{CW00rbc}. The
+certificate of a function provides an over-approximation of the
+execution time of a call to the function. The logic only defines what 
+is a correct deduction of a certificate and has no inference
+algorithm associated with it. Although the logic is about computation time the authors claim it could be extended to measure memory consumption. 
+
+Another mechanical verification of a byte code language is \cite{CJPS05cmu}, where a constraint-based algorithm is presented to check the existence of \new\ instructions inside intra- and inter-procedural loops. It is completely formalised in Coq and a certified analyser is obtained using Coq's extraction mechanism. The time complexity of such analysis performs quite good but the auxiliary memory used does not allow it to be on-card. Their analysis is less precise than ours, since they work on an abstraction of the execution traces not considering the number of times a cycle is iterated (there are no annotations). Along these lines, a similar approach has been followed by \cite{schneider04cba}; no mechanical proof nor implementation is provided in such work.
+
+Other related research direction concerns runtime memory analysis. The work \cite{GNYZ04pir} presents a method for analysing, monitoring and controlling dynamic memory allocation, using pointer and scope analysis. By instrumenting the source code they control memory allocation at run-time. In order to guarantee the desired memory allocation property, in \cite{fredlund04gcp} is implemented a runtime monitor to control the execution of a Java Card applet. The applet code is instrumented: a call to a monitor method is added before a \new\ instruction. Such monitor method has as parameter the size of the allocation request and it halts the execution of the applet if a predefined allocation bound is exceeded. 
+
+There exists research on the definition of bytecode logics. In ~\cite{Q03plj} a Hoare logics for bytecode is defined. Yet the approach there is based on searching structure in the bytecode programs which is not very natural for untsructured bytecode programs. In \cite{WN05abs} a Hoare bytecode logics is defined in terms of weakest precondition calculus over the Jinja language (subset of Java). They use the logics for verifying bytecode against arithmetic overflow.  
+
+Upon completion of this work we became aware of a recent, and still
+unpublished, result along the same lines of ours. Indeed,  a hybrid (i.e., static and dynamic)
+resource bound checker for an imperative language designed to admit
+decidable verification is presented in \cite{CEILN05}. The verifier is based on a variant of Dijkstra's
+weakest precondition calculus using "generalized predicates", which keeps
+track of the resource units available. Besides adding loop invariants,
+pre- and post-conditions, the programmer must insert "acquires"
+annotations to reserve the resource units to be consumed. Our approach has
+the advantage of treating recursive methods and exceptions, not taken into
+account in \cite{CEILN05}. Another difference with our work is that we
+operate on the bytecode instead of on the source code.
+
+%%% Local Variables:
+%%% mode: latex
+%%% mode: reftex
+%%% TeX-master: "main.tex"
+%%% End:
+
+

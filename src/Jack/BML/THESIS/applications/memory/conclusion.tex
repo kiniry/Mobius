@@ -1,0 +1,63 @@
+% conclusion 
+
+Program logics have traditionally been used to verify functional
+properties of applications, but we have shown that such logics 
+are also appropriate to enforce security properties including
+memory consumption policies. We have shown that program logics
+complement nicely existing methods to verify memory consumption,
+over which they are superior in terms of the precision of the
+analysis (and inferior in terms of automation).
+
+
+We intend to pursue our work in three directions. Firstly, we would
+like to extend our approach to arrays. In principle, it should be
+reasonably easy to extend the verification method to arrays; however,
+it seems more complicated to extend our inference algorithm to arrays.
+The main difficulty here is to provide an estimate of the size of an
+array, as it is given by the top value on the operand stack at the
+time of its creation. Our intuition is that this can be done using
+an abstract interpretation or a symbolic evaluation of the program. 
+If we look at the example code below (in source code): 
+\begin{verbatim}
+void m(int s){
+ int len = s;
+ int[] i = new int[len]
+} 
+\end{verbatim}
+where \verb!len! is a local variable to the method, one can infer by
+symbolic computation that its value is the value of the method
+parameter. Thus the method can be given the precondition \texttt{Mem +
+s <= \Max}. In a similar line of work, we would like to extend our
+results to concurrency using recent advances in program logics for
+multi-threaded Java programs \cite{RDFHL05ess}. Providing an appropriate
+treatment of arrays and multi-threading is an important step towards
+applying our results to mobile phone applications.
+
+
+
+Secondly, we would like to adapt our approach to account for explicit
+memory management. More precisely, we would like to consider an
+extended language with a special instruction \texttt{free(o)} that
+deallocates the object \texttt{o}, and establish the correctness of
+our method under the assumption that deallocation is correct, i.e.
+that the object \texttt{o} is not reachable from the program point
+where \texttt{free(o)} is inserted. By combining our approach with
+existing compile-time analysis that infers for each program point
+which objects are not reachable, we should be able to provide more
+precise estimates of memory consumption.
+%\alarm{ref needed}
+
+
+
+
+Thirdly, we intend to apply our technique to other resources such as
+communication channels, bandwidth, and power consumption, as well as
+to more refined analyses that distinguish between different kinds of
+memory, such as RAM or non-volatile EEPROM.  As suggested by the MRG
+project~\cite{asp+04:cassis}, it seems also interesting to consider
+policies that enforce limits on the interaction between the program
+and its environment, for example w.r.t. the number of system calls or
+the bounds on parameters passed to them.
+
+
+

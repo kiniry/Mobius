@@ -1,0 +1,206 @@
+% Introduction 
+Trusted personal devices (TPDs for short) such as smart cards,
+mobile phones, and PDAs commonly rely on execution platforms such as the Java
+Virtual Machine and the Common Language Runtime. Such platforms are
+considered appropriate for such TPDs since they allow applications to
+be developed in a high-level language without committing to any
+specific hardware and since they feature security mechanisms that
+guarantee the innocuousness of downloaded applications. For example,
+the Java security architecture ensures that applications will not
+perform illegal memory accesses through stack inspection, which
+performs access control during execution, and bytecode verification,
+which performs static type-checking prior to execution.  On the other
+hand, current security architectures for TPDs do not provide any
+mechanism to control resource usage by downloaded applications,
+despite TPDs being subject to stringent resource constraints.
+Therefore, TPDs are particularly vulnerable to denial-of-service
+attacks, since executing a downloaded application may potentially lead
+to resource exhaustion.
+
+
+Several approaches have been suggested to date to enforce memory
+consumption policies for programs; all approaches are automatic,
+but none of them is ideally suited for TPDs, either for their
+lack of precision, or for the runtime penalty they impose on
+programs:
+\begin{itemize}
+\item \emph{Static analyses and abstract interpretations:} in such an
+approach, one performs an abstract execution of an approximation of
+the program. The approximation is chosen to be coarse enough to be
+computable, as a result of which it yields automatically bounds on
+memory consumption, but at the cost of precision. Such methods are not
+very accurate for recursive methods and loops, and often fail to
+provide bounds for programs that contain dynamic object creation
+within a loop or a recursive method;
+
+
+\item \emph{Proof-carrying code:} here the program
+comes equipped with a specification of its memory consumption, in the
+form of statements expressed in an appropriate program logic, and a
+certificate that establishes that the program verifies the memory
+consumption specification attached to it. The approach potentially
+allows for precise specifications. However, existing works on proof
+carrying code for resource usage sacrifice the possibility of
+enforcing accurate policies in favor of the possibility of generating
+automatically the specification and the certificate, in line with
+earlier work on certifying compilation;
+
+\item \emph{Run-time monitoring:}  here the program
+also comes equipped with a specification of its memory consumption, 
+but the verification is performed at run-time, and interrupted if
+the memory consumption policy is violated. Such an approach is both
+ precise and automatic, but incurs a runtime overhead which 
+makes it unsuitable for TPDs.
+\end{itemize}
+The objective of this work is to explore an alternative approach that
+favors precision of the analysis at the cost of automation. The
+approach is based on program logics, which originate from the seminal
+work on program verification by C.A.R.~Hoare and E.W.~Dijkstra and
+have been used traditionally to verify functional properties of
+programs. In earlier work, we have shown how general purpose logics
+can be used to enforce security properties of Java programs, including
+confidentiality~\cite{gpt04:csfw} and high-level security
+rules~\cite{m+04:cardis}. In this paper, we demonstrate that program
+logics are also appropriate for performing a precise analysis of
+resource consumption for Java programs.  Although our method is
+applicable both at source code level and bytecode level, our work 
+has focused on bytecode level, since in many application domains
+verification has to be performed without access to the source code
+of the applet. (However,  for the clarity of the explanations all
+examples in the introduction deal with source code level.)
+
+In order to illustrate the principles of our approach, let us consider
+the following program:
+
+\begin{verbatim}
+public void m(A a){
+  if (a  == null) {
+    a = new A();
+  }  
+   a.b = new B();
+}
+\end{verbatim}
+In order to model the memory consumption of this program, we introduce
+a {\em ghost} (or, {\em model}) variable \verb!Mem! that accounts for memory consumption; more
+precisely, the value of \verb!Mem! at any given program point is meant
+to provide an upper bound to the amount of memory consumed so far. To
+keep track of the memory consumption, we perform immediately after every 
+bytecode that allocates memory an increment of \verb!Mem! \ by the amount
+of memory consumed by the allocation. Thus, if the programmer specifies
+that \verb!ka! and \verb!kb! is the memory consumed by the allocation of 
+an instance of class \verb!A! and  \verb!B! respectively, the program must
+be annotated as:
+\begin{verbatim} 
+public void m(A a) {
+  if (a  == null) {
+    a = new A();
+    // set Mem = ka;
+  }  
+   a.b = new B();
+   // set Mem = kb;
+}
+\end{verbatim}
+Such annotations allow to compute at run-time the memory consumption of 
+the program. However, we are interested in static prediction of memory
+consumption, and resort to preconditions and postconditions to this end.
+Even for a simple example as above, one can express the specification
+at different levels of granularity. For example, fixing the amount of memory that
+the the program may use \verb!Max! one can specify that the method will use at most 
+\verb! ka +  kb! memory units and will not overpass the authorized limit to use \verb!Max! with the following specification:
+\begin{verbatim}
+//@  requires Mem + ka +  kb <= Max 
+//@ ensures  Mem <= \old(Mem) + ka +  kb     
+public void m(A a) {
+  if (a  == null) {
+    a = new A();
+    // set Mem = ka;
+  }  
+   a.b = new B();
+   // set Mem = kb;
+}
+\end{verbatim}
+Or try to be more precise and relate memory consumption to inputs with
+the following specification:
+\begin{verbatim}
+//@ requires a == null ==> Mem + ka +  kb <= Max &&	 
+   !(a  == null) ==> Mem + kb <= Max
+//@ ensures \old(a) == null ==> Mem <= \old(Mem) + ka +  kb && 
+    !(\old(a)  == null) ==> Mem <= \old(Mem) + kb    
+public void m(A a) {
+  if (a  == null) {
+    a = new A();
+  }  
+   a.b = new B();
+}
+\end{verbatim}
+More complex specifications are also possible. For example, one can
+take into account whether the program will throw an exception or not.
+using (possibly several) exceptional postconditions stating that
+$\texttt{k}_{\texttt{E}}$ memory units are allocated in case the
+method exits on exception \texttt{E}.
+
+
+
+The main characteristics of our approach are:
+\begin{itemize}
+\item \emph{Precision:} our analysis allows to specify and enforce
+very precise memory consumption policies, including policies that take
+into account the results of branching statements or the values of
+parameters in method calls. Being based on program logics, which are
+very versatile, the precision of our analysis can be further improved
+by using it in combination with other analyses, such as control flow
+analysis and exception analysis;
+
+
+\item \emph{Correctness:} our analysis exploits existing program logics
+which are (usually) already known to be sound. In fact, it is immediate
+to derive the soundness of our analysis from the soundness of the program
+logic, provided ghost annotations that update memory consumption variables
+are consistent with an instrumented semantics that  extends the language
+operational semantics with a suitable cost model that reflects resource
+usage;
+
+\item \emph{Language coverage:} our analysis relies on the existence
+of a verification condition generator for the programming language at
+hand, and is therefore scalable to complex programming features.  In
+the course of the paper, we shall illustrate applications of our
+approach to programs featuring recursive methods, method
+overriding and exceptions;
+
+
+\item \emph{Usability:} our approach can be put to practice
+immediately using existing verification tools for program logics. We
+have applied our approach to annotated Java bytecode programs using a
+verification environment developed in \cite{LM05:acc}, but it is also possible to use our approach on
+JML annotated Java source code~\cite{BRL03:fme}, and more generally on
+programs that are written in a language for which appropriate support
+for contract-based reasoning exists;
+
+
+
+\item \emph{Annotation generation:} in contrast to other techniques
+discussed above, our approach requires user interaction, both for
+specifying the program and for proving that it meets its specification.
+In order to reduce the burden of the user, we have developed heuristics
+that infer automatically part of the annotations;
+
+
+\item \emph{Feasibility:} thanks to annotation generation mechanisms
+and powerful provers that help discharge many proof obligations
+automatically, our approach can be applied to realistic Java bytecode
+programs with a reasonable overhead.
+\end{itemize}
+In the course of the article, we illustrate the principles and
+characteristics of our approach in the context of Java bytecode
+programs. More specifically, the paper is organized as follows:
+Section~\ref{sec:prelim} provides a brief introduction to Java
+bytecode programs and to the modeling language and weakest
+precondition calculus used to specify and verify such programs.
+Section~\ref{sec:verif} describes in some detail how the
+infrastructure described in Section~\ref{sec:prelim} can be used to
+specify and verify precise memory consumption
+policies. Section~\ref{sec:infer} is devoted to a presentation of our
+algorithms for inferring automatically annotations. We conclude in
+Section~\ref{sec:rel} with related work and in Section~\ref{sec:conc}
+with directions for future work.
+

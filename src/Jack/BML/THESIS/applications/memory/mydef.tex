@@ -1,0 +1,286 @@
+
+\newcommand{\bbb}{\mathbb{B}}
+% moved here from carmel.tex
+\newcommand{\spp}{\hspace{1.5cm}}
+
+
+\newcommand{\semb}{\llbracket}
+\newcommand{\seme}{\rrbracket}
+\newcommand{\sem}[1]{ \semb #1 \seme}
+\newcommand{\ia}[1]{ \semb #1 \seme}
+\newcommand{\fia}[1]{ \mathcal{F}\semb #1 \seme}
+\newcommand{\ria}[1]{ \mathcal{R}\semb #1 \seme}
+
+\newcommand{\Coq}{{\sf Coq}}
+\newcommand{\ocaml}{\textsc{ocaml}}
+
+\newcommand{\memvar}{\text{Mem}}
+
+\newcommand{\AbVal}{\widehat{\text{Val}}}
+\newcommand{\Val}{{\text{Val}}}
+\newcommand{\Stack}{{\text{Stack}}}
+\newcommand{\AbStack}{{\widehat{\text{Stack}}}}
+\newcommand{\SafeCallStack}{{\text{SafeCallStack}}}
+\newcommand{\OneCall}{{\text{OneCall}}}
+\newcommand{\Var}{{\text{Var}}}
+\newcommand{\LocalVar}{{\text{LocalVar}}}
+\newcommand{\AbLocalVar}{{\widehat{\text{LocalVar}}}}
+\newcommand{\State}{{\text{State}}}
+\newcommand{\Trace}{{\text{Trace}}}
+\newcommand{\AbState}{{\widehat{\text{State}}}}
+\newcommand{\progCount}{{\text{progCount}}}
+\newcommand{\fieldName}{{\text{fieldName}}}
+\newcommand{\methodName}{{\mathrm{methodName}}}
+\newcommand{\MM}{{\methodName}}
+\newcommand{\PP}{{\progCount}}
+\newcommand{\className}{{\text{className}}}
+\newcommand{\varName}{{\text{varName}}}
+\newcommand{\Adress}{{\text{Adress}}}
+\newcommand{\Instruction}{{\text{Instruction}}}
+\newcommand{\InstAt}{{\text{InstAt}}}
+\newcommand{\Constraint}{{\text{Constraint}}}
+\newcommand{\St}{\widehat{\text{St}}}
+
+\newcommand{\config}[1]{{\langle\!\langle #1 \rangle\!\rangle}}
+\newcommand{\fram}[1]{{\left\langle #1 \right\rangle}}
+\newcommand{\num}{{\text{num}}}
+\newcommand{\reff}{{\text{ref}}}
+\newcommand{\nul}{{\text{null}}}
+\newcommand{\some}{{\text{some}}}
+\newcommand{\nameClass}{{\text{nameClass}}}
+\newcommand{\class}{{\text{class}}}
+\newcommand{\newObject}{{\text{newObject}}}
+\newcommand{\newArray}{{\text{newArray}}}
+\newcommand{\lengthArray}{{\text{lengthArray}}}
+\newcommand{\fieldValue}{{\text{fieldValue}}}
+\newcommand{\Value}{{\text{Value}}}
+\newcommand{\classes}{{\text{classes}}}
+\newcommand{\RefValue}{{\text{RefValue}}}
+\newcommand{\Location}{{\text{Location}}}
+\newcommand{\methodLookup}{{\text{methodLookup}}}
+\newcommand{\nbArgument}{{\text{nbArgument}}}
+\newcommand{\nameMethod}{{\text{nameMethod}}}
+
+\newcommand{\ClassName}{{{\text{ClassName}}}}
+\newcommand{\FieldName}{{{\text{FieldName}}}}
+\newcommand{\default}{{{\text{default}}}}
+\newcommand{\END}{{{\text{END}}}}
+\newcommand{\AbHeap}{{\widehat{\text{Heap}}}}
+
+\newcommand{\Sinit}{{\mathcal{S}_{\mathit{init}}}}
+
+\newcommand{\instructionAt}{{\text{instructionAt}}}
+
+
+%\newcommand{\abs}{\mbox{${\cal S}\!\mathit{t}$}}
+\newcommand{\abs}{\mbox{$\Sigma$}}
+\newcommand{\addr}{\mbox{\em addr}}
+\newcommand{\pc}{\mathit{pc}}
+\newcommand{\stf}{{\mathit{sf}}}
+\newcommand{\cl}{{\mathit{cl}}}
+
+\newcommand{\analyze}{\text{\tt analyse}}
+\newcommand{\Analyze}{\ensuremath{\mathit{Unbounded}(P)}}
+\newcommand{\Program}{\text{Program}}
+
+\newenvironment{constraint}{%
+\noindent
+\hspace{.3mm}$
+\begin{array}[t]{l}}{%
+\end{array}$\\[0.2cm]
+}
+
+\newenvironment{contraint}{%
+\noindent
+\hspace{1cm}$
+\begin{array}[t]{l}}{%
+\end{array}$\\[0.5cm]
+}
+
+
+
+
+\newcommand{\AbPop}{\widehat{\text{pop}}}
+\newcommand{\AbPush}{\widehat{\text{push}}}
+\newcommand{\AbTop}{\widehat{\text{top}}}
+\newcommand{\AbBinop}{\widehat{\text{binop}}}
+\newcommand{\AbApply}{\widehat{\text{apply}}}
+\newcommand{\AbSubst}{\widehat{\text{subst}}}
+\newcommand{\Num}{{{\text{Num}}}}
+\newcommand{\AbNum}{{\widehat{\text{Num}}}}
+\newcommand{\AbRef}{{\widehat{\text{Ref}}}}
+\newcommand{\AbObject}{{\widehat{\text{Object}}}}
+%\newcommand{\AbHeap}{{\widehat{\text{Heap}}}}
+\newcommand{\Flow}{\text{\tt Flow}}
+
+\newenvironment{myalltt}{\vspace*{-3pt}\begin{alltt}}{\end{alltt}\vspace*{-3pt}}
+
+%%
+%% Added by Gerardo (28/09/2004)
+%%
+
+\newcommand{\Rule}[2]
+{
+\frac{#1}
+{
+\begin{array}{l}
+#2
+\end{array}
+}
+}
+
+\newcommand\Loop{\ensuremath{\mathit{Loop}}}
+\newcommand\Pred{\ensuremath{\mathit{Pred}}}
+\newcommand\BC{\ensuremath{\mathit{BC}}}
+\newcommand\MutRec{\ensuremath{\mathit{MutRecR}}}
+\newcommand\Rec{\ensuremath{\mathit{Rec}}}
+\newcommand\Anc{\ensuremath{\mathit{Anc}}}
+\newcommand\LoopCall{\ensuremath{\mathit{LoopCall}}}
+\newcommand\Call{\ensuremath{\mathit{Call}}}
+\newcommand\Q{\ensuremath{\mathit{Q}}}
+\newcommand\tr{\ensuremath{\mathit{tr}}}
+
+\newcommand\End{\ensuremath{\mathtt{end}}}
+\newcommand\nop{\ensuremath{\mathtt{nop}}}
+\newcommand\push{\ensuremath{\mathtt{push}}}
+\newcommand\pop{\ensuremath{\mathtt{pop}}}
+\newcommand\dup{\ensuremath{\mathtt{dup}}}
+\newcommand\swap{\ensuremath{\mathtt{swap}}}
+\newcommand\numop{\ensuremath{\mathtt{numop}}}
+\newcommand\load{\ensuremath{\mathtt{load}}}
+\newcommand\store{\ensuremath{\mathtt{store}}}
+\newcommand\inc{\ensuremath{\mathtt{inc}}}
+\newcommand\add{\ensuremath{\mathtt{add}}}
+\newcommand\sub{\ensuremath{\mathtt{sub}}}
+\newcommand\goto{\ensuremath{\mathtt{goto}}}
+\newcommand\If{\ensuremath{\mathtt{if}}}
+\newcommand\looksw{\ensuremath{\mathtt{lookupswitch}}}
+\newcommand\tabsw{\ensuremath{\mathtt{tableswitch}}}
+\newcommand\newarray{\ensuremath{\mathtt{newarray}}}
+%\newcommand\default{\ensuremath{\mathtt{default}}}
+\newcommand\new{\ensuremath{\mathtt{new}}}
+\newcommand\checkc{\ensuremath{\mathtt{checkcast}}}
+\newcommand\getst{\ensuremath{\mathtt{getstatic}}}
+\newcommand\putst{\ensuremath{\mathtt{putstatic}}}
+\newcommand\instof{\ensuremath{\mathtt{instanceof}}}
+\newcommand\getfd{\ensuremath{\mathtt{getfield}}}
+\newcommand\getfdt{\ensuremath{\mathtt{getfield this}}}
+\newcommand\putfd{\ensuremath{\mathtt{putfield}}}
+\newcommand\invdef{\ensuremath{\mathtt{invokedefinite}}}
+\newcommand\invvir{\ensuremath{\mathtt{invokevirtual}}}
+\newcommand\invint{\ensuremath{\mathtt{invokeinterface}}}
+\newcommand\return{\ensuremath{\mathtt{return}}}
+\newcommand\arrlh{\ensuremath{\mathtt{arraylength}}}
+\newcommand\arrld{\ensuremath{\mathtt{arrayload}}}
+\newcommand\arrst{\ensuremath{\mathtt{arraystore}}}
+\newcommand\throw{\ensuremath{\mathtt{throw}}}
+\newcommand\jsr{\ensuremath{\mathtt{jsr}}}
+\newcommand\ret{\ensuremath{\mathtt{ret}}}
+\newcommand\this{\ensuremath{\mathtt{this}}}
+\newcommand\instr{\ensuremath{\mathtt{instr}}}
+\newcommand\const{\ensuremath{\mathtt{const}}}
+\newcommand\Array{\ensuremath{\mathsf{array}}}
+\newcommand\Int{\ensuremath{\mathsf{int}}}
+\newcommand\byte{\ensuremath{\mathsf{byte}}}
+\newcommand\short{\ensuremath{\mathsf{short}}}
+\newcommand\bool{\ensuremath{\mathsf{bool}}}
+\newcommand\Ctxt{\ensuremath{\mathsf{Ctxt}}}
+
+\newcommand\warn{\ensuremath{<!>}}
+\newcommand\trace{\overline{s}}
+\newcommand\defi{\stackrel{\mathrm{def}}{=}}
+\newcommand\lub{\sqcup}
+
+\newcommand\Size{\ensuremath{\mathit{Size}}}
+\newcommand\Pre{\ensuremath{\mathrm{Pre}}}
+\newcommand\Post{\ensuremath{\mathrm{Post}}}
+%\newcommand\old{\ensuremath{\backslash\mathrm{old}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Mariela's definitions
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\blockm}[1]{ $b^{#1}$ }
+\newcommand{\pathm}[2]{\blockm{#1} $\ll^{*}$ \blockm{#2} }
+
+\newtheorem{defn}{Definition}
+
+%%%%%%%%%Specification commands
+\newcommand{\annotation}{BML}
+\newcommand{\Apredicate}{\textit{P}}
+\newcommand{\predicate}{\mathcal{P}}
+\newcommand{\expression}{\mathcal{E}}
+\newcommand{\requires}{\texttt{requires}}
+\newcommand{\ensures}{\texttt{ensures}}
+\newcommand{\exsures}[1]{\texttt{exsures(#1)}}
+\newcommand{\assert}{\texttt{assert}}
+\newcommand{\invariant}{\texttt{invariant}}
+\newcommand{\variant}{\texttt{variant}}
+
+\newcommand{\declare}{\texttt{declare}}
+\newcommand{\ghost}{\texttt{Model}}
+\newcommand{\ghostSet}{\texttt{set}}
+\newcommand{\modifies}{\texttt{modifies}}
+\newcommand{\ensemble}[2]{#1 .. #2}
+\newcommand{\maxIter}[1]{ iter^#1 }
+\newcommand{\progLoop}[1]{\textit{#1}}
+\newcommand{\memConsAt}[1]{\Mem^l}
+\newcommand{\method}{\textit{m}}
+\newcommand{\atState}[2]{#1^{#2} }
+
+\newcommand{\Mem}{\texttt{MemUsed}}
+\newcommand{\old}{\texttt{old}}
+\newcommand\Max{\ensuremath{\texttt{Max}}}
+\newcommand{\allocated}[1]{allocPath(#1)}
+\newcommand{\srcCode}[1]{\texttt{#1}}
+\newcommand{\local}[1]{\texttt{localVar}(#1)}
+
+
+
+%%%%%%%%%%%% allocation function
+\newcommand{\visited}{\texttt{visited}}
+\newcommand{\true}{\textit{true}}
+\newcommand{\false}{\textit{false}}
+
+\newcommand{\instrAt}[1]{i_{#1}}
+%\newcommand{\instanceOfAlloc}[1]{instanceOfAllocates( #1 )}
+
+\newcommand{\allocInstance}[1]{\texttt{allocInstance(#1)}}
+\newcommand{\allocLoop}[1]{loopConsumption(#1)} % function that returns directly the allocations done by a loop : multiplied by the max iterations it can do
+\newcommand{\allocMethod}[1]{\texttt{methodConsumption(#1)}} % returns the allocations done in a method
+\newcommand{\allocLoopWithEnd}[2]{alloc\_loop\_path(#1 , #2)} % returns the allocations done in a loop for a particular path that starts at the start instruction of a loop and that % ends with an insstruction that leads back to the start instructions
+
+\newcommand{\allocIns}[1]{alloc\_instr(#1)} % function that returns that the allocation by the argument
+
+\newcommand{\numLoop}[1]{\textit{numberLoop}(#1)}
+\newcommand{\loopEndsSet}[1]{loopEndSet(#1)}
+\newcommand{\loopSet}[1]{loopSet(#1)}
+\newcommand{\loopEntry}[1]{entry(#1)} % predicate that says that the instruction is an entry to a loop
+
+\newcommand{\backedge}[2]{backedge(#1,#2)} % the start of the backedge  and the end of the backedge
+
+
+\newcommand{\wpi}[3]{ \rm{wp}( \srcCode{#1}, #2, #3) } % wp for instructions
+\newcommand{\wpExe}[1]{ \rm{wp}(#1) } % wp for blocks
+\newcommand{\normalPost}{\psi^{n}}
+\newcommand{\excPost}{\psi^{exc}}
+
+\newcommand{\stack}[1]{St(#1)}
+\newcommand{\topStack}{c}
+\newcommand{\javaNull}{null}
+\newcommand{\Ref}[1]{ref_{#1} }
+\newcommand{\NULL}{\texttt{null}}
+\newcommand{\substitution}[2]{[ #1 \leftarrow #2] }
+
+
+\newcommand{\prevIns}[1]{prev(#1 )}
+\newcommand{\nextIns}[1]{next(#1 )}
+\newcommand{\targetIns}[1]{target(#1)}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\todo}[1]
+{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\tiny\textsf{#1}}}}
