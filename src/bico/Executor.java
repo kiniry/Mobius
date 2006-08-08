@@ -49,14 +49,14 @@ public class Executor {
 		 * classes to be read from hand-made files
 		 */
 		String[] speciallibs = new String[] { 
-				"java.lang.Object", "java.lang.Exception" 
+				"java.lang.Object", "java.lang.Throwable", "java.lang.Exception" 
 		};
 
 		/**
 		 * classes to be parsed from standard library
 		 */
 		String[] otherlibs = new String[] { 
-//				"java.lang.Object", "java.lang.Exception" 
+//				"java.lang.Object", "java.lang.Throwable", "java.lang.Exception" 
 		};
 
 		doBeginning(out);
