@@ -4,7 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.bcel.Constants;
-import org.apache.bcel.classfile.ExceptionTable;
+import org.apache.bcel.classfile.Code;
+import org.apache.bcel.classfile.CodeException;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -15,12 +16,7 @@ import org.apache.bcel.util.SyntheticRepository;
 public class Executor {
 
 	/**
-	 * 
-	 * 
-	 * @param args -
-	 *            later used now set before
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * Bico entry point
 	 */
 	public static void main(String[] args) throws ClassNotFoundException,
 			IOException {
@@ -29,48 +25,42 @@ public class Executor {
 		// dealing with args
 		String pathname = "";
 		String slash = System.getProperty("file.separator");
-		if (args.length == 0) {
-			pathname = System.getProperty("user.dir");
-			pathname = pathname.concat(slash+"bico_test");
-		} else if (args[0].toString().compareTo("help") == 0) {
-			System.out.println("Version of the program - 0.1");
-			System.out.println("Program coverts *.class files into special Coq format");
-			System.out.println("When used with no argument - it converts all class files from *user.dir* folder");
-			System.out.println("One argument: ");
-			System.out.println("help - displays this info");
-			System.out.println("dir  - sets folder to *user.dir*");
-			System.out.println("home - sets folder to *user.home*");
-			System.out.println("else - it treats it as a path");
-		} else if (args[0].toString().compareTo("dir") == 0) {
-			pathname = System.getProperty("user.dir");
-		} else if (args[0].toString().compareTo("home") == 0) {
-			pathname = System.getProperty("user.home");
+		if (args.length == 0 || args[0].toString().compareTo("help") == 0) {
+			System.out.println("BICO version 0.2");
+			System.out.println("Bico coverts *.class files into Coq format");
+			System.out.println("When used with no argument or the 'help' argument - it prints this help message");
+			System.out.println("When used with one argument - Bico does it's job in this directory");
 		} else {
 			pathname = args[0].toString();
 		}
-		System.out.println(pathname);
+		System.out.println("Working path: " + pathname);
 
 		// creating file for output
-		// current solution - only one output file
-		File ff = new File(pathname + slash + "out.txt");
-		boolean exists = ff.exists();
-		if (exists) {
+		// FIXME: current solution - only one output file
+		File ff = new File(pathname + slash + "TheProgram.v");
+		if (ff.exists()) {
 			ff.delete();
 		}
 		ff.createNewFile();
 		FileWriter fwr = new FileWriter(ff);
 		BufferedWriter out = new BufferedWriter(fwr);
-		// sysouts are // becouse they may be useful
 
-		// TODO require import module program ... - always the same???
-		// TODO create universal objects for: a) all included classes??b) all
-		// classes to which this is subclass
-		String[] otherslib = new String[1];
-		otherslib[0] = "java.lang.Object";
-		// ??maybe later others updated while files??
+		/**
+		 * classes to be read from hand-made files
+		 */
+		String[] speciallibs = new String[] { 
+				"java.lang.Object", "java.lang.Exception" 
+		};
+
+		/**
+		 * classes to be parsed from standard library
+		 */
+		String[] otherlibs = new String[] { 
+//				"java.lang.Object", "java.lang.Exception" 
+		};
 
 		doBeginning(out);
-
+		
 		File f = new File(pathname);
 		String[] list = f.list();
 		int counter = 0;
@@ -91,18 +81,40 @@ public class Executor {
 			}
 		}
 
-		for (int i = 0; i < otherslib.length; i++) {
-			handleLibraryClass(otherslib[i], out);
+		String str;
+		
+		for (int i = 0; i < speciallibs.length; i++) {
+			str = "Load \""+coqify(speciallibs[i])+".v\".";
+			writeln(out,1,str);
+			out.newLine();
+		}
+			
+		for (int i = 0; i < otherlibs.length; i++) {
+			handleLibraryClass(otherlibs[i], out);
 		}
 
 		for (int i = 0; i < files.length; i++) {
 			handleDiskClass(files[i], pathname, out);
 		}
 
-		doEnding(files, otherslib, out);
+		doEnding(speciallibs, otherlibs, files, out);
 
 		out.close(); // closing output file
 	}
+
+	
+	static int tab=2;
+	private static void writeln(BufferedWriter out, int tabs, String s) 
+	throws IOException {
+		StringBuffer str=new StringBuffer();
+		for(int i=0; i<tabs*tab; i++) {
+			str.append(' ');
+		}
+		str.append(s);
+		out.write(str.toString());
+		out.newLine();
+	}
+	
 	/**
 	 * Handle one class from library files
 	 */
@@ -142,102 +154,76 @@ public class Executor {
 
 		Method[] methods = cg.getMethods();
 
-		// delete all dots in names and wrong chars - are all ok ??
-		// FIXME what numbers are correct/are names ok - packages
-		String str71 = "  Definition ";
-		String str7 = "";
-		str7 = jc.getPackageName();
-		if (str7.length() == 0) {
-			str71 = str71.concat("EmptyPackageName");
-		} else {
-			str71 = str71.concat(coqify(str7) + "PackageName");
-		}
-		str71 = str71.concat(" := 2%positive."); // ??always ????
-		// System.out.println(str71);
-		// System.out.println();
-		out.write(str71);
-		out.newLine();
-		out.newLine();
+		// FIXME package names have to be dealt with
+//		String str71 = "  Definition ";
+//		String str7 = "";
+//		str7 = jc.getPackageName();
+//		if (str7.length() == 0) {
+//			str71 = str71.concat("EmptyPackageName");
+//		} else {
+//			str71 = str71.concat(coqify(str7) + "PackageName");
+//		}
+//		str71 = str71.concat(" := 2%positive."); // ??always ????
+//		out.write(str71);
+//		out.newLine();
+//		out.newLine();
 
 		System.out.println("Module " + coqify(jc.getClassName()) + ".");
-		out.write("  Module " + coqify(jc.getClassName()) + ".");
-		out.newLine();
+		writeln(out,1,"Module " + coqify(jc.getClassName()) + ".");
 		out.newLine();
 
 		// TODO check all positives and set correct values
 		// classname
-		String str777 = "    Definition className : ClassName := (";
-		str777 = str777.concat("EmptyPackageName, 11%positive). "); //TODO: EmptyPackageName for now
-		out.write(str777);
-		out.newLine();
+		String str = "Definition className : ClassName := (";
+		str = str.concat("EmptyPackageName, 11%positive). "); //TODO: EmptyPackageName for now
+		writeln(out,2,str);
 		out.newLine();
 
 		// fields
 		Field[] ifield = jc.getFields();
-		if (ifield.length == 0) {
-			// there are no fields
-			out.newLine();
-		} else {
+		if (ifield.length > 0) {
 			String strf;
 			int jjjj;
 			for (int i = 0; i < ifield.length; i++) {
-				strf = "    Definition ";
+				strf = "Definition ";
 				strf = strf.concat(coqify(ifield[i].getName()));
 				strf = strf.concat("FieldSignature : FieldSignature := FIELDSIGNATURE.Build_t ");
-				out.write(strf);
-				out.newLine();
+				writeln(out,2,strf);
 				// !!! here positives
 				jjjj = 100 + i;
-				strf = "        (className, " + jjjj + "%positive)";
-				out.write(strf);
-				out.newLine();
+				strf = "(className, " + jjjj + "%positive)";
+				writeln(out,3,strf);
 				// !!! here will be conversion
-				strf = "        ";
-				strf = strf.concat(convertType(ifield[i].getType()));
-				out.write(strf);
+				strf = convertType(ifield[i].getType());
+				writeln(out,3,strf);
+				writeln(out,2,".");
 				out.newLine();
-				out.write("    .");
-				out.newLine();
-				out.newLine();
-
-				strf = "    Definition ";
+				
+				strf = "Definition ";
 				strf = strf.concat(coqify(ifield[i].getName()));
 				strf = strf.concat("Field : Field := FIELD.Build_t");
-				out.write(strf);
-				out.newLine();
-				strf = "        ";
-				strf = strf.concat(coqify(ifield[i].getName())
-						+ "FieldSignature");
-				out.write(strf);
-				out.newLine();
-				strf = "      " + ifield[i].isFinal();
-				out.write(strf);
-				out.newLine();
-				strf = "        " + ifield[i].isStatic();
-				out.write(strf);
-				out.newLine();
+				writeln(out,2,strf);
+				strf = coqify(ifield[i].getName()) + "FieldSignature";
+				writeln(out,3,strf);
+				strf = "" + ifield[i].isFinal();
+				writeln(out,3,strf);
+				strf = "" + ifield[i].isStatic();
+				writeln(out,3,strf);
 				if (ifield[i].isPrivate()) {
-					out.write("        Private");
-					out.newLine();
+					writeln(out,3,"Private");
 				}
 				if (ifield[i].isProtected()) {
-					out.write("        Protected");
-					out.newLine();
+					writeln(out,3,"Protected");
 				}
 				if (ifield[i].isPublic()) {
-					out.write("        Public");
-					out.newLine();
+					writeln(out,3,"Public");
 				}
 				// FIXME current solution
-				strf = "        FIELD.UNDEF";
-				out.write(strf);
+				strf = "FIELD.UNDEF";
+				writeln(out,3,strf);
+				writeln(out,2,".");
 				out.newLine();
-				out.write("   .");
-				out.newLine();
-				out.newLine();
-
 			}
-
 		}
 
 		// Method[] methods = jc.getMethods();
@@ -252,90 +238,65 @@ public class Executor {
 
 		// System.out.println(" Definition class : Class := CLASS.Build_t");
 		// System.out.println(" className");
-		out.write("    Definition class : Class := CLASS.Build_t");
-		out.newLine();
-		out.write("		className");
-		out.newLine();
+		writeln(out,2,"Definition class : Class := CLASS.Build_t");
+		writeln(out,3,"className");
 
 		String superClassName = coqify(jc.getSuperclassName());
 		// TODO: ??assume that all classes have supclass object even object??how to
 		// treat this
 		if (superClassName==null || superClassName.compareTo("java.lang.Object") == 0) {
-			// System.out.println(" None");
-			out.write("		None");
-			out.newLine();
+			writeln(out,3,"None");
 		} else {
-			// System.out.println(converttocoq(supclassname));
-			out.write("		(Some " + superClassName + ".className)");
-			out.newLine();
+			writeln(out,3,"(Some " + superClassName + ".className)");
 		}
 		// no interfaces now but...
 		String[] inames = jc.getInterfaceNames();
-		String str = "		(";
 		if (inames.length == 0) {
 			// System.out.println(" nil");
-			out.write("		nil");
-			out.newLine();
+			writeln(out,3,"nil");
 		} else {
+			str = "(";
 			for (int i = 0; i < inames.length; i++) {
 				str = str.concat(coqify(inames[i]) + "::");
 			}
 			str = str.concat("nil)");
 			// System.out.println(str);
-			out.write(str);
-			out.newLine();
+			writeln(out,3,str);
 		}
 
 		// fields
 
-		String str2 = "		(";
 		if (ifield.length == 0) {
 			// System.out.println(" nil");
-			out.write("		nil");
-			out.newLine();
+			writeln(out,3,"nil");
 		} else {
+			String str2 = "(";
 			for (int i = 0; i < ifield.length; i++) {
 				str2 = str2.concat(coqify(ifield[i].getName()) + "Field::");
 			}
 			str2 = str2.concat("nil)");
-			// System.out.println(str2);
-			out.write(str2);
-			out.newLine();
+			writeln(out,3,str2);
 		}
 		// methods
 		Method[] imeth = jc.getMethods();
-		String str1 = "		(";
 		if (imeth.length == 0) {
-			// System.out.println(" nil");
-			out.write("		nil");
-			out.newLine();
+			writeln(out,20,"nil");
 		} else {
+			str = "(";
 			for (int i = 0; i < imeth.length; i++) {
-				str1 = str1.concat(coqify(imeth[i].getName()) + "Method::");
+				str = str.concat(coqify(imeth[i].getName()) + "Method::");
 			}
-			str1 = str1.concat("nil)");
+			str = str.concat("nil)");
 			// System.out.println(str1);
-			out.write(str1);
-			out.newLine();
+			writeln(out,3,str);
 		}
 
-		// why only this??
-		// System.out.println(" " + jc.isFinal());
-		// System.out.println(" " + jc.isPublic());
-		// System.out.println(" " + jc.isAbstract());
-		// System.out.println("End " + converttocoq(jc.getClassName()) + ".");
-		// System.out.println("");
-		out.write("		" + jc.isFinal());
+		writeln(out,3,"" + jc.isFinal());
+		writeln(out,3,"" + jc.isPublic());
+		writeln(out,3,"" + jc.isAbstract());
+		writeln(out,2,".");
 		out.newLine();
-		out.write("		" + jc.isPublic());
-		out.newLine();
-		out.write("		" + jc.isAbstract());
-		out.newLine();
-		out.write("    .");
-		out.newLine();
-		out.newLine();
-		out.write("  End " + coqify(jc.getClassName()) + ".");
-		out.newLine();
+		writeln(out,1,"End " + coqify(jc.getClassName()) + ".");
 		out.newLine();
 	}
 
@@ -348,39 +309,26 @@ public class Executor {
 		// InstructionHandle ih[] = il.getInstructionHandles();
 		// signature
 		int u = i2 + 10;
-		String str = "    Definition ";
-		str = str.concat(coqify(method.getName()));
-		str = str
-				.concat("Signature : MethodSignature := METHODSIGNATURE.Build_t");
-		// System.out.println(str);
-		out.write(str);
-		out.newLine();
-		str = "        (className, " + u + "%positive)";
-		out.write(str);
-		out.newLine();
+		String str = "Definition "+coqify(method.getName());
+		str = str.concat("Signature : MethodSignature := METHODSIGNATURE.Build_t");
+		writeln(out,2,str);
+		str = "(className, " + u + "%positive)";
+		writeln(out,3,str);
 		Type[] atrr = method.getArgumentTypes();
-		str = "";
 		if (atrr.length == 0) {
-			// System.out.println(" nil");
-			out.write("		nil");
-			out.newLine();
+			writeln(out,3,"nil");
 		} else {
+			str = "(";
 			for (int i = 0; i < atrr.length; i++) {
-				str = str.concat("(" + convertType(atrr[i]) + "::");
+				str = str.concat(convertType(atrr[i]) + "::");
 			}
 			str = str.concat("nil)");
-			out.write("        " + str);
-			out.newLine();
+			writeln(out,3,str);
 		}
 		Type t = method.getReturnType();
-		str = "		" + convertTypeOption(t);
-		out.write(str);
+		writeln(out,3,convertTypeOption(t));
+		writeln(out,2,".");
 		out.newLine();
-
-		out.write("    .");
-		out.newLine();
-		out.newLine();
-
 	}
 
 	/**
@@ -399,136 +347,103 @@ public class Executor {
 		
 		if (!method.isAbstract()) {
 			// instructions
-			str = "    Definition ";
-			str = str.concat(name+"Instructions : list (PC*Instruction) :=");
+			str = "Definition "+name+"Instructions : list (PC*Instruction) :=";
 			// System.out.println(str);
-			out.write(str);
-			out.newLine();
+			writeln(out,2,str);
 			InstructionList il = mg.getInstructionList();
 			if (il != null) {
 				Instruction[] listins = il.getInstructions();
-				str = "";
-				if (listins.length == 0) {
-					// System.out.println(" nil");
-					out.write("		nil");
-					out.newLine();
-				} else {
-					int pos = 0;
-					for (int i = 0; i < listins.length; i++) {
-						str = str.concat("        "
-								+ doInstruction(pos, listins[i], cpg)
-								+ "::");
-						pos = pos + listins[i].getLength();
-						out.write(str);
-						out.newLine();
-						str = "";
-					}
-					str = "        nil";
-					// System.out.println(str);
-					out.write(str);
-					out.newLine();
+				int pos = 0;
+				for (int i = 0; i < listins.length; i++) {
+					str = doInstruction(pos, listins[i], cpg) + "::";
+					pos = pos + listins[i].getLength();
+					writeln(out,3,str);
 				}
-			}
-			// System.out.println();
-			out.write("    .");
-			out.newLine();
+			} 
+			writeln(out,3,"nil");
+			writeln(out,2,".");
 			out.newLine();
 			
-			// body
-			str = "    Definition ";
-			str = str.concat(name+"Body : BytecodeMethod := Build_BytecodeMethod_");
-			// System.out.println(str);
-			out.write(str);
-			out.newLine();
-			out.write("		"+name+"Instructions");
-			out.newLine();
-			// exception names not handlers now
-			ExceptionTable etab = method.getExceptionTable();
-			if (etab == null) {
-				// System.out.println(" nil");
-				out.write("		nil");
-				out.newLine();
-			} else {
-				String[] etabnames = etab.getExceptionNames();
-				str = "";
-				if (etabnames.length == 0) {
-					// System.out.println(" nil");
-					out.write("		nil");
-					out.newLine();
-				} else {
-					for (int i = 0; i < etabnames.length; i++) {
-						str = str.concat("		(" + coqify(etabnames[i]) + "::");
+			// exception handlers
+			Code code = method.getCode();
+			boolean handlers = false;
+			if (code != null) {
+				CodeException[] etab = code.getExceptionTable();
+				if (etab != null && etab.length>0) {
+					handlers = true;
+					str = "Definition "+name+"Handlers : List ExceptionHandler := ";
+					writeln(out,2,str);
+					for (int i = 0; i < etab.length; i++) {
+						str = "(EXCEPTIONHANDLER.Build_t ";
+						int catchType=etab[i].getCatchType();
+						if (catchType==0) {
+							str = str.concat("None ");	
+						} else {
+							str = str.concat("(Some ");
+							String exName=method.getConstantPool().getConstantString(catchType,
+									Constants.CONSTANT_Class);
+							str = str.concat(coqify(exName));
+							str = str.concat(".className) ");
+						}
+						str = str.concat("" + etab[i].getStartPC() + "%N ");	
+						str = str.concat("" + etab[i].getEndPC() + "%N ");	
+						str = str.concat("" + etab[i].getHandlerPC() + "%N)::");	
+						writeln(out,3,str);
 					}
-					str = str.concat("nil)");
+					str = "nil";
 					// System.out.println(str);
-					out.write("		" + str);
+					writeln(out,3,str);
+					writeln(out,2,".");
 					out.newLine();
 				}
 			}
-			int j;
-			j = mg.getMaxLocals();
-			// System.out.println(" "+j);
-			out.write("		" + j);
-			out.newLine();
-			j = mg.getMaxStack();
-			// System.out.println(" "+j);
-			out.write("		" + j);
-			out.newLine();
-			// System.out.println();
-			out.write("    .");
-			out.newLine();
+			
+			// body
+			str = "Definition "+name+"Body : BytecodeMethod := BYTECODEMETHOD.Build_t";
+			// System.out.println(str);
+			writeln(out,2,str);
+			writeln(out,3,name+"Instructions");
+			// exception names not handlers now
+			if (handlers) {
+				writeln(out,3,name+"Handlers");
+			} else {
+				writeln(out,3,"nil");
+			}
+			writeln(out,3,"" + mg.getMaxLocals());
+			writeln(out,3,"" + mg.getMaxStack());
+			writeln(out,2,".");
 			out.newLine();
 		}
 		
 		// method
-		str = "    Definition ";
-		str = str.concat(name+"Method : Method := METHOD.Build_t");
+		str = "Definition "+name+"Method : Method := METHOD.Build_t";
 		// System.out.println(str);
-		out.write(str);
-		out.newLine();
-		str = "	    ";
-		str = str.concat(name+"Signature");
-		// System.out.println(str);
-		out.write(str);
-		out.newLine();
+		writeln(out,2,str);
+		writeln(out,3,name+"Signature");
 		if (method.isAbstract()) {
-			str = "        None";
+			str = "None";
 		} else {
-			str = "        (Some ";
-			str = str.concat(name+"Body)");
+			str = "(Some "+name+"Body)";
 		}
-		// System.out.println(str);
-		out.write(str);
-		out.newLine();
-		// System.out.println(" "+method.isFinal());
-		out.write("	    " + method.isFinal());
-		out.newLine();
-		// System.out.println(" "+method.isStatic());
-		out.write("	    " + method.isStatic());
-		out.newLine();
-		str="        ";
+		writeln(out,3,str);
+		writeln(out,3,"" + method.isFinal());
+		writeln(out,3,"" + method.isStatic());
+		writeln(out,3,"" + method.isNative());
 		if (method.isPrivate()) {
-			// System.out.println(" private");
-			str = str.concat("Private");
+			str = "Private";
 		} else if (method.isProtected()) {
-			// System.out.println(" protected");
-			str = str.concat("Protected");
+			str = "Protected";
 		} else if (method.isPublic()) {
-			// System.out.println(" public");
-			str = str.concat("Public");
+			str = "Public";
 		} else {
-			String attr="0x"+Integer.toHexString(method.getAccessFlags());
-			System.out.println("Unknown modifier of method "+name+" : "+attr);
-			str = str.concat("Package (* "+attr+" *)");
+//			String attr="0x"+Integer.toHexString(method.getAccessFlags());
+//			System.out.println("Unknown modifier of method "+name+" : "+attr);
+			str = "Package"; // " (* "+attr+" *)"
 		}
-		
-		out.write(str);
-		out.newLine();
+		writeln(out,3,str);
 		// System.out.println();System.out.println();
-		out.write("    .");
+		writeln(out,2,".");
 		out.newLine();
-		out.newLine();
-
 	}
 
 	/**
@@ -541,14 +456,11 @@ public class Executor {
 		// System.out.println();
 		// System.out.println("Module TheProgram.");
 		// System.out.println();
-		out.write("Require Import ImplemProgramWithList.");
+		writeln(out,0,"Require Import ImplemProgramWithList.");
 		out.newLine();
+		writeln(out,0,"Import P.");
 		out.newLine();
-		out.write("Import P.");
-		out.newLine();
-		out.newLine();
-		out.write("Module TheProgram.");
-		out.newLine();
+		writeln(out,0,"Module TheProgram.");
 		out.newLine();
 
 	}
@@ -558,13 +470,16 @@ public class Executor {
 	 * @param files - names of classes read from disk
 	 * @param others - names of classes from the library
 	 */
-	private static void doEnding(String[] files, String[] others,
+	private static void doEnding(String[] speciallibs, String[] otherlibs, String[] files,
 			BufferedWriter out) throws IOException {
 
 		// all classes
-		String str = "  Definition AllClasses : list Class := ";
-		for (int i = 0; i < others.length; i++) {
-			str = str.concat(coqify(others[i]) + ".class :: ");
+		String str = "Definition AllClasses : list Class := ";
+		for (int i = 0; i < speciallibs.length; i++) {
+			str = str.concat(coqify(speciallibs[i]) + ".class :: ");
+		}
+		for (int i = 0; i < otherlibs.length; i++) {
+			str = str.concat(coqify(otherlibs[i]) + ".class :: ");
 		}
 		for (int i = 0; i < files.length; i++) {
 			str = str.concat(coqify(files[i]) + ".class :: ");
@@ -572,27 +487,19 @@ public class Executor {
 		str = str.concat("nil.");
 		// System.out.println(str);
 		// System.out.println();
-		out.write(str);
-		out.newLine();
+		writeln(out,1,str);
 		out.newLine();
 
 		// FIXME no interfaces possible now
-		out.write("  Definition AllInterfaces : list Interface := nil.");
+		writeln(out,1,"Definition AllInterfaces : list Interface := nil.");
 		out.newLine();
+		writeln(out,1,"Definition program : Program := PROG.Build_t");
+		writeln(out,2,"AllClasses");
+		writeln(out,2,"AllInterfaces");
+		writeln(out,1,".");
 		out.newLine();
-		out.write("  Definition program : Program := PROG.Build_t");
+		writeln(out,0,"End TheProgram.");
 		out.newLine();
-		out.write("	AllClasses");
-		out.newLine();
-		out.write("	AllInterfaces");
-		out.newLine();
-		out.write("  .");
-		out.newLine();
-		out.newLine();
-		out.write("End TheProgram.");
-		out.newLine();
-		out.newLine();
-
 	}
 
 	/**
@@ -691,7 +598,7 @@ public class Executor {
 			char c = name.charAt(0);
 	
 			if (c == 'A' || c == 'B' || c == 'I' || c == 'S') {
-				ret = name;
+				ret = "V" + name.substring(1,5) + " " + c + "array";
 			} else if (c == 'C' || c == 'D' || c == 'F' || c == 'L') {
 				ret = Unhandled("ArrayInstruction", ins);
 			} else {
@@ -702,9 +609,9 @@ public class Executor {
 		else if (ins instanceof ATHROW)
 			ret = name;
 		else if (ins instanceof BIPUSH) {
-			ret = Unhandled(ins);
+			ret = "Const BYTE " + printZ(((BIPUSH)ins).getValue());
 		} else if (ins instanceof BranchInstruction) {
-			String index = printIndex(((BranchInstruction) ins).getIndex());
+			String index = printZ(((BranchInstruction) ins).getIndex());
 	
 			if (ins instanceof GOTO) {
 				ret = name + " " + index;
@@ -714,6 +621,8 @@ public class Executor {
 				String op;
 	
 				if (name.endsWith("null")) {
+					//  ifnonnull o        --> Ifnull NeRef o
+					//  ifnull o           --> Ifnull EqRef o
 					if (name.contains("non")) {
 						op = "Ne";
 					} else {
@@ -753,7 +662,7 @@ public class Executor {
 		} else if (ins instanceof CPInstruction) {
 			Type type = ((CPInstruction) ins).getType(cpg);
 			if (ins instanceof ANEWARRAY) {
-				ret = name + " " + convertType(type);
+				ret = "Newarray " + convertType(type);
 			} else if (ins instanceof CHECKCAST) {
 				ret = name + " " + convertType(type);
 			} else if (ins instanceof FieldOrMethod) {
@@ -775,8 +684,7 @@ public class Executor {
 			} else if (ins instanceof LDC2_W) {
 				ret = Unhandled(ins);
 			} else if (ins instanceof MULTIANEWARRAY) {
-				short d = ((MULTIANEWARRAY) ins).getDimensions();
-				ret = name + " " + convertType(type) + d + "%Z";
+				ret = Unhandled(ins);
 			} else if (ins instanceof NEW) {
 				ret = name + " " + convertType(type);
 			} else 
@@ -794,7 +702,7 @@ public class Executor {
 		} else if (ins instanceof FCONST) {
 			ret = Unhandled(ins);
 		} else if (ins instanceof ICONST) {
-			ret = "Const INT " + ((ICONST) ins).getValue();
+			ret = "Const INT " + printZ(((ICONST) ins).getValue());
 		} else if (ins instanceof IMPDEP1) {
 			ret = Unhandled(ins);
 		} else if (ins instanceof IMPDEP2) {
@@ -807,8 +715,7 @@ public class Executor {
 			int index = ((LocalVariableInstruction) ins).getIndex();
 	
 			if (ins instanceof IINC) {
-				ret = name + " " + index + "%N " + ((IINC) ins).getIncrement()
-						+ "%Z";
+				ret = name + " " + index + "%N " + printZ(((IINC) ins).getIncrement());
 			} else {
 				char c = name.charAt(0);
 	
@@ -818,7 +725,8 @@ public class Executor {
 					if (under != -1) {
 						name = name.substring(0, under);
 					}
-					ret = name + " " + index + "%N";
+					// Aload -> Vload Aval
+					ret = "V" + name.substring(1) + " " + c + "val " + index + "%N";
 				} else if (c == 'D' || c == 'F' || c == 'L') {
 					ret = Unhandled("LocalVariableInstruction", ins);
 				} else {
@@ -839,15 +747,19 @@ public class Executor {
 			ret = Unhandled(ins);
 		} else if (ins instanceof ReturnInstruction) {
 			char c = name.charAt(0);
-			if (c == 'A' || c == 'I' || c == 'R' /* nothing returned */) {
+			if (c == 'R') { // return nothing
 				ret = name;
+			} else if (c == 'A' || c == 'I') {
+				// Areturn -> Vreturn Aval
+				// Ireturn -> Vreturn Ival
+				ret = "Vreturn " + c + "val";
 			} else if (c == 'D' || c == 'F' || c == 'L') {
 				ret = Unhandled("ReturnInstruction", ins);
 			} else {
 				ret = Unknown("ReturnInstruction", ins);
 			}
 		} else if (ins instanceof SIPUSH) {
-			ret = Unhandled(ins);
+			ret = "Const SHORT " + printZ(((SIPUSH)ins).getValue());
 		} else if (ins instanceof StackInstruction) {
 			ret = name;
 		} else {
@@ -894,12 +806,20 @@ public class Executor {
 	 * for printing offsets
 	 * @return i%Z or (-i)%Z
 	 */
-	private static String printIndex(int index) {
+	private static String printZ(int index) {
 		if (index<0) {
 			return "("+index+")%Z";
 		} else {
 			return String.valueOf(index)+"%Z";
 		}
+	}
+
+	/**
+	 * for printing offsets
+	 * @return i%Z or (-i)%Z
+	 */
+	private static String printZ(Number index) {
+		return printZ(index.intValue());
 	}
 
 	/**
@@ -922,7 +842,8 @@ public class Executor {
 			return null;
 		} else {
 			String strout = strin;
-			strout = strin.replace(".", "_");
+			strout = strout.replace(".", "_");
+			strout = strout.replace("/","_");
 			// strout = strout.replace("(","_");
 			// strout = strout.replace(")","_");
 			strout = strout.replace(">", "_");
