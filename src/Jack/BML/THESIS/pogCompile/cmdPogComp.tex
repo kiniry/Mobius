@@ -1,0 +1,171 @@
+
+
+
+
+
+%\newcommand{\instr}[1]{\mbox{\rm\texttt{#1}}}
+
+%\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
+%\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
+%\newcommand{\invariant}[1]{\it{I}_{\tt{#1}}}
+%\newcommand{\boucle}[1]{\texttt{#1}}
+%\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
+
+%\newcommand{\ins}[1]{ins_{#1}} %{#1 : \mbox{\rm\texttt{instr}} }
+%\newcommand{\insOnly}{\mbox{\rm\texttt{instr}}}
+%\newcommand{\excPostSpec}{exc^{bc}}
+
+
+%\newcommand{\pre}{\psi^{pre}}
+%\newcommand{\normalPost}{\psi^{postN}}
+\newcommand{\excPostExpl}{\mbox{\rm\textsf{excPost}}^{src2bc}}
+%\newcommand{\javaNull}{null}
+\newcommand{\arrayLength}{\texttt{length}}
+
+%\newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
+
+%\newcommand{\stateTrans}{\longrightarrow}
+%\newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
+
+
+
+
+%\newcommand{\retValue}[1]{\textrm{returnVal}(#1)} % designates the result of the method
+%\newcommand{\objCl}[1]{\tt{Obj_{#1}}}
+%\newcommand{\modExp}{modExp}% stands for modfied locations by loops and methods
+
+
+
+%\newcommand{\excIndex}[2]{excIndex(#1,#2 )}
+
+
+%classFileExt.tex
+%\newcommand{\intLiteral}{\texttt{int\_const} }
+%\newtheorem{Formula}{Formulas}
+%\newtheorem{Predicate}{Predicates}
+
+%\newcommand{\class}{\mbox{ \rm \texttt{Class} }} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP names%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\wpName}{\mbox{\rm\textit{wp}}}
+\newcommand{\wpNameSrcExpr}{\wpName^{src}}
+\newcommand{\wpNameStmt}{\wpName^{bc}_{stmt}}
+\newcommand{\wpNameBcSeq}{\wpName^{bc}_{seq}}
+\newcommand{\wpNameExpl}{\wpName^{bc}}
+
+\newcommand{\wpBcSeq}[3]{ \wpName^{bc}_{seq}(#1, #2, #3, \methodd) } % for denoting a weakest precondition over sequence of instructions
+\newcommand{\wpExpl}[3]{\wpName^{bc}( #1, #2, #3, \methodd) } % wp for a single instruction with  explicite postconditions
+\newcommand{\wpStmt}[3]{\wpName^{bc}_{stmt}( #1, #2, #3, \methodd) } % for a single instruction
+
+%\newcommand{\formulaBc}{\mathcal{F}^{bc}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ % param1 - start protect region,param2 - end protect region, param3 - start exc handler, param4 - exception type
+\newcommand{\wpSrcExpr}[4]{ \textrm{wp}^{src}( #1 , #2, #3, \methodd )_{#4} }
+\newcommand{\wpSrcStmt}[3]{ \textrm{wp}^{src}( #1 , #2, #3, \methodd ) }
+\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}}
+\newcommand{\excPostSrc}{\mbox{\rm\textsf{excPost}}^{src}}
+\newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{excPostSpec}}^{src}}
+\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}}
+\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%end wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pogComp.tex %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%source expressions
+
+\newcommand{\formulaSrc}{\mathcal{F}}
+\newcommand{\expressionSrc}{\mathcal{E}^{src}}
+\newcommand{\expressionSrcRel}{\mathcal{E}^{\rel}}
+\newcommand{\constantInt}{\mbox{\rm\textbf{constInt}}}
+\newcommand{\constantBool}{\mbox{\rm\textbf{constBool}}}
+\newcommand{\constantRef}{\mbox{\rm\textbf{constRef}}}
+
+\newcommand{\newSrc}{\mbox{\rm\textbf{new}}}
+\newcommand{\local}{\texttt{locVar}} 
+\newcommand{\this}{\mbox{\rm\textbf{this}}}
+\newcommand{\rel}{\mathcal{R}}
+%statements
+
+\newcommand{\stmt}{\mathcal{STMT}} 
+\newcommand{\Myif}{\mbox{\rm\texttt{if}}}
+\newcommand{\Mythen}{\mbox{\rm\texttt{then}}} 
+\newcommand{\Myelse}{\mbox{\rm\texttt{else}}}
+\newcommand{\while}{\mbox{\rm\texttt{while}}}
+\newcommand{\invariant}{\mbox{\rm\texttt{INV}}}
+\newcommand{\modLoop}{\mbox{\rm\texttt{modif}}}
+\newcommand{\do}{\mbox{\rm\texttt{do}}}
+\newcommand{\try}{\mbox{\rm\texttt{try}}}
+\newcommand{\catch}{\mbox{\rm\texttt{catch}}}
+\newcommand{\finally}{\mbox{\rm\texttt{finally}}}
+\newcommand{\throw}{\mbox{\rm\texttt{throw}}} 
+\newcommand{\returnSrc}{\mbox{\rm\texttt{return}}}
+ \newcommand{\instanceofSrc}{\mbox{\rm\textbf{instanceof}}}
+
+
+%%%%%%%%%%%%%%expressions and statements
+\newcommand{\ExprStmt}{\mathcal{S}}
+ 
+\newcommand{\compileSynt}[1]{  \ulcorner #1 \urcorner^{\tiny{spec}}  } % this for the syntactic compilation of source expressions into bytecode expressions as is defined % in the JML compiler 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Compiler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\addExceptionTableOnly}{\mbox{\rm\textsf{addExcHandler}}}
+\newcommand{\addExceptionTable}[4]{\mbox{\rm\textsf{addExcHandler}}(#1, \ #2, \ #3, \ #4 , \methodd)}
+
+\newcommand{\addLoopTableOnly}{\mbox{\rm\textsf{addLoopSpec}}}
+\newcommand{\addLoopTable}[3]{\mbox{\rm\textsf{addLoopSpec}}(#1, \ #2, \ #3,  \methodd)}
+\newcommand{\compile}[1]{ \ulcorner  #1 \urcorner }
+\newcommand{\compileLabel}[3]{ \ulcorner  #1,#2,#3 \urcorner }
+
+
+\newcommand{\compileExp}[2]{\compile{ #1} }
+
+
+\newcommand{\stR}[1]{\textrm{startInd}(#1 ) } %startRegion
+\newcommand{\enR}[1]{\textrm{endInd}(#1 ) } %endRegion
+
+
+\newcommand{\next}[1]{\mbox{\rm\textit{next}}(#1)}
+\newcommand{\prev}[1]{\mbox{\rm\textit{prev}}(#1)}
+\newcommand{\mod}{\mbox{\rm\textsf{modif}}^{src}}
+
+
+
+\newcommand{\eqModNames}{ =^{mod \ Names \ and \ bools } }
+\newcommand{\spaceWpBc}{ \phantom{ \textrm{wp}^{bc} }}
+\newcommand{\spaceWpSrc}{ \phantom{ \textrm{wp}^{src} }}
+%\newcommand{\body}{ \mbox{\rm\textsf{body}} }
+%\newcommand{\JavaType}{ \texttt{ JavaType} }
+\newcommand{\ClassTypes}{ \texttt{ ClassTypes} }
+\newcommand{\Mybool}{ \texttt{boolean} }
+
+
+\newcommand{ \freshVar}{ \mbox{\rm\textbf{boundVar}} }
+
+
+\newcommand{\Constructor}[1]{\mbox{\rm\textsf{constr}}(#1) }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%the assertion language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+ \newcommand{\expressionSpecSrc}{\mathcal{E}^{spec}}  % a mapping from source expressions to expressions in the assertion language 
+ \newcommand{\compileSrcSpec}[1]{\ulcorner #1 \urcorner^{\tiny{src2spec}}}
+
+
+
+\newcommand{\returnType}{\mbox{\rm\textsf{retType}}}
+
+
+\newcommand{\bydef}{^{\mbox{\rm{\textit{def}}}}}
+%\newcommand{\excType}{\mbox{\rm{\texttt{ExcClass}}}}
+\newcommand{\Exception}{\mbox{\rm{\texttt{Exception}}}}% stands for the super class of all Java exceptions
+
