@@ -30,6 +30,7 @@ public class Executor {
 			System.out.println("Bico coverts *.class files into Coq format");
 			System.out.println("When used with no argument or the 'help' argument - it prints this help message");
 			System.out.println("When used with one argument - Bico does it's job in this directory");
+			System.exit(0);
 		} else {
 			pathname = args[0].toString();
 		}
@@ -210,14 +211,19 @@ public class Executor {
 				strf = "" + ifield[i].isStatic();
 				writeln(out,3,strf);
 				if (ifield[i].isPrivate()) {
-					writeln(out,3,"Private");
-				}
+					str = "Private";
+				} else
 				if (ifield[i].isProtected()) {
-					writeln(out,3,"Protected");
+					str = "Protected";
 				}
 				if (ifield[i].isPublic()) {
-					writeln(out,3,"Public");
+					str = "Public";
+				} else {
+//					String attr="0x"+Integer.toHexString(method.getAccessFlags());
+//					System.out.println("Unknown modifier of method "+name+" : "+attr);
+					str = "Package"; // " (* "+attr+" *)"
 				}
+				writeln(out,3,str);
 				// FIXME current solution
 				strf = "FIELD.UNDEF";
 				writeln(out,3,strf);
@@ -371,7 +377,7 @@ public class Executor {
 				CodeException[] etab = code.getExceptionTable();
 				if (etab != null && etab.length>0) {
 					handlers = true;
-					str = "Definition "+name+"Handlers : List ExceptionHandler := ";
+					str = "Definition "+name+"Handlers : list ExceptionHandler := ";
 					writeln(out,2,str);
 					for (int i = 0; i < etab.length; i++) {
 						str = "(EXCEPTIONHANDLER.Build_t ";

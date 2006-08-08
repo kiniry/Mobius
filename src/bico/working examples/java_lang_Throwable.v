@@ -11,12 +11,6 @@
     Definition _init_Instructions : list (PC*Instruction) :=
       (0%N, Vload Aval 0%N)::
       (1%N, Invokespecial java_lang_Object._init_Signature)::
-      (4%N, Vload Aval 0%N)::
-      (5%N, Vload Aval 0%N)::
-      (6%N, Putfield java_lang_Throwable.causeFieldSignature)::
-      (9%N, Vload Aval 0%N)::
-      (10%N, Invokevirtual java_lang_Throwable.fillInStackTraceSignature)::
-      (13%N, Pop)::
       (14%N, Return)::
       nil
     .
