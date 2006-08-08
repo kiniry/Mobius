@@ -1,0 +1,507 @@
+\subsection{Industrial evaluations}
+Two industrial evaluations have been carried internally by industrial
+partners Axalto and Oberthur. The purpose of the present section is to
+summarize the outcomes of these evaluations, that respectively focused
+on the PayFlex case study and on a file system. More details can be
+found in internal documents by the partners.
+
+\subsubsection{Verification of banking case studies}
+As a first test for Jack, we have studied a little banking
+application.  This section presents different metrics concerning the
+evaluation of the tool on this package.
+\begin{table}
+ \begin{tabular}{|l|c|c|c|c|c|c|c|} \hline
+ Classes & Java & JavaDoc & JML & Proof & Automatic & Time to PO & Time to \\
+  & lines & lines & lines & obligations & proof & generate (s) & prove (s)\\  \hline
+ Transfert\_src  & 116 & 34 & 150 & 359 & 91\% & 22,5 & 238 \\
+ AccountMan\_src & 105 & 51 & 236 & 269 & 82\% & 12,7 & 195 \\
+ Currency\_src   &  93 & 20 &  28 &  50 & 96\% &  7,6 &  17 \\
+ Balance\_src    &  64 & 38 &  58 & 335 & 95\% & 16,5 & 191 \\
+ Spending\_rule  &  40 & 33 &  62 &  42 & 67\% & 13,6 & 217 \\ \hline
+ \end{tabular}
+\caption{banking applet metrics}
+\label{MetricsTable}
+\end{table}
+Different remarks can be made from Table \ref{MetricsTable},
+concerning the cost of adding JML annotations, the performance 
+of the tool, as well as the cost associated to the proof.
+The case study was also used to evaluate the following points:
+\begin{itemize}
+\item \emph{Cost of the annotations}
+A first remark concerns the cost of the annotations.  The metrics
+given here only concern the number of lines but one can see that the
+documentation size (JavaDoc and JML) is one and half greater than the
+code size.  So, writing the JML specification seems to be a costly
+activity.  This remark can be moderated by two points: this
+development was the first that we made, and annotations were added to
+already existing code. So it suffers from its lack of abstraction, and
+the annotations are really verbose. Moreover the time to specify is to
+be compared to the time to test.
+
+\item \emph{Interactive phase}
+The automatic phases are quite responsive with some seconds to
+generate proof obligations and attempt to discharge them
+automatically.  Furthermore, the automatic proof rating is reasonable.
+It is quite greater than the usual value for a B development (around
+80\%).
+
+Nevertheless, after automatic proof step, there remain 111 lemmas to
+prove using the Atelier B interface.  An expert needs between 4 and 5
+days to prove them.
+\end{itemize}
+Then, the new version of Jack has been evaluated on the Payflex case
+study with the automatic mode using Simplify combined with the
+interactive mode using Coq. Relevant changes on the Coq mode include:
+\begin{itemize}
+\item the transitivity relation for subtypes is now explicit:
+      as a result, proofs about the payflex file system are better handled
+      when one must decide whether a file of type T is also of type T' 
+or not.
+  
+\item  the display of proof obligation hypothesis is clearer and more 
+readable than on previous version
+
+  
+\item an prototype editor for coq inside Eclipse has been
+  developed. It can be used as an alternative to ProofGeneral or
+  CoqIDE.
+
+  
+\item the use of pure (i.e. side-effect free) method calls in JML
+  annotations is better handled: the method call is no longer
+  automatically replaced by its postcondition, instead it is displayed
+  as a Java method call and the user can unfold it when desired (as is
+  done in the Krakatoa tool for instance)
+  
+\item JML model variables (i.e. used for specification purpose only)
+  are now well supported, and one can also use some methods declared
+  with the keyword 'native' (it is not standard JML) in
+  annotations.These methods are native with respect to a particular
+  prover, that is they must be defined directly in the prover. That is
+  a way to develop some 'specification libraries' to reuse when
+  needed.
+\end{itemize}
+In order to reduce the overhead of writing annotations, Axalto has
+also worked on the JML specification of the JC applet in general (as
+the tool uses as input the JML specification). Some theoretical
+results on the verification of specific properties have been obtained,
+and a paper has been issued on the subject\cite{Rousset}. We start the
+development of a tool with graphical interface to assist the writing
+of annotations: from an UML class diagram or the code itself of an
+application, it proposes some specification patterns to the user
+(non-null by default for references, ranges for variable of integer
+type and arrays length), then translation to adequate class invariants
+and method preconditions is performed. In practice, annotations
+generated in that manner reveal sufficient to prove that each method
+'does not go wrong' (i.e. is runtime error free) and all the
+verification conditions are filled in automatic mode with Simplify
+using tools like Krakatoa or Jack.
+
+\subsubsection{Verification of a file system}
+This section describes the evaluation of the JACK product by Oberthur
+Card Systems to specify Java Card programs in a smart card technology
+context.
+
+\subsubsection{File system specification}
+For our evaluation, we choose a case study in line with the objectives
+of the INSPIRED project. We specify a large part of a file system on
+smart card. The file system stores user data and manages access
+control on these data. It is for example an important security feature
+of e-passports.
+
+In our evaluation, we consider a realistic file system containing
+three kinds of files:
+
+\begin{itemize}
+\item Elementary files (EF): contain user data. There are several types of EF:
+\begin{itemize}
+\item Binary files: are files without internal structure
+\item Record files: where data are stored in records. These files can be:
+\begin{itemize}
+\item With records of variable length
+\item With record of fixed length
+\item With a cyclic structure
+\end{itemize}
+\end{itemize}
+\item Dedicated files (DF): are similar to \lq\lq folders\rq\rq\; they contain
+other EF or DF
+
+\item Master file (MF): it is a particular DF that is the root of the
+file system
+
+\end{itemize}
+We specified a complete set of commands that are:\\
+\begin{tabular}{l}
+CREATE FILE \\
+SELECT FILE \\
+READ BINARY \\
+UPDATE BINARY \\
+READ RECORD \\
+UPDATE RECORD \\
+APPEND RECORD \\
+DELETE FILE
+\end{tabular}\\
+These commands are specified in ISO-IEC 7816 as APDU (Application
+Protocol Data Unit). We recall the APDU structure. It comprises:
+\begin{itemize}
+\item CLA (1 byte): define the command class 
+\item  INS (1byte): command instruction
+\item  P1 (1 byte) and P2 (1 byte): parameters of the command
+\item  LC (1 byte): command length
+\item  Data field (N bytes): data of the command
+\item LE (1 byte): expected length of the response
+\end{itemize}
+The response APDU contains two fields:
+\begin{itemize} 
+\item Body: containing the data returned by the card
+\item SW1||SW2: status of the command execution (9000 means \lq\lq correct
+execution\rq\rq  and others values are reserved for error and warning
+status).
+
+\end{itemize}
+Our specification uses heavily an existing Java Card API specification
+developed by Erik Poll in the VERIFICARD project. Other important
+ingredients are: 
+\begin{itemize}
+\item Specification of basic operations on APDU (offset
+computation, slicing\ldots) 
+\item Arithmetic operation: this point is quite difficult because we
+  use heavily the cast between the types short (signed) and byte
+  (unsigned) Operations on Bits: ({\tt \&\&}, {\tt <<}, \ldots) : to
+  avoid a complex specification, we put them as axioms.
+\end{itemize}
+Another important ingredient is the access condition control
+that is performed by the following method:
+
+ checkAccessCondition(oper,fichier)
+
+that take two parameters:
+\begin{itemize}
+\item
+oper: describes the requested operation. Possible values are:
+\\
+\begin{tabular}{l}
+AMB\_CREATE\_DF \\
+AMB\_CREATE\_EF \\
+AMB\_EF\_READ  \\
+AMB\_EF\_APPEND\_RECORD \\
+AMB\_DF\_DELETE  \\
+AMB\_EF\_DELETE \\
+AMB\_EF\_WRITE 
+\end{tabular}\\
+\item fichier: is the reference on the file on which the operation will act. 
+\end{itemize}.
+The result of the method has two possible values:  ACCESS GRANTED 
+or ACCESS DENIED.
+
+\paragraph{Complete example of specification}
+
+We present in this section the JML specification of he READ BINARY
+command. The corresponding method has the following signature:
+
+readBinary(byte p1,byte p2,byte Lc,byte[] buffer, short offset)
+We distinguish three different steps for the specification development: 
+\begin{itemize}
+\item Lookup the file
+\item Offset computation
+\item Copy of the found data in the output buffer
+\end{itemize}
+
+\subparagraph{Lookup the file}
+The parameters p1, p2 are used to identify the file. A private method
+is especially defined for this operation.
+
+\begin{lstlisting}
+ElementaryFile getBinary(byte P1,byte p2)}.
+
+/*@ requires true;
+@ ensures ((byte)(p1 & (byte)(0x80) == 0)
+@               ==> \result == m_oCurrentFile;
+@ ensures ((byte)(p1 & (byte)(0x80) != 0)
+@               ==> (\exists ElementaryFile ef;
+@                       ef.m_bSFI == (p2 & 0x7F);
+@                       \result == ef)
+@ ensures \typeof(\result) <: \type(Elementaryfile)
+@*/
+\end{lstlisting}
+This file research is based on a of a linked list that we completely specified, for operations: create, insert, remove. 
+
+\subparagraph{Offset computation}
+This part is performed by the following method:
+\begin{lstlisting}
+getOffset(byte p1,byte p2)
+
+/*@ requires true;
+@ modifies \nothing;
+@ ensures ((byte)(p1 & 0x80)== 0x80)==>
+@               \result == Util.makeShort((byte)0,P2);//(1)
+@ ensures ((byte)(p1 & 0x80)!= 0x80)==>
+@               \result == Util.makeShort(P1,P2);//(2)
+@ ensures \result >= 0;//(3)
+@*/
+\end{lstlisting}
+\subparagraph{Copy data}
+This step is performed without difficulties in JML. 
+
+We put together all the previous pieces of specification to build the specification of the READ BINARY command.
+\begin{lstlisting} 
+/*@ requires apdu != null;
+@ requires apduR != null;
+@ modifies m_oCurrentFile;
+@ modifies ISOException.systemInstance.theSw[0],
+ISOException.systemInstance.systemInstance._reason;
+@ ensures (\exists TransparentFile ef;
+@               ef == getBinaryFile(p1, p2);
+@               ef.checkfFileStateAccessRead() ==>
+@               checkAccessCondition(File.AMB_DEF_READ, ef)
+@                       == ACCESS_GRANTED
+@               ==> (
+@                       (((byte)0x00 & length)+getUpdateOffset(p1, p2)<= ef.length) ==>
+@                       (
+@                               (\forall short s;
+@                                       0 <=s
+@                                       && s<((byte)0x00 & length);
+@                                            ef.data[s+getUpdateOffset(p1,p2)] ==apduR[s])
+@                               &&
+@                               \result == ((byte)0x00 & length)
+@                       ))
+@               &&
+@               (
+@                       (((byte)0x00 & length)+getUpdateOffset(p1, p2)> ef.length) ==>
+@                       (
+@                               (\forall short s;
+@                                       0 <=s
+@                                       && s < (ef.length -getUpdateOffset(p1, p2));
+@                                               ef.data[s+getUpdateOffset(p1, p2)]== apduR[s])
+@                               &&
+@                               \result == (ef.length -getUpdateOffset(p1, p2))
+@                       )
+@               )
+@               &&
+@               ((byte)(p1 & (byte)0x80) == (byte)0x80
+@               ==> ef == currentFile
+@       )));
+@       signals (ISOException ex) true;
+@*/
+\end{lstlisting}
+A complete example of proof As example, we extract from our
+development a proof from the APPEND RECORD command. It concerns 
+the creation of a record and constraints on its size.
+
+The proof is composed of the following sections: first, it contains
+a header to import all the necessary libraries:
+\begin{lstlisting}
+Add LoadPath "c:\coq\lib\theories\bool" as Coq.Bool.
+Require Import Bool.
+Add LoadPath "c:\coq\lib\theories\ZArith" as Coq.ZArith.
+Require Import ZArith.
+Add LoadPath "c:\coq\lib\theories\Logic" as Coq.Logic.
+Require Import Classical.
+Require Import "C:\eclipse\workspace\IDONE\JPOs
+\com_oberthurcs_javacard_common_filesystem_VariableRecordElementaryFile".
+
+Load "C:\eclipse\workspace\IDONE\JPOs\localTactics.v".
+
+Open Scope Z_scope.
+Open Scope J_Scope.
+\end{lstlisting}
+Then, it contains a declaration of Java Card variables:
+\begin{lstlisting}
+Section JackProof.
+Variable Result_setData_3: bool.
+Variable byteelements_0: REFERENCES -> t_int -> t_byte.
+Variable filesystem_Record_m_sLength_0: 
+REFERENCES -> t_short.
+Variable filesystem_Record_m_baData_0: 
+REFERENCES -> REFERENCES.
+Variable filesystem_Record_index_0: 
+REFERENCES -> t_short.
+Variable filesystem_Record_state_0:
+ REFERENCES -> t_short.
+Variable util_LinkedObject_next_0: 
+REFERENCES -> REFERENCES.
+Variable util_LinkedObject_indice_0: 
+REFERENCES -> t_short.
+Variable util_LinkedObject_previous_0: 
+REFERENCES -> REFERENCES.
+Variable util_LinkedObject_jmlPrevious_0: 
+REFERENCES -> REFERENCES.
+Variable util_LinkedObject_jmlNext_0: 
+REFERENCES -> REFERENCES.
+Variable f_java_lang_Object_owner_0: REFERENCES -> REFERENCES.
+Variable newObject_8: REFERENCES.
+Variable this: REFERENCES.
+Variable l_p_baSource: REFERENCES.
+Variable l_p_sOffset: t_short.
+Variable l_p_sLength: t_short.
+Variable l_p_sRecordSize: t_short.
+\end{lstlisting}
+Then one finds hypotheses coming from the specification of called methods:
+\begin{lstlisting}
+Variable hyp1 : (Result_setData_3 = true).
+Variable hyp2 : (not ((newObject_8 = null))).
+Variable hyp3 : (not ((newObject_8 = null))).
+Variable hyp4 : (not ((newObject_8 = null))).
+Variable hyp5 : (not ((instances newObject_8))).
+Variable hyp6 : (newObject_8 <> null).
+Variable hyp7 : (((j_lt 255 l_p_sRecordSize)) ->
+((filesystem_Record_m_sLength_0 newObject_8) = 255)).
+Variable hyp8 : (((j_le l_p_sRecordSize 0)) ->
+((filesystem_Record_m_sLength_0 newObject_8) = 255)).
+Variable hyp9 : (((((j_lt 0 l_p_sRecordSize)) /\ ((j_le l_p_sRecordSize 255))))
+ -> ((filesystem_Record_m_sLength_0 newObject_8) = l_p_sRecordSize)).
+Variable hyp10 : forall x1258, (x1258 <> newObject_8) ->((f_m_sLength x1258) 
+= (filesystem_Record_m_sLength_0 x1258)).
+Variable hyp11 : (forall (x1259:REFERENCES), 
+(~((singleton REFERENCES (filesystem_Record_m_baData_0 newObject_8)) x1259)) 
+-> ((byteelements_0 x1259) = (byteelements x1259))).
+Variable hyp12 : forall (Result_checkData_4: bool),
+        ((((((((((((j_le 0 l_p_sLength)) /\ 
+((j_le l_p_sLength (arraylength (filesystem_Record_m_baData_0 newObject_8)))))) /\ 
+((j_le (j_add l_p_sLength l_p_sOffset) (arraylength l_p_baSource))))) ->
+(Result_checkData_4 = true))) /\ 
+((((((((j_lt l_p_sLength 0)) \/ 
+((j_lt (arraylength (filesystem_Record_m_baData_0 newObject_8)) l_p_sLength)))) \/ 
+((j_lt (arraylength l_p_baSource) (j_add l_p_sLength l_p_sOffset))))) ->
+(Result_checkData_4 = false))))) ->
+(Result_setData_3 = Result_checkData_4))).
+Variable hyp13 : forall (Result_checkData_5: bool),
+        ((((((((((((j_le 0 l_p_sLength)) /\ 
+((j_le l_p_sLength (arraylength (filesystem_Record_m_baData_0 newObject_8)))))) /\ 
+((j_le (j_add l_p_sLength l_p_sOffset) (arraylength l_p_baSource))))) ->
+(Result_checkData_5 = true))) /\ 
+((((((((j_lt l_p_sLength 0)) \/ 
+((j_lt (arraylength (filesystem_Record_m_baData_0 newObject_8)) l_p_sLength))))
+ \/ ((j_lt (arraylength l_p_baSource) (j_add l_p_sLength l_p_sOffset))))) ->
+(Result_checkData_5 = false))))) ->
+(((Result_checkData_5 = true)) ->
+(forall (l_s171: t_short), 
+(((((j_le 0 l_s171)) /\ ((j_lt l_s171 l_p_sLength)))) ->
+(((byteelements_0 (filesystem_Record_m_baData_0 newObject_8)) l_s171) 
+= ((byteelements_0 l_p_baSource) (j_add l_s171 l_p_sOffset)))))))).
+Variable hyp14 : forall x1260, (x1260 <> newObject_8) ->
+((f_m_baData x1260) = (filesystem_Record_m_baData_0 x1260)).
+\end{lstlisting}
+Statements concerning variable that are not modified in this method
+\begin{lstlisting}
+Variable hyp15 : forall x1261, (x1261 <> newObject_8) ->
+((f_index x1261) = (filesystem_Record_index_0 x1261)).
+Variable hyp16 : forall x1262, (x1262 <> newObject_8) ->
+((f_state x1262) = (filesystem_Record_state_0 x1262)).
+Variable hyp17 : forall x1263, (x1263 <> newObject_8) ->
+((f_next x1263) = (util_LinkedObject_next_0 x1263)).
+Variable hyp18 : forall x1264, (x1264 <> newObject_8) ->
+((f_indice x1264) = (util_LinkedObject_indice_0 x1264)).
+Variable hyp19 : forall x1265, (x1265 <> newObject_8) ->
+((f_previous x1265) = (util_LinkedObject_previous_0 x1265)).
+Variable hyp20 : forall x1266, (x1266 <> newObject_8) ->
+((f_jmlPrevious x1266) = (util_LinkedObject_jmlPrevious_0 x1266)).
+Variable hyp21 : forall x1267, (x1267 <> newObject_8) ->
+((f_jmlNext x1267) = (util_LinkedObject_jmlNext_0 x1267)).
+Variable hyp22 : forall x1268, (x1268 <> newObject_8) ->
+((f_owner x1268) = (f_java_lang_Object_owner_0 x1268)).
+Variable hyp23 : (instances this).
+Variable hyp24 : (subtypes (typeof this) (class c_VariableRecordElementaryFile)).
+\end{lstlisting}
+Hypotheses extracted from the class where is performed the proof:
+\begin{lstlisting}
+Variable hyp25 : 
+((union REFERENCES instances (singleton REFERENCES null)) l_p_baSource).
+Variable hyp26 : (((l_p_baSource <> null)) ->
+(subtypes (typeof l_p_baSource) (array (class c_byte) 1))).
+Variable hyp29 : (l_p_baSource <> null).
+Variable hyp30 : (j_le 0 l_p_sOffset).
+\end{lstlisting}
+The statement of the lemma to prove:
+\begin{lstlisting}
+Lemma l:
+forall (Result_checkData_0: bool),
+        ((((((((((((j_le 0 l_p_sLength)) /\ 
+((j_le l_p_sLength (arraylength (filesystem_Record_m_baData_0 newObject_8)))))) /\ 
+((j_le (j_add l_p_sLength l_p_sOffset) (arraylength l_p_baSource))))) ->
+(Result_checkData_0 = true))) /\ 
+((((((((j_lt l_p_sLength 0)) \/ 
+((j_lt (arraylength (filesystem_Record_m_baData_0 newObject_8)) l_p_sLength)))) \/ 
+((j_lt (arraylength l_p_baSource) (j_add l_p_sLength l_p_sOffset))))) ->
+(Result_checkData_0 = false))))) ->
+(((Result_checkData_0 = true)) ->
+((((((filesystem_Record_m_sLength_0 newObject_8) = l_p_sRecordSize)) \/ 
+(((filesystem_Record_m_sLength_0 newObject_8) = 255)))) /\ 
+((forall (l_s128: t_short), (((((j_le 0 l_s128)) /\ ((j_lt l_s128 l_p_sLength)))) ->
+(((byteelements_0 (filesystem_Record_m_baData_0 newObject_8)) l_s128)
+ = ((byteelements_0 l_p_baSource) (j_add l_s128 l_p_sOffset)))))))))).
+\end{lstlisting}
+The proof:
+\begin{lstlisting}
+Proof with autoJack; arrtac.
+intros.
+split.
+generalize (dec_Zle  l_p_sRecordSize 0).
+intro.
+inversion_clear H1.
+right.
+apply (hyp8 H2).
+generalize (Znot_le_gt l_p_sRecordSize 0 H2).
+intro.
+generalize (dec_Zle  l_p_sRecordSize 255).
+unfold Decidable.decidable.
+intro.
+inversion_clear H3.
+generalize (Zgt_lt l_p_sRecordSize 0 H1).
+intro.
+left.
+auto.
+generalize (Znot_le_gt l_p_sRecordSize 255  H4).
+intro.
+generalize (Zgt_lt l_p_sRecordSize 255 H3).
+intro.
+right.
+apply (hyp7 H5).
+intros.
+rewrite H0 in H.
+generalize (hyp13 true H).
+intros.
+cut (true = true).
+intro.
+apply (H2 H3 l_s128 H1).
+reflexivity.
+Qed.
+End JackProof.
+\end{lstlisting}
+\paragraph{Conclusion}
+We experiment the JML specification on a non-trivial example, showing that this language is suitable for smart card applications. Especially because we use a specification style that is very close from the implementation. However we remark that in some cases, we are obliged to use complex techniques like: auxiliary functions, sequence memorisation\ldots
+
+
+Furthermore, Jack is based on an old JML syntax and unfortunately it
+does not support some very interesting functionalities:
+\begin{itemize}
+\item Model methods: that are methods exclusively used for specification and that can be used as a toolbox to solve common problems
+
+\item Refinement: with the file jml-refined one can refine JML
+specification at several level of precision
+\end{itemize}
+In our experiment, we tried to used JML in a Common Criteria
+certification framework. Our conclusion is that it fulfil partially
+the requirements of the development activity (ADV): FSP (functional
+specifications), HLD (high level design) and LLD (low level design),
+because it permits the complete description of the interfaces at each
+of these levels.
+
+\begin{quote}
+ADV FSP.3.3C The functional specification shall describe the
+purpose and method of use of all external TSF
+interfaces, providing complete details of all effects,
+exceptions and error messages.
+
+ADV HLD.3.8C The high-level design shall describe the purpose
+and method of use of all interfaces to the subsystems
+of the TSF, providing complete details
+of all effects, exceptions and error messages.
+
+ADV LLD.2.5C The low-level design shall describe the purpose
+and method of use of all interfaces to the modules
+of the TSF, providing complete details of
+all effects, exceptions and error messages.
+\end{quote}
+However it is not possible to formally prove the correspondence between these levels (FSP, HLD and LLD). A semi-formal correspondence based on matrix is possible. To have a formal proof of correspondence, the jml-refined functionality is necessary.    
+
