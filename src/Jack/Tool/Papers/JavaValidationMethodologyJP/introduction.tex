@@ -1,16 +1,16 @@
 \section{Introduction}
 
 
-Smart cards are trusted personal devices whose characteristics are
-regulated by the ISO 7816 standard. As other trusted personal devices,
-smartcards are designed to store and process confidential data, and
-can act as tokens to provide users with a secure electronic
-representation in a large network. They are widely deployed and used
-in application areas such as mobile telecommunications, banking,
-transportation, electronic identity, and digital rights management
-(DRM). Further, they hold the promise to play a key role in the
-e-society, especially as a means to guarantee users a personalized,
-global, and secure access to applications and services.
+%Smart cards are trusted personal devices whose characteristics are
+%regulated by the ISO 7816 standard. As other trusted personal devices,
+%smartcards are designed to store and process confidential data, and
+%can act as tokens to provide users with a secure electronic
+%representation in a large network. They are widely deployed and used
+%in application areas such as mobile telecommunications, banking,
+%transportation, electronic identity, and digital rights management
+%(DRM). Further, they hold the promise to play a key role in the
+%e-society, especially as a means to guarantee users a personalized,
+%global, and secure access to applications and services.
 
 
 The prominent role played by trusted personal devices in security
@@ -35,7 +35,7 @@ replicate from one device to the other), and may have a huge impact.
 In particular, a malicious attacker spreading over the network and
 disconnecting or disrupting devices massively could have deep consequences.
 
-This deliverable reports on the development of methodologies and tools
+This article reports on the development of methodologies and tools
 that increase confidence in applications.  For concreteness, we focus 
 on Java applications that can be executed on devices that embed Java
 Virtual Machines (JVM) or their variants, in particular Java Card
@@ -53,18 +53,18 @@ are relevant to other execution platforms for trusted personal devices.
 
 
 \subsection{Security issues}
-While the focus of the deliverable is on application validation,
+While our focus of is on application validation,
 security is a holistic property of a system, and formal techniques
 must therefore be employed at different levels to provide strong
 guarantees about the security of a TPD and its applications.
 Essentially, the levels are: the hardware, platform, the libraries,
 and the applications.
 
-The need to consider security at those levels is illustrated for
-example by the case study described on Page 55 in Deliverable D8.2,
-which is concerned with secure platforms. The development of secure
-API is discussed in Deliverables D7.1 and D7.2. As previously mentioned,
-hardware security is discussed in Deliverable D8.1.
+%The need to consider security at those levels is illustrated for
+%example by the case study described on Page 55 in Deliverable D8.2,
+%which is concerned with secure platforms. The development of secure
+%API is discussed in Deliverables D7.1 and D7.2. As previously mentioned,
+%hardware security is discussed in Deliverable D8.1.
 
 
 \paragraph*{Platform} The TPD security architecture guarantees that
@@ -205,7 +205,21 @@ annotation comments in Java code,
 so that they are ignored by Java compilers but can be used
 by tools that support JML\@.  Within annotation comments JML extends the
 Java syntax with several keywords.  It also extends Java's expression syntax with several
-operators.
+operators.%The first proofs are relatively easy. 
+%The State class is proved almost automatically; 
+%except for the constructor where it is necessary to break a disjunction ({\tt instance S $\vee$ S = null}) to prove the invariants.
+
+%The Instruction class has also been relatively easy to prove. 
+%A significant number of proof was done automatically (approximately 90 \%); 
+%then majority of proof could be trivially resolved, except some lemma concerning  a loop termination.    
+
+%Finally the Verifier class was harder to prove.
+%The lemmas were containing too many hypotheses to be automatically proved.
+%Around 500 proof obligations have to be resolved manually.
+%Some of them was obvious and were resolved with quite the same script, but the script cannot be automated.
+%Some of them was complex: the proof script became little large (an average of 30 steps).
+%The lemmas concerning the loop invariant of the verify method and its initialization were the most difficult.
+
 The central ingredients of a JML specification are preconditions
 (given in {\tt requires} clauses), postconditions (given in {\tt
   ensures} clauses), and (class and interface) invariants.  These are
@@ -265,12 +279,11 @@ can be discharged using proof assistants or automatic provers.
 
 
 \subsection{Main contributions}
-The work reported in this deliverable builds upon the JACK tool,
+The work reported in this article builds upon the JACK tool,
 that was initially developed within Gemplus. The tool development
 was transferred to INRIA at the beginning of the project, with
-the objective to improve and increase its functionalities so as
-to address the needs of INSPIRED. The main contributions of the
-work carried within INSPIRED are:
+the objective to improve and increase its functionalities. The main contributions of the
+work are:
 \begin{itemize}
 \item support for verifying high-level security properties
 \item support for verifying bytecode programs
@@ -283,8 +296,8 @@ It is not in the scope of the present document to describe these
 improvements.
 
 
-\subsection{Contents of the deliverable}
-This document is organized as follows, the next chapter introduce the
-assertion language JML, chapter 2 describes the JACK tool with its
-extension feature, chapter 3 presents some evaluations done with the
-tools and the last chapter concludes.
+%\subsection{Contents of the article}
+This document is organized as follows, the next section introduce the
+assertion language JML, section 2 describes the JACK tool with its
+extension feature, section 3 presents some evaluations done with the
+tools and the last section concludes.
