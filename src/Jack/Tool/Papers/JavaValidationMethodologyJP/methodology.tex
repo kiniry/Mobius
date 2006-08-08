@@ -9,22 +9,10 @@ that do guarantee the lack of programming mistakes and that
 all security properties that have been specified and verified
 do indeed hold.
 
-
-
-This chapter describes some tools that have been developed during the
-Inspired project, that can be handled to validate Java applications
+This chapter describes some tools that can be handled to validate Java applications
 and methodologies that can be applied depending on different
 validation purposes.  All those tools are part a Java application
 validation workshop called JACK.
-
-
-The first section is a general presentation of the JACK tool, section
-2 introduces a JACK extension allowing to verify with some automation
-some security properties, section 3 presents an associated tool
-allowing to describe security properties with automata, section 4 is
-about the proof facilities in JACK, section 5 describes Jack features
-at bytecode level and section 6 concludes with some perspectives in
-Java application validation tool development.
 
 \subsection{JACK}
 This section presents the Java Applet Correctness Kit (or \JACK).
@@ -66,6 +54,8 @@ The Java/Jack Proof Obligation Language is an internal language used in Jack to 
 The language is typed but has no specific syntax. It corresponds to an internal representation in the tool. Its semantic is given by the translation into the different theorem provers. Adding a theorem prover in JACK corresponds mainly to convert expressions of the JPOL language into the specific theorem prover language.
 
 \subsubsection{JACK Plugins}
+Different plugins have been developped around the JACK workshop benefeting from its extensible architecture. A front-head for Java abytecode has been developped. This tool generates verification condition from Java bytecode in the JPOL language. This allows it to benefit from the JACK features like verification condition viewer and multi-provers. This tool is described in a next section. Provers are also plugin that have been successively added to JACK. And finally tools allowing to help in writing the assertions into the code has been developped. The first one generates precondition to prevent against runtime exception and is based on the in-built JACK weakest precondition calculus, the second one aims to propagate core-anotations allowing to automatize the proof of some security property: this tool is described in the next section.
+
 
 \subsection{Security property propagation}\label{sec:highlevel}
 
@@ -93,11 +83,6 @@ indirectly invoking the methods that form the core of the security
 policy, thus \emph{weaving} the security policy throughout the
 application. 
 \end{enumerate} 
-This section is organized as follows. Subsection~\ref{SecHighLevelSecProp}
-introduces several typical high-level security properties. Next,
-Subsection~\ref{SecVerif} presents the process to weave these properties
-throughout applications.
-
 
 To show the usefulness of our approach, we applied the algorithm to
 several realistic examples of industrial applications. When doing
@@ -105,13 +90,7 @@ this, we actually found violations against the security policies
 documented for some of these applications.  The results are reported
 in Section~\ref{SecResults}.
 
-\subsubsection{JavaCard applet security properties}
-To show the usefulness of the security property propagation, we applied it to
-several realistic examples of smart card applications. When doing
-this, we actually found violations against the security policies
-documented for some of these applications.
-
-\paragraph {Atomicity}
+\subsubsection{Atomicity}
 
 A smart card does not include a power supply, thus a brutal retrieval
 from the terminal could interrupt a computation and bring the system in
@@ -442,8 +421,6 @@ automatically a large class of high-level security properties.
 
 
 \subsection{Bytecode validation}
-An objective of the Inspired project is to develop tools allowing to built secure framework for post-issued applications. The bytecode verification framework embedded in JACK is the way to support this feature.  
-
 We propose a bytecode verification framework with the following components: a bytecode specification language, a compiler from source
  program annotations into bytecode annotations and a verification condition generator over Java bytecode.
 
@@ -451,13 +428,11 @@ In a client-producer scenario, these features bring to the producer means to sup
 which will allow the client to establish trust in the code, especially when the client policy is potentially complex and a fully automatic specification inference
 will fail. On the other hand, the client is supplied with a procedure to check the untrusted annotated code. 
 
-  
-
 Our approach is tailored to Java bytecode.
 The Java technology is widely applied to mobile and embedded components because of its portability across platforms. 
 For instance, its dialect JavaCard is largely used in smart card applications and the J2ME Mobile Information Device Profile 
 (MIDP) finds application in GSM mobile components. 
-%In this article, we propose a static verification technique using formal methods for sequential Java bytecode programs.
+
 
 The proposed scheme is composed of several components.
  We define a bytecode specification language, called BML, and supply a compiler from 
