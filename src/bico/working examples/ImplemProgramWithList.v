@@ -1,32 +1,21 @@
+Add LoadPath "../Library".
 Require Export List.
 Require Export ZArith.
 Require Export Program.
 Require Export Relation_Operators.
-
-Definition positive_dec: forall p1 p2:positive, {p1=p2}+{p1<>p2}.
-Proof.
-  decide equality.
-Defined.
-
-Definition N_dec: forall n1 n2:N, {n1=n2}+{n1<>n2}.
-Proof.
-  decide equality.
-  apply positive_dec.
-Defined.
-
-Definition nat_of_N (n : N) : nat := match n with
-  | N0 => 0
-  | (Npos p) => nat_of_P p
-end.
+Require Export EqBoolAux.
+Require Export PosAux.
 
 Section findList.
   Variable A B : Set.
   Variable getKey : A -> B.
-  Variable B_eq_dec : forall x y : B, {x=y}+{~x=y}.
+  Variable Beq : B -> B -> bool.
+  Variable Beq_spec : forall x y, if Beq x y then x = y else x <> y.
+
   Fixpoint find (b:B) (l:list A) {struct l} : option A :=
     match l with
       nil => None
-    | a::q => if B_eq_dec (getKey a) b then Some a
+    | a::q => if Beq (getKey a) b then Some a
               else find b q
     end.
   Lemma find_getKey : forall b l a,
@@ -34,43 +23,97 @@ Section findList.
   Proof.
     induction l; simpl.
     intros; discriminate.
-    intro; destruct B_eq_dec; intros.
-    inversion_clear H in e; auto.
-    auto.
+    intro; generalize (Beq_spec (getKey a) b);destruct (Beq (getKey a) b); intros.
+    injection H0;intros;subst;trivial.    auto.
   Qed.
 
 End findList.
 
 Module Make <: PROGRAM.
 
+  Definition eq_dec (A:Set) := forall x y:A, x=y \/~x=y.
+
   Definition Var := N. 
-  Definition Var_eq_dec : forall x1 x2:Var, {x1=x2}+{~x1=x2} := N_dec.
+  Lemma Var_eq_dec : eq_dec Var.
+  Proof. exact (Aeq_dec _ Neq Neq_spec). Qed.
   Definition Var_toN : Var -> nat := nat_of_N.
+  Definition N_toVar : nat -> Var := N_of_nat.
+  Lemma Var_toN_bij1 : forall v, N_toVar (Var_toN v) = v.
+  Proof. exact nat_of_N_bij2. Qed.
+  Lemma Var_toN_bij2 : forall n, Var_toN (N_toVar n) = n.
+  Proof. exact nat_of_N_bij1. Qed.
 
   Definition PC : Set := N.
-  Definition PC_eq_dec := N_dec.
+  Definition PC_eq := Neq.
+  Definition PC_eq_spec := Neq_spec.
+  Lemma PC_eq_dec : eq_dec PC.
+  Proof. exact Var_eq_dec. Qed.
 
   Definition PackageName : Set := positive.
   Definition ShortClassName : Set := positive.
   Definition ShortMethodName : Set := positive.
   Definition ShortFieldName : Set := positive.
+  Open Local Scope type_scope.
   Definition ClassName := PackageName * ShortClassName.
   Definition InterfaceName := PackageName * ShortClassName.
   Definition MethodName := ClassName * ShortMethodName.
   Definition FieldName := ClassName * ShortFieldName.
 
+ Definition eqClassName : ClassName -> ClassName -> bool := prod_eq _ Peq _ Peq.
+  Lemma eqClassName_spec : forall x y, if eqClassName x y then x = y else x <> y.
+  Proof. exact (prod_eq_spec _ Peq Peq_spec _ Peq Peq_spec). Qed.
+  Lemma ClassName_eq_dec : eq_dec ClassName.
+  Proof. exact (Aeq_dec _ eqClassName eqClassName_spec). Qed.
+
+  Definition eqInterfaceName : InterfaceName ->InterfaceName -> bool := 
+      prod_eq _ Peq _ Peq.
+  Lemma eqInterfaceName_spec : forall x y, if eqInterfaceName x y then x = y else x <> y.
+  Proof. exact (prod_eq_spec _ Peq Peq_spec _ Peq Peq_spec). Qed.
+  Lemma InterfaceName_eq_dec : eq_dec InterfaceName.
+  Proof. exact (Aeq_dec _ eqClassName eqClassName_spec). Qed.
+
+  Definition eqMethodName : MethodName -> MethodName -> bool := 
+    prod_eq _ eqClassName _ Peq.
+  Lemma eqMethodName_spec : forall x y, if eqMethodName x y then x = y else x <> y.
+  Proof. exact (prod_eq_spec _ eqClassName eqClassName_spec _ Peq Peq_spec). Qed.
+  Lemma MethodName_eq_dec : eq_dec MethodName.
+  Proof. exact (Aeq_dec _ eqMethodName eqMethodName_spec). Qed.
+
+  Definition eqFieldName : FieldName -> FieldName -> bool :=
+     prod_eq _ eqClassName _ Peq.
+  Lemma eqFieldName_spec : forall x y, if eqFieldName x y then x = y else x <> y.
+  Proof. exact (prod_eq_spec _ eqClassName eqClassName_spec _ Peq Peq_spec). Qed.
+  Lemma FieldName_eq_dec : eq_dec FieldName.
+  Proof. exact (Aeq_dec _ eqFieldName eqFieldName_spec). Qed.
+
+  Open Scope positive_scope.
   (* IMPORTANT CONSTANT CONVENTIONS FOR PARSER !! *)
-  Definition javaLang : PackageName := 1%positive.
-  Definition object : ShortClassName := 1%positive.
-  Definition NullPointerException : ShortClassName := 2%positive.
-  Definition ArrayIndexOutOfBoundsException : ShortClassName := 3%positive.
-  Definition ArrayStoreException : ShortClassName := 4%positive.
-  Definition NegativeArraySizeException : ShortClassName := 5%positive.
-  Definition ClassCastException : ShortClassName := 6%positive.
-  Definition ArithmeticException : ShortClassName := 7%positive.
+  Definition javaLang : PackageName := 1.
+  Definition EmptyPackageName : PackageName := 2.
+  Definition object : ShortClassName := 1.
+  Definition NullPointerException : ShortClassName := 2.
+  Definition ArrayIndexOutOfBoundsException : ShortClassName := 3.
+  Definition ArrayStoreException : ShortClassName := 4.
+  Definition NegativeArraySizeException : ShortClassName := 5.
+  Definition ClassCastException : ShortClassName := 6.
+  Definition ArithmeticException : ShortClassName := 7.
+  Definition throwable : ShortClassName := 8.
 
   Inductive Visibility : Set :=
     Package | Protected | Private | Public.
+
+ Definition eqVisibility x y := 
+    match x, y with 
+    | Package, Package => true
+    | Protected, Protected => true
+    | Private, Private => true
+    | Public, Public => true
+    | _, _ => false
+    end.
+  Lemma eqVisibility_spec : forall x y, if eqVisibility x y then x = y else x <> y.
+  Proof. destruct x;destruct y;simpl;trivial;intro; discriminate. Qed.
+  Lemma Visibility_eq_dec : eq_dec Visibility.
+  Proof. exact (Aeq_dec _ eqVisibility eqVisibility_spec). Qed.
 
   Inductive type : Set :=
       | ReferenceType (rt : refType)
@@ -82,46 +125,63 @@ Module Make <: PROGRAM.
   with  primitiveType : Set := 
       | BOOLEAN  | BYTE | SHORT | INT.
 
-  Definition eq_dec (A:Set) := forall x y:A, {x=y}+{~x=y}.
   Scheme type_strong_rec := Induction for type Sort Set
     with refType_strong_rec := Induction for refType Sort Set.
+ 
+  Scheme type_strong_ind := Induction for type Sort Prop
+    with refType_strong_ind := Induction for refType Sort Prop.
+  Definition eq_primitiveType x y :=
+    match x, y with
+    | BOOLEAN, BOOLEAN => true
+    | BYTE, BYTE => true
+    | SHORT, SHORT => true
+    | INT, INT => true 
+    | _, _ => false
+    end.
+  Lemma eq_primitiveType_spec : forall x y, if eq_primitiveType x y then x = y else x <> y.
+  Proof.
+   destruct x;destruct y;simpl;trivial; intro;discriminate.
+  Qed.
   Lemma primitiveType_dec : eq_dec primitiveType.
-  Proof. 
-   unfold eq_dec; decide equality.
+  Proof.  exact (Aeq_dec _ eq_primitiveType eq_primitiveType_spec). Qed.
+
+  Fixpoint eq_type (t1 t2:type) {struct t1} : bool := 
+    match t1, t2 with 
+    | ReferenceType rt1, ReferenceType rt2 => eq_reftype rt1 rt2
+    | PrimitiveType pt1, PrimitiveType pt2 => eq_primitiveType pt1 pt2
+    | _, _ => false
+    end
+  with eq_reftype (rt1 rt2: refType) {struct rt1} : bool := 
+    match rt1, rt2 with
+    | ArrayType t1, ArrayType t2 => eq_type t1 t2
+    | ClassType cn1, ClassType cn2 => eqClassName cn1 cn2
+    | InterfaceType in1, InterfaceType in2 => eqInterfaceName in1 in2
+    |_, _ => false
+    end.
+
+  Lemma eq_type_spec : forall t1 t2, if eq_type t1 t2 then t1 = t2 else t1 <> t2.
+  Proof.
+   induction t1 using type_strong_ind with 
+        (P0:=
+          fun rt1 => forall rt2, if eq_reftype rt1 rt2 then rt1 = rt2 else rt1 <> rt2);intros.
+   destruct t2;simpl;try (intro;discriminate;fail).
+   assert (UU:=IHt1 rt0);destruct (eq_reftype rt rt0);subst;trivial.
+   intro H;injection H;auto.
+   destruct t2;simpl;try (intro;discriminate;fail).
+   assert (UU := eq_primitiveType_spec pt pt0);destruct (eq_primitiveType pt pt0);subst;trivial.
+   intro H;injection H;auto.
+   destruct rt2;simpl;try (intro H;discriminate H).
+   assert (UU:=IHt1 typ);destruct (eq_type t1 typ);subst;trivial.
+   intro H;injection H;auto.
+   destruct rt2;simpl;intros;try (intro;discriminate;fail).
+   assert (UU := eqClassName_spec ct ct0);destruct (eqClassName ct ct0);subst;trivial.
+   intro H;injection H;auto.
+   destruct rt2;simpl;intros;try (intro;discriminate;fail).
+   assert (UU := eqInterfaceName_spec it it0);destruct (eqInterfaceName it it0);subst;trivial.
+   intro H;injection H;auto.
   Qed.
   Lemma type_dec : eq_dec type.
-  Proof. 
-   unfold eq_dec.
-   intros x; pattern x.
-   apply type_strong_rec with (P0:=fun r1:refType => forall r2, {r1=r2}+{~r1=r2}); intros.
-   destruct y; try (right;discriminate).
-   destruct (H rt0).
-   left; subst; constructor.
-   right; intro; elim n.
-   injection H0; auto.
-   destruct y; try (right;discriminate).
-   destruct (primitiveType_dec pt pt0).
-   left; subst; constructor.
-   right; intro; elim n.
-   injection H; auto.
-   destruct r2; try (right;discriminate).
-   destruct (H typ0).
-   left; subst; constructor.
-   right; intro; elim n.
-   injection H0; auto.
-   destruct r2; try (right;discriminate).
-   decide equality ct ct0; try apply positive_dec; intros.
-   destruct (H ct ct0).
-   left; subst; constructor.
-   right; intro; elim n.
-   injection H0; auto.
-   destruct r2; try (right;discriminate).
-   decide equality it it0; try apply positive_dec; intros.
-   destruct (H it it0).
-   left; subst; constructor.
-   right; intro; elim n.
-   injection H0; auto.
-  Qed.
+  Proof. exact (Aeq_dec _ eq_type eq_type_spec). Qed.
 
   Inductive CompInt : Set := EqInt | NeInt | LtInt | LeInt | GtInt | GeInt.
   Inductive CompRef : Set := EqRef | NeRef.
@@ -134,70 +194,39 @@ Module Make <: PROGRAM.
     Parameter jump : PC -> t -> PC.
   End OFFSET_TYPE.
   Module OFFSET <: OFFSET_TYPE.
-    Definition t := N.
-    Definition jump : PC -> t -> PC := Nplus.
+    Definition t := Z.
+    Definition jump (pc:PC) (ofs:t) : PC := Zabs_N (Zplus (Z_of_N pc) ofs).
   End OFFSET.
-
-  Lemma prod_eq_dec : 
-    forall (A B : Set)
-           (tA : forall x y:A, {x=y}+{~x=y})
-           (tB : forall x y:B, {x=y}+{~x=y})
-           (x y : A*B), {x=y}+{~x=y}.
-  Proof.
-    intros A B tA tB (a1,b1) (a2,b2).
-    destruct (tA a1 a2).
-    destruct (tB b1 b2).
-    left; congruence.
-    right; intros H; elim n; inversion H; reflexivity.
-    right; intros H; elim n; inversion H; reflexivity.    
-  Qed.
-
-  Lemma option_eq_dec : 
-    forall (A : Set)
-           (tA : forall x y:A, {x=y}+{~x=y})
-           (x y : option A), {x=y}+{~x=y}.
-  Proof.
-    intros A tA x y; destruct x; destruct y.
-    destruct (tA a a0).
-    left; congruence.
-    right; intros H; elim n; inversion H; reflexivity.
-    right; intros H; discriminate.
-    right; intros H; discriminate.
-    left; reflexivity.
-  Qed.
-
-  Definition ClassName_eq_dec : eq_dec ClassName :=
-      prod_eq_dec _ _ positive_dec positive_dec.
-  Definition InterfaceName_eq_dec : eq_dec InterfaceName :=
-      prod_eq_dec _ _ positive_dec positive_dec.
-  Definition FieldName_eq_dec : eq_dec FieldName :=
-      prod_eq_dec _ _ ClassName_eq_dec positive_dec.
 
   Module FIELDSIGNATURE.
     Record t :Set := {
       name : FieldName;
       type : type
     }.
-    Lemma eq_dec : forall f1 f2:t, {f1=f2}+{~f1=f2}.
-    Proof.
-      intros.
-      destruct f1 as [n1 t1]; destruct f2 as [n2 t2].
-      destruct (FieldName_eq_dec n1 n2).
-      destruct (type_dec t1 t2).
-      left; congruence.
-      right; intros H; elim n; inversion H; reflexivity.
-      right; intros H; elim n; inversion H; reflexivity.    
+    Definition eq_t (x y : t) := 
+         let (n1,t1) := x in
+         let (n2,t2) := y in
+         if eqFieldName n1 n2 then eq_type t1 t2 else false.
+    Lemma eq_t_spec : forall x y, if eq_t x y then x = y else x <> y.
+    Proof. 
+      intros (n1,t1) (n2,t2);simpl;generalize (eqFieldName_spec n1 n2);
+       destruct (eqFieldName n1 n2);intros.
+      generalize (eq_type_spec t1 t2);destruct (eq_type t1 t2);intros;subst;trivial.
+      intro H;injection H;auto.
+      intro H1;injection H1;auto.
     Qed.
+    Lemma eq_dec : eq_dec t.
+    Proof. exact (Aeq_dec _ eq_t eq_t_spec). Qed.
   End FIELDSIGNATURE.
+
   Definition FieldSignature := FIELDSIGNATURE.t.
+
   Module Type FIELDSIGNATURE_TYPE.
     Parameter name : FieldSignature  -> FieldName.
     Parameter type : FieldSignature -> type.
-    Parameter eq_dec : forall f1 f2:FieldSignature, {f1=f2}+{~f1=f2}.
+    Parameter eq_dec : forall f1 f2:FieldSignature,  f1=f2 \/~f1=f2.
   End FIELDSIGNATURE_TYPE.
 
-  Definition MethodName_eq_dec : eq_dec MethodName :=
-      FieldName_eq_dec.
 
   Module METHODSIGNATURE.
     Record t :Set := {
@@ -205,18 +234,27 @@ Module Make <: PROGRAM.
       parameters : list type;
       result : option type
     }.
-    Lemma eq_dec : forall mid1 mid2:t, {mid1=mid2}+{~mid1=mid2}.
+     Definition eq_t (x y : t) :=
+      let (n1,p1,r1) := x in
+      let (n2,p2,r2) := y in
+      if eqMethodName n1 n2 then 
+       if list_eq _ eq_type p1 p2 then opt_eq _ eq_type r1 r2 
+       else false
+      else false.
+    Lemma eq_t_spec : forall x y, if eq_t x y then x = y else x <> y.
     Proof.
-      intros.
-      destruct mid1 as [n1 p1 r1]; destruct mid2 as [n2 p2 r2].
-      destruct (MethodName_eq_dec n1 n2).
-      destruct (list_eq_dec type_dec p1 p2).
-      destruct (option_eq_dec _ type_dec r1 r2).
-      left; congruence.
-      right; intros H; elim n; inversion H; reflexivity.
-      right; intros H; elim n; inversion H; reflexivity.    
-      right; intros H; elim n; inversion H; reflexivity.    
+      intros (n1,p1,r1) (n2,p2,r2);simpl;generalize (eqMethodName_spec n1 n2);
+       destruct (eqMethodName n1 n2);intros.
+      generalize (list_eq_spec _ eq_type eq_type_spec p1 p2);
+       destruct (list_eq _ eq_type p1 p2);intros.
+      generalize (opt_eq_spec _ eq_type eq_type_spec r1 r2);
+       destruct (opt_eq _ eq_type r1 r2);intros. subst;trivial.
+      intro UU;injection UU;auto.
+      intro UU;injection UU;auto.
+      intro H1;injection H1;auto.
     Qed.
+    Lemma eq_dec : eq_dec t.
+    Proof. exact (Aeq_dec _ eq_t eq_t_spec). Qed.
   End METHODSIGNATURE.
 
   Definition MethodSignature := METHODSIGNATURE.t.
@@ -225,76 +263,83 @@ Module Make <: PROGRAM.
     Parameter name : MethodSignature -> MethodName.
     Parameter parameters : MethodSignature -> list type.
     Parameter result : MethodSignature -> option type.
-    Parameter eq_dec : forall mid1 mid2:MethodSignature, {mid1=mid2}+{~mid1=mid2}.
+    Parameter eq_dec : forall mid1 mid2:MethodSignature,  mid1=mid2 \/~mid1=mid2.
   End METHODSIGNATURE_TYPE.
 
+  Inductive ArrayKind : Set :=
+    | Aarray
+    | Iarray
+    | Barray
+    | Sarray.
+    
+  Inductive ValKind : Set :=
+    | Aval
+    | Ival.
+
   Inductive Instruction : Set :=
-   | Aaload | Aastore | Aconst_null
-   | Aload (x:Var) | Anewarray (t:refType) | Areturn 
-   | Arraylength | Astore (x:Var) | Athrow
-   | Baload | Bastore (* | Bipush z *)
-   (* | Caload | Castore *) 
+   | Aconst_null
+   | Arraylength 
+   | Athrow
    | Checkcast (t:refType)
    | Const (t:primitiveType) (z:Z)
-   (* | D2f | D2i | D2l | Dadd | Daload | Dastore | Dcmp_<op> 
-      | Dconst_<d> | ddiv | dload | dload_<n> | dmul | dneg | drem | dreturn 
-      | dstore | dstore_<n> | dsub  *)
-   | Dup | Dup_x1 | Dup_x2 | Dup2 | Dup2_x1 | Dup2_x2
-   (* | f2d | f2i | f2l | fadd | faload | fastore | fcmp_<op> | fconst_<f>
-      | fdiv | fload | fload_<n> | fmul | fneg | frem | freturn 
-      | fstore | fstore_<n> | fsub *)
-   | Getfield (f:FieldSignature) | Getstatic  (f:FieldSignature) 
+   | Dup
+   | Dup_x1
+   | Dup_x2
+   | Dup2
+   | Dup2_x1
+   | Dup2_x2
+   | Getfield (f:FieldSignature)
+   | Getstatic  (f:FieldSignature) 
    | Goto (o:OFFSET.t)
-   | I2b | (* I2c | i2d | i2f | i2l  *) I2s
-   | Ibinop (op:BinopInt) | Iaload 
-   | Iastore (* Iconst *) 
+   | I2b
+   | I2s
+   | Ibinop (op:BinopInt)
    | If_acmp (cmp:CompRef) (o:OFFSET.t)
    | If_icmp (cmp:CompInt) (o:OFFSET.t) 
    | If0 (cmp:CompInt) (o:OFFSET.t)
-   | Ifnull (cmp:CompRef) (o:OFFSET.t) (* EqRef for Ifnull;
-                                          NeRef for Ifnonnull *)
-   | Iinc (x:Var) (z:Z) | Iload (x:Var) | Ineg 
+   | Ifnull (cmp:CompRef) (o:OFFSET.t)
+   | Iinc (x:Var) (z:Z)
+   | Ineg 
    | Instanceof (t:refType) 
    | Invokeinterface (m:MethodSignature)
    | Invokespecial (m:MethodSignature)
    | Invokestatic (m:MethodSignature)
    | Invokevirtual (m:MethodSignature)
-   | Ireturn | Istore (x:Var) (* | Jsr *)
-   (* | l2d | l2f | l2i | ladd | laload | land | lastore | lcmp | lconst *)
-
-   (* | Ldc (z:Z)  *)
-   (* ldc2_w | ldiv | lload | lmul | lneg *) 
-
    | Lookupswitch (def:OFFSET.t) (l:list (Z*OFFSET.t)) 
-
-   (* lor | lrem | lreturn | lshl | lshr | lstore | lsub  | lxor | lushr *)
-   (* | monitorenter | monitorexit *)
-
-   | Multianewarray (t:refType) (d:Z) | New (cl:ClassName) | Newarray (t:primitiveType)
-   | Nop | Pop | Pop2 | Putfield (f:FieldSignature) | Putstatic (f:FieldSignature)
-   (* | ret *)
-
-   | Return | Saload | Sastore 
-   (* | Sipush (z:Z)*)
+   | New (c:ClassName)
+   | Newarray (t:type)
+   | Nop
+   | Pop
+   | Pop2
+   | Putfield (f:FieldSignature)
+   | Putstatic (f:FieldSignature)
+   | Return
    | Swap 
-   | Tableswitch (def:OFFSET.t) (low high:Z) (l:list OFFSET.t) (* | wide *).
-
-
-  Lemma Visibility_eq_dec : eq_dec Visibility.
-  Proof.
-    unfold eq_dec; decide equality.
-  Qed.
-
-  Lemma bool_eq_dec : eq_dec bool.
-  Proof.
-    unfold eq_dec; decide equality.
-  Qed.
+   | Tableswitch (def:OFFSET.t) (low high:Z) (l:list OFFSET.t)
+   | Vaload (k:ArrayKind) 
+   | Vastore (k:ArrayKind)
+   | Vload (k:ValKind) (x:Var)
+   | Vreturn (k:ValKind)
+   | Vstore (k:ValKind) (x:Var).
 
   Module FIELD.
     Inductive value : Set :=
     | Int (v:Z)
     | NULL 
     | UNDEF.
+  Definition eq_value x y := 
+     match x, y with
+     | Int z1, Int z2 => Zeq z1 z2
+     | NULL, NULL => true
+     | UNDEF, UNDEF => true
+     | _, _ => false
+     end.
+    Lemma eq_value_spec : forall x y, if eq_value x y then x = y else x <> y.
+    Proof.
+      destruct x;destruct y;intros;simpl;trivial;try (intro;discriminate;fail).
+      generalize (Zeq_spec v v0);destruct (Zeq v v0);intros. subst;trivial.
+      intro H1;injection H1;auto.
+    Qed.
 
     Record t : Set := {
       signature : FieldSignature;
@@ -303,33 +348,29 @@ Module Make <: PROGRAM.
       visibility : Visibility;
       initValue : value
     }.
-
-    Lemma value_eq_dec : forall x y:value, {x=y}+{~x=y}.
-    Proof.
-      intros.
-      destruct x; destruct y; try (left;reflexivity) || (right;intros H;discriminate H).
-      destruct (Z_eq_dec v v0).
-      left; congruence.
-      right; intros H; elim n; inversion H; reflexivity.
+    Definition eq_t (x y:t) := 
+       let (s1,f1,st1,v1,val1) := x in
+       let (s2,f2,st2,v2,val2) := y in
+       if FIELDSIGNATURE.eq_t s1 s2 then
+        if bool_eq f1 f2 then 
+         if bool_eq st1 st2 then
+          if eqVisibility v1 v2 then eq_value val1 val2
+          else false
+        else false
+      else false
+     else false.
+    Lemma eq_t_spec : forall x y, if eq_t x y then x = y else x <> y.
+    Proof with try (intro UU;injection UU;auto;fail).     
+     intros (s1,f1,st1,v1,val1)(s2,f2,st2,v2,val2);simpl.
+     generalize (FIELDSIGNATURE.eq_t_spec s1 s2);destruct (FIELDSIGNATURE.eq_t s1 s2);intros...
+     generalize (bool_eq_spec f1 f2);destruct (bool_eq f1 f2);intros...
+     generalize (bool_eq_spec st1 st2);destruct (bool_eq st1 st2);intros...
+     generalize (eqVisibility_spec v1 v2);destruct (eqVisibility v1 v2);intros...
+     generalize (eq_value_spec val1 val2);destruct (eq_value val1 val2);intros...
+     subst;trivial. 
     Qed.
-
-    Lemma eq_dec : forall x y:t, {x=y}+{~x=y}.
-    Proof.
-      intros.
-      destruct x as [sgn1 f1 s1 v1 iv1];
-      destruct y as [sgn2 f2 s2 v2 iv2].
-      destruct (FIELDSIGNATURE.eq_dec sgn1 sgn2).
-      destruct (bool_eq_dec f1 f2).
-      destruct (bool_eq_dec s1 s2).
-      destruct (Visibility_eq_dec v1 v2).
-      destruct (value_eq_dec iv1 iv2).
-      left; congruence.
-      right; intros H; elim n; inversion H; reflexivity.
-      right; intros H; elim n; inversion H; reflexivity.
-      right; intros H; elim n; inversion H; reflexivity.
-      right; intros H; elim n; inversion H; reflexivity.    
-      right; intros H; elim n; inversion H; reflexivity.    
-    Qed.
+    Lemma eq_dec : eq_dec t.
+    Proof. exact (Aeq_dec _ eq_t eq_t_spec). Qed.
    
   End FIELD.
 
@@ -365,7 +406,26 @@ Module Make <: PROGRAM.
              | _ => true
              end
         end.            
-  End EXCEPTIONHANDLER.
+   Definition eq_t (x y:t) :=
+     let (c1,b1,e1,h1) := x in
+     let (c2,b2,e2,h2) := y in
+     if opt_eq _ eqClassName c1 c2 then
+      if Neq b1 b2 then 
+       if Neq e1 e2 then Neq h1 h2 
+       else false
+      else false
+     else false.
+    Lemma eq_t_spec : forall x y, if eq_t x y then x = y else x <> y.    
+    Proof with  try (intro UU;injection UU;auto;fail).     
+      intros (c1,b1,e1,h1)(c2,b2,e2,h2);simpl.
+      generalize (opt_eq_spec _ eqClassName eqClassName_spec c1 c2);
+        destruct (opt_eq ClassName eqClassName c1 c2);intros ...
+      generalize (Neq_spec b1 b2);destruct (Neq b1 b2);intros...
+      generalize (Neq_spec e1 e2);destruct (Neq e1 e2);intros ...
+      generalize (Neq_spec h1 h2);destruct (Neq h1 h2);intros ...
+      subst;trivial.
+     Qed.
+    End EXCEPTIONHANDLER.
   Definition ExceptionHandler := EXCEPTIONHANDLER.t.
 
   Module Type EXCEPTIONHANDLER_TYPE.
@@ -374,24 +434,16 @@ Module Make <: PROGRAM.
     Parameter handler : ExceptionHandler -> PC.
   End EXCEPTIONHANDLER_TYPE.
    
-  Record BytecodeMethod_ : Set := {
-    instr : list (PC*Instruction);
-    exceptionHandlers : list ExceptionHandler;
-    max_locals : nat;
-    max_operand_stack_size : nat
-  }.
-  Definition BytecodeMethod := BytecodeMethod_.
-
   Module BYTECODEMETHOD.
 
-    Definition exceptionHandlers : BytecodeMethod -> list ExceptionHandler :=
-      exceptionHandlers.
-    Definition max_locals : BytecodeMethod -> nat:=
-      max_locals.
-    Definition max_operand_stack_size : BytecodeMethod -> nat :=
-      max_operand_stack_size.
+    Record t : Set := {
+      instr : list (PC*Instruction);
+      exceptionHandlers : list ExceptionHandler;
+      max_locals : nat;
+      max_operand_stack_size : nat
+    }.
 
-    Definition  firstAddress (bm:BytecodeMethod) : PC :=
+    Definition  firstAddress (bm:t) : PC :=
       match (instr bm) with
         nil => 0%N
       | (pp,_)::_ => pp
@@ -400,17 +452,17 @@ Module Make <: PROGRAM.
        match l with
          nil => None
        | (pp,i)::q =>
-         if N_dec pp0 pp then Some i
+         if Neq pp0 pp then Some i
          else instructionAt_rec pp0 q
        end.
-    Definition instructionAt (bm:BytecodeMethod) (pp:PC) : option Instruction :=
+    Definition instructionAt (bm:t) (pp:PC) : option Instruction :=
      instructionAt_rec pp (instr bm).
 
     Fixpoint nextAddress_rec (pp0:PC) (l:list (PC*Instruction)) {struct l} : option PC :=
        match l with
          nil => None
        | (pp1,_)::q =>
-         if N_dec pp0 pp1 then 
+         if Neq pp0 pp1 then 
             match q with
               nil => None
             | (pp2,_)::_ => Some pp2
@@ -418,32 +470,15 @@ Module Make <: PROGRAM.
          else nextAddress_rec pp0 q
        end.
 
-    Definition nextAddress (bm:BytecodeMethod) (pp:PC) : option PC :=
+    Definition nextAddress (bm:t) (pp:PC) : option PC :=
       nextAddress_rec pp (instr bm).
 
-    Inductive reachable_pc (bm: BytecodeMethod) : PC -> Prop :=
-    | reachable_pc_first: reachable_pc bm (firstAddress bm)
-    | reachable_pc_handler: forall exn,
-        In exn (exceptionHandlers bm) ->
-        reachable_pc bm (EXCEPTIONHANDLER.handler exn)
-    | reachable_pc_next: forall pc pc',
-        reachable_pc bm pc ->
-        nextAddress bm pc = Some pc' ->
-        reachable_pc bm pc'.
-
-    Definition DefinedInstruction (bm:BytecodeMethod) (pc:PC) : Prop :=
+    Definition DefinedInstruction (bm:t) (pc:PC) : Prop :=
       exists i, instructionAt bm pc = Some i.
-    Axiom all_instruction_in_reachable_pc : forall bm pc ins,
-      instructionAt bm pc = Some ins -> reachable_pc bm pc.
-    Axiom in_reachable_pc_some_instruction : forall bm pc,
-      DefinedInstruction bm (firstAddress bm) ->
-      (forall exn, In exn (exceptionHandlers bm) -> 
-                   DefinedInstruction bm (EXCEPTIONHANDLER.handler exn)) ->
-      reachable_pc bm pc ->
-      DefinedInstruction bm pc.
-
    
   End BYTECODEMETHOD.
+  Definition BytecodeMethod := BYTECODEMETHOD.t.
+
 
   Module Type BYTECODEMETHOD_TYPE.
     Parameter firstAddress : BytecodeMethod -> PC.
@@ -453,27 +488,9 @@ Module Make <: PROGRAM.
     Parameter max_locals : BytecodeMethod -> nat.
     Parameter max_operand_stack_size : BytecodeMethod -> nat.
 
-    Inductive reachable_pc (bm: BytecodeMethod) : PC -> Prop :=
-    | reachable_pc_first: reachable_pc bm (firstAddress bm)
-    | reachable_pc_handler: forall exn,
-        In exn (exceptionHandlers bm) ->
-        reachable_pc bm (EXCEPTIONHANDLER.handler exn)
-    | reachable_pc_next: forall pc pc',
-        reachable_pc bm pc ->
-        nextAddress bm pc = Some pc' ->
-        reachable_pc bm pc'.
     Definition DefinedInstruction (bm:BytecodeMethod) (pc:PC) : Prop :=
       exists i, instructionAt bm pc = Some i.
 
-    Parameter all_instruction_in_reachable_pc : forall bm pc ins,
-      instructionAt bm pc = Some ins -> reachable_pc bm pc.
-    Parameter in_reachable_pc_some_instruction : forall bm pc,
-      DefinedInstruction bm (firstAddress bm) ->
-      (forall exn, In exn (exceptionHandlers bm) -> 
-                   DefinedInstruction bm (EXCEPTIONHANDLER.handler exn)) ->
-      reachable_pc bm pc ->
-      DefinedInstruction bm pc.
-   
   End BYTECODEMETHOD_TYPE.
 
   Module METHOD.
@@ -482,18 +499,40 @@ Module Make <: PROGRAM.
       body : option BytecodeMethod;
       isFinal : bool;
       isStatic : bool;
+      isNative : bool;
       visibility : Visibility      
     }.
+    Definition valid_var (m:t) (x:Var) : Prop :=
+      forall bm, body m = Some bm ->
+         (Var_toN x) <= (BYTECODEMETHOD.max_locals bm).
+    Definition valid_stack_size (m:t) (length:nat) : Prop :=
+      forall bm, body m = Some bm ->
+         length <= (BYTECODEMETHOD.max_operand_stack_size bm).
   End METHOD.
 
   Definition Method := METHOD.t.
+(***
+  Parameter Meth_eq : Method -> Method -> bool.
+***)
+  Definition Meth_eq (m1 m2:Method) : bool :=
+        METHODSIGNATURE.eq_t (METHOD.signature m1) (METHOD.signature m2).
+  Parameter Meth_eq_spec :
+          forall p q:Method, if Meth_eq p q then p=q else p<>q.
 
   Module Type METHOD_TYPE.
     Parameter signature : Method -> MethodSignature.
     Parameter body : Method -> option BytecodeMethod.
     Parameter isFinal : Method -> bool.
     Parameter isStatic : Method -> bool.
+    Parameter isNative : Method -> bool.
     Parameter visibility : Method -> Visibility.
+    Definition valid_var (m:Method) (x:Var) : Prop :=
+      forall bm, body m = Some bm ->
+         (Var_toN x) <= (BYTECODEMETHOD.max_locals bm).
+
+    Definition valid_stack_size (m:Method) (length:nat) : Prop :=
+      forall bm, body m = Some bm ->
+         length <= (BYTECODEMETHOD.max_operand_stack_size bm).
   End METHOD_TYPE.
 
   Module CLASS.
@@ -512,7 +551,7 @@ Module Make <: PROGRAM.
       fun cl s => 
       find Field ShortFieldName 
            (fun f => snd (FIELDSIGNATURE.name (FIELD.signature f)))
-            positive_dec
+            Peq
            s (fields cl).
     Lemma field_shortname_prop : forall cl s f,
       field cl s = Some f -> s = snd (FIELDSIGNATURE.name (FIELD.signature f)).
@@ -520,18 +559,20 @@ Module Make <: PROGRAM.
       unfold field; intros cl s f.
       apply (find_getKey Field ShortFieldName 
            (fun f => snd (FIELDSIGNATURE.name (FIELD.signature f)))).
+      exact Peq_spec.
     Qed.
 
     Definition method : t -> MethodSignature -> option Method :=
       fun cl mid =>
        find Method MethodSignature METHOD.signature
-            METHODSIGNATURE.eq_dec
+            METHODSIGNATURE.eq_t
             mid (methods cl) .
     Lemma method_signature_prop : forall cl mid m,
       method cl mid = Some m -> mid = METHOD.signature m.
     Proof.
       unfold method; intros p cl mid.
       apply find_getKey.
+      exact METHODSIGNATURE.eq_t_spec.
     Qed.
     Definition defined_Method (cl:t) (m:Method) :=
       method cl (METHOD.signature m) = Some m.
@@ -569,7 +610,7 @@ Module Make <: PROGRAM.
       fun cl s => 
       find Field ShortFieldName 
            (fun f => snd (FIELDSIGNATURE.name (FIELD.signature f)))
-            positive_dec
+            Peq
            s (fields cl).
     Lemma field_shortname_prop : forall cl s f,
       field cl s = Some f -> s = snd (FIELDSIGNATURE.name (FIELD.signature f)).
@@ -577,18 +618,20 @@ Module Make <: PROGRAM.
       unfold field; intros cl s f.
       apply (find_getKey Field ShortFieldName 
            (fun f => snd (FIELDSIGNATURE.name (FIELD.signature f)))).
+      exact Peq_spec.
     Qed.
 
     Definition method : t -> MethodSignature -> option Method :=
       fun cl mid =>
        find Method MethodSignature METHOD.signature
-            METHODSIGNATURE.eq_dec
+            METHODSIGNATURE.eq_t
             mid (methods cl) .
     Lemma method_signature_prop : forall cl mid m,
       method cl mid = Some m -> mid = METHOD.signature m.
     Proof.
       unfold method; intros p cl mid.
       apply find_getKey.
+      exact METHODSIGNATURE.eq_t_spec.
     Qed.
   End INTERFACE.
  
@@ -612,7 +655,7 @@ Module Make <: PROGRAM.
     Definition class : t -> ClassName -> option Class :=
       fun p cn =>
        find Class ClassName CLASS.name
-          ClassName_eq_dec
+          eqClassName
           cn (classes p).
     Definition defined_Class (p:t) (cl:Class) :=
       class p (CLASS.name cl) = Some cl.
@@ -621,7 +664,9 @@ Module Make <: PROGRAM.
     Proof.
       unfold class; intros p cn cl.
       apply (find_getKey Class ClassName CLASS.name).
+      exact eqClassName_spec.
     Qed.
+
     Lemma In_classes_defined_Class : forall p cl,
       distinct CLASS.name (classes p) ->
       In cl (classes p) -> defined_Class p cl.
@@ -631,10 +676,12 @@ Module Make <: PROGRAM.
       induction l; simpl; intros.
       elim H0.
       destruct H0; subst.
-      destruct (ClassName_eq_dec (CLASS.name cl) (CLASS.name cl)).
+      generalize (eqClassName_spec (CLASS.name cl) (CLASS.name cl));
+        destruct (eqClassName (CLASS.name cl) (CLASS.name cl));intros.
       reflexivity.
-      elim n; reflexivity.
-      destruct (ClassName_eq_dec (CLASS.name a) (CLASS.name cl)).
+      elim H0; reflexivity.
+      generalize (eqClassName_spec (CLASS.name a) (CLASS.name cl));
+       destruct (eqClassName (CLASS.name a) (CLASS.name cl));intros.
       rewrite (H a cl); auto with datatypes.
       apply IHl; auto.
       repeat intro; apply H; auto with datatypes.
@@ -646,15 +693,16 @@ Module Make <: PROGRAM.
       generalize (classes p).
       induction l; simpl; intro.
       intros; discriminate.
-      destruct (ClassName_eq_dec (CLASS.name a) (CLASS.name cl)); intros.
-      inversion H; auto.
+      generalize (eqClassName_spec (CLASS.name a) (CLASS.name cl));
+        destruct (eqClassName (CLASS.name a) (CLASS.name cl)); intros.
+      inversion H0; auto.
       right; auto.
     Qed.
 
     Definition interface : t -> InterfaceName -> option Interface :=
       fun p iname =>
        find Interface InterfaceName INTERFACE.name
-          InterfaceName_eq_dec
+          eqInterfaceName
           iname (interfaces p).
     Definition defined_Interface (p:t) (i:Interface) :=
       interface p (INTERFACE.name i) = Some i.
@@ -663,6 +711,7 @@ Module Make <: PROGRAM.
     Proof.
       unfold interface; intros p iname i.
       apply (find_getKey Interface InterfaceName INTERFACE.name).
+      exact eqInterfaceName_spec.
     Qed.
   End PROG.
 
@@ -690,6 +739,7 @@ Module Make <: PROGRAM.
      isStatic p fs.
 
   Definition javaLangObject : ClassName := (javaLang,object).
+  Definition javaLangThrowable : ClassName := (javaLang,throwable).
 
   Inductive direct_subclass (p:Program) (c:Class) (s:Class) : Prop :=
     | direct_subclass1 : 
@@ -881,18 +931,13 @@ Module Make <: PROGRAM.
        compat_refType p tpS tpT ->
        compat_refType p (ArrayType (ReferenceType tpS)) (ArrayType (ReferenceType tpT)).
 
-  Axiom subclass_name_dec : forall p cn1 cn2,
-    {subclass_name p cn1 cn2}+{~subclass_name p cn1 cn2}.
-  
-  Axiom defined_field_dec : forall p cn f,
-    {defined_field p cn f}+{~defined_field p cn f}.
-
+ 
 End Make.
 
 Module P <: PROGRAM := Make.
 
 (* 
  Local Variables: 
- coq-prog-name: "coqtop -I ../maps -I ../reference_semantics -emacs"
+ coq-prog-name: "coqtop -emacs"
  End:
 *)

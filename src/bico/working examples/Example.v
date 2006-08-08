@@ -4,7 +4,7 @@ Import P.
 
 Module TheProgram.
 
-  Module Object.
+  Module java_lang_Object.
     Definition className : ClassName := javaLangObject.
    
     Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
@@ -18,6 +18,7 @@ Module TheProgram.
 	None
 	false 					(** isFinal **)
 	true						(** isStatic **)
+	false						(** isNative **)
 	Public					(** Visibility **)
     .
 
@@ -32,62 +33,24 @@ Module TheProgram.
 	false					(** isAbstract : bool **)
     .
 
-  End Object.	
-
-  Definition EmptyPackageName := 2%positive.
+  End java_lang_Object.	
 
   Module Addition. 				(** one module for each class **)
 
     Definition className : ClassName := (EmptyPackageName, 11%positive). (** package id, class id **)
+
+    (* signatures *)
 
     Definition zFieldSignature : FieldSignature := FIELDSIGNATURE.Build_t
 	(className, 12%positive)	(** field name **)
 	(PrimitiveType INT)
     .
 		
-    Definition zField : Field := FIELD.Build_t
-	zFieldSignature
-	false 					(** isFinal : bool **)
-	true						(** isStatic : bool **)
-	Private					(** visibility : Visibility **)
-	FIELD.UNDEF			(** initValue : value **)
-    .
-
-  
-
-    (* method: public Addition() *)
-
-    (** FixMe: for "recursion" reasons, all signatures should be moved to the beginning of the module **)
-    Definition AdditionSignature : MethodSignature := METHODSIGNATURE.Build_t
+    Definition _init_Signature : MethodSignature := METHODSIGNATURE.Build_t
 	(className, 13%positive) 	(** method name **)
 	nil						(** list of parameter types **)
 	(Some (ReferenceType (ClassType className)))	(** optional result type **)
     .
-
-    Definition AdditionInstructions : list (PC*Instruction) :=
-	(0%N, Aload 0%N) ::
-	(1%N, Invokespecial Object._init_Signature) ::
-	(4%N, Return) ::
-	nil
-    .
-
-    Definition AdditionBody : BytecodeMethod := Build_BytecodeMethod_
-	AdditionInstructions
-	nil 						(** list of ExceptionHandlers **)
-	1						(** max_locals **)
-	1						(** max_operand_stack_size **)
-    .
-
-    Definition AdditionMethod : Method := METHOD.Build_t
-	AdditionSignature
-	(Some AdditionBody)
-	false 					(** isFinal **)
-	true						(** isStatic **)
-	Public					(** Visibility **)
-    .
-
-
-    (* method: public static int add(int) *)
 
     Definition addSignature : MethodSignature := METHODSIGNATURE.Build_t
 	(className,14%positive) 	(** method name **)
@@ -95,17 +58,57 @@ Module TheProgram.
 	(Some (PrimitiveType INT))	(** optional result type **)
     .	
 
-    Definition addInstructions : list (PC*Instruction) :=
-	(0%N, Iload 0%N) ::
-	(1%N, Getstatic zFieldSignature) ::
-	(4%N, Ibinop AddInt) ::
-	(5%N, Istore 1%N) ::
-	(6%N, Iload 1%N) ::
-	(7%N, Ireturn) ::
+    (* fields *)
+
+    Definition zField : Field := FIELD.Build_t
+	zFieldSignature
+	false 					(** isFinal : bool **)
+	true						(** isStatic : bool **)
+	Private					(** visibility : Visibility **)
+	FIELD.UNDEF				(** initValue : value **)
+    .
+
+    (* methods *)
+
+    (* method: public Addition() *)
+
+    Definition _init_Instructions : list (PC*Instruction) :=
+        (0%N, Vload Aval 0%N)::
+        (1%N, Invokespecial java_lang_Object._init_Signature)::
+        (4%N, Return)::
         nil
     .
 
-    Definition addBody : BytecodeMethod := Build_BytecodeMethod_ 
+    Definition _init_Body : BytecodeMethod := BYTECODEMETHOD.Build_t
+	_init_Instructions
+	nil 						(** list of ExceptionHandlers **)
+	1						(** max_locals **)
+	1						(** max_operand_stack_size **)
+    .
+
+    Definition _init_Method : Method := METHOD.Build_t
+	_init_Signature
+	(Some _init_Body)
+	false 					(** isFinal **)
+	true						(** isStatic **)
+	false 					(** isNative **)
+	Public					(** Visibility **)
+    .
+
+
+    (* method: public static int add(int) *)
+
+    Definition addInstructions : list (PC*Instruction) :=
+        (0%N, Vload Ival 0%N)::
+        (1%N, Getstatic Addition.zFieldSignature)::
+        (4%N, Ibinop AddInt)::
+        (5%N, Vstore Ival 1%N)::
+        (6%N, Vload Ival 1%N)::
+        (7%N, Vreturn Ival)::
+        nil
+    .
+
+    Definition addBody : BytecodeMethod := BYTECODEMETHOD.Build_t 
 	addInstructions
 	nil 						(** list of ExceptionHandlers **)
 	2						(** max_locals **)
@@ -117,6 +120,7 @@ Module TheProgram.
 	(Some addBody)
 	false 					(** isFinal **)
 	true						(** isStatic **)
+	false 					(** isNative **)
 	Public					(** Visibility **)
     .
 
@@ -125,16 +129,16 @@ Module TheProgram.
 	(Some javaLangObject) 		(** superclass **)        
 	nil 						(** list of implemented interfaces **)
    	(zField::nil)				(** list of fields **)
-	(AdditionMethod::addMethod::nil)	(** list of methods **)
-	false					(** isFinal **)
+	(_init_Method::addMethod::nil)	(** list of methods **)
+	false						(** isFinal **)
 	true						(** isPublic **)
-	false					(** isAbstract **) 
+	false						(** isAbstract **) 
     .
 
   End Addition.
 
 
-  Definition AllClasses : list Class := Addition.class :: Object.class :: nil.
+  Definition AllClasses : list Class := Addition.class :: java_lang_Object.class :: nil.
 	(** in general: Class1 :: ... :: Classn :: nil **)
 
   Definition AllInterfaces : list Interface := nil.

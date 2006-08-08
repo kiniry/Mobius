@@ -8,7 +8,7 @@
  Simplifications have been made with the objective that a straightforward
  classfile parser would implement this API.
 
- @author Frederic Besson *)
+ @author Frederic Besson and David Pichardie *)
 
 
 Require Import List.
@@ -16,7 +16,7 @@ Require Import ZArith.
 Require Import Relation_Operators.
 
 (*Require Export MapSignatures.*)
-Open Scope type_scope.
+Open Local Scope type_scope.
 
 (* Where Lists are used, sometimes Sets would be more adequate.
   However, this would complicate the specification.
@@ -45,6 +45,10 @@ Module Type PROGRAM.
 
  (** Variables are indexed by integers *)
   Parameter Var_toN : Var -> nat.
+  Parameter N_toVar : nat -> Var.
+  Parameter Var_toN_bij1 : forall v, N_toVar (Var_toN v) = v.
+  Parameter Var_toN_bij2 : forall n, Var_toN (N_toVar n) = n.
+
 
   (** Handling of qualified names *)
   Parameter PackageName : Set.
@@ -63,6 +67,7 @@ Module Type PROGRAM.
   (** Some constants *)
   Parameter javaLang : PackageName.
   Parameter object : ShortClassName.
+  Parameter throwable : ShortClassName.
 
   (** Native Exceptions *)
   Parameter NullPointerException ArrayIndexOutOfBoundsException ArrayStoreException
@@ -91,6 +96,19 @@ Module Type PROGRAM.
   Inductive BinopInt : Set := AddInt | AndInt | DivInt | MulInt | OrInt | RemInt 
                             | ShlInt | ShrInt | SubInt | UshrInt | XorInt.
 
+  (* Type information used for Vaload and Saload *)
+  Inductive ArrayKind : Set :=
+    | Aarray
+    | Iarray
+    | Barray
+    | Sarray.
+    
+  (* Type information used for Vload, Vstore and Vreturn *)
+  Inductive ValKind : Set :=
+    | Aval
+    | Ival.
+
+
   Module Type OFFSET_TYPE.
     (* The type of address offsets *)
     Parameter t : Set.
@@ -99,89 +117,13 @@ Module Type PROGRAM.
   End OFFSET_TYPE.
   Declare Module OFFSET : OFFSET_TYPE.
 
-    (** Parser translation :
-
-  aload_<n> --> aload n
-
-  astore_<n> --> astore n
-
-  goto_w --> goto
-
-  iconst_<n> --> const INT n
-
-  iload_<n> --> iload n 
-
-  istore_<n> --> istore n 
-
-  ldc_w --> ldc *)
-
-  Inductive Instruction : Set :=
-   | Aaload | Aastore | Aconst_null
-   | Aload (x:Var) | Anewarray (t:refType) | Areturn 
-   | Arraylength | Astore (x:Var) | Athrow
-   | Baload | Bastore (* | Bipush z *)
-   (* | Caload | Castore *) 
-   | Checkcast (t:refType)
-   | Const (t:primitiveType) (z:Z)
-   (* | D2f | D2i | D2l | Dadd | Daload | Dastore | Dcmp_<op> 
-      | Dconst_<d> | ddiv | dload | dload_<n> | dmul | dneg | drem | dreturn 
-      | dstore | dstore_<n> | dsub  *)
-   | Dup | Dup_x1 | Dup_x2 | Dup2 | Dup2_x1 | Dup2_x2
-   (* | f2d | f2i | f2l | fadd | faload | fastore | fcmp_<op> | fconst_<f>
-      | fdiv | fload | fload_<n> | fmul | fneg | frem | freturn 
-      | fstore | fstore_<n> | fsub *)
-   | Getfield (f:FieldSignature) | Getstatic  (f:FieldSignature) 
-   | Goto (o:OFFSET.t)
-   | I2b | (* I2c | i2d | i2f | i2l  *) I2s
-   | Ibinop (op:BinopInt) | Iaload 
-   | Iastore (* Iconst *) 
-   | If_acmp (cmp:CompRef) (o:OFFSET.t)
-   | If_icmp (cmp:CompInt) (o:OFFSET.t) 
-   | If0 (cmp:CompInt) (o:OFFSET.t)
-   | Ifnull (cmp:CompRef) (o:OFFSET.t) (* EqRef for Ifnull;
-                                          NeRef for Ifnonnull *)
-   | Iinc (x:Var) (z:Z) | Iload (x:Var) | Ineg 
-   | Instanceof (t:refType) 
-   | Invokeinterface (m:MethodSignature)
-   | Invokespecial (m:MethodSignature)
-   | Invokestatic (m:MethodSignature)
-   | Invokevirtual (m:MethodSignature)
-   | Ireturn | Istore (x:Var) (* | Jsr *)
-   (* | l2d | l2f | l2i | ladd | laload | land | lastore | lcmp | lconst *)
-
-   (* | Ldc (z:Z)  *)
-   (* ldc2_w | ldiv | lload | lmul | lneg *) 
-
-   | Lookupswitch (def:OFFSET.t) (l:list (Z*OFFSET.t)) 
-
-   (* lor | lrem | lreturn | lshl | lshr | lstore | lsub  | lxor | lushr *)
-   (* | monitorenter | monitorexit *)
-
-   | Multianewarray (t:refType) (d:Z) | New (cl:ClassName) | Newarray (t:primitiveType)
-   | Nop | Pop | Pop2 | Putfield (f:FieldSignature) | Putstatic (f:FieldSignature)
-   (* | ret *)
-
-   | Return | Saload | Sastore 
-   (* | Sipush (z:Z)*)
-   | Swap 
-   | Tableswitch (def:OFFSET.t) (low high:Z) (l:list OFFSET.t) (* | wide *).
-
-  (** Content of a method *)
-  Module Type METHOD_TYPE.
-
-    Parameter signature : Method -> MethodSignature.
-    (** A method that is not abstract has a method body *)
-    Parameter body : Method -> option BytecodeMethod.
-
-
-    (* modifiers *)
-    Parameter isFinal : Method -> bool.
-    Parameter isStatic : Method -> bool.
-
-    Parameter visibility : Method -> Visibility.
-
-    End METHOD_TYPE.
-  Declare Module METHOD : METHOD_TYPE.
+  (** Operations on the signatures of fields *)
+  Module Type FIELDSIGNATURE_TYPE.
+    Parameter name : FieldSignature  -> FieldName.
+    Parameter type : FieldSignature -> type.
+    Parameter eq_dec : forall f1 f2:FieldSignature, f1=f2 \/ ~f1=f2.
+  End FIELDSIGNATURE_TYPE.
+  Declare Module FIELDSIGNATURE : FIELDSIGNATURE_TYPE.
 
   (** Content of a method signature *)
   Module Type METHODSIGNATURE_TYPE.
@@ -192,9 +134,208 @@ Module Type PROGRAM.
     (** Java type for return value, the constructor [None] of type option being used for the [Void] type *)
     Parameter result : MethodSignature -> option type.
 
-    Parameter eq_dec : forall mid1 mid2:MethodSignature, {mid1=mid2}+{~mid1=mid2}.
+    Parameter eq_dec : 
+      forall mid1 mid2:MethodSignature, mid1=mid2 \/ ~mid1=mid2.
   End METHODSIGNATURE_TYPE.
   Declare Module METHODSIGNATURE : METHODSIGNATURE_TYPE.
+
+    (** Parser translation :
+
+  aaload             --> Vaload Aarray
+  aastore            --> Vastore Aarray
+  aconst_null        --> Aconst_null
+  aload x            --> Vload Aval x
+  aload_<n>          --> Vload Aval n
+  anewarray t        --> Newarray (ReferenceType t)
+  areturn            --> Vreturn Aarray
+  arraylength        --> Arraylength
+  astore x           --> Vstore Aval x
+  astore_<n>         --> Vstore Aval n
+  athrow             --> Athrow
+  baload             --> Vaload Barray
+  bastore            --> Vastore Barray
+  bipush c           --> Const BYTE c
+  caload             --> char not supported
+  castore            --> char not supported
+  checkcast t        --> Checkcast t
+  d2f                --> double not supported
+  d2i                --> double not supported
+  d2l                --> double not supported
+  dadd               --> double not supported
+  daload             --> double not supported
+  dastore            --> double not supported
+  dcmp<op>           --> double not supported
+  dconst_<d>         --> double not supported
+  ddiv               --> double not supported
+  dload              --> double not supported
+  dload_<n>          --> double not supported
+  dmul               --> double not supported
+  dneg               --> double not supported
+  drem               --> double not supported
+  dreturn            --> double not supported
+  dstore             --> double not supported
+  dstore_<n>         --> double not supported
+  dsub               --> double not supported
+  dup                --> Dup
+  dup_x1             --> Dup_x1
+  dup_x2             --> Dup_x2
+  dup2               --> Dup2
+  dup2_x1            --> Dup2_x1
+  dup2_x2            --> Dup2_x2
+  f2d                --> float not supported
+  f2i                --> float not supported
+  f2l                --> float not supported
+  fadd               --> float not supported
+  faload             --> float not supported
+  fastore            --> float not supported
+  fcmp<op>           --> float not supported
+  fconst_<f>         --> float not supported
+  fdiv               --> float not supported
+  fload              --> float not supported
+  fload_<n>          --> float not supported
+  fmul               --> float not supported
+  fneg               --> float not supported
+  frem               --> float not supported
+  freturn            --> float not supported
+  fstore             --> float not supported
+  fstore_<n>         --> float not supported
+  fsub               --> float not supported
+  getfield f         --> Getfield f
+  getstatic f        --> Getstatic f
+  goto o             --> Goto o    
+  goto_w o           --> Goto o
+  i2b                --> I2b
+  i2c                --> char not supported
+  i2d                --> double not supported
+  i2f                --> float not supported
+  i2l                --> long not supported
+  i2s                --> I2s
+  iadd               --> Ibinop AddInt
+  iaload             --> Vaload Iarray
+  iand               --> Ibinop AndInt
+  iastore            --> Vastore Iarray
+  iconst_<i>         --> Const i
+  idiv               --> Ibinop DivInt
+  if_acmp<cond> o    --> If_acmp cond o
+  if_icmp<cond> o    --> If_icmp cond o
+  if<cond> o         --> If0 cond o
+  ifnonnull o        --> Ifnull NeRef o
+  ifnull o           --> Ifnull EqRef o
+  iinc x c           --> Iinc x c
+  iload x      	     --> Vload Ival x
+  iload_<n>    	     --> Vload Ival n
+  imul         	     --> Ibinop MulInt
+  ineg         	     --> Ineg
+  instanceof t       --> Instanceof t
+  invokeinterface m  --> Invokeinterface m
+  invokespecial m    --> Invokespecial m
+  invokestatic m     --> Invokestatic m
+  invokevirtual m    --> Invokevirtual m
+  ior                --> Ibinop OrInt
+  irem               --> Ibinop RemInt
+  ireturn            --> Vreturn Ival
+  ishl               --> Ibinop ShlInt
+  ishr               --> Ibinop ShrInt
+  istore x     	     --> Vstore Ival x
+  istore_<n>   	     --> Vstore Ival n
+  isub               --> Ibinop SubInt
+  iushr              --> Ibinop UshrInt
+  ixor               --> Ibinop XorInt
+  jsr                --> subroutines not supported
+  jsr_w              --> subroutines not supported
+  l2d                --> long not supported
+  l2f                --> long not supported
+  l2i                --> long not supported
+  ladd               --> long not supported
+  laload             --> long not supported
+  land               --> long not supported
+  lastore            --> long not supported
+  lcmp               --> long not supported
+  lconst_<l>         --> long not supported
+  ldc c              --> Const c (but strings not supported)
+  ldc_w c            --> Const c (but strings not supported)
+  ldc2_w c           --> long and double not supported
+  ldiv               --> long not supported
+  lload              --> long not supported
+  lload_<n>          --> long not supported
+  lmul               --> long not supported
+  lneg               --> long not supported
+  lookupswitch d l   --> Lookupswitch d l
+  lor                --> long not supported
+  lrem               --> long not supported
+  lreturn            --> long not supported
+  lshl               --> long not supported
+  lshr               --> long not supported
+  lstore             --> long not supported
+  lstore_<n>         --> long not supported
+  lsub               --> long not supported
+  lushr              --> long not supported
+  lxor               --> long not supported
+  monitorenter       --> multithreading not supported
+  monitorexit        --> multithreading not supported
+  multianewarray     --> not supported
+  new c              --> New c
+  newarray t         --> Newarray (PrimitiveType t)
+  nop                --> Nop
+  pop                --> Pop
+  pop2               --> Pop2
+  putfield f         --> Putfield f
+  putstatic f        --> Putstatic f
+  ret                --> subroutines not supported
+  return             --> Return
+  saload             --> Vaload Sarray
+  sastore            --> Vastore Sarray
+  sipush c           --> Const c
+  swap               --> Swap
+  tableswitch d lo l --> Tableswitch d lo l
+   *)
+
+  Inductive Instruction : Set :=
+   | Aconst_null
+   | Arraylength 
+   | Athrow
+   | Checkcast (t:refType)
+   | Const (t:primitiveType) (z:Z)
+   | Dup
+   | Dup_x1
+   | Dup_x2
+   | Dup2
+   | Dup2_x1
+   | Dup2_x2
+   | Getfield (f:FieldSignature)
+   | Getstatic  (f:FieldSignature) 
+   | Goto (o:OFFSET.t)
+   | I2b
+   | I2s
+   | Ibinop (op:BinopInt)
+   | If_acmp (cmp:CompRef) (o:OFFSET.t)
+   | If_icmp (cmp:CompInt) (o:OFFSET.t) 
+   | If0 (cmp:CompInt) (o:OFFSET.t)
+   | Ifnull (cmp:CompRef) (o:OFFSET.t)
+   | Iinc (x:Var) (z:Z)
+   | Ineg 
+   | Instanceof (t:refType) 
+   | Invokeinterface (m:MethodSignature)
+   | Invokespecial (m:MethodSignature)
+   | Invokestatic (m:MethodSignature)
+   | Invokevirtual (m:MethodSignature)
+   | Lookupswitch (def:OFFSET.t) (l:list (Z*OFFSET.t)) 
+(*   | Multianewarray (t:refType) (d:Z) | New (cl:ClassName) *)
+   | New (c:ClassName)
+   | Newarray (t:type)
+   | Nop
+   | Pop
+   | Pop2
+   | Putfield (f:FieldSignature)
+   | Putstatic (f:FieldSignature)
+   | Return
+   | Swap 
+   | Tableswitch (def:OFFSET.t) (low high:Z) (l:list OFFSET.t)
+   | Vaload (k:ArrayKind) 
+   | Vastore (k:ArrayKind)
+   | Vload (k:ValKind) (x:Var)
+   | Vreturn (k:ValKind)
+   | Vstore (k:ValKind) (x:Var).
 
   (** Operations on exception handlers *)
   Module Type EXCEPTIONHANDLER_TYPE.
@@ -224,31 +365,37 @@ Module Type PROGRAM.
     (** max number of elements on the operand stack *)
     Parameter max_operand_stack_size : BytecodeMethod -> nat.
 
-
-    Inductive reachable_pc (bm: BytecodeMethod) : PC -> Prop :=
-    | reachable_pc_first: reachable_pc bm (firstAddress bm)
-    | reachable_pc_handler: forall exn,
-        In exn (exceptionHandlers bm) ->
-        reachable_pc bm (EXCEPTIONHANDLER.handler exn)
-    | reachable_pc_next: forall pc pc',
-        reachable_pc bm pc ->
-        nextAddress bm pc = Some pc' ->
-        reachable_pc bm pc'.
     Definition DefinedInstruction (bm:BytecodeMethod) (pc:PC) : Prop :=
       exists i, instructionAt bm pc = Some i.
-
-    Parameter all_instruction_in_reachable_pc : forall bm pc ins,
-      instructionAt bm pc = Some ins -> reachable_pc bm pc.
-    Parameter in_reachable_pc_some_instruction : forall bm pc,
-      DefinedInstruction bm (firstAddress bm) ->
-      (forall exn, In exn (exceptionHandlers bm) -> 
-                   DefinedInstruction bm (EXCEPTIONHANDLER.handler exn)) ->
-      reachable_pc bm pc ->
-      DefinedInstruction bm pc.
    
   End BYTECODEMETHOD_TYPE.
   Declare Module BYTECODEMETHOD : BYTECODEMETHOD_TYPE.
  
+  (** Content of a method *)
+  Module Type METHOD_TYPE.
+
+    Parameter signature : Method -> MethodSignature.
+    (** A method that is not abstract has a method body *)
+    Parameter body : Method -> option BytecodeMethod.
+
+    (* modifiers *)
+    Parameter isFinal : Method -> bool.
+    Parameter isStatic : Method -> bool.
+    Parameter isNative : Method -> bool.
+
+    Parameter visibility : Method -> Visibility.
+
+    Definition valid_var (m:Method) (x:Var) : Prop :=
+      forall bm, body m = Some bm ->
+         (Var_toN x) <= (BYTECODEMETHOD.max_locals bm).
+
+    Definition valid_stack_size (m:Method) (length:nat) : Prop :=
+      forall bm, body m = Some bm ->
+         length <= (BYTECODEMETHOD.max_operand_stack_size bm).
+
+    End METHOD_TYPE.
+  Declare Module METHOD : METHOD_TYPE.
+
   (** Operations on fields *)
   Module Type FIELD_TYPE.
     Parameter signature : Field -> FieldSignature.    
@@ -268,15 +415,6 @@ Module Type PROGRAM.
 
   End FIELD_TYPE.
   Declare Module FIELD : FIELD_TYPE.
-
-  (** Operations on the signatures of fields *)
-  Module Type FIELDSIGNATURE_TYPE.
-    Parameter name : FieldSignature  -> FieldName.
-    Parameter type : FieldSignature -> type.
-    Parameter eq_dec : forall f1 f2:FieldSignature, {f1=f2}+{~f1=f2}.
-  End FIELDSIGNATURE_TYPE.
-  Declare Module FIELDSIGNATURE : FIELDSIGNATURE_TYPE.
-
 
   (** Content of a Java class *)
   Module Type CLASS_TYPE.
@@ -357,6 +495,7 @@ Module Type PROGRAM.
      isStatic p fs.
 
   Definition javaLangObject : ClassName := (javaLang,object).
+  Definition javaLangThrowable : ClassName := (javaLang,throwable).
 
   Inductive direct_subclass (p:Program) (c:Class) (s:Class) : Prop :=
     | direct_subclass1 : 
@@ -374,10 +513,6 @@ Module Type PROGRAM.
     | subclass_name1 : forall c1 c2, 
        subclass p c1 c2 -> 
        subclass_name p (CLASS.name c1) (CLASS.name c2).
-
-  Parameter subclass_name_dec : forall p cn1 cn2,
-    {subclass_name p cn1 cn2}+{~subclass_name p cn1 cn2}.
-
 
   Inductive direct_subclass_name (p:Program) : ClassName -> ClassName -> Prop :=
     | direct_subclass_name1 : forall c s,
@@ -435,9 +570,6 @@ Module Type PROGRAM.
 
   Definition defined_field (p:Program) (cn:ClassName) (fs:FieldSignature) : Prop :=
     exists f, is_defined_field p cn fs f.
-
-  Parameter defined_field_dec : forall p cn f,
-    {defined_field p cn f}+{~defined_field p cn f}.
 
   Definition findMethod (p:Program) (msig: MethodSignature) : option Method :=
     let (cn,meth) := METHODSIGNATURE.name msig in
@@ -557,13 +689,16 @@ Module Type PROGRAM.
 
 
   (** Extra tools for implementation *)
-  Parameter PC_eq_dec : forall pc1 pc2:PC, {pc1=pc2}+{~pc1=pc2}. 
-  Parameter Var_eq_dec : forall x1 x2:Var, {x1=x2}+{~x1=x2}. 
-  Parameter ClassName_eq_dec : forall c1 c2:ClassName,{c1=c2}+{~c1=c2}.
-(*  Declare Module MapPC : MAP with Definition key := PC.
-  Declare Module MapBotPC : MAP_BOT with Definition key := PC. *)
+  Parameter PC_eq : PC -> PC -> bool.
+  Parameter PC_eq_spec : forall p q:PC, if PC_eq p q then p=q else p<>q.
+  Parameter PC_eq_dec : forall pc1 pc2:PC, pc1=pc2 \/ ~pc1=pc2.
 
-
+  Parameter Meth_eq : Method -> Method -> bool.
+  Parameter Meth_eq_spec :
+          forall p q:Method, if Meth_eq p q then p=q else p<>q.
+  
+  Parameter Var_eq_dec : forall x1 x2:Var, x1=x2 \/ ~x1=x2. 
+  Parameter ClassName_eq_dec : forall c1 c2:ClassName, c1=c2 \/ ~c1=c2.
 
 End PROGRAM.
     
