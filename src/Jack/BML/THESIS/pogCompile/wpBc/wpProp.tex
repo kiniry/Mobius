@@ -183,8 +183,7 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				\mbox{\rm\textit{the compilation of $\compileLabel{s}{\stmt}{e}$ , }} \\
                         	\mbox{\rm\textit{is in the same execution relation with $\ins{e+1}$, }} \\
 
-	 %\end{array}$$
-	 %$$ \begin{array}{l}
+
 			        \mbox{\rm\textit{    Def. \ref{inter} for \interOnly, \numConclusion{1.1} and \numConclusion{1.2}   we conclude that \} } }\\
 				\numConclusion{1.3}  \ \inter{e'' + 1}{e+1} = \inter{e}{e+1} = \psi\\
 				\mbox{\rm\textit{\{From property \ref{compile:prop:compProp4} the edge between  $e''$ and $e'' + 1$}}\\
@@ -192,6 +191,8 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				\numConclusion{1.4} \ \inter{e''}{e'' +1} = \wpi{e'' + 1}{m}{} \\
 				\mbox{\rm \comment{ From the definition of the \wpName  \ for \goto \ instructions and \numConclusion{1.4}  }}\\
 				\numConclusion{1.5}  \ \wpi{e'' + 1}{m}{} = \inter{e'' + 1}{e+1} \\
+				 \end{array}$$
+				  $$ \begin{array}{l}
 				\mbox{\rm \comment{ From \numConclusion{1.4}, \numConclusion{1.3}	and \numConclusion{1.5}}}	\\
 				\numConclusion{1.6}	\  \inter{e''}{e'' +1} = \inter{e}{e+1}	= \psi	\\
 				
