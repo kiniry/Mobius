@@ -1,0 +1,290 @@
+\section{Introduction}
+
+
+Smart cards are trusted personal devices whose characteristics are
+regulated by the ISO 7816 standard. As other trusted personal devices,
+smartcards are designed to store and process confidential data, and
+can act as tokens to provide users with a secure electronic
+representation in a large network. They are widely deployed and used
+in application areas such as mobile telecommunications, banking,
+transportation, electronic identity, and digital rights management
+(DRM). Further, they hold the promise to play a key role in the
+e-society, especially as a means to guarantee users a personalized,
+global, and secure access to applications and services.
+
+
+The prominent role played by trusted personal devices in security
+sensitive applications make them an ideal target for
+attacks. Traditionally, the main concern with smartcards has been with
+hardware attacks in which the attacker gains access to confidential
+information or disturbs the functioning of the card through
+observation (e.g. of power or electro-magnetic radiations) or invasion
+(e.g. overriding sensors or attaching probes). This issue is studied in
+Deliverable D8.1.
+
+The trusted personal device remains a specific domain where post
+issuance corrections are very expensive due to the deployment process
+and the mass production. Furthermore, the emergence of new generation
+trusted personal devices increasingly connected to networks and
+providing execution support for complex programs and the prospect of
+logical attacks has urged the trusted personal devices industry to
+improve the quality of their software, as logical attacks are
+potentially easier to launch than physical attacks (for example they
+do not require physical access to the device, and are easier to
+replicate from one device to the other), and may have a huge impact.
+In particular, a malicious attacker spreading over the network and
+disconnecting or disrupting devices massively could have deep consequences.
+
+This deliverable reports on the development of methodologies and tools
+that increase confidence in applications.  For concreteness, we focus 
+on Java applications that can be executed on devices that embed Java
+Virtual Machines (JVM) or their variants, in particular Java Card
+Virtual Machines (JCVM). Java enabled devices are a natural choice for
+formal methods because:
+\begin{inparaenum}[i)]
+\item they are widely deployed in the field;
+\item they feature mechanisms that contribute to the security of the
+platform and the applications that execute over it;
+\item detailed informal specifications of the Java platform are publicly
+available, and can be scrutinized.
+\end{inparaenum}
+However, it should be clear that the methods presented in this document
+are relevant to other execution platforms for trusted personal devices.
+
+
+\subsection{Security issues}
+While the focus of the deliverable is on application validation,
+security is a holistic property of a system, and formal techniques
+must therefore be employed at different levels to provide strong
+guarantees about the security of a TPD and its applications.
+Essentially, the levels are: the hardware, platform, the libraries,
+and the applications.
+
+The need to consider security at those levels is illustrated for
+example by the case study described on Page 55 in Deliverable D8.2,
+which is concerned with secure platforms. The development of secure
+API is discussed in Deliverables D7.1 and D7.2. As previously mentioned,
+hardware security is discussed in Deliverable D8.1.
+
+
+\paragraph*{Platform} The TPD security architecture guarantees that
+downloaded applications are innocuous and comply with some basic
+policies related to typing, initialization or access control. Such
+basic policies are the cornerstones upon which the overall security of
+the smartcard will rely. Therefore it is important to verify that the
+security architecture does enforce these basic policies as
+intended. Thus, an important application of formal methods to TPD
+security is platform verification, which aims at providing an abstract
+model of the Java platform and security architecture, and at proving
+that the security functions play their expected role.
+
+\paragraph*{Libraries} However, it is not sufficient to show that
+security functions are correctly designed. In particular, one also has
+to ensure that other components of the infrastructure, in particular
+API, are correctly designed and implemented. For the purpose of this
+deliverable, where the focus is on Java based TPD, the Java API and
+the Global Platform API constitute two prominent components of the
+infrastructure whose correct design is central to security. 
+
+
+\paragraph*{Applications} 
+Platform and libraries verification is a fundamental step towards
+guaranteeing the security of smartcards, and a prerequisite for Common
+Criteria evaluations at the highest levels. Nevertheless, the
+guarantees offered by the Java security architecture are limited, and
+further verifications must be performed to verify that applications
+make a legitimate use of the infrastructure, and do not attempt any
+hostile action.
+
+Thus, application validation is another important application of
+formal methods to TPD security. To date, testing campaigns remain the
+primary means to ensure the quality of applications. However, testing
+campaigns are expensive and only provide partial guarantees with
+regard to the reliability of software. Therefore, it is important to
+develop other advanced techniques for applet validation.
+
+There are many facets to applet validation, each with its own
+objectives and techniques:
+\begin{itemize}
+\item one can enhance existing security architectures to enforce
+security properties not addressed by current architectures, in
+particular confidentiality and availability.  Verification can be
+performed by enhanced bytecode verification mechanisms;
+
+
+\item one can abandon the realm of type systems and its associated
+benefits and choose develop logical methods for specifying and
+verifying either automatically or efficiently a specific class of
+security properties. Verification can be performed by (possibly
+efficient and hence incomplete) logic-based proof inference
+mechanisms;
+
+
+
+
+\item one can exploit the expressive power of logical methods to
+require that applications, or at least sensitive fragments of
+applications, are subjected to functional verification, i.e. to
+verifications that establish their correctness in terms of
+functionality as well as security.
+\end{itemize}
+
+
+
+\subsection{Logical verification of security properties using JML}
+In order to provide precise analyzes with a limited overhead, we
+advocate an integrated approach where validation techniques of
+increasing strength are used, starting from automated techniques such
+as testing and moving towards formal validation using a combination of
+automated and interactive tools. In addition, we aim at overcoming the
+difficulty of introducing formal techniques in industrial processes by
+providing notations and tools hiding the mathematical formalisms and
+by integrating formal techniques into classical developers environment
+so as to allow users to benefit from formal techniques without having
+to learn new formalisms and to become experts.
+
+All the tools and results presented in this document were developed
+with this goal in mind, notably the choice of JML as assertion
+language and the development of JACK and its associated feature.
+Using those techniques, Java developers should be able to validate
+their code, or at least to get a good assurance on its correctness.
+
+
+\subsubsection{JML}
+JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the ``Java
+Modeling Language'', is a behavioral interface specification language
+for Java; that is, it specifies both the behavior and the syntactic
+interface of Java code.  The syntactic interface of a Java class or
+interface consists of its method signatures, the names and types of
+its fields, etc.  This is what is commonly meant by an application
+programming interface (API).  The behavior of such an API can be
+precisely documented in JML annotations; these describe the intended
+way that programmers should use the API.  In terms of behavior, JML
+can detail, for example, the preconditions and postconditions for
+methods as well as class invariants. These specifications are given as
+annotations of the Java source file. More precisely, they are included
+as special Java comments, either after the symbols \lstinline!//@! or
+enclosed between \lstinline!/*@! and
+\lstinline[basicstyle=\normalfont\ttfamily\small\sl]!@*/!. For example,
+the general schema for the annotation of a method is the following:
+\begin{lstlisting}
+/*@ behavior
+  @   requires <precondition>;
+  @   ensures <postcondition if no exception raised>;
+  @   signals(E) <postcondition when exception E raised>;
+  @   assignable <modified fields and variables>;
+  @*/
+\end{lstlisting}
+where \lstinline!requires! specifies the conditions on variables, fields
+and method parameters at the beginning of the method call so that the
+conditions after \lstinline!ensures! hold at the end of the method
+call and the conditions after \lstinline!signals(E)! hold if an
+exception is raised and not caught inside the analyzed method.  The
+underlying model is a an extension of Hoare-Floyd logic: if the
+precondition holds at the beginning of the method call, then
+postconditions (with and without exceptions) will hold after the
+call. The \lstinline!assignable! clause specifies side-effect affected
+variables and is used during the weakest precondition calculus for
+method invocations.
+
+An important goal for the design of JML is that it should be easily
+understandable by Java programmers. This is achieved by staying as
+close as possible to Java syntax and semantics.  Another important
+design goal is that JML {\em not} impose any particular design method
+on users; instead, JML should be able to document Java programs
+designed in any manner \cite{Leavens-Baker-Ruby03}.
+
+JML uses Java's expression syntax in assertions,
+thus JML's notation is easy for programmers to learn.  
+Because JML supports quantifiers such as
+\verb_\forall_ and \verb_\exists_, and because JML allows ``model''
+(i.e., specification-only) fields and methods, specifications can
+easily be made precise and complete.
+JML assertions are written as special
+annotation comments in Java code,
+so that they are ignored by Java compilers but can be used
+by tools that support JML\@.  Within annotation comments JML extends the
+Java syntax with several keywords.  It also extends Java's expression syntax with several
+operators.
+The central ingredients of a JML specification are preconditions
+(given in {\tt requires} clauses), postconditions (given in {\tt
+  ensures} clauses), and (class and interface) invariants.  These are
+all expressed as boolean expressions in JML's extension to Java's
+expression syntax.
+In addition to ``normal'' postconditions, the language also supports
+``exceptional'' postconditions, specified in {\tt signals} clauses.
+These can be used to specify what must be true when a method throws an
+exception. 
+
+\paragraph*{Styles of specification}
+Due to its expressiveness and versatility, the JML specification
+language supports several styles of specifications; the choice of one
+style of specification over the others depends on the purpose of the
+verification effort. In a nutshell, one can either opt for lightweight
+specifications in which one introduces enough annotations to reason
+about some specific safety property, such as the absence of
+exceptions, or heavyweight specifications where functional behavior is
+considered. There is of course a great liberty in how \lq\lq
+lightweight\rq\rq\ or \lq\lq heavyweight\rq\rq\ a specification should
+be, and different styles can be used in different parts of an
+application.
+
+In addition, one may opt for defensive specifications, in which methods
+are annotated with preconditions that prevent exceptions to occur, or
+offensive specifications, which use appropriate clauses to specify 
+exceptional postconditions.
+
+\subsubsection{Verification techniques and tools}
+
+JML specifications correctness can be verified either during runtime
+or statically~\cite{BurdyCCEKLLP03}. To be verified during runtime, the
+source code must have been compiled using \texttt{jmlc}, which is a
+enhanced Java compiler for JML annotated code. This compiler adds to
+the generated program assertions checking instructions corresponding
+to the JML specifications of the program: preconditions, postconditions 
+and loop or class invariants. An exception is raised during the execution 
+if a JML condition fails. The JML runtime assertion checker can be used
+for unit testing~\cite{CL02:ecoop}.
+
+
+For the static verification of Java programs, several tools are
+available using (variations of) JML as specification language. These
+tools adopt different compromises between soundness and automation,
+and thus it is useful to use them in combination, starting from
+automatic but unsound tools, and pursuing with sound but interactive
+tools.  Among these tools, ESC/Java2~\cite{CK04:cassis} offers the higher
+level of automation as it does not require any user interaction and
+relies on the Simplify automatic prover. It is particularly useful for
+checking null pointers or array bounds limits; however it is unsound
+and incomplete.
+
+In order to further increase the level of reliability of applications,
+we propose a methodology based on static verification using
+JACK~\cite{BRL-JACK}, a tool that generates proof obligations that
+can be discharged using proof assistants or automatic provers.
+
+
+\subsection{Main contributions}
+The work reported in this deliverable builds upon the JACK tool,
+that was initially developed within Gemplus. The tool development
+was transferred to INRIA at the beginning of the project, with
+the objective to improve and increase its functionalities so as
+to address the needs of INSPIRED. The main contributions of the
+work carried within INSPIRED are:
+\begin{itemize}
+\item support for verifying high-level security properties
+\item support for verifying bytecode programs
+\item validation of the methodology for estimating resource
+usage and optimizing code for low-footprint.
+\end{itemize}
+In order to carry the above tasks and evaluations, it has also
+been necessary to make many improvements to the tool itself.
+It is not in the scope of the present document to describe these 
+improvements.
+
+
+\subsection{Contents of the deliverable}
+This document is organized as follows, the next chapter introduce the
+assertion language JML, chapter 2 describes the JACK tool with its
+extension feature, chapter 3 presents some evaluations done with the
+tools and the last chapter concludes.

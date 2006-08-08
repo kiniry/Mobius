@@ -1,0 +1,245 @@
+\section{Evaluations}
+\subsection{Checking High-Level Security Properties}\label{SecResults} 
+
+Using the techniques of Section~\ref{sec:highlevel}, we checked for
+several realistic applications whether they respect the security
+properties presented in Section~\ref{SecHighLevelSecProp}, and
+actually found some violations.  This section presents these results
+for the PACAP case study of Gemplus, focusing on the atomicity properties.
+
+
+\subsubsection{Core-annotations for Atomicity Properties}
+
+The core-annotations related to the atomicity properties specify the
+methods related to the transaction mechanism declared in class
+\texttt{JCSystem} of the Java Card API. As explained above, a static
+ghost variable \texttt{TRANS} is used to keep track of whether there
+is a transaction in progress.  
+
+
+To check for the absence of uncaught exceptions inside transactions,
+we use a special feature of JACK, namely pre- and postcondition
+annotations for statement blocks (as presented
+in~\cite{BRL-JACK}). Block annotations are  similar to method
+specifications. The propagation algorithm is adapted, so that it not
+only generates annotations for methods, but also for designated
+blocks. As core-annotation, we add the following annotation for
+\texttt{commitTransaction}. 
+\begin{verbatim}
+/*@ exsures (Exception) TRANS == 0; @*/
+public static native void commitTransaction() 
+                          throws TransactionException;
+\end{verbatim}
+This specifies that exceptions only can occur if no transaction is in
+progress. Propagating these annotations to statement blocks ending
+with a commit guarantees that if exceptions are thrown, they have to
+be caught within the transaction.
+
+%that these only can raise exceptions, if they
+%do not start a transaction.
+
+%An exceptional postcondition is added claiming that an exeption can be
+%thrown only if no transaction is open.  The propagation of this
+%exceptional postcondition mechanism leads to annotate the block that
+%terminates with the commit of the transaction and all calling methods.
+
+Finally, in order to check that only a bounded number of retries of
+pin-verification is possible, we annotate the method \texttt{check}
+(declared in the interface \texttt{Pin} in the
+standard Java Card API) with a precondition, requiring that no
+transaction is in progress.
+\begin{verbatim}
+/*@ requires TRANS == 0; @*/
+public boolean check(byte[] pin, short offset, byte length);
+\end{verbatim}
+Note: one could enforce a weaker property than not checking
+PIN in transactions, but it is good practice to do so.
+
+\subsubsection{Checking atomicity}
+The method of Section~\ref{sec:highlevel} has been applied on
+industrial examples of TPD applications to check that atomicity
+properties are respected.
+
+
+
+ We used the core-annotations as presented above, and
+propagated these throughout the applications.
+
+For both applications we found that they contained no nested
+transactions, and that they did not contain attempts to verify pin
+codes within transactions. All proof obligations generated
+\emph{w.r.t.}~these properties are trivial and can be discharged
+immediately. However, to emphasize once more the usefulness of having
+a tool for generating annotations, in the PACAP case study we
+encountered cases where a single transaction gave rise to twenty-three
+annotations in five different classes. When writing these annotations
+manually, it is very easy to forget some of them.
+
+Finally, in the PACAP application we found transactions containing
+uncaught exceptions. Consider for example the following code fragment.
+\begin{verbatim}
+void appExchangeCurrency(...) { 
+  ...
+  /*@ exsures (Exception) TRANS == 0; @*/ 
+  { ...
+  JCSystem.beginTransaction();      
+  try {balance.setValue(decimal2); ...}
+  catch (DecimalException e) {
+    ISOException.throwIt(PurseApplet.DECIMAL_OVERFLOW); }
+  JCSystem.commitTransaction();
+  } ... }
+\end{verbatim}
+The method \texttt{setValue} that is called can actually throw a
+decimal exception, which would lead to throwing an ISO exception, and
+the transaction would not be committed. This clearly violates the
+security policy as described in
+Section~\ref{SecHighLevelSecProp}. After propagating the
+core-annotations, and computing the appropriate proof obligations,
+this violation is found automatically, without any problems.
+
+
+
+
+\subsection{Bytecode Verifier}
+The tools have also been tested on a bytecode verifier java implementation. A termination proof has been provided.
+A specific implementation has been coded with on one hand the main loop which remain unchanged whatever the specifications of the virtual machine Java chosen, and other instructions and memory states which depends on selected model.
+\subsubsection{Implementation and Modelisation}
+The main loop is in a package which contains abstract classes: 
+the instructions and the states are implemented in a more generic way.
+The package containing the implementation is composed from the instructions for the standard Java types and of the states of memory typing. 
+\paragraph {Memory states}
+The memory states are represented by the State class, which is an abstract class.  It does not contain any precise definition of the memory: 
+one has no information on the stack or on the local variables table. 
+The implementation is relatively simple: 
+it is a class which contains a type stack and a table of the types of the local variables. 
+Functions allowing to read simply these structures and to generate verification error in the cases of misuse are defined.   
+\paragraph{Instructions}
+The instructions are also represented by an abstract class: 
+the class Instruction.  
+Since in the Kildall algorithm each instruction is associated to a memory state,  the Instruction class has a field of the State type. 
+An instruction can also have one or more successors. 
+This relation is represented by a field which is the list of the successors of the instruction.  
+One of the other aspects is the fact that on associate to each instruction a boolean field to determine if it has been modified or not.
+
+Several properties of the bytecode verifier are formalised in this class.
+First of all one verifies that the successors of the instruction are well included in the others instructions of the program. 
+If these successors pointed towards external instructions, an verification error would be returned. 
+
+The others important properties concern the pure function {\tt
+buildNewState}.  This function builds the typing state of the
+execution of an instruction on the current state.  This construction
+can fail if the instruction tries for example to pop an element when
+the stack is empty.  If it succeeds, a new non null state is built.
+
+
+Around ten instructions have been implemented: {\tt load} and {\tt
+blind} for the access to local variables, {\tt push} and {\tt pop} to
+obtain or put element on the stack, {\tt op1} and {\tt op2} which is
+two operators who consume both the two top element of the stack and
+which replaces them by a result of a certain type, {\tt ifle} and {\tt
+jump} instructions of jump towards another instruction successor, {\tt
+nop} the instruction which does not do anything and finally {\tt stop}
+which is an instruction which does not have a successor.  These
+instructions have an associated type in the OperandType class, who can
+be None, Type1 or Type2.  Those are the minimal instructions to have a
+Java-like program.
+
+\paragraph {The main loop}
+The main loop is implemented in the Verifier class.  It is not an
+abstract class because it uses the properties of the State and
+Instruction abstract classes to verify an instruction set on
+particular states.  This class provides two functions, the function
+{\tt verify} in which the loop is written and the function {\tt check}
+which verify an instruction.
+
+%The m \ 'ethode check ensures that all \ 'states of the successors of an instruction donn \ 'ee,    are larger or \ 'equal that the \ 'states before the ex \ 'ecution of the m \ 'ethode. This   propri \ 'and \ 'E seems simple \ `has to express but it implies several Pr \ 'erequis.  First of all it should be guaranteed that the successors of the instructions point all worms of   valid instructions. Then that all the instructions are diff \ 'erentes of no one and that theirs  \ 'states are too diff \ 'erents of no one them.    The Pr \ calculation weaker 'econdition of Jack forces us \ `has to add these propri \ 'and \ 'be    Li \ 'ees \ `with the S \ 'emantic of the language Java.  .   %Pour to facilitate the evidence I have \ 'and \ 'E oblig \ 'E  %de to add a certain number of assertions.    
+
+The {\ tt verify} method is the main loop of the bytecode verifier.
+It contains two nested loops. The internal one is a {\tt for} loop
+which iterates on the instructions and verify all the quoted
+instructions (as described in the Kildall algorithm). The termination
+of the internal loop is easy to prove.  The {\tt for} loop executes as
+many time as there are numbers in the table.  The external {\tt while}
+loop stops the algorithm when no more instruction typing state is
+modified.  This termination is not obvious to prove, especially with
+JML, since it only allow to prove loop termination by giving an
+integer variant.
+
+Since the states have to be used to show the algorithm termination,
+one has to make correspond each state with an integer. Thus at each
+loop iteration, the integer associated with the state either increase
+or preserve the same value; and it exists a maximum value.
+
+
+\begin{figure}[ht]  
+\begin{center}    
+\begin{tabular}{p {0.4 \textwidth} c c c c}  
+{\bf Classes:} & State & Instruction & Verifier \\  
+{\bf Lines of code:} & 14 & 47 & 66 \\  
+{\bf Lines of annotations:} & 20 & 54 & 81 \\  \raggedright 
+{\bf Proof obligations:} & 26 & 129 & 627 \\  \raggedright 
+{\bf Automatically proved proof obligations:} & 17 & 93 & 112 \\  
+{\bf Average length of a non-automatic proof:} & 3 & 6 & 12 \\    
+\end{tabular}  
+\end{center}  
+\caption{Some statistics on proof}  
+\label{stats}  
+\end{figure}    
+\subsubsection{Proofs}
+The first proofs are relatively easy.  The State class is proved
+almost automatically; these proofs are not due to the code of the
+methods but some standard verification Jack adds to each methods,
+mostly to verify that all the public invariants are not broken after
+the execution of each method.  Since the methods in the State class
+are quite simple (and do not break the invariants), the automation is
+good for these kind of proof obligations.  The only special case is
+for the constructor where it is necessary to break a disjunction ({\tt
+instance S $\vee$ S = null}) to prove the invariants.
+
+
+The Instruction class has also been relatively easy to prove.  A
+significant number of proof was done automatically (approximately 90
+\%) and as for the State class this was mainly the verifications of
+invariants; then majority of proof could be trivially resolved as most
+of the methods are observer or accessors to private fields.  Two
+methods verify some properties over the instructions, namely {\tt
+checkDomain} which checks if the successors of the instruction are
+contained in the program and {\tt isSuccessor} which test if the
+instruction passed as a parameter is in the list of the successors of
+the current instruction.  Thes two methods contains loops, so the
+proof obligations generated are quite differents. We have to use some
+arithmetic to prove their termination, which is not automated since it
+does not appear often.  Finally the Verifier class was harder to
+prove. One of the main reason is that the main method contains 2
+loops; the inner one, easy to verify (a bit more difficult than the
+ones contained in the Instruction class) because it simply consult
+each intruction of the instruction array representing the program, but
+with much more properties expressed on it. The proof obligations
+generated for the main loop containing the inner loop are harder to
+prove because the loop terminates only if it reaches a fixpoint, so it
+cannot be expressed by simple arithmetic like the previous ones.  The
+lemmas of this class were containing too many hypotheses to be
+automatically proved.  In fact for each class some properties are
+brought from the previous ones, this adds lots of hypothesis but it
+adds too to the complexity of the proofs.  That's why there was some
+kind of exponentional growth in the size of the proof obligations for
+each class when they were defined.  Around 500 proof obligations had
+to be solved manually.  Some of them were obvious and were resolved
+with quite the same script, but the script cannot be automated.  Some
+of them were complex: the proof script became little large (an average
+of 30 steps).  As one should expect the lemmas concerning the loop
+invariant of the verify method and its initialization were the most
+difficult to prove.
+
+
+
+
+\subsection{Low-Footprint Java-to-Native Compilation}
+
+\subsection{Memory consumption}
+
+\subsubsection{Modeling Memory Consumption}\label{sec:verif}
+
+\subsubsection{Inferring Memory Allocation}\label{sec:infer}
+
+
