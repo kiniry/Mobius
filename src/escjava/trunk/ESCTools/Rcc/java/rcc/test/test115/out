@@ -4,19 +4,49 @@ C.java:5: Warning:  field 'F.e' must be guarded because it is a non-final static
 C.java:6: Warning:  field 'F.ej' must be guarded because it is a non-final static field (StaticField)
    public static  Object ej[];
                   ^
+C.java:16: Warning: lock expression may not be constant.   (ConstantLocks)
+    D/*#{F.d}*/ dd; 
+         ^
+C.java:16: Error: type of argument (error) does not match the formal parameter type (Object)
+    D/*#{F.d}*/ dd; 
+         ^
 C.java:17: Warning: lock expression may not be constant.   (ConstantLocks)
     D/*#{F.e}*/ ee;
          ^
+C.java:17: Error: type of argument (error) does not match the formal parameter type (Object)
+    D/*#{F.e}*/ ee;
+         ^
+C.java:17: Warning: lock expression may not be constant.   (ConstantLocks)
+    D/*#{F.e}*/ ee;
+         ^
+C.java:16: Warning: lock expression may not be constant.   (ConstantLocks)
+    D/*#{F.d}*/ dd; 
+         ^
+Associated declaration is "C.java", line 11, col 21:
+    public int a /*# guarded_by o */;
+                     ^
+C.java:20: Warning: possible race condition.  Lock 'F.d' may not be held.  Locks currently held are '(d)'. (Race)
+            dd.a = 2;
+            ^
+Associated declaration is "C.java", line 11, col 21:
+    public int a /*# guarded_by o */;
+                     ^
 C.java:21: Error: Value of type D<(F.e)> cannot be assigned to location of type D<(F.d)>
             dd = ee;
                ^
+C.java:22: Warning: possible race condition.  Lock 'F.d' may not be held.  Locks currently held are '(d)'. (Race)
+            dd.a=ee.a;
+            ^
+Associated declaration is "C.java", line 11, col 21:
+    public int a /*# guarded_by o */;
+                     ^
 C.java:17: Warning: lock expression may not be constant.   (ConstantLocks)
     D/*#{F.e}*/ ee;
          ^
 Associated declaration is "C.java", line 11, col 21:
     public int a /*# guarded_by o */;
                      ^
-C.java:22: Warning: possible race condition.  Lock 'F.e' may not be held.  Locks currently held are '(F.d)'. (Race)
+C.java:22: Warning: possible race condition.  Lock 'F.e' may not be held.  Locks currently held are '(d)'. (Race)
             dd.a=ee.a;
                  ^
 Associated declaration is "C.java", line 11, col 21:
@@ -28,14 +58,20 @@ class J extends D/*#{F.e}*/ {
 C.java:31: Warning: lock expression may not be constant.   (ConstantLocks)
     DD/*#{null,c}*/ x;
                ^
+C.java:31: Error: type of argument (error) does not match the formal parameter type (C)
+    DD/*#{null,c}*/ x;
+               ^
+C.java:31: Warning: lock expression may not be constant.   (ConstantLocks)
+    DD/*#{null,c}*/ x;
+               ^
 C.java:39: Warning: lock expression may not be constant.   (ConstantLocks)
 class Js extends D/*#{F.e,F.ej[2]}*/ {
                       ^
 C.java:39: Warning: lock expression may not be constant.   (ConstantLocks)
 class Js extends D/*#{F.e,F.ej[2]}*/ {
-                          ^
+                           ^
 C.java:10: Fatal error: mismatch in number of type arguments for D
 class D /*# {ghost Object o}  */ {
 ^
-9 warnings
-2 errors
+15 warnings
+5 errors
