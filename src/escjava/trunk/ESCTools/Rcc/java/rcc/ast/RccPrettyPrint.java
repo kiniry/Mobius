@@ -43,6 +43,7 @@ public class RccPrettyPrint extends DelegatingPrettyPrint {
     //@ requires o != null && mp != null;
     public void print(OutputStream o, int ind, TypeModifierPragma mp) {
         int tag = mp.getTag();
+        
         switch (tag) {
             
         case TagConstants.ARRAYGUARDMODIFIERPRAGMA:{

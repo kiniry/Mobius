@@ -36,15 +36,12 @@ public class ThreadLocalStatusPragma extends ModifierPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw ThreadLocalStatusPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected ThreadLocalStatusPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.local == local;
+ //@ ensures this.loc == loc;
+ protected ThreadLocalStatusPragma(boolean local, int loc) {
+    this.local = local;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -63,7 +60,7 @@ public class ThreadLocalStatusPragma extends ModifierPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[ThreadLocalStatusPragma"
        + " local = " + this.local
        + " loc = " + this.loc
@@ -87,10 +84,7 @@ public class ThreadLocalStatusPragma extends ModifierPragma {
 
  //@ ensures \result != null;
  public static ThreadLocalStatusPragma make(boolean local, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    ThreadLocalStatusPragma result = new ThreadLocalStatusPragma();
-    result.local = local;
-    result.loc = loc;
+    ThreadLocalStatusPragma result = new ThreadLocalStatusPragma(local, loc);
     return result;
  }
 }

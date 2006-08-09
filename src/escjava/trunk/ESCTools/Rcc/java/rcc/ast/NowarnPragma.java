@@ -38,15 +38,12 @@ public class NowarnPragma extends LexicalPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw NowarnPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected NowarnPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.checks == checks;
+ //@ ensures this.loc == loc;
+ protected NowarnPragma(/*@ non_null @*/ IdentifierVec checks, int loc) {
+    this.checks = checks;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -72,7 +69,7 @@ public class NowarnPragma extends LexicalPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[NowarnPragma"
        + " checks = " + this.checks
        + " loc = " + this.loc
@@ -97,10 +94,7 @@ public class NowarnPragma extends LexicalPragma {
 
  //@ ensures \result != null;
  public static NowarnPragma make(/*@ non_null @*/ IdentifierVec checks, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    NowarnPragma result = new NowarnPragma();
-    result.checks = checks;
-    result.loc = loc;
+    NowarnPragma result = new NowarnPragma(checks, loc);
     return result;
  }
 }

@@ -45,15 +45,12 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
 
 // Generated boilerplate constructors:
 
-  /**
-   * Construct a raw GhostDeclPragma whose class invariant(s) have not
-   * yet been established.  It is the caller's job to
-   * initialize the returned node's fields so that any
-   * class invariants hold.
-   */
-  //@ requires I_will_establish_invariants_afterwards;
-  protected GhostDeclPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+  //@ ensures this.decl == decl;
+  //@ ensures this.loc == loc;
+  protected GhostDeclPragma(/*@ non_null @*/ FieldDecl decl, int loc) {
+     this.decl = decl;
+     this.loc = loc;
+  }
 
 // Generated boilerplate methods:
 
@@ -75,7 +72,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
      throw new IndexOutOfBoundsException("AST child index " + indexPre);
   }   //@ nowarn Exception;
 
-  public final String toString() {
+  public final /*@non_null*/String toString() {
      return "[GhostDeclPragma"
         + " decl = " + this.decl
         + " loc = " + this.loc
@@ -100,10 +97,7 @@ public class GhostDeclPragma extends TypeDeclElemPragma {
 
   //@ ensures \result != null;
   public static GhostDeclPragma make(/*@ non_null @*/ FieldDecl decl, int loc) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     GhostDeclPragma result = new GhostDeclPragma();
-     result.decl = decl;
-     result.loc = loc;
+     GhostDeclPragma result = new GhostDeclPragma(decl, loc);
      return result;
   }
 }

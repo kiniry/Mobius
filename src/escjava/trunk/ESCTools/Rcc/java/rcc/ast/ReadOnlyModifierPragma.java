@@ -34,15 +34,10 @@ public class ReadOnlyModifierPragma extends ModifierPragma {
 
 // Generated boilerplate constructors:
 
-  /**
-   * Construct a raw ReadOnlyModifierPragma whose class invariant(s) have not
-   * yet been established.  It is the caller's job to
-   * initialize the returned node's fields so that any
-   * class invariants hold.
-   */
-  //@ requires I_will_establish_invariants_afterwards;
-  protected ReadOnlyModifierPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+  //@ ensures this.loc == loc;
+  protected ReadOnlyModifierPragma(int loc) {
+     this.loc = loc;
+  }
 
 // Generated boilerplate methods:
 
@@ -61,7 +56,7 @@ public class ReadOnlyModifierPragma extends ModifierPragma {
      throw new IndexOutOfBoundsException("AST child index " + indexPre);
   }   //@ nowarn Exception;
 
-  public final String toString() {
+  public final /*@non_null*/String toString() {
      return "[ReadOnlyModifierPragma"
         + " loc = " + this.loc
         + "]";
@@ -84,9 +79,7 @@ public class ReadOnlyModifierPragma extends ModifierPragma {
 
   //@ ensures \result != null;
   public static ReadOnlyModifierPragma make(int loc) {
-     //@ set I_will_establish_invariants_afterwards = true;
-     ReadOnlyModifierPragma result = new ReadOnlyModifierPragma();
-     result.loc = loc;
+     ReadOnlyModifierPragma result = new ReadOnlyModifierPragma(loc);
      return result;
   }
 }

@@ -43,15 +43,12 @@ public class ArrayGuardModifierPragma extends TypeModifierPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw ArrayGuardModifierPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected ArrayGuardModifierPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.expressions == expressions;
+ //@ ensures this.loc == loc;
+ protected ArrayGuardModifierPragma(/*@ non_null @*/ ExprVec expressions, int loc) {
+    this.expressions = expressions;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -77,7 +74,7 @@ public class ArrayGuardModifierPragma extends TypeModifierPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[ArrayGuardModifierPragma"
        + " expressions = " + this.expressions
        + " loc = " + this.loc
@@ -103,10 +100,7 @@ public class ArrayGuardModifierPragma extends TypeModifierPragma {
 
  //@ ensures \result != null;
  public static ArrayGuardModifierPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    ArrayGuardModifierPragma result = new ArrayGuardModifierPragma();
-    result.expressions = expressions;
-    result.loc = loc;
+    ArrayGuardModifierPragma result = new ArrayGuardModifierPragma(expressions, loc);
     return result;
  }
 }

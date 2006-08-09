@@ -15,7 +15,7 @@ import rcc.ast.TagConstants;
  ** Handles turning off warnings.
  **/
 
-public class NoWarn {
+public class NoWarn extends escjava.translate.NoWarn {
     
     /***************************************************
      *                                                 *

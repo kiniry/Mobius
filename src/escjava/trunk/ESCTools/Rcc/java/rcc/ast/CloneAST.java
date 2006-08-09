@@ -20,17 +20,15 @@ public class CloneAST extends CloneVisitorSuper {
     }
 
     public ASTNode finish(ASTNode a, Object o) {
-        cloneDecorations(a, (Boolean)o);
         
-        if (!cloneDecorations) {
+        if (cloneDecorations) {
+            cloneDecorations(a, (Boolean)o);
+        } else {
             rcc.tc.FlowInsensitiveChecks.guardDecoration.set(a,null);
             rcc.tc.FlowInsensitiveChecks.requiresDecoration.set(a,null);
             rcc.tc.FlowInsensitiveChecks.elemGuardDecoration.set(a,null);
             rcc.tc.FlowInsensitiveChecks.threadLocalDecoration.set(a,null);
-            // if (a instanceof TypeName)
             rcc.tc.PrepTypeDeclaration.typeParametersDecoration.set(a,null);
-            //        javafe.tc.TypeSig.sigDecoration.set(a,null);
-            // a.getDecorations()[8] = null;
         }
         
         return a;
@@ -179,7 +177,7 @@ public class CloneAST extends CloneVisitorSuper {
     
     
     public  ExprVec clone(ExprVec x, Boolean b) {
-        return  clone(x,b.booleanValue());
+        return  clone(x, b.booleanValue());
     }
     
     public  ExprVec clone(ExprVec x, boolean b) {
@@ -196,11 +194,7 @@ public class CloneAST extends CloneVisitorSuper {
     }
     
     public Object  clone(ASTNode x,boolean b) {
-        ASTNode r = (ASTNode)x.accept(this,new Boolean(b));
-        if (cloneDecorations) {
-            cloneDecorations(r,  new Boolean(b));
-        }
-        return r;
+        return (ASTNode)x.accept(this,new Boolean(b));
     }
 }   
 

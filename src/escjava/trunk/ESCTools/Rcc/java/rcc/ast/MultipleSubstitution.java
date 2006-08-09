@@ -34,9 +34,11 @@ public class MultipleSubstitution {
   
   public ASTNode  substitute(ASTNode a) {
     int i;
-    for (i = 0; i<substitutions.size(); i++) {
+    for (i = 0; i < substitutions.size(); i++) {
       Substitution s = substitutions.elementAt(i);
       if (equalityTester.equals(s.match,a)) {
+        //System.out.println(a);
+        //new Exception().printStackTrace(System.out);
         return s.replace;
       }
     }

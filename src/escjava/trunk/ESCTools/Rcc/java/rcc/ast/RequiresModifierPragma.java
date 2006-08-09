@@ -42,15 +42,12 @@ public class RequiresModifierPragma extends ModifierPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw RequiresModifierPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected RequiresModifierPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.expressions == expressions;
+ //@ ensures this.loc == loc;
+ protected RequiresModifierPragma(/*@ non_null @*/ ExprVec expressions, int loc) {
+    this.expressions = expressions;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -76,7 +73,7 @@ public class RequiresModifierPragma extends ModifierPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[RequiresModifierPragma"
        + " expressions = " + this.expressions
        + " loc = " + this.loc
@@ -102,10 +99,7 @@ public class RequiresModifierPragma extends ModifierPragma {
 
  //@ ensures \result != null;
  public static RequiresModifierPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    RequiresModifierPragma result = new RequiresModifierPragma();
-    result.expressions = expressions;
-    result.loc = loc;
+    RequiresModifierPragma result = new RequiresModifierPragma(expressions, loc);
     return result;
  }
 }

@@ -1025,7 +1025,7 @@ return finish(x,o);
       x.tmodifiers = _temptmodifiers; 
       Type _tempelemType = (Type)(x.elemType == null ? null : x.elemType.accept(this, o));
       x.elemType = _tempelemType; 
-return finish(x,o);
+      return finish(x,o);
    }
 
 //@ ensures RES!=null

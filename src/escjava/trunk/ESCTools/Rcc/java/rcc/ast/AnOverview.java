@@ -63,15 +63,8 @@ public abstract class AnOverview extends ASTNode {
 
 // Generated boilerplate constructors:
 
-   /**
-    * Construct a raw AnOverview whose class invariant(s) have not
-    * yet been established.  It is the caller's job to
-    * initialize the returned node's fields so that any
-    * class invariants hold.
-    */
-   //@ requires I_will_establish_invariants_afterwards;
-   protected AnOverview() {}    //@ nowarn Invariant,NonNullInit;
-
+   protected AnOverview() {
+   }
    
 
 // Generated boilerplate methods:
@@ -89,7 +82,7 @@ public abstract class AnOverview extends ASTNode {
 
    /** Return a string representation of <code>this</code>.
    Meant for debugging use only, not for presentation. */
-   public abstract String toString();
+   public abstract /*@non_null*/ String toString();
 
    /** Accept a visit from <code>v</code>.  This method simply
    calls the method of <code>v</code> corresponding to the

@@ -44,15 +44,12 @@ public class GenericArgumentPragma extends TypeModifierPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw GenericArgumentPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected GenericArgumentPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.expressions == expressions;
+ //@ ensures this.loc == loc;
+ protected GenericArgumentPragma(/*@ non_null @*/ ExprVec expressions, int loc) {
+    this.expressions = expressions;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -78,7 +75,7 @@ public class GenericArgumentPragma extends TypeModifierPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[GenericArgumentPragma"
        + " expressions = " + this.expressions
        + " loc = " + this.loc
@@ -104,10 +101,7 @@ public class GenericArgumentPragma extends TypeModifierPragma {
 
  //@ ensures \result != null;
  public static GenericArgumentPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    GenericArgumentPragma result = new GenericArgumentPragma();
-    result.expressions = expressions;
-    result.loc = loc;
+    GenericArgumentPragma result = new GenericArgumentPragma(expressions, loc);
     return result;
  }
 }

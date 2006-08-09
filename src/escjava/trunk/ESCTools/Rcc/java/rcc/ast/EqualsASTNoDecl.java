@@ -104,8 +104,8 @@ public class EqualsASTNoDecl extends EqualityVisitorSuper {
     }   
 
     public boolean contains(ExprVec a, Expr expr) {
-        for (int j = 0; j<a.size(); j++) {
-            if (equals(a.elementAt(j),expr)) {
+        for (int j = 0; j < a.size(); j++) {
+            if (equals(a.elementAt(j), expr)) {
                 return true;
             }
         }

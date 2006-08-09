@@ -45,15 +45,12 @@ public class GenericParameterPragma extends TypeModifierPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw GenericParameterPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected GenericParameterPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.args == args;
+ //@ ensures this.loc == loc;
+ protected GenericParameterPragma(/*@ non_null @*/ FormalParaDeclVec args, int loc) {
+    this.args = args;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -79,7 +76,7 @@ public class GenericParameterPragma extends TypeModifierPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[GenericParameterPragma"
        + " args = " + this.args
        + " loc = " + this.loc
@@ -105,10 +102,7 @@ public class GenericParameterPragma extends TypeModifierPragma {
 
  //@ ensures \result != null;
  public static GenericParameterPragma make(/*@ non_null @*/ FormalParaDeclVec args, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    GenericParameterPragma result = new GenericParameterPragma();
-    result.args = args;
-    result.loc = loc;
+    GenericParameterPragma result = new GenericParameterPragma(args, loc);
     return result;
  }
 }

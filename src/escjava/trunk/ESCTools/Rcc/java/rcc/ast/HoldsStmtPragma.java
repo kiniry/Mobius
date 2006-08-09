@@ -37,15 +37,12 @@ public class HoldsStmtPragma extends StmtPragma {
 
 // Generated boilerplate constructors:
 
- /**
-  * Construct a raw HoldsStmtPragma whose class invariant(s) have not
-  * yet been established.  It is the caller's job to
-  * initialize the returned node's fields so that any
-  * class invariants hold.
-  */
- //@ requires I_will_establish_invariants_afterwards;
- protected HoldsStmtPragma() {}    //@ nowarn Invariant,NonNullInit;
-
+ //@ ensures this.expressions == expressions;
+ //@ ensures this.loc == loc;
+ protected HoldsStmtPragma(/*@ non_null @*/ ExprVec expressions, int loc) {
+    this.expressions = expressions;
+    this.loc = loc;
+ }
 
 // Generated boilerplate methods:
 
@@ -71,7 +68,7 @@ public class HoldsStmtPragma extends StmtPragma {
     throw new IndexOutOfBoundsException("AST child index " + indexPre);
  }   //@ nowarn Exception;
 
- public final String toString() {
+ public final /*@non_null*/String toString() {
     return "[HoldsStmtPragma"
        + " expressions = " + this.expressions
        + " loc = " + this.loc
@@ -97,10 +94,7 @@ public class HoldsStmtPragma extends StmtPragma {
 
  //@ ensures \result != null;
  public static HoldsStmtPragma make(/*@ non_null @*/ ExprVec expressions, int loc) {
-    //@ set I_will_establish_invariants_afterwards = true;
-    HoldsStmtPragma result = new HoldsStmtPragma();
-    result.expressions = expressions;
-    result.loc = loc;
+    HoldsStmtPragma result = new HoldsStmtPragma(expressions, loc);
     return result;
  }
 }

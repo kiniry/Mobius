@@ -10,6 +10,7 @@ import javafe.util.ErrorSet;
 import javafe.util.Location;
 import javafe.util.Set;
 import rcc.ast.TagConstants;
+import rcc.RccOptions;
 import javafe.tc.TypeSig;
 
 
@@ -71,7 +72,7 @@ public final class ErrorMsg {
             Assert.fail("unreachable");
         }
         
-        if (rcc.Main.inst.options().tse) {
+        if (RccOptions.get().tse) {
             try {
                 throw new Exception();
             } catch(Exception e) {
@@ -90,7 +91,7 @@ public final class ErrorMsg {
             ErrorSet.displayColumn(declLoc);
         }
 
-        if (rcc.Main.inst.options().suggest) {
+        if (RccOptions.get().suggest) {
             System.out.println("Suggestion [" + 
                                Location.toLineNumber(loc)+
                                "," + Location.toColumn(loc) + 
