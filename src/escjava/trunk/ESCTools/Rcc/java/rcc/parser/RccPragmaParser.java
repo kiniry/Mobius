@@ -2,13 +2,26 @@
 
 package rcc.parser;
 
-import javafe.ast.*;
-
+import rcc.ast.ArrayGuardModifierPragma;
 import rcc.ast.GenericArgumentPragma;
 import rcc.ast.GenericParameterPragma;
-import rcc.ast.*;
+import rcc.ast.NowarnPragma;
+import rcc.ast.GuardedByModifierPragma;
+import rcc.ast.HoldsStmtPragma;
+import rcc.ast.ReadOnlyModifierPragma;
+import rcc.ast.RequiresModifierPragma;
 import rcc.ast.TagConstants;
-import rcc.Main;
+import rcc.ast.ThreadLocalStatusPragma;
+import rcc.RccOptions;
+
+import javafe.ast.ASTNode;
+import javafe.ast.ExprVec;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
+import javafe.ast.Identifier;
+import javafe.ast.IdentifierVec;
+import javafe.ast.ModifierPragmaVec;
+import javafe.ast.Type;
 
 import javafe.parser.Lex;
 import javafe.parser.PragmaParser;
@@ -21,6 +34,8 @@ import javafe.util.StackVector;
 import javafe.util.Assert;
 
 import java.io.IOException;
+
+//import rcc.ast.*;
 
 /**
  * 
@@ -141,8 +156,8 @@ public class RccPragmaParser extends Parse implements PragmaParser {
                         + Location.toColumn(loc);
             }
 
-            if (Main.inst.options().ignoreAnnSet == null || 
-                    !Main.inst.options().ignoreAnnSet.contains(locs)) {
+            if (RccOptions.get().ignoreAnnSet == null || 
+                    !RccOptions.get().ignoreAnnSet.contains(locs)) {
                 // Not an annotation to ignore
                 // System.out.println("Not ignoring ann at "+locs);
                 return true;
@@ -240,7 +255,7 @@ public class RccPragmaParser extends Parse implements PragmaParser {
         case TagConstants.LBRACE:
             if (scanner.ttype == TagConstants.IDENT
                     && TagConstants.fromIdentifier(scanner.identifierVal) == TagConstants.GHOST) {
-                // scanner.getNextToken();
+                // scanner.getNextToken(); // rgrig: Check this!
                 dst.ttype = TagConstants.TYPEMODIFIERPRAGMA;
                 FormalParaDeclVec v = parseFormalParameterListNoParen(scanner);
                 dst.auxVal = GenericParameterPragma.make(v, loc);
