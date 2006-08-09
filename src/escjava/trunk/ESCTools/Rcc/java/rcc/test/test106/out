@@ -19,7 +19,7 @@ C.java:18: Warning: possible race condition.  Lock 'b.s1' may not be held.  Lock
 Associated declaration is "C.java", line 13, col 18:
     String tt /*# guarded_by b.s1, C.t, C.class */;
                   ^
-C.java:18: Warning: possible race condition.  Lock 'C.t' may not be held.  Locks currently held are '(C.class)'. (Race)
+C.java:18: Warning: possible race condition.  Lock 't' may not be held.  Locks currently held are '(C.class)'. (Race)
             tt = "123";
             ^
 Associated declaration is "C.java", line 13, col 18:

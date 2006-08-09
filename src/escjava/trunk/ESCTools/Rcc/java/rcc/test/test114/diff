@@ -1,0 +1,56 @@
+1,12d0
+< C.java:16: Warning: lock expression may not be constant.   (ConstantLocks)
+<     D/*#{F.d}*/ dd;
+<          ^
+< C.java:16: Error: type of argument (error) does not match the formal parameter type (Object)
+<     D/*#{F.d}*/ dd;
+<          ^
+< C.java:16: Warning: lock expression may not be constant.   (ConstantLocks)
+<     D/*#{F.d}*/ dd;
+<          ^
+< Associated declaration is "C.java", line 6, col 21:
+<     public int a /*# guarded_by o */;
+<                      ^
+19,30d6
+< C.java:21: Warning: possible race condition.  Lock 'F.d' may not be held.  Locks currently held are '(d)'. (Race)
+<             dd.a = 2;
+<             ^
+< Associated declaration is "C.java", line 6, col 21:
+<     public int a /*# guarded_by o */;
+<                      ^
+< C.java:29: Warning: lock expression may not be constant.   (ConstantLocks)
+<     D/*#{z}*/ dd;
+<          ^
+< C.java:29: Error: type of argument (error) does not match the formal parameter type (Object)
+<     D/*#{z}*/ dd;
+<          ^
+52,63d27
+< C.java:31: Warning: possible race condition.  Lock 'z' may not be held.  Locks currently held are '(z)'. (Race)
+<         dd.a = 2;
+<         ^
+< Associated declaration is "C.java", line 6, col 21:
+<     public int a /*# guarded_by o */;
+<                      ^
+< C.java:36: Warning: lock expression may not be constant.   (ConstantLocks)
+<     D/*#{o}*/ dd;
+<          ^
+< C.java:36: Error: type of argument (error) does not match the formal parameter type (Object)
+<     D/*#{o}*/ dd;
+<          ^
+67,80c31
+< C.java:36: Warning: lock expression may not be constant.   (ConstantLocks)
+<     D/*#{o}*/ dd;
+<          ^
+< Associated declaration is "C.java", line 6, col 21:
+<     public int a /*# guarded_by o */;
+<                      ^
+< C.java:38: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '(G.this.o)'. (Race)
+<         dd.a = 2;
+<         ^
+< Associated declaration is "C.java", line 6, col 21:
+<     public int a /*# guarded_by o */;
+<                      ^
+< 15 warnings
+< 3 errors
+---
+> 7 warnings

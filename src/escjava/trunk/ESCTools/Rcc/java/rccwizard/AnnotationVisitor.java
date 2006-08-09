@@ -17,13 +17,13 @@ public class AnnotationVisitor extends DefaultVisitor {
 
     public void visitTypeDecl(TypeDecl x) {
         envBase = new Hashtable();
-        if (Main.inst.options().guessnull) {
+        if (RccOptions.get().guessnull) {
             envBase.put("null", Types.javaLangObject());
         }
 
         Annotator modifierAnnotator = new Annotator("<L", x.locId, x.id
                 .toString(), "type decl", "");
-        if (!Main.inst.options().readonly) {
+        if (!RccOptions.get().readonly) {
             modifierAnnotator.put("thread_local");
         }
         super.visitTypeDecl(x);
@@ -43,7 +43,7 @@ public class AnnotationVisitor extends DefaultVisitor {
 
         // hack to make public methods have no requires clauses:
         // we put this in to check AWT where we didn't have the whole program.
-        if (Main.inst.options().pmnr && Modifiers.isPublic(rd.modifiers))
+        if (RccOptions.get().pmnr && Modifiers.isPublic(rd.modifiers))
             return;
 
         if (!(rd instanceof MethodDecl)) {
@@ -63,7 +63,7 @@ public class AnnotationVisitor extends DefaultVisitor {
                     GenericVarDecl decl = rd.args.elementAt(0);
                     if (isObjectArrayType(decl.type)) {
                         // main routine, special annotation guesses
-                        if (!Main.inst.options().readonly && Main.inst.options().guessnull) {
+                        if (!RccOptions.get().readonly && RccOptions.get().guessnull) {
                             Annotator requiresAnnotator = new Annotator(rd,
                                     "parameter:" + ms, "requires ");
                             requiresAnnotator.put("null");
@@ -108,7 +108,7 @@ public class AnnotationVisitor extends DefaultVisitor {
             String expr2 = (String) e.nextElement();
             Type type2 = (Type) envReq.get(expr2);
 
-            if (Types.isReferenceType(type2) && !Main.inst.options().readonly) {
+            if (Types.isReferenceType(type2) && !RccOptions.get().readonly) {
                 requiresAnnotator.put(expr2);
             }
         }
@@ -125,7 +125,7 @@ public class AnnotationVisitor extends DefaultVisitor {
             return;
         }
 
-        if (Main.inst.options().readonly) {
+        if (RccOptions.get().readonly) {
             modifierAnnotator.put("readonly");
         }
 
@@ -137,7 +137,7 @@ public class AnnotationVisitor extends DefaultVisitor {
             String expr2 = (String) e.nextElement();
             Type type2 = (Type) env.get(expr2);
 
-            if (Types.isReferenceType(type2) && !Main.inst.options().readonly) {
+            if (Types.isReferenceType(type2) && !RccOptions.get().readonly) {
                 modifierAnnotator.put("guarded_by " + expr2);
             }
         }

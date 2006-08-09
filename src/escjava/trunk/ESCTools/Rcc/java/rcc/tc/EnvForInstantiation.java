@@ -45,13 +45,13 @@ public class EnvForInstantiation extends GhostEnv {
     public void display() {
         parent.display();
         System.out.println("[[ extended with the partially created typesig for "
-                           + peer.getExternalName() + " ]]");
+                           + peervar.getExternalName() + " ]]");
     }
     
     
     public javafe.tc.TypeSig lookupSimpleTypeName(Identifier id, int loc) {
         // Check for a definition in peer:
-        javafe.tc.TypeSig result = peer.lookupType(null, id, loc); // TODO: check
+        javafe.tc.TypeSig result = peervar.lookupType(null, id, loc); // TODO: check
         if (result!=null)
             return result;
         

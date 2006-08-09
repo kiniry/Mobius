@@ -50,14 +50,9 @@ public class Main extends javafe.SrcTool {
     
     
     public /*@ non_null */ Options makeOptions() {
-        return new RccOptions();
+        return RccOptions.get();
     }
     
-    public RccOptions options() {
-        return (RccOptions)options;
-    }
-
-
     /** My name is... */
     public String name() { return "rccwizard annotation generator"; }
 

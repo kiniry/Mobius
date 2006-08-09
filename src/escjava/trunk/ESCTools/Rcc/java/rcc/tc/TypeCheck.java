@@ -15,33 +15,45 @@ import javafe.util.Info;
 
 public class TypeCheck extends javafe.tc.TypeCheck {
     
-    /**
-     ** Creates a instance of TypeCheck, and sets the <code>inst</code>
-     ** field to this instance. Only one instance should be created. 
-     ** Also initializes PrepTypeDeclaration.
-     **/
-    public TypeCheck() {
+    // === Singleton ===
+    
+    // TODO: Investigate the dubious marriage between singleton and
+    //   inheritance: is there no better solution? (rgrig)
+    
+    private TypeCheck() {
         super();
-        inst = this;
+        
+        // Enables overriding of static methods.
         new rcc.tc.PrepTypeDeclaration();
     }
     
+    private static TypeCheck instance = null;
+
+    /**
+     * @return the only instance of this class.
+     */
+    public static TypeCheck get() {
+        if (instance == null) {
+            instance = new TypeCheck();
+        }
+        return instance;
+    }
+    
+    
+    // === Overrides ===
     
     /**
-     ** Called to obtain the algorithm for performing name resolution
-     ** and type checking.  Returns an instance of
-     ** <code>rcc.tc.FlowInsensitiveChecks</code>.
-     **/
+     * @return an instance of <code>rcc.tc.FlowInsensitiveChecks</code>
+     *         as the algorithm used for name resolution and typecheck.
+     */
     public javafe.tc.FlowInsensitiveChecks makeFlowInsensitiveChecks() {
         return new rcc.tc.FlowInsensitiveChecks();
     }
     
     /**
-     ** Can a member of type target with modifiers
-     ** modifiers/pmodifiers be accessed by code located in from? <p>
-     **
-     ** Note: pmodifiers may be null. <p>
-     **/
+     * We can access anything from annotations.
+     * @see javafe.tc.TypeCheck.canAccess
+     */
     public boolean canAccess(/*@ non_null @*/ TypeSig from, 
                              /*@ non_null @*/ TypeSig target,
                              int modifiers,
@@ -49,24 +61,8 @@ public class TypeCheck extends javafe.tc.TypeCheck {
         if (FlowInsensitiveChecks.inAnnotation) {
             return true;
         }
-        
-        if (Modifiers.isPublic(modifiers))
-            return true;
-        if (Modifiers.isProtected(modifiers) && from.isSubtypeOf(target))
-            return true;
-        if (!Modifiers.isPrivate(modifiers))  // aka, protected, package
-            return from.inSamePackageAs(target);
-        
-        /*
-         * private case -- have same enclosing class? [1.1]:
-         */
-        while (from.enclosingType!=null)
-            from = from.enclosingType;
-        while (target.enclosingType!=null)
-                  target = target.enclosingType;
-        return target==from;
+        return super.canAccess(from, target, modifiers, pmodifiers);
     }
-    
 }
 
 

@@ -16,7 +16,7 @@ flags="$*"
 unset CLASSPATH
 export CLASSPATH
     
-run -quiet ${flags} > out 2>&1
+./run -quiet ${flags} > out 2>&1
 diff out ans > diff || echo Failed
 #cp out ans
 cd ..

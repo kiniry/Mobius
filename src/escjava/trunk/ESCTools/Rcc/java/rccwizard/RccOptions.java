@@ -1,7 +1,5 @@
 package rccwizard;
 
-//import escjava.ast.TagConstants;
-//import escjava.translate.NoWarn;
 import javafe.SrcToolOptions;
 import javafe.util.UsageError;
 
@@ -11,13 +9,20 @@ import javafe.util.UsageError;
  */
 public class RccOptions extends SrcToolOptions {
 
-    // === Contruction ===
+    // === Singleton ===
     
-    public RccOptions() {
+    private static RccOptions instance = null;
+    
+    private RccOptions() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
+    public static RccOptions get() {
+        if (instance == null) {
+            instance = new RccOptions();
+        }
+        return instance;
+    }
     
     // === RccWizard options ===
     

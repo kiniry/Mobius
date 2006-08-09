@@ -50,7 +50,7 @@ public class GhostEnv extends EnvForTypeSig {
     public void display() {
         parent.display();
         System.out.println("[[ extended with the (ghost) bindings of type "
-                           + peer.getExternalName() + " ]]");
+                           + peervar.getExternalName() + " ]]");
     }
     
     
@@ -132,7 +132,7 @@ public class GhostEnv extends EnvForTypeSig {
             return fields;
         
         fields = new Hashtable(5);
-        collectGhostFields(peer);
+        collectGhostFields(peervar);
         return fields;
     }
     
@@ -172,7 +172,7 @@ public class GhostEnv extends EnvForTypeSig {
      **/
     protected boolean hasField(Identifier id) {
 
-        if (peer.hasField(id))
+        if (peervar.hasField(id))
             return true;
         
         if (!FlowInsensitiveChecks.inAnnotation)

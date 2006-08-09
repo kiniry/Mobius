@@ -1,22 +1,4 @@
-C.java:12: Warning: requires set must be a subset of superclass method's.   (Super)
-    public void  f() {
-                 ^
-Associated declaration is "C.java", line 11, col 8:
-    /*# requires this, this */ 
-        ^
-C.java:12: Warning: requires set must be a subset of superclass method's.   (Super)
-    public void  f() {
-                 ^
-Associated declaration is "C.java", line 11, col 8:
-    /*# requires this, this */ 
-        ^
-C.java:20: Warning: requires set must be a subset of superclass method's.   (Super)
-    public void  f() {
-                 ^
-Associated declaration is "C.java", line 19, col 8:
-    /*# requires this */ 
-        ^
-C.java:27: Warning: possible race condition.  Lock 'F.this' may not be held.  Locks currently held are '()'. (Race)
+C.java:27: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '()'. (Race)
         s = "asd";
         ^
 Associated declaration is "C.java", line 3, col 18:
@@ -28,9 +10,9 @@ C.java:32: Warning: lock expression may not be constant.   (ConstantLocks)
 Associated declaration is "C.java", line 32, col 24:
     static Object o /*# guarded_by G.o */;
                         ^
-C.java:35: Warning: possible race condition.  Lock 'G.o' may not be held.  Locks currently held are '()'. (Race)
+C.java:35: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '()'. (Race)
         synchronized(G.o) { 
-                     ^
+                      ^
 Associated declaration is "C.java", line 32, col 24:
     static Object o /*# guarded_by G.o */;
                         ^
@@ -46,22 +28,16 @@ C.java:51: Warning: requires set must be a subset of superclass method's.   (Sup
 Associated declaration is "C.java", line 50, col 8:
     /*# requires this, G.o */
         ^
-C.java:51: Warning: requires set must be a subset of superclass method's.   (Super)
-    public void  f() {
-                 ^
-Associated declaration is "C.java", line 50, col 8:
-    /*# requires this, G.o */
-        ^
-C.java:36: Warning: possible race condition.  Lock 'G.this' may not be held.  Locks currently held are '(G.o)'. (Race)
+C.java:36: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '(o)'. (Race)
             f();
             ^
 Associated declaration is "C.java", line 50, col 8:
     /*# requires this, G.o */
         ^
-C.java:41: Warning: possible race condition.  Lock 'G.o' may not be held.  Locks currently held are '()'. (Race)
+C.java:41: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '()'. (Race)
         synchronized(G.o) {
-                     ^
+                      ^
 Associated declaration is "C.java", line 32, col 24:
     static Object o /*# guarded_by G.o */;
                         ^
-11 warnings
+7 warnings

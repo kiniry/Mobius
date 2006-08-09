@@ -9,7 +9,7 @@ source:
 	@echo "No .java files need to be built"
 
 runtest: 
-	rtestall
+	./rtestall
 
 clean: 
 	-rm -rf test*/out test*/diff

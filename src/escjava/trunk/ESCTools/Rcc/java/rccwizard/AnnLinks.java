@@ -87,7 +87,7 @@ public class AnnLinks extends javafe.SrcTool {
      ** default, returns <code>javafe.tc.TypeCheck</code>.
      **/
     public javafe.tc.TypeCheck makeTypeCheck() {
-        return new rcc.tc.TypeCheck();
+        return rcc.tc.TypeCheck.get();
     }
     
     

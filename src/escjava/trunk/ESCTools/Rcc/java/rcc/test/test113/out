@@ -7,13 +7,7 @@ Associated declaration is "C.java", line 7, col 4:
 C.java:29: Warning: requires set must be a subset of superclass method's.   (Super)
                 public void f() /*# requires this,Dd.class */{}
                             ^
-Associated declaration is "C.java", line 29, col 22:
+Associated declaration is "C.java", line 29, col 36:
                 public void f() /*# requires this,Dd.class */{}
                                     ^
-C.java:29: Warning: requires set must be a subset of superclass method's.   (Super)
-                public void f() /*# requires this,Dd.class */{}
-                            ^
-Associated declaration is "C.java", line 29, col 22:
-                public void f() /*# requires this,Dd.class */{}
-                                    ^
-3 warnings
+2 warnings

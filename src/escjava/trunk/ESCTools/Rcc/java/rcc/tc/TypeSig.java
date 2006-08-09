@@ -13,10 +13,7 @@ import javafe.tc.*;
 import javafe.util.Location;
 
 
-/**
- **
- **/
-
+// TODO: Comment this!
 public class TypeSig extends javafe.tc.TypeSig {
     
     // for recover instantiation info from instance of it.
@@ -24,8 +21,6 @@ public class TypeSig extends javafe.tc.TypeSig {
     public javafe.tc.TypeSig generic;      // do not set outside of finishInst
 
     public static final ASTDecoration defaultInstantiationDecoration = new ASTDecoration(" default instantiation");
-    
-
     
     public  TypeSig(String[] packageName,
                     /*@ non_null @*/ String simpleName,
@@ -60,7 +55,7 @@ public class TypeSig extends javafe.tc.TypeSig {
             return;
         }
 
-        if (((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.inst).
+        if (((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst()).
             hasParameters(this)) {
             Info.out("[super class resolving class " + this + " to be Object]");
             
@@ -85,16 +80,18 @@ public class TypeSig extends javafe.tc.TypeSig {
         if (state >= TypeSig.PREPPED)
             return;
         resolveSupertypeLinks();
-        if (((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.inst).hasParameters(this)) {
-            //Info.out("[prepping generic class " + this + "]");
-            //state = TypeSig.PREPPED;
-            //            ((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.inst).prepGenericTypeDecl(this);
-            //return;
+        // TODO: Looks like generic classes are not handled. Fix!
+        if (((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst()).hasParameters(this)) {
+            /*
+            Info.out("[prepping generic class " + this + "]");
+            state = TypeSig.PREPPED;
+            ((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst()).prepGenericTypeDecl(this);
+            return;
+            */
         }
         
-//        resolveSupertypeLinks();
         Info.out("[prepping " + this + "]");
-        PrepTypeDeclaration.inst.prepTypeSignature(this);
+        PrepTypeDeclaration.getInst().prepTypeSignature(this);
 
         state = TypeSig.PREPPED;
     }
@@ -114,7 +111,7 @@ public class TypeSig extends javafe.tc.TypeSig {
             prep();
 
         Info.out("[typechecking " + this + "]");
-        if (((rcc.tc.PrepTypeDeclaration)rcc.tc.PrepTypeDeclaration.inst).hasParameters(this)) {
+        if (((rcc.tc.PrepTypeDeclaration)rcc.tc.PrepTypeDeclaration.getInst()).hasParameters(this)) {
             Info.out("[creating default instantiation for " + this + "]");
             TypeSig defaultInst =
                 FlowInsensitiveChecks.defaultInstantiation(this);
@@ -162,10 +159,28 @@ public class TypeSig extends javafe.tc.TypeSig {
         }
     }
     
-    static public rcc.tc.TypeSig instantiate(javafe.tc.TypeSig t, TypeDecl decl, ExprVec expressions, Env env) {
-        
-        rcc.tc.TypeSig sig = new rcc.tc.TypeSig(t.packageName, t.simpleName, 
-                                                t.enclosingType, null, t.getCompilationUnit());
+    /**
+     * Makes a shallow copy of a type signature. Does not copy the method
+     * and field lists. The simple name of the resulting signature will
+     * be <tt>oldname&lt;expressions&gt;</tt>.
+     * @param t The type signature to copy.
+     * @param expressions Used to construct the simple name of the result.
+     * @param env The environment of the result.
+     * @return A type signature: <code>t</code> with the modifications
+     *      described above
+     */
+    static public rcc.tc.TypeSig instantiate(
+        javafe.tc.TypeSig t, 
+        ExprVec expressions, 
+        Env env
+    ) {
+        rcc.tc.TypeSig sig = new rcc.tc.TypeSig(
+            t.packageName, 
+            t.simpleName, 
+            t.enclosingType, 
+            null, 
+            t.getCompilationUnit()
+        );
 
         sig.packageName = t.packageName;
         sig.enclosingType = t.enclosingType;
