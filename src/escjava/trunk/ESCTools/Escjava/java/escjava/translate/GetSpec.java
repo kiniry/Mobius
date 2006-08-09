@@ -923,6 +923,21 @@ public final class GetSpec {
       for (int i = 0; i < dmd.ensures.size(); i++) {
         try {
           ExprModifierPragma prag = dmd.ensures.elementAt(i);
+	  //[GKS]
+	  if (Main.options().idc)
+	  {
+	    if (Main.options().debug)
+	    {
+	      System.err.println("GK-Trace-PRAG: " + prag);
+	      System.out.println("GK-Trace-PPRN: " +
+				 EscPrettyPrint.inst.toString(prag.expr));
+	    }
+	    Expr expr=prag.expr;
+	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFINEDNESS,
+					expr,expr.getStartLoc());
+	    conds.add(cond);
+	  }
+	  //[GKE]
           TrAnExpr.initForClause();
           Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
           if (TrAnExpr.extraSpecs) {
@@ -2027,6 +2042,21 @@ public final class GetSpec {
   {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
+      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS)
+      {
+	if(Main.options().debug) 
+	{
+	  System.err.println("GK-Trace-POST: in GetSpec.checkConditions()");
+	  System.err.println("\tAbout to trAndGen:" +
+			     EscPrettyPrint.inst.toString(cond.pred));
+	  System.err.println("\tI.e.:" + cond.pred);
+	}
+	DefGCmd oDefGCs = new DefGCmd();
+ 	oDefGCs.trAndGen(cond.pred);
+	GuardedCmd gc=oDefGCs.popFromCode();
+	code.addElement(gc);
+	continue;
+      }
       if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
       Translate.setop(cond.pred);
       // if the condition is an object invariant, send its guarded command
