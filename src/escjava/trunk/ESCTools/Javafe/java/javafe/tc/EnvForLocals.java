@@ -71,7 +71,7 @@ public class EnvForLocals extends Env implements/*privately*/ Cloneable {
 	    were looking up a name.  That does not work for a number of
 	    situations:  
 		- declaring a formal parameter for a catch clause
-		- local variables inside a block-level classs declaration
+		- local variables inside a block-level class declaration
 		- formal parameters of an anonymous class
 	    In the last two situations anyway, the enclosing block is able
 	    to see names declared outside of it, but is also allowed to 

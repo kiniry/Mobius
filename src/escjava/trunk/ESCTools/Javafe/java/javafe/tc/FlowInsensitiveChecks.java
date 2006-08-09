@@ -13,7 +13,7 @@ import javafe.parser.ParseUtil;
  * Does disambiguation and flow insensitive checks on a type
  * declaration.
  */
-
+// TODO: Universes should be implemented by subclassing (rgrig).
 public class FlowInsensitiveChecks
 {
     static public FlowInsensitiveChecks inst = new FlowInsensitiveChecks();
@@ -260,7 +260,7 @@ public class FlowInsensitiveChecks
     protected void checkTypeDeclElem(TypeDeclElem e) {
 
         Assert.notNull(sig);
-        Assert.notFalse(sig.state>= TypeSig.PREPPED);
+        Assert.notFalse(sig.state >= TypeSig.PREPPED);
         TypeDecl d = sig.getTypeDecl();
         boolean specOnly = d.specOnly;
 
@@ -1174,709 +1174,1149 @@ public class FlowInsensitiveChecks
         return result;
     }
 
-    //@ requires env != null && expr != null && t != null;
+    /**
+     * Typechecks expressions.
+     * @param env  The current environment.
+     * @param expr The expression to be checked.
+     * @param t    The expected type.
+     * @return     The checked expression.
+     */
     //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
-    //@ ensures \result != null;
-    protected Expr checkExpr(Env env, Expr expr, Type t) {
+    //@ ensures \result == expr;
+    protected Expr checkExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ Expr expr, 
+        /*@ non_null */ Type t
+    ) {
         Expr ne = checkExpr(env,expr);
         checkType(ne, t);
         return ne;
     }
-
+    
     /**
-     * This method should call <code>setType</code> on <code>x</code> before its
-     * done.
+     * Typechecks expressions. Work is delegated to specialized methods.
+     * This way the clients that inherit from this class have a finer
+     * grained control by overriding methods.
+     * 
+     * @param env The current environment.
+     * @param x   The expression to typecheck.
+     * @return    The checked expression. It has the type set.
      */
-    //@ requires env != null && x != null;
     //@ requires !(env instanceof EnvForCU);
     //@ requires sig != null;
-    //@ ensures \result != null;
-    protected Expr checkExpr(Env env, Expr x) {
-
+    //@ ensures \result == x;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkExpr(/*@ non_null */ Env env, /*@ non_null */ Expr x) {
         // System.out.println("Checking: "+Location.toString(x.getStartLoc()));
 
-        if (getTypeOrNull(x) != null)
-            // already done
+        if (getTypeOrNull(x) != null) {
+            // already checked
             return x;
+        }
 
-        // set default result type to integer, in case there is an error
-        setType(x, Types.intType);
+        // Set default result type to error.
+        setType(x, Types.errorType);
 
         switch (x.getTag()) {
-    
-            case TagConstants.THISEXPR: {
-                ThisExpr t = (ThisExpr)x;
+        case TagConstants.THISEXPR:
+            return checkThisExpr(env, (ThisExpr)x);
 
-        	//alx: dw use this like a universe modifier to simplify 
-		//        universeTypeCombiner
-        	if (useUniverses)
-        		ParseUtil.setUniverse(t,TagConstants.THISEXPR);
-		//alx-end
+        // The environment is not needed to check literals.
+        case TagConstants.STRINGLIT:
+            return checkStringLitExpr(x);
+        case TagConstants.CHARLIT:
+            return checkCharLitExpr(x);
+        case TagConstants.BOOLEANLIT:
+            return checkBooleanLitExpr(x);
+        case TagConstants.FLOATLIT:
+            return checkFloatLitExpr(x);
+        case TagConstants.DOUBLELIT:
+            return checkDoubleLitExpr(x);
+        case TagConstants.INTLIT: 
+            return checkIntLitExpr(x);
+        case TagConstants.LONGLIT:
+            return checkLongLitExpr(x);
+        case TagConstants.NULLLIT: 
+            return checkNullLitExpr(x);
 
-                if (env.isStaticContext() && t.classPrefix==null) {
-                    ErrorSet.error(x.getStartLoc(),
-		       "Unqualified this cannot be used in static contexts");
-                }
+        case TagConstants.ARRAYREFEXPR:
+            return checkArrayRefExpr(env, (ArrayRefExpr)x);
+        case TagConstants.NEWINSTANCEEXPR:
+            return checkNewInstanceExpr(env, (NewInstanceExpr)x);
+        case TagConstants.NEWARRAYEXPR:
+            return checkNewArrayExpr(env, (NewArrayExpr)x);
+        case TagConstants.CONDEXPR:
+            return checkCondExpr(env, (CondExpr)x);
+        case TagConstants.INSTANCEOFEXPR:
+            return checkInstanceOfExpr(env, (InstanceOfExpr)x);
+        case TagConstants.CASTEXPR:
+            return checkCastExpr(env, (CastExpr)x);
 
-                Type referredType = sig;
-                if (t.classPrefix != null) {
-                    env.resolveType(sig,t.classPrefix);
-                    referredType = t.classPrefix;
-                    checkTypeModifiers(env, referredType);
+        case TagConstants.CLASSLITERAL:
+            return checkClassLiteralExpr(env, (ClassLiteral)x);
 
-                    /*
-                     * Check that t.classPrefix is the class of one of our
-                     * current/enclosing instances:
-                     */
-                    TypeSig classPrefix = Types.toClassTypeSig(referredType);
-                    if (classPrefix==null || !env.canAccessInstance(classPrefix)) {
-                        ErrorSet.error(t.getStartLoc(),
-                                       "Undefined variable: "
-                                       + PrettyPrint.inst.toString(referredType)
-                                       + ".this");
-			setType(x, Types.errorType);
-			return x;
-		    }
-		    //alx: dw this of enclosing instances is peer in 
-		    //        pure .ctors
-		    if (useUniverses)
-			if (inCtor && inPure)
-			    ParseUtil.setUniverse(t,TagConstants.READONLY);
-			else
-			    ParseUtil.setUniverse(t,TagConstants.PEER);
-		    //alx-end
-                }
+        case TagConstants.OR: case TagConstants.AND:
+        case TagConstants.BITOR: case TagConstants.BITXOR:
+        case TagConstants.BITAND: case TagConstants.NE:
+        case TagConstants.EQ: case TagConstants.GE:
+        case TagConstants.GT: case TagConstants.LE:
+        case TagConstants.LT: case TagConstants.LSHIFT:
+        case TagConstants.RSHIFT: case TagConstants.URSHIFT:
+        case TagConstants.ADD: case TagConstants.SUB:
+        case TagConstants.DIV: case TagConstants.MOD:
+        case TagConstants.STAR:
+            return checkBinaryExpr(env, (BinaryExpr)x);
+  
+        case TagConstants.ASSIGN: case TagConstants.ASGMUL:
+        case TagConstants.ASGDIV: case TagConstants.ASGREM:
+        case TagConstants.ASGADD: case TagConstants.ASGSUB:
+        case TagConstants.ASGLSHIFT: case TagConstants.ASGRSHIFT:
+        case TagConstants.ASGURSHIFT: case TagConstants.ASGBITAND:
+        case TagConstants.ASGBITOR: case TagConstants.ASGBITXOR: 
+            return checkAssignmentExpr(env, (BinaryExpr)x);
 
-                setType(x, referredType);
-                return x;
-            }
-    
-            case TagConstants.STRINGLIT:
-                setType(x, Types.javaLangString());
-		//alx: dw set to implicit peer
-            	ParseUtil.setUniverse(x,TagConstants.IMPL_PEER);
-		//alx-end
-                return x;
+        case TagConstants.UNARYADD: 
+        case TagConstants.UNARYSUB:
+            return checkSignExpr(env, (UnaryExpr)x);
 
-            case TagConstants.CHARLIT:
-                setType(x, Types.charType);
-                return x;
+        case TagConstants.BITNOT:
+            return checkBitnotExpr(env, (UnaryExpr)x);
 
-            case TagConstants.BOOLEANLIT:
-                setType(x, Types.booleanType);
-                return x;
+        case TagConstants.INC: case TagConstants.DEC: 
+        case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC:
+            return checkIncDecExpr(env, (UnaryExpr)x);
+  
+        case TagConstants.NOT:
+            return checkNotExpr(env, (UnaryExpr)x);
+  
+        case TagConstants.PARENEXPR:
+            return checkParenExpr(env, (ParenExpr)x);
 
-            case TagConstants.FLOATLIT:
-                setType(x, Types.floatType);
-                return x;
+        case TagConstants.AMBIGUOUSVARIABLEACCESS:
+            return checkAmbiguousVariableAccessExpr(env, (AmbiguousVariableAccess)x);
+        case TagConstants.FIELDACCESS:
+            return checkFieldAccessExpr(env, (FieldAccess)x);
+        case TagConstants.AMBIGUOUSMETHODINVOCATION:
+            return checkAmbiguousMethodInvocationExpr(env, (AmbiguousMethodInvocation)x);
+        case TagConstants.METHODINVOCATION:
+            return checkMethodInvocationExpr(env, (MethodInvocation)x);
 
-            case TagConstants.DOUBLELIT:
-                setType(x, Types.doubleType);
-                return x;
+        case TagConstants.VARIABLEACCESS:
+            // TODO: No environment needed? (rgrig)
+            return checkVariableAccessExpr((VariableAccess)x); 
 
-            case TagConstants.INTLIT: 
-                setType(x, Types.intType);
-                return x;
-
-            case TagConstants.LONGLIT:
-                setType(x, Types.longType);
-                return x;
-
-            case TagConstants.NULLLIT: //alx: dw use NULLLIT like a 
-		                       //   universe modifier
-                setType(x, Types.nullType);
-            	if (useUniverses)
-            		ParseUtil.setUniverse(x,TagConstants.NULLLIT);
-		//alx-end
-                return x;
-    
-            case TagConstants.ARRAYREFEXPR: {
-                ArrayRefExpr r = (ArrayRefExpr)x;
-	
-                r.array = checkExpr(env, r.array);
-                Type arrType = getType(r.array);
-	
-                if(arrType instanceof ArrayType) {
-                    setType(r, ((ArrayType)arrType).elemType);
-                } else {
-                    setType(r, Types.errorType);
-		    if (!Types.isErrorType(arrType))
-			ErrorSet.error(r.locOpenBracket, 
-                                    "Attempt to index a non-array value");
-                }
-	  
-                r.index = checkExpr(env, r.index);
-                Type t = getType(r.index);
-                Type ndxType = Types.isNumericType(t) ? Types.unaryPromote(t) : t;
-                if(!Types.isSameType(ndxType, Types.intType) &&
-		   !Types.isErrorType(ndxType)) 
-                    ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
-
-                //alx: dw set universe modifier for ArrayRefExpr, but this is 
-		//   never used because for this switch-case the overriding 
-		//   method in escjava doesn't call the super implementation
-                if (useUniverses)
-		    determineUniverseForArrayRefExpr(r);
-		//alx-end
-                return r;
-            }
-
-            case TagConstants.NEWINSTANCEEXPR: {
-                NewInstanceExpr ne = (NewInstanceExpr)x;
-
-                /*
-                 * We handle the "scoping" of ne.type differently depending on
-                 * whether or not an explicit enclosing instance ptr is
-                 * provided:
-                 */
-                TypeSig calleeSig;
-                if (ne.enclosingInstance==null) {
-                    // 1.0 case:  new N(...) ...
-                    env.resolveType(sig,ne.type);
-                    checkTypeModifiers(env, ne.type);
-                    calleeSig = TypeSig.getSig(ne.type);
-                } else {
-                    // 1.1 case: E.new I(...) ...
-
-                    // Type check E to get class type enclosingType:
-                    ne.enclosingInstance = checkExpr(env, ne.enclosingInstance);
-                    TypeSig enclosingInstanceType;
-                    try {
-                        enclosingInstanceType =
-                            (TypeSig)getType(ne.enclosingInstance);  //@ nowarn Cast;//caught
-                    } catch (ClassCastException E) {
-                        ErrorSet.error(ne.enclosingInstance.getStartLoc(),
-                                       "The enclosing instance supplied in a new"
-                                       + " expression must be of a class type.");
-                        enclosingInstanceType = Types.javaLangObject();
-                    }
-
-                    // Check and "resolve" I:
-                    if (ne.type.name.size() != 1)
-                        ErrorSet.error(ne.type.getStartLoc(),
-                                       "Only a simple name can be used after new"
-                                       + " when an enclosing instance is supplied.");
-                    Identifier id = ne.type.name.identifierAt(0);
-                    int idLoc = ne.type.name.locIdAt(0);
-                    calleeSig = enclosingInstanceType.lookupType(enclosingInstanceType, id, idLoc);
-                    if (calleeSig==null)
-                        ErrorSet.fatal(ne.type.getStartLoc(),
-                                       "No such type: "
-                                       + enclosingInstanceType.toString()+"$"+id);
-                    checkTypeModifiers(env, ne.type);
-                    TypeSig.setSig(ne.type, calleeSig);
-                }
-
-
-                /*
-                 * Handle remaining type checking/inference for enclosing instance ptr:
-                 */
-
-                // Get the type of calleeSig's enclosing instance or null if none
-                // exists:
-                TypeSig enclosingInstanceType = calleeSig.getEnv(false)
-                    .getEnclosingInstance();
-
-                // If calleeSig has an enclosing instance and the user didn't supply
-                // a value for it, try to infer one:
-                if (ne.enclosingInstance==null && enclosingInstanceType != null) {
-                    Expr enclosingInstance =
-                        env.lookupEnclosingInstance(enclosingInstanceType,
-                                                    ne.getStartLoc());
-                    if (enclosingInstance != null) {
-                        ne.locDot = ne.getStartLoc();
-                        ne.enclosingInstance = enclosingInstance;
-                        checkExpr(env, ne.enclosingInstance, enclosingInstanceType);
-                    }
-                }
-
-                if (ne.enclosingInstance != null) {
-                    if (enclosingInstanceType==null)
-                        ErrorSet.error(ne.enclosingInstance.getStartLoc(),
-                                       "An enclosing instance may be provided only "
-                                       + "when the named instance type is an inner class");
-                } else if (enclosingInstanceType != null) {
-                    ErrorSet.error(ne.getStartLoc(),
-                                   "No enclosing instance of class "
-                                   + enclosingInstanceType
-                                   + " is in scope; an explicit one must be provided"
-                                   + " when creating instances of inner class "
-                                   + calleeSig + ".");
-                }
-
-                /*
-                 * The type that will *actually* call the constructor
-                 * 
-                 * (matters if the constructor is "protected"!)
-                 */
-                TypeSig caller = sig;
-
-                /*
-                 * Handle anonymous class case:
-                 */
-                if (ne.anonDecl != null) {
-                    // Update anonDecl to have proper supertype:
-                    if (calleeSig.getTypeDecl() instanceof ClassDecl) {
-                        Assert.notFalse(ne.anonDecl.superClass==null);  //@ nowarn Pre;
-                        ne.anonDecl.superClass = ne.type;
-                    } else {
-                        ne.anonDecl.superInterfaces.addElement(ne.type);
-                        calleeSig = Types.javaLangObject();
-                    }
-
-                    // Create and check TypeSig for declared type:
-                    TypeSig T = Types.makeTypeSig(null, env, ne.anonDecl);
-                    T.typecheck();
-                    caller = T;
-                    setType(ne, T);
-                } else
-                    setType(ne, ne.type);
-
-
-                Type[] argTypes = checkExprVec(env, ne.args);
-
-                if (!(calleeSig.getTypeDecl() instanceof ClassDecl))
-                    ErrorSet.error(ne.loc, 
-                                   "Cannot create an instance of an interface");
-                else if (Modifiers.isAbstract(calleeSig.getTypeDecl().modifiers)
-                         && ne.anonDecl==null)
-                    ErrorSet.error(ne.loc,
-                                   "Cannot create an instance of an abstract class");
-                else { 
-                    try {
-                        ConstructorDecl cd = calleeSig.lookupConstructor(argTypes, caller);
-                        ne.decl = cd;
-                    } catch(LookupException e) {
-                        reportLookupException(e, "constructor", 
-                                              Types.printName(calleeSig), ne.loc);
-                    }
-                }
-		//alx: dw test args uf .ctor
-                if (useUniverses) {
-		    checkNoRepInStaticContext(ne);
-		    for (int i = 0; i<ne.args.size(); i++) {
-			FormalParaDecl decl_arg = ne.decl.args.elementAt(i);
-			if (readonlyStdForPureCtor && 
-			    ParseUtil.getUniverse(decl_arg)==TagConstants.IMPL_PEER)
-			    ParseUtil.setUniverse(decl_arg,
-						  TagConstants.READONLY);
-			checkUniverseAssignability(ne.decl.args.elementAt(i),
-						   ne.args.elementAt(i));
-		    }
-                }
-		//alx-end
-
-                return ne;
-            }
-
-            case TagConstants.NEWARRAYEXPR: {
-                NewArrayExpr na = (NewArrayExpr)x;
-                env.resolveType(sig,na.type);
-                Type r = na.type;
-                checkTypeModifiers(env, r); 
-                for(int i = 0; i < na.dims.size(); i++) {
-                    Expr e = na.dims.elementAt(i);
-                    Expr newExpr = checkExpr(env, e, Types.intType);
-                    na.dims.setElementAt(newExpr, i);
-                    r = ArrayType.make(r, na.locOpenBrackets[i]);
-                    checkTypeModifiers(env, r); 
-                }
-                setType(na, r);
-
-                if (na.init != null) {
-                    na.init = (ArrayInit)checkInit(env, na.init, r);
-                    //alx: dw set the universe type for array inits and test it
-                    if (useUniverses) {
-                    	if (ParseUtil.getUniverse(na.init)==0 && 
-			    ParseUtil.getElementUniverse(na.init)!=0)
-  			      ParseUtil.setUniverse(na.init, 
-						    ParseUtil.getUniverse(na));
-                    	checkUniverseAssignability(na,na.init);
-                    }
-		    //alx-end
-		}
-		//alx: dw check if universes are used in the static context
-                if (useUniverses)
-		    checkNoRepInStaticContext(na);
-		//alx-end
-
-                return na;
-            }
-
-            case TagConstants.CONDEXPR: {
-                CondExpr ce = (CondExpr)x;
-                ce.test = checkExpr(env, ce.test, Types.booleanType);
-                ce.thn = checkExpr(env, ce.thn);
-                ce.els = checkExpr(env, ce.els);
-
-                Type res = tryCondExprMatch(ce.thn, ce.els);
-                if (res != null)
-                    setType(ce, res);
-                else
-                    ErrorSet.error(ce.locQuestion,
-                                    "Incompatible arguments to the ?: operator");
-                //alx: dw determine universe for 'b? (peer T) x: (rep T) x;'
-                if (useUniverses) {
-		    int l = ParseUtil.getUniverse(ce.thn);
-		    int r = ParseUtil.getUniverse(ce.els);
-		    if (l!=0) { //isn't a primitiv type
-			int n = leastUpperUniverseBound(l,r);
-			ParseUtil.setUniverse(ce,n);
-			l = ParseUtil.getElementUniverse(ce.thn);
-			r = ParseUtil.getElementUniverse(ce.els);
-			n = leastUpperUniverseBound(l,r);
-			ParseUtil.setElementUniverse(ce,n);
-		    }
-                }
-		//alx-end
-
-                return ce;
-            }
-
-            case TagConstants.INSTANCEOFEXPR: {
-                InstanceOfExpr ie = (InstanceOfExpr)x;
-                ie.expr = checkExpr(env, ie.expr);
-                Type exprType = getType(ie.expr);
-                env.resolveType(sig,ie.type);
-                checkTypeModifiers(env, ie.type);
-                if(!Types.isReferenceType(ie.type)) {
-                    ErrorSet.error(ie.loc, "Non-reference type in instanceof operation");
-                }
-                else if(!Types.isCastable(exprType, ie.type)) {
-                    ErrorSet.error(ie.loc, 
-                                   "Invalid instanceof operation: "+
-                                   "A value of type "+Types.printName(exprType)
-                                   +" can never be an instance of "
-                                   +Types.printName(ie.type));
-                }
-                //alx: dw check castability for instanceof-expr
-                if (useUniverses) {
-                	checkUniverseCastability(ie,ie.expr);
-                    checkNoRepInStaticContext(ie);
-                }
-		//alx-end
-
-                setType(ie, Types.booleanType);
-                return ie;
-            }
-
-            case TagConstants.CASTEXPR: {
-                CastExpr ce = (CastExpr)x;
-                ce.expr = checkExpr(env, ce.expr);
-                Type exprType = getType(ce.expr);
-                env.resolveType(sig,ce.type);
-                checkTypeModifiers(env, ce.type); 
- 
-                if(!Types.isCastable(exprType, ce.type)) {
-                    ErrorSet.error(ce.locOpenParen, 
-                                   "Bad cast from "+Types.printName(exprType)
-                                   +" to "+Types.printName(ce.type));
-                }
-                //alx: dw check castability and 'no rep in static context'
-                if (useUniverses) {
-		    checkUniverseCastability(ce,ce.expr);
-                    checkNoRepInStaticContext(ce);
-                }
-		//alx-end
-                setType(ce, ce.type);
-                return ce;
-            }
-
-            case TagConstants.CLASSLITERAL: {
-                ClassLiteral cl = (ClassLiteral)x;
-                env.resolveType(sig,cl.type);
-                checkTypeModifiers(env, cl.type); 
-                setType(cl, Types.javaLangClass());
-                //alx: dw is a field => set to IMPL_PEER
-                ParseUtil.setUniverse(cl,TagConstants.IMPL_PEER);
-		//alx-end
-                return cl;
-            }
-
-            case TagConstants.OR: case TagConstants.AND:
-            case TagConstants.BITOR: case TagConstants.BITXOR:
-            case TagConstants.BITAND: case TagConstants.NE:
-            case TagConstants.EQ: case TagConstants.GE:
-            case TagConstants.GT: case TagConstants.LE:
-            case TagConstants.LT: case TagConstants.LSHIFT:
-            case TagConstants.RSHIFT: case TagConstants.URSHIFT:
-            case TagConstants.ADD: case TagConstants.SUB:
-            case TagConstants.DIV: case TagConstants.MOD:
-            case TagConstants.STAR: {
-                BinaryExpr be = (BinaryExpr)x;
-                be.left = checkExpr(env, be.left);
-                be.right = checkExpr(env, be.right);
-                Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
-                //alx: dw set universe for the binary expression, if any
-                if (useUniverses)
-		    copyUniverses(be,be.left);
-		//alx-end
-                setType(be, t);
-                return be;
-            }
-      
-            case TagConstants.ASSIGN: case TagConstants.ASGMUL:
-            case TagConstants.ASGDIV: case TagConstants.ASGREM:
-            case TagConstants.ASGADD: case TagConstants.ASGSUB:
-            case TagConstants.ASGLSHIFT: case TagConstants.ASGRSHIFT:
-            case TagConstants.ASGURSHIFT: case TagConstants.ASGBITAND:
-            case TagConstants.ASGBITOR: case TagConstants.ASGBITXOR: {
-                BinaryExpr be = (BinaryExpr)x;
-                be.left = checkDesignator(env, be.left);
-                be.right = checkExpr(env, be.right);
-                Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
-                setType(be, t);
-                return be;
-            }
-
-                // Unary operations
-
-            case TagConstants.UNARYADD: 
-            case TagConstants.UNARYSUB: {
-                UnaryExpr ue = (UnaryExpr)x;
-                ue.expr = checkExpr(env, ue.expr);
-                // Argument must be primitive numeric type
-                Type t = getType(ue.expr);
-                if(checkNumericType(ue.expr)) {
-                    // Result is value of unary promoted type of arg
-                    setType(ue, Types.unaryPromote(getType(ue.expr)));
-                }
-                return ue;
-            }
-
-            case TagConstants.BITNOT: {
-                UnaryExpr ue = (UnaryExpr)x;
-                ue.expr = checkExpr(env, ue.expr);
-                // Argument must be primitive numeric type
-                if(checkIntegralType(ue.expr)) {
-                    // Result is value of unary promoted type of arg
-                    setType(ue, Types.unaryPromote(getType(ue.expr)));
-                } 
-                return ue;
-            }
-
-            case TagConstants.INC: case TagConstants.DEC: 
-            case TagConstants.POSTFIXINC: case TagConstants.POSTFIXDEC: {
-                UnaryExpr ue = (UnaryExpr)x;
-                ue.expr = checkDesignator(env, ue.expr);
-
-		if (ue.expr instanceof VariableAccess) {
-		    GenericVarDecl v = ((VariableAccess)ue.expr).decl;
-		    if (Modifiers.isFinal(v.modifiers))
-			ErrorSet.caution(ue.expr.getStartLoc(),
-			    "May not assign to a final variable",
-			    v.getStartLoc());
-		} else if (ue.expr instanceof FieldAccess) {
-		    GenericVarDecl v = ((FieldAccess)ue.expr).decl;
-		    // v is null if there was an error such as a field
-		    // name that does not exist
-		    if (v == Types.lengthFieldDecl) 
-			ErrorSet.error(ue.expr.getStartLoc(),
-			    "May not assign to array's length field");
-		    else if (v != null && Modifiers.isFinal(v.modifiers))
-			ErrorSet.caution(ue.expr.getStartLoc(),
-			    "May not assign to a final field",
-			    v.getStartLoc());
-
-		}
-		    // FIXME - need checks of more complicated expressions
-
-                // Argument must be primitive numeric variable type
-                if (checkNumericType(ue.expr)) {
-                    if(!isVariable(ue.expr))
-                        ErrorSet.error(ue.locOp,
-                                        "Argument of increment/decrement operation "
-                                        +"is not a location");
-                    // Result is of same type
-                    setType(ue, getType(ue.expr));
-                }
-                return ue;
-            }
-      
-            case TagConstants.NOT: {
-                // Argument must be boolean, result is boolean
-                UnaryExpr ue = (UnaryExpr)x;
-                ue.expr = checkExpr(env, ue.expr, Types.booleanType);
-                setType(ue, Types.booleanType);
-                return ue;
-            }
-      
-            case TagConstants.PARENEXPR: {
-                ParenExpr pe = (ParenExpr)x;
-                pe.expr = checkExpr(env, pe.expr);
-                setType(pe, getType(pe.expr));
-                //alx: dw copy the universes to the paren-expr
-                if (useUniverses)
-		    copyUniverses(pe,pe.expr);
-		//alx-end
-		
-                return pe;
-            }
-
-            case TagConstants.AMBIGUOUSVARIABLEACCESS: {
-                AmbiguousVariableAccess av = (AmbiguousVariableAccess)x;
-                Assert.notNull(av.name);
-                Expr resolved = env.disambiguateExprName(av.name);
-                if(resolved == null) {
-                    if (av.name.size() == 1) {
-                        ErrorSet.error(av.getStartLoc(),
-                                       "Undefined variable '" + av.name.printName() + "'");
-                    } else ErrorSet.error(av.getStartLoc(),
-                                        "Cannot resolve variable access '"
-                                        +av.name.printName()+"'");
-		    setType(x, Types.errorType);
-                    return av;
-                }
-                Assert.notFalse(resolved.getTag() !=
-                                TagConstants.AMBIGUOUSVARIABLEACCESS); 
-                return checkExpr(env, resolved);
-            }
-
-            case TagConstants.FIELDACCESS: {
-                FieldAccess fa = (FieldAccess)x;
-                Type t = checkObjectDesignator(env, fa.od);
-                if(t != null) {
-                    try {
-                        fa.decl = Types.lookupField(t, fa.id, sig);
-                        setType(fa, fa.decl.type);
-
-                        if (fa.od instanceof TypeObjectDesignator &&
-                            !Modifiers.isStatic(fa.decl.modifiers)) {
-                            // Is fa.decl an instance field of the same class as
-                            // fa is part of?
-                            boolean thisField = false;
-                            if (fa.decl.parent != null)
-                                thisField = (env.getEnclosingClass()
-                                             .isSubtypeOf(TypeSig.getSig(fa.decl.parent)));
-                            if (thisField ||
-                                ((TypeObjectDesignator)fa.od).type instanceof TypeName)
-                                ErrorSet.error(fa.locId,
-                                               "An instance field may be accessed only via "
-                                               + "an object and/or from a non-static"
-                                               + " context or an inner class enclosed"
-                                               + " by a type possessing that field.");
-					// FIXME - point to declaration
-                            else
-                                ErrorSet.error(fa.locId,
-                                               "The instance fields of type "
-                                               + ((TypeObjectDesignator)fa.od).type
-                                               + " may not be accessed from type "
-                                               + sig);
-					// FIXME = point to declaration
-                        }
-			//alx: dw determine or set universe type
-			if (useUniverses)
-			    determineUniverseForFieldAccess(fa);
-			//alx-end
-                    } catch(LookupException ex) {
-			if (!Types.isErrorType(t))
-			    reportLookupException(ex, "field", 
-				Types.printName(t), fa.locId);
-			setType(fa, Types.errorType);
-                    }
-                } 
-		//alx: dw if no target, just copy universe modifier 
-		//        of declaration. does this ever happen???
-		else if (useUniverses)
-		    copyUniverses(fa,fa.decl);
-		//alx-end
-                return fa;
-            }
-
-            case TagConstants.AMBIGUOUSMETHODINVOCATION: {
-                AmbiguousMethodInvocation ami = (AmbiguousMethodInvocation)x;
-                MethodInvocation resolved = env.disambiguateMethodName(ami);
-                if (resolved == null) {
-                    // This currently never happens because non-resolvable
-                    // ambiguous methods result in a fatal error.  (See EnvForTypeSig)
-                    ErrorSet.error(ami.getStartLoc(),
-                                    "Ambiguous method invocation");
-                    return ami;
-                }
-                return checkExpr(env, resolved);
-            }
-
-            case TagConstants.METHODINVOCATION: {
-                MethodInvocation mi = (MethodInvocation)x;
-                Type t = checkObjectDesignator(env, mi.od);
-                Type[] argTypes = checkExprVec(env, mi.args);
-                if(t != null) {
-                    try {
-                        mi.decl = Types.lookupMethod(t, mi.id, argTypes, sig);
-                        setType(mi, mi.decl.returnType);
-			
-			//alx: dw determine or set default universe modifier
-                        if (useUniverses)
-			    determineUniverseForMethodInvocation(mi);
-			//alx-end
-
-                        if (mi.od instanceof TypeObjectDesignator &&
-                            !Modifiers.isStatic(mi.decl.modifiers)) {
-                            // Is mi.decl an instance method of the same class as
-                            // mi is part of?
-                            boolean thisMethod = false;
-                            if (mi.decl.parent != null)
-                                thisMethod = 
-                                    env.getEnclosingClass().isSubtypeOf(TypeSig.getSig(mi.decl.parent));
-
-                            if (thisMethod ||
-                                ((TypeObjectDesignator)mi.od).type instanceof TypeName)
-                                ErrorSet.error(mi.locId, "An instance method may be invoked" +
-                                               " only via an object and/or from a non-static" +
-                                               " context or an inner class enclosed by a type" +
-                                               " possessing that method.");
-                            else
-                                ErrorSet.error(mi.locId,
-                                               "The instance methods of type "
-                                               + ((TypeObjectDesignator)mi.od).type
-                                               + " may not be invoked from type "
-                                               + sig);
-                        }
-                    } catch(LookupException ex) {
-			if (!Types.isErrorType(t))
-			    reportLookupException(ex, 
-                                              "method "+mi.id
-                                              +Types.printName(argTypes), 
-                                              Types.printName(t), mi.locId);
-			setType(mi, Types.errorType);
-                    }
-                }
-                return mi;
-            }
-
-            case TagConstants.VARIABLEACCESS: {
-                VariableAccess lva = (VariableAccess)x;
-                setType(lva, lva.decl.type);
-                Assert.notNull(getType(lva));
-
-                //alx: dw take the universes of the declaration
-                if (useUniverses)
-		    copyUniverses(lva,lva.decl);
-		//alx-end
-
-                // Front-end VariableAccess's never point to fields:
-                Assert.notFalse(!(lva.decl instanceof FieldDecl)); //@ nowarn Pre;
-
-                // Make sure only access final variables from enclosing instances:
-                if (Env.whereDeclared(lva.decl) != sig &&
-                    !Modifiers.isFinal(lva.decl.modifiers))
-                    ErrorSet.error(lva.loc,
-                                   "Attempt to use a non-final variable"
-                                   + " from a different method.  From enclosing"
-                                   + " blocks, only final local variables are"
-                                   + " available.");
-
-                return lva;
-            }
-
-            default:
-                System.out.println("FAIL " + x);
-		System.out.println(" AT " + Location.toString(x.getStartLoc())); 
-                Assert.fail("Switch fall-through (" + 
-                            TagConstants.toString(x.getTag()) + ")");
-                return null;		// Dummy
+        default:
+            System.out.println("FAIL " + x);
+            System.out.println(" AT " + Location.toString(x.getStartLoc())); 
+            Assert.fail(
+                "Switch fall-through (" + TagConstants.toString(x.getTag()) + ")"
+            );
+            //@ assert false;
+            return null; // dummy
         }
+    }
+
+    /**
+     * Typecheck variable access. 
+     * @param lva The variable access.
+     * @return    The variable access.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkVariableAccessExpr(/*@ non_null */ VariableAccess lva) {
+        setType(lva, lva.decl.type);
+        Assert.notNull(getType(lva));
+
+        //alx: dw take the universes of the declaration
+        if (useUniverses) {
+            copyUniverses(lva, lva.decl);
+        }
+        //alx-end
+
+        // Front-end VariableAccess's never point to fields.
+        Assert.notFalse(!(lva.decl instanceof FieldDecl)); //@ nowarn Pre;
+
+        // Make sure only access final variables from enclosing instances.
+        if (Env.whereDeclared(lva.decl) != sig && 
+            !Modifiers.isFinal(lva.decl.modifiers)) {
+            ErrorSet.error(
+                lva.loc,
+                "Attempt to use a non-final variable from a different " +
+                "method. From enclosing blocks, only final local variables " +
+                "are available."
+            );
+        }
+
+        return lva;
+    }
+
+    /**
+     * Typecheck method invocation.
+     * @param env The current environment.
+     * @param mi  The method invocation.
+     * @return    The checked method invocation.
+     */
+    //@ ensure getTypeOrNull(\result) != null;
+    protected MethodInvocation checkMethodInvocationExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ MethodInvocation mi
+    ) {
+        Type t = checkObjectDesignator(env, mi.od);
+        Type[] argTypes = checkExprVec(env, mi.args);
+
+        // TODO: Shouldn't an error be reported for [t == null]? (rgrig)
+        if (t != null) {
+            try {
+                mi.decl = Types.lookupMethod(t, mi.id, argTypes, sig);
+                setType(mi, mi.decl.returnType);
+
+                //alx: dw determine or set default universe modifier
+                if (useUniverses) {
+                    determineUniverseForMethodInvocation(mi);
+                }
+                // alx-end
+
+                // When [x.y] is correctly used, x being a class (type) implies
+                // that y is a static method; otherwise something is wrong. 
+                if (mi.od instanceof TypeObjectDesignator &&
+                    !Modifiers.isStatic(mi.decl.modifiers)) {
+                    // Figure out what exactly is wrong.
+
+                    // Is mi.decl an instance method of the same class as
+                    // mi is part of?
+                    boolean thisMethod = false;
+                    if (mi.decl.parent != null) {
+                        thisMethod = 
+                            env.getEnclosingClass().isSubtypeOf(TypeSig.getSig(mi.decl.parent));
+                    }
+
+                    if (thisMethod ||
+                        ((TypeObjectDesignator)mi.od).type instanceof TypeName) {
+                        ErrorSet.error(
+                            mi.locId, 
+                            "An instance method may be invoked" +
+                                " only via an object and/or from a non-static" +
+                                " context or an inner class enclosed by a type" +
+                                " possessing that method."
+                        );
+                    } else {
+                        ErrorSet.error(
+                            mi.locId,
+                            "The instance methods of type " +
+                                ((TypeObjectDesignator)mi.od).type +
+                                " may not be invoked from type " + sig
+                        );
+                    }
+                }
+            } catch(LookupException ex) {
+                if (!Types.isErrorType(t)) {
+                    reportLookupException(
+                        ex, 
+                        "method " + mi.id + Types.printName(argTypes), 
+                        Types.printName(t), 
+                        mi.locId
+                    );
+                }
+                setType(mi, Types.errorType);
+            }
+        }
+        return mi;
+    }
+
+    /**
+     * Disambiguates an ambiguous method invocation and then typechecks it.
+     * @param env The current environment.
+     * @param ami The ambiguous method invocation.
+     * @return    The checked ambiguous invocation.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkAmbiguousMethodInvocationExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ AmbiguousMethodInvocation ami
+    ) {
+        MethodInvocation resolved = env.disambiguateMethodName(ami);
+        Assert.notFalse(
+            resolved != null, 
+            "Disambiguation failure should result in a fatal error."
+        );
+        return checkExpr(env, resolved);
+    }
+
+    /**
+     * Typechecks a field access (e.g., <tt>this.x</tt>).
+     * @param env The current environment.
+     * @param fa  The field access.
+     * @return    The checked field access.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected FieldAccess checkFieldAccessExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ FieldAccess fa
+    ) {
+        Type t = checkObjectDesignator(env, fa.od);
+        if (t != null) {
+            try {
+                fa.decl = Types.lookupField(t, fa.id, sig);
+                setType(fa, fa.decl.type);
+
+                // TODO: The following code duplicates a lot of the code in checkMethodInvocation.
+                // Given [x.y]. It should hold that if x is a class then y is static.
+                if (fa.od instanceof TypeObjectDesignator &&
+                    !Modifiers.isStatic(fa.decl.modifiers)) {
+                    // Determine what error should be produced.
+                    
+                    // Is fa.decl an instance field of the same class as
+                    // fa is part of?
+                    boolean thisField = false;
+                    if (fa.decl.parent != null) {
+                        thisField = 
+                            env.getEnclosingClass().isSubtypeOf(TypeSig.getSig(fa.decl.parent));
+                    }
+                    if (thisField ||
+                        ((TypeObjectDesignator)fa.od).type instanceof TypeName) {
+                        ErrorSet.error(
+                            fa.locId,
+                            "An instance field may be accessed only via " +
+                                "an object and/or from a non-static" +
+                                " context or an inner class enclosed" +
+                                " by a type possessing that field."
+                        );
+                    } else {
+                        // FIXME - point to declaration
+                        // _Also_ point to [fa.decl.locId]? (rgrig)
+                        ErrorSet.error(
+                            fa.locId,
+                            "The instance fields of type " +
+                                ((TypeObjectDesignator)fa.od).type +
+                                " may not be accessed from type " + sig
+                        );
+                        // FIXME = point to declaration
+                    }
+                }
+                //alx: dw determine or set universe type
+                if (useUniverses) {
+                    determineUniverseForFieldAccess(fa);
+                }
+                //alx-end
+            } catch(LookupException ex) {
+                if (!Types.isErrorType(t)) {
+                    reportLookupException(ex, "field", Types.printName(t), fa.locId);
+                }
+                setType(fa, Types.errorType);
+            }
+        } 
+        // alx: dw if no target, just copy universe modifier of declaration. 
+        // does this ever happen???
+        else if (useUniverses) {
+            copyUniverses(fa, fa.decl);
+        }
+        //alx-end
+        return fa;
+    }
+
+    
+    /**
+     * Disambiguates an ambiguous variable access and then typechecks
+     * (e.g., <tt>x</tt>).
+     * @param env The current environment.
+     * @param av  The variable access.
+     * @return    The disambiguated and checked variable access.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkAmbiguousVariableAccessExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ AmbiguousVariableAccess av
+    ) {
+        Assert.notNull(av.name);
+        Expr resolved = env.disambiguateExprName(av.name);
+        if(resolved == null) {
+            if (av.name.size() == 1) {
+                ErrorSet.error(
+                    av.getStartLoc(),
+                    "Undefined variable '" + av.name.printName() + "'"
+                );
+            } else {
+                ErrorSet.error(
+                    av.getStartLoc(),
+                    "Cannot resolve variable access '" +
+                    av.name.printName() + "'"
+                );
+            }
+            setType(av, Types.errorType);
+            return av;
+        }
+        Assert.notFalse(resolved.getTag() != TagConstants.AMBIGUOUSVARIABLEACCESS); 
+        return checkExpr(env, resolved);
+    }
+
+    
+    /**
+     * Typechecks paranthesis.
+     * @param env The current environment.
+     * @param pe  The paranthesis expression.
+     * @return    The checked paranthesis expression.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkParenExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ ParenExpr pe
+    ) {
+        pe.expr = checkExpr(env, pe.expr);
+        setType(pe, getType(pe.expr));
+        //alx: dw copy the universes to the paren-expr
+        if (useUniverses) {
+            copyUniverses(pe,pe.expr);
+        }
+        //alx-end
+        return pe;
+    }
+
+    
+    /**
+     * Typecheck boolean not (e.g., <tt>!x</tt>). 
+     * The argument must be boolean and the result is a boolean.
+     * @param env The current environment.
+     * @param ue  The unary expression containing the boolean not operation.
+     * @return The typechecked not expression.
+     */
+    //@ requires ue.getTag() == TagLiteral.NOT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkNotExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ UnaryExpr ue
+    ) {
+        // Argument must be boolean, result is boolean
+        ue.expr = checkExpr(env, ue.expr, Types.booleanType);
+        setType(ue, Types.booleanType);
+        return ue;
+    }
+
+    
+    /**
+     * Typecheck unary increment and decrement operators (e.g., <tt>++x</tt>). 
+     * @param env The current environment.
+     * @param ue  The unary expression representing the inc(dec)rement.
+     * @return The checked expression.
+     */
+    //@ requires ue.getTag() == TagConstant.INC || 
+    //@          ue.getTag() == TagConstant.DEC ||
+    //@          ue.getTag() == TagConstant.POSTFIXINC ||
+    //@          ue.getTag() == TagConstant.POSTFIXDEC;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkIncDecExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ UnaryExpr ue
+    ) {
+        ue.expr = checkDesignator(env, ue.expr);
+        if (ue.expr instanceof VariableAccess) {
+            GenericVarDecl v = ((VariableAccess)ue.expr).decl;
+            if (Modifiers.isFinal(v.modifiers)) {
+                ErrorSet.caution(
+                    ue.expr.getStartLoc(),
+                    "May not assign to a final variable",
+                    v.getStartLoc()
+                );
+            }
+        } else if (ue.expr instanceof FieldAccess) {
+            GenericVarDecl v = ((FieldAccess)ue.expr).decl;
+            // v is null if there was an error such as a field
+            // name that does not exist
+            if (v == Types.lengthFieldDecl) { 
+                ErrorSet.error(
+                    ue.expr.getStartLoc(),
+                    "May not assign to array's length field"
+                );
+            }
+            else if (v != null && Modifiers.isFinal(v.modifiers)) {
+                ErrorSet.caution(
+                    ue.expr.getStartLoc(),
+                    "May not assign to a final field",
+                    v.getStartLoc()
+                );
+            }
+        }
+
+        // FIXME - need checks of more complicated expressions
+
+        // Argument must be primitive numeric variable type
+        if (checkNumericType(ue.expr)) {
+            if(!isVariable(ue.expr))
+                ErrorSet.error(ue.locOp,
+                        "Argument of increment/decrement operation "
+                        +"is not a location");
+            // Result is of same type
+            setType(ue, getType(ue.expr));
+        }
+        return ue;
+    }
+
+    
+    /**
+     * Typecheck bitwise negation (e.g., <tt>~x</tt>).
+     * The argument must be a primitive numeric type; the result
+     * has the same type as the argument. 
+     * @param env The current environment.
+     * @param ue  The unary expression representing bitwise negation.
+     * @return The checked expression.
+     */
+    //@ requires ue.getTag() == TagConstants.BITNOT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkBitnotExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ UnaryExpr ue
+    ) {
+        ue.expr = checkExpr(env, ue.expr);
+        if(checkIntegralType(ue.expr)) {
+            setType(ue, Types.unaryPromote(getType(ue.expr)));
+        } 
+        return ue;
+    }
+
+    /**
+     * Typecheck sign (e.g. <tt>+x</tt> or <tt>-x</tt>).
+     * The argument must be a primitive numeric type; the result
+     * has the same type as the argument.
+     * @param env The current environment;
+     * @param ue  The unary expression representing the sign.
+     * @return The checked expression.
+     */
+    //@ requires ue.getTag() == TagConstants.UNARYADD ||
+    //@          ue.getTag() == tagConstants.UNARYSUB;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkSignExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ UnaryExpr ue
+    ) {
+        ue.expr = checkExpr(env, ue.expr);
+        Type t = getType(ue.expr);
+        if(checkNumericType(ue.expr)) {
+            setType(ue, Types.unaryPromote(getType(ue.expr)));
+        }
+        return ue;
+    }
+
+    /**
+     * Typecheck assignment-like expressions (e.g., <tt>a += 2</tt>).
+     * @param env The current environment.
+     * @param be  The binary expression representing the assignment.
+     * @return The checked expression.
+     */
+    //@ requires be.getTag() == TagConstants.ASSIGN ||
+    //@          be.getTag() == TagConstants.ASGMUL ||
+    //@          be.getTag() == TagConstants.ASGDIV ||
+    //@          be.getTag() == TagConstants.ASGREM ||
+    //@          be.getTag() == TagConstants.ASGADD ||
+    //@          be.getTag() == TagConstants.ASGSUB ||
+    //@          be.getTag() == TagConstants.ASGLSHIFT ||
+    //@          be.getTag() == TagConstants.ASGRSHIFT ||
+    //@          be.getTag() == TagConstants.ASGURSHIFT ||
+    //@          be.getTag() == TagConstants.ASGBITAND ||
+    //@          be.getTag() == TagConstants.ASGBITOR ||
+    //@          be.getTag() == TagConstants.ASGBITXOR;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkAssignmentExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ BinaryExpr be
+    ) {
+        be.left = checkDesignator(env, be.left);
+        be.right = checkExpr(env, be.right);
+        Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
+        setType(be, t);
+        return be;
+    }
+
+    /**
+     * Typecheck simple binary expressions (e.g., <tt>x + y</tt>).
+     * @param env The current environment.
+     * @param be  The simple binary expression.
+     * @return    The checked expression.
+     */
+    // TODO: It's ugly to have two methods with the same name. (rgrig)
+    //@ requires be.getTag() == TagConstants.OR ||
+    //@          be.getTag() == TagConstants.AND ||
+    //@          be.getTag() == TagConstants.BITOR ||
+    //@          be.getTag() == TagConstants.BITXOR ||
+    //@          be.getTag() == TagConstants.BITAND ||
+    //@          be.getTag() == TagConstants.NE ||
+    //@          be.getTag() == TagConstants.EQ ||
+    //@          be.getTag() == TagConstants.GE ||
+    //@          be.getTag() == TagConstants.GT ||
+    //@          be.getTag() == TagConstants.LE ||
+    //@          be.getTag() == TagConstants.LT ||
+    //@          be.getTag() == TagConstants.LSHIFT ||
+    //@          be.getTag() == TagConstants.RSHIFT ||
+    //@          be.getTag() == TagConstants.URSHIFT ||
+    //@          be.getTag() == TagConstants.ADD ||
+    //@          be.getTag() == TagConstants.SUB ||
+    //@          be.getTag() == TagConstants.DIV ||
+    //@          be.getTag() == TagConstants.MOD ||
+    //@          be.getTag() == TagConstants.STAR;
+    //@ ensures getTYpeOrNull(\result) != null;
+    protected Expr checkBinaryExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ BinaryExpr be
+    ) {
+        be.left = checkExpr(env, be.left);
+        be.right = checkExpr(env, be.right);
+        Type t = checkBinaryExpr(be.op, be.left, be.right, be.locOp);
+        //alx: dw set universe for the binary expression, if any
+        if (useUniverses) {
+            copyUniverses(be,be.left);
+        }
+        // alx-end
+        setType(be, t);
+        return be;
+    }
+
+    /**
+     * Typechecks a class literal (e.g., <tt>X</tt> which might appear
+     * as the rhs of <tt>instanceof</tt>).
+     * @param env The current environment.
+     * @param cl  The class literal to check.
+     * @return    The checked expression.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkClassLiteralExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ ClassLiteral cl
+    ) {
+        env.resolveType(sig,cl.type);
+        checkTypeModifiers(env, cl.type); 
+        setType(cl, Types.javaLangClass());
+        //alx: dw is a field => set to IMPL_PEER
+        ParseUtil.setUniverse(cl,TagConstants.IMPL_PEER);
+        //alx-end
+        return cl;
+    }
+
+    /**
+     * Typecheck a (dynamic) cast.
+     * @param env The current environment.
+     * @param ce  The cast to be checked.
+     * @return    The checked expression.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected CastExpr checkCastExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ CastExpr ce
+    ) {
+        ce.expr = checkExpr(env, ce.expr);
+        Type exprType = getType(ce.expr);
+        env.resolveType(sig, ce.type);
+        checkTypeModifiers(env, ce.type); 
+ 
+        if(!Types.isCastable(exprType, ce.type)) {
+            ErrorSet.error(
+                ce.locOpenParen, 
+                "Bad cast from "+Types.printName(exprType) + " to " +
+                    Types.printName(ce.type)
+            );
+        }
+        //alx: dw check castability and 'no rep in static context'
+        if (useUniverses) {
+            checkUniverseCastability(ce, ce.expr);
+            checkNoRepInStaticContext(ce);
+        }
+        //alx-end
+        setType(ce, ce.type);
+        return ce;
+    }
+
+    /**
+     * Typechecks a dynamic type probe (e.g., <tt>x instanceof X</tt>).
+     * @param env The current environment.
+     * @param ie  The <tt>instance of</tt> expression.
+     * @return    The checked expression.
+     */
+    //@ ensures getTypeorNull(\result) != null;
+    protected Expr checkInstanceOfExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ InstanceOfExpr ie
+    ) {
+        ie.expr = checkExpr(env, ie.expr);
+        Type exprType = getType(ie.expr);
+        env.resolveType(sig, ie.type);
+        checkTypeModifiers(env, ie.type);
+        if(!Types.isReferenceType(ie.type)) {
+            ErrorSet.error(ie.loc, "Non-reference type in instanceof operation");
+        }
+        else if(!Types.isCastable(exprType, ie.type)) {
+            ErrorSet.error(
+                ie.loc, 
+                "Invalid instanceof operation: " +
+                    "A value of type " + Types.printName(exprType) +
+                    " can never be an instance of " +
+                    Types.printName(ie.type)
+            );
+        }
+        //alx: dw check castability for instanceof-expr
+        if (useUniverses) {
+            checkUniverseCastability(ie,ie.expr);
+            checkNoRepInStaticContext(ie);
+        }
+        //alx-end
+
+        setType(ie, Types.booleanType);
+        return ie;
+    }
+
+    /**
+     * Typechecks a conditional expression (e..g, <tt>a == 0 ? x : 0</tt>).
+     * @param env The current environment.
+     * @param ce  The expression to check.
+     * @return    The checked expression.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkCondExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ CondExpr ce
+    ) {
+        ce.test = checkExpr(env, ce.test, Types.booleanType);
+        ce.thn = checkExpr(env, ce.thn);
+        ce.els = checkExpr(env, ce.els);
+
+        // The two branches should have compatible types (i.e., at least one
+        // should be castable to the other).
+        Type res = tryCondExprMatch(ce.thn, ce.els);
+        if (res != null) {
+            setType(ce, res);
+        } else {
+            ErrorSet.error(
+                ce.locQuestion,
+                "Incompatible arguments to the ?: operator"
+            );
+        }
+        
+        //alx: dw determine universe for 'b? (peer T) x: (rep T) x;'
+        if (useUniverses) {
+            int l = ParseUtil.getUniverse(ce.thn);
+            int r = ParseUtil.getUniverse(ce.els);
+            if (l != 0) { //isn't a primitiv type
+                int n = leastUpperUniverseBound(l, r);
+                ParseUtil.setUniverse(ce, n);
+                l = ParseUtil.getElementUniverse(ce.thn);
+                r = ParseUtil.getElementUniverse(ce.els);
+                n = leastUpperUniverseBound(l, r);
+                ParseUtil.setElementUniverse(ce,n);
+            }
+        }
+        //alx-end
+
+        return ce;
+    }
+
+    /**
+     * Typecheck a new array construction (e.g., <tt>new int[100]</tt>).
+     * @param env The current environment.
+     * @param na  The expression to check.
+     * @return    The checked expression.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkNewArrayExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ NewArrayExpr na
+    ) {
+        env.resolveType(sig, na.type);
+        Type r = na.type;
+        checkTypeModifiers(env, r); 
+        for (int i = 0; i < na.dims.size(); i++) {
+            // (Type)Check the dimension is an integer.
+            Expr e = na.dims.elementAt(i);
+            Expr newExpr = checkExpr(env, e, Types.intType);
+            na.dims.setElementAt(newExpr, i);
+            
+            // Add a dimension to the array type.
+            r = ArrayType.make(r, na.locOpenBrackets[i]);
+            checkTypeModifiers(env, r); 
+        }
+        setType(na, r);
+
+        if (na.init != null) {
+            // Check the case where we have something like
+            //   new int[] {1, 2, 3}
+            na.init = (ArrayInit)checkInit(env, na.init, r);
+            //alx: dw set the universe type for array inits and test it
+            if (useUniverses) {
+                if (ParseUtil.getUniverse(na.init) == 0 && 
+                    ParseUtil.getElementUniverse(na.init) != 0) {
+                    ParseUtil.setUniverse(na.init, ParseUtil.getUniverse(na));
+                }
+                checkUniverseAssignability(na,na.init);
+            }
+            //alx-end
+        }
+        
+        //alx: dw check if universes are used in the static context
+        if (useUniverses) {
+            checkNoRepInStaticContext(na);
+        }
+        //alx-end
+
+        return na;
+    }
+
+    /**
+     * Typecheck a class instantiation (e.g., <tt>new C()</tt>).
+     * @param env The current environment.
+     * @param ne  The instantiotion to check.
+     * @return    The checked instantiation.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected NewInstanceExpr checkNewInstanceExpr(
+        /*@ non_null */ Env env,
+        /*@ non_null */ NewInstanceExpr ne
+    ) {
+        /*
+         * We handle the "scoping" of ne.type differently depending on
+         * whether or not an explicit enclosing instance ptr is
+         * provided:
+         */
+        TypeSig calleeSig;
+        if (ne.enclosingInstance==null) {
+            // 1.0 case:  new N(...) ...
+            env.resolveType(sig,ne.type);
+            checkTypeModifiers(env, ne.type);
+            calleeSig = TypeSig.getSig(ne.type);
+        } else {
+            // 1.1 case: E.new I(...) ...
+
+            // Type check E to get class type enclosingType:
+            ne.enclosingInstance = checkExpr(env, ne.enclosingInstance);
+            TypeSig enclosingInstanceType;
+            try {
+                enclosingInstanceType =
+                    (TypeSig)getType(ne.enclosingInstance);  //@ nowarn Cast;//caught
+            } catch (ClassCastException E) {
+                ErrorSet.error(ne.enclosingInstance.getStartLoc(),
+                               "The enclosing instance supplied in a new"
+                               + " expression must be of a class type.");
+                enclosingInstanceType = Types.javaLangObject();
+            }
+
+            // Check and "resolve" I:
+            if (ne.type.name.size() != 1)
+                ErrorSet.error(ne.type.getStartLoc(),
+                               "Only a simple name can be used after new"
+                               + " when an enclosing instance is supplied.");
+            Identifier id = ne.type.name.identifierAt(0);
+            int idLoc = ne.type.name.locIdAt(0);
+            calleeSig = enclosingInstanceType.lookupType(enclosingInstanceType, id, idLoc);
+            if (calleeSig==null)
+                ErrorSet.fatal(ne.type.getStartLoc(),
+                               "No such type: "
+                               + enclosingInstanceType.toString()+"$"+id);
+            checkTypeModifiers(env, ne.type);
+            TypeSig.setSig(ne.type, calleeSig);
+        }
+
+
+        /*
+         * Handle remaining type checking/inference for enclosing instance ptr:
+         */
+
+        // Get the type of calleeSig's enclosing instance or null if none
+        // exists:
+        TypeSig enclosingInstanceType = calleeSig.getEnv(false)
+            .getEnclosingInstance();
+
+        // If calleeSig has an enclosing instance and the user didn't supply
+        // a value for it, try to infer one:
+        if (ne.enclosingInstance==null && enclosingInstanceType != null) {
+            Expr enclosingInstance =
+                env.lookupEnclosingInstance(enclosingInstanceType,
+                                            ne.getStartLoc());
+            if (enclosingInstance != null) {
+                ne.locDot = ne.getStartLoc();
+                ne.enclosingInstance = enclosingInstance;
+                checkExpr(env, ne.enclosingInstance, enclosingInstanceType);
+            }
+        }
+
+        if (ne.enclosingInstance != null) {
+            if (enclosingInstanceType==null)
+                ErrorSet.error(ne.enclosingInstance.getStartLoc(),
+                               "An enclosing instance may be provided only "
+                               + "when the named instance type is an inner class");
+        } else if (enclosingInstanceType != null) {
+            ErrorSet.error(ne.getStartLoc(),
+                           "No enclosing instance of class "
+                           + enclosingInstanceType
+                           + " is in scope; an explicit one must be provided"
+                           + " when creating instances of inner class "
+                           + calleeSig + ".");
+        }
+
+        /*
+         * The type that will *actually* call the constructor
+         * 
+         * (matters if the constructor is "protected"!)
+         */
+        TypeSig caller = sig;
+
+        /*
+         * Handle anonymous class case:
+         */
+        if (ne.anonDecl != null) {
+            // Update anonDecl to have proper supertype:
+            if (calleeSig.getTypeDecl() instanceof ClassDecl) {
+                Assert.notFalse(ne.anonDecl.superClass==null);  //@ nowarn Pre;
+                ne.anonDecl.superClass = ne.type;
+            } else {
+                ne.anonDecl.superInterfaces.addElement(ne.type);
+                calleeSig = Types.javaLangObject();
+            }
+
+            // Create and check TypeSig for declared type:
+            TypeSig T = Types.makeTypeSig(null, env, ne.anonDecl);
+            T.typecheck();
+            caller = T;
+            setType(ne, T);
+        } else
+            setType(ne, ne.type);
+
+
+        Type[] argTypes = checkExprVec(env, ne.args);
+
+        if (!(calleeSig.getTypeDecl() instanceof ClassDecl))
+            ErrorSet.error(ne.loc, 
+                           "Cannot create an instance of an interface");
+        else if (Modifiers.isAbstract(calleeSig.getTypeDecl().modifiers)
+                 && ne.anonDecl==null)
+            ErrorSet.error(ne.loc,
+                           "Cannot create an instance of an abstract class");
+        else { 
+            try {
+                ConstructorDecl cd = calleeSig.lookupConstructor(argTypes, caller);
+                ne.decl = cd;
+            } catch(LookupException e) {
+                reportLookupException(e, "constructor", 
+                                      Types.printName(calleeSig), ne.loc);
+            }
+        }
+        
+        //alx: dw test args uf .ctor
+        if (useUniverses) {
+            checkNoRepInStaticContext(ne);
+            for (int i = 0; i<ne.args.size(); i++) {
+                FormalParaDecl decl_arg = ne.decl.args.elementAt(i);
+                if (
+                    readonlyStdForPureCtor && 
+                    ParseUtil.getUniverse(decl_arg)==TagConstants.IMPL_PEER
+                ) {
+                    ParseUtil.setUniverse(decl_arg, TagConstants.READONLY);
+                    checkUniverseAssignability(
+                        ne.decl.args.elementAt(i),
+        		ne.args.elementAt(i)
+                    );
+                }
+            }
+        }
+        //alx-end
+
+        return ne;
+    }
+
+    /**
+     * Typechecks an array reference expression (e.g., <tt>a[3]</tt>). 
+     * @param env The current environment.
+     * @param r   The expression to check.
+     * @return    The checked expression.
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected ArrayRefExpr checkArrayRefExpr(
+        /*@ non_null */ Env env, 
+        /*@ non_null */ ArrayRefExpr r
+    ) {
+        r.array = checkExpr(env, r.array);
+        Type arrType = getType(r.array);
+
+        if(arrType instanceof ArrayType) {
+            setType(r, ((ArrayType)arrType).elemType);
+        } else {
+            setType(r, Types.errorType);
+            if (!Types.isErrorType(arrType)) {
+                ErrorSet.error(r.locOpenBracket, "Attempt to index a non-array value");
+            }
+        }
+  
+        r.index = checkExpr(env, r.index);
+        Type t = getType(r.index);
+        Type ndxType = Types.isNumericType(t) ? Types.unaryPromote(t) : t;
+        if (
+            !Types.isSameType(ndxType, Types.intType) &&
+            !Types.isErrorType(ndxType)
+        ) { 
+            ErrorSet.error(r.locOpenBracket, "Array index is not an integer");
+        }
+
+        //alx: dw set universe modifier for ArrayRefExpr, but this is 
+        //   never used because for this switch-case the overriding 
+        //   method in escjava doesn't call the super implementation
+        if (useUniverses) {
+            determineUniverseForArrayRefExpr(r);
+        }
+        //alx-end
+        
+        return r;
+    }
+
+    /**
+     * Typechecks <tt>null</tt>.
+     * @param x The null expression.
+     * @return  The null expression.
+     */
+    //@ requires x.getTag() == TagConstants.NULLLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkNullLitExpr(/*@ non_null */ Expr x) {
+        //alx: dw use NULLLIT as a universe modifier
+        setType(x, Types.nullType);
+        if (useUniverses) {
+            ParseUtil.setUniverse(x,TagConstants.NULLLIT);
+        }
+        //alx-end
+        return x;
+    }
+
+    /**
+     * Typechecks long literal expressions (e.g., <tt>29L</tt>).
+     * @param x The literal.
+     * @return  The literal.
+     */
+    //@ requires x.getTag() == TagConstants.LONGLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkLongLitExpr(/*@ non_null */ Expr x) {
+        setType(x, Types.longType);
+        return x;
+    }
+
+    /**
+     * Typechecks integers (e.g., <tt>29</tt>).
+     * @param x The literal.
+     * @return  The literal.
+     */
+    //@ requires x.getTag() == TagConstants.INTLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkIntLitExpr(/*@ non_null */ Expr x) {
+        setType(x, Types.intType);
+        return x;
+    }
+
+    /**
+     * Typechecks doubles (e.g., <tt>2.9</tt>).
+     * @param x The literal.
+     * @return  The literal.
+     */
+    //@ requires x.getTag() == TagConstants.DOUBLELIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkDoubleLitExpr(/*@ non_null */ Expr x) {
+        setType(x, Types.doubleType);
+        return x;
+    }
+
+    /**
+     * Typechecks floats (e.g., <tt>2.9F</tt>). 
+     * @param x The literal.
+     * @return  The literal.
+     */
+    //@ requires x.getTag() == TagConstants.FLOATLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkFloatLitExpr(/*@ non_null */ Expr x) {
+        setType(x, Types.floatType);
+        return x;
+    }
+
+    /**
+     * Typechecks booleans.
+     * @param x The literal.
+     * @return  The literal.
+     */
+    //@ requires x.getTag() == TagConstants.BOOLEANLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkBooleanLitExpr(Expr x) {
+        setType(x, Types.booleanType);
+        return x;
+    }
+
+    /**
+     * Typechecks characters.
+     * @param x The literal.
+     * @return  The literal.
+     */
+    //@ requires x.getTag() == TagConstants.CHARLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkCharLitExpr(/*@ non_null */ Expr x) {
+        setType(x, Types.charType);
+        return x;
+    }
+
+    /**
+     * Typechecks strings.
+     * @param x The expression to be checked.
+     * @return  The checked expression.
+     */
+    //@ requires x.getTag() == TagConstants.STRINGLIT;
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkStringLitExpr(/*@ non_null */ Expr x) {
+        setType(x, Types.javaLangString());
+        //alx: dw set to implicit peer
+        ParseUtil.setUniverse(x, TagConstants.IMPL_PEER);
+        //alx-end
+        return x;
+    }
+
+    /**
+     * Typechecks <tt>this</tt> expression.
+     * @param env The current environment.
+     * @param e   The expression to check.
+     * @return    The checked expression (which was mutated).
+     */
+    //@ ensures getTypeOrNull(\result) != null;
+    protected Expr checkThisExpr(/*@ non_null */ Env env, /*@ non_null */ ThisExpr e) {
+     	//alx: dw use this like a universe modifier to simplify universeTypeCombiner
+     	if (useUniverses) {
+     	    ParseUtil.setUniverse(e, TagConstants.THISEXPR);
+        }
+     	// alx-end
+
+        // It is illegal to use [this] in static methods.
+        if (env.isStaticContext() && e.classPrefix == null) {
+            ErrorSet.error(
+                e.getStartLoc(),
+                "Unqualified this cannot be used in static contexts"
+            );
+        }
+
+        Type referredType = sig;
+        if (e.classPrefix != null) {
+            env.resolveType(sig, e.classPrefix);
+            referredType = e.classPrefix;
+            checkTypeModifiers(env, referredType);
+
+            // It is illegal to use [X.this] if we are not within X.
+            TypeSig classPrefix = Types.toClassTypeSig(referredType);
+            if (classPrefix == null || !env.canAccessInstance(classPrefix)) {
+                ErrorSet.error(
+                    e.getStartLoc(),
+                    "Undefined variable: "
+                        + PrettyPrint.inst.toString(referredType) + ".this"
+                );
+                setType(e, Types.errorType);
+                return e;
+            }
+            
+            // alx: dw this of enclosing instances is peer in pure .ctors
+            if (useUniverses) {
+                if (inCtor && inPure) {
+                    ParseUtil.setUniverse(e, TagConstants.READONLY);
+                } else {
+                    ParseUtil.setUniverse(e, TagConstants.PEER);
+                }
+            }
+            // alx-end
+        }
+
+        setType(e, referredType);
+        return e;
     }
 
     // ======================================================================
@@ -2370,10 +2810,12 @@ public class FlowInsensitiveChecks
     //@ ensures \result != null;
     public static Type getType(VarInit i) {
         Type t = getTypeOrNull(i);
-        if(t==null) 
-            Assert.fail("getType at "+i.getTag()+" "+
-                        PrettyPrint.inst.toString(i) +
-                        Location.toString(i.getStartLoc()));
+        if (t == null) {
+            Assert.fail(
+                "getType at " + i.getTag() + " " + PrettyPrint.inst.toString(i) +
+                    Location.toString(i.getStartLoc())
+            );
+        }
         return t;
     }
 

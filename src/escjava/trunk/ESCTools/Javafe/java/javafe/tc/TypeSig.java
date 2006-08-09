@@ -9,9 +9,249 @@ import javafe.ast.*;
 import javafe.util.*;
 
 /**
- *
- */
 
+A <code>TypeSig</code> is a proxy and adaptor for <a
+href="javafe.ast.TypeDecl.html"><code>TypeDecl</code></a>.<p>
+
+They are proxies because, during name resolution, <a
+href="javafe.ast.TypeName.html"><code>TypeName</code></a> objects are
+resolved to point to <code>TypeSig</code> objects rather than directly
+to <code>TypeDecl</code> objects. This gives us the flexibility of
+deferring parsing of a type declaration until we know we need detailed
+information about it.<p>
+
+They are adaptors because they provide extra functionality not provided
+by <code>TypeDecl</code> objects.  In particular, they provide lookup
+methods that allow clients to find particular members of a type
+declaration (including inherited members), and resolve methods that
+perform name resolution inside the implementation of a type
+declaration.<p>
+
+<i>What about the fact that we are a subtype of <code>Type</code>?</i>
+
+
+<h3> Interning </h3>
+
+<code>TypeSig</code> objects are meant to be "interned"; that is, for
+each <i>canonical</i> <code>TypeDecl</code>, we want there to be exactly
+one associated <code>TypeSig</code> object.  The first
+<code>TypeDecl</code> loaded by the system for a given typename is
+considered to be the canonical <code>TypeDecl</code> for that typename;
+all other <code>TypeDecl</code>s for that typename are considered
+non-canonical.<p>
+
+To achieve this interning, clients of the <code>javafe.tc</code> package
+should not directly create <code>TypeSig</code> objects; rather, they
+should rely on <code>javafe.tc</code> to create <code>TypeSig</code>
+objects for them.  Similarly, clients of the <code>javafe.tc</code>
+package should rely on <code>javafe.tc</code> to do the parsing
+necessary to create instances of <code>TypeDecl</code>.  Not only will
+the <code>javafe.tc</code> package intern <code>TypeSig</code> objects,
+it will also ensure that, for <code>TypeSig s</code> and <code>TypeDecl
+d,</code><ul>
+
+<li> <code>s.getTypeDecl()</code> is always a canonical <code>TypeDecl</code>
+
+<li> <code>s.getTypeDecl().sig == s</code>
+
+<li> if <code>d</code> is canonical then <code>d.sig.getTypeDecl()==d</code>
+
+<li> if <code>d</code> is not canonical then <code>d.sig</code> is the
+<code>TypeSig</code> associated with <code>d</code>'s typename.</ul>
+
+<i>What is the interface for clients within the <code>javafe.tc</code>
+package?</i><p>
+
+
+
+<h3> Staging the processing of type declarations </h3><p>
+
+Resolving the names in a type declaration and checking its static
+semantics usually involves looking at other declarations to which it
+refers.  Finding, reading, and processing referred-to types makes
+resolution and checking fairly complicated.  As a result, we have
+decomposed it into smaller steps.  Type declarations move through a
+number of states as the resolution and checking process proceeds.  In
+addition to making the overall processing of type declarations
+conceptually more manageable, this decomposition has two other 
+benefits:<ul>
+
+
+<li> <i>Handling cycles</i>. As mentioned above, processing one type may
+involve processing types to which it refers.  However, two types may
+refer to each other, making it impossible to process any one of them
+"first."  Decomposing the processing into stages helps us handle such
+cycles.
+
+<li> <i>Improving performance</i>. Processing one type declaration does
+not require fully processing the declarations to which it refers.  How
+much processing is required of a referred-to type depends on the manner
+in which it is referred (e.g., the superclass of a class requires more
+processing than a type referred to by another type referred to by the
+class).  Decomposing processing into stages allows us to be lazy in
+processing referred-to types; that is, it allows us to process them only
+to the extent that is necessary and no further.</ul>
+
+
+The rest of this section details the states through which a
+<code>TypeSig</code> object moves during its lifetime.  Most clients of
+the <code>javafe.tc</code> package do not need to know about these
+details.  However, clients interested in extending the processing done
+by the <code>javafe.tc</code> package may need to add other states as
+well.  Also, this documentation gives an overview of the
+<code>javafe.tc</code> package for those interested in understanding its
+implementation.<p>
+
+<code>TypeSig</code>s start in the <i><code>TypeSig</code> created</i>
+state then move sequentially through the following four states:
+<i>parsed</i>, <i>supertype links resolved</i>, <i>prepped</i>, and
+<i>checked</i>.  Each following state represents additional processing
+completed on top of the processing required for the previous state.  A
+description of these states in reverse order follows.  Included are the
+properties that hold in each state; these properties are "additive":
+properties of states later in the list are also properties of states
+earlier in the list.<ul>
+
+<li> <i>Checked.</i> Type declarations in this state have been fully
+disambiguated, resolved and checked (see <a
+href="javafe.tc.TypeCheck.html"> <code>TypeCheck</code> </a> for the
+definitions of disambiguation, resolution, and checking).
+Transitioning to this state can trigger parsing and/or preparation of
+types referenced (<i>where?</i>) either explicitly or implicitly.
+Implicitly referenced types are types used but not explicitly
+mentioned in a <code>TypeName</code> node (<i>huh?</i>); for example,
+the type of the result of <code>foo</code> in the expression
+"<code>bar(x.foo())</code>" is implicitly referenced by this
+expression.<p>
+
+
+<li> <i>Prepped.</i> When checking a type declaration, we need to look
+up members of other type declarations it uses.  Before looking up
+members of these referred-to declarations, it is useful to do some work
+on them first, such as building internal tables.  <code>TypeSig</code>s
+in the prepped state have had such work done on their declarations,
+preparing them for having their members queried.  As a convenience, the
+methods of <code>TypeSig</code> that lookup the members of a type
+declaration, such as <A href="#lookupField(javafe.ast.Identifier,
+javafe.tc.TypeSig)"> <code>lookupField</code></A> and <A
+href="#lookupMethod(javafe.ast.Identifier, javafe.ast.Type[],
+javafe.tc.TypeSig)"> <code>lookupMethod</code></a>, automatically
+transition the declaration (<i><code>TypeSig</code></i>?) to the prepped
+state if it isn't there already.<p>
+
+When preparing the declaration associated with a <code>TypeSig</code>,
+it is also useful to report certain errors in it, such as two fields
+with the same name.  This way, when checking a class, the user will also
+see a report of errors in the interfaces (but not the implementations)
+of the classes used by the class being checked.<p>
+
+The prepped state is <i>supertype transitive</i>: a state <i>X</i> is
+supertype transitive if a <code>TypeSig</code> can only be in state
+<i>X</i> if all its supertypes are at least in state <i>X</i>.  Note
+that there is no requirement that <i>X</i>'s type members be in any
+particular state.<p>
+
+
+<li> <i>Supertype links resolved.</i> When preparing or checking a type
+declaration, we may need to ask if one type referred to by the
+declaration is a supertype of another.  To perform this query, we need
+to resolve supertype links.  After parsing, the supertypes of a type
+declaration are represented as <code>TypeName</code>s, which are
+symbolic references.  Resolution of a <code>TypeName</code> object
+involves pointing its <code>sig</code> field to the <code>TypeSig</code>
+object for the type declaration to which the <code>TypeName</code>
+symbolically refers.  Resolving the supertype links of type declarations
+separately from preparing them allows us to perform supertype checks
+during the preparation process.<p>
+
+As a convenience, the <code>isSubtypeOf</code> method of
+<code>TypeSig</code>, which performs the supertype test, automatically
+resolves supertype links if they have not been resolved already.<p>
+
+Like the prepped state, the "supertype links resolved" state is
+supertype transitive.<p>
+
+
+<li> <i>Parsed</i>.  Although many <code>TypeSig</code>s come into
+existence when their type declarations are parsed, some of them can be
+created earlier.  Thus, we can distinguish <code>TypeSig</code>s that
+have been parsed from those that have not.  However, it is difficult for
+a client outside <code>javafe.tc</code> to know whether or not a
+<code>TypeSig</code> has been parsed.  This is because, if a client
+calls <a href="#getTypeDecl()"> <code>getTypeDecl</code></a> on a
+<code>TypeSig</code> that has not been parsed, it will be parsed
+automatically.<p>
+
+
+<li> <i><code>TypeSig</code> created</i>.  This is the initial state
+of <code>TypeSig</code> objects that come into existence before their
+corresponding declarations have been parsed.  Again, it is it is
+difficult for a client outside <code>javafe.tc</code> to to distinguish
+between this state and the parsed state.</ul>
+
+
+
+
+<h3> More internal details </h3>
+
+<p> This section contains a few more details about the implementation
+for those who wish to understand it.
+
+<p> Inside the <code>javafe.tc</code> package, creation of
+<code>TypeSig</code> and <code>TypeDecl</code> objects is managed by
+the <a href="javafe.tc.OutsideEnv.html"> <code>OutsideEnv</code>
+</a> class.  Methods of this class take the fully-qualified name of
+an "package-member type" -- that is, a type declaration not nested
+inside another declaration -- and return the <code>TypeSig</code>
+instance associated with the type declaration denoted by that name.
+<code>OutsideEnv</code> also coordinates the parsing of type
+declarations, ensuring that only one <code>TypeDecl</code> is
+created for a type declaration, and ensuring that
+<code>TypeSig</code> objects point to the appropriate
+<code>TypeDecl</code> objects.
+
+<p> The <code>OutsideEnv</code> uses direct instances of
+<code>TypeSig</CODE> for nested types only.  It uses a special subclass
+of <code>TypeSig</code>, <code>TopTypeSig</code>, for externally
+nameable types (what the Java spec calls "top-level types").  This
+subclass has fields giving the types external name.  A further subclass
+of <code>TopTypeSig</code>, <code>OutsideTypeSig</code>, handles outside
+types.  Alone among <code>TypeSigs</code>, <code>OutsideTypeSig</code>s
+have the the ability to load their <code>TypeDecl</code> objects lazily.
+All other <code>TypeSig</code> classes must have their
+<code>TypeDecl</code> provided at creation time.  However, this is an
+implementation issue only: clients outside of <code>javafe.tc</code>
+should not assume the existence of these subclasses.
+
+<p> Transitioning a <code>TypeSig</code> from one state to another may
+require parsing and processing of other types such as supertypes or the
+types found in method signatures.  For example, checking that the
+<code>throws</code> clause of a method override is legal may involve
+checking a subtype relationship, which requires that types involved be
+supertype-link resolved.  We call transitions that arise in the process
+of another transitions "secondary transitions."  The code that
+implements transitions does not have to explicitly invoke secondary
+transitions; rather, they are performed by calling methods like
+<code>lookupField</code> or <code>isSubtypeOf</code>, whose
+implementations <em>do</em> invoke transitions if they are needed.  For
+example, the method that implements the preparation transition does not
+directly call the method that implements supertype link resolution, but
+it <em>does</em> call <code>isSubtypeOf</code>, which in turn does
+directly call the supertype link resolution method.  Thus, secondary
+transitions are largely transparent to the code implementing each
+transition, with one exception.  The code implementing the transition to
+one state can<em>not</em> invoke methods that automatically transition
+types to a higher state.  For example, the code implementing supertype
+link resolution cannot call <code>lookupField</code>.  This discipline
+helps us avoid looping.
+
+
+@see OutsideEnv
+@see TypeCheck
+@see TypeDecl
+@see TypeName
+
+*/
 public class TypeSig extends Type
 {
     /***************************************************
@@ -58,8 +298,8 @@ public class TypeSig extends Type
      *
      * This variable should be set only using setDecl. <p>
      */
-    //@ invariant state>=PARSED ==> myTypeDecl != null;
-    //@ invariant state<PARSED ==> myTypeDecl==null;
+    //@ invariant state >= PARSED ==> myTypeDecl != null;
+    //@ invariant state < PARSED ==> myTypeDecl == null;
     /*@spec_public*/ protected TypeDecl myTypeDecl;
 
     /**
@@ -79,10 +319,10 @@ public class TypeSig extends Type
      *
      * You can tell what kind of type we are as follows:
      *
-     *   package-member type               if enclosingType==null 
+     *   package-member type              if enclosingType==null 
      *   type-member type                 if enclosingType != null && member
-     *   block level type                  if simpleName != null && !member
-     *   anonymous type                    if simpleName==null
+     *   block level type                 if simpleName != null && !member
+     *   anonymous type                   if simpleName==null
      */
     //@ invariant (enclosingType==null) ==> member;   // package-member
     //@ invariant (simpleName==null) ==> !member;      // anonymous
@@ -823,7 +1063,7 @@ public class TypeSig extends Type
      * name, or detect a cycle in the type hierarchy.<p>
      */
     //@ modifies state;
-    //@ ensures state>=TypeSig.LINKSRESOLVED;
+    //@ ensures state >= TypeSig.LINKSRESOLVED;
     public void resolveSupertypeLinks() {
 	if (state<LINKSRESOLVED)
 	    SLResolution.transition(this);
@@ -879,7 +1119,7 @@ public class TypeSig extends Type
 	if (Info.on) Info.out("[typechecking " + this + "]");
 	TypeCheck.inst.makeFlowInsensitiveChecks().checkTypeDeclaration(this);
 	if (Info.on) Info.out("[typechecking-end " + this + " " + javafe.Tool.timeUsed(start) + "]");
-        // @review kiniry 31 Aug - Why is this commented out?
+        // TODO: @review kiniry 31 Aug - Why is this commented out?
 	// FlowSensitiveChecks.checkTypeDeclaration(this);
 	this.state = TypeSig.CHECKED;
     }
@@ -916,13 +1156,13 @@ public class TypeSig extends Type
     including inherited ones. */
 
     // "invariant" fields.<each element>.hasParent
-    //@ invariant state>=PREPPED ==> fields != null;
+    //@ invariant state >= PREPPED ==> fields != null;
     //@ spec_public
     protected FieldDeclVec fields;
 
     // Note: 'fields' contains all visible fields
     // 'hiddenfields' contains all the others (e.g. hidden or not accessible)
-    //@ invariant state>=PREPPED ==> hiddenfields != null;
+    //@ invariant state >= PREPPED ==> hiddenfields != null;
     protected FieldDeclVec hiddenfields;
 
     /** After preparation, this field contains all method members of
@@ -930,7 +1170,7 @@ public class TypeSig extends Type
     including inherited ones. */
 
     // "invariant" methods.<each element>.hasParent
-    //@ invariant state>=PREPPED ==> methods != null;
+    //@ invariant state >= PREPPED ==> methods != null;
     //@ spec_public
     protected MethodDeclVec methods;
 
@@ -1115,250 +1355,6 @@ public class TypeSig extends Type
     //************************************************************
     //************************************************************
 
-/**
-
-  A <code>TypeSig</code> is a proxy and adaptor for <a
-  href="javafe.ast.TypeDecl.html"><code>TypeDecl</code></a>.<p>
-
-  They are proxies because, during name resolution, <a
-  href="javafe.ast.TypeName.html"><code>TypeName</code></a> objects are
-  resolved to point to <code>TypeSig</code> objects rather than directly
-  to <code>TypeDecl</code> objects. This gives us the flexibility of
-  deferring parsing of a type declaration until we know we need detailed
-  information about it.<p>
-
-  They are adaptors because they provide extra functionality not provided
-  by <code>TypeDecl</code> objects.  In particular, they provide lookup
-  methods that allow clients to find particular members of a type
-  declaration (including inherited members), and resolve methods that
-  perform name resolution inside the implementation of a type
-  declaration.<p>
-
-  <i>What about the fact that we are a subtype of <code>Type</code>?</i>
-
-
-  <h3> Interning </h3>
-
-  <code>TypeSig</code> objects are meant to be "interned"; that is, for
-  each <i>canonical</i> <code>TypeDecl</code>, we want there to be exactly
-  one associated <code>TypeSig</code> object.  The first
-  <code>TypeDecl</code> loaded by the system for a given typename is
-  considered to be the canonical <code>TypeDecl</code> for that typename;
-  all other <code>TypeDecl</code>s for that typename are considered
-  non-canonical.<p>
-
-  To achieve this interning, clients of the <code>javafe.tc</code> package
-  should not directly create <code>TypeSig</code> objects; rather, they
-  should rely on <code>javafe.tc</code> to create <code>TypeSig</code>
-  objects for them.  Similarly, clients of the <code>javafe.tc</code>
-  package should rely on <code>javafe.tc</code> to do the parsing
-  necessary to create instances of <code>TypeDecl</code>.  Not only will
-  the <code>javafe.tc</code> package intern <code>TypeSig</code> objects,
-  it will also ensure that, for <code>TypeSig s</code> and <code>TypeDecl
-  d,</code><ul>
-
-  <li> <code>s.getTypeDecl()</code> is always a canonical <code>TypeDecl</code>
-
-  <li> <code>s.getTypeDecl().sig == s</code>
-
-  <li> if <code>d</code> is canonical then <code>d.sig.getTypeDecl()==d</code>
-
-  <li> if <code>d</code> is not canonical then <code>d.sig</code> is the
-  <code>TypeSig</code> associated with <code>d</code>'s typename.</ul>
-
-  <i>What is the interface for clients within the <code>javafe.tc</code>
-  package?</i><p>
-
-
-
-  <h3> Staging the processing of type declarations </h3><p>
-
-  Resolving the names in a type declaration and checking its static
-  semantics usually involves looking at other declarations to which it
-  refers.  Finding, reading, and processing referred-to types makes
-  resolution and checking fairly complicated.  As a result, we have
-  decomposed it into smaller steps.  Type declarations move through a
-  number of states as the resolution and checking process proceeds.  In
-  addition to making the overall processing of type declarations
-  conceptually more manageable, this decomposition has two other 
-  benefits:<ul>
-
-
-  <li> <i>Handling cycles</i>. As mentioned above, processing one type may
-  involve processing types to which it refers.  However, two types may
-  refer to each other, making it impossible to process any one of them
-  "first."  Decomposing the processing into stages helps us handle such
-  cycles.
-
-  <li> <i>Improving performance</i>. Processing one type declaration does
-  not require fully processing the declarations to which it refers.  How
-  much processing is required of a referred-to type depends on the manner
-  in which it is referred (e.g., the superclass of a class requires more
-  processing than a type referred to by another type referred to by the
-  class).  Decomposing processing into stages allows us to be lazy in
-  processing referred-to types; that is, it allows us to process them only
-  to the extent that is necessary and no further.</ul>
-
-
-  The rest of this section details the states through which a
-  <code>TypeSig</code> object moves during its lifetime.  Most clients of
-  the <code>javafe.tc</code> package do not need to know about these
-  details.  However, clients interested in extending the processing done
-  by the <code>javafe.tc</code> package may need to add other states as
-  well.  Also, this documentation gives an overview of the
-  <code>javafe.tc</code> package for those interested in understanding its
-  implementation.<p>
-
-  <code>TypeSig</code>s start in the <i><code>TypeSig</code> created</i>
-  state then move sequentially through the following four states:
-  <i>parsed</i>, <i>supertype links resolved</i>, <i>prepped</i>, and
-  <i>checked</i>.  Each following state represents additional processing
-  completed on top of the processing required for the previous state.  A
-  description of these states in reverse order follows.  Included are the
-  properties that hold in each state; these properties are "additive":
-  properties of states later in the list are also properties of states
-  earlier in the list.<ul>
-
-  <li> <i>Checked.</i> Type declarations in this state have been fully
-  disambiguated, resolved and checked (see <a
-  href="javafe.tc.TypeCheck.html"> <code>TypeCheck</code> </a> for the
-  definitions of disambiguation, resolution, and checking).
-  Transitioning to this state can trigger parsing and/or preparation of
-  types referenced (<i>where?</i>) either explicitly or implicitly.
-  Implicitly referenced types are types used but not explicitly
-  mentioned in a <code>TypeName</code> node (<i>huh?</i>); for example,
-  the type of the result of <code>foo</code> in the expression
-  "<code>bar(x.foo())</code>" is implicitly referenced by this
-  expression.<p>
-
-
-  <li> <i>Prepped.</i> When checking a type declaration, we need to look
-  up members of other type declarations it uses.  Before looking up
-  members of these referred-to declarations, it is useful to do some work
-  on them first, such as building internal tables.  <code>TypeSig</code>s
-  in the prepped state have had such work done on their declarations,
-  preparing them for having their members queried.  As a convenience, the
-  methods of <code>TypeSig</code> that lookup the members of a type
-  declaration, such as <A href="#lookupField(javafe.ast.Identifier,
-  javafe.tc.TypeSig)"> <code>lookupField</code></A> and <A
-  href="#lookupMethod(javafe.ast.Identifier, javafe.ast.Type[],
-  javafe.tc.TypeSig)"> <code>lookupMethod</code></a>, automatically
-  transition the declaration (<i><code>TypeSig</code></i>?) to the prepped
-  state if it isn't there already.<p>
-
-  When preparing the declaration associated with a <code>TypeSig</code>,
-  it is also useful to report certain errors in it, such as two fields
-  with the same name.  This way, when checking a class, the user will also
-  see a report of errors in the interfaces (but not the implementations)
-  of the classes used by the class being checked.<p>
-
-  The prepped state is <i>supertype transitive</i>: a state <i>X</i> is
-  supertype transitive if a <code>TypeSig</code> can only be in state
-  <i>X</i> if all its supertypes are at least in state <i>X</i>.  Note
-  that there is no requirement that <i>X</i>'s type members be in any
-  particular state.<p>
-
-
-  <li> <i>Supertype links resolved.</i> When preparing or checking a type
-  declaration, we may need to ask if one type referred to by the
-  declaration is a supertype of another.  To perform this query, we need
-  to resolve supertype links.  After parsing, the supertypes of a type
-  declaration are represented as <code>TypeName</code>s, which are
-  symbolic references.  Resolution of a <code>TypeName</code> object
-  involves pointing its <code>sig</code> field to the <code>TypeSig</code>
-  object for the type declaration to which the <code>TypeName</code>
-  symbolically refers.  Resolving the supertype links of type declarations
-  separately from preparing them allows us to perform supertype checks
-  during the preparation process.<p>
-
-  As a convenience, the <code>isSubtypeOf</code> method of
-  <code>TypeSig</code>, which performs the supertype test, automatically
-  resolves supertype links if they have not been resolved already.<p>
-
-  Like the prepped state, the "supertype links resolved" state is
-  supertype transitive.<p>
-
-
-  <li> <i>Parsed</i>.  Although many <code>TypeSig</code>s come into
-  existence when their type declarations are parsed, some of them can be
-  created earlier.  Thus, we can distinguish <code>TypeSig</code>s that
-  have been parsed from those that have not.  However, it is difficult for
-  a client outside <code>javafe.tc</code> to know whether or not a
-  <code>TypeSig</code> has been parsed.  This is because, if a client
-  calls <a href="#getTypeDecl()"> <code>getTypeDecl</code></a> on a
-  <code>TypeSig</code> that has not been parsed, it will be parsed
-  automatically.<p>
-
-
-  <li> <i><code>TypeSig</code> created</i>.  This is the initial state
-  of <code>TypeSig</code> objects that come into existence before their
-  corresponding declarations have been parsed.  Again, it is it is
-  difficult for a client outside <code>javafe.tc</code> to to distinguish
-  between this state and the parsed state.</ul>
-
-
-
-
-  <h3> More internal details </h3>
-
-  <p> This section contains a few more details about the implementation
-  for those who wish to understand it.
-
-  <p> Inside the <code>javafe.tc</code> package, creation of
-  <code>TypeSig</code> and <code>TypeDecl</code> objects is managed by
-  the <a href="javafe.tc.OutsideEnv.html"> <code>OutsideEnv</code>
-  </a> class.  Methods of this class take the fully-qualified name of
-  an "package-member type" -- that is, a type declaration not nested
-  inside another declaration -- and return the <code>TypeSig</code>
-  instance associated with the type declaration denoted by that name.
-  <code>OutsideEnv</code> also coordinates the parsing of type
-  declarations, ensuring that only one <code>TypeDecl</code> is
-  created for a type declaration, and ensuring that
-  <code>TypeSig</code> objects point to the appropriate
-  <code>TypeDecl</code> objects.
-
-  <p> The <code>OutsideEnv</code> uses direct instances of
-  <code>TypeSig</CODE> for nested types only.  It uses a special subclass
-  of <code>TypeSig</code>, <code>TopTypeSig</code>, for externally
-  nameable types (what the Java spec calls "top-level types").  This
-  subclass has fields giving the types external name.  A further subclass
-  of <code>TopTypeSig</code>, <code>OutsideTypeSig</code>, handles outside
-  types.  Alone among <code>TypeSigs</code>, <code>OutsideTypeSig</code>s
-  have the the ability to load their <code>TypeDecl</code> objects lazily.
-  All other <code>TypeSig</code> classes must have their
-  <code>TypeDecl</code> provided at creation time.  However, this is an
-  implementation issue only: clients outside of <code>javafe.tc</code>
-  should not assume the existence of these subclasses.
-
-  <p> Transitioning a <code>TypeSig</code> from one state to another may
-  require parsing and processing of other types such as supertypes or the
-  types found in method signatures.  For example, checking that the
-  <code>throws</code> clause of a method override is legal may involve
-  checking a subtype relationship, which requires that types involved be
-  supertype-link resolved.  We call transitions that arise in the process
-  of another transitions "secondary transitions."  The code that
-  implements transitions does not have to explicitly invoke secondary
-  transitions; rather, they are performed by calling methods like
-  <code>lookupField</code> or <code>isSubtypeOf</code>, whose
-  implementations <em>do</em> invoke transitions if they are needed.  For
-  example, the method that implements the preparation transition does not
-  directly call the method that implements supertype link resolution, but
-  it <em>does</code> call <code>isSubtypeOf</code>, which in turn does
-  directly call the supertype link resolution method.  Thus, secondary
-  transitions are largely transparent to the code implementing each
-  transition, with one exception.  The code implementing the transition to
-  one state can<em>not</em> invoke methods that automatically transition
-  types to a higher state.  For example, the code implementing supertype
-  link resolution cannot call <code>lookupField</code>.  This discipline
-  helps us avoid looping.
-
-
-@see OutsideEnv
-@see TypeCheck
-@see TypeDecl
-@see TypeName
-
-  */
 
     /**
      * Gets the TypeSig recorded by <code>setSig</code>, or null.

@@ -42,11 +42,10 @@ public abstract class Env {
 
 
     /**
-     * Return the intermost class enclosing the code that is checked
-     * in this environment. <p>
+     * Return the innermost class enclosing the code that is checked
+     * in this environment.<p>
      *
-     * May return null if there is no enclosing class (aka, for
-     * environments for CompilationUnits). <p>
+     * May return null if there is no enclosing class (see postcondition).<p>
      *
      * If isStaticContext() returns true, then this is the type of "this".
      */
