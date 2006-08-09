@@ -75,6 +75,7 @@
           (castByte2Char  Number Number)
           (castChar2Byte  Number Number)
 
+          # 
           (NULL     Reference)
           (+        Number Number Number)
           (-        Number Number Number)
