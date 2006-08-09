@@ -16,7 +16,6 @@ import rcc.ast.*;
 import rcc.ast.TagConstants;
 
 import javafe.reader.StandardTypeReader;
-//import rcc.reader.EscTypeReader;
 
 import javafe.parser.PragmaParser;
 
@@ -26,19 +25,14 @@ import rcc.tc.TypeCheck;
 import javafe.util.*;
 
 /**
- * * Top level control module for ESC for Java.
- * <p> * * This class (and its superclasses) handles parsing * <code>rcc</code>'s
- * command-line arguments and orchestrating the * other pieces of the front end
- * and rcc to perform the requested * operations.
- * <p> * *
+ * The main class of the <tt>RCC</tt> tool.
  * 
- * @see javafe.Tool *
  * @see javafe.SrcTool
  */
 
 public class Main extends javafe.SrcTool {
 
-    /** Our version number * */
+    /** Our version number */
     public final String version = "0.233.  Based on escjava 1.1.5a, 16 June 1999";
 
     public Vector commandLineFiles;
@@ -51,34 +45,23 @@ public class Main extends javafe.SrcTool {
 
     // === Options processing ===
     /**
-     * rgrig: The following two functions follow the ESC/Java2 convention.
+     * The following two functions follow the ESC/Java2 convention.
      */
 
     public/* @ non_null */Options makeOptions() {
-        return new RccOptions();
-    }
-
-    public RccOptions options() {
-        return (RccOptions) options;
+        return RccOptions.get();
     }
 
     /**
-     * * Return the name of this tool. E.g., "ls" or "cp".
-     * <p> * * Used in usage and error messages.
-     * <p>
+     * @return "rcc", which is the name of this tool.
      */
     public String name() {
         return "rcc";
     }
 
-    /***************************************************************************
-     * * Front-end setup: * *
-     **************************************************************************/
-
-    /*
-     * public StandardTypeReader makeStandardTypeReader(String path,
-     * PragmaParser P) { return RccTypeReader.make(path, P); }
-     */
+    // === Front-end setup ===
+    // The following are overrides of template methods in
+    // <code>javafe.SrcTool</code>.
 
     public javafe.parser.PragmaParser makePragmaParser() {
         return new rcc.parser.RccPragmaParser();
@@ -91,89 +74,77 @@ public class Main extends javafe.SrcTool {
     }
 
     public javafe.tc.TypeCheck makeTypeCheck() {
-        return new rcc.tc.TypeCheck();
+        return rcc.tc.TypeCheck.get();
     }
 
     /**
-     * * Override SrcTool.notify to ensure all lexicalPragmas get * registered
-     * as they are loaded.
+     * Make sure all lexical pragmas get registered as they are loaded.
      */
     public void notify(CompilationUnit justLoaded) {
         super.notify(justLoaded);
         NoWarn.registerNowarns(justLoaded.lexicalPragmas);
     }
 
-    /***************************************************************************
-     * * Main processing code: * *
-     **************************************************************************/
+    // === Main processing code ===
 
     /**
-     * * Start up an instance of this tool using command-line arguments *
+     * Start up an instance of this tool using command-line arguments
      * <code>args</code>.
-     * <p> * * This is the main entry point for the <code>rcc</code> *
-     * command.
-     * <p>
+     * 
+     * This is the main entry point for the <tt>RCC</tt> tool.
      */
     // @ requires elemsnonnull(args)
     public static void main(String[] args) {
-
+        // Enables overriding of static methods.
         new rcc.tc.Types();
 
         Main t = new Main();
 
         t.run(args);
 
-        if (t.options().pun) {
+        if (RccOptions.get().pun) {
             NoWarn.displayUntriggeredNowarns();
         }
-
+        
+        /* DBG: See the ALL code that gets processed.
+        for (int i = 0; i < t.loaded.size(); ++i) {
+            CompilationUnit cu = (CompilationUnit)t.loaded.get(i);
+            PrettyPrint.inst.print(System.out, cu);
+        }
+        */
     }
 
-    /***************************************************************************
-     * * SrcTool-instance specific processing: * *
-     **************************************************************************/
+    // === [SrcTool] specific processing ===
 
     /**
-     * * Hook for any work needed before <code>handleCU</code> is called * on
-     * each <code>CompilationUnit</code> to process them.
+     * Hook for any work needed before <code>handleCU</code> is called on each
+     * <code>CompilationUnit</code> to process them.
      */
     public void preprocess() {
-        if (!options().quiet)
+        if (!RccOptions.get().quiet)
             System.out.println("Rcc version " + version);
         commandLineFiles = (Vector) loaded.clone();
-        /*
-         * for (int i = 0; i < commandLineFiles.size(); i++)
-         * System.out.println(commandLineFiles.elementAt(i));
-         */
     }
 
     /**
-     * * Hook for any work needed after <code>handleCU</code> has been called *
-     * on each <code>CompilationUnit</code> to process them.
+     * This method is called on each <code>CompilationUnit</code> that this
+     * tool processes. This method overrides the implementation given in the
+     * superclass, adding a couple of lines before the superclass implementation
+     * is called.
      */
-    public void postprocess() {
-    }
-
-    /**
-     * * This method is called on each <code>CompilationUnit</code> * that
-     * this tool processes. This method overrides the implementation * given in
-     * the superclass, adding a couple of lines before the * superclass
-     * implementation is called.
+    /*
+     * rgrig: does it do anything useful? public void handleCU(CompilationUnit
+     * cu) { // NoWarn.setStartLine(startLine, cu); //
+     * UniqName.setDefaultSuffixFile(cu.getStartLoc()); super.handleCU(cu);
+     * 
+     * RccOptions.get().startLine = -1; // StartLine applies only to first CU }
      */
-    public void handleCU(CompilationUnit cu) {
-        // NoWarn.setStartLine(startLine, cu);
-
-        // UniqName.setDefaultSuffixFile(cu.getStartLoc());
-        super.handleCU(cu);
-
-        options().startLine = -1; // StartLine applies only to first CU
-    }
 
     /**
-     * * This method is called by SrcTool on the TypeDecl of each * outside type
-     * that SrcTool is to process.
-     * <p> * * In addition, it calls itself recursively to handle types * nested
-     * within outside types.
+     * This method is called by <code>SrcTool</code> on the
+     * <code>TypeDecl</code> of each outside type that <code>SrcTool</code>
+     * is to process. In addition, it calls itself recursively to handle types
+     * nested within outside types.
      * <p>
      */
     public void handleTD(TypeDecl td) {
@@ -181,19 +152,11 @@ public class Main extends javafe.SrcTool {
         if (sig.getTypeDecl().specOnly) // do not process specs
             return;
 
-        if (Location.toLineNumber(td.getEndLoc()) < options().startLine)
+        if (Location.toLineNumber(td.getEndLoc()) < RccOptions.get().startLine)
             return;
-
-        long startTime = java.lang.System.currentTimeMillis();
-        if (!options().quiet)
-            System.out.println("\n" + sig.toString() + " ...");
 
         // Do actual work:
         boolean aborted = processTD(td);
-
-        if (!options().quiet)
-            System.out.println("  [" + timeUsed(startTime) + " total]"
-                    + (aborted ? " (aborted)" : ""));
 
         /*
          * Handled any nested types: [1.1]
@@ -206,17 +169,17 @@ public class Main extends javafe.SrcTool {
     }
 
     /**
-     * * Run all the requested stages on a given TypeDecl; * return true if we
-     * had to abort.
-     * <p> * * Precondition: td is not from a binary file.
-     * <p>
+     * Run all the requested stages on a given <code>TypeDecl</code>.
+     * 
+     * @pre <code>td</code> is not from a binary file.
+     * @return <code>true</code> iff we had to abort.
      */
     private boolean processTD(TypeDecl td) {
 
         int errorCount = ErrorSet.errors;
         TypeSig sig = TypeCheck.inst.getSig(td);
         sig.typecheck();
-        if (options().pjt) {
+        if (RccOptions.get().pjt) {
             // Create a pretty-printer that shows types
             DelegatingPrettyPrint p = new javafe.tc.TypePrint();
 

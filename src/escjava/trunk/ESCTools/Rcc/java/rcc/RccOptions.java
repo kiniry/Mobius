@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.StringTokenizer;
 
-import escjava.ast.TagConstants;
-import escjava.translate.NoWarn;
+import rcc.ast.TagConstants;
+import rcc.ast.NoWarn;
 import javafe.SrcToolOptions;
 import javafe.util.Set;
 import javafe.util.UsageError;
@@ -16,23 +16,27 @@ import javafe.util.UsageError;
 
 /**
  * @author rgrig
- * 
- * TODO: This should be a singleton to provide a simple way for the rest
- * of the application to access options.
  */
 public class RccOptions extends SrcToolOptions {
 
-    // === Contruction ===
+    // === Singleton ===
     
-    public RccOptions() {
+    private static RccOptions instance = null;
+    
+    private RccOptions() {
         super();
-        // TODO Auto-generated constructor stub
+    }
+    
+    public static RccOptions get() {
+        if (instance == null) {
+            instance = new RccOptions(); 
+        }
+        return instance;
     }
     
     
     // === Rcc options ===
     
-    public boolean quiet        = false;
     public boolean wall         = false;
     public boolean noho         = false;  // ignore no holds
     public boolean agt          = false;  // add guarded_by this
@@ -65,7 +69,6 @@ public class RccOptions extends SrcToolOptions {
         r.append(" -dts    classes on command line are thread_shared by default\n");
         r.append(" -ihl    initializer blocks hold self/class lock\n");
         r.append(" -ihnl   static initializer blocks hold the null lock\n");
-        r.append(" -quiet  don't print status messages\n");
         r.append("\n");
         r.append(" -nowarn <category>        turn off warning category\n");
         r.append(" -warn <category>          turn on warning category\n");    
@@ -141,10 +144,6 @@ public class RccOptions extends SrcToolOptions {
         }       
         if (option.equals("-trace_error")) {
             tse = true;
-            return offset;
-        }
-        if (option.equals("-quiet")) {
-            quiet = true;
             return offset;
         } else if (option.equals("-nowarn")) {
             assertArg(offset, args.length, "nowarn");
