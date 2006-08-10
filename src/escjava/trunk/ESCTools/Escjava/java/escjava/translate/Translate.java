@@ -3492,6 +3492,7 @@ public final class Translate
       case TagConstants.SPEC_PROTECTED:
       case TagConstants.GHOST:
       case TagConstants.NON_NULL:		// handled above
+      case TagConstants.NULLABLE:
         break;
 
       case TagConstants.MODEL:
