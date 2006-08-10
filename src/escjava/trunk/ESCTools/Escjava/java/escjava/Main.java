@@ -659,8 +659,8 @@ public class Main extends javafe.SrcTool
 				      /*@ non_null */ TypeSig sig,
 				      /*@ non_null */ InitialState initState) {
 
-        if (r.body == null) return "passed immediately";
-	if (r.parent.specOnly) return "passed immediately";
+      if (r.body == null && !Main.options().idc) return "passed immediately";
+      if (r.parent.specOnly && !Main.options().idc) return "passed immediately";
         if ( Location.toLineNumber(r.getEndLoc()) < options().startLine )
 	    return "skipped";
         String simpleName = TypeCheck.inst.getRoutineName(r).intern();
@@ -1185,7 +1185,7 @@ public class Main extends javafe.SrcTool
     //@ requires initState != null;
     protected GuardedCmd computeBody(RoutineDecl r, InitialState initState) {
         if (r.getTag() == TagConstants.METHODDECL &&
-            ((MethodDecl)r).body == null) {
+            ((MethodDecl)r).body == null && !Main.options().idc) {
             // no body
             return null;
         }
@@ -1210,15 +1210,24 @@ public class Main extends javafe.SrcTool
              * Compute translation assuming synTargs is empty:
              * (gives same set of targets faster than using null)
              */
-            GuardedCmd tmpBody = gctranslator.trBody(r, scope,
-                                                     initState.getPreMap(),
-                                                     /*predictedSynTargs*/new Set(),
-                                                     null,
-                                                     /* issueCautions */ false);
-            if (options().noDirectTargetsOpt)
+            GuardedCmd tmpBody;
+	    if (r.body==null && Main.options().idc)
+	    {
+	      tmpBody=null;
+	      predictedSynTargs=new Set();
+	    }
+	    else
+	    {
+	      tmpBody=gctranslator.trBody(r, scope,
+					  initState.getPreMap(),
+					  /*predictedSynTargs*/new Set(),
+					  null,
+					  /* issueCautions */ false);
+	      if (options().noDirectTargetsOpt)
                 predictedSynTargs = Targets.normal(tmpBody);
-            else
+	      else
                 predictedSynTargs = Targets.direct(tmpBody);
+	    }
             if (options().statsTime)
                 System.out.println("      [prediction time: " + timeUsed(T) + "]");
         }
@@ -1234,20 +1243,29 @@ public class Main extends javafe.SrcTool
 	   since it is generated from the routine decl.
 	   However, I don't know for sure what would go missing.  DRCok
 	*/
-
-        GuardedCmd body = gctranslator.trBody(r, scope,
-                                              initState.getPreMap(),
-                                              predictedSynTargs, null,
-                                              /* issueCautions */ true);
-
-
-        Set fullSynTargs = Targets.normal(body);
+	GuardedCmd body;
+	Set fullSynTargs;
         Set synTargs;
-        if (options().noDirectTargetsOpt)
+	if (r.body==null && Main.options().idc)
+	{
+	  body=GC.gets(GC.ecvar, GC.ec_return);//ExprCmd.make(TagConstants.ASSERTCMD, GC.truelit, r.loc+40);
+	  fullSynTargs=new Set();
+	  synTargs=new Set();
+	}
+	else
+	{
+
+	  body = gctranslator.trBody(r, scope,
+				     initState.getPreMap(),
+				     predictedSynTargs, null,
+				     /* issueCautions */ true);
+	  fullSynTargs=Targets.normal(body);
+	  if (options().noDirectTargetsOpt)
             synTargs = fullSynTargs;
-        else
+	  else
             synTargs = Targets.direct(body);
 
+	}
 
         /*
          * Verify predictedSynTargs if present that

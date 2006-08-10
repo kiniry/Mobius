@@ -44,7 +44,14 @@ public final class GetSpec {
       /*@ non_null */FindContributors scope,
       /*@ non_null */Set synTargs, Hashtable premap) {
     Spec spec = getCommonSpec(rd, scope, premap);
-    return extendSpecForBody(spec, scope, synTargs);
+    if (rd.body==null && Main.options().idc)
+    {
+      return(spec);
+    }
+    else
+    {
+      return extendSpecForBody(spec, scope, synTargs);
+    }
   }
   
   private static /*@ non_null @*/ Spec getCommonSpec(
@@ -935,7 +942,9 @@ public final class GetSpec {
 	    Expr expr=prag.expr;
 	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFINEDNESS,
 					expr,expr.getStartLoc());
-	    conds.add(cond);
+	    // Disable this for now so that I can test routines and constructors
+	    // with no bodies.
+	    //conds.add(cond);
 	  }
 	  //[GKE]
           TrAnExpr.initForClause();
