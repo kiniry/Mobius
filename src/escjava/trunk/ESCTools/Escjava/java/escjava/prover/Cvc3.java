@@ -214,12 +214,13 @@ public class Cvc3 extends NewProver {
     try {
       String cmd = "QUERY " + formula.toString() + ";";
       String r = wrapper.queryFormula(cmd);
-      if (r.startsWith("Don't")) {
+      if (r.startsWith("Abort")) {
         res = ProverResponse.TIMEOUT; //should this be something else?
       } else if (r.startsWith("Valid")) {
         res = ProverResponse.YES; // is VALID
-      } else { // is INVALID
-        String counterex = r.substring(8);
+      } else { // is INVALID or DON'T KNOW
+        int colon = r.indexOf(":");
+        String counterex = r.substring(colon+1);
         res = ProverResponse.COUNTER_EXAMPLE;
         res.formula = new Formula(counterex);
       }

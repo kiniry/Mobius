@@ -16,10 +16,10 @@ public class Test {
      vc.assertFormula("ASSERT f(x,x)=y;");
      vc.assertFormula("ASSERT f(x,x)=z;");
      s = vc.queryFormula("QUERY x=z;");
-     System.out.println("1 "+s);
+     System.out.println("1 (valid) "+s);
      vc.undoAssert(2);
      s = vc.queryFormula("QUERY f(x+1,x+1)=y;");
-     System.out.println("2 "+s);
+     System.out.println("2 (invalid) "+s);
      vc.stopSolver();
      vc.setFlags("-lang presentation -output-lang smtlib");
      System.out.println("Reset flags, new solver");
@@ -32,11 +32,11 @@ public class Test {
      vc.assertFormula("ASSERT f(x+1,x+1)=y+1;");
      vc.assertFormula("ASSERT f(x,x)=z;");
      s = vc.queryFormula("QUERY NOT x=z;");
-     System.out.println("3 "+s);
+     System.out.println("3 (invalid) "+s);
      s = vc.queryFormula("QUERY f(x,y)=y;");
-     System.out.println("4 "+s);
-     s = vc.queryFormula("QUERY EXISTS(z:INT):f(x,z)=y;");
-     System.out.println("5 "+s);
+     System.out.println("4 (invalid) "+s);
+     s = vc.queryFormula("QUERY EXISTS(w:INT):f(x,w)=y;");
+     System.out.println("5 (unknown) "+s);
      vc.stopSolver();
    } catch (Exception e) {
      System.out.println(e);

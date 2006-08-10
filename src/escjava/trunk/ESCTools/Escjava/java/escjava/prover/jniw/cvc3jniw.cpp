@@ -492,15 +492,18 @@ string JNIW_query(string s)
     JNIW_scope++;
     Expr e = JNIW_readExpr(JNIW_vc->getEM()->getInputLang(),s);
     JNIW_getAtomicFormulas(e);
-    bool ret;
-    ret = JNIW_vc->query(e,false);
-    if (!ret) {
-      if (JNIW_vc->incomplete()) {
-        ss << "Don't know";
-      } 
-      else 
-      {
+    QueryResult ret;
+    ret = JNIW_vc->query(e);
+    if (ret==VALID) {
+        ss << "Valid";
+    } else if (ret==ABORT) {
+      ss << "Abort";
+    } else {
+      if (ret==INVALID) {
         ss << "Invalid: ";
+      } else if (ret== UNKNOWN) {
+        ss << "Don't know: ";
+      }
         // accumulate the
         if (false) {
 /*
@@ -535,9 +538,6 @@ string JNIW_query(string s)
             }
           }
         }
-      }
-    } else {
-      ss << "Valid";
     }
     JNIW_vc->pop();
   } catch (Exception x) {

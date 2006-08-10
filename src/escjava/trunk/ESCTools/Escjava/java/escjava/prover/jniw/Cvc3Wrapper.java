@@ -122,7 +122,8 @@ public class Cvc3Wrapper {
    *
    * @return a string with one of the following contents:
    * <tt><ul>
-   * <li> Don't know
+   * <li> Don't know: <i>lits</i>
+   * <li> Abort
    * <li> Valid
    * <li> Invalid: <i>lits</i>
    * </ul></tt>
@@ -130,6 +131,7 @@ public class Cvc3Wrapper {
    * <strong>TRUE</strong> literals from any asserted formulas.  Each 
    * literal will be contained in parentheses, and negative literals will
    * be prefixed by a tilde.  For example: <tt>(a) (~b)</tt>
+   * In the case of "Don't know", this may be a spurious counterexample.
    *
    * @throws Cvc3WrapperException if there are any errors.  In this case
    * the assertion does not "count" for undos.
