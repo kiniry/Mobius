@@ -1248,8 +1248,10 @@ public class Main extends javafe.SrcTool
         Set synTargs;
 	if (r.body==null && Main.options().idc)
 	{
-	  GuardedCmd gcGets=GC.gets(GC.ecvar, GC.ec_return);
-	  body=gcGets;
+	  GuardedCmd gc1=GC.gets(GC.ecvar, GC.ec_return);
+	  GuardedCmd gc2=GC.assume(GC.falselit);
+	  GuardedCmd gc3=GC.seq(gc1,gc2);
+	  body=gc3;
 	  if (r.getTag()==TagConstants.CONSTRUCTORDECL)
 	  {
 	    // get java.lang.Object
@@ -1276,7 +1278,7 @@ public class Main extends javafe.SrcTool
 				       GC.select(ownerVA,GC.resultvar), 
 				       GC.nulllit);
 	      GuardedCmd gcOwner=GC.assume(ownerNull);
-	      body=GC.seq(gcGets,gcOwner);
+	      body=GC.seq(gc3,gcOwner);
 	    }
 	  }
 	  fullSynTargs=new Set();
