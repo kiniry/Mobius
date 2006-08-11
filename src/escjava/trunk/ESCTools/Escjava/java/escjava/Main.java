@@ -1248,7 +1248,37 @@ public class Main extends javafe.SrcTool
         Set synTargs;
 	if (r.body==null && Main.options().idc)
 	{
-	  body=GC.gets(GC.ecvar, GC.ec_return);//ExprCmd.make(TagConstants.ASSERTCMD, GC.truelit, r.loc+40);
+	  GuardedCmd gcGets=GC.gets(GC.ecvar, GC.ec_return);
+	  body=gcGets;
+	  if (r.getTag()==TagConstants.CONSTRUCTORDECL)
+	  {
+	    // get java.lang.Object
+	    TypeSig obj = escjava.tc.Types.javaLangObject();
+	    FieldDecl owner = null; // make the compiler happy
+	    boolean found = true;
+	    boolean save = escjava.tc.FlowInsensitiveChecks.inAnnotation;
+	    try {
+	      escjava.tc.FlowInsensitiveChecks.inAnnotation = true;
+	      owner = escjava.tc.Types.lookupField(obj, 
+					Identifier.intern("owner"), 
+					obj);
+	    } catch (javafe.tc.LookupException e) {
+	      found = false;
+	    } finally {
+	      escjava.tc.FlowInsensitiveChecks.inAnnotation = save;
+	    }
+	    // if we couldn't find the owner ghost field, there's nothing to do
+	    if (found) 
+	    {
+	      VariableAccess ownerVA = TrAnExpr.makeVarAccess(owner,
+							      Location.NULL);
+	      Expr ownerNull = GC.nary(TagConstants.REFEQ, 
+				       GC.select(ownerVA,GC.resultvar), 
+				       GC.nulllit);
+	      GuardedCmd gcOwner=GC.assume(ownerNull);
+	      body=GC.seq(gcGets,gcOwner);
+	    }
+	  }
 	  fullSynTargs=new Set();
 	  synTargs=new Set();
 	}
