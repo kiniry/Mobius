@@ -263,6 +263,23 @@ public class DefGCmd
 	}
 
 	case TagConstants.IMPLIES:
+	  {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr = this.trAndGen(be.left);
+	    Expr notLeftExpr=GC.nary(TagConstants.BOOLNOT,leftExpr);
+	    this.code.push();
+	    Expr rightExpr = this.trAndGen(be.right);
+	    GuardedCmd rightGC=this.popFromCode();
+	    GuardedCmd leftGC=GC.assume(GC.truelit);
+	    GuardedCmd notleftGC=GC.assume(rightExpr);
+	    this.code.
+	      addElement(GC.ifcmd(notLeftExpr,
+				  GC.assume(GC.truelit),
+				  rightGC));
+	    int newtag = TrAnExpr.getGCTagForBinary(be);
+	    return GC.nary(e.getStartLoc(),e.getEndLoc(),
+			   newtag,leftExpr,rightExpr);
+	  }
 	case TagConstants.IFF:
 	case TagConstants.NIFF:
 	case TagConstants.BITOR:
@@ -356,10 +373,24 @@ public class DefGCmd
 	    return null;
 	}
       
-	case TagConstants.EXPLIES: {
-	    if(true) { break; } else { notImpl(e); }
-	    return null;
-	}
+	case TagConstants.EXPLIES: 
+	  {
+	    BinaryExpr be = (BinaryExpr)e;
+	    Expr leftExpr = this.trAndGen(be.right);
+	    Expr notLeftExpr=GC.nary(TagConstants.BOOLNOT,leftExpr);
+	    this.code.push();
+	    Expr rightExpr = this.trAndGen(be.left);
+	    GuardedCmd rightGC=this.popFromCode();
+	    GuardedCmd leftGC=GC.assume(GC.truelit);
+	    GuardedCmd notleftGC=GC.assume(rightExpr);
+	    this.code.
+	      addElement(GC.ifcmd(notLeftExpr,
+				  GC.assume(GC.truelit),
+				  rightGC));
+	    int newtag = TagConstants.BOOLIMPLIES;
+	    return GC.nary(e.getStartLoc(),e.getEndLoc(),
+			   newtag,leftExpr,rightExpr);
+	  }
       
 	case TagConstants.SUBTYPE: {
 	    if(true) { break; } else { notImpl(e); }
