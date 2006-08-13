@@ -72,8 +72,11 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
     public static final double NaN;
 
     public static final double MAX_VALUE;
-
     public static final double MIN_VALUE;
+
+    public static final Class TYPE;
+    //@ initially TYPE == \type(double);
+    //@ invariant_redundantly TYPE == double.class;
 
     /*@ public normal_behavior
       @   ensures !isNaN(d) && !isInfinite(d) ==> parseable(\result);
@@ -357,7 +360,4 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
 		 (isNaN(a) || isNaN(b) || (a==b));
 	}
     */
-
-    public static final Class TYPE;
-
 }

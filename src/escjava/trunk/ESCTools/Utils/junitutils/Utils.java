@@ -218,26 +218,22 @@ public class Utils {
 	@ public represents moreChar <- pos < cc.length;
 	@*/
 
-      /*@ public invariant_redundantly 
+      /*@ public invariant_redundantly moreTokens ==> moreChar;
+	@ public invariant_redundantly 
 	@ moreChar && !Character.isWhitespace(cc[pos]) ==> moreTokens;
 	@*/
 
     /**
      * @return true if there are more tokens to be returned
      */
-      // IDC should catch error in the original spec too
-      //xx@ modifies pos;
-      //xx@ ensures \result == \old(moreTokens());
-      //xx@ ensures \result ==> !Character.isWhitespace(cc[pos]);
-      //xx@ ensures moreTokens() == \old(moreTokens());
-      //
-      //@ public normal_behavior
-      //@ modifies pos;
-      //@ ensures \result == moreChar;
-      //@ ensures \result ==> !Character.isWhitespace(cc[pos]);
-      //@ ensures_redundantly \result ==> moreTokens;
-      //+@ ensures \result == moreTokens;		// true but esc cannot prove
-      //+@ ensures moreTokens == \old(moreTokens);	// true but esc cannot prove
+      /*@ public normal_behavior
+	@ modifies pos;
+	@ ensures \result == moreChar;
+	@ ensures \result ==> !Character.isWhitespace(cc[pos]);
+	@ ensures_redundantly \result ==> moreTokens; */
+     /*+@ ensures \result == moreTokens;		// true but esc cannot prove
+	@ ensures moreTokens == \old(moreTokens);	// true but esc cannot prove
+	@*/
     public boolean hasMoreTokens() {
       while (pos < cc.length && Character.isWhitespace(cc[pos])) pos++;
       return pos < cc.length;
@@ -397,7 +393,9 @@ public class Utils {
    */
   //@ requires \nonnullelements(args);
   static public String executeCompile(/*@ non_null */ Class cls, 
-				      /*@ non_null */ String[] args) {
+				      /*@ non_null */ String[] args) 
+    throws SecurityException, NoSuchMethodException
+  {
     return executeMethod(cls,"compile",args);
   }
   
@@ -410,16 +408,18 @@ public class Utils {
    * @return  The standard output and error output of the invocation
    */
   //@ requires \nonnullelements(args);
-  static public String executeMethod(/*@ non_null */ Class cls, 
+  static private String executeMethod(/*@ non_null */ Class cls, 
 				     /*@ non_null */ String methodname, 
-				     /*@ non_null */ String[] args) {
+				     /*@ non_null */ String[] args) 
+    throws SecurityException, NoSuchMethodException 
+  {
     try {
       Method method = cls.getMethod(methodname, new Class[] { String[].class });
       return executeMethod(method,args);
     } catch (NoSuchMethodException e) {
-      System.out.println("No method compile in class " + cls);  // FIXME - better error return needed
+      System.err.println("No method compile in class " + cls);  // FIXME - better error return needed
       e.printStackTrace();
-      throw new RuntimeException(e.toString());
+      throw e; // new RuntimeException(e.toString());
     }
   }
   
@@ -431,7 +431,7 @@ public class Utils {
    * @return		The standard output and error output of the method
    */
   //@ requires \nonnullelements(args);
-  static public String executeMethod(/*@ non_null */ Method method, 
+  static private String executeMethod(/*@ non_null */ Method method, 
 				     /*@ non_null */ String[] args) {
     try {
 	ByteArrayOutputStream ba = setStreams();

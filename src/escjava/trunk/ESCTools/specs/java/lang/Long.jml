@@ -60,6 +60,7 @@ public /*@ pure @*/ final
 
     public static final Class TYPE;
                      //@ initially TYPE == \type(long);
+		     //@ invariant_redundantly TYPE == long.class;
 
     /*@ public normal_behavior
       @   requires (Character.MIN_RADIX <= radix

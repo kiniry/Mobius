@@ -76,6 +76,7 @@ public class BackPred
                              + UniqName.type(Types.longType) + "| |"
                              + UniqName.type(Types.floatType) + "| |"
                              + UniqName.type(Types.doubleType) + "| |"
+                             + UniqName.type(Types.voidType) + "| |"
                              + UniqName.type(escjava.tc.Types.typecodeType) + "|");
 
 

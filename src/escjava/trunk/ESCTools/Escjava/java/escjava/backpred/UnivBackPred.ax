@@ -65,6 +65,8 @@
 	(IMPLIES (<: t |T_bigint|) (EQ t |T_bigint|))))
 (BG_PUSH (FORALL (t) (PATS (<: t |T_real|))
 	(IMPLIES (<: t |T_real|) (EQ t |T_real|))))
+(BG_PUSH (FORALL (t) (PATS (<: t |T_void|))
+	(IMPLIES (<: t |T_void|) (EQ t |T_void|))))
 
 ; (New as of 12 Dec 2000)
 ; primitive types have no proper supertypes
@@ -89,6 +91,8 @@
 	(IMPLIES (<: |T_bigint| t) (EQ t |T_bigint|))))
 (BG_PUSH (FORALL (t) (PATS (<: |T_real| t))
 	(IMPLIES (<: |T_real| t) (EQ t |T_real|))))
+(BG_PUSH (FORALL (t) (PATS (<: |T_void| t))
+	(IMPLIES (<: |T_void| t) (EQ t |T_void|))))
 	
 ; === ESCJ 8: Section 1.2
 
@@ -217,6 +221,11 @@
 	   (PATS (typeof x))
 	   ;(PATS (is x |T_bigint|))
 	   (IFF (is x |T_bigint|) (EQ (typeof x) |T_bigint|))
+     ))
+(BG_PUSH (FORALL (x) 
+	   (PATS (typeof x))
+	   ;(PATS (is x |T_void|))
+	   (IFF (is x |T_void|) (EQ (typeof x) |T_void|))
      ))
      
 ; === ESCJ 8: Section 2.3

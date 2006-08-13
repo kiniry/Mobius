@@ -92,6 +92,10 @@ public /*@ pure @*/ final class Byte extends Number implements Comparable
     public static final byte MIN_VALUE;
     public static final byte MAX_VALUE;
 
+    public static /* non_null */ final Class TYPE;
+    //@ initially TYPE == \type(byte);
+    //@ invariant_redundantly TYPE == byte.class;
+
     /*@
       @ public normal_behavior
       @   {|
@@ -304,7 +308,4 @@ public /*@ pure @*/ final class Byte extends Number implements Comparable
       @       signals_only ClassCastException;
       @*/
     public int compareTo(Object o);
-
-    public static /* non_null */ final Class TYPE;
-
 }

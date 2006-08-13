@@ -142,7 +142,8 @@ public final class Class implements java.io.Serializable {
                    this == double.class ||
                    this == char.class ||
                    this == boolean.class ||
-                   this == byte.class
+                   this == byte.class ||
+		   this == void.class		// this case was missing --PC
                   );
       @*/
     public /*@ pure @*/ native boolean isPrimitive();

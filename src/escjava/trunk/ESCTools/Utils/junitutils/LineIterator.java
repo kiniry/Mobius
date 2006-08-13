@@ -48,8 +48,13 @@ public class LineIterator implements Iterator {
     /** Starts an iterator reading from the given external process. 
 	@param filename The name of the file to be read
      */
-    //@ ensures (* file is readable *);
-    //@ signals (java.io.IOException) (* file is not readable *);
+    /*@ public behavior
+      @   modifies nextLine, elementType, returnsNull;
+      @   ensures (* file is readable *);
+      @   signals (java.io.IOException) (* file is not readable *);
+      @ also private behavior
+      @   modifies r;
+      @*/
     public LineIterator(/*@ non_null */ String filename) throws java.io.IOException  {
 	r = new BufferedReader(new FileReader(filename)); 
 	nextLine = r.readLine();

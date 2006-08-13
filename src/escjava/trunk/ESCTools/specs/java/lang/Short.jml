@@ -89,10 +89,11 @@ public /*@ pure @*/ final
 
 
 	public static final short   MIN_VALUE;
-
 	public static final short   MAX_VALUE;
 
 	public static final Class   TYPE;
+	//@ initially TYPE == \type(short);
+	//@ invariant_redundantly TYPE == short.class;
 
 	/*@
 	  @ public normal_behavior

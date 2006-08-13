@@ -59,6 +59,7 @@ public  /*@ pure @*/ final
 
     public static final Class TYPE;
                                //@ initially TYPE == \type(int);
+                               //@ invariant_redundantly TYPE == int.class;
 
     /*@ public normal_behavior
       @   requires (Character.MIN_RADIX <= radix

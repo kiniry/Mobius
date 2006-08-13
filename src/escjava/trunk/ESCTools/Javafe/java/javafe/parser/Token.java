@@ -146,8 +146,15 @@ public class Token
      * Copy all the fields of <code>this</code> into
      * <code>dst</code>.  For convenience, returns <code>dst</code>.
      */
-    //@ ensures \result.equals(this);
-    public final Token copyInto(/*@ non_null @*/ Token dst) {
+    /*@ ensures 
+	dst.ttype == ttype &&
+	dst.startingLoc == startingLoc &&
+	dst.endingLoc == endingLoc &&
+	dst.identifierVal == identifierVal &&
+	dst.auxVal == auxVal &&
+	\result == dst;
+    */
+    public final /*@ non_null */ Token copyInto(/*@ non_null @*/ Token dst) {
 	dst.ttype = ttype;
 	dst.startingLoc = startingLoc;
 	dst.endingLoc = endingLoc;

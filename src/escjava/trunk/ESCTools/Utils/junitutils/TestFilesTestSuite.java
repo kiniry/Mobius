@@ -62,12 +62,6 @@ public class TestFilesTestSuite  extends TestSuite {
     // DATA MEMBERS
     // -------------------------------------------------------------
 
-    //@ public model boolean initialized;
-    // Here is a good enough approximation for initialized:
-    /*@ protected represents initialized <-
-      @ 		testName != null && method != null;
-      @*/
-
     /** The name of this test suite. */
     protected String testName; //@ in initialized;
     //@ protected invariant_redundantly initialized ==> (testName != null);
@@ -91,7 +85,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	@param cls	The class in which to find the static compile method
     */
     /*@ public behavior
-      @   assignable initialized;
+      @   assignable initialized, objectState;
       @   ensures_redundantly initialized;
       @   signals_only RuntimeException;
       @*/
@@ -104,7 +98,13 @@ public class TestFilesTestSuite  extends TestSuite {
 	this.testName = testName;
 	try {
 	    method = cls.getMethod("compile", new Class[] { String[].class });
-	    //System.out.println("METHOD " + method);
+	    Class rt = method.getReturnType();
+	    if(rt != Integer.TYPE && rt != Boolean.TYPE) {
+		String m = (cls.getName() +
+			    ".compile() must have a return type of " +
+			    "'int' or 'boolean', not " + rt);
+		throw new RuntimeException(m);
+	    }
 	} catch (NoSuchMethodException e) {
 	    throw new RuntimeException(e.toString());
         }
@@ -124,6 +124,20 @@ public class TestFilesTestSuite  extends TestSuite {
 	}
     }
 
+    //@ public model boolean initialized;
+    /*@ protected represents initialized <- testName != null
+      @ 	&& method != null
+      @		&& (method.getReturnType() == int.class
+      @		    || method.getReturnType() == boolean.class);
+      @*/
+
+    //@ ensures \result == initialized;
+    private /*@ pure */ boolean initialized() {
+	return testName != null 
+	    && method != null 
+	    && (method.getReturnType() == int.class
+		|| method.getReturnType() == boolean.class);
+    }
 
     /** Factory method for the helper class object. */
     //@ assignable \nothing;
@@ -157,7 +171,7 @@ public class TestFilesTestSuite  extends TestSuite {
 	protected /*@ non_null */ String fileToTest;
 
 	/** Result of test */
-	protected Object returnedObject;
+	protected /*@ nullable */ Object returnedObject;
 
 	/** Command-line arguments (including filename) for this test. */
 	protected /*@ non_null */ String[] args;
@@ -165,15 +179,18 @@ public class TestFilesTestSuite  extends TestSuite {
 	/** This is the framework around the test.  It sets up the streams to
 	    capture output, and catches all relevant exceptions.
 	*/
+
 	//@ also
-        //@ requires initialized;
+	//@   requires initialized;
+	// Maybe we could move the above spec case into the superclass?
 	public void runTest() throws java.io.IOException {
 	    // Due to behavioral subtyping this method might be called
-	    // when !initialized ... hence test
-	    if(testName == null || method == null) // i.e. !initialized
-		return;
-
-	    //@ assert initialized; // now ESCJ can prove this assertion
+	    // when !initialized ... hence we will test for this condition
+	    if(!initialized()) {
+		String msg = "TestFilesTestSuite.runTest() "
+		    + "called before 'this' was properly initialized";
+		fail(msg);
+	    }
 
 	    //System.out.println("\nTest suite " + testName + ": "  + fileToTest);
 	    //for (int kk=0; kk<args.length; ++kk) System.out.println(args[kk]);

@@ -38,6 +38,8 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
 
     //@ non_null
     public static final Class	TYPE;
+    //@ initially TYPE == \type(boolean);
+    //@ invariant_redundantly TYPE == boolean.class;
 
     //@ public model boolean theBoolean; in objectState;
 

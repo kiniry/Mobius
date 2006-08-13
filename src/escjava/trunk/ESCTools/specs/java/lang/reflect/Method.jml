@@ -24,6 +24,9 @@ package java.lang.reflect;
 public final
 class Method extends AccessibleObject implements Member {
 
+    //@ public model Class returnType;
+
+    //@ ensures this.returnType == returnType;
     //@ pure
     Method(Class declaringClass,
            String name,
@@ -48,9 +51,9 @@ class Method extends AccessibleObject implements Member {
     public /*@ pure @*/ int getModifiers();
 
     /*@ public normal_behavior
-      @   ensures \result != null;
+      @   ensures \result == returnType;
       @*/
-    public /*@ pure @*/ Class getReturnType();
+    public /*@ pure non_null @*/ Class getReturnType();
 
     /*@ public normal_behavior
       @   ensures \result != null;
@@ -68,6 +71,19 @@ class Method extends AccessibleObject implements Member {
 
     public /*@ pure @*/ String toString();
 
+    /*@ ensures getReturnType() == boolean.class ==> \result instanceof Boolean;
+      @ ensures getReturnType() == byte.class    ==> \result instanceof Byte;
+      @ ensures getReturnType() == char.class    ==> \result instanceof Character;
+      @ ensures getReturnType() == int.class     ==> \result instanceof Integer;
+      @ ensures getReturnType() == long.class    ==> \result instanceof Long;
+      @ ensures getReturnType() == short.class   ==> \result instanceof Short;
+      @ ensures getReturnType() == double.class  ==> \result instanceof Double;
+      @ ensures getReturnType() == float.class   ==> \result instanceof Float;
+      @ ensures getReturnType() == void.class    ==> \result == null;
+      @ ensures_redundantly 
+      @ 	getReturnType().isPrimitive() && getReturnType() != void.class 
+      @			==> \result != null;
+      @*/
     public Object invoke(Object obj, Object[] args)
 	throws IllegalAccessException, IllegalArgumentException,
                InvocationTargetException;
