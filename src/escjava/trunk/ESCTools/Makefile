@@ -400,7 +400,7 @@ jmlc1:
 	  -d $(JMLC_CLASSFILES_DIR) \
 	  -a -A --purity \
 	  -n \
-	  --keepGoing --source 1.4 --Quiet --recursive \
+	  --keepGoing --recursive \
 	  $(JMLC_FLAGS) \
 	  $(TARGET) \
 	  && touch .jmlc
