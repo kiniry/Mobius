@@ -1356,7 +1356,7 @@ public class FlowInsensitiveChecks
      * @param mi  The method invocation.
      * @return    The checked method invocation.
      */
-    //@ ensure getTypeOrNull(\result) != null;
+    //@ ensures getTypeOrNull(\result) != null;
     protected MethodInvocation checkMethodInvocationExpr(
         /*@ non_null */ Env env, 
         /*@ non_null */ MethodInvocation mi
@@ -1579,7 +1579,7 @@ public class FlowInsensitiveChecks
      * @param ue  The unary expression containing the boolean not operation.
      * @return The typechecked not expression.
      */
-    //@ requires ue.getTag() == TagLiteral.NOT;
+    //@ requires ue.getTag() == TagConstants.NOT;
     //@ ensures getTypeOrNull(\result) != null;
     protected Expr checkNotExpr(
         /*@ non_null */ Env env, 
@@ -1598,11 +1598,11 @@ public class FlowInsensitiveChecks
      * @param ue  The unary expression representing the inc(dec)rement.
      * @return The checked expression.
      */
-    //@ requires ue.getTag() == TagConstant.INC || 
-    //@          ue.getTag() == TagConstant.DEC ||
-    //@          ue.getTag() == TagConstant.POSTFIXINC ||
-    //@          ue.getTag() == TagConstant.POSTFIXDEC;
-    //@ ensures getTypeOrNull(\result) != null;
+    /*@ requires ue.getTag() == TagConstants.INC || 
+                 ue.getTag() == TagConstants.DEC ||
+                 ue.getTag() == TagConstants.POSTFIXINC ||
+                 ue.getTag() == TagConstants.POSTFIXDEC;
+        ensures getTypeOrNull(\result) != null; */
     protected Expr checkIncDecExpr(
         /*@ non_null */ Env env, 
         /*@ non_null */ UnaryExpr ue
@@ -1680,9 +1680,9 @@ public class FlowInsensitiveChecks
      * @param ue  The unary expression representing the sign.
      * @return The checked expression.
      */
-    //@ requires ue.getTag() == TagConstants.UNARYADD ||
-    //@          ue.getTag() == tagConstants.UNARYSUB;
-    //@ ensures getTypeOrNull(\result) != null;
+    /*@ requires ue.getTag() == TagConstants.UNARYADD ||
+                 ue.getTag() == TagConstants.UNARYSUB;
+        ensures getTypeOrNull(\result) != null; */
     protected Expr checkSignExpr(
         /*@ non_null */ Env env, 
         /*@ non_null */ UnaryExpr ue
@@ -1701,19 +1701,19 @@ public class FlowInsensitiveChecks
      * @param be  The binary expression representing the assignment.
      * @return The checked expression.
      */
-    //@ requires be.getTag() == TagConstants.ASSIGN ||
-    //@          be.getTag() == TagConstants.ASGMUL ||
-    //@          be.getTag() == TagConstants.ASGDIV ||
-    //@          be.getTag() == TagConstants.ASGREM ||
-    //@          be.getTag() == TagConstants.ASGADD ||
-    //@          be.getTag() == TagConstants.ASGSUB ||
-    //@          be.getTag() == TagConstants.ASGLSHIFT ||
-    //@          be.getTag() == TagConstants.ASGRSHIFT ||
-    //@          be.getTag() == TagConstants.ASGURSHIFT ||
-    //@          be.getTag() == TagConstants.ASGBITAND ||
-    //@          be.getTag() == TagConstants.ASGBITOR ||
-    //@          be.getTag() == TagConstants.ASGBITXOR;
-    //@ ensures getTypeOrNull(\result) != null;
+    /*@ requires be.getTag() == TagConstants.ASSIGN ||
+                 be.getTag() == TagConstants.ASGMUL ||
+                 be.getTag() == TagConstants.ASGDIV ||
+                 be.getTag() == TagConstants.ASGREM ||
+                 be.getTag() == TagConstants.ASGADD ||
+                 be.getTag() == TagConstants.ASGSUB ||
+                 be.getTag() == TagConstants.ASGLSHIFT ||
+                 be.getTag() == TagConstants.ASGRSHIFT ||
+                 be.getTag() == TagConstants.ASGURSHIFT ||
+                 be.getTag() == TagConstants.ASGBITAND ||
+                 be.getTag() == TagConstants.ASGBITOR ||
+                 be.getTag() == TagConstants.ASGBITXOR;
+        ensures getTypeOrNull(\result) != null; */
     protected Expr checkAssignmentExpr(
         /*@ non_null */ Env env, 
         /*@ non_null */ BinaryExpr be
@@ -1732,26 +1732,26 @@ public class FlowInsensitiveChecks
      * @return    The checked expression.
      */
     // TODO: It's ugly to have two methods with the same name. (rgrig)
-    //@ requires be.getTag() == TagConstants.OR ||
-    //@          be.getTag() == TagConstants.AND ||
-    //@          be.getTag() == TagConstants.BITOR ||
-    //@          be.getTag() == TagConstants.BITXOR ||
-    //@          be.getTag() == TagConstants.BITAND ||
-    //@          be.getTag() == TagConstants.NE ||
-    //@          be.getTag() == TagConstants.EQ ||
-    //@          be.getTag() == TagConstants.GE ||
-    //@          be.getTag() == TagConstants.GT ||
-    //@          be.getTag() == TagConstants.LE ||
-    //@          be.getTag() == TagConstants.LT ||
-    //@          be.getTag() == TagConstants.LSHIFT ||
-    //@          be.getTag() == TagConstants.RSHIFT ||
-    //@          be.getTag() == TagConstants.URSHIFT ||
-    //@          be.getTag() == TagConstants.ADD ||
-    //@          be.getTag() == TagConstants.SUB ||
-    //@          be.getTag() == TagConstants.DIV ||
-    //@          be.getTag() == TagConstants.MOD ||
-    //@          be.getTag() == TagConstants.STAR;
-    //@ ensures getTYpeOrNull(\result) != null;
+    /*@ requires be.getTag() == TagConstants.OR ||
+                 be.getTag() == TagConstants.AND ||
+                 be.getTag() == TagConstants.BITOR ||
+                 be.getTag() == TagConstants.BITXOR ||
+                 be.getTag() == TagConstants.BITAND ||
+                 be.getTag() == TagConstants.NE ||
+                 be.getTag() == TagConstants.EQ ||
+                 be.getTag() == TagConstants.GE ||
+                 be.getTag() == TagConstants.GT ||
+                 be.getTag() == TagConstants.LE ||
+                 be.getTag() == TagConstants.LT ||
+                 be.getTag() == TagConstants.LSHIFT ||
+                 be.getTag() == TagConstants.RSHIFT ||
+                 be.getTag() == TagConstants.URSHIFT ||
+                 be.getTag() == TagConstants.ADD ||
+                 be.getTag() == TagConstants.SUB ||
+                 be.getTag() == TagConstants.DIV ||
+                 be.getTag() == TagConstants.MOD ||
+                 be.getTag() == TagConstants.STAR;
+        ensures getTypeOrNull(\result) != null; */
     protected Expr checkBinaryExpr(
         /*@ non_null */ Env env, 
         /*@ non_null */ BinaryExpr be
@@ -1828,7 +1828,7 @@ public class FlowInsensitiveChecks
      * @param ie  The <tt>instance of</tt> expression.
      * @return    The checked expression.
      */
-    //@ ensures getTypeorNull(\result) != null;
+    //@ ensures getTypeOrNull(\result) != null;
     protected Expr checkInstanceOfExpr(
         /*@ non_null */ Env env, 
         /*@ non_null */ InstanceOfExpr ie
