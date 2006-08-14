@@ -123,16 +123,13 @@ TypeErrors2.java:96: Error: Cannot convert int to boolean
 TypeErrors2.java:99: Error: Cannot convert double to an integral type
     Double asd = ~0.0;
                   ^
-TypeErrors2.java:99: Error: Cannot convert int to java.lang.Double
-    Double asd = ~0.0;
-                 ^
 TypeErrors2.java:102: Error: Cannot convert boolean to a numeric type 
     i = +false;
          ^
 TypeErrors2.java:112: Error: Keyword super cannot be used in a static context
   int i = super.x;
           ^
-30 errors
+29 errors
 ==== TypeErrors3.java: ====
 TypeErrors3.java:7: Caution: Enclosing statement labelled 'x' is not a while, do or for statement
     continue x;                 // caution

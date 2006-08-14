@@ -8,18 +8,12 @@ WontTypecheck.java:2: Error: Cannot convert boolean to a numeric type
 WontTypecheck.java:3: Error: Incompatible arguments to the ?: operator
   //@ requires (* this is fine *) ? (* but this is a boolean *) : x;
                                   ^
-WontTypecheck.java:3: Error: Cannot convert int to boolean
-  //@ requires (* this is fine *) ? (* but this is a boolean *) : x;
-               ^
 WontTypecheck.java:4: Error: Incompatible arguments to the ?: operator
   //@ requires (* similarly *) ? x : (* now the boolean is here *);
                                ^
-WontTypecheck.java:4: Error: Cannot convert int to boolean
-  //@ requires (* similarly *) ? x : (* now the boolean is here *);
-               ^
 Caution: Turning off extended static checking due to type error(s)
 1 caution
-5 errors
+3 errors
 WontEvenParse0.java:2: Fatal error: Unterminated informal predicate
   //@ invariant (* this informal predicate has no end
                 ^
