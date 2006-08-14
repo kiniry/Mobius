@@ -69,7 +69,7 @@ public class Main extends javafe.SrcTool {
 
     public PrettyPrint makePrettyPrint() {
         DelegatingPrettyPrint p = new RccPrettyPrint();
-        p.del = new StandardPrettyPrint(p);
+        p.setDel(new StandardPrettyPrint(p));
         return p;
     }
 
@@ -184,7 +184,7 @@ public class Main extends javafe.SrcTool {
             DelegatingPrettyPrint p = new javafe.tc.TypePrint();
 
             // p.del = new RccPrettyPrint(p, new StandardPrettyPrint(p));
-            p.del = new StandardPrettyPrint(p);
+            p.setDel(new StandardPrettyPrint(p));
 
             if (rcc.tc.TypeSig.defaultInstantiationDecoration.get(sig) != null) {
                 td = ((TypeSig) rcc.tc.TypeSig.defaultInstantiationDecoration

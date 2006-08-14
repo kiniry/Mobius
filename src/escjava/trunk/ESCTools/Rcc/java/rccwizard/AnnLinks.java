@@ -77,7 +77,7 @@ public class AnnLinks extends javafe.SrcTool {
      **/
     public PrettyPrint makePrettyPrint() {
         DelegatingPrettyPrint p = new RccPrettyPrint();
-        p.del = new StandardPrettyPrint(p);
+        p.setDel(new StandardPrettyPrint(p));
         return p;
     }
     
