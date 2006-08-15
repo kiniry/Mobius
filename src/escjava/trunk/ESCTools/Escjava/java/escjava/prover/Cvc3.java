@@ -32,6 +32,11 @@ public class Cvc3 extends NewProver {
     Cvc3.debug = debug;
   }
   
+  /** Starts a new instance of CVC3.  This is necessary in order to redefine
+   * any functions or variables used.
+   *
+   * @return OK (or exit)
+   */
   /*@
    @ also
    @ assignable wrapper;
@@ -53,7 +58,7 @@ public class Cvc3 extends NewProver {
     //++
     if(debug)
       if( res != ProverResponse.OK )
-        System.out.println("Failed to init sammy");
+        System.out.println("Failed to init cvc");
       //++
       
     started = true;
@@ -62,6 +67,17 @@ public class Cvc3 extends NewProver {
     
   }
   
+  /**
+   * Sets command line flags for CVC3.  Flag are currently just strings in
+   * the properties.  
+   *
+   * @param properties is a table of the flags.  Keys and entries are strings,
+   * and are concatenated together to form each flag (so there is no 
+   * functional difference between ["a b",""] and ["a","b"]).
+   *
+   * @return OK or SYNTAX_ERROR, as appropriate.
+   *
+   */
   public /*@non_null*/ProverResponse set_prover_resource_flags(/*@non_null*/Properties properties) {
     
     //++
@@ -81,11 +97,11 @@ public class Cvc3 extends NewProver {
       
       try {
         currentFlag = (String)flags.nextElement();
-        value += " "+properties.getProperty( currentFlag );
+        value += currentFlag+" "+properties.getProperty( currentFlag );
       }
       
       catch (Exception e) {
-        System.err.println("Sammy::Failed to inspect properties");
+        System.err.println("Cvc3::Failed to inspect properties");
         System.exit(0);
       }
     }
@@ -107,17 +123,23 @@ public class Cvc3 extends NewProver {
       
     return res;
   }
-  
-  public /*@non_null*/ProverResponse signature(/*@non_null*/Signature signature) {
-   
  
+  /**
+   * Declares a signature to CVC3.  The signature is assumed to be a string
+   * of a sequence of CVC-readable declaration commands (each 
+   * terminated by a semicolon).
+   *
+   * @return ProverResponse.OK if no problems encountered, otherwise
+   * ProverResponse.FAIL.
+   */ 
+  public /*@non_null*/ProverResponse signature(/*@non_null*/Signature signature) {
     //++
     if(debug)
       System.out.print("Cvc3::signature");
     //++
     
     /*
-     * This requires the signature be able to be transormed into a list
+     * This requires the signature be able to be transformed into a list
      * (Vector) of strings for each declaration command (without the ;)
      * res can only degrade from "OK".
      */
@@ -157,7 +179,10 @@ public class Cvc3 extends NewProver {
     
     return res;
   }
-  
+
+  /**
+   * Same as make_asumption.
+   */ 
   public /*@non_null*/ProverResponse declare_axiom(/*@non_null*/Formula formula) {
     
     /*
@@ -166,7 +191,16 @@ public class Cvc3 extends NewProver {
     
     return make_assumption(formula);
   }
-  
+ 
+  /**
+   * Asserts a formula to cvc3.
+   *
+   * @param The fomula to be asserted, as a string.  (not a "command")
+   *
+   * @return OK, FAIL, or INCONSISTENCY_WARNING.  INCONSISTENCY_WARNING will
+   * indicate the current (post-assertion) context has been detected as
+   * inconsistent.
+   */
   public /*@non_null*/ProverResponse make_assumption(/*@non_null*/Formula formula) {
     
     /*
@@ -193,6 +227,14 @@ public class Cvc3 extends NewProver {
     return res;
   }
   
+  /**
+   * Retracts some number of previous assumptions.
+   *
+   * @param count the number of undos.  If count &lt = 0 then do nothing.  
+   * If count &gt the number of assertions, all assertions will be undone.
+   *
+   * @return OK.
+   */
   public /*@non_null*/ProverResponse retract_assumption(int count) {
     
     wrapper.undoAssert(count);   
@@ -200,6 +242,18 @@ public class Cvc3 extends NewProver {
     return ProverResponse.OK;
   }
   
+  /**
+   * Perform a query on a formula.
+   *
+   * @param formula the formula to be checked.
+   * @param properties not currently used
+   *
+   * @return YES (is valid), COUNTEREXAMPLE (possibly spurious), or TIMEOUT.
+   * Note is is possible to also distinguish truly invalid operations from
+   * invalid-but-possibly-incomplete ones, but there does not appear to be
+   * a ProverResponse for "don't know" responses that allows the (possible)
+   * counterexample.
+   */
   public /*@non_null*/ProverResponse is_valid(/*@non_null*/Formula formula,
       Properties properties) {
     
@@ -233,6 +287,13 @@ public class Cvc3 extends NewProver {
     return res;
   }
   
+
+  /**
+   * Destroys the current instance of cvc3.  It is necessary to call
+   * start_solver() to do further processing.
+   *
+   * Returns OK or FAIL.
+   */
     //@ also
     //@ assignable signature_defined, started;
   public /*@non_null*/ProverResponse stop_prover() {

@@ -47,6 +47,7 @@ int JNIW_scope_base = 0;
 
 //*******************************************************************
 // collect all atomic formulas in specified Expr into predMap and IDPredMap
+// This requires that the vc be instantiated before calling (JNIW_start_solver)
 void JNIW_getAtomicFormulas(Expr e) {
 #ifdef JNIW_DEBUG
   cout << "JNIW_getAtomicFormulas()" << endl;
@@ -79,6 +80,7 @@ void JNIW_getAtomicFormulas(Expr e) {
 
 //*******************************************************************
 // reads a typedef string & returns the associated Type object
+// This requires that the vc be instantiated before calling (JNIW_start_solver)
 Type JNIW_readType(InputLanguage lang, const string& instring) 
             throw(Exception)
 {
@@ -134,6 +136,7 @@ Type JNIW_readType(InputLanguage lang, const string& instring)
                                                                                 
 //*******************************************************************
 // reads an expr string & returns the associated Expr object
+// This requires that the vc be instantiated before calling (JNIW_start_solver)
 Expr JNIW_readExpr(InputLanguage lang, const string& instring)
             throw(Exception)
 {
@@ -172,6 +175,7 @@ Expr JNIW_readExpr(InputLanguage lang, const string& instring)
                                                                                 
 //*******************************************************************
 // reads an funcdef string & returns the associated Op object
+// This requires that the vc be instantiated before calling (JNIW_start_solver)
 Op JNIW_readFunDef(InputLanguage lang, const string& instring)
             throw(Exception)
 {
@@ -230,8 +234,9 @@ Op JNIW_readFunDef(InputLanguage lang, const string& instring)
 }
                                                                                 
 //*******************************************************************
-// reads an const def string & returns the associated Expr object
+// reads an const def string & processes it
 // also works for function defs, if you don't care about the Op
+// This requires that the vc be instantiated before calling (JNIW_start_solver)
 void JNIW_readConstDef(InputLanguage lang, const string& instring)
             throw(Exception)
 {
@@ -314,8 +319,23 @@ void JNIW_readConstDef(InputLanguage lang, const string& instring)
       throw EvalException("Unknown constdef format: "+e.toString());
   }
 }
-                                                                                
+//*******************************************************************
+// This is the simplified version of the command reader, using the api.
+// This produces output to cout (which is not captured here).
+// It reads an arbirtary number of commands and processes them.
+// This requires that the vc be instantiated before calling (JNIW_start_solver)
+void JNIW_readCommands(InputLanguage lang, const string& instring)
+{
+#ifdef JNIW_DEBUG
+  cout << "JNIW_readCommands("<< instring <<")" << endl;
+  flush (cout);
+#endif
+  stringstream s;
+  s << instring;
+  JNIW_vc->loadFile(s,lang,false);
+}
 
+                                                                                
 
 //*******************************************************************
 // Interface functions
