@@ -5,6 +5,8 @@
 # author: David Cok
 # author: Joe Kiniry
 
+JAVAFE_VERSION=1.0
+
 export TOP = ..
 include ${TOP}/Makefile.defs
 # The above defines JAVAFE_ROOT, JAVAC, JAVAC_FLAGS
@@ -33,6 +35,9 @@ all: clean build test docs
 build: fixperms compile
 
 buildall: compileall
+
+jar: build
+	jar cf dist/lib/javafe-$(JAVAFE_VERSION).jar -C classfiles .
 
 ifdef ALLTESTS
 test: extensive_tests self_typecheck typecheckJDK14
