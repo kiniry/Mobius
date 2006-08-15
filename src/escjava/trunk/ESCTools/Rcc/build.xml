@@ -58,6 +58,10 @@
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
 		<delete dir="${doc}" />
+		<delete>
+			<fileset dir="${src}/rcc/test" includes="**/diff"/>
+			<fileset dir="${src}/rcc/test" includes="**/out"/>
+		</delete>
 	</target>
 </project>
 
