@@ -331,18 +331,18 @@ public class FlowInsensitiveChecks
                     //    static context and remember universe type of 
                     //    the return value
                     if (useUniverses) {
-                    	checkNoRepInStaticContext(md);
-                    	if (ParseUtil.getUniverse(md)!=0) {
-			    universeReturnType = ParseUtil.getUniverse(md);
-			    if (ParseUtil.getElementUniverse(md)!=0)
-				universeElementReturnType = 
-				    ParseUtil.getElementUniverse(md);
-                    	}
+                            checkNoRepInStaticContext(md);
+                            if (ParseUtil.getUniverse(md)!=0) {
+                            universeReturnType = ParseUtil.getUniverse(md);
+                            if (ParseUtil.getElementUniverse(md)!=0)
+                                universeElementReturnType = 
+                                    ParseUtil.getElementUniverse(md);
+                            }
                     }
-		    //alx-end
+                    //alx-end
 
                     if (md.body != null && !specOnly) {
-	      
+              
                         if(Modifiers.isAbstract(md.modifiers))
                             ErrorSet.error(md.loc, 
                                            "An abstract method cannot include a body");
@@ -364,7 +364,7 @@ public class FlowInsensitiveChecks
 
                     //alx:dw remember if in constructor
                     inCtor=true;
-		    //alx-end
+                    //alx-end
 
                     // Was checked in parser
                     Assert.notFalse(!(d instanceof InterfaceDecl)); //@ nowarn Pre;
@@ -375,7 +375,7 @@ public class FlowInsensitiveChecks
                     // Check if we need to add an implicit constructor invocation
                     //@ assume !specOnly ==> cd.body != null;
                     if(!dontAddImplicitConstructorInvocations && !specOnly &&
-			cd.body != null && // FIXME - we've broken the assumption above by allowing spec files - need to fix that uniformly
+                        cd.body != null && // FIXME - we've broken the assumption above by allowing spec files - need to fix that uniformly
                         !(cd.body.stmts.size() > 0
                           && cd.body.stmts.elementAt(0) instanceof 
                           ConstructorInvocation)) {
@@ -397,7 +397,7 @@ public class FlowInsensitiveChecks
 
                 leftToRight = false;
                 enclosingLabels.removeAllElements();
-	  
+          
                 allowedExceptions.removeAllElements();
                 for(int j=0; j<rd.raises.size(); j++) {
                     TypeName n = rd.raises.elementAt(j);
@@ -418,44 +418,44 @@ public class FlowInsensitiveChecks
                     checkTypeModifiers(env, formal.type);
                     //alx: dw test universe types of arguments
                     if (useUniverses) {
-                    	int tag=ParseUtil.getUniverse(formal);
-                    	if (tag!=0) { //is not a primitive type
-			    if (inCtor && tag==TagConstants.REP)
-				ErrorSet.error(formal.getStartLoc(),
-				   "rep not allowed in constructor signature");
-			    else if (!inCtor && inPure) {
-				if (tag!=TagConstants.IMPL_PEER && 
-				    tag!=TagConstants.READONLY)
-				    ErrorSet.error(formal.getStartLoc(),
-					       "arguments of pure methods"+
-					       " must have readonly "+
-					       "universe type");
-				ParseUtil.setUniverse(formal,
-						  TagConstants.READONLY);
-			    } else if (inCtor && 
-				       inPure && 
-				       readonlyStdForPureCtor && 
-				       tag==TagConstants.IMPL_PEER) {
-				ParseUtil.setUniverse(formal,
-						      TagConstants.READONLY);
-			    } else {
-				checkNoRepInStaticContext(formal);
-			    }
-                    	}
+                            int tag=ParseUtil.getUniverse(formal);
+                            if (tag!=0) { //is not a primitive type
+                            if (inCtor && tag==TagConstants.REP)
+                                ErrorSet.error(formal.getStartLoc(),
+                                   "rep not allowed in constructor signature");
+                            else if (!inCtor && inPure) {
+                                if (tag!=TagConstants.IMPL_PEER && 
+                                    tag!=TagConstants.READONLY)
+                                    ErrorSet.error(formal.getStartLoc(),
+                                               "arguments of pure methods"+
+                                               " must have readonly "+
+                                               "universe type");
+                                ParseUtil.setUniverse(formal,
+                                                  TagConstants.READONLY);
+                            } else if (inCtor && 
+                                       inPure && 
+                                       readonlyStdForPureCtor && 
+                                       tag==TagConstants.IMPL_PEER) {
+                                ParseUtil.setUniverse(formal,
+                                                      TagConstants.READONLY);
+                            } else {
+                                checkNoRepInStaticContext(formal);
+                            }
+                            }
                     }
-		    //alx-end
+                    //alx-end
                 }
 
                 // Process ModifierPragmas
                 checkModifierPragmaVec(rd.pmodifiers, rd, env);
-	  
+          
                 if (rd.body != null) {
                     checkStmt(env, rd.body);
                 }
 
                 break;
             }
-	
+        
             case TagConstants.INITBLOCK: {
                 InitBlock si = (InitBlock) e;
                 PrepTypeDeclaration.inst.
@@ -464,13 +464,13 @@ public class FlowInsensitiveChecks
                 Env rootEnv = Modifiers.isStatic(si.modifiers) ? rootSEnv : rootIEnv;
                 returnType = null;
                 checkStmt(new EnvForEnclosedScope(rootEnv), si.block);
-		//alx:dw remember if in static context
+                //alx:dw remember if in static context
                 if (useUniverses)
-		    inStatic = Modifiers.isStatic(si.modifiers);
-		//alx-end
+                    inStatic = Modifiers.isStatic(si.modifiers);
+                //alx-end
                 break;
             }
-	
+        
             case TagConstants.CLASSDECL:
             case TagConstants.INTERFACEDECL: {
                 TypeSig.getSig((TypeDecl)e).typecheck();
@@ -483,13 +483,13 @@ public class FlowInsensitiveChecks
                 else
                     Assert.fail("Switch fall-through (" + e.getTag() + ")");
         }
-	//alx:dw reset for the next TypeDeclElem
+        //alx:dw reset for the next TypeDeclElem
         inPure=false;
         inCtor=false;
         inStatic=false;
         universeReturnType = 0;
         universeElementReturnType = 0;
-	//alx-end
+        //alx-end
     }
 
 
@@ -525,24 +525,24 @@ public class FlowInsensitiveChecks
                                    x.locId, "local variable");
                 checkModifierPragmaVec(x.pmodifiers, x, e);
 
-		Env newEnv = new EnvForLocals(e,x);
+                Env newEnv = new EnvForLocals(e,x);
                 if (x.init != null) {
                     x.init = checkInit(newEnv, x.init, x.type);
                     //alx: dw set the universe type for array inits and test it
                     if (useUniverses) {
-                    	if (ParseUtil.getUniverse(x.init)==0 && 
-			    ParseUtil.getElementUniverse(x.init)!=0)
-			    ParseUtil.setUniverse(x.init, 
-						  ParseUtil.getUniverse(x));
-                    	checkUniverseAssignability(x,x.init);
+                            if (ParseUtil.getUniverse(x.init)==0 && 
+                            ParseUtil.getElementUniverse(x.init)!=0)
+                            ParseUtil.setUniverse(x.init, 
+                                                  ParseUtil.getUniverse(x));
+                            checkUniverseAssignability(x,x.init);
                     }
-		    //alx-end
-		}
-		//alx: dw test if the given universe modifier is allowed 
-		//   for this context
+                    //alx-end
+                }
+                //alx: dw test if the given universe modifier is allowed 
+                //   for this context
                 if (useUniverses)
-                	checkNoRepInStaticContext(x);
-		//alx-end
+                        checkNoRepInStaticContext(x);
+                //alx-end
                 return newEnv;
             }
 
@@ -550,12 +550,12 @@ public class FlowInsensitiveChecks
                 ClassDeclStmt cds = (ClassDeclStmt)s;
 
                 // Create and check TypeSig for declared type:
-		// Note: this code was altered to pass the new environment including the
-		// new class into the TypeSig for the class.  Without that change, uses of
-		// the class name inside the class were not resolved.  I'm not sure that
-		// this is correct for all matters of scope and name visibility, but it
-		// solves this problem.  -- DRCok 10/2/2003
-		Env newenv = new EnvForLocalType(e, cds.decl);
+                // Note: this code was altered to pass the new environment including the
+                // new class into the TypeSig for the class.  Without that change, uses of
+                // the class name inside the class were not resolved.  I'm not sure that
+                // this is correct for all matters of scope and name visibility, but it
+                // solves this problem.  -- DRCok 10/2/2003
+                Env newenv = new EnvForLocalType(e, cds.decl);
                 TypeSig T = Types.makeTypeSig(cds.decl.id.toString(), newenv, cds.decl);
                 T.typecheck();
 
@@ -603,8 +603,8 @@ public class FlowInsensitiveChecks
                             x.expr = checkExpr(env, x.expr);
                             Object val = ConstantExpr.eval(x.expr);
                             // System.out.println("At "+Location.toString(x.expr.getStartLoc()));
-	      
-                            if(val == null)		
+              
+                            if(val == null)                
                                 ErrorSet.error(x.loc, "Non-constant value in switch label");
                             else if(!ConstantExpr.
                                      constantValueFitsIn(val, (PrimitiveType)switchType)) 
@@ -621,7 +621,7 @@ public class FlowInsensitiveChecks
                                                 || val instanceof Integer);
                                 Long valLong = new Long(ConstantExpr.getLongConstant(val));
                                 if(switchValues.containsKey(valLong)) {
-					// Point to dup label - FIXME
+                                        // Point to dup label - FIXME
                                     ErrorSet.error(x.loc, 
                                                    "Duplicate case label "+val
                                                    +" in switch statement");
@@ -632,13 +632,13 @@ public class FlowInsensitiveChecks
                         } else {
                             // this is default
                             if(defaultEncountered)
-					// Point to dup label - FIXME
+                                        // Point to dup label - FIXME
                                 ErrorSet.error(x.loc, 
                                                "Duplicate default label in switch statement");
                             else
                                 defaultEncountered = true;
                         }
-	    
+            
                     } else
                         env = checkStmt(env, stmt);
                 }
@@ -661,16 +661,16 @@ public class FlowInsensitiveChecks
                 String expectedStmtKind =
                     s.getTag() == TagConstants.BREAKSTMT ? "switch, while, do, or for" 
                     : "while, do or for" ;
-	    
+            
                 for(int i=size-1; i>=0 && dest==null; i--) {
                     Stmt ati = enclosingLabels.elementAt(i);
                     Stmt target 
                         = ati instanceof LabelStmt ? ((LabelStmt)ati).stmt : ati;
-	  
+          
                     // continue target must be a loop statement
                     // unlabelled break target must be a loop or switch
                     // labelled break can be any statement
-	  
+          
                     boolean loopTarget = 
                         (target instanceof ForStmt)
                         || (target instanceof WhileStmt)
@@ -727,38 +727,38 @@ public class FlowInsensitiveChecks
                     if(rs.expr != null) {
                         Type res = getType(rs.expr);
 
-			//alx: dw test universe of return stmt
+                        //alx: dw test universe of return stmt
                         if (useUniverses && 
-			    !universeIsSubtypeOf(universeReturnType,
-						 ParseUtil.getUniverse(rs.expr)))
-			    ErrorSet.error(rs.getStartLoc(),
-					   "This routine must return "+
-                        		   TagConstants.toString(universeReturnType)+
-					   ", not "+
-					   TagConstants.toString(ParseUtil.getUniverse(rs.expr)));
+                            !universeIsSubtypeOf(universeReturnType,
+                                                 ParseUtil.getUniverse(rs.expr)))
+                            ErrorSet.error(rs.getStartLoc(),
+                                           "This routine must return "+
+                                           TagConstants.toString(universeReturnType)+
+                                           ", not "+
+                                           TagConstants.toString(ParseUtil.getUniverse(rs.expr)));
                         else if (useUniverses && 
-				 !universeIsSubtypeOf(universeElementReturnType,
-						      ParseUtil.getElementUniverse(rs.expr)))
-			    ErrorSet.error(rs.getStartLoc(),
-					   "This routine must return "+
-					   TagConstants.toString(universeReturnType)+
-					   " "+
-					   TagConstants.toString(universeElementReturnType)+
-					   ", not "+
-					   TagConstants.toString(ParseUtil.getUniverse(rs.expr))+
-					   " "+
-					   TagConstants.toString(ParseUtil.getElementUniverse(rs.expr)));
-			//alx-end
+                                 !universeIsSubtypeOf(universeElementReturnType,
+                                                      ParseUtil.getElementUniverse(rs.expr)))
+                            ErrorSet.error(rs.getStartLoc(),
+                                           "This routine must return "+
+                                           TagConstants.toString(universeReturnType)+
+                                           " "+
+                                           TagConstants.toString(universeElementReturnType)+
+                                           ", not "+
+                                           TagConstants.toString(ParseUtil.getUniverse(rs.expr))+
+                                           " "+
+                                           TagConstants.toString(ParseUtil.getElementUniverse(rs.expr)));
+                        //alx-end
 
                         if(Types.isSameType(returnType, Types.voidType))
                             ErrorSet.error(rs.loc, 
                                            "This routine is not expected to return a value");
                         else if(!assignmentConvertable(rs.expr, returnType)) {
                             if (!Types.isErrorType(res))
-				ErrorSet.error(rs.loc, 
+                                ErrorSet.error(rs.loc, 
                                             "Cannot convert "+Types.printName(res)
                                             +" to return type "+Types.printName(returnType));
-			}
+                        }
                     } else {
                         if(!Types.isSameType(returnType, Types.voidType))
                             ErrorSet.error(rs.loc, "This routine must return a value");
@@ -778,7 +778,7 @@ public class FlowInsensitiveChecks
                 } else {
 
                     if (Types.isCheckedException(res)) {
-	  
+          
                         // Must be caught by try or throws clause
                         for(int i=0; i<allowedExceptions.size(); i++) {
                             if(Types.isSubclassOf(res, allowedExceptions.elementAt(i)))
@@ -845,7 +845,7 @@ public class FlowInsensitiveChecks
                         && ((LabelStmt)enclosing).label == ls.label)
                         ErrorSet.error(ls.locId, 
                                        "Label '"+ls.label+"' already used in this scope");
-				// FIXME - point to dup
+                                // FIXME - point to dup
                 }
     
                 enclosingLabels.addElement(ls);
@@ -999,11 +999,11 @@ public class FlowInsensitiveChecks
                 return e;
             }
 
-	    case TagConstants.ASSERTSTMT: {
-		AssertStmt assertStmt = (AssertStmt)s;
-		if (assertStmt.label != null)
+            case TagConstants.ASSERTSTMT: {
+                AssertStmt assertStmt = (AssertStmt)s;
+                if (assertStmt.label != null)
                     assertStmt.label = checkExpr(e, assertStmt.label);
-		assertStmt.pred = checkExpr(e, assertStmt.pred, Types.booleanType);
+                assertStmt.pred = checkExpr(e, assertStmt.pred, Types.booleanType);
 
                 // Turn a Java assert into a conditional throw and attach it to the
                 // AssertStmt.
@@ -1049,19 +1049,19 @@ public class FlowInsensitiveChecks
                 // Reattach this translated form to the AST node.
                 assertStmt.ifStmt = ifStmt;
 
-		return e;
-	    }
+                return e;
+            }
 
             default:
                 if(s instanceof StmtPragma)
                     checkStmtPragma(e, (StmtPragma)s);
                 else {
                     Assert.fail("Switch fall-through (" + s.getTag() + " " +
-			TagConstants.toString(s.getTag()) + " " +
-			Location.toString(s.getStartLoc()) + ")");
+                        TagConstants.toString(s.getTag()) + " " +
+                        Location.toString(s.getStartLoc()) + ")");
                 }
         }
-        return e;			// dummy
+        return e;                        // dummy
     }
 
     //@ requires !(se instanceof EnvForCU);
@@ -1084,13 +1084,13 @@ public class FlowInsensitiveChecks
     //@ ensures \result != null;
     //@ ensures !(\result instanceof EnvForCU);
     protected Env checkStmtVec(Env env, StmtVec v) {
-	for(int i = 0, sz = v.size(); i < sz; i++) {
-	    Stmt stmt = v.elementAt(i);
-	    
-	    env = checkStmt(env, stmt);
-	}
+        for(int i = 0, sz = v.size(); i < sz; i++) {
+            Stmt stmt = v.elementAt(i);
+            
+            env = checkStmt(env, stmt);
+        }
 
-	return env;
+        return env;
     }
 
   
@@ -1123,9 +1123,9 @@ public class FlowInsensitiveChecks
             ArrayInit ai = (ArrayInit)x;
 
             if(expectedResult instanceof ArrayType) {
-		//alx: dw remember least upper bound for universes
-            	int bound=TagConstants.NULLLIT;
-		//alx-end
+                //alx: dw remember least upper bound for universes
+                    int bound=TagConstants.NULLLIT;
+                //alx-end
 
                 Type elemType = ((ArrayType)expectedResult).elemType;
                 for(int i=0; i< ai.elems.size(); i++) {
@@ -1133,12 +1133,12 @@ public class FlowInsensitiveChecks
                     ai.elems.setElementAt(disamb, i);
                     //alx: dw TODO: explain that addition
                     bound=leastUpperUniverseBound(bound,
-					   ParseUtil.getUniverse(disamb));
-		    //alx-end
+                                           ParseUtil.getUniverse(disamb));
+                    //alx-end
                 }
                 //alx: dw save bound as universe for the elements
                 ParseUtil.setElementUniverse(ai,bound);
-		//alx-end
+                //alx-end
 
                 setType(ai, expectedResult);
             } else {
@@ -2106,7 +2106,7 @@ public class FlowInsensitiveChecks
                     ParseUtil.setUniverse(decl_arg, TagConstants.READONLY);
                     checkUniverseAssignability(
                         ne.decl.args.elementAt(i),
-        		ne.args.elementAt(i)
+                        ne.args.elementAt(i)
                     );
                 }
             }
@@ -2272,11 +2272,11 @@ public class FlowInsensitiveChecks
      */
     //@ ensures getTypeOrNull(\result) != null;
     protected Expr checkThisExpr(/*@ non_null */ Env env, /*@ non_null */ ThisExpr e) {
-     	//alx: dw use this like a universe modifier to simplify universeTypeCombiner
-     	if (useUniverses) {
-     	    ParseUtil.setUniverse(e, TagConstants.THISEXPR);
+             //alx: dw use this like a universe modifier to simplify universeTypeCombiner
+             if (useUniverses) {
+                 ParseUtil.setUniverse(e, TagConstants.THISEXPR);
         }
-     	// alx-end
+             // alx-end
 
         // It is illegal to use [this] in static methods.
         if (env.isStaticContext() && e.classPrefix == null) {
@@ -2334,10 +2334,10 @@ public class FlowInsensitiveChecks
                 eod.type = getType(eod.expr);
                 //alx: dw copy universes of the inner expression
                 if (useUniverses && ParseUtil.getUniverse(eod.expr)!=0)
-                	ParseUtil.setUniverse(eod,
-					      ParseUtil.getUniverse(eod.expr));
-		//alx-end
-		return eod.type;
+                        ParseUtil.setUniverse(eod,
+                                              ParseUtil.getUniverse(eod.expr));
+                //alx-end
+                return eod.type;
             }
 
             case TagConstants.TYPEOBJECTDESIGNATOR: {
@@ -2347,8 +2347,8 @@ public class FlowInsensitiveChecks
                 Type t = tod.type;
                 if(t instanceof TypeName) {
                     t = TypeSig.getSig((TypeName)t);
-		    tod.type = t;
-		}
+                    tod.type = t;
+                }
                 Assert.notFalse(t instanceof TypeSig);
                 checkTypeModifiers(env, t);  
                 return (TypeSig)t;
@@ -2358,8 +2358,8 @@ public class FlowInsensitiveChecks
                 SuperObjectDesignator sod = (SuperObjectDesignator)od;
                 //alx: dw super is peer
                 if (useUniverses)
-		    ParseUtil.setUniverse(sod,TagConstants.PEER);
-		//alx-end
+                    ParseUtil.setUniverse(sod,TagConstants.PEER);
+                //alx-end
 
                 if(env.isStaticContext()) {
                     ErrorSet.error(sod.locSuper,
@@ -2378,8 +2378,8 @@ public class FlowInsensitiveChecks
                         }
 
                         TypeSig ts = TypeSig.getSig(superClass);
-			sod.type = ts;
-			return ts;
+                        sod.type = ts;
+                        return ts;
                     } else {
                         ErrorSet.error(sod.locDot, 
                                         "Can't use keyword super in an interface");
@@ -2405,93 +2405,93 @@ public class FlowInsensitiveChecks
     //@ requires leftExpr != null && rightExpr != null;
     private Type tryCondExprMatch(Expr leftExpr, Expr rightExpr) {
         Type leftType = getType(leftExpr);
-	Type rightType = getType(rightExpr);
-					  
-	/*
-	 * If the second and third operands have the same type,
-	 * then than is the type of the conditional expression:
-	 */
-	if (Types.isSameType(leftType, rightType))
-	    return leftType;
+        Type rightType = getType(rightExpr);
+                                          
+        /*
+         * If the second and third operands have the same type,
+         * then than is the type of the conditional expression:
+         */
+        if (Types.isSameType(leftType, rightType))
+            return leftType;
 
 
-	/*
-	 * Rules for case where both L and R have numeric types:
-	 */
-	if (Types.isNumericType(leftType)
-	    && Types.isNumericType(rightType)) {
-	    /*
-	     * If one of the operands is of type byte 
-	     * and the other is of type short, 
-	     * then the type of the conditional expression is short:
-	     */
-	    if (Types.isSameType(leftType, Types.byteType) &&
+        /*
+         * Rules for case where both L and R have numeric types:
+         */
+        if (Types.isNumericType(leftType)
+            && Types.isNumericType(rightType)) {
+            /*
+             * If one of the operands is of type byte 
+             * and the other is of type short, 
+             * then the type of the conditional expression is short:
+             */
+            if (Types.isSameType(leftType, Types.byteType) &&
                 Types.isSameType(rightType, Types.shortType))
-		return Types.shortType;
-	    if (Types.isSameType(rightType, Types.byteType) &&
+                return Types.shortType;
+            if (Types.isSameType(rightType, Types.byteType) &&
                 Types.isSameType(leftType, Types.shortType))
-		return Types.shortType;
+                return Types.shortType;
 
-	    /*
-	     * If one of the operands is of type T where T is byte/short/char, 
-	     * and the other operand is a constant expression of type int
-	     * whose value is representable in type T,
-	     * then the type of the conditional expression is T.
-	     */
-	    if ((Types.isSameType(leftType, Types.byteType) ||
+            /*
+             * If one of the operands is of type T where T is byte/short/char, 
+             * and the other operand is a constant expression of type int
+             * whose value is representable in type T,
+             * then the type of the conditional expression is T.
+             */
+            if ((Types.isSameType(leftType, Types.byteType) ||
                  Types.isSameType(leftType, Types.shortType) ||
                  Types.isSameType(leftType, Types.charType))
-		&& ConstantExpr.
-		constantValueFitsIn(ConstantExpr.eval(rightExpr),
-				    (PrimitiveType)leftType))
-		return leftType;
-	    if ((Types.isSameType(rightType, Types.byteType) ||
+                && ConstantExpr.
+                constantValueFitsIn(ConstantExpr.eval(rightExpr),
+                                    (PrimitiveType)leftType))
+                return leftType;
+            if ((Types.isSameType(rightType, Types.byteType) ||
                  Types.isSameType(rightType, Types.shortType) ||
                  Types.isSameType(rightType, Types.charType))
-		&& ConstantExpr.
-		constantValueFitsIn(ConstantExpr.eval(leftExpr),
-				    (PrimitiveType)rightType))
-		return rightType;
+                && ConstantExpr.
+                constantValueFitsIn(ConstantExpr.eval(leftExpr),
+                                    (PrimitiveType)rightType))
+                return rightType;
 
 
-	    /*
-	     * Otherwise, binary numeric promotion (5.6.2) is applied
-	     * to the operand types, and the type of the conditional
-	     * expression is the promoted type:
-	     */
-	    return Types.binaryNumericPromotion(leftType, rightType);
-	}
+            /*
+             * Otherwise, binary numeric promotion (5.6.2) is applied
+             * to the operand types, and the type of the conditional
+             * expression is the promoted type:
+             */
+            return Types.binaryNumericPromotion(leftType, rightType);
+        }
 
 
-	/*
-	 * If one operands is of the null type and the other is 
-	 * a reference type, then the result type is that reference type
-	 */
-	if (Types.isSameType(leftType, Types.nullType) &&
-	    Types.isReferenceType(rightType)) 
-	    return rightType;
-	if (Types.isSameType(rightType, Types.nullType) &&
-	    Types.isReferenceType(leftType)) 
-	    return leftType;
+        /*
+         * If one operands is of the null type and the other is 
+         * a reference type, then the result type is that reference type
+         */
+        if (Types.isSameType(leftType, Types.nullType) &&
+            Types.isReferenceType(rightType)) 
+            return rightType;
+        if (Types.isSameType(rightType, Types.nullType) &&
+            Types.isReferenceType(leftType)) 
+            return leftType;
 
 
-	/*
-	 * If the second and third operands are of different reference
-	 * types, then it must be possible to convert one of the types
-	 * to the other type (call this latter type T) by assignment
-	 * conversion (5.2); the type of the conditional expression
-	 * is T. It is a compile-time error if neither type is
-	 * assignment compatible with the other type.
-	 */
-	if (Types.isReferenceType(leftType) 
-	    && Types.isReferenceType(rightType)) {
-	    if (assignmentConvertable(leftExpr, rightType))
-		return rightType;
-	    if (assignmentConvertable(rightExpr, leftType))
-		return leftType;
-	}
+        /*
+         * If the second and third operands are of different reference
+         * types, then it must be possible to convert one of the types
+         * to the other type (call this latter type T) by assignment
+         * conversion (5.2); the type of the conditional expression
+         * is T. It is a compile-time error if neither type is
+         * assignment compatible with the other type.
+         */
+        if (Types.isReferenceType(leftType) 
+            && Types.isReferenceType(rightType)) {
+            if (assignmentConvertable(leftExpr, rightType))
+                return rightType;
+            if (assignmentConvertable(rightExpr, leftType))
+                return leftType;
+        }
 
-	// Invalid combination
+        // Invalid combination
         return null;
 
     }
@@ -2560,11 +2560,11 @@ public class FlowInsensitiveChecks
             case TagConstants.BITOR: 
             case TagConstants.BITXOR: {
                 if(!Types.isBooleanType(leftType)) {
-	  
+          
                     // Arguments are primitive integral
                     // binary numeric promotion is performed
                     // type of result is promoted type of operands
-	  
+          
                     if(checkIntegralType(left)
                         && checkIntegralType(right))
                         return Types.binaryNumericPromotion(leftType, rightType);
@@ -2572,7 +2572,7 @@ public class FlowInsensitiveChecks
                         // error recovery
                         return Types.intType;
                 } 
-	
+        
                 // else fall thru. Arguments must be boolean, result is boolean
             }
       
@@ -2592,7 +2592,7 @@ public class FlowInsensitiveChecks
                           && Types.isSameType(leftType, rightType))
                       || (Types.isReferenceOrNullType(leftType) 
                           && Types.isReferenceOrNullType(rightType))) {
-	
+        
                     if(  Types.isCastable(leftType, rightType) 
                           || Types.isCastable(rightType, leftType)) {
                         // is ok, result boolean
@@ -2602,12 +2602,12 @@ public class FlowInsensitiveChecks
       
                 // Fall thru to here on error
 
-		if (!Types.isErrorType(leftType) && !Types.isErrorType(rightType)) {
-		    ErrorSet.error(loc, 
+                if (!Types.isErrorType(leftType) && !Types.isErrorType(rightType)) {
+                    ErrorSet.error(loc, 
                                "Invalid types ("+Types.printName(leftType)
                                +" and "+Types.printName(rightType)
                                +") in equality comparison");
-		}
+                }
                 return Types.booleanType;
       
             case TagConstants.ASSIGN:
@@ -2622,45 +2622,45 @@ public class FlowInsensitiveChecks
             case TagConstants.ASGBITAND:
             case TagConstants.ASGBITOR: 
             case TagConstants.ASGBITXOR: {
-		if (left instanceof VariableAccess) {
-		    //alx: dw check that target is not readonly & 
-		    //        field is not rep (if target!=this)
-		    if (useUniverses) {
-			FieldAccess fa = (FieldAccess) left;
-			if (ParseUtil.getUniverse(fa.od)==TagConstants.READONLY)
-			    ErrorSet.error(fa.getStartLoc(),
-				  "cannot assign to field of readonly target");
-			else if (ParseUtil.getUniverse(fa.decl)==TagConstants.REP && 
-				 ParseUtil.getUniverse(fa.od)!=TagConstants.THISEXPR)
-			    ErrorSet.error(fa.getStartLoc(),
-				  "cannot assign to rep field of target "+
-				  "different from this");
-		    }
-		    GenericVarDecl v = ((VariableAccess)left).decl;
-		    if (Modifiers.isFinal(v.modifiers) && 
-			(v instanceof FormalParaDecl ||
-			(v instanceof LocalVarDecl &&
-			    ((LocalVarDecl)v).init != null)
-			))
-			ErrorSet.caution(left.getStartLoc(),
-			    "May not assign to a final variable",
-			    v.getStartLoc());
-		} else if (left instanceof FieldAccess) {
-		    GenericVarDecl v = ((FieldAccess)left).decl;
-		    // v is null if there was an error such as a field
-		    // name that does not exist
-		    if (v == Types.lengthFieldDecl) 
-			ErrorSet.error(left.getStartLoc(),
-			    "May not assign to array's length field");
-		    else if (v != null && Modifiers.isFinal(v.modifiers) &&
-			v instanceof FieldDecl &&
-			((FieldDecl)v).init != null)
-			ErrorSet.caution(left.getStartLoc(),
-			    "May not assign to a final field",
-			    v.getStartLoc());
+                if (left instanceof VariableAccess) {
+                    //alx: dw check that target is not readonly & 
+                    //        field is not rep (if target!=this)
+                    if (useUniverses) {
+                        FieldAccess fa = (FieldAccess) left;
+                        if (ParseUtil.getUniverse(fa.od)==TagConstants.READONLY)
+                            ErrorSet.error(fa.getStartLoc(),
+                                  "cannot assign to field of readonly target");
+                        else if (ParseUtil.getUniverse(fa.decl)==TagConstants.REP && 
+                                 ParseUtil.getUniverse(fa.od)!=TagConstants.THISEXPR)
+                            ErrorSet.error(fa.getStartLoc(),
+                                  "cannot assign to rep field of target "+
+                                  "different from this");
+                    }
+                    GenericVarDecl v = ((VariableAccess)left).decl;
+                    if (Modifiers.isFinal(v.modifiers) && 
+                        (v instanceof FormalParaDecl ||
+                        (v instanceof LocalVarDecl &&
+                            ((LocalVarDecl)v).init != null)
+                        ))
+                        ErrorSet.caution(left.getStartLoc(),
+                            "May not assign to a final variable",
+                            v.getStartLoc());
+                } else if (left instanceof FieldAccess) {
+                    GenericVarDecl v = ((FieldAccess)left).decl;
+                    // v is null if there was an error such as a field
+                    // name that does not exist
+                    if (v == Types.lengthFieldDecl) 
+                        ErrorSet.error(left.getStartLoc(),
+                            "May not assign to array's length field");
+                    else if (v != null && Modifiers.isFinal(v.modifiers) &&
+                        v instanceof FieldDecl &&
+                        ((FieldDecl)v).init != null)
+                        ErrorSet.caution(left.getStartLoc(),
+                            "May not assign to a final field",
+                            v.getStartLoc());
 
-		}
-		    // FIXME - need checks of more complicated expressions
+                }
+                    // FIXME - need checks of more complicated expressions
 
                 if(!isVariable(left)) {
                     if (!Types.isErrorType(leftType)) ErrorSet.error(loc,
@@ -2668,26 +2668,26 @@ public class FlowInsensitiveChecks
                                    "is not a location");
                 } else if(op == TagConstants.ASSIGN) {
                     if(!assignmentConvertable(right, leftType) &&
-			!Types.isErrorType(getType(right)) && !Types.isErrorType(leftType))
+                        !Types.isErrorType(getType(right)) && !Types.isErrorType(leftType))
                         ErrorSet.error(loc,
                                        "Value of type "+Types.printName(getType(right))
                                        +" cannot be assigned to location of type "
                                        + Types.printName(leftType));
-		    //alx: dw check that target is not readonly for 
-		    //        array element assignments and test universe
-		    //        type assignment
+                    //alx: dw check that target is not readonly for 
+                    //        array element assignments and test universe
+                    //        type assignment
                     if (useUniverses) {
-                    	if (left instanceof ArrayRefExpr) {
-			    ArrayRefExpr ar = (ArrayRefExpr) left;
-			    if (ParseUtil.getUniverse(ar.array)==TagConstants.READONLY)
-				ErrorSet.error(ar.getStartLoc(),
-				       "cannot assign to elements of "+
-				       "a readonly array reference");
-                    	}
-                    	// test universe types of assignment
-                    	checkUniverseAssignability(left,right);
+                            if (left instanceof ArrayRefExpr) {
+                            ArrayRefExpr ar = (ArrayRefExpr) left;
+                            if (ParseUtil.getUniverse(ar.array)==TagConstants.READONLY)
+                                ErrorSet.error(ar.getStartLoc(),
+                                       "cannot assign to elements of "+
+                                       "a readonly array reference");
+                            }
+                            // test universe types of assignment
+                            checkUniverseAssignability(left,right);
                     }
-		    //alx-end
+                    //alx-end
                 } else {
                     // E1 op= E2 is equivalent to
                     // E1 = (T)(E1 op E2), where T is type of E1
@@ -2731,9 +2731,9 @@ public class FlowInsensitiveChecks
         Type t = getType(e);
         if(Types.isIntegralType(t)) {
             return true;
-	} else {
-	    if (!Types.isErrorType(t))
-		ErrorSet.error(e.getStartLoc(), 
+        } else {
+            if (!Types.isErrorType(t))
+                ErrorSet.error(e.getStartLoc(), 
                             "Cannot convert "+Types.printName(t)
                             +" to an integral type");
             return false;
@@ -2744,8 +2744,8 @@ public class FlowInsensitiveChecks
     static boolean checkNumericType(Expr e) {
         Type t = getType(e);
         if(!Types.isNumericType(t)) {
-	    if (!Types.isErrorType(t))
-		ErrorSet.error(e.getStartLoc(), 
+            if (!Types.isErrorType(t))
+                ErrorSet.error(e.getStartLoc(), 
                             "Cannot convert "+Types.printName(t)
                             +" to a numeric type ");
             return false;
@@ -2788,7 +2788,7 @@ public class FlowInsensitiveChecks
         if (t instanceof TypeName)
             t = TypeSig.getSig((TypeName)t);
         typeDecoration.set(i, t);
-	return i;
+        return i;
     }
 
     /**
@@ -2833,7 +2833,7 @@ public class FlowInsensitiveChecks
 
     //@ requires s != null && l != null;
     private static void setBranchLabel(BranchStmt s, Stmt l) {
-        Assert.notFalse(branchDecoration.get(s) == null);	//@ nowarn Pre;
+        Assert.notFalse(branchDecoration.get(s) == null);        //@ nowarn Pre;
         branchDecoration.set(s,l);
     }
 
@@ -2860,8 +2860,8 @@ public class FlowInsensitiveChecks
     //@ requires expr != null && t != null;
     static void checkType(Expr expr, Type t) {
         if(!inst.assignmentConvertable(expr, t)) {
-	    if (!Types.isErrorType(getType(expr)))
-		ErrorSet.error(expr.getStartLoc(), 
+            if (!Types.isErrorType(getType(expr)))
+                ErrorSet.error(expr.getStartLoc(), 
                             "Cannot convert "+Types.printName(getType(expr))
                             +" to "+Types.printName(t));
         }
@@ -2940,8 +2940,8 @@ public class FlowInsensitiveChecks
         if (v != null)
           for(int i = 0; i < v.size(); i++) {
             env = checkModifierPragma(v.elementAt(i), ctxt, env);
-	      }
-	  return env;
+              }
+          return env;
     }
 
     /**
@@ -2953,13 +2953,13 @@ public class FlowInsensitiveChecks
     //@ requires p != null && env != null;
     protected Env checkModifierPragma(ModifierPragma p, ASTNode ctxt, Env env) {
         // Assert.fail("Unexpected ModifierPragma");
-	return env;
+        return env;
     }
 
     //@ requires e != null && s != null;
     protected Env checkStmtPragma(Env e, StmtPragma s) {
         Assert.fail("Unexpected StmtPragma");
-	return e;
+        return e;
     }
 
     //@ requires env != null;
@@ -2969,7 +2969,7 @@ public class FlowInsensitiveChecks
         if(v != null)
             for(int i=0; i<v.size(); i++)
                 env = checkTypeModifierPragma(v.elementAt(i), ctxt, env);
-	return env;
+        return env;
     }
     
     //@ requires p != null && env != null;
@@ -2977,7 +2977,7 @@ public class FlowInsensitiveChecks
                                            ASTNode ctxt,
                                            Env env) {
         Assert.fail("Unexpected TypeModifierPragma");
-	return env;
+        return env;
     }
 
     /**
@@ -2988,85 +2988,85 @@ public class FlowInsensitiveChecks
         // don't know context for type, so pull it out of the type's decorations.
         if (env == null) {
             env = (Env)Env.typeEnv.get(t);
-        }	
+        }        
         Assert.notFalse(env != null);  //@ nowarn Pre;
         checkTypeModifierPragmaVec(t.tmodifiers, t, env);
         if (t instanceof ArrayType) {
             env = checkTypeModifiers(env, ((ArrayType)t).elemType);
         }
-	return env;
+        return env;
     }
 
     //alx: dw needs overriding method
     //no assumptions on the parameter, TODO: what does that method
     protected boolean isPure(RoutineDecl rd) {
-    	return false;
+            return false;
     }
     //alx-end
     
     //alx: dw TODO what does that method
     protected static int universeTypeCombiner(int l, int r) {
-    	switch (l) {
-    	case TagConstants.THISEXPR:	//dw: special case for l=peer=this
-	    {
-    		return r;
-	    }
-    	case TagConstants.PEER:
-    	case TagConstants.IMPL_PEER:
-	    {
-    		if (r==TagConstants.PEER || r==TagConstants.IMPL_PEER)
-		    return TagConstants.PEER;
-    		return TagConstants.READONLY;
-	    }
-    	case TagConstants.REP:
-	    {
-    		if (r==TagConstants.PEER || r==TagConstants.IMPL_PEER)
-		    return TagConstants.REP;
-    		return TagConstants.READONLY;
-	    }
-    	case TagConstants.READONLY:
-	    {
-    		return TagConstants.READONLY;
-	    }
-    	}
-    	
-    	return 0;
+            switch (l) {
+            case TagConstants.THISEXPR:        //dw: special case for l=peer=this
+            {
+                    return r;
+            }
+            case TagConstants.PEER:
+            case TagConstants.IMPL_PEER:
+            {
+                    if (r==TagConstants.PEER || r==TagConstants.IMPL_PEER)
+                    return TagConstants.PEER;
+                    return TagConstants.READONLY;
+            }
+            case TagConstants.REP:
+            {
+                    if (r==TagConstants.PEER || r==TagConstants.IMPL_PEER)
+                    return TagConstants.REP;
+                    return TagConstants.READONLY;
+            }
+            case TagConstants.READONLY:
+            {
+                    return TagConstants.READONLY;
+            }
+            }
+            
+            return 0;
     }
     //alx-end
     
     //alx: dw TODO: what does the method
     protected static int universeTypeCombiner(/*@ non_null @*/ ASTNode left, 
-					      /*@ non_null @*/ ASTNode right) {
-    	return universeTypeCombiner(ParseUtil.getUniverse(left),
-				    ParseUtil.getUniverse(right)); 
+                                              /*@ non_null @*/ ASTNode right) {
+            return universeTypeCombiner(ParseUtil.getUniverse(left),
+                                    ParseUtil.getUniverse(right)); 
     }
     //alx-end
     
     //alx: dw TODO: what does the method
     protected void checkNoRepInStaticContext(/*@ non_null @*/ ASTNode n) {
-    	if (inStatic && ParseUtil.getUniverse(n)==TagConstants.REP)
-	    ErrorSet.error(n.getStartLoc(),
-			   "usage of rep not allowed in static contexts");
+            if (inStatic && ParseUtil.getUniverse(n)==TagConstants.REP)
+            ErrorSet.error(n.getStartLoc(),
+                           "usage of rep not allowed in static contexts");
     }
     //alx-end
     
     
     //alx: dw TODO: what does the method
     protected void checkUniverseForField(/*@ non_null @*/ GenericVarDecl gvd) {
-    	int mod=ParseUtil.getUniverse(gvd);
-    	if (mod!=0 && Modifiers.isStatic(gvd.modifiers) && 
-	    mod!=TagConstants.READONLY) {
-	    if (mod==TagConstants.REP)
-		ErrorSet.error(gvd.getStartLoc(),
-			       "static fields cannot be of universe type rep");
-	    if (!impl_peerInStaticCautionThrown && 
-		mod==TagConstants.IMPL_PEER) {
-		ErrorSet.caution(gvd.getStartLoc(),
-				 "using 'implicit peer' as default for "+
-				 "static fields, but should be readonly");
-		impl_peerInStaticCautionThrown=true;
-	    }
-    	}
+            int mod=ParseUtil.getUniverse(gvd);
+            if (mod!=0 && Modifiers.isStatic(gvd.modifiers) && 
+            mod!=TagConstants.READONLY) {
+            if (mod==TagConstants.REP)
+                ErrorSet.error(gvd.getStartLoc(),
+                               "static fields cannot be of universe type rep");
+            if (!impl_peerInStaticCautionThrown && 
+                mod==TagConstants.IMPL_PEER) {
+                ErrorSet.caution(gvd.getStartLoc(),
+                                 "using 'implicit peer' as default for "+
+                                 "static fields, but should be readonly");
+                impl_peerInStaticCautionThrown=true;
+            }
+            }
     }
     //alx-end
     
@@ -3076,14 +3076,14 @@ public class FlowInsensitiveChecks
     
     //alx: dw TODO whad does the method?
     public static void copyUniverses(/*@ non_null @*/ ASTNode dest,
-				     /*@ non_null @*/ ASTNode source) {
-    	int r = ParseUtil.getUniverse(source);
-    	if (r!=0) {
-	    ParseUtil.setUniverse(dest,r);
-	    int e = ParseUtil.getElementUniverse(source);
-	    if (e!=0)
-		ParseUtil.setElementUniverse(dest,e);
-    	}
+                                     /*@ non_null @*/ ASTNode source) {
+            int r = ParseUtil.getUniverse(source);
+            if (r!=0) {
+            ParseUtil.setUniverse(dest,r);
+            int e = ParseUtil.getElementUniverse(source);
+            if (e!=0)
+                ParseUtil.setElementUniverse(dest,e);
+            }
     }
     //alx-end
     
@@ -3091,19 +3091,19 @@ public class FlowInsensitiveChecks
     //alx: dw the first common supertype (used for array inits and ?: )
     //TODO: what are the specs here?
     public static int leastUpperUniverseBound(int l, int r) {
-    	if (l==TagConstants.THISEXPR || l==TagConstants.IMPL_PEER)
-	    l=TagConstants.PEER;
-    	if (r==TagConstants.THISEXPR || r==TagConstants.IMPL_PEER)
-	    r=TagConstants.PEER;
-    	
-    	if (l==r)
-	    return r;
-    	else if (l==TagConstants.NULLLIT)
-	    return r;
-    	else if (r==TagConstants.NULLLIT)
-	    return l;
-    	else
-	    return TagConstants.READONLY;
+            if (l==TagConstants.THISEXPR || l==TagConstants.IMPL_PEER)
+            l=TagConstants.PEER;
+            if (r==TagConstants.THISEXPR || r==TagConstants.IMPL_PEER)
+            r=TagConstants.PEER;
+            
+            if (l==r)
+            return r;
+            else if (l==TagConstants.NULLLIT)
+            return r;
+            else if (r==TagConstants.NULLLIT)
+            return l;
+            else
+            return TagConstants.READONLY;
     }
     //alx-end
     
@@ -3112,105 +3112,105 @@ public class FlowInsensitiveChecks
     //        universeTypeCombiner. fa.od must not be null!!!
     //TODO: is the spec OK?
     public static void determineUniverseForFieldAccess(
-				    /*@ non_null @*/ FieldAccess fa) {
-    	//if target has no universe modifier, set it to impl_peer
-    	if (fa.od!=null && ParseUtil.getUniverse(fa.od)==0)
-	    ParseUtil.setUniverse(fa.od,TagConstants.IMPL_PEER);
-    	//if decl has no universe modifier, set to default
-    	if (!(fa.decl.type instanceof PrimitiveType) && 
-	    ParseUtil.getUniverse(fa.decl)==0)
-	    ParseUtil.setUniverse(fa.decl,
-				  new int[] {0,0},
-				  fa.decl.type,
-				  Location.NULL);
-    	//use universeTypeCombiner
-    	if (ParseUtil.getUniverse(fa.decl)!=0) {
-	    ParseUtil.setUniverse(fa,universeTypeCombiner(fa.od,fa.decl));
-	    if (ParseUtil.getElementUniverse(fa.decl)!=0)
-		ParseUtil.setElementUniverse(fa, 
-				    ParseUtil.getElementUniverse(fa.decl));
-    	}
+                                    /*@ non_null @*/ FieldAccess fa) {
+            //if target has no universe modifier, set it to impl_peer
+            if (fa.od!=null && ParseUtil.getUniverse(fa.od)==0)
+            ParseUtil.setUniverse(fa.od,TagConstants.IMPL_PEER);
+            //if decl has no universe modifier, set to default
+            if (!(fa.decl.type instanceof PrimitiveType) && 
+            ParseUtil.getUniverse(fa.decl)==0)
+            ParseUtil.setUniverse(fa.decl,
+                                  new int[] {0,0},
+                                  fa.decl.type,
+                                  Location.NULL);
+            //use universeTypeCombiner
+            if (ParseUtil.getUniverse(fa.decl)!=0) {
+            ParseUtil.setUniverse(fa,universeTypeCombiner(fa.od,fa.decl));
+            if (ParseUtil.getElementUniverse(fa.decl)!=0)
+                ParseUtil.setElementUniverse(fa, 
+                                    ParseUtil.getElementUniverse(fa.decl));
+            }
     }
     //alx-end
     
     //alx: dw TODO what does the method?
     public void determineUniverseForMethodInvocation(
-				    /*@ non_null @*/ MethodInvocation mi) {
-    	//if target has no universe modifier, set it to impl_peer
-    	if (mi.od!=null && ParseUtil.getUniverse(mi.od)==0)
-	    ParseUtil.setUniverse(mi.od,TagConstants.IMPL_PEER);
-    	int od = ParseUtil.getUniverse(mi.od);
-    	//if decl has no universe modifier, set to default
-    	if (!(mi.decl.returnType instanceof PrimitiveType) && 
-	    ParseUtil.getUniverse(mi.decl)==0)
-	      ParseUtil.setUniverse(mi.decl,
-				    new int[] {0,0},
-				    mi.decl.returnType,
-				    Location.NULL);
-    	//use universeTypeCombiner
-    	if (ParseUtil.getUniverse(mi.decl)!=0) { 
-	    ParseUtil.setUniverse(mi,universeTypeCombiner(mi.od,mi.decl));
-	    if (ParseUtil.getElementUniverse(mi.decl)!=0)
-		ParseUtil.setElementUniverse(mi,
-	        		    ParseUtil.getElementUniverse(mi.decl));
-    	       
-    	}
-    	boolean isPureMeth=isPure(mi.decl);
-    	if (od==TagConstants.READONLY && !isPureMeth)
-	    ErrorSet.error(mi.getStartLoc(),
-		   "only pure methods can be called on readonly targets");
-    	boolean repIsError = od!=TagConstants.THISEXPR;
-    	for (int i = 0; i<mi.args.size(); i++) {
-	    int decl_universe_arg;
-	    FormalParaDecl decl_arg=mi.decl.args.elementAt(i);
-	    if (decl_arg.type instanceof PrimitiveType)
-		continue;
-	    Expr actual_arg=mi.args.elementAt(i);
-	    if (ParseUtil.getUniverse(decl_arg)==0 && !isPureMeth)
-		ParseUtil.setUniverse(decl_arg,
-				      new int[] {0,0},
-				      decl_arg.type,
-				      Location.NULL);
-	    else if (isPureMeth) {
-		decl_universe_arg = ParseUtil.getUniverse(decl_arg);
-		if (decl_universe_arg!=TagConstants.READONLY) {
-		    if (decl_universe_arg!=TagConstants.IMPL_PEER && 
-			decl_universe_arg!=0)
-			ErrorSet.error(decl_arg.getStartLoc(),
-			     "parameters of pure methods have to be readonly");
-		    ParseUtil.setUniverse(decl_arg,TagConstants.READONLY);
-		}
-	    }
-	    decl_universe_arg = ParseUtil.getUniverse(decl_arg);
-	    //if the target is rep and a method is defined as foo(peer T x), 
-	    //then the actual argument has to be 
-	    // rep T. (universeTypeCombiner: rep*peer=rep)
-	    if (od==TagConstants.REP && 
-		(decl_universe_arg==TagConstants.PEER || 
-		 decl_universe_arg==TagConstants.IMPL_PEER)) {
-		if (ParseUtil.getUniverse(actual_arg)!=TagConstants.REP)
-		    ErrorSet.error(actual_arg.getStartLoc(),
-				   "the argument has to be rep: rep*peer=rep");
-	    }
-	    else {
-		checkUniverseAssignability(decl_arg,actual_arg);
-		if (repIsError && decl_universe_arg==TagConstants.REP) {
-		    ErrorSet.error(mi.getStartLoc(),
-				   "methods with rep arguments can only be "+
-				   "called on target this");
-		    repIsError=false;
-		}
-	    }
-    	}
+                                    /*@ non_null @*/ MethodInvocation mi) {
+            //if target has no universe modifier, set it to impl_peer
+            if (mi.od!=null && ParseUtil.getUniverse(mi.od)==0)
+            ParseUtil.setUniverse(mi.od,TagConstants.IMPL_PEER);
+            int od = ParseUtil.getUniverse(mi.od);
+            //if decl has no universe modifier, set to default
+            if (!(mi.decl.returnType instanceof PrimitiveType) && 
+            ParseUtil.getUniverse(mi.decl)==0)
+              ParseUtil.setUniverse(mi.decl,
+                                    new int[] {0,0},
+                                    mi.decl.returnType,
+                                    Location.NULL);
+            //use universeTypeCombiner
+            if (ParseUtil.getUniverse(mi.decl)!=0) { 
+            ParseUtil.setUniverse(mi,universeTypeCombiner(mi.od,mi.decl));
+            if (ParseUtil.getElementUniverse(mi.decl)!=0)
+                ParseUtil.setElementUniverse(mi,
+                                    ParseUtil.getElementUniverse(mi.decl));
+                   
+            }
+            boolean isPureMeth=isPure(mi.decl);
+            if (od==TagConstants.READONLY && !isPureMeth)
+            ErrorSet.error(mi.getStartLoc(),
+                   "only pure methods can be called on readonly targets");
+            boolean repIsError = od!=TagConstants.THISEXPR;
+            for (int i = 0; i<mi.args.size(); i++) {
+            int decl_universe_arg;
+            FormalParaDecl decl_arg=mi.decl.args.elementAt(i);
+            if (decl_arg.type instanceof PrimitiveType)
+                continue;
+            Expr actual_arg=mi.args.elementAt(i);
+            if (ParseUtil.getUniverse(decl_arg)==0 && !isPureMeth)
+                ParseUtil.setUniverse(decl_arg,
+                                      new int[] {0,0},
+                                      decl_arg.type,
+                                      Location.NULL);
+            else if (isPureMeth) {
+                decl_universe_arg = ParseUtil.getUniverse(decl_arg);
+                if (decl_universe_arg!=TagConstants.READONLY) {
+                    if (decl_universe_arg!=TagConstants.IMPL_PEER && 
+                        decl_universe_arg!=0)
+                        ErrorSet.error(decl_arg.getStartLoc(),
+                             "parameters of pure methods have to be readonly");
+                    ParseUtil.setUniverse(decl_arg,TagConstants.READONLY);
+                }
+            }
+            decl_universe_arg = ParseUtil.getUniverse(decl_arg);
+            //if the target is rep and a method is defined as foo(peer T x), 
+            //then the actual argument has to be 
+            // rep T. (universeTypeCombiner: rep*peer=rep)
+            if (od==TagConstants.REP && 
+                (decl_universe_arg==TagConstants.PEER || 
+                 decl_universe_arg==TagConstants.IMPL_PEER)) {
+                if (ParseUtil.getUniverse(actual_arg)!=TagConstants.REP)
+                    ErrorSet.error(actual_arg.getStartLoc(),
+                                   "the argument has to be rep: rep*peer=rep");
+            }
+            else {
+                checkUniverseAssignability(decl_arg,actual_arg);
+                if (repIsError && decl_universe_arg==TagConstants.REP) {
+                    ErrorSet.error(mi.getStartLoc(),
+                                   "methods with rep arguments can only be "+
+                                   "called on target this");
+                    repIsError=false;
+                }
+            }
+            }
     }
     //alx-end
     
     //alx: dw TODO what does the method
     public static void determineUniverseForArrayRefExpr(
                               /*@ non_null @*/ ArrayRefExpr r) {
-    	ParseUtil.setUniverse(r,universeTypeCombiner(
-		       ParseUtil.getUniverse(r.array),
-		       ParseUtil.getElementUniverse(r.array)));
+            ParseUtil.setUniverse(r,universeTypeCombiner(
+                       ParseUtil.getUniverse(r.array),
+                       ParseUtil.getElementUniverse(r.array)));
     }
     //alx-end
 }
