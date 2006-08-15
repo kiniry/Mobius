@@ -19,3 +19,4 @@ release
 release-temp
 release-test
 semantic.cache
+Makefile.local
