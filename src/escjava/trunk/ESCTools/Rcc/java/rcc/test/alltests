@@ -1,8 +1,7 @@
-test95	Omit	Unknown ghost fields test
-test96	Good	Unknown ghost fields test
-test97  Good    test ghost fields of array type
-test98  Good	test ghost fields of type object
-
+test95	 Bad	Unknown ghost fields test (escj test)
+test96	 Good	Unknown ghost fields test
+test97   Good   test ghost fields of array type
+test98   Good	test ghost fields of type object
 test100  Good	test of guarded and requires
 test101  Good	another basic test
 test102  Good	uses static fields as guards
@@ -22,3 +21,4 @@ test115  Good	type params
 test116  Good	type params
 test117  Good	type params
 test118  Good	type param inheritance / inner classes
+

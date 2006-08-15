@@ -52,7 +52,6 @@ public class TypeCheck extends javafe.tc.TypeCheck {
     
     /**
      * We can access anything from annotations.
-     * @see javafe.tc.TypeCheck.canAccess
      */
     public boolean canAccess(/*@ non_null @*/ TypeSig from, 
                              /*@ non_null @*/ TypeSig target,

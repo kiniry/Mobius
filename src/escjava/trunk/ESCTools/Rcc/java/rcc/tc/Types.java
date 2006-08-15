@@ -235,10 +235,9 @@ public class Types extends javafe.tc.Types {
      * Returns the name of a <code>Type</code> as a <code>String</code>.
      * The resulting name will be fully qualified if the <code>Type</code>
      * has been name resolved.
-     * 
-     * @pre PrettyPrint.inst != null;
      */
-    // @ ensures RES != null
+    //@ requires PrettiPrint.inst != null;
+    //@ ensures \result != null;
     public String printNameInstance(Type t) {
         if (t instanceof TypeName) {
             javafe.tc.TypeSig sig = TypeSig.getSig((TypeName) t);
@@ -266,7 +265,7 @@ public class Types extends javafe.tc.Types {
      * This routine assumes we are in an annotation so ghost fields are 
      * visible and <tt>spec_public</tt> is equivalent to public.
      * 
-     * @pre We are in an annotation.
+     * PRE: We are in an annotation.
      */
     protected FieldDecl lookupFieldInstance(
             /*@ non_null */ Type t, 

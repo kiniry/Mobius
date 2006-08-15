@@ -33,7 +33,7 @@ import javafe.util.*;
 public class Main extends javafe.SrcTool {
 
     /** Our version number */
-    public final String version = "0.233.  Based on escjava 1.1.5a, 16 June 1999";
+    public final String version = "0.3.0";
 
     public Vector commandLineFiles;
 
@@ -56,7 +56,7 @@ public class Main extends javafe.SrcTool {
      * @return "rcc", which is the name of this tool.
      */
     public String name() {
-        return "rcc";
+        return "RCC";
     }
 
     // === Front-end setup ===
@@ -121,8 +121,9 @@ public class Main extends javafe.SrcTool {
      * <code>CompilationUnit</code> to process them.
      */
     public void preprocess() {
-        if (!RccOptions.get().quiet)
-            System.out.println("Rcc version " + version);
+        if (!RccOptions.get().quiet) {
+            System.out.println(name() + " version " + version);
+        }
         commandLineFiles = (Vector) loaded.clone();
     }
 

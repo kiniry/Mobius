@@ -1,9 +1,17 @@
-#!/bin/sh -f
-# Copyright 2000, 2001, Compaq Computer Corporation
+#!/bin/bash 
 
-# use: rtestall FLAGS
-
-for f in `grep Good alltests | awk '{print $1;}'`; do
-#echo $f
-./rtest $f $*
+# Run all good tests and create list with failed ones.
+TESTS=`grep Good alltests | awk '{print $1}'`
+rm -f failed
+for t in $TESTS; do
+  cd $t
+  ./run > out 2>&1
+  diff out ans > diff || echo "  $t" >> ../failed
+  cd ..
 done
+
+# Create report with the failed tests
+if [ -f failed ]; then
+  echo Failed RCC regression tests: > /dev/stderr
+  cat failed > /dev/stderr
+fi

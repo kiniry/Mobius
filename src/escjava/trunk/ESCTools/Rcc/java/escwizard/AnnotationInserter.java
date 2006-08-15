@@ -23,8 +23,7 @@ public class AnnotationInserter {
       error("usage: AnnotationInserter instructionFile [-f <file of sourcefiles>] sourcefiles...");
     }
     File instructionFile = new File(args[0]);
-    String instructions = new String(FileInfo.getFileContents(instructionFile),
-                                     0);
+    String instructions = new String(FileInfo.getFileContents(instructionFile)); // TODO: check this (rgrig)!
     FileCollection sources = new FileCollection(2*(args.length-1));
     for (int i = 1; i < args.length; i++) {
       if (args[i].equals("-f")) {

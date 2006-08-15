@@ -1,34 +1,5 @@
-#!/bin/csh -f
-
-# Copyright 2000, 2001, Compaq Computer Corporation
-
-
-#
-# Where to get binaries for escjava:
-#
-
-
-if ($?CLASSPATH) then
-    setenv      USERPATH        ${CLASSPATH}
-else
-    setenv	USERPATH	"."
-endif
-
-
-if ($?BOOTCLASSPATH) then
-    
-else
-    setenv	BOOTCLASSPATH	/udir/freund/java/jdksrc-1.2.2
-endif
-
-#setenv	USERPATH	/udir/freund/java/jdksrc-1.2.2:${CLASSES}:${USERPATH}
-
-if ($?RCC_STDARGS) then
-else
-    setenv      RCC_STDARGS   "-nowarn Override -nowarn ThreadLocal -nowarn_package java  -nowarn_package javax"
-endif
-
-${JAVA} -classpath ${CLASSES} rcc.Main  -bootclasspath ${BOOTCLASSPATH} -classpath ${USERPATH} ${RCC_STDARGS} $*
-
-exit 0
+#!/bin/bash
+SCRIPT=`which $0`
+HERE=`dirname $SCRIPT`
+java -classpath $HERE/classes:$HERE/lib/javafe-1.0.jar rcc.Main -quiet $*
 

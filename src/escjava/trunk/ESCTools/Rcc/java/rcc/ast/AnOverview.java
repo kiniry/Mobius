@@ -53,9 +53,6 @@ import javafe.util.Location;
 	
 	(P.S. Ignore the stuff that appears below; the only purpose of this class
 	is to contain the above overview.)
-	
-	@see javafe.ast.AnOverview
-	
 	*/
 
 public abstract class AnOverview extends ASTNode {

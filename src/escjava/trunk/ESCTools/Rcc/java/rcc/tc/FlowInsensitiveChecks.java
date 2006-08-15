@@ -45,10 +45,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     // === Setup for ghost variables ===
 
-    /**
-     * Are we in the middle of processing an annotation? (used by GhostEnv and
-     * requires/guarded annotations)
-     */
+    /** Whether we are or not in an annotation. */
     public static boolean inAnnotation = false;
 
     public static final ASTDecoration guardDecoration = new ASTDecoration(
@@ -696,9 +693,8 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     }
     
     /**
-     * TODO: Comment this!
-     * @param env
-     * @return
+     * @param env The environment in which to check the new expression.
+     * @return The environment after the new expression.
      */
     // TODO: Annotate this!
     protected NewInstanceExpr checkNewInstanceExpr(
@@ -739,7 +735,6 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     
     /**
      * Check that the locks on the element of the array are held.
-     * @inheritDoc
      */
     //@ ensures getTypeOrNull(\result) != null;
     protected ArrayRefExpr checkArrayRefExpr(
