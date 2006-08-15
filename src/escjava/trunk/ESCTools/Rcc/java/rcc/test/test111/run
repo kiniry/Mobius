@@ -1,5 +1,2 @@
-#!/bin/sh
-# usage: run FLAGS
-
-${RCCN} -warn ThreadLocal $* *.java
+rcc -nowarn Override -nowarn_package java *.java
 
