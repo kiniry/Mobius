@@ -101,7 +101,7 @@ if (( ! $QUIET )); then
     fi
     if (( $VERBOSE )); then
         if [[ ! -z $PASSED ]]; then
-            echo Tests that pass in `pwd`: /dev/stderr
+            echo Tests that pass in `pwd`: > /dev/stderr
             list $PASSED
         fi
     fi
