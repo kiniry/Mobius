@@ -1,0 +1,25 @@
+C.java:3: Warning:  field 'C.s' must be guarded in a thread shared class (SharedField)
+    String s;
+    ^
+C.java:31: Warning:  field 'G.o' must be guarded because it is a non-final static field (StaticField)
+    static Object o;
+           ^
+C.java:47: Warning: lock expression may not be constant.   (ConstantLocks)
+    /*# requires this, o */
+                       ^
+Associated declaration is "C.java", line 47, col 8:
+    /*# requires this, o */
+        ^
+C.java:48: Warning: requires set must be a subset of superclass method's.   (Super)
+    public void  f() {
+                 ^
+Associated declaration is "C.java", line 47, col 8:
+    /*# requires this, o */
+        ^
+C.java:35: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '(o)'. (Race)
+            f();    
+            ^
+Associated declaration is "C.java", line 47, col 8:
+    /*# requires this, o */
+        ^
+5 warnings

@@ -1,0 +1,11 @@
+#!/bin/sh -f
+# usage: run FLAGS
+
+rm -rf outdir
+#${RCCW} $* -inpath ../src/Ambit-noAnnot outdir progSources.txt > houdini.out 2>&1
+${RCCW} $*  outdir progSources.txt > houdini.out 2>&1
+cat outdir/src-annotated/C.java
+
+
+
+

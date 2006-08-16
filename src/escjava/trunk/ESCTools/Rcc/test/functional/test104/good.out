@@ -1,0 +1,13 @@
+C.java:12: Warning: lock expression may not be constant.   (ConstantLocks)
+    static Object o /*# guarded_by G.o */;
+                                   ^
+Associated declaration is "C.java", line 12, col 24:
+    static Object o /*# guarded_by G.o */;
+                        ^
+C.java:15: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '()'. (Race)
+        synchronized(o) { 
+                     ^
+Associated declaration is "C.java", line 12, col 24:
+    static Object o /*# guarded_by G.o */;
+                        ^
+2 warnings
