@@ -2,17 +2,7 @@
 
 package rcc.parser;
 
-import rcc.ast.ArrayGuardModifierPragma;
-import rcc.ast.GenericArgumentPragma;
-import rcc.ast.GenericParameterPragma;
-import rcc.ast.NowarnPragma;
-import rcc.ast.GuardedByModifierPragma;
-import rcc.ast.HoldsStmtPragma;
-import rcc.ast.ReadOnlyModifierPragma;
-import rcc.ast.RequiresModifierPragma;
-import rcc.ast.TagConstants;
-import rcc.ast.ThreadLocalStatusPragma;
-import rcc.RccOptions;
+import java.io.IOException;
 
 import javafe.ast.ASTNode;
 import javafe.ast.ExprVec;
@@ -20,54 +10,53 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.Identifier;
 import javafe.ast.IdentifierVec;
-import javafe.ast.ModifierPragmaVec;
 import javafe.ast.Type;
-
 import javafe.parser.Lex;
+import javafe.parser.Parse;
 import javafe.parser.PragmaParser;
 import javafe.parser.Token;
-import javafe.parser.Parse;
-import javafe.util.Location;
 import javafe.util.CorrelatedReader;
 import javafe.util.ErrorSet;
+import javafe.util.Location;
 import javafe.util.StackVector;
-import javafe.util.Assert;
+import rcc.RccOptions;
+import rcc.ast.ArrayGuardModifierPragma;
+import rcc.ast.GenericArgumentPragma;
+import rcc.ast.GenericParameterPragma;
+import rcc.ast.GuardedByModifierPragma;
+import rcc.ast.HoldsStmtPragma;
+import rcc.ast.NowarnPragma;
+import rcc.ast.ReadOnlyModifierPragma;
+import rcc.ast.RequiresModifierPragma;
+import rcc.ast.TagConstants;
+import rcc.ast.ThreadLocalStatusPragma;
 
-import java.io.IOException;
-
-//import rcc.ast.*;
+// import rcc.ast.*;
 
 /**
- * 
  * Grammar:
- * 
- * 
  */
 
 public class RccPragmaParser extends Parse implements PragmaParser {
 
     private Lex scanner;
 
-    private int inProcessTag, inProcessLoc;
-
     StackVector seq = new StackVector();
 
     public RccPragmaParser() {
         scanner = new PragmaLex(new ErrorPragmaParser(
-                "Nested annotation comments are not allowed"), true);
-
-        inProcessTag = -1;
+            "Nested annotation comments are not allowed"), true);
     }
 
     public boolean checkTag(int tag) {
         return tag == '#'; // SNF Wed Jun 30 15:49:52 1999 || tag == '*';
     }
-    
+
     /**
-     * rgrig: No idea what this should do. The documentation 
-     * in the PragmaParser interface says "todo: document this".
+     * rgrig: No idea what this should do. The documentation in the PragmaParser
+     * interface says "todo: document this".
      */
-    public javafe.ast.FieldDecl isPragmaDecl(/*@ non_null @*/ Token l) {
+    public javafe.ast.FieldDecl isPragmaDecl(/* @ non_null @ */Token l) {
         return null;
     }
 
@@ -96,8 +85,9 @@ public class RccPragmaParser extends Parse implements PragmaParser {
                 cc = in.read();
                 if (cc == -1) {
                     // At end-of-comment but still no close paren:
-                    ErrorSet.error(in.getLocation(),
-                            "Badly formed wizard comment (missing `)')");
+                    ErrorSet.error(
+                        in.getLocation(),
+                        "Badly formed wizard comment (missing `)')");
                     break;
                 }
             } while (cc != ')');
@@ -110,7 +100,7 @@ public class RccPragmaParser extends Parse implements PragmaParser {
 
     public void restart(CorrelatedReader in, boolean eolComment) {
         try {
-            int cc = in.read();
+            in.read();
             eatWizardComment(in);
             scanner.restart(in);
         } catch (IOException e) {
@@ -130,13 +120,16 @@ public class RccPragmaParser extends Parse implements PragmaParser {
         while (l.ttype != TagConstants.RBRACE) {
             l.getNextToken(); // swallow open paren or comma
             int modifiers = parseModifiers(l);
-            ModifierPragmaVec modifierPragmas = this.modifierPragmas;
             Type type = parseType(l);
             int locId = l.startingLoc;
             Identifier id = parseIdentifier(l);
             type = parseBracketPairs(l, type);
-            seq.addElement(FormalParaDecl.make(modifiers, modifierPragmas, id,
-                    type, locId));
+            seq.addElement(FormalParaDecl.make(
+                modifiers,
+                modifierPragmas,
+                id,
+                type,
+                locId));
             if (l.ttype != TagConstants.RBRACE && l.ttype != TagConstants.COMMA)
                 fail(l.startingLoc, "Expected comma or }");
         }
@@ -152,12 +145,11 @@ public class RccPragmaParser extends Parse implements PragmaParser {
             if (dst.auxVal != null && dst.auxVal instanceof ASTNode) {
                 int loc = ((ASTNode) dst.auxVal).getStartLoc();
                 locs = Location.toFileName(loc) + " "
-                        + Location.toLineNumber(loc) + " "
-                        + Location.toColumn(loc);
+                    + Location.toLineNumber(loc) + " " + Location.toColumn(loc);
             }
 
-            if (RccOptions.get().ignoreAnnSet == null || 
-                    !RccOptions.get().ignoreAnnSet.contains(locs)) {
+            if (RccOptions.get().ignoreAnnSet == null
+                || !RccOptions.get().ignoreAnnSet.contains(locs)) {
                 // Not an annotation to ignore
                 // System.out.println("Not ignoring ann at "+locs);
                 return true;
@@ -193,13 +185,11 @@ public class RccPragmaParser extends Parse implements PragmaParser {
         case TagConstants.NOWARN:
             dst.ttype = TagConstants.LEXICALPRAGMA;
             seq.push();
-            if (scanner.ttype == TagConstants.IDENT)
-                for (;;) {
-                    seq.addElement(parseIdentifier(scanner));
-                    if (scanner.ttype != TagConstants.COMMA)
-                        break;
-                    scanner.getNextToken(); // Discard COMMA
-                }
+            if (scanner.ttype == TagConstants.IDENT) for (;;) {
+                seq.addElement(parseIdentifier(scanner));
+                if (scanner.ttype != TagConstants.COMMA) break;
+                scanner.getNextToken(); // Discard COMMA
+            }
             IdentifierVec checks = IdentifierVec.popFromStackVector(seq);
             dst.auxVal = NowarnPragma.make(checks, loc);
             if (scanner.ttype != TagConstants.EOF)
@@ -254,15 +244,16 @@ public class RccPragmaParser extends Parse implements PragmaParser {
 
         case TagConstants.LBRACE:
             if (scanner.ttype == TagConstants.IDENT
-                    && TagConstants.fromIdentifier(scanner.identifierVal) == TagConstants.GHOST) {
+                && TagConstants.fromIdentifier(scanner.identifierVal) == TagConstants.GHOST) {
                 // scanner.getNextToken(); // rgrig: Check this!
                 dst.ttype = TagConstants.TYPEMODIFIERPRAGMA;
                 FormalParaDeclVec v = parseFormalParameterListNoParen(scanner);
                 dst.auxVal = GenericParameterPragma.make(v, loc);
             } else {
                 dst.ttype = TagConstants.TYPEMODIFIERPRAGMA;
-                ExprVec expressions = parseExpressionList(scanner,
-                        TagConstants.RBRACE);
+                ExprVec expressions = parseExpressionList(
+                    scanner,
+                    TagConstants.RBRACE);
                 dst.auxVal = GenericArgumentPragma.make(expressions, loc);
             }
 

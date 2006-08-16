@@ -3,10 +3,7 @@
 
 package rcc.tc;
 
-import rcc.ast.*;
-import rcc.ast.TagConstants;
 import javafe.tc.*;
-import javafe.util.*;
 import javafe.ast.*;
 
 /**

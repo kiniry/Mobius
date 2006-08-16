@@ -3,18 +3,9 @@
 package rcc.ast;
 
 
-import java.util.Hashtable;
-
-import javafe.ast.*;
-
 import javafe.ast.Expr;
-import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
-import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
-import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
-import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
-import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
-import javafe.util.Assert;
-import javafe.util.Location;
+import javafe.ast.ExprVec;
+import javafe.ast.TypeModifierPragma;
 
 
 // Convention: unless otherwise noted, integer fields named "loc"g refer

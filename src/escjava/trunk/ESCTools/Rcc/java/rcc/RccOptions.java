@@ -4,14 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.StringTokenizer;
 
-import rcc.ast.TagConstants;
-import rcc.ast.NoWarn;
 import javafe.SrcToolOptions;
 import javafe.util.Set;
 import javafe.util.UsageError;
+import rcc.ast.NoWarn;
+import rcc.ast.TagConstants;
 
 
 /**

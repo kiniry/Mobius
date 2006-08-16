@@ -2,107 +2,99 @@
 
 package rcc.ast;
 
-
-import java.util.Hashtable;
-
-import javafe.ast.*;
-
-import javafe.ast.Expr;
-import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
-import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
-import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
-import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
-import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
-import javafe.util.Assert;
-import javafe.util.Location;
-
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
+import javafe.ast.TypeModifierPragma;
 
 // Convention: unless otherwise noted, integer fields named "loc"g refer
 // to the locaction of the first character of the syntactic unit
 
-//# TagBase javafe.tc.TagConstants.LAST_TAG + 1
-//# VisitorRoot javafe.ast.Visitor
-//# VisitorARRoot javafe.ast.VisitorArgResult
-
-
-
+// # TagBase javafe.tc.TagConstants.LAST_TAG + 1
+// # VisitorRoot javafe.ast.Visitor
+// # VisitorARRoot javafe.ast.VisitorArgResult
 
 public class GenericParameterPragma extends TypeModifierPragma {
- public /*@ non_null @*/ FormalParaDeclVec args;
+    public/* @ non_null @ */FormalParaDeclVec args;
 
-  public int loc;
+    public int loc;
 
-			
-	public int getStartLoc() { return loc; }
-	public int getEndLoc() { 
-		if (args.size()==0)
-	    return super.getEndLoc();
-		
-		FormalParaDecl e= args.elementAt(args.size()-1);
-		return e.getEndLoc();
-	}
+    public int getStartLoc() {
+        return loc;
+    }
 
+    public int getEndLoc() {
+        if (args.size() == 0) return super.getEndLoc();
 
-// Generated boilerplate constructors:
+        FormalParaDecl e = args.elementAt(args.size() - 1);
+        return e.getEndLoc();
+    }
 
- //@ ensures this.args == args;
- //@ ensures this.loc == loc;
- protected GenericParameterPragma(/*@ non_null @*/ FormalParaDeclVec args, int loc) {
-    this.args = args;
-    this.loc = loc;
- }
+    // Generated boilerplate constructors:
 
-// Generated boilerplate methods:
+    // @ ensures this.args == args;
+    // @ ensures this.loc == loc;
+    protected GenericParameterPragma(/* @ non_null @ */FormalParaDeclVec args,
+        int loc) {
+        this.args = args;
+        this.loc = loc;
+    }
 
- public final int childCount() {
-    int sz = 0;
-    if (this.args != null) sz += this.args.size();
-    return sz + 0;
- }
+    // Generated boilerplate methods:
 
- public final Object childAt(int index) {
-         /*throws IndexOutOfBoundsException*/
-    if (index < 0)
-       throw new IndexOutOfBoundsException("AST child index " + index);
-    int indexPre = index;
+    public final int childCount() {
+        int sz = 0;
+        if (this.args != null) sz += this.args.size();
+        return sz + 0;
+    }
 
-    int sz;
+    public final Object childAt(int index) {
+        /* throws IndexOutOfBoundsException */
+        if (index < 0)
+            throw new IndexOutOfBoundsException("AST child index " + index);
+        int indexPre = index;
 
-    sz = (this.args == null ? 0 : this.args.size());
-    if (0 <= index && index < sz)
-       return this.args.elementAt(index);
-    else index -= sz;
+        int sz;
 
-    throw new IndexOutOfBoundsException("AST child index " + indexPre);
- }   //@ nowarn Exception;
+        sz = (this.args == null ? 0 : this.args.size());
+        if (0 <= index && index < sz)
+            return this.args.elementAt(index);
+        else
+            index -= sz;
 
- public final /*@non_null*/String toString() {
-    return "[GenericParameterPragma"
-       + " args = " + this.args
-       + " loc = " + this.loc
-       + "]";
- }
+        throw new IndexOutOfBoundsException("AST child index " + indexPre);
+    } // @ nowarn Exception;
 
- public final int getTag() {
-    return TagConstants.GENERICPARAMETERPRAGMA;
- }
+    public final/* @non_null */String toString() {
+        return "[GenericParameterPragma" + " args = " + this.args + " loc = "
+            + this.loc + "]";
+    }
 
- public final void accept(javafe.ast.Visitor v) { 
-  if (v instanceof Visitor) ((Visitor)v).visitGenericParameterPragma(this);
- }
+    public final int getTag() {
+        return TagConstants.GENERICPARAMETERPRAGMA;
+    }
 
- public final Object accept(javafe.ast.VisitorArgResult v, Object o) { 
-  if (v instanceof VisitorArgResult) return ((VisitorArgResult)v).visitGenericParameterPragma(this, o); else return null;
- }
+    public final void accept(javafe.ast.Visitor v) {
+        if (v instanceof Visitor)
+            ((Visitor) v).visitGenericParameterPragma(this);
+    }
 
- public void check() {
-    for(int i = 0; i < this.args.size(); i++)
-       this.args.elementAt(i).check();
- }
+    public final Object accept(javafe.ast.VisitorArgResult v, Object o) {
+        if (v instanceof VisitorArgResult)
+            return ((VisitorArgResult) v).visitGenericParameterPragma(this, o);
+        else
+            return null;
+    }
 
- //@ ensures \result != null;
- public static GenericParameterPragma make(/*@ non_null @*/ FormalParaDeclVec args, int loc) {
-    GenericParameterPragma result = new GenericParameterPragma(args, loc);
-    return result;
- }
+    public void check() {
+        for (int i = 0; i < this.args.size(); i++)
+            this.args.elementAt(i).check();
+    }
+
+    // @ ensures \result != null;
+    public static GenericParameterPragma make(
+        /* @ non_null @ */FormalParaDeclVec args,
+        int loc) {
+        GenericParameterPragma result = new GenericParameterPragma(args, loc);
+        return result;
+    }
 }

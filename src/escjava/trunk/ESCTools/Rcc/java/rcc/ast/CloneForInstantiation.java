@@ -3,10 +3,11 @@
 
 package rcc.ast;
 
+import javafe.ast.ClassDecl;
+import javafe.ast.InterfaceDecl;
+import javafe.ast.TypeModifierPragma;
+import javafe.ast.TypeModifierPragmaVec;
 import javafe.util.Assert;
-import javafe.util.Location;
-
-import javafe.ast.*;
 
 /**
  * Clones everything except decorations and generic parameter pragmas.

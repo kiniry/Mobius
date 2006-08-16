@@ -4,25 +4,19 @@
 // based on main from esc
 package rcc;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
-import java.io.*;
 
 import javafe.Options;
-import javafe.ast.*;
-
-import rcc.ast.*;
-import rcc.ast.TagConstants;
-
-import javafe.reader.StandardTypeReader;
-
-import javafe.parser.PragmaParser;
-
-import javafe.tc.*;
+import javafe.ast.CompilationUnit;
+import javafe.ast.DelegatingPrettyPrint;
+import javafe.ast.PrettyPrint;
+import javafe.ast.StandardPrettyPrint;
+import javafe.ast.TypeDecl;
+import javafe.tc.TypeSig;
+import javafe.util.Location;
+import rcc.ast.NoWarn;
+import rcc.ast.RccPrettyPrint;
 import rcc.tc.TypeCheck;
-
-import javafe.util.*;
 
 /**
  * The main class of the <tt>RCC</tt> tool.
@@ -157,7 +151,7 @@ public class Main extends javafe.SrcTool {
             return;
 
         // Do actual work:
-        boolean aborted = processTD(td);
+        processTD(td);
 
         /*
          * Handled any nested types: [1.1]
@@ -176,8 +170,6 @@ public class Main extends javafe.SrcTool {
      * @return <code>true</code> iff we had to abort.
      */
     private boolean processTD(TypeDecl td) {
-
-        int errorCount = ErrorSet.errors;
         TypeSig sig = TypeCheck.inst.getSig(td);
         sig.typecheck();
         if (RccOptions.get().pjt) {

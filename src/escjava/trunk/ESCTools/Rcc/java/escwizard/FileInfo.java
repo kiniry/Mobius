@@ -133,11 +133,8 @@ class FileInfo {
     } catch (FileNotFoundException fnfe) {
       AnnotationInserter.error("FileNotFoundException raised when trying to " +
                                "open '" + outName + "' for writing");
-    } catch (IOException ioe) {
-      AnnotationInserter.error("IOException raised when trying to " +
-                               "open '" + outName + "' for writing");
-    }
-
+    } 
+    
     try {
       int n = 0;
       WorkItem wi = wiList;

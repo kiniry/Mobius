@@ -2,99 +2,90 @@
 
 package rcc.ast;
 
-
-import java.util.Hashtable;
-
-import javafe.ast.*;
-
-import javafe.ast.Expr;
-import rcc.ast.Visitor;      // Work around 1.0.2 compiler bug
-import rcc.ast.VisitorArgResult;      // Work around 1.0.2 compiler bug
-import rcc.ast.TagConstants; // Work around 1.0.2 compiler bug
-import rcc.ast.GeneratedTags;// Work around 1.0.2 compiler bug
-import rcc.ast.AnOverview;   // Work around 1.0.2 compiler bug
-import javafe.util.Assert;
-import javafe.util.Location;
-
+import javafe.ast.IdentifierVec;
+import javafe.ast.LexicalPragma;
 
 // Convention: unless otherwise noted, integer fields named "loc"g refer
 // to the locaction of the first character of the syntactic unit
 
-//# TagBase javafe.tc.TagConstants.LAST_TAG + 1
-//# VisitorRoot javafe.ast.Visitor
-//# VisitorARRoot javafe.ast.VisitorArgResult
-
-
+// # TagBase javafe.tc.TagConstants.LAST_TAG + 1
+// # VisitorRoot javafe.ast.Visitor
+// # VisitorARRoot javafe.ast.VisitorArgResult
 
 public class NowarnPragma extends LexicalPragma {
- public /*@ non_null @*/ IdentifierVec checks;
+    public/* @ non_null @ */IdentifierVec checks;
 
-        public int loc;
+    public int loc;
 
-	boolean triggered = false;
+    boolean triggered = false;
 
-	public int getStartLoc() { return loc; }
+    public int getStartLoc() {
+        return loc;
+    }
 
+    // Generated boilerplate constructors:
 
-// Generated boilerplate constructors:
+    // @ ensures this.checks == checks;
+    // @ ensures this.loc == loc;
+    protected NowarnPragma(/* @ non_null @ */IdentifierVec checks, int loc) {
+        this.checks = checks;
+        this.loc = loc;
+    }
 
- //@ ensures this.checks == checks;
- //@ ensures this.loc == loc;
- protected NowarnPragma(/*@ non_null @*/ IdentifierVec checks, int loc) {
-    this.checks = checks;
-    this.loc = loc;
- }
+    // Generated boilerplate methods:
 
-// Generated boilerplate methods:
+    public final int childCount() {
+        int sz = 0;
+        if (this.checks != null) sz += this.checks.size();
+        return sz + 0;
+    }
 
- public final int childCount() {
-    int sz = 0;
-    if (this.checks != null) sz += this.checks.size();
-    return sz + 0;
- }
+    public final Object childAt(int index) {
+        /* throws IndexOutOfBoundsException */
+        if (index < 0)
+            throw new IndexOutOfBoundsException("AST child index " + index);
+        int indexPre = index;
 
- public final Object childAt(int index) {
-         /*throws IndexOutOfBoundsException*/
-    if (index < 0)
-       throw new IndexOutOfBoundsException("AST child index " + index);
-    int indexPre = index;
+        int sz;
 
-    int sz;
+        sz = (this.checks == null ? 0 : this.checks.size());
+        if (0 <= index && index < sz)
+            return this.checks.elementAt(index);
+        else
+            index -= sz;
 
-    sz = (this.checks == null ? 0 : this.checks.size());
-    if (0 <= index && index < sz)
-       return this.checks.elementAt(index);
-    else index -= sz;
+        throw new IndexOutOfBoundsException("AST child index " + indexPre);
+    } // @ nowarn Exception;
 
-    throw new IndexOutOfBoundsException("AST child index " + indexPre);
- }   //@ nowarn Exception;
+    public final/* @non_null */String toString() {
+        return "[NowarnPragma" + " checks = " + this.checks + " loc = "
+            + this.loc + "]";
+    }
 
- public final /*@non_null*/String toString() {
-    return "[NowarnPragma"
-       + " checks = " + this.checks
-       + " loc = " + this.loc
-       + "]";
- }
+    public final int getTag() {
+        return TagConstants.NOWARNPRAGMA;
+    }
 
- public final int getTag() {
-    return TagConstants.NOWARNPRAGMA;
- }
+    public final void accept(javafe.ast.Visitor v) {
+        if (v instanceof Visitor) ((Visitor) v).visitNowarnPragma(this);
+    }
 
- public final void accept(javafe.ast.Visitor v) { 
-  if (v instanceof Visitor) ((Visitor)v).visitNowarnPragma(this);
- }
+    public final Object accept(javafe.ast.VisitorArgResult v, Object o) {
+        if (v instanceof VisitorArgResult)
+            return ((VisitorArgResult) v).visitNowarnPragma(this, o);
+        else
+            return null;
+    }
 
- public final Object accept(javafe.ast.VisitorArgResult v, Object o) { 
-  if (v instanceof VisitorArgResult) return ((VisitorArgResult)v).visitNowarnPragma(this, o); else return null;
- }
+    public void check() {
+        if (this.checks == null) throw new RuntimeException();
+    }
 
- public void check() {
-    if (this.checks == null) throw new RuntimeException();
- }
-
- //@ ensures \result != null;
- public static NowarnPragma make(/*@ non_null @*/ IdentifierVec checks, int loc) {
-    NowarnPragma result = new NowarnPragma(checks, loc);
-    return result;
- }
+    // @ ensures \result != null;
+    public static NowarnPragma make(
+        /* @ non_null @ */IdentifierVec checks,
+        int loc) {
+        NowarnPragma result = new NowarnPragma(checks, loc);
+        return result;
+    }
 }

@@ -2,10 +2,20 @@
 
 package rcc.ast;
 
-import javafe.util.Assert;
-import javafe.util.Location;
-
-import javafe.ast.*;
+import javafe.ast.ASTNode;
+import javafe.ast.ClassDecl;
+import javafe.ast.ConstructorInvocation;
+import javafe.ast.Expr;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.InitBlock;
+import javafe.ast.InterfaceDecl;
+import javafe.ast.MethodInvocation;
+import javafe.ast.NewInstanceExpr;
+import javafe.ast.RoutineDecl;
+import javafe.ast.TypeDecl;
+import javafe.ast.VariableAccess;
 
 
 // Convention: unless otherwise noted, integer fields named "loc" refer
@@ -153,6 +163,7 @@ public class CloneAST extends CloneVisitorSuper {
     
     
     public CloneAST() {
+        // Do nothing
     }
     
     
@@ -166,7 +177,7 @@ public class CloneAST extends CloneVisitorSuper {
                 if (d[i] instanceof ASTNode && !(d[i] instanceof javafe.tc.TypeSig)) {
                     d[i] = (ASTNode)clone((ASTNode)d[i], b.booleanValue());
                 } else   if (d[i] instanceof ExprVec) {
-                    d[i] = (ExprVec)clone((ExprVec)d[i], b.booleanValue());
+                    d[i] = clone((ExprVec)d[i], b.booleanValue());
                 }
             }
         } else {
@@ -187,7 +198,7 @@ public class CloneAST extends CloneVisitorSuper {
         } else {
             _tempexpressions = ExprVec.make(x.size());
             for (int i = 0; i < x.size(); i++) {
-                _tempexpressions.insertElementAt((Expr)clone((ASTNode)x.elementAt(i), b),i);
+                _tempexpressions.insertElementAt((Expr)clone(x.elementAt(i), b),i);
             } 
         }
         return  _tempexpressions;

@@ -2,12 +2,7 @@
 
 package rcc.ast;
 
-import java.util.Hashtable;
-
-import javafe.util.Assert;
-import javafe.util.Location;
-
-import javafe.ast.*;
+import javafe.ast.ASTNode;
 
 
 // Convention: unless otherwise noted, integer fields named "loc" refer
@@ -46,7 +41,7 @@ public class CloneWithSubstitution extends CloneAST {
 
     // === Testing and debugging ===
     //private Hashtable dbgh = new Hashtable();
-    
+    /*
     private static void dbg(ExprVec exprs) {
         System.out.println(PrettyPrint.inst.toString(exprs));
     }
@@ -58,4 +53,5 @@ public class CloneWithSubstitution extends CloneAST {
     private static void dbg(Type type) {
         System.out.println(PrettyPrint.inst.toString(type));
     }
+    */
 }

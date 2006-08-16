@@ -2,23 +2,16 @@
 
 package rcc.tc;
 
-import java.util.Hashtable;
+import javafe.ast.FieldDeclVec;
+import javafe.ast.MethodDeclVec;
 
-import javafe.ast.*;
-import javafe.util.*;
+class PrepPart extends Object {
+    FieldDeclVec fields;
 
-import javafe.ast.*;
-import javafe.tc.*; 
-import javafe.util.Location;
+    MethodDeclVec methods;
 
-
-class PrepPart extends Object  {
-  FieldDeclVec fields;
-  MethodDeclVec methods;
-  
-  public  PrepPart(FieldDeclVec fields, MethodDeclVec method) {
-    this.fields = fields;
-    this.methods = methods;
-  }
-  
+    public PrepPart(FieldDeclVec fields, MethodDeclVec methods) {
+        this.fields = fields;
+        this.methods = methods;
+    }
 }
