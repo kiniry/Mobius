@@ -36,7 +36,7 @@ build: fixperms compile
 
 buildall: compileall
 
-jar: build
+jar: build test
 	jar cf dist/lib/javafe-$(JAVAFE_VERSION).jar -C classfiles .
 
 ifdef ALLTESTS
