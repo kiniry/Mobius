@@ -1,8 +1,8 @@
 <!-- ANT build script by rgrig. -->
 <project name="RCC" default="dist" basedir=".">
 	<description>
-        a Race Condition Checker for Java
-    </description>
+		a Race Condition Checker for Java
+	</description>
 
 	<!-- set global properties for this build -->
 	<property name="src" location="java" />
@@ -20,8 +20,6 @@
 
 	<target name="compile" depends="init" description="compile the source ">
 		<javac srcdir="${src}" destdir="${build}" deprecation="yes" optimize="yes">
-			<exclude name="rccwizard/test/**" />
-			<!-- TODO: the testfiles should be moved and the excludes above removed -->
 			<classpath refid="classpath" /> 
 		</javac>
 	</target>
