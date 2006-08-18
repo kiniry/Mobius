@@ -3012,7 +3012,7 @@ constructors or helper methods called by constructors.
 @item @strong{Description:} This modifier on a field declaration 
 indicates that the field in question may have a null value.  It is
 equivalent to a class invariant of the
-@*@center @code{invariant @emph{field} != null && @emph{field} == null;}
+@*@center @code{invariant @emph{field} != null || @emph{field} == null;}
 @*with the same access modifiers as the field itself which, since this
 specification simplifies to @code{true} because all references in Java
 either have @code{null} value or they do not, is not added at all.
