@@ -126,7 +126,7 @@ public class CoqConstructFinder implements ICoqColorConstants{
 				new SingleLineRule("Let ", ":=", declare),
 
 				new SingleLineRule("Theorem ", ".", declare),
-				new SingleLineRule("Letmma ", ".", declare),
+				new SingleLineRule("Lemma ", ".", declare),
 				new MultiLineRule("Inductive ", ":=", declare),
 				new MultiLineRule("Scheme ", ":=", declare),
 				new MultiLineRule("Parameter ", ":=", declare),
