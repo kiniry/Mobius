@@ -2,12 +2,88 @@
 
 package javafe.tc;
 
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Set;
 
-import javafe.ast.*;
-import javafe.util.*;
-import javafe.parser.FileFormatException;
+import javafe.ast.ASTDecoration;
+import javafe.ast.ASTNode;
+import javafe.ast.AmbiguousMethodInvocation;
+import javafe.ast.AmbiguousVariableAccess;
+import javafe.ast.ArrayInit;
+import javafe.ast.ArrayRefExpr;
+import javafe.ast.ArrayType;
+import javafe.ast.AssertStmt;
+import javafe.ast.BinaryExpr;
+import javafe.ast.BranchStmt;
+import javafe.ast.CastExpr;
+import javafe.ast.CatchClause;
+import javafe.ast.ClassDecl;
+import javafe.ast.ClassDeclStmt;
+import javafe.ast.ClassLiteral;
+import javafe.ast.CondExpr;
+import javafe.ast.ConstructorDecl;
+import javafe.ast.ConstructorInvocation;
+import javafe.ast.DoStmt;
+import javafe.ast.EvalStmt;
+import javafe.ast.Expr;
+import javafe.ast.ExprObjectDesignator;
+import javafe.ast.ExprVec;
+import javafe.ast.FieldAccess;
+import javafe.ast.FieldDecl;
+import javafe.ast.ForStmt;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.GenericBlockStmt;
+import javafe.ast.GenericVarDecl;
+import javafe.ast.Identifier;
+import javafe.ast.IfStmt;
+import javafe.ast.InitBlock;
+import javafe.ast.InstanceOfExpr;
+import javafe.ast.InterfaceDecl;
+import javafe.ast.LabelStmt;
+import javafe.ast.LocalVarDecl;
+import javafe.ast.MethodDecl;
+import javafe.ast.MethodInvocation;
+import javafe.ast.ModifierPragma;
+import javafe.ast.ModifierPragmaVec;
+import javafe.ast.Modifiers;
+import javafe.ast.Name;
+import javafe.ast.NewArrayExpr;
+import javafe.ast.NewInstanceExpr;
+import javafe.ast.ObjectDesignator;
+import javafe.ast.ParenExpr;
+import javafe.ast.PrettyPrint;
+import javafe.ast.PrimitiveType;
+import javafe.ast.ReturnStmt;
+import javafe.ast.RoutineDecl;
+import javafe.ast.SkipStmt;
+import javafe.ast.Stmt;
+import javafe.ast.StmtPragma;
+import javafe.ast.StmtVec;
+import javafe.ast.SuperObjectDesignator;
+import javafe.ast.SwitchLabel;
+import javafe.ast.SwitchStmt;
+import javafe.ast.SynchronizeStmt;
+import javafe.ast.ThisExpr;
+import javafe.ast.ThrowStmt;
+import javafe.ast.TryCatchStmt;
+import javafe.ast.TryFinallyStmt;
+import javafe.ast.Type;
+import javafe.ast.TypeDecl;
+import javafe.ast.TypeDeclElem;
+import javafe.ast.TypeDeclElemPragma;
+import javafe.ast.TypeModifierPragma;
+import javafe.ast.TypeModifierPragmaVec;
+import javafe.ast.TypeName;
+import javafe.ast.TypeObjectDesignator;
+import javafe.ast.UnaryExpr;
+import javafe.ast.VarDeclStmt;
+import javafe.ast.VarInit;
+import javafe.ast.VariableAccess;
+import javafe.ast.WhileStmt;
 import javafe.parser.ParseUtil;
+import javafe.util.Assert;
+import javafe.util.ErrorSet;
+import javafe.util.Location;
 
 /**
  * Does disambiguation and flow insensitive checks on a type
@@ -491,583 +567,598 @@ public class FlowInsensitiveChecks
         universeElementReturnType = 0;
         //alx-end
     }
-
-
-    /**
-     * Typecheck a statement in a given environment then return the environment in
-     * effect for statements that follow the given statement.
-     *
-     * <p> (The returned environment will be the same as the one passed in unless the
-     * statement is a declaration.)
-     *
-     * </p>
-     */
-    //@ requires e != null && s != null;
-    //@ requires !(e instanceof EnvForCU);
-    //@ requires sig != null;
-    //@ ensures \result != null;
-    //@ ensures !(\result instanceof EnvForCU);
-    protected Env checkStmt(Env e, Stmt s) {
-
-
-        switch (s.getTag()) {
-  
-            /*
-             * Handle declarations first:
-             */
-
-            case TagConstants.VARDECLSTMT: {
-                LocalVarDecl x = ((VarDeclStmt)s).decl;
-                e.resolveType(sig,x.type);
-                checkTypeModifiers(e, x.type);
-                PrepTypeDeclaration.inst.
-                    checkModifiers(x.modifiers, Modifiers.ACC_FINAL,
-                                   x.locId, "local variable");
-                checkModifierPragmaVec(x.pmodifiers, x, e);
-
-                Env newEnv = new EnvForLocals(e,x);
-                if (x.init != null) {
-                    x.init = checkInit(newEnv, x.init, x.type);
-                    //alx: dw set the universe type for array inits and test it
-                    if (useUniverses) {
-                            if (ParseUtil.getUniverse(x.init)==0 && 
-                            ParseUtil.getElementUniverse(x.init)!=0)
-                            ParseUtil.setUniverse(x.init, 
-                                                  ParseUtil.getUniverse(x));
-                            checkUniverseAssignability(x,x.init);
-                    }
-                    //alx-end
-                }
-                //alx: dw test if the given universe modifier is allowed 
-                //   for this context
-                if (useUniverses)
-                        checkNoRepInStaticContext(x);
-                //alx-end
-                return newEnv;
-            }
-
-            case TagConstants.CLASSDECLSTMT: {
-                ClassDeclStmt cds = (ClassDeclStmt)s;
-
-                // Create and check TypeSig for declared type:
-                // Note: this code was altered to pass the new environment including the
-                // new class into the TypeSig for the class.  Without that change, uses of
-                // the class name inside the class were not resolved.  I'm not sure that
-                // this is correct for all matters of scope and name visibility, but it
-                // solves this problem.  -- DRCok 10/2/2003
-                Env newenv = new EnvForLocalType(e, cds.decl);
-                TypeSig T = Types.makeTypeSig(cds.decl.id.toString(), newenv, cds.decl);
-                T.typecheck();
-
-                return newenv;
-            }
-
-
-                /*
-                 * Next handle switch statement & associated statements; it needs
-                 * special treatment to deal with labels properly.
-                 */
-
-            case TagConstants.SWITCHLABEL:
-                Assert.precondition("Switch label passed to checkStmt!");
-
-
-            case TagConstants.SWITCHSTMT: {
-                SwitchStmt c = (SwitchStmt)s;
-                c.expr = checkExpr(e, c.expr);
-                Env env = e;
-
-                // Now do special handling of the following block with case stmts
-
-                Type switchType = getType(c.expr);
-                if (!Types.isIntegralType(switchType)||Types.isLongType(switchType)) {
-                    ErrorSet.error(c.expr.getStartLoc(),
-                                   "The type of a switch expression must be char,"
-                                   + " byte, short, or int.");
-                    switchType = Types.intType;
-                }
-
-
-                // What case values encountered so far. 
-                Hashtable switchValues = new Hashtable();
-
-                boolean defaultEncountered = false;
-                enclosingLabels.addElement(c);
-
-                for(int i = 0, sz = c.stmts.size(); i < sz; i++) {
-                    Stmt stmt = c.stmts.elementAt(i);
     
-                    if (stmt.getTag() == TagConstants.SWITCHLABEL) {
-                        SwitchLabel x = (SwitchLabel)stmt;
-                        if (x.expr != null) {
-                            x.expr = checkExpr(env, x.expr);
-                            Object val = ConstantExpr.eval(x.expr);
-                            // System.out.println("At "+Location.toString(x.expr.getStartLoc()));
-              
-                            if(val == null)                
-                                ErrorSet.error(x.loc, "Non-constant value in switch label");
-                            else if(!ConstantExpr.
-                                     constantValueFitsIn(val, (PrimitiveType)switchType)) 
-                                ErrorSet.error(x.loc, 
-                                               "Case label value (" + val
-                                               +") not assignable to "
-                                               +"the switch expression type "
-                                               +Types.printName(switchType));
-                            else {
-                                // Check if it is a duplicate
-                                // val may be Integer or Long, convert to Long for
-                                // duplicate checking
-                                Assert.notFalse(val instanceof Long    //@ nowarn Pre;
-                                                || val instanceof Integer);
-                                Long valLong = new Long(ConstantExpr.getLongConstant(val));
-                                if(switchValues.containsKey(valLong)) {
-                                        // Point to dup label - FIXME
-                                    ErrorSet.error(x.loc, 
-                                                   "Duplicate case label "+val
-                                                   +" in switch statement");
-                                } else {
-                                    switchValues.put(valLong,valLong);
-                                }
-                            }
-                        } else {
-                            // this is default
-                            if(defaultEncountered)
-                                        // Point to dup label - FIXME
-                                ErrorSet.error(x.loc, 
-                                               "Duplicate default label in switch statement");
-                            else
-                                defaultEncountered = true;
-                        }
-            
-                    } else
-                        env = checkStmt(env, stmt);
-                }
+    // === Typecheck statements : begin ===
 
-                enclosingLabels.pop();
-                return e;
-            }
+    protected Env checkVarDeclStmt(Env e, LocalVarDecl s) {
+        e.resolveType(sig, s.type);
+        checkTypeModifiers(e, s.type);
+        PrepTypeDeclaration.inst.checkModifiers(
+            s.modifiers, 
+            Modifiers.ACC_FINAL,
+            s.locId, 
+            "local variable");
+        checkModifierPragmaVec(s.pmodifiers, s, e);
 
-
-                /*
-                 * Finally handle remaining statements.
-                 */
-
-            case TagConstants.BREAKSTMT:
-            case TagConstants.CONTINUESTMT: {
-                BranchStmt bs = (BranchStmt)s;
-                Stmt dest = null;
-                int size = enclosingLabels.size();
-
-                String expectedStmtKind =
-                    s.getTag() == TagConstants.BREAKSTMT ? "switch, while, do, or for" 
-                    : "while, do or for" ;
-            
-                for(int i=size-1; i>=0 && dest==null; i--) {
-                    Stmt ati = enclosingLabels.elementAt(i);
-                    Stmt target 
-                        = ati instanceof LabelStmt ? ((LabelStmt)ati).stmt : ati;
-          
-                    // continue target must be a loop statement
-                    // unlabelled break target must be a loop or switch
-                    // labelled break can be any statement
-          
-                    boolean loopTarget = 
-                        (target instanceof ForStmt)
-                        || (target instanceof WhileStmt)
-                        || (target instanceof DoStmt);
-
-                    boolean validTarget = 
-                        loopTarget
-                        || (s.getTag() == TagConstants.BREAKSTMT 
-                            && (target instanceof SwitchStmt
-                                || bs.label != null));
-
-                    if(bs.label == null) {
-                        if(validTarget)
-                            dest = target;
-                        else 
-                            continue;
-                    } else if(ati instanceof LabelStmt
-                               && ((LabelStmt)ati).label == bs.label) {
-                        if(!validTarget)
-                            ErrorSet.caution(bs.loc, 
-                                             "Enclosing statement labelled '"
-                                             +bs.label+"' is not a "
-                                             +expectedStmtKind+" statement");
-                        // just give a warning and continue, since javac accepts this
-                        dest = target;
+        Env newEnv = new EnvForLocals(e, s);
+        if (s.init != null) {
+            s.init = checkInit(newEnv, s.init, s.type);
+            //alx: dw set the universe type for array inits and test it
+            if (useUniverses) {
+                    if (ParseUtil.getUniverse(s.init) == 0 
+                        &&  ParseUtil.getElementUniverse(s.init)!=0) {
+                        ParseUtil.setUniverse(s.init, 
+                            ParseUtil.getUniverse(s));
                     }
-                    // else continue
-                }
-
-                if(dest == null) {
-                    ErrorSet.error(bs.loc, 
-                                   bs.label == null 
-                                   ? "No enclosing unlabelled "+expectedStmtKind+" statement"
-                                   : "No enclosing "+expectedStmtKind+" statement labelled '"+bs.label+"'");
-                } else
-                    setBranchLabel(bs, dest);
-
-                return e;
+                    checkUniverseAssignability(s, s.init);
             }
-
-            case TagConstants.SKIPSTMT:
-                return e;
-  
-            case TagConstants.RETURNSTMT: {
-                ReturnStmt rs = (ReturnStmt)s;
-
-                if(rs.expr != null) 
-                    rs.expr = checkExpr(e, rs.expr);
-
-                if(returnType == null) 
-                    ErrorSet.error(rs.loc, 
-                                   "Returns are not allowed in a static initializer");
-                else {
-                    if(rs.expr != null) {
-                        Type res = getType(rs.expr);
-
-                        //alx: dw test universe of return stmt
-                        if (useUniverses && 
-                            !universeIsSubtypeOf(universeReturnType,
-                                                 ParseUtil.getUniverse(rs.expr)))
-                            ErrorSet.error(rs.getStartLoc(),
-                                           "This routine must return "+
-                                           TagConstants.toString(universeReturnType)+
-                                           ", not "+
-                                           TagConstants.toString(ParseUtil.getUniverse(rs.expr)));
-                        else if (useUniverses && 
-                                 !universeIsSubtypeOf(universeElementReturnType,
-                                                      ParseUtil.getElementUniverse(rs.expr)))
-                            ErrorSet.error(rs.getStartLoc(),
-                                           "This routine must return "+
-                                           TagConstants.toString(universeReturnType)+
-                                           " "+
-                                           TagConstants.toString(universeElementReturnType)+
-                                           ", not "+
-                                           TagConstants.toString(ParseUtil.getUniverse(rs.expr))+
-                                           " "+
-                                           TagConstants.toString(ParseUtil.getElementUniverse(rs.expr)));
-                        //alx-end
-
-                        if(Types.isSameType(returnType, Types.voidType))
-                            ErrorSet.error(rs.loc, 
-                                           "This routine is not expected to return a value");
-                        else if(!assignmentConvertable(rs.expr, returnType)) {
-                            if (!Types.isErrorType(res))
-                                ErrorSet.error(rs.loc, 
-                                            "Cannot convert "+Types.printName(res)
-                                            +" to return type "+Types.printName(returnType));
-                        }
-                    } else {
-                        if(!Types.isSameType(returnType, Types.voidType))
-                            ErrorSet.error(rs.loc, "This routine must return a value");
-                    }
-                }
-                return e;
-            }
-
-            case TagConstants.THROWSTMT: {
-                ThrowStmt t = (ThrowStmt)s;
-                t.expr = checkExpr(e, t.expr);
-                Type res = getType(t.expr);
-
-                if(!Types.isSubclassOf(res, Types.javaLangThrowable())) {
-                    ErrorSet.error(t.loc, 
-                                    "Cannot throw values of type "+Types.printName(res));
-                } else {
-
-                    if (Types.isCheckedException(res)) {
-          
-                        // Must be caught by try or throws clause
-                        for(int i=0; i<allowedExceptions.size(); i++) {
-                            if(Types.isSubclassOf(res, allowedExceptions.elementAt(i)))
-                                // is ok
-                                return e;
-                        }
-                        // Not caught
-                        ErrorSet.error(t.loc, 
-                                        "Exception must be caught by an enclosing try "
-                                        +"or throws clause");
-                    }
-                }
-                return e;
-            }
-
-            case TagConstants.BLOCKSTMT:
-                checkStmtVec(e, ((GenericBlockStmt)s).stmts);
-                return e;
-      
-            case TagConstants.WHILESTMT: {
-                WhileStmt w = (WhileStmt)s;
-                w.expr = checkExpr(e, w.expr, Types.booleanType);
-                enclosingLabels.addElement(w);
-                checkStmt(e, w.stmt);
-                enclosingLabels.pop();
-                return e;
-            }
-      
-            case TagConstants.DOSTMT: {
-                DoStmt d = (DoStmt)s;
-                d.expr = checkExpr(e, d.expr, Types.booleanType);
-                enclosingLabels.addElement(d);
-                checkStmt(e, d.stmt);
-                enclosingLabels.pop();
-                return e;
-            }
-      
-            case TagConstants.IFSTMT: {
-                IfStmt i = (IfStmt)s;
-                i.expr = checkExpr(e, i.expr, Types.booleanType);
-                checkStmt(e, i.thn);
-                checkStmt(e, i.els);
-                return e;
-            }
-      
-            case TagConstants.SYNCHRONIZESTMT: {
-                SynchronizeStmt ss = (SynchronizeStmt)s;
-                ss.expr = checkExpr(e, ss.expr, Types.javaLangObject());
-                checkStmt(e, ss.stmt);
-                return e;
-            }
-      
-            case TagConstants.EVALSTMT: {
-                EvalStmt v = (EvalStmt) s;
-                v.expr = checkExpr(e, v.expr);
-                return e;
-            }
-      
-            case TagConstants.LABELSTMT: {
-                LabelStmt ls = (LabelStmt)s;
-                for(int i=0; i<enclosingLabels.size(); i++) {
-                    Stmt enclosing = enclosingLabels.elementAt(i);
-                    if(enclosing instanceof LabelStmt 
-                        && ((LabelStmt)enclosing).label == ls.label)
-                        ErrorSet.error(ls.locId, 
-                                       "Label '"+ls.label+"' already used in this scope");
-                                // FIXME - point to dup
-                }
-    
-                enclosingLabels.addElement(ls);
-                checkStmt(e, ls.stmt);
-                enclosingLabels.pop();
-
-                return e;
-            }
-      
-            case TagConstants.TRYFINALLYSTMT: {
-                TryFinallyStmt tf = (TryFinallyStmt)s;
-                checkStmt(e, tf.tryClause);
-                checkStmt(e, tf.finallyClause);
-                return e;
-            }
-      
-            case TagConstants.TRYCATCHSTMT: {
-                TryCatchStmt tc = (TryCatchStmt)s;
-                TypeSigVec newExceptions = allowedExceptions.copy();
-
-                // add all catch clause exceptions to allowedExceptions
-                for(int i=0; i<tc.catchClauses.size(); i++) {
-                    CatchClause c = tc.catchClauses.elementAt(i);
-                    Type t = c.arg.type;
-                    e.resolveType(sig,t);
-                    checkTypeModifiers(e, t);
-                    if(!Types.isSubclassOf(t, Types.javaLangThrowable()))
-                        ErrorSet.error(c.loc, 
-                                        "Declared type of a catch formal parameter "
-                                        +"must be a subclass of java.lang.Throwable");
-                    else {
-                        if (t instanceof TypeName) {
-                            t = TypeSig.getSig((TypeName)t);
-                        }
-                        newExceptions.addElement((TypeSig)t);
-                    }
-                    PrepTypeDeclaration.inst.checkModifiers(c.arg.modifiers,
-                                                            Modifiers.ACC_FINAL,
-                                                            c.arg.getStartLoc(),
-                                                            "formal parameter");
-
-                    EnvForLocals subenv = new EnvForLocals(e, c.arg, false);
-                    checkStmt(subenv, c.body);
-                }
-
-                TypeSigVec oldExceptions = allowedExceptions;
-                allowedExceptions = newExceptions;
-                checkStmt(e, tc.tryClause);
-                allowedExceptions = oldExceptions;
-
-                return e;
-            }
-
-            case TagConstants.FORSTMT: {
-                ForStmt f = (ForStmt) s;
-                Env se = checkStmtVec(e, f.forInit);
-                checkForLoopAfterInit(se, f);
-                return e;
-            }
-      
-            case TagConstants.CONSTRUCTORINVOCATION: {
-                ConstructorInvocation ci = (ConstructorInvocation)s;
-
-                TypeSig calleeSig =
-                    ci.superCall 
-                    ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) //@nowarn Cast,NonNull;
-                                     .superClass)
-                    : sig;
-
-                /*
-                 * Everything before the constructor invocation call occurs is
-                 * considered to be in a static context:
-                 */
-                Env sEnv = e.asStaticContext();
-
-                Type[] argTypes = checkExprVec(sEnv, ci.args);
-
-
-                /*
-                 * Handle type checking/inference for enclosing instance ptr:
-                 */
-
-                // Get the type of calleeSig's enclosing instance or null if none
-                // exists:
-                TypeSig enclosingInstanceType = calleeSig.getEnv(false)
-                    .getEnclosingInstance();
-
-                // If calleeSig has an enclosing instance and the user didn't supply
-                // a value for it, try to infer one:
-                if (ci.enclosingInstance==null && enclosingInstanceType != null) {
-                    ci.locDot = ci.getStartLoc();
-                    ci.enclosingInstance =
-                        sEnv.lookupEnclosingInstance(enclosingInstanceType,
-                                                     ci.getStartLoc());
-                }
-
-                if (ci.enclosingInstance != null) {
-                    if (enclosingInstanceType != null)
-                        ci.enclosingInstance = checkExpr(sEnv,
-                                                         ci.enclosingInstance,
-                                                         enclosingInstanceType);
-                    else
-                        ErrorSet.error(ci.enclosingInstance.getStartLoc(),
-                                       "An enclosing instance may be provided only "
-                                       + "when the superclass has an enclosing instance");
-                } else if (enclosingInstanceType != null) {
-                    /*
-                     * Compute appropriate error message details:
-                     */
-                    String details;
-                    if (ci.locKeyword == sig.getTypeDecl().locOpenBrace) {
-                        // inferred constructor with an inferred super inside it:
-                        details = "cannot create a default constructor for class "
-                            + sig + ".";
-                    } else if (ci.locKeyword == ci.locOpenParen) {
-                        // inferred super(...) in an explicit constructor:
-                        details = "cannot create a default superclass constructor."
-                            + "  (superclass is " + calleeSig + ")";
-                    } else {
-                        // explicit super(...) case...
-                        details = "an explicit one must be"
-                            + " provided when creating inner class "
-                            + calleeSig + ".";
-                    }
-
-                    ErrorSet.error(ci.getStartLoc(),
-                                   "No enclosing instance of class "
-                                   + enclosingInstanceType
-                                   + " is in scope; " + details);
-                }
-
-
-                try {
-                    ConstructorDecl cd 
-                        = calleeSig.lookupConstructor(argTypes, sig);
-                    Assert.notNull(cd);
-                    ci.decl = cd;
-                } catch(LookupException ex) {
-                    // Don't print an error if superclass is an interface (an
-                    // error has already been reported in this case)
-                    if (! ci.superCall
-                        || calleeSig.getTypeDecl().getTag() == TagConstants.CLASSDECL)
-                        reportLookupException(ex, 
-                                              "constructor " + calleeSig.getTypeDecl().id
-                                              + Types.printName(argTypes), 
-                                              Types.printName(calleeSig), 
-                                              ci.locKeyword);
-                }
-
-                // Rest of constructor body is in the normal non-static context:
-                return e;
-            }
-
-            case TagConstants.ASSERTSTMT: {
-                AssertStmt assertStmt = (AssertStmt)s;
-                if (assertStmt.label != null)
-                    assertStmt.label = checkExpr(e, assertStmt.label);
-                assertStmt.pred = checkExpr(e, assertStmt.pred, Types.booleanType);
-
-                // Turn a Java assert into a conditional throw and attach it to the
-                // AssertStmt.
-
-                // assert Predicate ;
-                // ==>
-                // if (! Predicate)
-                //   throw new java.lang.AssertionError();
-                // or
-                // assert Predicate : LabelExpr ;
-                // ==>
-                // if (! Predicate)
-                //   throw new java.lang.AssertionError(LabelExpr);
-                int startLoc = assertStmt.getStartLoc();
-                int endLoc = assertStmt.getEndLoc();
-                Assert.notFalse(startLoc != Location.NULL);
-                UnaryExpr negatedPredicate = 
-                    UnaryExpr.make(TagConstants.NOT, assertStmt.pred, startLoc);
-                ParenExpr parenthesizedNegatedPredicate =
-                    ParenExpr.make(negatedPredicate, startLoc, endLoc);
-                Name javaLangAssertionErrorName = 
-                    Name.make("java.lang.AssertionError", startLoc);
-                TypeName javaLangAssertionTypeName = TypeName.make(javaLangAssertionErrorName);
-                ExprVec constructorArgs = null;
-                if (assertStmt.label != null) {
-                    Expr [] constructorArgsAsArray = { assertStmt.label };
-                    constructorArgs = ExprVec.make(constructorArgsAsArray);
-                } else {
-                    constructorArgs = ExprVec.make();
-                }
-                NewInstanceExpr newAssertionError = 
-                    NewInstanceExpr.make(null, Location.NULL, javaLangAssertionTypeName,
-                                         constructorArgs, null, startLoc, endLoc);
-                ThrowStmt throwAssertionError = ThrowStmt.make(newAssertionError, 
-                                                               startLoc);
-                Stmt elseSkip = SkipStmt.make(startLoc);
-                IfStmt ifStmt = IfStmt.make(parenthesizedNegatedPredicate, throwAssertionError, 
-                                            elseSkip, startLoc);
-                // Now typecheck the generated IfStmt so that it is fully resolved.
-                ifStmt.expr = checkExpr(e, ifStmt.expr, Types.booleanType);
-                checkStmt(e, ifStmt.thn);
-                checkStmt(e, ifStmt.els);
-                // Reattach this translated form to the AST node.
-                assertStmt.ifStmt = ifStmt;
-
-                return e;
-            }
-
-            default:
-                if(s instanceof StmtPragma)
-                    checkStmtPragma(e, (StmtPragma)s);
-                else {
-                    Assert.fail("Switch fall-through (" + s.getTag() + " " +
-                        TagConstants.toString(s.getTag()) + " " +
-                        Location.toString(s.getStartLoc()) + ")");
-                }
+            //alx-end
         }
-        return e;                        // dummy
+        //alx: dw test if the given universe modifier is allowed 
+        //   for this context
+        if (useUniverses) {
+            checkNoRepInStaticContext(s);
+        }
+        //alx-end
+        return newEnv;
+    }
+    
+    protected Env checkClassDeclStmt(Env e, ClassDeclStmt s) {
+        // TODO: Check this!
+        Env newEnv = new EnvForLocalType(e, s.decl);
+        TypeSig T = Types.makeTypeSig(s.decl.id.toString(), newEnv, s.decl);
+        T.typecheck();
+        return newEnv;
+    }
+    
+    protected Env checkSwitchStmt(Env e, SwitchStmt s) {
+        s.expr = checkExpr(e, s.expr);
+        Env env = e;
+
+        // Now do special handling of the following block with case stmts
+        Type switchType = getType(s.expr);
+        if (!Types.isIntegralType(switchType) || Types.isLongType(switchType)) {
+            ErrorSet.error(
+                s.expr.getStartLoc(),
+                "The type of a switch expression must be char,"
+                    + " byte, short, or int.");
+            switchType = Types.intType;
+        }
+
+        // What case values encountered so far.
+        java.util.Set switchValues = new HashSet();
+
+        boolean defaultEncountered = false;
+        enclosingLabels.addElement(s);
+
+        for (int i = 0, sz = s.stmts.size(); i < sz; i++) {
+            Stmt stmt = s.stmts.elementAt(i);
+
+            if (stmt.getTag() == TagConstants.SWITCHLABEL) {
+                SwitchLabel x = (SwitchLabel)stmt;
+                if (x.expr != null) {
+                    x.expr = checkExpr(env, x.expr);
+                    Object val = ConstantExpr.eval(x.expr);
+                    // System.out.println("At
+                    // "+Location.toString(x.expr.getStartLoc()));
+
+                    if (val == null)
+                        ErrorSet.error(
+                            x.loc,
+                            "Non-constant value in switch label");
+                    else if (!ConstantExpr.constantValueFitsIn(
+                        val,
+                        (PrimitiveType)switchType))
+                        ErrorSet.error(x.loc, "Case label value (" + val
+                            + ") not assignable to "
+                            + "the switch expression type "
+                            + Types.printName(switchType));
+                    else {
+                        // Check if it is a duplicate
+                        // val may be Integer or Long, convert to Long for
+                        // duplicate checking
+                        Assert.notFalse(val instanceof Long // @ nowarn Pre;
+                            || val instanceof Integer);
+                        Long valLong = new Long(
+                            ConstantExpr.getLongConstant(val));
+                        if (switchValues.contains(valLong)) {
+                            // Point to dup label - FIXME
+                            ErrorSet.error(x.loc, "Duplicate case label " + val
+                                + " in switch statement");
+                        } else {
+                            switchValues.add(valLong);
+                        }
+                    }
+                } else {
+                    // this is default
+                    if (defaultEncountered)
+                        // Point to dup label - FIXME
+                        ErrorSet.error(
+                            x.loc,
+                            "Duplicate default label in switch statement");
+                    else
+                        defaultEncountered = true;
+                }
+
+            } else
+                env = checkStmt(env, stmt);
+        }
+
+        enclosingLabels.pop();
+        return e;
     }
 
-    //@ requires !(se instanceof EnvForCU);
-    //@ requires sig != null;
-    protected void checkForLoopAfterInit(/*@ non_null */ Env se,
-                                         /*@ non_null */ ForStmt f) {
+    /**
+     * Typecheck a statement in a given environment then return the environment
+     * in effect for statements that follow the given statement.
+     * <p>
+     * (The returned environment will be the same as the one passed in unless
+     * the statement is a declaration.)
+     * </p>
+     */
+    // @ requires e != null && s != null;
+    // @ requires !(e instanceof EnvForCU);
+    // @ requires sig != null;
+    // @ ensures \result != null;
+    // @ ensures !(\result instanceof EnvForCU);
+    protected Env checkStmt(Env e, Stmt s) {
+
+        switch (s.getTag()) {
+        // === Handle declarations ===
+        case TagConstants.VARDECLSTMT:
+            return checkVarDeclStmt(e, ((VarDeclStmt)s).decl);
+        case TagConstants.CLASSDECLSTMT:
+            return checkClassDeclStmt(e, (ClassDeclStmt)s);
+
+        // === Handle `switch' and related statements ===
+        // NOTE: The block following `switch' is also handled.
+        case TagConstants.SWITCHLABEL:
+            Assert.precondition("Switch label passed to checkStmt!");
+        case TagConstants.SWITCHSTMT:
+            return checkSwitchStmt(e, (SwitchStmt)s);
+
+        // === Handle the rest of the statements ===
+        case TagConstants.BREAKSTMT:
+        case TagConstants.CONTINUESTMT: {
+            BranchStmt bs = (BranchStmt)s;
+            Stmt dest = null;
+            int size = enclosingLabels.size();
+
+            String expectedStmtKind = s.getTag() == TagConstants.BREAKSTMT ? "switch, while, do, or for"
+                : "while, do or for";
+
+            for (int i = size - 1; i >= 0 && dest == null; i--) {
+                Stmt ati = enclosingLabels.elementAt(i);
+                Stmt target = ati instanceof LabelStmt ? ((LabelStmt)ati).stmt
+                    : ati;
+
+                // continue target must be a loop statement
+                // unlabelled break target must be a loop or switch
+                // labelled break can be any statement
+
+                boolean loopTarget = (target instanceof ForStmt)
+                    || (target instanceof WhileStmt)
+                    || (target instanceof DoStmt);
+
+                boolean validTarget = loopTarget
+                    || (s.getTag() == TagConstants.BREAKSTMT && (target instanceof SwitchStmt || bs.label != null));
+
+                if (bs.label == null) {
+                    if (validTarget)
+                        dest = target;
+                    else
+                        continue;
+                } else if (ati instanceof LabelStmt
+                    && ((LabelStmt)ati).label == bs.label) {
+                    if (!validTarget)
+                        ErrorSet.caution(
+                            bs.loc,
+                            "Enclosing statement labelled '" + bs.label
+                                + "' is not a " + expectedStmtKind
+                                + " statement");
+                    // just give a warning and continue, since javac accepts
+                    // this
+                    dest = target;
+                }
+                // else continue
+            }
+
+            if (dest == null) {
+                ErrorSet.error(
+                    bs.loc,
+                    bs.label == null ? "No enclosing unlabelled "
+                        + expectedStmtKind + " statement" : "No enclosing "
+                        + expectedStmtKind + " statement labelled '" + bs.label
+                        + "'");
+            } else
+                setBranchLabel(bs, dest);
+
+            return e;
+        }
+
+        case TagConstants.SKIPSTMT:
+            return e;
+
+        case TagConstants.RETURNSTMT: {
+            ReturnStmt rs = (ReturnStmt)s;
+
+            if (rs.expr != null) rs.expr = checkExpr(e, rs.expr);
+
+            if (returnType == null)
+                ErrorSet.error(
+                    rs.loc,
+                    "Returns are not allowed in a static initializer");
+            else {
+                if (rs.expr != null) {
+                    Type res = getType(rs.expr);
+
+                    // alx: dw test universe of return stmt
+                    if (useUniverses
+                        && !universeIsSubtypeOf(
+                            universeReturnType,
+                            ParseUtil.getUniverse(rs.expr)))
+                        ErrorSet.error(
+                            rs.getStartLoc(),
+                            "This routine must return "
+                                + TagConstants.toString(universeReturnType)
+                                + ", not "
+                                + TagConstants.toString(ParseUtil.getUniverse(rs.expr)));
+                    else if (useUniverses
+                        && !universeIsSubtypeOf(
+                            universeElementReturnType,
+                            ParseUtil.getElementUniverse(rs.expr)))
+                        ErrorSet.error(
+                            rs.getStartLoc(),
+                            "This routine must return "
+                                + TagConstants.toString(universeReturnType)
+                                + " "
+                                + TagConstants.toString(universeElementReturnType)
+                                + ", not "
+                                + TagConstants.toString(ParseUtil.getUniverse(rs.expr))
+                                + " "
+                                + TagConstants.toString(ParseUtil.getElementUniverse(rs.expr)));
+                    // alx-end
+
+                    if (Types.isSameType(returnType, Types.voidType))
+                        ErrorSet.error(
+                            rs.loc,
+                            "This routine is not expected to return a value");
+                    else if (!assignmentConvertable(rs.expr, returnType)) {
+                        if (!Types.isErrorType(res))
+                            ErrorSet.error(rs.loc, "Cannot convert "
+                                + Types.printName(res) + " to return type "
+                                + Types.printName(returnType));
+                    }
+                } else {
+                    if (!Types.isSameType(returnType, Types.voidType))
+                        ErrorSet.error(
+                            rs.loc,
+                            "This routine must return a value");
+                }
+            }
+            return e;
+        }
+
+        case TagConstants.THROWSTMT: {
+            ThrowStmt t = (ThrowStmt)s;
+            t.expr = checkExpr(e, t.expr);
+            Type res = getType(t.expr);
+
+            if (!Types.isSubclassOf(res, Types.javaLangThrowable())) {
+                ErrorSet.error(t.loc, "Cannot throw values of type "
+                    + Types.printName(res));
+            } else {
+
+                if (Types.isCheckedException(res)) {
+
+                    // Must be caught by try or throws clause
+                    for (int i = 0; i < allowedExceptions.size(); i++) {
+                        if (Types.isSubclassOf(
+                            res,
+                            allowedExceptions.elementAt(i)))
+                        // is ok
+                            return e;
+                    }
+                    // Not caught
+                    ErrorSet.error(
+                        t.loc,
+                        "Exception must be caught by an enclosing try "
+                            + "or throws clause");
+                }
+            }
+            return e;
+        }
+
+        case TagConstants.BLOCKSTMT:
+            checkStmtVec(e, ((GenericBlockStmt)s).stmts);
+            return e;
+
+        case TagConstants.WHILESTMT: {
+            WhileStmt w = (WhileStmt)s;
+            w.expr = checkExpr(e, w.expr, Types.booleanType);
+            enclosingLabels.addElement(w);
+            checkStmt(e, w.stmt);
+            enclosingLabels.pop();
+            return e;
+        }
+
+        case TagConstants.DOSTMT: {
+            DoStmt d = (DoStmt)s;
+            d.expr = checkExpr(e, d.expr, Types.booleanType);
+            enclosingLabels.addElement(d);
+            checkStmt(e, d.stmt);
+            enclosingLabels.pop();
+            return e;
+        }
+
+        case TagConstants.IFSTMT: {
+            IfStmt i = (IfStmt)s;
+            i.expr = checkExpr(e, i.expr, Types.booleanType);
+            checkStmt(e, i.thn);
+            checkStmt(e, i.els);
+            return e;
+        }
+
+        case TagConstants.SYNCHRONIZESTMT: {
+            SynchronizeStmt ss = (SynchronizeStmt)s;
+            ss.expr = checkExpr(e, ss.expr, Types.javaLangObject());
+            checkStmt(e, ss.stmt);
+            return e;
+        }
+
+        case TagConstants.EVALSTMT: {
+            EvalStmt v = (EvalStmt)s;
+            v.expr = checkExpr(e, v.expr);
+            return e;
+        }
+
+        case TagConstants.LABELSTMT: {
+            LabelStmt ls = (LabelStmt)s;
+            for (int i = 0; i < enclosingLabels.size(); i++) {
+                Stmt enclosing = enclosingLabels.elementAt(i);
+                if (enclosing instanceof LabelStmt
+                    && ((LabelStmt)enclosing).label == ls.label)
+                    ErrorSet.error(ls.locId, "Label '" + ls.label
+                        + "' already used in this scope");
+                // FIXME - point to dup
+            }
+
+            enclosingLabels.addElement(ls);
+            checkStmt(e, ls.stmt);
+            enclosingLabels.pop();
+
+            return e;
+        }
+
+        case TagConstants.TRYFINALLYSTMT: {
+            TryFinallyStmt tf = (TryFinallyStmt)s;
+            checkStmt(e, tf.tryClause);
+            checkStmt(e, tf.finallyClause);
+            return e;
+        }
+
+        case TagConstants.TRYCATCHSTMT: {
+            TryCatchStmt tc = (TryCatchStmt)s;
+            TypeSigVec newExceptions = allowedExceptions.copy();
+
+            // add all catch clause exceptions to allowedExceptions
+            for (int i = 0; i < tc.catchClauses.size(); i++) {
+                CatchClause c = tc.catchClauses.elementAt(i);
+                Type t = c.arg.type;
+                e.resolveType(sig, t);
+                checkTypeModifiers(e, t);
+                if (!Types.isSubclassOf(t, Types.javaLangThrowable()))
+                    ErrorSet.error(
+                        c.loc,
+                        "Declared type of a catch formal parameter "
+                            + "must be a subclass of java.lang.Throwable");
+                else {
+                    if (t instanceof TypeName) {
+                        t = TypeSig.getSig((TypeName)t);
+                    }
+                    newExceptions.addElement((TypeSig)t);
+                }
+                PrepTypeDeclaration.inst.checkModifiers(
+                    c.arg.modifiers,
+                    Modifiers.ACC_FINAL,
+                    c.arg.getStartLoc(),
+                    "formal parameter");
+
+                EnvForLocals subenv = new EnvForLocals(e, c.arg, false);
+                checkStmt(subenv, c.body);
+            }
+
+            TypeSigVec oldExceptions = allowedExceptions;
+            allowedExceptions = newExceptions;
+            checkStmt(e, tc.tryClause);
+            allowedExceptions = oldExceptions;
+
+            return e;
+        }
+
+        case TagConstants.FORSTMT: {
+            ForStmt f = (ForStmt)s;
+            Env se = checkStmtVec(e, f.forInit);
+            checkForLoopAfterInit(se, f);
+            return e;
+        }
+
+        case TagConstants.CONSTRUCTORINVOCATION: {
+            ConstructorInvocation ci = (ConstructorInvocation)s;
+
+            TypeSig calleeSig = ci.superCall ? TypeSig.getSig(((ClassDecl)sig.getTypeDecl()) // @nowarn
+                                                                                                // Cast,NonNull;
+                .superClass)
+                : sig;
+
+            /*
+             * Everything before the constructor invocation call occurs is
+             * considered to be in a static context:
+             */
+            Env sEnv = e.asStaticContext();
+
+            Type[] argTypes = checkExprVec(sEnv, ci.args);
+
+            /*
+             * Handle type checking/inference for enclosing instance ptr:
+             */
+
+            // Get the type of calleeSig's enclosing instance or null if none
+            // exists:
+            TypeSig enclosingInstanceType = calleeSig.getEnv(false).getEnclosingInstance();
+
+            // If calleeSig has an enclosing instance and the user didn't supply
+            // a value for it, try to infer one:
+            if (ci.enclosingInstance == null && enclosingInstanceType != null) {
+                ci.locDot = ci.getStartLoc();
+                ci.enclosingInstance = sEnv.lookupEnclosingInstance(
+                    enclosingInstanceType,
+                    ci.getStartLoc());
+            }
+
+            if (ci.enclosingInstance != null) {
+                if (enclosingInstanceType != null)
+                    ci.enclosingInstance = checkExpr(
+                        sEnv,
+                        ci.enclosingInstance,
+                        enclosingInstanceType);
+                else
+                    ErrorSet.error(
+                        ci.enclosingInstance.getStartLoc(),
+                        "An enclosing instance may be provided only "
+                            + "when the superclass has an enclosing instance");
+            } else if (enclosingInstanceType != null) {
+                /*
+                 * Compute appropriate error message details:
+                 */
+                String details;
+                if (ci.locKeyword == sig.getTypeDecl().locOpenBrace) {
+                    // inferred constructor with an inferred super inside it:
+                    details = "cannot create a default constructor for class "
+                        + sig + ".";
+                } else if (ci.locKeyword == ci.locOpenParen) {
+                    // inferred super(...) in an explicit constructor:
+                    details = "cannot create a default superclass constructor."
+                        + "  (superclass is " + calleeSig + ")";
+                } else {
+                    // explicit super(...) case...
+                    details = "an explicit one must be"
+                        + " provided when creating inner class " + calleeSig
+                        + ".";
+                }
+
+                ErrorSet.error(
+                    ci.getStartLoc(),
+                    "No enclosing instance of class " + enclosingInstanceType
+                        + " is in scope; " + details);
+            }
+
+            try {
+                ConstructorDecl cd = calleeSig.lookupConstructor(argTypes, sig);
+                Assert.notNull(cd);
+                ci.decl = cd;
+            } catch (LookupException ex) {
+                // Don't print an error if superclass is an interface (an
+                // error has already been reported in this case)
+                if (!ci.superCall
+                    || calleeSig.getTypeDecl().getTag() == TagConstants.CLASSDECL)
+                    reportLookupException(
+                        ex,
+                        "constructor " + calleeSig.getTypeDecl().id
+                            + Types.printName(argTypes),
+                        Types.printName(calleeSig),
+                        ci.locKeyword);
+            }
+
+            // Rest of constructor body is in the normal non-static context:
+            return e;
+        }
+
+        case TagConstants.ASSERTSTMT: {
+            AssertStmt assertStmt = (AssertStmt)s;
+            if (assertStmt.label != null)
+                assertStmt.label = checkExpr(e, assertStmt.label);
+            assertStmt.pred = checkExpr(e, assertStmt.pred, Types.booleanType);
+
+            // Turn a Java assert into a conditional throw and attach it to the
+            // AssertStmt.
+
+            // assert Predicate ;
+            // ==>
+            // if (! Predicate)
+            // throw new java.lang.AssertionError();
+            // or
+            // assert Predicate : LabelExpr ;
+            // ==>
+            // if (! Predicate)
+            // throw new java.lang.AssertionError(LabelExpr);
+            int startLoc = assertStmt.getStartLoc();
+            int endLoc = assertStmt.getEndLoc();
+            Assert.notFalse(startLoc != Location.NULL);
+            UnaryExpr negatedPredicate = UnaryExpr.make(
+                TagConstants.NOT,
+                assertStmt.pred,
+                startLoc);
+            ParenExpr parenthesizedNegatedPredicate = ParenExpr.make(
+                negatedPredicate,
+                startLoc,
+                endLoc);
+            Name javaLangAssertionErrorName = Name.make(
+                "java.lang.AssertionError",
+                startLoc);
+            TypeName javaLangAssertionTypeName = TypeName.make(javaLangAssertionErrorName);
+            ExprVec constructorArgs = null;
+            if (assertStmt.label != null) {
+                Expr[] constructorArgsAsArray = { assertStmt.label };
+                constructorArgs = ExprVec.make(constructorArgsAsArray);
+            } else {
+                constructorArgs = ExprVec.make();
+            }
+            NewInstanceExpr newAssertionError = NewInstanceExpr.make(
+                null,
+                Location.NULL,
+                javaLangAssertionTypeName,
+                constructorArgs,
+                null,
+                startLoc,
+                endLoc);
+            ThrowStmt throwAssertionError = ThrowStmt.make(
+                newAssertionError,
+                startLoc);
+            Stmt elseSkip = SkipStmt.make(startLoc);
+            IfStmt ifStmt = IfStmt.make(
+                parenthesizedNegatedPredicate,
+                throwAssertionError,
+                elseSkip,
+                startLoc);
+            // Now typecheck the generated IfStmt so that it is fully resolved.
+            ifStmt.expr = checkExpr(e, ifStmt.expr, Types.booleanType);
+            checkStmt(e, ifStmt.thn);
+            checkStmt(e, ifStmt.els);
+            // Reattach this translated form to the AST node.
+            assertStmt.ifStmt = ifStmt;
+
+            return e;
+        }
+
+        default:
+            if (s instanceof StmtPragma)
+                checkStmtPragma(e, (StmtPragma)s);
+            else {
+                Assert.fail("Switch fall-through (" + s.getTag() + " "
+                    + TagConstants.toString(s.getTag()) + " "
+                    + Location.toString(s.getStartLoc()) + ")");
+            }
+        }
+        return e; // dummy
+    }
+    // === Typecheck statements : end ===
+    
+
+    // @ requires !(se instanceof EnvForCU);
+    // @ requires sig != null;
+    protected void checkForLoopAfterInit(/* @ non_null */ Env se,
+                                         /* @ non_null */ ForStmt f) {
         f.test = checkExpr(se, f.test);
         for (int i = 0; i < f.forUpdate.size(); i++) {
             Expr ex = checkExpr(se, f.forUpdate.elementAt(i));
@@ -1078,11 +1169,11 @@ public class FlowInsensitiveChecks
         enclosingLabels.pop();
     }
 
-    //@ requires env != null && v != null;
-    //@ requires !(env instanceof EnvForCU);
-    //@ requires sig != null;
-    //@ ensures \result != null;
-    //@ ensures !(\result instanceof EnvForCU);
+    // @ requires env != null && v != null;
+    // @ requires !(env instanceof EnvForCU);
+    // @ requires sig != null;
+    // @ ensures \result != null;
+    // @ ensures !(\result instanceof EnvForCU);
     protected Env checkStmtVec(Env env, StmtVec v) {
         for(int i = 0, sz = v.size(); i < sz; i++) {
             Stmt stmt = v.elementAt(i);
@@ -1094,10 +1185,10 @@ public class FlowInsensitiveChecks
     }
 
   
-    //@ requires env != null && ev != null  ;
-    //@ requires !(env instanceof EnvForCU);
-    //@ requires sig != null;
-    //@ ensures \nonnullelements(\result);
+    // @ requires env != null && ev != null ;
+    // @ requires !(env instanceof EnvForCU);
+    // @ requires sig != null;
+    // @ ensures \nonnullelements(\result);
     protected Type[] checkExprVec(Env env, ExprVec ev) {
 
         Type[] r = new Type[ ev.size() ];
@@ -1113,11 +1204,11 @@ public class FlowInsensitiveChecks
     }
 
 
-    //@ requires sig != null;
-    //@ requires !(env instanceof EnvForCU);
-    //@ requires env != null && x != null && expectedResult != null;
-    //@ ensures \result != null;
-    //@ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit;
+    // @ requires sig != null;
+    // @ requires !(env instanceof EnvForCU);
+    // @ requires env != null && x != null && expectedResult != null;
+    // @ ensures \result != null;
+    // @ ensures (x instanceof ArrayInit) ==> \result instanceof ArrayInit;
     protected VarInit checkInit(Env env, VarInit x, Type expectedResult) {
         if (x instanceof ArrayInit) {
             ArrayInit ai = (ArrayInit)x;
