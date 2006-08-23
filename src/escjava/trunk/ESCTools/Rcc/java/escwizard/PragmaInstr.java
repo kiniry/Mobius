@@ -63,6 +63,7 @@ class PragmaInstr extends Instr {
     this.pragma = pragma;
   }
 
+  //@Override
   public String toString() {
     return "File " + fileidNowarn + ", line " + lineNowarn + "," + colNowarn +
       " (" + errorType + ") <" + descriptionPragma +">; file " +
@@ -107,6 +108,7 @@ class PragmaInstr extends Instr {
     }
   }
 
+  //@Override 
   WorkItem process(FileCollection sources) {
     //@ assume fileidPragma < sources.n;
     //@ assume fileidNowarn < sources.n;

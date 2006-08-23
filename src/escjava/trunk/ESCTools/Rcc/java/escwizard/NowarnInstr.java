@@ -31,11 +31,13 @@ class NowarnInstr extends Instr {
     this.reason = reason;
   }
   
+  //@Override
   public String toString() {
     return "File " + fileid + ", line " + line + "," + col +
       " (" + errorType + ") <" + reason +">";
   }
 
+  //@Override 
   WorkItem process(FileCollection sources) {
     //@ assume fileid < sources.n;
     return processNowarn(fileid, line, col, errorType, reason, sources);

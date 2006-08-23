@@ -73,43 +73,62 @@ import rcc.ast.SubstitutionVec;
 import rcc.ast.TagConstants;
 import rcc.ast.ThreadLocalStatusPragma;
 
+/** Typechecks. */
 public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
-    public static LockStack locks = new LockStack();
+    /** The locks we currently hold. */
+    private static LockStack locks = new LockStack();
 
-    public static EqualsAST equality = new EqualsAST();
+    /** Used to check AST equality. */
+    private static EqualsAST equality = new EqualsAST();
 
     // === Setup for ghost variables ===
-
-    /** Whether we are or not in an annotation. */
+    
+    /** 
+     * Whether we are or not in an annotation. This field is
+     * public because it is also set from <code>PrepTypeDeclaration</code>.
+     */
     public static boolean inAnnotation = false;
+    
+    // The following decorations are accessed by CloneAST
 
+    /** AST decoration for "guarded_by" pragmas. */
     public static final ASTDecoration guardDecoration = new ASTDecoration(
         "guard");
 
+    /** AST decoration for "requires" pragmas. */
     public static final ASTDecoration requiresDecoration = new ASTDecoration(
         "requires");
 
+    /** AST decoration for "elem_guarded_by" pragmas. */
     public static final ASTDecoration elemGuardDecoration = new ASTDecoration(
         "element guard");
 
+    /** AST decoration for "ThreadLocal" pragmas. */
     public static final ASTDecoration threadLocalDecoration = new ASTDecoration(
         "local status");
 
     // For readonly modifier checking
     private boolean canAssignReadOnly;
 
-    /** We use <code>GhostEnv</code> instead of <code>EnvForTypeSig</code>. */
+    /**
+     * @param s The enclosing type signature.
+     * @param staticContext Are we in a static context?
+     * @return A <code>GhostEnv</code>
+     */
     protected EnvForTypeSig makeEnvForTypeSig(TypeSig s, boolean staticContext) {
         return new GhostEnv(s.getEnv(staticContext), s, staticContext);
     }
 
-    // TODO: Comment this.
-    public FlowInsensitiveChecks() {
-    // Do nothing.
-    }
+    /** Initialize a typechecker. */
+    public FlowInsensitiveChecks() { /* do nothing */}
 
-    // TODO: Comment this.
+    /**
+     * Initialize a typechecker in a certain environment.
+     * 
+     * @param sig The type signature in which to typecheck.
+     * @param env The current typing environment.
+     */
     public FlowInsensitiveChecks(TypeSig sig, EnvForTypeSig env) {
         this.sig = sig;
 
@@ -123,7 +142,11 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     // === Extensions to type declaration member checkers ===
 
-    // TODO: Comment this!
+    /**
+     * Typechecks a type declaration.
+     * 
+     * @param s The type declaration to typecheck.
+     */
     // requires s.state >= TypeSig.PREPPED;
     public void checkTypeDeclaration(/* @ non_null */TypeSig s) {
         Assert.precondition(s.state >= TypeSig.PREPPED);
@@ -172,7 +195,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         switch (e.getTag()) {
 
         case TagConstants.FIELDDECL: {
-            FieldDecl fd = (FieldDecl) e;
+            FieldDecl fd = (FieldDecl)e;
             staticContext = Modifiers.isStatic(fd.modifiers);
             Env rootEnv = staticContext ? rootSEnv : rootIEnv;
             Env env = addGhosts(sig, rootEnv);
@@ -215,14 +238,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
         case TagConstants.METHODDECL:
         case TagConstants.CONSTRUCTORDECL: {
-            RoutineDecl rd = (RoutineDecl) e;
+            RoutineDecl rd = (RoutineDecl)e;
             staticContext = Modifiers.isStatic(rd.modifiers);
             Env rootEnv = staticContext ? rootSEnv : rootIEnv;
             Env env = addGhosts(sig, rootEnv);
 
             // First do method/constructor specific stuff
             if (rd instanceof MethodDecl) {
-                MethodDecl md = (MethodDecl) e;
+                MethodDecl md = (MethodDecl)e;
                 checkTypeModifiers(env, md.returnType);
                 returnType = md.returnType;
                 canAssignReadOnly = false;
@@ -238,7 +261,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 }
             } else {
                 // Constructor
-                ConstructorDecl cd = (ConstructorDecl) rd;
+                ConstructorDecl cd = (ConstructorDecl)rd;
 
                 // Was checked in parser
                 Assert.notFalse(!(d instanceof InterfaceDecl)); // @ nowarn Pre
@@ -330,7 +353,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
         case TagConstants.INITBLOCK: {
             locks.mark();
-            InitBlock si = (InitBlock) e;
+            InitBlock si = (InitBlock)e;
             PrepTypeDeclaration.getInst().checkModifiers(
                 si.modifiers,
                 Modifiers.ACC_STATIC,
@@ -364,20 +387,26 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
         case TagConstants.CLASSDECL:
         case TagConstants.INTERFACEDECL: {
-            TypeSig.getSig((TypeDecl) e).typecheck();
+            TypeSig.getSig((TypeDecl)e).typecheck();
             break;
         }
 
         default:
             if (e instanceof TypeDeclElemPragma)
-                checkTypeDeclElemPragma((TypeDeclElemPragma) e);
+                checkTypeDeclElemPragma((TypeDeclElemPragma)e);
             else
                 Assert.fail("Switch fall-through (" + e.getTag() + ")");
         }
     }
 
+    /**
+     * Get the locks required by a method. TODO: Why is this public?
+     * 
+     * @param rd The method.
+     * @return The locks required by <code>rd</code>.
+     */
     static public ExprVec getRequiresVec(RoutineDecl rd) {
-        ExprVec expressions = (ExprVec) requiresDecoration.get(rd);
+        ExprVec expressions = (ExprVec)requiresDecoration.get(rd);
         if (expressions == null) {
             FlowInsensitiveChecks a = new FlowInsensitiveChecks();
             inAnnotation = true;
@@ -391,7 +420,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     // === Extensions to expression and statement checkers ===
 
     protected Env checkStmt(Env env, Stmt s) {
-        if (inAnnotation) { return env; }
+        if (inAnnotation) {
+            return env;
+        }
         int tag = s.getTag();
         // System.out.println("process stmt: " +
         // TagConstants.toString(s.getTag()));
@@ -399,7 +430,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         case TagConstants.SYNCHRONIZESTMT:
             try {
                 locks.mark();
-                SynchronizeStmt ss = (SynchronizeStmt) s;
+                SynchronizeStmt ss = (SynchronizeStmt)s;
                 ss.expr = checkExpr(env, ss.expr, Types.javaLangObject());
                 locks.push(ss.expr);
                 checkStmt(env, ss.stmt);
@@ -409,7 +440,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             break;
 
         case TagConstants.CONSTRUCTORINVOCATION: {
-            ConstructorInvocation ci = (ConstructorInvocation) s;
+            ConstructorInvocation ci = (ConstructorInvocation)s;
             env = super.checkStmt(env, s);
             if (ci.decl == null) return env; // SNF
             ExprVec expressions = getRequiresVec(ci.decl);
@@ -435,7 +466,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     protected boolean lockHeld(MultipleSubstitution ms, Expr e) {
         CloneWithSubstitution c = new CloneWithSubstitution(ms);
         // dbg(e);
-        e = (Expr) c.clone(e, true);
+        e = (Expr)c.clone(e, true);
         // dbg(e);
 
         // System.out.println (" ---locks " + locks.expressionsToString());
@@ -450,10 +481,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      * super.checkExpr(env, x); }
      */
 
+    /**
+     * @param sig
+     * @return
+     */
     static public rcc.tc.TypeSig defaultInstantiation(rcc.tc.TypeSig sig) {
         boolean t = inAnnotation;
         inAnnotation = true;
-        FormalParaDeclVec fpv = (FormalParaDeclVec) PrepTypeDeclaration.typeParametersDecoration.get(sig);
+        FormalParaDeclVec fpv = (FormalParaDeclVec)PrepTypeDeclaration.typeParametersDecoration.get(sig);
 
         ExprVec args = ExprVec.make();
         if (fpv != null) {
@@ -467,30 +502,29 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                     parameter.id,
                     parameter.getStartLoc());
                 args.addElement(fa);
-                sig.getEnv(true).resolveType(sig, parameter.type); // TODO:
-                // check
-                // (rgrig)
+                // TODO: Check this!
+                sig.getEnv(true).resolveType(sig, parameter.type);
                 setType(fa, parameter.type);
-                fa.decl = (FieldDecl) PrepTypeDeclaration.parameterDeclDecoration.get(parameter);
+                fa.decl = (FieldDecl)PrepTypeDeclaration.parameterDeclDecoration.get(parameter);
                 setType(eod.expr, sig); // good enough for now. change below to
                 // correct sig
             }
         }
-        TypeSig s = ((rcc.tc.PrepTypeDeclaration) PrepTypeDeclaration.getInst()).findTypeSignature(
+        TypeSig s = ((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst()).findTypeSignature(
             sig.getEnv(true),
             sig,
             args,
             sig.getTypeDecl().getStartLoc());
 
         for (int i = 0; i < args.size(); i++) {
-            FieldAccess fa = (FieldAccess) args.elementAt(i);
-            setType(((ExprObjectDesignator) fa.od).expr, s);
+            FieldAccess fa = (FieldAccess)args.elementAt(i);
+            setType(((ExprObjectDesignator)fa.od).expr, s);
             s.getEnv(true).resolveType(sig, getType(fa)); // TODO: check
             // (rgrig)
         }
 
         inAnnotation = t;
-        return (rcc.tc.TypeSig) s;
+        return (rcc.tc.TypeSig)s;
     }
 
     protected void checkLocksHeld(
@@ -511,7 +545,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 CloneWithSubstitution c = new CloneWithSubstitution(ms);
                 int declLoc = getLocInPragmas(expr, mpv);
                 // dbg(expr);
-                expr = (Expr) c.clone(expr, true);
+                expr = (Expr)c.clone(expr, true);
                 // dbg(expr);
                 ErrorMsg.print(sig, "Race", line, "Lock '"
                     + PrettyPrint.inst.toString(expr) + "' may not be held."
@@ -536,7 +570,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             // dbg(expr);
             if (!lockHeld(ms, expr)) {
                 CloneWithSubstitution c = new CloneWithSubstitution(ms);
-                expr = (Expr) c.clone(expr, true);
+                expr = (Expr)c.clone(expr, true);
                 int declLoc = expr.getStartLoc(); // FIX TO PRINT RIGHT LOC
                 ErrorMsg.print(sig, "Race", line, "Lock '"
                     + PrettyPrint.inst.toString(expr) + "' may not be held."
@@ -553,7 +587,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         CloneWithSubstitution c = new CloneWithSubstitution(ms);
 
         // dbg(type);
-        type = (Type) c.clone(type, true);
+        type = (Type)c.clone(type, true);
 
         if (type instanceof ArrayType) {
             // Recurse for array case. This wastes some work, but the
@@ -566,15 +600,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
 
         if (type instanceof TypeName) {
-            type = TypeSig.getSig((TypeName) type);
+            type = TypeSig.getSig((TypeName)type);
         }
 
         if (type instanceof rcc.tc.TypeSig) {
-            rcc.tc.TypeSig tsig = (rcc.tc.TypeSig) type;
+            rcc.tc.TypeSig tsig = (rcc.tc.TypeSig)type;
             if (tsig.generic != null) {
                 CloneForInstantiation ci = new CloneForInstantiation(ms);
                 ExprVec args = ci.clone(tsig.expressions, true);
-                rcc.tc.PrepTypeDeclaration preparer = (rcc.tc.PrepTypeDeclaration) PrepTypeDeclaration.getInst();
+                rcc.tc.PrepTypeDeclaration preparer = (rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst();
                 type = preparer.findTypeSignature(
                     env,
                     tsig.generic,
@@ -610,6 +644,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     /**
      * Typechecks field access. Unlike the overriden method it also takes into
      * account ghost fields.
+     * 
+     * @param env The environment in which to typecheck.
+     * @param fa The field access to typecheck.
+     * @return The typechecked field access.
      */
     // @ ensures getTypeOrNull(\result) != null;
     protected FieldAccess checkFieldAccessExpr(
@@ -636,7 +674,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 // TODO: The user might write by hand [CLASS.this] thou. This is
                 // very unlikely so it's not handled. Correct treatment should
                 // take into account inheritance.
-                Expr object = ((ExprObjectDesignator) fa.od).expr;
+                Expr object = ((ExprObjectDesignator)fa.od).expr;
                 // System.out.print("this -> ");
                 // dbg(object);
                 s.addElement(new Substitution(ThisExpr.make(
@@ -661,6 +699,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     /**
      * Prepare substitutions for invocation of methods with ghost variables.
+     * 
+     * @param env The environment in which to typecheck.
+     * @param mi The method invocation to typecheck.
+     * @return The typechecked method invocation.
      */
     // TODO: Annotate this!
     protected MethodInvocation checkMethodInvocationExpr(
@@ -677,7 +719,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 && mi.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
                 s.addElement(new Substitution(ThisExpr.make(
                     TypeSig.getSig(mi.decl.parent),
-                    mi.od.getStartLoc()), ((ExprObjectDesignator) mi.od).expr));
+                    mi.od.getStartLoc()), ((ExprObjectDesignator)mi.od).expr));
             }
 
             for (int i = 0; i < mi.args.size(); i++) {
@@ -711,6 +753,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     /**
      * @param env The environment in which to check the new expression.
+     * @param ne The new expression to typecheck.
      * @return The environment after the new expression.
      */
     // TODO: Annotate this!
@@ -756,6 +799,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     /**
      * Check that the locks on the element of the array are held.
+     * 
+     * @param env The environment in which to typecheck.
+     * @param r The array reference to typecheck.
+     * @return The typechecked array reference.
      */
     // @ ensures getTypeOrNull(\result) != null;
     protected ArrayRefExpr checkArrayRefExpr(
@@ -794,18 +841,18 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         switch (a.getTag()) {
         case TagConstants.METHODDECL:
         case TagConstants.CONSTRUCTORDECL: {
-            RoutineDecl rd = (RoutineDecl) a;
+            RoutineDecl rd = (RoutineDecl)a;
             getRequiresVec(rd);
             break;
         }
         case TagConstants.FIELDDECL: {
-            FieldDecl fd = (FieldDecl) a;
+            FieldDecl fd = (FieldDecl)a;
             getGuardedVec(fd);
             break;
         }
         case TagConstants.CLASSDECL:
         case TagConstants.INTERFACEDECL: {
-            getLocalThreadStatus((TypeDecl) a, env);
+            getLocalThreadStatus((TypeDecl)a, env);
             break;
         }
         default:
@@ -820,7 +867,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         TypeModifierPragmaVec mod,
         ASTNode a,
         Env env) {
-        getElemGuardedVec((Type) a, env);
+        getElemGuardedVec((Type)a, env);
         return env;
     }
 
@@ -844,7 +891,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         int tag = p.getTag();
         switch (tag) {
         case TagConstants.ARRAYGUARDMODIFIERPRAGMA: {
-            ArrayGuardModifierPragma rp = (ArrayGuardModifierPragma) p;
+            ArrayGuardModifierPragma rp = (ArrayGuardModifierPragma)p;
             checkLockExprVec(env, rp.expressions, rp.getStartLoc());
             // dbg(rp.expressions);
             if (ctxt.getTag() != TagConstants.ARRAYTYPE) {
@@ -856,7 +903,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                     Location.NULL);
             }
             // log.info("Transforming elems_guarded_by into a decoration.");
-            ExprVec g = (ExprVec) elemGuardDecoration.get(ctxt);
+            ExprVec g = (ExprVec)elemGuardDecoration.get(ctxt);
             for (int i = 0; i < rp.expressions.size(); i++) {
                 g.addElement(rp.expressions.elementAt(i));
             }
@@ -889,7 +936,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             break;
 
         case TagConstants.REQUIRESMODIFIERPRAGMA: {
-            RequiresModifierPragma rp = (RequiresModifierPragma) p;
+            RequiresModifierPragma rp = (RequiresModifierPragma)p;
             checkLockExprVec(env, rp.expressions, rp.getStartLoc());
             if (ctxt.getTag() != TagConstants.METHODDECL
                 && ctxt.getTag() != TagConstants.CONSTRUCTORDECL) {
@@ -901,7 +948,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                     Location.NULL);
                 break;
             }
-            ExprVec g = (ExprVec) requiresDecoration.get(ctxt);
+            ExprVec g = (ExprVec)requiresDecoration.get(ctxt);
             for (int i = 0; i < rp.expressions.size(); i++) {
                 g.addElement(rp.expressions.elementAt(i));
             }
@@ -909,7 +956,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         }
         case TagConstants.GUARDEDBYMODIFIERPRAGMA: {
             if (ctxt.getTag() == TagConstants.CLASSDECL) break; // already done
-            GuardedByModifierPragma rp = (GuardedByModifierPragma) p;
+            GuardedByModifierPragma rp = (GuardedByModifierPragma)p;
             checkLockExprVec(env, rp.expressions, rp.getStartLoc());
             if (ctxt.getTag() != TagConstants.FIELDDECL
                 && ctxt.getTag() != TagConstants.CLASSDECL) {
@@ -921,7 +968,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                     Location.NULL);
                 break;
             }
-            ExprVec g = (ExprVec) guardDecoration.get(ctxt);
+            ExprVec g = (ExprVec)guardDecoration.get(ctxt);
             for (int i = 0; i < rp.expressions.size(); i++) {
                 Expr expr = rp.expressions.elementAt(i);
                 g.addElement(expr);
@@ -950,7 +997,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
             }
             threadLocalDecoration.set(ctxt, new Boolean(
-                ((ThreadLocalStatusPragma) p).local));
+                ((ThreadLocalStatusPragma)p).local));
             break;
         }
         default:
@@ -965,7 +1012,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         int tag = s.getTag();
         switch (tag) {
         case TagConstants.HOLDSSTMTPRAGMA: {
-            HoldsStmtPragma cs = (HoldsStmtPragma) s;
+            HoldsStmtPragma cs = (HoldsStmtPragma)s;
             checkLockExprVec(env, cs.expressions, cs.getStartLoc());
             if (RccOptions.get().pun) {
                 for (int i = 0; i < cs.expressions.size(); i++) {
@@ -1029,14 +1076,14 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
         // check overridden expr ved
         if (rd instanceof MethodDecl) {
-            MethodDecl md = (MethodDecl) rd;
+            MethodDecl md = (MethodDecl)rd;
             Set methods = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(
                 md);
             Enumeration e = methods.elements();
             while (e.hasMoreElements()) {
-                MethodDecl m = (MethodDecl) e.nextElement();
+                MethodDecl m = (MethodDecl)e.nextElement();
                 ExprVec superExpressions = getRequiresVec(m);
-                ExprVec expressions = (ExprVec) requiresDecoration.get(rd);
+                ExprVec expressions = (ExprVec)requiresDecoration.get(rd);
                 for (int i = 0; i < expressions.size(); i++) {
                     Expr expr = expressions.elementAt(i);
                     if (!equality.contains(superExpressions, expr)) {
@@ -1056,13 +1103,13 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      *         according to <code>EqualsASTNoDecl</code>.
      */
     protected boolean checkDuplicateExpressions(ExprVec exps) {
-        EqualsASTNoDecl eq = new EqualsASTNoDecl();
+        EqualsASTNoDecl eqNoDecl = new EqualsASTNoDecl();
 
         for (int i = 0; i < exps.size(); ++i) {
             Expr ei = exps.elementAt(i);
             for (int j = i + 1; j < exps.size(); ++j) {
                 Expr ej = exps.elementAt(j);
-                if (eq.equals(ei, ej)) return true;
+                if (eqNoDecl.equals(ei, ej)) return true;
             }
         }
 
@@ -1126,7 +1173,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     }
 
     static public ExprVec getGuardedVec(FieldDecl fd) {
-        ExprVec expressions = (ExprVec) guardDecoration.get(fd);
+        ExprVec expressions = (ExprVec)guardDecoration.get(fd);
         if (expressions == null) {
             FlowInsensitiveChecks a = new FlowInsensitiveChecks();
             inAnnotation = true;
@@ -1145,10 +1192,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     // TODO: Comment this!
     static public ExprVec getElemGuardedVec(Type t, Env env) {
-        ExprVec expressions = (ExprVec) elemGuardDecoration.get(t);
+        ExprVec expressions = (ExprVec)elemGuardDecoration.get(t);
         // dbg(t); dbg(expressions);
         if (env == null) {
-            env = (Env) Env.typeEnv.get(t);
+            env = (Env)Env.typeEnv.get(t);
         }
         if (expressions == null) {
             FlowInsensitiveChecks a = new FlowInsensitiveChecks();
@@ -1222,7 +1269,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
         Enumeration e = direct.elements();
         while (e.hasMoreElements()) {
-            MethodDecl directMD = (MethodDecl) (e.nextElement());
+            MethodDecl directMD = (MethodDecl)(e.nextElement());
             result.add(directMD);
             result.addEnumeration(getAllOverrides(directMD).elements());
         }
@@ -1237,13 +1284,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
      */
 
     public static MethodDecl getSuperClassOverride(RoutineDecl rd) {
-        if (!(rd instanceof MethodDecl)) { return null; }
-        MethodDecl md = (MethodDecl) rd;
+        if (!(rd instanceof MethodDecl)) {
+            return null;
+        }
+        MethodDecl md = (MethodDecl)rd;
         MethodDecl override = null;
         Set direct = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(md);
         Enumeration e = direct.elements();
         while (e.hasMoreElements()) {
-            MethodDecl directMD = (MethodDecl) (e.nextElement());
+            MethodDecl directMD = (MethodDecl)(e.nextElement());
             if (directMD.parent instanceof ClassDecl) {
                 if (override == null) {
                     override = directMD;
@@ -1284,14 +1333,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     protected boolean isFinalExpr(Env env, Expr expr) {
         switch (expr.getTag()) {
         case TagConstants.VARIABLEACCESS: {
-            VariableAccess lva = (VariableAccess) expr;
+            VariableAccess lva = (VariableAccess)expr;
             return Modifiers.isFinal(lva.decl.modifiers)
                 || readOnlyPragma(lva.decl.pmodifiers) != null;
 
         }
         case TagConstants.FIELDACCESS: {
-            FieldAccess fa = (FieldAccess) expr;
-            if (!isFinalObjectDesignator(env, fa.od)) { return false;
+            FieldAccess fa = (FieldAccess)expr;
+            if (!isFinalObjectDesignator(env, fa.od)) {
+                return false;
 
             }
             try {
@@ -1319,7 +1369,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     private boolean isFinalObjectDesignator(Env env, ObjectDesignator od) {
         switch (od.getTag()) {
         case TagConstants.EXPROBJECTDESIGNATOR: {
-            return isFinalExpr(env, ((ExprObjectDesignator) od).expr);
+            return isFinalExpr(env, ((ExprObjectDesignator)od).expr);
         }
 
         default:
@@ -1333,23 +1383,23 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         switch (od.getTag()) {
 
         case TagConstants.EXPROBJECTDESIGNATOR: {
-            ExprObjectDesignator eod = (ExprObjectDesignator) od;
+            ExprObjectDesignator eod = (ExprObjectDesignator)od;
             return getType(eod.expr);
         }
 
         case TagConstants.TYPEOBJECTDESIGNATOR: {
-            TypeObjectDesignator tod = (TypeObjectDesignator) od;
+            TypeObjectDesignator tod = (TypeObjectDesignator)od;
             // Type has been created by disambiguation code, so it is ok.
 
             Type t = tod.type;
-            if (t instanceof TypeName) t = TypeSig.getSig((TypeName) t);
+            if (t instanceof TypeName) t = TypeSig.getSig((TypeName)t);
             Assert.notFalse(t instanceof TypeSig); // @ nowarn Pre
-            return (TypeSig) t;
+            return (TypeSig)t;
         }
 
         case TagConstants.SUPEROBJECTDESIGNATOR: {
             TypeDecl d = sig.getTypeDecl();
-            TypeSig superSig = TypeSig.getSig(((ClassDecl) d).superClass); // @
+            TypeSig superSig = TypeSig.getSig(((ClassDecl)d).superClass); // @
             // nowarn
             // NonNull
             return superSig;
@@ -1367,11 +1417,15 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         for (int i = 0; i < mpv.size(); i++) {
             ModifierPragma mp = mpv.elementAt(i);
             if (mp instanceof RequiresModifierPragma) {
-                RequiresModifierPragma rmp = (RequiresModifierPragma) mp;
-                if (rmp.expressions.contains(expr)) { return rmp.getStartLoc(); }
+                RequiresModifierPragma rmp = (RequiresModifierPragma)mp;
+                if (rmp.expressions.contains(expr)) {
+                    return rmp.getStartLoc();
+                }
             } else if (mp instanceof GuardedByModifierPragma) {
-                GuardedByModifierPragma gmp = (GuardedByModifierPragma) mp;
-                if (gmp.expressions.contains(expr)) { return gmp.getStartLoc(); }
+                GuardedByModifierPragma gmp = (GuardedByModifierPragma)mp;
+                if (gmp.expressions.contains(expr)) {
+                    return gmp.getStartLoc();
+                }
             }
         }
         return Location.NULL;
@@ -1380,7 +1434,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     /** *** thread local ********* */
 
     static public boolean getLocalThreadStatus(TypeDecl d, Env env) {
-        Boolean b = (Boolean) threadLocalDecoration.get(d);
+        Boolean b = (Boolean)threadLocalDecoration.get(d);
         if (b == null) {
             FlowInsensitiveChecks a = new FlowInsensitiveChecks();
             a.sig = TypeSig.getSig(d); // not safe for inner classes
@@ -1399,7 +1453,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
     public Boolean checkLocalThreadStatus(TypeDecl d, Env env) {
         super.checkModifierPragmaVec(d.pmodifiers, d, env);
-        Boolean b = ((Boolean) threadLocalDecoration.get(d));
+        Boolean b = ((Boolean)threadLocalDecoration.get(d));
 
         boolean onCommandLine = rcc.Main.inst != null
             && rcc.Main.inst.commandLineFiles.contains(TypeSig.getSig(d).getCompilationUnit());
@@ -1440,18 +1494,20 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         Info.out("[infering that "
             + TypeSig.getSig(d).simpleName
             + " is "
-            + (((Boolean) threadLocalDecoration.get(d)).booleanValue() ? "thread local"
+            + (((Boolean)threadLocalDecoration.get(d)).booleanValue() ? "thread local"
                 : "thread shared") + "]");
 
         commonThreadLocal(env, d);
 
-        return ((Boolean) threadLocalDecoration.get(d));
+        return ((Boolean)threadLocalDecoration.get(d));
     }
 
     private boolean guardPragmaExists(ModifierPragmaVec m) {
         if (m == null) return false;
         for (int i = 0; i < m.size(); i++) {
-            if (m.elementAt(i) instanceof GuardedByModifierPragma) { return true; }
+            if (m.elementAt(i) instanceof GuardedByModifierPragma) {
+                return true;
+            }
         }
         return false;
     }
@@ -1459,7 +1515,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     private ReadOnlyModifierPragma readOnlyPragma(ModifierPragmaVec m) {
         if (m == null) return null;
         for (int i = 0; i < m.size(); i++) {
-            if (m.elementAt(i) instanceof ReadOnlyModifierPragma) { return (ReadOnlyModifierPragma) m.elementAt(i); }
+            if (m.elementAt(i) instanceof ReadOnlyModifierPragma) {
+                return (ReadOnlyModifierPragma)m.elementAt(i);
+            }
         }
         return null;
     }
@@ -1467,27 +1525,37 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     private boolean requiresPragmaExists(ModifierPragmaVec m) {
         if (m == null) return false;
         for (int i = 0; i < m.size(); i++) {
-            if (m.elementAt(i) instanceof RequiresModifierPragma) { return true; }
+            if (m.elementAt(i) instanceof RequiresModifierPragma) {
+                return true;
+            }
         }
         return false;
     }
 
     private boolean elementGuardPragmaExists(Type a) {
-        if (!(a instanceof ArrayType)) { return false; }
-        TypeModifierPragmaVec m = ((ArrayType) a).tmodifiers;
+        if (!(a instanceof ArrayType)) {
+            return false;
+        }
+        TypeModifierPragmaVec m = ((ArrayType)a).tmodifiers;
         if (m == null) return false;
         for (int i = 0; i < m.size(); i++) {
-            if (m.elementAt(i) instanceof ArrayGuardModifierPragma) { return true; }
+            if (m.elementAt(i) instanceof ArrayGuardModifierPragma) {
+                return true;
+            }
         }
         return false;
     }
 
     private boolean arrayGuarded(Type a) {
-        if (!(a instanceof ArrayType)) { return true; }
-        TypeModifierPragmaVec m = ((ArrayType) a).tmodifiers;
+        if (!(a instanceof ArrayType)) {
+            return true;
+        }
+        TypeModifierPragmaVec m = ((ArrayType)a).tmodifiers;
         if (m == null) return false;
         for (int i = 0; i < m.size(); i++) {
-            if (m.elementAt(i) instanceof ArrayGuardModifierPragma) { return arrayGuarded(((ArrayType) a).elemType); }
+            if (m.elementAt(i) instanceof ArrayGuardModifierPragma) {
+                return arrayGuarded(((ArrayType)a).elemType);
+            }
         }
         return false;
     }
@@ -1498,10 +1566,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         for (int i = 0; i < d.elems.size(); i++) {
             elem = d.elems.elementAt(i);
             if (elem.getTag() == TagConstants.FIELDDECL) {
-                FieldDecl fd = (FieldDecl) elem;
+                FieldDecl fd = (FieldDecl)elem;
                 if (Modifiers.isStatic(fd.modifiers)) {
                     if (fd.type instanceof TypeSig) {
-                        TypeDecl decl = ((TypeSig) fd.type).getTypeDecl();
+                        TypeDecl decl = ((TypeSig)fd.type).getTypeDecl();
                         if (getLocalThreadStatus(decl, env)) {
                             ErrorMsg.print(
                                 sig,
@@ -1540,7 +1608,9 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         if (mpv == null) return d.getStartLoc();
         for (int i = 0; i < mpv.size(); i++) {
             ModifierPragma p = mpv.elementAt(i);
-            if (p.getTag() == TagConstants.THREADLOCALSTATUSPRAGMA) { return p.getStartLoc(); }
+            if (p.getTag() == TagConstants.THREADLOCALSTATUSPRAGMA) {
+                return p.getStartLoc();
+            }
         }
         return d.getStartLoc();
     }
@@ -1564,7 +1634,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             case TagConstants.FIELDDECL:
                 break;
             case TagConstants.METHODDECL: {
-                MethodDecl md = (MethodDecl) elem;
+                MethodDecl md = (MethodDecl)elem;
                 // if ( isMethodOverride(md)) {
                 Set methods = javafe.tc.PrepTypeDeclaration.getInst().getOverrides(
                     md);
@@ -1572,7 +1642,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                 Enumeration e = methods.elements();
                 while (e.hasMoreElements()) {
 
-                    MethodDecl superDecl = (MethodDecl) e.nextElement();
+                    MethodDecl superDecl = (MethodDecl)e.nextElement();
                     if (!getLocalThreadStatus(superDecl.parent, env)) {
                         ErrorMsg.print(sig, "Override", md.getStartLoc(), "'"
                             + md.id.toString() + "'", superDecl.getStartLoc());
@@ -1588,17 +1658,23 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
     public boolean isLocalOK(TypeDecl d, Env env) {
         TypeDeclElem elem;
 
-        if (d instanceof InterfaceDecl) { return false; }
+        if (d instanceof InterfaceDecl) {
+            return false;
+        }
 
-        if (d == Types.getJavaLang("Thread").getTypeDecl()) { return false; }
+        if (d == Types.getJavaLang("Thread").getTypeDecl()) {
+            return false;
+        }
 
         for (int i = 0; i < d.elems.size(); i++) {
             elem = d.elems.elementAt(i);
             switch (elem.getTag()) {
             case TagConstants.FIELDDECL: {
-                FieldDecl fd = (FieldDecl) elem;
+                FieldDecl fd = (FieldDecl)elem;
                 if (guardPragmaExists(fd.pmodifiers)
-                    || elementGuardPragmaExists(((FieldDecl) elem).type)) { return false; }
+                    || elementGuardPragmaExists(((FieldDecl)elem).type)) {
+                    return false;
+                }
                 break;
             }
             case TagConstants.METHODDECL:
@@ -1612,10 +1688,10 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         TypeDeclElem elem;
         boolean unsharedFieldSeen = false;
 
-        if (d instanceof ClassDecl && ((ClassDecl) d).superClass != null) {
+        if (d instanceof ClassDecl && ((ClassDecl)d).superClass != null) {
             TypeDecl parent = env.resolveTypeName(
                 null,
-                ((ClassDecl) d).superClass) // TODO: check
+                ((ClassDecl)d).superClass) // TODO: check
                 .getTypeDecl();
             if (parent != null && getLocalThreadStatus(parent, env)) {
                 ErrorMsg.print(
@@ -1651,7 +1727,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             elem = d.elems.elementAt(i);
             switch (elem.getTag()) {
             case TagConstants.FIELDDECL: {
-                FieldDecl fd = (FieldDecl) elem;
+                FieldDecl fd = (FieldDecl)elem;
                 if (!Modifiers.isFinal(fd.modifiers)) {
                     if (!guardPragmaExists(fd.pmodifiers)
                         && readOnlyPragma(fd.pmodifiers) == null) {
@@ -1739,7 +1815,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 
                 javafe.tc.TypeSig type = null;
                 if (fd.type instanceof TypeName) {
-                    type = TypeSig.getSig((TypeName) fd.type);
+                    type = TypeSig.getSig((TypeName)fd.type);
                     if (type == null) {
                         ErrorMsg.print(
                             sig,
@@ -1751,7 +1827,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
                     }
                 }
                 if (fd.type instanceof javafe.tc.TypeSig) {
-                    type = (javafe.tc.TypeSig) fd.type;
+                    type = (javafe.tc.TypeSig)fd.type;
                 }
                 if (type != null) { // we have a typesig as the type
                     TypeDecl decl = type.getTypeDecl();
@@ -1781,24 +1857,34 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
         if (d == Types.getJavaLang("Thread").getTypeDecl()
             || Types.isSubclassOf(
                 TypeSig.getSig(d),
-                Types.getJavaLang("Thread"))) { return true; }
+                Types.getJavaLang("Thread"))) {
+            return true;
+        }
 
-        if (d == Types.getJavaLang("Object").getTypeDecl()) { return true; }
+        if (d == Types.getJavaLang("Object").getTypeDecl()) {
+            return true;
+        }
 
-        if (d instanceof InterfaceDecl) { return true; }
+        if (d instanceof InterfaceDecl) {
+            return true;
+        }
 
         for (int i = 0; i < d.elems.size(); i++) {
             elem = d.elems.elementAt(i);
             switch (elem.getTag()) {
             case TagConstants.FIELDDECL:
-                FieldDecl fd = (FieldDecl) elem;
-                if (guardPragmaExists(fd.pmodifiers)) { return true; }
+                FieldDecl fd = (FieldDecl)elem;
+                if (guardPragmaExists(fd.pmodifiers)) {
+                    return true;
+                }
                 break;
 
             case TagConstants.METHODDECL:
-                MethodDecl md = (MethodDecl) elem;
+                MethodDecl md = (MethodDecl)elem;
                 if (Modifiers.isSynchronized(md.modifiers)
-                    || requiresPragmaExists(md.pmodifiers)) { return true; }
+                    || requiresPragmaExists(md.pmodifiers)) {
+                    return true;
+                }
                 break;
             }
         }
@@ -1820,12 +1906,12 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
             // System.out.println("checkDesignator " + e);
             switch (e.getTag()) {
             case TagConstants.VARIABLEACCESS: {
-                VariableAccess lva = (VariableAccess) e;
+                VariableAccess lva = (VariableAccess)e;
                 romp = readOnlyPragma(lva.decl.pmodifiers);
                 break;
             }
             case TagConstants.FIELDACCESS: {
-                FieldAccess fa = (FieldAccess) e;
+                FieldAccess fa = (FieldAccess)e;
                 try {
                     FieldDecl fd = Types.lookupField(getObjectDesignatorType(
                         env,

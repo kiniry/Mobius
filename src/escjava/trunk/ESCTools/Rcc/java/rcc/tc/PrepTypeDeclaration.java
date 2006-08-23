@@ -26,7 +26,6 @@ import javafe.ast.Modifiers;
 import javafe.ast.PrettyPrint;
 import javafe.ast.SimpleName;
 import javafe.ast.ThisExpr;
-import javafe.ast.Type;
 import javafe.ast.TypeDecl;
 import javafe.ast.TypeDeclElem;
 import javafe.ast.TypeDeclElemVec;
@@ -50,7 +49,6 @@ import rcc.ast.GenericArgumentPragma;
 import rcc.ast.GenericParameterPragma;
 import rcc.ast.GhostDeclPragma;
 import rcc.ast.MultipleSubstitution;
-import rcc.ast.RccPrettyPrint;
 import rcc.ast.Substitution;
 import rcc.ast.SubstitutionVec;
 import rcc.ast.TagConstants;
@@ -62,7 +60,6 @@ import rcc.ast.TagConstants;
  * never use functions from <code>FlowInsensitiveChecks</code> which takes
  * care of the last phases of typechecking.
  */
-// TODO: Comment this!
 public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
     public PrepTypeDeclaration() {
@@ -80,10 +77,10 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         for (int i = 0, sz = d.elems.size(); i < sz; i++) {
             TypeDeclElem e = d.elems.elementAt(i);
             if (e instanceof FieldDecl) {
-                FieldDecl fd = (FieldDecl) e;
+                FieldDecl fd = (FieldDecl)e;
                 ModifierPragma t[] = fd.pmodifiers.toArray();
                 for (int j = 0; j < t.length; j++) {
-                    t[j] = (ModifierPragma) clone.clone(t[j], true);
+                    t[j] = (ModifierPragma)clone.clone(t[j], true);
                 }
                 fd.pmodifiers = ModifierPragmaVec.make(t);
             }
@@ -92,10 +89,10 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         for (int j = 0; j < d.pmodifiers.size(); j++) {
             ModifierPragma p = d.pmodifiers.elementAt(j);
             if (p.getTag() == TagConstants.GUARDEDBYMODIFIERPRAGMA) {
-                for (int i = 0, sz = d.elems.size(); i < sz; i++) {
+                for (int i = 0; i < d.elems.size(); i++) {
                     TypeDeclElem e = d.elems.elementAt(i);
                     if (e instanceof FieldDecl) {
-                        FieldDecl fd = (FieldDecl) e;
+                        FieldDecl fd = (FieldDecl)e;
                         if (!Modifiers.isFinal(fd.modifiers)) {
                             fd.pmodifiers.addElement(p);
                         }
@@ -106,13 +103,17 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
     }
 
     public boolean hasParameters(javafe.tc.TypeSig sig) {
-        if (typeParametersDecoration.get(sig) != null) { return true; }
+        if (typeParametersDecoration.get(sig) != null) {
+            return true;
+        }
 
         // look for type parameters
         TypeModifierPragmaVec v = sig.getTypeDecl().tmodifiers;
         if (v != null) {
             for (int i = 0; i < v.size(); i++) {
-                if (v.elementAt(i).getTag() == TagConstants.GENERICPARAMETERPRAGMA) { return true; }
+                if (v.elementAt(i).getTag() == TagConstants.GENERICPARAMETERPRAGMA) {
+                    return true;
+                }
             }
         }
         return false;
@@ -152,7 +153,6 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
         // Add members of direct superclass, if any
         // superclass may be null, or may name an interface
-
         TypeName superClassName = decl.superClass;
         javafe.tc.TypeSig superClassSig = superClassName == null ? null
             : TypeSig.getSig(superClassName);
@@ -182,20 +182,17 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         }
 
         // Add members of direct super interfaces
-
         checkSuperInterfaces(currentSig, decl.superInterfaces);
 
         // Check no two abstract methods with same method signature
         // and different return types
-
         for (int i = 0; i < methodSeq.size(); i++) {
-            MethodDecl mdi = (MethodDecl) methodSeq.elementAt(i);
+            MethodDecl mdi = (MethodDecl)methodSeq.elementAt(i);
             for (int j = 0; j < i; j++) {
-                MethodDecl mdj = (MethodDecl) methodSeq.elementAt(j);
+                MethodDecl mdj = (MethodDecl)methodSeq.elementAt(j);
 
                 // Check if mdi and mdj are abstract methods
                 // with same signature and different return types
-
                 if (Modifiers.isAbstract(mdi.modifiers)
                     && Modifiers.isAbstract(mdj.modifiers)
                     && Types.isSameMethodSig(mdi, mdj)
@@ -224,7 +221,6 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
         // Visit all enclosed member declarations
         // They will add themselves to fieldSeq and methodSeq
-
         for (int i = 0; i < decl.elems.size(); i++)
             visitTypeDeclElem(
                 decl.elems.elementAt(i),
@@ -271,7 +267,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         int tag = p.getTag();
         switch (tag) {
         case TagConstants.GENERICPARAMETERPRAGMA: {
-            GenericParameterPragma pp = (GenericParameterPragma) p;
+            GenericParameterPragma pp = (GenericParameterPragma)p;
             Object pd = typeParametersDecoration.get(currentSig);
             if (pd != null && pd != pp.args) {
                 ErrorSet.error(
@@ -292,11 +288,11 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                     parameter.locId,
                     null,
                     Location.NULL);
-                decl.setParent((TypeDecl) ctxt);
+                decl.setParent((TypeDecl)ctxt);
                 GhostDeclPragma pragma = GhostDeclPragma.make(
                     decl,
                     parameter.locId);
-                ((TypeDecl) ctxt).elems.insertElementAt(pragma, 0);
+                ((TypeDecl)ctxt).elems.insertElementAt(pragma, 0);
                 parameterDeclDecoration.set(parameter, decl);
             }
             break;
@@ -327,18 +323,24 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         for (int i = 0; i < instantiations.size(); i++) {
             Instantiation instantiation = instantiations.elementAt(i);
             if (instantiation.sig == sig
-                && equality.equals(instantiation.expressions, expressions)) { return instantiation.instantiation; }
+                && equality.equals(instantiation.expressions, expressions)) {
+                return instantiation.instantiation;
+            }
         }
         return null;
     }
 
-    // TODO: This function is broken because it uses FlowInsensitiveChecks
-    // TODO: Comment this!
-    protected void processGenericArgumentPragmas(Env env, TypeName tn) {
+    /**
+     * Transform type modifier pragmas into type argument decorations,
+     * if it hasn't been already done.
+     *  
+     * @param tn The type name to process.
+     */
+    protected void processGenericArgumentPragmas(TypeName tn) {
         Info.out("[process formal params for " + tn.name.printName() + "]");
-        ExprVec expressions = (ExprVec) typeArgumentDecoration.get(tn);
-        if (expressions != null) { return; }
-        if (tn.tmodifiers == null) { return; }
+        ExprVec expressions = (ExprVec)typeArgumentDecoration.get(tn);
+        if (expressions != null) return;
+        if (tn.tmodifiers == null) return;
 
         for (int i = 0; i < tn.tmodifiers.size(); i++) {
             TypeModifierPragma p = tn.tmodifiers.elementAt(i);
@@ -355,44 +357,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
                         tn.getStartLoc(),
                         "can only have one type argument list for class or interface name.");
                 }
-                GenericArgumentPragma gp = (GenericArgumentPragma) p;
-                /*
-                 * javafe.tc.TypeSig sigForEnclosingClass =
-                 * env.getEnclosingClass(); FlowInsensitiveChecks fic = new
-                 * FlowInsensitiveChecks(sigForEnclosingClass,
-                 * getEnvForCurrentSig(sigForEnclosingClass, true));
-                 */
-                javafe.tc.TypeSig sigForEnclosingClass = env.getEnclosingClass();
-                FlowInsensitiveChecks fic = new FlowInsensitiveChecks(
-                    sigForEnclosingClass,
-                    getEnvForCurrentSig(sigForEnclosingClass, false));
-                boolean t = FlowInsensitiveChecks.inAnnotation;
-                FlowInsensitiveChecks.inAnnotation = true;
-
-                {
-                    if (sigForEnclosingClass.state < TypeSig.PREPPED) {
-                        rcc.tc.TypeSig.prepPartDecoration.set(
-                            sigForEnclosingClass,
-                            new PrepPart(
-                                getFieldsFromStack(),
-                                getMethodsFromStack()));
-                    }
-
-                    // this is not quite right: what if we are checking a static
-                    // field: this should
-                    // not be in context.
-                    // fic.checkLockExprVec(getEnvForCurrentSig(sigForEnclosingClass,
-                    // false),
-                    // System.out.println("env: ");
-                    // env.display();
-                    fic.checkLockExprVec(env, gp.expressions, Location.NULL);
-                    rcc.tc.TypeSig.prepPartDecoration.set(
-                        sigForEnclosingClass,
-                        null);
-                }
-
-                FlowInsensitiveChecks.inAnnotation = t;
-
+                GenericArgumentPragma gp = (GenericArgumentPragma)p;
                 typeArgumentDecoration.set(tn, gp.expressions);
                 break;
             default:
@@ -434,8 +399,8 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
             env = s.getEnclosingEnv();
         }
 
-        processGenericArgumentPragmas(env, tn);
-        ExprVec expressions = (ExprVec) typeArgumentDecoration.get(tn);
+        processGenericArgumentPragmas(tn);
+        ExprVec expressions = (ExprVec)typeArgumentDecoration.get(tn);
         return findTypeSignature(env, sig, expressions, tn.getStartLoc());
     }
 
@@ -477,7 +442,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
      * A signature obtained by instantiating <code>sig</code> with
      * <code>expressions</code>. Note that the resulting signature has not
      * been prepped (it lacks information about its methods and fields). A bunch
-     * of errors (such as templete parameter mismatch) is detected and reported
+     * of errors (such as template parameter mismatch) are detected and reported
      * during the process.
      * 
      * @param env The environment in which the instance appears.
@@ -487,7 +452,6 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
      *         declaration that has template arguments substituted for the
      *         formal parameters.
      */
-    // TODO: This function is broken because it uses FlowInsensitiveChecks
     protected javafe.tc.TypeSig createInstantiation(
         Env env,
         javafe.tc.TypeSig sig,
@@ -497,11 +461,11 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
 
         TypeDecl decl = sig.getTypeDecl();
         TypeSig newSig = TypeSig.instantiate(sig, expressions, env);
-        FormalParaDeclVec parameters = (FormalParaDeclVec) PrepTypeDeclaration.typeParametersDecoration.get(sig);
+        FormalParaDeclVec parameters = (FormalParaDeclVec)PrepTypeDeclaration.typeParametersDecoration.get(sig);
         if (parameters == null) {
             Env currEnv = getEnvForCurrentSig(sig, true);
             checkTypeModifierPragmaVec(decl.tmodifiers, decl, currEnv, sig);
-            parameters = (FormalParaDeclVec) PrepTypeDeclaration.typeParametersDecoration.get(sig);
+            parameters = (FormalParaDeclVec)PrepTypeDeclaration.typeParametersDecoration.get(sig);
             if (parameters == null) {
                 ErrorSet.fatal(
                     decl.getStartLoc(),
@@ -521,14 +485,6 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
         for (int i = 0; i < parameters.size(); i++) {
             Expr expr = expressions.elementAt(i);
             FormalParaDecl parameter = parameters.elementAt(i);
-            Type type = FlowInsensitiveChecks.getType(expr);
-
-            if (!javafe.tc.Types.isInvocationConvertable(type, parameter.type)) {
-                ErrorSet.error(expr.getStartLoc(), "type of argument ("
-                    + RccPrettyPrint.inst.toString(type)
-                    + ") does not match the formal parameter type ("
-                    + RccPrettyPrint.inst.toString(parameter.type) + ")");
-            }
 
             // Prepare a substitution to replace the ghost parameter
             // with the argument.
@@ -556,22 +512,34 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
             subs,
             new EqualsASTNoDecl());
         CloneWithSubstitution clone = new CloneForInstantiation(ms);
-        decl = (TypeDecl) clone.clone(decl, true);
+        decl = (TypeDecl)clone.clone(decl, true);
         newSig.finishInst(decl, sig, expressions);
         instantiations.addElement(new Instantiation(sig, expressions, newSig));
 
         // An instance does not have any type parameters.
         typeParametersDecoration.set(newSig, null);
         return newSig;
-
     }
 
+    /**
+     * Returns an environment for <code>sig</code>. The information about
+     * members is taken from <code>fieldsSeq</code> and from
+     * <code>methodsSeq</code>, which were populated by the declaration visit
+     * methods.
+     * 
+     * @param sig The signature for which an environment is requested.
+     * @param isStatic The result contains bindings for non-static members iff
+     *            <code>isStatic</code>.
+     * @return An environment containing all the members of <code>sig</code>.
+     */
     protected EnvForTypeSig getEnvForCurrentSig(
         javafe.tc.TypeSig sig,
         boolean isStatic) {
         Env env;
 
-        if (sig.state >= TypeSig.PREPPED) { return sig.getEnv(isStatic); }
+        if (sig.state >= TypeSig.PREPPED) {
+            return sig.getEnv(isStatic);
+        }
         env = sig.getEnv(isStatic);
         EnvForInstantiation envForCheck = new EnvForInstantiation(
             env,
@@ -579,7 +547,7 @@ public class PrepTypeDeclaration extends javafe.tc.PrepTypeDeclaration {
             getFieldsFromStack(),
             getMethodsFromStack(),
             isStatic);
-        // envForCheck.display();
+        // DBG: envForCheck.display();
         return envForCheck;
     }
 

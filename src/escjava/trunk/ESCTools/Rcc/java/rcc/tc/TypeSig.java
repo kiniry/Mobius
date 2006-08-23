@@ -18,7 +18,12 @@ import javafe.tc.SLResolution;
 import javafe.util.Assert;
 import javafe.util.Info;
 
-// TODO: Comment this!
+/**
+ * Creates default instances.
+ * 
+ * @see javafe.tc.TypeSig
+ */
+// TODO: Why are default instances needed?
 public class TypeSig extends javafe.tc.TypeSig {
 
     // for recover instantiation info from instance of it.
@@ -27,8 +32,13 @@ public class TypeSig extends javafe.tc.TypeSig {
     public javafe.tc.TypeSig generic; // do not set outside of finishInst
 
     public static final ASTDecoration defaultInstantiationDecoration = new ASTDecoration(
-        " default instantiation");
+        "default instantiation");
 
+    /**
+     * {@inheritDoc} Also remember the enclosing type.
+     * 
+     * @param enclosingType The enclosing type.
+     */
     public TypeSig(String[] packageName,
     /* @ non_null @ */String simpleName, javafe.tc.TypeSig enclosingType,
         TypeDecl decl, CompilationUnit CU) {
@@ -48,14 +58,10 @@ public class TypeSig extends javafe.tc.TypeSig {
         super(simpleName, enclosingEnv, decl);
     }
 
-    /*
-     * // for Prepping an instantiated class public TypeSig() { super(); }
-     */
-
     public void resolveSupertypeLinks() {
-        if (state >= LINKSRESOLVED) { return; }
+        if (state >= LINKSRESOLVED) return;
 
-        if (((rcc.tc.PrepTypeDeclaration) PrepTypeDeclaration.getInst()).hasParameters(this)) {
+        if (((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst()).hasParameters(this)) {
             Info.out("[super class resolving class " + this + " to be Object]");
 
             CheckCompilationUnit.checkCompilationUnit(getCompilationUnit());
@@ -66,7 +72,7 @@ public class TypeSig extends javafe.tc.TypeSig {
                     d.superInterfaces.elementAt(i));
 
             if (getTypeDecl() instanceof ClassDecl) {
-                ClassDecl cd = (ClassDecl) getTypeDecl();
+                ClassDecl cd = (ClassDecl)getTypeDecl();
                 cd.superClass = TypeName.make(null, Name.make(
                     "java.lang.Object",
                     cd.locOpenBrace));
@@ -78,38 +84,17 @@ public class TypeSig extends javafe.tc.TypeSig {
         javafe.tc.SLResolution.transition(this);
     }
 
-    public void prep() {
-        if (state >= TypeSig.PREPPED) return;
-        resolveSupertypeLinks();
-        // TODO: Looks like generic classes are not handled. Fix!
-        if (((rcc.tc.PrepTypeDeclaration) PrepTypeDeclaration.getInst()).hasParameters(this)) {
-            /*
-             * Info.out("[prepping generic class " + this + "]"); state =
-             * TypeSig.PREPPED;
-             * ((rcc.tc.PrepTypeDeclaration)PrepTypeDeclaration.getInst()).prepGenericTypeDecl(this);
-             * return;
-             */
-        }
-
-        Info.out("[prepping " + this + "]");
-        PrepTypeDeclaration.getInst().prepTypeSignature(this);
-
-        state = TypeSig.PREPPED;
-    }
-
     /**
-     * * Transition <code>this</code> to the "checked" state.
-     * <p> * * See the TypeSig type comments for details of what this involves.
-     * <p> * * A fatal error may be reported if we cannot resolve a supertype *
-     * name, or detect a cycle in the type hierarchy.
-     * <p>
+     * {@inheritDoc}
+     * If there are any parameters then typecheck the default 
+     * instantiation of <code>this</code>.
      */
     public void typecheck() {
         if (this.state >= TypeSig.CHECKED) return;
         if (this.state < TypeSig.PREPPED) prep();
 
         Info.out("[typechecking " + this + "]");
-        if (((rcc.tc.PrepTypeDeclaration) rcc.tc.PrepTypeDeclaration.getInst()).hasParameters(this)) {
+        if (((rcc.tc.PrepTypeDeclaration)rcc.tc.PrepTypeDeclaration.getInst()).hasParameters(this)) {
             Info.out("[creating default instantiation for " + this + "]");
             TypeSig defaultInst = FlowInsensitiveChecks.defaultInstantiation(this);
             defaultInst.state = PARSED;
@@ -122,7 +107,6 @@ public class TypeSig extends javafe.tc.TypeSig {
             TypeCheck.inst.makeFlowInsensitiveChecks().checkTypeDeclaration(
                 this);
         }
-        // FlowSensitiveChecks.checkTypeDeclaration(this);
         this.state = TypeSig.CHECKED;
     }
 
@@ -131,7 +115,7 @@ public class TypeSig extends javafe.tc.TypeSig {
 
     // @ ensures RES!=null
     public FieldDeclVec getFields() {
-        PrepPart p = (PrepPart) prepPartDecoration.get(this);
+        PrepPart p = (PrepPart)prepPartDecoration.get(this);
         if (p == null) {
             prep();
             Assert.notNull(fields); // @ nowarn Pre
@@ -142,10 +126,9 @@ public class TypeSig extends javafe.tc.TypeSig {
     }
 
     /** Similar to <code>getFields</code>, except for methods. */
-
     // @ ensures RES!=null
     public MethodDeclVec getMethods() {
-        PrepPart p = (PrepPart) prepPartDecoration.get(this);
+        PrepPart p = (PrepPart)prepPartDecoration.get(this);
         if (p == null) {
             prep();
             Assert.notNull(methods); // @ nowarn Pre
@@ -193,10 +176,7 @@ public class TypeSig extends javafe.tc.TypeSig {
         return sig;
     }
 
-    public void finishInst(
-        TypeDecl d,
-        javafe.tc.TypeSig sig,
-        ExprVec exprs) {
+    public void finishInst(TypeDecl d, javafe.tc.TypeSig sig, ExprVec exprs) {
         this.expressions = exprs;
         this.generic = sig;
 

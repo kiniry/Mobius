@@ -27,7 +27,7 @@
 	<target name="doc" description="generate javadoc">
 		<javadoc destdir="${doc}" sourcepath="${src}">
 			<package name="rcc.*" />
-			<excludepackage name="rcc.parser.test.*" />
+			<classpath refid="classpath" />
 		</javadoc>
 	</target>
 

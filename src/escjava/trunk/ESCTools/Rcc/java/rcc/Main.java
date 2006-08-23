@@ -38,10 +38,9 @@ public class Main extends javafe.SrcTool {
     }
 
     // === Options processing ===
-    /**
-     * The following two functions follow the ESC/Java2 convention.
-     */
-
+    // The following two functions follow the ESC/Java2 convention.
+    
+    //@Override
     public/* @ non_null */Options makeOptions() {
         return RccOptions.get();
     }
@@ -49,6 +48,7 @@ public class Main extends javafe.SrcTool {
     /**
      * @return "rcc", which is the name of this tool.
      */
+    //@Override
     public String name() {
         return "RCC";
     }
@@ -57,16 +57,19 @@ public class Main extends javafe.SrcTool {
     // The following are overrides of template methods in
     // <code>javafe.SrcTool</code>.
 
+    //@Override
     public javafe.parser.PragmaParser makePragmaParser() {
         return new rcc.parser.RccPragmaParser();
     }
 
+    //@Override
     public PrettyPrint makePrettyPrint() {
         DelegatingPrettyPrint p = new RccPrettyPrint();
         p.setDel(new StandardPrettyPrint(p));
         return p;
     }
 
+    //@Override
     public javafe.tc.TypeCheck makeTypeCheck() {
         return rcc.tc.TypeCheck.get();
     }
@@ -74,6 +77,7 @@ public class Main extends javafe.SrcTool {
     /**
      * Make sure all lexical pragmas get registered as they are loaded.
      */
+    //@Override
     public void notify(CompilationUnit justLoaded) {
         super.notify(justLoaded);
         NoWarn.registerNowarns(justLoaded.lexicalPragmas);
@@ -114,6 +118,7 @@ public class Main extends javafe.SrcTool {
      * Hook for any work needed before <code>handleCU</code> is called on each
      * <code>CompilationUnit</code> to process them.
      */
+    //@Override
     public void preprocess() {
         if (!RccOptions.get().quiet) {
             System.out.println(name() + " version " + version);
@@ -142,6 +147,7 @@ public class Main extends javafe.SrcTool {
      * nested within outside types.
      * <p>
      */
+    //@Override
     public void handleTD(TypeDecl td) {
         TypeSig sig = TypeCheck.inst.getSig(td);
         if (sig.getTypeDecl().specOnly) // do not process specs

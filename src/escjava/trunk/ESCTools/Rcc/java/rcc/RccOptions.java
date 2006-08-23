@@ -56,6 +56,7 @@ public class RccOptions extends SrcToolOptions {
     
     // === Show functions ===
     
+    //@Override
     public String showOptions(boolean all) {
         StringBuffer r = new StringBuffer(super.showOptions(all));
         r.append(" -pjt    print code with types\n");
@@ -79,6 +80,7 @@ public class RccOptions extends SrcToolOptions {
         return r.toString();
     }
     
+    //@Override
     public String showNonOptions() {
         return super.showNonOptions();
     }
@@ -95,6 +97,7 @@ public class RccOptions extends SrcToolOptions {
      * @throws UsageError When an option is recognized but badly formed
      *         (e.g., a parameter is missing).
      */
+    //@Override
     public int processOption(String option, String[] args, int offset) throws UsageError {
         if (option.equals("-pjt")) {
             pjt = true;
