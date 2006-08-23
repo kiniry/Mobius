@@ -1,4 +1,0 @@
-D.java:10: Fatal error: type D already defined at "C.java", line 3, col 0
-class D /*# {ghost Object o}  */ {
-^
-1 error
