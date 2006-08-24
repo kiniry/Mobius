@@ -1,0 +1,138 @@
+\documentclass[]{llncs}
+
+\title{FMCO Tutorial Proposal:\\
+JACK~---~a tool for validation of security and behaviour of Java applications}
+
+\author{Gilles Barthe\inst{1} \and
+        Lilian Burdy\inst{1} \and
+        Julien Charles\inst{1} \and
+        Benjamin Gr\'egoire\inst{1} \and
+        Marieke Huisman\inst{1} \and
+        Jean-Louis Lanet\inst{2} \and
+        Mariela Pavlova\inst{1} \and
+        Antoine Requet\inst{2}}
+\institute{INRIA Sophia Antipolis, France \and Gemplus, France}
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%JACK is a tool set for the validation of Java applications. The
+%security requirements and behaviour of the application can be
+%specified with JML. JACK computes the verification conditions that
+%ensure correctness of the application. The verification conditions can
+%be verified with different automatic and interactive provers.
+
+%To support the whole development process of secure applications, JACK
+%allows to do the verification both at source code and at bytecode
+%level. Specifications of source code programs can be automatically
+%compiled into bytecode specifications. 
+
+%JACK also provides support for writing specifications, as it
+%implements several algorithms to automatically generate annotations.
+%\end{abstract}
+
+\paragraph{Motivation}
+Over the last years, the use of trusted personal devices, such as
+mobile phones, PDAs and smart cards, has become more and more
+widespread. As they are often used with security-sensitive
+applications, they are an ideal target for attacks. Traditionally,
+research has been focusing on avoiding hardware attacks, but the
+emergence of new generation trusted personal devices that are
+increasingly connected to networks and provide execution support for
+complex programs has put forward the need to improve the quality of
+software to avoid logical attacks.  Logical attacks are potentially
+easier to launch than physical attacks (for example they do not
+require physical access to the device, and are easier to replicate
+from one device to the other), and may have a huge impact.  In
+particular, a malicious attacker spreading over the network and
+disconnecting or disrupting devices massively could have deep
+consequences.
+
+\paragraph{A tool for application validation}
+We report here on the development of the tool JACK that can be used
+throughout the application development process to increase confidence
+in it. JACK allows to verify Java applications that are annotated with
+JML (Java Modeling Language\footnote{See
+\texttt{http://www.jmlspecs.org}.}). An advantage of using JML is that
+there is wide range of tools and techniques available that use JML as
+input language, \emph{i.e.}\ JML specifications can be used to improve
+testing, they can be simulated, and in particular they can be
+verified. We distinguish two kinds of verification: at runtime, using
+\texttt{jmlc} or statically. Several tools provide
+static verification of JML-annotated programs, adopting different
+compromises between soundness and automation.  Among these tools, JACK
+aims at achieving a high level of soundness, while keeping
+automation. Therefore, JACK automatically generates proof obligations
+that can be discharged both by automatic and by interactive theorem
+provers. The automatic prover that is used is Simplify, that is also
+used by several other tools for program verification. The interactive
+theorem prover that is used by JACK is Coq. 
+
+The tutorial will focus on the main characteristics of JACK that
+distinguish it from other tools for the static verification of
+JML-annotated Java programs is that it provides support for the whole
+development process of secure applications:
+\begin{itemize}
+\item it is integrated with the widely-used IDE Eclipse\footnote{See
+\texttt{http://www.eclipse.org}.};
+\item it provides means to generate annotations; and
+\item it allows verification of source code and bytecode level
+programs, and source code specifications can be compiled into bytecode
+specifications.
+\end{itemize}
+Moreover, JACK allows to verify complex functional behaviour
+specifications, by providing advanced support for interactive
+verification. 
+
+
+\paragraph{Integration with Eclipse}
+Because of the tight integration with Eclipse, the developer does not
+have to change tools to validate the application. A special JACK view
+has been implemented, that allow to inspect the generated proof
+obligations in different views (in a Java-like syntax, or in the
+language of the prover). Moreover, syntax colouring of the original
+source code allows to see to which parts of the application and
+specification the proof obligation relates.
+
+\paragraph{Generation of annotations}
+One of the drawbacks of using JML-like annotations for specification
+is that it is labour-intensive and error-prone to write them, as it is
+easy to forget some annotations. We provide two different annotation
+generators: the first generator computes frame conditions and simple
+preconditions that are sufficient to avoid runtime exceptions, the
+second generator takes as input a security policy and generates and
+propagates annotations in such a way that if the application respects
+the annotations, then it also respects the security policy.
+
+\paragraph{Verification of bytecode programs}
+A possible approach to the secure loading of applications on trusted
+personal devices is the use of proof-carrying code. In such a
+framework, the applications come equipped with a specification and a
+proof that allow the client to establish trust in the application. To
+achieve this, we need the ability to reason about bytecode. JACK
+provides a verification condition generator for BML, the Bytecode
+Modeling Language, a bytecode variation of BML. In addition, it
+provides a compiler from JML to BML, and we have shown that this
+compiler basically preserves proof obligations (and thus source code
+level proofs can be reused at bytecode level).
+
+\paragraph{Support for interactive verification}
+As interactive program verification is known to be labour-intensive,
+several advanced Coq tactics have been developed that help with this
+verification. To be able to write expressive specifications, a
+\texttt{native} construct has been proposed for JML, that allows to
+link JML constructs directly with the logic of the underlying
+prover. This allows to develop the theory about these constructs
+directly in the logic of the theorem prover, which makes verification
+much simpler.
+
+\paragraph{Literature}
+Several papers have been published around JACK; here we list a few.
+
+\nocite{BRL03:fme,Charles06,m+04:cardis,BurdyP06}
+
+\bibliographystyle{plain}
+\bibliography{../specification.bib,/net/home/gbarthe/bib/string,/net/home/gbarthe/bib/gilles,/net/home/gbarthe/bib/article,/net/home/gbarthe/bib/book,/net/home/gbarthe/bib/lncs,/net/home/gbarthe/bib/misc,/net/home/gbarthe/bib/proceedings,/net/home/gbarthe/bib/techrep,/net/home/gbarthe/bib/thesis,/net/home/gbarthe/bib/software,/net/home/gbarthe/bib/web}
+
+\end{document}
