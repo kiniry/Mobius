@@ -50,28 +50,28 @@ disconnecting or disrupting devices massively could have deep
 consequences.
 
 \paragraph{A tool for application validation}
-We report here on the development of the tool JACK that can be used
-throughout the application development process to increase confidence
-in it. JACK allows to verify Java applications that are annotated with
-JML (Java Modeling Language\footnote{See
-\texttt{http://www.jmlspecs.org}.}). An advantage of using JML is that
+We report here on the development of the tool JACK. JACK can be used
+throughout the development process to increase confidence in the
+quality of an application. JACK allows to verify Java applications
+that are annotated with JML\footnote{The Java Modeling Language, see
+\texttt{http://www.jmlspecs.org}.}. An advantage of using JML is that
 there is wide range of tools and techniques available that use JML as
-input language, \emph{i.e.}\ JML specifications can be used to improve
-testing, they can be simulated, and in particular they can be
+specification language, \emph{i.e.}\ JML specifications can be used to
+improve testing, they can be simulated, and in particular they can be
 verified. We distinguish two kinds of verification: at runtime, using
-\texttt{jmlc} or statically. Several tools provide
+\texttt{jmlc}, or statically. Several tools provide
 static verification of JML-annotated programs, adopting different
 compromises between soundness and automation.  Among these tools, JACK
 aims at achieving a high level of soundness, while keeping
 automation. Therefore, JACK automatically generates proof obligations
 that can be discharged both by automatic and by interactive theorem
-provers. The automatic prover that is used is Simplify, that is also
-used by several other tools for program verification. The interactive
-theorem prover that is used by JACK is Coq. 
+provers. The automatic prover that is used is Simplify, a well-known
+prover for program verification, the interactive theorem prover that
+is used is Coq.
 
-The tutorial will focus on the main characteristics of JACK that
+This tutorial will focus on the main characteristics of JACK, which
 distinguish it from other tools for the static verification of
-JML-annotated Java programs is that it provides support for the whole
+JML-annotated Java programs. First, it provides support for the whole
 development process of secure applications:
 \begin{itemize}
 \item it is integrated with the widely-used IDE Eclipse\footnote{See
@@ -81,7 +81,7 @@ development process of secure applications:
 programs, and source code specifications can be compiled into bytecode
 specifications.
 \end{itemize}
-Moreover, JACK allows to verify complex functional behaviour
+Second, JACK allows to verify complex functional behaviour
 specifications, by providing advanced support for interactive
 verification. 
 
@@ -89,7 +89,7 @@ verification.
 \paragraph{Integration with Eclipse}
 Because of the tight integration with Eclipse, the developer does not
 have to change tools to validate the application. A special JACK view
-has been implemented, that allow to inspect the generated proof
+has been implemented, that allows to inspect the generated proof
 obligations in different views (in a Java-like syntax, or in the
 language of the prover). Moreover, syntax colouring of the original
 source code allows to see to which parts of the application and
@@ -97,7 +97,7 @@ specification the proof obligation relates.
 
 \paragraph{Generation of annotations}
 One of the drawbacks of using JML-like annotations for specification
-is that it is labour-intensive and error-prone to write them, as it is
+is that it is labour-intensive and error-prone to write them and it is
 easy to forget some annotations. We provide two different annotation
 generators: the first generator computes frame conditions and simple
 preconditions that are sufficient to avoid runtime exceptions, the
@@ -113,9 +113,9 @@ proof that allow the client to establish trust in the application. To
 achieve this, we need the ability to reason about bytecode. JACK
 provides a verification condition generator for BML, the Bytecode
 Modeling Language, a bytecode variation of BML. In addition, it
-provides a compiler from JML to BML, and we have shown that this
-compiler basically preserves proof obligations (and thus source code
-level proofs can be reused at bytecode level).
+provides a compiler from JML to BML, for which we have shown that it
+basically preserves proof obligations (and thus source code level
+proofs can be reused at bytecode level).
 
 \paragraph{Support for interactive verification}
 As interactive program verification is known to be labour-intensive,
@@ -124,8 +124,8 @@ verification. To be able to write expressive specifications, a
 \texttt{native} construct has been proposed for JML, that allows to
 link JML constructs directly with the logic of the underlying
 prover. This allows to develop the theory about these constructs
-directly in the logic of the theorem prover, which makes verification
-much simpler.
+directly in the logic of the theorem prover, which makes specification
+and verification much simpler.
 
 \paragraph{Literature}
 Several papers have been published around JACK; here we list a few.
