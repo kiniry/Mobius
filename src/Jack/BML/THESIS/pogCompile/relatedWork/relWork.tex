@@ -1,16 +1,27 @@
 \section{Related Work}\label{pog:relWork}
 
-Several works dealing with the relation between 
-source and its compilation verification condition generated.
 
-Barthe, Rezk and Saabas in \ref{} also argue that proof obligations produced
+Several works dealing with the relation between the 
+verification conditions over source and its compilation into a low  level  programming  language exist.
+
+Barthe, Rezk and Saabas in \cite{gta05:fast} also argue that proof obligations produced
 over source code and
 bytecode produced by a nonoptimizing compiler   are equivalent.
-The source language supports method invokation, exception throwing and handling.They do not consider instructions that may throw
-runtime exceptions. Note that because of this  However, in their work they do not discuss  what are the compiler assumptions
+The source language which they use supports method invokation, exception throwing and handling. 
+They do not consider instructions that may throw
+runtime exceptions. 
+ However, in their work they do not discuss  what are the compiler assumptions
 and properties  which will guarantee this equivalence. We claim that their proof for
- the verification condition preserving compilation holds only if their non optimizing compiler has the properties discussed here in Section
- \ref{compile}.
+ the verification condition preserving compilation holds only if the non optimizing 
+ compiler has the properties discussed here in Section \ref{compile}.
+
+
+In \cite{SU05CNS}, Saabas and Uustalu present a goto language which is provided with a compositional structure.
+They give a Hoare logic rules for the language where they mention explicitely the program counter in the assertions. 
+They show that if a source program has a Hoare logic derivation
+ against a pre and postcondition then its compilation in the aforementioned goto language will also have a Hoare
+ logic derivation in the aformentioned Hoare logic rules.\todo{to be continued. Actually they do not impose any special restrictions on the target code. Compositional rule strange}
+ 
 
 % \todo{because they do not expose those conditions, 
 %they cannot use the induction hypothesis because they have not proven that the condition to apply the induction hold}
@@ -19,7 +30,7 @@ and properties  which will guarantee this equivalence. We claim that their proof
  In \cite{FB04LBT}, F.Bannwart and P.Muller show how to transform a Hoare style logic derivation on source Java like
  program into a Hoare style logic derivation of a Java bytecode like program. This solution however has the shortcoming
 that the certificate (in this case it is the Hoare style logic derivation) can be potentially large. In particular, this means that
-applying this technique in scenarios like PCC could be hard because of the large size of the certificate. 
+applying this technique in scenarios like PCC could be hardly applicable because of the large size of the certificate. 
     
 
 

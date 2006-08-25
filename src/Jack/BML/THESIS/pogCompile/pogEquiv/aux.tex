@@ -6,7 +6,9 @@
 \newtheorem{exprSrcBcWp1}[wpExprSrc]{Lemma}
 \newtheorem{exprSrcBcWp2}[wpExprSrc]{Lemma}
 \newtheorem{wpStmtBcSrc1}[wpExprSrc]{Lemma}
+\newtheorem{wpStmtBcSrc3}[wpExprSrc]{Lemma} % wp(s), where [s, stmt, e] does not contain stack expressions if inter(s, e) does not contain
 \newtheorem{wpStmtBcSrc2}[wpExprSrc]{Lemma}
+\newtheorem{theorem}{Theorem}[section]
 %\newtheorem{stackCounter}[interProp]{Lemma}
 %\newtheorem{dupProp}[interProp]{Lemma}
 %\newtheorem{newProp}[interProp]{Lemma}
@@ -270,7 +272,7 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \equiv \\
  \\
 
   
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \psi }{\excPost} \  \equiv \\ 
+	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  \equiv \\ 
             \forall \freshVar_1, \ldots  \freshVar_k ,   Q \Rightarrow \\
 	                      \Myspace \phi \begin{array}{l}
                                        \subst{\counter}{\counter + 1}\\
@@ -286,7 +288,7 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \equiv \\
 
 
 
-The next lemma establishes  a relation between the source and bytecode\wpName w.r.t. to the same weakest precondition. 
+The next lemma establishes  a relation between the source and bytecode functions \wpName \ w.r.t. to the same weakest precondition. 
 
 $\excPost $ 
 \begin{wpStmtBcSrc1}[Proof obligation equivalence on statements ] \label{wpStmtBcSrc1}
@@ -301,17 +303,23 @@ $$
  $$
 \end{wpStmtBcSrc1}
 
-This follows from the previous lemma (which establishes the relation between the \wpName over source and the \wpName \ over bytecode that takes into account the compilation structure  )
+This follows from the previous lemma (which establishes the relation between the \wpName \ over source and
+ the \wpName \ over bytecode that takes into account the compilation structure  )
 and lemma \ref{relWpStmt} (which establishes the relation between the \wpName \ over bytecode that takes into account the compilation structure  and the original \wpName which does 
 not consider the properties of the compiler )
 
-
-The next statement establishes under what conditions
- the \wpName \  over source and the \wpName defined in the previous Chapter are equivalent.
  
 
-\todo{for the next lemma we have to say also : if 
-      $\compileLabel{s}{\stmt}{e}$ and $ \inter{e}{e+1} $ does not  contain stack expr. then $\wpi{s }{\methodd}{} $  does not  contain stack expr }
+
+ 
+\begin{wpStmtBcSrc3}  \label{wpStmtBcSrc3}
+For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$ 
+$ \wpi{}{\methodd}{\ins{s} } $ does not contain stack expressions
+\end{wpStmtBcSrc3}
+
+The next statement establishes under what conditions
+ the \wpName \  over source and the \wpName \ defined in the previous Chapter are equivalent.
+
 \begin{wpStmtBcSrc2}[Proof obligation equivalence on statements] \label{wpStmtBcSrc2}
 For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and 
    exceptional postcondition  function $\excPostExpl $ such that :
@@ -323,9 +331,18 @@ For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and
       then it holds 
 $$ \wpSrcStmt{\stmt}{\psi }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
 \end{wpStmtBcSrc2}
+\textit{Proof}: \\
+This follows from the previous Lemma \ref{wpStmtBcSrc1} and Lemma \ref{relWpStmt} \\
+\Qed
 
 
-From the last lemma follows that if the body of the  method \methodd is $\stmt$, and its compilation is $\compileLabel{s}{\stmt}{e}$, then 
+From the last lemma follows that if the body of the  method \methodd \ is $\stmt$, and its compilation is $\compileLabel{s}{\stmt}{e}$, then 
 the proof obligations generated over $\stmt$ upon postcondition $\method.\normalPost$ and exceptional
-postcondition function  $\method.\excPostSpec$     and its compilation $\compileLabel{s}{\stmt}{e}$ are the same 
-$$ \wpSrcStmt{\stmt}{\normalPost }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
+postcondition function  $\method.\excPostSpec$     and its compilation $\compileLabel{s}{\stmt}{e}$ are the same. The last theorem 
+formalizes this fact.
+
+\begin{theorem}
+For all method \methodd \ if its body is $\stmt$ such that its compilation is 
+ $\compileLabel{s}{\stmt}{e}$  we have the following:
+$$ \wpSrcStmt{\stmt}{\methodd.\normalPost }{\methodd.\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
+\end{theorem}

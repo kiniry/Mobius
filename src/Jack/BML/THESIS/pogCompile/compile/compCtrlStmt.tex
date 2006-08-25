@@ -1,5 +1,8 @@
-\subsection{Compiling control statements in bytecode instructions} \label{pogEq:compile:compCtrlStmt}
-\todo{about the compilation of exception handlers}
+\subsubsection{Compiling control statements in bytecode instructions} \label{pogEq:compile:compCtrlStmt}
+%\todo{about the compilation of exception handlers}
+
+Now, let us look at the compilation of source statements. 
+
 \begin{itemize}
   \item compositional statement \todo{a redundant  jump  added in the compilation in order  to see explicitely the relation between stmt1 and stmt2}
       $$\begin{array}{l} \compileLabel{s}{\stmt_1; \stmt_2}{e} = \\  
@@ -89,13 +92,17 @@
 		       % e: \goto \ e + 1; \\
 		       \\ \\
                     
-			\addExceptionTable{ s }{ e'  }{ e' + 2 }{\excType} )
+			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} )
              \end{array}
         $$
 	
 
 
 	The compiler compiles the normal statement $\stmt_1$ and the exception handler $\stmt_2$.
+	Note that in the exception handler table of the bytecode representation of method \methodd, a new line is added 
+	which states that the if one of bytecode instructions from index $s$ to index $e'$  throw a not handled exception of type  \excType
+	control will be transfered to the instruction at index \excType.
+ 
 % Then in the exception handler table a new element is added - it describes that the handler starting at $ \stR{ \compileLabel{\stmt_2} }  $ protects the region from $\stR{\compileLabel{\stmt_1} } $ to
  %$\enR{\compileLabel{\stmt_1}}  $ from exceptions of type $Class$.
 
@@ -116,7 +123,7 @@
 
         
         \\\\
-	\addExceptionTable{ s }{  e' }{ e''+2  }{ \Exception } 
+	\addExceptionTable{\methodd}{ s }{  e' }{ e''+2  }{ \Exception } 
    \end{array}
    $$ 
 
@@ -146,7 +153,7 @@ at the places where a \jsr \ to the subroutine is done.
 \end{enumerate}
 
 The  last remark that we would like to make is that subroutines and their compilation via \ret \ and \jsr has always presented a problem for Java.
-First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work \todo{verify this}.
+First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work\todo{verify this}.
 Second, the analysis performed by the  bytecode verifier in  the JVM becomes rather complex because  (and its first version was erroneus ) 
 of the Java subroutines. In the last version of Java Sun compiler, subroutines has become obsolete 
  where they are compiled by inlining. Thus, the compiler presented here represents a realistic approximation of the Java Sun compiler.
@@ -195,10 +202,13 @@ of the Java subroutines. In the last version of Java Sun compiler, subroutines h
 	      \compileLabel{e' +  1}{\expressionSrcRel}{e  -1 };\\
 	      e: \ifCond \ s +  1; \\
 	      \\\\
-	      \addLoopTable{e'+1}{\invariant }{\modLoop}
+	      \addLoopTable{\methodd}{e'+1}{\invariant }{\modLoop}
 	 \end{array}
     \end{array}
 $$
+Note that the compiler adds a new element in the table of loop invariants of the method \methodd. 
+This new element relates  the index $e'+1$  with the loop invariant \invariant \  and the
+ list of modified expressions \modLoop.
 
 
 

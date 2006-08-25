@@ -60,8 +60,8 @@ the predicate transformer for  expressions.
 
 \begin{wpExpr}[\wpName \ for compiled expressions] \label{wpExpr}
                For any expression $\expressionSrc$, postcondition $\psi$ and exceptional postcondition function
-               $\excPostExpl$ the \wpName \ function for the compilation $\compile{\expression}$  is
-               $ \wpBcSeq{\compile{\expression} }{ \psi  } { \excPostExpl }  $
+               $\excPostExpl$ the \wpName \ function for the compilation $\compileLabel{s}{\expressionSrc}{e}$  is
+               $ \wpBcSeq{\compileLabel{s}{\expressionSrc}{e} }{ \psi  } { \excPostExpl }  $
  \end{wpExpr}
 
 For instance, the  rule of the \wpName  \ for the compilation of access  field expression $\expressionSrc.\fieldd $ 
@@ -87,7 +87,7 @@ This is equivalent to :
 
 The function which calculates the \wpName \ predicate of a compiled statement is called $\wpNameStmt$ and has the following signature :
 $$\wpNameStmt : Set(\bcIns) \rightarrow  \formulaBc \rightarrow  ( \mbox{ \rm \texttt{Exc}}  \rightarrow \formulaBc ) \rightarrow \formulaBc$$ 
-The definition of $\wpNameStmt$ uses the compiler function defined in Section \ref{compCtrlStmt}
+The definition of $\wpNameStmt$ uses the compiler function defined in the previous Section \ref{pogEq:compile:compCtrlStmt}.
 
 \begin{itemize}
     \item sequential statement compilation $\compileLabel{s}{\stmt_1;\stmt_2}{e} $ which by definition is 

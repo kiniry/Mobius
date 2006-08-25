@@ -129,7 +129,8 @@ The same property is established for compilation of expressions.
 
 \end{relWpExpr}
 
-\textit{Proof}: From Property \ref{compile:prop:compProp3} of the compiler it follows that for every expression
+\textit{Proof}: \\
+From Property \ref{compile:prop:compProp3} of the compiler it follows that for every expression
  $\expressionSrc$, start label $s$  and  end label $e$,
   the resulting compilation   $\compileLabel{s}{\expressionSrc}{e}$ is a block of instructions. We can apply 
  the previous lemma  \ref{wpBlock} and we get the result.
@@ -191,16 +192,14 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				\numConclusion{1.4} \ \inter{e''}{e'' +1} = \wpi{e'' + 1}{m}{} \\
 				\mbox{\rm \comment{ From the definition of the \wpName  \ for \goto \ instructions and \numConclusion{1.4}  }}\\
 				\numConclusion{1.5}  \ \wpi{e'' + 1}{m}{} = \inter{e'' + 1}{e+1} \\
-				 \end{array}$$
-				  $$ \begin{array}{l}
+				 
 				\mbox{\rm \comment{ From \numConclusion{1.4}, \numConclusion{1.3}	and \numConclusion{1.5}}}	\\
 				\numConclusion{1.6}	\  \inter{e''}{e'' +1} = \inter{e}{e+1}	= \psi	\\
-				
+								
 
-				
-
-				\mbox{\rm\comment{From  \ref{compile:prop:compProp8}  } } \\
-                               
+				\mbox{\rm\comment{From Property  \ref{compile:prop:compProp8}  } } \\
+                               \end{array}$$
+				  $$ \begin{array}{l}
                                 \numConclusion{1.7}  \ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) =  \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
 				\mbox{\rm\comment{apply the induction hypothesis over \numConclusion{1.6} and  \numConclusion{1.7}  } }\\ 
 				\numConclusion{1.8} \	\wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} = \wpi{e'+2}{m}{} \\
@@ -228,8 +227,8 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
                                
                                  \numConclusion{1.13}  \ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) =  \excPostExpl( \mbox{\rm\texttt{Exc}} )\\
 				 
-                                  \comment{From Property \ref{compile:prop:compProp9} and  \numConclusion{1.13}}\\
-				 \numConclusion{1.14} \ \forall \mbox{\rm\texttt{Exc}} ,  \forall s \le i \le e',  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \\
+                                  \comment{From Property \ref{compile:prop:compProp9} and then  \numConclusion{1.13}}\\
+				 \numConclusion{1.14} \ \forall \mbox{\rm\texttt{Exc}} ,  \forall i,  s \le i \le e',  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \\
                                                           \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i )  \\
                                  
 				 \comment{apply Lemma \ref{relWpExpr}  over hypothesis  \numConclusion{1.11}, \numConclusion{1.12}, \numConclusion{1.14} } \\

@@ -16,16 +16,15 @@ The  next definition presents the expressions of the source language, i.e. the l
        		         	& \constantInt  \\
 				& \mid \Mytrue \\ 
 				& \mid \Myfalse \\
-			%	& \mid \constantRef \\
+				& \mid \Mynull  \\
+				& \mid \this \\
 				& \mid \expressionSrc \ op \ \expressionSrc \\  
 				& \mid \expressionSrc.f \\
 				& \mid \var \\
   			        & \mid (Class) \ \expressionSrc \\
-                                & \mid \Mynull  \\
-				& \mid \this \\
-              	        	& \mid \expressionSrcRel \\
 				& \mid \expressionSrc.m( ) \\
 				& \mid  \newSrc \ Class  ( \expressionSrc  ) \\ 
+				& \mid \expressionSrcRel \\
                                 & \\
 				& \\
         
@@ -38,51 +37,27 @@ The  next definition presents the expressions of the source language, i.e. the l
     $$
 \end{Expression}
 
-
+    As we can see from the grammar, the language supports 
+    integer constants $\constantInt$, the boolean constants  $ \Mytrue$ and $\Myfalse$, the null constant \Mynull \ 
+    denoting  the empty reference, a construct \this \ for referring to the current object,  
+    arithmetic expressions  $\expressionSrc \ \arithOp \ \expressionSrc$ where $\arithOp \in  \{+ , - , div , rem, * \}$.
+    The language  allows to talk about the value stored in a field \fieldd \ for the object reference $\expressionSrc $
+    via the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions  $(Class) \expressionSrc$
+    and method local variables  and parameters \var.  
+    The language also has constructs for expressing method invokations  $ \expressionSrc.m()  $  as well as instance creation
+    $\newSrc \ Class(\expressionSrc )$. For the sake of clarity we consider only non void  methods which do not receive parameters and constructors
+    that receive exactly one argument without losing
+    any specific feature   of modular object oriented  languages. 
+    The language allows to express a relation between  expressions via the construct
+     $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$ as well as to state that an expression 
+   $\expressionSrc$ is an instance of class Class via  $\expressionSrc \ \instanceofSrc \ Class$.
     
-We now  a give an informal description of the meaning of the expressions of the above grammar:
-\begin{itemize}
-   
-   \item $ \constantInt  $ is any integer literal 
-   
-
-   \item  $ \Mytrue$ and $\Myfalse$ are the unique boolean  constants 
-
-   \item \constantRef \ is a reference to an object in the memory heap
-   
-   \item  $\expressionSrc \ op \ \expressionSrc$ which stands for an arithmetic expression with any of the arithmetic 
-          operators $ + , - , div , rem, * $
-	   
-   
-   
-   \item $ \expressionSrc.f $ is a field access expression where the field with name $f$ is accessed
-
-   \item the cast expression $(Class) \expressionSrc$  which is applied only to expressions from a reference type
-   
-   \item the expression \Mynull \ stands for the null reference which does not point to any location in the heap
-  
-   \item \this \ refers to the current object 
-   \item $ \expressionSrc.m()  $ stands for a method invokation expression. Note that here we consider
-         only methods without arguments which return a value
-   \item $\newSrc \ Class(\expressionSrc )$ stands for an object creation expression of class $Class$. We consider only constructors which take
-         only one argument for the sake of readability 
- 
-
-%   \item $\rel \in \{ \le, < ,  \ge, >, = , \neq \} $ 
-   
-\end{itemize}
+    
 
 
 
 
-The language is also provided with relational expressions, which evaluate to the boolean values: 
 
-\begin{itemize}
-   
-   \item $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \} $ stands for the relation between two expressions 
-   
-   \item  $\expressionSrc \ \instanceofSrc \ Class $ states that $\expressionSrc$ has as type the class $Class $ or one of its subclasses 
-\end{itemize}
 
 
 
@@ -121,27 +96,23 @@ effect
 
 % informal description 
 
-From the definition we can see that the language supports also the following constructs :
+  Thus the control constructs in the language are the compositional statement
+  $\stmt;\stmt$ which states that if the first statement is executed normally
+  immediately after it executes the second statement. The conditional statement
+  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  $ which stands for
+  an if statement. The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
+  evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
+  $ \Myelse$ branch is executed. Next, there is a construct for handling exceptions $ \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \}  $.
+  Its meaning is that if the statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
+  the exception will be caught by the statement following the  $ \catch $ keyword. The source language supports also 
+  subroutines via the statement $ \try  \ \{ \stmt \} \ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
+  no matter how the statement following the keyword \try \ terminates,
+  the statement introduced by the keyword \finally \ must execute after it. The language also provides a construct for expressing loops 
+   $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body 
+   statement $ \stmt$ will be executed until the relational expression  $\expressionSrcRel$ evaluates to false.
+   Note that a loop statement is provided with a predicate \invariant \ which must hold whenever the loop entry is reached and with a list of expressions
+   \modLoop \ which give all the locations that  may be modified per loop iteration. The construct $ \returnSrc \  \expressionSrc $ is
+   the statement by which method execution may terminate and control will be transfered to the method caller.
+   The last statement that we consider is the assignment statement $ \expressionSrc = \expressionSrc$.
+    It states that the expression on the left of the assignment sign $=$ is assigned the value of the expression on the right.
 
-\begin{itemize}
-   \item $\stmt;\stmt$, i.e. statements that execute sequentially 
-
-   \item $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  $ which stands for
-         an if statement. The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
-	 evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
-	 $ \Myelse$ branch is executed
-
-   \item $ \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \}  $ which states that if the
-            statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
-	    the exception will be caught by the statement following the  $ \catch $ keyword
-	        
-   \item  $ \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} $ 
-  % \item $ \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \}   $
-   \item $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body statement
-         $ \stmt$ will be executed until the relational expression  $\expressionSrcRel$ evaluates to true.
-   \item  $ \returnSrc \  \expressionSrc $ is the statement by which the execution will be finished
-   \item $ \expressionSrc = \expressionSrc$ stands for an assignment expression, where the value of the left expression is updated with the value   
-         of the right expression  
-  %  \item finally, every expression $\expressionSrc$ is a statement 
- 
-\end{itemize}

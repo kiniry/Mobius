@@ -1,33 +1,53 @@
 \subsubsection{Expressions}\label{pog:wpSrc:wpExpr}
+In the following, we shall give the definition of a weakest
+predicate transformer function for expressions. 
+
+
+As we shall see,  for some of the expressions   
+the definition of the weakest precondition function is trivial (i.e. it is the identity function )
+ as they do have  no side effects.
+ However, this is not the case for expressions that might throw an exception or which may change values of program variables.
+ The predicate returned by the weakest precondition predicate transformer for expressions which may throw an exception 
+will basically acumulate the hypothesis under which the evaluation 
+of the expression terminates normally and the  conditions under which it  terminates exceptionally.
+
+
 The weakest precondition function for expressions has the following signature:
 $$ \wpNameSrcExpr : \expressionSrc \rightarrow \formulaSrc \rightarrow ( \mbox{ \rm \texttt{Exc}} \rightarrow  \formulaSrc ) \rightarrow  
-\MethodSet \rightarrow   \expressionSpecSrc \rightarrow  \formulaSrc $$
+\MethodSet \rightarrow   (\expressionSpecSrc \cup \formulaSrc)  \rightarrow  \formulaSrc $$
 
 For calculating the  $\wpNameSrcExpr$  \ predicate  of  an expression $\expressionSrc$ declared in method \methodd,
  the function $\wpNameSrcExpr$ \ takes as arguments  $\expressionSrc$, a postcondition $\normalPostSrc$, an exceptional postcondition 
 function $\excPostSrc$  and  an $\expressionSpecSrc$ and returns the    formula 
-$\wpSrcExpr{\expressionSrc}{\psi}{\excPostSrc}{ \expressionSpecSrc}$ which is the \wpName \ precondition of $\expressionSrc$ 
-if the its value is represented by $\expressionSpecSrc$.
+$\wpSrcExpr{\expressionSrc}{\psi}{\excPostSrc}{ v }$ which is the \wpName \ precondition of $\expressionSrc$ 
+if the its evaluation is represented by $v$.
 
 In the following, we give the rules of $\wpNameSrcExpr$.
+We provide comments at the places which we do not consider trivial.
+
+
 \begin{itemize}
 
       \item integer and boolean constant access \\
 	  ( $const \in \{  \constantInt , \Mytrue , \Myfalse, \constantRef  \}$ )
 	$$ \wpSrcExpr{const}{\normalPostSrc }{ \excPostSrc }{const} = \normalPostSrc $$
+	Constant expressions do not change the state and thus, if a predicate $ \normalPostSrc$ hold after its execution
+	this means that it held in the prestate of the expession.
 	
     \item field access expression
 	         $$ \begin{array}{l} 
-             \wpSrcExpr{\expressionSrc_1.f  }{\normalPostSrc }{ \excPostSrc }{v.f} = \\
-	                        \wpSrcExpr{\expressionSrc_1 }{\\
+             \wpSrcExpr{\expressionSrc.f  }{\normalPostSrc }{ \excPostSrc }{v.f} = \\
+	                        \wpSrcExpr{\expressionSrc }{\\
 			                   \phantom{wpiSr} \begin{array}{l} 
 						        v \neq \Mynull \Rightarrow \normalPostSrc\\
 			                                \wedge \\
-						        v = \Mynull \Rightarrow \excPostSrc(\texttt{ NullPointerExc} ,\expressionSrc_1 ) 
+						        v = \Mynull \Rightarrow \excPostSrc(\NullPointerExc ) 
 		                                   \end{array}}{\\ \phantom{wpiSrc} \excPostSrc }{v} 
-                     		  
-                  
+                     		                    
 	    \end{array} $$
+	    The rule for the field access expression takes into account the two possible  outcomings of its evaluation. If the evaluation $v$ 
+	    of the reference $\expressionSrc$ is different from $\Mynull$ then the evaluation terminates normally, otherwise the exceptional postcondition 
+	    for \NullPointerExc \ must hold. 
 
 	 \item arithmetic expressions 
              $$ \begin{array}{l}

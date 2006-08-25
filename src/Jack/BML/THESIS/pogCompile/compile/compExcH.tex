@@ -6,22 +6,22 @@ the compiler should keep track of the exception handlers by adding information
 in the exception handler table array \excHandlerTable \ (presented in Section \ref{clazz})   every time it sees one.
  To do this, the compiler is provided with a procedure with the following name and signature:
 
-$$ \addExceptionTableOnly : nat \rightarrow nat \rightarrow nat \rightarrow  \ClassSet_{exc}  \rightarrow    \MethodSet  $$
-	
-The definition of the procedure is the following:
+$$ \addExceptionTableOnly : \MethodSet *  nat * nat * nat *  \ClassSet_{exc}   $$
+The procedure adds a  new element in the exception handler table
+of a method \methodd. The meaning of the new element is that 
+every exception of type \mbox{\rm\texttt{Exc}}  thrown in between the instructions $start \ldots end$ can be handled by 
+the code starting at index $h$.	
+The formal definition of the procedure is the following:
 
 $$ \begin{array}{l}
-  \addExceptionTable{ start }{ end  }{ h}{  \mbox{\rm\texttt{Exc}} } ) = \\
+  \addExceptionTable{\methodd}{ start }{ end  }{ h}{  \mbox{\rm\texttt{Exc}} }  = \\
    \begin{array}{l}
          \methodd.\excHandlerTable := \{ (start, end, h,  \mbox{\rm\texttt{Exc}}   ) , \methodd.\excHandlerTable \}
 
    \end{array}
 \end{array}$$
-The function adds a  new element in the exception handler table
-of a method \methodd. The meaning of the new element is that 
-every exception of type \mbox{\rm\texttt{Exc}}  thrown in between the instructions $start \ldots end$ can be handled by 
-the code starting at index $h$.
 
-We can remark that when the function  \addExceptionTableOnly \  adds a new element in the exception handler table array
+
+We can remark that when the procedure  \addExceptionTableOnly \  adds a new element in the exception handler table array
 of a method \methodd, the new element is added at the beginning of the  exception handler table   \methodd.\excHandlerTable.
 
