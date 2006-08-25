@@ -285,12 +285,12 @@ Field : TYPE = ARRAY ReferenceValue OF JavaValue ;
 % type 'Field'
 
 
-asField : (Field, JavaType) -> Field ;
+return_type : Field -> JavaType;
 
 % Axioms
 is_asField_axiom: axiom =  
-FORALL (f:Field, t:JavaType, x:JavaValue) : 
-  is(asField(f,t)[x],t) ;
+FORALL (f:Field, x:JavaValue) : 
+  is(f[x],return_type(f)) ;
 %
 % Translation note:
 % Corresponds to Simplify's `asField'.
@@ -343,8 +343,8 @@ DATATYPE
 END ;
 
 array_parent : ArrayValue -> ArrayValue ;
-array_position : ArrayValue -> Value ;
-array_fresh : (ArrayValue, Time, Time, ElemsT, ArrayShape, JavaType, JavaValue) -> BOOLEAN
+array_position : ArrayValue -> JavaValue ;
+array_fresh : (ArrayValue, Time, Time, ElemsT, ArrayShape, JavaType, JavaValue) -> BOOLEAN;
 
 
 %% A simple way (a la C) to implement the Java Booleans in CVC:
@@ -379,3 +379,16 @@ bool_eq : (INT,INT) -> INT = LAMBDA(x:INT,y:INT):
                                ELSE y 
                                ENDIF ;
 
+Path : TYPE;
+S : TYPE;
+LockSet: TYPE;
+e_closed_time : ElemsT -> Time;
+f_closed_time : Field -> Time;
+is_new_array : ArrayValue -> BOOLEAN;
+alloc:Time;
+alloc_:Time;
+LS:LockSet;
+Exception: JavaType = javaClass(-3);
+
+% needed: unset
+% check: shapeOne, shapeMany (types or functions?) 

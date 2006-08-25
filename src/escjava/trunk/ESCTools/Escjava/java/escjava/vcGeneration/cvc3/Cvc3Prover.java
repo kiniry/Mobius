@@ -20,6 +20,9 @@ public class Cvc3Prover extends ProverType {
     HashMap lablelhash = new HashMap();
     // a counter to ensure unique names
     int labelcounter = 0;
+
+    int classCounter = 1;
+    HashMap classType = new HashMap();
    
     // how to pass labels to the prover 
     // since cvc labels are actually abstract variables, we will
@@ -129,6 +132,7 @@ public class Cvc3Prover extends ProverType {
     // renames variables
     // for completeness, we should also check for keword conflicts (not done)
     private void cvc3Rename(VariableInfo caller) {
+
         // <variables not handled>
         Pattern p2 = Pattern.compile("Unknown tag <.*>");
         Matcher m2 = p2.matcher(caller.old);
@@ -150,6 +154,17 @@ public class Cvc3Prover extends ProverType {
           caller.def = cvc3idRename(caller.old);
     }
 
+    public String getClassTypeValue(String classname) {
+      String s;
+      if (classType.containsKey(classname))
+        s = (String)classType.get(classname);
+      else {
+        s = "javaClass("+(classCounter++)+")";
+        classType.put(classname,s);
+      }
+      return s;
+    }
+
     public String getTypeInfo(TypeInfo caller) {
         if (caller.def == null)
             cvc3Rename(caller);
@@ -160,12 +175,11 @@ public class Cvc3Prover extends ProverType {
     // for completeness, we should also check for keword conflicts (not done)
     // rename types
     /*! ensures cvc != null; !*/
-    private void cvc3Rename(TypeInfo caller) {
-
-
-
+    private void cvc3Rename(/*@ non_null @*/TypeInfo caller) {
         if (caller.old.equals("null")) {
-          caller.def = "Reference";
+          caller.def = "NULL!JavaValue";
+        } else if (caller.old.equals("java.lang.Object")) {
+          caller.def = "Object";
         } else { 
 // do we only want to allow java.x.y?
           // follow rules for variable renaming, above
@@ -196,7 +210,9 @@ public class Cvc3Prover extends ProverType {
         TNode.addName("ecReturn", "%Path", "ecReturn");
         TNode.addName("ecThrow", "%Path", "ecThrow");
         TNode.addName("XRES", "%Reference", "XRES");        
+        TNode.addName("java.lang.Object", "JavaType", "Object");        
         TNode.addName("java'lang'Object", "JavaType", "Object");        
+        TNode.addName("java.lang.Exception", "JavaType", "Exception");        
         TNode.addName("alloc", "Time", "alloc");        
         TNode.addName("alloc_", "Time", "alloc_");        
         TNode.addName("LS", "LockSet", "LS");        
@@ -226,13 +242,11 @@ public class Cvc3Prover extends ProverType {
         if (v.size() > 1)
           s.write("(");
         for (;j<v.size();j++) {
-          TypeInfo ti = ((TypeInfo)v.get(j));
-          if (ti == null || ti.def==null) {
-            s.write ("JavaValue");
-          }
-          else {
-            s.write(ti.def);
-          }
+          TypeInfo ti = (TypeInfo)v.get(j);
+          if (ti == null) 
+            s.write("JavaValue");
+          else
+            s.write(getTypeInfo(ti));
 
           if (j < v.size()-1)
             s.write (",");
@@ -262,8 +276,14 @@ public class Cvc3Prover extends ProverType {
        varhash.put("alloc_",null);
        varhash.put("LS",null);
        varhash.put("elems",null);
-       varhash.put("t_int",null);
+       varhash.put("javaInt",null);
+       varhash.put("javaChar",null);
+       varhash.put("javaDouble",null);
+       varhash.put("javaBool",null);
+       varhash.put("javaFloat",null);
+       varhash.put("java'lang'Object",null); // base Object type
        varhash.put("Object",null); // base Object type
+       varhash.put("Exception",null); // Exception class type
        varhash.put("not_handled",null); // this will be handled in the visitor
 
        while (iter.hasNext()) {
@@ -286,6 +306,10 @@ public class Cvc3Prover extends ProverType {
            // declare variable
            s.write(vitmp.getVariableInfo() + " : "
              + vitmp.type.getTypeInfo());
+           // declare new object types
+           if (vitmp.type.getTypeInfo().equals("JavaType"))
+             s.write(" = "+getClassTypeValue(vitmp.getVariableInfo()));
+
            s.write(";\n");
 // only assert the types of javatype vars!!
            // now add static type decl:

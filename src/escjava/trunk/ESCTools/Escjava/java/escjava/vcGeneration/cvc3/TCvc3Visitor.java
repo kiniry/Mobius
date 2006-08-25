@@ -174,14 +174,10 @@ class TCvc3Visitor extends TVisitor {
 
 
     /*
-     * Pretty print for unsupported operators (comments)
+     * Pretty print for null operators 
      */
-    public void noOp(/*@ non_null @*/String s, TNode n) {
-     try {
-       lib.appendN("% "+s +"\n");
-     } catch (Exception e) {
-       System.out.println(e.getMessage());
-     }
+    public void noOp(TFunction n) throws IOException {
+     n.getChildAt(0).accept(this);
    }
 
     // variable or type name    
@@ -340,12 +336,12 @@ class TCvc3Visitor extends TVisitor {
     }
 
     public void visitTLockLE(/*@ non_null @*/TLockLE n) throws IOException {
-prefixOp("#lockLE",n);
+prefixOp("LockLE",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTLockLT(/*@ non_null @*/TLockLT n) throws IOException {
-prefixOp("#lockLT",n);
+prefixOp("LockLT",n);
 		// TODO Auto-generated method stub
     }
 
@@ -436,6 +432,8 @@ prefixOp("#lockLT",n);
       // out format is FORALL (x:t1,y:t2): formula
       // TODO Not sure how quantifier nodes are put together
       // for one variable it appears to be (var,T/F,formula)
+lib.appendN("TRUE");
+lib.beginC("%");
       int i=0;
       lib.appendI("FORALL(");
       TNode child;
@@ -465,6 +463,7 @@ prefixOp("#lockLT",n);
       child = n.getChildAt(n.sons.size() - 1);
       child.accept(this);
       lib.reduceI();
+lib.endC();
     }
 
     public void visitTExist(/*@ non_null @*/TExist n) throws IOException {
@@ -502,56 +501,56 @@ prefixOp("#lockLT",n);
     }
 
     public void visitTIsAllocated(/*@ non_null @*/TIsAllocated n) throws IOException {
-      prefixOp("IsAllocated",n);
+      prefixOp("is_allocated",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTEClosedTime(/*@ non_null @*/TEClosedTime n) throws IOException {
-      prefixOp("EClosedTime",n);
+      prefixOp("e_closed_time",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTFClosedTime(/*@ non_null @*/TFClosedTime n) throws IOException {
-      prefixOp("FClosedTime",n);
+      prefixOp("f_closed_time",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTAsElems(/*@ non_null @*/TAsElems n) throws IOException {
+      noOp(n);
       // not needed!
     }
 
     public void visitTAsField(/*@ non_null @*/TAsField n) throws IOException {
-      prefixOp("AsField",n);
+      prefixOp("asField",n);
 		// TODO Auto-generated method stub
+// note, get field type from here!  we may to preprocess to get this
     }
 
     public void visitTAsLockSet(/*@ non_null @*/TAsLockSet n) throws IOException {
+      noOp(n);
     // should not be needed!
     }
 
     public void visitTArrayLength(/*@ non_null @*/TArrayLength n) throws IOException {
-      prefixOp("ArrayLength",n);
-		// TODO Auto-generated method stub
+      prefixOp("array_length",n);
     }
 
     public void visitTArrayFresh(/*@ non_null @*/TArrayFresh n) throws IOException {
-prefixOp("ArrayFresh",n);
-		// TODO Auto-generated method stub
+      prefixOp("array_fresh",n);
     }
 
     public void visitTArrayShapeOne(/*@ non_null @*/TArrayShapeOne n) throws IOException {
-prefixOp("ArrayShapeOne",n);
+prefixOp("shapeOne",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTArrayShapeMore(/*@ non_null @*/TArrayShapeMore n) throws IOException {
-prefixOp("ArrayShapeMore",n);
+prefixOp("shapeMore",n);
 		// TODO Auto-generated method stub
     }
 
     public void visitTIsNewArray(/*@ non_null @*/TIsNewArray n) throws IOException {
-prefixOp("IsNewArray",n);
-		// TODO Auto-generated method stub
+      prefixOp("is_new_array",n);
     }
 
     public void visitTString(/*@ non_null @*/TString n) throws IOException {
