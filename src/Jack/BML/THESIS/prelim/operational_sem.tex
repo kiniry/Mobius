@@ -91,25 +91,25 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
    and there is a transitive state transition to  $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{k}$ 
     such that the instruction \methodd.\body[k] is either a \return \ instruction or an 
     instruction which terminates execution with an uncaught exception and the configuration after its execution is 
-    $\configFinal{ \heap'}{\locVarOnly'}{\Final}$ then   we denote this  with: 
-    $$ {\scriptsize \methodd : \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTransTerm \configFinal{ \heap'}{\locVarOnly'}{\Final} }$$
+    $\configFinal{ \heap'}{\Final}$ then   we denote this  with: 
+    $$ {\scriptsize \methodd : \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTransTerm \configFinal{ \heap'}{\Final} }$$
  \end{transClosStateTrans1}
  
 
 
 
- We first give the operational semantics of a method execution. The execution of method \methodd 
+ We first give the operational semantics of a method execution. The execution of method \methodd \
  is the execution of its body upto reaching a final state configuration:
  
  $$
  {\scriptsize  \frac{\begin{array}{l}
           \methodd \vdash  \methodd.\body[0] :  
-	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  \stateTrans^{*} \configFinal{\heap'}{\locVarOnly'}{\Final}\\
+	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  \stateTrans^{*} \configFinal{\heap'}{\Final}\\
 	\end{array}	 
        }
        {\methodd :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		    \stateTransTerm
-                   \configFinal{\heap'}{\locVarOnly'} {\Final} }}$$ \\
+                   \configFinal{\heap'} {\Final} }}$$ \\
 
 
  
@@ -160,10 +160,10 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
         $$ {\scriptsize \frac{ } 
             {\methodd \vdash \return :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                    \stateTrans 
-                                    \configFinalNorm{\heap}{\locVarOnly}{\stackOnlyParam{\counterOnly}}}   }  $$
+                                    \configFinalNorm{\heap}{\stackOnlyParam{\counterOnly}}}   }  $$
 
 	    The instruction causes the normal termination of the execution of the current method \methodd.
-	    The instruction does not affect changes on the heap \heap and the return result is contained in
+	    The instruction does not affect changes on the heap \heap{} and the return result is contained in
 	    the stack top element \stackOnlyParam{\counterOnly}
       \end{enumerate}
 
@@ -299,7 +299,7 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 						  \configVar }} $$
 						        
         The top value contained on the stack top \stackOnlyParam{\counterOnly} and the reference contained in \stackOnlyParam{\counterOnly - 1} 
-	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull \footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
+	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull{} \footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
 	for instance, \stackOnlyParam{\counterOnly - 1} contains certainly a reference        of type \texttt{C}  } , the value of its field 
 	\texttt{f} for the object  is updated 
 	with the value\stackOnlyParam{\counterOnly} and the counter \counterOnly is decremented.
@@ -575,7 +575,7 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
                                                        {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTransTerm 
-							 \configFinalNorm{\heap'}{\locVarOnly'}{\Res}\\
+							 \configFinalNorm{\heap'}{\Res}\\
 				                %\end{array}  
                                                    \\
 						   \counterOnly' = \counterOnly - \methodd.\numArgs + 1 \\
@@ -596,7 +596,7 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
                                                        {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTransTerm 
-						       \configFinalExc{\heap'}{\locVarOnly'}{\Exc}\\
+						       \configFinalExc{\heap'}{\Exc}\\
 				           %\end{array} \\
 					   \Rightarrow \\
 					  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, typeof(\Exc)  ,\methodd.\excHandlerTable ) =  \configVar
