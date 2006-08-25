@@ -81,7 +81,7 @@ public class Cvc3 extends NewProver {
   public /*@non_null*/ProverResponse set_prover_resource_flags(/*@non_null*/Properties properties) {
     
     //++
-    if(debug) System.out.println("Sammy::set_prover_resource_flags");
+    if(debug) System.out.println("Cvc3::set_prover_resource_flags");
     //++
     
     /* we have to create a big string containing

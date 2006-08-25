@@ -68,7 +68,7 @@ public class ProverManager {
     if (useCvc3 && (cvc3 == null || !cvc3.started)) {
       long startTime = java.lang.System.currentTimeMillis();
       if (cvc3 == null)
-        cvc3 = new Cvc3(false);
+        cvc3 = new Cvc3(true);
 
       if (!Main.options().quiet) 
         System.out.println("  Prover started:" + Main.timeUsed(startTime));
@@ -79,10 +79,7 @@ public class ProverManager {
       cvc3.set_prover_resource_flags(flags);
 
       cvc3.start_prover();
-/*
-      cvc3.make_assumption(XXX);
-      escjava.backpred.Backpred.genUnivBackPred(XXX);
-*/
+      // note: the backpred is included as part of the vcGen code
     } 
     
     if (listener != null) listener.stateChanged(1);
@@ -142,6 +139,11 @@ public class ProverManager {
     
     if (listener != null) 
       listener.stateChanged(0);
+
+    if(useCvc3) {
+      cvc3.stop_prover();
+      cvc3 = null;
+    }
     
     isStarted = false;
     status = NOTSTARTED;
@@ -178,29 +180,34 @@ public class ProverManager {
   //? ensures \result != null;
   synchronized
   static public Enumeration prove(Expr vc, FindContributors scope) {
-    
-    if (scope == null) {
-      if (savedScope != null && status != PUSHED) push(savedScope);
-    } else {
-      if (status == PUSHED) {
-        if (savedScope != scope) {
-          pop();
+   
+    if (useSimplify) { 
+      if (scope == null) {
+        if (savedScope != null && status != PUSHED) push(savedScope);
+      } else {
+        if (status == PUSHED) {
+          if (savedScope != scope) {
+            pop();
+            push(scope);
+          }
+        } else {
           push(scope);
         }
-      } else {
-        push(scope);
+      }
+      if (listener != null) listener.stateChanged(2);
+      try {
+        simplify.startProve();
+        VcToString.compute(vc, simplify.subProcessToStream());
+ 
+        Enumeration en = simplify.streamProve();
+        if (listener != null) listener.stateChanged(1);
+        return en;
+      } catch (FatalError e) {
+        died();
+        return null;
       }
     }
-    if (listener != null) listener.stateChanged(2);
-    try {
-      simplify.startProve();
-      VcToString.compute(vc, simplify.subProcessToStream());
- 
-      Enumeration en = simplify.streamProve();
-      if (listener != null) listener.stateChanged(1);
-      return en;
-    } catch (FatalError e) {
-      died();
+    else {
       return null;
     }
   }
@@ -234,5 +241,4 @@ public class ProverManager {
    * Our Cvc3 instance.
    */
   public static Cvc3 cvc3;
- 
 }

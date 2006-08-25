@@ -246,6 +246,7 @@ public class Main extends javafe.SrcTool
 	ProverManager.useSimplify = options().useSimplify;
 	ProverManager.useSammy = options().useSammy;
 	ProverManager.useHarvey = options().useHarvey;
+        ProverManager.useCvc3 = options().useCvc3;
 	//$$
 
         if (!options().quiet) {

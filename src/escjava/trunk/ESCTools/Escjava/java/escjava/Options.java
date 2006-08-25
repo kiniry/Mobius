@@ -293,6 +293,7 @@ public class Options extends javafe.SrcToolOptions {
     // -> by default simplify is used when the option -Prover is not given.
     public boolean useSammy = false;
     public boolean useHarvey = false;
+    public boolean useCvc3 = false;
 
     // use the new verification conditions generator
     public boolean nvcg = false;
@@ -819,6 +820,8 @@ public class Options extends javafe.SrcToolOptions {
                     useSammy = true;
                 if (optionChecked.equals("harvey"))
                     useHarvey = true;
+                if (optionChecked.equals("cvc3"))
+                    useCvc3 = true;
 
                 newOffset++;
             }
@@ -833,6 +836,8 @@ public class Options extends javafe.SrcToolOptions {
                     useSammy = true;
                 if (optionChecked.equals("harvey"))
                     useHarvey = true;
+                if (optionChecked.equals("cvc3"))
+                    useCvc3 = true;
 
                 newOffset++;
             }
@@ -847,6 +852,8 @@ public class Options extends javafe.SrcToolOptions {
                     useSammy = true;
                 if (optionChecked.equals("harvey"))
                     useHarvey = true;
+                if (optionChecked.equals("cvc3"))
+                    useCvc3 = true;
 
                 newOffset++;
             }
