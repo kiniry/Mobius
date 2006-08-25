@@ -49,7 +49,9 @@ public class Cvc3Prover extends ProverType {
         out.write("INCLUDE \"header.cvc3\";\n");
         generateDeclarations(out,term);
         generatePureMethodDeclarations(out);
+        out.write("QUERY\n");
         generateTerm(out,term);
+        out.write(";");
     }
     
 
@@ -224,17 +226,13 @@ public class Cvc3Prover extends ProverType {
         if (v.size() > 1)
           s.write("(");
         for (;j<v.size();j++) {
-System.out.println("2");
           TypeInfo ti = ((TypeInfo)v.get(j));
-          if (ti == null) {
+          if (ti == null || ti.def==null) {
             s.write ("JavaValue");
           }
           else {
-System.out.println(ti.toString());
-System.out.println("3b");
             s.write(ti.def);
           }
-System.out.println("4");
 
           if (j < v.size()-1)
             s.write (",");
@@ -242,9 +240,9 @@ System.out.println("4");
         if (v.size() > 1)
           s.write(")");
         if (tmc.type == null) 
-          s.write (" -> JavaValue\n");
+          s.write (" -> JavaValue;\n");
         else
-          s.write (" -> " + tmc.type.def + "\n");
+          s.write (" -> " + tmc.type.def + ";\n");
       }
     }
 
