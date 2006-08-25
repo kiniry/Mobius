@@ -1,16 +1,16 @@
 The objective of this section is to demonstrate how the user can
 annotate and verify programs in order to obtain an upper bound on
 memory consumption. We begin by describing the principles of our
-approach, then turn to establish its soundness, and finally show
+approach, then turn to a discussion for its soundness, and finally show
 how it can be applied to non-trivial examples involving recursive
 methods and exceptions.
 
 
-\subsection{Principles}
+\subsubsection{Principles}
 Let us begin with a very simple memory consumption policy which aims
 at enforcing that  programs do not consume more than
 some fixed amount of memory \Max . To enforce this policy, we first
-introduce a ghost variable \Mem\ that represents at any given point of
+introduce a ghost variable \Mem{} that represents at any given point of
 the program the memory used so far. Then, we annotate the program both
 with the policy and with additional statements that will be used to
 check that the application respects the policy.
@@ -41,7 +41,7 @@ guarantee that the memory allocated during a normal execution of
 $\method$ is not more than some fixed number \allocMethod{\method}\
 of memory units. Thus for the method $\method$ the postcondition is:
 $$
-\ensures \  \Mem \leq \old(\Mem) + \allocMethod{\method}.
+\ensures \  \Mem \leq \old{\Mem} + \allocMethod{\method}.
 $$
 
 \paragraph{The exceptional postcondition} of the method $\method$ must
@@ -51,7 +51,7 @@ than \allocMethod{\method}\ units. Thus for the method $\method$ the
 exceptional postcondition is:
 
 $$
-\exsures{Exception} \  \Mem \leq \old(\Mem) + \allocMethod{\method}.
+\exsures{Exception} \  \Mem \leq \old{\Mem} + \allocMethod{\method}.
 $$
 
 
@@ -74,7 +74,8 @@ this paper, we only consider dynamic object creation with the bytecode
 \new; arrays are left for future work and briefly discussed in the
 conclusion. 
 
-The function $allocInstance: Class \rightarrow int$ gives an estimation of the memory used by an instance of a class.
+The function $\allocInstanceOnly: Class \rightarrow int$ gives an estimation of the memory used by an instance of a class. 
+Note that the memory allocated for a class instance is specific to the implementation of the virtual machine.
 %In order to perform the update for \new\ bytecodes, we must assume given a function $allocInstance: Class \rightarrow int$ which maps classes to an estimation of the memory that any instance of the class may occupy. 
 At every program point where a bytecode \srcCode{\new \ A} is found, the ghost variable \Mem\ must be incremented by $\allocInstance{A}$. This
 is achieved by inserting a ghost assignment immediately after any \new\ instruction, as shown below:
@@ -85,14 +86,14 @@ $$
 \end{array}
 $$
 
-\subsection{Correctness}
+\subsubsection{Correctness}
 %An important question is if the annotations that we prescribe here guarantees that the memory used in a program is not more than a fixed upper bound \Max. 
 We want to guarantee that the memory allocated by a given program is bounded by a constant \Max.
 We can prove that our annotation is correct w.r.t. to the policy for constraint memory use, by instrumenting the operational semantics of the bytecode language given in
- Section \ref{subsec:sound}. The instrumented operational semantics
+Chapter \ref{prelim}, Section \ref{opSem}. The instrumented operational semantics
 manipulates states as before, but it is extended with the special variable \Mem. Thus, states in the new semantics have the form:
 
-$$\configMem{h,\fram{m,\pc,l,s},\stf,\Mem}$$
+$$ \configMem{\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}}{\Mem} $$ 
 
 %The variable \Mem \ changes its value only for instructions that allocate space in the heap, i.e. \new\ instructions:
 
@@ -106,7 +107,7 @@ $$\configMem{h,\fram{m,\pc,l,s},\stf,\Mem}$$
 
 
 The other instructions do not affect \Mem, so the corresponding rules of the operational semantics are as before. As we saw in the previous section to every
-instruction of the form $\new\ A$ we attach the annotation $\set\ \Mem = \Mem + \allocInstance(A)$. The proof obligation generator converts this annotation into new value for the variable \Mem:
+instruction of the form $\new\ A$ we attach the annotation $\set\ \Mem = \Mem + \allocInstance{A}$. The proof obligation generator converts this annotation into new value for the variable \Mem:
 
 $$
 \begin{array}{l}
@@ -119,7 +120,7 @@ We can prove that whenever the allocated space in the heap increments,
 the ghost variable \Mem\ also increments, which is a sufficient condition to guarantee the correctness of the annotations. 
 So far we do not deal with garbage collection (see discussion in Section \ref{sec:conc}).
 
-\subsection{Examples}
+\subsubsection{Examples}
 We illustrate hereafter our approach by several examples. 
 %\alarm{talk about number of proof obligations, which are discharged automatically in Coq, etc}
 
@@ -137,7 +138,7 @@ $$
 \begin{array}{ll}
 \requires & \Mem + k  \leq \Max \\
 \modifies & \Mem \\
-\ensures & \Mem  \leq \old(\Mem) + k
+\ensures & \Mem  \leq \old{\Mem} + k
 \end{array}
 $$
 
@@ -146,7 +147,7 @@ $$
 \begin{array}{ll}
 \requires & \Mem + l  \leq \Max \\
 \modifies & \Mem \\
-\ensures & \Mem  \leq \old(\Mem) + l
+\ensures & \Mem  \leq \old{\Mem} + l
 \end{array}
 $$
 
@@ -155,7 +156,7 @@ method n(A a)
 ...
 //{ prove Mem <= Mem +max(l,k) }
 invokevirtual m <A>
-//{ assume Mem <= \old(Mem) + max(l,k)}
+//{ assume Mem <= \old{Mem} + max(l,k)}
 ...
 \end{verbatim}
 \caption{\sc Example of overridden methods}
@@ -192,7 +193,8 @@ $$
  \variant  & \local{1} \\
  \ensures  & \local{1} \ge 0 \\
            & \wedge \\
-           & \Mem <= \old(\Mem) +  \old(\local{1})*2*\allocInstance{A} + \allocInstance{A}\\
+           & \Mem <= \old{\Mem} +  \\
+	   & \old{\local{1}}*2*\allocInstance{A} + \allocInstance{A}\\
            &  +  \allocInstance{C})
 \end{array}$$
 
@@ -254,8 +256,8 @@ $$
        %&  \local{1} == \Mynull \Rightarrow  \\
            %& \phantom{\local{1}} \Mem +  \allocInstance{B} + \allocInstance{A}   \le \Max \\
   \modifies & \Mem \\
-  \ensures  & \Mem \le \old(\Mem) +  \allocInstance{A} \\
-  \exsures{NullPointerException}  & \Mem == \old(\Mem)   \\
+  \ensures  & \Mem \le \old{\Mem} +  \allocInstance{A} \\
+  \exsures{NullPointerException}  & \Mem == \old{\Mem}   \\
 \end{array}$$
 
 \begin{tabular}{lr}

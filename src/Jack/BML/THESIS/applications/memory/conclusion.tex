@@ -18,16 +18,17 @@ array, as it is given by the top value on the operand stack at the
 time of its creation. Our intuition is that this can be done using
 an abstract interpretation or a symbolic evaluation of the program. 
 If we look at the example code below (in source code): 
-\begin{verbatim}
+\begin{lstlisting}[frame=trbl] 
 void m(int s){
  int len = s;
  int[] i = new int[len]
 } 
-\end{verbatim}
+\end{lstlisting}
 where \verb!len! is a local variable to the method, one can infer by
 symbolic computation that its value is the value of the method
-parameter. Thus the method can be given the precondition \texttt{Mem +
-s <= \Max}. In a similar line of work, we would like to extend our
+parameter. Thus the method can be given the precondition 
+\lstinline{Mem + 4*s <= \Max}\footnote{this because an integer in Java is encoded in 4 bytes}.
+ In a similar line of work, we would like to extend our
 results to concurrency using recent advances in program logics for
 multi-threaded Java programs \cite{RDFHL05ess}. Providing an appropriate
 treatment of arrays and multi-threading is an important step towards

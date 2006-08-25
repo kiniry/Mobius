@@ -11,8 +11,9 @@ class invariants). In this section, we describe an implementation of
 an annotation assistant dedicated to the analysis of memory consumption,
 and illustrate its working on an example.
 
-\subsection{Annotation assistant}
-The user must provide annotations about the memory required to create objects of the given classes. The variants for each loop and recursive method may be given by the user or be synthesized through appropriate mechanisms.
+\subsubsection{Annotation assistant}
+The user must provide annotations about the memory required to create objects of the given classes.
+ The variants for each loop and recursive method may be given by the user or be synthesized through appropriate mechanisms.
 
 %Given a control flow graph of the program --which is computed by the verification environment, a function that gives for each class the memory required to create an object of that class, which is provided by the user, and a variant for each loop and recursive method, which can either be provided by the user, or synthesized through appropriate mechanisms. 
 
@@ -21,7 +22,8 @@ inserts the ghost assignments on appropriate places, and then computes
 recursively the memory allocated on each loop and method. 
 A pseudo-code of the algorithm for inferring an upper bound for method allocations is given in Fig. \ref{methodAlloc}.
 Essentially, it finds the maximal memory that can be allocated in a method by exploring all its possible execution path.
-The algorithm computes the set of blocks contained in a loop, the loop entry block and the set of end blocks of a loop; see Section 10 of  \cite{ASU86cpt} for a description of the algorithms used.
+The algorithm computes the set of blocks contained in a loop, the loop entry block and the set of end blocks of a loop; see Section 10 of 
+ \cite{ASU86cpt} for a description of the algorithms used.
 
 \begin{figure}[!htp]
 function $\allocMethod{.}$\\
@@ -29,18 +31,19 @@ function $\allocMethod{.}$\\
 \textbf{Output:} Upper bound of the memory allocated by $m$. \\
 \textbf{Body:}
 \begin{enumerate}
-   \item Detect all the loops in $m$;
-   \item For every loop $l$ determine $\loopSet{l}$, $\loopEntry{l}$ and $\loopEndsSet$;
-   \item Apply the function $alloc$ to each instruction $i_k$, such that $i_k = \return$;
+   \item Detect all the loops in $m$; for every loop $l$ determine $\loopSet{l}$, $\loopEntry{l}$ and $\loopEndsSet{l}$;
+   \item Apply the function \allocatedOnly \  to each instruction $\instrAt{k}$, such that $\instrAt{k} = \return$;
    \item Take the maximum of the results given in the previous step: \\
- $max_{i_k = \return } \allocated{i_k}$.
+ $max_{\instrAt{k} = \return } \allocated{\instrAt{k}}$.
 \end{enumerate}
 \caption{\sc Inference algorithm}
 \label{methodAlloc}
 \end{figure}
 
-The auxiliary function $allocPath$, which infers the maximal allocations done by the set of execution paths ending with the same \return\ instruction, is given in Fig. \ref{fig:allocMethod}.
-Inferring the memory allocated inside loops is done by the function $\allocLoopWithEnd{\cdot}{\cdot}$, which is invoked by $allocPath$ whenever the current instruction belong to a loop. The specification of the function is shown in Fig. \ref{fig:loopPath}.
+The auxiliary function $allocPath$, which infers the maximal allocations done by the set of execution paths ending with the same \return\ instruction,
+ is given in Fig. \ref{fig:allocMethod}.
+Inferring the memory allocated inside loops is done by the function $\allocLoopWithEnd{\cdot}{\cdot}$, which is invoked by $allocPath$ whenever the 
+current instruction belong to a loop. The specification of the function is shown in Fig. \ref{fig:loopPath}.
 
 \begin{figure}[!hbp]
 %\centerline{
@@ -121,10 +124,14 @@ entry point, which is the case for code produced by non-optimizing
 compilers. A pre-analysis could give us all the entry points of more
 general loops, for instance by the algorithms given in \cite{CJPS05cmu}; our approach may be thus applied straightforwardly.
 
-\subsection{Example}
+\subsubsection{Example}
 %Our assistant is able to handle programs with complex features, such as \alarm{mariela}.\alarm{fix section}
 
-Let us consider the bytecode given in Fig. \ref{inf:src}, which is a simplified version of the bytecode corresponding to the source code given in the right of the figure. For simplicity of presentation, we do not show all the instructions (the result of the inference procedure is not affected). Method $m$ has two branching instructions, where two objects are created: one instance of class $A$ and another of class $B$. Our inference algorithm gives that $\allocMethod{m} = \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} + \allocMethod{B.init}$. Due to limitation on space, we do not explain the details of such inference, which are given in Fig. \ref{inf:ex} ($\instrAt{k}$ refers to the bytecode instruction at position $k$).
+Let us consider the bytecode given in Fig. \ref{inf:src}, which is a simplified version of the bytecode corresponding to the source code given in the
+ right of the figure. For simplicity of presentation, we do not show all the instructions (the result of the inference procedure is not affected).
+ Method $m$ has two branching instructions, where two objects are created: one instance of class $A$ and another of class $B$. Our inference algorithm gives
+ that $\allocMethod{m} = \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} + \allocMethod{B.init}$. Due to limitation on space, we do not explain
+ the details of such inference, which are given in Fig. \ref{inf:ex} ($\instrAt{k}$ refers to the bytecode instruction at position $k$).
 
 
 %It infers the maximal memory used for the example program at Fig. \ref{inf:src}. 

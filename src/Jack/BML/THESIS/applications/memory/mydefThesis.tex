@@ -4,8 +4,8 @@
 \newcommand{\fram}[1]{{\left\langle #1 \right\rangle}}
 \newcommand{\stf}{{\mathit{sf}}}
 
-\newcommand{\configMem}[1]{{\langle\!\langle #1 \rangle\!\rangle}}
-\newcommand{\instrAt}{\texttt{InstAt}}
+\newcommand{\configMem}[2]{{\langle\!\langle #1, #2 \rangle\!\rangle}}
+\newcommand{\instrAt}[1]{i_{#1}}
 
 
 \newcommand{\Mem}{\texttt{MemUsed}}
@@ -13,15 +13,16 @@
 
 %%%%%%%%%%%% allocation function
 \newcommand{\visited}{\texttt{visited}}
-\newcommand{\allocated}[1]{allocPath(#1)}
-
+\newcommand{\allocated}[1]{\mbox{\rm\texttt{allocPath}}(#1)}
+\newcommand{\allocatedOnly}{\mbox{\rm\texttt{allocPath}}}
 
 %\newcommand{\instanceOfAlloc}[1]{instanceOfAllocates( #1 )}
 
-\newcommand{\allocInstance}[1]{\texttt{allocInstance(#1)}}
-\newcommand{\allocLoop}[1]{loopConsumption(#1)} % function that returns directly the allocations done by a loop : multiplied by the max iterations it can do
-\newcommand{\allocMethod}[1]{\texttt{methodConsumption(#1)}} % returns the allocations done in a method
-\newcommand{\allocLoopWithEnd}[2]{alloc\_loop\_path(#1 , #2)} % returns the allocations done in a loop for a particular path that starts at the start instruction of a loop and that % ends with an insstruction that leads back to the start instructions
+\newcommand{\allocInstance}[1]{\mbox{\rm\texttt{allocInstance}}(#1)}
+\newcommand{\allocInstanceOnly}{\mbox{\rm\texttt{allocInstance}}}
+\newcommand{\allocLoop}[1]{\mbox{\rm\texttt{loopConsumption}}(#1)} % function that returns directly the allocations done by a loop : multiplied by the max iterations it can do
+\newcommand{\allocMethod}[1]{\mbox{\rm\texttt{methodConsumption}}(#1)} % returns the allocations done in a method
+\newcommand{\allocLoopWithEnd}[2]{\mbox{\rm\texttt{allocLoopPath}}(#1 , #2)} % returns the allocations done in a loop for a particular path that starts at the start instruction of a loop and that % ends with an insstruction that leads back to the start instructions
 
 \newcommand{\allocIns}[1]{alloc\_instr(#1)} % function that returns that the allocation by the argument
 

@@ -1,3 +1,4 @@
+
 % Introduction 
 Trusted personal devices (TPDs for short) such as smart cards,
 mobile phones, and PDAs commonly rely on execution platforms such as the Java
@@ -53,61 +54,65 @@ the memory consumption policy is violated. Such an approach is both
 makes it unsuitable for TPDs.
 \end{itemize}
 The objective of this work is to explore an alternative approach that
-favors precision of the analysis at the cost of automation. The
-approach is based on program logics, which originate from the seminal
-work on program verification by C.A.R.~Hoare and E.W.~Dijkstra and
-have been used traditionally to verify functional properties of
-programs. In earlier work, we have shown how general purpose logics
-can be used to enforce security properties of Java programs, including
-confidentiality~\cite{gpt04:csfw} and high-level security
-rules~\cite{m+04:cardis}. In this paper, we demonstrate that program
-logics are also appropriate for performing a precise analysis of
-resource consumption for Java programs.  Although our method is
-applicable both at source code level and bytecode level, our work 
-has focused on bytecode level, since in many application domains
-verification has to be performed without access to the source code
-of the applet. (However,  for the clarity of the explanations all
-examples in the introduction deal with source code level.)
+favors precision of the analysis at the cost of automation. The approach is based on program logic and more particularly uses
+the verification calculus introduced in Chapter \ref{wpGeneral}.
+%The approach is based on program logics, which originate from the seminal
+%work on program verification by C.A.R.~Hoare and E.W.~Dijkstra and
+%have been used traditionally to verify functional properties of
+%programs. In earlier work, we have shown how general purpose logics
+%can be used to enforce security properties of Java programs, including
+%confidentiality~\cite{gpt04:csfw} and high-level security
+%rules~\cite{m+04:cardis}. In this paper, we demonstrate that program
+%logics are also appropriate for performing a precise analysis of
+%resource consumption for Java programs.  Although our method is
+%applicable both at source code level and bytecode level, our work 
+%has focused on bytecode level, since in many application domains
+%verification has to be performed without access to the source code
+%of the applet. 
+Note that,  for the clarity of the explanations all
+examples in the introduction deal with source code level.
 
 In order to illustrate the principles of our approach, let us consider
 the following program:
 
-\begin{verbatim}
+\begin{lstlisting}[frame=trbl] 
 public void m(A a){
   if (a  == null) {
     a = new A();
   }  
    a.b = new B();
 }
-\end{verbatim}
-In order to model the memory consumption of this program, we introduce
-a {\em ghost} (or, {\em model}) variable \verb!Mem! that accounts for memory consumption; more
-precisely, the value of \verb!Mem! at any given program point is meant
+\end{lstlisting}
+
+For modeling the memory consumption of this program, we introduce
+a \ghost{}  variable \lstinline!Mem! that accounts for memory consumption; more
+precisely, the value of \lstinline!Mem! at any given program point is meant
 to provide an upper bound to the amount of memory consumed so far. To
 keep track of the memory consumption, we perform immediately after every 
-bytecode that allocates memory an increment of \verb!Mem! \ by the amount
+bytecode that allocates memory an increment of \lstinline!Mem! \ by the amount
 of memory consumed by the allocation. Thus, if the programmer specifies
-that \verb!ka! and \verb!kb! is the memory consumed by the allocation of 
-an instance of class \verb!A! and  \verb!B! respectively, the program must
+that \lstinline!ka! and \lstinline!kb! is the memory consumed by the allocation of 
+an instance of class \lstinline!A! and  \lstinline!B! respectively, the program must
 be annotated as:
-\begin{verbatim} 
+\begin{lstlisting}[frame=trbl] 
 public void m(A a) {
   if (a  == null) {
     a = new A();
     // set Mem = ka;
   }  
    a.b = new B();
-   // set Mem = kb;
-}
-\end{verbatim}
+   // set Mem = kb;}
+\end{lstlisting}
+
 Such annotations allow to compute at run-time the memory consumption of 
 the program. However, we are interested in static prediction of memory
 consumption, and resort to preconditions and postconditions to this end.
 Even for a simple example as above, one can express the specification
 at different levels of granularity. For example, fixing the amount of memory that
-the the program may use \verb!Max! one can specify that the method will use at most 
-\verb! ka +  kb! memory units and will not overpass the authorized limit to use \verb!Max! with the following specification:
-\begin{verbatim}
+the the program may use \lstinline!Max! one can specify that the method will use at most 
+\lstinline! ka +  kb! memory units and will not overpass the authorized limit to use \lstinline!Max! with the following specification:
+
+\begin{lstlisting}[frame=trbl] 
 //@  requires Mem + ka +  kb <= Max 
 //@ ensures  Mem <= \old(Mem) + ka +  kb     
 public void m(A a) {
@@ -118,13 +123,14 @@ public void m(A a) {
    a.b = new B();
    // set Mem = kb;
 }
-\end{verbatim}
+\end{lstlisting}
 Or try to be more precise and relate memory consumption to inputs with
 the following specification:
-\begin{verbatim}
+\begin{lstlisting}[frame=trbl] 
 //@ requires a == null ==> Mem + ka +  kb <= Max &&	 
-   !(a  == null) ==> Mem + kb <= Max
-//@ ensures \old(a) == null ==> Mem <= \old(Mem) + ka +  kb && 
+    !(a  == null) ==> Mem + kb <= Max
+//@ ensures \old(a) == null ==> 
+    Mem <= \old(Mem) + ka +  kb && 
     !(\old(a)  == null) ==> Mem <= \old(Mem) + kb    
 public void m(A a) {
   if (a  == null) {
@@ -132,7 +138,7 @@ public void m(A a) {
   }  
    a.b = new B();
 }
-\end{verbatim}
+\end{lstlisting}
 More complex specifications are also possible. For example, one can
 take into account whether the program will throw an exception or not.
 using (possibly several) exceptional postconditions stating that
@@ -144,7 +150,7 @@ method exits on exception \texttt{E}.
 The main characteristics of our approach are:
 \begin{itemize}
 \item \emph{Precision:} our analysis allows to specify and enforce
-very precise memory consumption policies, including policies that take
+precise memory consumption policies, including policies that take
 into account the results of branching statements or the values of
 parameters in method calls. Being based on program logics, which are
 very versatile, the precision of our analysis can be further improved
@@ -168,13 +174,13 @@ approach to programs featuring recursive methods, method
 overriding and exceptions;
 
 
-\item \emph{Usability:} our approach can be put to practice
-immediately using existing verification tools for program logics. We
-have applied our approach to annotated Java bytecode programs using a
-verification environment developed in \cite{LM05:acc}, but it is also possible to use our approach on
-JML annotated Java source code~\cite{BRL03:fme}, and more generally on
-programs that are written in a language for which appropriate support
-for contract-based reasoning exists;
+%\item \emph{Usability:} our approach can be put to practice
+%immediately using existing verification tools for program logics. We
+%have applied our approach to annotated Java bytecode programs using a
+%verification environment developed in \cite{LM05:acc}, but it is also possible to use our approach on
+%JML annotated Java source code~\cite{BRL03:fme}, and more generally on
+%programs that are written in a language for which appropriate support
+%for contract-based reasoning exists;
 
 
 
@@ -190,17 +196,20 @@ and powerful provers that help discharge many proof obligations
 automatically, our approach can be applied to realistic Java bytecode
 programs with a reasonable overhead.
 \end{itemize}
-In the course of the article, we illustrate the principles and
+In the course of this section, we illustrate the principles and
 characteristics of our approach in the context of Java bytecode
-programs. More specifically, the paper is organized as follows:
-Section~\ref{sec:prelim} provides a brief introduction to Java
-bytecode programs and to the modeling language and weakest
-precondition calculus used to specify and verify such programs.
-Section~\ref{sec:verif} describes in some detail how the
-infrastructure described in Section~\ref{sec:prelim} can be used to
-specify and verify precise memory consumption
-policies. Section~\ref{sec:infer} is devoted to a presentation of our
-algorithms for inferring automatically annotations. We conclude in
-Section~\ref{sec:rel} with related work and in Section~\ref{sec:conc}
+programs. More specifically,  the rest of this section is organized
+ as follows:
+%Section~\ref{sec:prelim} provides a brief introduction to Java
+%bytecode programs and to the modeling language and weakest
+%precondition calculus used to specify and verify such programs.
+Section~\ref{sec:verif} describes how we specify a bytecode against
+a constraint memory usage policy. 
+%infrastructure described in Section~\ref{sec:prelim} can be used to
+%specify and verify precise memory consumption
+%policies. 
+Section~\ref{sec:infer} is devoted to a presentation of our
+algorithms for inferring automatically part of the annotations annotations.
+ We conclude in Section~\ref{sec:rel} with related work and in Section~\ref{sec:conc}
 with directions for future work.
 
