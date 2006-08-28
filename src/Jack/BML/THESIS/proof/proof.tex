@@ -504,7 +504,8 @@ Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalP
 %Assume that every execution of the method \methodd \ terminates.
  Assume that  execution of methodd \methodd \ starts in state $_{0}$ 
 and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ s_{0}}$
-Then if the method \methodd \ terminates, i.e. there exists a  state $s_n$, $s_0 \stateTrans^{*} s_n $ such that $\ins{\pc_n} = \return $ or
+Then if the method \methodd \ terminates, i.e. there exists a  state $s_n$,  $\methodd : s_0  \stateTransTerm s_1   $ 
+ such that $\ins{\pc_n} = \return $ or
  $\ins{\pc_n}$ throws an unhandled 
 exception of type \mbox{\rm\texttt{Exc}} the following holds:
 \begin{itemize}
