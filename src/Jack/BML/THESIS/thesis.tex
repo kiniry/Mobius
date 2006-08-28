@@ -6,6 +6,8 @@
 \usepackage{epsfig}
 \usepackage{listings}
 \usepackage{longtable}
+\usepackage{multirow}
+\usepackage{color}
 
 \def\lstlanguagefiles{Jml.sty}
 \lstloadlanguages{Jml}
@@ -46,6 +48,7 @@
 
 %4
 \chapter{Bytecode modeling language} \label{bcsl}
+  \lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
   \input{BML/intro.tex} 
   \input{BML/prelim.tex}
   \input{BML/designBml.tex}
@@ -60,6 +63,7 @@
   \input{assertLangVC/substitution.tex}
   \input{assertLangVC/interpretation.tex}
   \input{assertLangVC/extendMethod.tex} 
+
 %5
 \chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
  \input{wp/intro.tex} 
@@ -72,11 +76,11 @@
 
 
 
-
 \chapter{Correctness of the verification condition generator}\label{proofGeneral}
   \input{proof/intro.tex}
   \input{proof/substprop.tex}
   \input{proof/proof.tex}
+
 %6
 \chapter{Equivalence between Java source and bytecode proof Obligations}
        %\input{pogCompile/cmdPogComp.tex}
@@ -116,34 +120,42 @@
 
 
 %8
-      \chapter{A compact verification condition generator}
+ \chapter{A compact verification condition generator}
 
 
 
 %9
-\chapter{Applications} 
-\input{applications/memory/mydefThesis}
+   % \chapter{Applications} 
+   % \input{applications/intro}
+   % \newpage
+   \chapter{Constraint memory consumption policies using Hoare logics}
+       \input{applications/memory/mydefThesis}
+       \lstset{numbers=none}
+       \input{applications/memory/intro}
+       \section{Modeling memory consumption}\label{sec:verif}
+       \input{applications/memory/technical}
+       \section{Inferring memory allocation for methods}\label{sec:infer}
+       \input{applications/memory/infer}
+       \section{Related work}\label{sec:rel}
+       \input{applications/memory/relatedworks}
+       \section{Conclusion}\label{sec:conc}
+       \input{applications/memory/conclusion}
 
-\section{Introduction}
-\input{applications/memory/intro}
-
-\section{Preliminaries}\label{sec:prelim}
-\input{applications/memory/prelim}
-
-\section{Modeling memory consumption}\label{sec:verif}
-\input{applications/memory/technical}
-
-\section{Inferring memory allocation for methods}\label{sec:infer}
-\input{applications/memory/infer}
-
-\section{Related work}\label{sec:rel}
-\input{applications/memory/relatedworks}
-
-\section{Conclusion}\label{sec:conc}
-\input{applications/memory/conclusion}
-
-
-
+ 
+  \chapter{A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}
+      \lstset{frameround=tttt}
+      %\input{applications/optimCompiler/cmd}
+      \input{applications/optimCompiler/intro}
+      \input{applications/optimCompiler/aheadOfTimeComp}
+      \input{applications/optimCompiler/rtExc}
+      \input{applications/optimCompiler/algo}
+      \input{applications/optimCompiler/spec}
+      \input{applications/optimCompiler/proof2optim}
+      %\input{applications/optimCompiler/preciseness} 
+      \input{applications/optimCompiler/results} 
+      \input{applications/optimCompiler/limitations} 
+      \input{applications/optimCompiler/relWork}
+      \input{applications/optimCompiler/conclusion} 
  
 %10
 \chapter{Conclusion}
@@ -152,6 +164,6 @@
  \addcontentsline{toc}{chapter}{Appendices}
 
 \bibliographystyle{plain}
-\bibliography{biblio,specification,xbib_mem-wpc}
+\bibliography{biblio,specification,bib_mem-wpc,optimComp}
 
 \end{document}
