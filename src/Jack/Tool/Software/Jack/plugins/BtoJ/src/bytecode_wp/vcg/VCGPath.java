@@ -132,6 +132,9 @@ public class VCGPath extends Expression {
 	 * @return the identifier of the newly created hypothesis in the pool of hypothesis
 	 */
 	public void addHypForNewInstanceInModifiesGoals( Reference newRef) {
+		if (vcs == null){
+			return;
+		}
 		for ( int i =0; i < vcs.size(); i++) {
 			VC vc = (VC)vcs.elementAt(i);
 			if (vc.getType() == VcType.MODIFIES) {
