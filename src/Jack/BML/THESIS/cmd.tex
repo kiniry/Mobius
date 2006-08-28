@@ -1,6 +1,7 @@
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -606,7 +607,7 @@
 \newcommand{\constantRef}{\mbox{\rm\textbf{constRef}}}
 
 \newcommand{\newSrc}{\mbox{\rm\textbf{new}}}
-\newcommand{\local}{\texttt{locVar}} 
+\newcommand{\local}[1]{\mbox{\rm{\textbf{reg}}}(#1){}} 
 \newcommand{\this}{\mbox{\rm\textbf{this}}}
 \newcommand{\rel}{\mathcal{R}}
 %statements
@@ -635,10 +636,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Compiler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\addExceptionTableOnly}{\mbox{\rm\textsf{addExcHandler}}}
-\newcommand{\addExceptionTable}[4]{\mbox{\rm\textsf{addExcHandler}}(#1, \ #2, \ #3, \ #4 , \methodd)}
+\newcommand{\addExceptionTable}[5]{\mbox{\rm\textsf{addExcHandler}}(#1, \ #2, \ #3, \ #4 , \ #5)}
 
 \newcommand{\addLoopTableOnly}{\mbox{\rm\textsf{addLoopSpec}}}
-\newcommand{\addLoopTable}[3]{\mbox{\rm\textsf{addLoopSpec}}(#1, \ #2, \ #3,  \methodd)}
+\newcommand{\addLoopTable}[4]{\mbox{\rm\textsf{addLoopSpec}}(#1, \ #2, \ #3,  \ #4)} % method, nat, invariant,  modifies
 \newcommand{\compile}[1]{ \ulcorner  #1 \urcorner }
 \newcommand{\compileLabel}[3]{ \ulcorner  #1,#2,#3 \urcorner }
 
@@ -684,3 +685,10 @@
 %\newcommand{\excType}{\mbox{\rm{\texttt{ExcClass}}}}
 \newcommand{\Exception}{\mbox{\rm{\texttt{Exception}}}}% stands for the super class of all Java exceptions
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Compiler properties
+\newcommand{\substatement}[2]{#1\lbrack #2\rbrack} % 
+\newcommand{\strictsubstatement}[2]{#1\lbrack \lbrack #2\rbrack\rbrack} % 
+
+
+\newcommand{\benchname}[1]{\textbf{#1}}
