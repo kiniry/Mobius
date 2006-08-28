@@ -112,7 +112,7 @@ public class BCATHROW extends BCExceptionThrower {
 		ExceptionHandler[] excHandlers = getTrace().getMethod()
 				.getExceptionHandlers();
 
-		// in case there is no any specified exception then any thrown exception
+		// in case there is no specified exception then any thrown exception
 		// implies false
 		// in the post state
 		if ((exceptionsThrown == null || exceptionsThrown.length == 0)
@@ -124,9 +124,9 @@ public class BCATHROW extends BCExceptionThrower {
 		}
 		FormulaOverride wp = new FormulaOverride(config, getTrace(), typeOfTopStack,
 				this);
-		VCGPath _vcs = new VCGPath();
+		//VCGPath _vcs = new VCGPath();
 		vcs.addGoal( VcType.INSTR_THROW_EXC , wp, getPosition());
-		return _vcs;
+		return vcs;
 	}
 
 }
