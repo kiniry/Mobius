@@ -6,7 +6,7 @@ how it can be applied to non-trivial examples involving recursive
 methods and exceptions.
 
 
-\subsubsection{Principles}
+\subsection{Principles}
 Let us begin with a very simple memory consumption policy which aims
 at enforcing that  programs do not consume more than
 some fixed amount of memory \Max . To enforce this policy, we first
@@ -28,6 +28,7 @@ $\method$ is:
 $$
 \requires \ \Mem + \allocMethod{\method}  \leq \Max.
 $$
+
 %\todo{ to leave this paragraph or not. It is about the initialization of the variable \Mem} 
 The precondition of the
 program entry point (i.e., the method from which an application
@@ -86,7 +87,7 @@ $$
 \end{array}
 $$
 
-\subsubsection{Correctness}
+\subsection{Correctness}
 %An important question is if the annotations that we prescribe here guarantees that the memory used in a program is not more than a fixed upper bound \Max. 
 We want to guarantee that the memory allocated by a given program is bounded by a constant \Max.
 We can prove that our annotation is correct w.r.t. to the policy for constraint memory use, by instrumenting the operational semantics of the bytecode language given in
@@ -120,7 +121,7 @@ We can prove that whenever the allocated space in the heap increments,
 the ghost variable \Mem\ also increments, which is a sufficient condition to guarantee the correctness of the annotations. 
 So far we do not deal with garbage collection (see discussion in Section \ref{sec:conc}).
 
-\subsubsection{Examples}
+\subsection{Examples}
 We illustrate hereafter our approach by several examples. 
 %\alarm{talk about number of proof obligations, which are discharged automatically in Coq, etc}
 
@@ -133,7 +134,7 @@ methods will be invoked. This is the reason for requiring enough memory space fo
 %After the method execution we consider the extreme case where there is executed the method \method\ that consumes the most.
 
 \begin{figure}[!htp]
-Specification of method $m$ in class A:
+Specification of method \methodd{} in class A:
 $$
 \begin{array}{ll}
 \requires & \Mem + k  \leq \Max \\
@@ -142,7 +143,7 @@ $$
 \end{array}
 $$
 
-Specification for method $m$ in class B:
+Specification for method \methodd{} in class B:
 $$
 \begin{array}{ll}
 \requires & \Mem + l  \leq \Max \\
@@ -164,7 +165,11 @@ invokevirtual m <A>
 \end{figure}
 
 
-\subsubsection{Recursive Methods} In Fig. \ref{recMeth} the bytecode of the recursive method $m$ and its specification is shown. For sake of space we show only a simplified version of the bytecode; we assume that the constructors for the class \srcCode{A} and \srcCode{C} do not allocate memory. Besides the precondition and the postcondition, the specification also includes information about the termination of the method: \variant\ $\local{1}$, meaning that the local variable $\local{1}$ decreases on every recursive call down to and no more than $0$, guaranteeing that the execution of the method will terminate.
+\subsubsection{Recursive Methods} In Fig. \ref{recMeth} the bytecode of the recursive method \methodd{} and its specification is shown. 
+ We show a simplified version of the bytecode; we assume that the constructors for the class \srcCode{A} and \srcCode{C}
+ do not allocate memory. Besides the precondition and the postcondition, the specification also includes information 
+ about the termination of the method: \variant\ $\local{1}$, meaning that the local variable $\local{1}$ decreases on every recursive call down to and no more than $0$, guaranteeing
+ that the execution of the method will terminate.
  
 %Now we explain why such a precondition is required for method \textbf{m} in order to specify the property for constraint memory consumption. 
 
@@ -233,10 +238,11 @@ $$
  \label{recMeth}
 \end{figure}
 
-In the sequential execution up to line \srcCode{7}, the program allocates at most $\allocInstance{A}$ memory units and decrements by $1$ the value of $\local{1}$. The instruction at line \srcCode{8} is a recursive call to $m$, which either will take the same branch if $\local{1} > 0 $ or will jump to line \srcCode{12} otherwise, where it allocates at most $\allocInstance{A} +  \allocInstance{C}$ memory units. On returning from the recursive call one more allocation will be performed at line \srcCode{9}.
- Thus $m$ will execute, $\local{1}$ times, the instructions from lines \srcCode{4} to \srcCode{35},  and it finally will execute all the instructions from lines  \srcCode{12} to \srcCode{16}.
+In the sequential execution up to line \srcCode{7}, the program allocates at most $\allocInstance{A}$ memory units and decrements by $1$ the value of $\local{1}$. The instruction at line \srcCode{8} is a recursive call to \methodd{}, which either will take the same branch if $\local{1} > 0 $ or will jump to line \srcCode{12} otherwise, where it allocates at most $\allocInstance{A} +  \allocInstance{C}$ memory units. On returning from the recursive call one more allocation will be performed at line \srcCode{9}.
+ Thus \methodd{} will execute, $\local{1}$ times, the instructions from lines \srcCode{4} to \srcCode{35}, 
+and it finally will execute all the instructions from lines  \srcCode{12} to \srcCode{16}.
 The postcondition states that the method will perform no more
-than $\old(\local{1})$ recursive calls (i.e., the value of the register variable in the pre-state of the method) and that on every recursive call it allocates no more than two instances of class \texttt{A} and that it will finally allocate one instance of class \texttt{A} and another of class \texttt{C}.
+than $\old{\local{1}}$ recursive calls (i.e., the value of the register variable in the pre-state of the method) and that on every recursive call it allocates no more than two instances of class \texttt{A} and that it will finally allocate one instance of class \texttt{A} and another of class \texttt{C}.
 
 
 \subsubsection{More precise specification} We can be more precise in specifying the precondition of a method by considering what are the field values of an instance, for example. Suppose that we have the method \method\ as shown in Fig. \ref{excMeth}. We assume that in the constructor of the class \texttt{A} no allocations are done. The first line of the method \method\ initializes one of the fields of field \texttt{b}. Since nothing guarantees that field \texttt{b} is not \Mynull, the execution may terminate with

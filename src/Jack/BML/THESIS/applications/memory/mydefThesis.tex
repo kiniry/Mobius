@@ -27,9 +27,9 @@
 \newcommand{\allocIns}[1]{alloc\_instr(#1)} % function that returns that the allocation by the argument
 
 \newcommand{\numLoop}[1]{\textit{numberLoop}(#1)}
-\newcommand{\loopEndsSet}[1]{loopEndSet(#1)}
-\newcommand{\loopSet}[1]{loopSet(#1)}
-\newcommand{\loopEntry}[1]{entry(#1)} % predicate that says that the instruction is an entry to a loop
+\newcommand{\loopEndsSet}[1]{\mbox{\rm\texttt{loopEndSet}}(#1)}
+\newcommand{\loopSet}[1]{\mbox{\rm\texttt{loopSet}}(#1)}
+\newcommand{\loopEntry}[1]{\mbox{\rm\texttt{entry}}(#1)} % predicate that says that the instruction is an entry to a loop
 
 \newcommand{\backedge}[2]{backedge(#1,#2)} % the start of the backedge  and the end of the backedge
 
@@ -41,6 +41,7 @@
 
 
 \newcommand{\ensemble}[2]{#1 .. #2}
-\newcommand{\maxIter}[1]{ iter^#1 }
+\newcommand{\maxIter}[1]{\mbox{\rm\texttt{iter}}(#1)}
 \newcommand{\progLoop}[1]{\textit{#1}}
 \newcommand{\srcCode}[1]{\texttt{#1}}
+\newcommand{\preds}{\mbox{\rm\texttt{preds}}} % predecessors of a given instruction

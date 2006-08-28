@@ -24,8 +24,7 @@ Another mechanical verification of a byte code language is \cite{CJPS05cmu}, whe
 
 Other related research direction concerns runtime memory analysis. The work \cite{GNYZ04pir} presents a method for analysing, monitoring and controlling dynamic memory allocation, using pointer and scope analysis. By instrumenting the source code they control memory allocation at run-time. In order to guarantee the desired memory allocation property, in \cite{fredlund04gcp} is implemented a runtime monitor to control the execution of a Java Card applet. The applet code is instrumented: a call to a monitor method is added before a \new\ instruction. Such monitor method has as parameter the size of the allocation request and it halts the execution of the applet if a predefined allocation bound is exceeded. 
 
-There exists research on the definition of bytecode logics. In ~\cite{Q03plj} a Hoare logics for bytecode is defined. Yet the approach there is based on searching structure in the bytecode programs which is not natural for untsructured bytecode programs. In \cite{WN05abs} a Hoare bytecode logics is defined in terms of
- weakest precondition calculus over the Jinja language (subset of Java). They use the logics for verifying bytecode against arithmetic overflow.  
+
 
 Upon completion of this work we became aware of a recent, and still
 unpublished, result along the same lines of ours. Indeed,  a hybrid (i.e., static and dynamic)
