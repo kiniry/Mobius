@@ -16,11 +16,24 @@ and properties  which will guarantee this equivalence. We claim that their proof
  compiler has the properties discussed here in Section \ref{compile}.
 
 
-In \cite{SU05CNS}, Saabas and Uustalu present a goto language which is provided with a compositional structure.
-They give a Hoare logic rules for the language where they mention explicitely the program counter in the assertions. 
+In \cite{SU05CNS}, Saabas and Uustalu present a goto language provided with a compositional structure called SGoto.
+They give a Hoare logic rules for the language where they mention explicitely the program counter in the assertions and define a nonoptimizing 
+compiler from the source language into SGoto. Few  restrictions are imposed on the compiler. 
 They show that if a source program has a Hoare logic derivation
- against a pre and postcondition then its compilation in the aforementioned goto language will also have a Hoare
- logic derivation in the aformentioned Hoare logic rules.\todo{to be continued. Actually they do not impose any special restrictions on the target code. Compositional rule strange}
+ against a pre and postcondition then its compilation in SGoto will also have a Hoare
+ logic derivation in the aformentioned Hoare logic rules. However, we consider that this is not sufficient for a practical use especially when 
+talking about programs written in an unstructured language. 
+For instance, using this approach in a PCC scenario would mean that the consumer should know the structure of 
+of the  executable code in order that the proof can be checked. This may not be desirable for several reasons:
+the producer does not want to  give the structure because he does not want that the producer may get the source version of its program; 
+or even if he does it, this means that the verification process on the consumer side could become heavier.
+ Thus, it is more relevant if possible to get directly  a relation between a structured program 
+and its compilation in an  unstructured  language which is the aim of the current chapter.
+ For this, as Saabas and Uustalo we use a  structured version of the compilation of a source program 
+but which is an intermediate stage of our proof that source structured programs and bytecode unstructured 
+programs have the same verifictaion conditions.
+
+%\todo{to be continued.  je ne sais pas comment dire mais il faut dire que c'est un peu tough de retrouve dans un program bytecode les structure qu'ils proposent }
  
 
 % \todo{because they do not expose those conditions, 
