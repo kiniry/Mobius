@@ -9,9 +9,34 @@
 \usepackage{multirow}
 \usepackage{color}
 
+%listing package settings
 \def\lstlanguagefiles{Jml.sty}
 \lstloadlanguages{Jml}
 \lstset{language=Jml,flexiblecolumns=false}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%Frame script for figures%%%%%%%%%%%%%%%%%%
+%% The frameit and Frameit environments formats text within a single
+%% Anything can be framed, including verbatim text.
+
+\def\doframeit#1{\vbox{%
+  \hrule height\fboxrule
+    \hbox{%
+      \vrule width\fboxrule \kern\fboxsep
+      \vbox{\kern\fboxsep #1\kern\fboxsep }%
+      \kern\fboxsep \vrule width\fboxrule }%
+    \hrule height\fboxrule }}
+
+\def\frameit{\smallskip \advance \linewidth by -7.5pt \setbox0=\vbox \bgroup
+\strut \ignorespaces }
+
+\def\endframeit{\ifhmode \par \nointerlineskip \fi \egroup
+\doframeit{\box0}}
+%%%%%%%%%%%%%%%%%%%%%%%%%Frame script for figures%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \title{Bytecode Verification and its Applications}
 \begin{document}
@@ -101,7 +126,7 @@
        \input{pogCompile/compile/compExcH.tex} 
        \input{pogCompile/compile/compLoopInv.tex} 
        \input{pogCompile/compile/compExpr.tex} 
-       \input{pogCompile/compile/compCtrlStmt.tex}
+       %\input{pogCompile/compile/compCtrlStmt.tex}
        \input{pogCompile/compile/propCompFun.tex}
 
 
@@ -115,12 +140,11 @@
        \section{Weakest precondition calculus for bytecode programs}\label{pog:wpBcGeneral}
           \input{pogCompile/wpBc/bcWp.tex}
 	  \input{pogCompile/wpBc/wpProp.tex}
-	
 	  \input{pogCompile/pogEquiv/aux.tex} 
 
 
 %8
- \chapter{A compact verification condition generator}
+% \chapter{A compact verification condition generator}
 
 
 
