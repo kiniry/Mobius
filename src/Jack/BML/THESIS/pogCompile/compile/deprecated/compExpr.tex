@@ -1,0 +1,105 @@
+
+
+\begin{itemize}
+  \item  integer or boolean constant access 
+     \begin{itemize}
+            \item  integer constant access 
+	         $$\compileLabel{s}{\constantInt}{s}  =   s : \push \  \constantInt $$
+	    \item boolean constant access
+	          $$\compileLabel{s}{\Mytrue}{s} = s: \push  \ 1 $$
+                   
+                  $$\compileLabel{s}{\Myfalse}{s} = s: \push \ 0 $$
+		  \textit{Note}: the source boolean expressions are compiled down to integers 
+     \end{itemize}
+      %  where the execution of the compilation changes the stack : \counter = \counter + 1  \stack{\counter + 1} = \const
+  \item  method invokation
+     $$\compileLabel{s}{ \expressionSrc_1.m(\expressionSrc_2)}{e} = 
+           \begin{array}{l}  
+                 \compileLabel{s}{\expressionSrc_1}{e'};\\
+		 \compileLabel{e' + 1}{\expressionSrc_2}{e - 1};\\
+		  e  :\invoke \ m
+            \end{array}     
+    $$
+  
+  %  where the execution of the compilation of $\expressionSrc$ affects the stack: \\
+   %     $$\begin{array}{l}
+      %          %\counter = \counter + 1 \\
+    %            \stack{\counter} = \compile{\eval{ \expressionSrc }}
+      %     \end{array}
+   %     $$
+
+%\textit{Note}: in order to keep simplicity, we consider here only methods without parameters the case of methods with parameters being similar 
+
+
+
+\item field access
+     $$\compileLabel{s}{ \expressionSrc.f}{e} =   
+         \begin{array}{l}
+              \compileLabel{s}{\expressionSrc}{e - 1}; \\ 
+              e : \getfield  \ f
+           \end{array}   
+     $$ 
+
+
+
+  
+   \item local variable access
+     $$\compileLabel{s}{ \var }{s} =  s: \load \ \locVar{i} $$ 
+   where $\locVar{i} $ is the local variable at index $i$
+
+
+                
+   \item arithmetic expressions
+     
+     $$\compileLabel{s}{ \expressionSrc_1 \ op \ \expressionSrc_2 }{e} = 
+                 \begin{array}{l}
+                       \compileLabel{s}{ \expressionSrc_1}{  e'  } ; \\
+                       \compileLabel{e' + 1}{ \expressionSrc_2}{ e - 1  }; \\
+                       e:\arithOp
+                 \end{array}     
+                $$ 
+               %      where after the execution of $\compileLabel{ \expressionSrc_1}$ and $\compileLabel{ \expressionSrc_2}$ the stack changes: 
+                       
+	   %	$$
+	   %	  \begin{array}{l}
+	   %	        %\counter = \counter + 2 \\
+	   %		 \stack{\counter } =  \compileLabel{\eval{ \expressionSrc_1} } \\
+	   %		 \stack{\counter - 1} = \compileLabel{\eval{ \expressionSrc_2} }
+	       %      \end{array} 
+	   %	$$  
+
+   \item cast expression 
+     $$ \compileLabel{s}{ (\mbox{ \rm \texttt{Class}}   ) \ \expressionSrc }{e} = 
+              \begin{array}{l}  
+                 \compileLabel{s}{\expressionSrc}{e  - 1};\\
+                  e : \checkcast \ \mbox{ \rm \texttt{Class }} ;
+              \end{array}
+$$
+	      
+
+  \item instanceof expression
+    $$ \compileLabel{s}{\expressionSrc \ \instanceofSrc \ Class }{e} = 
+         \begin{array}{l}
+              \compileLabel{s}{\expressionSrc}{ e  -1 };\\
+               e : \instanceof \ Class;
+         \end{array} $$
+
+  \item null expression
+    $$ \compileLabel{s}{\Mynull }{s } = s: \push \ \Mynull$$
+          
+ 
+ \item object creation
+    
+   $$\compileLabel{s}{ \newSrc \ Class (\expressionSrc ) }{e} =
+                 \begin{array}{l}
+                       s :    \new \ Class; \\ 
+		       s + 1: \dup; \\
+		       \compileLabel{s+2}{\expressionSrc}{e - 1 };\\
+	               
+		       e : \invoke \ \Constructor{Class};     
+	       \end{array}$$
+ 		        
+\item this instance
+  $$\compileLabel{s}{\this}{s } = s:  \load \ \locVar{0}$$
+              	              
+\end{itemize}
