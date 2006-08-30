@@ -7,13 +7,11 @@
 
 
 We present a source Java-like programming language which supports the following features:
-object manipulation and creation, method invokation, throwing and handling exceptions, subroutines etc.  
-The  next definition presents the expressions of the source language, i.e. the language constructs that evaluate.
-
-\begin{Expression}[Expression]\label{exprSrc}
-    The grammar for source expressions  is defined as follows
-    $$ \begin{array} {ll}    \expressionSrc ::=       
-       		         	& \constantInt  \\
+object manipulation and creation, method invokation, throwing and handling exceptions, subroutines etc. Fig. \ref{source:grammar} gives the formal grammar of the source language.
+\begin{figure}[ht!] 
+\begin{frameit}
+   $$ \begin{array} {ll}    
+     \expressionSrc ::=         & \constantInt  \\
 				& \mid \Mytrue \\ 
 				& \mid \Myfalse \\
 				& \mid \Mynull  \\
@@ -27,17 +25,30 @@ The  next definition presents the expressions of the source language, i.e. the l
 				& \mid \expressionSrcRel \\
                                 & \\
 				& \\
-        
-
      \expressionSrcRel ::=      & \expressionSrc \ \rel \ \expressionSrc \\
 				& \mid \expressionSrc \ \instanceofSrc \ Class\\
 				& \\   
-				& \rel \in \{ \le, < ,  \ge, >, = , \neq \}                   
-    \end{array} 
-    $$
-\end{Expression}
+				& \rel \in \{ \le, < ,  \ge, >, = , \neq \}      \\
+				& \\
+				& \\
+      \stmt ::=		        & \stmt;\stmt \\
+                                & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
+			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
+		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+			%	& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+				& \mid \throw \ \expressionSrc  \\
+                                & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \}\ \\
+				& \mid \returnSrc \  \expressionSrc \\
+			%	& \mid \returnSrc \\
+                   		& \mid \expressionSrc = \expressionSrc \\        
+    \end{array} $$
+\caption{\sc Source language}
+\label{source:grammar}
+\end{frameit}
+\end{figure}
 
-    As we can see from the grammar, the language supports 
+
+    As we can see from the figure, the language supports 
     integer constants $\constantInt$, the boolean constants  $ \Mytrue$ and $\Myfalse$, the null constant \Mynull \ 
     denoting  the empty reference, a construct \this \ for referring to the current object,  
     arithmetic expressions  $\expressionSrc \ \arithOp \ \expressionSrc$ where $\arithOp \in  \{+ , - , div , rem, * \}$.
@@ -52,60 +63,54 @@ The  next definition presents the expressions of the source language, i.e. the l
      $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$ as well as to state that an expression 
    $\expressionSrc$ is an instance of class Class via  $\expressionSrc \ \instanceofSrc \ Class$.
     
-    
+    The expressions can be of object types or basic types. Formally the types are 
 
-
-
-
-
-
-
-
-
-
-
-The expressions can be of object types or basic types. Formally the types are 
-
-$$
+    $$
 \JavaType ::= Class, \ Class \in \ClassTypes \mid \Myint \mid \Mybool
 $$ 
 
-\todo{est-ce que je dois dire qu'on considere un sousensemble de Class qui represente les exceptions ?}
 
-The next definition gives the control flow constructs of our language as well as the expressions that have a side 
-effect  
-\begin{Statement}[Statement]
-    The grammar for expressions  is defined as follows :
-\end{Statement}
-    $$ \begin{array} {ll}    \stmt ::=  
-                                & \stmt;\stmt \\
-                                & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
-			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
-		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
-			%	& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
-				& \mid \throw \ \expressionSrc  \\
-                                & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \}\ \\
-				& \mid \returnSrc \  \expressionSrc \\
-			%	& \mid \returnSrc \\
-                   		& \mid \expressionSrc = \expressionSrc \\
-			
-			
-			 \end{array} 
-    $$
 
+
+
+%\begin{Statement}[Statement]
+   % The grammar for expressions  is defined as follows :
+%\end{Statement}
+%\begin{figure}
+%\begin{frameit}
+%    $$ \begin{array} {ll}    \stmt ::=  
+%                                & \stmt;\stmt \\
+%                                & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
+%			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
+%		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+%			%	& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+%				& \mid \throw \ \expressionSrc  \\
+%                                & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \}\ \\
+%				& \mid \returnSrc \  \expressionSrc \\
+%			%	& \mid \returnSrc \\
+%                   		& \mid \expressionSrc = \expressionSrc \\
+%			
+%%			
+%			 \end{array} 
+%    $$
+%
+%\caption{\sc Grammar for statements}
+%\label{stmtSrc}
+%\end{frameit}
+%\end{figure}
 
 % informal description 
 
-  Thus the control constructs in the language are the compositional statement
-  $\stmt;\stmt$ which states that if the first statement is executed normally
+  The source language supports also control flow constructs like  the compositional statement
+  $\stmt;\stmt$. The semantics of such a statements is  that if the first statement terminates execution normally
   immediately after it executes the second statement. The conditional statement
-  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  $ which stands for
+  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ $  \Myelse \ \{ \stmt \}  $ which stands for
   an if statement. The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
   evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
   $ \Myelse$ branch is executed. Next, there is a construct for handling exceptions $ \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \}  $.
   Its meaning is that if the statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
   the exception will be caught by the statement following the  $ \catch $ keyword. The source language supports also 
-  subroutines via the statement $ \try  \ \{ \stmt \} \ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
+  subroutines via the statement $ \try  \ \{ \stmt \}  $ $ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
   no matter how the statement following the keyword \try \ terminates,
   the statement introduced by the keyword \finally \ must execute after it. The language also provides a construct for expressing loops 
    $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body 

@@ -34,7 +34,7 @@ proof obligations. Note also that those properties are respected by any non opti
 In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and $\expressionSrc$.
  
 The first property that we observe is that the last instruction $\ins{e}$ in the compilation
- $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation with the
+ $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation (see Fig. \ref{defEdge}) with the
   instruction $\ins{e + 1}$.
 
 \begin{compProp0}[Compilation of statements and expressions]\label{compile:prop:compProp0}
@@ -46,7 +46,7 @@ The proof is trivial by case analysis of the compiled statements.
 
 Let us now turn to the next property of interest.
 Informally, it states  that  if there are instructions inside a compiled statetement or expression 
- $\compileLabel{s}{\ExprStmt}{e}$ which are in execution relation\footnote{see Def. \ref{defEdge}}  with an instruction 
+ $\compileLabel{s}{\ExprStmt}{e}$ which are in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
 $\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
 of $\ExprStmt$ 
  then   $ k  = e +1$. 

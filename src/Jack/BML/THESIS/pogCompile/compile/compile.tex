@@ -9,8 +9,8 @@ We now turn to specify a simple compiler from the source language presented in S
 
 The compiler is the triple
  $$< \compileLabel{*}{*}{*}, \addExceptionTableOnly , \addLoopTableOnly >$$
- The first element in the triple is a  function $\compile{}$ which transforms statements and expressions
- into a sequence of bytecode instructions. 
+ The first element in the triple is a  function $\compileLabel{*}{*}{*}$ which transforms statements and expressions
+ into a sequence of bytecode instructions of the body of the method \methodd. 
 The second element is the procedure  \addExceptionTableOnly \ which compiles  the source exception handlers.
 Note that that the source language supports syntactic structure for encoding exception handlers while
  bytecode programs keep track of them via a data structure which describes how  regions 
@@ -22,9 +22,9 @@ specification, namely loop invariants and the modified expressions.
 
 In the following, in the next subsection \ref{pogEq:compile:excHandlers} we define the procedure for the compilation of exception handlers,
  in subsection \ref{pogEq:compile:loopInv},  we will present the procedure for compiling loop invariants.
- In  subsections 
-\ref{pogEq:compile:compExpr} and  \ref{pogEq:compile:compCtrlStmt}
-we proceed with the definition of the compiler function $\compile{}$ for exressions and statements. 
+ In  subsection
+\ref{pogEq:compile:compExpr} 
+we proceed with the definition of the compiler function $\compileLabel{*}{*}{*} $ for exressions and statements. 
 The last subsection \ref{compile:prop} states the properties of the bytecode produced by the compiler.
 
 

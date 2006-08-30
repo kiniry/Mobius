@@ -1,13 +1,15 @@
 
+
+
 \subsection{Weakest Predicate Transformer for the Source Language } \label{pog:wpSrc}
 
-The weakest precondition calculates for every statement $\stmt$ in method \methodd \ from our source language,
-for any normal postcondition $Post$ and exceptional postcondition function $\excPostSrc$ ($ \mbox{ \rm \texttt{Exc}} \rightarrow \stmt \rightarrow \formulaSrc $),
- the predicate $Pre$ such that if it holds in the pre state of $\stmt$ and   if $\stmt$ terminates normally then $Post$ holds in the poststate and
- if $\stmt$ terminates on exception $Exc$ then $\excPostSrc(Exc, \stmt)$ holds. 
+The weakest precondition calculates  the predicate weakest precondition predicate $WP$  statement $\stmt$ in method \methodd \ from our source language,
+for any normal postcondition $\normalPostSrc$ and exceptional postcondition function $\excPostSrc$, 
+ such that if it holds in the pre state of $\stmt$ and   if $\stmt$ terminates normally then $\normalPostSrc$  holds in the poststate and
+ if $\stmt$ terminates on exception \Exc{} then $\excPostSrc(Exc, \stmt)$ holds. 
 In the following, in  subsection   \ref{pog:wpSrc:excPost} we discuss how the exceptional postcondition function is defined.
 Subsections \ref{pog:wpSrc:wpExpr} and  \ref{pog:wpSrc:wpStmt} present respectively
- the definition of \wpName \  function for expressions and for statements.  
+ the definition of \wpName \  function for expressions and statements.  
  
 
 
@@ -23,12 +25,12 @@ for exception $\texttt{Exc}$ if it terminates on exception $\texttt{Exc}$
 
 We introduce a function $\excPostSrc$  which maps exception types to predicates  
 
-$$ \excPostSrc :  \mbox{\rm \texttt{ ETypes  }}  \longrightarrow   Predicate $$ 
+$$ \excPostSrc :  \excType \longrightarrow   \formulaBc $$ 
 
 
 
-The function $\excPostSrc$ \ returns the predicate $\excPostSrc (\texttt{Exc}) $ that must hold in a particular program point if
- at this point an exception of type \texttt{Exc} is thrown.
+The function $\excPostSrc$ \ returns the predicate $\excPostSrc (\mbox{\rm\texttt{Exc}}) $ that must hold in a particular program point if
+ at this point an exception of type \mbox{\rm\texttt{Exc}} is thrown.
 
 %The function $\excPostSpecSrc $ returns for any exception \texttt{Exc}  thrown by the method the predicate that must hold in the 
 % method exceptional termination state caused by throwing an exception of type \texttt{Exc}.
@@ -40,10 +42,10 @@ We also use  function updates for $\excPostSrc$ which are defined in the usual w
 
 
 $$
-\update{\excPostSrc}{\texttt{Exc'} }{ P }(\texttt{Exc})  = 
+\update{\excPostSrc}{\mbox{\rm\texttt{Exc'} }}{ P }( \mbox{\rm\texttt{Exc}} )  = 
        \left\{\begin{array}{ll} 
-         P & if \texttt{Exc} <: \texttt{Exc'}  \\
-         \excPostSrc(\texttt{Exc} ) & else 
+         P & if \mbox{\rm\texttt{Exc}}  <: \mbox{\rm\texttt{Exc'}}  \\
+         \excPostSrc(\mbox{\rm\texttt{Exc}} ) & else 
      \end{array}\right.$$
 
 

@@ -5,18 +5,19 @@
 
 \subsection{Source assertion language} \label{formulasSrc}
 The properties that our predicate calculus treats are from first order predicate logic.
-In the following, we give the formal definition of the assertion language into which 
-the properties are encoded. Note that the language is the same  to the bytecode assertion 
-language presented earlier modulo the stack expressions $\stack{\counter + - \ldots}$ and \counter.  
+In Fig. \ref{formulasSrc:grammar}, we give the formal definition of the assertion language into which 
+the properties are encoded. Note that the language is almost the same as the bytecode assertion 
+language presented earlier (see Chapter \ref{assertLang} ). However, the assertion language for source programs
+ does not support  stack expressions ($\stack{\counter + - \ldots}$ and \counter) which make sense only for bytecode.  
 
 
  
-
-\begin{Formula}[Definition]
-The set of formulas is defined inductively as follows
+\begin{figure}[ht!]
+%\begin{Formula}[Definition]
+\begin{frameit}
 	$$
 	\begin{array}{ll}
-	\formulaSrc ::= & \psi(\expressionSpecSrc,  \expressionSpecSrc )\\
+	\formulaSrc ::= & \expressionSpecSrc \predicates  \expressionSpecSrc \\
 	  & \vert  \instances(\expressionSpecSrc)\\
 	  & \vert \true \\
 	  & \vert  \false \\	
@@ -44,8 +45,12 @@ The set of formulas is defined inductively as follows
 	                          & \mid \result
                                   
 	\end{array}
-	$$ 
-\end{Formula}
+	$$
+\caption{\sc Source assertion grammar}
+\label{formulasSrc:grammar}
+\end{frameit}
+\end{figure}
+%\end{Formula}
 
 % Note that the expressions in the assertion language are very similar to the expression  in the programming language presented in subsection \ref{source}.
 
