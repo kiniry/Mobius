@@ -32,10 +32,7 @@ the most important features of the JVM. In the following, we look closer at what
 
    \item  the unique basic type which is supported is the integer type.
           This is not so unrealistic as the JVM supports only few instructions 
-          for dealing with the other integral types, like byte and short. However, it is true that
-	  the formalization of the long type and manipulation of long values can be more complicated because
-	  of the fact that long values are stored in two adjacent registers. For our purposes, we do not consider  that 
-	  long values represent an interesting case and we discard them.
+          for dealing with the other integral types, like byte and short.
 	  
 \end{itemize} 
  
@@ -78,6 +75,11 @@ the most important features of the JVM. In the following, we look closer at what
 	 For instance, in the presence of interfaces, we should have extended 
 	 the subtyping relation. 
 
+   \item 64 bit arithmetic.  For our purposes, we do not consider  
+	  long values as their treatment is similar to the integer arithmetic.
+	  However, it is true that the formalization of the long type and manipulation of long type can be more complicated because
+	  of the fact that long values are stored in two adjacent registers but it feasible to extend the current formalization 
+	  with long values.
 
    \item floating point arithmetic. We omit this data in our bytecode language for the following reasons.
 	 There is no support for floating point data by automated tools.  

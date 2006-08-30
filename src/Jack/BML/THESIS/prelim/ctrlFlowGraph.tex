@@ -28,44 +28,78 @@ The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $
 in which the vertices are the instructions of the method body, i.e. 
 
 $$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
-The following definition defines the set of edges in the control flow graph.
-\begin{defEdge}[Edge in control flow graph]\label{defEdge} 
- The set of edges $\execRel$ is a relation between the vertices elements
-$$ \execRel : V * V $$ and is defined  as follows:
-$$ \begin{array}{l} (\methodd.\body[j], \methodd.\body[k]) \in \execRel \\
-   \iff \\
-   \begin{array}{l} \methodd.\body[j] \neq \return \wedge( \\
-                    \methodd.\body[j] = \ifCond \ k \vee \\
-		    \methodd.\body[j] = \goto \ k \ \vee \\
-		    \methodd.\body[j] \neq \goto \wedge  k = j+1 \ \vee \\ 
-		    \methodd.\body[j] = \putfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
-		    \methodd.\body[j] = \getfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
-		    \methodd.\body[j] = \arrstore \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
-                    \methodd.\body[j] = \arrstore \wedge \findExcHandler{\ArrIndexOutOfBoundExc  }{j}{\methodd.\excHandlerTable} = k \ \vee \\
-		    
-		    \methodd.\body[j] = \arrload \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k \ \vee \\
-                    \methodd.\body[j] = \arrload \wedge \findExcHandler{\ArrIndexOutOfBoundExc  }{j}{\methodd.\excHandlerTable} = k \ \vee \\
-		    \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}} \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k \ \vee \\
-		     \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}} \wedge \forall \mbox{\rm\texttt{Exc}}, \exists s , \mbox{\rm \texttt{n}}.\exceptions[s ] = \mbox{\rm\texttt{Exc}} \wedge  \\
-	\phantom{\methodd.\body[j] = \invoke } \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k \ \vee \\	    
-		    \methodd.\body[j] = \athrow  \wedge \forall \mbox{\rm\texttt{Exc}}, \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k \ \vee \\
-		    %\methodd.\body[j] = \athrow  \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k \vee 
-		    
-		    )
-   \end{array} 
-\end{array}$$
-\end{defEdge}
-From the Def. \ref{defEdge} follows that there is an edge between two vertices $\methodd.\body[j]$ and  $\methodd.\body[k]$ if they may execute immediately one after another.
+
+% The following definition defines the set of edges in the control flow graph.
+%\begin{defEdge}[Edge in control flow graph]\label{defEdge}  
+%Let us have a control flow graph $G( V , \execRel ) $.
+% The set of edges $\execRel$ is a relation between the vertices elements
+%$$ \execRel : V * V $$ and is defined  as follows:
+
+In Fig. \ref{defEdge} we can see the execution relation between instructions.
+Note first that we rather use the infix notation $\methodd.\body[j] \execRel \methodd.\body[k]$ instead of $(\methodd.\body[j], \methodd.\body[k]) \in \execRel$  %Note that the branch instructions $ \ifCond \ k $ or  $\goto \ k$ are   in execution relation with the instruction at index $k$.
+ The definition says that there is an edge between two vertices $\methodd.\body[j]$ and  $\methodd.\body[k]$ if they may execute immediately one after another.
  We say that $\methodd.\body[j]$ is a predecessor of $\methodd.\body[k]$ and that  $\methodd.\body[k]$ is a successor of  $\methodd.\body[j]$.
  The definition states the \return \  instruction  does not have successors.
 If  $\methodd.\body[j ]$ is the jump instruction $ \ifCond \ k $ then  its successors are the instruction at index $k$ in the method body   
-$\methodd.\body[k]$ and the instruction and the instruction $\methodd.\body[j + 1 ]$. 
+$\methodd.\body[k]$ and the instruction and the instruction $\methodd.\body[j + 1 ]$. {defEdge}
 From the definition, we also get that every instruction which potentially may throw an exception of type \texttt{Exc}
 has as successor the first instruction of the exception handler that may handle the exception type \texttt{Exc}. For instance, a successor
 of the instruction $\putfield$ is the exception handler entry point which can handle  the \NullPointerExc \ exception. 
 The possible successors of the instruction $\athrow$ are the entry point of any  exception handler  in the method \methodd.
-In the following, we will rather use the infix notation $\methodd.\body[j] \execRel \methodd.\body[k]$.
+.
 % We will also use the notation $\next{\methodd.\body[j] }$ for denoting the successor of   $\methodd.\body[j]$ in a given execution path.
+\begin{figure}[ht!]
+$$ 
+   \begin{array}{l} \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+                  
+                    \frac{ \methodd.\body[j] = \goto \ k  }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+
+                    \frac{ \methodd.\body[j] = \putfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+
+		    \frac{ \methodd.\body[j] = \putfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+		     \frac{ \methodd.\body[j] = \getfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+
+		     \frac{ \methodd.\body[j] = \arrstore \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+		     \frac{ \methodd.\body[j] = \arrstore \wedge \findExcHandler{\ArrIndexOutOfBoundExc}{j}{\methodd.\excHandlerTable} = k
+		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+		     \frac{ \methodd.\body[j] = \arrload \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
+		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+                     \frac{ \methodd.\body[j] = \arrload \wedge \findExcHandler{\ArrIndexOutOfBoundExc }{j}{\methodd.\excHandlerTable} = k
+		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}   \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
+		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+
+		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}  \wedge 
+                                \begin{array}{l}
+				     \forall \mbox{\rm\texttt{Exc}}, \exists s , \mbox{\rm \texttt{n}}.\exceptions[s ] = \mbox{\rm\texttt{Exc}} \wedge  \\
+		                     \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k 
+                                \end{array}}{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+                     \frac{ \methodd.\body[j] = \athrow  \wedge \forall \mbox{\rm\texttt{Exc}}, \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k}
+		    { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		   
+		    \frac{ \methodd.\body[j] \neq  \goto \  \methodd.\body[j] \neq  \return  \  k = j + 1  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+
+		   
+	
+  % \end{array} 
+\end{array}$$
+
+\caption{\sc Definition of the execution relation between bytecode instructions in a control flow graph}
+\label{defEdge}
+\end{figure}
+%\end{defEdge}
+
+
 
 
 We assume that the control flow graph of every method is reducible, i.e. every loop has exactly one entry point. This actually is admissible
@@ -95,7 +129,7 @@ Note  that  in  \cite{ARUCom1986}  reducibility is defined in terms of the domin
 Although  not said exlicitely, the first condition in the upper definition corresponds to the dominator relation\footnote{we decided to not introduce the standard
 definitions as it has several technical details for the exposition of which we would need more space and which are of not particular interest for the current thesis}.
 
-We illustrate the above definition with the control flow graph of the example from Fig. \ref{replaceSrc} in Fig. \ref{ctrlflow}.
+We illustrate the above definition with the control flow graph of the example from Fig. \ref{replaceSrc}.% in Fig. \ref{ctrlflow}.
 In the figure, we rather show the execution relation between basic blocks which is a standard notion denoting a sequence of instructions which execute sequentially
 and  where only the last one may be a jump and the first may be a target of a jump. 
 The black edges represent a sequential execution relation, while dashed edges represent a backedge, i.e. the edge which stands for the execution
