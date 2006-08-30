@@ -202,7 +202,8 @@ We will also see how the weakest precondition is defined in presence of exceptio
 		 
 		    \forall \referenceOnly,\\
                       \Myspace    not \ \instances(\referenceOnly) \wedge \\
-		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
+		      \Myspace \referenceOnly \neq \Mynull  \\
+		        \Myspace \typeof{\referenceOnly} <: \class  \Rightarrow	\\
 		      % \Myspace  \typeof{\referenceOnly} = \type{\clazz} \Rightarrow	\\
 			                 \Myspace   \Myspace     
 					 \begin{array}{l}   \inter{i}{i+1} \\
@@ -227,7 +228,7 @@ We will also see how the weakest precondition is defined in presence of exceptio
 			\forall \referenceOnly,\\
                         \Myspace    not \ \instances(\referenceOnly) \wedge \\
 			 \Myspace \referenceOnly \neq \Mynull \wedge \\
-			% \Myspace \typeof{\referenceOnly} =\type{\anyType[ ]}
+			\Myspace \typeof{\referenceOnly} = \type{\anyType[ ]} \wedge \\
 			 	\Myspace \stack{\counter} \ge 0 \Rightarrow  \\
 					 \Myspace     \Myspace  \inter{i}{i+1} \\
                                            \Myspace      \Myspace \begin{array}{l}        
