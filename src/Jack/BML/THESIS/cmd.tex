@@ -96,7 +96,7 @@
 \newcommand{\integer}{\texttt{int} }
 \newcommand{\register}[1]{\mbox{\rm\textbf{reg}}(#1)}
 
-\newcommand{\Mynull}{\jmlKey{null}}
+\newcommand{\Mynull}{\jmlKey{null}{}}
 %\newcommand{\this}{\texttt{this}}
 \newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
 \newcommand{\arrayAccess}[2]{\mbox{\rm\textbf{arrayAccess}}( #1, #2) }  %{\mbox{\rm arrAccess}(#1, #2)}
@@ -137,8 +137,8 @@
 
 
 
-\newcommand{\getExcPost}{\mbox{\rm\textsf{getExcPostIns}}}
-\newcommand{\excPost}{\mbox{\rm\textsf{excPost}}}
+\newcommand{\getExcPost}{\mbox{\rm\textsf{excPostIns}}}
+\newcommand{\excPost}{\mbox{\rm\textsf{excPostRTE}}}
 \newcommand{\javaNull}{null}
 \newcommand{\length}{\mbox{\rm arrLength}} % stands for array length
 
@@ -211,8 +211,8 @@
 \newcommand{\SetConfigFinalExc}{\mbox{\rm \textit{S}}^{exc}}
 
 \newcommand{\termination}{\mbox{\rm End}}
-\newcommand{\Res}{\mbox{\rm Res}}
-\newcommand{\Exc}{\mbox{\rm Exc}} % the third component of a terminating configuration in  case of an exception
+\newcommand{\Res}{\mbox{\rm Res}}% operational semantics for bytecode :
+\newcommand{\Exc}{\mbox{\rm Exc}} % operational semantics for bytecode : the third component of a terminating configuration in  case of an exception, i.e. the exceptional  object which causes the exceptional termination  
 
 \newcommand{\eval}[2]{ #1 \vDash #2 } % \tau (expr )
 \newcommand{\conf}[1]{\tt{<#1>}} % <\tau>
@@ -238,7 +238,7 @@
 
 \newtheorem{Formula}{Formulas}
 \newtheorem{Predicate}{Predicates}
-\newcommand{\formulaBc}{\mbox{\rm\textit{P}}_{bml}}
+\newcommand{\formulaBc}{\mbox{\rm\textit{P}}}
 
 
 
@@ -256,7 +256,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%Class Fields Methods%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\class}{\mbox{ \rm Cl } }
+ \newcommand{\class}{\mbox{\rm\texttt{Cl}}{}} % a generalization which stands for any Java class
 
  \newcommand{\FieldSet}{\mbox{\rm\textbf{Field}} } % the set of fields
  \newcommand{\FieldName}{\mbox{\rm\textbf{FieldName}}}
@@ -496,7 +496,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\evalExp}[2]{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
+\newcommand{\evalExp}[2]{[\![#1]\!]_{s_{0}, #2}}%{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
 \newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
 
 \newcommand{\interp}[2]{#2 , s_{0} \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
@@ -581,13 +581,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % param1 - start protect region,param2 - end protect region, param3 - start exc handler, param4 - exception type
-\newcommand{\wpSrcExpr}[4]{ \textrm{wp}^{src}( #1 , #2, #3, \methodd )_{#4} }
-\newcommand{\wpSrcStmt}[3]{ \textrm{wp}^{src}( #1 , #2, #3, \methodd ) }
-\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}}
+\newcommand{\wpSrcExpr}[4]{ \wpName^{src}( #1 , #2, #3, \methodd )_{#4} }
+\newcommand{\wpSrcStmt}[3]{ \wpName^{src}( #1 , #2, #3, \methodd ) }
+\newcommand{\preSrc}{\mbox{\rm\textsf{Pre}}^{src}{}}
 \newcommand{\excPostSrc}{\mbox{\rm\textsf{excPost}}^{src}}
-\newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{excPostSpec}}^{src}}
-\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}}
-\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}}
+\newcommand{\excPostSpecSrc}{\mbox{\rm\textsf{excPostSpec}}^{src}{}}
+\newcommand{\normalPostSrc}{\mbox{\rm\textsf{nPost}}^{src}{}}
+\newcommand{\exceptionSrc}{\mbox{\rm\textsf{exceptions}}^{src}{}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%end wp for source %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -641,7 +641,7 @@
 \newcommand{\addLoopTableOnly}{\mbox{\rm\textsf{addLoopSpec}}}
 \newcommand{\addLoopTable}[4]{\mbox{\rm\textsf{addLoopSpec}}(#1, \ #2, \ #3,  \ #4)} % method, nat, invariant,  modifies
 \newcommand{\compile}[1]{ \ulcorner  #1 \urcorner }
-\newcommand{\compileLabel}[3]{ \ulcorner  #1,#2,#3 \urcorner }
+\newcommand{\compileLabel}[3]{ \ulcorner  #1,#2,#3  \urcorner_{\methodd} }
 
 
 \newcommand{\compileExp}[2]{\compile{ #1} }
