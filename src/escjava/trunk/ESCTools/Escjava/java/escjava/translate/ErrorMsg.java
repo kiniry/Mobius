@@ -37,7 +37,11 @@ public final class ErrorMsg
 			     /*@ non_null */ Set directTargets,
 			     /*@ non_null */ PrintStream out) {
 	try {
-	    int cLabels = labelList.length();
+		// DRC - I added the guard against labelList being null.
+                // In some buggy(?) situation, its absence was causing an
+                // Exception, though I suspect the design expects that
+                // labelList is never null.
+	    int cLabels = labelList == null ? 0 : labelList.length();
 	    int iErrorLabel = -1;
 	    String tail = null;
 	    for (int i = 0; i < cLabels; i++) {
