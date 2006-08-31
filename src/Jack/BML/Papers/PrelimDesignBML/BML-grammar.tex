@@ -1,0 +1,174 @@
+% generated and manually adapted from BML-grammar.texinfo
+
+\newdimen{\standardmargin}  \setlength{\standardmargin}{15pt}
+\newdimen{\tableindent}     \setlength{\tableindent}{50pt}
+\newbox\ItemBox
+
+\setcounter{secnumdepth}{5}       
+\setcounter{tocdepth}{5}          
+
+\def\lqHook{\char16 }\def\rqHook{\char17 }\def\lnqHook{\char96 }\def\rnqHook{\char39 }%
+%\usepackage{varioref}         
+
+
+
+
+\newcommand{\lbr}{\ifvmode\else\unskip\relax\nobreak\hfil\break\fi}
+
+
+
+
+\newenvironment{display}[1][\standardmargin]%
+                       {\begingroup\def~{\mbox{ }}\let\\=\lbr
+                        \list{}{\listparindent0pt  \itemindent0pt
+                        \rightmargin0pt    \leftmargin#1}%
+                \item}
+               {\endlist\endgroup}
+
+
+
+\renewenvironment{quote}
+                 {\list{}{\leftmargin\standardmargin\rightmargin\leftmargin}%
+                  \item\relax}
+                 {\endlist}
+
+
+
+\makeatletter
+\newcommand\Nopagebreak{\let\if@nobreak\iftrue \nopagebreak}
+\makeatother
+
+
+
+
+
+\newcommand{\tabletermHook}[1]{#1}
+
+\newcommand{\codeHook}[1]{\mbox{\ttfamily #1}}
+\newcommand{\kbdHook}[1]{\mbox{\ttfamily\slshape #1}}
+
+\newcommand{\keyHook}[1]{{\fboxsep2pt\fbox{\sffamily\footnotesize #1}}}
+\newcommand{\sampHook}[1]{\lnqHook\texttt{#1}\rnqHook}
+\newcommand{\verbHook}[1]{\mbox{\ttfamily #1}}
+\newcommand{\varHook}[1]{\mbox{\slshape #1}}
+\newcommand{\envHook}[1]{\mbox{\ttfamily #1}}
+\newcommand{\fileHook}[1]{\lnqHook\texttt{#1}\rnqHook}
+\newcommand{\commandHook}[1]{\mbox{\ttfamily #1}}
+\newcommand{\optionHook}[1]{\lnqHook\mbox{\ttfamily #1}\rnqHook}
+\newcommand{\dfnHook}[1]{\emph{#1}}
+\newcommand{\citeHook}[1]{\textit{#1}}
+\newcommand{\abbrevwordHook}[1]{#1}
+\newcommand{\abbrevdescHook}[1]{ (#1)}
+\newcommand{\acronymwordHook}[1]{\mbox{#1}}
+\newcommand{\acronymdescHook}[1]{\footnote{#1}}
+\newcommand{\urlHook}[1]{#1}
+\newcommand{\emailHook}[1]{#1}
+
+\newcommand{\emphHook}[1]{\emph{#1}}
+\newcommand{\strongHook}[1]{\textbf{#1}}
+\newcommand{\scHook}[1]{\textsc{#1}}
+\newcommand{\slantedHook}[1]{\textsl{#1}}
+\newcommand{\sansserifHook}[1]{\textsf{#1}}
+\newcommand{\iHook}[1]{\textit{#1}}
+\newcommand{\bHook}[1]{\textbf{#1}}
+\newcommand{\tHook}[1]{\texttt{#1}}
+\newcommand{\rHook}[1]{\textrm{#1}}
+\newcommand{\dmnHook}[1]{\,\mbox{#1}}
+\newcommand{\mathHook}[1]{\ensuremath{#1}}
+\newcommand{\footnoteHook}[1]{\footnote{#1}}
+
+
+
+\newenvironment{quotationHook}{\begin{quote}}{\end{quote}}
+\newenvironment{copyingHook}{\begin{quote}}{\end{quote}}
+\newenvironment{verbatimHook}{\begin{display}[0pt]\ttfamily}{\end{display}}
+\newenvironment{exampleHook}{\begin{display}\ttfamily}{\end{display}}
+\newenvironment{lispHook}{\begin{display}\ttfamily}{\end{display}}
+\newenvironment{displayHook}{\begin{display}\relax}{\end{display}}
+\newenvironment{formatHook}{\begin{display}[0pt]}{\end{display}}
+
+\newenvironment{smallexampleHook}{\begin{small}\begin{exampleHook}}%
+    {\end{exampleHook}\end{small}}
+\newenvironment{smalldisplayHook}{\begin{small}\begin{displayHook}}%
+    {\end{displayHook}\end{small}}
+\newenvironment{smallformatHook}{\begin{small}\begin{formatHook}}%
+    {\end{formatHook}\end{small}}
+\newenvironment{smalllispHook}{\begin{small}\begin{lispHook}}%
+    {\end{lispHook}\end{small}}
+
+\newenvironment{flushleftHook}{\begin{flushleft}}{\end{flushleft}}
+\newenvironment{flushrightHook}{\begin{flushright}}{\end{flushright}}
+\newenvironment{groupHook}{\begin{samepage}}{\end{samepage}}
+
+\newenvironment{cartoucheHook}{\begin{center}\shadowbox\bgroup
+    \hbox to \hsize\bgroup\begin{minipage}{\hsize}}%
+    {\end{minipage}\hss\egroup\egroup\end{center}}
+
+\newcommand{\centerHook}[1]{\centerline{#1}}
+
+
+
+
+\newenvironment{definitionitem}[1][\standardmargin]
+               {\list{}{\listparindent0pt  \itemindent0pt
+                        \rightmargin0pt    \leftmargin#1}%
+                \item\removelastskip\relax}
+               {\endlist}
+
+\sloppy               
+\hbadness20000
+
+
+
+
+
+%\PassOptionsToPackage{hyphens}{url}
+%\newcommand{\xhyphen}{\discretionary{\char127}{}{-}}
+%\IfFileExists{pdfcprot.sty}{\usepackage[activate]{pdfcprot}}{}
+%\usepackage[%
+%  pagebackref=true,pdfstartview=FitH,
+%  pdfcreator={texi2latex + LaTeX with hyperref package},
+%  pdfpagelayout=OneColumn,
+%  bookmarks=true,bookmarksopen=false,  colorlinks,pdfpagelabels=true,
+%  draft=false,breaklinks=true,plainpages=false]{hyperref}[2000/05/08]  \hypersetup{%
+%    pdftitle={BML grammar},
+%    pdfsubject={<setfilename>BML-grammar.texinfo</setfilename>},
+%    pdfauthor={}
+%  }
+%\urlstyle{rm}
+
+
+
+
+%\usepackage{hypbmsec}
+
+
+
+%\InputIfFileExists{texi2latex.cfg}%
+%  {\message{Loading global configuration file texi2latex.cfg}}{}
+%\InputIfFileExists{\jobname-t2l.cfg}%
+%  {\message{Loading local configuration file \jobname-t2l.cfg}}{}
+
+
+
+%\begin{document}
+
+
+\gdef\InsertLabelMaybe{\label{predicates-and-specification-expressions}\gdef\InsertLabelMaybe{}}
+\section{Grammar for BML predicates and specification expressions}\label{AppBML}\InsertLabelMaybe
+
+As in the JML Reference Manual~\cite{JMLReferenceManual05}, we use an extended Backus-Nauer Form (BNF) grammar to describe the syntax of JML. The extensions are as follows~\cite{Ledgard80}.
+
+\begin{itemize}
+\item Nonterminal symbols are written as follows: \textit{nonterminal}.
+
+\item Terminal symbols are written as follows: \texttt{terminal}.
+
+\item Square brackets ([ and ]) surround optional text. Notice that
+\texttt{[} and \texttt{]} are terminal symbols.  
+
+\item The notation \(\ldots\) means that the preceding nonterminal or group of optional text can be repeated zero (0) or more times.  
+\end{itemize}
+
+\begin{displayHook}\\\relax {\varHook{predicate}}~::=~{\varHook{spec-{}expression}}\\\relax {\varHook{spec-{}expression-{}list}}~::=~{\varHook{spec-{}expression}}\\\relax ~~~~~~~~~~~~~~~~~~~~~~~~~[~{\codeHook{,}}~{\varHook{spec-{}expression}}~]~\dots \@{}\\\relax {\varHook{spec-{}expression}}~::=~{\varHook{expression}}\\\relax {\varHook{expression-{}list}}~::=~{\varHook{expression}}~[~{\codeHook{,}}~{\varHook{expression}}~]~\dots \@{}\\\relax {\varHook{expression}}~::=~{\varHook{conditional-{}expr}}~\\\relax {\varHook{conditional-{}expr}}~::=~{\varHook{equivalence-{}expr}}\\\relax ~~~~~~~~~~~~~~~~~~~[~{\codeHook{?{}}}~{\varHook{conditional-{}expr}}~{\codeHook{:}}~{\varHook{conditional-{}expr}}~]\\\relax {\varHook{equivalence-{}expr}}~::=~{\varHook{implies-{}expr}}\\\relax ~~~~~~~~~~~~~~~~~~~~~[~{\varHook{equivalence-{}op}}~{\varHook{implies-{}expr}}~]~\dots \@{}\\\relax {\varHook{equivalence-{}op}}~::=~{\codeHook{<{}==>{}}}~{\mbox{\char124{}}}~{\codeHook{<{}=!{}=>{}}}\\\relax {\varHook{implies-{}expr}}~::=~{\varHook{logical-{}or-{}expr}}\\\relax ~~~~~~~~~~~~~[~{\codeHook{==>{}}}~{\varHook{implies-{}non-{}backward-{}expr}}~]\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{logical-{}or-{}expr}}~{\codeHook{<{}==}}~{\varHook{logical-{}or-{}expr}}\\\relax ~~~~~~~~~~~~~[~{\codeHook{<{}==}}~{\varHook{logical-{}or-{}expr}}~]~\dots \@{}\\\relax {\varHook{implies-{}non-{}backward-{}expr}}~::=~{\varHook{logical-{}or-{}expr}}\\\relax ~~~~~~~~~~~~~[~{\codeHook{==>{}}}~{\varHook{implies-{}non-{}backward-{}expr}}~]\\\relax {\varHook{logical-{}or-{}expr}}~::=~{\varHook{logical-{}and-{}expr}}~[~`{}{\codeHook{{\mbox{\char124{}}}{\mbox{\char124{}}}}}'{}~{\varHook{logical-{}and-{}expr}}~]~\dots \@{}\\\relax {\varHook{logical-{}and-{}expr}}~::=~{\varHook{inclusive-{}or-{}expr}}~[~{\codeHook{\&\&}}~{\varHook{inclusive-{}or-{}expr}}~]~\dots \@{}\\\relax {\varHook{inclusive-{}or-{}expr}}~::=~{\varHook{exclusive-{}or-{}expr}}~[~`{}{\codeHook{{\mbox{\char124{}}}}}'{}~{\varHook{exclusive-{}or-{}expr}}~]~\dots \@{}\\\relax {\varHook{exclusive-{}or-{}expr}}~::=~{\varHook{and-{}expr}}~[~{\codeHook{{\mbox{\char94{}}}}}~{\varHook{and-{}expr}}~]~\dots \@{}\\\relax {\varHook{and-{}expr}}~::=~{\varHook{equality-{}expr}}~[~{\codeHook{\&}}~{\varHook{equality-{}expr}}~]~\dots \@{}\\\relax {\varHook{equality-{}expr}}~::=~{\varHook{relational-{}expr}}~[~{\codeHook{==}}~{\varHook{relational-{}expr}}]~\dots \@{}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{relational-{}expr}}~[~{\codeHook{!{}=}}~{\varHook{relational-{}expr}}]~\dots \@{}\\\relax {\varHook{relational-{}expr}}~::=~{\varHook{shift-{}expr}}~{\codeHook{<{}}}~{\varHook{shift-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{shift-{}expr}}~{\codeHook{>{}}}~{\varHook{shift-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{shift-{}expr}}~{\codeHook{<{}=}}~{\varHook{shift-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{shift-{}expr}}~{\codeHook{>{}=}}~{\varHook{shift-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{shift-{}expr}}~{\codeHook{<{}:}}~{\varHook{shift-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{shift-{}expr}}~[~{\codeHook{instanceof}}~{\varHook{type-{}spec}}~]\\\relax {\varHook{shift-{}expr}}~::=~{\varHook{additive-{}expr}}~[~{\varHook{shift-{}op}}~{\varHook{additive-{}expr}}~]~\dots \@{}\\\relax {\varHook{shift-{}op}}~::=~{\codeHook{<{}<{}}}~{\mbox{\char124{}}}~{\codeHook{>{}>{}}}~{\mbox{\char124{}}}~{\codeHook{>{}>{}>{}}}\\\relax {\varHook{additive-{}expr}}~::=~{\varHook{mult-{}expr}}~[~{\varHook{additive-{}op}}~{\varHook{mult-{}expr}}~]~\dots \@{}\\\relax {\varHook{additive-{}op}}~::=~{\codeHook{+}}~{\mbox{\char124{}}}~{\codeHook{-{}}}\\\relax {\varHook{mult-{}expr}}~::=~{\varHook{unary-{}expr}}~[~{\varHook{mult-{}op}}~{\varHook{unary-{}expr}}~]~\dots \@{}\\\relax {\varHook{mult-{}op}}~::=~{\codeHook{*}}~{\mbox{\char124{}}}~{\codeHook{/}}~{\mbox{\char124{}}}~{\codeHook{\%}}\\\relax {\varHook{unary-{}expr}}~::=~{\codeHook{(}}~{\varHook{type-{}spec}}~{\codeHook{)}}~{\varHook{unary-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{+}}~{\varHook{unary-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{-{}}}~{\varHook{unary-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{unary-{}expr-{}not-{}plus-{}minus}}\\\relax {\varHook{unary-{}expr-{}not-{}plus-{}minus}}~::=~{\codeHook{{\mbox{\char126{}}}}}~{\varHook{unary-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{!{}}}~{\varHook{unary-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{(}}~{\varHook{built-{}in-{}type}}~{\codeHook{)}}~{\varHook{unary-{}expr}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{(}}~{\varHook{reference-{}type}}~{\codeHook{)}}~{\varHook{unary-{}expr-{}not-{}plus-{}minus}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{primary-{}expr}}~[~{\varHook{primary-{}suffix}}~]~\dots \@{}\\\relax {\varHook{primary-{}suffix}}~::=~{\codeHook{(}}~[~{\varHook{expression-{}list}}~]~{\codeHook{)}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~`{}{\codeHook{[}}'{}~{\varHook{expression}}~`{}{\codeHook{]}}'{}\\\relax {\varHook{primary-{}expr}}~::=~~{\codeHook{{\mbox{\char92{}}}{\mbox{\char35{}}}}}{\varHook{natural}}~{\mbox{\char124{}}}~{\codeHook{lv[}}~{\varHook{natural}}~{\codeHook{]}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{constant}}~{\mbox{\char124{}}}~{\codeHook{super}}~{\mbox{\char124{}}}~{\codeHook{true}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{false}}~{\mbox{\char124{}}}~{\codeHook{this}}~{\mbox{\char124{}}}~{\codeHook{null}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{(}}~{\varHook{expression}}~{\codeHook{)}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{bml-{}primary}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{jml-{}primary}}\\\relax {\varHook{built-{}in-{}type}}~::=~{\codeHook{void}}~{\mbox{\char124{}}}~{\codeHook{boolean}}~{\mbox{\char124{}}}~{\codeHook{byte}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{char}}~{\mbox{\char124{}}}~{\codeHook{short}}~{\mbox{\char124{}}}~{\codeHook{int}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{long}}~{\mbox{\char124{}}}~{\codeHook{float}}~{\mbox{\char124{}}}~{\codeHook{double}}\\\relax {\varHook{constant}}~::=~{\varHook{java-{}literal}}\\\relax {\varHook{bml-{}primary}}~::=~{\varHook{array-{}length-{}expression}}~{\mbox{\char124{}}}\\\relax ~~~~~~~~~~~{\mbox{\char124{}}}~{\varHook{opstack-{}counter-{}expression}}\\\relax ~~~~~~~~~~~{\mbox{\char124{}}}~{\varHook{stack-{}expresion}}\\\relax {\varHook{array-{}length-{}expression}}~::=~{\codeHook{length(}}~{\varHook{expression}}~{\codeHook{)}}\\\relax {\varHook{opstack-{}counter-{}expression}}~::=~{\codeHook{cntr}}\\\relax {\varHook{stack-{}expression}}~::=~{\codeHook{st(}}~{\varHook{additive-{}expr}}~{\codeHook{)}}\\\relax {\varHook{jml-{}primary}}~::=~{\varHook{result-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{old-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{fresh-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{nonnullelements-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{typeof-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{elemtype-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{type-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{spec-{}quantified-{}expr}}\\\relax {\varHook{result-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}result}}\\\relax {\varHook{old-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}old}}~{\codeHook{(}}~{\varHook{spec-{}expression}}~{\codeHook{)}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{{\mbox{\char92{}}}pre}}~{\codeHook{(}}~{\varHook{spec-{}expression}}~{\codeHook{)}}\\\relax {\varHook{fresh-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}fresh}}~{\codeHook{(}}~{\varHook{spec-{}expression-{}list}}~{\codeHook{)}}\\\relax {\varHook{nonnullelements-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}nonnullelements}}~{\codeHook{(}}~{\varHook{spec-{}expression}}~{\codeHook{)}}\\\relax {\varHook{typeof-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}typeof}}~{\codeHook{(}}~{\varHook{spec-{}expression}}~{\codeHook{)}}\\\relax {\varHook{elemtype-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}elemtype}}~{\codeHook{(}}~{\varHook{spec-{}expression}}~{\codeHook{)}}\\\relax {\varHook{type-{}expression}}~::=~{\codeHook{{\mbox{\char92{}}}type}}~{\codeHook{(}}~{\varHook{type}}~{\codeHook{)}}\\\relax {\varHook{spec-{}quantified-{}expr}}~::=~{\codeHook{(}}~{\varHook{quantifier}}~{\varHook{quantified-{}var-{}decls}}~{\codeHook{;}}\\\relax ~~~~~~~~~~~~~~~~~~~~~~~~~~~[~[~{\varHook{predicate}}~]~{\codeHook{;}}~]\\\relax ~~~~~~~~~~~~~~~~~~~~~~~~~~~{\varHook{spec-{}expression}}~{\codeHook{)}}\\\relax {\varHook{quantifier}}~::=~{\codeHook{{\mbox{\char92{}}}forall}}~{\mbox{\char124{}}}~{\codeHook{{\mbox{\char92{}}}exists}}\\\relax {\varHook{quantified-{}var-{}decls}}~::=~[~{\varHook{bound-{}var-{}modifiers}}~]~{\varHook{type-{}spec}}~{\varHook{quantified-{}var-{}declarator}}\\\relax ~~~~~~~~~~~~~~~~~~~~~~~~~[~{\codeHook{,}}~{\varHook{quantified-{}var-{}declarator}}~]~\dots \@{}\\\relax {\varHook{quantified-{}var-{}declarator}}~::=~{\varHook{ident}}~[~{\varHook{dims}}~]\\\relax {\varHook{bound-{}var-{}modifiers}}~::=~{\codeHook{non{\mbox{\char95{}}}null}}~{\mbox{\char124{}}}~{\codeHook{nullable}}\\\relax {\varHook{store-{}ref-{}list}}~::=~{\varHook{store-{}ref}}~[~{\codeHook{,}}~{\varHook{store-{}ref}}~]~\dots \@{}\\\relax {\varHook{store-{}ref}}~::=~{\varHook{store-{}ref-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{store-{}ref-{}keyword}}\\\relax {\varHook{store-{}ref-{}expression}}~::=~{\varHook{store-{}ref-{}name}}~[~{\varHook{store-{}ref-{}name-{}suffix}}~]~\dots \@{}\\\relax {\varHook{store-{}ref-{}name}}~::=~{\codeHook{{\mbox{\char92{}}}{\mbox{\char35{}}}}}~{\varHook{natural}}~{\mbox{\char124{}}}~{\codeHook{super}}~{\mbox{\char124{}}}~{\codeHook{this}}\\\relax {\varHook{store-{}ref-{}name-{}suffix}}~::=~{\codeHook{(}}~{\varHook{store-{}ref-{}expression}}~{\codeHook{)}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~`{}{\codeHook{[}}'{}~{\varHook{spec-{}array-{}ref-{}expr}}~`{}{\codeHook{]}}'{}\\\relax {\varHook{spec-{}array-{}ref-{}expr}}~::=~{\varHook{spec-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\varHook{spec-{}expression}}~{\codeHook{..}}~{\varHook{spec-{}expression}}\\\relax ~~~~~~~~{\mbox{\char124{}}}~{\codeHook{*}}\\\relax {\varHook{store-{}ref-{}keyword}}~::=~{\codeHook{{\mbox{\char92{}}}nothing}}~{\mbox{\char124{}}}~{\codeHook{{\mbox{\char92{}}}everything}}~{\mbox{\char124{}}}~{\codeHook{{\mbox{\char92{}}}not{\mbox{\char95{}}}specified}}\end{displayHook}
+
