@@ -75,7 +75,7 @@ development of a secure application for a trusted personal device, by
 means of several examples. In particular, we show how a high-level
 security policy can be weaven as annotations in the application. This
 can be done at source code, but also at bytecode level. JACK's user
-interface, integrated in the IDE Eclipse\footnote{See
+interface, integrated in Eclipse IDE\footnote{See
 \texttt{http://www.eclipse.org}.} allows to inspect the different
 proof obligations that are generated for these annotations. Further,
 we will also show how JACK is used to verify complex functional
@@ -86,7 +86,7 @@ interactive verification.
 \paragraph{Integration with Eclipse}
 Because of the tight integration with Eclipse, the developer does not
 have to change tools to validate the application. We will show the
-special JACK view, that allows to inspect the generated proof
+special JACK perspective, that allows to inspect the generated proof
 obligations in different views (in a Java-like syntax, or in the
 language of the prover). Moreover, syntax colouring of the original
 source code allows to see to which parts of the application and
@@ -111,8 +111,8 @@ achieve this, we need the ability to reason about bytecode. JACK
 provides a verification condition generator for BML, the Bytecode
 Modeling Language, a bytecode variation of BML. In addition, it
 provides a compiler from JML to BML, for which we have shown that it
-basically preserves proof obligations (and thus source code level
-proofs can be reused at bytecode level).
+basically preserves proof obligations (and thus in principle source
+code level proofs can be reused at bytecode level).
 
 \paragraph{Support for interactive verification}
 As interactive program verification is known to be labour-intensive,
