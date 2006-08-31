@@ -1,0 +1,247 @@
+\section{The Bytecode Modeling Language}
+\label{SecBML}
+
+
+\subsection{Syntax of BML}
+
+Basically, BML has the same syntax as JML with two exceptions:
+\begin{enumerate}
+\item specifications are not written directly in the program code,
+they are added as special attributes to the bytecode; and
+\item the grammar for expressions only allows bytecode expressions.
+\end{enumerate}
+
+With respect to the expression syntax, this means concretely that
+field names, class names etc.\ are replaced by constants, using
+the constant pool, while registers are used to refer to local
+variables. In addition, we can use stack expressions and the stack
+counter to describe intermediate states of a computation. These will
+typically only appear in intermediate assertions, we do not use them
+in method specifications. Finally, we add a special expression
+\texttt{length(\(a\))}, denoting the length of array \(a\). Since the 
+source code expression \texttt{\(a\).length} is compiled into a
+special bytecode instruction \texttt{arraylength}, we also need a
+special specification construct for this at bytecode level.
+
+BML contains equivalent constructs for all specification constructs of
+JML Level 0 (see~\cite[\S2.9]{JMLReferenceManual05}), which defines
+the features that should be understood and checked by all JML
+tools. In addition, it contains several constructs from JML level 1,
+that we find important to be able to write meaningful specifications
+for the example applications studied in the \mobius project. These
+constructs are:
+\begin{itemize}
+\item static invariants;
+\item object and static history constraints; and 
+\item loop variants (using the \texttt{decreasing} keyword).
+\end{itemize}
+
+At the moment, the use of pure methods is not part of the BML grammar,
+as there is still ongoing research on the exact semantics of method
+calls used in specifications. However, we believe that if the
+theoretical issues have been settled, eventually the
+\mobius tool set should support this, both at source code and at 
+bytecode level. Finally, experiences with verification of realistic case
+studies have shown that it is beneficial to have a special clause
+\texttt{loop-modifies}, which is specified together with the loop
+invariant. This clause specifies which variables
+\emph{may} be modified by a loop (as an \texttt{assignable} clause does
+for a method). This \texttt{loop-modifies} clause allows to write
+concise specifications, and to efficiently generate proof obligations
+using a weakest precondition calculus.
+
+\begin{figure}[t]
+
+\begin{tabular}{lll}
+\multicolumn{2}{l}{\emph{primary-suffix} := \texttt{(} [\emph{expression-list}] \texttt{)}}\\
+\hspace*{1cm}& \(\mid\) \texttt{[} \emph{expression} \texttt{]}\\
+\multicolumn{2}{l}{\emph{primary-expr} ::= 
+\texttt{\#}\emph{natural}} & \% reference in the constant pool \\
+&\(\mid\) \texttt{lv[}\emph{natural}\texttt{]} &\% local variable \\
+&\(\mid\) \texttt{length(}\emph{expression}\texttt{)} &\% array
+length \\
+&\(\mid\) \texttt{cntr} &\% counter of the operand stack\\
+&\(\mid\) \texttt{st(}\emph{additive-expr}\texttt{)} &\% stack
+expressions\\
+&\(\mid\) \emph{constant} \(\mid\)
+\texttt{super}\\
+&\(\mid\) \texttt{true} \(\mid\) \texttt{false} \(\mid\)
+\texttt{this} \(\mid\) \texttt{null} \\
+&\(\mid\) \texttt{(}\emph{expression}\texttt{)}\\
+&\(\mid\) \emph{jml-primary}\\
+\\
+\multicolumn{2}{l}{\emph{store-ref-expression} := \emph{store-ref-name}
+[\emph{store-ref-name-suffix}]}\\
+\multicolumn{2}{l}{\emph{store-ref-name} := 
+\texttt{\#}\emph{natural}} &\% reference in the constant pool \\
+&\(\mid\)\texttt{super} \(\mid\) \texttt{this}\\
+\multicolumn{2}{l}{\emph{store-ref-name-suffix} := 
+\texttt{(}\emph{store-ref-expression}\texttt{)}}\\
+&\(\mid\) \texttt{[}\emph{spec-array-ref-expr}\texttt{]}
+\end{tabular}
+
+\caption{Grammar for BML predicates and specification expressions}
+\label{FigBMLGrammar}
+\end{figure}
+
+Since the bytecode and BML specifications are two separate entities,
+they should be parsed independently. Concretely this means that the
+grammar of BML is similar to the grammar of type specifications,
+method specifications and data groups of JML~\cite[\S A.5, A.6,
+A.7]{JMLReferenceManual05}, restricted to the constructs in JML level
+0, plus the constructs of JML level 1 mentioned, but with the changes
+to the grammar for predicates and specification expressions, as
+mentioned above. Figure~\ref{FigBMLGrammar} displays the most
+interesting part of this grammar for predicates and specification
+expressions, defining the syntax for primary expressions, primary
+suffixes, store-ref expressions and store-ref expressions (see
+Appendix~\ref{AppBML} for a short explanation of the syntax notation
+and the full grammar of predicates and specification
+expressions). Primary expressions, followed by zero or more primary
+suffixes, are the most basic form of expressions, formed by
+identifiers, bracketed expressions
+\emph{etc}. Store ref expressions (followed by zero or more store ref 
+suffixes) are the expressions that can be used in an assignable
+clause.
+
+As mentioned above, all identifiers are replaced by references to the
+constant pool (a number, preceded by the symbol
+\texttt{\#}) or to local registers. The local register \texttt{lv[0]}
+of a non-static method always contains the implicit argument
+\texttt{this}, the other registers contain the parameters and the
+local variables declared inside a method body. As explained above, we
+add special keywords to be able to express properties about the length
+of an array, the current stack counter (\texttt{cntr}), and to refer
+to an element on the stack (\texttt{st(\(e\))}, where \(e\) is some
+arithmetic expression). In BML, a field access is written as a function
+application. For example, suppose we have the source code qualified expression
+\texttt{obj.f}, where \texttt{obj} is the first parameter of a
+method, and \texttt{f} is a field of this object. This becomes
+\texttt{\#\(n\)(lv[1])} in BML, where \(n\) is the index in the
+constant pool to the field constant reference denoting the field
+\texttt{f}, while \texttt{lv[1]} is the register in the local variable
+array in which the parameter \texttt{obj} is stored.  Therefore the
+grammar for \emph{primary-suffixes} and \emph{store-ref-name-suffixes}
+does not provide any grammar for qualified expressions.
+
+
+In JML, many special keywords are preceded by the symbol
+\texttt{\bsl}, to ensure that they will not clash with variable
+names. For BML, we do not have to worry about this: all
+variable names are replaced by references to the constant pool or
+local variable registers. Therefore, the new keywords are written
+without a special preceding symbol. However, for convenience, we keep
+the symbol for keywords that are also JML keywords.
+
+Finally, statement annotations are described as a special attribute,
+mapping line numbers to annotations. To parse these annotations, we
+reuse the relevant parts of the grammar for statements and annotation
+statements~\cite[\S A.9]{JMLReferenceManual05}.
+
+Type checking of the specification can be done in the obvious way,
+using the type information stored in the constant pool.
+
+\subsection{An example BML specification}
+\label{sec:bml:example}
+
+
+\begin{figure}
+{\small
+\begin{verbatim}
+{| requires lv[1] > 0 
+   ensures #24 <= \old(#24) + lv[1] * (lv[1] + 1) / 2 |}
+ 0 iconst_1
+ 1 istore_2
+ 2 goto 22 (+20)
+ 5 aload_0
+ 6 aload_0
+ 7 getfield #24 <Bill.sum>
+10 aload_0
+11 iload_2
+12 invokevirtual #26 <Bill.round_cost>
+15 iadd
+16 putfield #24 <Bill.sum>
+19 iinc 2 by 1
+loop_invariant lv[2] <= lv[1] + 1 && #24 <= \old(#24) + (lv[2] + 1) * lv[2]/2
+entry loop:
+22 iload_2
+23 iload_1
+24 if_icmple 5 (-19)
+27 iconst_1
+28 ireturn
+29 astore_3
+30 iconst_0
+31 ireturn
+\end{verbatim}
+}
+\caption{Bytecode + BML specification for method \texttt{produce\unsc bill} in class \texttt{Bill}}\label{FigBMLSpec}
+\end{figure}
+
+To show a typical BML specification, Figure~\ref{FigBMLSpec} presents
+the BML version of the specification of method \texttt{produce\_bill}
+of the running example (see Figure~\ref{fig:running-example} on
+page~\pageref{fig:running-example} for the JML specification). Notice
+that the field \texttt{sum} has been assigned the number 24 in the
+constant pool. Further, \texttt{lv[1]} denotes the parameter
+\texttt{n}, and \texttt{lv[2]} denotes the local variable \texttt{i}.
+ 
+The class invariant gives rise to the following BML specification
+(stored in the class file as a special user-specific attribute, as
+explained below):
+
+\begin{verbatim}
+invariant:  #24 >= 0
+\end{verbatim}
+
+%This class contains a
+%private, but \texttt{spec\unsc public} (i.e.~publicly visible
+%in specifications) field
+%\texttt{list}, which is an array of objects. The class invariant says
+%that \texttt{list} is not null, and in addition, its elements are
+%never null.  Further, the class contains a method \texttt{replace},
+%which checks if its first parameter \texttt{obj1} occurs in
+%\texttt{list}, and if this is the case, replaces it (once) by its
+%second parameter \texttt{obj2}. 
+
+%\begin{figure}[t!]
+%{\small
+%\begin{verbatim}
+%public class ListArray {
+%//*@ spec_public @*/ private Object[] list;
+%//@ invariant list != null && \nonnullelements(list);
+	
+%/*@ requires obj2 != null;
+%  @ assignable list[*];
+%  @ ensures \result == (\exists int i; 0 <= i && i < list.length && 
+%  @                                    \old(list[i]) == obj1 && list[i] == obj2);
+%  @*/ 
+%  public boolean replace(Object obj1,Object obj2)
+%  {
+%    int i = 0;
+%    /*@ loop_modifies this[*];
+%      @ loop_invariant 0 <= i && i <= list.length && 
+%      @                (\forall int k; 0 <= k && k < i ==> list[k] != obj1);
+%      @*/ 
+%    for (i = 0; i < list.length; i++ ) {
+%      if ( list[i] == obj1) { list[i] = obj2; return true; }}
+%    return false; }
+%}
+%\end{verbatim}
+%}
+%\caption{JML specification for class \texttt{ListArray}}\label{FigJMLSpec}
+%\end{figure}
+
+
+\subsection{Evaluation of BML expressions}
+
+When defining the evaluation of BML expressions, a subtle point that
+has to be taken into account is the fact that at bytecode level no
+explicit boolean values are used, they are encoded as integers (but
+variables can still be of type \texttt{boolean} --- this information is
+used by the BCV). Thus, to make sure that expressions such as
+\texttt{\bsl result == \bsl exists i. i >= 0} are correctly evaluated,
+the evaluation of the quantified expression is wrapped up by a
+conditional function, returning 1 if the condition is true, 0
+otherwise.
+
+
