@@ -1,7 +1,5 @@
 
 
-\def \bsl       {\symbol{92}}
-\def \unsc      {\symbol{95}}
 \newcommand{\sem}[1]{\ensuremath{[\![{#1}]\!]_{\small{\textit{BML}}}\/}}
 
 \newcommand{\mobius}{\textsf{MOBIUS}\xspace}
@@ -12,32 +10,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\bcIns}{\mbox{ \rm I} }
- \newcommand{\instrs}{\mbox{ \rm IS} }
- \newcommand{\ifCond}{ \instr{if\_cond } }
- \newcommand{\goto}{ \instr{goto } }
- \newcommand{\return}{ \instr{return } }
- \newcommand{\arithOp}{ \instr{arith\_op} }
- \newcommand{\load}{ \instr{load} }
- \newcommand{\store}{ \instr{store} }
- \newcommand{\push}{ \instr{push} }
- \newcommand{\pop}{\instr{pop}}
- \newcommand{\dup}{\instr{dup}}
- \newcommand{\iinc}{\instr{iinc}}
- \newcommand{\new}{\instr{new}}
- \newcommand{\newarray}{\instr{newarray}}
- \newcommand{\putfield}{\instr{putfield}} 
- \newcommand{\getfield}{\instr{getfield}}
- \newcommand{\arrstore}{\instr{type\_astore}} 
- \newcommand{\arrload}{\instr{type\_aload}}
- \newcommand{\arraylength}{\instr{arraylength}}
- \newcommand{\instanceof}{\instr{instanceof}} 
- \newcommand{\checkcast}{\instr{checkcast}} 
- \newcommand{\athrow}{\instr{athrow}}
- \newcommand{\invoke}{\instr{invoke}}
- \newcommand{\jsr}{\instr{jsr}}
- \newcommand{\ret}{\instr{ret}}
- \newcommand{\swap}{\instr{swap}}
+% \newcommand{\bcIns}{\mbox{ \rm I} }
+% \newcommand{\instrs}{\mbox{ \rm IS} }
+% \newcommand{\ifCond}{ \instr{if\_cond } }
+% \newcommand{\goto}{ \instr{goto } }
+% \newcommand{\return}{ \instr{return } }
+% \newcommand{\arithOp}{ \instr{arith\_op} }
+% \newcommand{\load}{ \instr{load} }
+% \newcommand{\store}{ \instr{store} }
+% \newcommand{\push}{ \instr{push} }
+% \newcommand{\pop}{\instr{pop}}
+% \newcommand{\dup}{\instr{dup}}
+% \newcommand{\iinc}{\instr{iinc}}
+% \newcommand{\new}{\instr{new}}
+% \newcommand{\newarray}{\instr{newarray}}
+% \newcommand{\putfield}{\instr{putfield}} 
+% \newcommand{\getfield}{\instr{getfield}}
+% \newcommand{\arrstore}{\instr{type\_astore}} 
+% \newcommand{\arrload}{\instr{type\_aload}}
+% \newcommand{\arraylength}{\instr{arraylength}}
+% \newcommand{\instanceof}{\instr{instanceof}} 
+% \newcommand{\checkcast}{\instr{checkcast}} 
+% \newcommand{\athrow}{\instr{athrow}}
+% \newcommand{\invoke}{\instr{invoke}}
+% \newcommand{\jsr}{\instr{jsr}}
+% \newcommand{\ret}{\instr{ret}}
+% \newcommand{\swap}{\instr{swap}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,34 +43,34 @@
 
 
 \newcommand{\todo}[1]{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
-\newcommand{\fig}[1]{ Fig.#1}
+%\newcommand{\fig}[1]{ Fig.#1}
 \newcommand{\jmlKey}[1]{\mbox{\rm\textbf{#1}}}% wrapping jml keywords
-\newcommand{\java}[1]{\texttt{#1}}
-\newcommand{\stack}[1]{\mbox{\rm\textbf{st}}(#1)}% element on top stack 
-\newcommand{\stackOnly}{\mbox{\rm St}}
-\newcommand{\stackOnlyParam}[1]{\mbox{\rm St}(#1)}
-\newcommand{\newStack}{ \lbrack~\rbrack  } % empty stack
-\newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
+%\newcommand{\java}[1]{\texttt{#1}}
+%\newcommand{\stack}[1]{\mbox{\rm\textbf{st}}(#1)}% element on top stack 
+%\newcommand{\stackOnly}{\mbox{\rm St}}
+%\newcommand{\stackOnlyParam}[1]{\mbox{\rm St}(#1)}
+%\newcommand{\newStack}{ \lbrack~\rbrack  } % empty stack
+%\newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
 
-\newcommand{\counter}{\mbox{\rm\textbf{cntr}} }
-\newcommand{\counterOnly}{\mbox{\rm Cntr} }
-\newcommand{\topStack}{\mbox{\rm cntr} }
-\newcommand{\true}{\mbox{\rm\textbf{true}} } % true from the assertion language
-\newcommand{\false}{\mbox{\rm\textbf{false}}} % false from the assertion language
+%\newcommand{\counter}{\mbox{\rm\textbf{cntr}} }
+%\newcommand{\counterOnly}{\mbox{\rm Cntr} }
+%\newcommand{\topStack}{\mbox{\rm cntr} }
+%\newcommand{\true}{\mbox{\rm\textbf{true}} } % true from the assertion language
+%\newcommand{\false}{\mbox{\rm\textbf{false}}} % false from the assertion language
 
 
 
-\newcommand{\instr}[1]{\mbox{  \rm #1} }
+%\newcommand{\instr}[1]{\mbox{  \rm #1} }
 
 %\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
 %\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
 %\newcommand{\invariant}[1]{\it{I}_{\tt{#1}}}
 %\newcommand{\boucle}[1]{\texttt{#1}}
 %\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
-\newcommand{\ins}[1]{#1 : \mbox{\rm\texttt{instr}}}
+%\newcommand{\ins}[1]{#1 : \mbox{\rm\texttt{instr}}}
 
 
-\newcommand{\insOnly}{\texttt{instr}}
+%\newcommand{\insOnly}{\texttt{instr}}
 
 % the grammar for the bytecode specification language
 %\newcommand{\ClassSpec}{\rm{ClassSpec}}
@@ -100,39 +98,39 @@
 %\newcommand{\JMLExpr }{\texttt{JmlExp} }
 
 
-\newcommand{\integer}{\texttt{int} }
-\newcommand{\register}[1]{\mbox{\rm\textbf{reg}}(#1)}
+%\newcommand{\integer}{\texttt{int} }
+%\newcommand{\register}[1]{\mbox{\rm\textbf{reg}}(#1)}
 
-\newcommand{\Mynull}{\jmlKey{null}}
-%\newcommand{\this}{\texttt{this}}
-\newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
+%\newcommand{\Mynull}{\jmlKey{null}}
+%%\newcommand{\this}{\texttt{this}}
+%\newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
 \newcommand{\arrayAccess}[2]{\mbox{\rm\textbf{arrayAccess}}( #1, #2) }  %{\mbox{\rm arrAccess}(#1, #2)}
-\newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
+%\newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
 
 
 %\newcommand{\loopInv}{loopInvariant}
 %\newcommand{\loopMod}{loopModifies}
 
-\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\result}{\jmlKey{\bsl result}}
 %\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
 %\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
 %\newcommand{\TYPE}{\jmlKey{TYPE} }
 %\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
 %\newcommand{\excPost}{\psi^{exc}}
 
-\newcommand{\Myspace}{\phantom{aaa}}
-\newcommand{\predicate}{ \mathcal{P}} 
-\newcommand{\Myfalse}{ \textit{false} }
-\newcommand{\Mytrue}{ \textit{true} }
+%\newcommand{\Myspace}{\phantom{aaa}}
+%\newcommand{\predicate}{ \mathcal{P}} 
+%\newcommand{\Myfalse}{ \textit{false} }
+%\newcommand{\Mytrue}{ \textit{true} }
 
 
 
-% abstractCtrlFlow.tex
-\newcommand{\execRel}{\rightarrow} % the execution relation
-\newcommand{\blockm}[1]{ \tt{b^{#1}} }
-\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
-\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
-\newcommand{\instrPost}[1]{ post(\instr{#1} )}
+%% abstractCtrlFlow.tex
+%\newcommand{\execRel}{\rightarrow} % the execution relation
+%\newcommand{\blockm}[1]{ \tt{b^{#1}} }
+%\newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
+%\newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
+%\newcommand{\instrPost}[1]{ post(\instr{#1} )}
 
 
 
@@ -144,354 +142,354 @@
 
 
 
-\newcommand{\getExcPost}{\mbox{\rm\textsf{getExcPostIns}}}
-\newcommand{\excPost}{\mbox{\rm\textsf{excPost}}}
-\newcommand{\javaNull}{null}
-\newcommand{\length}{\mbox{\rm arrLength}} % stands for array length
+%\newcommand{\getExcPost}{\mbox{\rm\textsf{getExcPostIns}}}
+%\newcommand{\excPost}{\mbox{\rm\textsf{excPost}}}
+%\newcommand{\javaNull}{null}
+%\newcommand{\length}{\mbox{\rm arrLength}} % stands for array length
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WP functions%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\newcommand{\wpi}[3]{\mbox{\rm\textit{wp}}(#3 \  #1, #2) }
-\newcommand{\fwpi}{\mbox{\rm\textit{wp}}}
-\newcommand{\inter}[2]{\mbox{ \rm \textit{inter}}(#1, #2, \methodd)} % predicate that holds between two bytecode blocks
-\newcommand{\interOnly}{\mbox{ \rm \textit{inter}}} % the name of the function that calculates predicate that holds between two bytecode blocks
-\newcommand{\objects}{\texttt{Objects}}
+%\newcommand{\wpi}[3]{\mbox{\rm\textit{wp}}(#3 \  #1, #2) }
+%\newcommand{\fwpi}{\mbox{\rm\textit{wp}}}
+%\newcommand{\inter}[2]{\mbox{ \rm \textit{inter}}(#1, #2, \methodd)} % predicate that holds between two bytecode blocks
+%\newcommand{\interOnly}{\mbox{ \rm \textit{inter}}} % the name of the function that calculates predicate that holds between two bytecode blocks
+%\newcommand{\objects}{\texttt{Objects}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Heap%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\newcommand{\heap}{\mbox{\rm H}}
- \newcommand{\HeapSet}{\mbox{\rm \textsf{HeapType}}}
- \newcommand{\heapFields}{\mbox{\rm \textsf{Fld}}}
- \newcommand{\heapArrays}{\mbox{\rm \textsf{Arr}}}
- \newcommand{\heapLocs}{\mbox{\rm \textsf{Loc}}}
- \newcommand{\heapTypeOf}{\mbox{\rm \textsf{TypeOf }}}
+%\newcommand{\heap}{\mbox{\rm H}}
+% \newcommand{\HeapSet}{\mbox{\rm \textsf{HeapType}}}
+% \newcommand{\heapFields}{\mbox{\rm \textsf{Fld}}}
+% \newcommand{\heapArrays}{\mbox{\rm \textsf{Arr}}}
+% \newcommand{\heapLocs}{\mbox{\rm \textsf{Loc}}}
+% \newcommand{\heapTypeOf}{\mbox{\rm \textsf{TypeOf }}}
  
 
-\newcommand{\pc}{\mbox{\rm Pc}}
-\newcommand{\field}[2]{\texttt{f}_{#2}^{#1}}
-\newcommand{\Values}{\mbox{\rm\textit{Values}}}
+%\newcommand{\pc}{\mbox{\rm Pc}}
+%\newcommand{\field}[2]{\texttt{f}_{#2}^{#1}}
+%\newcommand{\Values}{\mbox{\rm\textit{Values}}}
 \newcommand{\locVar}[1]{\mbox{\rm{\textbf{reg}}}(#1) }
-\newcommand{\locVarOnly}{\mbox{\rm Reg}}
+%\newcommand{\locVarOnly}{\mbox{\rm Reg}}
 
 
-\newcommand{\AllRefs}{\mbox{\rm\textit{RefType}}} % the set all references  - reff \cup \reffArr  
-\newcommand{\reff}{\mbox{\rm\textit{RefTypeCl} }} % the type of simple reference
-\newcommand{\reffArr}{\mbox{\rm\textit{RefTypeArr}}}
+%\newcommand{\AllRefs}{\mbox{\rm\textit{RefType}}} % the set all references  - reff \cup \reffArr  
+%\newcommand{\reff}{\mbox{\rm\textit{RefTypeCl} }} % the type of simple reference
+%\newcommand{\reffArr}{\mbox{\rm\textit{RefTypeArr}}}
 
-\newcommand{\reference}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
-\newcommand{\referenceOnly}{\mbox{\rm\texttt{ref}}} 
-\newcommand{\RefArr}[1]{\tt{refArr}_{#1} } % a reference to an array  ref_{type}^{length}
-\newcommand{\substitution}[3]{#1 \lbrack #2 \leftarrow #3 \rbrack }
-\newcommand{\subst}[2]{ \lbrack #1 \leftarrow #2 \rbrack }
-\newcommand{\prevState}[1]{prev(#1)}
-\newcommand{\nextState}[1]{next(#1)}
-
-
-\newcommand{\RefValuesArr}{\mbox{\rm\textit{RefValArr}}}
-\newcommand{\Ref}{\mbox{\rm\textit{RefValCl}}}
-\newcommand{\comment}[1]{ \{ \textit{ #1} \} }
+%\newcommand{\reference}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
+%\newcommand{\referenceOnly}{\mbox{\rm\texttt{ref}}} 
+%\newcommand{\RefArr}[1]{\tt{refArr}_{#1} } % a reference to an array  ref_{type}^{length}
+%\newcommand{\substitution}[3]{#1 \lbrack #2 \leftarrow #3 \rbrack }
+%\newcommand{\subst}[2]{ \lbrack #1 \leftarrow #2 \rbrack }
+%\newcommand{\prevState}[1]{prev(#1)}
+%\newcommand{\nextState}[1]{next(#1)}
 
 
+%\newcommand{\RefValuesArr}{\mbox{\rm\textit{RefValArr}}}
+%\newcommand{\Ref}{\mbox{\rm\textit{RefValCl}}}
+%\newcommand{\comment}[1]{ \{ \textit{ #1} \} }
 
-\newcommand{\numConclusion}[1]{\textit{(#1)}}
-\newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
 
-\newcommand{\stateTrans}{\hookrightarrow}
-\newcommand{\stateTransTerm}{\Rightarrow }
-\newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
+
+%\newcommand{\numConclusion}[1]{\textit{(#1)}}
+%\newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
+
+%\newcommand{\stateTrans}{\hookrightarrow}
+%\newcommand{\stateTransTerm}{\Rightarrow }
+%\newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%STATE CONFIGURATION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\configVar}{\mbox{\rm \textit{S}}}
-\newcommand{\config}[5]{<{#1},{#2},{#3},{#4},{#5}>} % <\heap, \counter, \stackOnly, \locVarOnly , \pc>
-\newcommand{\configFinalNorm}[2]{<{#1},{#2}>^{norm} }% the final configuration for a method's operational semantics   <\heap, RetValue> 
-\newcommand{\configFinalExc}[2]{<{#1},{#2}>^{exc}}% the final configuration for a method's operational semantics   <\heap, excValue> 
-\newcommand{\configFinal}[2]{<{#1},{#2}>^{final}} % config^final = config^exc + config^norm
-\newcommand{\Final}{\mbox{\rm \textit{Final}}} % stands for result or the thrown exception
-\newcommand{\SetConfigs}{\mbox{\rm \textit{S}}}
-\newcommand{\SetConfigInterm}{\mbox{\rm \textit{S}}^{interm}}
-\newcommand{\SetConfigFinal}{\mbox{\rm \textit{S}}^{final}}
-\newcommand{\SetConfigFinalNorm}{\mbox{\rm \textit{S}}^{norm}}
-\newcommand{\SetConfigFinalExc}{\mbox{\rm \textit{S}}^{exc}}
+%\newcommand{\configVar}{\mbox{\rm \textit{S}}}
+%\newcommand{\config}[5]{<{#1},{#2},{#3},{#4},{#5}>} % <\heap, \counter, \stackOnly, \locVarOnly , \pc>
+%\newcommand{\configFinalNorm}[2]{<{#1},{#2}>^{norm} }% the final configuration for a method's operational semantics   <\heap, RetValue> 
+%\newcommand{\configFinalExc}[2]{<{#1},{#2}>^{exc}}% the final configuration for a method's operational semantics   <\heap, excValue> 
+%\newcommand{\configFinal}[2]{<{#1},{#2}>^{final}} % config^final = config^exc + config^norm
+%\newcommand{\Final}{\mbox{\rm \textit{Final}}} % stands for result or the thrown exception
+%\newcommand{\SetConfigs}{\mbox{\rm \textit{S}}}
+%\newcommand{\SetConfigInterm}{\mbox{\rm \textit{S}}^{interm}}
+%\newcommand{\SetConfigFinal}{\mbox{\rm \textit{S}}^{final}}
+%\newcommand{\SetConfigFinalNorm}{\mbox{\rm \textit{S}}^{norm}}
+%\newcommand{\SetConfigFinalExc}{\mbox{\rm \textit{S}}^{exc}}
 
-\newcommand{\termination}{\mbox{\rm End}}
-\newcommand{\Res}{\mbox{\rm Res}}
-\newcommand{\Exc}{\mbox{\rm Exc}} % the third component of a terminating configuration in  case of an exception
+%\newcommand{\termination}{\mbox{\rm End}}
+%\newcommand{\Res}{\mbox{\rm Res}}
+%\newcommand{\Exc}{\mbox{\rm Exc}} % the third component of a terminating configuration in  case of an exception
 
-\newcommand{\eval}[2]{ #1 \vDash #2 } % \tau (expr )
-\newcommand{\conf}[1]{\tt{<#1>}} % <\tau>
+%\newcommand{\eval}[2]{ #1 \vDash #2 } % \tau (expr )
+%\newcommand{\conf}[1]{\tt{<#1>}} % <\tau>
 
-\newcommand{\bottom}{\bot}
-%\newcommand{\pstate}[2]{<#1,#2> }
-\newcommand{\RefValues}{\mbox{\rm\textit{RefVal}}}
-\newcommand{\retValue}[1]{\textrm{returnVal}(#1)} % designates the result of the method
-\newcommand{\objCl}[1]{\tt{Obj}_{#1}}% object representing a class instance 
-\newcommand{\objArr}[2]{\tt{ObjArr}_{#1}^{#2}} % obj_{type}^{length} object representing an array instance
-\newcommand{\modExp}{modExp}% stands for modfied locations by loops and methods
-
-
-\newcommand{\method}{\mbox{ \rm m}~}
-\newcommand{\excIndex}[2]{\mbox{ \rm \texttt{excIndex}}(#1,#2 ) }
+%\newcommand{\bottom}{\bot}
+%%\newcommand{\pstate}[2]{<#1,#2> }
+%\newcommand{\RefValues}{\mbox{\rm\textit{RefVal}}}
+%\newcommand{\retValue}[1]{\textrm{returnVal}(#1)} % designates the result of the method
+%\newcommand{\objCl}[1]{\tt{Obj}_{#1}}% object representing a class instance 
+%\newcommand{\objArr}[2]{\tt{ObjArr}_{#1}^{#2}} % obj_{type}^{length} object representing an array instance
+%\newcommand{\modExp}{modExp}% stands for modfied locations by loops and methods
 
 
-%classFileExt.tex
-\newcommand{\Myint}{\mbox{\rm\textbf{int}}}
-%\newcommand{\intLiteral}{\texttt{int\_const} }
-\newcommand{\predicates}{ \mathcal{R} }
+%\newcommand{\method}{\mbox{ \rm m}~}
+%\newcommand{\excIndex}[2]{\mbox{ \rm \texttt{excIndex}}(#1,#2 ) }
 
 
-\newtheorem{Formula}{Formulas}
-\newtheorem{Predicate}{Predicates}
-\newcommand{\formulaBc}{\mbox{\rm\textit{P}}_{bml}}
+%%classFileExt.tex
+%\newcommand{\Myint}{\mbox{\rm\textbf{int}}}
+%%\newcommand{\intLiteral}{\texttt{int\_const} }
+%\newcommand{\predicates}{ \mathcal{R} }
+
+
+%\newtheorem{Formula}{Formulas}
+%\newtheorem{Predicate}{Predicates}
+%\newcommand{\formulaBc}{\mbox{\rm\textit{P}}_{bml}}
 
 
 
 
 %%%%%%%%%%%%%%%%%%Exception Types%%%%%%%%%%%%%%%%%%%%%%%%%5
-\newcommand{\excType}{\mbox{\rm \textit{ExcType}}}
-\newcommand{\NullPointerExc}{\mbox{ \rm \texttt{NullPntrExc}}}
-\newcommand{\NegativeArraySizeExc}{\mbox{ \rm \texttt{NegArrSizeExc}}  }
-\newcommand{\ArrIndexOutOfBoundExc}{\mbox{ \rm \texttt{ArrIndBndExc}} }
-\newcommand{\ArithExc}{\mbox{ \rm \texttt{ArithExc}} }
-\newcommand{\ClassCastExc}{\mbox{\rm \texttt{CastExc}}}
-\newcommand{\Throwable}{\mbox{\rm \texttt{Throwable}}}
-\newcommand{\ArrStoreExc}{\mbox{\rm \texttt{ArrStoreExc}} }
+%\newcommand{\excType}{\mbox{\rm \textit{ExcType}}}
+%\newcommand{\NullPointerExc}{\mbox{ \rm \texttt{NullPntrExc}}}
+%\newcommand{\NegativeArraySizeExc}{\mbox{ \rm \texttt{NegArrSizeExc}}  }
+%\newcommand{\ArrIndexOutOfBoundExc}{\mbox{ \rm \texttt{ArrIndBndExc}} }
+%\newcommand{\ArithExc}{\mbox{ \rm \texttt{ArithExc}} }
+%\newcommand{\ClassCastExc}{\mbox{\rm \texttt{CastExc}}}
+%\newcommand{\Throwable}{\mbox{\rm \texttt{Throwable}}}
+%\newcommand{\ArrStoreExc}{\mbox{\rm \texttt{ArrStoreExc}} }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%Class Fields Methods%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\class}{\mbox{ \rm Cl } }
+% \newcommand{\class}{\mbox{ \rm Cl } }
 
- \newcommand{\FieldSet}{\mbox{\rm\textbf{Field}} } % the set of fields
- \newcommand{\FieldName}{\mbox{\rm\textbf{FieldName}}}
- \newcommand{\MethodSet}{\mbox{\rm\textbf{Method}} }
- \newcommand{\LoopSpecSet}{\mbox{\rm\textbf{LoopSpec}} }
- \newcommand{\MethodName}{\mbox{\rm\textbf{MethodName}} }
- \newcommand{\isField}[2]{\mbox{\rm\textsf{isfield}}(#1,#2)}
- \newcommand{\ClassSet}{\mbox{\rm\textbf{Class}}} % the  set of fields
- \newcommand{\ClassName}{\mbox{\rm\textbf{ClassName}}} % the set of fields
+% \newcommand{\FieldSet}{\mbox{\rm\textbf{Field}} } % the set of fields
+% \newcommand{\FieldName}{\mbox{\rm\textbf{FieldName}}}
+% \newcommand{\MethodSet}{\mbox{\rm\textbf{Method}} }
+% \newcommand{\LoopSpecSet}{\mbox{\rm\textbf{LoopSpec}} }
+% \newcommand{\MethodName}{\mbox{\rm\textbf{MethodName}} }
+% \newcommand{\isField}[2]{\mbox{\rm\textsf{isfield}}(#1,#2)}
+% \newcommand{\ClassSet}{\mbox{\rm\textbf{Class}}} % the  set of fields
+% \newcommand{\ClassName}{\mbox{\rm\textbf{ClassName}}} % the set of fields
  
- \newcommand{\clazz}{\mbox{\rm \textit{C}}}
- \newcommand{\fieldd}{\mbox{\rm \textit{f}} }
- \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
+% \newcommand{\clazz}{\mbox{\rm \textit{C}}}
+% \newcommand{\fieldd}{\mbox{\rm \textit{f}} }
+% \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
 
  %%%%%%%%%%%%%%%%%Class attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
- \newcommand{\fields}{\mbox{\rm \textsf{fields}}}
- \newcommand{\methods}{\mbox{\rm \textsf{methods}}}
- \newcommand{\className}{\mbox{\rm \textsf{className}}}
- \newcommand{\superClass}{\mbox{\rm \textsf{superClass}}}
- \newcommand{\classCP}{\mbox{\rm \textsf{constantPool}}}
- %%%%%%%%%%%%%%%%%Field attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
- \newcommand{\fieldName}{\mbox{\rm \textsf{Name}}}
- \newcommand{\fieldType}{\mbox{\rm \textsf{Type}}}
- \newcommand{\declaredIn}{\mbox{\rm \textsf{declaredIn}}}
+% \newcommand{\fields}{\mbox{\rm \textsf{fields}}}
+% \newcommand{\methods}{\mbox{\rm \textsf{methods}}}
+% \newcommand{\className}{\mbox{\rm \textsf{className}}}
+% \newcommand{\superClass}{\mbox{\rm \textsf{superClass}}}
+% \newcommand{\classCP}{\mbox{\rm \textsf{constantPool}}}
+% %%%%%%%%%%%%%%%%%Field attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+% \newcommand{\fieldName}{\mbox{\rm \textsf{Name}}}
+% \newcommand{\fieldType}{\mbox{\rm \textsf{Type}}}
+% \newcommand{\declaredIn}{\mbox{\rm \textsf{declaredIn}}}
 
- %%%%%%%%%%%%%%%%%Method attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
- \newcommand{\methodName}{\mbox{\rm\textsf{Name}}}
- \newcommand{\retType}{\mbox{\rm\textsf{retType}}}
- \newcommand{\args}{\mbox{\rm\textsf{args}}}
- \newcommand{\numArgs}{\mbox{\rm\textsf{nArgs}}}
- \newcommand{\body}{\mbox{\rm\textsf{body}}}
- \newcommand{\entryPoint}{\mbox{\rm\textsf{entryPnt}}}
- \newcommand{\excHandlerTable}{\mbox{\rm\textsf{excHndlS}}}
- \newcommand{\exceptions}{\mbox{\rm\textsf{exceptions}}}
-\newcommand{\methodLocVar}{\mbox{\rm\textsf{locVars}}}
+% %%%%%%%%%%%%%%%%%Method attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+% \newcommand{\methodName}{\mbox{\rm\textsf{Name}}}
+% \newcommand{\retType}{\mbox{\rm\textsf{retType}}}
+% \newcommand{\args}{\mbox{\rm\textsf{args}}}
+% \newcommand{\numArgs}{\mbox{\rm\textsf{nArgs}}}
+% \newcommand{\body}{\mbox{\rm\textsf{body}}}
+% \newcommand{\entryPoint}{\mbox{\rm\textsf{entryPnt}}}
+% \newcommand{\excHandlerTable}{\mbox{\rm\textsf{excHndlS}}}
+% \newcommand{\exceptions}{\mbox{\rm\textsf{exceptions}}}
+%\newcommand{\methodLocVar}{\mbox{\rm\textsf{locVars}}}
 
-\newcommand{\excPostSpec}{\mbox{\rm\textsf{excPostSpec}}} % the postcondition that is specified in case the method ends with an exception exc 
-\newcommand{\loopSpecTable}{\mbox{\rm\textsf{loopSpecS}}}
-\newcommand{\normalPost}{\mbox{\rm\textsf{normalPost}}}
-\newcommand{\pre}{\mbox{\rm\textsf{pre}}}
-\newcommand{\modif}{\mbox{\rm\textsf{modif}}}
+%\newcommand{\excPostSpec}{\mbox{\rm\textsf{excPostSpec}}} % the postcondition that is specified in case the method ends with an exception exc 
+%\newcommand{\loopSpecTable}{\mbox{\rm\textsf{loopSpecS}}}
+%\newcommand{\normalPost}{\mbox{\rm\textsf{normalPost}}}
+%\newcommand{\pre}{\mbox{\rm\textsf{pre}}}
+%\newcommand{\modif}{\mbox{\rm\textsf{modif}}}
 
-%%%%%%%%%%%%%%%%%Loop attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\loopSpec}{\mbox{\rm\textit{loopSpec}}}
+%%%%%%%%%%%%%%%%%%Loop attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\loopSpec}{\mbox{\rm\textit{loopSpec}}}
 
 
 
 %%%%%%%%%%%%%%%%%Intra spec attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\intraSpec}{\mbox{\rm\textit{assertion}}}
-\newcommand{\atIndex}{\mbox{\rm\textbf{atIndex}}}
+%\newcommand{\intraSpec}{\mbox{\rm\textit{assertion}}}
+%\newcommand{\atIndex}{\mbox{\rm\textbf{atIndex}}}
 
 
-%%%%%%%%%%%%%%%%Exception handler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\ExcHandler}{\mbox{\rm \textbf{ExcHandler}}}
- \newcommand{\excHH}{\mbox{\rm\textsf{excH}}} % stands for an instance of an ExceptioHandler type 
- \newcommand{\pcStart}{\mbox{\rm \textsf{startPc}}} 
- \newcommand{\pcEnd}{\mbox{\rm \textsf{endPc}}}
- \newcommand{\pcHandler}{\mbox{\rm \textsf{handlerPc}}}
-  \newcommand{\exc}{\mbox{\rm \textsf{exc}}}
+%%%%%%%%%%%%%%%%%Exception handler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newcommand{\ExcHandler}{\mbox{\rm \textbf{ExcHandler}}}
+% \newcommand{\excHH}{\mbox{\rm\textsf{excH}}} % stands for an instance of an ExceptioHandler type 
+% \newcommand{\pcStart}{\mbox{\rm \textsf{startPc}}} 
+% \newcommand{\pcEnd}{\mbox{\rm \textsf{endPc}}}
+% \newcommand{\pcHandler}{\mbox{\rm \textsf{handlerPc}}}
+%  \newcommand{\exc}{\mbox{\rm \textsf{exc}}}
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%HEAP%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%HEAP%%%%%%%%%%%%%%%%%%%%%
 
- \newcommand{\referenceDef}{\mbox{\rm ! }} % a function that decides if a reference exists and points to an existing object
- \newcommand{\referenceType}{\mbox{\rm isOfType} } % a function that decides that the reference is of some type 
- \newcommand{\JavaClass}{\mbox{\rm \textit{JClass}}} % the set of Java classes
- \newcommand{\JavaType}{\mbox{\rm\textit{JType}}} % the set of Java classes
+% \newcommand{\referenceDef}{\mbox{\rm ! }} % a function that decides if a reference exists and points to an existing object
+% \newcommand{\referenceType}{\mbox{\rm isOfType} } % a function that decides that the reference is of some type 
+% \newcommand{\JavaClass}{\mbox{\rm \textit{JClass}}} % the set of Java classes
+% \newcommand{\JavaType}{\mbox{\rm\textit{JType}}} % the set of Java classes
  
- %\newcommand{\list}{\mbox{\rm\textit{list}}}
-%%%%%%%%%%%%%%%%%% List %%%%%%%%%%%%%%%%%%%
- \newcommand{\assocList}{\mbox{\rm\textsf{::}}}
- \newcommand{\emptyList}{\lbrack \ \rbrack}
- \newcommand{\listLen}{\mbox{\rm\textit{length}}}
- \newcommand{\isInList}[2]{\mbox{\rm\textit{inList}}(#1, #2)\ }
- \newcommand{\isInListOnly}{\mbox{\rm \textit{inList}}  }
- \newcommand{\addInList}[2]{\mbox{\rm cons}(#2, #1) }
+% %\newcommand{\list}{\mbox{\rm\textit{list}}}
+%%%%%%%%%%%%%%%%%%% List %%%%%%%%%%%%%%%%%%%
+% \newcommand{\assocList}{\mbox{\rm\textsf{::}}}
+% \newcommand{\emptyList}{\lbrack \ \rbrack}
+% \newcommand{\listLen}{\mbox{\rm\textit{length}}}
+% \newcommand{\isInList}[2]{\mbox{\rm\textit{inList}}(#1, #2)\ }
+% \newcommand{\isInListOnly}{\mbox{\rm \textit{inList}}  }
+% \newcommand{\addInList}[2]{\mbox{\rm cons}(#2, #1) }
  
- \newcommand{\addInListOnly}{\mbox{\rm cons} } 
- \newcommand{\intersectOnly}{ \cap }
- \newcommand{\intersect}[2]{#1 \cap #2}
- \newcommand{\getFreshRef}[2]{\mbox{\rm getFreshRef}(#1,#2)}
- \newcommand{\getFreshRefOnly}{\mbox{\rm getFreshRef} \ }
+% \newcommand{\addInListOnly}{\mbox{\rm cons} } 
+% \newcommand{\intersectOnly}{ \cap }
+% \newcommand{\intersect}[2]{#1 \cap #2}
+% \newcommand{\getFreshRef}[2]{\mbox{\rm getFreshRef}(#1,#2)}
+% \newcommand{\getFreshRefOnly}{\mbox{\rm getFreshRef} \ }
 
- \newcommand{\newRef}[2]{\mbox{\rm newRef}(#1,#2 ) } % creates a new reference in the store
- \newcommand{\newRefOnly}{\mbox{\rm newRef}}
- \newcommand{\newArrRef}[3]{\mbox{\rm newArrRef}(#1,#2,#3) \ } % creates a new reference in the store
- \newcommand{\newArrRefOnly}{\mbox{\rm newArrRef}}
+% \newcommand{\newRef}[2]{\mbox{\rm newRef}(#1,#2 ) } % creates a new reference in the store
+% \newcommand{\newRefOnly}{\mbox{\rm newRef}}
+% \newcommand{\newArrRef}[3]{\mbox{\rm newArrRef}(#1,#2,#3) \ } % creates a new reference in the store
+% \newcommand{\newArrRefOnly}{\mbox{\rm newArrRef}}
 
- \newcommand{\getLocations}[1]{\mbox{\rm getLoc}(#1) \ }
- \newcommand{\getLocationsOnly}{\mbox{\rm getLoc} \ } 
- \newcommand{\addNewLocation}[2]{\mbox{\rm allocator}(#1,#2) \ }
- \newcommand{\addNewLocationOnly}{\mbox{\rm allocator} \ }
- \newcommand{\defaultValue}[1]{\mbox{\rm\textsf{defVal}}(#1)} % default value for a type
- \newcommand{\defaultValueOnly}{\mbox{\rm \textit{defVal}}}
- \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
- \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
- \newcommand{\Dom}{\mbox{\rm\textsf{Dom}}}
- \newcommand{\Range}{\mbox{\rm\textsf{Range}}}
- \newcommand{\anyType}{\mbox{\rm \texttt{T}}} % represents any Java Type
- \newcommand{\Arrays}{\mbox{\rm ARR}} % an abstraction for all arrays in the heap
+% \newcommand{\getLocations}[1]{\mbox{\rm getLoc}(#1) \ }
+% \newcommand{\getLocationsOnly}{\mbox{\rm getLoc} \ } 
+% \newcommand{\addNewLocation}[2]{\mbox{\rm allocator}(#1,#2) \ }
+% \newcommand{\addNewLocationOnly}{\mbox{\rm allocator} \ }
+% \newcommand{\defaultValue}[1]{\mbox{\rm\textsf{defVal}}(#1)} % default value for a type
+% \newcommand{\defaultValueOnly}{\mbox{\rm \textit{defVal}}}
+% \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
+% \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
+% \newcommand{\Dom}{\mbox{\rm\textsf{Dom}}}
+% \newcommand{\Range}{\mbox{\rm\textsf{Range}}}
+% \newcommand{\anyType}{\mbox{\rm \texttt{T}}} % represents any Java Type
+% \newcommand{\Arrays}{\mbox{\rm ARR}} % an abstraction for all arrays in the heap
 
  %%%%%%%%%%%%%%%%%%% the state after  exception is thrown %%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\getStateAfterExc}{\mbox{\rm \textit{getStateOnExc}}} 
- \newcommand{\findExcHandler}[3]{\mbox{\rm \textit{findExcHandler}}(#1,#2,#3)} % #1 = exception, #2 = pc , #3 = exception handler table 
- \newcommand{\findExcHandlerOnly}{\mbox{\rm\textit{findExcHandler}}} % #1 = exception, #2 = pc , #3 = exception handler table 
+% \newcommand{\getStateAfterExc}{\mbox{\rm \textit{getStateOnExc}}} 
+% \newcommand{\findExcHandler}[3]{\mbox{\rm \textit{findExcHandler}}(#1,#2,#3)} % #1 = exception, #2 = pc , #3 = exception handler table 
+% \newcommand{\findExcHandlerOnly}{\mbox{\rm\textit{findExcHandler}}} % #1 = exception, #2 = pc , #3 = exception handler table 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Subtyping and types%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\newcommand{\subtypeOnly}{\mbox{\rm \textsf{subtype}}} 
-\newcommand{\subtype}[2]{\mbox{\rm \textsf{subtype} }(#1,#2)}
- \newcommand{\Object}{\mbox{\rm \texttt{Object}} }
+%\newcommand{\subtypeOnly}{\mbox{\rm \textsf{subtype}}} 
+%\newcommand{\subtype}[2]{\mbox{\rm \textsf{subtype} }(#1,#2)}
+% \newcommand{\Object}{\mbox{\rm \texttt{Object}} }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%constant pool%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
-\newcommand{\constantPool}{ \mbox{\rm\textbf{CP}}}
-\newcommand{\localVariableTable}{\mbox{\rm\textbf{LV}}} 
-\newcommand{\locVarEls}{\mbox{\rm\textbf{localVarTableElem}}}% an element of the local variable table
-\newcommand{\lineNumberTable}{\mbox{\rm\textbf{LN}}} 
+%\newcommand{\constantPool}{ \mbox{\rm\textbf{CP}}}
+%\newcommand{\localVariableTable}{\mbox{\rm\textbf{LV}}} 
+%\newcommand{\locVarEls}{\mbox{\rm\textbf{localVarTableElem}}}% an element of the local variable table
+%\newcommand{\lineNumberTable}{\mbox{\rm\textbf{LN}}} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\newcommand{\nonterminal}{ \mbox{\rm\textit{italics}} }
-\newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
-\newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
+%\newcommand{\nonterminal}{ \mbox{\rm\textit{italics}} }
+%\newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
+%\newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
-\newcommand{\expression}{\mbox{\rm\textit{E}}_{bml} }
-\newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
-\newcommand{\expressions}{\mbox{\rm\textit{SpecExp}}_{bml}}
+%\newcommand{\expression}{\mbox{\rm\textit{E}}_{bml} }
+%\newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
+%\newcommand{\expressions}{\mbox{\rm\textit{SpecExp}}_{bml}}
 
-\newcommand{\Constants}{\mbox{\rm\textit{constants}}_{bml}}
-\newcommand{\intLiteral}{\mbox{\rm\textit{intLiteral}}}
-\newcommand{\signedInt}{\mbox{\rm\textit{signedIntLiteral}}}
-\newcommand{\ident}{\mbox{\rm\textit{ident}}}
-\newcommand{\idRef}{\mbox{\rm\textit{idRef}}}
-\newcommand{\digit}{\mbox{\rm\textit{digit}}}
-\newcommand{\digits}{\mbox{\rm\textit{digits}}}
-\newcommand{\nonZeroDigit}{\mbox{\rm\textit{nonZerodigit}}}
-\newcommand{\boundVar}{\mbox{\rm\textit{boundVar}}}
+%\newcommand{\Constants}{\mbox{\rm\textit{constants}}_{bml}}
+%\newcommand{\intLiteral}{\mbox{\rm\textit{intLiteral}}}
+%\newcommand{\signedInt}{\mbox{\rm\textit{signedIntLiteral}}}
+%\newcommand{\ident}{\mbox{\rm\textit{ident}}}
+%\newcommand{\idRef}{\mbox{\rm\textit{idRef}}}
+%\newcommand{\digit}{\mbox{\rm\textit{digit}}}
+%\newcommand{\digits}{\mbox{\rm\textit{digits}}}
+%\newcommand{\nonZeroDigit}{\mbox{\rm\textit{nonZerodigit}}}
+%\newcommand{\boundVar}{\mbox{\rm\textit{boundVar}}}
 \newcommand{\bound}{\mbox{\rm\textbf{bv}}}
-\newcommand{\unsignedInt}{\mbox{\rm\textit{unsignedInt}}}
-\newcommand{\RefValuesSpec}{\mbox{\rm\textit{refVal}}}
-\newcommand{\ClassSpec}{\mbox{\rm\textit{classSpec}}}
-\newcommand{\invModifier}{\mbox{\rm\textit{modifier}}} % type of class invariant 
-\newcommand{\instance}{\mbox{\rm\textbf{instance}}}% instance for invariant
-\newcommand{\static}{\mbox{\rm\textbf{static}}}
+%\newcommand{\unsignedInt}{\mbox{\rm\textit{unsignedInt}}}
+%\newcommand{\RefValuesSpec}{\mbox{\rm\textit{refVal}}}
+%\newcommand{\ClassSpec}{\mbox{\rm\textit{classSpec}}}
+%\newcommand{\invModifier}{\mbox{\rm\textit{modifier}}} % type of class invariant 
+%\newcommand{\instance}{\mbox{\rm\textbf{instance}}}% instance for invariant
+%\newcommand{\static}{\mbox{\rm\textbf{static}}}
 
-\newcommand{\MethodSpec}{\mbox{\rm\textit{methodSpec}}}
-\newcommand{\specCase}{\mbox{\rm\textit{specCase}}}
-\newcommand{\intraMethodSpec}{\mbox{\rm\textit{intraMethodSpec}}}
-\newcommand{\modifiesLoc}{\mbox{\rm\textit{locations}}}
-\newcommand{\specIndex}{ \mbox{\rm\textit{specIndex}}}
-\newcommand{\op}{\mbox{\rm\textit{op}}}
-\newcommand{\exsuresList }{\mbox{\rm\textit{exsuresList}}}
+%\newcommand{\MethodSpec}{\mbox{\rm\textit{methodSpec}}}
+%\newcommand{\specCase}{\mbox{\rm\textit{specCase}}}
+%\newcommand{\intraMethodSpec}{\mbox{\rm\textit{intraMethodSpec}}}
+%\newcommand{\modifiesLoc}{\mbox{\rm\textit{locations}}}
+%\newcommand{\specIndex}{ \mbox{\rm\textit{specIndex}}}
+%\newcommand{\op}{\mbox{\rm\textit{op}}}
+%\newcommand{\exsuresList }{\mbox{\rm\textit{exsuresList}}}
 
-\newcommand{\mult}{\mbox{\rm\textbf{mult}}}
-\newcommand{\divis}{\mbox{\rm\textbf{div}}}
-\newcommand{\modulo}{\mbox{\rm\textbf{rem}}}
-\newcommand{\plus}{\mbox{\rm\textbf{+}}}
-\newcommand{\minus}{\mbox{\rm\textbf{-}}}
+%\newcommand{\mult}{\mbox{\rm\textbf{mult}}}
+%\newcommand{\divis}{\mbox{\rm\textbf{div}}}
+%\newcommand{\modulo}{\mbox{\rm\textbf{rem}}}
+%\newcommand{\plus}{\mbox{\rm\textbf{+}}}
+%\newcommand{\minus}{\mbox{\rm\textbf{-}}}
 
-\newcommand{\bmlKeyWords}{ \mbox{\rm\textit{bmlKeyWords}} }
+%\newcommand{\bmlKeyWords}{ \mbox{\rm\textit{bmlKeyWords}} }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%%%%%%%%%% method extension%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\newcommand{\posL}{\mbox{\rm\textsf{pos}}}
-\newcommand{\invL}{\mbox{\rm\textsf{invariant}}}
-\newcommand{\modifL}{\mbox{\rm\textsf{modif}}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%%%%%%%%%%%%%%%%%%%%%%%% BML keywords%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\newcommand{\ClassInv}{\mbox{\rm\textbf{invariant}}}
-\newcommand{\ClassHistoryConstr}{\mbox{\rm\textbf{classConstraint}}}
-\newcommand{\declare}{\mbox{\rm \textbf{declare}} }
-\newcommand{\ghost}{\mbox{\rm\textbf{ghost}}}
-\newcommand{\locations}{\mbox{\textbf{locations}}}
-\newcommand{\also}{ \mbox{\rm\textbf{also}}}
-\newcommand{\requires}{\mbox{\rm\textbf{requires}}}
-\newcommand{\ensures}{\mbox{\rm\textbf{ensures}}}
-\newcommand{\exsures}{\mbox{\rm\textbf{exsures}}}
-\newcommand{\modifies}{\mbox{\rm\textbf{modifies}}}
-\newcommand{\assert}{\mbox{\rm \textbf{assert}}}
-\newcommand{\set}{\rm\textbf{set}}
-\newcommand{\loopInv}{\mbox{\rm\textbf{loop\_invariant}}}
-\newcommand{\loopMod}{\mbox{\rm\textbf{loop\_modifies}}}
+%\newcommand{\posL}{\mbox{\rm\textsf{pos}}}
+%\newcommand{\invL}{\mbox{\rm\textsf{invariant}}}
+%\newcommand{\modifL}{\mbox{\rm\textsf{modif}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%% BML keywords%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%\newcommand{\ClassInv}{\mbox{\rm\textbf{invariant}}}
+%\newcommand{\ClassHistoryConstr}{\mbox{\rm\textbf{classConstraint}}}
+%\newcommand{\declare}{\mbox{\rm \textbf{declare}} }
+%\newcommand{\ghost}{\mbox{\rm\textbf{ghost}}}
+%\newcommand{\locations}{\mbox{\textbf{locations}}}
+%\newcommand{\also}{ \mbox{\rm\textbf{also}}}
+%\newcommand{\requires}{\mbox{\rm\textbf{requires}}}
+%\newcommand{\ensures}{\mbox{\rm\textbf{ensures}}}
+%\newcommand{\exsures}{\mbox{\rm\textbf{exsures}}}
+%\newcommand{\modifies}{\mbox{\rm\textbf{modifies}}}
+%\newcommand{\assert}{\mbox{\rm \textbf{assert}}}
+%\newcommand{\set}{\rm\textbf{set}}
+%\newcommand{\loopInv}{\mbox{\rm\textbf{loop\_invariant}}}
+%\newcommand{\loopMod}{\mbox{\rm\textbf{loop\_modifies}}}
 
-\newcommand{\loopDecreases}{\mbox{\rm\textbf{loop\_decreases}}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-
-\newcommand{\jmlStmt}[1]{\textrm{#1}}
-\newcommand{\specExpression}{\mathcal{E}^{spec}}
-
-\newcommand{\EXC}{ \mbox{$\backslash$\rm\textbf{EXC}}} % SPEC the spec variable used in exceptional postconditions to denote the thrown exception object
+%\newcommand{\loopDecreases}{\mbox{\rm\textbf{loop\_decreases}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 
+%\newcommand{\jmlStmt}[1]{\textrm{#1}}
+%\newcommand{\specExpression}{\mathcal{E}^{spec}}
 
-
-\newcommand{\ArithExpr}{\texttt{ArithmeticExpr} }
-
-\newcommand{\JMLExpr }{\texttt{JmlExp} }
-
-\newcommand{\everything}{\mbox{\rm \textbf{everything}}}
-\newcommand{\nothing}{\mbox{\rm  \textbf{nothing}}}
-\newcommand{\arrayAccessMod}[2]{\mbox{\rm\textit{arrayModAt}}(#1,#2)}
-
-\newcommand{\all}{ \mbox{\rm all}}
+%\newcommand{\EXC}{ \mbox{$\backslash$\rm\textbf{EXC}}} % SPEC the spec variable used in exceptional postconditions to denote the thrown exception object
 
 
 
 
-%\newcommand{\result}{\jmlKey{$\backslash$result}}
-\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
-\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
-\newcommand{\subtypeSpec}{<:}
-\newcommand{\type}[1]{\jmlKey{$\backslash$type(}#1 \jmlKey{)}}
-\newcommand{\TYPE}{\jmlKey{$\backslash$TYPE} }
-\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
-%\newcommand{\excPost}{\psi^{exc}}
+%\newcommand{\ArithExpr}{\texttt{ArithmeticExpr} }
+
+%\newcommand{\JMLExpr }{\texttt{JmlExp} }
+
+%\newcommand{\everything}{\mbox{\rm \textbf{everything}}}
+%\newcommand{\nothing}{\mbox{\rm  \textbf{nothing}}}
+%\newcommand{\arrayAccessMod}[2]{\mbox{\rm\textit{arrayModAt}}(#1,#2)}
+
+%\newcommand{\all}{ \mbox{\rm all}}
+
+
+
+
+%%\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\old}[1]{\jmlKey{\bsl (}#1\jmlKey{)}}
+%\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
+%\newcommand{\subtypeSpec}{<:}
+%\newcommand{\type}[1]{\jmlKey{$\backslash$type(}#1 \jmlKey{)}}
+%\newcommand{\TYPE}{\jmlKey{$\backslash$TYPE} }
+%\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
+%%\newcommand{\excPost}{\psi^{exc}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -503,61 +501,61 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\evalExp}[2]{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
-\newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
+%\newcommand{\evalExp}[2]{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
+%\newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
 
-\newcommand{\interp}[2]{#2 , s_{0} \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
-\newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2, s_{0}  \vDash \\ 
-				         #1 
-				  \end{array}}
+%\newcommand{\interp}[2]{#2 , s_{0} \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
+%\newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2, s_{0}  \vDash \\ 
+%				         #1 
+%				  \end{array}}
 
-\newcommand{\validFormula}[1]{\vDash #1 }
-%%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\modifLoop}{\mbox{\rm \textit{modifLoop}}}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% local variable table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\nameInd}{\mbox{\rm\textsf{nameIndex}}}
-\newcommand{\attLen}{\mbox{\rm\textsf{attrLen}}}
-\newcommand{\lvLength}{\mbox{\rm\textsf{lvLength}}}
-\newcommand{\lvTab}{\mbox{\rm\textsf{lvTable}}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% element in the array of local variable table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\lvElStart}{\mbox{\rm\textsf{startPc}}}
-\newcommand{\lvElLen}{\mbox{\rm\textsf{length}}}
-\newcommand{\descrInd}{\mbox{\rm\textsf{descrInd}}}
-\newcommand{\lvElInd}{\mbox{\rm\textsf{index}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% the deep expression language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\exprWp}{\mbox{\rm\textit{E}}}
-\newcommand{\predWp}{\mbox{\rm\textit{P}}}
-
-\newcommand{\constantsWp}{\mbox{\rm\textit{constants}}}
-\newcommand{\expressionsWp}{\mbox{\rm\textit{Expr}}}
-\newcommand{\typeExpWp}{\mbox{\rm\textit{T}}}
-\newcommand{\var}{\mbox{\rm\textbf{var}}}
-\newcommand{\instances}{\mbox{\rm\textbf{instances}}}
-
-\newcommand{\ConstantsWp}{\mbox{\rm\textit{constants}}}
+%\newcommand{\validFormula}[1]{\vDash #1 }
+%%%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\modifLoop}{\mbox{\rm \textit{modifLoop}}}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% local variable table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\nameInd}{\mbox{\rm\textsf{nameIndex}}}
+%\newcommand{\attLen}{\mbox{\rm\textsf{attrLen}}}
+%\newcommand{\lvLength}{\mbox{\rm\textsf{lvLength}}}
+%\newcommand{\lvTab}{\mbox{\rm\textsf{lvTable}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% element in the array of local variable table %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\lvElStart}{\mbox{\rm\textsf{startPc}}}
+%\newcommand{\lvElLen}{\mbox{\rm\textsf{length}}}
+%\newcommand{\descrInd}{\mbox{\rm\textsf{descrInd}}}
+%\newcommand{\lvElInd}{\mbox{\rm\textsf{index}}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-\newcommand{\light}{\textit{light}} % light weight specification 
-\newcommand{\heavy}{\textit{heavy}} % heavy weight specification
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% the deep expression language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\exprWp}{\mbox{\rm\textit{E}}}
+%\newcommand{\predWp}{\mbox{\rm\textit{P}}}
+
+%\newcommand{\constantsWp}{\mbox{\rm\textit{constants}}}
+%\newcommand{\expressionsWp}{\mbox{\rm\textit{Expr}}}
+%\newcommand{\typeExpWp}{\mbox{\rm\textit{T}}}
+%\newcommand{\var}{\mbox{\rm\textbf{var}}}
+%\newcommand{\instances}{\mbox{\rm\textbf{instances}}}
+
+%\newcommand{\ConstantsWp}{\mbox{\rm\textit{constants}}}
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BML%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%\newcommand{\light}{\textit{light}} % light weight specification 
+%\newcommand{\heavy}{\textit{heavy}} % heavy weight specification
 
 
 
 
 
-\newcommand{\Qed}{\textit{Qed.}}
+
+
+%\newcommand{\Qed}{\textit{Qed.}}
 
 
 

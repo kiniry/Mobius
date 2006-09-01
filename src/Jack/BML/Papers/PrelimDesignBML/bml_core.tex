@@ -39,10 +39,12 @@ constructs are:
 At the moment, the use of pure methods is not part of the BML grammar,
 as there is still ongoing research on the exact semantics of method
 calls used in specifications. However, we believe that if the
-theoretical issues have been settled, eventually the
-\mobius tool set should support this, both at source code and at 
-bytecode level. Finally, experiences with verification of realistic case
-studies have shown that it is beneficial to have a special clause
+theoretical issues have been settled, eventually any tool supporting
+BML should also support this. In fact, we think that both at source
+code and at bytecode level, specifications benefit a lot from being
+allowed to use method calls in them. Finally, as mentioned above
+experiences with verification of realistic case studies have shown
+that it is beneficial to have a special clause
 \texttt{loop-modifies}, which is specified together with the loop
 invariant. This clause specifies which variables
 \emph{may} be modified by a loop (as an \texttt{assignable} clause does
@@ -145,7 +147,7 @@ using the type information stored in the constant pool.
 \label{sec:bml:example}
 
 
-\begin{figure}
+\begin{figure}[t]
 {\small
 \begin{verbatim}
 {| requires lv[1] > 0 

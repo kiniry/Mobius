@@ -3,65 +3,55 @@
 
 To store BML specifications together with the bytecode that it
 specifies, we need a way to encode them in the class file format. We
-do this using so-called user-specific attributes for Java class files.
+do this using so-called user-specific attributes for Java class
+files. The JVM specification defines the format of those attributes
+and mandates that any user-specific information should be stored in
+such attributes. When defining this format, we took the following
+considerations into account.
 
-\begin{itemize}
-\item \textbf{Java compiler independance } 
-Class files containing BML specification must not depend on any non
-optimizing compiler.
+\begin{description}
+\item [Java compiler independance]
+The format of BML specifications in a class file must not depend on
+any particular (non-optimising) compiler.
     
-      To do this, the process of the Java source compilation is
-      separate from the JML compilation. More particularly, the
-      \JMLtoBML (short for the compiler from JML to BML) \ compiler
-      takes as input a Java source file annotated with JML
-      specification and its Java class produced by a non optimizing
-      compiler containing a debug information.% As we shall see later
-      in the coming sections, the debug data plays a role in the
-      compilation of the JML specification into BML.
       
-      %In other words, we would like that the compilation of BML specification  is not attached to a particular Java compiler. 
-      %This makes BML independant from Java source compilation.
-      % Note, however that we impose as a restriction that the compiler should be not optimizing. 
-       % generating debug information~\footnote{the debug information is necessary for the compilation
-      % from JML to BML as we shall see in the coming sections}.
+\item [JVM compatibility]
+The class files augmented with the BML specification must be
+executable by any implementation of the JVM.  As the JVM specification
+does not allow insertion of any user-specific data in the list with
+bytecode instructions, BML annotations must be stored separately from
+the method body (the list of bytecode instructions which represents
+its body).
 
-\item \textbf{JVM compatibility } 
-            The class files augmented with the BML specification must
-            be executable by any implementation of the JVM
-            specification.  % why do we do so?  Because the JVM
-            specification does not allow inlining of any user specific
-            data in the bytecode instructions BML annotations must be
-            stored separately from the method body (the list of
-            bytecode instructions which represents its body).
-	  
-	    
-	    % how 
+\item[Compactness and efficiency]
+      Although opposite, we consider those two features together
+      because they are mutually dependent. By the first, we mean that
+      the class files augmented with BML should be as compact as
+      possible.  The second feature refers to that tools supporting
+      BML should not be slowed down by the processing of the BML
+      specification and more precisely we refer verification condition
+      generator tools.  This is an important condition if verification
+      is done on devices with limited resources.
 
-In particular, the BML specification is written in the so called user
-defined attributes in the class file.  The JVM specification defines
-the format of those attributes and mandates that any user specific
-information should be stored in such attributes. Note, that attribute
-which encodes the specification referring to a particular bytecode
-instruction contains information about the index of this
-instruction. For instance, BML loop invariants are stored in a user
-defined attribute in the class file format which contains the
-invariant as well as the index of the entry point instruction of the
-loop.
+\end{description}	  
+
 	    
 	    %comparison
 
-	    Thus, BML encoding is different from the encoding of JML
-	    specification where annotations are written directly in
-	    the source text as comments at a particular point in the
-	    program text or accompany a particular program
-	    structure. For instance, in Fig. \ref{replaceSrc} the
-	    reader may notice that the loop specification refers to
-	    the control structure which follows after the
-	    specification and which corresponds to the loop.  This is
-	    possible first because the Java source language is
-	    structured, and second because writing comments in the
-	    source text does not violate the Java or the JVM
-	    specifications.
+Therefore, attributes that encode the parts of the specification that
+refer to a particular bytecode instruction, contain information about
+the index of this instruction. For instance, the attribute that stores
+BML loop invariants contains the invariant as well as the index of the
+entry point instruction of the loop.  Thus, BML encoding is different
+from the encoding of JML specification where annotations are written
+directly in the source text as comments at a particular point in the
+program text or accompany a particular program structure. For
+instance, in Figure~\ref{FigExampleJML} the reader may notice that the
+loop specification refers to the control structure which follows after
+the specification and which corresponds to the loop.  This is possible
+first because the Java source language is structured, and second
+because writing comments in the source text does not violate the Java
+or the JVM specifications.
 	  
 
             %  However, on bytecode level we
@@ -71,16 +61,7 @@ loop.
 	    %  For instance, loops on bytecode are identified by a unique loop entry instruction and thus, a loop invariant must hold basically every time
 	    %  the corresponding loop entry instruction is reached.
 
-\item \textbf{Compactness} and \textbf{Efficiency}
 
-      Although opposite, we consider those two features together
-      because they are mutually dependent. By the first, we mean that
-      the class files augmented with BML should be as compact as
-      possible.  The second feature refers to that tools supporting
-      BML should not be slowed down by the processing of the BML
-      specification and more precisely we refer verification condition
-      generator tools.  This is an important condition if verification
-      is done on devices with limited resources.
 
       For fulfilling these conditions, BML is designed to correspond
       to a subset of the desugared version of JML.  In particular, it
@@ -107,7 +88,6 @@ loop.
       BML suitable for verification on devices with limitted
       resources.
       
-\end{itemize}
 
 
 Recall that a class file contains all the information related to a

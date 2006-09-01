@@ -1,5 +1,15 @@
 
 \section{Compiling JML specifications into BML specifications}
+      To do this, the process of the Java source compilation is
+      separate from the JML compilation. More particularly, the
+      \JMLtoBML (short for the compiler from JML to BML) \ compiler
+      takes as input a Java source file annotated with JML
+      specification and its Java class produced by a non optimizing
+      compiler containing a debug information.% As we shall see later
+      in the coming sections, the debug data plays a role in the
+      compilation of the JML specification into BML.
+
+
 Requirements on the class file format
 \begin{itemize}
   \item \textbf{Debug Information} \\ A requirement to the class file
