@@ -1,0 +1,3 @@
+Main-Class: bico.Executor
+Name: bico
+Sealed: yes

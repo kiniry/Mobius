@@ -20,7 +20,9 @@ sometimes I must put them manually from svn. Looks like Eclipse
 sometimes removes "orphane" .class files.
 
 6. To compile the produced file TheProgram.v in Coq you must first compile
-   Program.v ImplemProgramWithList.v 
+   Program.v ImplemProgramWithList.v if you use bico with list or 
+   ImplemProgramWithMap.v
    and provide files 
    java_lang_Object.v java_lang_Exception.v java_lang_Throwable.v
+   which are a part of bicolano
    which are situated in the "working examples" directory 

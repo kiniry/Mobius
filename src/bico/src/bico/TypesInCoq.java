@@ -1,3 +1,4 @@
+package bico;
 
 public interface TypesInCoq {
 	//instruction types in BCEL the same as in umbra
