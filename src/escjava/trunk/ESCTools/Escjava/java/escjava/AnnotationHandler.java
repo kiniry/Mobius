@@ -665,8 +665,12 @@ public class AnnotationHandler {
 
     if (reqIsTrue && m.size() == 0) return;
 
-    requiresList.add(reqIsTrue ? ExprModifierPragma.make(TagConstants.REQUIRES,
+    {
+      ExprModifierPragma emp = (reqIsTrue ? 
+        ExprModifierPragma.make(TagConstants.REQUIRES,
         T, Location.NULL) : andLabeled(list));
+      requiresList.add(emp);
+    }
 
     // Now transform each non-requires pragma
     boolean foundDiverges = false;
@@ -691,7 +695,20 @@ public class AnnotationHandler {
           if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR) break;
           if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN) break;
           if (isTrue(mm.expr)) break;
-          if (!reqIsTrue) mm.expr = implies(req, mm.expr);
+          if (!reqIsTrue && false) {
+            mm.expr = implies(req,mm.expr);
+          }
+          if (!reqIsTrue) {
+//System.out.println("ORIG ENSURES") ; printSpec(mm);
+//System.out.println("DECL " + (Utils.owningDecl.get(mm)!=null));
+             ExprModifierPragma newmm = ExprModifierPragma.make(tag,
+				    implies(req,mm.expr), mm.getStartLoc()) ;
+	     Utils.owningDecl.set(newmm, Utils.owningDecl.get(mm));
+	     newmm.errorTag = mm.errorTag;
+             mm = newmm;
+//System.out.println("NEW ENSURES") ; printSpec(mm);
+          }
+
           resultList.addElement(mm);
           break;
         }
@@ -710,7 +727,7 @@ public class AnnotationHandler {
           if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR) break;
           if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN) break;
           if (isTrue(mm.expr)) break;
-          if (!reqIsTrue) mm.expr = implies(req, mm.expr);
+          if (!reqIsTrue) mm.expr = implies(req,mm.expr);
           resultList.addElement(mm);
           break;
         }
