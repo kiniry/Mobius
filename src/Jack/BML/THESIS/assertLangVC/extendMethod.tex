@@ -14,7 +14,7 @@ $$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
 							  \excHandlerTable & : \ExcHandler [] \\
 							  \exceptions &  : \ClassSet_{exc}[] \\
 							  \pre & : \predWp \\
-							  \modif & :   \expressionsWp \lbrack \ \rbrack  \\
+							  \modif & :   \expression \lbrack \ \rbrack  \\
 							  \excPostSpec & : \excType \rightharpoonup \predWp \\
 							  \normalPost & : \predWp \\
                                                           \loopSpecTable & : \LoopSpecSet \lbrack \ \rbrack  
@@ -52,7 +52,7 @@ $$ \begin{array}{l}
       \LoopSpecSet = \left\{\begin{array}{ll}  
                                        \posL   & : nat \\
                                        \invL   & : \predWp \\                 
-	                               \modifL   & :  \expressionsWp  \lbrack \ \rbrack  
+	                               \modifL   & :  \expression  \lbrack \ \rbrack  
                             \end{array}  \right\} 
      \end{array} $$ \todo{define modifies locations in the grammar }
 

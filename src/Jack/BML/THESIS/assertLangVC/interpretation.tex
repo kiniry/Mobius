@@ -7,15 +7,52 @@
 
 \section{Interpretation}\label{interpret}
 
-We discuss the evaluation of expressions and interpretation of predicates  in a particular program state configuration.
-Thus, we first define a function for expression evaluation, as well as a function which for a given state and predicate returns the interpretation
-of the given predicate in the given state. 
-The function $eval$ which evaluates expressions in a state has the following signature:
+In this section, we shall focus on the semantics of formulas and expressions w.r.t. a state configuration.
+The part which deserves a more  careful treating is the question of partiality in our programming language.
+
+%  brief presentation of the problem 
+We first discuss  the impact of the partial function evaluation on the definition of the semantics. 
+Partiality is   a  fact  in program languages and at the same time represents a
+ controversal point in defining a program logic. 
+
+ Several logics has been proposed for dealing with partial functions, 
+every one bringing certain advantages as well as disadvantages (see \cite{gries95avoiding,schieder99adapting}).
+Three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
+ formulas might be false, true or undefined in a state appear to lose certain nice properties
+ which standard logic with equality have
+as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc.
+ In \cite{bijlsma90sqb}, Bijlsma comes up with another solution where the  properties of the logic are preserved but 
+however compositionality of expression evaluation does not hold anymore.
+
+In \cite{gries95avoiding}, Gries and Schnieder give another solution to the problem which consists in underspecification 
+and thus  avoiding the special object of undefideness.
+ More particularly, their approach considers all functions as total but for some value of the argument 
+the function is not specified. 
+
+In \cite{schieder99adapting},  B. Schieder and M. Broy notice that 
+  an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
+undefined where  the logical connectives are extended in a nonmonotonic way preserves the properties of the classical logic
+on the price  of having two sorts of equality. 
+
+Our formalization is simple and escapes the theoretical problems of a three valued logic by keeping the evaluation function partial but
+ allowing undefideness only for expressions.
+Thus, an expression evaluation may return a value or may  be not defined. On the contrary, formulas are still either true or false.   
+
+
+Thus, we first define a function for expression evaluation
+ $\evalExpName$ which evaluates expressions in a state has the following signature:
 $$
-eval : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup \Values \cup \JavaType
+\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup \Values \cup \JavaType
 $$
 Note that the evaluation function is partial and  takes as arguments an expression of the assertion language presented in the previuos Section 
-\ref{assertLang:lang} and two states (see Section \ref{def})  and returns a value as defined in Section \ref{types}. \todo{what is the impact of the evaluation partiallity}
+\ref{assertLang:lang} and two states (see Section \ref{def})  and returns a value as defined in Section \ref{types}. In the following,
+if the evaluation   of an expression \expression{} is defined for the states $s$ $s_0$, i.e. the evaluation function returns a value,
+  we use the notation  $\defined{ \evalExp{\expression}{s}}$.  
+
+
+
+
+
 %The function $eval$ associates a value to expressions from  \expression  \  if they have a value in the state.
 %For instance, a reference which is not in the domain of the  
 
@@ -36,29 +73,28 @@ $$
  = \heap(\fieldd) (\evalExp{ \exprWp}{ s } ) \\
 \\
 
- \evalExp{\update{\fieldd}{\expression^1}{\expression^2}(\expression^3)}{ s } = \\
-=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expression^1}{s } }{ \evalExp{\expression^2}{s }  }} (\fieldd)
-                                            (  \evalExp{\expression^3}{ s } ) \\
+ \evalExp{\update{\fieldd}{\expression_1}{\expression_2}(\expression_3)}{ s } = \\
+=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expression_1}{s } }{ \evalExp{\expression_2}{s }  }} (\fieldd)
+                                            (  \evalExp{\expression_3}{ s } ) \\
  \\
 
 
- \evalExp{\arrayAccess{\expression^1} {\expression^2}  }{ s } = \\
+ \evalExp{\arrayAccess{\expression_1} {\expression_2}  }{ s } = \\
 
- = \heap (\evalExp{ \expression^1}{ s } ,\evalExp{ \expression^2}{ s } )   \\
+ = \heap (\evalExp{ \expression_1}{ s } ,\evalExp{ \expression_2}{ s } )   \\
 \\
 
- \evalExp{ \update{ \arrayAccessOnly}{ (\expression^1 , \expression^2)}{ \expression^3} (\expression^4,\expression^5)  } { s } = \\
- = \update{\heap}{ ( \evalExp{\expression^1}{s } ,  \evalExp{\expression^2}{s } ) }  
-                 { \evalExp{\expression^3}{s }}\\
-                 \Myspace ( \evalExp{\expression^4}{s } ,  \evalExp{\expression^5}{ s  } ) \\
+ \evalExp{ \update{ \arrayAccessOnly}{ (\expression_1 , \expression_2)}{ \expression_3} (\expression_4,\expression_5)  } { s } = \\
+ = \update{\heap}{ ( \evalExp{\expression_1}{s } ,  \evalExp{\expression_2}{s } ) }  
+                 { \evalExp{\expression_3}{s }}\\
+                 \Myspace ( \evalExp{\expression_4}{s } ,  \evalExp{\expression_5}{ s  } ) \\
 \\
- \evalExp{ \locVar{i} } { s } = \locVarOnly(i) 
-\end{array}$$
+ \evalExp{ \locVar{i} } { s } = \locVarOnly(i) \\
+\\
 
-$$\begin{array}{l}
  \evalExp{ \old{\exprWp} } { s } =\evalExp{ \exprWp }{  s_{0}} \\
 \\ 
- \evalExp{\expression^1 \ \op \ \expression^2   } { s } =   \evalExp{\expression^1}{s} \op  \evalExp{\expression^2}{s}  \\
+ \evalExp{\expression_1 \ \op \ \expression_2   } { s } =   \evalExp{\expression_1}{s} \op  \evalExp{\expression_2}{s}  \\
 
 \\
 \evalExp{ \typeof{\exprWp}}{s } = \\
@@ -134,15 +170,19 @@ $$
 
 \interp{\exists x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ a \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ exists \ such \ that \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
 \\
-\interp{\expression^1 \  \predicates \  \expression^2 }{s} \ if \ and \ only \ if  \begin{array}{l}
-                                                              \evalExp{\expression^1 }{s} \neq \bottom \wedge \\
-							       \evalExp{\expression^2 }{s}\neq \bottom \wedge \\
-                                                             \evalExp{\expression^1 }{s} \evalRel{\predicates }  \evalExp{\expression^2 }{s} \ is  \ true
+\interp{\expression_1 \  \predicates \  \expression_2 }{s} \ if \ and \ only \ if  \begin{array}{l}
+                                                              \defined{ \evalExp{\expression_1 }{s}}  \wedge \\
+							      \defined{ \evalExp{\expression_2 }{s} } \wedge \\
+                                                             \evalExp{\expression_1 }{s} \evalRel{\predicates }  \evalExp{\expression_2 }{s} \ is  \ true
 
 							     \end{array} \\
 \\
-
+\\
 \interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ if \ and \ only \ if  \    \isInList{\referenceOnly }{ \getLocations{\heap_{0}}}  
 \end{array}
 $$   
 \end{interpPred}
+Note that the upper definition interprets atomic formulas in  states $s$ and $s_0$, i.e. formulas which 
+represent relations between expressions, as true only if the evaluation of these expressions is defined
+in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
+ 
