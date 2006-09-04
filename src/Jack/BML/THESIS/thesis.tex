@@ -39,20 +39,22 @@
 
 
 \title{Bytecode Verification and its Applications}
-\begin{document}
-\lstset{language=Jml}
-\lstset{frameround=tttt}
-%\lstset{commentstyle=\textsf}
+    \begin{document}
+    \lstset{language=Jml}
+    \lstset{frameround=tttt}
+    %\lstset{commentstyle=\textsf}
 
-\renewcommand{\topfraction}{0.9}
-\renewcommand{\textfraction}{0.05}
-\renewcommand{\floatpagefraction}{0.75}
+    \renewcommand{\topfraction}{0.9}
+    \renewcommand{\textfraction}{0.05}
+    \renewcommand{\floatpagefraction}{0.75}
 
 \maketitle
 \tableofcontents
 
 %1
 \chapter{Introduction}
+
+
 
 %2
 \chapter{ Java bytecode language and its operational semantics} \label{opSem}
@@ -71,7 +73,8 @@
  \input{prelim/operational_sem.tex} 
  \input{prelim/ctrlFlowGraph.tex}
 
-%4
+
+%3
 \chapter{Bytecode modeling language} \label{bcsl}
   \lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
   \input{BML/intro.tex} 
@@ -82,12 +85,14 @@
   \input{BML/compiler.tex}
 
 
+%4
 \chapter{Assertion language for the verification condition generator}\label{assertLang}
   \input{assertLangVC/assertionLang.tex}
   \input{assertLangVC/BMLfragment.tex}
   \input{assertLangVC/substitution.tex}
   \input{assertLangVC/interpretation.tex}
   \input{assertLangVC/extendMethod.tex} 
+
 
 %5
 \chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
@@ -100,14 +105,16 @@
  \input{wp/smallExample.tex}
 
 
-
+%6
 \chapter{Correctness of the verification condition generator}\label{proofGeneral}
   \input{proof/intro.tex}
   \input{proof/substprop.tex}
   \input{proof/proof.tex}
 
-%6
-\chapter{Equivalence between Java source and bytecode proof Obligations}
+
+
+%7
+\chapter{Equivalence between Java source and bytecode proof Obligations}\label{pogEquiv}
        %\input{pogCompile/cmdPogComp.tex}
        \input{pogCompile/intro.tex}
        \input{pogCompile/relatedWork/relWork.tex}
@@ -143,16 +150,14 @@
 	  \input{pogCompile/pogEquiv/aux.tex} 
 
 
-%8
-% \chapter{A compact verification condition generator}
 
 
-
-%9
    % \chapter{Applications} 
    % \input{applications/intro}
    % \newpage
-   \chapter{Constraint memory consumption policies using Hoare logics}
+
+%8
+\chapter{Constraint memory consumption policies using Hoare logics}
        \input{applications/memory/mydefThesis}
        \lstset{numbers=none}
        \input{applications/memory/intro}
@@ -165,8 +170,8 @@
        \section{Conclusion}\label{sec:conc}
        \input{applications/memory/conclusion}
 
- 
-  \chapter{A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}
+%9 
+\chapter{A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}
       \lstset{frameround=tttt}
       %\input{applications/optimCompiler/cmd}
       \input{applications/optimCompiler/intro}
@@ -181,12 +186,13 @@
       \input{applications/optimCompiler/relWork}
       \input{applications/optimCompiler/conclusion} 
  
+
 %10
 \chapter{Conclusion}
 
 \appendix
  \addcontentsline{toc}{chapter}{Appendices}
-
+  \input{appendix/pogCompile/pogEquiv/aux}
 \bibliographystyle{plain}
 \bibliography{biblio,specification,bib_mem-wpc,optimComp}
 
