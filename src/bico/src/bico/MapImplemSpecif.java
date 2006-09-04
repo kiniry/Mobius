@@ -10,6 +10,16 @@ public class MapImplemSpecif implements ImplemSpecifics {
 	public String interfaceType() {
 		return "PROG.MapInterface.t";
 	}
+	String interfaceParen = "";
+	public String interfaceCons(String name) {
+		interfaceParen += ")";
+		return "(mi_cons " + name;
+	}
+	public String interfaceEnd() {
+		String res = "mi_empty"+ interfaceParen;
+		interfaceParen = "";
+		return res;
+	}
 	public String interfaceEmpty() {
 		return "mi_empty";
 	}

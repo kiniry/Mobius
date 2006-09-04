@@ -12,7 +12,8 @@ public interface ImplemSpecifics {
 	public String fieldsCons(String name);
 	public String fieldsEnd(String name);
 	public String interfaceType();
-	public String interfaceEmpty();
+	public String interfaceCons(String name);
+	public String interfaceEnd();
 	public void printExtraBodyField(BufferedWriter out) throws IOException;
 	public String getNoMethods();
 	public String methodsCons(String string);

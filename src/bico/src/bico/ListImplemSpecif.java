@@ -6,6 +6,12 @@ public class ListImplemSpecif implements ImplemSpecifics {
 	public String classType() {
 		return "list Class";
 	}
+	public String interfaceCons(String name) {
+		return name + " :: ";
+	}
+	public String interfaceEnd() {
+		return "nil";
+	}
 	public String classCons(String name) {
 		return name + " :: ";
 	}
