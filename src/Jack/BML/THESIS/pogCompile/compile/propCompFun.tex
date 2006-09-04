@@ -28,7 +28,7 @@
 In this subsection, we will focus on the properties of the  bytecode produced by the compiler presented above.
 These properties although a straightforward consequence of the compiler definition
  are actually important for establishing formally the equivalence between source and bytecode 
-proof obligations. Note also that those properties are respected by any non optimizing compiler.
+proof obligations. %Note also that those properties are respected by any non optimizing compiler.
 
 
 In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and $\expressionSrc$.
@@ -44,8 +44,7 @@ The first property that we observe is that the last instruction $\ins{e}$ in the
 \end{compProp0}
 The proof is trivial by case analysis of the compiled statements.
 
-Let us now turn to the next property of interest.
-Informally, it states  that  if there are instructions inside a compiled statetement or expression 
+Let us now turn to the next property. Informally, it states  that  if there are instructions inside a compiled statetement or expression 
  $\compileLabel{s}{\ExprStmt}{e}$ which are in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
 $\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
 of $\ExprStmt$ 
@@ -326,7 +325,7 @@ $$ \begin{array}{l}
 $$
 \end{compProp9}
 
-The last property concerns try catch statements
+The next property concerns try catch statements.
 \begin{compProp10}[Exception handlers and try catch statements]\label{compile:prop:compProp10}
 For every try catch statement $ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
 its compilation $$
@@ -340,11 +339,14 @@ its compilation $$
 
  \end{array}$$
 is such that the following holds 
-$$\begin{array}{l} \forall \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow
- \Myspace   \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =\\ 
- \Myspace   \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable}  \\
- \wedge
+$$\begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow
+  \begin{array}{l}  
+         \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =\\ 
+    \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable}  \\
+ 
+    \wedge\\
   \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2 \\ 
+   \end{array}
  \end{array} $$
 
 

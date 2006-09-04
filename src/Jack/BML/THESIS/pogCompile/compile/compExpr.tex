@@ -10,10 +10,12 @@ The compiler function takes three arguments: a natural number $s$ from which the
 and returns an array of bytecode instructions which is the compilation of the source construct.
 As we shall see in the following of this section, we will define inductively the compiler over the structure
 of the compiled source construction.
+
 %\subsubsection{Compiling source expressions into bytecode}\label{pogEq:compile:compExpr}
-We shall first look at Fig. \ref{pogEq:compile:compExpr:def} how expressions are compiled. We can notice that the compilation of
- the constants like constant integers,
-\Mytrue, \Myfalse, \Mynull{}  are compiled down to the instruction \push. Note also that the boolean constant  \Mytrue{} and \Myfalse{}
+We first look at Fig. \ref{pogEq:compile:compExpr:defExpr} how expressions are compiled.
+ From the figure, we can see that the compilation of
+ the constants like constant integers, the boolean constants
+\Mytrue, \Myfalse, \Mynull{}  are compiled with the instruction \push. Note also that the boolean constants  \Mytrue{} and \Myfalse{}
 are encoded as the integers 1 and 0 in the bytecode.  The field access expression $ \expressionSrc.f$ compilation consists in the compilation
 $\compileLabel{s}{\expressionSrc}{e - 1}$ of the expression   $ \expressionSrc $ followed by the instruction $ e: \getfield  \ f $ which is
  the last instruction of the compilation.  May be more attention deserve the compilation of the instance creation expression
