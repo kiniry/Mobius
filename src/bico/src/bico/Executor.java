@@ -859,10 +859,10 @@ public class Executor extends Object {
 					//fom.getSignature(cpg)
 					String ms;
 					try {
-						ms = className + "." + mh.getName((InvokeInstruction)fom, cpg);
+						ms = className + "." + mh.getName((InvokeInstruction)fom, cpg) + "Signature";
 					} catch (MethodNotFoundException e) {
 						System.err.println("doInstruction: " + e.getMessage() + " was supposed to be loaded before use...");
-						ms = className + "." + coqify(fom.getName(cpg));
+						ms = className + "." + coqify(fom.getName(cpg)) + "Signature";
 						
 					}
 					ret = name + " " + ms;
