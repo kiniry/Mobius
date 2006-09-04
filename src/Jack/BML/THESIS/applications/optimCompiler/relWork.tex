@@ -1,0 +1,11 @@
+
+\section{Related Work}
+\label{sec:relatedwork}
+% AOTs
+Toba~\cite{Proebsting1997} is a Java-to-C compiler that transforms a whole Java program into a native one. Harissa~\cite{Muller1997} is a Java environment that includes a Java-to-C compiler as well as a virtual machine, and therefore supports mixed execution. While both environments implement some optimizations, they are not able to detect and remove unused runtime checks during ahead-of-time compilation. The JC Virtual Machine~\cite{JCVM} is a Java virtual machine implementations that converts class files into C code using the Soot~\cite{Raja1999} framework, and runs their compiled version. It supports redundant exceptions checks removal, and is tuned for runtime performance, by using operating system signals in order to detect exceptional conditions like null pointer dereferencing. This allows to automatically remove most of the \texttt{NullPointerException}-related checks.
+
+% Optimizing during JIT compilation
+In~\cite{Hummel1997} and~\cite{Azevedo1999}, Hummel et al. use a Java compiler that annotates bytecodes with higher-level information known during compile-time in order to improve the efficiency of generated native code. \cite{Ishizaki1999} proposes methods for optimizing exceptions handling in the case of JIT compiled native code. These works rely on knowledge that can be statically inferred either by the Java compiler or by the JIT compiler. In doing so, they manage to efficiently factorize runtime checks, or in some cases to remove them. However, they are still limited to the context of the compiled method, and do not take the whole program into account. Indeed, knowing properties about a the parameters of a method can help removing further checks.
+
+We propose to go further than these approaches, by giving more precise directives as to how the program behaves in the form of JML annotations. These annotations are then used to get formal behavioral proofs of the program, which guarantee that runtime checks can safely be eliminated for ahead-of-time compilation.
+

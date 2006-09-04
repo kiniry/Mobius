@@ -1,0 +1,39 @@
+
+
+
+\subsection{Methodology for Writing Specification Against Runtime Exception}
+
+We now illustrate with an example what are the JML annotations needed 
+for verifying that a method does not throw  a runtime exception.
+ Figure~\ref{fig:jmlexample}\footnote{although the analysis that we describe is on bytecode level, for the sake of readability, the examples are also given on source level}
+ shows a Java method annotated with a JML specification. The method \verb!clear! declared in class \verb!Code_Table! receives an integer parameter \verb!size! and assigns \verb!0! to all the elements in the array field \verb!tab! whose indexes are smaller than the value of the parameter \verb!size!. The specification of the method guarantees that if every caller respects the method precondition and if every execution of the method guarantees its postcondition then the method \verb!clear! never throws an exception of type or subtype \verb!java.lang.Exception!\footnote{Note that every Java runtime exception is a subclass of \texttt{java.lang.Exception}}. This is expressed by the class and method specification contracts.
+First, a class invariant is declared which states that once an instance of type \verb!Code_Table! is created, its array field \verb!tab! is not null. The class invariant guarantees that no method will throw a \NullPointerExc{} when dereferencing (directly or indirectly) \verb!tab!.
+
+\begin{figure}
+\begin{verbatim}
+final class Code_Table {
+  private/*@spec_public */short tab[];
+
+  //@invariant tab != null;
+
+  ...
+
+  //@requires size <= tab.length;
+  //@ensures true;
+  //@exsures (Exception) false;
+  public void clear(int size) {
+  1  int code;
+  2  //@loop_modifies code, tab[*];
+  3  //@loop_invariant code <= size && code >= 0;
+  4  for (code = 0; code < size; code++) {
+  5    tab[code] = 0;
+     }
+  }
+}
+\end{verbatim}
+
+\caption{\sc A JML-annotated method}
+\label{fig:jmlexample}
+\end{figure}
+
+The method precondition requires the \verb!size! parameter to be smaller than the length of \verb!tab!. The normal postcondition, introduced by the keyword \verb!ensures!, basically says that the method will always terminate normally, by declaring that the set of final states in case of normal termination includes all the possible final states, i.e. that the predicate \verb!true! holds after the method's normal execution\footnote{Actually, after terminating execution the method guarantees that the first \texttt{size} elements of the array tab will be equal to 0, but as this information is not relevant to proving that the method will not throw runtime exceptions we omit it}. On the other hand, the exceptional postcondition for the exception \texttt{java.lang.Exception} says that the method will not throw any exception of type \texttt{java.lang.Exception} (which includes all runtime exceptions). This is done by declaring that the set of final states in the exceptional termination case is empty, i.e. the predicate \texttt{false} holds if an exception caused the termination of the method. The loop invariant says that the array accesses are between index \verb!0! and index \verb!size - 1! of the array \verb!tab!, which guarantees that no loop iteration will cause a \verb!ArrayIndexOutOfBoundsException! since the precondition requires that \verb!size <= tab.length!.

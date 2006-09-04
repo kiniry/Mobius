@@ -1,0 +1,9 @@
+
+\section{Conclusion}
+\label{sec:conclusion}
+The main result of the present article is a new Java-to-native code optimization technique based on static program verification using formal methods. The methodology gives more precise and therefore better results than other existing solutions in the field and allows us to remove almost all the exception check sites in the native code, as we show in section \ref{sec:experiments}. The memory footprints of natively-compiled methods thus become comparable with the ones of the original bytecode when compiled in ARM thumb.
+
+Although we applied this work to the ahead-of-time compilation of Java methods, the bytecode annotations could also be interpreted by JIT compilers, which would then also be able to completely get rid of a considerable part of runtime exceptions.
+
+\subsection*{Acknowledgments}
+The authors would like to thank Jean-Louis Lanet for kindly providing us with the JML-annotated sources of the \benchname{banking}, \benchname{scheduler} and \benchname{tcpip} programs evaluated in this paper.
