@@ -39,9 +39,17 @@ public class Executor extends Object {
 	public final static String HELP_MSG = 
 		"-------------------------------------------------------------------------------------\n" +
 		"Bico converts *.class files into Coq format\n" +
-		"When used with no argument or the 'help' argument - it prints this help message\n" +
-		"To force the use of maps use the '-map' argument, '-list' argument being for the list\n" +
-		"When used with one argument - Bico does it's job in this directory\n" +
+		"The default behaviour being to generate the files for Bicolano's \n" +
+		"implementation with maps.\n" +
+		"Its use is 'java -jar bico.jar Args'\n" +
+		"Args being a combination of the following arguments:\n" +
+		"<directory> - specify directory in which Bico does its job (there must be only one \n" +
+		"              directory, and this argument is mandatory)\n" +
+		"help        - it prints this help message\n" +
+		"-list       - forces the use of lists (incompatible with the -map argument)\n"+
+		"-map        - forces the use of maps (incompatible with the -list argument)\n" +
+		"<classname> - generates also the file for this class, bico must be able to find it \n" +
+		"              in its class path\n"+
 		"-------------------------------------------------------------------------------------";
 	/** determine the span of the 'reserved' system class names number default is 100 */
 	private static final int RESERVED_NUMBERS = 100;
