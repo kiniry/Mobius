@@ -1,19 +1,15 @@
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%BYTECODE LANGUAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  \newcommand{\bcIns}{\mbox{ \rm I} }
  \newcommand{\instrs}{\mbox{ \rm IS} }
- \newcommand{\ifCond}{ \instr{if\_cond } }
- \newcommand{\goto}{ \instr{goto } }
- \newcommand{\return}{ \instr{return } }
- \newcommand{\arithOp}{ \instr{arith\_op} }
- \newcommand{\load}{ \instr{load} }
- \newcommand{\store}{ \instr{store} }
- \newcommand{\push}{ \instr{push} }
+ \newcommand{\ifCond}{\instr{if\_cond}}
+ \newcommand{\goto}{\instr{goto}}
+ \newcommand{\return}{\instr{return}}
+ \newcommand{\arithOp}{\instr{arith\_op}}
+ \newcommand{\load}{ \instr{load}}
+ \newcommand{\store}{\instr{store}}
+ \newcommand{\push}{\instr{push}}
  \newcommand{\pop}{\instr{pop}}
  \newcommand{\dup}{\instr{dup}}
  \newcommand{\iinc}{\instr{iinc}}
@@ -55,7 +51,7 @@
 
 
 
-\newcommand{\instr}[1]{\mbox{  \rm #1} }
+\newcommand{\instr}[1]{\mbox{\rm #1}}
 
 %\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
 %\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
@@ -361,8 +357,9 @@
  \newcommand{\Arrays}{\mbox{\rm ARR}} % an abstraction for all arrays in the heap
 
  %%%%%%%%%%%%%%%%%%% the state after  exception is thrown %%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\getStateAfterExc}{\mbox{\rm \textit{getStateOnExc}}} 
- \newcommand{\findExcHandler}[3]{\mbox{\rm \textit{findExcHandler}}(#1,#2,#3)} % #1 = exception, #2 = pc , #3 = exception handler table 
+ \newcommand{\getStateAfterExc}{\mbox{\rm\textit{getStateOnExcRT}}}
+  \newcommand{\getStateAfterExcNotRT}{\mbox{\rm\textit{getStateOnExc}}}% the function which gets the next state of the execution if the exception thrown is not a runtime 
+ \newcommand{\findExcHandler}[3]{\mbox{\rm\textit{findExcHandler}}(#1,#2,#3)} % #1 = exception, #2 = pc , #3 = exception handler table 
  \newcommand{\findExcHandlerOnly}{\mbox{\rm\textit{findExcHandler}}} % #1 = exception, #2 = pc , #3 = exception handler table 
 
 
@@ -371,7 +368,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Subtyping and types%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \newcommand{\subtypeOnly}{\mbox{\rm \textsf{subtype}}} 
-\newcommand{\subtype}[2]{\mbox{\rm \textsf{subtype} }(#1,#2)}
+\newcommand{\subtype}[2]{\mbox{\rm\textsf{subtype}}(#1,#2)}
  \newcommand{\Object}{\mbox{\rm \texttt{Object}} }
 
 
@@ -390,7 +387,7 @@
 \newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
 \newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
-\newcommand{\expression}{\mbox{\rm\textit{E}}_{bml} }
+\newcommand{\expression}{\mbox{\rm\textit{E}}}
 \newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
 \newcommand{\expressions}{\mbox{\rm\textit{SpecExp}}_{bml}}
 
@@ -497,6 +494,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\evalExp}[2]{[\![#1]\!]_{s_{0}, #2}}%{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
+\newcommand{\evalExpName}{[\![*]\!]_{*,*}}
 \newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
 
 \newcommand{\interp}[2]{#2 , s_{0} \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
@@ -505,6 +503,9 @@
 				  \end{array}}
 
 \newcommand{\validFormula}[1]{\vDash #1 }
+
+\newcommand{\defined}[1]{! \  #1 } % function value #1 is defined 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\modifLoop}{\mbox{\rm \textit{modifLoop}}}
 
@@ -666,7 +667,7 @@
 \newcommand{\Mybool}{ \texttt{boolean} }
 
 
-\newcommand{\freshVar}{ \mbox{\rm\textbf{boundVar}} }
+\newcommand{\freshVar}{ \mbox{\rm\textbf{bv}} }
 
 
 \newcommand{\Constructor}[1]{\mbox{\rm\textsf{constr}}(#1) }
@@ -692,3 +693,4 @@
 
 
 \newcommand{\benchname}[1]{\textbf{#1}}
+
