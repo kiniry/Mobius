@@ -198,27 +198,27 @@ We will also see how the weakest precondition is defined in presence of exceptio
 	\begin{enumerate}
 		\item create a new object \\
 		$$ \begin{array}{l}
-                         \wpi{\instr{new  \ \clazz }} {\methodd}{i}  =  \\
+                         \wpi{\new  \ \class } {\methodd}{i}  =  \\
 		 
-		    \forall \referenceOnly,\\
-                      \Myspace    not \ \instances(\referenceOnly) \wedge \\
-		      \Myspace \referenceOnly \neq \Mynull  \\
-		        \Myspace \typeof{\referenceOnly} <: \class  \Rightarrow	\\
-		      % \Myspace  \typeof{\referenceOnly} = \type{\clazz} \Rightarrow	\\
+		    \forall \freshVar,\\
+                      \Myspace    \neg \ \instances(\freshVar) \wedge \\
+		      \Myspace \freshVar \neq \Mynull  \\
+		        \Myspace \typeof{\freshVar} <: \class  \Rightarrow	\\
+		      
 			                 \Myspace   \Myspace     
 					 \begin{array}{l}   \inter{i}{i+1} \\
 		                                   \subst{ \counter}{ \counter + 1 } \\
-						   \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
-						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-				\subst{ \typeof{\referenceOnly}}{ \clazz } \\		   
+						   \subst{ \stack{ \counter + 1} }{\freshVar} \\
+						   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } \\
+			%	\subst{ \typeof{\referenceOnly}}{ \clazz } \\		   
 		       \end{array}
               \end{array}$$
-		  The postcondition of the instruction \new \ is the intermediate predicate $\inter{i}{i+1}$. The weakest precondition 
-		  of the instruction says that for any reference $\referenceOnly$ 
-		  if $\referenceOnly$ was not instantiated in the initial state of the execution of \methodd \ then
+		  The postcondition of the instruction \new{} is the intermediate predicate $\inter{i}{i+1}$. The weakest precondition 
+		  of the instruction says that for any reference $\freshVar$ 
+		  if $\freshVar$ is not an instance reference  in the initial state of the execution of \methodd \ then
 		  the precondition is the same predicate but in which the stack
-		  counter is incremented and \referenceOnly  \ is pushed on the stack top  where the fields for the 
-		  \referenceOnly \ are initialized with their default values 
+		  counter is incremented and \freshVar  \ is pushed on the stack top  where the fields for the 
+		  \freshVar \ have the default value of their type. 
 	
 		
 		\item array creation 
@@ -415,16 +415,16 @@ We will also see how the weakest precondition is defined in presence of exceptio
 
 
 	 		\Myspace (\findExcHandler{ \mbox{\rm\texttt{n} }.\exceptions[j] }{i}{\methodd.\excHandlerTable} = \bottom \Rightarrow \\  
-					 \Myspace \forall \bound_i (  \\ 
-						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
-                                                 \Myspace\Myspace\Myspace  \methodd.\getExcPost (i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound_i }    ) ) \\
+					 \Myspace \forall \bound (  \\ 
+						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound } \Rightarrow \\ 
+                                                 \Myspace\Myspace\Myspace  \methodd.\getExcPost (i,   \methodd.\exceptions[j] )\subst{\EXC }{\bound }    ) ) \\
 						 \Myspace \wedge \\
 						 \Myspace (\findExcHandler{ \mbox{\rm\texttt{m} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}{\methodd.\excHandlerTable} = k    \Rightarrow \\ 
- \Myspace \forall \bound_i (  \\ 
-						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound_i } \Rightarrow \\ 
-                                                 \Myspace\Myspace\Myspace  \methodd.\getExcPost \begin{array}{l}
+ \Myspace \forall \bound (  \\ 
+						 \Myspace \Myspace \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j]) \subst{\EXC }{\bound } \Rightarrow \\ 
+                                                 \Myspace\Myspace\Myspace  \inter{i}{k} \begin{array}{l}
 						                                           \subst{\counter}{0} \\
-                                                                                           \subst{\stack{0} }{\bound_i }  
+                                                                                           \subst{\stack{0} }{\bound }  
 						                                        \end{array}) )
 							
 	 				 		\end{array}
@@ -443,16 +443,16 @@ We will also see how the weakest precondition is defined in presence of exceptio
 						Second, we get a logical statement which guarantees the correctness of the method invokation
 						in case of normal termination.
 						On the other hand, its postcondition \mbox{\rm\texttt{n}}.\normalPost \ is assumed to hold and thus, we want to establish that 
-						under the assumption that \methodd.\normalPost \  holds \ with \result \ substituted with a fresh bound variable $ \bound_i$
+						under the assumption that \methodd.\normalPost{}  holds \ with \result{} substituted with a fresh bound variable $ \bound$
 						and correctly initialized formal parameters
 						is true we want to establish that the predicate \inter{i}{i+1 } \
 						holds . This implication is quantified over the locations \mbox{\rm\texttt{n}}.\modif \ that a method may modify
-						and the variable $ \bound_i$ which stands for the result that the invoked method \mbox{\rm\texttt{n}} \ returns.  
+						and the variable $ \bound$ which stands for the result that the invoked method \mbox{\rm\texttt{n}} \ returns.  
 						
 						The third part of the rule deals with the exceptional termination of the method invokation.
 						In this case, if the invoked method \texttt{n} terminates on any exception which belongs to the array of 
-						exceptions \texttt{n}.\exceptions \ that \texttt{n} may throw. Two cases are considered - either the thrown
-						exception can be handled by \methodd \ or not. If the thrown exception  \texttt{Exc} can not be handled
+						exceptions \texttt{n}.\exceptions{} that \texttt{n} may throw. Two cases are considered - either the thrown
+						exception can be handled by \methodd{} or not. If the thrown exception  \texttt{Exc} can not be handled
 						by the method \methodd \
 						(i.e. $\findExcHandler{ \mbox{\rm\texttt{n} }.\excPostSpec ( \mbox{\rm\texttt{n} }.\exceptions[j])  }{i}
 						{\methodd.\excHandlerTable} = \bottom $) then if the exceptional postcondition predicate
