@@ -29,15 +29,16 @@ normal form of  $\wpNameSrcExpr$ is such that
 
 $$ \begin{array}{l}
          \mbox{\rm\textit{either  there exists $ Q,R:\formulaSrc $  }} \\
-         \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  \equiv \\ 
+         \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
           Q \Rightarrow \psi \\
           \wedge \\ 
 	  R \\\\
 	  \mbox{\rm\textit{or exists $ Q,R:\formulaSrc, v_1 \ldots v_k :\expressionSrc $   }} \\
 \\
- \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  \equiv \\
-      \forall \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \psi 
+ \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
+      \forall \freshVar, \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \psi 
                                                                              \begin{array}{l}
+									         \subst{v}{ \freshVar}  \\
 									        \subst{v_1 }{ \freshVar_1 }  \\
 										\ldots \\
 										\subst{v_k}{ \freshVar_k } 
@@ -90,16 +91,16 @@ contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$, the f
 
   There  exist $ Q, R : \formulaSrc$  such that 
 $$ \begin{array}{l}
-      \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  \equiv \\ 
+      \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
           Q \Rightarrow \psi \\
           \wedge \\ 
 	  R  \\
   \\
-\Rightarrow \\
+\Longrightarrow \\
  \\
 
   
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  \equiv \\ 
+	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
               Q \Rightarrow \phi \begin{array}{l}
                                        \subst{\counter}{\counter + 1}\\
 			               \subst{\stack{\counter +1}}{ v }
@@ -108,157 +109,24 @@ $$ \begin{array}{l}
 	  R 
   \end{array}$$
 
-
-
-
 \end{exprSrcBcWp1}
 
-We proceed with several cases of the proof, which is done by induction over the structure of the formula
 
-Proof : 
- 
-
-
-\begin{enumerate} 
-		\item    $\expressionSrc = const , const \in \ \constantInt, \Mytrue, \Myfalse $
-                     
-		     $$ \begin{array}{l}  
-		               \mbox{\rm\comment{source case }} \\
-		              \numConclusion{1} \wpSrcExpr{ const}{\psi}{ \excPost}{const}  \\
-		    	       \mbox{\rm\comment{following the definition of the wp function for source expressions in subsection  \ref{pog:wpSrc:wpExpr} }} \\
-			       \equiv \psi \\
-			       \\
-			       \mbox{\rm\comment{bytecode case }} \\
-		               \numConclusion{2} \wpBcSeq{\compileLabel{s}{const}{s} }{\phi}{ \excPost}  \\
-			\end{array}$$ 
-                       $$ \begin{array}{l}  
-		               
-		    	       \mbox{\rm\comment{following the definition   of the compiler function in subsection \ref{pogEq:compile:compExpr} }} \\
-			       \equiv \wpExpl{s \ \push const }{\phi}{ \compile{\excPost}}  \\
-			       \mbox{\rm\comment{following the definition of the wp function for bytecode in subsection \ref{pog:wpSrc:wpExpr}  }} \\
-			       \equiv \phi \begin{array}{l}
-                                                \subst{ \counter }{ \counter + 1}\\
-						\subst{\stack{ \counter +1} }{const  }
-					    \end{array} \\
-			        \\
-				\\
-				 \mbox{\rm\comment{from \numConclusion{1} and   \numConclusion{2} and $Q,R = \true $ this case holds   }} \\
-					 
-				    
-			\end{array}$$
-                        
-			
-			
-                \item  $\expressionSrc = \expressionSrc.f $
-                         $$ \begin{array}{l}  
-		               \mbox{\rm\comment{source case }} \\
-		               \numConclusion{1} \ \wpSrcExpr{ \expressionSrc.f  }{\psi}{ \excPost}{v.f}  \\
-		    	       \mbox{\rm\textit{\{following the definition of the wp function  }} \\
-			        \mbox{\rm\textit{ for source expressions in subsection  \ref{pog:wpSrc:wpExpr}  \} }} \\
-			       \equiv \wpSrcExpr{\expressionSrc }{ \begin{array}{l}
-                                                                 v \neq \Mynull \Rightarrow \psi\\
-								 \wedge \\
-								 v = \Mynull \Rightarrow \excPost(\NullPointerExc)
-								 \end{array} }{ \excPost  }{v}  \\
-			       \\
-			       \\ 
-			        \mbox{\rm\comment{bytecode case }} \\
-		               \numConclusion{2} \  \wpBcSeq{ \compileLabel{s}{\expressionSrc.f}{e}}{\phi}{\compile{ \excPost}}   \\
-			       \mbox{\rm\comment{following the definition of the compiler function in subsection \ref{pogEq:compile:compExpr} }} \\
-			       \equiv \wpBcSeq{ \begin{array}{l}
-			                          \compileLabel{s}{\expressionSrc}{e-1} \\
-						   e \ \getfield  \ f
-						 \end{array} }{\phi}{ \excPost}  \\
-			       \mbox{\rm\textit{\{following the definition of the wp function for bytecode    }} \\
-			        \mbox{\rm\textit{ in subsection \ref{pog:wpBc}   \} }} \\
-			        \equiv \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e-1}}{\\
-                                                                          \phantom{wp^{bc}} \begin{array}{l} 
-				                                                 \stack{\counter} \neq \Mynull \Rightarrow  \\
-										    \phi \subst{\stack{ \counter} }{ \fieldAccess {\stack{\counter}}{\fieldd} } \\
-										    \wedge \\
-										    \stack{\counter} = \Mynull   \Rightarrow   \excPost (\NullPointerExc)  
-										 
-				                                            \end{array} }{\\ \phantom{wp^{bc}} \compile{ \excPost}} \\
-
-			
-
-	\mbox{\rm\comment{From \numConclusion{1} and \numConclusion{2} we apply the induction hypothesis  }} \\		
-				\exists Q', R' : \formulaSrc , \\ 
-			       \numConclusion{3} \
-						\wpSrcExpr{\expressionSrc }{ \begin{array}{l}
-                                                                 v \neq \Mynull \Rightarrow \psi\\
-								 \wedge \\
-								  v = \Mynull \Rightarrow \excPost(\NullPointerExc)
-								 \end{array} }{ \excPost  }{v}  \\
-				\equiv  \\
-				Q'  \Rightarrow \begin{array}{l}
-				                     v \neq \Mynull \Rightarrow \psi\\
-						     \wedge \\
-						     v \neq \Mynull \Rightarrow \excPost(\NullPointerExc)
-				               \end{array} \\
-					      \wedge \\
-					       R' \\\\
-			  \Rightarrow \\	   
-			        \wpBcSeq{ \compile{\expressionSrc}}{\\
-                                                                          \phantom{wp^{bc}} \begin{array}{l} 
-				                                                 \stack{\counter} \neq \Mynull \Rightarrow  \\
-										    \phi \subst{\stack{ \counter} }{ \fieldAccess {\stack{\counter}}{\fieldd} }\\
-										    \wedge \\
-										    \stack{\counter} = \Mynull   \Rightarrow   \excPost (\NullPointerExc)  
-										 
-				                                            \end{array} }{\\ \phantom{wp^{bc}} \compile{ \excPost}} \\
-				\equiv  \\
-
-\end{array}$$
-$$\begin{array}{l}
-
-				Q'  \Rightarrow \begin{array}{ll}
-				                                \begin{array}{l} \stack{\counter} \neq \Mynull \Rightarrow \phi\subst{\stack{ \counter}}{\fieldAccess {\stack{\counter}}{\fieldd}}\\
-								\wedge \\
-								\stack{\counter} = \Mynull \Rightarrow \excPost(\NullPointerExc) 
-							  \end{array} &
-							  \begin{array}{l}   
-						                \subst{\counter}{\counter + 1} \\
-								 \subst{\stack{\counter + 1}}{v }
-						          \end{array}
-				               \end{array} \\	
-			        \wedge \\
-			       R'
-			       \\
-			       	\equiv  \\
-			
-				 \mbox{\rm\comment{$\phi$ contains only stack expressions $\stack{\counter - k } , k \ge 0$ and properties of substitution }} \\
- 				 Q'  \Rightarrow \begin{array}{l}
-				                                 v \neq \Mynull \Rightarrow \phi
-                                                                 \begin{array}{l}
-								   \subst{\counter}{\counter + 1} \\
-								   \subst{\stack{\counter + 1}}{\fieldAccess{v}{\fieldd} }
-								   \end{array}  \\
-								\wedge \\
-								v = \Mynull \Rightarrow \excPost(\NullPointerExc) 
-							  
-							  
-				               \end{array} \\	
-			        \wedge \\
-			       R'		\\
-			       \\
-			       \mbox{\rm\comment{from \numConclusion{3}  this case holds  }}\\
-			       		 
-		      	\end{array}$$
-
-\end{enumerate}
-
-
-
+The following lemma refers to the cases for method invokation and instance creation. In the following, we scatch the case for 
+instance creation but we ommit the part of the formulas concerning the exceptional termination of the evaluation of
+ the expression. 
 \begin{exprSrcBcWp2}[Wp of a compiled expression ] \label{pogEq:aux:exprSrcBcWp}
+\todo{actually, here need an assumption that the modifies clauses cannot contain stack expressions }
  For any expression $\expressionSrc$ from our source language, for any formula $\psi: \formulaSrc$  
 of the source assertion language and any formula $\phi: \formulaBc$ such that $\phi$ may only 
-contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$, the following holds
+contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if the modifies clauses of every
+ method does not contain stack expressions, then the following holds : \\
 there exist $ Q,R:\formulaSrc, v_1 \ldots v_k :\expressionSrc $
-$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \equiv \\
- \forall \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \\
+$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} = \\
+ \forall \freshVar, \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \\
  \Myspace \psi 
                                                                              \begin{array}{l}
+									         \subst{v }{ \freshVar }  \\
 									        \subst{v_1 }{ \freshVar_1 }  \\
 										\ldots \\
 										\subst{v_k}{ \freshVar_k } 
@@ -268,15 +136,15 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \equiv \\
 
       
   \\
-\Rightarrow \\
+ \Longrightarrow \\
  \\
 
   
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  \equiv \\ 
-            \forall \freshVar_1, \ldots  \freshVar_k ,   Q \Rightarrow \\
+	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
+            \forall \freshVar, \freshVar_1, \ldots  \freshVar_k ,   Q \Rightarrow \\
 	                      \Myspace \phi \begin{array}{l}
                                        \subst{\counter}{\counter + 1}\\
-			               \subst{\stack{\counter +1}}{ v }\\
+			               \subst{\stack{\counter +1}}{\freshVar  }\\
 				       \subst{v_1 }{ \freshVar_1 }  \\
 				       \ldots \\
 				       \subst{v_k}{ \freshVar_k } 
@@ -287,10 +155,9 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \equiv \\
 \end{exprSrcBcWp2}
 
 
-
 The next lemma establishes  a relation between the source and bytecode functions \wpName \ w.r.t. to the same weakest precondition. 
 
-$\excPost $ 
+
 \begin{wpStmtBcSrc1}[Proof obligation equivalence on statements ] \label{wpStmtBcSrc1}
  
 $$ 
