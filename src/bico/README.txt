@@ -20,9 +20,11 @@ sometimes I must put them manually from svn. Looks like Eclipse
 sometimes removes "orphane" .class files.
 
 6. To compile the produced file TheProgram.v in Coq you must first compile
-   Program.v ImplemProgramWithList.v if you use bico with list or 
-   ImplemProgramWithMap.v
-   and provide files 
-   java_lang_Object.v java_lang_Exception.v java_lang_Throwable.v
-   which are a part of bicolano
-   which are situated in the "working examples" directory 
+   bicolano if you use bico with list (ImplemProgramWithList.v) or 
+   with maps (ImplemProgramWithMap.v). Bicolano must be in the LoadPath
+   of bicos'Program generated vernacular file.
+
+7. To compile bico as an independent jar file (to be run with the command
+	'java -jar bico.jar'), go into the bico directory and type in 'make'.
+	If it doesn't find bcel as a part of the umbra package you can specify its
+	absolute path in the makefile.
