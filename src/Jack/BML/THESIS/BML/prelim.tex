@@ -51,7 +51,7 @@ The tool Daikon \cite{ECG01DDL}  tool uses a subset of JML for detecting loop in
 
 
      
-Figure~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
+Fig.~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
 The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument
  and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it 
 returns false. Thus the method  specification between lines 5 and 9 which exposes the method contract states the following.
@@ -81,8 +81,8 @@ public class ListArray {
     
     //@ loop_modifies i, list[*];
     //@ loop_invariant i <= list.length && i >=0 
-    //@ && (\forall int k;0 <= k && k < i ==> 
-    //@     list[k] != obj1);
+    //@ &&(\forall int k;0 <= k && k < i ==> 
+    //@    list[k] != obj1  && list[k] == \old(list[k]));
     for (i = 0; i < list.length; i++ ){
       if ( list[i] == obj1){
         list[i] = obj2;

@@ -32,7 +32,8 @@ In the following, we look in details at the phases of the compilation process:
       \texttt{TRANS} is encoded in the class file format. 
       Note that,  the constant pool indexes \textbf{\#18} and \textbf{\#19}  which contain its description were not in the constant
       pool table of the class file \texttt{Transaction.class} before running the \JMLtoBML \ compiler on it. 
-\begin{figure}[t]
+\begin{figure}[ht!]
+\begin{frameit}
 \textbf{     
 \begin{tabbing}
  Gho\=st\_field\_Attribute \{\\
@@ -56,6 +57,7 @@ In the following, we look in details at the phases of the compilation process:
 
 \caption{\sc Compilation of ghost variable declaration}
 \label{bml:compiler:ghost}
+\end{frameit}
 \end{figure}
 
 \item Desugaring of the JML specification \\
@@ -139,6 +141,7 @@ In the following, we look in details at the phases of the compilation process:
        From our experiments, the heuristic works successfully for the Java Sun non optimizing compiler.
  
 \begin{figure}[t]
+\begin{frameit}
 \textbf{Line\_Number\_Table} 
 \textbf{     
 \begin{tabbing}
@@ -151,6 +154,7 @@ start\_pc \= line \\
 
 \caption{\textbf{Line\_Number\_Table}  {\sc for the method } \texttt{replace} {\sc in Fig.  \ref{replaceSrc}  } }
 \label{bml:compiler:loopEntry}
+\end{frameit}
 \end{figure} \todo{une presentation tres laide }
 
       
@@ -186,6 +190,7 @@ Finally, the compilation of the postcondition of method \texttt{replace} is give
 % (\#19 is the compilation of the field name \texttt{list} and $\locVar{1}$ stands for the method parameter \texttt{obj}). 
 
 \begin{figure}[t]
+\begin{frameit}
  $$\begin{array}{l}
          \result = 1 \\
           \\ 
@@ -199,6 +204,7 @@ Finally, the compilation of the postcondition of method \texttt{replace} is give
 $$
 \caption{\sc The compilation of the postcondition in Fig. \ref{replaceSrc}}
 \label{postCompile}
+\end{frameit}
 \end{figure}
 
 
@@ -220,6 +226,7 @@ the loop invariant (\textbf{invariant}), an expression which guarantees terminat
 \end{enumerate}
 
 \begin{figure}[t]
+\begin{frameit}
 \textbf{     
 \begin{tabbing}
 JML\=Loop\_specification\_attribute \{\\
@@ -245,7 +252,7 @@ JML\=Loop\_specification\_attribute \{\\
 \end{itemize}
 \caption{\sc Structure of the Loop Attribute}
 \label{loopAttribute}
-%\end{frameit}
+\end{frameit}
 \end{figure}
 
 % The JML compiler does not depend on any specific Java compiler, but it requires the presence of a debugging information,
