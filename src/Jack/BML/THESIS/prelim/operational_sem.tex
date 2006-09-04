@@ -302,8 +302,8 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull{} \footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
 	for instance, \stackOnlyParam{\counterOnly - 1} contains certainly a reference        of type \texttt{C}  } , the value of its field 
 	\texttt{f} for the object  is updated 
-	with the value\stackOnlyParam{\counterOnly} and the counter \counterOnly is decremented.
-	If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull then a \NullPointerExc~ is thrown
+	with the value\stackOnlyParam{\counterOnly} and the counter \counterOnly{} is decremented.
+	If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull{} then a \NullPointerExc{} is thrown.
           
         \item \getfield  
         	  
@@ -328,10 +328,11 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 						 \stateTrans  
 						 \configVar} }$$
 	 
-	The top stack element \stackOnlyParam{\counterOnly}  is popped from the stack. If \stackOnlyParam{\counterOnly} is not \Mynull the value of the field \texttt{f}
+	The top stack element \stackOnlyParam{\counterOnly}  is popped from the stack. If \stackOnlyParam{\counterOnly} is not \Mynull{} the value of the field \texttt{f}
 	in the object referenced by the reference contained in \stackOnlyParam{\counterOnly}, is fetched and pushed onto the operand stack \stackOnlyParam{\counterOnly}.
-        If \stackOnlyParam{\counterOnly} is \Mynull then a \texttt{NullPointerExc} is thrown, i.e. the stack counter is set to 0, a new object of type
-	\texttt{NullPointerExc} is created in the memory heap store \heap and a reference to it $\Ref{NullPointerExc}$ is pushed onto the operand stack					 
+        If \stackOnlyParam{\counterOnly} is \Mynull{} then a \NullPointerExc{} is thrown, i.e. the stack counter is set to 0, a new object of type
+	\NullPointerExc{} is created in the memory heap store \heap{} and a reference to it is pushed onto the operand stack 
+	(see in the previous section the definition of \getStateAfterExc).					 
 			
         \item  \newarray  \ \anyType \\
 	        $${\scriptsize \frac{\begin{array}{l}
@@ -541,13 +542,26 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 
    \item Throw exception instruction. \athrow
             $${\scriptsize \frac{ \begin{array}{l}	 
-		             \stackOnlyParam{\counterOnly} \neq \Mynull   \\
-			     \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},typeof( \stackOnlyParam{\counterOnly} )  ,\methodd.\excHandlerTable ) =  \configVar
+		           \stackOnlyParam{\counterOnly} \neq \Mynull   \\
+			   \findExcHandler{\heap.\heapTypeOf(  \stackOnlyParam{\counterOnly} )  }{\pc}{\methodd.\excHandlerTable} = \bottom 
+			   %  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},typeof( \stackOnlyParam{\counterOnly} )  ,\methodd.\excHandlerTable ) =  \configVar
 		    \end{array}	     
 	      }
               {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                         \stateTrans  
-					 \configVar} } $$
+					\configFinalExc{\heap }{\stackOnlyParam{\counterOnly} }} } $$
+
+
+	 $${\scriptsize \frac{ \begin{array}{l}	 
+		           \stackOnlyParam{\counterOnly} \neq \Mynull   \\
+			   \findExcHandler{\heap.\heapTypeOf(  \stackOnlyParam{\counterOnly} )  }{\pc}{\methodd.\excHandlerTable} = \pc^{eH} \\
+			   \stackOnly' = \update{\stackOnly}{0}{ \stackOnlyParam{\counterOnly} } \\
+			   %  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},typeof( \stackOnlyParam{\counterOnly} )  ,\methodd.\excHandlerTable ) =  \configVar
+		    \end{array}	     
+	      }
+              {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+		                          \stateTrans  
+					   \config{\heap}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}  } } $$								
 
 	     $${\scriptsize \frac{ \begin{array}{l}	 
 	                     \stackOnlyParam{\counterOnly}  = \Mynull   \\
@@ -559,28 +573,29 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 					  \configVar} } $$ 				 
 
            The stack top element  must be a reference of an object of type \\ \Throwable. 
-	  If there is a handler that protects this bytecode instruction from the exception thrown, the control is transfered
-	  to the instruction at which the exception handler starts. %\footnote{for every method the ExceptionHandler
+	  If the exception object \stackOnlyParam{\counterOnly} on the stack top is not \Mynull{} then there are two possible execution of the instruction.
+	  Either there is not an exception handler  that protects this bytecode instruction from the 
+	  exception type and the current method \methodd{} terminates exceptionally by throwing the exceptio object \stackOnlyParam{\counterOnly} or
+	   there is a handler that protects this bytecode instruction from the exception thrown and the control is transfered
+	  to the instruction at index $\pc^{eH}$  at which the exception handler starts. %\footnote{for every method the ExceptionHandler
 	  % table describes the corresponding exception handler by the limits of the 
 	  % region it protects, the Exception that it catches, and the instruction at which it starts}.
-	  If the object on the stack top is \Mynull, a \NullPointerExc \ is thrown. 
+	  If the object on the stack top is \Mynull, a \NullPointerExc \ is thrown and is handled as the function \getStateAfterExc{} prescribes. 
 
  \item Method Invokation. \invoke \footnote{ only the case when  the invoked method returns a value}
       
-         $$ {\scriptsize \frac{\begin{array}{l} \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
-	                         meth : %\begin{array}{l} 
-			                        \config{\heap}       
+            $$ {\scriptsize \frac{\begin{array}{l} 
+	                        \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
+	                         meth :         \config{\heap}       
                                                        {0}
 						       {\newStack }
                                                        {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
-						         \stateTransTerm 
-							 \configFinalNorm{\heap'}{\Res}\\
-				                %\end{array}  
-                                                   \\
-						   \counterOnly' = \counterOnly - \methodd.\numArgs + 1 \\
-						   \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
-						   \pc' = \pc + 1
+						       \stateTransTerm 
+						       \configFinalNorm{\heap'}{\Res}\\
+				                       \counterOnly' = \counterOnly - \methodd.\numArgs + 1 \\
+						       \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
+						       \pc' = \pc + 1
 			         \end{array} 	      
 	         }	         
 	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
@@ -588,23 +603,40 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} } $$
 	  
 	  $${\scriptsize \frac{\begin{array}{l}
-	                        \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
-	                         meth: %\begin{array}{l} 
-			                        \config{\heap}       
+	                            \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
+	                             meth:             \config{\heap}       
                                                        {0}
 						       {\newStack }
                                                        {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTransTerm 
 						       \configFinalExc{\heap'}{\Exc}\\
-				           %\end{array} \\
-					   \Rightarrow \\
-					  \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, typeof(\Exc)  ,\methodd.\excHandlerTable ) =  \configVar
+				     \findExcHandler{\heap'.\heapTypeOf(\Exc)  }{\pc}{\methodd.\excHandlerTable} = \bottom 
+		%\getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, typeof(\Exc)  ,\methodd.\excHandlerTable ) =  \configVar
+	                        \end{array} 	      
+	         }	         
+	         {\methodd \vdash \invoke \  meth :  
+		                         \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+		                        \stateTrans  
+					\configFinalExc{\heap'}{\Exc}	} } $$
+				
+	  $${\scriptsize \frac{\begin{array}{l}
+	                        \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
+	                         meth:              \config{\heap}       
+                                                       {0}
+						       {\newStack }
+                                                       {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
+						       {0} 
+						         \stateTransTerm 
+						       \configFinalExc{\heap'}{\Exc}\\
+				            \findExcHandler{\heap'.\heapTypeOf(\Exc)  }{\pc}{\methodd.\excHandlerTable} = \pc^{eH}\\
+					    \stackOnly' = \update{\stackOnly}{0}{\Exc}
+					   %\getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, typeof(\Exc)  ,\methodd.\excHandlerTable ) =  \configVar
 	         \end{array} 	      
 	         }	         
 	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\configVar} } $$
+				\config{\heap'}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}	} } $$
 
 
 	  $${\scriptsize \frac{\begin{array}{l}
@@ -624,7 +656,7 @@ $$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \c
 	 terminates normally, the return value \Res \  of its execution is stored on the operand stack of the invoker. 
 	 If the execution of of method $meth$ terminates because of an exception \Exc, then the exception handler of the invoker is searched for
 	 a handler that can handle the exception. In case the object  \stackOnlyParam{ \counterOnly - meth.\numArgs } \  on which the  method $meth$ must be 
-	 called is \Mynull, a \NullPointerExc is thrown.  			
+	 called is \Mynull, a \NullPointerExc{} is thrown.  			
 
 
 

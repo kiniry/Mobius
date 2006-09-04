@@ -21,14 +21,19 @@ Our language supports an exception handling mechanism similar to the JVM one.
 
 The language also supports programming exceptions. Those exceptions are forced by the programmer, by a special bytecode 
 intruction as we shall see later in the coming section. 
-The modelization of the exception handling mechanism involves several functions. 
- The function \getStateAfterExc \ deals with bytecode instructions that may throw exceptions. The function returns the state 
- configuration after the current instruction during the execution of \methodd \ throws an exception of type $\mbox{\rm\texttt{E}}$. If the  method
- \methodd \ has an  exception handler which can handle  exceptions of type $\mbox{\rm\texttt{E}}$ thrown at the index of the current  instruction,
+
+ The modelization of the exception handling mechanism involves several auxiliary functions. 
+ The function \getStateAfterExc \ deals with bytecode instructions that may throw runtime exceptions.
+ This function applies only to instructions which are not a method invokation neither the special instruction
+ by which the program can throw explicitely an exception.
+ The function returns the state  configuration after the current instruction during the execution of \methodd \ throws a runtime exception
+ of type $\mbox{\rm\texttt{E}}$. If the  method \methodd \ has an  exception handler which can handle  exceptions of type
+ $\mbox{\rm\texttt{E}}$ thrown at the index of the current  instruction,
  the execution will proceed and thus, the state is an intermediate state configuration.
  If the method \methodd \ does not have an exception handler for dealing with exceptions of type $\mbox{\rm\texttt{E}}$ 
  at the current index, the execution of \methodd \ terminates exceptionally and the current instruction
- causes the method exceptional termination:
+ causes the method exceptional termination. Note also that the heap is changed as a new instance of the corresponding exceptional 
+ type is created:
 
  
  $$\begin{array}{l}
@@ -52,6 +57,10 @@ The modelization of the exception handling mechanism involves several functions.
 	(\heap', \referenceOnly )= \newRef{\heap}{\mbox{\rm\texttt{E}}}
     \end{array}
  $$
+ 
+
+
+
 
  If an exception $\mbox{\rm\texttt{E}}$ is thrown by instruction at position $i$ while executing the method \methodd,
  the exception handler table  \methodd.\excHandlerTable \ will be searched for the first exception handler that can handle the exception. 

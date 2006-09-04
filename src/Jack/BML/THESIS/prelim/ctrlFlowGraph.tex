@@ -49,6 +49,7 @@ The possible successors of the instruction $\athrow$ are the entry point of any 
 .
 % We will also use the notation $\next{\methodd.\body[j] }$ for denoting the successor of   $\methodd.\body[j]$ in a given execution path.
 \begin{figure}[ht!]
+\begin{frameit}
 $$ 
    \begin{array}{l} \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
                   
@@ -94,8 +95,9 @@ $$
   % \end{array} 
 \end{array}$$
 
-\caption{\sc Definition of the execution relation between bytecode instructions in a control flow graph}
+\caption{\sc  Execution relation between bytecode instructions in a control flow graph}
 \label{defEdge}
+\end{frameit}
 \end{figure}
 %\end{defEdge}
 
@@ -143,12 +145,14 @@ relation between a final instruction (instruction at index \texttt{18}) in the b
 % \end{itemize}
  
 \begin{figure}[ht!]
+\begin{frameit}
 \begin{center}
 %\includegraphics{bc.eps}
 \epsfig{file=figs/bc.eps, height=5in,  width=1.5in}
 \caption{{ \sc The control flow graph of the source program from Fig.\ref{replaceSrc}} }
 \label{ctrlflow}
 \end{center}
+\end{frameit}
 \end{figure}
 
 %The next lemma states a property about execution paths in a control flow graph that contains backedges. This lemma will be used in the proof of correctness
