@@ -1,3 +1,21 @@
+\begin{abstract} 
+
+We present the Bytecode Modeling Language (BML), the Java bytecode
+cousin of JML. BML allows the application developer to specify the
+required behaviour of the application in the form of annotations,
+directly at the level of the bytecode. An extension of the class file
+format is defined that allows to store the specification directly with
+the bytecode. This is a first step towards the development of a
+proof-carrying code platform, where applications come together with
+their specification and a proof of correctness. BML is designed to be
+closely related with JML. In particular, JML specifications can be
+compiled into BML specifications. We also discuss the other tools that
+are currently being developed for BML, and that will result in a tool
+set where an application can be validated throughout its development,
+both at source code and at byte code level.
+
+\end{abstract}
+
 \section{Introduction}\label{IntroSectLab}
 
 The use of formal methods to show a relation between specification and
@@ -79,15 +97,15 @@ pre and postconditions, class and object invariants, assertions for
 particular program points like loop invariants. To our knowledge BML
 does not have predecessors that are tailored to Java bytecode.
 
-In section~\ref{SecJMLOverview}, we give a quick summary of the main
+Section~\ref{SecJMLOverview} gives a quick summary of the main
 features of JML. Section~\ref{SecBML} then gives a detailed account of
 BML, describing its syntax, the relationship with JML and where its
 semantics differs from the JML semantics. Section~\ref{SecClassfile}
-then proposes a format in which BML specifications can be stored in
-the appropriate class files (just as JML specifications can be written
-as special comments in the Java source code). Finally,
+proposes a format in which BML specifications can be stored in the
+class file format (just as JML specifications can be written as
+special comments in the Java source code). Finally,
 Section~\ref{SecJMLtoBML} discusses the compilation process from JML
 to BML, while Section~\ref{SecConcl} wraps up, and in particular
-discusses related and future work.
+discusses related and future work and tool support.
 
 

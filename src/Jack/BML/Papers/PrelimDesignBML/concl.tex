@@ -1,2 +1,86 @@
 \section{Conclusions and future work}\label{SecConcl}
 
+This paper presents the Bytecode Modeling Language (BML). Its syntax
+and semantics are directly inspired by JML, and it is possible to
+translate JML specifications into BML specifications in a fairly
+direct way. The BML language as we have defined it now, corresponds
+roughly to JML level 0, \emph{i.e.}\ that part of JML whose semantics
+is relatively well understood. However, more advanced constructs of
+JML can be easily added to BML, if required. 
+
+\subsection{Related work}
+The interest in specification and verification of bytecode
+applications is quite recent, and not too much work has been done in
+that direction. Several logics have been developed to reason about
+bytecode, \emph{e.g.}~by Bannwart \& M\"uller~\cite{BannwartMueller05}
+and within the MRG project~\cite{AspinallEtAl:TPHOLs2004}. However,
+in this work, no attention is given to how one can conveniently write
+understandable specifications for bytecode.
+
+The development of BML is clearly inspired by the development of the
+JML specification language~\cite{JMLReferenceManual05}. Both JML and
+BML follow the Design by Contract principle introduced first in
+Eiffel~\cite{Meyer97}. The Boogie project~\cite{BarnettCDJL05}
+introduces in similarly the Design by Contract principles into the C\#
+programming language, both at source code level and for CIL, the .NET
+intermediate language.  The possibility to check a property at
+run-time, using the \texttt{assert} construct, has been long 
+adopted in the C programming language and recently also in Java (Java
+1.5, see \cite[\S 14.10]{JLS}). 
+
+Finally, we should mention the Extended Virtual Platform
+project\footnote{See
+\url{http://www.cs.usm.maine.edu/~mroyer/xvp/}.}. This project aims at
+developing a framework that allows to compile JML annotations, to
+allow run-time checking~\cite{AlagicXVP05}. However, in contrast to
+our work, they do not intend to do static verification of bytecode
+programs. Moreover, their platform takes JML-annotated source code
+files as starting point, while with BML one is able to annotate
+bytecode applications directly\footnote{Some security-critical
+applications are written in bytecode directly, to avoid security
+problems related with compilation. Thus, for such applications one
+needs to be able to specify and verify them directly at this level.}.
+
+\subsection{Future work: a tool set for BML}\label{SecTools}
+
+We plan to develop a tool set to support BML. Parts of the tools and
+algorithms have already been implemented, see~\cite{BurdyP06}, but
+still some work is needed to cover the whole language. 
+
+Moreover, we would like that such a tool set is used in connection
+with a tool set supporting JML (\emph{e.g.}\ JACK~\cite{BurdyRL03} or
+ESC/Java~\cite{CokK04}). Ideally, these tool sets are developed
+together, so that both specifications and proofs can be compiled from
+source code into bytecode level. This requires that the verification
+logic used at source code level can be mapped into the logic used at
+bytecode level. The development of this tool set will be a part of the
+work in the \mobius project. The tool set for BML should provide the
+following functionalities:
+
+\begin{itemize}
+\item a tool to inspect and write directly BML specifications;
+\item a run-time checker of BML specifications, this can be
+implemented by a code transformation, inserting explicit run-time
+checks in the bytecode, or by extending the virtual machine to take
+the user-specific attributes with specifications into account;
+\item a full implementation of the \JMLtoBML compiler;
+\item a verification condition generator for BML (which
+corresponds to a verification condition generator for JML,
+\emph{i.e.}\ modulo some well-understood differences, the same proof
+obligations are generated for source code and bytecode level);  and
+\item a desugaring tool, to compact specifications by reducing the
+number of specification clauses and behaviour specifications that are
+possible. 
+\end{itemize}
+
+Typically, the tool set will generate proof obligations that can be
+fed to both automatic and interactive theorem provers. Since the Coq
+theorem prover is particular suited for proof-carrying code (Coq proof
+objects can easily be shipped with an application), this will be the
+main prover of interest in the \mobius project. To ease verification
+with Coq, we will also develop several advanced tactics, taking
+advantage of the particular format of proof obligations for program
+verification.
+ 
+
+

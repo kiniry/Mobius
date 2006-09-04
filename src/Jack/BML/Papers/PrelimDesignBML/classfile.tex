@@ -2,12 +2,21 @@
 \label{SecClassfile}
 
 To store BML specifications together with the bytecode that it
-specifies, we need a way to encode them in the class file format. We
-do this using so-called user-specific attributes for Java class
-files. The JVM specification defines the format of those attributes
-and mandates that any user-specific information should be stored in
-such attributes. When defining this format, we took the following
-considerations into account.
+specifies, we need a way to encode them in the class file
+format. Recall that a class file contains all the information related
+to a single class or interface, i.e.\ its class name, interfaces
+implemented by the class, its super class and the methods and fields
+it declares. The Java Virtual Machine Specification~\cite{JVMspec}
+prescribes the mandatory elements of the class file: the constant
+pool, the field information and the method information. The constant
+pool is the table which is used to construct the runtime constant pool
+upon class or interface creation. This will serve for loading, linking
+and resolution of references used in the class. The JVM specification
+allows to add user-specific information to the class file
+(\cite[\S4.7.1]{JVMspec}), by defining user-specific attributes,
+following the structure prescribed by the JVM specification. When
+defining these attributes, we took the following considerations into
+account.
 
 \begin{description}
 \item [Java compiler independance]
@@ -24,88 +33,28 @@ the method body (the list of bytecode instructions which represents
 its body).
 
 \item[Compactness and efficiency]
-      Although opposite, we consider those two features together
-      because they are mutually dependent. By the first, we mean that
-      the class files augmented with BML should be as compact as
-      possible.  The second feature refers to that tools supporting
-      BML should not be slowed down by the processing of the BML
-      specification and more precisely we refer verification condition
-      generator tools.  This is an important condition if verification
-      is done on devices with limited resources.
-
+For a code client, the fact that BML is used to specify and verify the
+application should be transparant. In particular, it should not have
+any impact on the application's performance. Thus, the class file
+augmented with BML should be as compact as possible, and the presence
+of BML annotations should not slow down normal execution of the
+application. Notice that these requirements are very important for
+mobile device applications, where one often has limited resources.
 \end{description}	  
 
-	    
-	    %comparison
+To compact the specifications even more, one can use a desugaring 
+as defined for JML~\cite{RaghavanL00}. This allows to reduce the
+number of specification clauses, and also to unify the different kinds
+of behaviour specifications. 
 
-Therefore, attributes that encode the parts of the specification that
-refer to a particular bytecode instruction, contain information about
-the index of this instruction. For instance, the attribute that stores
-BML loop invariants contains the invariant as well as the index of the
-entry point instruction of the loop.  Thus, BML encoding is different
-from the encoding of JML specification where annotations are written
-directly in the source text as comments at a particular point in the
-program text or accompany a particular program structure. For
-instance, in Figure~\ref{FigExampleJML} the reader may notice that the
-loop specification refers to the control structure which follows after
-the specification and which corresponds to the loop.  This is possible
-first because the Java source language is structured, and second
-because writing comments in the source text does not violate the Java
-or the JVM specifications.
-	  
+Thus, to ensure JVM compatibility, the different specification
+constructs are stored in special tables, and where necessary these
+attributes contain information about the index of the instruction that
+they specify. For instance, the attribute that stores BML loop
+invariants contains the invariant as well as the index of the entry
+point instruction of the loop.
 
-            %  However, on bytecode level we
-	    %  could not write directly in the bytecode of a method body, as this will corrupt the performance of any standard Java Virtual Machine.
-	    %  That's why specification is written outside the bytecode text and contains also information about the instruction to which the specification
-	    %  refers. Then, as bytecode does not have control structures specification will always refer to a particular instruction in the bytecode. 
-	    %  For instance, loops on bytecode are identified by a unique loop entry instruction and thus, a loop invariant must hold basically every time
-	    %  the corresponding loop entry instruction is reached.
-
-
-
-      For fulfilling these conditions, BML is designed to correspond
-      to a subset of the desugared version of JML.  In particular, it
-      brings a relative compactness of the class file as well as makes
-      the verification procedure more efficient.
-
-      % compactness   
-
-      We first see in what sense this allows the class file
-      compactness. Because every kind of BML specification clause is
-      stored in a different user defined attribute, supporting all
-      constructs of JML would mean that class files may contain a
-      large number of attributes which would increase considerably the
-      class file size. Of course, the size of a BML specification
-      depends also on how much detailed is the specification, the more
-      detailed it is, the larger size it would have.
-      
-      % efficiency
-
-      Because BML corresponds to a desugared version of JML, this
-      means that on verification time the BML specification does not
-      need much processing and thus, it can be easily translated to
-      the data structures used in the verification scheme. This makes
-      BML suitable for verification on devices with limitted
-      resources.
-      
-
-
-Recall that a class file contains all the information related to a
-single class or interface, i.e.~its class name, interfaces
-implemented by the class, its super class and the methods and fields
-it declares. The Java Virtual Machine Specification~\cite{JVMspec} 
-prescribes the mandatory elements of the class
-file: the constant pool, the field information and the method
-information. The constant pool is the table which is used to construct
-the runtime constant pool upon class or interface creation. This will
-serve for loading, linking and resolution of references used in the
-class. The JVM specification allows to add user-specific information to the 
-class
-file (\cite[\S4.7.1]{JVMspec}), by defining user-specific attributes,
-following the structure prescribed by the JVM specification. 
-We use these to encode
-the BML specifications. For each class, we add the following global
-user-specific attributes:
+For each class, we add the following global user-specific attributes:
 \begin{itemize}
 \item lists of the model and ghost fields used in the specification;
 if a model or a ghost field is dereferenced in the specification, then
@@ -119,10 +68,10 @@ variables, since every constant that occurs in the class file
 \item a list of the history constraints (both static and object).
 \end{itemize}
 
-The lists of model and ghost fields have the following format:\\ 
+The lists of model and ghost fields have the following format:
 
 \textbf{
-\begin{tabular}{l}
+\begin{longtable}{lp{8cm}}
 Ghost\unsc Field\unsc attribute \{\\
 \hspace*{1em}
 \begin{tabular}{l}
@@ -137,8 +86,9 @@ u2  fields\unsc count;\\
 \} fields[fields\unsc count];\\
 \end{tabular}\\
 \}
-\end{tabular}
-}\\
+&
+\end{longtable}
+}
 
 This should be understood as follows: the name of the attribute is
 given as an index into the constant pool. This constant pool entry
@@ -162,9 +112,7 @@ invariants and history constraints is specified by the
 constraint) is defined over objects, when it is \textbf{0} the
 invariant (or constraint) is static.
 
-\noindent
-\begin{center}
-\begin{tabular}{p{7cm}p{10cm}}
+\begin{longtable}{p{7cm}p{8cm}}
 \textbf{
 \begin{tabular}{l}
 JMLClassInvariant\unsc attribute \{ \\
@@ -182,6 +130,7 @@ u2  invariant\unsc count;\\
 \end{tabular}
 }
 &
+\bigskip\\
 \textbf{
 \begin{tabular}{l}
 JMLHistoryConstraints\unsc attribute \{ \\ 
@@ -199,8 +148,7 @@ u2  history\unsc constr\unsc count;\\
 \}
 \end{tabular}
 }
-\end{tabular}
-\end{center}
+\end{longtable}
 
 The JVM specification prescribes that the table with method 
 information at least
@@ -211,8 +159,8 @@ specifications.  The attribute with the lightweight behaviour
 specifications is formatted as follows (heavyweight behaviour
 specifications are handled similarly): 
 
-\noindent\begin{flushleft}\textbf{    
-\begin{tabular}{l}
+\textbf{    
+\begin{longtable}{lp{8cm}}
 JMLMethod\unsc attribute \{ \\ 
 \hspace*{1em}
 \begin{tabular}[t]{l}
@@ -235,9 +183,10 @@ u2 spec\unsc count;\\
 \} spec[spec\unsc count];   \\
 \end{tabular}\\
 \}
-\end{tabular}
+&
+\end{longtable}
 }
-\end{flushleft}
+
 
 The global requires formula is the disjunction of all preconditions in
 the different specification cases of the method. For each
@@ -258,9 +207,9 @@ denotes the expression that will be assigned to \textbf{e1}. For the
 assert and assume statements, the formula \textbf{predicate} is the
 predicate that is supposed to hold at this point in the program
 execution. We only give the format for the assert statement table
-here, the assume statement table is similar.\\
+here, the assume statement table is similar.
 
-\begin{tabular}{p{8cm}p{8cm}}
+\begin{longtable}{p{6cm}p{8cm}}
 \textbf{  
 \begin{tabular}[t]{l}
 Set\unsc attribute \{\\
@@ -296,7 +245,7 @@ u2 assert\unsc count;\\
 \}
 \end{tabular}
 }
-\end{tabular}\\
+\end{longtable}
 
 
 Finally, loop specifications consist of the following elements: an
@@ -306,10 +255,10 @@ loop, a loop invariant, and a \textbf{decreases} clause, which is the
 loop variant, i.e.~the expression that allows to prove
 termination of the loop. If the specification does not contain a loop
 variant, we indicate this, using a special tag for the
-\textbf{decreases} clause. This gives the following attribute format.\\
+\textbf{decreases} clause. This gives the following attribute format.
 
 \textbf{     
-\begin{tabular}{l}
+\begin{longtable}{lp{8cm}}
 JMLLoop\unsc specification\unsc attribute \{\\
 \begin{tabular}{l}
 u2 attribute\unsc name\unsc index;\\
@@ -325,5 +274,5 @@ u2 loop\unsc count;\\
 \} loop[loop\unsc count];\\
 \end{tabular}\\
 \}
-\end{tabular}
-}\\
+\end{longtable}
+}

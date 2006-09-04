@@ -8,48 +8,59 @@ manual~\cite{JMLReferenceManual05}. Where necessary, we refer to the
 appropriate sections of this manual. A detailed overview of the tools
 which support JML can be found in~\cite{BurdyCCEKLLP05}.
 
-\lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
-\begin{figure}[t]
-\begin{lstlisting}[frame=trbl] 
+%\lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
+\begin{figure}[th!]
+%\begin{lstlisting}[frame=trbl] 
+{\small
+\begin{verbatim}
+/**
+ * @author Hermann Lehner, Aleksy Schubert
+ *
+ * The Bill class provides an abstract implementation of the bill
+ * functionality. It calculates the aggregate cost for series of
+ * investments based on the implementation of the method which gives 
+ * the cost of a single round (to be implemented in subclasses).
+ * 
+ */
 abstract class Bill {
   
   private int sum;
   //@ invariant sum>=0;
  
-/**
- * This method gives a cost of a single round.
- * @param x is the number of the particular round
- * @return the cost of the investment in this round, it's not
- *  greater than <code>x</code> 
- */ 
-//@ensures 0 <= \result && \result <= x;
-abstract int round_cost(int x) throws Exception;
-
-/**
- * This method calculates the cost of the whole series of investments.
- *
- * @return <code>true</code> when the calculation is successful and
- * <code>false</code> when the calculation cannot be performed
- */
-//@requires n > 0;
-//@ensures sum <=\old(sum)+n*(n+1)/2;
-public boolean produce_bill(int n){
-int i;
-try{
-//@ loop_modifies sum, i;
-//@ loop_invariant 0 <= i && 0 <= sum && i <= n + 1 && sum <=  \old(sum)+(i-1)*i/2;
-      for (i=1;i<=n;i++) 
-      {
-        this.sum = this.sum + round_cost(i);
-      }
+  /**
+   * This method gives a cost of a single round.
+   * 
+   * @param x is the number of the particular round
+   * @return the cost of the investment in this round, it's not
+   *         greater than <code>x</code> 
+   */ 
+  //@ensures 0 <= \result && \result <= x;
+  abstract int round_cost(int x) throws Exception;
+  
+  /**
+   * This method calculates the cost of the whole series of investments.
+   *
+   * @return <code>true</code> when the calculation is successful and
+   *         <code>false</code> when the calculation cannot be performed
+   */
+  //@requires n > 0;
+  //@ensures sum <=  \old(sum)+n*(n+1)/2;
+  public boolean produce_bill(int n){
+    try{
+      //@ loop_modifies sum, i;
+      //@ loop_invariant 0 <= i && 0 <= sum && i <= n + 1 && sum <=  \old(sum)+(i-1)*i/2;
+      for (int i=1;i<=n;i++) 
+      { this.sum = this.sum + round_cost(i); }
       return true;
     } catch (Exception e){
       return false;
     }
   }
 }
-\end{lstlisting}
-\caption{\sc class \mbox{\rm \lstinline!ListArray!} with JML annotations} 
+\end{verbatim}
+}
+%\end{lstlisting}
+\caption{Class \texttt{Bill} with JML annotations} 
 \label{FigExampleJML}
 \end{figure}
 
@@ -62,7 +73,7 @@ frameconditions (\jmlKey{assignable}). The latter specify which
 variables \emph{may} be modified by a method. In the method body, one
 can annotate loops with invariants (\jmlKey{loop\unsc invariant} and loop
 frame conditions (\jmlKey{loop\unsc modifies}). The latter is a
-non-standard extension of JML, introduced in~\cite{BRL-JACK}, which we
+non-standard extension of JML, introduced in~\cite{BurdyRL03}, which we
 found useful to make program verification more practical. Finally, one
 can also specify class invariants, \emph{i.e.}\ a property that should
 hold in all visible states of the execution, and history constraints,
@@ -76,20 +87,29 @@ such as \jmlKey{\bsl result}, denoting the return value of a non-void
 method, and \jmlKey{\bsl old}, indicating that an expression should be
 evaluated in the pre-state of the method.
 
-The \jmlKey{spec\unsc public} denotes that a variable is publicly
-visible in specifications. JML also allows to declare special
-specification-only variables: logical variables (with keyword
-\jmlKey{model}) and so-called ghost variables, that can be assigned to
-in special \jmlKey{set} annotations.
+JML allows to declare special specification-only variables: logical
+variables (with keyword \jmlKey{model}) and so-called ghost variables,
+that can be assigned to in special \jmlKey{set} annotations.
 
-Figure~\ref{FigExampleJML} specifies the method ... 
+To illustrate the different features of JML, Figure~\ref{FigExampleJML}
+defines the class \texttt{Bill}. It contains an abstract method
+\texttt{round\unsc cost}, that computes the cost of a particular
+round. The method \texttt{produce\unsc bill} is supposed to sum up the
+costs of the different rounds. The specification for
+\texttt{round\unsc cost} states the result of the method should be
+positive, but less than the number of the round. The specification for
+\texttt{produce\unsc bill} requires that we compute at least one
+round, and then specifies an upperbound on the outcome of the
+method. We use a loop invariant and loop frame condition, to prove the
+method body correct. Finally, the class invariant specifies that the
+\texttt{sum} field is always positive.
      
 
 
-JML also allows the declaration of special JML variables, that are
-used only for specification purposes. These variables are declared in
-comments with the \jmlKey{ghost} modificator and may be used only in
-specification clauses. Those variables can also be assigned. Ghost
-variables are usually used for expressing properties which can not be
-expressed with the program variables.
+%JML also allows the declaration of special JML variables, that are
+%used only for specification purposes. These variables are declared in
+%comments with the \jmlKey{ghost} modificator and may be used only in
+%specification clauses. Those variables can also be assigned. Ghost
+%variables are usually used for expressing properties which can not be
+%expressed with the program variables.
 

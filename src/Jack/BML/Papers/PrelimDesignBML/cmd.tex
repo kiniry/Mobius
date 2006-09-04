@@ -44,7 +44,7 @@
 
 \newcommand{\todo}[1]{\marginpar{\baselineskip0ex\rule{2,5cm}{0.5pt}\\[0ex]{\textsf{#1}}}}
 %\newcommand{\fig}[1]{ Fig.#1}
-\newcommand{\jmlKey}[1]{\mbox{\rm\textbf{#1}}}% wrapping jml keywords
+\newcommand{\jmlKey}[1]{\texttt{#1}}% wrapping jml keywords
 %\newcommand{\java}[1]{\texttt{#1}}
 %\newcommand{\stack}[1]{\mbox{\rm\textbf{st}}(#1)}% element on top stack 
 %\newcommand{\stackOnly}{\mbox{\rm St}}
@@ -103,8 +103,8 @@
 
 %\newcommand{\Mynull}{\jmlKey{null}}
 %%\newcommand{\this}{\texttt{this}}
-%\newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
-\newcommand{\arrayAccess}[2]{\mbox{\rm\textbf{arrayAccess}}( #1, #2) }  %{\mbox{\rm arrAccess}(#1, #2)}
+\newcommand{\fieldAccess}[2]{#1\texttt{.}#2}
+\newcommand{\arrayAccess}[2]{\texttt{arrayAccess(} #1 \texttt{,} #2\texttt{)}}  
 %\newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
 
 
@@ -170,7 +170,7 @@
 %\newcommand{\pc}{\mbox{\rm Pc}}
 %\newcommand{\field}[2]{\texttt{f}_{#2}^{#1}}
 %\newcommand{\Values}{\mbox{\rm\textit{Values}}}
-\newcommand{\locVar}[1]{\mbox{\rm{\textbf{reg}}}(#1) }
+\newcommand{\locVar}[1]{\texttt{lv[}#1\texttt{]}}
 %\newcommand{\locVarOnly}{\mbox{\rm Reg}}
 
 
@@ -402,7 +402,7 @@
 %\newcommand{\Constants}{\mbox{\rm\textit{constants}}_{bml}}
 %\newcommand{\intLiteral}{\mbox{\rm\textit{intLiteral}}}
 %\newcommand{\signedInt}{\mbox{\rm\textit{signedIntLiteral}}}
-%\newcommand{\ident}{\mbox{\rm\textit{ident}}}
+\newcommand{\ident}{\textit{ident}}
 %\newcommand{\idRef}{\mbox{\rm\textit{idRef}}}
 %\newcommand{\digit}{\mbox{\rm\textit{digit}}}
 %\newcommand{\digits}{\mbox{\rm\textit{digits}}}
@@ -485,17 +485,17 @@
 %%\newcommand{\result}{\jmlKey{$\backslash$result}}
 \newcommand{\old}[1]{\jmlKey{\bsl (}#1\jmlKey{)}}
 %\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
-%\newcommand{\subtypeSpec}{<:}
-%\newcommand{\type}[1]{\jmlKey{$\backslash$type(}#1 \jmlKey{)}}
-%\newcommand{\TYPE}{\jmlKey{$\backslash$TYPE} }
-%\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
+\newcommand{\subtypeSpec}{\texttt{<:}}
+\newcommand{\type}[1]{\jmlKey{\bsl type(}#1 \jmlKey{)}}
+\newcommand{\TYPE}{\jmlKey{\bsl TYPE} }
+\newcommand{\elemtype}[1]{ \jmlKey{\bsl elemtype(}#1\jmlKey{)} } 
 %%\newcommand{\excPost}{\psi^{exc}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%JML2BML compiler%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\JMLtoBML}{JML2BML}% the name of the compiler 
+\newcommand{\JMLtoBML}{\textsf{JML2BML}\xspace}% the name of the compiler 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
