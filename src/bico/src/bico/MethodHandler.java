@@ -35,9 +35,13 @@ public class MethodHandler {
 				return false;
 			if(o instanceof MethodType) {
 				MethodType mt = (MethodType)o;
-				return name.equals(mt.name) &&
-						(targs.length == mt.targs.length) &&
-							tret.equals(mt.tret);
+				if(!(name.equals(mt.name) && (targs.length == mt.targs.length) && tret.equals(mt.tret)))
+					return false;
+				for(int i = 0; i < targs.length; i++) {
+					if(!targs[i].equals(mt.targs[i]))
+						return false;
+				}
+				return true;
 						
 			}
 			return false;

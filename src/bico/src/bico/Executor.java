@@ -3,6 +3,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -151,14 +152,6 @@ public class Executor extends Object {
 		
 		//write prelude ;)
 		doBeginning();
-
-		
-		// handle library classes specified as 'the other libs'
-		Iterator iter = otherlibs.iterator();
-		while(iter.hasNext()) {
-			handleLibraryClass(iter.next().toString());
-		}
-
 		
 		//scan for classes
 		File f = filename.getParentFile();
@@ -170,14 +163,37 @@ public class Executor extends Object {
 				files.add(list[i].substring(0, pom));
 			}
 		}
+		System.out.println("Found "+ files.size() +" class file(s) in the working path.");
 		
 		
+		// first we define classes name and interfaces names :)
+		Iterator iter = otherlibs.iterator();
+		while(iter.hasNext()) {
+			defineLibraryClassName(iter.next().toString());
+		}
+		
+		// define the found classes
+		iter = files.iterator();
+		while(iter.hasNext()) {
+			defineDiskClassName(iter.next().toString(), filename.getParent());
+		}
+		
+		out.newLine();
+		
+		// handle library classes specified as 'the other libs'
+		iter = otherlibs.iterator();
+		while(iter.hasNext()) {
+			String current = iter.next().toString();
+			System.out.println("Handling: " + current);
+			handleLibraryClass(current);
+		}
+
 		
 		// handle the found classes
 		iter = files.iterator();
 		while(iter.hasNext()) {
 			String current = iter.next().toString();
-			System.out.println("Handling: " + current + ".class");
+			System.out.println("Handling: " + current);
 			handleDiskClass(current, filename.getParent());
 		}
 
@@ -194,6 +210,10 @@ public class Executor extends Object {
 	public static void main(String[] args) throws
 			IOException {
 		System.out.println(WELCOME_MSG);
+		System.setSecurityManager(new SecurityManager() {
+			 public void checkPermission(Permission perm) {
+			 }
+		});
 		Executor exec;
 		try {
 			exec = new Executor(args);
@@ -222,14 +242,7 @@ public class Executor extends Object {
 	 */
 	private void handleLibraryClass(String libname)
 			throws ClassNotFoundException, IOException, MethodNotFoundException {
-		System.out.println("Handling: " + libname);
-		SyntheticRepository strin = SyntheticRepository.getInstance();
-		JavaClass jc = strin.loadClass(libname);
-		strin.removeClass(jc);
-		ClassGen cg = new ClassGen(jc);
-		ConstantPoolGen cpg = cg.getConstantPool();
-		doClass(jc, cg, cpg);
-
+		handleClass(libname, ClassPath.SYSTEM_CLASS_PATH);
 	}
 	
 	/**
@@ -238,23 +251,53 @@ public class Executor extends Object {
 	 */
 	private void handleDiskClass(String clname, String pathname) 
 			throws ClassNotFoundException, IOException, MethodNotFoundException {
-
 		ClassPath cp = new ClassPath(pathname);
+		handleClass(clname, cp);
+
+	}
+	private void handleClass(String clname, ClassPath cp) throws ClassNotFoundException, IOException, MethodNotFoundException {
 		SyntheticRepository strin = SyntheticRepository.getInstance(cp);
 		JavaClass jc = strin.loadClass(clname);
 		strin.removeClass(jc);
 		ClassGen cg = new ClassGen(jc);
 		ConstantPoolGen cpg = cg.getConstantPool();
-		doClass(jc, cg, cpg);
-
+		doClass(jc, cg, cpg);		
 	}
 
+	private void defineLibraryClassName(String libname) throws ClassNotFoundException, IOException {
+		defineClassName(libname, ClassPath.SYSTEM_CLASS_PATH);
+
+	}
+	
+	private void defineDiskClassName(String clname, String pathname) throws ClassNotFoundException, IOException {
+		ClassPath cp = new ClassPath(pathname);
+		defineClassName(clname, cp);
+	}
+	
+	private void defineClassName(String clname, ClassPath cp) throws ClassNotFoundException, IOException {
+		SyntheticRepository strin = SyntheticRepository.getInstance(cp);
+		JavaClass jc = strin.loadClass(clname);
+		strin.removeClass(jc);
+		String moduleName = coqify(jc.getClassName());
+		if(jc.isInterface()) {
+			String str = "Definition "+ moduleName + "_interfaceName : InterfaceName := "
+						+ "(EmptyPackageName, 11%positive). ";
+			writeln(out,1,str);
+		}
+		else {
+			String str = "Definition "+ moduleName + "_className : InterfaceName := "
+			+ "(EmptyPackageName, 11%positive). ";
+			writeln(out,1,str);
+		}
+	}
+	
 	/**
 	 * Real handling of one class in jc
 	 * @throws MethodNotFoundException 
+	 * @throws ClassNotFoundException 
 	 */
 	private void doClass(JavaClass jc, ClassGen cg, ConstantPoolGen cpg)
-		throws IOException, MethodNotFoundException {
+		throws IOException, MethodNotFoundException, ClassNotFoundException {
 
 		Method[] methods = cg.getMethods();
 
@@ -279,17 +322,18 @@ public class Executor extends Object {
 
 		// TODO check all positives and set correct values
 		// classname
+		//TODO put another package instead of empty...
 		if(jc.isInterface()) {
 			treatedInterfaces.add(moduleName + ".interface");
-			String str = "Definition interfaceName : InterfaceName := (";
-			str = str.concat("EmptyPackageName, 11%positive). ");
+			String str = "Definition interfaceName : InterfaceName := "
+							+ moduleName + "_interfaceName.";
 			writeln(out,2,str);
 		}
 		else {
 
 			treatedClasses.add(moduleName + ".class");
-			String str = "Definition className : ClassName := (";
-			str = str.concat("EmptyPackageName, 11%positive). "); //TODO: EmptyPackageName for now
+			String str = "Definition className : ClassName := "
+				  + moduleName + "_className.";
 			writeln(out,2,str);
 		}
 		
@@ -388,7 +432,7 @@ public class Executor extends Object {
 			if (superClassName==null || superClassName.compareTo("java.lang.Object") == 0) {
 				writeln(out,3,"None");
 			} else {
-				writeln(out,3,"(Some " + superClassName + ".className)");
+				writeln(out,3,"(Some " + superClassName + "_className)");
 			}
 		}
 		String[] inames = jc.getInterfaceNames();
@@ -398,7 +442,7 @@ public class Executor extends Object {
 		} else {
 			String str = "(";
 			for (int i = 0; i < inames.length; i++) {
-				str = str.concat(coqify(inames[i]) + ".interfaceName ::");
+				str = str.concat(coqify(inames[i]) + "_interfaceName ::");
 			}
 			str = str.concat("nil)");
 			// System.out.println(str);
@@ -447,9 +491,10 @@ public class Executor extends Object {
 	/**
 	 * write the method body
 	 * @throws MethodNotFoundException 
+	 * @throws ClassNotFoundException 
 	 */
 	private void doMethodInstructions(Method method, MethodGen mg, ConstantPoolGen cpg) 
-			throws IOException, MethodNotFoundException {
+			throws IOException, MethodNotFoundException, ClassNotFoundException {
 
 		// LocalVariableGen[] aa = mg.getLocalVariables();
 		// // aa[i].toString();
@@ -507,7 +552,7 @@ public class Executor extends Object {
 							String exName=method.getConstantPool().getConstantString(catchType,
 									Constants.CONSTANT_Class);
 							str += coqify(exName);
-							str += ".className) ";
+							str += "_className) ";
 						}
 						str += etab[i].getStartPC() + "%N ";	
 						str += etab[i].getEndPC() + "%N ";	
@@ -631,9 +676,10 @@ public class Executor extends Object {
 	/**
 	 * write the method signature
 	 * @param jc 
+	 * @throws ClassNotFoundException 
 	 */
 	private void doMethodSignature(JavaClass jc, Method method, MethodGen mg,
-			BufferedWriter out, int i2) throws IOException {
+			BufferedWriter out, int i2) throws IOException, ClassNotFoundException {
 		// InstructionList il = mg.getInstructionList();
 		// InstructionHandle ih[] = il.getInstructionHandles();
 		// signature
@@ -670,89 +716,15 @@ public class Executor extends Object {
 		out.newLine();
 	}
 
-	static int tab=2;
-	static void writeln(BufferedWriter out, int tabs, String s) 
-	throws IOException {
-		StringBuffer str=new StringBuffer();
-		for(int i=0; i<tabs*tab; i++) {
-			str.append(' ');
-		}
-		str.append(s);
-		out.write(str.toString());
-		out.newLine();
-	}
-	/**
-	 * @return Coq value of t of type primitiveType
-	 */
-	private static String convertPrimitiveType(BasicType t) {
-		if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
-			|| t == Type.INT) {
-			return (t.toString().toUpperCase());
-		} else {
-			Unhandled("BasicType", t);
-			return ("INT (* "+t.toString()+" *)");
-		}
-	}
-
-	/**
-	 * @return Coq value of t of type refType
-	 */
-	private static String convertReferenceType(ReferenceType t) {
-		if (t instanceof ArrayType) {
-			return "(ArrayType "+convertType(((ArrayType)t).getElementType())+")";
-		} else if (t instanceof ObjectType) {
-			ObjectType ot = (ObjectType)t;
-			if (ot.referencesClass()) { // does thik work?
-			    return "(ClassType " + coqify(ot.getClassName())+".className)";
-			} else if (ot.referencesInterface()) { // does this work?
-				//TODO: adjust to the structure of "interface" modules
-				return "(InterfaceType " + coqify(ot.getClassName())+".interfaceName)";
-			} else {
-				Unhandled("ObjectType", t);	
-				return "(ObjectType javaLangObject (* "+t.toString()+" *) )";	
-			}
-		} else {
-			Unhandled("ReferenceType", t);	
-			return "(ObjectType javaLangObject (* "+t.toString()+" *) )";		
-		}
-	}
-	
-	/**
-	 * @return Coq value of t of type type
-	 */
-	private static String convertType(Type t) {
-		if (t  instanceof BasicType) {
-			return "(PrimitiveType " + convertPrimitiveType((BasicType)t) + ")"; 
-		} else if (t instanceof ReferenceType) {
-			return "(ReferenceType " + convertReferenceType((ReferenceType)t) + ")";
-		} else {
-			Unhandled ("Unhandled Type: ", t);
-			return "(ReferenceType (ObjectType javaLangObject (* "+t.toString()+" *) )";	
-		}
-	}
-
-
-
-
-	/**
-	 * Handles type or void
-	 * @return (Some "coq type t") or None
-	 */
-	private static String convertTypeOption(Type t) {
-		if (t==Type.VOID || t==null) {
-			return "None";
-		}
-		return "(Some " + convertType(t) + ")";
-	}
-
 	/**
 	 * Handles one instruction ins at position pos
 	 * @param cpg - constant pool of the method
 	 * @return "(ins)" in Coq syntax
+	 * @throws ClassNotFoundException 
 	 * @throws MethodNotFoundException 
 	 */
 	private String doInstruction(int pos, Instruction ins,
-			ConstantPoolGen cpg) {
+			ConstantPoolGen cpg) throws ClassNotFoundException {
 		String ret;
 	
 		String name = ins.getName();
@@ -850,13 +822,12 @@ public class Executor extends Object {
 				ret = name + " " + convertType(type);
 			} else if (ins instanceof FieldOrMethod) {
 				FieldOrMethod fom = (FieldOrMethod) ins;
-				String className = coqify(fom.getClassName(cpg));
+				String className = coqify(fom.getReferenceType(cpg).toString());
 				//String fmName = coqify(fom.getName(cpg));
 				if (ins instanceof FieldInstruction) {
 					String fs = className + "." + coqify(fom.getName(cpg)) + "FieldSignature";
 					ret = name + " " + fs;
 				} else if (ins instanceof InvokeInstruction) {
-					//fom.getSignature(cpg)
 					String ms;
 					try {
 						ms = className + "." + mh.getName((InvokeInstruction)fom, cpg) + "Signature";
@@ -960,6 +931,88 @@ public class Executor extends Object {
 		return  "(" + ret + ")";
 	
 	}
+	
+	
+	
+	private static int tab=2;
+	static void writeln(BufferedWriter out, int tabs, String s) 
+			throws IOException {
+		StringBuffer str=new StringBuffer();
+		for(int i=0; i<tabs*tab; i++) {
+			str.append(' ');
+		}
+		str.append(s);
+		out.write(str.toString());
+		out.newLine();
+	}
+	/**
+	 * @return Coq value of t of type primitiveType
+	 */
+	private static String convertPrimitiveType(BasicType t) {
+		if (t == Type.BOOLEAN || t == Type.BYTE || t == Type.SHORT
+			|| t == Type.INT) {
+			return (t.toString().toUpperCase());
+		} else {
+			Unhandled("BasicType", t);
+			return ("INT (* "+t.toString()+" *)");
+		}
+	}
+
+	/**
+	 * @return Coq value of t of type refType
+	 * @throws ClassNotFoundException 
+	 */
+	private static String convertReferenceType(ReferenceType t) throws ClassNotFoundException {
+		if (t instanceof ArrayType) {
+			return "(ArrayType "+convertType(((ArrayType)t).getElementType())+")";
+		} else if (t instanceof ObjectType) {
+			ObjectType ot = (ObjectType)t;
+	
+			if (ot.referencesClassExact()) { // does thik work?
+				return "(ClassType " + coqify(ot.getClassName())+"_className)";
+			} else if (ot.referencesInterfaceExact()) { // does this work?
+				//TODO: adjust to the structure of "interface" modules
+				return "(InterfaceType " + coqify(ot.getClassName())+"_interfaceName)";
+			} else {
+				Unhandled("ObjectType", t);	
+				return "(ObjectType javaLangObject (* "+t.toString()+" *) )";	
+			}
+		} else {
+			Unhandled("ReferenceType", t);	
+			return "(ObjectType javaLangObject (* "+t.toString()+" *) )";		
+		}
+	}
+	
+	/**
+	 * @return Coq value of t of type type
+	 * @throws ClassNotFoundException 
+	 */
+	private static String convertType(Type t) throws ClassNotFoundException {
+		if (t  instanceof BasicType) {
+			return "(PrimitiveType " + convertPrimitiveType((BasicType)t) + ")"; 
+		} else if (t instanceof ReferenceType) {
+			return "(ReferenceType " + convertReferenceType((ReferenceType)t) + ")";
+		} else {
+			Unhandled ("Unhandled Type: ", t);
+			return "(ReferenceType (ObjectType javaLangObject (* "+t.toString()+" *) )";	
+		}
+	}
+
+
+
+
+	/**
+	 * Handles type or void
+	 * @return (Some "coq type t") or None
+	 * @throws ClassNotFoundException 
+	 */
+	private static String convertTypeOption(Type t) throws ClassNotFoundException {
+		if (t==Type.VOID || t==null) {
+			return "None";
+		}
+		return "(Some " + convertType(t) + ")";
+	}
+
 
 	/**
 	 * for instructions not handled by Bicolano
@@ -1041,6 +1094,7 @@ public class Executor extends Object {
 			// strout = strout.replace("(","_");
 			// strout = strout.replace(")","_");
 			str = str.replace('>', '_');
+			str = str.replace('$', '_');
 			str = str.replace('<', '_');
 			return str;
 		}
