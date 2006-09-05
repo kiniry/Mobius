@@ -1,4 +1,4 @@
-BCEL=`find ../../umbra/libs -name bcel.jar`
+BCEL=`find ../../ -name bcel-5.2.jar`
 
 jar: clean java
 	@ echo Packing:
