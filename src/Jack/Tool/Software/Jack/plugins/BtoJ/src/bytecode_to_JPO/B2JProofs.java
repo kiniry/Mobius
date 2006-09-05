@@ -676,8 +676,8 @@ public class B2JProofs extends Proofs {
 		}
 
 		else if (e instanceof JavaObjectType) {
-			String name = ((JavaObjectType) e).getSignature();
-			name = name.substring(1, name.length() - 1).replace('/', '.');
+			String name = ((JavaObjectType) e).getBcelType().toString();
+			//name = name.substring(1, name.length() - 1).replace('/', '.');
 			return new TTypeForm(IFormToken.T_TYPE, new Type(((B2JPackage) config.getPackage())
 					.addB2JClass(config, ((B2JPackage) config.getPackage()).getClass(name), false)));
 			// TODO JavaObjectType
