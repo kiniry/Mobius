@@ -32,6 +32,23 @@
 \begin{document}
 \maketitle      
 \begin{abstract}
+This article presents a developer
+methodology for developer oriented application validation based on 
+the Jack validation framework. The tool allows to prove properties on
+Java program in a user-friendly environment. Java program annotated
+with JML assertions can be proved correct at source or at bytecode
+level. Many phases of the validation are automated: annotation
+generation, anotation propogation, verification condition generation,
+proof. The proof part is and cannot be fully automated and different
+interactive provers are linked to the tool allowing to prove remaining
+lemmas. The tool is fully integrated in the eclipse IDE. A Coq proof
+environment has also been developped as an eclipse plugin in order to
+have a unique interface in all the validation phases.
+
+Benefiting from users feedback, the tools have also been improved
+to deal with different purposes such that security properties
+verification, functional properties verification, code optimization,
+or resource consumption verification.
 \end{abstract}
 \input{introduction}        
 \input{methodology}        
@@ -43,35 +60,3 @@
 
 \end{document}
 
-
-% Articles :
-%  - JML
-%  - Jack FME
-%  - Cardis
-%  - Bytecode
-% + rapport de Thibaut
-
-
-% 1 Introduction 1-2
-% 3 T & M
-% 3.1 JACK 7-17
-% 3.2 Sec prop propag 18-24
-% 3.3 Bytecode 25-32
-% 4 Eval
-% 4.1 Ober   33-34
-% 4.2 Axal   35-36
-% 4.3 Byte Ver 37-38
-% 4.4 Footprint 39-44
-% 4.5 Memory  45-49
-% 5 Concl 51
-
-% TODO API specification
-%      Pile IP
-
-% TODO
-% Citer Inspired
-% Intro : Existing approach
-% 2.1.5 : A completer
-% 2.3 : Motivation
-% 2.3.5 : A completer
-% Conclusion : Related work + on va travailler ensemble Javacard oui mais midp..
