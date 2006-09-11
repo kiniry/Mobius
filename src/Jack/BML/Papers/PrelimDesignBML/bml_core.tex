@@ -12,15 +12,15 @@ they are added as special attributes to the bytecode; and
 \end{enumerate}
 
 With respect to the expression syntax, this means concretely that
-field names, class names etc.\ are replaced by constants, using
+field names, class names \emph{etc.}\ are replaced by constants, using
 the constant pool, while registers are used to refer to local
 variables. In addition, we can use stack expressions and the stack
 counter to describe intermediate states of a computation. These will
 typically only appear in intermediate assertions, we do not use them
 in method specifications. Finally, we add a special expression
-\texttt{length(\(a\))}, denoting the length of array \(a\). Since the 
-source code expression \texttt{\(a\).length} is compiled into a
-special bytecode instruction \texttt{arraylength}, we also need a
+\jmlKey{length(\(a\))}, denoting the length of array \(a\). Since the 
+source code expression \jmlKey{\(a\).length} is compiled into a
+special bytecode instruction \jmlKey{arraylength}, we also need a
 special specification construct for this at bytecode level.
 
 BML contains equivalent constructs for all specification constructs of
@@ -33,7 +33,7 @@ constructs are:
 \begin{itemize}
 \item static invariants;
 \item object and static history constraints; and 
-\item loop variants (using the \texttt{decreasing} keyword).
+\item loop variants (using the \jmlKey{decreasing} keyword).
 \end{itemize}
 
 At the moment, the use of pure methods is not part of the BML grammar,
@@ -42,47 +42,52 @@ calls used in specifications. However, we believe that if the
 theoretical issues have been settled, eventually any tool supporting
 BML should also support this. In fact, we think that both at source
 code and at bytecode level, specifications benefit a lot from being
-allowed to use method calls in them. Finally, as mentioned above
+allowed to use method calls in them. Finally, as mentioned above,
 experiences with verification of realistic case studies have shown
 that it is beneficial to have a special clause
-\texttt{loop-modifies}, which is specified together with the loop
+\jmlKey{loop\unsc modifies}, which is specified together with the loop
 invariant. This clause specifies which variables
-\emph{may} be modified by a loop (as an \texttt{assignable} clause does
-for a method). This \texttt{loop-modifies} clause allows to write
+\emph{may} be modified by the loop (as an \jmlKey{assignable} clause does
+for a method). This \jmlKey{loop-modifies} clause allows to write
 concise specifications, and to efficiently generate proof obligations
 using a weakest precondition calculus.
 
 \begin{figure}[t]
 
 \begin{tabular}{lll}
-\multicolumn{2}{l}{\emph{primary-suffix} := \texttt{(} [\emph{expression-list}] \texttt{)}}\\
-\hspace*{1cm}& \(\mid\) \texttt{[} \emph{expression} \texttt{]}\\
+\multicolumn{2}{l}{\emph{predicate} ::= \(\ldots\)}\medskip\\
+\multicolumn{2}{l}{\emph{unary-expr-not-plus-minus} ::= \(\ldots\)}\\
+\hspace*{1cm} & \(\mid\) \emph{primary-expr} [\emph{primary-suffix}]\(\ldots\)\\ 
+
+\multicolumn{2}{l}{\emph{primary-suffix} ::= \jmlKey{.} \emph{ident}}\\
+&\(\mid\) \jmlKey{(} [\emph{expression-list}] \jmlKey{)}\\
+& \(\mid\) \jmlKey{[} \emph{expression} \jmlKey{]}\\
 \multicolumn{2}{l}{\emph{primary-expr} ::= 
-\texttt{\#}\emph{natural}} & \% reference in the constant pool \\
-&\(\mid\) \texttt{lv[}\emph{natural}\texttt{]} &\% local variable \\
-&\(\mid\) \texttt{length(}\emph{expression}\texttt{)} &\% array
+\jmlKey{\#}\emph{natural}} & \% reference in the constant pool \\
+&\(\mid\) \jmlKey{lv[}\emph{natural}\jmlKey{]} &\% local variable \\
+&\(\mid\) \jmlKey{length(}\emph{expression}\jmlKey{)} &\% array
 length \\
-&\(\mid\) \texttt{cntr} &\% counter of the operand stack\\
-&\(\mid\) \texttt{st(}\emph{additive-expr}\texttt{)} &\% stack
+&\(\mid\) \jmlKey{cntr} &\% counter of the operand stack\\
+&\(\mid\) \jmlKey{st(}\emph{additive-expr}\jmlKey{)} &\% stack
 expressions\\
 &\(\mid\) \emph{constant} \(\mid\)
-\texttt{super}\\
-&\(\mid\) \texttt{true} \(\mid\) \texttt{false} \(\mid\)
-\texttt{this} \(\mid\) \texttt{null} \\
-&\(\mid\) \texttt{(}\emph{expression}\texttt{)}\\
-&\(\mid\) \emph{jml-primary}\\
-\\
-\multicolumn{2}{l}{\emph{store-ref-expression} := \emph{store-ref-name}
-[\emph{store-ref-name-suffix}]}\\
-\multicolumn{2}{l}{\emph{store-ref-name} := 
-\texttt{\#}\emph{natural}} &\% reference in the constant pool \\
-&\(\mid\)\texttt{super} \(\mid\) \texttt{this}\\
-\multicolumn{2}{l}{\emph{store-ref-name-suffix} := 
-\texttt{(}\emph{store-ref-expression}\texttt{)}}\\
-&\(\mid\) \texttt{[}\emph{spec-array-ref-expr}\texttt{]}
+\jmlKey{super}\\
+&\(\mid\) \jmlKey{true} \(\mid\) \jmlKey{false} \(\mid\)
+\jmlKey{this} \(\mid\) \jmlKey{null} \\
+&\(\mid\) \jmlKey{(}\emph{expression}\jmlKey{)}\\
+&\(\mid\) \emph{jml-primary}%\\
+%\\
+%\multicolumn{2}{l}{\emph{store-ref-expression} ::= \emph{store-ref-name}
+%[\emph{store-ref-name-suffix}]}\\
+%\multicolumn{2}{l}{\emph{store-ref-name} ::= 
+%\jmlKey{\#}\emph{natural}} &\% reference in the constant pool \\
+%&\(\mid\)\jmlKey{super} \(\mid\) \jmlKey{this}\\
+%\multicolumn{2}{l}{\emph{store-ref-name-suffix} ::= 
+%\jmlKey{(}\emph{store-ref-expression}\jmlKey{)}}\\
+%&\(\mid\) \jmlKey{[}\emph{spec-array-ref-expr}\jmlKey{]}
 \end{tabular}
 
-\caption{Grammar for BML predicates and specification expressions}
+\caption{Fragment of grammar for BML predicates and specification expressions}
 \label{FigBMLGrammar}
 \end{figure}
 
@@ -95,55 +100,71 @@ A.7]{JMLReferenceManual05}, restricted to the constructs in JML level
 to the grammar for predicates and specification expressions, as
 mentioned above. Figure~\ref{FigBMLGrammar} displays the most
 interesting part of this grammar for predicates and specification
-expressions, defining the syntax for primary expressions, primary
-suffixes, store-ref expressions and store-ref expressions (see
-Appendix~\ref{AppBML} for a short explanation of the syntax notation
-and the full grammar of predicates and specification
+expressions, defining the syntax for primary expressions and primary
+suffixes (see Appendix~\ref{AppBML} for a short explanation of the
+syntax notation and the full grammar of predicates and specification
 expressions). Primary expressions, followed by zero or more primary
 suffixes, are the most basic form of expressions, formed by
 identifiers, bracketed expressions
-\emph{etc}. Store ref expressions (followed by zero or more store ref 
-suffixes) are the expressions that can be used in an assignable
-clause.
+\emph{etc}. %Store-ref expressions (followed by zero or more store-ref 
+%suffixes) are the expressions that can be used in an assignable
+%clause.
 
 As mentioned above, all identifiers are replaced by references to the
 constant pool (a number, preceded by the symbol
-\texttt{\#}) or to local registers. The local register \texttt{lv[0]}
+\jmlKey{\#}) or to local registers. The local register \jmlKey{lv[0]}
 of a non-static method always contains the implicit argument
-\texttt{this}, the other registers contain the parameters and the
-local variables declared inside a method body. As explained above, we
-add special keywords to be able to express properties about the length
-of an array, the current stack counter (\texttt{cntr}), and to refer
-to an element on the stack (\texttt{st(\(e\))}, where \(e\) is some
-arithmetic expression). In BML, a field access is written as a function
-application. For example, suppose we have the source code qualified expression
-\texttt{obj.f}, where \texttt{obj} is the first parameter of a
-method, and \texttt{f} is a field of this object. This becomes
-\texttt{\#\(n\)(lv[1])} in BML, where \(n\) is the index in the
-constant pool to the field constant reference denoting the field
-\texttt{f}, while \texttt{lv[1]} is the register in the local variable
-array in which the parameter \texttt{obj} is stored.  Therefore the
-grammar for \emph{primary-suffixes} and \emph{store-ref-name-suffixes}
-does not provide any grammar for qualified expressions.
+\jmlKey{this}, the other registers contain the parameters and the
+local variables declared inside a method body. Compilers often reuse
+local variable registers throughout the execution of a single
+method. Thus, when \emph{e.g.}\ type checking an annotation containing
+a local variable, it has to be taken into account at which point in
+the code the annotation is evaluated (but notice that this is not more
+complicated than reusing the same local variable names in different
+block statements). 
+
+As explained above, we add special keywords to be able to express
+properties about the length of an array, the current stack counter
+(\jmlKey{cntr}), and to refer to an element on the stack
+(\jmlKey{st(\(e\))}, where \(e\) is some arithmetic expression).
+
+In Java source code, one can usually leave the receiver object
+\texttt{this} implicit. But compilation into bytecode makes this
+object explicit, \emph{i.e.}\ instructions such as \texttt{putfield}
+\emph{always} require that the receiver object is loaded on the
+operand stack. In analogy with this, BML specifications require that
+the receiver object is written explicitly in expressions (see
+Figure~\ref{FigBMLSpec} below). 
+
+%In BML, a field access is written as a function
+%application. For example, suppose we have the source code qualified expression
+%\jmlKey{obj.f}, where \jmlKey{obj} is the first parameter of a
+%method, and \jmlKey{f} is a field of this object. This becomes
+%\jmlKey{\#\(n\)(lv[1])} in BML, where \(n\) is the index in the
+%constant pool to the field constant reference denoting the field
+%\jmlKey{f}, while \jmlKey{lv[1]} is the register in the local variable
+%array in which the parameter \jmlKey{obj} is stored.  Therefore the
+%grammar for \emph{primary-suffixes} and \emph{store-ref-name-suffixes}
+%does not provide any grammar for qualified expressions.
 
 
 In JML, many special keywords are preceded by the symbol
-\texttt{\bsl}, to ensure that they will not clash with variable
+\jmlKey{\bsl}, to ensure that they will not clash with variable
 names. For BML, we do not have to worry about this: all
 variable names are replaced by references to the constant pool or
 local variable registers. Therefore, the new keywords are written
 without a special preceding symbol. However, for convenience, we keep
 the symbol for keywords that are also JML keywords.
 
-Finally, statement annotations are described as a special attribute,
-mapping line numbers to annotations. To parse these annotations, we
-reuse the relevant parts of the grammar for statements and annotation
-statements~\cite[\S A.9]{JMLReferenceManual05}.
+%Finally, statement annotations are described as a special attribute,
+%mapping line numbers to annotations. To parse these annotations, we
+%reuse the relevant parts of the grammar for statements and annotation
+%statements~\cite[\S A.9]{JMLReferenceManual05}.
 
-Type checking of the specification can be done in the obvious way,
-using the type information stored in the constant pool.
+%Type checking of the specification can be done in the obvious way,
+%using the type information stored in the constant pool.
 
-\subsection{An example BML specification}
+\paragraph{An example BML specification}
 \label{sec:bml:example}
 
 
@@ -151,10 +172,10 @@ using the type information stored in the constant pool.
 {\small
 \begin{verbatim}
 {| requires lv[1] > 0 
-   ensures #24 <= \old(#24) + lv[1] * (lv[1] + 1) / 2 |}
+   ensures lv[0].#24 <= \old(lv[0].#24) + lv[1] * (lv[1] + 1) / 2 |}
  0 iconst_1
  1 istore_2
- 2 goto 22 (+20)
+ 2 goto 22 
  5 aload_0
  6 aload_0
  7 getfield #24 <Bill.sum>
@@ -164,12 +185,12 @@ using the type information stored in the constant pool.
 15 iadd
 16 putfield #24 <Bill.sum>
 19 iinc 2 by 1
-loop_invariant 0 <= lv[2] && 0 <= #24 && lv[2] <= lv[1] + 1 && 
-               #24 <= \old(#24) + (lv[2] + 1) * lv[2]/2
+loop_invariant 0 <= lv[2] && 0 <= lv[0].#24 && lv[2] <= lv[1] + 1 && 
+               lv[0].#24 <= \old(lv[0].#24) + (lv[2] + 1) * lv[2]/2
 entry loop:
 22 iload_2
 23 iload_1
-24 if_icmple 5 (-19)
+24 if_icmple 5 
 27 iconst_1
 28 ireturn
 29 astore_3
@@ -177,15 +198,17 @@ entry loop:
 31 ireturn
 \end{verbatim}
 }
-\caption{Bytecode + BML specification for method \texttt{produce\unsc bill} in class \texttt{Bill}}\label{FigBMLSpec}
+\caption{Bytecode + BML specification for method \jmlKey{produce\unsc bill} in class \jmlKey{Bill}}\label{FigBMLSpec}
 \end{figure}
 
 To show a typical BML specification, Figure~\ref{FigBMLSpec} presents
-the BML version of the specification of method \texttt{produce\_bill}
+the BML version of the specification of method \jmlKey{produce\_bill}
 of the JML example in Figure~\ref{FigJMLSpec}. Notice that the field
-\texttt{sum} has been assigned the number 24 in the constant
-pool. Further, \texttt{lv[1]} denotes the parameter
-\texttt{n}, and \texttt{lv[2]} denotes the local variable \texttt{i}.
+\jmlKey{sum} has been assigned the number 24 in the constant
+pool, and that it is always explicitly qualified with \jmlKey{lv[0]}
+(denoting \jmlKey{this}). Further, \jmlKey{lv[1]} denotes the
+parameter \jmlKey{n}, while \jmlKey{lv[2]} denotes the local variable
+\jmlKey{i}.
  
 The class invariant gives rise to the following BML specification
 (stored in the class file as a special user-specific attribute, as
@@ -195,15 +218,20 @@ explained below):
 invariant:  #24 >= 0
 \end{verbatim}
 
+This expression is not qualified with \jmlKey{lv[0]}, as it is
+implicitly quantified over all objects that are an instance of a
+subclass of class \texttt{Bill} (\emph{cf.}\ the JML
+semantics~\cite[\S 8.2]{JMLReferenceManual05}).
+
 %This class contains a
-%private, but \texttt{spec\unsc public} (i.e.~publicly visible
+%private, but \jmlKey{spec\unsc public} (i.e.~publicly visible
 %in specifications) field
-%\texttt{list}, which is an array of objects. The class invariant says
-%that \texttt{list} is not null, and in addition, its elements are
-%never null.  Further, the class contains a method \texttt{replace},
-%which checks if its first parameter \texttt{obj1} occurs in
-%\texttt{list}, and if this is the case, replaces it (once) by its
-%second parameter \texttt{obj2}. 
+%\jmlKey{list}, which is an array of objects. The class invariant says
+%that \jmlKey{list} is not null, and in addition, its elements are
+%never null.  Further, the class contains a method \jmlKey{replace},
+%which checks if its first parameter \jmlKey{obj1} occurs in
+%\jmlKey{list}, and if this is the case, replaces it (once) by its
+%second parameter \jmlKey{obj2}. 
 
 %\begin{figure}[t!]
 %{\small
@@ -230,27 +258,27 @@ invariant:  #24 >= 0
 %}
 %\end{verbatim}
 %}
-%\caption{JML specification for class \texttt{ListArray}}\label{FigJMLSpec}
+%\caption{JML specification for class \jmlKey{ListArray}}\label{FigJMLSpec}
 %\end{figure}
 
 
 
-\subsection{Wellformed BML specifications}
-Above, we gave the formal grammar of BML.  However, we are interested
-only in a strict subset of the specifications that can be generated by
-this grammar. In particular, a \emph{valid} BML specification should
-be well-typed and respect several structural constraints, that are
-similar to the structural constraints that the bytecode verifier
-imposes over the class file format.
+\subsection{Well-formed BML specifications}
+Above, we presented the formal grammar of BML.  However, we are
+interested only in the strict subset of \emph{well-formed}
+specifications. In particular, a well-formed BML specification should
+be well-typed and respect several structural constraints, similar to
+the structural constraints that the bytecode verifier imposes over the
+class file format.
 
-Examples of type constraints that a valid BML specification must
+Examples of type constraints that a BML specification must
 respect are the following:
 \begin{itemize}
-\item the array access expression
-$\arrayAccess{e_1}{_e2}$ is well-typed only if $e_1$ is of array
+\item array access expression
+$\arrayAccess{e_1}{e_2}$ is well-typed only if $e_1$ is of array
 type and $e_2$ is of integer type;
 
-\item the field access expression
+\item field access expression
     $\fieldAccess{e}{\ident}$ is well-typed only if $e$ is
     of a subtype of the class where the field described by the constant
     pool element at index $\ident$ is declared;
@@ -259,20 +287,20 @@ type and $e_2$ is of integer type;
 operator (\(+,-,*,/\) \emph{etc.}) is well-typed only if $e_1$ and $
 e_2$ are of a numeric type;
     
-\item the predicate $e_1 \sim e_2$ where $\sim \in \{\leq,<,\geq,
+\item predicate $e_1 \sim e_2$ where $\sim \in \{\leq,<,\geq,
 >\}$ is well-typed only if the expressions $e_1$ and $e_2$ are of a 
 numeric type;
 
-\item the predicate $e_1 \subtypeSpec e_2$ is well-typed only if the 
-expressions $e_1$ and $e_ 2$ are of type \texttt{java.lang.Class}
+\item predicate $e_1 \subtypeSpec e_2$ is well-typed only if the 
+expressions $e_1$ and $e_ 2$ are of type \jmlKey{java.lang.Class}
 (which is the same as the JML type \TYPE); and
 
-\item the expression $\elemtype{e}$ is well-type only if $e$ is of array type.
+\item expression $\elemtype{e}$ is well-typed only if $e$ is of array type.
 
 	  
 \end{itemize}
 
-Example of structural constraint that a valid BML specification must
+Examples of structural constraints that a BML specification must
 respect are the following: 
 \begin{itemize}
 \item all references to the constant pool must be to an entry of the
@@ -290,21 +318,190 @@ specification, $i$ must be a valid index in the method's local
 variables table.
 \end{itemize}
 
-It is future work to implement the wellformedness checks for BML
-specifications as an extension of the bytecode verifier.
+These confirmedness checks for BML are best implemented as an
+extension of the bytecode verifier.
  
 
-\subsection{Evaluation of BML expressions}
+%\subsection{Evaluation of BML expressions}
 
-When defining the evaluation of BML expressions, a subtle point that
-has to be taken into account is the fact that at bytecode level no
-explicit boolean values are used, they are encoded as integers (but
-variables can still be of type \texttt{boolean} --- this information is
-used by the BCV). Thus, to make sure that expressions such as
-\texttt{\bsl result == \bsl exists i. i >= 0} are correctly evaluated,
-the evaluation of the quantified expression is wrapped up by a
-conditional function, returning 1 if the condition is true, 0
-otherwise.
+%When defining the evaluation of BML expressions, a subtle point that
+%has to be taken into account is the fact that at bytecode level no
+%explicit boolean values are used, they are encoded as integers (but
+%variables can still be of type \jmlKey{boolean} --- this information is
+%used by the BCV). Thus, to make sure that expressions such as
+%\jmlKey{\bsl result == \bsl exists i. i >= 0} are correctly evaluated,
+%the evaluation of the quantified expression is wrapped up by a
+%conditional function, returning 1 if the condition is true, 0
+%otherwise.
+
+\subsection{Semantics of BML expressions}
+
+The semantics of BML specifications follows the semantics of JML
+specifications~\cite{JMLReferenceManual05}. But, just a JML
+specification can be mapped into a more fundamental Hoare triple
+specification, we also have provided a semantics for BML in terms of a
+basic logic for Java bytecode. For this logic, we took the so-called
+\mobius base logic, a logic for reasoning about Java bytecode
+programs, that will be the core of the proof carrying code platform
+developed within the project. This logic (see~\cite{BeringerH06} for a
+description of an earlier version of this logic, without exceptions)
+has been proven sound \emph{w.r.t.}\ a formalisation of the virtual
+machine. On top of this logic, a direct verification condition
+generator has been proven sound. All this has been done in the Coq
+theorem prover. In addition, as a first step towards efficient tool
+development a translation of bytecode into guarded commands has been
+defined and proven correct, \emph{w.r.t.}\ verification condition
+generation. 
+
+Defining the mapping of BML specifications into this \mobius base
+logic is defined in two steps. First the evaluation of predicates is
+defined over the program state (\emph{i.e.}\ over the heap, store and
+operand stack), and second the complete BML specifications are
+translated into judgements of the \mobius base logic. Notice that this
+embedding allows to use the verification condition generator for the
+\mobius base logic also for BML specifications.
+
+As mentioned above, a BML specification can contain the following
+constructs: class specifications, method specifications, and statement
+annotations, in particular the \texttt{assert},
+\texttt{assume}, and  \texttt{set} annotations, that can occur at any 
+point in the program text, and loop invariants, loop frame 
+conditions, and loop variants, that are associated to loop blocks.
+Judgement in the \mobius base logic are of the form
+\(\JudgeF{\ppt}{A}{B}{I}\), where \(\LST\) is a proof context,
+\(\Anno\) the local annotation table, \emph{i.e.}~the table that
+associates annotations with particular instructions. Further, \(A\) is
+a (local) precondition, relating the state at label \ppt with the
+initial state, while \(B\) is a (local) postcondition, relating the
+initial, current and final state, and \(I\) is a (local) invariant,
+\emph{i.e}\ a predicate that is supposed to hold throughout execution
+of the current method.
+
+\paragraph{Class specifications}
+For invariants and history constraints, the BML semantics corresponds
+to the JML semantics. Thus, any class invariant or constraint can be
+translated into appropriate pre- and postconditions for the relevant
+methods (taking the visibility modifiers into account). We follow this
+semantics for JML~\cite[\S 8]{JMLReferenceManual05} and define the
+mapping into the \mobius base logic only after this translation. 
+
+\paragraph{Method specifications}
+BML preconditions directly correspond to the preconditions of the
+\mobius base logic judgements . The normal and exceptional
+postconditions are combined into a single postcondition, specifying
+with a case distinction which conditions should hold if the state is
+normal or exceptional, respectively. Frame conditions should also be
+added to the postconditions, specifying explicitly which variables are
+allowed to be changed. Since predicates in the \mobius base logic
+specify properties over the whole heap, this can be expressed
+directly: all locations that are not mentioned in the frame condition
+of the method (evaluated in the prestate of the method) should be
+unchanged.
+
+In JML and also in BML it is possible to write several method
+specifications for a single method. A standard procedure exists for
+desugaring these into a single method
+specification~\cite{RaghavanL00}. We use this approach in our
+translation to handle methods with multiple specifications.
+
+\paragraph{Statement annotations}
+The treatment of \texttt{assert} annotations is simple, they are
+transformed directly into program annotations. 
+
+For \texttt{assume} annotations, different interpretations are
+possible: either the \texttt{assume} statement adds some additional
+information that is supposed to be added to the properties that are
+already known for a particular program point or the \texttt{assume}
+statement corresponds to a local precondition for the remaining
+statements. In the latter case they have to be sufficiently strong to
+prove correctness of all the remaining program code. We are currently
+investigating these different interpretations and which would be the
+most appropriate for our work.
+
+At the moment, the \mobius base logic does not have ghost
+variables; it is future work to add these. To specify assignments to
+ghost variables, \texttt{set} annotations are used. Therefore, it only
+makes sense to map \texttt{set} annotations into the \mobius base
+logic, once it has ghost variables. In JML, \texttt{set} annotations
+occur in the program text. In BML, they are described in a special
+\emph{set annotation table}, which associates them to a particular
+instruction. The latter approach will probably also be followed in the
+\mobius base logic, \emph{i.e.}\ there will be a set annotations table. It is
+still to be decided whether the set annotations associated to a
+particular instruction are an unordered set or whether we will
+actually specify a sequence of instructions (currently in BML it is
+described as an unordered set).
+
+Similar to \texttt{assert} annotations, loop invariants also directly
+become program annotations of the appropriate program point.
+
+Loop variants can be transformed into a sequence of assert and set
+annotations, after introducing appropriate ghost variables. This
+transformation can be done at the level of BML, after which we can use
+the mapping of set and assert annotations into the
+\mobius base logic. 
+The transformation of the BML specification basically proceeds as
+follows.  Let \texttt{variant} be the expression declared in the
+decreases clause.  We declare ghost variables \texttt{loop\unsc init}
+(initially set to true) and \texttt{loop\unsc variant} (the 
+preliminary initialisation of which is not essential). 
+If \(l\) is the program point where we
+enter the loop, then at that point we add an assertion
+\begin{verbatim}
+//@ assert !loop_init ==> (0 <= variant && variant < loop_variant);
+\end{verbatim}
+followed by:
+\begin{verbatim}
+//@ set loop_init = false;
+//@ set loop_variant = variant;
+\end{verbatim}
+This ensures that every time the loop entry point \(l\) is reached
+again, the decrease of the loop variant is checked. Only a path that
+goes through the loop can set \texttt{loop\unsc init} to false.
+
+For mapping loop frame conditions, we use again the fact that in the
+\mobius base logic we can express properties of the heap. Thus,
+we again make a transformation into a sequence of assert and set
+statements. We declare ghost variables to remember the old heap and
+all locations mentioned in the loop frame condition, and a ghost
+variable \texttt{loop\unsc init} as above. Then we assert at the entry
+point of the heap that if \texttt{loop\unsc init} does not hold, any
+location that is not mentioned in the loop frame condition should
+remain unchanged. Notice that this assertion cannot be directly
+expressed in BML, but it can be expressed in the \mobius base
+logic. Finally, in the \mobius base logic we add appropriate ghost
+variable updates to remember the old heap and the locations of the
+loop frame condition when the loop was first entered.
+
+
+%\paragraph{Example}
+%\label{par:embedding:running}
+%Consider again the BML specification of the class \texttt{Bill} in
+%Figure~\ref{FigBMLSpec}. We have already shown above how the different
+%predicates can be translated into the deep expression language. Let us
+%use \(\gamma_{\mbox{\tiny\textsc{PRE}}}\), 
+%\(\gamma_{\mbox{\tiny\textsc{POST}}}\) and
+%\(\gamma_{\mbox{\tiny\textsc{INV}}}\) 
+%%for expressions \eqref{RunningExamplePre},
+%%\eqref{RunningExamplePost} and \eqref{RunningExampleInv},
+%respectively. Let us further assume that \(\mathcal{I}\) is the deep
+%expression encoding the class invariant \texttt{\#24 >= 0},
+%\emph{i.e.}\
+%\[
+%\mathcal{I} = \mathit{LookUpHeapBML This (FieldName Bill.sum)} \leq 0.
+%\]
+%If we map the BML specification into the \mobius base logic, this will
+%result in the following judgement:
+%\[
+%\JudgeF{\ppt}
+%       {\mathit{MPreTag(\mathcal{I}) \wedge \gamma_{%
+%                                               \mbox{\tiny\textsc{PRE}}}}}
+%       {\mathit{MPostTag(\mathcal{I}) \wedge \gamma_{%
+%                                               \mbox{\tiny\textsc{POST}}}}}
+%       {\mathsf{true}}.
+%\]
+%Finally, the local annotation table \(\Anno\) will contain a single entry:
+%from instruction 22 (loop entry point) to \(\gamma_{\mbox{\tiny\textsc{INV}}}\).
 
 
 

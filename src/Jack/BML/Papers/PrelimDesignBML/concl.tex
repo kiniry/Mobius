@@ -47,6 +47,20 @@ We plan to develop a tool set to support BML. Parts of the tools and
 algorithms have already been implemented, see~\cite{BurdyP06}, but
 still some work is needed to cover the whole language. 
 
+We have implemented a first prototype of the \JMLtoBML compiler. We
+also have implementations of verification condition generators for
+Java source code and bytecode (as part of the tool
+JACK~\cite{BurdyRL03}). We have shown that if we compile an
+application with its specification, there exists a correspondence
+between the proof obligations generated at source and at bytecode
+level, modulo differences in elimination of trivial goals, handling of
+arithmetic expressions, and the naming convention of generated
+variables. Moreover, when the proofs are done with the interactive
+theorem prover Coq, the prover generates different names for
+hypotheses at source code and bytecode level. It is future work to
+clean up to compilation, so that there is a one-to-one correspondence.
+
+
 Moreover, we would like that such a tool set is used in connection
 with a tool set supporting JML (\emph{e.g.}\ JACK~\cite{BurdyRL03} or
 ESC/Java~\cite{CokK04}). Ideally, these tool sets are developed

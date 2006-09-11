@@ -1,7 +1,7 @@
+\section{Compiling JML specifications into BML specifications}\label{SecJMLtoBML} 
 
-\section{Compiling JML specifications into BML specifications}
 Since it is often easier and more intuitive to write specifications at
-source coude level, we have defined a compiler from JML to BML
+source code level, we have defined a compiler from JML to BML:
 \JMLtoBML. BML is designed to be very close to JML, so that the
 correspondence between the original and the compiled specification
 remains relatively clear. Notice that in principle, the same can be
@@ -14,30 +14,28 @@ but some work in this direction has already been done, see
 The compilation of the JML specification is separated from the
 compilation of the Java source code. In fact, \JMLtoBML takes as input
 an annotated Java source file \emph{and} the Java class file produced
-by a non optimising compiler with the debug flag set. The debug
+by a non-optimising compiler with the debug flag set. The debug
 information that is generated helps us to compile the annotations
 correctly. 
 
 From the debug information, we use in particular the
 \textbf{Line\_Number\_Table} and the \textbf{Local\_Variable\_Table}
-attributes. The presence of these attribute is
+attributes. The presence of these attributes is
 optional~\cite{JVMspec}, but almost all standard non-optimising
-compilers can generate this data. The \textbf{Line\_Number\_Table} is
+compilers can generate these. The \textbf{Line\_Number\_Table} is
 computed as part of the compilation of a method; it links line numbers
-in the Java source code and of the Java bytecode instructions.  The
+in the Java source code with the Java bytecode instructions.  The
 \textbf{Local\_Variable\_Table} describes the local variables that
 appear in a method.  
 
 To be able to appropriately compile loop invariants, the control flow
 graph corresponding to the list of bytecode instructions resulting
 from the compilation of a method body must be a
-\emph{reducible control flow graph}\footnote{The same restriction
-applies if one wishes to define an efficient verification condition
-generator for BML.}. This means basically that every cycle in the
-graph must have exactly one entry point, and it is not possible to
-jump into the middle of a cycle from outside the cycle
+\emph{reducible control flow graph}. This means basically that every 
+cycle in the graph must have exactly one entry point, and it is not
+possible to jump into the middle of a cycle from outside the cycle
 (see~\cite{AhoSU86} for the full definition of reducibility). Note
-that this is not a serious restriction; all non-optomising Java
+that this is not a serious restriction; all non-optimising Java
 compilers produce reducible control flow graphs and in practice even
 most hand-written bytecode is reducible.
 
@@ -48,39 +46,36 @@ have access to the generated class file.
 
 \begin{description}
 
-\item[Compilation of ghost and model field declarations] This step
-adds entries in the constant pool for all ghost and model variables
-declared in the specification. The \textbf{Ghost\unsc Field \unsc
-attribute} defined above is used for this. 
+\item[Compilation of ghost and model field declarations] 
+For all ghost and model variables declared in the specification,
+entries are added in the constant pool. 
 
-\item [Desugaring of the JML specification] This is an optional step,
-to achieve more compact specifications directly. Here one would use
-the standard JML procedure for desugaring~\cite{RaghavanL00}. This
-desugaring can also be applied later on the BML specification directly.
+%\item [Desugaring of the JML specification] This is an optional step,
+%to achieve more compact specifications directly. Here one would use
+%the standard JML procedure for desugaring~\cite{RaghavanL00}. This
+%desugaring can also be applied later on the BML specification directly.
 
 \item[Linking and resolving of source data structures]
-In this stage, the JML specification is transformed into an
-intermediate format, where the identifiers are resolved to their
-corresponding data structures in the class file.  The Java and JML
-source identifiers are linked with their identifiers on bytecode
-level, \emph{i.e.}\ the corresponding indexes either from the constant
-pool or from the \textbf{Local\_Variable\_Table} attribute. This is
-similar to the linking and resolving stage of the Java source code
-compiler. 
+The JML specification is transformed into an intermediate format,
+where the identifiers are resolved to their corresponding data
+structures in the class file.  The Java and JML source identifiers are
+linked with their identifiers on bytecode level, \emph{i.e.}\ the
+corresponding indexes either from the constant pool or from the
+\textbf{Local\_Variable\_Table} attribute. This is similar to the
+linking and resolving stage of the Java source code compiler.
 
 \item[Locating instructions for annotation statements] 
-Annotation statements, like loop specifications and asserts, specify
-assertions that should hold at particular points in the program. The
-compiler associates this with the appropriate point in the bytecode
-program, using the \textbf{Line\_Number\_Table} attribute.
+Annotation statements, like loop specifications and asserts are
+associated with the appropriate point in the bytecode program, using
+the \textbf{Line\_Number\_Table} attribute.
 
-However, a problem is that a source line may correspond to more than
+A problem is that a source line may correspond to more than
 one instruction in the \textbf{Line\_Number\_Table}. This makes it
 complicated to identify the exact loop entry instruction in the
 bytecode, and thus to know to which instruction the compiled loop
 specification should be associated. 
  
-To solve this problem, we use the following heuristics: if the control
+To solve this, we use the following heuristics: if the control
 flow graph of the bytecode is reducible and if we search from an index
 in the \textbf{Line\_Number\_Table} that corresponds to the first line
 of a source loop, then the first loop entry instruction found will be
@@ -93,10 +88,10 @@ Java compiler.
 \item[Compilation of JML predicates]
 JML predicates are Java boolean expressions. However, the JVM does not
 provide direct support for several integral types, such as byte,
-short, char, nor for booleans. Instead, they are encoded as integers.
-Thus, as mentioned above, the compiler wraps up the boolean
-expressions in the JML specification are wrapped by a conditional
-function, returning 1 if the predicate is true, 0 otherwise.
+short, char, or for booleans. Instead, they are encoded as integers.
+Therefore, the compiler wraps up the boolean expressions in the JML
+specification by a conditional function, returning 1 if the predicate
+is true, 0 otherwise.
 
 \item[Generation of user-specific class attributes]
 Finally, the complete specification is compiled into appropriate
@@ -104,17 +99,4 @@ user-specific attributes, using the format defined in the previous
 section. 
     
 \end{description}
-
-We have implemented a first prototype of the \JMLtoBML compiler. We
-also have implementations of verification condition generators for
-Java source code and bytecode (as part of the tool
-JACK~\cite{BurdyRL03}). We have shown that if we compile an
-application with its specification, there exists a correspondence
-between the proof obligations generated at source and at bytecode
-level, modulo differences in elimination of trivial goals, handling of
-arithmetic expressions, and the naming convention of generated
-variables. Moreover, when the proofs are done with the interactive
-theorem prover Coq, the prover generates different names for
-hypotheses at source code and bytecode level. It is future work to
-clean up to compilation, so that there is a one-to-one correspondence.
 

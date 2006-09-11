@@ -2,55 +2,58 @@
 
 We present the Bytecode Modeling Language (BML), the Java bytecode
 cousin of JML. BML allows the application developer to specify the
-required behaviour of the application in the form of annotations,
-directly at the level of the bytecode. An extension of the class file
-format is defined that allows to store the specification directly with
-the bytecode. This is a first step towards the development of a
-proof-carrying code platform, where applications come together with
-their specification and a proof of correctness. BML is designed to be
+behaviour of an application in the form of annotations,
+\emph{directly} at the level of the bytecode. An extension of the class file
+format is defined to store the specification directly with the
+bytecode. This is a first step towards the development of a proof
+carrying code platform, where applications come together with their
+specification and a proof of correctness. BML is designed to be
 closely related with JML. In particular, JML specifications can be
-compiled into BML specifications. We also discuss the other tools that
+compiled into BML specifications. We briefly discuss the tools that
 are currently being developed for BML, and that will result in a tool
 set where an application can be validated throughout its development,
-both at source code and at byte code level.
+both at source code and at bytecode level.
 
 \end{abstract}
 
 \section{Introduction}\label{IntroSectLab}
 
-The use of formal methods to show a relation between specification and
-implementation of an application has become an accepted technique for
-the development of security-critical applications. Different tools
+The use of formal methods to show conformance of a specification
+\emph{w.r.t.}\ an implementation has become an accepted technique 
+for the development of security-critical applications. Various tools
 exist that allow to specify and validate complex functional or
 security properties, using different techniques such as runtime
 assertion checking, testing and verification condition generation.
-However, these techniques typically define specification and
-verification for source code level programs, but for many
-applications, and in particular for mobile code, one also needs to be
-able to specify and verify for a low level language.
+However, often these techniques are restricted to source code level
+programs, while for many applications, and in particular for mobile
+code, one needs to be able to also specify and verify the executable
+(or interpreted) code.
 
 
-In some cases, the executable or interpreted code may not be
-accompanied by its specified source, in other cases one simply does
-not trust the compiler. Thus, to get a high confidence in the security
-of the code, one needs to verify the executable code directly. In
-order to do this, one also needs to be able to specify the
-requirements that the code should satisfy at this level. Of course,
-for properties like well-typedness such a specification can often be
-inferred automatically, but in general, this is not decidable. Thus,
-for more sophisticated policies, automatic specification inference
-will not work.
+In some cases, the executable code may not be accompanied by its
+(specified) source, in other cases one simply does not trust the
+compiler. Moreover, some security-critical applications are directly
+developed at bytecode level, to avoid different security
+threats. Thus, to get a high confidence in the security of the code,
+one needs to verify the executable code directly. Therefore, one also
+needs to be able to specify the requirements that the code should
+satisfy at this level. For properties like well-typedness such a
+specification can often be inferred automatically, but in general,
+this is an undecidable problem. Thus, for more sophisticated policies,
+automatic specification inference will not work, and other,
+interactive techniques are needed to write specifications.
 
-Proof carrying code is a possible solution to support the secure
-downloading of applications on a mobile device. An application comes
-together with a specification, and the necessary evidence from which
-the code client can easily establish that the application respects its
-specification. In such a scenario, the code producer, who \emph{has}
-to produce a correctness proof, will often prefer to do the
-verification at source code level, and then compile the specification
-and the proof into the level of executable code. Realising a platform
-to support this scenario is one of the goals of the \mobius
-project\footnote{See
+In the context of proof carrying code, the need to specify executable
+code directly becomes even more prominent. Proof carrying code is a
+possible solution to support the secure downloading of applications on
+a mobile device. An application comes together with a specification,
+and the necessary evidence from which the code client can easily
+establish that the application respects its specification. In such a
+scenario, the code producer, who \emph{has} to produce a correctness
+proof, will often prefer to do the verification at source code level,
+and then compile the specification and the proof into the level of
+executable code. Realising a platform to support this scenario is one
+of the goals of the \mobius project\footnote{See
 \texttt{http://mobius.inria.fr}.}. This paper describes the
 low-level specification language that we propose to specify the
 security requirements for mobile device applications. Since the most
@@ -69,17 +72,17 @@ exist that allow to validate, verify or generate JML specifications
 (see~\cite{BurdyCCEKLLP05} for an overview). Several case studies have
 demonstrated that JML can be used to specify realistic industrial
 examples, and that the different tools allow to find errors in the
-implementations (see e.g.~\cite{BreunesseCHJ04}). One of the reasons
+implementations (see \emph{e.g.}~\cite{BreunesseCHJ04}). One of the reasons
 for its success is that JML uses a Java-like syntax. Specifications
 are written using preconditions, postcondition, class invariants and
 other annotations, where the different predicates are side-effect-free
 Java expressions, extended with specification-specific keywords
-(e.g.~logical quantifiers and a keyword to refer to the return value
+(\emph{e.g.}\ logical quantifiers and a keyword to refer to the return value
 of a method). Other important factors for the success of JML are its
 expressiveness and flexibility. JML is in particular suited to express
-many of the different security requirements for that have been
-identified to be of interest for mobile device
-applications~\cite{Deliverable1.2?}.
+many of the different security requirements that have been identified
+to be of interest for mobile device
+applications~\cite{Deliverable1.2}.
 
 
 Therefore, to specify Java bytecode programs, we define a variation
@@ -92,20 +95,20 @@ compiling the source code predicates into bytecode predicates and
 leaving all other parts of the specification unchanged.
 
 BML supports the most important features of JML. Thus, we can express
-functional properties of Java bytecode programs in the form of method
-pre and postconditions, class and object invariants, assertions for
-particular program points like loop invariants. To our knowledge BML
-does not have predecessors that are tailored to Java bytecode.
+functional properties of Java bytecode programs in the form of
+\emph{e.g.}\ pre- and postconditions, class and object invariants, and
+assertions for particular program points like loop invariants. To the
+best of our knowledge, no other specification languages with similar
+design goals exist for Java bytecode.
 
 Section~\ref{SecJMLOverview} gives a quick summary of the main
 features of JML. Section~\ref{SecBML} then gives a detailed account of
-BML, describing its syntax, the relationship with JML and where its
-semantics differs from the JML semantics. Section~\ref{SecClassfile}
-proposes a format in which BML specifications can be stored in the
-class file format (just as JML specifications can be written as
-special comments in the Java source code). Finally,
-Section~\ref{SecJMLtoBML} discusses the compilation process from JML
-to BML, while Section~\ref{SecConcl} wraps up, and in particular
+BML, describing its syntax and semantics, while
+Section~\ref{SecClassfile} proposes a format in which BML
+specifications can be stored in the class file (just as JML
+specifications can be written as special comments in the Java source
+code). Finally, Section~\ref{SecJMLtoBML} discusses the compilation
+process from JML to BML, while Section~\ref{SecConcl} wraps up and
 discusses related and future work and tool support.
 
 
