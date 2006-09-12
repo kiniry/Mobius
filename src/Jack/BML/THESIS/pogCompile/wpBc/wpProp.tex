@@ -28,7 +28,7 @@ For all instructions
 \begin{itemize}
    \item  $i_j \execRel i_k$
    \item  $\psi = \inter{i_j}{i_k}$  
-   \item  $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, j ) $ 
+   \item  $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, j ) $ 
 \end{itemize}
 
 the following holds 
@@ -81,7 +81,7 @@ instructions and calculating it by using a $\wpNameBcSeq$ \ is the same under se
     \item  $\psi = \inter{\ins{j}}{\ins{j+1}}$
 
      \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall i, 1 \le i \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
-                  $ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i ) $ 
+                  $ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, i ) $ 
 
 
    
@@ -120,7 +120,7 @@ The same property is established for compilation of expressions.
       \begin{itemize}
             \item $\psi = \inter{e}{e+1}$ 
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall 1 \le i,k \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
-                  $ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i ) $ 
+                  $ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, i ) $ 
             
 
       \end{itemize} then the following holds:
@@ -143,7 +143,7 @@ The next lemma states the same property but this time for the compilation of sta
 
       \begin{itemize}
             \item $\psi = \inter{e}{e+1}$
-	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) $ 
+	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) $ 
       \end{itemize} then the following holds: 
   %   if $\psi = \inter{e}{e+1}$ then the following holds
      $$   \wpStmt{\compileLabel{s}{\stmt}{e} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   
@@ -200,7 +200,7 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				\mbox{\rm\comment{From Property  \ref{compile:prop:compProp8}  } } \\
                                \end{array}$$
 				  $$ \begin{array}{l}
-                                \numConclusion{1.7}  \ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) =  \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
+                                \numConclusion{1.7}  \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
 				\mbox{\rm\comment{apply the induction hypothesis over \numConclusion{1.6} and  \numConclusion{1.7}  } }\\ 
 				\numConclusion{1.8} \	\wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} = \wpi{e'+2}{m}{} \\
 
@@ -225,11 +225,11 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				 
 				 \comment{From the initial hypothesis   }  \\
                                
-                                 \numConclusion{1.13}  \ \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e ) =  \excPostExpl( \mbox{\rm\texttt{Exc}} )\\
+                                 \numConclusion{1.13}  \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  \excPostExpl( \mbox{\rm\texttt{Exc}} )\\
 				 
                                   \comment{From Property \ref{compile:prop:compProp9} and then  \numConclusion{1.13}}\\
 				 \numConclusion{1.14} \ \forall \mbox{\rm\texttt{Exc}} ,  \forall i,  s \le i \le e',  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \\
-                                                          \methodd.\excPost(\mbox{\rm\texttt{Exc}}, i )  \\
+                                                          \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, i )  \\
                                  
 				 \comment{apply Lemma \ref{relWpExpr}  over hypothesis  \numConclusion{1.11}, \numConclusion{1.12}, \numConclusion{1.14} } \\
 				 
@@ -266,9 +266,9 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 			  
               \comment{apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} \\
 	      \numConclusion{2} \   \wpStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} \\ 
-	      \comment{from the definition of \excPost \ and property \ref{compile:prop:compProp10}} \\
+	      \comment{from the definition of \getExcPost \ and property \ref{compile:prop:compProp10}} \\
 	      \numConclusion{3} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = \\ 
-              \phantom{\forall \mbox{\rm\texttt{Exc}} ,}     \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e' )\\
+              \phantom{\forall \mbox{\rm\texttt{Exc}} ,}     \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' )\\
 	      \comment{we can also conclude from Prop.  \ref{compile:prop:compProp5} and  \ref{compile:prop:compProp4}  } \\
 	      \numConclusion{4} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1} \\
 	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{3} and  \numConclusion{4}    } \\
