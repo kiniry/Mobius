@@ -2,10 +2,12 @@
 
 package escjava;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.io.*;
 
+import javafe.InputEntry;
 import javafe.ast.*;
 import escjava.ast.*;
 import javafe.tc.OutsideEnv;
@@ -36,6 +38,7 @@ import escjava.vcGeneration.*;
 import javafe.util.*;
 
 import escjava.soundness.*;
+import javafe.ast.LShiftVisitor;
 
 /**
  * Top level control module for ESC for Java.
@@ -384,7 +387,31 @@ public class Main extends javafe.SrcTool
             }
             o.close();
         }
-
+        
+        // Calls the visitors that detect cases of unsoundness and
+        // incompleteness on each of the passed in class names
+        if(options().warnUnsoundIncomplete) {
+          // current class we are testing
+          int current_class = 0;
+          // get the list of input entries off the command line
+          ArrayList temp = options.inputEntries;
+          // the package name of this class
+          String[] p = new String[0];
+          // create the visitors
+          RShiftVisitor rshift = new RShiftVisitor();
+          LShiftVisitor lshift = new LShiftVisitor();
+          // run the visitors on each of the classes
+          for(; current_class < temp.size(); current_class++) {
+            // get the type signature for the class we are interested in as
+            // this contains the CompliationUnit we want to run the visitors
+            // over
+          	InputEntry a = (InputEntry) temp.get(current_class);
+            TypeSig classtype = OutsideEnv.lookup(p, a.name);
+            CompilationUnit classunit = classtype.getCompilationUnit();
+            rshift.visitASTNode(classunit);
+            lshift.visitASTNode(classunit);
+          }
+        }
 	if (!keepProver) ProverManager.kill();
     }
 
