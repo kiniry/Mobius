@@ -16,21 +16,25 @@ $$ \begin{array}{ll}
    \end{array}  $$
 
 
-Our language supports two kinds of values : values of the basic type \Myint  \ and reference values   \RefValues. \RefValues \  may be either references to
-class objects or references to array objects. The set of references of class objects is denoted with $ref$ and the set of references to array 
-objects is represented with $refArr$. The following  definition gives the  formal grammar of values:
+Our language supports two kinds of values : values of the basic type \Myint  \ and reference values   \RefValues. \RefValues \  may be references to
+class objects, references to array objects or the special null value which denotes the reference pointing nowhere.
+ The set of references of class objects is denoted with \Ref{}, the set of references to array  objects is represented with \RefValuesArr
+and the null reference value is denoted with \Mynull. The following  definition gives the  formal grammar for values:
  
 $$\begin{array}{ll}
              \Values &       ::= i \mid \RefValues \\
 	     \RefValues &    ::= \Ref \mid \RefValuesArr  \mid   \Mynull \\  %: C , C \in \reff \mid \RefValuesArr  \mid   \Mynull \\
-	     \RefValuesArr & ::= refArr   %: C\lbrack \rbrack,  C\lbrack \rbrack \in \reffArr
+	     %\RefValuesArr & ::= \{  ra_1, \ldots,\}   %: C\lbrack \rbrack,  C\lbrack \rbrack \in \reffArr
  \end{array}$$
 
 
 
 Every type has an associated default value which can be accessed via
-the function \defaultValueOnly. The function is defined as follows:
-$$\mbox{\rm\textsf{defVal}} :   \AllRefs    \rightarrow   \Values $$
+the function \defaultValueOnly. 
+Particularly, for reference types (\AllRefs) the default value is 
+\Mynull{} and the default value of \Myint{} type is $0$.
+Thus, the definition of the  function \defaultValueOnly{} is as follows:
+$$\mbox{\rm\textsf{defVal}} :   \JavaType    \rightarrow   \Values $$
 $$ \defaultValue{\anyType} = 
            \left\{\begin{array}{ll}
 	      \Mynull & \anyType \in \AllRefs  \\
@@ -49,3 +53,5 @@ $$\begin{array}{ll}
   \frac{   }{\subtype{C[]}{\Object}} &  
   \frac{ \subtype{C1}{C2}}{\subtype{C1[]}{C2[]}} \\
   \end{array}$$
+Note that the subtyping relation that we use here is a subset of the Java subtyping relation. However, it is a subset of
+the Java's subtyping relation which includes as well interface and abstract class types.

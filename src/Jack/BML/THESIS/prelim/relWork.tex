@@ -1,11 +1,19 @@
 \section{Related Work}\label{relWork}
  A considerable effort has been done on the formalization of 
- the semantics of the JVM. Most of the existing formalizations cover a representative subset 
- of the language. Among them is the work \cite{FM99FFJ} by N.Freund and J.Mitchell and \cite{qian99formal} by Qian,
- which give a formalization in terms of a small step operational semantics of a
+ the JVM semantics as a reply to the holes and ambiguities encountered in
+ the specification of the Java bytecode verifier. 
+ Thus,  most of the existing formalizations are
+ used for reasoning over the Java bytecode well-typedness.
+ 
+ %cover a representative subset of the language.
+ We can start with the work of Stata and Abadi \cite{stata98type} in which they propose a semantics  and 
+  typying rules for checking the correct behavior of  subroutines in the presence of polymorphism.
+ In \cite{FM99FFJ}  N.Freund and J.Mitchell extend the aforementioned work to 
+ a language which supports all the Java features e.g.
+ object manipulation and instance initialization, exception handling, arrays.
+ In \cite{qian99formal}  Qian  gives a formalization in terms of a small step operational semantics of a
  large subset of the Java bytecode language including method calls, object creation and manipulation,
  exception throwing and handling as well subroutines, which is used for the formal specification of the language and the bytecode verifier.
-
  Based on the work of Qian, in \cite{pusch98proving} C.Pusch gives a formalization of the JVM and the Java Bytecode Verifier
  in Isabelle/HOL and proves in it the soundness of the specification of the verifier.
  In \cite{KleinN04}, Klein and Nipkow give a formal small step and big step operational
@@ -13,9 +21,11 @@
  a compiler from Jinja to the language of the JVM. They prove the equivalence between the small and big step
  semantics of Jinja, the  type safety for the Jinja VM, the correctness of the bytecode verifier w.r.t. the type system
  and finally that the compiler preseves semantics and well-typedness.
- 
+  
+
 % Java Card
- The small size and complexity of the JavaCard platform simplifies the formalization of the system and thus,
+  The small size and complexity of the JavaCard platform (the JVM version tailored to smart cards) 
+ simplifies the formalization of the system and thus,
  has attracted  particularly the scientific interest. CertiCartes \cite{barthe01formal,barthe02formal}
  is an in-depth formalization of JavaCard. It has a formal executable
  specification written in Coq of a defensive and an offensive JCVM and an abstract JCVM together with the specification

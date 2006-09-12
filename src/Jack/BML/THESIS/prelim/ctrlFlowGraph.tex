@@ -7,7 +7,7 @@
 
 \newtheorem{propPath}{Lemma}[section]
 
-\section{Representing bytecode programs as control flow graphs}\label{prelim}
+\section{Representing bytecode programs as control flow graphs}\label{prelim:ctrFlow}
 
 This section will introduce a formalization of an unstructured program in terms of a control flow graph.
 The notion of a loop in a bytecode program will be also defined. Note that in the following,
@@ -25,9 +25,9 @@ The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $
  and this is the first element in the method body $\methodd.\body[0]$.
 
  The array of bytecode instructions of a method \methodd \ determine the control flow graph $G( V , \execRel ) $  of method \methodd \ 
-in which the vertices are the instructions of the method body, i.e. 
+in which the vertices are the instructions of the method body.
 
-$$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
+%$$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
 
 % The following definition defines the set of edges in the control flow graph.
 %\begin{defEdge}[Edge in control flow graph]\label{defEdge}  
@@ -41,7 +41,7 @@ Note first that we rather use the infix notation $\methodd.\body[j] \execRel \me
  We say that $\methodd.\body[j]$ is a predecessor of $\methodd.\body[k]$ and that  $\methodd.\body[k]$ is a successor of  $\methodd.\body[j]$.
  The definition states the \return \  instruction  does not have successors.
 If  $\methodd.\body[j ]$ is the jump instruction $ \ifCond \ k $ then  its successors are the instruction at index $k$ in the method body   
-$\methodd.\body[k]$ and the instruction and the instruction $\methodd.\body[j + 1 ]$. {defEdge}
+$\methodd.\body[k]$  and the instruction $\methodd.\body[j + 1 ]$. 
 From the definition, we also get that every instruction which potentially may throw an exception of type \texttt{Exc}
 has as successor the first instruction of the exception handler that may handle the exception type \texttt{Exc}. For instance, a successor
 of the instruction $\putfield$ is the exception handler entry point which can handle  the \NullPointerExc \ exception. 
@@ -113,30 +113,33 @@ from an instruction in a given loop in the control flow graph to the loop entry)
  
 \begin{defLoop}[Backedge Definition]
 \label{defLoop}
-Assume we have the method \methodd \ with body \methodd.\body \ which determine the control flow graph $G(V, \execRel) $.  We assume also 
-that the entry point of $G$ is the vertice  $\methodd.\body[0]$.
- In such a graph $G$, we say that $\ins{loopEntry}$ is a loop entry instruction and $\ins{f}$ is a loop end instruction
+Assume we have the method \methodd \ with body \methodd.\body \ which determine the control flow graph $G(V, \execRel) $
+with entry point $\methodd.\body[0]$.
+ In such a graph $G$, we say that $\ins{loopEntry}$ is a loop entry instruction and $\ins{loopEnd}$ is a loop end instruction
  of the same loop if the following conditions hold:
 \begin{itemize}
-\item for every execution path $P$ from $\methodd.\body[0]$ to  $\ins{f}$:   $P~=~\methodd.\body[0] \execRel^{+} \ins{f}$
- there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{f} \notin  \ subP  $
-%every path in the control flow graph starting at the entry point $\methodd.\body[0]$  that reaches $\ins{f}$, passes before reaching $\ins{f}$
+\item for every execution path $P$ from $\methodd.\body[0]$ to  $\ins{loopEnd}$ such that
+     $P~=~\methodd.\body[0] \execRel^{+} \ins{loopEnd}$
+     there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{loopEnd} \notin  \ subP  $
+%every path in the control flow graph starting at the entry point $\methodd.\body[0]$  that reaches $\ins{loopEnd}$, passes before reaching $\ins{loopEnd}$
 % through  $\ins{loopEntry}$ 
-\item there is a path in which $\ins{loopEntry}$  is executed immediately after the execution of $\ins{f}$ ( $\ins{f} \execRel \ins{loopEntry}$)
+\item there is a path in which $\ins{loopEntry}$  is executed immediately after the execution of $\ins{loopEnd}$ ( $\ins{loopEnd} \execRel \ins{loopEntry}$)
 \end{itemize}
-We denote the execution relation between $\ins{f}$ and  $\ins{loopEntry}$ with \\
-$\ins{f} \execRel^l \ins{loopEntry}$ and we say that $  \execRel^l $  is a backedge. 
+We denote the execution relation between $\ins{loopEnd}$ and  $\ins{loopEntry}$ with \\
+$\ins{loopEnd} \execRel^l \ins{loopEntry}$ and we say that $  \execRel^l $  is a loop backedge. 
 \end{defLoop}
 Note  that  in  \cite{ARUCom1986}  reducibility is defined in terms of the dominator relation. 
-Although  not said exlicitely, the first condition in the upper definition corresponds to the dominator relation\footnote{we decided to not introduce the standard
+Although  not said explicitely, the first condition in the upper definition corresponds to the dominator relation\footnote{we decided to not introduce the standard
 definitions as it has several technical details for the exposition of which we would need more space and which are of not particular interest for the current thesis}.
 
 We illustrate the above definition with the control flow graph of the example from Fig. \ref{replaceSrc}.% in Fig. \ref{ctrlflow}.
 In the figure, we rather show the execution relation between basic blocks which is a standard notion denoting a sequence of instructions which execute sequentially
 and  where only the last one may be a jump and the first may be a target of a jump. 
-The black edges represent a sequential execution relation, while dashed edges represent a backedge, i.e. the edge which stands for the execution
+The black edges represent a sequential execution relation, while dashed edges represent  loop backedge, i.e. the edge which stands for the execution
 relation between a final instruction (instruction at index \texttt{18}) in the bytecode cycle and the entry instruction of the cycle (instruction at index \texttt{19}).  
-
+Note that the ``back'' in ``backedge'' stands for  that the control flow goes back to an instruction through which 
+the execution path has already passed which does not forcingly mean that the orientation of the edge will be in a backwards direction in the graphical representation 
+of the graph. \todo{che pas si c'est util mais Lilian a dit que ce n'est pas claire}
 % Note that from now on, we are interested in  control flow graphs with the following properties:
 
 % \begin{itemize}
@@ -159,9 +162,9 @@ relation between a final instruction (instruction at index \texttt{18}) in the b
 % of our calculus in section \ref{proof}.
 % \begin{propPath} \label{propPath}
 % Let's have a control flow graph with an entry point instruction $\methodd.\body[0]$ and two instructions $\ins{loopEntry}$ and  
-% $\ins{f}$ such that  \\
-% $\ins{f}~\execRel^l~\ins{loopEntry}$. If there exists an execution path $P$ from $\methodd.\body[0]$ to  $\ins{f}$:   $P~=~\methodd.\body[0] \execRel^{+} \ins{f}$
-% then there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{f} \notin  \ subP  $ 
+% $\ins{loopEnd}$ such that  \\
+% $\ins{loopEnd}~\execRel^l~\ins{loopEntry}$. If there exists an execution path $P$ from $\methodd.\body[0]$ to  $\ins{loopEnd}$:   $P~=~\methodd.\body[0] \execRel^{+} \ins{loopEnd}$
+% then there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{loopEnd} \notin  \ subP  $ 
 % \end{propPath} 
 
 

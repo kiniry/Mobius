@@ -11,18 +11,17 @@
  When a method terminates its execution normally, the result, if any, is popped from the method operand stack, the method frame is
  popped from the frame stack and the method result (if any) is pushed on the operand stack
  of its caller. If the method terminates with an exception, it does not return any result and the exception object is propagated back to its callers.
-
-
- Most of the existing formalizations of the JVM semantics model the method frame stack and use a small step operational semantics. 
- This approach is necessary when reasoning about the properties of the JVM or the bytecode verifier. 
-
- However the purpose of the operational semantics presented in this chapter is to give
+ Thus, an operational semantics which  follows closely the JVM would model the method frame stack and use a small step operational semantics. 
+ 
+ However, the purpose of the operational semantics presented in this chapter is to give
  a model w.r.t.which a proof of correctness of our verification calculus will be done. Because the latter
- is modular and assumes termination,
- i.e. the verification calculus assumes the correctness and the termination of the invoked methods,
+ is modular and assumes program termination,
+ i.e. the verification calculus assumes the correctness and the termination of the rest of the methods,
  we do not need a model for reasoning about the termination or the correctness of invoked methods.
- A big step semantics provides a suitable level of abstraction as it does not express those details.
- In the following, we give a short review of the formalizations of the JVM.
+ A big step operational semantics which is silent about the method frame stack
+ provides a suitable level of abstraction.
+ 
+%In the following, we give a short review of the formalizations of the JVM.
 
 %Particularly, a model where method invokation does not expose the execution ``details''
 %of invokation but rather assumes its termination and exposes its result is sufficient.

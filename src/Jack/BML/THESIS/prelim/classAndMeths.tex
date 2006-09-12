@@ -1,11 +1,12 @@
  %\newcommand{\isFieldOfOnly}{\mbox{ \rm \textit{isFieldOf}} \ }
  % \newcommand{\isFieldOf}[2]{\mbox{ \rm \textit{isFieldOf}}(#1, #2) }
 
- \section{Classes, Fields and Methods}\label{clazz}
- Java programs are a set of classes. As the JVM says \textit{ A class declaration specifies a new reference type and provides its implementation. \ldots
- The body of a class declares members (fields and methods), static initializers, and constructors. }
- In our formalisation, the set of classes is denoted with $\ClassSet$, the set of fields with $\FieldSet$, the set of methods $\MethodSet$.
- We define a domain for class names \ClassName, for field names \FieldName \ and for method names \MethodName respectively.
+ \section{Classes, fields and methods}\label{clazz}
+ Java programs are a set of classes. As the JVM says \textit{`` A class declaration specifies a new reference type and provides its implementation. \ldots
+ The body of a class declares members (fields and methods), static initializers, and constructors.''}
+ In our formalisation, classes are encoded  with the data structure $\ClassSet$,  fields with $\FieldSet$ and
+ methods are encoded with $\MethodSet$ data structure. 
+ We define a domain for class names \ClassName, for field names \FieldName{} and for method names \MethodName{} respectively.
 
  An object of type \ClassSet \ is a tuple with the following components: list of field objects (\fields), which are declared in this class,
  list of the methods declared in the class (\methods), the name of the class (\className)   and the super class of the class (\superClass).
@@ -37,15 +38,15 @@
   we assign to its attribute \declaredIn \ the value $\bottom$.  
   The special field which stands for the array length  
  (the name of the object and its field  \fieldName \ have the same name ) is the following:
- $$  \length =  \left\{\begin{array}{ll} \fieldName & = \length;\\
+ $$  \length =  \left\{\begin{array}{ll} \fieldName & = length;\\
 			                 \fieldType  & = int; \\
 					 \declaredIn & = \bottom
                      \end{array} \right\}$$
 
- Note that there are other possible approaches for modeling the array length. For instance,
+ There are other possible approaches for modeling the array length. For instance,
  the array length can be part of the array reference. We consider that both of the choices are equivalent.
  However, the current formalization follows closely our implementation  of the verification condition 
- generator which is necessary if we want to do a proof of correctness of the implementation.
+ generator which encodes in this way array length which is necessary if we want to do a proof of correctness of the implementation.
 
 % We assume that for any two different fields $\fieldd_1$ and $\fieldd_2$ their names are different : 
 % $$\fieldd_1 \neq \fieldd_2 \Rightarrow \fieldd_1.fieldName \neq  \fieldd_2.fieldName  $$
