@@ -1,4 +1,712 @@
+2006-05-05  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/fmco.tex:
+	Removed fmco.tex, as this has moved to the JML2 repository,
+	in directory
+	  /docs/fmco05
+	to be precise
+
+2006-04-19  everest  <everest@category.ucd.ie>
+
+	* docs/Escjava2-Logics/coq/defs.v: more array axioms
+
+2006-04-07  chalin  <chalin@category.ucd.ie>
+
+	* Escjava/Makefile: *** empty log message ***
+
+	* Makefile:
+	For the fix-perms target: added "*.pl" to the list of files that
+	need to be chmod'ed as executable.
+
+2006-03-29  everest  <everest@category.ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	I disabled 'Clement's experiment'
+
+2006-03-24  chalin  <chalin@category.ucd.ie>
+
+	* slides/fmco05/fmco.pdf:
+	* slides/fmco05/fmco.tex, slides/fmco05/work-log-and-status.txt:
+	I've reviewed all sections and declare this ready for submission.
+
+	* slides/fmco05/fmco.tex:
+	* slides/fmco05/work-log-and-status.txt:
+	- Section 6: completed review, editing and spell-checking (PC).
+
+	* slides/fmco05/AlarmClock.java:
+	_alarm_going_off renamed to _alarmEnabled
+
+	* slides/fmco05/fmco.tex:
+	* slides/fmco05/work-log-and-status.txt:
+	- Section 5: completed review, editing and spell-checking (PC).
+
+2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
+
+2006-03-24  chalin  <chalin@category.ucd.ie>
+
+	* slides/fmco05/AlarmClock.java:
+	* slides/fmco05/AlarmClock_interfaceless.java:
+	* slides/fmco05/Makefile:
+	Renamed AlarmClock_interfaceless.java to AlarmClock.java.
+
+	* slides/fmco05/.cvsignore: *** empty log message ***
+
+	* slides/fmco05/AlarmClock_interfaceless.java: Indentation.
+
+	* slides/fmco05/fmco.tex:
+	* slides/fmco05/work-log-and-status.txt:
+	* Section 4: completed review, editing and spell-checking (PC).
+
+	* slides/fmco05/work-log-and-status.txt: Added todo item.
+
+	* slides/fmco05/TickTockClock.java: Minor formatting change.
+
+2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/fmco.tex:
+	Synched Section 3 with TickTockClass rather than Class.
+
+2006-03-24  chalin  <chalin@category.ucd.ie>
+
+	* slides/fmco05/Clock.java: Re-establishing former postconditions.
+
+	* slides/fmco05/Clock.java:
+	Small changes, mainly to get the figure to fit in a single page.
+
+	* slides/fmco05/Makefile: Added esc target.
+
+	* slides/fmco05/work-log-and-status.txt:
+	- Releasing mutex of Section 3 to Erik.
+	- Keeping mutex for Section 4.
+
+	* slides/fmco05/fmco.tex: - Fixed issue re. reference to Rosenblum.
+	- Other minor fixes.
+
+	* slides/fmco05/Clock.java:
+	Updating spec to /really/ make use of the model field.
+
+	* slides/fmco05/SettableClock.java:
+	Didn't compile (parentheses missing).  Formatted code more nicely (on multiple lines) since the figure shows up on a page by itself anyways.
+
+	* slides/fmco05/work-log-and-status.txt: Taking mutex.
+
+2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
+
+	* slides/fmco05/fmco.tex:
+	minor fixes Section 2-7
+
+2006-03-24  chalin  <chalin@category.ucd.ie>
+
+	* slides/fmco05/fmco.tex:
+	* slides/fmco05/work-log-and-status.txt:
+	- Section 8: Conclusion, reviewed and updated.
+	- Minor change in abstract.
+
+2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/fmco.tex:
+	typos Section 3 fixed
+
+2006-03-24  chalin  <chalin@category.ucd.ie>
+
+	* slides/fmco05/fmco.tex:
+	* slides/fmco05/work-log-and-status.txt:
+	- Section 2: completed review, editing and spell-checking (PC).
+	  - This seems like is very close to being final -- maybe a mising reference.
+	  - I've pulled out the not on non-null because there are no referece type
+	    decls in the samples of Section 2. :)
+
+2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
+
+2006-03-24  chalin  <chalin@category.ucd.ie>
+
+	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
+
+	* slides/fmco05/fmco.tex:
+	* slides/fmco05/work-log-and-status.txt:
+	- Section 1: completed review, editing and spell-checking.
+	  There is a potential to trim citations in Section 1.1 -- see margin notes --
+	  though I have left them in for now.
+
+	* slides/fmco05/fmco.bib: - Added ref to Jive.
+	- Updated JML Ref Man entry.
+
+	* slides/fmco05/work-log-and-status.txt: Work log and paper status.
+
+2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
+
+	* slides/fmco05/DigitalDisplayClock.java:
+	* slides/fmco05/fmco.bib:
+	* slides/fmco05/fmco.tex:
+	*** empty log message ***
+
+	* slides/fmco05/DigitalDisplayClock.java:
+	removered erroneous /@* rep @*/
+
+	* slides/fmco05/Makefile.defs:
+	* slides/fmco05/AlarmClock_interfaceless.java:
+	* slides/fmco05/AlarmInterface.java:
+	* slides/fmco05/BrokenDigitalDisplayClock.java:
+	* slides/fmco05/Clock.java:
+	* slides/fmco05/DigitalDisplayClock.java:
+	* slides/fmco05/Makefile:
+	* slides/fmco05/SettableClock.java:
+	* slides/fmco05/TickTockClock.java:
+	* slides/fmco05/WrappingCounter.java:
+	* slides/fmco05/fmco.bib:
+	* slides/fmco05/fmco.tex:
+	*** empty log message ***
+
+2006-03-06  mikolas  <mikolas@category.ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
+	I ran a spell checker on DocumentationVcGenerator.tex and
+	corrected some grammar but there's still lots of mistakes.
+
+2006-02-21  alx-gforge  <alx-gforge@category.ucd.ie>
+
+	* docs/Escjava2-ImplementationNotes/Makefile:
+	* docs/Escjava2-Provers/Makefile:
+	* docs/Escjava2-Extending/Makefile:
+	* docs/Escjava2-Logics/Makefile:
+	* Makefile.defs:
+	changes to the makefiles so that it is easy to replace the old texi2pdf
+	with the current RedHat command texi2dvi -p
+
+2006-02-17  raboof  <raboof@category.ucd.ie>
+
+	* Houdini/java/houdini/CopyLoaded.java:
+	properly fixed 'loaded' race condition now (though possibly overly robust).
+
+	added docs
+
+2006-02-16  everest  <everest@category.ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/.cvsignore:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	sum keyword
+
+	* Escjava/java/escjava/vcGeneration/TDotVisitor.java:
+	*** empty log message ***
+
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/xml/TXmlVisitor.java:
+	sum keyword
+
+	* Escjava/java/escjava/vcGeneration/simplify/TSimplifyVisitor.java:
+	*** empty log message ***
+
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java: sum
+
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TVisitor.java:
+	the sum keyword
+
+2006-02-15  raboof  <raboof@category.ucd.ie>
+
+	* Javafe/java/javafe/ast/StandardPrettyPrint.java:
+	Don't print field declaration initialisers when 'specOnly' is set.
+
+	* Houdini/java/houdini/InferThrows.java:
+	commented out obsolete (?) invariant
+
+	* Escjava/java/escjava/tc/PrepTypeDeclaration.java:
+	don't use clone (oops)
+
+	* Escjava/java/escjava/tc/PrepTypeDeclaration.java: robustness
+
+	* Javafe/java/javafe/reader/BinReader.java:
+	parameter required to be non-null
+
+	* Escjava/java/escjava/RefinementSequence.java: minor fixes
+
+2006-02-14  everest  <everest@category.ucd.ie>
+
+	* Escjava/Makefile: Fixed the vcgen problem (i think)
+
+2006-02-13  raboof  <raboof@category.ucd.ie>
+
+	* Houdini/GetAssocDecls.perl: perl is usually /usr/bin/perl
+
+	* Houdini/java/houdini/Job.java: Job is not an OptionHandler
+
+	* Houdini/java/houdini/OptionHandler.java:
+	OptionHandler is no longer needed
+
+	* Houdini/java/houdini/Main.java:
+	convert houdini main to options design pattern
+
+	* Houdini/java/houdini/HoudiniServer.java:
+	convert HoudiniServer to options pattern
+
+	* Houdini/java/houdini/WorkList.java: add mandatory ';'
+
+	* Houdini/java/houdini/OptionHandlerOptions.java:
+	common options for houdini server and clients
+
+	* Houdini/runOnSelf: simpler 'runonself' script
+
+	* Houdini/java/houdini/CopyLoaded.java:
+	Copy instead of parse-and-prettypring .spec and .jml files.
+
+	This is not only a (probably minor) performance boost, but also a workaround
+	for the fact that the parsing and prettyprinting code doesn't currently provide
+	a completely correct code->ast->code roundtrip.
+
+	* Houdini/java/houdini/CheckPoint.java:
+	* Houdini/java/houdini/FinalESCRun.java:
+	* Houdini/java/houdini/GuardManager.java:
+	* Houdini/java/houdini/HoudiniClient.java:
+	* Houdini/java/houdini/WorkerState.java:
+	use options/frontendtool design pattern for Houdini also
+
+	* Houdini/java/houdini/AnnLinks.java:
+	* Houdini/java/houdini/AnnotationVisitor.java:
+	* Houdini/java/houdini/CommonAnnotationGuesser.java:
+	* Houdini/java/houdini/PragmaInstr.java:
+	* Houdini/java/houdini/StandardAnnotationGuesser.java:
+	* Houdini/java/houdini/util/Assert.java:
+	fix annotation syntax, both for generated annotations and some annotations to houdini code.
+
+	* Houdini/Makefile:
+	* Houdini/jhoudini:
+	* Houdini/setup:
+	- Removed 'setup' script
+	- made Makefile independent of setup script
+	- added required 'setup' options to jhoudini
+	- many other jhoudini fixes
+	- removed jhoudini dependency on (and easy support for) rsh
+
+2006-02-03  raboof  <raboof@category.ucd.ie>
+
+	* Escjava/java/escwizard/AnnotationInserter.java:
+	* Escjava/java/escwizard/FileCollection.java:
+	* Escjava/java/escwizard/FileInfo.java:
+	* Escjava/java/escwizard/Instr.java:
+	* Escjava/java/escwizard/NowarnInstr.java:
+	* Escjava/java/escwizard/PragmaInstr.java:
+	* Escjava/java/escwizard/WorkItem.java:
+	* Escjava/java/houdini/AnnLinks.java:
+	* Escjava/java/houdini/AnnotationGuesser.java:
+	* Escjava/java/houdini/AnnotationVisitor.java:
+	* Escjava/java/houdini/Annotator.java:
+	* Escjava/java/houdini/CommonAnnotationGuesser.java:
+	* Escjava/java/houdini/InferThrows.java:
+	* Escjava/java/houdini/LibraryAnnotationGuesser.java:
+	* Escjava/java/houdini/Main.java:
+	* Escjava/java/houdini/MoreReachableAnnotationGuesser.java:
+	* Escjava/java/houdini/ReqFalseAnnotationGuesser.java:
+	* Escjava/java/houdini/StandardAnnotationGuesser.java:
+	* Escjava/java/houdini/SwingGuesser.java:
+	* Houdini/java/houdini/AnnLinks.java:
+	* Houdini/java/houdini/AnnotationGuesser.java:
+	* Houdini/java/houdini/AnnotationInserter.java:
+	* Houdini/java/houdini/AnnotationVisitor.java:
+	* Houdini/java/houdini/Annotator.java:
+	* Houdini/java/houdini/CommonAnnotationGuesser.java:
+	* Houdini/java/houdini/FileCollection.java:
+	* Houdini/java/houdini/FileInfo.java:
+	* Houdini/java/houdini/InferThrows.java:
+	* Houdini/java/houdini/Instr.java:
+	* Houdini/java/houdini/LibraryAnnotationGuesser.java:
+	* Houdini/java/houdini/Main.java:
+	* Houdini/java/houdini/MoreReachableAnnotationGuesser.java:
+	* Houdini/java/houdini/NowarnInstr.java:
+	* Houdini/java/houdini/PragmaInstr.java:
+	* Houdini/java/houdini/ReqFalseAnnotationGuesser.java:
+	* Houdini/java/houdini/StandardAnnotationGuesser.java:
+	* Houdini/java/houdini/SwingGuesser.java:
+	* Houdini/java/houdini/WorkItem.java:
+	Moving houdini-related Java files from Escjava to the Houdini package
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	Fix printing of PARSEDSPECS as described in bug #239.
+
+	Change did not affect test output.
+
+	* Houdini/java/houdini/CopyLoaded.java:
+	* Javafe/java/javafe/CopyLoaded.java:
+	* Escjava/java/houdini/CopyLoaded.java:
+	CopyLoaded cleanup:
+
+	* Merged Escjava/java/houdini/CopyLoaded.java and Javafe/java/javafe/CopyLoaded.java
+	- Made CopyLoadedOptions extend escjava.Options (because these static settings are
+	  required by some escjava code called by CopyLoaded)
+	- Moved resulting CopyLoaded.java file into the Houdini envelope
+
+2006-02-01  alx-gforge  <alx-gforge@category.ucd.ie>
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	I added information that it is possible to call non-pure methods in pure
+	ones.
+
+2006-01-30  raboof  <raboof@category.ucd.ie>
+
+	* Houdini/HGuards.perl:
+	This script is required by jhoudini, but wasn't in CVS or in the
+	original release.
+
+	It was reconstructed by looking at the pieces of code that produce
+	its input and require its output, so it might be incorrect, but
+	for now it appears to work.
+
+2006-01-27  chalin  <chalin@category.ucd.ie>
+
+	* specs/java/util/Arrays.refines-spec:
+	Now expressing \result != null of asList as non_null in the method
+	signature.
+
+	* specs/java/util/Vector.spec:
+	Removed invalid precondition conjunct on constructor:
+	c.content.theSize < Integer.MAX_VALUE.
+
+	* specs/java/lang/Object.spec:
+	Adjusted spec of toString() - now using nullity modifier instead of
+	nullity predicates (which allows JML and ESC/Java to report more
+	errors).
+
+	* specs/java/awt/event/ActionListener.jml: *** empty log message ***
+
+2005-12-29  jkiniry  <jkiniry@category.ucd.ie>
+
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	Rewrote several captions.  Added diagrams about the various
+	TagConstants classes, the Java lexer and support classes, and the Java
+	and pragma parsers.  Wrote a full class chart for Token and started
+	one for Lexer.  Added a list of floats for BON diagrams.  Started
+	writing the Java lexer and parser sections.
+
+2005-12-28  jkiniry  <jkiniry@category.ucd.ie>
+
+	* Javafe/java/javafe/parser/Token.java:
+	Added some docs and specs to correspond to BON specification in
+	"Extending..." booklet.  A bit of documentation cleanup as well.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Added an Emacs file variable to indicate this file should be edited in
+	Java mode.  A bit of documentation cleanup as well.
+
+	* Javafe/astgen/astactions.h:
+	* Javafe/test/javafe/parser/test/TestExpr.java:
+	* Javafe/test/javafe/parser/test/TestLex.java:
+	* Javafe/test/javafe/parser/test/TestParse.java:
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	Wrote more detailed outline for several chapters, some more top-level
+	architecture documentation, a section on astgen, and quite a bit of
+	the testing extensions chapter.  Updated documentation and
+	specifications in source code for lexer and parser test harnesses to
+	correspond to the BON in this booklet.
+
+	* Escjava/test/junittests/Makefile:
+	* Javafe/Makefile:
+	* Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	* docs/Escjava2-Provers/Makefile:
+	Standardised some rule names (use underscores instead of hyphens),
+	indentation (use tabs instead of spaces), @echo use (quote string
+	to echo), and refactor typecheckJDK rule into two rules, one for
+	typechecking pre JDK 1.4 source (typecheckOldJDK) and one for
+	typechecking JDK 1.4 (typecheckJDK14).  The old rule typecheckJDK
+	still exists and just calls the two new rules.
+
+2005-12-27  jkiniry  <jkiniry@category.ucd.ie>
+
+	* Javafe/test/javafe/test/fe/test2000/ans:
+	Corrected test2000's expected output (it should be blank).
+
+	* Javafe/java/javafe/ast/hierarchy.j: Fixed indentation of a method.
+
+	* Escjava/test/jdktests/skip, Escjava/test/junittests/skip:
+	Skipping tests that are currently failing per Patrice's request.  Bugs
+	have been filed on all currently failing tests.
+
+	* Escjava/java/escjava/ast/.cvsignore:
+	Ignoring DecreasesInfo.java now that it is in hierarchy.j
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BinaryExpr.sx:
+	javafe.ast.BinaryExpr Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.GeneratedTags.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.GenericBlockStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.GenericVarDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Identifier.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.IdentifierVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.IfStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ImportDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ImportDeclVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.InitBlock.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.InstanceOfExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.InterfaceDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LabelStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LexicalPragma.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LexicalPragmaVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LiteralExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LocalVarDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.MethodDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.MethodInvocation.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ModifierPragma.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ModifierPragmaVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Modifiers.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Name.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.NewArrayExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.NewInstanceExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ObjectDesignator.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.OnDemandImportDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.OperatorTags.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ParenExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.PrettyPrint.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.PrimitiveType.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ReturnStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.RoutineDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SimpleName.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SingleTypeImportDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SkipStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.StandardPrettyPrint.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Stmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.StmtPragma.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.StmtVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SuperObjectDesignator.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SwitchLabel.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SwitchStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SynchronizeStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TagConstants.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ThisExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ThrowStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TryCatchStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TryFinallyStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Type.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclElem.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclElemPragma.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclElemVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeModifierPragma.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeModifierPragmaVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeName.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeNameVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeObjectDesignator.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.UnaryExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Util.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VarDeclStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VarInit.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VarInitVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VariableAccess.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Visitor.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VisitorArgResult.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.WhileStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast._SpecialParserInterface.sx:
+	javafe.ast.[G-Z].* Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ASTDecoration.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ASTNode.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.AmbiguousMethodInvocation.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.AmbiguousVariableAccess.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ArrayInit.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ArrayRefExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ArrayType.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BlockStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BranchStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BreakStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CastExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CatchClause.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CatchClauseVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ClassDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ClassDeclStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ClassLiteral.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CompilationUnit.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CompoundName.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CondExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ConstructorDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ConstructorInvocation.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ContinueStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.DefaultVisitor.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.DelegatingPrettyPrint.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.DoStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.EvalStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Expr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ExprObjectDesignator.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ExprVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FieldAccess.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FieldDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ForStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FormalParaDecl.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FormalParaDeclVec.sx:
+	javafe.ast.[A-F].* Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.CheckCompilationUnit.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.CheckInvariants.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.ConstantExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.Env.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForCU.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForLocalType.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForLocals.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForTypeSig.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.FieldDeclVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.FlowInsensitiveChecks.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.Listener.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.LookupException.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.MethodDeclVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.OutsideEnv.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.PrepTypeDeclaration.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.SLResolution.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TagConstants.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypeCheck.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypePrint.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypeSig.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypeSigVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.Types.sx:
+	javafe.tc Simplify benchmark/tests
+
+2005-12-26  jkiniry  <jkiniry@category.ucd.ie>
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.ClassPath.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.EmptyEnum.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.ExtTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Extension.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.FileTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Filter.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.FilterEnum.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.HashTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.LeafTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.LookAheadEnum.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.PathComponent.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.PkgTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.PreloadedTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Query.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Resolve.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Resolve_AmbiguousName.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Resolve_Result.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.SlowQuery.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.StringUtil.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Tree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.TreeWalker.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.UnionTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.ZipTree.sx:
+	javafe.filespace Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.test.TestExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.test.TestLex.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.test.TestParse.sx:
+	javafe.parser.test Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.Lex.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.Parse.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseExpr.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseStmt.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseType.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseUtil.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.PragmaParser.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.TagConstants.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.Token.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.TokenQueue.sx:
+	javafe.parser Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Assert.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.AssertionFailureException.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.BufferedCorrelatedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.ClipPolicy.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.CorrelatedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.CorrelatedReaderTest.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.ErrorSet.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.FatalError.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.FileCorrelatedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.FilterCorrelatedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Info.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Location.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.LocationManagerCorrelatedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.NotImplementedException.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Set.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.StackVector.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.SubCorrelatedReader.sx:
+	javafe.util Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.CountFilesLoaded.sx:
+	javafe.test Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/tohtml.DeclLinks.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/tohtml.Java2Html.sx:
+	tohtml Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.LocTool.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.Print.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.SuperlinksTest.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.SupertypeTest.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.lex.TestLex.sx:
+	javafe.test Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.ASTClassFileParser.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.BinReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.CachedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.DescriptorParser.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.MethodSignature.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.Reader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.SrcReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.StandardTypeReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.TypeReader.sx:
+	javafe.reader Simplify benchmark/tests
+
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.GenericFile.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.NormalGenericFile.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.UnopenableFile.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.ZipGenericFile.sx:
+	javafe.genericfile Simplify benchmark/tests
+
+	*
+	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.CopyLoaded.sx:
+	*
+	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.CountLines.sx:
+	*
+	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.FrontEndTool.sx:
+	*
+	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.PrintSpec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.SrcTool.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.TestTool.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.Tool.sx:
+	javafe Simplify benchmark/tests
+
+2005-12-22  jkiniry  <jkiniry@category.ucd.ie>
+
+	* Javafe/astgen/astactions.h:
+	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
+	Wrote the first 3/4 of a section on astgen.  Updated the docs in the
+	source of astgen to correspond to the text in this section.
+
 2005-12-18  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* specs-chalin-kiniry/Makefile: Standardising echo use.
+
+	* Javafe/java/javafe/ast/Modifiers.java: Javadoc cleanup.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Added DecreasesInfo to header docs.
+
+	* prj.el: Turned off imenu use: as parsing is too slow.
+
+	* Escjava/java/escjava/ast/Modifiers.java:
+	* Javafe/test/javafe/test/fe/Makefile:
+	A bit of code cleanup.  I considered moving Modifiers into
+	hierarchy.j, but since it is really a support class outside of the
+	AST, I have kept it separate.
+
+	* Escjava/test/junittests/skip:
+	Skipping current tests that I am working on.
+
+	* Javafe/test/javafe/test/fe/test2000/run:
+	* Javafe/test/javafe/test/fe/test2001/ans:
+	Correcting test output, or lack thereof.
+
+	* ChangeLog: Standard ChangeLog update.
 
 	* Escjava/test/junittests/FormalNullableInheritance.java-expected:
 	* Escjava/test/junittests/StaticInnerClasses.java-expected:
