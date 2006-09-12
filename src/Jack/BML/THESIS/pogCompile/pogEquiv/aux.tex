@@ -193,7 +193,7 @@ For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and
  
   \begin{itemize}
          \item $\psi = \inter{e}{e+1}$
-	 \item$\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\excPost(\mbox{\rm\texttt{Exc}}, e) $ 
+	 \item$\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e) $ 
   \end{itemize}
       then it holds 
 $$ \wpSrcStmt{\stmt}{\psi }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
@@ -208,7 +208,7 @@ the proof obligations generated over $\stmt$ upon postcondition $\method.\normal
 postcondition function  $\method.\excPostSpec$     and its compilation $\compileLabel{s}{\stmt}{e}$ are the same. The last theorem 
 formalizes this fact.
 
-\begin{theorem}
+\begin{theorem}[Proof obligation preservation]
 For all method \methodd \ if its body is $\stmt$ such that its compilation is 
  $\compileLabel{s}{\stmt}{e}$  we have the following:
 $$ \wpSrcStmt{\stmt}{\methodd.\normalPost }{\methodd.\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
