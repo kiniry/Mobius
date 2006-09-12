@@ -1,18 +1,24 @@
 
 \subsection{Intermediate predicates} \label{wp:interPred}
-In this subsection, we define a function $\interOnly$ which for two instructions that may execute one 
-after another in a control graph  of a method \methodd \ determines the predicate $\inter{j}{k}$ which must hold in between them.
+In this subsection, we define the function $\interOnly$ which for two instructions that may execute one
+after another in a control flow graph  of  method \methodd \ determines the predicate $\inter{j}{k}$ which must hold in between them.
 The function has the signature:
-$$ \interOnly: nat \longrightarrow nat  \longrightarrow \MethodSet \longrightarrow \predWp $$ 
+$$ \interOnly: int \longrightarrow int  \longrightarrow \MethodSet \longrightarrow \predWp $$ 
 
 
-The predicate $\inter{j}{k}$ will be used for determining the weakest predicate that must hold in the prestate of the instruction
-$\ins{j}$ if the execution path after passes through the instruction $\ins{k}$.
+ The predicate $\inter{j}{k}$ will be used for determining the weakest predicate that must hold in the poststate of the instruction
+ $\ins{j}$ in the execution path where  \ins{j} is followed by the instruction $\ins{k}$.
+ This predicate depends on the execution relation between the two instructions $\ins{j}$ and $\ins{k}$.
+ Recall that  we introduced the notion of execution  relation between two instructions  in Chapter \ref{opSem},
+ Section \ref{prelim:ctrFlow}. %There we define the notion of an edge between  a loop entry and loop end instruction and we mark it with $\execRel^l$.
 
-This predicate depends on the execution relation between the two instructions $\ins{j}$ and $\ins{k}$ as the next definition shows.
- 
+
+ % different on source level and a motivation for doing so
+ %Note that this is not necessary for structured programs as loops correspond to program structures and thus are well identified.
+ % However, for unstructured programs with loops annotated with invariants and frame conditions,
+ %this is a necessary step. 
+
 \begin{defInter}[Intermediate predicate between two instructions ]\label{inter} 
-
 Assume that $\ins{j} \execRel \ins{k}$. The predicate $\inter{j}{k}$ must hold after the execution of $\ins{j}$ and before the execution of 
 $\ins{k}$ and is defined as follows:
 \begin{itemize}

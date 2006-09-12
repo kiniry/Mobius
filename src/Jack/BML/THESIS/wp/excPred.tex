@@ -2,14 +2,20 @@
 \newtheorem{defExcRuntime}[defExc]{Definition}% auxiliary function
 \subsection{Weakest precondition in the presence of exceptions } \label{wp:Exc} % this section describes a function which decides what is the exceptional postcondition if an instruction throws an exception
 Our weakest precondition calculus deals with exceptional termination and thus, we need
-some mechanism for providing the exceptional postcondition predicate of an instruction 
-when it throws an exception. 
-For this, we define the function \getExcPost \  with signature :
+a way for calculating the postcondition of an instruction in  case it terminates on an exception.
+In particular, the postcondition should depend on if there is an exception handler or not. 
+In the first case, the execution continues at the exception handler entry point and thus
+ the postcondition of the exceptionally terminating instruction will be the precondition 
+of the instruction from which the exception handler starts. In the case where there is no exception handler,
+ this means that the current method also terminates on exception and thus, the specified exceptional exceptional
+postcondition of the method for this exception should hold.
+
+We define the function \getExcPost \  with signature :
  $$\getExcPost : int   \longrightarrow \excType \longrightarrow  \predWp  $$
 The function \methodd.\getExcPost \ 
 takes as arguments an index $i$ in the array of instructions of method \methodd \ and an exception type
  \mbox{ \rm \texttt{Exc}}  and returns the predicate \methodd.\getExcPost($i$, \mbox{ \rm \texttt{Exc}}   )
-  that must hold after the instruction at index $i$ throws an exception. We give a formal definition hereafter.
+  that must hold after the instruction at index $i$ throws an exception of type \mbox{ \rm \texttt{Exc}}. We give a formal definition hereafter.
 
 
 \begin{defExc}[Postcondition in case of a thrown exception]\label{defExc}
@@ -34,7 +40,7 @@ returns the predicate that must hold in the preststate of the instruction at ind
 Note that the function $\methodd.\excPost$  does not deal with programmatic exceptions thrown by the instruction \athrow,
  neither exception caused by a method invokation
 (execution of instruction \invoke) as the exceptions thrown by those instructions are handled in a different way as we
- shall see later in the definition of the \fwpi \ function in Section \ref{wpRules}.  
+ shall see later in the definition of the \fwpi \ function in the next subsection.  
 
 
 

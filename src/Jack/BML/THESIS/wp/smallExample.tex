@@ -1,145 +1,122 @@
 \section{Example}\label{wp:example}
-In the following, we will consider an example of the application of the verification procedure 
-with \fwpi.
-Consider Fig. \ref{wp:example:sqrSrc}, which gives an example of a Java method which calculates the square of its input which is stated in its postcondition.
-The calculation of the square of the parameter  \lstinline!i!  is done with an iteration which sums all the impair numbers  \lstinline! 2*s + 1, 0<=s <=i! 
- in the local variable \lstinline!sqr!. The invariant states that whenever the loop entry is reached the variable 
-  \lstinline!sqr! will contain the square of the local variable  \lstinline!s! and that \lstinline!0 <=s <=i!. 
-In Fig.\ref{wp:example:sqrBc}, we show the bytecode of method \lstinline!square!. 
-The weakest precondition for a fragment of  the instructions are shown in Fig. \ref{wp:example:sqrBcVc}. 
+In the following, we  shall see what are the resulting preconditions 
+that the \fwpi{} will calculate for the instructions in the bytecode from the program in Fig. \ref{wp:example:sum}.
+
+
+
+Fig.\ref{wp:example:sumVC} shows the weakest preconditions for some of the instructions in the bytecode of the method  \lstinline!sum!.
+In the figure, the line before every instruction gives the calculated weakest precondition of the instruction.
+ Thus, the weakest precondition of the instruction  \return \ at line 74 states that before the instruction is executed the stack top element
+\stack{\counter}  must  contain the sum  of the natural numbers smaller than the local variable \locVar{1}. This precondition is calculated from the method postcondition 
+which is given in curly brackets at line 75.
+
+
+
+The instruction preceding the \return{}
+instruction is a conditional branch which may jump to instruction at line 44 (or at position 5 in the bytecode array). 
+This instruction has as precondition a predicate which reflects the two possible choices after it: if the element below
+the stack top \stack{\counter -1} is smaller than the stack top element \stack{\counter} then the precondition P5 of
+the instruction at line 44 must hold, otherwise the precondition Pre13 of the instruction at line 74 holds. 
+For every instruction which does not targets a loop entry instruction the precondition is calculated from the precondition of its
+ successor instructions. The special cases are the instructions at lines 37 and 56 which point to the loop entry instruction
+ at line 61. As described earlier we can see that the resulting precondition of the instruction at line 56 is calculated upon the loop invariant.
+The precondition of the instruction at line 37 is calculated also upon the loop invariant but also confirms that the invariant implies
+the precondition of the loop entry instruction.
+
+Finally, we can remark that the  verification condition for the method \lstinline!Pre ==> Pre0! is valid.
 
 
 
 
-
-\begin{figure}
-\begin{lstlisting}[frame=trbl]
-//@ ensures \result == i*i; 
-public int square( int i ) { 
-  int sqr  = 0;
-  if ( i < 0) {
-    i = -i;
-  }
-  //@ loop_modifies s, sqr;
-  //@ loop_invariant (0 <= s) && (s <= i) && sqr == s*s ;
-  for (int s = 0 ; s < i; s++ ) {
-    sqr = sqr + 2*s + 1;
-  }
-  return sqr;
-}
-
-\end{lstlisting} 
-\caption{\sc Java method which calculates the square of its input  }
-\label{wp:example:sqrSrc}
-\end{figure}
 
 
 \begin{figure}
-\begin{minipage}[t]{32mm}
+{\scriptsize
 \begin{lstlisting}[frame=trbl]
-0  const 0
-1  store 2
-2  load 1
-3  if\_ge 7 
-4  load 1
-5  neg
-6  store 1
-7  const 0
-8  store 3
-9  goto 19 
-10 load 2
-11 const 2
-12 load 3
-13 mul
-14 add
-15 const 1
-16 add
-17 store 2
-18 iinc 3
-//loop start
-19 load 3 
-20 load 1
-21 if\_icmplt 10
-22 load 2
-23 return
-\end{lstlisting} 
-\end{minipage}
-\phantom{aaaaa}
-\begin{minipage}[t]{20mm}
-$$\begin{array}{l}
- \mbox{\rm\lstinline!square!}. \normalPost = \result == \locVar{1}* \locVar{1} \\ 
- \mbox{\rm\lstinline!square!}.\loopSpecTable =  \\
-        \left\{  \begin{array}{l}  \posL   = 19 \\\\
-                          \invL   =\begin{array}{l} 
-                                     0 <= \locVar{3}  \wedge \\
-				     \locVar{3}<= \locVar{1}   \wedge \\
-                                    \locVar{2} = \locVar{3} *\locVar{3}
-                                   \end{array}\\ \\
-	                  \modifL =  \locVar{3}, \locVar{2}\\
-			  \end{array}\right.
-         \end{array}$$
-\end{minipage}
-\caption{\sc  bytecode of method \lstinline!square! and its specification }
-\label{wp:example:sqrBc}
+{Pre: reg(1) >= 0}
+{Pre0:= 
+ 0>=0 && 0<=reg(1)&& 0==0*(0-1)/2
+ && 
+ forall reg(3), reg(2)
+    reg(3)>=0 &&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2
+       ==> reg(3)<reg(1) ==> Pre5 
+       &&
+       reg(3)>= reg(1) ==>  Pre13}
+0 const 0
+
+{0>=0 && 0<=reg(1)&& st(cntr)==0*(0-1)/2
+ && 
+ forall reg(3), reg(2)
+    reg(3)>=0 &&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2
+       ==> reg(3)<reg(1) ==> Pre5 
+       &&
+       reg(3)>= reg(1) ==>  Pre13}
+1 store 2
+
+{0>=0 && 0<=reg(1)&& reg(2)==0*(0-1)/2
+ && 
+ forall reg(3), reg(2)
+    reg(3)>=0 &&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2
+       ==> reg(3)<reg(1) ==> Pre5 
+       &&
+       reg(3)>= reg(1) ==>  Pre13}
+2 const 0
+
+{st(cntr)>=0 && st(cntr)<=reg(1)&&reg(2)==st(cntr)*(st(cntr)+1)/2
+ && 
+ forall reg(3),reg(2), 
+    reg(3)>=0&&reg(3)<=reg(1)&&reg(2)==reg(3)*(reg(3)-1)/2==> 
+       reg(3)<reg(1) ==> Pre5  && reg(3)>= reg(1) ==> Pre13}
+3 store 3
+
+{I && forall reg(2),reg(3) (I ==> Pre10) }
+4 goto 10
+
+{Pre5:=
+ reg(3)+1>=0&&reg(3)+1<=reg(1)&&reg(2)+reg(3)==(reg(3)+1)*(reg(3))/2}
+5 load 2
+
+{reg(3)+1>=0&&reg(3)+1<=reg(1)&&st(cntr)+reg(3)==(reg(3)+1)*(reg(3))/2}
+6 load 3
+
+{reg(3)+1>=0&&reg(3)+1<=reg(1)&&
+ st(cntr-1)+st(cntr)==(reg(3)+1)*(reg(3))/2}
+7 add
+
+{reg(3)+1>=0&&reg(3)+1<=reg(1)&&
+ st(cntr)==(reg(3)+1)*(reg(3))/2}
+8 store 2
+
+{reg(3)+1>=0&&reg(3)+1<=reg(1)&&
+ reg(2)==(reg(3)+1)*(reg(3))/2}
+9 iinc 3 //LOOP END
+
+{Pre10 := reg(3)<reg(1) ==> Pre5 
+          &&
+          reg(3)>= reg(1) ==>  Pre13}
+10 load 3 //LOOP ENTRY
+
+{st(cntr)<reg(1)==>Pre5 
+ &&
+st(cntr)>=reg(1)==>Pre13}
+11 load 1
+
+{st(cntr - 1) < st(cntr) ==> Pre5 
+ &&
+ st(cntr - 1) >= st(cntr) ==>  Pre13}
+12 if_icmplt 5 
+
+{Pre13:= st(cntr) ==reg(1)*(reg(1)+1)/2}
+13 return
+{Post: \result==reg(1)*(reg(1)+1)/2}
+\end{lstlisting} }
+\caption{\sc weakest precondition predicates for the instructions of the   bytecode of method \lstinline!sum!}
+\label{wp:example:sumVC}
 \end{figure}
-Fig.\ref{wp:example:sqrBcVc} shows the resulting preconditions for some of the instructions in the bytecode of the method  \lstinline!square!.
-In the figure, the line before every instruction gives the calculated weakest precondition of the instruction in the execution path which reaches the end 
-of the method. Thus, the weakest precondition of the instruction  \return \ at line 28 states that before the instruction is executed the stack top element
-\stack{\counter}  must  contain the square of the local variable \locVar{1}. Note that this precondition is calculated from the method postcondition 
-which is given in curly brackets at line 38.
-The instruction before the \return \ instruction has as precondition that the local variable \locVar{2} must be equal to the square of \locVar{1}.
- The instruction \ifCond \ at line 24  has as weakest precondition that   if the stack element below the stack top element \stack{\counter - 1}
- is not smaller than    \stack{\counter } then  \locVar{2} == \locVar{1}*\locVar{1}. Note that we give only a part of the precondition of this instruction for the sake
-of clarity. In particular, we give the precondition which must hold if the condition is not true, or in other words the precondition of the \ifCond \ instruction for the execution path which goes to the end of the method. 
-The  case which deserves more attention is the instruction \goto \ at line 14 which jumps to the loop entry instruction at line 21. 
-As  discussed in Section \ref{wp:interPred}, the weakest precondition of this \goto consists in the specified loop invariant and the a formula
-which states that the invariant implies the precondition of the loop entry.  
 
-Another point to notice is that the instruction at line 19 which is a loop end instruction w.r.t. Def \ref{defLoop} has as precondition the loop invariant where the 
-\locVar{3} is incremented.
 
-\begin{figure}
-\begin{lstlisting}[frame=trbl]
-...
-// invariant initialization
-{   0 <= lv(3) && 
-    lv(3) <= lv(1) && 
-    lv(2) = lv(3) * lv(3) } 
-// invariant implies the loop postcondition 
-{ forall lv(3), forall lv(2),
-    0 <= lv(3) && 
-    lv(3) <= lv(1) && 
-    lv(2) = lv(3) * lv(3) &&
-    not(lv(3) < lv(1))==> 
-       lv(2) = old(lv(1)) * old(lv(1)) }
-9  goto 19
 
-...
 
-{  0 <= lv(3) + 1 && 
-    lv(3) + 1 <= lv(1) && 
-    lv(2) = (lv(3) + 1) * ( lv(3) + 1) } 
-18 iinc 3
 
-{ not (lv(3) < lv(1)) ==>lv(2) == lv(1)*lv(1) }
-19 load 3 //loop start
-
-{ not (st(cntr) < lv(1))==>lv(2)==lv(1)*lv(1) }
-20 load 1
-
-{not ( st(cntr - 1)<st(cntr))==>lv(2) == lv(1)*lv(1)}
-21 if icmplt 10
-
-{lv(2) == lv(1)*lv(1)   }
-22 load 2
-
-{st(cntr) == lv(1)*lv(1) }
-23 return
-
-{ \result == lv(1)*lv(1) }
-\end{lstlisting} 
-\caption{\sc  bytecode of method \lstinline!square! and weakest preconditions for  a fragment of the execution path which reaches the method end}
-\label{wp:example:sqrBcVc}
-\end{figure}
 
 

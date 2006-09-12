@@ -7,45 +7,157 @@
 
 \section{Weakest precondition calculus} \label{wpRules}
 
-In what follows, we assume that the bytecode has passed the bytecode verifier, thus it is well typed and well structured. Actually, our calculus is concerned only
-with functional properties of programs leaving the problem of code well structuredness and welltypedness to the bytecode verification techniques 
-
-
-
-
-
-
-
 
 %\subsection{Rules for single instruction}
 The weakest precondition predicate transformer function which for any instruction of the Java sequential fragment
 determines the predicate that must hold in the prestate of the instruction has the following signature:
 
-$$ \fwpi :   (nat,\bcIns)  \longrightarrow   \MethodSet   \longrightarrow \predWp $$
+$$ \fwpi :   (int,\bcIns)  \longrightarrow   \MethodSet   \longrightarrow \predWp $$
 The function \fwpi \ takes two arguments : 
 the second argument is the method \methodd \ to which the  instruction belongs
 and  the first argument is  the instruction (for instance  \putfield) along with its position in \methodd.
 %and finally the position of the instruction in the body of  \methodd.
 
-The function \fwpi \  returns a predicate $\wpi{ins}{\methodd}{pos}$ such that  if it holds in the prestate of the method \methodd \  and if the
-\methodd \ terminates normally then the normal postcondition \methodd.\normalPost \ holds when  \methodd \ terminates execution, otherwise if \methodd \ terminates on an exception
-  \mbox{ \rm \texttt{Exc}} the exceptional postcondition  $ \methodd.\excPost( \mbox{ \rm \texttt{Exc}} )$ holds. 
-Thus, the \fwpi \ function takes into account both normal and exceptional program termination. Note however, that \fwpi \ deals only with partial correctness, i.e.
- it does not guarantee program termination.
+Let us first see what is the desired meaning of \fwpi.
+Particularly, we would like that the function \fwpi{}  returns a predicate $\wpi{ins}{\methodd}{pos}$
+such that  if it holds in the prestate of the method \methodd \  and if the
+\methodd{} terminates normally then the normal postcondition \methodd.\normalPost \ holds when 
+\methodd{} terminates execution, otherwise if \methodd \ terminates on an exception
+\mbox{ \rm \texttt{Exc}} the exceptional postcondition  $\methodd.\excPostSpec(\mbox{ \rm \texttt{Exc}})$ holds where the function \excPostSpec{} was
+introduced in Section \ref{methExtend}. Thus, the \fwpi \ function takes into account both normal and exceptional
+program termination. Note however, that \fwpi{} deals only with partial correctness, i.e. it does not 
+guarantee program termination. In the next Chapter \ref{proofGeneral}, we shall formally argument that \fwpi{} has this semantics.
+ 
+ In the following, we will give an intuition to the way in which we have defined our verification condition generator.
+ Consider the example in Fig. \ref{wp:example:sum} which 
+ shows both the source code and the bytecode of a method which calculates the sum of all the natural numbers
+ smaller or equal to the parameter \lstinline!k!. The source and bytecode are annotated, the first one in JML and the latter in BML.
+ However, the bytecode annotations are actually stored separately from the bytecode instructions as we have described in Section \ref{methExtend}
+ but we have put them explicitely in the bytecode at the point where they must hold for the sake of clarity. 
+ Note that in what follows we will name the loop invariant $I$.
+ We have also marked the instructions which are identified as loop start and end
+ according to Def.\ref{defEdge} in Chapter \ref{opSem}, Section \ref{prelim:ctrFlow}. 
 
-In order to define the \fwpi \ function, we will need two other notions.
- The first one is a function which will determine the predicate between two instructions that are in execution relation as defined in Def. \ref{defEdge}. 
-Note that this is not necessary for structured programs. However, for unstructured programs with loops annotated with invariants and frame conditions,
-this is a necessary step.  The definition of the intermediate predicate is given in the next subsection \ref{wp:interPred}.
-We will also see how the weakest precondition is defined in presence of exceptions. This is done in subsection \ref{wp:interExc}.
+  
+\begin{figure}[ht!]
+\begin{center}
+\begin{minipage}[c]{\linewidth} 
+\begin{minipage}[c]{.63\linewidth}
+\scriptsize{
+\begin{lstlisting}[frame=trbl]
+//@requires reg(1)>=0
+0 const 0
+1 store 2
+2 const 0
+3 store 3
+4 goto 10
+5 load 2
+6 load 3
+7 add
+8 store 2
+9 iinc 3 //LOOP END
+//@loop_modifies reg(2),reg(3)
+//@loop_invariant I := 
+//@               reg(3)>=0 &&
+//@               reg(3)<=reg(1)&&
+//@               reg(2)==reg(3)*(reg(3)-1)/2
+10 load 3 //LOOP ENTRY 
+11 load 1
+12 if_icmplt 5 
+13 return
+//@ensures \result==
+           reg(1)*(reg(1)+1)/2
+\end{lstlisting}} 
+\end{minipage}
+
+
+%\hfill
+\begin{minipage}[c]{.63\linewidth} 
+\scriptsize{
+\begin{lstlisting}[frame=trbl]
+//@requires k >= 0 ;
+//@ensures \result == k*(k+1)/2;
+public void m(int k){
+  int sum = 0;
+  //@loop_modifies sum, i;
+  //@loop_invariant i >= 0 
+  && i <=k && sum == i*(i-1)/2;
+  for (int i = 0;i < k;i++){
+    sum = sum + i;
+  } 
+}
+\end{lstlisting} }
+\end{minipage}
+\end{minipage}
+\end{center}
+\caption{\sc  bytecode of method \lstinline!sum! and its specification }
+\label{wp:example:sum}
+\end{figure}
+
+
+ It is worth first to note that because the bytecode is not structured we cannot define
+ the weakest precondition in the same way in which a predicate transformer for structured
+ languages is defined.  We will rather  define the predicate transformer for an instructions to depend on
+ the instructions which may follow it during an execution:  
+$$\fwpi( j ) = \bigwedge_k  C_k \Rightarrow S_k(\fwpi( k )) , where  \ j \execRel k $$
+$C_k$ stands for some condition to be filled in order that after the instruction at index $j$ executes the instruction at index $k$.
+ In most of the cases the condition $C_k$  is \Mytrue{} except for conditional jumps or when the instruction  $j$ throws an exception.
+$S_k$ stands for a function which might be the identity function or apply substitutions over its argument.
+
+Thus the weakest precondition for the instruction at index 12 (in the bytecode version) which is a conditional jump  
+of the program will be:
+$$ \begin{array}{ll} \fwpi( 12 )  = & 
+                      \stack{\counter - 1} < \stack{\counter} \Rightarrow   \fwpi(13) \subst{\counter}{\counter - 2} \\
+                      &\wedge \\
+		      &\stack{\counter - 1} >= \stack{\counter} \Rightarrow   \fwpi(5)\subst{\counter}{\counter - 2}, \\
+		      & where \ 12 \execRel 13, 12 \execRel 5
+   \end{array}
+		      $$
+
+Let us see now what  we would expect about the result of   the function \fwpi{} when applied to the instructions
+that have as successor the loop entry instruction at index 10. For instance, we can look at the instruction
+at index 9 which is marked in the figure as the end of the loop. 
+As we said earlier we have inlined annotations in the bytecode at the places where they must hold. Thus after the execution
+of the instruction at index 9  the loop invariant must hold. It follows then that for a loop end instruction 
+we will rather require that the \fwpi{} function takes into account the corresponding loop invariant:
+$$ \begin{array}{ll} \fwpi( 9 )  = &
+                    I \subst{\locVar{3}}{\locVar{3} + 1}, \\
+		     & where \ 9 \execRel^l 10 
+		     \end{array}$$
+
+
+The situation is  similar  for the instruction at index 4 which jumps to the loop entry instruction at index 10. 
+The semantics of the invariant requires that  in between instructions 4 and 10 first the invariant must hold
+and second,  whatever are the values
+of the program variables that might be modified by the loop, the invariant should imply the precondition of the loop entry instruction at 10.
+ Thus we would like that  the function \fwpi{} gives us something like: 
+   $$\begin{array}{ll} \fwpi( 4 ) =& 
+                    I \\
+		    &\wedge \\
+		    &\forall \locVar{2}, \locVar{3},  I  \Rightarrow \fwpi(10), \\
+			&    where \ 4 \execRel 10 \ \wedge 10 \ is \ a \ loop \ entry   
+      \end{array}
+                 $$
+% May be it is here the place to discuss   why we   quantify over the values of the
+% modified variables in the loop. The  reason for this is that we can thus properly
+%initialize the non modified variables in verification conditions. This makes the set of 
+%%the provable verification conditions larger than in the case we would have not done this.  
+%In the following, we shall assume that the modifies clauses in specifications
+%are correct although we verify it in our verification condition generator.
+
+The example shows that the function \fwpi{} depends  on the semantics of the instruction 
+for which it calculates a precondition and also on the execution relation it has with its successors.
+In order to define the function \fwpi{} we will use an intermediate function which shall decide 
+what is the postcondition of an instruction  upon the execution relation with its successors. This function 
+is introduced in the next subsection \ref{wp:interPred}.
+ 
+We will also see how the weakest precondition is defined in the presence of exceptions in subsection \ref{wp:Exc}.
 \input{wp/intermPred.tex}
 \input{wp/excPred.tex} 
 
 
 
-
-
-\subsection{Rules for single instruction}
+\subsection{Rules for single instruction} \label{wp:singleInstr}
  In the following, we give the definition of the weakest precondition function for every instruction.
 
 
