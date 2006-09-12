@@ -1,0 +1,131 @@
+\subsubsection{Example}
+%Our assistant is able to handle programs with complex features, such as \alarm{mariela}.\alarm{fix section}
+
+Let us consider the bytecode given in Fig. \ref{inf:src}, which is a simplified version of the bytecode corresponding to the source code given in the
+ right of the figure. For simplicity of presentation, we do not show all the instructions (the result of the inference procedure is not affected).
+ Method $m$ has two branching instructions, where two objects are created: one instance of class $A$ and another of class $B$. Our inference algorithm gives
+ that $\allocMethod{m} = \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} + \allocMethod{B.init}$. Due to limitation on space, we do not explain
+ the details of such inference, which are given in Fig. \ref{inf:ex} ($\instrAt{k}$ refers to the bytecode instruction at position $k$).
+
+
+%It infers the maximal memory used for the example program at Fig. \ref{inf:src}. 
+%In the examples $\instrAt{k}$ refers to the instruction in the bytecode at position $k$.
+
+\begin{figure}[!hbp]
+\begin{tabular}{lr}
+\begin{minipage}[t]{170pt}
+\begin{alltt}
+\begin{small}
+\srcCode{0 aload\_1} 
+\srcCode{1 ifnonnull 6 } 
+\srcCode{2 new <A>}
+... 
+\srcCode{4 invokespecial <A.<init>>} 
+\srcCode{6 aload\_2}
+\srcCode{7 ifnonnull 12}
+\srcCode{8 new <B>} 
+... 
+\srcCode{10 invokespecial <B.<init>>}
+...
+\srcCode{12 return}
+\end{small}
+\end{alltt}
+\end{minipage} &
+
+\begin{minipage}[t]{170pt}
+\begin{alltt}
+\small{
+public void m(A a , B b ) \{
+  if ( a == null ) \{
+    a = new A();
+  \}
+  if (b == null) \{
+    b = new B();
+  \}
+\}
+}
+\end{alltt}
+\end{minipage}
+\end{tabular}
+\caption{\sc Example}
+\label{inf:src}
+\end{figure}
+
+
+\begin{figure}[!hbp]
+$\begin{array}{l}
+\\
+\allocMethod{m}\\
+=\\
+\allocated{\instrAt{12}} \\
+= max_{\instrAt{k} \in preds(1_{12})} (\allocated{\instrAt{k} }) + \allocIns{ \instrAt{12}}\\
+\{\allocIns{\instrAt{12}} = 0, preds(\instrAt{i_{12}} ) = \{ i_{10}, i_7 \}\}\\
+= max( \allocated{\instrAt{10}} , \allocated{\instrAt{7}} ) \\
+= max(max_{ \instrAt{k} \in preds(\instrAt{10})}(\allocated{ \instrAt{k}}) + \allocIns{\instrAt{10}} ,\\
+\phantom{= max.}
+max_{ \instrAt{k} \in preds(\instrAt{7} )}(\allocated{ \instrAt{k}}) +\allocIns{\instrAt{7}}   \\
+\phantom{=}) \\
+
+\{preds(\instrAt{10} ) = \{ i_8 \} , preds(\instrAt{7} ) = \{ i_6 \} \} \\
+
+= max( \allocated{\instrAt{8}} + \allocIns{\instrAt{10}}, \allocated{\instrAt{6}} + \allocIns{\instrAt{7}} ) \\
+\{ \allocIns{\instrAt{10}} = \allocMethod{B.init} ,  \allocIns{\instrAt{7}} = 0 \} \\
+
+= max( max_{ \instrAt{k} \in preds(\instrAt{8} )}(\allocated{ \instrAt{k}})  +  \allocIns{\instrAt{8}} + \allocMethod{B.init}  , \\
+ \phantom{= max.} max_{ \instrAt{k} \in preds(\instrAt{6} )}(\allocated{ \instrAt{k}})  +   \allocIns{\instrAt{6}}  \\
+\phantom{=}) \\
+
+\{preds(\instrAt{8} ) = \{ i_7 \}, preds(\instrAt{6} ) = \{ i_4 \} \} \\
+
+= max( \allocated{\instrAt{7}}  +  +  \allocIns{\instrAt{8}} + \allocMethod{B.init}  , \\ 
+ \phantom{= max.} \allocated{\instrAt{4}}  + \allocIns{\instrAt{6}}  \\
+\phantom{=}) \\
+
+\{ \allocIns{\instrAt{8}} = \allocInstance{B} ,  \allocIns{\instrAt{6}} = 0 \} \\
+
+= max( max_{ \instrAt{k} \in preds(\instrAt{7} )}(\allocated{ \instrAt{k}})  +  \allocIns{\instrAt{7}} + \allocInstance{B} +\allocMethod{B.init}  , \\
+ \phantom{= max.} max_{ \instrAt{k} \in preds(\instrAt{4} )}(\allocated{ \instrAt{k}}) + \allocIns{\instrAt{4}}\\
+ \phantom{=}) \\
+\{ preds(\instrAt{7}) = \{ i_6\}, preds(\instrAt{4}) = \{ i_2 \}  \}\\
+ = max(\allocated{i_6} + \allocIns{\instrAt{7}} + \allocInstance{B} +\allocMethod{B.init}, \\
+   \phantom{= max.}   \allocated{i_2} +\allocIns{i_4} \\
+  \phantom{=} ) \\ 
+\{ \allocIns{\instrAt{7}} = 0 ,  \allocIns{\instrAt{4}} = \allocMethod{A.init} \} \\
+ = max( max_{ \instrAt{k} \in preds(\instrAt{6} )}(\allocated{ \instrAt{k}})  +  \allocIns{\instrAt{6}} + \allocInstance{B} +\allocMethod{B.init}  , \\
+  \phantom{= max.} max_{ \instrAt{k} \in preds(\instrAt{2} )}(\allocated{ \instrAt{k}}+  \allocIns{\instrAt{2}}  +  \allocMethod{A.init} \\
+  \phantom{=} ) \\ 
+  =  \{ preds(\instrAt{6}) = \{ i_4, i_1\}, preds(\instrAt{2}) = \{ i_1 \}  \} \\
+  = max( max(\allocated{i_4} , \allocated{i_1})  +  \allocIns{\instrAt{6}} + \allocInstance{B} +\allocMethod{B.init}  , \\
+  \phantom{= max.} \allocated{i_1} +  \allocIns{\instrAt{2}} +  \allocMethod{A.init} \\
+\phantom{=} ) \\ 
+\{ \allocIns{\instrAt{6}} = 0 ,  \allocIns{\instrAt{2}} = \allocInstance{A} \} \\
+= max( max ( max_{i_k \in preds(i_4)}( \allocated{i_k} ) + \allocIns{i_4}, \\
+\phantom{ = max. max.} max_{i_k \in preds(i_1)}( \allocated{i_k} ) + \allocIns{i_1} \\
+\phantom{ = max.} ) + \allocInstance{B} +\allocMethod{B.init}  , \\
+\phantom{= max .}  \allocated{i_0}+ \allocInstance{A} + \allocMethod{A.init}  , \\
+\phantom{=} ) \\ 
+ \{ preds(i_4)= \{i_2 \}, preds(i_1) =\{i_0 \} \} \\
+ \{ \allocated{i_0} = \allocIns{i_0} = 0, \allocIns{i_1} = 0 , \allocIns{i_4} = \allocMethod{A.init} \} \\
+ = max(   max ( \allocated{i_2} + \allocMethod{A.init} , \\
+ \phantom{ = max. max.}\allocated{i_0}   \\
+ \phantom{ = max.} ) + \allocInstance{B} +\allocMethod{B.init}  , \\
+ \phantom{= max .} \allocInstance{A} + \allocMethod{A.init}  , \\
+ \phantom{=} ) \\ 
+  \{ \allocated{i_0} = \allocIns{i_0} = 0 \} \\
+ = max(   \allocated{i_2} + \allocMethod{A.init} + \allocInstance{B} +\allocMethod{B.init}  , \\
+ \phantom{= max .} \allocInstance{A} + \allocMethod{A.init}  , \\
+ \phantom{=} ) \\ 
+ \ldots \\
+ = max(   \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} +\allocMethod{B.init}  \\
+ \phantom{= max .} \allocInstance{A} + \allocMethod{A.init}  , \\
+ \phantom{=} ) \\ 
+ =   \allocInstance{A} + \allocMethod{A.init} + \allocInstance{B} +\allocMethod{B.init}
+  
+\end{array} $ \\
+
+\caption{\sc Inference of the memory allocated by the method $m$ of Fig. \ref{inf:src}}
+\label{inf:ex}
+\end{figure}
+
+%The procedure presented above terminates as an acyclic
+%representation of the control flow graph is used.
