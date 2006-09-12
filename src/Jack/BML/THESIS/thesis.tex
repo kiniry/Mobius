@@ -9,6 +9,7 @@
 \usepackage{multirow}
 \usepackage{color}
 
+
 %listing package settings
 \def\lstlanguagefiles{Jml.sty}
 \lstloadlanguages{Jml}
@@ -59,7 +60,6 @@
 %2
 \chapter{ Java bytecode language and its operational semantics} \label{opSem}
  \input{prelim/intro.tex}   
- \input{prelim/designOpSem.tex}
  \input{prelim/relWork.tex} 
  \input{prelim/notation.tex} 
  \input{prelim/classAndMeths.tex} 
@@ -70,7 +70,9 @@
  \input{prelim/stack.tex} 
  \input{prelim/pc.tex} 
  \input{prelim/exceptions.tex} 
+ \input{prelim/designOpSem.tex}
  \input{prelim/operational_sem.tex} 
+% \input{prelim/wellTyped.tex} 
  \input{prelim/ctrlFlowGraph.tex}
 
 
@@ -108,6 +110,7 @@
 %6
 \chapter{Correctness of the verification condition generator}\label{proofGeneral}
   \input{proof/intro.tex}
+  \input{proof/proofOutline.tex}
   \input{proof/substprop.tex}
   \input{proof/proof.tex}
 
@@ -167,8 +170,8 @@
        \input{applications/memory/infer}
        \section{Related work}\label{sec:rel}
        \input{applications/memory/relatedworks}
-       \section{Conclusion}\label{sec:conc}
-       \input{applications/memory/conclusion}
+      % \section{Conclusion}\label{sec:conc}
+      % \input{applications/memory/conclusion}
 
 %9 
 \chapter{A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}
@@ -184,7 +187,7 @@
       \input{applications/optimCompiler/results} 
       \input{applications/optimCompiler/limitations} 
       \input{applications/optimCompiler/relWork}
-      \input{applications/optimCompiler/conclusion} 
+      %\input{applications/optimCompiler/conclusion} 
  
 
 %10
