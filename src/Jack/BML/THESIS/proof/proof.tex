@@ -504,7 +504,7 @@ Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalP
 %Assume that every execution of the method \methodd \ terminates.
  Assume that  execution of methodd \methodd \ starts in state $_{0}$ 
 and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ s_{0}}$
-Then if the method \methodd \ terminates, i.e. there exists a  state $s_n$,  $\methodd : s_0  \stateTransTerm s_1   $ 
+Then if the method \methodd \ terminates, i.e. there exists a  state $s_n$,  $\methodd : s_0  \stateTransTerm s_n   $ 
  such that $\ins{\pc_n} = \return $ or
  $\ins{\pc_n}$ throws an unhandled 
 exception of type \mbox{\rm\texttt{Exc}} the following holds:
@@ -517,8 +517,8 @@ exception of type \mbox{\rm\texttt{Exc}} the following holds:
 Proof: 
 %By hypothesis the execution of method \methodd \ always terminates, i.e. there exists $n$ steps such that
 Let $ \ s_{0} \stateTrans^{*} s_n $ and $\methodd.\body[\pc_n]$ is a \return \ or an instruction that throws a  not handled exception.
- Applying lemma \ref{lemma3}, we can get that $  \interp{ \wpi{\methodd.\body[\pc_n] } {\methodd}{ } }{ s_{n}}$. We apply lemma \ref{lemma0}
-for the case for a \return \ or instruction that throws an unhandled exception which allows to conclude that the current statement holds.
+ Applying lemma \ref{lemma3}, we can get that $\forall i, 0 \le i \le n , \ \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ } }{ s_{i}}$. 
+We apply lemma \ref{lemma1} for the case for a \return \ or instruction that throws an unhandled exception which allows to conclude that the current statement holds.
 
 
 

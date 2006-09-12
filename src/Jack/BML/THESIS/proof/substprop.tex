@@ -1,4 +1,3 @@
-
 \newtheorem{substHeap}{Lemma}[section]
 \newtheorem{newHeap}[substHeap]{Lemma}
 \newtheorem{substStack}[substHeap]{Lemma}
@@ -9,7 +8,7 @@
 
 \newtheorem{valid}{Definition}[section]
 
-\section{Substitution properties}\label{substProp}
+\section{Relation between syntactic substitution and semantic evaluation}\label{substProp}
 
 The following lemmas estasblish that substitution over state configurations or expressions / formulas result in the same evaluation
 
@@ -216,7 +215,7 @@ the following holds:
 The next definition defines a particular set of assertion formulas which we call valid formulas.
 \begin{valid}[Valid formulas]
   If an assertion formula  $ f \in \predWp $ holds in any current state and any initial state, i.e.
-$\forall state, state_{init}, \interp{f}{state} $ we say that this is a valid formula and we note it with :
+$\forall s, s_{0}, \  \interp{f}{s} $ we say that this is a valid formula and we note it with :
   $\validFormula{f} $ 
 \end{valid}
 

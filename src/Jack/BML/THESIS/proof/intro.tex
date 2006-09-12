@@ -1,26 +1,23 @@
-%\section{Introduction}
+ %\section{Introduction}
  In the previous chapter \ref{wpGeneral}, we defined a verification
  condition generator for a Java bytecode like language. We used a weakest precondition
- to build the verification conditions. In this section, we will argue formally that the
+ to build the verification conditions. In this section, we will show formally that the
  proposed verification condition generator is correct, or in other words that it is sufficient
  to prove the verification conditions generated over a bytecode program and its specification 
  for establishing that the program respects the specification. 
-
  In particular, we will prove the correctness of our methodology w.r.t. the operational semantics of our bytecode language
- given in chapter \ref{opSem}. The way in which the proof is done is standard. Note that the formalization
- of the operational semantics in terms of relation on states serves us to give a model for our assertion
- language. 
+ given in chapter \ref{opSem}. 
 
-
-
- We now proceed with the proof of the partial correctness of the weakest precondition calculus, i.e. we assume that programs 
-always terminate. Note also that in the following we do not consider recursive methods.
-The first section \ref{substProp} introduces several properties concerning expression evaluation and  interpretation 
-of predicates in a particular state. Those properties will play role in the correctness proof  of the verification condition generator
-in section  \ref{proof}. Section \ref{proof} starts with a formal definition for method correctness. Then, we establish the correctness
-of a single instruction (lemma \ref{lemma0}). The next step of the proof  is to establish that if all the steps
-in an execution path establish the intermediate predicates then the execution can either proceed by establishing
-the next weakest precondition predicate or will terminate in a state which respects the adequate postcondition.
+% We now proceed with the proof of the partial correctness of the weakest precondition calculus.
+% Note also that in the following we do not consider recursive methods.
+ In the following, in Section \ref{proof:outline} we first start with an outline of the proof.   
+ The second Section \ref{substProp} establishes the relation between syntactic substitution  and evaluation.
+ The latter will play a role in the correctness proof  of the verification condition generator
+ in Section  \ref{proof}.
+% Section \ref{proof} starts with a formal definition for method correctness. Then, we establish the correctness
+% of a single instruction (lemma \ref{lemma0}). The next step of the proof  is to establish that if all the steps
+% in an execution path establish the intermediate predicates then the execution can either proceed by establishing
+% the next weakest precondition predicate or will terminate in a state which respects the adequate postcondition.
   
 
 
