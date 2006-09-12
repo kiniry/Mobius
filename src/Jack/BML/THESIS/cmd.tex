@@ -39,7 +39,7 @@
 \newcommand{\java}[1]{\texttt{#1}}
 \newcommand{\stack}[1]{\mbox{\rm\textbf{st}}(#1)}% element on top stack 
 \newcommand{\stackOnly}{\mbox{\rm St}}
-\newcommand{\stackOnlyParam}[1]{\mbox{\rm St}(#1)}
+\newcommand{\stackOnlyParam}[1]{\mbox{\rm St}~(~#1~)}
 \newcommand{\newStack}{ \lbrack~\rbrack  } % empty stack
 \newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
 
@@ -58,7 +58,7 @@
 %\newcommand{\invariant}[1]{\it{I}_{\tt{#1}}}
 %\newcommand{\boucle}[1]{\texttt{#1}}
 %\newcommand{\loopModifies}[1]{\textbf{Modifies}(\texttt{#1}) }
-\newcommand{\ins}[1]{#1 : \mbox{\rm\texttt{instr}}}
+\newcommand{\ins}[1]{#1 } %: \mbox{\rm\texttt{instr}}}
 
 
 \newcommand{\insOnly}{\texttt{instr}}
@@ -172,8 +172,8 @@
 \newcommand{\reference}[1]{\mbox{ \rm \texttt{ref}}_{#1}}
 \newcommand{\referenceOnly}{\mbox{\rm\texttt{ref}}} 
 \newcommand{\RefArr}[1]{\tt{refArr}_{#1} } % a reference to an array  ref_{type}^{length}
-\newcommand{\substitution}[3]{#1 \lbrack #2 \leftarrow #3 \rbrack }
-\newcommand{\subst}[2]{ \lbrack #1 \leftarrow #2 \rbrack }
+\newcommand{\substitution}[3]{#1 \lbrack #2 \backslash #3 \rbrack }
+\newcommand{\subst}[2]{ \lbrack #1 \backslash #2 \rbrack }
 \newcommand{\prevState}[1]{prev(#1)}
 \newcommand{\nextState}[1]{next(#1)}
 
@@ -248,7 +248,7 @@
 \newcommand{\ClassCastExc}{\mbox{\rm \texttt{CastExc}}}
 \newcommand{\Throwable}{\mbox{\rm \texttt{Throwable}}}
 \newcommand{\ArrStoreExc}{\mbox{\rm \texttt{ArrStoreExc}} }
-
+\newcommand{\Exception}{\mbox{\rm{\texttt{Exception}}}}% stands for the super class of all Java exceptions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%Class Fields Methods%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -348,7 +348,7 @@
  \newcommand{\addNewLocation}[2]{\mbox{\rm allocator}(#1,#2) \ }
  \newcommand{\addNewLocationOnly}{\mbox{\rm allocator} \ }
  \newcommand{\defaultValue}[1]{\mbox{\rm\textsf{defVal}}(#1)} % default value for a type
- \newcommand{\defaultValueOnly}{\mbox{\rm \textit{defVal}}}
+ \newcommand{\defaultValueOnly}{\mbox{\rm \textsf{defVal}}}
  \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
  \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
  \newcommand{\Dom}{\mbox{\rm\textsf{Dom}}}
@@ -684,7 +684,7 @@
 
 \newcommand{\bydef}{^{\mbox{\rm{\textit{def}}}}}
 %\newcommand{\excType}{\mbox{\rm{\texttt{ExcClass}}}}
-\newcommand{\Exception}{\mbox{\rm{\texttt{Exception}}}}% stands for the super class of all Java exceptions
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Compiler properties
