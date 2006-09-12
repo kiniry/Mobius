@@ -1,5 +1,5 @@
 
-\section{Related Work}
+\section{Related work}
 \label{sec:relatedwork}
 % AOTs
 Toba~\cite{Proebsting1997} is a Java-to-C compiler that transforms a whole Java program into a native one. Harissa~\cite{Muller1997} is a Java environment that includes a Java-to-C compiler as well as a virtual machine, and therefore supports mixed execution. While both environments implement some optimizations, they are not able to detect and remove unused runtime checks during ahead-of-time compilation. The JC Virtual Machine~\cite{JCVM} is a Java virtual machine implementations that converts class files into C code using the Soot~\cite{Raja1999} framework, and runs their compiled version. It supports redundant exceptions checks removal, and is tuned for runtime performance, by using operating system signals in order to detect exceptional conditions like null pointer dereferencing. This allows to automatically remove most of the \texttt{NullPointerException}-related checks.

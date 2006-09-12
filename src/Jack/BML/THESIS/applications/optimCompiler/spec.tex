@@ -1,7 +1,7 @@
 
 
 
-\subsection{Methodology for Writing Specification Against Runtime Exception}
+\subsection{Methodology for writing specification against runtime exception}
 
 We now illustrate with an example what are the JML annotations needed 
 for verifying that a method does not throw  a runtime exception.
@@ -10,7 +10,8 @@ for verifying that a method does not throw  a runtime exception.
 First, a class invariant is declared which states that once an instance of type \verb!Code_Table! is created, its array field \verb!tab! is not null. The class invariant guarantees that no method will throw a \NullPointerExc{} when dereferencing (directly or indirectly) \verb!tab!.
 
 \begin{figure}
-\begin{verbatim}
+
+\begin{lstlisting}[frame=trbl]
 final class Code_Table {
   private/*@spec_public */short tab[];
 
@@ -30,7 +31,7 @@ final class Code_Table {
      }
   }
 }
-\end{verbatim}
+\end{lstlisting}
 
 \caption{\sc A JML-annotated method}
 \label{fig:jmlexample}

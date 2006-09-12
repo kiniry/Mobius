@@ -52,7 +52,7 @@ than \allocMethod{\method}\ units. Thus for the method $\method$ the
 exceptional postcondition is:
 
 $$
-\exsures{Exception} \  \Mem \leq \old{\Mem} + \allocMethod{\method}.
+\exsures{} \Exception \  \Mem \leq \old{\Mem} + \allocMethod{\method}.
 $$
 
 
@@ -134,34 +134,43 @@ methods will be invoked. This is the reason for requiring enough memory space fo
 %After the method execution we consider the extreme case where there is executed the method \method\ that consumes the most.
 
 \begin{figure}[!htp]
-Specification of method \methodd{} in class A:
-$$
-\begin{array}{ll}
-\requires & \Mem + k  \leq \Max \\
-\modifies & \Mem \\
-\ensures & \Mem  \leq \old{\Mem} + k
-\end{array}
-$$
+\begin{frameit}
+\begin{center}
+\begin{minipage}[t]{110mm}
+\begin{lstlisting}[frame=trbl]
+Specification of method
+ m in class A:
 
-Specification for method \methodd{} in class B:
-$$
-\begin{array}{ll}
-\requires & \Mem + l  \leq \Max \\
-\modifies & \Mem \\
-\ensures & \Mem  \leq \old{\Mem} + l
-\end{array}
-$$
+requires MemUsed + k  <= Max 
+modifies MemUsed 
+ensures  MemUsed  <= \old(MemUsed) + k
+\end{lstlisting}
 
-\begin{verbatim}
-method n(A a)
+\begin{lstlisting}[frame=trbl]
+Specification for method m in class B:
+
+requires MemUsed + l  <= Max 
+modifies MemUsed 
+ensures  MemUsed  <=  \old(Mem) + l
+\end{lstlisting}
+
+\end{minipage}
+
+\begin{minipage}[t]{110mm}
+\begin{lstlisting}[frame=trbl]
+void method n(A a)
 ...
-//{ prove Mem <= Mem +max(l,k) }
-invokevirtual m <A>
-//{ assume Mem <= \old{Mem} + max(l,k)}
+//{ prove MemUsed <= Mem +max(l,k) }
+invokevirtual m A
+//{ assume MemUsed <= \old{MemUsed} + max(l,k)}
 ...
-\end{verbatim}
+\end{lstlisting}
+\end{minipage}
+
 \caption{\sc Example of overridden methods}
 \label{classExt}
+\end{center}
+\end{frameit}
 \end{figure}
 
 
@@ -176,64 +185,79 @@ invokevirtual m <A>
 We explain first the precondition. If the condition of line \srcCode{1} is not true, the execution continues at line \srcCode{2}.
 
 \begin{figure}[!hbp]
-\begin{alltt}
-public class D \{
-  public void m( int i) \{
-    if (i > 0) \{
+
+\begin{minipage}[t]{90mm}
+\begin{lstlisting}[frame=trbl]
+
+ requires  MemUsed +
+           reg(1)*2*allocInstance(A) + 
+           allocInstance(A) +
+	   allocInstance(C) <=  Max 
+
+ variant   reg(1) 
+
+ ensures   reg(1) >= 0 
+           &&
+	   MemUsed <= old(MemUsed)+  
+	   \old(reg(1))*2*allocInstance(A)+
+	   allocInstance(A) + 
+           allocInstance(C)
+ 
+public void m()
+//local variable loaded on 
+//the operand stack of method m
+ 0 load 1
+// if \reg(1) <= 0 go to 12
+ 1 ifle 12}
+ 2 new A 
+// here reg(1) > 0 
+//@ set MemUsed =
+        MemUsed +  allocInstance(A)
+ 3 invokespecial A.init
+ 4 aload 0
+ 5 iload 1
+ 6 iconst 1
+// reg(1) decremented with 1
+ 7 isub
+//recursive call with the new 
+//value of reg(1)
+ 8 invokevirtual D.m
+ 9 new A
+//set MemUsed = MemUsed + 
+      allocInstance(A)
+ 10 invokespecial A.init
+ 11 goto 16
+ target of the jump at  1
+ 12 new A
+//set MemUsed = MemUsed + 
+      allocInstance(A)
+ 13 invokespecial A.init
+ 14 new  C
+//set MemUsed =
+      MemUsed +  allocInstance(C)
+ 15 invokespecial C.init
+ 16 return
+\end{lstlisting} 
+\end{minipage}
+
+\phantom{aaaaa}
+
+\begin{minipage}[t]{90mm}
+\begin{lstlisting}[frame=trbl]
+public class D {
+  public void m( int i) {
+    if (i > 0) {
       new A();
       m(i - 1);
       new A();
-    \} else \{
+    } else {
       new C();
       new A();
-   \}
-  \}
-\}
-\end{alltt}
-
-$$
-\begin{array}{ll}
- \requires & ( \Mem + \local{1}*2*\allocInstance{A} + \\
-           &  \allocInstance{A} + \allocInstance{C}) \le \Max \\
- \variant  & \local{1} \\
- \ensures  & \local{1} \ge 0 \\
-           & \wedge \\
-           & \Mem <= \old{\Mem} +  \\
-	   & \old{\local{1}}*2*\allocInstance{A} + \allocInstance{A}\\
-           &  +  \allocInstance{C})
-\end{array}$$
-
-\begin{alltt}
-\srcCode{\textbf{public void m()}}
-//\small{\textit{local variable loaded on} }
-//\small{\textit{the operand stack of method \textbf{m}}}
-\srcCode{0 \load\_1}
-//\small{ \textit{ if \local{1} <= 0 jump}}
-\srcCode{1 ifle 12}
-\srcCode{2 new <A>} //\small{ \textit{ here \local{1} > 0  } }
-//set \Mem = \Mem +  \allocInstance{A}
-\srcCode{3 invokespecial <A.<init>>}
-\srcCode{4 aload\_0}
-\srcCode{5 iload\_1}
-\srcCode{6 iconst\_1}
-//\small{\textit{\local{1} decremented with 1}}
-\srcCode{7 isub}
-//\small{ \textit{ recursive call with the new value of \local{1}}}
-\srcCode{8 invokevirtual <D.m>}//
-\srcCode{9 new <A>}
-//set \Mem = \Mem +  \allocInstance{A}
-\srcCode{10 invokespecial <A.<init>>}
-\srcCode{11 goto 16}
-//\small{\textit{target of the jump at \srcCode{1}}}
-\srcCode{12 new <A>}
-//set \Mem = \Mem +  \allocInstance{A}
-\srcCode{13 invokespecial <A.<init>>}
-\srcCode{14 new  <C>}
-//set \Mem = \Mem +  \allocInstance{C}
-\srcCode{15 invokespecial <C.<init>>}
-\srcCode{16 return}
-\end{alltt}
-
+   }
+  }
+}
+\end{lstlisting} 
+\end{minipage}
 \caption{\sc Example of a recursive method}
  \label{recMeth}
 \end{figure}
@@ -254,7 +278,7 @@ object of class \texttt{A}. The exceptional postcondition states
 that no allocation is performed if \texttt{NullpointerException} causes the execution termination.
 
 \begin{figure}[!hbp]
-$$
+$${\scriptsize
 \begin{array}{ll}
  \requires &  \local{1} != \Mynull \Rightarrow  \\
            & \phantom{\local{1}} \Mem +  \allocInstance{A} \le \Max \\
@@ -263,38 +287,44 @@ $$
            %& \phantom{\local{1}} \Mem +  \allocInstance{B} + \allocInstance{A}   \le \Max \\
   \modifies & \Mem \\
   \ensures  & \Mem \le \old{\Mem} +  \allocInstance{A} \\
-  \exsures{NullPointerException}  & \Mem == \old{\Mem}   \\
-\end{array}$$
+  \exsures{} NullPointerExc  & \Mem == \old{\Mem}   \\
+\end{array}}$$
 
-\begin{tabular}{lr}
-\begin{minipage}[t]{170pt}
-\begin{alltt}
-\srcCode{0 aload\_0}
-\srcCode{1 getfield<C.b>}
-\srcCode{2 iload\_2}
-\srcCode{3 putfield <B.i>}
-\srcCode{4 new <A>}
-//set \Mem = \Mem +
-      \allocInstance{A}
-\srcCode{5 dup}
-\srcCode{6 invokespecial <A.<init>>}
-\srcCode{7 astore\_1}
-\srcCode{8 return}
-\end{alltt}
+
+\begin{minipage}[t]{90pt}
+{\scriptsize
+\begin{lstlisting}[frame=trbl]
+ 0 load 0
+ 1 getfield C.b
+ 2 load 2
+ 3 putfield B.i
+ 4 new A 
+//set MemUsed = 
+  MemUsed +
+  allocInstance(A)
+ 5 dup
+ 6 invokespecial A.init
+ 7 store 1
+ 8 return
+\end{lstlisting}
+}
 \end{minipage}
- &
-\begin{minipage}[t]{170pt}
-\begin{alltt}
-public class C \{
-  B b;
-  public void m(A a, int i) \{
-    b.i = i ;
-    a = new A();
-  \}
-\}
-\end{alltt}
+
+
+\begin{minipage}[t]{90pt}
+{\scriptsize
+\begin{lstlisting}[frame=trbl]
+public class C{
+ B b;
+ public void m(A a,int i){
+   b.i = i ;
+   a = new A();
+ }
+}
+\end{lstlisting}
+}
 \end{minipage}
-\end{tabular}
+
 \caption{\sc Example of a method with possible exceptional termination}
 \label{excMeth}
 \end{figure}

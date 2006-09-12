@@ -1,12 +1,13 @@
 
 
-\subsection{From Program Proofs to Program Optimizations }
+\subsection{From program proofs to program optimizations }
 \label{proofs}
 In this phase, the bytecode instructions that can safely be executed without runtime checks are identified. Depending on the complexity of the verification conditions, Jack can discharge them to the fully automatic prover Simplify, or to the Coq and AtelierB interactive theorem prover assistants.
 
 There are several conditions to be met for a bytecode instruction to be optimized safely -- the precondition of the method the instruction belongs to must hold every time the method is invoked, and the verification condition related to the exceptional termination must also hold. In order to give a flavor of the verification conditions we deal with, figure~\ref{proofs:vc} shows part of the  verification condition related to the possible \texttt{ArrayIndexOutOfBounds} exceptional termination of instruction \verb!11 sastore! in figure~\ref{bcsl}, which is actually provable.
 
 \begin{figure}
+\begin{frameit}
 \[
   \begin{array}{ll}
     \begin{array}{l}
@@ -21,8 +22,9 @@ There are several conditions to be met for a bytecode instruction to be optimize
         \end{array}
      &  \Rightarrow  \Myfalse
   \end{array}\]
-\caption{The verification condition for the \texttt{ArrayIndexOutOfBoundException} check related to the \texttt{sastore} instruction of figure~\ref{bcsl}}
+\caption{\sc The verification condition for the \texttt{ArrayIndexOutOfBoundException} check related to the \texttt{sastore} instruction of figure~\ref{bcsl}}
 \label{proofs:vc}
+\end{frameit}
 \end{figure}
 
 Once identified, proved instructions can be marked in user-defined attributes of the class file so that the compiler can find them.

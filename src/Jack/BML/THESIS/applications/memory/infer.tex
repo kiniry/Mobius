@@ -35,7 +35,9 @@ the loop entry instruction; you are not entering in detail in the loop detection
 algorithm as it is standard and the reader may  see Section 10 of 
  \cite{ASU86cpt} for a description of the algorithms.
 
+
 \begin{figure}[!htp]
+\begin{frameit}
 function $\allocMethod{.}$\\
 \textbf{Input:} Bytecode of a method \methodd{} . \\
 \textbf{Output:} Upper bound of the memory allocated by \methodd{} . \\
@@ -48,14 +50,15 @@ function $\allocMethod{.}$\\
 \end{enumerate}
 \caption{\sc Inference algorithm}
 \label{methodAlloc}
+\end{frameit}
 \end{figure}
-
 The auxiliary function $allocPath$, which infers the maximal allocations done by the set of execution paths ending with the same \return{} instruction,
  is given in Fig. \ref{fig:allocMethod}.
 Inferring the memory allocated inside loops is done by the function $\allocLoopWithEnd{\cdot}{\cdot}$, which is invoked by \allocatedOnly{} whenever the 
 current instruction belong to a loop. The specification of the function is shown in Fig. \ref{fig:loopPath}.
 
 \begin{figure}[!hbp]
+\begin{frameit}
 %\centerline{
 $\allocated{\instrAt{s}}$ = 
 $$ \left\{ \begin{array}{ll}
@@ -78,10 +81,12 @@ max_{\instrAt{k} \in \preds(\instrAt{s} )}
 $$
 \caption{\sc Definition of the function $\allocated{\instrAt{s}}$} 
 \label{fig:allocMethod}
+\end{frameit}
 \end{figure}
 
 
 \begin{figure}[!hbp]
+\begin{frameit}
 $\allocLoop{\loopEntry{l}} = $
 $$ \begin{array}{l}
     \maxIter{l} * max_{ \instrAt{e} \in \loopEndsSet{l}  } (\allocLoopWithEnd{\loopEntry{l}}{\instrAt{e}} )
@@ -116,6 +121,7 @@ $$
 $$
  \caption{\sc Definition of the function $\allocLoop{\cdot}$ and  $\allocLoopWithEnd{\cdot}{\cdot}$ }
 \label{fig:loopPath}
+\end{frameit}
 \end{figure}
 
 
@@ -134,8 +140,9 @@ The annotation assistant currently synthesize only simple
 memory policies (i.e., whenever the memory consumption policy does not depend on
 the values of inputs).
 %and could be significantly improved in this respect. 
-Furthermore, it does not deal with arrays, subroutines, nor exceptions. Our approach may be extended to treat such cases (see the discussion in Section \ref{sec:conc} about how to include arrays in our analysis). For sake of simplicity,
-we have also restricted the loop analysis only to those with a unique
+Furthermore, it does not deal with arrays, subroutines, nor exceptions. Our approach may be extended to treat such cases 
+%(see the discussion in Section \ref{sec:conc} about how to include arrays in our analysis).
+ For sake of simplicity, we have also restricted the loop analysis only to those with a unique
 entry point, which is the case for code produced by non-optimizing
 compilers.
 Dealing with loops with a multiple entry points is left for a future work. %A pre-analysis could give us all the entry points of more

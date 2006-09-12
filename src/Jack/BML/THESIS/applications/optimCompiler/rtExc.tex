@@ -1,6 +1,6 @@
 
 
-\section{Java Runtime Exceptions}
+\section{Java runtime exceptions}
 \label{sec:runtimeexceptions}
 % Why runtime exceptions
 The JVM~\cite{Lindholm2000} specifies a safe execution environment for Java programs. Contrary to native execution, which does not automatically control the safety of the program's operations, the Java virtual machine ensures that every instruction operates safely. The Java environment may throw predefined runtime exceptions at runtime, like the following ones:
@@ -30,31 +30,33 @@ Of the 202 bytecodes defined by the Java virtual machine specification, we notic
 Figure~\ref{fig:javatoc} shows an example of Java bytecode that requires a runtime check to be issued when being compiled into native code.
 
 \begin{figure}[t]
+\begin{frameit}
 \begin{center}
 \begin{minipage}[b]{0.4\linewidth}
 \textbf{Java version:}
 \centering
-\begin{verbatim}
+\begin{lstlisting}
   iload i
   iload j
   idiv
   ireturn
-\end{verbatim}
+\end{lstlisting}
 \end{minipage}
-\hspace{0.5cm}
+\hspace{0.2cm}
 \begin{minipage}[b]{0.5\linewidth}
 \textbf{C version:}
 \centering
-\begin{verbatim}
-1   int i, j;
-2   if (j == 0) 
-3     THROW(ArithmeticException);
-4   RETURN_INT(i / j);
-\end{verbatim}
+\begin{lstlisting}
+1 int i, j;
+2 if (j == 0) 
+3   THROW(ArithmeticException);
+4 RETURN_INT(i / j);
+\end{lstlisting}
 \end{minipage}
 \end{center}
-\caption{A Java bytecode program and its (simplified) C-compiled version. The behavior of the division operator in Java must be entirely reproduced by the C program, which leads to the generation of a runtime exception check site}
+\caption{\sc A Java bytecode program and its (simplified) C-compiled version. The behavior of the division operator in Java must be entirely reproduced by the C program, which leads to the generation of a runtime exception check site}
 \label{fig:javatoc}
+\end{frameit}
 \end{figure}
 
 It is, however, possible to eliminate these checks from the native code if the execution context of the bytecode shows that the exceptional case never happens. In the program of figure~\ref{fig:javatoc}, the lines 2 and 3 could have been omitted if we were sure that for all possible program paths, \texttt{j} can never be equal to zero at this point. This allows to generate less code and thus to save memory. Removing exception check sites is a topic that has largely been studied in the domain of JIT and AOT compilation.

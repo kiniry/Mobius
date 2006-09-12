@@ -5,11 +5,11 @@
 
 Our approach suffers from some limitations and usage restrictions, regarding its application on multi-threaded programs and in combination with dynamic code loading.
 
-\subsection{Multi-Threaded Programs}
+\subsection{Multi-threaded programs}
 
 As we said in section~\ref{sec:method}, JACK only supports the sequential subset of Java. Because of this, we are unable to prove check sites related to monitor state checking, that typically throws an \texttt{IllegalMonitorStateException}. However, they can be simplified if it is known that the system will never run more than one thread simultaneously. It should be noted, that Java Card does not make use of multi-threading and thus doesn't suffer from this limitation.
 
-\subsection{Dynamic Code Loading}
+\subsection{Dynamic code loading}
 
 Our removal of runtime exception check sites is based on the assumption that a method's preconditions are always respected at all its call sites.
  For closed systems, it is easy to verify this property, but in the case of open systems which may load and execute any kind of code, the property
