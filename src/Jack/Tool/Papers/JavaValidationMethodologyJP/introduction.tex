@@ -1,17 +1,6 @@
 \section{Introduction}
 
 
-%Smart cards are trusted personal devices whose characteristics are
-%regulated by the ISO 7816 standard. As other trusted personal devices,
-%smartcards are designed to store and process confidential data, and
-%can act as tokens to provide users with a secure electronic
-%representation in a large network. They are widely deployed and used
-%in application areas such as mobile telecommunications, banking,
-%transportation, electronic identity, and digital rights management
-%(DRM). Further, they hold the promise to play a key role in the
-%e-society, especially as a means to guarantee users a personalized,
-%global, and secure access to applications and services.
-
 
 The prominent role played by trusted personal devices in security
 sensitive applications make them an ideal target for
@@ -60,13 +49,6 @@ guarantees about the security of a TPD and its applications.
 Essentially, the levels are: the hardware, platform, the libraries,
 and the applications.
 
-%The need to consider security at those levels is illustrated for
-%example by the case study described on Page 55 in Deliverable D8.2,
-%which is concerned with secure platforms. The development of secure
-%API is discussed in Deliverables D7.1 and D7.2. As previously mentioned,
-%hardware security is discussed in Deliverable D8.1.
-
-
 \paragraph*{Platform} The TPD security architecture guarantees that
 downloaded applications are innocuous and comply with some basic
 policies related to typing, initialization or access control. Such
@@ -89,7 +71,7 @@ infrastructure whose correct design is central to security.
 
 \paragraph*{Applications} 
 Platform and libraries verification is a fundamental step towards
-guaranteeing the security of smartcards, and a prerequisite for Common
+guaranteeing the security of TPD, and a prerequisite for Common
 Criteria evaluations at the highest levels. Nevertheless, the
 guarantees offered by the Java security architecture are limited, and
 further verifications must be performed to verify that applications
@@ -120,8 +102,6 @@ efficient and hence incomplete) logic-based proof inference
 mechanisms;
 
 
-
-
 \item one can exploit the expressive power of logical methods to
 require that applications, or at least sensitive fragments of
 applications, are subjected to functional verification, i.e. to
@@ -143,7 +123,7 @@ by integrating formal techniques into classical developers environment
 so as to allow users to benefit from formal techniques without having
 to learn new formalisms and to become experts.
 
-All the tools and results presented in this document were developed
+All the tools and results presented in this article were developed
 with this goal in mind, notably the choice of JML as assertion
 language and the development of JACK and its associated feature.
 Using those techniques, Java developers should be able to validate
@@ -205,48 +185,7 @@ annotation comments in Java code,
 so that they are ignored by Java compilers but can be used
 by tools that support JML\@.  Within annotation comments JML extends the
 Java syntax with several keywords.  It also extends Java's expression syntax with several
-operators.%The first proofs are relatively easy. 
-%The State class is proved almost automatically; 
-%except for the constructor where it is necessary to break a disjunction ({\tt instance S $\vee$ S = null}) to prove the invariants.
-
-%The Instruction class has also been relatively easy to prove. 
-%A significant number of proof was done automatically (approximately 90 \%); 
-%then majority of proof could be trivially resolved, except some lemma concerning  a loop termination.    
-
-%Finally the Verifier class was harder to prove.
-%The lemmas were containing too many hypotheses to be automatically proved.
-%Around 500 proof obligations have to be resolved manually.
-%Some of them was obvious and were resolved with quite the same script, but the script cannot be automated.
-%Some of them was complex: the proof script became little large (an average of 30 steps).
-%The lemmas concerning the loop invariant of the verify method and its initialization were the most difficult.
-
-The central ingredients of a JML specification are preconditions
-(given in {\tt requires} clauses), postconditions (given in {\tt
-  ensures} clauses), and (class and interface) invariants.  These are
-all expressed as boolean expressions in JML's extension to Java's
-expression syntax.
-In addition to ``normal'' postconditions, the language also supports
-``exceptional'' postconditions, specified in {\tt signals} clauses.
-These can be used to specify what must be true when a method throws an
-exception. 
-
-\paragraph*{Styles of specification}
-Due to its expressiveness and versatility, the JML specification
-language supports several styles of specifications; the choice of one
-style of specification over the others depends on the purpose of the
-verification effort. In a nutshell, one can either opt for lightweight
-specifications in which one introduces enough annotations to reason
-about some specific safety property, such as the absence of
-exceptions, or heavyweight specifications where functional behavior is
-considered. There is of course a great liberty in how \lq\lq
-lightweight\rq\rq\ or \lq\lq heavyweight\rq\rq\ a specification should
-be, and different styles can be used in different parts of an
-application.
-
-In addition, one may opt for defensive specifications, in which methods
-are annotated with preconditions that prevent exceptions to occur, or
-offensive specifications, which use appropriate clauses to specify 
-exceptional postconditions.
+operators.
 
 \subsubsection{Verification techniques and tools}
 

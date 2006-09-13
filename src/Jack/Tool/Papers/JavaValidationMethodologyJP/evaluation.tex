@@ -100,140 +100,6 @@ this violation is found automatically, without any problems.
 
 
 
-\subsection{Bytecode Verifier}
-The tools have also been tested on a bytecode verifier java implementation. A termination proof has been provided.
-A specific implementation has been coded with on one hand the main loop which remain unchanged whatever the specifications of the virtual machine Java chosen, and other instructions and memory states which depends on selected model.
-\subsubsection{Implementation and Modelisation}
-The main loop is in a package which contains abstract classes: 
-the instructions and the states are implemented in a more generic way.
-The package containing the implementation is composed from the instructions for the standard Java types and of the states of memory typing. 
-\paragraph {Memory states}
-The memory states are represented by the State class, which is an abstract class.  It does not contain any precise definition of the memory: 
-one has no information on the stack or on the local variables table. 
-The implementation is relatively simple: 
-it is a class which contains a type stack and a table of the types of the local variables. 
-Functions allowing to read simply these structures and to generate verification error in the cases of misuse are defined.   
-\paragraph{Instructions}
-The instructions are also represented by an abstract class: 
-the class Instruction.  
-Since in the Kildall algorithm each instruction is associated to a memory state,  the Instruction class has a field of the State type. 
-An instruction can also have one or more successors. 
-This relation is represented by a field which is the list of the successors of the instruction.  
-One of the other aspects is the fact that on associate to each instruction a boolean field to determine if it has been modified or not.
-
-Several properties of the bytecode verifier are formalised in this class.
-First of all one verifies that the successors of the instruction are well included in the others instructions of the program. 
-If these successors pointed towards external instructions, an verification error would be returned. 
-
-The others important properties concern the pure function {\tt
-buildNewState}.  This function builds the typing state of the
-execution of an instruction on the current state.  This construction
-can fail if the instruction tries for example to pop an element when
-the stack is empty.  If it succeeds, a new non null state is built.
-
-
-Around ten instructions have been implemented: {\tt load} and {\tt
-blind} for the access to local variables, {\tt push} and {\tt pop} to
-obtain or put element on the stack, {\tt op1} and {\tt op2} which is
-two operators who consume both the two top element of the stack and
-which replaces them by a result of a certain type, {\tt ifle} and {\tt
-jump} instructions of jump towards another instruction successor, {\tt
-nop} the instruction which does not do anything and finally {\tt stop}
-which is an instruction which does not have a successor.  These
-instructions have an associated type in the OperandType class, who can
-be None, Type1 or Type2.  Those are the minimal instructions to have a
-Java-like program.
-
-\paragraph {The main loop}
-The main loop is implemented in the Verifier class.  It is not an
-abstract class because it uses the properties of the State and
-Instruction abstract classes to verify an instruction set on
-particular states.  This class provides two functions, the function
-{\tt verify} in which the loop is written and the function {\tt check}
-which verify an instruction.
-
-%The m \ 'ethode check ensures that all \ 'states of the successors of an instruction donn \ 'ee,    are larger or \ 'equal that the \ 'states before the ex \ 'ecution of the m \ 'ethode. This   propri \ 'and \ 'E seems simple \ `has to express but it implies several Pr \ 'erequis.  First of all it should be guaranteed that the successors of the instructions point all worms of   valid instructions. Then that all the instructions are diff \ 'erentes of no one and that theirs  \ 'states are too diff \ 'erents of no one them.    The Pr \ calculation weaker 'econdition of Jack forces us \ `has to add these propri \ 'and \ 'be    Li \ 'ees \ `with the S \ 'emantic of the language Java.  .   %Pour to facilitate the evidence I have \ 'and \ 'E oblig \ 'E  %de to add a certain number of assertions.    
-
-The {\ tt verify} method is the main loop of the bytecode verifier.
-It contains two nested loops. The internal one is a {\tt for} loop
-which iterates on the instructions and verify all the quoted
-instructions (as described in the Kildall algorithm). The termination
-of the internal loop is easy to prove.  The {\tt for} loop executes as
-many time as there are numbers in the table.  The external {\tt while}
-loop stops the algorithm when no more instruction typing state is
-modified.  This termination is not obvious to prove, especially with
-JML, since it only allow to prove loop termination by giving an
-integer variant.
-
-Since the states have to be used to show the algorithm termination,
-one has to make correspond each state with an integer. Thus at each
-loop iteration, the integer associated with the state either increase
-or preserve the same value; and it exists a maximum value.
-
-
-\begin{figure}[ht]  
-\begin{center}    
-\begin{tabular}{p {0.4 \textwidth} c c c c}  
-{\bf Classes:} & State & Instruction & Verifier \\  
-{\bf Lines of code:} & 14 & 47 & 66 \\  
-{\bf Lines of annotations:} & 20 & 54 & 81 \\  \raggedright 
-{\bf Proof obligations:} & 26 & 129 & 627 \\  \raggedright 
-{\bf Automatically proved proof obligations:} & 17 & 93 & 112 \\  
-{\bf Average length of a non-automatic proof:} & 3 & 6 & 12 \\    
-\end{tabular}  
-\end{center}  
-\caption{Some statistics on proof}  
-\label{stats}  
-\end{figure}    
-\subsubsection{Proofs}
-The first proofs are relatively easy.  The State class is proved
-almost automatically; these proofs are not due to the code of the
-methods but some standard verification Jack adds to each methods,
-mostly to verify that all the public invariants are not broken after
-the execution of each method.  Since the methods in the State class
-are quite simple (and do not break the invariants), the automation is
-good for these kind of proof obligations.  The only special case is
-for the constructor where it is necessary to break a disjunction ({\tt
-instance S $\vee$ S = null}) to prove the invariants.
-
-
-The Instruction class has also been relatively easy to prove.  A
-significant number of proof was done automatically (approximately 90
-\%) and as for the State class this was mainly the verifications of
-invariants; then majority of proof could be trivially resolved as most
-of the methods are observer or accessors to private fields.  Two
-methods verify some properties over the instructions, namely {\tt
-checkDomain} which checks if the successors of the instruction are
-contained in the program and {\tt isSuccessor} which test if the
-instruction passed as a parameter is in the list of the successors of
-the current instruction.  Thes two methods contains loops, so the
-proof obligations generated are quite differents. We have to use some
-arithmetic to prove their termination, which is not automated since it
-does not appear often.  Finally the Verifier class was harder to
-prove. One of the main reason is that the main method contains 2
-loops; the inner one, easy to verify (a bit more difficult than the
-ones contained in the Instruction class) because it simply consult
-each intruction of the instruction array representing the program, but
-with much more properties expressed on it. The proof obligations
-generated for the main loop containing the inner loop are harder to
-prove because the loop terminates only if it reaches a fixpoint, so it
-cannot be expressed by simple arithmetic like the previous ones.  The
-lemmas of this class were containing too many hypotheses to be
-automatically proved.  In fact for each class some properties are
-brought from the previous ones, this adds lots of hypothesis but it
-adds too to the complexity of the proofs.  That's why there was some
-kind of exponentional growth in the size of the proof obligations for
-each class when they were defined.  Around 500 proof obligations had
-to be solved manually.  Some of them were obvious and were resolved
-with quite the same script, but the script cannot be automated.  Some
-of them were complex: the proof script became little large (an average
-of 30 steps).  As one should expect the lemmas concerning the loop
-invariant of the verify method and its initialization were the most
-difficult to prove.
-
-
-
-
 \subsection{Low-Footprint Java-to-Native Compilation}
 % Pertinence of compiling bytecode into native code for embedded devices
 Enabling Java on embedded and restrained systems is an important challenge for today's industry and research groups~\cite{Mulchandani1998}. Java brings features like execution safety and low-footprint program code that make this technology appealing for embedded devices which have obvious memory restrictions, as the success of Java Card witnesses. However, the memory footprint and safety features of Java come at the price of a slower program execution, which can be a problem when the host device already has a limited processing power. As of today, the interest of Java for smart cards is still growing, with next generation operating systems for smart cards that are closer to standard Java systems~\cite{Lagosanto2002,Grimaud2003}, but runtime performance in still an issue. To improve the runtime performances of Java systems, a common practice is to translate some parts of the program bytecode into native code.
@@ -245,36 +111,11 @@ Doing so removes the interpretation layer and improves the execution speed, but 
 Although the runtime checks are necessary to the safety of the Java virtual machine, they are most of the time used as a protection mechanism against programming errors or malicious code: A runtime exception should be the result of an exceptional, unexpected program behavior and is rarely thrown when executing sane code - doing so is considered poor programming practice. The safety checks are therefore without effect most of the time, and, in the case of native code, uselessly enlarge the code size.
 
 % Our contribution
-Several studies proposed to factorize these checks or in some case to eliminate them, but none proposed a complete elimination without hazarding the system security. In this document, we use formal proofs to ensure that run-time checks can never be true into a program, which allows us to completely and safely eliminate them from the generated native code. The programs to optimize are JML-annotated against runtime exceptions and verified by the Java Applet Correctness Kit (JACK~\cite{BRL-JACK}). We have been able to remove almost all of the runtime checks on tested programs, and obtained native ARM thumb code which size was comparable to the original bytecode. 
+Several studies proposed to factorize these checks or in some case to eliminate them, but none proposed a complete elimination without hazarding the system security. Here, we use formal proofs to ensure that run-time checks can never be true into a program, which allows us to completely and safely eliminate them from the generated native code. The programs to optimize are JML-annotated against runtime exceptions and verified by the Java Applet Correctness Kit (JACK~\cite{BRL-JACK}). We have been able to remove almost all of the runtime checks on tested programs, and obtained native ARM thumb code which size was comparable to the original bytecode. 
 
 More details can be found in a companion document~\cite{mariela06:cardis}.
 
-\subsubsection{Java and Ahead-of-Time Compilation}
-\label{sec:sota}
-
-Compiling Java into native code common on embedded devices. This section gives an overview of the different compilation techniques of Java programs, and points out the issue of runtime exceptions.
-
-\paragraph{Ahead-of-Time \& Just-in-Time Compilation}
-
-% JIT & AOT compilations
-Ahead-of-Time (AOT) compilation is a common way to improve the efficiency of Java programs. It is related to Just-in-Time (JIT) compilation by the fact that both processes take Java bytecode as input and produce native code that the architecture running the virtual machine can directly execute. AOT and JIT compilation differ by the time at which the compilation occurs. JIT compilation is done, as its name states, just-in-time by the virtual machine, and must therefore be performed within a short period of time which leaves little room for optimizations. The output of JIT compilation is machine-language. On the contrary, AOT compilation compiles the Java bytecode way before the program is run, and links the native code with the virtual machine. In other words, it translates non-native methods into native methods (usually C code) prior to the whole system execution. AOT compilers either compile the Java program entirely, resulting in a 100\% native program without a Java interpreter, or can just compile a few important methods. In the latter case, the native code is usually linked with the virtual machine. AOT compilation have no or few time constraints, and can generate optimized code. Moreover, the generated code can take advantage of the C compiler's own optimizations.
-
-% Why JIT is not applicable to embedded devices
-JIT compilation in interesting by several points. For instance, there is no prior choice about which methods must be compiled: the virtual machine compiles a method when it appears that doing so is beneficial, e.g. because the method is called often. However, JIT compilation requires embedding a compiler within the virtual machine, which needs resources to work and writable memory to store the compiled methods. Moreover, the compiled methods are present twice in memory: once in bytecode form, and another time in compiled form. While this scheme is efficient for decently-powerful embedded devices such as PDAs, it is inapplicable to very restrained devices like smartcards or sensors. For them, ahead-of-time compilation is usually preferred because it does not require a particular support from the embedded virtual machine outside of the ability to run native methods, and avoids method duplication. AOT compilation has some constraints, too: the compiled methods must be known in advance, and dynamically-loading new native methods is forbidden, or at least very unsafe.
-
-% Runtime exceptions
-Both JIT and AOT compilers must produce code that exactly mimics the behavior of the Java virtual machine. In particular, the safety checks performed on some bytecode must also be performed in the generated code.
-
-\paragraph{Java Runtime Exceptions}
-\label{sec:runtimeexceptions}
-% Why runtime exceptions
-The JVM (Java Virtual Machine)~\cite{VMSpec} specifies a safe execution environment for Java programs. Contrary to native execution, which does not automatically control the safety of the program's operations, the Java virtual machine ensures that every instruction operates safely. The Java environment may throw predefined runtime exceptions at runtime, like the following ones:
-
-If the JVM detects that executing the next instruction will result in an inconsistency or an illegal memory access, it throws a runtime exception, that may be caught by the current method or by other methods on the current stack. If the exception is not caught, the virtual machine exits. This safe execution mode implies that many checks are made during runtime to detect potential inconsistencies. 
-
-Of the 202 bytecodes defined by the Java virtual machine specification, we noticed that 43 require at least one runtime exception check before being executed. While these checks are implicitly performed by the bytecode interpreter in the case of interpreted code, they must explicitly be issued every time such a bytecode is compiled into native code, which leads to a code size explosion. Ishizaki et al. measured that bytecodes requiring runtime checks are frequent in Java programs: for instance, the natively-compiled version of the SPECjvm98 \texttt{compress} benchmark has 2964 exception check sites for a size of 23598 bytes. As for the \texttt{mpegaudio} benchmark, it weights 38204 bytes and includes 6838 exception sites~\cite{Ishizaki1999}. The exception check sites therefore make a non-neglectable part of the compiled code.
-
-\subsubsection{Optimizing Ahead-of-Time Compiled Java Code}
+\subsubsection{Optimizing Compiled Java Code}
 \label{sec:method}
 
 %verification procedure
