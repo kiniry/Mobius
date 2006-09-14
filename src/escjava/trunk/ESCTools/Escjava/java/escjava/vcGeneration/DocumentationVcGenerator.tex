@@ -1,4 +1,5 @@
 \documentclass[english,a4paper,10pt]{article}
+\usepackage{graphicx}
 \usepackage{babel}
 \usepackage[latin1]{inputenc}
 \usepackage{vmargin}
@@ -42,8 +43,8 @@ This document describes the operation of the verification condition generator of
 
 \newpage
 
-\section{An old tree}
-First let's explain the global design of escjava2. Each method analysed leads to the generation of a set of guarded commands. The guarded commands represents how the method is supposed to be executed. You can see them by adding the \textit{-pgc} to the \textit{escj} script. The guarded commands are then modified, in a stage called 'desugaring' by the original authors of escjava. The generation of verification conditions\footnote{verification condition will be abbreviated by 'vc' by now} takes place after this phase, you can see it by adding the \textit{-pvc} flag to the escjava executable. Originally, the logic of Simplify was completely untyped\footnote{or has only one type depending on how you see it}. The new vc generator use the old proof and type it in order to be able to generate proof for many sorted logics. As the old proof system was fakely typed with the 'as trick', I did the assumption that we can build a strongly typed proof from it (see \cite{1}). At the moment, the only new logic supported is the many sorted one for pvs. We can summarize the process this way : \\
+\section{The Old Tree}
+First let us explain the global design of escjava2. Each method analysed leads to the generation of a set of guarded commands. The guarded commands represents how the method is supposed to be executed. You can see them by adding the \textit{-pgc} to the \textit{escj} script. The guarded commands are then modified, in a stage called 'desugaring' by the original authors of escjava. The generation of verification conditions\footnote{verification condition will be abbreviated by 'vc' by now} takes place after this phase, you can see it by adding the \textit{-pvc} flag to the escjava executable. Originally, the logic of Simplify was completely untyped\footnote{or has only one type depending on how you see it}. The new vc generator use the old proof and type it in order to be able to generate proof for many sorted logics. As the old proof system was fakely typed with the 'as trick', I did the assumption that we can build a strongly typed proof from it (see \cite{1}). At the moment, the only new logic supported is the many sorted one for pvs. We can summarize the process this way : \\
 
 \begin{figure}[H]
 \begin{center}
@@ -73,11 +74,12 @@ Public method of this class are :
 \end{itemize}
 \end{itemize}
 
-\subsection{The top abstract classes}
+\subsection{The Top Abstract Classes}
 
-\subsubsection{Static objects belonging to all nodes}
+\subsubsection{Static Objects Belonging to All Nodes}
 
-The new ast tree makes strong use of abstract classes and overloading of functions. The top class from which all nodes inherit is \textit{TNode}. It contains as well all static fields and functions. First I explain the operation of these static field because it's quite independent from the tree itself. There is a field containing a map describing how renaming of variable is done. This map is called \textit{variablesName}. Let's explain how it is encoded with a little example. Imagine you have a proof for Simplify that looks like : 
+The new ast tree makes strong use of abstract classes and overloading of functions. The top class from which all nodes inherit is \textit{TNode}. It contains as well all static fields and functions. First I explain the operation of these static field because it's quite independent from the tree itself. There is a field containing a map describing how renaming of variable is done. This map is called \textit{variablesName}. Let's explain how it is encoded with a little example. 
+Let us take a look on the proof obligation in figure ~\ref{fig:simplifyProof}.
 
 \begin{figure}
 \begin{verbatim}
@@ -93,17 +95,17 @@ The new ast tree makes strong use of abstract classes and overloading of functio
                )
 \end{verbatim}
 \caption{Simplify's proof example}
-\label{simplifyProof}
+\label{fig:simplifyProof}
 \end{figure}
 
-You can notice that :
+You can notice that:
 \begin{itemize}
 \item There is one variable, (surely a integer, double or float) named \textit{c-1.8}.
-\item There is one variable which is a type : \textit{$\vert$TYPE:9..$\vert$}. You can guess it because it's compared with \textit{T\_int} which is a type too. This is important to notice that type have a type (integer is a \textit{FinalType}, a reference is a \textit{ReferenceType}).
+\item There is one variable which is a type : \textit{$\vert$TYPE:9..$\vert$}. You can guess it because it's compared with \textit{T\_int} which is a type too. It is important to notice that types have a type (integer is a \textit{FinalType}, a reference is a \textit{ReferenceType}).
 \item Another variable is \textit{$\vert$tmp0!int[]:9.22$\vert$} (this is a reference to an array).
 \end{itemize}
 
-Seeing that, the \textit{variablesName} hashmap will look like figure \ref{mapVariables} page \pageref{mapVariables}.
+The hashmap \textit{variablesName} for this example is shown in figure \ref{mapVariables}.
 
 \begin{figure}
 \begin{tabular}{p{80pt}|p{80pt}|p{80pt}|p{80pt}|p{40pt}}
@@ -117,7 +119,7 @@ $\vert$tmp!int[]:9.22$\vert$ & tmp\_int\_9\_22 & tmp\_int\_9\_22 & tmp\_int\_9\_
 \label{mapVariables}
 \end{figure}
 
-\indent So \textit{variablesName} is a java \textit{HashMap} where key are string which represents name of variable in the old translation of vc. Object stored belongs to class \textit{VariableInfo}(see related section page \ref{variableInfo}). So when we encounter a variable name \textit{c-1.8}, if \textit{c-1.8} isn't a key of the \textit{variablesName} field, we entered it as a key in the hashMap, and the associated object is a new \textit{VariableInfo} containing the different renaming of the variable (field \textit{unsortedPvs pvs} and \textit{sammy}). The last field of \textit{VariableInfo} objects is a pointer on a \textit{TypeInfo} object which contains the type of the variable (if known). In order not to waste memory, renaming is done only when we know what kind of proof we will have to generate. The \textit{TypeInfo} class works in the same way as \textit{VariableInfo} in a \textit{HashMap} called \textit{typesName} :\\
+\indent Therefore \textit{variablesName} is a java \textit{HashMap} where keys are strings which represent the name of variable in the old translation of vc. The values stored into this hashmap belongs to class \textit{VariableInfo} (see related section page \ref{variableInfo}). So when we encounter a variable named \textit{c-1.8}, if \textit{c-1.8} isn't already among the keys of  \textit{variablesName}, we entered it as a key in the hashMap and the associated object is a new \textit{VariableInfo} containing the different renaming of the variable (field \textit{unsortedPvs pvs} and \textit{sammy}). The last field of \textit{VariableInfo} objects is a pointer on a \textit{TypeInfo} object which contains the type of the variable (if known). In order not to waste memory, renaming is done only when we know what kind of proof we will have to generate. The \textit{TypeInfo} class works in the same way as \textit{VariableInfo} in a \textit{HashMap} called \textit{typesName}, see figure ~\ref{fig:mapTypes}.
 
 \begin{figure}
 \begin{tabular}{p{80pt}|p{80pt}|p{80pt}|p{80pt}}
@@ -129,10 +131,10 @@ integer & S & DiscreteNumber & int \\
 $\vert$TYPE:9.. $\vert$ & S & TYPE\_9\_\_ & TYPE\_9\_\_ \\
 \end{tabular}\\
 \caption{map example of types names storing}
-\label{mapTypes}
+\label{fig:mapTypes}
 \end{figure}
 
-\paragraph{Why is it done this way ?}{}
+\paragraph{Why Is It Done This Way ?}{}
 
 \begin{enumerate}
 \item Having one map to store all variable information is very similar to compilation procedure. So I think this is very natural to handle it this way.
@@ -141,17 +143,17 @@ $\vert$TYPE:9.. $\vert$ & S & TYPE\_9\_\_ & TYPE\_9\_\_ \\
 \item The unicity of old name (the leftest column in our arrays) is guaranteed by the old proof system, thus it should not raise problems.
 \end{enumerate}
 
-\paragraph{How to improve it ?}{}
+\paragraph{How to Improve It ?}{}
 
 \begin{itemize}
-\item Looking at the code of \textit{TNode} you can notice that some initialization (call to \textit{init()}) are done as many times as method check, this can be corrected to be reduced to one.
+\item Looking at the code of \textit{TNode} you can notice that some initializations (call to \textit{init()}) are done as many times as method check, this can be corrected to be reduced to one.
 \item Think about handling all possible types, and how far we can go. For example I'm quite sure we can fully support arrays, but I'm not sure it will be very easy to find types of maps (associating object to field for example).
 \item \textbf{This is not robust and absolutely experimental}. This is the key point. To continue further this work and think about adding capabilities to escjava2, you should test it against a lot, a lot of tests cases. Be sure to ask Joe to explain what means 'intense' testing\dots 
 \end{itemize}
 
-\paragraph{About types}{(see figure \ref{mapTypes} page \pageref{mapTypes})}
+\paragraph{About Types}{(see figure \ref{fig:mapTypes} page \pageref{fig:mapTypes})}
 
-\paragraph{}Like for \textit{variablesName}, keys in typesName (the second array of the example) represents the name of the type in the old tree. As the old tree wasn't typed, it was defined during the rewriting of the vc generator. Column numbered higher than one refers to corresponding name of the type in the different logics. For example the first line means that the type 'integer' is equivalent to the type 'int' in the pvs unsorted logic and in the smt lib one, and that it's translated to 'DiscreteNumber' for the pvs many sorted logic. We add a line in this array (it means we create a new \textit{TypeInfo}(see related section page \ref{typeInfo}) object) when we encounter a new type. Of course, we don't add the same type two times (this is easily done because key must be unique). For example the type encountered in the old proof called \textit{$\vert$TYPE:9.. $\vert$} is caught by the last line. A question immediately raises : what are the types in the old tree ?\\
+\paragraph{}Like for \textit{variablesName}, keys in \textit{typesName} represents  names of the type in the old tree. As the old tree was not typed, it was defined during the rewriting of the vc generator. The values for each key refer to corresponding name of the type in the different logics. For example, the first row means that the type 'integer' is equivalent to the type 'int' in the pvs unsorted logic and in the smt lib one, and that it is translated to 'DiscreteNumber' for the pvs many sorted logic. We add a row in this array (it means we create a new \textit{TypeInfo} (see related section page \ref{typeInfo}) object) when we encounter a new type. Of course, we do not add the same type two times (this is easily done because key must be unique). For example, the type encountered in the old proof called \textit{$\vert$TYPE:9.. $\vert$} is caught by the last line. A question immediately raises: what are the types in the old tree ?\\
 
 \indent We tried to use every information available in the old tree, in order not to be constraint when we generate proofs. At the moment, different types are :
 \begin{itemize} %to do complete that if code change
@@ -168,8 +170,8 @@ $\vert$TYPE:9.. $\vert$ & S & TYPE\_9\_\_ & TYPE\_9\_\_ \\
 \item \%Path
 
 \end{itemize}
-As keys in the \textit{typesName} \textit{HashMap} are String, these types are stored as String. This explains why some of them are prefixed with a \%. \% is a character which cannot be used in Java for naming a variable or a type. That's why we used to prefix some of our types. Imagine that the user defined a class "Time", then we will try to add to this map with the key "Type". That's why we have to differentiate our type "Time" by prefixing it with a \% which we know can't be use as a legal identifier in Java.\\
-As you can guess, when we encounter a type name in the old tree, we check if it's already present in the \textit{typesName} map. If not we add it. That's why, in order to be a little bit efficient, some types are added before any call can be made. There is a function initializing type table in the \textit{TNode} class :
+As keys in the \textit{typesName} \textit{HashMap} are of the type String, these types are stored as String. This explains why some of them are prefixed with a \%. \% is a character which cannot be used in Java for naming a variable or a type. That's why we used to prefix some of our types. Imagine that the user defined a class "Time", then we will try to add to this map with the key "Type". That's why we have to differentiate our type "Time" by prefixing it with a \% which we know can't be use as a legal identifier in Java.\\
+As you can guess, when we encounter a type name in the old tree, we check if it's already present in the \textit{typesName} map. If not, we add it. That's why, in order to be a little bit efficient, some types are added before any call can be made. There is a function initializing type table in the \textit{TNode} class :
 
 \begin{verbatim}
     static public void init (){
@@ -192,34 +194,34 @@ It means that the new object \textit{TypeInfo} is stored in the field \textit{\$
 
 \subsubsection{TNode}
 
-In this section, I describe features that are more related to the fact that TNode is the super class for all node (i.e., not talking about static/global variables). This class contains a lot of functions and fields. The different fields are :
+In this section, I describe features that are more related to the fact that TNode is the super class for all nodes (i.e., not talking about static/global variables). The different fields are:
 
 \paragraph{Fields}{}
 
 \begin{itemize}
-\item static protected int id : This field is an identifier which allows to distinguish every single node. It's used when we create the dot graph (see below).
+\item protected int id : This field is an identifier which allows to distinguish every single node. It's used when we create the dot graph (see below).
 \item static protected int counter : This field is used to create different id for each node. It's incremented at each call to the \textit{TNode} constructor.
 \item protected boolean isroot : This flag indicates if the node is the root one. His utility can be discussed\dots
-\item public TypeInfo type : This field points vers the \textit{TypeInfo} representing the type of this node. It can be null as long as the tree hasn't been typed.
-\item protected boolean typeSure : When we type the tree, sometimes we can't be sure about the type (for example when inspecting an \textit{AnyEQ} function) of a variable. As long as this boolean isn't set to true, the type can change if we find more information in another part of the tree.
-\item static protected int lastType : this field store the type of the proof you last asked for. This is used to launch appropriate proof simplifier visitor for example (see further).
+\item public TypeInfo type : This field points to the \textit{TypeInfo} representing the type of this node. It can be null as long as the tree hasn't been typed.
+\item protected boolean typeSure : When we type the tree, sometimes we are not sure about the type (for example when inspecting an \textit{AnyEQ} function) of a variable. As long as this boolean isn't set to true, the type can change if we find more information in another part of the tree.
+\item static protected int lastType : this field stores the type of the proof you asked for last. This is, for example, used to launch appropriate proof simplifier visitor (see further).
 \item static protected boolean typeProofSet : this is used in specifications to make sure you have set the proof before calling type-of-proof asked function.
 \item String label : this will store the name of the current proof generated (like method\_X\_file\_Y for example).
 \end{itemize}
 
-\paragraph{Functions \protect\footnote{By looking at the code you can notice that I skip some (often overloaded one) function whose sense is trivial}}{}
+\paragraph{Methods \protect\footnote{By looking at the code you can notice that I skip some (often overloaded one) function whose sense is trivial}}{}
 
 \begin{itemize}
-\item public TNode() : this is the default constructor for all node in the proof, it's just increase the counter and the id for the node being created.
+\item public TNode() : this is the default constructor for all nodes in the proof, it merely increases the counter and sets the id for the node being created.
 \item static public void init() : This functions reinitializes \textit{variablesName} and \textit{typesName} before beginning a new proof.
 \item public void setOutputType(String type) : this is used to set the type of the proof.
-\item protected void generateDeclarations(StringBuffer s) : As now variables are typed, we should declare it in new proofs. For the example of proof (see figure \ref{simplifyProof} page \pageref{simplifyProof}), the declaration for the pvs many sorted logic will consist of (I skip the array variable as it's not yet implemented) :
+\item protected void generateDeclarations(StringBuffer s) : As now variables are typed, we should declare it in new proofs. For the example of proof (see figure \ref{fig:simplifyProof}, page \pageref{fig:simplifyProof}), the declaration for the pvs many sorted logic will consist of (I skip the array variable as it's not yet implemented) :
 \begin{verbatim}
     c_1_8 : DiscreteNumber
     TYPE_9__ : ReferenceType
 \end{verbatim}
 \item static public VariableInfo addName(String oldName, String type, \dots) : this function is called when the user discover a new variable and want to add it to the variables map. Imagine (still referring to Simplify's proof example of figure \ref{simplifyProof}) that this is the first you encounter \textit{c-1.8}, you will make a call looking like TNode.addName("c-1.8", "integer"). This call handle adding variable (if not already present in the map) to the map and adding its type to the types map (same notice).
-\item static VariableInfo(String name) : this function allows to retrieve the \textit{VariableInfo} object associated to this name.
+\item static VariableInfo getVariableInfo(String name) : this function allows to retrieve the \textit{VariableInfo} object associated with the given name.
 \item static public TypeInfo addType(String oldType, \dots) : Identical to variable operation, if we encounter a type in the proof, we will add it by calling this function. Imagine we are checking the constructor of a user defined class \textit{A}. We will then do the following call : 
 \begin{verbatim}
     TName n = new TName();
@@ -234,7 +236,7 @@ In this section, I describe features that are more related to the fact that TNod
 \end{itemize}
 
 \subsubsection{TFunction}
-This class, which inherits directly from \textit{TNode}, is used to represent nodes corresponding to function, i.e., nodes that have sons. That's why it contains a \textit{vector} of \textit{TNode}.
+This class, which inherits directly from \textit{TNode}, is used to represent nodes corresponding to functions, i.e., nodes that have sons. That's why it contains a \textit{vector} of \textit{TNode}.
 
 That's why it contains a few additional functions related to son adding/getting :
 \begin{itemize}
@@ -243,7 +245,7 @@ That's why it contains a few additional functions related to son adding/getting 
 \item protected void typeTree() : This method does nothing except calling it on all sons. As \textit{TFunction} is abstract, ie has no implementation, we have no information about type here.
 \end{itemize}
 
-\paragraph{Classes extending TFunction}{}
+\paragraph{Classes Extending TFunction}{}
 
 \paragraph{}{A lot of classes are here just to factorize behaviour of function depending on what type they are related to. Let me explain. For example \textit{TBoolRes} extends \textit{TFunction} and represents node returning a boolean (\textit{Boolean Result}). That's why you can see in his constructor :
 \begin{verbatim}
@@ -256,10 +258,10 @@ Notice that sometimes we are speaking of type of node, sometimes type of variabl
 }
 
 \subsubsection{TVariable}
-First consider that this class means variable and constant. Variables are represented by class \textit{TName}. Constants are represented by class \textit{TLiteral.java}.
+Children of this class are used to represent variables and constants. Variables are represented by the class \textit{TName}. Constants are represented by the class \textit{TLiteral.java}.
 
-\paragraph{constants}{
-TLiteral inherits directly from TVariable and add nothing to it (this is stupid). Above TLiteral you have all classes defined in TLiteral\textbf{.j} (again you have to split that file's with Patrice Chalin's script division-j-file). These classes encode various constants that can appear in proof like :
+\paragraph{Constants}{
+TLiteral inherits directly from TVariable and adds nothing to it (this is stupid). Above TLiteral you have all classes defined in TLiteral\textbf{.j} (again you have to split that file's with Patrice Chalin's script division-j-file). These classes encode various constants that can appear in proof like :
 \begin{verbatim}
 (EQ 
    (c-1.8 0)
@@ -269,7 +271,7 @@ TLiteral inherits directly from TVariable and add nothing to it (this is stupid)
 In that little proof, you have the constant '0' which an integer (coded by \textit{TInt}) and the constant '"do not read that"' which is a string (coded by \textit{TString}). The advantage of creating as class as constant type is that you can know their type easily. 
 }
 
-\paragraph{variables}{are encoded by the class \textit{TName}. They have an additional field of type \textit{String} where we store their \dots name. This name is the same as the one serving as a key in the global map \textit{variablesName}. Notice that if we have a proof looking like :
+\paragraph{Variables}{are encoded by the class \textit{TName}. They have an additional field of type \textit{String} where we store their \dots name. This name is the same as the one serving as a key in the global map \textit{variablesName}. Notice that if we have a proof looking like :
 \begin{verbatim}
 (EQ
    (c-1.8 0)
@@ -297,7 +299,7 @@ At the moment, the only renaming that is partially implemented is the one for th
 An important thing to consider is to avoid confusion between user defined type and our types. 
 Imagine that the user defined the class 'Reference'. As we already use it in our pvs proof system, we have to rename it. That's why user defined types are prefixed with 'userDef?'.\\
 Note that as types are variables too, their renaming is done here too. There is a confusion between that and the renaming done in \textit{TypeInfo} (see next paragraph), something has to be fixed here to avoid that.\\
-There should be a reflexion about all this renaming problem before implementing anything because this is now very confusing. This seems stupid, but between the convention of the old ESC/Java team, mine and yours, it can be hard not to make mistakes.
+There should be a reflection about all this renaming problem before implementing anything because this is now very confusing. This seems stupid, but between the convention of the old ESC/Java team, mine and yours, it can be hard not to make mistakes.
 
 \subsubsection{TypeInfo}
 \label{typeInfo}
@@ -308,14 +310,14 @@ Note that predefined types added before each proof are added with their renaming
 This class was intended to centralize outputting of messages. Yet the right way to do the job is to use anonymous class and instantiating function depending on which flags were passed to ESC/Java2. It also use bash special characters to display colors, it can be done in a nicer and more flexible way.\\
 Note that, each call to \textit{TDisplay} function receives the object of the caller in order to indicate what classes we are in. As I didn't find how to display the name of the method currently called, I just passed it as second argument too. This is quite lame, I think this can be done in a nicer way.
 
-\section{Practically speaking, how does it work ?}
+\section{Practically Speaking, How Does it Work ?}
 \label{practically}
 All source code is located in ESCTools/Escjava/java/escjava/vcGeneration/.
-\subsection{Flags you can pass to escjava2}
+\subsection{Flags You Can Pass to escjava2}
 \label{flags}
 
 \begin{itemize}
-\item \textbf{-nvcg} : this flag enables all other feature. If you do not pass this one, you can't use the \textbf{n}ew \textbf{vc} \textbf{g}enerator.
+\item \textbf{-nvcg} : this flag enables all other features. If you do not pass this one, you can't use the \textbf{n}ew \textbf{vc} \textbf{g}enerator.
 \item \textbf{-pPvs} : Generate \textbf{p}roof for the pvs sorted logic (located in ESCTools/Escjava2-Logics/pvs/escjava2.pvs).
 \item \textbf{-pSimplify} : Generate proof for simplify. This was done to compare that the proof system doesn't skip important node (for example we skip label, and handling of \textit{forall} and \textit{exist} isn't supported \footnote{\label{footnoteDavid}I didn't make further test but these constructs have been added by David Cok to support \textit{model} keyword but have not been implemented correctly (it uses tag not recognized by escjava2), you should contact him for further details.}) by comparing proof generated this way and proof generated by the old system (i.e., compare output of ./escj ~/javaFile.java -nvcg -pSimplify and ./escj ~/javaFile.java -pvc). From previous tests, it seems to work very well (no inconsistency between both proofs generated (knowing the limitations of the new proof system)).
 \item \textbf{-pErr} : Display errors on error output.
@@ -326,7 +328,7 @@ All source code is located in ESCTools/Escjava/java/escjava/vcGeneration/.
 \item \textbf{-vc2Dot} : output the old proof in dot format and launch the appropriate dot command on it (look at Main.java). \red{Fixme, I guess that if you've tried this flag}, you've noticed it does not work. That's very easy to fix. As the constructor of ASTNode does nothing special, I need to add a counter to it (to identify each node). Yet the problem is that if I define a constructor in ESCTools/Javafe/java/javafe/ast/hierarchy.j the default constructor is still generated (which clashes with the new one), thus you can't compile. So you need to decomment the constructor in hierarchy.j, compile one time, fix ASTNode.java to comment the old constructor and that's it.
 \end{itemize}
 
-\subsection{Generating new ast tree}
+\subsection{Generating The New AST}
 Translation of the old tree is done in the \textit{generateIfpTree} function in the VcGenerator class. So if you want to modify the way it's done, that's where you have to first look. The translation is similar with the code of the pretty printer for the old logic (ESCTools/Escjava/java/escjava/translate/VcToString.java). It takes non typed object and create a lot of node using inheritance from TFunction to build a new typed tree.\\
 All you have to give to this function is the root node (here named \textit{vcBody}) of the old proof (this is done in Main.java), something like :
 \begin{verbatim}
@@ -343,11 +345,13 @@ vc = LabelExpr.make(r.getStartLoc(), r.getEndLoc(),
 \end{verbatim}
 This was done this way because in the old logic, there was a need for a few additional hypothesis for each proof. Ie the proof sent to Simplify was :
 
+\red{Shouldn't be here an implication?}
+
 \begin{center}
 (additional hypothesis) $\wedge$ (proof current method)
 \end{center}
 
-I won't explain, but if you have a good knowledge of Simplify's logic, it will makes sense (you can read \cite{1}, that's explained), so the additional hypothesis are :
+I won't explain, but if you have a good knowledge of Simplify's logic, it will make sense (you can read \cite{1}, that's explained), so the additional hypothesis are :
 \begin{verbatim}
       (AND 
         (EQ |elems@pre| elems)
@@ -368,7 +372,7 @@ As it's no more useful in new logic, the vc generator use the old proof before a
 
 \indent The process of translating the old tree is quite crappy. It consists of big switch on tags, and/or conditional statements with \textit{instanceof}. After identifying the type of the old node, I extract information we want by looking at appropriate data structures. This is the main source of errors I think and is not very robust. The rest of operations is much more cleaner. This is not surprising since manipulating the old tree wasn't handy (and that's why a new ast was designed).
 
-\subsection{Typing the tree}
+\subsection{Typing the Tree}
 \label{typeTree}
 At this stage, we have a tree which is not completely typed. For example if we encounter a node \textit{ANYEQ} (which stands for "any equality"), we can not have further information on what it represents.\\
 Yet we can deduce a lot of things by visiting the tree. At the moment this is done by calling the function \textit{typeTree} recursively on all nodes (starting from the root one). So imagine we have a proof looking like :
@@ -379,10 +383,13 @@ Yet we can deduce a lot of things by visiting the tree. At the moment this is do
 )
 \end{verbatim}
 From the the second line we learn that \textit{c-1.8} is an integer. Then, as the operator \textit{EQ} is used for a lot of things, we can't guess nothing. Yet as \textit{c-1.8} is an integer, and that we know \textit{EQ} is applied on same types sons, we can deduce that \textit{d-2.24} is an integer too.\\
+
+\red{Is this really true? In java I can happily compare ints with reals.}
+
 Depending of the type of the class you're 'in', the function doing the typing (\textit{typeTree}) acts differently. You can know understand the advantage of defining class strongly related to type (I mean defining \textit{TBoolOp} for node returning a boolean, \textit{TIntOp} for node taking \textit{integers} and returning boolean).\\
 To set the type of a node, you have to call the method \textit{setType(TypeInfo, boolean)}. The boolean is here to indicate if you're sure what you're doing. Because of the old implementation sometimes you can't be sure of the type, thus you can pass false as second argument. Then if we have further information later in the proof we will change it. From first experiments, this happens rarely which means the old proof was well typed (which is a good sign and indicates this work is finishable \footnote{does it match any English word ?}).\\
 
-\subsection{Simplication}
+\subsection{Simplification}
 Simplification of the proof consists of deleting we know are useless, or deleting operations we will know the result (like boolAnd(true, a, b) = boolAnd(a, b)). For the moment this is only partially done (\dots). This is done in the \textit{TProofSimplifier} visitor class. For the moment, we only delete \textit{TIs} node. This kind of node gives information about the type of variable. So this is useful to gather type, but as proof are now typed, we can delete these axioms (this information is now contained when declaring variables). Imagine you have an old Simplify proof looking like :
 \begin{verbatim}
 (AND 
