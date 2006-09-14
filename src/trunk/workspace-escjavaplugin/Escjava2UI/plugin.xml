@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
-<plugin
+<?eclipse version="3.2"?>
+<plugin>
+<!-- ignored plugin attributes
    id="escjava.plugin"
    name="Escjava2 UI"
    version="1.1.1"
    provider-name="David R. Cok"
-   class="escjava.plugin.EscjavaPlugin">
+   class="escjava.plugin.EscjavaPlugin"
+-->
 
+<!-- ignored elements follow
    <runtime>
       <library name="EscjavaPlugin.jar">
          <export name="*"/>
@@ -28,6 +31,7 @@
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
       <import plugin="escjava.esctools"/>
    </requires>
+-->
 
    <!-- This extension defines the Esc/Java project nature -->
      
@@ -230,13 +234,13 @@
                definitionId="escjava.plugin.commands.CheckEscjava">
          </action>
 
-         <action
+         <!-- action
                toolbarPath="additions"
                label="ESC"
                tooltip="Runs Esc/Java2 static checks"
                class="escjava.plugin.EscjavaAction$Check"
                id="escjava.plugin.EscjavaAction.Check.Toolbar">
-         </action>
+         </action> -->
 <!--
             <action
                label="Test Information"
@@ -348,31 +352,31 @@
       <command
             name="Install Esc/Java2"
             description="Installs Esc/Java2 nature and builder on the selected projects"
-            category="escjava.plugin.EscjavaCommandCategory"
+            categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.EnableEscjava">
       </command>
       <command
             name="Remove Esc/Java2"
             description="Removes Esc/Java2 nature and builder from the given project"
-            category="escjava.plugin.EscjavaCommandCategory"
+            categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.DisableEscjava">
       </command>
       <command
             name="Check Esc/Java2"
             description="Performs Esc/Java2 checks on selected Java elements"
-            category="escjava.plugin.EscjavaCommandCategory"
+            categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.CheckEscjava">
       </command>
       <command
             name="Clear Esc/Java2 Markers"
             description="Clears all Esc/Java2 Markers on selected objects"
-            category="escjava.plugin.EscjavaCommandCategory"
+            categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.ClearMarkers">
       </command>
       <command
             name="Go to associated declaration"
             description="Highlights the declaration being violated by a given problem marker"
-            category="escjava.plugin.EscjavaCommandCategory"
+            categoryId="escjava.plugin.EscjavaCommandCategory"
             id="escjava.plugin.commands.GoToDeclaration">
       </command>
   </extension>
