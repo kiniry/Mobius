@@ -17,8 +17,13 @@
 \section{Proof of Correctness } \label{proof}
 
 The correctness of our verification  condition generator is established w.r.t.
-to the operational semantics described in Section \ref{opSem}. We look only at
- partial correctness, i.e. we assume that programs always terminate and we assume that there are no recursive methods.
+to the operational semantics described in Section \ref{opSem}.
+Remind that, we look only at
+ partial correctness, i.e. our calculus works under the assumption that 
+a progam terminates. 
+ 
+
+ 
 
 We first give a definition that a ``method is correct w.r.t its specification''
 
@@ -81,9 +86,10 @@ initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly 
 \end{lemma0}
 Proof :
 The proof is by case analysis on the type of instruction that will be next executed. 
-We are going to see only the proofs for the instructions \return , \load and \invoke, the other cases being the same
+We are going to see only the proofs for the instructions \return , \load, \new{} and \putfield{} the other cases being the same
 \begin{enumerate} 
-		\item    $\ins{\pc_n}$ = \return 
+		\item    $\ins{\pc_n} = \return$ 
+		 
 		     $$ \begin{array}{l}
 		    	\mbox{\rm\comment{by initial hypothesis }} \\
 			\interp{\wpi{\return}{\pc_{n}}{\methodd}} {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}  \\
@@ -95,12 +101,18 @@ We are going to see only the proofs for the instructions \return , \load and \in
                           \interp { \normalPost} { \configFinalNorm{\heap_n  }
 				                                   { \evalExp{ \stack{\topStack}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } }
                          }\\
-			 \mbox{\rm \comment{by definition of the evaluation function \mbox{ \rm \textit{eval}}  } }\\
+			\comment{by definition of the evaluation function $\evalExpName$}\\
 			 \iff \\ 
 				   \interp{ \normalPost} { \configFinalNorm{\heap_n  }  
-							    { \stackOnly_n ( \counterOnly_n  )  } } 
+							    { \stackOnly_n ( \counterOnly_n  )  } } \\
+				\comment{from the operational semantics for \return }\\
+				s_{n+1} = \configFinalNorm{\heap_n  } { \stackOnly_n ( \counterOnly_n  )  }	\\
+				\comment{and we obtain that }	\\
+				\interp{ \normalPost} {s_{n+1} }  
+							    
 			\end{array} $$
 	\item   $\ins{\pc_n } = \load \ i $ 
+	             \todo{Easy: say what are other cases are similar to this one}
 	                  
 			  $$ \begin{array}{l}
 			  	\mbox{\rm\comment{by initial hypothesis }} \\
@@ -113,15 +125,17 @@ We are going to see only the proofs for the instructions \return , \load and \in
 			\mbox{\rm\comment{applying the substitution properties \ref{substCntr} and \ref{substStack} }}\\
 		
 		       \iff \\ 
-		       \interpTwoLines{\inter{\pc_n }{\pc_n  +1 }   }
+		       \numConclusion{1} \ \interpTwoLines{\inter{\pc_n }{\pc_n  +1 }   }
                                   { \config{\heap_n }{\counterOnly_n  + 1}{ \update{\stackOnly_n }{\counterOnly_n  + 1 }{\locVarOnly_n (i) } }{\locVarOnly_n }{\pc_{n+1} } } \\
 		    
 		   
 			\comment{from the operational semantics of the \load instruction in section \ref{opSem}} \\
-			 \interp{  \inter{\pc_n }{\pc_n  +1 }  }{s_{n + 1}} \\
+		\numConclusion{2} \ s_{n+1} = \config{\heap_n }{\counterOnly_n  + 1}{ \update{\stackOnly_n }{\counterOnly_n  + 1 }{\locVarOnly_n (i) } }{\locVarOnly_n }{\pc_{n+1} } \\
+			 \comment{ from \numConclusion{1} and \numConclusion{2} follows } \\
+			 \interp{\inter{\pc_n }{\pc_n  +1 }  }{s_{n + 1}} \\
 		  	 \comment{and the lemma holds in this case } 
 			 \end{array}	$$
-	\item  $\new  \ \clazz $ 
+	\item   $\ins{\pc_n} = \new  \ \clazz $ 
 	        $$ \begin{array}{l}  
 		      	\mbox{\rm\comment{by initial hypothesis }} \\ 
                          \interp{\wpi{\new \ \clazz }{\methodd}{\pc  }}{\config{\heap_n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }} \\
@@ -180,8 +194,8 @@ We are going to see only the proofs for the instructions \return , \load and \in
 		       \mbox{\rm\textit{ and the operational semantics of the instruction \new \} }} \\  
 		       \interp{ \inter{i}{i+1} }{s_{n+1}}
 		\end{array}	$$
-\item  $\ins{\pc } = \putfield   \ \fieldd $ \\
-
+\item  $\ins{\pc_n } = \putfield   \ \fieldd $  \\
+                \todo{Easy: say what are other cases are similar to this one}
 	        $$ \begin{array}{l}  
 		      	\mbox{\rm\comment{by initial hypothesis }} \\ 
                          \interp{\wpi{\pc_n  \ \putfield   \ \fieldd }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} \\
@@ -336,7 +350,7 @@ instruction at index $loopEntry $ in the array of bytecode instructions of the m
  Thus, there exists a natural number  $ i , 0 \le i < \methodd.\loopSpecTable.length   $   such that
  $ \methodd. \loopSpecTable[i].\posL = loopEntry $,  $ \methodd. \loopSpecTable[i].\invL = I $ and
    $ \methodd. \loopSpecTable[i].\modifL =\{ mod_i, i = 1..s \}$.
-We look only at the case when the current instruction is a \load  instruction\\
+We look only at the case when the current instruction is a \load{}  instruction\\
 $$ \begin{array}{l}
 \mbox{\rm\comment{by initial hypothesis}} \\
 \interp{ \wpi{\pc_n \ \load \ i }{\methodd}{}}{s_n} \\
@@ -472,7 +486,11 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 
 \Qed
 
-\begin{lemma3}[\fwpi \ of method entry point instruction]\label{lemma3}
+We now shall see that starting execution of a method in a state where the \fwpi{}
+ predicate for the entry instruction holds implies that the  
+\fwpi{} for all the instructions in the execution path hold. 
+
+\begin{lemma3}[\fwpi \ precondition for method entry point holds initially ]\label{lemma3}
 Assume we have a method \methodd. Assume that  execution of method  \methodd \ starts execution
  in state $s_{0}$ and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$ where 
 and makes $n$ steps to reach state $s_n$: $s_{0} \stateTrans^{n} s_{n} $, then
@@ -482,53 +500,65 @@ $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ 
 \end{lemma3}
 Proof : Induction over the number of execution steps $n$
 \begin{enumerate}
-    \item  $s_{0} \stateTrans s_{1}$. From the initial hypothesis   we can apply lemma \ref{lemma1}, we get that 
+    \item\textit{ $s_{0} \stateTrans s_{1}$. By initial hypothesis we have that  $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$
+             we can apply lemma \ref{lemma1}, we get that 
              $\interp{ \wpi{\ins{\pc_{1}}}{\methodd}{  } } { s_{1} }  $ and thus, the  case when one step is made from the initial state
-             $s_0$  holds   
-    \item Induction hypothesis:   $s_{0} \stateTrans^{n - 1} s_{n - 1}$ and \\
+             $s_0$  holds}   
+    \item \textit{Induction hypothesis:   $s_{0} \stateTrans^{n - 1} s_{n - 1}$ and \\
            $\forall i,  0 < i \le n - 1, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{}}{ s_{i}} $
-           and there can be made one step $s_{n- 1} \stateTrans s_n$.  Lemma \ref{lemma1} can be applied and we get that
-	    
+           and there can be made one step $s_{n- 1} \stateTrans s_n$.  Lemma \ref{lemma1} \ can be applied and we get that
            $\numConclusion{1} \ \interp{ \wpi{\methodd.\body[\pc_n] } {\methodd}{ } }{ s_{n}} $. 
 	   From the induction hypothesis and \numConclusion{1} follows that 
-	   $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$
-            
+	   $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$ }
 \end{enumerate}
+\Qed \\
 
+Having the last lemma we can  establish that if a method starts
+execution in a state in which the \fwpi{} precondition  for the method entry instruction 
+holds and the method terminates then the method postcondition holds in the method final state.
 
-
-\begin{lemma2}[Validity of \fwpi \ for a method implies that postcondition holds]\label{lemma2}
+\begin{lemma2}[\fwpi \ precondition for method entry point holds initially]\label{lemma2}
 
 Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
 
 %Assume that every execution of the method \methodd \ terminates.
- Assume that  execution of methodd \methodd \ starts in state $_{0}$ 
+ Assume that  execution of method \methodd{} starts in state $_{0}$ 
 and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ s_{0}}$
-Then if the method \methodd \ terminates, i.e. there exists a  state $s_n$,  $\methodd : s_0  \stateTransTerm s_n   $ 
+Then if the method \methodd{} terminates, i.e. there exists a  state $s_n$,  $\methodd : s_0  \stateTransTerm s_n   $ 
  such that $\ins{\pc_n} = \return $ or
  $\ins{\pc_n}$ throws an unhandled 
 exception of type \mbox{\rm\texttt{Exc}} the following holds:
 \begin{itemize}
     \item if $\ins{\pc_n} = \return $ then $\interp{ \methodd.\normalPost}{s_{n+1}}$
-    \item  if $\ins{\pc_n}$ throws a not handled exception of type \texttt{Exc} then 
+    \item  if $\ins{\pc_n}$ throws a not handled exception of type \texttt{Exc} then \\ 
              $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
 \end{itemize}
 \end{lemma2}
 Proof: 
 %By hypothesis the execution of method \methodd \ always terminates, i.e. there exists $n$ steps such that
-Let $ \ s_{0} \stateTrans^{*} s_n $ and $\methodd.\body[\pc_n]$ is a \return \ or an instruction that throws a  not handled exception.
+\textit{Let $ \ s_{0} \stateTrans^{*} s_n $ and $\methodd.\body[\pc_n]$ is a \return \ or an instruction that throws a  not handled exception.
  Applying lemma \ref{lemma3}, we can get that $\forall i, 0 \le i \le n , \ \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ } }{ s_{i}}$. 
 We apply lemma \ref{lemma1} for the case for a \return \ or instruction that throws an unhandled exception which allows to conclude that the current statement holds.
-
+}
+\Qed\\
 
 
 Now, we are ready to state the theorem which expresses the correctness of our verification condition generator
 w.r.t. the operational semantics of our language
 \begin{vcGenCorrect}\label{vcGenCorrect}
 For any  method \methodd \  if the verification condition is valid:
-$$ \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} $$
- then \methodd \ is correct in the sense of the definition \ref{defCorrect}. 
+$$ \numConclusion{1} \ \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} $$
+ then \methodd \ is correct in the sense of the Def. \ref{defCorrect}. 
 \end{vcGenCorrect}
-Proof: From lemma \ref{lemma2} and the initial hypothesis that the weakest precondition of the 
-entry point holds we conclude that the method \methodd \ is correct
+Proof:
+\textit{ 
+As we want to prove that method \methodd{} is correct w.r.t. its specification we have
+as hypothesis that the method precondition holds in the  the initial state $s_0$ 
+of the method execution, or $\interp{ \methodd.\pre }{ s_{0}}$.
+From the latter and \numConclusion{1}, we get that the weakest precondition of the 
+entry point holds in the initial state, i.e.  $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$. 
+We can apply then Lemma \ref{lemma2} and we get that the respective method postcondition holds in the final state 
+of the method \methodd. We can conclude then that \methodd \ respects  its specification in the sense of Def. \ref{defCorrect}.
+ }\\
+\Qed
 %of $ \methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd} $ is done.

@@ -10,7 +10,19 @@
 
 \section{Relation between syntactic substitution and semantic evaluation}\label{substProp}
 
-The following lemmas estasblish that substitution over state configurations or expressions / formulas result in the same evaluation
+In this section, we will show what is the relation between the syntactic notion
+of substitution and the semantic notion of evaluation. Particularly, we shall see that they commute.
+As an intermediate execution state $ \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc } $ 
+is composed from several elements, a heap \heap{}, the stack counter \counterOnly, the operand stack \stackOnly{} 
+and the array of registers \locVarOnly, we shall state for each component a separate lemma.
+In the following, we shall scatch the proof only of the first lemma the other lemmas having a similar proof. 
+
+Let us now look at the next formal statement.
+It refers to the fact that if we substitute in a give expression $\expression_1$ 
+the expression  \locVar{i} which represents the local variable at index i
+ with another expression $\expression_2$ and evaluate the resulting expression in a state $s_1$
+ we will get the same value if we evaluate   $\expression_1$  in the state 
+$\update{s_1}{\locVarOnly(i) }{ \evalExp{ \expression_2 }{s_1}  }$.
 
 
 \begin{substLv}[Update  a local variable]\label{substLv}
