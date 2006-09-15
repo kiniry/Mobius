@@ -33,7 +33,11 @@ will also need a tool to inspect and write directly BML
 specifications, and a run-time checker for BML specifications. The
 latter can be implemented by a code transformation, inserting explicit
 run-time checks in the bytecode, or by extending the virtual machine
-to take the user-specific attributes with specifications into account;
+to take the user-specific attributes with specifications into account.
+It is also important to have a tool support for checking the well-formedness
+of BML specifications. In particular, we think that such a tool 
+can be done by extending the bytecode verifier for checking not
+only bytecode instructions but also bytecode specification.
 
 Our initial experiments with compilation of specifications has shown
 that there exists indeed a correspondence between the proof

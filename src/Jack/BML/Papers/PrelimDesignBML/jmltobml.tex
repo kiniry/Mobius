@@ -32,8 +32,8 @@ To be able to appropriately compile loop invariants, the control flow
 graph corresponding to the list of bytecode instructions resulting
 from the compilation of a method body must be a
 \emph{reducible control flow graph}. This means basically that every 
-cycle in the graph must have exactly one entry point, and it is not
-possible to jump into the middle of a cycle from outside the cycle
+cycle in the graph must have exactly one entry point, or in other words
+ it is not possible to jump into the middle of a cycle from outside the cycle
 (see~\cite{AhoSU86} for the full definition of reducibility). Note
 that this is not a serious restriction; all non-optimising Java
 compilers produce reducible control flow graphs and in practice even

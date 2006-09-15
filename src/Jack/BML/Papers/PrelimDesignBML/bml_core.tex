@@ -13,10 +13,10 @@ they are added as special attributes to the bytecode; and
 
 With respect to the expression syntax, this means concretely that
 field names, class names \emph{etc.}\ are replaced by constants, using
-the constant pool, while registers are used to refer to local
-variables. In addition, we can use stack expressions and the stack
-counter to describe intermediate states of a computation. These will
-typically only appear in intermediate assertions, we do not use them
+the constant pool, while registers are used to refer to method local
+variables and parameters. In addition, we can use stack expressions and
+ the stack counter to describe intermediate states of a computation.
+ These will typically only appear in intermediate assertions, we do not use them
 in method specifications. Finally, we add a special expression
 \codeHook{length(\(a\))}, denoting the length of array \(a\). Since the 
 source code expression \codeHook{\(a\).length} is compiled into a
@@ -268,7 +268,7 @@ Above, we presented the formal grammar of BML.  However, we are
 interested only in the strict subset of \emph{well-formed}
 specifications. In particular, a well-formed BML specification should
 be well-typed and respect several structural constraints, similar to
-the structural constraints that the bytecode verifier imposes over the
+the type and structural constraints that the bytecode verifier imposes over the
 class file format.
 
 Examples of type constraints that a BML specification must
