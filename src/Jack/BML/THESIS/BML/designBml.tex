@@ -13,9 +13,9 @@ how  they compare to JML and what  are the motivations that led us to these deci
 %Because BML is tailored to a directly interpreted bytecode, 
 %the language should respect the following conditions:
 
-\begin{itemize}
+\begin{description}
 
-\item \textbf{Java compiler independance } \\
+\item [Java compiler independance ] 
       Class files containing BML specification must not depend on 
       any non optimizing compiler. 
     
@@ -30,7 +30,7 @@ how  they compare to JML and what  are the motivations that led us to these deci
        % generating debug information~\footnote{the debug information is necessary for the compilation
       % from JML to BML as we shall see in the coming sections}.
 
-\item \textbf{JVM compatibility } \\
+\item [JVM compatibility]
             The class files augmented with the BML specification must be executable by any
 	    implementation of the JVM specification.
 	    % why do we do so?
@@ -67,61 +67,62 @@ how  they compare to JML and what  are the motivations that led us to these deci
 	    %  For instance, loops on bytecode are identified by a unique loop entry instruction and thus, a loop invariant must hold basically every time
 	    %  the corresponding loop entry instruction is reached.
 
-\item \textbf{Compactness} and \textbf{Efficiency}\\
-      Although opposite, we consider those two features together because they are mutually dependent. 
-      By the first, we mean that the class files augmented with BML should be as compact as possible.  
-      The second feature refers to that tools supporting BML should not be slowed down by the processing
-      of the BML specification and more  precisely  we refer verification condition generator tools.
-      This is an important condition if verification is done  on devices with limited resources.
+\item [BML corresponds to a partially desugared version of JML]
+      %Although opposite, we consider those two features together because they are mutually dependent. 
+     %  By the first, we mean that the class files augmented with BML should be as compact as possible.  
+      % The second feature refers to that tools supporting BML should not be slowed down by the processing
+      % of the BML specification and more  precisely  we refer verification condition generator tools.
+     %  This is an important condition if verification is done  on devices with limited resources.
 
-      For fulfilling these conditions, BML is designed to correspond to a subset of the desugared version of JML.
-      In particular, it brings a relative compactness of the class
-      file as well as makes the verification procedure more efficient. 
-
-      % compactness   
-      We first see in what sense this allows the class file compactness. 
-      Because every kind of BML specification clause is
-      stored in a different user defined attribute, supporting all constructs of JML would 
-      mean that class files may contain a large number of attributes which would increase
-      considerably the class file size. Of course, the size of a BML specification depends also 
-      on how much detailed is the specification, the more
-      detailed it is, the larger size it would have.
-      
-      % efficiency
-      Because BML corresponds to a desugared version of JML, this means that on verification time
+      BML is designed to correspond to a subset of the desugared version of JML.
+      We consider that such encoding makes the verification procedure more efficient. 
+      Let us see why. Because BML corresponds to a desugared version of JML, this means that on verification time
       the BML specification does not need much processing and thus, it can be easily translated to the
       data structures used in the verification scheme. This makes BML suitable for verification on devices
       with limitted resources.
+      % compactness   
+     % We first see in what sense this allows the class file compactness. 
+    %  Because every kind of BML specification clause is
+    %  stored in a different user defined attribute, supporting all constructs of JML would 
+    %  mean that class files may contain a large number of attributes which would increase
+    %  considerably the class file size. Of course, the size of a BML specification depends also 
+    %  on how much detailed is the specification, the more
+    %  detailed it is, the larger size it would have.
       
-\end{itemize}
+      % efficiency
+     
+      
+\end{description}
 
 
 
-As the attentive reader has noticed, we impose some restrictions on the structure of the class file format and the bytecode programs.
-These restrictions are the following:
- 
+We impose also few restrictions on the structure of the class file:
 
-
-\begin{itemize}
-  \item \textbf{Debug Information} \\ 
-       A requirement to the class file format is that it must contain a debug information, more particularly
+\begin{description}
+  \item [\textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}]
+       A requirement to the class file format is that it must contain 
        the \textbf{Line\_Number\_Table} \\ 
        and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
        these attribute is optional \cite{VMSpec}, yet almost all standard non optimizing compilers can generate these data. 
        The \textbf{Line\_Number\_Table} is part of the compilation of a method and 
        describes the link between the Java source lines and the Java bytecode.
        The \textbf{Local\_Variable\_Table} describes the local variables that appear in a method.  
-       This debug information is necessary for the compiler from JML to BML, as we shall see later in Section \ref{BCSLcompile}.
+       These attributes are usually used by debuggers as they describe the relation between source and bytecode.
+       It is also necessary for the compiler from JML to BML, as we shall see later in Section \ref{BCSLcompile}.
 
-\item  \textbf{Reducible control flow graph} \\ 
-       The control flow graph corresponding to the list of bytecode instructions resulting from the compilation of a method
-       body must be a reducible control flow graph. An intuition to the notion of reducibility is that every cycle in the
-       graph must have exactly one entry point, 
-       or in other words a cycle can not be jumped from outside inside (see \cite{ARUCom1986} for the definition of reducibility). This condition is necessary for the compilation
-       phase of the loop  invariants as well as for the verification procedure (Section \ref{wpGeneral}).
-       Note, that this restriction is realistic as nonoptomizing Java compilers produce
-       reducible control flow graphs and in  practice even hand written code is in most cases reducible. 
-\end{itemize}
+  \item [Non-optimizing compilation] 
+       The compilation process from JML to BML relies on finding the relation between source and its compilation into bytecode.
+       As code optimization can make this relation to disappear, we require that the bytecode be produced by a non-optimizing
+       compiler.
+%\item  [Reducible control flow graph] 
+%       The control flow graph corresponding to the list of bytecode instructions resulting from the compilation of a method
+%%       body must be a reducible control flow graph. An intuition to the notion of reducibility is that every cycle in the
+%       graph must have exactly one entry point, 
+%       or in other words a cycle can not be jumped from outside inside (see \cite{ARUCom1986} for the definition of reducibility). This condition is necessary for the compilation
+%       phase of the loop  invariants as well as for the verification procedure (Section \ref{wpGeneral}).
+%       Note, that this restriction is realistic as nonoptomizing Java compilers produce
+%       reducible control flow graphs and in  practice even hand written code is in most cases reducible. 
+\end{description}
 
 
 
