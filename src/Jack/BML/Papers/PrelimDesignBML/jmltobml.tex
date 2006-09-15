@@ -47,8 +47,10 @@ have access to the generated class file.
 \begin{description}
 
 \item[Compilation of ghost and model field declarations] 
-For all ghost and model variables declared in the specification,
-entries are added in the constant pool. 
+Ghost and Model variables declared in the specification are
+compiled to a special class attribute 
+ which contains a list of all  specification variable declarations. 
+%entries are added in the constant pool. 
 
 %\item [Desugaring of the JML specification] This is an optional step,
 %to achieve more compact specifications directly. Here one would use
@@ -60,7 +62,7 @@ The JML specification is transformed into an intermediate format,
 where the identifiers are resolved to their corresponding data
 structures in the class file.  The Java and JML source identifiers are
 linked with their identifiers on bytecode level, \emph{i.e.}\ the
-corresponding indexes either from the constant pool or from the
+corresponding indexes either from the second constant pool or from the
 \textbf{Local\_Variable\_Table} attribute. This is similar to the
 linking and resolving stage of the Java source code compiler.
 

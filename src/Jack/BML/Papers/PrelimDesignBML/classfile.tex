@@ -38,7 +38,7 @@ application should be transparent. In particular, it should not have
 any impact on the application's performance, thus, the class file
 augmented with BML should not slow down loading or normal execution of
 the application. Notice that this requirement is very important for
-mobile device applications, where one often has limited resources.
+mobile device applications, where one often has limited resources. 
 \end{description}	  
 
 
@@ -49,19 +49,30 @@ instance, the attribute that stores BML loop invariants contains the
 invariant as well as the index of the entry point instruction of the
 loop.
 
-For each class, we add the following information to the class file:
+For each class, we must add the following information to the class file:
 \begin{itemize}
+\item a second constant pool which contains constant references
+      for the BML specification expressions;
 \item an attribute with the model fields used in the specification;
 \item an attribute with the ghost fields used in the specification;
 \item an attribute with the class invariants (both static and object); and
 \item an attribute with the history constraints (both static and object).
 \end{itemize}
 
-The JVM specification requires that the names of these attributes are
-added to the constant pool.  In addition, if a model or a ghost field
+
+
+%The JVM specification requires that the names of these attributes areadded to the constant pool.  
+Thus, if a model or a ghost field
 is dereferenced in the specification, then a constantFieldRef is added
-to the constant pool as the Java compiler would do for any
-dereferenced Java field. %\footnote{The JVM specification does not allow
+to the second constant pool as the Java compiler would do for any
+dereferenced Java field in the original constant pool of the class. 
+Note that in that way we guarantee that the JVM performance 
+will not be corrupted because of the encoding of the BML specification.
+In particular, if we use the original constant pool for storing
+constants originating from specifications this would mean that 
+the search time in the original constant pool can degrade
+significantly especially if we have a large specification. 
+ %\footnote{The JVM specification does not allow
 %to create a separate constant pool for specification-only variables,
 %since every constant that occurs in the class file
 %\emph{must} occur in the standard constant pool.};
@@ -133,7 +144,7 @@ field descriptor, containing \emph{e.g.}\ type information.  The tags
 \textbf{u2} and \textbf{u4} specifies the size of the attribute, 2 and
 4 bytes, respectively. The model field attribute is similar.
 
-In a similar way, we the attributes for 
+In a similar way, we add the attributes for 
 the class invariants and history constraints contain a list of
 invariants and constraint entries, respectively. These contain the
 predicates, a tag whether the invariant (constraint) is defined over
