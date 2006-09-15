@@ -14,10 +14,11 @@ they are added as special attributes to the bytecode; and
 With respect to the expression syntax, this means concretely that
 field names, class names \emph{etc.}\ are replaced by constants, using
 the constant pool, while registers are used to refer to method local
-variables and parameters. In addition, we can use stack expressions and
- the stack counter to describe intermediate states of a computation.
- These will typically only appear in intermediate assertions, we do not use them
-in method specifications. Finally, we add a special expression
+variables and parameters. In addition, we can use stack expressions
+and the stack counter to describe intermediate states of a
+computation.  These will typically only appear in intermediate
+assertions, we do not use them in method specifications. We
+add a special expression
 \codeHook{length(\(a\))}, denoting the length of array \(a\). Since the 
 source code expression \codeHook{\(a\).length} is compiled into a
 special bytecode instruction \codeHook{arraylength}, we also need a
@@ -65,11 +66,11 @@ using a weakest precondition calculus.
 \multicolumn{2}{l}{\varHook{primary-expr} ::= 
 \codeHook{\#}\varHook{natural}} & \% reference in the constant pool \\
 &\(\mid\) \codeHook{lv[}\varHook{natural}\codeHook{]} &\% local variable \\
-&\(\mid\) \codeHook{length(}\varHook{expression}\codeHook{)} &\% array
-length \\
 &\(\mid\) \codeHook{cntr} &\% counter of the operand stack\\
 &\(\mid\) \codeHook{st(}\varHook{additive-expr}\codeHook{)} &\% stack
 expressions\\
+&\(\mid\) \codeHook{length(}\varHook{expression}\codeHook{)} &\% array
+length \\
 &\(\mid\) \varHook{constant} \(\mid\)
 \codeHook{super}\\
 &\(\mid\) \codeHook{true} \(\mid\) \codeHook{false} \(\mid\)
