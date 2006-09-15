@@ -170,7 +170,8 @@ Fig. \ref{opSem:arithStack}  shows the  arithmetic instructions and and the ones
 Arithmetic instruction pop the values which are on the stack top \stackOnlyParam{\counterOnly}  and \stackOnlyParam{\counterOnly - 1}  at the position below
  and apply the corresponding arithmetic operation on them.
  The stack counter is decremented and  the resulting  value on the stack top \stackOnlyParam{\counterOnly - 1} \ \rm{op} \ \stackOnlyParam{\counterOnly}
- is pushed on the stack  top  \stackOnlyParam{\counterOnly - 1}. 
+ is pushed on the stack  top  \stackOnlyParam{\counterOnly - 1}. Note that our formalization does not take into consideration overflow of arithmetic instructions.
+Here, we assume that we can manipulate any unbounded integers.  
 Note that there are two cases for the arithmetic instructions  \instr{div} and \instr{rem}. This is because they 
 may terminate on a runtime exception when the second argument is 0. From the rule for exceptional termination
  we can see that the exception handler table \methodd.\excHandlerTable{} of the current method will be searched 
@@ -475,8 +476,6 @@ reference that points to an array. If the stack top element \stackOnlyParam{\cou
 \length{\stackOnlyParam{\counterOnly} } is fetched and pushed on the stack.
 If the stack top element \stackOnlyParam{\counterOnly} is \Mynull{} then a \NullPointerExc{} is thrown. Here we can see how the array
  length is modeled via the special object field \length. 
-
-
 
 
 Let us now look at Fig. \ref{opSem:obj:creat} to  see how 
