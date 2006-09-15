@@ -57,19 +57,20 @@ For each class, we add the following information to the class file:
 \item an attribute with the history constraints (both static and object).
 \end{itemize}
 
-The JVM specification requires that the names of these attributes have
-are added to the constant pool.  In addition, if a model or a ghost
-field is dereferenced in the specification, then a constantFieldRef is
-added to the constant pool as the Java compiler would do for any
-dereferenced Java field\footnote{The JVM specification does not allow
-to create a separate constant pool for specification-only variables,
-since every constant that occurs in the class file
-\emph{must} occur in the standard constant pool.};
+The JVM specification requires that the names of these attributes are
+added to the constant pool.  In addition, if a model or a ghost field
+is dereferenced in the specification, then a constantFieldRef is added
+to the constant pool as the Java compiler would do for any
+dereferenced Java field. %\footnote{The JVM specification does not allow
+%to create a separate constant pool for specification-only variables,
+%since every constant that occurs in the class file
+%\emph{must} occur in the standard constant pool.};
 
-The attribute with ghost fields has the following format:
 
+\begin{figure}[t]
 \textbf{
-\begin{longtable}{lp{8cm}}
+\begin{longtable}{p{5.5cm}p{8cm}}
+\begin{tabular}[t]{l}
 Ghost\unsc Field\unsc attribute \{\\
 \hspace*{1em}
 \begin{tabular}{l}
@@ -84,17 +85,47 @@ u2  fields\unsc count;\\
 \} fields[fields\unsc count];\\
 \end{tabular}\\
 \}
+\end{tabular}
 &
+\begin{tabular}[t]{l}
+BMLMethod\unsc attribute \{ \\ 
+\hspace*{1em}
+\begin{tabular}[t]{l}
+u2 attribute\unsc name\unsc index;\\ 
+u4 attribute\unsc length;\\ 
+formula requires\unsc formula;\\
+u2 spec\unsc count;\\
+\{\begin{tabular}[t]{l}
+  formula spec\unsc requires\unsc formula; \\
+  u2 assignable\unsc count;\\
+  formula assignable[assignable\unsc count];\\
+  formula ensures\unsc formula;\\
+  u2 exsures\unsc count;\\
+  \{\begin{tabular}[t]{l}
+    u2 exception\unsc index; \\
+    formula exsures\unsc formula;\\
+    \end{tabular}\\
+  \} exsures[exsures\unsc count];\\
+  \end{tabular}\\
+\} spec[spec\unsc count];   \\
+\end{tabular}\\
+\}
+\end{tabular}
 \end{longtable}
 }
+\caption{Attributes for ghost field declarations and method specifications}
+\label{FigAttributes}
+\end{figure}
 
-This should be understood as follows: the name of the attribute is
-given as an index into the constant pool. This constant pool entry
-will be representing a string \texttt{"Ghost\unsc Field"}. Next we
-have the length of the attribute, which should be 2 +
-6*\textbf{fields\unsc count} (the number of fields stored in the
-list). The \textbf{fields} table then stores all ghost fields. For
-each field we store its access flags (\emph{e.g.}\ \texttt{public} or
+The left-hand column of Figure~\ref{FigAttributes} shows the format of
+the ghost fields attribute. This should be understood as follows: the
+name of the attribute is given as an index into the constant
+pool. This constant pool entry will be representing a string
+\texttt{"Ghost\unsc Field"}. Next we have the length of the attribute,
+which should be 2 + 6*\textbf{fields\unsc count} (the number of fields
+stored in the list). The \textbf{fields} table then stores all ghost
+fields. For each field we store its access flags (\emph{e.g.}\
+\texttt{public} or
 \texttt{private}), and the name index and descriptor index, both
 referring to the constant pool. The first must be a string,
 representing the (unqualified) name of the variable, the latter is a
@@ -156,50 +187,20 @@ instances or static, and appropriate visibility modifiers.
 The JVM specification prescribes that the table with method
 information at least contains the code of each method. We add
 attributes for the method specification, and for set statements,
-assert statements, assume statements and loop specifications.  The
-attribute with the lightweight behaviour specifications is formatted
-as follows (heavyweight behaviour specifications are handled
-similarly):
+assert statements, assume statements and loop specifications.  
 
-\textbf{    
-\begin{longtable}{lp{8cm}}
-JMLMethod\unsc attribute \{ \\ 
-\hspace*{1em}
-\begin{tabular}[t]{l}
-u2 attribute\unsc name\unsc index;\\ 
-u4 attribute\unsc length;\\ 
-formula requires\unsc formula;\\
-u2 spec\unsc count;\\
-\{\begin{tabular}[t]{l}
-  formula spec\unsc requires\unsc formula; \\
-  u2 assignable\unsc count;\\
-  formula assignable[assignable\unsc count];\\
-  formula ensures\unsc formula;\\
-  u2 exsures\unsc count;\\
-  \{\begin{tabular}[t]{l}
-    u2 exception\unsc index; \\
-    formula exsures\unsc formula;\\
-    \end{tabular}\\
-  \} exsures[exsures\unsc count];\\
-  \end{tabular}\\
-\} spec[spec\unsc count];   \\
-\end{tabular}\\
-\}
-&
-\end{longtable}
-}
-
-
-The global requires formula is the disjunction of all preconditions in
-the different specification cases of the method. For each
-specification case, we then have a precondition
-(\textbf{spec\unsc requires\unsc formula}), a list of assignable expressions,
-a postcondition (\textbf{ensures\unsc formula}) and a list of exceptional
-postconditions (stored in the \textbf{exsures} attribute). If a clause
-is not explicitly specified, its default value will be stored
-here. Notice that for each list of elements we get two attributes: one
-to store the number of elements, and one attribute actually containing
-the elements.
+The attribute for lightweight behaviour specifications is shown in the
+right-hand column of Figure~\ref{FigAttributes}. (heavyweight behaviour
+specifications are handled similarly).  The global requires formula is
+the disjunction of all preconditions in the different specification
+cases of the method. For each specification case, we then have a
+precondition (\textbf{spec\unsc requires\unsc formula}), a list of
+assignable expressions, a postcondition (\textbf{ensures\unsc
+formula}) and a list of exceptional postconditions (stored in the
+\textbf{exsures} attribute). If a clause is not explicitly specified,
+its default value will be stored here. Notice that for each list of
+elements we get two attributes: one to store the number of elements,
+and one attribute actually containing the elements.
 
 The tables with set, assert and assume statements have the same format
 as for example the attribute for ghost fields, \emph{i.e.}\ some
@@ -263,24 +264,24 @@ loop, a loop invariant, and a \textbf{decreases} clause, which is the
 loop variant, \emph{i.e.}\ the expression that allows to prove
 termination of the loop. If the specification does not contain a loop
 variant, we indicate this, using a special tag for the
-\textbf{decreases} clause. This gives the following attribute format.
+\textbf{decreases} clause. %This gives the following attribute format.
 
-\textbf{     
-\begin{longtable}{lp{8cm}}
-JMLLoop\unsc specification\unsc attribute \{\\
-\begin{tabular}{l}
-u2 attribute\unsc name\unsc index;\\
-u4 attribute\unsc length;\\
-u2 loop\unsc count;\\
-\{\begin{tabular}{l}
-  u2 index;\\
-  u2 modifies\unsc count;\\
-  formula modifies[modifies\unsc count];\\
-  formula invariant;\\
-  expression decreases;\\
-  \end{tabular}\\
-\} loop[loop\unsc count];\\
-\end{tabular}\\
-\}
-\end{longtable}
-}
+%\textbf{     
+%\begin{longtable}{lp{8cm}}
+%JMLLoop\unsc specification\unsc attribute \{\\
+%\begin{tabular}{l}
+%u2 attribute\unsc name\unsc index;\\
+%u4 attribute\unsc length;\\
+%u2 loop\unsc count;\\
+%\{\begin{tabular}{l}
+%  u2 index;\\
+%  u2 modifies\unsc count;\\
+%  formula modifies[modifies\unsc count];\\
+%  formula invariant;\\
+%  expression decreases;\\
+%  \end{tabular}\\
+%\} loop[loop\unsc count];\\
+%\end{tabular}\\
+%\}
+%\end{longtable}
+%}

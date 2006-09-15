@@ -1,4 +1,4 @@
-\section{Conclusions and future work}\label{SecConcl}
+\section{Conclusions and related work}\label{SecConcl}
 
 This paper presents the Bytecode Modeling Language (BML). Its syntax
 and semantics are directly inspired by JML, and it is possible to
@@ -8,7 +8,49 @@ roughly to JML level 0, \emph{i.e.}\ that part of JML whose semantics
 is relatively well understood. However, more advanced constructs of
 JML can be easily added to BML, if required. 
 
-\subsection{Related work}
+\begin{figure}[t]
+\includegraphics[width=\textwidth]{toolset.eps} 
+\caption{Overview of \mobius tool set}\label{FigToolSet}
+\end{figure}
+As part of the \mobius project, we plan to develop a tool set that
+supports both JML and BML. Figure~\ref{FigToolSet} outlines the
+general architecture of this tool set. Thus, both Java/JML and
+bytecode/BML can be used as input application. For both specification
+languages, verification condition generators are used to generate
+appropriate proof obligations that can be discharged with a theorem
+prover (either automatic or interactive). To support the proof
+carrying code platform, the provers will be instrumented to produce
+certificates. In addition, source code applications annotated with JML
+can be compiled into bytecode annotated with BML.
+
+The development of the JML subcomponent of the tool set will be based
+on experiences with ESC/Java~\cite{CokK04} and JACK~\cite{BurdyRL03}.
+Several tools and algorithms (notably the compiler and the
+verification condition generator) for BML have already been
+implemented, see~\cite{BurdyP06}, but more work is needed to cover the
+whole language. Moreover, to make the tool set usable in practice, we
+will also need a tool to inspect and write directly BML
+specifications, and a run-time checker for BML specifications. The
+latter can be implemented by a code transformation, inserting explicit
+run-time checks in the bytecode, or by extending the virtual machine
+to take the user-specific attributes with specifications into account;
+
+Our initial experiments with compilation of specifications has shown
+that there exists indeed a correspondence between the proof
+obligations generated at source and at bytecode level, modulo
+differences in elimination of trivial goals, handling of arithmetic
+expressions, and the naming convention of generated
+variables. Moreover, when the proofs are done with the Coq prover,
+different names are generated for hypotheses at source code and
+bytecode level. It is future work to clean up the compilation, so
+there is a one-to-one correspondence.
+
+
+
+
+ 
+
+\subsection*{Related work}
 The interest in specification and verification of bytecode
 applications is quite recent, and not too much work has been done in
 that direction. Several logics have been developed to reason about
@@ -41,60 +83,8 @@ applications are written in bytecode directly, to avoid security
 problems related with compilation. Thus, for such applications one
 needs to be able to specify and verify them directly at this level.}.
 
-\subsection{Future work: a tool set for BML}\label{SecTools}
-
-We plan to develop a tool set to support BML. Parts of the tools and
-algorithms have already been implemented, see~\cite{BurdyP06}, but
-still some work is needed to cover the whole language. 
-
-We have implemented a first prototype of the \JMLtoBML compiler. We
-also have implementations of verification condition generators for
-Java source code and bytecode (as part of the tool
-JACK~\cite{BurdyRL03}). We have shown that if we compile an
-application with its specification, there exists a correspondence
-between the proof obligations generated at source and at bytecode
-level, modulo differences in elimination of trivial goals, handling of
-arithmetic expressions, and the naming convention of generated
-variables. Moreover, when the proofs are done with the interactive
-theorem prover Coq, the prover generates different names for
-hypotheses at source code and bytecode level. It is future work to
-clean up to compilation, so that there is a one-to-one correspondence.
 
 
-Moreover, we would like that such a tool set is used in connection
-with a tool set supporting JML (\emph{e.g.}\ JACK~\cite{BurdyRL03} or
-ESC/Java~\cite{CokK04}). Ideally, these tool sets are developed
-together, so that both specifications and proofs can be compiled from
-source code into bytecode level. This requires that the verification
-logic used at source code level can be mapped into the logic used at
-bytecode level. The development of this tool set will be a part of the
-work in the \mobius project. The tool set for BML should provide the
-following functionalities:
-
-\begin{itemize}
-\item a tool to inspect and write directly BML specifications;
-\item a run-time checker of BML specifications, this can be
-implemented by a code transformation, inserting explicit run-time
-checks in the bytecode, or by extending the virtual machine to take
-the user-specific attributes with specifications into account;
-\item a full implementation of the \JMLtoBML compiler;
-\item a verification condition generator for BML (which
-corresponds to a verification condition generator for JML,
-\emph{i.e.}\ modulo some well-understood differences, the same proof
-obligations are generated for source code and bytecode level);  and
-\item a desugaring tool, to compact specifications by reducing the
-number of specification clauses and behaviour specifications that are
-possible. 
-\end{itemize}
-
-Typically, the tool set will generate proof obligations that can be
-fed to both automatic and interactive theorem provers. Since the Coq
-theorem prover is particular suited for proof-carrying code (Coq proof
-objects can easily be shipped with an application), this will be the
-main prover of interest in the \mobius project. To ease verification
-with Coq, we will also develop several advanced tactics, taking
-advantage of the particular format of proof obligations for program
-verification.
- 
-
-
+\subsection*{Acknowledgements}
+We thank Lennart Beringer and Olha Shkaravska for discussions about
+the semantics of BML. 

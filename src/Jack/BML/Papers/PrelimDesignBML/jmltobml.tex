@@ -76,8 +76,8 @@ bytecode, and thus to know to which instruction the compiled loop
 specification should be associated. 
  
 To solve this, we use the following heuristics: if the control
-flow graph of the bytecode is reducible and if we search from an index
-in the \textbf{Line\_Number\_Table} that corresponds to the first line
+flow graph of the bytecode is reducible and we search from an index
+in the \textbf{Line\_Number\_ Table} that corresponds to the first line
 of a source loop, then the first loop entry instruction found will be
 the loop entry corresponding to this source loop.  We do not have a
 formal correctness proof for this algorithm, because it depends on the

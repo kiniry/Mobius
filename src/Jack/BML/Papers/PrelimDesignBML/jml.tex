@@ -33,7 +33,7 @@ abstract class Bill {
    * @return <code>true</code> when the calculation is successful and
    *         <code>false</code> when the calculation cannot be performed */
   //@ requires n > 0;
-  //@ ensures sum <=  \old(sum)+n*(n+1)/2;
+  //@ ensures sum <= \old(sum)+n*(n+1)/2;
   public boolean produce_bill(int n){
     try{
       //@ loop_modifies sum, i;

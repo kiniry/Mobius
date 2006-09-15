@@ -18,9 +18,9 @@ variables. In addition, we can use stack expressions and the stack
 counter to describe intermediate states of a computation. These will
 typically only appear in intermediate assertions, we do not use them
 in method specifications. Finally, we add a special expression
-\jmlKey{length(\(a\))}, denoting the length of array \(a\). Since the 
-source code expression \jmlKey{\(a\).length} is compiled into a
-special bytecode instruction \jmlKey{arraylength}, we also need a
+\codeHook{length(\(a\))}, denoting the length of array \(a\). Since the 
+source code expression \codeHook{\(a\).length} is compiled into a
+special bytecode instruction \codeHook{arraylength}, we also need a
 special specification construct for this at bytecode level.
 
 BML contains equivalent constructs for all specification constructs of
@@ -33,7 +33,7 @@ constructs are:
 \begin{itemize}
 \item static invariants;
 \item object and static history constraints; and 
-\item loop variants (using the \jmlKey{decreasing} keyword).
+\item loop variants (using the \codeHook{decreasing} keyword).
 \end{itemize}
 
 At the moment, the use of pure methods is not part of the BML grammar,
@@ -45,46 +45,46 @@ code and at bytecode level, specifications benefit a lot from being
 allowed to use method calls in them. Finally, as mentioned above,
 experiences with verification of realistic case studies have shown
 that it is beneficial to have a special clause
-\jmlKey{loop\unsc modifies}, which is specified together with the loop
+\codeHook{loop\unsc modifies}, which is specified together with the loop
 invariant. This clause specifies which variables
-\emph{may} be modified by the loop (as an \jmlKey{assignable} clause does
-for a method). This \jmlKey{loop-modifies} clause allows to write
+\emph{may} be modified by the loop (as an \codeHook{assignable} clause does
+for a method). This \codeHook{loop-modifies} clause allows to write
 concise specifications, and to efficiently generate proof obligations
 using a weakest precondition calculus.
 
 \begin{figure}[t]
 
 \begin{tabular}{lll}
-\multicolumn{2}{l}{\emph{predicate} ::= \(\ldots\)}\medskip\\
-\multicolumn{2}{l}{\emph{unary-expr-not-plus-minus} ::= \(\ldots\)}\\
-\hspace*{1cm} & \(\mid\) \emph{primary-expr} [\emph{primary-suffix}]\(\ldots\)\\ 
+\multicolumn{2}{l}{\varHook{predicate} ::= \(\ldots\)}\medskip\\
+\multicolumn{2}{l}{\varHook{unary-expr-not-plus-minus} ::= \(\ldots\)}\\
+\hspace*{1cm} & \(\mid\) \varHook{primary-expr} [\varHook{primary-suffix}]\(\ldots\)\\ 
 
-\multicolumn{2}{l}{\emph{primary-suffix} ::= \jmlKey{.} \emph{ident}}\\
-&\(\mid\) \jmlKey{(} [\emph{expression-list}] \jmlKey{)}\\
-& \(\mid\) \jmlKey{[} \emph{expression} \jmlKey{]}\\
-\multicolumn{2}{l}{\emph{primary-expr} ::= 
-\jmlKey{\#}\emph{natural}} & \% reference in the constant pool \\
-&\(\mid\) \jmlKey{lv[}\emph{natural}\jmlKey{]} &\% local variable \\
-&\(\mid\) \jmlKey{length(}\emph{expression}\jmlKey{)} &\% array
+\multicolumn{2}{l}{\varHook{primary-suffix} ::= \codeHook{.} \varHook{ident}}\\
+&\(\mid\) \codeHook{(} [\varHook{expression-list}] \codeHook{)}\\
+& \(\mid\) \codeHook{[} \varHook{expression} \codeHook{]}\\
+\multicolumn{2}{l}{\varHook{primary-expr} ::= 
+\codeHook{\#}\varHook{natural}} & \% reference in the constant pool \\
+&\(\mid\) \codeHook{lv[}\varHook{natural}\codeHook{]} &\% local variable \\
+&\(\mid\) \codeHook{length(}\varHook{expression}\codeHook{)} &\% array
 length \\
-&\(\mid\) \jmlKey{cntr} &\% counter of the operand stack\\
-&\(\mid\) \jmlKey{st(}\emph{additive-expr}\jmlKey{)} &\% stack
+&\(\mid\) \codeHook{cntr} &\% counter of the operand stack\\
+&\(\mid\) \codeHook{st(}\varHook{additive-expr}\codeHook{)} &\% stack
 expressions\\
-&\(\mid\) \emph{constant} \(\mid\)
-\jmlKey{super}\\
-&\(\mid\) \jmlKey{true} \(\mid\) \jmlKey{false} \(\mid\)
-\jmlKey{this} \(\mid\) \jmlKey{null} \\
-&\(\mid\) \jmlKey{(}\emph{expression}\jmlKey{)}\\
-&\(\mid\) \emph{jml-primary}%\\
+&\(\mid\) \varHook{constant} \(\mid\)
+\codeHook{super}\\
+&\(\mid\) \codeHook{true} \(\mid\) \codeHook{false} \(\mid\)
+\codeHook{this} \(\mid\) \codeHook{null} \\
+&\(\mid\) \codeHook{(}\varHook{expression}\codeHook{)}\\
+&\(\mid\) \varHook{jml-primary}%\\
 %\\
-%\multicolumn{2}{l}{\emph{store-ref-expression} ::= \emph{store-ref-name}
-%[\emph{store-ref-name-suffix}]}\\
-%\multicolumn{2}{l}{\emph{store-ref-name} ::= 
-%\jmlKey{\#}\emph{natural}} &\% reference in the constant pool \\
-%&\(\mid\)\jmlKey{super} \(\mid\) \jmlKey{this}\\
-%\multicolumn{2}{l}{\emph{store-ref-name-suffix} ::= 
-%\jmlKey{(}\emph{store-ref-expression}\jmlKey{)}}\\
-%&\(\mid\) \jmlKey{[}\emph{spec-array-ref-expr}\jmlKey{]}
+%\multicolumn{2}{l}{\varHook{store-ref-expression} ::= \varHook{store-ref-name}
+%[\varHook{store-ref-name-suffix}]}\\
+%\multicolumn{2}{l}{\varHook{store-ref-name} ::= 
+%\codeHook{\#}\varHook{natural}} &\% reference in the constant pool \\
+%&\(\mid\)\codeHook{super} \(\mid\) \codeHook{this}\\
+%\multicolumn{2}{l}{\varHook{store-ref-name-suffix} ::= 
+%\codeHook{(}\varHook{store-ref-expression}\codeHook{)}}\\
+%&\(\mid\) \codeHook{[}\varHook{spec-array-ref-expr}\codeHook{]}
 \end{tabular}
 
 \caption{Fragment of grammar for BML predicates and specification expressions}
@@ -112,9 +112,9 @@ identifiers, bracketed expressions
 
 As mentioned above, all identifiers are replaced by references to the
 constant pool (a number, preceded by the symbol
-\jmlKey{\#}) or to local registers. The local register \jmlKey{lv[0]}
+\codeHook{\#}) or to local registers. The local register \codeHook{lv[0]}
 of a non-static method always contains the implicit argument
-\jmlKey{this}, the other registers contain the parameters and the
+\codeHook{this}, the other registers contain the parameters and the
 local variables declared inside a method body. Compilers often reuse
 local variable registers throughout the execution of a single
 method. Thus, when \emph{e.g.}\ type checking an annotation containing
@@ -125,8 +125,8 @@ block statements).
 
 As explained above, we add special keywords to be able to express
 properties about the length of an array, the current stack counter
-(\jmlKey{cntr}), and to refer to an element on the stack
-(\jmlKey{st(\(e\))}, where \(e\) is some arithmetic expression).
+(\codeHook{cntr}), and to refer to an element on the stack
+(\codeHook{st(\(e\))}, where \(e\) is some arithmetic expression).
 
 In Java source code, one can usually leave the receiver object
 \texttt{this} implicit. But compilation into bytecode makes this
@@ -138,18 +138,18 @@ Figure~\ref{FigBMLSpec} below).
 
 %In BML, a field access is written as a function
 %application. For example, suppose we have the source code qualified expression
-%\jmlKey{obj.f}, where \jmlKey{obj} is the first parameter of a
-%method, and \jmlKey{f} is a field of this object. This becomes
-%\jmlKey{\#\(n\)(lv[1])} in BML, where \(n\) is the index in the
+%\codeHook{obj.f}, where \codeHook{obj} is the first parameter of a
+%method, and \codeHook{f} is a field of this object. This becomes
+%\codeHook{\#\(n\)(lv[1])} in BML, where \(n\) is the index in the
 %constant pool to the field constant reference denoting the field
-%\jmlKey{f}, while \jmlKey{lv[1]} is the register in the local variable
-%array in which the parameter \jmlKey{obj} is stored.  Therefore the
-%grammar for \emph{primary-suffixes} and \emph{store-ref-name-suffixes}
+%\codeHook{f}, while \codeHook{lv[1]} is the register in the local variable
+%array in which the parameter \codeHook{obj} is stored.  Therefore the
+%grammar for \varHook{primary-suffixes} and \varHook{store-ref-name-suffixes}
 %does not provide any grammar for qualified expressions.
 
 
 In JML, many special keywords are preceded by the symbol
-\jmlKey{\bsl}, to ensure that they will not clash with variable
+\codeHook{\bsl}, to ensure that they will not clash with variable
 names. For BML, we do not have to worry about this: all
 variable names are replaced by references to the constant pool or
 local variable registers. Therefore, the new keywords are written
@@ -186,7 +186,7 @@ the symbol for keywords that are also JML keywords.
 16 putfield #24 <Bill.sum>
 19 iinc 2 by 1
 loop_invariant 0 <= lv[2] && 0 <= lv[0].#24 && lv[2] <= lv[1] + 1 && 
-               lv[0].#24 <= \old(lv[0].#24) + (lv[2] + 1) * lv[2]/2
+               lv[0].#24 <= \old(lv[0].#24) + (lv[2] - 1) * lv[2]/2
 entry loop:
 22 iload_2
 23 iload_1
@@ -198,17 +198,17 @@ entry loop:
 31 ireturn
 \end{verbatim}
 }
-\caption{Bytecode + BML specification for method \jmlKey{produce\unsc bill} in class \jmlKey{Bill}}\label{FigBMLSpec}
+\caption{Bytecode + BML specification for method \codeHook{produce\unsc bill} in class \codeHook{Bill}}\label{FigBMLSpec}
 \end{figure}
 
 To show a typical BML specification, Figure~\ref{FigBMLSpec} presents
-the BML version of the specification of method \jmlKey{produce\_bill}
+the BML version of the specification of method \codeHook{produce\_bill}
 of the JML example in Figure~\ref{FigJMLSpec}. Notice that the field
-\jmlKey{sum} has been assigned the number 24 in the constant
-pool, and that it is always explicitly qualified with \jmlKey{lv[0]}
-(denoting \jmlKey{this}). Further, \jmlKey{lv[1]} denotes the
-parameter \jmlKey{n}, while \jmlKey{lv[2]} denotes the local variable
-\jmlKey{i}.
+\codeHook{sum} has been assigned the number 24 in the constant
+pool, and that it is always explicitly qualified with \codeHook{lv[0]}
+(denoting \codeHook{this}). Further, \codeHook{lv[1]} denotes the
+parameter \codeHook{n}, while \codeHook{lv[2]} denotes the local variable
+\codeHook{i}.
  
 The class invariant gives rise to the following BML specification
 (stored in the class file as a special user-specific attribute, as
@@ -218,20 +218,20 @@ explained below):
 invariant:  #24 >= 0
 \end{verbatim}
 
-This expression is not qualified with \jmlKey{lv[0]}, as it is
+This expression is not qualified with \codeHook{lv[0]}, as it is
 implicitly quantified over all objects that are an instance of a
 subclass of class \texttt{Bill} (\emph{cf.}\ the JML
 semantics~\cite[\S 8.2]{JMLReferenceManual05}).
 
 %This class contains a
-%private, but \jmlKey{spec\unsc public} (i.e.~publicly visible
+%private, but \codeHook{spec\unsc public} (i.e.~publicly visible
 %in specifications) field
-%\jmlKey{list}, which is an array of objects. The class invariant says
-%that \jmlKey{list} is not null, and in addition, its elements are
-%never null.  Further, the class contains a method \jmlKey{replace},
-%which checks if its first parameter \jmlKey{obj1} occurs in
-%\jmlKey{list}, and if this is the case, replaces it (once) by its
-%second parameter \jmlKey{obj2}. 
+%\codeHook{list}, which is an array of objects. The class invariant says
+%that \codeHook{list} is not null, and in addition, its elements are
+%never null.  Further, the class contains a method \codeHook{replace},
+%which checks if its first parameter \codeHook{obj1} occurs in
+%\codeHook{list}, and if this is the case, replaces it (once) by its
+%second parameter \codeHook{obj2}. 
 
 %\begin{figure}[t!]
 %{\small
@@ -258,7 +258,7 @@ semantics~\cite[\S 8.2]{JMLReferenceManual05}).
 %}
 %\end{verbatim}
 %}
-%\caption{JML specification for class \jmlKey{ListArray}}\label{FigJMLSpec}
+%\caption{JML specification for class \codeHook{ListArray}}\label{FigJMLSpec}
 %\end{figure}
 
 
@@ -292,7 +292,7 @@ e_2$ are of a numeric type;
 numeric type;
 
 \item predicate $e_1 \subtypeSpec e_2$ is well-typed only if the 
-expressions $e_1$ and $e_ 2$ are of type \jmlKey{java.lang.Class}
+expressions $e_1$ and $e_ 2$ are of type \codeHook{java.lang.Class}
 (which is the same as the JML type \TYPE); and
 
 \item expression $\elemtype{e}$ is well-typed only if $e$ is of array type.
@@ -318,7 +318,7 @@ specification, $i$ must be a valid index in the method's local
 variables table.
 \end{itemize}
 
-These confirmedness checks for BML are best implemented as an
+These well-formedness checks for BML are best implemented as an
 extension of the bytecode verifier.
  
 
@@ -327,9 +327,9 @@ extension of the bytecode verifier.
 %When defining the evaluation of BML expressions, a subtle point that
 %has to be taken into account is the fact that at bytecode level no
 %explicit boolean values are used, they are encoded as integers (but
-%variables can still be of type \jmlKey{boolean} --- this information is
+%variables can still be of type \codeHook{boolean} --- this information is
 %used by the BCV). Thus, to make sure that expressions such as
-%\jmlKey{\bsl result == \bsl exists i. i >= 0} are correctly evaluated,
+%\codeHook{\bsl result == \bsl exists i. i >= 0} are correctly evaluated,
 %the evaluation of the quantified expression is wrapped up by a
 %conditional function, returning 1 if the condition is true, 0
 %otherwise.
@@ -339,19 +339,17 @@ extension of the bytecode verifier.
 The semantics of BML specifications follows the semantics of JML
 specifications~\cite{JMLReferenceManual05}. But, just a JML
 specification can be mapped into a more fundamental Hoare triple
-specification, we also have provided a semantics for BML in terms of a
-basic logic for Java bytecode. For this logic, we took the so-called
-\mobius base logic, a logic for reasoning about Java bytecode
-programs, that will be the core of the proof carrying code platform
-developed within the project. This logic (see~\cite{BeringerH06} for a
-description of an earlier version of this logic, without exceptions)
-has been proven sound \emph{w.r.t.}\ a formalisation of the virtual
-machine. On top of this logic, a direct verification condition
-generator has been proven sound. All this has been done in the Coq
-theorem prover. In addition, as a first step towards efficient tool
-development a translation of bytecode into guarded commands has been
+specification, we have also provided a semantics for BML in terms of a
+basic logic for Java bytecode, namely the so-called
+\mobius base logic that will be the core of the proof carrying code platform
+developed within the project. This logic (see~\cite{BeringerH06} for
+an earlier version of the logic, without exceptions) has been proven
+sound in Coq \emph{w.r.t.}\ a formalisation of the virtual machine. On
+top of this, a direct verification condition generator has been proven
+sound, also in Coq. And, as a first step towards efficient tool
+development, a translation of bytecode into guarded commands has been
 defined and proven correct, \emph{w.r.t.}\ verification condition
-generation. 
+generation.
 
 Defining the mapping of BML specifications into this \mobius base
 logic is defined in two steps. First the evaluation of predicates is
@@ -361,15 +359,15 @@ translated into judgements of the \mobius base logic. Notice that this
 embedding allows to use the verification condition generator for the
 \mobius base logic also for BML specifications.
 
-As mentioned above, a BML specification can contain the following
-constructs: class specifications, method specifications, and statement
-annotations, in particular the \texttt{assert},
-\texttt{assume}, and  \texttt{set} annotations, that can occur at any 
-point in the program text, and loop invariants, loop frame 
-conditions, and loop variants, that are associated to loop blocks.
-Judgement in the \mobius base logic are of the form
+%As mentioned above, a BML specification can contain the following
+%constructs: class specifications, method specifications, and statement
+%annotations, in particular the \texttt{assert},
+%\texttt{assume}, and  \texttt{set} annotations, that can occur at any 
+%point in the program text, and loop invariants, loop frame 
+%conditions, and loop variants, that are associated to loop blocks.
+Judgements in the \mobius base logic are of the form
 \(\JudgeF{\ppt}{A}{B}{I}\), where \(\LST\) is a proof context,
-\(\Anno\) the local annotation table, \emph{i.e.}~the table that
+and \(\Anno\) the local annotation table, \emph{i.e.}~the table that
 associates annotations with particular instructions. Further, \(A\) is
 a (local) precondition, relating the state at label \ppt with the
 initial state, while \(B\) is a (local) postcondition, relating the
@@ -377,63 +375,26 @@ initial, current and final state, and \(I\) is a (local) invariant,
 \emph{i.e}\ a predicate that is supposed to hold throughout execution
 of the current method.
 
-\paragraph{Class specifications}
-For invariants and history constraints, the BML semantics corresponds
-to the JML semantics. Thus, any class invariant or constraint can be
-translated into appropriate pre- and postconditions for the relevant
-methods (taking the visibility modifiers into account). We follow this
-semantics for JML~\cite[\S 8]{JMLReferenceManual05} and define the
-mapping into the \mobius base logic only after this translation. 
+Mapping class specifications (invariants and history constraints) and
+method specifications into the \mobius base logic is straightforward.
+Since the \mobius base logic only has one postcondition, the normal
+and exceptional postconditions are combined into a single
+postcondition, specifying with a case distinction which conditions
+should hold if the state is normal or exceptional, respectively. Frame
+conditions are also added to the postconditions, specifying
+explicitly which variables are allowed to be changed. Since predicates
+in the \mobius base logic specify properties over the whole heap, this
+can be expressed directly: all locations that are not mentioned in the
+frame condition of the method (evaluated in the prestate of the
+method) should be unchanged. Methods with multiple specifications are
+translated only after desugaring them into a single method
+specification \emph{cf.}~\cite{RaghavanL00}. 
 
-\paragraph{Method specifications}
-BML preconditions directly correspond to the preconditions of the
-\mobius base logic judgements . The normal and exceptional
-postconditions are combined into a single postcondition, specifying
-with a case distinction which conditions should hold if the state is
-normal or exceptional, respectively. Frame conditions should also be
-added to the postconditions, specifying explicitly which variables are
-allowed to be changed. Since predicates in the \mobius base logic
-specify properties over the whole heap, this can be expressed
-directly: all locations that are not mentioned in the frame condition
-of the method (evaluated in the prestate of the method) should be
-unchanged.
-
-In JML and also in BML it is possible to write several method
-specifications for a single method. A standard procedure exists for
-desugaring these into a single method
-specification~\cite{RaghavanL00}. We use this approach in our
-translation to handle methods with multiple specifications.
-
-\paragraph{Statement annotations}
-The treatment of \texttt{assert} annotations is simple, they are
-transformed directly into program annotations. 
-
-For \texttt{assume} annotations, different interpretations are
-possible: either the \texttt{assume} statement adds some additional
-information that is supposed to be added to the properties that are
-already known for a particular program point or the \texttt{assume}
-statement corresponds to a local precondition for the remaining
-statements. In the latter case they have to be sufficiently strong to
-prove correctness of all the remaining program code. We are currently
-investigating these different interpretations and which would be the
-most appropriate for our work.
-
-At the moment, the \mobius base logic does not have ghost
-variables; it is future work to add these. To specify assignments to
-ghost variables, \texttt{set} annotations are used. Therefore, it only
-makes sense to map \texttt{set} annotations into the \mobius base
-logic, once it has ghost variables. In JML, \texttt{set} annotations
-occur in the program text. In BML, they are described in a special
-\emph{set annotation table}, which associates them to a particular
-instruction. The latter approach will probably also be followed in the
-\mobius base logic, \emph{i.e.}\ there will be a set annotations table. It is
-still to be decided whether the set annotations associated to a
-particular instruction are an unordered set or whether we will
-actually specify a sequence of instructions (currently in BML it is
-described as an unordered set).
-
-Similar to \texttt{assert} annotations, loop invariants also directly
-become program annotations of the appropriate program point.
+The different statement annotations (assert, assume, set and loop
+invariants) are inserted in the local annotation table, at the
+appropriate instruction\footnote{In fact, at tthe moment, the \mobius
+base logic does not support ghost variables; but these will be added
+in the near future.}. 
 
 Loop variants can be transformed into a sequence of assert and set
 annotations, after introducing appropriate ghost variables. This
@@ -459,10 +420,10 @@ This ensures that every time the loop entry point \(l\) is reached
 again, the decrease of the loop variant is checked. Only a path that
 goes through the loop can set \texttt{loop\unsc init} to false.
 
-For mapping loop frame conditions, we use again the fact that in the
-\mobius base logic we can express properties of the heap. Thus,
-we again make a transformation into a sequence of assert and set
-statements. We declare ghost variables to remember the old heap and
+For mapping loop frame conditions, we use again that in the
+\mobius base logic we can express properties of the heap. 
+We make a transformation into a sequence of assert and set
+statements, declaring ghost variables to remember the old heap and
 all locations mentioned in the loop frame condition, and a ghost
 variable \texttt{loop\unsc init} as above. Then we assert at the entry
 point of the heap that if \texttt{loop\unsc init} does not hold, any
@@ -473,35 +434,6 @@ logic. Finally, in the \mobius base logic we add appropriate ghost
 variable updates to remember the old heap and the locations of the
 loop frame condition when the loop was first entered.
 
-
-%\paragraph{Example}
-%\label{par:embedding:running}
-%Consider again the BML specification of the class \texttt{Bill} in
-%Figure~\ref{FigBMLSpec}. We have already shown above how the different
-%predicates can be translated into the deep expression language. Let us
-%use \(\gamma_{\mbox{\tiny\textsc{PRE}}}\), 
-%\(\gamma_{\mbox{\tiny\textsc{POST}}}\) and
-%\(\gamma_{\mbox{\tiny\textsc{INV}}}\) 
-%%for expressions \eqref{RunningExamplePre},
-%%\eqref{RunningExamplePost} and \eqref{RunningExampleInv},
-%respectively. Let us further assume that \(\mathcal{I}\) is the deep
-%expression encoding the class invariant \texttt{\#24 >= 0},
-%\emph{i.e.}\
-%\[
-%\mathcal{I} = \mathit{LookUpHeapBML This (FieldName Bill.sum)} \leq 0.
-%\]
-%If we map the BML specification into the \mobius base logic, this will
-%result in the following judgement:
-%\[
-%\JudgeF{\ppt}
-%       {\mathit{MPreTag(\mathcal{I}) \wedge \gamma_{%
-%                                               \mbox{\tiny\textsc{PRE}}}}}
-%       {\mathit{MPostTag(\mathcal{I}) \wedge \gamma_{%
-%                                               \mbox{\tiny\textsc{POST}}}}}
-%       {\mathsf{true}}.
-%\]
-%Finally, the local annotation table \(\Anno\) will contain a single entry:
-%from instruction 22 (loop entry point) to \(\gamma_{\mbox{\tiny\textsc{INV}}}\).
 
 
 
