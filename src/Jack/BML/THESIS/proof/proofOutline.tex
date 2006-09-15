@@ -1,0 +1,100 @@
+\section{Proof outline} \label{proof:outline}
+\todo{NB: pour les stacks est-ce qu'ils peuvent etre modifies? Le probleme c'est qu'on assume que le bytecode verifier
+a passe sur le programme, et donc pour chaque instruction le stack va avoir le meme type et profondeur avant l'execution de l'instruction.
+Alors est-ce que ca c'est grave?}
+ We would first like to remark that in the following, we shall establish the soundness of our verification condition generator
+ w.r.t. method correctness. For instance, the proof does not deal with the soundness of our
+ methodology w.r.t. class invariants, class history constraints, neither about ghost variables. The reason for
+ this is that their verification is the same on source and bytecode level. Note that establishing the semantics and 
+ verifying class invariants in JML in a modular way, which is our frontend language, is not completely clear. Class
+ specifications is a subject which  by itself is complex (see \todo{ownership systems, Peter Mueller}).
+ Thus,  we do not consider that these verification issues are particular to the bytecode verification  techniques
+ and thus, we shall omit to discuss their soundness here. 
+
+Also, we assume that there are no recursive methods in the program. 
+Proving the correctness of a verification calculus in the presence 
+of recursive methods would require a notion of recursive method call depth in the operational
+semantics. This would complicate the proof without bringing any particular feature of the bytecode.
+The reader interested in how recursive methods are manipulated in the soundness proof
+of program logics might look at \cite{Nipkow-MOD2001}.  
+
+Remember that we assume that the control flow graph of a method is reducible, or in other words there 
+are no cycles in the graph with two entries. This means that if program have cycles then they should 
+conform to Def. \ref{defLoop} from Section \ref{prelim:ctrFlow}.
+As we shall in the folloing, control flow graph reducibility plays an important role in
+ the proof of soundness of the verification condition generator. 
+Note that this restriction (as we said earlier) is realistic as every non-optimizing Java compiler produces
+reducible control flow graphs and even hand written code is usually reducible.
+
+
+We would like to make a last but not least remark. The proof for soundness presented here would seem large w.r.t. 
+the proof of soundness of Spec\# presented in  \cite{leinoWPUP}. Spec\# relies on several transformations over the 
+bytecode. First, a transformation of the potentially irreducible control flow graph to a reducible one is done.
+The second step  eliminates loops. The third step consists in translating programs into a single-assignment form.
+The fourth step is converting the program into a  guarded command language and finally, the fifth and last 
+step is passifying it which means changing assignments
+to \texttt{assume} statements. The proof presented in  
+\cite{leinoWPUP} is done for  programs written in passified guarded command language.
+But what is the formal guarantee that the initial  bytecode program is also correct? 
+A proof of soundness for Spec\# which takes into account only the last three stages can be 
+already complex. 
+
+
+Before entering in the technical details of the proof, we 
+give here an informal description of the steps to be overtaken there.
+We will describe our reasoning in the direction opposite to its formalization in the later sections.
+ We start with our main objective and then start to ``zoom'' in the steps that must be made in order that it be achieved. 
+Every time we discuss informally a step in the proof we point out the lemma in the formal proof to which it refers.
+
+Let us first see what exactly we want to show. 
+We would like to establish that if the verification conditions
+generated for a method 
+are valid and the precondition of the method holds in the initial state of the method 
+then the postcondition of  the method holds in its final state. This is formally given in Definition \ref{defCorrect}, Section \ref{proof}
+and the main theorem \ref{vcGenCorrect} formally establishes that the verification conditions generated with the help of \fwpi{} respect this definition. 
+
+To do this, we first show that if the precondition calculated by the \fwpi{} for the entry instruction of the method
+holds in the initial state of the method
+then the postcondition of the method will hold in the final state of the method provided that the method terminates
+(Lemma \ref{lemma2}). 
+
+ For this, we have to establish that if the precondition calculated by
+the \fwpi{} for the entry instruction of the method holds in the initial state of the method then the precondition calculated by \fwpi{}
+for every instruction reachable from the method entry instruction also holds in the prestate of that instruction. This is done in Lemma \ref{lemma3}. 
+We use here an induction over the number of execution steps made in the execution path.
+The induction case uses Lemma \ref{lemma1}.
+
+Lemma \ref{lemma1}  shows that if in an execution path
+   the preconditions calculated by \fwpi{} for  the instructions in the path are such that the respective precondition holds in the prestate
+of the respective instruction then either the respective normal or exceptional method postcondition holds or another execution step can be made and
+the weakest precondition of the next instruction  holds. This is also known as  progress property.  
+  The latter lemma is may be the most complicated one as it uses the argument of the reducibility 
+ of the execution graph (Section \ref{prelim:ctrFlow}, Def. \ref{defLoop}).
+   The lemma has three cases: 
+
+\begin{itemize}
+    \item the case where the next instruction is not a loop entry instruction. In this case the proof is standard and uses the single step soundness of \fwpi.
+    \item the case when the next instruction is a loop entry instruction and the current instruction is not a loop end. 
+          In this case,  we use the single step soundness of \fwpi{} as well the special form of the precondition of the current instruction. 
+    \item the case where the next instruction is a loop entry and the current is a loop end instruction (see Def. \ref{defLoop}).
+          In this case, we use  the reducibility of the control flow graph which gives us that the execution path has 
+	  a prefix subpath which passes through the loop entry instruction but not through the current loop end instruction. 
+	  This fact allows us to conclude that also in that case the Lemma \ref{lemma1} holds
+\end{itemize}
+
+ What we mean by single step soundness of the \fwpi{} function is  
+that if the predicate calculated by \fwpi{} for an instruction holds in its prestate then the postcondition 
+upon which the precondition is calculated holds in its poststate (Lemma \ref{lemma0}). The argument for
+the single step soundness uses the relation between syntactic substitution and semantic evaluation which looks
+like:
+
+
+$$\evalExp{\substitution{\expression_1}{ \expression_2 }{ \expression_3 }}{ s_1 } =
+ \evalExp{\expression_1}{ \update{s_1}{ \evalExp{\expression_2}{s_1} }{\evalExp{\expression_3}{s_1} } } $$ 
+
+This  equivalence is standardly  used for establishing the soundness of predicate transformer function w.r.t. a program semantics
+and means that it does not matter if we use a syntactic substitution over the expression and evaluate the resulting expression  
+or update the state and evaluate the original expression. The next section is dedicated to the relation between substitution and evaluation.
+
+ 
+ 
