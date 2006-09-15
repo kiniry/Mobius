@@ -4,3 +4,4 @@ Bundle-Name: Esc/Java2 Update Site
 Bundle-SymbolicName: Escjava2UpdateSite
 Bundle-Version: 1.1.1
 Bundle-Localization: plugin
+Bundle-Vendor: David R. Cok and MOBIUS Project

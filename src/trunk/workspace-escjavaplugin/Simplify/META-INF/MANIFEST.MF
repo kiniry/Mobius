@@ -5,4 +5,4 @@ Bundle-SymbolicName: escjava.simplify
 Bundle-Version: 1.1.1
 Bundle-Localization: plugin
 Eclipse-LazyStart: true
-Bundle-Vendor: David R. Cok & MOBIUS Project
+Bundle-Vendor: David R. Cok and MOBIUS Project

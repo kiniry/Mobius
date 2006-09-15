@@ -17,6 +17,6 @@ Require-Bundle: org.eclipse.ui,
  escjava.esctools
 Import-Package: org.eclipse.ui.texteditor
 Eclipse-LazyStart: true
-Bundle-Vendor: David R. Cok & MOBIUS Project
+Bundle-Vendor: David R. Cok and MOBIUS Project
 Bundle-Activator: escjava.plugin.EscjavaPlugin
 Bundle-ClassPath: EscjavaPlugin.jar
