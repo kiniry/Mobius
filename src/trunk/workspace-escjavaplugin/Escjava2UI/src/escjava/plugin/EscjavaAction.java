@@ -22,7 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -708,7 +708,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 		protected boolean end(IJavaProject jp, Collection elements) {
 			final Collection touchList = touch;
 			// FIXME - is this the right thread to use
-			Platform.run(new SafeRunnable() {
+			SafeRunner.run(new SafeRunnable() {
 				public void run() throws Exception {
 					Iterator i = touchList.iterator();
 					while (i.hasNext()) {

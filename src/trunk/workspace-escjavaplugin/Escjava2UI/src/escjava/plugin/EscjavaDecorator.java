@@ -12,6 +12,7 @@ import java.util.HashSet;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -71,10 +72,10 @@ public class EscjavaDecorator implements org.eclipse.jface.viewers.ILightweightL
 				// think we are ok.
 				Bundle bundle = Platform.getBundle(EscjavaPlugin.PLUGINID);
 				IPath path = new Path("icons/JMLSmall.png");
-				URL iconURL = Platform.find(bundle,path);
+				URL iconURL = FileLocator.find(bundle,path,null);
 				img = ImageDescriptor.createFromURL(iconURL);
 				path = new Path("icons/JMLSmallDisabled.png");
-				iconURL = Platform.find(bundle,path);
+				iconURL = FileLocator.find(bundle,path,null);
 				imgDisabled = ImageDescriptor.createFromURL(iconURL);
 			}
 			try {

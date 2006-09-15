@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -611,12 +612,12 @@ public class Utils {
 		Bundle bundle = Platform.getBundle(pluginName);
 		
 		IPath p = new Path(path);
-		URL url = Platform.find(bundle,p);
+		URL url = FileLocator.find(bundle, p, null);
 		// The substring call is to remove an initial /
 		// FIXME do we remove the / on all platforms?
 		// FIXME - do we need to do these back-and-forth conversions of wil this do:
 		// return Platform.resolve(url).getPath().substring(1);
-		p = new Path(Platform.resolve(url).getPath()).makeAbsolute();
+		p = new Path(FileLocator.resolve(url).getPath()).makeAbsolute();
 		String s = p.toOSString();
 		if (System.getProperty("os.name").startsWith("Windows")) s = s.substring(1);
 		return s;
