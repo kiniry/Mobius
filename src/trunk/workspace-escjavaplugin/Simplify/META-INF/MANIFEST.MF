@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Simplify Plug-in
+Bundle-SymbolicName: escjava.simplify
+Bundle-Version: 1.1.1
+Bundle-Localization: plugin
+Eclipse-LazyStart: true
+Bundle-Vendor: David R. Cok & MOBIUS Project
