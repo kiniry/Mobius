@@ -1,10 +1,6 @@
  
 
 
-
-
-
-
 \section{Weakest precondition calculus} \label{wpRules}
 
 
@@ -97,12 +93,13 @@ public void m(int k){
 
  It is worth first to note that because the bytecode is not structured we cannot define
  the weakest precondition in the same way in which a predicate transformer for structured
- languages is defined.  We will rather  define the predicate transformer for an instructions to depend on
+ languages is defined.  
+ We will rather  define the predicate transformer for an instructions to depend on
  the instructions which may follow it during an execution:  
 $$\fwpi( j ) = \bigwedge_k  C_k \Rightarrow S_k(\fwpi( k )) , where  \ j \execRel k $$
-$C_k$ stands for some condition to be filled in order that after the instruction at index $j$ executes the instruction at index $k$.
+$C_k$ stands for some condition to be filled in order that after the execution of instruction at index $j$ the instruction at index $k$ is executed.
  In most of the cases the condition $C_k$  is \Mytrue{} except for conditional jumps or when the instruction  $j$ throws an exception.
-$S_k$ stands for a function which might be the identity function or apply substitutions over its argument.
+$S_k$ stands for a function which might be the identity function or a function which applies substitutions over its argument.
 
 Thus the weakest precondition for the instruction at index 12 (in the bytecode version) which is a conditional jump  
 of the program will be:
