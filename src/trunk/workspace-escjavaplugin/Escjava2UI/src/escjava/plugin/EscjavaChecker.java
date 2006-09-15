@@ -155,6 +155,16 @@ public class EscjavaChecker extends escjava.Main
 	  if (!EscjavaUtils.isSpecsInstalled(project)) {
 	    EscjavaUtils.installDefaultSpecs(project);
 	  }
+	  inputs.add("-Specs");
+	  try {
+		inputs.add(EscjavaUtils.findSpecs());
+	} catch (Exception e1) {
+		Utils.showMessageInUI(null, "Esc/Java",
+        "Could not locate specifications");
+        Log.errorlog(
+            "Could not locate specifications", null);
+        return false;
+	}
 	  
 	  inputs.add("-classpath");
 	  inputs.add(Utils.getProjectClassPath(project));
