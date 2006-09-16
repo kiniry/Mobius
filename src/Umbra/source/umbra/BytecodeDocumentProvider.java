@@ -14,13 +14,18 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
  * This class has been modificated with relation to the generated automatically
  * to allow adding listener that is responsible for error checking
  * 
- * @author Wojciech W¹s
+ * @author Wojciech WÄ…s
  */
-
 public class BytecodeDocumentProvider extends FileDocumentProvider {
 
+	/**
+	 * TODO
+	 */
 	private BytecodeContribution contribution;
 	
+	/**
+	 * TODO
+	 */
 	protected IDocument createEmptyDocument() {
 		return new BytecodeDocument();
 	}
@@ -61,7 +66,6 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 	 * @param cg		class generator in BCEL
 	 * @param input		input file
 	 */
-	
 	public void setRelation(AbstractDecoratedTextEditor editor, JavaClass jc, ClassGen cg, IEditorInput input) {
 		BytecodeDocument document = (BytecodeDocument)getDocument(input);
 		document.setJavaClass(jc);

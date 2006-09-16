@@ -21,20 +21,52 @@ import org.eclipse.ui.IEditorPart;
 import umbra.instructions.BytecodeController;
 
 /**
- * @author Wojtek W¹s
+ * TODO
+ * 
+ * @author Wojtek WÄ…s
  */
 public class BytecodeContribution extends ControlContribution { 
 	
+	/**
+	 * TODO
+	 */
 	private int num = 0;
+	/**
+	 * TODO
+	 */
 	private boolean needNew = true;
+	/**
+	 * TODO
+	 */
 	private IEditorPart activeEditor;
+	/**
+	 * TODO
+	 */
 	private Label labelNum, labelOff, labelText;
+	/**
+	 * TODO
+	 */
 	private static BytecodeContribution inUse;
+	/**
+	 * TODO
+	 */
 	private BytecodeController bcc;	
+	/**
+	 * TODO
+	 */
 	private boolean ready = false;
+	/**
+	 * TODO
+	 */
 	private boolean modTable = false;
+	/**
+	 * TODO
+	 */
 	private boolean[] modified;
 	
+	/**
+	 * TODO
+	 */
 	private void init(IDocument doc) throws BadLocationException
 	{
 		bcc = new BytecodeController();
@@ -48,10 +80,19 @@ public class BytecodeContribution extends ControlContribution {
 		return;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public class BytecodeListener implements IDocumentListener {
 		
+		/**
+		 * TODO
+		 */
 		int startRem = -1, stopRem = -1;
 		
+		/**
+		 * TODO
+		 */
 		public BytecodeListener() {
 		}
 
@@ -101,15 +142,24 @@ public class BytecodeContribution extends ControlContribution {
 		
 	}
 	
+	/**
+	 * TODO
+	 */
 	protected BytecodeContribution() {
 		super("Bytecode");
 		inUse = this;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public static BytecodeContribution inUse() {
 		return inUse;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public static BytecodeContribution newItem() {
 		if (inUse != null) {
 			if (!inUse.needNew) {
@@ -120,10 +170,16 @@ public class BytecodeContribution extends ControlContribution {
 		return new BytecodeContribution();
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void survive() {
 		needNew = false;
 	}
 	
+	/**
+	 * TODO
+	 */
 	protected Control createControl(Composite parent) {
 		Composite composite = new Composite(parent, SWT.BORDER);
 		composite.setData(this);
@@ -135,16 +191,25 @@ public class BytecodeContribution extends ControlContribution {
 		return composite;
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void displayCorrect() {
 		labelText.setBackground(new Color(null, new RGB(0, 128, 0)));
 		labelText.setText("Correct");
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void displayError(int line) {
 		labelText.setBackground(new Color(null, new RGB(255, 128, 0)));
 		labelText.setText("Error detected: " + line);
 	}
 
+	/**
+	 * TODO
+	 */
 	public void addListener(IDocument document) {
 		BytecodeListener listener = new BytecodeListener();
 		document.addDocumentListener(listener);
@@ -157,23 +222,38 @@ public class BytecodeContribution extends ControlContribution {
 		activeEditor = editor;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void reinit() {
 		ready = false;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean[] getModified() {
 		return bcc.getModified();
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void setModTable(boolean[] modified) {
 		this.modified = modified;
 		modTable = true;
 	}
 
+	/**
+	 * TODO
+	 */
 	public String[] getCommentTab() {
 		return bcc.getComments();
 	}
 	
+	/**
+	 * TODO
+	 */
 	public String[] getInterlineTab() {
 		return bcc.getInterline();
 	}

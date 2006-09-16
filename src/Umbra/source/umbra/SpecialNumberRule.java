@@ -12,13 +12,26 @@ import org.eclipse.jface.text.rules.Token;
  * Modified NumberRule that allows an additional mark before
  * (or after) the number to be read (used with '#' and '%').
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public class SpecialNumberRule extends NumberRule {
 
-	char start, fin;
+	/**
+	 * TODO
+	 */
+	char start;
+	/**
+	 * TODO
+	 */
+	char fin;
+	/**
+	 * TODO
+	 */
 	boolean isFin;
 	
+	/**
+	 * TODO
+	 */
 	public SpecialNumberRule(char start, char fin, IToken token) {
 		super(token);
 		this.start = start;
@@ -26,12 +39,18 @@ public class SpecialNumberRule extends NumberRule {
 		isFin = true;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public SpecialNumberRule(char start, IToken token) {
 		super(token);
 		this.start = start;
 		isFin = false;
 	}
 
+	/**
+	 * TODO
+	 */
 	public IToken evaluate(ICharacterScanner scanner) {
 		int c= scanner.read();
 		if ((char)c == start) {

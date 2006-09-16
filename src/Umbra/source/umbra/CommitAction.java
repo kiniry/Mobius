@@ -17,20 +17,27 @@ import org.eclipse.ui.part.FileEditorInput;
  * After running it the rebuild action will create a Bytecode related
  * to the commited version.
  * 
- * @author Wojciech W±s
+ * @author Wojciech WÄ…s
  *
  */
 public class CommitAction implements IEditorActionDelegate {
 	
+	/**
+	 * TODO
+	 */
 	private IEditorPart editor;
 
+	/**
+	 * TODO
+	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
-		// TODO Auto-generated method stub
 		editor = targetEditor;
 	}
 
+	/**
+	 * TODO
+	 */
 	public void run(IAction action) {
-		// TODO Auto-generated method stub
 			editor.doSave(null);
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = file.getFullPath();
@@ -45,6 +52,9 @@ public class CommitAction implements IEditorActionDelegate {
 			}
 	}
 
+	/**
+	 * TODO
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		// TODO Auto-generated method stub
 

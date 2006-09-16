@@ -19,16 +19,25 @@ import org.eclipse.ui.part.FileEditorInput;
 /**
  * The action that removes historical versions of code.
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public class ClearHistoryAction implements IEditorActionDelegate {
 
+	/**
+	 * TODO
+	 */
 	private IEditorPart editor;
 	
+	/**
+	 * TODO
+	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
+	/**
+	 * TODO
+	 */
 	public void run(IAction action) {
 		((BytecodeEditor)editor).clearHistory();
 		for (int i = 0; i <= IHistory.maxHistory; i++) {
@@ -55,6 +64,9 @@ public class ClearHistoryAction implements IEditorActionDelegate {
 	
 	}
 
+	/**
+	 * TODO
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 
 	}

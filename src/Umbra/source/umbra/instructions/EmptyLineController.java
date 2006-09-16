@@ -8,10 +8,13 @@ package umbra.instructions;
  * 
  * This is a class for a line with whitespaces only.
  * 
- * @author Jaros≥aw Paszek
+ * @author Jaros≈Çaw Paszek
  */
 public class EmptyLineController extends BytecodeLineController {
 
+	/**
+	 * TODO
+	 */
 	public EmptyLineController(String l) {
 		super(l);
 	}

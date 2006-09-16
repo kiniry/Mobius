@@ -7,14 +7,22 @@ package umbra;
 import org.eclipse.jface.text.rules.IWordDetector;
 
 /**
- * @author Wojtek W¹s
+ * TODO
+ * 
+ * @author Wojtek WÄ…s
  */
 public class BytecodeWordDetector implements IWordDetector {
 
+	/**
+	 * TODO
+	 */
 	public boolean isWordStart(char c) {
 		return Character.isLetter(c);
 	}
 
+	/**
+	 * TODO
+	 */
 	public boolean isWordPart(char c) {
 		return (Character.isLetterOrDigit(c) || c == '_');
 	}

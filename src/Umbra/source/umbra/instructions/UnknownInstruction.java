@@ -9,18 +9,22 @@ package umbra.instructions;
  * This is a class resposible for all lines which are regarded
  * to be an instruction but unable to classify.
  * 
- * @author Tomek Batkiewicz i Jaros≥aw Paszek
+ * @author Tomek Batkiewicz i Jaros≈Çaw Paszek
  */
 public class UnknownInstruction extends InstructionLineController {
 	
 	
+	/**
+	 * TODO
+	 */
 	public UnknownInstruction(String l, String n) {
 		super(l, n);
 	}
-/**
- * Instruction out of classification must be obviously incorrect.
- * @see		InstructionLineController#correct()
- */
+	/**
+	 * Instruction out of classification must be obviously incorrect.
+	 * 
+	 * @see		InstructionLineController#correct()
+	 */
 	public boolean correct()
 	{
 		return false;

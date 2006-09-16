@@ -12,9 +12,11 @@ import org.eclipse.jface.text.rules.WordRule;
  * It has been generated automatically except obtaing
  * color values from the array in IColorValues.
  */
-
 public class BytecodeTagScanner extends RuleBasedScanner {
 
+	/**
+	 * TODO
+	 */
 	public BytecodeTagScanner(ColorManager manager, int mod) {
 		
 		IToken[] tokens = TokenGetter.getTokenTab(manager, mod);

@@ -8,28 +8,82 @@ package umbra;
 /**
  * The interface defining colors used in particular coloring styles
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public interface IColorValues {
+	/**
+	 * TODO
+	 */
 	static int PARTS = 16;
 	
+	/**
+	 * TODO
+	 */
 	static int STRING = 0;
+	/**
+	 * TODO
+	 */
 	static int COMMENT = 1;
+	/**
+	 * TODO
+	 */
 	static int DEFAULT = 2;
+	/**
+	 * TODO
+	 */
 	static int ERROR = 3;
+	/**
+	 * TODO
+	 */
 	static int HEADER = 4;
+	/**
+	 * TODO
+	 */
 	static int TAG = 5;
+	/**
+	 * TODO
+	 */
 	static int CLASS = 6;
+	/**
+	 * TODO
+	 */
 	static int BTC_INSTR = 7;
+	/**
+	 * TODO
+	 */
 	static int KEY = 8;
+	/**
+	 * TODO
+	 */
 	static int LINE = 9;
+	/**
+	 * TODO
+	 */
 	static int THROWS = 10;
+	/**
+	 * TODO
+	 */
 	static int SQUARE = 11;
+	/**
+	 * TODO
+	 */
 	static int NUMBER = 12;
+	/**
+	 * TODO
+	 */
 	static int POSITION = 13;
+	/**
+	 * TODO
+	 */
 	static int HASH = 14;
+	/**
+	 * TODO
+	 */
 	static int ATTR = 15;
 	
+	/**
+	 * TODO
+	 */
 	static int[][] models = new int[][] {new int[] {0, 0, 255, 0,
 		0, 0, 0, 2, 0, 0, 0, 0, 255, 0, 0, 0, 
 		0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 

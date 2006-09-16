@@ -19,14 +19,26 @@ import org.apache.bcel.generic.MethodGen;
  */
 public abstract class BytecodeLineController {
 
+	/**
+	 * TODO
+	 */
 	protected String line;
+	/**
+	 * TODO
+	 */
 	protected int index;
 
+	/**
+	 * TODO
+	 */
 	public BytecodeLineController(String l) {
 		super();
 		line = l;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
 		index = i;
 		return false;
@@ -45,35 +57,59 @@ public abstract class BytecodeLineController {
 		return null;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void setTarget(InstructionList il, Instruction ins) {
 		
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void initHandle(BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, LinkedList instructions, int off) {	
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void update(BytecodeLineController oldLine, BytecodeLineController nextLine, ClassGen cg, Instruction ins, boolean metEnd, boolean theLast, LinkedList instructions, int off) {
 		if (oldLine.getHandle() != null) {
 			oldLine.dispose(nextLine, cg, theLast, instructions, off);
 		}
 	}
 	
+	/**
+	 * TODO
+	 */
 	public InstructionHandle getHandle() {
 		return null;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public InstructionList getList() {
 		return null;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public MethodGen getMethod() {
 		return null;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public int getIndex() {
 		return index;
 	}
 	
+	/**
+	 * TODO
+	 */
 	//&*zmiana nazwy! usuwam z podklas!
 	protected String extractPoint(String l) {
 		String s;
@@ -100,10 +136,16 @@ public abstract class BytecodeLineController {
 		return false;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void dispose(BytecodeLineController nextLine, ClassGen cg, boolean theLast, LinkedList instructions, int off) {
 		
 	}
 
+	/**
+	 * TODO
+	 */
 	public void setIndex(int index2) {
 		this.index = index2;		
 	}

@@ -15,12 +15,15 @@ import umbra.IBytecodeStrings;
  * Instructions of this class are responsible for jumping in code. 
  * Their specificity is having target.
  * 
- * @author Jaros≥aw Paszek
+ * @author Jaros≈Çaw Paszek
  */
 public class JumpInstruction extends NumInstruction {
 
 	
 	
+	/**
+	 * TODO
+	 */
 	public JumpInstruction(String l, String n) {
 		super(l, n);
 	}
@@ -33,8 +36,6 @@ public class JumpInstruction extends NumInstruction {
 	 * 
 	 *@see InstructionLineController#correct() 
 	 */
-
-	
 	public boolean correct()
 	{
 		String s;
@@ -71,6 +72,9 @@ public class JumpInstruction extends NumInstruction {
 		return false;
 	}
 
+	/**
+	 * TODO
+	 */
 	private int getInd() {
 		boolean isd;
 		String counter = "0123456789";
@@ -95,9 +99,9 @@ public class JumpInstruction extends NumInstruction {
 	}
 	
 	/**
+	 * TODO
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 		
 		
@@ -176,7 +180,6 @@ public class JumpInstruction extends NumInstruction {
 	 * does not exist is not completely solved yet.
 	 * 
 	 */
-	
 	public void setTarget(InstructionList il, Instruction ins) {
 		int i = 0;
 		i = getInd();

@@ -2,13 +2,26 @@ package umbra;
 
 import org.eclipse.jface.text.rules.*;
 
+/**
+ * TODO
+ */
 public class TagRule extends MultiLineRule {
 	
+	/**
+	 * TODO
+	 */
 	int loop = 0;
 
+	/**
+	 * TODO
+	 */
 	public TagRule(IToken token) {
 		super("<", ">", token);
 	}
+	
+	/**
+	 * TODO
+	 */
 	protected boolean sequenceDetected(
 		ICharacterScanner scanner,
 		char[] sequence,
@@ -31,6 +44,9 @@ public class TagRule extends MultiLineRule {
 		return super.sequenceDetected(scanner, sequence, eofAllowed);
 	}
 	
+	/**
+	 * TODO
+	 */
 	protected IToken doEvaluate(ICharacterScanner scanner, boolean resume) {
 		
 		if (resume) {

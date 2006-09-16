@@ -15,16 +15,27 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
 /**
- * @author Wojtek W¹s
+ * TODO 
+ * 
+ * @author Wojtek WÄ…s
  */
 public class InstalInfoAction implements IEditorActionDelegate {
 
+	/**
+	 * TODO
+	 */
 	private IEditorPart editor;
 	
+	/**
+	 * TODO
+	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
+	/**
+	 * TODO
+	 */
 	public void run(IAction action) {
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -37,6 +48,9 @@ public class InstalInfoAction implements IEditorActionDelegate {
 		}
 	}
 
+	/**
+	 * TODO
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 	
 	}

@@ -33,6 +33,9 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 public class DisasBCEL implements IEditorActionDelegate {
 	
+	/**
+	 * TODO
+	 */
 	private IEditorPart editor;
 
 	/**
@@ -40,7 +43,6 @@ public class DisasBCEL implements IEditorActionDelegate {
 	 * source. Generates new bytecode from it and displays
 	 * it in a new bytecode editor window.
 	 */
-	
 	public void run(IAction action) {
 		IPath active = ((FileEditorInput)editor.getEditorInput()).getFile().getFullPath();
 		if (editor.isSaveOnCloseNeeded()) {
@@ -77,6 +79,9 @@ public class DisasBCEL implements IEditorActionDelegate {
 		}
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void replaceClass(IPath active) {
 		String fnameFrom = active.toOSString().replaceFirst(".java", ".class");
 		String lastSegment = active.lastSegment().replaceFirst(".java", ".class");
@@ -94,9 +99,15 @@ public class DisasBCEL implements IEditorActionDelegate {
 	}
 	
 
+	/**
+	 * TODO
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
+	/**
+	 * TODO
+	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}

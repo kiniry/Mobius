@@ -9,14 +9,20 @@ package umbra.instructions;
  * the headers or at the end of the method, 
  * containing some method data, not to be edited by a user.
  * 
- * @author Tomek Batkiewicz i Jaros≥aw Paszek
+ * @author Tomek Batkiewicz i Jaros≈Çaw Paszek
  */ 
 public class CodeLineController extends BytecodeLineController {
 
+	/**
+	 * TODO
+	 */
 	public CodeLineController(String l) {
 		super(l);
 	}
 
+	/**
+	 * TODO
+	 */
 	private String removeWhitespaces() {
 	String s;
     s = "";
@@ -38,7 +44,6 @@ public class CodeLineController extends BytecodeLineController {
 	 * 
 	 * @see BytecodeLineController#correct()
 	 */
-	
 	public boolean correct()
 	{   //Code musi byc bo by nie byla ta klasa
 		if (this.line.startsWith("Code")) {

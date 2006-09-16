@@ -39,18 +39,38 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
 public class BytecodeEditor extends TextEditor {
 	
+	/**
+	 * TODO
+	 */
 	private ColorManager colorManager;
+	/**
+	 * TODO
+	 */
 	private int mod;
+	/**
+	 * TODO
+	 */
 	private boolean updated = true;
+	/**
+	 * TODO
+	 */
 	private AbstractDecoratedTextEditor relatedEditor;
+	/**
+	 * TODO
+	 */
 	private JavaClass javaClass;
+	/**
+	 * TODO
+	 */
 	private ClassGen classGen;
+	/**
+	 * TODO
+	 */
 	private int historyNum = -1;
 	
 	/**
 	 * A constructor with no Bytecode-related specificity
 	 */
-	
 	public BytecodeEditor() {
 		super();
 		mod = Composition.getMod();
@@ -62,16 +82,21 @@ public class BytecodeEditor extends TextEditor {
 	/**
 	 * Default function used while closing editor
 	 */
-	
 	public void dispose() {
 		colorManager.dispose();
 		super.dispose();
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean isUpdated() {
 		return updated;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void leave() {
 		updated = false;
 	}
@@ -80,7 +105,6 @@ public class BytecodeEditor extends TextEditor {
 	 * @return Java code editor 
 	 * that Bytecode has been generated from
 	 */
-	
 	public AbstractDecoratedTextEditor getRelatedEditor() {
 		return relatedEditor;
 	}
@@ -89,7 +113,6 @@ public class BytecodeEditor extends TextEditor {
 	 * @return BCEL structure related to Bytecode
 	 * that allows obtaining its particular instructions
 	 */
-	
 	public JavaClass getJavaClass() {
 		return javaClass;
 	}
@@ -120,7 +143,6 @@ public class BytecodeEditor extends TextEditor {
 	 * not existed such yet, the binary file is simply rewritten, otherwise
 	 * it is saved unchanged). 
 	 */
-	
 	public void doSave(IProgressMonitor progressMonitor) {
 		super.doSave(progressMonitor);
 		IPath active = ((FileEditorInput)getEditorInput()).getFile().getFullPath();
@@ -152,7 +174,6 @@ public class BytecodeEditor extends TextEditor {
 	 * @param path		relative path
 	 * @return			absolute path
 	 */
-	
 	public IPath getPath(IPath path) {
 		return ResourcesPlugin.getWorkspace().getRoot().getFolder(path).getProject().getLocation();
 	}
@@ -175,7 +196,6 @@ public class BytecodeEditor extends TextEditor {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	
 	public void refreshBytecode(IPath path, String[] commentTab, String[] interlineTab) throws ClassNotFoundException, CoreException, IOException {
 		String pathName = getPath(path).toOSString(); 	
 		FileEditorInput input = (FileEditorInput)getEditorInput();
@@ -239,7 +259,7 @@ public class BytecodeEditor extends TextEditor {
 	 * @return		index of first ":" in the next instruction line.
 	 */
 	private int nextLineOff(String code, int pos) {
-		// pozycja nastêpnego dwukropka
+		// pozycja nastï¿½pnego dwukropka
 		boolean nline = false;
 		int len = code.length();
 		int res = -1;
@@ -270,7 +290,7 @@ public class BytecodeEditor extends TextEditor {
 	 * @return		number of instructions in bareCode
 	 */
 	private int getOffset(String bareCode) {
-		/* ile dwukropków? */
+		/* ile dwukropkï¿½w? */
 		int p = 0;
 		int ile = 0;
 		while (p >= 0) {
@@ -329,7 +349,6 @@ public class BytecodeEditor extends TextEditor {
 	 * @return Current number of versions; 
 	 * -1 if limit has been reached
 	 */
-	
 	public int newHistory() {
 		if (historyNum == IHistory.maxHistory) return -1;
 		historyNum++;
@@ -345,6 +364,9 @@ public class BytecodeEditor extends TextEditor {
 		historyNum = -1;
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void controlPrint(JavaClass jc) {
 		System.out.println();
 		System.out.println("Control print of instruction list:");

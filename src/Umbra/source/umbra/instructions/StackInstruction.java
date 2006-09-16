@@ -24,11 +24,14 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * Load and store instrucions.
  * 
- * @author Jaros≥aw Paszek
+ * @author Jaros≈Çaw Paszek
  *
  */
 public class StackInstruction extends NumInstruction {
 
+	/**
+	 * TODO
+	 */
 	public StackInstruction(String l, String n) {
 		super(l, n);
 	}
@@ -39,7 +42,6 @@ public class StackInstruction extends NumInstruction {
 	 * 
 	 *@see InstructionLineController#correct() 
 	 */
-	
 	public boolean correct()
 	{
 		String s;
@@ -78,6 +80,9 @@ public class StackInstruction extends NumInstruction {
 	}
 	
 	
+	/**
+	 * TODO
+	 */
 	private int getInd() {
 		boolean isd;
 		String licznik = "0123456789";
@@ -100,10 +105,12 @@ public class StackInstruction extends NumInstruction {
 		}
 		return 0;
 	}
+	
 	/**
+	 * TODO
+	 * 
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 		int index = 0;
 		//&*

@@ -17,11 +17,14 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * Instructions of this kind are used to call other methods.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  */
 public class InvokeInstruction extends StringInstruction {
 
 	
+	/**
+	 * TODO
+	 */
 	public InvokeInstruction(String l, String n) {
 		super(l, n);
 	}
@@ -34,7 +37,6 @@ public class InvokeInstruction extends StringInstruction {
 	 * 
 	 *@see InstructionLineController#correct() 
 	 */
-
 	public boolean correct()
 	{
 		String s;
@@ -59,6 +61,9 @@ public class InvokeInstruction extends StringInstruction {
 		return false;
 	}
 	
+	/**
+	 * TODO
+	 */
 	private int getInd() {
 		boolean isd;
 		String licznik = "0123456789";
@@ -85,7 +90,6 @@ public class InvokeInstruction extends StringInstruction {
 	/**
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 	int index;
 	index = getInd();

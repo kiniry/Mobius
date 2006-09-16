@@ -20,16 +20,25 @@ import org.eclipse.ui.part.FileEditorInput;
  * This class defines an action that adds current bytecode
  * to history.
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public class HistoryAction implements IEditorActionDelegate {
 
+	/**
+	 * TODO
+	 */
 	private IEditorPart editor;
 	
+	/**
+	 * TODO
+	 */
 	public void setActiveEditor(IAction action, IEditorPart targetEditor) {
 		editor = targetEditor;
 	}
 
+	/**
+	 * TODO
+	 */
 	public void run(IAction action) { 
 		int num = ((BytecodeEditor)editor).newHistory();
 		if (num == -1) {
@@ -63,6 +72,9 @@ public class HistoryAction implements IEditorActionDelegate {
 		}
 	}
 
+	/**
+	 * TODO
+	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 	
 	}

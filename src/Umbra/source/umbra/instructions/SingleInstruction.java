@@ -14,15 +14,20 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * Various instructions with no parameter.
  * 
- * @author Jaros³aw Paszek
+ * @author Jarosï¿½aw Paszek
  */
 public class SingleInstruction extends InstructionLineController {
 	
+	/**
+	 * TODO
+	 */
 	public SingleInstruction(String l, String n) {
 		super(l, n);
 	}
 	
 	/**
+	 * TODO
+	 * 
 	 * @see BytecodeLineController#getInstruction()
 	 */
 	public Instruction getInstruction() {

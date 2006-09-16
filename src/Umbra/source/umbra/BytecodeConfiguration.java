@@ -15,24 +15,49 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
  * involving special ways of colouring and possibility of
  * changing the coloring styles ('mod' parameter).  
  */
-
 public class BytecodeConfiguration extends SourceViewerConfiguration {
+	/**
+	 * TODO
+	 */
 	private BytecodeDoubleClickStrategy doubleClickStrategy;
+	/**
+	 * TODO
+	 */
 	private BytecodeTagScanner tagScanner;
+	/**
+	 * TODO
+	 */
 	private BytecodeScanner scanner;
+	/**
+	 * TODO
+	 */
 	private ColorManager colorManager;
+	/**
+	 * TODO
+	 */
 	private int mod;
 	
+	/**
+	 * TODO
+	 */
 	public BytecodeConfiguration(ColorManager colorManager, int mod) {
 		this.colorManager = colorManager;
 		this.mod = mod;
 	}
+
+	/**
+	 * TODO
+	 */
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		return new String[] {
 			IDocument.DEFAULT_CONTENT_TYPE,
 			BytecodePartitionScanner.HEAD,
 			BytecodePartitionScanner.TAG };
 	}
+	
+	/**
+	 * TODO
+	 */
 	public ITextDoubleClickStrategy getDoubleClickStrategy(
 		ISourceViewer sourceViewer,
 		String contentType) {
@@ -41,6 +66,9 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		return doubleClickStrategy;
 	}
 
+	/**
+	 * TODO
+	 */
 	protected BytecodeScanner getBytecodeScanner() {
 		if (scanner == null) {
 			scanner = new BytecodeScanner(colorManager, mod);
@@ -49,6 +77,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		}
 		return scanner;
 	}
+	
+	/**
+	 * TODO
+	 */
 	protected BytecodeTagScanner getBytecodeTagScanner() {
 		if (tagScanner == null) {
 			tagScanner = new BytecodeTagScanner(colorManager, mod);
@@ -58,6 +90,9 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 		return tagScanner;
 	}
 
+	/**
+	 * TODO
+	 */
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 

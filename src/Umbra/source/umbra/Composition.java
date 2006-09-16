@@ -8,11 +8,17 @@ package umbra;
  * This class keeps the value of current coloring style
  * that is obtained after each refreshing.
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public class Composition {
 	
+	/**
+	 * TODO
+	 */
 	static int mod = 1;
+	/**
+	 * TODO
+	 */
 	static boolean disas = false;
 	
 	/**
@@ -26,14 +32,23 @@ public class Composition {
 		return mod;
 	}
 	
+	/**
+	 * TODO
+	 */
 	static public void setMod(int i) {
 		mod = i;
 	}
 		
+	/**
+	 * TODO
+	 */
 	static public void startDisas() {
 		disas = true;
 	}
 	
+	/**
+	 * TODO
+	 */
 	static public void stopDisas() {
 		disas = false;
 	}

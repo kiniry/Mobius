@@ -13,10 +13,16 @@ package umbra.instructions;
  */
 public class HeaderLineController extends BytecodeLineController {
 
+	/**
+	 * TODO
+	 */
 	public HeaderLineController(String l) {
 		super(l);
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean correct()
 	{
 		//niz za bardzo mozna ustalic zaleznosci
@@ -27,8 +33,8 @@ public class HeaderLineController extends BytecodeLineController {
 	/**
 	 * The method index of the header is equal to
 	 * the previous line's one increased by one.
+	 * TODO
 	 */
-	
 	public void setIndex(int index2) {
 		this.index = index2 + 1;
 	}

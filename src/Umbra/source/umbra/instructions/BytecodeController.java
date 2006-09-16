@@ -31,14 +31,26 @@ import umbra.IBytecodeStrings;
  * modified (in case of combining changes) and what comments
  * are added to Bytecode
  * 
- * @author Wojciech W¹s, Tomek Batkiewicz i Jaros³aw Paszek
+ * @author Wojciech Wï¿½s, Tomek Batkiewicz i Jarosï¿½aw Paszek
  */
 public class BytecodeController {
 	
+	/**
+	 * TODO
+	 */
 	private LinkedList all, instructions, incorrect;
+	/**
+	 * TODO
+	 */
 	private Hashtable comments, interline;
+	/**
+	 * TODO
+	 */
 	private boolean[] modified;
 
+	/**
+	 * TODO
+	 */
 	public BytecodeController() {
 		super();
 		all = new LinkedList();
@@ -48,6 +60,9 @@ public class BytecodeController {
 		interline = new Hashtable();
 	}
 
+	/**
+	 * TODO
+	 */
 	public void showInstructionList()
 	{
 		for (int i = 0; i < all.size(); i++) {
@@ -55,6 +70,9 @@ public class BytecodeController {
 		}
 	}
 
+	/**
+	 * TODO
+	 */
 	public void showAllIncorrectLines()
 	{   
 	    System.out.println("" + incorrect.size() + " incorrects:");
@@ -120,6 +138,9 @@ public class BytecodeController {
 		for (int i = 0; i < modified.length; i++) modified[i] = false;
 	}
 
+	/**
+	 * TODO
+	 */
 	public void removeIncorrects(int start, int stop) {
 		for (int i = start; i <= stop; i++) {
 			BytecodeLineController line = (BytecodeLineController)all.get(i); 
@@ -356,6 +377,9 @@ public class BytecodeController {
 		return l;
 	}
 	
+	/**
+	 * TODO
+	 */
 	protected String removeColonFromLine(String l) {
 		int i = 0;
 		while ((i < l.length()) && (Character.isDigit(l.charAt(i))))
@@ -439,10 +463,16 @@ public class BytecodeController {
 		return (index1 != index2);
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean[] getModified() {
 		return modified;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void setModified(boolean[] modified) {
 		this.modified = modified;
 	}
@@ -462,6 +492,9 @@ public class BytecodeController {
 		return commentTab;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public String[] getInterline() {
 		String[] commentTab = new String[instructions.size()];
 		for (int i = 0; i < instructions.size(); i++) {
@@ -472,6 +505,9 @@ public class BytecodeController {
 		return commentTab;
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void controlPrint(int index) {
 		System.out.println();
 		System.out.println("Control print of bytecode modification (" + index + "):");

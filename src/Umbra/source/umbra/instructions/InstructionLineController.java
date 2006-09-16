@@ -20,21 +20,39 @@ import org.apache.bcel.generic.TargetLostException;
  * This class defines a structure that describes a single Bytecode
  * instruction and contains related BCEL structures
  * 
- * @author Wojciech W¹s, Tomek Batkiewicz
+ * @author Wojciech Wï¿½s, Tomek Batkiewicz
  */
 public abstract class InstructionLineController extends BytecodeLineController {
 
+	/**
+	 * TODO
+	 */
 	protected InstructionList il;
+	/**
+	 * TODO
+	 */
 	protected InstructionHandle ih;
+	/**
+	 * TODO
+	 */
 	protected MethodGen mg;
+	/**
+	 * TODO
+	 */
 	protected String name; 
 	
+	/**
+	 * TODO
+	 */
 	public InstructionLineController(String l, String n) {
 		super(l);
 		name = n;
 		// tu moze w podklasach gdzie w podklasach instrukcje sie tworzy odpowiednio
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean addHandle(InstructionHandle ih, InstructionList il, MethodGen mg, int i) {
 		this.ih = ih;
 		this.il = il;
@@ -88,6 +106,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		}
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void controlPrint(BytecodeLineController line) {
 		System.out.println("Init: next line");
 		if (line == null) System.out.println("Null");
@@ -101,6 +122,9 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		}
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void printInstructionList(InstructionList il) {
 		InstructionHandle ih = il.getStart();
 		System.out.println(ih.getInstruction().getName());
@@ -179,14 +203,23 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		//System.out.println(cg.getMethodAt(index).getCode().toString());
 	}	
 	
+	/**
+	 * TODO
+	 */
 	public InstructionHandle getHandle() {
 		return ih;
 	}
 	
+	/**
+	 * TODO
+	 */
 	public InstructionList getList() {
 		return il;
 	}
 
+	/**
+	 * TODO
+	 */
 	public MethodGen getMethod() {
 		return mg;
 	}
@@ -236,8 +269,14 @@ public abstract class InstructionLineController extends BytecodeLineController {
 		System.out.println("Done");
 	}
 
+	/**
+	 * TODO
+	 */
 	// dodane 7.27.19
 	final static String sp = ":-#%()<>;|";
+	/**
+	 * TODO
+	 */
 	final static int ileSp = sp.length();
 	
 	/**

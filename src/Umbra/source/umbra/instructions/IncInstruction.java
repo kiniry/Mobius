@@ -14,12 +14,15 @@ import umbra.IBytecodeStrings;
  * handling with single instruction methods(correctness, getting handle).
  * This is only dealing with iinc instruction.
  * 
- * @author Jaros³aw Paszek i Tomasz Batkiewicz 
+ * @author Jarosï¿½aw Paszek i Tomasz Batkiewicz 
  */
 public class IncInstruction extends NumInstruction {
 
 	
 	
+	/**
+	 * TODO
+	 */
 	public IncInstruction(String l, String n) {
 		super(l, n);
 	}
@@ -36,6 +39,9 @@ public class IncInstruction extends NumInstruction {
 		return super.chkcorr(line, "W%DW?-D?W");
 	}
 	
+	/**
+	 * TODO
+	 */
 	public boolean correct0()
 	{
 		String s;
@@ -81,6 +87,9 @@ public class IncInstruction extends NumInstruction {
 		return false;
 	}
 
+	/**
+	 * TODO
+	 */
 	private int getInd1() {
 		boolean isd;
 		String licznik = "0123456789";
@@ -104,6 +113,9 @@ public class IncInstruction extends NumInstruction {
 		return 0;
 	}
 	
+	/**
+	 * TODO
+	 */
 	private int getInd2() {
 		boolean isd;
 		String licznik = "0123456789";
@@ -151,9 +163,10 @@ public class IncInstruction extends NumInstruction {
 	}
 	
 	/**
+	 * TODO
+	 * 
 	 * @see BytecodeLineController#getInstruction()
 	 */
-	
 	public Instruction getInstruction() {
 		
 		if (!correct())

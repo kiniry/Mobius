@@ -4,9 +4,12 @@ package umbra;
  * The interface including the maximal available number of
  * versions in history. 
  * 
- * @author Wojciech W¹s
+ * @author Wojciech WÄ…s
  */
 
 public interface IHistory {
+	/**
+	 * TODO
+	 */
 	int maxHistory = 2;
 }

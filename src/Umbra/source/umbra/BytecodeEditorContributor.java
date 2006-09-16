@@ -53,19 +53,49 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * synchronization of cursor's positions from Bytecode to Java code,
  * color changing and checking syntax correctness. 
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public class BytecodeEditorContributor extends EditorActionBarContributor {
 
+	/**
+	 * TODO
+	 */
 	private BytecodeContribution bytecodeContribution;
+	/**
+	 * TODO
+	 */
 	private BytecodeEditorAction actionPlus;
+	/**
+	 * TODO
+	 */
 	private BytecodeEditorAction actionMinus;
+	/**
+	 * TODO
+	 */
 	private BytecodeRefreshAction refreshAction;
+	/**
+	 * TODO
+	 */
 	private BytecodeRebuildAction rebuildAction;
+	/**
+	 * TODO
+	 */
 	private BytecodeCombineAction combineAction;
+	/**
+	 * TODO
+	 */
 	private BytecodeRestoreAction restoreAction;
+	/**
+	 * TODO
+	 */
 	private BytecodeSynchrAction synchrAction;
+	/**
+	 * TODO
+	 */
 	private boolean needRefresh = false;
+	/**
+	 * TODO
+	 */
 	private int mod;
 	
 	/**
@@ -73,8 +103,17 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 *  in two instances: one changes colors clockwise and the other counter-clockwise.  
 	 */
 	class BytecodeEditorAction extends Action {
+		/**
+		 * TODO
+		 */
 		private Shell shell;
+		/**
+		 * TODO
+		 */
 		private IEditorPart activeEditor;
+		/**
+		 * TODO
+		 */
 		private int change;
 		
 		/**
@@ -85,6 +124,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			this.change = change;
 		}
 		
+		/**
+		 * TODO
+		 */
 		public void setShell(Shell shell) {
 			this.shell = shell;
 		}
@@ -108,6 +150,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			}
 		}
 		
+		/**
+		 * TODO
+		 */
 		public void setActiveEditor(IEditorPart part) {
 			activeEditor = part;
 		}
@@ -121,12 +166,21 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * Java code after saving binary file.
 	 */
 	public class BytecodeRefreshAction extends Action {
+		/**
+		 * TODO
+		 */
 		private IEditorPart editor;
 		
+		/**
+		 * TODO
+		 */
 		public BytecodeRefreshAction() {
 			super("Refresh");
 		}
 
+		/**
+		 * TODO
+		 */
 		public void setActiveEditor(IEditorPart targetEditor) {
 			editor = targetEditor;
 		}
@@ -173,12 +227,21 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	public class BytecodeRebuildAction extends Action {
 		
+		/**
+		 * TODO
+		 */
 		private IEditorPart editor;
 		
+		/**
+		 * TODO
+		 */
 		public void setActiveEditor(IEditorPart targetEditor) {
 			editor = targetEditor;
 		}
 		
+		/**
+		 * TODO
+		 */
 		public BytecodeRebuildAction() {
 			super("Rebuild");
 		}
@@ -189,7 +252,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		 * updated and the editor window appropriately restored.
 		 * 
 		 */
-		
 		public void run() {
 			IFile file = ((FileEditorInput)editor.getEditorInput()).getFile();
 			IPath active = file.getFullPath();
@@ -230,7 +292,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * If modification happens in the same method, Bytecode
 	 * modification is privileged.
 	 */
-	
 	class BytecodeCombineAction extends Action {
 		private Shell shell;
 		private IEditorPart editor;
@@ -252,7 +313,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		 * 
 		 * @see BytecodeRebuildAction
 		 */
-		
 		public void run() {
 			JavaClass oldJc = ((BytecodeEditor)editor).getJavaClass();
 			//System.out.println("OLD JAVA CLASS:");
@@ -324,6 +384,9 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 			
 		}
 		
+		/**
+		 * TODO
+		 */
 		public void setActiveEditor(IEditorPart part) {
 			editor = part;
 		}
@@ -334,15 +397,26 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * history. Current verion is replaced with one of these
 	 * kept in history as a file with bt1, bt2, etc. extension 
 	 */
-	
 	class BytecodeRestoreAction extends Action {
+		/**
+		 * TODO
+		 */
 		private Shell shell;
+		/**
+		 * TODO
+		 */
 		private IEditorPart editor;
 		
+		/**
+		 * TODO
+		 */
 		public BytecodeRestoreAction() {
 			super("Restore");
 		}
 		
+		/**
+		 * TODO
+		 */
 		public void setShell(Shell shell) {
 			this.shell = shell;
 		}
@@ -353,7 +427,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		 * appropriate historical version and new input is
 		 * generated and put into the editor window.
 		 */
-		
 		public void run() {		
 			String strnum = JOptionPane.showInputDialog("Input version number (0 to 2):", "0");
 			int num = 0;
@@ -416,16 +489,28 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 */
 	class BytecodeSynchrAction extends Action {
 		
+		/**
+		 * TODO
+		 */
 		private AbstractTextEditor editor;
 		
+		/**
+		 * TODO
+		 */
 		public BytecodeSynchrAction() {
 			super("Synchronize");
 		}
 		
+		/**
+		 * TODO
+		 */
 		public void setActiveEditor(IEditorPart targetEditor) {
 			editor = (AbstractTextEditor)targetEditor;
 		}
 
+		/**
+		 * TODO
+		 */
 		public void run() {
 			ITextSelection selection = (ITextSelection)editor.getSelectionProvider().getSelection();
 			int off = selection.getOffset();
@@ -435,7 +520,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	}
 	
 	/**
-	 * The constructor is performed when the editor is started.
+	 * The constructor is executed when the editor is started.
 	 * It includes creating all actions and provide them with their icons.
 	 * 
 	 * @throws MalformedURLException
@@ -472,13 +557,11 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		combineAction.setToolTipText("Combine");
 		restoreAction.setToolTipText("Restore");
 		synchrAction.setToolTipText("Synchronize");
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
 	 * New buttons for the actions are added to the toolbar.
 	 */
-	
 	public void contributeToToolBar(IToolBarManager toolBarManager) {
 		// Run super.
 		super.contributeToToolBar(toolBarManager);
@@ -496,7 +579,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	/**
 	 * New items for the actions are added to the menu.
 	 */
-	
 	public void contributeToMenu(IMenuManager menuManager) {
 		// Run super.
 		super.contributeToMenu(menuManager);
@@ -517,7 +599,6 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 	 * 
 	 * @param editor	the current editor window
 	 */
-	
 	public void setActiveEditor(IEditorPart editor) {
 		super.setActiveEditor(editor);
 		if (editor instanceof BytecodeEditor) {
@@ -582,10 +663,16 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
 		if (proper) Composition.stopDisas();
 	}
 	
+	/**
+	 * TODO
+	 */
 	public void synchrDisable() {
 		synchrAction.setEnabled(false);
 	}
 	
+	/**
+	 * TODO
+	 */
 	private void controlPrint(JavaClass jc, int i) {
 		Method meth = jc.getMethods()[i];
 		System.out.println(meth.getCode().toString());

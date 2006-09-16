@@ -7,10 +7,13 @@ package umbra;
  * Some string arrays used to identify keywords and instruction
  * names in bytecode
  * 
- * @author Wojtek W¹s, Jaros³aw Paszek
+ * @author Wojtek WÄ…s, JarosÅ‚aw Paszek
  */
 public interface IBytecodeStrings {
 
+	/**
+	 * TODO
+	 */
 	public static String[] instructions = new String[] {"aconst_null", "dadd", "ddiv", "dmul", "dneg", "drem", "dsub", 
 			"fadd", "fdiv", "fmul", "fneg", "frem", "fsub", "iadd", "iand", "idiv", "imul", "ineg",
 			"ior", "irem", "isub", "iushr", "ixor", "ladd", "land", "ldiv", "lmul", "lneg", "lor",
@@ -34,9 +37,9 @@ public interface IBytecodeStrings {
 			"dup2", "dup2_x1", "dup2_x2", "pop", "pop2", "swap"};
 	
 	/**
+	 * TODO
 	 * instructions with no arguments required 
 	 */
-	
 	public static String[] single = new String[] {"aconst_null", "dadd", "ddiv", "dmul", "dneg" , 
 			"drem", "dsub", "fadd", "fdiv", "fmul", "fneg", "frem", "fsub", "iadd", "iand", 
 			"imul", "idiv", "ineg", "ior", "isub", "irem", "iushr", "ixor", "lsub", 
@@ -51,31 +54,63 @@ public interface IBytecodeStrings {
 			"lload_0", "lload_1", "lload_2", "lload_3", "lstore_0", "lstore_1", "lstore_2", "lstore_3", 
 			"monitorenter", "monitorexit", "areturn", "dreturn", "freturn", "ireturn", "lreturn", "return", 
 			"dup", "dup_x1", "dup_x2","dup2", "dup2_x1", "dup2_x2", "pop", "pop2", "swap"};
+	
+	/**
+	 * TODO
+	 */
 	//dodatkowo liczba - stosowe
 	public static String[] push = new String[] {"bipush", "sipush"};
-    //	dodatkowo #liczba - skokowe
+    
+	/**
+	 * TODO
+	 */
+	//	dodatkowo #liczba - skokowe
 	public static String[] jump = new String[] {"goto", "goto_w", 
 			"if_acmpeq", "if_acmpne", "if_icmpeq", "if_icmpge", "if_icmpgt", "if_icmple", "if_icmplt", "if_icmpne",
 			"ifeq", "ifge", "ifgt", "ifle", "iflt", "ifne", "ifnonnull", "ifnull", "jsr", "jsr_w", 
 			"lookupswitch", "tableswitch"};
-    //dodatkowo %liczba i liczba  
+	/**
+	 * TODO
+	 */
+	//dodatkowo %liczba i liczba  
 	public static String[] incc = new String[] {"iinc"};
-    //dodatkowo %liczba  
+	/**
+	 * TODO
+	 */
+	//dodatkowo %liczba  
 	public static String[] stack = new String[] {"aload", "astore", "dload", "dstore", 
 			"fload", "fstore", "iload", "istore", "lload", "lstore"};
+	/**
+	 * TODO
+	 */
 	//dodatkowo <char> - typ tablicy
 	public static String[] array = new String[] {"newarray"};
-    //inicjowanie - dodatkowo <java.costam> (liczba)
+	/**
+	 * TODO
+	 */
+	//inicjowanie - dodatkowo <java.costam> (liczba)
 	public static String[] anew = new String[] {"anewarray", "checkcast", "instanceof", 
 			"new"};
-    //fieldinstructions - dodatkowo java.costam (liczba)
+	/**
+	 * TODO
+	 */
+	//fieldinstructions - dodatkowo java.costam (liczba)
 	public static String[] field = new String[] {"getfield", "getstatic", 
 			"putfield", "putstatic"};
-    //invokeinstr - java.costam; rozne nawiasy [( V i (liczba)
+	/**
+	 * TODO
+	 */
+	//invokeinstr - java.costam; rozne nawiasy [( V i (liczba)
 	public static String[] invoke = new String[] {"invokeinterface", "invokespecial", 
 			"invokestatic", "invokevirtual"};
-    // "true" || "false" || "null" || "tr" || liczba + (liczba)
+	/**
+	 * TODO
+	 */
+	// "true" || "false" || "null" || "tr" || liczba + (liczba)
 	public static String[] ldc = new String[] {"ldc", "ldc_w", "ldc2_w"};
+	/**
+	 * TODO
+	 */
 	// nie bo nie bylo
 	public static String[] unknown = new String[] { "breakpoint", "d2f", "d2i", "d2l", "f2d", "f2i", "f2l", 
 			"i2b", "i2c", "i2d", "i2f", "i2l", "i2s", "l2d", "l2f", "l2i", "multilinewarray", 
@@ -86,14 +121,29 @@ public interface IBytecodeStrings {
 	
 	
 	
+	/**
+	 * TODO
+	 */
 	public static String[] javaKeywords = new String[] {"public", "protected", "private", "static", "void", "int", "long", "short", "char", "byte", "boolean",
 			"class", "interface", "extends", "implements"};
 	
+	/**
+	 * TODO
+	 */
 	public static String[] lines = new String[] {"Line numbers:", "Local variable table:"};	
 	
+	/**
+	 * TODO
+	 */
 	public static String[] linewords = new String[] {"Line", "numbers", "Local", "variable", "table"};
 	
+	/**
+	 * TODO
+	 */
 	public static String[] code = new String[] {"Code", "max_stack", "max_locals", "code_length"};
 	
+	/**
+	 * TODO
+	 */
 	public static char[] keys = new char[] {'B', 'C', 'D', 'I', 'S', 'V'};
 }

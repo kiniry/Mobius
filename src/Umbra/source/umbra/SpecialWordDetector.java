@@ -8,14 +8,20 @@ import org.eclipse.jface.text.rules.IWordDetector;
 /**
  * Detector used for finding type symbols in Bytecode (like '(V)')
  * 
- * @author Wojtek W¹s
+ * @author Wojtek WÄ…s
  */
 public class SpecialWordDetector implements IWordDetector {
 	
+	/**
+	 * TODO
+	 */
 	public boolean isWordStart(char c) {
 		return (Character.isWhitespace(c));
 	}
 
+	/**
+	 * TODO
+	 */
 	public boolean isWordPart(char c) {
 		for (int i = 0; i < IBytecodeStrings.keys.length; i++) {
 			if (c == IBytecodeStrings.keys[i]) return true;

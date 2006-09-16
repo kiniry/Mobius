@@ -7,10 +7,13 @@ package umbra.instructions;
 /**
  * This class is resposible for all lines that we cannot classify.
  * 
- * @author Jaros≥aw Paszek
+ * @author Jaros≈Çaw Paszek
  */
 public class UnknownLineController extends BytecodeLineController {
 
+	/**
+	 * TODO
+	 */
 	public UnknownLineController(String l) {
 		super(l);
 	}
