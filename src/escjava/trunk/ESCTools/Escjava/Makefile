@@ -324,14 +324,17 @@ clean_escjava_backpred:
 ## FIXME - Check all these
 
 .PHONY: clean clean_escjava clean_tests clean_classfiles \
-	clean_docs clean_misc clean_archives
+	clean_docs clean_misc clean_archives clean_vcGeneration
 
 clean: clean_classfiles clean_docs clean_escjava clean_tests \
 	clean_misc clean_archives \
 	clean_mocha
 
-clean_escjava: clean_escjava_ast clean_escjava_backpred clean_jniw
+clean_escjava: clean_escjava_ast clean_escjava_backpred clean_vcGeneration clean_jniw
 	rm -f ${VERSION_FILE} ${VERSION_TEMP}
+
+clean_vcGeneration:
+	(cd java/escjava/vcGeneration; ./clean.sh)
 
 clean_tests:
 	${MAKE} -C ${TESTSOURCEDIRECTORY} clean
@@ -415,7 +418,7 @@ test_escjava_parser:
 self_typecheck:
 	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-	    -sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet \
 		${PACKAGE_LIST}
@@ -429,7 +432,7 @@ test_matrix:
 
 self_test_nocheck: build
 	JAVA_VM_FLAGS=-Xmx256m \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 		-sourcepath "$(call canonicalize,${SOURCEPATH})" \
 		-vclimit 1000000 \
 		-nocheck -source 1.4 -quiet -nosemicolonwarnings \
