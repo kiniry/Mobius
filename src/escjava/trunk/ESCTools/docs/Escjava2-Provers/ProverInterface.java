@@ -7,8 +7,8 @@ interface ProverInterface
      * Variables indicating the state of the prover
      * All assertions using this have been commented for the moment
      */
-//     public boolean prover_started;
-//     public boolean signature_defined;
+  //@ public model boolean prover_started;
+  //@ public model boolean signature_defined;
 
   /**
    * Start up the prover.  After the prover is started correctly it
@@ -41,7 +41,7 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-//    @   requires prover_started;
+    @   requires prover_started;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR ||
@@ -60,7 +60,7 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-//    @   requires prover_started;
+    @   requires prover_started;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR;
@@ -75,7 +75,7 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-//    @   requires signature_defined;
+    @   requires signature_defined;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR ||
@@ -91,7 +91,7 @@ interface ProverInterface
    * @return a response code.
    */
   /*@ public normal_behavior
-//    @   requires signature_defined;
+    @   requires signature_defined;
     @   ensures \result == ProverResponse.OK || 
     @           \result == ProverResponse.FAIL ||
     @           \result == ProverResponse.SYNTAX_ERROR ||
