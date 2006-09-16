@@ -2269,6 +2269,8 @@ Discussion of ESC/Java2's strongest postcondition and weakest
 precondition calculi for translating Java into verification conditions
 via a guarded command language.
 
+@section Translation to Guarded Command
+
 @section Strongest Postcondition Calculus
 
 Discussion of ESC/Java2's strongest postcondtion calculus for
