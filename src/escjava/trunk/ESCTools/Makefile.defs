@@ -262,11 +262,26 @@ export JAVAFE_PACKAGE_LIST = \
 	javafe.reader javafe.genericfile javafe.filespace \
 	javafe.tc javafe.util \
 
+export JAVAFE_PACKAGE_PATHS = \
+	javafe javafe/ast javafe/parser  \
+	javafe/reader javafe/genericfile javafe/filespace \
+	javafe/tc javafe/util \
+
 export ESCJAVA_PACKAGE_LIST = escjava \
 	escjava.ant escjava.ast escjava.backpred escjava.gui \
 	escjava.pa escjava.pa.generic escjava.parser \
 	escjava.prover escjava.reader escjava.sp \
-	escjava.tc escjava.translate # escjava.vcGeneration
+	escjava.tc escjava.translate \
+	escjava.vcGeneration escjava.vcGeneration.coq escjava.vcGeneration.pvs \
+	escjava.vcGeneration.sammy escjava.vcGeneration.simplify escjava.vcGeneration.xml
+
+export ESCJAVA_PACKAGE_PATHS = escjava \
+	escjava/ant escjava/ast escjava/backpred escjava/gui \
+	escjava/pa escjava/pa/generic escjava/parser \
+	escjava/prover escjava/reader escjava/sp \
+	escjava/tc escjava/translate \
+	escjava/vcGeneration escjava/vcGeneration/coq escjava/vcGeneration/pvs \
+	escjava/vcGeneration/sammy escjava/vcGeneration/simplify escjava/vcGeneration/xml
 
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)

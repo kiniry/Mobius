@@ -26,6 +26,8 @@ include Makefile.defs
 ##  binary-release - makes the tar file constituting a binary release
 ##  releases-notests - makes both releases without doing any tests
 ##  releases - makes both releases with tests after
+##  jmlc1b1 - run jmlc on all source files
+##  self_typecheck - run escjava2's typechecker on all source files
 ##
 ## You can run each of these in a subdirectory and only apply it to
 ## the code in that subdirectory, if you like.  Note though, that the
@@ -211,7 +213,7 @@ cleanup:
 ## Specifications
 
 $(ESCJAVA2_SPECS_JAR):
-	(cd specs; jar cf $(ESCJAVA2_SPECS_JAR) .)
+	( cd specs; jar cf $(ESCJAVA2_SPECS_JAR) . )
 
 # RDG: We are not shipping jmlspecs.jar right now because the large VC
 # conditions generated for the full JML specs can make our theorem prover choke
@@ -548,8 +550,8 @@ srcjar:
 	cp -r ${ESCJAVA2_SPECS} ${RELTEMP}/sub/specs
 	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
-	(cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
-	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils)
+	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
+	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; rm -rf `find . -name CVS`; )
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
 	rm -rf ${RELTEMP}/sub
@@ -688,7 +690,7 @@ generate-specs-archive:
 	cp -r ${ORIG_SRC_SPECS} ${RELTEMP}
 	-find ${RELTEMP}/specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
 	-find ${RELTEMP}/original-specs -name "CVS" -exec rm -rf {} \;  > /dev/null 2>&1
-	(cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs;) 
+	( cd ${RELTEMP}; tar cjf ${PATCH_DIR}/${SPECS_TAR} specs original-specs; )
 	rm -rf ${RELTEMP}/specs ${RELTEMP}/original-specs
 
 generate-toplevel-archive: clean
@@ -711,7 +713,7 @@ generate-toplevel-archive: clean
 	cp ${ESCTOOLS_ROOT}/Escjava/release/master/bin/Simplify-1.5.4.macosx \
 		${RELTEMP}/ESCTools/Escjava/release/master/bin
 	-find ${RELTEMP}/ESCTools -name "CVS" -exec rm -rf {} \;  > /dev/null  2>&1
-	(cd ${RELTEMP}/ESCTools; tar cjf ${PATCH_DIR}/${TOPLEVEL_TAR} . ;) 
+	( cd ${RELTEMP}/ESCTools; tar cjf ${PATCH_DIR}/${TOPLEVEL_TAR} . ; )
 	rm -rf ${RELTEMP}/ESCTools
 
 ## Until we can figure out how to have diff/patch detect and generate
