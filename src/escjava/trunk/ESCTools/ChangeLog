@@ -1,4 +1,1380 @@
-2006-05-05  erikpoll  <erikpoll@category.ucd.ie>
+2006-09-14  Mikolas Janota  <mikolas.janota@ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
+	Trying to make the documentation clearer.
+
+2006-09-12  Alan Morkan  <alan.morkan@ucd.ie>
+
+	* Javafe/java/javafe/ast/LShiftVisitor.java:
+	* Javafe/java/javafe/ast/RShiftVisitor.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
+	* Javafe/java/javafe/ast/ASTDotVisitor.java:
+	Addition of the original work done by Barry Denby on the soundness
+	and completeness warning system. Includes Visitor classes for two
+	basic completness warnings and the necessary code in Main.java and
+	Options.java.
+
+2006-09-12  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* ChangeLog: Updated through early May.
+
+2006-09-04  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Partial fix to test Arrays.java
+
+2006-08-31  David Cok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/backpred/UnivBackPred.ax:
+	Committing a correction to the background predicate that should
+	have been in a while ago - avoiding an inconsistency in the type
+	system for manifest integers
+
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	More defensive programming
+
+2006-08-25  Jed Hagen  <ghagen@cs.uiowa.edu>
+
+	* Escjava/java/escjava/vcGeneration/cvc3/TCvc3Visitor.java:
+	* Escjava/java/escjava/vcGeneration/cvc3/header.cvc3:
+	* Escjava/java/escjava/vcGeneration/cvc3/Cvc3Prover.java:
+	Further refinement to cvc3 vcGeneration, more backpred, Visitor tweaks
+
+	* Escjava/java/escjava/vcGeneration/cvc3/Cvc3Prover.java:
+	Caught possible null-string dereference in method declaration generation.
+
+	* Escjava/java/escjava/vcGeneration/PrettyPrinter.java:
+	Added support for newline-terminated commenting to PrettyPrinter
+	via beginC() and endC() methods.
+
+	* Escjava/java/escjava/vcGeneration/cvc3/header.cvc3:
+	* Escjava/java/escjava/vcGeneration/cvc3/Cvc3Prover.java:
+	* Escjava/java/escjava/vcGeneration/cvc3/TCvc3Visitor.java:
+	* Escjava/java/escjava/prover/Cvc3.java:
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/Main.java:
+	Added useCvc3 Option.  Working on vcGen for Cvc3 (still very much WIP).
+
+2006-08-23  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Rcc/.cvsignore:
+	* Rcc/build.xml:
+	* Rcc/java/escwizard/NowarnInstr.java:
+	* Rcc/java/escwizard/PragmaInstr.java:
+	* Rcc/java/escwizard/WorkItem.java:
+	* Rcc/java/rcc/Main.java:
+	* Rcc/java/rcc/Makefile:
+	* Rcc/java/rcc/RccOptions.java:
+	* Rcc/java/rcc/count-annot:
+	* Rcc/java/rcc/getAllPragmas.lim:
+	* Rcc/java/rcc/parser/Makefile:
+	* Rcc/java/rcc/tc/FlowInsensitiveChecks.java:
+	* Rcc/java/rcc/tc/PrepTypeDeclaration.java:
+	* Rcc/java/rcc/tc/TypeSig.java:
+	removed some checks from the prep stage; they will be added to the
+	typecheck stage
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	refactor FlowInsensitiveChecks.checkStmt into smaller pieces to
+	allow finer grained control for users when overriding the behavior
+
+2006-08-18  Alan Morkan  <alan.morkan@ucd.ie>
+
+	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
+	Corrected a typo in the desugaring of the 'nullable' field
+	annotation. Changed it from a logical conjunction to a logical
+	disjunction.
+
+2006-08-16  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Rcc/build.xml:
+	updated the rcc build.xml to reflect the recent test reorganization
+	(that is, removed some unnecessary tags)
+
+	* Rcc/test/functional/test: fixed a typo in the functional test script
+
+	* Rcc/test/functional/README:
+	* Rcc/test/functional/alltests:
+	* Rcc/test/functional/test:
+	* Rcc/test/functional/test.usage:
+	* Rcc/test/functional/test116/C.java:
+	* Rcc/test/functional/test116/good.err:
+	* Rcc/test/functional/test116/good.out:
+	* Rcc/test/functional/test116/D.java:
+	* Rcc/test/functional/test116/T.java:
+	* Rcc/test/functional/test116/run:
+	* Rcc/test/functional/test97/ghost.java:
+	* Rcc/test/functional/test97/good.err:
+	* Rcc/test/functional/test97/good.out:
+	* Rcc/test/functional/test97/run:
+	* Rcc/test/functional/test108/C.java:
+	* Rcc/test/functional/test108/good.err:
+	* Rcc/test/functional/test108/good.out:
+	* Rcc/test/functional/test108/run:
+	* Rcc/test/functional/rccw_big/.cvsignore:
+	* Rcc/test/functional/rccw_big/houdini.out:
+	* Rcc/test/functional/rccw_big/progSources.txt:
+	* Rcc/test/functional/rccw_big/run:
+	* Rcc/test/functional/test104/C.java:
+	* Rcc/test/functional/test104/good.err:
+	* Rcc/test/functional/test104/good.out:
+	* Rcc/test/functional/test104/run:
+	* Rcc/test/functional/test107/C.java:
+	* Rcc/test/functional/test107/good.err:
+	* Rcc/test/functional/test107/good.out:
+	* Rcc/test/functional/test107/run:
+	* Rcc/test/functional/test95/ans:
+	* Rcc/test/functional/test95/ghost.java:
+	* Rcc/test/functional/test95/run:
+	* Rcc/test/functional/test96/ghost.java:
+	* Rcc/test/functional/test96/good.err:
+	* Rcc/test/functional/test96/good.out:
+	* Rcc/test/functional/test96/run:
+	* Rcc/test/functional/test109/C.java:
+	* Rcc/test/functional/test109/good.err:
+	* Rcc/test/functional/test109/good.out:
+	* Rcc/test/functional/test109/run:
+	* Rcc/test/functional/test114/C.java:
+	* Rcc/test/functional/test114/good.out:
+	* Rcc/test/functional/test114/run:
+	* Rcc/test/functional/test114/good.err:
+	* Rcc/test/functional/test111/good.err:
+	* Rcc/test/functional/test111/C.java:
+	* Rcc/test/functional/test111/good.out:
+	* Rcc/test/functional/test111/run:
+	* Rcc/test/functional/test101/C.java:
+	* Rcc/test/functional/test101/good.err:
+	* Rcc/test/functional/test101/good.out:
+	* Rcc/test/functional/test101/run:
+	* Rcc/test/functional/test102/C.java:
+	* Rcc/test/functional/test102/good.err:
+	* Rcc/test/functional/test102/good.out:
+	* Rcc/test/functional/test102/run:
+	* Rcc/test/functional/test115/C.java:
+	* Rcc/test/functional/test115/good.err:
+	* Rcc/test/functional/test115/good.out:
+	* Rcc/test/functional/test115/run:
+	* Rcc/test/functional/test98/ghost.java:
+	* Rcc/test/functional/test98/good.err:
+	* Rcc/test/functional/test98/good.out:
+	* Rcc/test/functional/test98/run:
+	* Rcc/test/functional/test106/C.java:
+	* Rcc/test/functional/test106/good.err:
+	* Rcc/test/functional/test112/C.java:
+	* Rcc/test/functional/test112/good.err:
+	* Rcc/test/functional/test112/good.out:
+	* Rcc/test/functional/test112/run:
+	* Rcc/test/functional/test106/good.out:
+	* Rcc/test/functional/test106/run:
+	* Rcc/test/functional/test110/C.java:
+	* Rcc/test/functional/test110/good.err:
+	* Rcc/test/functional/test110/good.out:
+	* Rcc/test/functional/test110/run:
+	* Rcc/test/functional/parser/ErrorPragmaParser.java.test:
+	* Rcc/test/functional/parser/Modifiers1.java.test:
+	* Rcc/test/functional/parser/PragmaLex.java.test:
+	* Rcc/test/functional/parser/RccPragmaParser.java.test:
+	* Rcc/test/functional/parser/StmtPragmas1.java.test:
+	* Rcc/test/functional/parser/good.err:
+	* Rcc/test/functional/parser/good.out:
+	* Rcc/test/functional/parser/run:
+	* Rcc/test/functional/rccw_small/.cvsignore:
+	* Rcc/test/functional/rccw_small/C.java:
+	* Rcc/test/functional/rccw_small/ans:
+	* Rcc/test/functional/rccw_small/houdini.out:
+	* Rcc/test/functional/rccw_small/progSources.txt:
+	* Rcc/test/functional/rccw_small/run:
+	* Rcc/test/functional/test105/C.java:
+	* Rcc/test/functional/test105/good.err:
+	* Rcc/test/functional/test105/good.out:
+	* Rcc/test/functional/test105/run:
+	* Rcc/java/rcc/parser/test/GoodPragmas.ans:
+	* Rcc/java/rcc/parser/test/Modifiers1.java:
+	* Rcc/java/rcc/parser/test/GoodPragmas.j:
+	* Rcc/java/rcc/parser/test/StmtPragmas1.java:
+	* Rcc/java/rcc/parser/test/TestRccPragmaParser.java:
+	* Rcc/java/rcc/parser/test/Makefile:
+	* Rcc/java/rcc/parser/test/TestLex.java:
+	* Rcc/test/functional/test103/good.out:
+	* Rcc/test/functional/test103/run:
+	* Rcc/test/functional/test103/good.err:
+	* Rcc/test/functional/test100/run:
+	* Rcc/test/functional/test103/C.java:
+	* Rcc/test/functional/test100/C.java:
+	* Rcc/test/functional/test100/good.err:
+	* Rcc/test/functional/test100/good.out:
+	* Rcc/test/functional/test113/C.java:
+	* Rcc/test/functional/test113/run:
+	* Rcc/test/functional/test113/good.err:
+	* Rcc/test/functional/test113/good.out:
+	* Rcc/test/functional/test118/run:
+	* Rcc/test/functional/test118/good.err:
+	* Rcc/test/functional/test118/good.out:
+	* Rcc/test/functional/test118/C.java:
+	* Rcc/test/functional/test117/C.java:
+	* Rcc/test/functional/test117/D.java:
+	* Rcc/test/functional/test117/T.java:
+	* Rcc/test/functional/test117/good.out:
+	* Rcc/test/functional/test117/run:
+	* Rcc/test/functional/test117/good.err:
+	Reorganized the RCC functional tests.  They now contain a rather
+	general purpose `test' script for doing functional tests.
+
+	* Rcc/java/escwizard/FileInfo.java:
+	* Rcc/java/rcc/parser/ErrorPragmaParser.java:
+	* Rcc/java/rcc/parser/PragmaLex.java:
+	* Rcc/java/rcc/parser/RccPragmaParser.java:
+	* Rcc/java/rcc/Main.java:
+	* Rcc/java/rcc/RccOptions.java:
+	* Rcc/java/rcc/tc/EnvForInstantiation.java:
+	* Rcc/java/rcc/tc/FlowInsensitiveChecks.java:
+	* Rcc/java/rcc/tc/GhostEnv.java:
+	* Rcc/java/rcc/tc/Instantiation.java:
+	* Rcc/java/rcc/tc/LockStack.java:
+	* Rcc/java/rcc/tc/Makefile:
+	* Rcc/java/rcc/tc/PrepPart.java:
+	* Rcc/java/rcc/tc/PrepTypeDeclaration.java:
+	* Rcc/java/rcc/tc/TypeCheck.java:
+	* Rcc/java/rcc/tc/TypeSig.java:
+	* Rcc/java/rcc/tc/Types.java:
+	* Rcc/java/rccwizard/AnnLinks.java:
+	* Rcc/java/rccwizard/AnnotationVisitor.java:
+	* Rcc/java/rccwizard/Annotator.java:
+	* Rcc/java/rccwizard/Main.java:
+	* Rcc/java/rcc/ast/AnOverview.java:
+	* Rcc/java/rcc/ast/ArrayGuardModifierPragma.java:
+	* Rcc/java/rcc/ast/CloneAST.java:
+	* Rcc/java/rcc/ast/CloneForInstantiation.java:
+	* Rcc/java/rcc/ast/CloneVisitorSuper.java:
+	* Rcc/java/rcc/ast/CloneWithSubstitution.java:
+	* Rcc/java/rcc/ast/EqualityVisitorSuper.java:
+	* Rcc/java/rcc/ast/EqualsASTNoDecl.java:
+	* Rcc/java/rcc/ast/ErrorMsg.java:
+	* Rcc/java/rcc/ast/GeneratedTags.java:
+	* Rcc/java/rcc/ast/GenericArgumentPragma.java:
+	* Rcc/java/rcc/ast/GenericParameterPragma.java:
+	* Rcc/java/rcc/ast/GuardedByModifierPragma.java:
+	* Rcc/java/rcc/ast/HoldsStmtPragma.java:
+	* Rcc/java/rcc/ast/Makefile:
+	* Rcc/java/rcc/ast/MultipleSubstitution.java:
+	* Rcc/java/rcc/ast/NoWarn.java:
+	* Rcc/java/rcc/ast/NowarnPragma.java:
+	* Rcc/java/rcc/ast/RccPrettyPrint.java:
+	* Rcc/java/rcc/ast/ReadOnlyModifierPragma.java:
+	* Rcc/java/rcc/ast/RequiresModifierPragma.java:
+	* Rcc/java/rcc/ast/ThreadLocalStatusPragma.java:
+	* Rcc/java/rcc/ast/EqualsAST.java:
+	* Rcc/java/rcc/ast/GhostDeclPragma.java:
+	* Rcc/java/rcc/ast/Substitution.java:
+	* Rcc/java/rcc/ast/TagConstants.java:
+	* Rcc/java/rcc/ast/Visitor.java:
+	* Rcc/java/rcc/ast/VisitorArgResult.java:
+	* Rcc/java/rcc/ast/hierarchy.j:
+	fixed *lots* of eclipse warnings; many of them due to sloppy imports
+
+	* Rcc/build.xml:
+	* Rcc/rcc-parser-test:
+	script for running the rcc parser test
+
+	* Javafe/Makefile:
+	the test classes should be included in the distribution so that
+	clients of this component can inherit from them
+
+2006-08-15  Jed Hagen  <ghagen@cs.uiowa.edu>
+
+	* Escjava/java/escjava/prover/Cvc3.java:
+	* Escjava/java/escjava/prover/jniw/cvc3jniw.cpp:
+	Expanded comments, added additional API call (to be used later).
+
+2006-08-15  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* .cvsignore: cvs ignore Makefile.local
+
+	* Rcc/build.xml: updated clean target
+
+	* Rcc/lib/.cvsignore:
+	this is the directory with dependencies (as jar files)
+
+	* Rcc/java/escwizard/AnnotationInserter.java:
+	* Rcc/java/rcc/tc/FlowInsensitiveChecks.java:
+	* Rcc/java/rcc/tc/TypeCheck.java:
+	* Rcc/java/rcc/tc/Types.java:
+	* Rcc/Makefile:
+	* Rcc/Makefile.settings:
+	* Rcc/README.txt:
+	* Rcc/build.xml:
+	* Rcc/java/rcc/Main.java:
+	* Rcc/java/rcc/Root.java:
+	* Rcc/rcc:
+	* Rcc/rccjava.1:
+	* Rcc/rccn:
+	* Rcc/setup:
+	* Rcc/setup.bash:
+	* Rcc/java/rcc/ast/AnOverview.java:
+	* Rcc/java/rcc/ast/CloneVisitor.java:
+	* Rcc/java/rcc/ast/EqualityVisitor.java:
+	* Rcc/java/rcc/ast/NoWarn.java:
+	RCC component converted to ant build system.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	tabs -> spaces (remember to turn of the strange spc/tabs mix which
+	is the default in emacs)
+
+	* Javafe/.cvsignore:
+	* Javafe/Makefile:
+	create jar distribution of Javafe for programs that depend on this
+	component cvs ignore dist directory
+
+2006-08-14  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Escjava/test/escjava/test/test70/ans:
+	* Javafe/test/javafe/test/fe/test1001/ans:
+	updated test answer
+
+	* Rcc/java/rccwizard/AnnLinks.java:
+	* Rcc/java/rcc/Main.java:
+	fixed compile error with java 5
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	fixed JML typechecking errors
+
+2006-08-13  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Added definedness support for ==> (IMPLIES) and <== (EXPLIES).
+
+2006-08-13  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* specs/java/lang/Byte.jml: Added values for MIN_VALUE and MAX_VALUE.
+
+	* Escjava/java/escjava/backpred/BackPred.java:
+	* Escjava/java/escjava/backpred/UnivBackPred.ax:
+	* Javafe/java/javafe/parser/Token.java:
+	* Utils/junitutils/LineIterator.java:
+	* Utils/junitutils/TestFilesTestSuite.java:
+	* Utils/junitutils/Utils.java:
+	* specs/java/lang/Boolean.spec:
+	* specs/java/lang/Byte.jml:
+	* specs/java/lang/CharSequence.spec:
+	* specs/java/lang/Class.jml:
+	* specs/java/lang/Double.jml:
+	* specs/java/lang/Float.jml:
+	* specs/java/lang/Integer.jml:
+	* specs/java/lang/Long.jml:
+	* specs/java/lang/Short.jml:
+	* specs/java/lang/Void.jml:
+	* specs/java/lang/reflect/Method.jml:
+	* specs/junit/framework/Assert.jml:
+	* specs/junit/framework/TestCase.jml:
+	GForge bug [#318] [found-by-esc] various errors reported by esc
+	when run on junitutils.
+
+	With this commit, we are down to 4 cautions (which cannot be eliminated).
+
+	Problems fixed with this update:
+	1) Axioms were missing from the Type Specific Background Predicate
+	(TSBP) and the Universal BP for void.class.
+	2) Postcondition for copyInto() counted on Token.equals() which is
+	not defined.  Changed contractto explicitly ensure that fields are
+	the same as those of the copy.
+	3) Assignable clause missing.
+	4) Proper modeling of initialization in TestFilesTestSuite.
+	- (Added/updated) model boolean initialized with appropriate
+	representation ... to include that method is a method returning
+	int or boolean.
+	- Added private boolean initialized() == initialized model field.
+	- runTest() requires initialized but cannot count on it due to
+	behavioral subtyping, hence must explicitly test for it (and raise
+	an exception if it does not hold).
+	- with strengthened specs for java.lang.reflect.Method, escj can
+	now extablish that the called method does not return null
+	(provided initialized is true).
+	5) Changes in Utils.java ...
+	6) java.lang.*: needed to provide initial value for TYPE field of
+	Boolean, Byte, etc
+	7) isPrimitive() was missing the case for void.class.
+	8) java.lang.reflect.Method:
+	- added model field returnType
+	- correspondingly updated ctr contract, getReturnType()
+	- contract of invoke now says that the \result will be an instance
+	of based on the returnType.
+	9) see below.
+	10) see below.
+
+	UPDATED FILES:
+
+	Escjava/java/escjava/backpred/BackPred.java
+	- (1) added Types.voidType to list of "distinct" types.
+
+	Escjava/java/escjava/backpred/UnivBackPred.ax
+	- (1) T_void declared "final" and having no proper supertypes.
+	- (1) Added rule for definition of typeof w.r.t. T_void (though it
+	doesn't appear to be used).
+
+	Javafe/java/javafe/parser/Token.java
+	- (2) see description above.
+
+	Utils/junitutils/LineIterator.java
+	- (3) Assignable clause missing for a method.
+
+	Utils/junitutils/TestFilesTestSuite.java
+
+	Utils/junitutils/Utils.java
+	specs/java/lang/Boolean.spec: (6)
+	specs/java/lang/Byte.jml: (6)
+	specs/java/lang/CharSequence.spec: changed assertion into non_null modifier.
+	specs/java/lang/Class.jml:
+	- (7) isPrimitive() was missing the case for void.class.
+	specs/java/lang/Double.jml: (6).
+	specs/java/lang/Float.jml: (6).
+	specs/java/lang/Integer.jml: added redundant invariant TYPE == int.class.
+	specs/java/lang/Long.jml: added redundant invariant TYPE == long.class.
+	specs/java/lang/Short.jml: (6).
+	specs/java/lang/reflect/Method.jml: (8)
+
+	NEW FILES:
+
+	specs/java/lang/Void.jml: (6)
+	specs/junit/framework/Assert.jml:
+	- (9) generated .jml file.  Added spec for fail() and fail(String).
+	specs/junit/framework/TestCase.jml:
+	- (10) generated .jml file. (strangely, no specs added).
+
+	* Makefile:
+	Removed redundante flags from command line args of $(JMLC) in jmlc1 target.
+
+	* Makefile.defs: Added --source 1.4 to JMLC_FLAGS.
+
+2006-08-11  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/Main.java:
+	Modified the bogus body inserted for empty constructors/methods.
+
+	* Escjava/java/escjava/Main.java:
+	Added the ASSUME refEQ(select(owner:?.?.?, RES), null); guarded command
+	to constructors with no bodies so that they do not complain for owner
+	nullity.
+
+2006-08-10  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Removed the trAndGenPrev.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/Main.java:
+	Made changes pertinent to definedness checking of spec methods and
+	constructors with no bodies.
+
+2006-08-10  Jed Hagen  <ghagen@cs.uiowa.edu>
+
+	* Escjava/java/escjava/prover/Cvc3.java:
+	* Escjava/java/escjava/prover/jniw/Cvc3Wrapper.java:
+	* Escjava/java/escjava/prover/jniw/Test.java:
+	* Escjava/java/escjava/prover/jniw/cvc3jniw.cpp:
+	* Escjava/java/escjava/prover/jniw/test.cpp:
+	* Escjava/Makefile:
+	CVCL::ValidityChecker::query() signature changed; also cvc3
+	wrapper now returns 'abort' result and counterexample on 'don't
+	know' result
+
+	* Escjava/java/escjava/prover/jniw/cvc3jniw.o: Removing object file.
+
+2006-08-10  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Javafe/astgen/.cvsignore:
+	* Javafe/java/javafe/ast/.cvsignore:
+	*** empty log message ***
+
+	* Escjava/java/escjava/translate/Translate.java:
+	A contribution to FR [#122] non-null references by default.
+
+2006-08-09  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Added support for post-conditions.
+
+2006-08-09  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Logics/smt-lib/many-sorted-logic.smt:
+	Testing escjava-commits loginfo triggers.
+
+2006-08-09  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Javafe/java/javafe/tc/Env.java:
+	* Javafe/java/javafe/tc/EnvForLocals.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	* Javafe/doc/javadoc/stylesheet.css:
+	small teaks
+
+	* Rcc/java/rccwizard/AnnLinks.java:
+	* Rcc/java/rccwizard/AnnotationVisitor.java:
+	* Rcc/java/rccwizard/Main.java:
+	* Rcc/java/rccwizard/RccOptions.java:
+	* Rcc/java/rcc/tc/Instantiation.java:
+	* Rcc/java/rcc/tc/PrepTypeDeclaration.java:
+	* Rcc/java/rcc/tc/TypeCheck.java:
+	* Rcc/java/rcc/tc/TypeSig.java:
+	* Rcc/java/rcc/tc/Types.java:
+	* Rcc/java/rcc/tc/EnvForInstantiation.java:
+	* Rcc/java/rcc/tc/FlowInsensitiveChecks.java:
+	* Rcc/java/rcc/tc/GhostEnv.java:
+	* Rcc/java/rcc/parser/RccPragmaParser.java:
+	Lots of refactorings.
+
+	The main remaining problem is that `prep' methods break Javafe's
+	contract by calling `check' methods. This is how types parametrized
+	by values are implemented. A cleaner solution is needed. Currently,
+	exemples like the following cause the stack to overflow.
+
+	class C /*#{ghost Object lock}*/ {
+	  final C/*#{field}*/ field;
+	}
+
+	* Rcc/java/rcc/ast/CloneWithSubstitution.java:
+	* Rcc/java/rcc/ast/EqualsASTNoDecl.java:
+	* Rcc/java/rcc/ast/ErrorMsg.java:
+	* Rcc/java/rcc/ast/GenericArgumentPragma.java:
+	* Rcc/java/rcc/ast/GenericParameterPragma.java:
+	* Rcc/java/rcc/ast/GhostDeclPragma.java:
+	* Rcc/java/rcc/ast/GuardedByModifierPragma.java:
+	* Rcc/java/rcc/ast/HoldsStmtPragma.java:
+	* Rcc/java/rcc/ast/MultipleSubstitution.java:
+	* Rcc/java/rcc/ast/NoWarn.java:
+	* Rcc/java/rcc/ast/NowarnPragma.java:
+	* Rcc/java/rcc/ast/RccPrettyPrint.java:
+	* Rcc/java/rcc/ast/ReadOnlyModifierPragma.java:
+	* Rcc/java/rcc/ast/RequiresModifierPragma.java:
+	* Rcc/java/rcc/ast/TagConstants.java:
+	* Rcc/java/rcc/ast/ThreadLocalStatusPragma.java:
+	* Rcc/java/rcc/ast/AnOverview.java:
+	* Rcc/java/rcc/ast/ArrayGuardModifierPragma.java:
+	* Rcc/java/rcc/ast/CloneAST.java:
+	* Rcc/java/rcc/ast/CloneForInstantiation.java:
+	* Rcc/java/rcc/ast/CloneVisitorSuper.java:
+	* Rcc/java/rcc/RccOptions.java:
+	* Rcc/java/rcc/Main.java:
+	Lots of refactorings.
+
+	The main remaining problem is that prep stage calls into the check
+	stage thus breaking the contract given in TYpeSig's comment. This
+	is done in order to suppert types parametrized by values. A
+	cleaner solution is needed. Currently, examples like the following
+	cause a stack overflow.
+
+	class C /*# { ghost Object lock }*/ {
+	  final C/*#{field}*/ field;
+	}
+
+	* Rcc/sources:
+	* Rcc/Makefile:
+	Lots of refactorings.
+
+	The main problem still remaining is that the prep stage
+	calls check methods breaking the contract from TypeSig's
+	comments. This is done in order to implement types
+	parametrized by values. A cleaner solution is needed. Currently,
+	exemples like the following cause stack overflow.
+
+	class C /*# { ghost Object lock } */ {
+	  final C/*#{field}*/ field;
+	}
+
+2006-08-06  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Makefile:
+	Changes so that jmlc related targets append to JMLC_FLAGS rather than override it.
+
+	* Javafe/java/javafe/parser/Lex.java:
+	315 [found-by-jmlc] Token created with invalid
+	loc (Location.NULL).  Second fix. scanToken() was not respecting
+	the superclass (Token) invariant.
+
+2006-08-05  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/reader/EscTypeReader.java:
+	* Escjava/test/escjava/parser/test/TestEscPragmaParser.java:
+	* Escjava/test/escjava/parser/test/TestLex.java:
+	* Javafe/java/javafe/ast/DelegatingPrettyPrint.java:
+	* Javafe/java/javafe/ast/PrettyPrint.java:
+	* Javafe/java/javafe/ast/StandardPrettyPrint.java:
+	* Javafe/test/javafe/test/Print.java:
+	Fix to [#411] [found-by-jmlc] DelegatingPrettyPrint constructor
+	violates superclass invariant. The fix involved removing the
+	"requires false" contract on the default contructors of
+	DelegatingPrettyPrint and EscPrettyPrint (otherwise: there remain
+	uncallable).  The default contructor of DelegatingPrettyPrint was
+	adapted so as to initialize its delegate (del) field to
+	PrettyPrint.inst (as static PrettyPrint instance that is handily
+	available).  In the constructor contract we do not tell the client
+	what the value of del is, hence encouraging them to promptly
+	explicitly set it.  (For this purpose we made the del field
+	private and provided a setDel() method).  (Nullity modifiers
+	and/or assertions were also adjusted during this exercise.)
+
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	Fix to [#413] [found-by-jmlc] javafe.tc.PrepTypeDeclaration
+	constructor fails to satisfy invariant.
+
+2006-08-05  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Added support for ARRAYREFEXPR.
+
+2006-08-05  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Utils/junitutils/TestFilesTestSuite.java: Added nullity modifiers.
+
+	* Javafe/java/javafe/parser/Token.java:
+	Updated comment (which should have been updated during the last commit).
+
+	* specs/java/io/PrintStream.refines-java:
+	Minor corrects: added modifies clause and changed a visibility modifier on a method contract.
+
+	* Makefile: (Minor fix of cut-paste error for test1 target)
+
+	* specs/java/io/FilterOutputStream.refines-spec:
+	* specs/java/io/PrintStream.refines-java:
+	* specs/java/io/ByteArrayOutputStream.refines-spec:
+	* specs/java/io/File.refines-spec:
+	* Utils/junitutils/Diff.java:
+	* Utils/junitutils/TestFilesTestSuite.java:
+	* Utils/junitutils/Utils.java:
+	[#318] [found-by-esc] various errors reported by esc when run on junitutils
+
+	With this commit, running escj on Utils yields (84% fewer issues):
+	- 5 cautions (2 prover timeouts and 3 inner classes skipped)
+	- 1 error (due to Simplify aborting)
+
+	Code bugs have been found --- see bug report for details.
+	New API specs have been added.
+
+	* Escjava/java/escjava/prover/PPOutputStream.java:
+	- Removed redundant overrides (because they simply mimiced what the superclass does).
+	- Declared instance fields private.
+
+	* Utils/junitutils/LineIterator.java:
+	(Added superfluous nullable keyword.)
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/junittests/NonNull.java:
+	* Escjava/test/junittests/NonNull.java-expected:
+	* Escjava/test/junittests/NonNullErrors.java:
+	* Escjava/test/junittests/NonNullErrors.java-expected:
+	One step closer to full support for 'nullable'.  This pragma can
+	now legally be used where ever 'non_null' is permitted.  Since
+	escj still has the nullable-by-default semantics, 'nullable' has
+	no effect.
+
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/junittests/Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	New target 'test1' in the ESCTools main Makefile requires that
+	EXTRA_CP be added to class paths.
+
+	* Makefile:
+	New target 'test1' which is like 'test', but it adds
+	jmlruntime.jar to the class paths for all other tests.
+
+	* Utils/Makefile:
+	- Renamed esctest to self_test to be consistent with the target
+	named used in the Escjava makefile.
+	- Can now also self_test with a PROVER_KILL_TIME of 7.
+
+2006-08-04  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Fixed bug in fieldAccess.  Added support for newInstExpr.  Added
+	preliminary support for method invocation (testing for potential
+	null dereference).
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Definedness tests: now correctly processing unary expr and field access.
+
+	* Escjava/java/escjava/sp/SPVC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	*** empty log message ***
+
+	* Escjava/java/escjava/translate/Translate.java:
+	When processing method calls, skip CHKEXPRDEFINEDNESS checks
+	associated with the method contract.
+	
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	*** empty log message ***
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Towards a more inclusive trAndGen method.
+
+2006-08-04  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Removed the static member DefGCmd.spec - bad implementation choice
+	on my part.  Added a private method to generate the map needed by
+	TrAnExpr.trSpecExpr.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Renamed generate() to trAndGen().
+	Furthermore, passes the spec to DefGCmd because it is needed for
+	MethodInvocation and FieldAccess nodes.
+
+2006-08-03  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	- Renamed generate to trAndGen.
+	- Made use of TrAnExpr.trSpecExpr() for generating a correct GCExpr for
+	  all non-trivial expressions.
+	- Added support for CondExpr.
+	- Added support for FieldAccess.
+	- Added support for MethodInvocation.
+
+2006-08-02  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/Makefile:
+	build and clean targets of jniw are now no-ops unless the JNIW
+	environment variable is defined
+
+2006-08-02  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Fixed the returning GCExpr for InstanceOfExpr, ThisExpr, and BinaryExpr.
+
+2006-08-02  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Added -debug (hidden) option to control IDC traces while we learn about escj.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Removed ^M's and added Id header.
+
+2006-08-02  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Modified the GCExpr generated when an InstanceOfExpr is
+	encoutered.  Now it returns a GC.truelit as opposed the GCExpr
+	returned from InstanceOfExpr.expr.
+
+2006-07-31  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Added code to generate defindness guarded commands for div/mod,
+	conditional &&/|| operators, as well as certain cases of
+	dereferencing.
+
+2006-07-31  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Javafe/java/javafe/parser/Token.java:
+	Fixed to bug [#315] [found-by-jmlc] Token created with invalid
+	loc (Location.NULL).
+
+2006-07-29  Jed Hagen  <ghagen@cs.uiowa.edu>
+
+	* Escjava/java/escjava/vcGeneration/cvc3/Cvc3Prover.java:
+	* Escjava/java/escjava/vcGeneration/cvc3/TCvc3Visitor.java:
+	* Escjava/java/escjava/vcGeneration/cvc3/header.cvc3:
+	Fixed pattern-matching error in Cvc3Prover.java
+	Tweaked variable renaming in Cvc3Prover.java
+	Need to switch to Boolean as 0/1? Currently a mix -- needs to be fixed.
+	Added call to read file "header.cvc3" for (some) logic defs in Cvc3Prover.getProof().
+
+2006-07-28  Jed Hagen  <ghagen@cs.uiowa.edu>
+
+	* Escjava/java/escjava/vcGeneration/cvc3/TCvc3Visitor.java:
+	* Escjava/java/escjava/vcGeneration/cvc3/Cvc3Prover.java:
+	Initial (incomplete) attempt at a vcGenerator for the cvc3 prover.
+
+2006-07-25  Jed Hagen  <ghagen@cs.uiowa.edu>
+
+	* docs/Escjava2-Logics/pvs/escjava2.pvs:
+	* Escjava/java/escjava/prover/jniw/Cvc3Wrapper.h:
+	* Escjava/java/escjava/prover/jniw/Cvc3Wrapper.java:
+	* Escjava/java/escjava/prover/jniw/Cvc3WrapperException.java:
+	* Escjava/java/escjava/prover/jniw/Makefile:
+	* Escjava/java/escjava/prover/jniw/Test.java:
+	* Escjava/java/escjava/prover/jniw/config.h:
+	* Escjava/java/escjava/prover/jniw/cvc3jniw.cpp:
+	* Escjava/java/escjava/prover/jniw/cvc3jniw.h:
+	* Escjava/java/escjava/prover/jniw/cvc3jniw.o:
+	* Escjava/java/escjava/prover/jniw/readme.txt:
+	* Escjava/java/escjava/prover/jniw/test.cpp:
+	* Escjava/java/escjava/prover/Cvc3.java:
+	* Escjava/java/escjava/prover/Makefile:
+	* Escjava/Makefile:
+	* Makefile.defs:
+	* Makefile.local.sample:
+	Adding support files for cvc3 prover. These include a jni
+	wrapper/interface to the cvc library, along with modifications to
+	makefiles to support the c++ compilation of the native wrapper
+	library for cvc3.  Currently these are not yet completely
+	integrated into the larger escj system.
+
+	* Escjava/java/escjava/ProverManager.java:
+	This is a rather sketchy and incomplete inclusion of the cvc3
+	prover, mostly based on the sammy code.  It is a work in progress
+	and not expected to completely support the cvc3 prover (yet).
+
+2006-06-10  George Karabotsos  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	- Added the support for ParenExpr for the generation of defined
+	expressions.
+	- Fixed the location of the ^ character so as to appear right
+	under the division character.
+
+2006-06-08  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Utils/junitutils/Utils.java:
+	part of [#318]: added non_null modifiers to some methods and/or
+	parameters.
+
+	* Escjava/test/jdktests/TestBitSet.java-ckd:
+	I don't think that we should have a .java-ckd file in the repository.
+
+	* Escjava/test/junittests/.cvsignore: Added *.jml-ckd.
+
+	* Escjava/test/jdktests/.cvsignore:
+	* Escjava/test/jdktests/Makefile:
+	Fix to get tests to pass under cygwin.  This time the problem was
+	that use of sed did not work for Windows like
+	paths (e.g. ab\cd\ef) since \a, for example, is treated as an
+	escape char.
+
+	* Utils/junitutils/TestFilesTestSuite.java:
+	part of [#318]: incomplete constructor spec did not include
+	possible exceptional behavior.
+
+	* Utils/junitutils/TestCase.java:
+	part of [#318]: missing non-null modifiers on parameters.
+
+	* specs/java/util/Iterator.spec: part of [#318].
+
+	* specs/java/lang/Class.jml:
+	part of [#318]: getMethod*() result is non_null.
+
+	* Javafe/java/javafe/util/ErrorSet.java:
+	Fix to [#319], 'jdktests fail under cygwin because of EOL issues'.
+	Now "getLine" method tests for both '\r' and '\n'.
+
+	* Utils/junitutils/LineIterator.java: part of [#318]:
+	  - supertype method contracts not respected because
+	  implementations were throwing a RuntimeException.
+	  - ghost variables not being set (hence could not prove that
+	  next() returned an Object of the right type).
+
+	* specs/java/util/Iterator.spec:
+	part of [#318]: changed invariant involving model method with an
+	informal contract to start with @+ because ESC/Java2 will be
+	unable to prove it.
+
+2006-06-08  Perry James  <perry@dsrg.org>
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/tc/OutsideEnv.java:
+	* Javafe/java/javafe/tc/PrepTypeDeclaration.java:
+	* Escjava/java/escjava/ast/Utils.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/ast/PrettyPrint.java:
+	* Makefile:
+	fixes for bugs 312,313,314,316 -- rac-found violations during static initialization
+
+2006-06-08  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Utils/junitutils/Diff.java:
+	part of [#318]: junitutils.Diff.calculate method needed to be
+	declared a helper.  Note that the original warning of invariant
+	violation is gone, but now the constructor VC is apparently too
+	big :(.
+
+	* Escjava/test/jdktests/Makefile:
+	* Escjava/test/jdktests/skip:
+	jdktests were actually not running under cygwin due to blank lines
+	at the end of the skip file.  This has been fixed.
+
+2006-06-06  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/ast/.cvsignore: Added EscPrimitiveType.java
+
+	* Javafe/java/javafe/ast/.cvsignore: Added JavafePrimitiveType.java.
+
+2006-06-06  Perry James  <perry@dsrg.org>
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	fix for bug #311, AnnotationHandler creates instances of
+	LiteralExpr with invalid location
+
+	* Javafe/java/javafe/tc/Types.java:
+	* Escjava/java/escjava/translate/InlineConstructor.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/parser/ParseType.java:
+	* Javafe/java/javafe/reader/DescriptorParser.java:
+	* Javafe/java/javafe/reader/MethodSignature.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/tc/Types.java:
+	* Makefile:
+	fix for bug #310, Types creates instances of PrimitiveType with
+	invalid tags
+
+	* Javafe/astgen/astoutput.c:
+	generate ensures clauses for auto-generated constructors
+
+2006-06-03  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/Makefile:
+	* Makefile.defs:
+	* Escjava/test/jdktests/Makefile:
+	Again trying to get tests to run under cygwin.
+
+	* Escjava/test/escjava/test/Makefile:
+	Again trying to get all tests to run under cygwin.
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	[new assertion semantics] support for definedness checks of preconditions.
+
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	Added tag CHKEXPRDEFINEDNESS.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	- Added a static not(e) method (similar to the and(e1,e2), and
+	or(e1,e2) methods).
+	- Made isTrue() and isFalse() public since there is no reason to
+	restrict them to being package in scope (even the fields T and F
+	are public).
+
+	* Javafe/java/javafe/ast/ASTDecoration.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	Made ASTNode.decorations field private.
+
+	* Escjava/test/junittests/Makefile:
+	Fixed so that tests build runs under cygwin (also removed
+	unnecessary PHONY canonicalize_paths).
+
+	* Javafe/test/javafe/test/fe/Makefile:
+	Making use of $(DIFF) instead of 'diff' (so tests can run under cygwin).
+
+2006-06-01  Perry James  <perry@dsrg.org>
+
+	* slides/Makefile: commented out line to clean fmco05
+
+2006-05-31  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/Options.java:
+	Added new (currently experimental) option "-idc" to enable the
+	checking of "is-defined conditions (IDCs), under the new JML
+	semantics.
+
+2006-05-25  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Rcc/java/rccwizard/AnnLinks.java:
+	* Rcc/java/rccwizard/AnnotationVisitor.java:
+	* Rcc/java/rccwizard/Main.java:
+	* Rcc/java/rccwizard/RccOptions.java:
+	* Rcc/Makefile:
+	* Rcc/Makefile.settings:
+	* Rcc/java/rcc/parser/ErrorPragmaParser.java:
+	* Rcc/java/rcc/parser/RccPragmaParser.java:
+	* Rcc/java/rcc/tc/EnvForInstantiation.java:
+	* Rcc/java/rcc/tc/FlowInsensitiveChecks.java:
+	* Rcc/java/rcc/tc/InstantiationVec.java:
+	* Rcc/java/rcc/tc/PrepTypeDeclaration.java:
+	* Rcc/java/rcc/Main.java:
+	* Rcc/java/rcc/RccOptions.java:
+	* Rcc/java/rcc/ast/AnOverview.java:
+	* Rcc/java/rcc/ast/ArrayGuardModifierPragma.java:
+	* Rcc/java/rcc/ast/ErrorMsg.java:
+	* Rcc/java/rcc/ast/GeneratedTags.java:
+	* Rcc/java/rcc/ast/GenericArgumentPragma.java:
+	* Rcc/java/rcc/ast/GenericParameterPragma.java:
+	* Rcc/java/rcc/ast/GhostDeclPragma.java:
+	* Rcc/java/rcc/ast/GuardedByModifierPragma.java:
+	* Rcc/java/rcc/ast/HoldsStmtPragma.java:
+	* Rcc/java/rcc/ast/IntegerVec.java:
+	* Rcc/java/rcc/ast/NowarnPragma.java:
+	* Rcc/java/rcc/ast/ReadOnlyModifierPragma.java:
+	* Rcc/java/rcc/ast/RequiresModifierPragma.java:
+	* Rcc/java/rcc/ast/StringVec.java:
+	* Rcc/java/rcc/ast/SubstitutionVec.java:
+	* Rcc/java/rcc/ast/TagConstants.java:
+	* Rcc/java/rcc/ast/ThreadLocalStatusPragma.java:
+	* Rcc/java/rcc/ast/Visitor.java:
+	* Rcc/java/rcc/ast/VisitorArgResult.java:
+	RCC now compiles. It does not work though (some fixes were syntactical).
+
+2006-05-19  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Makefile: Fine tuning of jmlc target.
+
+	* Escjava/Makefile:
+	- clean_classfiles now removes ESCJAVA_CLASSFILES4RAC.
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/tc/Types.java:
+	* Javafe/java/javafe/ast/IdentifierNode.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	[#295], "[found-by-jmlc] static instances of AST nodes violate
+	class invariants".  Big fix (actually part 2, Perry committed part
+	1) to #295.
+
+	* Escjava/test/escjava/parser/test/GoodJmlPragmas.ans:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	Fix to [#294], "represents clause not pretty printed correctly by escjava".
+
+	* Javafe/java/javafe/util/_TYPE_Vec.j:
+	toString() can no longer be declared pure (this can be seen as
+	another fix to [#286], "[found-by-jmlc] typechecking (via jmlc)
+	fails for build target jmlc1b1").
+
+	* Escjava/test/escjava/test/Makefile:
+	- Added a (conditional) defintion of CLASSDIRECTORY so that this
+	makefile can be used directly (rather than via a partent directory
+	makefile).
+	- Minor changes to help sanitize the (voluminous) output during 'make test'.
+
+	* Javafe/Makefile:
+	- cleanclasses now also removes JAVAFE_CLASSFILES4RAC.
+	- Minor changes to help sanitize the (voluminous) output during 'make test'.
+
+	* Javafe/java/javafe/util/Makefile:
+	* Javafe/test/javafe/parser/test/Makefile:
+	* Javafe/test/javafe/test/Makefile:
+	* Javafe/test/javafe/test/fe/Makefile:
+	* Javafe/test/javafe/test/lex/Makefile:
+	Minor changes to help sanitize the (voluminous) output during 'make test'.
+
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	Added non_null modifier to a method param (of TBoolImplies visitor).
+
+	* Escjava/java/escjava/vcGeneration/sammy/SammyProver.java:
+	Diabled invalid ensure clauses (using undefined id 'sammy').
+	Added non_null modifier to a method param.
+
+	* Escjava/java/escjava/vcGeneration/pvs/unsorted/PvsUnsortedProver.java:
+	Replaced '$' prefix with '_' (consistent with change in main file).
+
+2006-05-18  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Javafe/java/javafe/tc/Types.java: *** empty log message ***
+
+2006-05-18  Perry James  <perry@dsrg.org>
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/tc/Types.java:
+	* Javafe/astgen/astoutput.c:
+	fix for bug 293, invalid locId passed to FieldDecl.make
+
+2006-05-18  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Makefile: Fixed 'jml' target (e.g. now using -n switch).
+	Setting JMLC_XMX for jmlc target of Javafe.
+
+	* Makefile:
+	jmlc call to make utils now used buildall instead of build as target.
+
+	* Utils/Makefile: Added buildall target.
+
+	* Makefile:
+	In jmlc target, now making use of Utils build with USE_JMLC defined.
+
+	* slides/Makefile: Added fmco05 to clean.
+
+	* Utils/.cvsignore: *** empty log message ***
+
+	* Utils/Makefile:
+	The design of this Makefile now matches other subsystem Makefiles
+	(e.g. Javafe) more closely.  In addition it is now setup to have
+	the build target use jmlc if USE_JMLC is defined.
+
+	* Utils/junitutils/Makefile:
+	All targets moved to parent directory Makefile.
+
+	* Utils/Makefile: *** empty log message ***
+
+	* Makefile: Adjustments to jmlc (which is now using jmlc1).
+
+	* Escjava/Makefile:
+	clean_test now invokes a make clean on the test subdir which takes
+	over from there (rather than only calling escjava/test's make
+	clean).
+
+	* Escjava/test/Makefile: For now this only contains a clean target.
+
+	* Makefile:
+	Rework of targets to build ESC/Java2 using JMLC.  Main target is
+	now jmlc.
+
+	* Makefile.defs: Added JMLC_FLAGS.
+
+2006-05-17  Perry James  <perry@dsrg.org>
+
+	* Javafe/astgen/astoutput.c:
+	* Makefile:
+	fix for 292, constructors of FieldDecl violated when type is a
+	PrimitiveType
+
+2006-05-17  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/vcGeneration/TBoolOp.java:
+	* Escjava/java/escjava/vcGeneration/TBoolRes.java:
+	* Escjava/java/escjava/vcGeneration/TFloatFun.java:
+	* Escjava/java/escjava/vcGeneration/TFloatOp.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/TIntFun.java:
+	* Escjava/java/escjava/vcGeneration/TIntOp.java:
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TRefOp.java:
+	* Escjava/java/escjava/vcGeneration/TTypeOp.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/sammy/SammyProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	* Escjava/java/escjava/vcGeneration/xml/XmlProver.java:
+	Renamed public TNode fields starting with '$' to use '_' instead
+	(we should avoid using '$' in public hand written i/f's).
+
+	* Makefile:
+	Added `cleanup' targets to remove zero-sized class files that JMLc
+	leaves hanging around when it dies during the compilation of a
+	file.
+
+2006-05-17  Perry James  <perry@dsrg.org>
+
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/parser/OldVarDecl.java:
+	* Javafe/astgen/astoutput.c:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	fix for 289, constructors of subtypes of ASTNode do not ensure invariants
+
+2006-05-15  Perry James  <perry@dsrg.org>
+
+	* Javafe/java/javafe/reader/ASTClassFileParser.java:
+	* Javafe/java/javafe/reader/BinReader.java:
+	* Javafe/java/javafe/reader/CachedReader.java:
+	* Javafe/java/javafe/reader/SrcReader.java:
+	* Javafe/java/javafe/tc/EnvForCU.java:
+	* Javafe/java/javafe/tc/EnvForEnclosedScope.java:
+	* Javafe/java/javafe/tc/EnvForLocalType.java:
+	* Javafe/java/javafe/tc/EnvForLocals.java:
+	* Javafe/java/javafe/tc/EnvForTypeSig.java:
+	* Javafe/java/javafe/tc/TagConstants.java:
+	* Javafe/java/javafe/tc/TypePrint.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	* Javafe/java/javafe/util/Location.java:
+	* Javafe/java/javafe/util/LocationManagerCorrelatedReader.java:
+	* Javafe/java/javafe/util/Set.java:
+	* Javafe/java/javafe/util/StackVector.java:
+	* Javafe/java/javafe/util/_TYPE_Vec.j:
+	* Javafe/java/javafe/ast/ASTDecoration.java:
+	* Javafe/java/javafe/ast/Identifier.java:
+	* Javafe/java/javafe/ast/IdentifierNode.java:
+	* Javafe/java/javafe/ast/Modifiers.java:
+	* Javafe/java/javafe/ast/OperatorTags.java:
+	* Javafe/java/javafe/ast/PrettyPrint.java:
+	* Javafe/java/javafe/ast/StandardPrettyPrint.java:
+	* Javafe/java/javafe/ast/TagConstants.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/genericfile/NormalGenericFile.java:
+	* Javafe/java/javafe/genericfile/UnopenableFile.java:
+	* Javafe/java/javafe/genericfile/ZipGenericFile.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/parser/TagConstants.java:
+	* Javafe/astgen/astoutput.c:
+	* Javafe/java/decsrc/container/CharVec.java:
+	* Javafe/java/decsrc/container/IntSet.java:
+	* Javafe/java/decsrc/io/UnlockedBufInputStream.java:
+	* Javafe/java/javafe/InputEntry.java:
+	* Javafe/java/javafe/PrintSpec.java:
+	* Escjava/java/escjava/vcGeneration/pvs/unsorted/PvsUnsortedProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	* Escjava/java/escjava/vcGeneration/simplify/TSimplifyVisitor.java:
+	* Escjava/java/escjava/vcGeneration/xml/TXmlVisitor.java:
+	* Escjava/java/escjava/vcGeneration/xml/XmlProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AIntegralVisitor.java:
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Escjava/java/escjava/tc/EnvForGhostLocals.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/tc/TypeCheck.java:
+	* Escjava/java/escjava/tc/TypeSig.java:
+	* Escjava/java/escjava/translate/ATarget.java:
+	* Escjava/java/escjava/vcGeneration/TDotVisitor.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/parser/ErrorPragmaParser.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/prover/Atom.java:
+	* Escjava/java/escjava/prover/Formula.java:
+	* Escjava/java/escjava/prover/Harvey.java:
+	* Escjava/java/escjava/prover/SExp.java:
+	* Escjava/java/escjava/prover/Sammy.java:
+	* Escjava/java/escjava/prover/Signature.java:
+	* Escjava/java/escjava/prover/TriggerlessQuantWarning.java:
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	* Escjava/java/escjava/ast/Modifiers.java:
+	* Escjava/java/escjava/ast/hierarchy.j:
+	* Escjava/java/escjava/gui/EscEditor.java:
+	* Escjava/java/escjava/gui/EscFrame.java:
+	* Escjava/java/escjava/gui/EscOptions.java:
+	* Escjava/java/escjava/gui/GUI.java:
+	* Escjava/java/escjava/gui/GuiOptionsPanel.java:
+	* Makefile:
+	fix for 286, allowing for compilation with jmlc, build target jmlc1b1
+
+2006-05-12  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/ant/Commandline.java:
+	Added "package escjava.ant" statement so as to suppress caution
+	during escj self_* tests.
+
+2006-05-11  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/test/junittests/skip:
+	Added 'StaticInnerClasses.java' since it doesn't pass and the
+	original log entry says "Added placeholder test results for new
+	tests for nullable and static inner classes [jkiniry]".
+
+	* Escjava/test/junittests/skip:
+	Removed trailing space after 'FormalNullableInheritance.java'
+	since this prevented it from being skipped.
+
+	* Escjava/test/junittests/ExpandWildRef.java-expected:
+	Added one line at the end, namely "1 caution".  Apparently the
+	caution was previously being generated but it never got reported
+	in the summary generated by ESC/Java2.
+
+2006-05-10  Aleksy Schubert  <alx@mimuw.edu.pl>
+
+	* specs/java/io/PrintStream.refines-java:
+	+ more specs for constructors
+	+ changed the names of parameters
+
+	* specs/java/io/FileOutputStream.spec:
+	+ the initial version - only specs for constructors
+
+2006-05-08  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Rcc/java/rcc/RccOptions.java:
+	* Rcc/java/rcc/Main.java:
+	Small steps toward getting RCC to compile again.
+	  Factored out options from main class. (Now options handling
+	  should be in a separate class that inherits from
+	  javafe.SrcToolOptions)
+
+	* Rcc/java/rcc/Makefile:
+	Small steps toward getting RCC to compile again.
+	  Cleaned up a bit outdated Makefile stuff. (rccjava.mtex is not
+	  in repository)
+
+	* Rcc/Makefile: Small steps toward getting RCC to compile again.
+	  Cleaned up a bit outdated Makefile stuff.
+
+	* Rcc/setup.bash: Small steps toward getting RCC to compile again.
+	  Environment settings for bash.
+
+	* Escjava/.cvsignore: cvs: ignore my tests
+
+2006-05-08  Aleksy Schubert  <alx@mimuw.edu.pl>
+
+	* Javafe/java/javafe/tc/EnvForTypeSig.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/tc/GhostEnv.java:
+	* Javafe/java/javafe/Options.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/ParseUtil.java:
+	* Javafe/java/javafe/parser/TagConstants.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	* Escjava/java/escjava/RefinementSequence.java:
+	* .cvsignore:
+	+ added the support for the Universe type system as implemented by
+	  Dirk Wellenzohn, it needs to be replaced by a cleaner solution
+
+2006-05-07  Radu Grigore  <radu.grigore@ucd.ie>
+
+	* Rcc/java/escwizard/AnnotationInserter.java:
+	* Rcc/java/escwizard/FileCollection.java:
+	* Rcc/java/escwizard/FileInfo.java:
+	* Rcc/java/escwizard/Instr.java:
+	* Rcc/java/escwizard/NowarnInstr.java:
+	* Rcc/java/escwizard/PragmaInstr.java:
+	* Rcc/java/rcc/parser/ErrorPragmaParser.java:
+	* Rcc/java/rcc/parser/PragmaLex.java:
+	* Rcc/java/rcc/parser/RccPragmaParser.java:
+	* Rcc/java/rcc/parser/test/Modifiers1.java:
+	* Rcc/java/rcc/parser/test/StmtPragmas1.java:
+	* Rcc/java/rcc/parser/test/TestLex.java:
+	* Rcc/java/rcc/parser/test/TestRccPragmaParser.java:
+	* Rcc/java/rccwizard/AnnLinks.java:
+	* Rcc/java/rccwizard/AnnotationVisitor.java:
+	* Rcc/java/rccwizard/Annotator.java:
+	* Rcc/java/rccwizard/Main.java:
+	* Rcc/java/rcc/Main.java:
+	* Rcc/java/rcc/Root.java:
+	* Rcc/java/rcc/tc/EnvForInstantiation.java:
+	* Rcc/java/rcc/tc/FlowInsensitiveChecks.java:
+	* Rcc/java/rcc/tc/GhostEnv.java:
+	* Rcc/java/rcc/tc/Instantiation.java:
+	* Rcc/java/rcc/tc/InstantiationVec.java:
+	* Rcc/java/rcc/tc/LockStack.java:
+	* Rcc/java/rcc/tc/PrepTypeDeclaration.java:
+	* Rcc/java/rcc/tc/TypeCheck.java:
+	* Rcc/java/rcc/tc/TypeSig.java:
+	* Rcc/java/rcc/tc/Types.java:
+	* Rcc/java/rcc/ast/AnOverview.java:
+	* Rcc/java/rcc/ast/ArrayGuardModifierPragma.java:
+	* Rcc/java/rcc/ast/CloneAST.java:
+	* Rcc/java/rcc/ast/CloneForInstantiation.java:
+	* Rcc/java/rcc/ast/CloneWithSubstitution.java:
+	* Rcc/java/rcc/ast/EqualsAST.java:
+	* Rcc/java/rcc/ast/EqualsASTNoDecl.java:
+	* Rcc/java/rcc/ast/ErrorMsg.java:
+	* Rcc/java/rcc/ast/GenericArgumentPragma.java:
+	* Rcc/java/rcc/ast/GenericParameterPragma.java:
+	* Rcc/java/rcc/ast/GhostDeclPragma.java:
+	* Rcc/java/rcc/ast/GuardedByModifierPragma.java:
+	* Rcc/java/rcc/ast/HoldsStmtPragma.java:
+	* Rcc/java/rcc/ast/IntegerVec.java:
+	* Rcc/java/rcc/ast/MultipleSubstitution.java:
+	* Rcc/java/rcc/ast/NoWarn.java:
+	* Rcc/java/rcc/ast/NowarnPragma.java:
+	* Rcc/java/rcc/ast/RccPrettyPrint.java:
+	* Rcc/java/rcc/ast/ReadOnlyModifierPragma.java:
+	* Rcc/java/rcc/ast/RequiresModifierPragma.java:
+	* Rcc/java/rcc/ast/StringVec.java:
+	* Rcc/java/rcc/ast/Substitution.java:
+	* Rcc/java/rcc/ast/TagConstants.java:
+	* Rcc/java/rcc/ast/ThreadLocalStatusPragma.java:
+	* Rcc/java/rcc/ast/SubstitutionVec.java:
+	Changed tabs into spaces in RCC java files. (Previously there was
+	a mix of tabs and spaces)
+
+2006-05-05  Erik Poll  <erikpoll@cs.ru.nl>
 
 	* slides/fmco05/fmco.tex:
 	Removed fmco.tex, as this has moved to the JML2 repository,
@@ -6,11 +1382,11 @@
 	  /docs/fmco05
 	to be precise
 
-2006-04-19  everest  <everest@category.ucd.ie>
+006-04-19  Julien Charles  <julien.charles@sophia.inria.fr>
 
 	* docs/Escjava2-Logics/coq/defs.v: more array axioms
 
-2006-04-07  chalin  <chalin@category.ucd.ie>
+2006-04-07  Patrice Chalin  <chalin@cs.concordia.ca>
 
 	* Escjava/Makefile: *** empty log message ***
 
@@ -18,158 +1394,18 @@
 	For the fix-perms target: added "*.pl" to the list of files that
 	need to be chmod'ed as executable.
 
-2006-03-29  everest  <everest@category.ucd.ie>
+2006-03-29  Julien Charles  <julien.charles@sophia.inria.fr>
 
 	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
 	I disabled 'Clement's experiment'
 
-2006-03-24  chalin  <chalin@category.ucd.ie>
-
-	* slides/fmco05/fmco.pdf:
-	* slides/fmco05/fmco.tex, slides/fmco05/work-log-and-status.txt:
-	I've reviewed all sections and declare this ready for submission.
-
-	* slides/fmco05/fmco.tex:
-	* slides/fmco05/work-log-and-status.txt:
-	- Section 6: completed review, editing and spell-checking (PC).
-
-	* slides/fmco05/AlarmClock.java:
-	_alarm_going_off renamed to _alarmEnabled
-
-	* slides/fmco05/fmco.tex:
-	* slides/fmco05/work-log-and-status.txt:
-	- Section 5: completed review, editing and spell-checking (PC).
-
-2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
-
-	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
-
-2006-03-24  chalin  <chalin@category.ucd.ie>
-
-	* slides/fmco05/AlarmClock.java:
-	* slides/fmco05/AlarmClock_interfaceless.java:
-	* slides/fmco05/Makefile:
-	Renamed AlarmClock_interfaceless.java to AlarmClock.java.
-
-	* slides/fmco05/.cvsignore: *** empty log message ***
-
-	* slides/fmco05/AlarmClock_interfaceless.java: Indentation.
-
-	* slides/fmco05/fmco.tex:
-	* slides/fmco05/work-log-and-status.txt:
-	* Section 4: completed review, editing and spell-checking (PC).
-
-	* slides/fmco05/work-log-and-status.txt: Added todo item.
-
-	* slides/fmco05/TickTockClock.java: Minor formatting change.
-
-2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
-
-	* slides/fmco05/fmco.tex:
-	Synched Section 3 with TickTockClass rather than Class.
-
-2006-03-24  chalin  <chalin@category.ucd.ie>
-
-	* slides/fmco05/Clock.java: Re-establishing former postconditions.
-
-	* slides/fmco05/Clock.java:
-	Small changes, mainly to get the figure to fit in a single page.
-
-	* slides/fmco05/Makefile: Added esc target.
-
-	* slides/fmco05/work-log-and-status.txt:
-	- Releasing mutex of Section 3 to Erik.
-	- Keeping mutex for Section 4.
-
-	* slides/fmco05/fmco.tex: - Fixed issue re. reference to Rosenblum.
-	- Other minor fixes.
-
-	* slides/fmco05/Clock.java:
-	Updating spec to /really/ make use of the model field.
-
-	* slides/fmco05/SettableClock.java:
-	Didn't compile (parentheses missing).  Formatted code more nicely (on multiple lines) since the figure shows up on a page by itself anyways.
-
-	* slides/fmco05/work-log-and-status.txt: Taking mutex.
-
-2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
-
-	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
-
-	* slides/fmco05/fmco.tex:
-	minor fixes Section 2-7
-
-2006-03-24  chalin  <chalin@category.ucd.ie>
-
-	* slides/fmco05/fmco.tex:
-	* slides/fmco05/work-log-and-status.txt:
-	- Section 8: Conclusion, reviewed and updated.
-	- Minor change in abstract.
-
-2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
-
-	* slides/fmco05/fmco.tex:
-	typos Section 3 fixed
-
-2006-03-24  chalin  <chalin@category.ucd.ie>
-
-	* slides/fmco05/fmco.tex:
-	* slides/fmco05/work-log-and-status.txt:
-	- Section 2: completed review, editing and spell-checking (PC).
-	  - This seems like is very close to being final -- maybe a mising reference.
-	  - I've pulled out the not on non-null because there are no referece type
-	    decls in the samples of Section 2. :)
-
-2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
-
-	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
-
-2006-03-24  chalin  <chalin@category.ucd.ie>
-
-	* slides/fmco05/work-log-and-status.txt: *** empty log message ***
-
-	* slides/fmco05/fmco.tex:
-	* slides/fmco05/work-log-and-status.txt:
-	- Section 1: completed review, editing and spell-checking.
-	  There is a potential to trim citations in Section 1.1 -- see margin notes --
-	  though I have left them in for now.
-
-	* slides/fmco05/fmco.bib: - Added ref to Jive.
-	- Updated JML Ref Man entry.
-
-	* slides/fmco05/work-log-and-status.txt: Work log and paper status.
-
-2006-03-24  erikpoll  <erikpoll@category.ucd.ie>
-
-	* slides/fmco05/DigitalDisplayClock.java:
-	* slides/fmco05/fmco.bib:
-	* slides/fmco05/fmco.tex:
-	*** empty log message ***
-
-	* slides/fmco05/DigitalDisplayClock.java:
-	removered erroneous /@* rep @*/
-
-	* slides/fmco05/Makefile.defs:
-	* slides/fmco05/AlarmClock_interfaceless.java:
-	* slides/fmco05/AlarmInterface.java:
-	* slides/fmco05/BrokenDigitalDisplayClock.java:
-	* slides/fmco05/Clock.java:
-	* slides/fmco05/DigitalDisplayClock.java:
-	* slides/fmco05/Makefile:
-	* slides/fmco05/SettableClock.java:
-	* slides/fmco05/TickTockClock.java:
-	* slides/fmco05/WrappingCounter.java:
-	* slides/fmco05/fmco.bib:
-	* slides/fmco05/fmco.tex:
-	*** empty log message ***
-
-2006-03-06  mikolas  <mikolas@category.ucd.ie>
+2006-03-06  Mikolas Janota  <mikolas.janota@ucd.ie>
 
 	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:
 	I ran a spell checker on DocumentationVcGenerator.tex and
 	corrected some grammar but there's still lots of mistakes.
 
-2006-02-21  alx-gforge  <alx-gforge@category.ucd.ie>
+2006-02-21  Aleksy Schubert  <alx@mimuw.edu.pl>
 
 	* docs/Escjava2-ImplementationNotes/Makefile:
 	* docs/Escjava2-Provers/Makefile:
@@ -179,14 +1415,14 @@
 	changes to the makefiles so that it is easy to replace the old texi2pdf
 	with the current RedHat command texi2dvi -p
 
-2006-02-17  raboof  <raboof@category.ucd.ie>
+2006-02-17  Arnout Engelen <arnouten@bzzt.net>
 
 	* Houdini/java/houdini/CopyLoaded.java:
 	properly fixed 'loaded' race condition now (though possibly overly robust).
 
 	added docs
 
-2006-02-16  everest  <everest@category.ucd.ie>
+2006-02-16  Julien Charles  <julien.charles@sophia.inria.fr>
 
 	* Escjava/java/escjava/vcGeneration/.cvsignore:
 	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
@@ -212,7 +1448,7 @@
 	* Escjava/java/escjava/vcGeneration/TVisitor.java:
 	the sum keyword
 
-2006-02-15  raboof  <raboof@category.ucd.ie>
+2006-02-15  Arnout Engelen <arnouten@bzzt.net>
 
 	* Javafe/java/javafe/ast/StandardPrettyPrint.java:
 	Don't print field declaration initialisers when 'specOnly' is set.
@@ -230,11 +1466,11 @@
 
 	* Escjava/java/escjava/RefinementSequence.java: minor fixes
 
-2006-02-14  everest  <everest@category.ucd.ie>
+2006-02-14  Julien Charles  <julien.charles@sophia.inria.fr>
 
 	* Escjava/Makefile: Fixed the vcgen problem (i think)
 
-2006-02-13  raboof  <raboof@category.ucd.ie>
+2006-02-13  Arnout Engelen <arnouten@bzzt.net>
 
 	* Houdini/GetAssocDecls.perl: perl is usually /usr/bin/perl
 
@@ -259,9 +1495,10 @@
 	* Houdini/java/houdini/CopyLoaded.java:
 	Copy instead of parse-and-prettypring .spec and .jml files.
 
-	This is not only a (probably minor) performance boost, but also a workaround
-	for the fact that the parsing and prettyprinting code doesn't currently provide
-	a completely correct code->ast->code roundtrip.
+	This is not only a (probably minor) performance boost, but also a
+	workaround for the fact that the parsing and prettyprinting code
+	doesn't currently provide a completely correct code->ast->code
+	roundtrip.
 
 	* Houdini/java/houdini/CheckPoint.java:
 	* Houdini/java/houdini/FinalESCRun.java:
@@ -276,18 +1513,19 @@
 	* Houdini/java/houdini/PragmaInstr.java:
 	* Houdini/java/houdini/StandardAnnotationGuesser.java:
 	* Houdini/java/houdini/util/Assert.java:
-	fix annotation syntax, both for generated annotations and some annotations to houdini code.
+	fix annotation syntax, both for generated annotations and some
+	annotations to houdini code.
 
 	* Houdini/Makefile:
 	* Houdini/jhoudini:
 	* Houdini/setup:
-	- Removed 'setup' script
-	- made Makefile independent of setup script
-	- added required 'setup' options to jhoudini
-	- many other jhoudini fixes
-	- removed jhoudini dependency on (and easy support for) rsh
+	* Removed 'setup' script
+	* made Makefile independent of setup script
+	* added required 'setup' options to jhoudini
+	* many other jhoudini fixes
+	* removed jhoudini dependency on (and easy support for) rsh
 
-2006-02-03  raboof  <raboof@category.ucd.ie>
+2006-02-03  Arnout Engelen <arnouten@bzzt.net>
 
 	* Escjava/java/escwizard/AnnotationInserter.java:
 	* Escjava/java/escwizard/FileCollection.java:
@@ -338,19 +1576,18 @@
 	* Javafe/java/javafe/CopyLoaded.java:
 	* Escjava/java/houdini/CopyLoaded.java:
 	CopyLoaded cleanup:
-
-	* Merged Escjava/java/houdini/CopyLoaded.java and Javafe/java/javafe/CopyLoaded.java
+	- Merged Escjava/java/houdini/CopyLoaded.java and Javafe/java/javafe/CopyLoaded.java
 	- Made CopyLoadedOptions extend escjava.Options (because these static settings are
 	  required by some escjava code called by CopyLoaded)
 	- Moved resulting CopyLoaded.java file into the Houdini envelope
 
-2006-02-01  alx-gforge  <alx-gforge@category.ucd.ie>
+2006-02-01  Aleksy Schubert  <alx@mimuw.edu.pl>
 
 	* docs/Escjava2-ImplementationNotes/Escjava2-ImplementationNotes.texinfo:
 	I added information that it is possible to call non-pure methods in pure
 	ones.
 
-2006-01-30  raboof  <raboof@category.ucd.ie>
+2006-01-30  Arnout Engelen <arnouten@bzzt.net>
 
 	* Houdini/HGuards.perl:
 	This script is required by jhoudini, but wasn't in CVS or in the
@@ -360,7 +1597,7 @@
 	its input and require its output, so it might be incorrect, but
 	for now it appears to work.
 
-2006-01-27  chalin  <chalin@category.ucd.ie>
+2006-01-27  Patrice Chalin  <chalin@cs.concordia.ca>
 
 	* specs/java/util/Arrays.refines-spec:
 	Now expressing \result != null of asList as non_null in the method
@@ -375,9 +1612,7 @@
 	nullity predicates (which allows JML and ESC/Java to report more
 	errors).
 
-	* specs/java/awt/event/ActionListener.jml: *** empty log message ***
-
-2005-12-29  jkiniry  <jkiniry@category.ucd.ie>
+2005-12-29  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
 	Rewrote several captions.  Added diagrams about the various
@@ -386,7 +1621,7 @@
 	one for Lexer.  Added a list of floats for BON diagrams.  Started
 	writing the Java lexer and parser sections.
 
-2005-12-28  jkiniry  <jkiniry@category.ucd.ie>
+2005-12-28  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* Javafe/java/javafe/parser/Token.java:
 	Added some docs and specs to correspond to BON specification in
@@ -420,14 +1655,15 @@
 	typechecking JDK 1.4 (typecheckJDK14).  The old rule typecheckJDK
 	still exists and just calls the two new rules.
 
-2005-12-27  jkiniry  <jkiniry@category.ucd.ie>
+2005-12-27  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* Javafe/test/javafe/test/fe/test2000/ans:
 	Corrected test2000's expected output (it should be blank).
 
 	* Javafe/java/javafe/ast/hierarchy.j: Fixed indentation of a method.
 
-	* Escjava/test/jdktests/skip, Escjava/test/junittests/skip:
+	* Escjava/test/jdktests/skip:
+	* Escjava/test/junittests/skip:
 	Skipping tests that are currently failing per Patrice's request.  Bugs
 	have been filed on all currently failing tests.
 
@@ -437,198 +1673,27 @@
 	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BinaryExpr.sx:
 	javafe.ast.BinaryExpr Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.GeneratedTags.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.GenericBlockStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.GenericVarDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Identifier.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.IdentifierVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.IfStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ImportDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ImportDeclVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.InitBlock.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.InstanceOfExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.InterfaceDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LabelStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LexicalPragma.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LexicalPragmaVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LiteralExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.LocalVarDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.MethodDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.MethodInvocation.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ModifierPragma.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ModifierPragmaVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Modifiers.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Name.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.NewArrayExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.NewInstanceExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ObjectDesignator.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.OnDemandImportDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.OperatorTags.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ParenExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.PrettyPrint.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.PrimitiveType.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ReturnStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.RoutineDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SimpleName.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SingleTypeImportDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SkipStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.StandardPrettyPrint.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Stmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.StmtPragma.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.StmtVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SuperObjectDesignator.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SwitchLabel.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SwitchStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.SynchronizeStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TagConstants.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ThisExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ThrowStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TryCatchStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TryFinallyStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Type.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclElem.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclElemPragma.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclElemVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeDeclVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeModifierPragma.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeModifierPragmaVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeName.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeNameVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.TypeObjectDesignator.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.UnaryExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Util.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VarDeclStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VarInit.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VarInitVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VariableAccess.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Visitor.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.VisitorArgResult.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.WhileStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast._SpecialParserInterface.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.ast.[G-Z].* Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ASTDecoration.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ASTNode.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.AmbiguousMethodInvocation.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.AmbiguousVariableAccess.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ArrayInit.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ArrayRefExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ArrayType.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BlockStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BranchStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.BreakStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CastExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CatchClause.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CatchClauseVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ClassDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ClassDeclStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ClassLiteral.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CompilationUnit.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CompoundName.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.CondExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ConstructorDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ConstructorInvocation.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ContinueStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.DefaultVisitor.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.DelegatingPrettyPrint.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.DoStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.EvalStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.Expr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ExprObjectDesignator.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ExprVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FieldAccess.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FieldDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.ForStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FormalParaDecl.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.ast.FormalParaDeclVec.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.ast.[A-F].* Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.CheckCompilationUnit.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.CheckInvariants.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.ConstantExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.Env.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForCU.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForLocalType.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForLocals.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.EnvForTypeSig.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.FieldDeclVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.FlowInsensitiveChecks.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.Listener.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.LookupException.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.MethodDeclVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.OutsideEnv.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.PrepTypeDeclaration.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.SLResolution.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TagConstants.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypeCheck.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypePrint.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypeSig.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.TypeSigVec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.tc.Types.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.tc Simplify benchmark/tests
 
-2005-12-26  jkiniry  <jkiniry@category.ucd.ie>
+2005-12-26  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.ClassPath.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.EmptyEnum.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.ExtTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Extension.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.FileTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Filter.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.FilterEnum.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.HashTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.LeafTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.LookAheadEnum.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.PathComponent.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.PkgTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.PreloadedTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Query.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Resolve.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Resolve_AmbiguousName.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Resolve_Result.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.SlowQuery.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.StringUtil.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.Tree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.TreeWalker.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.UnionTree.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.filespace.ZipTree.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.filespace Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.test.TestExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.test.TestLex.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.test.TestParse.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.parser.test Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.Lex.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.Parse.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseExpr.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseStmt.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseType.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.ParseUtil.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.PragmaParser.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.TagConstants.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.Token.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.parser.TokenQueue.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.parser Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Assert.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.AssertionFailureException.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.BufferedCorrelatedReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.ClipPolicy.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.CorrelatedReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.CorrelatedReaderTest.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.ErrorSet.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.FatalError.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.FileCorrelatedReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.FilterCorrelatedReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Info.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Location.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.LocationManagerCorrelatedReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.NotImplementedException.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.Set.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.StackVector.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.util.SubCorrelatedReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.util Simplify benchmark/tests
 
 	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.CountFilesLoaded.sx:
@@ -638,44 +1703,19 @@
 	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/tohtml.Java2Html.sx:
 	tohtml Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.LocTool.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.Print.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.SuperlinksTest.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.SupertypeTest.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.test.lex.TestLex.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.test Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.ASTClassFileParser.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.BinReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.CachedReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.DescriptorParser.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.MethodSignature.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.Reader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.SrcReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.StandardTypeReader.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.reader.TypeReader.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.reader Simplify benchmark/tests
 
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.GenericFile.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.NormalGenericFile.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.UnopenableFile.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.genericfile.ZipGenericFile.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe.genericfile Simplify benchmark/tests
 
-	*
-	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.CopyLoaded.sx:
-	*
-	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.CountLines.sx:
-	*
-	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.FrontEndTool.sx:
-	*
-	docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.PrintSpec.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.SrcTool.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.TestTool.sx:
-	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/javafe.Tool.sx:
+	* docs/Escjava2-Logics/simplify/simplify_benchmarks/front_end_suite/:
 	javafe Simplify benchmark/tests
 
-2005-12-22  jkiniry  <jkiniry@category.ucd.ie>
+2005-12-22  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
 	* Javafe/astgen/astactions.h:
 	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
@@ -860,7 +1900,8 @@
 2005-12-07  Frederic Rioux  <f_rioux@cs.concordia.ca>
 
 	* Escjava/java/escjava/Options.java:
-	* Escjava/java/escjava/vcGeneration/TNode.java, Makefile:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Makefile:
 	Fixed Makefile target, special characters, and spec to better
 	support jmlc compilation. Please note that due to a ISU JML tools
 	problem, special (e.g. accented) characters are not parsed
@@ -1144,7 +2185,8 @@
 	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
 	Prelude generator added
 
-	* docs/Escjava2-Logics/coq/defs.v, docs/Escjava2-Logics/coq/defs_unsorted.v:
+	* docs/Escjava2-Logics/coq/defs.v:
+	* docs/Escjava2-Logics/coq/defs_unsorted.v:
 	Coq logics
 
 	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
@@ -1301,7 +2343,8 @@
 	* Javafe/java/javafe/ast/hierarchy.j:
 	Twiddling back to the correct form; whoops.
 
-	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
 	Conor Gallagher's initial work on checking specification soundness.
 	He will followup with added documentation and will be coordinating
 	with one or more of Robin Green, Alan Morkan, and Radu Grigore on
@@ -1351,7 +2394,8 @@
 	Spreading last version of the new ast generator ->*and
 	documentation*<-, enjoy
 
-	* Escjava/java/escjava/Main.java, Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/Options.java:
 	Options.java > Uniformizing all flags for the new proof generator
 	and adding new ones. Be sure to read doc in
 	ESCTools/Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.pdf.
@@ -1359,7 +2403,8 @@
 	Main.java > adding a conditionnal switch you can enter by "-nvcg"
 	and enabling new ast generations
 
-	* Javafe/java/javafe/ast/Identifier.java, Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/ast/Identifier.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
 	minor tweaks to allow new ast generations. Note that there is
 	something to fix in hierarchy.h (see section "flags you can pass
 	to escjava2" in
@@ -1477,7 +2522,8 @@
 
 2005-10-01  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
-	* Makefile, Makefile.defs:
+	* Makefile:
+	* Makefile.defs:
 	Currently we are avoiding generating javadocs for escjava.vcGeneration
 	as this package is not ready for release.
 
@@ -1530,7 +2576,8 @@
 
 2005-09-27  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
-	* ChangeLog, release-files/RELEASE_NOTES.txt:
+	* ChangeLog:
+	* release-files/RELEASE_NOTES.txt:
 	Updated ChangeLog and release notes for new release.
 
 	* docs/Escjava2-Extending/Escjava2-Extending.texinfo:
@@ -1652,7 +2699,8 @@
 	location-neutral, but I have not yet extensively tested it beyond my
 	three Macs and one Linux box.
 
-	* Makefile.defs, Makefile.local.sample:
+	* Makefile.defs:
+	* Makefile.local.sample:
 	Moved DEBUGGER_FLAGS and JAVA_REMOTE_DEBUG into Makefile.defs.
 
 	Added Emacs mode hint to the top of both files.
@@ -1710,7 +2758,9 @@
 	Created a new subclass of "Type" named "ErrorType" (effectively
 	factoring it out of PrimitiveType). [Fix to GForge bug 143]
 
-	* .cvsignore, Escjava/.cvsignore, Javafe/.cvsignore:
+	* .cvsignore:
+	* Escjava/.cvsignore:
+	* Javafe/.cvsignore:
 	Changed classfiles to classfiles* so that it would pickup
 	classfiles4rac.
 
@@ -1909,7 +2959,9 @@
 
 2005-08-27  Joseph Kiniry <joseph.kiniry@ucd.ie>
 
-	* Escjava/Makefile, Makefile, Makefile.defs:
+	* Escjava/Makefile:
+	* Makefile:
+	* Makefile.defs:
 	Documented different choices for SPECS variable.  Made sure default
 	was the ESC specs.
 
@@ -1923,7 +2975,8 @@
 	Updated several test rules in Escjava/Makefile to use new
 	ESCJAVA_BUILD_CLASSPATH and SOURCEPATH.
 
-	* Makefile, Makefile.defs:
+	* Makefile:
+	* Makefile.defs:
 	Removed JAVADOC_SOURCEPATH and just used SOURCEPATH.
 
 	Reconfigured use of -classpath and -sourcepath for JML commands to
@@ -2164,7 +3217,9 @@
 	Added some missing semi-colons.  Some whitespace changes
 	due to code format corrections (replacing tabs with spaces).
 
-	* Escjava/Makefile, Makefile, Makefile.defs:
+	* Escjava/Makefile:
+	* Makefile:
+	* Makefile.defs:
 	Added rule selftypecheck to top-level and Escjava Makefiles.
 	This rule causes a typecheck of the full javafe and escjava
 	packages.
@@ -2379,7 +3434,8 @@
 	Also eliminated useless else block.  
 	I'm not sure that this rule ever worked right.
 
-	* Javafe/astgen/.cvsignore, papers/.cvsignore:
+	* Javafe/astgen/.cvsignore:
+	* papers/.cvsignore:
 	Added a few more binary files to various .cvsignores.
 
 	* docs/design-notes/escj00.html:
@@ -2426,7 +3482,8 @@
 	Corrected use of EOLs to match all other files in project.  Please keep EOLs
 	as UNIX LFs and not DOS CR/LFs or MacOS CRs.
 
-	* Escjava/Makefile, Makefile:
+	* Escjava/Makefile:
+	* Makefile:
 	Added top-level target 'source' which rebuilds all dependent source (e.g.,
 	astgen-derived AST classes) in javafe and escjava packages.  Added another
 	pattern to fix-perms target to make all shell scripts user-executable.
@@ -2483,7 +3540,8 @@
 
 	http://sourceforge.net/tracker/index.php?func=detail&aid=876093&group_id=65346&atid=510629
 
-	* Escjava/Makefile, Makefile:
+	* Escjava/Makefile:
+	* Makefile:
 	Changed specs-test target to run from the top-level so that
 	automatically jumping to the error location has the proper relative
 	paths for next-error in Emacs and other tools that have the
@@ -2556,7 +3614,8 @@
 	http://sort.ucd.ie/tracker/index.php?func=detail&aid=110&group_id=97&atid=441
 
 	* Escjava/java/escjava/Main.java:
-	* README.first, Javafe/java/javafe/util/ErrorSet.java:
+	* README.first:
+	* Javafe/java/javafe/util/ErrorSet.java:
 	Added preload() method to check which VM version was being used and issue
 	a failure error message if a Java 1.5 VM is in use, per bug #109.
 	http://sort.ucd.ie/tracker/index.php?func=detail&aid=109&group_id=97&atid=441
@@ -2721,7 +3780,8 @@
 	o Reduced multiple axioms for definition of typeof into a single
 	axiom, which will likely turn into a definition next.
 
-	* slides/ETAPSTutorial/1_intro_jml.tex, slides/ETAPSTutorial/2_tool.tex:
+	* slides/ETAPSTutorial/1_intro_jml.tex:
+	* slides/ETAPSTutorial/2_tool.tex:
 	Made line breaks more uniform, added mention of signals_only on one
 	slide, moved non_null to the right place in one example, red/full
 	typo, KeY group mention, spelled Spark-Ada right.
@@ -3172,7 +4232,8 @@
 
 2005-05-18  David Cok  <cok@frontiernet.net>
 
-	* Escjava/test/jdktests/TestObject.java-expected, specs/java/util/Collection.spec:
+	* Escjava/test/jdktests/TestObject.java-expected:
+	* specs/java/util/Collection.spec:
 	Tweaking for tests
 
 	* Escjava/test/CausedAnErrorOnce01.java:
@@ -3362,7 +4423,8 @@
 	* specs/java/util/GregorianCalendar.refines-spec:
 	* specs/java/util/List.spec:
 	* specs/java/util/Properties.spec:
-	* specs/java/util/SortedMap.spec, specs/java/util/Vector.spec:
+	* specs/java/util/SortedMap.spec:
+	* specs/java/util/Vector.spec:
 	Fixing improperly marked -@ specs.
 
 	* Escjava/java/escjava/prover/SExp.java:
@@ -3666,10 +4728,12 @@
 	* slides/ETAPSTutorial/PPRerik.sty:
 	Convenience copy for easy slide building.
 
-	* Makefile, Makefile.defs:
+	* Makefile:
+	* Makefile.defs:
 	Updates for ETAPS (2.0a9) release and merge with work at home.
 
-	* README.first, ChangeLog: Update for ETAPS (2.0a9) release.
+	* README.first:
+	* ChangeLog: Update for ETAPS (2.0a9) release.
 
 	* slides/ETAPSTutorial/.cvsignore:
 	Prep-work for release.
@@ -4157,7 +5221,8 @@
 	* Escjava/test/junittests/skip:
 	Skipping a platform dependent test - Scope.java
 
-	* .cvsignore, Escjava/test/jdktests/TestSet.java:
+	* .cvsignore:
+	* Escjava/test/jdktests/TestSet.java:
 	Reorganizing tests and specs
 
 	* Escjava/test/escjava/test/Makefile:
@@ -4834,7 +5899,8 @@
 	Added new fixperms target to build dependencies to help with fresh CVS
 	users.
 
-	* Escjava/test/matrix/Rational.java, Escjava/test/matrix/SparseVector.java:
+	* Escjava/test/matrix/Rational.java:
+	* Escjava/test/matrix/SparseVector.java:
 	Added some terminating semi-colons to specs.
 
 	* Escjava/java/escjava/ant/Commandline.java:
@@ -6270,7 +7336,8 @@
 	A bit of expansion on the technical points - more to come.
 
 	* papers/PASTE2004.bib:
-	* papers/PASTE2004.tex, papers/sig-alternate.cls:
+	* papers/PASTE2004.tex:
+	* papers/sig-alternate.cls:
 	Responding to some of Gary's comments.
 
 	* papers/PASTE2004.tex: A few spelling corrections.
@@ -6620,7 +7687,8 @@
 	* Escjava/java/escjava/translate/GetSpec.java:
 	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
 	* Escjava/java/escjava/ast/Utils.java:
-	* Escjava/java/escjava/Options.java, Makefile:
+	* Escjava/java/escjava/Options.java:
+	* Makefile:
 	One more step in handling methods and model variables.
 
 2003-12-30  Joseph R. Kiniry  <kiniry@cs.kun.nl>
@@ -7177,7 +8245,8 @@
 	have not yet been tested on Linux or OS X, so consider the build
 	infrastructure in an unstable state for the next ~24 hours.
 
-	* Javafe/test/javafe/test/fe/do, Javafe/test/javafe/test/fe/doj:
+	* Javafe/test/javafe/test/fe/do:
+	* Javafe/test/javafe/test/fe/doj:
 	Rewrite do scripts to bash.
 
 	* Escjava/test/junittests/BadPrefix.java-expected:
@@ -7387,7 +8456,8 @@
 	Committing the right version this time
 
 	* Escjava/java/escjava/getAllPragmas.lim:
-	* Escjava/knowntestfailures.txt, Escjava/sources:
+	* Escjava/knowntestfailures.txt:
+	* Escjava/sources:
 	Removing obsolete files
 
 	* Escjava/test/junittests/Makefile:
@@ -9010,7 +10080,8 @@
 	* Escjava/Makefile:
 	* Javafe/Makefile:
 	* Makefile:
-	* Makefile.defs, install.sh:
+	* Makefile.defs:
+	* install.sh:
 	Restoring and improving the release test targets.
 
 2003-08-14  David Cok  <cok@frontiernet.net>
