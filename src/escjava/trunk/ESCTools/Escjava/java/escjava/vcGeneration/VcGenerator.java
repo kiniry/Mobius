@@ -20,9 +20,9 @@ public class VcGenerator {
      *
      * Usage :
      * You have to supply the root node of the vc tree you want to translate.
-     * Then you can call any of the public fonction to get what you want.
+     * Then you can call any of the public finction to get what you want.
      * It has been designed in a way that makes sure we won't do the work 
-     * 2 times. Ie if you call the constructor and never call old2Dot(),
+     * two times. I.e., if you call the constructor and never call old2Dot(),
      * we never compute the dot file.
      * Most of the time (ie except for development and debugging), you have
      * to do : 
