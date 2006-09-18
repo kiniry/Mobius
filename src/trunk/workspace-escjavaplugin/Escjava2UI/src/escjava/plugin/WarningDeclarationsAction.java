@@ -165,24 +165,23 @@ public class WarningDeclarationsAction implements
    * TODO
    * 
    * @param window
-   * @param s
+   * @param fname
    * @throws Exception
    */
-  static public void openEditor(IWorkbenchWindow window, String s)
+  static public void openEditor(IWorkbenchWindow window, String fname)
       throws Exception {
     int offset = -1;
     int line = -1;
-    int k = s.lastIndexOf(' ');
+    int k = fname.lastIndexOf(' ');
     if (k != -1) {
-      offset = Integer.parseInt(s.substring(k + 1));
-      s = s.substring(0,k);
-      k = s.lastIndexOf(' ');
+      offset = Integer.parseInt(fname.substring(k + 1));
+      fname = fname.substring(0,k);
+      k = fname.lastIndexOf(' ');
       if (k != -1) {
-        line = Integer.parseInt(s.substring(k + 1));
-        s = s.substring(0,k);
+        line = Integer.parseInt(fname.substring(k + 1));
+        fname = fname.substring(0,k);
       }
     }
-    String fname = s.trim();
     IPath p = new Path(fname);
     int jk = fname.indexOf(".jar:");
     IWorkbenchPage page = window.getActivePage();
