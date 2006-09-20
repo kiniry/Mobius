@@ -41,7 +41,7 @@ public class BasicPresentationReconciler extends PresentationReconciler {
 	 * @see org.eclipse.jface.text.presentation.PresentationReconciler#setDocumentToDamagers(org.eclipse.jface.text.IDocument)
 	 */
 	protected void setDocumentToDamagers(IDocument doc) {
-		if(fDoc != null) {
+		if(fDoc != null && (fListener != null)) {
 			fDoc.removeDocumentListener(fListener);
 		}
 		fDoc = doc;
@@ -74,6 +74,7 @@ public class BasicPresentationReconciler extends PresentationReconciler {
 		if (p != null)
 			fViewer.changeTextPresentation(p, false);
 		fViewer.revealRange(fScanner.getLimit() - 1, 1);
+		//fViewer.setTopIndex(fScanner.getLimit() - 1);
 		fViewer.setSelectedRange(fScanner.getLimit(), 0);
 	}
 	

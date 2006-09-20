@@ -9,12 +9,15 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
 import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.BasicTextAttribute;
 import prover.gui.editor.BasicTextPresentation;
 import prover.gui.editor.IColorConstants;
+import prover.gui.editor.ProverEditor;
 
 
 /**
@@ -36,20 +39,22 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
 	private BasicRuleScanner fScanner;
 	/** The length of the document before any modifications. */
 	private int fLen;
-	
+	/** The part that has to have focus after the end of the append job */
+	private IWorkbenchPart fEditor;
 	
 	/**
 	 * Create a new AppendJob.
 	 * @param scanner The scanner used to decide which word to highlight
 	 * @param tp The information about the document that shall be updated
 	 */
-	public AppendJob(BasicRuleScanner scanner, BasicTextPresentation tp) {
+	public AppendJob(ProverEditor pe, BasicRuleScanner scanner, BasicTextPresentation tp) {
 		super("Updating view");
 		fStrToAppend = new StringBuffer();
 		fPresentation = (BasicTextPresentation)tp.clone();
 		fViewer = tp.getTextViewer();
 		fDoc = fViewer.getDocument();
 		fScanner = scanner;
+		fEditor = pe;
 		
 	}
 	
@@ -111,6 +116,7 @@ public class AppendJob extends UIJob implements IColorConstants, IAppendJob {
 			}
 		}	
 		fViewer.changeTextPresentation(fPresentation, true);
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(fEditor);
 		return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 	}
 	

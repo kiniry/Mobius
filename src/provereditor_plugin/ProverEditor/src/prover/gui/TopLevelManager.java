@@ -426,7 +426,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 			str = str.replaceAll(replacements[i][0], 
 					replacements[i][1]);
 		}
-		AppendJob job = new AppendJob(fStateScan, fStatePres);
+		AppendJob job = new AppendJob(fProverContext.ce, fStateScan, fStatePres);
 		
 	
 		job.add(str);

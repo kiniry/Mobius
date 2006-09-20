@@ -28,6 +28,5 @@ public class BackAction extends AProverAction{
 			ProverEditor ce = (ProverEditor) ed;
 			TopLevelManager.getInstance().regress(new ProverFileContext(ce));			
 		}
-		
 	}
 }

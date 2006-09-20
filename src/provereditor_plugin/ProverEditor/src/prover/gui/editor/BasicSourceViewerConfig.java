@@ -54,11 +54,12 @@ public class BasicSourceViewerConfig extends SourceViewerConfiguration implement
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getPresentationReconciler(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sv) {
-		rc = new BasicPresentationReconciler(getTagScanner());	
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getTagScanner());
-		rc.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		rc.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		
+		if (rc == null) {
+			rc = new BasicPresentationReconciler(getTagScanner());	
+			DefaultDamagerRepairer dr = new DefaultDamagerRepairer(getTagScanner());
+			rc.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+			rc.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+		}
 		return rc;
 	}
 }
