@@ -1,0 +1,35 @@
+\section{Bytecode specification language}\label{intro:bml}
+
+
+% motivation
+% why does source specifications do not work any more in our context?
+Let us see what advocates the need of a low level specification language.
+Traditionally, specification languages were tailored for high level languages.  
+Source  specification allows to express complex functional or security properties about programs.
+Thus, they are successfully  used 
+for software audit and validation. Still, source specification in the context of mobile code does not help a lot for several reasons.
+
+
+First, the executable or interpreted code  may not be accompanied by its specified  source. Second, it is more reasonable for the 
+code receiver to check the executable code than its source code, especially if he is not willing to trust the compiler.
+Third, verifying a bytecode program against certain functional property needs a formalism into which the property will be encoded. 
+
+
+ It is in this perspective, that we propose  a bytecode specification language which we call BML (short for Bytecode Modeling Language). 
+BML is the bytecode encoding of an important subset of  JML (short for Java Modeling Language). The latter is a rich specification language tailored to Java source programs and
+ allows to specify rich functional properties over Java source programs.
+
+
+ 
+
+% what does the language support?
+ BML supports the most important features of JML. Thus, we can express functional and security properties of Java
+ bytecode programs in the form of method pre and postconditions, class and object invariants, assertions
+ for particular program points like loop invariants. To our knowledge BML does not have predecessors that are tailored 
+ to Java bytecode.  
+
+
+
+
+
+
