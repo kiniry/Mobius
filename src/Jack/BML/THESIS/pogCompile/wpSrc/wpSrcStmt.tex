@@ -33,20 +33,12 @@ $${\scriptsize
            \end{array} \\ \\ \\
 
 
-	   \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{locVarAssign}}} \\
-               \begin{array}{l} 
-	        \wpSrcStmt{\expressionSrc_1}{  \\
-		 \phantom{wpiSr} \wpSrcExpr{\expressionSrc_2 }{ \\
-		 \phantom{wpiSr}\phantom{wpiSr}
-		 \begin{array}{l}
-		     v_1 \neq \Mynull  \Rightarrow \\
-	         \phantom{wpiSr}  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   \\
-		 \wedge \\
-		 v_1  = \Mynull  \Rightarrow  \\
-		 \phantom{wpiSr}   \excPostSrc(\texttt{NullPointerExc}) 
-	  \end{array}}{ \\ \phantom{wpiSr}\phantom{wpiSr}  \excPostSrc}{v_2} 
-	  }{ \\ \phantom{wpiSr}  \excPostSrc}{v_1} 
-    \end{array} \\ \\ \\
+	   \wpSrcStmt{ \expressionSrc_1 = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{locVarAssign}}} \\
+                  \begin{array}{l}   \wpSrcExpr{\expressionSrc_2 }{ 
+				    \normalPostSrc \subst{\expressionSrc_1}{v}   
+				   }{ \excPostSrc}{v}  
+		  \end{array}
+	           \\ \\ \\
 
     \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
                \begin{array}{l} 
