@@ -1,0 +1,143 @@
+%\newtheorem{compProp1}{Property}[section]
+
+\section{Proofs of properties from Section \ref{compile:prop} }\label{appendix:compile:prop}
+
+\begin{compProp1}[Property \ref{compile:prop:compProp1} Compilation of statements and expressions]
+    For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
+    the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
+           $$ \begin{array}{l} 
+                             \forall i, ( \ins{i} \in \compileLabel{s}{\ExprStmt }{e} ) \wedge \\
+			     \Myspace ( \ins{i} \execRel \ins{k}) \wedge \\
+			     \Myspace \neg (\ins{k} \in   \compileLabel{s}{\ExprStmt}{e}  ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}     \Rightarrow   \\
+                             \Myspace \Myspace k = e + 1  \\
+			     
+              \end{array}$$ 
+\end{compProp1}
+
+
+
+The proof is done by induction on the structure of the compiled statement. 
+We scatch the proof for the compilation of the if statement, the rest of the cases being similar \\
+\textit{Proof:} 
+$$
+\begin{array}{l}
+            \comment{Assume that $\exists i, i \in [  s \ldots e ], \exists k ,   k \notin [s \ldots e + 1] \wedge \ins{i} \execRel \ins{k}    $  }\\
+            \\
+            \mbox{\rm\comment{by definition of the compiler function for if statements in section \ref{pogEq:compile:compCtrlStmt} }} \\
+            \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e} =  \\
+        
+	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
+            e' + 1 \ \ifCond \ e'' + 2;\\
+            \compileLabel{e' + 2}{\stmt_2}{e''}\\
+             e'' + 1 \ \goto \ e +  1; \\
+            \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
+	    %e: \goto   e + 1  \\
+           
+	    \\ 
+	   \numConclusion{1} \ \comment{Assume that $ s \le i  \le e'$ } \\
+	   \comment{by induction hypothesis for $\expressionSrcRel$ we get } \\
+
+	    \numConclusion{2}   \forall  i ,  s \le i \le e' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
+			     \Myspace \neg  ( \ins{k} \in  \compileLabel{s}{\stmt}{e} ) \\
+			     \Myspace \neg  \isStartExc{\ins{k}}   \Rightarrow   \\
+                             \Myspace \Myspace  k = e' + 1 \\ 
+	    \comment{ From	\numConclusion{1} and 	 \numConclusion{2}  we get a contradiction in this case} \\\\
+        
+	    \numConclusion{3} \ \comment{Assume that $ e'+2 \le i  \le e''$ } \\			 
+	    \numConclusion{4} \  \forall i ,  e' + 2 \ge i \le e'' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
+			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e} ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
+                             \Myspace \Myspace k = e'' + 1\\
+	    \comment{ From	\numConclusion{3} and 	 \numConclusion{4}  we get a contradiction in this case} \\\\
+	    
+	    \numConclusion{5} \ \comment{Assume that $ e'' +2 \le i  \le e $ } \\
+	    \numConclusion{6} \  \forall i ,  e'' + 2 \ge i \le e ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
+			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e}  ) \\
+			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
+                             \Myspace \Myspace k = e + 1	     \\\\
+       \comment{ From	\numConclusion{5} and 	 \numConclusion{6}  we get a contradiction in this case} \\\\
+	    
+      \numConclusion{7}  \comment{Assume that $s =  e' + 1 $ } \\
+       \mbox{\rm\textit{ \{ as $ e' + 1 \ \ifCond \ e'' + 2$ and  $e'' + 2$ and $e' + 2$ are labels in }}\\
+       \mbox{\rm\textit{  the compilation of the statement, we get a contradiction in this case \}  }}\\	\\
+      
+      \numConclusion{8}  \comment{Assume that $s =  e'' + 1 $ } \\
+   \mbox{\rm\textit{ \{ as $ e''  + 1 \ \goto \ e+ 1$ we get a contradiction once again }}\\
+\end{array}
+$$
+\Qed \\
+
+
+\begin{compProp3}[Compilation of expressions]
+    For any expression $\expressionSrc$, starting label $s$ and end label $e$,
+    the compilation $\compileLabel{s}{\expressionSrc}{e}$ is a block of bytecode instruction in the sense of Def. \ref{seqInstr}
+   
+\end{compProp3}
+\textit{Proof:}
+
+Following the Def. \ref{seqInstr} of block of bytecode instructions,  we have to see if the compilation of an expression respects
+three conditions.
+The first condition of Def.\ref{seqInstr}  follows from lemma \ref{compile:prop:compProp2}. 
+Def. \ref{seqInstr} also requires that there are no jump instructions  in the list of instructions representing the  compilation of an expression.
+This is established by induction over the structure of the expression.
+The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
+  no instruction except $\ins{s}$ may be  a loop entry  in the sense of Def.  \ref{defLoop} in Chapter
+\ref{wpGeneral}, Section \ref{prelim}. This is the case, as there are no jump instructions inside the compiled expression  and all the instructions inside an
+expression are sequential\todo{this is not well explained}.\\
+\Qed 
+
+
+\begin{compProp8}[Exception handler property for statements]
+  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its strict substatement $\stmt'$, i.e. 
+$\strictsubstatement{\stmt}{\stmt'} $
+if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
+$$ \begin{array}{l}
+          \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
+	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
+   \end{array}
+$$
+
+\end{compProp8}
+\textit{Proof}:
+The proof is by contradiction. Assume this is not true, i.e.
+ $$\begin{array}{l} \exists \stmt, \stmt' ,   \\
+       \numConclusion{1}    \Myspace \stmt \neq \try \{ \ldots \} \catch \{ \ldots \} \wedge \\
+       \numConclusion{2}   \Myspace  \strictsubstatement{\stmt}{\stmt'} \\
+       \numConclusion{3}  \Myspace  \compileLabel{s}{\stmt}{e} \wedge \\
+       \numConclusion{4} \Myspace  \compileLabel{s'}{\stmt'}{e'} \wedge \\
+       \numConclusion{5}  \Myspace \exists  \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} \neq \\
+                                            \phantom{\exists \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}    
+\end{array}
+$$
+
+This means that there exists two elements $   (s_1,e_1, eH_1, \mbox{\rm\texttt{Exc}} ) $  and
+$   (s_2,e_2, eH_2, \mbox{\rm\texttt{Exc}} )$  in the exception handler table of method \methodd \ \methodd.\excHandlerTable \  such that   : 
+$$ \numConclusion{6}  \Myspace eH_1 \neq eH_2 $$
+From lemma \ref{compile:prop:compProp7} we get that :
+
+$$ \numConclusion{7}  \Myspace \begin{array}{l}
+        \exists \stmt_1, s_1, e_1, \compileLabel{s_1}{\stmt_1}{e_1} \\
+	\wedge \\
+	\exists \stmt_2, s_2, e_2,\compileLabel{s_2}{\stmt_2}{e_2}
+\end{array}	 $$
+
+
+From the initial condition \numConclusion{2} by lemma \ref{compile:prop:compPropSubstmt}  we conclude that 
+$$\numConclusion{8} \Myspace \compileLabel{s_1}{\stmt_1}{e_1} \notin   \compileLabel{s}{\stmt}{e} $$
+
+%From \numConclusion{7}, it follows that the exception handler for $e'$ is obligatory outside $\compileLabel{s}{\stmt}{e}$.
+
+ Because $e \in [s_2 \ldots e_2 ]  \wedge  e' \in [s_1 \ldots e_1 ] \wedge e,e' \in [s \ldots e]$, \numConclusion{8} by applying 
+  Lemma \ref{compile:prop:compProp6}  we can conclude that
+
+ $$  \begin{array}{l} 
+          \compileLabel{s}{\stmt}{e} \in \compileLabel{s_1}{\stmt_1}{e_1} \in  \compileLabel{s_2}{\stmt_2}{e_2} \\
+           \vee \\
+	 \compileLabel{s}{\stmt}{e} \in   \compileLabel{s_2}{\stmt_2}{e_2} \in \compileLabel{s_1}{\stmt_1}{e_1}
+ \end{array}$$	   
+
+ In both of the cases and of the definition of \findExcHandlerOnly \ in Chapter \ref{opSem}, Section \ref{opSem:exc}  this means that 
+$$ \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
+which is in contradiction with \numConclusion{6}.
+\Qed \\
