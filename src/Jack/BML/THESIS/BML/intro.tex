@@ -9,34 +9,9 @@
 
 
 %\section{Introduction} \label{bcsl}
-This chapter presents a bytecode level specification language, called for short BML and a compiler from a
+This chapter presents the bytecode level specification language, called for short BML and a compiler from a
  subset of the high level Java specification language JML to BML which from now we shall call \JMLtoBML. 
-
-% motivation
-
- Before going further, we discuss what advocates the need of a low level specification language.
-Traditionally, specification languages were tailored for high level languages.  
-Source  specification allows to express complex functional or security properties about programs.
-Thus, they are successfully be used 
-for software audit and validation. Still, source specification in the context of mobile code does not help a lot for several reasons.
-
-
-First, the executable or interpreted code  may not be accompanied by its specified  source. Second, it is more reasonable for the 
-code receiver to check the executable code than its source code, especially if he is not willing to trust the compiler. 
-Third, if the client has complex requirements and even if the code respects them, in order to establish them, 
-the code should be specified. Of course, for properties like well typedness this specification can be inferred automatically,
-but in the general case this problem is not decidable. 
-Thus, for more sophisticated policies, an automatic inference will not work.
-
- It is in this perspective, that we propose to make the Java
-bytecode benefit from the source specification by defining the BML language and a compiler from JML towards BML.    
-
-% what does the language support?
- BML supports the most important features of JML. Thus, we can express functional properties of Java
- bytecode programs in the form of method pre and postconditions, class and object invariants, assertions
- for particular program points like loop invariants. To our knowledge BML does not have predecessors that are tailored 
- to Java bytecode.  
-
+The chapter is organized as follows.
  In section \ref{BCSLprelim}, we give an overview of the main features of JML. A detailed overview of BML is given in section \ref{BCSLgrammar}.  
   As we stated before, we support also a compiler from the high level specification language JML into BML. The 
  compilation process from JML to BML is discussed in section  \ref{BCSLcompile}.
