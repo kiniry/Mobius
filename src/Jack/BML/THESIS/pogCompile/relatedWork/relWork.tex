@@ -8,13 +8,12 @@ Barthe, Rezk and Saabas in \cite{gta05:fast} also argue that proof obligations p
 over source code and
 bytecode produced by a nonoptimizing compiler   are equivalent.
 The source language which they use supports method invokation, exception throwing and handling. 
-They do not consider instructions that may throw
-runtime exceptions. 
+They do not consider instructions that may throw runtime exceptions which simplifies the reasoning over expressions. 
  However, in their work they do not discuss  what are the  assumptions about the compiler 
 or the  properties that it might verify  which will guarantee this equivalence.
  We claim that the proof presented in \cite{gta05:fast} for
- the verification condition preserving compilation holds only if the non optimizing 
- compiler has the properties discussed here in Section \ref{compile}.
+ the verification condition preserving compilation is correct only if the non optimizing 
+ compiler has the properties discussed here in Section \ref{compile}, subsection \ref{compile:prop}.
 
 
 In \cite{SU05CNS}, Saabas and Uustalu present a goto language provided with a compositional structure called SGoto.
