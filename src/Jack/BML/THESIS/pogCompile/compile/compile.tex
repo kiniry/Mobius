@@ -5,20 +5,29 @@
 \section{Compiler} \label{compile}
 
 We now turn to specify a simple compiler from the source language presented in Section
-\ref{source} into the bytecode language. The compiler does not perform any optimizations. 
+\ref{source} into the bytecode language.
 
 The compiler is the triple
  $$< \compileLabel{*}{*}{*}, \addExceptionTableOnly , \addLoopTableOnly >$$
- The first element in the triple is a  function $\compileLabel{*}{*}{*}$ which transforms statements and expressions
- into a sequence of bytecode instructions of the body of the method \methodd. 
-The second element is the procedure  \addExceptionTableOnly \ which compiles  the source exception handlers.
+
+ The first component in the triple is a  function $\compileLabel{*}{*}{*}$ which transforms statements and expressions
+ into a sequence of bytecode instructions of the body of the method \methodd.
+ Note that it does not perform any optimizations.
+
+ The second component is the procedure  
+\addExceptionTableOnly \ which compiles  the source exception handlers.
 Note that that the source language supports syntactic structure for encoding exception handlers while
  bytecode programs keep track of them via a data structure which describes how  regions 
 in the bytecode are protected from exceptions.
 
- The third element of the compiler is the procedure
+ The third component of the compiler is the procedure
   \addLoopTableOnly \ which manages the compilation of loop
 specification, namely loop invariants and the modified expressions. 
+
+The compiler presented here is realistic as the first and second component actually resemble closely a non-optimizing Java compiler.
+The third component is not a typical part of a Java compiler. It actually corresponds to our \JMLtoBML{} compiler which compiles 
+loop invariants into class attributes and finds their respective place in the bytecode.  
+
 
 In the following, in the next subsection \ref{pogEq:compile:excHandlers} we define the procedure for the compilation of exception handlers,
  in subsection \ref{pogEq:compile:loopInv},  we will present the procedure for compiling loop invariants.
@@ -48,6 +57,5 @@ The last subsection \ref{compile:prop} states the properties of the bytecode pro
 %\eval{\expressionSrc}  & else
 %\end{array} \right.
 %$$
-
 
 

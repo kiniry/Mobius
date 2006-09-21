@@ -18,13 +18,9 @@
 \newtheorem{compProp5}[compProp0]{Property} %
 \newtheorem{seqInstr}{Definition}[subsection]
 
-
-
-
- 
 \newcommand{\isStartExc}[1]{\mbox{\rm\textit{isExcHandlerStart}}(#1)}
-\subsection{Properties of the compiler function}\label{compile:prop}
 
+\subsection{Properties of the compiler function}\label{compile:prop}
 In this subsection, we will focus on the properties of the  bytecode produced by the compiler presented above.
 These properties although a straightforward consequence of the compiler definition
  are actually important for establishing formally the equivalence between source and bytecode 
@@ -33,16 +29,23 @@ proof obligations. %Note also that those properties are respected by any non opt
 
 In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and $\expressionSrc$.
  
-The first property that we observe is that the last instruction $\ins{e}$ in the compilation
- $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation (see Fig. \ref{defEdge}) with the
-  instruction $\ins{e + 1}$.
+ The first property that we observe is that the last instruction $\ins{e}$ in the compilation
+ $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation
+ (see Fig. \ref{defEdge} for the definition of execution relation between instructions) with the
+ instruction $\ins{e + 1}$.
+
+In order to get a precise idea of what we mean, the reader may take a look at the example in Fig. \ref{pogEquiv:compile:prop}.
+There, we can see that the last instruction of the compilation of the statement \lstinline!int sqr  = 0;! is the instruction \lstinline!1 store sqr! 
+and that it is in execution relation with the instruction at index \lstinline!2 const 0!. The same holds also for the compilation of the \lstinline!if!
+statement where the last instruction  in its compilation is \lstinline!11 store v! and is  in execution relation with \lstinline!12 const 0!.
+Actually, the compilation of every statement or expression in the example has this property.
 
 \begin{compProp0}[Compilation of statements and expressions]\label{compile:prop:compProp0}
  For any statement or expression $\ExprStmt$ which does not terminate on \return, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\stmt}{e}$ such that 
      $$ \ins{e} \execRel \ins{e+1}$$
 \end{compProp0}
-The proof is trivial by case analysis of the compiled statements.
+The proof is trivial and is by case analysis of the compiled statements.
 
 Let us now turn to the next property. Informally, it states  that  if there are instructions inside a compiled statetement or expression 
  $\compileLabel{s}{\ExprStmt}{e}$ which are in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
@@ -52,6 +55,12 @@ of $\ExprStmt$
  The conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and 
 $\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
 the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper handler exception handler.
+For illustration, we may consider Fig. \ref{pogEquiv:compile:prop} and see that the compilation of the statement  
+\lstinline!if ( i >= 0) then {v = i} else {v = -i}! 
+which comprises instructions from 4 to 11. 
+Thus, the compilation contains two jump instructions. The first is the instruction \lstinline!5 ifge 10! which jumps inside the compilation of the if statement
+and the instruction \lstinline!9 goto 12!  which jumps apparently to instruction 12. 
+We can now state this property formally.
 
 \begin{compProp1}[Compilation of statements and expressions]\label{compile:prop:compProp1}
     For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
@@ -67,58 +76,8 @@ the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception an
 \end{compProp1}
 
 
- The proof is done by induction on the structure of the compiled statement. 
-We scatch the proof for the compilation of the if statement, the rest of the cases being similar \\
-\textit{Proof:} 
-$$
-\begin{array}{l}
-            \comment{Assume that $\exists i, i \in [  s \ldots e ], \exists k ,   k \notin [s \ldots e + 1] \wedge \ins{i} \execRel \ins{k}    $  }\\
-            \\
-            \mbox{\rm\comment{by definition of the compiler function for if statements in section \ref{pogEq:compile:compCtrlStmt} }} \\
-            \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e} =  \\
-        
-	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
-            e' + 1 \ \ifCond \ e'' + 2;\\
-            \compileLabel{e' + 2}{\stmt_2}{e''}\\
-             e'' + 1 \ \goto \ e +  1; \\
-            \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
-	    %e: \goto   e + 1  \\
-           
-	    \\ 
-	   \numConclusion{1} \ \comment{Assume that $ s \le i  \le e'$ } \\
-	   \comment{by induction hypothesis for $\expressionSrcRel$ we get } \\
-
-	    \numConclusion{2}   \forall  i ,  s \le i \le e' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg  ( \ins{k} \in  \compileLabel{s}{\stmt}{e} ) \\
-			     \Myspace \neg  \isStartExc{\ins{k}}   \Rightarrow   \\
-                             \Myspace \Myspace  k = e' + 1 \\ 
-	    \comment{ From	\numConclusion{1} and 	 \numConclusion{2}  we get a contradiction in this case} \\\\
-        
-	    \numConclusion{3} \ \comment{Assume that $ e'+2 \le i  \le e''$ } \\			 
-	    \numConclusion{4} \  \forall i ,  e' + 2 \ge i \le e'' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e} ) \\
-			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
-                             \Myspace \Myspace k = e'' + 1\\
-	    \comment{ From	\numConclusion{3} and 	 \numConclusion{4}  we get a contradiction in this case} \\\\
-	    
-	    \numConclusion{5} \ \comment{Assume that $ e'' +2 \le i  \le e $ } \\
-	    \numConclusion{6} \  \forall i ,  e'' + 2 \ge i \le e ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e}  ) \\
-			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
-                             \Myspace \Myspace k = e + 1	     \\\\
-       \comment{ From	\numConclusion{5} and 	 \numConclusion{6}  we get a contradiction in this case} \\\\
-	    
-      \numConclusion{7}  \comment{Assume that $s =  e' + 1 $ } \\
-       \mbox{\rm\textit{ \{ as $ e' + 1 \ \ifCond \ e'' + 2$ and  $e'' + 2$ and $e' + 2$ are labels in }}\\
-       \mbox{\rm\textit{  the compilation of the statement, we get a contradiction in this case \}  }}\\	\\
-      
-      \numConclusion{8}  \comment{Assume that $s =  e'' + 1 $ } \\
-   \mbox{\rm\textit{ \{ as $ e''  + 1 \ \goto \ e+ 1$ we get a contradiction once again }}\\
-\end{array}
-$$
-\Qed \\
-
-The next three lemmas deal with the substatement relation. 
+ 
+The next three properties deal with the substatement relation. 
 In the following, for denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
 we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$.
 For denoting that  $\ExprStmt'$ is a strict substatement of  $\ExprStmt$ ( i.e. that $\ExprStmt'$  is contained in $\ExprStmt$ 
@@ -127,52 +86,55 @@ we use the notation $\strictsubstatement{\ExprStmt }{\ExprStmt'}$.
 
 The next  property  of the compiler is that any statement or expression   is
  compiled in a list of bytecode instructions 
-such that there could not be jumps  from outside inside the list, i.e.
+such that there could not be jumps  from outside inside the compilation of a statement or expression, i.e.
 the control flow can reach the instructions representing the compilation $\compileLabel{s}{\ExprStmt}{e}$ 
- of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$.
+ of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$. 
+For instance, the instructions in the compilation of any statement(expression) in Fig. \ref{pogEquiv:compile:prop}
+ can be reached from outside of the statement(expression) compilation only via the first instruction of the statement(expression) compilation.
 
 \begin{compProp2}[Compilation of statements and expressions]\label{compile:prop:compProp2}
  For all  statements $\ExprStmt'$  and $\ExprStmt$, such that $\substatement{\ExprStmt }{\ExprStmt'} $
-and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$
+and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then :
 
 %\begin{itemize}
     %\item  $\substatement{\ExprStmt }{\ExprStmt'} $
 
  %   \item   their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$
 %\end{itemize}
-then :
 
-$$\begin{array}{l} \neg (\exists i_j, \exists i_k,  \\   
-                       \Myspace   i_j \in \compileLabel{s}{\ExprStmt[\ExprStmt']}{e} \wedge\\
-		       \Myspace \neg (i_j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge \\
-		       \Myspace  i_k \in \compileLabel{s'}{\ExprStmt'}{e'}  \wedge \\
-		       \Myspace s' \neq k   \wedge 
-		       \Myspace i_j \execRel i_k )
+
+$$\begin{array}{l} %\neg (\exists i_j, \exists i_k,  \\   
+                        (  i_j \in \compileLabel{s}{\ExprStmt[\ExprStmt']}{e} \wedge\\
+		        \neg (i_j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge \\
+		        i_k \in \compileLabel{s'}{\ExprStmt'}{e'}  \wedge \\
+		        
+		       i_j \execRel i_k )  \Rightarrow \\ 
+		       \Myspace  s' = k 
 
 
   \end{array}$$ 
 
 \end{compProp2}
-
-The proof is done by induction over the structure of statements and expressions  and uses the previous lemma \ref{compile:prop:compProp1}.
+The proof is by induction over the structure of statements and expressions  and uses the previous lemma \ref{compile:prop:compProp1}.
 
 
  
 The next lemma  states that the substatement relation on source expressions and statements is preserved
-by the compiler.
+by the compiler. For instance, the compilation of the loop body (comprising instructions from 15 to 26) in Fig. \ref{pogEquiv:compile:prop}  
+is part of the compilation of the loop itself (comprising instructions from 14 to 29) .
+
 \begin{compProp11}[Substatement and subexpression relation preserved]\label{compile:prop:compPropSubstmt}
 For all statements $\ExprStmt'$ and $\ExprStmt $ with
 respective compilations are $\compileLabel{s'}{\ExprStmt'}{e'}$ and  $\compileLabel{s}{\ExprStmt}{e}$ 
-we have  that 
+if 
   $  \substatement{\ExprStmt }{\ExprStmt'} \Leftrightarrow \compileLabel{s'}{\ExprStmt'}{e'} \in  \compileLabel{s}{\ExprStmt}{e} $ 
 \end{compProp11}
 This follows directly from the compiler function definition.
 
-The next property  states 
-that if the compilations of two
+The next property states that if the compilations of two
 statements in a method body share instructions then 
 either the compilation of one of them is completely inside of the other or viceversa.
-
+This is also evident from Fig. \ref{pogEquiv:compile:prop}.
 
 \begin{compProp6}[No overlapping compilation]\label{compile:prop:compProp6}
 For all statements $\ExprStmt_1$ and $\ExprStmt_2$ such that their compilations are 
@@ -187,11 +149,11 @@ $$\begin{array}{l}
 \end{compProp6}
 
 Next, we give a definition for a set of instructions such that they execute sequentially which will be used for 
-establishing afterwards the properties of the bytecode instructions resulting in expression compilation. 
+establishing afterwards the properties of the bytecode instructions resulting in expression compilation.
+ 
 \begin{seqInstr}[Block of instructions] \label{seqInstr}
 If the list of  instructions \\ $l  = \lbrack \ins{i_1} \ldots \ins{i_n} \rbrack$ in the compilation of method \methodd is such that 
  \begin{itemize}
-              
       \item none of the instructions is a target of an instruction $\ins{i_j}$ which does not belong to $l$ except for $\ins{i_1}$
       \item none of the instructions in the set is a jump instruction, i.e. $\forall m, m = 1..k \Rightarrow \neg( \ins{i_m} \in  \{\goto, \ifCond\} )  $ 
       \item $  \forall j, i_1 <  j \le i_n , \neg \exists k \in \methodd.\body, \ins{k} \execRel^{l} \ins{j} $ 
@@ -203,159 +165,22 @@ We denote such a list of instructions with $\ins{i_1};...;\ins{i_k}$
 
 
 The next lemma states that the compilation of an expression $\expressionSrc$ results in
- a block of bytecode instructions.  
+ a block of bytecode instructions.  For instance, consider the compilation of the expression \lstinline!sqr + 2*s + 1;! in Fig. \ref{pogEquiv:compile:prop}  
+ comprised between instructions 16-21. Instructions  16-21 satisfy the three points from the above definition.
 \begin{compProp3}[Compilation of expressions]\label{compile:prop:compProp3}
     For any expression $\expressionSrc$, starting label $s$ and end label $e$,
     the compilation $\compileLabel{s}{\expressionSrc}{e}$ is a block of bytecode instruction in the sense of Def. \ref{seqInstr}
    
 \end{compProp3}
-Proof:
-
-Following the Def. \ref{seqInstr} of block of bytecode instructions,  we have to see if the compilation of an expression respects
-three conditions.
-The first condition of Def.\ref{seqInstr}  follows from lemma \ref{compile:prop:compProp2}. 
-Def. \ref{seqInstr} also requires that there are no jump instructions  in the list of instructions representing the  compilation of an expression.
-This is established by induction over the structure of the expression.
-The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
-  no instruction except $\ins{s}$ may be  a loop entry  in the sense of Def.  \ref{defLoop} in Chapter
-\ref{wpGeneral}, Section \ref{prelim}. This is the case, as there are no jump instructions inside the compiled expression  and all the instructions inside an
-expression are sequential\todo{this is not well explained}.\\
-\Qed 
-
-Next, we shall focus on properties which concern the compilation of exception handlers.
-As we saw in the previous section, the compiler keeps track of the exception 
-handlers by adding them in the exception handler table. We now establish that the elements in the exception handler
- table correspond to a statement
-in the source language.
-
-\begin{compProp7}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
-Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable  \
-  is such that exists a statement $\stmt$ such that $\compileLabel{s}{\stmt}{e}$
 
 
-%Assume we have a method \methodd \ and the compilation of its body results in  $\stmt$ is $\compileLabel{s}{\stmt}{e}$ and exception
-%handler table \methodd.\excHandlerTable. Then every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$ in \methodd.\excHandlerTable \ is
-%such that there exists a statement $\stmt'$ such that  $\stmt' $ is a substatement of $\stmt$  such that the compilation of 
-% $\stmt' $ is $\compileLabel{s}{\stmt'}{e}$
-\end{compProp7} 
-\textit{Proof}:
-This follows directly from the definition of the compiler. 
-The proof is done by contradiction. From the compiler definition, we get that  elements are added in 
- \methodd.\excHandlerTable \ only in the cases of 
-try catch and try finally statement compilation and that the guarded regions in the added elements correspond to statements. \\
-\Qed
+The following two statements concern the loops on bytecode and source. 
+In particular, we want that a cycle appears in the compilation of a statement  $\stmt$  only if it contains a loop (or is itself a loop).
+For instance, we can  see in Fig. \ref{pogEquiv:compile:prop} that the unique cycle in the bytecode corresponds to the source loop and that the 
+instruction marked with \lstinline!LOOP END! and the instruction marked with \lstinline!LOOP START! correspond respectively to the end instruction   in the 
+compilation of the source loop body   and to start instruction in the compilation of the compilation of the \lstinline!while! test. 
+Stated formally, we get the following property. 
 
-In the rest of this subsection we will look at properties of the compiler which are a consequence of the upper properties.
-
-
-
-\todo{give the definition of the function  $\isStartExc{\ins{k}}$   }
-
-
-The following property states that the exceptions thrown by a 
-statement which is not a try catch and the  exceptions thrown by its strict substatement
-will be handled by the same exception handler.
-
-\begin{compProp8}[Exception handler property for statements]\label{compile:prop:compProp8}
-  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its strict substatement $\stmt'$, i.e. 
-$\strictsubstatement{\stmt}{\stmt'} $
-if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
-$$ \begin{array}{l}
-          \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
-	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
-   \end{array}
-$$
-
-\end{compProp8}
-\textit{Proof}:
-The proof is by contradiction. Assume this is not true, i.e.
- $$\begin{array}{l} \exists \stmt, \stmt' ,   \\
-       \numConclusion{1}    \Myspace \stmt \neq \try \{ \ldots \} \catch \{ \ldots \} \wedge \\
-       \numConclusion{2}   \Myspace  \strictsubstatement{\stmt}{\stmt'} \\
-       \numConclusion{3}  \Myspace  \compileLabel{s}{\stmt}{e} \wedge \\
-       \numConclusion{4} \Myspace  \compileLabel{s'}{\stmt'}{e'} \wedge \\
-       \numConclusion{5}  \Myspace \exists  \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} \neq \\
-                                            \phantom{\exists \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}    
-\end{array}
-$$
-
-This means that there exists two elements $   (s_1,e_1, eH_1, \mbox{\rm\texttt{Exc}} ) $  and
-$   (s_2,e_2, eH_2, \mbox{\rm\texttt{Exc}} )$  in the exception handler table of method \methodd \ \methodd.\excHandlerTable \  such that   : 
-$$ \numConclusion{6}  \Myspace eH_1 \neq eH_2 $$
-From lemma \ref{compile:prop:compProp7} we get that :
-
-$$ \numConclusion{7}  \Myspace \begin{array}{l}
-        \exists \stmt_1, s_1, e_1, \compileLabel{s_1}{\stmt_1}{e_1} \\
-	\wedge \\
-	\exists \stmt_2, s_2, e_2,\compileLabel{s_2}{\stmt_2}{e_2}
-\end{array}	 $$
-
-
-From the initial condition \numConclusion{2} by lemma \ref{compile:prop:compPropSubstmt}  we conclude that 
-$$\numConclusion{8} \Myspace \compileLabel{s_1}{\stmt_1}{e_1} \notin   \compileLabel{s}{\stmt}{e} $$
-
-%From \numConclusion{7}, it follows that the exception handler for $e'$ is obligatory outside $\compileLabel{s}{\stmt}{e}$.
-
- Because $e \in [s_2 \ldots e_2 ]  \wedge  e' \in [s_1 \ldots e_1 ] \wedge e,e' \in [s \ldots e]$, \numConclusion{8} by applying 
-  Lemma \ref{compile:prop:compProp6}  we can conclude that
-
- $$  \begin{array}{l} 
-          \compileLabel{s}{\stmt}{e} \in \compileLabel{s_1}{\stmt_1}{e_1} \in  \compileLabel{s_2}{\stmt_2}{e_2} \\
-           \vee \\
-	 \compileLabel{s}{\stmt}{e} \in   \compileLabel{s_2}{\stmt_2}{e_2} \in \compileLabel{s_1}{\stmt_1}{e_1}
- \end{array}$$	   
-
- In both of the cases and of the definition of \findExcHandlerOnly \ in Chapter \ref{opSem}, Section \ref{opSem:exc}  this means that 
-$$ \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
-which is in contradiction with \numConclusion{6}.
-
-
-A similar property can be established about expressions
- 
-\begin{compProp9}[Exception handler property for expressions]\label{compile:prop:compProp9}
-  For every statement $\stmt$ which is not a try catch  in method \methodd \  and  its strict  subexpression
- $\expressionSrc$, i.e. $\strictsubstatement{\stmt}{\expressionSrc}$
- we have that 
-if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\expressionSrc}{e'}$ and \numConclusion{2}
- then the following holds:
-$$ \begin{array}{l}
-          \forall \mbox{\rm\tt{Exc}}, \forall  \ i, s' \le i \le e' ,  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
-	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{i}{\methodd.\excHandlerTable} 
-   \end{array}
-$$
-\end{compProp9}
-
-The next property concerns try catch statements.
-\begin{compProp10}[Exception handlers and try catch statements]\label{compile:prop:compProp10}
-For every try catch statement $ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
-its compilation $$
-\begin{array}{l} 
-\compileLabel{s}{\stmt_1}{e'}; \\
-                       e' + 1: \goto \ e + 1; \\
-		  
-                       \compileLabel{e' + 2 }{\stmt_2}{e };\\
-		       % e: \goto \ e + 1; \\
-		       \\ \\
-
- \end{array}$$
-is such that the following holds 
-$$\begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow
-  \begin{array}{l}  
-         \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =\\ 
-    \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable}  \\
- 
-    \wedge\\
-  \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2 \\ 
-   \end{array}
- \end{array} $$
-
-
-
-\end{compProp10}
-
-
-Next, we can establish also that the compilation of a statement $\stmt$ may  contain  cycles only if $\stmt$ is a cycle or contains
-a substatement which is a cycle. 
 \begin{compProp4}[Cycles in the control flow graph]\label{compile:prop:compProp4}  % cycles in bytecode only if the source has  
 \todo{alternative formulation: say that the only loop entries are the first instructions of a loop body }
 The compilation \\ $\compileLabel{s}{\stmt}{e}$ of a $\stmt$ may contain an instruction $\ins{k}$ and \ins{j}  which are respectively 
@@ -397,6 +222,186 @@ $\ins{e+1}$ is a  loop entry either all are loop ends or none of them is:
  For every statement $\stmt$ its compilation $\compileLabel{s}{\stmt}{e}$ is such that 
 $(\exists k, s \le k \le e, \ins{k} \execRel^{l} \ins{e+1} ) \iff (\forall k, s \le k \le e, \ins{k} \execRel \ins{e+1}  \Rightarrow \ins{k} \execRel^{l} \ins{e+1} ) $
 \end{compProp5}
+
+
+Next, we shall focus on properties which concern the compilation of exception handlers. 
+As we saw in the previous section, the compiler keeps track of the exception 
+handlers by adding them in the exception handler table. 
+
+We illustrate this by the example in Fig. \ref{pogEquiv:compile:prop:exc} which shows both the bytecode (on the left) and source code(on the right)
+ of . the method \lstinline!abs!.
+The method \lstinline!abs! gets as parameter \lstinline!n! an object of type  \lstinline!Number!.
+ The method returns  the absolute value of the integer field \lstinline!n.value! of the parameter \lstinline!n!. The absolute value is stored
+in the method local variable \lstinline!abs!. This is implemented by the if statement. However, in the test of the if statement, we dereference
+ the parameter  \lstinline!n! ignoring whether it is \Mynull{} or not. That is why the \lstinline!if! statement may throw a \NullPointerExc{} and thus,
+ it is wrapped in a \lstinline!try catch! block. 
+The exception handler (the statement following the \lstinline!catch! keyword)
+ creates a new instance of class \lstinline!Number! and initializes its value with 0. 
+Finally the method returns the absolute value of the parameter.
+
+ The exception handler table  \lstinline!abs!.\ExcHandler{}  contains one element which describes the unique exception handler
+in the method. In particular, it states that the region between 2 and 20 is protected from \NullPointerExc{} by the bytecode starting at index 22.
+ We may remark that the region between 2 and 20 corresponds to the compilation of the \lstinline!if! statement. 
+
+ 
+  \begin{figure}[ht!]
+\begin{frameit}
+  \scriptsize{
+  \begin{tabular}{ll}
+\lstinline!int abs(Number reg(1))!    & \lstinline!int abs(Number n )! \\
+				     
+\lstinline!0 const 0!                 &  \lstinline!int abs = 0;!\\
+\lstinline!1 store abs!		      & \\ 
+				      & \\ &\\ &\\
+				      & \lstinline!try {!\\
+\lstinline!2 load n!                  & \Myspace \lstinline!if (n.value >= 0)!\\
+\lstinline!3 getfield Number.value! & \\
+\lstinline!4 iflt 9!                  & \\
+                                      & \\ &\\ &\\
+\lstinline!5 load n!                  & \Myspace\Myspace\lstinline!else {abs = - n.value;}!\\			
+\lstinline!6 getfield Number.value! & \\
+\lstinline!7 store abs!                 & \\
+                                      & \\ &\\ &\\
+\lstinline!8 goto 21!		      & \\
+                                      & \\ &\\ &\\
+\lstinline!9 load n!		      & \Myspace\Myspace\lstinline!then {abs = n.value;}!\\
+\lstinline!18 getfield Number.value!& \\
+\lstinline!19 neg!                   & \\
+\lstinline!20 store abs!		      & \\
+                                      & \\ &\\ &\\
+\lstinline!21 goto 29!		      & \\
+                                      & \lstinline!}!\\
+                                      & \lstinline!catch(NullPointerExc e) {!\\
+\lstinline!22 store e!		      & \Myspace\lstinline!n = new Number(0);! \\
+\lstinline!23 new  <Number>!	      & \\
+\lstinline!24 dup!                    & \\
+\lstinline!25 const 0!		      & \\
+\lstinline!26 invoke Number.init! & \\
+\lstinline!27 store n!                       
+                                             & \lstinline!}!\\
+ & \\ &\\ &\\
+
+\lstinline!28 load abs! & \lstinline!return abs! \\			     
+\lstinline!29 return! & \\ 
+ & \\ &\\ &\\
+\lstinline!abs!.\ExcHandler =  & \\
+         \begin{tabular}{lll}
+	                               \pcStart &=& 2\\
+				       \pcEnd &=& 20\\
+				        \pcHandler &=&22\\
+					\exc  &=& \NullPointerExc
+                               \end{tabular}   & 
+    \end{tabular}
+}
+
+  \caption{\sc  relation between bytecode and source code of method \lstinline!abs! }
+  \label{pogEquiv:compile:prop:exc}
+\end{frameit}  
+\end{figure}
+
+
+This illustrates the next property of the compiler. More particularly, it states  that the fields  \pcStart{} and  \pcEnd{}  in an element of the
+ exception handler  table are the start and end index of the compilation of a source statement in the original source program.
+
+\begin{compProp7}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
+Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable  \
+  is such that exists a statement $\stmt$ such that $\compileLabel{s}{\stmt}{e}$
+
+
+%Assume we have a method \methodd \ and the compilation of its body results in  $\stmt$ is $\compileLabel{s}{\stmt}{e}$ and exception
+%handler table \methodd.\excHandlerTable. Then every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$ in \methodd.\excHandlerTable \ is
+%such that there exists a statement $\stmt'$ such that  $\stmt' $ is a substatement of $\stmt$  such that the compilation of 
+% $\stmt' $ is $\compileLabel{s}{\stmt'}{e}$
+\end{compProp7} 
+\textit{Proof}:
+This follows directly from the definition of the compiler. 
+The proof is done by contradiction. From the compiler definition, we get that  elements are added in 
+ \methodd.\excHandlerTable \ only in the cases of 
+try catch and try finally statement compilation and that the guarded regions in the added elements correspond to statements. \\
+\Qed
+
+%In the rest of this subsection we will look at properties of the compiler which are a consequence of the upper properties.
+
+
+
+%\todo{give the definition of the function  $\isStartExc{\ins{k}}$   }
+
+
+The following property states that the exceptions thrown by a 
+statement which is not a try catch and the  exceptions thrown by its strict substatement
+will be handled by the same exception handler, i.e. the result of the function \findExcHandler{*}{*}{*} will be the same 
+if we pass as an argument their respective last instructions.
+
+ For instance, consider in Fig. \ref{pogEquiv:compile:prop:exc} 
+the bytecode version of the program. The last  instruction in the compilation of the \lstinline!if! statement is the 
+instruction at index 20 and the last instruction in the compilation of the \lstinline!else! branch is 7. 
+For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox{\rm\tt{Exc}} }{20}{\lstinline!abs!.\ExcHandler} returns the same value  as
+\findExcHandler{\mbox{\rm\tt{Exc}} }{7}{\lstinline!abs!.\ExcHandler}. 
+
+\begin{compProp8}[Exception handler property for statements]\label{compile:prop:compProp8}
+  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its strict substatement $\stmt'$, i.e. 
+$\strictsubstatement{\stmt}{\stmt'} $
+if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
+$$ \begin{array}{l}
+          \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
+	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
+   \end{array}
+$$
+
+\end{compProp8}
+
+
+A similar property can be established for expressions.
+ 
+\begin{compProp9}[Exception handler property for expressions]\label{compile:prop:compProp9}
+  For every statement $\stmt$ which is not a try catch  in method \methodd \  and  its strict  subexpression
+ $\expressionSrc$, i.e. $\strictsubstatement{\stmt}{\expressionSrc}$
+ we have that 
+if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\expressionSrc}{e'}$ and \numConclusion{2}
+ then the following holds:
+$$ \begin{array}{l}
+          \forall \mbox{\rm\tt{Exc}}, \forall  \ i, s' \le i \le e' ,  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
+	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{i}{\methodd.\excHandlerTable} 
+   \end{array}
+$$
+\end{compProp9}
+
+The next property states that a try catch statement is such that $ \try \ \{ \stmt_1 \} $ $ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
+any exception except \excType{} thrown by  the last instruction in the compilation of $ \stmt_1 $ or the last instruction of the compilation 
+of $ \stmt_2$ are handled by the same exception handler. In particular, if the last instruction in the compilation of
+ $ \stmt_1 $ throws an exception of type \excType \  it will be handled by the start instruction of the compilation of $\stmt_2 $.
+
+For instance, the last instruction in the compilation of the the try catch statement  in Fig. \ref{pogEquiv:compile:prop:exc} 
+is the instruction at index 27 and the last instruction in the compilation of the try statement is the instruction at index 20. 
+We can see that any excepition except \NullPointerExc{} which might be thrown from these instructions 
+will be handled in the same way. This in particular is evident if we look at the exception handler table.
+ 
+\begin{compProp10}[Exception handlers and try catch statements]\label{compile:prop:compProp10}
+For every try catch statement $ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
+its compilation $$
+\begin{array}{l} 
+\compileLabel{s}{\stmt_1}{e'}; \\
+                       e' + 1: \goto \ e + 1; \\
+		  
+                       \compileLabel{e' + 2 }{\stmt_2}{e };\\
+		       % e: \goto \ e + 1; \\
+		       \\ \\
+
+ \end{array}$$
+is such that the following holds 
+$$\begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow
+  \begin{array}{l}  
+         \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =\\ 
+    \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable}  \\
+   \end{array} \\
+   \wedge\\
+  \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2 \\ 
+ \end{array} $$
+
+
+
+\end{compProp10}
+
 
 
 %\todo{this is not sufficient. There must be established a property that the $\execRel^l$ is only in the compilation of while statements} 
