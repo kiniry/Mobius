@@ -1,5 +1,5 @@
 
-
+%\newtheorem{wellDef}{Definition}[section]
 \newtheorem{interpExpr}{Definition}[section]
 \newtheorem{interpTypeExpr}[interpExpr]{Definition} 
 \newtheorem{interpPred}[interpExpr]{Definition}
@@ -8,46 +8,167 @@
 \section{Interpretation}\label{interpret}
 
 In this section, we shall focus on the semantics of formulas and expressions w.r.t. a state configuration.
-The part which deserves a more  careful treating is the question of partiality in our programming language.
+Note that we shall give a semantics which ignores partiality in the language. Of course, this is an 
+important theoretical question which by itself have given rise to a lot of research and has received different answers.
+%The part which deserves a more  careful attention is the question of partiality in the language.
+What we mean by partiality is the existence of functions like division or dereferencing of a field, array indexing etc. 
+To get a precise idea of the problem we can consider the following logical statements: 
 
-%  brief presentation of the problem 
-We first discuss  the impact of the partial function evaluation on the definition of the semantics. 
-Partiality is   a  fact  in program languages and at the same time represents a
- controversal point in defining a program logic. 
+$$
+\begin{array}{l} 
+\numConclusion{1} \  \fieldd(\exprWp ) == 3\\
+\numConclusion{2} \ \arrayAccess{\expression_1} {\expression_2} == 5
+\end{array}
+$$   
 
- Several logics has been proposed for dealing with partial functions, 
-every one bringing certain advantages as well as disadvantages (see \cite{gries95avoiding,schieder99adapting}).
-Three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
- formulas might be false, true or undefined in a state appear to lose certain nice properties
- which standard logic with equality have
-as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc.
- In \cite{bijlsma90sqb}, Bijlsma comes up with another solution where the  properties of the logic are preserved but 
-however compositionality of expression evaluation does not hold anymore.
+Under certain conditions, these formulas may not have a meaning. In case 
+\numConclusion{1}  the statement does not make sense if
+$\exprWp$ is \Mynull. In case  \numConclusion{2}  the statement does not make sense if 
+either $\expression_1 $ is \Mynull{} or $\expression_2$  is not in the bounds of $\expression_1 $.
 
-In \cite{gries95avoiding}, Gries and Schnieder give another solution to the problem which consists in underspecification 
-and thus  avoiding the special object of undefideness.
+
+Building a logic for partiality is not trivial. Different solutions exist. 
+Gries and Schnieder \cite{gries95avoiding} give a solution to the problem which consists in function 
+underspecification  and thus  avoid the problem of undefideness.
  More particularly, their approach considers all functions as total but for some value of the argument 
-the function is not specified. 
-
-In \cite{schieder99adapting},  B. Schieder and M. Broy notice that 
+the function is not specified.  B. Schieder and M. Broy \cite{schieder99adapting} give 
   an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
 undefined where  the logical connectives are extended in a nonmonotonic way preserves the properties of the classical logic
-on the price  of having two sorts of equality. 
+on the price  of having two sorts of equality.
+A naive three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
+ formulas might be false, true or undefined in a state appear to lose certain nice properties
+ which standard logic with equality have
+as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc. 
+In \cite{burdy98treatment}, L. Burdy shows a three valued logic in which the above features of classical logic are preserved.
+a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$ over expressions and formulas. Thus formulas can be either true, false or not defined and
+expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
+ gives the, necessary and sufficient
+ conditions such that $\expression$(\predWp ) is defined.
+ More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
+ holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is false.
 
-Our formalization is simple and escapes the theoretical problems of a three valued logic by keeping the evaluation function partial but
- allowing undefideness only for expressions.
-Thus, an expression evaluation may return a value or may  be not defined. On the contrary, formulas are still either true or false.   
+In the following we shall abstract from partiality of evaluation and we shall consider that our evaluation is a total function. 
+Note that we could have used  as is done \todo{lilian}, a three valued interpretation for formulas and expressions with an operator for well-definedness over predicates and expressions 
+whose interpretation to true would mean that the predicate / expression is not undefined. We however, consider that this only will complicate 
+the present formalization without bringing any original feature of the present thesis. 
+This means that for instance, for predicates which contain field dereference  we shall assume that the reference is not \Mynull,
+that arrays are always accessed inside their bounds etc. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%deprcated%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+% In \cite{bijlsma90sqb}, Bijlsma comes up with another solution where the  properties of the logic are preserved but  however compositionality of expression evaluation does not hold anymore.
+
+%In \cite{gries95avoiding}, Gries and Schnieder give another solution to the problem which consists in underspecification 
+%and thus  avoiding the special object of undefideness.
+% More particularly, their approach considers all functions as total but for some value of the argument 
+%the function is not specified. 
+
+%In \cite{schieder99adapting},  B. Schieder and M. Broy give 
+%  an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
+%undefined where  the logical connectives are extended in a nonmonotonic way preserves the properties of the classical logic
+%on the price  of having two sorts of equality. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%deprcated%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+%In \cite{} \todo{Owe, Lilian}, the authors propose a three valued logic for dealing with partiality by introducing
+%a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$ over expressions and formulas. Thus formulas can be either true, false or not defined and
+%expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
+% gives the, necessary and sufficient
+% conditions such that $\expression$(\predWp ) is defined.
+% More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
+% holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is false. To get a more precise idea of the operator $\wellDefined{}$
+%we scatch it hereafter:
+
+ 
+%\begin{wellDef}[Well defined expressions] \label{wellDef}
+
+%$$
+%\begin{array}{l}
+%\wellDefined{v} = \Mytrue \\
+%\\
+%\wellDefined{\fieldd(\expression )} =\wellDefined{\expression} \wedge  \expression \neq \Mynull \\
+%\\
+%\wellDefined{ \arrayAccess{\expression_1} {\expression_2}   } = 
+%           \begin{array}{l}
+%             \expression_1 \neq \Mynull \wedge\\
+%	     0 \le  \expression_2 < \arraylength(\expression_1)
+%           \end{array} \\
+%
+%\wellDefined{\predWp_1 \wedge \predWp_2} =  \begin{array}{l} 
+%                                                     \wellDefined{\predWp_1} \wedge  \wellDefined{\predWp_2} \wedge \\
+%                                                     
+%                                          
+%                                       
+%                                            \end{array} \\                                                
+%\ldots 
+%\end{array}
+%$$ 
+
+ 
 
 
-Thus, we first define a function for expression evaluation
+ 
+The relation $\vDash$ that we define next, gives a meaning to the formulas from our
+ assertion language $\predWp$ w.r.t. two state configurations - a current state and an initial state.
+
+% Note that the interpretation of 
+%  $\wellDefined{\expression}$($\wellDefined{\predWp}$) cannot be undefined, it is either true or false.
+%As we shall see, the relation  $\vDash$  interprets formulas to the $true$ value under the condition
+%is well -defined in the sense of the operator $\wellDefined{}$
+%$$ \vDash :  \SetConfigs *  \predWp  $$
+ 
+\begin{interpPred}[Interpretation of predicates] \label{interpPred} 
+The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
+w.r.t. an initial state  $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ is defined inductively as follows:
+$$
+\begin{array}{l}
+\interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
+\\
+\interp{\false}{s} \ is \ false \ in \ any \ state \ s \\
+\\
+\interp{  \neg \ \predWp  }{s} \ if \ and \ only \ if   \ \neg \ \interp{\predWp}{s} \\ 
+\\
+
+\interp{\predWp_1  \wedge  \predWp_2 }{s} \ if \ and \ only \ if   \ \interp{\predWp_1}{s} \ and \ \interp{\predWp_2}{s}  \\
+\\
+
+\interp{\predWp_1  \vee  \predWp_2 }{s} \ if \ and \ only \ if   \   \interp{\predWp_1}{s} \ or \ \interp{\predWp_2}{s}  \\
+\\
+\interp{\predWp_1  \Rightarrow  \predWp_2 }{s} \ if \ and \ only \ if    \  \interp{\predWp_1}{s} \ then \ \interp{\predWp_2}{s}  \\
+\\
+
+\\
+\interp{\forall x : T .  \predWp(x)   }{s} \ if \ and \ only \ if \  \ forall \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
+\\
+
+\interp{\exists x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ a \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ exists \ such \ that \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
+\\
+\interp{\expression_1 \  \predicates \  \expression_2 }{s} \ if \ and \ only \ if  \
+                                                             \evalExp{\expression_1 }{s} \evalRel{\predicates }  \evalExp{\expression_2 }{s} \ is  \ true
+
+							    
+\\
+\\
+\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ if \ and \ only \ if  \    \referenceOnly \in \heap_{0}.\heapLocs
+\end{array}
+$$   
+\end{interpPred}
+
+% Note that the upper definition interprets atomic formulas in  states $s$ and $s_0$, i.e. formulas which 
+%represent relations between expressions, as true only if the evaluation of these expressions is defined
+%in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
+ 
+
+
+
+Next, we define a function for expression evaluation
  $\evalExpName$ which evaluates expressions in a state has the following signature:
+%\rightharpoonup
 $$
-\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup \Values \cup \JavaType
+\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightarrow  \Values \cup \JavaType
 $$
-Note that the evaluation function is partial and  takes as arguments an expression of the assertion language presented in the previuos Section 
-\ref{assertLang:lang} and two states (see Section \ref{def})  and returns a value as defined in Section \ref{types}. In the following,
-if the evaluation   of an expression \expression{} is defined for the states $s$ $s_0$, i.e. the evaluation function returns a value,
-  we use the notation  $\defined{ \evalExp{\expression}{s}}$.  
+Note that the evaluation function is total and  takes as arguments an expression of the assertion language presented in the previuos Section 
+\ref{assertLang:lang} and two states (see Section \ref{def})  and returns a value as defined in Section \ref{types}.
+% In the following,
+%if the evaluation   of an expression \expression{} is defined for the states $s$ $s_0$, i.e. the evaluation function returns a value,
+%  we use the notation  $\defined{ \evalExp{\expression}{s}}$.  
 
 
 
@@ -69,8 +190,8 @@ $$
 \evalExp{ v  }{s } = v\\
   where \  v \in \  \Myint   \ \vee  \  v \in  \RefValues \\
 \\
- \evalExp{\fieldd(\exprWp ) }{s} = \\
- = \heap(\fieldd) (\evalExp{ \exprWp}{ s } ) \\
+ \evalExp{\fieldd(\expression ) }{s} = \\
+ = \heap(\fieldd) (\evalExp{ \expression}{ s } ) \\
 \\
 
  \evalExp{\update{\fieldd}{\expression_1}{\expression_2}(\expression_3)}{ s } = \\
@@ -83,7 +204,6 @@ $$
 
  = \heap (\evalExp{ \expression_1}{ s } ,\evalExp{ \expression_2}{ s } )   \\
 \\
-
  \evalExp{ \update{ \arrayAccessOnly}{ (\expression_1 , \expression_2)}{ \expression_3} (\expression_4,\expression_5)  } { s } = \\
  = \update{\heap}{ ( \evalExp{\expression_1}{s } ,  \evalExp{\expression_2}{s } ) }  
                  { \evalExp{\expression_3}{s }}\\
@@ -136,55 +256,4 @@ $$
   
 
 \end{interpExpr}
-
-
-
- 
-The relation $\vDash$ that we define next, gives a meaning to the formulas from our
- assertion language $\predWp$.
-%$$ \vDash :  \SetConfigs *  \predWp  $$
- 
-\begin{interpPred}[Interpretation of predicates] \label{interpPred} 
-The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
-w.r.t. an initial state  $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ is defined inductively as follows:
-$$
-\begin{array}{l}
-\interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
-\\
-\interp{\false}{s} \ is \ false \ in \ any \ state \ s \\
-\\
-\interp{  \neg \ \predWp  }{s} \ if \ and \ only \ if  \  not \ \interp{\predWp}{s} \\ 
-\\
-
-\interp{\predWp_1  \wedge  \predWp_2 }{s} \ if \ and \ only \ if  \ \interp{\predWp_1}{s} \ and \ \interp{\predWp_2}{s}  \\
-\\
-
-\interp{\predWp_1  \vee  \predWp_2 }{s} \ if \ and \ only \ if  \ \interp{\predWp_1}{s} \ or \ \interp{\predWp_2}{s}  \\
-\\
-\interp{\predWp_1  \Rightarrow  \predWp_2 }{s} \ if \ and \ only \ if  \ if \ \interp{\predWp_1}{s} \ then \ \interp{\predWp_2}{s}  \\
-\\
-\interp{\predWp_1  \ if \ and \ only \ if  \predWp_2 }{s} \ if \ and \ only \ if  \  \interp{\predWp_1}{s} \ if \ and \ only \ if  \ \interp{\predWp_2}{s}  \\
-\\
-\interp{\forall x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ forall \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
-\\
-
-\interp{\exists x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ a \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ exists \ such \ that \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
-\\
-\interp{\expression_1 \  \predicates \  \expression_2 }{s} \ if \ and \ only \ if  \begin{array}{l}
-                                                              \defined{ \evalExp{\expression_1 }{s}}  \wedge \\
-							      \defined{ \evalExp{\expression_2 }{s} } \wedge \\
-                                                             \evalExp{\expression_1 }{s} \evalRel{\predicates }  \evalExp{\expression_2 }{s} \ is  \ true
-
-							     \end{array} \\
-\\
-\\
-\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ if \ and \ only \ if  \    \isInList{\referenceOnly }{ \getLocations{\heap_{0}}}  
-\end{array}
-$$   
-\end{interpPred}
-Note that the upper definition interprets atomic formulas in  states $s$ and $s_0$, i.e. formulas which 
-represent relations between expressions, as true only if the evaluation of these expressions is defined
-in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
- 
-
 
