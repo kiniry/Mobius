@@ -21,6 +21,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 
@@ -99,7 +100,13 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 		return instance;
 	}
 	
-	
+	/**
+	 * Returns the parser for the current prover 
+	 * @return a parser to get the sentences.
+	 */
+	public BasicRuleScanner getParser() {
+		return fParser;
+	}
 	/*
 	 *  (non-Javadoc)
 	 * @see prover.exec.toplevel.stream.IStreamListener#append(int, java.lang.String)
@@ -516,6 +523,7 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 		 */
 		public IStatus runInUIThread(IProgressMonitor monitor) {
 			fReconciler.everythingHasChanged(0, fLimit); 
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(fProverContext.ce);
 			return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 		}
 		

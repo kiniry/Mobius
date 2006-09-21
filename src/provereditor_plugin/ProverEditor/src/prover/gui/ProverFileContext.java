@@ -1,6 +1,7 @@
 package prover.gui;
 
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextViewer;
 
 import prover.gui.editor.BasicSourceViewerConfig;
 import prover.gui.editor.LimitRuleScanner;
@@ -21,7 +22,7 @@ public class ProverFileContext {
 	public final IDocument doc; 
 	public final BasicSourceViewerConfig sv; 
 	public final LimitRuleScanner scan;
-	
+	public final ITextViewer viewer;
 	
 	/**
 	 * The constructor to initialize the different fields.
@@ -33,11 +34,14 @@ public class ProverFileContext {
 			doc = null;
 			sv = null;
 			scan = null;
+			viewer = null;
 		}
 		else {
 			sv = ce.getSourceViewerConfig();
 			doc = sv.getPresentationReconciler().getDocument();			
 			scan = sv.getTagScanner();
+			viewer = sv.getPresentationReconciler().getViewer();
+			
 		}
 	}
 }

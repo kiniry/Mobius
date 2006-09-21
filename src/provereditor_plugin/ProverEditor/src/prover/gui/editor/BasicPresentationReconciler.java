@@ -73,9 +73,20 @@ public class BasicPresentationReconciler extends PresentationReconciler {
 		TextPresentation p= createPresentation(new Region(beg, end), fDoc);
 		if (p != null)
 			fViewer.changeTextPresentation(p, false);
-		fViewer.revealRange(fScanner.getLimit() - 1, 1);
-		//fViewer.setTopIndex(fScanner.getLimit() - 1);
-		fViewer.setSelectedRange(fScanner.getLimit(), 0);
+		//fViewer.revealRange(fScanner.getLimit() - 1, 1);
+		int offset = 0;
+		try {
+			offset = fDoc.getLineOffset(fDoc.getNumberOfLines(0, fScanner.getLimit()));
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		fViewer.revealRange(offset, 1);
+		if(fViewer.isEditable()) {
+			fViewer.setSelectedRange(offset,0);
+		}
+		//fViewer.setSelectedRange(fScanner.getLimit(), 0);
 	}
 	
 	
@@ -96,6 +107,9 @@ public class BasicPresentationReconciler extends PresentationReconciler {
 	 */
 	public IDocument getDocument() {
 		return fDoc;
+	}
+	public ITextViewer getViewer() {
+		return fViewer;
 	}
 	
 	/*

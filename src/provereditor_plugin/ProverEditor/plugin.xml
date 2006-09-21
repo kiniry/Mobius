@@ -66,6 +66,16 @@
    <extension
          point="org.eclipse.ui.bindings">
       <key
+            commandId="ProverEditor.jump_forward"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+M3+ARROW_RIGHT"/>
+      <key
+            commandId="ProverEditor.jump_backward"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+M3+ARROW_LEFT"/>
+      <key
             commandId="ProverEditor.progress_command"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="ProverEditor.scheme"
@@ -117,6 +127,16 @@
             description="Evaluate all in the file"
             id="ProverEditor.eval_all_command"
             name="Evaluate All Command"/>
+      <command
+            categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.JumpBackward"
+            id="ProverEditor.jump_backward"
+            name="Jump Backward"/>
+      <command
+            categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.JumpForward"
+            id="ProverEditor.jump_forward"
+            name="Jump Forward"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
