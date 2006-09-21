@@ -4,6 +4,8 @@
  \newcommand{\bcIns}{\mbox{ \rm I} }
  \newcommand{\instrs}{\mbox{ \rm IS} }
  \newcommand{\ifCond}{\instr{if\_cond}}
+ \newcommand{\nop}{\instr{nop
+}}
  \newcommand{\goto}{\instr{goto}}
  \newcommand{\return}{\instr{return}}
  \newcommand{\arithOp}{\instr{arith\_op}}
@@ -241,6 +243,7 @@
 
 %%%%%%%%%%%%%%%%%%Exception Types%%%%%%%%%%%%%%%%%%%%%%%%%5
 \newcommand{\excType}{\mbox{\rm \textit{ExcType}}}
+\newcommand{\RuntimeExc}{\mbox{ \rm \texttt{RuntimeExc}}}
 \newcommand{\NullPointerExc}{\mbox{ \rm \texttt{NullPntrExc}}}
 \newcommand{\NegativeArraySizeExc}{\mbox{ \rm \texttt{NegArrSizeExc}}  }
 \newcommand{\ArrIndexOutOfBoundExc}{\mbox{ \rm \texttt{ArrIndBndExc}} }
@@ -613,6 +616,7 @@
 \newcommand{\rel}{\mathcal{R}}
 %statements
 
+\newcommand{\Myskip}{\mbox{\rm\texttt{skip}}} 
 \newcommand{\stmt}{\mathcal{STMT}} 
 \newcommand{\Myif}{\mbox{\rm\texttt{if}}}
 \newcommand{\Mythen}{\mbox{\rm\texttt{then}}} 
@@ -694,3 +698,7 @@
 
 \newcommand{\benchname}[1]{\textbf{#1}}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WELL DEFINEDNESS%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\newcommand{\wellDefined}[1]{\delta(#1)}
