@@ -77,7 +77,7 @@ In particular, \textbf{the features supported} by our bytecode language are
 	such a field is not found. Another example is the \texttt{MemoryOverflowError} thrown when no more memory is available.
 	Note that such errors is not always clear how to express in our program logic presented later in the thesis. This is because, 
 	the logic is more related with the functional properties of the program while the JVM errors are related more to the physical
-	state of the JVM. Thus, we omit here this aspect of JVM.
+	state of the JVM. Thus, we omit here this aspect of the JVM.
 	 
 
    \item [interface types] These are reference types whose methods are not implemented and whose variables are constants.
@@ -98,6 +98,14 @@ In particular, \textbf{the features supported} by our bytecode language are
 	 without gaining more new features of Java. 
 	 For instance, in the presence of interfaces, we should have extended 
 	 the subtyping relation. 
+
+   \item [arithmetic overflow] The arithmetic in Java is  bounded. This means that if the result of an 
+         arithmetic operation exceeds (is below) the largest integer (the smallest)  the operation will
+	 result in overflow. The arithmetic proposed here is infinite. We could have designed the arithmetic
+	 operations such that they take into account the arithmetic overflow. 
+	 However, we consider that for the purposes of the present thesis this is not necessary and will 
+	 complicate the presentation without bringing any particular feature of the bytecode. 
+	 
 
    \item [64 bit arithmetic]  We do not consider  
 	  long values as their treatment is similar to the integer arithmetic.

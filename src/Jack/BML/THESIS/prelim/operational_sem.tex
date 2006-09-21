@@ -13,30 +13,31 @@
  
 \begin{figure}[h] 
 \begin{frameit}
-      $$  \begin{array}{lll}
-             \bcIns ::= & \ifCond & \\
-	                & \mid \goto  & \\ 
-			& \mid \return  &\\ 
-			& \mid \arithOp  & \\ 
-			& \mid \load & \\ 
-			& \mid \store & \\
-			& \mid \push & \\
-			& \mid \pop & \\
-			& \mid \dup & \\
-			& \mid \iinc & \\
-			& \mid \new & \\
-			& \mid \newarray &  \\ 	
-			& \mid \putfield  & \\
-			& \mid \getfield  & \\
-			& \mid \arrstore &  \\
-			& \mid \arrload  & \\
-			& \mid \arraylength  & \\
-			& \mid \instanceof  & \\
-			& \mid \checkcast &  \\
-			& \mid \athrow  & \\
-			& \mid \invoke  & \\
-		%	& \mid \jsr  & \\
-		%	& \mid \ret  & \\
+      $$  \begin{array}{ll}
+             \bcIns ::= & \nop \\
+	                & \mid \ifCond \\
+	                & \mid \goto  \\ 
+			& \mid \return  \\ 
+			& \mid \arithOp  \\ 
+			& \mid \load \\ 
+			& \mid \store \\
+			& \mid \push \\
+			& \mid \pop \\
+			& \mid \dup \\
+			& \mid \iinc \\
+			& \mid \new \\
+			& \mid \newarray   \\ 	
+			& \mid \putfield  \\
+			& \mid \getfield  \\
+			& \mid \arrstore   \\
+			& \mid \arrload  \\
+			& \mid \arraylength  \\
+			& \mid \instanceof  \\
+			& \mid \checkcast \\
+			& \mid \athrow  \\
+			& \mid \invoke  \\
+		%	& \mid \jsr  \\
+		%	& \mid \ret  \\
 	\end{array}$$
         \caption{\sc Bytecode language}
         \label{opSem:bclang}

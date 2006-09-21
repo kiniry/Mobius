@@ -25,7 +25,8 @@ intruction as we shall see later in the coming section.
 
  The modelization of the exception handling mechanism involves several auxiliary functions. 
  The function \getStateAfterExc \ deals with bytecode instructions that may throw runtime exceptions.
- This function applies only to instructions which are not a method invokation neither the special instruction
+ This function applies only to instructions which may throw a \RuntimeExc{} exception  but which are not a method
+ invokation neither the special instruction
  by which the program can throw explicitely an exception.
  The function returns the state  configuration after the current instruction during the execution of \methodd \ throws a runtime exception
  of type $\mbox{\rm\texttt{E}}$. If the  method \methodd \ has an  exception handler which can handle  exceptions of type
