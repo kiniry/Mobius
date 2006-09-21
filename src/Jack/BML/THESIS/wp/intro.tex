@@ -1,14 +1,7 @@
 
 This section describes a Hoare style verification condition generator for bytecode based on a weakest precondition predicate transformer function.
  
-% motivations
-A natural question is to ask what are the motivations behind building a bytecode verification condition generator (vcGen for short)
-while a considerable list of tools for source code verification exists.
-We consider that today's software industry requires more and more guarantees about software security especially when
-mobile computing becomes a reality. Thus in mobile code scenarios, performing verification on source code of untrusted executable
- unit requires a trust in the compiler but which is not always reasonable. On the other hand,
- type based verification used for example, in the Java bytecode verifier could not deal with complex functional or security
- properties which is the case for a verification condition generator.   
+
 %technical
 The vcGen is tailored to the bytecode language introduced in Section \ref{opSem} and thus, it deals
 with stack manipulation, object creation and manipulation, field access and update, as well as exception throwing and handling.
@@ -17,7 +10,7 @@ with stack manipulation, object creation and manipulation, field access and upda
 Different ways of generating verification conditions exist. The verification condition
  generator presented  propagates the weakest precondition and exploits the information 
 about the modified locations by methods and loops. 
-In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choice done here.
+In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choices done here.
 
 %related work
 Bytecode verification has become lately quite fashionable, thus several works exist on bytecode verification. Section \ref{relWorkWp}
