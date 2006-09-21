@@ -18,7 +18,7 @@ We will argue under what conditions the two formulations of the \wpName \ functi
 
 % single instruction
 
-We give now a definition of the \wpName \ function for a single sequential instruction (instructions different from \goto, \ifCond, \jsr, \ret  ) which takes
+We give now a definition of the \wpName \ function for a single sequential instruction (instructions different from \goto, \ifCond) which takes
 explicitely the postcondition and the exceptional postcondition function 
 upon which the precondition will be calculated. Its signature is the following:
 
@@ -208,5 +208,5 @@ $${\scriptsize
 \end{figure}
 
 
-As we can see in the figure the definition  is defined over the result of the compiler for every statement. Thus, it 
+As we can see in the figure the \wpName{} is defined over the result of the compiler for every statement. Thus, it 
 is similar to the definition of weakest precondition function for the source language.  
