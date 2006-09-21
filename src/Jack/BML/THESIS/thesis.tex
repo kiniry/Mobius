@@ -54,7 +54,8 @@
 
 %1
 \chapter{Introduction}
-
+  \input{intro/intro.tex}  
+ 
 
 
 %2
@@ -139,6 +140,8 @@
     \input{pogCompile/wpSrc/srcWp.tex}	  
     \input{pogCompile/wpSrc/wpSrcExpr.tex}
     \input{pogCompile/wpSrc/wpSrcStmt.tex}
+    \input{pogCompile/wpSrc/example.tex}
+
 
   \section{Weakest precondition calculus for bytecode programs}\label{pog:wpBcGeneral}
     \input{pogCompile/wpBc/bcWp.tex}
@@ -153,11 +156,12 @@
 \chapter{Constraint memory consumption policies using Hoare logics}
   \input{applications/memory/mydefThesis}
   \lstset{numbers=none}
-  \input{applications/memory/intro}
+  %\input{applications/memory/intro}
   \section{Modeling memory consumption}\label{sec:verif}
   \input{applications/memory/technical}
+  \input{applications/memory/examples}
   \section{Inferring memory allocation for methods}\label{sec:infer}
-  \input{applications/memory/infer}
+  \input{applications/memory/infer}\label{sec:infer}
   \section{Related work}\label{sec:rel}
   \input{applications/memory/relatedworks}
 %      %deprecated\section{Conclusion}\label{sec:conc}
@@ -184,6 +188,7 @@
 
 \appendix
   \addcontentsline{toc}{chapter}{Appendices}
+    \input{appendix/pogCompile/compile/propCompFun}
     \input{appendix/pogCompile/pogEquiv/aux}
  
 \bibliographystyle{plain}
