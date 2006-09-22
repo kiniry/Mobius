@@ -4,9 +4,15 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 public class Proof {
-	public int fNamePos;
-	public int fBeginPos;
-	public int fEndPos;
+	public final int fNamePos;
+	public final int fBeginPos;
+	public int fEndPos = 0;
+	
+	public Proof(int namePos, int beginPos) {
+		fNamePos = namePos;
+		fBeginPos = beginPos;
+	}
+	
 	public boolean isProofName(int pos){
 		return (fNamePos >= pos) && ((fBeginPos == 0) || (fBeginPos > pos));		
 	}

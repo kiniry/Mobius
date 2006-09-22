@@ -21,9 +21,18 @@ import fr.inria.everest.coq.editor.utils.ProofHandler;
 
 public class BasicCoqTop implements IProverTopLevel  {
 
+	/** if fModuleName <> <code>null</code> we are trying to skip a module */ 
 	private String fModuleName = null;
+	/** object to help skip proofs */
 	private ProofHandler ph = new ProofHandler();
 	
+	
+	/**
+	 * Tell whether or not we are doing a proof.
+	 * ie. if the prompt begins by something else than 'Coq'.
+	 * @param itl the current top level to consider
+	 * @return <code>true</code> or <code>false</code> depending if we are within a proof
+	 */
 	public boolean isProofMode(ITopLevel itl) {
 		try {
 			while(itl.getErrBuffer().trim().equals("") && itl.isAlive())
@@ -91,10 +100,12 @@ public class BasicCoqTop implements IProverTopLevel  {
 	public int hasToSkipUndo(ITopLevel itl, IDocument document, String cmd, int beg, int end) {
 
 		int res;
-		if((res = ph.hasToSkip(this, itl, document, cmd, beg, end)) != IProverTopLevel.DONT_SKIP) {
+		if((res = ph.hasToSkip(this, itl, document, cmd, beg, end)) 
+				!= IProverTopLevel.DONT_SKIP) {
 			return res;
 		}
 		if(fModuleName != null) {
+			// fetch the end of a module
 			if((cmd.indexOf("Module " + fModuleName) != -1) ||
 				(cmd.indexOf("Module Type " + fModuleName) != -1) ||
 				(cmd.indexOf("Section " + fModuleName) != -1)) {
@@ -104,15 +115,20 @@ public class BasicCoqTop implements IProverTopLevel  {
 			return IProverTopLevel.SKIP_AND_CONTINUE;
 		}
 		if(cmd.trim().startsWith("End ")) {
+			// we will have to skip a module :)
 			fModuleName = cmd.substring(4, cmd.length() - 1);
 			return IProverTopLevel.SKIP_AND_CONTINUE;
 		}
-		if(cmd.startsWith("Proof"))
-			return IProverTopLevel.SKIP;
-
-		if((cmd.startsWith("Show ")) ||
-			(cmd.startsWith("Print ")))
-			return IProverTopLevel.SKIP;
+		
+		// the commands to skip
+		String [] vernac = {"Proof", "Show ", "Print "};
+		for (int i = 0; i < vernac.length; i++) {
+			if(cmd.startsWith(vernac[i])) {
+				return IProverTopLevel.SKIP;
+			}
+		}
+		
+		// in doubt we evaluate
 		return IProverTopLevel.DONT_SKIP;
 	}
 
@@ -125,7 +141,8 @@ public class BasicCoqTop implements IProverTopLevel  {
 	
 	public int hasToSkipSendCommand(ITopLevel itl, IDocument doc, String cmd, int beg, int end) {
 		int res;
-		if((res = ph.hasToSend(this, itl, doc, cmd, beg, end)) != IProverTopLevel.DONT_SKIP) {
+		if((res = ph.hasToSend(this, itl, doc, cmd, beg, end)) 
+				!= IProverTopLevel.DONT_SKIP) {
 			return res;
 		}
 		return IProverTopLevel.DONT_SKIP;
@@ -138,17 +155,19 @@ public class BasicCoqTop implements IProverTopLevel  {
 	public String[] getCommands(String top, String[] path) {
 		String [] cmds;
 		if(path != null) {
-			cmds = new String[1 + path.length * 2];
+			cmds = new String[2 + path.length * 2];
+			
 			for(int i = 0; i < path.length; i++) {
-				cmds[(2 * i) + 1] = "-I";
-				cmds[(2 * i) + 2] = path[i];
+				cmds[(2 * i) + 2] = "-I";
+				cmds[(2 * i) + 3] = path[i];
 			}
 			
 		}
 		else {
-			cmds = new String[1];
+			cmds = new String[2];
 		}
 		cmds[0] = top;
+		cmds[1] = "-emacs";
 		return cmds;
 	}
 }
