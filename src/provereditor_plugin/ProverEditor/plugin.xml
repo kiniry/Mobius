@@ -100,6 +100,11 @@
             contextId="org.eclipse.ui.contexts.window"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+END"/>
+      <key
+            commandId="org.eclipse.ui.edit.text.cut.line.to.end"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="ProverEditor.scheme"
+            sequence="M1+K"/>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
