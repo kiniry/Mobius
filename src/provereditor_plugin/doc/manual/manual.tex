@@ -1,34 +1,168 @@
 \documentclass[a4paper]{article}
 %HEVEA \usepackage{hevea}
 
-\title{ProverEditor documentation v.0.1.0}
+\newcommand{\eclipse}{
+    \ahref{http://www.eclipse.org/}{Eclipse}}
+\newcommand{\proverspec}{ prover specific documentation}
+\title{ProverEditor v.0.1.0 Documentation}
 
 \begin{document}
 
-\part* {ProverEditor documentation v.0.1.0}
-\tableofcontents
+\part* {ProverEditor v.0.1.0 Documentation}
 
 
-\section{Goal}
-This editor is used to edit interactive theorem prover files.
-It is made to use with Coq, and in a near future PVS and other 
+
+
+This editor is used to edit interactive theorem prover files within
+\eclipse.
+It is made to use with \ahref{http://coq.inria.fr}{Coq}, 
+and in a near future PVS and other 
 provers.
-
+It uses a lightweight approach: easy to extend, 
+with just a minimal set of commands.
+%HEVEA\cutdef{subsection}
 \section{Installation and requirements}
-\subsection{Requirements:}
+\subsection{Requirements}
 \begin{itemize}
 \item You need a recent Eclipse (preferred 3.1+)
 \item A working Coq installation (with a proper ide, coqc and coqtop).
 \end{itemize}
 \subsection{Installation}
-In eclipse go to Help > Find And Install; select the option 
-'Search for new feature to install'; click on Next; then click on 
-'New Remote Site'... and then that's done.\\
-After that you are asked if you want to restart Eclipse. It is better
+In eclipse go to {\tt Help $>$ Find And Install}; select the option 
+{\tt Search for new feature to install}; click on Next; then click on 
+{\tt New Remote Site...} and then that's done.\\
+After that you are asked if you want to restart \eclipse. It is better
 to answer yes to this question. 
 
+\section{Basic Configurations}
+These configurations are {\bf mandatory} if you want Prover Editor to work.
+\subsection{Configuring the prover}
+Go to {\tt Window $>$ Preferences...}, in the category {\tt ProverEditor}
+select the prover you want to configure (right now only the choice of Coq 
+is possible), and specify the full path to the binaries of the prover.
+The grace time is the time Prover Editor will wait if the prover's top-level
+is not responding.
 
-%HEVEA \imgsrc{img/inter.jpg}
+%HEVEA \imgsrc{prover-configuration.jpg}
+
+\subsection{Adding the toplevel view}
+It is still not enough to make Prover Editor work. 
+You have now to add the Top-Level view to your \eclipse's views. Go in 
+ {\tt Window $>$ Show View $>$ Other...} and choose in the category other,
+Prover Editor top-level view.
+
+%HEVEA \imgsrc{view-configuration.jpg}
+
+{\bf You're done ! now you can properly use Prover Editor !!!}.
+
+
+\section{Some uses}
+
+\subsection{Interactions}
+\subsubsection{Views}
+There are 3 view parts in the interface: 
+\begin{itemize}
+\item the editor, which is used to view a Coq file. It has syntax highlighting,
+and when a part is evaluated, the part cannot be edited anymore (as in most 
+interactive theorem prover editors).\\
+
+%HEVEA \imgsrc{coqeditor.jpg}
+
+\item the top-level, use to show the result of the interactions.\\
+
+%HEVEA \imgsrc{toplevel.jpg}
+
+\item the outline not shown for every prover, which able to view a summary
+of the currently edited files.\\
+
+%HEVEA \imgsrc{coqoutline.jpg}
+
+\end{itemize}
+
+\subsubsection{Evaluating a file}
+All the interactions are done through the usse of a toolbar.\\
+%HEVEA \imgsrc{toolbar.jpg}
+
+From left to right, the meanings of the buttons: 
+\begin{itemize}
+\item the first one launch or reset Prover Editor on the currently read file. 
+\item the second is used to progress through a proof
+\item the third is made to undo a step in a proof
+\item the fourth is made to try to progress until the end of the 
+currently edited file
+\item the fifth is bound to go back to the beginning of a file
+\item the sixth one, is to cancel the current interaction with the 
+prover. This last button is to use with the first button, as it is useful
+to restart everything if we are in an inconsistent state of the editor
+(it should not happen really often, but it is useful to be able to 
+reset the editor state).
+\end{itemize}
+Some of these commands are binded to some keyboard shortcuts as detailed
+in the next section.
+\subsection{Keyboard Shortcuts}
+\subsubsection{Set the ProverEditor keyboard shortcuts on}
+To activate keyboard shortcuts in ProverEditor, you must go to
+{\tt Window $>$ Preferences...} in the category {\tt Keys}, choose 
+{\tt Modify} and change the scheme to {\tt Prover Editor}, as on the image. 
+After, click on {\tt Apply} or {\tt Ok} to accept the changes.
+
+%HEVEA \imgsrc{shortcuts.jpg}
+
+
+\subsubsection{Shortcuts}
+\begin{itemize}
+\item Ctrl+Alt+Down Arrow: Progress in the proof
+\item Ctrl+Alt+Up Arrow: Undo a step in the proof
+\item Ctrl+Alt+Left: Jump to the previous sentence
+\item Ctrl+Alt+Right: Jump to the next sentence
+\item Ctrl+K: Delete until the end of line (like in Emacs)
+\end{itemize}
+
+
+\subsection{Library paths}
+If you right-click on a directory, ProverEditor add the item 
+{\tt Add to loadpath}. It is used to tell to the prover to look into
+the specified directories for its libraries.
+
+%HEVEA \imgsrc{addloadpath.jpg}
+
+This action adds an entry to the file {\tt .prover_paths}, which is then
+passed to the ide, the compiler and the top-level. The exact behaviour and 
+specifically how it is passed to  the different provers is specific to 
+each plugins (see \proverspec).
+The format of the file is one directory per line, with path relative
+to the project path. To remove a directory just remove its line from 
+the file.
+
+\subsection{Pop-up menu}
+If you right click on a file editable by Prover Editor (ie. a file from
+a prover) Prover Editor add as a menu item a compile button as well as launch
+IDE button. The compilation is done through the compiler which was specified 
+in the prover configuration dialog, and the IDE is also 
+the one specified for the prover configuration. The load path for the 
+project is given to the compiler or the IDE.
+
+%HEVEA \imgsrc{popup.jpg}
+
+
+
+
+%HEVEA\cutend
+\\ 
+\begin{it}
+ProverEditor will be part of the \ahref{http://mobius.inria.fr}{Mobius} 
+tool suite.\\
+\end{it}
+
+\\
+%HEVEA \imgsrc{screenshot1.jpg}
+
+
+\begin{it}
+This documentation is maintained since the first birthday of 
+\ahref{http://gforge.inria.fr/projects/provereditor/}{ProverEditor} which
+was once \ahref{http://www-sop.inria.fr/everest/personnel/Julien.Charles/papers/05-12-12-spops.ps}{CoqEditor for Eclipse}, september the 25th 2006.
+\end{it}
 
 
 \end{document}

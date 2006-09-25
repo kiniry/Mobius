@@ -1,12 +1,12 @@
 TG= manual.html
-CSS=../../../style.css
-CSSed=..\\/..\\/..\\/style.css
 all: clean real
 
 real: ${TG}
 	@make images
 
-
+install: real
+	rm -rf /proj/everest/www/personnel/Julien.Charles/downloads/ProverEditor/Manual
+	cp -R build /proj/everest/www/personnel/Julien.Charles/downloads/ProverEditor/Manual
 images:
 	@echo Copying images.
 	@cd img; cp * ../build
@@ -24,9 +24,9 @@ images:
 	
 	@echo "Running Hacha"
 	@cd build; hacha $@ -o i$@
-
+	@cd build; cp ../style.css manual.css
 clean :
 	@echo Cleaning.
-	@rm -f *.html *.pdf *.dvi *.gif *.jpg *~ *.css *.htoc *.haux
-	@rm -rf build; mkdir build 
+	@rm -f *.html *.pdf *.dvi *.gif *.jpg *~ *.htoc *.haux
+	@rm -rf build/* 
 
