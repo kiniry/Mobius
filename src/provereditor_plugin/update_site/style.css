@@ -1,0 +1,59 @@
+/* le corps */
+body {
+	margin: 1em;
+	background: #ffddff;
+	color: #000;
+	font-family: Verdana,Sans-serif;
+	font-size: 90%;
+}
+
+/* les titres */
+h1 {
+        margin: 2em 1em 1em 0em;
+        clear: both;
+        color: black;
+        text-align: left;
+        font-family: sans-serif;
+	background:#ffddff
+}
+					
+/* misc */
+
+hr {
+	border-style: dotted;
+}
+
+
+p.foot {
+	padding-top: 0.7em;
+	padding-right: 0.5em;
+	text-align: right;
+	font-size: small;
+	color: #D6CCBD;
+	font-family: sans-serif;
+	border-top: dotted 1px #D6CCBD;
+}
+tt {font-size: 11pt; }
+
+/* la base existante */
+a:visited {color :  #550055; text-decoration : none; }
+a:link {color : #550055; text-decoration : none; font-weight : bold}
+a:hover {color : violet; text-decoration : underline; }
+a:active {color : violet; text-decoration : underline; }
+.title6 { font-size : 10pt ; background-color : #41FFFF }
+.spec{color: Red;}
+.warning{color: Red; font-weight : bold}
+
+tr { background-color : #ffddff }
+ .doc { background-color :#b0efff  }
+.old {color: Gray;}
+.old:link {color: Gray; font-weight:bold;}
+.old:visited {color: Gray; font-weight:bold;}
+.old:hover {color: Gray; font-weight:bold;}
+.old:active {color: Gray; font-weight:bold;}
+
+.oldlnk:link {color: Gray; font-weight:bold;}
+.oldlnk:visited {color: Gray; font-weight:bold;}
+.oldlnk:hover {color: Gray; font-weight:bold;}
+.oldlnk:active {color: Gray; font-weight:bold;}
+
