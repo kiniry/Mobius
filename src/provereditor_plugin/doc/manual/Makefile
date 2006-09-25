@@ -5,8 +5,7 @@ real: ${TG}
 	@make images
 
 install: real
-	rm -rf /proj/everest/www/personnel/Julien.Charles/downloads/ProverEditor/Manual
-	cp -R build /proj/everest/www/personnel/Julien.Charles/downloads/ProverEditor/Manual
+	cd build; scp -r * jcharles@provereditor.gforge.inria.fr:/home/groups/provereditor/htdocs
 images:
 	@echo Copying images.
 	@cd img; cp * ../build
