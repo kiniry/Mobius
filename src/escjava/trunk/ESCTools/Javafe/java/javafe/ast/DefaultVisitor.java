@@ -1,3 +1,4 @@
+// $Id$
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package javafe.ast;
@@ -8,27 +9,27 @@ import javafe.util.Location;
 
 public class DefaultVisitor extends Visitor {
 
-  public void visitASTNode(ASTNode x) {
+  public void visitASTNode(/*@non_null*/ ASTNode x) {
     // Assert.fail("DefaultVisitor.visitASTNode"+x);
   }
 
-  public void visitModifierPragma(ModifierPragma x) {
+  public void visitModifierPragma(/*@non_null*/ ModifierPragma x) {
   }
 
-  public void visitTypeDeclElemPragma(TypeDeclElemPragma x) {
+  public void visitTypeDeclElemPragma(/*@non_null*/ TypeDeclElemPragma x) {
   }
 
-  public void visitStmtPragma(StmtPragma x) {
+  public void visitStmtPragma(/*@non_null*/ StmtPragma x) {
   }
 
-  public void visitTypeModifierPragma(TypeModifierPragma x) {
+  public void visitTypeModifierPragma(/*@non_null*/ TypeModifierPragma x) {
   }
 
-  public void visitLexicalPragma(LexicalPragma x) {
+  public void visitLexicalPragma(/*@non_null*/ LexicalPragma x) {
   }
 
 
-  public void visitCompilationUnit(CompilationUnit x) {
+  public void visitCompilationUnit(/*@non_null*/ CompilationUnit x) {
     for(int i=0; i<x.imports.size(); i++)
       x.imports.elementAt(i).accept( this );
     for(int i=0; i<x.elems.size(); i++)
@@ -38,7 +39,7 @@ public class DefaultVisitor extends Visitor {
 	    x.lexicalPragmas.elementAt(i).accept( this );
   }
 
-  public void visitTypeDecl(TypeDecl x) {
+  public void visitTypeDecl(/*@non_null*/ TypeDecl x) {
     for(int i=0; i<x.superInterfaces.size(); i++)
       x.superInterfaces.elementAt(i).accept( this );
     for(int i=0; i<x.elems.size(); i++)
@@ -51,16 +52,16 @@ public class DefaultVisitor extends Visitor {
 	    x.tmodifiers.elementAt(i).accept( this );
   }
 
-  public void visitClassDecl(ClassDecl x) {
+  public void visitClassDecl(/*@non_null*/ ClassDecl x) {
     if( x.superClass != null ) x.superClass.accept( this );
     visitTypeDecl(x);
   }
 
-  public void visitInterfaceDecl(InterfaceDecl x) {
+  public void visitInterfaceDecl(/*@non_null*/ InterfaceDecl x) {
     visitTypeDecl(x);
   }
 
-  public void visitRoutineDecl(RoutineDecl x) {
+  public void visitRoutineDecl(/*@non_null*/ RoutineDecl x) {
     for(int i=0; i<x.args.size(); i++)
       x.args.elementAt(i).accept( this );
     for(int i=0; i<x.raises.size(); i++)
@@ -72,117 +73,117 @@ public class DefaultVisitor extends Visitor {
 
   }
 
-  public void visitConstructorDecl(ConstructorDecl x) {
+  public void visitConstructorDecl(/*@non_null*/ ConstructorDecl x) {
     visitRoutineDecl(x);
     if( x.tmodifiers != null ) 
 	for(int i=0; i<x.tmodifiers.size(); i++)
 	    x.tmodifiers.elementAt(i).accept( this );
   }
 
-  public void visitMethodDecl(MethodDecl x) {
+  public void visitMethodDecl(/*@non_null*/ MethodDecl x) {
     visitRoutineDecl(x);
     x.returnType.accept( this );
   }
 
-  public void visitInitBlock(InitBlock x) {
+  public void visitInitBlock(/*@non_null*/ InitBlock x) {
     x.block.accept( this );
     if( x.pmodifiers != null ) 
 	for(int i=0; i<x.pmodifiers.size(); i++)
 	    x.pmodifiers.elementAt(i).accept( this );
   }
 
-  public void visitGenericVarDecl(GenericVarDecl x) {
+  public void visitGenericVarDecl(/*@non_null*/ GenericVarDecl x) {
     if( x.pmodifiers != null ) 
 	for(int i=0; i<x.pmodifiers.size(); i++)
 	    x.pmodifiers.elementAt(i).accept( this );
     x.type.accept( this );
   }
 
-  public void visitLocalVarDecl(LocalVarDecl x) {
+  public void visitLocalVarDecl(/*@non_null*/ LocalVarDecl x) {
     visitGenericVarDecl(x);
     if( x.init != null ) x.init.accept( this );
   }
 
-  public void visitFieldDecl(FieldDecl x) {
+  public void visitFieldDecl(/*@non_null*/ FieldDecl x) {
     visitGenericVarDecl(x);
     if( x.init != null ) x.init.accept( this );
   }
 
-  public void visitFormalParaDecl(FormalParaDecl x) {
+  public void visitFormalParaDecl(/*@non_null*/ FormalParaDecl x) {
     visitGenericVarDecl(x);
   }
 
   // ------------------------------
 
-  public void visitGenericBlockStmt(GenericBlockStmt x) {
+  public void visitGenericBlockStmt(/*@non_null*/ GenericBlockStmt x) {
     for(int i=0; i<x.stmts.size(); i++)
       x.stmts.elementAt(i).accept( this );
   }
 
-  public void visitBlockStmt(BlockStmt x) {
+  public void visitBlockStmt(/*@non_null*/ BlockStmt x) {
     visitGenericBlockStmt(x);
   }
 
-  public void visitSwitchStmt(SwitchStmt x) {
+  public void visitSwitchStmt(/*@non_null*/ SwitchStmt x) {
     visitGenericBlockStmt(x);
     x.expr.accept( this );
   }
 
-  public void visitClassDeclStmt(ClassDeclStmt x) {
+  public void visitClassDeclStmt(/*@non_null*/ ClassDeclStmt x) {
     x.decl.accept( this );
   }
 
-  public void visitVarDeclStmt(VarDeclStmt x) {
+  public void visitVarDeclStmt(/*@non_null*/ VarDeclStmt x) {
     x.decl.accept( this );
   }
 
-  public void visitWhileStmt(WhileStmt x) {
+  public void visitWhileStmt(/*@non_null*/ WhileStmt x) {
     x.expr.accept( this );
     x.stmt.accept( this );
   }
 
-  public void visitDoStmt(DoStmt x) {
+  public void visitDoStmt(/*@non_null*/ DoStmt x) {
     x.expr.accept( this );
     x.stmt.accept( this );
   }
 
-  public void visitSynchronizeStmt(SynchronizeStmt x) {
+  public void visitSynchronizeStmt(/*@non_null*/ SynchronizeStmt x) {
     x.expr.accept( this );
     x.stmt.accept( this );
   }
 
-  public void visitEvalStmt(EvalStmt x) {
+  public void visitEvalStmt(/*@non_null*/ EvalStmt x) {
     x.expr.accept( this );
   }
 
-  public void visitReturnStmt(ReturnStmt x) {
+  public void visitReturnStmt(/*@non_null*/ ReturnStmt x) {
     if( x.expr != null ) x.expr.accept( this );
   }
 
-  public void visitThrowStmt(ThrowStmt x) {
+  public void visitThrowStmt(/*@non_null*/ ThrowStmt x) {
     x.expr.accept( this );
   }
 
-  public void visitBranchStmt(BranchStmt x) {
+  public void visitBranchStmt(/*@non_null*/ BranchStmt x) {
   }
 
-  public void visitBreakStmt(BreakStmt x) {
+  public void visitBreakStmt(/*@non_null*/ BreakStmt x) {
   }
 
-  public void visitContinueStmt(ContinueStmt x) {
+  public void visitContinueStmt(/*@non_null*/ ContinueStmt x) {
   }
 
-  public void visitLabelStmt(LabelStmt x) {
+  public void visitLabelStmt(/*@non_null*/ LabelStmt x) {
     x.stmt.accept( this );
   }
 
-  public void visitIfStmt(IfStmt x) {
+  public void visitIfStmt(/*@non_null*/ IfStmt x) {
     x.expr.accept( this );
     x.thn.accept( this );
     x.els.accept( this );
   }
 
-  public void visitForStmt(ForStmt x) {
+  public void visitForStmt(/*@non_null*/ ForStmt x) {
     for(int i=0; i<x.forInit.size(); i++)
       x.forInit.elementAt(i).accept( this );
     x.test.accept( this );
@@ -191,59 +192,59 @@ public class DefaultVisitor extends Visitor {
     x.body.accept( this );
   }
 
-  public void visitSkipStmt(SkipStmt x) {
+  public void visitSkipStmt(/*@non_null*/ SkipStmt x) {
   }
 
-  public void visitSwitchLabel(SwitchLabel x) {
+  public void visitSwitchLabel(/*@non_null*/ SwitchLabel x) {
     if( x.expr != null ) x.expr.accept( this );
   }
 
-  public void visitTryFinallyStmt(TryFinallyStmt x) {
+  public void visitTryFinallyStmt(/*@non_null*/ TryFinallyStmt x) {
     x.tryClause.accept( this );
     x.finallyClause.accept( this );
   }
 
-  public void visitTryCatchStmt(TryCatchStmt x) {
+  public void visitTryCatchStmt(/*@non_null*/ TryCatchStmt x) {
     x.tryClause.accept( this );
     for(int i=0; i<x.catchClauses.size(); i++)
       x.catchClauses.elementAt(i).accept( this );
   }
 
-  public void visitConstructorInvocation(ConstructorInvocation x) {
+  public void visitConstructorInvocation(/*@non_null*/ ConstructorInvocation x) {
     for(int i=0; i<x.args.size(); i++)
       x.args.elementAt(i).accept( this );
   }
 
-  public void visitCatchClause(CatchClause x) {
+  public void visitCatchClause(/*@non_null*/ CatchClause x) {
     x.arg.accept( this );
     x.body.accept( this );
   }
 
-  public void visitArrayInit(ArrayInit x) {
+  public void visitArrayInit(/*@non_null*/ ArrayInit x) {
     for(int i=0; i<x.elems.size(); i++)
       x.elems.elementAt(i).accept( this );
   }
 
-  public void visitExpr(Expr x) {
+  public void visitExpr(/*@non_null*/ Expr x) {
   }
 
-  public void visitThisExpr(ThisExpr x) {
+  public void visitThisExpr(/*@non_null*/ ThisExpr x) {
     if (x.classPrefix != null)
 	x.classPrefix.accept( this );
     visitExpr(x);
   }
 
-  public void visitLiteralExpr(LiteralExpr x) {
+  public void visitLiteralExpr(/*@non_null*/ LiteralExpr x) {
     visitExpr(x);
   }
 
-  public void visitArrayRefExpr(ArrayRefExpr x) {
+  public void visitArrayRefExpr(/*@non_null*/ ArrayRefExpr x) {
     x.array.accept( this );
     x.index.accept( this );
     visitExpr(x);
   }
 
-  public void visitNewInstanceExpr(NewInstanceExpr x) {
+  public void visitNewInstanceExpr(/*@non_null*/ NewInstanceExpr x) {
     x.type.accept( this );
     for(int i=0; i<x.args.size(); i++)
       x.args.elementAt(i).accept( this );
@@ -251,7 +252,7 @@ public class DefaultVisitor extends Visitor {
     visitExpr(x);
   }
 
-  public void visitNewArrayExpr(NewArrayExpr x) {
+  public void visitNewArrayExpr(/*@non_null*/ NewArrayExpr x) {
     x.type.accept( this );
     for(int i=0; i<x.dims.size(); i++)
       x.dims.elementAt(i).accept( this );
@@ -259,68 +260,68 @@ public class DefaultVisitor extends Visitor {
     visitExpr(x);
   }
 
-  public void visitCondExpr(CondExpr x) {
+  public void visitCondExpr(/*@non_null*/ CondExpr x) {
     x.test.accept( this );
     x.thn.accept( this );
     x.els.accept( this );
     visitExpr(x);
   }
 
-  public void visitInstanceOfExpr(InstanceOfExpr x) {
+  public void visitInstanceOfExpr(/*@non_null*/ InstanceOfExpr x) {
     x.expr.accept( this );
     x.type.accept( this );
     visitExpr(x);
   }
 
-  public void visitCastExpr(CastExpr x) {
+  public void visitCastExpr(/*@non_null*/ CastExpr x) {
     x.expr.accept( this );
     x.type.accept( this );
     visitExpr(x);
   }
 
-  public void visitBinaryExpr(BinaryExpr x) {
+  public void visitBinaryExpr(/*@non_null*/ BinaryExpr x) {
     x.left.accept( this );
     x.right.accept( this );
     visitExpr(x);
   }
 
-  public void visitUnaryExpr(UnaryExpr x) {
+  public void visitUnaryExpr(/*@non_null*/ UnaryExpr x) {
     x.expr.accept( this );
     visitExpr(x);
   }
 
-  public void visitParenExpr(ParenExpr x) {
+  public void visitParenExpr(/*@non_null*/ ParenExpr x) {
     x.expr.accept( this );
     visitExpr(x);
   }
 
-  public void visitAmbiguousVariableAccess(AmbiguousVariableAccess x) {
+  public void visitAmbiguousVariableAccess(/*@non_null*/ AmbiguousVariableAccess x) {
     visitExpr(x);
   }
 
-  public void visitVariableAccess(VariableAccess x) {
+  public void visitVariableAccess(/*@non_null*/ VariableAccess x) {
     visitExpr(x);
   }
 
-  public void visitFieldAccess(FieldAccess x) {
+  public void visitFieldAccess(/*@non_null*/ FieldAccess x) {
     x.od.accept( this );
     visitExpr(x);
   }
 
-  public void visitAmbiguousMethodInvocation(AmbiguousMethodInvocation x) {
+  public void visitAmbiguousMethodInvocation(/*@non_null*/ AmbiguousMethodInvocation x) {
     for(int i=0; i<x.args.size(); i++)
       x.args.elementAt(i).accept( this );
     visitExpr(x);
   }
 
-  public void visitMethodInvocation(MethodInvocation x) {
+  public void visitMethodInvocation(/*@non_null*/ MethodInvocation x) {
     x.od.accept( this );
     for(int i=0; i<x.args.size(); i++)
       x.args.elementAt(i).accept( this );
     visitExpr(x);
   }
 
-  public void visitClassLiteral(ClassLiteral x) {
+  public void visitClassLiteral(/*@non_null*/ ClassLiteral x) {
     x.type.accept( this );
     visitExpr(x);
   }
@@ -328,40 +329,40 @@ public class DefaultVisitor extends Visitor {
 
   // ------------------------------
 
-  public void visitExprObjectDesignator(ExprObjectDesignator x) {
+  public void visitExprObjectDesignator(/*@non_null*/ ExprObjectDesignator x) {
     x.expr.accept( this );
     visitObjectDesignator(x);
   }
 
-  public void visitTypeObjectDesignator(TypeObjectDesignator x) {
+  public void visitTypeObjectDesignator(/*@non_null*/ TypeObjectDesignator x) {
     x.type.accept( this );
     visitObjectDesignator(x);
   }
 
-  public void visitSuperObjectDesignator(SuperObjectDesignator x) {
+  public void visitSuperObjectDesignator(/*@non_null*/ SuperObjectDesignator x) {
     visitObjectDesignator(x);
   }
 
   // ------------------------------
 
-  public void visitPrimitiveType(PrimitiveType x) {
+  public void visitPrimitiveType(/*@non_null*/ PrimitiveType x) {
     visitType(x);
   }
 
-  public void visitTypeName(TypeName x) {
+  public void visitTypeName(/*@non_null*/ TypeName x) {
     visitType(x);
   }
 
-  public void visitArrayType(ArrayType x) {
+  public void visitArrayType(/*@non_null*/ ArrayType x) {
     x.elemType.accept( this );
     visitType(x);
   }
 
-  public void visitType(Type x) {
+  public void visitType(/*@non_null*/ Type x) {
   }
 
   // ------------------------------
 
-  public void visitName(Name x) {
+  public void visitName(/*@non_null*/ Name x) {
   }
 }

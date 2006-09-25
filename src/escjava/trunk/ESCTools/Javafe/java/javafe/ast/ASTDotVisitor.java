@@ -1,5 +1,5 @@
 /**
- * ASTDotVisitor.java
+ * $Id$
  *
  * @title "AST DOT file visitor"
  * @description "Walks through an AST and outputs a dot graph format representation of that AST"
@@ -105,8 +105,7 @@ public class ASTDotVisitor extends Visitor {
   /**
    * visits an ast node and outputs it in dot file format
    */
-  //@ requires x != null;
-  public void visitASTNode(ASTNode x) {
+  public void visitASTNode(/*@ non_null */ ASTNode x) {
     // write the file
     try {
       // write the start of the dot file
@@ -121,34 +120,28 @@ public class ASTDotVisitor extends Visitor {
     }
   }
   
-  //@ requires x != null;
-  public void visitCompilationUnit(CompilationUnit x) {
+  public void visitCompilationUnit(/*@ non_null */ CompilationUnit x) {
     setVisitString("", x.dotId, "CompilationUnit(todo)");
   }
   
-  //@ requires x != null;
-  public void visitImportDecl(ImportDecl x) {
+  public void visitImportDecl(/*@ non_null */ ImportDecl x) {
     setVisitString("", x.dotId, "ImportDecl(have not seen yet)");
   }
   
-  //@ requires x != null
-  public void visitSingleTypeImportDecl(SingleTypeImportDecl x) {
+  public void visitSingleTypeImportDecl(/*@ non_null */ SingleTypeImportDecl x) {
     setVisitString("", x.dotId, "SingleTypeImportDecl(todo)");
   }
   
-  //@ requires x != null;
-  public void visitOnDemandImportDecl(OnDemandImportDecl x) {
+  public void visitOnDemandImportDecl(/*@ non_null */ OnDemandImportDecl x) {
     setVisitString("", x.dotId, "OnDemandImportDecl(todo)");
   }
 
-  //@ requires x != null;
-  public void visitTypeDecl(TypeDecl x) {
+  public void visitTypeDecl(/*@ non_null */ TypeDecl x) {
     // get the source text
     printer.print(source_dump, 0, x);
   }
 
-  //@ requires x != null;
-  public void visitClassDecl(ClassDecl x) {
+  public void visitClassDecl(/*@ non_null */ ClassDecl x) {
     visitTypeDecl(x);
     // we need to grab everything before the first { charcter and remove
     // all the newlines
@@ -161,8 +154,7 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "ClassDecl");
   }
 
-  //@ requires x != null;
-  public void visitInterfaceDecl(InterfaceDecl x) {
+  public void visitInterfaceDecl(/*@ non_null */ InterfaceDecl x) {
     visitTypeDecl(x);
     // we have to be pretty careful here as we can have interfaces that extend
     // other interfaces so we need to get everything before the first {
@@ -176,12 +168,10 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "InterfaceDecl");
   }
 
-  //@ requires x != null;
-  public void visitRoutineDecl(RoutineDecl x) {
+  public void visitRoutineDecl(/*@ non_null */ RoutineDecl x) {
   }
 
-  //@ requires x != null;
-  public void visitConstructorDecl(ConstructorDecl x) {
+  public void visitConstructorDecl(/*@ non_null */ ConstructorDecl x) {
     // grab the source text
     printer.print(source_dump, 0, x, x.id(), false);
     // get everything before the first newline
@@ -189,8 +179,7 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "ConstructorDecl");
   }
 
-  //@ requires x != null;
-  public void visitMethodDecl(MethodDecl x) {
+  public void visitMethodDecl(/*@ non_null */ MethodDecl x) {
     // grab the source text
     printer.print(source_dump, 0, x, x.id(), false);
     // grab everything before the first newline
@@ -198,59 +187,49 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "MethodDecl");
   }
 
-  //@ requires x != null;
-  public void visitInitBlock(InitBlock x) {
+  public void visitInitBlock(/*@ non_null */ InitBlock x) {
     setVisitString("", x.dotId, "InitBlock(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitTypeDeclElemPragma(TypeDeclElemPragma x) {
+  public void visitTypeDeclElemPragma(/*@ non_null */ TypeDeclElemPragma x) {
     setVisitString("", x.dotId, "TypeDeclElemPragma(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitGenericVarDecl(GenericVarDecl x) {
+  public void visitGenericVarDecl(/*@ non_null */ GenericVarDecl x) {
     // get the source text
     printer.print(source_dump, x);
   }
 
-  //@ requires x != null;
-  public void visitLocalVarDecl(LocalVarDecl x) {
+  public void visitLocalVarDecl(/*@ non_null */ LocalVarDecl x) {
     visitGenericVarDecl(x);
     setVisitString(source_dump.toString(), x.dotId, "LocalVarDecl");
   }
 
-  //@ requires x != null;
-  public void visitFieldDecl(FieldDecl x) {
+  public void visitFieldDecl(/*@ non_null */ FieldDecl x) {
     visitGenericVarDecl(x);
     setVisitString(source_dump.toString(), x.dotId, "FieldDecl");
   }
 
-  //@ requires x != null;
-  public void visitFormalParaDecl(FormalParaDecl x) {
+  public void visitFormalParaDecl(/*@ non_null */ FormalParaDecl x) {
     visitGenericVarDecl(x);
     setVisitString(source_dump.toString(), x.dotId, "FormalParaDecl");
   }
 
-  //@ requires x != null;
-  public void visitStmt(Stmt x) {
+  public void visitStmt(/*@ non_null */ Stmt x) {
     // grab the source text
     printer.print(source_dump, 0, x);
   }
 
-  //@ requires x != null;
-  public void visitGenericBlockStmt(GenericBlockStmt x) {
+  public void visitGenericBlockStmt(/*@ non_null */ GenericBlockStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitBlockStmt(BlockStmt x) {
+  public void visitBlockStmt(/*@ non_null */ BlockStmt x) {
     visitGenericBlockStmt(x);
     setVisitString("", x.dotId, "BlockStmt");
   }
 
-  //@ requires x != null;
-  public void visitSwitchStmt(SwitchStmt x) {
+  public void visitSwitchStmt(/*@ non_null */ SwitchStmt x) {
     visitStmt(x);
     // grab everything the first occurence of the ) charcter searching
     // backwards from the first newline
@@ -259,24 +238,20 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "SwitchStmt");
   }
 
-  //@ requires x != null;
-  public void visitAssertStmt(AssertStmt x) {
+  public void visitAssertStmt(/*@ non_null */ AssertStmt x) {
     setVisitString("", x.dotId, "AssertStmt(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitVarDeclStmt(VarDeclStmt x) {
+  public void visitVarDeclStmt(/*@ non_null */ VarDeclStmt x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "VarDeclStmt");
   }
 
-  //@ requires x != null;
-  public void visitClassDeclStmt(ClassDeclStmt x) {
+  public void visitClassDeclStmt(/*@ non_null */ ClassDeclStmt x) {
     setVisitString("", x.dotId, "ClassDeclStmt(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitWhileStmt(WhileStmt x) {
+  public void visitWhileStmt(/*@ non_null */ WhileStmt x) {
     visitStmt(x);
     // grab everything from the start of the while statment to the last )
     // charcter from the first newline
@@ -285,64 +260,53 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "WhileStmt");
   }
 
-  //@ requires x != null;
-  public void visitDoStmt(DoStmt x) {
+  public void visitDoStmt(/*@ non_null */ DoStmt x) {
     visitStmt(x);
     setVisitString("", x.dotId, "DoStmt");
   }
 
-  //@ requires x != null;
-  public void visitSynchronizeStmt(SynchronizeStmt x) {
+  public void visitSynchronizeStmt(/*@ non_null */ SynchronizeStmt x) {
     setVisitString("", x.dotId, "SynchronizeStmt(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitEvalStmt(EvalStmt x) {
+  public void visitEvalStmt(/*@ non_null */ EvalStmt x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "EvalStmt");
   }
 
-  //@ requires x != null;
-  public void visitReturnStmt(ReturnStmt x) {
+  public void visitReturnStmt(/*@ non_null */ ReturnStmt x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "ReturnStmt");
   }
 
-  //@ requires x != null;
-  public void visitThrowStmt(ThrowStmt x) {
+  public void visitThrowStmt(/*@ non_null */ ThrowStmt x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "ThrowStmt");
   }
 
-  //@ requires x != null;
-  public void visitBranchStmt(BranchStmt x) {
+  public void visitBranchStmt(/*@ non_null */ BranchStmt x) {
     setVisitString("", x.dotId, "BranchStmt(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitBreakStmt(BreakStmt x) {
+  public void visitBreakStmt(/*@ non_null */ BreakStmt x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "BreakStmt");
   }
 
-  //@ requires x != null;
-  public void visitContinueStmt(ContinueStmt x) {
+  public void visitContinueStmt(/*@ non_null */ ContinueStmt x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "ContinueStmt");
   }
 
-  //@ requires x != null;
-  public void visitLabelStmt(LabelStmt x) {
+  public void visitLabelStmt(/*@ non_null */ LabelStmt x) {
     setVisitString("", x.dotId, "LabelStmt(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitIfStmt(IfStmt x) {
+  public void visitIfStmt(/*@ non_null */ IfStmt x) {
     setVisitString("", x.dotId, "IfStmt");
   }
 
-  //@ requires x != null;
-  public void visitForStmt(ForStmt x) {
+  public void visitForStmt(/*@ non_null */ ForStmt x) {
     visitStmt(x);
     // get everything from the beginning until the last ) charcter is
     // encountered on the first line
@@ -351,14 +315,12 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "ForStmt");
   }
 
-  //@ requires x != null;
-  public void visitSkipStmt(SkipStmt x) {
+  public void visitSkipStmt(/*@ non_null */ SkipStmt x) {
     visitStmt(x);
     setVisitString("", x.dotId, "SkipStmt");
   }
 
-  //@ requires x != null;
-  public void visitSwitchLabel(SwitchLabel x) {
+  public void visitSwitchLabel(/*@ non_null */ SwitchLabel x) {
     // source string to append to the node label
     String source = null;
     visitStmt(x);
@@ -368,14 +330,12 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "SwitchLabel");
   }
 
-  //@ requires x != null;
-  public void visitTryFinallyStmt(TryFinallyStmt x) {
+  public void visitTryFinallyStmt(/*@ non_null */ TryFinallyStmt x) {
     visitStmt(x.finallyClause);
     setVisitString("", x.dotId, "TryFinallyStmt");
   }
 
-  //@ requires x != null;
-  public void visitTryCatchStmt(TryCatchStmt x) {
+  public void visitTryCatchStmt(/*@ non_null */ TryCatchStmt x) {
     visitStmt(x);
     // grab the try statment before the first { charcter
     String source = source_dump.toString();
@@ -383,19 +343,16 @@ public class ASTDotVisitor extends Visitor {
     setVisitString(source, x.dotId, "TryCatchStmt");
   }
 
-  //@ requires x != null;
-  public void visitStmtPragma(StmtPragma x) {
+  public void visitStmtPragma(/*@ non_null */ StmtPragma x) {
     setVisitString("", x.dotId, "StmtPragma(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitConstructorInvocation(ConstructorInvocation x) {
+  public void visitConstructorInvocation(/*@ non_null */ ConstructorInvocation x) {
     visitStmt(x);
     setVisitString(source_dump.toString(), x.dotId, "ConstructorInvocation");
   }
 
-  //@ requires x != null;
-  public void visitCatchClause(CatchClause x) {
+  public void visitCatchClause(/*@ non_null */ CatchClause x) {
     // we have to do some manual work here as the catch clause is not
     // really dealt with on its own in the pretty printer.
     printer.print(source_dump, x.arg);
@@ -403,208 +360,173 @@ public class ASTDotVisitor extends Visitor {
     setVisitString("catch (" + source_dump.toString() + ")", x.dotId, "CatchClause");
   }
 
-  //@ requires x != null;
-  public void visitVarInit(VarInit x) {
+  public void visitVarInit(/*@ non_null */ VarInit x) {
     // get the source text
     printer.print(source_dump, 0, x);
   }
 
-  //@ requires x != null;
-  public void visitArrayInit(ArrayInit x) {
+  public void visitArrayInit(/*@ non_null */ ArrayInit x) {
     visitVarInit(x);
     setVisitString(source_dump.toString(), x.dotId, "ArrayInit");
   }
 
-  //@ requires x != null;
-  public void visitExpr(Expr x) {
+  public void visitExpr(/*@ non_null */ Expr x) {
     // grab the source text
     printer.print(source_dump, 0, x);
   }
 
-  //@ requires x != null;
-  public void visitThisExpr(ThisExpr x) {
+  public void visitThisExpr(/*@ non_null */ ThisExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "ThisExpr");
   }
 
-  //@ requires x != null;
-  public void visitLiteralExpr(LiteralExpr x) {
+  public void visitLiteralExpr(/*@ non_null */ LiteralExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "LiteralExpr");
   }
 
-  //@ requires x != null;
-  public void visitArrayRefExpr(ArrayRefExpr x) {
+  public void visitArrayRefExpr(/*@ non_null */ ArrayRefExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "ArrayRefExpr");
   }
 
-  //@ requires x != null;
-  public void visitNewInstanceExpr(NewInstanceExpr x) {
+  public void visitNewInstanceExpr(/*@ non_null */ NewInstanceExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "NewInstanceExpr");
   }
 
-  //@ requires x != null;
-  public void visitNewArrayExpr(NewArrayExpr x) {
+  public void visitNewArrayExpr(/*@ non_null */ NewArrayExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "NewArrayExpr");
   }
 
-  //@ requires x != null;
-  public void visitCondExpr(CondExpr x) {
+  public void visitCondExpr(/*@ non_null */ CondExpr x) {
     setVisitString("", x.dotId, "CondExpr(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitInstanceOfExpr(InstanceOfExpr x) {
+  public void visitInstanceOfExpr(/*@ non_null */ InstanceOfExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "InstanceOfExpr");
   }
 
-  //@ requires x != null;
-  public void visitCastExpr(CastExpr x) {
+  public void visitCastExpr(/*@ non_null */ CastExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "CastExpr");
   }
 
-  //@ requires x != null;
-  public void visitBinaryExpr(BinaryExpr x) {
+  public void visitBinaryExpr(/*@ non_null */ BinaryExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "BinaryExpr");
   }
 
-  //@ requires x != null;
-  public void visitUnaryExpr(UnaryExpr x) {
+  public void visitUnaryExpr(/*@ non_null */ UnaryExpr x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "UnaryExpr");
   }
 
-  //@ requires x != null;
-  public void visitParenExpr(ParenExpr x) {
+  public void visitParenExpr(/*@ non_null */ ParenExpr x) {
     setVisitString("", x.dotId, "ParenExpr(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitAmbiguousVariableAccess(AmbiguousVariableAccess x) {
+  public void visitAmbiguousVariableAccess(/*@ non_null */ AmbiguousVariableAccess x) {
     setVisitString("", x.dotId, "AmbiguousVariableAccess(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitVariableAccess(VariableAccess x) {
+  public void visitVariableAccess(/*@ non_null */ VariableAccess x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "VariableAccess");
   }
 
-  //@ requires x != null;
-  public void visitFieldAccess(FieldAccess x) {
+  public void visitFieldAccess(/*@ non_null */ FieldAccess x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "FieldAccess");
   }
 
-  //@ requires x != null;
-  public void visitAmbiguousMethodInvocation(AmbiguousMethodInvocation x) {
+  public void visitAmbiguousMethodInvocation(/*@ non_null */ AmbiguousMethodInvocation x) {
     setVisitString("", x.dotId, "AmbigousMethodInvocation(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitMethodInvocation(MethodInvocation x) {
+  public void visitMethodInvocation(/*@ non_null */ MethodInvocation x) {
     visitExpr(x);
     setVisitString(source_dump.toString(), x.dotId, "MethodInvocation");
   }
 
-  //@ requires x != null;
-  public void visitClassLiteral(ClassLiteral x) {
+  public void visitClassLiteral(/*@ non_null */ ClassLiteral x) {
     setVisitString("", x.dotId, "ClassLiteral(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitObjectDesignator(ObjectDesignator x) {
+  public void visitObjectDesignator(/*@ non_null */ ObjectDesignator x) {
     // get the source text
     printer.print(source_dump, 0, x);
   }
 
-  //@ requires x != null;
-  public void visitExprObjectDesignator(ExprObjectDesignator x) {
+  public void visitExprObjectDesignator(/*@ non_null */ ExprObjectDesignator x) {
     visitObjectDesignator(x);
     setVisitString(source_dump.toString(), x.dotId, "ExprObjectDesignator");
   }
 
-  //@ requires x != null;
-  public void visitTypeObjectDesignator(TypeObjectDesignator x) {
+  public void visitTypeObjectDesignator(/*@ non_null */ TypeObjectDesignator x) {
     visitObjectDesignator(x);
     setVisitString("", x.dotId, "TypeObjectDesignator");
   }
 
-  //@ requires x != null;
-  public void visitSuperObjectDesignator(SuperObjectDesignator x) {
+  public void visitSuperObjectDesignator(/*@ non_null */ SuperObjectDesignator x) {
     visitObjectDesignator(x);
     setVisitString(source_dump.toString(), x.dotId, "SuperObjectDesignator");
   }
 
-  //@ requires x != null;
-  public void visitType(Type x) {
+  public void visitType(/*@ non_null */ Type x) {
     // get the source text and set the visit string
     printer.print(source_dump, x);
     setVisitString(source_dump.toString(), x.dotId, "Type");
   }
 
-  //@ requires x != null;
-  public void visitErrorType(ErrorType x) {
+  public void visitErrorType(/*@ non_null */ ErrorType x) {
     setVisitString("", x.dotId, "ErrorType(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitPrimitiveType(PrimitiveType x) {
+  public void visitPrimitiveType(/*@ non_null */ PrimitiveType x) {
     // grab the source text as a Type node can appear in the tree
     printer.print(source_dump, x);
     setVisitString(source_dump.toString(), x.dotId, "PrimitiveType");
   }
 
-  //@ requires x != null;
-  public void visitTypeName(TypeName x) {
+  public void visitTypeName(/*@ non_null */ TypeName x) {
     // grab the source text as the generic Type can appear in the tree
     printer.print(source_dump, x);
     setVisitString(source_dump.toString(), x.dotId, "TypeName");
   }
 
-  //@ requires x != null;
-  public void visitArrayType(ArrayType x) {
+  public void visitArrayType(/*@ non_null */ ArrayType x) {
     // grab the source text as the generic Type can be in the tree as well
     printer.print(source_dump, x);
     setVisitString(source_dump.toString(), x.dotId, "ArrayType");
   }
 
-  //@ requires x != null;
-  public void visitName(Name x) {
+  public void visitName(/*@ non_null */ Name x) {
     // grab the source text
     printer.print(source_dump, x);
   }
 
-  //@ requires x != null;
-  public void visitSimpleName(SimpleName x) {
+  public void visitSimpleName(/*@ non_null */ SimpleName x) {
     visitName(x);
     setVisitString(source_dump.toString(), x.dotId, "SimpleName");
   }
 
-  //@ requires x != null;
-  public void visitCompoundName(CompoundName x) {
+  public void visitCompoundName(/*@ non_null */ CompoundName x) {
     visitName(x);
     setVisitString(source_dump.toString(), x.dotId, "CompoundName");
   }
 
-  //@ requires x != null;
-  public void visitModifierPragma(ModifierPragma x) {
+  public void visitModifierPragma(/*@ non_null */ ModifierPragma x) {
     setVisitString("", x.dotId, "ModifierPragma(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitLexicalPragma(LexicalPragma x) {
+  public void visitLexicalPragma(/*@ non_null */ LexicalPragma x) {
     setVisitString("", x.dotId, "LexicalPragma(have not seen yet)");
   }
 
-  //@ requires x != null;
-  public void visitTypeModifierPragma(TypeModifierPragma x) {
+  public void visitTypeModifierPragma(/*@ non_null */ TypeModifierPragma x) {
     setVisitString("", x.dotId, "TypeModifierPragma(have not seen yet)");
   }
   

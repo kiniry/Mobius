@@ -1,3 +1,4 @@
+// $Id$
 /* Copyright 2000, 2001, Compaq Computer Corporation */
 
 package escjava.tc;
@@ -485,8 +486,7 @@ System.out.println("FOUND " + t);
     return ee;
   }
 
-  //@ also requires e != null;
-  protected Expr checkExpr(Env env, Expr e) {
+  protected Expr checkExpr(/*@non_null*/ Env env, /*@non_null*/ Expr e) {
     // Anticipate that the next context is probably not one suitable for
     // quantifications and labels.  "isPredicateContext" must revert to its old
     // value before return.

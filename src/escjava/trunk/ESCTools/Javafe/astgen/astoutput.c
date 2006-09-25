@@ -530,15 +530,15 @@ void outputEndOfAstFile(const char *text, int len,
       if (c->c->superclass != NULL) { 
 	/* If superclass exists, gen visit method that dispatches to
 	   visit method of superclass. */
-	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
-	fprintf(visitorOutputFile, "  public void visit%s(%s x) {\n",
+	/* fprintf(visitorOutputFile, "  //@ requires x != null;\n"); */
+	fprintf(visitorOutputFile, "  public void visit%s(/*@non_null*/ %s x) {\n",
 		c->c->name, c->c->name);
 	fprintf(visitorOutputFile, "    visit%s(x);\n",
 		c->c->superclass->name);
 	fprintf(visitorOutputFile, "  }\n\n");
       } else /* Gen an abstract visit method */ {
-	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
-	fprintf(visitorOutputFile, "  public abstract void visit%s(%s x);\n\n",
+	/* fprintf(visitorOutputFile, "  //@ requires x != null;\n"); */
+	fprintf(visitorOutputFile, "  public abstract void visit%s(/*@non_null*/ %s x);\n\n",
 		c->c->name, c->c->name);
       }
     }
@@ -572,17 +572,17 @@ void outputEndOfAstFile(const char *text, int len,
       if (c->c->superclass != NULL) { 
 	/* If superclass exists, gen visit method that dispatches to
 	   visit method of superclass. */
-	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
-	fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n");
-	fprintf(visitorOutputFile, "  public Object visit%s(%s x, Object o) {\n",
+	/* fprintf(visitorOutputFile, "  //@ requires x != null;\n");
+	   fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n"); */
+	fprintf(visitorOutputFile, "  public /*@non_null*/ Object visit%s(/*@non_null*/ %s x, Object o) {\n",
 		c->c->name, c->c->name);
 	fprintf(visitorOutputFile, "    return visit%s(x, o);\n",
 		c->c->superclass->name);
 	fprintf(visitorOutputFile, "  }\n\n");
       } else /* Gen an abstract visit method */ {
-	fprintf(visitorOutputFile, "  //@ requires x != null;\n");
-	fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n");
-	fprintf(visitorOutputFile, "  public abstract Object visit%s(%s x, Object o);\n\n",
+	/* fprintf(visitorOutputFile, "  //@ requires x != null;\n");
+	   fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n"); */
+	fprintf(visitorOutputFile, "  public abstract /*@non_null*/ Object visit%s(/*@non_null*/ %s x, Object o);\n\n",
 		c->c->name, c->c->name);
       }
     }

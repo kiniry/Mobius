@@ -1,7 +1,7 @@
 /**
- * RShiftVisitor.java
+ * $Id$
  *
- * @title "Visitor for Detection of LightShift Incompleteness cases"
+ * @title "Visitor for Detection of LeftShift Incompleteness cases"
  * @description "Walks through an AST and finds any cases where the left
  * shift operator is used. It then adds a warning to ErrorSet about this"
  */
@@ -12,8 +12,8 @@ import javafe.util.Location;
 import javafe.util.ErrorSet;
 
 public class LShiftVisitor extends Visitor {
-  //@ requires x != null;
-  public void visitASTNode(ASTNode x) {
+
+  public void visitASTNode(/*@ non_null */ ASTNode x) {
     // a child of this node
     Object child = null;
     // temporary ASTNode
@@ -28,273 +28,219 @@ public class LShiftVisitor extends Visitor {
     }
   }
 
-  //@ requires x != null;
-  public void visitCompilationUnit(CompilationUnit x) {
+  public void visitCompilationUnit(/*@ non_null */ CompilationUnit x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitImportDecl(ImportDecl x) {
+  public void visitImportDecl(/*@ non_null */ ImportDecl x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitSingleTypeImportDecl(SingleTypeImportDecl x) {
+  public void visitSingleTypeImportDecl(/*@ non_null */ SingleTypeImportDecl x) {
     visitImportDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitOnDemandImportDecl(OnDemandImportDecl x) {
+  public void visitOnDemandImportDecl(/*@ non_null */ OnDemandImportDecl x) {
     visitImportDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitTypeDecl(TypeDecl x) {
+  public void visitTypeDecl(/*@ non_null */ TypeDecl x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitClassDecl(ClassDecl x) {
+  public void visitClassDecl(/*@ non_null */ ClassDecl x) {
     visitTypeDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitInterfaceDecl(InterfaceDecl x) {
+  public void visitInterfaceDecl(/*@ non_null */ InterfaceDecl x) {
     visitTypeDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitRoutineDecl(RoutineDecl x) {
+  public void visitRoutineDecl(/*@ non_null */ RoutineDecl x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitConstructorDecl(ConstructorDecl x) {
+  public void visitConstructorDecl(/*@ non_null */ ConstructorDecl x) {
     visitRoutineDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitMethodDecl(MethodDecl x) {
+  public void visitMethodDecl(/*@ non_null */ MethodDecl x) {
     visitRoutineDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitInitBlock(InitBlock x) {
+  public void visitInitBlock(/*@ non_null */ InitBlock x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitTypeDeclElemPragma(TypeDeclElemPragma x) {
+  public void visitTypeDeclElemPragma(/*@ non_null */ TypeDeclElemPragma x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitGenericVarDecl(GenericVarDecl x) {
+  public void visitGenericVarDecl(/*@ non_null */ GenericVarDecl x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitLocalVarDecl(LocalVarDecl x) {
+  public void visitLocalVarDecl(/*@ non_null */ LocalVarDecl x) {
     visitGenericVarDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitFieldDecl(FieldDecl x) {
+  public void visitFieldDecl(/*@ non_null */ FieldDecl x) {
     visitGenericVarDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitFormalParaDecl(FormalParaDecl x) {
+  public void visitFormalParaDecl(/*@ non_null */ FormalParaDecl x) {
     visitGenericVarDecl(x);
   }
 
-  //@ requires x != null;
-  public void visitStmt(Stmt x) {
+  public void visitStmt(/*@ non_null */ Stmt x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitGenericBlockStmt(GenericBlockStmt x) {
+  public void visitGenericBlockStmt(/*@ non_null */ GenericBlockStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitBlockStmt(BlockStmt x) {
+  public void visitBlockStmt(/*@ non_null */ BlockStmt x) {
     visitGenericBlockStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitSwitchStmt(SwitchStmt x) {
+  public void visitSwitchStmt(/*@ non_null */ SwitchStmt x) {
     visitGenericBlockStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitAssertStmt(AssertStmt x) {
+  public void visitAssertStmt(/*@ non_null */ AssertStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitVarDeclStmt(VarDeclStmt x) {
+  public void visitVarDeclStmt(/*@ non_null */ VarDeclStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitClassDeclStmt(ClassDeclStmt x) {
+  public void visitClassDeclStmt(/*@ non_null */ ClassDeclStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitWhileStmt(WhileStmt x) {
+  public void visitWhileStmt(/*@ non_null */ WhileStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitDoStmt(DoStmt x) {
+  public void visitDoStmt(/*@ non_null */ DoStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitSynchronizeStmt(SynchronizeStmt x) {
+  public void visitSynchronizeStmt(/*@ non_null */ SynchronizeStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitEvalStmt(EvalStmt x) {
+  public void visitEvalStmt(/*@ non_null */ EvalStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitReturnStmt(ReturnStmt x) {
+  public void visitReturnStmt(/*@ non_null */ ReturnStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitThrowStmt(ThrowStmt x) {
+  public void visitThrowStmt(/*@ non_null */ ThrowStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitBranchStmt(BranchStmt x) {
+  public void visitBranchStmt(/*@ non_null */ BranchStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitBreakStmt(BreakStmt x) {
+  public void visitBreakStmt(/*@ non_null */ BreakStmt x) {
     visitBranchStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitContinueStmt(ContinueStmt x) {
+  public void visitContinueStmt(/*@ non_null */ ContinueStmt x) {
     visitBranchStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitLabelStmt(LabelStmt x) {
+  public void visitLabelStmt(/*@ non_null */ LabelStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitIfStmt(IfStmt x) {
+  public void visitIfStmt(/*@ non_null */ IfStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitForStmt(ForStmt x) {
+  public void visitForStmt(/*@ non_null */ ForStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitSkipStmt(SkipStmt x) {
+  public void visitSkipStmt(/*@ non_null */ SkipStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitSwitchLabel(SwitchLabel x) {
+  public void visitSwitchLabel(/*@ non_null */ SwitchLabel x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitTryFinallyStmt(TryFinallyStmt x) {
+  public void visitTryFinallyStmt(/*@ non_null */ TryFinallyStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitTryCatchStmt(TryCatchStmt x) {
+  public void visitTryCatchStmt(/*@ non_null */ TryCatchStmt x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitStmtPragma(StmtPragma x) {
+  public void visitStmtPragma(/*@ non_null */ StmtPragma x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitConstructorInvocation(ConstructorInvocation x) {
+  public void visitConstructorInvocation(/*@ non_null */ ConstructorInvocation x) {
     visitStmt(x);
   }
 
-  //@ requires x != null;
-  public void visitCatchClause(CatchClause x) {
+  public void visitCatchClause(/*@ non_null */ CatchClause x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitVarInit(VarInit x) {
+  public void visitVarInit(/*@ non_null */ VarInit x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitArrayInit(ArrayInit x) {
+  public void visitArrayInit(/*@ non_null */ ArrayInit x) {
     visitVarInit(x);
   }
 
-  //@ requires x != null;
-  public void visitExpr(Expr x) {
+  public void visitExpr(/*@ non_null */ Expr x) {
     visitVarInit(x);
   }
 
-  //@ requires x != null;
-  public void visitThisExpr(ThisExpr x) {
+  public void visitThisExpr(/*@ non_null */ ThisExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitLiteralExpr(LiteralExpr x) {
+  public void visitLiteralExpr(/*@ non_null */ LiteralExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitArrayRefExpr(ArrayRefExpr x) {
+  public void visitArrayRefExpr(/*@ non_null */ ArrayRefExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitNewInstanceExpr(NewInstanceExpr x) {
+  public void visitNewInstanceExpr(/*@ non_null */ NewInstanceExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitNewArrayExpr(NewArrayExpr x) {
+  public void visitNewArrayExpr(/*@ non_null */ NewArrayExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitCondExpr(CondExpr x) {
+  public void visitCondExpr(/*@ non_null */ CondExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitInstanceOfExpr(InstanceOfExpr x) {
+  public void visitInstanceOfExpr(/*@ non_null */ InstanceOfExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitCastExpr(CastExpr x) {
+  public void visitCastExpr(/*@ non_null */ CastExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitBinaryExpr(BinaryExpr x) {
+  public void visitBinaryExpr(/*@ non_null */ BinaryExpr x) {
     // if the binary expression contains the right shift operator warn about
     // it
     if(x.getTag() == TagConstants.LSHIFT || x.getTag() == TagConstants.ASGLSHIFT) {
@@ -303,118 +249,95 @@ public class LShiftVisitor extends Visitor {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitUnaryExpr(UnaryExpr x) {
+  public void visitUnaryExpr(/*@ non_null */ UnaryExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitParenExpr(ParenExpr x) {
+  public void visitParenExpr(/*@ non_null */ ParenExpr x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitAmbiguousVariableAccess(AmbiguousVariableAccess x) {
+  public void visitAmbiguousVariableAccess(/*@ non_null */ AmbiguousVariableAccess x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitVariableAccess(VariableAccess x) {
+  public void visitVariableAccess(/*@ non_null */ VariableAccess x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitFieldAccess(FieldAccess x) {
+  public void visitFieldAccess(/*@ non_null */ FieldAccess x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitAmbiguousMethodInvocation(AmbiguousMethodInvocation x) {
+  public void visitAmbiguousMethodInvocation(/*@ non_null */ AmbiguousMethodInvocation x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitMethodInvocation(MethodInvocation x) {
+  public void visitMethodInvocation(/*@ non_null */ MethodInvocation x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitClassLiteral(ClassLiteral x) {
+  public void visitClassLiteral(/*@ non_null */ ClassLiteral x) {
     visitExpr(x);
   }
 
-  //@ requires x != null;
-  public void visitObjectDesignator(ObjectDesignator x) {
+  public void visitObjectDesignator(/*@ non_null */ ObjectDesignator x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitExprObjectDesignator(ExprObjectDesignator x) {
+  public void visitExprObjectDesignator(/*@ non_null */ ExprObjectDesignator x) {
     visitObjectDesignator(x);
   }
 
-  //@ requires x != null;
-  public void visitTypeObjectDesignator(TypeObjectDesignator x) {
+  public void visitTypeObjectDesignator(/*@ non_null */ TypeObjectDesignator x) {
     visitObjectDesignator(x);
   }
 
-  //@ requires x != null;
-  public void visitSuperObjectDesignator(SuperObjectDesignator x) {
+  public void visitSuperObjectDesignator(/*@ non_null */ SuperObjectDesignator x) {
     visitObjectDesignator(x);
   }
 
-  //@ requires x != null;
-  public void visitType(Type x) {
+  public void visitType(/*@ non_null */ Type x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitErrorType(ErrorType x) {
+  public void visitErrorType(/*@ non_null */ ErrorType x) {
     visitType(x);
   }
 
-  //@ requires x != null;
-  public void visitPrimitiveType(PrimitiveType x) {
+  public void visitPrimitiveType(/*@ non_null */ PrimitiveType x) {
     visitType(x);
   }
 
-  //@ requires x != null;
-  public void visitTypeName(TypeName x) {
+  public void visitTypeName(/*@ non_null */ TypeName x) {
     visitType(x);
   }
 
-  //@ requires x != null;
-  public void visitArrayType(ArrayType x) {
+  public void visitArrayType(/*@ non_null */ ArrayType x) {
     visitType(x);
   }
 
-  //@ requires x != null;
-  public void visitName(Name x) {
+  public void visitName(/*@ non_null */ Name x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitSimpleName(SimpleName x) {
+  public void visitSimpleName(/*@ non_null */ SimpleName x) {
     visitName(x);
   }
 
-  //@ requires x != null;
-  public void visitCompoundName(CompoundName x) {
+  public void visitCompoundName(/*@ non_null */ CompoundName x) {
     visitName(x);
   }
 
-  //@ requires x != null;
-  public void visitModifierPragma(ModifierPragma x) {
+  public void visitModifierPragma(/*@ non_null */ ModifierPragma x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitLexicalPragma(LexicalPragma x) {
+  public void visitLexicalPragma(/*@ non_null */ LexicalPragma x) {
     visitASTNode(x);
   }
 
-  //@ requires x != null;
-  public void visitTypeModifierPragma(TypeModifierPragma x) {
+    public void visitTypeModifierPragma(/*@ non_null */ TypeModifierPragma x) {
     visitASTNode(x);
   }
 
