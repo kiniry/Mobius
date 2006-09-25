@@ -170,14 +170,15 @@ $$
  $$
 \end{wpStmtBcSrc1}
 
-This follows from the previous lemma (which establishes the relation between the \wpName \ over source and
- the \wpName \ over bytecode that takes into account the compilation structure  )
-and lemma \ref{relWpStmt} (which establishes the relation between the \wpName \ over bytecode that takes into account the compilation structure  and the original \wpName which does 
-not consider the properties of the compiler )
+This follows from the previous lemma (which establishes the relation between the \wpName \ over source expressions and
+ the \wpName \ over bytecode expressions that takes into account the compilation structure  )
+and is done by structural induction. Note that it is trivial as the \wpName{} for the compilation of statements  into bytecode  introduced in Section 
+is very similar to the \wpName{} for source statements. 
+
 
  
 
-
+\todo{say what is this?}
  
 \begin{wpStmtBcSrc3}  \label{wpStmtBcSrc3}
 For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$ 
@@ -199,7 +200,7 @@ For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and
 $$ \wpSrcStmt{\stmt}{\psi }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
 \end{wpStmtBcSrc2}
 \textit{Proof}: \\
-This follows from the previous Lemma \ref{wpStmtBcSrc1} and Lemma \ref{relWpStmt} \\
+This follows from Lemma \ref{wpStmtBcSrc1} and Lemma \ref{relWpStmt} \\
 \Qed
 
 
@@ -213,3 +214,12 @@ For all method \methodd \ if its body is $\stmt$ such that its compilation is
  $\compileLabel{s}{\stmt}{e}$  we have the following:
 $$ \wpSrcStmt{\stmt}{\methodd.\normalPost }{\methodd.\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
 \end{theorem}
+The proof follows from the previous proposition \ref{wpStmtBcSrc2}
+
+
+
+
+Note that such an equivalence between proof obligations on source and bytecode and the fact that
+we have proof for the soundness of the bytecode verification condition generator
+ gives us the soundness of the source  weakest precondition calculus.  
+
