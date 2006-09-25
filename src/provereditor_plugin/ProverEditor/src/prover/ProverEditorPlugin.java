@@ -22,9 +22,9 @@ import prover.gui.preference.PreferencePage;
  */
 public class ProverEditorPlugin extends AbstractUIPlugin {
 	/** the number of minor version */
-	public static final int SUBVERSION = 1;
+	public static final int SUBVERSION = 0;
 	/** the number of version */
-	public static final int VERSION = 0;
+	public static final int VERSION = 1;
 	/** the number of the major version */
 	public static final int MAJORVERSION = 0;
 	

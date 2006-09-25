@@ -2,11 +2,8 @@ package prover.gui.actions;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
-import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
 
 import prover.gui.ProverFileContext;
 import prover.gui.TopLevelManager;
@@ -14,16 +11,12 @@ import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.ProverEditor;
 import prover.plugins.AProverTranslator;
 
-public class JumpBackward implements IHandler {
-
-	public void addHandlerListener(IHandlerListener handlerListener) {
-	}
-
-	public void dispose() {
-	}
-
+public class JumpBackward extends AJumpAction {
+	/**
+	 * The method executed when jump is triggered.
+	 * Jump to the previous sentence in the editor.
+	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-
 		IEditorPart ep = getActiveEditor();
 		if(! (ep instanceof ProverEditor)) {
 			return null;
@@ -50,20 +43,4 @@ public class JumpBackward implements IHandler {
 		pfc.viewer.revealRange(pos, 0);
 		return null;
 	}
-
-	public boolean isEnabled() {
-		return true;
-	}
-
-	public boolean isHandled() {
-		return true;
-	}
-
-	public void removeHandlerListener(IHandlerListener handlerListener) {
-	}
-	
-	private static IEditorPart getActiveEditor() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-	}
-
 }
