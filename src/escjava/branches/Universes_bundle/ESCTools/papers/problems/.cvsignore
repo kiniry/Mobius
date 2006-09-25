@@ -1,0 +1,6 @@
+*.gen
+*.class
+*.texinfo
+classes
+jmlc
+

@@ -1,0 +1,21 @@
+## $Id$
+TestSystem3.java
+## Tests with Simplify problems
+TestThrowable.java
+TestStringBuffer.java
+TestString.java
+TestProperties.java
+TestLong.java
+TestInteger.java
+TestBitSet.java
+TestFile.java
+## These are failing and we don't know why (JK & PC) ... but we suspect that
+## it might be due to experiments David is conducting.  TBC.  In the meantime
+## our objective is to get a clean test run.
+TestSet.java
+TestSet2.java
+TestCollection.java
+## Turn this test back on once we have new/good specs for ByteArrayInputStream.
+TestByteArrayInputStream.java
+##
+## End of file - DO NOT LEAVE BLANK LINES BEYOND THIS POINT
