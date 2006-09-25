@@ -60,4 +60,7 @@ clean:
 docs:
 	@true
 
+info:
+	@echo "This package contains: " `cat $(SOURCEFILES) | wc -l` " LOC."
+
 # End of file
