@@ -48,8 +48,9 @@ expressions may evaluate to a value or be undefined. The operator  $\wellDefined
  holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is false.
 
 In the following we shall abstract from partiality of evaluation and we shall consider that our evaluation is a total function. 
-Note that we could have used  as is done \todo{lilian}, a three valued interpretation for formulas and expressions with an operator for well-definedness over predicates and expressions 
-whose interpretation to true would mean that the predicate / expression is not undefined. We however, consider that this only will complicate 
+Note that we could have used for instance the formalization in \cite{burdy98treatment}, i.e. 
+a three valued interpretation for formulas and expressions with an operator for well-definedness over predicates and expressions 
+whose interpretation to true would mean that the predicate / expression is defined. We however, consider that this only will complicate 
 the present formalization without bringing any original feature of the present thesis. 
 This means that for instance, for predicates which contain field dereference  we shall assume that the reference is not \Mynull,
 that arrays are always accessed inside their bounds etc. 
