@@ -104,8 +104,8 @@ In order to respect the above requirements we propose a framework with the follo
 	 arithmetic operations, object creation and manipulation,
 	 method invokations, exception throwing and handling, stack manipulation etc. 
 	 
-	 We have an implementation which is integrated in Jack (short for Java Applect Correctness Kit) \cite{BRL-JACK} which is a plugin
-	 for the eclipse ide \footnote{http://www.eclipse.org/}
+	 We have an implementation which is integrated in Jack (short for Java Applect Correctness Kit) \cite{BRL-JACK} which is a user friendly 
+	 plugin for the eclipse ide \footnote{http://www.eclipse.org/}. 
 	 
    \item [Bytecode Modeling Language] 
          A specification language which is tailored to bytecode. Let us see what advocates the need of a
@@ -148,7 +148,7 @@ In order to respect the above requirements we propose a framework with the follo
     \item[Equivalence between source and bytecode proof obligations] Such an equivalence is useful when programs and requirements over them are complex.
          In this case, an interactive verification procedure over the source code  could be helpful.
 	 (e.g. proving the verification conditions in an interactive theorem prover).
-	 An application of such an equivalence is the 
+	 Let us see why.
 	 First, interactive  procedure is suitable where automatic decision procedures will not cope with
 	 difficult theorems which is potentially the case for sophisticated security policies or functional requirements. 
 	 Second, using verification on source code is useful as program bugs and errors can be easily identified and corrected.
@@ -158,13 +158,27 @@ In order to respect the above requirements we propose a framework with the follo
 	 can be shipped  to the client.
 \end{description}
 
-Such a framework may be used for different purposes. We illustrate this by two examples - verification of constraint memory consumption policies and
-    optimization of Java to native compiler.
+%Such a framework may be used for different purposes. We illustrate this by two examples - verification of constraint memory consumption policies and   optimization of Java to native compiler.
 
 
 
 
-\section{Applications}
+\section{Plan of the thesis}
+
+
+The present thesis is organized as follows. In the next Chapter \ref{opSem}, we introduce
+ the bytecode language and its operational semantics which will be used all along the thesis for the definition of the verification condition generator and the proof
+of its soundness. 
+Chapter \ref{bcsl} presents the syntax and semantics of the Bytecode Modeling Language (BML) and the compiler from JML to BML. 
+
+Chapter \ref{assertLang} presents the assertion language and its formal semantics which the verification calculus manipulates. 
+In Chapter \ref{wpGeneral}, we turn to the definition of the verification condition generator and Chapter \ref{proofGeneral}
+ presents the proof of its soundness. In Chapter \ref{pogEquiv}, we shall focus on the relation between 
+verification conditions on source and bytecode level and we shall see under what conditions they are the same modulo names and basic types.
+   
+Chapter \ref{applications:memory} presents an application of the bytecode verification condition generator and BML to the verification of constraint memory consumption
+policies. Chapter \ref{applications:optimComp} shows how we can build a Java-to-Native compiler using our verification framework.
+
 
 
 
