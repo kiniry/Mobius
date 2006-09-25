@@ -1,0 +1,23 @@
+\let\oldmeta=\@meta
+\renewcommand{\@meta}{%
+\oldmeta
+\begin{rawhtml}
+<META name="Author" content="Julien Charles">
+<link rel="stylesheet" href="../../../style.css">
+\end{rawhtml}}
+
+\newcommand{\rarrow}{
+->
+}
+
+\newcommand{\conj}{
+/$\backslash$
+}
+
+\newcommand{\s} {
+$\;\;$
+}
+\newcommand{\+}{}
+\renewcommand{\-}{}
+\renewcommand{\=}{}
+\renewcommand{\>}{\s }
