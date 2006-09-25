@@ -99,13 +99,14 @@ $$
    The last statement that we consider is the assignment statement $ \expressionSrc = \expressionSrc$.
     It states that the expression on the left of the assignment sign $=$ is assigned the value of the expression on the right.
 
-In Fig. \ref{pogComp:source:example}, we give an example program written in our source language. It is the method \lstinline!square! which calculates the 
-the   square of the parameter \lstinline!i!. First, we store  the absolute value of \lstinline!i! in the variable \lstinline!v!.
-Then  the while statement  calculates the sum of the impair positive numbers smaller than 
+In Fig. \ref{pogComp:source:example}, we give an example program written in our source language. The figure shows 
+the method \lstinline!square! which calculates the 
+the   square of the parameter \lstinline!i!. First, the absolute value of \lstinline!i! is stored in the variable \lstinline!v!.
+Then  the while statement  calculates the sum of the impair positive numbers whose whole division by 2 is smaller than
 \lstinline!v! which is the square of \lstinline!i!.  The example is also
 provided with specification written in JML. The specification states
 that the method returns the square of its parameter and that the loop
-invariant is \lstinline!(0 <= s) && (s <= v) && sqr == s*s!
+invariant is \lstinline!(0 <= s) && (s <= v) && sqr == s*s!.
 
 \begin{figure}[ht!]
  \begin{lstlisting}[frame=trbl] 
