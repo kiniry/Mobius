@@ -8,8 +8,10 @@
 \section{Bytecode language and its operational semantics} \label{opSem}
  The bytecode language that we introduce here corresponds to a representative subset of the Java bytecode language. 
  In particular, it supports object manipulation and creation, method invokation, as well as exception throwing and handling.
- In fig. \ref{opSem:bclang}, we give the list of instructions that constitute our bytecode
- language.
+ 
+In fig. \ref{opSem:bclang}, we give the list of instructions that constitute our bytecode
+ language\footnote{The instruction \arithOp{} stands for any arithmetic instruction in the list  \instr{add}, \instr{sub}, \instr{mult}, 
+ \instr{and}, \instr{or}, \instr{xor} , \instr{ishr}, \instr{ishl}, \instr{div}, \instr{rem} }.
  
 \begin{figure}[h] 
 \begin{frameit}
@@ -44,8 +46,7 @@
 \end{frameit}
 \end{figure}  
  	 
- Note that the instruction \arithOp{} stands for any arithmetic instruction in the list  \instr{add}, \instr{sub}, \instr{mult}, 
- \instr{and}, \instr{or}, \instr{xor} , \instr{ishr}, \instr{ishl}, \instr{div}, \instr{rem} ).
+
  
 
 
@@ -80,14 +81,13 @@
   $$  {\scriptsize \methodd \vdash \bcIns : \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc }   \stateTrans \config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'} } $$
  \end{StateTransition}
 
- We also define the transitive closure of a single execution step with the next definition.
+ We also define the transitive closure of the single execution step with the following definition.
  
 
  \begin{transClosStateTrans0}[Transitive closure of a method state transition relation]\label{stateTransit}
- If  the method \methodd \  starts execution in a state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$ 
- at the entry point instruction \methodd.\body[0]
- and there exists  a transitive state transition  to the state $\config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'}$ we denote this with:
-$$\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'}  $$ 
+ If  in the execution of the method \methodd \ in  state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$  executes an instruction \bcIns{} \ and
+ there exists  a transitive state transition  to the state $\config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'}$ we denote this with:
+$$ {\scriptsize \methodd \vdash \bcIns :\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} \stateTrans^{*} \config{ \heap'}{\counterOnly'}{\stackOnly'}{\locVarOnly'}{\pc'} } $$ 
 \end{transClosStateTrans0}
 
 
@@ -96,11 +96,13 @@ The following definition characterizes the executions that terminate.
 
  \begin{transClosStateTrans1}[Termination  of method execution] \label{stateTransClos}
    If  the method \methodd \  starts execution in a state $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}$   
-   at the entry point instruction \methodd.\body[0] 
-   and there is a transitive state transition to  $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{k}$ 
-    such that the instruction \methodd.\body[k] is either a \return \ instruction or an 
-    instruction which terminates execution with an uncaught exception and the configuration after its execution is 
-    $\configFinal{ \heap'}{\Final}$ then   we denote this  with: 
+   at the entry point instruction \mbox{\rm\methodd.\body[0]} 
+   and there is a transitive state transition to the final state $\configFinal{ \heap'}{\Final}$ then   we denote this  with: 
+
+  % $\config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{k}$ 
+   %   such that the instruction \methodd.\body[k] is either a \return \ instruction or an 
+  %    instruction which terminates execution with an uncaught exception and the configuration after its execution is 
+  %    $\configFinal{ \heap'}{\Final}$ then   we denote this  with: 
     $$ {\scriptsize \methodd : \config{ \heap}{\counterOnly}{\stackOnly}{\locVarOnly}{ \pc } \stateTransTerm \configFinal{ \heap'}{\Final} }$$
  \end{transClosStateTrans1}
  
@@ -124,12 +126,9 @@ The following definition characterizes the executions that terminate.
  
 
    
- Next, we define the operational semantics of every instruction. The operational semantics
- of an instruction states how the execution of an instruction affects the program state configuration 
- in terms of state configuration transitions defined in the previous subsection \ref{def}.
- Note that we do not model the method frame stack of the JVM which is not needed for our purposes. 
 
- Fig. \ref{opSem:jump} shows the rules for the instructions which cause control transfer. The first rule refers to
+We now turn to the semantics of the individual instructions in our language. 
+ Fig. \ref{opSem:jump} shows the rules for control transfer instructions. The first rule refers to
 the instruction \ifCond. The condition \texttt{cond} = $\{ =, \neq, \le, <, >, \ge \} $ is applied to the stack top  \stackOnlyParam{\counterOnly} and the element below the stack top 
 \stackOnlyParam{\counterOnly -1}which must be of type \Myint. If the condition is true then the control is transfered to the instruction
   at index \texttt{n}, otherwise the control continues at the instruction following the current instruction. The top two elements \stackOnlyParam{\counterOnly} and
@@ -167,7 +166,7 @@ $$
 
 
 
-Fig. \ref{opSem:arithStack}  shows the  arithmetic instructions and and the ones  for stack loading and  storing. 
+Fig. \ref{opSem:arithStack}  shows the semantics of  arithmetic instructions and instructions for loading and storing on the operand stack. 
 Arithmetic instruction pop the values which are on the stack top \stackOnlyParam{\counterOnly}  and \stackOnlyParam{\counterOnly - 1}  at the position below
  and apply the corresponding arithmetic operation on them.
  The stack counter is decremented and  the resulting  value on the stack top \stackOnlyParam{\counterOnly - 1} \ \rm{op} \ \stackOnlyParam{\counterOnly}
@@ -182,7 +181,7 @@ found or not the instruction execution will terminate exceptionally or not.
  the content of the local variable $\locVarOnly(i)$ on the stack top \stackOnlyParam{\counterOnly + 1}.  
 The instruction \store{} pops the stack top element \stackOnlyParam{\counterOnly}  and stores it into
  local variable $\locVarOnly(i)$ and  decrements the stack counter \counterOnly.  
-The instruction \iinc{} increments the value of the local variable $\locVarOnly{i}$.   
+The instruction \iinc{} increments the value of the local variable $\locVarOnly(i)$.   
 The instruction  \push{} pushes on the stack top the integer value \textrm{i}
  and increments the stack counter \counterOnly{}. The instruction \pop{} pops the stack top element
  \stackOnly(\counterOnly). The instruction \dup{} duplicates the stack top element  \stackOnly( \counterOnly ).  
@@ -197,7 +196,7 @@ The instruction  \push{} pushes on the stack top the integer value \textrm{i}
 	   \stackOnly' = \update{\stackOnly} {\counterOnly-1}{\stackOnlyParam{\counterOnly} \ \rm{op} \ \stackOnlyParam{\counterOnly-1}} \\
 	   \pc' = \pc + 1
 	   \end{array}}
-		   {\method \vdash  \op :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+		   {\method \vdash  \arithOp :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		          \stateTrans 
                           \config{\heap}{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'} } } \\ \\ 
 {\scriptsize \frac{ 
@@ -206,7 +205,7 @@ The instruction  \push{} pushes on the stack top the integer value \textrm{i}
 	   \stackOnly(\counterOnly) = 0 \\ 
 	   \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \ArithExc ,\methodd.\excHandlerTable ) =  \configVar   
 	   \end{array}}
-		   {\method \vdash  \op :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+		   {\method \vdash  \arithOp :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		          \stateTrans 
 			  \configVar
                            } }\\\\
@@ -436,12 +435,12 @@ $$
 
 Fig. \ref{opSem:obj:manip} and \ref{opSem:obj:creat}  give the semantics for instructions manipulating the program heap.
 Let us first focus on Fig. \ref{opSem:obj:manip} which shows how object fields are accessed and modified.  
-For instance, the instruction \putfield pops the top value contained on the stack top \stackOnlyParam{\counterOnly} 
+For instance, the instruction \putfield{} pops the top value contained on the stack top \stackOnlyParam{\counterOnly} 
 and the reference value contained in \stackOnlyParam{\counterOnly - 1} 
 	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull{} 
 %\footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
 %	for instance, \stackOnlyParam{\counterOnly - 1} contains certainly a reference        of type \texttt{C}  } , 
-the value of its field 	\texttt{f} for the object  is updated with the value\stackOnlyParam{\counterOnly} and
+the value of its field 	\fieldd{} for the object  is updated with the value\stackOnlyParam{\counterOnly} and
  the counter \counterOnly{} is decremented. If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull{} then a \NullPointerExc{} is thrown. 
 
 The instruction for an access of the a value of a particular field for a particular object reference is the 
@@ -452,11 +451,11 @@ in the object referenced by the reference contained in \stackOnlyParam{\counterO
 If \stackOnlyParam{\counterOnly} is \Mynull{} then a \NullPointerExc{} is thrown, i.e. the stack counter is set to 0, a new object of type
 \NullPointerExc{} is created in the memory heap store \heap{} and a reference to it is pushed onto the operand stack.
 
-The instruction \arrstore{} stores the value in \stackOnlyParam{\counterOnly} \ at index \stackOnlyParam{\counterOnly - 1} \ in 
- the array  \stackOnlyParam{\counterOnly - 2}. 
+The instruction \arrstore{} stores the value in \stackOnlyParam{\counterOnly} \ at index \stackOnlyParam{\counterOnly~-~1} \ in 
+ the array  \stackOnlyParam{\counterOnly~-~2}. 
 The three top stack elements \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1} \  and \stackOnlyParam{\counterOnly - 2} 
 are popped from the operand stack. The type value contained in \stackOnlyParam{\counterOnly} must be assignment 
-compatible\todo{say what assignment compatible is} with the type
+compatible with the type
 of the elements of the array reference contained in \stackOnlyParam{\counterOnly - 2},  \stackOnlyParam{\counterOnly - 1} \  must be of type int. 
 The value \stackOnlyParam{\counterOnly} \ is stored in the component at index \stackOnlyParam{\counterOnly - 1} \  of the array  in  \stackOnlyParam{\counterOnly - 2}.
 If \stackOnlyParam{\counterOnly - 2} \ is \Mynull{} a \NullPointerExc{} is thrown. If \stackOnlyParam{\counterOnly - 1}   is not in the bounds of the array 
