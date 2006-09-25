@@ -585,7 +585,7 @@ We will also see how the weakest precondition is defined in the presence of exce
 				
 							$$ \begin{array}{l}
 							          \wpi{\instr{athrow }} {\methodd}{i}  = \\
-								    \stack{\counter} = \Mynull \Rightarrow  \methodd.\getExcPost( i, \NullPointerExc) \\  
+								    \stack{\counter} = \Mynull \Rightarrow  \methodd.\excPost( i, \NullPointerExc) \\
 								     \wedge \\
 							          \stack{\counter} \neq \Mynull \Rightarrow \\
 								    \begin{array}{l}  
@@ -601,9 +601,9 @@ We will also see how the weakest precondition is defined in the presence of exce
 							   \end{array}
 							$$ \\
 						The thrown object is on the top of the stack \stack{\counter}.
-						If the stack top object \stack{\counter} \ is \Mynull, then the instruction \athrow will terminate on an exception
-						\NullPointerExc \ where the predicate returned by the function $ \methodd.\excPost$ must hold.
-						The case when  the thrown object is not \Mynull \  should consider all the possible exceptions that
+						If the stack top object \stack{\counter} \ is \Mynull, then the instruction \athrow{}  terminates on an exception
+						\NullPointerExc \ where the predicate returned by the function $ \methodd.\excPost( i, \NullPointerExc)$ must hold.
+						The case when  the thrown object is not \Mynull{}  should consider all the possible exceptions that
 						might be thrown by the current instruction. This is because we do not know the type of the thrown object which is
 						on the stack top.
 						The part of the \fwpi \ when the thrown object on the stack top  \stack{\counter} \ is not \Mynull \ considers all the possible types

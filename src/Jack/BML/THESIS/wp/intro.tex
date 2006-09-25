@@ -18,20 +18,15 @@ is an overview of the existing work in the domain.
 
 
 
-%what is different w.r.t source
-Performing Hoare style logic verification over an unstructured program like bytecode programs has few particularities which
-verification of structured programs lacks. For example, loops on source level correspond to a syntactic structure in the source language and thus, identifying
-a loop in a source program is not difficult.  However, this is not the case for unstructured programs. 
-As we saw in the previous section \ref{bcsl}, our approach consists in compiling source specification into
-bytecode specification. When compiling a loop invariant, we need to know where exactly in the bytecode the invariant must hold.
-Section \ref{prelim} introduces the notion of a loop in an unstructured program.
+
 
 % definition of the wp
 As we stated earlier, our verification condition generator is based on a weakest precondition (wp) calculus. As we shall see in Section  \ref{wpRules}
 a wp function for bytecode is similar to a wp function for source code. However, a logic tailored to stack based bytecode should take into account 
 particular bytecode features as for example the operand stack.
 
-
+%example
+Finally, section \ref{wp:example} gives an example for how the verification condition generator works.
 
 % proof of correctness
 %An important question is the correctness of our methodology, i.e. what guarantees that if the verification procedure succeeds on a program then 
