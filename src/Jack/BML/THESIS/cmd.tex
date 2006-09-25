@@ -4,8 +4,7 @@
  \newcommand{\bcIns}{\mbox{ \rm I} }
  \newcommand{\instrs}{\mbox{ \rm IS} }
  \newcommand{\ifCond}{\instr{if\_cond}}
- \newcommand{\nop}{\instr{nop
-}}
+ \newcommand{\nop}{\instr{nop}}
  \newcommand{\goto}{\instr{goto}}
  \newcommand{\return}{\instr{return}}
  \newcommand{\arithOp}{\instr{arith\_op}}
@@ -41,7 +40,7 @@
 \newcommand{\java}[1]{\texttt{#1}}
 \newcommand{\stack}[1]{\mbox{\rm\textbf{st}}(#1)}% element on top stack 
 \newcommand{\stackOnly}{\mbox{\rm St}}
-\newcommand{\stackOnlyParam}[1]{\mbox{\rm St}~(~#1~)}
+\newcommand{\stackOnlyParam}[1]{\mbox{\rm St}(#1)}
 \newcommand{\newStack}{ \lbrack~\rbrack  } % empty stack
 \newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
 
@@ -53,7 +52,7 @@
 
 
 
-\newcommand{\instr}[1]{\mbox{\rm #1}}
+\newcommand{\instr}[1]{\mbox{\rm\texttt{#1}}}
 
 %\newcommand{\loopStart}[1]{\textbf{loop\_start$\tt{_#1}$}}
 %\newcommand{\loopEnd}[1]{\textbf{loop\_end$\tt{_#1}$}}
