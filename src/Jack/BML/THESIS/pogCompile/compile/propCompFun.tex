@@ -47,21 +47,26 @@ Actually, the compilation of every statement or expression in the example has th
 \end{compProp0}
 The proof is trivial and is by case analysis of the compiled statements.
 
-Let us now turn to the next property. Informally, it states  that  if there are instructions inside a compiled statetement or expression 
- $\compileLabel{s}{\ExprStmt}{e}$ which are in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
+Let us now turn to the next property. It states  that  if there is an instructions inside a compiled statetement or expression 
+ $\compileLabel{s}{\ExprStmt}{e}$ which   is in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
 $\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
-of $\ExprStmt$ 
- then   $ k  = e +1$. 
- The conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and 
-$\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
-the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper handler exception handler.
-For illustration, we may consider Fig. \ref{pogEquiv:compile:prop} and see that the compilation of the statement  
-\lstinline!if ( i >= 0) then {v = i} else {v = -i}! 
-which comprises instructions from 4 to 11. 
-Thus, the compilation contains two jump instructions. The first is the instruction \lstinline!5 ifge 10! which jumps inside the compilation of the if statement
-and the instruction \lstinline!9 goto 12!  which jumps apparently to instruction 12. 
-We can now state this property formally.
+of $\ExprStmt$  then   $ k  = e +1$. Informally,  this means that if there are jumps from inside the compilation  $\compileLabel{s}{\ExprStmt}{e}$  of $\ExprStmt$   
+outside then the target of the jump is $e +1$.
 
+For illustration, we may consider Fig. \ref{pogEquiv:compile:prop} and focus on the compilation of the statement  
+\lstinline!if ( i >= 0) then {v = i} else {v = -i}! 
+which comprises instructions from 4 to 11. Note that sequential instructions   have as  successor the next instruction.  Thus, sequential
+instructions respect this condition. 
+Only jump instructions may cause control transfer outside the \lstinline!if! compilation. 
+We notice that the compilation contains two jump instructions. 
+The first is the instruction \lstinline!5 ifge 10! which jumps inside the compilation of the if statement
+and the instruction \lstinline!9 goto 12!  which jumps apparently to instruction 12. 
+Thus, the compilation of the \lstinline!if! statement respects the property.
+
+We can now state this property formally.
+ Note that in the formalization,  the conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and 
+$\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
+the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper exception handler.
 \begin{compProp1}[Compilation of statements and expressions]\label{compile:prop:compProp1}
     For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
@@ -89,8 +94,9 @@ The next  property  of the compiler is that any statement or expression   is
 such that there could not be jumps  from outside inside the compilation of a statement or expression, i.e.
 the control flow can reach the instructions representing the compilation $\compileLabel{s}{\ExprStmt}{e}$ 
  of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$. 
-For instance, the instructions in the compilation of any statement(expression) in Fig. \ref{pogEquiv:compile:prop}
- can be reached from outside of the statement(expression) compilation only via the first instruction of the statement(expression) compilation.
+ For instance, the instructions 14-29 in the compilation of the while statement
+ in Fig. \ref{pogEquiv:compile:prop} 
+ can be reached from outside of the statement compilation only via the instruction at index 14.
 
 \begin{compProp2}[Compilation of statements and expressions]\label{compile:prop:compProp2}
  For all  statements $\ExprStmt'$  and $\ExprStmt$, such that $\substatement{\ExprStmt }{\ExprStmt'} $
