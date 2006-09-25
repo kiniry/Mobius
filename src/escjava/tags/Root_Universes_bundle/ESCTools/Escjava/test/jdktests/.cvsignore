@@ -1,0 +1,7 @@
+*.class
+*.java-ckd
+.sedScript
+listfiles
+listtests
+testfile
+tests_built

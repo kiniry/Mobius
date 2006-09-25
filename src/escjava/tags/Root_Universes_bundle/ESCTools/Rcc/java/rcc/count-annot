@@ -1,0 +1,29 @@
+# Copyright 2000, 2001, Compaq Computer Corporation
+
+#!/bin/tcsh
+#    find $1 -name \*.java | xargs egrep "\*#\(" | lim ~/proj/Rcc/java/rcc/getAllPragmas.lim |sort > /tmp/cow
+    find $1 -name \*.java | xargs cat | lim ~/proj/Rcc/java/rcc/getAllPragmas.lim | egrep "#\(" sort > /tmp/cow
+
+echo "requires"
+egrep "requires" /tmp/cow | wc
+
+echo "guarded_by"
+egrep "guarded_by" /tmp/cow | wc
+
+echo "holds"
+egrep "holds" /tmp/cow | wc
+
+echo "no_warn"
+egrep "no_warn" /tmp/cow | wc
+
+echo "{}"
+egrep "\{|\}" /tmp/cow | wc
+
+echo "thread_"
+egrep "thread_" /tmp/cow | wc
+
+cat /tmp/cow | wc
+
+cat /tmp/cow
+
+
