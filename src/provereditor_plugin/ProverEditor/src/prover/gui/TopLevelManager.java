@@ -191,6 +191,8 @@ public class TopLevelManager extends ViewPart implements IColorConstants {
 	
 	
 	private boolean progress_intern (ProverFileContext pc, int realoldlimit, int oldlimit) { 
+		if(fParser == null)
+			return false;
 		fParser.setRange(pc.doc, oldlimit, pc.doc.getLength() - oldlimit);
 		UpdateJob uj;
 		IToken tok;

@@ -60,4 +60,9 @@ public class ProverEditor extends TextEditor{
 			return super.getAdapter(cl);
 		}
 	}
+	 protected void initializeKeyBindingScopes() {
+	        setKeyBindingScopes(new String[] { //"org.eclipse.ui.textEditorScope", 
+	        		 "ProverEditor.context" });
+	  }
+
 }

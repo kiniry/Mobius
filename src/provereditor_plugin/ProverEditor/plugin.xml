@@ -67,17 +67,17 @@
          point="org.eclipse.ui.bindings">
       <key
             commandId="ProverEditor.jump_forward"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+ARROW_RIGHT"/>
       <key
             commandId="ProverEditor.jump_backward"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+ARROW_LEFT"/>
       <key
             commandId="ProverEditor.progress_command"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+ARROW_DOWN"/>
       <scheme
@@ -87,7 +87,7 @@
             parentId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
       <key
             commandId="ProverEditor.back_command"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+ARROW_UP"/>
       <key
@@ -97,12 +97,12 @@
             sequence="M1+M3+HOME"/>
       <key
             commandId="ProverEditor.eval_all_command"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+END"/>
       <key
             commandId="org.eclipse.ui.edit.text.cut.line.to.end"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+K"/>
    </extension>
@@ -191,6 +191,14 @@
             icon="icons/icon_lego_gray.gif"
             id="ProverEditor.topview"
             name="Prover Editor Toplevel"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="While editing a file from a prover"
+            id="ProverEditor.context"
+            name="In ProverEditor"
+            parentId="org.eclipse.ui.textEditorScope"/>
    </extension>
 
 </plugin>
