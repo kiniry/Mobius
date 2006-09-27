@@ -2,7 +2,7 @@
 <feature
       id="ProverEditorFeature"
       label="ProverEditorFeature"
-      version="0.1.0">
+      version="0.1.1">
 
    <description url="http://gforge.inria.fr/projects/provereditor/">
       Contains ProverEditor and all its plugins.
@@ -25,6 +25,13 @@
 
    <plugin
          id="prover.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="coq.sugar"
          download-size="0"
          install-size="0"
          version="0.0.0"

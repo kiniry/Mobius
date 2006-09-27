@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <feature url="features/ProverEditorFeature_0.1.0.jar" id="ProverEditorFeature" version="0.1.0"/>
+   <feature url="features/ProverEditorFeature_0.1.1.jar" id="ProverEditorFeature" version="0.1.1"/>
 </site>
