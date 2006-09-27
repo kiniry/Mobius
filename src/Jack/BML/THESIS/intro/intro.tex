@@ -1,108 +1,75 @@
-A natural question is to ask what are the motivations behind building a bytecode verification condition generator (vcGen for short)
- while a large list of tools for source code verification exists. 
-We will try in the following to give an answer to this question. Let us start with a brief description of the context of the present thesis.
-\section{Context}
-%context
-  Establishing trust in software components that originate from untrusted or unknown producers is an important issue  for trusted personal devices
-  (TPDs for short) such as smart cards, mobile phones, bank cards.
-   TPDs  commonly rely on execution platforms such as the Java 
-  Virtual Machine(JVM) and the Common Language Runtime. Such platforms are
-  considered appropriate for TPDs since they allow applications to
-  be developed in a high-level language without committing to any
-  specific hardware and since they feature security mechanisms that
-  guarantee the innocuousness of downloaded applications.
-        
+% Java source
+Since the beginning of programming languages, the problem of program correctness has been an issue. 
+Especially this is the case today when complex programming applications  enter into our daily life and perform actions 
+which may potentially compromise confidential data or the performance of the computer system they are executed on etc.
+
+
+% Applications 
+Among the programming systems which has gained a lot of popularity in industry is the Java platform of Sun Microsystems. % and the Common Language Runtime (CLR) of Microsoft.  
+ The reasons for the  success of Java is that it allows applications to 
+ be developed in a high-level language without committing to any
+specific hardware and since it features security mechanisms which
+guarantee the innocuousness of downloaded applications. 
+For instance, smart card applications are relying on the Java framework and
+ more particularly on the JavaCard framework a dialect of Java tailored to small devices. 
 
 
 
- % state of the art
-Depending on what exactly we want to guarantee about the security of an executable software component 
- different techniques exist:
+% source verification. Helps developers, software audit 
+Thus, a necessary phase in the program development is the validation of the program implementation, during which 
+the producer checks if the written code conforms to her/his intentions. 
+These intentions are usually expressed as  a functional specification in terms of a relation between the program
+input and output, or a property which  should hold all along the execution of the application. 
 
-%Establishing trust in software components that originate from untrusted or unknown producers is an important issue in areas such as
-% smart card applications, mobile phones, bank cards, ID cards and whatever scenario where untrusted code should be installed and executed.
-%The present paper addresses the  problem of establishing trust in software components that originate from untrusted or unknown producers. 
-%The question concerns important areas like 
-%smart card applications, mobile phones, bank cards, ID cards and whatever scenario where untrusted code should be installed and executed.
+A widely used approach is to perform testing. However, this technique is not capable
+to cover all the input space and thus, although the tests have been successfull, 
+the implemntation may still contain errors. This, of course, is not desirable in particular in the case of a critical 
+program applications as is the case for applications which target smart cards. 
 
-%context related work
-\begin{description}
-    % source
-   \item [verification over the source code] 
-     The field of source verification is wildly studied and several  tools exists for
-     dealing with source verification. We can start the listing with the Eiffel programming system \todo{} 
-     upto all the verification tools tailored to Java: esc/java \cite{escjava}, the Loop tool \cite{jacobs03java},
-     Krakatoa \cite{marche03krakatoa},
-     Jack \cite{BRL-JACK}.  
-     However, using source verification techniques 
-     for guaranteeing properties on the interpreted code requires 
-     (1) that the source code accompanies the bytecode (2) the code receiver trust the compiler. 
+ Another possibility is to use formal verification methods. Such technique relies on:
+\begin{itemize} 
+   \item annotations of the implemention which express the intended behavior of the program. The annotations
+         are written in a formal specification language.
+   \item a program logic which  generates logical (verification) conditions  from the annotations and the program. 
+         The truthfulness of these conditions implies that the implementation respects the annotations and thus,
+	 that the implementation respects the initial specification. 
+    
+   \item a decision procedure which should decide if the conditions hold.     
+           
+\end{itemize}
+Contrary to program testing,  formal program verification guarantees that if the verification procedure 
+has been successfull then the implementation respects the specification. 
+ The field of formal  verification is wildly studied and several  tools exist for
+dealing with Java source verification. We should mention in the list of the verification tools tailored to Java the extended static checker
+esc/java \cite{escjava}, the Loop tool \cite{jacobs03java},
+Krakatoa \cite{marche03krakatoa}, Jack \cite{BRL-JACK}. These tools are tailored to Java source code and thus,
+ are helpful for the development process. For instance, the developer may use such verification tools for discovering program bugs and
+ errors. More generally, verification on source code allows the code producer to audit the quality of a software implemention.
+ 
+However, there are scenarios in which source verification will be of less help. Examples for such cases are:
+\begin{itemize}
+    \item  mobile code scenarios where the client should generate the verification conditions and where he receives usually only
+           the interpreted bytecode (which usually is not accompanied by its respective source code). And even if the client receives the source code
+	   with the bytecode, he should trust the compiler which is not desirable.
+    \item  specific applications like the use of formal methods to optimizing compilers. In this case, the verification on source code
+           is not pertinent as it should identify the places in the bytecode which may be optimized.
+\end{itemize} 
 
-   % bytecode verification
-   \item [type based verification techniques] 
-     This approach does not need the presence of the source code neither require to trust the compiler as
-     the checks can be done directly on bytecode. In particular, a typical example is the Java bytecode
-     verifier (see \cite{Ljbc}) which is part of the JVM. The bytecode verifier performs static analysis over the bytecode yet,
-     it can only guarantee that  the code is well typed and well structured or in other words that the
-     bytecode does not corrupt the performance of the virtual machine. 
+In these scenarios it is necessary to perform the verification  directly on bytecode level. In particular, we propose a bytecode
+ verification  scheme which we present hereafter.
 
-   % dynamic checks  
-   \item [dynamic checks] This approach consists in performing checks dynamically on execution time.    
-     However, the performance is compromiseds especially in the case of 
-     devices with limitted resources.  For example,
-     the Java security architecture ensures that applications will not
-     perform illegal memory accesses through stack inspection, which
-     performs access control during execution
-   
-   %PCC
-   \item[proof carrying code]
-     The Proof Carrying Code paradigm (PCC) and the certifying compiler \cite{DesNecLee98} are another alternative.
-     In this architecture, untrusted code
-     is accompanied by a proof for its safety w.r.t. to some safety property and the code receiver has  to generate the 
-     verification conditions and type check the proof against them. 
-     The proof is generated automatically by the certifying compiler for properties like well typedness or safe memory access. 
-     As the certifying compiler is designed to be completely automatic, it will not be able to deal with rich functional or security properties. 
-\end{description}
-% what features should have a framework for dealing with complex properties
-
-
-
-\section{Motivations}
-
-The present thesis addresses the issue of bytecode verification and aims at the following features:
-\begin{description}
-   % source
-   \item [no trust in the compiler required] 
-         Our objective will be to build a verification framework which does not make assumptions on the compiler.
-         In the case of critical software the client will not be willing to trust the compiler. In particular, he would like
-         to get a direct evidence that the executable software component  he receives will behave in the expected way 
-   \item [Java bytecode] 
-         Java is widely used  in software industry mainly because of its platform independence and its secure mechanisms.
-	 This in particular is true for the TPD industry where guarantees of software quality and security are 
-	 important. From a practical point of view, we consider that Java is a  good target for a verification framework.
-   \item [verify complex client policies]
-         Criteria for software quality may potentially be complex. For instance, in a mobile code 
-	 scenario where a client receives an untrusted implementation of an interface and he would like to get a guarantee
-	 that the implementation respects the functional specification of the interface. Note that such kind of checks may be not easily verified
-	 with type checking.
-	 
-         % A complete automation of the verification process limits the verification only to certain
-	 % problems ``easy to check'' and thus, can not be applied to complex client policies because of
-	 % the well - known problem of undecidability our approach is not fully automated. 
-
-\end{description}
-
-
-
-\section{Novel approach}
-In order to respect the above requirements we propose a framework with the following components:
+   \section{Contributions}
+We propose a framework which allows the verification of bytecode programs against complex functional and safety properties, which has the following 
+components.
 \begin{description}
    \item [Verification condition generator for Java bytecode]
          As we stated above, we target to build a framework where no assumptions for the compiler are made.
 	 Thus, we propose a verification condition generator (VcGen for short) for Java bytecode which is completely independent from 
 	 the source code. The verification condition generator a large subset of Java and deals with
 	 arithmetic operations, object creation and manipulation,
-	 method invokations, exception throwing and handling, stack manipulation etc. 
+	 method invokations, exception throwing and handling, stack manipulation etc.
+	 The verification condition relies on a standard weakest predicate transformer function
+	 and  has a proof of soundness.
 	 
 	 We have an implementation which is integrated in Jack (short for Java Applect Correctness Kit) \cite{BRL-JACK} which is a user friendly 
 	 plugin for the eclipse ide \footnote{http://www.eclipse.org/}. 
@@ -141,9 +108,7 @@ In order to respect the above requirements we propose a framework with the follo
 	 For properties like well typedness specification can be inferred automatically,
 	 but in the general case this problem is not decidable.  
 	 Thus, for more sophisticated policies, an automatic inference will not work.
-	 A compiler from JML to BML  makes the Java  bytecode benefit from
-	 %the source specification by defining the BML language and
-	 a compiler from JML  towards BML.
+	 A compiler from JML to BML  makes the Java  bytecode benefit from the JML source specification.
 
     \item[Equivalence between source and bytecode proof obligations] Such an equivalence is useful when programs and requirements over them are complex.
          In this case, an interactive verification procedure over the source code  could be helpful.
@@ -158,7 +123,59 @@ In order to respect the above requirements we propose a framework with the follo
 	 can be shipped  to the client.
 \end{description}
 
-%Such a framework may be used for different purposes. We illustrate this by two examples - verification of constraint memory consumption policies and   optimization of Java to native compiler.
+\section{Related work}
+
+There exists different techniques for establishing that a program respects certain condition. Here, we make a brief review:
+
+\begin{description}
+  
+  
+
+   % bytecode verification
+   \item [type based verification techniques] 
+     This approach does not need the presence of the source code neither require to trust the compiler as
+     the checks can be done directly on bytecode. In particular, a typical example is the Java bytecode
+     verifier (see \cite{Ljbc}) which is part of the JVM. The bytecode verifier performs static analysis over the bytecode yet,
+     it can only guarantee that  the code is well typed and well structured or in other words that the
+     bytecode does not corrupt the performance of the virtual machine. 
+
+   % dynamic checks  
+   \item [dynamic checks] This approach consists in performing checks dynamically on execution time.    
+     However, the performance is compromised especially in the case of 
+     devices with limitted resources.  For example,
+     the Java security architecture ensures that applications will not
+     perform illegal memory accesses through stack inspection, which
+     performs access control during execution
+   
+   %PCC
+   \item[proof carrying code]
+     The Proof Carrying Code paradigm (PCC) and the certifying compiler \cite{DesNecLee98} are another alternative.
+     In this architecture, untrusted code
+     is accompanied by a proof for its safety w.r.t. to some safety property and the code receiver has  to generate the 
+     verification conditions and type check the proof against them. 
+     The proof is generated automatically by the certifying compiler for properties like well typedness or safe memory access. 
+     As the certifying compiler is designed to be completely automatic, it will not be able to deal with rich functional or security properties. 
+     
+     A candidate for future work is putting together the bytecode verification condition generator, 
+     the  BML language and the equivalence between source and bytecode verification conditions into a PCC framework for complex policies.
+     In such a framework, the client
+     will, as usual, rely  on the bytecode verification condition generator and  the certificate sent by the client. 
+     However, differently from the existing schemes for PCC, the producer site will generate \textit{interactively} the certificate (formal proof) 
+     over the \textit{source code}. This is motivated by the fact that the client policies may be non trivial and making an interactive proof over the source
+     code will make finding the proof realistic.
+
+\end{description}
+
+\section{Applications}
+We have applied our verification condition generator in two cases. The first one is the verification of constraint memory consumption policies.
+ Indeed, it is an important issue for devices with limited resources as smart cards to have a guarantee that a newly installed application 
+will not corrupt the whole system because of malevolent resource usage. In such critical situations, bytecode verification is suitable
+as it does not compromize the compiler. 
+
+
+We have also shown how bytecode verification can be applied to  bytecode to native compiler optimizations. Because the verification is performed
+on bytecode, we can relate verification conditions to the particular program point to which they relate to. This helps to identify
+the program points which can be optimized. 
 
 
 
@@ -166,7 +183,7 @@ In order to respect the above requirements we propose a framework with the follo
 \section{Plan of the thesis}
 
 
-The present thesis is organized as follows. In the next Chapter \ref{opSem}, we introduce
+The present thesis is organized as follows. In the next Chapter \ref{opSem:prelim}, we introduce
  the bytecode language and its operational semantics which will be used all along the thesis for the definition of the verification condition generator and the proof
 of its soundness. 
 Chapter \ref{bcsl} presents the syntax and semantics of the Bytecode Modeling Language (BML) and the compiler from JML to BML. 
