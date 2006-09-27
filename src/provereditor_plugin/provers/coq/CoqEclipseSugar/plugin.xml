@@ -24,14 +24,6 @@
             id="CoqEditor.category"
             name="Coq"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="ProverEditor.jump_tag"
-            contextId="ProverEditor.context"
-            schemeId="ProverEditor.scheme"
-            sequence="F3"/>
-   </extension>
 
 
 </plugin>
