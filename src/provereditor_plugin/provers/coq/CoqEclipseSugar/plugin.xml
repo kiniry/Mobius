@@ -27,17 +27,11 @@
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="CoqEclipseSugar.command1"
+            commandId="ProverEditor.jump_tag"
             contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="F3"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            defaultHandler="fr.inria.everest.coq.sugar.Jump"
-            id="CoqEclipseSugar.command1"
-            name="CoqEclipseSugar.command1"/>
-   </extension>
+
 
 </plugin>
