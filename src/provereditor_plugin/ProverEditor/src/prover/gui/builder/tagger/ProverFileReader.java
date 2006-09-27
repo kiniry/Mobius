@@ -255,7 +255,7 @@ public class ProverFileReader extends Reader {
         synchronized (lock) {
             ensureOpen();
 
-	bufferLoop:
+	//bufferLoop:
 	    for (;;) {
 
 		if (nextChar >= nChars)

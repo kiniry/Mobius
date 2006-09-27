@@ -142,6 +142,11 @@
             defaultHandler="prover.gui.actions.JumpForward"
             id="ProverEditor.jump_forward"
             name="Jump Forward"/>
+      <command
+      		categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.JumpToTag"
+            id="ProverEditor.jump_tag"
+            name="Jump to tag"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
