@@ -105,6 +105,11 @@
             contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+K"/>
+      <key
+            commandId="ProverEditor.jump_tag"
+            contextId="ProverEditor.context"
+            schemeId="ProverEditor.scheme"
+            sequence="F3"/>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
