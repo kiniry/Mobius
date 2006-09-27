@@ -1,7 +1,5 @@
 \section{Introduction}
 
-
-
 The prominent role played by trusted personal devices in security
 sensitive applications make them an ideal target for
 attacks. Traditionally, the main concern with smartcards has been with
@@ -49,7 +47,7 @@ guarantees about the security of a TPD and its applications.
 Essentially, the levels are: the hardware, platform, the libraries,
 and the applications.
 
-\paragraph*{Platform} The TPD security architecture guarantees that
+The TPD security architecture guarantees that
 downloaded applications are innocuous and comply with some basic
 policies related to typing, initialization or access control. Such
 basic policies are the cornerstones upon which the overall security of
@@ -60,7 +58,7 @@ security is platform verification, which aims at providing an abstract
 model of the Java platform and security architecture, and at proving
 that the security functions play their expected role.
 
-\paragraph*{Libraries} However, it is not sufficient to show that
+However, it is not sufficient to show that
 security functions are correctly designed. In particular, one also has
 to ensure that other components of the infrastructure, in particular
 API, are correctly designed and implemented. For the purpose of this
@@ -68,8 +66,6 @@ deliverable, where the focus is on Java based TPD, the Java API and
 the Global Platform API constitute two prominent components of the
 infrastructure whose correct design is central to security. 
 
-
-\paragraph*{Applications} 
 Platform and libraries verification is a fundamental step towards
 guaranteeing the security of TPD, and a prerequisite for Common
 Criteria evaluations at the highest levels. Nevertheless, the
@@ -83,16 +79,13 @@ formal methods to TPD security. To date, testing campaigns remain the
 primary means to ensure the quality of applications. However, testing
 campaigns are expensive and only provide partial guarantees with
 regard to the reliability of software. Therefore, it is important to
-develop other advanced techniques for applet validation.
-
-There are many facets to applet validation, each with its own
+develop other advanced techniques for applet validation. In this wqy, there are many facets to applet validation, each with its own
 objectives and techniques:
 \begin{itemize}
 \item one can enhance existing security architectures to enforce
 security properties not addressed by current architectures, in
 particular confidentiality and availability.  Verification can be
 performed by enhanced bytecode verification mechanisms;
-
 
 \item one can abandon the realm of type systems and its associated
 benefits and choose develop logical methods for specifying and
@@ -101,15 +94,12 @@ security properties. Verification can be performed by (possibly
 efficient and hence incomplete) logic-based proof inference
 mechanisms;
 
-
 \item one can exploit the expressive power of logical methods to
 require that applications, or at least sensitive fragments of
 applications, are subjected to functional verification, i.e. to
 verifications that establish their correctness in terms of
 functionality as well as security.
 \end{itemize}
-
-
 
 \subsection{Logical verification of security properties using JML}
 In order to provide precise analyzes with a limited overhead, we
@@ -129,8 +119,6 @@ language and the development of JACK and its associated feature.
 Using those techniques, Java developers should be able to validate
 their code, or at least to get a good assurance on its correctness.
 
-
-\subsubsection{JML}
 JML~\cite{Leavens-Baker-Ruby99b,Leavens-Baker-Ruby03}, the ``Java
 Modeling Language'', is a behavioral interface specification language
 for Java; that is, it specifies both the behavior and the syntactic
@@ -187,8 +175,6 @@ by tools that support JML\@.  Within annotation comments JML extends the
 Java syntax with several keywords.  It also extends Java's expression syntax with several
 operators.
 
-\subsubsection{Verification techniques and tools}
-
 JML specifications correctness can be verified either during runtime
 or statically~\cite{BurdyCCEKLLP03}. To be verified during runtime, the
 source code must have been compiled using \texttt{jmlc}, which is a
@@ -221,7 +207,6 @@ can be discharged using proof assistants or automatic provers.
 The work reported in this article builds upon the JACK tool that has been developed initially by Gemplus, and since 2003 by INRIA
 in the context of a bilateral collaboration with Gemplus, and then
 in the context of the INSPIRED project.
-
 The objective, when the tool was transfered to INRIA, was to improve and increase its functionalities. The main contributions of the work are:
 \begin{itemize}
 \item support for verifying high-level security properties
@@ -229,10 +214,9 @@ The objective, when the tool was transfered to INRIA, was to improve and increas
 \item validation of the methodology for estimating resource
 usage and optimizing code for low-footprint.
 \end{itemize}
-In order to carry the above tasks and evaluations, it has also
-been necessary to make many improvements to the tool itself.
+%In order to carry the above tasks and evaluations, it has also
+%been necessary to make many improvements to the tool itself.
 
-%\subsection{Contents of the article}
-This document is organized as follows, the next section describes the JACK tool with its
+This article is organized as follows, the next section describes the JACK tool with its
 extension feature, section 3 presents some evaluations done with the
 tools and the last section concludes.
