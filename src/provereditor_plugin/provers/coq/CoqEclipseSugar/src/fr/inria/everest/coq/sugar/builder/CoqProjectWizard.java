@@ -6,6 +6,8 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
+import prover.gui.builder.ProjectNature;
+
 public class CoqProjectWizard extends BasicNewProjectResourceWizard {
 
     public boolean performFinish() {
@@ -17,7 +19,7 @@ public class CoqProjectWizard extends BasicNewProjectResourceWizard {
 			String [] natures = desc.getNatureIds();
 			String [] newNatures = new String[natures.length + 1];
 			System.arraycopy(natures, 0, newNatures, 0, natures.length);
-			newNatures[natures.length] = CoqNature.NATURE_ID;
+			newNatures[natures.length] = ProjectNature.NATURE_ID;
 			desc.setNatureIds(newNatures);
 			proj.setDescription(desc, null);
 		} catch (CoreException e) {

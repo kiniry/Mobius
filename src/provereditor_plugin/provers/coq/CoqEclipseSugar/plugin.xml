@@ -4,13 +4,6 @@
 
 
    <extension
-         point="org.eclipse.ui.ide.projectNatureImages">
-      <image
-            icon="icons/proj.gif"
-            id="CoqEditor.project.image"
-            natureId="coq.editor.coqNature"/>
-   </extension>
-   <extension
          point="org.eclipse.ui.newWizards">
       <wizard
             category="CoqEditor.category"
@@ -30,6 +23,21 @@
       <category
             id="CoqEditor.category"
             name="Coq"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="CoqEclipseSugar.command1"
+            contextId="ProverEditor.context"
+            schemeId="ProverEditor.scheme"
+            sequence="F3"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="fr.inria.everest.coq.sugar.Jump"
+            id="CoqEclipseSugar.command1"
+            name="CoqEclipseSugar.command1"/>
    </extension>
 
 </plugin>
