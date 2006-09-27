@@ -44,6 +44,13 @@ public class JumpToTag implements IHandler{
 					return null;
 				}
 			}
+			while(iter.hasNext()) {
+				TagStruct ts = (TagStruct) iter.next();
+				if(ts.name.equals(word)) {
+					ts.show();
+					return null;
+				}
+			}
 		}
 		return null;
 	}

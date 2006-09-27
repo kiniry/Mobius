@@ -27,22 +27,15 @@ public class Tagger {
 	private TagTable tags = new TagTable();
 	private IProject fProject;
 	
-	public void run(IFile fResource) {
-		
-		if(fResource == null)
+	public void run(IFile f) {
+		if(f == null)
 			return;
-		if(fResource.getProject().equals(fProject)) {
-			return;
-		}
-		
-		loadTags(fProject);
-		
-
+		loadTags(f.getProject());
 	}
 	
 	
 	public void loadTags(IProject project) {
-		if(project.equals(fProject)) {
+		if(project == null || project.equals(fProject)) {
 			return;
 		}
 		fProject = project;
