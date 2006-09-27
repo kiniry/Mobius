@@ -200,5 +200,31 @@
             name="In ProverEditor"
             parentId="org.eclipse.ui.textEditorScope"/>
    </extension>
+   <extension
+         point="org.eclipse.core.resources.builders"
+         id="builder"
+         name="ProverEditor builder">
+      <builder
+            hasNature="true"
+            isConfigurable="true">
+         <run class="prover.gui.builder.ProjectBuilder"/>
+      </builder>
+   </extension>
+   <extension
+         id="nature"
+         name="ProverEditor Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="prover.gui.builder.ProjectNature"/>
+      </runtime>
+      <builder id="prover.editor.builder"/>
+   </extension>
 
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/proj.gif"
+            id="ProverEditor.project.image"
+            natureId="prover.editor.nature"/>
+   </extension>
 </plugin>

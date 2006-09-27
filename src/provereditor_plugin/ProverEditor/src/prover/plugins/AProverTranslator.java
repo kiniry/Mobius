@@ -1,5 +1,7 @@
 package prover.plugins;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -127,6 +129,10 @@ public abstract class AProverTranslator {
 	 */
 	public ProverType getFileOutline(ProverEditor editor, IDocument doc, ProverType root) {
 		return root;
+	}
+	
+	public Pattern [] [] getTagPatterns() {
+		return new Pattern[0][0];
 	}
 
 }
