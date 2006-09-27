@@ -1,6 +1,7 @@
 package fr.inria.everest.coq.editor;
 
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
@@ -242,6 +243,21 @@ public class CoqProverTranslator extends AProverTranslator implements ICoqColorC
 		
 		ccf.parse(root);
 		return root;
+	}
+	
+	private final static Pattern [] [] pats = {
+		{Pattern.compile("\\s*Module Type\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Module\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Definition\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Lemma\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Fixpoint\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Axiom\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Parameter\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Inductive\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		{Pattern.compile("\\s*Variable\\s*"), Pattern.compile("[a-zA-Z_0-9]*")},
+		};
+	public Pattern [][] getTagPatterns() {
+		return pats;
 	}
 
 }
