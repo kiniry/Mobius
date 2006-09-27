@@ -9,23 +9,18 @@ that do guarantee the lack of programming mistakes and that
 all security properties that have been specified and verified
 do indeed hold.
 
-This chapter describes some tools that can be handled to validate Java applications
+This section describes some tools that can be handled to validate Java applications
 and methodologies that can be applied depending on different
 validation purposes.  All those tools are part a Java application
 validation workshop called JACK.
 
 \subsection{JACK}
-This section presents the Java Applet Correctness Kit (or \JACK).
-This tool, already briefly described in \cite{BRL-JACK}, is
+The Java Applet Correctness Kit (or \JACK), already briefly described in \cite{BRL-JACK}, is
 a formal tool that allows one to prove properties on Java programs
 using the Java Modeling Language \cite{Leavens-Baker-Ruby03} (JML).
-It has been developed initially by Gemplus, and since 2003 by INRIA
-in the context of a bilateral collaboration with Gemplus, and then
-in the context of the INSPIRED project.
 
-
-It generates proof obligations allowing to prove that the Java code
-conforms to its JML specification.  The lemmas are translated into an
+It generates proof obligations (also called verification condition) allowing to prove that the Java code
+conforms to its JML specification.  The lemmas issued from the generation are are described into an
 internal formula language called JPOL (Java/Jack Proof Obligation
 Language). Then JPOL verification conditions are translated into
 different prover language, namely Coq, PVS, Simplify and the B
@@ -45,7 +40,7 @@ like the Coq proof assistant, PVS or Click'n'Prove.
 
 \subsubsection{Jack Proof Obligation Language}
  \label{JPOL}
-The Java/Jack Proof Obligation Language is an internal language used in Jack to represent verification conditions issued from the weakest precondition calculus. It can be considered as a melting-pot language based on first order logic with some specific features like:
+The Java/Jack Proof Obligation Language is an internal language used in Jack to represent verification conditions issued from the weakest precondition calculus. It can be considered as a melting-pot high level language based on first order logic with some specific features like:
 \begin{itemize}
 \item some basic set theory constructions (coming from the B notation)
 \item some JML keywords
@@ -54,7 +49,7 @@ The Java/Jack Proof Obligation Language is an internal language used in Jack to 
 The language is typed but has no specific syntax. It corresponds to an internal representation in the tool. Its semantic is given by the translation into the different theorem provers. Adding a theorem prover in JACK corresponds mainly to convert expressions of the JPOL language into the specific theorem prover language.
 
 \subsubsection{JACK Plugins}
-Different plugins have been developped around the JACK workshop benefeting from its extensible architecture. A front-head for Java abytecode has been developped. This tool generates verification condition from Java bytecode in the JPOL language. This allows it to benefit from the JACK features like verification condition viewer and multi-provers. This tool is described in a next section. Provers are also plugin that have been successively added to JACK. And finally tools allowing to help in writing the assertions into the code has been developped. The first one generates precondition to prevent against runtime exception and is based on the in-built JACK weakest precondition calculus, the second one aims to propagate core-anotations allowing to automatize the proof of some security property: this tool is described in the next section.
+Different plugins have been developped around the JACK workshop benefeting from its extensible architecture. A front-head for Java bytecode has been developped. This tool generates verification condition from Java bytecode in the JPOL language. This allows it to benefit from the JACK features like verification condition viewer and multi-provers. This tool is described in a section~\ref{bytecodesection}. Provers are also plugin that have been successively added to JACK. And finally tools allowing to help in writing the assertions into the code has been developped. The first one generates precondition to prevent against runtime exception and is based on the in-built JACK weakest precondition calculus, the second one aims to propagate core-anotations allowing to automatize the proof of some security property: this tool is described in the next section.
 
 
 \subsection{Security property propagation}\label{sec:highlevel}
@@ -87,10 +82,10 @@ application.
 To show the usefulness of our approach, we applied the algorithm to
 several realistic examples of industrial applications. When doing
 this, we actually found violations against the security policies
-documented for some of these applications.  The results are reported
-in Section~\ref{SecResults}.
+documented for some of these applications. To help understanding, we present an example of some security property before explaining the weaving algorithm. Results are reported in Section~\ref{SecResults}.
 
-\subsubsection{Atomicity}
+\subsubsection{Atomicity}\label{SecHighLevelSecProp}
+In order in explain the weaving algorithm, we fist give an example of security property taken from credit card security requirements.  
 
 A smart card does not include a power supply, thus a brutal retrieval
 from the terminal could interrupt a computation and bring the system in
@@ -418,9 +413,9 @@ annotations will be generated for all methods calling
 calling \texttt{m} \emph{etc.}
 Having an algorithm to generate such annotations enables to check
 automatically a large class of high-level security properties.
+Results on real JavaCard applications are presented in Section~\ref{SecResults}.
 
-
-\subsection{Bytecode validation}
+\subsection{Bytecode validation}\label{bytecodesection}
 We propose a bytecode verification framework with the following components: a bytecode specification language, a compiler from source
  program annotations into bytecode annotations and a verification condition generator over Java bytecode.
 
