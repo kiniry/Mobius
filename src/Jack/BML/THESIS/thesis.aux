@@ -2,13 +2,25 @@
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{5}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\citation{escjava}
+\citation{jacobs03java}
+\citation{marche03krakatoa}
+\citation{BRL-JACK}
+\citation{BRL-JACK}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Contributions}{6}}
+\citation{Ljbc}
+\citation{DesNecLee98}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Related work}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Applications}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Plan of the thesis}{9}}
 \citation{VMSpec}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2} Java bytecode language and its operational semantics}{7}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2} Java bytecode language and its operational semantics}{11}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{opSem}{{2}{7}}
-\@writefile{toc}{\contentsline {paragraph}{The features supported}{7}}
-\@writefile{toc}{\contentsline {paragraph}{The features not supported}{8}}
+\newlabel{opSem:prelim}{{2}{11}}
+\citation{ESC2000LNS}
+\citation{DRT03GLF}
+\citation{stata98type}
 \citation{FM99FFJ}
 \citation{qian99formal}
 \citation{pusch98proving}
@@ -16,181 +28,407 @@
 \citation{barthe01formal}
 \citation{barthe02formal}
 \citation{siveroni04operational}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Related Work}{9}}
-\newlabel{relWork}{{2.1}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Notation}{9}}
-\newlabel{notation}{{2.2}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Classes, Fields and Methods}{10}}
-\newlabel{clazz}{{2.3}{10}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Program types and values}{11}}
-\newlabel{types}{{2.4}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}State configuration}{12}}
-\newlabel{def}{{2.5}{12}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Modeling the Object Heap}{14}}
-\newlabel{heap}{{2.5.1}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Registers}{17}}
-\newlabel{register}{{2.5.2}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}The operand stack}{17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.4}Program counter}{17}}
-\newlabel{pc}{{2.5.4}{17}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.6}Throwing and handling exceptions}{17}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.7}Bytecode Language and its Operational Semantics}{19}}
-\newlabel{opSem}{{2.7}{19}}
-\newlabel{stateTrans}{{2.7.0.1}{19}}
-\newlabel{stateTransClos}{{2.7.0.2}{19}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Bytecode Language instructions }}{20}}
-\newlabel{opSem:bclang}{{2.1}{20}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Specification language for Java bytecode programs}{27}}
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{bcsl}{{3}{27}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Related Work}{14}}
+\newlabel{relWork}{{2.1}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Notation}{15}}
+\newlabel{notation}{{2.2}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Classes, fields and methods}{15}}
+\newlabel{clazz}{{2.3}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Program types and values}{17}}
+\newlabel{types}{{2.4}{17}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}State configuration}{18}}
+\newlabel{def}{{2.5}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Modeling the object heap}{19}}
+\newlabel{heap}{{2.5.1}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Registers}{22}}
+\newlabel{register}{{2.5.2}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}The operand stack}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.4}Program counter}{23}}
+\newlabel{pc}{{2.5.4}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Throwing and handling exceptions}{23}}
+\newlabel{opSem:exc}{{2.6}{23}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}Design choices for the operational semantics}{24}}
+\newlabel{opSem:JVM}{{2.7}{24}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.8}Bytecode language and its operational semantics}{25}}
+\newlabel{opSem}{{2.8}{25}}
+\newlabel{stateTrans}{{2.8.1}{25}}
+\newlabel{stateTransit}{{2.8.2}{25}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces \sc  Bytecode language}}{26}}
+\newlabel{opSem:bclang}{{2.1}{26}}
+\newlabel{stateTransClos}{{2.8.3}{26}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces \sc  Operational semantics for control transfer instructions}}{27}}
+\newlabel{opSem:jump}{{2.2}{27}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces \sc  Operational semantics for arithmetic and load store instructions}}{28}}
+\newlabel{opSem:arithStack}{{2.3}{28}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces \sc  Operational semantics for object manipulation }}{29}}
+\newlabel{opSem:obj:manip}{{2.4}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces \sc  Operational semantics for object creation }}{31}}
+\newlabel{opSem:obj:creat}{{2.5}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces \sc  Operational semantics for type checking }}{32}}
+\newlabel{opSem:obj:typecheck}{{2.6}{32}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces \sc  Operational semantics for programmatic exceptions }}{32}}
+\newlabel{opSem:obj:throw}{{2.7}{32}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces \sc  Operational semantics for programmatic exceptions }}{33}}
+\newlabel{opSem:obj:method}{{2.8}{33}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.9}Representing bytecode programs as control flow graphs}{33}}
+\newlabel{prelim:ctrFlow}{{2.9}{33}}
+\citation{ARUCom1986}
+\citation{ARUCom1986}
+\newlabel{defLoop}{{2.9.1}{34}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces \sc  Execution relation between bytecode instructions in a control flow graph}}{35}}
+\newlabel{defEdge}{{2.9}{35}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.10}{\ignorespaces { \sc  The control flow graph of the source program from Fig.3.1\hbox {}} }}{36}}
+\newlabel{ctrlflow}{{2.10}{36}}
 \citation{JMLRefMan}
 \citation{M97oos}
-\citation{BurdyCCEKLLP03}
 \citation{BreunesseCHJ04}
-\citation{BRL-JACK}
-\citation{escjava}
 \citation{jmlrac}
+\citation{escjava}
+\citation{ECG01DDL}
 \citation{BurdyCCEKLLP03}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}A quick overview of JML}{28}}
-\newlabel{BCSLprelim}{{3.1}{28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces \sc  class \unhbox \voidb@x \hbox {\rm  \texttt  {ListArray}} with JML annotations}}{29}}
-\newlabel{replaceSrc}{{3.1}{29}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}BML}{29}}
-\newlabel{BCSLgrammar}{{3.2}{29}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Notation convention}{29}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}BML Grammar}{30}}
-\newlabel{BCSL}{{3.2.2}{30}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Interpretation of the BML grammar}{32}}
-\@writefile{toc}{\contentsline {subsubsection}{BML expressions}{32}}
-\@writefile{toc}{\contentsline {subsubsection}{BML predicates}{33}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces \sc  An example for class specification}}{34}}
-\newlabel{classSpec}{{3.2}{34}}
-\@writefile{toc}{\contentsline {subsubsection}{Class Specification}{34}}
-\@writefile{toc}{\contentsline {subsubsection}{Inter --- method specification}{34}}
-\@writefile{toc}{\contentsline {subsubsection}{Method specification case}{35}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces \sc  An example for an intra method specification }}{36}}
-\newlabel{bcSpec}{{3.3}{36}}
-\@writefile{toc}{\contentsline {subsubsection}{Intra --- method specification}{37}}
-\@writefile{toc}{\contentsline {subsubsection}{Frame conditions}{38}}
-\citation{VMSpec}
-\citation{Ljbc}
-\citation{VMSpec}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Well formed BML specification}{39}}
-\citation{VMSpec}
-\citation{JMLRefMan}
-\citation{RT03djml}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Compiling JML into BML}{40}}
-\newlabel{BCSLcompile}{{3.4}{40}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces \sc  An example for a method with two normal behaviours specified in JML}}{41}}
-\newlabel{JmlSpec}{{3.4}{41}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces \sc  The compilation of the postcondition in Fig. 3.1\hbox {}}}{42}}
-\newlabel{postCompile}{{3.5}{42}}
-\citation{ARUCom1986}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces \sc  Structure of the Loop Attribute}}{43}}
-\newlabel{loopAttribute}{{3.6}{43}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Verification condition generator for Java bytecode }{45}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Bytecode modeling language}{37}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{wpGeneral}{{4}{45}}
+\newlabel{bcsl}{{3}{37}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Overview of JML}{37}}
+\newlabel{BCSLprelim}{{3.1}{37}}
+\citation{BRL-JACK}
+\citation{PD06LBR}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces \sc  class \unhbox \voidb@x \hbox {\rm  \lstinline !ListArray!} with JML annotations}}{39}}
+\newlabel{replaceSrc}{{3.1}{39}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces \sc  specifying No Nested Transaction property with ghost variable}}{40}}
+\newlabel{bml:ghost}{{3.2}{40}}
+\citation{december-jml}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces \sc  An example for a method with a heavy weight specification in JML}}{41}}
+\newlabel{bml:heavySp}{{3.3}{41}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Design features of BML}{42}}
+\newlabel{BML:design}{{3.2}{42}}
+\citation{VMSpec}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}The subset of JML supported in BML}{43}}
+\newlabel{BCSLgrammar}{{3.3}{43}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Notation convention}{43}}
+\newlabel{bml:notation}{{3.3.1}{43}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}BML Grammar}{44}}
+\newlabel{BCSL}{{3.3.2}{44}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Syntax and semantics of BML}{45}}
+\@writefile{toc}{\contentsline {subsubsection}{BML expressions}{45}}
+\@writefile{toc}{\contentsline {subsubsection}{BML predicates}{46}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces \sc  An example for a heavy weight specification in BML}}{47}}
+\newlabel{bml:heavySpBML}{{3.4}{47}}
+\@writefile{toc}{\contentsline {subsubsection}{Class Specification}{47}}
+\citation{RT03djml}
+\@writefile{toc}{\contentsline {subsubsection}{Frame conditions}{48}}
+\@writefile{toc}{\contentsline {subsubsection}{Inter --- method specification}{48}}
+\@writefile{toc}{\contentsline {subsubsection}{Intra --- method specification}{49}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces \sc  An example for a loop specification in BML}}{50}}
+\newlabel{bml:loopBML}{{3.5}{50}}
+\citation{VMSpec}
+\citation{Ljbc}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Well formed BML specification}{51}}
+\citation{RT03djml}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Compiling JML into BML}{52}}
+\newlabel{BCSLcompile}{{3.5}{52}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces \sc  Compilation of ghost variable declaration}}{52}}
+\newlabel{bml:compiler:ghost}{{3.6}{52}}
+\citation{ARUCom1986}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces \textbf  {Line\_Number\_Table} {\sc  for the method } \texttt  {replace} {\sc  in Fig. 3.1\hbox {} } }}{54}}
+\newlabel{bml:compiler:loopEntry}{{3.7}{54}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces \sc  The compilation of the postcondition in Fig. 3.1\hbox {}}}{55}}
+\newlabel{postCompile}{{3.8}{55}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces \sc  Structure of the Loop Attribute}}{56}}
+\newlabel{loopAttribute}{{3.9}{56}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Assertion language for the verification condition generator}{57}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{assertLang}{{4}{57}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}The assertion language}{58}}
+\newlabel{assertLang:lang}{{4.1}{58}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Substitution}{59}}
+\newlabel{subst}{{4.2}{59}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Interpretation}{59}}
+\newlabel{interpret}{{4.3}{59}}
+\citation{gries95avoiding}
+\citation{schieder99adapting}
+\citation{WPCDS}
+\citation{gries95avoiding}
+\citation{burdy98treatment}
+\citation{burdy98treatment}
+\newlabel{interpPred}{{4.3.1}{60}}
+\newlabel{interpExpr}{{4.3.2}{61}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Extending method declarations with specification}{63}}
+\newlabel{methExtend}{{4.4}{63}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Verification condition generator for Java bytecode }{65}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{wpGeneral}{{5}{65}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Discussion}{65}}
+\newlabel{wp:discussionVC}{{5.1}{65}}
+\citation{WPCDS}
+\citation{escjava}
+\citation{BLS04sp}
+\citation{F67amp}
+\citation{gta05:fast}
+\citation{B04tlsj}
+\citation{Ljbc}
 \citation{F67amp}
 \citation{Hoare69ABC}
 \citation{WPCDS}
-\citation{Ljbc}
 \citation{escjava}
 \citation{jacobs03java}
 \citation{BRL-JACK}
 \citation{Quigley03PLJ}
 \citation{B04tlsj}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Related work}{67}}
+\newlabel{relWorkWp}{{5.2}{67}}
 \citation{BM05plb}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Related work}{46}}
-\newlabel{relWorkWp}{{4.1}{46}}
-\citation{WildmoserN-ESOP05}
 \citation{BLS04sp}
 \citation{leinoWPUP}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}The expression language}{47}}
-\newlabel{deepExpr}{{4.2.1}{47}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Substitution}{49}}
-\newlabel{subst}{{4.2.1}{49}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Interpretation }{49}}
-\newlabel{interpret}{{4.2.2}{49}}
-\newlabel{interpExpr}{{4.2.2.1}{50}}
-\newlabel{interpPred}{{4.2.2.2}{51}}
-\newlabel{substLv}{{4.2.2.1}{51}}
-\newlabel{substHeap}{{4.2.2.2}{52}}
-\newlabel{substStack}{{4.2.2.3}{53}}
-\newlabel{substCntr}{{4.2.2.4}{53}}
-\newlabel{substRet}{{4.2.2.5}{53}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Representing bytecode programs as control flow graphs}{53}}
-\newlabel{prelim}{{4.3}{53}}
-\citation{ARUCom1986}
-\newlabel{defEdge}{{4.3.1}{54}}
-\newlabel{defLoop}{{4.3.2}{55}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Extending method declarations with specification}{55}}
-\newlabel{methExtend}{{4.4}{55}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces { \sc  The control flow graph of the source program from Fig.3.1\hbox {}} }}{56}}
-\newlabel{ctrlflow}{{4.1}{56}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Weakest precondition calculus}{58}}
-\newlabel{wpRules}{{4.5}{58}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Intermediate predicates}{58}}
-\newlabel{wp:interPred}{{4.5.1}{58}}
-\newlabel{inter}{{4.5.1}{58}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Weakest precondition in the presence of runtime exceptions}{59}}
-\newlabel{wp:interExc}{{4.5.2}{59}}
-\newlabel{defExc}{{4.5.2}{59}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Rules for single instruction}{60}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}Example}{67}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Correctness of the verification condition generator}{69}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Weakest precondition calculus}{68}}
+\newlabel{wpRules}{{5.3}{68}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.1}{\ignorespaces \sc  bytecode of method \lstinline !sum! and its specification }}{69}}
+\newlabel{wp:example:sum}{{5.1}{69}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Intermediate predicates}{71}}
+\newlabel{wp:interPred}{{5.3.1}{71}}
+\newlabel{inter}{{5.3.1.1}{71}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Weakest precondition in the presence of exceptions }{72}}
+\newlabel{wp:Exc}{{5.3.2}{72}}
+\newlabel{defExc}{{5.3.2.1}{72}}
+\newlabel{wp:exc:defExcRuntime}{{5.3.2.2}{72}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Rules for single instruction}{73}}
+\newlabel{wp:singleInstr}{{5.3.3}{73}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Example}{80}}
+\newlabel{wp:example}{{5.4}{80}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5.2}{\ignorespaces \sc  weakest precondition predicates for the instructions of the bytecode of method \lstinline !sum!}}{82}}
+\newlabel{wp:example:sumVC}{{5.2}{82}}
+\citation{Nipkow-MOD2001}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Correctness of the verification condition generator}{83}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{proofGeneral}{{5}{69}}
+\newlabel{proofGeneral}{{6}{83}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Proof outline}{83}}
+\newlabel{proof:outline}{{6.1}{83}}
+\citation{leinoWPUP}
+\citation{leinoWPUP}
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Relation between syntactic substitution and semantic evaluation}{85}}
+\newlabel{substProp}{{6.2}{85}}
+\newlabel{substLv}{{6.2.1}{86}}
+\newlabel{substHeap}{{6.2.2}{87}}
+\newlabel{newHeap}{{6.2.3}{87}}
+\newlabel{substStack}{{6.2.4}{88}}
+\newlabel{substCntr}{{6.2.5}{88}}
+\newlabel{substRet}{{6.2.6}{88}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.3}Proof of Correctness }{88}}
+\newlabel{proof}{{6.3}{88}}
+\newlabel{defCorrect}{{6.3.1}{88}}
 \citation{M97oos}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Proof of Correctness }{70}}
-\newlabel{proof}{{5.1}{70}}
-\newlabel{defCorrect}{{5.1.1}{70}}
-\newlabel{lemma0}{{5.1.1}{70}}
-\newlabel{lemma1}{{5.1.2}{73}}
-\newlabel{lemma2}{{5.1.3}{76}}
-\newlabel{vcGenCorrect}{{5.1.4}{76}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Equivalence between Java source and bytecode proof Obligations}{77}}
+\newlabel{lemma0}{{6.3.1}{89}}
+\newlabel{lemma1}{{6.3.2}{93}}
+\newlabel{lemma3}{{6.3.3}{96}}
+\newlabel{lemma2}{{6.3.4}{97}}
+\newlabel{vcGenCorrect}{{6.3.5}{97}}
+\citation{ComNec}
+\@writefile{toc}{\contentsline {chapter}{\numberline {7}Equivalence between Java source and bytecode proof Obligations}{99}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {7}A compact verification condition generator}{79}}
+\newlabel{pogEquiv}{{7}{99}}
+\citation{gta05:fast}
+\citation{gta05:fast}
+\citation{SU05CNS}
+\@writefile{toc}{\contentsline {section}{\numberline {7.1}Related work}{100}}
+\newlabel{pog:relWork}{{7.1}{100}}
+\citation{FB04LBT}
+\@writefile{toc}{\contentsline {section}{\numberline {7.2}Source language}{101}}
+\newlabel{source}{{7.2}{101}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.1}{\ignorespaces \sc  Source language}}{102}}
+\newlabel{source:grammar}{{7.1}{102}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.3}Compiler}{103}}
+\newlabel{compile}{{7.3}{103}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.2}{\ignorespaces \sc  method \lstinline !square! written in our source language}}{104}}
+\newlabel{pogComp:source:example}{{7.2}{104}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.1}Exception handler table}{104}}
+\newlabel{pogEq:compile:excHandlers}{{7.3.1}{104}}
+\citation{VMSpec}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.2}Compiling loop invariants}{105}}
+\newlabel{pogEq:compile:loopInv}{{7.3.2}{105}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.3}Compiling source program constructs in bytecode instructions}{105}}
+\newlabel{pogEq:compile:compExpr}{{7.3.3}{105}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.3}{\ignorespaces \sc  Definition of the compiler for expressions }}{106}}
+\newlabel{pogEq:compile:compExpr:defExpr}{{7.3}{106}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.4}{\ignorespaces \sc  Definition of the compiler for statements }}{107}}
+\newlabel{pogEq:compile:compExpr:defStmt}{{7.4}{107}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.5}{\ignorespaces \sc  Definition of the compiler for statements that change the exception handler table}}{109}}
+\newlabel{pogEq:compile:compExpr:defExc}{{7.5}{109}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.6}{\ignorespaces \sc  Definition of the compiler for the loop statement}}{109}}
+\newlabel{pogEq:compile:compExpr:defLoop}{{7.6}{109}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3.4}Properties of the compiler function}{110}}
+\newlabel{compile:prop}{{7.3.4}{110}}
+\newlabel{compile:prop:compProp0}{{7.3.4.1}{110}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.7}{\ignorespaces \sc  relation between bytecode and source code of method \lstinline !square! from Fig. 7.2\hbox {} }}{111}}
+\newlabel{pogEquiv:compile:prop}{{7.7}{111}}
+\newlabel{compile:prop:compProp1}{{7.3.4.2}{112}}
+\newlabel{compile:prop:compProp2}{{7.3.4.3}{112}}
+\newlabel{compile:prop:compPropSubstmt}{{7.3.4.4}{113}}
+\newlabel{compile:prop:compProp6}{{7.3.4.5}{113}}
+\newlabel{seqInstr}{{7.3.4.1}{113}}
+\newlabel{compile:prop:compProp3}{{7.3.4.6}{113}}
+\newlabel{compile:prop:compProp4}{{7.3.4.7}{114}}
+\newlabel{compile:prop:compProp5}{{7.3.4.8}{114}}
+\newlabel{compile:prop:compProp7}{{7.3.4.9}{115}}
+\newlabel{compile:prop:compProp8}{{7.3.4.10}{115}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.8}{\ignorespaces \sc  relation between bytecode and source code of method \lstinline !abs! }}{116}}
+\newlabel{pogEquiv:compile:prop:exc}{{7.8}{116}}
+\newlabel{compile:prop:compProp9}{{7.3.4.11}{116}}
+\newlabel{compile:prop:compProp10}{{7.3.4.12}{117}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.4}Weakest precondition calculus for source programs}{117}}
+\newlabel{pog:wpSrcGeneral}{{7.4}{117}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.1}Source assertion language}{117}}
+\newlabel{formulasSrc}{{7.4.1}{117}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.2}Weakest predicate transformer for the source language }{117}}
+\newlabel{pog:wpSrc}{{7.4.2}{117}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.9}{\ignorespaces \sc  Source assertion grammar}}{118}}
+\newlabel{formulasSrc:grammar}{{7.9}{118}}
+\@writefile{toc}{\contentsline {subsubsection}{Exceptional Postcondition Function}{118}}
+\newlabel{pog:wpSrc:excPost}{{7.4.2}{118}}
+\@writefile{toc}{\contentsline {subsubsection}{Expressions}{119}}
+\newlabel{pog:wpSrc:wpExpr}{{7.4.2}{119}}
+\@writefile{toc}{\contentsline {subsubsection}{Statements}{120}}
+\newlabel{pog:wpSrc:wpStmt}{{7.4.2}{120}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.10}{\ignorespaces \sc  WP for source expressions }}{121}}
+\newlabel{pog:wpSrc:wpExpr:wpSrcExpr}{{7.10}{121}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.11}{\ignorespaces \sc  Weakest precondition for method invokation and instance creation }}{122}}
+\newlabel{pog:wpSrc:wpExpr:wpSrcInvoke}{{7.11}{122}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4.3}Example}{122}}
+\newlabel{pogCompile:wpSrc:example}{{7.4.3}{122}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.12}{\ignorespaces \sc  WP for source control statements without exceptions }}{123}}
+\newlabel{pog:wpSrc:wpStmt:withoutExc}{{7.12}{123}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.5}Weakest precondition calculus for bytecode programs}{123}}
+\newlabel{pog:wpBcGeneral}{{7.5}{123}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.13}{\ignorespaces \sc  WP for the control statements with exceptions }}{124}}
+\newlabel{pog:wpSrc:wpStmt:withExc}{{7.13}{124}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.14}{\ignorespaces \sc  method \lstinline !square! written in our source language}}{124}}
+\newlabel{pogComp:wpSource:example}{{7.14}{124}}
+\newlabel{pog:wpBc:wpSeq}{{7.5.1}{125}}
+\newlabel{wpExpr}{{7.5.2}{125}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5.1}Properties of the \unhbox \voidb@x \hbox {\rm  \textit  {wp}}\ functions}{126}}
+\newlabel{pog:wpBcProp}{{7.5.1}{126}}
+\newlabel{wpIns}{{7.5.1.1}{126}}
+\newlabel{wpBlock}{{7.5.1.2}{127}}
+\newlabel{relWpExpr}{{7.5.1.3}{128}}
+\newlabel{relWpStmt}{{7.5.1.4}{128}}
+\@writefile{toc}{\contentsline {section}{\numberline {7.6}Proof obligation equivalence on source and bytecode level}{131}}
+\newlabel{pogEq:aux}{{7.6}{131}}
+\newlabel{pogEq:aux:wpExprSrc}{{7.6.1}{131}}
+\newlabel{exprValueOnStack}{{7.6.2}{132}}
+\newlabel{pogEq:aux:exprSrcBcWp}{{7.6.3}{133}}
+\newlabel{wpStmtBcSrc1}{{7.6.4}{134}}
+\newlabel{wpStmtBcSrc3}{{7.6.5}{134}}
+\newlabel{wpStmtBcSrc2}{{7.6.6}{134}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7.15}{\ignorespaces \sc  Definition of $\unhbox \voidb@x \hbox {\rm  \textit  {wp}}^{bc}_{stmt}$ }}{135}}
+\newlabel{pog:wpBcGeneral:wpNameStmt}{{7.15}{135}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {8}Constraint memory consumption policies using Hoare logics}{137}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {8}Applications}{81}}
+\newlabel{applications:memory}{{8}{137}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.1}Modeling memory consumption}{137}}
+\newlabel{sec:verif}{{8.1}{137}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.2}Principles}{137}}
+\newlabel{sec:principles}{{8.2}{137}}
+\@writefile{toc}{\contentsline {paragraph}{The precondition}{137}}
+\@writefile{toc}{\contentsline {paragraph}{The normal postcondition}{138}}
+\@writefile{toc}{\contentsline {paragraph}{The exceptional postcondition}{138}}
+\@writefile{toc}{\contentsline {paragraph}{Loops}{138}}
+\@writefile{toc}{\contentsline {paragraph}{For every instruction that allocates memory}{139}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.3}Examples}{139}}
+\newlabel{sec:examples}{{8.3}{139}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}Inheritance and overridden methods}{139}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.2}Recursive Methods}{139}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.1}{\ignorespaces \sc  Example of overridden methods}}{140}}
+\newlabel{classExt}{{8.1}{140}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.3}More precise specification}{140}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.2}{\ignorespaces \sc  Example of a recursive method}}{141}}
+\newlabel{recMeth}{{8.2}{141}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.3}{\ignorespaces \sc  Example of a method with possible exceptional termination}}{142}}
+\newlabel{excMeth}{{8.3}{142}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.4}Inferring memory allocation for methods}{142}}
+\newlabel{sec:infer}{{8.4}{142}}
+\citation{ASU86cpt}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.4.1}Annotation assistant}{143}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.4}{\ignorespaces \sc  Inference algorithm}}{143}}
+\newlabel{methodAlloc}{{8.4}{143}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.5}{\ignorespaces \sc  Definition of the function $\unhbox \voidb@x \hbox {\rm  \texttt  {allocPath}}(i_{s})$}}{144}}
+\newlabel{fig:allocMethod}{{8.5}{144}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.6}{\ignorespaces \sc  Definition of the function $\unhbox \voidb@x \hbox {\rm  \texttt  {loopConsumption}}(\cdot )$ and $\unhbox \voidb@x \hbox {\rm  \texttt  {allocLoopPath}}(\cdot  , \cdot )$ }}{144}}
+\newlabel{fig:loopPath}{{8.6}{144}}
+\citation{MWCG99tal}
+\citation{AH02ats}
+\citation{Hofmann00tsb}
+\citation{HP99rdd}
+\citation{AC03hba}
+\citation{VC04fta}
+\citation{ACDJ04fsb}
+\citation{HJ03sph}
+\citation{CW00rbc}
+\citation{CJPS05cmu}
+\citation{schneider04cba}
+\newlabel{sec:infer}{{8.4.1}{145}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.5}Related work}{145}}
+\newlabel{sec:rel}{{8.5}{145}}
+\citation{GNYZ04pir}
+\citation{fredlund04gcp}
+\citation{CEILN05}
+\citation{CEILN05}
+\citation{Mulchandani1998}
+\citation{Lagosanto2002}
+\citation{Grimaud2003}
+\@writefile{toc}{\contentsline {chapter}{\numberline {9}A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}{147}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibstyle{plain}
-\bibdata{biblio,specification}
-\@writefile{toc}{\contentsline {chapter}{\numberline {9}Conclusion}{83}}
+\newlabel{applications:optimComp}{{9}{147}}
+\newlabel{sec:intro}{{9}{147}}
+\@writefile{toc}{\contentsline {section}{\numberline {9.1}Ahead-of-time \& just-in-time compilation}{148}}
+\newlabel{sec:sota}{{9.1}{148}}
+\citation{Lindholm2000}
+\@writefile{toc}{\contentsline {section}{\numberline {9.2}Java runtime exceptions}{149}}
+\newlabel{sec:runtimeexceptions}{{9.2}{149}}
+\citation{Ishizaki1999}
+\@writefile{lof}{\contentsline {figure}{\numberline {9.1}{\ignorespaces \sc  A Java bytecode program and its (simplified) C-compiled version. The behavior of the division operator in Java must be entirely reproduced by the C program, which leads to the generation of a runtime exception check site}}{151}}
+\newlabel{fig:javatoc}{{9.1}{151}}
+\@writefile{toc}{\contentsline {section}{\numberline {9.3}Optimizing ahead-of-time compiled Java code}{151}}
+\newlabel{sec:method}{{9.3}{151}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3.1}Methodology for writing specification against runtime exception}{152}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9.2}{\ignorespaces \sc  A JML-annotated method}}{153}}
+\newlabel{fig:jmlexample}{{9.2}{153}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3.2}From program proofs to program optimizations }{153}}
+\newlabel{proofs}{{9.3.2}{153}}
+\citation{BRL-JACK}
+\citation{JITSWebsite}
+\@writefile{lof}{\contentsline {figure}{\numberline {9.3}{\ignorespaces \sc  The verification condition for the \texttt  {ArrayIndexOutOfBoundException} check related to the \texttt  {sastore} instruction of figure\nobreakspace  {}3\hbox {}}}{154}}
+\newlabel{proofs:vc}{{9.3}{154}}
+\@writefile{toc}{\contentsline {section}{\numberline {9.4}Experimental results}{154}}
+\newlabel{sec:experiments}{{9.4}{154}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4.1}Methodology}{154}}
+\@writefile{lot}{\contentsline {table}{\numberline {9.1}{\ignorespaces Number of exception check sites and memory footprints when compiled for ARM thumb}}{155}}
+\newlabel{tab:nbexcsites}{{9.1}{155}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4.2}Results}{155}}
+\newlabel{results}{{9.4.2}{155}}
+\@writefile{lot}{\contentsline {table}{\numberline {9.2}{\ignorespaces Human work on the tested programs}}{156}}
+\newlabel{tab:implication}{{9.2}{156}}
+\citation{Proebsting1997}
+\citation{Muller1997}
+\citation{JCVM}
+\citation{Raja1999}
+\citation{Hummel1997}
+\citation{Azevedo1999}
+\citation{Ishizaki1999}
+\@writefile{toc}{\contentsline {section}{\numberline {9.5}Limitations}{157}}
+\newlabel{sec:limitations}{{9.5}{157}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5.1}Multi-threaded programs}{157}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5.2}Dynamic code loading}{157}}
+\@writefile{toc}{\contentsline {section}{\numberline {9.6}Related work}{157}}
+\newlabel{sec:relatedwork}{{9.6}{157}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {10}Conclusion}{159}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibcite{ARUCom1986}{1}
-\bibcite{BM05plb}{2}
-\bibcite{BLS04sp}{3}
-\bibcite{barthe02formal}{4}
-\bibcite{barthe01formal}{5}
-\bibcite{B04tlsj}{6}
-\bibcite{M97oos}{7}
-\bibcite{BreunesseCHJ04}{8}
-\bibcite{BurdyCCEKLLP03}{9}
-\bibcite{BRL-JACK}{10}
-\bibcite{jmlrac}{11}
-\bibcite{WPCDS}{12}
-\bibcite{FM99FFJ}{13}
-\bibcite{JMLRefMan}{14}
-\bibcite{Hoare69ABC}{15}
-\bibcite{jacobs03java}{16}
-\bibcite{KleinN04}{17}
-\bibcite{escjava}{18}
-\bibcite{Ljbc}{19}
-\bibcite{VMSpec}{20}
-\bibcite{leinoWPUP}{21}
-\bibcite{pusch98proving}{22}
-\bibcite{qian99formal}{23}
-\bibcite{Quigley03PLJ}{24}
-\bibcite{RT03djml}{25}
-\bibcite{F67amp}{26}
-\bibcite{siveroni04operational}{27}
-\bibcite{WildmoserN-ESOP05}{28}
+\@writefile{toc}{\contentsline {chapter}{Appendices}{159}}
+\@writefile{toc}{\contentsline {section}{\numberline {.1}Proofs of properties from Section 7.3.4\hbox {} }{159}}
+\newlabel{appendix:compile:prop}{{.1}{159}}
