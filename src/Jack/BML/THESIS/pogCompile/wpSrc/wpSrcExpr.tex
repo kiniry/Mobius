@@ -1,15 +1,8 @@
 \subsubsection{Expressions}\label{pog:wpSrc:wpExpr}
-In the following, we shall give the definition of a weakest
-predicate transformer function for expressions. 
+In the following, we  give a standard  definition of a weakest
+predicate transformer function for source expressions. 
 
 
-As we shall see,  for some of the expressions   
-the definition of the weakest precondition function is trivial (i.e. it is the identity function )
- as they do have  no side effects.
- However, this is not the case for expressions that might throw an exception or which may change values of program variables.
- The predicate returned by the weakest precondition predicate transformer for expressions which may throw an exception 
-will basically acumulate the hypothesis under which the evaluation 
-of the expression terminates normally and the  conditions under which it  terminates exceptionally.
 
 
 The weakest precondition function for expressions has the following signature:
@@ -22,56 +15,31 @@ function $\excPostSrc$  and
 $\wpSrcExpr{\expressionSrc}{\psi}{\excPostSrc}{ v }$ which is the \wpName \ precondition of $\expressionSrc$ 
 if the its evaluation is represented by  specification expression or formula $v$.
 
-
-In Fig. \ref{pog:wpSrc:wpExpr:wpSrcExpr} we can see the $\wpNameSrcExpr$ rules for the expressions of the source language except for method invokation 
-and instance creation. The latter are given separately in Fig.\ref{pog:wpSrc:wpExpr:wpSrcInvoke} as their definition is similar and is different from 
-the rest of the wp rules for expressions.
-
-Let us first look in Fig. \ref{pog:wpSrc:wpExpr:wpSrcExpr}.
-For instance, the rule for constant expressions does not change the state and thus, if a predicate $ \normalPostSrc$ holds
+In Fig. \ref{pog:wpSrc:wpExpr:wpSrcExpr} we can see the $\wpNameSrcExpr$ rules for  most of the expressions of the source language (except for method invokation 
+and instance creation).
+As we may notice, for some of the expressions   
+the definition of the weakest precondition function is trivial (i.e. it is the identity function )
+ as they have  no side effects. For instance, the rule for constant expressions does not change the state and thus, if a predicate $ \normalPostSrc$ holds
  after its execution this means that it held in the prestate of the expession. 
-Note that here we do not consider arithmetic expressions that may throw
-an arithmetic exception, i.e. we discard the division operations. However,  
-we do not lose any particular feature of the language by discarding this case 
-while gaining clearer representation. 
-The rule for the $\expressionSrc{} \  \instanceofSrc{}  \ \class $ expression is equal to the weakest precondition 
-of the expression $\expressionSrc$.  This definition will allow us to get the possible outcomings  of the evaluation 
-of $\expressionSrc$. Note that the value of the \instanceofSrc{}  expression will be true if  
-the evaluation of $\expressionSrc$ is not \Mynull{} and is a subtype of \class{}.
-The rest of the rules for  relational expressions are defined in a similar way.
- 
-The rule for a cast expression $( \class ) \ \expressionSrc$ 
-  have a similar semantics as the \instanceofSrc{} expression.
- However, its rule reflects the fact that the expression evaluation may terminate on 
-a \ClassCastExc{} if $ \expressionSrc$ is not a subtype of  \class.
+ However, this is not the case for expressions that might throw an exception or which may change values of program variables.
+ The predicate returned by the weakest precondition predicate transformer for expressions which may throw an exception 
+will basically acumulate the hypothesis under which the evaluation 
+of the expression terminates normally and the  conditions under which it  terminates exceptionally.
+\footnote{Note that here we do not consider arithmetic expressions that may throw
+an arithmetic exception, i.e. we discard the division operations.
+ However,   we do not lose any particular feature of the language by discarding this case 
+while gaining clearer representation.} 
+The rule for a cast expression $( \class ) \ \expressionSrc$ shows that the evaluation of the expression
+does not change the program state in case the $ \expressionSrc$ is of subtype of of class  $\class$. In case the latter is not true 
+the rule reflects the case that the a  \ClassCastExc{} exception is thrown.
+
 
  The rule for the field access expression takes into account
 the two possible  outcomings of its evaluation. If the evaluation $v$ of the expression $\expressionSrc$ 
 is different from $\Mynull$ then the evaluation terminates normally, otherwise the exceptional postcondition  
-for \NullPointerExc \ must hold.
+for \NullPointerExc{}  must hold.
 
-  
-Let us now look at the rule for method invokation expression $ \expressionSrc.\methodd()$ in Fig. \ref{pog:wpSrc:wpExpr:wpSrcInvoke}.
-The resulting precondition  takes into account the case when the  object $v$ to which $\expressionSrc $ evaluates and
- on which  the method is called is \Mynull{} or not. If it is \Mynull{} then the weakest precondition of the handler against \NullPointerExc{}
-must hold. In the opposite case, we want several predicates to hold. 
-First, the precondition $ \methodd.\preSrc $  of the invoked method \methodd{} must hold. 
-Then, the  normal postcondition $\methodd.\normalPostSrc $ 
-of \methodd{} must imply the postcondition  $\normalPostSrc{}$ whatever is the value of the returned object and whatever are the values of the 
-locations in the modifies list $\methodd. \mod{}$  of the method \methodd. Finally, if the method \methodd{} terminates on an exception \mbox{\rm\texttt{E}},
- then the respective postcondition    $\methodd.\excPostSpecSrc(\mbox{\rm \texttt{E}})$ must imply the predicate $\excPostSrc(\mbox{\rm\texttt{E}} )$  returned by the exceptional function 
- $\excPostSrc$ whatever are the values of the locations in the modifies list  $\methodd. \mod{} $  of the method~\methodd.
-
-The rule for instance creation  $\newSrc \ \class  ( \expressionSrc  )$ 
-is similar to method invokation rule. It states that  for any reference which is
- fresh for the heap \\ 
-($\neg \ \instances(\freshVar ) $) ,  which is not \Mynull{} and whose type is a subtype of \class{}  
-the precondition of the constructor  $\Constructor{\class}{}$  of class  \class{} must hold and that the 
-normal postcondition $\Constructor{\class}.\normalPostSrc{}$ of the constructor 
-must imply the postcondition  $\normalPostSrc$ with the respective substitutions. A similar condition we
- get for the cases when the constructor may terminate on an exception.
-
-
+ 
 
 \begin{figure}[ht!]
 \begin{frameit}
@@ -150,57 +118,36 @@ $${\scriptsize
 \end{figure}
 
 
+In Fig.\ref{pog:wpSrc:wpExpr:wpSrcInvoke}, we give the rule of instance creation. It is given separately
+as they are more complicated than the rest of the cases. 
+
+% Let us now look at the rule for method invokation expression $ \expressionSrc.\methodd()$ in Fig. \ref{pog:wpSrc:wpExpr:wpSrcInvoke}.
+%The resulting precondition  takes into account the case when the  object $v$ to which $\expressionSrc $ evaluates and
+% on which  the method is called is \Mynull{} or not. If it is \Mynull{} then the weakest precondition of the handler against \NullPointerExc{}
+%must hold. In the opposite case, we want several predicates to hold. 
+%First, the precondition $ \methodd.\preSrc $  of the invoked method \methodd{} must hold. 
+%Then, the  normal postcondition $\methodd.\normalPostSrc $ 
+%of \methodd{} must imply the postcondition  $\normalPostSrc{}$ whatever is the value of the returned object and whatever are the values of the 
+%locations in the modifies list $\methodd. \mod{}$  of the method \methodd. Finally, if the method \methodd{} terminates on an exception \mbox{\rm\texttt{E}},
+% then the respective postcondition    $\methodd.\excPostSpecSrc(\mbox{\rm \texttt{E}})$ must imply the predicate $\excPostSrc(\mbox{\rm\texttt{E}} )$  returned by the exceptional function 
+% $\excPostSrc$ whatever are the values of the locations in the modifies list  $\methodd. \mod{} $  of the method~\methodd.
+
+We shall consider more in detail only the rule for instance creation.
+ It states that  for any reference which is
+ fresh for the heap \\ 
+($\neg \ \instances(\freshVar ) $) ,  which is not \Mynull{} and whose type is a subtype of \class{}  
+the precondition of the constructor  $\Constructor{\class}{}$  of class  \class{} must hold and that the 
+normal postcondition $\Constructor{\class}.\normalPostSrc{}$ of the constructor 
+must imply the postcondition  $\normalPostSrc$ with the respective substitutions. A similar condition we
+ get for the cases when the constructor may terminate on an exception.
+
 
 
 \begin{figure}[ht!]
 \begin{frameit}
 $${\scriptsize 
         \begin{array}{l} 
-	      \wpSrcExpr{ \expressionSrc.\methodd()  }{\normalPostSrc }{ \excPostSrc }{v}  =   \\
-	   \begin{array}{l}  \wpSrcExpr{\expressionSrc}{ \\
-                          
-                            \phantom{ wpisrc \expressionSrc_1 }  
-			     \left\{ \begin{array}{l}
-			      v'  \neq \mbox{ \rm \Mynull }  \Rightarrow     \\
-			      
-                                          \Myspace    \Myspace    \methodd.\preSrc  %\begin{array}{l} 
-					                         \subst{\this}{ v'} \\
-                                                                 %\subst{\mbox{\rm arg}}{ v_2} \\
-					                  %\end{array}  \\
-                                          \Myspace   \Myspace \wedge \\
-					  \Myspace   \Myspace \forall \freshVar, \ \forall \ m \in \methodd. \mod \\ 
-                                          \Myspace   \Myspace  \left\{\begin{array}{l}  
-					  \typeof{\freshVar} <: \methodd.\returnType \wedge \\ 
-					  \methodd.\normalPostSrc
-					                                \begin{array}{l} 
-					                                    \subst{\result}{\freshVar } \\
-									    \subst{ \this}{ v' } \\
-									   % \subst{\mbox{\rm arg} }{ \expressionSrc_2}
-					                                 \end{array}   \\
-                                             \Myspace \Rightarrow \normalPostSrc  \subst{ v }{ \freshVar }  \\ 
-					                       \end{array}\right.\\
-					     \Myspace   \Myspace \wedge \\
-					     \Myspace   \Myspace	 \forall \mbox{\rm \texttt{E}} \in \methodd.\exceptionSrc, \\
-					     \Myspace   \Myspace	 \forall \ m \in \methodd. \mod\\
-					     \Myspace   \Myspace  
-					  \begin{array}{l}
-					  \forall \freshVar,
-					  \freshVar \neq \Mynull \wedge \\
-					  \typeof{\freshVar} <: \mbox{\rm \texttt{E}} \Rightarrow\\ 
-					         \methodd.\excPostSpecSrc( \mbox{\rm \texttt{E}} ) \Rightarrow
-						  \excPostSrc( \mbox{\rm \texttt{E}} )\subst{\EXC}{\freshVar}  
-					  \end{array} \\ 
-			                v' = \mbox{ \rm \Mynull }  \Rightarrow  \\
-					\Myspace \begin{array}{l}
-						    \forall \freshVar, 
-							      \neg \instances(\freshVar) \wedge \\
-							       \freshVar \neq \Mynull \wedge \\
-							       \typeof{\freshVar} <: \NullPointerExc \Rightarrow\\        
-					     \Myspace \excPostSrc( \NullPointerExc ) \subst{\EXC}{\freshVar}\\  
-					\end{array}  
-                           \end{array}\right.
-       } { \\  \phantom{ wpisrc \expressionSrc_1 } \excPostSrc  } 
-	       {v'  } \end{array} \\ \\ \\
+	     
 
 \wpSrcExpr{ \newSrc \ \class  ( \expressionSrc  ) } {\normalPostSrc }{ \excPostSrc  }{v} = \\
  	  

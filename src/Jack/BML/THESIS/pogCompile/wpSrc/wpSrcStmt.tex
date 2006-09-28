@@ -1,44 +1,16 @@
 
 \subsubsection{Statements}\label{pog:wpSrc:wpStmt}
-In the following, we present the rules of the weakest precondition predicate transformer for 
-control statements. In Fig. \ref{pog:wpSrc:wpStmt:withoutExc} we give the rules for control 
-statements which do not deal with exceptions. They are defined in a standard way. 
-For instance, the rule \textsf{seq} states that the weakest predicate for a sequence of statements  $\stmt_1;\stmt_2$
-w.r.t. a normal postcondition $\normalPostSrc$ and exceptional postcondition function $ \excPostSrc$
-is the weakest  predicate of $\stmt_1$ w.r.t. to the normal postcondition $ \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc} $
-and the same exceptional postcondition function $ \excPostSrc$.
-Let us look also at the rule \textsf{while}. The rule requires that the invariant 
-holds. It also requires that if the invariant holds and the conditional expression evaluates to true then the
-weakest precondition of the loop body w.r.t. a postcondition which is the loop invariant. Note that this is quantified over
-the expressions which are in the modifies list \modLoop{} of the loop. This allows to properly initialize those variables which are not
-modified in the loop. Actually, we use the same technique here as in Chapter \ref{wpGeneral}.
 
-The control statements related to the exception handling and throwing as well as the finally statements
-may be have a more particular definition. They are given in Fig. \ref{pog:wpSrc:wpStmt:withExc}. 
-Let us look at the rule \textsf{try catch}. Actually, it is similar to the  rule  \textsf{seq} from 
-Fig. \ref{pog:wpSrc:wpStmt:withoutExc}, but dual in the way the postcondition modifications. In particular, 
-the weakest predicate of a try catch statement $ \try \ \{ \stmt_1 \} \ $ 
-$\catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} $  w.r.t. a normal postcondition   $\normalPostSrc$  and exceptional postcondition function $ \excPostSrc$
-is the weakest predicate of the try statement $\stmt_1$ w.r.t. the normal postcondition  $\normalPostSrc$  and the updated exceptional function
-$\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }$.
 
  
 \begin{figure}[ht!]
 \begin{frameit}
 $${\scriptsize 
         \begin{array}{l} 
-	   \wpSrcStmt{ \stmt_1;\stmt_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{seq}}} \\
-	   \begin{array}{l} 
-             \wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc}} { \excPostSrc} 
-           \end{array} \\ \\ \\
+	  
 
 
-	   \wpSrcStmt{ \expressionSrc_1 = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{locVarAssign}}} \\
-                  \begin{array}{l}   \wpSrcExpr{\expressionSrc_2 }{ 
-				    \normalPostSrc \subst{\expressionSrc_1}{v}   
-				   }{ \excPostSrc}{v}  
-		  \end{array}
-	           \\ \\ \\
+
 
     \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
                \begin{array}{l} 
@@ -68,19 +40,6 @@ $${\scriptsize
 	 } {\\  \phantom{wpiSr}  \excPostSrc }{v} 
      \end{array} \\ \\ \\
 
-      \wpSrcStmt{ \while \ (\expressionSrcRel) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
-	      \begin{array}{l} 
-	       \invariant \ \wedge\\
-	       \forall \  m, m \in \modLoop , \\
-	       \Myspace \invariant \Rightarrow \\
-	 	     \Myspace    \Myspace \wpSrcExpr{\expressionSrcRel}{\\\phantom{wp^{src}} 
-		     \begin{array}{l}  		
-		           \Myspace v = \Mytrue  \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc}  \\ 
-		           \Myspace v = \Myfalse  \Rightarrow  \normalPostSrc
-		     \end{array}
-	      }{ \\ \Myspace \phantom{wp^{src}} \excPostSrc}{v}  \end{array} \\ \\ \\
-\wpSrcStmt{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} = \\
-             \begin{array}{l}   \wpSrcExpr{ \expressionSrc}{ \normalPostSrc \subst{\result }{ v }} { \excPostSrc}{v}  \end{array}
 
 \end{array} } $$
 
