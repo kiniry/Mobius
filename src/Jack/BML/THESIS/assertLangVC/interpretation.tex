@@ -39,18 +39,21 @@ A naive three valued logic, where expressions may be evaluated to a value or  un
  formulas might be false, true or undefined in a state appear to lose certain nice properties
  which standard logic with equality have
 as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc. 
-In \cite{burdy98treatment}, L. Burdy shows a three valued logic in which the above features of classical logic are preserved.
-a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$ over expressions and formulas. Thus formulas can be either true, false or not defined and
+In \cite{burdy98treatment}, L. Burdy proposes a three valued logic in which the above features of classical logic are preserved.
+He introduces a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$
+ over expressions and formulas. Thus, formulas can be either true, false or not defined and
 expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
- gives the, necessary and sufficient
+ gives the necessary and sufficient
  conditions such that $\expression$(\predWp ) is defined.
  More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
- holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is false.
+ holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to false.
 
-In the following we shall abstract from partiality of evaluation and we shall consider that our evaluation is a total function. 
+In the following, we shall abstract from partiality of evaluation and we shall consider that our evaluation is a total function. 
 Note that we could have used for instance the formalization in \cite{burdy98treatment}, i.e. 
 a three valued interpretation for formulas and expressions with an operator for well-definedness over predicates and expressions 
-whose interpretation to true would mean that the predicate / expression is defined. We however, consider that this only will complicate 
+whose interpretation to true would mean that the predicate / expression is defined. This in particular, means that 
+for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
+ We however, consider that this only will complicate 
 the present formalization without bringing any original feature of the present thesis. 
 This means that for instance, for predicates which contain field dereference  we shall assume that the reference is not \Mynull,
 that arrays are always accessed inside their bounds etc. 
