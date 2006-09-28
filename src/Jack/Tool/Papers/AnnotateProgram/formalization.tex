@@ -1,0 +1,1046 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{form}
+
+\title{Formalization}
+\author{Alejandro Tamalet}
+
+\begin{document}
+\maketitle
+
+\section{Notation}\label{sec:Notation}
+The abstract syntax of Java programs is described by production rules of the form
+\begin{haskell}
+T & \geqdef\,\,\, & C_1\, a_{11}: T_{11}; a_{12}: T_{12} \dots\\
+ & \gbar & \ldots\\
+ & \gbar & C_n\,\, a_{n1}: T_{n1}; a_{n2}: T_{n2} \dots\\
+\end{haskell}
+An element $a_{ij}$ is called a component and it is described by the rule $T_{ij}$. The number of components
+in each branch may be different but finite. 
+Components of the same type can be joined as in $a_1, a_2 \colon T$ and mutual recursive definitions of the
+rules are allowed.
+To obtain an specimen of type $T$ we use one of the labels $C_i$ as a constructor, e.g. $C_i(e_1, e_2, \ldots,
+e_k)$ where each $e_j$ with $j=1..k$ is an specimen described by the rule $T_{ij}$; this implies that the
+order in which components are named matters.
+When there is just one way to construct an specimen of $T$ we omit the label and we use $T$ as constructor.
+By convention constructors begin with capital letters.
+
+To access a component of a specimen we use the standard dot notation: $x.p$ refers to the component $p$ of the
+specimen $x$.
+The notation is lifted over lists and sets.
+When $xs$ is a set, $xs.p$ is the set of the $p$ component of the elements of $xs$, that is,
+\begin{haskell}
+  xs.p \eqdef \{x.p | x \in xs\}.
+\end{haskell}
+Similarly, when $xs$ is a list we define
+\begin{haskell}
+  xs.p \eqdef [x.p | x \leftarrow xs].
+\end{haskell}
+
+The update notation $c(a := new\_a)$ is used to construct a specimen that is like $c$ but where its $a$
+component is updated to $new\_val$. There can be several updates separated by commas.
+
+When a construct can be repeated many times but the order is not important and each element is unique we use
+sets, in those cases we write $xs \colon \powerset(X)$ instead of $xs \colon (X)^*$.
+An optional component is enclosed in square bracket, e.g. $[a \colon T]$; to represent an absent component we
+use $\bot$.
+
+Production rules will be used only to define program constructs; other objects like automata, events or
+transitions will be described as tuples, e.g.
+\begin{haskell}
+Event \eqdef (type \colon EventType; mname \colon Name).
+\end{haskell}
+To describe an event we don't use $Event$ as constructor, instead we just give a tuple like $(Entry, m)$,
+nevertheless, we still use the dot notation to access its components.
+Note that we use $\geqdef$ for production rules and $\eqdef$ for other definitions.
+
+We use parenthesis for function application, e.g. $f(x)$, instead of the style used by some functional
+languages that represent function application with a space or a dot. 
+Functions defined  will be uncurryfied hence we will define $f \colon X \times Y \to Z$ instead of $f \colon X
+\to Y \to Z$.
+When the argument is a tuple we omit the outer pairs of parentheses, e.g. we write $f(x,y)$ instead of
+$f((x,y))$ when $f \colon X \times Y \to Z$. 
+
+A function can be applied to a set of elements of one of its arguments yielding a set of values, for instance
+for a function $f \colon X \to Y$ and subset $S$ of $X$ we have that:
+\begin{haskell}
+  f(\cdot S \cdot) \eqdef \{y | x \in S \wedge f(x) = y\}.  
+\end{haskell}
+
+Finally we remark that the description of the annotation process is a specification and not an implementation
+thus there are not issues about performance. Furthermore, an implementation may annotate programs in a
+different but equivalent way, though this equivalence must be proved.
+
+
+\section{Assumptions and Simplifications}\label{sec:Assumptions}
+This section describes the general assumptions of the approach.
+\subsubsection*{MVAs} 
+Imposed by the definition of MVAs:
+\begin{itemize}
+  \item \<halted\> is not in the set of control points.
+  \item All sets are finite.
+  \item If many MVAs annotate a program, they have disjoints sets of control points and variables.
+  \item Ghost variables added in the process are valid identifiers and that they do not clash with the
+identifiers of the program.
+  \item Guards are side-effect free.
+  \item The evaluation of guards and actions terminates normally.
+  \item Expressions appearing in actions do not involve any of the methods being monitored. These expressions
+will be translated into the expressions of a set statement and JML requires these expressions not to have
+side-effects. We may allow such method calls if we assume that in those cases the set annotations will not be
+executed.
+\end{itemize}
+
+\subsubsection*{Programs}
+\begin{itemize}
+  \item The code is available.
+  \item Methods involved in the specification are not abstract nor native. (Probably we allow native methods
+in inherited classes, although I'm not sure if it is possible to override native methods).
+  \item Methods involved in events that are inherited but not overridden must not be final and must be have a
+protected or public access modifier.
+  \item There is no static overloading of methods. This can be achieved by \emph{mangling} names, that is,
+adding information of the types of the arguments to the name of the methods that are overloaded to
+disambiguate them.
+  \item Variables that can be used by the automata to evaluate guards are not hidden by parameters or local
+varibles. In an implementation this assumption can be drop by prefixing \texttt{this.} to the conflictive
+variables.
+  \item One of the classes has a function called \texttt{main} (with the required signature).
+\end{itemize}
+
+\subsubsection*{Annotations}
+In this section we do some assumptions and simplifications that will shorten the description of the
+annotation process.
+We will benefit from this simplification when proving properties of annotations.
+
+%TODO
+\begin{quote}
+\small
+Explain why it is possible to do these assumptions and simplifications and to manage the general case.
+\end{quote}
+
+The first simplification is to think that there is only one automaton that annotates a class, thus there is
+no need to disambiguate between the variables that keep track of the current control point of each automaton;
+we will only need one variable that we call \texttt{cp}.
+
+We also assume that there is a JML conditional instruction that can evaluate ghost variables:
+\begin{haskell}
+Statement &\geqdef \ldots \gbar IfJML \gbar \ldots\\
+IfJML &\geqdef (test: BoolExpr, body: Statement)^*
+\end{haskell}
+
+It takes a list of pairs of boolean conditions and statements to model embedded ifs. The statements must
+be a sequence of \<Set\> or other \<IfJML\> instructions.
+It is possible to do without it using conditional expressions and auxiliary ghost variables.
+
+
+\section{Simplified Java programs}\label{sec:JavaProgs}
+This section describes the abstract syntax for an interesting subset of Java programs.
+
+\subsection{Abstract Syntax}
+For sake of abbreviation we define
+\begin{haskell}
+\Methods \eqdef \powerset(Method)
+\end{haskell}
+
+The main simplifications are:
+\begin{itemize}
+  \item No modeled: interfaces, types, arrays, modifiers, object creation, static data, packages, type casts,
+\texttt{instanceof}.
+  \item No \texttt{for} loops (just \texttt{while}). No \texttt{break} nor \texttt{continue} instructions.
+  \item There is only one kind of exceptions thus it is not specified in the catch clause and in the throw.
+instruction.
+  \item Methods have just one argument and one return statement at their end.
+  \item All methods are public thus the invariant is check for every method call.
+\end{itemize}
+
+\renewcommand{\arraystretch}{1.3}
+\setlength{\arraycolsep}{.5\arraycolsep}
+\begin{displaymath}
+\begin{array}[l]{lcl}
+Program         & \geqdef & classes \gcolon \powerset(Class)\\
+Class           & \geqdef & name \gcolon Name \gsemi superClass \gcolon Class \gsemi inv \gcolon
+\powerset(BoolExpr);\\
+                &         & gvds \gcolon \powerset(GhostVarDecl) \gcolon fds \gcolon \powerset(FieldDecl)
+\gsemi methods \gcolon \Methods\\
+GhostVarDecl    & \geqdef & type \colon Type\gsemi name \colon Name\gsemi ival \colon Expr\\
+FieldDecl       & \geqdef & type \gcolon Type\gsemi name \gcolon Name\gsemi ival \gcolon Expr\\
+Type            & \geqdef & IntType \gbar BoolType \gbar Void \gbar RefType\\
+Method          & \geqdef & name \gcolon Name\gsemi argDecls \gcolon (ArgDecl)^*\gsemi pre, post \gcolon
+Expr \gsemi\\
+                &         & body \gcolon Stmt \gsemi pset, qset, xset \gcolon Stmt \gsemi res \gcolon Expr
+\gsemi resType \gcolon Type\\
+ArgDecl         & \geqdef & type \gcolon Type\gsemi name \gcolon Name\\
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}[l]{lcl}
+Stmt   & \geqdef & If\,\, test \gcolon BoolExpr\gsemi then \gcolon Stmt\gsemi else \gcolon
+Stmt\\
+            & \gbar   & Sequence\,\, s1, s2 \gcolon Stmt\\
+            & \gbar   & Set\,\, target \gcolon Name\gsemi source \gcolon Expr\\
+            & \gbar   & Skip\\
+            & \gbar   & StmtExpr\,\, expr \gcolon Expr\\
+            & \gbar   & Throw\\
+            & \gbar   & TryCatch\,\, try \gcolon Stmt\gsemi [finally, catch \gcolon Stmt]\\
+            & \gbar   & While\,\, test \gcolon BoolExpr\gsemi body \gcolon Stmt\\
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}[l]{lcl}
+Expr  & \geqdef & Assign\,\, target \gcolon Name\gsemi source \gcolon
+Expr\\
+            & \gbar   & BExpr\,\, b \gcolon BoolExpr\\
+            & \gbar   & CondExpr\,\, test \gcolon BoolExpr\gsemi then,else \gcolon Expr\\
+            & \gbar   & MethodCall\,\, tgt \gcolon Expr \gsemi name \gcolon Name\gsemi args\gcolon
+(Expr)^*\\
+            & \gbar   & NExpr\,\, n \gcolon NumExpr \\ 
+            & \gbar   & QAssign\,\, tgt \gcolon Expr \gsemi target \gcolon Name\gsemi source \gcolon
+Expr\\
+            & \gbar   & VarEval\,\, var \gcolon Name\\              
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}[l]{lcl}
+BoolExpr        & \geqdef & True \gbar False \gbar Not\,\, b \gcolon BoolExpr\\
+                & \gbar   & And\,\, b1, b2 \gcolon BoolExpr \gbar Or\,\, b1, b2 \gcolon BoolExpr\\
+                & \gbar   & Lt\,\, b1, b2 \gcolon NumExpr \gbar Le\,\, b1, b2 \gcolon NumExpr\\
+                & \gbar   & Eq\,\, b1, b2 \gcolon NumExpr \gbar Ne\,\, b1, b2 \gcolon NumExpr\\
+                & \gbar   & Ge\,\, b1, b2 \gcolon NumExpr \gbar Gt\,\, b1, b2 \gcolon NumExpr\\
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}[l]{lcl}
+NumExpr         & \geqdef & Int\,\, i \gcolon \Integer\\
+                & \gbar   & Plus\,\, b1, b2 \gcolon NumExpr \gbar Minus\,\, b1, b2 \gcolon NumExpr\\
+                & \gbar   & Times\,\, b1, b2 \gcolon NumExpr \gbar Div\,\, b1, b2 \gcolon NumExpr\\
+\end{array}
+\end{displaymath}
+
+
+\subsection{Operational Semantics}
+\input{osprogs}
+
+\section{MVA}
+
+\subsection{Definition}
+
+An MVA is defined as the following tuple
+\begin{haskell}\label{def:MVA}
+MVA &\eqdef\,& (name,className \dcolon Name; cps \dcolon \powerset(CP); icp \dcolon CP; evs \dcolon
+\powerset(Event);\\
+  && vdsA \dcolon \powerset(VarDeclA); vdsP \dcolon \powerset(VarDeclP); ts \dcolon \powerset(Transition))
+\end{haskell}
+where
+\begin{itemize}
+  \item \<name\> is the name of the automaton. It is needed when working with many automatas that annotate a
+class but in this work we will restrict ourself to just one automaton thus its role will be downplayed.
+  \item \<className\> is the name of the class the automaton will monitor.
+  \item \<cps\> is a the set of control points. We assume that \<halted\> $\notin$ \<cps\>.
+  \item \<icp\> is the initial control point. It must be a member of \<cps\>.
+  \item \<evs\> is a set of events.
+  \item \<vdsA\> is a set of variable declarations for the automaton and \<vdsP\> is a set of variable
+declarations for variables of the class that the automaton may use in guards.
+  \item \<ts\> is a set of transitions.
+\end{itemize}
+
+A variable of the automaton is described by an identifier, a type and its initial value.
+\begin{haskell}
+VarDeclA \eqdef (name \dcolon Name, type \dcolon Type, ival \dcolon Expression)
+\end{haskell}
+
+For a variable of the program we only require its name and its type.
+\begin{haskell}
+VarDeclP \eqdef (name \dcolon Name, type \dcolon Type)
+\end{haskell}
+
+Let $Val$ be the set of possible variable values and $Var$ a mapping from identifiers to values, that is,
+\begin{haskell}
+Var \eqdef Name \to Val
+\end{haskell}
+
+A guard is a boolean expression that includes variables from the automaton and from the program.
+\begin{haskell}
+Guard \eqdef Var \times Var \to Bool
+\end{haskell}
+
+An action is a function of type $Var \to Var$. Concretly, an action is a list of assignments to variables
+in $vdsA.name$.
+\begin{haskell}
+Action \eqdef (source \colon Name; target \colon Expression)^*\\
+\end{haskell}
+
+\<skip\>, the empty action, is just an empty list. Do not confuse \<skip\> (an \<Action\>) with \<Skip\> (a
+\<Statement\>).
+An event is composed by an event type and a method name.
+\begin{haskell}
+Event \eqdef (type \colon EventType; mname \colon Name)
+\end{haskell}
+
+There are three flavours of events: entry, exit normal and exit exceptional.
+\begin{haskell}
+EventType \eqdef Entry | ExitNormal | ExitExcept
+\end{haskell}
+
+The set of transitions is described as a table with entries for the source control point, event, guard, action
+and target control point.
+\begin{haskell}
+Transition \eqdef (scp \dcolon CP; event \dcolon Event; guard \dcolon Guard; action \dcolon Action; tcp
+\dcolon CP)
+\end{haskell}
+
+To make the specification more consice we define
+\begin{haskell}
+  \Transitions \eqdef \powerset(Transition)
+\end{haskell}
+
+We say that an automaton is \emph{deterministic} if for every source control point and event there is just one
+guard that holds, in any state of the variables. Formally,
+\begin{haskell}\label{def:MVADeterm}
+determ(a) \eqdef \forall q \in a.cps; e \in a.evs; va \in VarA; vp \in VarP \cdot\\
+ \quad\quad (\exists p \in Guard; t \in a.ts \cdot t.scp = q \wedge t.event = e \wedge t.guard = p \wedge\\
+ \quad\quad p(va,vp)) \Longrightarrow (\forall t' \in ts \cdot t.scp = q \wedge t'.event = e \wedge\\
+ \quad\quad t.guard \neq p \Longrightarrow \neg t'.guard(va, vp))\\
+\end{haskell}
+
+Note that the guard may not exist, but if it does then it is the only one that holds for the given values of
+the variables in the transitions that leave from $q$ when $e$ occurs.
+
+We say that an MVA is \emph{total} if there is always one and only one guard that holds for each set
+transitions with a common source control point and event.
+\begin{haskell}\label{def:MVATotal}
+total(a) \eqdef determ(a) \wedge \forall q \in a.cps; e \in a.evs; va \in VarA; vp \in aVarP \cdot\\
+ \quad\quad \exists p \in Guard; t \in a.ts \cdot t.scp = q \wedge t.event = e \wedge t.guard = p \wedge\\
+ \quad\quad p(va, vp).
+\end{haskell}
+
+\subsection{Operational Semantics} 
+In this subsection we give the operational semantics for MVAs. We restrict our atention to total automata.
+The state of an MVA is composed by its current control point and values for its variables.
+\begin{haskell}
+AState \eqdef (cp \dcolon CP; vars \dcolon VarA)
+\end{haskell}
+
+Notice that the value of the variables of the program are not part the automaton state. They will be provided
+as paramenters to transitions, together with an event in a $PEvent$.
+
+\begin{haskell}
+PEvent \eqdef Var_P \times Event
+\end{haskell}
+
+A single judgment for an MVA $a$ is given by the function $\Delta_a$ which for a given state of $a$ and a
+\<PEvent\> it updates the current control point and the variables of the automaton according the transition
+that applies (recall that we assume that $a$ is total).
+\begin{haskell}
+\Delta_a &\ofType& AState \times PEvent \to AState\\
+\Delta_a((q,va), (vp,e)) &\eqdef& (t.tcp, t.action(va))
+  \hswhere{t \in a.ts \wedge t.scp = q \wedge t.event = e \wedge t.guard(va, vp)}
+\end{haskell}
+
+We write $s \stackrel{pe}{\Rightarrow} s'$  when $\Delta(s, pe) = s'$.
+% We generalize the single-step judgment to (finite) multi-step judgment using standard rules of reflexivity
+% and transitivity. The multi-step partial function $\Delta^*_a$ is recursively defined as
+% \begin{haskell}
+% \Delta^*_a &\ofType& AState \times [PEvent] \to AState\\
+% \Delta^*_a(s, \emptylist) &\eqdef& s\\
+% \Delta^*_a(s, w:a) &\eqdef& \Delta_a(\Delta^*_a(s, w), a)
+% \end{haskell}
+% and we write $s \stackrel{pe}{\Rightarrow_a^*} s'$  when $\Delta_a^*(s, pe) = s'$.
+
+
+\section{Monitored Programs}
+\subsection{Definition}
+A monitored program is a program together with an MVA that monitors its behaviour.
+\begin{haskell}
+MonitoredProgram \eqdef Program \times MVA
+\end{haskell}
+
+The following definition states when a MVA $A$ can monitor a program $P$.
+\begin{haskell}
+\sqsubseteq &\ofType& MVA \times Program \to Bool\\
+A \modeled P &\eqdef&
+ \hsalign{
+   \exists c \in P.classes \cdot\, c.name = A.className \wedge (\forall v \in A.vdsA,\\
+    \exists pv \in c.gvs \cdot\, v.name = pv.name \wedge v.type = pv.type) \wedge\\
+   (\forall v \in A.vdsP, \exists pv \in c.fields \cdot\, v.name = pv.name \wedge\\
+   v.type = pv.type)
+  }
+\end{haskell}
+
+In this article we will work with a MVA $A$ and a program $P$ such that $A \modeled P$. 
+
+\subsection{Operational Semantics}
+\input{mprogs}
+
+
+\section{Annotation Generation}\label{sec:AnnGen}
+This section describes the annotation generation process. 
+The description is top-down; subsections describe different phases of the procedure.
+
+
+\subsection{Completing an MVA}\label{sec:CompMVA}
+The first step in the annotation process is to make transition function of the automata a total function (see
+section \ref{def:MVADeterm}).
+
+Given an MVA \<a\>, \<completeMVA(a)\> is a new MVA that is like \<a\> but its set of control points is
+augmented with \<halted\> and its transition function is made total. Hence in this automaton there is no stuck
+configuration ---the automaton not being able to take any step further---, but it may reach a trap control
+point.
+
+\begin{haskell}\label{def:completeMVA}
+completeMVA &\ofType& MVA \to MVA\\
+completeMVA(a) &\eqdef&
+    \hsalign{
+      a(&cps := a.cps \cup \{halted\},\\
+        &ts := a.ts \cup completeTrans(cps, a.evs, a.ts))
+    }
+\end{haskell}
+
+To complete a set of transitions so that it becomes a total function with respect to a set of control points
+$cps$ and a set of events $es$ we choose a control point $cp \in cps$ and an event $e \in es$, and we add the
+transition \<(cp, p, e, skip, halted)\> where $p$ covers any case not covered by the guards of the transitions
+having $cp$ as source control point and $e$ as event.
+We also add an unconditional transition for any event in $es$ from the halted state to itself.
+
+\begin{haskell}\label{def:completeTrans}
+completeTrans &\ofType& \powerset(CP) \sstimes \powerset(Event) \sstimes \Transitions \ssto \Transitions\\
+completeTrans(cps, es, ts) &\eqdef&\relax
+  \hsbody{
+    \{(cp, e, p, skip, halted) | cp \in cps \wedge e \in es \wedge \\
+    \quad\quad p = Not(disjunct(\{t.guard | t \in ts \wedge t.scp = cp \wedge t.event = e\}))\} \cup\\
+    \{(halted, e, True, skip, halted) | e \in es\}
+  }
+\end{haskell}
+
+The function \<disjunct\> returns the disjunction of the guards given as input. It may be tempting to define
+it simply as $\bigvee_{i=1}^n p_i$, but recall that here a guard is a program construct, not a boolean
+function.
+
+\begin{haskell}\label{def:disjunct}
+disjunct(\emptyset) &\eqdef\,& True\\
+disjunct(\{p\} \sscup ps) &\eqdef& Or(p, disjunct(ps))
+\end{haskell}
+
+The definition is by cases on the structure of the set. For the empty set it returns $True$ and for a
+non-empty set the definition is recursive. The well-foundness of the function is justified by the assumption
+that the given set is finite. The order in which elements are taken from the set is irrelevant since $Or$ is
+conmutative when both arguments are defined, which is also an assumption.
+
+From now on we assume that automaton we work with has been completed with \<completeMVA\>.
+
+\subsection{Annotating programs}\label{sec:AnnPrograms}
+The function \<annProgram\> is in charge of annotating programs; it is the top level function. It receives a
+monitored program and returns a program where the automaton has been encoded as JML annotations.
+
+\begin{haskell}\label{def:annProgram}
+annProgram &\ofType& MonitoredProgram \to Program\\
+annProgram(cs, a) &\eqdef& \{Program(annClass(c, a)) |\, c \in cs\}
+\end{haskell}
+
+Given a (possibly already annotated) class \<c\> and an automaton \<a\>, \<annClass\> returns \<c\> with
+additional annotations and some simple code transformations that encode \<a\>.
+
+\begin{haskell}\label{def:annClass}
+annClass &\ofType& Class \times MVA \to Class\\
+annClass(c, a) &\eqdef&\relax
+  \hsbody{
+    \hsif{c.name = a.className}{
+      \hsalign{
+        c(&inv := c.inv \cup \{Ne(VarEval(\texttt{"cp"}), VarEval(halted))\}\\
+          &gvs := c.gvs \cup newGVDs(a),\\
+          &methods := annMethods(methods', a))
+      }
+    }{
+      c}\\
+  \hskwd{where}\\
+    \quad\quad methods' = completeMethods(c.methods, c.superClass, a.evs.mname)
+  }
+\end{haskell}
+
+\<annClass\> returns a class that is like \<c\> but with some additions to its invariants, ghost variables and
+methods. 
+An invariant stating that the current control point is not \<halted\> is added to the resulting class.
+Declarations of ghost variables are enlarged with \<newGVDs(a)\> (see page~\pageref{def:newGVDs}) and methods
+are first completed with \<completeMethods\> (see next definition) and then annotated with the transitions of
+\<a\> (see page~\pageref{def:annMethods}).
+
+
+\subsection{Completing methods}\label{sec:CompMethods}
+An automaton may have within its events a call to a method $m$ that is not defined in the class $c$ that it
+is monitoring. In that case $m$ will be redefined with just a call to its implementation in a superclass of
+$c$. This redefinition is needed to have a body where the ghost variables could be modified.
+
+\<completeMethods\> receives a list of methods $ms$, their superclass \<c\>, and a list of the names of the
+methods that have to be annotated, $ns$, and returns $ms$ plus redefinitions of methods whose names are in
+$ns$ but not in $ms$; \<c\> is needed to look for inherited methods.
+
+\begin{haskell}\label{def:completeMethods}
+completeMethods &\ofType& \Methods \sstimes Class \sstimes \powerset(Name) \ssto \Methods\\
+completeMethods(ms, c, ns) &\eqdef&\relax
+  \hsbody{
+%     ms \cup \{\,overrideMethod(n, c) |\, n \in ns \wedge n \notin ms.name\,\}
+    ms \cup \{\,overrideMethod(n, c) |\, n \in ns \setminus ms.name\,\}
+  }
+\end{haskell}
+
+The function \<overrideMethod\> takes the name of a method $n$ and its superclass $c$ and returns a
+redefinition of that method with just a call to the implementation in its ancestor.
+It is assumed that $n$ is defined along the hierarchy of $c$.
+
+\begin{haskell}\label{def:overrideMethod}
+overrideMethod &\ofType& Name \times Class \to Method\\
+overrideMethod(n, c) &\eqdef& m(body := body')
+  \hswhere{
+    m & \eqdef lookupMethod(n,c)\\
+    body' &\eqdef \hsifone{m.resultType = Void}{StmtExpr(mc)}{Return(mc)}\\
+    mc &\eqdef MethodCall(Super, m.name, VarEval(\cdot m.argDecls.name \cdot))
+  }
+\end{haskell}
+
+Since the returned method has the same signature as $m$, $m$ will be overridden.
+If the return type of $m$ is $Void$, the call is treated as an statement, otherwise it is used as the return
+value of the method.
+For the method call each formal argument has been turned into an expression.
+
+The function \<lookupMethod\> takes a name of method and a class and returns the first method with that name
+in the hierarchy of $c$ (going upwards from $c$) or $\bot$ if there is no such method. It is not further
+specified.
+
+
+\subsection{Generating ghost variables}\label{sec:GenGVs}
+This subsection describes \<newGVDs\> which that generates the declarations of the ghost variables that encode
+an automaton. Its definition is the following.
+
+\begin{haskell}\label{def:newGVDs}
+newGVDs &\ofType& MVA \to \powerset(GhostVarDecl)\\
+newGVDs(a) &\eqdef&
+  \hsbody{
+    \{\,GhostVarDecl(IntType, \texttt{"cp"}, VarEval(a.icp)\,\} \,\cup\\
+    \{\,GhostVarDecl(IntType, q, NExpr(Int(unique(q)))) \,|\, q \in a.cps\,\} \,\cup\\
+    \{\,GhostVarDecl(v.type, v.name, v.ival) \,|\, v \in a.vdsA\,\}
+  }
+\end{haskell}
+
+The result is the union of declarations that encode the current control point, possible values for it and 
+variables of the automanton. 
+The function \<unique\> is an injective function from $CP$ to $\Integer$.
+
+It is assumed that the name of the control points and variables of the automaton do not clash with other
+identifiers of the program.
+
+
+\subsection{Annotating methods}\label{sec:AnnMethods}
+Here we describe the core of the annotation process, that is, the annotation of the individual methods.
+
+The function \<annMethods\> annotates the given methods with the given automata.
+\begin{haskell}\label{def:annMethods}
+annMethods &\ofType& \Methods \times MVA \to \Methods\\
+annMethods(ms, a) &\eqdef& \{annMethod(m, a) | m \in ms\}\\
+\end{haskell}
+
+\<annMethod\> adds the annotations of the methods at the right places.
+\begin{haskell}\label{def:annMethod}
+annMethod &\ofType& Method \times MVA \to Method\\
+annMethod(m, a) &\eqdef& 
+  \hsalign{
+    m(&pset:=annEvent(filterEv(Entry)),\\
+      &qset:=annEvent(filterEv(ExitNormal)),\\
+      &xset:=annEvent(filterEv(ExitNormal)))
+  }
+  \hswhere{
+    filterEv(type) &\eqdef& \{\,t | t \in a.ts \wedge t.event = (type, m.name)\,\}
+  }
+\end{haskell}
+
+
+\subsection{Annotating Events}\label{sec:AnnEvents}
+Given a set of control points $\{q_i\}_{i=1}^n$, an event $e$ and a set of transitions $\{(q_1, p_{11},e,$
+$a_{11}, q_{11}),$ $(q_1, p_{12}, e, a_{12}, q_{12}),$ $\ldots,$ $(q_n, p_{n1}, e, a_{n1},
+q_{n1}),$ $\ldots,$ $(q_n, p_{nk}, e, a_{nk}, q_{nk})\}$ (note that all transitions have $e$ as event), the
+idea is to encode the triggering of $e$ with annotations similar to the following.
+
+%   @     \textit{perform action \(a\sb{11}\)};
+\begin{alltt}
+/*@
+  @ if (cp == \(q\sb{1}\)) \{
+  @   if (\(p\sb{11}\)) \{
+  @     set cp = \(q\sb{11}\);
+  @     \(a\sb{11}\);
+  @   \} else if (\(p\sb{12}\)) \{
+  @     set cp = \(q\sb{12}\);
+  @     \(a\sb{12}\);
+  @   \}
+  @   \ldots
+  @ \ldots
+  @ \} else if (cp == \(q\sb{n}\)) \{
+  @   if (\(p\sb{n1}\)) \{
+  @     set cp = \(q\sb{n1}\);
+  @     \(a\sb{n1}\);
+  @   \ldots
+  @   \} else if (\(p\sb{nk}\)) \{
+  @     set cp = \(q\sb{nk}\);
+  @     \(a\sb{nk}\);
+  @   \}
+  @ \}
+  @*/
+\end{alltt}
+
+\<annEvent\> generates the annotations to update the control point and the variables for an event,
+independently of its type. It receives the transitions that involve the event that is being annotated.
+
+\begin{haskell}\label{def:annEventSimp}
+annEvent &\ofType& \Delta \to Statement\\
+annEvent(ts) &\eqdef& IfJML(branches)
+   \hswhere{
+     branches &\eqdef& [annTransCP(cp, \{t | t \in ts \wedge t.scp = cp\}) | cp \in ts.scp]
+   }
+% annEvent(ts) &\eqdef& IfJML([annTransCP(cp, filterCP(cp, ts)) | cp \in ts.scp])
+\end{haskell}
+
+Each element of \<branches\> will produce annotations for the transitions that have the same event and the
+same source control point.
+Note that the set of control points is taken from the the transitions; in general it may be a proper subset of
+all the control points of the automaton but having completed the transitions we are sure that they are the
+same. It is obvious that \texttt{cp} can only have values within the set of control points thus at least one
+of the branches will be selected.
+The order in which the elements of the list \<branches\> are generated from the set \<ts.scp\> is
+irrelevant because the conditions are mutually exclusive.
+
+\bigskip
+\<annTransCP\> takes a control point \<cp\> and a set of transitions \<ts\> and returns a pair containing a
+boolean expression that checks if the current control point is \<cp\> and a statement that will choose one of
+the guards from \<ts\> and take the corresponding action.
+\begin{haskell}\label{def:annTransCP}
+annTransCP &\ofType& CP \to \Delta \to (BoolExpr, Statement)\\
+annTransCP(q, ts) &\eqdef& (cond, stmt)
+  \hswhere{
+    cond &\eqdef\,& Eq(VarEval(\texttt{"cp"}), VarEval(q))\\
+    stmt &\eqdef& IfJML(annGuardsActions(ts))
+  }
+\end{haskell}
+
+\bigskip
+\<annGuardsActions\> receives a set of transitions that have the same source control point and event and
+returns a list of boolean expressions obtained from their guards and statements representing their execution.
+\begin{haskell}\label{def:annGuardsActions}
+annGuardsActions &\ofType& \Delta \to [(BoolExpr, Statement)]\\
+annGuardsActions(ts) &\eqdef& [(t.guard, updVars(t)) | t \in ts]
+\end{haskell}
+Again, the order in which the list is generated from the set of transitions is not important because having
+completed the set transitions we can assure that there is always one and only one guard that holds for each
+pair of control point and event, in any state of the variables.
+%TODO: put a link to the definition of functions for transitions.
+
+\bigskip
+\<updVars\> updates the control point and the variables of the automaton according to the transition given as
+argument.
+\begin{haskell}\label{def:updVars}
+updVars &\ofType& Transition \to Statement\\
+updVars(t) &\eqdef& Sequence(Set(\texttt{"cp"}), VarEval(t.tcp), annAction(t.action))
+\end{haskell}
+
+\bigskip
+Recall that an action is a list of pairs (\<source: Name, target: Expression\>). The function \<annAction\>
+simply translates an action into a sequence of set instructions.
+\begin{haskell}\label{def:annAction}
+annAction &\ofType& Action \to Statement\\
+annAction(\emptylist) &\eqdef& Skip\\
+annAction(a:as) &\eqdef& Sequence(Set(a.source, a.target), annAction(as))
+\end{haskell}
+
+Notice that the action \<skip\> is translated to the program construct \<Skip\>.
+
+\subsection{Refining the specification}
+
+\begin{haskell}
+newGVDs &\ofType& MVA \to \powerset(GhostVarDecl)\\
+newGVDs(a) &\eqdef&
+  \hsbody{
+    \{\,GhostVarDecl(IntType, \texttt{"cp"}, VarEval(a.icp)\,\} \,\cup\\
+    \{\,GhostVarDecl(BoolType, \texttt{"ex"}, BExpr(False)\,\} \,\cup\\
+    \{\,GhostVarDecl(IntType, q, NExpr(Int(unique(q)))) \,|\, q \in a.cps\,\} \,\cup\\
+    \{\,GhostVarDecl(v.type, v.name, v.ival) \,|\, v \in a.vdsA\,\}
+  }
+\end{haskell}
+
+The boolean variable \texttt{ex} will be used as a flag to mark an exceptional termination.
+
+\<annMethod\> adds the annotations of the methods at the right places.
+\begin{haskell}
+annMethod &\ofType& Method \times MVA \to Method\\
+annMethod(m, a) &\eqdef& m(body := TryCatch(tryBlock, catchBlock, finallyBlock))
+  \hswhere{
+    tryBlock &\eqdef\,& annEvent(filterEv(Entry)) ; body\\
+    catchBlock &\eqdef& \hsiftwo{filterEv(ExitExecpt) = \emptyset}{Throw}{
+      \hsalign{
+        &annEvent(filterEv(ExitExecpt)) ;\\
+        &Set(\texttt{"ex"}, True) ; Throw}}\\
+%TODO: This is not accurate because VarEval is an Expression not a BoolExpr
+    finallyBlock &\eqdef& IfJML [(Not(VarEval(\texttt{"ex"})), annEvent(\\
+                 && filterEv(ExitNormal))), (True, Skip)] ; Set(\texttt{"ex"}, False)\\
+    filterEv(type) &\eqdef& \{\,t | t \in a.ts \wedge t.event = (type, m.name)\,\}
+  }
+\end{haskell}
+To be able to differentiate between normal and exceptional exits, a try-catch-finally block is put around the
+body of each annotated method.
+The annotations for entry events are placed at the entrance of the method, exit exceptional events are
+annotated in the catch close and exit normal events are annotated in the finally clause. The catch block also
+flags the exceptional termination setting the variable \texttt{ex} and re-throws the exception to avoid
+disturbing the semantics of the method.
+The finally block executes annotations for exit normal events only if the method did not throw an exception.
+Then it resets the variable \texttt{ex}.
+
+The set of transitions passed to \<annEvent\> is filter according to the type of event what it is being
+annotated in each place.
+To simplify the notation we have written $a; b$ instead of \<Sequence(a, b)\>.
+
+
+\section{Properties of Annotations}
+This sections discusses properties of the annotation process. Many of them are trivial but we will rely on
+them when proving the correctness of the approach.
+
+\subsection{General}
+\begin{property}
+  The function \<annProgram\> finishes for all entries (that meet the assumptions).
+\begin{proof}
+  This follows from the fact that the sets are all finite and the recursive definitions are primitive
+recursive.
+\end{proof}
+\end{property}
+
+\begin{property}\label{prop:cClass}
+Given a program $P$ and a MVA $A$ such that $A \modeled P$, there is a class $c \in P.classes$ such that
+\begin{haskell}
+annProgram(P, A) = (P.Classes \setminus \{c\}) \cup annClass(c, A)
+\end{haskell}
+\begin{proof}
+Since $A \modeled P$, there is a class $c \in P.classes$ such that $c.name = A.className$. Since class names
+are all different, this is the only class that gets annotated with \<annClass\> and the other classes remain
+unchanged.
+\end{proof}
+\end{property}
+
+\begin{property}
+  The ghost variables that encode the different control points are constant throughout the program.
+\begin{proof}
+  This follows from the assumption that the variables of the automata and \texttt{cp} are only modified by the
+annotation that produced by the annotation process and the fact that there is no assignment to those
+variables, thus their values do not change once they are initialized.
+\end{proof}
+\end{property}
+
+\begin{property}
+  In the program $annProgram(P, A)$, the value of $cp$ is always one of the possible control points of $A$.
+\begin{proof}
+The variable $cp$ is initialized to $A.icp$ which is requiered to be a member of $A.cps$.
+The only places in the code where $cp$ is assigned are those generated by $updVars$ which assigns to it
+the value of $t.tcp$, for some transition $t$ of $A.ts$. This value is also requiered to be in $A.cps$.
+\end{proof}
+\end{property}
+
+
+\subsection{Automaton completition}
+\begin{property}
+  If for an input string $s$ an MVA $a$ gets stuck then \<completeMVA(a)\> will be in the state \<halted\>
+after reading $s$, that is
+  $$\Delta^*_a(q_0, s) = \bot \textrm{ if and only if } \Delta^*_{a'}(q_0, s) = halted,$$
+where \<a' = completeMVA(a)\> and $q_0$ is the initial state of $a$.
+\end{property}
+
+\begin{property}
+  Let $a$ be an MVA that has been completed with \<completeMVA\>, then for any event $e$ in $a.evs$,
+$(halted, True, e, skip, halted) \in a.ts$
+\end{property}
+
+\begin{property}
+  Let $a$ be an MVA that has been completed with \<completeMVA\>, then $a.ts$ is a total function.
+\end{property}
+
+
+\subsection{Code Transformations}
+\begin{property}
+  The code transformations made by \<completeMethods\> and \<annMethod\> do not change the semantic of the
+program.
+\end{property}
+
+\begin{property}
+  There is an equivalent way of encoding the transitions that does not need the assumption of the \<IfJML\>
+instruction.
+\end{property}
+
+
+\subsection{Inital states}
+  Let $\sigma_0^P$ and $\sigma_0^{\gamma(A,P)}$ be the initial (small) states of $P$ and $annProgram(P, A)$ as
+defined
+in Definition \ref{def:PE} and \ref{def:MPE}, respectively.
+
+\begin{property}\label{prop:InitalMPModelsA}
+%   Let $\sigma_0^P$ and $\sigma_0^{\gamma(A,P)}$ be the initial states of $P$ and $annProgram(A, P)$ as
+% defined in Definition \ref{def:PE} and \ref{def:MPE}, respectively, then
+\ 
+\begin{haskell}
+\sigma_0^{\gamma(A,P)}.gvs =\,\,& \sigma_0^P.gvs \sscup \{ cp \mapsto A.icp \} \sscup \{ q.name \mapsto
+unique(q) \,|\, q \in A.cps \}\\
+& \cup \{ v.name \mapsto v.ival\,|\,v \in A.vdsA \}
+\end{haskell}
+\begin{proof}
+Let $c$ be the class of $P.classes$ that gets annotated (see Property \ref{prop:cClass}). Then
+\begin{haskell}
+\siAP.gvs &=\,\,& \setc{gvd.name \mapsto gvd.ival}{gvd \in c.gvds \wedge c \in
+annProgram(P,A).classes}\\
+&=& \setc{gvd.name \mapsto gvd.ival}{gvd \in c.gvds \wedge c \in P.classes \setminus \{c\}} \cup\\
+&&  \setc{gvd.name \mapsto gvd.ival}{gvd \in annClass(c,A).gvds}\\
+&=& \setc{gvd.name \mapsto gvd.ival}{gvd \in c.gvds \wedge c \in P.classes \setminus \{c\}} \cup\\
+&&  \setc{gvd.name \mapsto gvd.ival}{gvd \in c.gvds} \cup\\
+&&  \setc{gvd.name \mapsto gvd.ival}{gvd \in newGVDs(c, A)}\\
+&=& \setc{gvd.name \mapsto gvd.ival}{gvd \in c.gvds \wedge c \in P.classes} \cup\\
+&&  \{cp \mapsto A.icp\} \cup \setc{q.name \mapsto unique(q)}{q \in A.cps} \cup\\
+&&  \{v.name \mapsto v.ival \,|\, v \in A.vdsA\}\\
+&=& \sigma_0^P.gvs \cup \{cp \mapsto A.icp\} \cup \setc{q.name \mapsto unique(q)}{q \in A.cps} \cup\\
+&&  \setc{v.name \mapsto v.ival}{v \in A.vdsA}
+\end{haskell}
+\end{proof}
+\end{property}
+
+\begin{property}\label{prop:InitalMPModelsP}
+\ 
+\begin{haskell}
+\siAP.fvs = \siP.fvs \wedge \siAP.gvs \subseteq \siP \wedge \siAP.lvs = \siP.lvs
+\end{haskell}
+\begin{proof}
+Let $c$ be the class in $P.classes$ that gets annotated (see Property~\ref{prop:cClass}). For this class the
+ghost variable declarations are enlarged with $newGVDs(c, A)$ and hence the function $\siAP.gvs$ is a subset
+of $\siP.gvs$. Since fields and local variables declarations are not changed, $\siAP.fvs = \siP.fvs$ and
+$\siAP.lvs = \siP.lvs$.
+\end{proof}
+\end{property}
+
+
+\section{Correctness}\label{sec:Correctness}
+\begin{definition}
+Let $A$ be an MVA and $P$ a program such that $A \modeled P$, then we define
+\begin{haskell}\label{def:AModeled}
+\sqsubseteq &\ofType& AState \times PSt \to Bool\\
+\sA \modeled \sP &\eqdef& \sA.cp = \sP.gvs(cp) \wedge \sA.vars \subseteq \sP.gvs
+\end{haskell}
+
+\begin{haskell}\label{def:PModeled}
+\sqsubseteq &\ofType& PSt \times PSt \to Bool\\
+\sP \modeled \sAP &\eqdef& \sP.fvs = \sAP.fvs \wedge \sP.gvs \subseteq \sAP.gvs \wedge\\
+&&\sP.lvs = \sAP.lvs
+\end{haskell}
+
+\begin{haskell}\label{def:StateEquiv}
+\approx &\ofType& MPState \times PState \to Bool\\
+% \alpha \monitor (x, \sigma) \approx (x', \sigma') &\eqdef& (x = x' \vee (x' = JMLExc \wedge \alpha.cp =
+% halted)) \wedge\\
+%   && \alpha \modeled \sigma' \wedge \sigma \modeled \sigma'\\
+%TODO: Say that this relation is applies to "compatible" states
+%   && \dom(\alpha.vars) \cup \dom (\sigma.gvs) \cup \{cp\} = \dom(\sigma')
+\sA \monitor (x, \sP) \approx (x', \sAP) &\eqdef& x = x' \wedge \sA \modeled \sAP \wedge \sP \modeled \sAP\\
+\end{haskell}
+\end{definition}
+
+\begin{lemma}\label{prop:InitialEquiv}
+If $\siA, Norm(\siP)$ and $Norm(\siAP)$ are the initial states of $A, P$ and $annProgram(P, A)$,
+respectively, then $\siA \monitor Norm(\siP) \approx Norm(\siAP)$.
+\begin{proof}
+Since both states are non-exceptional, to prove the equivalence we have to prove that $\siA \modeled \siAP$,
+which follows from Property~\ref{prop:InitalMPModelsA}, and that $\siP \modeled \siAP$ which is proved in
+Property~\ref{prop:InitalMPModelsP}.
+\end{proof}
+\end{lemma}
+
+\subsection*{Rule Induction for Commands}
+To avoid simultaneosly combining structural induction on commands with that on expressions we use the
+\emph{special principle rule induction} described in~\cite[p44]{Winskel}.
+
+% \renewcommand{\arraystretch}{1.3}
+\begin{displaymath}
+\begin{array}{l}
+\forall c \in Stmt; \siA \monitor (x_0, \siP), \soA \monitor (x_1, \soP) \in MPState; (x'_0, \siAP),
+(x'_1, \soAP) \in PState\, \cdot\\
+\quad \stmp{c, \siA \monitor (x_0, \siP)}{\soA \monitor (x_0, \soP)} \wedge\\
+\quad \stap{c, (x'_0, \siAP)}{(x'_1, \soAP)} \longrightarrow\\
+\quad Q(c, \siA \monitor (x_0, \siP), \soA \monitor (x_1, \soP), (x'_0, \siAP), (x'_1, \soAP)) \quad
+\text{iff}\\
+\lbrack\\ %Exceptions
+\forall c \in Stmt; \siA \monitor (Some(x_0), \siP) \in MPState; (Some(x'_0), \siAP) \in PState\, \cdot\\
+\quad Q(c, \siA \monitor (Some(x_0), \siP), \siA \monitor (Some(x_0), \siP), (Some(x'_0), \siAP), (Some(x'_0),
+\siAP))\\
+\wedge\\ %Skip
+\forall \siA \monitor Norm(\siP) \in MPState; Norm(\siAP) \in PState\, \cdot\\
+\quad Q(Skip, \siA \monitor Norm(\siP), \siA \monitor Norm(\siP), Norm(\siAP), Norm(\siAP))\\
+\wedge\\
+\ldots\\
+\wedge\\
+\forall \sinMP, \soA \monitor \soP, \stA \monitor \stP \in MPState; Norm(\siAP), \soAP, \stAP \in PState\,
+\cdot\\
+\quad \etmp{e, \sinMP}{v, \soMP} \,\wedge\\
+\quad \stmp{\pif{the\_Bool(v)}{c_1}{c_2}, \soMP}{\stMP} \,\wedge\\
+\quad \etap{e, \sinAP}{(v', \soAP)} \,\wedge\\
+\quad \stap{\pif{the\_Bool(v)}{c_1}{c_2}, \soAP}{\stAP} \,\wedge\\
+\quad Q(\pif{the\_Bool(v)}{c_1}{c_2}, \soMP, \stMP, \soAP, \stAP) \longrightarrow\\
+\quad Q(If(e, c_1, c_2), \sinMP, \stMP, \sinAP, \stAP)\\
+\wedge\\
+\ldots\\
+\rbrack
+\end{array}
+\end{displaymath}
+
+\subsection*{Rule Induction for Expressions}
+% \newpage
+\begin{displaymath}
+\begin{array}{l}
+\forall e \in Expr; \siA \monitor (x_0, \siP), \soA \monitor (x_1, \soP) \in MPState; (x'_0, \siAP),
+(x'_1, \soAP) \in PState;\\
+v,v' \in Val\, \cdot\\
+\quad \etmp{e, \siA \monitor (x_0, \siP)}{v, \soA \monitor (x_0, \soP)} \,\wedge\\
+\quad \etap{e, (x'_0, \siAP)}{v', (x'_1, \soAP)} \longrightarrow\\
+\quad Q(e, \siA \monitor (x_0, \siP), v, \soA \monitor (x_1, \soP), (x'_0, \siAP), v', (x'_1, \soAP))
+\quad \text{iff}\\
+\lbrack \forall e \in Expr; \siA \monitor (Some(x_0), \siP) \in MPState; (Some(x'_0), \siAP) \in PState\,
+\cdot\\
+\quad Q(e, \siA \monitor (Some(x_0), \siP), \bot, \siA \monitor (Some(x_0), \siP), (Some(x'_0), \siAP),\\
+\quad\quad \bot, (Some(x'_0), \siAP))\\
+\wedge \ldots\\
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}{l}
+% \wedge \qquad \texttt{// Method call rule}\\ %Method calls
+\wedge
+%Monitored Programs
+\forall e,p \in Expr; a,a',pv,pv',v,v' \in Val; \alpha^A_0,\ldots\alpha^A_6 \in AState;\\
+\sinP,(x_1,\soP), \ldots, (x_5, \sigma^P_5), \sinAP, (x'_1,\soAP),\ldots,(x'_7,\sigma^{\AP}_7) \in PState
+\,\cdot\\
+\quad \etmp{e,\sinMP}{a, \alpha^A_1 \monitor (x_1, \soP)} \,\wedge\\
+\quad \etmp{p, \alpha^A_1 \monitor (x_1, \soP)}{pv, \alpha^A_2 \monitor (x_2, \sigma^P_2)} \,\wedge\\
+\quad x_3 = \pif{x_2 \neq None \wedge a = Null}{NullPointer}{x_2} \,\wedge\\
+\quad md = lookup\_mthd(P, a, mn, p) \wedge inv = lookup\_inv(P, a) \,\wedge\\
+\quad \sigma^P_3 = \sigma^P_2(lvs:=init\_vars(md.lvars[this \mapsto a][md.pn \mapsto pv])) \,\wedge\\
+\quad P, \sigma^P_3 \vDash inv \wedge \alpha_0.cp \neq halted \wedge P, \sigma^P_3 \vDash md.pre \,\wedge\\
+\quad \alpha^A_3 = \begin{cases}
+\Delta_A(\alpha^A_2, \sigma^P_3.fvs, (mn, Entry))& \text{if } (m, Entry) \in A.evs\\
+\alpha^A_2& \text{otherwise}
+\end{cases} \,\wedge\\
+\quad \stmp{md.body, \alpha^A_3 \monitor (x_3, \sigma^P_3)}{\alpha^A_4 \monitor (x_4, \sigma^P_4)}
+\,\wedge\\
+\quad \etmp{md.res, \alpha^A_4 \monitor (x_4, \sigma^P_4)}{v, \alpha^A_5 \monitor (x_5, \sigma^P_5))}
+\,\wedge\\
+\alpha^A_6 = \begin{cases}
+\Delta_A(\alpha^A_5, \sigma^P_5.fvs, (mn, ExitNormal))\!\!\!& \text{if } (mn, ExitNormal) \in A.evs \wedge x_5
+= None\\
+\Delta_A(\alpha^A_5, \sigma^P_5.fvs, (mn, ExitExcept))& \text{if } (mn, ExitExcept) \in A.evs \wedge x_5 \neq
+None\\
+\alpha^A_5& \text{otherwise}
+\end{cases}\\
+\quad \wedge\, P, \sigma^P_5 \vDash md.post \wedge P, \sigma^P_5 \vDash inv \wedge \alpha_6.cp \neq halted
+\,\wedge\\
+%Annotated Programs
+\quad \etap{e,\sinAP}{a',(x'_1,\soAP)} \,\wedge\\
+\quad \etap{p, (x'_1, \soAP)}{pv', (x'_2, \stAP)} \,\wedge\\
+\quad x'_3 = \pif{x'_2 \neq None \wedge a' = Null}{NullPointer}{x'_2} \,\wedge\\
+\quad md' = lookup\_mthd(\gamma(P,A), a', mn, p') \wedge inv' = lookup\_inv(\gamma(P,A), a') \,\wedge\\
+\quad \sigma^{\AP}_3 = \sigma^{\AP}_2(lvs:=init\_vars(md.lvars[this \mapsto a'][md.pn \mapsto pv']))
+\,\wedge\\
+\quad \AP, \sigma^{\AP}_3 \vDash inv' \wedge \gamma(P,A), \sigma^{\AP}_3 \vDash md'.pre \,\wedge\\
+\quad \stap{md'.pset, (x'_3, \sigma^{\AP}_3)}{(x'_4, \sigma^{\AP}_4)} \,\wedge\\
+\quad \stap{md'.body, (x'_4, \sigma^{\AP}_4)}{(x'_5, \sigma^{\AP}_5)} \,\wedge\\
+\quad \etap{md'.res, (x'_5, \sigma^{\AP}_5)}{v,(x'_6, \sigma^{\AP}_6))} \,\wedge\\
+\quad \stap{\pif{x'_6 = None}{md'.qset}{md'.xset}, (x'_6, \sigma^{\AP}_6)}{(x'_7, \sigma^{\AP}_7)} \,\wedge\\
+\quad \AP, \sigma^{\AP}_7 \vDash inv' \wedge \AP, \sigma^{\AP}_7 \vDash md'.post \,\wedge\\
+\quad Q(e, \sinMP, a, \soxMP, \sinAP, a', (x'_1,\soAP))\\
+\quad Q(p, \alpha^A_1 \monitor (x_1, \soP), pv, \alpha^A_2 \monitor (x_2, \sigma^P_2), (x'_1, \soAP), pv',
+(x'_2, \stAP))\\
+%THINK: I'm saying that Q must hold for md.res, what about md'.res?
+\quad Q(md.res, \alpha^A_4 \monitor (x_4, \sigma^P_4), v, \alpha^A_5 \monitor (x_5, \sigma^P_5), (x'_5,
+\sigma^{\AP}_5), v, (x'_6, \sigma^{\AP}_6)) \longrightarrow\\
+\quad Q(MethodCall(e,mn,p), \sinMP, v', \alpha^A_6 \monitor (x_5, \sigma^P_5(lvs:=\sigma_2.lvs)),\\
+\quad\quad \sinAP, v', (x'_7, \sigma^{\AP}_7(lvs:=\sigma^{\AP}_2.lvs)))\\
+\wedge \ldots \rbrack
+\end{array}
+\end{displaymath}
+
+\mycomm{\quad I'm saying that Q must hold for md.res, what about md'.res?}
+
+\medskip
+The next pair of theorems express that the eqivalence relation is maintained by the execution of the
+same command or the evaluation an expression in both systems.
+
+%TODO: Agregar Norm
+\begin{theorem}\label{prop:InvComm}
+Let $c$ be a $Stmt$; $\alpha^A$, $(x, \sP)$ and $(x', \sAP)$ be states of $A$, $P$ and $annProgram(P, A)$,
+respectively, then if
+\begin{enumerate}
+  \item $\sixMP \approx (x'_0, \sAP)$,
+  \item $\stmp{c, \sixMP}{\soxMP}$, and
+  \item $\stap{c, (x'_0, \sAP)}{(x'_1, \soAP)}$
+\end{enumerate}
+then $\soxMP \approx (x'_1, \soAP)$.
+\end{theorem}
+
+\begin{theorem}\label{prop:InvExpr}
+Let $e$ be an $Expr$; $\alpha^A$, $(x, \sP)$ and $(x', \sAP)$ be states of $A$,
+$P$ and $annProgram(P, A)$, respectively, then if
+\begin{enumerate}
+  \item $\sixMP \approx (x'_0, \sAP)$,
+  \item $\etmp{e, \sixMP}{v, \soxMP}$, and
+  \item $\etap{e, (x'_0, \sAP)}{v', (x'_1, \soAP)}$
+\end{enumerate}
+then $v = v'$ $\wedge$ $\soxMP \approx (x'_1, \soAP)$.
+\end{theorem}
+
+We prove both theorems together in a mutual recursion using the rules of induction for commands and
+expressions. In the case of commands, $Q$ is $\sixMP \approx (x'_0, \sAP)$ $\longrightarrow$ $\soxMP \approx
+(x'_1, \soAP)$ and for expressions we add $v = v'$ to the consequent.
+For instance, to prove Theorem~\ref{prop:InvComm} in the $If$ case, in the antecedent we have
+
+\[
+\begin{array}{l}
+\etmp{e, \sinMP }{v, \soMP} \,\wedge\\
+\etap{e, Norm(\siAP)}{v', \soAP}\\
+\end{array}
+\]
+assuming that $\sixMP \approx (x'_0, \sAP)$ we can apply Theorem~\ref{prop:InvExpr} to obtain that $\soxMP
+\approx (x'_1, \soAP)$. In the antecedent we also have
+\[
+\begin{array}{l}
+\stmp{\pif{the\_Bool(v)}{c_1}{c_2}, \soMP}{\stMP} \,\wedge\\
+\stap{\pif{the\_Bool(v)}{c_1}{c_2}, \soAP}{\stAP} \,.\\
+\end{array}
+\]
+Since $v$ is evaluated in equivalent states, it will have the same value and thus the same command will be
+chosen. Applying the inductive hypotesis to this command we get that $\stMP \approx \stAP$ and hence
+$Q(\pif{the\_Bool(v)}{c_1}{c_2}, \soMP, \stMP, \soAP, \stAP)$ holds. It follows that $Q(If(e, c_1, c_2),
+\sinMP, \stMP, \sinAP, \stAP)$ holds.
+
+\begin{theorem}
+Let $\siA$ be a state of $A$ and $Norm(\siP)$ a state of $AnnProgram(P, A)$.
+Let $c$ be the statement $annEvent(\setc{t}{t \in A.ts \wedge t.event = (k,mn)})$ for some method name $mn$
+and event type $k$ and $pe$ the $PEvent$ $(\siP.fvs, (mn, k))$. If
+\begin{enumerate}
+  \item $\atr{\siA}{pe}{\soA}$,
+  \item $\siA \modeled \siAP$, and
+  \item $\stap{c, Norm(\siAP)}{(x, \soAP)}$
+\end{enumerate}
+then $\soA \modeled \soAP$.
+\end{theorem}
+
+\medskip
+\begin{theorem}\label{prop:Correctness}
+Given a program $P$ and a MVA $A$ such that $A \modeled P$,
+\[A \monitor P \Rightarrow_{PE} \alpha \monitor \sigma \wedge annProgram(P, A)(e) \Rightarrow_{MPE} \sigma' 
+\longrightarrow \alpha \monitor \sigma \approx \sigma'\]
+\begin{proof}
+It follows from Lemma~\ref{prop:InitialEquiv}, Theorem~\ref{prop:InvComm} and the fact that $annProgram(P,
+A)$ does not add or modify any command in $P$, it just adds some ghost variables declarations and modifies
+some method declarations.
+\end{proof}
+\end{theorem}
+
+\bibliographystyle{plain}
+\bibliography{overview}
+\end{document}

@@ -1,0 +1,170 @@
+\ProvidesPackage{form}
+\usepackage[latin1]{inputenc}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amsthm, amsfonts, amssymb}
+\usepackage{alltt}
+\usepackage{comment}
+\usepackage{url}
+\usepackage{ifthen}
+\usepackage{haskell}
+\usepackage{proof} %infer
+% \usepackage{multirow}
+\usepackage{pxfonts}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{property}[theorem]{Property}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}
+
+\newboolean{printcomments}
+\setboolean{printcomments}{true}
+% \setboolean{printcomments}{false}
+% \newenvironment{mycomm}
+%   {\ifthenelse{\boolean{printcomments}}{\begin{quote}\small\itshape}{}}%
+%   {\ifthenelse{\boolean{printcomments}}{\end{quote}}{}}%
+
+\newcommand{\mycomm}[1]%
+{%
+\ifthenelse{\boolean{printcomments}}{{\quote\small\itshape #1}}{}%
+}
+
+
+%%% Definitions
+\def\pindent{\hspace*{0.5cm}}
+%\def\emptyList{[\,]}
+\def\ofType{\hspace*{2pt}:\hspace*{5pt}}
+\def\sto{\!\to\!}
+\def\ssto{\!\to\!\!}
+\def\stimes{\!\times\!}
+\def\sstimes{\!\times\!\!}
+\def\scup{\!\cup\!}
+\def\sscup{\!\cup\!\!}
+
+%% Grammar rules
+%For declarations made with haskell environment
+%\def\gcolon{\!\!\colon}
+% \def\geqdef{\eqdef\,}
+%\def\gbar{\,\,\,|}
+
+%For declaration made with an array
+\def\geqdef{::=}
+\def\gcolon{\colon}
+\def\gbar{\,\,|\,\,}
+\def\gsemi{;\,}
+
+%For declarations made with haskell environment
+\def\dcolon{\!\colon}
+
+%Customizations
+\def\eqdef{\triangleq\,}
+%\def\eqdef{:=}
+%\def\emptyset{\varnothing}
+\def\emptylist{[\,]}
+
+\newcommand\Natural{{\mathbb N}}
+\newcommand\Integer{{\mathbb Z}}
+\newcommand\powerset{{\mathcal{P}}}
+\DeclareMathOperator{\dom}{dom}
+
+\newcommand{\pif}[3]{\textbf{if}\, #1\, \textbf{then}\, #2\, \textbf{else}\, #3}
+% Fer's infer rule
+% \newcommand{\infrulen}[3]
+% {\dfrac{\begin{array}[b]{@{}c@{}} #1 \\ \end{array}}{#2}~#3}
+
+%Struts for array line separation
+\newcommand\T{\rule{0pt}{2.2ex}}
+\newcommand\B{\rule[-1.6ex]{0pt}{0pt}}
+
+\def\Transitions{\Delta}
+\def\Methods{\Pi}
+\newcommand{\monitor}{\mathbin{\|}}
+\newcommand{\modeled}{\sqsubseteq}
+%Puts something in brackets (useful when [ and ] can not be used)
+\newcommand{\br}[1]{\lbrack #1\rbrack}
+%Set comprehension
+\newcommand{\setc}[2]{\{#1 \,|\,\, #2\}}
+
+
+\newcommand{\AP}{\gamma(P,A)}
+%Small states
+\newcommand{\sA}{\alpha^A}
+\newcommand{\sP}{\sigma^P}
+\newcommand{\sAP}{\sigma^{\gamma(P,A)}}
+
+%Normal states (without subscripts)
+\newcommand{\NsP}{Norm(\sigma^P)}
+\newcommand{\NsAP}{Norm(\sigma^{\gamma(P,A)})}
+
+%Initial states
+\newcommand{\siA}{\alpha_0^A}
+\newcommand{\siP}{\sigma_0^P}
+\newcommand{\sinP}{Norm(\sigma_0^P)}
+\newcommand{\siAP}{\sigma_0^{\gamma(P,A)}}
+\newcommand{\sinAP}{Norm(\siAP)}
+\newcommand{\sixAP}{(x_0, \siAP)}
+
+\newcommand{\siMP}{\siA \monitor \siP}
+\newcommand{\sinMP}{\siA \monitor Norm(\siP)}
+\newcommand{\sixMP}{\siA \monitor (x_0,\siP)}
+
+%State with subscript 1
+\newcommand{\soA}{\alpha_1^A}
+\newcommand{\soP}{\sigma_1^P}
+\newcommand{\soAP}{\sigma_1^{\gamma(P,A)}}
+\newcommand{\soMP}{\soA \monitor \soP}
+\newcommand{\sonMP}{\soA \monitor Norm(\soP)}
+\newcommand{\soxMP}{\soA \monitor (x_1,\soP)}
+
+%State with subscript 2
+\newcommand{\stA}{\alpha_2^A}
+\newcommand{\stP}{\sigma_2^P}
+\newcommand{\stMP}{\stA \monitor \sigma_2^P}
+\newcommand{\stAP}{\sigma_2^{\gamma(P,A)}}
+
+%Haskell
+% if expression in one lines
+\hscommand{\hsifone}[4][t]{%
+  \hskwd{if} #2 \hskwd{then} #3 \hskwd{else} #4
+}
+
+% if expression in two lines
+\hscommand{\hsiftwo}[4][t]{%
+  \hsalign[#1]{%
+    \hskwd{if} #2 \hskwd{then} #3\\
+    \hskwd{else} #4\\
+    }%
+  }
+
+%It does not work when the where clause has many definitions  
+\hscommand{\hsbodyw}[2]{%
+    {}\\
+  \hsnoalign{
+      \quad\hsalign{
+        {#1}\\
+        \hskwd{where}\\
+        {\quad}{#2}
+      }%
+    }%
+  }
+
+%MVA Operational Semantics 
+\newcommand{\atr}[3]{%
+  A \vdash #1 \stackrel{#2}{\Rightarrow}_A #3}
+%Program Operational Semantics
+\newcommand{\etp}[2]{%
+  P \vdash \langle #1 \rangle \triangleright_P \langle #2 \rangle}
+\newcommand{\stp}[2]{%
+  P \vdash \langle #1 \rangle \Rightarrow_P #2}
+\newcommand{\etap}[2]{%
+  \gamma(P,A) \vdash \langle #1 \rangle \triangleright_P \langle #2 \rangle}
+\newcommand{\stap}[2]{%
+  \gamma(P,A) \vdash \langle #1 \rangle \Rightarrow_P #2}
+%Monitored Program Operational Semantics
+\newcommand{\etmp}[2]{%
+  A, P \vdash \langle #1 \rangle \triangleright_{MP} \langle #2 \rangle}
+\newcommand{\stmp}[2]{%
+  A, P \vdash \langle #1 \rangle \Rightarrow_{MP} #2}
+

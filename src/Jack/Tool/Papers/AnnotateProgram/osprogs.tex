@@ -1,0 +1,262 @@
+This is an adaptation of von Oheimb's work \cite{Oheimb-Nipkow-Java-LNCS}.
+
+The evaluation rules are given as mutually inductive set of tuples. These sets define functions which will
+be writen as shown next.
+\begin{list}{--}{}
+  \item $\stp{c,\sigma}{\sigma'}$  means that the execution of the $Statement$ $c$ transforms the state
+$s$ into $s'$ in the context of the $Program$ P.
+  \item $\etp{c,\sigma}{v,\sigma'}$  means that the $Expression$ $e$ evaluates to $v$, transforming
+$s$ into $s'$ in the context of the $Program$ P.
+\end{list}
+
+\begin{haskell}
+\hskwd{datatype} Maybe(a) \eqdef Some(a) | None
+\end{haskell}
+
+\begin{haskell}
+Excpt &\eqdef&\, Throwable | NullPointer
+\end{haskell}
+
+An state of a program is composed by an optional exception and a \texttt{small state} that keeps track of the
+values of the fields, ghost variables and local variables. For simplification we assume that ghost variables
+are global, local ghost variables could be added easily.
+\begin{haskell}
+PState \eqdef ex \gcolon Maybe Excpt \times st \gcolon PSt\\
+PSt \eqdef (fvs \gcolon Var, gvs \gcolon Var, lvs \gcolon Var)\\
+\end{haskell}
+
+Exceptions propagate when a series of statements or a series of expressions is evaluated:
+$$\stp{c,(Some(x), \sigma)}{(Some(x), \sigma)}$$
+$$\etp{e,(Some(x), \sigma)}{\bot, (Some(x), \sigma)}$$
+
+All the other rules can assume that in their concerning initial state no exception has been thrown. For such
+states, we define the abbreviation $Norm(\sigma)$, which stands for $(None, \sigma)$.
+
+\subsection*{Statements}
+The rules for statements not explicitly involving exceptions are the standards ones in big-step semantics:
+
+%THINK: It may be better to make the exception explicit
+\begin{displaymath}
+\begin{array}{lc}
+\br{Skip_P}     & \B\stp{ Skip, Norm(\sigma)}{Norm(\sigma)} \\
+
+\br{Seq_P}      & 
+\begin{array}{c}
+\stp{c_1, Norm(\sigma_0)}{\sigma_1} \quad \stp{c_2, \sigma_1}{\sigma_2}\\
+\hline
+\B\stp{Seq(c_1, c_2), Norm(\sigma_0)}{\sigma_2}
+\end{array}\\
+
+\br{StmtExpr_P} &
+\begin{array}{c}
+\etp{e, Norm(\sigma_0)}{v,\sigma_1}\\
+\hline
+\B\stp{StmtExpr(e), Norm(\sigma_0)}{\sigma_1}
+\end{array}\\
+
+\br{If_P} &
+\begin{array}{c}
+\etp{e, Norm(\sigma_0)}{v,\sigma_1}\\
+\stp{\pif{the\_Bool(v)}{c_1}{c_2}, \sigma_1}{\sigma_2}\\
+\hline
+\B \stp{If(e,c_1,c_2), Norm(\sigma_0)}{\sigma_2}
+\end{array}\\
+
+\br{While_P} &
+\begin{array}{c}
+\stp{If(e, While(e,c), Skip), \sigma_1}{\sigma_1}\\
+\hline
+\stp{While(e,c), Norm(\sigma_0)}{\sigma_2}
+\end{array}\\
+
+\end{array}
+\end{displaymath}
+
+Since it is not our intention to give a realistic model of Java programs we have simplified the treatment of
+exceptions. We assume that \texttt{throw} takes no argument and always raises an exception of type
+\texttt{Throwable}.
+
+\begin{displaymath}
+\begin{array}{lc}
+\br{Throw_P}     &
+\stp{Throw, Norm(\sigma_0)}{(Throwable, \sigma_0)}
+\end{array}
+\end{displaymath}
+
+In a \texttt{try} $c_1$ \texttt{catch} $c_2$ \texttt{finally} $c_3$ statement we do not distinguish between
+types of exceptions. For a more complete treatment of exceptions see~\cite{Oheimb-Nipkow-Java-LNCS}. If
+the execution of $c_1$ throws an exception $c_2$ is evaluated, otherwise it is skipped; then $c_3$ is
+evaluated even if $c_2$ raised an exception. If both $c_2$ and $c_3$ threw an exceptions then $c_2$ will be
+given precedence.
+
+% \renewcommand{\arraystretch}{1.3}
+\begin{displaymath}
+\begin{array}{lc}
+\br{TryCatch_P}     &  
+\begin{array}{c}
+\stp{c_1, Norm(\sigma_0)}{(x_1,\sigma_1)}\\
+% (x_2, \sigma_2) = \begin{cases}
+% Norm(\sigma_1)& \text{if } x_1 = None\\
+% \Delta_P(c_2, Norm(\sigma_1))& \text{otherwise}
+% \end{cases}\\
+\stp{\textbf{if}\, x_1=None\, \textbf{then}\, Skip\, \textbf{else}\, c_2, Norm(\sigma_0)}{(x_2, \sigma_2)}\\
+\stp{c_3, Norm(\sigma_2)}{(x_3, \sigma_3)}\\
+x_4 = \begin{cases}
+x_2& \text{if } x_2 \neq None\\
+x_3& \text{otherwise}
+\end{cases}\\
+\hline
+\stp{TryCatch(c_1, c_2, c_3), Norm(\sigma_0)}{(x_4, \sigma_3)}
+\end{array}
+\end{array}
+\end{displaymath}
+
+\begin{displaymath}
+\begin{array}{lc}
+\br{LU_P}     &
+\begin{array}{c}
+is\_ghost(vn, Norm(\sigma_0))\\
+\etp{e, Norm(\sigma_0)}{v, (x_1, \sigma_1)}\\
+\sigma_2 = \pif{x = None}{\sigma_1.gvs[vn \mapsto v]}{\sigma_1}\\
+\hline
+\etp{Set(vn, e), Norm(\sigma_0)}{v, (x_1, \sigma_2)}
+\end{array}
+\end{array}
+\end{displaymath}
+
+%TODO: Revise the syntax and define or change the function $the\_Bool$.
+
+\subsection*{Expressions}
+We assume that the sets of fields, ghost variables and local variable names are disjoint. The following
+functions, of type $Identifier \times Program \to Bool$ are use to distinguish between the kind of variables.
+
+\begin{haskell}
+is\_local(vn, \sigma) &\eqdef\,& vn \in \dom(\sigma.lvs)\\
+is\_field(vn, \sigma) &\eqdef& vn \in \dom(\sigma.fvs)\\
+is\_ghost(vn, \sigma) &\eqdef& vn \in \dom(\sigma.gvs)
+\end{haskell}
+
+%NOTE: To be more precise, this variables should take as argument the class but I don't do that because
+% I am flattering the namespace. This simplification will also bring problems in the semantics of qualified
+% constructs where the target expression is evaluated just to produce its side-effect.
+
+An access to a local variable (or a parameter or the \texttt{this} pointer) reads from the local state
+component:
+\begin{displaymath}
+\begin{array}{lc}
+\br{LA_P}     &
+\begin{array}{c}
+is\_local(vn, Norm(\sigma))\\
+\hline
+\etp{VarEval(vn), Norm(\sigma)}{\sigma.lvs(vn), Norm(\sigma)}
+\end{array}
+\end{array}
+\end{displaymath}
+
+An assignment to a local variables updates the state, unless the evaluation of the subexpression raises an
+exception:
+\begin{displaymath}
+\begin{array}{lc}
+\br{LU_P}     &
+\begin{array}{c}
+is\_local(vn, Norm(\sigma_0))\\
+\etp{e, Norm(\sigma_0)}{v, (x_1, \sigma_1)}\\
+\sigma_2 = \pif{x = None}{\sigma_1.lvs[vn \mapsto v]}{\sigma_1}\\
+\hline
+\etp{LAssign(vn, e), Norm(\sigma_0)}{v, (x_1, \sigma_2)}
+\end{array}
+\end{array}
+\end{displaymath}
+%TODO: Assign takes three args. Diff between local assign (LAssign) and qualified assignments (QAssign)
+
+
+\begin{displaymath}
+\begin{array}{lc}
+\br{QA_P}     &
+\begin{array}{c}
+is\_field(vn, Norm(\sigma_0))\\
+\etp{e, Norm(\sigma_0)}{v, (x_1, \sigma_1)}\\
+x_2 = \pif{x_1 = None \wedge v = Null}{NullPointer}{x_1}\\
+\hline
+\etp{QAccess(e, vn), Norm(\sigma_0)}{\sigma_1.fvs(vn), (x_2, \sigma_1)}
+\end{array}
+\end{array}
+\end{displaymath}
+%TODO: This is a too simplistic view of the heap!
+
+\begin{displaymath}
+\begin{array}{lc}
+\br{QU_P}     &
+\begin{array}{c}
+is\_field(vn, Norm(\sigma_0))\\
+\etp{e_1, Norm(\sigma_0)}{v_1, (x_1, \sigma_1)}\\
+x_2 = \pif{x_1 = None \wedge v_1 = Null}{NullPointer}{x_1}\\
+\etp{e_2,\sigma_1}{v_2, (x_3, \sigma_2)}\\
+\sigma_3 = \pif{x_2 = None}{\sigma_2.fvs[vn \mapsto v_2]}{\sigma_2}\\
+\hline
+\etp{QAssign(e_1, vn, e_2), Norm(\sigma_0)}{v_2, (x_3, \sigma_3)}
+\end{array}
+\end{array}
+\end{displaymath}
+
+
+%TODO: Define init_vars and this
+
+\begin{displaymath}
+\begin{array}{lc}
+\br{MC_P}     &
+\begin{array}{c}
+\etp{e,Norm(\sigma_0)}{a,(x_1,\sigma_1)}\\
+\etp{p, (x_1, \sigma_1)}{pv, (x_2, \sigma_2)}\\
+x_3 = \pif{x_2 \neq None \wedge a = Null}{NullPointer}{x_2}\\
+md = lookup\_mthd(P, a, mn, p)\quad inv = lookup\_inv(P, a)\\
+\sigma_3 = \sigma_2(lvs:=init\_vars(md.lvars[this \mapsto a][md.pn \mapsto pv]))\\
+P, \sigma_3 \vDash inv\quad P, \sigma_3 \vDash md.pre\quad \stp{md.pset, (x_3, \sigma_3)}{(x_4, \sigma_4)}\\
+\stp{md.body, (x_4, \sigma_4)}{(x_5, \sigma_5)}\\
+\etp{md.res, (x_5, \sigma_5)}{v,(x_6, \sigma_6))}\\
+\stp{\pif{x_6 = None}{md.qset}{md.xset}, (x_6, \sigma_6)}{(x_7, \sigma_7)}\\
+P, \sigma_7 \vDash inv\quad P, \sigma_7 \vDash md.post\\
+\hline
+\etp{MethodCall(e,mn,p), Norm(\sigma_0)}{v, (x_7, \sigma_7(lvs:=\sigma_2.lvs)}\\
+\end{array}
+\end{array}
+\end{displaymath}
+
+Recall that we assumed that there is no clash between local variables and class variables, otherwise we
+should evaluate the invariant in a state with no local variables like $\sigma_7(lvs:=\emptyset)$ so that the
+value of the variables are taken from $fvs$ or $gvs$.
+
+\medskip
+The following theorems enunciate that the evaluation of expressions and the execution of statements are
+deterministic. They can be proved by the \emph{special rule principle of induction} (see~\cite{Winskel}).
+\begin{theorem}
+If $\etp{e,\sigma_0}{v,\sigma_1}$ and $\etp{e,\sigma_0}{v,\sigma_2}$ then $\sigma_1 = \sigma_2$.
+\end{theorem}
+
+\begin{theorem}
+If  $\stp{c,\sigma_0}{\sigma_1}$ and $\stp{c,\sigma_0}{\sigma_2}$ then $\sigma_1 = \sigma_2$.
+\end{theorem}
+
+\medskip
+The execution of a program starts with a call to the entry method \texttt{main} with some argument, and is
+evaluated in a state where fields and ghost variables are mapped to their initial values.
+
+\begin{definition}\label{def:PE}
+The execution of a program $P$ with input $e$ is defined as
+$$P(e) \Rightarrow_{PE} (x,\sigma) \eqdef \stp{MethodCall(this, main, e), Norm(\sigma_0)}{(x, \sigma)}$$
+where $\sigma_0$ is such that
+\begin{haskell}
+\sigma_0.fvs &=\,& \{fd.name \mapsto fd.ival \,|\, fd \in c.fds \wedge c \in P.classes\}\\
+\sigma_0.gvs &=& \{gvd.name \mapsto gvd.ival \,|\, gvd \in c.gvds \wedge c \in P.classes\}\\
+\sigma_0.lvs &=& \{this \mapsto v\}
+\end{haskell}
+\end{definition}
+
+%NOTE: To be more precise I should evaluate fs.ival and gvd.ival (they are expressions). The problem is to say
+% in which state are evaluated these expressions. A way out would be to require them (in the syntax) to be
+% literals
+
+The value $v$ represents the initial object; in a more realistic semantics such object would be created.
+%NOTE: If I model the heap and object creation, as David does, I will have problems when defining the
+% equivalence relation since I will have to define a heap equivalence (which should be independent of the
+% actual addresses) and then I will have to make proofs with that definition.

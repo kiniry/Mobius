@@ -1,0 +1,255 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[dvips]{graphicx}
+
+\author{Alejandro Tamalet}
+\date{2006-06-01}
+\title{Notes}
+
+\begin{document}
+\maketitle
+
+\section{Problem Definition}
+\begin{itemize}
+  \item What kind of properties are we interested in?.\\
+  Should we strive to express liveness properties?
+  \item Which is our set of events?. Just method calls?\\
+  What about method exit (it may be useful to specify properties involving
+embedded calls)?\\
+  Any other?
+  \item Are we interested in finite or infinite program traces?
+\begin{itemize}
+  \item Some interesting applications on which we might want to enforce
+policies are often consider to run infinitely (web servers, operating systems,
+mobile phone software). They is naturally modeled with a (countably) infinite
+sequence of system's action.
+
+  \item Most programs are intended to termite.
+
+  \item If we consider finite executions we will be focused on programs that
+terminate. That implies an analysis of program termination which is a
+liveness property (we would be proving total correctness).
+
+  \item A finite sequence of actions can be extended to an infinite one by
+appending empty actions. Sequences of states are usually extended by repeating
+the last state.
+
+  \item Finite actions can be arbitrary long.
+
+\end{itemize}  
+  \item Should we specify only normal behaviour or a complete behaviour?, in
+other words, should we specify the error state (if needed at all) as part of the
+high-level specification or not?
+  \item Are we interested in run-time verification or formal verification?\\
+  Both?\\
+  More in one than in the other?
+  \item Should we use only standard JML, purposed extensions (e.g. TL,
+protocols) or should we purpose further extensions?
+\end{itemize}
+
+\section{Formalisms}
+\subsection*{JML as an Upper Bound in Expressiveness}
+The first limitation we find is given by (standard) JML. Any formalism we choose
+must be encodable into JML, maybe with a suitable extension.
+  
+In the field of run-time checking there are many powerful formalism (security
+automata, alternating automata, edit automata, etc) and tools to enforce
+security properties. They may be given in a high level formalism like LTL. The
+main difference between this approaches an our is that they have at their
+disposal more powerful mechanism of instrumentation like code transformation,
+code addition (for example using AspectJ), bookkeeping of the automaton state
+(even if it is extended with conditions and actions), etc. Those capabilities
+are far beyond the expressive power of JML.
+
+One of the main concerns of tools to enforce security properties is
+performance. See for example the paper ``Enforcing Trace Properties by Program
+Transformations''. Many of the techniques used by these tools are not available
+through JML. For instance, in the paper \cite{StolzBodden06}, they use a lazy
+state-space generation technique which is infeasible in JML.
+
+\subsection*{State Machines}
+The common way to check that a property holds is to describe it in some
+formalism that can be latter translated to state machine. A state machine is
+composed of a set of states (which for our purposes has to be finite), an
+initial state, a set of accepted states, an alphabet for input and a transition
+function that based on the current state and possibly in other data, returns a
+new state and might perform some actions over the data.
+
+Usually we take as an automaton state a state of the program and the input are
+the actions perfomed.
+The way to know if the property holds on program that terminates is to see if
+after consuming all the input the automata is in an accepted state.
+
+If the transition table is complete, there usually are trap states, that is to
+say, a state from which we can not reach an accepted state. If we were able to
+recognize those states then we could infer the falsity of the property as soon
+as one of these states is reached.
+
+This characterizes the ways of proving or refuting a property. As we will see in
+JML we have difficulties in checking the acceptance condition, thus leaves us
+just with the second alternative.
+
+\subsection*{Finite Regular Automata}
+The number of wrong traces detected by the translation of an automaton to JML is
+less than the number of traces rejected by the automaton. However, this is only
+for technical reasons.
+
+\subsection*{Pushdown Automata and Beyond}
+If we want to move from simple automata to a more powerful formalism that has a
+transition function that besides of taking into account the current state
+considers the value of other data (e.g. an integer, a stack, a tape, etc) and
+returns a new state and performs some action that data, we face the problem of
+encoding these actions into JML.
+
+An automaton with two stacks is equivalent to a Turing Machine, thus if we were
+able to encode such an automaton we would have, at least in theory, to express
+any computable property. However, it doesn't mean at all that it can be done in
+a realistic way.
+
+\subsection*{Linear Temporal Logic}
+LTL and its equivalent formalisms (B\"uchi automata, Security automata, Rabin
+automata, Street automata, Parity automata, Muller automata, etc) are a
+appealing option for our CIL. However on a closer inspection we find some
+problems and drawbacks:
+\begin{itemize}
+  \item Liveness properties can not be enforced. At most a small subset (but
+probably not a useful one) can be encoded into JML (see Marieke' work). Systems
+that use LTL to specify properties often use a model checker to prove them.
+  \item But even if we could translate LTL into JML, we may not be able to
+express many interesting properties. The following is a quoting from the paper
+``A Temporal Logic of Nested Calls and Returns´´.
+\begin{quote}
+While LTL is an attractive specification language for capturing regular
+sequencing requirements such as ``between successive write operations to a
+variable, a read operation should occur,'' it cannot express requirements such
+as ``if the pre-condition $p$ holds when a module is invoked, the post-condition
+$q$ should hold when the module returns.'' This requires matching of calls and
+returns, and is a context-free property if calls are nested (recall that the
+language $\{a^nb^n | n \in N\}$ is a non-regular context-free language).
+[\ldots]\ In this paper, we introduce \textsc{CaRet} ---a temporal logic that
+can express requirements about matching calls and returns, along with the
+necessary tools for algorithmic reasoning. [\dots] to the best of our knowledge,
+this is the first specification language that allows specification of partial
+and total correctness with respect to pre and post conditions, and has a
+decidable model checking problem with respect to boolean abstractions of
+recursive sequential programs.
+\end{quote}
+\end{itemize}
+
+\subsection*{Security automata}
+What can we say about security automata in particular?
+A security automata is a B\"uchi automata used to express security properties.
+
+A B\"uchi automaton is like regular automaton, the difference is that it works
+on an infinite input and the acceptance condition is that it must visit
+infinitely often an accepted state.
+
+B\"uchi automata are also known Propositional Temporal Formulas like LTL
+formulae can be tanslated B\"{u}chi automata where automaton state transitions
+are defined in terms of atoms of the temporal formula and the inputs are boolean
+predicates over those states. However, these formulas are usally proved using
+explicit-state model chequers rather than proof assistants. A model chequer can
+detect infite traces that belong to the language accepted by the automaton by
+hashing states and detecting cycles that include acceptance states.
+
+The set of states is only required to be countable, that is, it may be infinite.
+This is not a serious problem, quoting Schneider~\cite{Schneider89}:
+\begin{quote}
+ Technically, it is the finite set of equivalence classes (under the monadic
+predicates of the temporal formula being specified) of program states. [\ldots]
+Infinite sets of automaton states are necessary for recognizing certain
+safety properties, because whether a given prefix should be rejected might
+depend on all of the input symbols in that prefix. The ever-larger prefixes
+produced as execution proceeds require ever-larger sets of states to encode
+needed information about the past. For example, a safety property stipulating
+that, at each step of execution, the value of some target variable $x$ equals
+the sum of its values in preceding states requires (to store the sum of the past
+values of $x$) a state variable that grows without bound.
+
+Security policies of concern in real systems do not seem to require large
+amounts of storage and, in fact, are enforced today using mechanisms that use
+only modest amounts of storage; a security automaton to specify such a policy
+would also require only a modest-sized set of automaton states. We see no reason
+to expect application-specific or special-purpose security policies to be
+different. So, restricting the [set of states] for a security automaton to a
+finite amount of storage is not, in practice, a limitation.
+\end{quote}
+
+Another technical point against B\'uchi automata is that they are
+non-deterministic. Their deterministic version is less powerful. I don't know
+if the translation from an LTL to a B\'uchi automata yields a deterministic
+automata. If both formalisms are equivalent then there must be some LTL formula
+that can not be translated to a deterministic B\'uchi automata.
+
+The main problem of working with B\'uchi automata is undoubtedly how to
+check their acceptance condition.
+Stolz and Bodden\cite{StolzBodden06} opted not to use B\"uchi automata (they use
+alternate automata). This is what they say (they express properties in LTL and
+work with finite traces):
+\begin{quotation}
+When initially evaluating the topic and possible implementations, we considered
+modelling LTL using B\"uchi automata. A B\"uchi automanta is a natural concept
+from the point of view of model checking, where traces are usually infinitely
+long and the automaton correspondingly accepts infinite traces. As we found out
+in experiments and as Havelund mentions in \cite{RosuHavelund}, B\"uchi automata
+are difficult to adapt to reason about finite traces. In particular there may be
+several minimal B\"uchi automata all recognizing the same language and even
+with the same transition table but with different sets $F$ of accepting states.
+Depending on the LTL to B\"uchi automata translation, the resulting automaton
+might or might not be suited for evaluation of finite paths, where it is
+essential which states \textit{exactly} are final. Thus we opted for alternating
+finite automata, which provide a sound model and can, as presented, easily be
+transformed to ordinary DFA over finite words.
+\end{quotation}
+
+In \cite{RosuHavelund} Ro\c{s}u and Havelund work with LTL formulae over finite
+execution traces of events. They develop an efficient algorithm using dynamic
+programming (however, the execution traces need to be visited backwards). The
+reasons they give for not using B\"uchi automata are related to the difficulty
+of translating LTL formulae to B\"uchi automata (we can avoid this step if we
+work directly with security automata), semantic and performace problems. They
+also note that other similar systems like Temporal Rover and MaC do not use
+B\"uchi automata either.
+
+If in JML it is a problem to know if a regular automata ended in an accepted
+state (that is, if it accepted a finite input trace), being able to know if an
+infinite trace will make the automata go infinitely many times through accepted
+states is probably impossible.
+If we are unable to check the acceptance condition then there is benefit in
+using these automata instead of a regular one (see the discussion on the
+characterisation of errors that can be catched using some kind of state
+machine).
+
+%\subsection*{Edit automata}
+% Extension de los automatas de seguridad usando edit automata. Consideran
+% inputs finitos
+%\subsection*{Alternating automata}
+
+\section{Problems of the approach}
+\begin{itemize}
+  \item The whole automaton, i.e. the set of states, transition function,
+initial state and accepted states must be translated into code
+annotations\footnote{The set of events is implicitly defined if they represent
+method calls.}. This may lead to cumbersome specifications.
+  \item Any realistic implementation will need a way to synchronize the high
+level specification with the generated annotations. These requirement will need
+to be able to distinguish between the synthesized annotations and the ones
+added by manually.
+  \item The previous topics may not be problems depending on how we plan to use
+the tool. A possible approach is to use it just for testing and verification.
+
+Before running a test case the tool adds the annotations the relevant classes.
+Verification is also done over the annotated class but otherwise we work over
+the unannotated class.
+  \item The performance cost can be high if for every method call we add many
+checks and some actions. Again, it may be acceptable when doing testing. Static
+verification if, of course, not concerned with performance.
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{overview}
+\end{document}
+

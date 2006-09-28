@@ -1,0 +1,77 @@
+\subsubsection*{Statements}
+% The rules for the evaluation of statements are similar to that of annotated programs since their premises
+% don't have into account the state of the automaton. For example,
+
+\begin{displaymath}
+\begin{array}{lc}
+\br{If_{MP}} &
+\begin{array}{c}
+\etmp{e, \alpha_0 \monitor Norm(\sigma_0)}{v,\alpha_1 \monitor \sigma_1}\\
+\stmp{\pif{the\_Bool(v)}{c_1}{c_2}, \alpha_1 \monitor \sigma_1}{\alpha_2 \monitor \sigma_2}\\
+\hline
+\B \stmp{If(e,c_1,c_2), \alpha_0 \monitor Norm(\sigma_0)}{\alpha_2 \monitor \sigma_2}
+\end{array}\\
+\end{array}
+\end{displaymath}
+
+
+\subsubsection*{Expressions}
+\begin{displaymath}
+% \begin{array}{lc}
+% \br{MC_{MP}} &
+\begin{array}{c}
+\etmp{e, \alpha_0 \monitor Norm(\sigma_0)}{a, \alpha_1 \monitor (x_1, \sigma_1)}\\
+
+\etmp{p, \alpha_1 \monitor (x_1, \sigma_1)}{pv, \alpha_2 \monitor (x_2, \sigma_2)}\\
+
+x_3 = \pif{x_2 \neq None \wedge a = Null}{NullPointer}{x_2}\\
+
+md = lookup\_mthd(P, a, mn, p)\quad inv = lookup\_inv(P, a)\\
+
+\sigma_3 = \sigma_2(lvs:=init\_vars(md.lvars[this \mapsto a][md.pn \mapsto pv]))\\
+
+P, \sigma_3 \vDash inv \quad \alpha_0.cp \neq halted \quad P, \sigma_3 \vDash md.pre\\
+
+\alpha_3 = \begin{cases}
+\Delta_A(\alpha_2, \sigma_3.fvs, (mn, Entry))& \text{if } (m, Entry) \in A.evs\\
+\alpha_2& \text{otherwise}
+\end{cases}\\
+
+\stmp{md.body, \alpha_3 \monitor (x_3, \sigma_3)}{\alpha_4 \monitor (x_4, \sigma_4)}\\
+
+\etmp{md.res, \alpha_4 \monitor (x_4, \sigma_4)}{v, \alpha_5 \monitor (x_5, \sigma_5))}\\
+
+\alpha_6 = \begin{cases}
+\Delta_A(\alpha_5, \sigma_5.fvs, (mn, ExitNormal))\!\!\!& \text{if } (mn, ExitNormal) \in A.evs \wedge x_5 =
+None\\
+\Delta_A(\alpha_5, \sigma_5.fvs, (mn, ExitExcept))& \text{if } (mn, ExitExcept) \in A.evs \wedge x_5 \neq
+None\\
+\alpha_5& \text{otherwise}
+\end{cases}\\
+
+P, \sigma_5 \vDash md.post\quad P, \sigma_5 \vDash inv\quad \alpha_6.cp \neq halted\\
+
+\hline
+\etmp{\T MethodCall(e,mn,p), \alpha_0 \monitor Norm(\sigma_0)}{v, \alpha_6 \monitor (x_5,
+(\sigma_5(lvs:=\sigma_2.lvs)))}\\
+\end{array}\\
+% \end{array}
+\end{displaymath}
+
+\bigskip
+The execution of a program $P$ monitored by an automaton $A$ executes $P$ begining in the state $\alpha_0
+\monitor \sigma_0$ where $\alpha_0$ and $\sigma_0$ are the initial states of $A$ and $P$, respectively.
+
+\begin{definition}\label{def:MPE}
+The execution of a program $P$ with input $e$, monitored by a MVA $A$ is defined as
+$$A \monitor P(e) \Rightarrow_{MPE} \alpha \monitor (x,\sigma) \eqdef \stp{MethodCall(this, main, e),
+\alpha_0 \monitor Norm(\sigma_0)}{\alpha \monitor (x, \sigma)}$$
+where $\sigma_0$ is such that
+\begin{haskell}
+\alpha_0.cp &=\,\,& A.icp\\
+\alpha_0.vars &=\,& \{v.name \mapsto v.ival \,|\, v \in A.vdsA\}\\
+\sigma_0.fvs &=& \{field.name \mapsto field.ival \,|\, field \in c.fields \wedge c \in P.classes\}\\
+\sigma_0.gvs &=& \{gv.name \mapsto gv.ival \,|\, gv \in c.gvs \wedge c \in P.classes\}\\
+\sigma_0.lvs &=& \{this \mapsto v\}
+\end{haskell}
+\end{definition}

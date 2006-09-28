@@ -1,0 +1,747 @@
+%Creation date 2006-06-02
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amsthm, amsfonts, amssymb}
+\usepackage[dvips]{graphicx}
+\usepackage{alltt}
+
+\usepackage{subfig}
+\usepackage[all]{xy}
+%\CompileMatrices
+%\entrymodifiers={++[o][F-]}
+\def\nodelen{0.5cm}
+\def\enode{*++[o][F-]{\hspace*{\nodelen}}}  %empty node
+\def\aenode{*++[o][F=]{\hspace*{\nodelen}}} %acepted empty node
+\def\node#1{*++[o][F-]{#1}}  %node
+\def\anode#1{*++[o][F=]{#1}}  %acepted node
+%\UseComputerModernTips
+
+\def\fun{\rightarrow}
+\def\jcode#1{\textup{\texttt{#1}}}
+\DeclareMathOperator{\dom}{dom}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\author{Alejandro Tamalet}
+\date{2006-06-16}
+\title{Common Language Interface}
+
+\begin{document}
+\maketitle
+
+\section{ToDo}
+Problems with the current annotations:
+\begin{itemize}
+  \item If we change the value of the control point before changing the value of the variables, then the
+guards on the variable's updates will be using the new value of the control point. If we change it after
+updating the variables then the guards will use the new values of the variables.
+  Thus we must save the value of each variable before modifying it, and refer to the old value in the
+conditions of the conditional assignments.
+  \item The annotation for exit normal events can not be put, in general, at the end of the method body
+because if the method executes a \texttt{return} statement, those annotation will not be executed (in non-void
+methods they will be dead-code). The best thing to do is to put them in a \texttt{finally} clause but since
+this clause is executed after the \texttt{catch} clause, we need a variable to flag an abnormal termination
+and test it at the beginning of the normal exit annotations.
+  \item The generation of pre and post-conditions is not so simple, we have to propagate the changes made to
+the variables.
+\end{itemize}
+
+
+\section{Definition}\label{sec:Definition}
+The choice for our Common Language Interface (CLI) is a state machine similar to a deterministic pushdown
+automaton (DPDA) with some variations. First of all, since we are not interested in the acceptance condition,
+there are no accepted states --- it is better to think that every state is accepted. Moreover, instead of a
+stack there is a set of variables of different types. Besides events, transitions have predicates that act as
+guards and actions to update the value of the variables.
+We refer to these state machines as \textit{multivariable automata}.
+
+%% Infinite sequence of input
+We will use this formalism to specify properties of software that can be thought as infinite processes, e.g.
+software for operating mobile phones, operating systems or web servers, thus we consider that the sequence of
+events may be infinite.
+
+\subsection*{Formal Definition}
+%% Preliminary definitions
+The set of variable names or identifiers used by the automaton is called $Ident$; for the sake of simplicity
+we do not specify the possible values for each variable, instead we assume that they can have values in fixed
+set $Val$. $V$, also called the store, is a mapping from identifiers to values, that is, $V = Ident \fun Val$,
+and $Q$ is a set of control points. A state is a control point plus an assignment of values to variables, thus
+$State = Q \times V$. A guard is a mapping from stores to boolean values and an action is a store transformer,
+hence we define $\mathcal P = V \fun Boolean$ and $\mathcal A = V \fun V$. An undefined value is denoted by
+$\bot$.
+
+A multivariable automata (MVA) is a 6-tuple $\langle Q, Ident, q_0, v_0, \Sigma, \delta \rangle$ where $Q$ is
+a finite set of control points, $Ident$ is a finite set of identifiers, $q_0 \in Q$ is the initial control
+point, $\sigma_0 \in Val$ is the initial configuration for the variables, $\Sigma$ is a finite set of events
+and $\delta \colon Q \times \mathcal P \times \Sigma \times \mathcal A \fun Q$ is a finite partial transition
+function where the guards in $\mathcal P$ are decidable and the actions in $\mathcal A$ are computable. 
+
+%% Operational semantics
+We specify the behaviour of a MVA $M$ giving its operational semantics. The basic single step judgment is
+defined by the partial function $\Delta_M$ which given a state and an event returns a new state.
+
+\begin{align*}
+\Delta_M \colon & State \times \Sigma \fun State\\
+\Delta_M((q, \sigma), e) =\,& \textbf{if } \exists!\: p \cdot \exists\: a \cdot
+\langle q,p,e,a \rangle \in \dom(\delta) \wedge p(\sigma) \textbf{ then }\\
+& \hspace{0.5cm} \langle \delta(q,p,e,a), a(\sigma) \rangle\\
+& \textbf{else}\\
+& \hspace{0.5cm} \bot
+\end{align*}
+
+Note that the guard $p$ is required to be unique to avoid non-determinism. If $\Delta_M((q,\sigma),e)$ is a
+defined state $(q',\sigma')$ we write $(q,\sigma) \stackrel{p,e}{\longrightarrow}_M (q',\sigma')$ to denote
+that the current state changes from $(q,\sigma)$ to $(q',\sigma')$ when $e$ occurs and $p(\sigma)$ holds,
+otherwise we say that the automaton halts . If $p$ is \texttt{true} we just write $(q,\sigma)
+\stackrel{e}{\longrightarrow}_M (q',\sigma')$.
+
+We generalize the single-step judgment to (finite) multi-step judgment using standard rules of reflexivity and
+transitivity. The multi-step partial function $\Delta^*_M$ is recursively defined as
+\begin{align*}
+\Delta^*_M \colon& State \times \Sigma^* \fun State\\
+\Delta^*_M(s, \epsilon) =\,& s\\%, \textrm{ and}\\
+\Delta^*_M(s, wa) =\,& \Delta_M(\Delta^*_M(s, w), a)
+\end{align*}
+
+If $\Delta^*_M(s, w)$ is a defined state $s'$ we write $s \stackrel{w}{\Longrightarrow}_M s'$.
+
+%% Expressiveness of MVAs
+Notice that with an augmented automata it is easy to simulate a pushdown automata with two stacks. Since the
+expressive of the latter is equivalent in power to a Turing Machine, our formalism is also as powerful as a
+Turing Machine.
+
+\subsection*{Events}
+When specifying a property of a program it is important to clearly define the set of events being used since
+it restricts the kind of properties that can be expressed.. Recall that the transition function is partial
+thus if $e \in \Sigma$ occurs in a state where no transition involving $e$ is available, the automaton halts.
+
+In this work we will consider three kinds of events: method entry, method exit and exception throwing. The
+distinction between method entry and exit is useful to model embedded calls and considering exception throwing
+allows to distinguish between normal and exceptional termination of a method call.
+
+Another interesting sort of events are field access. We do not support it directly since an instruction like
+\texttt{x = x + y} would trigger two field reads an a field write simultaneously. To support field reads and
+writes, the developer must provide setter and getter functions which can be annotated at entry or exit.
+
+\subsection*{Textual Representation}
+%% Textual representation
+There must be a textual representation of an MVA to make them practical. Figure~\ref{fig:TP} shows an MVA that
+describes a transaction protocol with unbounded number of embedded transactions and Figure~\ref{fig:txtTP}
+gives one of its possible textual representations.
+%TODO: Comentar el protocolo. Uso de exit en los eventos, variable necesaria % para contar las transacciones.
+
+
+\begin{figure}[!htb] % Transaction Protocol
+\centering\ 
+\SelectTips{cm}{10}
+\UseTips
+\xymatrix{
+  *\txt{} \ar[r]^(0.4){T=0}
+  &  \enode \ar[rr]_{bt,T=1}
+  && \enode \ar@/_1pc/[ll]_{T==1,ct\: \vee\:at,T=0}
+\ar@(r,u)[]_{T>1,ct\: \vee\:at,T=T-1} \ar@(r,d)^{bt,T=T+1}\\
+}
+\NoTips
+\caption{MVA describing a transaction protocol.}\label{fig:TP}
+\end{figure}
+
+\begin{figure}[!htbp]
+\begin{verbatim}
+[Control Points]
+NOTRANS, INTRANS
+
+[Initial Control Point]
+NOTRANS
+
+[Events]
+bt = exit beginTransaction,
+ct = exit commitTansaction,
+at = exit abortTransaction
+
+[Variables]
+int T = 0;
+
+[Transitions]
+NOTRANS, true, bt, T=1, INTRANS;
+INTRANS, T==1, {ct, at}, T=0, NOTRANS;
+INTRANS, T>1, {ct, at}, T=T-1, INTRANS;
+INTRANS, true, bt, T=T+1, INTRANS;
+\end{verbatim}
+\caption{Textual representation of an MVA for a transaction
+protocol.}\label{fig:txtTP}
+\end{figure}
+
+%TODO: 
+% .Conviene que haga un BNF de la representacion textual.
+% Ojo que una asignacion es una expresion y no quiero que la evaluacion de la 
+% guarda me pueda cambiar el estado. Tambien podria hacer una llamada a una
+% funcion. Tengo que poner como requisito que las guards sean side-effect free.
+
+The exact format of the textual representation of an MVA is not important for this presentation. For a tool it
+would be better to have an XML representation with its associated DTD. We only require that it has all the
+needed information, in particular it must give the type of each variable (which is implicit in our formal
+definition).
+
+In the textual representation given in Figure~\ref{fig:txtTP}, \texttt{[Control Points]} represent $Q$,
+\texttt{[Initial Control Point]} is $q_0$ and \texttt{[Event]} is $\Sigma$. 
+The set of variable $Ident$ is described in \texttt{Variables} together with their types and initial values
+$v_0$. The section \texttt{[Transitions]} describes the $\delta$ function. A transition is a 5-tuple composed
+of an source control point, a guard, an event, an action and a target control point. Since our ultimate
+intention is to translate the automaton into JML, we use the Java notation to express guards and actions (e.g.
+\texttt{=} for assignments and \texttt{==} for comparisons.
+
+To reduce the number of transitions it is also possible to give a set of events in a single transition. Each
+event is given a name that is latter referenced in the transitions section. They are declared as $event\_name
+= event\_type\,\, method$ where $event\_name$ is the name given to the event, $event\_type$ can be
+\texttt{entry}, \texttt{exit}, \texttt{exit normal} or \texttt{exit exceptional} and $method$ is the name of a
+method of the class that is being specified. The modifier \texttt{exit} means normal or exceptional
+termination; it is used to reduce the number of transitions the has the advantage of being easily translated
+into a \texttt{finally} clause (see next section).
+If $method$ is overloaded, it must be disambiguated giving its parameter list (the return type is not
+important since in Java two overloaded method must have different parameter list). An action is can be the
+empty action represented by \texttt{skip}, an assignmet to one of the variables of the automata or multiple
+assignments separated by semicolons and enclosed in brackets, e.g. $\{S = 0; T = T+1\}$.
+
+For events representing exceptional termination, it is possible to specify the type of the exception being
+thrown by $event\_name$ $=$ \texttt{exceptional} $method$ $exception\_type$ $[order]$. The optional argument
+$order$ tells the orden in which the exceptions will be handled.
+The syntax of event declaration could be extended to restrict the value of the arguments of the method, for
+instance \texttt{e = entry someFunction(i>1)} declares an event \texttt{e} that represent the entry to the
+function \texttt{someFunction} when it is called with a value of its argument \texttt{i} greater that one. We
+do not include this feature in our representation since these requirements are easily expressed as guards in
+transitions.
+
+%TODO: Improve this comment
+A method can not have associated an \texttt{exit normal} or \texttt{exit exceptional} and at the same time
+have an \texttt{exit} event since in that case an exit of that method would trigger to events.
+
+%FIXME: This is wrong because a class may be annotated by many (independent) automata
+%% Implementation conventions
+% We take the convention that the name of the file storing the MVA has the same name as the class it is
+% specifying but with the extention \texttt{tmva} --- an XML representation can have, for example, the
+% extention
+% xmva. They must reside in the same directory.
+
+
+\section{Translation into JML}\label{sec:TransJML}
+In this section we show how an MVA can be translated into the behavioral interface specification language JML.
+We begin by showing how to encode control points and variables and the following subsection analyses a
+representation for transitions.
+
+\subsection*{States}\label{subsec:StatesVar}
+Control points and variables are translated into ghost variables.  The current control point is represented as
+an integer variable called \texttt{cp} and each of its possible values is declared as a \texttt{public static
+final ghost int} variable and is initialized to a unique value. The current control point is initialized to
+the control point representing $q_0$.
+
+The transition function is completed by adding a control point \texttt{HALTED} that models $\bot$. An
+invariant is added to check that \texttt{cp} never has this value.
+
+The type of the variables is implicit in our model of MVA but will be explicit in its textual representation.
+Each variable is initialized in its declaration. The following piece of code shows how the state of the
+transaction protocol is translated into JML annotations.
+
+\begin{verbatim}
+/*@ public static final ghost int
+  @   NOTRANS = 1,
+  @   INTRANS = 2,
+  @   HALTED = 0;  
+  @*/
+
+//@ public ghost int cp = NOTRANS;
+
+//@ public ghost int T = 0;
+
+//@ public invariant cp != HALTED;
+\end{verbatim}
+
+%TODO:
+% .Explain why the set of states has to be finite (it can't be countable).
+
+\subsection*{Transitions}\label{subsec:Transitions}
+To represent transitions in JML we first disaggregate transitions that have a set of events into transitions
+with just one event, e.g. $\langle q,p,\{e_1,\ldots,e_n\},a,q' \rangle$ is treated as $n$ transitions $\langle
+q,p,e_1,a,q' \rangle, \ldots, \langle q,p,e_n,a,q' \rangle$.
+
+
+Then each transition is associated with the method of its event (there must be no ambiguity since the method
+must have been disambiguated if there is overloading).
+We say that a transition is an \texttt{entry} (\texttt{exit}, \texttt{exit normal}, \texttt{exit exceptional})
+transition if its event is an \texttt{entry} (\texttt{exit}, \texttt{exit normal}, \texttt{exit exceptional})
+event.
+
+A transition will be translated into annotations to its method. The bookkeeping of the state of the automata
+will be done in its body.
+%SEE: and some checks will be added in its header.
+This imposes an important limitation to the formalism: properties can only be about implemented methods, that
+is, they can not talk abstract methods. Ideally we should only add JML annotations but there are some features
+that need some simple code transoformation that do not alter the semnatics of the programs\footnote{By this we
+mean that a compiler should be able to remove the added code as an optimization step.}.
+% I may do some comment or reference to a place where I explain that the generated program is meant to be
+% used for static analysis and testing, not for normal development
+
+%% Code transormations
+A simple transformation is needed to encode the different flavours of exit transitions. We wrap the method'
+body in a \texttt{try catch finally} block and we add the translation of transactions as shown next.
+
+% \begin{figure}[htbp]
+\begin{alltt}
+public void someFunction() \{
+  \textit{entry transitions}
+  try \{
+    \textit{function' body}
+    \textit{exit normal transitions}
+  \}
+  catch (Exception e) \{
+    \textit{exit exceptional transitions}
+    \texttt{throw e;}
+  \}
+  finally \{
+    \textit{exit transitions}
+  \}
+\}
+\end{alltt}
+% \caption{Code transformation to add termination events.}\label{fig:termevents}
+% \end{figure}
+
+Here we can see that exit transitions are conveniently mapped into a finally block instead of being repaeted
+at the end of the try block and in the catch block. For transitions that specify the type of the exception and
+the order, suitable catch blocks are generated.
+
+The other case where code is added is when annotating methods that are declared in a superclass  but not
+overriden in the current one. First we redefine the method with just a call to its original implementation as
+shown next
+\begin{alltt}
+public void someInheritedFunction() \{
+  super();
+\}
+\end{alltt}
+and then we add a \texttt{try cathch finally} block and annotations for transitions as shown before.
+
+%% Translation of each transition
+The translation of each transition is independent of its kind, but transitions involving the same event will
+be mixed up. 
+If the transition $\langle q,p,e,a,q' \rangle$ is applicable, that is, if the \texttt{cp} equals $q$ and then
+$p$ evaluates to \texttt{true} then the value of \texttt{cp} has to be updated to $q'$ and $a$ has to be
+performed. To set the new value of \texttt{cp} and the automaton' variables based on these condition we use
+the conditional expressions.
+
+Assume, for instance, that all the transitions of some kind for some method are $\langle q1,p1,e,a1,q1'
+\rangle$, $\langle q2,p2,e,a2,q2' \rangle$ and $\langle q3,p3,e,a3,q3' \rangle$ (note that they involve the
+same event $e$). Then to update the value of the current control point we generate the following annotation
+\begin{alltt}
+  /*@ set cp = (cp == \(q1\) && \(p1\)) ? \(q1'\) :
+    @    ((cp == \(q2\) && \(p2\)) ? \(q2'\) : 
+    @    ((cp == \(q3\) && \(p3\)) ? \(q3'\) : HALTED)); @*/
+\end{alltt}
+To update variables we follow a similar approach. To set the new value for a variable $T$ we look in all the
+transitions involving the same event that modify $T$ in their actions. Then these actions are combined using
+conditional expressions as we did for \texttt{cp}. If in the previous example $a1$ is $T=T+1; U=1$, $a2$ is
+$T=T-1$ and $a3$ is $skip$, then the following annotations will be genereted
+\begin{alltt}
+  /*@ set T = (cp == \(q1\) && \(p1\)) ? T+1 :
+    @    ((cp == \(q2\) && \(p2\)) ? T-1 : T);
+    @ set U = (cp == \(q1\) && \(p1\)) ? 1 : U; @*/
+\end{alltt}
+
+The location where these annotations are placed depends on the kind of the event as expalined before.
+
+\bigskip
+%TODO: Ver cual es el mejor lugar para poner esto
+There are some restrinctions imposed by the implementation mechanisms (JML), mainly in the translations of
+transitions.
+
+An action is composed of a sequence of assignments $v_i = e_i$ with $i = 1..n$, where $v_i$ is a variable of
+the automaton and $e_i$ is an expression. We require that the evaluation of $e_i$ does not depend on the value
+of $v_j$, for $1 \leq j < i$.
+The reason this restriction is that we can not depend of $v_j$ being updated before $v_i$ because another
+action (for the same source control point and event) may update the variables in a different order.
+
+To show a concrete example, assume than and MVA $\mathcal{M}$ has control points \{qs, qt\}, variables
+$\{S, T\}$ and transitions $\{(qs, S < T, e, S=S+1;T=S , qt), (qs, T < S, e, T=T+1;S=T , qt)$. Two
+possible statements to update $S$ and $T$ when $e$ ocurrs are \texttt{S = (S < T) ? S+1 : ((T < S) ? T : S)}
+and \texttt{T = (S < T) ? S : ((T < S) ? T+1 : T)} where for simplicity we omit the checks of the current
+control point.
+The first instruction will assign a wrong value to $S$ if
+$T < S$ because the value of $T$ has not been incremented yet. Similarly, the second instruction will assign
+wrong value to $T$ if $S < T$, thus it does not matter in which order we generate these instructions, we
+will always get a wrong value for one of the variables. It is easy to see that the same happens if we
+first evaluate $T < S$ and then $S < T$ in the generated instructions.
+
+However, it must be emphasized that this restriction is imposed by the lack of better ways to translate
+transitions into JML annotations. In particular, if we had a conditional control structure, that is an
+\texttt{if} instruction, capable of evaluating ghost variables, then we would be able to write 
+
+\begin{alltt}
+/*@ if (cp == qs) \{
+  @   if (S < T) \{
+  @     set cp = qt
+  @     set S = S + 1;
+  @     set T = S;
+  @   \} else if (T > S) \{
+  @     set cp = qt
+  @     set T = T + 1;
+  @     set S = T;
+  @   \}
+  @ \} else \{
+  @   set cp = HALTED;
+  @ \}
+  @*/
+\end{alltt}
+Notice that the current control point and the guards are evaluated just once.
+
+Another possibility is to interpret assignments made in actions as being executed in parallel. In this case
+for each variable $V$ of the automaton we would need an auxiliary variable $oldV$ to store its value before
+the action, and each reference to $V$ in the right hand side of an assignment should be replace by $oldV$.
+For instance, in the previous example we would have:
+%`Optimized' version
+% \begin{alltt}
+% /*@ set oldcp = cp;
+%   @ set oldS = S;
+%   @ set oldT = T;
+%   @ set cp = (cp == qs && S < T) ? qt : 
+%   @             ((cp == qs && T < S) ? qt : HALTED);
+%   @ set S = (oldcp == qs && S < T) ? S+1 : 
+%   @             ((oldcp == qs && T < S) ? T : S);
+%   @ set T = (oldcp == qs && oldS < T) ? oldS : 
+%   @             ((oldcp == qs && T < oldS) ? T+1 : T);
+%   @*/
+% \end{alltt}
+
+%`Unoptimized' version
+\begin{alltt}
+/*@ set oldcp = cp;
+  @ set oldS = S;
+  @ set oldT = T;
+  @ set cp = (oldcp == qs && oldS < oldT) ? qt : 
+  @             ((oldcp == qs && oldT < oldS) ? qt : HALTED);
+  @ set S = (oldcp == qs && oldS < oldT) ? oldS+1 : 
+  @             ((oldcp == qs && oldT < oldS) ? oldT : oldS);
+  @ set T = (oldcp == qs && oldS < oldT) ? oldS : 
+  @             ((oldcp == qs && oldT < oldS) ? oldT+1 : oldT);
+  @*/
+\end{alltt}
+
+In this case we assume that each action updates a variable at most once, that is to say, there can not be
+two assignments in the an action with the same target.
+
+%TODO: 
+% .Las anotaciones que van antes de la declaracion del metodo son redundantes
+% (y son todas parecidas).
+% /*@ requires cp == \(q1\) && \(p1\);
+%   @ assignable \(lvar(a1)\);
+%   @ ensures cp == \(q1'\) && \(a2p(a1)\);
+%   @ also
+%   @ requires cp == \(q2\) && \(p2\);
+%   @ assignable \(lvar(a2)\);
+%   @ ensures cp == \(q2'\) && \(a2p(a2)\);
+%   @*/
+
+% .Explain why it is not possible to work with a non-deterministic transition
+% relation 
+%Si las transiciones eran no deterministas el resultado va a ser indeterminado
+
+\begin{figure}[!htbp]
+\begin{verbatim}
+/*@ public static final ghost int
+  @   NOTRANS = 1,
+  @   INTRANS = 2,
+  @   HALTED = 3; 
+  @*/
+
+/*@ public ghost int state = NOTRANS; @*/
+
+/*@ public ghost int T = 0; @*/
+
+//@ public invariant cp != HALTED;
+
+/*@ requires cp == NOTRANS;
+  @ assignable T;
+  @ ensures cp == INTRANS && T == 1;
+  @ also
+  @ requires cp == INTRANS;
+  @ assignable T;
+  @ ensures cp == INTRANS && T == \old(T) + 1;
+  @*/
+  public static void beginTransaction() {
+    /*@ set cp = (cp == NOTRANS) ? INTRANS : 
+      @   ((cp == INTRANS) ? INTRANS : HALTED);
+      @ set T = (cp == NOTRANS) ? 1 : 
+      @   ((cp == INTRANS) ? T + 1 : T); @*/
+    ... 
+  }
+  
+/*@ requires cp == NOTRANS;
+  @ ensures cp == HALTED
+  @ also
+  @ require cp == INTRANS && T == 1;
+  @ assignable T;
+  @ ensures cp == NOTRANS && T == 0;
+  @ also
+  @ requires cp == INTRANS && T > 1;
+  @ assignable T;
+  @ ensures cp == INTRANS && T == \old(T) - 1;
+  @*/
+  public static void commitTransaction() {
+    /*@ set cp = (cp == NOTRANS) ? HALTED : 
+      @ ((cp == INTRANS && T == 1) ? NOTRANS : 
+      @ ((cp == INTRANS && T > 1) ? INTRANS : HALTED));
+      @ set T = (cp == NOTRANS) ? 0 : 
+          ((cp == INTRANS) ? T - 1 : T); @*/      
+    ... 
+  }
+\end{verbatim}
+\caption{The transaction protocol specified in JML.}\label{fig:JMLTrans}
+\end{figure}
+
+%One disadvantage of this approach is that it produces many annotations,
+%nevertheless, they can be accepted if they are used just to do statical
+%analysis and testing.
+%TODO: Mencionar la generacion de invariantes y constraints (F2J)
+%Redundancia de otros enfoques, variables para representar eventos
+
+\section{Correctness of the translation}
+See the other document.
+
+\section{Examples}
+Expressiveness:
+\begin{itemize}
+  \item If we have counter over the number of times a method is called and exited, we may be able to express
+some properties about the stack call but not everything since we in which order the methods are called.
+  \item We may also think about having a stack with the methods calls (or at least with the methods we are
+interested in) but that may be cumbersome.
+\end{itemize}
+
+\subsection*{Applet Protocol}
+The applet protocol can be easily described by augmented the automaton with an empty set of variables $V$, and
+taking $I$ equal to \texttt{true}.
+
+\subsection*{Transaction Protocol}
+Again this automaton can be augmented just adding $I = \texttt{true}$. In this case $V = \{T \colon Int\}$.
+
+
+\section{A Simple Temporal Specification Language} % Trentelman's thesis
+TODO: 
+\begin{itemize}
+  \item In the JAG page they call the language ``Java Temporal Pattern Language''.
+  \item Is there any way to model \textbf{enabled} and \textbf{hangs}?. I can model them as predicates over
+the variables that say how does a methods terminates.
+
+Be careful since \textbf{enabled} means that the precondition holds, not that it terminates (it may also
+fulfill its postcondition).
+
+Even if we can express them in JML it is not clear if can statically prove properties involving them.
+  \item \textbf{always} should be translated to an invariant of the class. In our formalism we can only check
+that when an event occurs, the property holds.
+If our set of events is composed by all (public) method calls and returns (including exceptional returns),
+then we can emulate an invariant (although we do it in a much verbose and inefficient way). In this case we
+can replace all the explicit checks by an invariant.
+
+However, if we restrict our attention to just some methods then we can only check the condition when an event
+related to any of this methods is triggered. Note also that if we consider many events (field reads and
+writes, etc) we will be checking the condition after each of this events. It may be desirable for
+strong invariants (although they are not enough to prove them) but not in other cases where we need to
+temporally break the invariant. We could differentiate them by adding another construct, for example
+\textbf{invariant} to express properties that should be checked only between method calls and use
+\textbf{always} for strong invariants.
+
+  \item Temporal formulae involving \textbf{before}, \textbf{until} and/or
+\textbf{eventually} describe liveness properties (something ``good'' must
+happen).
+  \item Is \textbf{before} $e_1$ $\phi$ a liveness properly?. It is if we
+require that $e_1$ eventually happens. In JML we can only express the weaker
+interpretation that does not requires $e_1$ to happen (that is we can only
+consider \textbf{before} $e_1$ $\phi$ equivalent to $e_1$ \textbf{unless}
+$\phi$).
+  \item If I can't write \textbf{until} then I would not be able to write
+\textbf{between} $e_1$ $e_2$ $\psi$ since it is equivalent to \textbf{after}
+$e_1$ ($\psi$ \textbf{until} $e_2$).
+\end{itemize}
+
+%\def\NonTerm#1{\langle #1 \rangle}
+\begin{figure}
+\begin{center}
+\begin{minipage}{20cm}
+\begin{tabbing}
+TempForm\, \= = \= \hspace*{3.1pt} \= \textbf{after} Events TempForm \+\+\\
+%  | \textbf{before} Events\\
+  | TraceProp \textbf{unless} Events\\
+%  | \textbf{between} Events Events TraceProp\\
+  | \textbf{atmost} \textit{nat} Event\\
+  | TraceProp \-\-\\
+\\
+TraceProp \> = \> \> \textbf{always} JMLPred \+\+\\
+  | \textbf{never} JMLPred \-\-\\
+\\
+Events \> = \> \> Event \+\+\\
+  | Event, Events \-\-\\
+\\
+Event \> = \> \> \textit{method} \textbf{called} \+\+\\
+  | \textit{method} \textbf{normal}\\
+  | \textit{method} \textbf{exceptional}\\
+  | \textit{method} \textbf{exceptional} \textit{excp}\\
+  | \textit{method} \textbf{terminates}
+\end{tabbing} 
+\end{minipage}
+\end{center}
+\caption{Simplified temporal specification syntax.}
+\end{figure} 
+
+\subsection*{Translation to MVA}
+To show how our simple specification language can be represented by
+multivariable automata we will classify the properties that can be expressed
+with this language and then we will give an augmented automaton for each class.
+
+%Para calcular estas reglas podria usar las reglas de Arden (ver el libro de Pi
+% calculo).
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[c]{4.8cm}
+\textbf{always} $P$\\
+\textbf{always} $P$ \textbf{unless} $E$\\
+\textbf{after} $E_1$ \textbf{always} P \textbf{unless} $E_2$\\
+\textbf{atmost} $n$ $e$\\
+\textbf{after} $E$ \textbf{atmost} $n$ $e$
+\end{minipage}
+\end{figure}
+
+%TODO: Junstar las figuras usando subfig
+
+\begin{figure}[htb]
+\centering\ 
+\subfloat[\texttt{always $P$}.\label{fig:TLS_Always}]{
+  \xymatrix{
+    *\txt{} \ar[r]^{}
+    &  \enode \ar@(ur,ul)[]_{\Sigma, P}
+  }
+}
+
+\subfloat[\texttt{always $P$ unless $E$}.\label{fig:TLS_AU}]{
+  \xymatrix{
+    *\txt{} \ar[r]^{}
+    &  \enode \ar@(ur,ul)[]_{\Sigma \setminus E, P} \ar@/^0.8pc/[rr]^{E}
+    && \enode \ar@(ur,ul)[]_{\Sigma}
+  }
+}
+
+\subfloat[\texttt{after $E_1$ always $P$ unless $E_2$}.\label{fig:TLS_AAU}]{
+  \xymatrix{
+    *\txt{} \ar[r]^{}
+    &  \enode \ar@(ur,ul)[]_{\Sigma \setminus E_1} \ar@/^0.8pc/[rr]^{E_1}
+    && \enode \ar@(ur,ul)[]_{\Sigma \setminus E_2, P}
+  \ar@/^0.8pc/[ll]^{E_2}
+  }
+}
+
+\subfloat[\texttt{atmost $n$ $e$}.\label{fig:TLS_Atmost}]{
+  \xymatrix{
+    *\txt{} \ar[r]^<(0.3){ce = 0}
+    & \enode \ar@(ur,ul)[]_{\Sigma \setminus \{e\}} \ar@(dr,dl)[]^{e,\, ce <
+  n,\, ce = ce + 1}
+  }
+}
+
+\subfloat[\texttt{after $E$ atmost $n$ $e$}.\label{fig:TLS_AA}]{
+  \xymatrix{
+    *\txt{} \ar[r]^{}
+    & \enode \ar@(ur,ul)[]_{\Sigma \setminus E} \ar[rr]^{E, ce = 0}
+    && \enode \ar@(ur,ul)[]_{\Sigma \setminus \{e\}} \ar@(dr,dl)[]^{e,\, ce <
+  n,\, ce = ce + 1}
+  }
+}
+\caption{Translation of TLS into MVA.}
+\end{figure}
+
+
+\subsection*{Examples}
+
+\begin{minipage}[c]{10cm}
+  \textbf{after} beginTransaction \textbf{called} (\textbf{always}
+T == 1 \textbf{unless}\\
+  \hspace*{1cm}abortTransaction \textbf{called},
+commitTransaction \textbf{called})
+\end{minipage} 
+
+\begin{figure}[htb]
+\centering\ 
+\xymatrix{
+  *\txt{} \ar[r]^{}
+  &  \enode \ar@(ur,ul)[]_{\Sigma \setminus \{btc\}} \ar@/^0.8pc/[rr]^{btc}
+  && \enode \ar@(ur,ul)[]_{\Sigma \setminus \{atc, ctc\}, T==1}
+\ar@/^0.8pc/[ll]^{\{atc, ctc\}}
+}
+%\caption{\texttt{after m1 called always x >= 3}.}\label{fig:tlsex1}
+\end{figure}
+
+Note that we are referring to T even when T is not modified by this automaton. 
+
+\bigskip 
+\begin{minipage}[c]{10cm}
+  \textbf{after} abortTransaction \textbf{called}, commitTransaction
+\textbf{called}\\
+  \hspace*{1cm}(\textbf{always} T == 0 \textbf{unless} beginTransaction
+\textbf{called})
+\end{minipage} 
+
+\begin{figure}[htb]
+\centering\ 
+\xymatrix{
+  *\txt{} \ar[r]^{}
+  &  \enode \ar@(ur,ul)[]_{\Sigma \setminus \{atc,ctc\}}
+\ar@/^0.8pc/[rr]^{\{atc,ctc\}}
+  && \enode \ar@(ur,ul)[]_{\Sigma \setminus \{btc\}, T==0} \ar@/^0.8pc/[ll]^{bt}
+}
+%\caption{\texttt{after m1 called always x >= 3}.}\label{fig:tlsex1}
+\end{figure}
+
+% \subsection*{\texttt{after m1 called always x >= 3}}
+% Suppose that we are interested in the methods \texttt{m1}, \texttt{m2} and
+% \texttt{m3}, that is $M = \{\texttt{m1}, \texttt{m2}, \texttt{m3}\}$.
+% Let $\Sigma_1$ be $\Sigma \setminus \{\texttt{m1 called}\}$.
+% A simple way to represent this property is be the following graphic:
+% 
+% \def\nodelen{1cm}
+% 
+% \begin{figure}[htb]
+% \centering\ 
+% \xymatrix{
+%   *\txt{} \ar[r]^{}
+%   & \node{true} \ar[rr]^{\texttt{m called}} \ar@(ur,ul)[]_{\Sigma_1}
+%   && \node{x \geq 3} \ar@(ur,ul)[]_{\Sigma}
+% }
+% \caption{\texttt{after m1 called always x >= 3}.}\label{fig:after}
+% \end{figure}
+% 
+% 
+% \subsection*{\texttt{before m1 called always x >= 3}}
+% \begin{figure}[htb]
+% \centering\ 
+% \xymatrix{
+%   *\txt{} \ar[r]^{}
+%   & \node{x \geq 3} \ar[rr]^{\texttt{m called}} \ar@(ur,ul)[]_{\Sigma_1}
+%   && \node{true} \ar@(ur,ul)[]_{\Sigma}
+% }
+% \caption{\texttt{before m1 called always x >= 3}.}\label{fig:before}
+% \end{figure}
+
+\section{Related Work}
+
+\subsection*{Security Automata}
+\begin{itemize}
+  \item According to  Ligatti:  Fong formally showed that placing limits on a
+monitor's state space induces limits on properties enforceable by the monitor.
+  \item Since we can only stop the execution when we encounter that a property
+is being violated (maybe temporaly), our annotations can be seen as a
+truncation automata. Thus the set of safety properties is an upper bound on the
+set of properties enforceable by our approach.
+\end{itemize}
+
+\subsection*{F2J}
+
+\subsection*{JAG}
+
+\end{document}

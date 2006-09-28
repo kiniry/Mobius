@@ -1,0 +1,594 @@
+%Creation date: 2006-05-12
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[american]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[dvips]{graphicx}
+
+\usepackage[all]{xy}
+%\CompileMatrices
+%\entrymodifiers={++[o][F-]}
+\def\enode{*++[o][F-]{\hspace*{0.5cm}}}  %empty node
+\def\aenode{*++[o][F=]{\hspace*{0.5cm}}} %acepted empty node
+\def\node#1{*++[o][F-]{#1}}  %node
+\def\anode#1{*++[o][F=]{#1}}  %acepted node
+%\UseComputerModernTips
+
+%Shortcuts
+\def\bt{\texttt{beginTransaction}}
+\def\ct{\texttt{commitTransaction}}
+\def\at{\texttt{abortTransaction}}
+
+
+\title{An overview of program annotations derived from high level
+specifications}
+\author{Alejandro Tamalet}
+\date{2006-06-01}
+
+\begin{document}
+
+\maketitle
+
+%TODO: Organizar mejor la presentacion.
+% Quiza convenga sacar la introduccion actual
+% Detallar varias deciciones: input infinitas, analisis statico, especificacion
+% del comportamiento deseable (sin estado de error)
+% Decisiones relacionadas con la expresividad de JML y Java: necesidad de
+% un modelo deterministico, imposibilidad de chequear el estado final
+% Que pasa con las herramientas que tenia que evaluar, lo hago o no?
+
+\begin{abstract}
+  This is work is an overview of formalisms and available tools that can be used
+to translate specifications defined in some high level formalism into JML
+annotations.
+%TODO: Say something else
+%We also analyze some suitable extentions to JML.
+  
+\end{abstract}
+
+%NOTA: Automata es el plural de automaton
+\section{Introduction}
+Behavioral interface specification languages (BISL) like JML and Jass are being
+increasingly used to specify program interfaces. 
+%VER: Creo que tengo que cambiar la introduccion y empezar con algo que motive
+%este survey, despues vendria esto
+The style of specifications encouraged by Design by Contracts (DBC) ---
+preconditions, postconditions and invariants --- is well suited to describe the
+functional behaviour of a program module, that is, the relation between its
+input and its output.
+However, not every behavioral property can be gracefully described using this
+format. A broad kind of properties that a client should know before using a
+module are related to restrictions in the order that exported methods can 
+be called.
+
+Such requirements, called \textit{protocols} in this work, are common in
+object-oriented libraries and frameworks. For example, Figure \ref{fig:APA}
+shows an automaton that describes an applet protocol specifying a certain
+predefined order in which some of its methods must be invoked. Clients using an
+applet must call its \texttt{init} method first then \texttt{start} and
+afterwards they must call \texttt{stop}. Once the applet is stopped, it can be
+restarted and stopped again until it is eventually destroyed by invoking
+\texttt{destroy}.
+
+\begin{figure}[htb]
+\centering
+\ %I don't know why it needs some input to center the figure
+\xymatrix{
+  *\txt{} \ar[r]
+  & \node{1} \ar[r]^{init}
+  & \node{2} \ar[r]^{start}
+  & \node{3} \ar@/^/[r]^{stop}
+  & \node{4} \ar@/^/[l]^{start} \ar[rr]^{destroy}
+  && \anode{5}
+}
+\caption{The applet protocol as an automaton}\label{fig:APA}
+\end{figure}
+
+%SEE: I'm not sure why in this graphic the nodes are more separated
+% \begin{figure}[htb]
+% \centering
+% \ %I don't know why it needs some input to center the figure
+% \xymatrix{
+%   *\txt{} \ar[r]
+%   & \enode \ar[r]^{init}
+%   & \enode \ar[r]^{start}
+%   & \enode \ar@/^/[r]^{stop}
+%   & \enode \ar@/^/[l]^{start} \ar[r]^{destroy}
+%   & \aenode
+% }
+% \caption{The applet protocol as an automaton}\label{fig:APA}
+% \end{figure}
+
+The order dependencies among method calls that protocols describe may not be
+classified as a functional requirement. Nevertheless, it is quite simple to
+transtale protocols described by automatons into program annotations using DBC.
+Figure~\ref{fig:APJML} on page \pageref{fig:APJML} shows an example JML
+specification of the applet protocol described in Figure~\ref{fig:APA}. It
+defines a static ghost variable \texttt{state} that represents the current state
+of the automaton. The possible states of the finite state machine are then
+represented as constants, in our example we call the possible states PRISTINE,
+INIT, START, STOP and DESTROY.
+Afterwards each method that is mapped to an event (an arrow of the automaton) is
+annotated with a precondition that says which are its possible source states and
+a postcondition that prescribes its target states. For instance, the method
+\texttt{start} can be called either in the state INIT or in STOP, thus we add
+the clause \texttt{require state == START || state == STOP}. After its execution
+we must end up in the state \texttt{STOP} hence the clause \texttt{ensure state
+== STOP} is added.
+
+\begin{figure}
+\begin{verbatim}
+package java.applet;
+public class Applet {
+  /*@ public static final ghost int
+    @   PRISTINE = 1,
+    @   INIT = 2,
+    @   START = 3,
+    @   STOP = 4,
+    @   DESTROY = 5; 
+    @*/
+
+  //@ public ghost int state = PRISTINE;
+
+  //@ requires state == PRISTINE;
+  //@ ensures state == INIT;
+  public void init() {
+    //@ set state = INIT;
+    // ... 
+  }
+  
+  //@ requires state == INIT || state == STOP;
+  //@ ensures state == START;
+  public void start() {
+  //@ set state = START; 
+  // ... 
+  }
+  
+  //@ requires state == START;
+  //@ ensures state == STOP;
+  public void stop() {
+    //@ set state = STOP;
+    // ... 
+  }
+  
+  //@ requires state == STOP;
+  //@ ensures state == DESTROY;
+  public void destroy() {
+    //@ set state = DESTROY;
+    // ...
+  }
+  
+  // other fields and methods ...
+}
+\end{verbatim} 
+\caption{The applet protocol specified in JML}\label{fig:APJML}
+\end{figure}
+
+The procedure to translate an arbitrary finite state machine follows the
+strategy. In spite of its simplicity, this approach has some drawbacks.
+The main problem is that the added annotations are scattered through the program
+text and you loose the clear picture of what a program is allowed and
+not allowed to do. In Figure~\ref{fig:APJML} it is not so easy to grasp the
+set of allowed sequences of method calls as it is in Figure~\ref{fig:APA}. That
+is because the protocol is described indirectly by coding a finite state machine
+by hand into DBC primitives. When these annotations are combined with the usual
+functional annotations the problem just gets worse. 
+In addition, the approach does not work for Java interfaces and native methods
+because in Java they cannot contain method definitions, and hence the
+\texttt{set} instruction since it is treated as a Java statement.
+
+A solution to the first problem is to have a tool that generates the
+annotations automatically from a high level specification of the protocol. In
+the rest of this work we discuss this approach.
+%VER: podria decir que para resolver el segundo problema (al menos con la
+%interfaces) se han propuesto extensiones a JML.
+Section~\ref{sec:Source} discusses suitables languages to specifies protocols
+while Section~\ref{sec:Target} discusses different encodings of protocols as
+annotations. In Section~\ref{sec:Tools} some existing tools are compared and
+Section~\ref{sec:Conclusion} concludes.
+
+
+\section{Source Languages}\label{sec:Source}
+Up to know we have assumed that high-level properties are described as
+automatons. In this section we study many abstract machines trying to
+find the most suitable abstraction to the kind of properties that can be
+translated into DBC annotations. We will call such formalism the \textit{Common
+Interface Language} (CIF).
+%VER: No se si necesariamente tienen que ser traducidas a DBC, podrian usar
+%alguna extension.
+
+
+\subsection{Finite Automaton}
+Finite automata are the natural choice for our CIF. We have seen that there is a
+simple procedure to translate them into program annotations and that they are
+useful to describe some interesting properties, especially what we have called
+protocols. Any other candidate must be at least as expressive as an ordinary
+automata.
+
+Automata recognize type-3 (regular) languages in Chomsky' hierarchy. They are
+equivalent to regular grammars and regular expressions. This equivalence may be
+helpful when the property to describe is complex since a textual
+representation will be more malleable. 
+The deterministic and non--deterministic versions of this kind of finite state
+machine are equivalent, however by the nature of our problem we will be only 
+interested in the deterministic ones.
+
+ToDo:
+\begin{itemize}
+  \item Pasar el automata para el protocolo que no permite transacciones
+embebidas a esta seccion.
+  \item Comentar sobre las ventajas y desventajas de especificar el estado de
+error.
+  \item Decir que no puedo chequear si termine en un estado aceptado (suponiendo
+que la traza es finita).
+
+For finite traces this is just a technical problem, not a theoretical one. We
+only need to be able to check the condition before the object is elegible for
+garbage collection.
+  \item Caracterizar el tipo de propiedades que se puede describir con un
+automata. En principio lo unico que puedo hacer es decir si se violo un
+protocolo, es decir se llamo a un metodo en un orden indebido, pero no puedo
+asegurar que se hallan llamados todos los metodos necesarios para completar el
+protocolo (ya que no puedo chequear si se termino en un estado aceptado). Por
+ejemplo en el protocolo de Applet puedo detectar una llamada al m\'etodo
+\texttt{start} antes de la invocaci\'on de \texttt{init}, pero no puedo
+verficar que se haya llamado a \texttt{destroy} antes de que el objeto sea
+garbage collected.
+
+  This means that the number of wrong traces detected by our translation is
+less than the number of traces rejected by the automaton.
+\end{itemize}
+
+
+\subsection{Augmented Automaton}
+%Para simplificar el texto me conviene decir que voy a representar las llamadas
+%a los metodos /bt/ /ct/ /at/ con lo eventos bt, ct y at, respectivamente
+Ordinary automata may not be enough for our purposes. Consider the typical
+example of specifying a transaction mechanism. Suppose that a transaction can
+be started by invoking the method \bt\ and it can be committed by calling \ct\
+or rolled back by \at.
+We can specify a protocol where embedded transactions are not allowed by a
+simple automaton as is shown in Figure~\ref{fig:STP}. Notice that we have merged
+arrows with the same source and target by making a disjunction of their events.
+
+\begin{figure}[htb] % Simple Transaction Protocol
+\centering\ 
+\xymatrix{
+  *\txt{} \ar[r]
+  & \anode{1} \ar[rr]_{bt} \ar[dr]_{ct\: \vee\: at}
+  && \node{2} \ar@/_1pc/[ll]_{ct\: \vee\: at} \ar[dl]^{bt}\\
+  && \node{3} \ar@(dl,dr)[]_{bt\: \vee\: ct\: \vee\: at}
+}
+\caption{Automaton describing a simple transaction protocol where
+\textit{bt} = beginTransaction, \textit{ct} = commitTransaction,
+\textit{at} = abortTransaction.}\label{fig:STP}
+\end{figure}
+
+When no transaction in course the automaton is in the state 1, the initial and
+only accepted state. An invocation of \bt\ changes the current state to state 2
+but a call to \ct\ or \at\ will provoke a transition to the state 3 from where
+there is no return. While in state 2 a \ct\ or an \at\ would yield a transition
+back to state 1. An attempt to begin a new transaction will result in a
+transition to the dead state 3.
+
+This protocol can be easily extended to support a predined number of embedded
+transactions\footnote{Although it is feasible in theory, the number of needed
+states will be proportional to the maximum transaction depth. This may
+derive in cumbersome annotations.}, but what if we want to allow an arbitrary
+depth of embedding?.
+This requierement can not be described by an ordinary automaton alone since it
+needs to be able to recognize a language similar to $\{a^nb^n | n \geq 0\}$,
+which is a known limitation of these finite state machines. We would need at
+least a pushdown automaton to especify this protocol.
+
+Unfortunately pushdown automata are not so intuitive as a simple automaton. It
+is not so clear how to represent them in a graphical notation and the generated
+annotations can be confusing. However, in our example and many similar ones, we
+can attain a simpler solution with the addition of a counter to an ordinary
+automaton and some conventions. Figure \ref{fig:TP} illustrates an automaton
+augmented with a integer variable $T$ representing the current transaction
+depth. Besides labeling an edge with an event (or a disjuntion of events for
+simplicity) we can also specify a condition over the variables that we have
+introduced and action to update these variables when the transition takes place.
+
+\begin{figure}[htb] % Transaction Protocol
+\centering\ 
+\xymatrix{
+  *\txt{} \ar[r]^(0.4){T=0}
+  & \anode{1} \ar[rr]_{bt,T=1} \ar[dr]_{bt\: \vee\:at}
+  && \node{2} \ar@/_1pc/[ll]_{T==1,ct\: \vee\:at,T=0}
+\ar@(r,u)[]_{T>1,ct\: \vee\:at,T=T-1} \ar@(d,r)_{bt,T=T+1}\\
+  && \node{3} \ar@(dl,dr)[]_{bt\: \vee\:ct\: \vee\:at}
+}
+\caption{Augmented automaton describing a transaction protocol.}\label{fig:TP}
+\end{figure}
+
+At the beginning of the automaton we initialize $T$ to zero. State 1 represents
+the state where no transactions are being carried out. A call to \ct\ or \at\
+during this state will lead to dead state 3 and a call to \bt\ will set the
+state 2 as the current state and it will increment in 1 the value of T. At
+state 2 any call to \bt\ will just increment the value of $T$ while a aborting
+or commiting the transaction will make the automaton go back to state 1 if
+$T==1$ or will stay in state 2 otherwise; in either case $T$ is decremented by
+1.
+
+%TODO: arregalar este comentario
+In some cases it may be convenient not to specify the accepted states directly
+on the automaton but to describe them as a boolean function over the added
+variables. In our example that function would be $T == 0$. The expressive power
+won't be incresed but the number of states may be reduced. Furthermore, the
+transalation to program annotations is straightforward: instead of checking that
+after the execution of the method the automaton is in one of the accepted
+states, we just have to evaluate the accepting function. Thus there would be no
+need to define the variable \texttt{state} and constants for its possible
+values. An example of how to translate Figure~\ref{fig:TP} with accepting
+function $T == 0$ into JML annotations is shown in Figure~\ref{fig:JMLTrans}.
+
+
+\begin{figure}
+\begin{verbatim}
+/*@ public static final ghost int
+  @   NOTRANS = 1,
+  @   INTRANS = 2,
+  @   DEAD = 3; 
+  @*/
+
+/*@ public ghost int state = NOTRANS; @*/
+
+/*@ public ghost int T = 0; @*/
+
+/*@ requires state == NOTRANS;
+  @ assignable T;
+  @ ensures state == INTRANS && T == 1;
+  @ also
+  @ requires state == INTRANS;
+  @ assignable T;
+  @ ensures state == INTRANS && T == \old(T) + 1;
+  @ also
+  @ requires state == DEAD;
+  @ ensures state == DEAD; 
+  @*/
+  public static void beginTransaction() {
+    /*@ set state = (state == NOTRANS) ? INTRANS : 
+      @   ((state == INTRANS) ? INTRANS : DEAD);
+      @ set T = (state == DEAD) ? T : T + 1;
+      @*/ 
+    ... 
+  }
+  
+/*@ requires state == NOTRANS;
+  @ ensures state == DEAD
+  @ also
+  @ require state == INTRANS && T == 1;
+  @ assignable T;
+  @ ensures state == NOTRANS && T == 0;
+  @ also
+  @ requires state == INTRANS && T > 1;
+  @ assignable T;
+  @ ensures state == INTRANS && T == \old(T) - 1;
+  @ also
+  @ requires state == DEAD;
+  @ ensures state == DEAD; 
+  @*/
+  public static void commitTransaction() {
+    /*@
+      @ set state = (state == NOTRANS) ? DEAD : 
+      @ ((state == INTRANS && T == 1) ? NOTRANS : 
+      @ ((state == INTRANS && T > 1) ? INTRANS : DEAD));
+      @ set T = (state == DEAD) ? T : T - 1;
+      @*/
+    ... 
+  }
+\end{verbatim}
+\caption{The transaction protocol specified in JML.}\label{fig:JMLTrans}
+\end{figure}
+
+ToDo:
+\begin{itemize}
+  \item Now the problem is that we can't specify in the body of the method which
+is the next state since this decision is based on the current state and the
+value of $T$.
+  \begin{itemize}
+    \item We can't generate an inocuos Java conditional since the condition
+involves ghost variables.
+    \item Creo que JML no tiene construcciones para testear una condicion
+dentro del cuerpo de la funcion de manera componible con un set. Ver la pagina
+107 del manual de referencia de JML donde se detallan las posibles
+construcciones que pueden ir en la implementacion del metodo.
+  \end{itemize}
+  \item Cuando el programa termina tengo que chequear que este en un estado
+aceptado, pero no tengo claro como hacer esto.
+  \begin{itemize}
+    \item Ver si la especificacion de JML dice algo.
+    \item Ver que dice el paper que especifica las llamadas a metodos.
+    \item Esta es una propiedad de liveness. No estoy muy seguro. No estoy
+diciendo que eventualmente se va a llegar a un estado aceptado, solo quiero
+hacer un chequeo del ultimo estado del programa, lo que pasa es que no se como
+hacerlo.
+
+  Quiza podria propagar estos requerimientos a una postcondicion del main, pero
+tendria problemas de visibilidad, privacidad, etc. Ademas no necesariamente
+tengoq que esperar a que se termine el programa para chequear estas
+condiciones, tendria que poder chequearlas cuando el objeto es reclamado
+(garbage collected).
+  \end{itemize}
+  \item Falta decir que el state 3 es un estado de error y si llego a el deberia
+lanzar una excepcion. Esto tiene que ser parte de la especificacion de alto
+nivel.
+  \begin{itemize}
+    \item Una forma simple de implementarlo es poniendo el invariante
+\texttt{state <> 3}.
+    \item Otro enfoque es no especificar el estado error y solamente
+especificar el comportamiento normal.
+
+Las ventajas de este enfoque es que se reduce la especificacion de alto nivel
+(un estado menos con sus transiciones) y no necesito decir que estados son de
+error. Esto se refleja directamente en las anotaciones JML.
+
+La desventaja es que tengo que saber bien cuales son mis eventos, es decir, los
+metodos que me interesan (esto no es un problema mayor). El problema esta en la
+traduccion a JML; no me queda claro como hacerlo.
+
+Si puedo saber si un programa termino o no en un estado aceptado entonces no
+necesitaria decir que 3 es un estado de error ya que si el automata cae en ese
+estado va a permanecer ahi hasta el fin del programa y en ese momento se va a
+verificar que el protocolo no se cumplio. La ventaja de explicitar los estados
+de error es que se puede detectar el error tan pronto como ocurre.
+
+Un enfoque mixto es no especificar este estado en la propiedad de alto nivel
+luego traducir este automata a uno equivalente que tiene el estado de error y
+por ultimo traducir este automata a JML. Como el estado de error lo generamos
+nosotros, sabemos cual es.
+  \end{itemize}
+  \item With this kind of automaton we can not update the added (model or ghost)
+variables when the methods are native or are interfaces.
+  \item Escribir estos protocolos en Java y hacer ejemplos que los respeten y
+otros que no.
+  \item Dar un descripcion formal de estos automatas. 
+  \begin{itemize}
+    \item The condition must be (Turing Machine) computable.
+  \end{itemize}
+\end{itemize}
+
+\subsection{Security Automaton}\label{subsec:SA}
+In recent years security automata have received much attention since they
+promise to describe the class of security policies that are enforceable by
+system execution monitoring~\cite{Schneider00}. Hence they are a natural
+candidate for our CIF.
+
+Security automata are B\"uchi automata~\cite{Schneider89} that accept safety
+properties. B\"uchi automata are similar to ordinary non--deterministic
+finite--state automata except that they work with infinite input. Formally, a
+security automaton is defined by:
+\begin{itemize}
+  \item a countable set $Q$ of automaton states,
+  \item a countable set $Q_0 \subseteq Q$ of initial automaton states,
+  \item a countable set $I$ of input symbols,
+  \item a transition function $\delta \colon (Q \times I) \rightarrow 2^Q$.
+\end{itemize}
+
+..blah blah
+
+B\"uchi automata are oftenly used in explicit-state model chequers for
+representing formulae.
+A model chequer can detect infite traces that belong to the language accepted
+by the automaton by hashing states and detecting cycles that include acceptance
+states.
+
+Our following step is to decide whether security automata are a good choice for
+our CIF.
+
+\subsection{Alternating automaton}\label{subsec:AlterAut}
+An alternating finite automaton (AFA) is a non-deterministic finite automaton
+whose transitions are divided into existential and universal transitions. Let
+$A$ be an alternating automaton.
+
+\begin{itemize}
+  \item For a transition $(q, a, q_1 \vee q_2)$, $A$ nondeterministically
+chooses to switch the state to either $q_1$ or $q_2$, reading $a$.
+  \item For a transition $(q, a, q_1 \wedge q_2)$, $A$ moves to $q_1$ and $q_2$,
+reading $a$.
+\end{itemize}
+
+Note that due to the universal quantification a run is represented by a run
+tree. $A$ accepts a word $w$, if there exists a run tree on $w$ such that every
+path ends in an accepting state.
+
+A basic theorem tells that any AFA is equivalent to an non-deterministic finite
+automaton (NFA) by performing a similar kind of powerset construction as it is
+used for the transformation of a NFA to a deterministic finite automaton (DFA).
+This construction converts an AFA with k states to a NFA with up to $2^k$
+states.
+
+An alternative model which is frequently used is the one where Boolean
+combinations are represented as clauses. For instance, one could assume the
+combinations to be in DNF so that $\{\{q_1\}\{q_2,q_3\}\}$ would represent $q_1
+\vee (q_2 \wedge q_3)$. The state \texttt{tt} (true) is represented by
+$\{\{\}\}$ in this case and \texttt{ff} (false) by $\emptyset$. This clause
+representation is usually more efficient.
+
+
+\subsection{To Do}
+\begin{itemize}
+ \item Other candidates: Team Automata, Edit Automata, OCL (UML).
+ \item \textbf{Expressiveness}. Have to clearly specificy the kind of properties
+we are interested in, its uses and limitations. So far it is not clear.
+  \begin{itemize}
+    \item Is it possible to express parametric properties?. For instance, we
+would like to say that the java card should always install each applet then
+register it and finally unregister it. The thing is that it must be ensure for
+each applet. We will also need this expressiveness if we want to specify that
+every time a file is opened it is eventually closed (this is a liveness
+property).
+    \item It may be convenient to differentiate between the entry and the
+exit of a method call, that will give use more control. In particular it will
+allow us to specify behaviours of nested calls. Otherwise when does the
+automaton receive an input (as soon as it is invoked or when it returns).
+    \item Non-primite static variables (aliasing?).
+    \item Instance variables. Be careful with aliasing.
+    \item Recursion.
+    \item Inter-object properties.
+  \end{itemize}
+ \item In some cases specifying properties by graphical automata may be
+cumbersome. See the example given in~\cite{Schneider00}.
+ \item It may be useful to have a table or some graphic of the equivalence
+between the formalisms.
+\end{itemize}
+
+
+\section{Target Languages}\label{sec:Target}
+\cite{CheonPeru05}
+\begin{itemize}
+ \item JML as standard language.
+ \item Extension purposed in ``Specifying and Checking Method Call Sequences of
+Java Programs'' and approach taken by Jass.
+ \item Expressiveness.
+ \item Analyze the Temporal Logic extention to JML and how it can be used to
+describe protocols.
+\end{itemize}
+
+
+\section{Tools}\label{sec:Tools}
+%TODO: Podria hacer una tabla que compare ciertas caracteristicas comunes de las herramientas.
+%Caracteristicas posibles: representacion grafica, generacion de codigo, lenguaje target (con extensiones), disponibilidad, 
+
+%TODO: implementar el ejemplo en cada una de las herramientas y resaltar que es
+%lo que hace y lo que no hace cada una.
+%Hacer una implementacion que cumpla el protocolo y otra que no la cumpla
+
+%running example (ver frase en el paper de AspectJ2EE)
+Discuss possible implementations?. Look at the paper about Aspect2JEE to find
+out about ``Deploy-Time Weaving''.
+
+\subsection{KeY}\label{subsec:KeY}
+\begin{itemize}
+  \item See the comparison with OCL in ``An overview of JML tools and
+applications''.
+  \item Look up the paper ``Translating the Object Constraint Language into
+the Java Modelling Language'', ACM, 2004.
+\end{itemize}
+
+
+\subsection{JAG}\label{subsec:JAG}
+\
+\subsection{Automat2JML}\label{subsec:Automat2JML}
+Do some reverse engineering to find out what it does.
+
+Look at the tool described in \cite{PaBaBu03}.
+
+\subsection{F2J}\label{subsec:F2J}
+\begin{itemize}
+  \item Wait for the tool, otherwise talk about what is written in some papers.
+  \item AutoJML, described by Thibault and also developed at Nijmegen, seems to
+be a front-end for F2J that describes properties using UML.
+%TODO: Ver que es lo que quiere decir TD cuando dice que no permite "conditional
+%executions" y que consecuencias tiene esto
+\end{itemize}
+
+
+\section{Conclusion}\label{sec:Conclusion}
+
+\bibliographystyle{plain}
+\bibliography{overview}
+\end{document}
