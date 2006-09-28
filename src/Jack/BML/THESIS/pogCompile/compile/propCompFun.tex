@@ -24,7 +24,24 @@
 In this subsection, we will focus on the properties of the  bytecode produced by the compiler presented above.
 These properties although a straightforward consequence of the compiler definition
  are actually important for establishing formally the equivalence between source and bytecode 
-proof obligations. %Note also that those properties are respected by any non optimizing compiler.
+proof obligations. Note that a standard non-optimizing Java compiler generates code which respects them and thus, we
+do not restrict at all the compilation process.  We outline the categories of properties that we shall consider:
+\begin{itemize}
+     
+     \item compilation of a statement (expressions) may contain instructions which either target instructions inside the compilation of a statement or  the 
+           first instruction of the next statement, if there is next statement. These are Properties \ref{compile:prop:compProp0}, \ref{compile:prop:compProp1}.
+     
+     \item expressions are compiled into a sequence of instructions which does not contains jumps Property \ref{compile:prop:compProp3}.
+     
+     \item substatement relation preserved by the compiler Properties \ref{compile:prop:compPropSubstmt}, \ref{compile:prop:compProp6}.
+
+     \item a compilation of a source statement contains cycles only if the source statement contains cycles Properties \ref{compile:prop:compProp4}
+     
+     \item exception handler preservation Properties \ref{compile:prop:compProp8}, \ref{compile:prop:compProp9},  \ref{compile:prop:compProp10}
+     
+\end{itemize}
+
+
 
 
 In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and $\expressionSrc$.
@@ -194,18 +211,13 @@ a loop entry and a loop end  in the sense of Def.
 \ref{defLoop} (i.e. there exists $\ins{j}$ such that $\ins{j} \execRel^{l} \ins{k}$ ) only if  $\stmt$ is a loop or contains 
  a substatement $\stmt'$ which is a loop statement and the following holds:
   $$\begin{array}{l}
-                        \stmt = \\             
-	                \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} \\ \\ 
-			\vee \\\\
-
-                        \stmt[\stmt'] \wedge \\
+                        \substatement{\stmt}{\stmt'} \wedge \\
 			\stmt' = \\
-             
-	                \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} \\ \\ 
+                       \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt'' \} \\ \\ 
 
-                        \compileLabel{s}{   \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \}   }{e} = \\
+                        \compileLabel{s}{   \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt'' \}   }{e} = \\
 			s: \goto \ e' + 1; \\
-	                \compileLabel{s +  1}{\stmt}{e'}; \\
+	                \compileLabel{s +  1}{\stmt''}{e'}; \\
 			 %\lbrack  \compileSynt{\invariant} , \compileSynt{\modLoop} \rbrack \\ 
 			 \compileLabel{e' +  1}{\expressionSrcRel}{e  -1 };\\
 			 e: \ifCond \ s +  1; \\  \\
@@ -249,7 +261,7 @@ Finally the method returns the absolute value of the parameter.
 in the method. In particular, it states that the region between 2 and 20 is protected from \NullPointerExc{} by the bytecode starting at index 22.
  We may remark that the region between 2 and 20 corresponds to the compilation of the \lstinline!if! statement. 
 
- 
+ \todo{change the example}
   \begin{figure}[ht!]
 \begin{frameit}
   \scriptsize{
