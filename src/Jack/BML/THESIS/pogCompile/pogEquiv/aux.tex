@@ -176,7 +176,7 @@ $$
 \end{wpStmtBcSrc1}
 
 This follows from the previous lemma (which establishes the relation between the \wpName \ over source expressions and
- the \wpName \ over bytecode expressions that takes into account the compilation structure  )
+ the \wpName \ over bytecode expressions that takes into account the compilation structure)
 and is done by structural induction. Note that it is trivial as the \wpName{} for the compilation of statements  into bytecode  introduced in Section 
 is very similar to the \wpName{} for source statements. 
 
@@ -198,14 +198,17 @@ For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and
    exceptional postcondition  function $\excPostExpl $ such that :
  
   \begin{itemize}
-         \item $\psi = \inter{e}{e+1}$
+         \item if $e + 1$ exists then  $\psi = \inter{e}{e+1}$
+	 \item if $e+1$ does not exist and $\ins{e} = \return$  then $\psi = \methodd.\normalPost$
 	 \item$\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e) $ 
   \end{itemize}
       then it holds 
 $$ \wpSrcStmt{\stmt}{\psi }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
 \end{wpStmtBcSrc2}
 \textit{Proof}: \\
-This follows from Lemma \ref{wpStmtBcSrc1} and Lemma \ref{relWpStmt} \\
+This follows from Lemmas \ref{wpStmtBcSrc1}, which establishes the equivalence between the verification conditions of
+ source programs  and their compilation which is generated over the compilation and  Lemma \ref{relWpStmt}  which establishes 
+the equivalence between the latter and verification conditions generated over the bytecode without taking into account the compiler.\\
 \Qed
 
 
