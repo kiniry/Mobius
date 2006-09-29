@@ -3,52 +3,83 @@ The top-level auxiliary file: thesis.aux
 The style file: plain.bst
 Database file #1: biblio.bib
 Warning--string name "springer" is undefined
---line 299 of file biblio.bib
-I was expecting a `,' or a `}'---line 427 of file biblio.bib
+--line 314 of file biblio.bib
+I was expecting a `,' or a `}'---line 544 of file biblio.bib
  :   
- :   note =  { Microsoft Research, One Microsoft Way, Redmond, WA 98052, USA}
+ :   url = "citeseer.ist.psu.edu/article/jacobs03java.html"
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 585 of file biblio.bib
+ :   
+ :   OPTkey =   {},
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
 Database file #2: specification.bib
-You've used 28 entries,
+Database file #3: bib_mem-wpc.bib
+Repeated entry---line 162 of file bib_mem-wpc.bib
+ : @manual{JMLRefMan
+ :                  ,
+I'm skipping whatever remains of this entry
+Database file #4: optimComp.bib
+Repeated entry---line 239 of file optimComp.bib
+ : @book{M97oos
+ :             ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 314 of file optimComp.bib
+ : @inproceedings{BRL-JACK
+ :                        ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2476 of file optimComp.bib
+ : @inproceedings{BRL-JACK
+ :                        ,
+I'm skipping whatever remains of this entry
+A bad cross reference---entry "gta05:fast"
+refers to entry "fast05", which doesn't exist
+Warning--I didn't find a database entry for "fast05"
+Warning--to sort, need author or key in JITSWebsite
+Warning--to sort, need author or key in JCVM
+Warning--empty booktitle in gta05:fast
+Warning--empty journal in DRT03GLF
+Warning--there's a number but no series in gries95avoiding
+You've used 70 entries,
             2118 wiz_defined-function locations,
-            703 strings with 8954 characters,
-and the built_in function-call counts, 8994 in all, are:
-= -- 836
-> -- 449
-< -- 12
-+ -- 185
-- -- 145
-* -- 541
-:= -- 1485
-add.period$ -- 86
-call.type$ -- 28
-change.case$ -- 149
+            949 strings with 15354 characters,
+and the built_in function-call counts, 23264 in all, are:
+= -- 2235
+> -- 1112
+< -- 30
++ -- 455
+- -- 364
+* -- 1445
+:= -- 3774
+add.period$ -- 215
+call.type$ -- 70
+change.case$ -- 381
 chr.to.int$ -- 0
-cite$ -- 28
-duplicate$ -- 372
-empty$ -- 741
-format.name$ -- 145
-if$ -- 1923
+cite$ -- 75
+duplicate$ -- 958
+empty$ -- 1895
+format.name$ -- 364
+if$ -- 5011
 int.to.chr$ -- 0
-int.to.str$ -- 28
-missing$ -- 21
-newline$ -- 141
-num.names$ -- 64
-pop$ -- 205
+int.to.str$ -- 70
+missing$ -- 52
+newline$ -- 346
+num.names$ -- 148
+pop$ -- 499
 preamble$ -- 1
-purify$ -- 123
+purify$ -- 315
 quote$ -- 0
-skip$ -- 279
+skip$ -- 720
 stack$ -- 0
-substring$ -- 377
-swap$ -- 101
-text.length$ -- 12
+substring$ -- 1130
+swap$ -- 263
+text.length$ -- 30
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 106
-warning$ -- 0
-while$ -- 81
-width$ -- 30
-write$ -- 300
-(There was 1 error message)
+type$ -- 270
+warning$ -- 5
+while$ -- 209
+width$ -- 72
+write$ -- 750
+(There were 7 error messages)

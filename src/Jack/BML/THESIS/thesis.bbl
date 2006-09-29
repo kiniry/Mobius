@@ -1,9 +1,49 @@
 \begin{thebibliography}{10}
 
+\bibitem{JITSWebsite}
+{J}ava {I}n {T}he {S}mall.
+\newblock http://www.lifl.fr/RD2P/JITS/.
+
+\bibitem{JCVM}
+{J}{C} {V}irtual {M}achine.
+\newblock http://jcvm.sourceforge.net/.
+
+\bibitem{ACDJ04fsb}
+R.M. Amadio, S.~Coupet-Grimal, S.~Dal Zilio, and L.~Jakubiec.
+\newblock {A Functional Scenario for Bytecode Verification of Resource Bounds}.
+\newblock Research report 17-2004, {LIF}, Marseille, France, 2004.
+
+\bibitem{AC03hba}
+D.~Aspinall and A.~Compagnoni.
+\newblock Heap-bounded assembly language.
+\newblock {\em J. Autom. Reason.}, 31(3-4):261--302, 2003.
+
+\bibitem{AH02ats}
+D.~Aspinall and M.~Hofmann.
+\newblock Another type system for in-place update.
+\newblock In {\em ESOP}, volume 2305 of {\em LNCS}, pages 36--52, 2002.
+
 \bibitem{ARUCom1986}
 AV, Sethi R, and Ullman JD.
 \newblock {\em Compilers-Principles, Techniques and Tools}.
 \newblock Addison-Wesley: Reading, 1986.
+
+\bibitem{ASU86cpt}
+J.~Ullman A.V.~Aho, R.~Sethi.
+\newblock {\em Compilers Principles, Techniques and Tools}.
+\newblock Addison-Wesley Publiching Company, 1986.
+
+\bibitem{Azevedo1999}
+Ana Azevedo, Alex Nicolau, and Joe Hummel.
+\newblock Java annotation-aware just-in-time (ajit) complilation system.
+\newblock In {\em JAVA '99: Proceedings of the ACM 1999 conference on Java
+  Grande}, pages 142--151, New York, NY, USA, 1999. ACM Press.
+
+\bibitem{FB04LBT}
+Fabian Bannwart.
+\newblock A logic for bytecode and the translation of proofs from sequential
+  java.
+\newblock Technical report, ETHZ, 2004.
 
 \bibitem{BM05plb}
 Fabian Bannwart and Peter Muller.
@@ -15,6 +55,11 @@ Mike Barnett, K.~Rustan~M. Leino, and Wolfram Schulte.
 \newblock The {Spec}\# programming system: An overview.
 \newblock In "G.Barthe, L.Burdy, M.Huisman, J.Lanet, and T.Muntean", editors,
   {\em CASSIS workshop proceedings}, {LNCS}, pages 49--69. Springer, 2004.
+
+\bibitem{gta05:fast}
+G.~Barthe, T.~Rezk, and A.~Saabas.
+\newblock Proof obligations preserving compilation.
+\newblock pages 112--126, 2005.
 
 \bibitem{barthe02formal}
 Gilles Barthe, Guillaume Dufay, Line Jakubiec, and Simao~Melo de~Sousa.
@@ -44,6 +89,10 @@ C.~Breunesse, N.~Cata{\~n}o, M.~Huisman, and B.~Jacobs.
 \newblock {\em Science of Computer Programming}, 2004.
 \newblock To appear.
 
+\bibitem{burdy98treatment}
+L.~Burdy.
+\newblock A treatment of partiality: Its application to the b method, 1998.
+
 \bibitem{BurdyCCEKLLP03}
 L.~Burdy, Y.~Cheon, D.~Cok, M.~Ernst, J.~Kiniry, G.T. Leavens, K.R.M. Leino,
   and E.~Poll.
@@ -59,16 +108,53 @@ L.~Burdy, A.~Requet, and J.-L. Lanet.
   Formal Methods: International Symposium of Formal Methods Europe}, volume
   2805 of {\em {LNCS}}, pages 422--439, 2003.
 
+\bibitem{CJPS05cmu}
+D.~Cachera, T.~Jensen, D.~Pichardie, and G.~Schneider.
+\newblock Certified memory usage analysis.
+\newblock Submitted, 2005.
+
+\bibitem{CEILN05}
+A.~Chander, D.~Espinosa, N.~Islam, P.~Lee, and G.~Necula.
+\newblock Enforcing resource bounds via static verification of dynamic checks.
+\newblock To appear, 2005.
+
 \bibitem{jmlrac}
 Yoonsik Cheon and Gary~T. Leavens.
 \newblock A runtime assertion checker for the {Java} modeling language.
 \newblock In {\em Software Engineering Research and Practice (SERP'02)}, CSREA
   Press, pages 322--328, June 2002.
 
+\bibitem{CW00rbc}
+K.~Crary and S.~Weirich.
+\newblock Resource bound certification.
+\newblock In {\em Proceedings of the 27th ACM SIGPLAN-SIGACT symposium on
+  Principles of programming languages}, pages 184--198. ACM Press, 2000.
+
+\bibitem{DRT03GLF}
+Marc Daumas, Laurence Rideau, and Laurent Théry.
+\newblock A generic library for floating-point numbers and its application to
+  exact computing.
+\newblock page 169, 2003.
+
+\bibitem{december-jml}
+Draft~Revision December.
+\newblock Jml reference manual.
+
 \bibitem{WPCDS}
 Edsger~W. Dijkstra and Carel~S. Scholten.
 \newblock {\em Predicate Calculus and Program Semantics}.
 \newblock Springer, 1990.
+
+\bibitem{ECG01DDL}
+Michael~D. Ernst, Jake Cockrell, William~G. Griswold, and David Notkin.
+\newblock Dynamically discovering likely program invariants to support program
+  evolution.
+\newblock {\em IEEE Trans. Softw. Eng.}, 27(2):99--123, 2001.
+
+\bibitem{fredlund04gcp}
+L.-A. Fredlund.
+\newblock Guaranteeing correctness properties of a java card applet.
+\newblock In {\em RV'04}, ENTCS, 2004.
 
 \bibitem{FM99FFJ}
 Stephen~N. Freund and John~C. Mitchell.
@@ -76,6 +162,26 @@ Stephen~N. Freund and John~C. Mitchell.
 \newblock In {\em OOPSLA '99: Proceedings of the 14th ACM SIGPLAN conference on
   Object-oriented programming, systems, languages, and applications}, pages
   147--166, New York, NY, USA, 1999. ACM Press.
+
+\bibitem{GNYZ04pir}
+D.~Garbervetsky, C.~Nakhli, S.~Yovine, and H.~Zorgati.
+\newblock Program instrumentation and run-time analysis of scoped memory in
+  java.
+\newblock In {\em RV'04}, ENCS, 2004.
+
+\bibitem{gries95avoiding}
+David Gries and Fred~B. Schneider.
+\newblock Avoiding the undefined by underspecification.
+\newblock In Jan van Leeuwen, editor, {\em Computer Science Today: Recent
+  Trends and Developments}, number 1000, pages 366--373. Springer-Verlag, New
+  York, N.Y., 1995.
+
+\bibitem{Grimaud2003}
+G.~Grimaud and J.-J. Vandewalle.
+\newblock Introducing research issues for next generation {J}ava-based smart
+  card platforms.
+\newblock In {\em Proc. Smart Objects Conference (sOc'2003)}, Grenoble, France,
+  2003.
 
 \bibitem{JMLRefMan}
 G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
@@ -87,6 +193,39 @@ G.T.Leavens, Erik Poll, Curtis Clifton, Yoonsik Cheon, Clyde Ruby, David Cok,
 C.~A.~R. Hoare.
 \newblock An axiomatic basis for computer programming.
 \newblock {\em Commun. ACM}, 12(10):576--580, 1969.
+
+\bibitem{Hofmann00tsb}
+M.~Hofmann.
+\newblock A type system for bounded space and functional in-place update.
+\newblock {\em Nordic Journal of Computing}, 7(4):258--289, 2000.
+
+\bibitem{HJ03sph}
+M.~Hofmann and S.~Jost.
+\newblock Static prediction of heap space usage for first-order functional
+  programs.
+\newblock In {\em Proc.~of 30th ACM Symp.~on Principles of Programming
+  Languages (POPL'03)}, pages 185--197. ACM Press, 2003.
+
+\bibitem{HP99rdd}
+J.~Hughes and L.~Pareto.
+\newblock Recursion and dynamic data-structures in bounded space: Towards
+  embedded {ML} programming.
+\newblock In {\em International Conference on Functional Programming}, pages
+  70--81, 1999.
+
+\bibitem{Hummel1997}
+Joseph Hummel, Ana Azevedo, David Kolson, and Alexandru Nicolau.
+\newblock Annotating the {Java} bytecodes in support of optimization.
+\newblock {\em Concurrency: Prac\-tice and Experience}, 9(11):1003--1016, 1997.
+
+\bibitem{Ishizaki1999}
+Kazuaki Ishizaki, Motohiro Kawahito, Toshiaki Yasue, Mikio Takeuchi, Takeshi
+  Ogasawara, Toshio Suganuma, Tamiya Onodera, Hideaki Komatsu, and Toshio
+  Nakatani.
+\newblock Design, implementation, and evaluation of optimizations in a
+  just-in-time compiler.
+\newblock In {\em JAVA '99: Proceedings of the ACM 1999 conference on Java
+  Grande}, pages 119--128, New York, NY, USA, 1999. ACM Press.
 
 \bibitem{jacobs03java}
 B.~Jacobs and E.~Poll.
@@ -100,6 +239,21 @@ Gerwin Klein and Tobias Nipkow.
 \newblock Technical Report 0400001T.1, National ICT Australia, Sydney, March
   2004.
 
+\bibitem{Lagosanto2002}
+Laurent Lagosanto.
+\newblock Next-generation embedded java operating system for smart cards.
+\newblock In {\em 4th Gemplus Developer Conference}, 2002.
+
+\bibitem{PD06LBR}
+Gary~T. Leavens, Albert~L. Baker, and Clyde Ruby.
+\newblock Preliminary design of jml: a behavioral interface specification
+  language for java.
+\newblock {\em SIGSOFT Softw. Eng. Notes}, 31(3):1--38, 2006.
+
+\bibitem{ESC2000LNS}
+"K. Rustan~M. Leino, Greg Nelson, , and James B.~Saxe ".
+\newblock Esc/java user's manual.
+
 \bibitem{escjava}
 R.K. Leino.
 \newblock escjava.
@@ -110,14 +264,66 @@ Xavier Leroy.
 \newblock {Java} bytecode verification: Algorithms and formalizations.
 \newblock In {\em Journal of Automated Reasoning 2003}, 2003.
 
+\bibitem{Lindholm2000}
+Tim Lindholm and Frank Yellin.
+\newblock {\em Java Virtual Machine Specification}.
+\newblock Addison-Wesley Longman Publishing Co., Inc., 1999.
+
 \bibitem{VMSpec}
 Tim Lindholm and Frank Yellin.
 \newblock Java virtual machine specification.
 \newblock Technical report, Java Software, Sun Microsystems, Inc., 2004.
 
+\bibitem{marche03krakatoa}
+C.~Marche, C.~Paulin-Mohring, and X.~Urbain.
+\newblock The krakatoa tool for certification of java/javacard programs
+  annotated in jml, 2003.
+
 \bibitem{leinoWPUP}
 M.Barnett and K.~Rustan~M. Leino.
 \newblock Weakest-precondition of unstructured programs.
+\newblock Microsoft Research, One Microsoft Way, Redmond, WA 98052, USA.
+
+\bibitem{MWCG99tal}
+G.~Morrisett, D.~Walker, K.~Crary, and N.~Glew.
+\newblock From {S}ystem {F} to typed assembly language.
+\newblock {\em ACM Trans. Program. Lang. Syst.}, 21(3):527--568, 1999.
+
+\bibitem{Mulchandani1998}
+Deepak Mulchandani.
+\newblock Java for embedded systems.
+\newblock {\em Internet Computing, IEEE}, 2(3):30 -- 39, 1998.
+
+\bibitem{Muller1997}
+Gilles Muller, Barbara Moura, Fabrice Bellard, and Charles Consel.
+\newblock Harissa: a flexible and efficient java environment mixing bytecode
+  and compiled code.
+\newblock In {\em Third USENIX Conference on Object-Oriented Technologies
+  (COOTS)}. USENIX, Portland, Oregon, June 1997.
+
+\bibitem{ComNec}
+George Necula.
+\newblock {\em Compiling With Proofs}.
+\newblock PhD thesis, Carnegie Mellon University, 1998.
+\newblock Phd thesis.
+
+\bibitem{DesNecLee98}
+George~C. Necula and Peter Lee.
+\newblock The design and implementation of a certifying compiler.
+\newblock In {\em PLDI98}, 1998.
+
+\bibitem{Nipkow-MOD2001}
+Tobias Nipkow.
+\newblock Hoare logics in {Isabelle/HOL}.
+\newblock In H.~Schwichtenberg and R.~Steinbr\"uggen, editors, {\em Proof and
+  System-Reliability}, pages 341--367. Kluwer, 2002.
+
+\bibitem{Proebsting1997}
+Todd~A. Proebsting, Gregg Townsend, Patrick Bridges, John~H. Hartman, Tim
+  Newsham, and Scott~A. Watterson.
+\newblock Toba: Java for applications: A way ahead of time (wat) compiler.
+\newblock In {\em Third USENIX Conference on Object-Oriented Technologies
+  (COOTS)}, Portland, Oregon, June 1997. University of Arizona.
 
 \bibitem{pusch98proving}
 Cornelia Pusch.
@@ -149,15 +355,45 @@ R.W.Floyd.
 \newblock In J.~T. Schwartz, editor, {\em volume 19 of Proceedings of Symposia
   in Applied Mathematics}, pages 19--32, 1967.
 
+\bibitem{SU05CNS}
+Ando Saabas and Tarmo Uustalu.
+\newblock A compositional natural semantics and hoare logic for low-level
+  languages.
+\newblock In {\em {Conf. version in P. D Mosses, I. Ulidowski, eds., Proc. of
+  2nd Wksh. on Structured Operational Semantics, SOS'05 (Lisbon, July 2005)}},
+  pages 151--168, 2005.
+
+\bibitem{schieder99adapting}
+Birgit Schieder and Manfred Broy.
+\newblock Adapting calculational logic to the undefined.
+\newblock {\em The Computer Journal}, 42(2):73--81, ???? 1999.
+
+\bibitem{schneider04cba}
+G.~Schneider.
+\newblock A constraint-based algorithm for analysing memory usage on java
+  cards.
+\newblock Technical Report RR-5440, INRIA, December 2004.
+
 \bibitem{siveroni04operational}
 I.~Siveroni.
 \newblock Operational semantics of the java card virtual machine, 2004.
 
-\bibitem{WildmoserN-ESOP05}
-Martin Wildmoser and Tobias Nipkow.
-\newblock Asserting bytecode safety.
-\newblock In {\em Proceedings of the 15th European Symposium on Programming
-  (ESOP05)}, 2005.
-\newblock to appear.
+\bibitem{stata98type}
+Raymie Stata and Mart\'{i}n Abadi.
+\newblock A type system for {Java} bytecode subroutines.
+\newblock In {\em Conference Record of {POPL} 98: The 25TH {ACM}
+  {SIGPLAN}-{SIGACT} Symposium on Principles of Programming Languages, San
+  Diego, California}, pages 149--160, New York, NY, 1998.
+
+\bibitem{Raja1999}
+Raja Vall\'ee-Rai, Laurie Hendren, Vijay Sundaresan, Patrick Lam, Etienne
+  Gagnon, and Phong Co.
+\newblock Soot - a java optimization framework.
+\newblock In {\em Proceedings of CASCON 1999}, pages 125--135, 1999.
+
+\bibitem{VC04fta}
+J.~C. Vanderwaart and K.~Crary.
+\newblock Foundational typed assembly language for grid computing.
+\newblock Technical Report CMU-CS-04-104, CMU, February 2004.
 
 \end{thebibliography}
