@@ -162,13 +162,13 @@ $${\scriptsize
 	\compileLabel{s}{  \var = \expressionSrc }{e} =  \\  
              \begin{array}{l}
                         \compileLabel{s}{\expressionSrc}{e  - 1 }\\
-			e : \instr{store} \ \locVar{i};
+			e : \store \ \locVar{\mbox{\rm i}};
              \end{array} \\ 
 	\\ \\  
-	\compileLabel{s}{\athrow \ \expressionSrc}{e} = \\
+	\compileLabel{s}{\throw \ \expressionSrc}{e} = \\
              \begin{array}{l} 
 	           \compileLabel{s}{ \expressionSrc}{e - 1}; \\
-	           e: \instr{athrow}; 
+	           e: \athrow; 
 	        \end{array} \\
 		\\ \\
 	\compileLabel{s}{\returnSrc  \  \expressionSrc }{e } =  \\

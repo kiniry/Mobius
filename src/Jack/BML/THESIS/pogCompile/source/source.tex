@@ -34,7 +34,6 @@ object manipulation and creation, method invokation, throwing and handling excep
       \stmt ::=		        & \Myskip \\
                                 & \mid \stmt;\stmt \\
                                 & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
-				& \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \}	\\
 			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
 		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
 			%	& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
@@ -67,9 +66,7 @@ object manipulation and creation, method invokation, throwing and handling excep
     
     The expressions can be of object types or basic types. Formally the types are 
 
-    $$
-\JavaType ::= Class, \ Class \in \ClassTypes \mid \Myint \mid \Mybool
-$$ 
+$$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$ 
 
 
 

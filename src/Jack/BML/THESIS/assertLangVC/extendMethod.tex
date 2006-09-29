@@ -7,17 +7,17 @@ $$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
                      \MethodSet  = \left\{\begin{array}{ll}  
                                                           \methodName & :\MethodName\\
 						          \retType & :\JavaType\\
-							  \args &  : (name * \JavaType) [] \\
+							  \args &  : list \ (name * \JavaType) \\
 							  \numArgs & : nat \\
-							  \body &  : \bcIns [] \\
+							  \body &  : list \  \bcIns \\
 							  %\entryPoint  &  : \bcIns \\
-							  \excHandlerTable & : \ExcHandler [] \\
-							  \exceptions &  : \ClassSet_{exc}[] \\
+							  \excHandlerTable & : list \ \ExcHandler  \\
+							  \exceptions &  : list \ \ClassSet_{exc}\\
 							  \pre & : \predWp \\
-							  \modif & :   \expression \lbrack \ \rbrack  \\
+							  \modif & :   list \ x\expression \\
 							  \excPostSpec & : \excType \rightharpoonup \predWp \\
 							  \normalPost & : \predWp \\
-                                                          \loopSpecTable & : \LoopSpecSet \lbrack \ \rbrack  
+                                                          \loopSpecTable & : list \ \LoopSpecSet 
 							  
                                      \end{array}  \right\} 
      \end{array} $$
@@ -36,13 +36,13 @@ Let's see the meaning of the new elements in the method data structure.
 	   if the method \methodd \ terminates on an exception of type \mbox{ \rm \texttt{Exc}}. 
 	   Note that this function is constructed from the \exsures \ clause of a method introduced in  Chapter \ref{bcsl},
 	   section \ref{BCSLgrammar}. For instance, if method \methodd \ has an exsures clause:
-	   $$ \exsures \  ( \mbox{ \rm \texttt{Exc}}) \ \locVar{1} = \Mynull $$
+	   $$ \exsures \  ( \mbox{ \rm \texttt{Exc}}) \ \locVar{1} == \Mynull $$
 	   then for every exception type $\mbox{ \rm \texttt{SExc}} $ such that \subtype{\texttt{SExc} }{\texttt{Exc}}
-	   the function  the result of the function \methodd.\excPostSpec \  for  \texttt{SExc} 
-           is $\methodd.\excPostSpec(\texttt{SExc} ) = \locVar{1} = \Mynull$. If for an exception \texttt{Exc} there is not specified exsures
-	   clause then the function \excPostSpec \ returns the default exceptional postcondition predicate \Myfalse, i.e.
+	    the result of the function \methodd.\excPostSpec \  for  \texttt{SExc} 
+           is $\methodd.\excPostSpec(\texttt{SExc} ) = \locVar{1} == \Mynull$. If for an exception \texttt{Exc} there is not specified
+	   explicitely an exsures clause then the function \excPostSpec \ returns the default exceptional postcondition predicate \Myfalse, i.e.
 	   $\methodd.\excPostSpec(\texttt{Exc} ) = \Myfalse$
-     \item \methodd.\loopSpecTable \ is an array of \LoopSpecSet \ data structures which give the specifcication information 
+     \item \methodd.\loopSpecTable \ is a list of \LoopSpecSet \ data structures which give the specifcication information 
            for a particular loop in the bytecode         
 \end{itemize}
 
@@ -52,7 +52,7 @@ $$ \begin{array}{l}
       \LoopSpecSet = \left\{\begin{array}{ll}  
                                        \posL   & : nat \\
                                        \invL   & : \predWp \\                 
-	                               \modifL   & :  \expression  \lbrack \ \rbrack  
+	                               \modifL   & :  list \ \expression  
                             \end{array}  \right\} 
      \end{array} $$ \todo{define modifies locations in the grammar }
 
