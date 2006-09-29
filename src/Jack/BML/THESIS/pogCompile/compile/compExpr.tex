@@ -10,8 +10,9 @@ returns a pair which contains a list of bytecode instructions which is the compi
  and  a natural number which is the greatest label in the compilation. In the following, we allow us
 to use instead the notation 
 $ \compileLabel{s}{\stmt}{e} =[\ins{i_s} \ldots \ins{i_e} ] $
-to refer to the list of instructions resulting from the compiler function applied
- over the index $s$ and the statement $\stmt$ 
+to refer to the list of instructions 
+which is the first component in the couple resulting from the compilation of 
+ statement $\stmt$  starting with index $s$ \ 
 $\ulcorner  s, \stmt  \urcorner_{\methodd} = ( [\ins{i_s} \ldots \ins{i_e}], e) $.
 
 Before entering into technicalities, we would like to make several remarks. First, although the compiler is realistic,
