@@ -29,8 +29,10 @@ Because of its full automation this architecture fails to deal with complex func
 
 
 The relation of the verification conditions over bytecode and source code can be used for building an
- alternative PCC architecture which can deal with complex security policy. 
-More particularly, such an equivalence can be exploited by the code producer to generate
+ alternative PCC architecture which can deal with complex security policies. Note that in case of a non-trivial 
+security policy neither an automatic inference of the specification, nor an automatic generation 
+of the proof will be possible.
+In those cases, such an equivalence can be exploited by the code producer to generate
  the certificate interactively over the source code. Because of the
 equivalence between the proof obligations over source and bytecode programs (modulo names and types), 
 their  proof certificates are also the same and thus the certificate generated interactively over the
@@ -44,28 +46,21 @@ In the following, Section \ref{pog:relWork} presents an overview of existing wor
  In Section \ref{source},  we introduce the source programming language. As we shall see,
 this programming language has the basic features of Java as it supports object creation and manipulation, like instance 
 field access and  update, 
- exception throwing and handling, method calls as well as subroutines.
-
-Section \ref{compile} presents a simple non optimizing compiler from the source language to the bytecode
+ exception throwing and handling, method calls as well as subroutines. Section \ref{compile} presents a simple non optimizing compiler from the source language to the bytecode
  language presented already in Chapter \ref{prelim}. In this section, we will discuss certain properties of the 
-compiler which are necessary conditions for establishing this equivalence.
-
-Next, Section \ref{pog:wpSrcGeneral} presents the weakest precondition predicate 
-transformer which we define over the source language.
-
-Section  \ref{pog:wpBcGeneral} introduces a new formulation of the weakest precondition for bytecode, which 
+compiler which are necessary conditions for establishing this equivalence. Next, Section \ref{pog:wpSrcGeneral} presents the weakest precondition predicate 
+transformer which we define over the source language. Section  \ref{pog:wpBcGeneral} introduces a new formulation of the weakest precondition for bytecode, which 
 is defined over the  compilation of source expressions and statements. This formulation of the weakest precondition
  is helpful for establishing the desired 
 relation between bytecode and source proof obligations.
  In this section, we also discuss upon what conditions
 the weakest precondition given before in Chapter \ref{wpGeneral} and 
 this new version are equivalent.
-
 In Section \ref{pogEq:aux}, we proceed with the proof of equivalence between the proof obligations generated 
 by the weakest precondition defined in  Chapter \ref{wpGeneral}.
 To do this, we first establish  the equivalence between the source weakest precondition and the bytecode weakest precondition
  defined over the compilation of statements and expressions. We exploit this equivalence 
-to conclude that the source verification condition generator and the bytecode verification condition generator 
+to conclude that the source verification conditions and the bytecode verification conditions 
 presented in Chapter \ref{wpGeneral} are syntactically the same.
  
 

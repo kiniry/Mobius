@@ -8,32 +8,35 @@ We now turn to specify a simple compiler from the source language presented in S
 \ref{source} into the bytecode language.
 
 The compiler is the triple
- $$< \compileLabel{*}{*}{*}, \addExceptionTableOnly , \addLoopTableOnly >$$
+ $$< \compile{ }_{\methodd}, \addExceptionTableOnly , \addLoopTableOnly >$$
 
- The first component in the triple is a  function $\compileLabel{*}{*}{*}$ which transforms statements and expressions
+ The first component in the triple is a  function $\compile{ }_{\methodd}$  which transforms statements and expressions
  into a sequence of bytecode instructions of the body of the method \methodd.
  Note that it does not perform any optimizations.
 
  The second component is the procedure  
-\addExceptionTableOnly \ which compiles  the source exception handlers.
-Note that that the source language supports syntactic structure for encoding exception handlers while
- bytecode programs keep track of them via a data structure which describes how  regions 
+\addExceptionTableOnly \ which adds elements in exception handler table of the compiled bytecode \methodd.
+Note that the source language supports syntactic structure for encoding exception handlers while
+ bytecode programs keep track of them via a data structure called exception handler table which describes how  regions 
 in the bytecode are protected from exceptions.
 
  The third component of the compiler is the procedure
-  \addLoopTableOnly \ which manages the compilation of loop
-specification, namely loop invariants and the modified expressions. 
+  \addLoopTableOnly \ which adds  loop
+specifications in the loop specification table (see Chapter \ref{assertLang} section \ref{methExtend}).
 
-The compiler presented here is realistic as the first and second component actually resemble closely a non-optimizing Java compiler.
-The third component is not a typical part of a Java compiler. It actually corresponds to our \JMLtoBML{} compiler which compiles 
-loop invariants into class attributes and finds their respective place in the bytecode.  
+The compiler presented here is realistic as the first and second component actually resemble closely 
+a non-optimizing Java compiler and as we shall later in this section, the produced bytecode 
+is very close to the bytecode produced by  a Java compiler.
+
+The third component is not a typical part of a Java compiler. It actually corresponds to our 
+\JMLtoBML{} compiler which compiles  loop invariants into class attributes and finds their respective place in the bytecode.  
 
 
 In the following, in the next subsection \ref{pogEq:compile:excHandlers} we define the procedure for the compilation of exception handlers,
  in subsection \ref{pogEq:compile:loopInv},  we will present the procedure for compiling loop invariants.
  In  subsection
 \ref{pogEq:compile:compExpr} 
-we proceed with the definition of the compiler function $\compileLabel{*}{*}{*} $ for exressions and statements. 
+we proceed with the definition of the compiler function $\compile{ }_{\methodd} $ for exressions and statements. 
 The last subsection \ref{compile:prop} states the properties of the bytecode produced by the compiler.
 
 

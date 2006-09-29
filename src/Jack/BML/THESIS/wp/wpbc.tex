@@ -217,13 +217,13 @@ We will also see how the weakest precondition is defined in the presence of exce
                     \end{array} $$ 
                 
                 The weakest precondition of the instruction then is the predicate that must hold between the current instruction
-                and its successor, but where the stack counter is incremented and the stack top is substituted with $\locVar{j}$.
+                and its successor, but where the stack counter is incremented and the stack top is substituted with $\locVar{\mbox{ \rm j}}$.
                 For instance, if we have that the predicate $\inter{i}{i+1} $ is equal to $ \stack{counter} == 3$ then we get that the precondition of
-                instruction is $\locVar{j} == 3$:               
+                instruction is $\locVar{\mbox{\rm j}} == 3$:               
 		$$
 		\begin{array}{l}
-		    \{  \locVar{j} == 3 \} \\
-		     i:  \load  \ \mbox{ \rm j} \\
+		    \{  \locVar{\mbox{\rm j}} == 3 \} \\
+		     i:  \load  \ \mbox{\rm j} \\
                      \{ \stack{\counter} == 3 \} \\
                      i+1: \ldots 
 		 \end{array}
@@ -231,19 +231,19 @@ We will also see how the weakest precondition is defined in the presence of exce
  		
 		\item store the stack top element in a local variable	 \\	 
 		$$ \begin{array}{l}
-                          \wpi{\store \ \mbox{ \rm j} } { \methodd}{i}  =   \\ 
+                          \wpi{\store \ \mbox{\rm j} } { \methodd}{i}  =   \\ 
 		\inter{i}{i+1}\begin{array}{l} 
                                     \subst{\counter}{\counter   - 1} \\
-				    \subst{\locVar{j} }{\stack{ \counter}}  
+				    \subst{\locVar{\mbox{\rm j}} }{\stack{ \counter}}  
 			       \end{array}
                    \end{array} $$ \\
 		  
 		  Contrary to the previous instruction, the instruction $\store \ \mbox{\rm j}$ will take the stack top element
-		  and will store its contents in the local variable $\locVar{j}$.
+		  and will store its contents in the local variable $\locVar{\mbox{ \rm j}}$.
 
 		\item push an integer constant on the operand stack  \\
 			$$\begin{array}{l}
-                          \wpi{\push  \  \mbox{ \rm j} }  {\methodd} {i} =   \\
+                          \wpi{\push  \  \mbox{\rm j} }  {\methodd} {i} =   \\
 			  \inter{i}{i+1}\begin{array}{l}  
                                     \subst{\counter}{ \counter   + 1} \\ 
                                     \subst{\stack{ \counter +1 }}{ \mbox{ \rm j }}
@@ -255,7 +255,7 @@ We will also see how the weakest precondition is defined in the presence of exce
 		\item incrementing a local variable 
 				$$ \begin{array}{l}
                                           \wpi{\iinc \   \mbox{ \rm j} } {i} {\methodd}   =  \\
-				          \inter{i}{i+1} \subst{ \locVar{  j} }{  \locVar{j} + 1 } 
+				          \inter{i}{i+1} \subst{ \locVar{  j} }{  \locVar{\mbox{ \rm j}} + 1 } 
                                    \end{array}$$
 		  
 	\end{enumerate}

@@ -3,7 +3,7 @@
 \subsection{Compiling source program  constructs in bytecode instructions} \label{pogEq:compile:compExpr} 
 
 As we stated in the beginning the function for compiling program statements and expressions in bytecode instruction is named $\compile{}$
-$$ \compile{ } : nat * (\stmt \cup \expressionSrc )* nat \longrightarrow  \bcIns [ \ ]  $$
+$$ \compile{ }_{\methodd} : nat * (\stmt \cup \expressionSrc )* nat \longrightarrow  \bcIns [ \ ]  $$
 The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation starts,
  the statement $\stmt$ or expression $\expressionSrc$  to be compiled and a natural number which is
  the greatest label in the compilation 
@@ -190,13 +190,14 @@ which states that the if one of bytecode instructions from index $s$ to index $e
 control will be transfered to the instruction at index \excType.
 
 As you can notice, Fig \ref{pogEq:compile:compExpr:defExc} contains the compiler definition for try finally statements. 
-We compile the finally statement $ \stmt_2 $ by inlining, it is first compiled as a code executed after $\stmt_1  $  and
-then it is compiled as part of the default exception handler. The default exception handler which starts at index $e'' + 2 $ and 
-which will  handle any exception thrown by $\compileLabel{s}{\stmt_1}{e'}$. The exception handler 
-first stores the thrown exception in the local variable at index $l$, then executed the subroutine code and after the execution rethrows the exception 
+We compile the finally statement $ \stmt_2 $ by inlining, i.e. it is first compiled as a code executed after $\stmt_1$  and
+then it is compiled as part of the default exception handler. The default exception handler starts at index $e'' + 2 $ and 
+  handles any exception thrown by $\compileLabel{s}{\stmt_1}{e'}$. The exception handler 
+first stores the thrown exception in the local variable at index $l$, then executes the subroutine code and after that rethrows the exception 
 stored in the local variable $l$. 
 
-This compilation differs from the compilation scheme in the JVM specification for finally statements, which requires that the subroutines must be compiled using \instr{jsr} and 
+This compilation differs from the compilation scheme in the JVM specification for finally statements, 
+which requires that the subroutines must be compiled using \instr{jsr} and 
 \ret \ instructions. However, the semantics of the programs produced by the compiler presented here and a compiler which follows closely the JVM specification 
 is equivalent. 
 In the following, we discuss informally why this is true.

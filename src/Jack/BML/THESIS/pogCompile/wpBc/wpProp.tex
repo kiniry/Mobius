@@ -17,25 +17,25 @@ The first lemma states that the $\wpNameExpl$ \ function defined in the previous
  for a single bytecode instruction
  will return the same result as the \fwpi \ function defined in Chapter \ref{wpGeneral}.  In particular, the explicite
  weakest precondition function for a single bytecode instruction 
-  $\wpExpl{ i_j}{ \psi  }{ \excPostExpl} $ \ is equivalent to $\wpi{}{\methodd}{i_j}$ only if 
-$\psi$  is the intermediate predicate between $\ins{j}$ and the next instruction $\ins{k}$ to be executed. A similar condition we get for the function
- $\excPostExpl$.
+  $\wpExpl{ j}{ \psi  }{ \excPostExpl} $ \ is equivalent to $\wpi{}{\methodd}{j}$ only if 
+$\psi$  is the intermediate predicate $\inter{j}{k}$ between $\ins{j}$ and the next instruction
+ $\ins{k}$ to be executed. We get a similar condition for the function $\excPostExpl$.
 
 \begin{wpIns}[Equivalence of the formulations for single instructions ]\label{wpIns}
-For all instructions  
- $i_j  \in \bcIns \backslash \{ \goto , \ifCond\}$ and  $i_k$ which belong to method \methodd,  formula
+If an instruction at index $j$ such that it is not a jump instruction
+ $j  \in \bcIns \backslash \{ \goto , \ifCond\}$ and  instruction at index $k$ in the body of method \methodd,  formula
  $\psi$,and  function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that
 \begin{itemize}
-   \item  $i_j \execRel i_k$
-   \item  $\psi = \inter{i_j}{i_k}$  
+   \item  $j \execRel k$
+   \item  $\psi = \inter{j}{k}$  
    \item  $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, j ) $ 
 \end{itemize}
 
 the following holds 
 
-   $\wpExpl{ i_j}{ \psi  }{ \excPostExpl} = \wpi{}{\methodd}{i_j} $
+   $\wpExpl{ j}{ \psi  }{ \excPostExpl} = \wpi{}{\methodd}{j} $
 \end{wpIns}
-The proof is done by case analysis on the instruction $i_j$\\
+The proof is done by case analysis on the instruction $j$\\
 
 %\todo{note that the current formulation is not true because of the exceptions }
 \textit{Proof:}
@@ -43,7 +43,7 @@ We scatch the case for a \getfield \  instruction.
 $$
 \begin{array}{l}
   \mbox{\rm\comment{by hypothesis }} \\
-    i_j = \getfield \ \fieldd \\
+    j = \getfield \ \fieldd \\
    \mbox{\rm\comment{by definition of the \wpName \  function }} \\
     \numConclusion{1} \  \wpExpl{\getfield \ \fieldd }{\psi}{\excPostExpl} = \\
     
@@ -56,7 +56,7 @@ $$
   \mbox{\rm\comment{by definition of the \fwpi \  function }} \\
 \numConclusion{2} \  \wpi{}{\methodd}{ \getfield \ \fieldd} = \\
                            \stack{\counter } \neq \Mynull \Rightarrow 
-			         \inter{i_j}{i_k}   \  \subst{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
+			         \inter{j}{k}   \  \subst{ \stack{\counter} }{ \fieldd(\stack{\counter})}\\          
 			  \wedge \\
 			  \stack{\counter }  = \Mynull  \Rightarrow   \excPost( \NullPointerExc,j ) \\\\
 
@@ -77,7 +77,7 @@ instructions and calculating it by using a $\wpNameBcSeq$ \ is the same under se
   For every block of instructions $\ins{1}; \dots;\ins{j} $  and instruction $\ins{k}$  in  method \methodd,
   formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $  such that
  \begin{itemize} 
-    \item $\ins{j} \execRel \ins{k}$
+    %\item $\ins{j} \execRel \ins{k}$
     \item  $\psi = \inter{\ins{j}}{\ins{j+1}}$
 
      \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall i, 1 \le i \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
@@ -118,9 +118,11 @@ The same property is established for compilation of expressions.
      For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \,  formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
       \begin{itemize}
-            \item $\psi = \inter{e}{e+1}$ 
+            \item if $e+1$ exists  then $\psi = \inter{e}{e+1}$
+	    \item if $e+1$ does not exist and $\ins{e} = \return$ then $\psi = \methodd. \normalPost$
+	    
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall 1 \le i,k \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
-                  $ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, i ) $ 
+                  $ \methodd.\getExcPost(i, \mbox{\rm\texttt{Exc}}) $ 
             
 
       \end{itemize} then the following holds:
@@ -172,7 +174,8 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \subst{t}{t-2} 
 			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPostExpl}   \\ \\
 				
-
+				\end{array}$$
+				  $$ \begin{array}{l}
 				\mbox{\comment{\rm by initial hypothesis, we have   } }\\
 				\numConclusion{1.1} \ \psi = \inter{e}{e+1}  \\ 
 			         \mbox{\comment{\rm by the compiler definition $ \ins{e'' + 1} = \goto \ e +  1; $  } }\\
@@ -198,15 +201,14 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 								
 
 				\mbox{\rm\comment{From Property  \ref{compile:prop:compProp8}  } } \\
-                               \end{array}$$
-				  $$ \begin{array}{l}
+                               
                                 \numConclusion{1.7}  \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
 				\mbox{\rm\comment{apply the induction hypothesis over \numConclusion{1.6} and  \numConclusion{1.7}  } }\\ 
 				\numConclusion{1.8} \	\wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} = \wpi{e'+2}{m}{} \\
 
 				\comment{ apply the induction hypothesis over the initial hypothesis  }\\
 				\numConclusion{1.9} \ \wpStmt{\compileLabel{e'' +  2 }{\stmt_1}{e}   }{\psi}{\excPostExpl} = \wpi{e''+2}{m}{} \\
-
+			
 				\comment{by definition of \ifCond \ function }\\
 			        \numConclusion{1.10} \ 	\wpi{  e' + 1: \ifCond \ e'' + 2; }{m}{ } = \\
 			         \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\
@@ -219,7 +221,8 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				 \wedge \\
 				 \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \\
 				 \Myspace  \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl}  \\
-				 
+				 	\end{array}$$
+				  $$ \begin{array}{l}
 				 \comment{From Property \ref{compile:prop:compProp5}  }\\
 				 \numConclusion{1.12} \ \inter{e'}{e'+1} =	\wpi{  e' + 1: \ifCond \ e'' + 2; }{m}{ }\\
 				 
@@ -254,7 +257,7 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 	    \numConclusion{1} \    \wpStmt{   \compileLabel{s}{ \begin{array}{l} \try \ \{ \stmt_1 \} \\
 		                                              \catch \ (\excType \ \var )\{ \stmt_2 \} 
                                               \end{array}}{e}}{\psi}{\excPostExpl} =\bydef \\
-			\comment{Def. of $\wpNameStmt$ in the previous Section \ref{pog:wpBc} }	\\	      
+			\comment{Def. of $\wpNameStmt$ for compiled statements in the previous Section }	\\	      
 	        \wpStmt{
 	                 \compileLabel{s}{\stmt_1}{e'};
 	

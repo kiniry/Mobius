@@ -29,22 +29,23 @@ do not restrict at all the compilation process.  We outline the categories of pr
 \begin{itemize}
      
      \item compilation of a statement (expressions) may contain instructions which either target instructions inside the compilation of a statement or  the 
-           first instruction of the next statement, if there is next statement. These are Properties \ref{compile:prop:compProp0}, \ref{compile:prop:compProp1}.
+           first instruction of the next statement, if there is next statement (Properties \ref{compile:prop:compProp0}, \ref{compile:prop:compProp1}).
      
-     \item expressions are compiled into a sequence of instructions which does not contains jumps Property \ref{compile:prop:compProp3}.
+     \item expressions are compiled into a sequence of instructions which does not contains jumps (Property \ref{compile:prop:compProp3}).
      
-     \item substatement relation preserved by the compiler Properties \ref{compile:prop:compPropSubstmt}, \ref{compile:prop:compProp6}.
+     \item substatement relation preserved by the compiler (Properties \ref{compile:prop:compPropSubstmt}, \ref{compile:prop:compProp6}).
 
-     \item a compilation of a source statement contains cycles only if the source statement contains cycles Properties \ref{compile:prop:compProp4}
+     \item a compilation of a source statement contains cycles only if the source statement contains cycles (Property \ref{compile:prop:compProp4}).
      
-     \item exception handler preservation Properties \ref{compile:prop:compProp8}, \ref{compile:prop:compProp9},  \ref{compile:prop:compProp10}
+     \item exception handler preservation (Properties \ref{compile:prop:compProp8}, \ref{compile:prop:compProp9},  \ref{compile:prop:compProp10}).
      
 \end{itemize}
 
 
 
 
-In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and $\expressionSrc$.
+In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and expressions $\expressionSrc$.
+In the following, we take a closer look at the properties in question.
  
  The first property that we observe is that the last instruction $\ins{e}$ in the compilation
  $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation
@@ -116,7 +117,7 @@ the control flow can reach the instructions representing the compilation $\compi
  can be reached from outside of the statement compilation only via the instruction at index 14.
 
 \begin{compProp2}[Compilation of statements and expressions]\label{compile:prop:compProp2}
- For all  statements $\ExprStmt'$  and $\ExprStmt$, such that $\substatement{\ExprStmt }{\ExprStmt'} $
+ For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\substatement{\ExprStmt }{\ExprStmt'} $
 and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then :
 
 %\begin{itemize}

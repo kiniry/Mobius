@@ -1,17 +1,25 @@
 
 \subsubsection{Statements}\label{pog:wpSrc:wpStmt}
 
+In the following, we discuss  the weakest precondition predicate transformer for  control statements.
+ We will not give an exhaustive overview of the \wpName{} rules for statements as they are standard 
+but we will rather  concentrate on few which we consider illustrative. 
 
+Fig. \ref{pog:wpSrc:wpStmt:withoutExc} gives  the rule for  field assignment and conditional control transfer
+statements which do not deal with exceptions. They are defined in a standard way. 
+The rule for field assignment shows that the statement may terminate normally or on an exception. 
+In particular, if the  dereferenced object reference $\expressionSrc_1$ does not evaluate to \Mynull{} 
+ then  the postcondition $\normalPostSrc{}$ must hold where the value of the field \fieldd{} for the 
+evaluation $v_1$ of $\expressionSrc_1$ is changed to the value  $v_2$ of  $\expressionSrc_2$.
+If  the  dereferenced object reference $\expressionSrc_1$  evaluates to \Mynull{} then the postcondition 
+$ \excPostSrc(\NullPointerExc) $ must hold.
+The rule for the conditional statement is also standard.
  
 \begin{figure}[ht!]
 \begin{frameit}
 $${\scriptsize 
         \begin{array}{l} 
 	  
-
-
-
-
     \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
                \begin{array}{l} 
 	       \wpSrcStmt{\expressionSrc_1}{  \\
@@ -22,7 +30,7 @@ $${\scriptsize
 	         \phantom{wpiSr}  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   \\
 		 \wedge \\
 		 v_1  = \Mynull  \Rightarrow  \\
-		   \phantom{wpiSr}   \excPostSrc(\texttt{NullPointerExc}) 
+		   \phantom{wpiSr}   \excPostSrc(\NullPointerExc) 
 		   \end{array}}{ \\ \phantom{wpiSr}\phantom{wpiSr}  \excPostSrc}{v_2} 
 		   }{ \\ \phantom{wpiSr}  \excPostSrc}{v_1} 
 		   \end{array} \\ \\ \\
@@ -49,6 +57,13 @@ $${\scriptsize
 \end{figure}
 
 
+The control statements related to the exception handling and throwing as well as the finally statements
+ have a more particular definition. They are given in Fig. \ref{pog:wpSrc:wpStmt:withExc}. 
+Let us look at the rule \textsf{try catch}. %Actually, it is similar to the  rule  \textsf{seq} from  Fig. \ref{pog:wpSrc:wpStmt:withoutExc}, but dual in the way the postcondition modifications.
+ The weakest predicate of a try catch statement $ \try \ \{ \stmt_1 \} \ $ 
+$\catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} $  w.r.t. a normal postcondition   $\normalPostSrc$  and exceptional postcondition function $ \excPostSrc$
+is the weakest predicate of the try statement $\stmt_1$ w.r.t. the normal postcondition  $\normalPostSrc$  and the updated exceptional function
+$\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }$.
 
 
 \begin{figure}[ht!]
@@ -60,7 +75,7 @@ $${\scriptsize
 	      \wpSrcExpr{\expressionSrc}{\\ \phantom{wpiSr} 
                   \begin{array}{l}
 		       
-	                v = \Mynull \Rightarrow \excPostSrc( \texttt{NullPointerExc} )  \\
+	                v = \Mynull \Rightarrow \excPostSrc( \NullPointerExc  )  \\
 			\wedge \\
 			 v \neq \Mynull \Rightarrow\\
 			 \Myspace
