@@ -23,11 +23,11 @@ $\psi$  is the intermediate predicate $\inter{j}{k}$ between $\ins{j}$ and the n
 
 \begin{wpIns}[Equivalence of the formulations for single instructions ]\label{wpIns}
 If an instruction at index $j$ such that it is not a jump instruction
- $j  \in \bcIns \backslash \{ \goto , \ifCond\}$ and  instruction at index $k$ in the body of method \methodd,  formula
+ $j  \in \bcIns \backslash \{ \goto , \ifCond\}$ and  
  $\psi$,and  function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that
-\begin{itemize}
-   \item  $j \execRel k$
-   \item  $\psi = \inter{j}{k}$  
+\begin{itemize} 
+   \item if an  instruction at index $k$ exists such that it may execute after the instruction at index $j$, i.e. $j \execRel k$ then $\psi = \inter{j}{k}$  
+   \item if the instruction at index $j$ is a \return{} instruction then  $\psi = \methodd.\normalPost$  
    \item  $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, j ) $ 
 \end{itemize}
 
@@ -67,21 +67,22 @@ $$
 $$
 \Qed\\
 
-The following lemma establishes 
-that calculating the \fwpi \ predicate of the first instruction of a block of bytecode 
-instructions and calculating it by using a $\wpNameBcSeq$ \ is the same under several conditions about the postcondition predicates.
+The following lemma establishes that calculating the \wpName{} predicate of the first instruction of a block of 
+bytecode (Def. \ref{seqInstr}  in the previous Section \ref{compile}, Subsection \ref{compile:prop}) 
+instructions and calculating it by using a $\wpNameBcSeq$ function which  calculates the precondition of a sequence of instructions is
+ the same under several conditions about the postcondition predicates. 
 
 
 
  \begin{wpBlock}[\wpName  \  for a block of instructions]\label{wpBlock}
-  For every block of instructions $\ins{1}; \dots;\ins{j} $  and instruction $\ins{k}$  in  method \methodd,
+  For every block of instructions $\ins{1}; \dots;\ins{j} $  where instruction $\ins{j + 1}$  exists, 
   formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $  such that
  \begin{itemize} 
     %\item $\ins{j} \execRel \ins{k}$
     \item  $\psi = \inter{\ins{j}}{\ins{j+1}}$
 
      \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall i, 1 \le i \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
-                  $ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, i ) $ 
+                  $ \methodd.\getExcPost(i,\mbox{\rm\texttt{Exc}}) $ 
 
 
    
@@ -118,9 +119,7 @@ The same property is established for compilation of expressions.
      For every compiled expression $\compileLabel{s}{\expressionSrc}{e}$  in  method \methodd  \,  formula $\psi$ and function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
       \begin{itemize}
-            \item if $e+1$ exists  then $\psi = \inter{e}{e+1}$
-	    \item if $e+1$ does not exist and $\ins{e} = \return$ then $\psi = \methodd. \normalPost$
-	    
+            \item $\psi = \inter{e}{e+1}$	    
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall 1 \le i,k \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
                   $ \methodd.\getExcPost(i, \mbox{\rm\texttt{Exc}}) $ 
             
@@ -144,7 +143,8 @@ The next lemma states the same property but this time for the compilation of sta
     function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
       \begin{itemize}
-            \item $\psi = \inter{e}{e+1}$
+            \item if $e+1$ exists  then $\psi = \inter{e}{e+1}$
+	    \item if $e+1$ does not exist and $\ins{e} = \return$ then $\psi = \methodd. \normalPost$
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) $ 
       \end{itemize} then the following holds: 
   %   if $\psi = \inter{e}{e+1}$ then the following holds

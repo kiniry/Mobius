@@ -48,15 +48,17 @@ Krakatoa \cite{marche03krakatoa}, Jack \cite{BRL-JACK}. These tools are tailored
  
 However, there are scenarios in which source verification will be of less help. Examples for such cases are:
 \begin{itemize}
-    \item  mobile code scenarios where the client should generate the verification conditions and where he receives usually only
+    \item  mobile code scenarios where 
+           the client should generate the verification conditions and where he receives usually only
            the interpreted bytecode (which usually is not accompanied by its respective source code). And even if the client receives the source code
 	   with the bytecode, he should trust the compiler which is not desirable.
     \item  specific applications like the use of formal methods to optimizing compilers. In this case, the verification on source code
            is not pertinent as it should identify the places in the bytecode which may be optimized.
 \end{itemize} 
 
-In these scenarios it is necessary to perform the verification  directly on bytecode level. In particular, we propose a bytecode
- verification  scheme which we present hereafter.
+In these scenarios, it is more suitable to perform the verification  directly on bytecode level.
+In the following, we present a framework which allows to verify statically bytecode programs 
+against potentially non trivial functional and security properties.
 
    \section{Contributions}
 We propose a framework which allows the verification of bytecode programs against complex functional and safety properties, which has the following 

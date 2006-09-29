@@ -3,22 +3,31 @@
 \subsection{Compiling source program  constructs in bytecode instructions} \label{pogEq:compile:compExpr} 
 
 As we stated in the beginning the function for compiling program statements and expressions in bytecode instruction is named $\compile{}$
-$$ \compile{ }_{\methodd} : nat * (\stmt \cup \expressionSrc )* nat \longrightarrow  \bcIns [ \ ]  $$
-The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation starts,
- the statement $\stmt$ or expression $\expressionSrc$  to be compiled and a natural number which is
- the greatest label in the compilation 
-and returns an array of bytecode instructions which is the compilation of the source construct.
-As we shall see in the following of this section, we will define inductively the compiler over the structure
-of the compiled source construction.
+$$ \compile{ }_{\methodd} : nat * (\stmt \cup \expressionSrc ) \longrightarrow  list \ \bcIns * nat  $$
+The compiler function takes two arguments: a natural number $s$ from which the labeling of the compilation starts,
+ the statement $\stmt$ or expression $\expressionSrc$  to be compiled and
+returns a pair which contains a list of bytecode instructions which is the compilation of the source construct
+ and  a natural number which is the greatest label in the compilation. In the following, we allow us
+to use instead the notation 
+$ \compileLabel{s}{\stmt}{e} =[\ins{i_s} \ldots \ins{i_e} ] $
+to refer to the list of instructions resulting from the compiler function applied
+ over the index $s$ and the statement $\stmt$ 
+$\ulcorner  s, \stmt  \urcorner_{\methodd} = ( [\ins{i_s} \ldots \ins{i_e}], e) $.
 
-%\subsubsection{Compiling source expressions into bytecode}\label{pogEq:compile:compExpr}
-We first look at Fig. \ref{pogEq:compile:compExpr:defExpr} how expressions are compiled.
- From the figure, we can see that the compilation of
+Before entering into technicalities, we would like to make several remarks. First, although the compiler is realistic,
+we do not compile names of variables, classes and method but rather use the same on bytecode and source code. Second,
+ the compiler preserves boolean expressions which is not the case for Java compilers as the JVM language does not support
+the boolean type. We have made this choice for the sake of simplicity.    
+ 
+As we shall see in the following of this section, the compiler is defined inductively over the structure 
+of the compiled source constructions. We first focus on Fig. \ref{pogEq:compile:compExpr:defExpr} how expressions
+ are compiled. From the figure, we can see that the compilation of
  the constants like constant integers, the boolean constants
-\Mytrue, \Myfalse, \Mynull{}  are compiled with the instruction \push. Note also that the boolean constants  \Mytrue{} and \Myfalse{}
-are encoded as the integers 1 and 0 in the bytecode.  The field access expression $ \expressionSrc.f$ compilation consists in the compilation
+\Mytrue, \Myfalse, \Mynull{}  are compiled with the instruction \push. The field access expression $ \expressionSrc.f$ compilation consists in the compilation
 $\compileLabel{s}{\expressionSrc}{e - 1}$ of the expression   $ \expressionSrc $ followed by the instruction $ e: \getfield  \ f $ which is
- the last instruction of the compilation.  May be more attention deserve the compilation of the instance creation expression
+ the last instruction of the compilation.  
+
+May be more attention deserve the compilation of the instance creation expression
 $\newSrc \ \class  (\expressionSrc )$. The first instruction in the compilation is the instruction $s : \new \ \class$ which 
 creates a new reference in the heap and pushes it on the stack top 
 (see for the operational semantics of the instruction in Section \ref{opSem}). The next instruction in the compilation is the instruction 
@@ -26,7 +35,7 @@ creates a new reference in the heap and pushes it on the stack top
 $ \compileLabel{s+2}{\expressionSrc}{e - 1 }; $ of the argument passed to the class constructor. The last instruction of the compilation
 is the invokation of the class constructor  \Constructor{\class}. Note that this compilation follows closely 
 the JVM specification ( see \cite{VMSpec}, Section 7.8 ) which mandates 
-how standard Java compilers compiler instance creation expressions.  
+how standard Java compilers compile instance creation expressions.  
   
 % As the target language is interpreted by a stack based virtual machine,
 %the evaluation of  expressions is stored on the stack.
@@ -44,28 +53,28 @@ $${\scriptsize
         \begin{array}{lll} 
 	\compileLabel{s}{\constantInt}{s} &  =  & s : \push \  \constantInt \\
 	& & \\ & & \\
-	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \ 1\\
+	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \  \Mytrue \\
 	& & \\ & & \\
-	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \ 0 \\
+	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \ \Myfalse \\
 	& & \\ & & \\
 	\compileLabel{s}{\Mynull }{s } & = &  s: \push \ \Mynull\\
 	& & \\ & & \\
-	\compileLabel{s}{\this}{s } & = &  s:  \load \ \locVar{0} \\
+	\compileLabel{s}{\this}{s } & = &  s:  \load \ \this \\
 	& & \\ & & \\ 
-	\compileLabel{s}{ \expressionSrc.f}{e} & = &    
+	\compileLabel{s}{ \expressionSrc.\fieldd}{e} & = &    
          \begin{array}{l}
               \compileLabel{s}{\expressionSrc}{e - 1}; \\ 
-              e : \getfield  \ f
+              e : \getfield  \ \fieldd
            \end{array} \\
 	& & \\ & & \\ 
-	\compileLabel{s}{\expressionSrc_1.m(\expressionSrc_2)}{e} & = &  
+	\compileLabel{s}{\expressionSrc_1.\mbox{\rm \texttt{n}} (\expressionSrc_2)}{e} & = &  
 	   \begin{array}{l}  
                  \compileLabel{s}{\expressionSrc_1}{e'};\\
 		 \compileLabel{e' + 1}{\expressionSrc_2}{e - 1};\\
-		  e  :\invoke \ m
+		  e  :\invoke \ \mbox{\rm \texttt{n}} 
             \end{array}  \\
 	& & \\ & & \\
-	\compileLabel{s}{ \var }{s} & = &   s: \load \ \locVar{i} \\
+	\compileLabel{s}{ \var }{s} & = &   s: \load \ \var \\ %\locVar{i} \\
 	& & \\ & & \\
 	\compileLabel{s}{ \expressionSrc_1 \ op \ \expressionSrc_2 }{e} & = &  
                  \begin{array}{l}
@@ -116,13 +125,8 @@ at index $e' + 2$ will be executed. Note that at index $ e''+2$ starts the compi
 $\compileLabel{e'' +  2}{\stmt_1}{ e  };$ and at index $ e'+2$ starts the compilation of the else branch 
 $\compileLabel{e' + 2}{\stmt_2)}{e''}$. After the compilation of the else branch follows a $ e'' + 1: \goto e + 1$ \ instruction
 which jumps at the first instruction  outside the compilation of the branch statement. 
- It deserves may be our attention  that
-we have two different compilation rules for the assignment. More particularly, it depends on if it is a  field assignment or
-local variable assignment.  In the case for field assignment $ \expressionSrc_1.f= \expressionSrc_2$,
-the last instruction of the compilation is a $\putfield \ f$ instruction. The compilation of a
- local variable assignment $ \var = \expressionSrc$ statement terminates with a \store \ insruction.
 
-\todo{est-ce que il faut changer le langage source pour avoir aussi 2 types d'affectation}
+
 
 
 
@@ -182,7 +186,7 @@ $${\scriptsize
 \end{figure}
 
 Fig. \ref{pogEq:compile:compExpr:defExc} shows the compiler definition for statements whose compilation will
-change the  the exception handler of the current method.
+change the  exception handler  table of the current method.
 The first such statement  is the try catch statement.
 The compiler compiles the normal statement $\stmt_1$ and the exception handler $\stmt_2$.
 Note that in the exception handler table of the bytecode representation of method \methodd, a new line is added 
@@ -196,7 +200,7 @@ then it is compiled as part of the default exception handler. The default except
 first stores the thrown exception in the local variable at index $l$, then executes the subroutine code and after that rethrows the exception 
 stored in the local variable $l$. 
 
-This compilation differs from the compilation scheme in the JVM specification for finally statements, 
+This compilation differs from the standard compilation scheme in the JVM specification for finally statements, 
 which requires that the subroutines must be compiled using \instr{jsr} and 
 \ret \ instructions. However, the semantics of the programs produced by the compiler presented here and a compiler which follows closely the JVM specification 
 is equivalent. 
@@ -207,7 +211,8 @@ The first instruction of the compilation
 of the subroutine stores the stack top element in the local variable at index $k$ ( i.e. stores in the local variable at index $k$ the index of the instruction following the \instr{jsr} instruction). Thus, after the code of the subroutine is 
 executed, the \ret \ k instruction jumps to 
  the instruction following the corresponding \jsr. This behaviour can be actually simulated by programs without \jsr \ and \ret \ but which inline the subroutine code
-at the places where a \jsr \ to the subroutine is done.
+at the places where a \jsr \ to the subroutine is done.  The last version of Java Sun compiler,
+proposes an option for inlining subroutines.
 
 \textit{Note:}
  \begin{enumerate}
@@ -216,11 +221,11 @@ at the places where a \jsr \ to the subroutine is done.
            \item here we also assume that the statement $\stmt_1$ does not contain a \instr{return} instruction 
 \end{enumerate}
 
-The  last remark that we would like to make is that subroutines and their compilation via \ret \ and \jsr has always presented a problem for Java.
-First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work\todo{verify this}.
-Second, the analysis performed by the  bytecode verifier in  the JVM becomes rather complex because  (and its first version was erroneus ) 
-of the Java subroutines. In the last version of Java Sun compiler, subroutines has become obsolete 
- where they are compiled by inlining. Thus, the compiler presented here represents a realistic approximation of the Java Sun compiler.
+% The  last remark that we would like to make is that subroutines and their compilation via \ret \ and \jsr has always presented a problem for Java.
+%First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work\todo{verify this}.
+%Second, the analysis performed by the  bytecode verifier in  the JVM becomes rather complex because  (and its first version was erroneus ) 
+%of the Java subroutines. In the last version of Java Sun compiler, subroutines has become obsolete 
+% where they are compiled by inlining. Thus, the compiler presented here represents a realistic approximation of the Java Sun compiler.
 
 
 \begin{figure}[ht!]
@@ -298,6 +303,7 @@ $${\scriptsize
 \label{pogEq:compile:compExpr:defLoop}
 \end{frameit}
 \end{figure}
+
 
 
 

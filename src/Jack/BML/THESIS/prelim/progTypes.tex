@@ -9,7 +9,7 @@
 
  
 $$ \begin{array}{ll}
-          \JavaType & ::= \Myint \mid \AllRefs\\
+          \JavaType & ::= \AllRefs \mid \Myint  \\
           \AllRefs  & ::= \reff \mid \reffArr \\
 	  \reff     & ::= \ClassSet \\
 	  \reffArr  & ::= \JavaType[]	  
@@ -22,7 +22,7 @@ class objects, references to array objects or the special null value which denot
 and the null reference value is denoted with \Mynull. The following  definition gives the  formal grammar for values:
  
 $$\begin{array}{ll}
-             \Values &       ::= i \mid \RefValues \\
+             \Values &       ::=  \RefValues \mid i, i : \Myint \\
 	     \RefValues &    ::= \Ref \mid \RefValuesArr  \mid   \Mynull \\  %: C , C \in \reff \mid \RefValuesArr  \mid   \Mynull \\
 	     %\RefValuesArr & ::= \{  ra_1, \ldots,\}   %: C\lbrack \rbrack,  C\lbrack \rbrack \in \reffArr
  \end{array}$$

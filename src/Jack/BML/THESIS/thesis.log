@@ -1,4 +1,4 @@
-This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  29 SEP 2006 11:42
+This is TeX, Version 3.14159 (Web2C 7.4.5) (format=latex 2005.7.20)  29 SEP 2006 14:12
 **thesis.tex
 (./thesis.tex
 LaTeX2e <2001/06/01>
@@ -209,13 +209,13 @@ LaTeX Warning: Citation `marche03krakatoa' on page 8 undefined on input line 45
 .
 
 [8]
-Overfull \hbox (21.56378pt too wide) in paragraph at lines 113--124
+Overfull \hbox (21.56378pt too wide) in paragraph at lines 115--126
 []\OT1/cmr/m/n/10 Such an equiv-
  []
 
 [9]
 
-LaTeX Warning: Citation `DesNecLee98' on page 10 undefined on input line 152.
+LaTeX Warning: Citation `DesNecLee98' on page 10 undefined on input line 154.
 
 [10]) [11] [12
 
@@ -1290,7 +1290,11 @@ E AND BYTECODE PROOF OBLIGATIONS
 [106]) (./pogCompile/compile/compLoopInv.tex)
 (./pogCompile/compile/compExpr.tex [107]
 
-LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 43.
+LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 52.
+
+
+LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 136.
+
 
 
 Overfull \hbox (133.85889pt too wide) has occurred while \output is active
@@ -1299,21 +1303,15 @@ E AND BYTECODE PROOF OBLIGATIONS
  []
 
 [108]
-Underfull \hbox (badness 2277) in paragraph at lines 125--125
-\OT1/cmss/m/n/10 est-ce que il faut changer
- []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
+ [109]
 
-LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 132.
-
-
-[109]
-
-LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 228.
+LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 233.
 
 
 
-LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 281.
+LaTeX Font Warning: Command \scriptsize invalid in math mode on input line 286.
 
 
 
@@ -1332,17 +1330,20 @@ ties 7.3.4.4[], 7.3.4.5[]).
  []
 
 
-Overfull \hbox (133.85889pt too wide) has occurred while \output is active
-\OT1/cmr/m/n/10 112 \OT1/cmr/m/sl/10 CHAPTER 7.  EQUIVALENCE BETWEEN JAVA SOURC
-E AND BYTECODE PROOF OBLIGATIONS
- []
-
-[112] [113]
 Overfull \hbox (3.43973pt too wide) in paragraph at lines 62--64
 []\OT1/cmr/m/it/10 For any
  []
 
 
+Overfull \hbox (133.85889pt too wide) has occurred while \output is active
+\OT1/cmr/m/n/10 112 \OT1/cmr/m/sl/10 CHAPTER 7.  EQUIVALENCE BETWEEN JAVA SOURC
+E AND BYTECODE PROOF OBLIGATIONS
+ []
+
+[112]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [113]
 Overfull \hbox (3.43973pt too wide) in paragraph at lines 89--91
 []\OT1/cmr/m/it/10 For any
  []
@@ -1512,23 +1513,18 @@ E AND BYTECODE PROOF OBLIGATIONS
  []
 
 [126]
-Overfull \hbox (3.40552pt too wide) in paragraph at lines 77--79
+Overfull \hbox (3.40552pt too wide) in paragraph at lines 78--80
 []\OT1/cmr/m/it/10 For ev-ery block of in-struc-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 112--114
+Underfull \hbox (badness 10000) in paragraph at lines 113--115
 
  []
 
 
-Overfull \hbox (2.67776pt too wide) in paragraph at lines 118--119
+Overfull \hbox (2.67776pt too wide) in paragraph at lines 119--120
 []\OT1/cmr/m/it/10 For ev-ery com-piled ex-pres-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--138
-
  []
 
 
@@ -1538,7 +1534,9 @@ Overfull \hbox (29.2776pt too wide) has occurred while \output is active
  []
 
 [127]
-Underfull \vbox (badness 4792) has occurred while \output is active []
+Underfull \hbox (badness 10000) in paragraph at lines 133--139
+
+ []
 
 
 Overfull \hbox (133.85889pt too wide) has occurred while \output is active
@@ -1556,12 +1554,12 @@ Overfull \hbox (29.2776pt too wide) has occurred while \output is active
  []
 
 [129]
-Overfull \hbox (1.7815pt too wide) detected at line 287
+Overfull \hbox (1.7815pt too wide) detected at line 289
 []
  []
 
 ) (./pogCompile/pogEquiv/aux.tex
-Underfull \hbox (badness 10000) in paragraph at lines 289--1
+Underfull \hbox (badness 10000) in paragraph at lines 291--1
 
  []
 
