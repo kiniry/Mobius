@@ -1,3 +1,4 @@
+DocumentationVcGenerator.dvi
 TAllocLE.java
 TAllocLT.java
 TAnyEQ.java
@@ -44,6 +45,7 @@ TIntegralLT.java
 TIntegralMod.java
 TIntegralMul.java
 TIntegralNE.java
+TIntegralSub.java
 TIs.java
 TIsAllocated.java
 TIsNewArray.java
@@ -55,10 +57,9 @@ TRefNE.java
 TSelect.java
 TStore.java
 TString.java
+TSum.java
 TTypeEQ.java
 TTypeLE.java
 TTypeNE.java
 TTypeOf.java
 TUnset.java
-TIntegralSub.java
-TSum.java

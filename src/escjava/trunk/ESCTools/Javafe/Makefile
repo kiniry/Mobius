@@ -40,7 +40,7 @@ jar: build test
 	jar cf dist/lib/javafe-$(JAVAFE_VERSION).jar -C classfiles .
 
 ifdef ALLTESTS
-test: extensive_tests self_typecheck typecheckJDK14
+test: extensive_tests self_typecheck typecheckJDK
 else
 test: runtest self_typecheck
 endif

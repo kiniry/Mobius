@@ -4,12 +4,12 @@ o Update release-files/RELEASE_NOTES.txt
 o Release builds (binary and source).
   ESC_VERSION=2.0aX ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases
 or
-  ESC_VERSION=2.0aX ESC_RELEASE_DATE=`date "+%d-%m-%y"` make
-  releases-notest
+  ESC_VERSION=2.0aX ESC_RELEASE_DATE=`date "+%d-%m-%y"` make releases-notests
 o Take release to another machine, unpack, install, and test.
-o Tag repository for new release.
-  cvs tag -r escjava-2-0aX
+o Tag repository for new release.  E.g.,
+  cvs tag -r escjava-2-0bX
 o Upload to GForge
 o Announce to world
  + All JMLSpecs mailing lists
+ + ESC/Java developer list
  + FreshMeat

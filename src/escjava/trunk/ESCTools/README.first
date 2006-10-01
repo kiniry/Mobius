@@ -77,7 +77,7 @@ These booklets are in very early stages, and most of them are nothing
 more than cleaned-up aggregations of existing documentation scattered
 across several other older documents with detailed outlines and some
 additional material.  It is expected that these documents will be
-flushed out throughout our beta releases.
+flushed out throughout our beta releases, beginning on 1 October 2006.
 
 These booklets include:
 
@@ -269,6 +269,7 @@ ESC_SPECS - defined to be a classpath containing directories or jar
 	provided, the executables will use the location of a snapshot 
 	of the specifications from the JML project that is included 
 	in the ESC/Java2 release.
+
 	You may instead want to obtain a current copy of
 	the specification files provided by the JML project and define
 	this variable to reference them.  If you use the JML
@@ -276,6 +277,13 @@ ESC_SPECS - defined to be a classpath containing directories or jar
 	model files that are rooted at .../JML/JML2.  You may also
 	want to include in this classpath any specification files for
 	your own projects.
+
+        We do *not* suggest that you use the JML2 specifications until
+        we have full support for provers more powerful than Simplify,
+        as reasoning about the full JML specs regularly pushes
+        Simplify beyond the limits of its capability.  Thus, we
+        strongly suggest you do *not* set ESC_SPECS to any value.
+
 	[ ESC/Java2 will append this classpath to the sourcepath if a
 	sourcepath is specified; otherwise it is appended to the 
 	classpath used to find the files on which ESC/Java2 operates.]

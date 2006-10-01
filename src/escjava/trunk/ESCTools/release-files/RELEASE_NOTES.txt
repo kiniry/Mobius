@@ -1,4 +1,162 @@
 -------------------------------------------------------------------
+version 2.0b0 "Mobius PVE Internal Release" (1 October 2006)
+
+As we are now moving into beta releases, we will focus on fixing bugs
+and writing documentation and will not add any new major features to
+ESC/Java2.  Thus, the bug list below s relatively large, but should
+shrink significantly over time.
+
+Note also that we plan on having much more regular releases now that
+we have moved into beta.  We hope to put out monthly beta releases, in
+conjunction with regularly releases of Mobius program Verification
+Environment components. <http://mobius.inria.fr/>
+
+New features include:
+
+ o Work continues on the new multiple prover, multiple logic backend.
+   It is still under development, but its interface is semi-stable.
+   Design and development of this subsystem was initiated by Clement
+   Hurlin.
+
+ o Documentation on the various subsystems of ESC/Java2 continue to be
+   written.  Finishing documentation now has a priority over adding
+   new features, as mentioned above.
+
+ o The CVC3, Coq, and PVS backends have seen a significant amount of
+   development thanks to the hard work of Jed Hagen, Julien Charles, and
+   Ke Sun respectively.
+
+ o The specification soundness checker is in testing and will be
+   announced in a future beta release, thanks to the hard work of Alan
+   Morkan.
+
+ o The Houdini subsystem is under testing and will be announced in a
+   future beta release thanks to the hard work of Arnout Engelen.
+
+ o The Race Condition Checker subsystem is under testing and will be
+   announced in a future beta release thanks to the hard work of Radu
+   Grigore.
+
+ o Compilation and testing with jmlc is working well due to the hard
+   work of the Concordia development team, led by Patrice Chalin, and
+   composed of George Karabotsos, Perry James, and Frederic Rioux.
+
+ o The Universes typesystem typechecker is under testing and will be
+   announced in a future beta release thanks to the hard work of
+   students at ETHZ and Aleksy Schubert.
+
+ o The Soundness and Completeness warning system is under development
+   and testing due to the hard work of Alan Morkan.
+
+ o An experimental backend plugin system has been designed and
+   developed by Carl Pulley.
+
+ o Numerous bugs have been identified, fixed, and added. :)
+
+The following bugs are FIXED or CLOSED in this release:
+
+ID      Summary                                                                               Open Date            Assigned To     Submitted By
+315     [found-by-jmlc] Token created with invalid loc (Location.NULL)                        2006-06-07 02:28     Patrice Chalin  Nobody
+411     [found-by-jmlc] DelegatingPrettyPrint constructor violates superclass invariant       2006-07-31 02:13     Nobody          Patrice Chalin
+413     [found-by-jmlc] javafe.tc.PrepTypeDeclaration constructor fails to satisfy invariant  2006-08-05 16:23     Patrice Chalin  Patrice Chalin
+319     jdktests fail under cygwin because of EOL issues                                      2006-06-08 16:55     Patrice Chalin  Patrice Chalin
+316     [found-by-jmlc] PrettyPrint._spaces null, inviolation of nullity                      2006-06-07 18:03     Perry James     Perry James
+314     [found-by-jmlc] javafe.tc.PrepTypeDeclaration.inst is null, violating nullity         2006-06-07 01:24     Perry James     Perry James
+313     [found-by-jmlc] javafe.tc.OutsideEnv.reader is null, violating nullity                2006-06-07 00:47     Perry James     Perry James
+312     [found-by-jmlc] FlowInsensitiveChecks.decorationType not set                          2006-06-06 23:42     Perry James     Perry James
+295     [found-by-jmlc] static instances of AST nodes violate class invariants                2006-05-19 12:59     Patrice Chalin  Patrice Chalin
+311     [found-by-jmlc] AnnotationHandler creates instances of LiteralExpr                    2006-06-06 15:32     Perry James     Perry James
+                        with invalid location (NULL)
+310     [found-by-jmlc] Types creates instances of PrimitiveType with invalid tags            2006-06-06 03:01     Perry James     Perry James
+294     represents clause not pretty printed correctly by escjava                             2006-05-19 05:58     Patrice Chalin  Patrice Chalin
+293     [found-by-jmlc] invalid locId passed to FieldDecl.make                                2006-05-18 03:32     Perry James     Perry James
+292     [found-by-jmlc] constructors of FieldDecl violated when type is a PrimitiveType       2006-05-17 15:43     Perry James     Perry James
+289     [found-by-jmlc] constructors of subtypes of ASTNode do not ensure invariants          2006-05-17 14:51     Perry James     Perry James
+286     [found-by-jmlc] typechecking (via jmlc) fails for build target jmlc1b1                2006-05-15 17:02     Perry James     Perry James
+240     specOnly printing prints field default values.                                        2006-02-02 13:27     Arnout Engelen  Arnout Engelen
+239     EscPrettyPrinter incorrectly prints "parsed specs"                                    2006-01-31 14:16     Arnout Engelen  Arnout Engelen
+242     _infixConcat_ error on String concatenation                                           2006-02-02 17:11     Nobody          Perry James
+147     typechecking error for swing.plaf.motif.MotifBorders in JDK 1.2                       2005-09-03 11:15     Radu Grigore    Joseph Kiniry
+148     typechecking error for javax.swing.plf.basic.BasicSliderUI in JDK 1.2                 2005-09-03 11:17     Robin Green     Joseph Kiniry
+149     typechecking error for rmi.server.RMIClassLoader in JDK 1.2                           2005-09-03 11:18     Robin Green     Joseph Kiniry
+151     typechecking error for java.awt.image.IndexColorModel in JDK 1.3                      2005-09-03 11:22     Robin Green     Joseph Kiniry
+150     typechecking error for java.util.TreeMap in JDK 1.2                                   2005-09-03 11:19     Robin Green     Joseph Kiniry
+157     cannot typecheck JDK 1.1's java.awt.Container                                         2005-09-03 19:31     Robin Green     Joseph Kiniry
+142     make JDK src typecheck tests use proper classfiles.jar in bootclasspath               2005-09-01 08:54     Joseph Kiniry   Joseph Kiniry
+159     make jmlc1b1 reports errors                                                           2005-09-03 20:43     Joseph Kiniry   Nobody
+
+
+The following bugs are known to EXIST in this release:
+
+ID      Summary                                                                               Open Date            Assigned To       Submitted By
+480     universes type system support breaks Java parsing of some existing code.              2006-10-01 19:13     Aleksy Schubert   Joseph Kiniry
+155     TestByteArrayInputStream missing five previously issued warnings                      2005-09-03 11:47     David Cok         Joseph Kiniry
+430     verification fails for method having idem contracts in both its class and supertype   2006-08-17 13:15     Nobody            Patrice Chalin
+238     sos.koa.Candidate: toString() causes escj to crash                                    2006-01-26 01:35     George Karabotsos Patrice Chalin
+105     handling DSA for recursive specs is broken                                            2005-06-01 19:15     Radu Grigore      Joseph Kiniry
+474     attempting to process the escjava package with escjava2 results in an infinite loop   2006-09-25 08:59     Nobody            Joseph Kiniry
+156     default constructor's default specification                                           2005-09-03 17:06     Radu Grigore      Joseph Kiniry
+125     Must be able to reason about clone() in ESC/Java, verif. too                          2005-08-18 09:25     Joseph Kiniry     Joseph Kiniry
+414     non-pure methods can be used in assertion expressions                                 2006-08-08 13:00     Nobody            Patrice Chalin
+412     Simplify crashes when blank lines added                                               2006-08-01 22:02     Joseph Kiniry     Patrice Chalin
+137     specs for java.util.Calendar, java.util.Date,                                         2005-08-21 22:23     Robin Green       Joseph Kiniry
+        and java.util.GregorianCalendar need to be finished
+211     main() should have a default spec                                                     2005-11-10 16:57     Radu Grigore      Joseph Kiniry
+200     empty exception does not check                                                        2005-10-29 21:47     Radu Grigore      Aleksy Schubert
+247     Houdini CopyLoaded does not copy all required files                                   2006-02-17 16:34     Nobody            Arnout Engelen
+222     Type checking errors with new VC generator                                            2005-11-29 11:05     Joseph Kiniry     Carl Pulley
+138     calling a non-helper private method in a constructor                                  2005-08-22 18:34     Alan Morkan       Joseph Kiniry
+318     [found-by-esc] various errors reported by esc when run on junitutils                  2006-06-08 12:51     Patrice Chalin    Patrice Chalin
+244     erroneous &quot;helper pragma cannot be applied to method without a body&quot;        2006-02-10 18:50     Nobody            Perry James
+320     Modulo Axioms in the Prelude are Incorrect                                            2006-06-13 14:02     Nobody            Mikolas Janota
+161     deeply nested inner classes and inheritance                                           2005-09-04 16:57     Radu Grigore      Joseph Kiniry
+237     A bug concerning a single file including multiple classes                             2006-01-25 13:51     Nobody            Ke Sun
+127     SecurityKey and KeySet example.                                                       2005-08-18 09:45     Joseph Kiniry     Joseph Kiniry
+226     Hidden warnings                                                                       2005-12-02 17:20     Nobody            Mikolas Janota
+223     Simple Java programs with loops pass checking wrongly                                 2005-12-01 00:10     Mikolas Janota    Hermann Lehner
+187     bogus warning in Map.spec when working with two byte[],                               2005-10-24 13:26     Radu Grigore      Radu Grigore
+        one of them obtained from a string arg
+259     infix String concat makes postconditions satisfied                                    2006-04-05 11:44     Nobody            Nobody
+143     [found-by-jmlc] ERRORTYPE tag constant is not a legal PrimitiveType tag value         2005-09-01 14:35     Patrice Chalin    Patrice Chalin
+209     Mysterious broken object invariant (with -LoopSafe option)                            2005-11-08 16:37     Nobody            Christian Haack
+241     EscPrettyPrinter incorrectly prints OLD                                               2006-02-02 14:17     Nobody            Arnout Engelen
+317     Escjava/test/junittests/SpecFile.jml fails under cygwin                               2006-06-08 11:35     Nobody            Patrice Chalin
+210     javafe.util.AssertionFailureException                                                 2005-11-08 17:43     Nobody            Christian Haack
+290     nullity annotations should be cleaned up                                              2006-05-17 15:10     Perry James       Perry James
+220     source file generation in escjava.vcGeneration                                        2005-11-28 14:23     Nobody            Joseph Kiniry
+269     desugaring implementation does not precisely match desugaring definition              2006-04-23 14:17     Nobody            Joseph Kiniry
+55      inheritance of invariants                                                             2005-04-08 12:29     Alan Morkan       Peter van Rossum
+291     fields of subclasses of ASTNode are declared public                                   2006-05-17 15:15     Perry James       Perry James
+275     model method name resolution                                                          2006-04-28 07:47     Robin Green       Joseph Kiniry
+126     remaining scope problem with java/jml fields                                          2005-08-18 09:42     Robin Green       Joseph Kiniry
+129     Model imports change name resolution                                                  2005-08-18 09:53     Robin Green       Joseph Kiniry
+208     assertion failure in escjava.translate.Inner.getEnclosingInstanceField                2005-11-08 10:39     Nobody            Aleksy Schubert
+217     The String class in JRE_1.4.2_10-build3 does not typecheck.                           2005-11-23 15:42     Radu Grigore      Radu Grigore
+95      infinite loop caused similarly named methods in different classes                     2005-04-23 19:21     Radu Grigore      Peter van Rossum
+225     java/lang/RuntimeException.jml, pure constructor                                      2005-12-02 17:04     Nobody            Mikolas Janota
+270     method call resolution (static vs. dynamic types)                                     2006-04-23 14:19     Nobody            Joseph Kiniry
+243     problem with += when lvalue is array element                                          2006-02-09 13:21     Nobody            Arnout Engelen
+124     problems with quantifier triggering                                                   2005-08-18 09:23     Nobody            Joseph Kiniry
+280     Escjava/test/jdktests/TestArrays fails                                                2006-05-11 16:35     Nobody            Patrice Chalin
+        (non_null mod of Arrays.asList apparently ignored)
+158     cannot typecheck several classes in JDK 1.4's source                                  2005-09-03 19:45     Radu Grigore      Joseph Kiniry
+        due to inner class resolution problems
+229     Java builder in Eclipse does not output .class files in expected location             2005-12-07 15:12     Joseph Kiniry     Robin Green
+231     javafe.util.AssertionFailureException in modeBatch()...                               2005-12-28 16:28     Joseph Kiniry     Nobody
+264     interface type reported as int in interface containing                                2006-04-12 11:47     Robin Green       Patrice Chalin
+        constant instance of itself via anon. class
+272     Simplify needs xwindows library under mac os                                          2006-04-26 20:37     Joseph Kiniry     Mikolas Janota
+250     error code incorrect when typechecking no files                                       2006-02-28 19:07     Nobody            Joseph Kiniry
+224     -prover option not defensive enough                                                   2005-12-02 16:53     Nobody            Mikolas Janota
+228     correct and clarify -Loop switch documentation                                        2005-12-06 14:15     Mikolas Janota    Joseph Kiniry
+111     Recursive postconditions                                                              2005-07-21 11:59     Alan Morkan       Joseph Kiniry
+251     add support for \same keyword                                                         2006-02-28 19:08     Nobody            Joseph Kiniry
+162     Shipped Simplify for Linux cannot be executed - shared libs missing                   2005-09-22 13:59     Joseph Kiniry     Robin Green
+131     Typechecking with no specs results in mysterious typechecking errors.                 2005-08-20 10:12     Robin Green       Joseph Kiniry
+103     do not crash when translating annotations we have ignored                             2005-05-31 18:50     Joseph Kiniry     Joseph Kiniry
+219     Pollution with multiple provers targeted by VC generator                              2005-11-28 10:10     Nobody            Carl Pulley
+
+-------------------------------------------------------------------
 version 2.0a9 "2005 New Academic Term Release" (1 October 2005)
 
 New features include:
@@ -167,7 +325,7 @@ The following bugs are known to EXIST in this release:
   [ 924986  ] Self-checking Javafe
   [ 924856  ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368  ] remaining scope problem with java/jml fields
-  [ 879849  ] SecurityKey &amp; KeySet example.
+  [ 879849  ] SecurityKey & KeySet example.
   [ 879832  ] Implicit constructor postconditions.
   [ 876972  ] NullPointerException by ESC/Java-2.0a5
   [ 876093  ] Supplying the same command-line switch multiple times.
@@ -265,7 +423,7 @@ The following bugs are known to EXIST in this release:
   [ 924986 ] Self-checking Javafe
   [ 924856 ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368 ] remaining scope problem with java/jml fields
-  [ 879849 ] SecurityKey &amp; KeySet example.
+  [ 879849 ] SecurityKey & KeySet example.
   [ 879832 ] Implicit constructor postconditions.
   [ 876972 ] NullPointerException by ESC/Java-2.0a5
   [ 876093 ] Supplying the same command-line switch multiple times.
@@ -326,7 +484,7 @@ The following bugs are known to EXIST in this release:
   [ 924986 ] Self-checking Javafe
   [ 924856 ] Example escjava2 tcsh script fails on paths w whitespace
   [ 888368 ] remaining scope problem with java/jml fields
-  [ 879849 ] SecurityKey &amp; KeySet example.
+  [ 879849 ] SecurityKey & KeySet example.
   [ 879832 ] Implicit constructor postconditions.
   [ 876972 ] NullPointerException by ESC/Java-2.0a5
   [ 876093 ] Supplying the same command-line switch multiple times.

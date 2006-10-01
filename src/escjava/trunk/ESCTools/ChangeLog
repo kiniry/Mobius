@@ -1,3 +1,61 @@
+2006-09-25  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Javafe/astgen/astoutput.c:
+	* Javafe/java/javafe/ast/ASTDotVisitor.java:
+	* Javafe/java/javafe/ast/DefaultVisitor.java:
+	* Javafe/java/javafe/ast/LShiftVisitor.java:
+	* Javafe/java/javafe/ast/RShiftVisitor.java:
+	A recent commit (addition) of the files ASTDotVisitor.java
+	LShiftVisitor.java RShiftVisitor.java caused "make test" and "make
+	jmlc" to fail.  This commit remedies the problem by replacing
+	various explicit "something != null" by appropriate nullity
+	annotations (... also fixing JML spec syntax errors at the same
+	time).
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Rolling out the interim changes that David made because they are
+	causing NPEs during testing.  Note that this commit creates v1.78
+	and that David's changes are still in v1.77.
+
+	* Utils/Makefile:
+	Added target info which now prints the number of LOC in this package.
+
+	* Escjava/Makefile:
+	Adjusting self_test target and adding self_test0 (a target that I
+	used to smoke out bug #474).
+
+2006-09-18  Patrice Chalin  <chalin@cs.concordia.ca>
+
+	* Makefile:
+	Cleanup and clarifications w.r.t. using jmlc.  Note that the main
+	jml target is named 'jmlc'.
+
+2006-09-16  Joseph Kiniry <joseph.kiniry@ucd.ie>
+
+	* docs/Escjava2-Provers/ProverInterface.java:
+	Added back in model fields to track prover state.
+
+	* docs/Escjava2-Logics/unsorted/.cvsignore:
+	ignoring PVS-related directories and files
+
+	* docs/Escjava2-Logics/Escjava2-Logics.texinfo:
+	- added new section title
+
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	- spellcheck and grammar fix
+
+	* Escjava/Makefile:
+	- clean target now depends upon clean_vcGeneration and clean_jniw
+	- added clean_vcGeneration target
+
+	* Makefile, Makefile.defs:
+	- added summary docs about jmlc1b1 and self_typecheck top-level targets
+	- put some spaces around parenthesized subcommands so that they are
+	  easier to read and identify
+
+	* ChangeLog: updated for all commits to date
+
 2006-09-14  Mikolas Janota  <mikolas.janota@ucd.ie>
 
 	* Escjava/java/escjava/vcGeneration/DocumentationVcGenerator.tex:

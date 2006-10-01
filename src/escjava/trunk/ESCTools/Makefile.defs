@@ -154,7 +154,7 @@ export TEXI2PDF ?= texi2pdf
 export ESC_PROJECT ?= ESCJava
 export ESC_VERSION ?= CURRENT-CVS
 
-export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005 David Cok and Joseph Kiniry<br />&copy; 2005 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
+export COPYRIGHT = 'ESC/Java2<br />&copy; 2003,2004,2005,2006 David Cok and Joseph Kiniry<br />&copy; 2005,2006 UCD Dublin<br />&copy; 2003,2004 Radboud University Nijmegen<br />&copy; 1999,2000 Compaq Computer Corporation<br />&copy; 1997,1998,1999 Digital Equipment Corporation<br />All Rights Reserved'
 
 ##########################################################################
 ## The following definitions are used in various Makefiles and should
@@ -220,7 +220,7 @@ export RELNAME ?= ${ESC_PROJECT}-${ESC_VERSION}
 export RELNAME-DATE ?= ${RELNAME}-${ESC_RELEASE_DATE}
 export RELJAR  ?= ${JAR_FILES}/esctools2.jar
 export RELSRCJAR  ?= ${JAR_FILES}/esctools2src.jar
-export RELCODENAME ?= "ETAPS 2005"
+export RELCODENAME ?= "Mobius PVE Internal Release"
 export RELTAR  ?= ${RELNAME-DATE}-binary
 export RELSRCTAR  ?= ${RELNAME-DATE}-source
 export RELPATCHTAR  ?= ${RELNAME-DATE}-patch
