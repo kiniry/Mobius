@@ -1,0 +1,53 @@
+C.java:20: Error: Duplicate declaration of method with same signature
+    /*# guarded_by fs */
+        ^
+C.java:3: Warning:  field 'C.i' must be guarded in a thread shared class (SharedField)
+    int i;
+    ^
+C.java:5: Warning: lock expression may not be constant.   (ConstantLocks)
+    C o /*# guarded_by s */;
+                       ^
+Associated declaration is "C.java", line 5, col 12:
+    C o /*# guarded_by s */;
+            ^
+C.java:6: Warning: lock expression may not be constant.   (ConstantLocks)
+    C oo /*# guarded_by s */  /*# guarded_by this
+                        ^
+Associated declaration is "C.java", line 6, col 13:
+    C oo /*# guarded_by s */  /*# guarded_by this
+             ^
+C.java:20: Warning: incorrect use of annotation.  guarded_by modifiers only allowed on fields and classes. (Modifiers)
+    /*# guarded_by fs */
+        ^
+C.java:23: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '()'. (Race)
+        s = "asd";
+        ^
+Associated declaration is "C.java", line 4, col 17:
+    String s /*# guarded_by this */;
+                 ^
+C.java:35: Warning: lock expression may not be constant.   (ConstantLocks)
+    /*# guarded_by s */
+                   ^
+Associated declaration is "C.java", line 35, col 8:
+    /*# guarded_by s */
+        ^
+C.java:35: Warning: incorrect use of annotation.  guarded_by modifiers only allowed on fields and classes. (Modifiers)
+    /*# guarded_by s */
+        ^
+C.java:37: Warning: lock expression may not be constant.   (ConstantLocks)
+        C o /*# guarded_by s */;
+                           ^
+Associated declaration is "C.java", line 37, col 16:
+        C o /*# guarded_by s */;
+                ^
+C.java:37: Warning: incorrect use of annotation.  guarded_by modifiers only allowed on fields and classes. (Modifiers)
+        C o /*# guarded_by s */;
+        ^
+C.java:38: Warning: possible race condition.  Lock 'this' may not be held.  Locks currently held are '()'. (Race)
+        s = "asd";
+        ^
+Associated declaration is "C.java", line 4, col 17:
+    String s /*# guarded_by this */;
+                 ^
+10 warnings
+1 error

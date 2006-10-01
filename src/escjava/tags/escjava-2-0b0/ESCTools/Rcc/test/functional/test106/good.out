@@ -1,0 +1,34 @@
+C.java:11: Warning:  field 'F.b' must be guarded in a thread shared class (SharedField)
+    C b;
+    ^
+C.java:12: Warning: lock expression may not be constant.   (ConstantLocks)
+    String t /*# guarded_by b.s */;
+                            ^
+Associated declaration is "C.java", line 12, col 17:
+    String t /*# guarded_by b.s */;
+                 ^
+C.java:13: Warning: lock expression may not be constant.   (ConstantLocks)
+    String tt /*# guarded_by b.s1, C.t, C.class */;
+                             ^
+Associated declaration is "C.java", line 13, col 18:
+    String tt /*# guarded_by b.s1, C.t, C.class */;
+                  ^
+C.java:18: Warning: possible race condition.  Lock 'b.s1' may not be held.  Locks currently held are '(C.class)'. (Race)
+            tt = "123";
+            ^
+Associated declaration is "C.java", line 13, col 18:
+    String tt /*# guarded_by b.s1, C.t, C.class */;
+                  ^
+C.java:18: Warning: possible race condition.  Lock 't' may not be held.  Locks currently held are '(C.class)'. (Race)
+            tt = "123";
+            ^
+Associated declaration is "C.java", line 13, col 18:
+    String tt /*# guarded_by b.s1, C.t, C.class */;
+                  ^
+C.java:20: Warning: possible race condition.  Lock 'b' may not be held.  Locks currently held are '()'. (Race)
+        synchronized(b.s) {
+                     ^
+Associated declaration is "C.java", line 3, col 24:
+    final String s  /*# guarded_by this */;
+                        ^
+6 warnings

@@ -1,0 +1,7 @@
+C.java:14: Warning: possible race condition.  Lock 'o' may not be held.  Locks currently held are '()'. (Race)
+        F.s = "123";
+         ^
+Associated declaration is "C.java", line 9, col 24:
+    static String s /*# guarded_by C.o */;
+                        ^
+1 warning

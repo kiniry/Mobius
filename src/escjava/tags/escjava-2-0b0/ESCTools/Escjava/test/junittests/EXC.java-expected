@@ -1,0 +1,32 @@
+ESC/Java version VERSION
+    [TIME]
+
+EXC ...
+  Prover started:TIME
+    [TIME]
+
+EXC: main(P) ...
+------------------------------------------------------------------------
+EXC.java:15: Warning: Possible assertion failure (Assert)
+    //@ assert false;
+        ^
+Execution trace information:
+    Routine call returned exceptionally in "EXC.java", line 10, col 8.
+
+------------------------------------------------------------------------
+    [TIME]  failed
+
+EXC: EXC() ...
+    [TIME]  passed
+  [TIME total]
+
+P ...
+    [TIME]
+
+P: getProperty(java.lang.String) ...
+    [TIME]  passed immediately
+
+P: P() ...
+    [TIME]  passed
+  [TIME total]
+1 warning
