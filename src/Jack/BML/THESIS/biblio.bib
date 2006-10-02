@@ -14,7 +14,12 @@ publisher={Kluwer},year=2002,pages={341-367}}
   PAGES = {112-126},
   TOPICS = {team}
 }
-
+@Book{JLS,
+  author =	 {J. Gosling and B. Joy and G. Steele and G. Bracha},
+  title = 	 {The Java Language Specification, Third Edition},
+  publisher = 	 {Sun Microsystems, Inc.},
+  year = 	 2005
+}
 @TechReport{VMSpec,
   author = {Tim Lindholm and Frank Yellin},
   title = {Java Virtual Machine Specification},
@@ -28,7 +33,13 @@ publisher={Kluwer},year=2002,pages={341-367}}
   OPTnote =      {},
   OPTannote =    {}
 }
-
+@Misc{AlagicXVP05,
+  author =	 {S. Alagi\'c and M. Royer},
+  title =	 {Next Generation of Virtual Platforms},
+  howpublished = {Article in \texttt{odbms.org}},
+  year =	 2005,
+  note =	 {Available from \texttt{http://odbms.org/about\_contributors\_alagic.html}}
+}
 @BOOK{ARUCom1986,
   AUTHOR =       " AV and Sethi R and Ullman JD.",
   PUBLISHER =    "Addison-Wesley: Reading",
@@ -111,27 +122,32 @@ Clyde Ruby and David Cok and Joseph Kiniry},
   year = 	 {2004},
   URL = "http://research.microsoft.com/~nick/stacks.pdf"}
 
-@InProceedings{BM05plb,
-  author = 	 {Fabian Bannwart and Peter Muller},
-  title = 	 {A Program Logic for Bytecode},
-  booktitle = 	 {Bytecode 2005},
-  OPTcrossref =  {},
-  OPTkey = 	 {},
-  OPTpages = 	 {},
-  year = 	 {2005},
-  OPTeditor = 	 {},
-  OPTvolume = 	 {},
-  OPTnumber = 	 {},
-  series = 	 {ENTCS},
-  OPTaddress = 	 {},
-  OPTmonth = 	 {},
-  OPTorganization = {},
-  OPTpublisher = {},
-  OPTnote = 	 {},
-  OPTannote = 	 {}
+ @inproceedings{BM05plb,
+ author = {F. Y. Bannwart and P. M{\"u}ller},
+ title = {A Logic for Bytecode},
+ booktitle = {Bytecode Semantics, Verification, Analysis and Transformation (BYTECODE)},
+ editor = {F. Spoto},
+ year = {2005},
+ series = {Electronic Notes in Theoretical Computer Science},
+ volume = {141},
+ issue = {1},
+ pages = {255--273},
+ publisher = {Elsevier}
 }
 
-
+@inproceedings{AspinallEtAl:TPHOLs2004,
+  author    = {D. Aspinall and
+               L. Beringer and
+               M. Hofmann and
+               H.-W. Loidl and
+               A. Momigliano},
+  title     = {A Program Logic for Resource Verification.},
+  year      = {2004},
+  pages     = {34-49},
+  ee        = {http://springerlink.metapress.com/openurl.asp?genre=article{\&}issn=0302-9743{\&}volume=3223{\&}spage=34},
+  crossref  = {DBLP:conf/tphol/2004},
+  bibsource = {DBLP, http://dblp.uni-trier.de}
+}
   
 
 @Manual{MultJava,
@@ -419,10 +435,17 @@ formal features and provides a ``Java style view'' of lemmas."}
 
 
 @misc{leinoWPUP,
-  author = "M.Barnett and K. Rustan M. Leino  ",
-  title = "Weakest-Precondition of Unstructured Programs",
-  note =  {Microsoft Research, One Microsoft Way, Redmond, WA 98052, USA}
-   }
+   author = {Mike Barnett and K. Rustan M. Leino},
+   title = {Weakest-precondition of unstructured programs},
+   booktitle = {PASTE '05: The 6th ACM SIGPLAN-SIGSOFT workshop on Program analysis for software tools and engineering},
+   year = {2005},
+   isbn = {1-59593-239-9},
+   pages = {82--87},
+   location = {Lisbon, Portugal},
+   doi = {http://doi.acm.org/10.1145/1108792.1108813},
+   publisher = {ACM Press},
+   address = {New York, NY, USA},
+}
 
 
 
@@ -551,9 +574,12 @@ formal features and provides a ``Java style view'' of lemmas."}
  }
 
 @misc{december-jml,
-  author = "Draft Revision December",
-  title = "JML Reference Manual",
-  url = "citeseer.ist.psu.edu/657806.html" }
+  AUTHOR = "G.T. Leavens and E. Poll and C. Clifton and Y. Cheon and C. Ruby and  D. Cok and P. M{\"u}ller and J. Kiniry",
+  TITLE  = "{JML} Reference Manual",
+  year = 2005,
+  NOTE   = "Preliminary draft \\\verb+http://www.cs.iastate.edu/~leavens/JML/jmlrefman/jmlrefman_toc.html+"
+
+ }
 
 @article{ECG01DDL,
  author = {Michael D. Ernst and Jake Cockrell and William G. Griswold and David Notkin},
