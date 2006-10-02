@@ -231,3 +231,14 @@ Note that such an equivalence between proof obligations on source and bytecode a
 we have proof for the soundness of the bytecode verification condition generator
  gives us the soundness of the source  weakest precondition calculus.  
 
+Another remark is that here we ignore the difference between names and types on  source and bytecode level. 
+Let us first focus on the naming on source and bytecode. 
+In this chapter, we have considered that the compiler  does not change  variable, class and method  names.
+ This is not true for Java compilers, as these names are basically compiled into 
+indexes in the constant pool table. However, this difference is a minor detail and of course, this means that 
+the equivalence between source and bytecode verification conditions in Java can be established modulo names.
+The second detail in the formalization presented here is that the compilers compiles boolean types into boolean types.
+This neither holds for real Java compiler. This is because JVM does not have a direct support  for booleans and thus,
+Java compilers compile booleans into integers. This implies that the other difference between source and proof
+obligations in Java is modulo types. Once again, we consider that this is a detail that would only make heavier
+the presentation without being an important issue in establishing the equivalence of the verification conditions on source and bytecode. 
