@@ -52,7 +52,7 @@ object manipulation and creation, method invokation, throwing and handling excep
     As we can see from the figure, the language supports 
     integer constants $\constantInt$, the boolean constants  $ \Mytrue$ and $\Myfalse$, the null constant \Mynull \ 
     denoting  the empty reference, a construct \this \ for referring to the current object,  
-    arithmetic expressions  $\expressionSrc \ \arithOp \ \expressionSrc$ where $\arithOp \in  \{+ , - , div , rem, * \}$.
+    arithmetic expressions  $\expressionSrc \ op \ \expressionSrc$ where $op \in  \{+ , - , div , rem, * \}$.
     The language  allows to talk about the value stored in a field \fieldd \ for the object reference $\expressionSrc $
     via the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions  $(Class) \expressionSrc$
     and method local variables  and parameters \var.  
@@ -71,29 +71,31 @@ $$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$
 
 
 
-% informal description 
+ % informal description 
 
-  The source language supports also control flow constructs like  the statement which does nothing \Myskip, the  compositional statement
-  $\stmt;\stmt$. The conditional statement
-  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ $  \Myelse \ \{ \stmt \}  $ which stands for
-  an if statement.%  We also have a construct  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ which has the semantics 
-%  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ $  \Myelse \ \{ \Myskip\}  $.  However, we include it explicitely 
-%  as it is useful and makes the language more realistic.  
-   The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
-  evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
-  $\Myelse$ branch is executed. Next, there is a construct for handling exceptions $ \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \}  $.
+  The source language supports control flow constructs like 
+  compositional statement, conditional statement, assignment statement, return statement etc.
+% the statement which does nothing \Myskip, the  compositional statement
+%  $\stmt;\stmt$. The conditional statement
+%  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ $  \Myelse \ \{ \stmt \}  $ which stands for
+%  an if statement.%  We also have a construct  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ which has the semantics 
+%   The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
+%  evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
+%  $\Myelse$ branch is executed. 
+  There is also a construct for handling exceptions $ \try  \ \{ \stmt \}  \ \catch \ ( Class  )\ \{ \stmt \}  $.
   Its meaning is that if the statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
-  the exception will be caught by the statement following the  $ \catch $ keyword. The source language supports also 
-  subroutines via the statement $ \try  \ \{ \stmt \}  $ $ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
+  the exception will be caught by the statement following the  $ \catch $ keyword. An interesting feature  is the finally statement
+  introduced via the syntax $ \try  \ \{ \stmt \}  $ $ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
   no matter how the statement following the keyword \try \ terminates,
   the statement introduced by the keyword \finally \ must execute after it. The language also provides a construct for expressing loops 
    $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body 
    statement $ \stmt$ will be executed until the relational expression  $\expressionSrcRel$ evaluates to false.
    Note that a loop statement is provided with a predicate \invariant \ which must hold whenever the loop entry is reached and with a list of expressions
-   \modLoop \ which give all the locations that  may be modified per loop iteration. The construct $ \returnSrc \  \expressionSrc $ is
-   the statement by which method execution may terminate and control will be transfered to the method caller.
-   The last statement that we consider is the assignment statement $ \expressionSrc = \expressionSrc$.
-    It states that the expression on the left of the assignment sign $=$ is assigned the value of the expression on the right.
+   \modLoop \ which give all the locations that  may be modified per loop iteration.
+%  The construct $ \returnSrc \  \expressionSrc $ is
+%   the statement by which method execution may terminate and control will be transfered to the method caller.
+%   The last statement that we consider is the assignment statement $ \expressionSrc = \expressionSrc$.
+%    It states that the expression on the left of the assignment sign $=$ is assigned the value of the expression on the right.
 
 In Fig. \ref{pogComp:source:example}, we give an example program written in our source language. The figure shows 
 the method \lstinline!square! which calculates the 
