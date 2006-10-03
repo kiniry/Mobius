@@ -18,6 +18,7 @@ import jml2b.IJml2bConfiguration;
 import jml2b.structure.IClass;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -32,6 +33,7 @@ import bytecode_wp.bcclass.attributes.BCAttribute;
 import bytecode_wp.bcclass.attributes.ClassInvariant;
 import bytecode_wp.bcclass.attributes.HistoryConstraints;
 import bytecode_wp.bcclass.attributes.ModifiesSet;
+import bytecode_wp.bcclass.attributes.SecondConstantPool;
 import bytecode_wp.bcclass.utils.MethodSignature;
 import bytecode_wp.bcexpression.BCLocalVariable;
 import bytecode_wp.bytecode.block.IllegalLoopException;
@@ -57,7 +59,7 @@ public class BCClass implements IClass {
 	private String superClassName;
 
 	private BCConstantPool constantPool;
-
+	
 	private BCClass superClass;
 
 	private HashMap interfaces;
@@ -78,7 +80,7 @@ public class BCClass implements IClass {
 		ConstantPoolGen cpg = new ConstantPoolGen(_clazz.getConstantPool());
 		constantPool = new BCConstantPool(cpg);
 		Attribute[] attributes = _clazz.getAttributes();
-		setAttributes(attributes);
+		setAttributes(cpg.getConstantPool(), attributes);
 		Method[] methods = _clazz.getMethods();
 		initMethods(methods, cpg);
 
@@ -132,7 +134,7 @@ public class BCClass implements IClass {
 		}
 	}
 
-	private void setAttributes(Attribute[] _attributes)
+	private void setAttributes(ConstantPool cp, Attribute[] _attributes)
 			throws ReadAttributeException {
 		Unknown privateAttr = null;
 		for (int i = 0; i < _attributes.length; i++) {
@@ -141,6 +143,8 @@ public class BCClass implements IClass {
 				BCAttribute bcAttribute = AttributeReader.readAttribute(
 						privateAttr, this, null,
 						new BCLocalVariable[] { new BCLocalVariable(0) });
+				if (bcAttribute instanceof SecondConstantPool) 
+					constantPool.add(cp,(SecondConstantPool) bcAttribute);
 				if (bcAttribute instanceof ClassInvariant) {
 					classInvariant = (ClassInvariant) bcAttribute;
 				} else if (bcAttribute instanceof HistoryConstraints) {

@@ -8,6 +8,7 @@ package bytecode_wp.bcclass;
 
 import jml2b.IJml2bConfiguration;
 
+import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantInteger;
@@ -20,6 +21,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.classfile.ConstantPool; 
 import org.apache.bcel.generic.Type;
 
+import bytecode_wp.bcclass.attributes.SecondConstantPool;
 import bytecode_wp.bcexpression.StringLiteral;
 import bytecode_wp.bcexpression.javatype.JavaType;
 import bytecode_wp.constants.BCCONSTANT_Integer;
@@ -57,97 +59,87 @@ public class BCConstantPool {
 		return config;
 	}
 
-	private void init(ConstantPool _cpg) {
-	
-		constants = new BCConstant[_cpg.getLength()];
-		size = _cpg.getLength();
-		for (int i = 1; i < size; i++) {
-			// Util.dump( " cp constant at "+ i + "is " +
-			// _cpg.getConstant(i).toString() );
-			if (_cpg.getConstant(i) instanceof ConstantString) {
-				ConstantString constant = (ConstantString) _cpg.getConstant(i);
-				String value = (String) constant.getConstantValue(_cpg
-						);
-				BCCONSTANT_String bcconstant = new BCCONSTANT_String(i, value);
-				constants[i] = bcconstant;
-			} else if (_cpg.getConstant(i) instanceof ConstantInteger) {
-				ConstantInteger constant = (ConstantInteger) _cpg
-						.getConstant(i);
-				int value = ((Integer) (constant.getConstantValue(_cpg
-						))).intValue();
-				BCCONSTANT_Integer bcconstant = new BCCONSTANT_Integer(i, value);
-				constants[i] = bcconstant;
-			} else if (_cpg.getConstant(i) instanceof ConstantClass) {
-				ConstantClass constant = (ConstantClass) _cpg.getConstant(i);
-				String className = (String) constant.getConstantValue(_cpg
-						);
-				int name_index = constant.getNameIndex();
-				BCConstantClass bcconstant = new BCConstantClass(i, name_index,
-						className);
-				constants[i] = bcconstant;
-			} else if (_cpg.getConstant(i) instanceof ConstantFieldref) {
-				ConstantFieldref constant = (ConstantFieldref) _cpg
-						.getConstant(i);
-				int classIndex = constant.getClassIndex();
-				ConstantNameAndType nameAndType = (ConstantNameAndType) _cpg
-						.getConstant(constant.getNameAndTypeIndex());
-				String fieldName = nameAndType.getName(_cpg);
-				String signature = nameAndType.getSignature(_cpg
-						);
-				JavaType fieldType = JavaType.getJavaType(signature);
-				BCConstantFieldRef bcconstant = new BCConstantFieldRef(i,
-						classIndex, fieldName, fieldType, this);
-				constants[i] = bcconstant;
-			} else if (_cpg.getConstant(i) instanceof ConstantMethodref) {
-				ConstantMethodref constant = (ConstantMethodref) _cpg
-						.getConstant(i);
-				int classIndex = constant.getClassIndex();
+	private BCConstant convert(int i, ConstantPool cp, Constant c) {
+		if (c instanceof ConstantString) {
+			ConstantString constant = (ConstantString) c;
+			String value = (String) constant.getConstantValue(cp);
+			return new BCCONSTANT_String(i, value);
+		} else if (c instanceof ConstantInteger) {
+			ConstantInteger constant = (ConstantInteger) c;
+			int value = ((Integer) (constant.getConstantValue(cp))).intValue();
+			return new BCCONSTANT_Integer(i, value);
+		} else if (c instanceof ConstantClass) {
+			ConstantClass constant = (ConstantClass) c;
+			String className = (String) constant.getConstantValue(cp);
+			int name_index = constant.getNameIndex();
+			return new BCConstantClass(i, name_index,
+					className);
+		} else if (c instanceof ConstantFieldref) {
+			ConstantFieldref constant = (ConstantFieldref) c;
+			int classIndex = constant.getClassIndex();
+			ConstantNameAndType nameAndType = (ConstantNameAndType) cp
+					.getConstant(constant.getNameAndTypeIndex());
+			String fieldName = nameAndType.getName(cp);
+			String signature = nameAndType.getSignature(cp	);
+			JavaType fieldType = JavaType.getJavaType(signature);
+			return new BCConstantFieldRef(i,
+					classIndex, fieldName, fieldType, this);
+		} else if (c instanceof ConstantMethodref) {
+			ConstantMethodref constant = (ConstantMethodref) c;
+			int classIndex = constant.getClassIndex();
 
-				ConstantNameAndType nameAndType = (ConstantNameAndType) _cpg
-						.getConstant(constant.getNameAndTypeIndex());
+			ConstantNameAndType nameAndType = (ConstantNameAndType) cp
+					.getConstant(constant.getNameAndTypeIndex());
 
-				String methodName = nameAndType.getName(_cpg);
-				String methodSignature = nameAndType.getSignature(_cpg
-						);
-				Type[] argTypes = Type.getArgumentTypes(methodSignature);
-				JavaType[] bcArgTypes = new JavaType[argTypes.length];
-				for (int k = 0; k < argTypes.length; k++) {
-					bcArgTypes[k] = JavaType.getJavaType(argTypes[k]);
-				}
-				Type retType = Type.getReturnType(methodSignature);
-				JavaType bcRetType = JavaType.getJavaType(retType);
-				BCConstantMethodRef bcconstant = new BCConstantMethodRef(i,
-						classIndex, methodName, bcRetType, bcArgTypes, this);
-				constants[i] = bcconstant;
-			} else if (_cpg.getConstant(i) instanceof ConstantInterfaceMethodref) {
-				ConstantInterfaceMethodref constant = (ConstantInterfaceMethodref) _cpg
-						.getConstant(i);
-				int classIndex = constant.getClassIndex();
-
-				ConstantNameAndType nameAndType = (ConstantNameAndType) _cpg
-						.getConstant(constant.getNameAndTypeIndex());
-
-				String methodName = nameAndType.getName(_cpg);
-				String methodSignature = nameAndType.getSignature(_cpg
-						);
-				Type[] argTypes = Type.getArgumentTypes(methodSignature);
-				JavaType[] bcArgTypes = new JavaType[argTypes.length];
-				for (int k = 0; k < argTypes.length; k++) {
-					bcArgTypes[k] = JavaType.getJavaType(argTypes[k]);
-				}
-				Type retType = Type.getReturnType(methodSignature);
-				JavaType bcRetType = JavaType.getJavaType(retType);
-				BCConstantInterfaceMethodRef bcconstant = new BCConstantInterfaceMethodRef(
-						i, classIndex, methodName, bcRetType, bcArgTypes, this);
-				constants[i] = bcconstant;
-			} else if (_cpg.getConstant(i) instanceof ConstantUtf8) {
-				ConstantUtf8 constantUtf8 = (ConstantUtf8) _cpg.getConstant(i);
-				StringLiteral stringLiteral = new StringLiteral(constantUtf8
-						.getBytes());
-				BCConstantUtf8 cutf8 = new BCConstantUtf8(i, stringLiteral);
-				constants[i] = cutf8;
+			String methodName = nameAndType.getName(cp);
+			String methodSignature = nameAndType.getSignature(cp);
+			Type[] argTypes = Type.getArgumentTypes(methodSignature);
+			JavaType[] bcArgTypes = new JavaType[argTypes.length];
+			for (int k = 0; k < argTypes.length; k++) {
+				bcArgTypes[k] = JavaType.getJavaType(argTypes[k]);
 			}
-		}
+			Type retType = Type.getReturnType(methodSignature);
+			JavaType bcRetType = JavaType.getJavaType(retType);
+			return new BCConstantMethodRef(i,
+					classIndex, methodName, bcRetType, bcArgTypes, this);
+		} else if (c instanceof ConstantInterfaceMethodref) {
+			ConstantInterfaceMethodref constant = (ConstantInterfaceMethodref) c;
+			int classIndex = constant.getClassIndex();
+
+			ConstantNameAndType nameAndType = (ConstantNameAndType) cp
+					.getConstant(constant.getNameAndTypeIndex());
+
+			String methodName = nameAndType.getName(cp);
+			String methodSignature = nameAndType.getSignature(cp);
+			Type[] argTypes = Type.getArgumentTypes(methodSignature);
+			JavaType[] bcArgTypes = new JavaType[argTypes.length];
+			for (int k = 0; k < argTypes.length; k++) {
+				bcArgTypes[k] = JavaType.getJavaType(argTypes[k]);
+			}
+			Type retType = Type.getReturnType(methodSignature);
+			JavaType bcRetType = JavaType.getJavaType(retType);
+			return new BCConstantInterfaceMethodRef(
+					i, classIndex, methodName, bcRetType, bcArgTypes, this);
+		} else if (c instanceof ConstantUtf8) {
+			ConstantUtf8 constantUtf8 = (ConstantUtf8) c;
+			StringLiteral stringLiteral = new StringLiteral(constantUtf8
+					.getBytes());
+			return new BCConstantUtf8(i, stringLiteral);
+		}		
+		return null;
+	}
+	
+	private void init(ConstantPool _cpg) {
+		int size= 1;
+		if (_cpg.getConstant(size) == null)
+			size = 0;
+		else
+		while (_cpg.getConstant(size) != null)
+			size++;
+		constants = new BCConstant[size];
+		for (int i = 1; i < size; i++) {
+			constants[i] = convert(i, _cpg, _cpg.getConstant(i));
+			}
 	}
 
 	public BCConstant getConstant(int i) {
@@ -160,5 +152,16 @@ public class BCConstantPool {
 	 */
 	public int getSize() {
 		return size;
+	}
+
+	public void add(ConstantPool cp, SecondConstantPool pool) {
+		 BCConstant[] newConstants = new BCConstant[constants.length + pool.getConstant_pool_count()];
+		 for (int i=0; i<constants.length;i++)
+			 newConstants[i] = constants[i];
+		 for (int i=0;i<pool.getConstant_pool_count();i++)
+			 newConstants[i+constants.length] =convert(i,cp,pool.getConstant_pool(i)); 
+		 //TODO Ici cela ne devrait pas marcher car il faudrait un vrai constant pool
+		 constants = newConstants;
+		 size = constants.length;
 	}
 }
