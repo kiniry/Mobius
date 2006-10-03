@@ -23,5 +23,6 @@ public interface BCAttribute {
 	// class specification
 	public static final String HISTORY_CONSTRAINTS = "HistoryConstraints";
 	public static final String CLASSINVARIANT = "ClassInvariant";
+	public static final String SECOND_CONSTANT_POOL = "SecondConstantPool";
 
 }
