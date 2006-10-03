@@ -6,6 +6,12 @@
  */
 package bytecode_wp.bc.io;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+
+import org.apache.bcel.classfile.ClassFormatException;
+import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Unknown;
 
 import bytecode_wp.bcclass.BCClass;
@@ -24,6 +30,7 @@ import bytecode_wp.bcclass.attributes.ModifiesSet;
 import bytecode_wp.bcclass.attributes.Postcondition;
 import bytecode_wp.bcclass.attributes.SET;
 import bytecode_wp.bcclass.attributes.SETTable;
+import bytecode_wp.bcclass.attributes.SecondConstantPool;
 import bytecode_wp.bcclass.attributes.SingleBlockSpecification;
 import bytecode_wp.bcclass.attributes.SingleLoopSpecification;
 import bytecode_wp.bcclass.attributes.SpecificationCase;
@@ -136,6 +143,9 @@ public class AttributeReader {
 		if (name.equals(BCAttribute.CLASSINVARIANT)) {
 			return readClassInvariant(privateAttr.getBytes());
 		}
+		if (name.equals(BCAttribute.SECOND_CONSTANT_POOL)) {
+			return readSecondConstantPool(privateAttr.getBytes());
+		}
 		return null;
 	}
 
@@ -162,6 +172,14 @@ public class AttributeReader {
 		ClassInvariant classInvariant = new ClassInvariant(predicate, JavaType
 				.getJavaType(clazz.getName()), ClassInvariant.INSTANCE);
 		return classInvariant;
+	}
+	
+	private static SecondConstantPool readSecondConstantPool(byte[] bytes) throws ReadAttributeException {
+		try {
+			return new SecondConstantPool(new DataInputStream(new ByteArrayInputStream(bytes)));
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	// ////////////////////////////////////////end Class
