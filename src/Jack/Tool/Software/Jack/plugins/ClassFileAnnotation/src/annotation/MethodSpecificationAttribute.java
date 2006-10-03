@@ -91,7 +91,7 @@ public class MethodSpecificationAttribute extends JmlAttributes {
 		throws Jml2bException, PogException {
 		super(
 			IConstants.TAG_METHOD_SPECIFICATION_ATTRIBUTE,
-			jcp.getOrCreateUtf8ConstantIndex("MethodSpecification"),
+			jcp.createAttributeNameUtf8ConstantIndex("MethodSpecification"),
 			getByteArray(config, jcp, m, methodzz),
 			cp);
 	}

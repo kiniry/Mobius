@@ -74,18 +74,28 @@ public class JmlConstantPool {
 		}
 	}
 
+	private static final short maxAttributes = 9;
+	
 	ConstantPool cp;
 
 	Vector newConstant = new Vector();
+	
+	Vector newAttributeNameConstant = new Vector();
 
+	// Last index in the newConstant vector + 1
 	short index;
 
+	// Last index  in the initial constant pool + 1
 	short index0;
+	
+	// Last index in the newAttributeNameConstant + 1
+	short index1;
 
 	JmlConstantPool(ConstantPool cp) {
 		this.cp = cp;
-		index = (short) cp.getLength();
-		index0 = index;
+		index0 = (short) cp.getLength();
+		index = (short) (index0+ maxAttributes);
+		index1 = index0;
 	}
 
 	public short getOrCreateNameIndex(AField a) {
@@ -96,6 +106,20 @@ public class JmlConstantPool {
 		return getOrCreateUtf8ConstantIndex(m.getName());
 	}
 
+	short createAttributeNameUtf8ConstantIndex(String string) {
+		Enumeration e = newAttributeNameConstant.elements();
+		short i = index0;
+		while (e.hasMoreElements()) {
+			Constant element = (Constant) e.nextElement();
+			if (element instanceof ConstantUtf8
+					&& ((ConstantUtf8) element).getBytes().equals(string))
+				return i;
+			i++;
+		}
+		newAttributeNameConstant.add(new ConstantUtf8(string));
+		return index1++;
+	}
+	
 	short getOrCreateUtf8ConstantIndex(String string) {
 		short i = searchUtf8Constant(string);
 		if (i == -1) {
@@ -112,7 +136,7 @@ public class JmlConstantPool {
 				if (((ConstantUtf8) ca[i]).getBytes().equals(string))
 					return i;
 		Enumeration e = newConstant.elements();
-		short i = index0;
+		short i = (short) (index0 + maxAttributes);
 		while (e.hasMoreElements()) {
 			Constant element = (Constant) e.nextElement();
 			if (element instanceof ConstantUtf8
@@ -150,7 +174,7 @@ public class JmlConstantPool {
 		if (index < index0)
 			return cp.getConstant(index);
 		else
-			return (Constant) newConstant.get(index - index0);
+			return (Constant) newConstant.get(index - index0 - maxAttributes);
 	}
 
 	private boolean isFieldRef(IJml2bConfiguration config, AField field,
@@ -172,34 +196,33 @@ public class JmlConstantPool {
 	}
 
 	private short searchClassIndex(IJml2bConfiguration config, Class class1) {
-		/*
-		 * Constant[] ca = cp.getConstantPool(); 
-		 * for (short i = 0; i < ca.length; i++) { 
-		 * 		if (ca[i] instanceof ConstantClass &&
-		 * 		((ConstantClass) ca[i]).getBytes(cp).equals(
-		 * 			class1.getFullyQualifiedName().replace('.', '/'))) return i;
-		 * }
-		 * Enumeration e = newConstant.elements(); 
-		 * short i = index0; 
-		 * while (e.hasMoreElements()) { 
-		 * 		Constant element = (Constant) e.nextElement(); 
-		 * 		if (element instanceof ConstantClass && ((ConstantClass) element).getBytes(cp).equals(
-		 * 				class1.getFullyQualifiedName())) 
-		 * 			return i; 
-		 * 		i++;
-		 * } 
-		 * return -1;
-		 */
+		  Constant[] ca = cp.getConstantPool(); 
+		  for (short i = 0; i < ca.length; i++) { 
+		  		if (ca[i] instanceof ConstantClass &&
+		  		((ConstantClass) ca[i]).getBytes(cp).equals(
+		  			class1.getFullyQualifiedName().replace('.', '/'))) return i;
+		  }
+		  Enumeration e = newConstant.elements(); 
+		  short i = (short) (index0 + maxAttributes); 
+		  while (e.hasMoreElements()) { 
+		  		Constant element = (Constant) e.nextElement(); 
+		  		if (element instanceof ConstantClass && ((ConstantClass) element).getBytes(cp).equals(
+		  				class1.getFullyQualifiedName())) 
+		  			return i; 
+		  		i++;
+		  } 
+		 return -1;
+		 
 
-		ConstantPool completePool = getCompleteConstantPool();
-		Constant[] ca = completePool.getConstantPool();
-		for (short i = 0; i < ca.length; i++) {
-			if (ca[i] instanceof ConstantClass
-					&& ((ConstantClass) ca[i]).getBytes(completePool).equals(
-							class1.getFullyQualifiedName().replace('.', '/')))
-				return i;
-		}
-		return -1;
+//		ConstantPool completePool = getCompleteConstantPool();
+//		Constant[] ca = completePool.getConstantPool();
+//		for (short i = 0; i < ca.length; i++) {
+//			if (ca[i] instanceof ConstantClass
+//					&& ((ConstantClass) ca[i]).getBytes(completePool).equals(
+//							class1.getFullyQualifiedName().replace('.', '/')))
+//				return i;
+//		}
+//		return -1;
 	}
 
 	public short getFieldRefIndex(IJml2bConfiguration config, AField field) {
@@ -212,7 +235,7 @@ public class JmlConstantPool {
 				if (isFieldRef(config, field, ca[i]))
 					return i;
 			Enumeration e = newConstant.elements();
-			short i = index0;
+			short i = (short) (index0 + maxAttributes);
 			while (e.hasMoreElements()) {
 				Constant element = (Constant) e.nextElement();
 				if (isFieldRef(config, field, element))
@@ -252,7 +275,7 @@ public class JmlConstantPool {
 			if (isMethodRef(config, method, ca[i]))
 				return i;
 		Enumeration e = newConstant.elements();
-		short i = index0;
+		short i = (short) (index0 + maxAttributes);
 		while (e.hasMoreElements()) {
 			Constant element = (Constant) e.nextElement();
 			if (isMethodRef(config, method, element))
@@ -296,7 +319,7 @@ public class JmlConstantPool {
 					&& ((ConstantNameAndType) ca[i]).getSignatureIndex() == typeIndex)
 				return i;
 		Enumeration e = newConstant.elements();
-		short i = index0;
+		short i = (short) (index0 + maxAttributes);
 		while (e.hasMoreElements()) {
 			Constant element = (Constant) e.nextElement();
 			if (element instanceof ConstantNameAndType
@@ -320,13 +343,20 @@ public class JmlConstantPool {
 	}
 
 	public ConstantPool getCompleteConstantPool() {
-		Constant[] ca = new Constant[index];
+		Constant[] ca = new Constant[index1];
 		for (int i = 0; i < index0; i++)
 			ca[i] = cp.getConstant(i);
-		for (int i = index0; i < index; i++)
-			ca[i] = (Constant) newConstant.get(i - index0);
+		for (int i = index0; i < index1; i++)
+			ca[i] = (Constant) newAttributeNameConstant.get(i - index0);
 		return new ConstantPool(ca);
 
+	}
+
+	public ConstantPool getSecondConstantPool() {
+		Constant[] ca = new Constant[index - index0 - maxAttributes];
+		for (int i = 0; i < index - index0 - maxAttributes; i++)
+			ca[i] = (Constant) newConstant.get(i);
+		return new ConstantPool(ca);	
 	}
 
 }

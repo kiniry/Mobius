@@ -64,7 +64,7 @@ public class ConstraintAttribute extends JmlAttributes {
 		throws Jml2bException {
 		super(
 			IConstants.TAG_CONSTRAINT_ATTRIBUTE,
-			jcp.getOrCreateUtf8ConstantIndex("Constraint"),
+			jcp.createAttributeNameUtf8ConstantIndex("Constraint"),
 			getByteArray(config, jcp, c),
 			cp);
 	}

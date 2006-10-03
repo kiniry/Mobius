@@ -22,7 +22,7 @@ import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.ErrorHandler;
 import jml2b.exceptions.Jml2bException;
 import jml2b.exceptions.PogException;
-import jml2b.pog.Pog;
+import jml2b.pog.util.IdentifierResolver;
 import jml2b.structure.AField;
 import jml2b.structure.java.Class;
 import jml2b.structure.java.Field;
@@ -78,7 +78,7 @@ public class AnnotationGenerator extends Generator {
 		Vector files) {
 		monitor.subTask("Annotating class file");
 		try {
-			Pog.init(configuration);
+			IdentifierResolver.init(configuration);
 
 			for (int i = 0; i < file_count; ++i) {
 				JmlFile jmlf = (JmlFile) files.get(i);
@@ -96,7 +96,7 @@ public class AnnotationGenerator extends Generator {
 						sr.clear();
 						JavaClass clazz =
 							sr.loadClass(c.getFullyQualifiedName());
-						JmlAttributes[] jmla = new JmlAttributes[4];
+						JmlAttributes[] jmla = new JmlAttributes[5];
 						JmlConstantPool jcp =
 							new JmlConstantPool(clazz.getConstantPool());
 						Vector fields = new Vector();
@@ -146,11 +146,18 @@ public class AnnotationGenerator extends Generator {
 								c,
 								clazz.getConstantPool());
 
+						jmla[4] =
+							new SecondConstantPoolAttribute(
+								configuration,
+								jcp,
+								c,
+								clazz.getConstantPool());
+
 						Attribute aa[] = clazz.getAttributes();
-						Attribute aa1[] = new Attribute[aa.length + 4];
+						Attribute aa1[] = new Attribute[aa.length + 5];
 						for (int j = 0; j < aa.length; j++)
 							aa1[j] = aa[j];
-						for (int j = 0; j < 4; j++)
+						for (int j = 0; j < 5; j++)
 							aa1[aa.length + j] = jmla[j];
 						clazz.setAttributes(aa1);
 

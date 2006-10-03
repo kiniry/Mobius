@@ -49,7 +49,7 @@ public class ModelMethodAttribute extends JmlAttributes {
 		Vector methods) {
 		super(
 			IConstants.TAG_MODEL_METHOD_ATTRIBUTE,
-			jcp.getOrCreateUtf8ConstantIndex("Model_Method"),
+			jcp.createAttributeNameUtf8ConstantIndex("Model_Method"),
 			getByteArrayLength(methods, jcp),
 			cp);
 		this.config = config;

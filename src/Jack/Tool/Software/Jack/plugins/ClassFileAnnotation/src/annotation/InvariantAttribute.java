@@ -64,7 +64,7 @@ public class InvariantAttribute extends JmlAttributes {
 		throws Jml2bException {
 		super(
 			IConstants.TAG_INVARIANT_ATTRIBUTE,
-			jcp.getOrCreateUtf8ConstantIndex("ClassInvariant"),
+			jcp.createAttributeNameUtf8ConstantIndex("ClassInvariant"),
 			getByteArray(config, jcp, c),
 			cp);
 	}

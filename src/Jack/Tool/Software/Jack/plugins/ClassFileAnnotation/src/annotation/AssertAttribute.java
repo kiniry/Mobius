@@ -73,7 +73,7 @@ public class AssertAttribute extends JmlAttributes {
 
 	protected AssertAttribute(IJml2bConfiguration config, JmlConstantPool jcp, ConstantPool cp, Method m,
 			org.apache.bcel.classfile.Method methodzz) throws Jml2bException, PogException {
-		super(IConstants.TAG_ASSERT_ATTRIBUTE, jcp.getOrCreateUtf8ConstantIndex("Assert"), getByteArray(config,
+		super(IConstants.TAG_ASSERT_ATTRIBUTE, jcp.createAttributeNameUtf8ConstantIndex("Assert"), getByteArray(config,
 																										jcp,
 																										m,
 																										methodzz), cp);

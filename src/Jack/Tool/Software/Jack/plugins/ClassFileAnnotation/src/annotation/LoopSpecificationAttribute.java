@@ -103,7 +103,7 @@ public class LoopSpecificationAttribute extends JmlAttributes {
 	}
 	protected LoopSpecificationAttribute(IJml2bConfiguration config, JmlConstantPool jcp, ConstantPool cp, Method m,
 			org.apache.bcel.classfile.Method methodzz) throws PogException, Jml2bException {
-		super(IConstants.TAG_LOOP_SPECIFICATION_ATTRIBUTE, jcp.getOrCreateUtf8ConstantIndex("LoopSpecification"),
+		super(IConstants.TAG_LOOP_SPECIFICATION_ATTRIBUTE, jcp.createAttributeNameUtf8ConstantIndex("LoopSpecification"),
 				getByteArray(config, jcp, m, methodzz), cp);
 	}
 

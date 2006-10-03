@@ -89,7 +89,7 @@ public class BlockSpecificationAttribute extends JmlAttributes {
 		throws PogException, Jml2bException {
 		super(
 			IConstants.TAG_BLOCK_SPECIFICATION_ATTRIBUTE,
-			jcp.getOrCreateUtf8ConstantIndex("BlockSpecification"),
+			jcp.createAttributeNameUtf8ConstantIndex("BlockSpecification"),
 			getByteArray(config, jcp, m, methodzz),
 			cp);
 	}

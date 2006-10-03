@@ -57,7 +57,7 @@ public class ModelFieldAttribute extends JmlAttributes {
 		Vector fields) {
 		super(
 			IConstants.TAG_MODEL_FIELD_ATTRIBUTE,
-			jcp.getOrCreateUtf8ConstantIndex("ModelField"),
+			jcp.createAttributeNameUtf8ConstantIndex("ModelField"),
 			getByteArray(config, fields, jcp),
 			cp);
 	}

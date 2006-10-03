@@ -12,7 +12,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import jml2b.IJml2bConfiguration;
-import jml2b.structure.java.*;
+import jml2b.structure.java.Method;
+import jml2b.structure.java.Modifiers;
+import jml2b.structure.java.Parameters;
 
 import org.apache.bcel.classfile.Attribute;
 

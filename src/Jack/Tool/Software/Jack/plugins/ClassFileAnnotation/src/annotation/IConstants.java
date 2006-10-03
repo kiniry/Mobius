@@ -30,4 +30,5 @@ public interface IConstants {
 
 	static final byte TAG_LOOP_SPECIFICATION_ATTRIBUTE = 0x07;
 
+	static final byte TAG_SECOND_CONSTANT_POOL_ATTRIBUTE = 0x08;
 	}
