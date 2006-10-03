@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+
+-->
+</head>
+<body bgcolor="white">
+
+The <code>instancie()</code> methods are used to desuggar Java.
+They have two functions
+<UL>
+<li> instanciated with <code>this</code> member field that are implicitely called
+with the current object.
+<li> simplify full name construction to obtain
+<UL>
+<li> a uniq identifier to adress static fields
+<li> an expression dot an identifier to adress member field. 
+</UL>
+</UL>
+After the call of this method, the field identifiers are normalized in 
+<code>a</code> if <code>a</code> is a static field or <code>b.a</code> if a is a
+member field (b remains an expression).
+
+</body>
+</html>

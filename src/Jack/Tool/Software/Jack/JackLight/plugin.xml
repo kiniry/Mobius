@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin id="JackLight"
+        name="Jack Light Plugin"
+   version="1.8.5"
+   provider-name="INRIA Sophia - Everest project"
+   class="jack.plugin.JackPlugin">
+   <runtime>
+      <library name="jack.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+     <extension-point id="Prover" name="prover" schema="schema/Prover.exsd"/>
+
+<!--   
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+      </perspectiveExtension>
+   </extension>
+-->
+  <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.ICompilationUnit"
+            id="jack.plugin.compile.CompileAction">
+         <menu
+               label="Jack (Bytecode)"
+               path="additions"
+               id="bytecode">
+            <separator
+                  name="bytecode_slot">
+            </separator>
+         </menu>
+<!--         
+         <action
+               label="Verify bytecode"
+               class="jack.plugin.compile.VerifyBytecodeAction"
+               menubarPath="jack_menu/slot1"
+               id="jack.plugin.newAction">
+         </action>
+-->
+      </objectContribution>
+   </extension>
+<!--
+  <extension point="org.eclipse.ui.editors"> 
+      <editor 
+         id="jack.plugin.perspective.CaseEditor" 
+         icon="jpov/icons/jml_compile.gif"
+         name="Case Editor" 
+         class="jack.plugin.perspective.CaseEditor"
+         default="false"> 
+      </editor> 
+   </extension> 
+-->
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Jack"
+            class="jack.plugin.JackPreferencePage"
+            id="jack.plugin.JackPreferencePage">
+      </page>
+      <page
+            name="compiler"
+            category="jack.plugin.JackPreferencePage"
+            class="jack.plugin.JackPreferencePageCompiler"
+            id="jack.plugin.JackPreferencePageCompiler">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            name="Jack"
+            class="jack.plugin.JackProjectPropertyPage"
+            id="jack.plugin.projectproperty">
+      </page>
+   </extension>
+   <extension
+         id="jackproblem"
+         name="jack.plugin.jackproblem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+   </extension>
+</plugin>
