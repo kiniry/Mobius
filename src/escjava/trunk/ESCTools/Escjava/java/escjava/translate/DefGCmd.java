@@ -19,9 +19,17 @@ import escjava.ast.ExprCmd;
 import escjava.ast.GCExpr;
 import escjava.ast.GuardedCmd;
 import escjava.ast.GuardedCmdVec;
+import escjava.ast.ExprCmd;
+import escjava.ast.VarInCmd;
+import escjava.ast.DynInstCmd;
+import escjava.ast.SeqCmd;
+import escjava.ast.Call;
+import escjava.ast.CmdCmdCmd;
+import escjava.ast.LoopCmd;
 import escjava.ast.LabelExpr;
 import escjava.ast.NaryExpr;
 import escjava.ast.TagConstants;
+import escjava.ast.EscPrettyPrint;
 
 /**
  * Class <code>DefGCmd</code> implements the definedness guarded commands
@@ -50,7 +58,7 @@ public class DefGCmd
    *
    */
   private StackVector code;
-  
+
   /**
    * <code>debug</code> is a central and convinient way of turning on/off
    * debug messages.
@@ -87,7 +95,7 @@ public class DefGCmd
    * field.
    *
    * @param x an <code>Expr</code> value
-   * @return an <code>Expr</code> value.  This expression is always a GCExpr.
+   * @return an <code>Expr</code> value.  This expression is always a Expr.
    * its not set as GCExpr so that we do not get type mismatch between client
    * methods.
    */
@@ -116,7 +124,7 @@ public class DefGCmd
 	case TagConstants.STRINGLIT: {
 	    break;
 	}
-      
+
 	case TagConstants.RESEXPR: {
 	    break;
 	}
@@ -529,6 +537,161 @@ public class DefGCmd
 	map.put(GC.thisvar.decl, GC.resultvar);
 	return(map);
     }
+
+  
+  /**
+   * Describe <code>morfAsserts</code> method here.
+   *
+   * @param gc a <code>GuardedCmd</code> value
+   * @param ante an <code>Expr</code> value
+   * @return a <code>GuardedCmd</code> value
+   */
+  public GuardedCmd morfAsserts(/*@ non_null */ GuardedCmd gc,
+				/*@ non_null */ Expr ante)
+  {
+//     if (debug)
+//     {
+//       System.out.println(this.traceMethod() + 
+// 			 TagConstants.toString(gc.getTag()));
+//     }
+
+    switch (gc.getTag()) 
+    {
+
+    case TagConstants.ASSERTCMD:
+      {
+	ExprCmd ec=(ExprCmd)gc;
+// 	if (debug)
+// 	{
+// 	  System.out.println("GK-Trace: "+ec.pred);
+// 	  System.out.println("    i.e.: "+
+// 			     EscPrettyPrint.inst.toString(ec.pred));
+// 	}
+	Assert.notFalse(ec.pred.getTag() == TagConstants.LABELEXPR);
+	LabelExpr le=(LabelExpr)ec.pred;
+	le.expr=GC.implies(ante,le.expr);
+	return(ec);
+      }
+
+
+    case TagConstants.SKIPCMD:
+    case TagConstants.RAISECMD:
+    case TagConstants.ASSUMECMD:
+    case TagConstants.GETSCMD:
+    case TagConstants.SUBGETSCMD:
+    case TagConstants.SUBSUBGETSCMD:
+    case TagConstants.RESTOREFROMCMD:
+      return(gc);
+
+    case TagConstants.VARINCMD:
+      {
+	VarInCmd vc=(VarInCmd)gc;
+	vc.g=this.morfAsserts(vc.g,ante);
+	return(vc);
+      }
+
+    case TagConstants.DYNINSTCMD:
+      {
+	DynInstCmd dc=(DynInstCmd)gc;
+	dc.g=this.morfAsserts(dc.g,ante);
+	return(dc);
+      }
+
+    case TagConstants.SEQCMD:
+      {
+	SeqCmd sc=(SeqCmd)gc;
+	for (int i=0;i<sc.cmds.size();i++)
+	{
+	  GuardedCmd gc1=sc.cmds.elementAt(i);
+	  gc=this.morfAsserts(gc1,ante);
+	  sc.cmds.setElementAt(gc1,i);
+	}
+	return(sc);
+      }
+
+    case TagConstants.CALL:
+      {
+	Call call=(Call)gc;
+	call.desugared=this.morfAsserts(call.desugared,ante);
+	return(call);
+      }
+
+    case TagConstants.TRYCMD:
+    case TagConstants.CHOOSECMD:
+      {
+	CmdCmdCmd tc = (CmdCmdCmd)gc;
+	tc.g1=this.morfAsserts(tc.g1,ante);
+	tc.g2=this.morfAsserts(tc.g2,ante);
+	return(tc);
+      }
+
+    case TagConstants.LOOPCMD:
+      {
+	LoopCmd lp = (LoopCmd)gc;
+	lp.guard=this.morfAsserts(lp.guard,ante);
+	lp.body=this.morfAsserts(lp.body,ante);
+	return(lp);
+      }
+
+    default:
+      //@ unreachable;
+      Assert.notFalse(false);
+      return null;
+    }
+  }
+
+
+  /**
+   * Describe <code>reapAndTrAntecedent</code> method here.
+   *
+   * @param post an <code>Expr</code> value
+   * @return an <code>Expr</code> value
+   */
+  public Expr reapAndTrAntecedent(Expr post)
+  {
+    // Fail if this is not an implication.
+    Assert.notFalse(post.getTag() == TagConstants.IMPLIES);
+    // Get the antecedent.
+    Expr e=((BinaryExpr)post).left;
+    // Generate the GCExpr for the ante.
+    e=TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
+    return(e);
+  }
+
+  /**
+   * Describe <code>reapConsequent</code> method here.
+   *
+   * @param post an <code>Expr</code> value
+   * @return an <code>Expr</code> value
+   */
+  public Expr reapConsequent(Expr post)
+  {
+    // Fail if this is not an implication.
+    Assert.notFalse(post.getTag() == TagConstants.IMPLIES);
+    // Get the antecedent.
+    Expr e=((BinaryExpr)post).right;
+    // Generate the GCExpr for the ante.
+    return(e);
+  }
+
+  public static Expr reapLeftmostConjunct(Expr e)
+  {
+    Assert.notFalse(e.getTag() == TagConstants.AND,e.toString());
+    BinaryExpr be = (BinaryExpr)e;
+    Expr newExpr;
+    if (be.left.getTag()==TagConstants.AND)
+    {
+      Expr e1=reapLeftmostConjunct(be.left);
+      newExpr=BinaryExpr.make(TagConstants.AND,e1,be.right,be.locOp);
+    }
+    else
+    {
+      newExpr=be.right;
+    }
+    return(newExpr);
+  }
+
+
 
     private String traceMethod() {
 	Throwable t=new Throwable();

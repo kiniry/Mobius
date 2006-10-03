@@ -1274,11 +1274,15 @@ public class Main extends javafe.SrcTool
 	GuardedCmd body;
 	Set fullSynTargs;
         Set synTargs;
+	// Denotes whether the method has body or not
+	// used in GetSpec.surroundBodyBySpec()
+	boolean nobody=false;
 	if (r.body==null && Main.options().idc)
 	{
-	  GuardedCmd gc1=GC.gets(GC.ecvar, GC.ec_return);
-	  GuardedCmd gc2=GC.assume(GC.falselit);
-	  GuardedCmd gc3=GC.seq(gc1,gc2);
+	  GuardedCmd gc3=GC.gets(GC.ecvar, GC.ec_return);
+	  nobody=true;
+	  //GuardedCmd gc2=GC.assume(GC.falselit);
+	  //GuardedCmd gc3=GC.seq(gc1,gc2);
 	  body=gc3;
 	  if (r.getTag()==TagConstants.CONSTRUCTORDECL)
 	  {
@@ -1355,7 +1359,7 @@ public class Main extends javafe.SrcTool
         GuardedCmd fullCmd = 
             GetSpec.surroundBodyBySpec(body, spec, scope, fullSynTargs,
                                        initState.getPreMap(),
-                                       r.getEndLoc());
+                                       r.getEndLoc(),nobody);
 
         if (Main.options().loopTranslation == Options.LOOP_SAFE &&
             Main.options().predAbstract) {

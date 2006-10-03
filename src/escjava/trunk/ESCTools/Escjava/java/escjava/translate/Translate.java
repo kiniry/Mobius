@@ -3883,7 +3883,9 @@ public final class Translate
     for(int i=0; i<spec.pre.size(); i++) {
       Condition cond = spec.pre.elementAt(i);
       int label = cond.label;
-      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
+      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS ||
+	  cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+	  cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
 	  // We do not need to check for definedness of the precondition of a called
 	  // method since such a definedness check will be done when the called
 	  // method spec is checked.

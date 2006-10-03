@@ -61,7 +61,10 @@ public class TagConstants extends GeneratedTags
     public static final int CHKDECREASES_DECR = CHKDECREASES_BOUND + 1;
     public static final int CHKDEFINEDNESS = CHKDECREASES_DECR + 1;
     public static final int CHKEXPRDEFINEDNESS = CHKDEFINEDNESS + 1;
-    public static final int CHKINDEXNEGATIVE = CHKEXPRDEFINEDNESS + 1;
+    public static final int CHKEXPRDEFNORMPOST = CHKEXPRDEFINEDNESS + 1;
+    public static final int CHKEXPRDEFEXCEPOST = CHKEXPRDEFNORMPOST + 1;
+    public static final int CHKINDEXNEGATIVE = CHKEXPRDEFEXCEPOST + 1;
+  //public static final int CHKINDEXNEGATIVE = CHKEXPRDEFINEDNESS + 1;
     public static final int CHKINDEXTOOBIG = CHKINDEXNEGATIVE + 1;
     public static final int CHKINITIALIZATION = CHKINDEXTOOBIG + 1;
     public static final int CHKINITIALIZERLEAK = CHKINITIALIZATION + 1;
@@ -743,6 +746,8 @@ public class TagConstants extends GeneratedTags
         "Decreases",
         "Unreadable",
 	"Undefined",
+	"UndefinedNormalPost",
+	"UndefinedExceptionalPost",
         "IndexNegative",
         "IndexTooBig",
         "Uninit",

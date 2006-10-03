@@ -513,7 +513,6 @@ public final class GetSpec {
     ExprVec postAssumptions = ExprVec.make();
     ConditionVec post = trMethodDeclPostcondition(dmd, preVarMap,
         postAssumptions);
-    
     java.util.Set postlocs = new java.util.HashSet();
     int size = post.size();
     for (int ic = 0; ic < size; ++ic) {
@@ -611,27 +610,47 @@ public final class GetSpec {
       if(Main.options().idc) { // add is-defined conditions
 	//Expr e = expr2IsDefExpr(expr);
 	if(!escjava.AnnotationHandler.isTrue(expr)) {
-	if (false // DISABLE THIS FOR NOW 
-	      && expr instanceof LabelExpr && ((LabelExpr)expr).expr instanceof InstanceOfExpr) 
-	  {
+// 	if (false // DISABLE THIS FOR NOW 
+// 	      && expr instanceof LabelExpr && ((LabelExpr)expr).expr instanceof InstanceOfExpr) 
 	    // [FIXME] This is a temporary solution.
 	    // Filter out LabelExpr nodes with their first node being InstanceOfExpr because
 	    // those are the precondition of client methods that we do not want to handle.
-	  }
-	  else 
+	  Expr e2idc=null;
+	  if (true)
+	    //if (dmd.isStaticMethod() || dmd.isConstructor())
 	  {
-	    // Note: the expression argument to the CHECK-DEFINEDNESS
-	    // command is the requires clause assertion expression
-	    // untranslated -- i.e. not translated into the equivalent
-	    // GC expression form.  The translation is not later when
-	    // the CHECK-DEFINEDNESS command is desugared.
-	    if(DefGCmd.debug)
-	      System.err.println("GK-Trace-IDC: " + expr);
-	    Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
-					  expr,//TrAnExpr.trSpecExpr(e, map, null),
-					  expr.getStartLoc());
-	    pre.addElement(cond);
+	    if (Main.options().debug)
+	    {
+	      System.out.println("GK-Trace: STATIC METHOD or CONSTRUCTOR!");
+	    }
+	    e2idc=expr;
 	  }
+	  else if (dmd.isInstanceMethod())
+	  {
+	    if (Main.options().debug)
+	    {
+	      System.out.println("GK-Trace: INSTANCE METHOD!");
+	    }
+	    Assert.notFalse(expr.getTag() == TagConstants.AND,
+			    EscPrettyPrint.inst.toString(expr));
+	    e2idc=DefGCmd.reapLeftmostConjunct(expr);
+	  }
+	  else
+	  {
+	    Assert.notFalse(false,EscPrettyPrint.inst.toString(expr));
+	  }
+
+	  // Note: the expression argument to the CHECK-DEFINEDNESS
+	  // command is the requires clause assertion expression
+	  // untranslated -- i.e. not translated into the equivalent
+	  // GC expression form.  The translation is not later when
+	  // the CHECK-DEFINEDNESS command is desugared.
+	  if(Main.options().debug) 
+	    System.err.println("GK-Trace-IDC: " + e2idc);
+	  Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
+					e2idc,//TrAnExpr.trSpecExpr(e, map, null),
+					e2idc.getStartLoc());
+	  pre.addElement(cond);
 	}
       }
       Condition cond = GC.condition(TagConstants.CHKPRECONDITION, pred, loc);
@@ -850,11 +869,11 @@ public final class GetSpec {
       Expr pp = GC.or(normal, GC.and(except, GC.or(ev)));
 
       if (!Main.options().strictExceptions) {
-      for (int i = num; i < dmd.throwsSet.size(); i++) {
-        TypeName x = dmd.throwsSet.elementAt(i);
-        p = GC.nary(TagConstants.TYPELE, typeofXRES, GC.typeExpr(x));
-        ev.addElement(p);
-      }
+	for (int i = num; i < dmd.throwsSet.size(); i++) {
+	  TypeName x = dmd.throwsSet.elementAt(i);
+	  p = GC.nary(TagConstants.TYPELE, typeofXRES, GC.typeExpr(x));
+	  ev.addElement(p);
+	}
       }
 
       Expr eOutcomes;
@@ -933,18 +952,11 @@ public final class GetSpec {
 	  //[GKS]
 	  if (Main.options().idc)
 	  {
-	    if (Main.options().debug)
-	    {
-	      System.err.println("GK-Trace-PRAG: " + prag);
-	      System.out.println("GK-Trace-PPRN: " +
-				 EscPrettyPrint.inst.toString(prag.expr));
-	    }
-	    Expr expr=prag.expr;
-	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFINEDNESS,
-					expr,expr.getStartLoc());
-	    // Disable this for now so that I can test routines and constructors
-	    // with no bodies.
-	    //conds.add(cond);
+	    if(Main.options().debug) 
+	      System.err.println("GK-Trace-IDC: " + prag.expr);
+	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFNORMPOST,
+					prag.expr,prag.expr.getStartLoc());
+	    conds.add(cond);
 	  }
 	  //[GKE]
           TrAnExpr.initForClause();
@@ -995,10 +1007,23 @@ public final class GetSpec {
         try {
           // Pragma has the form: exsures (T v) E
           VarExprModifierPragma prag = dmd.exsures.elementAt(i);
+	  //[GKS]
+	  if (Main.options().idc)
+	  {
+	    if (Main.options().debug)
+	    {
+	      if(Main.options().debug) 
+		System.err.println("GK-Trace-IDC: " + prag.expr);
+	    }
+	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFEXCEPOST,
+					prag.expr,prag.expr.getStartLoc());
+	    conds.add(cond);
+	  }
+	  //[GKE]
           TrAnExpr.initForClause();
           // TrSpecExpr[[ E, {v-->XRES}, wt ]]
-          Hashtable map = new Hashtable();
-          Expr pred;
+	  Hashtable map = new Hashtable(); 
+	  Expr pred;
           if (prag.arg != null) {
             map.put(prag.arg, GC.xresultvar);
             pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
@@ -1982,7 +2007,8 @@ public final class GetSpec {
 					      FindContributors scope, 
 					      Set syntargets, 
 					      Hashtable premap,
-					      int locEndCurlyBrace) 
+					      int locEndCurlyBrace,
+					      boolean nobody) 
   {
     StackVector code = new StackVector();
     code.push();
@@ -1990,7 +2016,7 @@ public final class GetSpec {
     assumeConditions(spec.pre, code);
     code.addElement(body);
     addAssumptions(spec.postAssumptions, code);
-    checkConditions(spec.post, locEndCurlyBrace, code);
+    checkConditions(spec.post, locEndCurlyBrace, code, nobody);
     checkModifiesConstraints(spec, scope, syntargets, premap, locEndCurlyBrace,
         code);
     
@@ -2013,25 +2039,21 @@ public final class GetSpec {
   }
   
   private static void assumeConditions(/*@ non_null @*/ ConditionVec cv, 
-				       /*@ non_null @*/ StackVector code) 
+				       /*@ non_null @*/ StackVector code)
   {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
       //[GKS]
       if(Main.options().idc && cond.label == TagConstants.CHKEXPRDEFINEDNESS)
       {
-	if(DefGCmd.debug)
-	  System.err.println("GK-Trace-DEF: "+ cond);
-
 	DefGCmd oDefGCs = new DefGCmd();
-	if(DefGCmd.debug) {
+	if(Main.options().debug) {
 	    System.err.println("\tAbout to trAndGen:" +
 			       EscPrettyPrint.inst.toString(cond.pred));
 	    System.err.println("\tI.e.:" + cond.pred);
 	}
  	oDefGCs.trAndGen(cond.pred);
 	GuardedCmd gc=oDefGCs.popFromCode();
-	//GuardedCmd gc = GC.check(cond.locPragmaDecl, cond);
 	code.addElement(gc);
 	//[GKE]
       } else {
@@ -2047,33 +2069,55 @@ public final class GetSpec {
   
   private static void checkConditions(/*@ non_null @*/ ConditionVec cv, 
 				      int loc, 
-				      StackVector code) 
+				      StackVector code,
+				      boolean nobody)
   {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
-      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS)
+      //[GKS]
+      if (Main.options().idc &&
+	  (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+	   cond.label == TagConstants.CHKEXPRDEFEXCEPOST))
       {
-	if(Main.options().debug) 
-	{
-	  System.err.println("GK-Trace-POST: in GetSpec.checkConditions()");
-	  System.err.println("\tAbout to trAndGen:" +
-			     EscPrettyPrint.inst.toString(cond.pred));
-	  System.err.println("\tI.e.:" + cond.pred);
-	}
 	DefGCmd oDefGCs = new DefGCmd();
- 	oDefGCs.trAndGen(cond.pred);
+	Expr cons=oDefGCs.reapConsequent(cond.pred);
+	if(Main.options().debug) {
+	  System.err.println("\tAbout to trAndGen:" +
+			     EscPrettyPrint.inst.toString(cons));
+	  System.err.println("\tI.e.:" + cons);
+	}
+ 	Expr pred=oDefGCs.trAndGen(cons);
 	GuardedCmd gc=oDefGCs.popFromCode();
+	// Use the cond.expr to obtain the antecedent of the postcondition.  
+	// It is then used as the antecedent of all the ASSERT IDCs generated.
+	// Its important to note that we expect an implication here!!
+	Expr ante=oDefGCs.reapAndTrAntecedent(cond.pred);
+	// Add the EC == ecReturn to the antecedent
+	if (cond.label == TagConstants.CHKEXPRDEFNORMPOST)
+	{
+	  ante=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return),
+		      ante);
+	}
+	else
+	{
+	  ante=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_throw),
+		      ante);
+	}
+	oDefGCs.morfAsserts(gc,ante);
 	code.addElement(gc);
 	continue;
       }
-      if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
-      Translate.setop(cond.pred);
-      // if the condition is an object invariant, send its guarded command
-      // translation as auxiliary info to GC.check
-      if (cond.label == TagConstants.CHKOBJECTINVARIANT)
-        code.addElement(GC.check(loc, cond, cond.pred));
-      else
-        code.addElement(GC.check(loc, cond));
+      if (!nobody)
+      {
+	if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
+	Translate.setop(cond.pred);
+	// if the condition is an object invariant, send its guarded command
+	// translation as auxiliary info to GC.check
+	if (cond.label == TagConstants.CHKOBJECTINVARIANT)
+	  code.addElement(GC.check(loc, cond, cond.pred));
+	else
+	  code.addElement(GC.check(loc, cond));
+      }
     }
   }
   

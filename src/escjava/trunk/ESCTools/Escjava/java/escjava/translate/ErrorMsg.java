@@ -336,6 +336,8 @@ public final class ErrorMsg
 	    Assert.notFalse(hasAssocDecl);
 	    break;
 	case TagConstants.CHKEXPRDEFINEDNESS:
+	case TagConstants.CHKEXPRDEFNORMPOST:
+	case TagConstants.CHKEXPRDEFEXCEPOST:
 	    r = ("Assertion expression may be undefined (e.g. due to use of an operator or method when its precondition could be violated)");
 	    Assert.notFalse(hasAssocDecl);
 	    break;
