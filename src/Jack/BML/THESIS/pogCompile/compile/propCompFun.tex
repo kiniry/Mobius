@@ -248,7 +248,7 @@ As we saw in the previous section, the compiler keeps track of the exception
 handlers by adding them in the exception handler table. 
 
 We illustrate this by the example in Fig. \ref{pogEquiv:compile:prop:exc} which shows both the bytecode (on the left) and source code(on the right)
- of . the method \lstinline!abs!.
+ of the method \lstinline!abs!.
 The method \lstinline!abs! gets as parameter \lstinline!n! an object of type  \lstinline!Number!.
  The method returns  the absolute value of the integer field \lstinline!n.value! of the parameter \lstinline!n!. The absolute value is stored
 in the method local variable \lstinline!abs!. This is implemented by the if statement. However, in the test of the if statement, we dereference
@@ -319,8 +319,8 @@ in the method. In particular, it states that the region between 2 and 20 is prot
 \end{figure}
 
 
-This illustrates the next property of the compiler. More particularly, it states  that the fields  \pcStart{} and  \pcEnd{}  in an element of the
- exception handler  table are the start and end index of the compilation of a source statement in the original source program.
+This illustrates the next property of the compiler. More particularly, it states  that the fields  \pcStart{} and  \pcEnd{}  of an 
+ exception handler element are the start and end indexes of the compilation of a source statement in the original source program.
 
 \begin{compProp7}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
 Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable  \
