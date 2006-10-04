@@ -1,0 +1,379 @@
+
+
+\subsection{Compiling source program  constructs in bytecode instructions} \label{pogEq:compile:compExpr} 
+
+As we stated in the beginning the function for compiling program statements and expressions in bytecode instruction is named $\compile{}$
+$$ \compile{ }_{\methodd} : nat * (\stmt \cup \expressionSrc )* nat \longrightarrow  \bcIns [ \ ]  $$
+The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation starts,
+ the statement $\stmt$ or expression $\expressionSrc$  to be compiled and a natural number which is
+ the greatest label in the compilation 
+and returns an array of bytecode instructions which is the compilation of the source construct.
+As we shall see in the following of this section, we will define inductively the compiler over the structure
+of the compiled source construction.
+
+%\subsubsection{Compiling source expressions into bytecode}\label{pogEq:compile:compExpr}
+We first look at Fig. \ref{pogEq:compile:compExpr:defExpr} how expressions are compiled.
+ From the figure, we can see that the compilation of
+ the constants like constant integers, the boolean constants
+\Mytrue, \Myfalse, \Mynull{}  are compiled with the instruction \push. Note also that the boolean constants  \Mytrue{} and \Myfalse{}
+are encoded as the integers 1 and 0 in the bytecode.  The field access expression $ \expressionSrc.f$ compilation consists in the compilation
+$\compileLabel{s}{\expressionSrc}{e - 1}$ of the expression   $ \expressionSrc $ followed by the instruction $ e: \getfield  \ f $ which is
+ the last instruction of the compilation.  May be more attention deserve the compilation of the instance creation expression
+$\newSrc \ \class  (\expressionSrc )$. The first instruction in the compilation is the instruction $s : \new \ \class$ which 
+creates a new reference in the heap and pushes it on the stack top 
+(see for the operational semantics of the instruction in Section \ref{opSem}). The next instruction in the compilation is the instruction 
+\dup which duplicates the stack top element. Then follows the compilation 
+$ \compileLabel{s+2}{\expressionSrc}{e - 1 }; $ of the argument passed to the class constructor. The last instruction of the compilation
+is the invokation of the class constructor  \Constructor{\class}. Note that this compilation follows closely 
+the JVM specification ( see \cite{VMSpec}, Section 7.8 ) which mandates 
+how standard Java compilers compiler instance creation expressions.  
+  
+% As the target language is interpreted by a stack based virtual machine,
+%the evaluation of  expressions is stored on the stack.
+%Thus, for every compilation we give how the compiled
+%subexpressions affect the stack. The stack counter is denoted with \counter and the element at position \texttt{k} 
+%from the stack top is denoted with $\stack{\counter - k}$ 
+%and so for expressions the compiler function is denoted with $$ \compileExp{ \expression }{\stack{ind}}$$
+%which means that after evaluating expression  $\expression$, its evaluation $ \compile{ \eval{\expression}}$
+% is stored at index $\stack{ind}$ on the stack.
+
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{lll} 
+	\compileLabel{s}{\constantInt}{s} &  =  & s : \push \  \constantInt \\
+	& & \\ & & \\
+	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \ 1\\
+	& & \\ & & \\
+	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \ 0 \\
+	& & \\ & & \\
+	\compileLabel{s}{\Mynull }{s } & = &  s: \push \ \Mynull\\
+	& & \\ & & \\
+	\compileLabel{s}{\this}{s } & = &  s:  \load \ \locVar{0} \\
+	& & \\ & & \\ 
+	\compileLabel{s}{ \expressionSrc.f}{e} & = &    
+         \begin{array}{l}
+              \compileLabel{s}{\expressionSrc}{e - 1}; \\ 
+              e : \getfield  \ f
+           \end{array} \\
+	& & \\ & & \\ 
+	\compileLabel{s}{\expressionSrc_1.m(\expressionSrc_2)}{e} & = &  
+	   \begin{array}{l}  
+                 \compileLabel{s}{\expressionSrc_1}{e'};\\
+		 \compileLabel{e' + 1}{\expressionSrc_2}{e - 1};\\
+		  e  :\invoke \ m
+            \end{array}  \\
+	& & \\ & & \\
+	\compileLabel{s}{ \var }{s} & = &   s: \load \ \locVar{i} \\
+	& & \\ & & \\
+	\compileLabel{s}{ \expressionSrc_1 \ op \ \expressionSrc_2 }{e} & = &  
+                 \begin{array}{l}
+                       \compileLabel{s}{ \expressionSrc_1}{  e'  } ; \\
+                       \compileLabel{e' + 1}{ \expressionSrc_2}{ e - 1  }; \\
+                       e:\arithOp
+                 \end{array}  \\
+	& & \\ & & \\
+	\compileLabel{s}{ (\class ) \ \expressionSrc }{e} & = &  
+              \begin{array}{l}  
+                 \compileLabel{s}{\expressionSrc}{e  - 1};\\
+                  e : \checkcast \ \class ;
+              \end{array}	 \\
+	& & \\ & & \\ 
+
+	\compileLabel{s}{\expressionSrc \ \instanceofSrc \ \class }{e} & = &  
+         \begin{array}{l}
+              \compileLabel{s}{\expressionSrc}{ e  -1 };\\
+               e : \instanceof \ \class;
+	  \end{array} \\
+	  & & \\ & & \\ 
+\compileLabel{s}{ \newSrc \ \class  (\expressionSrc ) }{e} & = & 
+                 \begin{array}{l}
+                       s :    \new \ \class; \\ 
+		       s + 1: \dup; \\
+		       \compileLabel{s+2}{\expressionSrc}{e - 1 };\\
+	               
+		       e : \invoke \ \Constructor{\class};     
+	       \end{array}
+
+	\end{array} 
+} $$
+
+\caption{\sc Definition of the compiler for expressions }
+\label{pogEq:compile:compExpr:defExpr}
+\end{frameit}
+\end{figure}
+
+Fig. \ref{pogEq:compile:compExpr:defStmt} presents the definition 
+of the compiler function for statements which does not affect the exception handler table 
+neither have affect the specification tables.
+Let us explain in more detail the rule for 
+conditional statement. First the conditional expression is compiled $\compileLabel{s}{\expressionSrcRel}{e'};$.
+Afterwards, comes the conditional branch instruction $e' + 1: \ifCond \ e'' + 2;$. Remind that the \ifCond \ 
+instruction will compare the two stack top elements  (w.r.t. some condition ) and if they fulfill the condition
+in question, the control will be transfered to instruction at index $ e'' +2 $, otherwise the next instruction
+at index $e' + 2$ will be executed. Note that at index $ e''+2$ starts the compilation of the then branch 
+$\compileLabel{e'' +  2}{\stmt_1}{ e  };$ and at index $ e'+2$ starts the compilation of the else branch 
+$\compileLabel{e' + 2}{\stmt_2)}{e''}$. After the compilation of the else branch follows a $ e'' + 1: \goto e + 1$ \ instruction
+which jumps at the first instruction  outside the compilation of the branch statement. 
+ It deserves may be our attention  that
+we have two different compilation rules for the assignment. More particularly, it depends on if it is a  field assignment or
+local variable assignment.  In the case for field assignment $ \expressionSrc_1.f= \expressionSrc_2$,
+the last instruction of the compilation is a $\putfield \ f$ instruction. The compilation of a
+ local variable assignment $ \var = \expressionSrc$ statement terminates with a \store \ insruction.
+
+\todo{est-ce que il faut changer le langage source pour avoir aussi 2 types d'affectation}
+
+
+
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l}
+	      \compileLabel{s}{\stmt_1; \stmt_2}{e}  =  \\  
+	      \begin{array}{l}
+	            \compileLabel{s}{\stmt_1}{e'};\\
+	    	    \compileLabel{e'+1}{\stmt_2}{e}
+	      \end{array}  \\
+       \\ \\
+       \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e}   =  \\  
+        \begin{array}{l}
+	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
+            e' + 1: \ifCond \ e'' + 2;\\
+            \compileLabel{e' + 2}{\stmt_2)}{e''}\\
+             e'' + 1: \goto \ e +  1; \\
+            \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
+	    %e: \goto   e + 1        
+	\end{array}  \\ 
+	\\ \\  
+	
+	\compileLabel{s}{\expressionSrc_1.f= \expressionSrc_2}{e} = \\
+             \begin{array}{l}
+                        \compileLabel{s}{\expressionSrc_1}{e'};\\
+			\compileLabel{e'+1}{\expressionSrc_2}{e - 1 };\\
+			e  :\putfield \ \fieldd;
+             \end{array} \\ 
+	\\ \\  
+	\compileLabel{s}{  \var = \expressionSrc }{e} =  \\  
+             \begin{array}{l}
+                        \compileLabel{s}{\expressionSrc}{e  - 1 }\\
+			e : \instr{store} \ \locVar{i};
+             \end{array} \\ 
+	\\ \\  
+	\compileLabel{s}{\athrow \ \expressionSrc}{e} = \\
+             \begin{array}{l} 
+	           \compileLabel{s}{ \expressionSrc}{e - 1}; \\
+	           e: \instr{athrow}; 
+	        \end{array} \\
+		\\ \\
+	\compileLabel{s}{\returnSrc  \  \expressionSrc }{e } =  \\
+	\begin{array}{l} 
+	      \compileLabel{s}{ \expressionSrc }{e - 1};\\
+	      e : \return
+	\end{array} 
+
+	\end{array} 
+} $$
+
+\caption{\sc Definition of the compiler for statements }
+\label{pogEq:compile:compExpr:defStmt}
+\end{frameit}
+\end{figure}
+
+Fig. \ref{pogEq:compile:compExpr:defExc} shows the compiler definition for statements whose compilation will
+change the  the exception handler of the current method.
+The first such statement  is the try catch statement.
+The compiler compiles the normal statement $\stmt_1$ and the exception handler $\stmt_2$.
+Note that in the exception handler table of the bytecode representation of method \methodd, a new line is added 
+which states that the if one of bytecode instructions from index $s$ to index $e'$  throw a not handled exception of type  \excType
+control will be transfered to the instruction at index \excType.
+
+As you can notice, Fig \ref{pogEq:compile:compExpr:defExc} contains the compiler definition for try finally statements. 
+We compile the finally statement $ \stmt_2 $ by inlining, it is first compiled as a code executed after $\stmt_1  $  and
+then it is compiled as part of the default exception handler. The default exception handler which starts at index $e'' + 2 $ and 
+which will  handle any exception thrown by $\compileLabel{s}{\stmt_1}{e'}$. The exception handler 
+first stores the thrown exception in the local variable at index $l$, then executed the subroutine code and after the execution rethrows the exception 
+stored in the local variable $l$. 
+
+This compilation differs from the compilation scheme in the JVM specification for finally statements, which requires that the subroutines must be compiled using \instr{jsr} and 
+\ret \ instructions. However, the semantics of the programs produced by the compiler presented here and a compiler which follows closely the JVM specification 
+is equivalent. 
+In the following, we discuss informally why this is true.
+ The semantics of a \jsr \ k insruction is to  jump to the first instruction of the compiled subroutine which starts at index $k$ and pushes on the
+ operand stack the index of the next instruction of the \jsr \ that caused the execution of the subroutine. 
+The first instruction of the compilation
+of the subroutine stores the stack top element in the local variable at index $k$ ( i.e. stores in the local variable at index $k$ the index of the instruction following the \instr{jsr} instruction). Thus, after the code of the subroutine is 
+executed, the \ret \ k instruction jumps to 
+ the instruction following the corresponding \jsr. This behaviour can be actually simulated by programs without \jsr \ and \ret \ but which inline the subroutine code
+at the places where a \jsr \ to the subroutine is done.
+
+\textit{Note:}
+ \begin{enumerate}
+           \item we assume that the local variable $l$ is not used in the compilation of the statement $\stmt_2$, which guarantees that after any execution which 
+	   terminates normally of $\compileLabel{e'' + 3}{\stmt_2}{e - 2}$ the local variable  $l$ will still hold the thrown object
+           \item here we also assume that the statement $\stmt_1$ does not contain a \instr{return} instruction 
+\end{enumerate}
+
+The  last remark that we would like to make is that subroutines and their compilation via \ret \ and \jsr has always presented a problem for Java.
+First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work\todo{verify this}.
+Second, the analysis performed by the  bytecode verifier in  the JVM becomes rather complex because  (and its first version was erroneus ) 
+of the Java subroutines. In the last version of Java Sun compiler, subroutines has become obsolete 
+ where they are compiled by inlining. Thus, the compiler presented here represents a realistic approximation of the Java Sun compiler.
+
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l}
+
+	\compileLabel{s}{ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \} }{e} = \\
+	\begin{array}{l}
+             
+                       \compileLabel{s}{\stmt_1}{e'}; \\
+                       e' + 1: \goto \ e + 1; \\
+		  
+                       \compileLabel{e' + 2 }{\stmt_2}{e };\\
+		       % e: \goto \ e + 1; \\
+		       \\ 
+                    
+			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} )
+             \end{array} \\ 
+	\\ \\  
+ 	
+	\compileLabel{s}{ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} }{e} = \\
+       	\begin{array}{l} 
+	\compileLabel{s}{\stmt_1}{e'}; \\
+	\compileLabel{e'+1}{\stmt_2}{e''}; \\
+        e''+1  : \goto \ e + 1;\\
+        
+        \\ 
+        \{ \mbox{ \rm default exception handler} \} \\
+        e'' +  2: \store \ l; \\
+	\compileLabel{e'' + 3}{\stmt_2}{e - 2}; \\	                
+        e - 1 :\load \ l;\\
+        e: \athrow;\\
+
+        
+        \\
+	\addExceptionTable{\methodd}{ s }{  e' }{ e''+2  }{ \Exception } 
+        \end{array} \\ 
+	\\ \\  
+	
+		
+
+\end{array} 
+} $$
+
+\caption{\sc Definition of the compiler for statements that change the exception handler table}
+\label{pogEq:compile:compExpr:defExc}
+\end{frameit}
+\end{figure}
+
+We have put separately in Fig.\ref{pogEq:compile:compExpr:defLoop} the compiler definition for loop statements as its compilation is particular
+ because it is the unique case where the specification tables of the current method are affected. 
+Particularly, the compiler adds a new element in the table of loop invariants of the method \methodd. 
+This new element relates  the index $e'+1$  with the loop invariant \invariant \  and the
+ list of modified expressions \modLoop.
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l}
+ \compileLabel{s}{\while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} }{e} = \\
+         \begin{array}{l}
+              s: \goto \ e' + 1; \\
+	      \compileLabel{s +  1}{\stmt}{e' }; \\
+	     % \lbrack  \compileSynt{\invariant} , \compileSynt{\modLoop} \rbrack \\ 
+	      \compileLabel{e' +  1}{\expressionSrcRel}{e  -1 };\\
+	      e: \ifCond \ s +  1; \\
+	      \\\\
+	      \addLoopTable{\methodd}{e'+1}{\invariant }{\modLoop}
+	 \end{array}
+
+\end{array} 
+} $$
+
+\caption{\sc Definition of the compiler for the loop statement}
+\label{pogEq:compile:compExpr:defLoop}
+\end{frameit}
+\end{figure}
+
+
+
+For an illustration, we can turn to Fig. \ref{pogEquiv:compile:prop}.
+The example shows the correspondance between  the bytecode (left) resulting from the compilation described above and the source lines(right)
+ of method  \lstinline!square! from Fig. \ref{pogComp:source:example}.
+
+We can see in the figure how the branch statement is compiled (bytecode instructions from 4 to 11).
+ It also shows us the somewhat unusual way into which 
+the while statement is compiled. More particularly, the compilation of the test of the \lstinline!while! is after its body while semantically the test must be executed 
+at every iteration before the loop body.  The compilation is actually correct because the instruction 
+\lstinline!14 goto 27! jumps to the compilation of the line \lstinline!while(s<v)! and thus, the execution proceeds in the expected way.
+ We have also marked the instructions which correspond to the loop entry and loop end  which are the instructions at index 27 and 26. 
+ 
+
+Note that the bytecode has been generated by a standard Java compiler. We have only modified the compilation of  \lstinline!s = s+1;! to match the definition 
+of our compiler\footnote{the Java compiler will tend to compile incrementation into \lstinline!iinc!}. Note also that we keep the same names on bytecode and source.
+This is done for the sake of simplicity and in this chapter, we shall use always this convention.
+
+ \begin{figure}[ht!]
+\begin{frameit}
+  \scriptsize{
+  \begin{tabular}{ll}
+& \lstinline!int square( int i )!\\
+\lstinline!0 const 0!      & \lstinline!int sqr  = 0;! \\
+\lstinline!1 store sqr!	   & \\
+                           & \\ & \\
+
+\lstinline!2 const 0!      & \lstinline!int v = 0;! \\
+\lstinline!3 store v!	   & \\
+                           & \\ & \\
+
+\lstinline!4 load i!       & \lstinline!if ( i >= 0)! \\ 
+\lstinline!5 ifge 10!	   & \\
+ & \\ & \\
+\lstinline!6 load i!       & \Myspace \lstinline!else{v =-i;}! \\ 
+\lstinline!7 neg!	   & \\
+\lstinline!8 store v!	   & \\
+                           & \\ & \\
+\lstinline!9 goto 12!	   & \\ 
+
+                           & \\ & \\
+\lstinline!10 load i!	   &\Myspace \lstinline!then{v = i;}! \\ 
+\lstinline!11 store v!	   & \\  
+                           & \\ & \\
+\lstinline!12 const 0!	   & \lstinline!int s = 0;! \\
+\lstinline!13 store s!	   & \\ 
+                           & \\ & \\
+\lstinline!14 goto 27!	   & \\ 
+	                   & \\ & \\
+\lstinline!15 load sqr!      &\Myspace \lstinline!sqr = sqr + 2*s + 1;! \\ 
+\lstinline!16 const 2!	   & \\ 
+\lstinline!17 load s!	   & \\ 
+\lstinline!18 mul!	   & \\        
+\lstinline!19 add!	   & \\ 
+\lstinline!20 const 1!	   & \\ 
+\lstinline!21 add!	   & \\ 
+\lstinline!22 store sqr!   & \\ 
+                           & \\ & \\
+
+\lstinline!23 load s!      & \Myspace \lstinline!s = s+1;! \\
+\lstinline!24 const 1!	   & \\ 
+\lstinline!25 add!	   & \\ 
+\lstinline!26 store s!	   & \lstinline!LOOP END! \\ 
+                           & \\  & \\ 
+
+\lstinline!27 load s!      & \lstinline!LOOP START!  \lstinline!while( s < v )!\\ 
+\lstinline!28 load v!      & \\  
+\lstinline!29 if_icmplt 15!& \\  
+                           & \\  & \\ 
+\lstinline!30 load sqr!      &\lstinline!return sqr;!\\ 
+\lstinline!31 return!      &\\
+  \end{tabular}
+
+}
+
+  \caption{\sc  relation between bytecode and source code of method \lstinline!square! from Fig. \ref{pogComp:source:example} }
+  \label{pogEquiv:compile:prop}
+\end{frameit}  
+\end{figure}
