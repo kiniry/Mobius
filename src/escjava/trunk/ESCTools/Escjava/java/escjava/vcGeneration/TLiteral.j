@@ -19,7 +19,7 @@ public class TBoolean extends TLiteral{
 
     public boolean value;
 
-    protected TBoolean (boolean value){
+    public TBoolean (boolean value){
 	this.value = value;
 	type = _boolean;
     }
