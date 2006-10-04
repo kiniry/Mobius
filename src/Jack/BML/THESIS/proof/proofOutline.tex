@@ -5,11 +5,10 @@ Alors est-ce que ca c'est grave?}
  We would first like to remark that in the following, we shall establish the soundness of our verification condition generator
  w.r.t. method correctness. For instance, the proof does not deal with the soundness of our
  methodology w.r.t. class invariants, class history constraints, neither about ghost variables. The reason for
- this is that their verification is the same on source and bytecode level. Note that establishing the semantics and 
- verifying class invariants in JML in a modular way, which is our frontend language, is not completely clear. Class
- specifications is a subject which  by itself is complex (see \todo{ownership systems, Peter Mueller}).
- Thus,  we do not consider that these verification issues are particular to the bytecode verification  techniques
- and thus, we shall omit to discuss their soundness here. 
+ this is that their verification is the same on source and bytecode level. Establishing the semantics and 
+ verifying class invariants in JML in a modular way, which is our frontend language, is a subject which  by itself
+ is complex (see \cite{barnett03verification}). Thus,  we do not consider that these verification issues are particular
+ to the bytecode verification  techniques and thus, we shall omit to discuss their soundness here. 
 
 Also, we assume that there are no recursive methods in the program. 
 Proving the correctness of a verification calculus in the presence 
@@ -21,7 +20,7 @@ of program logics might look at \cite{Nipkow-MOD2001}.
 Remember that we assume that the control flow graph of a method is reducible, or in other words there 
 are no cycles in the graph with two entries. This means that if program have cycles then they should 
 conform to Def. \ref{defLoop} from Section \ref{prelim:ctrFlow}.
-As we shall in the folloing, control flow graph reducibility plays an important role in
+As we shall in the following, control flow graph reducibility plays an important role in
  the proof of soundness of the verification condition generator. 
 Note that this restriction (as we said earlier) is realistic as every non-optimizing Java compiler produces
 reducible control flow graphs and even hand written code is usually reducible.
