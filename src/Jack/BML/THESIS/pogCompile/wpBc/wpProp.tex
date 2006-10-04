@@ -103,7 +103,7 @@ $$
    \wpExpl{ \ins{j} }{ \psi }{ \excPostExpl}  = \wpi{\ins{j}}{\methodd}{} \\
    \mbox{\rm\textit{\{by definition \ref{seqInstr} ,  $\ins{j}$ is not a loop entry }} \\
    \mbox{\rm\textit{ and from Def. \ref{wp:interPred} \}}} \\
-   \numConclusion{2} \ \inter{j}{j+1} =\wpi{\ins{j}}{\methodd}{} \\
+   \numConclusion{2} \ \inter{j-1}{j} =\wpi{\ins{j}}{\methodd}{} \\
    \mbox{\rm\textit{\{apply the induction hypothesis over $\ins{1}; \ldots;\ins{j -1 } $  , }}\\
    \mbox{\rm\textit{ \numConclusion{2} and the initial hypothesis for exception handlers \}}}\\
    \numConclusion{3} \ \wpBcSeq{\ins{1}; \dots;\ins{j -1 } }{\wpExpl{ \ins{j} }{ \psi }{ \excPostExpl}  }{\excPostExpl } = \\
@@ -120,7 +120,7 @@ The same property is established for compilation of expressions.
 
       \begin{itemize}
             \item $\psi = \inter{e}{e+1}$	    
-	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall 1 \le i,k \le j,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
+	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \forall i, s\le i \le e,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) =$ 
                   $ \methodd.\getExcPost(i, \mbox{\rm\texttt{Exc}}) $ 
             
 
