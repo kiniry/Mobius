@@ -20,7 +20,7 @@ object manipulation and creation, method invokation, throwing and handling excep
 				& \mid \expressionSrc.f \\
 				& \mid \var \\
   			        & \mid (Class) \ \expressionSrc \\
-				& \mid \expressionSrc.m( ) \\
+				& \mid \expressionSrc.m(\expressionSrc) \\
 				& \mid  \newSrc \ Class  ( \expressionSrc  ) \\ 
 				& \mid \expressionSrcRel \\
                                 & \\
@@ -53,18 +53,19 @@ object manipulation and creation, method invokation, throwing and handling excep
     integer constants $\constantInt$, the boolean constants  $ \Mytrue$ and $\Myfalse$, the null constant \Mynull \ 
     denoting  the empty reference, a construct \this \ for referring to the current object,  
     arithmetic expressions  $\expressionSrc \ op \ \expressionSrc$ where $op \in  \{+ , - , div , rem, * \}$.
-    The language  allows to talk about the value stored in a field \fieldd \ for the object reference $\expressionSrc $
-    via the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions  $(Class) \expressionSrc$
-    and method local variables  and parameters \var.  
-    The language also has constructs for expressing method invokations  $ \expressionSrc.m()  $  as well as instance creation
-    $\newSrc \ Class(\expressionSrc )$. For the sake of clarity we consider only non void  methods which do not receive parameters and constructors
-    that receive exactly one argument without losing
-    any specific feature   of modular object oriented  languages. 
-    The language allows to express a relation between  expressions via the construct
-     $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$ as well as to state that an expression 
-   $\expressionSrc$ is an instance of class Class via  $\expressionSrc \ \instanceofSrc \ Class$.
+    The value stored in a field \fieldd \ for the object reference $\expressionSrc $ is denoted with
+    the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions with   $(Class) \expressionSrc$
+    and method local variables  and parameters with identifiers taken from the set \var.  
+    The language also has constructs for expressing method invokation.  For the sake of clarity we consider only non void  instance  methods which receive exactly one parameter. 
+    Thus, the first expression in the syntax of the method invokation stands for the receiver object and 
+    the expression which is in brackets after the  method name is the unique argument of the  method.
+    The language supports also instance creation. Note that constructors take one argument.
+    A relation between    expressions is denoted with
+     $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$. 
+     The language supports also the construct  $\expressionSrc \ \instanceofSrc \ \class$ which means that
+     $\expressionSrc$ is an instance of class \class.
     
-    The expressions can be of object types or basic types. Formally the types are 
+    Expressions can be of object, integer or boolean types. Formally the types are 
 
 $$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$ 
 
@@ -86,12 +87,12 @@ $$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$
   Its meaning is that if the statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
   the exception will be caught by the statement following the  $ \catch $ keyword. An interesting feature  is the finally statement
   introduced via the syntax $ \try  \ \{ \stmt \}  $ $ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
-  no matter how the statement following the keyword \try \ terminates,
-  the statement introduced by the keyword \finally \ must execute after it. The language also provides a construct for expressing loops 
-   $ \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} $ states for a loop statement where the body 
-   statement $ \stmt$ will be executed until the relational expression  $\expressionSrcRel$ evaluates to false.
-   Note that a loop statement is provided with a predicate \invariant \ which must hold whenever the loop entry is reached and with a list of expressions
-   \modLoop \ which give all the locations that  may be modified per loop iteration.
+  no matter how the statement following the keyword \try \ terminates (on an exception or normally),
+  the statement introduced by the keyword \finally \ must execute after it. Also, if the try statement terminates normally(exceptionally) then the
+  whole statement will terminate normally(exceptionally).
+  Loop statements are also supported.  They are provided with a predicate \invariant \ which must hold whenever 
+  the loop entry is reached and with a list of expressions
+   \modLoop \ which lists the locations that  may be modified per loop iteration.
 %  The construct $ \returnSrc \  \expressionSrc $ is
 %   the statement by which method execution may terminate and control will be transfered to the method caller.
 %   The last statement that we consider is the assignment statement $ \expressionSrc = \expressionSrc$.
