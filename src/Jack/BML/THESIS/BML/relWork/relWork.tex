@@ -1,0 +1,34 @@
+
+
+\section{Related work}
+The interest in specification and verification of bytecode
+applications is quite recent, and not too much work has been done in
+that direction. Several logics have been developed to reason about
+bytecode, \emph{e.g.}~by Bannwart \& M\"uller~\cite{BM05plb}
+and within the MRG project~\cite{AspinallEtAl:TPHOLs2004}. However,
+in this work, no attention is given to how one can conveniently write
+understandable specifications for bytecode.
+
+The development of BML is clearly inspired by the development of the
+JML specification language~\cite{december-jml}. Both JML and
+BML follow the Design by Contract principle introduced first in
+Eiffel~\cite{M97oos}. The Boogie project~\cite{leinoWPUP}
+introduces in similarly the Design by Contract principles into the C\#
+programming language, both at source code level and for CIL, the .NET
+intermediate language.  The possibility to check a property at
+run-time, using the \texttt{assert} construct, has been long 
+adopted in the C programming language and recently also in Java (Java
+1.5, see \cite[\S 14.10]{JLS}). 
+
+Finally, we should mention the Extended Virtual Platform
+project\footnote{See
+\url{http://www.cs.usm.maine.edu/~mroyer/xvp/}.}. This project aims at
+developing a framework that allows to compile JML annotations, to
+allow run-time checking~\cite{AlagicXVP05}. However, in contrast to
+our work, they do not intend to do static verification of bytecode
+programs. Moreover, their platform takes JML-annotated source code
+files as starting point, while with BML one is able to annotate
+bytecode applications directly\footnote{Some security-critical
+applications are written in bytecode directly, to avoid security
+problems related with compilation. Thus, for such applications one
+needs to be able to specify and verify them directly at this level.}.
