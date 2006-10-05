@@ -3,6 +3,7 @@
 package javafe.parser;
 
 import javafe.ast.*;
+import javafe.extensions.universes.InitUniverses;
 import javafe.util.StackVector;
 import javafe.util.ErrorSet;
 
@@ -426,6 +427,9 @@ VariableDeclarator:
   parseTypeDeclElemIntoSeqTDE(Lex l, int keyword, /*@non_null*/Identifier containerId,
 				   boolean specOnly)			
   {
+	  //alx:
+	    boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+	    //alx-end
     int loc = l.startingLoc;
     int modifiers = parseModifiers(l);
     //alx: dw clone the array to use it later
@@ -671,6 +675,9 @@ VariableDeclarator:
   //@ ensures \result != null;
   public FormalParaDeclVec parseFormalParameterList(Lex l) 
   {
+	  //alx:
+	  boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+	  //alx-end
     /* Should be on LPAREN */
     if( l.ttype != TagConstants.LPAREN ) 
       fail(l.startingLoc, "Expected open paren");

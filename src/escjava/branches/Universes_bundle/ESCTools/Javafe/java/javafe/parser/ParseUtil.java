@@ -6,6 +6,7 @@ package javafe.parser;
 import javafe.Tool;
 //alx-end
 import javafe.ast.*;
+import javafe.extensions.universes.InitUniverses;
 import javafe.util.StackVector;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
@@ -22,8 +23,6 @@ public class ParseUtil
 {
     //alx: dw if to use the universe type system and with which level
     //alx: TODO what specs for these fields
-    public int universeLevel=23;
-    public boolean useUniverses=false;
     // used by parseModifiers() to remember universe modifiers
     public int[] universeArray = {0,0};
     //alx-end
@@ -31,12 +30,6 @@ public class ParseUtil
     public ParseUtil() {
 	//@ set seqModifierPragma.elementType = \type(ModifierPragma);
 	//@ set seqModifierPragma.owner = this;
-    	//alx: dw init universe vars
-    	if (Tool.options!=null) {
-    		universeLevel=Tool.options.universeLevel;
-    		useUniverses=Tool.options.useUniverseTypeSystem;
-    	}
-	//alx-end
     }
 
 
@@ -179,6 +172,7 @@ public class ParseUtil
     	int nof_universeModifiers=0;
     	universeArray[0]=0;
     	universeArray[1]=0;
+    	int universeLevel = InitUniverses.getCurrentInit().getUniverseLevel();
 
         int modifiers = Modifiers.NONE;
 
@@ -332,8 +326,9 @@ public class ParseUtil
 				      int[] a, 
 				      /*@ non_null @*/ Type t, int loc) {
 	int tag = t.getTag();
-	boolean reportErrors=Tool.options!=null && 
-	                     Tool.options.universeLevel%5!=0;
+	InitUniverses iu = InitUniverses.getCurrentInit();
+	boolean reportErrors=iu!=null && 
+	                     iu.getUniverseLevel()%5!=0;
 	if (a!=null && !(tag==TagConstants.ARRAYTYPE)) {
 	    if (t instanceof PrimitiveType) {
 		if (a[0]!=0 && reportErrors)

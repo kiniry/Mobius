@@ -51,7 +51,9 @@ ESCJAVA_SOURCE_FILES_RELATIVE = \
         $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/sammy/*.java) \
         $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/simplify/*.java) \
         $(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/vcGeneration/xml/*.java) \
-	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java)
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/extensions/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/extensions/universes/*.java)
 
 ESCJAVA_SOURCE_FILES = \
 	$(foreach javafile,$(ESCJAVA_SOURCE_FILES_RELATIVE),\

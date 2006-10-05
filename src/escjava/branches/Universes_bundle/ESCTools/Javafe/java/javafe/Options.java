@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javafe.extensions.IJavafeInitComponentView;
+import javafe.extensions.universes.InitUniverses;
 import javafe.util.ErrorSet;
 import javafe.util.UsageError;
 import junitutils.Utils;
@@ -26,6 +28,14 @@ import junitutils.Utils;
 
 public class Options
 {
+	/**
+	 * The array with all the extensions to the options
+	 * class.
+	 */
+	static public /*@ non_null @*/ IJavafeInitComponentView[] initJavafeExtensions = {
+		(IJavafeInitComponentView) new InitUniverses()
+	};
+	
   /**
    * Holds all the non-option arguments.
    */
@@ -114,15 +124,6 @@ public class Options
   static public final int NEVER_BINARY = 3;
   static public final int NEVER_SOURCE = 4;
   public int fileOrigin = PREFER_RECENT;
-
-  //alx: dw if we have to recognize and check the Universe type modifiers
-  public boolean useUniverseTypeSystem = false;
-  // the next variable decodes where the modifiers can be and if one has to check them
-  // modifiers in comments => mod 2 == 0
-  // modifiers as keyword  => mod 3 == 0
-  // no checking           => mod 5 == 0  
-  public int universeLevel = 23; // just some arbitrary prime larger then the primes used as universe modes
-  //alx-end
 
   public Options() {
     // Everything should be initialized to default values.
@@ -289,44 +290,18 @@ public class Options
     } else if (option.equals("-neversource")) {
       fileOrigin = NEVER_SOURCE;
       return offset;
-    //alx: dw recoginze options
-    } else if (option.equals("-universes")) {
-    	useUniverseTypeSystem=true;
-    	universeLevel=2;
-    	if ((offset < args.length) && (args[offset].charAt(0) != '-')) {
-    		if (args[offset].equalsIgnoreCase("comment")) {
-    			universeLevel=2;
-    			offset++;
-    		}
-    		else if (args[offset].equalsIgnoreCase("keyword")) {
-    			universeLevel=3;
-    			offset++;
-    		}
-    		else if (args[offset].equalsIgnoreCase("commentandkeyword")) {
-    			universeLevel=6;
-    			offset++;
-    		}
-    		if ((offset < args.length) && 
-		    (args[offset].charAt(0) != '-') && 
-		    args[offset].equalsIgnoreCase("readonlyforpurector")) {
-    			universeLevel*=7;
-    			offset++;
-    		}
-    		if ((offset < args.length) && 
-		    (args[offset].charAt(0) != '-') && 
-		    args[offset].equalsIgnoreCase("nochecks")) {
-    			universeLevel*=5;
-    			offset++;
-    		}
+    } else {
+    	for (int i =0; i<initJavafeExtensions.length; i++) {
+    		int res = initJavafeExtensions[i].processOption(option, args, offset);
+    		if (res!=-1) return res;
     	}
-    	return offset;
-    //alx-end
-    } else if (option.equals("--")) {
-      while (offset < args.length) {
-        inputEntries.add(new UnknownInputEntry(args[offset++]));
-      }
-      return offset;
-    }
+    	if (option.equals("--")) {
+    		while (offset < args.length) {
+    			inputEntries.add(new UnknownInputEntry(args[offset++]));
+    		}
+    		return offset;
+    	};
+    };
 
     // Pass on unrecognized options:
 
@@ -337,7 +312,7 @@ public class Options
     throw new UsageError("Unknown option: " + option);
   }
 
-  //@   protected normal_behavior
+//@   protected normal_behavior
   //@   requires offset < args.length;
   //@ also protected exceptional_behavior
   //@   requires offset >= args.length;
@@ -408,7 +383,15 @@ public class Options
    */
   public String showOptions(boolean all) {
     String result = showOptionArray(publicOptionData);
-    if (all) result += showOptionArray(privateOptionData);
+    for (int i = 0; i<initJavafeExtensions.length;i++) {
+    	result += initJavafeExtensions[i].showPublicOptions();
+    }
+    if (all) {
+    	result += showOptionArray(privateOptionData);
+    	for (int i = 0; i<initJavafeExtensions.length;i++) {
+        	result += initJavafeExtensions[i].showPrivateOptions();
+        }	
+    }
     return result;
   }
 
@@ -420,7 +403,7 @@ public class Options
     return sb.toString();
   }
 
-  public String format(String[] sa) {
+  public static String format(String[] sa) {
     int columns = Integer.getInteger("COLUMNS", 80).intValue();
     StringBuffer sb = new StringBuffer("  " + sa[0] + " : ");
     int current_column = 2 + sa[0].length() + 3;

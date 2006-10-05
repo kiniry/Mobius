@@ -3,6 +3,7 @@
 package javafe.parser;
 
 import javafe.ast.*;
+import javafe.extensions.universes.InitUniverses;
 import javafe.util.StackVector;
 import javafe.util.Location;
 import javafe.util.ErrorSet;
@@ -776,6 +777,8 @@ public abstract class ParseStmt extends ParseExpr
             expect(l, TagConstants.LPAREN);
             FormalParaDecl arg = parseFormalParaDecl(l);
             //alx: dw in catchclauses the default is readonly
+            boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+            int universeLevel = InitUniverses.getCurrentInit().getUniverseLevel();
             if (useUniverses && getUniverse(arg)==TagConstants.IMPL_PEER)
             	setUniverse(arg,TagConstants.READONLY);
             else if (useUniverses && getUniverse(arg)!=TagConstants.READONLY) {
@@ -822,6 +825,9 @@ public abstract class ParseStmt extends ParseExpr
                                  ModifierPragmaVec modifierPragmas,
                                  Type basetype)
     {
+        //alx:
+        boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+        //alx-end
         // make modifierPragmas non-null, so can retroactively extend
         if( modifierPragmas == null )
             modifierPragmas = ModifierPragmaVec.make();
@@ -885,7 +891,11 @@ public abstract class ParseStmt extends ParseExpr
      */
     //@ requires l != null && l.m_in != null;
     //@ ensures \result != null;
-    public FormalParaDecl parseFormalParaDecl(Lex l) {
+    public FormalParaDecl parseFormalParaDecl(Lex l) 
+    {
+    	//alx:
+        boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+        //alx-end
         int modifiers = parseModifiers(l);
         //alx: dw save the universe modifiers
         int[] localUniverseArray=null;

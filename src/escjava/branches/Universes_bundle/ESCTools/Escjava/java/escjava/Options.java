@@ -12,6 +12,8 @@ import javafe.util.Set;
 import javafe.util.UsageError;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
+import escjava.extensions.IESCInitComponentView;
+import escjava.extensions.universes.InitUniverses;
 import escjava.translate.NoWarn;
 
 /**
@@ -20,6 +22,14 @@ import escjava.translate.NoWarn;
  */
 
 public class Options extends javafe.SrcToolOptions {
+	  /**
+	   * The array with all the extensions to the options
+	   * class.
+	   */
+	  static public /*@ non_null @*/ IESCInitComponentView[] initESCExtensions = {
+		 (IESCInitComponentView) new InitUniverses()
+	  };
+
     final String[][] escPublicOptionData = {
             { "-CounterExample",
                     "If a warning is discovered, generate a counter-example if possible." },
@@ -1392,8 +1402,51 @@ public class Options extends javafe.SrcToolOptions {
         	warnUnsoundIncomplete = true;
         	return offset;
         }
-        // Pass on unrecognized options:
-        return super.processOption(option, args, offset);
+        
+        //process options from extensions
+    	int inExtensions = processOptionInExtensions(option, args, offset);
+    	if (inExtensions>=0) {
+    		return inExtensions;
+    	}
+    	// Pass on unrecognized options:
+    	return super.processOption(option, args, offset);
+    }
+    	
+    /**
+     * Process next tool options that are handled in extensions.
+     *
+     * <p> This routine handles the standard front-end options, storing the
+     * resulting information in the preceding instance variables and
+     * <code>Info.on</code>.
+     *
+     * @param option the option currently being handled.  An option
+     * always starts with a '-' character, and the remaining
+     * command-line arguments (not counting <code>option</code>)
+     * (<code>args[offset]</code>,...,<code>args[args.length-1]</code>).
+     * @param args the command-line arguments that are being processed.
+     * @param offset the offset into the <code>args</args> array that
+     * indicates which option is currently being dealt with.
+     * @return The offset to any remaining command-line arguments
+     * should be returned or -1 in case no option from the extensions
+     * is recognized.  (This allows the option to consume some or
+     * all of the following arguments and to signal that no option
+     * was recognized.) 
+     * @throws UsageError 
+     * @exception UsageError If the option is erroneous, throw an
+     * {@link UsageError} exception with a string describing the
+     * problem.
+     */
+    //@ requires option != null;
+   	//@ requires \nonnullelements(args);
+    //@ requires 0 <= offset && offset <= args.length;
+    //@ ensures (0 <= \result && \result <= args.length) || \result == -1;
+    private int processOptionInExtensions(String option, String[] args, int offset) 
+                   throws UsageError {
+    	for (int i=0; i<initESCExtensions.length; i++) {
+    		int res = initESCExtensions[i].processOption(option, args, offset);
+    		if (res>=0) return res;
+    	}
+    	return -1;
     }
 
     private Vector readFile(String filename) {

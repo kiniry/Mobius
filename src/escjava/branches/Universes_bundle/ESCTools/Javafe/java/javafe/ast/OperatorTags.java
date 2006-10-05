@@ -63,6 +63,10 @@ public class OperatorTags extends GeneratedTags
     public static final int LAST_TAG = POSTFIXDEC;
 
     /**
+     * This method gives the string representation of
+     * the given token.
+     * 
+     * @param opTag the number of the tag
      * @return the text representation of <code>code</code>.  For
      * example, return the string "=" for the tag {@link #ASSIGN}.
      */

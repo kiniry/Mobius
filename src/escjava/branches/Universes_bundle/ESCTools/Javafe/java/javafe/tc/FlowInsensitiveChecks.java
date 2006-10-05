@@ -81,6 +81,7 @@ import javafe.ast.VarDeclStmt;
 import javafe.ast.VarInit;
 import javafe.ast.VariableAccess;
 import javafe.ast.WhileStmt;
+import javafe.extensions.universes.InitUniverses;
 import javafe.parser.ParseUtil;
 import javafe.util.Assert;
 import javafe.util.ErrorSet;
@@ -115,12 +116,13 @@ public class FlowInsensitiveChecks
     // Use this to get an instance in order to get proper derived behavior.
     protected FlowInsensitiveChecks() { 
 	//alx: dw init useUniverses
-    	useUniverses=javafe.Tool.options!=null && 
-                     javafe.Tool.options.useUniverseTypeSystem && 
-                     javafe.Tool.options.universeLevel%5!=0;
-    	readonlyStdForPureCtor=javafe.Tool.options!=null && 
-	             javafe.Tool.options.useUniverseTypeSystem && 
-                     javafe.Tool.options.universeLevel%7==0;
+    	InitUniverses univInit = InitUniverses.getCurrentInit();
+    	useUniverses=univInit!=null && 
+                     univInit.getUseUniverseTypeSystem() && 
+                     univInit.getUniverseLevel()%5!=0;
+    	readonlyStdForPureCtor=univInit!=null && 
+	             univInit.getUseUniverseTypeSystem() &&
+	             univInit.getUniverseLevel()%7!=0;
     }
 
     /**

@@ -5,12 +5,23 @@ package escjava.ast;
 import javafe.ast.Identifier;
 import javafe.util.Assert;
 
+import escjava.extensions.IESCInitComponentView;
+import escjava.extensions.IESCLexerComponentView;
+import escjava.extensions.universes.InitUniverses;
+import escjava.extensions.universes.LexerUniverses;
 import escjava.prover.Atom;
 
 public class TagConstants extends GeneratedTags 
 	//javafe.tc.TagConstants
     //implements GeneratedTags
 {
+	  /**
+	   * The array with all the extensions to the lexer.
+	   */
+	  static public /*@ non_null @*/ IESCLexerComponentView[] lexerESCComponents = {
+		 (IESCLexerComponentView) new LexerUniverses()
+	  };
+	
     //// Tags for new binary operators
     public static final int IMPLIES = escjava.ast.GeneratedTags.LAST_TAG + 1;
     public static final int EXPLIES = IMPLIES + 1;
@@ -404,18 +415,6 @@ public class TagConstants extends GeneratedTags
     public static final int ALSO_MODIFIES = ALSO_EXSURES + 1;
     public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
 
-    // Include the Universe type annotation keywords (cjbooms)
-    //alx: dw
-    public static final int PEER = ALSO_REQUIRES + 1;
-    public static final int READONLY = PEER + 1;
-    public static final int REP = READONLY + 1;
-    /*
-    public static final int PEER = ALSO_REQUIRES + 1;
-    public static final int READONLY = PEER + 1;
-    public static final int REP = READONLY + 1;
-    */
-    //alx-end
-
     // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
     public static final int NULLABLE = REP + 1;
     public static final int NULLABLE_BY_DEFAULT = NULLABLE + 1;
@@ -433,16 +432,31 @@ public class TagConstants extends GeneratedTags
     public static final int SPEC_SAFE_MATH = SPEC_JAVA_MATH + 1;
     public static final int SPEC_BIGINT_MATH = SPEC_SAFE_MATH + 1;
 
-    public static final int LASTESCKEYWORDTAG = SPEC_BIGINT_MATH;
+    public static final int LASTESCKEYWORDTAG; //It is set in the static section
 
-    public static final int LAST_TAG = LASTESCKEYWORDTAG;
+    public static final int LAST_TAG; //It is set in the static section
+    
+    static {
+    	int lastESCFixedKeyword = SPEC_BIGINT_MATH+1;
+    	for (int i=0; i<lexerESCComponents.length; i++)
+    		lastESCFixedKeyword = lexerESCComponents[i].reserveTagConstants(lastESCFixedKeyword);
+    	LASTESCKEYWORDTAG = lastESCFixedKeyword-1;
+    	LAST_TAG = LASTESCKEYWORDTAG;
+    }
 
     public static final /*@non_null*/ Identifier ExsuresIdnName = 
         Identifier.intern("Optional..Exsures..Id..Name");
 
     //// Helper functions
 
+	/*@ requires
+	  @       tag>=0;
+	  @*/
     public static /*@non_null*/ String toVcString(int tag) {
+    	for (int i=0;i<lexerESCComponents.length;i++) {
+    		String res = lexerESCComponents[i].toVcString(tag);
+    		if (res!=null) return res;
+    	}
         switch(tag) {
             case TYPECODE:
                 return "TYPECODE";		// displayed to user as "TYPE"
@@ -464,8 +478,26 @@ public class TagConstants extends GeneratedTags
     }
 
     // Documented in parent.
-
+    /**
+     * This method gives the string representation of
+     * a given token. It checks if the tag is defined
+     * in the current subclass and if so it gives its
+     * representation. When the number of the tag is less
+     * than the minimal number of a tag defined here then
+     * the representation is searched in the superclass.
+     * If this fails an information about unknown tag
+     * is returned.
+     * 
+     * @see escjava.ast.GeneratedTags#toString(int)
+     */
+	/*@ requires
+	  @       tag>=0;
+	  @*/
     public static /*@non_null*/ String toString(int tag) {
+    	for (int i=0;i<lexerESCComponents.length;i++) {
+    		String res = lexerESCComponents[i].toString(tag);
+    		if (res!=null) return res;
+    	}
         switch(tag) {
             // new literal expression (not true keyword)
             case  SYMBOLLIT:
@@ -555,11 +587,22 @@ public class TagConstants extends GeneratedTags
             if (keyword == jmlkeywords[i]) return i + FIRSTJMLKEYWORDTAG;
         for(int i = 0; i < esckeywords.length; i++)
             if (keyword == esckeywords[i]) return i + FIRSTESCKEYWORDTAG;
+        for(int i =0; i<lexerESCComponents.length; i++) {
+        	int res = lexerESCComponents[i].fromIdentifier(keyword);
+        	if (res>0) return res;
+        }
         return NULL;
     }
 
+	/*@ requires
+	  @       tag>=0;
+	  @*/
     public static boolean isKeywordTag(int tag) {
-	return (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
+    	boolean tmp = false; 	
+    	for (int i=0; i<lexerESCComponents.length; i++) {
+    		tmp = tmp || lexerESCComponents[i].isKeywordTag(tag);
+    	}
+    	return tmp || (FIRSTJMLKEYWORDTAG <= tag && tag <= LASTJMLKEYWORDTAG)
           || (FIRSTESCKEYWORDTAG <= tag && tag <= LASTESCKEYWORDTAG)
           || tag == TagConstants.NULLLIT;
     }
@@ -568,6 +611,10 @@ public class TagConstants extends GeneratedTags
         for (int i = FIRSTESCCHECKTAG; i <= LASTESCCHECKTAG; i++) {
             if (s.equals(escchecks[i - FIRSTESCCHECKTAG]))
                 return i;
+        }
+        for (int i = 0; i<lexerESCComponents.length; i++) {
+        	int res = lexerESCComponents[i].checkFromString(s);
+        	if (res>0) return res;
         }
         //@ unreachable;
         Assert.fail("unrecognized check string: \"" + s + "\"");
@@ -578,8 +625,15 @@ public class TagConstants extends GeneratedTags
      * @return a "redundant-fied" version of the passed tag if it can
      * be made redundant; otherwise, return the parameter unchanged.
      */
+	/*@ requires
+	  @       tag>=0;
+	  @*/
     public static int makeRedundant(int tag) {
-        int Result = tag;
+    	int Result = tag;
+    	for (int i=0; i<lexerESCComponents.length; i++) {
+    		Result = lexerESCComponents[i].makeRedundant(tag);
+    		if (Result!=tag) return Result;
+    	}
         switch (tag) {
 	    case TagConstants.REQUIRES:
                 Result = TagConstants.REQUIRES_REDUNDANTLY; break;
@@ -641,8 +695,15 @@ public class TagConstants extends GeneratedTags
      * @return an "unredundant-fied" version of the passed tag if it
      * is redundant; otherwise, return the parameter unchanged.
      */
+	/*@ requires
+	  @       tag>=0;
+	  @*/
     public static int unRedundant(int tag) {
         int Result = tag;
+    	for (int i=0; i<lexerESCComponents.length; i++) {
+    		Result = lexerESCComponents[i].unRedundant(tag);
+    		if (Result!=tag) return Result;
+    	}        
         switch (tag) {
 	          case TagConstants.REQUIRES_REDUNDANTLY:
                 Result = TagConstants.REQUIRES; break;
@@ -700,8 +761,15 @@ public class TagConstants extends GeneratedTags
         return Result;
     }
 
+	/*@ requires
+	  @       tag>=0;
+	  @*/
     public static boolean isRedundant(int tag) {
-      return (tag == TagConstants.REQUIRES_REDUNDANTLY
+      boolean tmp = false;
+      for (int i=0;i<lexerESCComponents.length; i++)
+    	  tmp = tmp || lexerESCComponents[i].isRedundant(tag);
+      return (tmp
+    		  || tag == TagConstants.REQUIRES_REDUNDANTLY
               || tag == TagConstants.ASSERT_REDUNDANTLY
               || tag == TagConstants.ASSIGNABLE_REDUNDANTLY
               || tag == TagConstants.ASSUME_REDUNDANTLY
@@ -730,6 +798,7 @@ public class TagConstants extends GeneratedTags
               );
     }
 
+    //Note that some checks may be gathered in extension components
     public final static /*@non_null*/ String[] escchecks = {
         "ZeroDiv",
         "ArrayStore",
@@ -774,7 +843,8 @@ public class TagConstants extends GeneratedTags
 	"AdditionalInfo", // internal use only
         "Free"  // printed in debugging output only
     };
-        
+
+    //Note that some escfunctions may be gathered in extension components
     private static /*@non_null*/ String[] escfunctions = {
         "allocLT",
         "allocLE",
@@ -858,6 +928,7 @@ public class TagConstants extends GeneratedTags
     static public final String STRINGCATINFIX = "java.lang.String._infixConcat_";
 				     // Must match method name in String.spec
 
+    //Note that some jmlkeywords may be gathered in extensions
     private static /*@non_null*/ Identifier[] jmlkeywords = {
         Identifier.intern("assume"),
         Identifier.intern("axiom"),
@@ -1022,16 +1093,12 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("working_space")
     };
 
+    //Note that some esckeywords may be gathered in extensions
     private static /*@non_null*/ Identifier[] esckeywords = {
         Identifier.intern("also_ensures"),
         Identifier.intern("also_exsures"),
         Identifier.intern("also_modifies"),
         Identifier.intern("also_requires"),
-
-        // Universe type annotations (cjbooms)
- 	Identifier.intern("\\peer"),
-        Identifier.intern("\\readonly"),
-        Identifier.intern("\\rep"),
 
         // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
         Identifier.intern("nullable"),

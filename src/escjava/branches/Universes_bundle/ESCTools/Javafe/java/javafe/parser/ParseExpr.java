@@ -3,6 +3,7 @@
 package javafe.parser;
 
 import javafe.ast.*;
+import javafe.extensions.universes.InitUniverses;
 //alx: 
 import javafe.tc.FlowInsensitiveChecks;
 import javafe.util.ErrorSet;
@@ -184,6 +185,7 @@ public abstract class ParseExpr extends ParseType
     public Expr parseExpression(Lex l) {
         // Save old stack pointer, so re-enterable
         int baseStackPtr = stackPtr;
+        boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
     
         getExpression:
         for(;;) {
@@ -348,6 +350,10 @@ public abstract class ParseExpr extends ParseType
     //@ ensures \result != null;
     public Expr parseUnaryExpression(Lex l) {
         Expr primary;
+        
+        //alx:
+        boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+        //alx-end
 
         switch( l.ttype ) {
             case TagConstants.SUB: {
@@ -530,6 +536,9 @@ public abstract class ParseExpr extends ParseType
     //@ requires l != null && l.m_in != null;
     //@ ensures \result != null;
     public Expr parseCastExpression(Lex l) {
+        //alx:
+        boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+        //alx-end
         int locOpen = l.startingLoc;
         expect( l, TagConstants.LPAREN );
 
@@ -891,6 +900,9 @@ public abstract class ParseExpr extends ParseType
     //@ requires l.ttype == TagConstants.NEW;
     //@ ensures \result != null;
     public Expr parseNewExpression(Lex l) {
+        //alx:
+        boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+        //alx-end
         int locNew = l.startingLoc;
         l.getNextToken();
     

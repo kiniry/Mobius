@@ -273,7 +273,8 @@ export ESCJAVA_PACKAGE_LIST = escjava \
 	escjava.prover escjava.reader escjava.sp \
 	escjava.tc escjava.translate \
 	escjava.vcGeneration escjava.vcGeneration.coq escjava.vcGeneration.pvs \
-	escjava.vcGeneration.sammy escjava.vcGeneration.simplify escjava.vcGeneration.xml
+	escjava.vcGeneration.sammy escjava.vcGeneration.simplify escjava.vcGeneration.xml \
+	escjava.extensions escjava.extensions.universes
 
 export ESCJAVA_PACKAGE_PATHS = escjava \
 	escjava/ant escjava/ast escjava/backpred escjava/gui \
@@ -281,7 +282,8 @@ export ESCJAVA_PACKAGE_PATHS = escjava \
 	escjava/prover escjava/reader escjava/sp \
 	escjava/tc escjava/translate \
 	escjava/vcGeneration escjava/vcGeneration/coq escjava/vcGeneration/pvs \
-	escjava/vcGeneration/sammy escjava/vcGeneration/simplify escjava/vcGeneration/xml
+	escjava/vcGeneration/sammy escjava/vcGeneration/simplify escjava/vcGeneration/xml \
+	escjava/extensions escjava/extensions/universes
 
 export PACKAGE_LIST = \
 	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
