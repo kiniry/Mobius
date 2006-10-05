@@ -1,20 +1,21 @@
 %\newtheorem*{ex}{Lemma}
 
-\section{Proofs from Section \ref{pogEq:aux}}
+\section{Proofs from Section \ref{pogEq:aux}} \label{appendix:pogComp:pogEq:aux}
 
 
-\begin{exprSrcBcWp1}[\ref{exprValueOnStack} Wp of a compiled expression ] 
- For any expression $\expressionSrc$ from our source language, for any formula $\psi: \formulaSrc$  
-of the source assertion language and any formula $\phi: \formulaBc$ such that $\phi$ may only 
-contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$, the following holds
+\begin{exprSrcBcWp1}[Wp of a compiled expression ] \label{exprValueOnStack}
+ For any expression $\expressionSrc$ from our source language, for any formula $\psi$  
+of the source assertion language and any formula $\phi$ such that $\phi$ may only 
+contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if the modifies clauses of every
+ method does not contain stack expression  the following holds:
 
 
 
-  There  exist $ Q, R : \formulaSrc$  such that 
+  Forall formulas $ Q, R$  such that 
 $$ \begin{array}{l}
       \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
-          Q \Rightarrow \psi \\
-          \wedge \\ 
+        \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) 
+          \wedge  
 	  R  \\
   \\
 \Longrightarrow \\
@@ -22,19 +23,52 @@ $$ \begin{array}{l}
 
   
 	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-              Q \Rightarrow \phi \begin{array}{l}
+             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \phi \begin{array}{l}
                                        \subst{\counter}{\counter + 1}\\
 			               \subst{\stack{\counter +1}}{ v }
-                         \end{array} \\ \\
-          \wedge \\ 
+                         \end{array} \end{array} \right) \end{array} \right)
+          \wedge 
 	  R 
   \end{array}$$
+and 
+forall formulas $ Q, R$  such that 
+$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
+      \forall \freshVar, %\freshVar_1, \ldots  \freshVar_k   , 
+             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{ \freshVar}\end{array} \right)  \end{array} \right) 
+                                                                             %    \begin{array}{l}
+									     %       \\
+									     %  \subst{v_1 }{ \freshVar_1 }  \\
+									     %	\ldots \\
+									     %	\subst{v_k}{ \freshVar_k } 
+									     %   \end{array}  
+                                                                  \wedge   R     
 
-\end{exprSrcBcWp1}
+ \\
+\Longrightarrow \\
+ \\
+
+\wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
+            \forall \freshVar, % \freshVar_1, \ldots  \freshVar_k ,  
+                              \left( \begin{array}{l} Q \Rightarrow  \left( \begin{array}{l} \phi  \begin{array}{l}\subst{\counter}{\counter + 1} \\
+                                                                                                  \subst{\stack{\counter +1}}{\freshVar  } \end{array} \end{array} \right)
+			       \end{array} \right)      
+			               
+                                    %  \begin{array}{l}
+				    %   \subst{v_1 }{ \freshVar_1 }  \\
+				    %   \ldots \\
+				    %   \subst{v_k}{ \freshVar_k } 
+				    % \end{array}  
+				    \wedge R
+	
+\end{array}$$
+\end{exprSrcBcWp1} 
 
 
-We  show several cases of the proof, which is done by induction over the structure of the formula. The rest of the cases
-proceed in  a similar way.
+
+
+We  show several cases of the proof for the first part of the lemma,  which is done by induction over the expression structure.
+The second case of the lemma refers to instance creation expressions and method invokation. The rest of the cases
+proceed in  a similar way. 
 
 Proof : \\
  
@@ -168,363 +202,8 @@ $$\begin{array}{l}
 
 \end{enumerate}
 
+\Qed\\
 
-\begin{exprSrcBcWp2}[Wp of a compiled expression ] \label{pogEq:aux:exprSrcBcWp}
-\todo{actually, here need an assumption that the modifies clauses cannot contain stack expressions }
- For any expression $\expressionSrc$ from our source language, for any formula $\psi: \formulaSrc$  
-of the source assertion language and any formula $\phi: \formulaBc$ such that $\phi$ may only 
-contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if the modifies clauses of every
- method does not contain stack expressions, then the following holds : \\
-there exist $ Q,R:\formulaSrc, v_1 \ldots v_k :\expressionSrc $
-$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} = \\
- \forall    \freshVar, \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \\
- \Myspace \psi 
-                                                                             \begin{array}{l}
-									         \subst{v }{ \freshVar }  \\
-									        \subst{v_1 }{ \freshVar_1 }  \\
-										\ldots \\
-										\subst{v_k}{ \freshVar_k } 
-									     \end{array}\\
-          \wedge \\ 
-	  R  
-
-      
-  \\
- \Longrightarrow \\
- \\
-
-  
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-            \forall \freshVar, \freshVar_1, \ldots  \freshVar_k ,   Q \Rightarrow \\
-	                      \Myspace \phi \begin{array}{l}
-                                       \subst{\counter}{\counter + 1}\\
-			               \subst{\stack{\counter +1}}{ \freshVar }\\
-				       \subst{v_1 }{ \freshVar_1 }  \\
-				       \ldots \\
-				       \subst{v_k}{ \freshVar_k } 
-                         \end{array} \\ 
-          \wedge \\ 
-	  R 
-  \end{array}$$
-\end{exprSrcBcWp2}
-This lemma refers to the cases for method invokation and instance creation. In the following, we scatch the case for 
-instance creation but we ommit the part of the formulas concerning the exceptional termination of the evaluation of
- the expression. \\
-Proof:
-
-$$ \begin{array}{l}
-       \comment{following the definition from Fig.\ref{pog:wpSrc:wpExpr:wpSrcInvoke} we get for the source case } \\\\
-       \numConclusion{1}  \  \wpSrcExpr{ \newSrc \ \class  ( \expressionSrc  ) } {\psi }{ \excPostSrc  }{v} = \\
- 	  
- 	             \begin{array}{l}  \forall \freshVar, \\
- 				               \neg \ \instances(\freshVar ) \wedge \\
- 					       \freshVar  \neq \Mynull \\
-					       \typeof{\freshVar} <: \class  \Rightarrow \\ 
-		     \wpSrcExpr{\expressionSrc} { \\ \\
- 		                \phantom{wpSr}\left\{ \begin{array}{l}
-                                   
- 				   \Myspace  \Myspace  \Constructor{\class}.\preSrc
- 				                \begin{array}{l} 
-                                                       \subst{ \this}{ \freshVar } \\
-                                                       \subst{ arg}{ v' } \\
-						        \subst{ \fieldd} { \update{\fieldd} { \freshVar}{\defaultValue{ \fieldd.  \fieldType } } }_{{ \subtype{\fieldd.\declaredIn}{  \class}} } 
-  					     	\end{array} \\
-  					\Myspace  \Myspace	       \wedge \\
-  					\Myspace  \Myspace  \forall \ m \in \Constructor{\class}. \mod , \\
-  					       \Myspace  \Myspace  \Myspace    \Constructor{\class}.\normalPostSrc       
-  					             \begin{array}{l}   
-  						          \subst{ \this}{ \freshVar  } \\
-  						          \subst{ arg}{ v' } 
-							   \subst{ \fieldd} { \update{\fieldd} { \freshVar}{\defaultValue{ \fieldd.  \fieldType } } }_{{ \subtype{\fieldd.\declaredIn}{  \class}} } \\
-  						       	  %\subst{	\typeof{\freshVar}}{ \class} 
-  						     \end{array}  \\
-                                                   \Myspace  \Myspace   \Myspace  \Myspace    \Rightarrow   \psi \subst{ v }{ \freshVar  } \\ 
-  					         
-  		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }{v'}  \end{array} \\\\
-\comment{ compiler definition from Fig. \ref{pogEq:compile:compExpr:defExpr} and definition of $\wpNameBcSeq$ } \\\\
-\numConclusion{2}  \ \wpBcSeq{ \compileLabel{s}{ \newSrc \ \class  ( \expressionSrc  ) }{ e}}{ \phi  } { \excPost}  = \\\\
-\wpBcSeq{ \begin{array}{l}
-               s :    \new \ \class; \\ 
-	       s + 1: \dup; \\
-	       \compileLabel{s+2}{\expressionSrc}{e - 1 };\\
-	       e : \invoke \ \Constructor{\class};   
-          \end{array} 
-	}
-	{\\ \phantom{\wpName^{bc}_{seq}} \phi  } 
-	{\\ \phantom{\wpName^{bc}_{seq}} \excPost } = \\\\
-\comment{definition of  $\wpNameBcSeq$  }\\\\
-\wpBcSeq{ \begin{array}{l}
-               s :    \new \ \class; \\ 
-	       s + 1: \dup; \\
-	       \compileLabel{s+2}{\expressionSrc}{e - 1 };
-	      % e : \invoke \ \Constructor{\class};   
-          \end{array} 
-	}
-	{\\ \phantom{\wpName^{bc}_{seq}}   \wpExpl{e: \invoke \ \Constructor{\class} }{\phi }{  \excPost  }  } 
-	{\\ \phantom{\wpName^{bc}_{seq}} \excPost } =  \\  \\ 
-
- \comment{definition of  $\wpNameExpl$ for \invoke  } \end{array}$$
-
-$$\begin{array}{l} 
- \wpBcSeq{ \begin{array}{l}
-               s :    \new \ \class; \\ 
-	       s + 1: \dup; \\
-	       
-	      % e : \invoke \ \Constructor{\class};   
-          \end{array} 
-	}
-	{\\ \phantom{\wpName^{bc}_{seq}}\wpBcSeq{ \compileLabel{s+2}{\expressionSrc}{e - 1 };} { \\ \phantom{\wpName^{bc}_{seq}} \phantom{\wpName^{bc}_{seq}}
-	                                                                  \begin{array}{l} \Constructor{\class} .\pre\begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter - 1  } }\\
-									   \subst{ \locVar{1}}{\stack{\counter } }
-									   \end{array} \\
-	 				 			\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif ) (  \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter - 1  } }\\
-									   \subst{ \locVar{1}}{\stack{\counter } }
-									   \end{array}
-										    \Rightarrow    \phi  \subst{\counter}{ \counter - 2 } )
-									\end{array}					   																		\end{array}	}{ \\ \phantom{\wpName^{bc}_{seq} } \phantom{\wpName^{bc}_{seq}} \excPost   }				
-	 				 			 } 
-	{\\ \phantom{\wpName^{bc}_{seq}} \excPost }   \\\\
-
- 
-\comment{we assume  for $\expressionSrc$, $\psi$ and $\excPostSrc$ that the following holds   } \\ \\
-
-\numConclusion{3} \  for \ some \  Q,R:\formulaSrc  ,\\
-\wpSrcExpr{\expressionSrc} { \\ 
- 		                \phantom{wpSr} \begin{array}{l}
-                                   
- 				    \Constructor{\class}.\preSrc
- 				                \begin{array}{l} 
-                                                       \subst{ \this}{ \freshVar } \\
-                                                       \subst{ arg}{ v' } \\
-						        \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-  					     	\end{array} \\
-  					
-  					  \forall \ m \in \Constructor{\class}. \mod , \\
-  					       \Myspace  \Myspace \Constructor{\class}.\normalPostSrc       
-  					             \begin{array}{l}   
-  						          \subst{ \this}{ \freshVar  } \\
-  						          \subst{ arg}{ v' } \\
-							   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-  						       	  %\subst{	\typeof{\freshVar}}{ \class} 
-  						     \end{array}   \Rightarrow \\
-						   \Myspace  \Myspace     \psi   \begin{array}{l} 
-						                                          \subst{ v }{ \freshVar  }\\
-											   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-											  \end{array} 
-                        \end{array} } {  \\  \\ \phantom{wpSrc}   \excPostSrc }{v'} = \\ \\
-
-  Q \Rightarrow \left\{\begin{array}{l}
-                                   
- 				    \Constructor{\class}.\preSrc
- 				                \begin{array}{l} 
-                                                       \subst{ \this}{ \freshVar } \\
-                                                       \subst{ arg}{ v' } \\
-						        \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-  					     	\end{array} \\
-  					
-  					  \forall \ m \in \Constructor{\class}. \mod , \\
-  					       \Myspace  \Myspace  \Myspace    \Constructor{\class}.\normalPostSrc       
-  					             \begin{array}{l}   
-  						          \subst{ \this}{ \freshVar  } \\
-  						          \subst{ arg}{ v' } \\
-							   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-  						       	  %\subst{	\typeof{\freshVar}}{ \class} 
-  						     \end{array}   \Rightarrow   \psi \subst{ v }{ \freshVar  } 
-                       \end{array}\right. \\
-  \wedge  \\ 
-  R 
-
-\\\\  
-\comment{which means that } \\\\
- \numConclusion{1} = \\
- \forall \freshVar, \\
- 				               \neg \ \instances(\freshVar ) \wedge \\
- 					       \freshVar  \neq \Mynull \\
-					       \typeof{\freshVar} <: \class  \Rightarrow \\ 
-  Q \Rightarrow \left\{\begin{array}{l}
-                                   
- 				    \Constructor{\class}.\preSrc
- 				                \begin{array}{l} 
-                                                       \subst{ \this}{ \freshVar } \\
-                                                       \subst{ arg}{ v' } \\
-						        \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-  					     	\end{array} \\
-  					
-  					  \forall \ m \in \Constructor{\class}. \mod , \\
-  					       \Myspace  \Myspace  \Myspace    \Constructor{\class}.\normalPostSrc       
-  					             \begin{array}{l}   
-  						          \subst{ \this}{ \freshVar  } \\
-  						          \subst{ arg}{ v' } \\
-							   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } 
-  						       	  %\subst{	\typeof{\freshVar}}{ \class} 
-  						     \end{array}   \Rightarrow   \psi \subst{ v }{ \freshVar  } 
-                       \end{array}\right. \\
-  \wedge  \\ 
-  R \end{array}$$
-
-$$\begin{array}{l}
-\comment{ from  Lemma \ref{exprValueOnStack} then we get }
-\\\\
-
-\numConclusion{4}  \
-\wpBcSeq{ \compileLabel{s+2}{\expressionSrc}{e - 1 };}{ \\ \phantom{\wpName^{bc}_{seq}} \phantom{\wpName^{bc}_{seq}}
-	                                                                  \begin{array}{l} \Constructor{\class} .\pre\begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter - 1  } }\\
-									   \subst{ \locVar{1}}{\stack{\counter } }
-									   \end{array} \\
-	 				 			\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif ) (  \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter - 1  } }\\
-									   \subst{ \locVar{1}}{\stack{\counter } }
-									   \end{array}
-										    \Rightarrow    \phi  \subst{\counter}{ \counter - 2 } )
-									\end{array}					   																		\end{array} } { \\ \phantom{\wpName^{bc}_{seq} }
-                                                                  \phantom{\wpName^{bc}_{seq}} \excPost   } = \\\\
-
-  Q \Rightarrow \left\{\begin{array}{l} \Constructor{\class} .\pre \begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter - 1  } }\\
-									   \subst{ \locVar{1}}{\stack{\counter } }
-								 \end{array} \\
-	 				 			\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif )   \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter - 1  } }\\
-									   \subst{ \locVar{1}}{\stack{\counter } }
-									   \end{array}\\
-									\Myspace \Rightarrow    \phi  \subst{\counter}{ \counter - 2 } 
-								\end{array}		
-			   	 \end{array}\right\}  
-									\begin{array}{l} 
-									\subst{\counter}{\counter + 1} \\
-									\subst{\stack{\counter + 1}}{v'}
-									\end{array}\\
-                     
-\wedge \\
-R \\
-=\\\\
-\mbox{\rm\textit{ \{apply substitution and because \Constructor{\class}.\modif \ does not contain stack expressions and  }}\\
-\mbox{\rm\textit{  because of the initial hypothesis about $ \phi$ obtain \}}} \\\\
-
-
-
-
-
-
-
- Q \Rightarrow \left\{\begin{array}{l} \Constructor{\class} .\pre\begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter  } }\\
-									   \subst{ \locVar{1}}{v' }
-									   \end{array} \\
-	 				 			\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif ) (  \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{ \stack{\counter  } }\\
-									   \subst{ \locVar{1}}{v' }
-									   \end{array} \\
-									\Myspace 	    \Rightarrow    \phi  \subst{\counter}{ \counter - 1 } )
-									\end{array}					   																	\end{array} \right. \\
-\wedge \\
-R \\
-\end{array}$$
-
-$$\begin{array}{l}
-
-\comment{from \numConclusion{2} and \numConclusion{4}  }
-\\\\
-
-\numConclusion{5} \ \wpBcSeq{ \compileLabel{s}{ \newSrc \ \class  ( \expressionSrc  ) }{ e}}{ \phi  } { \excPost} = \\
- \wpBcSeq{ \begin{array}{l}
-               s :    \new \ \class; \\ 
-	       s + 1: \dup; \\
-	       
-	 
-          \end{array} 
-	}{\\ \phantom{\wpName^{bc}_{seq}}
-           Q \Rightarrow \left\{\begin{array}{l} \Constructor{\class} .\pre\begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter  } }\\
-									   \subst{ \locVar{1}}{v' }
-									   \end{array} \\
-	 				 			\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif ) (  \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{ \stack{\counter  } }\\
-									   \subst{ \locVar{1}}{v' }
-									   \end{array} \\
-									\Myspace 	    \Rightarrow    \phi  \subst{\counter}{ \counter - 1 } )
-									\end{array}					   																	\end{array} \right.
+	
+						
          
-
-  }{ \\ \phantom{\wpName^{bc}_{seq}}  \excPost } = \\\\
-
-\comment{apply rule $\wpNameExpl$ \ for  \dup }\\\\
-
-\wpBcSeq{ \compileLabel{s}{ \newSrc \ \class  ( \expressionSrc  ) }{ e}}{ \phi  } { \excPost} = \\
- \wpBcSeq{   s :    \new \ \class;\\ 
-	    
-	    
-	}{\\ \phantom{\wpName^{bc}_{seq}}
-           Q \Rightarrow \left\{\begin{array}{l} \Constructor{\class} .\pre\begin{array}{l}
-								           \subst{ \locVar{0}}{\stack{\counter  } }\\
-									   \subst{ \locVar{1}}{v' }
-									   \end{array} \\
-	 				 			\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif )   \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{ \stack{\counter  } }\\
-									   \subst{ \locVar{1}}{v' }
-									   \end{array} \\
-									\Myspace 	    \Rightarrow    \phi  %\subst{\counter}{ \counter - 1 } 
-									\end{array}					   																	\end{array} \right.
-         
-
-  }{ \\ \phantom{\wpName^{bc}_{seq}}  \excPost } = \\\\
-\comment{apply rule $\wpNameExpl$ \ for  \new }\\\\
-  \forall \freshVar,\\
-                      \Myspace    \neg \ \instances(\freshVar) \wedge \\
-		      \Myspace \freshVar \neq \Mynull  \\
-		        \Myspace \typeof{\freshVar} <: \class  \Rightarrow	\\
-		      Q \Rightarrow \left\{\begin{array}{l} \Constructor{\class} .\pre\begin{array}{l}
-								           \subst{ \locVar{0}}{\freshVar } \\
-									   \subst{ \locVar{1}}{v' }\\
-									    \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \subtype{\fieldd.\declaredIn}{  \class}} } \\
-									   \end{array} \\
-	\wedge \\
-								\begin{array}{l}
-	 				 			       \forall  mod ,  ( mod \in \Constructor{\class}.\modif )   \\ 
-								       \Myspace \Constructor{\class}.\normalPost 
-								       \begin{array}{l}
-								           \subst{ \locVar{0}}{ \freshVar   }\\
-									   \subst{ \locVar{1}}{v' }\\
-									   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{
-\small \subtype{\fieldd.\declaredIn}{  \class}} } 
-									   \end{array} \\
-									\Myspace 	    \Rightarrow    \phi  \\
-									\begin{array}{l}
-									\subst{\counter}{ \counter + 1 }\\
-									 \subst{ \stack{\counter + 1}}{ \freshVar} \\
-									 \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{
-\small \subtype{\fieldd.\declaredIn}{  \class}} }
-									
-									\end{array} 
-									\end{array}
-				\end{array}\right. \\\\		               
-	\comment{from the equalities \numConclusion{5} , \numConclusion{1},  \numConclusion{2} and assumption  \numConclusion{3} this case holds }					  
-\end{array}$$
-\Qed \\
