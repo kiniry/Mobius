@@ -4,40 +4,86 @@
 
 \section{Compiler} \label{compile}
 
-We now turn to specify a simple compiler from the source language presented in Section
-\ref{source} into the bytecode language.
+ We now turn to specify a simple compiler from the source language presented in the previous section
+ into the bytecode language discussed in  Chapter \ref{opSem:prelim}. The function which transforms
+ source constructs in the body of method \methodd{} into bytecode instructions is denoted with
+ $\compile{}_{\methodd}$ and its signature is:  
+ $$ \compile{ }_{\methodd} : nat * (\stmt \cup \expressionSrc ) \longrightarrow  list \ \bcIns * nat  $$
+ The compiler function takes two arguments: a natural number $s$ from which the labeling of the compilation starts,
+ the statement $\stmt$ or expression $\expressionSrc$  to be compiled and
+ returns a pair which contains a list of bytecode instructions which is the compilation of the source construct
+ and  a natural number which is the greatest label in the compilation. In the following, we will allow us
+ to use instead the notation 
+ $ \compileLabel{s}{\stmt}{e} =[\ins{i_s} \ldots \ins{i_e} ] $
+ to refer to the list of instructions  which is the first component in the pair resulting from the compilation of 
+ statement $\stmt$  starting with index $s$ \ 
+ $\ulcorner  s, \stmt  \urcorner_{\methodd} = ( [\ins{i_s} \ldots \ins{i_e}], e) $.
 
-The compiler is the triple
- $$< \compile{ }_{\methodd}, \addExceptionTableOnly , \addLoopTableOnly >$$
-
- The first component in the triple is a  function $\compile{ }_{\methodd}$  which transforms statements and expressions
- into a sequence of bytecode instructions of the body of the method \methodd.
- Note that it does not perform any optimizations.
-
- The second component is the procedure  
-\addExceptionTableOnly \ which adds elements in exception handler table of the compiled bytecode \methodd.
-Note that the source language supports syntactic structure for encoding exception handlers while
- bytecode programs keep track of them via a data structure called exception handler table which describes how  regions 
-in the bytecode are protected from exceptions.
-
- The third component of the compiler is the procedure
-  \addLoopTableOnly \ which adds  loop
-specifications in the loop specification table (see Chapter \ref{assertLang} section \ref{methExtend}).
-
-The compiler presented here is realistic as the first and second component actually resemble closely 
-a non-optimizing Java compiler and as we shall later in this section, the produced bytecode 
-is very close to the bytecode produced by  a Java compiler.
-
-The third component is not a typical part of a Java compiler. It actually corresponds to our 
-\JMLtoBML{} compiler which compiles  loop invariants into class attributes and finds their respective place in the bytecode.  
+ Although the compiler is realistic, we do not compile variable, class and method names but rather use the same names on bytecode
+ and source code. Second, the compiler preserves boolean expressions which is not the case for Java compilers as the JVM language does not support
+ the boolean type. Taking into account these facts is not difficult but we have made this choice for the sake of simplicity.
 
 
-In the following, in the next subsection \ref{pogEq:compile:excHandlers} we define the procedure for the compilation of exception handlers,
- in subsection \ref{pogEq:compile:loopInv},  we will present the procedure for compiling loop invariants.
- In  subsection
-\ref{pogEq:compile:compExpr} 
-we proceed with the definition of the compiler function $\compile{ }_{\methodd} $ for exressions and statements. 
-The last subsection \ref{compile:prop} states the properties of the bytecode produced by the compiler.
+
+ The produced bytecode targets a stack based virtual machine\footnote{We have already described the
+ the JVM in Chapter \ref{opSem:prelim} which is stack based}. Thus, a basic principle of the compiler 
+ is that  expressions are compiled into a sequence of instructions whose execution (if it terminates normally)  
+ will leave the virtual machine in a state where the value of the expression is on the top of the operand stack.
+
+ Of course, the compiler must  preserve the intended semantics of source control structures. For instance,
+ the compilation of a compositional statement $\stmt_1;\stmt_2$ should be such that the bytecode resulting from
+ the compilation of statement $\stmt_2$ is always executed after the compilation 
+ of statement $\stmt_1$ if the latter terminates normally.  For cases like compositional, loop and conditional statements, the compiler will use only bytecode instructions
+ in order to preserve their intended meaning. However, this is more complicated for try catch statements. 
+ In particular, for every method \methodd{} the virtual machine 
+ relies on the method exception handler table  \methodd.\excHandlerTable{}(see Section \ref{clazz}) and on a search function  in it 
+\findExcHandlerOnly{}(see Section \ref{opSem:exc})
+ in order to decide where  to transfer the control in case of a thrown exception. Thus, in order to generate method exception handler table,
+ we define a function \addExceptionTableOnly{} which adds elements in \methodd.\excHandlerTable{} whenever the compiler function $\compile{}_{\methodd}$
+ reaches a try catch statement. The function has the following signature:
+ $$ \addExceptionTableOnly : \MethodSet *  nat * nat * nat *  \ClassSet_{exc}   $$
+
+ The meaning of the new element is that	every exception of type \Exc{} thrown in between the instructions
+ $start \ldots end$ can be handled by the code starting at index $h$.	
+ The formal definition of the procedure is the following:
+
+$$ \begin{array}{l}
+  \addExceptionTable{\methodd}{ start }{ end  }{ h}{  \mbox{\rm\texttt{Exc}} }  = \\
+   \begin{array}{l}
+         \methodd.\excHandlerTable := \{ (start, end, h,  \mbox{\rm\texttt{Exc}}   ) , \methodd.\excHandlerTable \}
+
+   \end{array}
+\end{array}$$
+
+
+ We can remark that when the procedure  \addExceptionTableOnly \  adds a new element in the exception handler table the new element is added at the beginning of the 
+ exception handler table   \methodd.\excHandlerTable.  This is an important detail which explain why the virtual machine  transfers control to the proper exception
+ handler table. This is beacause in our formalization of the virtual machine, the function  \findExcHandlerOnly{}(see Section \ref{opSem:exc})
+ returns the first  such index in the exception handler table  \excHandlerTable{} starting the search from its beginning.
+
+ What we have been describing up to now  corresponds to the design of a standard Java compiler. However, for the aims of the current section, we
+ have to take into account the specification of source statements. In particular, we have seen in the previous section that the syntax for loop statements explicitely
+ mentions the loop invariant and the modified locations in a loop iteration. In order to preserve the loop specification in the bytecode, we provide the compiler with a function 
+ \addLoopTableOnly \ which adds  loop specification elements in the loop specification table (the latter has been introduced in
+ Chapter \ref{assertLang}, Section \ref{methExtend}). The function has the following signature:
+ $$ \addLoopTableOnly : \MethodSet  *  nat *  \formulaBc  *  list \ \expression $$
+ It  takes as arguments a method \methodd, an index in the array of bytecode instructions $i$ of \methodd, 
+ a predicate $\invariant$, a list of modified expressions \modLoop \ 
+ and adds a new element in the table of loop invariants 
+ \methodd.\loopSpecTable \ of method \methodd.
+ Or more formally :
+ 
+ $$ \begin{array}{l}
+  \addLoopTable{\methodd}{ i }{ \invariant  }{ \modLoop} =  \\
+   
+   \begin{array}{l}
+         
+         \methodd.\loopSpecTable := \{ (i,\invariant , \modLoop  ) , \methodd.\loopSpecTable \}
+
+   \end{array}
+   \end{array}$$
+ In  the next subsection \ref{pogEq:compile:compExpr},  we proceed with the definition of the compiler function $\compile{ }_{\methodd} $ for expressions and statements. 
+ In subsection \ref{compile:prop}, we discuss the properties of the bytecode produced by the compiler.
 
 
 
