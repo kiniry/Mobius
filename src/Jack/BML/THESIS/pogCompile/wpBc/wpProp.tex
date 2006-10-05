@@ -147,11 +147,12 @@ The next lemma states the same property but this time for the compilation of sta
 	    \item if $e+1$ does not exist and $\ins{e} = \return$ then $\psi = \methodd. \normalPost$
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) $ 
       \end{itemize} then the following holds: 
-  %   if $\psi = \inter{e}{e+1}$ then the following holds
+  
      $$   \wpStmt{\compileLabel{s}{\stmt}{e} }{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   
 \end{relWpStmt}
 
-Proof : the proof is  by induction on the compilation of a statement. We scatch here the proof of few cases 
+Proof : the proof is  by structural induction on the compilation of a statement and uses the properties of the compiler 
+        shown before. We scatch here the proof of few cases 
 
 
 \begin{itemize}
@@ -162,8 +163,17 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 	     \wpStmt{   \compileLabel{s}{ \begin{array}{l} \Myif \ (\expressionSrcRel) \\
                                                                \Mythen \ \{ \stmt_1 \} \\  
 							       \Myelse \ \{ \stmt_2 \}   
-                                              \end{array}}{e}}{\psi}{\excPostExpl} =\bydef \\\\
-                     
+                                              \end{array}}{e}}{\psi}{\excPostExpl} = \\\\
+			\comment{definition of the compiler} \\\\
+                     \wpStmt{   \begin{array}{l}
+	                            \compileLabel{s}{\expressionSrcRel}{e'}; \\
+				     e' + 1: \ifCond \ e'' + 2;\\
+				    \compileLabel{e' + 2}{\stmt_2}{e''}\\
+				    e'' + 1: \goto \ e +  1; \\
+				    \compileLabel{e'' +  2}{\stmt_1}{ e  };
+				\end{array}  }{\psi}{\excPostExpl} = \\\\
+          \comment{definition of the \wpName{} over compiled expressions} \\\\
+
                         \wpBcSeq{    \compileLabel{s}{\expressionSrcRel}{e'}; \\
 				} {\\
                              \phantom{wp^{bc}_{seq}}	 \begin{array}{l}
@@ -174,24 +184,23 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				           \phantom{wp^{bc}_{seq}} \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} \subst{t}{t-2} 
 			        \end{array}  }{ \\ \phantom{wp^{bc}_{seq}} \excPostExpl}   \\ \\
 				
-				\end{array}$$
-				  $$ \begin{array}{l}
+			
 				\mbox{\comment{\rm by initial hypothesis, we have   } }\\
 				\numConclusion{1.1} \ \psi = \inter{e}{e+1}  \\ 
 			         \mbox{\comment{\rm by the compiler definition $ \ins{e'' + 1} = \goto \ e +  1; $  } }\\
 				\numConclusion{1.2} \ \ins{e'' + 1} \execRel \ins{e + 1} \\
 				
 				
-                               	
+                               		\end{array}$$
+				  $$ \begin{array}{l}
 				\mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp5} which states that every instruction inside }} \\
 				\mbox{\rm\textit{the compilation of $\compileLabel{s}{\stmt}{e}$ , }} \\
                         	\mbox{\rm\textit{is in the same execution relation with $\ins{e+1}$, }} \\
-
-
-			        \mbox{\rm\textit{    Def. \ref{inter} for \interOnly, \numConclusion{1.1} and \numConclusion{1.2}   we conclude that \} } }\\
+			        \mbox{\rm\textit{    Def. \ref{inter} for the function \interOnly, \numConclusion{1.1} and \numConclusion{1.2}   we conclude that \} } }\\
 				\numConclusion{1.3}  \ \inter{e'' + 1}{e+1} = \inter{e}{e+1} = \psi\\
-				\mbox{\rm\textit{\{From property \ref{compile:prop:compProp4} the edge between  $e''$ and $e'' + 1$}}\\
-				\mbox{\rm\textit{ is not a loop edge and from Def. \ref{inter} \}  }} \\
+				\mbox{\rm\textit{\{Property \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
+                                \mbox{\rm\textit{  appears only on loop statement compilation and thus, the edge between  $e''$ and $e'' + 1$}}\\
+				\mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
 				\numConclusion{1.4} \ \inter{e''}{e'' +1} = \wpi{e'' + 1}{m}{} \\
 				\mbox{\rm \comment{ From the definition of the \wpName  \ for \goto \ instructions and \numConclusion{1.4}  }}\\
 				\numConclusion{1.5}  \ \wpi{e'' + 1}{m}{} = \inter{e'' + 1}{e+1} \\
@@ -221,8 +230,8 @@ Proof : the proof is  by induction on the compilation of a statement. We scatch 
 				 \wedge \\
 				 \neg \rel ( \stack{\counter}, \stack{\counter - 1 } ) \Rightarrow \\
 				 \Myspace  \wpStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl}  \\
-				 	\end{array}$$
-				  $$ \begin{array}{l}
+				 %	\end{array}$$
+				 % $$ \begin{array}{l}
 				 \comment{From Property \ref{compile:prop:compProp5}  }\\
 				 \numConclusion{1.12} \ \inter{e'}{e'+1} =	\wpi{  e' + 1: \ifCond \ e'' + 2; }{m}{ }\\
 				 
