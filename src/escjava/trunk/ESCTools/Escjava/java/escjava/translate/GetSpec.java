@@ -616,21 +616,17 @@ public final class GetSpec {
 	    // Filter out LabelExpr nodes with their first node being InstanceOfExpr because
 	    // those are the precondition of client methods that we do not want to handle.
 	  Expr e2idc=null;
+	  
+	  // [GK] Do not prune the leftmost conjunction because I realized that
+	  // that there are cases where the precondition is not always in 
+	  // the form of a conjunction.
 	  if (true)
 	    //if (dmd.isStaticMethod() || dmd.isConstructor())
 	  {
-	    if (Main.options().debug)
-	    {
-	      System.out.println("GK-Trace: STATIC METHOD or CONSTRUCTOR!");
-	    }
 	    e2idc=expr;
 	  }
 	  else if (dmd.isInstanceMethod())
 	  {
-	    if (Main.options().debug)
-	    {
-	      System.out.println("GK-Trace: INSTANCE METHOD!");
-	    }
 	    Assert.notFalse(expr.getTag() == TagConstants.AND,
 			    EscPrettyPrint.inst.toString(expr));
 	    e2idc=DefGCmd.reapLeftmostConjunct(expr);
@@ -2086,7 +2082,7 @@ public final class GetSpec {
 			     EscPrettyPrint.inst.toString(cons));
 	  System.err.println("\tI.e.:" + cons);
 	}
- 	Expr pred=oDefGCs.trAndGen(cons);
+ 	oDefGCs.trAndGen(cons);
 	GuardedCmd gc=oDefGCs.popFromCode();
 	// Use the cond.expr to obtain the antecedent of the postcondition.  
 	// It is then used as the antecedent of all the ASSERT IDCs generated.

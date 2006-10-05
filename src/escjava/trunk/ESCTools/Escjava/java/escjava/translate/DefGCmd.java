@@ -642,7 +642,10 @@ public class DefGCmd
 
 
   /**
-   * Describe <code>reapAndTrAntecedent</code> method here.
+   * Expects a postcondition in the following form:
+   * A && P1 && ... && Pn ==> Q. 
+   * It then extracts the antecedent, translates it into a <code>GCExpr</code>
+   * and returns it.
    *
    * @param post an <code>Expr</code> value
    * @return an <code>Expr</code> value
@@ -650,7 +653,12 @@ public class DefGCmd
   public Expr reapAndTrAntecedent(Expr post)
   {
     // Fail if this is not an implication.
-    Assert.notFalse(post.getTag() == TagConstants.IMPLIES);
+    //Assert.notFalse(post.getTag() == TagConstants.IMPLIES);
+    if (post.getTag() != TagConstants.IMPLIES)
+    {
+      return(GC.truelit);
+    }
+
     // Get the antecedent.
     Expr e=((BinaryExpr)post).left;
     // Generate the GCExpr for the ante.
@@ -659,7 +667,9 @@ public class DefGCmd
   }
 
   /**
-   * Describe <code>reapConsequent</code> method here.
+   * Expects a postcondition in the following form:
+   * A && P1 && ... && Pn ==> Q. 
+   * It then extracts the consequent, and returns it.
    *
    * @param post an <code>Expr</code> value
    * @return an <code>Expr</code> value
@@ -667,13 +677,28 @@ public class DefGCmd
   public Expr reapConsequent(Expr post)
   {
     // Fail if this is not an implication.
-    Assert.notFalse(post.getTag() == TagConstants.IMPLIES);
-    // Get the antecedent.
+    //Assert.notFalse(post.getTag() == TagConstants.IMPLIES,post.toString());
+    if (post.getTag() != TagConstants.IMPLIES)
+    {
+      if (debug)
+      {
+	System.out.println("GK-Trace: WARNING: postcondition not an implication"+
+			   "\n\t\t"+post.toString());
+      }
+      return(post);
+    }
+    // Get the concequent.
     Expr e=((BinaryExpr)post).right;
-    // Generate the GCExpr for the ante.
     return(e);
   }
 
+  /**
+   * Iterates through a tree of ASTNodes denoting number of conjunctions.
+   * It reaps the leftmost one and rebuilds the remaining ones.
+   *
+   * @param e an <code>Expr</code> value
+   * @return an <code>Expr</code> value
+   */
   public static Expr reapLeftmostConjunct(Expr e)
   {
     Assert.notFalse(e.getTag() == TagConstants.AND,e.toString());
