@@ -2,7 +2,6 @@
 
 \section{Proofs from Section \ref{pogEq:aux}} \label{appendix:pogComp:pogEq:aux}
 
-
 \begin{exprSrcBcWp1}[Wp of a compiled expression ] \label{exprValueOnStack}
  For any expression $\expressionSrc$ from our source language, for any formula $\psi$  
 of the source assertion language and any formula $\phi$ such that $\phi$ may only 
@@ -11,47 +10,47 @@ contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if
 
 
 
-  Forall formulas $ Q, R$  such that 
+  Forall formulas $ Q, R$ and $k \ge 0$  such that 
 $$ \begin{array}{l}
       \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
-        \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) 
-          \wedge  
-	  R  \\
+
+      \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+         %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+          \wedge   R
+        
   \\
 \Longrightarrow \\
  \\
 
   
 	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \phi \begin{array}{l}
-                                       \subst{\counter}{\counter + 1}\\
+            \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \phi \end{array} \right)   %\begin{array}{l}
+                                       \subst{\counter}{\counter + 1}
 			               \subst{\stack{\counter +1}}{ v }
-                         \end{array} \end{array} \right) \end{array} \right)
+				       \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+                         
           \wedge 
 	  R 
   \end{array}$$
 and 
-forall formulas $ Q, R$  such that 
+forall formulas $ Q, R$ and $k\ge 0$ such that 
 $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
-      \forall \freshVar, %\freshVar_1, \ldots  \freshVar_k   , 
-             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{ \freshVar}\end{array} \right)  \end{array} \right) 
-                                                                             %    \begin{array}{l}
-									     %       \\
-									     %  \subst{v_1 }{ \freshVar_1 }  \\
-									     %	\ldots \\
-									     %	\subst{v_k}{ \freshVar_k } 
-									     %   \end{array}  
-                                                                  \wedge   R     
+      
+              \forall v', v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) \subst{v}{v'} \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+         %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+          \wedge 
+	  R
 
  \\
 \Longrightarrow \\
  \\
 
 \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-            \forall \freshVar, % \freshVar_1, \ldots  \freshVar_k ,  
-                              \left( \begin{array}{l} Q \Rightarrow  \left( \begin{array}{l} \phi  \begin{array}{l}\subst{\counter}{\counter + 1} \\
-                                                                                                  \subst{\stack{\counter +1}}{\freshVar  } \end{array} \end{array} \right)
-			       \end{array} \right)      
+            \forall v', v^{'}_1 \ldots v^{'}_k,
+                              \left( \begin{array}{l} Q \Rightarrow  \phi \end{array} \right)   % \begin{array}{l}
+                                                                            \subst{\counter}{\counter + 1}
+                                                                            \subst{\stack{\counter +1}}{v } 
+									    \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}		  
 			               
                                     %  \begin{array}{l}
 				    %   \subst{v_1 }{ \freshVar_1 }  \\
@@ -62,6 +61,9 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
 	
 \end{array}$$
 \end{exprSrcBcWp1} 
+
+
+  
 
 
 
