@@ -25,7 +25,7 @@ $\wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v}$ asserts that  (in case for n
  predicate $\psi $ must hold under certain  conditions in the prestate of the evaluation of an expression and that
  (in the exceptional termination case) some other condition must hold. Some expressions always terminate evaluation normally
  (e.g. constants, \instanceof{} expressions) and in that case for normalizing the form of the \wpName{} result we may consider
-that the exceptional postcondition case is equal to \Mytrue. Another particularity is that th instance creation
+that the exceptional postcondition case is equal to \Mytrue. Another particularity is that the instance creation
 expression has a \wpName{} predicate which is quantified over the evaluation of the new instance. The same happens in the case
 for method invokation expressions where the \wpName{} predicate is quantified over the result of the method invokation 
 as well on the values of the modified expressions by the method invokation. 
@@ -37,27 +37,28 @@ for any source expression $\expressionSrc$
 normal form of  $\wpNameSrcExpr$ is such that 
 
 $$ \begin{array}{l}
-         \mbox{\rm\textit{either  there exists $ Q,R:\formulaSrc $  }} \\
+         \mbox{\rm\textit{either  there exists formulas $ Q,R$  }} \\
          \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
-          Q \Rightarrow \psi \\
-          \wedge \\ 
+         \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+          \wedge 
 	  R \\\\
-	  \mbox{\rm\textit{or exists $ Q,R:\formulaSrc, v_1 \ldots v_k :\expressionSrc $   }} \\
+	  \mbox{\rm\textit{or exists formulas $ Q,R $   }} \\
 \\
  \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
-      \forall \freshVar, \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \psi 
-                                                                             \begin{array}{l}
-									         \subst{v}{ \freshVar}  \\
-									        \subst{v_1 }{ \freshVar_1 }  \\
-										\ldots \\
-										\subst{v_k}{ \freshVar_k } 
-									     \end{array}
-          \wedge \\ 
-	  R  
+      \forall \freshVar, %, \freshVar_1, \ldots  \freshVar_k   , 
+                 \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{ \freshVar}\end{array} \right)  \end{array} \right)    \wedge   R  
+                                                                               %    \begin{array}{l}
+									            
+									       %    \subst{v_1 }{ \freshVar_1 }  \\
+									       %    \ldots \\
+									       %    \subst{v_k}{ \freshVar_k } 
+									       %  \end{array}  
+                                                                        
    \end{array}  $$ \\
 \end{wpExprSrc}
 
-This follows from the definition of $\wpNameSrcExpr$ \ in Section \ref{pog:wpSrc:wpExpr}.% The second form  in which the part of the calculated weakest precondition predicate is quantified   appears in the cases for instance creation and method invokation expressions.
+The proof is done over the  definition of $\wpNameSrcExpr$ function given in Section \ref{pog:wpSrc:wpExpr}.
+% The second form  in which the part of the calculated weakest precondition predicate is quantified   appears in the cases for instance creation and method invokation expressions.
 
 %Before stating the main theorem we need some auxiliary properties.
 % First, we establish that adding a \instr{goto} \ instruction  to a bytecode of instructions does not change the weakest predicate of the
@@ -74,12 +75,18 @@ This follows from the definition of $\wpNameSrcExpr$ \ in Section \ref{pog:wpSrc
 %\end{interProp}
 
 
-We now turn to see what is the relation between  the weakest precondition formulas \ for  an expression $\expressionSrc$ 
+We now turn to see what is the relation between  the weakest precondition formulas for  an expression $\expressionSrc$ 
 and its compilation $\compileLabel{s}{\expressionSrc}{e}$. 
-Depending on the form of the weakest precondition  (as we saw with the previous lemma there are two possible forms of the weakest precondition for source expressions) 
-of a soure expression $\expressionSrc $ obtained from  $\wpNameSrcExpr$ 
- we will state the relation between $\wpNameSrcExpr$  \ and $\wpNameBcSeq$  in the following two lemmas.  
-Informally, both lemmas express the fact that 
+The following lemma establishes a relation between the \wpName{} functions on source and bytecode level which 
+are independent from the postcondition.
+ First, we have to take into account that the evaluation 
+of an expression on bytecode level, which in terms of the virtual machine means the execution of the instructions
+resulting from the expression compilation will terminate normally in a state where the value of the expression will be on the top
+of the operand stack. In particular, we will show that if  the expression  $\expressionSrc$ evaluates to $v$ then the stack top element will be on the stack top when 
+the compilation of an expression executes.
+ Apart from this difference that on bytecode stack comes into the scene, the \wpName{} function on source and bytecode 
+calculates very similar verification conditions. In particular, 
+
 \begin{itemize}
   \item the hypothesis of the part of the weakest preconditions on  source and bytecode level
 concerning the normal termination of the expression  are the same  
@@ -90,17 +97,18 @@ concerning the normal termination of the expression  are the same
 
 
 \begin{exprSrcBcWp1}[Wp of a compiled expression ] \label{exprValueOnStack}
- For any expression $\expressionSrc$ from our source language, for any formula $\psi: \formulaSrc$  
-of the source assertion language and any formula $\phi: \formulaBc$ such that $\phi$ may only 
-contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$, the following holds
+ For any expression $\expressionSrc$ from our source language, for any formula $\psi$  
+of the source assertion language and any formula $\phi$ such that $\phi$ may only 
+contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if the modifies clauses of every
+ method does not contain stack expression  the following holds:
 
 
 
-  There  exist $ Q, R : \formulaSrc$  such that 
+  Forall formulas $ Q, R$  such that 
 $$ \begin{array}{l}
       \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
-          Q \Rightarrow \psi \\
-          \wedge \\ 
+        \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) 
+          \wedge  
 	  R  \\
   \\
 \Longrightarrow \\
@@ -108,61 +116,53 @@ $$ \begin{array}{l}
 
   
 	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-              Q \Rightarrow \phi \begin{array}{l}
+             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \phi \begin{array}{l}
                                        \subst{\counter}{\counter + 1}\\
 			               \subst{\stack{\counter +1}}{ v }
-                         \end{array} \\ \\
-          \wedge \\ 
+                         \end{array} \end{array} \right) \end{array} \right)
+          \wedge 
 	  R 
   \end{array}$$
+and 
+forall formulas $ Q, R$  such that 
+$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
+      \forall \freshVar, %\freshVar_1, \ldots  \freshVar_k   , 
+             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{ \freshVar}\end{array} \right)  \end{array} \right) 
+                                                                             %    \begin{array}{l}
+									     %       \\
+									     %  \subst{v_1 }{ \freshVar_1 }  \\
+									     %	\ldots \\
+									     %	\subst{v_k}{ \freshVar_k } 
+									     %   \end{array}  
+                                                                  \wedge   R     
 
-\end{exprSrcBcWp1}
-
-
-The following lemma refers to the cases for method invokation and instance creation. 
-\begin{exprSrcBcWp2}[Wp of a compiled expression ] \label{pogEq:aux:exprSrcBcWp}
-\todo{actually, here need an assumption that the modifies clauses cannot contain stack expressions }
- For any expression $\expressionSrc$ from our source language, for any formula $\psi: \formulaSrc$  
-of the source assertion language and any formula $\phi: \formulaBc$ such that $\phi$ may only 
-contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if the modifies clauses of every
- method does not contain stack expressions, then the following holds : \\
-there exist $ Q,R:\formulaSrc, v_1 \ldots v_k :\expressionSrc $
-$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} = \\
- \forall \freshVar, \freshVar_1, \ldots  \freshVar_k   ,  Q \Rightarrow \\
- \Myspace \psi 
-                                                                             \begin{array}{l}
-									         \subst{v }{ \freshVar }  \\
-									        \subst{v_1 }{ \freshVar_1 }  \\
-										\ldots \\
-										\subst{v_k}{ \freshVar_k } 
-									     \end{array}
-          \wedge \\ 
-	  R  
-
-      
-  \\
- \Longrightarrow \\
+ \\
+\Longrightarrow \\
  \\
 
-  
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-            \forall \freshVar, \freshVar_1, \ldots  \freshVar_k ,   Q \Rightarrow \\
-	                      \Myspace \phi \begin{array}{l}
-                                       \subst{\counter}{\counter + 1}\\
-			               \subst{\stack{\counter +1}}{\freshVar  }\\
-				       \subst{v_1 }{ \freshVar_1 }  \\
-				       \ldots \\
-				       \subst{v_k}{ \freshVar_k } 
-                         \end{array} \\ \\
-          \wedge \\ 
-	  R 
-  \end{array}$$
-\end{exprSrcBcWp2}
+\wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
+            \forall \freshVar, % \freshVar_1, \ldots  \freshVar_k ,  
+                              \left( \begin{array}{l} Q \Rightarrow  \left( \begin{array}{l} \phi  \begin{array}{l}\subst{\counter}{\counter + 1} \\
+                                                                                                  \subst{\stack{\counter +1}}{\freshVar  } \end{array} \end{array} \right)
+			       \end{array} \right)      
+			               
+                                    %  \begin{array}{l}
+				    %   \subst{v_1 }{ \freshVar_1 }  \\
+				    %   \ldots \\
+				    %   \subst{v_k}{ \freshVar_k } 
+				    % \end{array}  
+				    \wedge R
+	
+\end{array}$$
+\end{exprSrcBcWp1} 
+The scatch of the proof is given in Appendix \ref{appendix:pogComp:pogEq:aux}.
+
 
 
 The next lemma establishes  a relation between the source and bytecode functions \wpName \ w.r.t. to the same weakest precondition. 
+This follows from the previous lemma which establishes the relation between the \wpName \ over source expressions and
+ the \wpName \ over bytecode expressions that takes into account the compilation structure.
 
-\todo{say here that we are aware that the names on bytecode and source level will not be the same. However this is a minor detail }
 \begin{wpStmtBcSrc1}[Proof obligation equivalence on statements ] \label{wpStmtBcSrc1}
  
 $$ 
@@ -174,11 +174,39 @@ $$
     \end{array}
  $$
 \end{wpStmtBcSrc1}
+Proof:
 
-This follows from the previous lemma (which establishes the relation between the \wpName \ over source expressions and
- the \wpName \ over bytecode expressions that takes into account the compilation structure)
-and is done by structural induction. Note that it is trivial as the \wpName{} for the compilation of statements  into bytecode  introduced in Section 
-is very similar to the \wpName{} for source statements. 
+The proof is done by structural induction. Here, we scatch the case for assignment to a local variable.
+
+ $$\begin{array}{l}
+	  \wpSrcStmt{  \var = \expressionSrc }{\psi}{\excPostExpl} =  \\
+	  \comment{Def. of $\wpNameSrcExpr$ for  statements in the previous Section }	\\
+	  \numConclusion{1} \   \wpSrcExpr{  \expressionSrc }{\psi \subst{\var}{v}}{\excPostExpl}{v} \\\\
+	
+          \wpStmt{  \compileLabel{s}{\var = \expressionSrc}{e} }{\psi}{\excPostExpl} =  \\
+	 \comment{Def. of the compiler from Section \ref{pogEq:compile:compExpr} } \\
+	 \wpStmt{\begin{array}{l}
+                        \compileLabel{s}{\expressionSrc}{e  - 1 }\\
+			e : \store \ \var; 
+             \end{array}  }{\psi}{\excPostExpl} = \\ 
+
+	  \comment{Def. of $\wpNameStmt$ function for compiled statements in the previous Section }	\\
+	 
+	  \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e  - 1 }
+		  }{\wpExpl{\store  \ \var}{ \psi  }{ \excPostExpl} }{\excPostExpl} = \\ 
+             
+          \comment{Def. of $\wpNameExpl$ function for single instruction in the previous Section }	\\
+	  \numConclusion{2} \   \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e  - 1 }
+		  }{ \psi \begin{array}{l}
+                                \subst{\counter}{\counter - 1}\\  
+				\subst{\var}{\stack{\counter }}
+                          \end{array}}{\excPostExpl} = \\ 
+        
+
+
+\end{array}$$
+
+\Qed \\
 
 
  
