@@ -1,0 +1,153 @@
+
+
+\section{Rules of the \wpName{} function for the source language }\label{appendix:wpSrc}
+
+
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l} 
+	      \wpSrcExpr{ \expressionSrc.\methodd()  }{\normalPostSrc }{ \excPostSrc }{v}  =   \\
+	   \begin{array}{l}  \wpSrcExpr{\expressionSrc}{ \\
+                          
+                            \phantom{ wpisrc \expressionSrc_1 }  
+			     \left\{ \begin{array}{l}
+			      v'  \neq \mbox{ \rm \Mynull }  \Rightarrow     \\
+			      
+                                          \Myspace    \Myspace    \methodd.\preSrc  %\begin{array}{l} 
+					                         \subst{\this}{ v'} \\
+                                                                 %\subst{\mbox{\rm arg}}{ v_2} \\
+					                  %\end{array}  \\
+                                          \Myspace   \Myspace \wedge \\
+					  \Myspace   \Myspace \forall \freshVar, \ \forall \ m \in \methodd. \mod \\ 
+                                          \Myspace   \Myspace  \left\{\begin{array}{l}  
+					  \typeof{\freshVar} <: \methodd.\returnType \wedge \\ 
+					  \methodd.\normalPostSrc
+					                                \begin{array}{l} 
+					                                    \subst{\result}{\freshVar } \\
+									    \subst{ \this}{ v' } \\
+									   % \subst{\mbox{\rm arg} }{ \expressionSrc_2}
+					                                 \end{array}   \\
+                                             \Myspace \Rightarrow \normalPostSrc  \subst{ v }{ \freshVar }  \\ 
+					                       \end{array}\right.\\
+					     \Myspace   \Myspace \wedge \\
+					     \Myspace   \Myspace	 \forall \mbox{\rm \texttt{E}} \in \methodd.\exceptionSrc, \\
+					     \Myspace   \Myspace	 \forall \ m \in \methodd. \mod\\
+					     \Myspace   \Myspace  
+					  \begin{array}{l}
+					  \forall \freshVar,
+					  \freshVar \neq \Mynull \wedge \\
+					  \typeof{\freshVar} <: \mbox{\rm \texttt{E}} \Rightarrow\\ 
+					         \methodd.\excPostSpecSrc( \mbox{\rm \texttt{E}} ) \Rightarrow
+						  \excPostSrc( \mbox{\rm \texttt{E}} )\subst{\EXC}{\freshVar}  
+					  \end{array} \\ 
+			                v' = \mbox{ \rm \Mynull }  \Rightarrow  \\
+					\Myspace \begin{array}{l}
+						    \forall \freshVar, 
+							      \neg \instances(\freshVar) \wedge \\
+							       \freshVar \neq \Mynull \wedge \\
+							       \typeof{\freshVar} <: \NullPointerExc \Rightarrow\\        
+					     \Myspace \excPostSrc( \NullPointerExc ) \subst{\EXC}{\freshVar}\\  
+					\end{array}  
+                           \end{array}\right.
+       } { \\  \phantom{ wpisrc \expressionSrc_1 } \excPostSrc  } 
+	       {v'  } \end{array} \\ \\ \\
+
+
+  		     
+
+        \end{array} } $$
+\caption{\sc Weakest precondition for method invokation  }
+\label{appendix:pog:wpSrc:wpExpr:wpSrcInvoke}
+\end{frameit}
+\end{figure}
+
+
+
+In the following, we present the rules of the weakest precondition predicate transformer for 
+control statements. In Fig. \ref{appendix:pog:wpSrc:wpStmt:withoutExc} we give the rules for control 
+statements which do not deal with exceptions. They are defined in a standard way. 
+For instance, the rule \textsf{seq} states that the weakest predicate for a sequence of statements  $\stmt_1;\stmt_2$
+w.r.t. a normal postcondition $\normalPostSrc$ and exceptional postcondition function $ \excPostSrc$
+is the weakest  predicate of $\stmt_1$ w.r.t. to the normal postcondition $ \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc} $
+and the same exceptional postcondition function $ \excPostSrc$.
+Let us look also at the rule \textsf{while}. The rule requires that the invariant 
+holds. It also requires that if the invariant holds and the conditional expression evaluates to true then the
+weakest precondition of the loop body w.r.t. a postcondition which is the loop invariant. Note that this is quantified over
+the expressions which are in the modifies list \modLoop{} of the loop. This allows to properly initialize those variables which are not
+modified in the loop. Actually, we use the same technique here as in Chapter \ref{wpGeneral}.
+
+The control statements related to the exception handling and throwing as well as the finally statements
+may be have a more particular definition. They are given in Fig. \ref{pog:wpSrc:wpStmt:withExc}. 
+Let us look at the rule \textsf{try catch}. Actually, it is similar to the  rule  \textsf{seq} from 
+Fig. \ref{pog:wpSrc:wpStmt:withoutExc}, but dual in the way the postcondition modifications. In particular, 
+the weakest predicate of a try catch statement $ \try \ \{ \stmt_1 \} \ $ 
+$\catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} $  w.r.t. a normal postcondition   $\normalPostSrc$  and exceptional postcondition function $ \excPostSrc$
+is the weakest predicate of the try statement $\stmt_1$ w.r.t. the normal postcondition  $\normalPostSrc$  and the updated exceptional function
+$\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }$.
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l} 
+	   \wpSrcStmt{ \stmt_1;\stmt_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{seq}}} \\
+	   \begin{array}{l} 
+             \wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc}} { \excPostSrc} 
+           \end{array} \\ \\ \\
+
+
+	   \wpSrcStmt{ \var = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{locVarAssign}}} \\
+                  \begin{array}{l}   \wpSrcExpr{\expressionSrc_2 }{ 
+				    \normalPostSrc \subst{\var}{v}   
+				   }{ \excPostSrc}{v}  
+		  \end{array}
+	           \\ \\ \\
+
+    \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
+               \begin{array}{l} 
+	       \wpSrcStmt{\expressionSrc_1}{  \\
+	        \phantom{wpiSr} \wpSrcExpr{\expressionSrc_2 }{ \\
+		\phantom{wpiSr}\phantom{wpiSr}
+		\begin{array}{l}
+		    v_1 \neq \Mynull  \Rightarrow \\
+	         \phantom{wpiSr}  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   \\
+		 \wedge \\
+		 v_1  = \Mynull  \Rightarrow  \\
+		   \phantom{wpiSr}   \excPostSrc(\texttt{NullPointerExc}) 
+		   \end{array}}{ \\ \phantom{wpiSr}\phantom{wpiSr}  \excPostSrc}{v_2} 
+		   }{ \\ \phantom{wpiSr}  \excPostSrc}{v_1} 
+		   \end{array} \\ \\ \\
+
+    \wpSrcStmt{ \begin{array}{l} \Myif \  (\expressionSrcRel)\\  \Mythen  \{ \stmt_1 \} \\  \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } 
+    =^{\mbox{\rm\textsf{if}}}\\
+
+         \begin{array}{l} 
+	 \wpSrcExpr{ \expressionSrcRel }{ \\
+	              \phantom{wpiSr}  \begin{array}{l}  
+		      v = \Mytrue  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
+		      \wedge \\
+		      v = \Myfalse    \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
+	 \end{array}
+	 } {\\  \phantom{wpiSr}  \excPostSrc }{v} 
+     \end{array} \\ \\ \\
+
+      \wpSrcStmt{ \while \ (\expressionSrcRel) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
+	      \begin{array}{l} 
+	       \invariant \ \wedge\\
+	       \forall \  m, m \in \modLoop , \\
+	       \Myspace \invariant \Rightarrow \\
+	 	     \Myspace    \Myspace \wpSrcExpr{\expressionSrcRel}{\\\phantom{wp^{src}} 
+		     \begin{array}{l}  		
+		           \Myspace v = \Mytrue  \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc}  \\ 
+		           \Myspace v = \Myfalse  \Rightarrow  \normalPostSrc
+		     \end{array}
+	      }{ \\ \Myspace \phantom{wp^{src}} \excPostSrc}{v}  \end{array} \\ \\ \\
+\wpSrcStmt{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} = \\
+             \begin{array}{l}   \wpSrcExpr{ \expressionSrc}{ \normalPostSrc \subst{\result }{ v }} { \excPostSrc}{v}  \end{array}
+
+\end{array} } $$
+
+\caption{\sc WP for source control statements without exceptions }
+\label{appendix:pog:wpSrc:wpStmt:withoutExc}
+\end{frameit}
+\end{figure}
