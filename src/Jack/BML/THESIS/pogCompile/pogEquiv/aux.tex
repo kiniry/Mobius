@@ -10,7 +10,7 @@
 \newtheorem{wpStmtBcSrc2}[wpExprSrc]{Lemma}
 \newtheorem{theorem}{Theorem}[section]
 %\newtheorem{stackCounter}[interProp]{Lemma}
-%\newtheorem{dupProp}[interProp]{Lemma}
+%\newtheorem{dupProp}[interProp]{Lemma}%
 %\newtheorem{newProp}[interProp]{Lemma}
 
 
@@ -37,16 +37,20 @@ for any source expression $\expressionSrc$
 normal form of  $\wpNameSrcExpr$ is such that 
 
 $$ \begin{array}{l}
-         \mbox{\rm\textit{either  there exists formulas $ Q,R$  }} \\
-         \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
-         \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+         \mbox{\rm\textit{either  there exists formulas $ Q,R$ and $k\ge 0$ }} \\
+         \wpSrcExpr{\expressionSrc }{ \psi }{ \excPostExpl}{v} \  = \\ 
+	 \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+         %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
           \wedge 
 	  R \\\\
-	  \mbox{\rm\textit{or exists formulas $ Q,R $   }} \\
-\\
- \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
-      \forall \freshVar, %, \freshVar_1, \ldots  \freshVar_k   , 
-                 \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{ \freshVar}\end{array} \right)  \end{array} \right)    \wedge   R  
+	  \mbox{\rm\textit{or exists formulas $ Q,R $   and $k\ge 0$}} \\
+ \wpSrcExpr{\expressionSrc }{ \psi }{ \excPostExpl}{v} \  = \\
+      \forall v', v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{v'} \end{array} \right) \end{array} \right) \subst{v}{v'} \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+         %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+          \wedge 
+	  R \\\\
+
+          
                                                                                %    \begin{array}{l}
 									            
 									       %    \subst{v_1 }{ \freshVar_1 }  \\
@@ -104,47 +108,47 @@ contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if
 
 
 
-  Forall formulas $ Q, R$  such that 
+  Forall formulas $ Q, R$ and $k \ge 0$  such that 
 $$ \begin{array}{l}
-      \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
-        \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) 
-          \wedge  
-	  R  \\
+      \wpSrcExpr{\expressionSrc }{ \psi }{ \excPostExpl}{v} \  = \\ 
+
+      \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+         %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+          \wedge   R
+        
   \\
 \Longrightarrow \\
  \\
 
   
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \phi \begin{array}{l}
-                                       \subst{\counter}{\counter + 1}\\
-			               \subst{\stack{\counter +1}}{ v }
-                         \end{array} \end{array} \right) \end{array} \right)
+	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPostExpl} \  = \\ 
+            \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow 
+	                                                              \left( \begin{array}{l} \phi \subst{\counter}{\counter + 1}
+								       \subst{\stack{\counter +1}}{ v }\end{array} \right) \end{array} \right)   %\begin{array}{l}
+                                       
+				       \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+                         
           \wedge 
 	  R 
   \end{array}$$
 and 
-forall formulas $ Q, R$  such that 
-$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
-      \forall \freshVar, %\freshVar_1, \ldots  \freshVar_k   , 
-             \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l} \psi \subst{v}{ \freshVar}\end{array} \right)  \end{array} \right) 
-                                                                             %    \begin{array}{l}
-									     %       \\
-									     %  \subst{v_1 }{ \freshVar_1 }  \\
-									     %	\ldots \\
-									     %	\subst{v_k}{ \freshVar_k } 
-									     %   \end{array}  
-                                                                  \wedge   R     
+forall formulas $ Q, R$ and $k\ge 0$ such that 
+$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPostExpl}{v} \  = \\
+      
+              \forall v', v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l}\psi \subst{v}{v'} \end{array} \right)  \end{array} \right) \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+         %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
+          \wedge 
+	  R
 
  \\
 \Longrightarrow \\
  \\
 
-\wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-            \forall \freshVar, % \freshVar_1, \ldots  \freshVar_k ,  
-                              \left( \begin{array}{l} Q \Rightarrow  \left( \begin{array}{l} \phi  \begin{array}{l}\subst{\counter}{\counter + 1} \\
-                                                                                                  \subst{\stack{\counter +1}}{\freshVar  } \end{array} \end{array} \right)
-			       \end{array} \right)      
+\wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPostExpl} \  = \\ 
+            \forall v', v^{'}_1 \ldots v^{'}_k,
+                              \left( \begin{array}{l} Q \Rightarrow  
+                                         \left( \begin{array}{l} \phi  \subst{\counter}{\counter + 1}  \subst{\stack{\counter +1}}{v'} \end{array} \right)  \end{array} \right) 
+      									    \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}		  
 			               
                                     %  \begin{array}{l}
 				    %   \subst{v_1 }{ \freshVar_1 }  \\
@@ -167,9 +171,9 @@ This follows from the previous lemma which establishes the relation between the 
  
 $$ 
     \begin{array}{l}
-    \forall \stmt, \psi, \excPostSrc , \\
-       \Myspace  \wpStmt{\compileLabel{s}{\stmt}{e}}{ \psi }{ \excPostSrc }  = \\
-       \Myspace   \wpSrcStmt{\stmt  }{\psi }{ \excPostSrc }  
+    \forall \stmt, \psi, \excPostExpl , \\
+        \wpStmt{\compileLabel{s}{\stmt}{e}}{ \psi }{ \excPostExpl }  = 
+        \wpSrcStmt{\stmt  }{\psi }{ \excPostExpl }  
 	 
     \end{array}
  $$
@@ -197,12 +201,36 @@ The proof is done by structural induction. Here, we scatch the case for assignme
              
           \comment{Def. of $\wpNameExpl$ function for single instruction in the previous Section }	\\
 	  \numConclusion{2} \   \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e  - 1 }
-		  }{ \psi \begin{array}{l}
+	  	  }{ \psi \begin{array}{l}
                                 \subst{\counter}{\counter - 1}\\  
-				\subst{\var}{\stack{\counter }}
-                          \end{array}}{\excPostExpl} = \\ 
-        
+	  			\subst{\var}{\stack{\counter }}
+                          \end{array}}{\excPostExpl}  \\\\
+         
+         \end{array}$$   
+	 $$\begin{array}{l}
+          \mbox{\rm\textit{\{from Lemma \ref{pogEq:aux:wpExprSrc} we get that the result of $\wpNameSrcExpr{}$ of a source expression }} \\
+	  \mbox{\rm\textit{ is in one of two possible normal forms. We assume that for expression $\expressionSrc$ from \numConclusion{1} }}\\
+	  \mbox{\rm\textit{  $\wpNameSrcExpr{}$  calculates a formula in the first normal form and, i.e. }}\\
+          \mbox{\rm\textit{ there exists formulas $Q,R$ and  $k =  0$ \} }}\\
+          
+	  
+	 \numConclusion{3} \ \wpSrcExpr{  \expressionSrc }{\psi \subst{\var}{v}}{\excPostExpl}{v} = 
+	   
+	  \left( \begin{array}{l} Q \Rightarrow \psi  \subst{\var}{v} \end{array} \right)  \wedge   R \\\\
 
+         \comment{from \numConclusion{3} and  Lemma \ref{exprValueOnStack} follows } \\ 
+	 \numConclusion{4} \ \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e  - 1 }
+	  	  }{ \psi  \subst{\counter}{\counter - 1}
+	  			\subst{\var}{\stack{\counter }}
+                          }{\excPostExpl} = \\
+	\left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l}\psi \subst{\counter}{\counter - 1}
+	  			\subst{\var}{\stack{\counter }} \subst{\counter}{\counter + 1} \subst{\stack{\counter + 1}}{v} \end{array} \right) \end{array} \right) 
+         
+          \wedge   R \\
+        \comment{property of substitution } \\
+	\numConclusion{5} \	\left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l}\psi
+	  			\subst{\var}{v} \end{array} \right) \end{array} \right)  \wedge   R \\
+       \comment{ from \numConclusion{3}, \numConclusion{4} and  \numConclusion{5} this case holds }
 
 \end{array}$$
 
@@ -231,7 +259,7 @@ For every $\stmt$, compilation $\compileLabel{s}{\stmt}{e}$,  formula $\psi$ and
 	 \item$\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e) $ 
   \end{itemize}
       then it holds 
-$$ \wpSrcStmt{\stmt}{\psi }{\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
+$$ \wpSrcStmt{\stmt}{\psi }{\excPostExpl }  = \wpi{}{\methodd}{\ins{s} }$$
 \end{wpStmtBcSrc2}
 \textit{Proof}: \\
 This follows from Lemmas \ref{wpStmtBcSrc1}, which establishes the equivalence between the verification conditions of
@@ -248,7 +276,7 @@ formalizes this fact.
 \begin{theorem}[Proof obligation preservation]
 For all method \methodd \ if its body is $\stmt$ such that its compilation is 
  $\compileLabel{s}{\stmt}{e}$  we have the following:
-$$ \wpSrcStmt{\stmt}{\methodd.\normalPost }{\methodd.\excPostSrc }  = \wpi{}{\methodd}{\ins{s} }$$
+$$ \wpSrcStmt{\stmt}{\methodd.\normalPost }{\methodd.\excPostExpl }  = \wpi{}{\methodd}{\ins{s} }$$
 \end{theorem}
 The proof follows from the previous proposition \ref{wpStmtBcSrc2}
 
