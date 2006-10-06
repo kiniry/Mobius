@@ -12,3 +12,5 @@ rm -f *.aux *.log *.pdf *.tex.backup *.toc
 # Delete java files generated from j files
 cat *.j | awk '/class/ {print $3".java"}' | xargs rm -f
 
+sh help
+
