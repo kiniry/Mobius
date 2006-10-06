@@ -7,3 +7,7 @@ cd java/escjava/vcGeneration
 
 ./division-j-file.pl TFunction.j 
 ./division-j-file.pl TLiteral.j
+
+cd coq
+
+./PreludeGenerator.sh
