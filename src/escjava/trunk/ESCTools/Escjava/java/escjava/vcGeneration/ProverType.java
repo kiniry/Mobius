@@ -114,8 +114,10 @@ abstract public class ProverType {
      * 
      * @param tree a VC term to be simplified
      */
-    //FIXME To what extent is this really necessary?
-    abstract public TNode rewrite(TNode tree);
+    //FIXME To what extent is this really necessary? 
+    // jgc: for prover specific feature ie. turning  and into implications and the end not
+    // into false...
+    abstract public TNode rewrite(TNode tree) throws IOException;
 
     /**
      * This methods generates the declarations for a specified prover.
