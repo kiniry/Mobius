@@ -89,8 +89,10 @@ $$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$
   the exception will be caught by the statement following the  $ \catch $ keyword. An interesting feature  is the finally statement
   introduced via the syntax $ \try  \ \{ \stmt \}  $ $ \finally \ \{ \stmt \}$.  The meaning of the construct is that  
   no matter how the statement following the keyword \try \ terminates (on an exception or normally),
-  the statement introduced by the keyword \finally \ must execute after it. Also, if the try statement terminates normally(exceptionally) then the
-  whole statement will terminate normally(exceptionally).
+  the statement introduced by the keyword \finally \ must execute after it. If the try block terminates normally then the
+  whole try statement will terminate as the finally block. If the try block terminates on exception \Exc{} and if the finally block
+  terminates normally, the whole try finally statement terminates for on the exception  \Exc{}.  If the try block terminates on exception \Exc{} and if the finally block
+  terminates on exception \Exc' then the whole try finally  terminates on exception \Exc'.
   Loop statements are also supported.  They are provided with a predicate \invariant \ which must hold whenever 
   the loop entry is reached and with a list of expressions
    \modLoop \ which lists the locations that  may be modified per loop iteration.
