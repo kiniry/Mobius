@@ -1,17 +1,7 @@
 % Java source
 Since the beginning of programming languages, the problem of program correctness has been an issue. 
 Especially this is the case today when complex programming applications  enter into our daily life and perform actions 
-which may potentially compromise confidential data or the performance of the computer system they are executed on etc.
-
-
-% Applications 
-Among the programming systems which has gained a lot of popularity in industry is the Java platform of Sun Microsystems. % and the Common Language Runtime (CLR) of Microsoft.  
- The reasons for the  success of Java is that it allows applications to 
- be developed in a high-level language without committing to any
-specific hardware and since it features security mechanisms which
-guarantee the innocuousness of downloaded applications. 
-For instance, smart card applications are relying on the Java framework and
- more particularly on the JavaCard framework a dialect of Java tailored to small devices. 
+which may potentially compromise confidential data or the performance of the computer system they are executed.
 
 
 
@@ -22,43 +12,59 @@ These intentions are usually expressed as  a functional specification in terms o
 input and output, or a property which  should hold all along the execution of the application. 
 
 A widely used approach is to perform testing. However, this technique is not capable
-to cover all the input space and thus, although the tests have been successfull, 
-the implemntation may still contain errors. This, of course, is not desirable in particular in the case of a critical 
+to cover all the cases of the input space and thus, although the tests have been successful, 
+the implementation may still contain errors. This, of course, is not desirable in particular in the case of a critical 
 program applications as is the case for applications which target smart cards. 
 
  Another possibility is to use formal verification methods. Such technique relies on:
 \begin{itemize} 
-   \item annotations of the implemention which express the intended behavior of the program. The annotations
+   \item annotations of the implementation which express the intended behavior of the program. The annotations
          are written in a formal specification language.
    \item a program logic which  generates logical (verification) conditions  from the annotations and the program. 
          The truthfulness of these conditions implies that the implementation respects the annotations and thus,
 	 that the implementation respects the initial specification. 
     
-   \item a decision procedure which should decide if the conditions hold.     
+   \item a decision procedure which should decide if the conditions hold. The decision procedure might be automated or not.
+         Automation is nice as it needs no user interaction.
+         However, automation cannot deal with complex policies. For instance, automated theorem provers 
+	 fail to deal with complicated theorems. Interactive decision procedures are another alternative which is 
+	 more powerful and can more often ``say'' if something holds or not. Of course, because of the undecidability 
+	 even an interactive procedures may fail to decide if a proposition holds or not. Although interactive decision 
+	 systems are more reliable they need a user expertise in theorem proving and logic.
+         Thus, depending what kind of properties we check and to what extent the software is critical,
+	  we may go to an automatic or interactive procedure. 
+
            
 \end{itemize}
 Contrary to program testing,  formal program verification guarantees that if the verification procedure 
-has been successfull then the implementation respects the specification. 
+has been successful then the implementation respects the specification. 
  The field of formal  verification is wildly studied and several  tools exist for
 dealing with Java source verification. We should mention in the list of the verification tools tailored to Java the extended static checker
 esc/java \cite{escjava}, the Loop tool \cite{jacobs03java},
 Krakatoa \cite{marche03krakatoa}, Jack \cite{BRL-JACK}. These tools are tailored to Java source code and thus,
  are helpful for the development process. For instance, the developer may use such verification tools for discovering program bugs and
- errors. More generally, verification on source code allows the code producer to audit the quality of a software implemention.
+ errors. More generally, verification on source code allows the code producer to audit the quality of a software implementation.
  
-However, there are scenarios in which source verification will be of less help. Examples for such cases are:
-\begin{itemize}
-    \item  mobile code scenarios where 
-           the client should generate the verification conditions and where he receives usually only
-           the interpreted bytecode (which usually is not accompanied by its respective source code). And even if the client receives the source code
-	   with the bytecode, he should trust the compiler which is not desirable.
-    \item  specific applications like the use of formal methods to optimizing compilers. In this case, the verification on source code
-           is not pertinent as it should identify the places in the bytecode which may be optimized.
-\end{itemize} 
+However, there are scenarios in which source verification is not appropriate. 
+This is the case for mobile code scenarios where the client should generate the verification conditions and where he receives usually only
+the interpreted bytecode (which usually is not accompanied by its respective source code). And even if the client receives the source code
+ with the bytecode, he should trust the compiler which is not desirable. 
+    %\item  specific applications like the use of formal methods to optimizing compilers. In this case, the verification on source code
+     %      is not pertinent as it should identify the places in the bytecode which may be optimized.
+%\end{itemize} 
 
-In these scenarios, it is more suitable to perform the verification  directly on bytecode level.
+In these scenarios, it is more suitable to perform the verification  directly on the  executable or interpreted code.
 In the following, we present a framework which allows to verify statically bytecode programs 
-against potentially non trivial functional and security properties.
+against potentially non trivial functional and security properties. The framework is tailored to Java bytecode.
+
+% Applications 
+ The Java platform  of Sun Microsystems has gained a lot of popularity in industry  for the last two decades.
+ The reasons for its  success is that it allows applications to 
+ be developed in a high-level language without committing to any
+ specific hardware and since it features security mechanisms which
+ guarantee the innocuousness of downloaded applications. 
+ For instance, smart card applications are relying on the Java framework and
+ more particularly on the JavaCard framework a dialect of Java tailored to small devices. 
 
    \section{Contributions}
 We propose a framework which allows the verification of bytecode programs against complex functional and safety properties, which has the following 
@@ -69,32 +75,28 @@ components.
 	 Thus, we propose a verification condition generator (VcGen for short) for Java bytecode which is completely independent from 
 	 the source code. The verification condition generator a large subset of Java and deals with
 	 arithmetic operations, object creation and manipulation,
-	 method invokations, exception throwing and handling, stack manipulation etc.
+	 method invocations, exception throwing and handling, stack manipulation etc.
 	 The verification condition relies on a standard weakest predicate transformer function
 	 and  has a proof of soundness.
 	 
-	 We have an implementation which is integrated in Jack (short for Java Applect Correctness Kit) \cite{BRL-JACK} which is a user friendly 
+	 We have an implementation which is integrated in Jack (short for Java Applet Correctness Kit) \cite{BRL-JACK} which is a user friendly 
 	 plugin for the eclipse ide \footnote{http://www.eclipse.org/}. 
 	 
    \item [Bytecode Modeling Language] 
-         A specification language which is tailored to bytecode. Let us see what advocates the need of a
-	 low level specification language. Traditionally, specification languages were tailored for high level languages.  
-	 Source  specification allows to express complex functional or security properties about programs.
-	 Thus, they are successfully  used for software audit and validation. Still, source specification in 
-	 the context of mobile code does not help a lot for several reasons.
+         
+ %	 Let us see what advocates the need of a
+ %	 low level specification language. Traditionally, specification languages were tailored for high level languages.  
+ %	 Source  specification allows to express complex functional or security properties about programs.
+ %	 Thus, they are successfully  used for software audit and validation. Still, source specification in 
+ %	 the context of mobile code does not help a lot for several reasons.
 
-
-	 First, the executable or interpreted code  may not be accompanied by its specified  source. Second, it is more reasonable for the 
-	 code receiver to check the executable code than its source code, especially if he is not willing to trust the compiler.
-	 Third, verifying a bytecode program against certain functional property needs a formalism into which the property will be encoded. 
-
+         As we said above, our objective is to be able  check complex functional or security policies.
+	 For this, we need a formalism into which properties will be encoded. 
 
 	 It is in this perspective, that we propose  a bytecode specification language which we call BML (short for Bytecode Modeling Language). 
-	 BML is the bytecode encoding of an important subset of  JML (short for Java Modeling Language). The latter is a rich specification language tailored to Java source programs and
+	 BML is the bytecode encoding of an important subset of  JML (short for Java Modeling Language). The latter is a rich specification
+	 language tailored to Java source programs and
 	 allows to specify rich functional properties over Java source programs.
-
-
- 
 
 	 % what does the language support?
 	 BML supports the most important features of JML like method pre and postconditions, intra method specification as for instance loop invariants, class invariants, special
@@ -104,11 +106,9 @@ components.
 	 to Java bytecode.  
 
    \item [Compiler from source to bytecode annotations]
-         One would ask why we need a bridge between source and bytecode specification. Or put it differently, why not
-	 writing or inferring specification directly on bytecode.
- 
+         Let us see why such a compiler may be useful.
 	 For properties like well typedness specification can be inferred automatically,
-	 but in the general case this problem is not decidable.  
+	 but in the general case and especially in the case of complex properties this problem is not decidable.  
 	 Thus, for more sophisticated policies, an automatic inference will not work.
 	 A compiler from JML to BML  makes the Java  bytecode benefit from the JML source specification.
 
@@ -124,6 +124,17 @@ components.
 	 proved the bytecode and the certificate (the proof of the verification conditions) produced over the source
 	 can be shipped  to the client.
 \end{description}
+
+\section{Applications}
+We have applied our verification condition generator in two cases. The first one is the verification of constraint memory consumption policies.
+ Indeed, it is an important issue for devices with limited resources as smart cards to have a guarantee that a newly installed application 
+will not corrupt the whole system because of malevolent resource usage. In such critical situations, bytecode verification is suitable
+as it does not compromise the compiler. 
+
+
+We have also shown how bytecode verification can be applied to  bytecode to native compiler optimizations. Because the verification is performed
+on bytecode, we can relate verification conditions to the particular program point to which they relate to. This helps to identify
+the program points which can be optimized. 
 
 \section{Related work}
 
@@ -144,7 +155,7 @@ There exists different techniques for establishing that a program respects certa
    % dynamic checks  
    \item [dynamic checks] This approach consists in performing checks dynamically on execution time.    
      However, the performance is compromised especially in the case of 
-     devices with limitted resources.  For example,
+     devices with limited resources.  For example,
      the Java security architecture ensures that applications will not
      perform illegal memory accesses through stack inspection, which
      performs access control during execution
@@ -168,16 +179,6 @@ There exists different techniques for establishing that a program respects certa
 
 \end{description}
 
-\section{Applications}
-We have applied our verification condition generator in two cases. The first one is the verification of constraint memory consumption policies.
- Indeed, it is an important issue for devices with limited resources as smart cards to have a guarantee that a newly installed application 
-will not corrupt the whole system because of malevolent resource usage. In such critical situations, bytecode verification is suitable
-as it does not compromize the compiler. 
-
-
-We have also shown how bytecode verification can be applied to  bytecode to native compiler optimizations. Because the verification is performed
-on bytecode, we can relate verification conditions to the particular program point to which they relate to. This helps to identify
-the program points which can be optimized. 
 
 
 
