@@ -40,9 +40,9 @@ Let's see the meaning of the new elements in the method data structure.
 	   then for every exception type $\mbox{ \rm \texttt{SExc}} $ such that \subtype{\texttt{SExc} }{\texttt{Exc}}
 	    the result of the function \methodd.\excPostSpec \  for  \texttt{SExc} 
            is $\methodd.\excPostSpec(\texttt{SExc} ) = \locVar{1} == \Mynull$. If for an exception \texttt{Exc} there is not specified
-	   explicitely an exsures clause then the function \excPostSpec \ returns the default exceptional postcondition predicate \Myfalse, i.e.
+	   explicitly an exsures clause then the function \excPostSpec \ returns the default exceptional postcondition predicate \Myfalse, i.e.
 	   $\methodd.\excPostSpec(\texttt{Exc} ) = \Myfalse$
-     \item \methodd.\loopSpecTable \ is a list of \LoopSpecSet \ data structures which give the specifcication information 
+     \item \methodd.\loopSpecTable \ is a list of \LoopSpecSet \ data structures which give the specification information 
            for a particular loop in the bytecode         
 \end{itemize}
 
