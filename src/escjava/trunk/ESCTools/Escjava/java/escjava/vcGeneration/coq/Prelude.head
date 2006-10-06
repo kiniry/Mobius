@@ -5,7 +5,7 @@ import java.io.*;
 /**
  * This class is used to generates the Coq prelude to the specified 
  * path. The prelude is taken from the file 
- * <code>ESCTOOLS/docs/Escjava2-logics/coq/defs.v</code>.
+ * <code>$ESCTOOLS/docs/Escjava2-logics/coq/defs.v</code>.
  * @author J.Charles
  * @version 14/11/2005
  */

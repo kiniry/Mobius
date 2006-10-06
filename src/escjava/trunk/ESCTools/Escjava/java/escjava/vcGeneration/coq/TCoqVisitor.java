@@ -4,6 +4,7 @@ import java.io.*;
 
 import escjava.vcGeneration.*;
 import escjava.vcGeneration.coq.visitor.ANotHandledVisitor;
+import escjava.vcGeneration.coq.visitor.TCoqBoolVisitor;
 
 /**
  * In the Coq extension, we differentiate <code>Boolean</code>
@@ -19,7 +20,7 @@ import escjava.vcGeneration.coq.visitor.ANotHandledVisitor;
  * @author J.Charles based on the work of C.Hurlin
  * @version 14/11/2005
  */
-class TCoqVisitor extends ANotHandledVisitor {
+public class TCoqVisitor extends ANotHandledVisitor {
 
     
 	TCoqVisitor(Writer out, CoqProver prover){
@@ -91,17 +92,17 @@ class TCoqVisitor extends ANotHandledVisitor {
     		}
     		else
     			out.appendN("(");
-    		Object o = (n.getChildAt(i+1));
-    		if((o instanceof TBoolean)) {
+    		//Object o = (n.getChildAt(i+1));
+//    		if((o instanceof TBoolean)) {
     			n.getChildAt(i).accept(tcv);
     			out.appendN(" = ");	
     			n.getChildAt(i+1).accept(tcv);
-    		}
-    		else {
-    			n.getChildAt(i).accept(tcbv);
-    			out.appendN(" <-> ");
-    			n.getChildAt(i+1).accept(tcbv);
-    		}
+//    		}
+//    		else {
+//    			n.getChildAt(i).accept(tcbv);
+//    			out.appendN(" <-> ");
+//    			n.getChildAt(i+1).accept(tcbv);
+//    		}
 
 			
     		out.appendN(")");

@@ -1,7 +1,9 @@
 package escjava.vcGeneration.coq;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -9,6 +11,11 @@ import java.util.regex.Pattern;
 import java.io.*;
 
 import escjava.vcGeneration.*;
+import escjava.vcGeneration.coq.visitor.simplifiers.TAndRemover;
+import escjava.vcGeneration.coq.visitor.simplifiers.TNotRemover;
+import escjava.vcGeneration.coq.visitor.simplifiers.TProofSimplifier;
+import escjava.vcGeneration.coq.visitor.simplifiers.TProofSplitter;
+import escjava.vcGeneration.coq.visitor.simplifiers.TProofTyperVisitor;
 import escjava.translate.*;
 import javafe.ast.*;
 
@@ -20,13 +27,41 @@ import javafe.ast.*;
  * @version 14/11/2005
  */
 public class CoqProver extends ProverType {
+    private static final String DEFAULT_PROOFSCRIPT = "startsc...\n";
+
+	/** the prelude path: ie. defs.v */
+    private static final String PRELUDE_PATH =  "defs.v"; 
     
-    public String labelRename(String label) {
-        label = label.replace('.','_');
-        label = label.replace('<','_');
-        label = label.replace('>','_');
-        return label;
+    /** the proof obligations location: ie. coq_proofs */
+    private static final String PROOF_PATH = "coq_proofs";
+
+    
+    /**
+     * Pretty print a number, based on the size of the max number 
+     * in the serie. ie. if the max is 123, the number 2 will be
+     * printed 002.
+     * @param n the number to pretty print
+     * @param max the max number of the serie
+     * @return the pretty version of <code>n</code>
+     */
+    public static String ppNumber(int n, int max) {
+    	int oldmax = max;
+    	int oldn = n;
+    	int i = 0;
+    	for (; max != 0; max = max /10) i++;
+    	int j = 0;
+    	max = oldmax;
+    	
+    	for (; n != 0; n = n /10) j++;
+    	max = i - j;
+    	String res = "";
+    	for(int k = 0; k < max; k++) {
+    		res += "0";
+    	}
+    	return res + oldn;
     }
+    
+    
     
 	/**
 	 * @return an instance of the class {@link TCoqVisitor}.
@@ -36,31 +71,121 @@ public class CoqProver extends ProverType {
     }
 
     /**
+     * Write in the directory coq_proofs/proofName the different
+     * vernacular files corresponding to the proof obligations.
      * @param proofname the name we should give to the generated lemma.
      * @param declns the declarations of the forall.
      * @param vc the generated verification condition.
      * @return the Coq vernacular file representing the proof.
      */
-    public void getProof(Writer out, String proofName, TNode term) throws IOException {
-
-        //    	// We try to generate the prelude.
-        //   		try {
-        //			new Prelude(new File("defs.v")).generate();
-        //		} catch (IOException e) {
-        //			e.printStackTrace();
-        //		}
-
-        // generate declarations
-        out.write("Load \"defs.v\".\n");
-        generatePureMethodsDeclarations(out);
-        out.write("Lemma " + proofName + " : \n");
-        out.write("forall ");
-        generateDeclarations(out, term);
-        out.write(" ,\n");
-        generateTerm(out, term);
-        out.write(".\n");
-        out.write("Proof with autosc.\n" + "Qed.");
+    public void getProof(Writer output, String proofName, TNode term) throws IOException {
+    	File coqProofDir = new File(PROOF_PATH);
+    	if(!coqProofDir.exists()) {
+    		coqProofDir.mkdir();
+    	}
+    	Prelude p = new Prelude(new File(coqProofDir, PRELUDE_PATH));
+    	p.generate();
+    	
+    	File coqCurrentProofDir = new File(coqProofDir, proofName);
+    	coqCurrentProofDir.mkdir();
+    		
+    	List res = simplifyProofObligation(term);
+    	
+    	Iterator iter = res.iterator();
+    	int count = 1;
+    	while(iter.hasNext()) {
+    		File proof = new File(coqCurrentProofDir, ppNumber(count, res.size()) + ".v");
+    		term = (TNode) iter.next();
+    		String script = getProofScript(proof);
+    		writeProofObligation(proofName, proof, term, script);
+        	count++;
+    	}
     }
+
+    
+    /**
+     * This method modify the proof obligation term given as a
+     * parameter. It returns a list of proof terms corresponding
+     * to the original one.
+     * @param term the term to simplify and/or decompose
+     * @return the list of term corresponding to the original term
+     * @throws IOException
+     */
+	private List simplifyProofObligation(TNode term) throws IOException {
+        TProofTyperVisitor tptv = new TProofTyperVisitor();
+        term.accept(tptv);
+		TProofSimplifier tps = new TProofSimplifier();
+    	term.accept(tps);
+    	TNotRemover tfr = new TNotRemover();
+    	term.accept(tfr);
+    	TAndRemover tar = new TAndRemover();
+    	term.accept(tar);
+    	TProofSplitter ps = new TProofSplitter();
+    	term.accept(ps);
+    	List res = ps.getListTerms();
+    	if((res == null) || res.size() ==0) {
+    		res = new ArrayList();
+    		res.add(term);
+    	}
+		return res;
+	}
+    
+    
+    
+
+    
+    
+    /**
+     * Returns the proof script previously available in the proof
+     * or a default proof script in the worst case.
+     * @param proof the proof to parse in order to find the old
+     * proof script
+     * @return the old proof script or {@link #DEFAULT_PROOFSCRIPT}
+     * @throws IOException if there is a problem reading the proof
+     * file
+     */
+	private String getProofScript(File proof) throws IOException {
+		if(proof.exists()) {
+			LineNumberReader lnr = new LineNumberReader(new FileReader(proof));
+			String red;
+			while((red = lnr.readLine()) != null) {
+				if(red.startsWith("Proof with autosc")) {
+					String res = "";
+					while(((red = lnr.readLine()) != null)
+							&& !red.startsWith("Qed.")) {
+						res += red + "\n";
+					}
+					lnr.close();
+					return res;
+				}
+			}
+			lnr.close();
+		}
+		return DEFAULT_PROOFSCRIPT;
+	}
+
+	
+	/**
+	 * Write the proof obligation to the disc.
+	 * @param proofName the name of the proof
+	 * @param proof the file where to write the proof
+	 * @param term the proof obligation to translate to Coq
+	 * @param proofScript the proof script to put inside of the proof obligation
+	 * @throws IOException if there is an error while writing the file
+	 */
+	private void writeProofObligation(String proofName, File proof, TNode term, String proofScript) throws IOException {
+		Writer out = new FileWriter(proof);
+		out.write("Load \"coq_proofs" + File.separator + PRELUDE_PATH + "\".\n");
+		generatePureMethodsDeclarations(out);
+		out.write("Lemma " + proofName + " : \n");
+		out.write("forall ");
+		generateDeclarations(out, term);
+		out.write(" ,\n");
+		generateTerm(out, term);
+		out.write(".\n");
+		out.write("Proof with autosc.\n"+ proofScript + "Qed.\n");
+		out.close();
+	}
 
     
     /**
@@ -133,26 +258,22 @@ public class CoqProver extends ProverType {
         TNode.addName("XRES", "%Reference", "XRes");
     }
     
+    
+    /*
+     * (non-Javadoc)
+     * @see escjava.vcGeneration.ProverType#addTypeInfo(escjava.translate.InitialState, javafe.ast.Expr)
+     */
     public Expr addTypeInfo(InitialState initState, Expr tree) {
         //FIXME Our prover logic is (presumably?) typed, so why do we need to do this here?
         tree = GC.implies(initState.getInitialState(), tree);
         return tree;
     }
     
-    /**
-     * Tries to simplify the given tree using the class
-     * {@link TProofTyperVisitor}.
-     * @param tree the tree to simplify.
+    /*
+     * (non-Javadoc)
+     * @see escjava.vcGeneration.ProverType#rewrite(escjava.vcGeneration.TNode)
      */
     public TNode rewrite(TNode tree) {
-        TProofTyperVisitor tptv = new TProofTyperVisitor();
-        try {
-            tree.accept(tptv);
-        } catch (IOException e) {
-            // This should never happen!?
-        }
-        //TProofSimplifier psvi = new TProofSimplifier();
-        //tree.accept(psvi);
         return tree;
     }
     
@@ -226,7 +347,18 @@ public class CoqProver extends ProverType {
     		return vi.def;
     	}
     }
-	   
+	
+    /*
+     * (non-Javadoc)
+     * @see escjava.vcGeneration.ProverType#labelRename(java.lang.String)
+     */
+	public String labelRename(String label) {
+        label = label.replace('.','_');
+        label = label.replace('<','_');
+        label = label.replace('>','_');
+        return label;
+    }
+    
     /** 
      * Rename the variable, ie. the name {@link VariableInfo#old} to
      * a proper Coq name in the variable {@link VariableInfo#def}.
@@ -428,13 +560,10 @@ public class CoqProver extends ProverType {
 
             } else {
                 s.write("(" + viTemp.getVariableInfo() + " : S)");
-                TDisplay
-                        .warn(
-                                this,
-                                "generateDeclarations",
-                                "Type of variable "
-                                        + keyTemp
-                                        + " is not set when declarating variables for the proof, skipping it...");
+                TDisplay.warn(this,
+                          "generateDeclarations",
+                          "Type of variable " + keyTemp
+                           + " is not set when declarating variables for the proof, skipping it...");
             }
         }
     }
