@@ -21,25 +21,34 @@ Definition t_double := R.
 Variable Types : Set.
 Inductive S: Set  := 
        Z_to_S : Z -> S.
+Coercion Z_to_S : Z >-> S.
+
 Definition LockSet := S.
 Definition Path := S.
 Definition Reference:= S.
 
 Definition Elem := Reference.
 Definition Field := Reference.
+
 (* Some arithmetic things *)
 Variable S_to_Z : S -> Z.
-(* Variable Z_to_S : Z -> S. *)
-Axiom Z_to_S_elim : forall x,  S_to_Z (Z_to_S x) = x.
-Variable S_to_bool : S -> bool.
+Coercion S_to_Z : S >-> Z.
 
+(* Variable Z_to_S : Z -> S. *)
+(* Axiom Z_to_S_elim : forall x,  S_to_Z (Z_to_S x) = x.*)
+(* Check  Z_to_S_elim. *)
+Variable S_to_bool : S -> bool.
+Coercion S_to_bool : S >-> bool.
 Variable S_false : S.
 Variable S_true : S.
 Axiom S_false_is_false : S_to_bool S_false = false.
 Axiom S_true_is_true : S_to_bool S_true = true.
+
 Hint Rewrite S_false_is_false S_true_is_true: escj.
-Axiom S_to_Z_det: 
+
+(* Axiom S_to_Z_det: 
          forall x : S,  (S_to_Z x) = (S_to_Z x).
+Check S_to_Z_det. *)
 Lemma S_to_Z_inj:
          forall x y: Z, (Z_to_S x) = (Z_to_S y) -> x = y.
 Proof.
@@ -47,10 +56,11 @@ intros x y H.
 injection H.
 trivial.
 Qed.
+
 Axiom S_to_bool_det: 
          forall x y: S,  x = y -> (S_to_bool x) = (S_to_bool y).
-Hint Immediate S_to_Z_det S_to_bool_det.
-Hint Rewrite Z_to_S_elim:escj.
+
+Hint Immediate S_to_bool_det.
 
 Lemma Zeq_bool_sym :
 forall x:Z, Zeq_bool x x = true.
@@ -262,6 +272,13 @@ Module Type A_args.
 Parameter A : Set .
 End A_args.
 
+
+Variable arrselect: S -> Z -> S.
+Variable arrstore: S -> Z -> S -> S.
+
+Variable select: S -> S -> S.
+Variable store: S -> S -> S -> S.
+
 Module    AHeap (X:A_args): Heap with Definition A := X.A   .
 Definition A := X.A.
 Variable arrselect: S -> Z -> A.
@@ -336,11 +353,14 @@ Module RefHeap := AHeap ArgRef.
 Hint Resolve RefHeap.select_store2.
 Hint Rewrite  -> RefHeap.select_store1 RefHeap.arrselect_store1: escj_select.
 
+Module ArgS : A_args with Definition A := S.
+Definition A := S.
+End ArgS.
+Module SHeap := AHeap ArgS.
 
 Module ArgInt : A_args with Definition A := t_int.
 Definition A := t_int.
 End ArgInt.
-
 Module IntHeap := AHeap ArgInt.
 Hint Resolve IntHeap.select_store2.
 Hint Rewrite  -> IntHeap.select_store1 IntHeap.arrselect_store1: escj_select.
@@ -353,12 +373,13 @@ Module BoolHeap := AHeap ArgBool.
 Hint Resolve BoolHeap.select_store2.
 Hint Rewrite  -> BoolHeap.select_store1 BoolHeap.arrselect_store1 : escj_select.
 
+Variable x: Reference.
+Check (SHeap.arrselect x 1 = x).
 
 
 
 
-
-
+Coercion Is_true : bool >-> Sortclass.
 
 (* Sans elimOr/elimAnd c'est un peu la deche *)
 (**
@@ -542,7 +563,11 @@ end.
 
 
 
-Ltac autosc := intros; subst; elimOr; elimAnd; intros; subst;  
+Ltac simplsc := intros; subst; elimOr; elimAnd; intros; subst; 
+try match goal with
+| [H: context a [negb (negb _)] |- _] =>
+	rewrite negb_elim in H
+end;
 repeat match goal with
 |[H: _ |- _] => rewrite RefHeap.select_store1 in H
 end;
@@ -550,8 +575,18 @@ repeat match goal with
 |[H: _ |- _] => rewrite BoolHeap.select_store1 in H
 end; autorewrite with escj; autorewrite with escj_select;
 auto.
-Ltac startsc := unfold not; unfoldEscTime; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
+Ltac startsc := unfoldEscTime; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
 (* unfoldArrAx. *)
-
-
+Ltac autosc := simplsc;
+repeat match goal with
+| [ H: ?v = ?v -> _ |- _ ] =>
+     let h := fresh "H" in
+       assert(h := H (refl_equal ecReturn));
+       clear H; try subst
+end;
+try match goal with 
+| [ H: (~ True) = True |- _ ] => 
+       let h := fresh "H" in
+        (assert(h := I); rewrite <- H in h; apply h); exact I
+end.
 
