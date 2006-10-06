@@ -1,66 +1,5 @@
 
-This chapter is devoted to an application of our verification framework
-to constraint memory usage policies. Let us first focus on 
- the context and motivations.
 
-% Introduction 
-Trusted personal devices (TPDs for short) such as smart cards,
-mobile phones, and PDAs commonly rely on execution platforms such as the Java
-Virtual Machine and the Common Language Runtime. Such platforms are
-considered appropriate for such TPDs since they allow applications to
-be developed in a high-level language without committing to any
-specific hardware and since they feature security mechanisms that
-guarantee the innocuousness of downloaded applications. For example,
-the Java security architecture ensures that applications will not
-perform illegal memory accesses through stack inspection, which
-performs access control during execution, and bytecode verification,
-which performs static type-checking prior to execution.  On the other
-hand, current security architectures for TPDs do not provide any
-mechanism to control resource usage by downloaded applications,
-despite TPDs being subject to stringent resource constraints.
-Therefore, TPDs are particularly vulnerable to denial-of-service
-attacks, since executing a downloaded application may potentially lead
-to resource exhaustion.
-
-
-Several approaches have been suggested to date to enforce memory
-consumption policies for programs; all approaches are automatic,
-but none of them is ideally suited for TPDs, either for their
-lack of precision, or for the runtime penalty they impose on
-programs:
-\begin{itemize}
-\item \emph{Static analyses and abstract interpretations:} in such an
-approach, one performs an abstract execution of an approximation of
-the program. The approximation is chosen to be coarse enough to be
-computable, as a result of which it yields automatically bounds on
-memory consumption, but at the cost of precision. Such methods are not
-very accurate for recursive methods and loops, and often fail to
-provide bounds for programs that contain dynamic object creation
-within a loop or a recursive method;
-
-
-\item \emph{Proof-carrying code:} here the program
-comes equipped with a specification of its memory consumption, in the
-form of statements expressed in an appropriate program logic, and a
-certificate that establishes that the program verifies the memory
-consumption specification attached to it. The approach potentially
-allows for precise specifications. However, existing works on proof
-carrying code for resource usage sacrifice the possibility of
-enforcing accurate policies in favor of the possibility of generating
-automatically the specification and the certificate, in line with
-earlier work on certifying compilation;
-
-\item \emph{Run-time monitoring:}  here the program
-also comes equipped with a specification of its memory consumption, 
-but the verification is performed at run-time, and interrupted if
-the memory consumption policy is violated. Such an approach is both
- precise and automatic, but incurs a runtime overhead which 
-makes it unsuitable for TPDs.
-\end{itemize}
-The objective of this chapter is to explore an alternative approach that
-favors precision of the analysis at the cost of automation.
- The approach is based on program logic and more particularly uses
-the verification calculus introduced in Chapter \ref{wpGeneral}.
 %The approach is based on program logics, which originate from the seminal
 %work on program verification by C.A.R.~Hoare and E.W.~Dijkstra and
 %have been used traditionally to verify functional properties of
@@ -74,8 +13,7 @@ the verification calculus introduced in Chapter \ref{wpGeneral}.
 %has focused on bytecode level, since in many application domains
 %verification has to be performed without access to the source code
 %of the applet. 
-Note that,  for the clarity of the explanations all
-examples in the introduction deal with source code level.
+
 
 In order to illustrate the principles of our approach, let us consider
 the following program:
