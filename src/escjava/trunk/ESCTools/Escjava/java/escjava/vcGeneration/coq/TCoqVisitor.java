@@ -1,6 +1,7 @@
 package escjava.vcGeneration.coq;
 
 import java.io.*;
+import java.util.Iterator;
 
 import escjava.vcGeneration.*;
 import escjava.vcGeneration.coq.visitor.ANotHandledVisitor;
@@ -50,9 +51,10 @@ public class TCoqVisitor extends ANotHandledVisitor {
     }
 
     public void visitTRoot(/*@ non_null @*/ TRoot n) throws IOException{
-	
-	for(int i = 0; i <= n.sons.size() - 1; i++)
-	    n.getChildAt(i).accept(tcv);
+    	Iterator iter = n.sons.iterator();
+    	while(iter.hasNext()) {
+    		((TNode)iter.next()).accept(tcv);
+    	}
 
     }
 

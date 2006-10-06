@@ -1,23 +1,34 @@
 package escjava.vcGeneration.coq;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.*;
 
-import escjava.vcGeneration.*;
+import javafe.ast.Expr;
+import escjava.translate.GC;
+import escjava.translate.InitialState;
+import escjava.vcGeneration.ProverType;
+import escjava.vcGeneration.TDisplay;
+import escjava.vcGeneration.TMethodCall;
+import escjava.vcGeneration.TNode;
+import escjava.vcGeneration.TRoot;
+import escjava.vcGeneration.TVisitor;
+import escjava.vcGeneration.TypeInfo;
+import escjava.vcGeneration.VariableInfo;
 import escjava.vcGeneration.coq.visitor.simplifiers.TAndRemover;
 import escjava.vcGeneration.coq.visitor.simplifiers.TNotRemover;
 import escjava.vcGeneration.coq.visitor.simplifiers.TProofSimplifier;
 import escjava.vcGeneration.coq.visitor.simplifiers.TProofSplitter;
 import escjava.vcGeneration.coq.visitor.simplifiers.TProofTyperVisitor;
-import escjava.translate.*;
-import javafe.ast.*;
 
 
 /**
@@ -88,13 +99,18 @@ public class CoqProver extends ProverType {
     	
     	File coqCurrentProofDir = new File(coqProofDir, proofName);
     	coqCurrentProofDir.mkdir();
-    		
-    	List res = simplifyProofObligation(term);
+    	if (!(term instanceof TRoot)) {
+    		TDisplay.err(this, "getProof(Writer output, String proofName, TNode term)", 
+    				"For coq pretty printer, the node should be a root node!" + term.getClass());
+    		return;
+    	}
+    	TRoot root = (TRoot) term;
     	
-    	Iterator iter = res.iterator();
+    	Iterator iter = root.sons.iterator();
+    	int size = root.sons.size();
     	int count = 1;
     	while(iter.hasNext()) {
-    		File proof = new File(coqCurrentProofDir, ppNumber(count, res.size()) + ".v");
+    		File proof = new File(coqCurrentProofDir, "goal" + ppNumber(count, size) + ".v");
     		term = (TNode) iter.next();
     		String script = getProofScript(proof);
     		writeProofObligation(proofName, proof, term, script);
@@ -111,7 +127,7 @@ public class CoqProver extends ProverType {
      * @return the list of term corresponding to the original term
      * @throws IOException
      */
-	private List simplifyProofObligation(TNode term) throws IOException {
+	private TRoot simplifyProofObligation(TRoot term) throws IOException {
         TProofTyperVisitor tptv = new TProofTyperVisitor();
         term.accept(tptv);
 		TProofSimplifier tps = new TProofSimplifier();
@@ -122,12 +138,7 @@ public class CoqProver extends ProverType {
     	term.accept(tar);
     	TProofSplitter ps = new TProofSplitter();
     	term.accept(ps);
-    	List res = ps.getListTerms();
-    	if((res == null) || res.size() ==0) {
-    		res = new ArrayList();
-    		res.add(term);
-    	}
-		return res;
+		return term;
 	}
     
     
@@ -273,7 +284,19 @@ public class CoqProver extends ProverType {
      * (non-Javadoc)
      * @see escjava.vcGeneration.ProverType#rewrite(escjava.vcGeneration.TNode)
      */
-    public TNode rewrite(TNode tree) {
+    public TNode rewrite(TNode tree) throws IOException {
+    	TRoot root;
+    	if (!(tree instanceof TRoot)) {
+    		TDisplay.warn(this, "rewrite(TNode tree)", 
+    				"For coq pretty printer, the node should be a root node! instead of " + tree.getClass());
+    		root = new TRoot();
+    		root.sons.add(tree);
+    		tree.parent = root;
+    	}
+    	else {
+    		root = (TRoot) tree;
+    	}
+    	tree = simplifyProofObligation(root);
         return tree;
     }
     
@@ -292,8 +315,8 @@ public class CoqProver extends ProverType {
         	if(t.old.startsWith("java.")) //check if in the form java.x.y 
         		t.def = t.old.replace('.','_');
         	else {
-        		System.err.println("Type not handled in escjava::vcGeneration::TypeInfo::coqRename() : "+t.old); 
-        		System.err.println("Considering it as a user defined type... ie Types");
+        		TDisplay.err(this, "coqRename(TypeInfo)", "Type not handled in "+t.old + 
+        				"Considering it as a user defined type... ie Types");
         		t.def = "ReferenceType";
         	}
         }
@@ -334,13 +357,10 @@ public class CoqProver extends ProverType {
 				}
 				    
     		}
-
-    		System.err.println("Warning in " +
-    				"escjava.java.vcGenerator.coq.CoqProver.getCoq(VariableInfo), " +
-    				"considering "+
-    				vi.old
-    				+" as a user defined type, " +
-    				"or a not (yet) handled variable.");
+    		TDisplay.warn(this, "getCoq(VariableInfo)",
+    				"considering "+ vi.old +
+    				" as a user defined type, or a not (yet) " +
+    				"handled variable.");
     			
     		coqRename(vi);
     		
@@ -373,11 +393,11 @@ public class CoqProver extends ProverType {
 		Matcher m1 = p1.matcher(vi.old);
 		
 		// <variables not handled>
-		Pattern p2 = Pattern.compile("Unknown tag <.*>");
-		Matcher m2 = p2.matcher(vi.old);
+		Pattern pUnknownTag = Pattern.compile("Unknown tag <.*>");
+		Matcher mUnknownTag = pUnknownTag.matcher(vi.old);
 		
-		Pattern p3 = Pattern.compile("\\|brokenObj<.*>\\|");
-		Matcher m3 = p3.matcher(vi.old);
+		Pattern pBrokenObject = Pattern.compile("\\|brokenObj<.*>\\|");
+		Matcher mBrokenObject = pBrokenObject.matcher(vi.old);
 		// </variables not handled>
 		Pattern p4 = Pattern.compile("\\|(.*):(.*)\\|");
 		Matcher m4 = p4.matcher(vi.old);
@@ -394,7 +414,7 @@ public class CoqProver extends ProverType {
 		  This case is done first because some variables not handled are "%Type" ones
 		  and thus otherwise they will be matched by the next if construct
 		*/
-		if(m2.matches() || m3.matches() || vi.old.equals("brokenObj")) { // variable is not handled yet, ask David Cok about
+		if(mUnknownTag.matches() || mBrokenObject.matches() || vi.old.equals("brokenObj")) { // variable is not handled yet, ask David Cok about
 		    // some things
 		    coq = "(* %NotHandled *) brokenObj"; 
 		    vi.type = TNode._Reference;
@@ -412,7 +432,7 @@ public class CoqProver extends ProverType {
 		  we use it to make the difference.
 		*/
 		else if(vi.type == TNode._Type){
-		    System.err.println("Warning in escjava.java.vcGeneration.VariableInfo.coqRename() : considering "+vi.old+" as a user defined type.");
+		    TDisplay.warn(this, "coqRename()", "considering "+vi.old+" as a user defined type.");
 
 		    // renaming done here
 		    coq = "userDef_"+ vi.old;
@@ -423,13 +443,16 @@ public class CoqProver extends ProverType {
 		else if(m1.matches()){
 		    //@ assert m1.groupCount() == 3;
 
-		    if(m1.groupCount() != 3)
-		    	System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : m.groupCount() != 3");
-
+		    if(m1.groupCount() != 3) {
+		    	TDisplay.err(this, "coqRename(VariableInfo)",
+		    			"m.groupCount() != 3");
+		    }
 		    for( i = 1; i <= m1.groupCount(); i++) {
 
-		    	if(m1.start(i) == -1 || m1.end(i) == -1)
-		    		System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : return value of regex matching is -1");
+		    	if(m1.start(i) == -1 || m1.end(i) == -1) {
+		    		TDisplay.err(this, "coqRename", 
+		    				"return value of regex matching is -1");
+		    	}
 		    	else {
 			    
 		    		String temp = vi.old.substring(m1.start(i),m1.end(i));
@@ -449,7 +472,8 @@ public class CoqProver extends ProverType {
 		    				//@ assert column != null;
 		    				break;
 		    			default :
-		    				System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : switch call incorrect, switch on value "+i);
+		    				TDisplay.err(this, "coqRename",
+		    					"switch call incorrect, switch on value "+i);
 		    		}
 		    	} // no error in group			
 		    } // checking all group
@@ -462,12 +486,14 @@ public class CoqProver extends ProverType {
 
 		else if(m4.matches()) {
 		    if(m4.groupCount() != 2)
-				System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : m.groupCount() != 3");
+				TDisplay.err(this, "coqRename", 
+						"m.groupCount() != 3");
 
 		    for( i = 1; i <= m4.groupCount(); i++) {
 
 				if(m4.start(i) == -1 || m4.end(i) == -1)
-				    System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : return value of regex matching is -1");
+				    TDisplay.err(this, "coqRename",  
+				    		"return value of regex matching is -1");
 				else {
 				    
 				    String temp = vi.old.substring(m4.start(i),m4.end(i));
@@ -483,7 +509,8 @@ public class CoqProver extends ProverType {
 				    		//@ assert line != null;
 				    		break;
 				    	default :
-				    		System.err.println("Error in escjava.java.vcGeneration.VariableInfo.coqRename : switch call incorrect, switch on value "+i);
+				    		TDisplay.err(this, "coqRename", 
+				    				"switch call incorrect, switch on value "+i);
 				    }
 				} // no error in group
 			

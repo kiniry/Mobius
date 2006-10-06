@@ -2,6 +2,7 @@ package escjava.vcGeneration.coq.visitor.simplifiers;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import escjava.vcGeneration.TAllocLE;
@@ -98,7 +99,9 @@ public abstract class ATSimplifier extends TVisitor {
 	 * @return the root of the term
 	 */
 	public static TFunction findRoot(TFunction node) {
-		while(node.parent != null)
+		if(node.parent == null)
+			return node;
+		while(node.parent.parent != null)
 			node = node.parent;
 		return node;
 	}
@@ -142,7 +145,7 @@ public abstract class ATSimplifier extends TVisitor {
 	 * @see escjava.vcGeneration.TVisitor#visitTRoot(escjava.vcGeneration.TRoot)
 	 */
 	public void visitTRoot(TRoot n) throws IOException {
-		Iterator iter = n.sons.iterator();
+		Iterator iter = ((List) n.sons.clone()).iterator();
 		while(iter.hasNext()) {
 		    ((TNode)iter.next()).accept(this);
 		}
