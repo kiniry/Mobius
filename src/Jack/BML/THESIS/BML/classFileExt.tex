@@ -138,7 +138,7 @@ $$\begin{array}{lll}
 We now turn to explaining how JML specifications are compiled into user defined attributes for Java class files. Recall that a class file defines
 a single class or interface and contains information about  the class name, interfaces implemented by the class, super class, methods and fields declared in the class and references. The Java Virtual Machine Specification (JVMS) \cite{VMSpec} mandates that the class file contains data structure usually referred as the \textbf{constant\_pool} table which is used to construct the runtime constant pool upon class or interface creation. The runtime constant pool serves for loading, linking and resolution of references used in the class. The JVMS allows to add to the class file user specific information(\cite{VMSpec}, ch.4.7.1). This is done by defining user specific attributes  (their structure is predefined by JVMS).
 
-Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms jml into runtime checks and thus generates input for the jmlrac tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
+Thus the ``JML compiler'' \footnote{Gary Leavens also calls his tool jmlc JML compiler, which transforms JML into runtime checks and thus generates input for the JML tool  } compiles the JML source specification into user defined attributes. The compilation process has three stages:
 \begin{enumerate}
 \item Compilation of the Java source file. This can be done by any Java compiler that supplies for every method in the generated class file 
 the \\ \textbf{Line\_Number\_Table} and \textbf{Local\_Variable\_Table}  attributes. The presence in the Java class file format of 
@@ -155,7 +155,7 @@ is compiled in binary form using tags in the standard way. The compilation of an
 
 
 Another important issue in this stage of the JML compilation is how the type differences on source and bytecode level are treated. 
-By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for intergral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that 
+By type differences we refer to the fact that the JVM (Java Virtual Machine) does not provide direct support for integral types like byte, short, char, neither for boolean. Those types are rather encoded as integers in the bytecode. Concretely, this means that 
 if a Java source variable has a boolean type it will be compiled to a variable with
 an integer type. For instance, in the example for the method 
 \texttt{isElem} and its specification in Fig.\ref{replaceSrc} the postcondition states the equality between the JML expression  

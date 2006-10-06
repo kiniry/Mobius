@@ -65,7 +65,7 @@ In the following, we look in details at the phases of the compilation process:
      % In particular BML does not support heavy weight behaviour specification clauses or nested specification, neither an incomplete
      % method specification(see  \cite{JMLRefMan}).
       % Thus, a step in the compilation of JML specification into BML specification is the desugaring of the JML heavy weight
-      The phase consists in converting the JML method heavy-weight behaviours and the light - weight non complete
+      The phase consists in converting the JML method heavy-weight behaviors and the light - weight non complete
       specification into BML specification cases.
       It corresponds to part of the standard JML desugaring as described  in \cite{RT03djml}.
       For instance, the BML compiler will produce from the specification in Fig.\ref{bml:heavySp} the BML specification 
@@ -124,7 +124,7 @@ In the following, we look in details at the phases of the compilation process:
        For instance, for method \texttt{replace} in
       the Java source example in Fig. \ref{replaceSrc} the java compiler will  produce two lines in the 
        \textbf{Line\_Number\_Table} which correspond to the source line \textbf{17}  as shown in Fig. \ref{bml:compiler:loopEntry}.
-       The problem is that none of the basic bloks determined by instructions  \textbf{2} and  \textbf{18} contain the loop entry instruction of the compilation
+       The problem is that none of the basic blocks determined by instructions  \textbf{2} and  \textbf{18} contain the loop entry instruction of the compilation
        of the loop at line \textbf{17} in Fig. \ref{replaceSrc}. Actually, the loop entry instruction in the bytecode in 
        Fig. \ref{bml:loopBML} (remember that this is the compilation in bytecode of the Java source in Fig. \ref{replaceSrc}) which corresponds to the 
        in the bytecode is at index \textbf{19}.

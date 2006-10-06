@@ -52,7 +52,7 @@ The tool Daikon \cite{ECG01DDL}  tool uses a subset of JML for detecting loop in
 
      
 Fig.~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
-The method \texttt{replace} will search in the array for the first occurence of the object \texttt{obj1} passed as first argument
+The method \texttt{replace} will search in the array for the first occurrence of the object \texttt{obj1} passed as first argument
  and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it 
 returns false. Thus the method  specification between lines 5 and 9 which exposes the method contract states the following.
 First the precondition (line 5 ) requires from any caller to assure that the instance variable \texttt{list} is not \texttt{null}.
@@ -157,7 +157,7 @@ for any kind of exception (i.e. for the exception class  \texttt{Exception}) is 
 An example for a \heavy \ weight specification is given in Fig. \ref{bml:heavySp}. In the figure, method \texttt{divide} has 
 two behaviors, one in case the method terminates normally (lines 11---14) and the other (lines 17---20) in case the method
  terminates by throwing an object reference of \texttt{ArithmeticException}.
- In the normal behavior case, the exceptional postcondition is ommitted  specification as by default if the precondition (line 12 )
+ In the normal behavior case, the exceptional postcondition is omitted  specification as by default if the precondition (line 12 )
  holds this assures that no exceptional
  termination is possible. Another observation over the example is that the exceptional behavior is introduced with the JML keyword \jmlKey{also}. 
  The keyword  \jmlKey{also} serves for introducing every new behavior of a method except the first one. Note that the keyword \jmlKey{also} 
