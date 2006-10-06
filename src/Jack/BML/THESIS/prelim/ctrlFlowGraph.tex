@@ -51,7 +51,7 @@ The possible successors of the instruction $\athrow$ are the entry point of any 
 \begin{figure}[ht!]
 \begin{frameit}
 $$ 
-   \begin{array}{l} \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+{\scriptsize   \begin{array}{l} \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
                   
                     \frac{ \methodd.\body[j] = \goto \ k  }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
 
@@ -93,7 +93,7 @@ $$
 		   
 	
   % \end{array} 
-\end{array}$$
+\end{array}}$$
 
 \caption{\sc  Execution relation between bytecode instructions in a control flow graph}
 \label{defEdge}
@@ -129,7 +129,7 @@ We denote the execution relation between $\ins{loopEnd}$ and  $\ins{loopEntry}$ 
 $\ins{loopEnd} \execRel^l \ins{loopEntry}$ and we say that $  \execRel^l $  is a loop backedge. 
 \end{defLoop}
 Note  that  in  \cite{ARUCom1986}  reducibility is defined in terms of the dominator relation. 
-Although  not said explicitely, the first condition in the upper definition corresponds to the dominator relation\footnote{we decided to not introduce the standard
+Although  not said explicitly, the first condition in the upper definition corresponds to the dominator relation\footnote{we decided to not introduce the standard
 definitions as it has several technical details for the exposition of which we would need more space and which are of not particular interest for the current thesis}.
 
 We illustrate the above definition with the control flow graph of the example from Fig. \ref{replaceSrc}.% in Fig. \ref{ctrlflow}.
@@ -138,7 +138,7 @@ and  where only the last one may be a jump and the first may be a target of a ju
 The black edges represent a sequential execution relation, while dashed edges represent  loop backedge, i.e. the edge which stands for the execution
 relation between a final instruction (instruction at index \texttt{18}) in the bytecode cycle and the entry instruction of the cycle (instruction at index \texttt{19}).  
 Note that the ``back'' in ``backedge'' stands for  that the control flow goes back to an instruction through which 
-the execution path has already passed which does not forcingly mean that the orientation of the edge will be in a backwards direction in the graphical representation 
+the execution path has already passed which does not obligatory mean that the orientation of the edge will be in a backwards direction in the graphical representation 
 of the graph. \todo{che pas si c'est util mais Lilian a dit que ce n'est pas claire}
 % Note that from now on, we are interested in  control flow graphs with the following properties:
 

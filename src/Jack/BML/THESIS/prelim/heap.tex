@@ -1,14 +1,14 @@
 
 
  \subsection{Modeling the object heap} \label{heap}
- An important issue for the modelization of an object oriented programming language and its operational semantics
+ An important issue for the modeling of an object oriented programming language and its operational semantics
  is the memory heap. The heap is the
  runtime data area from which memory  for all class instances and arrays is allocated. Whenever a new instance
  is allocated, the JVM returns a reference value that points to the newly created object. 
  We introduce a record type \HeapSet \ which models the memory heap. We do not take into account 
  garbage collection and thus, we assume that heap objects has an infinite memory space. 
  
- In our modelization, a heap consists of the following components:
+ In our modeling, a heap consists of the following components:
  \begin{itemize}
        \item a component  named \heapFields \ which is a partial function that maps field
              structures (of type \FieldSet \ introduced in subsection \ref{clazz} ) into partial functions from references (\AllRefs)
@@ -166,7 +166,7 @@ In the following, we adopt few more naming conventions which do not create any a
  Getting the function corresponding to a field \fieldd in a heap \heap \ :
 $ \heap . \heapFields ( \fieldd)$ is replaced  with $ \heap  ( \fieldd)$ for the sake of simplicity.
  
-The same abreviation is done for access of an element in an  array object referenced by the reference 
+The same abbreviation is done for access of an element in an  array object referenced by the reference 
  \referenceOnly at index $i$ in the heap \heap. Thus, the usual denotation:
 $ \heap . \heapArrays (\referenceOnly, i )$ becomes $ \heap(\referenceOnly, i )$.
  

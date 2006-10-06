@@ -13,7 +13,7 @@ Our language supports an exception handling mechanism similar to the JVM one.
  More particularly, it supports  Runtime exceptions: 
  \begin{itemize}
    \item \NullPointerExc \ thrown if a null pointer is dereferenced
-   \item \NegativeArraySizeExc \ thrown if there is an attempt to creat  an array with a negative size 
+   \item \NegativeArraySizeExc \ thrown if there is an attempt to create  an array with a negative size 
    \item \ArrIndexOutOfBoundExc \ thrown if an array is accessed out of its bounds
    \item \ArithExc \ thrown if a division by zero is done
    \item \ClassCastExc \ thrown if an object reference is cast to to an incompatible type
@@ -21,13 +21,13 @@ Our language supports an exception handling mechanism similar to the JVM one.
 \end{itemize}
 
 The language also supports programming exceptions. Those exceptions are forced by the programmer, by a special bytecode 
-intruction as we shall see later in the coming section. 
+instruction as we shall see later in the coming section. 
 
- The modelization of the exception handling mechanism involves several auxiliary functions. 
+ The modeling of the exception handling mechanism involves several auxiliary functions. 
  The function \getStateAfterExc \ deals with bytecode instructions that may throw runtime exceptions.
  This function applies only to instructions which may throw a \RuntimeExc{} exception  but which are not a method
- invokation neither the special instruction
- by which the program can throw explicitely an exception.
+ invocation neither the special instruction
+ by which the program can throw explicitly an exception.
  The function returns the state  configuration after the current instruction during the execution of \methodd \ throws a runtime exception
  of type $\mbox{\rm\texttt{E}}$. If the  method \methodd \ has an  exception handler which can handle  exceptions of type
  $\mbox{\rm\texttt{E}}$ thrown at the index of the current  instruction,

@@ -7,7 +7,7 @@
 
 \section{Bytecode language and its operational semantics} \label{opSem}
  The bytecode language that we introduce here corresponds to a representative subset of the Java bytecode language. 
- In particular, it supports object manipulation and creation, method invokation, as well as exception throwing and handling.
+ In particular, it supports object manipulation and creation, method invocation, as well as exception throwing and handling.
  
 In fig. \ref{opSem:bclang}, we give the list of instructions that constitute our bytecode
  language\footnote{The instruction \arithOp{} stands for any arithmetic instruction in the list  \instr{add}, \instr{sub}, \instr{mult}, 
@@ -109,8 +109,8 @@ The following definition characterizes the executions that terminate.
 
 
 
- We first give the operational semantics of a method execution. The execution of method \methodd \
- is the execution of its body upto reaching a final state configuration:
+ We now give the operational semantics of a terminating method execution. A terminating execution of method \methodd \
+ is the execution of its body up to reaching a final state configuration:
  
  $$
  {\scriptsize  \frac{\begin{array}{l}
@@ -489,7 +489,7 @@ is put on the stack  top \stackOnlyParam{\counterOnly + 1}. It deserves to note 
  instance must be created is not found.    
 
 The instruction \newarray creates a new array whose components are of type \anyType \ and whose length is the stack top value is allocated on the heap.
-The array elements are initialised to the default value of  \anyType \ and a reference to it is put on the stack top. 
+The array elements are initialized to the default value of  \anyType \ and a reference to it is put on the stack top. 
 In case the stack top is less than 0, then \NegativeArraySizeExc{} is thrown.
 
  
@@ -601,7 +601,7 @@ The language presented here allows also to force  exception throwing. This is do
  instruction \athrow{} presented in Fig. \ref{opSem:obj:throw}.    The stack top element  must be a reference of an object of type  \Throwable. 
 	 If the exception object \stackOnlyParam{\counterOnly} on the stack top is not \Mynull{} then there are two possible execution of the instruction.
 	  Either there is not an exception handler  that protects this bytecode instruction from the 
-	  exception type and the current method \methodd{} terminates exceptionally by throwing the exceptio object \stackOnlyParam{\counterOnly} or
+	  exception type and the current method \methodd{} terminates exceptionally by throwing the exception object \stackOnlyParam{\counterOnly} or
 	   there is a handler that protects this bytecode instruction from the exception thrown and the control is transfered
 	  to the instruction at index $\pc^{eH}$  at which the exception handler starts. %\footnote{for every method the ExceptionHandler
 	  % table describes the corresponding exception handler by the limits of the 
@@ -643,10 +643,10 @@ The language presented here allows also to force  exception throwing. This is do
 \end{frameit}
 \end{figure}
 
-       Finally, in Fig. \ref{opSem:obj:method}, we can see the semantics of method invokation. 
+       Finally, in Fig. \ref{opSem:obj:method}, we can see the semantics of method invocation. 
 	 The first top $meth.\numArgs$ \ elements in the operand stack \stackOnly \ are popped from the operand stack. If 
          \stackOnlyParam{ \counterOnly - $meth$.\numArgs } is not \Mynull, the invoked method is executed on the object   \stackOnlyParam{ \counterOnly - $meth$.\numArgs } 
-	 and where the first \numArgs + 1 elements of the list of its of local variables is initialised with \\
+	 and where the first \numArgs + 1 elements of the list of its of local variables is initialized with 
          \stackOnlyParam{ \counterOnly - meth.\numArgs } \ldots \stackOnlyParam{\counterOnly}. In case that the execution of method $meth$
 	 terminates normally, the return value \Res{}  of its execution is stored on the operand stack of the invoker. 
 	 If the execution of of method $meth$ terminates because of an exception \Exc, then the exception handler of the invoker is searched for

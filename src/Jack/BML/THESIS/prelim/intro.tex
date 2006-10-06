@@ -11,13 +11,13 @@
 % supported features
 In particular, \textbf{the features supported} by our bytecode language are 
 \begin{description} 
-   \item  [arithmetic operations] like multiplication, division, addition and substruction. 
+   \item  [arithmetic operations] like multiplication, division, addition and subtraction. 
 
    \item  [stack manipulation] Similarly to the JVM  our abstract machine is stack based, i.e. instructions
           get their arguments from the operand stack and push their result on the  operand stack.
 
-   \item  [method invokation] In the following, we consider only  non void methods. 
-          We restrict our modelization for the sake of simplicity without losing any specific feature of the Java language.
+   \item  [method invocation] In the following, we consider only  non void methods. 
+          We restrict our modeling for the sake of simplicity without losing any specific feature of the Java language.
           
    \item  [object manipulation and creation] 
           Java supports all the facilities for object creation and manipulation.
@@ -30,7 +30,7 @@ In particular, \textbf{the features supported} by our bytecode language are
 	  are forced by the programmer with a special instruction in the program text.
    
    \item  [classes and class inheritance] Like in the JVM language, our bytecode language supports  a tree class hierarchy in which every class 
-          has a super class except the class \texttt{Object} which is the root of the class hieararchy.
+          has a super class except the class \texttt{Object} which is the root of the class hierarchy.
 
    \item  [integer type] The unique basic type which is supported is the integer type.
           This is not so unrealistic as the JVM
@@ -56,9 +56,9 @@ In particular, \textbf{the features supported} by our bytecode language are
          Static initialization is a good candidate for a future work. 
 
    \item [subroutines] Subroutines in Java is a piece of code inside a method which must be executed 
-         after another, no matter how the first terminate excecution. 
+         after another, no matter how the first terminate execution. 
 	 They correspond to the construction \texttt{try\{ \} finally \{ \} } in the Java language.
-	 Subroutines are a controversory point 
+	 Subroutines are a controversy point 
 	 in the JVM because on one hand they complicate a lot the bytecode verification algorithm in Java and second,
 	 slow the JVM execution because of the way they are implemented. While the standard compilation of  \texttt{try\{ \} finally \{ \} }
 	 is with special instructions, the most recent Java compilers inline the subroutine 
@@ -71,7 +71,7 @@ In particular, \textbf{the features supported} by our bytecode language are
         a reasonable application may recover. i.e. handle the exception and exceptions which cannot be recovered. This last group
 	of exceptions in Java are called JVM errors. JVM errors are  thrown typically when the proper functioning of the JVM cannot 
 	continue. 
-	The cause might be an error  on loading, linking, initialization time of a class or on execution time because of defficiency in the JVM resource, e.g.
+	The cause might be an error  on loading, linking, initialization time of a class or on execution time because of deficiency in the JVM resource, e.g.
 	stack, memory overflow.
 	For instance, during the resolution of a field name may terminate on \texttt{NoSuchFieldError} if 
 	such a field is not found. Another example is the \texttt{MemoryOverflowError} thrown when no more memory is available.
@@ -89,7 +89,7 @@ In particular, \textbf{the features supported} by our bytecode language are
 	 presence of interface types and thus,
 	 the least common super type of two types is not unique.
 	 However, in the current thesis we do not deal with bytecode verification but 
-	 we will be interested in the program functional behaviour. For instance, if a method overrides a method
+	 we will be interested in the program functional behavior. For instance, if a method overrides a method
 	 from the super class or implements a method from an interface, our objective will be to establish that the method
 	 respects the specification of the method it overrides or implements. In this sense, super classes or interfaces
 	 are treated similarly in our verification tool.
@@ -139,12 +139,12 @@ In particular, \textbf{the features supported} by our bytecode language are
 
   
  The rest of this chapter is organized as follows:
- subsection \ref{relWork} is an overview of existing formalisations of the JVM semantics,
+ subsection \ref{relWork} is an overview of existing formalizations of the JVM semantics,
  subsection \ref{notation} gives some particular notations that will be used from now on along the thesis,
  subsection \ref{clazz} introduces the structures classes, fields and methods  used in the virtual machine, 
  subsection \ref{types} gives the type system which is supported by the bytecode language,
  subsection \ref{def} introduces the notion of state configuration,
- subsection \ref{heap} gives the modelisation of the memory heap,
+ subsection \ref{heap} gives the modeling of the memory heap,
  subsection \ref{opSem:JVM} is a discussion about our choice for operational semantics,
  subsection \ref{opSem} gives the operational semantics of our language.
 

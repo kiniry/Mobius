@@ -4,7 +4,7 @@
  \section{Classes, fields and methods}\label{clazz}
  Java programs are a set of classes. As the JVM says \textit{`` A class declaration specifies a new reference type and provides its implementation. \ldots
  The body of a class declares members (fields and methods), static initializers, and constructors.''}
- In our formalisation, classes are encoded  with the data structure $\ClassSet$,  fields with $\FieldSet$ and
+ In our formalization, classes are encoded  with the data structure $\ClassSet$,  fields with $\FieldSet$ and
  methods are encoded with $\MethodSet$ data structure. 
  We define a domain for class names \ClassName, for field names \FieldName{} and for method names \MethodName{} respectively.
 
@@ -72,7 +72,7 @@
                                      \end{array}  \right\}
      \end{array} $$
   
- We assume that for every method \methodd \ the entrypoint is the first instruction in the list of instructions 
+ We assume that for every method \methodd \ the entry point is the first instruction in the list of instructions 
  of which the method body consists, i.e. $ \methodd.\entryPoint =\methodd.\body[0]$.
 
  An object of type \ExcHandler \ contains information about the region in the method body that it protects, i.e. the start
