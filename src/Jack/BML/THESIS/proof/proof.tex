@@ -43,7 +43,7 @@ $ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $
  The next issue that is important for understanding our approach is that we follow the design by 
  contract paradigm \cite{M97oos}. This means that when verifying a method body, we assume that the
  rest of the methods respect their
- specification in the sense of the previuos definition \ref{defCorrect}.
+ specification in the sense of the previous definition \ref{defCorrect}.
 
 
 % Once generated the verification conditions are proved with the first-order predicate logic rules. We denote that a formula $ f $ 
@@ -324,7 +324,7 @@ holds then
 Proof :
 The proof is by case analysis on the type of instruction that will be next executed. 
 
- We consider three cases: the case when the next execution step doesnot enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
+ We consider three cases: the case when the next execution step does not enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
 the case when the current instruction is a loop end and the next instruction to be executed is a loop entry instruction (the execution step is $\execRel_l$ )
 and the case when the current instruction is not a loop end and the next instruction is a loop entry instruction ( corresponds to the first iteration of a loop) 
 
@@ -354,7 +354,7 @@ We look only at the case when the current instruction is a \load{}  instruction\
 $$ \begin{array}{l}
 \mbox{\rm\comment{by initial hypothesis}} \\
 \interp{ \wpi{\pc_n \ \load \ i }{\methodd}{}}{s_n} \\
-\mbox{\rm \comment{by defintion of  the wp function in section \ref{wpRules} of the previous chapter} } \\
+\mbox{\rm \comment{by definition of  the wp function in section \ref{wpRules} of the previous chapter} } \\
  \interp{ \inter{\pc_n}{ \pc_n + 1} \begin{array}{l} 
                                               \subst{\counter}{\counter +1} \\
 					      \subst{  \stack{ \counter  + 1}}{\locVar{j}} 
