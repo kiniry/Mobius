@@ -60,42 +60,43 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     	String pre = "";
     	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
-    	if((TNode._integer.equals(n.type))||
-    			(TNode._INTTYPE.equals(n.type)) ||
-    			n.parent instanceof TIntegralEQ) {
-    		genericFun("IntHeap." + pre +"select ", n);
-    		
-    	} else if (TNode._boolean.equals(n.type)) 
-    		genericFun("BoolHeap." + pre +"select ", n);
-    	else
-    		genericFun("RefHeap." +pre +"select ", n);
+    	genericFun(pre +"select ", n);
+//    	if((TNode._integer.equals(n.type))||
+//    			(TNode._INTTYPE.equals(n.type))) {//||
+//    			//n.parent instanceof TIntegralEQ) {
+//    		genericFun("IntHeap." + pre +"select ", n);
+//    		
+//    	} else if (TNode._boolean.equals(n.type)) 
+//    		genericFun("BoolHeap." + pre +"select ", n);
+//    	else
+//    		genericFun("RefHeap." +pre +"select ", n);
     }
     public void visitTStore(/*@ non_null @*/ TStore n) throws IOException{
     	String pre = "";
     	TNode index =(TNode)n.sons.get(1);
-    	TNode val =(TNode)n.sons.get(2);
-    	TypeInfo tval = val.type;
-    	if(val instanceof TName) {
-    		tval = TNode.getVariableInfo(((TName)val).name).type;
-    	}
+//    	TNode val =(TNode)n.sons.get(2);
+//    	TypeInfo tval = val.type;
+//    	if(val instanceof TName) {
+//    		tval = TNode.getVariableInfo(((TName)val).name).type;
+//    	}
     	if(TNode._integer.equals(index.type))
     		pre = "arr";
-    	
-    	if((TNode._integer.equals(tval)) ||
-    			(TNode._INTTYPE.equals(tval))) {
-    		
-    		genericFun("IntHeap." + pre + "store ", n);
-    	}
-    	else if(TNode._boolean.equals(tval))
-    		genericFun("BoolHeap." + pre +"store ", n);
-    	else {
-    		if(val instanceof TName) {
-    			String na = ((TName)val).name;
-    			if(na.indexOf("resu") != -1)
-    				System.out.println(na + " " + val.type);	
-    		}
-    		genericFun("RefHeap." + pre + "store ", n);
-    	}
+    	genericFun( pre + "store ", n);
+//    	if((TNode._integer.equals(tval)) ||
+//    			(TNode._INTTYPE.equals(tval))) {
+//    		
+//    		genericFun("IntHeap." + pre + "store ", n);
+//    	}
+//    	else if(TNode._boolean.equals(tval))
+//    		genericFun("BoolHeap." + pre +"store ", n);
+//    	else {
+//    		if(val instanceof TName) {
+//    			String na = ((TName)val).name;
+//    			if(na.indexOf("resu") != -1)
+//    				System.out.println(na + " " + val.type);	
+//    		}
+//    		genericFun("RefHeap." + pre + "store ", n);
+//    	}
     }
 	  
 

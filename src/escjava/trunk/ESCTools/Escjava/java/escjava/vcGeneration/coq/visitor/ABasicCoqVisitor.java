@@ -60,7 +60,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
     
     public void propFun(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
-    	out.appendI("("+ s+" ");
+    	out.appendI(s+" ");
     	
     	int i =0;
     	for(; i < n.sons.size(); i++) {
@@ -73,7 +73,6 @@ public abstract class ABasicCoqVisitor extends TVisitor{
     	    if(i != n.sons.size() - 1)
     		out.appendN(" ");
     	}
-    	out.appendN(")");
 
     	if((n.getChildAt(--i)) instanceof TName || (n.getChildAt(--i)) instanceof TLiteral)
     	    out.reduceIwNl();
@@ -89,11 +88,9 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 
 	if(n.sons.size() != 1)
 	    System.err.println("java.escjava.vcGeneration.TCoqVisitor.unFun : an unary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 1");
-	out.appendI("(");
+	out.appendI("");
 	out.appendN(s);
-	out.appendN(" (");
 	n.getChildAt(0).accept(tcv);
-	out.appendN("))");
 	if((n.getChildAt(0)) instanceof TName || (n.getChildAt(0)) instanceof TLiteral)
 	    out.reduceIwNl();
 	else
@@ -111,16 +108,10 @@ public abstract class ABasicCoqVisitor extends TVisitor{
      */
     public void genericOp(/*@ non_null @*/ String s, TFunction n) throws IOException{
 
-	out.appendI("(");
+	out.appendI("");
+	for(int i =0; i < n.sons.size(); i++) {
 
-	int i =0;
-//	for(int j = 0; j < n.sons.size(); j++)
-//		out.appendN("(");
-	for(; i < n.sons.size(); i++) {
-		out.appendN("(");
 	    n.getChildAt(i).accept(tcv);
-	    //if(i != 0)
-		out.appendN(")");
 	    /*
 	     * not the last
 	     */
@@ -131,34 +122,21 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	    
 	    out.appendN(" ");
 	}
-	//for(int j = 0; j <= i; j++)
-		out.appendN(")");
 	out.reduceI();
     }
     public void genericPropOp(/*@ non_null @*/ String s, TFunction n) throws IOException{
-
-    	out.appendI("(");
-
-    	int i =0;
-//    	for(int j = 0; j < n.sons.size(); j++)
-//    		out.appendN("(");
-    	for(; i < n.sons.size(); i++) {
-    		out.appendN("(");
+    	out.appendI("");
+    	for(int i =0; i < n.sons.size(); i++) {
     	    n.getChildAt(i).accept(tcbv);
-
-    		out.appendN(")");
     	    /*
     	     * not the last
     	     */
     	    if(i != n.sons.size() - 1) {
-    	    	out.appendN("\n");
-    	    	out.append(s);
+    	    	out.appendN(" " + s + " ");
     	    }
-    	    
-    	    out.appendN(" ");
+
     	}
-    	//for(int j = 0; j <= i; j++)
-    		out.appendN(")");
+    	
     	out.reduceI();
         }
     /*
@@ -169,12 +147,9 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 
 	if(n.sons.size() != 1)
 	    System.err.println("java.escjava.vcGeneration.TCoqVisitor.unFun : an unary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 1");
-	out.appendI("(");
+	out.appendI("");
 	out.appendN(s);
-	out.appendN(" (");
 	n.getChildAt(0).accept(tcbv);
-
-	out.appendN("))");
 	if((n.getChildAt(0)) instanceof TName || (n.getChildAt(0)) instanceof TLiteral)
 	    out.reduceIwNl();
 	else
@@ -196,7 +171,7 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	if(n.sons.size() != 2)
 	    System.err.println("java.escjava.vcGeneration.TCoqVisitor : a binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");
 
-	out.appendI("(");
+	out.appendI("");
 	
 	n.getChildAt(0).accept(tcv);
 
@@ -207,7 +182,6 @@ public abstract class ABasicCoqVisitor extends TVisitor{
 	
 	out.appendN(" "+s+" ");
 	n.getChildAt(1).accept(tcv);
-	out.appendN(")");
 	if((n.getChildAt(1)) instanceof TName || (n.getChildAt(1)) instanceof TLiteral)
 	    out.reduceIwNl();
 	else
@@ -219,21 +193,20 @@ public abstract class ABasicCoqVisitor extends TVisitor{
     	if(n.sons.size() < 2 )
     	    System.err.println("java.escjava.vcGeneration.TCoqVisitor : the spaced out binary operator named "+s+" has a number of sons equals to "+n.sons.size()+" which is different from 2");
 
-    	out.appendI("(");
+    	out.appendI("");
     	for(int i =0; i < n.sons.size() - 1; i++) {
     		
     		if(i != 0) {
-    			out.appendN(" /\\ (");
+    			out.appendN(" /\\ ");
     		}
-    		else
-    			out.appendN("(");
+//    		else
+//    			out.appendN("");
     		// Frankie says... no equality on Prop
     		n.getChildAt(i).accept(tcv);    	
     		out.appendN(" "+s+" ");
     		n.getChildAt(i+1).accept(tcv);
-    		out.appendN(")");
+//    		out.appendN("");
     	}
-    	out.appendN(")");
     	if((n.getChildAt(1)) instanceof TName || (n.getChildAt(1)) instanceof TLiteral)
     	    out.reduceIwNl();
     	else
