@@ -4,6 +4,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.HandlerEvent;
+import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
@@ -18,9 +23,21 @@ import prover.gui.editor.ProverEditor;
 /**
  * Action used for the toolbar buttons provided by ProverEditor.
  */
-public abstract class AProverAction implements IWorkbenchWindowActionDelegate{
+public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  IHandler{
 	/** The set of all the actions of type {@link AProverAction} */
 	private static Set fSet = new HashSet();
+	/** the set of the handler listener for this handler */
+	private Set fHandlerSet = new HashSet();
+	
+	/**
+	 * Returns the current active editor of the workbench.
+	 * It has the same result as {@link PlatformUI#getWorkbench()#getActiveWorkbenchWindow()#getActivePage()#getActiveEditor()}
+	 * @return The active editor
+	 */
+	protected static IEditorPart getActiveEditor() {
+		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	}
+	
 	
 	/*
 	 *  (non-Javadoc)
@@ -69,4 +86,65 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate{
 		}
 		return false;
 	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#addHandlerListener(org.eclipse.core.commands.IHandlerListener)
+	 */
+	public void addHandlerListener(IHandlerListener handlerListener) { 
+		fHandlerSet.add(handlerListener);
+	}
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#removeHandlerListener(org.eclipse.core.commands.IHandlerListener)
+	 */
+	public void removeHandlerListener(IHandlerListener handlerListener) { 
+		fHandlerSet.remove(handlerListener);
+	}
+
+	/**
+	 * Fire the property change to all the listener.
+	 * @param event the event to advertise
+	 */
+	protected void fireChangeToHandlers(HandlerEvent event) {
+		Iterator iter = fHandlerSet.iterator();
+		while(iter.hasNext()) {
+			IHandlerListener hl = (IHandlerListener)iter.next();
+			hl.handlerChanged(event);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#isHandled()
+	 */
+	public boolean isHandled() {
+		return true;
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
+	public void run(IAction action) {
+		trigger();
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 */
+	public Object execute(ExecutionEvent event) throws ExecutionException {
+		trigger();
+		return null;
+	}
+	
+	/**
+	 * Trigger a prover action. The action is dependent
+	 * of the child implementations.
+	 */
+	public abstract void trigger();
 }

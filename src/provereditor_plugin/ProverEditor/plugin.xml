@@ -92,7 +92,7 @@
             sequence="M1+M3+ARROW_UP"/>
       <key
             commandId="ProverEditor.reset_command"
-            contextId="org.eclipse.ui.contexts.window"
+            contextId="ProverEditor.context"
             schemeId="ProverEditor.scheme"
             sequence="M1+M3+HOME"/>
       <key
@@ -115,6 +115,7 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.ProgressAction"
             description="Progress in the current proof"
             id="ProverEditor.progress_command"
             name="Progress Command"/>
@@ -124,16 +125,19 @@
             name="Prover Editor"/>
       <command
             categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.BackAction"
             description="Back in the current proof"
             id="ProverEditor.back_command"
             name="Back Command"/>
       <command
             categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.ResetAction"
             description="Reset the file"
             id="ProverEditor.reset_command"
             name="Reset Command"/>
       <command
             categoryId="ProverEditor.category"
+            defaultHandler="prover.gui.actions.ProgressEndAction"
             description="Evaluate all in the file"
             id="ProverEditor.eval_all_command"
             name="Evaluate All Command"/>

@@ -1,7 +1,5 @@
 package prover.gui.actions;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.ui.IEditorPart;
 
@@ -11,15 +9,15 @@ import prover.gui.editor.BasicRuleScanner;
 import prover.gui.editor.ProverEditor;
 import prover.plugins.AProverTranslator;
 
-public class JumpBackward extends AJumpAction {
+public class JumpBackward extends AProverAction {
 	/**
 	 * The method executed when jump is triggered.
 	 * Jump to the previous sentence in the editor.
 	 */
-	public Object execute(ExecutionEvent event) throws ExecutionException {
+	public void trigger() {
 		IEditorPart ep = getActiveEditor();
 		if(! (ep instanceof ProverEditor)) {
-			return null;
+			return;
 		}
 		ProverFileContext pfc = new ProverFileContext((ProverEditor) ep);
 		TopLevelManager tlm = TopLevelManager.getInstance();
@@ -30,7 +28,7 @@ public class JumpBackward extends AJumpAction {
 			tlm.reset(pfc);
 		}
 		if((parser = tlm.getParser()) == null) {
-			return null; // second try we give up...
+			return; // second try we give up...
 		}		
 		parser.setRange(pfc.doc, 0, oldlimit - 1);
 		IToken tok; int pos = 0;
@@ -41,6 +39,6 @@ public class JumpBackward extends AJumpAction {
 		} 
 		pfc.viewer.setSelectedRange(pos, 0);
 		pfc.viewer.revealRange(pos, 0);
-		return null;
+		return;
 	}
 }

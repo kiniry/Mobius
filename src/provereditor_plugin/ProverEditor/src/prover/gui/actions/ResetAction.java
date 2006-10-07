@@ -1,6 +1,5 @@
 package prover.gui.actions;
 
-import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -16,10 +15,10 @@ import prover.gui.editor.ProverEditor;
  */
 public class ResetAction extends AProverAction{
 	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 * (non-Javadoc)
+	 * @see prover.gui.actions.AProverAction#trigger()
 	 */
-	public void run(IAction action) {
+	public void trigger() {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
 		} catch (PartInitException e) {	}

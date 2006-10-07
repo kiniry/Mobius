@@ -5,7 +5,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -18,13 +17,13 @@ import prover.gui.editor.ProverEditor;
 /**
  * An action to progress in ProverEditor.
  */
-public class ProgressAction extends AProverAction  {
+public class ProgressAction extends AProverAction {
 
 	/*
-	 *  (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 * (non-Javadoc)
+	 * @see prover.gui.actions.AProverAction#trigger()
 	 */
-	public void run(IAction action) {
+	public void trigger() {
 		try {
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("ProverEditor.topview");
 		} catch (PartInitException e) {	}
@@ -35,9 +34,9 @@ public class ProgressAction extends AProverAction  {
 			Job job = new UpdateJob(ce);
 			job.schedule();
 			
-		}
-		
+		}		
 	}
+	
 	
 	/**
 	 * The Job to send a progress action to the top level.
@@ -70,4 +69,10 @@ public class ProgressAction extends AProverAction  {
 			return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
 		}
 	}
+
+
+	
+	
+
+
 }

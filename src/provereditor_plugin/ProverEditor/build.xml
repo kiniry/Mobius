@@ -49,7 +49,7 @@
 		<antcall target="gather.bin.parts">
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
-		<zip destfile="${plugin.destination}/prover.editor_0.9.4.jar" basedir="${temp.folder}/prover.editor_0.9.4" filesonly="false" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/prover.editor_0.9.5.jar" basedir="${temp.folder}/prover.editor_0.9.5" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
@@ -167,11 +167,11 @@
 	</target>
 
 	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/prover.editor_0.9.4"/>
-		<copy todir="${destination.temp.folder}/prover.editor_0.9.4" failonerror="true" overwrite="false">
+		<mkdir dir="${destination.temp.folder}/prover.editor_0.9.5"/>
+		<copy todir="${destination.temp.folder}/prover.editor_0.9.5" failonerror="true" overwrite="false">
 			<fileset dir="${build.result.folder}/@dot" includes="**"			/>
 		</copy>
-		<copy todir="${destination.temp.folder}/prover.editor_0.9.4" failonerror="true" overwrite="false">
+		<copy todir="${destination.temp.folder}/prover.editor_0.9.5" failonerror="true" overwrite="false">
 			<fileset dir="${basedir}" includes="plugin.xml,META-INF/,icons/"			/>
 		</copy>
 	</target>
@@ -180,20 +180,20 @@
 	</target>
 
 	<target name="gather.sources" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/prover.editor_0.9.4"/>
-		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/prover.editor_0.9.4" failonerror="false" overwrite="false"/>
+		<mkdir dir="${destination.temp.folder}/prover.editor_0.9.5"/>
+		<copy file="${build.result.folder}/src.zip" todir="${destination.temp.folder}/prover.editor_0.9.5" failonerror="false" overwrite="false"/>
 	</target>
 
 	<target name="gather.logs" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/prover.editor_0.9.4"/>
-		<copy file="${temp.folder}/@dot.bin${logExtension}" todir="${destination.temp.folder}/prover.editor_0.9.4" failonerror="false" overwrite="false"/>
+		<mkdir dir="${destination.temp.folder}/prover.editor_0.9.5"/>
+		<copy file="${temp.folder}/@dot.bin${logExtension}" todir="${destination.temp.folder}/prover.editor_0.9.5" failonerror="false" overwrite="false"/>
 	</target>
 
 	<target name="clean" depends="init" description="Clean the plug-in: prover.editor of all the zips, jars and logs created.">
 		<delete dir="${build.result.folder}/@dot"/>
 		<delete file="${build.result.folder}/src.zip"/>
-		<delete file="${plugin.destination}/prover.editor_0.9.4.jar"/>
-		<delete file="${plugin.destination}/prover.editor_0.9.4.zip"/>
+		<delete file="${plugin.destination}/prover.editor_0.9.5.jar"/>
+		<delete file="${plugin.destination}/prover.editor_0.9.5.zip"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
@@ -216,7 +216,7 @@
 		<delete>
 			<fileset dir="${temp.folder}" includes="**/*.bin${logExtension}"			/>
 		</delete>
-		<zip destfile="${plugin.destination}/prover.editor_0.9.4.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/prover.editor_0.9.5.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
