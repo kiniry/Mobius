@@ -9,7 +9,6 @@ import java.io.Reader;
 /**
  * A line reader that has a counter to know how many characters
  * have been read this far.
- * @author J. Charles
  */
 public class ProverFileReader extends Reader {
 
