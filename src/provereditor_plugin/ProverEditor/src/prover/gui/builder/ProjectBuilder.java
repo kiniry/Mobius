@@ -10,13 +10,18 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import prover.gui.builder.tagger.Tagger;
 
-
+/**
+ * The project build for tags.
+ * @author J. Charles
+ */
 public class ProjectBuilder extends IncrementalProjectBuilder {
+	/** the builder id ie.: "prover.editor.builder" */
 	public static final String BUILDER_ID = "prover.editor.builder";
-	public ProjectBuilder() {
-		super();
-	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.resources.IncrementalProjectBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
+	 */
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		switch(kind) {

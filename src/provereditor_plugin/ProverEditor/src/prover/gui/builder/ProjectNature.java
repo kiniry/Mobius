@@ -6,9 +6,22 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
-
+/**
+ * The nature used to add a tag builder to a project.
+ * @author J. Charles
+ */
 public class ProjectNature implements IProjectNature {
+	/** the id of the nature ie: "prover.editor.nature" */
 	public static final String NATURE_ID = "prover.editor.nature";
+	
+	
+	/**
+	 * Configure the nature; add the builder to the project.
+	 */
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.resources.IProjectNature#configure()
+	 */
 	public void configure() throws CoreException {
 		IProjectDescription desc = fProject.getDescription();
 		ICommand[] commands = desc.getBuildSpec();
@@ -29,6 +42,13 @@ public class ProjectNature implements IProjectNature {
 
 	}
 
+	/**
+	 * Deconfigure the nature; remove the builder from the project.
+	 */
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.resources.IProjectNature#deconfigure()
+	 */
 	public void deconfigure() throws CoreException {
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
@@ -44,11 +64,21 @@ public class ProjectNature implements IProjectNature {
 		}
 
 	}
+	/** the current project associated with this nature */
 	private IProject fProject = null;
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.resources.IProjectNature#getProject()
+	 */
 	public IProject getProject() {
 		return fProject;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
+	 */
 	public void setProject(IProject project) {
 		fProject =project;
 	}

@@ -8,9 +8,15 @@ import org.eclipse.core.runtime.CoreException;
 
 import prover.gui.builder.tagger.Tagger;
 
-
+/**
+ * The delta visitor used by the tags builder.
+ * @author J. Charles
+ */
 public class DeltaVisitor implements IResourceDeltaVisitor {
-
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+	 */
 	public boolean visit(IResourceDelta delta) throws CoreException {
 		IResource res = delta.getResource();
 		int type = res.getType();
