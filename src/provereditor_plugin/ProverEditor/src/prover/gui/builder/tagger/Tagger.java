@@ -17,24 +17,88 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
 import prover.Prover;
+import prover.plugins.Logger;
 
 
 public class Tagger {
-	/** The current selection in the workbench */
-	public static final Tagger instance = new Tagger();
-	
+	/** the current instance of the tagger */
+	public static final Tagger instance = new Tagger();	
+	/** the file name of the file where the tags are stored */
 	public static final String filename = ".prover_editor_tags"; 
+	
+	/** the tags contained in the current selected project */
 	private TagTable tags = new TagTable();
+	/** the current selected project */
 	private IProject fProject;
 	
+	/**
+	 * @return the tags of the current project
+	 */
+	public Iterator getTags() {
+		return tags;
+	}
+	
+	/**
+	 * Try to load tags from the project of a file.
+	 * @param f the file from which to start
+	 */
 	public void run(IFile f) {
 		if(f == null)
 			return;
 		loadTags(f.getProject());
 	}
 	
+	/**
+	 * Clean the build ie. remove the tag file from a given
+	 * project.
+	 * @param project the project from which the tag file will be removed
+	 */
+	public static void performCleanBuild(IProject project) {
+		IFile file = project.getFile(filename);
+		File tagfile = file.getRawLocation().toFile();
+		tagfile.delete();
+	}
 	
-	public void loadTags(IProject project) {
+	/**
+	 * Add the tag of the given file to the tag table.
+	 * @param f the file to find tags in
+	 */
+	public void performAddChangedFile(IFile f) {
+		IProject project = f.getProject();
+		loadTags(project);
+		try {
+			tag(f.getRawLocation().toFile());
+		} catch (IOException e) {
+			Logger.err.println("Did not manage to read/write from the file " + f + " " + e);
+		}
+	}
+	
+	/**
+	 * If a file is removed from a project,
+	 * its tags too should be removed.
+	 * @param f the file to remove
+	 */
+	public void performRemoveFile(IFile f) {
+		IProject project = f.getProject();
+		loadTags(project);
+		tags.remove(f.getRawLocation().toFile().toString());
+	}
+	
+	/**
+	 * Build the tags for all the files in the whole project.
+	 * @param project the project to build the tags for
+	 */
+	public void performFullBuild(IProject project) {
+		File f = project.getLocation().toFile();
+		tagDirectory(f);
+		saveTags(project);	
+	}
+	
+	/**
+	 * Load the tags from the given project.
+	 * @param project the project from which to load the tags
+	 */
+	private void loadTags(IProject project) {
 		if(project == null || project.equals(fProject)) {
 			return;
 		}
@@ -48,42 +112,18 @@ public class Tagger {
 				ois.close();
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.err.println("There was a proble loading " + filename + ".");
 			}
 		}
 		else {
 			performFullBuild(project); 
 		}		
 	}
-	public static void performCleanBuild(IProject project) {
-		IFile file = project.getFile(filename);
-		File tagfile = file.getRawLocation().toFile();
-		tagfile.delete();
-	}
-	
-	public void performAddChangedFile(IFile f) {
-		IProject project = f.getProject();
-		loadTags(project);
-		try {
-			tag(f.getRawLocation().toFile());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	public void performRemoveFile(IFile f) {
-		IProject project = f.getProject();
-		loadTags(project);
-		tags.remove(f.getRawLocation().toFile().toString());
-	}
-	
-	
-	public void performFullBuild(IProject project) {
-		File f = project.getLocation().toFile();
-		tagDirectory(f);
-		saveTags(project);	
-	}
 
-
+	/**
+	 * Save the tags for the given project
+	 * @param project
+	 */
 	private void saveTags(IProject project) {
 		IFile file = project.getFile(filename);
 		File tagfile = file.getRawLocation().toFile();
@@ -92,16 +132,21 @@ public class Tagger {
 			tags.save(oos);
 			oos.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.err.println("There was a problem saving " + filename + ".");
 		}
 		
 		try {
 			project.refreshLocal(IResource.DEPTH_ONE, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			Logger.warn.println("Could not refresh the view!");
 		}
 	}
 
+	/**
+	 * Get tags from all the files of a directory.
+	 * It also goes recursively into the subdirectories.
+	 * @param f the directory to start from
+	 */
 	private void tagDirectory(File f) {
 		File [] dirs = f.listFiles(new FileFilter(){
 			public boolean accept(File pathname) {
@@ -127,13 +172,17 @@ public class Tagger {
 			}
 	}
 
-
+	/**
+	 * Get the tag from a file, specific to a prover.
+	 * @param file the file to get the tag from
+	 * @throws IOException if there is a read error
+	 */
 	private void tag(File file) throws IOException {
 		Prover pr = Prover.findProverFromFile(file.toString());
 		if(pr == null)
 			return;
 		Pattern[][] pats = pr.getTranslator().getTagPatterns();
-		TagTable.TagList l = new TagTable.TagList();
+		TagList l = new TagList();
 		ProverFileReader lnr = new ProverFileReader(new FileReader(file));
 		String str;
 		int offset = 0;
@@ -151,7 +200,7 @@ public class Tagger {
 					m.find();
 					str = str.substring(0, m.end());
 //					int wordend = m.end() + wordbeg;
-					l.add(str, wordbeg, str.length(), filename);
+					l.add(new TagStruct(str, filename, wordbeg, str.length()));
 					break;
 				}
 			}
@@ -161,10 +210,6 @@ public class Tagger {
 		tags.add(filename,l);
 	}
 
-
-	public Iterator getTags() {
-		return tags;
-	}
 
 
 	
