@@ -3,9 +3,9 @@ DEC/Compaq/HP.  The revisions were performed by David Cok and Joe
 Kiniry. You can read the general background on the original DEC/SRC
 ESC/Java in README.txt.
 
-If you obtained ESC/Java2 as part of a binary release, you should also
-consult README.release for installation and execution instructions
-concerning the release.
+If you obtained ESC/Java2 as part of a binary release, you should 
+ignore this file and consult README.release for installation and 
+execution instructions concerning the release.
 
 This document is meant to describe the patch/source release of
 ESC/Java2, thus the paths herein are in reference to the patch/source
