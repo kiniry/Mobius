@@ -1,7 +1,6 @@
 %\newtheorem*{ex}{Lemma}
 
 \section{Proofs from Section \ref{pogEq:aux}} \label{appendix:pogComp:pogEq:aux}
-
 \begin{exprSrcBcWp1}[Wp of a compiled expression ] \label{exprValueOnStack}
  For any expression $\expressionSrc$ from our source language, for any formula $\psi$  
 of the source assertion language and any formula $\phi$ such that $\phi$ may only 
@@ -12,7 +11,7 @@ contain stack expressions of the form     $\stack{\counter - k}, k \ge 0$ and if
 
   Forall formulas $ Q, R$ and $k \ge 0$  such that 
 $$ \begin{array}{l}
-      \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\ 
+      \wpSrcExpr{\expressionSrc }{ \psi }{ \excPostExpl}{v} \  = \\ 
 
       \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
          %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
@@ -23,10 +22,11 @@ $$ \begin{array}{l}
  \\
 
   
-	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
-            \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \phi \end{array} \right)   %\begin{array}{l}
-                                       \subst{\counter}{\counter + 1}
-			               \subst{\stack{\counter +1}}{ v }
+	    \wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPostExpl} \  = \\ 
+            \forall v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow 
+	                                                              \left( \begin{array}{l} \phi \subst{\counter}{\counter + 1}
+								       \subst{\stack{\counter +1}}{ v }\end{array} \right) \end{array} \right)   %\begin{array}{l}
+                                       
 				       \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
                          
           \wedge 
@@ -34,9 +34,9 @@ $$ \begin{array}{l}
   \end{array}$$
 and 
 forall formulas $ Q, R$ and $k\ge 0$ such that 
-$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
+$$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPostExpl}{v} \  = \\
       
-              \forall v', v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right) \subst{v}{v'} \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
+              \forall v', v^{'}_1 \ldots v^{'}_k, \left( \begin{array}{l} Q \Rightarrow \left( \begin{array}{l}\psi \subst{v}{v'} \end{array} \right)  \end{array} \right) \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}
          %\left( \begin{array}{l} Q \Rightarrow \psi   \end{array} \right)
           \wedge 
 	  R
@@ -45,12 +45,11 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
 \Longrightarrow \\
  \\
 
-\wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPost} \  = \\ 
+\wpBcSeq{ \compileLabel{s}{\expressionSrc}{e} }{ \phi }{\excPostExpl} \  = \\ 
             \forall v', v^{'}_1 \ldots v^{'}_k,
-                              \left( \begin{array}{l} Q \Rightarrow  \phi \end{array} \right)   % \begin{array}{l}
-                                                                            \subst{\counter}{\counter + 1}
-                                                                            \subst{\stack{\counter +1}}{v } 
-									    \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}		  
+                              \left( \begin{array}{l} Q \Rightarrow  
+                                         \left( \begin{array}{l} \phi  \subst{\counter}{\counter + 1}  \subst{\stack{\counter +1}}{v'} \end{array} \right)  \end{array} \right) 
+      									    \subst{v_1}{v^{'}_1 } \ldots \subst{v_k }{ v^{'}_k}		  
 			               
                                     %  \begin{array}{l}
 				    %   \subst{v_1 }{ \freshVar_1 }  \\
@@ -61,6 +60,7 @@ $$ \begin{array}{l} \wpSrcExpr{\expressionSrc }{ \psi }{ \excPost}{v} \  = \\
 	
 \end{array}$$
 \end{exprSrcBcWp1} 
+
 
 
   
@@ -89,7 +89,7 @@ Proof : \\
 		               \numConclusion{2} \wpBcSeq{\compileLabel{s}{const}{s} }{\phi}{ \excPost}  \\
 			
 		    	       \mbox{\rm\comment{following the definition   of the compiler function in subsection \ref{pogEq:compile:compExpr} }} \\
-			       = \wpExpl{s \ \push const }{\phi}{ \compile{\excPost}}  \\
+			       = \wpExpl{s \ \push \ const }{\phi}{ \compile{\excPost}}  \\
 			       \mbox{\rm\comment{following the definition of the wp function for bytecode in subsection \ref{pog:wpSrc:wpExpr}  }} \\
 			       = \phi \begin{array}{l}
                                                 \subst{ \counter }{ \counter + 1}\\
@@ -97,7 +97,7 @@ Proof : \\
 					    \end{array} \\
 			        \\
 				\\
-				 \mbox{\rm\comment{from \numConclusion{1} and   \numConclusion{2} and $Q,R = \true $ this case holds   }} \\
+				 \mbox{\rm\comment{from \numConclusion{1} and   \numConclusion{2} and $Q,R = \true , k = 0$ this case holds   }} \\
 					 
 				    
 			\end{array}$$
@@ -138,7 +138,7 @@ Proof : \\
 
 			 $$ \begin{array}{l} 
 
-	\mbox{\rm\comment{From \numConclusion{1} and \numConclusion{2} we apply the induction hypothesis  }} \\		
+	\mbox{\rm\comment{From \numConclusion{1} and \numConclusion{2} we apply the induction hypothesis  $k =0$ }} \\		
 				\exists Q', R' : \formulaSrc , \\ 
 			       \numConclusion{3} \
 						\wpSrcExpr{\expressionSrc }{ \begin{array}{l}
