@@ -1,0 +1,65 @@
+% panther-slides.sty
+% A slide style to use with seminar.
+% \small  : turns fonts to small
+% \norm   : turns fonts to normal
+% \big    : turns fonts to big
+% \realbig: turns fonts to realbig
+% \blist  : begins a bullet list ( to use with \item)
+% \elist  : to close a bullet list
+% \nextslide{title} : a new slide starting with title.
+% \pantherbeg
+% \pantherend : begin + end document
+\usepackage{url}
+\usepackage{pstricks}
+\usepackage{slidesec}
+\usepackage{fancyvrb}
+\usepackage{epsfig}
+\slideframe{none}
+\pagestyle{plain}
+
+\newcommand{\rarrow}{
+$\rightarrow$
+}
+
+\newcommand{\conj}{
+$\wedge$
+}
+\renewcommand{\small}{
+  \fontfamily{cmss} \fontsize{10}{12}\selectfont
+}
+\newcommand{\norm}{
+  \fontfamily{cmss} \fontsize{14}{14.5}\selectfont
+}
+\renewcommand{\big}{
+  \fontfamily{cmss} \fontsize{18}{20}\selectfont
+}
+\newcommand{\realbig}{
+  \fontfamily{cmss} \fontsize{20}{24}\selectfont
+}
+\newcommand{\purple}{\blue}
+%\newrgbcolor{purple}{0.57 0.19 0.54}
+
+\newcommand{\nextslide}[1]{
+  \end{slide}
+\begin{slide}
+  \centerslidesfalse
+  %\title{#1}
+  \theslideheading{\begin{center} \big #1 \end{center}} 
+  \norm
+  %\psline[linecolor=magenta, cornersize=absolute]{-}(-0.5,-0)(3.5,-0)
+  \psline[linecolor=blue, cornersize=absolute]{-}(-0.5,-0)(3.5,-0)
+
+}
+\newcommand{\blist}{\begin{list}{$\bullet$}{}}
+
+\newcommand{\elist}{
+  \end{list}
+}
+\newcommand{\pantherbeg}{
+  \begin{document}
+    \begin{slide}
+}
+\newcommand{\pantherend}{
+  \end{slide}
+    \end{document}
+}

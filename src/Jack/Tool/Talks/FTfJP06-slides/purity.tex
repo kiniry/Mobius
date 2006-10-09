@@ -1,0 +1,90 @@
+
+\nextslide{Purity in JML}
+%\small
+Pure methods are methods you can {\purple use in specifications} 
+in JML.
+\blist \small
+\item No 'visible' side effect
+\item A constructor can be pure
+\elist
+The main problem for proofs readability: keeping track of the pure method name
+
+\nextslide{ Purity in Jack}
+\small
+\blist
+\item In Jack constructors are not pure
+\item it is translated into a couple definition / hypothesis 
+
+\elist
+
+{\purple Definition} myfun\_1 : A1Type\rarrow A2Type\rarrow ResType\rarrow Prop :=\\
+{\purple fun} (arg1 arg2 Res) {\purple $=>$} Context1\rarrow Res = true. (* ResType = bool *)
+
+{\purple Definition} myfun\_2 : A1Type\rarrow A2Type\rarrow ResType\rarrow Prop :=\\
+{\purple fun} (arg1 arg2 Res) {\purple $=>$} Context2\rarrow Res = false.\\
+...\\
+(* Used within a hypothesis : *)\\
+... \rarrow myfun\_2 this l\_var1 Res\_23\rarrow Res\_23 = true.\\
+
+
+\nextslide{Native methods}
+\begin{enumerate}
+\item Macros
+\item Predicates
+\item Native methods
+
+
+\end{enumerate}
+
+
+\nextslide{Specification macros, predicates in JML}
+\small
+\blist
+\item Pure methods can be used to do some specification macros:
+\begin{tabbing}
+ /*\=@ {\purple requires} true;\+\\
+   @ {\purple ensures} $\backslash$result == ((tab != null) \&\& (i $>=$ 0) \&\& (i $<$ tab.length));\\
+   @*/\-\\
+ public\= /*@ {\purple pure} @*/ boolean withinBounds(Object[] tab, int i) \{\\
+ 	\>return (tab != null) \&\& (i $>=$ 0) \&\& (i $<$ tab.length);\\
+ \}\\
+ \end{tabbing}
+\item Go {\purple further} in this direction:\\
+directly defining the pure method in Coq 
+%\\(doing some specification macros at the Coq level)
+\elist
+
+
+
+\nextslide{Native methods}
+\small
+How the predicates are defined for Jack:
+\blist
+\item Within JML:\\
+  //@ public {\purple native} boolean withinBounds(Object[] tab, int i);
+\item In the file user\_extensions.v:
+\begin{tabbing}
+  {\purple Defi}\={\purple nition} withinBounds : \+\\
+  Reference \rarrow
+  (Reference \rarrow t\_int \rarrow Reference) \rarrow  t\_int \rarrow bool := \\
+	{\purple fun} \=  tab intelements value {\purple $=>$} \\
+	\>and (tab != null) (and (0 $<$= value) (value $<$ (arraylength tab))).\\
+\end{tabbing}
+\elist
+
+\nextslide{ Static libraries}
+\small
+
+These functions can  define some prover specific libraries:
+\blist
+\item They permit to have {\purple clearer} annotations
+withinBounds(tab, i) instead of (i $>=$ 0) \&\& (i $<$ tab.length)
+\item We can prove {\purple properties on them} at the Coq level 
+
+\elist
+These are a way to explicitly declare the type of
+{\purple uninterpreted function symbols} :\\
+\rarrow alike ESC/Java {\purple dttfsa} construct and
+Why's {\purple Parameter} construct, less 'tool specific' \\
+... but it's not enough
+

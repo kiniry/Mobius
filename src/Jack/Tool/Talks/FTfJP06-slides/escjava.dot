@@ -1,0 +1,36 @@
+
+digraph G {
+    rankdir="LR";
+    subgraph conv {
+	labelloc="b";
+        c[label="Proof \nobligations \ngenerator", shape = rectangle, color=blue, fontcolor=blue];
+    };
+    javjml[label= "Java + JML",  color=blue, fontcolor=blue];
+    oldvc[label= "Old VCgen",  color=blue, fontcolor=blue];
+    newvc[label= "New VCgen",  color=blue, fontcolor=blue];
+    outi1 [label=  "Simplify", shape = rectangle]
+    outi2 [label=  "Simplify", shape = rectangle]
+    outi3 [label=  "PVS", shape = rectangle]
+    outi4 [label=  "...", style=dashed, shape = rectangle]
+
+    preuv1[label= "Proof", shape=plaintext];
+    preuv2[label= "Proof", shape=plaintext];
+    preuv3[label= "Proof", shape=plaintext];
+    preuv4[label= "Proof", shape=plaintext];
+
+    javjml -> subgraph conv [constraint=true, color=blue, fontcolor=blue];
+    subgraph conv -> oldvc [constraint=true, color=blue, fontcolor=blue];
+    subgraph conv -> newvc [constraint=true, color=blue, fontcolor=blue];
+    oldvc -> outi1  [constraint=true];
+    outi1 -> oldvc;
+    newvc -> outi2  [constraint=true];
+    newvc -> outi3  [constraint=true];
+    newvc -> outi4  [constraint=true, style=dashed];
+    outi1 -> preuv1  [constraint=true];
+    outi2 -> preuv2  [constraint=true];
+    outi3 -> preuv3  [constraint=true];
+    outi4 -> preuv4  [constraint=true, style=dashed];
+
+
+  }
+

@@ -1,0 +1,110 @@
+\nextslide{Using purity}
+\begin{enumerate}
+\item Purity in JML
+
+\item Purity in Jack
+\item Simplifyng pure methods
+\item Specification macros, predicates for JML
+\item A quicksort annotated with predicates
+
+
+\end{enumerate}
+
+\nextslide{Purity in JML}
+%\small
+Pure methods are methods you can {\purple use in your specification} 
+in JML.
+\blist \small
+\item No 'visible' side effect
+\item A constructor can be pure
+\elist
+\rarrow We'd like them to be deterministic
+The main problem: keeping track of the pure method name
+
+\nextslide{ Purity in Jack}
+\small
+\blist
+\item In Jack constructors are not pure
+\item At first pure methods were directly unfolded 
+  within the proof obligations
+\item Now there is a couple definition / hypothesis 
+
+\elist
+
+{\purple Definition} myfun\_1 : A1Type\rarrow A2Type\rarrow ResType\rarrow Prop :=\\
+{\purple fun} (h arg1 arg2 Res) {\purple $=>$} Context1\rarrow Res = true. (* ResType = bool *)
+
+{\purple Definition} myfun\_2 : A1Type\rarrow A2Type\rarrow ResType\rarrow Prop :=\\
+{\purple fun} (h arg1 arg2 Res) {\purple $=>$} Context2\rarrow Res = false.\\
+...\\
+(* Used within a hypothesis : *)\\
+... \rarrow myfun\_2 this l\_var1 Res\_23\rarrow Res\_23 = true.\\
+
+\nextslide{Simplifying pure methods}
+\small
+This method of defining pure methods:
+\blist
+\item Useful for the {\purple readability} of the lemma,
+\item Bad for the proof
+\elist
+\rarrow tactics {\purple unfold\_pure}, {\purple unfold\_pure\_all}  are generated to {\purple directly 
+unfold} the definitions in a specified hypothesis or for all the lemma
+\begin{tabbing}
+Hyp\=othesis of the form :\\
+\>H: $\forall$ result, meth\_pure = result \rarrow result = true\\
+are turned to\\
+\>H: meth\_pure = true\\
+with a tactic called {\purple simpl\_pure}.
+\end{tabbing}
+\nextslide{Specification macros, predicates in JML}
+\small
+\blist
+\item Pure methods can be used to do some specification macros:
+\begin{tabbing}
+ /*\=@ {\purple requires} true;\+\\
+   @ {\purple ensures} $\backslash$result == ((tab != null) \&\& (i $>=$ 0) \&\& (i $<$ tab.length));\\
+   @*/\-\\
+ public\= /*@ {\purple pure} @*/ boolean withinBounds(Object[] tab, int i) \{\\
+ 	\>return (tab != null) \&\& (i $>=$ 0) \&\& (i $<$ tab.length);\\
+ \}\\
+ \end{tabbing}
+\item Go {\purple further} in this direction:\\
+directly defining the pure method in Coq 
+%\\(doing some specification macros at the Coq level)
+\elist
+
+\nextslide{Coq predicates in JML}
+\small
+How the predicates are defined for Jack:
+\blist
+\item Within JML:\\
+  //@ public {\purple native} boolean {\purple Coq\_\_}withinBounds(Object[] tab, int i);
+\item In the file userTactics.v:
+\begin{tabbing}
+  {\purple Defi}\={\purple nition} withinBounds : \+\\
+  (Reference \rarrow t\_int \rarrow Reference) \rarrow Reference \rarrow t\_int \rarrow bool := \\
+	{\purple fun} \= intelements tab value {\purple $=>$} \\
+	\>andb (Zle\_bool 0 value) (Zlt\_bool value (arraylength tab)).\\
+\end{tabbing}
+\elist
+
+\nextslide{ A quicksort annotated with predicates}
+\small
+All the important annotations are replaced by these predicates:
+\begin{tabbing}
+/*\=@ public native boolean Coq\_\_is\_sorted(int[] tab, int beg, int end);\+ \\
+  @ public native boolean Coq\_\_is\_inf(int [] tab, int value, int beg, int end);\\
+  @ public native boolean Coq\_\_is\_sup(int [] tab, int value, int beg, int end);\\
+  @ public native boolean Coq\_\_withinBounds(int[] tab, int i); \\
+  @*/
+\end{tabbing}
+These predicates are indeed {\purple not so useful} by themselves:
+\blist
+\item They permit to have {\purple clearer} annotations
+withinBounds(tab, i) instead of (i $>=$ 0) \&\& (i $<$ tab.length)
+\item We can prove {\purple properties on them} at the Coq level 
+(but not enough)
+\elist
+
+\rarrow It can facilitate the proofs or at least their understanding
+

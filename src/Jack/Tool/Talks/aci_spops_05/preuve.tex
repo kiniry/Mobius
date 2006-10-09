@@ -1,0 +1,86 @@
+\nextslide{Un exemple}\small
+\begin{tt}
+\begin{tabbing}
+
+{\purple int} i; {\purple int}[] tab = {\purple new int}[3];\\
+/*\=@ {\purple loop\_modifies} \= i, tab[*]; \+\\
+  @ {\purple loop\_invariant}  (0 <= i) \&\& (i <= tab.length) \&\& \\
+  @        \>({\purple $\backslash$forall} int j; (0 <= j) \&\& (j < i); tab[j] == 0);\\
+  @ {\purple decreases} (tab.length - i);\\
+  @*/ \- \\
+{\purple for} (i \== 0; i < tab.length; i++) \{  \\
+  \>tab[i] = 0;  \\
+\}
+\end{tabbing}
+\end{tt}
+\rarrow Jack g\'en\`ere 13 obligations de preuve, 
+dont {\purple 5  concernent} la boucle.
+
+Nous allons r\'esoudre l'obligation de preuve de la 
+{\purple conservation de l'invariant}.
+\nextslide{Preuve de la conservation de l'invariant}\small
+intelements : REFERENCES \rarrow t\_int \rarrow t\_int\\
+l\_i : t\_int\\
+newObject\_9 : REFERENCES\\
+hyp1 : 0 $\leq$ l\_i\\
+%hyp2 : newObject\_9 $<>$ null\\
+hyp4 : $\forall$ l\_j : t\_int,
+       0 $\leq$ l\_j $\wedge$ l\_j $<$ l\_i \rarrow intelements newObject\_9 l\_j = 0\\
+%hyp5 : $\sim$ instances newObject\_9\\
+hyp8 : interval 0
+         (j\_sub
+            (overridingCoupleRef t\_int arraylength newObject\_9 3 newObject\_9)
+            1) l\_i\\
+hyp9 : l\_i $<$
+       overridingCoupleRef t\_int arraylength newObject\_9 3 newObject\_9\\
+hyp10 : l\_i $\leq$
+        overridingCoupleRef t\_int arraylength newObject\_9 3 newObject\_9\\
+----------------------------------------------------------------------------- (1/1)\\
+$\forall$ l\_j : t\_int,
+0 $\leq$ l\_j $\wedge$ l\_j $<$ l\_i + 1 \rarrow\\
+overridingCoupleZ t\_int (intelements newObject\_9) l\_i 0 l\_j = 0
+
+\nextslide{Preuve (1)}
+\small
+{\tt startJack.}\\
+\begin{it}
+1 subgoal\\
+...\\
+hyp9 : l\_i $<$\\
+       overridingCoupleRef t\_int arraylength newObject\_9 3 newObject\_9\\
+H : 0 $\leq$ l\_j\\
+H0 : l\_j $<$ l\_i + 1\\
+H4 : l\_i $\leq$\\
+     overridingCoupleRef t\_int arraylength newObject\_9 3 newObject\_9 - 1\\
+----------------------------------------------------------------------------- (1/1)\\
+overridingCoupleZ t\_int (intelements newObject\_9) l\_i 0 l\_j = 0
+\end{it}
+
+\nextslide{Preuve (2)}\small
+{\tt solveOverriding; trivial}\\
+\begin{it}
+1 subgoal\\
+...\\
+hyp4 : $\forall$ l\_j : t\_int,\\
+0 $\leq$ l\_j $\wedge$ l\_j $<$ l\_i \rarrow intelements newObject\_9 l\_j = 0\\
+H : 0 $\leq$ l\_j\\
+H0 : l\_j $<$ l\_i + 1\\
+H2 : l\_i $<>$ l\_j\\
+----------------------------------------------------------------------------- (1/1)\\
+intelements newObject\_9 l\_j = 0\\
+\end{it}
+
+{\tt destrJle (l\_j $\leq$ l\_i); autoJack.}\\
+{\it Proof Completed.}
+
+\nextslide{Preuve (3)}
+En r\'esum\'e, on obtient le script de preuve:
+\begin{center}
+\begin{minipage}{6cm}
+\begin{verbatim}
+startJack.
+solveOverriding; trivial.
+destrJle (l_j <= l_i); autoJack.
+\end{verbatim}
+\end{minipage}
+\end{center}

@@ -1,0 +1,96 @@
+\documentclass{seminar}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{panther-slides}
+\usepackage{url}
+
+
+\pantherbeg
+  \vspace*{26pt}
+  \begin{flushright}
+  \begin{bf}\begin{it}
+      
+      \begin{LARGE}
+	\realbig
+	 Different ways of annotating and \\proving
+	 a quicksort with Jack\\[10pt]
+      \end{LARGE}
+  \end{it} \end{bf}
+  \norm
+  Julien Charles\\
+%Benjamin Gr\a'egoire\\
+\vfill
+\begin{minipage}{5cm}\small
+%\begin{flushright}
+%Benjamin Gr\a'egoire
+%\end{flushright}
+%\begin{tabbing}
+% \=Benjamin Gr\a'egoire\\ \>Benjamin Gr\a'egoire
+%\end{tabbing} 
+\end{minipage}\\
+  \small
+  \begin{tabular}{p{0.7\linewidth}r}
+  \epsfig{file=everest_logo.ps, height=18pt} & Thursday, february the 16th 2006\\
+  \end{tabular}
+
+  \end{flushright}
+ %\epsfig{file=logo.eps, height=18pt}
+  
+
+\nextslide{Introduction}
+
+\blist
+\small 
+\item Goal: verify  a {\purple quicksort} written in Java 
+  annotated with {\purple JML} with Jack
+\item \ {\purple Static verification} of this program: \\
+\rarrow done in an interactive way with Coq.
+\item Motivation: need for some simple examples in Jack
+  \blist 
+    \item Already done in ESC/Java2
+    \item Already done in Krakatoa\\
+    \rarrow Now doing it in {\purple Jack}
+  \elist 
+\item It is still a work in progress \\(the proof not using the predicates is
+finished,  not the other)
+\elist
+\nextslide{General Plan}
+\begin{enumerate}
+\item Basics
+\item Annotating in a normal way
+\item Using purity  
+\item Using ghost and model variables
+\end{enumerate}
+
+
+\input{basics_1.tex}
+\input{normal_way.tex}
+\input{purity.tex}
+\input{ghosts.tex}
+\nextslide{Conclusion}\small
+\blist 
+\item The quicksort was annotated in different ways, and a proof has been
+made in its {\purple entirety} for the version without the predicates
+\item We can now use some {\purple Coq predicates} in Jack's JML annotations
+\item The use of Coq predicates for model variables is still in developpement\\
+\rarrow We have {\purple encouraging} first results
+\item \ {\purple Correctness} of the different approaches
+\item Adapting already done proofs
+  using model variables ({\purple refinement})?
+
+\elist
+
+
+\nextslide{Download links}
+\small
+{\purple Jack}:\\
+\url{http://www-sop.inria.fr/everest/soft/Jack/}\\
+
+{\purple CoqEditor} (only works with the CVS version of Coq!):\\
+\url{http://www-sop.inria.fr/everest/soft/Jack/UpdateSite/}\\
+
+{\purple eassert}, {\purple quicksort}:\\
+\url{http://www-sop.inria.fr/everest/personnel/Julien.Charles/}
+
+\pantherend

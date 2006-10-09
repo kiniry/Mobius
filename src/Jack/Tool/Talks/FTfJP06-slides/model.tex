@@ -1,0 +1,113 @@
+\nextslide{Using native types}
+\begin{enumerate}
+\item Definition
+\item Method calls
+\item Application
+%\item A new tactic
+\end{enumerate}
+\nextslide{Native types}
+\small
+\blist
+\item To express more complex properties, we'd like special datatypes\\
+\rarrow Have sets easily in Coq, not in JML 
+\item A new construct to directly use a Coq defined datatype:\\
+//@  public {\purple native} class ObjectSets 
+\begin{tabbing}
+In the \=file user\_extensions.v:\+\\
+  {\purple Defi}\={\purple nition} ObjectSet : set Reference.
+\end{tabbing}
+\item The types are not some standard Java/JML class types:
+\blist
+\item it does not inherit from the class object
+\item no constructors, no casts
+\item it is not an instance, etc...
+
+\item more of a functional type: modifiers create new objects and are 'static'
+\elist
+\elist
+\nextslide{Method calls}\small
+\begin{tabbing}
+/*\=@ pub\=lic {\purple native} class MyNativeType \{\+\\
+ @\> public  {\purple native} static boolean staticMethod1();\\
+ @\> public  {\purple native} static boolean staticMethod2();\\
+   @\> public {\purple  native} boolean nativeMethod();\\
+  @ \}\\
+  @*/
+\end{tabbing}
+Alike for Java defined classes:
+\blist
+\item Static method calls:\\
+//@  {\purple assert} MyNativeType.staticMethod1() != MyNativeType.staticMethod2();
+\item Instance method calls:\\
+//@  {\purple ghost} MyNativeType myNativeObject;\\
+...\\
+//@  {\purple assert} myNativeObject.nativeMethod();
+\elist
+\nextslide{Application: A set library}
+\small
+\begin{tabbing}
+We can now define a set library binded on some  {\purple Coq types}, 
+to use in annotations:\\
+/*\=@ pub\=lic native class ObjectSet \{\+\\
+  @\> public native static ObjectSet create();\\
+   @\> public native static ObjectSet add(ObjectSet os, Object o);\\
+   @\> public native boolean member(Object o);\\
+  @ \> public static native ObjectSet toSet(Object [] tab);\\
+  @ \}\\
+  @*/
+\end{tabbing}
+\begin{tabbing}
+Definition ObjectSet := set Reference. \\
+Definition ObjectSet\_create := empty\_set.\\
+Definition ObjectSet\_add (os: ObjectSet) (o: Reference) :=  set\_add o os.\\
+ Definition ObjectSet\_member (this: ObjectSet) (o: Reference) := set\_mem o this
+\end{tabbing}
+\nextslide{Using native libraries}
+\blist \small
+\item Must prove properties over the library to make it usable\\
+\rarrow Usually longer, but the proofs are {\purple reusable}\\
+(We have done it for a {\purple quick sort} proof using a Coq list library)
+\item It can be used with ghost variables, and 
+also with model variables.\\
+\rarrow We can refine some Coq datatypes to
+some Java libraries.\\
+(Work in progress: proof of the correctness of a {\purple bytecode verifier} written in Java, against a semantic defined in Coq)
+\elist
+%\nextslide{ Model variables}
+%\small
+%\blist
+%\item Model variables are specification variables {\purple associated} with a program variable.
+%\item The association is done through a translation function.
+%\item In JML it has the following syntax:
+%  \blist 
+%  \item //@ {\purple model} MyType modVar;
+%  \item //@ {\purple represents} modVar $\leftarrow$ P(progVar)
+%  \elist
+%\item You cannot do a 'set' with these variables, i.e. you cannot
+%  {\purple assign} them.\\
+%\rarrow The model variable is considered to be modified 
+%at the same time the program variable it represents
+%\elist
+
+%\nextslide{POs with model}
+%\small
+%For the post-condition of each method which is {\purple using progVar}:
+%\blist
+%\item Jack adds the condition:\\
+%$\exists$ v, v = P(progVar)
+%\item Jack replaces each occurence of modVar in the post-condition 
+%of the method by v
+%\elist
+%We can link naturally a IntList model variable with a variable of the program
+%\nextslide{A new tactic}
+%\small
+%This gives these kind of proof obligations in Coq :\\
+%(some\_hypothesis) \rarrow\\
+%$\exists$ v, v = P(progVar) \conj post 
+%\blist
+%\item Usually we have to introduce v as an existential variable, 
+%and then {\purple find the value} of v which is in fact the result P(progVar).
+%\item Problem: P is a {\purple function} while v isn't (the reflexivity is not trivial)
+%\\
+%\rarrow We have added a tactic, {\purple extac} to solve these kind of problems
+%\elist

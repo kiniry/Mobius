@@ -1,0 +1,150 @@
+\nextslide{Using ghost and model variables}
+\begin{enumerate}
+\item Ghost variables 
+\item A quicksort annotated with ghosts
+\item Model variables
+\item Quicksort with model
+\item A new tactic
+\end{enumerate}
+
+\nextslide{ Ghost variables}
+\small
+\blist
+\item Ghost variables are {\purple specification} variables.
+\item They are declared through the keyword ghost:\\
+//@ {\purple ghost} MyClass i;
+\item They can be used within specifications
+\item Their value can be {\purple modified} with the set instruction:\\
+//@ {\purple set} i $\leftarrow$ MyClass.pureFactory();\\
+The set instruction allows only JML {\purple expressions and pure methods}
+\elist
+\nextslide{ Ghost and predicates}
+\small
+In Jack ghosts variables are treated like {\purple program variables} \\(the
+set instruction being the equivalent to an assignement).\\
+Adaptation to the predicates:
+\blist
+\item In the Coq plugin, a flag is added to define {\purple ghost natively}, 
+its definition being made by a user (in userTactics.v):\\
+Variable i: Z.
+\item With the Coq predicates we can define a native pure Coq method: \\
+in the java program:\\
+//@ public static native MyClass pureFactory();\\
+in Coq:\\
+Definition pureFactory := 3.\\
+\rarrow We can use ghost data structure {\purple entirely defined} within Coq!
+\elist
+\nextslide{Modelling with ghosts}
+\small
+Ghost variables can model the behaviour of program variables:
+\blist
+\item if the assignments are made at the {\purple same steps}
+\item if there is a {\purple transformation function} between the modelled variable
+and the ghost variable
+\elist
+For the quicksort we decided to model the array with a list
+library, entirely written in Coq to use in spectifications
+\nextslide{A quicksort annotated with ghosts (1)}
+\small
+We change the field declaration to:\\
+private int [] tab;\\
+//@ {\purple ghost IntList list};
+\begin{tabbing}
+
+pub\=lic class IntList \{\+\\
+	/*\=@ \+public static native IntList Coq\_\_create();\\
+	  @ public static native IntList Coq\_\_cons(int i, IntList c);\\
+	  @ public static native IntList Coq\_\_app(IntList c1, IntList c2);\\
+	  @ public native boolean Coq\_\_is\_in(int i);\\
+	  @ public native boolean Coq\_\_equals(IntList i);\\
+	  @ public native int Coq\_\_length();\\
+	  @ public static native IntList {\purple Coq\_\_toList}(int []tab);\\
+	  @*/\-\\
+\}
+\end{tabbing}
+\nextslide{A quicksort annotated with ghosts (2)}
+\small
+\begin{tabbing}
+/*\=@\+ \ {\purple r}\={\purple equir}\={\purple es} (tab != null) \&\& (0 $<=$ i) \&\& (i $<$ tab.length)\\ 
+  @ \>\> \&\& (0 $<=$ j) \&\& (j $<$ tab.length);\\
+  @ {\purple modifies} tab[i], tab[j], list;\\
+  @ {\purple ensures} tab[i] == $\backslash$old(tab[j]) \&\& (tab[j] ==  $\backslash$old(tab[i])) \&\& \\
+  @ \>\> list.equals(IntList.toList(tab)) \&\& list.permutation( $\backslash$old(list));\\
+%  @ {\purple exsures} (Exception) false;\\
+  @*/\\
+  pub\=lic void swap(int i, int j) \+\{\\
+     int tmp;\\
+     tmp = tab[i];\\
+     tab[i] = tab[j];\\
+     tab[j] = tmp;\\
+     //@ {\purple set} list = IntList.toList(tab);\-\\
+  \}
+\end{tabbing}
+
+\nextslide{ Model variables}
+\small
+\blist
+\item Model variables are ghost variables {\purple associated} with a program variable.
+\item The association is done through a translation function.
+\item In JML it has the following syntax:
+  \blist 
+  \item //@ {\purple model} MyType modVar;
+  \item //@ {\purple represents} modVar $\leftarrow$ P(progVar)
+  \elist
+\item You cannot do a 'set' with these variables, i.e. you cannot
+  {\purple assign} them.\\
+\rarrow The model variable is considered to be modified 
+at the same time the program variable it represents
+\elist
+
+\nextslide{POs with model}
+\small
+For the post-condition of each method which is {\purple using progVar}:
+\blist
+\item Jack adds the condition:\\
+$\exists$ v, v = P(progVar)
+\item Jack replaces each occurence of modVar in the post-condition 
+of the method by v
+\elist
+With ghost variables, to simulate this behaviour, 
+we had to add to the specification of the methods this equality by hand\\
+\rarrow {\purple Better correctness} than with ghost variables
+\nextslide{A new tactic}
+\small
+This gives these kind of proof obligations in Coq :\\
+(some\_hypothesis) \rarrow\\
+$\exists$ v, v = P(progVar) \conj post 
+\blist
+\item Usually we have to introduce v as an existential variable, 
+and then {\purple find the value} of v which is in fact the result P(progVar).
+\item Problem: P is a {\purple function} while v isn't (the reflexivity is not trivial)
+\\
+\rarrow We have added a tactic, {\purple refl\_goal} to solve these kind of problems
+\elist
+\nextslide{Quicksort with model (1)}
+\small 
+The only modifications concerns the {\purple variable declaration}:\\
+//@ {\purple ghost} IntList list;\\
+is replaced by:\\
+//@ {\purple model} IntList list;\\
+//@ {\purple represents} list $\leftarrow$  IntList.toList(tab);\\
+%//@ {\purple depends} list $\leftarrow$ tab;\\
+\\
+\nextslide{Quicksort with model (2)}
+\small	
+\begin{tabbing}
+/*\=@ \+
+   {\purple r}\={\purple equir}\={\purple es} (tab != null) \&\& (0 $<=$ i) \&\& (i $<$ tab.length)\\ 
+  @ \>\> \&\& (0 $<=$ j) \&\& (j $<$ tab.length);\\
+  @ {\purple modifies} tab[i], tab[j], list;\\
+  @ {\purple ensures} tab[i] == $\backslash$old(tab[j]) \&\& (tab[j] ==  $\backslash$old(tab[i])) \&\& \\
+  @ \>\>  list.permutation( $\backslash$old(list));\\
+%  @ {\purple exsures} (Exception) false;\\
+  @*/\\
+  pub\=lic void swap(int i, int j) \+\{\\
+     int tmp;\\
+     tmp = tab[i];\\
+     tab[i] = tab[j];\\
+     tab[j] = tmp;\-\\
+  \}
+\end{tabbing}

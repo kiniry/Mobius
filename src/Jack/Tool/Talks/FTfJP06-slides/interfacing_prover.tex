@@ -1,0 +1,44 @@
+\nextslide{2. Interface}
+\begin{enumerate}
+\item Interacting with the user
+\item Interacting with the prover
+\end{enumerate}
+\nextslide{Interacting with the user (1)}
+ESC/Java has 2 interfaces:
+\blist
+\item A {\purple command line} interface with many switches
+\item An eclipse interface which basically add some gui
+  over the command line version, and permits an easier way 
+  to see the {\purple warnings} of ESC/Java
+\elist
+POs are generated for {\purple each method}.
+\nextslide{Interacting with the user (2)}
+Jack is much more interactive prover friendly:
+\blist
+\item Case Explorer
+\item Ability to prove only {\purple one} proof obligation
+\item Can try to prove several goals automatically
+\elist
+POs are generated for each {\purple execution path}.
+
+\nextslide{Interacting with the prover (1)}
+\small
+ESC/Java interacts with provers through some prover extensions.\\
+ESC/Java has two kind of interaction with provers:
+\blist
+\item Simplify-like: \\each goal is tried with the prover and ESC/Java 
+{\purple awaits}
+a respond to continue verifying the program.
+\item Interactive, using the {\purple new vcGen}, and recently developped interfaces
+\rarrow {\purple no interaction with the prover at all}, it only generates some
+files containing the lemmas to prove
+\elist
+\nextslide{Interacting with the prover (2)} \small
+Jack interacts with provers through some prover plugins.\\
+
+Jack has only one way to interact with provers:\\
+\rarrow It passes a {\purple list of proof obligations} (PO) to the prover.\\
+If there is only one PO is most likely done from an interactive
+mode.\\
+\rarrow the context from which a prover is called depends on
+the informations given by the {\purple prover plugin}.

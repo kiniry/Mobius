@@ -1,0 +1,15 @@
+
+digraph G {
+
+   s1 [label="S", shape=plaintext];
+   s2 [label="S'", shape=plaintext];
+   st1 [label="St", shape=plaintext];
+   st2[label="St'", shape=plaintext];
+   st1 -> st2[constraint=false];
+   s1 ->s2 [constraint=false];
+   s1 -> st1  [constraint=true];
+   s2 -> st2  [constraint=true];
+
+
+  }
+

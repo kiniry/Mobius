@@ -1,0 +1,117 @@
+\nextslide{Annotating in a normal way}
+\begin{enumerate}
+\item{The QuickSort algorithm}
+\item{Kind of proof obligations}
+\item{Annotations}
+\item{A tactic: eassert}
+
+\end{enumerate}
+
+\nextslide{The QuickSort algorithm...}
+\small
+\begin{tabbing}
+pri\=vate void sort(int lo, int hi) \{\+ \\
+  int left, right, pivot;\\
+  if(!(lo $<$ hi)) return;\\
+  left = lo;\\
+  right = hi;\\
+  pivot = tab[hi];\\
+  
+  whi\=le(left $<$ right) \+\{\\
+    while((left $<$ right) \&\& (tab[left] $<=$ pivot)) left++;\\
+    while((left $<$ right) \&\& (tab[right] $>=$ pivot)) right--;\\
+    if\=(left $<$ right)\+ \{\\
+      swap(left, right);\-\\
+    \}\-\\
+  \}
+\end{tabbing}
+\nextslide{...in Java}
+\small
+\begin{tabbing}
+\ \ \ \=swap(left, hi);\+\\
+  if \=(left $>$ 0)\+\\
+  sort(lo, left -1);\-\\
+  
+  if (left +1 $<$ tab.length)\+\\
+  sort(left +1, hi);\- \-\\
+\}
+\end{tabbing}
+
+\blist
+\item Property wanted: it sorts the array
+\item The permutation property is left out, we use just an {\purple injection} property
+\elist
+\nextslide{Kind of proof obligations}
+\small
+\blist
+\item Around 230 proof obligations (POs)
+\item 100 are solved automatically
+\item Difficulties: 
+\blist 
+\item the {\purple loop termination} wasn't so trivial\\
+\rarrow the use of {\purple ghost variables} was necessary
+\item the proof can easily get {\purple messy}\\
+\rarrow use of assertions
+\elist
+\elist
+\nextslide{Annotations (1)}
+\small
+Specifications of the main method:
+\begin{tabbing}
+/*\=@ {\purple requ}\={\purple ires} (tab != null) \&\& (0 $<=$ lo) \&\& (lo $<$ tab.length) \&\&\+ \\
+  @     \>(0 $<=$ hi) \&\& (hi $<$ tab.length);\\
+    @ {\purple modifies} tab[lo .. hi];\\
+    @ {\purple ensures} ($\backslash$forall int i, j; (lo $<=$ i) \&\& (i $<=$ hi) $==>$ (lo $<=$ j) \&\& (j $<=$ hi) \\
+    @             \> $==>$ (i $<$ j) $==>$ tab[i] $<=$ tab[j]) \&\&\\
+    @             \>($\backslash$forall int i\=; lo $<=$ i \&\& i $<=$ hi; ($\backslash$exists int j; lo $<=$ j \&\& j $<=$ hi \&\& \\
+ @ \>\>$\backslash$old(tab[j]) == tab[i])); \\
+    @*/\\
+        private void sort(int lo, int hi)\\
+\end{tabbing}
+\nextslide{Annotations (2)}
+\small
+Annotations of the loop invariant:
+\begin{tabbing}
+/*\=@ {\purple loop\_modifies} left, right, tab[lo..(hi - 1)];\+\\
+  @ {\purple loop\_}\={\purple invariant} \= (lo $<=$ left) \&\& (left $<=$ right) \&\& (right $<=$ hi) \&\& \\
+  @    \>($\backslash$forall int m; (lo $<=$ m) \&\& (m $<$ left) $==>$ tab[m] $<=$ pivot) \\
+  @    \>\&\& ($\backslash$forall int n; (right $<$ n) \&\& (n $<=$ hi) $==>$ pivot  $<=$ tab[n])\\
+  @     \>\&\& tab[right] $>=$ pivot \&\&\\
+  @     \> ($\backslash$forall int i; lo $<=$ i \&\& i $<=$ hi - 1; \\
+@ \>\>($\backslash$exists int j; lo $<=$ j \&\& j $<=$ hi \&\& $\backslash$old(tab[j]) == tab[i]));\\
+  @ {\purple decreases} (right - left);\\
+  @*/
+\end{tabbing}
+\nextslide{A tactic: eassert (1)}
+\small
+Many of the goals in this proofs were with {\purple split inequalities}
+\blist
+\item The hypothesis were of the form:\\
+H: $\forall$ v, A \rarrow B(v)... \rarrow a $<$ b\\
+H': $\forall$ v, A' \rarrow B'(v)... \rarrow b $<$ c
+\item the lemma to prove:\\
+a $<$ c
+\item
+I had troubles {\purple directly} instanciating the hypothesis to have:\\
+a $<$ b and b $<$ c.
+\elist
+\rarrow the tactic {\purple eassert}
+\nextslide{eassert (2)}
+\small
+The tactic is like assert, but it permits {\purple holes} when
+instanciating the hypothesis, and the  holes are turn 
+{\purple into subgoals}.\\
+For a goal like:\\
+H: A \rarrow B \rarrow C\\
+=========================\\
+G
+
+
+eassert(h := H \_ \_).\\
+turns it into {\purple 3 goals}:
+\blist
+\item One in order to prove A
+\item One in order to prove B
+\item One still asking to prove G
+but with an hypothesis added (h: C)
+\elist

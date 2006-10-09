@@ -1,0 +1,66 @@
+\nextslide{3. ProverEditor}
+\begin{enumerate}
+  \item Existing editors
+  \item Motivations
+  \item Description
+  \item Some screenshots
+
+\end{enumerate}
+
+\nextslide{Existing editors}
+
+\blist 
+\item Standard tools:
+  \blist \small
+     \item Proof General (emacs)
+     \item CoqIde (ocaml)
+  \elist
+\item More related works:
+  \blist \small
+     \item PCoq (Java)
+     \item The new proof general (integrated in eclipse, but only for Isabelle)
+  \elist
+\elist
+
+\nextslide{Motivations}
+\small
+At first:
+\blist
+\item Editor not included in Jack's Coq plugin
+\item The use of {\purple CoqIde} or {\purple ProofGeneral} to edit Jack's Coq files
+\elist
+What for?
+\blist
+  \item Separating the {\purple library controlling Coq} from Jack
+  \item Jack is already in Eclipse, why not edit Coq files in it too?
+  \item Proof General is getting in Eclipse but for now not it looks 'dead'
+  \item need a light-weight multi-prover interface in Eclipse
+\elist
+
+
+
+\nextslide{ProverEditor}
+\small
+It has:
+\blist 
+\item \ {\purple syntax highlighting}
+ for both the Coq file and the proof view window
+\item the same keyboard shortcuts as CoqIde
+\elist
+Gain:
+\blist
+\item Full integration within eclipse: 
+  \blist 
+  \item no weird pop-up except if the user wants to use another editor
+  \item the managing of the proof files made a bit easier
+  \elist
+  
+\item As a separate developpement: better handling of Coq than 
+  what was done within Jack, and also usable with ESC/Java
+\item Handling of {\purple large} files ($>$ 1 Mo)
+\elist
+
+\nextslide{Demo...}
+\begin{center}
+\includegraphics[width=0.73 \linewidth]{screenshot1.ps}
+\end{center}
