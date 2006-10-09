@@ -45,5 +45,5 @@ dot2:
 
 clean :
 	@echo Cleaning.
-	@rm -f *.html *.pdf *.dvi
+	@rm -f *.html *.pdf *.dvi *~ *.ps *.log *.aux
 
