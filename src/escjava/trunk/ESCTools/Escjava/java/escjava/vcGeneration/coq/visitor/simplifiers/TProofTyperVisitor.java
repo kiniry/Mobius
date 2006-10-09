@@ -1,8 +1,81 @@
 package escjava.vcGeneration.coq.visitor.simplifiers;
 
-import java.io.*;
+import java.io.IOException;
 
-import escjava.vcGeneration.*;
+import escjava.vcGeneration.TAllocLE;
+import escjava.vcGeneration.TAllocLT;
+import escjava.vcGeneration.TAnyEQ;
+import escjava.vcGeneration.TAnyNE;
+import escjava.vcGeneration.TArrayFresh;
+import escjava.vcGeneration.TArrayLength;
+import escjava.vcGeneration.TArrayShapeMore;
+import escjava.vcGeneration.TArrayShapeOne;
+import escjava.vcGeneration.TAsElems;
+import escjava.vcGeneration.TAsField;
+import escjava.vcGeneration.TAsLockSet;
+import escjava.vcGeneration.TBoolAnd;
+import escjava.vcGeneration.TBoolEQ;
+import escjava.vcGeneration.TBoolImplies;
+import escjava.vcGeneration.TBoolNE;
+import escjava.vcGeneration.TBoolNot;
+import escjava.vcGeneration.TBoolOr;
+import escjava.vcGeneration.TBoolean;
+import escjava.vcGeneration.TCast;
+import escjava.vcGeneration.TChar;
+import escjava.vcGeneration.TDisplay;
+import escjava.vcGeneration.TDouble;
+import escjava.vcGeneration.TEClosedTime;
+import escjava.vcGeneration.TExist;
+import escjava.vcGeneration.TFClosedTime;
+import escjava.vcGeneration.TFloat;
+import escjava.vcGeneration.TFloatAdd;
+import escjava.vcGeneration.TFloatDiv;
+import escjava.vcGeneration.TFloatEQ;
+import escjava.vcGeneration.TFloatGE;
+import escjava.vcGeneration.TFloatGT;
+import escjava.vcGeneration.TFloatLE;
+import escjava.vcGeneration.TFloatLT;
+import escjava.vcGeneration.TFloatMod;
+import escjava.vcGeneration.TFloatMul;
+import escjava.vcGeneration.TFloatNE;
+import escjava.vcGeneration.TForAll;
+import escjava.vcGeneration.TFunction;
+import escjava.vcGeneration.TInt;
+import escjava.vcGeneration.TIntegralAdd;
+import escjava.vcGeneration.TIntegralDiv;
+import escjava.vcGeneration.TIntegralEQ;
+import escjava.vcGeneration.TIntegralGE;
+import escjava.vcGeneration.TIntegralGT;
+import escjava.vcGeneration.TIntegralLE;
+import escjava.vcGeneration.TIntegralLT;
+import escjava.vcGeneration.TIntegralMod;
+import escjava.vcGeneration.TIntegralMul;
+import escjava.vcGeneration.TIntegralNE;
+import escjava.vcGeneration.TIntegralSub;
+import escjava.vcGeneration.TIs;
+import escjava.vcGeneration.TIsAllocated;
+import escjava.vcGeneration.TIsNewArray;
+import escjava.vcGeneration.TLockLE;
+import escjava.vcGeneration.TLockLT;
+import escjava.vcGeneration.TMethodCall;
+import escjava.vcGeneration.TName;
+import escjava.vcGeneration.TNode;
+import escjava.vcGeneration.TNull;
+import escjava.vcGeneration.TRefEQ;
+import escjava.vcGeneration.TRefNE;
+import escjava.vcGeneration.TRoot;
+import escjava.vcGeneration.TSelect;
+import escjava.vcGeneration.TStore;
+import escjava.vcGeneration.TString;
+import escjava.vcGeneration.TSum;
+import escjava.vcGeneration.TTypeEQ;
+import escjava.vcGeneration.TTypeLE;
+import escjava.vcGeneration.TTypeNE;
+import escjava.vcGeneration.TTypeOf;
+import escjava.vcGeneration.TUnset;
+import escjava.vcGeneration.TVisitor;
+import escjava.vcGeneration.TypeInfo;
+import escjava.vcGeneration.VariableInfo;
 
 /**
  * Coq extension needs 'clear' typing.
@@ -12,7 +85,7 @@ import escjava.vcGeneration.*;
  * @version last update: 15/11/2005
  */
 public class TProofTyperVisitor extends TVisitor {
-
+	
     public TProofTyperVisitor() {
         // Since this visitor modifies the original tree, it has no need to output to a stream
         super(null);
@@ -40,7 +113,16 @@ public class TProofTyperVisitor extends TVisitor {
 		return false;
 	}
 	
+
 	public void visitTName(/*@non_null*/TName n) throws IOException {
+		if (n.type != null) {		
+			VariableInfo vi = TNode.getVariableInfo(n.name);
+			if(vi.type == null) {
+				TDisplay.info(this, "visitTName(TName n)", 
+						"typing the variable " + n.name);
+				vi.type = n.type;
+			}
+		}
 	}
 
 	public void visitTRoot(/*@non_null*/TRoot n) throws IOException {
@@ -79,14 +161,10 @@ public class TProofTyperVisitor extends TVisitor {
 
 	public void visitTAllocLT(/*@non_null*/TAllocLT n) throws IOException {
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTAllocLE(/*@non_null*/TAllocLE n) throws IOException {
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTAnyEQ(/*@non_null*/TAnyEQ n) throws IOException {
@@ -102,17 +180,18 @@ public class TProofTyperVisitor extends TVisitor {
 			}
 			parent.sons.setElementAt(beq, ind);
 			beq.accept(this);
-		} else {
-			n.type = TNode._boolean;
 		}
+		else {
+			setAllTypesTo(n, TNode._Reference);
+		}
+		n.type = TNode._boolean;
+
 		
 	}
 
 	public void visitTAnyNE(/*@non_null*/TAnyNE n) throws IOException {
 		visitSons(n);
 		n.type = TNode._boolean;
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTIntegralEQ(/*@non_null*/TIntegralEQ n) throws IOException {
@@ -176,22 +255,16 @@ public class TProofTyperVisitor extends TVisitor {
 	public void visitTFloatEQ(/*@non_null*/TFloatEQ n) throws IOException {
 		n.type = TNode._boolean;
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTFloatGE(/*@non_null*/TFloatGE n) throws IOException {
 		n.type = TNode._boolean;
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTFloatGT(/*@non_null*/TFloatGT n) throws IOException {
 		n.type = TNode._boolean;
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTFloatLE(/*@non_null*/TFloatLE n) throws IOException {
@@ -273,8 +346,6 @@ public class TProofTyperVisitor extends TVisitor {
 	public void visitTRefNE(/*@non_null*/TRefNE n) throws IOException {
 		n.type = TNode._boolean;
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTTypeEQ(/*@non_null*/TTypeEQ n) throws IOException {
@@ -335,8 +406,7 @@ public class TProofTyperVisitor extends TVisitor {
 	}
 
 	public void visitTTypeOf(/*@non_null*/TTypeOf n) throws IOException {
-		visitSons(n);
-		// TODO Auto-generated method stub
+		setAllTypesTo(n, TNode._Reference);
 		
 	}
 
@@ -353,14 +423,10 @@ public class TProofTyperVisitor extends TVisitor {
 
 	public void visitTIsAllocated(/*@non_null*/TIsAllocated n) throws IOException {
 		visitSons(n);
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void visitTEClosedTime(/*@non_null*/TEClosedTime n) throws IOException {
-		visitSons(n);
-		// TODO Auto-generated method stub
-		
+		setAllTypesTo(n, TNode._Reference); // type the sons with the elem type
 	}
 
 	public void visitTFClosedTime(/*@non_null*/TFClosedTime n) throws IOException {
@@ -459,9 +525,8 @@ public class TProofTyperVisitor extends TVisitor {
 		
 	}
 
-	public void visitTSum(TSum s) {
-		// TODO Auto-generated method stub
-		
+	public void visitTSum(TSum s) throws IOException {
+	
 	}
 
 

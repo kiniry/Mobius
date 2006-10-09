@@ -160,5 +160,5 @@ abstract public class TVisitor {
 
     abstract public void visitTIntegralSub(/*@ non_null @*/ TIntegralSub sub) throws IOException;
     
-    abstract public void visitTSum (TSum s);
+    abstract public void visitTSum (/*@ non_null @*/  TSum s) throws IOException;
 }
