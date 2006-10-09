@@ -1,7 +1,13 @@
 % Java source
 Since the beginning of programming languages, the problem of program correctness has been an issue. 
-Especially this is the case today when complex programming applications  enter into our daily life and perform actions 
-which may potentially compromise confidential data or the performance of the computer system they are executed.
+Especially, this is the case today when complex software applications  enter into our daily life and perform actions 
+which may potentially compromise confidential data (credit cards), the performance of the
+ computer system they are executed on. 
+ Errors in software conception may have disastrous effects, for instance 
+the explosion of Ariane 5 due to a bug and undertesting. The importance of the correctness
+of software systems is even bigger in cases the latter take part in the automatic 
+control of engines which may put in danger lives, like airplains or subways.
+
 
 
 
@@ -13,8 +19,8 @@ input and output, or a property which  should hold all along the execution of th
 
 A widely used approach is to perform testing. However, this technique is not capable
 to cover all the cases of the input space and thus, although the tests have been successful, 
-the implementation may still contain errors. This, of course, is not desirable in particular in the case of a critical 
-program applications as is the case for applications which target smart cards. 
+the implementation may still contain errors. This, of course, is not desirable in particular in the case of critical 
+program applications as is the case for applications which target airplains, subways or smart cards. 
 
  Another possibility is to use formal verification methods. Such technique relies on:
 \begin{itemize} 
