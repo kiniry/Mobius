@@ -1,22 +1,20 @@
 \section{Encoding BML specifications in the class file format}
 \label{SecClassfile}
 
-To store BML specifications together with the bytecode it
-specifies, we need a way to encode them in the class file
-format. Recall that a class file contains all the information related
-to a single class or interface, \emph{i.e.}\ its class name, interfaces
-implemented by the class, its super class and the methods and fields
-it declares. The Java Virtual Machine Specification~\cite{JVMspec}
-prescribes the mandatory elements of the class file: the constant
-pool, the field information and the method information. The constant
-pool is the table which is used to construct the runtime constant pool
-upon class or interface creation. This will serve for loading, linking
-and resolution of references used in the class. The JVM specification
-allows to add user-specific information to the class file
-(\cite[\S4.7.1]{JVMspec}), by defining user-specific attributes,
-following the structure prescribed by the JVM specification. When
-defining these attributes, we took the following considerations into
-account.
+To store BML specifications together with the bytecode it specifies,
+we encode them in the class file format. Recall that a class file
+contains all the information related to a single class or interface,
+\emph{i.e.}\ its class name, interfaces implemented by the class, its
+super class and the methods and fields it declares. The Java Virtual
+Machine Specification~\cite{JVMspec} prescribes the mandatory elements
+of the class file: the constant pool, the field information and the
+method information. The constant pool is used to construct the runtime
+constant pool upon class or interface creation. This will serve for
+loading, linking and resolution of references used in the class. The
+JVM specification allows to add user-specific information to the class
+file (\cite[\S4.7.1]{JVMspec}) as special user-specific attributes.
+When defining these attributes, we took the following considerations
+into account.
 
 \begin{description}
 \item [Java compiler independence]
@@ -26,53 +24,48 @@ any particular (non-optimising) compiler.
       
 \item [JVM compatibility]
 The class files augmented with the BML specification must be
-executable by any implementation of the JVM.  As the JVM specification
+executable by any implementation of the JVM.  The JVM specification
 does not allow insertion of any user-specific data in the list with
-bytecode instructions, BML annotations must be stored separately from
-the method body (the list of bytecode instructions which represents
-its body).
+bytecode instructions, therefore BML annotations must be stored
+separately from the method body. Where necessary the annotations
+contain information about the index of the instruction that they
+specify. For instance, the attribute that stores BML loop
+specifications contains also the index of the entry point instruction
+of the loop.
 
 \item[Efficiency]
-For a code user, the fact that BML is used to specify and verify the
-application should be transparent. In particular, it should not have
-any impact on the application's performance, thus, the class file
-augmented with BML should not slow down loading or normal execution of
-the application. Notice that this requirement is very important for
-mobile device applications, where one often has limited resources. 
+The presence of BML annotations should not have any impact on the
+application's performance, \emph{i.e.}, the augmented class file
+should not slow down loading or normal execution of the
+application. Notice that this requirement is important for mobile
+device applications, where one often has limited resources.
 \end{description}	  
 
-
-To ensure JVM compatibility, the different specification constructs
-are stored in special attributes, and where necessary these contain
-information about the index of the instruction that they specify. For
-instance, the attribute that stores BML loop invariants contains the
-invariant as well as the index of the entry point instruction of the
-loop.
-
-For each class, we must add the following information to the class file:
+For each class, we add the following information to the class file:
 \begin{itemize}
 \item a second constant pool which contains constant references
       for the BML specification expressions;
-\item an attribute with the model fields used in the specification;
 \item an attribute with the ghost fields used in the specification;
+\item an attribute with the model fields used in the specification;
 \item an attribute with the class invariants (both static and object); and
-\item an attribute with the history constraints (both static and object).
+\item an attribute with the constraints (both static and object).
 \end{itemize}
+Apart from the second constant pool, all extra class attributes
+basically contain the name of the attribute, the number of elements it
+contains, and a list with the actual elements.
 
+If a model or a ghost field is dereferenced in the specification, then
+a \textbf{constantFieldRef} is added to the second constant pool as
+the Java compiler would do for any dereferenced Java field in the
+original constant pool of the class. Note that this guarantees that
+the JVM performance will not be affected because of the encoding of
+the BML specification.  In particular, if we would use the original
+constant pool for storing constants originating from specifications,
+the search time in the original constant pool might degrade
+significantly (especially for a large specification).
 
-
-%The JVM specification requires that the names of these attributes areadded to the constant pool.  
-Thus, if a model or a ghost field
-is dereferenced in the specification, then a constantFieldRef is added
-to the second constant pool as the Java compiler would do for any
-dereferenced Java field in the original constant pool of the class. 
-Note that in that way we guarantee that the JVM performance 
-will not be corrupted because of the encoding of the BML specification.
-In particular, if we use the original constant pool for storing
-constants originating from specifications this would mean that 
-the search time in the original constant pool can degrade
-significantly especially if we have a large specification. 
- %\footnote{The JVM specification does not allow
+%\footnote{The
+%JVM specification does not allow
 %to create a separate constant pool for specification-only variables,
 %since every constant that occurs in the class file
 %\emph{must} occur in the standard constant pool.};
@@ -134,7 +127,7 @@ name of the attribute is given as an index into the constant
 pool. This constant pool entry will be representing a string
 \texttt{"Ghost\unsc Field"}. Next we have the length of the attribute,
 which should be 2 + 6*\textbf{fields\unsc count} (the number of fields
-stored in the list). The \textbf{fields} table then stores all ghost
+stored in the list). The \textbf{fields} table stores all ghost
 fields. For each field we store its access flags (\emph{e.g.}\
 \texttt{public} or
 \texttt{private}), and the name index and descriptor index, both
@@ -144,16 +137,16 @@ field descriptor, containing \emph{e.g.}\ type information.  The tags
 \textbf{u2} and \textbf{u4} specifies the size of the attribute, 2 and
 4 bytes, respectively. The model field attribute is similar.
 
-In a similar way, we add the attributes for 
-the class invariants and history constraints contain a list of
-invariants and constraint entries, respectively. These contain the
-predicates, a tag whether the invariant (constraint) is defined over
-instances or static, and appropriate visibility modifiers.
+In a similar way, we define attributes for class invariants and
+constraints, containing a list of invariants and constraints,
+respectively. These contain the predicate, a tag whether the
+invariant (constraint) is defined over instances or static, and
+appropriate visibility modifiers.
 
 
 %. The type of
-%invariants and history constraints is specified by the 
-%\textbf{type} entry: when it is \textbf{1} the invariant (or history
+%invariants and  constraints is specified by the 
+%\textbf{type} entry: when it is \textbf{1} the invariant (or 
 %constraint) is defined over objects, when it is \textbf{0} the
 %invariant (or constraint) is static.
 
@@ -178,30 +171,30 @@ instances or static, and appropriate visibility modifiers.
 %\bigskip\\
 %\textbf{
 %\begin{tabular}{l}
-%JMLHistoryConstraints\unsc attribute \{ \\ 
+%JMLConstraints\unsc attribute \{ \\ 
 %\hspace*{1em}\begin{tabular}{l}
 %u2 attribute\unsc name\unsc index;\\ 
 %u4 attribute\unsc length;\\ 
 %%formula attribute\unsc formula;\\ 
-%u2  history\unsc constr\unsc count;\\
+%u2  \unsc constr\unsc count;\\
 %\{\begin{tabular}[t]{l} 
 %        u1 type;\\
 %	formula constraint;\\ 
 %\end{tabular}\\
-%\} history\unsc constr[history\unsc constr\unsc count];
+%\} \unsc constr[\unsc constr\unsc count];
 %\end{tabular}\\
 %\}
 %\end{tabular}
 %}
 %\end{longtable}
 
-The JVM specification prescribes that the table with method
+The JVM specification prescribes that the attribute with method
 information at least contains the code of each method. We add
-attributes for the method specification, and for set statements,
-assert statements, assume statements and loop specifications.  
+attributes for the method specification, set statements,
+assert statements, and loop specifications.  
 
 The attribute for lightweight behaviour specifications is shown in the
-right-hand column of Figure~\ref{FigAttributes}. (heavyweight behaviour
+right-hand column of Figure~\ref{FigAttributes} (heavyweight behaviour
 specifications are handled similarly).  The global requires formula is
 the disjunction of all preconditions in the different specification
 cases of the method. For each specification case, we then have a
@@ -209,15 +202,8 @@ precondition (\textbf{spec\unsc requires\unsc formula}), a list of
 assignable expressions, a postcondition (\textbf{ensures\unsc
 formula}) and a list of exceptional postconditions (stored in the
 \textbf{exsures} attribute). If a clause is not explicitly specified,
-its default value will be stored here. Notice that for each list of
-elements we get two attributes: one to store the number of elements,
-and one attribute actually containing the elements.
+its default value will be stored here. 
 
-The tables with set, assert and assume statements have the same format
-as for example the attribute for ghost fields, \emph{i.e.}\ some
-general information, and a list of entries. For each statement
-annotation, we keep the appropriate predicate or expression, plus the
-index to the appropriate point in the bytecode.
 
 %are very
 %similar. For each statement we use \textbf{index} to denote the point
@@ -267,15 +253,32 @@ index to the appropriate point in the bytecode.
 %}
 %\end{longtable}
 
+The attributes for set and assert statements and loop specifications
+have the same format as \emph{e.g.}\ the ghost variable attribute: a
+length entry and a list of elements.  The elements storing set and
+assert statements do not only keep the appropriate predicate or
+expression, but also an index to the appropriate point in the
+bytecode. Similarly, the elements for loop specifications contain the
+loop specification (invariant, variant and frame conditions), plus an
+index to the bytecode instruction that corresponds to the entry of the
+loop. If the specification does not contain a loop variant, we
+indicate this, using a special tag for the
+\textbf{decreases} clause.
 
-Finally, loop specification attributes consist of the following elements: an
-\textbf{index} to the bytecode instruction that corresponds to the
-entry of the loop, a list of variables that may be modified by the
-loop, a loop invariant, and a \textbf{decreases} clause, which is the
-loop variant, \emph{i.e.}\ the expression that allows to prove
-termination of the loop. If the specification does not contain a loop
-variant, we indicate this, using a special tag for the
-\textbf{decreases} clause. %This gives the following attribute format.
+
+%and for loop
+%specifications have the same
+%format as for example the attribute for ghost fields, \emph{i.e.}\
+%some general information, and a list of entries. For each statement
+%annotation, we keep the appropriate predicate or expression, plus the
+%index to the appropriate point in the bytecode.
+%Finally, loop specification attributes consist of the following elements: an
+%\textbf{index} to the bytecode instruction that corresponds to the
+%entry of the loop, a list of variables that may be modified by the
+%loop, a loop invariant, and a \textbf{decreases} clause, which is the
+%loop variant, \emph{i.e.}\ the expression that allows to prove
+%termination of the loop. 
+ %This gives the following attribute format.
 
 %\textbf{     
 %\begin{longtable}{lp{8cm}}

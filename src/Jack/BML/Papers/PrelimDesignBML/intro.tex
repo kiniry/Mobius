@@ -5,8 +5,8 @@ cousin of JML. BML allows the application developer to specify the
 behaviour of an application in the form of annotations,
 \emph{directly} at the level of the bytecode. An extension of the class file
 format is defined to store the specification directly with the
-bytecode. This is a first step towards the development of a proof
-carrying code platform, where applications come together with their
+bytecode. This is a first step towards the development of a platform
+for Proof Carrying Code, where applications come together with their
 specification and a proof of correctness. BML is designed to be
 closely related with JML. In particular, JML specifications can be
 compiled into BML specifications. We briefly discuss the tools that
@@ -29,41 +29,43 @@ programs, while for many applications, and in particular for mobile
 code, one needs to be able to also specify and verify the executable
 (or interpreted) code.
 
+Different possible reasons for this exist: the executable code may not
+be accompanied by its (specified) source, or one simply does not trust
+the compiler. And in an attempt to avoid \emph{all} possible security
+threats, sometimes security-critical applications are directly
+developed at the executable level. Thus, it is essential to have the
+means to specify \emph{and} to verify an application directly at this
+level, without the use of a compiler. Thus, both specification and
+verification techniques should be tailored directly to the
+particularities of executable code. Moreover, in order to capture all
+relevant security requirements, the specification language used should
+be expressive enough for this.
 
-In some cases, the executable code may not be accompanied by its
-(specified) source, in other cases one simply does not trust the
-compiler. Moreover, some security-critical applications are directly
-developed at bytecode level, to avoid different security
-threats. Thus, to get a high confidence in the security of the code,
-one needs to verify the executable code directly. Therefore, one also
-needs to be able to specify the requirements that the code should
-satisfy at this level. For properties like well-typedness such a
-specification can often be inferred automatically, but in general,
-this is an undecidable problem. Thus, for more sophisticated policies,
-automatic specification inference will not work, and other,
-interactive techniques are needed to write specifications.
-
-In the context of proof carrying code, the need to specify executable
-code directly becomes even more prominent. Proof carrying code is a
+Proof Carrying Code (PCC) is a typical example where the need to
+specify and verify executable code directly is imperative. PCC is a
 possible solution to support the secure downloading of applications on
-a mobile device. An application comes together with a specification,
-and the necessary evidence from which the code client can easily
-establish that the application respects its specification. In such a
-scenario, the code producer, who \emph{has} to produce a correctness
-proof, will often prefer to do the verification at source code level,
-and then compile the specification and the proof into the level of
-executable code. Realising a platform to support this scenario is one
-of the goals of the \mobius project\footnote{See
-\texttt{http://mobius.inria.fr}.}. This paper describes the
-low-level specification language that we propose to specify the
-security requirements for mobile device applications. Since the most
-common execution framework for mobile devices is the J2ME platform,
-our low-level specification language is tailored to Java
-bytecode. Moreover, we want to be able to translate source code level
-specifications into bytecode level specifications, therefore our
-specification language is designed to be closely related to the Java
-Modeling Language (JML)\footnote{See
-\texttt{http://www.jmlspecs.org}.}.
+a mobile device. The executable code of an application comes together
+with a specification, and the necessary evidence from which the code
+client can easily establish that the application respects its
+specification. In such a scenario, the code producer, who \emph{has}
+to produce a correctness proof, will often prefer to do the
+verification at source code level, and then compile the specification
+and the proof into the level of executable code. Realising a platform
+to support this scenario is one of the goals of the \mobius
+project\footnote{See
+\texttt{http://mobius.inria.fr}.}. 
+
+This paper describes the low-level specification language that we
+propose to specify the security requirements for mobile device
+applications. Since the most common execution framework for mobile
+devices is the J2ME platform, our low-level specification language is
+tailored to Java bytecode. As we want to be able to translate
+source code level specifications into bytecode level specifications,
+our specification language is designed to be closely related
+to the Java Modeling Language (JML)\footnote{See
+\texttt{http://www.jmlspecs.org}.}. However, the specifications are
+written in such a way that they support the verification of
+\emph{unstructured} code. 
 
 
 Over the last few years, JML has become the \emph{de facto}
@@ -85,30 +87,27 @@ to be of interest for mobile device
 applications~\cite{Deliverable1.2}.
 
 
-Therefore, to specify Java bytecode programs, we define a variation
-of JML, which is especially tailored to bytecode. This paper
-presents this specification language, which we call BML, short for
-Bytecode Modeling Language. BML is designed to be the counterpart of
-JML at bytecode level. It allows to compile specifications at source
-code level into specifications at bytecode level, basically by
-compiling the source code predicates into bytecode predicates and
-leaving all other parts of the specification unchanged.
+Therefore, to specify Java bytecode programs, we define a variation of
+JML, which is especially tailored to bytecode, which we call BML,
+short for Bytecode Modeling Language.  BML supports the most important
+features of JML. Thus, we can express functional properties of Java
+bytecode programs in the form of \emph{e.g.}\ pre- and postconditions,
+class and object invariants, and assertions for particular program
+points like loop invariants. Because of the close connection with JML,
+JML source code level specifications can be compiled into BML bytecode
+level specifications without too much difficulty, basically by
+compiling the source code predicates into bytecode predicates.  To the
+best of our knowledge, no other specification language with similar
+design goals exists for Java bytecode.
 
-BML supports the most important features of JML. Thus, we can express
-functional properties of Java bytecode programs in the form of
-\emph{e.g.}\ pre- and postconditions, class and object invariants, and
-assertions for particular program points like loop invariants. To the
-best of our knowledge, no other specification languages with similar
-design goals exist for Java bytecode.
-
-Section~\ref{SecJMLOverview} gives a quick summary of the main
+Section~\ref{SecJMLOverview} gives a quick summary of the relevant
 features of JML. Section~\ref{SecBML} then gives a detailed account of
 BML, describing its syntax and semantics, while
 Section~\ref{SecClassfile} proposes a format in which BML
 specifications can be stored in the class file (just as JML
 specifications can be written as special comments in the Java source
-code). Finally, Section~\ref{SecJMLtoBML} discusses the compilation
+code). Section~\ref{SecJMLtoBML} then discusses the compilation
 process from JML to BML, while Section~\ref{SecConcl} wraps up and
-discusses related and future work and tool support.
+discusses tool support and related and future work.
 
 

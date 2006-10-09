@@ -8,6 +8,7 @@ manual~\cite{JMLReferenceManual05}. Where necessary, we refer to the
 appropriate sections of this manual. A detailed overview of the tools
 which support JML can be found in~\cite{BurdyCCEKLLP05}.
 
+
 %\lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
 \begin{figure}[th!]
 %\begin{lstlisting}[frame=trbl] 
@@ -19,7 +20,7 @@ which support JML can be found in~\cite{BurdyCCEKLLP05}.
  * investments based on the implementation of the method which gives 
  * the cost of a single round (to be implemented in subclasses). */
 abstract class Bill {
-  
+
   private int sum;  //@ invariant sum>=0;
  
   /* This method gives a cost of a single round.
@@ -51,41 +52,45 @@ abstract class Bill {
 \label{FigJMLSpec}
 \end{figure}
 
-Figure~\ref{FigJMLSpec} shows a typical example of a simple JML
-specification.  In order not to interfere with the standard Java
-compiler, JML specifications are written as special Java comments
-(tagged with \texttt{@}). Method specifications contain preconditions
-(keyword \jmlKey{requires}), postconditions (\jmlKey{ensures}) and
-frame conditions (\jmlKey{assignable}). The latter specify which
-variables \emph{may} be modified by a method. In the method body, one
-can annotate loops with invariants (\jmlKey{loop\unsc invariant}) and loop
-frame conditions (\jmlKey{loop\unsc modifies}). The latter is a
-non-standard extension of JML, introduced in~\cite{BurdyRL03}, which we
-found useful to make program verification more practical. Finally, one
-can also specify class invariants, \emph{i.e.}\ a property that should
-hold in all visible states of the execution, and history constraints,
-describing a relation that should hold between any two pairs of
-consecutive visible states (where visible states are the states in
-which a method is called or returned from). 
+To illustrate the different features of JML, Figure~\ref{FigJMLSpec}
+shows an example class specification, defining the class
+\texttt{Bill}. It contains an abstract method
+\texttt{round\unsc cost}, that computes the cost of a particular
+round. The method \texttt{produce\unsc bill} is supposed to sum up the
+costs of the different rounds. 
+
+In order not to interfere with the standard Java compiler, JML
+specifications are written as special comments (tagged with
+\texttt{@}). Method specifications contain preconditions (keyword
+\jmlKey{requires}), postconditions (\jmlKey{ensures}) and frame
+conditions (\jmlKey{assignable}). The latter specify which variables
+\emph{may} be modified by a method. In a method body, one can
+annotate all statements with an \jmlKey{assert} predicate and loops
+also with invariants (\jmlKey{loop\unsc invariant}), variants
+(\jmlKey{decreases}) and loop frame conditions (\jmlKey{loop\unsc
+modifies}). The latter is a non-standard extension of JML, introduced
+in~\cite{BurdyRL03}, which we found useful to make program
+verification more practical. One can also specify class invariants,
+\emph{i.e.}\ properties that should hold in all visible states of the
+execution, and constraints, describing a relation that 
+holds between any two pairs of consecutive visible states (where
+visible states are the states in which a method is called or returned
+from).
 
 The predicates in the different conditions are side-effect free Java
 boolean expressions, extended with specification-specific keywords,
 such as \jmlKey{\bsl result}, denoting the return value of a non-void
 method, and \jmlKey{\bsl old}, indicating that an expression should be
-evaluated in the pre-state of the method.
+evaluated in the pre-state of the method. 
 
 JML allows to declare special specification-only variables: logical
 variables (with keyword \jmlKey{model}) and so-called \jmlKey{ghost}
 variables, that can be assigned to in special \jmlKey{set}
 annotations.
 
-To illustrate the different features of JML, Figure~\ref{FigJMLSpec}
-defines the class \texttt{Bill}. It contains an abstract method
-\texttt{round\unsc cost}, that computes the cost of a particular
-round. The method \texttt{produce\unsc bill} is supposed to sum up the
-costs of the different rounds. The specification for
-\texttt{round\unsc cost} states that the result of the method should be
-positive, but less than the number of the round. The specification for
+In Figure~\ref{FigJMLSpec}, the specification for \texttt{round\unsc
+cost} states that the result of the method should be positive, but
+less than the number of the round. The specification for
 \texttt{produce\unsc bill} requires that we compute at least one
 round, and then ensures an upper-bound on the outcome of the
 method. We use a loop invariant and loop frame condition to prove the

@@ -1,7 +1,8 @@
 \section{Compiling JML specifications into BML specifications}\label{SecJMLtoBML} 
 
-Since it is often easier and more intuitive to write specifications at
-source code level, we have defined a compiler from JML to BML:
+Since it is often easier and more intuitive to write specifications
+and do verifications at source code level, we have defined a compiler
+from JML to BML:
 \JMLtoBML. BML is designed to be very close to JML, so that the
 correspondence between the original and the compiled specification
 remains relatively clear. Notice that in principle, the same can be
@@ -14,9 +15,8 @@ but some work in this direction has already been done, see
 The compilation of the JML specification is separated from the
 compilation of the Java source code. In fact, \JMLtoBML takes as input
 an annotated Java source file \emph{and} the Java class file produced
-by a non-optimising compiler with the debug flag set. The debug
-information that is generated helps us to compile the annotations
-correctly. 
+by a non-optimising compiler with the debug flag set. This debug
+information helps us to compile the annotations correctly.
 
 From the debug information, we use in particular the
 \textbf{Line\_Number\_Table} and the \textbf{Local\_Variable\_Table}
@@ -47,9 +47,9 @@ have access to the generated class file.
 \begin{description}
 
 \item[Compilation of ghost and model field declarations] 
-Ghost and Model variables declared in the specification are
-compiled to a special class attribute 
- which contains a list of all  specification variable declarations. 
+Ghost and model variables declared in the specification are
+compiled into the special class attributes that contains all ghost
+variable and model variable declarations. 
 %entries are added in the constant pool. 
 
 %\item [Desugaring of the JML specification] This is an optional step,
@@ -61,7 +61,7 @@ compiled to a special class attribute
 The JML specification is transformed into an intermediate format,
 where the identifiers are resolved to their corresponding data
 structures in the class file.  The Java and JML source identifiers are
-linked with their identifiers on bytecode level, \emph{i.e.}\ the
+linked to their identifiers on bytecode level, \emph{i.e.}\ the
 corresponding indexes either from the second constant pool or from the
 \textbf{Local\_Variable\_Table} attribute. This is similar to the
 linking and resolving stage of the Java source code compiler.
