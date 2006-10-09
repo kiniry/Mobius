@@ -1,8 +1,87 @@
-%\newtheorem{compProp1}{Property}[section]
+\newtheorem{compProp2}{Lemma}[section]
+\newtheorem{compProp1}[compProp2]{Lemma}
+\newtheorem{compProp7}[compProp2]{Lemma}
+\newtheorem{compProp11}[compProp2]{Lemma}
+\newtheorem{compProp6}[compProp2]{Lemma}
+
+
+\newtheorem*{compProp3A}{Property  \ref{compile:prop:compProp3}}
+\newtheorem*{compProp8A}{Property  \ref{compile:prop:compProp8}}
+
 
 \section{Proofs of properties from Section \ref{compile:prop} }\label{appendix:compile:prop}
 
-\begin{compProp1}[Property \ref{compile:prop:compProp1} Compilation of statements and expressions]
+
+
+
+\begin{compProp3A}[Compilation of expressions]
+    For any expression $\expressionSrc$, starting label $s$ and end label $e$,
+    the compilation $\compileLabel{s}{\expressionSrc}{e}$ is a block of bytecode instruction in the sense of Def. \ref{seqInstr}
+   
+\end{compProp3A}
+\textit{Proof:}
+
+Following the Def. \ref{seqInstr} of block of bytecode instructions,  we have to see if the compilation of an expression respects
+three conditions.
+The first condition of Def.\ref{seqInstr}  follows from lemma \ref{compile:prop:compProp2}. 
+Def. \ref{seqInstr} also requires that there are no jump instructions  in the list of instructions representing the  compilation of an expression.
+This is established by induction over the structure of the expression.
+The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
+  no instruction except $\ins{s}$ may be  a loop entry  in the sense of Def.  \ref{defLoop} in Chapter
+\ref{wpGeneral}, Section \ref{opSem:prelim}. This is the case, as there are no jump instructions inside the compiled expression  and all the instructions inside an
+expression are sequential\todo{this is not well explained}.\\
+\Qed 
+
+The next  property  of the compiler is that any statement or expression   is
+ compiled in a list of bytecode instructions 
+such that there could not be jumps  from outside inside the compilation of a statement or expression, i.e.
+the control flow can reach the instructions representing the compilation $\compileLabel{s}{\ExprStmt}{e}$ 
+ of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$. 
+ For instance, the instructions 14-29 in the compilation of the while statement
+ in Fig. \ref{pogEquiv:compile:prop} from Section \ref{pogEquiv:compile}  
+ can be reached from outside of the statement compilation only via the instruction at index 14.
+
+\begin{compProp2}[Compilation of statements and expressions]\label{compile:prop:compProp2}
+ For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\substatement{\ExprStmt }{\ExprStmt'} $
+and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then :
+
+
+
+$$\begin{array}{l} 
+                        (  i_j \in \compileLabel{s}{\ExprStmt[\ExprStmt']}{e} \wedge\\
+		        \neg (i_j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge \\
+		        i_k \in \compileLabel{s'}{\ExprStmt'}{e'}  \wedge \\
+		        
+		       i_j \execRel i_k )  \Rightarrow \\ 
+		       \Myspace  s' = k 
+
+
+  \end{array}$$ 
+
+\end{compProp2}
+The proof is by induction over the structure of statements and expressions  and uses the next lemma \ref{compile:prop:compProp1}.
+In particular, the next lemma  states  that  if there is an instructions inside a compiled statetement or expression 
+ $\compileLabel{s}{\ExprStmt}{e}$ which   is in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
+$\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
+of $\ExprStmt$  then   $ k  = e +1$. Informally,  this means that if there are jumps from inside the compilation  $\compileLabel{s}{\ExprStmt}{e}$  of $\ExprStmt$   
+outside then the target of the jump is $e +1$.
+
+For illustration, we may consider Fig. \ref{pogEquiv:compile:prop} and focus on the compilation of the statement  
+\lstinline!if ( i >= 0) then {v = i} else {v = -i}! 
+which comprises instructions from 4 to 11. Note that sequential instructions   have as  successor the next instruction.  Thus, sequential
+instructions respect this condition. 
+Only jump instructions may cause control transfer outside the \lstinline!if! compilation. 
+We notice that the compilation contains two jump instructions. 
+The first is the instruction \lstinline!5 ifge 10! which jumps inside the compilation of the if statement
+and the instruction \lstinline!9 goto 12!  which jumps apparently to instruction 12. 
+Thus, the compilation of the \lstinline!if! statement respects the property.
+
+We can now state this property formally.
+ Note that in the formalization,  the conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and 
+$\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
+the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper exception handler.
+\begin{compProp1}[Compilation of statements and expressions]\label{compile:prop:compProp1}
+
     For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
            $$ \begin{array}{l} 
@@ -68,27 +147,7 @@ $$
 $$
 \Qed \\
 
-
-\begin{compProp3}[Compilation of expressions]
-    For any expression $\expressionSrc$, starting label $s$ and end label $e$,
-    the compilation $\compileLabel{s}{\expressionSrc}{e}$ is a block of bytecode instruction in the sense of Def. \ref{seqInstr}
-   
-\end{compProp3}
-\textit{Proof:}
-
-Following the Def. \ref{seqInstr} of block of bytecode instructions,  we have to see if the compilation of an expression respects
-three conditions.
-The first condition of Def.\ref{seqInstr}  follows from lemma \ref{compile:prop:compProp2}. 
-Def. \ref{seqInstr} also requires that there are no jump instructions  in the list of instructions representing the  compilation of an expression.
-This is established by induction over the structure of the expression.
-The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
-  no instruction except $\ins{s}$ may be  a loop entry  in the sense of Def.  \ref{defLoop} in Chapter
-\ref{wpGeneral}, Section \ref{prelim}. This is the case, as there are no jump instructions inside the compiled expression  and all the instructions inside an
-expression are sequential\todo{this is not well explained}.\\
-\Qed 
-
-
-\begin{compProp8}[Exception handler property for statements]
+\begin{compProp8A}[Exception handler property]
   For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its strict substatement $\stmt'$, i.e. 
 $\strictsubstatement{\stmt}{\stmt'} $
 if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
@@ -97,9 +156,8 @@ $$ \begin{array}{l}
 	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
    \end{array}
 $$
-
-\end{compProp8}
-\textit{Proof}:
+\end{compProp8A}
+\textit{Proof}:\\
 The proof is by contradiction. Assume this is not true, i.e.
  $$\begin{array}{l} \exists \stmt, \stmt' ,   \\
        \numConclusion{1}    \Myspace \stmt \neq \try \{ \ldots \} \catch \{ \ldots \} \wedge \\
@@ -139,5 +197,53 @@ $$\numConclusion{8} \Myspace \compileLabel{s_1}{\stmt_1}{e_1} \notin   \compileL
 
  In both of the cases and of the definition of \findExcHandlerOnly \ in Chapter \ref{opSem}, Section \ref{opSem:exc}  this means that 
 $$ \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
-which is in contradiction with \numConclusion{6}.
+which is in contradiction with \numConclusion{6}.\\
 \Qed \\
+
+
+\begin{compProp7}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
+    Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable  \
+    is such that exists a statement $\stmt$ such that $\compileLabel{s}{\stmt}{e}$
+\end{compProp7} 
+\textit{Proof}:
+This follows directly from the definition of the compiler. 
+The proof is done by contradiction. From the compiler definition, we get that  elements are added in 
+ \methodd.\excHandlerTable \ only in the cases of 
+try catch and try finally statement compilation and that the guarded regions in the added elements correspond to statements. \\
+\Qed
+
+The next three properties deal with the substatement relation. 
+In the following, for denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
+we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$.
+For denoting that  $\ExprStmt'$ is a strict substatement of  $\ExprStmt$ ( i.e. that $\ExprStmt'$  is contained in $\ExprStmt$ 
+and there is no   $\ExprStmt''$  such that  $\ExprStmt''$ is contained in   $\ExprStmt$ and  $\ExprStmt'$ is contained in  $\ExprStmt''$)
+we use the notation $\strictsubstatement{\ExprStmt }{\ExprStmt'}$.
+
+The next lemma  states that the substatement relation on source expressions and statements is preserved
+by the compiler. For instance, the compilation of the loop body (comprising instructions from 15 to 26) in Fig. \ref{pogEquiv:compile:prop}  
+is part of the compilation of the loop itself (comprising instructions from 14 to 29).
+
+\begin{compProp11}[Substatement and subexpression relation preserved]\label{compile:prop:compPropSubstmt}
+For all statements $\ExprStmt'$ and $\ExprStmt $ with
+respective compilations are $\compileLabel{s'}{\ExprStmt'}{e'}$ and  $\compileLabel{s}{\ExprStmt}{e}$ 
+if 
+  $  \substatement{\ExprStmt }{\ExprStmt'} \Leftrightarrow \compileLabel{s'}{\ExprStmt'}{e'} \in  \compileLabel{s}{\ExprStmt}{e} $ 
+\end{compProp11}
+This follows directly from the compiler function definition.
+
+The next property states that if the compilations of two
+statements in a method body share instructions then 
+either the compilation of one of them is completely inside of the other or viceversa.
+This is also evident from Fig. \ref{pogEquiv:compile:prop}.
+
+\begin{compProp6}[No overlapping compilation]\label{compile:prop:compProp6}
+For all statements $\ExprStmt_1$ and $\ExprStmt_2$ such that their compilations are 
+ $\compileLabel{s_1}{\ExprStmt_1}{e_1} $ and that   $\compileLabel{s_2}{\ExprStmt_2}{e_2} $, if we have that 
+$ \exists k,  s_1 \le k  \le e_1 \wedge s_2 \le k  \le e_2  $ then the following holds:
+
+$$\begin{array}{l}
+         \compileLabel{s_2}{\ExprStmt_2}{e_2}  \in \compileLabel{s_1}{\ExprStmt_1}{e_1}\\   
+	 \vee \\
+	 \compileLabel{s_1}{\ExprStmt_1}{e_1}  \in \compileLabel{s_2}{\ExprStmt_2}{e_2} 
+\end{array}$$
+\end{compProp6}
