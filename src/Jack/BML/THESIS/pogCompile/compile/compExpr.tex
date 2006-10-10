@@ -124,13 +124,14 @@ $${\scriptsize
 	    	    \compileLabel{e'+1}{\stmt_2}{e}
 	      \end{array}  \\
        \\ \\
-       \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e}   =  \\  
+       \compileLabel{s}{ \Myif \ ( \expressionSrc_1 \rel \expressionSrc_2 ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e}   =  \\  
         \begin{array}{l}
-	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
-            e' + 1: \ifCond \ e'' + 2;\\
-            \compileLabel{e' + 2}{\stmt_2}{e''}\\
-             e'' + 1: \goto \ e +  1; \\
-            \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
+	     \compileLabel{s}{\expressionSrc_1}{e'}; \\
+	     \compileLabel{e'+1}{\expressionSrc_2}{e''}; \\
+             e'' + 1: \ifCond \ e''' + 2;\\
+            \compileLabel{e'' + 2}{\stmt_2}{e'''}\\
+             e''' + 1: \goto \ e +  1; \\
+            \compileLabel{e''' +  2}{\stmt_1}{ e  }; \\
 	    %e: \goto   e + 1        
 	\end{array}  \\ 
 	\\ \\  
@@ -145,13 +146,13 @@ $${\scriptsize
 	\compileLabel{s}{  \var = \expressionSrc }{e} =  \\  
              \begin{array}{l}
                         \compileLabel{s}{\expressionSrc}{e  - 1 }\\
-			e : \instr{store} \ \var;
+			e : \store \ \var;
              \end{array} \\ 
 	\\ \\  
 	\compileLabel{s}{\athrow \ \expressionSrc}{e} = \\
              \begin{array}{l} 
 	           \compileLabel{s}{ \expressionSrc}{e - 1}; \\
-	           e: \instr{athrow}; 
+	           e: \athrow; 
 	        \end{array} \\
 		\\ \\
 	\compileLabel{s}{\returnSrc  \  \expressionSrc }{e } =  \\
