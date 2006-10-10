@@ -20,7 +20,7 @@ abstract public class TFunction extends TNode {
 
         //++
         if (n.parent != null)
-            TDisplay.err(this, "addSon", "node already have a parent");
+            TDisplay.err("node already have a parent");
         //++
         else
             n.parent = this;
@@ -33,7 +33,7 @@ abstract public class TFunction extends TNode {
         try {
             return (TNode) sons.elementAt(index);
         } catch (ArrayIndexOutOfBoundsException e) {
-            TDisplay.err(this, "getChildAt", "ArrayIndexOutOfBoundsException"
+            TDisplay.err("ArrayIndexOutOfBoundsException"
                     + e.getMessage());
             return null; /* notice this default behaviour */
         }

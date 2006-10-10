@@ -60,7 +60,7 @@ public class TAllocLT extends TBoolRes {
 	 */
 
 	if(sons.size() < 2)
-	    TDisplay.err(this, "typeTree()", "Node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
+	    TDisplay.err("Node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -91,7 +91,7 @@ public class TAllocLE extends TBoolRes {
 	 */
 
 	if(sons.size() < 2)
-	    TDisplay.err(this, "typeTree()", "Node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
+	    TDisplay.err("Node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -124,7 +124,7 @@ public class TAnyEQ extends TFunction {
 	 */
 
 	if(sons.size() < 2)
-	    TDisplay.err(this, "typeTree()", "Node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
+	    TDisplay.err("Node has a different number of sons = "+sons.size()+" which is < from 2, bizarre...");
 	else
 	    // retrieve the son and compare their type
 	    {
@@ -135,15 +135,15 @@ public class TAnyEQ extends TFunction {
 		
 
 		if(vi1 == null & vi2 == null)
-		    TDisplay.warn(this, "typeTree()", "Not able to infer type in an AnyEQ node");
+		    TDisplay.warn("Not able to infer type in an AnyEQ node");
 		else {
 		    if(vi1 == null & vi2 != null) {
-			TDisplay.info(this, "typeTree()", "Inferring that node "+n1.toString()+ " has type "+vi2.old+" because it's a son of an AnyEQ node which other son has type "+vi2.old);
+			TDisplay.info("Inferring that node "+n1.toString()+ " has type "+vi2.old+" because it's a son of an AnyEQ node which other son has type "+vi2.old);
 			
 			n1.setType(vi2, true);
 		    }
 		    else if(vi1 != null & vi2 == null) {
-			TDisplay.info(this, "typeTree()", "Inferring that node "+n2.toString()+ " has type "+vi1.old+" because it's a son of an AnyEQ node which other son has type "+vi1.old);
+			TDisplay.info("Inferring that node "+n2.toString()+ " has type "+vi1.old+" because it's a son of an AnyEQ node which other son has type "+vi1.old);
 			n2.setType(vi1, true);
 		    }
 		}
@@ -414,7 +414,7 @@ public class TIs extends TBoolRes { // %Reference | double | char etc ..., type 
     public void typeTree(){
 	
 	if(sons.size()!=2)
-	    TDisplay.err(this, "typeTree()", "Node with "+sons.size()+" instead of 2, that's strange...");
+	    TDisplay.err("Node with "+sons.size()+" instead of 2, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -444,7 +444,7 @@ public class TSelect extends TFunction {
     public void typeTree(){
 	
 	if(sons.size()!=2)
-	    TDisplay.err(this, "typeTree()", "Node with "+sons.size()+" instead of 2, that's strange...");
+	    TDisplay.err("Node with "+sons.size()+" instead of 2, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -475,7 +475,7 @@ public class TStore extends TFunction {
     public void typeTree(){
 	
 	if(sons.size()!=3)
-	    TDisplay.err(this, "typeTree()", "TStore node with "+sons.size()+" instead of 3, that's strange...");
+	    TDisplay.err("TStore node with "+sons.size()+" instead of 3, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -535,7 +535,7 @@ public class TIsAllocated extends TBoolOp {
     public void typeTree(){
 	
 	if(sons.size()!=2)
-	    TDisplay.err(this, "typeTree()", "Node with "+sons.size()+" instead of 2, that's strange...");
+	    TDisplay.err("Node with "+sons.size()+" instead of 2, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -579,7 +579,7 @@ public class TFClosedTime extends TFunction {
     public void typeTree(){
 	
 	if(sons.size()!=1)
-	    TDisplay.err(this, "typeTree()", "Node with "+sons.size()+" instead of 1, that's strange...");
+	    TDisplay.err("Node with "+sons.size()+" instead of 1, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 
@@ -611,7 +611,7 @@ public class TAsField extends TFunction {
     public void typeTree(){
 	
 	if(sons.size()!=2)
-	    TDisplay.err(this, "typeTree()", "Node with "+sons.size()+" instead of 2, that's strange...");
+	    TDisplay.err("Node with "+sons.size()+" instead of 2, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);
@@ -704,7 +704,7 @@ public class TUnset extends TFunction {
     public void typeTree(){
 	
 	if(sons.size()!=3)
-	    TDisplay.err(this, "typeTree()", "TUnset node with "+sons.size()+" instead of 3, that's strange...");
+	    TDisplay.err("TUnset node with "+sons.size()+" instead of 3, that's strange...");
 	else {
 	    TNode n1 = getChildAt(0);
 	    TNode n2 = getChildAt(1);

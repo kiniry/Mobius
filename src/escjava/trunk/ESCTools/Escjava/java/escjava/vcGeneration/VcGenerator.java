@@ -180,7 +180,7 @@ public class VcGenerator {
 
             String s = m.toString();
 
-            TDisplay.err(this, "generateIfpTree", s);
+            TDisplay.err(s);
 
             // 		TName newNode = new TName(s);
             // 		// we put it as a variable name with type %Type
@@ -252,8 +252,7 @@ public class VcGenerator {
                 break;
             }
             default:
-                TDisplay.err(this, "generateIfpTree",
-                        "Instanceof LiteralExpr, case missed :"
+                TDisplay.err("Instanceof LiteralExpr, case missed :"
                                 + TagConstants.toString(m.getTag()));
                 break;
             }

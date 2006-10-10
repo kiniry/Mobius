@@ -145,7 +145,7 @@ abstract public class TNode {
             if (type != null)
                 ti = TNode.addType(type);
             else
-                TDisplay.warn("TNode", "addName", "Adding variable named "
+                TDisplay.warn("Adding variable named "
                         + oldName + " with no types");
 
             //@ assert typesName.containsKey(type);
@@ -161,10 +161,7 @@ abstract public class TNode {
                 if (vi.type != typesName.get(type)) {
 
                     TDisplay
-                            .warn(
-                                    "TNode",
-                                    "addName",
-                                    "You're trying to add a variable named "
+                            .warn("You're trying to add a variable named "
                                             + oldName
                                             + " whith type "
                                             + type.toString()
@@ -209,8 +206,7 @@ abstract public class TNode {
         //@ assert this instanceof TName;
 
         if (!(this instanceof TName)) {
-            TDisplay.err(this, "getVariableInfo()",
-                    "Warning calling getVariableInfo on a non TName Node");
+            TDisplay.err("Warning calling getVariableInfo on a non TName Node");
             return null;
         } else {
             TName n = (TName) this;
@@ -293,10 +289,7 @@ abstract public class TNode {
             // retrieve current type;
             if (!variablesName.containsKey(m.name)) {
                 TDisplay
-                        .err(
-                                this,
-                                "setType(TypeInfo, boolean)",
-                                "You're manipulating a TName ("
+                        .err("You're manipulating a TName ("
                                         + m.name
                                         + ") node, yet the name isn't in the global map 'variablesName'");
             }
@@ -309,14 +302,12 @@ abstract public class TNode {
             } else {
                 if (vi.type != type) {// inconsistency
                     if (vi.typeSure) // we don't change it
-                        TDisplay.err(this, "setType(TypeInfo, boolean)",
-                                "Variable named " + m.name + ", has type "
+                        TDisplay.err("Variable named " + m.name + ", has type "
                                         + vi.type.old
                                         + " yet you try to change it to "
                                         + type.old);
                     else {
-                        TDisplay.warn(this, "setType(TypeInfo, boolean)",
-                                "Changing type of " + m.name + " (which was "
+                        TDisplay.warn("Changing type of " + m.name + " (which was "
                                         + vi.type.old + ") to " + type.old);
                         vi.type = type;
                     }
@@ -328,16 +319,14 @@ abstract public class TNode {
                 // we compare the existing type
                 if (this.type != type) { // The two types are not equals
                     // inconsistancy
-                    TDisplay.warn(this, "setType(TypeInfo, boolean)",
-                            "Typechecking inconsistancy, " + this.toString()
+                    TDisplay.warn("Typechecking inconsistancy, " + this.toString()
                                     + "has type " + this.type.old
                                     + "but you're trying to set his type to "
                                     + type.old);
                 }
             } else
                 // type is null que pasa ?
-                TDisplay.err(this, "setType(TypeInfo, boolean)", "Node "
-                        + this.toString() + " has no type");
+                TDisplay.err( "Node " + this.toString() + " has no type");
 
         }
     }
@@ -360,10 +349,7 @@ abstract public class TNode {
             // retrieve current type;
             if (!variablesName.containsKey(m.name)) {
                 TDisplay
-                        .err(
-                                this,
-                                "getType",
-                                "You're manipulating a TName ("
+                        .err("You're manipulating a TName ("
                                         + m.name
                                         + ") node, yet the name isn't in the global map 'variablesName'");
             }
@@ -428,10 +414,7 @@ abstract public class TNode {
             // retrieve current type;
             if (!variablesName.containsKey(m.name)) {
                 TDisplay
-                        .err(
-                                this,
-                                "getType",
-                                "You're manipulating a TName ("
+                        .err("You're manipulating a TName ("
                                         + m.name
                                         + ") node, yet the name isn't in the global map 'variablesName'");
             }

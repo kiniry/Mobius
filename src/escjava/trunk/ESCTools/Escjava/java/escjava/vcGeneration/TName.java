@@ -32,7 +32,7 @@ public class TName extends TVariable {
 
 	    // retrieve current type;
 	    if(!variablesName.containsKey(m.name)) {
-	    	TDisplay.err(this, "setType(TypeInfo, boolean)", "You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
+	    	TDisplay.err("You're manipulating a TName ("+m.name+") node, yet the name isn't in the global map 'variablesName'");
 	    }
 	    // take care no else here
 	    
@@ -44,14 +44,14 @@ public class TName extends TVariable {
 	    else {
 			if(!vi.type.equals(type)) {// inconsistency
 			    if(vi.typeSure) // we don't change it
-			    	TDisplay.err(this, "setType(TypeInfo, boolean)", "Variable named "+m.name+", has type "+vi.type.old+" yet you try to change it to "+type.old);
+			    	TDisplay.err("Variable named "+m.name+", has type "+vi.type.old+" yet you try to change it to "+type.old);
 			    else {
 			    	if(type == _Reference) {
 			    		// no we won't change it !!!
-			    		TDisplay.warn(this, "setType(TypeInfo, boolean)", "I won't change the type of "+m.name+" (which was "+vi.type.old+") to this silly type : "+type.old);
+			    		TDisplay.warn("I won't change the type of "+m.name+" (which was "+vi.type.old+") to this silly type : "+type.old);
 			    	}
 			    	else {
-			    		TDisplay.warn(this, "setType(TypeInfo, boolean)", "Changing type of "+m.name+" (which was "+vi.type.old+") to "+type.old);
+			    		TDisplay.warn("Changing type of "+m.name+" (which was "+vi.type.old+") to "+type.old);
 			    		vi.type = type;
 			    	}
 			    }
