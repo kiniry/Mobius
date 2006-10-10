@@ -1,0 +1,74 @@
+\section{Motivating example}\label{sec:motivation}
+
+In order to illustrate the principles of our approach, let us consider
+the following program:
+
+\begin{lstlisting}[frame=trbl] 
+public void m(A a){
+  if (a  == null) {
+    a = new A();
+  }  
+   a.b = new B();
+}
+\end{lstlisting}
+
+For modeling the memory consumption of this program, we introduce
+a \ghost{}  variable \lstinline!Mem! that accounts for memory consumption; more
+precisely, the value of \lstinline!Mem! at any given program point is meant
+to provide an upper bound to the amount of memory consumed so far. To
+keep track of the memory consumption, we perform immediately after every 
+bytecode that allocates memory an increment of \lstinline!Mem! \ by the amount
+of memory consumed by the allocation. Thus, if the programmer specifies
+that \lstinline!ka! and \lstinline!kb! is the memory consumed by the allocation of 
+an instance of class \lstinline!A! and  \lstinline!B! respectively, the program must
+be annotated as:
+\begin{lstlisting}[frame=trbl] 
+public void m(A a) {
+  if (a  == null) {
+    a = new A();
+    // set Mem = ka;
+  }  
+   a.b = new B();
+   // set Mem = kb;}
+\end{lstlisting}
+
+Such annotations allow to compute at run-time the memory consumption of 
+the program. However, we are interested in static prediction of memory
+consumption, and resort to preconditions and postconditions to this end.
+Even for a simple example as above, one can express the specification
+at different levels of granularity. For example, fixing the amount of memory that
+the the program may use \lstinline!Max! one can specify that the method will use at most 
+\lstinline! ka +  kb! memory units and will not overpass the authorized limit to use \lstinline!Max! with the following specification:
+
+\begin{lstlisting}[frame=trbl] 
+//@  requires Mem + ka +  kb <= Max 
+//@ ensures  Mem <= \old(Mem) + ka +  kb     
+public void m(A a) {
+  if (a  == null) {
+    a = new A();
+    // set Mem = ka;
+  }  
+   a.b = new B();
+   // set Mem = kb;
+}
+\end{lstlisting}
+Or try to be more precise and relate memory consumption to inputs with
+the following specification:
+\begin{lstlisting}[frame=trbl] 
+//@ requires a == null ==> Mem + ka +  kb <= Max &&	 
+    !(a  == null) ==> Mem + kb <= Max
+//@ ensures \old(a) == null ==> 
+    Mem <= \old(Mem) + ka +  kb && 
+    !(\old(a)  == null) ==> Mem <= \old(Mem) + kb    
+public void m(A a) {
+  if (a  == null) {
+    a = new A();
+  }  
+   a.b = new B();
+}
+\end{lstlisting}
+More complex specifications are also possible. For example, one can
+take into account whether the program will throw an exception or not.
+using (possibly several) exceptional postconditions stating that
+$\texttt{k}_{\texttt{E}}$ memory units are allocated in case the
+method exits on exception \texttt{E}.
