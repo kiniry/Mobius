@@ -21,12 +21,12 @@ public class TNotRemover  extends ATSimplifier{
 	 */
 	public void visitTBoolImplies(TBoolImplies n) throws IOException {
 		if(n.sons.size() != 2)
-			  TDisplay.warn(this, "visitTBoolImplies(TBoolImplies n)", n.sons.size() +"sons, that's suspicious");
+			  TDisplay.warn(n.sons.size() +"sons, that's suspicious");
 
 		TNode noddy = (TNode)n.sons.get(1);
 		
 		if(noddy.parent == null) {
-			TDisplay.warn(this, "visitTBoolImplies(TBoolImplies n)", "Nodes parents should not be null!");
+			TDisplay.warn("Nodes parents should not be null!");
 			noddy.parent = n;
 		}
 		

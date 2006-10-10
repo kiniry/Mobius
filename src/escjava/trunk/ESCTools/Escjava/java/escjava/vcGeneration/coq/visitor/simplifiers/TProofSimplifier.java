@@ -121,7 +121,7 @@ public class TProofSimplifier extends ATSimplifier {
 	
 		//++
 		if( (i = n.sons.indexOf(m)) == -1)
-		    TDisplay.err(this, "simplify(TBoolAnd n, TNode m)","!n.sons.contains(m)");
+		    TDisplay.err("!n.sons.contains(m)");
 		//++
 		else
 		    n.sons.remove(i);
@@ -140,7 +140,7 @@ public class TProofSimplifier extends ATSimplifier {
 	
 			//++
 			if(! (n.getChildAt(0) instanceof TBoolRes))
-			    TDisplay.err(this, "simplify(TBoolRes n, TNode m)", "Remaining child does not return a boolean, continuing anyway...");
+			    TDisplay.err("Remaining child does not return a boolean, continuing anyway...");
 			//++
 			
 			/*
@@ -175,7 +175,7 @@ public class TProofSimplifier extends ATSimplifier {
 
 	//++
 	if(i == -1)
-	    TDisplay.err(this, "simplify(TFunction n, TNode m, TNode o)", "!n.contiains(m)");
+	    TDisplay.err("!n.contiains(m)");
 	//++
 
 	n.sons.setElementAt(o, i);
@@ -367,7 +367,7 @@ public class TProofSimplifier extends ATSimplifier {
 	    simplify(nTemp, n);
 	}
 	else 
-	    TDisplay.err(this, "visitTIs", "TIs node has a parent which type is != from TBoolRes");
+	    TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
@@ -424,7 +424,7 @@ public class TProofSimplifier extends ATSimplifier {
 		    simplify(nTemp, n);
 		}
 		else 
-		    TDisplay.err(this, "visitTIs", "TIs node has a parent which type is != from TBoolRes");
+		    TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
@@ -435,7 +435,7 @@ public class TProofSimplifier extends ATSimplifier {
 		    simplify(nTemp, n);
 		}
 		else 
-		    TDisplay.err(this, "visitTIs", "TIs node has a parent which type is != from TBoolRes");
+		    TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
@@ -446,7 +446,7 @@ public class TProofSimplifier extends ATSimplifier {
 		    simplify(nTemp, n);
 		}
 		else 
-		    TDisplay.err(this, "visitTIs", "TIs node has a parent which type is != from TBoolRes");
+		    TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 

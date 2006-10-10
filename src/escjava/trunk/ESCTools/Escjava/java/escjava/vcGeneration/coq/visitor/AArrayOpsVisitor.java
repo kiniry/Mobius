@@ -60,7 +60,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
     	String pre = "";
     	if(TNode._integer.equals(((TNode)n.sons.get(1)).type))
     		pre = "arr";
-    	genericFun(pre +"select ", n);
+    	genericFun("Heap." +pre +"select ", n);
 //    	if((TNode._integer.equals(n.type))||
 //    			(TNode._INTTYPE.equals(n.type))) {//||
 //    			//n.parent instanceof TIntegralEQ) {
@@ -81,7 +81,7 @@ public abstract class AArrayOpsVisitor extends AFloatVisitor {
 //    	}
     	if(TNode._integer.equals(index.type))
     		pre = "arr";
-    	genericFun( pre + "store ", n);
+    	genericFun("Heap." + pre + "store ", n);
 //    	if((TNode._integer.equals(tval)) ||
 //    			(TNode._INTTYPE.equals(tval))) {
 //    		

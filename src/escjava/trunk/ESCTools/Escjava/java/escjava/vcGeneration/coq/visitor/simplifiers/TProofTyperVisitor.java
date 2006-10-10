@@ -118,8 +118,7 @@ public class TProofTyperVisitor extends TVisitor {
 		if (n.type != null) {		
 			VariableInfo vi = TNode.getVariableInfo(n.name);
 			if(vi.type == null) {
-				TDisplay.info(this, "visitTName(TName n)", 
-						"typing the variable " + n.name);
+				TDisplay.info("typing the variable " + n.name);
 				vi.type = n.type;
 			}
 		}

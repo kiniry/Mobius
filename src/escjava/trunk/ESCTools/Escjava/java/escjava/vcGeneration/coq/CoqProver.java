@@ -100,8 +100,8 @@ public class CoqProver extends ProverType {
     	File coqCurrentProofDir = new File(coqProofDir, proofName);
     	coqCurrentProofDir.mkdir();
     	if (!(term instanceof TRoot)) {
-    		TDisplay.err(this, "getProof(Writer output, String proofName, TNode term)", 
-    				"For coq pretty printer, the node should be a root node!" + term.getClass());
+    		TDisplay.err("For coq pretty printer, the node should be a root node!" + 
+    				term.getClass());
     		return;
     	}
     	TRoot root = (TRoot) term;
@@ -287,8 +287,9 @@ public class CoqProver extends ProverType {
     public TNode rewrite(TNode tree) throws IOException {
     	TRoot root;
     	if (!(tree instanceof TRoot)) {
-    		TDisplay.warn(this, "rewrite(TNode tree)", 
-    				"For coq pretty printer, the node should be a root node! instead of " + tree.getClass());
+    		TDisplay.warn(
+    				"For coq pretty printer, the node should be a root node! instead of "
+    				+ tree.getClass());
     		root = new TRoot();
     		root.sons.add(tree);
     		tree.parent = root;
@@ -315,7 +316,7 @@ public class CoqProver extends ProverType {
         	if(t.old.startsWith("java.")) //check if in the form java.x.y 
         		t.def = t.old.replace('.','_');
         	else {
-        		TDisplay.err(this, "coqRename(TypeInfo)", "Type not handled in "+t.old + 
+        		TDisplay.err("Type not handled in "+t.old + 
         				"Considering it as a user defined type... ie Types");
         		t.def = "ReferenceType";
         	}
@@ -357,8 +358,7 @@ public class CoqProver extends ProverType {
 				}
 				    
     		}
-    		TDisplay.warn(this, "getCoq(VariableInfo)",
-    				"considering "+ vi.old +
+    		TDisplay.warn("considering "+ vi.old +
     				" as a user defined type, or a not (yet) " +
     				"handled variable.");
     			
@@ -432,7 +432,7 @@ public class CoqProver extends ProverType {
 		  we use it to make the difference.
 		*/
 		else if(vi.type == TNode._Type){
-		    TDisplay.warn(this, "coqRename()", "considering "+vi.old+" as a user defined type.");
+		    TDisplay.warn("considering "+vi.old+" as a user defined type.");
 
 		    // renaming done here
 		    coq = "userDef_"+ vi.old;
@@ -444,14 +444,12 @@ public class CoqProver extends ProverType {
 		    //@ assert m1.groupCount() == 3;
 
 		    if(m1.groupCount() != 3) {
-		    	TDisplay.err(this, "coqRename(VariableInfo)",
-		    			"m.groupCount() != 3");
+		    	TDisplay.err("m.groupCount() != 3");
 		    }
 		    for( i = 1; i <= m1.groupCount(); i++) {
 
 		    	if(m1.start(i) == -1 || m1.end(i) == -1) {
-		    		TDisplay.err(this, "coqRename", 
-		    				"return value of regex matching is -1");
+		    		TDisplay.err("return value of regex matching is -1");
 		    	}
 		    	else {
 			    
@@ -472,8 +470,7 @@ public class CoqProver extends ProverType {
 		    				//@ assert column != null;
 		    				break;
 		    			default :
-		    				TDisplay.err(this, "coqRename",
-		    					"switch call incorrect, switch on value "+i);
+		    				TDisplay.err("switch call incorrect, switch on value "+i);
 		    		}
 		    	} // no error in group			
 		    } // checking all group
@@ -486,14 +483,12 @@ public class CoqProver extends ProverType {
 
 		else if(m4.matches()) {
 		    if(m4.groupCount() != 2)
-				TDisplay.err(this, "coqRename", 
-						"m.groupCount() != 3");
+				TDisplay.err("m.groupCount() != 3");
 
 		    for( i = 1; i <= m4.groupCount(); i++) {
 
 				if(m4.start(i) == -1 || m4.end(i) == -1)
-				    TDisplay.err(this, "coqRename",  
-				    		"return value of regex matching is -1");
+				    TDisplay.err("return value of regex matching is -1");
 				else {
 				    
 				    String temp = vi.old.substring(m4.start(i),m4.end(i));
@@ -509,8 +504,7 @@ public class CoqProver extends ProverType {
 				    		//@ assert line != null;
 				    		break;
 				    	default :
-				    		TDisplay.err(this, "coqRename", 
-				    				"switch call incorrect, switch on value "+i);
+				    		TDisplay.err("switch call incorrect, switch on value "+i);
 				    }
 				} // no error in group
 			
@@ -585,13 +579,14 @@ public class CoqProver extends ProverType {
                         + viTemp.type.getTypeInfo());
                 s.write(")");
 
-            } else {
-                s.write("(" + viTemp.getVariableInfo() + " : S)");
-                TDisplay.warn(this,
-                          "generateDeclarations",
-                          "Type of variable " + keyTemp
-                           + " is not set when declarating variables for the proof, skipping it...");
-            }
+            } 
+//            else {
+//                s.write("(" + viTemp.getVariableInfo() + " : S)");
+//                TDisplay.warn(this,
+//                          "generateDeclarations",
+//                          "Type of variable " + keyTemp
+//                           + " is not set when declarating variables for the proof, skipping it...");
+//            }
         }
     }
 }

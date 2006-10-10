@@ -26,7 +26,7 @@ public class TAndRemover  extends ATSimplifier{
 	 */
 	public void visitTBoolImplies(TBoolImplies n) throws IOException {
 		if(n.sons.size() != 2)
-			  TDisplay.err(this, "visitTBoolImplies(TBoolImplies n)", n.sons.size() +"sons, that's suspicious");
+			  TDisplay.err(n.sons.size() +"sons, that's suspicious");
 
 		TNode noddy = (TNode)n.sons.get(0);
 		if(noddy instanceof TBoolAnd) {
