@@ -1,0 +1,33 @@
+
+In the end of this thesis, we would like to summerize 
+its contents and to focus on the future objectives. 
+
+% done. summary
+So far, we have seen how to perform verification over bytecode
+programs without compromising the compiler. In particular, the verification 
+scheme proposed allows to check a bytecode program against 
+non trivial functional and security properties. For this, we have 
+introduced a specification language BML tailored to Java bytecode, a compiler
+from the Java source specification language JML to BML and a verification 
+condition generator for Java bytecode programs. Moreover, we have
+shown that the verification procedure over Java like source program 
+and Java like bytecode are syntactically equivalent (modulo names and types). 
+
+% to do.PCC
+A next step is to build a PCC framework from the  components 
+mentioned above. To do this,  it is still missing the proof
+certificate, the decision procedure used by the code producer 
+for building the certificate  as well as the type checker used by the code
+client for checking the certificate. Interesting problem 
+in this direction is efficiency 
+will be how to produce certificates with an
+optimal size and to define ``small'' type checkers.
+
+% to do. type systems
+Another interesting perspective for continuation is the encoding 
+of type systems into a bytecode logic. 
+Type systems provide a high level of automation. 
+Their encoding in the verification condition generator can be useful
+especially on where the certificate checking is performed on a 
+ device which is potentially with limited resources.
+
