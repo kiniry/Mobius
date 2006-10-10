@@ -1,8 +1,9 @@
 \documentclass[book,10pt]{book}
 \input{cmd.tex}
 \usepackage{url}
+\usepackage{amsmath, amsthm, amssymb} 
 \usepackage{alltt}
-\usepackage{amssymb}
+%\usepackage{amssymb}
 \usepackage{epsfig}
 \usepackage{listings}
 \usepackage{longtable}
@@ -188,12 +189,16 @@
 
 %10
 \chapter{Conclusion}
+\input{conclusion/conclusion}
 
 \appendix
-  \addcontentsline{toc}{chapter}{Appendices}
+\chapter{Appendix}
+%  \addcontentsline{toc}{chapter}{Appendices}
     \input{appendix/pogCompile/compile/propCompFun}
     \input{appendix/pogCompile/wpSrc/wpSrcStmt}
     \input{appendix/pogCompile/pogEquiv/aux}
+
+ 
  
 \bibliographystyle{plain}
 \bibliography{biblio,specification,bib_mem-wpc,optimComp}
