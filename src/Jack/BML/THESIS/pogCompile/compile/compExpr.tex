@@ -2,31 +2,26 @@
 
 \subsection{Compiling source program  constructs in bytecode instructions} \label{pogEq:compile:compExpr} 
 
-As we stated in the beginning the function for compiling program statements and expressions in bytecode instruction is named $\compile{}$
-$$ \compile{ }_{\methodd} : nat * (\stmt \cup \expressionSrc )* nat \longrightarrow  \bcIns [ \ ]  $$
-The compiler function takes three arguments: a natural number $s$ from which the labeling of the compilation starts,
- the statement $\stmt$ or expression $\expressionSrc$  to be compiled and a natural number which is
- the greatest label in the compilation 
-and returns an array of bytecode instructions which is the compilation of the source construct.
-As we shall see in the following of this section, we will define inductively the compiler over the structure
-of the compiled source construction.
+ The compiler is defined inductively over the structure of the source constructs. 
+ In the following, we shall focus only on the compiler cases which we consider 
+ interesting or particular and we will assume that the rest of the cases are evident 
+ from the compiler definition.
 
-%\subsubsection{Compiling source expressions into bytecode}\label{pogEq:compile:compExpr}
-We first look at Fig. \ref{pogEq:compile:compExpr:defExpr} how expressions are compiled.
- From the figure, we can see that the compilation of
- the constants like constant integers, the boolean constants
-\Mytrue, \Myfalse, \Mynull{}  are compiled with the instruction \push. Note also that the boolean constants  \Mytrue{} and \Myfalse{}
-are encoded as the integers 1 and 0 in the bytecode.  The field access expression $ \expressionSrc.f$ compilation consists in the compilation
-$\compileLabel{s}{\expressionSrc}{e - 1}$ of the expression   $ \expressionSrc $ followed by the instruction $ e: \getfield  \ f $ which is
- the last instruction of the compilation.  May be more attention deserve the compilation of the instance creation expression
-$\newSrc \ \class  (\expressionSrc )$. The first instruction in the compilation is the instruction $s : \new \ \class$ which 
-creates a new reference in the heap and pushes it on the stack top 
-(see for the operational semantics of the instruction in Section \ref{opSem}). The next instruction in the compilation is the instruction 
-\dup which duplicates the stack top element. Then follows the compilation 
-$ \compileLabel{s+2}{\expressionSrc}{e - 1 }; $ of the argument passed to the class constructor. The last instruction of the compilation
-is the invokation of the class constructor  \Constructor{\class}. Note that this compilation follows closely 
-the JVM specification ( see \cite{VMSpec}, Section 7.8 ) which mandates 
-how standard Java compilers compiler instance creation expressions.  
+ Fig. \ref{pogEq:compile:compExpr:defExpr} shows the compilation scheme for expressions.
+ Let us look in more detail the compilation of  the instance creation expression
+ $\newSrc \ \class  (\expressionSrc )$.
+ This case is not trivial because of the way the new instance is initialised.
+ The first instruction in the compilation is the instruction $s : \new \ \class$ which 
+ creates a new reference in the heap and pushes it on the stack top 
+ (see for the operational semantics of the instruction in Section \ref{opSem}). 
+ Once the new instance is created the instructor must be invoked in order to initialise
+ its (instance) fields. This is done by first duplicating the reference (instruction \dup) and then invoking the constructor \Constructor{\class}
+ of \class{} by passing it as argument the duplicated reference. 
+ This has as effect that after the invokation of the constructor the stack top contains 
+ the reference to the newly created instance which is
+ now initialised. Note that this compilation follows closely 
+ the JVM specification (see \cite[\S 7.8]{VMSpec}) which mandates 
+ how standard Java compilers must compile instance creation expressions.  
   
 % As the target language is interpreted by a stack based virtual machine,
 %the evaluation of  expressions is stored on the stack.
@@ -44,13 +39,13 @@ $${\scriptsize
         \begin{array}{lll} 
 	\compileLabel{s}{\constantInt}{s} &  =  & s : \push \  \constantInt \\
 	& & \\ & & \\
-	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \ 1\\
+	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \ \Mytrue \\
 	& & \\ & & \\
-	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \ 0 \\
+	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \  \Myfalse \\
 	& & \\ & & \\
 	\compileLabel{s}{\Mynull }{s } & = &  s: \push \ \Mynull\\
 	& & \\ & & \\
-	\compileLabel{s}{\this}{s } & = &  s:  \load \ \locVar{0} \\
+	\compileLabel{s}{\this}{s } & = &  s:  \load \ \this \\
 	& & \\ & & \\ 
 	\compileLabel{s}{ \expressionSrc.f}{e} & = &    
          \begin{array}{l}
@@ -58,14 +53,13 @@ $${\scriptsize
               e : \getfield  \ f
            \end{array} \\
 	& & \\ & & \\ 
-	\compileLabel{s}{\expressionSrc_1.m(\expressionSrc_2)}{e} & = &  
+	\compileLabel{s}{\expressionSrc.m( )}{e} & = &  
 	   \begin{array}{l}  
-                 \compileLabel{s}{\expressionSrc_1}{e'};\\
-		 \compileLabel{e' + 1}{\expressionSrc_2}{e - 1};\\
+                 \compileLabel{s}{\expressionSrc}{e - 1};\\
 		  e  :\invoke \ m
             \end{array}  \\
 	& & \\ & & \\
-	\compileLabel{s}{ \var }{s} & = &   s: \load \ \locVar{i} \\
+	\compileLabel{s}{ \var }{s} & = &   s: \load \ \var \\
 	& & \\ & & \\
 	\compileLabel{s}{ \expressionSrc_1 \ op \ \expressionSrc_2 }{e} & = &  
                  \begin{array}{l}
@@ -87,13 +81,11 @@ $${\scriptsize
                e : \instanceof \ \class;
 	  \end{array} \\
 	  & & \\ & & \\ 
-\compileLabel{s}{ \newSrc \ \class  (\expressionSrc ) }{e} & = & 
+\compileLabel{s}{ \newSrc \ \class  ( ) }{s+2} & = & 
                  \begin{array}{l}
                        s :    \new \ \class; \\ 
 		       s + 1: \dup; \\
-		       \compileLabel{s+2}{\expressionSrc}{e - 1 };\\
-	               
-		       e : \invoke \ \Constructor{\class};     
+		       s + 2 : \invoke \ \Constructor{\class};     
 	       \end{array}
 
 	\end{array} 
@@ -106,23 +98,18 @@ $${\scriptsize
 
 Fig. \ref{pogEq:compile:compExpr:defStmt} presents the definition 
 of the compiler function for statements which does not affect the exception handler table 
-neither have affect the specification tables.
+neither affect the specification tables.
 Let us explain in more detail the rule for 
 conditional statement. First the conditional expression is compiled $\compileLabel{s}{\expressionSrcRel}{e'};$.
-Afterwards, comes the conditional branch instruction $e' + 1: \ifCond \ e'' + 2;$. Remind that the \ifCond \ 
+After wards, comes the conditional branch instruction $e' + 1: \ifCond \ e'' + 2;$. Remind that the \ifCond \ 
 instruction will compare the two stack top elements  (w.r.t. some condition ) and if they fulfill the condition
 in question, the control will be transfered to instruction at index $ e'' +2 $, otherwise the next instruction
 at index $e' + 2$ will be executed. Note that at index $ e''+2$ starts the compilation of the then branch 
 $\compileLabel{e'' +  2}{\stmt_1}{ e  };$ and at index $ e'+2$ starts the compilation of the else branch 
-$\compileLabel{e' + 2}{\stmt_2)}{e''}$. After the compilation of the else branch follows a $ e'' + 1: \goto e + 1$ \ instruction
+$\compileLabel{e' + 2}{\stmt_2)}{e''}$. After the compilation of the else branch follows a $ e'' + 1: \goto \ e + 1$ \ instruction
 which jumps at the first instruction  outside the compilation of the branch statement. 
- It deserves may be our attention  that
-we have two different compilation rules for the assignment. More particularly, it depends on if it is a  field assignment or
-local variable assignment.  In the case for field assignment $ \expressionSrc_1.f= \expressionSrc_2$,
-the last instruction of the compilation is a $\putfield \ f$ instruction. The compilation of a
- local variable assignment $ \var = \expressionSrc$ statement terminates with a \store \ insruction.
 
-\todo{est-ce que il faut changer le langage source pour avoir aussi 2 types d'affectation}
+
 
 
 
@@ -141,7 +128,7 @@ $${\scriptsize
         \begin{array}{l}
 	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
             e' + 1: \ifCond \ e'' + 2;\\
-            \compileLabel{e' + 2}{\stmt_2)}{e''}\\
+            \compileLabel{e' + 2}{\stmt_2}{e''}\\
              e'' + 1: \goto \ e +  1; \\
             \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
 	    %e: \goto   e + 1        
@@ -158,7 +145,7 @@ $${\scriptsize
 	\compileLabel{s}{  \var = \expressionSrc }{e} =  \\  
              \begin{array}{l}
                         \compileLabel{s}{\expressionSrc}{e  - 1 }\\
-			e : \instr{store} \ \locVar{i};
+			e : \instr{store} \ \var;
              \end{array} \\ 
 	\\ \\  
 	\compileLabel{s}{\athrow \ \expressionSrc}{e} = \\
@@ -186,40 +173,38 @@ change the  the exception handler of the current method.
 The first such statement  is the try catch statement.
 The compiler compiles the normal statement $\stmt_1$ and the exception handler $\stmt_2$.
 Note that in the exception handler table of the bytecode representation of method \methodd, a new line is added 
-which states that the if one of bytecode instructions from index $s$ to index $e'$  throw a not handled exception of type  \excType
+which states that the if one of bytecode instructions from index $s$ to index $e'$  throw a not handled exception of type  \excType{}
 control will be transfered to the instruction at index \excType.
 
-As you can notice, Fig \ref{pogEq:compile:compExpr:defExc} contains the compiler definition for try finally statements. 
-We compile the finally statement $ \stmt_2 $ by inlining, it is first compiled as a code executed after $\stmt_1  $  and
-then it is compiled as part of the default exception handler. The default exception handler which starts at index $e'' + 2 $ and 
-which will  handle any exception thrown by $\compileLabel{s}{\stmt_1}{e'}$. The exception handler 
-first stores the thrown exception in the local variable at index $l$, then executed the subroutine code and after the execution rethrows the exception 
-stored in the local variable $l$. 
+ Fig \ref{pogEq:compile:compExpr:defExc} contains also the compilation scheme for a try finally statement.
+ Remind that  the semantics of the statement is that however the try statement terminates execution 
+ the finally statement must be executed after it and the whole statement terminates execution as the try terminated execution.
+ Thus, the compilation of statetement $\stmt_1$ is followed by 
+ the compilation of statement $\stmt_2$. This should assure that after the normal execution of  $\stmt_1$ $\stmt_2$
+ will be executed. However, we have also to guarantee that  $\stmt_2$ will execute after $\stmt_1$ if the latter 
+ terminates on exception. For this, we create an exception handler  which protects $\stmt_1$ from any exception thrown.
+ The exception handler stores the reference to the thrown object in variable  $l$ then executes the compiled
+ finally statement  $\stmt_2$, then loads the exception reference on the stack and rethrows it.
+  
+ 
 
-This compilation differs from the compilation scheme in the JVM specification for finally statements, which requires that the subroutines must be compiled using \instr{jsr} and 
-\ret \ instructions. However, the semantics of the programs produced by the compiler presented here and a compiler which follows closely the JVM specification 
-is equivalent. 
-In the following, we discuss informally why this is true.
+ This compilation differs from the compilation scheme in the JVM specification for finally statements, which requires that the subroutines must be compiled using \instr{jsr} and 
+ \ret \ instructions. However, the semantics of the programs produced by the compiler presented here and a compiler which follows closely the JVM specification 
+ is equivalent. 
+ In the following, we discuss informally why this is true.
  The semantics of a \jsr \ k insruction is to  jump to the first instruction of the compiled subroutine which starts at index $k$ and pushes on the
  operand stack the index of the next instruction of the \jsr \ that caused the execution of the subroutine. 
-The first instruction of the compilation
-of the subroutine stores the stack top element in the local variable at index $k$ ( i.e. stores in the local variable at index $k$ the index of the instruction following the \instr{jsr} instruction). Thus, after the code of the subroutine is 
-executed, the \ret \ k instruction jumps to 
+ The first instruction of the compilation
+ of the subroutine stores the stack top element in the local variable at index $k$ ( i.e. stores in the local variable at index $k$ the
+ index of the instruction following the \jsr{} instruction). Thus, after the code of the subroutine is 
+ executed, the \ret \ k instruction jumps to 
  the instruction following the corresponding \jsr. This behaviour can be actually simulated by programs without \jsr \ and \ret \ but which inline the subroutine code
-at the places where a \jsr \ to the subroutine is done.
+ at the places where a \jsr \ to the subroutine is done.
+ We assume that the local variable $l$ is not used in the compilation of the statement $\stmt_2$, which guarantees that after any execution which 
+ terminates normally of $\compileLabel{e'' + 3}{\stmt_2}{e - 2}$ the local variable  $l$ will still hold the thrown object. We also assume that the 
+ statement $\stmt_1$ does not contain a \return{} instruction. 
 
-\textit{Note:}
- \begin{enumerate}
-           \item we assume that the local variable $l$ is not used in the compilation of the statement $\stmt_2$, which guarantees that after any execution which 
-	   terminates normally of $\compileLabel{e'' + 3}{\stmt_2}{e - 2}$ the local variable  $l$ will still hold the thrown object
-           \item here we also assume that the statement $\stmt_1$ does not contain a \instr{return} instruction 
-\end{enumerate}
 
-The  last remark that we would like to make is that subroutines and their compilation via \ret \ and \jsr has always presented a problem for Java.
-First, they slow down the performance of the JVM  because of the special way \ret \ and \jsr \ work\todo{verify this}.
-Second, the analysis performed by the  bytecode verifier in  the JVM becomes rather complex because  (and its first version was erroneus ) 
-of the Java subroutines. In the last version of Java Sun compiler, subroutines has become obsolete 
- where they are compiled by inlining. Thus, the compiler presented here represents a realistic approximation of the Java Sun compiler.
 
 
 \begin{figure}[ht!]
