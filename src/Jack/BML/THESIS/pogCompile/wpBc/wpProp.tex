@@ -7,9 +7,9 @@
 
 %\subsection{Properties of the \wpName \ functions}\label{pog:wpBcProp}
     
-We shall first establish a relation between the \wpName{} predicate transformer functions
+We shall first establish a relation between the \wpName{} predicate transformer functions for expressions 
 on bytecode and source level. 
-\begin{thm}\label{relWpStmt}
+\begin{thm}\label{pogComp:relWpExpr}
      For every expression $\expressionSrc$ and its compilation  $\compileLabel{s}{\expressionSrc}{e}$, the following holds :
 
   $$ \begin{array}{l} 
@@ -184,7 +184,7 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 	       \numConclusion{1} \    \wpSrcStmt{  \stmt_2 }{   \psi }{\excPostExpl } = \wpi{}{\methodd}{\ins{e'+1}} \\\\
 
 	       \mbox{\rm\textit{\{
-	       Lemma \ref{compile:prop:compProp1} states that $e$ and $e+1$ can be executed sequentially.}}\\
+	       Lemma \ref{compile:prop:compProp1} states that $e$ and $e+1$ are in execution relation}}\\
 	      \mbox{\rm\textit{ Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
 	       \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e'$ and $e' + 1$}}\\
 	       \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
@@ -249,7 +249,7 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 	\mbox{\rm\textit{    Def. \ref{inter} for the function \interOnly, \numConclusion{4} and \numConclusion{5}   we conclude that \} } }\\
 	\numConclusion{6}  \   \inter{e}{e+1} = \inter{e''' + 1}{e+1}  = \psi\\
 	\mbox{\rm\textit{\{Property \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
-        \mbox{\rm\textit{  appears only on loop statement compilation and thus, the edge between  $e''$ and $e'' + 1$}}\\
+        \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e''$ and $e'' + 1$}}\\
 	\mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
 	\numConclusion{7} \ \inter{e'''}{e''' +1} = \wpi{e''' + 1}{m}{} \\
 	\mbox{\rm \comment{ From the definition of the \wpName  \ for \goto \ instructions and \numConclusion{7}  }}\\
@@ -290,16 +290,23 @@ $$ \begin{array}{l}
       \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\
 
       \comment{from \numConclusion{14}, \numConclusion{13} and \numConclusion{1} }\\
-      \psi'\subst{ v_2}{\stack{\counter } } \subst{ v_1}{\stack{\counter - 1} }  = \inter{e''}{e''+1} \\
+      \numConclusion{15} \ \psi'\subst{ v_2}{\stack{\counter } } \subst{ v_1}{\stack{\counter - 1} }  = \inter{e''}{e''+1} \\
       
-      \comment{apply Lemma }
-             
+      \comment{apply Lemma  \ref{pogComp:relWpExpr} over $\psi'$, \numConclusion{15} and $\expression_2$} \\
+      \numConclusion{16} \ \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}  \subst{ v_1}{\stack{\counter} } = \wpi{e'+1}{\methodd}{}\\
+       
+      \mbox{\rm\textit{ Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
+      \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e'$ and $e' + 1$}}\\
+      \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
+      \numConclusion{17} \ \inter{e'}{e'+1} = \wpi{e'+1}{\methodd}{}\\
+      
+      \comment{from   \numConclusion{16} and \numConclusion{17}  apply Lemma  \ref{pogComp:relWpExpr} over 
+      $\wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}$ and $\expression_1$} \\
+      \numConclusion{18} \  \wpSrcExpr{ \expressionSrc_1 }{  \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2} 
+	 } { \excPostSrc }{v_1}	= \wpi{s}{\methodd}{} \\
 
-
-      
-      
-					  \comment{and this case holds}
-	    \end{array}$$
+	 \comment{from \numConclusion{18} and	\numConclusion{1} this case holds  }				  
+ \end{array}$$
 	  
   \item[try catch statement] 
         $$
