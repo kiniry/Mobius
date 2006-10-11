@@ -12,21 +12,23 @@ object manipulation and creation, method invokation, throwing and handling excep
 \begin{frameit}
    $$ \begin{array} {ll}    
      \expressionSrc ::=         & \constantInt  \\
-				& \mid \Mytrue \\ 
-				& \mid \Myfalse \\
+				%& \mid \Mytrue \\ 
+				%& \mid \Myfalse \\
 				& \mid \Mynull  \\
 				& \mid \this \\
-				& \mid \expressionSrc \ op \ \expressionSrc \\  
+				& \mid \expressionSrc \ \op \ \expressionSrc \\  
 				& \mid \expressionSrc.f \\
 				& \mid \var \\
   			        & \mid (Class) \ \expressionSrc \\
 				& \mid \expressionSrc.m() \\
 				& \mid  \newSrc \ \class  ( ) \\
-				& \mid \expressionSrcRel \\
+				& \\
+				&  \op \in \{ +, - , *, \}  \\
+				%& \mid \expressionSrcRel \\
                                 & \\
 				& \\
      \expressionSrcRel ::=      & \expressionSrc \ \rel \ \expressionSrc \\
-				& \mid \expressionSrc \ \instanceofSrc \ Class\\
+				%& \mid \expressionSrc \ \instanceofSrc \ Class\\
 				& \\   
 				& \rel \in \{ \le, < ,  \ge, >, = , \neq \}      \\
 				& \\
@@ -50,7 +52,7 @@ object manipulation and creation, method invokation, throwing and handling excep
 
 
     As we can see from the figure, the language supports 
-    integer constants $\constantInt$, the boolean constants  $ \Mytrue$ and $\Myfalse$, the null constant \Mynull \ 
+    integer constants $\constantInt$, the null constant \Mynull \ 
     denoting  the empty reference, a construct \this \ for referring to the current object,  
     arithmetic expressions  $\expressionSrc \ op \ \expressionSrc$ where $op \in  \{+ , - , div , rem, * \}$.
     The value stored in a field \fieldd \ for the object reference $\expressionSrc $ is denoted with
@@ -63,12 +65,10 @@ object manipulation and creation, method invokation, throwing and handling excep
     The language supports also instance creation. Note that constructors take one argument.
     A relation between    expressions is denoted with
      $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$. 
-     The language supports also the construct  $\expressionSrc \ \instanceofSrc \ \class$ which means that
-     $\expressionSrc$ is an instance of class \class.
-    
-    Expressions can be of object, integer or boolean types. Formally the types are 
+    % The language supports also the construct  $\expressionSrc \ \instanceofSrc \ \class$ which means that $\expressionSrc$ is an instance of class \class.
+    Expressions can be of reference type or integers. %Formally the types are 
 
-$$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$ 
+%$$ \JavaType ::= \ClassTypes \mid \Myint \mid \Mybool $$ 
 
 
 
