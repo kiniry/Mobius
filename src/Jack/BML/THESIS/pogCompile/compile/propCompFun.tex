@@ -79,7 +79,7 @@ We say that the list of instructions  $l  = \lbrack \ins{i_1} \ldots \ins{i_n} \
       \item none of the instructions is a target of an instruction $\ins{i_j}$ which does not belong to $l$ except for $\ins{i_1}$
       \item none of the instructions in the set is a jump instruction, a \return{} or an \athrow instruction
             i.e. $\forall m, m = 1..k \Rightarrow \neg( \ins{i_m} \in  \{\goto, \ifCond, \return, \athrow \} )  $ 
-      \item $  \forall j, i_1 \ge  j < i_n , \neg  \ ( \ins{j} \execRel^{l} \ins{j + 1} ) $ 
+      \item $  \forall j, i_1 \le  j < i_n , \neg  \ ( \ins{j} \execRel^{l} \ins{j + 1} ) $ 
  \end{itemize}
 
 We denote such a list of instructions with $\ins{i_1};...;\ins{i_n}$
@@ -242,9 +242,10 @@ For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox
 \findExcHandler{\mbox{\rm\tt{Exc}} }{7}{\lstinline!abs!.\ExcHandler}. 
 
 \begin{compProp8}[Exception handler property for statements]\label{compile:prop:compProp8}
-  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its strict substatement $\stmt'$, i.e. 
-$\strictsubstatement{\stmt}{\stmt'} $
-if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
+  For every statement $\stmt$ which is not a try catch statement  in method \methodd \ for  any $\ExprStmt$ such that
+  either$\ExprStmt$ is a  strict substatement of $\stmt$ 
+  or is  an expression contained in  $\stmt$
+if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\ExprStmt}{e'}$ then the following holds:
 $$ \begin{array}{l}
           \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
 	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
@@ -258,10 +259,10 @@ A similar property can be established for expressions. This time however, the pr
 strict subexpressions. 
  
 \begin{compProp9}[Exception handler property for expressions]\label{compile:prop:compProp9}
-  For every statement $\stmt$ which is not a try catch  in method \methodd \  and  its  subexpression
- $\expressionSrc$, i.e. $\substatement{\stmt}{\expressionSrc}$
+  For every expression $\expressionSrc$ and its subexpression
+ $\expressionSrc'$, i.e. $\substatement{\expressionSrc}{\expressionSrc'}$
  we have that 
-if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\expressionSrc}{e'}$ and \numConclusion{2}
+if their respective compilations are  $\compileLabel{s}{\expressionSrc}{e}$ and  $\compileLabel{s'}{\expressionSrc'}{e'}$
  then the following holds:
 $$ \begin{array}{l}
           \forall \mbox{\rm\tt{Exc}}, \forall  \ i, s' \le i \le e' ,  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
