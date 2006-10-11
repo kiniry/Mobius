@@ -209,15 +209,14 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 							       \Myelse \ \{ \stmt_2 \}  }{\psi}{\excPostExpl} = \\
 							       
 	%\begin{array}{l} 
-	 \wpSrcExpr{ \expressionSrc_1 }{ \\
-	              \phantom{wpiSr} \wpSrcExpr{ \expressionSrc_2 }{
-		         \begin{array}{l}  
+	 \wpSrcExpr{ \expressionSrc_1 }{  \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2} 
+	 } { \excPostSrc }{v_1} \\
+	 with  \phi' = \begin{array}{l}  
 		            v_1 \rel v_2  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
 			    \wedge \\
 			    v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
 	               \end{array}
-		       }{  \excPostSrc }{v_2} 
-	 } {\\  \phantom{wpiSr}  \excPostSrc }{v_1} \\\\
+	 \\\\
      %\end{array}  
 			\comment{definition of the compiler} \\\\
 	\numConclusion{2} \  
@@ -261,6 +260,7 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 								
 
 	\mbox{\rm\comment{From Property  \ref{compile:prop:compProp8}  } } \\
+	
 \end{array}$$
 $$ \begin{array}{l}
       \numConclusion{10} \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
@@ -277,14 +277,23 @@ $$ \begin{array}{l}
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%555
       \comment{\mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp4}  follows that the execution relation between $e''$ }}}\\
       \comment{\mbox{\rm\textit{and  $e'' + 1$ is not a loop edge. From Def. \ref{inter} for the function \interOnly{} we get   \}}}}\\
-      \inter{e''}{e'' + 1} = \wpi{ e'' + 1 }{m}{ } \\
+      \numConclusion{13} \  \inter{e''}{e'' + 1} = \wpi{ e'' + 1 }{m}{ } \\\\
 
-      \comment{by definition of conditional jump instruction follows} \\
-      \wpi{ e'' + 1 }{m}{ } = \\
-      \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \\
+      \comment{by definition of conditional jump instruction follows } \\
+      \numConclusion{14} \  \wpi{ e'' + 1 }{m}{ } = \\
+      \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \subst{\counter}{\counter - 2} \\
       \wedge \\
-      \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\\\
+      \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \subst{\counter}{\counter - 2} = \\
+      \comment{  $\wpi{e'''+2}{m}{}$ and $\wpi{e''+2}{m}{}$ are source assertion formulas} \\
+       \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \\
+      \wedge \\
+      \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\
 
+      \comment{from \numConclusion{14}, \numConclusion{13} and \numConclusion{1} }\\
+      \psi'\subst{ v_2}{\stack{\counter } } \subst{ v_1}{\stack{\counter - 1} }  = \inter{e''}{e''+1} \\
+      
+      \comment{apply Lemma }
+             
 
 
       
