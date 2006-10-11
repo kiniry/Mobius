@@ -18,8 +18,8 @@ both at source code and at bytecode level.
 
 \section{Introduction}\label{IntroSectLab}
 
-The use of formal methods to show conformance of a specification
-\emph{w.r.t.}\ an implementation has become an accepted technique 
+The use of formal methods to show conformance of an implementation
+\emph{w.r.t.}\ a specification has become an accepted technique 
 for the development of security-critical applications. Various tools
 exist that allow to specify and validate complex functional or
 security properties, using different techniques such as runtime
@@ -35,24 +35,25 @@ the compiler. And in an attempt to avoid \emph{all} possible security
 threats, sometimes security-critical applications are directly
 developed at the executable level. Thus, it is essential to have the
 means to specify \emph{and} to verify an application directly at this
-level, without the use of a compiler. Thus, both specification and
+level, without the use of a compiler, and both specification and
 verification techniques should be tailored directly to the
 particularities of executable code. Moreover, in order to capture all
 relevant security requirements, the specification language used should
 be expressive enough for this.
 
 Proof Carrying Code (PCC) is a typical example where the need to
-specify and verify executable code directly is imperative. PCC is a
-possible solution to support the secure downloading of applications on
-a mobile device. The executable code of an application comes together
-with a specification, and the necessary evidence from which the code
-client can easily establish that the application respects its
-specification. In such a scenario, the code producer, who \emph{has}
-to produce a correctness proof, will often prefer to do the
-verification at source code level, and then compile the specification
-and the proof into the level of executable code. Realising a platform
-to support this scenario is one of the goals of the \mobius
-project\footnote{See
+specify and verify executable code directly is imperative, in
+particular when one wishes to capture complex security policies that
+cannot be checked with a typechecker.  PCC is a possible solution to
+support the secure downloading of applications on a mobile device. The
+executable code of an application comes together with a specification,
+and the necessary evidence from which the code client can easily
+establish that the application respects its specification. In such a
+scenario, the code producer, who \emph{has} to produce a correctness
+proof, will often prefer to do the verification at source code level,
+and then compile the specification and the proof into the level of
+executable code. Realising a platform to support this scenario is one
+of the goals of the \mobius project\footnote{See
 \texttt{http://mobius.inria.fr}.}. 
 
 This paper describes the low-level specification language that we
@@ -63,8 +64,7 @@ tailored to Java bytecode. As we want to be able to translate
 source code level specifications into bytecode level specifications,
 our specification language is designed to be closely related
 to the Java Modeling Language (JML)\footnote{See
-\texttt{http://www.jmlspecs.org}.}. However, the specifications are
-written in such a way that they support the verification of
+\texttt{http://www.jmlspecs.org}.}, but also to support the verification of
 \emph{unstructured} code. 
 
 
@@ -74,17 +74,17 @@ exist that allow to validate, verify or generate JML specifications
 (see~\cite{BurdyCCEKLLP05} for an overview). Several case studies have
 demonstrated that JML can be used to specify realistic industrial
 examples, and that the different tools allow to find errors in the
-implementations (see \emph{e.g.}~\cite{BreunesseCHJ04}). One of the reasons
-for its success is that JML uses a Java-like syntax. Specifications
-are written using preconditions, postcondition, class invariants and
-other annotations, where the different predicates are side-effect-free
-Java expressions, extended with specification-specific keywords
-(\emph{e.g.}\ logical quantifiers and a keyword to refer to the return value
-of a method). Other important factors for the success of JML are its
-expressiveness and flexibility. JML is in particular suited to express
-many of the different security requirements that have been identified
-to be of interest for mobile device
-applications~\cite{Deliverable1.2}.
+implementations (see \emph{e.g.}~\cite{BreunesseCHJ04}). One of the
+reasons for its success is that JML uses a Java-like
+syntax. Specifications are written using preconditions, postcondition,
+class invariants and other annotations, where the different predicates
+are side-effect-free Java expressions, extended with
+specification-specific keywords (\emph{e.g.}\ logical quantifiers and
+a keyword to refer to the return value of a method). Other important
+factors for the success of JML are its expressiveness and
+flexibility. JML is in particular suited to express many of the
+different security requirements that have been identified to be of
+interest for mobile device applications~\cite{Deliverable1.2}.
 
 
 Therefore, to specify Java bytecode programs, we define a variation of
@@ -96,9 +96,11 @@ class and object invariants, and assertions for particular program
 points like loop invariants. Because of the close connection with JML,
 JML source code level specifications can be compiled into BML bytecode
 level specifications without too much difficulty, basically by
-compiling the source code predicates into bytecode predicates.  To the
-best of our knowledge, no other specification language with similar
-design goals exists for Java bytecode.
+compiling the source code predicates into bytecode predicates.  This
+allows to do development and verification at source code level, while
+still being able to ship bytecode level proofs.  To the best of our
+knowledge, no other specification language with similar design goals
+exists for Java bytecode.
 
 Section~\ref{SecJMLOverview} gives a quick summary of the relevant
 features of JML. Section~\ref{SecBML} then gives a detailed account of
