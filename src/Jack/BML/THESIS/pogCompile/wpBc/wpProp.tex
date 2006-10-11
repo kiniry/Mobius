@@ -38,7 +38,7 @@ the cases for field access and arithmetic expressions.
 		     
 		     
 		     
-		  \comment{by initial hypothesis we have that we have a formula $\psi$ such that }       \\
+		  \comment{by initial hypothesis we have that we have a formula $\psi$ such that for some $k \ge 0$}       \\
 		  \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \\
 
 		  \comment{from the definition of the \wpName{} for source field access expressions} \\ 
@@ -79,8 +79,65 @@ the cases for field access and arithmetic expressions.
 	     \end{array}
 	   $$
        \item[arithmetic expression]
-\end{description}
+      $$\begin{array}{l}
+	             \comment{from the compiler definition we have} \\
+		    \numConclusion{1} \ \compileLabel{s}{\expressionSrc_1 \ \op \ \expressionSrc_2 }{e} = \\
+		     \begin{array}{l}
+			   \compileLabel{s}{\expressionSrc_1}{e'}; \\
+			   \compileLabel{e' + 1}{\expressionSrc_2}{e - 1}; \\ 
+			    e : \op
+		     \end{array}	\\ \\
+		     
+		     \comment{by initial hypothesis we have that we have a formula $\psi$ for some $k \ge 0$ such that }       \\
+		     \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \\\\
 
+		     \comment{from the definition of the \wpName{} for source field access expressions} \\ 
+		     \numConclusion{3} \ \wpSrcExpr{ \expressionSrc_1 \ \op \ \expressionSrc_2 }{\psi }{ \excPostSrc }{v}  =   \\
+		     \begin{array}{l}
+		     \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{\psi'     }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} \\
+		     with \ \psi' = \psi \subst{v}{v_1 op v_2} \\
+
+		     \end{array}\\\\
+		     
+		     			  
+		     \mbox{\rm\textit{\{ it follows from Lemma \ref{compile:prop:compProp3} about expressions}}\\
+		     \mbox{\rm\textit{ that the compilation of an expression results}}\\
+		     \mbox{\rm\textit{ in a list of instructions which does not contain loop entries }}\\
+		     \mbox{\rm\textit{ Thus, from the Def.\ref{inter} of the function \interOnly{} we get \} }  } \\
+		     	  
+		     \numConclusion{4} \  \inter{e -1}{e} = \wpi{e}{\methodd}{} \\
+		   
+		     \comment{it follows from the \wpName{} for an arithmetic instruction}\\
+		     \numConclusion{5} \ \wpi{e}{\methodd}{} = \inter{e}{e+1}\subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = \\ 
+		     \comment{which is equal to because of  \numConclusion{2} } \\
+		     \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} \subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = \\
+		     \comment{$\psi$ is a source assertion and does not contain stack expressions  } \\
+		     \psi \subst{v}{\stack{\counter  - 1 }}\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } =\\
+		      \comment{substitution} \\
+		       \psi \subst{v}{\stack{\counter  - 1 } \op \stack{\counter} }\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} = \\
+		       \comment{this is equal to}  \\
+		       \psi'
+		          \subst{v_2}{\stack{\counter} } 
+		          \subst{v_1}{\stack{\counter -1} }
+			  \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} \\\\
+			  \mbox{\rm\textit{ \{from the equalities \numConclusion{5} we can apply }}\\
+			  \mbox{\rm\textit{the induction hypothesis over $\expressionSrc_2$ and  $\psi'$ and $k' = k - 1$ and get\}}} \\
+			  \numConclusion{6} \ \wpSrcExpr{\expressionSrc_2 }{\psi'}{ \excPostSrc }{v_2} \subst{v_1 }{\stack{\counter }}\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k'}  =
+			    \wpi{ e'+1}{\methodd}{} \\\\
+			 
+			 \comment{ it follows from Lemma \ref{compile:prop:compProp3}   } \\
+			 \inter{e'}{e'+1} = \wpi{ e'+1}{\methodd}{} \\
+			 \mbox{\rm\textit{\{we apply again the induction hypothesis over $\expressionSrc_1$,}} \\
+			 \mbox{\rm\textit{ $\wpSrcExpr{\expressionSrc_2 }{\psi'}{ \excPostSrc }{v_2} $ and $k''=k'-1$ \}}} \\
+			 \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{\psi'     }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} =
+			 \wpi{s}{\methodd}{}
+			 \comment{and this case holds}
+			  
+			  
+       \end{array}
+       $$ 
+\end{description}
+\Qed \\
 
 
 
