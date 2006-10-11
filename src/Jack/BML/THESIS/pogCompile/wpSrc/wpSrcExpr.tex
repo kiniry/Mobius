@@ -6,7 +6,7 @@ predicate transformer function for source expressions. %The weakest precondition
 For calculating the  $\wpNameSrcExpr$ \ predicate  of  an expression $\expressionSrc$ declared in method \methodd,
  the function $\wpNameSrcExpr$ \ takes as arguments  $\expressionSrc$, a postcondition $\normalPostSrc$, an exceptional postcondition 
 function $\excPostSrc$  and 
-  returns the    formula \\
+  returns the    formula 
 $\wpSrcExpr{\expressionSrc}{\psi}{\excPostSrc}{ v }$ which is the \wpName \ precondition of expression $\expressionSrc$ 
 if the its evaluation is represented by  specification expression $v$.  
 
@@ -37,28 +37,20 @@ for \NullPointerExc{}  must hold.
 $${\scriptsize 
         \begin{array}{l} 
            \wpSrcExpr{const}{\normalPostSrc }{ \excPostSrc }{v}  =  \normalPostSrc\subst{v}{const}  \\ 
-	   const \in \{  \constantInt , \Mytrue , \Myfalse, \constantRef, \Mynull, \this,\var\} \\
+	   const \in \{  \constantInt ,   \Mynull, \this,\var\} \\
 	   \\\\
 	   %\wpSrcExpr{\Mynull  }{\normalPostSrc }{ \excPostSrc }{\Mynull} =  \normalPostSrc \\ 
 	    % \\
-	   \wpSrcExpr{ \expressionSrc_1 \ op \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc }{v}  =   \\
+	   \wpSrcExpr{ \expressionSrc_1 \ \op \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc }{v}  =   \\
+
 	    \begin{array}{l}
                 \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{ \normalPostSrc \subst{v}{v_1 op v_2}  }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} 
 	    \end{array}\\
-	  where \  op = \{ +, - , *, \}  \\
+	 
 	   \\\\
 	   %\wpSrcExpr{\this  }{\normalPostSrc }{ \excPostSrc }{\this} = \normalPostSrc	      	    \\
 	   %\\
-           \wpSrcExpr{ \expressionSrc \ \instanceofSrc \  \class }{\normalPostSrc  }{ \excPostSrc }{ v}= \\
-	                \wpSrcExpr{ \expressionSrc  }
-                                  { \normalPostSrc\subst{v}{ v_1 \neq \Mynull \wedge \typeof{ v_1 } <:  \class }  }
-				  { \excPostSrc }{v_1 } \\
-           \\\\
 
-           \wpSrcExpr{ \expressionSrc_1 \ \rel \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc }{v} = \\
-	       \begin{array}{l}
-                       \wpSrcExpr{ \expressionSrc_1  }{  \wpSrcExpr{ \expressionSrc_2  }{ \normalPostSrc \subst{v}{v_1 \rel v_2 } }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1}
-               \end{array}\\ \\\\
 
 		     
              \wpSrcExpr{\expressionSrc.\fieldd  }{\normalPostSrc }{ \excPostSrc }{v}  = \\
@@ -85,7 +77,9 @@ $${\scriptsize
 	         \begin{array}{l}   \wpSrcExpr{ \expressionSrc } { \\ 
                       
                     \phantom{wpSr} \begin{array}{l}
-                    \typeof{v_1 } <:\class  \vee v = \Mynull \Rightarrow   % \\
+
+                    \typeof{v_1 } <:\class  \vee v_1 = \Mynull \Rightarrow   % \\
+
 		      %\phantom{wpSr} \phantom{wpSr}  
 		       \normalPostSrc \subst{v}{v_1}  \\
 		     \wedge \\
@@ -98,9 +92,20 @@ $${\scriptsize
 							       \Myspace \excPostSrc( \mbox{ \rm \ClassCastExc }  ) \subst{\EXC}{\freshVar}
 							  \end{array}
                      
+
                     \end{array}  } { \\ \phantom{wpSrc}  \excPostSrc }{v_1} \end{array}
-				
-        
+		    \\\\	
+		    % \wpSrcExpr{ \expressionSrc \ \instanceofSrc \  \class }{\normalPostSrc  }{ \excPostSrc }{ v}= \\
+	             %   \wpSrcExpr{ \expressionSrc  }
+                     %             { \normalPostSrc\subst{v}{ v_1 \neq \Mynull \wedge \typeof{ v_1 } <:  \class }  }
+		%		  { \excPostSrc }{v_1 } \\
+                   % \\\\
+
+           \wpSrcExpr{ \expressionSrc_1 \ \rel \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc }{v} = \\
+	       \begin{array}{l}
+                       \wpSrcExpr{ \expressionSrc_1  }{  \wpSrcExpr{ \expressionSrc_2  }{ \normalPostSrc \subst{v}{v_1 \rel v_2 } }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1}
+               \end{array}\\ 
+
 
     \end{array} 
 } $$
