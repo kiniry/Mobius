@@ -129,7 +129,7 @@ The following definition characterizes the executions that terminate.
 
 We now turn to the semantics of the individual instructions in our language. 
  Fig. \ref{opSem:jump} shows the rules for control transfer instructions. The first rule refers to
-the instruction \ifCond. The condition \texttt{cond} = $\{ =, \neq, \le, <, >, \ge \} $ is applied to the stack top  \stackOnlyParam{\counterOnly} and the element below the stack top 
+the instruction \ifCond. The condition \rel = $\{ =, \neq, \le, <, >, \ge \} $ is applied to the stack top  \stackOnlyParam{\counterOnly} and the element below the stack top 
 \stackOnlyParam{\counterOnly -1}which must be of type \Myint. If the condition is true then the control is transfered to the instruction
   at index \texttt{n}, otherwise the control continues at the instruction following the current instruction. The top two elements \stackOnlyParam{\counterOnly} and
  \stackOnlyParam{\counterOnly - 1}  of the stack top are popped from the operand stack. The rule for \goto{} shows that the instruction
@@ -142,7 +142,7 @@ the instruction \ifCond. The condition \texttt{cond} = $\{ =, \neq, \le, <, >, \
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
-           {\scriptsize \frac{ \mbox{ \rm \texttt{ cond}}( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1}) } 			       		               
+           {\scriptsize \frac{ \rel ( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1}) } 			       		               
                       {\method \vdash \ifCond \ n : \config{\heap }{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}
 		                      \stateTrans 
 				      \config{\heap}{\counterOnly - 2}{\stackOnly}{\locVarOnly}{n}} 
