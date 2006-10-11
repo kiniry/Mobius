@@ -60,12 +60,12 @@ This paper describes the low-level specification language that we
 propose to specify the security requirements for mobile device
 applications. Since the most common execution framework for mobile
 devices is the J2ME platform, our low-level specification language is
-tailored to Java bytecode. As we want to be able to translate
-source code level specifications into bytecode level specifications,
-our specification language is designed to be closely related
-to the Java Modeling Language (JML)\footnote{See
-\texttt{http://www.jmlspecs.org}.}, but also to support the verification of
-\emph{unstructured} code. 
+tailored to Java bytecode. Our language is designed to support the
+verification of \emph{unstructured} code. And, as we want to be able to
+translate source code level specifications into bytecode level
+specifications, our specification language is also designed to be
+closely related to the Java Modeling Language (JML)\footnote{See
+\texttt{http://www.jmlspecs.org}.}.
 
 
 Over the last few years, JML has become the \emph{de facto}
@@ -87,20 +87,20 @@ different security requirements that have been identified to be of
 interest for mobile device applications~\cite{Deliverable1.2}.
 
 
-Therefore, to specify Java bytecode programs, we define a variation of
-JML, which is especially tailored to bytecode, which we call BML,
-short for Bytecode Modeling Language.  BML supports the most important
-features of JML. Thus, we can express functional properties of Java
-bytecode programs in the form of \emph{e.g.}\ pre- and postconditions,
-class and object invariants, and assertions for particular program
-points like loop invariants. Because of the close connection with JML,
-JML source code level specifications can be compiled into BML bytecode
-level specifications without too much difficulty, basically by
-compiling the source code predicates into bytecode predicates.  This
-allows to do development and verification at source code level, while
-still being able to ship bytecode level proofs.  To the best of our
-knowledge, no other specification language with similar design goals
-exists for Java bytecode.
+Therefore, we define a variation of JML especially tailored to
+bytecode, called BML, short for Bytecode Modeling Language.
+BML supports the most important features of JML. Thus, we can express
+functional properties of Java bytecode programs in the form of
+\emph{e.g.}\ pre- and postconditions, class and object invariants, and
+assertions for particular program points like loop invariants. Because
+of the close connection with JML, JML source code level specifications
+can be compiled into BML bytecode level specifications without too
+much difficulty, basically by compiling the source code predicates
+into bytecode predicates.  This allows to do development and
+verification at source code level, while still being able to ship
+bytecode level proofs.  To the best of our knowledge, no other
+specification language with similar design goals exists for Java
+bytecode.
 
 Section~\ref{SecJMLOverview} gives a quick summary of the relevant
 features of JML. Section~\ref{SecBML} then gives a detailed account of
