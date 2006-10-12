@@ -12,22 +12,50 @@ from the Java source specification language JML to BML and a verification
 condition generator for Java bytecode programs. Moreover, we have
 shown that the verification procedure over Java like source program 
 and Java like bytecode are syntactically equivalent (modulo names and types). 
+This scheme is actually part of the PCC architecture of 
+European project Mobius\footnote{the site name} which aims to resolve the problems
+of mobile and ubicuous computing via PCC.
 
-% to do.PCC
-A next step is to build a PCC framework from the  components 
-mentioned above. To do this,  it is still missing the proof
-certificate, the decision procedure used by the code producer 
-for building the certificate  as well as the type checker used by the code
-client for checking the certificate. Interesting problem 
-in this direction is efficiency 
-will be how to produce certificates with an
-optimal size and to define ``small'' type checkers.
+% towards.PCC
+For building a PCC framework from the components cited above 
+there is still missing the proof certificate, the decision procedure
+that will be used by the producer for the certificate generation and the type checker used by the code
+client for checking the certificate. Important problems in this direction are
+\begin{itemize}
+  \item light weight verification condition generators. In particular, we refer 
+        to verification condition generation techniques which are simple and do not need
+	much computational resources. Because a verification condition generator always
+	form part of the trusted computing base on the client side, building such verification 
+	condition generators is important for on - device checking which rely on limitted computational 
+	resources  
+  
+  \item generation of compact certificates. This is important for several reasons.
+        The certificate may certainly  arrive via the network and should not corrupt the performance 
+ 
+
+ \item efficient type checker on the client site. This is in particular important 
+        if the device is with limitted resources where a complex certificate checking procedure
+        may corrupt the performance of the device
+       
+    
+\end{itemize}
+
+
+ %To do this,  it is still missing the proof
+%certificate, the decision procedure used by the code producer 
+%for building the certificate  as well as the type checker used by the code
+%client for checking the certificate. 
 
 % to do. type systems
-Another interesting perspective for continuation is the encoding 
-of type systems into a bytecode logic. 
+Another perspective in this direction is how   to encode
+ type systems into the bytecode logic. 
 Type systems provide a high level of automation. 
 Their encoding in the verification condition generator can be useful
 especially on where the certificate checking is performed on a 
  device which is potentially with limited resources.
+
+ So far, we have shown that the verification procedures over bytecode produced by
+a non optimizing compiler  and its respective source produce syntactically 
+equivalent verification conditions. The next step is to explore 
+the relation between  the verification conditions on bytecode produced by an optimizing compiler and its source.  
 
