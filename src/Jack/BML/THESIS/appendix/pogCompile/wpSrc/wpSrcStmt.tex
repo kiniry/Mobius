@@ -118,18 +118,7 @@ $${\scriptsize
 		   }{ \\ \phantom{wpiSr}  \excPostSrc}{v_1} 
 		   \end{array} \\ \\ \\
 
-    \wpSrcStmt{ \begin{array}{l} \Myif \  (\expressionSrcRel)\\  \Mythen  \{ \stmt_1 \} \\  \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } 
-    =^{\mbox{\rm\textsf{if}}}\\
-
-         \begin{array}{l} 
-	 \wpSrcExpr{ \expressionSrcRel }{ \\
-	              \phantom{wpiSr}  \begin{array}{l}  
-		      v = \Mytrue  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
-		      \wedge \\
-		      v = \Myfalse    \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
-	 \end{array}
-	 } {\\  \phantom{wpiSr}  \excPostSrc }{v} 
-     \end{array} \\ \\ \\
+    
 
       \wpSrcStmt{ \while \ (\expressionSrcRel) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
 	      \begin{array}{l} 
