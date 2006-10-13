@@ -219,7 +219,7 @@ Developers use both bash and tcsh as working shells.
 
 Step (d) above created a subdirectory named ESCTools in a directory of
 your choice.  We will refer to this directory as ESCTools or
-$ESCTOOLS_ROOT. It has subdirectories Javafe, ESC/Java, etc. for the
+$ESCTOOLS_ROOT. It has subdirectories Javafe, Escjava, etc. for the
 major subsytems of the ESC tools.  We will use the symbol
 $ESCTOOLS_ROOT to denote a path to this directory; if you like you may
 define ESCTOOLS_ROOT in your login script as an environment variable
