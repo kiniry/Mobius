@@ -57,10 +57,16 @@
 \chapter{Introduction}
   \input{intro/intro.tex}  
  
-
-
+\chapter{Java verification overview}
+   \input{javaVerif/intro.tex}
+   \input{javaVerif/prelim.tex} 
+   \input{javaVerif/source/source.tex}
+   \input{javaVerif/wpSrc/srcWp.tex}	  
+   \input{javaVerif/wpSrc/wpSrcExpr.tex}
+   \input{javaVerif/wpSrc/wpSrcStmt.tex}
+   \input{javaVerif/jack.tex}
 %2
-\chapter{ Java bytecode language and its operational semantics} \label{opSem:prelim}
+\chapter{Java bytecode language and its operational semantics} \label{opSem:prelim}
   \input{prelim/intro.tex}   
   \input{prelim/relWork.tex} 
   \input{prelim/notation.tex} 
@@ -82,7 +88,7 @@
   \lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
   \input{BML/intro.tex} 
   \input{BML/relWork/relWork}
-  \input{BML/prelim.tex}
+  %\input{BML/prelim.tex}
   \input{BML/designBml.tex}
   \input{BML/bml.tex}
   \input{BML/typeChecker.tex}
@@ -102,9 +108,7 @@
 \chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
   \input{wp/intro.tex} 
   \input{wp/discussionVC.tex}
-  \input{wp/relWork.tex}
-% \input{wp/exprLang.tex} 
-% \input{wp/prelim.tex} 
+  \input{wp/relWork.tex} 
   \input{wp/wpbc.tex} 
   \input{wp/smallExample.tex}
 
@@ -123,7 +127,7 @@
        % deprecated\input{pogCompile/cmdPogComp.tex}
   \input{pogCompile/intro.tex}
   \input{pogCompile/relatedWork/relWork.tex}
-  \input{pogCompile/source/source.tex}
+ 
    
   % may be we do not need this section as in the intro of the chapter
   % we will say that the target language is already introduced in Chapter 2  
@@ -137,11 +141,7 @@
   %deprecated\input{pogCompile/compile/compCtrlStmt.tex}
   \input{pogCompile/compile/propCompFun.tex}
 
-  \section{Weakest precondition calculus for source programs}\label{pog:wpSrcGeneral}
-    \input{pogCompile/wpSrc/formulasSrc.tex} 
-    \input{pogCompile/wpSrc/srcWp.tex}	  
-    \input{pogCompile/wpSrc/wpSrcExpr.tex}
-    \input{pogCompile/wpSrc/wpSrcStmt.tex}
+
     %\input{pogCompile/wpSrc/example.tex}
 
 
@@ -196,7 +196,7 @@
 \chapter{Appendix}
 
     \input{appendix/pogCompile/compile/propCompFun}
-    \input{appendix/pogCompile/wpSrc/wpSrcStmt}
+    
    % COMMENTED TEMPORARY \input{appendix/pogCompile/pogEquiv/aux}
 
  
