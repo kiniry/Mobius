@@ -17,11 +17,11 @@ is the assertion language that our  verification condition generator manipulates
 
 The assertion language presented here will abstract from most of the BML specification clauses described in Section \ref{BCSLgrammar}.
 Our interest will be focused only on method and loop specification.
-Some parts of BML will be completely ignored  either for keeping things simple or because those parts
-are desugared and result into the BML fragment of interest. For instance, 
-we do not consider here multiple method specification cases, neither assertions in particular program 
-point for the first reason. The assertion language presented here discards also class invariants and
- history constraints because  they boil down to method pre and postconditions.
+Note that  the assertion language presented here discards class invariants,
+ history constraints  because  they boil down to method pre and postconditions. 
+Specification inheritance in case of overriden methods also can be encoded as
+ method pre and postconditions.  
+
 
 The rest of this chapter is organized as follows. Section \ref{assertLang:lang} presents
 what is exactly the BML fragment of interest and its extensions.
