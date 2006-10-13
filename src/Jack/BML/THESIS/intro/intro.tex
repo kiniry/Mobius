@@ -17,7 +17,7 @@ the producer checks if the written code conforms to her/his intentions.
 These intentions are usually expressed as  a functional specification in terms of a relation between the program
 input and output, or a property which  should hold all along the execution of the application. 
 
-A widely used approach is to perform testing. However, this technique is not capable
+A widely used approach is program testing. However, this technique is not capable
 to cover all the cases of the input space and thus, although the tests have been successful, 
 the implementation may still contain errors. This, of course, is not desirable in particular in the case of critical 
 program applications as is the case for applications which target airplains, subways or smart cards. 
@@ -76,19 +76,7 @@ against potentially non trivial functional and security properties. The framewor
 We propose a framework which allows the verification of bytecode programs against complex functional and safety properties, which has the following 
 components.
 \begin{description}
-   \item [Verification condition generator for Java bytecode]
-         As we stated above, we target to build a framework where no assumptions for the compiler are made.
-	 Thus, we propose a verification condition generator (VcGen for short) for Java bytecode which is completely independent from 
-	 the source code. The verification condition generator a large subset of Java and deals with
-	 arithmetic operations, object creation and manipulation,
-	 method invocations, exception throwing and handling, stack manipulation etc.
-	 The verification condition relies on a standard weakest predicate transformer function
-	 and  has a proof of soundness.
-	 
-	 We have an implementation which is integrated in Jack (short for Java Applet Correctness Kit) \cite{BRL-JACK} which is a user friendly 
-	 plugin for the eclipse ide \footnote{http://www.eclipse.org/}. 
-	 
-   \item [Bytecode Modeling Language] 
+     \item [Bytecode Modeling Language] 
          
  %	 Let us see what advocates the need of a
  %	 low level specification language. Traditionally, specification languages were tailored for high level languages.  
@@ -110,6 +98,19 @@ components.
 	 bytecode programs in the form of method pre and postconditions, class and object invariants, assertions
 	 for particular program points like loop invariants. To our knowledge BML does not have predecessors that are tailored 
 	 to Java bytecode.  
+   \item [Verification condition generator for Java bytecode]
+         As we stated above, we target to build a framework where no assumptions for the compiler are made.
+	 Thus, we propose a verification condition generator (VcGen for short) for Java bytecode which is completely independent from 
+	 the source code. The verification condition generator a large subset of Java and deals with
+	 arithmetic operations, object creation and manipulation,
+	 method invocations, exception throwing and handling, stack manipulation etc.
+	 The verification condition relies on a standard weakest predicate transformer function
+	 and  has a proof of soundness.
+	 
+	 We have an implementation which is integrated in Jack (short for Java Applet Correctness Kit) \cite{BRL-JACK} which is a user friendly 
+	 plugin for the eclipse ide \footnote{http://www.eclipse.org/}. 
+	 
+ 
 
    \item [Compiler from source to bytecode annotations]
          Let us see why such a compiler may be useful.
