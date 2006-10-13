@@ -1,0 +1,195 @@
+\subsubsection{Expressions}\label{pog:wpSrc:wpExpr}
+In the following, we  give a standard  definition of a weakest
+predicate transformer function for source expressions. %The weakest precondition function for expressions has the following signature:
+%$$ \wpNameSrcExpr : \expressionSrc \rightarrow \formulaSrc \rightarrow ( \mbox{ \rm \texttt{Exc}} \rightarrow  \formulaSrc ) \rightarrow  
+%\MethodSet \rightarrow   (\expressionSpecSrc \cup \formulaSrc)  \rightarrow  \formulaSrc $$
+For calculating the  $\wpNameSrcExpr$ \ predicate  of  an expression $\expressionSrc$ declared in method \methodd,
+ the function $\wpNameSrcExpr$ \ takes as arguments  $\expressionSrc$, a postcondition $\normalPostSrc$, an exceptional postcondition 
+function $\excPostSrc$  and 
+  returns the    formula \\
+$\wpSrcExpr{\expressionSrc}{\psi}{\excPostSrc}{ v }$ which is the \wpName \ precondition of expression $\expressionSrc$ 
+if the its evaluation is represented by  specification expression $v$.  
+
+In Fig. \ref{pog:wpSrc:wpExpr:wpSrcExpr} we can see the $\wpNameSrcExpr$ rules for  most of the expressions of the source language (except for method invokation 
+and instance creation). As we may notice, for some of the expressions   
+the definition of the weakest precondition function is trivial is the identity function
+ as they have  no side effects. For instance, the rule for constant expressions does not change the state and thus,
+ if a predicate $ \normalPostSrc$ holds
+ after its execution this means that it held in the prestate of the expression. 
+ However, this is not the case for expressions that might throw an exception or which may change values of program variables.
+ The predicate returned by the weakest precondition predicate transformer for expressions which may throw an exception 
+will basically acumulate the hypothesis under which the evaluation 
+of the expression terminates normally and the  conditions under which it  terminates exceptionally.
+\footnote{Note that here we do not consider arithmetic expressions that may throw
+an arithmetic exception, i.e. we discard the division operations.
+ However,   we do not lose any particular feature of the language by discarding this case 
+while gaining clearer representation.} The rule for a cast expression $( \class ) \ \expressionSrc$ shows that the evaluation of the expression
+does not change the program state in case the $ \expressionSrc$ is of subtype of of class  $\class$. In case the latter is not true 
+the rule reflects the case that the a  \ClassCastExc{} exception is thrown. The rule for the field access expression takes into account
+the two possible  outcomings of its evaluation. If the evaluation $v$ of the expression $\expressionSrc$ 
+is different from $\Mynull$ then the evaluation terminates normally, otherwise the exceptional postcondition  
+for \NullPointerExc{}  must hold.
+
+ 
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l} 
+           \wpSrcExpr{const}{\normalPostSrc }{ \excPostSrc }{const}  =  \normalPostSrc  \\ 
+	   const \in \{  \constantInt , \Mytrue , \Myfalse, \constantRef, \Mynull, \this,\var\} \\
+	   \\\\
+	   %\wpSrcExpr{\Mynull  }{\normalPostSrc }{ \excPostSrc }{\Mynull} =  \normalPostSrc \\ 
+	    % \\
+	   \wpSrcExpr{ \expressionSrc_1 \ op \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc }{v_1 op v_2}  =   \\
+	    \begin{array}{l}
+                \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{ \normalPostSrc }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} 
+	    \end{array}\\
+	  where \  op = \{ +, - , *, \}  \\
+	   \\\\
+	   %\wpSrcExpr{\this  }{\normalPostSrc }{ \excPostSrc }{\this} = \normalPostSrc	      	    \\
+	   %\\
+           \wpSrcExpr{ \expressionSrc \ \instanceofSrc \  \class }{\normalPostSrc }{ \excPostSrc }{ v \neq \Mynull \wedge \typeof{ v } <:  \class } = \\
+	                \wpSrcExpr{ \expressionSrc  }{ \normalPostSrc }{ \excPostSrc }{v} \\
+           \\\\
+
+           \wpSrcExpr{ \expressionSrc_1 \ \rel \ \expressionSrc_2 }{\normalPostSrc }{ \excPostSrc }{v_1 \rel v_2} = \\
+	       \begin{array}{l}
+                       \wpSrcExpr{ \expressionSrc_1  }{  \wpSrcExpr{ \expressionSrc_2  }{ \normalPostSrc }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1}
+               \end{array}\\ \\\\
+
+		     
+             \wpSrcExpr{\expressionSrc.f  }{\normalPostSrc }{ \excPostSrc }{v.f}  = \\
+	                        \begin{array}{l} \wpSrcExpr{\expressionSrc }{\\
+			                   \phantom{wpiSr} \begin{array}{l} 
+						        v \neq \Mynull \Rightarrow \normalPostSrc\\
+			                                \wedge \\
+						        v = \Mynull \Rightarrow\\
+							 \Myspace 
+							  \begin{array}{l} 
+							      \forall \freshVar, 
+							      \neg \instances(\freshVar) \wedge \\
+							       \freshVar \neq \Mynull \Rightarrow\\ 
+							       \Myspace\excPostSrc(\NullPointerExc )\subst{\EXC}{\freshVar}
+							  \end{array}
+							        
+		                                   \end{array}}{\\ 
+                                           \phantom{wpiSrc} \excPostSrc }{v}  
+				\end{array}  \\
+		 \\\\	
+ 
+
+\wpSrcExpr{ ( \class ) \ \expressionSrc  }{\normalPostSrc }{ \excPostSrc }{v} = \\
+	         \begin{array}{l}   \wpSrcExpr{ \expressionSrc } { \\ 
+                      
+                    \phantom{wpSr} \begin{array}{l}
+                    \typeof{v } <:\class  \Rightarrow   % \\
+		      %\phantom{wpSr} \phantom{wpSr}  
+		       \normalPostSrc  \\
+		     \wedge \\
+		    \neg \   \typeof{v } <:  \class \Rightarrow  \\ 
+		    \Myspace 
+							  \begin{array}{l} 
+							      \forall \freshVar, 
+							      \neg \instances(\freshVar) \wedge \\
+							       \freshVar \neq \Mynull \Rightarrow\\ 
+							       \Myspace \excPostSrc( \mbox{ \rm \ClassCastExc }  ) \subst{\EXC}{\freshVar}
+							  \end{array}
+                     
+                    \end{array}  } { \\ \phantom{wpSrc}  \excPostSrc }{v} \end{array}
+				
+        
+
+    \end{array} 
+} $$
+
+\caption{\sc WP for source expressions }
+\label{pog:wpSrc:wpExpr:wpSrcExpr}
+\end{frameit}
+\end{figure}
+
+
+In Fig.\ref{pog:wpSrc:wpExpr:wpSrcInvoke}, we give the rule of instance creation. It is given separately
+as it is more complicated than the rest of the cases. 
+ The rule for instance creation states that  for any reference which is
+ fresh for the heap  ($\neg \ \instances(\freshVar ) $) ,  which is not \Mynull{} and whose type is a subtype of \class{}  
+the precondition of the constructor  $\Constructor{\class}{}$  of class  \class{} must hold and that the 
+normal postcondition $\Constructor{\class}.\normalPostSrc{}$ of the constructor 
+must imply the postcondition  $\normalPostSrc$ with the respective substitutions. A similar condition we
+ get for the cases when the constructor may terminate on an exception.
+% Let us now look at the rule for method invokation expression $ \expressionSrc.\methodd()$ in Fig. \ref{pog:wpSrc:wpExpr:wpSrcInvoke}.
+%The resulting precondition  takes into account the case when the  object $v$ to which $\expressionSrc $ evaluates and
+% on which  the method is called is \Mynull{} or not. If it is \Mynull{} then the weakest precondition of the handler against \NullPointerExc{}
+%must hold. In the opposite case, we want several predicates to hold. 
+%First, the precondition $ \methodd.\preSrc $  of the invoked method \methodd{} must hold. 
+%Then, the  normal postcondition $\methodd.\normalPostSrc $ 
+%of \methodd{} must imply the postcondition  $\normalPostSrc{}$ whatever is the value of the returned object and whatever are the values of the 
+%locations in the modifies list $\methodd. \mod{}$  of the method \methodd. Finally, if the method \methodd{} terminates on an exception \mbox{\rm\texttt{E}},
+% then the respective postcondition    $\methodd.\excPostSpecSrc(\mbox{\rm \texttt{E}})$ must imply the predicate $\excPostSrc(\mbox{\rm\texttt{E}} )$  returned by the exceptional function 
+% $\excPostSrc$ whatever are the values of the locations in the modifies list  $\methodd. \mod{} $  of the method~\methodd.
+
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l} 
+	     
+
+\wpSrcExpr{ \newSrc \ \class  ( \expressionSrc  ) } {\normalPostSrc }{ \excPostSrc  }{v} = \\
+ 	  
+ 	             \begin{array}{l}  \forall \freshVar, \\
+ 				               \neg \ \instances(\freshVar ) \wedge \\
+ 					       \freshVar  \neq \Mynull \\
+					       \typeof{\freshVar} <: \class  \Rightarrow \\ 
+		     \wpSrcExpr{\expressionSrc} { \\ \\
+ 		                \phantom{wpSr}\left\{ \begin{array}{l}
+                                   
+ 				   \Myspace  \Myspace  \Constructor{\class}.\preSrc
+ 				                \begin{array}{l} 
+                                                       \subst{ \this}{ \freshVar } \\
+                                                       \subst{ arg}{ v' } \\
+						       \subst{ \fieldd} { \update{\fieldd} { \freshVar}{\defaultValue{ \fieldd.  \fieldType } } }_{{ \subtype{\fieldd.\declaredIn}{  \class}} } \\
+  					     	\end{array} \\
+  					\Myspace  \Myspace	       \wedge \\
+  					\Myspace  \Myspace  \forall \ m \in \Constructor{\class}. \mod , \\
+  					       \Myspace  \Myspace    \Constructor{\class}.\normalPostSrc       
+  					             \begin{array}{l}   
+  						          \subst{ \this}{ \freshVar  } \\
+  						          \subst{ arg}{ v' } \\
+							  \subst{ \fieldd} { \update{\fieldd} { \freshVar}{\defaultValue{ \fieldd.  \fieldType } } }_{{ \subtype{\fieldd.\declaredIn}{  \class}} } \\
+  						       	  %\subst{	\typeof{\freshVar}}{ \class} 
+  						     \end{array}  \\
+                                                   \Myspace  \Myspace   \Myspace     \Rightarrow  \begin{array}{l} 
+						   \normalPostSrc\\
+						    \subst{ v }{ \freshVar  } \\ 
+						    \subst{ \fieldd} { \update{\fieldd} { \freshVar}{\defaultValue{ \fieldd.  \fieldType } } }_{{\subtype{\fieldd.\declaredIn}{  \class}} } \end{array}\\
+  					          \Myspace  \Myspace \wedge \\
+  						   \Myspace  \Myspace  \forall \mbox{\rm \texttt{Exc}} \in  \Constructor{\class}.\exceptionSrc, \\
+  						    \Myspace \Myspace  \forall \ m \in \Constructor{\class}. \mod, \\
+  						 \Myspace  \Myspace  
+						 \forall \freshVar_{exc},\\
+						 \Myspace \left\{\begin{array}{l}
+						 \freshVar \neq \Mynull \wedge \\
+						 \typeof{\freshVar_{exc}} <: \mbox{\rm\texttt{Exc}} \Rightarrow \\
+						  \Constructor{\class}.\excPostSpecSrc ( \mbox{\rm\texttt{Exc}}) 
+                                                           \Rightarrow\\ 
+                                         \Myspace  \Myspace     \excPostSrc( \mbox{\rm\texttt{Exc}})
+					 \end{array}\right\} 
+					 \begin{array}{l}
+					   \subst{\EXC}{\freshVar_{exc}}\\ 
+					   \subst{ v }{ \freshVar  } \\  
+					   \subst{ \fieldd}{\update{\fieldd} { \freshVar}{\defaultValue{ \fieldd.  \fieldType } } }_{{ \subtype{\fieldd.\declaredIn}{  \class}} }
+					   \end{array}
+  		              \end{array}\right. } {  \\  \\ \phantom{wpSrc}   \excPostSrc }{v'}  \end{array}
+  		     
+
+        \end{array} } $$
+\caption{\sc Weakest precondition for instance creation }
+\label{pog:wpSrc:wpExpr:wpSrcInvoke}
+\end{frameit}
+\end{figure}
+
+
+
+
+
