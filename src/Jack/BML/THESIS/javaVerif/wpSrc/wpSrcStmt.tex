@@ -1,0 +1,154 @@
+
+\subsubsection{Statements}\label{pog:wpSrc:wpStmt}
+
+In the following, we discuss  the weakest precondition predicate transformer for  control statements.
+ We will not give an exhaustive overview of the \wpName{} rules for statements as they are standard 
+but we will rather  concentrate on few which we consider illustrative. 
+
+Fig. \ref{pog:wpSrc:wpStmt:withoutExc} gives  the rule for  field assignment and conditional control transfer
+statements which do not deal with exceptions. They are defined in a standard way. 
+The rule for field assignment shows that the statement may terminate normally or on an exception. 
+In particular, if the  dereferenced object reference $\expressionSrc_1$ does not evaluate to \Mynull{} 
+ then  the postcondition $\normalPostSrc{}$ must hold where the value of the field \fieldd{} for the 
+evaluation $v_1$ of $\expressionSrc_1$ is changed to the value  $v_2$ of  $\expressionSrc_2$.
+If  the  dereferenced object reference $\expressionSrc_1$  evaluates to \Mynull{} then the postcondition 
+$ \excPostSrc(\NullPointerExc) $ must hold.
+The rule for the conditional statement is also standard.
+
+Let us now look  at the rule \textsf{while} which is slightly different from 
+standard rules for \wpName{} for loops as it uses the list \modLoop{}  which stands for the locations that may be modified  in a loop iteration. 
+%The difference is in the \modLoop{} framecondition which is a list of the locations that might be modified in a loop iteration. 
+%Note that here we consider that this list is correct and thus, we do not verify its validity. 
+We assume here that this list is correct, i.e. we assume that a location not mentioned in the list  \modLoop{} of a loop 
+will have the same values at the borders of the loop iteration.
+ Actually, if we want to verify   it, we can express it as part of the loop invariant. Remind that a loop invariant  is a predicate which must hold
+whenever the loop entry is reached. The semantics of a \modLoop{} list can be encoded as part of the invariant as a condition which states
+that all the locations not mentioned in the \modLoop{} must have the same value at the beginning and at the end state of a loop iteration.
+As we can see in the figure, the conditions resulting from \wpName{} over a loop statement ( which stand for the loop preservation at loop borders 
+and that the postcondition holds at the end of the loop execution) are quantified over the 
+elements of the \modLoop{} list. This quantification allows to initialize correctly the variables that keep their values unchanged at the loop borders.
+Of course, in order to initialize these variables the result of the \wpName{} function for a loop must be propagated up to the program entry point.
+
+Although this complicates slightly the verification condition generator, the loop frame condition is useful as it can work 
+on weaker specification than a verification condition generator which does not support it. This actually means that the burden of writing specification 
+becomes definitely lighter, as the person which specifies an application must identify not  \textit{the strongest loop invariant }
+but a \textit{loop invariant}. Of course, he should also identify  the locations which are modified by the loop (locations that may have different values 
+at the end and at the beginning of a loop iteration). Note that this last is easier than identifying the variables not modified in the loop which 
+must be done if we decide not use loop frame conditions. 
+
+\begin{figure}[ht!]
+\begin{frameit}
+$${\scriptsize 
+        \begin{array}{l} 
+	   \wpSrcStmt{ \stmt_1;\stmt_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{seq}}} \\
+	   \begin{array}{l} 
+             \wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc}} { \excPostSrc} 
+           \end{array} \\ \\ \\
+    \wpSrcStmt{ \var = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{locVarAssign}}} \\
+                  \begin{array}{l}   \wpSrcExpr{\expressionSrc_2 }{ 
+				    \normalPostSrc \subst{\var}{v}   
+				   }{ \excPostSrc}{v}  
+		  \end{array} \\ \\ \\
+    \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
+               \begin{array}{l} 
+	       \wpSrcStmt{\expressionSrc_1}{  \\
+	        \phantom{wpiSr} \wpSrcExpr{\expressionSrc_2 }{ \\
+		\phantom{wpiSr}\phantom{wpiSr}
+		\begin{array}{l}
+		    v_1 \neq \Mynull  \Rightarrow \\
+	         \phantom{wpiSr}  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   \\
+		 \wedge \\
+		 v_1  = \Mynull  \Rightarrow  \\
+		   \phantom{wpiSr}   \excPostSrc(\NullPointerExc) 
+		   \end{array}}{ \\ \phantom{wpiSr}\phantom{wpiSr}  \excPostSrc}{v_2} 
+		   }{ \\ \phantom{wpiSr}  \excPostSrc}{v_1} 
+		   \end{array} \\ \\ \\
+
+    \wpSrcStmt{ \begin{array}{l} \Myif \  (  \expressionSrc_1 \ \rel \ \expressionSrc_2   )  \Mythen  \{ \stmt_1 \}   \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } 
+     =^{\mbox{\rm\textsf{if}}}\\
+
+         \begin{array}{l} 
+	 \wpSrcExpr{ \expressionSrc_1 }{ \\
+	              \phantom{wpiSr} \wpSrcExpr{ \expressionSrc_2 }{
+		         \begin{array}{l}  
+		            v_1 \rel v_2  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
+			    \wedge \\
+			    v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
+	               \end{array}
+		       }{  \excPostSrc }{v_2} 
+	 } {\\  \phantom{wpiSr}  \excPostSrc }{v_1} 
+     \end{array} \\ \\ \\
+
+     \wpSrcStmt{ \while \ (\expressionSrcRel) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
+	      \begin{array}{l} 
+	       \invariant \ \wedge\\
+	       \forall \  m, m \in \modLoop , \\
+	       \Myspace \invariant \Rightarrow \\
+	 	     \Myspace    \Myspace \wpSrcExpr{\expressionSrcRel}{\\\phantom{wp^{src}} 
+		     \begin{array}{l}  		
+		           \Myspace v = \Mytrue  \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc}  \\ 
+		           \Myspace v = \Myfalse  \Rightarrow  \normalPostSrc
+		     \end{array}
+	      }{ \\ \Myspace \phantom{wp^{src}} \excPostSrc}{v}  \end{array} \\ \\ \\
+
+     \wpSrcStmt{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} = \\
+             \begin{array}{l}   \wpSrcExpr{ \expressionSrc}{ \normalPostSrc \subst{\result }{ v }} { \excPostSrc}{v}  \end{array}\\ \\ \\ 
+
+ \wpSrcStmt{ \throw \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{throw}}}\\
+	       \begin{array}{l} 
+	      \wpSrcExpr{\expressionSrc}{\\ \phantom{wpiSr} 
+                  \begin{array}{l}
+		       
+	                v = \Mynull \Rightarrow \excPostSrc( \NullPointerExc  )  \\
+			\wedge \\
+			 v \neq \Mynull \Rightarrow\\
+			 \Myspace
+			  \begin{array}{l}  
+				 \forall \mbox{\rm\texttt{Exc} } , \\
+				 \typeof{ v } <: \mbox{\rm\texttt{Exc} }   \Rightarrow \\
+				 \Myspace   \methodd.\excPostSrc( \mbox{\rm\texttt{Exc} }    ) \subst{\EXC}{v}
+			  \end{array} 
+
+			  
+	          \end{array}}   
+		     { \\ \phantom{wpiSr}  \excPostSrc}{v} 
+	   \end{array}     \\ \\ \\
+
+ \wpSrcStmt{ \try \ \{ \stmt_1 \} \ \catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{try catch}}}\\
+              \begin{array}{l}
+	      \wpSrcStmt{ \stmt_1}{ \\ 
+	                 \phantom{wpiSr} \normalPostSrc}{ \\ 
+			 \phantom{wpiSr} \update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }} 
+	      \end{array} \\ \\ \\
+
+\wpSrcStmt{ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{try finally}}}\\
+       \begin{array}{l} 
+	 \wpSrcStmt{ \stmt_1}{\\ \phantom{wpiSr}
+                     \wpSrcStmt{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{wpiSr}
+		     \update{\excPostSrc}{\mbox{\rm\texttt{Exception}}}{ \wpSrcStmt{\stmt_2}{ \excPostSrc( \mbox{\rm\texttt{Exception}}  )}{\excPostSrc}  } }
+       \end{array} 
+
+\end{array} } 
+$$
+
+\caption{\sc WP for source control statements}
+\label{pog:wpSrc:wpStmt:withoutExc}
+\end{frameit}
+\end{figure}
+
+
+
+The control statements related to the exception handling and throwing as well as the finally statements
+ have a more particular definition. 
+Let us look at the rule \textsf{try catch}.
+ %Actually, it is similar to the  rule  \textsf{seq} from  Fig. \ref{pog:wpSrc:wpStmt:withoutExc}, but dual in the way the postcondition modifications.
+ The weakest predicate of a try catch statement $ \try \ \{ \stmt_1 \} \ $ 
+$\catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} $  w.r.t. a normal postcondition   $\normalPostSrc$  and exceptional postcondition function $ \excPostSrc$
+is the weakest predicate of the try statement $\stmt_1$ w.r.t. the normal postcondition  $\normalPostSrc$  and the updated exceptional function
+$\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }$.
+
+
+
+
+
+
