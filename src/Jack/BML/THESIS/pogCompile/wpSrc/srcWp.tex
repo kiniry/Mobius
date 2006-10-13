@@ -1,53 +1,20 @@
 
 
 
-\subsection{Weakest predicate transformer for the source language } \label{pog:wpSrc}
+\section{Weakest predicate transformer for the Java like source language } \label{pog:wpSrcGeneral}
 
 The weakest precondition calculates  the predicate weakest precondition predicate $WP$  statement $\stmt$ in method \methodd \ from our source language,
 for any normal postcondition $\normalPostSrc$ and exceptional postcondition function $\excPostSrc$, 
  such that if it holds in the pre state of $\stmt$ and   if $\stmt$ terminates normally then $\normalPostSrc$  holds in the poststate and
  if $\stmt$ terminates on exception \Exc{} then $\excPostSrc(\Exc)$ holds. 
-In the following, in  subsection   \ref{pog:wpSrc:excPost} we discuss how the exceptional postcondition function is defined.
-Subsections \ref{pog:wpSrc:wpExpr} and  \ref{pog:wpSrc:wpStmt} present respectively
- the definition of \wpName \  function for expressions and statements.  Our description of the \wpName{} in these sections is not complete,
-but the reader may find the full definition in Appendix \ref{appendix:wpSrc}. 
- 
-
-
-
-\subsubsection{Exceptional Postcondition Function}\label{pog:wpSrc:excPost}
-
-As we stated earlier the weakest predicate transformer manages both the normal and
- exceptional termination of  an expression(statement). 
-In both cases the expression(statement) has to satisfy some condition : 
-the normal postcondition in case of normal termination and the exceptional postcondition
-for exception $\Exc$ if it terminates on exception $\Exc$
-
-
-We introduce a function $\excPostSrc$  which maps exception types to predicates  
-
-$$ \excPostSrc :  \excType \longrightarrow   \formulaBc $$ 
-
-
-
 The function $\excPostSrc$ \ returns the predicate $\excPostSrc (\mbox{\rm\texttt{Exc}}) $ that must hold in a particular program point if
  at this point an exception of type \mbox{\rm\texttt{Exc}} is thrown.
 
-%The function $\excPostSpecSrc $ returns for any exception \texttt{Exc}  thrown by the method the predicate that must hold in the 
-% method exceptional termination state caused by throwing an exception of type \texttt{Exc}.
-
-
-
-
-We also use  function updates for $\excPostSrc$ which are defined in the usual way
-
-
+In the following, we will use function updates $\update{\excPostSrc}{\Exc'}{ P } $ over $\excPostSrc $ which are defined in the usual way
 $$
 \update{\excPostSrc}{\Exc'}{ P }( \Exc )  = 
        \left\{\begin{array}{ll} 
          P & if \ \Exc  <: \Exc'  \\
          \excPostSrc(\Exc ) & else 
      \end{array}\right.$$
-
-
-
+We can now  focus on the definition of a weakest precondition predicate transformer function over the source language.
