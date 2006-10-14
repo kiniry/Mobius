@@ -1539,7 +1539,7 @@ public class Arrays {
       @   signals_only NullPointerException;
       @*/
     //@ pure
-    public static /*@ non_null @*/ List asList(Object[] a) throws NullPointerException;
+    public static /*@ non_null @*/ List asList(/*@ nullable @*/Object[] a) throws NullPointerException;
 
     //-----------------------------------------------------------------------
 
