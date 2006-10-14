@@ -15,7 +15,7 @@
 ##                    spec files that escjava is acting on)
 
 ## Optional variables:
-##  ESC_SPECS        (path for system specification files)
+##      ESC_SPECS        (path for system specification files)
 ##	ESCJ_VERBOSE     (turns on some debugging)
 ##	BOOTCLASSPATH    (rarely needed - changes the system files being used)
 ##	ESCJ_STDARGS     (the set of always used arguments to escjava)
@@ -24,27 +24,17 @@
 ##	ESC_REMOTE_DEBUG (if on, adds the debug flags to JAVA_VM_FLAGS)
 ##	JAVA_VM_DEBUG_FLAGS (the set of debug flags - a default set is already
 ##                       defined)
-##  XMLPROVERPATH    (path for prover based stylesheets to be used by the 
-##                    VC generator)
+##      XMLPROVERPATH    (path for prover based stylesheets to be used by the 
+##                        VC generator)
 ##
 ## The following are set based on the structure of a standard release (if
 ## ESCTOOLS_RELEASE is defined) or otherwise on the structure of the CVS files
-##  ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
-##                      as named by the SIMPLIFY variable)
+##      ESCJ_SIMPLIFY_DIR  (The directory containing the Simplify executable,
+##                          as named by the SIMPLIFY variable)
 ##	ESC_CLASSPATH      (The class path needed to invoke escjava)
 ##                     
 
 ############################################################################
-
-##export ESCTOOLS_RELEASE=''
-## (if present, presumes a release; if not defined,
-##  presumes running within CVS directories)
-##export ESCTOOLS_ROOT=''
-## (if not defined, tries to guess from the location
-##  of the current file)
-
-##	CLASSPATH        (defaults to "."; set it to point to any java or
-##                        spec files that escjava is acting on)
 
 if [ "$1"x = "-gui"x ]; then
     ## Run GUI
@@ -126,7 +116,7 @@ if [ -z "$SIMPLIFY" ]; then
     case "$OSTYPE" in
 	linux*)   SIMPLIFY=Simplify-1.5.4.linux	;;
 	darwin)  SIMPLIFY=Simplify-1.5.4.macosx	;;
-    cygwin)  SIMPLIFY=Simplify-1.5.4.exe	;;
+	cygwin)  SIMPLIFY=Simplify-1.5.4.exe	;;
 	solaris) SIMPLIFY=Simplify-1.5.4.solaris	;;
 	*)	;;
     esac
