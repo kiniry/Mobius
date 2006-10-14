@@ -21,6 +21,13 @@ include Makefile.defs
 ##  docs  - creates all docs; to get javadocs you must execute the
 ##          make from this directory
 ##  all   - does all of the above
+##
+## You can run each of these in a subdirectory and only apply it to
+## the code in that subdirectory, if you like.  Note though, that the
+## subdirectories other than Javafe presume that Javafe has been
+## built.
+##
+## These are additional top-level-only targets
 ##  patch-release  - makes the tar file constituting a patch release
 ##  source-release - makes the tar file constituting a full source release
 ##  binary-release - makes the tar file constituting a binary release
@@ -120,7 +127,7 @@ jmlc_test:
 ################################################################################
 ## General rules to clean up build tree
 
-.PHONY: fix-perms
+.PHONY: fix-perms .perms-fixed
 
 ## This rule is needed because CVS does not properly keep permissions
 ## (expecially x bits), so sometimes we need a reset.  Delete the
@@ -208,6 +215,7 @@ cleanup:
 	-find ${ESCTOOLS_ROOT} \
 		\( -name "*~" -or -name "*.#*" -or -name "semantic.cache*" \) \
 		-exec rm -f {} \; > /dev/null 2>&1
+	-rm -f docs_log
 
 ################################################################################
 ## Specifications
@@ -297,6 +305,11 @@ jmldoc: build
 	$(JMLDOC) -sourcepath \
 	  $(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH)) \
 	  -classpath "$(call canonicalize,${ESC_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:)${CLASSPATH}" \
+	  -overview docs/overview.html \
+	  -header $(COPYRIGHT) \
+	  -footer $(COPYRIGHT) \
+	  -bottom '<a href="http://secure.ucd.ie/products/opensource/ESCJava2/">The ESC/Java2 Project Homepage</a>' \
+	  -stylesheetfile $(DOCS_STYLESHEET) \
 	  -private --source 1.4 \
 	  -doctitle "ESCTools API" \
 	  -windowtitle "ESCTools" \
@@ -387,7 +400,7 @@ ${ESCJAVA_CLASSFILES4RAC}:
 JMLC_CLASSFILES=jmlc_classfiles
 
 ${JMLC_CLASSFILES}:
-	mkdir ${JMLC_CLASSFILES}
+	mkdir -p ${JMLC_CLASSFILES}
 
 #..............................................................................
 # Run jmlc on each file one by one (this target is superceded by target 'jmlc').
