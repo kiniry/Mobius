@@ -31,6 +31,10 @@ JAVAFE_SOURCE_DIR ?= ${JAVAFE_ROOT}/java
 
 JAVAFE_SOURCE_DIR_REL ?= $(ESCTOOLS_ROOT_REL)/Javafe/java
 
+# The following definitions all use =, not :=, so that the wildcard functions
+# are evaluated at the time of use, rather than at the time of definition.
+# Some .java files do not exist at the time the Makefile is read, but are
+# created in the course of executing the Makefile.
 ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/ant/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/ast/*.java) \
@@ -79,11 +83,6 @@ OTHER_SOURCE_FILES_RELATIVE = \
 OTHER_SOURCE_FILES = \
 	$(foreach javafile,$(OTHER_SOURCE_FILES_RELATIVE),\
 	$(subst Utils,$(ESCTOOLS_ROOT)/Utils,$(javafile)))
-
-## FIXME - Version.java is listed above because it might not exist when *.java
-## is expanded, but isn't that true for ast/*.java as well??? -David
-## I believe that these globbed terms are expanded during *use*, not during
-## definition. -Joe
 
 # The executable to run escjava
 export ESCJ = ${ESCJAVA_ROOT}/escj
