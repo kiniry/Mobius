@@ -248,7 +248,7 @@ quiet-docs:
 	-${MAKE} docs > docs_log 2>&1
 
 docs:
-	-${MAKE} -C docs build
+	-${MAKE} -C docs
 
 slides:
 	${MAKE} -C slides build
