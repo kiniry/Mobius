@@ -181,7 +181,7 @@ export JAVAFE_CLASSFILES = ${JAVAFE_ROOT}/classfiles
 export JAVAFE_CLASSFILES4RAC = ${JAVAFE_ROOT}/classfiles4rac
 
 # This is the path needed to run Javafe (only used for testing)
-export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
+export JAVAFE_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}
 
 ## Pertinent things for Escjava
 export ESCJAVA_ROOT = ${ESCTOOLS_ROOT}/Escjava
@@ -227,22 +227,22 @@ export RELSRCTAR  ?= ${RELNAME-DATE}-source
 export RELPATCHTAR  ?= ${RELNAME-DATE}-patch
 export RELCLASSPATH = ${RELDIR}/${RELJAR}
 
-export CALVIN_PATCHES   = ${RELNAME-DATE}-Calvin-patch.bz
-export ESCJAVA_PATCHES  = ${RELNAME-DATE}-Escjava-patch.bz
-export HOUDINI_PATCHES  = ${RELNAME-DATE}-Houdini-patch.bz
-export JAVAFE_PATCHES   = ${RELNAME-DATE}-Javafe-patch.bz
-export RCC_PATCHES      = ${RELNAME-DATE}-Rcc-patch.bz
-export SIMPLIFY_PATCHES = ${RELNAME-DATE}-Simplify-patch.bz
+# The prefix of the name of the patch release tar file and patch files
+export PATCH_NAME ?= ${RELNAME-DATE}
 
-export SPECS_TAR        = ${RELNAME-DATE}-specs.tbz
-export TOPLEVEL_TAR     = ${RELNAME-DATE}-TopLevel.tbz
-export ZERO_LENGTH_TAR  = ${RELNAME-DATE}-ZeroLengthFiles.tbz
+export CALVIN_PATCHES   = ${PATCH_NAME}-Calvin-patch.bz
+export ESCJAVA_PATCHES  = ${PATCH_NAME}-Escjava-patch.bz
+export HOUDINI_PATCHES  = ${PATCH_NAME}-Houdini-patch.bz
+export JAVAFE_PATCHES   = ${PATCH_NAME}-Javafe-patch.bz
+export RCC_PATCHES      = ${PATCH_NAME}-Rcc-patch.bz
+export SIMPLIFY_PATCHES = ${PATCH_NAME}-Simplify-patch.bz
+
+export SPECS_TAR        = ${PATCH_NAME}-specs.tbz
+export TOPLEVEL_TAR     = ${PATCH_NAME}-TopLevel.tbz
+export ZERO_LENGTH_TAR  = ${PATCH_NAME}-ZeroLengthFiles.tbz
 
 # Patch release - temp directory for generating a patch release
 export PATCH_DIR ?= ${ESCTOOLS_ROOT}/patches
-
-# The prefix of the name of the patch release tar file
-export PATCH_NAME ?= ${RELNAME-DATE}
 
 ################################################################################
 ## Original ESCTools material
@@ -316,7 +316,7 @@ export JUNIT_UTILS_PATH = ${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:${ANT_LIB}
 ## The classpath needed to build all of ESC/Java2.
 
 ## This is the path needed to build Javafe
-export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${ESCTOOLS_ROOT}/Utils
+export JAVAFE_BUILD_CLASSPATH = ${JAVAFE_CLASSFILES}:${UTILS_CLASSFILES}
 
 ## This is the path needed to build Escjava
 export ESCJAVA_BUILD_CLASSPATH = ${ESCJAVA_CLASSPATH}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}
