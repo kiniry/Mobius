@@ -22,7 +22,7 @@ export TESTSOURCEDIRECTORY = ${JAVAFE_ROOT}/test
 export CAN_CLASSDIRECTORY = ${call canonicalize,${CLASSDIRECTORY}}
 
 ## This one is needed in submakes that don't define their own classpath
-export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${ESCTOOLS_ROOT}/Utils)
+export CLASSPATH = $(call canonicalize,${CLASSDIRECTORY}:${UTILS_CLASSFILES})
 
 ##############################################################################
 
@@ -34,7 +34,7 @@ all: clean build test docs
 
 build: fixperms compile
 
-buildall: compileall
+buildall: fixperms compileall
 
 jar: build test
 	jar cf dist/lib/javafe-$(JAVAFE_VERSION).jar -C classfiles .
@@ -65,8 +65,8 @@ compile: ${CLASSDIRECTORY} source ${CLASSESSTAMP}
 
 ## Compiles all out of date java files
 ${CLASSESSTAMP}: ${SOURCEFILES}
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Utils) \
-	  -d $(call canonicalize,${CLASSDIRECTORY}) $?
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}) \
+	  -d ${CAN_CLASSDIRECTORY} $?
 	touch ${CLASSESSTAMP}
 
 ## Full compile, including all java files, whether out of date or not
@@ -75,8 +75,8 @@ compileall: ${CLASSDIRECTORY} source javafeall
 ## Compiles all java files, whether out of date or not
 javafeall:
 	( cd java; \
-	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Utils) \
-	  -d $(call canonicalize,${CLASSDIRECTORY}) \
+	${JAVAC} ${JAVAC_FLAGS} -classpath $(call canonicalize,${CLASSDIRECTORY}:${SOURCEDIRECTORY}:${UTILS_CLASSFILES}) \
+	  -d ${CAN_CLASSDIRECTORY} \
 	  `find javafe -name "*.java"` \
 	  `find tohtml -name "*.java"` )
 	touch ${CLASSESSTAMP}
