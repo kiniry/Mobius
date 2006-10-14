@@ -10,7 +10,7 @@ SOURCEFILES := junitutils/*.java
 CLASSESSTAMP = classes.stamp
 CLASSDIRECTORY=.
 
-CP = ${call canonicalize,${ESCTOOLS_ROOT}/Utils:${JUNIT_LIB}:$(ESCJAVA2_SPECS)}
+CP = ${call canonicalize,${UTILS_CLASSFILES}:${JUNIT_LIB}:$(ESCJAVA2_SPECS)}
 
 PROVER_KILL_TIME?=7
 
@@ -60,6 +60,7 @@ clean:
 docs:
 	@true
 
+.PHONY: info
 info:
 	@echo "This package contains: " `cat $(SOURCEFILES) | wc -l` " LOC."
 
