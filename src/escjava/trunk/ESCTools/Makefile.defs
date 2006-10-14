@@ -172,6 +172,7 @@ export DOCS_STYLESHEET = ${ESCTOOLS_ROOT}/docs/escjava.css
 
 ## Definitions for Utils
 export UTILS_SOURCE_DIR = ${ESCTOOLS_ROOT}/Utils
+export UTILS_CLASSFILES = ${ESCTOOLS_ROOT}/Utils
 
 ## Pertinent definitions for Javafe
 export JAVAFE_ROOT = ${ESCTOOLS_ROOT}/Javafe
