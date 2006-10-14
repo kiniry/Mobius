@@ -1434,7 +1434,7 @@ public class FlowInsensitiveChecks
             ErrorSet.error(
                 lva.loc,
                 "Attempt to use a non-final variable from a different " +
-                "method. From enclosing blocks, only final local variables " +
+                "method.  From enclosing blocks, only final local variables " +
                 "are available."
             );
         }
