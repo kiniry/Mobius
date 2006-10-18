@@ -578,12 +578,12 @@ public class CoqProver extends ProverType {
      * @param variablesNames the variables' names.
      */
     public void generateDeclarations(/*@ non_null @*/Writer s, HashMap variablesNames) throws IOException {
-        Set keySet = variablesNames.keySet();
+    	Set keySet = variablesNames.keySet();
 
         Iterator iter = keySet.iterator();
         String keyTemp = null;
         VariableInfo viTemp = null;
-
+        // il y a des limites a la grossierete. on vire le HashMap et on le remplace par un HashSet.
         while (iter.hasNext()) {
 
             try {
@@ -595,8 +595,12 @@ public class CoqProver extends ProverType {
 
             String name = viTemp.getVariableInfo().toString();
             if (name.equals("ecReturn") || name.equals("ecThrow")
+            		|| name.equals("allocNew_")
+            		|| name.equals("alloc_")
                     || name.equals("t_int"))
                 continue;
+            
+            // only writes variables with a known type ;)
             if (viTemp.type != null) {
                 s.write("(");
                 s.write(viTemp.getVariableInfo() + " : "
@@ -604,13 +608,9 @@ public class CoqProver extends ProverType {
                 s.write(")");
 
             } 
-//            else {
-//                s.write("(" + viTemp.getVariableInfo() + " : S)");
-//                TDisplay.warn(this,
-//                          "generateDeclarations",
-//                          "Type of variable " + keyTemp
-//                           + " is not set when declarating variables for the proof, skipping it...");
-//            }
+            else {
+            	TDisplay.err("I won't write the variable " + viTemp.getVariableInfo() +" because I've got no idea of its type.");
+            }
         }
     }
 }

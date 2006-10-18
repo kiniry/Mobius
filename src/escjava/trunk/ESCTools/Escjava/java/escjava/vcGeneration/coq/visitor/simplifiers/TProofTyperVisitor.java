@@ -118,8 +118,15 @@ public class TProofTyperVisitor extends TVisitor {
 		if (n.type != null) {		
 			VariableInfo vi = TNode.getVariableInfo(n.name);
 			if(vi.type == null) {
-				TDisplay.info("typing the variable " + n.name);
+//				TDisplay.info("Typing the variable " + n.name);
 				vi.type = n.type;
+			}
+		}
+		else {
+			VariableInfo vi = TNode.getVariableInfo(n.name);
+			if(vi != null) {
+				TDisplay.warn("I had no informations to type " + n.name + 
+						" and it is not in the list of known variables!");
 			}
 		}
 	}
@@ -393,8 +400,8 @@ public class TProofTyperVisitor extends TVisitor {
 	}
 
 	public void visitTSelect(/*@non_null*/TSelect n) throws IOException {
+		((TNode)n.sons.get(0)).type = TNode._Reference;
 		visitSons(n);
-		// TODO Auto-generated method stub
 		
 	}
 
