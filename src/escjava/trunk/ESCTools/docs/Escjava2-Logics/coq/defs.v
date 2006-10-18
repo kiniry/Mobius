@@ -43,9 +43,12 @@ Variable S_false : S.
 Variable S_true : S.
 Axiom S_false_is_false : S_to_bool S_false = false.
 Axiom S_true_is_true : S_to_bool S_true = true.
-
+Definition bool_to_S (b:bool ) := 
+   if b then
+     S_true
+     else S_false.
 Hint Rewrite S_false_is_false S_true_is_true: escj.
-
+Coercion bool_to_S : bool >-> S.
 (* Axiom S_to_Z_det: 
          forall x : S,  (S_to_Z x) = (S_to_Z x).
 Check S_to_Z_det. *)
@@ -142,8 +145,8 @@ Variable vAllocTime : Reference -> Time.
 Definition isAllocated: Reference -> Time -> Prop := 
     fun (obj : Reference) (t: Time) => vAllocTime obj < t.
 Ltac unfoldEscTime := unfold isAllocated.
-Variable ecReturn : S.
-Variable ecThrow : S.
+Variable ecReturn : Path.
+Variable ecThrow : Path.
 Axiom distinctAxiom : ecReturn <> ecThrow.
 Hint Immediate distinctAxiom.
 
@@ -184,13 +187,14 @@ Variable lockLT : LockSet -> LockSet -> Prop.
 (*Variable is : S -> S -> Prop. *)
 Variable isField : Field -> Prop.
 Variable allocNew_ : Reference.
+Variable alloc_ : Reference.
 
 
 Variable asField: Field -> Types -> Prop.
 Variable asElems: Elem -> Elem.
 Variable asLockSet: LockSet -> LockSet.
 
-Variable eClosedTime: S -> t_int.
+Variable eClosedTime: Elem -> t_int.
 
 (* Array Logic *)
 Variable arrayShapeOne: t_int -> Reference.
@@ -202,31 +206,30 @@ Axiom arrayLengthAx :
 Variable unset: S -> Z -> Z -> S.
 
 (* The operations on the heap - more or less *)
-Module Type Heap .
-Parameter A : Set.
-Variable arrselect: S -> Z -> A.
-Variable arrstore: S -> Z -> A -> S.
-Variable select: S -> S -> A.
-Variable store: S -> S -> A -> S.
+Module Heap.
+Variable arrselect: S -> Z -> S (* A *).
+Variable arrstore: S -> Z -> S (* A *) -> S.
+Variable select: S -> S -> S (* A *).
+Variable store: S -> S ->  S (* A *)-> S.
 
 Axiom select_store1: 
-    forall(var obj :S)(val :A), (select (store var obj val) obj) = val.
+    forall(var obj :S)(val : S (* A *)), (select (store var obj val) obj) = val.
 Axiom select_store2: 
-    forall(var obj1 obj2 :S) (val : A), 
+    forall(var obj1 obj2 :S) (val :  S (* A *)), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
 Axiom arrselect_store1: 
-    forall(var :S) (obj :Z)(val :A), (arrselect (arrstore var obj val) obj) = val.
+    forall(var :S) (obj :Z)(val :S (* A *)), (arrselect (arrstore var obj val) obj) = val.
 Axiom arrselect_store2: 
-    forall(var :S)(obj1 obj2 :Z) (val : A), 
+    forall(var :S)(obj1 obj2 :Z) (val :  S (* A *)), 
          obj1 <> obj2 -> 
                  (arrselect (arrstore var obj1 val) obj2) = (arrselect var obj2).
 
-Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types -> A -> Prop.
+Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types ->  S (* A *) -> Prop.
 
 (* array axioms2 *)
 Axiom array_axiom2 : 
-      forall (a: Reference) ( a0:Time) (b0:Time) (e : S) (n : t_int)  (T: Types)  (v : A),
+      forall (a: Reference) ( a0:Time) (b0:Time) (e : S) (n : t_int)  (T: Types)  (v :  S (* A *)),
         ((arrayFresh a a0 b0 e (arrayShapeOne n)  T v) ->
          (a0 <= (vAllocTime a))) /\
         ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
@@ -268,115 +271,9 @@ end.
 
 End Heap.
 
-Module Type A_args. 
-Parameter A : Set .
-End A_args.
 
-
-Variable arrselect: S -> Z -> S.
-Variable arrstore: S -> Z -> S -> S.
-
-Variable select: S -> S -> S.
-Variable store: S -> S -> S -> S.
-
-Module    AHeap (X:A_args): Heap with Definition A := X.A   .
-Definition A := X.A.
-Variable arrselect: S -> Z -> A.
-Variable arrstore: S -> Z -> A -> S.
-
-Variable select: S -> S -> A.
-Variable store: S -> S -> A -> S.
-
-Axiom select_store1: 
-    forall(var obj :S)(val :A), (select (store var obj val) obj) = val.
-Axiom select_store2: 
-    forall(var obj1 obj2 :S) (val : A), 
-         obj1 <> obj2 -> 
-                 (select (store var obj1 val) obj2) = (select var obj2).
-Axiom arrselect_store1: 
-    forall(var :S) (obj :Z)(val :A), (arrselect (arrstore var obj val) obj) = val.
-Axiom arrselect_store2: 
-    forall(var :S)(obj1 obj2 :Z) (val : A), 
-         obj1 <> obj2 -> 
-                 (arrselect (arrstore var obj1 val) obj2) = (arrselect var obj2).
-
-Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types -> A -> Prop.
-(* array axioms2 *)
-Axiom array_axiom2 : 
-      forall (a: Reference) ( a0:Time) (b0:Time) (e : S) (n : t_int)  (T: Types)  (v : A),
-        ((arrayFresh a a0 b0 e (arrayShapeOne n)  T v) ->
-         (a0 <= (vAllocTime a))) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (isAllocated a  b0)) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (a <> null)) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (typeof a) = T) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (arrayLength a) = n) (* /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         forall (i : Reference),
-           (select (select e a) i) = v) *).
-
-(* maybe another day... Hint Resolve array_axiom2_2 array_axiom2_3 array_axiom2_4 array_axiom2_5 array_axiom2_6. *)
-
-Ltac unfoldArrAx_intern R :=
-         match goal with
-          | [H : (arrayFresh ?a  ?a0  ?b0 ?e (arrayShapeOne ?n) ?T ?v) |- _ ] =>
-               let H1 := fresh "H" in (assert (H1 :=  (array_axiom2 a a0  b0  e  n  T  v H)));
-                genclear H; unfoldArrAx_intern R
-          | [H: _ |- _ ] => genclear H; unfoldArrAx_intern R
-          | _ => intros
-        end.
-
-Ltac unfoldArrAx  :=
-         match goal with
-          | [H : _|- ?R ] =>  unfoldArrAx_intern R
-        end.
-
-Ltac arrtac := (* a ameliorer *)
-match goal with
-| [H1: (arrayFresh null  ?a0  ?b0 ?e (arrayShapeOne ?n) ?T ?v) |- _] => 
-                 let H:= fresh "H" in (assert (H :=  (array_axiom2 null a0  b0  e  n  T  v H1)); repeat (destruct H); trivial)
-| [H1: (arrayFresh ?a  ?a0  ?b0 ?e (arrayShapeOne ?n) ?T ?v) |- _] => 
-                 let H:= fresh "H" in (assert (H :=  (array_axiom2 null a0  b0  e  n  T  v H1)); repeat (destruct H); trivial)
-end.
-
-End AHeap.
-
-
-Module ArgRef : A_args with Definition A := Reference.
-Definition A := Reference.
-End ArgRef.
-
-Module RefHeap := AHeap ArgRef.
-Hint Resolve RefHeap.select_store2.
-Hint Rewrite  -> RefHeap.select_store1 RefHeap.arrselect_store1: escj_select.
-
-Module ArgS : A_args with Definition A := S.
-Definition A := S.
-End ArgS.
-Module SHeap := AHeap ArgS.
-
-Module ArgInt : A_args with Definition A := t_int.
-Definition A := t_int.
-End ArgInt.
-Module IntHeap := AHeap ArgInt.
-Hint Resolve IntHeap.select_store2.
-Hint Rewrite  -> IntHeap.select_store1 IntHeap.arrselect_store1: escj_select.
-
-Module ArgBool : A_args with Definition A := bool.
-Definition A := bool.
-End ArgBool.
-
-Module BoolHeap := AHeap ArgBool.
-Hint Resolve BoolHeap.select_store2.
-Hint Rewrite  -> BoolHeap.select_store1 BoolHeap.arrselect_store1 : escj_select.
-
-Variable x: Reference.
-Check (SHeap.arrselect x 1 = x).
-
-
+Hint Resolve Heap.select_store2.
+Hint Rewrite  -> Heap.select_store1 Heap.arrselect_store1: escj_select.
 
 
 Coercion Is_true : bool >-> Sortclass.
@@ -569,11 +466,9 @@ try match goal with
 	rewrite negb_elim in H
 end;
 repeat match goal with
-|[H: _ |- _] => rewrite RefHeap.select_store1 in H
+|[H: _ |- _] => rewrite Heap.select_store1 in H
 end;
-repeat match goal with
-|[H: _ |- _] => rewrite BoolHeap.select_store1 in H
-end; autorewrite with escj; autorewrite with escj_select;
+ autorewrite with escj; autorewrite with escj_select;
 auto.
 Ltac startsc := unfoldEscTime; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
 (* unfoldArrAx. *)
