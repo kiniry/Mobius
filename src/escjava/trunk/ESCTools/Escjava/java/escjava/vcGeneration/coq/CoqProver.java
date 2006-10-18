@@ -8,12 +8,14 @@ import java.io.LineNumberReader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafe.ast.Expr;
+import escjava.Main;
 import escjava.translate.GC;
 import escjava.translate.InitialState;
 import escjava.vcGeneration.ProverType;
@@ -90,7 +92,29 @@ public class CoqProver extends ProverType {
      * @return the Coq vernacular file representing the proof.
      */
     public void getProof(Writer output, String proofName, TNode term) throws IOException {
-    	File coqProofDir = new File(PROOF_PATH);
+    	String src = Main.options.userSourcePath;
+    	
+    	if(src == null) {
+    		// moi je dis blurb!
+    		// this fix is for use with eclipse.
+    		// as a disclaimer with esc/java eclipse plugin 
+    		// Main.options.userSourcePath should never be null
+    		List l = Main.options.inputEntries;
+    		Iterator iter = l.iterator();
+    		while(iter.hasNext()) {
+    			//we try to find an existing file
+    			File f = new File(iter.next().toString());
+    			if(f.exists()) {
+    				File res = f.getParentFile();
+    				if(res.getName().equals("src"))
+    					res = res.getParentFile();
+    				src = res.getAbsolutePath();
+    				break;
+    			}
+    		}
+    	}
+    	TDisplay.info("I say: I have found this path... " +src + "!");
+    	File coqProofDir = new File(src, PROOF_PATH);
     	if(!coqProofDir.exists()) {
     		coqProofDir.mkdir();
     	}
