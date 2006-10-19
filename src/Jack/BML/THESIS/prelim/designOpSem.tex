@@ -7,7 +7,7 @@
  we shall first look at a brief description of the semantics of the Java Virtual Machine (JVM).
 
  JVM is stack based and when a new method is called a new method frame is pushed on the frame stack and the execution continues on this new frame.
- A method frame contains the method operand stack, the array of registers and the constant pool of the class the method belongs to.
+ A method frame contains the method operand stack and the array of registers of the method.
  When a method terminates its execution normally, the result, if any, is popped from the method operand stack, the method frame is
  popped from the frame stack and the method result (if any) is pushed on the operand stack
  of its caller. If the method terminates with an exception, it does not return any result and the exception object is propagated back to its callers.

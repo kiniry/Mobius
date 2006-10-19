@@ -52,23 +52,25 @@
 % $$\fieldd_1 \neq \fieldd_2 \Rightarrow \fieldd_1.fieldName \neq  \fieldd_2.fieldName  $$
 
  A method has a unique method id (\methodName), a return type (\retType),
- a list containing the formal parameter names and their types(\args), 
+ a list containing the formal parameter types(\args), 
  the number of its formal parameters (\numArgs),
  list of bytecode instructions representing its body (\body),
 % and the entry point instruction of the method (\entryPoint)
 % (the instruction at which every execution of the method starts), 
  the exception handler table (\excHandlerTable) and the list of exceptions
- (\exceptions) that the method may throw
+ (\exceptions) that the method may throw. Finally, the structure also contains information 
+ about the class where the method is declared(\declaredIn). 
 
  $$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
-                     \MethodSet  = \left\{\begin{array}{ll}  \methodName & :\MethodName\\
-						          \retType & :\JavaType\\
-							  \args &  : list \ (name * \JavaType) \\
-							  \numArgs & : nat \\
-							  \body &  : list \ \bcIns \\
-							  %\entryPoint  &  : \bcIns \\
-							  \excHandlerTable & : list \ \ExcHandler \\
-							  \exceptions & : list \ \ClassSet_{exc}
+                     \MethodSet  = \left\{\begin{array}{ll}  \methodName & :\MethodName \\
+						             \retType & :\JavaType\\
+							     \args &  : list \  \JavaType \\
+							     \numArgs & : nat \\
+							     \body &  : list \ \bcIns \\
+							     %\entryPoint  &  : \bcIns \\
+							     \excHandlerTable & : list \ \ExcHandler \\
+							     \exceptions & : list \ \ClassSet_{exc}\\
+							     \declaredIn  &  : \ClassSet
                                      \end{array}  \right\}
      \end{array} $$
   

@@ -7,10 +7,7 @@
 
 \section{Bytecode language and its operational semantics} \label{opSem}
  The bytecode language that we introduce here corresponds to a representative subset of the Java bytecode language. 
- In particular, it supports object manipulation and creation, method invocation, as well as exception throwing and handling.
- 
-In fig. \ref{opSem:bclang}, we give the list of instructions that constitute our bytecode
- language\footnote{The instruction \arithOp{} stands for any arithmetic instruction in the list  \instr{add}, \instr{sub}, \instr{mult}, 
+ In particular, it supports object manipulation and creation, method invocation, as well as exception throwing and handling. In fig. \ref{opSem:bclang}, we give the list of instructions that constitute our bytecode language\footnote{The instruction \arithOp{} stands for any arithmetic instruction in the list  \instr{add}, \instr{sub}, \instr{mult}, 
  \instr{and}, \instr{or}, \instr{xor} , \instr{ishr}, \instr{ishl}, \instr{div}, \instr{rem} }.
  
 \begin{figure}[h] 
@@ -128,14 +125,14 @@ The following definition characterizes the executions that terminate.
    
 
 We now turn to the semantics of the individual instructions in our language. 
- Fig. \ref{opSem:jump} shows the rules for control transfer instructions. The first rule refers to
+ Fig. \ref{opSem:jump} gives the rules for control transfer instructions. The first rule refers to
 the instruction \ifCond. The condition \rel = $\{ =, \neq, \le, <, >, \ge \} $ is applied to the stack top  \stackOnlyParam{\counterOnly} and the element below the stack top 
-\stackOnlyParam{\counterOnly -1}which must be of type \Myint. If the condition is true then the control is transfered to the instruction
+\stackOnlyParam{\counterOnly -1} which must be of type \Myint. If the condition evaluates to true then the control is transfered to the instruction
   at index \texttt{n}, otherwise the control continues at the instruction following the current instruction. The top two elements \stackOnlyParam{\counterOnly} and
  \stackOnlyParam{\counterOnly - 1}  of the stack top are popped from the operand stack. The rule for \goto{} shows that the instruction
  transfers the control to the instruction at position $n$.   
  The instruction \return{} causes the normal termination of the execution of the current method \methodd.
- The instruction does not affect changes on the heap \heap{} and the return result is contained in 
+ The resulting poststate of the  instruction is a final state where the return value is contained in  
  the stack top element \stackOnlyParam{\counterOnly}.
 
 
@@ -166,25 +163,24 @@ $$
 
 
 
-Fig. \ref{opSem:arithStack}  shows the semantics of  arithmetic instructions and instructions for loading and storing on the operand stack. 
-Arithmetic instruction pop the values which are on the stack top \stackOnlyParam{\counterOnly}  and \stackOnlyParam{\counterOnly - 1}  at the position below
+ Fig. \ref{opSem:arithStack}  shows the semantics of  arithmetic instructions and instructions for loading and storing on the operand stack. 
+ Arithmetic instruction pop the values which are on the stack top \stackOnlyParam{\counterOnly}  and \stackOnlyParam{\counterOnly - 1}  at the position below
  and apply the corresponding arithmetic operation on them.
- The stack counter is decremented and  the resulting  value on the stack top \stackOnlyParam{\counterOnly - 1} \ \rm{op} \ \stackOnlyParam{\counterOnly}
- is pushed on the stack  top  \stackOnlyParam{\counterOnly - 1}. Note that our formalization does not take into consideration overflow of arithmetic instructions.
-Here, we assume that we can manipulate any unbounded integers.  
-Note that there are two cases for the arithmetic instructions  \instr{div} and \instr{rem}. This is because they 
-may terminate on a runtime exception when the second argument is 0. From the rule for exceptional termination
+ The stack counter is decremented and  the resulting  value on the stack top \stackOnlyParam{\counterOnly - 1} \ \op \ \stackOnlyParam{\counterOnly}
+ is pushed on the stack  top  \stackOnlyParam{\counterOnly - 1}. Note that our formalization does not take into consideration overflow of arithmetic instructions, i.e.
+ we assume that we can manipulate any unbounded integers.  
+ We may remark that there are two rules  for the arithmetic instructions  \instr{div} and \instr{rem}. This is because these instructions
+ may terminate on a runtime exception when the second argument is 0. Let us focus on their rules in more detail. 
+  From the rule for exceptional termination
  we can see that the exception handler table \methodd.\excHandlerTable{} of the current method will be searched 
 for an exception handler protecting the current position \pc{} from \ArithExc{} exceptions and depending whether such a handler was
 found or not the instruction execution will terminate exceptionally or not. 
-  The instruction \load{} increments the stack counter  \counterOnly and pushes
- the content of the local variable $\locVarOnly(i)$ on the stack top \stackOnlyParam{\counterOnly + 1}.  
-The instruction \store{} pops the stack top element \stackOnlyParam{\counterOnly}  and stores it into
- local variable $\locVarOnly(i)$ and  decrements the stack counter \counterOnly.  
-The instruction \iinc{} increments the value of the local variable $\locVarOnly(i)$.   
-The instruction  \push{} pushes on the stack top the integer value \textrm{i}
- and increments the stack counter \counterOnly{}. The instruction \pop{} pops the stack top element
- \stackOnly(\counterOnly). The instruction \dup{} duplicates the stack top element  \stackOnly( \counterOnly ).  
+
+  The instructions \load{} $i$ and \store{} $i$  load and store  respectively the value  of the 
+  local variable of the currently executing method, while the 
+  the instruction \iinc{} increments the value of the local variable $\locVarOnly(i)$.   
+  The instruction  \push{} \textrm{i} pushes on the stack top the integer value \textrm{i}.
+  The instruction \pop{} pops the stack top element. The instruction \dup{} duplicates the stack top element  \stackOnly( \counterOnly ).  
 
 
 \begin{figure}[ht!] 
@@ -193,7 +189,7 @@ The instruction  \push{} pushes on the stack top the integer value \textrm{i}
 {\scriptsize \frac{ 
 	   \begin{array}{l}
 	   \counterOnly' = \counterOnly - 1 \\
-	   \stackOnly' = \update{\stackOnly} {\counterOnly-1}{\stackOnlyParam{\counterOnly} \ \rm{op} \ \stackOnlyParam{\counterOnly-1}} \\
+	   \stackOnly' = \update{\stackOnly} {\counterOnly-1}{\stackOnlyParam{\counterOnly} \ \op \ \stackOnlyParam{\counterOnly-1}} \\
 	   \pc' = \pc + 1
 	   \end{array}}
 		   {\method \vdash  \arithOp :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
@@ -427,7 +423,7 @@ $$
 \end{array}
 $$
 
-\caption{\sc Operational semantics for object manipulation }
+\caption{\sc Operational semantics for object manipulation and method invokation }
 \label{opSem:obj:manip}
 \end{frameit}
 \end{figure}
@@ -488,7 +484,7 @@ is put on the stack  top \stackOnlyParam{\counterOnly + 1}. It deserves to note 
  described here  is very close to the JVM semantics, we omit the so called VM errors, e.g. such the class from which an
  instance must be created is not found.    
 
-The instruction \newarray creates a new array whose components are of type \anyType \ and whose length is the stack top value is allocated on the heap.
+The instruction \newarray{} creates a new array whose components are of type \anyType \ and whose length is the stack top value is allocated on the heap.
 The array elements are initialized to the default value of  \anyType \ and a reference to it is put on the stack top. 
 In case the stack top is less than 0, then \NegativeArraySizeExc{} is thrown.
 
@@ -541,7 +537,7 @@ In case the stack top is less than 0, then \NegativeArraySizeExc{} is thrown.
 \end{figure}
 
 Our language also supports instructions for checking if an object is of a given type. They are given in Fig. \ref{opSem:obj:typecheck}.
-For instance, the instruction \instanceof checks if the stack top element is 
+For instance, the instruction \instanceof{} checks if the stack top element is 
  of subtype \clazz{}, then the   $1$ is pushed on the stack. If 
 the object reference is \Mynull or not a subtype of \clazz{} then $0$ is pushed on the stack top. 
 The \checkcast{} instruction has a similar behavior, only that in case that the stack top element is not
@@ -628,15 +624,16 @@ The language presented here allows also to force  exception throwing. This is do
 	      }
               {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                          \stateTrans  
-					   \config{\heap}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}  } } \\ \\ 
- {\scriptsize \frac{ \begin{array}{l}	 
+					   \config{\heap}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}  } } \\ \\  
+              {\scriptsize \frac{ \begin{array}{l}	 
 	                     \stackOnlyParam{\counterOnly}  = \Mynull   \\
 			     \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc  ,\methodd.\excHandlerTable ) =  \configVar
       		    \end{array}	     
 	      }
               {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                         \stateTrans  
-					  \configVar} } 	   
+					  \configVar} } 
+	   
 \end{array}$$
 \caption{\sc Operational semantics for programmatic exceptions }
 \label{opSem:obj:throw}
@@ -644,25 +641,31 @@ The language presented here allows also to force  exception throwing. This is do
 \end{figure}
 
        Finally, in Fig. \ref{opSem:obj:method}, we can see the semantics of method invocation. 
-	 The first top $meth.\numArgs$ \ elements in the operand stack \stackOnly \ are popped from the operand stack. If 
-         \stackOnlyParam{ \counterOnly - $meth$.\numArgs } is not \Mynull, the invoked method is executed on the object   \stackOnlyParam{ \counterOnly - $meth$.\numArgs } 
-	 and where the first \numArgs + 1 elements of the list of its of local variables is initialized with 
-         \stackOnlyParam{ \counterOnly - meth.\numArgs } \ldots \stackOnlyParam{\counterOnly}. In case that the execution of method $meth$
+       As the rule shows, first the proper method \mbox{\rm n} to be executed will be looked for via the function \lookupOnly. 
+       This is is done by taking from the data structure  \mbox{\rm meth} the method signature - the method name \mbox{\rm  meth}.\methodName, 
+       its argument types \ \mbox{\rm meth}.\args{}  and its  return type \mbox{\rm methid}.\retType. 
+       The search starts from the dynamic type of the object reference on which the method must be called.
+       Once  the proper method method \mbox{\rm n} is found it is invoked.
+	 The first top $\mbox{\rm n}.\numArgs$ \ elements in the operand stack \stackOnly \ are popped from the operand stack. If 
+         \stackOnlyParam{ \counterOnly - \mbox{\rm n} .\numArgs } is not \Mynull, the  method   \mbox{\rm n}  is executed on the object   \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } 
+	 and where the first \mbox{\rm n}.\numArgs + 1 elements of the list of its of local variables is initialized with 
+         \stackOnlyParam{ \counterOnly - \mbox{\rm n} .\numArgs } \ldots \stackOnlyParam{\counterOnly}. In case that the execution of method \mbox{\rm n}
 	 terminates normally, the return value \Res{}  of its execution is stored on the operand stack of the invoker. 
-	 If the execution of of method $meth$ terminates because of an exception \Exc, then the exception handler of the invoker is searched for
-	 a handler that can handle the exception. In case the object  \stackOnlyParam{ \counterOnly - $meth$.\numArgs } \  on which the  method $meth$ must be 
-	 called is \Mynull, a \NullPointerExc{} is thrown.  			
+	 If the execution of of method \mbox{\rm n} terminates because of an exception \Exc, then the exception handler of the invoker is searched for
+	 a handler that can handle the exception. In case the object  \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \  on which the  method \mbox{\rm n} must be 
+	 called is \Mynull, a \NullPointerExc{} is thrown. Note that in this last case we do not perform method lookup as it is sure that an exception can be thrown.  			
 
 
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
               {\scriptsize \frac{\begin{array}{l} 
-	                        \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
-	                         meth :         \config{\heap}       
+                        \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} } = \mbox{\rm n} \\
+	                        \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
+	                      \mbox{\rm n}  :         \config{\heap}       
                                                        {0}
 						       {\newStack }
-                                                       {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
+                                                       {\lbrack \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						       \stateTransTerm 
 						       \configFinalNorm{\heap'}{\Res}\\
@@ -670,51 +673,53 @@ The language presented here allows also to force  exception throwing. This is do
 						       \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
 						       \pc' = \pc + 1
 			         \end{array}  }	         
-	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  \mbox{\rm n} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
 					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} }  \\\\
-	   {\scriptsize \frac{\begin{array}{l}
-	                            \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
-	                             meth:             \config{\heap}       
+	   {\scriptsize \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} }
+	                            = \mbox{\rm n} \\
+	                            \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
+	                            \mbox{\rm n} :     \config{\heap}       
                                                        {0}
 						       {\newStack }
-                                                       {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
+                                                       {\lbrack \stackOnlyParam{\counterOnly - \mbox{\rm n}.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTransTerm 
 						       \configFinalExc{\heap'}{\Exc}\\
 				     \findExcHandler{\heap'.\heapTypeOf(\Exc)  }{\pc}{\methodd.\excHandlerTable} = \bottom 
 	                        \end{array}}	         
-	         {\methodd \vdash \invoke \  meth :  
+	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  
 		                         \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
 					\configFinalExc{\heap'}{\Exc}	} }  \\\\
-	   {\scriptsize \frac{\begin{array}{l}
-	                        \stackOnlyParam{ \counterOnly - meth.\numArgs } \neq \Mynull   \\
-	                         meth:              \config{\heap}       
+	   {\scriptsize \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType } {\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } }}    = \mbox{\rm n} \\
+	                        \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } \neq \Mynull   \\
+	                      \mbox{\rm n}:              \config{\heap}       
                                                        {0}
 						       {\newStack }
-                                                       {\lbrack \stackOnlyParam{ \counterOnly - meth.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
+                                                       {\lbrack \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs },\ldots ,\stackOnlyParam{ \counterOnly} \rbrack }
 						       {0} 
 						         \stateTransTerm 
 						       \configFinalExc{\heap'}{\Exc}\\
 				            \findExcHandler{\heap'.\heapTypeOf(\Exc)  }{\pc}{\methodd.\excHandlerTable} = \pc^{eH}\\
 					    \stackOnly' = \update{\stackOnly}{0}{\Exc}
 				\end{array} }	         
-	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
 				\config{\heap'}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}	} } \\\\ 
-	   {\scriptsize \frac{\begin{array}{l}
-	                         \stackOnlyParam{ \counterOnly - meth.\numArgs } = \Mynull   \\ 
+	   {\scriptsize \frac{\begin{array}{l} 
+	         
+	                         \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } = \Mynull   \\ 
 				 \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},\NullPointerExc,\methodd.\excHandlerTable ) =  \configVar
 	         \end{array} 	      
 	         }	         
-	         {\methodd \vdash \invoke \  meth :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
 					\configVar} } 
 
  	     					
 \end{array}$$
-\caption{\sc Operational semantics for programmatic exceptions }
+\caption{\sc Operational semantics for method invokation}
 \label{opSem:obj:method}
 \end{frameit}
 \end{figure}
