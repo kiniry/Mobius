@@ -47,8 +47,8 @@
 \newcommand{\counter}{\mbox{\rm\textbf{cntr}} }
 \newcommand{\counterOnly}{\mbox{\rm Cntr} }
 \newcommand{\topStack}{\mbox{\rm cntr} }
-\newcommand{\true}{\mbox{\rm\textbf{true}} } % true from the assertion language
-\newcommand{\false}{\mbox{\rm\textbf{false}}} % false from the assertion language
+\newcommand{\true}{\mbox{\rm\textit{true}} } % true from the assertion language
+\newcommand{\false}{\mbox{\rm\textit{false}}} % false from the assertion language
 
 
 
@@ -112,8 +112,8 @@
 
 \newcommand{\Myspace}{\phantom{aaa}}
 \newcommand{\predicate}{\mathcal{P}} 
-\newcommand{\Myfalse}{\textit{false}}
-\newcommand{\Mytrue}{\textit{true}}
+\newcommand{\Myfalse}{\mbox{\rm\textbf{false}}}
+\newcommand{\Mytrue}{\mbox{\rm\textbf{true}}}
 
 
 
@@ -496,10 +496,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\evalExp}[2]{[\![#1]\!]_{s_{0}, #2}}%{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
-\newcommand{\evalExpName}{[\![*]\!]_{*,*}}
+\newcommand{\evalPred}[2]{[\![#1]\!]_{s_{0}, #2}}
+\newcommand{\evalExpName}{[\![*]\!]_{*,*}} 
+\newcommand{\evalPredName}{\evalExpName}
+
 \newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
 
-\newcommand{\interp}[2]{#2 , s_{0} \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
+\newcommand{\interp}[2]{s_{0}, #2 \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
 \newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2, s_{0}  \vDash \\ 
 				         #1 
 				  \end{array}}
@@ -507,7 +510,7 @@
 \newcommand{\validFormula}[1]{\vDash #1 }
 
 \newcommand{\defined}[1]{! \  #1 } % function value #1 is defined 
-
+\newcommand{\definedOnly}{! }
 %%%%%%%%%%%%%%%%%%%%%%%%%wpbc%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\modifLoop}{\mbox{\rm \textit{modifLoop}}}
 
@@ -701,3 +704,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 \newcommand{\wellDefined}[1]{\delta(#1)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Method lookup%%%%%%%%%%%%%%
+\newcommand{\lookupOnly}{\mbox{\rm\textit{lookUp}}}
+\newcommand{\lookup}[4]{\mbox{\rm\textit{lookUp}}(#1,#2,#3,#4)} % name , argument types, return value , class to look for in 
+\newcommand{\lookupTwoLines}[4]{\mbox{\rm\textit{lookUp}}(\begin{array}{l}#1,#2,\\ \Myspace #3,#4 \end{array})}
+\newcommand{\findMethod}[4]{\mbox{\rm\textit{findMethod}}(#1,#2,#3,#4)} 
+\newcommand{\findMethodOnly}{\mbox{\rm\textit{findMethod}}}
