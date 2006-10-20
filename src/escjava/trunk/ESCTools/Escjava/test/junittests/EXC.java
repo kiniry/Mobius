@@ -2,21 +2,6 @@
 // method that is used in an annotation does not introduce inconsistencies.
 // Checks that a fixed bug does not get broken.
 
-public class EXC {
-
-  public static void main(P p) {
-    //@ assume p != null;
-    try {
-      p.getProperty(null);
-      //@ assert false;
-    } catch (Exception e) {
-      //@ assert e instanceof NullPointerException;
-    }
-    //@ assert false;
-  }
-
-}
-
 class P {
 
     public P defaults;
@@ -34,6 +19,42 @@ class P {
           signals (Exception e) (e instanceof NullPointerException) && (name == null || defaults == null);
     */
     //@ pure
-    public String getProperty(String name) throws RuntimeException;
+    public Object getProperty(Object name) throws RuntimeException;
+}
+
+public class EXC {
+
+  public static void main(P p) {
+    //@ assume p != null;
+    try {
+      p.getProperty(null);
+      //@ assert false;  // OK - not executed
+    } catch (Exception e) {
+      //@ assert e instanceof NullPointerException;
+    }
+    //@ assert false;  // SHOULD FAIL
+  }
+
+  public static void m(P p) {
+    //@ assume p != null;
+    try {
+      p.getProperty(null);
+      //@ assert false;  // OK - not executed
+    } catch (Exception e) {
+      //@ assert e instanceof NullPointerException;
+    //@ assert false;  // SHOULD FAIL
+    }
+  }
+
+  public static void mm(P p) {
+    //@ assume p != null;
+    try {
+      p.getProperty(null);
+      //@ assert false;  // OK - not executed
+    } catch (Exception e) {
+      //@ assert e instanceof ArithmeticException; // SHOULD FAIL
+    }
+  }
+
 }
 
