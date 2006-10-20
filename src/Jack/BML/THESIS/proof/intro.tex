@@ -1,7 +1,6 @@
  %\section{Introduction}
  In the previous chapter, we defined a verification
- condition generator for a Java bytecode like language. We used a weakest precondition
- to build the verification conditions. In this section, we will show formally that the
+ condition generator for a Java bytecode like language. In this section, we will show formally that the
  proposed verification condition generator is correct, or in other words that it is sufficient
  to prove the verification conditions generated over a method's body and its specification 
  for establishing that the method respects the specification. 
@@ -13,7 +12,8 @@
 
 % We now proceed with the proof of the partial correctness of the weakest precondition calculus.
 % Note also that in the following we do not consider recursive methods.
- In the following, in Section \ref{proof:outline} we first start with an outline of the proof.   
+ In the following, in Section \ref{proof:defineCorrect} we shall formulate the correctness statement of the verification 
+ condition generator. In Section \ref{proof:outline}, we describe the steps which must be overtaken in the proof. 
  The second Section \ref{substProp} establishes the relation between syntactic substitution  and semantic evaluation.
  The latter will play a role in the correctness proof  of the verification condition generator
  in Section  \ref{proof}.

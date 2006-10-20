@@ -1,4 +1,4 @@
-\newtheorem{defCorrect}{Definition}[section]
+
 %\newtheorem{lemma_1}{Lemma}[section] 
 \newtheorem{lemma0}{Lemma}[section] % one step sequential execution
 \newtheorem{lemma1}[lemma0]{Lemma} % progress
@@ -7,8 +7,7 @@
 % \pc_n = \return or  \ins{\pc_n }  throws a not handled exception E and 
 %\pc_n = \return  then  in state_n holds post
 % else in state_n holds the exceptional postcondition for E
-\newtheorem{vcGenCorrect}[lemma0]{Theorem}
-
+\newtheorem*{vcGenCorrect1}{Theorem  \ref{vcGenCorrect}}
 \newcommand{\state}[1]{ \tau_{#1} } 
 \newcommand{\straightBraces}[1]{ \texttt{ (} #1 \texttt{ )} }
 \newcommand{\tbc}{\textit{TBC}}
@@ -16,34 +15,12 @@
 
 \section{Proof of Correctness } \label{proof}
 
-The correctness of our verification  condition generator is established w.r.t.
-to the operational semantics described in Section \ref{opSem}.
-Remind that, we look only at
- partial correctness, i.e. our calculus works under the assumption that 
-a progam terminates. 
- 
 
  
-
-We first give a definition that a ``method is correct w.r.t its specification''
-
-\begin{defCorrect}[A method is correct w.r.t. its specification] \label{defCorrect}
-For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost
-and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd \ respects its specification if 
-for every two states $s_0$ and $s_1$ such that :
-\begin{itemize}
-      \item   $\methodd : s_0  \stateTransTerm s_1   $
-      \item   $ \interp{\methodd.\pre }{ s_0 }$
-\end{itemize}
-Then if \methodd \ terminates normally then the normal postcondition holds in the final state $s_1 $:  $\interp{\methodd.\normalPost}{s_1}$. 
-Otherwise, if  \methodd \ terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $s_1 $
-$ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $
-\end{defCorrect}
- 
- The next issue that is important for understanding our approach is that we follow the design by 
- contract paradigm \cite{M97oos}. This means that when verifying a method body, we assume that the
- rest of the methods respect their
- specification in the sense of the previous definition \ref{defCorrect}.
+% The next issue that is important for understanding our approach is that we follow the design by 
+% contract paradigm \cite{M97oos}. This means that when verifying a method body, we assume that the
+% rest of the methods respect their
+% specification in the sense of the previous definition \ref{defCorrect}.
 
 
 % Once generated the verification conditions are proved with the first-order predicate logic rules. We denote that a formula $ f $ 
@@ -56,7 +33,8 @@ $ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $
 %      $$ \forall f , f \in \formulaBc,  \vdash f \ \Rightarrow \ \interp{f}{} $$
 % \end{lemma_1}
 
-First, we establish the correctness of the weakest precondition function for a single instruction: if the \fwpi \ (short for weakest precondition ) of an 
+Our first concern in this section is to establish that the rules for single bytecode instructions have the following property:
+ if the \fwpi \ (short for weakest precondition ) of an 
 instruction holds in the prestate then in the poststate of the instruction the postcondition upon which the wp is caclulated holds. 
 
 
@@ -543,16 +521,11 @@ We apply lemma \ref{lemma1} for the case for a \return \ or instruction that thr
 \Qed\\
 
 
-Now, we are ready to state the theorem which expresses the correctness of our verification condition generator
-w.r.t. the operational semantics of our language
-\begin{vcGenCorrect}\label{vcGenCorrect}
-For any  method \methodd \  if the verification condition is valid:
-$$ \numConclusion{1} \ \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} $$
- then \methodd \ is correct in the sense of the Def. \ref{defCorrect}. 
-\end{vcGenCorrect}
+
+We are now ready to prove Theorem \ref{vcGenCorrect}.
 Proof:
 \textit{ 
-As we want to prove that method \methodd{} is correct w.r.t. its specification we have
+As we want to prove that method \methodd{} respects its specification we have
 as hypothesis that the method precondition holds in the  the initial state $s_0$ 
 of the method execution, or $\interp{ \methodd.\pre }{ s_{0}}$.
 From the latter and \numConclusion{1}, we get that the weakest precondition of the 
