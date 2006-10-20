@@ -1,8 +1,8 @@
-\newtheorem{compProp2}{Lemma}[section]
-\newtheorem{compProp1}[compProp2]{Lemma}
-\newtheorem{compProp7}[compProp2]{Lemma}
-\newtheorem{compProp11}[compProp2]{Lemma}
-\newtheorem{compProp6}[compProp2]{Lemma}
+\newtheorem{compPropApp}{Lemma}[section]
+%\newtheorem{compProp1}[compProp2]{Lemma}
+%\newtheorem{compProp7}[compProp2]{Lemma}
+%\newtheorem{compProp11}[compProp2]{Lemma}
+%\newtheorem{compProp6}[compProp2]{Lemma}
 
 
 \newtheorem*{compProp3A}{Property  \ref{compile:prop:compProp3}}
@@ -41,14 +41,14 @@ the control flow can reach the instructions representing the compilation $\compi
  in Fig. \ref{pogEquiv:compile:prop} from Section \ref{pogEquiv:compile}  
  can be reached from outside of the statement compilation only via the instruction at index 14.
 
-\begin{compProp2}[Compilation of statements and expressions]\label{compile:prop:compProp2}
- For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\substatement{\ExprStmt }{\ExprStmt'} $
-and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then :
+\begin{compPropApp}[Compilation of statements and expressions]\label{compile:prop:compProp2}
+ For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\ExprStmt'$  is a substatement of $\ExprStmt$ ($\substatement{\ExprStmt }{\ExprStmt'}$)
+and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then:
 
 
 
 $$\begin{array}{l} 
-                        (  i_j \in \compileLabel{s}{\ExprStmt[\ExprStmt']}{e} \wedge\\
+                        (  i_j \in \compileLabel{s}{\ExprStmt}{e} \wedge\\
 		        \neg (i_j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge \\
 		        i_k \in \compileLabel{s'}{\ExprStmt'}{e'}  \wedge \\
 		        
@@ -58,15 +58,16 @@ $$\begin{array}{l}
 
   \end{array}$$ 
 
-\end{compProp2}
+\end{compPropApp}
 The proof is by induction over the structure of statements and expressions  and uses the next lemma \ref{compile:prop:compProp1}.
-In particular, the next lemma  states  that  if there is an instructions inside a compiled statetement or expression 
+The latter lemma  states  that  if there is an instructions inside a compiled statetement or expression 
  $\compileLabel{s}{\ExprStmt}{e}$ which   is in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
 $\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
 of $\ExprStmt$  then   $ k  = e +1$. Informally,  this means that if there are jumps from inside the compilation  $\compileLabel{s}{\ExprStmt}{e}$  of $\ExprStmt$   
 outside then the target of the jump is $e +1$.
 
-For illustration, we may consider Fig. \ref{pogEquiv:compile:prop} and focus on the compilation of the statement  
+For illustration, we may return back to the example Fig. \ref{pogEquiv:compile:prop}  on page \pageref{pogEquiv:compile:prop} and focus on the 
+compilation of the \lstinline!if!  statement   
 \lstinline!if ( i >= 0) then {v = i} else {v = -i}! 
 which comprises instructions from 4 to 11. Note that sequential instructions   have as  successor the next instruction.  Thus, sequential
 instructions respect this condition. 
@@ -80,7 +81,7 @@ We can now state this property formally.
  Note that in the formalization,  the conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and 
 $\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
 the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper exception handler.
-\begin{compProp1}[Compilation of statements and expressions]\label{compile:prop:compProp1}
+\begin{compPropApp}[Compilation of statements and expressions]\label{compile:prop:compProp1}
 
     For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
@@ -92,7 +93,7 @@ the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception an
                              \Myspace \Myspace k = e + 1  \\
 			     
               \end{array}$$ 
-\end{compProp1}
+\end{compPropApp}
 
 
 
@@ -147,61 +148,128 @@ $$
 $$
 \Qed \\
 
-For establishing Property \ref{compile:prop:compProp8}, we will need several auxiliary lemmas which are concerned with the preservation 
-of the substatement relation. First, we have to show that the regions described in the exception  handler table elements  
+For establishing Property \ref{compile:prop:compProp8}, we will need several auxiliary lemmas. First, we have to show that the regions described in the exception  handler table elements  
 correspond t 
 
 
- \begin{compProp7}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
-    Every element  $ (s,e, eH, \mbox{\rm\texttt{Exc}} )$  in the exception handler table \methodd.\excHandlerTable  \
-    is such that exists a statement $\stmt$ such that $\compileLabel{s}{\stmt}{e}$
-\end{compProp7} 
+ \begin{compPropApp}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
+    Every element  $ (s,e, eH, \Exc )$  in the exception handler table \methodd.\excHandlerTable  \
+    resulting from the compilation of method \methodd{}
+    is such that exist statements $\stmt_1$, $\stmt_2$  and $\stmt$  such that $\compileLabel{s}{\stmt_1}{e}$
+    and  statement $\stmt$ is either a try catch statement of the form 
+    $\stmt = \try \{ \stmt_1 \} \catch ( \Exc )  \{ \stmt_2 \} $ or a try finally statement of the form 
+    $\stmt = \try \{ \stmt_1 \} \finally \{ \stmt_2 \} $
+\end{compPropApp} 
 \textit{Proof}:
-This follows directly from the definition of the compiler. 
-The proof is done by contradiction. From the compiler definition, we get that  elements are added in 
+The proof is done by contradiction and follows directly from the definition of the compiler. 
+ Particularly, from the compiler definition, we get that  elements are added in 
  \methodd.\excHandlerTable \ only in the cases of 
-try catch and try finally statement compilation and that the guarded regions in the added elements correspond to statements. \\
+try catch and try finally statement compilation and that the guarded region in the  the newly added element
+ correspond to the try  statement. \\
 \Qed
+In the following when we refer to the fact that a statement  $\stmt$  is either a try catch or a try finally statement with 
+a try substatement $\stmt'$ and we 
+are not interested in the catch or  finally  part we denote this with  $\stmt = \try{\stmt'} \ldots$
 
-The next three properties deal with the substatement relation. 
-In the following, for denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
-we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$.
-For denoting that  $\ExprStmt'$ is a strict substatement of  $\ExprStmt$ ( i.e. that $\ExprStmt'$  is contained in $\ExprStmt$ 
-and there is no   $\ExprStmt''$  such that  $\ExprStmt''$ is contained in   $\ExprStmt$ and  $\ExprStmt'$ is contained in  $\ExprStmt''$)
+
+% The next lemma  states that the substatement relation on source expressions and statements is preserved
+%by the compiler. For instance, the compilation of the loop body (comprising instructions from 15 to 26) in Fig. \ref{pogEquiv:compile:prop}  
+%is part of the compilation of the loop itself (comprising instructions from 14 to 29).
+
+%\begin{compPropApp}[Substatement and subexpression relation preserved]\label{compile:prop:compPropSubstmt}
+%For all statements $\ExprStmt'$ and $\ExprStmt $ with
+%respective compilations are $\compileLabel{s'}{\ExprStmt'}{e'}$ and  $\compileLabel{s}{\ExprStmt}{e}$ 
+%if 
+%  $  \substatement{\ExprStmt }{\ExprStmt'} \Leftrightarrow \compileLabel{s'}{\ExprStmt'}{e'} \in  \compileLabel{s}{\ExprStmt}{e} $ 
+%\end{compPropApp}
+%This follows directly from the compiler function definition.
+
+
+From the compiler definition, we can also see that the indexes of the instructions corresponding to the compilation 
+$\compileLabel{s}{\ExprStmt}{e}$ 
+of $ \ExprStmt$ starting at index $s$ and ending at index $e$ are such 
+
+\begin{compPropApp}[Indexes  of the compilation of expressions and statements]\label{compile:prop:compPropIndex}
+The compilation $\compileLabel{s}{\ExprStmt}{e}$ 
+of $ \ExprStmt$ is such that 
+
+\begin{itemize}
+ \item $s \le e$
+ \item every instruction in $\compileLabel{s}{\ExprStmt}{e}$  has an index  in between $s$ and $e$
+\end{itemize}
+\end{compPropApp}
+The latter follows directly from the compiler definition function.
+ 
+In the following,  we will deal with substatement relation. For denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
+we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$. 
+We also use the notion of a direct subexpression which here means that  $\ExprStmt'$ is a direct substatement of  $\ExprStmt$
+if $\ExprStmt'$  is contained in $\ExprStmt$ 
+and there does not exist  $\ExprStmt''$  such that  $\ExprStmt''$ is contained in   $\ExprStmt$ and  $\ExprStmt'$ is contained in  $\ExprStmt''$.
+For denoting that  $\ExprStmt'$ is a direct substatement of  $\ExprStmt$
 we use the notation $\strictsubstatement{\ExprStmt }{\ExprStmt'}$.
+The next lemma establishes that the substatement relation between statements is preserved by the compiler. 
+In particular, we establish that if a statement is a substatement of another then all of its instructions are contained in 
+the compilation of the other one. Also, if two statements are not in a substatement relation neither their compilations are.
+\begin{compPropApp}[Substatement relation preserved by the compiler]\label{compile:prop:compProp6}
+   For all statements $\stmt_1$ and $\stmt_2$, with respective compilations 
+   $\compileLabel{s_1}{\stmt_1}{e_1}$ and  $\compileLabel{s_2}{\stmt_2}{e_2}$ the following holds
+   \begin{itemize} 
+         \item if $\stmt_2$ is a substatement of  $\stmt_1$ ($\substatement{\stmt_1}{\stmt_2}$) then the following holds:
+	     $s_1 \le s_2$ and $ e_2 \le e_1$
+	  \item if  $\stmt_2$ is not  substatement of  $\stmt_1$ ($\neg \substatement{\stmt_1}{\stmt_2}$), neither $\stmt_1$ is a substatement of  $\stmt_2$ 
+                ($\neg \substatement{\stmt_2}{\stmt_1}$) then the following holds:
+	     $e_1 < s_2  $ or $ e_2 < s_1$
+   \end{itemize}
+\end{compPropApp}
+This also follows from the compiler function.
 
-The next lemma  states that the substatement relation on source expressions and statements is preserved
-by the compiler. For instance, the compilation of the loop body (comprising instructions from 15 to 26) in Fig. \ref{pogEquiv:compile:prop}  
-is part of the compilation of the loop itself (comprising instructions from 14 to 29).
 
-\begin{compProp11}[Substatement and subexpression relation preserved]\label{compile:prop:compPropSubstmt}
-For all statements $\ExprStmt'$ and $\ExprStmt $ with
-respective compilations are $\compileLabel{s'}{\ExprStmt'}{e'}$ and  $\compileLabel{s}{\ExprStmt}{e}$ 
-if 
-  $  \substatement{\ExprStmt }{\ExprStmt'} \Leftrightarrow \compileLabel{s'}{\ExprStmt'}{e'} \in  \compileLabel{s}{\ExprStmt}{e} $ 
-\end{compProp11}
-This follows directly from the compiler function definition.
+The next lemma states that if an instruction is part of the compilation 
+of two source statements then we have that these statements are in a substatement relation. 
 
-The next property states that if the compilations of two
-statements in a method body share instructions then 
-either the compilation of one of them is completely inside of the other or viceversa.
-This is also evident from Fig. \ref{pogEquiv:compile:prop}.
+\begin{compPropApp}[Common instructions in the compilation of statements]\label{compile:prop:commonInstr}
+   For all statements $\stmt_1$ and $\stmt_2$, with respective compilations 
+   $\compileLabel{s_1}{\stmt_1}{e_1}$ and  $\compileLabel{s_2}{\stmt_2}{e_2}$ if it is true that 
+   $s_1 \le k \le e_1 $ and $ s_2 \le k \le e_2$ then
+   $ \substatement{\stmt_1}{\stmt_2}$ or   $ \substatement{\stmt_2}{\stmt_1}$
+   
+\end{compPropApp}
+\textit{Proof}: by contradiction.\\
+The case when  $\stmt_1$ and $\stmt_2$ are the same is trivial.
+Let $\stmt_1$ and $\stmt_2$ are different.
+Assume that the above is not true, i.e. 
+$\numConclusion{1} \ \compileLabel{s_1}{\stmt_1}{e_1}  $,
+$\numConclusion{2} \ \compileLabel{s_2}{\stmt_2}{e_2}$, 
+$\numConclusion{3} \ s_1 \le k \le e_1 \wedge  s_2 \le k \le e_2$, 
+$\numConclusion{4} \  \neg \substatement{\stmt_1}{\stmt_2} \wedge \neg   \substatement{\stmt_2}{\stmt_1} $.
+From  \numConclusion{4} and previous Lemma \ref{compile:prop:compProp6}, case 2 we obtain $e_1 < s_2  $ or $ e_2 < s_1$
+But this is in contradiction with \numConclusion{3} and thus the lemma holds also in this case.
 
-\begin{compProp6}[No overlapping compilation]\label{compile:prop:compProp6}
-For all statements $\ExprStmt_1$ and $\ExprStmt_2$ such that their compilations are 
- $\compileLabel{s_1}{\ExprStmt_1}{e_1} $ and that   $\compileLabel{s_2}{\ExprStmt_2}{e_2} $, if we have that 
-$ \exists k,  s_1 \le k  \le e_1 \wedge s_2 \le k  \le e_2  $ then the following holds:
+\Qed\\
 
-$$\begin{array}{l}
-         \compileLabel{s_2}{\ExprStmt_2}{e_2}  \in \compileLabel{s_1}{\ExprStmt_1}{e_1}\\   
-	 \vee \\
-	 \compileLabel{s_1}{\ExprStmt_1}{e_1}  \in \compileLabel{s_2}{\ExprStmt_2}{e_2} 
-\end{array}$$
-\end{compProp6}
+
+
+
+% The next property states that if the compilations of two
+%statements in a method body share instructions then 
+%either the compilation of one of them is completely inside of the other or viceversa.
+%This is also evident from Fig. \ref{pogEquiv:compile:prop}.
+
+%\begin{compPropApp}[No overlapping compilation]\label{compile:prop:compProp6}
+%For all statements $\ExprStmt_1$ and $\ExprStmt_2$ such that their compilations are 
+% $\compileLabel{s_1}{\ExprStmt_1}{e_1} $ and that   $\compileLabel{s_2}{\ExprStmt_2}{e_2} $, if we have that 
+%$ \exists k,  s_1 \le k  \le e_1 \wedge s_2 \le k  \le e_2  $ then the following holds:
+%
+%$$\begin{array}{l}
+%         \compileLabel{s_2}{\ExprStmt_2}{e_2}  \in \compileLabel{s_1}{\ExprStmt_1}{e_1}\\   
+%	 \vee \\
+%	 \compileLabel{s_1}{\ExprStmt_1}{e_1}  \in \compileLabel{s_2}{\ExprStmt_2}{e_2} 
+%\end{array}$$
+%\end{compPropApp}
 
 
 \begin{compProp8A}[Exception handler property]
-  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its strict substatement $\stmt'$, i.e. 
+  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its direct substatement $\stmt'$, i.e. 
 $\strictsubstatement{\stmt}{\stmt'} $
 if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
 $$ \begin{array}{l}
@@ -210,47 +278,102 @@ $$ \begin{array}{l}
    \end{array}
 $$
 \end{compProp8A}
-\textit{Proof}:\\
-The proof is by contradiction. Assume this is not true, i.e.
- $$\begin{array}{l} \exists \stmt, \stmt' ,   \\
-       \numConclusion{1}    \Myspace \stmt \neq \try \{ \ldots \} \catch \{ \ldots \} \wedge \\
-       \numConclusion{2}   \Myspace  \strictsubstatement{\stmt}{\stmt'} \\
-       \numConclusion{3}  \Myspace  \compileLabel{s}{\stmt}{e} \wedge \\
-       \numConclusion{4} \Myspace  \compileLabel{s'}{\stmt'}{e'} \wedge \\
-       \numConclusion{5}  \Myspace \exists  \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} \neq \\
-                                            \phantom{\exists \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}    
-\end{array}
-$$
+\textit{Proof}: by contradiction \\
+\comment{i.e. assume that} \\
+$\numConclusion{1} \ \strictsubstatement{\stmt}{\stmt'}   $, \\
+$\numConclusion{2} \ \compileLabel{s}{\stmt}{e}$,\\
+$\numConclusion{3} \ \compileLabel{s'}{\stmt'}{e'}$ \\
+$\numConclusion{4} \ \exists s_1, e_1, eH_1, s_2, e_2, eH_2, \Exc $ such that\\
+   $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = eH_1$  \\
+   $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = eH_2$  \\
+   $ eH_1 \neq  eH_2  $ \\
+\comment{from definition of the \findExcHandlerOnly{} function we get } \\
+$\numConclusion{5} \  s_1 \le e \le e_1$ \\
+$\numConclusion{6} \  s_2 \le e' \le e_2$ \\
+\comment{from Lemma \ref{compile:prop:compProp7} for the elements in the exception handler table  of a method  resulting from the compiler } \\
+$\numConclusion{7} \ \exists \stmt_1, stmt^{try}_1  \compileLabel{s_1}{\stmt_1}{e_1}$ $  stmt^{try}_1 = \try\{ \stmt_1\} \ldots $ \\
+$\numConclusion{8} \ \exists \stmt_2,stmt^{try}_2 \compileLabel{s_2}{\stmt_2}{e_2} $ $ stmt^{try}_2 = \try\{ \stmt_2\} \ldots $ \\
+\comment{from \numConclusion{1} and Lemma \ref{compile:prop:compProp6} for substatement preservation } \\
+$\numConclusion{9} \ s \le s' \wedge e' \le e  $ \\
+\comment{from Lemma \ref{compile:prop:compPropIndex} for instructions in a source statement compilation } \\
+$\numConclusion{10} \ s \le  e  \wedge s' \le  e'  $ \\
+\comment{from  \numConclusion{9}  and  \numConclusion{10}   } \\
+$  \numConclusion{11}   s  \le  e' \le  e  $\\
+\comment{from  \numConclusion{11}, \numConclusion{6} and Lemma \ref{compile:prop:commonInstr} for common instructions in the compilation} \\
+$  \numConclusion{12} \    \substatement{\stmt}{\stmt_2} \vee \substatement{\stmt_2}{\stmt}  $
 
-This means that there exists two elements $   (s_1,e_1, eH_1, \mbox{\rm\texttt{Exc}} ) $  and
-$   (s_2,e_2, eH_2, \mbox{\rm\texttt{Exc}} )$  in the exception handler table of method \methodd \ \methodd.\excHandlerTable \  such that   : 
-$$ \numConclusion{6}  \Myspace eH_1 \neq eH_2 $$
-From lemma \ref{compile:prop:compProp7} we get that :
+\comment{from  \numConclusion{6}, \numConclusion{3} and Lemma \ref{compile:prop:commonInstr} for common instructions in the compilation} \\
+$  \numConclusion{13} \    \substatement{\stmt'}{\stmt_2} \vee \substatement{\stmt_2}{\stmt'}  $\\
+\comment{ from \numConclusion{12} and \numConclusion{13} we have 4 cases }\\ 
 
-$$ \numConclusion{7}  \Myspace \begin{array}{l}
-        \exists \stmt_1, s_1, e_1, \compileLabel{s_1}{\stmt_1}{e_1} \\
-	\wedge \\
-	\exists \stmt_2, s_2, e_2,\compileLabel{s_2}{\stmt_2}{e_2}
-\end{array}	 $$
+\begin{description}
+  \item[$( \substatement{\stmt}{\stmt_2} \vee \substatement{\stmt_2}{\stmt} ) \wedge \substatement{\stmt'}{\stmt_2}   $] 
+   Because $ \stmt_2$ is a direct substatement of $\stmt^{try}_2$ we conclude that    $\substatement{\stmt'}{ \stmt^{try}_2  }$.
+    But from Lemma \ref{compile:prop:compProp6} and the way try catch statement is compiled
+    we get that $e_2 <  e'$. From the last and \numConclusion{6} we get  a contradiction
+
+     \item[$ \substatement{\stmt}{\stmt_2}  \wedge \substatement{\stmt_2} {\stmt'}  $] 
+     This is in contradiction with \numConclusion{1}  which states that $\stmt'$ is a direct substatement 
+     of  $\stmt$.
+
+      \item[$ \substatement{\stmt_2}{\stmt}  \wedge \substatement{\stmt_2} {\stmt'}  $] 
+      From this, we get that $s_2 \le e \le e_2$ and $s_2 \le e' \le e_2 $.
+      But this means that $\findExcHandler{\Exc}{e}{\methodd.\excHandlerTable} $
+\end{description}
 
 
-From the initial condition \numConclusion{2} by lemma \ref{compile:prop:compPropSubstmt}  we conclude that 
-$$\numConclusion{8} \Myspace \compileLabel{s_1}{\stmt_1}{e_1} \notin   \compileLabel{s}{\stmt}{e} $$
 
-%From \numConclusion{7}, it follows that the exception handler for $e'$ is obligatory outside $\compileLabel{s}{\stmt}{e}$.
+ 
 
- Because $e \in [s_2 \ldots e_2 ]  \wedge  e' \in [s_1 \ldots e_1 ] \wedge e,e' \in [s \ldots e]$, \numConclusion{8} by applying 
-  Lemma \ref{compile:prop:compProp6}  we can conclude that
+% The proof is by contradiction. Assume this is not true, i.e.
+%  $$\begin{array}{l} \exists \stmt, \stmt' ,   \\
+%        \numConclusion{1}    \Myspace  \stmt \neq \try \{ \ldots \} \catch \{ \ldots \} \wedge \\
+%        \numConclusion{2}    \Myspace  \strictsubstatement{\stmt}{\stmt'} \\
+%        \numConclusion{3}    \Myspace  \compileLabel{s}{\stmt}{e} \wedge \\
+%        \numConclusion{4}    \Myspace  \compileLabel{s'}{\stmt'}{e'} \wedge \\
+%        \numConclusion{5}    \Myspace  \exists  \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} \neq \\
+%                                             \phantom{\exists \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}    
+% \end{array}
+% $$
 
- $$  \begin{array}{l} 
-          \compileLabel{s}{\stmt}{e} \in \compileLabel{s_1}{\stmt_1}{e_1} \in  \compileLabel{s_2}{\stmt_2}{e_2} \\
-           \vee \\
-	 \compileLabel{s}{\stmt}{e} \in   \compileLabel{s_2}{\stmt_2}{e_2} \in \compileLabel{s_1}{\stmt_1}{e_1}
- \end{array}$$	   
+% This means that there exists two elements $   (s_1,e_1, eH_1, \mbox{\rm\texttt{Exc}} ) $  and
+% $   (s_2,e_2, eH_2, \mbox{\rm\texttt{Exc}} )$  in the exception handler table of method \methodd \ \methodd.\excHandlerTable \  such that   : 
 
- In both of the cases and of the definition of \findExcHandlerOnly \ in Chapter \ref{opSem}, Section \ref{opSem:exc}  this means that 
-$$ \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
-which is in contradiction with \numConclusion{6}.\\
+% $$ \numConclusion{6}  \Myspace eH_1 \neq eH_2  $$
+% $$ \numConclusion{7}  \Myspace \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = eH_1 $$
+% $$ \numConclusion{8}  \Myspace \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = eH_2 $$
+
+
+
+% From lemma \ref{compile:prop:compProp7}, we know that the first elements of the exception handler element correspond 
+% to a statement :
+% $$ \numConclusion{7}  \Myspace 
+% \begin{array}{l}
+%         \exists \stmt_1, s_1, e_1, \compileLabel{s_1}{\stmt_1}{e_1} \\
+% 	\wedge \\
+% 	\exists \stmt_2, s_2, e_2,\compileLabel{s_2}{\stmt_2}{e_2}
+% \end{array} $$
+% 
+% From the definition of the  \findExcHandlerOnly{} and \numConclusion{8} it follows that 
+% $$ \numConclusion{9} \Myspace e' \in \compileLabel{s_2}{\stmt_2}{e_2}  $$ 
+% 
+% From the initial condition \numConclusion{2} by lemma \ref{compile:prop:compPropSubstmt}  we conclude that 
+% $$\numConclusion{8} \Myspace \compileLabel{s_1}{\stmt_1}{e_1} \notin   \compileLabel{s}{\stmt}{e} $$
+
+
+
+% Because $e \in [s_2 \ldots e_2 ]  \wedge  e' \in [s_1 \ldots e_1 ] \wedge e,e' \in [s \ldots e]$, \numConclusion{8} by applying 
+%  Lemma \ref{compile:prop:compProp6}  we can conclude that
+%
+% $$  \begin{array}{l} 
+%          \compileLabel{s}{\stmt}{e} \in \compileLabel{s_1}{\stmt_1}{e_1} \in  \compileLabel{s_2}{\stmt_2}{e_2} \\
+%           \vee \\
+%%	 \compileLabel{s}{\stmt}{e} \in   \compileLabel{s_2}{\stmt_2}{e_2} \in \compileLabel{s_1}{\stmt_1}{e_1}
+% \end{array}$$	   
+%
+% In both of the cases and of the definition of \findExcHandlerOnly \ in Chapter \ref{opSem}, Section \ref{opSem:exc}  this means that 
+%$$ \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
+%which is in contradiction with \numConclusion{6}.\\
 \Qed \\
 
 
