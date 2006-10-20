@@ -1,5 +1,8 @@
 In this chapter, we shall see how a bytecode verification condition generator can be used 
 for checking a software component w.r.t. to bounded memory consumption policies.
+Limited resource consumption policies are especially important for small device 
+which do have computational and store resource restrictions. Thus, developing techniques  that may statically 
+predict the resource consumption of an unknown program can be used for ensuring the security of small devices. 
 We  propose also an annotation inference algorithm against such policies.
 
 
@@ -7,6 +10,6 @@ The remainder of the chapter is organized as follows.
 Section \ref{sec:motivation} gives several motivating examples.
 In section \ref{sec:principles},  we begin by describing the principles of our
 approach. Section \ref{sec:examples} illustrates the approach with several examples on recursive methods, exception, inheritance.
-Section \ref{sec:infer} presents an algorithm for inferring method specification for constraint memory consumption policies 
-in terms of preconditions, postconditions and loop invariants. 
+%Section \ref{sec:infer} presents an algorithm for inferring method specification for constraint memory consumption policies 
+%in terms of preconditions, postconditions and loop invariants. 
 Finally, section \ref{sec:rel} presents an overview of related works.
