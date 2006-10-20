@@ -87,6 +87,7 @@ public final class GetSpec {
       Inner.firstThis0 = null;
     }
     
+    //System.out.println("COMMON END " + spec.postAssumptions.size());
     return spec;
   }
   
@@ -103,6 +104,7 @@ public final class GetSpec {
       /*@ non_null */RoutineDecl rd) 
   {
     DerivedMethodDecl dmd = (DerivedMethodDecl)dmdDecoration.get(rd);
+    //if (dmd != null) { System.out.println("RETRIEVED SPECS"); ((EscPrettyPrint)EscPrettyPrint.inst).printDMD(System.out,0,dmd);}
     if (dmd != null) return dmd;
     
     dmd = new DerivedMethodDecl(rd);
@@ -149,7 +151,9 @@ public final class GetSpec {
        * Add modifiers from this method as well as all methods it overrides;
        * also handle non_null:
        */
+
       addModifiersToDMD(dmd, md);
+      //{ System.out.println("SELF SPECS"); ((EscPrettyPrint)EscPrettyPrint.inst).printDMD(System.out,0,dmd);}
       Set overrides = escjava.tc.FlowInsensitiveChecks.getAllOverrides(md);
       Enumeration overridden_methods = overrides.elements();
       while (overridden_methods.hasMoreElements()) {
@@ -158,6 +162,7 @@ public final class GetSpec {
         
         addModifiersToDMD(dmd, smd);
       }
+      //{ System.out.println("COMBINED SPECS"); ((EscPrettyPrint)EscPrettyPrint.inst).printDMD(System.out,0,dmd);}
     }
     
     dmd.computeFreshUsage();
@@ -530,6 +535,7 @@ public final class GetSpec {
     
     GC.thisvar.decl.type = savedType;
 
+    //System.out.println("TRMETHOD END " + spec.postAssumptions.size());
     return spec;
   }
   
@@ -767,7 +773,8 @@ public final class GetSpec {
       /*@ non_null */Hashtable wt,
       /*@ non_null */ExprVec postAssumptions) {
     ConditionVec post = ConditionVec.make();
-    
+
+    //System.out.println("STARTING WITH " + postAssumptions.size());
     // type correctness of targets (including "alloc", if "alloc" is a target)
     Enumeration wtEnum = wt.keys();
     while (wtEnum.hasMoreElements()) {
@@ -961,6 +968,8 @@ public final class GetSpec {
 	  }
 	  //[GKE]
           TrAnExpr.initForClause();
+          //System.out.println("TRANEXPR");
+          //escjava.AnnotationHandler.printSpec(prag);
           Expr pred = TrAnExpr.trSpecExpr(prag.expr, map, wt);
           if (TrAnExpr.extraSpecs) {
             postAssumptions.append(TrAnExpr.trSpecExprAuxAssumptions);
@@ -982,6 +991,14 @@ public final class GetSpec {
           // implemented.
         }
       }
+/*
+      for (int i=0; i<postAssumptions.size(); i++) {
+        escjava.ast.EscPrettyPrint.inst.print(System.out,0,postAssumptions.elementAt(i));
+        System.out.println("");
+      }
+      System.out.println("ENDING WITH " + postAssumptions.size() + " " + axsToAdd.size());
+*/
+
       addAxioms(axsToAdd, postAssumptions);
       Iterator jj = conds.iterator();
       while (jj.hasNext()) {
@@ -990,6 +1007,7 @@ public final class GetSpec {
     } finally {
       TrAnExpr.closeForClause();
     }
+    //System.out.println("TRMETHODECLPOST T WITH " + postAssumptions.size());
     /*
      * System.out.println("WT"); Enumeration ee = wt.keys(); while
      * (ee.hasMoreElements()) { Object o = ee.nextElement();
@@ -1059,6 +1077,7 @@ public final class GetSpec {
       }
     }
     
+    //System.out.println("TRMETHODECLPOST Z WITH " + postAssumptions.size());
     // Then any initially clauses (for constructors, if not a helper)
     
     boolean isHelper = Utils.findModifierPragma(dmd.original.pmodifiers,
@@ -1115,6 +1134,7 @@ public final class GetSpec {
       InterfaceDecl ifd = (InterfaceDecl)en.nextElement();
       post = addConstraintClauses(post, ifd, wt, postAssumptions);
     }
+    //System.out.println("TRMETHODECLPOST ENDING WITH " + postAssumptions.size());
     return post;
   }
   
@@ -1180,6 +1200,7 @@ public final class GetSpec {
 					/*@ non_null */FindContributors scope, 
 					Set predictedSynTargs) 
   {
+    //System.out.println("EXTEND START " + spec.postAssumptions.size());
     // FIXME - I'm not sure that \old variables not in the modifies list get
     // translated here
     // I think those translations are in scope but not in spec.
@@ -1362,7 +1383,7 @@ public final class GetSpec {
         }
       }
     }
-    
+    //System.out.println("EXTEND END " + spec.postAssumptions.size());
     return spec;
   }
   
