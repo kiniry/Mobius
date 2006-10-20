@@ -140,7 +140,26 @@ separate_java_tests:
 		echo ... Creating $*-expected ;\
 		mv $*-ckd $*-expected ;\
 	fi ;\
-	fi ;\
+	fi ;
+
+## This target (X-run) runs escjava against X.java, using any flags specified
+## in X.java; the output is simply output, and not stored in -ckd or 
+## compared against -expected.  This is useful for debugging.
+%-run:
+	@echo Running $*  \
+		${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
+		`grep '//#FLAGS:' $* | \
+		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
+		${ARGS} 
+	@if [ ! -e $* ] ; then \
+		echo No such file $* ;\
+	else \
+	${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
+		`grep '//#FLAGS:' $* | \
+		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
+		${ARGS} $* ; \
+	fi
+
 
 %-expected: %
 	escjava ${ALWAYSFLAGS} \
