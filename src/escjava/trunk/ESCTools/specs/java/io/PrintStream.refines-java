@@ -34,6 +34,7 @@ public class PrintStream extends FilterOutputStream {
     //@ public model boolean error;
 
     //@ public normal_behavior
+    //@   requires os != null;
     //@   ensures outputText.equals("");
     //@   ensures !endsInNewLine;
     //@   ensures os.isOpen ==> isOpen;

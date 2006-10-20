@@ -22,7 +22,7 @@ public class FileOutputStream extends OutputStream {
     /*@
       @ public normal_behavior
       @   requires name != null;
-      @   assignable \not_specified;
+      @   assignable \nothing;
       @   ensures !wasClosed && isOpen && outputBytes.length == 0 
       @           && append == false;
       @ also
