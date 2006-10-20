@@ -51,11 +51,11 @@ public class TestSystem1 extends LocalTestCase {
     System.setIn(null);  // ERROR
   }
 
-  public void testOut() {
+  public void testOut(/*@ non_null */ PrintStream n) {
     PrintStream out_orig = System.out;
     try {
 	assertTrue( out_orig != null);
-	PrintStream n = new PrintStream(new FileOutputStream("testfile"));
+	//PrintStream n = new PrintStream(new FileOutputStream("testfile"));
 	System.setOut(n);
 	assertTrue( System.out == n);
         System.out.print("");
@@ -102,11 +102,11 @@ public class TestSystem1 extends LocalTestCase {
   }
 
 
-  public void testErr() {
+  public void testErr(/*@ non_null */ PrintStream n) {
     PrintStream err_orig = System.err;
     try {
 	assertTrue( err_orig != null);
-	PrintStream n = new PrintStream(new FileOutputStream("testfile"));
+	//PrintStream n = new PrintStream(new FileOutputStream("testfile"));
 	System.setErr(n);
 	assertTrue( System.err == n);
         System.err.print("");
