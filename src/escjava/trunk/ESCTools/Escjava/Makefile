@@ -160,10 +160,10 @@ really-compile: ${STAMPFILE}  build_jniw
 ${STAMPFILE}: ${ESCJAVA_SOURCE_FILES_RELATIVE}
 	@#./dl-xml-rpc-lib.sh # for future use
 	./generate-functions-vcGenerator.sh #fixme, this is lame
-	${JAVAC} ${JAVAC_FLAGS} \
+	echo $? | xargs -s 1000 ${JAVAC} ${JAVAC_FLAGS} \
 		-classpath $(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}) \
 		-sourcepath $(call canonicalize,${SOURCEPATH}) \
-		-d $(call canonicalize,${CLASSDIRECTORY}) $?
+		-d $(call canonicalize,${CLASSDIRECTORY}) 
 	cp ${ESCJAVA_SOURCE_DIR}/escjava/gui/*.html ${CLASSDIRECTORY}/escjava/gui
 	touch $@
 
@@ -417,18 +417,47 @@ test_escjava_parser:
 	$(MAKE) -C ${TOP_ESCJAVA_TEST_DIR} test
 
 self_typecheck:
+	@JAVA_VM_FLAGS=-Xmx256m \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
+		-source 1.4 -typecheck -quiet \
+		${UTILS_PACKAGE_LIST} ${JAVAFE_PACKAGE_LIST}
+	@for p in ${ESCJAVA_PACKAGE_LIST} ; do \
+	echo $$p ; \
 	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
 		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet \
-		${PACKAGE_LIST}
+		$$p ; \
+	done
+
+## FIXME - the following does a stack overflow, which is why the target above
+## runs over the packages one at a time.
+zzz:
+	JAVA_VM_FLAGS=-Xmx256m \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
+		-source 1.4 -typecheck -quiet \
+		escjava escjava.ant escjava.ast escjava.backpred 
+	done
+
+
+%-self:
+	JAVA_VM_FLAGS=-Xmx256m \
+	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
+		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
+		-source 1.4 -typecheck -quiet \
+		$*
 
 test_matrix:
 	JAVA_VM_FLAGS=-Xmx256m \
 	${ESCJ} -source 1.4 -sourcepath ${TESTSOURCEDIRECTORY} \
 		-classpath "${call canonicalize,${TESTSOURCEDIRECTORY}:${ESCTOOLS_ROOT}/Javafe/java:${ESCTOOLS_ROOT}/Escjava/java:${ESCTOOLS_ROOT}/Utils}" \
-		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs-kiniry:${JML2_SPECS_JAR}" \
+		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs" \
 		${TESTSOURCEDIRECTORY}/matrix/*.java
 
 self_test_nocheck: build
