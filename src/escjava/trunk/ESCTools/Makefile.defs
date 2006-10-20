@@ -258,6 +258,8 @@ export ESCTOOLS_ORIGINAL ?= ${ESCTOOLS_ROOT}/original_archives
 ################################################################################
 ## Packages
 
+export UTILS_PACKAGE_LIST = junitutils
+
 export JAVAFE_PACKAGE_LIST = \
 	javafe javafe.ast javafe.parser  \
 	javafe.reader javafe.genericfile javafe.filespace \
@@ -285,7 +287,7 @@ export ESCJAVA_PACKAGE_PATHS = escjava \
 	escjava/vcGeneration/sammy escjava/vcGeneration/simplify escjava/vcGeneration/xml
 
 export PACKAGE_LIST = \
-	  junitutils $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
+	  ${UTILS_PACKAGE_LIST} $(JAVAFE_PACKAGE_LIST) $(ESCJAVA_PACKAGE_LIST)
 
 ################################################################################
 ## JUnit
