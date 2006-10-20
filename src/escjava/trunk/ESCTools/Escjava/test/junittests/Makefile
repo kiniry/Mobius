@@ -162,6 +162,22 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 	fi ;\
 	fi ;\
 
+%-run: 
+	@echo Running $*  \
+		${ALWAYSFLAGS} \
+		`grep '//#FLAGS:' $* | \
+		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" `\
+		${ARGS} 
+	@if [ ! -e $* ] ; then \
+		echo No such file $* ;\
+	else \
+	${ESCJAVA} ${ALWAYSFLAGS} \
+		`grep '//#FLAGS:' $* | \
+		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
+		${ARGS} $* ; \
+	fi 
+
+
 %-expected: %
 	escjava ${ALWAYSFLAGS} \
 		`grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx"` $* 2>&1 > $@
