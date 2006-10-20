@@ -1,10 +1,9 @@
 \section{Related work} \label{relWorkWp}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In the following, we review briefly the existing work related to program verification
- and more particularly program verification tailored to Java and Java bytecode programs. 
+In the following, we review briefly the existing work related to bytecode verification
+ and more particularly program verification tailored to Java bytecode programs. 
 
-\todo{gilles: what do you mean by giving a title to every section}
  Floyd is among the first to work on program verification using logic methods for unstructured program
  languages (see \cite{F67amp}). Following the Floyd's approach, T.Hoare gives a formal logic for program verification in \cite{Hoare69ABC} known
  today under the name Hoare logic. Dijkstra and Scholten \cite{WPCDS} proposes then an efficient way for applying Hoare logic in
@@ -19,11 +18,7 @@ In the following, we review briefly the existing work related to program verific
 %is provided with a bytecode verifier. There is a lot of research work done in the domain 
 %and for a detailed overview of the state of the art one can look at~\cite{Ljbc}.  
 
-As Java has been gaining popularity in industry since the nineties of the twentieth century,
-it also attracted the research interest.   
-Thus the nineties upto nowadays give rise to several verification tools tailored to Java
- based on Hoare logic. Among the ones that gained most popularity are
-esc/java developed at Compaq \cite{escjava}, the Loop tool \cite{jacobs03java}, Krakatoa, Jack \cite{BRL-JACK} etc.   
+   
 
 Few works have been dedicated to the definition of a bytecode logic. Among the earliest work in the field of bytecode verification 
 is the thesis of C.Quigley  \cite{Quigley03PLJ} in which Hoare logic rules are given for a bytecode like language. This work is limited 
@@ -32,15 +27,21 @@ to a subset of the Java virtual machine instructions and does not treat for exam
  which gives an issue to complex and weak rules.
 
 The work by Nick Benton \cite{B04tlsj} gives a  typed logic for a bytecode language with stacks and jumps. 
-The technique that he proposes checks at the same time types and specifications.
-The language is simple and supports basically stack and arithmetic operations. Finally, a proof of correctness
+The technique that he proposes checks that both types and specifications are respected.
+The language is simple and supports basically stack and arithmetic operations. A proof of correctness
 w.r.t. an operational semantics is given.
 
 Following the work of Nick Benton, Bannwart and Muller \cite{BM05plb} give  a Hoare logic rules
 for a bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
-As in our work, they assume that the bytecode has passed the bytecode verification certification. The bytecode logic aims to 
-express functional properties. Invariants are inferred by fixpoint calculation.
-However, inferring invariants is not a decidable problem.
+As in our work, they assume that the bytecode is well-typed. 
+In particular, they define a Hoare-style bytecode logic which consists in building a derivation tree 
+and the leaves of the derivation tree must be proven in a classical logic. This is different from our solution
+where we generate directly  verification conditions using a weakest precondition calculus which are then proven in a logic.
+ A main inconvenient of using  Hoare logic triples for proving program correctness is that this is  
+  a complex process and needs even in simple cases a high level of user interaction and competence. Of course, our approach
+ also requires user interaction as far as the generated verification conditions are hard to prove but automation 
+ is possible as far as the verification conditions are simple.
+  
 
 
 % In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode 
@@ -51,8 +52,7 @@ However, inferring invariants is not a decidable problem.
  the method and class contracts  (pre, post conditions, exceptional postconditions, class invariants) are inserted in the intermediate code . 
  Spec\# is a superset of the C\# programming language, with a built-in  specification language, 
  which proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
- The static verification procedure  involves translation of the contract specification into metadata which is attached to the intermediate code. 
- The verification procedure \cite{leinoWPUP} that is performed includes several stages of processing the bytecode program:  
+ The verification procedure \cite{leinoWPUP} includes several processing stages of the bytecode program -  
  elimination of irreducible loops, transformation into an acyclic control flow graph,
  translation of the bytecode into a guarded passive command language program. Despite that here in our implementation we also
  do a transformation in the graph into an acyclic program, we consider that in a mobile code scenario
