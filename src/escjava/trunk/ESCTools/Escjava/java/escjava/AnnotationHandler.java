@@ -1,4 +1,3 @@
-// $Id$
 // This class is generated as part of the 2003 Revision of the ESC Tools
 // Author: David Cok
 
@@ -110,6 +109,7 @@ public class AnnotationHandler {
     handlePragmas(td);
     for (int j = 0; j < td.elems.size(); ++j) {
       TypeDeclElem tde = td.elems.elementAt(j);
+      // Handle nested types
       // Handle nested types
       if (tde instanceof TypeDecl) {
         handleTypeDecl((TypeDecl)tde);
@@ -427,6 +427,7 @@ public class AnnotationHandler {
     if (defaultSpecs && (tde instanceof ConstructorDecl) && tde.implicit) {
       TypeSig td = TypeSig.getSig(tde.parent);
       TypeSig tds = td.superClass();
+      tds.typecheck();
       if (tds != null && tde.pmodifiers != null && tde.pmodifiers.size() > 0)
           try {
             ConstructorDecl cd = tds.lookupConstructor(new Type[0], td);
@@ -692,7 +693,17 @@ public class AnnotationHandler {
           if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR) break;
           if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN) break;
           if (isTrue(mm.expr)) break;
-          if (!reqIsTrue) mm.expr = implies(req, mm.expr);
+          if (!reqIsTrue && false) {
+            mm.expr = implies(req,mm.expr);
+          }
+          if (!reqIsTrue) {
+             ExprModifierPragma newmm = ExprModifierPragma.make(tag,
+				    implies(req,mm.expr), mm.getStartLoc()) ;
+	         Utils.owningDecl.set(newmm, Utils.owningDecl.get(mm));
+	         newmm.errorTag = mm.errorTag;
+             mm = newmm;
+          }
+
           resultList.addElement(mm);
           break;
         }
@@ -711,7 +722,14 @@ public class AnnotationHandler {
           if (mm.expr.getTag() == TagConstants.NOTSPECIFIEDEXPR) break;
           if (mm.expr.getTag() == TagConstants.INFORMALPRED_TOKEN) break;
           if (isTrue(mm.expr)) break;
-          if (!reqIsTrue) mm.expr = implies(req, mm.expr);
+          if (!reqIsTrue) {
+             VarExprModifierPragma newmm = VarExprModifierPragma.make(tag,
+                    mm.arg,implies(req,mm.expr), mm.getStartLoc()) ;
+             Utils.owningDecl.set(newmm, Utils.owningDecl.get(mm));
+             newmm.setOriginalTag(mm.originalTag());
+            mm = newmm;
+          }
+          //if (!reqIsTrue) mm.expr = implies(req, mm.expr);
           resultList.addElement(mm);
           break;
         }
@@ -998,6 +1016,7 @@ public class AnnotationHandler {
           ExprModifierPragma newvmp = ExprModifierPragma.make(vmp.tag,
               vmp.expr, vmp.loc);
           newvmp.setOriginalTag(vmp.originalTag());
+          Utils.owningDecl.set(newvmp, Utils.owningDecl.get(vmp));
           if (Utils.ensuresDecoration.isTrue(vmp))
             Utils.ensuresDecoration.set(newvmp,true);
           prefix.setElementAt(newvmp, i);
@@ -1391,21 +1410,21 @@ public class AnnotationHandler {
         pms.initialAlso = pm.elementAt(0);
         ++pos;
       }
-      pos = parseAlsoSeq(pos, pm, 1, null, pms.specs);
+      pos = parseAlsoSeq(pos, pm, 1, null, pms.specs, rd);
       if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
         ++pos;
-        pos = parseAlsoSeq(pos, pm, 1, null, pms.impliesThat);
+        pos = parseAlsoSeq(pos, pm, 1, null, pms.impliesThat, rd);
       }
       if (pm.elementAt(pos).getTag() == TagConstants.FOR_EXAMPLE) {
         ++pos;
-        pos = parseAlsoSeq(pos, pm, 2, null, pms.examples);
+        pos = parseAlsoSeq(pos, pm, 2, null, pms.examples, rd);
       }
       if (pm.elementAt(pos).getTag() == TagConstants.IMPLIES_THAT) {
         ErrorSet
             .caution(pm.elementAt(pos).getStartLoc(),
                 "implies_that sections are expected to precede for_example sections");
         ++pos;
-        pos = parseAlsoSeq(pos, pm, 1, null, pms.impliesThat);
+        pos = parseAlsoSeq(pos, pm, 1, null, pms.impliesThat, rd);
       }
       while (true) {
         ModifierPragma mp = pm.elementAt(pos);
@@ -1454,7 +1473,7 @@ public class AnnotationHandler {
     // The behaviorTag is used to determine whether signals or ensures clauses
     // are permitted; 0 means either are ok; not valid on outermost call
     public int parseAlsoSeq(int pos, ModifierPragmaVec pm, int behaviorMode,
-        ModifierPragma behavior, ArrayList result) {
+        ModifierPragma behavior, ArrayList result, RoutineDecl rd) {
       while (true) {
         ModifierPragmaVec mpv = ModifierPragmaVec.make();
         if (behaviorMode != 0) {
@@ -1519,6 +1538,7 @@ public class AnnotationHandler {
               ExprModifierPragma emp = ExprModifierPragma.make(
                   TagConstants.ENSURES, AnnotationHandler.F, mp.getStartLoc());
               Utils.ensuresDecoration.set(emp, true);
+              Utils.owningDecl.set(emp,rd);
               mpv.addElement(emp);
               break;
             case TagConstants.EXAMPLE:
@@ -1554,7 +1574,7 @@ public class AnnotationHandler {
               behavior = null;
           }
         }
-        pos = parseSeq(pos, pm, 0, behavior, mpv);
+        pos = parseSeq(pos, pm, 0, behavior, mpv, rd);
         if (behaviorMode != 0 && behavior != null) {
           // Tag each heavyweight spec case
           //if (mpv.size() > 0) mpv.addElement(heavyweightFlag);
@@ -1620,7 +1640,7 @@ public class AnnotationHandler {
 
     //@ requires (* pm.elementAt(pm.size()-1).getTag() == TagConstants.END *);
     public int parseSeq(int pos, ModifierPragmaVec pm, int behaviorMode,
-        ModifierPragma behavior, ModifierPragmaVec result) {
+        ModifierPragma behavior, ModifierPragmaVec result, RoutineDecl rd) {
       int behaviorTag = behavior == null ? 0 : behavior.getTag();
       //System.out.println("STARTING " + behaviorMode + " " + behaviorTag);
       if (pm.elementAt(pos).getTag() == TagConstants.MODEL_PROGRAM) {
@@ -1690,7 +1710,7 @@ public class AnnotationHandler {
             int openLoc = loc;
             ++pos;
             ArrayList s = new ArrayList();
-            pos = parseAlsoSeq(pos, pm, 0, behavior, s);
+            pos = parseAlsoSeq(pos, pm, 0, behavior, s, rd);
             if (pm.elementAt(pos).getTag() != TagConstants.CLOSEPRAGMA) {
               ErrorSet.error(pm.elementAt(pos).getStartLoc(),
                   "Expected a closing |}", openLoc);
