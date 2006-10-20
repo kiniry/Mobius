@@ -19,5 +19,6 @@ TestCollection.java
 TestByteArrayInputStream.java
 ## This test has consistency problems either from a bug or in the specs
 TestSystem3.java
+TestSystem4.java
 ##
 ## End of file - DO NOT LEAVE BLANK LINES BEYOND THIS POINT
