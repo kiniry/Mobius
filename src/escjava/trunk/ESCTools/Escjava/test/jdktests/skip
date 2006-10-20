@@ -17,5 +17,7 @@ TestSet2.java
 TestCollection.java
 ## Turn this test back on once we have new/good specs for ByteArrayInputStream.
 TestByteArrayInputStream.java
+## This test has consistency problems either from a bug or in the specs
+TestSystem3.java
 ##
 ## End of file - DO NOT LEAVE BLANK LINES BEYOND THIS POINT
