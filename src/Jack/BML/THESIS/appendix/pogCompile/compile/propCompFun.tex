@@ -11,56 +11,9 @@
 
 \section{Proofs of properties from Section \ref{compile:prop} }\label{appendix:compile:prop}
 
-
-
-
-\begin{compProp3A}[Compilation of expressions]
-    For any expression $\expressionSrc$, starting label $s$ and end label $e$,
-    the compilation $\compileLabel{s}{\expressionSrc}{e}$ is a block of bytecode instruction in the sense of Def. \ref{seqInstr}
-   
-\end{compProp3A}
-\textit{Proof:}
-
-Following the Def. \ref{seqInstr} of block of bytecode instructions,  we have to see if the compilation of an expression respects
-three conditions.
-The first condition of Def.\ref{seqInstr}  follows from lemma \ref{compile:prop:compProp2}. 
-Def. \ref{seqInstr} also requires that there are no jump instructions  in the list of instructions representing the  compilation of an expression.
-This is established by induction over the structure of the expression.
-The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
-  no instruction except $\ins{s}$ may be  a loop entry  in the sense of Def.  \ref{defLoop} in Chapter
-\ref{wpGeneral}, Section \ref{opSem:prelim}. This is the case, as there are no jump instructions inside the compiled expression  and all the instructions inside an
-expression are sequential\todo{this is not well explained}.\\
-\Qed 
-
-The next  property  of the compiler is that any statement or expression   is
- compiled in a list of bytecode instructions 
-such that there could not be jumps  from outside inside the compilation of a statement or expression, i.e.
-the control flow can reach the instructions representing the compilation $\compileLabel{s}{\ExprStmt}{e}$ 
- of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$. 
- For instance, the instructions 14-29 in the compilation of the while statement
- in Fig. \ref{pogEquiv:compile:prop} from Section \ref{pogEquiv:compile}  
- can be reached from outside of the statement compilation only via the instruction at index 14.
-
-\begin{compPropApp}[Compilation of statements and expressions]\label{compile:prop:compProp2}
- For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\ExprStmt'$  is a substatement of $\ExprStmt$ ($\substatement{\ExprStmt }{\ExprStmt'}$)
-and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then:
-
-
-
-$$\begin{array}{l} 
-                        (  i_j \in \compileLabel{s}{\ExprStmt}{e} \wedge\\
-		        \neg (i_j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge \\
-		        i_k \in \compileLabel{s'}{\ExprStmt'}{e'}  \wedge \\
-		        
-		       i_j \execRel i_k )  \Rightarrow \\ 
-		       \Myspace  s' = k 
-
-
-  \end{array}$$ 
-
-\end{compPropApp}
-The proof is by induction over the structure of statements and expressions  and uses the next lemma \ref{compile:prop:compProp1}.
-The latter lemma  states  that  if there is an instructions inside a compiled statetement or expression 
+We start here with several auxiliary lemmas that will allows us to prove the statements from Section \ref{compile:prop} 
+about the compiler.
+The first lemma  states  that  if there is an instructions inside a compiled statetement or expression 
  $\compileLabel{s}{\ExprStmt}{e}$ which   is in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
 $\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
 of $\ExprStmt$  then   $ k  = e +1$. Informally,  this means that if there are jumps from inside the compilation  $\compileLabel{s}{\ExprStmt}{e}$  of $\ExprStmt$   
@@ -68,7 +21,7 @@ outside then the target of the jump is $e +1$.
 
 For illustration, we may return back to the example Fig. \ref{pogEquiv:compile:prop}  on page \pageref{pogEquiv:compile:prop} and focus on the 
 compilation of the \lstinline!if!  statement   
-\lstinline!if ( i >= 0) then {v = i} else {v = -i}! 
+\lstinline!if ( i >= 0) then {v = i}! \lstinline!else {v = -i}! 
 which comprises instructions from 4 to 11. Note that sequential instructions   have as  successor the next instruction.  Thus, sequential
 instructions respect this condition. 
 Only jump instructions may cause control transfer outside the \lstinline!if! compilation. 
@@ -86,20 +39,20 @@ the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception an
     For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
            $$ \begin{array}{l} 
-                             \forall i, ( \ins{i} \in \compileLabel{s}{\ExprStmt }{e} ) \wedge \\
-			     \Myspace ( \ins{i} \execRel \ins{k}) \wedge \\
-			     \Myspace \neg (\ins{k} \in   \compileLabel{s}{\ExprStmt}{e}  ) \\
-			     \Myspace \neg \isStartExc{\ins{k}}     \Rightarrow   \\
-                             \Myspace \Myspace k = e + 1  \\
+                             \forall i, ( \ins{i} \in \compileLabel{s}{\ExprStmt }{e} ) \wedge 
+			      ( \ins{i} \execRel \ins{k}) \wedge 
+			      \neg (\ins{k} \in   \compileLabel{s}{\ExprStmt}{e}  ) \wedge
+			      \neg \isStartExc{\ins{k}}     \Rightarrow   
+                               k = e + 1  
 			     
               \end{array}$$ 
 \end{compPropApp}
 
 
-
+\textit{Proof:} 
 The proof is done by induction on the structure of the compiled statement. 
 We scatch the proof for the compilation of the if statement, the rest of the cases being similar \\
-\textit{Proof:} 
+
 $$
 \begin{array}{l}
             \comment{Assume that $\exists i, i \in [  s \ldots e ], \exists k ,   k \notin [s \ldots e + 1] \wedge \ins{i} \execRel \ins{k}    $  }\\
@@ -148,10 +101,53 @@ $$
 $$
 \Qed \\
 
+The next  property  of the compiler is that any statement or expression   is
+ compiled in a list of bytecode instructions 
+such that there could not be jumps  from outside inside the compilation of a statement or expression, i.e.
+the control flow can reach the instructions representing the compilation $\compileLabel{s}{\ExprStmt}{e}$ 
+ of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$. 
+ For instance, the instructions 14-29 in the compilation of the while statement
+ in Fig. \ref{pogEquiv:compile:prop} from Section \ref{pogEquiv:compile}  
+ can be reached from outside of the statement compilation only via the instruction at index 14.
+
+\begin{compPropApp}[Compilation of statements and expressions]\label{compile:prop:compProp2}
+ For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\ExprStmt'$  is a substatement of $\ExprStmt$ ($\substatement{\ExprStmt }{\ExprStmt'}$)
+and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then the following holds:
+$$
+                        (  j \execRel k \wedge  j \in \compileLabel{s}{\ExprStmt}{e} \wedge
+		        \neg (j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge 
+		        k \in \compileLabel{s'}{\ExprStmt'}{e'}  
+		        )  \Rightarrow   k = s'  $$ 
+
+\end{compPropApp}
+The proof is by induction over the structure of statements and expressions  and uses  Lemma \ref{compile:prop:compProp1}.
+
+\begin{compProp3A}[Compilation of expressions]
+    For any expression $\expressionSrc$, starting label $s$ and end label $e$,
+    the compilation $\compileLabel{s}{\expressionSrc}{e}$ is a block of bytecode instruction in the sense of Def. \ref{seqInstr}
+   
+\end{compProp3A}
+\textit{Proof:}
+
+Following the Def. \ref{seqInstr} of block of bytecode instructions,  we have to see if the compilation of an expression respects
+three conditions.
+The first condition of Def.\ref{seqInstr} states that none of the instructions is a target of an instruction
+outside of the compilation of the expression except from the first instruction. This follows from lemma \ref{compile:prop:compProp2}. 
+The second condition in Def. \ref{seqInstr}  requires that there are no control 
+transfer instructions (jumps, \return and \athrow)  in the list of instructions representing the  compilation of an expression.
+This is established by induction over the structure of the expression.
+The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
+no instruction except possibly for the first instruction in the expression compilation is in a loop execution relation with its predecessor in the sense of 
+Def.  \ref{defLoop} in Chapter \ref{wpGeneral}, Section \ref{opSem:prelim}, page \pageref{opSem:prelim}.
+Assume that this is not the case. This would mean that there exist $i, s < i \le e  $  such that between it and its predecessor there is a loop edge
+ $ i-1 \execRel^{l} i$.  Following Def. \ref{defLoop}  this would mean that every execution path reaching instruction $i-1$  must pass before through instruction $i$.
+As all the instructions in the compilation of an expression are sequential in order that the latter be true there should be a jump to instruction $i$ from outside
+the compilation of the expression. But this contradicts the first condition. Thus, it follows that our hypothesis is false and we can conclude that the third condition 
+of Def. \ref{seqInstr} holds for compilation of expressions.
+ \Qed \\
+
 For establishing Property \ref{compile:prop:compProp8}, we will need several auxiliary lemmas. First, we have to show that the regions described in the exception  handler table elements  
-correspond t 
-
-
+correspond to statements which are declared in the try clause of try catch or try finally statements.  
  \begin{compPropApp}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
     Every element  $ (s,e, eH, \Exc )$  in the exception handler table \methodd.\excHandlerTable  \
     resulting from the compilation of method \methodd{}
@@ -166,7 +162,7 @@ The proof is done by contradiction and follows directly from the definition of t
  \methodd.\excHandlerTable \ only in the cases of 
 try catch and try finally statement compilation and that the guarded region in the  the newly added element
  correspond to the try  statement. \\
-\Qed
+\Qed\\
 In the following when we refer to the fact that a statement  $\stmt$  is either a try catch or a try finally statement with 
 a try substatement $\stmt'$ and we 
 are not interested in the catch or  finally  part we denote this with  $\stmt = \try{\stmt'} \ldots$
@@ -186,9 +182,7 @@ are not interested in the catch or  finally  part we denote this with  $\stmt = 
 
 
 From the compiler definition, we can also see that the indexes of the instructions corresponding to the compilation 
-$\compileLabel{s}{\ExprStmt}{e}$ 
-of $ \ExprStmt$ starting at index $s$ and ending at index $e$ are such 
-
+$\compileLabel{s}{\ExprStmt}{e}$  of $ \ExprStmt$  are all comprised in between $s$ and $e$.  
 \begin{compPropApp}[Indexes  of the compilation of expressions and statements]\label{compile:prop:compPropIndex}
 The compilation $\compileLabel{s}{\ExprStmt}{e}$ 
 of $ \ExprStmt$ is such that 
@@ -227,7 +221,7 @@ This also follows from the compiler function.
 The next lemma states that if an instruction is part of the compilation 
 of two source statements then we have that these statements are in a substatement relation. 
 
-\begin{compPropApp}[Common instructions in the compilation of statements]\label{compile:prop:commonInstr}
+\begin{compPropApp}[Common instructions in the compilation of statements ]\label{compile:prop:commonInstr}
    For all statements $\stmt_1$ and $\stmt_2$, with respective compilations 
    $\compileLabel{s_1}{\stmt_1}{e_1}$ and  $\compileLabel{s_2}{\stmt_2}{e_2}$ if it is true that 
    $s_1 \le k \le e_1 $ and $ s_2 \le k \le e_2$ then
@@ -284,15 +278,17 @@ $\numConclusion{1} \ \strictsubstatement{\stmt}{\stmt'}   $, \\
 $\numConclusion{2} \ \compileLabel{s}{\stmt}{e}$,\\
 $\numConclusion{3} \ \compileLabel{s'}{\stmt'}{e'}$ \\
 $\numConclusion{4} \ \exists s_1, e_1, eH_1, s_2, e_2, eH_2, \Exc $ such that\\
+   $ (s_1,e_1, eH_1, \Exc )$ is in the exception handler table $\methodd.\excHandlerTable$\\
+   $ (s_2,e_2, eH_2, \Exc )$ is in the exception handler table $\methodd.\excHandlerTable$\\
    $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = eH_1$  \\
    $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = eH_2$  \\
    $ eH_1 \neq  eH_2  $ \\
-\comment{from definition of the \findExcHandlerOnly{} function we get } \\
+\comment{from definition of the function  \findExcHandlerOnly{} in Section \ref{opSem:exc}, page \pageref{opSem:exc} } \\
 $\numConclusion{5} \  s_1 \le e \le e_1$ \\
 $\numConclusion{6} \  s_2 \le e' \le e_2$ \\
 \comment{from Lemma \ref{compile:prop:compProp7} for the elements in the exception handler table  of a method  resulting from the compiler } \\
-$\numConclusion{7} \ \exists \stmt_1, stmt^{try}_1  \compileLabel{s_1}{\stmt_1}{e_1}$ $  stmt^{try}_1 = \try\{ \stmt_1\} \ldots $ \\
-$\numConclusion{8} \ \exists \stmt_2,stmt^{try}_2 \compileLabel{s_2}{\stmt_2}{e_2} $ $ stmt^{try}_2 = \try\{ \stmt_2\} \ldots $ \\
+$\numConclusion{7} \ \exists \stmt_1, stmt^{try}_1 $ such that $  \compileLabel{s_1}{\stmt_1}{e_1}$ and $  stmt^{try}_1 = \try\{ \stmt_1\} \ldots $ \\
+$\numConclusion{8} \ \exists \stmt_2,stmt^{try}_2$ such that $ \compileLabel{s_2}{\stmt_2}{e_2} $ and $ stmt^{try}_2 = \try\{ \stmt_2\} \ldots $ \\
 \comment{from \numConclusion{1} and Lemma \ref{compile:prop:compProp6} for substatement preservation } \\
 $\numConclusion{9} \ s \le s' \wedge e' \le e  $ \\
 \comment{from Lemma \ref{compile:prop:compPropIndex} for instructions in a source statement compilation } \\
@@ -304,21 +300,42 @@ $  \numConclusion{12} \    \substatement{\stmt}{\stmt_2} \vee \substatement{\stm
 
 \comment{from  \numConclusion{6}, \numConclusion{3} and Lemma \ref{compile:prop:commonInstr} for common instructions in the compilation} \\
 $  \numConclusion{13} \    \substatement{\stmt'}{\stmt_2} \vee \substatement{\stmt_2}{\stmt'}  $\\
-\comment{ from \numConclusion{12} and \numConclusion{13} we have 4 cases }\\ 
+\comment{ from \numConclusion{12} and \numConclusion{13} we have 4 cases: }\\ 
 
 \begin{description}
-  \item[$( \substatement{\stmt}{\stmt_2} \vee \substatement{\stmt_2}{\stmt} ) \wedge \substatement{\stmt'}{\stmt_2}   $] 
-   Because $ \stmt_2$ is a direct substatement of $\stmt^{try}_2$ we conclude that    $\substatement{\stmt'}{ \stmt^{try}_2  }$.
-    But from Lemma \ref{compile:prop:compProp6} and the way try catch statement is compiled
-    we get that $e_2 <  e'$. From the last and \numConclusion{6} we get  a contradiction
+  \item[$ \substatement{\stmt'}{\stmt_2}  $] 
+       We show that the case $\substatement{\stmt'}{\stmt_2}$ is not possible. 
+       Because from \numConclusion{8}, we get that  $ \stmt_2$ is a direct substatement of $\stmt^{try}_2$ we conclude that
+       $\stmt^{try}_2 $ is a substatement of $\stmt'$, i.e.    $\substatement{\stmt'}{ \stmt^{try}_2  }$.
+       But from Lemma \ref{compile:prop:compProp6} and the way try catch  and try finally statements are compiled
+       we get that $e_2 <  e'$. From the last inequality and \numConclusion{6} we get  a contradiction
+       
+  \item[$\substatement{\stmt_2} {\stmt'} \wedge \substatement{\stmt}{\stmt_2}    $] 
+       This is in contradiction with \numConclusion{1}  which states that $\stmt'$ is a direct substatement 
+       of  $\stmt$
 
-     \item[$ \substatement{\stmt}{\stmt_2}  \wedge \substatement{\stmt_2} {\stmt'}  $] 
-     This is in contradiction with \numConclusion{1}  which states that $\stmt'$ is a direct substatement 
-     of  $\stmt$.
-
-      \item[$ \substatement{\stmt_2}{\stmt}  \wedge \substatement{\stmt_2} {\stmt'}  $] 
-      From this, we get that $s_2 \le e \le e_2$ and $s_2 \le e' \le e_2 $.
-      But this means that $\findExcHandler{\Exc}{e}{\methodd.\excHandlerTable} $
+  \item[$ \substatement{\stmt_2} {\stmt'} \wedge \substatement{\stmt_2}{\stmt}  $] 
+       From this, by Lemma \ref{compile:prop:compProp6} for compiler substatement preservation  we get that
+       \numConclusion{14}    $s_2 \le e \le e_2$ and $s_2 \le e' \le e_2 $.
+       Using \numConclusion{7}, we also get by a similar reasoning as in the first case that 
+       it is not possible that the statement $\stmt_1$ is a substatement of $\stmt$, i.e. we have that
+       \numConclusion{15} $\neg \substatement{\stmt}{\stmt_1}$. From \numConclusion{2} and \numConclusion{5} by Lemma 
+       \ref{compile:prop:compProp6}, we get that  \numConclusion{16}  $ \substatement{\stmt}{\stmt_1} \vee \substatement{\stmt_1}{\stmt} $ holds.
+       From  \numConclusion{15} and  \numConclusion{16} we get \numConclusion{17}  $ \substatement{\stmt_1}{\stmt}$ which also implies that 
+       \numConclusion{18} $ \substatement{\stmt_1}{\stmt'}$ as $\stmt'$ is a (direct) substatement of $\stmt$. 
+       From  \numConclusion{17}  and \numConclusion{18} and  Lemma \ref{compile:prop:compProp6}, we conclude that   
+       \numConclusion{19}    $s_1 \le e \le e_1$ and $s_1 \le e' \le e_1$. From  \numConclusion{14} and \numConclusion{19} and 
+       definition of the function \findExcHandlerOnly{}  Section \ref{opSem:exc}, page \pageref{opSem:exc} we conclude that either
+       $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} =  e_1 $ and 
+        $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =  e_1 $
+	or that \\
+         $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} =  e_2 $ and 
+        $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =  e_2 $. But this means 
+	 $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = $ $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}$
+	 which is contradiction with \numConclusion{4}.
+	
+ 
+      
 \end{description}
 
 
