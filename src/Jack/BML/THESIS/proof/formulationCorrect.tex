@@ -1,0 +1,48 @@
+\newtheorem{defCorrect}{Definition}[section]
+\newtheorem{vcGenCorrect}{Theorem}[section]
+
+\section{Formulation of the correctness statement}\label{proof:defineCorrect}
+
+%The correctness of our verification  condition generator is established w.r.t.to the operational semantics described in Section \ref{opSem}.
+In order to define what it means for the verification calculus to be correct we will need to 
+ precise what does it mean that a  method respects its specification. As we have stated 
+ before the intuition behind this notion is that if the method starts execution in a state 
+ where its precondition  holds then if it terminates execution then its postcondition holds.
+ Another condition for the correctness of a method is that if it overrides a method from a super class
+ of the class where it is declared  it must respect the specification of the method it overrides. As we explained 
+ earlier in Chapter \ref{assertLang}, Section \ref{assertLang:lang} the specification upon which the verification 
+ of an overriding method is performed guarantees that the method respects automatically the specification of the overriden method.
+ Thus, we shall not discuss in the following the behavioral subtyping as it holds trivially because of the way we construct specifications 
+ for overriding methods. Thus, we formulate method correctness as follows:
+
+\begin{defCorrect}[A method respects its specification] \label{defCorrect}
+For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost
+and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd \ respects its specification if 
+for every two states $s_0$ and $s_1$ such that :
+\begin{itemize}
+      
+      \item   $\methodd : s_0  \stateTransTerm s_1   $
+      \item   $ \interp{\methodd.\pre }{ s_0 }$
+\end{itemize}
+Then if \methodd \ terminates normally then the normal postcondition holds in the final state $s_1 $:  $\interp{\methodd.\normalPost}{s_1}$. 
+Otherwise, if  \methodd \ terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $s_1 $
+$ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $
+\end{defCorrect}
+
+
+Let us now see informally the correctness condition for the verification calculus. 
+We would like to establish that if the verification conditions
+generated for a method 
+are valid 
+and the precondition of the method holds in the initial state of the method 
+then the postcondition of  the method holds in its final state if the method terminates.
+Formally, we want to establish the following statement:
+
+\begin{vcGenCorrect}\label{vcGenCorrect}
+For any  method \methodd \  if the verification condition is valid:
+$$ \numConclusion{1} \ \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} $$
+ then \methodd \ respects its specificcation in the sense of the Def. \ref{defCorrect}. 
+\end{vcGenCorrect}
+
+The main purpose of the current chapter is to establish this theorem. Before entering in technical part of the proof
+we shall give an outline of the steps to be taken for establishing it.
