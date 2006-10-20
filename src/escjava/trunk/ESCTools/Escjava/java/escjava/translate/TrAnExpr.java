@@ -1741,11 +1741,11 @@ public class TrAnExpr {
           e = trSpecExpr(e,sp,st);
           trSpecExprAuxConditions.addElement(e);
           specialResultExpr = oldResultExpr;
-          /*
-           System.out.println("INSERTING-END " + Location.toString(m.getStartLoc()) );
-           EscPrettyPrint.inst.print(System.out,0,e);
-           System.out.println("");
-           */
+          
+          // System.out.println("INSERTING-END " + Location.toString(m.getStartLoc()) );
+          // EscPrettyPrint.inst.print(System.out,0,e);
+          // System.out.println("");
+           
         }
         
         default:
@@ -1845,8 +1845,40 @@ public class TrAnExpr {
       // Note - if there is an ensures clause with object fields, then it is
       // not a great candidate for a function call
       
-      // FIXME - need to guard this with signals and diverges
-      // conditions as well
+      Expr ex = escjava.AnnotationHandler.T;
+      javafe.tc.FlowInsensitiveChecks.setType(ex, Types.booleanType);
+      for (int i=0; i<v.size(); ++i) {
+        ModifierPragma p = v.elementAt(i);
+        if (p.getTag() == TagConstants.SIGNALS) { // includes SIGNALS_ONLY
+          //Expr e = trSpecExpr(((VarExprModifierPragma)p).expr,null,null); // FIXME - no substitution?
+          Expr e = ((VarExprModifierPragma)p).expr;
+          ex = BinaryExpr.make(TagConstants.AND,ex,e,Location.NULL);
+          javafe.tc.FlowInsensitiveChecks.setType(ex, Types.booleanType);
+        }
+      }
+      Expr notExceptionalReturn = UnaryExpr.make(TagConstants.NOT,ex,
+        Location.NULL);
+      javafe.tc.FlowInsensitiveChecks.setType(notExceptionalReturn, Types.booleanType);
+      
+      ex = escjava.AnnotationHandler.T;
+      javafe.tc.FlowInsensitiveChecks.setType(ex, Types.booleanType);
+      for (int i=0; i<v.size(); ++i) {
+        ModifierPragma p = v.elementAt(i);
+        if (p.getTag() == TagConstants.DIVERGES) {
+          //Expr e = trSpecExpr(((ExprModifierPragma)p).expr,null,null); // FIXME - no substitution?
+          Expr e = ((ExprModifierPragma)p).expr;
+          ex = BinaryExpr.make(TagConstants.AND,ex,e,Location.NULL);
+          javafe.tc.FlowInsensitiveChecks.setType(ex, Types.booleanType);
+        }
+      }
+      Expr notDivergentReturn = UnaryExpr.make(TagConstants.NOT,ex,
+                Location.NULL);
+      javafe.tc.FlowInsensitiveChecks.setType(notDivergentReturn, Types.booleanType);
+      
+      Expr guard = ex == escjava.AnnotationHandler.T ? notExceptionalReturn :
+              BinaryExpr.make(TagConstants.AND,notExceptionalReturn,notDivergentReturn,Location.NULL);
+      javafe.tc.FlowInsensitiveChecks.setType(guard, Types.booleanType);
+      
       // find ensures pragmas and translate them into axioms
       for (int i=0; i<v.size(); ++i) {
         ModifierPragma p = v.elementAt(i);
@@ -1857,6 +1889,8 @@ public class TrAnExpr {
           continue;
         }
 
+        //System.out.println("IN GETEQUIVALENTAXIOMS");
+        //escjava.AnnotationHandler.printSpec(p);
       RoutineDecl trd = (RoutineDecl) Utils.owningDecl.get(p);
 
       ArrayList bounds = makeBounds(trd, newThis);
@@ -1869,13 +1903,22 @@ public class TrAnExpr {
       } else {
         specialThisExpr = fcall;
       }
-      
-        Expr translatedPostcondition = trSpecExpr(
-                 ((ExprModifierPragma)p).expr,null,null); // FIXME - no subst?
 
+      Expr e = ((ExprModifierPragma)p).expr;
+
+      Expr translatedGuard = trSpecExpr(guard,null,null);
+      Expr translatedPostcondition = trSpecExpr(e,null,null); // FIXME - no subst?
+      translatedPostcondition = GC.implies(translatedGuard,translatedPostcondition);  
+
+        //System.out.println("NEW POST");
+        //escjava.ast.EscPrettyPrint.inst.print(System.out,0,translatedPostcondition);
+        //System.out.println();
+        
         // Wrap the expression in a forall
 
         Expr ee = createForall(translatedPostcondition,fcall,bounds);
+        //escjava.ast.EscPrettyPrint.inst.print(System.out,0,ee);
+        //System.out.println();
         conjuncts.addElement(ee);
       }
 
