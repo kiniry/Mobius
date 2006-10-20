@@ -721,27 +721,32 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     }
   }
   
-  public void printSpec(/*@non_null*/OutputStream o, int ind, /*@non_null*/Spec spec) {
-    write(o, "SPEC ");
+  public void printDMD(/*@non_null*/OutputStream o, int ind, /*@non_null*/DerivedMethodDecl dmd) {
+    write(o, "DMD ");
     
-    ModifierPragmaVec local = spec.dmd.original.pmodifiers;
+    ModifierPragmaVec local = dmd.original.pmodifiers;
     ModifierPragmaVec combined = ModifierPragmaVec.make();
     
-    for (int i=0; i<spec.dmd.requires.size(); i++)
-      combined.addElement(spec.dmd.requires.elementAt(i));
-    for (int i=0; i<spec.dmd.modifies.size(); i++)
-      combined.addElement(spec.dmd.modifies.elementAt(i));
-    for (int i=0; i<spec.dmd.ensures.size(); i++)
-      combined.addElement(spec.dmd.ensures.elementAt(i));
-    for (int i=0; i<spec.dmd.exsures.size(); i++)
-      combined.addElement(spec.dmd.exsures.elementAt(i));
+    for (int i=0; i<dmd.requires.size(); i++)
+      combined.addElement(dmd.requires.elementAt(i));
+    for (int i=0; i<dmd.modifies.size(); i++)
+      combined.addElement(dmd.modifies.elementAt(i));
+    for (int i=0; i<dmd.ensures.size(); i++)
+      combined.addElement(dmd.ensures.elementAt(i));
+    for (int i=0; i<dmd.exsures.size(); i++)
+      combined.addElement(dmd.exsures.elementAt(i));
     
-    spec.dmd.original.pmodifiers = combined;
-    print(o, ind+INDENT, spec.dmd.original,
-          spec.dmd.getContainingClass().id,
+    dmd.original.pmodifiers = combined;
+    print(o, ind+INDENT, dmd.original,
+          dmd.getContainingClass().id,
           false);
-    spec.dmd.original.pmodifiers = local;
-    
+    dmd.original.pmodifiers = local;
+    return;
+  }
+ 
+  public void printSpec(/*@non_null*/OutputStream o, int ind, /*@non_null*/Spec spec) {
+    write(o, "SPEC ");
+    printDMD(o,ind,spec.dmd);
     
     spaces(o, ind);
     write(o, "targets ");
