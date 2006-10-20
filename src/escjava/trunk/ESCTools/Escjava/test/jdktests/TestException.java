@@ -97,7 +97,17 @@ public class TestException extends LocalTestCase {
       assertTrue(true);
     }
     
-    tt = new Exception(s);
+  }
+  
+  /** Once initCause is called, you can't call it again,
+   *  even if the argument is null
+   *
+   */
+  public void testDuplicateInitCause2() {
+    String s = "abcd";
+    Exception t = new Exception("THR");
+    
+    Exception tt = new Exception(s);
     tt.initCause(null);
     try { 
       tt.initCause(t);
@@ -105,7 +115,7 @@ public class TestException extends LocalTestCase {
     } catch (IllegalStateException e) {
       assertTrue(true);
     }
-    
+
     tt = new Exception(s);
     tt.initCause(t);
     try { 
