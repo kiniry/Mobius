@@ -201,10 +201,10 @@ public interface Map {
     /*@ pure @*/ boolean containsValue(Object value);
 
     /*-@ public normal_behavior
-      @    requires !containsKey(key);
+      @    requires !content.hasMap(key);// hasMap or hasMapObject -- FIXME
       @    ensures \result == null;
       @ also public normal_behavior
-      @    requires containsKey(key);    
+      @    requires content.hasMap(key);    // hasMap or hasMapObject -- FIXME
       @    ensures \result == content.maps(key);
       @ also public normal_behavior
       @    requires content.hasMapObject(key);
