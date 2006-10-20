@@ -1,22 +1,24 @@
 
 %\newtheorem{wellDef}{Definition}[section]
-\newtheorem{interpExpr}{Definition}[section]
-\newtheorem{interpTypeExpr}[interpExpr]{Definition} 
-\newtheorem{interpPred}[interpExpr]{Definition}
+\newtheorem{interpretation}{Definition}[section]
+%\newtheorem{interpTypeExpr}[interpExpr]{Definition} 
+%\newtheorem{interpPred}[interpExpr]{Definition}
+%\newtheorem{predicate}[interpExpr]{Definition}
 
 
 \section{Interpretation}\label{interpret}
-
+%
 In this section, we shall focus on the semantics of formulas and expressions w.r.t. a state configuration.
-Note that we shall give a semantics which ignores partiality in the language. Of course, this is an 
-important theoretical question which by itself have given rise to a lot of research and has received different answers.
+A subtle point in giving the evaluation rules for expressions and the interpretation of formulas
+is the fact that the evaluation is actually  a partial function.% Note that we shall give a semantics which ignores partiality in the language. Of course, this is an 
+%important theoretical question which by itself have given rise to a lot of research and h%as received different answers.
 %The part which deserves a more  careful attention is the question of partiality in the language.
 What we mean by partiality is the existence of functions like division or dereferencing of a field, array indexing etc. 
 To get a precise idea of the problem we can consider the following logical statements: 
 
 $$
 \begin{array}{l} 
-\numConclusion{1} \  \fieldd(\exprWp ) == 3\\
+\numConclusion{1} \  \fieldAccess{\exprWp}{\fieldd} == 3\\
 \numConclusion{2} \ \arrayAccess{\expression_1} {\expression_2} == 5
 \end{array}
 $$   
@@ -30,33 +32,27 @@ either $\expression_1 $ is \Mynull{} or $\expression_2$  is not in the bounds of
 Building a logic for partiality is not trivial. Different solutions exist. 
 Gries and Schnieder \cite{gries95avoiding} give a solution to the problem which consists in function 
 underspecification  and thus  avoid the problem of undefideness.
- More particularly, their approach considers all functions as total but for some value of the argument 
-the function is not specified.  B. Schieder and M. Broy \cite{schieder99adapting} give 
+ More particularly, their approach considers all functions as total but for argument values for which the function is actually 
+not defined the function may return whatever value.  B. Schieder and M. Broy \cite{schieder99adapting} give 
   an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
 undefined where  the logical connectives are extended in a non monotonic way preserves the properties of the classical logic
 on the price  of having two sorts of equality.
 A naive three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
- formulas might be false, true or undefined in a state appear to lose certain nice properties
+ formulas might be \false{}, \true{} or undefined in a state appear to loose certain nice properties
  which standard logic with equality have
 as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc. 
 In \cite{burdy98treatment}, L. Burdy proposes a three valued logic in which the above features of classical logic are preserved.
 He introduces a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$
- over expressions and formulas. Thus, formulas can be either true, false or not defined and
+ over expressions and formulas. Thus, formulas can be either \true{}, \false{} or not defined and
 expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
  gives the necessary and sufficient
  conditions such that $\expression$(\predWp ) is defined.
  More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
- holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to false.
-
-In the following, we shall abstract from partiality of evaluation and we shall consider that our evaluation is a total function. 
-Note that we could have used for instance the formalization in \cite{burdy98treatment}, i.e. 
-a three valued interpretation for formulas and expressions with an operator for well-definedness over predicates and expressions 
-whose interpretation to true would mean that the predicate / expression is defined. This in particular, means that 
-for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
- We however, consider that this only will complicate 
-the present formalization without bringing any original feature of the present thesis. 
-This means that for instance, for predicates which contain field dereference  we shall assume that the reference is not \Mynull,
-that arrays are always accessed inside their bounds etc. 
+ holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to \false{}.
+ This in particular, means that for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
+ In the following, we define interpretation of formulas  in a two valued logic. However, a formula may hold in a state only under the condition that
+ it is  defined, i.e. all the expression contained in the formula should have a meaning in  this state.
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%deprcated%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 % In \cite{bijlsma90sqb}, Bijlsma comes up with another solution where the  properties of the logic are preserved but  however compositionality of expression evaluation does not hold anymore.
 
@@ -72,12 +68,12 @@ that arrays are always accessed inside their bounds etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%deprcated%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
 %In \cite{} \todo{Owe, Lilian}, the authors propose a three valued logic for dealing with partiality by introducing
-%a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$ over expressions and formulas. Thus formulas can be either true, false or not defined and
+%a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$ over expressions and formulas. Thus formulas can be either \true{}, \false{} or not defined and
 %expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
 % gives the, necessary and sufficient
 % conditions such that $\expression$(\predWp ) is defined.
 % More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
-% holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is false. To get a more precise idea of the operator $\wellDefined{}$
+% holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is \false{}. To get a more precise idea of the operator $\wellDefined{}$
 %we scatch it hereafter:
 
  
@@ -85,7 +81,7 @@ that arrays are always accessed inside their bounds etc.
 
 %$$
 %\begin{array}{l}
-%\wellDefined{v} = \Mytrue \\
+%\wellDefined{v} = \My\true{} \\
 %\\
 %\wellDefined{\fieldd(\expression )} =\wellDefined{\expression} \wedge  \expression \neq \Mynull \\
 %\\
@@ -106,147 +102,79 @@ that arrays are always accessed inside their bounds etc.
 %$$ 
 
  
-
-
- 
-The relation $\vDash$ that we define next, gives a meaning to the formulas from our
- assertion language $\predWp$ w.r.t. two state configurations - a current state and an initial state.
-
-% Note that the interpretation of 
-%  $\wellDefined{\expression}$($\wellDefined{\predWp}$) cannot be undefined, it is either true or false.
-%As we shall see, the relation  $\vDash$  interprets formulas to the $true$ value under the condition
-%is well -defined in the sense of the operator $\wellDefined{}$
-%$$ \vDash :  \SetConfigs *  \predWp  $$
- 
-\begin{interpPred}[Interpretation of predicates] \label{interpPred} 
-The interpretation $ s \vDash \predWp$ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
-w.r.t. an initial state  $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ is defined inductively as follows:
-$$
-\begin{array}{l}
-\interp{\true}{s} \  is \ true \ in \ any \ state \ s \\
-\\
-\interp{\false}{s} \ is \ false \ in \ any \ state \ s \\
-\\
-\interp{  \neg \ \predWp  }{s} \ if \ and \ only \ if   \ \neg \ \interp{\predWp}{s} \\ 
-\\
-
-\interp{\predWp_1  \wedge  \predWp_2 }{s} \ if \ and \ only \ if   \ \interp{\predWp_1}{s} \ and \ \interp{\predWp_2}{s}  \\
-\\
-
-\interp{\predWp_1  \vee  \predWp_2 }{s} \ if \ and \ only \ if   \   \interp{\predWp_1}{s} \ or \ \interp{\predWp_2}{s}  \\
-\\
-\interp{\predWp_1  \Rightarrow  \predWp_2 }{s} \ if \ and \ only \ if    \  \interp{\predWp_1}{s} \ then \ \interp{\predWp_2}{s}  \\
-\\
-
-\\
-\interp{\forall x : T .  \predWp(x)   }{s} \ if \ and \ only \ if \  \ forall \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
-\\
-
-\interp{\exists x : T .  \predWp(x)   }{s} \ if \ and \ only \ if  \ a \ value \ \mbox{ \rm \textbf{v}} \ of \  type \  T \ exists \ such \ that \ \interp{\predWp(\mbox{ \rm \textbf{v}})}{s}  \\
-\\
-\interp{\expression_1 \  \predicates \  \expression_2 }{s} \ if \ and \ only \ if  \
-                                                             \evalExp{\expression_1 }{s} \evalRel{\predicates }  \evalExp{\expression_2 }{s} \ is  \ true
-
-							    
-\\
-\\
-\interp{\instances(\referenceOnly) }{s}, where \ \referenceOnly \in \RefValues \ if \ and \ only \ if  \    \referenceOnly \in \heap_{0}.\heapLocs
-\end{array}
-$$   
-\end{interpPred}
-
-% Note that the upper definition interprets atomic formulas in  states $s$ and $s_0$, i.e. formulas which 
-%represent relations between expressions, as true only if the evaluation of these expressions is defined
-%in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
- 
-
-
-
-Next, we define a function for expression evaluation
+We define a function for expression evaluation
  $\evalExpName$ which evaluates expressions in a state has the following signature:
 %\rightharpoonup
 $$
-\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightarrow  \Values \cup \JavaType
+\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup  \Values \cup \JavaType
 $$
-Note that the evaluation function is total and  takes as arguments an expression of the assertion language presented in the previous Section 
-\ref{assertLang:lang} and two states (see Section \ref{def})  and returns a value as defined in Section \ref{types}.
-% In the following,
-%if the evaluation   of an expression \expression{} is defined for the states $s$ $s_0$, i.e. the evaluation function returns a value,
-%  we use the notation  $\defined{ \evalExp{\expression}{s}}$.  
+Note that the evaluation function is partial and  takes as arguments an expression of the assertion language presented in the previous Section 
+\ref{assertLang:lang} and two states (see Section \ref{def} for the definition of state)  and returns a value or a class type
+(see Section \ref{types} for the definition of values and types in the language). 
 
 
-
-
-
-%The function $eval$ associates a value to expressions from  \expression  \  if they have a value in the state.
-%For instance, a reference which is not in the domain of the  
-
-
-
-\begin{interpExpr}[Evaluation of expressions] \label{interpExpr} 
+\begin{interpretation}[Evaluation of expressions] \label{interpExpr} 
 The evaluation in a state \\
 $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expression$
 w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
 is denoted with $\evalExp{\expression}{s}$  and is defined inductively over the grammar of expressions $\expression$ \  as follows:
  
 $$
-\begin{array}{l}
-\evalExp{ v  }{s } = v\\
+\begin{array}{lll}
+\evalExp{ v  }{s } & = & v\\
   where \  v \in \  \Myint   \ \vee  \  v \in  \RefValues \\
-\\
- \evalExp{\fieldd(\expression ) }{s} = \\
- = \heap(\fieldd) (\evalExp{ \expression}{ s } ) \\
-\\
 
- \evalExp{\update{\fieldd}{\expression_1}{\expression_2}(\expression_3)}{ s } = \\
-=  \update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expression_1}{s } }{ \evalExp{\expression_2}{s }  }} (\fieldd)
+ \evalExp{\fieldAccess{\expression}{\fieldd  } ) }{s} & = & \heap(\fieldd) (\evalExp{ \expression}{ s } ) \\
+
+
+ \evalExp{ \fieldAccess{ \expression_3}{\update{\fieldd}{\expression_1}{\expression_2} }}{ s } & = &
+\update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expression_1}{s } }{ \evalExp{\expression_2}{s }  }} (\fieldd)
                                             (  \evalExp{\expression_3}{ s } ) \\
- \\
 
 
- \evalExp{\arrayAccess{\expression_1} {\expression_2}  }{ s } = \\
 
- = \heap (\evalExp{ \expression_1}{ s } ,\evalExp{ \expression_2}{ s } )   \\
-\\
- \evalExp{ \update{ \arrayAccessOnly}{ (\expression_1 , \expression_2)}{ \expression_3} (\expression_4,\expression_5)  } { s } = \\
- = \update{\heap}{ ( \evalExp{\expression_1}{s } ,  \evalExp{\expression_2}{s } ) }  
-                 { \evalExp{\expression_3}{s }}\\
-                 \Myspace ( \evalExp{\expression_4}{s } ,  \evalExp{\expression_5}{ s  } ) \\
-\\
- \evalExp{ \locVar{i} } { s } = \locVarOnly(i) \\
-\\
+ \evalExp{\arrayAccess{\expression_1} {\expression_2}  }{ s } & = & 
+  \heap (\evalExp{ \expression_1}{ s } ,\evalExp{ \expression_2}{ s } )   \\
 
- \evalExp{ \old{\exprWp} } { s } =\evalExp{ \exprWp }{  s_{0}} \\
-\\ 
- \evalExp{\expression_1 \ \op \ \expression_2   } { s } =   \evalExp{\expression_1}{s} \op  \evalExp{\expression_2}{s}  \\
+ \evalExp{ \update{ \arrayAccessOnly}{ (\expression_1 , \expression_2)}{ \expression_3} (\expression_4,\expression_5)  } { s } & =&
+  \update{\heap}{ ( \evalExp{\expression_1}{s } ,  \evalExp{\expression_2}{s } ) }  
+                 { \evalExp{\expression_3}{s }} 
+                 ( \evalExp{\expression_4}{s } ,  \evalExp{\expression_5}{ s  } ) \\
 
-\\
-\evalExp{ \typeof{\exprWp}}{s } = \\
+ \evalExp{ \locVar{i} } { s } & =  &\locVarOnly(i) \\
+
+
+ \evalExp{ \old{\exprWp} } { s } &  = & \evalExp{ \exprWp }{  s_{0}} \\
+
+ \evalExp{\expression_1 \ \op \ \expression_2   } { s } &  =  &  \evalExp{\expression_1}{s} \op  \evalExp{\expression_2}{s}  \\
+
+
+\evalExp{ \typeof{\exprWp}}{s } & = &
 \left\{\begin{array}{ll}
       \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
       \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
 	   
 \end{array}\right. \\
 
-\\ 
-\evalExp{ \elemtype{\exprWp}}{s } = \\  
+
+\evalExp{ \elemtype{\exprWp}}{s } & = &
 \left\{\begin{array}{ll}
             \mbox{ \rm \texttt{T} }  & if \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
 \end{array}\right. \\					    
-\\
 
-\evalExp{ \TYPE }{s } = \mbox{ \rm \texttt{java.lang.Class}} 
+
+\evalExp{ \TYPE }{s } & =  & \mbox{ \rm \texttt{java.lang.Class}} 
 \end{array}
 $$
 
 The evaluation of stack expressions can be done only in intermediate state configurations $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ :
 $$
-\begin{array}{ll}
- \evalExp{ \counter   } { s } = \counterOnly \\
-\\
+\begin{array}{lll}
+ \evalExp{ \counter   } { s } & =  & \counterOnly \\
 
- \evalExp{ \stack{ \exprWp}   } { s } = \stackOnly ( \evalExp{\exprWp}{s} ) \\
-\\
+
+ \evalExp{ \stack{ \exprWp}   } { s } &  = & \stackOnly ( \evalExp{\exprWp}{s} ) \\
+
 
 \end{array}
 $$
@@ -259,5 +187,123 @@ $$
 $$
   
 
-\end{interpExpr}
+\end{interpretation}
 
+Thus, for instance the evaluation  $\evalExp{ \fieldAccess{\locVar{1}}{\fieldd}  }{s}$ of the expression $ \fieldAccess{\locVar{1}}{\fieldd} $  in the
+ state $s =\config{\heap}{\counterOnly}{ \stackOnly }{\locVar{1} \rightarrow \Mynull  }{\pc } $ is not defined.
+
+
+
+% Note that the interpretation of 
+%  $\wellDefined{\expression}$($\wellDefined{\predWp}$) cannot be undefined, it is either \true{} or \false{}.
+%As we shall see, the relation  $\vDash$  interprets formulas to the $\true{}$ value under the condition
+%is well -defined in the sense of the operator $\wellDefined{}$
+%$$ \vDash :  \SetConfigs *  \predWp  $$
+In the following, we shall define an evaluation function $\evalPredName$ with signature: 
+$$\evalPredName :\predWp \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup  \true \cup \false $$
+As we can see from its signature, the predicate evaluation will project predicates from  our assertion language 
+into boolean values. Because the predicate evaluation depends on the expression evaluation, the function for predicate 
+evaluation is also partial. This intuitively means that as far as the predicate contains undefined expressions
+it cannot be said if it is \true{} or \false. 
+
+\begin{interpretation}[Evaluation of predicates in a state] \label{interpPred} 
+The evaluation $ s\evalPred{\predWp}{s} $ of a predicate $\predWp$ in a state configuration $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ 
+w.r.t. an initial state  $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ is defined inductively as follows:
+$$
+\begin{array}{lll}
+\evalPred{\Mytrue}{s} &  = & \true \\
+
+\evalPred{\Myfalse}{s} & = & \false \\
+
+\evalPred{  \neg \ \predWp  }{s} & = & \left\{ \begin{array}{ll} 
+                                                 \true   &  if  \ \evalPred{\predWp}{s} = \false \\
+						 \false  &  if  \ \evalPred{\predWp}{s} = \true \\
+						 \bottom &  else
+				   \end{array}\right. 
+\\
+
+\evalPred{\predWp_1  \wedge  \predWp_2 }{s} & = &   \left\{ \begin{array}{ll} 
+                                                              \true  &  if  \ \evalPred{\predWp_1}{s} =\true \  and  \  \evalPred{\predWp_2}{s} = \true  \\
+							      \false &  if  \ \evalPred{\predWp_1}{s} =\false \ or   \  \evalPred{\predWp_2}{s} = \false \\
+							      \bottom & else
+						   \end{array}\right.\\
+
+
+\evalPred{\predWp_1  \vee  \predWp_2 }{s} & = &  \left\{ \begin{array}{ll} 
+                                                            \true  &  if \ \evalPred{\predWp_1}{s} = \true \   or   \    \evalPred{\predWp_2}{s} = \true  \\
+							    \false &  if  \ \evalPred{\predWp_1}{s} =\false \  and   \  \evalPred{\predWp_2}{s} = \false \\
+							    \bottom & else
+					     \end{array}\right.   \\
+
+\evalPred{\predWp_1  \Rightarrow  \predWp_2 }{s} & = & \left\{ \begin{array}{ll} 
+                                                                 \true   &  if \  \evalPred{\predWp_1}{s} = \false \ or  \ \evalPred{\predWp_2}{s}  = \true \\
+								 \false  &  if \  \evalPred{\predWp_1}{s} =  \true \ and  \ \evalPred{\predWp_2}{s}  = \false \\
+								 \bottom &  else
+                                                        \end{array}\right.\\
+
+\evalPred{\forall x  :T. \predWp(x)   }{s} & = & \left\{ \begin{array}{ll} 
+                                                           \true   & if   \ \forall \mbox{ \rm \textbf{v}} \ of \ type \ T \  \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \true    \\
+							   \false  & if   \ \exists \mbox{ \rm \textbf{v}} \ of \ type \ T \  \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \false \\
+							   \bottom & else
+						   \end{array}\right.   \\
+
+
+\evalPred{\exists x .  \predWp(x)   }{s} & = & \left\{ \begin{array}{ll} 
+                                                         \true  & if \ \exists \mbox{ \rm \textbf{v}} \ \in \Values  \ of \ type \ T  \\
+                                                                & \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \true \\
+							 \false & if \ \forall \mbox{ \rm \textbf{v}} \ \in \Values  \ of \ type \ T \\
+                                                                & \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \false \\
+							 \bottom & else
+                                           \end{array}\right.   \\
+                                          
+
+\evalPred{\expression_1 \  \predicates \  \expression_2 }{s} & = & 
+                    \left\{ \begin{array}{ll} 
+                           \evalExp{\expression_1 }{s} \predicates \evalExp{\expression_2 }{s}  & \evalExp{\expression_1}{s} \neq \bottom \ and  \  \evalExp{\expression_2}{s} \neq \bottom\\
+			    \bottom & else
+		    \end{array}\right.   \\						    
+
+
+\evalPred{\instances(\referenceOnly) }{s} & = &   \referenceOnly \in \heap.\heapLocs
+\end{array}
+$$   
+\end{interpretation}
+ We now turn to define what means for a formula  to hold  in a given state.
+The relation $\vDash$ that we define next, gives a meaning to the formulas from our
+ assertion language $\predWp$ w.r.t. two state configurations - a current state and an initial state. 
+In particular, we say that a predicate holds in a state if under the condition that its evaluation in this states
+is defined then  it can be shown in the  logic denoted $|-$.  
+
+
+\begin{interpretation}[A predicate holds in a state] \label{interpPred}
+We say that the predicate $\predWp$  holds  in the state $s$  w.r.t. an initial state $s_0$, if the following holds
+$$   \interp{\predWp}{s} =^{def} \evalPred{\predWp}{s}  \neq  \bottom  \ and \  \evalPred{\predWp}{s} = \phi  \ then \ |- \phi    $$ 
+
+\end{interpretation}
+
+Let us return to our initial examples. The interpretation $\interp{\fieldAccess{\locVar{1}}{\fieldd} ==~3}{s}$
+ of the predicate $\fieldAccess{\locVar{1}}{\fieldd} ==~3$ in a state  $s =\config{\heap}{\counterOnly}{ \stackOnly }{\locVar{1} \rightarrow \Mynull  }{\pc } $ 
+is \true{} following the above definition. Note that its negation  $\interp{\neg (\fieldAccess{\locVar{1} }{\fieldd} ==~3}{s}$
+is also \true. This follows from the above definition for evaluation of formulas and the fact that
+ $ \evalExp{\fieldAccess{\locVar{1}{\fieldd}  }}{ s}  $ is not defined.
+ It also follows from the definition that the negation of the statement $ \neg \interp{\fieldAccess{\locVar{1} }{\fieldd} == 3 }{s}$ is \false. 
+Note also, that in this interpretation, for any two states $s_0, s$ we have that $ \interp{1/0 = 1/0}{s}$ holds. 
+
+%More generally, we can show that the classical excluded middle still holds in such a formalization. 
+
+.
+
+% Note that the upper definition interprets atomic formulas in  states $s$ and $s_0$, i.e. formulas which 
+%represent relations between expressions, as \true only if the evaluation of these expressions is defined
+%in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
+ 
+
+
+
+
+The next definition defines a particular set of assertion formulas which  hold in every program state. We call them  valid formulas. 
+\begin{interpretation}[Valid formulas]\label{assertLang:interpretation:valid}
+  If an assertion formula  $ \predWp $ holds in any current state and any initial state, i.e.
+$\forall s, s_{0}, \  \interp{\predWp}{s} $ we say that this is a valid formula and we note it with :
+  $\validFormula{\predWp} $ 
+\end{interpretation}

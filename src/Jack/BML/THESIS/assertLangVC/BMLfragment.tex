@@ -26,7 +26,7 @@ BML  expressions (nonterminal $\expression$) and predicates
 	  We extend the language of BML  formulas
 	  with a new user defined predicate $ \instances(\RefValues)$. Informally, the semantics of the predicate \\
 	  $\instances(\referenceOnly)$ where $\referenceOnly \in \RefValues$
-	  means that the reference $\referenceOnly  $  has been allocated when the current method started execution.
+	  means that the reference $\referenceOnly  $  is allocated in the current state.
         
 \end{description}
 
@@ -70,12 +70,12 @@ method pre and postconditions:
 	overriding method. The methodology consists in expressing the specification of the overriden method 
 	as part of the specification of the overriding method. The reader may have a look for a detailed description of
 	specification inheritance  in  the article \cite{Dhara-Leavens95} of K.Dhara and G.T.Leavens. Here, we will 
-	illustrate the specification inheritance through the example given in Fig. \ref{assertLang:lang:inherit}. We show on the right in the figure
-	the new specification of method  \lstinline!m!  from class \lstinline!B!. Its precondition is the disjunction of the its specified postcondition 
-	and the precondition of the method it overrides. On the other hand, its new postcondition expresses that depending what held in the precondition 
-	of the  method then either its postcondition holds or the postcondition of the method it overrides. Note that the new 
-	specification of \lstinline!m!  declared in class \lstinline!B!  respects the two covariant condition described above.
-	
+	illustrate the specification inheritance through the example given in Fig. \ref{assertLang:lang:inherit}. We show in the second part of 
+	the figure the specification of method  \lstinline!m!  from class \lstinline!B! which will be used in the verification of the method.
+	Its precondition is the disjunction of the its specified postcondition and the precondition of the method it overrides. On the other hand, its new postcondition expresses
+	that depending what held in the precondition of the  method then either its postcondition holds or the postcondition of the method it
+	overrides. Note that the new specification of \lstinline!m!  declared in class \lstinline!B!  respects the two covariant condition described above.
+	This approach allows to encode directly as preconditions and postconditions the subtyping relation. 
 	
 
 \begin{figure}[ht!]
@@ -102,7 +102,9 @@ class C{
     a.m()
   }
 } 
+\end{lstlisting}
 
+\begin{lstlisting}[frame=trbl]
 class B extends A {
   //@ requires Pre1 || Pre2;
   //@ ensures  (\old(Pre2) ==> Post2) && 
