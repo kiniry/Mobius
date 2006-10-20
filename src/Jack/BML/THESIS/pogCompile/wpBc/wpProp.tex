@@ -190,8 +190,11 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 	       \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
 	       \inter{e'}{e'+1} = \wpi{}{\methodd}{\ins{e'+1}}  \\\\
 
-	       \comment{$\stmt_1$ is a strict substatement of $\stmt_1;\stmt_2$ and thus, from Property  \ref{compile:prop:compProp8}  }  \\
-                               
+	       \comment{$\stmt_1$ is a strict substatement of $\stmt_1;\stmt_2$ and thus, from Property  \ref{compile:prop:compProp8} follows }  \\
+	        \forall  \mbox{\rm\texttt{Exc}}, \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e'}{\methodd.\excHandlerTable} = \\
+		                                 \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e}{\methodd.\excHandlerTable} \\
+	       
+                \comment{from the above conclusion and the Def. \ref{defExc}  of function \getExcPost } \\           
                 \numConclusion{2} \               \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
                                                                                    \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' )  \\\\
 										   
@@ -261,22 +264,22 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 
 	\mbox{\rm\comment{From Property  \ref{compile:prop:compProp8}  } } \\
 	
-\end{array}$$
-$$ \begin{array}{l}
+
       \numConclusion{10} \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
       \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
       \mbox{\rm\comment{apply the induction hypothesis over \numConclusion{9} and  \numConclusion{10}  } }\\ 
       
       \numConclusion{11} \	\wpSrcStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} = \wpi{e'+2}{m}{} \\
-
+\end{array}$$
+$$ \begin{array}{l}
       \comment{ apply the induction hypothesis over the initial hypothesis  }\\
       \numConclusion{12} \ \wpSrcStmt{\stmt_1}{\psi}{\excPostExpl} = \wpi{e'''+2}{m}{} \\\\
 
 			
 
       %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%555
-      \comment{\mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp4}  follows that the execution relation between $e''$ }}}\\
-      \comment{\mbox{\rm\textit{and  $e'' + 1$ is not a loop edge. From Def. \ref{inter} for the function \interOnly{} we get   \}}}}\\
+      \mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp4}  follows that the execution relation between $e''$ }}\\
+      \mbox{\rm\textit{and  $e'' + 1$ is not a loop edge. From Def. \ref{inter} for the function \interOnly{} we get   \}}}\\
       \numConclusion{13} \  \inter{e''}{e'' + 1} = \wpi{ e'' + 1 }{m}{ } \\\\
 
       \comment{by definition of conditional jump instruction follows } \\
@@ -342,3 +345,20 @@ $$ \begin{array}{l}
 	$$
 \end{description}
 \Qed \\
+\clearpage
+As a conclusion of the current chapter, we would like to make several remarks. 
+Such an equivalence between proof obligations on source and bytecode and the fact that
+we have proof for the soundness of the bytecode verification condition generator
+ gives us the soundness of the source  weakest precondition calculus.  
+
+Another remark is that here we ignore the difference between names and types on  source and bytecode level. 
+Let us first focus on the naming on source and bytecode. 
+In this chapter, we have considered that the compiler  does not change  variable, class and method  names.
+ This is not true for Java compilers, as these names are basically compiled into 
+indexes in the constant pool table. However, this difference is a minor detail and of course, this means that 
+the equivalence between source and bytecode verification conditions in Java can be established modulo names.
+The second detail in the formalization presented here is that the compilers compiles boolean types into boolean types.
+This neither holds for real Java compiler. This is because JVM does not have a direct support  for booleans and thus,
+Java compilers compile booleans into integers. This implies that the other difference between source and proof
+obligations in Java is modulo types. Once again, we consider that this is a detail that would only make heavier
+the presentation without being an important issue in establishing the equivalence of the verification conditions on source and bytecode. 
