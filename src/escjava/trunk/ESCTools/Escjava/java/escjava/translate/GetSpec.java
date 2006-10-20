@@ -15,7 +15,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Iterator;
+import java.util.Vector;
 import javafe.ast.*;
 import javafe.tc.TypeSig;
 
@@ -620,19 +623,14 @@ public final class GetSpec {
 	  // [GK] Do not prune the leftmost conjunction because I realized that
 	  // that there are cases where the precondition is not always in 
 	  // the form of a conjunction.
-	  if (true)
+	  if (true) {
 	    //if (dmd.isStaticMethod() || dmd.isConstructor())
-	  {
 	    e2idc=expr;
-	  }
-	  else if (dmd.isInstanceMethod())
-	  {
+	  } else if (dmd.isInstanceMethod()) {
 	    Assert.notFalse(expr.getTag() == TagConstants.AND,
 			    EscPrettyPrint.inst.toString(expr));
 	    e2idc=DefGCmd.reapLeftmostConjunct(expr);
-	  }
-	  else
-	  {
+	  } else {
 	    Assert.notFalse(false,EscPrettyPrint.inst.toString(expr));
 	  }
 
@@ -641,8 +639,12 @@ public final class GetSpec {
 	  // untranslated -- i.e. not translated into the equivalent
 	  // GC expression form.  The translation is not later when
 	  // the CHECK-DEFINEDNESS command is desugared.
-	  if(Main.options().debug) 
-	    System.err.println("GK-Trace-IDC: " + e2idc);
+	  if(Main.options().debug) {
+	    System.err.println("GK-Trace-PRE: " + 
+			       EscPrettyPrint.inst.toString(e2idc));
+	    System.err.println("\ti.e.: "+ e2idc);
+	  }
+	  
 	  Condition cond = GC.condition(TagConstants.CHKEXPRDEFINEDNESS, 
 					e2idc,//TrAnExpr.trSpecExpr(e, map, null),
 					e2idc.getStartLoc());
@@ -946,10 +948,13 @@ public final class GetSpec {
         try {
           ExprModifierPragma prag = dmd.ensures.elementAt(i);
 	  //[GKS]
-	  if (Main.options().idc)
-	  {
-	    if(Main.options().debug) 
-	      System.err.println("GK-Trace-IDC: " + prag.expr);
+	  if (Main.options().idc) {
+	    if(Main.options().debug) {
+	      System.err.println("GK-Trace-NPC: " + 
+				 EscPrettyPrint.inst.toString(prag.expr));
+	      System.err.println("\ti.e.: "+prag.expr);
+	    }
+	    
 	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFNORMPOST,
 					prag.expr,prag.expr.getStartLoc());
 	    conds.add(cond);
@@ -1004,12 +1009,11 @@ public final class GetSpec {
           // Pragma has the form: exsures (T v) E
           VarExprModifierPragma prag = dmd.exsures.elementAt(i);
 	  //[GKS]
-	  if (Main.options().idc)
-	  {
-	    if (Main.options().debug)
-	    {
-	      if(Main.options().debug) 
-		System.err.println("GK-Trace-IDC: " + prag.expr);
+	  if (Main.options().idc) {
+	    if(Main.options().debug) {
+	      System.err.println("GK-Trace-EPC: " + 
+				 EscPrettyPrint.inst.toString(prag.expr));
+	      System.err.println("\ti.e.: "+prag.expr);
 	    }
 	    Condition cond=GC.condition(TagConstants.CHKEXPRDEFEXCEPOST,
 					prag.expr,prag.expr.getStartLoc());
@@ -2040,20 +2044,19 @@ public final class GetSpec {
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
       //[GKS]
-      if(Main.options().idc && cond.label == TagConstants.CHKEXPRDEFINEDNESS)
-      {
+      if(Main.options().idc && cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
 	DefGCmd oDefGCs = new DefGCmd();
 	if(Main.options().debug) {
-	    System.err.println("\tAbout to trAndGen:" +
-			       EscPrettyPrint.inst.toString(cond.pred));
-	    System.err.println("\tI.e.:" + cond.pred);
+	  System.err.println("\tAbout to trAndGen:" +
+			     EscPrettyPrint.inst.toString(cond.pred));
+	  System.err.println("\tI.e.:" + cond.pred);
 	}
  	oDefGCs.trAndGen(cond.pred);
 	GuardedCmd gc=oDefGCs.popFromCode();
 	code.addElement(gc);
 	//[GKE]
       } else {
-	  code.addElement(GC.assumeAnnotation(cond.locPragmaDecl, cond.pred));
+	code.addElement(GC.assumeAnnotation(cond.locPragmaDecl, cond.pred));
       }
     }
   }
@@ -2068,41 +2071,78 @@ public final class GetSpec {
 				      StackVector code,
 				      boolean nobody)
   {
+    // [GKS]
+    Vector idcGCs=new Vector();
+    if (Main.options().idc) {
+      // First pass through the ConditionVec so that we build the IDC GCs.
+      // We expect postconditions to be in A /\ P1 /\ ... /\ Pk ==> Q form or
+      // to be just in the Q form.
+      // For every postcondition:
+      //   Break the implication and store the antecedent and consequents.
+      //   All the antecedents should be identical for the same specification 
+      //     block - if not throw an exception.
+      //   Conjoin all Qs per antecedent and pass that for IDC checking.
+      //   Iterate the GC gerenated by the IDC checking of the conjoin 
+      //   postconditions and append the antecedent to all ASSERT commands.
+      // Lets see how this will work out :>
+      LinkedHashMap mapAnte2AntePost=new LinkedHashMap();
+      for (int i=0;i<cv.size();i++) {
+	Condition cond = cv.elementAt(i);
+	if (Main.options().idc &&
+	    (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+	     cond.label == TagConstants.CHKEXPRDEFEXCEPOST)) {
+	  if (Main.options().debug) {
+	    System.err.println("Processing-Post: " +
+			       EscPrettyPrint.inst.toString(cond.pred));
+	    //System.err.println("\tI.e.:" + cond.pred);
+	  }
+	  DefGCmd.processPostcondition(cond.label, mapAnte2AntePost, cond.pred);
+	}
+      }
+      java.util.Set s=mapAnte2AntePost.entrySet();
+      Iterator is=s.iterator();
+      while (is.hasNext()) {
+	Map.Entry me = (Map.Entry)is.next();
+	Object [] antePost=(Object[])me.getValue();
+	Expr ante=(Expr)antePost[0];
+	Expr conjPosts=(Expr)antePost[1];
+	DefGCmd oDefGCs = new DefGCmd();
+	// Pass the conjoint postconditions for IDC.
+	oDefGCs.trAndGen(conjPosts);
+	// Obtain the GCs.
+	GuardedCmd idcGC=oDefGCs.popFromCode();
+	// Translate the antecedent into a GCExpr.
+	Expr gcAnte=TrAnExpr.trSpecExpr(ante, oDefGCs.minHMap4Tr(), null);
+	gcAnte=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return),
+		      gcAnte);
+	// Add the antedents in the proper 
+	oDefGCs.morfAsserts(idcGC,gcAnte);
+	idcGCs.addElement(idcGC);
+      }
+    }
+    //[GKE]
+    // Flag to denote whether the IDC GCs were added.
+    boolean idcGCAdded=false;
     for (int i = 0; i < cv.size(); i++) {
       Condition cond = cv.elementAt(i);
+
       //[GKS]
       if (Main.options().idc &&
 	  (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
-	   cond.label == TagConstants.CHKEXPRDEFEXCEPOST))
-      {
-	DefGCmd oDefGCs = new DefGCmd();
-	Expr cons=oDefGCs.reapConsequent(cond.pred);
-	if(Main.options().debug) {
-	  System.err.println("\tAbout to trAndGen:" +
-			     EscPrettyPrint.inst.toString(cons));
-	  System.err.println("\tI.e.:" + cons);
+	   cond.label == TagConstants.CHKEXPRDEFEXCEPOST)) {
+	if (!idcGCAdded) {
+	  if (Main.options().debug) {
+	    System.err.println("IDCGCs.SIZE: "+idcGCs.size());
+	  }
+	  for (int j=0;j<idcGCs.size();j++) {
+	    GuardedCmd idcGC=(GuardedCmd)idcGCs.elementAt(j);
+	    code.addElement(idcGC);
+	  }
+	  idcGCAdded=true;
 	}
- 	oDefGCs.trAndGen(cons);
-	GuardedCmd gc=oDefGCs.popFromCode();
-	// Use the cond.expr to obtain the antecedent of the postcondition.  
-	// It is then used as the antecedent of all the ASSERT IDCs generated.
-	// Its important to note that we expect an implication here!!
-	Expr ante=oDefGCs.reapAndTrAntecedent(cond.pred);
-	// Add the EC == ecReturn to the antecedent
-	if (cond.label == TagConstants.CHKEXPRDEFNORMPOST)
-	{
-	  ante=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_return),
-		      ante);
-	}
-	else
-	{
-	  ante=GC.and(GC.nary(TagConstants.ANYEQ, GC.ecvar, GC.ec_throw),
-		      ante);
-	}
-	oDefGCs.morfAsserts(gc,ante);
-	code.addElement(gc);
 	continue;
       }
+      // Add postconditions in the usual way.
       if (!nobody)
       {
 	if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;

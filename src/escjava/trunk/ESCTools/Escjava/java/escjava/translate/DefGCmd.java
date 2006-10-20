@@ -6,6 +6,7 @@
 package escjava.translate;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 import javafe.util.StackVector;
 import javafe.util.Location;
@@ -72,8 +73,6 @@ public class DefGCmd
    */
   public DefGCmd()
   {
-    // debug = Main.options().debug;
-    if (debug) System.err.println(this.traceMethod());
     this.code=new StackVector();
     this.code.push();
   }
@@ -141,17 +140,16 @@ public class DefGCmd
 	    // <expr>.id
 	    FieldAccess fa = (FieldAccess)e;
 	    if (!Modifiers.isStatic(fa.decl.modifiers) &&
-		fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) 
-		{
-		    ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
-		    Expr odExpr = trAndGen(eod.expr);
-		    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-		    GuardedCmd gc = GC.check(eod.locDot,
-					     TagConstants.CHKNULLPOINTER,
-					     refNEExpr,
-					     Location.NULL);
-		    this.code.addElement(gc);
-		}
+		fa.od.getTag() == TagConstants.EXPROBJECTDESIGNATOR) {
+	      ExprObjectDesignator eod = (ExprObjectDesignator)fa.od;
+	      Expr odExpr = trAndGen(eod.expr);
+	      Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+	      GuardedCmd gc = GC.check(eod.locDot,
+				       TagConstants.CHKNULLPOINTER,
+				       refNEExpr,
+				       Location.NULL);
+	      this.code.addElement(gc);
+	    }
 	    break;
 	}
       
@@ -361,18 +359,17 @@ public class DefGCmd
 	    }
 
 	    if (!Modifiers.isStatic(me.decl.modifiers) &&
-		me.od instanceof ExprObjectDesignator) 
-		{
-		    // Expr ex = ((ExprObjectDesignator)me.od).expr;
-		    ExprObjectDesignator eod = (ExprObjectDesignator)me.od;
-		    Expr odExpr = trAndGen(eod.expr);
-		    Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
-		    GuardedCmd gc = GC.check(eod.locDot,
-					     TagConstants.CHKNULLPOINTER,
-					     refNEExpr,
-					     Location.NULL);
-		    this.code.addElement(gc);
-		}
+		me.od instanceof ExprObjectDesignator) {
+	      // Expr ex = ((ExprObjectDesignator)me.od).expr;
+	      ExprObjectDesignator eod = (ExprObjectDesignator)me.od;
+	      Expr odExpr = trAndGen(eod.expr);
+	      Expr refNEExpr=GC.nary(TagConstants.REFNE,odExpr,GC.nulllit);
+	      GuardedCmd gc = GC.check(eod.locDot,
+				       TagConstants.CHKNULLPOINTER,
+				       refNEExpr,
+				       Location.NULL);
+	      this.code.addElement(gc);
+	    }
 	    break;
 	}
       
@@ -529,7 +526,7 @@ public class DefGCmd
 				e.getStartLoc(), e.toString());
     }
 
-    private Hashtable minHMap4Tr() {
+    Hashtable minHMap4Tr() {
 	// The returned map is only needed for constructors, but since
 	// general type checking will have been done, we can simply
 	// use the same map in all cases (constructor or not).
@@ -555,23 +552,21 @@ public class DefGCmd
 // 			 TagConstants.toString(gc.getTag()));
 //     }
 
-    switch (gc.getTag()) 
-    {
+    switch (gc.getTag()) {
 
-    case TagConstants.ASSERTCMD:
-      {
-	ExprCmd ec=(ExprCmd)gc;
+    case TagConstants.ASSERTCMD: {
+      ExprCmd ec=(ExprCmd)gc;
 // 	if (debug)
 // 	{
 // 	  System.out.println("GK-Trace: "+ec.pred);
 // 	  System.out.println("    i.e.: "+
 // 			     EscPrettyPrint.inst.toString(ec.pred));
 // 	}
-	Assert.notFalse(ec.pred.getTag() == TagConstants.LABELEXPR);
-	LabelExpr le=(LabelExpr)ec.pred;
-	le.expr=GC.implies(ante,le.expr);
-	return(ec);
-      }
+      Assert.notFalse(ec.pred.getTag() == TagConstants.LABELEXPR);
+      LabelExpr le=(LabelExpr)ec.pred;
+      le.expr=GC.implies(ante,le.expr);
+      return(ec);
+    }
 
 
     case TagConstants.SKIPCMD:
@@ -583,55 +578,48 @@ public class DefGCmd
     case TagConstants.RESTOREFROMCMD:
       return(gc);
 
-    case TagConstants.VARINCMD:
-      {
-	VarInCmd vc=(VarInCmd)gc;
-	vc.g=this.morfAsserts(vc.g,ante);
-	return(vc);
-      }
+    case TagConstants.VARINCMD: {
+      VarInCmd vc=(VarInCmd)gc;
+      vc.g=this.morfAsserts(vc.g,ante);
+      return(vc);
+    }
 
-    case TagConstants.DYNINSTCMD:
-      {
-	DynInstCmd dc=(DynInstCmd)gc;
-	dc.g=this.morfAsserts(dc.g,ante);
-	return(dc);
-      }
+    case TagConstants.DYNINSTCMD: {
+      DynInstCmd dc=(DynInstCmd)gc;
+      dc.g=this.morfAsserts(dc.g,ante);
+      return(dc);
+    }
 
-    case TagConstants.SEQCMD:
-      {
-	SeqCmd sc=(SeqCmd)gc;
-	for (int i=0;i<sc.cmds.size();i++)
-	{
-	  GuardedCmd gc1=sc.cmds.elementAt(i);
-	  gc=this.morfAsserts(gc1,ante);
-	  sc.cmds.setElementAt(gc1,i);
-	}
-	return(sc);
+    case TagConstants.SEQCMD: {
+      SeqCmd sc=(SeqCmd)gc;
+      for (int i=0;i<sc.cmds.size();i++) {
+	GuardedCmd gc1=sc.cmds.elementAt(i);
+	gc=this.morfAsserts(gc1,ante);
+	sc.cmds.setElementAt(gc1,i);
       }
+      return(sc);
+    }
 
-    case TagConstants.CALL:
-      {
-	Call call=(Call)gc;
-	call.desugared=this.morfAsserts(call.desugared,ante);
-	return(call);
-      }
+    case TagConstants.CALL: {
+      Call call=(Call)gc;
+      call.desugared=this.morfAsserts(call.desugared,ante);
+      return(call);
+    }
 
     case TagConstants.TRYCMD:
-    case TagConstants.CHOOSECMD:
-      {
-	CmdCmdCmd tc = (CmdCmdCmd)gc;
-	tc.g1=this.morfAsserts(tc.g1,ante);
-	tc.g2=this.morfAsserts(tc.g2,ante);
-	return(tc);
-      }
+    case TagConstants.CHOOSECMD: {
+      CmdCmdCmd tc = (CmdCmdCmd)gc;
+      tc.g1=this.morfAsserts(tc.g1,ante);
+      tc.g2=this.morfAsserts(tc.g2,ante);
+      return(tc);
+    }
 
-    case TagConstants.LOOPCMD:
-      {
-	LoopCmd lp = (LoopCmd)gc;
-	lp.guard=this.morfAsserts(lp.guard,ante);
-	lp.body=this.morfAsserts(lp.body,ante);
-	return(lp);
-      }
+    case TagConstants.LOOPCMD: {
+      LoopCmd lp = (LoopCmd)gc;
+      lp.guard=this.morfAsserts(lp.guard,ante);
+      lp.body=this.morfAsserts(lp.body,ante);
+      return(lp);
+    }
 
     default:
       //@ unreachable;
@@ -650,19 +638,17 @@ public class DefGCmd
    * @param post an <code>Expr</code> value
    * @return an <code>Expr</code> value
    */
-  public Expr reapAndTrAntecedent(Expr post)
+  public static Expr reapAntecedent(Expr post)
   {
     // Fail if this is not an implication.
     //Assert.notFalse(post.getTag() == TagConstants.IMPLIES);
-    if (post.getTag() != TagConstants.IMPLIES)
-    {
+    if (post.getTag() != TagConstants.IMPLIES) {
       return(GC.truelit);
     }
-
+    
     // Get the antecedent.
     Expr e=((BinaryExpr)post).left;
-    // Generate the GCExpr for the ante.
-    e=TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
+
     return(e);
   }
 
@@ -674,14 +660,12 @@ public class DefGCmd
    * @param post an <code>Expr</code> value
    * @return an <code>Expr</code> value
    */
-  public Expr reapConsequent(Expr post)
+  public static Expr reapConsequent(Expr post) 
   {
     // Fail if this is not an implication.
     //Assert.notFalse(post.getTag() == TagConstants.IMPLIES,post.toString());
-    if (post.getTag() != TagConstants.IMPLIES)
-    {
-      if (debug)
-      {
+    if (post.getTag() != TagConstants.IMPLIES) {
+      if (debug) {
 	System.out.println("GK-Trace: WARNING: postcondition not an implication"+
 			   "\n\t\t"+post.toString());
       }
@@ -704,27 +688,88 @@ public class DefGCmd
     Assert.notFalse(e.getTag() == TagConstants.AND,e.toString());
     BinaryExpr be = (BinaryExpr)e;
     Expr newExpr;
-    if (be.left.getTag()==TagConstants.AND)
-    {
+    if (be.left.getTag()==TagConstants.AND) {
       Expr e1=reapLeftmostConjunct(be.left);
       newExpr=BinaryExpr.make(TagConstants.AND,e1,be.right,be.locOp);
-    }
-    else
-    {
+    } else {
       newExpr=be.right;
     }
     return(newExpr);
   }
 
 
-
-    private String traceMethod() {
-	Throwable t=new Throwable();
-	StackTraceElement [] stes=t.getStackTrace();
-	if (stes!=null || stes.length!=0)
-	    {
-		return("GK-Trace : " + stes[1]);
-	    }
-	return("GK-Trace : NA");
+  /**
+   * This method will obtain a postcondition in the form of an implication, where
+   * the antecedent is the conjointed req. cl. exprs. along with some other
+   * predicates ESC adds.  It will break it into its antecedent and consequent
+   * expressions.  It will then call addConj2Map() and use the antecedent and 
+   * the condition label to build a unique key so that the pair of antecedent, 
+   * consequent is stored in the map.
+   *
+   * @param label an <code>int</code> value
+   * @param mapAnte2AntePost a <code>Map</code> value
+   * @param pred an <code>Expr</code> value
+   */
+  public static void processPostcondition(int  label,
+					  Map  mapAnte2AntePost,
+					  Expr pred)
+  {
+    // Get the antecedent
+    Expr ante=DefGCmd.reapAntecedent(pred);
+    // Get the consequent.
+    Expr post=DefGCmd.reapConsequent(pred);
+    if (debug) {
+      System.err.println("\tCOND: "+TagConstants.toString(label));
+      System.err.println("\tANTE: "+EscPrettyPrint.inst.toString(ante));
+      System.err.println("\tPOST: "+EscPrettyPrint.inst.toString(post));
     }
+
+    // Conjoin the postconditions per antecedents found.
+    addConj2Map(label,mapAnte2AntePost, ante, post);
+  }
+
+  /**
+   * Uses the ante and label values to build a key where by it will store
+   * the ante expression along with the conjointed post values that have the
+   * same ante and the same label.
+   *
+   * @param mapAnte2AntePost a <code>Map</code> value
+   * @param ante an <code>Expr</code> value
+   * @param post an <code>Expr</code> value
+   */
+  public static void addConj2Map(int label,
+				 Map mapAnte2AntePost,
+				 Expr ante, 
+				 Expr post)
+  {
+    Object [] antePost=null;
+    String k=label+ante.toString();
+    if (!mapAnte2AntePost.containsKey(k)) {
+      if (debug) {
+	System.out.println("\tCONJ: "+EscPrettyPrint.inst.toString(post));
+      }
+      antePost=new Object[2];
+      antePost[0]=ante;
+      antePost[1]=post;
+    } else {
+      antePost =(Object[])mapAnte2AntePost.get(k);
+      Expr e=(Expr)(antePost[1]);
+      BinaryExpr be=BinaryExpr.make(TagConstants.AND, e, post, Location.NULL);
+      if (debug) {
+	System.out.println("\tCONJ: "+EscPrettyPrint.inst.toString(be));
+      }
+      antePost[1]=be;
+    }
+    mapAnte2AntePost.put(k,antePost);
+  }
+
+  private String traceMethod() 
+  {
+    Throwable t=new Throwable();
+    StackTraceElement [] stes=t.getStackTrace();
+    if (stes!=null || stes.length!=0) {
+      return("GK-Trace : " + stes[1]);
+    }
+    return("GK-Trace : NA");
+  }
 }
