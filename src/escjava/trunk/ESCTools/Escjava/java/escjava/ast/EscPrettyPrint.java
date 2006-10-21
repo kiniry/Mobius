@@ -220,7 +220,6 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     case TagConstants.OLD:
       write(o, "/*@ "); 
       write(o, TagConstants.toString(tag)); 
-      write(o, " */");
       LocalVarDecl d = ((VarDeclModifierPragma)mp).decl;
       self.print(o, ind, d, true); 
       write(o, "; */");
