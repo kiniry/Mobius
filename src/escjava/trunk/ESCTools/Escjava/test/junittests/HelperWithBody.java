@@ -1,5 +1,5 @@
 // This is a test case from Bug#244
-//#FLAGS: -Q  
+//#FLAGS: -Q
 
 public class HelperWithBody
 {
