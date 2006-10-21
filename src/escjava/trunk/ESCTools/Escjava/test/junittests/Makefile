@@ -81,7 +81,7 @@ lists:
 ifdef COMSPEC
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
+		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} ) | tr -d "\r\n" \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
 		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
 		| sed -e "s@.:..@.;..@" \
@@ -90,7 +90,7 @@ ifdef COMSPEC
 else
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-		( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
+		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} ) | tr -d "\r\n" \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
 		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
 		>> listtests ; \
@@ -150,7 +150,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 		echo No such file $* ;\
 	else \
 	(${ESCJAVA} ${ALWAYSFLAGS} \
-		`grep '//#FLAGS:' $* | \
+		`(grep '//#FLAGS:' $* || echo ${DEFAULTFLAGS}) | tr -d "\r\n" | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$* 2>&1 | sed -e s/x/x/ > $*-ckd ) || exit 0; \
 	if [ -e $*-expected ] ; then \
@@ -165,22 +165,24 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 %-run: 
 	@echo Running $*  \
 		${ALWAYSFLAGS} \
-		`grep '//#FLAGS:' $* | \
+		`(grep '//#FLAGS:' $* || echo ${DEFAULTFLAGS}) | tr -d "\r\n" | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" `\
 		${ARGS} 
-	@if [ ! -e $* ] ; then \
+	if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
 	${ESCJAVA} ${ALWAYSFLAGS} \
-		`grep '//#FLAGS:' $* | \
+		`(grep '//#FLAGS:' $* || echo ${DEFAULTFLAGS}) | tr -d "\r\n" | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		${ARGS} $* ; \
 	fi 
 
 
 %-expected: %
-	escjava ${ALWAYSFLAGS} \
-		`grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx"` $* 2>&1 > $@
+	${ESCJAVA} ${ALWAYSFLAGS} \
+		`(grep '//#FLAGS:' $* || echo ${DEFAULTFLAGS}) | tr -d "\r\n" | \
+		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
+		  $* 2>&1 > $@
 
 .PHONY: clean
 clean:
