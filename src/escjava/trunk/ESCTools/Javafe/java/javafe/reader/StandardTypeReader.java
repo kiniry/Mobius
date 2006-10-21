@@ -263,6 +263,7 @@ public class StandardTypeReader extends TypeReader
     FilenameFilter ff = filter();
     ArrayList a = new ArrayList();
     Enumeration e = javaSrcFileSpace.findFiles(P);
+    if (e == null) return null;
     while (e.hasMoreElements()) {
       Tree t = (Tree)e.nextElement();
       String s = t.getLabel();

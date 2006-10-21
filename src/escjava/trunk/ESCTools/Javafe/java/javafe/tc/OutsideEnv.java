@@ -341,7 +341,7 @@ public final class OutsideEnv {
   public static ArrayList resolveSources(String[] pname) {
     ArrayList a = reader.findFiles(pname);
     if (a == null) {
-      ErrorSet.caution("Could not locate package: "
+      ErrorSet.error("Could not locate package: "
           + javafe.parser.ParseUtil.arrayToString(pname, "."));
       return null;
     }

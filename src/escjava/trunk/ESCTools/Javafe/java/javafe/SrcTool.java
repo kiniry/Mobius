@@ -132,7 +132,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	while (i.hasNext()) {
 	    InputEntry ie = (InputEntry)i.next();
 	    ArrayList a = resolveInputEntry(ie);
-	    OutsideEnv.addSources(a);
+	    if (a != null) OutsideEnv.addSources(a);
 	}
     }
 
