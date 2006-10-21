@@ -27,18 +27,24 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 
 ##############################################################################
 
+## The root targets to run the tests
+.PHONY: test runtests
+test runtests: extests separate_escjava_tests
+
+## Builds the lists that drive the tests as well as the JUnit tests themselves
 .PHONY: buildtests
 buildtests: lists
+	touch testfile  ## Required by TestSystem1.java
 	$(JAVAC) -classpath "${_ECLASSPATH}" -source 1.4 `cat listfiles` \
 		AllTests.java Suite.java LocalTestCase.java
 
-.PHONY: test runtests
-test runtests: extests separate_java_tests
-
+## This runs the tests as Junit tests.  AllTests runs everything that is
+## listed in listfiles.  These tests actually execute the Test*.java files.
 .PHONY: extests
 extests: buildtests
 	-${JUNIT} AllTests
 
+## This runs all the JUnit tests in a Junit GUI
 .PHONY: swtests
 swtests: buildtests
 	-$(JUNITSW) AllTests
@@ -48,86 +54,56 @@ ALWAYSFLAGS = -quiet -nowarn Deadlock -specs "${_SPECS}" -classpath "${_CLASSPAT
 
 CHUNK = 40
 
-.PHONY: lists
-lists: Test*.java skip
-	@-rm -f listtests listfiles
-	@touch listtests
-	@(ls Test*.java | grep -v -f skip > listfiles)
-ifdef COMSPEC
-	@for f in `cat listfiles `; do \
-	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
-	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
-	        | sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
-	        | sed -e "s@.:..@.;..@" \
-	        >> listtests ; \
-	done
-else
-	@for f in `cat listfiles `; do \
-	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
-	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
-		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
-	        >> listtests ; \
-	done
-endif
 
-.PHONY: septest
-
-.PHONY: provetests
-provetests:
-	@echo "Proving jdk tests..."
-	${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}" Test*.java
-
-.PHONY: partjunittests
-partjunittests: lists buildtests
-	@echo "TESTING Escjava: junittests (in parts)"
-	@$(MAKE) --no-print-directory lists
-	@cp listtests listteststemp
-	@cp listteststemp templist
-	@while test -s templist ; do \
+## This target runs all the escjava tests, but in batches to avoid resource
+## overloads
+#### FIXME - this target is not working
+.PHONY: part_escjava_tests
+part_escjava_tests: lists
+	@echo "TESTING escjava on jdktests (in parts)"
+	cp listtests listteststemp
+	cp listteststemp templist
+	while test -s templist ; do \
 	    head -n ${CHUNK} templist > listtests ;\
-	    ${MAKE} --no-print-directory quiet-junittests ;\
+	    ${JUNIT} Suite ;\
 	    tail +${CHUNK} templist | tail +2 > templista ;\
 	    mv templista templist; \
 	done 
-	@rm -f templist templista
-	@mv listteststemp listtests
+	rm -f templist templista
+	mv listteststemp listtests
 
-.PHONY: quiet-junittests
-quiet-junittests:
-	@$(JUNIT) Suite
 
-.PHONY: separate_java_tests
-separate_java_tests:
-	@touch skip
-	-@for f in `ls Test*.java | grep -v -f skip ` ; do \
+## This target runs all the escjava tests, but individually
+.PHONY: separate_escjava_tests
+separate_escjava_tests: lists
+	@echo "TESTING escjava on jdktests (individually)"
+	-@for f in `cat listfiles ` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
+## This target runs a single test, both as a JUnit test and as a escjava test
+%.test:
+	@echo Testing $*
+	$(MAKE) $*.ex
+	$(MAKE) $*-test
+
+## This target runs a single test as a JUnit test
 %.ex:
 	$(JAVAC) -classpath "${_CLASSPATH}" $*.java
 	-$(JUNIT) $*
 
-%.test:
-	@echo Testing $*
-	$(MAKE) $*.ex
-	(${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
-		`grep '//#FLAGS:' $*.java | \
-		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
-		$(addsuffix .java,$*))
-
 ## This target (X-test) runs escjava against X.java, using any flags specified
 ## in X.java and comparing the output against the contents of X.java-expected.
 ## The actual output is stored in X.java-ckd if it is different.
-%-test:
+%-test: .sedScript
 	@echo Testing $* 
-	@echo "s@${_ESCROOT}@ESCTOOLSROOT@" | tr '\\' '/' > .sedScript
 	@if [ ! -e $* ] ; then \
 		echo No such file $* ;\
 	else \
-	(${ESCJAVA} ${ALWAYSFLAGS} -classpath "${_CLASSPATH}" -specs "${_SPECS}"\
-		`grep '//#FLAGS:' $* | \
+	(${ESCJAVA} ${ALWAYSFLAGS} \
+		-classpath "${_CLASSPATH}" \
+		-specs "${_SPECS}"\
+		`(grep '//#FLAGS:' $* || echo ${DEFAULTFLAGS}) | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		$* 2>&1 \
 		| tr '\\' '/'  \
@@ -161,10 +137,42 @@ separate_java_tests:
 	fi
 
 
+## Generates the -expected file for the test.  
+## HAND INSPECT IT TO BE SURE IT IS CORRECT!!!!
 %-expected: %
 	escjava ${ALWAYSFLAGS} \
 		`grep '//#FLAGS:' $* | sed -e "sx//#FLAGS:xx"` $* 2>&1 > $@
 
+## Builds the lists that drive the tests
+.PHONY: lists
+lists: Test*.java skip
+	@-rm -f listtests listfiles
+	@touch listtests
+	@touch skip
+	@(ls Test*.java | grep -v -f skip > listfiles)
+ifdef COMSPEC
+	@for f in `cat listfiles `; do \
+	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
+	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
+	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
+	        | sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
+	        | sed -e "s@.:..@.;..@" \
+	        >> listtests ; \
+	done
+else
+	@for f in `cat listfiles `; do \
+	        echo -n ${ALWAYSFLAGS} " " >> listtests ; \
+	        ( grep FLAGS $$f || echo ${DEFAULTFLAGS} ) \
+	        | sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
+		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
+	        >> listtests ; \
+	done
+endif
+
+.sedScript:
+	@echo "s@${_ESCROOT}@ESCTOOLSROOT@" | tr '\\' '/' > .sedScript
+
+## Cleans all temporary files
 .PHONY: clean
 clean:
 	@rm -f `cat .cvsignore` core* .sedScript
