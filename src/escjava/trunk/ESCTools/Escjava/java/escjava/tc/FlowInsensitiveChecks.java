@@ -2007,7 +2007,7 @@ System.out.println("FOUND " + t);
                 ErrorSet.error(p.getStartLoc(),
                                "The helper pragma cannot be applied " +
                                "to method that can be overridden");
-              } else if (md.body == null) {
+              } else if (md.body == null && !md.specOnly) {
                 ErrorSet.error(p.getStartLoc(),
                                "The helper pragma cannot be applied " +
                                "to method without a body");

@@ -858,6 +858,7 @@ public class RefinementSequence extends CompilationUnit {
               d.returnType,
               d.locType);
       ((RoutineDecl)newtde).implicit = d.implicit;
+      ((RoutineDecl)newtde).specOnly = d.specOnly;
     } else if (tde instanceof ConstructorDecl) {
       ConstructorDecl d = (ConstructorDecl)tde;
       boolean enclosed = d.parent.parent != null && !Modifiers.isStatic(d.parent.modifiers) && javaIsBinary;
@@ -873,6 +874,7 @@ public class RefinementSequence extends CompilationUnit {
               d.locId,
               d.locThrowsKeyword);
       ((RoutineDecl)newtde).implicit = d.implicit;
+      ((RoutineDecl)newtde).specOnly = d.specOnly;
     } else if (tde instanceof TypeDecl) {
       newtde = cleancopy((TypeDecl)tde);
     } else if (tde instanceof InitBlock) {

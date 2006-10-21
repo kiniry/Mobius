@@ -343,6 +343,7 @@ public class Parse extends ParseStmt
 				 formals, raises, blk, loc, loc, loc,
 				 Location.NULL );
       cd.implicit = true;
+      cd.specOnly = specOnly;
       elems.addElement(cd);
   }
 
@@ -507,15 +508,17 @@ VariableDeclarator:
 				    : parseConstructorBody(l);
 
       }
-      seqTypeDeclElem.addElement( result = ConstructorDecl.make( modifiers,
-							modifierPragmas,
-							tmodifiers,
-							args, 
-							raises, body,
-							locOpenBrace,
-							loc, locId, 
-							locThrowsKeyword ) );
-      return result;
+      ConstructorDecl cd = ConstructorDecl.make( modifiers,
+				    modifierPragmas,
+				    tmodifiers,
+				    args, 
+				    raises, body,
+				    locOpenBrace,
+				    loc, locId, 
+				    locThrowsKeyword );
+      cd.specOnly = specOnly;
+      seqTypeDeclElem.addElement( cd);
+      return cd;
     } 
     else if( l.ttype == TagConstants.TYPEDECLELEMPRAGMA ) {
       // TypeDeclElemPragma
@@ -574,6 +577,7 @@ VariableDeclarator:
 					raises, body, locOpenBrace,
                                         loc, locId, locThrowsKeyword,
 					id, type, locType);
+        md.specOnly = specOnly;
         //alx: dw save universe return type to method declaration node
         if (useUniverses)
         	setUniverse(md,localUniverseArray,type,locType);

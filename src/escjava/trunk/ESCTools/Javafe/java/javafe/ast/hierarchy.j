@@ -451,6 +451,7 @@ public abstract class RoutineDecl extends ASTNode implements TypeDeclElem
 	// arguments are binary manufactured names instead of source code names
 
   public boolean implicit = false;
+  public boolean specOnly = false;
   public TypeNameVec originalRaises = null;
 
   //# int modifiers
