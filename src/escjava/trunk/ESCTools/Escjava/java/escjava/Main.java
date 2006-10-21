@@ -361,7 +361,7 @@ public class Main extends javafe.SrcTool
     public void postload() {
 	super.postload();
 	if (OutsideEnv.filesRead() == 0) {
-	    ErrorSet.caution("No files read.");
+	    ErrorSet.error("No files read.");
 	}
     }
 
