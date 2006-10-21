@@ -26,7 +26,7 @@ public class Ghost extends GhostA implements GhostI {
 		//@ set i = superinst; // OK
 		//@ set i = interk;// OK
 		//@ set i = interkinst; // OK
-		int q = i;  // ERROR
+		int q = i;  // ERROR -- i is only annotation
 	}
 
 	public static void mm() {
@@ -43,19 +43,19 @@ public class Ghost extends GhostA implements GhostI {
 	// ERRORS
 
 	public
-	//@ ghost int iii; // ERROR
+	//@ ghost int iii; // ERROR -- public must be in the annotation
 
-	/*@ ghost */ int jjj; // ERROR
+	/*@ ghost */ int jjj; // ERROR -- decl must be in annotation with ghost
 
 	int ppp;
 
-	//@ static ghost int temp = interkinst; // ERROR
-	//@ static ghost int temp2 = ppp; // ERROR
+	//@ static ghost int temp = interkinst; // ERROR -- interkinst is instance
+	//@ static ghost int temp2 = ppp; // ERROR -- ppp is instance
 	//@ static ghost int temp3 = interk; // OK
 	//@ static ghost int temp7 = interk3; // OK
 
-	//@ static ghost int temp4 = superinst; // ERROR
-	//@ static ghost int temp5 = superinst2; // ERROR
+	//@ static ghost int temp4 = superinst; // ERROR -- superinst is instance
+	//@ static ghost int temp5 = superinst2; // ERROR -- superinst2 is instance
 	//@ static ghost int temp6 = superistatic; // OK
 
 	static int aa = a; // OK
@@ -65,7 +65,7 @@ class GhostA {
 
 	//@ ghost int superinst;  // OK
 	//@ ghost instance int superinst2;  // OK
-	//@ static ghost instance int superiii; // ERROR
+	//@ static ghost instance int superiii; // ERROR -- static and instance
 	//@ static ghost int superistatic; // OK
 
 }
@@ -76,7 +76,7 @@ interface GhostI {
 
 	//@ ghost int interk;
 	//@ ghost instance int interkinst;
-	//@ ghost instance static int interkinst2; // ERROR
+	//@ ghost instance static int interkinst2; // ERROR -- static and instance
 	//@ ghost static int interk3;
 
 }
