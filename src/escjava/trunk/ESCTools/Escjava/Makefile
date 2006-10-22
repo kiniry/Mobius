@@ -422,27 +422,7 @@ self_typecheck:
 		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
 		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
 		-source 1.4 -typecheck -quiet \
-		${UTILS_PACKAGE_LIST} ${JAVAFE_PACKAGE_LIST}
-	@for p in ${ESCJAVA_PACKAGE_LIST} ; do \
-	echo $$p ; \
-	JAVA_VM_FLAGS=-Xmx256m \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
-		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
-		-source 1.4 -typecheck -quiet \
-		$$p ; \
-	done
-
-## FIXME - the following does a stack overflow, which is why the target above
-## runs over the packages one at a time.
-zzz:
-	JAVA_VM_FLAGS=-Xmx256m \
-	${ESCJ} -classpath "$(call canonicalize,${ESCJAVA_BUILD_CLASSPATH}:)${CLASSPATH}" \
-		-sourcepath "$(call canonicalize,$(SOURCEPATH):$(SPECS):$(JUNIT_SOURCEPATH))" \
-		-specs "${call canonicalize,${ESCTOOLS_ROOT}/specs}" \
-		-source 1.4 -typecheck -quiet \
-		escjava escjava.ant escjava.ast escjava.backpred 
-	done
+		${PACKAGE_LIST}
 
 
 %-self:
