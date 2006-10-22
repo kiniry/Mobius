@@ -23,6 +23,7 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 ##############################################################################
 .PHONY: buildtests
 buildtests:
+	$(MAKE)  lists
 	$(JAVAC) -classpath "${_CLASSPATH}" TestSuite.java
 	cp Binary.javax Binary.java
 	javac Binary.java
@@ -34,8 +35,8 @@ test runtests: buildtests
 	$(MAKE) dotests
 
 .PHONY: dotests
-dotests: lists
-	-$(MAKE) notjunittests
+dotests: 
+	-$(MAKE) nonjunittests
 	-$(MAKE) partjunittests
 
 .PHONY: junittests
@@ -47,12 +48,8 @@ junittests:
 quiet-junittests:
 	@$(JUNIT) TestSuite
 
-.PHONY: dotests-nolist
-dotests-nolist:
-	$(JUNIT) TestSuite
-
 .PHONY: swtests
-swtests: lists
+swtests: listtests
 	$(JUNITSW) TestSuite
 
 ALWAYSFLAGS = -nowarn Deadlock -verboseTrace -testMode -classpath "${_SPECS}"
@@ -68,20 +65,23 @@ OTHERTESTS = \
 ## These have output that depends on initialization (e.g. what has already 
 ## happened in the previous junittests), so the output is more stable when
 ## run separately
-NOTJUNITTESTS = 
+NONJUNITTESTS = 
 ifdef PDTESTS
 ## These are platform-dependent tests or tests whose output is a bit random
-NOTJUNITTESTS += $(shell cat notjunittests | grep -v -f skip)
+NONJUNITTESTS += $(shell cat notjunittests | grep -v -f skip)
 endif
 
-.PHONY: lists
-lists:
+.PHONY: lists 
+lists: listtests
+
+listtests:  ${wildcard *.java} ${OTHERTESTS} skip notjunittests
+	@echo Recreating test list in junittests
 	@rm -f listtests
 	@touch listtests
 ifdef COMSPEC
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} ) | tr -d "\r\n" \
+		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} )  \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
 		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
 		| sed -e "s@.:..@.;..@" \
@@ -90,34 +90,49 @@ ifdef COMSPEC
 else
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} ) | tr -d "\r\n" \
+		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} )  \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
 		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
 		>> listtests ; \
 	done
 endif
 
+
 .PHONY: separate_tests
 separate_tests:
 	$(MAKE) skips
 	$(MAKE) othertests
-	$(MAKE) separate_java_tests
-	$(MAKE) notjunittests
+	$(MAKE) separate_junit_tests
+	$(MAKE) nonjunittests
 
-.PHONY: notjunittests
-notjunittests:
-	@echo "TESTING Escjava: notjunittests"
-	@touch skip
-	@-for f in ${NOTJUNITTESTS} ; do \
+
+.PHONY: nonjunittests
+nonjunittests: notjunittests skip
+	@echo "TESTING Escjava: nonjunittests"
+	@-for f in ${NONJUNITTESTS} ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
+
+## Runs the tests listed in OTHERTESTS, as individual tests
+.PHONY: othertests
+othertests: $(addsuffix -test,${OTHERTESTS})
+
+
+## Runs the JUnit tests n one fell swoop, using the JUnit infrastructure
+## This can exhaust resources and get slower and slower, so we don't use it
+.PHONY: alljunittests
+alljunittests: listtests
+	@echo "TESTING Escjava: junittests (all at once)"
+	${MAKE} --no-print-directory quiet-junittests
+
+
 CHUNK = 40
 
+## Runs the JUnit tests as groups, using the JUnit infrastructure
 .PHONY: partjunittests
-partjunittests:
+partjunittests: listtests
 	@echo "TESTING Escjava: junittests (in parts)"
-	@$(MAKE) --no-print-directory lists
 	@cp listtests listteststemp
 	@cp listteststemp templist
 	@while test -s templist ; do \
@@ -129,21 +144,24 @@ partjunittests:
 	@rm -f templist templista
 	@mv listteststemp listtests
 
-.PHONY: separate_java_tests
-separate_java_tests:
-	@touch skip
-	@for f in `ls *.java | grep -v -f skip -f notjunittests` ; do \
+## Runs the junit tests as individual tests, not using the JUnit infrastructure
+.PHONY: separate_junit_tests
+separate_junit_tests: skip
+	@for f in `ls *.java | grep -v -f skip -f nonjunittests` ; do \
 		$(MAKE) --no-print-directory $${f}-test; \
 	done
 
+## Prints out the tests that are skipped, to remind the reader to fix them
 .PHONY: skips
-skips:
-	@touch skip
+skips: skip
 	@echo Skipped: `cat skip | grep -v "^#" `
 
-.PHONY: othertests
-othertests: $(addsuffix -test,${OTHERTESTS})
+## Creates an empty skip file, if needed.  Many targets presume one exists.
+skip:
+	@touch skip
 
+## Runs an individual test, e.g. make X.java-test runs the X.java test, just
+## as it is run as part of the test suite
 %-test: 
 	@echo Testing $* 
 	@if [ ! -e $* ] ; then \
@@ -162,6 +180,7 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 	fi ;\
 	fi ;\
 
+## Runs an individual test, simply outputing the result of the test
 %-run: 
 	@echo Running $*  \
 		${ALWAYSFLAGS} \
@@ -178,12 +197,14 @@ othertests: $(addsuffix -test,${OTHERTESTS})
 	fi 
 
 
+## Runs an individual test, putting the result into the -expected file
 %-expected: %
 	${ESCJAVA} ${ALWAYSFLAGS} \
 		`(grep '//#FLAGS:' $* || echo ${DEFAULTFLAGS}) | tr -d "\r\n" | \
 		sed -e "sx//#FLAGS:xx" -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" ` \
 		  $* 2>&1 > $@
 
+## Deletes all temporary files
 .PHONY: clean
 clean:
 	@rm -f `cat .cvsignore` core*
