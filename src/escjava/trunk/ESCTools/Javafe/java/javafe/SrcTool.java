@@ -131,13 +131,18 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	Iterator i = args.iterator();
 	while (i.hasNext()) {
 	    InputEntry ie = (InputEntry)i.next();
-	    ArrayList a = resolveInputEntry(ie);
+	    ie = resolveInputEntry(ie);
+        ArrayList a = ie.contents;
+        if ((ie instanceof ClassInputEntry) && a.size() > 0) {
+          ErrorSet.warning("Cannot parse a class file: " + a.get(0));
+          continue;
+        }
 	    if (a != null) OutsideEnv.addSources(a);
 	}
     }
 
-    //@ ensures \result.elementType <: \type(GenericFile);
-    public ArrayList resolveInputEntry(InputEntry iee) {
+    //@ ensures \result.contents.elementType <: \type(GenericFile);
+    public InputEntry resolveInputEntry(InputEntry iee) {
 	InputEntry ie = iee;
 	if (ie.contents == null) {
 	    ie = ie.resolve();
@@ -146,7 +151,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 		if (s != null) {
 		    ErrorSet.error(s);
 		    ie.contents = new ArrayList(0);
-		    return ie.contents;
+		    return ie;
 		}
 	    }
 	    if (ie instanceof FileInputEntry) {
@@ -182,11 +187,11 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 		ie.contents = new ArrayList(0);
 	    }
 	}
-	return ie.contents;
+	return ie;
     }
 
     public void loadInputEntry(InputEntry ie) {
-	OutsideEnv.addSources(resolveInputEntry(ie));
+	OutsideEnv.addSources(resolveInputEntry(ie).contents);
     }
 
     //@ requires argumentFileName != null;
@@ -203,7 +208,7 @@ public abstract class SrcTool extends FrontEndTool implements Listener
                 while ((s = in.readLine()) != null) {
                     // allow blank lines in files list
                     if (!s.equals("")) {
-                        ArrayList a = (resolveInputEntry(InputEntry.make(s)));
+                        ArrayList a = (resolveInputEntry(InputEntry.make(s))).contents;
                         if (a != null) list.addAll(a);
                     }
                 }
