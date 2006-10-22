@@ -17,6 +17,10 @@ fi
 echo "    ESCJ_SIMPLIFY: $ESCJ_SIMPLIFY"
 echo "    ESC_SPECS: $ESC_SPECS"
 
+for f in `echo test*`; do \
+    grep -q $f alltests || echo WARNING: $f NOT LISTED IN `pwd`/alltests ;\
+done
+
 echo TESTS OMITTED: `grep Omit alltests | awk '{print $1; }'`
 echo TESTS DROPPED: `grep Drop alltests | awk '{print $1; }'`
 echo TESTS TO BE FIXED: `grep FIX alltests | awk '{print $1; }'`
