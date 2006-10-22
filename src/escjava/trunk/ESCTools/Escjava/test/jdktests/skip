@@ -16,6 +16,7 @@ TestSet.java
 TestSet2.java
 TestCollection.java
 ## This works but takes a long time and tends to run out of resources
+TestBoolean.java
 TestException.java
 ## Turn this test back on once we have new/good specs for ByteArrayInputStream.
 TestByteArrayInputStream.java
