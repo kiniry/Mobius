@@ -226,10 +226,29 @@ public abstract class ParseExpr extends ParseType
                         || 
                         ( !isLeftAssoc && precedenceStack[stackPtr] > precedence ))) 
                 {
-                    e = BinaryExpr.make(opStack[stackPtr], 
-                                        exprStack[stackPtr], 
+                    Expr ee = exprStack[stackPtr];
+                    int binop = opStack[stackPtr];
+                    LiteralExpr res = null;
+                    if (ee instanceof LiteralExpr &&
+                            e instanceof LiteralExpr) {
+                      LiteralExpr litee = (LiteralExpr)ee;
+                      LiteralExpr lite = (LiteralExpr)e;
+                      if (binop == TagConstants.ADD) {
+                        if (lite.tag == TagConstants.STRINGLIT &&
+                                litee.tag == TagConstants.STRINGLIT) {
+                          res = LiteralExpr.make(TagConstants.STRINGLIT, 
+                                  (String)(litee.value) + (String)(lite.value), litee.loc);
+                        }
+                      }
+                    } 
+                    if (res != null) {
+                      e = res;
+                    } else {
+                      e = BinaryExpr.make(binop, 
+                                        ee, 
                                         e, 
                                         locStack[stackPtr] );
+                    }
                     stackPtr --;
                 }
         
