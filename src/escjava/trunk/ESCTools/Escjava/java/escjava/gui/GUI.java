@@ -562,7 +562,7 @@ public class GUI extends escjava.Main {
 
 	    //ByteArrayOutputStream ba = Utils.setStreams();
 	    try {
-		a = gui.resolveInputEntry(ie);
+		a = gui.resolveInputEntry(ie).contents;
 		s = Status.RESOLVED_OK;
 	    } catch (Exception e) {
 		System.out.println("Failed to resolve " + ie.name + ": " + e);
