@@ -30,8 +30,8 @@ The induction case uses Lemma \ref{lemma1}.
 
 Lemma \ref{lemma1}  shows that if in an execution path
    the preconditions calculated by \fwpi{} for  the instructions in the path are such that the respective precondition holds in the prestate
-of the respective instruction then either the respective normal or exceptional method postcondition holds or another execution step can be made and
-the weakest precondition of the next instruction  holds. This is also known as  progress property.  
+of the respective instruction then either the respective normal or exceptional method postcondition holds or if another execution step can be made and
+the weakest precondition of the next instruction  holds. This is also known as  a subject reduction property.  
   The latter lemma is may be the most complicated one as it uses the argument of the reducibility 
  of the execution graph (Section \ref{prelim:ctrFlow}, Def. \ref{defLoop}).
    The lemma has three cases: 
@@ -61,13 +61,13 @@ and means that it does not matter if we use a syntactic substitution over the ex
 or update the state and evaluate the original expression. The next section is dedicated to the relation between substitution and evaluation.
 
  
-Let us see what are the assumptions that we adopt in the following. 
-We assume that there are no recursive methods in the program. 
-Proving the correctness of a verification calculus in the presence 
-of recursive methods would require a notion of recursive method call depth in the operational
-semantics. This would complicate the proof without bringing any particular feature of the bytecode.
-The reader interested in how recursive methods are manipulated in the soundness proof
-of program logics might look at \cite{Nipkow-MOD2001}.  
+% Let us see what are the assumptions that we adopt in the following. 
+% We assume that there are no recursive methods in the program. 
+% Proving the correctness of a verification calculus in the presence 
+% of recursive methods would require a notion of recursive method call depth in the operational
+% semantics. This would complicate the proof without bringing any particular feature of the bytecode.
+% The reader interested in how recursive methods are manipulated in the soundness proof
+% of program logics might look at \cite{Nipkow-MOD2001}.  
 
 Remember that we assume that the control flow graph of a method is reducible, or in other words there 
 are no cycles in the graph with two entries. This means that if program have cycles then they should 
