@@ -65,8 +65,7 @@ The language has only side effect free expressions for the sake of simplicity.
     Thus, the first expression in the syntax of the method invokation stands for the receiver object.  
     The language supports also instance creation construct. Note that constructors like methods do not take arguments.
     The semantics of instance creation expression $\newSrc \ \class{}$  is that it 
-    creates a new reference of type \class{} in the heap and then initialize this new reference
-    by invoking a special method called a class constructor which is denoted with \Constructor{\class}.
+    creates a new reference of type \class{} in the heap  which is initialised by the class constructor $\class$.
     A relation between    expressions is denoted with
     $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$.
   
