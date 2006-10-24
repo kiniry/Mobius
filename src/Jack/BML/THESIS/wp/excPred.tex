@@ -22,7 +22,7 @@ takes as arguments an index $i$ in the array of instructions of method \methodd 
 $$  \begin{array}{l}
            \methodd.\getExcPost(i, \mbox{ \rm \texttt{Exc}}   ) = \\
    \left\{\begin{array}{ll}
-        \inter{i}{\pcHandler}   & if \  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \\
+        \wpi{}{\methodd}{\pcHandler}   & if \  \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \pcHandler \\
 	\methodd.\excPostSpec( \mbox{ \rm \texttt{Exc}}  ) & \findExcHandler{\mbox{ \rm \texttt{Exc}} }{i}{\methodd.\excHandlerTable} = \bottom 
   \end{array}\right.
 \end{array}

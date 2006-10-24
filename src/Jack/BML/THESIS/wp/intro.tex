@@ -12,9 +12,7 @@ Different ways of generating verification conditions exist. The verification con
 about the modified locations by methods and loops. 
 In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choices done here.
 
-%related work
-Bytecode verification has become lately quite fashionable, thus several works exist on bytecode verification. Section \ref{relWorkWp}
-is an overview of the existing work in the domain.
+
 
 
 % definition of the wp
@@ -23,16 +21,19 @@ As we stated earlier, our verification condition generator is based on a weakest
 particular bytecode features as for example the operand stack. Another particularity of our verification condition calculus (weakest precondition function)
 is the propagation of verification conditions up to the program point similar to the definition of the weakest precondition calculus
 for the Java-like  source language in Chapter \ref{javaVerif}. To do this, we define the  weakest precondition predicate transformer
-in terms of two mutually recursive function. 
-The first one calculates the precondition of instructions over intermediate predicates which should hold 
+in terms of two mutually recursive functions. 
+The first one calculates the precondition of instructions over an intermediate predicate which should hold 
 in between the current instruction and 
-its successors. A predicate which must hold between an instruction and its successor 
-depends on the precondition of the successor and the execution relation between them, if it is a loop edge or not.
-The definition of the weakest predicate transformer  is presented in Section  \ref{wpRules}. 
+its successor. A predicate which must hold between an instruction and its successor 
+depends on the precondition of the successor and the execution relation between the two instructions, namely 
+it depends on if the successor is a loop entry or not.
+This is explained in Section  \ref{wpRules}. 
 
 %example
-Finally, section \ref{wp:example} gives an example for how the verification condition generator works.
+Section \ref{wp:example} gives an example for how the verification condition generator works.
 
+%related work
+Finally, section \ref{relWorkWp} is an overview of the existing work in the domain.
 % proof of correctness
 %An important question is the correctness of our methodology, i.e. what guarantees that if the verification procedure succeeds on a program then 
 %the program respects  for real the property that we verified for. A skatch of the proof of correctness is presented in Section \ref{proof}
