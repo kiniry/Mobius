@@ -1,0 +1,74 @@
+
+\section{Program verification using program logic}\label{javaVerif:verifStyles}
+
+Now that we have defined the source language and its specification language, let us see 
+what are the possibile approaches for verifying that  a program respects its specification.
+
+ A first possibility is to formalize the semantics of programs and then to perform the verification directly over this formalization.
+For instance, this was done in the Loop tool \cite{jacobs03java} where a denotational semantics for programs was formalized in the theorem prover PVS.
+ However, such a  verification needs a lot of user interaction which makes  difficult that this approach scale up.
+ 
+Another approach then consists in using an axiomatic semantics of the programming language for the verification process. 
+Axiomatic program semantics has been first introduced by C.A.R. Hoare  \cite{Hoare69ABC} and is usually known under the name of Hoare 
+logic. A later version of the Loop tool  \cite{jacobs03java} 
+and the interactive Java verification system Jive \cite{MH00Arc} are examples for  Java program verification tools which use  a Hoare style reasoning.   
+ Hoare logic consists in a system of inference rules defined inductively over the statement structure. The inference rules manipulate
+  Hoare logic triples. A Hoare triple consists of a predicate $Pre$, a statement $\stmt$ and a predicate $Post$,  such 
+that if $Pre$  holds in the initial state of $\stmt$,  then  $Post$  holds in the final tate of $\stmt$. For denoting such 
+a Hoare  triple we use the  notation $\{Pre \}  \stmt \{Post\}$.
+Correctness of program $\stmt$ w.r.t. a precondition $Pre$ and postcondition   $Post$ is then established if a  tree can be built  by applying the inference rule of the Hoare
+logic over the triple $\{Pre \}  \stmt \{Post\}$ and the  leaves of the tree are either axioms or valid formulas.
+ Validity of formulas in the leaves of a Hoare logic tree is
+established by a decision procedure or a theorem prover. 
+The inference rules in a Hoare logic are  such that their premise states what should hold for the substatements of a statement $\stmt$ in order that the specification for 
+$\stmt$  holds. Because Hoare logic is   syntax directed, reasoning about programs using a Hoare logic is easier than working directly on the
+ semantics of the programming language. However, Hoare style verification needs still a considerable amount of user interaction.
+For instance, we may consider the Hoare  logic rule for the compositional statement given below:
+$$\frac{ \{Pre \}  \stmt_1 \{Post'\} \  \ \{Post'\}  \stmt_2 \{Post\}  }{ \{Pre \}  \stmt_1;\stmt_2 \{Post\} }$$
+The rule states that if there is a predicate $Post'$ such that the triples  $\{Pre \}  \stmt_1 \{Post'\}$ and $\{Post'\}  \stmt_2 \{Post\} $ hold then the triple
+$\{Pre \}  \stmt_1;\stmt_2 \{Post\} $ holds. 
+Although the inference rule tells us what must be proven for the substatements for establishing the correctness of $\{Pre \}  \stmt_1;\stmt_2 \{Post\} $,
+ it does not tell which is the predicate $Post'$.
+A user interaction is needed to determine  $Post'$. This situation occurs often also with the other rules in the logic.
+Actually,  even for small programs, a lot of human interaction  is necessary when  using Hoare style reasoning.
+  
+Another possibility is to apply a  more calculational approach. It consists in an algorithm which 
+from a given postcondition $Post$   of statement $\stmt$ calculates the weakest predicate $WP$ 
+that must hold in the  prestate of $\stmt$. Then, for establishing that
+  $\stmt$ respects a precondition
+  $Pre$ and the postcondition   $Post$ it is sufficient to show that $Pre$ implies $WP$, i.e. the verification
+condition $Pre \Rightarrow WP$. 
+The calculation of the weakest predicate is a completely automatic procedure which uses the so called weakest precondition predicate transformer function. 
+ Note that there also exists a strongest postcondition predicate transformer function which works in a forward direction 
+ (contrary to the weakest precondition). However, the strongest postcondition predicate transformer
+ did not gain popularity because of  the way it treats assignments. Particularly, the strongest postcondition calculus
+ quantifies  existentially over the old value
+ of the assigned variable while in a weakest predicate transformer assignments are treated with  substitutions.
+For more detailed information on strongest postcondition calculus the reader may refer to  \cite{WPCDS}.
+Using weakest predicate transformers in program verification thus, avoids to deal with Hoare logic inference rules. 
+ This means that the user
+ interacts (if needed) only in proving the verification conditions. 
+This approach underline the extended static checker for ESC/java \cite{escjava} and Jack tool \cite{BRL-JACK}. 
+These tools scale up and has been used in verification of real case studies \cite{HuismanJB01}, \cite{BBCGHLPR06:FMCO}.
+
+Another aspect of program verification using logical methods is also whether the verification should be performed directly over the original programs
+or  an intermediate language should be used. Let us see what are intermediate languages and how they can be used in the verification scheme.
+For instance, the simple guarded command language can be used as an intermediate language in the verification procedure.
+ The guarded command   language supports  only few program constructs but which are 
+sufficiently expressive to encode a rich programming language. 
+If a guarded command language is used in the verification procedure this would mean 
+a stage where  bytecode programs are transformed in guarded command language programs.
+Using guarded command language as an intermediate representation of programs
+is useful because the verification condition generator can interface and can be extended to interface 
+easily several programming languages. Moreover, if a change in the logic must be made, the change will impact only
+ the constructs of the intermediate language which in the case of a guarded command language are few.
+Such an intermediate representation is used in the extended static checker
+ESC/java (\cite{escjava}) and the Java verification system Krakatoa \cite{marche03krakatoa} which uses the input language of the verification tool Why\footnote{http://why.lri.fr/}.
+However, we consider that a guarded command language 
+opens a gap between  the verified code and the source code as we verify  a program in the intermediate language and not the original source program.
+Establishing the correctness of a verification systems which uses an intermediate language
+may be not trivial as the stages of the transformation of the original source program to its encoding in the intermediate language must be also proven correct. 
+
+To conclude, we consider that using predicate transformers for the generation of verification conditions makes the verification condition generator automatic 
+and that performing the verification directly on the program code is reliable as it guarantees that the proven program corresponds to the program that we want to prove. 
+%Thus, in the following we present a weakest predicate transformer defined for our source language.
