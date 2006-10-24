@@ -44,7 +44,7 @@
 \newcommand{\newStack}{ \lbrack~\rbrack  } % empty stack
 \newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
 
-\newcommand{\counter}{\mbox{\rm\textbf{cntr}} }
+\newcommand{\counter}{\mbox{\rm\textbf{cntr}}}
 \newcommand{\counterOnly}{\mbox{\rm Cntr} }
 \newcommand{\topStack}{\mbox{\rm cntr} }
 \newcommand{\true}{\mbox{\rm\textit{true}} } % true from the assertion language
@@ -118,7 +118,7 @@
 
 
 % abstractCtrlFlow.tex
-\newcommand{\execRel}{\rightarrow} % the execution relation
+\newcommand{\execRel}{ \ \mbox{\rm\textit{succ}} \ } % the execution relation
 \newcommand{\blockm}[1]{ \tt{b^{#1}} }
 \newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
 \newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }
@@ -189,9 +189,10 @@
 \newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
 
 \newcommand{\stateTrans}{\hookrightarrow}
-\newcommand{\stateTransTerm}{\Rightarrow }
+\newcommand{\stateTransWeight}[1]{\stateTrans_{\mbox{\rm\texttt{#1}}}}% execution relation with weights for the correctness
+\newcommand{\stateTransTerm}{\Downarrow}
 \newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
-
+\newcommand{\stateTransTermWeight}[1]{\Downarrow_{\mbox{\rm\texttt{#1}}} }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%STATE CONFIGURATION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -503,7 +504,7 @@
 \newcommand{\evalRel}[1]{\mbox{ \rm \textit{rel}}( #1 )} % evaluation of an expression #1 in  a state configuration #2
 
 \newcommand{\interp}[2]{s_{0}, #2 \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
-\newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2, s_{0}  \vDash \\ 
+\newcommand{\interpTwoLines}[2]{ \begin{array}{l}s_{0}, #2  \vDash \\ 
 				         #1 
 				  \end{array}}
 
