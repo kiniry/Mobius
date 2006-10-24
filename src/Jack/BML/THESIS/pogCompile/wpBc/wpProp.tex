@@ -6,9 +6,121 @@
 %\newtheorem{relWpStmt}[wpIns]{Lemma}
 
 %\subsection{Properties of the \wpName \ functions}\label{pog:wpBcProp}
-    
-We shall first establish a relation between the \wpName{} predicate transformer functions for expressions 
-on bytecode and source level. 
+ 
+In the following, we proceed with establishing the equivalence between source and bytecode 
+proof obligations. As we have already seen, the source programming language supports 
+expressions  and statements.  
+ Because statements and expressions play different roles in  a source program language 
+they need a different treatment here in this proof. Let us remind briefly about the semantics of these constructs and their compilation. 
+Expressions evaluate to a value and thus, their compilation affects the operand stack on execution time. 
+As we have discussed previously, because we compile for a stack based virtual machine,
+an expression compilation   results in a sequence of instructions whose execution must leave on the stack top the expression value.
+Statements have a different role in the language. They do not have values, but they control the control flow in the program. Thus,
+ the formulation of the equivalence for statements and expressions verification conditions will be different.
+   
+We focus now on the relation between the \wpName{} predicate transformer functions for expressions 
+on bytecode and source level. But before entering into technical details, we illustrate this relation
+ by an example given in Fig.\ref{pogCompile:wpBc:expression}.
+The figure contains three parts. The first part shows the compilation of a source expression \lstinline!sqr + 2*s! in a method \methodd{} starting at index \lstinline!i!.
+There we show the steps that the compiler will take for the compilation of the expression: compile the access of the variable \lstinline!sqr!,
+the multiplication  \lstinline! 2*s! and compile their addition. 
+
+The second part calculates the preconditions of the instructions resulting from the 
+ expression compilation against a postcondition that the stack top element is equal to 5 (\stack{\counter} = \lstinline! 5 !). 
+Actually, this postcondition requires that the evaluation of the expression must be equal to \lstinline!5!. 
+This is because as we said in the beginning of the section the compiler translates source expressions to a sequence of bytecode instructions
+ such that their execution 
+must leave the expression value on the stack top. 
+Note that every instruction is followed by its postcondition and is preceded by its weakest  precondition.  This means that the weakest predicate of an instruction is the
+postcondition of the predecessor instruction. This is because compilation of  expressions may not contain loop entries
+ (see previous Section \ref{compile:prop:compProp3}, page \pageref{compile:prop:compProp3}).  
+
+The third part shows how the precondition of the source expression is calculated w.r.t. the postcondition $v = 5$ where 
+$v$ is the special logical variable which stands for the value of the expression \lstinline!sqr + 2*s!.
+Thus, the bytecode postcondition \stack{\counter} = \lstinline! 5 ! and the source postcondition $v = 5$ express the same condition
+respectively on source and bytecode.
+Note that  substituting the abstract variable $v$ with the stack top in the source postcondition $ v = 5\subst{v}{\stack{\counter}}$ 
+results in the bytecode postcondition.
+
+ Let us focus on the intermediate stages in the calculation of the precondition of the whole expression.
+We may  remark that the resulting 
+postcondition   of the source expression   \lstinline!2*s! is $v_{sqr} +v_{2*s}=5$ and that the postcondition at line 1.9
+for the last instruction of its compilation (instruction \lstinline!i+3: mul!) is $\stack{\counter - 1}  + \stack{\counter} =~\mbox{\rm \lstinline! 5!}  $.
+Substituting in the source postcondition the abstract variable $v_{2*s}$ with \stack{\counter} and $v_{sqr}$  with \stack{\counter -1} results
+in the bytecode postcondition
+ $$ \numConclusion{1} \ (v_{sqr} +v_{2*s}=5)  \subst{v_{2*s}}{\stack{\counter}}\subst{v_{sqr}}{\stack{\counter-1}} \equiv\stack{\counter - 1}  + \stack{\counter} =~\mbox{\rm \lstinline! 5!} $$
+  over source postcondition 
+gives once again the respective bytecode postcondition. We can see that the precondition of  the first instruction (\lstinline!i+1: const 2!)
+of the compilation of 
+\lstinline!2*s! is   $\stack{\counter} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}$. We may remark that the 
+precondition of the source expression \lstinline!2*s!  in the third part of the figure is equivalent to $v_{sqr} + 2*\lstinline!s!=5 $.
+Substituting in the source precondition the abstract variable $v_{sqr}$ with \stack{\counter} results
+in a formula which is equivalent to the bytecode precondition
+ $$\numConclusion{2} \ (v_{sqr} +\mbox{\rm \lstinline!2*s!} =5) \subst{v_{sqr}}{\stack{\counter}} \equiv \stack{\counter }  + \mbox{\rm \lstinline!2*s!}  = ~\mbox{\rm \lstinline! 5!} $$
+
+Equivalences \numConclusion{1}  and \numConclusion{2} give the intuition of how the predicate transformers work over  source expressions and 
+their bytecode compilation. The predicate transformer over the instructions representing an expression
+ substitutes the stack top element expression  \stack{\counter} with the value of the expression and the stack counter is decremented. The predicate transformer 
+over a source expression calculates a predicate where the abstract variable representing its value is substituted with the expression value. 
+More formally, this is expressed in the next lemma.  
+
+\begin{figure}[ht!]
+\begin{frameit}
+  \scriptsize{ \begin{tabular}{lll} 
+   $ \compileLabel{i}{ \lstinline!sqr + 2*s ! }{i+4}$ & = &
+   \begin{tabular}{l} 
+     $\compileLabel{i}{ \lstinline!sqr! }{i}$ \\
+     $\compileLabel{i+1}{ \lstinline!2*s! }{i+3} $\\
+     \lstinline!i+4: add!
+      \end{tabular} \\
+      where & & \\
+      $\compileLabel{i}{ \lstinline!sqr! }{i}$ & = & \lstinline! i: load sqr!\\
+      \\
+      $\compileLabel{i+1}{ \lstinline!2*s! }{i+3}$ & = &
+      \begin{tabular}{l} 
+        % \lstinline!i  : load sqr! \\
+	 \lstinline!i+1: const 2!  \\
+	 \lstinline!i+2: load s!   \\
+	 \lstinline!i+3: mul!	   \\
+	 %\lstinline!i+4: add!	    
+   \end{tabular}
+    \end{tabular}
+}
+\end{frameit}
+
+\begin{frameit}
+  \scriptsize{
+  \begin{tabular}{ll}
+         1.1   & $\mbox{\rm \lstinline!sqr!} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline!5!}  $\\ 
+         1.2   &   \lstinline!i:  load sqr!  \\
+         1.3   &   $\stack{\counter} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}  $\\
+         1.4   &   \lstinline!i+1: const 2!	  \\
+	 1.5   &    $\stack{\counter - 1} + \stack{\counter } *\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}  $\\
+	 1.6   &   \lstinline!i+2: load s!	  \\
+	 1.7   &   $\stack{\counter - 2}  + \stack{\counter - 1} * \stack{\counter} = \mbox{\rm \lstinline! 5!}  $\\
+	 1.8   &     \lstinline!i+3: mul!	          \\
+	 1.9   &   $\stack{\counter - 1}  + \stack{\counter} = \mbox{\rm \lstinline! 5!}  $\\
+	 1.10  &   \lstinline!i+4: add!	          \\
+	 1.11  &   $\stack{\counter} = \mbox{\rm \lstinline! 5 !}  $\\
+  \end{tabular}}
+\end{frameit}
+
+
+\begin{frameit}
+  \scriptsize{
+  \begin{tabular}{ll}
+      2.1   &   $\wpSrcExpr{\lstinline!sqr + 2*s ! }{v = 5}{\excPostExpl}{v} = $ \\
+      2.2   &  	$\wpSrcExpr{\lstinline!sqr!}{\wpSrcExpr{\lstinline!2*s ! }{(v=5)\subst{v}{v_{sqr} + v_{2*s}} }{\excPostExpl}{v_{2*s}}  }{\excPostExpl}{v_{sqr}} = $ \\
+      2.3   & 	$\wpSrcExpr{\lstinline!sqr!}{\wpSrcExpr{\lstinline!2! }{\wpSrcExpr{\lstinline!s! }{(v_{sqr}+v_{2*s}=5)\subst{v_{2*s}}{v_{2}*v_{s}} }{\excPostExpl}{v_{s}}  }{\excPostExpl}{v_{2}} }{\excPostExpl}{v_{sqr}} = $ \\
+      2.4   &	$\wpSrcExpr{\lstinline!sqr!}{\wpSrcExpr{\lstinline!2! }{(v_{sqr} + v_{2}*v_{s}=5 ) \subst{v_{s}}{s} }{\excPostExpl}{v_{2}} }{\excPostExpl}{v_{sqr}} = $ \\
+      2.5   &	$\wpSrcExpr{\lstinline!sqr!}{(v_{sqr} + v_{2}*\lstinline!s!=5 ) \subst{v_{2}}{2} }{\excPostExpl}{v_{sqr}} = $ \\
+      2.6   &	$(v_{sqr} + 2*\lstinline!s!=5 ) \subst{v_{sqr}}{\lstinline!sqr!  } = $ \\
+      2.7   &	$ \lstinline!sqr! + 2*\lstinline!s!=5 $
+  \end{tabular}}
+\end{frameit}
+\caption{\sc Expression, its compilation  and their respective preconditions} \label{pogCompile:wpBc:expression}
+\end{figure}
+
 \begin{thm}\label{pogComp:relWpExpr}
      For every expression $\expressionSrc$ and its compilation  $\compileLabel{s}{\expressionSrc}{e}$, the following holds :
 
@@ -50,13 +162,14 @@ the cases for field access and arithmetic expressions.
 						 \wedge \\
 						 v_1 = \Mynull \Rightarrow  \excPostExpl(\NullPointerExc)
 					       \end{array} \\
-		
+		 \end{array}$$
+		 $$\begin{array}{l}
 		  \mbox{\rm\textit{\{because the execution relation between $e$ and $e+1 $ is not a loop backedge}} \\
 		  \mbox{\rm\textit{ by Lemma \ref{compile:prop:compProp3} which establishes that compilation of}}\\
 		  \mbox{\rm\textit{ expressions does not contain loop entries and }}\\
 		  \mbox{\rm\textit{from the Def. \ref{inter} of the function \interOnly \}}} \\
 		  \numConclusion{5} \  \inter{e-1}{e} = \wpi{e}{\methodd}{} \\
-		 
+		
 		 \comment{definition of the \wpName{} function for \getfield } \\
 		 \numConclusion{6} \  \wpi{e}{\methodd}{} = \\
 		                      \stack{\counter} \neq \Mynull \Rightarrow \inter{e}{e+1} \subst{\stack{\counter}}{\fieldAccess{\stack{\counter}}{\fieldd} } \\
@@ -66,11 +179,11 @@ the cases for field access and arithmetic expressions.
 		\comment{from \numConclusion{2}, \numConclusion{4}, \numConclusion{5} and \numConclusion{6}  } \\
 		\numConclusion{7} \ 	\psi' \subst{v_1}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} 	  = \inter{e-1}{e} \\ 	      
 		
-		
+		 
 		\mbox{\rm\textit{\{from Lemma \ref{compile:prop:compProp9} and the initial}}\\
 		\mbox{\rm\textit{ hypothesis about exceptional postcondition functions on source and bytecode get\}}} \\
 		
-		\numConclusion{8}  \ \forall \Exc ,  \excPostExpl( \Exc ) = \methodd.\getExcPost(\Exc, e - 1) \Rightarrow \\\\
+		\numConclusion{8}  \ \forall \Exc ,  \excPostExpl( \Exc ) = \methodd.\getExcPost(\Exc, e - 1)  \\\\
 		
 		\comment{we apply the induction hypothesis over \numConclusion{7}  and  \numConclusion{8} } \\
 		
@@ -93,8 +206,7 @@ the cases for field access and arithmetic expressions.
 		     \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \\\\
 
 		     \comment{from the definition of the \wpName{} for source field access expressions} \\ 
-		     \end{array}$$
-		      $$\begin{array}{l}
+		     
 		     \numConclusion{3} \ \wpSrcExpr{ \expressionSrc_1 \ \op \ \expressionSrc_2 }{\psi }{ \excPostSrc }{v}  =   \\
 		     \begin{array}{l}
 		     \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{\psi'     }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} \\
@@ -107,15 +219,18 @@ the cases for field access and arithmetic expressions.
 		     \mbox{\rm\textit{ that the compilation of an expression results}}\\
 		     \mbox{\rm\textit{ in a list of instructions which does not contain loop entries }}\\
 		     \mbox{\rm\textit{ Thus, from the Def.\ref{inter} of the function \interOnly{} we get \} }  } \\
-		     	  
+		     	 
 		     \numConclusion{4} \  \inter{e -1}{e} = \wpi{e}{\methodd}{} \\
 		   
 		     \comment{it follows from the \wpName{} for an arithmetic instruction}\\
 		     \numConclusion{5} \ \wpi{e}{\methodd}{} = \inter{e}{e+1}\subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = \\ 
 		     \comment{which is equal to because of  \numConclusion{2} } \\
+		     
 		     \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} \subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = \\
 		     \comment{$\psi$ is a source assertion and does not contain stack expressions  } \\
 		     \psi \subst{v}{\stack{\counter  - 1 }}\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } =\\
+		      \end{array}$$
+		      $$\begin{array}{l} 
 		      \comment{substitution} \\
 		       \psi \subst{v}{\stack{\counter  - 1 } \op \stack{\counter} }\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} = \\
 		       \comment{this is equal to}  \\
@@ -151,11 +266,11 @@ The next lemma states the same property but this time for the compilation of sta
      For every compiled statement $\compileLabel{s}{\stmt}{e}$  in  method \methodd, formula $\psi$ and 
     function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
-      \begin{itemize}
+      \begin{enumerate}
             \item if $e+1$ exists  then $\psi = \inter{e}{e+1}$
 	    \item if $e+1$ does not exist and $\ins{e} = \return$ then $\psi = \methodd. \normalPost$
 	    \item $\forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) $ 
-      \end{itemize} then the following holds: 
+      \end{enumerate} then the following holds: 
   
      $$   \wpSrcStmt{\stmt}{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}}$$   
 \end{thm}
@@ -262,14 +377,15 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 	\numConclusion{9}	\  \inter{e'''}{e''' +1} = \inter{e}{e+1}	= \psi	\\
 								
 
-	\mbox{\rm\comment{From Property  \ref{compile:prop:compProp8}  } } \\
+	\mbox{\rm\textit{\{From Property  \ref{compile:prop:compProp8} about the exception handlers for statements}}\\
+	\mbox{\rm\textit{and their strict substatements \}}}  \\
 	
 
       \numConclusion{10} \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
-      \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' )  \\
+      \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e''' )  \\
       \mbox{\rm\comment{apply the induction hypothesis over \numConclusion{9} and  \numConclusion{10}  } }\\ 
       
-      \numConclusion{11} \	\wpSrcStmt{\compileLabel{e' + 2}{\stmt_2}{e''} }{\psi}{\excPostExpl} = \wpi{e'+2}{m}{} \\
+      \numConclusion{11} \	\wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl} = \wpi{e''+2}{m}{} \\
 \end{array}$$
 $$ \begin{array}{l}
       \comment{ apply the induction hypothesis over the initial hypothesis  }\\
@@ -286,8 +402,9 @@ $$ \begin{array}{l}
       \numConclusion{14} \  \wpi{ e'' + 1 }{m}{ } = \\
       \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \subst{\counter}{\counter - 2} \\
       \wedge \\
-      \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \subst{\counter}{\counter - 2} = \\
-      \comment{  $\wpi{e'''+2}{m}{}$ and $\wpi{e''+2}{m}{}$ are source assertion formulas} \\
+      \neg  (  \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \subst{\counter}{\counter - 2} = \\
+      \mbox{\rm\textit{\{ from \numConclusion{11} and \numConclusion{12} follows that  $\wpi{e'''+2}{m}{}$ and $\wpi{e''+2}{m}{}$ are} }\\
+       \mbox{\rm\textit{ source assertion formulas and thus we can ommit substitution over \mbox{\rm\counter} \}}}\\
        \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \\
       \wedge \\
       \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\
@@ -295,16 +412,16 @@ $$ \begin{array}{l}
       \comment{from \numConclusion{14}, \numConclusion{13} and \numConclusion{1} }\\
       \numConclusion{15} \ \psi'\subst{ v_2}{\stack{\counter } } \subst{ v_1}{\stack{\counter - 1} }  = \inter{e''}{e''+1} \\
       
-      \comment{apply Lemma  \ref{pogComp:relWpExpr} over $\psi'$, \numConclusion{15} and $\expression_2$} \\
+      \comment{apply Lemma  \ref{pogComp:relWpExpr} over $\psi'$, \numConclusion{15} and $\expressionSrc_2$} \\
       \numConclusion{16} \ \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}  \subst{ v_1}{\stack{\counter} } = \wpi{e'+1}{\methodd}{}\\
        
-      \mbox{\rm\textit{ Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
+      \mbox{\rm\textit{\{Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
       \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e'$ and $e' + 1$}}\\
       \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
       \numConclusion{17} \ \inter{e'}{e'+1} = \wpi{e'+1}{\methodd}{}\\
       
       \comment{from   \numConclusion{16} and \numConclusion{17}  apply Lemma  \ref{pogComp:relWpExpr} over 
-      $\wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}$ and $\expression_1$} \\
+      $\wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}$ and $\expressionSrc_1$} \\
       \numConclusion{18} \  \wpSrcExpr{ \expressionSrc_1 }{  \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2} 
 	 } { \excPostSrc }{v_1}	= \wpi{s}{\methodd}{} \\
 
@@ -317,22 +434,41 @@ $$ \begin{array}{l}
 	    \numConclusion{1} \    \wpSrcStmt{    \try \ \{ \stmt_1 \} 
 		                                              \catch \ (\excType \ \var )\{ \stmt_2 \} 
                                                 }{\psi}{\excPostExpl} =  \\
-			\comment{Def. of $\wpNameStmt$ for statements } \\
+			\comment{by the definition of $\wpNameStmt$} \\
 	        \wpSrcStmt{\stmt_1
 	
                            }
                          { 
 	                 \psi}
-			 {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl }} } \\
-			  
+			 {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl }} } \\\\
+	        
+              \comment{definition of the compiler}\\
+	      	\numConclusion{2} \    \compileLabel{s}{ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \} }{e} = \\
+                      \compileLabel{s}{\stmt_1}{e'};   e' + 1: \goto \ e;  \compileLabel{e' + 2 }{\stmt_2}{e - 1}; e: \nop\\
+		                           
+			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} )\\\\
+             
+		  
               \comment{apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} \\
-	      \numConclusion{2} \   \wpSrcStmt{\stmt_2}{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} \\ 
-	      \comment{from the definition of \getExcPost \ and property \ref{compile:prop:compProp10}} \\
-	      \numConclusion{3} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = \\ 
-              \phantom{\forall \mbox{\rm\texttt{Exc}} ,}     \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' )\\
+	      \numConclusion{3} \   \wpSrcStmt{\stmt_2}{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} \\ 
+	      \comment{ from Lemma \ref{compile:prop:compProp10}  for the exceptional postcondition function for try catch }\\
+	      
+	      	      
+	       \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow\\
+	       \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = 
+	       \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable}  \\
+	       
+	       \wedge\\
+	        \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2\\
+	      
+	      \mbox{\rm\textit{\{from the definition of \getExcPost{} and  the initial hypothesis}}\\
+	      \mbox{\rm\textit{ about exceptinal postcondition functions\}}}\\
+	     
+	      \numConclusion{4} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = 
+                  \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' )\\
 	      \comment{we can also conclude from Prop.  \ref{compile:prop:compProp5} and  \ref{compile:prop:compProp4}  } \\
-	      \numConclusion{4} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1} \\
-	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{3} and  \numConclusion{4}    } \\
+	      \numConclusion{5} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1} \\
+	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{4} and  \numConclusion{5}    } \\
 	       \wpSrcStmt{
 	                 \stmt_1;
 	
@@ -345,7 +481,7 @@ $$ \begin{array}{l}
 	$$
 \end{description}
 \Qed \\
-\clearpage
+
 As a conclusion of the current chapter, we would like to make several remarks. 
 Such an equivalence between proof obligations on source and bytecode and the fact that
 we have proof for the soundness of the bytecode verification condition generator
