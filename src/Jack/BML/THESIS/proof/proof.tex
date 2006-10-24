@@ -33,7 +33,7 @@
 %      $$ \forall f , f \in \formulaBc,  \vdash f \ \Rightarrow \ \interp{f}{} $$
 % \end{lemma_1}
 
-Our first concern in this section is to establish that the rules for single bytecode instructions have the following property:
+Our first concern now will  be to establish that the rules for single bytecode instructions have the following property:
  if the \fwpi \ (short for weakest precondition ) of an 
 instruction holds in the prestate then in the poststate of the instruction the postcondition upon which the wp is caclulated holds. 
 
@@ -403,7 +403,7 @@ then the folloing holds:
 \end{lemma}
 
 Proof :
-The proof is by case analysis on the type of instruction that will be next executed. 
+The proof is by case analysis on the execution relation \execRel{}  between the current instruction and the next instruction.
 
  We consider three cases: the case when the next execution step does not enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
 the case when the current instruction is a loop end and the next instruction to be executed is a loop entry instruction (the execution step is $\execRel_l$ )
@@ -553,19 +553,16 @@ holds and the method terminates then the method postcondition holds in the metho
 
 \begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemma2}
 
-Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
-
+%Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
 %Assume that every execution of the method \methodd \ terminates.
- Assume that  execution of method \methodd{} starts in state $_{0}$ 
-and $\interp{ \wpi{\methodd.\body[0] } {\methodd}{0}}{ s_{0}}$
-Then if the method \methodd{} terminates, i.e. there terminates execution in a
- state $s_n$,  $\methodd : s_0  \stateTransTermWeight{k} s_n $. 
-Let all method executions with maximal call depth smaller or equal \mbox{\rm\texttt{k -1}} are correct w.r.t. their specification.
+For all states $s_0$ and $s_n$ such that   $\methodd : s_0  \stateTransTermWeight{k} s_n $
+and $\interp{ \wpi{} {\methodd}{0}}{ s_{0}}$ holds if we have
+that all method executions with maximal call depth smaller or equal \level{k -1} are correct w.r.t. their specification.
 Let the program counter in state $s_n$ points to an instruction $\return $ or
  an instruction which throws an unhandled exception of type \mbox{\rm\texttt{Exc}}, then  the following holds:
 \begin{itemize}
     \item if $\ins{\pc_n} = \return $ then $\interp{ \methodd.\normalPost}{s_{n+1}}$
-    \item  if $\ins{\pc_n}$ throws a not handled exception of type \texttt{Exc} then \\ 
+    \item  if $\ins{\pc_n}$ throws a not handled exception of type \mbox{\rm\texttt{Exc}} then \\ 
              $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
 \end{itemize}
 \end{lemma}
@@ -578,17 +575,40 @@ We apply lemma \ref{lemma1} for the case for a \return \ or instruction that thr
 \Qed\\
 
 
+\begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemmaMethRespSpec}
+If  all method executions with maximal call depth smaller or equal \level{k -1} are correct w.r.t. their specification 
+and the verification conditions for a method  are valid formulas then 
+A method \methodd{}  respects its specification at level \level{k} 
+\end{lemma}
+Proof: this proof  follows directly from Lemma \ref{lemma2}
+
+
+\newcommand{\Program}{\mbox{\rm\texttt{P}}}
 
 We are now ready to prove Theorem \ref{vcGenCorrect}.
 Proof:
-\textit{ 
-As we want to prove that method \methodd{} respects its specification we have
-as hypothesis that the method precondition holds in the  the initial state $s_0$ 
-of the method execution, or $\interp{ \methodd.\pre }{ s_{0}}$.
-From the latter and \numConclusion{1}, we get that the weakest precondition of the 
-entry point holds in the initial state, i.e.  $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$. 
-We can apply then Lemma \ref{lemma2} and we get that the respective method postcondition holds in the final state 
-of the method \methodd. We can conclude then that \methodd \ respects  its specification in the sense of Def. \ref{defCorrect}.
- }\\
+We want to establish now  that if for every \methodd{}
+ in every class \class{} in a program \Program{}  the respective verification conditions are valid then 
+the \Program{} is correct as defined in Def. \ref{defCorrectProg}.
+ This, in particular, means that for all levels $\level{k} \ge 0 $ the program is correct in  level \level{k}.
+We reason by induction on the level \level{k}. 
+\begin{description} 
+\item[base case \level{k} = 0]
+ In this case, because we can not have an execution step at level \level{0}, we conclude that all methods at level  \level{0}
+are correct
+\item[inductive case ] Let us have that the program is correct at level $\level{k-1}$. 
+In particular, this means that for every class \class{}, every method \methodd{} in \class{} is correct at level \level{k-1}.
+We can apply Lemma \ref{lemmaMethRespSpec} to every single method  \methodd{} in \Program{}, 
+ the induction hypothesis  and the initial hypothesis that  verification conditions  of \methodd{} are valid and we obtain that 
+every method  \methodd{} is correct w.r.t. its specification at level \level{k} 
+
+
+\end{description}
 \Qed
-%of $ \methodd.\pre \Rightarrow \wpi{\method.\body[0]}{0}{\methodd} $ is done.
+
+
+
+
+
+
+

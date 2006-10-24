@@ -9,9 +9,8 @@ In order to define what it means for the verification calculus to be correct we 
  before the intuition behind this notion is that if the method starts execution in a state 
  where its precondition  holds then if it terminates execution then its postcondition holds.
   
- As we want also to treat recursive methods, we use a standard technique which consists in  annotating the execution 
-relation in  the operational semantics with weights. A weight  stands for  the maximal 
-call depth in the execution of a  method. 
+ As we want also to treat recursive calls, we use a standard technique which consists in  annotating the execution 
+relation in  the operational semantics with levels. A level of execution  stands for  the maximal call depth in the execution of a  method. 
   Thus the operational semantics of a method invokation would be :
  
 $$ \begin{array}{l}
@@ -35,15 +34,17 @@ $$ \begin{array}{l}
 \end{array}$$
 
 This definition is rather intuitive and means that if a method \methodd{}
- has a maximal call depth $k+1$ any method \mbox{\rm meth}  called in its body will have a maximal call depth $k$. For the other instructions the 
-weight is just passed. This extension in the operational semantics will allow us to deal with recursive methods in our proof of correctness.
-
-
+ has a maximal call depth \level{k+1} any method \mbox{\rm meth}  called in its body will have a maximal call depth \level{k}. 
+If a method execution has a maximal depth call \level{1} this means that the method execution does not perform any method calls.
+Thus an execution labeled with \level{0} does not exist.
+ For the other instructions the weight of the maximal call depth is just passed. The rules for the instructions different from 
+method invokation have this general form: 
+$$ \begin{array}{l}
+              {\scriptsize \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTrans{k} s_2 , \  \level{k} > 0}}
+\end{array}$$
  
- Another condition involved in establishing a method correctness is that if it overrides a method from a super class
- of the class where it is declared  it must respect the specification of the method it overrides. Thus, we formulate method correctness as follows:
-
-\begin{defCorrect}[A method respects its specification] \label{defCorrect}
+We now first define what does it mean for a method to respect its specification at level \level{k}
+\begin{defCorrect}[A method respects its specification at level k] \label{defCorrectLevel}
 For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost
 and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd \ respects its specification if 
 for every two states $s_0$ and $s_1$ such that :
@@ -64,36 +65,58 @@ $\validFormula{\methodd.\normalPost \Rightarrow \mbox{\rm\texttt{n}}.\normalPost
  $\forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )$
 \end{defCorrect}
 
+Next, we give a definition for program correctness. 
+
+\begin{defCorrect}[A program is correct at level \level{k}]\label{defCorrectProgramLevel}
+A program is correct if for all classes \class{} in the program, every method \methodd{} in \class{}
+respects its specification at level \level{k}.
+\end{defCorrect}
+
+%We give a more general definition for the method correctness which abstracts from the call levels.
+%\begin{defCorrect}[A method respects its specification]\label{defCorrect}
+%A method \methodd \ respects its specification if and only if 
+%for all \level{k} where \level{k} $ \ge $ 0, method \methodd{} respects its specification at level \level{k}. 
+%\end{defCorrect}
+
+
+Similarly, we generalize the definition for program correctness. 
+
+\begin{defCorrect}[A program is correct]\label{defCorrectProgram}
+A program is correct
+if for all levels $\level{k} \ge 0 $ the program is correct at level \level{k}.
+\end{defCorrect}
+
+
 % As we explained  earlier in Chapter \ref{assertLang}, Section \ref{assertLang:lang} the specification upon which the verification 
 % of an overriding method is performed guarantees that the method respects automatically the specification of the overriden method.
 % Thus, we shall not discuss in the following the behavioral subtyping as it holds trivially because of the way we construct specifications  for overriding methods.
 
 Let us now see informally the correctness condition for the verification calculus. 
 We would like to establish that if the verification conditions
-generated for a method 
-are valid 
-and the precondition of the method holds in the initial state of the method 
-then the postcondition of  the method holds in its final state if the method terminates. 
-If, moreover a method overrides a method from the super class of the class where it is declared then there must be a covariant 
-relation between its specification and the specification of the overriden method.
+generated for all methods in a program are valid then we can conlcude that the program is correct. 
+%are valid 
+%and the precondition of the method holds in the initial state of the method 
+%then the postcondition of  the method holds in its final state if the method terminates. 
+%If, moreover a method overrides a method from the super class of the class where it is declared then there must be a covariant 
+%relation between its specification and the specification of the overriden method.
 Formally, we want to establish the following statement:
 
-\begin{vcGenCorrect}\label{vcGenCorrect}
-For any  method \methodd \  if the verification conditions for a method described in subsection \ref{wp:vcMeth}
-are valid, i.e. 
-$$  \begin{array}{l}  \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} \\
+\begin{vcGenCorrect}[Verification condition generator is correct]\label{vcGenCorrect}
 
-       \mbox{\rm\textit{if method \methodd{} overrides }} \mbox{\rm\texttt{n}} \ then \\
-        
-        \validFormula{\mbox{\rm\texttt{n}} . \pre \Rightarrow \methodd{}.\pre}\\
-	\validFormula{ \methodd{}.\normalPost \Rightarrow \mbox{\rm\texttt{n}} .\normalPost}\\
-	\validFormula{   \forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  ) }
-\end{array}
- $$
+If the verification conditions  for all  methods in a program   (see  subsection \ref{wp:vcMeth} )
+are valid then the program is correct w.r.t. Def. \ref{defCorrectProgram}
+%$$  \begin{array}{l}  \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} \\
+%       \mbox{\rm\textit{if method \methodd{} overrides }} \mbox{\rm\texttt{n}} \ then \\
+%        
+% %       \validFormula{\mbox{\rm\texttt{n}} . \pre \Rightarrow \methodd{}.\pre}\\
+%	\validFormula{ \methodd{}.\normalPost \Rightarrow \mbox{\rm\texttt{n}} .\normalPost}\\
+%	\validFormula{   \forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  ) }
+%\end{array}
+% $$
 
-
- then \methodd \ respects its specification in the sense of the Def. \ref{defCorrect}. 
 \end{vcGenCorrect}
 
 The main purpose of the current chapter is to establish this theorem. Before entering in technical part of the proof
 we shall give an outline of the steps to be taken for establishing it.
+
+
