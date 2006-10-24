@@ -31,26 +31,28 @@ the Loop tool developed by the Formal group at the University of Nijmegen,
 the Jack tool developed at Gemplus, the Krakatoa tool created by the Coq group at Inria, France.
 The tool Daikon \cite{ECG01DDL}  tool uses a subset of JML for detecting loop invariants by run of programs.
  A  detailed overview of the tools which support JML can  be found in~\cite{BurdyCCEKLLP03}.
-
+In the following, we shall proceed with the description of the basic features of JML which correspond basically to the
+JML Level0 subset of JML. 
 
 
 % technical details
-    Specifications in JML are written using different predicates
-    which are side-effect free Java expressions, extended with
+\subsection{JML expressions}\label{javaVerif:JML:expression}   
+    Expressions manipulated in JML  
+    are side-effect free Java expressions, extended with
     specification-specific keywords. JML specifications are written as comments so they are not
     visible by Java compilers. The JML syntax is close to the Java syntax: JML extends the Java
     syntax with few keywords and operators. 
-    For introducing method precondition and postcondition the keywords \jmlKey{requires} and \jmlKey{ensures} are used  
-    respectively,  \jmlKey{modifies} keyword introduces the locations that can be modified by the method, 
-    \jmlKey{loop\_invariant} stands for a loop invariant, the \jmlKey{loop\_modifies} keyword gives the 
-    locations modified by a loop etc. The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}.
     Special JML operators are, for instance, \jmlKey{$\backslash$result} which stands for the value that a method returns if it is not
     void, the \jmlKey{$\backslash$old(expression)} operator 
     designates the value of \jmlKey{expression} in the prestate of a method and is usually
-    used in the method's postcondition.
+    used in the method's postcondition, \jmlKey{$\backslash$typeof(expression)} which stands for the dynamic type of  \jmlKey{expression}, etc.
 
 
-     
+\subsection{Method contracts}\label{javaVerif:JML:methodContracts}     
+For introducing method precondition and postcondition the keywords \jmlKey{requires} and \jmlKey{ensures} are used  
+    respectively,  \jmlKey{modifies} keyword introduces the locations that can be modified by the method, 
+    \jmlKey{loop\_invariant} stands for a loop invariant, the \jmlKey{loop\_modifies} keyword gives the 
+    locations modified by a loop etc. The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}.
 Fig.~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
 The method \texttt{replace} will search in the array for the first occurrence of the object \texttt{obj1} passed as first argument
  and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it 
@@ -97,6 +99,7 @@ public class ListArray {
 \label{replaceSrc}
 \end{figure}
 
+\subsection{Ghost variables}\label{javaVerif:JML:ghost} 
  JML also allows the declaration of special JML variables, that are used only for specification purposes. 
  These variables are declared in comments with the \jmlKey{ghost} modificator and may be used only in specification clauses. Those variables 
  can also be assigned. Ghost variables are usually used  for expressing properties which can not be expressed with the program variables.
@@ -139,7 +142,7 @@ public class Transaction {
 \label{bml:ghost}
 \end{figure}
 
-% light and heavy weight specification
+\subsection{Light and heavy weight specification}\label{javaVerif:JML:lightHeavy}
 A useful feature of JML is that it allows two kinds of method specification, a \light  \ and \heavy \ weight specification. 
 An example for a \light \  specification is the annotation of method \texttt{replace} (lines 5---9) in Fig. \ref{replaceSrc}. The specification in 
 the example states what is the expected behavior of the method and under what conditions it might be called.
@@ -196,6 +199,7 @@ public class C {
 \caption{\sc An example for a method with a heavy weight specification in JML} \label{bml:heavySp}
 \end{figure}
 
+\subsection{Class specification} \label{javaVerif:JML:classSpec}
 JML can be used to specify not only methods but also properties of a class or interfaces. 
 A Java class may be specified with an invariant or history constraints. An invariant of a class is a predicate which holds at all visible states of
   every object of this class (see for the definition of visible state in the JML reference manual \cite{december-jml}). An invariant may be either static 
@@ -203,5 +207,105 @@ A Java class may be specified with an invariant or history constraints. An invar
   A Class history constraints is a property which relates the initial and terminal state of every method in the corresponding class. 
  The class \texttt{C}  in Fig.\ref{bml:heavySp} has also an instance invariant which states that the instance variable \texttt{a} is
  always greater than \texttt{0}.
+
+
+
+
+
+We would like to discuss in the following how JML constructs like class invariants and history constraints and inherited specification
+(multiple specification cases for a method) can be expressed as 
+method pre and postconditions:
+
+\begin{description} 
+  \item [Class invariants] A class invariant (\ClassInv)  is a property that must hold at every visible state of the class. This means that a
+        class invariant must hold when a method is called and also must be established at the end of a method execution. 
+	A class invariant must be established in the poststate 
+	of the constructor of this class.
+	Thus the semantics of
+	a class invariant is part of the pre and  postcondition of every method and is a part of the postcondition of the constructor of
+	the class to which it refers.
+	
+        
+  \item [History constraints] A class history constraint (\ClassHistoryConstr) gives a relation between the pre and poststate of every method in the class. 
+        A class history constraint thus can be expressed as a postcondition of every method in the class.
+  
+\end{description}     
+
+ 
+%  \subsection{Behavioral subtyping for overriding methods}\label{javaVerif:JML:subtyping}
+%         Method overriding appears in case when in a subclass a method is reimplemented.  For instance, in Fig. \ref{assertLang:lang:inherit},
+% 	we give an example of a class \lstinline!B! which extends class   \lstinline!A! and overrides method  \lstinline!m!. 
+% 	To deal with method overriding the virtual machine uses dinamically bounding, i.e. it is on execution time that the virtual machine decides which method to execute.
+% 	If we go back to the figure, this means that the invokation of method   \lstinline!m! on the object reference of type \lstinline!A!
+%         may stand for the method  \lstinline!m! declared in class \lstinline!B! or the one declared in \lstinline!A! because the dynamic type of the
+% 	reference stored in the field  \lstinline!a! may be \lstinline!A! or \lstinline!B!. Because  method \lstinline!m! from
+%         class \lstinline!B! can be called whenever method  \lstinline!m! from  \lstinline!A! may be called, we want that the former has the same 
+% 	return and argument types as the latter. We also require that method \lstinline!m! from
+% %         class \lstinline!B! behaves like method \lstinline!m! from \lstinline!A! or as we say that method is a behavioral subtype of \lstinline!A!. 
+% 	
+%         This is expressed by the two covariant conditions over their postconditions:
+% 	\begin{itemize}
+% 	   \item the precondition of the  overriden method must  imply
+% 	         the precondition of the overriding method 
+% 	   \item the postcondition of the overriding method must imply 
+% 	         the postcondition of the overriden method.
+% 	\end{itemize}
+% 	We adopt the specification inheritance technique which allows to encode behavioral subtyping in the specification of the 
+% 	overriding method. The methodology consists in expressing the specification of the overriden method 
+% 	as part of the specification of the overriding method. The reader may have a look for a detailed description of
+% 	specification inheritance  in  the article \cite{Dhara-Leavens95} of K.Dhara and G.T.Leavens. Here, we will 
+% 	illustrate the specification inheritance through the example given in Fig. \ref{assertLang:lang:inherit}. We show in the second part of 
+% 	the figure the specification of method  \lstinline!m!  from class \lstinline!B! which will be used in the verification of the method.
+% 	Its precondition is the disjunction of the its specified postcondition and the precondition of the method it overrides. On the other hand, its new postcondition expresses
+% 	that depending what held in the precondition of the  method then either its postcondition holds or the postcondition of the method it
+% 	overrides. Note that the new specification of \lstinline!m!  declared in class \lstinline!B!  respects the two covariant condition described above.
+% 	This approach allows to encode directly as preconditions and postconditions the subtyping relation. 
+% 	
+% 
+% \begin{figure}[ht!]
+% 
+% \begin{lstlisting}[frame=trbl]
+% class A {
+%  //@ requires Pre1;
+%  //@ ensures  Post1;
+%  int m(){
+%  }
+%}
+%
+%class B extends A {
+%  //@ requires Pre2;
+%  //@ ensures  Post2;
+%  int m(){
+%  }
+%}
+%
+%class C{
+%  A a;
+%  void n (){
+%    ...
+%    a.m()
+%  }
+%} 
+%\end{lstlisting}
+%
+%\begin{lstlisting}[frame=trbl]
+%%class B extends A {
+%  //@ requires Pre1 || Pre2;
+%  //@ ensures  (\old(Pre2) ==> Post2) && 
+%               (\old(Pre1)==> Post1) ;
+%  int m(){
+%%  }
+%}
+%
+%\end{lstlisting}
+% 
+% \caption{\sc An example for a specification inheritance} \label{assertLang:lang:inherit}
+%\end{figure}
+
+
+
+ % why do we discard the rest. 
+% We abstract from the rest of the JML grammar, as it boils down to JML
+% expressions and  predicates. 
 
 
