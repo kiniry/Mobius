@@ -7,6 +7,7 @@
 
 \newtheorem{propPath}{Lemma}[section]
 
+\index{$\execRel^l$}
 \section{Representing bytecode programs as control flow graphs}\label{prelim:ctrFlow}
 
 This section will introduce a formalization of an unstructured program in terms of a control flow graph.
@@ -24,7 +25,7 @@ The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $
  We assume that a method body has exactly one entry point
  and this is the first element in the method body $\methodd.\body[0]$.
 
- The array of bytecode instructions of a method \methodd \ determine the control flow graph $G( V , \execRel ) $  of method \methodd \ 
+ The array of bytecode instructions of a method \methodd \ determine the control flow graph $G( V , \execRel ) $   of method \methodd \ 
 in which the vertices are the instructions of the method body.
 
 %$$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
@@ -51,41 +52,44 @@ The possible successors of the instruction $\athrow$ are the entry point of any 
 \begin{figure}[ht!]
 \begin{frameit}
 $$ 
-{\scriptsize   \begin{array}{l} \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+{\scriptsize   \begin{array}{l} 
+
+                    \frac{ \methodd.\body[j] = \nop  } { \methodd.\body[j] \execRel \methodd.\body[j+1]  }
+                    \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
                   
                     \frac{ \methodd.\body[j] = \goto \ k  }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
 
-                    \frac{ \methodd.\body[j] = \putfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+                    \frac{ \methodd.\body[j] = \putfield \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
 		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
 
-		    \frac{ \methodd.\body[j] = \putfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		    \frac{ \methodd.\body[j] = \putfield \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
 		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 
-		     \frac{ \methodd.\body[j] = \getfield \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		     \frac{ \methodd.\body[j] = \getfield \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
 		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
 
-		     \frac{ \methodd.\body[j] = \arrstore \wedge \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
+		     \frac{ \methodd.\body[j] = \arrstore \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
 		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 
-		     \frac{ \methodd.\body[j] = \arrstore \wedge \findExcHandler{\ArrIndexOutOfBoundExc}{j}{\methodd.\excHandlerTable} = k
+		     \frac{ \methodd.\body[j] = \arrstore \ \findExcHandler{\ArrIndexOutOfBoundExc}{j}{\methodd.\excHandlerTable} = k
 		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 
-		     \frac{ \methodd.\body[j] = \arrload \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
+		     \frac{ \methodd.\body[j] = \arrload \ \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
 		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 
-                     \frac{ \methodd.\body[j] = \arrload \wedge \findExcHandler{\ArrIndexOutOfBoundExc }{j}{\methodd.\excHandlerTable} = k
+                     \frac{ \methodd.\body[j] = \arrload \ \findExcHandler{\ArrIndexOutOfBoundExc }{j}{\methodd.\excHandlerTable} = k
 		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 
-		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}   \wedge \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
+		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}   \ \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
 		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
 
-		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}  \wedge 
+		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}  \ 
                                 \begin{array}{l}
 				     \forall \mbox{\rm\texttt{Exc}}, \exists s , \mbox{\rm \texttt{n}}.\exceptions[s ] = \mbox{\rm\texttt{Exc}} \wedge  \\
 		                     \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k 
                                 \end{array}}{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 
-                     \frac{ \methodd.\body[j] = \athrow  \wedge \forall \mbox{\rm\texttt{Exc}}, \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k}
+                     \frac{ \methodd.\body[j] = \athrow  \ \forall \mbox{\rm\texttt{Exc}}, \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k}
 		    { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
 		   
 		    \frac{ \methodd.\body[j] \neq  \goto \  \methodd.\body[j] \neq  \return  \  k = j + 1  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
@@ -118,12 +122,12 @@ with entry point $\methodd.\body[0]$.
  In such a graph $G$, we say that $\ins{loopEntry}$ is a loop entry instruction and $\ins{loopEnd}$ is a loop end instruction
  of the same loop if the following conditions hold:
 \begin{itemize}
-\item for every execution path $P$ from $\methodd.\body[0]$ to  $\ins{loopEnd}$ such that
+\item for every path in the control flow graph $P$ from $\methodd.\body[0]$ to  $\ins{loopEnd}$ such that
      $P~=~\methodd.\body[0] \execRel^{+} \ins{loopEnd}$
      there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{loopEnd} \notin  \ subP  $
 %every path in the control flow graph starting at the entry point $\methodd.\body[0]$  that reaches $\ins{loopEnd}$, passes before reaching $\ins{loopEnd}$
 % through  $\ins{loopEntry}$ 
-\item there is a path in which $\ins{loopEntry}$  is executed immediately after the execution of $\ins{loopEnd}$ ( $\ins{loopEnd} \execRel \ins{loopEntry}$)
+\item there is a path in the control flow graph in which $\ins{loopEntry}$  follows immediately after $\ins{loopEnd}$ ( $\ins{loopEnd} \execRel \ins{loopEntry}$)
 \end{itemize}
 We denote the execution relation between $\ins{loopEnd}$ and  $\ins{loopEntry}$ with \\
 $\ins{loopEnd} \execRel^l \ins{loopEntry}$ and we say that $  \execRel^l $  is a loop backedge. 

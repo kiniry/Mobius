@@ -10,14 +10,14 @@
 
  An object of type \ClassSet \ is a tuple with the following components: list of field objects (\fields), which are declared in this class,
  list of the methods declared in the class (\methods), the name of the class (\className)   and the super class of the class (\superClass).
- All classes, except the special class \Object, have a unique direct super class. Formally, a class of our bytecode language 
+ All classes, except the special class \index{\Object}, have a unique direct super class. Formally, a class of our bytecode language 
  has the following structure:
 
 
  $$ \begin{array}{l}
           %\forall  \clazz : \ClassSet , \\
          \ClassSet = \left\{\begin{array}{ll} \fields    & :    list \ \FieldSet \\
-                                          \methods    & :    list \ \MethodSet\\
+                                          \methods    & :    list \ \MethodSet \\
 					  \className  & :   \ClassName \\
 					  \superClass & :   \ClassSet \cup \{ \bottom \}
                     \end{array} \right\}

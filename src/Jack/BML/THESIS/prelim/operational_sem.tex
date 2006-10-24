@@ -139,6 +139,11 @@ the instruction \ifCond. The condition \rel = $\{ =, \neq, \le, <, >, \ge \} $ i
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
+           {\scriptsize \frac{ } 			       		               
+                      {\method \vdash \nop : \config{\heap }{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}
+		                      \stateTrans 
+				      \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc+1}} 
+            } \\    \\
            {\scriptsize \frac{ \rel ( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1}) } 			       		               
                       {\method \vdash \ifCond \ n : \config{\heap }{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}
 		                      \stateTrans 
@@ -156,7 +161,7 @@ the instruction \ifCond. The condition \rel = $\{ =, \neq, \le, <, >, \ge \} $ i
 \end{array}
 $$
 
-\caption{\sc Operational semantics for control transfer instructions}
+\caption{\sc Operational semantics for the \nop{} and control transfer instructions}
 \label{opSem:jump}
 \end{frameit}
 \end{figure}
@@ -430,7 +435,8 @@ $$
 \clearpage
 
 Fig. \ref{opSem:obj:manip} and \ref{opSem:obj:creat}  give the semantics for instructions manipulating the program heap.
-Let us first focus on Fig. \ref{opSem:obj:manip} which shows how object fields are accessed and modified.  
+Let us first focus on Fig. \ref{opSem:obj:manip} which shows how object fields are accessed and modified. 
+We shall concentrate on the instruction for field update \putfield{}, the instruction for  \arrstore{} and array length access \arraylength, the others being similar. 
 For instance, the instruction \putfield{} pops the top value contained on the stack top \stackOnlyParam{\counterOnly} 
 and the reference value contained in \stackOnlyParam{\counterOnly - 1} 
 	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull{} 
@@ -439,38 +445,38 @@ and the reference value contained in \stackOnlyParam{\counterOnly - 1}
 the value of its field 	\fieldd{} for the object  is updated with the value\stackOnlyParam{\counterOnly} and
  the counter \counterOnly{} is decremented. If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull{} then a \NullPointerExc{} is thrown. 
 
-The instruction for an access of the a value of a particular field for a particular object reference is the 
-instruction \getfield. The instruction pops the  
- top stack element \stackOnlyParam{\counterOnly}.
- If \stackOnlyParam{\counterOnly} is not \Mynull{} the value of the field \texttt{f}
-in the object referenced by the reference contained in \stackOnlyParam{\counterOnly}, is fetched and pushed onto the operand stack \stackOnlyParam{\counterOnly}.
-If \stackOnlyParam{\counterOnly} is \Mynull{} then a \NullPointerExc{} is thrown, i.e. the stack counter is set to 0, a new object of type
-\NullPointerExc{} is created in the memory heap store \heap{} and a reference to it is pushed onto the operand stack.
+%The instruction for an access of the a value of a particular field for a particular object reference is the 
+%instruction \getfield. The instruction pops the  
+% top stack element \stackOnlyParam{\counterOnly}.
+% If \stackOnlyParam{\counterOnly} is not \Mynull{} the value of the field \texttt{f}
+%in the object referenced by the reference contained in \stackOnlyParam{\counterOnly}, is fetched and pushed onto the operand stack \stackOnlyParam{\counterOnly}.
+%If \stackOnlyParam{\counterOnly} is \Mynull{} then a \NullPointerExc{} is thrown, i.e. the stack counter is set to 0, a new object of type
+%\NullPointerExc{} is created in the memory heap store \heap{} and a reference to it is pushed onto the operand stack.
 
-The instruction \arrstore{} stores the value in \stackOnlyParam{\counterOnly} \ at index \stackOnlyParam{\counterOnly~-~1} \ in 
- the array  \stackOnlyParam{\counterOnly~-~2}. 
+The instruction \arrstore{} stores the value in \stackOnlyParam{\counterOnly} \ at index \stackOnlyParam{\counterOnly-1} \ in 
+ the array  \stackOnlyParam{\counterOnly-2}. 
 The three top stack elements \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1} \  and \stackOnlyParam{\counterOnly - 2} 
 are popped from the operand stack. The type value contained in \stackOnlyParam{\counterOnly} must be assignment 
 compatible with the type
 of the elements of the array reference contained in \stackOnlyParam{\counterOnly - 2},  \stackOnlyParam{\counterOnly - 1} \  must be of type int. 
-The value \stackOnlyParam{\counterOnly} \ is stored in the component at index \stackOnlyParam{\counterOnly - 1} \  of the array  in  \stackOnlyParam{\counterOnly - 2}.
-If \stackOnlyParam{\counterOnly - 2} \ is \Mynull{} a \NullPointerExc{} is thrown. If \stackOnlyParam{\counterOnly - 1}   is not in the bounds of the array 
+The value in the stack top element \ is stored in the component at index \stackOnlyParam{\counterOnly - 1} \  of the array  in  \stackOnlyParam{\counterOnly - 2}.
+If the array reference \stackOnlyParam{\counterOnly - 2} \ is \Mynull{} a \NullPointerExc{} is thrown. If  \stackOnlyParam{\counterOnly - 1}   is not in the bounds of the array 
 in \stackOnlyParam{\counterOnly - 2}  \ an \ArrIndexOutOfBoundExc{} exception is thrown. If \stackOnlyParam{\counterOnly} \ is not assignment 
 compatible with the type of the components of the array, then \ArrStoreExc{}  is thrown.
 
-The instruction \arrload{}   loads a value from an array. The top stack element \stackOnlyParam{\counterOnly} and 
-the element below it \stackOnlyParam{\counterOnly -1 }
-  are popped from the operand stack.  \stackOnlyParam{\counterOnly} must be of type \Myint. The value in \stackOnlyParam{\counterOnly -1 } must be 
- of type \reff \ whose components are of type \textrm{type}. The value in the component of the array  \texttt{arrRef} 
- at index \texttt{ind} is retrieved and pushed onto the operand stack.
- If \stackOnlyParam{\counterOnly -1 } contains the value \Mynull{} a \NullPointerExc{} is thrown. If \stackOnlyParam{\counterOnly}  is
-not in the bounds of the array object referenced by \stackOnlyParam{\counterOnly -1 }  a \ArrIndexOutOfBoundExc{} is thrown.
+%The instruction \arrload{}   loads a value from an array. The top stack element \stackOnlyParam{\counterOnly} and 
+%the element below it \stackOnlyParam{\counterOnly -1 }
+%  are popped from the operand stack.  \stackOnlyParam{\counterOnly} must be of type \Myint. The value in \stackOnlyParam{\counterOnly -1 } must be 
+% of type \reff \ whose components are of type \textrm{type}. The value in the component of the array  \texttt{arrRef} 
+% at index \texttt{ind} is retrieved and pushed onto the operand stack.
+% If \stackOnlyParam{\counterOnly -1 } contains the value \Mynull{} a \NullPointerExc{} is thrown. If \stackOnlyParam{\counterOnly}  is
+%not in the bounds of the array object referenced by \stackOnlyParam{\counterOnly -1 }  a \ArrIndexOutOfBoundExc{} is thrown.
 
 The instruction \arraylength{} gets the length of an array.
  The stack top element is popped from the stack. It must be a 
-reference that points to an array. If the stack top element \stackOnlyParam{\counterOnly} is not \Mynull{}  the length of the array  
+reference that points to an array. If the stack top element is not \Mynull{}  the length of the array  
 \length{\stackOnlyParam{\counterOnly} } is fetched and pushed on the stack.
-If the stack top element \stackOnlyParam{\counterOnly} is \Mynull{} then a \NullPointerExc{} is thrown. Here we can see how the array
+If the stack top element is \Mynull{} then a \NullPointerExc{} is thrown. Here we can see how the array
  length is modeled via the special object field \length. 
 
 
@@ -595,7 +601,7 @@ a subclass of \clazz{} a \ClassCastExc{} is thrown.
 
 The language presented here allows also to force  exception throwing. This is done via the
  instruction \athrow{} presented in Fig. \ref{opSem:obj:throw}.    The stack top element  must be a reference of an object of type  \Throwable. 
-	 If the exception object \stackOnlyParam{\counterOnly} on the stack top is not \Mynull{} then there are two possible execution of the instruction.
+	 If the exception object on the stack top is not \Mynull{} then there are two possible execution of the instruction.
 	  Either there is not an exception handler  that protects this bytecode instruction from the 
 	  exception type and the current method \methodd{} terminates exceptionally by throwing the exception object \stackOnlyParam{\counterOnly} or
 	   there is a handler that protects this bytecode instruction from the exception thrown and the control is transfered
@@ -643,7 +649,7 @@ The language presented here allows also to force  exception throwing. This is do
        Finally, in Fig. \ref{opSem:obj:method}, we can see the semantics of method invocation. 
        As the rule shows, first the proper method \mbox{\rm n} to be executed will be looked for via the function \lookupOnly. 
        This is is done by taking from the data structure  \mbox{\rm meth} the method signature - the method name \mbox{\rm  meth}.\methodName, 
-       its argument types \ \mbox{\rm meth}.\args{}  and its  return type \mbox{\rm methid}.\retType. 
+       its argument types \ \mbox{\rm meth}.\args{}  and its  return type \mbox{\rm method}.\retType. 
        The search starts from the dynamic type of the object reference on which the method must be called.
        Once  the proper method method \mbox{\rm n} is found it is invoked.
 	 The first top $\mbox{\rm n}.\numArgs$ \ elements in the operand stack \stackOnly \ are popped from the operand stack. If 
@@ -673,7 +679,7 @@ The language presented here allows also to force  exception throwing. This is do
 						       \stackOnly' = \update{\stackOnly}{\counterOnly'}{\Res} \\
 						       \pc' = \pc + 1
 			         \end{array}  }	         
-	         {\methodd \vdash \invoke \  \mbox{\rm n} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
+	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
 					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} }  \\\\
 	   {\scriptsize \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} }

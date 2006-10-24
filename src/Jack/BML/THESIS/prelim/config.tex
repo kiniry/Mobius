@@ -13,6 +13,12 @@
 \newtheorem{FormulaInterp}[AtState]{Definition}
 \newtheorem{StateProp2}[AtState]{Substitution Property for Field Functions } %lemme
 
+\index{\SetConfigs}
+ \index{\counterOnly{}}
+\index{\stackOnly{}}
+\index{\locVarOnly}
+\index{\pc}
+
 
 \section{State configuration}\label{def}
  In this section, we introduce the notion of program state.
@@ -30,10 +36,10 @@
                \begin{itemize}
                      \item the function \heap : \HeapSet \ which stands for the heap in the state configuration
 	   
-	             \item \counterOnly is a variable that contains a natural number which stands for the number of
+	             \item \counterOnly{} is a variable that contains a natural number which stands for the number of
 		     elements in the operand stack.  
 
-		     \item \stackOnly is a partial function from natural numbers to values  which  stands for 
+		     \item \stackOnly{} is a partial function from natural numbers to values  which  stands for 
 		     the operand stack.
 
 	             \item \locVarOnly \ is a partial function from natural numbers to values which stands for

@@ -2,6 +2,8 @@
  The purpose of this chapter is to introduce a bytecode language 
  and its operational semantics. The language will be used all along the thesis and more particularly
   later in Chapter \ref{wpGeneral} for the definition of the verification condition generator.
+ We define the operational semantics of  the bytecode language   as a relation between the initial and final states of 
+ instruction execution.
  The operational semantics will be used 
  for establishing  the soundness of the verification procedure.
  As our verification procedure is tailored to Java bytecode 
@@ -47,10 +49,13 @@ In particular, \textbf{the features supported} by our bytecode language are
 \textbf{The features not supported} by our bytecode language are 
 \begin{description} 
    \item[void methods]  Note that the current formalization can be extended to void methods without major difficulties.
+         However, in our implementation 
+         we treat void methods.
 
    \item [static fields and methods] Static data is shared between all the instances of the class
          where it is declared.  We can extend our formalization to deal with static fields and methods,
 	 however it would have made the presentation heavier without gaining new feature from the JVM bytecode language. 
+	 Once again, static methods are supported in the implementation of the verification condition generator.
 
    \item [static initialization] This part of the JVM is discarded as its formal understanding is difficult and complex.
          Static initialization is a good candidate for a future work. 
@@ -139,12 +144,13 @@ In particular, \textbf{the features supported} by our bytecode language are
 
   
  The rest of this chapter is organized as follows:
- subsection \ref{relWork} is an overview of existing formalizations of the JVM semantics,
  subsection \ref{notation} gives some particular notations that will be used from now on along the thesis,
  subsection \ref{clazz} introduces the structures classes, fields and methods  used in the virtual machine, 
  subsection \ref{types} gives the type system which is supported by the bytecode language,
  subsection \ref{def} introduces the notion of state configuration,
  subsection \ref{heap} gives the modeling of the memory heap,
  subsection \ref{opSem:JVM} is a discussion about our choice for operational semantics,
- subsection \ref{opSem} gives the operational semantics of our language.
+ subsection \ref{opSem} gives the operational semantics of our language 
+ and finally we conclude with subsection \ref{relWork}  which is an overview of existing formalizations of the JVM semantics.
+.
 
