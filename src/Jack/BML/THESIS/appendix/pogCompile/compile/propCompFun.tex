@@ -4,21 +4,32 @@
 %\newtheorem{compProp11}[compProp2]{Lemma}
 %\newtheorem{compProp6}[compProp2]{Lemma}
 
-
-\newtheorem*{compProp3A}{Property  \ref{compile:prop:compProp3}}
-\newtheorem*{compProp8A}{Property  \ref{compile:prop:compProp8}}
-
+\newtheorem*{compProp0A}{Lemma  \ref{compile:prop:compProp0}}
+\newtheorem*{compProp3A}{Lemma  \ref{compile:prop:compProp3}}
+\newtheorem*{compProp8A}{Lemma  \ref{compile:prop:compProp8}}
+\newtheorem*{compProp9A}{Lemma  \ref{compile:prop:compProp4}}
 
 \section{Proofs of properties from Section \ref{compile:prop} }\label{appendix:compile:prop}
 
-We start here with several auxiliary lemmas that will allows us to prove the statements from Section \ref{compile:prop} 
-about the compiler.
-The first lemma  states  that  if there is an instructions inside a compiled statetement or expression 
- $\compileLabel{s}{\ExprStmt}{e}$ which   is in execution relation\footnote{see definition in Fig. \ref{defEdge}}  with an instruction 
-$\ins{k}$ which is not the start of an exception handler and which is outside the compilation $\compileLabel{s}{\ExprStmt }{e}$
-of $\ExprStmt$  then   $ k  = e +1$. Informally,  this means that if there are jumps from inside the compilation  $\compileLabel{s}{\ExprStmt}{e}$  of $\ExprStmt$   
-outside then the target of the jump is $e +1$.
 
+\begin{compProp0A}%[Compilation of statements and expressions]\label{compile:prop:compProp0}
+ For any statement or expression $\ExprStmt$ which does not terminate on \return{} or \athrow, start label $s$ and end label $e$,
+    the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that  instruction  $e+1$ may execute after
+    $e$, i.e.   $ \ins{e} \execRel \ins{e+1}$
+\end{compProp0A}
+\textit{Proof:} 
+The proof  is by structural induction over the compiled statement.
+We scatch the case for compositional statement, the other cases being similar. 
+Remind that by compiler definition, we get that the compilation of $\stmt_1; \stmt_2$ starting at index $s$ is
+ $\compileLabel{s}{\stmt_1; \stmt_2}{e} = \compileLabel{s}{\stmt_1}{e'};\compileLabel{e'+1}{\stmt_2}{e}$.
+By  induction hypothesis, we get that the lemma holds for $\compileLabel{e'+1}{\stmt_2}{e}$ and we get that $e \execRel e+1$ 
+which means that this case holds.
+\Qed \\
+
+
+In the next, we will need several auxiliary lemmas that will allow us to prove the statements from Section \ref{compile:prop}. 
+The next lemma states that all the jump instructions in the compilation of a statement target instruction which are also 
+in the compilation of the statement.
 For illustration, we may return back to the example Fig. \ref{pogEquiv:compile:prop}  on page \pageref{pogEquiv:compile:prop} and focus on the 
 compilation of the \lstinline!if!  statement   
 \lstinline!if ( i >= 0) then {v = i}! \lstinline!else {v = -i}! 
@@ -30,97 +41,89 @@ The first is the instruction \lstinline!5 ifge 10! which jumps inside the compil
 and the instruction \lstinline!9 goto 12!  which jumps apparently to instruction 12. 
 Thus, the compilation of the \lstinline!if! statement respects the property.
 
-We can now state this property formally.
- Note that in the formalization,  the conditions  $ \neg (\ins{k} \in  \compileLabel{s}{\ExprStmt}{e} )  $ and 
-$\neg \isStartExc{\ins{k}}$  eliminate the case when the execution relation is between an instruction inside 
-the compilation $\compileLabel{s}{\ExprStmt}{e}$ which may throw an exception and the start instruction of the proper exception handler.
-\begin{compPropApp}[Compilation of statements and expressions]\label{compile:prop:compProp1}
 
-    For any statement or expression $\ExprStmt$, start label $s$ and end label $e$,
-    the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that: 
-           $$ \begin{array}{l} 
-                             \forall i, ( \ins{i} \in \compileLabel{s}{\ExprStmt }{e} ) \wedge 
-			      ( \ins{i} \execRel \ins{k}) \wedge 
-			      \neg (\ins{k} \in   \compileLabel{s}{\ExprStmt}{e}  ) \wedge
-			      \neg \isStartExc{\ins{k}}     \Rightarrow   
-                               k = e + 1  
-			     
-              \end{array}$$ 
+\begin{compPropApp}[Jumps in statement compilation target instructions inside the statement compilation]\label{compile:prop:compProp1}
+
+    For any statement $\ExprStmt $, start label $s$ and end label $e$,
+    the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that every jump instruction(\goto {} or \ifCond) which is in the compilation 
+    and transfer the control flow outside the compilation jumps to the instruction $e + 1$  .
+
 \end{compPropApp}
-
-
 \textit{Proof:} 
-The proof is done by induction on the structure of the compiled statement. 
-We scatch the proof for the compilation of the if statement, the rest of the cases being similar \\
-
-$$
+The proof is done by contradiction and uses structural induction. 
+We scatch the proof for the compilation of the if statement, the rest of the cases being similar. \\
+Suppose that this is not true.
+Recall that the compilation of a conditional statement starting at index $s$  
+(Fig. \ref{pogEq:compile:compExpr:defStmt} on page \pageref{pogEq:compile:compExpr:defStmt}) is of the form:
+$${\scriptsize \compileLabel{s}{ \Myif \ ( \expressionSrc_1 \rel \expressionSrc_2 ) \ \Mythen \ \{ \stmt_1 \}  \  \Myelse \ \{ \stmt_2 \}   }{e}= 
 \begin{array}{l}
-            \comment{Assume that $\exists i, i \in [  s \ldots e ], \exists k ,   k \notin [s \ldots e + 1] \wedge \ins{i} \execRel \ins{k}    $  }\\
-            \\
-            \mbox{\rm\comment{by definition of the compiler function for if statements in section \ref{pogEq:compile:compCtrlStmt} }} \\
-            \compileLabel{s}{ \Myif \ ( \expressionSrcRel ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e} =  \\
-        
-	    \compileLabel{s}{\expressionSrcRel}{e'}; \\
-            e' + 1 \ \ifCond \ e'' + 2;\\
-            \compileLabel{e' + 2}{\stmt_2}{e''}\\
-             e'' + 1 \ \goto \ e +  1; \\
-            \compileLabel{e'' +  2}{\stmt_1}{ e  }; \\
-	    %e: \goto   e + 1  \\
-           
-	    \\ 
-	   \numConclusion{1} \ \comment{Assume that $ s \le i  \le e'$ } \\
-	   \comment{by induction hypothesis for $\expressionSrcRel$ we get } \\
+\compileLabel{s}{\expressionSrc_1}{e'} \\
+\compileLabel{e'+1}{\expressionSrc_2}{e''}\\ 
+ e'' + 1: \ifCond \ e''' + 2; \\
+ \compileLabel{e'' + 2}{\stmt_2}{e'''}\\
+ e''' + 1: \goto \ e\\  
+\compileLabel{e''' +  2}{\stmt_1}{ e -1 };\\
+ e : \nop
+\end{array}}
+		    $$
+ 
+Because by induction hypothesis every jump in  $\compileLabel{e''' +  2}{\stmt_1}{ e} $ targets  instructions inside $\compileLabel{e''' +  2}{\stmt_1}{ e} $,
+ it  is not possible that there be  a jump  inside 
+$\compileLabel{e''' +  2}{\stmt_1}{ e} $  which targets outside the compilation of the conditional statement.
+ Similarly, we conclude that such a  jump cannot be contained in 
+$\compileLabel{e''' +  2}{\stmt_1}{ e -1  } $, $ \compileLabel{s}{\expressionSrc_1}{e'}$ nor $\compileLabel{e'+1}{\expressionSrc_2}{e''}$
+The only cases that remain possible are the  jumps  $ e'' + 1: \ifCond \ e''' + 2 $  and $ e''' + 1: \goto \ e  $.
+ But for both instructions that is not true. Thus, the lemma holds for this case.
 
-	    \numConclusion{2}   \forall  i ,  s \le i \le e' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg  ( \ins{k} \in  \compileLabel{s}{\stmt}{e} ) \\
-			     \Myspace \neg  \isStartExc{\ins{k}}   \Rightarrow   \\
-                             \Myspace \Myspace  k = e' + 1 \\ 
-	    \comment{ From	\numConclusion{1} and 	 \numConclusion{2}  we get a contradiction in this case} \\\\
-        
-	    \numConclusion{3} \ \comment{Assume that $ e'+2 \le i  \le e''$ } \\			 
-	    \numConclusion{4} \  \forall i ,  e' + 2 \ge i \le e'' ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e} ) \\
-			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
-                             \Myspace \Myspace k = e'' + 1\\
-	    \comment{ From	\numConclusion{3} and 	 \numConclusion{4}  we get a contradiction in this case} \\\\
-	    
-	    \numConclusion{5} \ \comment{Assume that $ e'' +2 \le i  \le e $ } \\
-	    \numConclusion{6} \  \forall i ,  e'' + 2 \ge i \le e ,  \ \ins{i}   \execRel \ins{k}) \wedge \\
-			     \Myspace \neg ( \ins{k}  \in \compileLabel{s}{\stmt}{e}  ) \\
-			     \Myspace \neg \isStartExc{\ins{k}}   \Rightarrow   \\
-                             \Myspace \Myspace k = e + 1	     \\\\
-       \comment{ From	\numConclusion{5} and 	 \numConclusion{6}  we get a contradiction in this case} \\\\
-	    
-      \numConclusion{7}  \comment{Assume that $s =  e' + 1 $ } \\
-       \mbox{\rm\textit{ \{ as $ e' + 1 \ \ifCond \ e'' + 2$ and  $e'' + 2$ and $e' + 2$ are labels in }}\\
-       \mbox{\rm\textit{  the compilation of the statement, we get a contradiction in this case \}  }}\\	\\
-      
-      \numConclusion{8}  \comment{Assume that $s =  e'' + 1 $ } \\
-   \mbox{\rm\textit{ \{ as $ e''  + 1 \ \goto \ e+ 1$ we get a contradiction once again }}\\
-\end{array}
-$$
-\Qed \\
+\Qed\\
+
+%The next lemma states that if we have a compilation of the statement or expression, there exists a path from in the control flow
+%graph from the first instruction to the last instruction of its compilation. 
+% \begin{compPropApp}[Path from the first instruction in the compilation of source construct to its last instruction ]\label{compile:prop:compPropPathInternal} 
+%  For any  statement or expression $\ExprStmt$ its compilation $\compileLabel{s}{\ExprStmt}{e}$ is such that there exists a path from $s$ to $e$ 
+% which contains only instruction from the compilation $\compileLabel{s}{\ExprStmt}{e}$
+% \end{compPropApp}
+% \textit{Proof} by structural induction using Lemmas \ref{compile:prop:compProp0} and  \ref{compile:prop:compProp1}.
+% % We sketch the case for compositional statement. The compilation of $\stmt_1;\stmt_2$ starting at index $s$ with last instruction index $e$ 
+% is  
+% $ \compileLabel{s}{\stmt_1}{e'}\compileLabel{e'+1}{\stmt_2}{s}  $. By induction hypothesis there is a path $P_1$ from 
+% instruction $e$  to instruction $e'+1$ which is inside  $ \compileLabel{s}{\stmt_1}{e'}$. By induction hypothesis, we can also conclude that there is a path $P_2$
+% from $e'+1$ to $s$. From Lemma  \ref{compile:prop:compProp0}, we know that there is an execution relation between $e'$ and $e'+1$. This means that there is a path from 
+% $s$ to $e$ such that it is inside  $ \compileLabel{s}{\stmt_1}{e'}\compileLabel{e'+1}{\stmt_2}{s}$ and thus this case holds
+% \Qed\\
 
 The next  property  of the compiler is that any statement or expression   is
  compiled in a list of bytecode instructions 
-such that there could not be jumps  from outside inside the compilation of a statement or expression, i.e.
-the control flow can reach the instructions representing the compilation $\compileLabel{s}{\ExprStmt}{e}$ 
- of statement $\ExprStmt$  only by passing   through the beginning of the compilation, i.e. the instruction at index $s$. 
+such that instructions inside the compilation of a statement or expression cannot be targetted by instructions 
+ which are outside the statement compilation except for the first instruction in the compilation.
  For instance, the instructions 14-29 in the compilation of the while statement
- in Fig. \ref{pogEquiv:compile:prop} from Section \ref{pogEquiv:compile}  
+ in Fig. \ref{pogEquiv:compile:prop} from Section \ref{compile:prop}
  can be reached from outside of the statement compilation only via the instruction at index 14.
 
-\begin{compPropApp}[Compilation of statements and expressions]\label{compile:prop:compProp2}
- For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\ExprStmt'$  is a substatement of $\ExprStmt$ ($\substatement{\ExprStmt }{\ExprStmt'}$)
-and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$  then the following holds:
-$$
-                        (  j \execRel k \wedge  j \in \compileLabel{s}{\ExprStmt}{e} \wedge
-		        \neg (j \in \compileLabel{s'}{\ExprStmt'}{e'} )   \wedge 
-		        k \in \compileLabel{s'}{\ExprStmt'}{e'}  
-		        )  \Rightarrow   k = s'  $$ 
+\begin{compPropApp}[Compilation of statements and expressions cannot be jumped from outside inside]\label{compile:prop:compProp2}
+ For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\ExprStmt'$  is a substatement of
+ $\ExprStmt$ ($\substatement{\ExprStmt }{\ExprStmt'}$)
+ and their  compilations  are $\compileLabel{s}{\ExprStmt}{e}$ and  $\compileLabel{s'}{\ExprStmt'}{e'}$. Let us have instruction at index $j$ 
+ in the compilation of  $\ExprStmt$ ( $j \in \compileLabel{s}{\ExprStmt}{e}$)
+ but which is not in the compilation of  $\compileLabel{s'}{\ExprStmt'}{e'}  $ ( $\neg (j \in \compileLabel{s'}{\ExprStmt'}{e'} ) $ ).
+ Let us also have instruction $k$ in the compilation   $ \compileLabel{s'}{\ExprStmt'}{e'}$. 
+  Suppose that $j$ may execute after $k$ ($ j \execRel k$). It then follows that  $k$ is the first instruction in the compilation of  $ \ExprStmt'$
+ \end{compPropApp}
+  \textit{Proof:}The proof is by induction over the structure of statements and expressions. % and uses  Lemma \ref{compile:prop:compProp1}
+We sketch here the case for compositional statement, the other cases are similar and use previous Lemma \ref{compile:prop:compProp1} and Lemma \ref{compile:prop:compProp0}
+The compositional statement $\stmt_1;\stmt_2$ has the compilation $ \compileLabel{s}{\stmt_1;\stmt_2}{e}$ which by the compiler definition is 
+ $ \compileLabel{s}{\stmt_1}{e'} \compileLabel{e'+1}{\stmt_2}{e}$. By induction hypothesis the lemma holds both for   $ \compileLabel{s}{\stmt_1}{e'}$
+and $\compileLabel{e'+1}{\stmt_2}{e}$. It is also necessary to show that there are no jumps from the compilation of $\stmt_1$ into the compilation of
+$\stmt_2$ and vice versa. Both directions follow from Lemma \ref{compile:prop:compProp1} that all jumps in a statement compilation are inside the statement.
+Moreover, from Lemma \ref{compile:prop:compProp0} we have that $e' \execRel e'+1$ which conforms to the statement.
+Thus, the  case for compositional statement holds.
+ 
 
-\end{compPropApp}
-The proof is by induction over the structure of statements and expressions  and uses  Lemma \ref{compile:prop:compProp1}.
+\Qed \\
+
+
+
+
 
 \begin{compProp3A}[Compilation of expressions]
     For any expression $\expressionSrc$, starting label $s$ and end label $e$,
@@ -145,6 +148,90 @@ As all the instructions in the compilation of an expression are sequential in or
 the compilation of the expression. But this contradicts the first condition. Thus, it follows that our hypothesis is false and we can conclude that the third condition 
 of Def. \ref{seqInstr} holds for compilation of expressions.
  \Qed \\
+ 
+We shall now proceed to the lemma which establishes that there are loops in the bytecode control flow graph corresponding to the compilation of a statement
+only if the statement contains loops. 
+
+\begin{compProp9A}  The compilation $\compileLabel{s}{\stmt}{e}$ of a statement $\stmt$ may contain an instruction $\ins{k}$ and $\ins{j}$  which are respectively 
+a loop entry and a loop end  in the sense of Def.
+\ref{defLoop}, page \pageref{defLoop}  (i.e. there exists $\ins{j}$ such that $\ins{j} \execRel^{l} \ins{k}$ ) if and only if  $\stmt$  contains 
+ a substatement $\stmt'$ which is a loop statement:
+ $$ \ins{j} = \loopStart{\stmt'}  - 1 \wedge  \ins{k} = \loopStart{\stmt'}  $$
+\end{compProp9A}
+\textit{Proof:}
+By structural induction over the compiled statement. The direction when statement contains a loop statement is trivial.
+We will show the other direction for compositional statements.
+\begin{description}
+\item[Compositional statement]
+Let us have the statement $\stmt_1;\stmt_2$ and its compilation 
+ $\compileLabel{s}{\stmt_1;\stmt_2}{e}$. From the compiler definition,
+we have that  
+$$ \scriptsize{\compileLabel{s}{\stmt_1;\stmt_2}{e} = \compileLabel{s}{\stmt_1}{e'}\compileLabel{e'+1}{\stmt_2}{s}}$$
+ By induction hypothesis, the lemma holds for  the compilations of $\stmt_1$ and   $\stmt_2$ which are 
+$\compileLabel{s}{\stmt_1}{e'}$ and  $\compileLabel{e'+1}{\stmt_2}{s}$.
+Let us which are the other possible execution edges in the compilation.
+
+% We know  from Lemma \ref{compile:prop:compProp0} that instruction 
+%$e' + 1$ may execute immediately after $e'$, i.e. $e' \execRel e'+ 1$. Let us assume that $e' \execRel^{l} e'+ 1 $.  Following Def. \ref{defLoop},
+%this means that every path that reaches $e'$ passes before through  $e'+ 1 $. Suppose that there is a path $P$  from the program entry point  to the 
+%$e'+1$  which does not pass through $e'$. There is a subpath $subP$ which first reaches the instruction $s$ (from Lemma \ref{compile:prop:compProp2})
+%From Lemma \ref{compile:prop:compPropPathInternal} we get that there is a path $P_{s,e}$ from instruction $s$ to instruction $e'$  which does not go outside
+%$\compileLabel{s}{\stmt_1}{e'}$. Thus there is a path from 
+%Because there are no jumps from outside inside statements by Lemma \ref{compile:prop:compProp2} except for the first instruction, this means that 
+%every path that reaches $e'+1$ passes through instruction $s$
+
+The only possibility which remains following
+  Lemma \ref{compile:prop:compProp0} and Lemma \ref{compile:prop:compProp2}  is
+$e' \execRel e'+1$. We will show  by contradiction that the execution relation between $e'$ and $e'+1$ is not a loop execution relation.
+Assume that the execution is a loop execution relation, i.e. $e' \execRel^{l} e'+1$. Following Def. \ref{defLoop}, this means that every path $P$ in the control flow graph 
+ from the program entry point instruction which reaches $e'$ has a subpath $ subP $ which does not pass through $e'$ and which passes through $e'+1$.
+ This is possible in two cases:
+\begin{itemize}
+\item  if there is a jump from outside $\compileLabel{s}{\stmt_1;\stmt_2}{e}$ to the instruction $e'+1$. This is not possible following Lemma \ref{compile:prop:compProp2}.
+
+\item there is a jump from an instruction from $\compileLabel{s}{\stmt_1}{e'}$ to  $e'+1$ but this is not possible following Lemma \ref{compile:prop:compProp1}
+\end{itemize}
+
+
+\item[Conditional statement]
+By definition, its compilation results in
+  $$ \scriptsize{\compileLabel{s}{ \Myif \ ( \expressionSrc_1 \rel \expressionSrc_2 ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e} = 
+\begin{array}{l}
+  \compileLabel{s}{\expressionSrc_1}{e'}\\
+  \compileLabel{e'+1}{\expressionSrc_2}{e''}\\  
+  e'' + 1: \ifCond \ e''' + 2 \\
+  \compileLabel{e'' + 2}{\stmt_2}{e'''}\\ 
+  e''' + 1: \goto \ e \\ 
+  \compileLabel{e''' +  2}{\stmt_1}{ e -1  }\\ 
+  e: \nop 
+\end{array}}
+$$
+ By induction hypothesis, we get that the lemma holds for the substatement compilations. The possible loop execution edges are :
+
+ \begin{itemize}
+       \item  $e' \execRel^{l} e'+1 $ This would mean that every execution path reaching $e'$ passes before through $e'+1$.
+             Let us see how $e'+1$ can be reached from the program entry point.
+             From Lemma \ref{compile:prop:compProp2} we know that there could be no jumps from outside the statement compilation inside it 
+	     except for the first instruction. Thus, every control flow path $P$ reaching $e'+1$ has a subpath $subP_s$ which first 
+	     reaches the instruction at index $s$ and does not pass through any instruction from the conditional statement.
+	      Because all the instructions in $\compileLabel{s}{\expressionSrc_1}{e'}$ are sequential (Lemma \ref{compile:prop:compProp3}), every path from the 
+	     program entry point reaching $e'+1$ passes through $e'$. Thus the assumption is false.
+	     We may apply similar reasoning to establish that it is not true that  $e'' \execRel^{l} e''+1 $ neither $e''+ 1 \execRel^{l} e''+2$, 
+	     $e'' + 1 \execRel^{l} e'''+2 $
+
+      
+      \item $e''' \execRel^{l} e'''+1$ This is not possible because $e'''$ can be reached from the program entry point by a path $P $ which has 
+           a subpath $subP_s$ which reaches $s$ and which does not pass through any instruction from the conditional statement.
+	   From the instruction $s$, the control flow path 
+	   passes through $s \ldots e', e' +1 \ldots e'', e''+1, e''+2\ldots e''' $. Thus there is a path from the 
+	   program entry point to  $e'''$ which does not pass through $e'''+1$ and thus, it is not true  that $e''' \execRel^{l} e'''+1$
+	   In the same way, we can show that it is not true that  $e''' + 1 \execRel^{l} e$, neither $ e -1 \execRel^{l} e  $
+	       
+ \end{itemize}
+
+\end{description}
+\Qed\\
+
 
 For establishing Property \ref{compile:prop:compProp8}, we will need several auxiliary lemmas. First, we have to show that the regions described in the exception  handler table elements  
 correspond to statements which are declared in the try clause of try catch or try finally statements.  
@@ -194,13 +281,8 @@ of $ \ExprStmt$ is such that
 \end{compPropApp}
 The latter follows directly from the compiler definition function.
  
-In the following,  we will deal with substatement relation. For denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
-we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$. 
-We also use the notion of a direct subexpression which here means that  $\ExprStmt'$ is a direct substatement of  $\ExprStmt$
-if $\ExprStmt'$  is contained in $\ExprStmt$ 
-and there does not exist  $\ExprStmt''$  such that  $\ExprStmt''$ is contained in   $\ExprStmt$ and  $\ExprStmt'$ is contained in  $\ExprStmt''$.
-For denoting that  $\ExprStmt'$ is a direct substatement of  $\ExprStmt$
-we use the notation $\strictsubstatement{\ExprStmt }{\ExprStmt'}$.
+
+We establish now several properties concerning substatement relation which has been introduced in Section \ref{compile:prop}, page \ref{compile:prop}.
 The next lemma establishes that the substatement relation between statements is preserved by the compiler. 
 In particular, we establish that if a statement is a substatement of another then all of its instructions are contained in 
 the compilation of the other one. Also, if two statements are not in a substatement relation neither their compilations are.
@@ -208,10 +290,10 @@ the compilation of the other one. Also, if two statements are not in a substatem
    For all statements $\stmt_1$ and $\stmt_2$, with respective compilations 
    $\compileLabel{s_1}{\stmt_1}{e_1}$ and  $\compileLabel{s_2}{\stmt_2}{e_2}$ the following holds
    \begin{itemize} 
-         \item if $\stmt_2$ is a substatement of  $\stmt_1$ ($\substatement{\stmt_1}{\stmt_2}$) then the following holds:
+         \item if $\stmt_2$ is a substatement of  $\stmt_1$ ($\substatement{\stmt_1}{\stmt_2}$) then 
 	     $s_1 \le s_2$ and $ e_2 \le e_1$
 	  \item if  $\stmt_2$ is not  substatement of  $\stmt_1$ ($\neg \substatement{\stmt_1}{\stmt_2}$), neither $\stmt_1$ is a substatement of  $\stmt_2$ 
-                ($\neg \substatement{\stmt_2}{\stmt_1}$) then the following holds:
+                ($\neg \substatement{\stmt_2}{\stmt_1}$) then
 	     $e_1 < s_2  $ or $ e_2 < s_1$
    \end{itemize}
 \end{compPropApp}
@@ -263,11 +345,13 @@ But this is in contradiction with \numConclusion{3} and thus the lemma holds als
 
 
 \begin{compProp8A}[Exception handler property]
-  For every statement $\stmt$ which is not a try catch statement  in method \methodd \  and  its direct substatement $\stmt'$, i.e. 
-$\strictsubstatement{\stmt}{\stmt'} $
-if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$ then the following holds:
+  Let us have a statement $\stmt$ which is not a try catch statement  neither a try finally statement in method \methodd. Assume that 
+  statement $\stmt'$ is its direct substatement, i.e. 
+$\strictsubstatement{\stmt}{\stmt'} $. Let 
+ their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then the following holds:
 $$ \begin{array}{l}
-          \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
+          \forall \mbox{\rm\tt{Exc}}, \\
+	  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = 
 	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
    \end{array}
 $$
@@ -331,7 +415,8 @@ $  \numConclusion{13} \    \substatement{\stmt'}{\stmt_2} \vee \substatement{\st
 	or that \\
          $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} =  e_2 $ and 
         $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} =  e_2 $. But this means 
-	 $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = $ $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}$
+	 $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = $\\
+	  $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable}$
 	 which is contradiction with \numConclusion{4}.
 	
  
