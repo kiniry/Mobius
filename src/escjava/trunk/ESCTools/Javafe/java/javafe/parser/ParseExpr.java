@@ -231,15 +231,10 @@ public abstract class ParseExpr extends ParseType
                     LiteralExpr res = null;
                     if (ee instanceof LiteralExpr &&
                             e instanceof LiteralExpr) {
-                      LiteralExpr litee = (LiteralExpr)ee;
-                      LiteralExpr lite = (LiteralExpr)e;
-                      if (binop == TagConstants.ADD) {
-                        if (lite.tag == TagConstants.STRINGLIT &&
-                                litee.tag == TagConstants.STRINGLIT) {
-                          res = LiteralExpr.make(TagConstants.STRINGLIT, 
-                                  (String)(litee.value) + (String)(lite.value), litee.loc);
-                        }
-                      }
+                      res = binaryConstantFolding(
+                              (LiteralExpr)ee, binop, (LiteralExpr)e);
+                      // returns null if no folding could be done;
+                      // returns the new literal if the op could be folded
                     } 
                     if (res != null) {
                       e = res;
@@ -332,6 +327,22 @@ public abstract class ParseExpr extends ParseType
                 // We never get down to here
             }
         }
+    }
+    
+    protected LiteralExpr binaryConstantFolding(LiteralExpr left, int op, LiteralExpr right) {
+      if (op == TagConstants.ADD) {
+        if (left.tag == TagConstants.INTLIT &&
+                right.tag == TagConstants.INTLIT) {
+          return LiteralExpr.make(TagConstants.INTLIT, 
+                  new Integer(((Integer)left.value).intValue() + ((Integer)right.value).intValue()), left.loc);
+        }
+        if (left.tag == TagConstants.STRINGLIT &&
+                right.tag == TagConstants.STRINGLIT) {
+          return LiteralExpr.make(TagConstants.STRINGLIT, 
+                  (String)(left.value) + (String)(right.value), left.loc);
+        }
+      }
+      return null;
     }
 
     /**********************************************************************
