@@ -26,25 +26,26 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
 \subsection{BML Grammar}\label{BCSL}
 
 %\begin{bml}[Formal grammar of BML]\label{BCSL} 
-$$\begin{array}{ll}
-     \Constants   & ::= \intLiteral  \mid \signedInt  \mid \Mynull \mid \ident  \\
+%$$
+\begin{longtable}{ll}
+     $\Constants$   & ::= \intLiteral  $\mid$ \signedInt  $\mid$ \Mynull $\mid$ \ident  \\
      & \\
 
-     \signedInt & ::= + \nonZeroDigit  \lbrack \digits \rbrack  \mid  - \nonZeroDigit  \lbrack \digits \rbrack \\
+     \signedInt & ::=  + \nonZeroDigit  \lbrack \digits \rbrack  $\mid$  - \nonZeroDigit  \lbrack \digits \rbrack \\
 
      & \\
-     \intLiteral & ::= \digit \mid \nonZeroDigit  \lbrack \digits \rbrack \\
+     \intLiteral & ::= \digit $ \mid $   \nonZeroDigit  \lbrack \digits \rbrack \\
 
      & \\ 
-     \digits & ::=  \digit  \lbrack \digits \rbrack \\
+     \digits & ::=   \digit  \lbrack \digits \rbrack \\
 
      & \\
      
-     \digit & ::=  \mbox{\rm\textbf{0}} \mid \nonZeroDigit \\
+     \digit & ::=  \mbox{\rm\textbf{0}} $\mid$ \nonZeroDigit \\
      
      & \\
 
-     \nonZeroDigit &::= \mbox{\rm\textbf{1}}  \mid \ldots \mid \mbox{\rm\textbf{9}}   \\
+     \nonZeroDigit &::= \mbox{\rm\textbf{1}}  $\mid$ \ldots $\mid$ \mbox{\rm\textbf{9}}   \\
      
      & \\
      
@@ -55,96 +56,90 @@ $$\begin{array}{ll}
      \boundVar & ::= \ \bound\_\intLiteral \\ 
 
      & \\
-    % \RefValuesSpec    & ::=  Ref \mid \Mynull \\
+    % \RefValuesSpec    & ::=  Ref $\mid$ \Mynull \\
      & \\
-    \expression      & ::= \Constants \\
-                     &  \mid \locVar{ \digits } \\ 
-       	             &  \mid \fieldAccess{\expression}{\ident} \\
-		     &  \mid \ident \\
-		  %  &  \mid  \update{\fieldd}{ \expression}{\expression}(\expression) \\
-		     &  \mid \arrayAccess{\expression} {\expression} \\	   
-		 %   &  \mid \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression) \\	
-		     &  \mid \expression \ \op \ \expression   \\
-		     &  \mid \counter \\
-		     &  \mid \stack{ \expression} \\
-                     &  \mid \old{ \expression  } \\
-                     &  \mid \EXC    \\
-		     &  \mid \result \\
-		     &  \mid \boundVar \\
-		     &  \mid \typeof{ \expression} \\
-                     &  \mid \type{\ident} \\
-                     &  \mid \elemtype{\expression  }\\
-		     &  \mid \TYPE\\  
+    $\expression$      & ::= $\Constants$ \\
+                     &  $\mid$ \locVar{ \digits } \\ 
+       	             &  $\mid$ \fieldAccess{\expression}{\ident} \\
+		     &  $\mid$ \ident \\
+		     &  $\mid$ \arrayAccess{\expression} {\expression} \\	   
+		     &  $\mid$ \expression \ \op \ \expression   \\
+		     &  $\mid$ \counter \\
+		     &  $\mid$ \stack{ \expression} \\
+                     &  $\mid$ \old{ \expression  } \\
+                     &  $\mid$ \EXC    \\
+		     &  $\mid$ \result \\
+		     &  $\mid$ \boundVar \\
+		     &  $\mid$ \typeof{ \expression} \\
+                     &  $\mid$ \type{\ident} \\
+                     &  $\mid$ \elemtype{\expression  }\\
+		     &  $\mid$ \TYPE\\  
   & \\
- \op & ::=  \plus \mid \minus \mid \mult \mid \divis \mid  \modulo \\
+ \op & ::=  \plus $\mid$ \minus $\mid$ \mult $\mid$ \divis $\mid$  \modulo \\
  
 
     & \\
- \predicates & ::=  \  = \mid  \neq \mid \leq \mid \le \mid \geq \mid > \mid \subtypeSpec    \\
+ $\predicates$ & ::=  \  = $\mid$ $ \neq$ $\mid$ $\leq$ $\mid$ $\l$e $\mid$ $\geq$ $\mid$ > $\mid$ \subtypeSpec    \\
   & \\
- \formulaBc & ::= 
-            \expression \ \predicates \  \expression   \\
-	  & \mid  \true \\
-	  & \mid  \false  \\	
-          & \mid not \ \formulaBc  \\
-	  & \mid \formulaBc  \wedge  \formulaBc \\
-	  & \mid \formulaBc \vee  \formulaBc \\
-	  & \mid \formulaBc  \Rightarrow \formulaBc \\
-          & \mid \formulaBc \iff  \formulaBc \\
-	  & \mid \forall \ \boundVar , \formulaBc\\
-	  & \mid \exists \ \boundVar  , \formulaBc	 \\
+ $\formulaBc$ & ::= 
+           $ \expression \ \predicates \  \expression $  \\
+	  & $\mid$  \true \\
+	  & $\mid$  \false  \\	
+          & $\mid$ not \ $\formulaBc $ \\
+	  & $\mid$ $\formulaBc  \wedge  \formulaBc $\\
+	  & $\mid$ $\formulaBc \vee  \formulaBc$ \\
+	  & $\mid$ $ \formulaBc  \Rightarrow \formulaBc$ \\
+          & $\mid$ $\formulaBc \iff  \formulaBc$ \\
+	  & $\mid$ $\forall \ \boundVar , \formulaBc$\\
+	  & $\mid$ $\exists \ \boundVar  , \formulaBc$	 \\
     & \\
   \ClassSpec & ::=  \ClassInv \ \invModifier \  \formulaBc  \\
-                 & \mid \ClassHistoryConstr  \ \formulaBc   \\
-                 & \mid \declare \ \ghost \ \ident \ \ident \\  
+                 & $\mid$ \ClassHistoryConstr  \ \formulaBc   \\
+                 & $\mid$ \declare \ \ghost \ \ident \ \ident \\  
    & \\
    
- \invModifier & ::= \instance \mid \static \\
+ \invModifier & ::= \instance $\mid$ \static \\
 		 
     & \\
-  \intraMethodSpec & ::=  \begin{array}{l}  \atIndex \ nat; \\
+  \intraMethodSpec & ::=  \begin{tabular}{l}  \atIndex \ nat; \\
 		                            \intraSpec ; 
-			  \end{array}\\
+			  \end{tabular}\\
 &\\
 \intraSpec & ::=  \loopSpec \\ 
-             & \mid \assert \ \formulaBc  \\                      
-	     & \mid \set \ \expression \  \expression \\
+             & $\mid$ \assert \ \formulaBc  \\                      
+	     & $\mid$ \set \ \expression \  \expression \\
 & \\
-\loopSpec  & ::=  \begin{array}{l}  
+\loopSpec  & ::=  \begin{tabular}{l}  
                         \loopInv \  \formulaBc; \\ 
 			\loopMod \ list; \\ 
                         \loopDecreases \ \expression; 
-	         \end{array}\\
-    \end{array}$$
-
-
-$$\begin{array}{ll} 
+	         \end{tabular}\\
+ 
  %   & \\ 
   \MethodSpec & ::= \specCase \\     
-                    & \mid  \specCase \ \also \ \MethodSpec \\
+                    & $\mid$  \specCase \ \also \ \MethodSpec \\
 
  & \\
-  \specCase & ::=    \{| \\
-                    & \phantom{aaa} \begin{array}{l}  
+  \specCase & ::=    \{$\vert$ \\
+                    & \phantom{aaa} \begin{tabular}{l}  
                               \requires  \ \formulaBc; \\
                                  \modifies  \ list \   \modifiesLoc;  \\
 				 \ensures \ \formulaBc; \\
 				 \exsuresList\\
 				 
-		     \end{array}  \\
-                    &\phantom{aaa} |\} \\
+		     \end{tabular}  \\
+                    &\phantom{aaa} $\vert$\} \\
  & \\ 
- \exsuresList & ::=   [ ] \mid  \exsures \ ( \ident )  \ \formulaBc  ; \exsuresList  \\
+ \exsuresList & ::=   [ ] $\mid$  \exsures \ ( \ident )  \ \formulaBc  ; \exsuresList  \\
  & \\
   \modifiesLoc & ::=  \fieldAccess{\expression}{\ident} \\
-                    & \mid \locVar{i} \\ 
-                    & \mid \arrayAccessMod{\expression}{\specIndex}\\
-		    & \mid \everything \\
-		    & \mid \nothing \\
+                    & $\mid$ \locVar{i} \\ 
+                    & $\mid$ \arrayAccessMod{\expression}{\specIndex}\\
+		    & $\mid$ \everything \\
+		    & $\mid$ \nothing \\
               
  & \\
- \specIndex & ::= \all \mid i_1 .. i_2 \mid i  \\
-            
+ \specIndex & ::= $\all$ $\mid$ $i_1 \ldots i_2$ $\mid$ i  \\            
 %\end{array}                
 %$$
 
@@ -153,24 +148,24 @@ $$\begin{array}{ll}
  
 %       & \\
 %       \bmlKeyWords & ::= \requires \\
-%                       & \mid \ensures \\
-%		       & \mid \modifies \\
-%		       & \mid \assert \\
-%		       & \mid \set \\
-%		       & \mid \exsures \\
-%		       & \mid  \also \\
-%		       & \mid  \ClassInv \\
-%		       & \mid \ClassHistoryConstr \\
-%		       & \mid \atIndex \\ 
-%		       & \mid \loopInv \\
-%		       & \mid \loopDecreases \\
-%		       & \mid \loopMod \\
-%		       & \mid \jmlKey{$\backslash$ typeof} \\
-%		       & \mid \jmlKey{$\backslash$ elemtype}\\
-%		       & \mid \TYPE\\
-%		       & \mid \result 
-\end{array}
-$$
+%                       & $\mid$ \ensures \\
+%		       & $\mid$ \modifies \\
+%		       & $\mid$ \assert \\
+%		       & $\mid$ \set \\
+%		       & $\mid$ \exsures \\
+%		       & $\mid$  \also \\
+%		       & $\mid$  \ClassInv \\
+%		       & $\mid$ \ClassHistoryConstr \\
+%		       & $\mid$ \atIndex \\ 
+%		       & $\mid$ \loopInv \\
+%		       & $\mid$ \loopDecreases \\
+%		       & $\mid$ \loopMod \\
+%		       & $\mid$ \jmlKey{$\backslash$ typeof} \\
+%		       & $\mid$ \jmlKey{$\backslash$ elemtype}\\
+%		       & $\mid$ \TYPE\\
+%		       & $\mid$ \result 
+\end{longtable}
+%$$
 
 
 \subsection{Syntax and semantics of BML}
