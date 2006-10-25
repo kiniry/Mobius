@@ -40,7 +40,7 @@ Thus an execution labeled with \level{0} does not exist.
  For the other instructions the weight of the maximal call depth is just passed. The rules for the instructions different from 
 method invokation have this general form: 
 $$ \begin{array}{l}
-              {\scriptsize \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTrans{k} s_2 , \  \level{k} > 0}}
+              {\scriptsize \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTransWeight{k} s_2 , \  \level{k} > 0}}
 \end{array}$$
  
 We now first define what does it mean for a method to respect its specification at level \level{k}

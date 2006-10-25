@@ -46,7 +46,7 @@ initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly 
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{*} s_n$
          \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \interp{\wpi{\ins{\pc_n}}{\methodd}{}}{s_n} $
-	 \item all methods in \Program{} at level \level{k - 1} are correct w.r.t. their specification
+	 \item all methods in \Program{} respect their specification at level \level{k-1}  
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
   
@@ -69,22 +69,21 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		 
 		     
 		    	\mbox{\rm\textit{\{by initial hypothesis we have that the \wpName{} }}\\
-			\mbox{\rm\textit{of the current instruction holds \}}} \\
+			\mbox{\rm\textit{of the current instruction holds \}}} 
 			$$\interp{\wpi{\return}{\pc_{n}}{\methodd}} {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}  $$
-			\mbox{\rm\comment{by definition the weakest precondition for \return } }\\
-			 
-                       $$\interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } = $$
-			\mbox{\rm\comment{by the substitution property \ref{substRet}  }}\\
+			\mbox{\rm\comment{by definition the weakest precondition for \return } }
+		        $$\interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } = $$
+			\mbox{\rm\comment{by the substitution property \ref{substRet}  }}
 			 
                           $$\interp { \normalPost} { \configFinalNorm{\heap_n  }
 				                                   { \evalExp{ \stack{\topStack}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } }
                          }$$
-			\comment{by definition of the evaluation function $\evalExpName$}\\
+			\comment{by definition of the evaluation function $\evalExpName$}
 			 $$  \interp{ \normalPost} { \configFinalNorm{\heap_n  }  
 							    { \stackOnly_n ( \counterOnly_n  )  } } $$
 			\comment{from the operational semantics for \return }\\
 		 	$$ s_{n+1} = \configFinalNorm{\heap_n  } { \stackOnly_n ( \counterOnly_n  )  }$$
-				\comment{and we obtain that }	\\
+				\comment{and we obtain that }
 			$$	\interp{ \normalPost} {s_{n+1} } $$ 
 							    
 		
@@ -328,7 +327,7 @@ $$\numConclusion{11} \
  s_{n+1} = s_n\subst{\counterOnly_n}{\counterOnly_n - \mbox{\rm\texttt{n'} } .\numArgs + 1} \subst{ \stackOnly_n(\counterOnly_n -  \mbox{\rm\texttt{n'} } .\numArgs +1 )}{\Res}  $$
 \comment{from \numConclusion{10} and \numConclusion{11}, we get the desired result in this case}
 \end{enumerate}
-
+\Qed \\
 
 %The next lemma establishes formally a relation between the \wpName{} of an instruction and the intermediate predicate that must hold
 %in between the instruction and its successor. In particular, that whenever $\wpi{i}{\methodd}{} $  holds in the prestate of the instruction point $i$
@@ -383,8 +382,9 @@ such that :
  \begin{itemize}
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{n} s_n$
          \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
-         \item $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $ 
-	 \item  all methods in \Program{} at level \level{ k - 1 } are correct w.r.t. their specification
+         \item $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $  
+	 \item all methods in \Program{} respect their specification at level \level{k-1}  
+	 
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
 
@@ -405,7 +405,7 @@ then the folloing holds:
 \end{enumerate}
 \end{lemma}
 
-Proof :
+\textit{Proof :}
 The proof is by case analysis on the execution relation \execRel{}  between the current instruction and the next instruction.
 
  We consider three cases: the case when the next execution step does not enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
@@ -439,10 +439,10 @@ $$ \begin{array}{l}
 \mbox{\rm\comment{by initial hypothesis}} \\
 \interp{\wpi{\pc_n}{\methodd}{}}{s_n} \\
 \comment{from Lemma \ref{lemma0} we have }\\
-\interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}} \\
+\interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}} \ = \\
 
  \mbox{\rm\comment{from the Def. \ref{inter} for an edge between a  }}\\				    
-            \equiv \\
+            
                  \interpTwoLines{  I \  \wedge\\
                                              \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
                                  }  { s_{n+1}  }\\
@@ -530,7 +530,7 @@ Let us have a program \Program{} and a method \methodd{} in \Program.
      \item execution of method  \methodd{} starts  in state $s_{0}$ 
      \item  makes $n$ steps to reach state $s_n$: $s_{0} \stateTransWeight{k}^{n} s_{n} $
      \item $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$ holds
-     \item all methods in \Program{} at level \level{k - 1} are correct w.r.t. their specification
+     \item all methods in \Program{} respect their specification at level \level{k-1}  
 \end{itemize}  
  then the following holds
 $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$
@@ -558,8 +558,8 @@ holds and the method terminates then the method postcondition holds in the metho
 \begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemma2}
 Let us have a program \Program{} and a method \methodd{} in \Program.
 For all states $s_0$ and $s_n$ such that   $\methodd : s_0  \stateTransTermWeight{k} s_n $
-and $\interp{ \wpi{} {\methodd}{0}}{ s_{0}}$ holds if we have
-that all methods at level \level{k -1} are correct w.r.t. their specification.
+and let $\interp{ \wpi{} {\methodd}{0}}{ s_{0}}$ holds. Assume that
+  all methods in \Program{} respect their specification at level \level{k-1}. 
 Let the program counter in state $s_n$ points to an instruction $\return $ or
  an instruction which throws an unhandled exception of type \mbox{\rm\texttt{Exc}}, then  the following holds:
 \begin{itemize}
@@ -568,28 +568,31 @@ Let the program counter in state $s_n$ points to an instruction $\return $ or
              $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
 \end{itemize}
 \end{lemma}
-Proof: 
+\textit{Proof:} 
 %By hypothesis the execution of method \methodd \ always terminates, i.e. there exists $n$ steps such that
 \textit{Let $ \ s_{0} \stateTransWeight{k}^{*} s_n $ and $\methodd.\body[\pc_n]$ is a \return \ or an instruction that throws a  not handled exception.
  Applying lemma \ref{lemma3}, we can get that $\forall i, 0 \le i \le n , \ \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ } }{ s_{i}}$. 
 We apply lemma \ref{lemma1} for the case for a \return \ or instruction that throws an unhandled exception which allows to conclude that the current statement holds.
-}
+}\\
 \Qed\\
 
-
-\begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemmaMethRespSpec}
+Now, we establish under what conditions we can conclude that a method respects its specification at level \level{k}.
+\begin{lemma}[method respects its specification at level \level{k}]\label{lemmaMethRespSpec}
 Let us have a program \Program{} and a method \methodd{} in \Program.
-If  all methods in \Program{} at level  \level{k -1} are correct w.r.t. their specification 
+If  all methods in \Program{} respect their specification at level  \level{k -1}
 and the verification conditions for a method  \methodd{} are valid formulas then 
 \methodd{}  respects its specification at level \level{k} 
-\end{lemma}
-Proof: this proof  follows directly from Lemma \ref{lemma2}.
+\end{lemma} The proof  follows directly from Lemma \ref{lemma2}.
 
 
 
 
 We are now ready to prove Theorem \ref{vcGenCorrect}.\\
-Proof:
+\begin{vcGenCorrect1}
+ If the verification conditions  for all  methods in a program \Program{}  (see  subsection \ref{wp:vcMeth} )
+are valid then \Program{} is correct w.r.t. Def. \ref{defCorrectProgram}
+\end{vcGenCorrect1}
+\textit{Proof:}
 We want to establish now  that if for every \methodd{}
  in every class \class{} in a program \Program{}  the respective verification conditions are valid then 
 the \Program{} is correct as defined in Def. \ref{defCorrectProgram}.
@@ -604,8 +607,6 @@ In particular, this means that for every class \class{}, every method \methodd{}
 We can apply Lemma \ref{lemmaMethRespSpec} to every single method  \methodd{} in \Program{}, 
  the induction hypothesis  and the initial hypothesis that  verification conditions  of \methodd{} are valid and we obtain that 
 every method  \methodd{} is correct w.r.t. its specification at level \level{k} 
-
-
 \end{description}
 \Qed
 
