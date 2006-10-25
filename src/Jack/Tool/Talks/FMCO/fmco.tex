@@ -1,0 +1,644 @@
+\documentclass[final,nocolorBG,a4,mobius,nototal,pdf,slideColor]{prosper}
+
+\addtolength{\textheight}{-1cm}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\pagestyle{plain}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{alltt}
+\usepackage{xspace}
+\makeatletter
+
+\newcommand{\textttbf}[1]{\texttt{\textbf{#1}}}
+
+\input{colour.tex}
+
+\usepackage{pstricks,pst-node,pst-text,pst-3d}
+\usepackage{epsfig}
+
+%\usepackage{colordvi}
+\usepackage{epsf}
+
+\input{prooftree} 
+
+\usepackage{colours}
+
+\title{\vspace*{-1em}\Blue{JACK~--~a tool for validation of security
+and behaviour of Java applications}\bigskip\\
+}
+\subtitle{}
+\author{
+\begin{tabular}{ll}
+\parbox[b]{7cm}{
+  Gilles Barthe\\
+  Lilian Burdy\\
+  Julien Charles\\
+  Benjamin Gr\'egoire\\
+  \Blue{Marieke Huisman}\\
+  Jean-Louis Lanet\\
+  Mariela Pavlova\\
+  Antoine Requets} & 
+\parbox[b]{5cm}{
+\includegraphics[width=2.5cm]{mobius_transparent.ps}\smallskip\\
+\includegraphics[width=2.5cm]{logo_inria.ps}}
+
+\smallskip\\
+  gemalto \& INRIA Sophia Antipolis, France\bigskip\\
+\end{tabular}
+          }
+\institution{
+}
+
+\slideCaption{JACK}
+
+
+
+\begin{document}
+
+\maketitle
+
+\overlays{3}{
+\begin{slide}{Google on ``mobile phone games''}
+\untilSlide{2}{
+Welcome to Imserba\bigskip\\
+
+The best mobile phones portal and community in the world
+Mobile phones Portal and Community\bigskip\\
+
+Imserba brings you the latest mobile phones related \\
+news, informations, stuffs you need for your phones. \\
+No matter which phone you are using: Nokia, Sony\\
+erricson, Siemens, Samsung, Motorola or anything\\ 
+else, here you can find our best collection of ring- \\
+tones, cell phone games, themes, screensavers,\\
+backgrounds.}
+\FromSlide{2}
+\vspace*{-14em}\\
+\begin{center}
+\includegraphics[width=4cm]{beestje.ps}
+\end{center}
+\FromSlide{3}
+\begin{center}
+\Red{Are you sure that you can trust these applications?}
+\end{center}
+\end{slide}
+}
+
+\begin{slide}{Security for trusted personal devices}
+\begin{itemize}
+\item \Blue{Trusted personal devices:} phones, smart cards, pda's, set
+top boxes, \dots
+\item Used for security-sensitive applications
+\item Network connected
+\item Support for complex applications (contain a full JVM)
+\item Shift from hardware attacks to logical attacks
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Guaranteeing security}
+\begin{itemize}
+\item Formal specification and verification
+\item Java Modeling Language (JML) able to express security properties
+\item Classical program calculi can be used
+\item Large body of theory on sound modular verification
+\item Proof Carrying Code paradigm
+\end{itemize}
+\end{slide}
+
+\overlays{5}{
+\begin{slide}{But how to convince developers do this?}
+\begin{itemstep}
+\item Seamless integration in standard development environment
+\item Small overhead in specification writing: annotation generation
+\item Verification conditions automatically generated, proven by
+automatic theorem prover
+\item Reasoning at source code \emph{and} at bytecode level
+\item Advanced support for difficult tasks (like interactive proving)
+\end{itemstep}
+\end{slide}
+}
+
+\begin{slide}{JACK: Java Applet Correctness Kit}
+\vspace*{-1.5em}
+\begin{center}
+\includegraphics[height=\textheight]{toolset.eps}
+\end{center}
+\end{slide}
+
+\begin{slide}{History of JACK}
+\begin{itemize}
+\item Development started at Gemplus (Jan 2002 to April 2003)\\
+Objective: Give developers tools that help them to provide and be
+accountable for a certain quality level of their code
+\begin{itemize}
+\item Conform to specification requirements
+\item Well-documented
+\item Without bugs
+\end{itemize}
+\item Transfered to INRIA (September 2003)
+\begin{itemize}
+\item Correctness stays major concern
+\item More features \& plugins
+\end{itemize}
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Features of JACK}
+\begin{itemize}
+\item Tight integration with IDE Eclipse
+\item JML used as annotation language
+\item Different means of validation possible
+
+\item Special JACK view for verification condition browsing
+\item Propagation of annotations, based on implementation of
+verification condition generator
+\end{itemize}
+\end{slide}
+
+\begin{slide}{And more features of JACK}
+\begin{itemize}
+\item JML specifications compiled into BML (Bytecode Modeling Language)
+\item Support for verification of bytecode 
+\item Support for Simplify (automatic) and Coq (interactive) prover
+\end{itemize}
+\end{slide}
+
+\part{Integration with Eclipse}
+\begin{slide}{Developing an application in Eclipse}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen1.ps}
+\end{slide}
+
+\begin{slide}{Using Simplify}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen2.ps}
+\end{slide}
+
+\begin{slide}{Proof obligation viewer}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen3.ps}
+\end{slide}
+
+\begin{slide}{Reasoning with method calls}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen4.ps}
+\end{slide}
+
+\begin{slide}{Reasoning about exceptions}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen5.ps}
+\end{slide}
+
+\begin{slide}{Proof obligations}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen6.ps}
+\end{slide}
+
+\begin{slide}{Proof obligations in Coq}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen7.ps}
+\end{slide}
+
+\begin{slide}{Proof obligations in Simplify}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen8.ps}
+\end{slide}
+
+\part{Annotation generation}
+
+\begin{slide}{The cost of writing annotations}
+\begin{itemize}
+\item Annotation writing labour-intensive and error-prone
+\item Much time spend on specifying obvious properties
+\item Annotations for a simple security property often scattered
+through the code
+\item For static verification, method specifications need to be
+relatively complete
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Runtime checking vs. static verification}
+\begin{itemize}
+\item Method \Blue{m} has specification: 
+\Blue{requires P; ensures Q}
+\item Method \Blue{n} calls method \Blue{m}\\
+\item \Red{Runtime checking}: at all calls to \Blue{m} the specification is
+tested
+\item \Red{Static checking}: if \Blue{n} does not establish \Blue{P}, it
+needs to be propagated\\ Specification for \Blue{n}:
+\Blue{requires P}
+\item If \Blue{n} does not invalidate \Blue{Q}, it can be
+propagated
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Annotation generation in JACK}
+\begin{itemize}
+\item Precondition generation to avoid nullpointer exceptions and
+array index out of bound exceptions
+\item Assignable clause generation
+\item Annotation generation to capture security properties, with
+annotation propagation
+\item Implementation uses weakest precondition implementation:
+annotations are extracted from generated verification conditions
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Generation of preconditions and assignable clauses}
+\includegraphics[width=\textwidth]{screen9.ps}
+\end{slide}
+
+\begin{slide}{Assertion generation}
+Two phases:
+\begin{itemize}
+\item \Blue{synthesising} core-annotations
+\item \Blue{weaving} annotations throughout the application
+\end{itemize}
+\ \smallskip\\
+\Blue{Synthesising}: for each property annotations have to be defined
+\bigskip\\
+\Blue{Weaving}: algorithm for pre- and postcondition generation\\ \ \\
+\end{slide}
+
+\begin{slide}{Example core-annotations}
+\Red{No nested transactions}
+\begin{alltt}
+\Blue{\textbf{/*@ static ghost int TRANSACT == 0; @*/}}
+\end{alltt}
+\ \smallskip\\
+Method \textttbf{beginTransaction}
+\begin{alltt}
+\Blue{\textbf{/*@ requires TRANSACT == 0;
+  @ assignable TRANSACT;
+  @ ensures TRANSACT == 1; @*/}}
+\textbf{public static native 
+   void beginTransaction() 
+        throws TransactionException;}
+\end{alltt}
+\ \smallskip\\
+Similar annotations for \textttbf{commitTransaction},
+\textttbf{abortTransaction} \\ \
+\end{slide}
+
+
+\begin{slide}{Preconditions for methods}
+\begin{alltt}
+\textbf{public void m() \{
+   ...
+   \Blue{// will require TRANSACT == 0}
+   JCSystem.beginTransaction();
+   \Blue{// TRANSACT modified} 
+   \Blue{// ensures TRANSACT == 1}
+   ...
+   \Blue{// will require TRANSACT == 1}
+   JSSystem.commitTransaction();
+   \Blue{// TRANSACT modified} 
+   \Blue{// ensures TRANSACT == 0}
+   ...
+   \}}
+\end{alltt}
+\end{slide}
+
+\begin{slide}{Results}
+\begin{itemize}
+\item Tested on several realistic smart card applications
+\item One core-annotation can give rise to many annotations in
+different classes (26 annotations, spread over 5 different classes)
+\item Several violations found: uncaught exceptions possible within
+transactions 
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Uncaught exception within transaction}
+\begin{alltt}
+\textbf{void appExchangeCurrency(...) \{
+   ...
+   \Blue{/*@ exsures (Exception) TRANSACT == 0; @*/} \{
+      ...
+      JCSystem.beginTransaction();	
+      try \{balance.setValue(decimal2);
+            ...
+      \} catch (DecimalException e) \{
+         ISOException.throwIt(
+              PurseApplet.OVERFLOW);
+      \}
+      JCSystem.commitTransaction();
+   \}
+   ...\}}
+\end{alltt}
+\end{slide}
+
+\part{Support for bytecode}
+\begin{slide}{Proof carrying code}
+\begin{itemize}
+\item Code producer 
+ \begin{itemize}
+ \item develops application and builds evidence for its correctness 
+ \item ships application and evidence 
+ \end{itemize}
+\item Code client  
+ \begin{itemize}
+ \item generates verification conditions for the application
+ \item checks that the evidence is a proof for the verification
+conditions  
+ \end{itemize}
+\end{itemize}
+\end{slide}
+
+\begin{slide}{A framework for verification of bytecode}
+ \begin{itemize}
+ \item Bytecode Modeling Language (BML)
+ \item Compiler from JML to BML
+ \item Verification condition generator
+ \item Equivalence with source code verification
+ \end{itemize}
+\end{slide}
+
+
+\begin{slide}{BML}
+ \begin{itemize}
+ \item Follows closely the syntax and semantics of JML
+ \item Expression language extended with bytecode specific constructs
+(constant pool indexes, local variables, stack counter, stack 
+expressions)
+ \item Structural and type checking, \`a la BCV
+ \item Encoding in class file format
+  \begin{itemize}
+   \item Java compiler independent 
+   \item JVM compatibility: user-specific attributes, indexing to
+relevant program point
+   \item Efficiency of JVM not affected
+  \end{itemize}
+ \end{itemize}
+\end{slide} 
+
+\begin{slide}{Example: quicksort}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen13.ps}
+\end{slide}
+
+\begin{slide}{Generated class file}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen10.ps}
+\end{slide}
+
+\begin{slide}{Method specification in BML}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen11.ps}
+\end{slide}
+
+\begin{slide}{Loop specification in BML}
+\vspace*{-1.5em}
+\includegraphics[height=\textheight]{screen12.ps}
+\end{slide}
+
+
+
+
+
+\begin{slide}{JML to BML compiler}
+ \begin{itemize}
+ \item Input:
+ \begin{itemize}
+  \item Source file annotated with JML 
+  \item Corresponding class file, decorated with
+\textbf{Local\_Variable\_Table} and \textbf{Line\_Number\_Table} 
+ \end{itemize}
+ \item Steps:
+ \begin{itemize}
+  \item Declarations of ghost and model fields
+  \item Linking 
+  \item Locating indexes for annotation statements
+  \item Compilation of JML predicates
+  \item Generation of user-specific class attributes
+ \end{itemize}
+ 
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Verification condition generator}
+\begin{itemize}
+ \item Covers the most important feature of 
+ Java - object manipulation and creation, exceptions, 
+method invocations, arithmetic, stack manipulation etc.
+ 
+ \item Contract-based approach
+ \item Uses frame conditions for generation of tractable and provable
+verification conditions
+ \item Proven sound under the hypothesis that the control flow graph is reducible
+\end{itemize}
+\end{slide}
+
+ 
+\begin{slide}{Relation between proof obligations on source and bytecode}
+\begin{itemize}
+\item Assumptions:
+ \begin{itemize}
+ \item non-optimising compiler 
+ \item compiler produces reducible control flow graphs
+ \item compiler preserves exception handling
+ \end{itemize}
+
+\item Equivalence proven modulo:
+ \begin{itemize}
+ \item names - Java names are compiled into indexes of the constant pool or elements in the method's local variable table
+ 
+ \item types - Java types integer, short, byte and boolean are
+ compiled into integers
+ 
+ \end{itemize}
+\end{itemize}
+\end{slide}
+
+\part{Support for interactive verification}
+
+\begin{slide}{Specification and verification of complex properties}
+\begin{itemize}
+\item For complex properties, automatic verification often not
+sufficient 
+\item Such properties often use advanced specification techniques
+(JML model features)
+\item Interactive prover support necessary: \Blue{Coq}
+\item Introduction of \Blue{native} construct to bridge gap between
+JML models and logic of theorem prover
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Coq}
+\begin{itemize}
+\item Based on \Blue{calculus of inductive constructions}
+\item Can express types, axioms, functions, variables, definitions,
+lemmas \dots
+\item Lemmas have to be proved, by building \Blue{proof term} out of
+the types, axioms, variables etc.
+\item \Blue{Tactics}: special commands called within a proof script
+\item \Blue{Custom tactics} can be created from more primitive ones
+\item Coq can easily express the logics for Jack
+\end{itemize}
+\end{slide}
+
+
+\begin{slide}{POs generated by Jack}
+\begin{itemize}
+\item Each hypothesis comes with \Blue{hints} about its origin
+\begin{itemize}
+\item Useful information for proof script 
+\item Separation of hypotheses
+\item Nearly human readable
+\end{itemize}
+\item Uses Coq's \Blue{pretty printing} 
+\item Tactics for cleaning and proving
+\begin{itemize}
+\item Achieves some level of automation
+\item Simplify is better for automatic proving
+\item But Coq proves (interactively) proof obligations that Simplify
+cannot handle
+\end{itemize}
+\end{itemize}
+\end{slide} 
+
+\begin{slide}{ProverEditor}
+\begin{itemize}
+\item \Blue{Syntax highlighting}
+ for both Coq file and proof view window
+\item Same \Blue{keyboard shortcuts} as CoqIde
+\item Full integration within Eclipse
+  \begin{itemize}
+  \item No weird pop-up except if user wants to use another editor
+  \item Management of proof files is easier
+  \end{itemize}
+  
+\item Also usable with ESC/Java
+\item Handles of \Blue{large} files ($>$ 1 Mo)
+\end{itemize}
+\end{slide}
+
+\begin{slide}{What it looks like}
+\vspace*{-1.5em}
+\begin{center}
+\includegraphics[height=\textheight]{screen14.ps}
+\end{center}
+\end{slide}
+
+\overlays{2}{
+\begin{slide}{Specifications of complex properties: use of pure methods}
+\begin{itemize}
+\item A method is \Blue{pure} when it has no visible side effect
+\item Pure methods can be used in specifications
+%\begin{tabbing}
+% /*\=@ \Blue{requires} true;\+\\
+%   @ \Blue{ensures} $\backslash$result == ((tab != null) \&\& (i $>=$ 0) \&\& (i $<$ tab.length));\\
+%   @*/\-\\
+% public\= /*@ \Blue{pure} @*/ boolean withinBounds(Object[] tab, int i) \{\\
+% 	\>return (tab != null) \&\& (i $>=$ 0) \&\& (i $<$ tab.length);\\
+% \}\\
+% \end{tabbing}
+\item \Blue{Model methods} are pure methods that exist only for
+specifications 
+\item Complicates verification: specification of pure method has to be
+used 
+\item Our approach: define the pure method in Coq in directly
+\end{itemize}
+\FromSlide{2}
+\begin{center}
+\Blue{Native specifications}
+\end{center}
+\end{slide}
+}
+
+
+
+\begin{slide}{Native methods}
+\begin{itemize}
+\item In JML:
+\begin{alltt}
+//@ public \Blue{native} boolean 
+       withinBounds(Object[] tab, int i);
+\end{alltt}
+\item In the Coq file user\_extensions.v:
+\begin{alltt}
+\Blue{Definition} withinBounds : 
+  Reference \(\rightarrow\) 
+  (Reference \(\rightarrow\) t\_int \(\rightarrow\) Reference)\(\rightarrow\)  
+  t\_int \(\rightarrow\) bool := 
+\Blue{fun} tab intelements value \Blue{=>} 
+    and (tab != null) (and (0 <= value) 
+    (value < (arraylength tab))).
+\end{alltt}
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Native types}
+\begin{itemize}
+\item To express complex properties, advanced datatypes useful
+\item Easily defined in Coq, not in JML
+\item \Blue{Native types}: \\
+Coq types in JML: 
+\begin{alltt}
+//@  public \Blue{native} class ObjectSet; 
+\end{alltt}
+In the Coq file user\_extensions.v:
+\begin{alltt}
+  \Blue{Definition} ObjectSet : set Reference.
+\end{alltt}
+\end{itemize}
+\end{slide}
+
+\begin{slide}{What are native types?}
+\begin{itemize}
+\item Native types are not standard Java/JML class types:
+\begin{itemize}
+\item Do not inherit from Object
+\item No constructors
+\item No casts
+\item No instance creation
+\end{itemize}
+\item Native types are \Blue{functional type}: 
+\begin{itemize}
+\item Modifiers are `static'
+\item Modifiers create new objects 
+\end{itemize}
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Example: set library}
+We can define a Coq set library to use in annotations\\
+
+In JML we \Blue{declare}:
+\begin{alltt}
+/*@ public native class ObjectSet \{
+  @ public native static ObjectSet 
+              \Blue{create}();
+  @ public native static ObjectSet 
+  @           \Blue{add}(ObjectSet os, Object o);
+  @ public native boolean 
+              \Blue{member}(Object o);
+  @ public static native ObjectSet 
+  @           \Blue{toSet}(Object [] tab);
+  @ \}
+  @*/
+\end{alltt}
+\end{slide}
+
+\begin{slide}{Example: set library}
+In Coq we \Blue{define}:
+\begin{alltt}
+Definition \Blue{ObjectSet} := set Reference. 
+Definition \Blue{ObjectSet\_create} := 
+                     empty\_set.
+Definition \Blue{ObjectSet\_add} 
+                     (os: ObjectSet) 
+                     (o: Reference) :=  
+                     set\_add o os.
+Definition \Blue{ObjectSet\_member} 
+                     (this: ObjectSet) 
+                     (o: Reference) := 
+                     set\_mem o this
+\end{alltt}
+\end{slide}
+
+\begin{slide}{To conclude...}
+\end{slide}
+\end{document}
