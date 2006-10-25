@@ -3,8 +3,8 @@
 Since the beginning of programming languages, the problem of program correctness has been an issue. 
 Especially, this is the case today when complex software applications  enter into our daily life and perform actions 
 which may potentially compromise confidential data (credit cards) or the performance of the
- computer system they are executed on (installing malicious software applications on a PC, for instance). 
-Also, errors in software conception may have disastrous effects, for instance 
+ computer system they are executed on (e.g. installing software which may format the hard disk of our PC).
+Also, errors in software conception may have disastrous effects, for instance
 the explosion of Ariane 5 due to an undertesting. Software correctness
  plays a crucial role in the overall software quality  in cases the latter take part in the automatic 
 control of engines which may put in danger lives, like airplanes or subways.
@@ -48,6 +48,7 @@ Using program logic for verifying programs  relies on:
 
  The field of formal  verification is well studied and several  tools exist for
 dealing with  source verification using program logic. We should mention in the list of the verification tools tailored to source languages
+the Caveat\footnote{http://www-list.cea.fr/labos/fr/LSL/caveat/index.html} verification framework  for C,
  Caduceus\footnote{http://why.lri.fr/caduceus/index.fr.html} for C,  the extended static checker
 esc/java \cite{escjava}, the Loop tool \cite{jacobs03java},
 Krakatoa \cite{marche03krakatoa}, Jack \cite{BRL-JACK}, etc. These tools are tailored to a source language and thus,
@@ -73,12 +74,19 @@ against potentially non trivial functional and security properties. The framewor
  specific hardware and since it features security mechanisms which
  guarantee the innocuousness of downloaded applications. 
  For instance, smart card applications are relying on the Java framework and
- more particularly on JavaCard, a dialect of Java tailored to small devices. 
-%Java bytecode verification does becomes 
+ more particularly on JavaCard, a dialect of Java tailored to small devices.
+ Such devices, however, impose  security restrictions  to the software components  they run for which platforms like Java do not provide 
+ a mechanisms for their guarantee, e.g. preserving of confidentiality and limitted use of computational resources. Moreover,
+ the new generation of smart card platforms where installation of  software components after the card has been issued is possible, opens new security problems.
+ Another example is the J2ME (which stands for Java 2 Micro Edition) which is widely used in mobile phone software industry.
+ Mobile phone users benefit today from the possibility to install new software components on the phone system by the wireless net, however no mechanisms are provided by the system 
+ for checking that the newly installed applets does not break the intrenal invariants of the system.
+
 
    \section{Contributions}
-We propose a framework which allows the verification of bytecode programs against complex functional and safety properties, which has the following 
-components.
+   We propose a framework which allows the verification of bytecode programs against complex
+   functional and safety properties, which has the following 
+   components.
 \begin{description}
      \item [Bytecode Modeling Language] 
          
@@ -134,13 +142,7 @@ components.
 	 proved the bytecode and the certificate (the proof of the verification conditions) produced over the source
 	 can be shipped  to the client.
 
-	 A natural continuation of the present ideas is putting together the bytecode verification condition generator, 
-	 the  BML language and the equivalence between source and bytecode verification conditions into a Proof Carrying Code framework for complex policies.
-	 In such a framework, the client
-	 will, as usual, rely  on the bytecode verification condition generator and  the certificate sent by the client. 
-	 However, differently from the existing schemes for PCC, the producer site will generate \textit{interactively} the certificate (formal proof) 
-	 over the \textit{source code}. This is motivated by the fact that the client policies may be non trivial and making an interactive proof over the source
-	 code will make finding the proof realistic.
+
 \end{description}
 
 
@@ -153,7 +155,15 @@ as it does not compromise the compiler. This work was published in \cite{gmg05:s
 We have also shown how bytecode verification can be applied to  bytecode to native compiler optimizations. Because the verification is performed
 on bytecode, we can relate verification conditions to the particular program point to which they refer. This helps to identify
 the program points which can be optimized. This gave issue to the publication \cite{DBLP:conf/cardis/CourbotPGV06}. 
+	 
 
+A natural continuation of the present ideas is putting together the bytecode verification condition generator, 
+	 the  BML language and the equivalence between source and bytecode verification conditions into a Proof Carrying Code framework for complex policies.
+	 In such a framework, the client
+	 will, as usual, rely  on the bytecode verification condition generator and  the certificate sent by the client. 
+	 However, differently from the existing schemes for PCC, the producer site will generate \textit{interactively} the certificate (formal proof) 
+	 over the \textit{source code}. This is motivated by the fact that the client policies may be non trivial and making an interactive proof over the source
+	 code will make finding the proof realistic.
 \section{Related techniques}
 
 There exists different techniques for establishing that a program respects certain condition. Here, we make a brief review:

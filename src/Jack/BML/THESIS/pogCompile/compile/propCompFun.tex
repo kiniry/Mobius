@@ -102,7 +102,7 @@ The next lemma states that the compilation of an expression $\expressionSrc$ res
 The following two statements concern the loops on bytecode and source. 
 In particular, we want that a cycle appears in the compilation of a statement  $\stmt$  only if it contains a loop.
 For instance, we can  see in Fig. \ref{pogEquiv:compile:prop} that the unique cycle in the bytecode corresponds to the source loop and that the 
-instruction marked with \lstinline!LOOP END! and the instruction marked with \lstinline!LOOP START! correspond respectively to the end instruction   in the 
+instruction marked with \lstinline!LOOP END! and the instruction marked with \lstinline!LOOP ENTRY! correspond respectively to the end instruction   in the 
 compilation of the source loop body   and to start instruction in the compilation of the compilation of the \lstinline!while! test. 
 Stated formally, we get the following property. 
 
@@ -261,12 +261,10 @@ For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox
 \findExcHandler{\mbox{\rm\tt{Exc}} }{7}{\lstinline!abs!.\ExcHandler}. 
 
 \begin{compProp}[Exception handler property for statements]\label{compile:prop:compProp8}
- Let us have a statement $\stmt$ which is not a try catch statement  neither a try finally statement in method \methodd. Assume that 
+ Assume that we have a statement  $\stmt$  which is not a try catch  neither a try finally statement in method \methodd. Assume that 
   statement $\stmt'$ is its direct substatement, i.e. 
-$\strictsubstatement{\stmt}{\stmt'} $. Let 
- their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then for every exceptional type \mbox{\rm\tt{Exc}} 
-if instruction $e$ throws an exception of type \mbox{\rm\tt{Exc}} or  instruction $e'$ throws an exception of type \mbox{\rm\tt{Exc}},
-the same exception handler will treat the exception, i.e.
+$\strictsubstatement{\stmt}{\stmt'} $. 
+Then the exception handlers for the instruction points $e$ and $e'$ are the same:
 $$ \begin{array}{l}
           \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = 
 	 \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 

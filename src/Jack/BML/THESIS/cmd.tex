@@ -118,7 +118,8 @@
 
 
 % abstractCtrlFlow.tex
-\newcommand{\execRel}{ \ \mbox{\rm\textit{succ}} \ } % the execution relation
+\newcommand{\execRel}{\mbox{\rm\textit{succ}}} % the execution relation
+\newcommand{\execRelLoop}{\mbox{\rm\textit{succ}}^{backedge}}
 \newcommand{\blockm}[1]{ \tt{b^{#1}} }
 \newcommand{\blockSeq}[1]{ \tt{b_{seq}^{#1}} }
 \newcommand{\pathm}[2]{\blockm{#1} \execRel^{*} \blockm{#2} }

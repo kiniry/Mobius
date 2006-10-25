@@ -94,15 +94,20 @@ public void m(int k){
  It is worth first to note that because the bytecode is not structured we cannot define
  the weakest precondition in the same way in which a predicate transformer for structured
  languages is defined.  
- We will rather  define the predicate transformer for an instructions to depend on
- the instructions which may follow it during an execution:  
-$$\fwpi( j ) = \bigwedge_k  C_k \Rightarrow S_k(\fwpi( k )) , where  \ j \execRel k $$
-$C_k$ stands for some condition to be filled in order that after the execution of instruction at index $j$ the instruction at index $k$ is executed.
- In most of the cases the condition $C_k$  is \Mytrue{} except for conditional jumps or when the instruction  $j$ throws an exception.
-$S_k$ stands for a function which might be the identity function or a function which applies substitutions over its argument.
+ We will rather  define the predicate transformer for  instructions that may have one possible successor to depend on
+ this successor:
+$$\fwpi( j ) =  S_k(\fwpi( k )) , where  \ j \execRel k $$
 
-Thus the weakest precondition for the instruction at index 12 (in the bytecode version) which is a conditional jump  
-of the program will be:
+where $S_k$ stands for a function which might be the identity function or a function which applies some substitution over its argument.
+ We would do similarly for instructions that may branch - instructions which may jump (\goto{} and \ifCond{}) as well as instructions
+ which may throw an exception (e.g. \putfield, \arrstore), but this time the predicate transformer for them depends on all of its successors:
+$$\fwpi( j ) = \bigwedge_k  C_k \Rightarrow S_k(\fwpi( k )) , where  \ j \execRel k $$
+The predicates $C_k$ stand for some condition to be filled in order that after the execution of instruction at index $j$ the instruction at index $k$ is executed.
+Note that here, in this example, we are using a loose notation for \wpName{}  function, as we only depends here on one parameter, namely the index
+of the instruction for which we calculate the weakest precondition.
+
+Returning back to our example in Fig. \ref{wp:example:sum}, the weakest precondition for the instruction at index 12 (in the bytecode version) 
+which is a conditional jump  of the program will be:
 $$ \begin{array}{ll} \fwpi( 12 )  = & 
                       \stack{\counter - 1} < \stack{\counter} \Rightarrow   \fwpi(13) \subst{\counter}{\counter - 2} \\
                       &\wedge \\
@@ -124,7 +129,8 @@ $$ \begin{array}{ll} \fwpi( 9 )  = &
 
 
 The situation is  similar  for the instruction at index 4 which jumps to the loop entry instruction at index 10. 
-The semantics of the invariant requires that  in between instructions 4 and 10 first the invariant must hold
+The semantics of the invariant requires that  in the state after the execution of instruction at index 4 and before the execution 
+of the instruction at index 10 the loop invariant must hold
 and second,  whatever are the values
 of the program variables that might be modified by the loop, the invariant should imply the precondition of the loop entry instruction at 10.
  Thus we would like that  the function \fwpi{} gives us something like: 
@@ -147,8 +153,7 @@ for which it calculates a precondition and also on the execution relation it has
 In order to define the function \fwpi{} we will use an intermediate function which shall decide 
 what is the postcondition of an instruction  upon the execution relation with its successors. This function 
 is introduced in the next subsection \ref{wp:interPred}.
- 
-We will also see how the weakest precondition is defined in the presence of exceptions in subsection \ref{wp:Exc}.
+ We will also see how the weakest precondition is defined in the presence of exceptions in subsection \ref{wp:Exc}.
 
 
 

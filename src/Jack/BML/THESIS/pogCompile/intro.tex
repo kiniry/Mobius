@@ -6,28 +6,28 @@ language and the verification conditions generated for the bytecode language
 as defined in Chapter \ref{wpGeneral}. More particularly, we 
 argue that they are syntactically equivalent if the compiler is nonoptmizing and satisfies certain 
 conditions.
-  
+ 
 
-% motivation
-% 1. security involves more and more complex policies
-% 2. evolution of the techniques 
-First, we would like to give the 
-context and motivations for studying the relationship 
-between source and bytecode verification.
+As we have already discussed in the introductory part of the thesis, the traditional PCC framework 
+and the certifying compiler are limited to decidable properties like well-typedness of the code
+or safe access to the memory. This is due to the fact that traditional PCC relies on a completely automation.
 
 
- Security becomes an important issue for the overall software quality.
-This is especially the case for mobile code or what so ever untrusted code. 
-A solution  proposed by G.Necula (see his thesis \cite{ComNec}) 
-is the PCC framework which brings the possibility to a  code receiver to 
-verify if an unknown code  or untrusted code respects certain safety conditions before being executed by the code receiver.
-In this framework the code client annotates the code automatically, generates verification conditons automatically
- and proves them automatically.
-The  program accompanied by the proof  is sent to the code receiver  who will typecheck the proof against 
-the verification conditions that he will generate.
-Because of its full automation this architecture fails to deal with complex functional or security properties.
+% First, we would like to give the 
+%context and motivations for studying the relationship 
+%between source and bytecode verification.
 
 
+% Security becomes an important issue for the overall software quality.
+%This is especially the case for mobile code or what so ever untrusted code. 
+%A solution  proposed by G.Necula (see his thesis \cite{ComNec}) 
+%is the PCC framework which brings the possibility to a  code receiver to 
+%verify if an unknown code  or untrusted code respects certain safety conditions before being executed by the code receiver.
+%In this framework the code client annotates the code automatically, generates verification conditons automatically
+% and proves them automatically.
+%The  program accompanied by the proof  is sent to the code receiver  who will typecheck the proof against 
+%%the verification conditions that he will generate.
+%Because of its full automation this architecture fails to deal with complex functional or security properties.
 The relation of the verification conditions over bytecode and source code can be used for building an
  alternative PCC architecture which can deal with complex security policies. Note that in case of a non-trivial 
 security policy neither an automatic inference of the specification, nor an automatic generation 
@@ -35,13 +35,13 @@ of the proof will be possible.
 In those cases, such an equivalence can be exploited by the code producer to generate
  the certificate interactively over the source code. Because of the
 equivalence between the proof obligations over source and bytecode programs (modulo names and types), 
-their  proof certificates are also the same and thus the certificate generated interactively over the
+their  proof certificates are also the same and thus, the certificate generated interactively over the
  source code can be sent along with the code.   
 
 
 In the following, Section \ref{compile} presents a simple non optimizing compiler from the source language presented in Chapter \ref{javaVerif}, Section \ref{source}
  to the bytecode language presented in Chapter \ref{opSem:prelim}, Section \ref{opSem}. In the section, we will also discuss certain properties of the 
-compiler which are necessary conditions for establishing the equivalence between the verification conditions over  source programs produced
+compiler that we define which are  conditions sufficient for establishing the equivalence between the verification conditions over  source programs produced
 by the calculus presented in Chapter  \ref{javaVerif},  Section \ref{pog:wpSrcGeneral} and 
 the verification conditions over the source compilation into bytecode produced by the calculus presented in Chapter \ref{wpGeneral}.
  Finally, Section \ref{pog:relWork} presents an overview of existing work in the field.

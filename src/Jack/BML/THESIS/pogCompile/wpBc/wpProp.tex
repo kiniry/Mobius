@@ -326,7 +326,7 @@ Proof : the proof is  by structural induction on the compilation of a statement 
                                                                \Mythen \ \{ \stmt_1 \}   
 							       \Myelse \ \{ \stmt_2 \}  }{\psi}{\excPostExpl} = \\
 							       
-	%\begin{array}{l} 
+	
 	 \wpSrcExpr{ \expressionSrc_1 }{  \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2} 
 	 } { \excPostSrc }{v_1} \\
 	 with  \phi' = \begin{array}{l}  
@@ -335,7 +335,7 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 			    v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
 	               \end{array}
 	 \\\\
-     %\end{array}  
+     
 			\comment{definition of the compiler} \\\\
 	\numConclusion{2} \  
 	\compileLabel{s}{\Myif \ (\expressionSrc_1 \ \rel \ \expressionSrc_2 ) 

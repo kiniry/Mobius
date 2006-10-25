@@ -52,7 +52,7 @@ initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly 
   
   then : 
  \begin{itemize}
-         \item if  $ \ins{\pc_n} \neq \return $ and the instruction does not terminate on exception,
+         \item if  $ \ins{\pc_n} \neq \return $ and the instruction does not terminate on exception,\\
 	      $ s_{n+1} = \config{\heap_{n+1} }{\counterOnly_{n+1} }{ \stackOnly_{n+1}}{\locVarOnly_{n+1} }{ \pc_{n+1} }  $
 	       then  $ \interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}}  $   holds 
         \item if  $ \ins{\pc_n} = \return $ then  $ \interp{\methodd.\normalPost}{s_{n+1}}  $   holds
