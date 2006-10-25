@@ -7,29 +7,11 @@ TestList.java:143: Warning: Possible assertion failure (Assert)
 TestList.java:164: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-TestList.java:183: Warning: Precondition possibly not established (Pre)
-            assertTrue (b);   // FIXME
-                       ^
-Associated declaration is "./LocalTestCase.java", line 19, col 6:
-  //@ requires b;
-      ^
-Execution trace information:
-    Routine call returned exceptionally in "TestList.java", line 178, col 11.
-
 TestList.java:186: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
 Execution trace information:
     Routine call returned exceptionally in "TestList.java", line 178, col 11.
-
-TestList.java:204: Warning: Precondition possibly not established (Pre)
-        assertTrue (b);
-                   ^
-Associated declaration is "./LocalTestCase.java", line 19, col 6:
-  //@ requires b;
-      ^
-Execution trace information:
-    Routine call returned exceptionally in "TestList.java", line 198, col 11.
 
 TestList.java:215: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
@@ -79,4 +61,4 @@ TestList.java:371: Warning: Possible assertion failure (Assert)
 TestList.java:401: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-13 warnings
+11 warnings
