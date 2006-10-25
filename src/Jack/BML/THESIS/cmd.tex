@@ -189,10 +189,12 @@
 \newcommand{\valueAtState}[2]{\it{val}_{#1}(#2)}
 
 \newcommand{\stateTrans}{\hookrightarrow}
-\newcommand{\stateTransWeight}[1]{\stateTrans_{\mbox{\rm\texttt{#1}}}}% execution relation with weights for the correctness
+\newcommand{\stateTransWeight}[1]{\stateTrans_{\level{#1}}}% execution relation with weights for the correctness
 \newcommand{\stateTransTerm}{\Downarrow}
 \newcommand{\stateTransTransClos}[1]{\longleftarrow_{#1}}
-\newcommand{\stateTransTermWeight}[1]{\Downarrow_{\mbox{\rm\texttt{#1}}} }
+\newcommand{\stateTransTermWeight}[1]{\Downarrow_{\level{#1}} }
+\newcommand{\level}[1]{\mbox{\rm\texttt{#1}}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%STATE CONFIGURATION%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -269,7 +271,7 @@
  \newcommand{\clazz}{\mbox{\rm \textit{C}}}
  \newcommand{\fieldd}{\mbox{\rm \textit{f}} }
  \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
-
+ \newcommand{\methodt}{\mbox{\rm \texttt{n}}}
  %%%%%%%%%%%%%%%%%Class attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
  \newcommand{\fields}{\mbox{\rm \textsf{fields}}}
  \newcommand{\methods}{\mbox{\rm \textsf{methods}}}
@@ -712,3 +714,8 @@
 \newcommand{\lookupTwoLines}[4]{\mbox{\rm\textit{lookUp}}(\begin{array}{l}#1,#2,\\ \Myspace #3,#4 \end{array})}
 \newcommand{\findMethod}[4]{\mbox{\rm\textit{findMethod}}(#1,#2,#3,#4)} 
 \newcommand{\findMethodOnly}{\mbox{\rm\textit{findMethod}}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5Establishing vcgen correctness%%%%%%%%%%%%%%%%%%%%
+\newcommand{\methOrder}{\prec} % order over methods : m is smaller than n if m can be called by n
+\newcommand{\Program}{\mbox{\rm\texttt{P}}}
