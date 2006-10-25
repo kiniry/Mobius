@@ -175,12 +175,12 @@ public class TestList extends LocalTestCase {
         assertTrue (b);       
 
         try {
-	    b = c.retainAll(null);
+	    b = c.retainAll(null); // Throws exception
             assertTrue( false);
         } catch (Exception e) {
             assertTrue( e instanceof NullPointerException);
 	    b = c.contains(i);
-	    assertTrue (b);   // FIXME
+	    assertTrue (b);
         }
 
 //@ assert false; // TEST FOR CONSISTENCY
@@ -195,7 +195,7 @@ public class TestList extends LocalTestCase {
         c.add(i);
 
         try {
-	    b = c.removeAll(null);
+	    b = c.removeAll(null); // Throws exception
             assertTrue( false);
         } catch (Exception e) {
             assertTrue( e instanceof NullPointerException);
