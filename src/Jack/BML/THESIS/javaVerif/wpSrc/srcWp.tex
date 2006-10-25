@@ -2,9 +2,13 @@
 
 
 \section{Weakest predicate transformer for the Java like source language } \label{pog:wpSrcGeneral}
-
-The weakest precondition calculates  the predicate weakest precondition predicate $WP$  statement $\stmt$ in method \methodd \ from our source language,
-for any normal postcondition $\normalPostSrc$ and exceptional postcondition function $\excPostSrc$, 
+We proceed here with the presentation of the weakest predicate transformer function. We would like first to remark
+that our predicate transformer deals both with normal and exceptional termination of programs and thus, the predicate transformer
+takes as arguments a statement  $\stmt$, a normal postcondition 
+$\normalPostSrc$ and an exceptional postcondition function  $\excPostSrc$.
+Before entering into more technical details let us see what is the intended meaning of the predicate $WP$ that 
+should be calculated by a weakest predicate transformer function against  $\stmt$,
+$\normalPostSrc$ and  $\excPostSrc$. The predicate    $WP$ must be 
  such that if it holds in the pre state of $\stmt$ and   if $\stmt$ terminates normally then $\normalPostSrc$  holds in the poststate and
  if $\stmt$ terminates on exception \Exc{} then $\excPostSrc(\Exc)$ holds. 
 The function $\excPostSrc$ \ returns the predicate $\excPostSrc (\mbox{\rm\texttt{Exc}}) $ that must hold in a particular program point if

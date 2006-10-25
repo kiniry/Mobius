@@ -33,7 +33,7 @@ Although this complicates slightly the verification condition generator, the loo
 on weaker specification than a verification condition generator which does not support it. This actually means that the burden of writing specification 
 becomes definitely lighter, as the person which specifies an application must identify not  \textit{the strongest loop invariant }
 but a \textit{loop invariant}. Of course, he should also identify  the locations which are modified by the loop (locations that may have different values 
-at the end and at the beginning of a loop iteration). Note that this last is easier than identifying the variables not modified in the loop which 
+at the end and at the beginning of a loop iteration). Modified locations in a loop is easier than identifying the variables not modified in the loop which 
 must be done if we decide not use loop frame conditions. 
 
 \begin{figure}[ht!]
@@ -125,7 +125,12 @@ $${\scriptsize
        \begin{array}{l} 
 	 \wpSrcStmt{ \stmt_1}{\\ \phantom{wpiSr}
                      \wpSrcStmt{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{wpiSr}
-		     \update{\excPostSrc}{\mbox{\rm\texttt{Exception}}}{ \wpSrcStmt{\stmt_2}{ \excPostSrc( \mbox{\rm\texttt{Exception}}  )}{\excPostSrc}  } }
+		     \update{\excPostSrc}{\Exception}{ \wpSrcStmt{\stmt_2}{ 
+		                                    \begin{array}{l}
+                                                        \EXC \neq \Mynull \Rightarrow \excPostSrc(\Exception) 
+							\wedge\\
+							\EXC = \Mynull \Rightarrow \excPostSrc(\NullPointerExc)
+						     \end{array} } { \excPostSrc }   } }
        \end{array} 
 
 \end{array} } 
@@ -140,15 +145,30 @@ $$
 
 The control statements related to the exception handling and throwing as well as the finally statements
  have a more particular definition. 
-Let us look at the rule \textsf{try catch}.
+Let us look at the rule for \textsf{try catch} statements.
  %Actually, it is similar to the  rule  \textsf{seq} from  Fig. \ref{pog:wpSrc:wpStmt:withoutExc}, but dual in the way the postcondition modifications.
  The weakest predicate of a try catch statement $ \try \ \{ \stmt_1 \} \ $ 
 $\catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} $  w.r.t. a normal postcondition   $\normalPostSrc$  and exceptional postcondition function $ \excPostSrc$
-is the weakest predicate of the try statement $\stmt_1$ w.r.t. the normal postcondition  $\normalPostSrc$  and the updated exceptional function
-$\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }$.
+is the weakest predicate of the try statement $\stmt_1$ w.r.t. the same normal postcondition  $\normalPostSrc$  and the updated exceptional function
+$\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }$. We can see the rule for the 
+\textsf{try catch} statement as  dual to the rule of the  compositional statement where in the latter we rather change the normal postcondition. 
+ 
 
+The  \textsf{try finally} statement is more complicated. It calculates the precondition of the try statement $\stmt_1$ where it takes as normal postcondition
+the precondition of the finally statement $\stmt_2$  calculated upon the initial normal postcondition $\normalPostSrc$ and exceptional postcondition function
+ $\excPostSrc$. This expresses the fact that after the try statement terminates normally the finally statement must be executed and the whole statement will terminate 
+as the finally statement. 
+On the other hand, the exceptional postcondition function passed to the try statement $\stmt_1$ is basically the initial exceptional postcondition function $\excPostSrc$ but updated for the exception
+type \Exception{}. It is updated 
+ with the precondition of the finally statement $\stmt_2$ calculated of the $\wpNameSrcExpr$ which takes as normal postcondition a predicate which we explain in the following.
+The postcondition which must hold in the poststate of  $\stmt_2$  states that   $\excPostSrc(\Exception)$ holds in the normal poststate of $\stmt_2$ if the variable
+\EXC{} which stands for the thrown exception object is not \Mynull. It also states that the if \EXC{} is not \Mynull then the exceptional
+postcondition  $\excPostSrc(\NullPointerExc)$ in case of a thrown \NullPointerExc{} is thrown.
 
-
-
-
-
+ The exception type \Exception{} is the super class of all exception types and thus, 
+an update of the exceptional postcondition function 
+means that for any exception thrown by $\stmt_1$ the exceptional postcondition is actually the precondition of the finally statement $\stmt_2$.
+ This also 
+corresponds to the semantics of \textsf{try finally}  described earlier. In particular, it says that if the try statement terminates on exception \texttt{E}
+the finally statement must be executed. If the finally statement terminates normally, then the  whole statement terminates on exception \texttt{E} and if the finally statement
+terminates on exception  \texttt{E'} then the  whole statement terminates on exception \texttt{E'}.

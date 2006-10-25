@@ -20,8 +20,7 @@
  $\ulcorner  s, \stmt  \urcorner_{\methodd} = ( [\ins{i_s} \ldots \ins{i_e}], e) $.
 
  Although the compiler is realistic, we do not compile variable, class and method names but rather use the same names on bytecode
- and source code. Second, the compiler preserves boolean expressions which is not the case for Java compilers as the JVM language does not support
- the boolean type. Taking into account these facts is not difficult but we have made this choice for the sake of simplicity.
+ and source code. Taking into account these facts is not difficult but we have made this choice for the sake of simplicity.
 
 
 
@@ -57,15 +56,17 @@ $$ \begin{array}{l}
 
 
  We can remark that when the procedure  \addExceptionTableOnly \  adds a new element in the exception handler table the new element is added at the beginning of the 
- exception handler table   \methodd.\excHandlerTable.  This is an important detail which explain why the virtual machine  transfers control to the proper exception
- handler table. This is beacause in our formalization of the virtual machine, the function  \findExcHandlerOnly{}(see Section \ref{opSem:exc})
+ exception handler table   \methodd.\excHandlerTable. This means that the more inner is a try catch statement over a statement 
+ the smaller index it will have in the exception handler table. This is an important detail which explains why the virtual machine  transfers control to the proper exception
+ handler table. This is because in our formalization of the virtual machine, the function  \findExcHandlerOnly{}(see Section \ref{opSem:exc}, page \pageref{opSem:exc})
  returns the first  such index in the exception handler table  \excHandlerTable{} starting the search from its beginning.
 
  What we have been describing up to now  corresponds to the design of a standard Java compiler. However, for the aims of the current section, we
- have to take into account the specification of source statements. In particular, we have seen in the previous section that the syntax for loop statements explicitely
+ have to take into account the specification of source statements. In particular, we have seen in the chapter \ref{javaVerif}  where the 
+ source language was presented,  that the syntax for loop statements explicitely
  mentions the loop invariant and the modified locations in a loop iteration. In order to preserve the loop specification in the bytecode, we provide the compiler with a function 
  \addLoopTableOnly \ which adds  loop specification elements in the loop specification table (the latter has been introduced in
- Chapter \ref{assertLang}, Section \ref{methExtend}). The function has the following signature:
+ Chapter \ref{assertLang} page \pageref{assertLang}, Section \ref{methExtend} page \pageref{methExtend}). The function has the following signature:
  $$ \addLoopTableOnly : \MethodSet  *  nat *  \formulaBc  *  list \ \expression $$
  It  takes as arguments a method \methodd, an index in the array of bytecode instructions $i$ of \methodd, 
  a predicate $\invariant$, a list of modified expressions \modLoop \ 

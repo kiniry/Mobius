@@ -59,11 +59,13 @@ statement where the last instruction  in its compilation is \lstinline!11 store 
 Actually, the compilation of every statement or expression in the example has this property.
 
 \begin{compProp}[Compilation of statements and expressions]\label{compile:prop:compProp0}
- For any statement or expression $\ExprStmt$ which does not terminate on \return, start label $s$ and end label $e$,
-    the compiler will produce a list of bytecode instruction $\compileLabel{s}{\stmt}{e}$ such that 
-     $$ \ins{e} \execRel \ins{e+1}$$
+ For any statement or expression $\ExprStmt$ which does not terminate on \return or \athrow, start label $s$ and end label $e$,
+    the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that  instruction  $e+1$ may execute after
+    $e$, i.e.   $ \ins{e} \execRel \ins{e+1}$
 \end{compProp}
-The proof is trivial and is by case analysis of the compiled statements.
+
+
+
 
 
  
@@ -98,19 +100,21 @@ The next lemma states that the compilation of an expression $\expressionSrc$ res
 
 
 The following two statements concern the loops on bytecode and source. 
-In particular, we want that a cycle appears in the compilation of a statement  $\stmt$  only if it contains a loop (or is itself a loop).
+In particular, we want that a cycle appears in the compilation of a statement  $\stmt$  only if it contains a loop.
 For instance, we can  see in Fig. \ref{pogEquiv:compile:prop} that the unique cycle in the bytecode corresponds to the source loop and that the 
 instruction marked with \lstinline!LOOP END! and the instruction marked with \lstinline!LOOP START! correspond respectively to the end instruction   in the 
 compilation of the source loop body   and to start instruction in the compilation of the compilation of the \lstinline!while! test. 
 Stated formally, we get the following property. 
 
 \begin{compProp}[Cycles in the control flow graph]\label{compile:prop:compProp4}  % cycles in bytecode only if the source has  
-\todo{alternative formulation: say that the only loop entries are the first instructions of a loop body }
+
 The compilation \\ $\compileLabel{s}{\stmt}{e}$ of a $\stmt$ may contain an instruction $\ins{k}$ and \ins{j}  which are respectively 
 a loop entry and a loop end  in the sense of Def.
 \ref{defLoop} (i.e. there exists $\ins{j}$ such that $\ins{j} \execRel^{l} \ins{k}$ ) if and only if  $\stmt$  contains 
  a substatement $\stmt'$ which is a loop statement:
  $$ \ins{j} = \loopStart{\stmt'}  - 1 \wedge  \ins{k} = \loopStart{\stmt'}  $$
+
+
  % and the following holds:
  %  $$\begin{array}{l}
  % %                        \substatement{\stmt}{\stmt'} \wedge \\
@@ -133,14 +137,14 @@ a loop entry and a loop end  in the sense of Def.
 
 \end{compProp}
  
-A consequence from this property is that it cannot be that the start of  a $\execRel^{l}$ edge is in the compilation of one statement $\stmt_1$
- and its end is in another statement $\stmt_2$.
-Another property concerning cycles in the control flow graph is that all the instructions in a compilation$\compileLabel{s}{\stmt}{e}$   of a statement $\stmt $which target the instruction $\ins{e+1}$  are in the same execution relation with  $\ins{e+1}$,i.e. if  
-$\ins{e+1}$ is a  loop entry either all are loop ends or none of them is:
-\begin{compProp}[Cycles in the control flow graph]\label{compile:prop:compProp5} 
- For every statement $\stmt$ its compilation $\compileLabel{s}{\stmt}{e}$ is such that 
-$(\exists k, s \le k \le e, \ins{k} \execRel^{l} \ins{e+1} ) \iff (\forall k, s \le k \le e, \ins{k} \execRel \ins{e+1}  \Rightarrow \ins{k} \execRel^{l} \ins{e+1} ) $
-\end{compProp}
+% A consequence from this property is that it cannot be that the start of  a $\execRel^{l}$ edge is in the compilation of one statement $\stmt_1$
+%% and its end is in another statement $\stmt_2$.
+%Another property concerning cycles in the control flow graph is that all the instructions in a compilation$\compileLabel{s}{\stmt}{e}$   of a statement $\stmt $which target the instruction $\ins{e+1}$  are in the same execution relation with  $\ins{e+1}$,i.e. if  
+%$\ins{e+1}$ is a  loop entry either all are loop ends or none of them is:
+%\begin{compProp}[Cycles in the control flow graph]\label{compile:prop:compProp5} 
+% For every statement $\stmt$ its compilation $\compileLabel{s}{\stmt}{e}$ is such that 
+%$(\exists k, s \le k \le e, \ins{k} \execRel^{l} \ins{e+1} ) \iff (\forall k, s \le k \le e, \ins{k} \execRel \ins{e+1}  \Rightarrow \ins{k} \execRel^{l} \ins{e+1} ) $
+%\end{compProp}
 
 
 Next, we shall focus on properties which concern the compilation of exception handlers. 
@@ -186,26 +190,29 @@ in the method. In particular, it states that the region between 2 and 20 is prot
 \lstinline!8 goto 21!		      & \\
                                       & \\ &\\ &\\
 \lstinline!9 load n!		      & \Myspace\Myspace\lstinline!then {abs = n.value;}!\\
-\lstinline!18 getfield Number.value!& \\
-\lstinline!19 neg!                   & \\
-\lstinline!20 store abs!		      & \\
+\lstinline!18 getfield Number.value!&   \\
+\lstinline!19 neg!                    & \\
+\lstinline!20 store abs!	      & \\
+
+\lstinline!21 nop!		      & \\
                                       & \\ &\\ &\\
-\lstinline!21 goto 29!		      & \\
+\lstinline!22 goto 26!		      & \\
                                       & \lstinline!}!\\
                                       & \lstinline!catch(NullPointerExc e) {!\\
-\lstinline!22 store e!		      & \Myspace\lstinline!abs = -1! \\
-\lstinline!23 const -1!	              & \\
-\lstinline!24 store abs!              & \\
+\lstinline!23 store e!		      & \Myspace\lstinline!abs = -1! \\
+\lstinline!24 const -1!	              & \\
+\lstinline!25 store abs!              & \\
                                       & \lstinline!}!\\
+\lstinline!26 nop! 
  & \\ &\\ &\\
 
-\lstinline!28 load abs! & \lstinline!return abs! \\			     
-\lstinline!29 return! & \\ 
+\lstinline!27 load abs! & \lstinline!return abs! \\			     
+\lstinline!28 return! & \\ 
  & \\ &\\ &\\
 \lstinline!abs!.\ExcHandler =  & \\
          \begin{tabular}{lll}
 	                               \pcStart &=& 2\\
-				       \pcEnd &=& 20\\
+				       \pcEnd &=& 21\\
 				        \pcHandler &=&22\\
 					\exc  &=& \NullPointerExc
                                \end{tabular}   & 
@@ -219,7 +226,8 @@ in the method. In particular, it states that the region between 2 and 20 is prot
 
 
 This illustrates the next property of the compiler. More particularly, it states  that the fields  \pcStart{} and  \pcEnd{}  of an 
- exception handler element are the start and end indexes of the compilation of a source statement in the original source program.
+ exception handler element are the start and end indexes of the compilation of a source statement in the original source program and this statement 
+is the try statement of either try finally or try catch statement.
 
 %In the rest of this subsection we will look at properties of the compiler which are a consequence of the upper properties.
 
@@ -228,62 +236,80 @@ This illustrates the next property of the compiler. More particularly, it states
 %\todo{give the definition of the function  $\isStartExc{\ins{k}}$   }
 
 
+In the following,  we will need the notion of substatement relation.
+ For denoting that  $\ExprStmt'$ is a substatement of  $\ExprStmt$ (i.e.$\ExprStmt'$ is contained in  $\ExprStmt$  )
+we shall use the notation $\substatement{\ExprStmt }{\ExprStmt'}$. 
+We also use the notion of a direct subexpression which here means that  $\ExprStmt'$ is a direct substatement of  $\ExprStmt$
+if $\ExprStmt'$  is contained in $\ExprStmt$ 
+and there does not exist  $\ExprStmt''$  such that  $\ExprStmt''$ is contained in   $\ExprStmt$ and  $\ExprStmt'$ is contained in  $\ExprStmt''$.
+For denoting that  $\ExprStmt'$ is a direct substatement of  $\ExprStmt$
+we use the notation $\strictsubstatement{\ExprStmt }{\ExprStmt'}$.
+
+
+
 The following property states that the exceptions thrown by a 
-statement which is not a try catch and the  exceptions thrown by its strict substatement
+statement which is not a try catch and the  exceptions thrown by its direct substatement
 will be handled by the same exception handler, i.e. the result of the function \findExcHandler{}{}{} will be the same 
 if we pass as an argument their respective last instructions. Note that we can establish this property only
-for strict subexpressions because  substatements could be contained in try catch substatements and
+for direct subexpressions because  substatements could be contained in try catch substatements and
  thus, they   break the property.
 
  For instance, consider in Fig. \ref{pogEquiv:compile:prop:exc} 
 the bytecode version of the program. The last  instruction in the compilation of the \lstinline!if! statement is the 
-instruction at index 20 and the last instruction in the compilation of the \lstinline!else! branch is 7. 
-For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox{\rm\tt{Exc}} }{20}{\lstinline!abs!.\ExcHandler} returns the same value  as
+instruction at index 21 and the last instruction in the compilation of the \lstinline!else! branch is 7. 
+For any exception type \mbox{\rm\tt{Exc}}, the application \findExcHandler{\mbox{\rm\tt{Exc}} }{21}{\lstinline!abs!.\ExcHandler} returns the same value  as
 \findExcHandler{\mbox{\rm\tt{Exc}} }{7}{\lstinline!abs!.\ExcHandler}. 
 
 \begin{compProp}[Exception handler property for statements]\label{compile:prop:compProp8}
-  For every statement $\stmt$ which is not a try catch statement  in method \methodd \ for  any $\ExprStmt$ such that
-  either$\ExprStmt$ is a  strict substatement of $\stmt$ 
-  or is  an expression contained in  $\stmt$
-if their respective compilations are  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\ExprStmt}{e'}$ then the following holds:
+ Let us have a statement $\stmt$ which is not a try catch statement  neither a try finally statement in method \methodd. Assume that 
+  statement $\stmt'$ is its direct substatement, i.e. 
+$\strictsubstatement{\stmt}{\stmt'} $. Let 
+ their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then for every exceptional type \mbox{\rm\tt{Exc}} 
+if instruction $e$ throws an exception of type \mbox{\rm\tt{Exc}} or  instruction $e'$ throws an exception of type \mbox{\rm\tt{Exc}},
+the same exception handler will treat the exception, i.e.
 $$ \begin{array}{l}
-          \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
-	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
+          \forall \mbox{\rm\tt{Exc}}, \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = 
+	 \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
    \end{array}
 $$
 
+
 \end{compProp}
-The proof is done in Appendix \ref{appendix:compile:prop}.
+%The proof is done in Appendix \ref{appendix:compile:prop}.
 
 A similar property can be established for expressions. This time however, the property holds for
 every instruction in the compilation of an expression.
  
 \begin{compProp}[Exception handler property for expressions]\label{compile:prop:compProp9}
-  For every expression $\expressionSrc$
-% and its subexpression
-% $\expressionSrc'$, i.e. $\substatement{\expressionSrc}{\expressionSrc'}$
- we have that if its respective compilation is  $\compileLabel{s}{\expressionSrc}{e}$
- then the following holds:
+  For every expression $\expressionSrc$,
+  for every instruction $i$ inside the compilation  $\compileLabel{s}{\expressionSrc}{e}$,
+  any exception type \mbox{\rm\tt{Exc}} thrown by  $i$  will be handled by the same exception handler 
+  as in the case where \mbox{\rm\tt{Exc}}   is thrown by the last instruction $e$ in the compilation, i.e.
 $$ \begin{array}{l}
-          \forall \mbox{\rm\tt{Exc}}, \forall  \ i, s \le i < e ,  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \\
-	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{i}{\methodd.\excHandlerTable} 
+          \forall \mbox{\rm\tt{Exc}}, \forall  \ i, s \le i < e , \\
+	   \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = 
+	  \findExcHandler{\mbox{\rm\tt{Exc}} }{i}{\methodd.\excHandlerTable} 
    \end{array}
 $$
 \end{compProp}
 
 The next property states that a try catch statement is such that $ \try \ \{ \stmt_1 \} $ $ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
-any exception except \excType{} thrown by  the last instruction in the compilation of $ \stmt_1 $ or the last instruction of the compilation 
-of $ \stmt_2$ are handled by the same exception handler. In particular, if the last instruction in the compilation of
- $ \stmt_1 $ throws an exception of type \excType \  it will be handled by the start instruction of the compilation of $\stmt_2 $.
+any exception \texttt{E} which is a subtype of \excType{} and thrown by  the last instruction in the compilation of the try statement $ \stmt_1 $ is handled by the 
+compilation of the exception handler $\stmt_2$. Moreover, an 
+ an exception \texttt{E'} which is not a subtype of \excType{} thrown by the  last instruction in the compilation of $\stmt_1$
+or the last instruction  in the compilation of $\stmt_2$ will be handled by the same exception handler. 
 
 For instance, the last instruction in the compilation of the the try catch statement  in Fig. \ref{pogEquiv:compile:prop:exc} 
-is the instruction at index 27 and the last instruction in the compilation of the try statement is the instruction at index 20. 
-We can see that any excepition except \NullPointerExc{} which might be thrown from these instructions 
-will be handled in the same way. This in particular is evident if we look at the exception handler table.
+is the instruction at index 26 and the last instruction in the compilation of the try statement is the instruction at index 21. 
+From the exception handler, we can see that any exception except \NullPointerExc{} which might be thrown from these instructions 
+will be handled in the same way. 
  
 \begin{compProp}[Exception handlers and try catch statements]\label{compile:prop:compProp10}
 For every try catch statement $ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \}  $ 
-its compilation $\compileLabel{s}{\stmt_1}{e'}; e' + 1: \goto \ e + 1; \compileLabel{e' + 2 }{\stmt_2}{e };$
+whose compilation  results in 
+$ \compileLabel{s}{\stmt_1}{e'}; e' + 1: \goto \ e;  $ $\compileLabel{e' + 2 }{\stmt_2}{e - 1}; e: \nop$
+and modifies the exception handler table  
+	$\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} $
 is such that the following holds 
 $$\begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow
   \begin{array}{l}  
@@ -294,11 +320,30 @@ $$\begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{E
   \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2 \\ 
  \end{array} $$
 
+\end{compProp}
+
+The next property states establishes a similar condition for try finally statements.
+
+\begin{compProp}[Exception handlers and try finally statements]\label{compile:prop:compProp10}
+For every try finally statement $ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \}  $ 
+whose compilation  results in \\
+$  \compileLabel{s}{\stmt_1}{e'}; \  \compileLabel{e'+1}{\stmt_2}{e''}; \ e''+1  : \goto \ e; \  e'' +  2: \store \ l; \ 
+\compileLabel{e'' + 3}{\stmt_2}{e - 3};\  e - 2 :\load \ l;\  e - 1: \athrow ;\  e: \nop$
+and modifies the exception handler table $\addExceptionTable{\methodd}{ s }{  e' }{ e''+2  }{ \Exception }$
+is such that the following holds 
+$$\begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \Rightarrow
+  \begin{array}{l}  
+         \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} =\\ 
+	  \findExcHandler{\mbox{\rm\tt{Exc}} }{e-3}{\methodd.\excHandlerTable}=  \\
+	    \findExcHandler{\mbox{\rm\tt{Exc}} }{e''}{\methodd.\excHandlerTable}
+   \end{array} \\
+   \wedge\\
+  \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e''+2 \\ 
+ \end{array} $$
+
 
 
 \end{compProp}
-
-
 
 %\todo{this is not sufficient. There must be established a property that the $\execRel^l$ is only in the compilation of while statements} 
 % In the following, we  abstract

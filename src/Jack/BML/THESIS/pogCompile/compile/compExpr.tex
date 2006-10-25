@@ -39,10 +39,10 @@ $${\scriptsize
         \begin{array}{lll} 
 	\compileLabel{s}{\constantInt}{s} &  =  & s : \push \  \constantInt \\
 	& & \\ & & \\
-	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \ \Mytrue \\
-	& & \\ & & \\
-	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \  \Myfalse \\
-	& & \\ & & \\
+%	\compileLabel{s}{\Mytrue}{s} & = &  s: \push  \ \Mytrue \\
+%	& & \\ & & \\
+%	\compileLabel{s}{\Myfalse}{s} & = &  s: \push \  \Myfalse \\
+%	& & \\ & & \\
 	\compileLabel{s}{\Mynull }{s } & = &  s: \push \ \Mynull\\
 	& & \\ & & \\
 	\compileLabel{s}{\this}{s } & = &  s:  \load \ \this \\
@@ -75,12 +75,12 @@ $${\scriptsize
               \end{array}	 \\
 	& & \\ & & \\ 
 
-	\compileLabel{s}{\expressionSrc \ \instanceofSrc \ \class }{e} & = &  
-         \begin{array}{l}
-              \compileLabel{s}{\expressionSrc}{ e  -1 };\\
-               e : \instanceof \ \class;
-	  \end{array} \\
-	  & & \\ & & \\ 
+	% \compileLabel{s}{\expressionSrc \ \instanceofSrc \ \class }{e} & = &  
+        %  \begin{array}{l}
+       %        \compileLabel{s}{\expressionSrc}{ e  -1 };\\
+       %         e : \instanceof \ \class;
+% 	  \end{array} \\
+% 	  & & \\ & & \\ 
 \compileLabel{s}{ \newSrc \ \class  ( ) }{s+2} & = & 
                  \begin{array}{l}
                        s :    \new \ \class; \\ 
@@ -100,66 +100,72 @@ Fig. \ref{pogEq:compile:compExpr:defStmt} presents the definition
 of the compiler function for statements which does not affect the exception handler table 
 neither affect the specification tables.
 Let us explain in more detail the rule for 
-conditional statement. First the conditional expression is compiled $\compileLabel{s}{\expressionSrcRel}{e'};$.
-After wards, comes the conditional branch instruction $e' + 1: \ifCond \ e'' + 2;$. Remind that the \ifCond \ 
+conditional statement. First the conditional expression is compiled. Its compilation comprises 
+instructions from index $s$ to $e''+1$ 
+where the latter is the  conditional branch instruction $e'' + 1: \ifCond \ e''' + 2$. Remind that the \ifCond \ 
 instruction will compare the two stack top elements  (w.r.t. some condition ) and if they fulfill the condition
-in question, the control will be transfered to instruction at index $ e'' +2 $, otherwise the next instruction
-at index $e' + 2$ will be executed. Note that at index $ e''+2$ starts the compilation of the then branch 
-$\compileLabel{e'' +  2}{\stmt_1}{ e  };$ and at index $ e'+2$ starts the compilation of the else branch 
-$\compileLabel{e' + 2}{\stmt_2)}{e''}$. After the compilation of the else branch follows a $ e'' + 1: \goto \ e + 1$ \ instruction
+in question, the control will be transfered to instruction at index $ e''' +2 $, otherwise the next instruction
+at index $e'' + 2$ will be executed. Note that at index $ e'''+2$ starts the compilation of the then branch 
+$\compileLabel{e''' +  2}{\stmt_1}{ e  }$ and at index $ e''+2$ starts the compilation of the else branch 
+$\compileLabel{e'' + 2}{\stmt_2)}{e'''}$. After the compilation of the else branch follows a $ e'' + 1: \goto \ e + 1$ \ instruction
 which jumps at the first instruction  outside the compilation of the branch statement. 
-
-
-
-
-
 
 \begin{figure}[ht!]
 \begin{frameit}
 $${\scriptsize 
-        \begin{array}{l}
-	      \compileLabel{s}{\stmt_1; \stmt_2}{e}  =  \\  
+        \begin{array}{lll}
+	      \compileLabel{s}{\stmt_1; \stmt_2}{e} &  = & 
 	      \begin{array}{l}
-	            \compileLabel{s}{\stmt_1}{e'};\\
-	    	    \compileLabel{e'+1}{\stmt_2}{e}
+	            \compileLabel{s}{\stmt_1}{e'}\\
+	    	    \compileLabel{e'+1}{\stmt_2}{e}\\
+		    %e : \nop
 	      \end{array}  \\
-       \\ \\
-       \compileLabel{s}{ \Myif \ ( \expressionSrc_1 \rel \expressionSrc_2 ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e}   =  \\  
-        \begin{array}{l}
-	     \compileLabel{s}{\expressionSrc_1}{e'}; \\
-	     \compileLabel{e'+1}{\expressionSrc_2}{e''}; \\
-             e'' + 1: \ifCond \ e''' + 2;\\
-            \compileLabel{e'' + 2}{\stmt_2}{e'''}\\
-             e''' + 1: \goto \ e +  1; \\
-            \compileLabel{e''' +  2}{\stmt_1}{ e  }; \\
-	    %e: \goto   e + 1        
-	\end{array}  \\ 
-	\\ \\  
-	
-	\compileLabel{s}{\expressionSrc_1.f= \expressionSrc_2}{e} = \\
+       & & \\  & & \\
+       \compileLabel{s}{ \Myif \ ( \expressionSrc_1 \rel \expressionSrc_2 ) \ \Mythen \ \{ \stmt_1 \} \  \Myelse \ \{ \stmt_2 \}   }{e}   & = &
+	      \begin{array}{l}
+	            \compileLabel{s}{\expressionSrc_1}{e'}; \\
+		    \compileLabel{e'+1}{\expressionSrc_2}{e''}; \\
+		    e'' + 1: \ifCond \ e''' + 2;\\
+		    \compileLabel{e'' + 2}{\stmt_2}{e'''}\\
+		    e''' + 1: \goto \ e; \\
+		    \compileLabel{e''' +  2}{\stmt_1}{ e -1  }; \\
+		    e: \nop
+	      %e: \goto   e + 1        
+	      \end{array}  \\ 
+	  & & \\  & & \\
+	\compileLabel{s}{\var = \expressionSrc_1}{e} & = & 
              \begin{array}{l}
-                        \compileLabel{s}{\expressionSrc_1}{e'};\\
-			\compileLabel{e'+1}{\expressionSrc_2}{e - 1 };\\
-			e  :\putfield \ \fieldd;
-             \end{array} \\ 
-	\\ \\  
-	\compileLabel{s}{  \var = \expressionSrc }{e} =  \\  
+                   \compileLabel{s}{\expressionSrc_1}{e - 1}\\
+		   e :\store \ \var\\
+		   
+             \end{array}\\ 
+	 & & \\  & & \\
+	\compileLabel{s}{\expressionSrc_1.f= \expressionSrc_2}{e} & = &
              \begin{array}{l}
-                        \compileLabel{s}{\expressionSrc}{e  - 1 }\\
-			e : \store \ \var;
+		   \compileLabel{s}{\expressionSrc_1}{e'};\\
+		   \compileLabel{e'+1}{\expressionSrc_2}{e - 1 };\\
+		   e :\putfield \ \fieldd
+		   
              \end{array} \\ 
-	\\ \\  
-	\compileLabel{s}{\athrow \ \expressionSrc}{e} = \\
+	& & \\  & & \\
+	\compileLabel{s}{  \var = \expressionSrc }{e}   & = &
+             \begin{array}{l}
+                   \compileLabel{s}{\expressionSrc}{e  - 1 }\\
+		   e  : \store \ \var;\\
+		   
+             \end{array} \\ 
+	& & \\  & & \\
+	\compileLabel{s}{\athrow \ \expressionSrc}{e} & = &
              \begin{array}{l} 
 	           \compileLabel{s}{ \expressionSrc}{e - 1}; \\
 	           e: \athrow; 
-	        \end{array} \\
-		\\ \\
-	\compileLabel{s}{\returnSrc  \  \expressionSrc }{e } =  \\
-	\begin{array}{l} 
-	      \compileLabel{s}{ \expressionSrc }{e - 1};\\
-	      e : \return
-	\end{array} 
+	     \end{array} \\
+	& & \\  & & \\
+	\compileLabel{s}{\returnSrc  \  \expressionSrc }{e }  & = &
+	     \begin{array}{l} 
+	           \compileLabel{s}{ \expressionSrc }{e - 1};\\
+		   e : \return
+	     \end{array} 
 
 	\end{array} 
 } $$
@@ -217,13 +223,14 @@ $${\scriptsize
 	\begin{array}{l}
              
                        \compileLabel{s}{\stmt_1}{e'}; \\
-                       e' + 1: \goto \ e + 1; \\
+                       e' + 1: \goto \ e; \\
 		  
-                       \compileLabel{e' + 2 }{\stmt_2}{e };\\
-		       % e: \goto \ e + 1; \\
+                       \compileLabel{e' + 2 }{\stmt_2}{e - 1};\\
+		       
+		        e: \nop
 		       \\ 
                     
-			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} )
+			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} 
              \end{array} \\ 
 	\\ \\  
  	
@@ -231,16 +238,15 @@ $${\scriptsize
        	\begin{array}{l} 
 	\compileLabel{s}{\stmt_1}{e'}; \\
 	\compileLabel{e'+1}{\stmt_2}{e''}; \\
-        e''+1  : \goto \ e + 1;\\
+        e''+1  : \goto \ e ;\\
         
         \\ 
         \{ \mbox{ \rm default exception handler} \} \\
         e'' +  2: \store \ l; \\
-	\compileLabel{e'' + 3}{\stmt_2}{e - 2}; \\	                
-        e - 1 :\load \ l;\\
-        e: \athrow;\\
-
-        
+	\compileLabel{e'' + 3}{\stmt_2}{e - 3}; \\	                
+        e - 2 :\load \ l;\\
+        e - 1: \athrow;\\
+	e: \nop
         \\
 	\addExceptionTable{\methodd}{ s }{  e' }{ e''+2  }{ \Exception } 
         \end{array} \\ 
@@ -256,24 +262,32 @@ $${\scriptsize
 \end{frameit}
 \end{figure}
 
-We have put separately in Fig.\ref{pogEq:compile:compExpr:defLoop} the compiler definition for loop statements as its compilation is particular
+ We have put separately in Fig.\ref{pogEq:compile:compExpr:defLoop} the compiler definition for loop statements as its compilation is particular
  because it is the unique case where the specification tables of the current method are affected. 
-Particularly, the compiler adds a new element in the table of loop invariants of the method \methodd. 
-This new element relates  the index $e'+1$  with the loop invariant \invariant \  and the
+ Particularly, the compiler adds a new element in the table of loop invariants of the method \methodd. 
+ This new element relates  the index $e'+1$  with the loop invariant \invariant \  and the
  list of modified expressions \modLoop.
+ In the following, the index of the first instruction of the compilation of the loop test
+ (in the figure this is the index $e'+1$) will be frequently referred to. 
+ Thus, we introduce the notation $\loopStart{\stmt}$ to refer to the first instruction in the compilation of the test
+ of the loop statement $\stmt$. Actually, in the control flow graph this instruction represents a loop entry
+ instruction following Def. \ref{defLoop}, Section \ref{prelim:ctrFlow}.
+ 
+ 
 \begin{figure}[ht!]
 \begin{frameit}
 $${\scriptsize 
         \begin{array}{l}
- \compileLabel{s}{\while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} }{e} = \\
+ \compileLabel{s}{\while \ (\expressionSrc_1 \ \rel  \ \expressionSrc_2) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} }{e} = \\
          \begin{array}{l}
-              s: \goto \ e' + 1; \\
-	      \compileLabel{s +  1}{\stmt}{e' }; \\
-	     % \lbrack  \compileSynt{\invariant} , \compileSynt{\modLoop} \rbrack \\ 
-	      \compileLabel{e' +  1}{\expressionSrcRel}{e  -1 };\\
-	      e: \ifCond \ s +  1; \\
-	      \\\\
-	      \addLoopTable{\methodd}{e'+1}{\invariant }{\modLoop}
+	       s: \goto \ e' + 1; \\
+	       \compileLabel{s +  1}{\stmt}{e' }; \\
+	       \compileLabel{e' +  1}{\expressionSrc_1}{e''};\\
+	       \compileLabel{e'' +  1}{\expressionSrc_2}{e-1};\\
+	       e : \ifCond \ s +  1; \\
+	       %e: \nop
+	       \\\\
+	       \addLoopTable{\methodd}{e'+1}{\invariant }{\modLoop}
 	 \end{array}
 
 \end{array} 
@@ -286,9 +300,43 @@ $${\scriptsize
 
 
 
-For an illustration, we can turn to Fig. \ref{pogEquiv:compile:prop}.
+For an illustration, we show in Fig. \ref{pogComp:source:example} the source of method \lstinline!square! which calculates the 
+the   square of the parameter \lstinline!i!.  First, the absolute value of \lstinline!i! is stored in the variable \lstinline!v!.
+Then  the while statement  calculates the sum of the impair positive numbers whose whole division by 2 is smaller than
+\lstinline!v! which is the square of \lstinline!i!.  The example is also
+provided with specification written in JML. The specification states
+that the method returns the square of its parameter and that the loop
+invariant is \lstinline!(0 <= s) && (s <= v) && sqr == s*s!. In Fig. \ref{pogEquiv:compile:prop}, we 
+then show the respective compilation of method \lstinline!square!.
 The example shows the correspondance between  the bytecode (left) resulting from the compilation described above and the source lines(right)
  of method  \lstinline!square! from Fig. \ref{pogComp:source:example}.
+
+
+
+\begin{figure}[ht!]
+ \begin{lstlisting}[frame=trbl] 
+//@ ensures \result == i*i; 
+public int square( int i ) {
+  int sqr  = 0;
+   int v = 0;
+   if ( i < 0)
+     then {
+       v = -i;} 
+     else {
+       v = i;}
+   int s = 0;
+   /*@ loop_modifies s, sqr;
+     @ loop_invariant (0 <= s) && (s <= v) && sqr == s*s ;
+      @*/
+   while( s < v ) {
+     sqr = sqr + 2*s + 1;
+     s = s+1;}
+   return sqr;}
+ \end{lstlisting}
+ \caption{\sc method  \lstinline!square! written in our source language}
+ \label{pogComp:source:example}
+ \end{figure}
+
 
 We can see in the figure how the branch statement is compiled (bytecode instructions from 4 to 11).
  It also shows us the somewhat unusual way into which 
