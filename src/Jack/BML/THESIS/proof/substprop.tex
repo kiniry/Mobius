@@ -36,79 +36,37 @@ the following holds:
       \item $\interp{\substitution{\psi}{ \locVar{i} }{ \expression_2 }}{ s_1 } \iff \interp{\psi}{s_2} $
 \end{enumerate}
 \end{substLv}
-Proof : by structural induction on the structure of $\expression_1$ 
+Proof 
 \begin{enumerate}
-\item we look at the first part of the lemma concerning expression evaluation
+\item  we look at the first part of the lemma concerning expression evaluation. It is 
+         by structural induction on the structure of $\expression_1$.  We look only at the simple case
+      when $ \expression_1 = \locVar{i} $. The other cases proceed in a similar way. 
+           \begin{longtable}{l} 
+	      $\evalExp{ \locVar{i} \subst{\locVar{i}  }{\expression_2 }}{s_1} = $\\
+	      \comment{apply substitution}\\
+	      $\evalExp{\expression_2}{s_1}=$\\
+	      \comment{by Def.\ref{interpExpr} of the evaluation  for local variables  and by the initial hypothesis for $s_2$ } \\
+	       $\evalExp{\locVar{i}}{s_2}$\\
+	   \end{longtable}
+   
 
-\begin{itemize}
-   \item    $ \expression_1 = \locVar{i} $ 
-           $$
-	    \begin{array}{l}
-	          ( left ) \  \substitution{\locVar{i}  }{ \locVar{i} }{ \expression_2 }    = \expression_2 \\
-		  \Rightarrow \\
-		\numConclusion{1} \  \evalExp{\substitution { \locVar{i} }{ \locVar{i} }{ \expression_2 }}{ s_1 } =   \evalExp{\expression_2}{s_1} \\
-		  \\
-		  (right ) \  \evalExp{\locVar{i}}{s_2} = \\
-		  \mbox{\rm\comment{by Def.\ref{interpExpr} of the evaluation  for local variables  }} \\
-		\numConclusion{2} \  =  \evalExp{\expression_2}{s_1} \\
-		 \mbox{\rm\comment{from \numConclusion{1} \  and \numConclusion{2} \ we get that the lemma holds in this case  }}
-	    \end{array} 
-	   $$
-   \item $\expression_1 = \fieldAccess{\expression_3}{\fieldd}$
-         $$\begin{array}{l} 
-	      \substitution{\fieldAccess{\expression_3}{\fieldd}}{ \locVar{i} }{ \expression_2 } = \\
-	      \mbox{\rm\comment{by definition of the substitution }} \\ 
-	      = \fieldAccess{\substitution{\expression_3}{ \locVar{i} }{ \expression_2 } }{\fieldd} \\
-	      
-	      \mbox{\rm\comment{by induction hypothesis }} \\
-	     	\numConclusion{1} \evalExp{\substitution{\expression_3}{ \locVar{i} }{ \expression_2 }}{ s_1 } = \evalExp{\expression_3}{s_2} \\
-              \\
-	      \mbox{\rm\comment{by  Def.\ref{interpExpr} of the evaluation  for field access expressions }} \\
-	      ( left ) \  \evalExp{\substitution{\fieldAccess{\expression_3}{\fieldd  }}{ \locVar{i} }{ \expression_2 }}{s_1} = \\
-	                = \heap(\fieldd)( \evalExp{\substitution{\expression_3}{ \locVar{i} }{ \expression_2 }}{s_1}   ) \\
-	      \\
-		
-	       (right ) \   \evalExp{  \fieldAccess{\expression_3}{\fieldd} }{s_2} = \\
-	                   = \heap(\fieldd) ( \evalExp{\expression_3 }{s_2}) \\
-	      \\ 
-              \mbox{\rm\textit{ \{ from \numConclusion{1},( left ) and    (right )}}\\
-	      \mbox{\rm\textit{  we get that the lemma holds in this case \} }}
-	      
-	  \end{array} 
-	 $$
-    \item the rest of the cases proceed in a similar way by applying the induction hypothesis
-\end{itemize}
 
- \item second case of the lemma 
-   \begin{itemize} 
-            \item $ \psi = \exprWp' \  \predicates \  \exprWp' $
-	    $$
-	    \begin{array}{l} 
- \mbox{\rm\comment{from the first part of the lemma we get  }} \\
-              	\numConclusion{1} \ \evalExp{\substitution{ \expression'}{ \locVar{i} }{ \expression_2 } }{s_1} =   \evalExp{\expression'}{s_2}\\
-		 \numConclusion{2} \ \evalExp{\substitution{ \expression''}{ \locVar{i} }{ \expression_2 } }{s_1} =   \evalExp{\expression''}{s_2}\\
-		 
-\\
+ \item second case of the lemma. It is by induction on the structure of the formula $\psi$. We sketch the case when 
+          $ \psi = \exprWp_1 \  \predicates \  \exprWp_2 $
 	    
-               \interp{\substitution{\psi}{ \locVar{i} }{ \expression_2 }}{ s_1 }   \\
-	      \mbox{\rm\comment{definition of substitution }} \\
-	     \numConclusion{3}  \equiv \\
-	       \interp{\substitution{ \expression'}{ \locVar{i} }{ \expression_2 } \  \predicates \ \substitution{ \expression'' }{ \locVar{i} }{ \expression_2 }  }{ s_1 }\\
-	        \mbox{\rm\comment{by  Def.\ref{interpPred}  we get  }} \\
-		\iff \\
-		\evalExp{\substitution{ \expression'}{ \locVar{i} }{ \expression_2 } }{s_1}
-                  \evalRel{\predicates }
-		   \evalExp{ \substitution{ \expression'' }{ \locVar{i} }{ \expression_2 } }{s_1} \ is \ true \\
-		
-		\mbox{\rm\comment{from  \numConclusion{1} , \numConclusion{2} and   \numConclusion{3}    }} \\
-		\iff \\
-		\evalExp{\expression'}{s_2} \evalRel{\predicates } \evalExp{\expression''}{s_2} \\
-		\equiv \\
-		\interp{\psi}{s_2}
-	      \end{array} 
-	 $$
-	 \item the rest of the cases are by structural induction
-   \end{itemize}
+	    \begin{longtable}{l} 
+               $\interp{(\exprWp_1 \  \predicates \  \exprWp_2 )\subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
+	       \comment{apply substitution}\\
+	       $\interp{\exprWp_1\subst{ \locVar{i} }{ \expression_2 }  \  \predicates \  \exprWp_2 \subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
+	       \comment{interpretation of formulas }\\
+	        $\evalExp{\exprWp_1\subst{ \locVar{i} }{ \expression_2 } }{s_1}  \  \predicates \ \evalExp{ \exprWp_2 \subst{ \locVar{i} }{ \expression_2 }}x  {s_1} = $ \\
+		\comment{from the first part of the lemma and the initial hypothesis for $s_2$ we get } \\
+		 $\evalExp{\exprWp_1}{s_2}  \  \predicates \  \evalExp{\exprWp_2} {s_2} = $ \\
+		 \comment{from definition of formula interpretation in a state}\\
+		 $ \interp{\exprWp_1 \  \predicates \  \exprWp_2}{s_2}$
+	     \end{longtable}
+	
+  
 \end{enumerate}
 
 \begin{substHeap}[Update of the heap]\label{substHeap}

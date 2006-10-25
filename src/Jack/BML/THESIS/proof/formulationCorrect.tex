@@ -44,7 +44,7 @@ $$ \begin{array}{l}
 \end{array}$$
  
 We now first define what does it mean for a method to respect its specification at level \level{k}
-\begin{defCorrect}[A method respects its specification at level k] \label{defCorrectLevel}
+\begin{defCorrect}[method respects its specification at level k] \label{defCorrectLevel}
 For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost
 and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd \ respects its specification if 
 for every two states $s_0$ and $s_1$ such that :
@@ -65,9 +65,9 @@ $\validFormula{\methodd.\normalPost \Rightarrow \mbox{\rm\texttt{n}}.\normalPost
  $\forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )$
 \end{defCorrect}
 
-Next, we give a definition for program correctness. 
+Next, we give a definition for program correctness at level \level{k}. 
 
-\begin{defCorrect}[A program is correct at level \level{k}]\label{defCorrectProgramLevel}
+\begin{defCorrect}[program is correct at level \level{k}]\label{defCorrectProgramLevel}
 A program is correct if for all classes \class{} in the program, every method \methodd{} in \class{}
 respects its specification at level \level{k}.
 \end{defCorrect}
@@ -79,9 +79,9 @@ respects its specification at level \level{k}.
 %\end{defCorrect}
 
 
-Similarly, we generalize the definition for program correctness. 
+We generalize the definition for program correctness w.r.t. the level \level{k}. 
 
-\begin{defCorrect}[A program is correct]\label{defCorrectProgram}
+\begin{defCorrect}[program is correct]\label{defCorrectProgram}
 A program is correct
 if for all levels $\level{k} \ge 0 $ the program is correct at level \level{k}.
 \end{defCorrect}
@@ -99,12 +99,11 @@ generated for all methods in a program are valid then we can conlcude that the p
 %then the postcondition of  the method holds in its final state if the method terminates. 
 %If, moreover a method overrides a method from the super class of the class where it is declared then there must be a covariant 
 %relation between its specification and the specification of the overriden method.
-Formally, we want to establish the following statement:
-
+We formulate this as a the theorem:
 \begin{vcGenCorrect}[Verification condition generator is correct]\label{vcGenCorrect}
 
-If the verification conditions  for all  methods in a program   (see  subsection \ref{wp:vcMeth} )
-are valid then the program is correct w.r.t. Def. \ref{defCorrectProgram}
+If the verification conditions  for all  methods in a program \Program{}  (see  subsection \ref{wp:vcMeth} )
+are valid then \Program{} is correct w.r.t. Def. \ref{defCorrectProgram}
 %$$  \begin{array}{l}  \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} \\
 %       \mbox{\rm\textit{if method \methodd{} overrides }} \mbox{\rm\texttt{n}} \ then \\
 %        

@@ -38,6 +38,7 @@ Our first concern now will  be to establish that the rules for single bytecode i
 instruction holds in the prestate then in the poststate of the instruction the postcondition upon which the wp is caclulated holds. 
 
 \begin{lemma}[Single execution step correctness] \label{lemma0}
+Let us have a program \Program{} and a method \methodd{} in \Program.
 For every state $s =\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } $ and
 initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly }{ 0 } $ 
    of the execution of method \methodd \  if the following conditions hold: 
@@ -45,7 +46,7 @@ initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly 
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{*} s_n$
          \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \interp{\wpi{\ins{\pc_n}}{\methodd}{}}{s_n} $
-	 \item  method executions with maximal call depth smaller or equal $ k - 1 $ are correct w.r.t. their specification
+	 \item all methods in \Program{} at level \level{k - 1} are correct w.r.t. their specification
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
   
@@ -67,7 +68,8 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		\item    $\ins{\pc_n} = \return$ 
 		 
 		     
-		    	\mbox{\rm\comment{by initial hypothesis }} \\
+		    	\mbox{\rm\textit{\{by initial hypothesis we have that the \wpName{} }}\\
+			\mbox{\rm\textit{of the current instruction holds \}}} \\
 			$$\interp{\wpi{\return}{\pc_{n}}{\methodd}} {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}  $$
 			\mbox{\rm\comment{by definition the weakest precondition for \return } }\\
 			 
@@ -134,7 +136,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		      $$\numConclusion{2} \ s_{n+1} = \config{\heap_{n +1}}{\counterOnly_n  +1  }{\update{\stackOnly_n }{\counterOnly_n  +  1}{ \referenceOnly  } }{\locVarOnly_n  }{\pc_n  +1} $$ 
 		      $$\numConclusion{3} \newRef{\heap}{\clazz} = (\heap_{n+1},\referenceOnly' )$$ 
 		       \\
-		       \comment{following Def. \ref{interpPred} instantiate \numConclusion{1} with \mbox{\rm\referenceOnly}$'$  } \\
+		       \comment{instantiate \numConclusion{1} with \mbox{\rm\referenceOnly}$'$  } \\
 		       $$ \numConclusion{4}  \  	 \interpTwoLines{\begin{array}{l}
 			 \neg \ \instances(\referenceOnly' ) \wedge \\
 			  \referenceOnly' \neq \Mynull \Rightarrow \\  
@@ -165,13 +167,17 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		       
 		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap}, \ref{newHeap} }} \\
 		       \mbox{\rm\textit{ and the operational semantics of the instruction \new \} }} \\  
-		       $$\interp{ \inter{i}{i+1} }{s_{n+1}}$$
+		       $$\interp{ \inter{i}{i+1} }{s_{n+1}}$$ 
 		
 \item  $\ins{\pc_n } = \putfield   \ \fieldd $  \\
-                The cases \getfield, \getfield, \arrstore, \arrload,  \arraylength{} are similar to this case   \\
+                The cases \getfield, \getfield, \arrstore, \arrload,  \arraylength{} are similar to this case.
+		This instruction may potentially throw a \NullPointerExc{} as the object reference whose field is updated may be \Mynull.
+		Thus, we should consider three cases : the case when the reference is \Mynull{} and the \NullPointerExc{} exception is not caught,
+		case when the reference is \Mynull{} and the \NullPointerExc{} exception is  caught, and the case when the reference is not \Mynull.
+		We consider in the following only the last case, the others are treated in a rather similar way.
                 		   \comment{by initial hypothesis } \\ 
                         $$ \interp{\wpi{\pc_n  \ \putfield   \ \fieldd }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} = $$
-			  \mbox{\rm\comment{definition of the wp function} } \\
+			 \comment{definition of the wp function}  \\
 			 
 		  $$  \numConclusion{1}	\interpTwoLines{ \stack{\counter } \ne \Mynull \Rightarrow \\
 						 \Myspace \inter{i}{i+1} \subst{ \counter }{  \counter -2 } 
@@ -181,60 +187,55 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 							\wedge \\
 							\stack{\counter } = \Mynull \Rightarrow   \methodd.\excPost( i, \NullPointerExc ) }
                        {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$
-                   \comment{ we get three cases }
-		    
-                   \begin{enumerate}
-		           \item the dereferenced reference on the stack top is \Mynull \ and an exception handler starting at 
-                                 instruction $k$ exists for \NullPointerExc \  and $\ins{\pc_n} $ is in its scope   
-			          
-				             \comment{thus, we get  the hypothesis   } \\
-				             $$ \interp{ \stack{\counter } = \Mynull }{ \config{\heap_n }{\counterOnly_n}{\stackOnly_n }{\locVarOnly_n }{\pc_n }  }$$  \\
-					      \mbox{\rm\comment{ from the above conclusion and \numConclusion{1} we get   } } \\
-					      $$\interp{ \methodd.\excPost( \pc_n , \NullPointerExc ) 
-												 }{ \config{\heap _n}{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } $$ \\
-					     \mbox{\rm\textit{\{ from Def. \ref{wp:exc:defExcRuntime}  of the function $ \methodd.\excPost$ }} \\
-                                              \mbox{\rm\textit{ and the assumption that the exception is handled we get \} } } \\
-				     
-                    	 $$\interpTwoLines{ \begin{array}{l} 
-			       \forall \referenceOnly,\\
-			       	\Myspace \neg \ \instances(\referenceOnly) \wedge \\
-				\Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
-				\Myspace \Myspace  \inter{\pc_n}{\pc_{n+1}} \\
-				\Myspace \Myspace		         \begin{array}{l}
-					           \subst{\counter}{0} \\
-						   \subst{\stack{0}}{\referenceOnly} \\
-						   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
-						   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }
-				                 \end{array} 
-                                          \end{array} } {\config{\heap_n  }{\counterOnly_n  }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$
-		       	\mbox{\rm\textit{\{ from lemmas \ref{substCntr},  \ref{substHeap}, \ref{substStack} and \ref{newHeap}}}\\
-			\mbox{\rm\textit{ and the operational semantics of  \putfield \} }}\\
+                %   \comment{ we get three cases }
+		%   \begin{enumerate}
+		%          \item the dereferenced reference on the stack top is \Mynull \ and an exception handler starting at 
+                %                instruction $k$ exists for \NullPointerExc \  and $\ins{\pc_n} $ is in its scope   
+		% 		             \comment{thus, we get  the hypothesis   } \\
+		% 		             $$ \interp{ \stack{\counter } = \Mynull }{ \config{\heap_n }{\counterOnly_n}{\stackOnly_n }{\locVarOnly_n }{\pc_n }  }$$  \\
+		% 			      \mbox{\rm\comment{ from the above conclusion and \numConclusion{1} we get   } } \\
+		% 			      $$\interp{ \methodd.\excPost( \pc_n , \NullPointerExc ) 
+		  % 										 }{ \config{\heap _n}{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } $$ \\
+		  % 			     \mbox{\rm\textit{\{ from Def. \ref{wp:exc:defExcRuntime}  of the function $ \methodd.\excPost$ }} \\
+                   %                              \mbox{\rm\textit{ and the assumption that the exception is handled we get \} } } \\
+		  % 		     
+                   %    	 $$\interpTwoLines{ \begin{array}{l} 
+		  % 	       \forall \referenceOnly,\\
+		  % 	       	\Myspace \neg \ \instances(\referenceOnly) \wedge \\
+		  % 		\Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
+		  % 		\Myspace \Myspace  \inter{\pc_n}{\pc_{n+1}} \\
+		  % 		\Myspace \Myspace		         \begin{array}{l}
+		  % 			           \subst{\counter}{0} \\
+		  % 				   \subst{\stack{0}}{\referenceOnly} \\
+		  % 				   \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \% 
+					  % 	   \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }
+		   % 		                 \end{array} 
+                   %                       \end{array} } {\config{\heap_n  }{\counterOnly_n  }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$
+		    %   	\mbox{\rm\textit{\{ from lemmas \ref{substCntr},  \ref{substHeap}, \ref{substStack} and \ref{newHeap}}}\\
+		%	\mbox{\rm\textit{ and the operational semantics of  \putfield \} }}\\
                         
-				$$\interp{ \inter{\pc_n}{\pc_{n+1}}}{ s_{n+1}}$$
-		 \item the reference on the stack top is \Mynull \ and and the exception thrown is not handled.
-		       In this case, we obtain following the same way of reasoning as the previous case :
-		       
-		      $$\interpTwoLines{  \begin{array}{l} 
-			\forall \referenceOnly,\\
-			\Myspace \neg \ \instances(\referenceOnly) \wedge \\
-			\Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
-                    	
-			
-			 \methodd.\excPostSpec( \NullPointerExc ) \\
-			 \begin{array}{l}
-		                \subst{\EXC }{\referenceOnly  }\\
-			        \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
-			        \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
-			   \end{array} 
-		    \end{array}  }{ \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } $$  \\  
-		 	\mbox{\rm \textit{\{ from lemmas   \ref{substStack}, \ref{substHeap}, \ref{newHeap}  and}}\\
-			\mbox{\rm \textit{ the operational semantics of \putfield \}}}\\
-			$$\interp{  \methodd.\excPostSpec(\NullPointerExc  )}{s_{n+1}}	$$	    
-
-                 \item the reference on the stack top is not \Mynull 
-
-
-                   
+		%		$$\interp{ \inter{\pc_n}{\pc_{n+1}}}{ s_{n+1}}$$
+		% \item the reference on the stack top is \Mynull \ and  the exception thrown is not handled.
+		 %      In this case, we obtain following the same way of reasoning as the previous case :
+		 %      
+		  %    $$\interpTwoLines{  \begin{array}{l} 
+		%	\forall \referenceOnly,\\
+		%	\Myspace \neg \ \instances(\referenceOnly) \wedge \\
+		%	\Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
+                 %   	
+		%	
+		%%	 \methodd.\excPostSpec( \NullPointerExc ) \\
+		%	 \begin{array}{l}
+		  %              \subst{\EXC }{\referenceOnly  }\\
+		%	        \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType ) } }_{ {\small \forall \fieldd: \FieldSet, 
+		%	        \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } }    \\
+		%	   \end{array} 
+		 %   \end{array}  }{ \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } $$  \\  
+		% 	\mbox{\rm \textit{\{ from lemmas   \ref{substStack}, \ref{substHeap}, \ref{newHeap}  and}}\\
+		%	\mbox{\rm \textit{ the operational semantics of \putfield \}}}\\
+		%	$$\interp{  \methodd.\excPostSpec(\NullPointerExc  )}{s_{n+1}}	$$	    
+		%
+                % \item the reference on the stack top is not \Mynull 
 			 \comment{thus, we get  the hypothesis   } 
 			$$  \interp{ \stack{\counter } \neq \Mynull }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } $$\\
 			 \comment{ from the above conclusion and \numConclusion{1} we get   } \\
@@ -250,7 +251,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 	           
 
                
-	   \end{enumerate}
+	   %\end{enumerate}
 
  \item method invokation 
 We shall ignore here the part of the \wpName{} which concerns the exceptional termination for reasons of clarity. Treating the whole 
@@ -313,7 +314,8 @@ $$ \numConclusion{8} \ \interp{  \mbox{\rm \texttt{n'}}.\normalPost \subst{\resu
 $$ \numConclusion{9} \ \interp{\mInv.\normalPost\subst{\result}{  \Res} 
 							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } }.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}  $$
 \mbox{\rm\textit{\{  instantiate the quantifications in \numConclusion{2} of the modified locations }}\\
-\mbox{\rm\textit{\modif{} with their values in state $s_{n+1}$ and the quantified variable $res$ with \Res{} and from  \numConclusion{9} we obtain\}}}
+\mbox{\rm\textit{\modif{} with their values in state $s_{n+1}$ and the quantified variable}}\\
+\mbox{\rm\textit{ $res$ with \Res{} and from  \numConclusion{9} we obtain\}}}
  
 $$ \interp{\inter{i}{i+1 } %\begin{array}{l}
 						 \subst{\counter}{ \counter - \mbox{\rm\texttt{n'} } .\numArgs + 1}
@@ -372,6 +374,7 @@ another step can be made and the \fwpi \ of the next instruction holds.
 
 
 \begin{lemma}[Subject reduction] \label{lemma1}
+Let us have a program \Program{} and a method \methodd{} in \Program.
 Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
 For every state  
  $ \config{\heap_{0}}{\counterOnly_{0}}{\stackOnly_{0}}{\locVarOnly_{0}}{\pc_{0}}$ 
@@ -381,7 +384,7 @@ such that :
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{n} s_n$
          \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $ 
-	 \item  method execution with maximal  depth call smaller or equal $ k - 1 $ are correct w.r.t. their specification
+	 \item  all methods in \Program{} at level \level{ k - 1 } are correct w.r.t. their specification
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
 
@@ -521,12 +524,13 @@ We now shall see that starting execution of a method in a state where the \fwpi{
 \fwpi{} for all the instructions in the execution path hold. 
 
 \begin{lemma}[\fwpi \ precondition for method entry point holds initially ]\label{lemma3}
-Assume we have a method \methodd. Let us have states  $s_{0}$ and $s_n$ such that: 
+Let us have a program \Program{} and a method \methodd{} in \Program.
+ Let us have states  $s_{0}$ and $s_n$ such that: 
 \begin{itemize} 
      \item execution of method  \methodd{} starts  in state $s_{0}$ 
      \item  makes $n$ steps to reach state $s_n$: $s_{0} \stateTransWeight{k}^{n} s_{n} $
      \item $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$ holds
-     \item  method executions with maximal  depth call smaller or equal $ k - 1 $ are correct w.r.t. their specification
+     \item all methods in \Program{} at level \level{k - 1} are correct w.r.t. their specification
 \end{itemize}  
  then the following holds
 $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$
@@ -552,12 +556,10 @@ execution in a state in which the \fwpi{} precondition  for the method entry ins
 holds and the method terminates then the method postcondition holds in the method final state.
 
 \begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemma2}
-
-%Assume we have a method \methodd \ with normal postcondition  $\methodd.\normalPost$ and exception function $\methodd.\excPostSpec$. 
-%Assume that every execution of the method \methodd \ terminates.
+Let us have a program \Program{} and a method \methodd{} in \Program.
 For all states $s_0$ and $s_n$ such that   $\methodd : s_0  \stateTransTermWeight{k} s_n $
 and $\interp{ \wpi{} {\methodd}{0}}{ s_{0}}$ holds if we have
-that all method executions with maximal call depth smaller or equal \level{k -1} are correct w.r.t. their specification.
+that all methods at level \level{k -1} are correct w.r.t. their specification.
 Let the program counter in state $s_n$ points to an instruction $\return $ or
  an instruction which throws an unhandled exception of type \mbox{\rm\texttt{Exc}}, then  the following holds:
 \begin{itemize}
@@ -576,20 +578,21 @@ We apply lemma \ref{lemma1} for the case for a \return \ or instruction that thr
 
 
 \begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemmaMethRespSpec}
-If  all method executions with maximal call depth smaller or equal \level{k -1} are correct w.r.t. their specification 
+Let us have a program \Program{} and a method \methodd{} in \Program.
+If  all methods in \Program{} at level  \level{k -1} are correct w.r.t. their specification 
 and the verification conditions for a method  \methodd{} are valid formulas then 
 \methodd{}  respects its specification at level \level{k} 
 \end{lemma}
-Proof: this proof  follows directly from Lemma \ref{lemma2}
+Proof: this proof  follows directly from Lemma \ref{lemma2}.
 
 
-\newcommand{\Program}{\mbox{\rm\texttt{P}}}
 
-We are now ready to prove Theorem \ref{vcGenCorrect}.
+
+We are now ready to prove Theorem \ref{vcGenCorrect}.\\
 Proof:
 We want to establish now  that if for every \methodd{}
  in every class \class{} in a program \Program{}  the respective verification conditions are valid then 
-the \Program{} is correct as defined in Def. \ref{defCorrectProg}.
+the \Program{} is correct as defined in Def. \ref{defCorrectProgram}.
  This, in particular, means that for all levels $\level{k} \ge 0 $ the program is correct in  level \level{k}.
 We reason by induction on the level \level{k}. 
 \begin{description} 
