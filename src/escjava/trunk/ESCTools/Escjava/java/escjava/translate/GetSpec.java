@@ -184,6 +184,7 @@ public final class GetSpec {
      * its; propagate non_nulls:
      */
     Hashtable subst = new Hashtable();
+    //System.out.println("SUBST " + rd.parent.id.toString());
     if (rd != dmd.original) {
       for (int i = 0; i < rd.args.size(); i++) {
         GenericVarDecl newDecl = dmd.original.args.elementAt(i);
@@ -197,6 +198,10 @@ public final class GetSpec {
             newDecl);
         
         subst.put(oldDecl, va);
+//        escjava.ast.EscPrettyPrint.inst.print(System.out,oldDecl);
+//        System.out.print(" -> ");
+//        escjava.ast.EscPrettyPrint.inst.print(System.out,0,va);
+//        System.out.println("");
       }
     }
     
@@ -218,6 +223,7 @@ public final class GetSpec {
           }
           case TagConstants.MODIFIESGROUPPRAGMA: {
             ModifiesGroupPragma em = (ModifiesGroupPragma)mp;
+            if (em.precondition != null) em.precondition = doSubst(subst,em.precondition); // FIXME - don't like modifiying the original
             for (int ii = 0; ii < em.items.size(); ++ii) {
               CondExprModifierPragma emp = em.items.elementAt(ii);
               if (emp.expr == null) {
@@ -236,7 +242,7 @@ public final class GetSpec {
                 // no action
               }
               emp = doSubst(subst, emp);
-              em.items.setElementAt(emp, ii);
+              em.items.setElementAt(emp, ii);  // FIXME - I don't like this modification of the original -- DRC
             }
             dmd.modifies.addElement(em);
             break;
@@ -288,9 +294,16 @@ public final class GetSpec {
     }
   }
   
+  /** Perform a substitution on an Expr * */
+  private static Expr doSubst(Hashtable subst,
+                        /*@ non_null @*/ Expr expr) {
+    return 
+        Substitute.doSubst(subst, expr);
+  }
+  
   /** Perform a substitution on an ExprModifierPragma * */
   private static ExprModifierPragma doSubst(Hashtable subst,
-					    /*@ non_null @*/ ExprModifierPragma emp) {
+                        /*@ non_null @*/ ExprModifierPragma emp) {
     return ExprModifierPragma.make(emp.tag,
         Substitute.doSubst(subst, emp.expr), emp.loc);
   }
@@ -1008,11 +1021,11 @@ public final class GetSpec {
       TrAnExpr.closeForClause();
     }
     //System.out.println("TRMETHODECLPOST T WITH " + postAssumptions.size());
-    /*
-     * System.out.println("WT"); Enumeration ee = wt.keys(); while
-     * (ee.hasMoreElements()) { Object o = ee.nextElement();
-     * System.out.println("MAP: " + o + " -->> " + wt.get(o)); }
-     */
+    
+//      System.out.println("WT"); Enumeration ee = wt.keys(); while
+//      (ee.hasMoreElements()) { Object o = ee.nextElement();
+//      System.out.println("MAP: " + o + " -->> " + wt.get(o)); }
+     
     // Then exceptional postconditions
     {
       // EC == ecThrow
@@ -1572,9 +1585,10 @@ public final class GetSpec {
         ExprVec ante = TrAnExpr.typeAndNonNullAllocCorrectAs(ii.sdecl, ii.U,
             null, true, null, false);
         if (spec.dmd.isConstructor()) {
-          TypeSig tU = ii.U;
+          TypeSig tU = ii.U; // Type that contains the invariant ii
           TypeSig tT = TypeSig.getSig(spec.dmd.getContainingClass());
           boolean includeAntecedent = false;
+          //if (Types.isSubclassOf(tU, tT) || Types.isSubclassOf(tT, tU)) {
           if (Types.isSubclassOf(tU, tT)) {
             if (!Types.isSameType(tU, tT)
                 || !spec.dmd.isConstructorThatCallsSibling()) {

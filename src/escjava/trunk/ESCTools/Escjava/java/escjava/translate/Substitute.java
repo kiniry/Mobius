@@ -431,7 +431,11 @@ public class Substitute {
 		Expr ee = me.args.elementAt(i);
 		args.addElement( doSubst(subst, ee, rhsVars));
 	  }
-	  MethodInvocation r = MethodInvocation.make(me.od, me.id, me.tmodifiers, me.locId, 
+      ObjectDesignator od = me.od;
+      if (od instanceof ExprObjectDesignator) {
+        od = ExprObjectDesignator.make(od.locDot,doSubst(subst, ((ExprObjectDesignator)od).expr, rhsVars));
+      }  // FIXME is it ok to ignore the other types of ObjectDesignator?
+	  MethodInvocation r = MethodInvocation.make(od, me.id, me.tmodifiers, me.locId, 
 			me.locOpenParen, args);
 	  r.decl = me.decl;
 	  result = r;

@@ -263,6 +263,14 @@ public class AnnotationHandler {
         }
   }
 
+  static public void printSpecs(TypeDecl td) {
+    TypeDeclElemVec v = td.elems;
+    for (int i = 0; i<v.size(); ++i) {
+      TypeDeclElem tde = v.elementAt(i);
+      if (tde instanceof RoutineDecl) printSpecs((RoutineDecl)tde);
+    }
+  }
+
   static public void printSpec(ModifierPragma mp) {
     if (mp instanceof ModifiesGroupPragma) {
       EscPrettyPrint.inst.print(System.out, 0, (ModifiesGroupPragma)mp);
