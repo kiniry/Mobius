@@ -57,9 +57,6 @@ SignalsOnly.java
 ## @see bug 269
 MartijnsPoint.java
 ## Tests in progress
-SuperSpecBug.java
-SuperSpecShortBug.java
-SuperSpecShortBugA.java
 Zero.java
 InheritedInvariant.java
 Bag.java
