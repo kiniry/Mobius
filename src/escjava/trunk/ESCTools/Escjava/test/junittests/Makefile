@@ -90,7 +90,7 @@ ifdef COMSPEC
 else
 	@for f in `ls *.java ${OTHERTESTS} | grep -v -f skip -f notjunittests`; do \
 		echo -n ${ALWAYSFLAGS} " " >> listtests ; \
-		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} )  \
+		( grep '//#FLAGS:' $$f || echo ${DEFAULTFLAGS} )  | tr -d "\r" \
 		| sed -e 's?//#FLAGS:??' -e "s/\$$/ $$f/"  \
 		| sed -e "s@ESCTOOLS_ROOT@${ESCTOOLS_ROOT}@" \
 		>> listtests ; \
