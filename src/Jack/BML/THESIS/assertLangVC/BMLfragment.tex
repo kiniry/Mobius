@@ -14,7 +14,7 @@ BML  expressions (nonterminal $\expression$) and predicates
 	       \item update field access expression 
 		  $\update{\fieldd}{ \expression}{\expression}(\expression)$.
 
-	       \item update array access expression \\
+	       \item update array access expression 
                    $ \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression)$
 	\end{itemize}
 
@@ -24,7 +24,7 @@ BML  expressions (nonterminal $\expression$) and predicates
           will need a means for expressing that a new object has been created during the method execution. 
 
 	  We extend the language of BML  formulas
-	  with a new user defined predicate $ \instances(\RefValues)$. Informally, the semantics of the predicate \\
+	  with a new user defined predicate $ \instances(\RefValues)$. Informally, the semantics of the predicate
 	  $\instances(\referenceOnly)$ where $\referenceOnly \in \RefValues$
 	  means that the reference $\referenceOnly  $  is allocated in the current state.
         
@@ -33,5 +33,5 @@ BML  expressions (nonterminal $\expression$) and predicates
 The assertion language will use the names of fields and classes for the sake of readability instead of their corresponding indexes
 in the constant pool as is in BML. 
 The assertion language discussed here supports only method pre and postconditions. Note that as we discussed earlier in 
-Section \ref{BCSLprelim}, subsection \ref{javaVerif:JML:subtyping} on page \pageref{javaVerif:JML:subtyping}, class invariants and 
-history constraints as well as behavior subtyping can be encoded as method pre and postconditions. 
+Section \ref{BCSLprelim}
+class invariants and history constraints can be encodes as pre and postconditions. 

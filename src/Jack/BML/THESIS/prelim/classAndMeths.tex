@@ -1,16 +1,16 @@
  %\newcommand{\isFieldOfOnly}{\mbox{ \rm \textit{isFieldOf}} \ }
  % \newcommand{\isFieldOf}[2]{\mbox{ \rm \textit{isFieldOf}}(#1, #2) }
 
- \section{Classes, fields and methods}\label{clazz}
+ \section{Program, classes, fields and methods}\label{clazz}
  Java programs are a set of classes. As the JVM says \textit{`` A class declaration specifies a new reference type and provides its implementation. \ldots
  The body of a class declares members (fields and methods), static initializers, and constructors.''}
- In our formalization, classes are encoded  with the data structure $\ClassSet$,  fields with $\FieldSet$ and
+ In our formalization, classes are encoded with the data structure $\ClassSet$,  fields with $\FieldSet$ and
  methods are encoded with $\MethodSet$ data structure. 
  We define a domain for class names \ClassName, for field names \FieldName{} and for method names \MethodName{} respectively.
 
  An object of type \ClassSet \ is a tuple with the following components: list of field objects (\fields), which are declared in this class,
  list of the methods declared in the class (\methods), the name of the class (\className)   and the super class of the class (\superClass).
- All classes, except the special class \index{\Object}, have a unique direct super class. Formally, a class of our bytecode language 
+ All classes, except the special class \Object, have a unique direct super class. Formally, a class of our bytecode language 
  has the following structure:
 
 

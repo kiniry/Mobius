@@ -10,7 +10,7 @@ $$ \interOnly: int \longrightarrow int  \longrightarrow \MethodSet \longrightarr
  $\ins{j}$ in the execution path where  \ins{j} is followed by the instruction $\ins{k}$.
  This predicate depends on the execution relation between the two instructions $\ins{j}$ and $\ins{k}$.
  The function \interOnly{} allows to generate correct verification conditions for loops. For this,  \inter{} does a case analysis 
- over the relation \execRel{} (introduced  in Chapter \ref{opSem}, Section \ref{prelim:ctrFlow} ) between the current instruction and its successor.
+ over the relation $\execRel{}$ (introduced  in Chapter \ref{opSem}, Section \ref{prelim:ctrFlow} ) between the current instruction and its successor.
  If the relation is a $\execRel^{l}$, i.e. the next instruction is a loop entry instruction and the current is a loop end
 ( as defined in Def.\ref{defLoop}) 
  then the predicate that must hold in between the current instruction and the next one is the loop invariant associated to the loop entry.

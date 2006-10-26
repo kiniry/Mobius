@@ -51,86 +51,98 @@ $${\scriptsize
 		  \end{array} \\ \\ \\
     \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
                \begin{array}{l} 
-	       \wpSrcStmt{\expressionSrc_1}{  \\
-	        \phantom{wpiSr} \wpSrcExpr{\expressionSrc_2 }{ \\
-		\phantom{wpiSr}\phantom{wpiSr}
-		\begin{array}{l}
-		    v_1 \neq \Mynull  \Rightarrow \\
-	         \phantom{wpiSr}  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   \\
-		 \wedge \\
-		 v_1  = \Mynull  \Rightarrow  \\
-		   \phantom{wpiSr}   \excPostSrc(\NullPointerExc) 
-		   \end{array}}{ \\ \phantom{wpiSr}\phantom{wpiSr}  \excPostSrc}{v_2} 
-		   }{ \\ \phantom{wpiSr}  \excPostSrc}{v_1} 
+	       \wpSrcStmt{\expressionSrc_1}{  %\\
+	        %\phantom{wpiSr}
+		 \wpSrcExpr{\expressionSrc_2 }{ %\\
+		%\phantom{wpiSr}\phantom{wpiSr}
+		%\begin{array}{l}
+		    v_1 \neq \Mynull  \Rightarrow % \\
+	         %\phantom{wpiSr} 
+		  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   %\\
+		 \wedge %\\
+		 v_1  = \Mynull  \Rightarrow  %\\
+		   %\phantom{wpiSr}   
+		   \excPostSrc(\NullPointerExc) 
+		   %\end{array}
+                   }{ %\\ \phantom{wpiSr}\phantom{wpiSr}  
+		   \excPostSrc}{v_2} 
+		   }{ \\ \phantom{\expressionSrc_1.\fieldd = \expressionSrc_2 }  
+		   \excPostSrc}{v_1} 
 		   \end{array} \\ \\ \\
 
     \wpSrcStmt{ \begin{array}{l} \Myif \  (  \expressionSrc_1 \ \rel \ \expressionSrc_2   )  \Mythen  \{ \stmt_1 \}   \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } 
      =^{\mbox{\rm\textsf{if}}}\\
 
          \begin{array}{l} 
-	 \wpSrcExpr{ \expressionSrc_1 }{ \\
-	              \phantom{wpiSr} \wpSrcExpr{ \expressionSrc_2 }{
-		         \begin{array}{l}  
-		            v_1 \rel v_2  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
+	 \wpSrcExpr{ \expressionSrc_1 }{ 
+	               \wpSrcExpr{ \expressionSrc_2 }{
+		         %\begin{array}{l}  
+		           v_1 \rel v_2  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } %\\
 			    \wedge \\
-			    v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
-	               \end{array}
-		       }{  \excPostSrc }{v_2} 
-	 } {\\  \phantom{wpiSr}  \excPostSrc }{v_1} 
+			  \phantom{wpiSr\expressionSrc_1wpiSr\expressionSrc_2} \neg v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } %\\
+	               %\end{array}
+		       }{\excPostSrc }{v_2} 
+	 } {\\ \phantom{wpiSr\expressionSrc_1}   \excPostSrc }{v_1} 
      \end{array} \\ \\ \\
 
      \wpSrcStmt{ \while \ (\expressionSrcRel) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
 	      \begin{array}{l} 
 	       \invariant \ \wedge\\
 	       \forall \  m, m \in \modLoop , \\
-	       \Myspace \invariant \Rightarrow \\
-	 	     \Myspace    \Myspace \wpSrcExpr{\expressionSrcRel}{\\\phantom{wp^{src}} 
-		     \begin{array}{l}  		
-		           \Myspace v = \Mytrue  \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc}  \\ 
-		           \Myspace v = \Myfalse  \Rightarrow  \normalPostSrc
-		     \end{array}
-	      }{ \\ \Myspace \phantom{wp^{src}} \excPostSrc}{v}  \end{array} \\ \\ \\
+	       \invariant \Rightarrow %\\
+	 	     %\Myspace    \Myspace 
+		     \wpSrcExpr{\expressionSrcRel}{%\\\phantom{wp^{src}} 
+		     %\begin{array}{l}  		
+		           v = \Mytrue  \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \wedge % \\ 
+		           v = \Myfalse  \Rightarrow  \normalPostSrc
+		     %\end{array}
+	      }{ %\\ \Myspace \phantom{wp^{src}} 
+	      \excPostSrc}{v}  \end{array} \\ \\ \\
 
      \wpSrcStmt{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} = \\
              \begin{array}{l}   \wpSrcExpr{ \expressionSrc}{ \normalPostSrc \subst{\result }{ v }} { \excPostSrc}{v}  \end{array}\\ \\ \\ 
 
  \wpSrcStmt{ \throw \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{throw}}}\\
 	       \begin{array}{l} 
-	      \wpSrcExpr{\expressionSrc}{\\ \phantom{wpiSr} 
-                  \begin{array}{l}
+	      \wpSrcExpr{\expressionSrc}{%\\ \phantom{wpiSr} 
+                  %\begin{array}{l}
 		       
-	                v = \Mynull \Rightarrow \excPostSrc( \NullPointerExc  )  \\
-			\wedge \\
-			 v \neq \Mynull \Rightarrow\\
-			 \Myspace
-			  \begin{array}{l}  
+	                v = \Mynull \Rightarrow \excPostSrc( \NullPointerExc  )  %\\
+			\wedge %\\
+			 v \neq \Mynull \Rightarrow%\\
+			 %\Myspace
+			  \left(\begin{array}{l}  
 				 \forall \mbox{\rm\texttt{Exc} } , \\
 				 \typeof{ v } <: \mbox{\rm\texttt{Exc} }   \Rightarrow \\
 				 \Myspace   \methodd.\excPostSrc( \mbox{\rm\texttt{Exc} }    ) \subst{\EXC}{v}
-			  \end{array} 
+			  \end{array}\right) 
 
 			  
-	          \end{array}}   
-		     { \\ \phantom{wpiSr}  \excPostSrc}{v} 
+	          %\end{array}
+		  }   
+		     { %\\ \phantom{wpiSr}  
+		     \excPostSrc}{v} 
 	   \end{array}     \\ \\ \\
 
  \wpSrcStmt{ \try \ \{ \stmt_1 \} \ \catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{try catch}}}\\
               \begin{array}{l}
-	      \wpSrcStmt{ \stmt_1}{ \\ 
-	                 \phantom{wpiSr} \normalPostSrc}{ \\ 
-			 \phantom{wpiSr} \update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }} 
+	      \wpSrcStmt{ \stmt_1}{ %\\ 
+	                 %\phantom{wpiSr} 
+			 \normalPostSrc}{ %\\ 
+			 %\phantom{wpiSr}
+			  \update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }} 
 	      \end{array} \\ \\ \\
 
 \wpSrcStmt{ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{try finally}}}\\
        \begin{array}{l} 
-	 \wpSrcStmt{ \stmt_1}{\\ \phantom{wpiSr}
-                     \wpSrcStmt{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{wpiSr}
+	 \wpSrcStmt{ \stmt_1}{%\\ \phantom{wpiSr}
+                     \wpSrcStmt{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{wpSrc\stmt_1}
 		     \update{\excPostSrc}{\Exception}{ \wpSrcStmt{\stmt_2}{ 
-		                                    \begin{array}{l}
+		                                    \left(\begin{array}{l}
                                                         \EXC \neq \Mynull \Rightarrow \excPostSrc(\Exception) 
 							\wedge\\
 							\EXC = \Mynull \Rightarrow \excPostSrc(\NullPointerExc)
-						     \end{array} } { \excPostSrc }   } }
+						     \end{array}\right) } { \excPostSrc }   } }
        \end{array} 
 
 \end{array} } 

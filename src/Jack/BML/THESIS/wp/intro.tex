@@ -5,15 +5,10 @@ This section describes a Hoare style verification condition generator for byteco
 %technical
 The vcGen is tailored to the bytecode language introduced in Section \ref{opSem} and thus, it deals
 with stack manipulation, object creation and manipulation, field access and update, as well as exception throwing and handling.
-
-% discussion about the choice for the vcgen algorithm
 Different ways of generating verification conditions exist. The verification condition
  generator presented  propagates the weakest precondition and exploits the information 
 about the modified locations by methods and loops. 
-In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choices done here.
-
-
-
+%In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choices done here.
 
 % definition of the wp
 As we stated earlier, our verification condition generator is based on a weakest precondition (wp) calculus.

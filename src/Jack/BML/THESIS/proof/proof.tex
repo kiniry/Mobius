@@ -47,6 +47,7 @@ initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly 
          \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \interp{\wpi{\ins{\pc_n}}{\methodd}{}}{s_n} $
 	 \item all methods in \Program{} respect their specification at level \level{k-1}  
+	 \item the verification conditions for \Program{} are valid formulas
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
   
@@ -68,8 +69,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		\item    $\ins{\pc_n} = \return$ 
 		 
 		     
-		    	\mbox{\rm\textit{\{by initial hypothesis we have that the \wpName{} }}\\
-			\mbox{\rm\textit{of the current instruction holds \}}} 
+		    	\comment{by initial hypothesis we have that the \wpName{} of the current instruction holds } 
 			$$\interp{\wpi{\return}{\pc_{n}}{\methodd}} {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}  $$
 			\mbox{\rm\comment{by definition the weakest precondition for \return } }
 		        $$\interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } = $$
@@ -275,9 +275,9 @@ definition of the \wpName{} for method invokation is done in a rather similar wa
 																								
 	 				 			 	\end{array}\right)  } {s_n}	\end{array} $$
  \mbox{\rm\textit{\{      From the operational semantics of method invocation the method lookup function}}\\
- \mbox{\rm\textit{   \lookupOnly{} will find the method \mbox{\rm \texttt{n'}} which potentially overrides method }}\\
-  \mbox{\rm\textit{   \mbox{\rm\texttt{n}} and which will be actually executed. Because \mbox{\rm \texttt{n'}} has a maximal execution}}\\
-  \mbox{\rm\textit{depth $k - 1$, we can apply the initial hypothesis for \mbox{\rm\texttt{n'}} and we then get :\}}}
+ \mbox{\rm\textit{   \lookupOnly{} will find the method \mbox{\rm \texttt{n'}} which overrides method }}\\
+  \mbox{\rm\textit{   \mbox{\rm\texttt{n}} and which will be actually executed. Because \mbox{\rm \texttt{n'}} is at level}}\\
+  \mbox{\rm\textit{\level{k-1}, we can apply the initial hypothesis for \mbox{\rm\texttt{n'}} and we then get :\}}}
                 $$  \begin{array}{l}
 		  \numConclusion{3} \  \interp{ \mbox{\rm \texttt{n'}}.\pre  }{\config{\heap_n}       
                                                        {0}
@@ -289,12 +289,16 @@ definition of the \wpName{} for method invokation is done in a rather similar wa
 				                      \counterOnly_{n+1} = \counterOnly_n - \mbox{\rm \texttt{n}}.\numArgs + 1 \\
 						       \stackOnly_{n+1} = \update{\stackOnly_n}{\counterOnly_n}{\Res} \\
 						       \pc_{n+1}  = \pc_n + 1 \\\\
-           
+            \end{array}$$
+	   \mbox{\rm\textit{\{ As the verification conditions for the program \Program{} are valid, we can}}\\
+	   \mbox{\rm\textit{ get that the verification conditions that the specification of }}\\
+	    \mbox{\rm\textit{ \mbox{\rm \texttt{n'}}  is in compliance with the specification of the overriden method \mbox{\rm\texttt{n}}  \}}} \\
 
-	    \numConclusion{4} \  \validFormula{\mInv.\pre \Rightarrow \mbox{\rm \texttt{n'}}.\pre   } \\\\ 
+	   $$  \begin{array}{l}\numConclusion{4} \  \validFormula{\mInv.\pre \Rightarrow \mbox{\rm \texttt{n'}}.\pre   } \\
 	     \numConclusion{5} \  \validFormula{\mbox{\rm \texttt{n'}}.\normalPost \Rightarrow  \mInv.\normalPost  } 
+	      \end{array}$$
 
- \end{array}$$
+
 \comment{ \numConclusion{3} is equivalent to}\\ 
 $$ 
 \begin{array}{l}
@@ -384,7 +388,7 @@ such that :
          \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $  
 	 \item all methods in \Program{} respect their specification at level \level{k-1}  
-	 
+	 \item the verification conditions for \Program{} are valid formulas
         % \item    %$ \forall \mbox{ \rm \texttt{n}} : \MethodSet . \mbox{ \rm \texttt{n}}   \neq \methodd \ n$  is correct w.r.t. its specification
  \end{itemize}
 
@@ -406,7 +410,7 @@ then the folloing holds:
 \end{lemma}
 
 \textit{Proof :}
-The proof is by case analysis on the execution relation \execRel{}  between the current instruction and the next instruction.
+The proof is by case analysis on the execution relation $\execRel{}$  between the current instruction and the next instruction.
 
  We consider three cases: the case when the next execution step does not enter a cycle (the next instruction is not a loop entry in the sense of Def.\ref{defLoop} )
 the case when the current instruction is a loop end and the next instruction to be executed is a loop entry instruction (the execution step is $\execRel_l$ )
@@ -531,6 +535,7 @@ Let us have a program \Program{} and a method \methodd{} in \Program.
      \item  makes $n$ steps to reach state $s_n$: $s_{0} \stateTransWeight{k}^{n} s_{n} $
      \item $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$ holds
      \item all methods in \Program{} respect their specification at level \level{k-1}  
+     \item the verification conditions for \Program{} are valid formulas
 \end{itemize}  
  then the following holds
 $$\forall i,  0 < i \le n, \  \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ }}{ s_{i}} $$
@@ -559,13 +564,13 @@ holds and the method terminates then the method postcondition holds in the metho
 Let us have a program \Program{} and a method \methodd{} in \Program.
 For all states $s_0$ and $s_n$ such that   $\methodd : s_0  \stateTransTermWeight{k} s_n $
 and let $\interp{ \wpi{} {\methodd}{0}}{ s_{0}}$ holds. Assume that
-  all methods in \Program{} respect their specification at level \level{k-1}. 
+  all methods in \Program{} respect their specification at level \level{k-1} and 
+the verification condition for \Program{} are valid formulas.
 Let the program counter in state $s_n$ points to an instruction $\return $ or
  an instruction which throws an unhandled exception of type \mbox{\rm\texttt{Exc}}, then  the following holds:
 \begin{itemize}
     \item if $\ins{\pc_n} = \return $ then $\interp{ \methodd.\normalPost}{s_{n+1}}$
-    \item  if $\ins{\pc_n}$ throws a not handled exception of type \mbox{\rm\texttt{Exc}} then \\ 
-             $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
+    \item  if $\ins{\pc_n}$ throws a not handled exception of type \mbox{\rm\texttt{Exc}} then  $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
 \end{itemize}
 \end{lemma}
 \textit{Proof:} 
@@ -579,17 +584,15 @@ We apply lemma \ref{lemma1} for the case for a \return \ or instruction that thr
 Now, we establish under what conditions we can conclude that a method respects its specification at level \level{k}.
 \begin{lemma}[method respects its specification at level \level{k}]\label{lemmaMethRespSpec}
 Let us have a program \Program{} and a method \methodd{} in \Program.
-If  all methods in \Program{} respect their specification at level  \level{k -1}
-and the verification conditions for a method  \methodd{} are valid formulas then 
-\methodd{}  respects its specification at level \level{k} 
-\end{lemma} The proof  follows directly from Lemma \ref{lemma2}.
+If  all methods in \Program{} respect their specification at level  \level{k -1} and 
+ the verification conditions for \Program{} are valid formulas
+then \methodd{}  respects its specification at level \level{k} 
+\end{lemma}
+ The proof  follows directly from Lemma \ref{lemma2}. We are now ready to prove Theorem \ref{vcGenCorrect}.
 
 
-
-
-We are now ready to prove Theorem \ref{vcGenCorrect}.\\
 \begin{vcGenCorrect1}
- If the verification conditions  for all  methods in a program \Program{}  (see  subsection \ref{wp:vcMeth} )
+ If the verification conditions  of program \Program{} (see  subsection \ref{wp:vcMeth})
 are valid then \Program{} is correct w.r.t. Def. \ref{defCorrectProgram}
 \end{vcGenCorrect1}
 \textit{Proof:}
@@ -606,8 +609,11 @@ are correct
 In particular, this means that for every class \class{}, every method \methodd{} in \class{} is correct at level \level{k-1}.
 We can apply Lemma \ref{lemmaMethRespSpec} to every single method  \methodd{} in \Program{}, 
  the induction hypothesis  and the initial hypothesis that  verification conditions  of \methodd{} are valid and we obtain that 
-every method  \methodd{} is correct w.r.t. its specification at level \level{k} 
+every method  \methodd{} is correct w.r.t. its specification at level \level{k}. This means that the program is correct at level k. 
 \end{description}
+From the base case and the inductive case, we can conclude that the program \Program{} is correct for every level \level{k} 
+and thus, we have proven the theorem.
+ 
 \Qed
 
 

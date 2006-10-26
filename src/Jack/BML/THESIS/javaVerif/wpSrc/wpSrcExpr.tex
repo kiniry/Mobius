@@ -52,46 +52,51 @@ $${\scriptsize
 
 		     
              \wpSrcExpr{\expressionSrc.\fieldd  }{\normalPostSrc }{ \excPostSrc }{v}  = \\
-	                        \begin{array}{l} \wpSrcExpr{\expressionSrc }{\\
-			                   \phantom{wpiSr} \begin{array}{l} 
-						        v_1 \neq \Mynull \Rightarrow \normalPostSrc \subst{v}{v_1.\fieldd}\\
-			                                \wedge \\
-						        v_1 = \Mynull \Rightarrow\\
-							 \Myspace 
-							  \begin{array}{l} 
+	                        \begin{array}{l} \wpSrcExpr{\expressionSrc }{%\\
+			                  % \phantom{wpiSr} %\begin{array}{l} 
+						        v_1 \neq \Mynull \Rightarrow \normalPostSrc \subst{v}{v_1.\fieldd} %\\
+			                                \wedge %\\
+						        v_1 = \Mynull \Rightarrow%\\
+							 %\Myspace 
+							 \left( \begin{array}{l} 
 							      \forall \freshVar, 
 							      \neg \instances(\freshVar) \wedge \\
 							       \freshVar \neq \Mynull \Rightarrow\\ 
 							       \Myspace\excPostSrc(\NullPointerExc )\subst{\EXC}{\freshVar}
-							  \end{array}
+							  \end{array}\right)
 							        
-		                                   \end{array}}{\\ 
-                                           \phantom{wpiSrc} \excPostSrc }{v_1}  
+		                                  % \end{array}
+						   }{% \\ 
+                                          % \phantom{wpiSrc}
+					    \excPostSrc }{v_1}  
 				\end{array}  \\
 		 \\\\	
  
 
 \wpSrcExpr{ ( \class ) \ \expressionSrc  }{\normalPostSrc }{ \excPostSrc }{v} = \\
-	         \begin{array}{l}   \wpSrcExpr{ \expressionSrc } { \\ 
+	         \begin{array}{l}   \wpSrcExpr{ \expressionSrc } { %\\ 
                       
-                    \phantom{wpSr} \begin{array}{l}
+                    % \phantom{wpSr} \begin{array}{l}
 
                     \typeof{v_1 } <:\class  \vee v_1 = \Mynull \Rightarrow   % \\
 
 		      %\phantom{wpSr} \phantom{wpSr}  
-		       \normalPostSrc \subst{v}{v_1}  \\
+		       \normalPostSrc \subst{v}{v_1}  %\\
 		     \wedge \\
-		    \neg \   \typeof{v_1 } <:  \class \Rightarrow  \\ 
-		    \Myspace 
-							  \begin{array}{l} 
+		   \phantom{wpSr\expressionSrc\neg} \neg \   \typeof{v_1 } <:  \class \Rightarrow  %\\ 
+		    %\phantom{wpSr}
+							  \left( \begin{array}{l} 
 							      \forall \freshVar, 
 							      \neg \instances(\freshVar) \wedge \\
 							       \freshVar \neq \Mynull \Rightarrow\\ 
-							       \Myspace \excPostSrc( \mbox{ \rm \ClassCastExc }  ) \subst{\EXC}{\freshVar}
-							  \end{array}
+							       \excPostSrc( \mbox{ \rm \ClassCastExc }  ) \subst{\EXC}{\freshVar}
+							  \end{array}\right)
                      
 
-                    \end{array}  } { \\ \phantom{wpSrc}  \excPostSrc }{v_1} \end{array}
+                     %\end{array}  
+                    } { %\\ 
+		    %\phantom{wpSrc} 
+                       \excPostSrc }{v_1} \end{array}
 		    \\\\	
 		    % \wpSrcExpr{ \expressionSrc \ \instanceofSrc \  \class }{\normalPostSrc  }{ \excPostSrc }{ v}= \\
 	             %   \wpSrcExpr{ \expressionSrc  }

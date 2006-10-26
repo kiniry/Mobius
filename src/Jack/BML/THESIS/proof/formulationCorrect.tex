@@ -14,7 +14,7 @@ relation in  the operational semantics with levels. A level of execution  stands
   Thus the operational semantics of a method invokation would be :
  
 $$ \begin{array}{l}
-              {\scriptsize \frac{\begin{array}{l} 
+             \frac{\begin{array}{l} 
                         \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} } = \mbox{\rm n} \\
 	                        \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
 	                      \mbox{\rm n}  :         \config{\heap}       
@@ -30,7 +30,7 @@ $$ \begin{array}{l}
 			         \end{array}  }	         
 	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTransWeight{k + 1}
-					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} }
+					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} 
 \end{array}$$
 
 This definition is rather intuitive and means that if a method \methodd{}
@@ -40,7 +40,7 @@ Thus an execution labeled with \level{0} does not exist.
  For the other instructions the weight of the maximal call depth is just passed. The rules for the instructions different from 
 method invokation have this general form: 
 $$ \begin{array}{l}
-              {\scriptsize \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTransWeight{k} s_2 , \  \level{k} > 0}}
+              \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTransWeight{k} s_2 , \  \level{k} > 0}
 \end{array}$$
  
 We now first define what does it mean for a method to respect its specification at level \level{k}
@@ -53,16 +53,16 @@ for every two states $s_0$ and $s_1$ such that :
       \item   $\methodd : s_0  \stateTransTermWeight{k} s_1   $
       \item   $ \interp{\methodd.\pre }{ s_0 }$
 \end{itemize}
-Then if \methodd \ terminates normally then the normal postcondition holds in the final state $s_1 $:  $\interp{\methodd.\normalPost}{s_1}$. 
-Otherwise, if  \methodd \ terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $s_1 $
-$ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $.
- Moreover, if method $\methodd$ overrides method \mbox{\rm\texttt{n}} then the specification of \methodd{} must be such that
- the precondition \mbox{\rm\texttt{n}}.$\pre$ of method  \mbox{\rm\texttt{n}} implies the precondition  $\methodd.\pre$ of method \methodd{}, i.e.
-$\validFormula{\mbox{\rm\texttt{n}}.\pre \Rightarrow   \methodd.\pre}$  
-and the postcondition 
-$\methodd.\normalPost$ of \methodd{} implies the postcondition $\mbox{\rm\texttt{n}}.\normalPost$   of method \mbox{\rm\texttt{n}}, i.e. 
-$\validFormula{\methodd.\normalPost \Rightarrow \mbox{\rm\texttt{n}}.\normalPost } $
- $\forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )$
+Then if \methodd \ terminates normally then the normal postcondition holds in the final state $s_1 $, i.e.  $\interp{\methodd.\normalPost}{s_1}$ holds. 
+Otherwise, if  \methodd{}  terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $s_1 $, i.e.
+$ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $ holds.
+ % Moreover, if method $\methodd$ overrides method \mbox{\rm\texttt{n}} then the specification of \methodd{} must be such that
+ % the precondition \mbox{\rm\texttt{n}}.$\pre$ of method  \mbox{\rm\texttt{n}} implies the precondition  $\methodd.\pre$ of method \methodd{}, i.e.
+ %$\validFormula{\mbox{\rm\texttt{n}}.\pre \Rightarrow   \methodd.\pre}$  
+ %and the postcondition 
+ %$\methodd.\normalPost$ of \methodd{} implies the postcondition $\mbox{\rm\texttt{n}}.\normalPost$   of method \mbox{\rm\texttt{n}}, i.e. 
+ %$\validFormula{\methodd.\normalPost \Rightarrow \mbox{\rm\texttt{n}}.\normalPost } $
+ % $\forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )$
 \end{defCorrect}
 
 Next, we give a definition for program correctness at level \level{k}. 
@@ -101,7 +101,6 @@ generated for all methods in a program are valid then we can conlcude that the p
 %relation between its specification and the specification of the overriden method.
 We formulate this as a the theorem:
 \begin{vcGenCorrect}[Verification condition generator is correct]\label{vcGenCorrect}
-
 If the verification conditions  for all  methods in a program \Program{}  (see  subsection \ref{wp:vcMeth} )
 are valid then \Program{} is correct w.r.t. Def. \ref{defCorrectProgram}
 %$$  \begin{array}{l}  \validFormula{\methodd.\pre \Rightarrow \wpi{\method.\body[0]}{\methodd}{}} \\
