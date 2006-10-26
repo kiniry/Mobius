@@ -32,5 +32,6 @@ ProverResponse.class
 Signature.class
 demoprover
 demoprover.jnilib
+libdemoprover.0.0.0.dylib
 libdemoprover.jnilib
 semantic.cache
