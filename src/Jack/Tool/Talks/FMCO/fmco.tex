@@ -75,12 +75,13 @@ else, here you can find our best collection of ring- \\
 tones, cell phone games, themes, screensavers,\\
 backgrounds.}
 \FromSlide{2}
-\vspace*{-14em}\\
+\vspace*{-13em}\\
 \begin{center}
 \includegraphics[width=4cm]{beestje.ps}
 \end{center}
 \FromSlide{3}
 \begin{center}
+\ \\ 
 \Red{Are you sure that you can trust these applications?}
 \end{center}
 \end{slide}
@@ -131,7 +132,7 @@ automatic theorem prover
 \begin{itemize}
 \item Development started at Gemplus (Jan 2002 to April 2003)\\
 Objective: Give developers tools that help them to provide and be
-accountable for a certain quality level of their code
+accountable for quality of their code
 \begin{itemize}
 \item Conform to specification requirements
 \item Well-documented
@@ -424,7 +425,7 @@ relevant program point
  Java - object manipulation and creation, exceptions, 
 method invocations, arithmetic, stack manipulation etc.
  
- \item Contract-based approach
+% \item Contract-based approach
  \item Uses frame conditions for generation of tractable and provable
 verification conditions
  \item Proven sound under the hypothesis that the control flow graph is reducible
@@ -437,8 +438,8 @@ verification conditions
 \item Assumptions:
  \begin{itemize}
  \item non-optimising compiler 
- \item compiler produces reducible control flow graphs
- \item compiler preserves exception handling
+ \item compiler produces reducible control flow graph
+ \item compiler preserves exception handler
  \end{itemize}
 
 \item Equivalence proven modulo:
@@ -470,7 +471,7 @@ JML models and logic of theorem prover
 \begin{itemize}
 \item Based on \Blue{calculus of inductive constructions}
 \item Can express types, axioms, functions, variables, definitions,
-lemmas \dots
+lemmas etc.
 \item Lemmas have to be proved, by building \Blue{proof term} out of
 the types, axioms, variables etc.
 \item \Blue{Tactics}: special commands called within a proof script
@@ -506,12 +507,12 @@ cannot handle
 \item Same \Blue{keyboard shortcuts} as CoqIde
 \item Full integration within Eclipse
   \begin{itemize}
-  \item No weird pop-up except if user wants to use another editor
+  \item No pop-ups, except if user wants to use another editor
   \item Management of proof files is easier
   \end{itemize}
   
 \item Also usable with ESC/Java
-\item Handles of \Blue{large} files ($>$ 1 Mo)
+\item Handles large files ($>$ 1 Mb)
 \end{itemize}
 \end{slide}
 
@@ -572,7 +573,7 @@ used
 
 \begin{slide}{Native types}
 \begin{itemize}
-\item To express complex properties, advanced datatypes useful
+\item To express complex properties, advanced data types useful
 \item Easily defined in Coq, not in JML
 \item \Blue{Native types}: \\
 Coq types in JML: 
@@ -640,5 +641,18 @@ Definition \Blue{ObjectSet\_member}
 \end{slide}
 
 \begin{slide}{To conclude...}
+\begin{itemize}
+\item \Blue{JACK}: a tool for validating application security and behaviour
+\item Features:
+\begin{itemize}
+\item Integration with Eclipse, developer-friendly environment
+\item Reduces the burden of annotation writing, by implementing
+various annotation generation algorithms
+\item Support for source code and bytecode verification
+\item Support for complex properties, by providing support for
+interactive verification
+\end{itemize}
+
+\end{itemize}
 \end{slide}
 \end{document}
