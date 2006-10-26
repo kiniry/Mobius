@@ -29,7 +29,7 @@ export JUNITSW = $(JAVA) -Xmx256M -classpath "${_CLASSPATH}" \
 
 ## The root targets to run the tests
 .PHONY: test runtests
-test runtests: extests separate_escjava_tests
+test runtests: extests skipped separate_escjava_tests
 
 ## Builds the lists that drive the tests as well as the JUnit tests themselves
 .PHONY: buildtests
@@ -168,6 +168,11 @@ else
 	        >> listtests ; \
 	done
 endif
+
+## Lists the skipped tests
+.PHONY: skipped
+skipped:
+	@echo SKIPPING: `(echo Test*.java | grep -f skip )`
 
 .sedScript:
 	@echo "s@${_ESCROOT}@ESCTOOLSROOT@" | tr '\\' '/' > .sedScript
