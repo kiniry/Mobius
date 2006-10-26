@@ -93,3 +93,4 @@ test102 Omit    created it but not using it right now --S.Q.
 test103 Omit	benchmarks for predicate abstraction
 test200 Good
 test201 Good
+test202 Good	Tests error messages with a bad sourcepath
