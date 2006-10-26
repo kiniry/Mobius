@@ -133,7 +133,8 @@ public abstract class SrcTool extends FrontEndTool implements Listener
 	    InputEntry ie = (InputEntry)i.next();
 	    ie = resolveInputEntry(ie);
         ArrayList a = ie.contents;
-        if ((ie instanceof ClassInputEntry) && a.size() > 0) {
+        if ((ie instanceof ClassInputEntry) && a.size() > 0 &&
+                a.get(0).toString().endsWith(".class")) {
           ErrorSet.warning("Cannot parse a class file: " + a.get(0));
           continue;
         }
