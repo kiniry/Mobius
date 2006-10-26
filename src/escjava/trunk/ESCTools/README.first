@@ -28,7 +28,8 @@ widely available and more easily accessible, in order to promote the
 use of specification and associated static and dynamic checking.
 
 A fourth purpose is to bring some of the other tools (Rcc, Houdini,
-Calvin) to a similar state---working and accessible.
+Calvin) to a similar state---working and accessible.  Thus far we
+have "revived" Houdini and Rcc.  Calvin is still untouched.
 
 ----------------------------------------------------------------------------
 
@@ -105,6 +106,24 @@ API, as a WDSL web service API, etc.), provides implementation details
 for distributed, current, and high-performance prover interfaces.
 
 We are working on obtaining design documentation on Simplify.
+
+----------------------------------------------------------------------------
+
+MAILING LISTS
+
+The JMLSpecs-Escjava mailing list, hosted at SourceForge.net, is the
+main mailing list for SRC ESC/Java and ESC/Java2 *users*.
+
+Please see the JMLSpecs project
+  <http://sourceforge.net/projects/jmlspecs/>
+for more information.
+
+ESC/Java developers communicate on the ESCJava-Developers mailing
+list, hosted at UCD.
+
+Please see the SRG Mailman web pages at
+  <http://topos.ucd.ie/mailman/listinfo>
+for more information.
 
 ----------------------------------------------------------------------------
 
