@@ -51,6 +51,11 @@ New features include:
  o An experimental backend plugin system has been designed and
    developed by Carl Pulley.
 
+ o The prover C interface is built using libtool.  If you are on OS X
+   then you need to use GNU libtool, not the libtool that comes with
+   Apple's developers tools.  Please obtain the latest libtool from
+   DarwinPorts, e.g.
+
  o Numerous bugs have been identified, fixed, and added. :)
 
 The following bugs are FIXED or CLOSED in this release:
