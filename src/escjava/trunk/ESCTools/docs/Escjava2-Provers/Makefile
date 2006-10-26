@@ -35,23 +35,25 @@ LIBTOOL = libtool
 #OSX_DYNAMIC_LIB_SWITCH = -dynamiclib
 #LINUX_DYNAMIC_LIB_SWITCH = -shared
 
-#OSX_DYNAMIC_LIB_EXTENSION = .jnilib
-#LINUX_DYNAMIC_LIB_EXTENSION = .so
+OSX_DYNAMIC_LIB_EXTENSION = dylib
+LINUX_DYNAMIC_LIB_EXTENSION = so
 
 #OSX_DYNAMIC_LIB_PREFIX = lib
 #LINUX_DYNAMIC_LIB_PREFIX = lib
 
-ifeq (`uname -s`,Darwin)
+os = $(shell uname -s)
+ifeq ("${os}","Darwin")
+	LIBTOOL = glibtool
 	CFLAGS = $(OSX_CFLAGS)
 	LFLAGS = $(OSX_LFLAGS)
 	#DYNAMIC_LIB_SWITCH = $(OSX_DYNAMIC_LIB_SWITCH)
-	#DYNAMIC_LIB_EXTENSION = $(OSX_DYNAMIC_LIB_EXTENSION)
+	DYNAMIC_LIB_EXTENSION = $(OSX_DYNAMIC_LIB_EXTENSION)
 	#DYNAMIC_LIB_PREFIX = $(OSX_DYNAMIC_LIB_PREFIX)
 else
 	CFLAGS = $(LINUX_CFLAGS)
 	LFLAGS = $(LINUX_LFLAGS)
 	#DYNAMIC_LIB_SWITCH = $(LINUX_DYNAMIC_LIB_SWITCH)
-	#DYNAMIC_LIB_EXTENSION = $(LINUX_DYNAMIC_LIB_EXTENSION)
+	DYNAMIC_LIB_EXTENSION = $(LINUX_DYNAMIC_LIB_EXTENSION)
 	#DYNAMIC_LIB_PREFIX = $(LINUX_DYNAMIC_LIB_PREFIX)
 endif
 
@@ -119,7 +121,7 @@ demoprover.o:	DemonstrationProver.c
 libdemoprover.la:	demoprover.o
 	$(LIBTOOL) --mode=link $(CC) $(CFLAGS) \
 		-o libdemoprover.la -rpath $(PWD) demoprover.lo $(LFLAGS) \
-		&& mv .libs/*.so .
+		&& mv -f .libs/*.$(DYNAMIC_LIB_EXTENSION) .
 
 cleanup:
 	rm -f _region_* *.aux *.log \
@@ -132,7 +134,7 @@ clean:
 	  $(paper).pdf $(paper).ps \
 	  demoprover \
 	  *.class \
-	  *.o *.la *.lo *.so .libs \
+	  *.o *.la *.lo *.so *.dylib .libs \
 	  *.java.texinfo \
 	  *.aux *.log *~ *.dvi *.brf \
 	  *.cp *.cps *.fn *.fns *.ky *.kys \
