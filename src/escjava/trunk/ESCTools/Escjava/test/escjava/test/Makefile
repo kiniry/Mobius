@@ -36,10 +36,13 @@ test_and_clean: test clean
 
 test_escjava:
 	@echo "TESTING Escjava: test_escjava"
-	env CLASSPATH=. ./rtestall
+	-env CLASSPATH=. ./rtestall
+
+%-test:
+	env CLASSPATH=. ./rtest $* || ${DIFF} $*/out $*/ans
 
 %-run:
-	env CLASSPATH=. ./rtest $* || ${DIFF} $*/out $*/ans
+	env CLASSPATH=. ./rtestrun $* 
 
 CD_AND_JAVA = cd $(PARSER_TEST_DIR); $(JAVA) -classpath "$(call canonicalize,${ESC_CLASSPATH})" $(PARSER_TEST_PACKAGE)
 CD_AND_JAVA_DEBUG = cd $(PARSER_TEST_DIR); $(JAVA) $(DEBUGGER_FLAGS) -classpath "$(call canonicalize,${ESC_CLASSPATH})" $(PARSER_TEST_PACKAGE)
