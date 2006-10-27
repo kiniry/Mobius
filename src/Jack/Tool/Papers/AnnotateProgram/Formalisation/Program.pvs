@@ -1,0 +1,186 @@
+% Section 3.1 Abstract Syntax of Program
+
+% JType instead of Type, because Type is a reserved keyword in PVS
+JType : DATATYPE
+BEGIN
+
+  IntType : IntType?
+  BoolType : BoolType?
+  Void : Void?
+  RefType : RefType?
+
+END JType
+
+
+NumExpr[Name : TYPE] : DATATYPE
+BEGIN
+
+  Int(i : int) : Int?
+  Plus(b1, b2 : NumExpr) : Plus?
+  Minus(b1, b2 : NumExpr) : Minus?
+  Times(b1, b2 : NumExpr) : Times?
+  Div(b1, b2 : NumExpr) : Div?
+  NumVarEval(varname : Name) : VarEval?
+
+END NumExpr
+
+
+BoolExpr[Name : TYPE] : DATATYPE
+BEGIN
+
+  IMPORTING NumExpr[Name]
+
+  % True, False, not, and, or reserved keywords in PVS
+  TT : TT?
+  FF : FF?
+  Neg(b : BoolExpr) : Neg?
+  Conj(b1, b2 : BoolExpr) : Conj?
+  Disj(b1, b2 : BoolExpr) : Disj?
+  Lt (b1, b2 : NumExpr) : Lt?
+  Le (b1, b2 : NumExpr) : Le?
+  Eq (b1, b2 : NumExpr) : Eq?
+  Neq (b1, b2 : NumExpr) : Neq?
+  Ge (b1, b2 : NumExpr) : Ge?
+  Gt (b1, b2 : NumExpr) : Gt?
+  BoolVarEval(varname : Name) : VarEval?
+
+END BoolExpr
+
+
+Expr[Name : TYPE] : DATATYPE
+BEGIN
+
+  IMPORTING BoolExpr[Name],
+            NumExpr[Name]
+
+  Assign(target : Name, source : Expr) : Assign?
+  BExpr(b : BoolExpr) : BExpr?
+  CondExpr(test : BoolExpr, thenexpr : Expr, elseexpr : Expr) : CondExpr?
+  MethodCall(tgt : Expr, name : Name, arg : Expr) : MethodCall?
+  NExpr(n : NumExpr) : NExpr?
+%  QAssign(tgt : Expr, target : Name, source : Expr) : QAssign?
+
+END Expr
+
+
+Stmt[Name : TYPE] : DATATYPE
+BEGIN
+  
+  IMPORTING Expr[Name]
+
+  % if, then and else reserved keywords in PVS
+  IfThenElse(test : BoolExpr, thenstmt : Stmt, elsestmt : Stmt) : IfThenElse?
+  Sequence(s1, s2 : Stmt) : Sequence?
+  Set(target : Name, source : Expr) : Set?
+  Skip : Skip?
+  StmtExpr (expr : Expr) : StmtExpr?
+  Throw : Throw?
+  % optional catch and finally modelled by lifting types
+  TryCatch (try : Stmt, catch : Stmt, finally : Stmt) : TryCatch?
+  While(test : BoolExpr, body : Stmt) : While?
+
+END Stmt
+
+
+SizeFunctions[Name : TYPE] : THEORY
+BEGIN
+
+  IMPORTING NumExpr[Name],
+            BoolExpr[Name],
+            Expr[Name],
+            Stmt[Name]
+
+  size(n : NumExpr) : nat = 
+    reduce_nat(LAMBDA(x : int) : 0, 
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(vn : Name) : 0)(n)
+
+  size(b : BoolExpr) : nat =
+    reduce_nat(0, 
+               0,
+               LAMBDA(n : nat) : 1 + n,
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
+               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
+               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
+               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
+               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
+               LAMBDA(n1, n2 : NumExpr) : size(n1) + size(n2) + 1,
+               LAMBDA(vn : Name) : 0)(b)
+
+  sum(l : list[nat]) : RECURSIVE nat =
+    CASES l OF
+      null : 0,
+      cons(n, l) : n + sum(l)
+    ENDCASES
+  MEASURE length(l)
+
+  size(e : Expr) : nat =
+    reduce_nat(LAMBDA(e : Name, n : nat) : n + 1,
+               LAMBDA(b : BoolExpr) : size(b),
+               LAMBDA(b : BoolExpr, n1, n2 : nat) : size(b) + n1 + n2 + 1,
+               LAMBDA(n1 : nat, e : Name, n2 : nat) : 1 + n1 + n2,
+               LAMBDA(n : NumExpr) : size(n))(e)
+ 
+  size(s : Stmt) : nat = 
+    reduce_nat(LAMBDA(e : BoolExpr, n1, n2 : nat) : size(e) + n1 + n2 + 1,
+               LAMBDA(n1, n2 : nat) : n1 + n2 + 1,
+               LAMBDA(e : Name, e : Expr) : size(e) + 1,
+               0,
+               LAMBDA(e : Expr) : size(e) + 1,
+               0,
+               LAMBDA(n1, n2, n3 : nat) : n1 + n2 + n3 + 1,
+               LAMBDA(b : BoolExpr, n : nat) : size(b) + n + 1)(s)
+
+               
+END SizeFunctions
+
+
+Program[Name : TYPE] : THEORY
+BEGIN
+  
+  IMPORTING JType,
+            Stmt[Name],
+            Expr[Name]
+  
+  GhostVarDecl : TYPE = [# jtype : JType, 
+                           name : Name,
+                           initval : Expr #]
+
+  FieldDecl : TYPE = [# jtype : JType,
+                        name : Name,
+                        initval : Expr #]
+
+  ArgDecl : TYPE = [# jtype : JType,
+                      name : Name #]
+
+  Method : TYPE = [# name : Name,
+                     arg : ArgDecl,
+                     pre : BoolExpr,
+                     post : BoolExpr,
+                     body : Stmt,
+                     preset : Stmt,
+                     postset : Stmt,
+                     excset : Stmt,
+                     res : Expr,
+                     resType : JType #]
+
+  % change from original document:
+  % superClass is just a name, not a class
+  % This avoid that Class is a recursive record definition
+  Class : TYPE = [# name : Name,
+                    superClass : lift[Name],
+                    % simplified: single invariant
+                    inv : BoolExpr,
+                    ghostvars : list[GhostVarDecl],
+                    fields : list[FieldDecl],
+                    methods : list[Method] #]
+
+  Program : TYPE = [# classes : list[Class] #]
+
+
+END Program

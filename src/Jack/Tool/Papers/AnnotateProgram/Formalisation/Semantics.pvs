@@ -1,0 +1,300 @@
+% Operational semantics, section 3.2
+Excpt : DATATYPE
+BEGIN
+
+  Throwable : Throwable?
+  NullPointer : NullPointer?
+
+END Excpt
+
+Val : DATATYPE 
+BEGIN
+
+  Int(i : int) : Int?
+  Bool(b : bool) : Bool?
+  Null : Null?
+  RefType(a : int) : RefType?
+  Bottom : Bottom?
+
+END Val
+
+
+State [Name : TYPE] : THEORY
+BEGIN
+
+  IMPORTING Excpt,
+            Program[Name],
+            Val
+
+  % functions whose existence we assume
+  lookup_mthd : [Program, Val, Name, Expr -> Method]
+  lookup_inv : [Program, Val -> BoolExpr]
+
+  
+  % fvs, gvs and lvs are partial functions from name to values
+  % Values are integers
+  % If it supposed to be a boolean, <= 0 = False, > 0 = True
+  PSt : TYPE = [# fvs : [Name -> Val],
+                  gvs : [Name -> Val], 
+                  lvs : [Name -> Val] #]
+
+  PState : TYPE = [# ex : lift[Excpt],
+                     st : PSt #]
+
+  % So far, I'm not modelling that the sets are disjoint
+  % This would imply adding a test to update, that vn is in the domain
+
+  is_local(vn : Name, sigma : PState) : bool =
+    NOT Bottom?(lvs(st(sigma))(vn))
+
+  is_field(vn : Name, sigma : PState) : bool =
+    NOT Bottom?(fvs(st(sigma))(vn))
+
+  is_ghost(vn : Name, sigma : PState) : bool =
+    NOT Bottom?(gvs(st(sigma))(vn))
+
+  lookup_local(vn : Name, sigma : PState) : Val =
+    lvs(st(sigma))(vn)
+
+  lookup_field(vn : Name, sigma : PState) : Val =
+    fvs(st(sigma))(vn)
+
+  lookup_ghost(vn : Name, sigma : PState) : Val =
+    gvs(st(sigma))(vn)
+
+  update_local(vn : Name, v : Val, sigma : PState) : PState =
+    (# ex := ex(sigma),
+       st := (# fvs := fvs(st(sigma)),
+                gvs := gvs(st(sigma)),
+                lvs := lvs(st(sigma)) WITH [vn := v] #) #)
+                
+  update_field(vn : Name, v : Val, sigma : PState) : PState =
+    (# ex := ex(sigma),
+       st := (# fvs := fvs(st(sigma)) WITH [vn := v],
+                gvs := gvs(st(sigma)),
+                lvs := lvs(st(sigma)) #) #)
+
+  update_ghost(vn : Name, v : Val, sigma : PState) : PState =
+    (# ex := ex(sigma),
+       st := (# fvs := fvs(st(sigma)), 
+                gvs := gvs(st(sigma)) WITH [vn := v],
+                lvs := lvs(st(sigma)) #) #)
+    
+  lookup(vn : Name, sigma : PState) : Val =
+    IF is_local(vn, sigma)
+    THEN lookup_local(vn, sigma)
+    ELSIF is_field(vn, sigma)
+    THEN lookup_field(vn, sigma)
+    ELSE lookup_ghost(vn, sigma)
+    ENDIF
+
+  update(vn : Name, v : Val, sigma : PState) : PState =
+    IF is_local(vn, sigma)
+    THEN update_local(vn, v, sigma)
+    ELSIF is_field(vn, sigma)
+    THEN update_field(vn, v, sigma)
+    ELSE update_ghost(vn, v, sigma)
+    ENDIF
+ 
+
+  val2int(v : Val) : int = 
+    IF Int?(v) 
+    THEN i(v) 
+    ELSE 0 
+    ENDIF
+
+  val2bool(v : Val) : bool =
+    IF Bool?(v)
+    THEN b(v)
+    ELSE FALSE
+    ENDIF
+
+END State
+
+Evaluation[Name : TYPE] : THEORY
+BEGIN
+
+  IMPORTING State[Name],
+            SizeFunctions[Name]
+
+  % I'm evaluating division by 0 to 0, I do not want to care about 
+  % modeling that exception here
+
+  % also, looking up a non-existing variable just returns 0
+  eval(n : NumExpr)(sigma : PState) : RECURSIVE int =
+    CASES n OF
+      Int(i) : i,
+      Plus(n1, n2) : eval(n1)(sigma) + eval(n2)(sigma),
+      Minus(n1, n2) : eval(n1)(sigma) - eval(n2)(sigma),
+      Times(n1, n2) : eval(n1)(sigma) * eval(n2)(sigma),
+      Div(n1, n2) : IF eval(n2)(sigma) = 0 
+                    THEN 0
+                    ELSE eval(n1)(sigma) / eval(n2)(sigma)
+                    ENDIF,
+      NumVarEval(vn) : val2int(lookup(vn, sigma))
+    ENDCASES
+  MEASURE size(n)
+
+  eval(b : BoolExpr)(sigma : PState) : RECURSIVE bool =
+    CASES b OF
+      TT : TRUE,
+      FF : FALSE,
+      Neg(b) : NOT eval(b)(sigma),
+      Conj(b1, b2) : eval(b1)(sigma) AND eval(b2)(sigma),
+      Disj(b1, b2) : eval(b1)(sigma) OR eval(b2)(sigma),
+      Lt(b1, b2) : eval(b1)(sigma) < eval(b2)(sigma),
+      Le(b1, b2) : eval(b1)(sigma) <= eval(b2)(sigma),
+      Eq(b1, b2) : eval(b1)(sigma) = eval(b2)(sigma),
+      Neq(b1, b2) : eval(b1)(sigma) /= eval(b2)(sigma),
+      Gt(b1, b2) : eval(b1)(sigma) > eval(b2)(sigma),
+      Ge(b1, b2) : eval(b1)(sigma) >= eval(b2)(sigma),
+      BoolVarEval(vn) : val2bool(lookup(vn, sigma))
+    ENDCASES
+  MEASURE size(b)
+
+END Evaluation
+
+
+
+Semantics[Name : TYPE] : THEORY
+BEGIN
+
+  IMPORTING State[Name],
+            Evaluation[Name]
+
+  deriv_expr(P : Program)
+            (c : Expr, sigma1 : PState, v : Val, sigma2 : PState)
+            (n : nat)
+            (deriv_stmt : [Program -> [Stmt, PState, PState -> [below(n) -> bool]]])
+            : RECURSIVE bool =
+   
+    IF up?(ex(sigma1))
+    % sigma1 is an exceptional state
+    % exceptions are simply propagated
+    THEN sigma1 = sigma2 AND v = Bottom
+    ELSE % sigma1 is a normal state
+    CASES c OF
+      % LU_p
+      Assign(vn, e) : is_local(vn, sigma1) AND
+                      NOT Bottom?(v) AND
+                      n > 0 AND
+                      (EXISTS (tau : PState) : 
+                         deriv_expr(P)(e, sigma1, v, tau)(n - 1)(deriv_stmt)
+                         AND
+                         sigma2 = (IF up?(ex(tau))
+                                   THEN tau
+                                   ELSE update_local(vn, v, tau)
+                                   ENDIF)),
+      BExpr(b) : sigma1 = sigma2 AND 
+                 NOT Bottom?(v) AND
+                 val2bool(v) = eval(b)(sigma1) AND
+                 n = 0,
+      CondExpr(c, t, e) : n > 0 AND
+                          IF eval(c)(sigma1)
+                          THEN deriv_expr(P)(t, sigma1, v, sigma2)
+                                         (n - 1)(deriv_stmt)
+                          ELSE deriv_expr(P)(e, sigma1, v, sigma2)
+                                         (n - 1)(deriv_stmt)
+                          ENDIF,
+      % MC_p
+      MethodCall(e, mn, p) :
+        EXISTS(m1, m2, m3, m4, m5, m6 : nat)
+              (a, pv : Val)
+              (tau1, tau2, tau3, tau4, tau5, tau6, tau7, tau8, tau9 : PState)
+              (old_val_arg : Val)(md : Method)(inv : BoolExpr) :
+          deriv_expr(P)(e, sigma1, a, tau1)(m1)(deriv_stmt) AND
+          deriv_expr(P)(p, tau1, pv, tau2)(m2)(deriv_stmt) AND
+          (tau3 = (IF up?(ex(tau1)) AND Null?(a)
+                   THEN tau2 WITH [ex := up(NullPointer)]
+                   ELSE tau2 
+                   ENDIF)) AND
+          md = lookup_mthd(P, a, mn, p) AND
+          inv = lookup_inv(P, a) AND
+          eval(inv)(tau3) AND
+          eval(pre(md))(tau3) AND
+          old_val_arg = lookup_local(name(arg(md)), tau3) AND
+          tau4 = update_local(name(arg(md)), pv, tau3) AND
+          deriv_stmt(P)(preset(md), tau4, tau5)(m3) AND
+          deriv_stmt(P)(body(md), tau5, tau6)(m4) AND
+          deriv_expr(P)(res(md), tau6, v, tau7)(m5)(deriv_stmt) AND
+          (IF bottom?(ex(tau7))
+           THEN deriv_stmt(P)(postset(md), tau7, tau8)(m6)
+           ELSE deriv_stmt(P)(excset(md), tau7 WITH [ex := bottom],
+                                          tau8 WITH [ex := bottom])(m6)
+                AND ex(tau7) = ex(tau8)
+           ENDIF) AND
+           tau9 = update_local(name(arg(md)), old_val_arg, tau8) AND
+           eval(inv)(tau9) AND
+           eval(post(md))(tau9) AND
+           n = m1 + m2 + m3 + m4 + m5 + m6 + 1,
+      NExpr(n) : sigma1 = sigma2 AND
+                 NOT Bottom?(v) AND
+                 val2int(v) = eval(n)(sigma1) AND
+                 n = 0
+      % 
+%      QAssign(e1, vn, e2) : 
+%         is_field(vn, sigma1) AND
+%         (EXISTS (sigma : PState, v1 : list[int]) :
+%            deriv_expr(P)(e1, sigma1,                     
+    ENDCASES
+    ENDIF
+  MEASURE n
+
+  deriv_stmt(P : Program)(c : Stmt, sigma1, sigma2 : PState)(n : nat) : 
+    RECURSIVE bool =
+    IF up?(ex(sigma1))
+    % sigma1 is an exceptional state
+    % exceptions are simply propagated
+    THEN sigma1 = sigma2
+    ELSE % sigma1 is a normal state
+    CASES c OF
+      IfThenElse(e, c1, c2) :
+          n > 0 AND 
+          deriv_stmt(P)(IF eval(e)(sigma1) THEN c1 ELSE c2 ENDIF, 
+                           sigma1, sigma2)(n - 1),
+      Sequence(c1, c2) :
+         EXISTS(m1, m2 : nat)(tau : PState) :
+           deriv_stmt(P)(c1, sigma1, tau)(m1) AND
+           deriv_stmt(P)(c2, tau, sigma2)(m2) AND
+           n = m1 + m2 + 1,
+      Set(vn, e) :
+         is_ghost(vn, sigma1) AND
+         n > 0 AND
+         EXISTS (tau : PState)(v : Val) :
+           deriv_expr(P)(e, sigma1, v, tau)(n - 1)(deriv_stmt) AND
+           (sigma2 = IF up?(ex(tau))
+                     THEN tau
+                     ELSE update_ghost(vn, v, tau)
+                     ENDIF),
+      Skip : sigma1 = sigma2 AND n = 0,
+      StmtExpr(e) : 
+         n > 0 AND
+         EXISTS (v : Val) :
+           deriv_expr(P)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt),
+      Throw: sigma2 = sigma1 WITH [ex := up(Throwable)],
+      TryCatch(c1, c2, c3) :
+        EXISTS(m1, m2, m3 : nat)(tau1, tau2, tau3 : PState) :
+          deriv_stmt(P)(c1, sigma1, tau1)(m1) AND
+          deriv_stmt(P)(IF up?(ex(tau1)) THEN c2 ELSE Skip ENDIF, 
+                           tau1 WITH [ex := bottom], tau2)(m2) AND
+          deriv_stmt(P)(c3, tau2 WITH [ex := bottom], tau3)(m3) AND
+          sigma2 = (# ex := IF up?(ex(tau2)) THEN ex(tau2) ELSE ex(tau3) ENDIF,
+                      st := st(tau3) #) AND
+          n = m1 + m2 + m3 + 1,
+      While(e, c) : 
+        n > 0 AND
+        deriv_stmt(P)(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)(n - 1)
+
+    ENDCASES
+  ENDIF
+  MEASURE n
+    
+  derives(P : Program)
+         (e : Expr, sigma1 : PState)(v : Val, sigma2 : PState) : bool =
+    EXISTS(n : nat) : deriv_expr(P)(e, sigma1, v, sigma2)(n)(deriv_stmt)
+
+  derives(P : Program)
+         (s : Stmt, sigma1 : PState)(sigma2 : PState) : bool =
+    EXISTS(n : nat) : deriv_stmt(P)(s, sigma1, sigma2)(n)
+
+END Semantics
