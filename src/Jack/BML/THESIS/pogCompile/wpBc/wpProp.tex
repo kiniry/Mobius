@@ -9,14 +9,12 @@
  
 In the following, we proceed with establishing the equivalence between source and bytecode 
 proof obligations. As we have already seen, the source programming language supports 
-expressions  and statements.  
- Because statements and expressions play different roles in  a source program language 
+expressions  and statements. Because statements and expressions play different roles in  a source program language 
 they need a different treatment here in this proof. Let us remind briefly about the semantics of these constructs and their compilation. 
 Expressions evaluate to a value and thus, their compilation affects the operand stack on execution time. 
 As we have discussed previously, because we compile for a stack based virtual machine,
 an expression compilation   results in a sequence of instructions whose execution must leave on the stack top the expression value.
-Statements have a different role in the language. They do not have values, but they control the control flow in the program. Thus,
- the formulation of the equivalence for statements and expressions verification conditions will be different.
+Statements have a different role in the language. They do not have values, but they control the control flow in the program. 
    
 We focus now on the relation between the \wpName{} predicate transformer functions for expressions 
 on bytecode and source level. But before entering into technical details, we illustrate this relation
@@ -49,11 +47,9 @@ for the last instruction of its compilation (instruction \lstinline!i+3: mul!) i
 Substituting in the source postcondition the abstract variable $v_{2*s}$ with \stack{\counter} and $v_{sqr}$  with \stack{\counter -1} results
 in the bytecode postcondition
  $$ \numConclusion{1} \ (v_{sqr} +v_{2*s}=5)  \subst{v_{2*s}}{\stack{\counter}}\subst{v_{sqr}}{\stack{\counter-1}} \equiv\stack{\counter - 1}  + \stack{\counter} =~\mbox{\rm \lstinline! 5!} $$
-  over source postcondition 
-gives once again the respective bytecode postcondition. We can see that the precondition of  the first instruction (\lstinline!i+1: const 2!)
-of the compilation of 
-\lstinline!2*s! is   $\stack{\counter} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}$. We may remark that the 
-precondition of the source expression \lstinline!2*s!  in the third part of the figure is equivalent to $v_{sqr} + 2*\lstinline!s!=5 $.
+We can remark that the precondition of  the first instruction (\lstinline!i+1: const 2!)
+of the compilation of the expression \lstinline!2*s! is   $\stack{\counter} + \mbox{\rm \lstinline!2!}*\mbox{\rm \lstinline!s!} = \mbox{\rm \lstinline! 5!}$. 
+We may remark that the  precondition of the source expression \lstinline!2*s!  in the third part of the figure is equivalent to $v_{sqr} + 2*\lstinline!s!=5 $.
 Substituting in the source precondition the abstract variable $v_{sqr}$ with \stack{\counter} results
 in a formula which is equivalent to the bytecode precondition
  $$\numConclusion{2} \ (v_{sqr} +\mbox{\rm \lstinline!2*s!} =5) \subst{v_{sqr}}{\stack{\counter}} \equiv \stack{\counter }  + \mbox{\rm \lstinline!2*s!}  = ~\mbox{\rm \lstinline! 5!} $$
@@ -139,122 +135,114 @@ the cases for field access and arithmetic expressions.
 
 
 \begin{description}
-       \item[field access]
-            $$\begin{array}{l}
-	             \comment{from the compiler definition we have} \\
-		    \numConclusion{1} \ \compileLabel{s}{\fieldAccess{\expressionSrc}{\fieldd}}{e} = \\
+       \item[field accesss]
+            
+	             \comment{From the compiler definition we have} 
+		    $$ \numConclusion{1} \ \compileLabel{s}{\fieldAccess{\expressionSrc}{\fieldd}}{e} = \\
 		     \begin{array}{l}
 			   \compileLabel{s}{\expressionSrc}{e - 1}; \\ 
-			    e : \getfield  \ \fieldd
-		     \end{array}	\\ \\ 
-		     
-		     
-		     
-		  \comment{by initial hypothesis we have that we have a formula $\psi$ such that for some $k \ge 0$}       \\
-		  \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \\
+			    e  : \getfield  \ \fieldd
+		     \end{array}$$	\\ 
+		 	
+	       \comment{by initial hypothesis we have that we have a formula $\psi$ such that for some $k \ge 0$}       \\
+		 $$ \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} $$ 
 
-		  \comment{from the definition of the \wpName{} for source field access expressions} \\ 
-		  \numConclusion{3} \ \wpSrcExpr{\fieldAccess{\expressionSrc}{\fieldd} }{\psi}{\excPostExpl}{v} = 
+		  \comment{from the definition of the \wpName{} for source field access expressions} 
+		  $$ \begin{array}{l}\numConclusion{3} \ \wpSrcExpr{\fieldAccess{\expressionSrc}{\fieldd} }{\psi}{\excPostExpl}{v} = 
 		  \wpSrcExpr{\expressionSrc}{\psi'}{\excPostExpl }{v_1}  \\
-		  where \\
+		  where \\ 
 		  \numConclusion{4} \ \psi'  =                   \begin{array}{l} 
 		                                 v_1 \neq \Mynull \Rightarrow \psi \subst{v}{\fieldAccess{v_1}{\fieldd}} \\
 						 \wedge \\
 						 v_1 = \Mynull \Rightarrow  \excPostExpl(\NullPointerExc)
-					       \end{array} \\
-		 \end{array}$$
-		 $$\begin{array}{l}
-		  \mbox{\rm\textit{\{because the execution relation between $e$ and $e+1 $ is not a loop backedge}} \\
-		  \mbox{\rm\textit{ by Lemma \ref{compile:prop:compProp3} which establishes that compilation of}}\\
-		  \mbox{\rm\textit{ expressions does not contain loop entries and }}\\
-		  \mbox{\rm\textit{from the Def. \ref{inter} of the function \interOnly \}}} \\
-		  \numConclusion{5} \  \inter{e-1}{e} = \wpi{e}{\methodd}{} \\
+					       \end{array}
+				\end{array}  \\
+		  $$
+		 
+		  \mbox{\rm\textit{\{because the execution relation between $e$ and $e+1 $ is not a loop backedge by Lemma \ref{compile:prop:compProp3} }} \\
+		  \mbox{\rm\textit{ which establishes that compilation of expressions does not contain loop entries and }}\\
+		  \mbox{\rm\textit{from the Def. \ref{inter} of the function \interOnly \}}} 
+		  $$\numConclusion{5} \  \inter{e-1}{e} = \wpi{e}{\methodd}{} $$ 
 		
-		 \comment{definition of the \wpName{} function for \getfield } \\
-		 \numConclusion{6} \  \wpi{e}{\methodd}{} = \\
-		                      \stack{\counter} \neq \Mynull \Rightarrow \inter{e}{e+1} \subst{\stack{\counter}}{\fieldAccess{\stack{\counter}}{\fieldd} } \\
+		 \comment{definition of the \wpName{} function for \getfield } 
+		 $$\numConclusion{6} \  \wpi{e}{\methodd}{} = \\
+		                     \begin{array}{l} \stack{\counter} \neq \Mynull \Rightarrow \inter{e}{e+1} \subst{\stack{\counter}}{\fieldAccess{\stack{\counter}}{\fieldd} } \\
 		                      \wedge \\  
-				      \stack{\counter}  = \Mynull \Rightarrow \methodd.\getExcPost(\NullPointerExc, e ) \\
+				      \stack{\counter}  = \Mynull \Rightarrow \methodd.\getExcPost(\NullPointerExc, e ) \end{array}$$
 		
-		\comment{from \numConclusion{2}, \numConclusion{4}, \numConclusion{5} and \numConclusion{6}  } \\
-		\numConclusion{7} \ 	\psi' \subst{v_1}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} 	  = \inter{e-1}{e} \\ 	      
+		\comment{from \numConclusion{2}, \numConclusion{4}, \numConclusion{5} and \numConclusion{6}  } 
+		$$\numConclusion{7} \ 	\psi' \subst{v_1}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} 	  = \inter{e-1}{e} $$
 		
 		 
-		\mbox{\rm\textit{\{from Lemma \ref{compile:prop:compProp9} and the initial}}\\
-		\mbox{\rm\textit{ hypothesis about exceptional postcondition functions on source and bytecode get\}}} \\
+		\comment{from Lemma \ref{compile:prop:compProp9} and the initial hypothesis about exceptional postcondition functions on source and bytecode get} \\
 		
-		\numConclusion{8}  \ \forall \Exc ,  \excPostExpl( \Exc ) = \methodd.\getExcPost(\Exc, e - 1)  \\\\
+		$$\numConclusion{8}  \ \forall \Exc ,  \excPostExpl( \Exc ) = \methodd.\getExcPost(\Exc, e - 1)  $$
 		
 		\comment{we apply the induction hypothesis over \numConclusion{7}  and  \numConclusion{8} } \\
 		
-		\numConclusion{9}  \ \wpSrcExpr{\expressionSrc}{\psi'}{\excPostExpl }{v_1} \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}  = \wpi{}{\methodd}{s}\\
+		$$ \numConclusion{9}  \ \wpSrcExpr{\expressionSrc}{\psi'}{\excPostExpl }{v_1} \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}  = \wpi{}{\methodd}{s}$$
 	
-	        \comment{from	\numConclusion{3}, \numConclusion{4} and 	\numConclusion{9} this case holds     }		     		
-	     \end{array}
-	   $$
-       \item[arithmetic expression]
-      $$\begin{array}{l}
-	             \comment{from the compiler definition we have} \\
-		    \numConclusion{1} \ \compileLabel{s}{\expressionSrc_1 \ \op \ \expressionSrc_2 }{e} = \\
+	        \comment{from	\numConclusion{3}, \numConclusion{4} and 	\numConclusion{9} this case holds     }	
+	   
+       		\item[arithmetic expression]
+      
+	             \comment{from the compiler definition we have} 
+		   $$  \numConclusion{1} \ \compileLabel{s}{\expressionSrc_1 \ \op \ \expressionSrc_2 }{e} = \\
 		     \begin{array}{l}
 			   \compileLabel{s}{\expressionSrc_1}{e'}; \\
 			   \compileLabel{e' + 1}{\expressionSrc_2}{e - 1}; \\ 
 			    e : \op
-		     \end{array}	\\ \\
+		     \end{array}$$ 	 
 		     
-		     \comment{by initial hypothesis we have that we have a formula $\psi$ for some $k \ge 0$ such that }       \\
-		     \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \\\\
+		   
+		       \comment{by initial hypothesis we have that we have a formula $\psi$ for some $k \ge 0$ such that }       
+		     $$ \numConclusion{2} \  \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1}$$ 
 
-		     \comment{from the definition of the \wpName{} for source field access expressions} \\ 
+		     \comment{from the definition of the \wpName{} for source field access expressions}  
 		     
-		     \numConclusion{3} \ \wpSrcExpr{ \expressionSrc_1 \ \op \ \expressionSrc_2 }{\psi }{ \excPostSrc }{v}  =   \\
+		     $$\numConclusion{3} \ \wpSrcExpr{ \expressionSrc_1 \ \op \ \expressionSrc_2 }{\psi }{ \excPostSrc }{v}  =   
 		     \begin{array}{l}
 		     \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{\psi'     }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} \\
-		     with \ \psi' = \psi \subst{v}{v_1 op v_2} \\
+		     with \ \psi' = \psi \subst{v}{v_1 op v_2} \end{array} $$
 
-		     \end{array}\\\\
-		     
-		     			  
-		     \mbox{\rm\textit{\{ it follows from Lemma \ref{compile:prop:compProp3} about expressions}}\\
-		     \mbox{\rm\textit{ that the compilation of an expression results}}\\
-		     \mbox{\rm\textit{ in a list of instructions which does not contain loop entries }}\\
-		     \mbox{\rm\textit{ Thus, from the Def.\ref{inter} of the function \interOnly{} we get \} }  } \\
+		         \mbox{\rm\textit{\{ it follows from Lemma \ref{compile:prop:compProp3} about expressions that the compilation }}\\
+		     \mbox{\rm\textit{of an expression results in a list of instructions which does not contain loop entries }}\\
+		     \mbox{\rm\textit{ Thus, from the Def.\ref{inter} of the function \interOnly{} we get \} }  } 
 		     	 
-		     \numConclusion{4} \  \inter{e -1}{e} = \wpi{e}{\methodd}{} \\
+		     $$ \numConclusion{4} \  \inter{e -1}{e} = \wpi{e}{\methodd}{}$$
 		   
-		     \comment{it follows from the \wpName{} for an arithmetic instruction}\\
-		     \numConclusion{5} \ \wpi{e}{\methodd}{} = \inter{e}{e+1}\subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = \\ 
-		     \comment{which is equal to because of  \numConclusion{2} } \\
-		     
-		     \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} \subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = \\
-		     \comment{$\psi$ is a source assertion and does not contain stack expressions  } \\
-		     \psi \subst{v}{\stack{\counter  - 1 }}\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } =\\
-		      \end{array}$$
-		      $$\begin{array}{l} 
-		      \comment{substitution} \\
-		       \psi \subst{v}{\stack{\counter  - 1 } \op \stack{\counter} }\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} = \\
-		       \comment{this is equal to}  \\
-		       \psi'
+		     \comment{it follows from the \wpName{} for an arithmetic instruction}
+		     $$\numConclusion{5} \ \wpi{e}{\methodd}{} = \inter{e}{e+1}\subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } = $$
+		     \comment{which is equal to because of  \numConclusion{2} } 		     
+		     $$ \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k} \subst{\counter}{\counter -1 } \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } =  $$
+		     \comment{$\psi$ is a source assertion and does not contain stack expressions  } 
+		    $$ \psi \subst{v}{\stack{\counter  - 1 }}\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} \subst{\stack{\counter - 1}}{\stack{\counter -1 }\op\stack{\counter} } =$$
+		      \comment{apply substitution} 
+		       $$\psi \subst{v}{\stack{\counter  - 1 } \op \stack{\counter} }\subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} = $$
+		       \comment{which is equal to}  
+		       $$\psi'
 		          \subst{v_2}{\stack{\counter} } 
 		          \subst{v_1}{\stack{\counter -1} }
-			  \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k} \\\\
+			  \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}$$ 
 			  \mbox{\rm\textit{ \{from the equalities \numConclusion{5} we can apply }}\\
-			  \mbox{\rm\textit{the induction hypothesis over $\expressionSrc_2$ and  $\psi'$ and  get\}}} \\
-			  \numConclusion{6} \ \wpSrcExpr{\expressionSrc_2 }{\psi'}{ \excPostSrc }{v_2} \subst{v_1 }{\stack{\counter }} \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}  =
-			    \wpi{ e'+1}{\methodd}{} \\\\
+			  \mbox{\rm\textit{the induction hypothesis over $\expressionSrc_2$ and  $\psi'$ and  get\}}} 
+			  $$\numConclusion{6} \ 
+			  \wpSrcExpr{\expressionSrc_2 }{\psi'}{ \excPostSrc }{v_2} \subst{v_1 }{\stack{\counter }} \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}  =
+			    \wpi{ e'+1}{\methodd}{} $$
 			 
-			 \comment{ it follows from Lemma \ref{compile:prop:compProp3}   } \\
-			 \inter{e'}{e'+1} = \wpi{ e'+1}{\methodd}{} \\
+			 \comment{ it follows from Lemma \ref{compile:prop:compProp3}   } 
+			 $$\inter{e'}{e'+1} = \wpi{ e'+1}{\methodd}{} $$
 			 \mbox{\rm\textit{\{we apply again the induction hypothesis over $\expressionSrc_1$,}} \\
-			 \mbox{\rm\textit{ $\wpSrcExpr{\expressionSrc_2 }{\psi'}{ \excPostSrc }{v_2} $  \}}} \\
-			 \wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{\psi' }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} 
-			 \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}   = \\
-			 \wpi{s}{\methodd}{} \\ 
+			 \mbox{\rm\textit{ $\wpSrcExpr{\expressionSrc_2 }{\psi'}{ \excPostSrc }{v_2} $  \}}} 
+			 $$\wpSrcExpr{ \expressionSrc_1  }{\wpSrcExpr{\expressionSrc_2 }{\psi' }{ \excPostSrc }{v_2}  }{ \excPostSrc }{v_1} 
+			 \subst{w_i}{\stack{\counter - i + 1}}_{i = 1 \ldots k}   = 
+			 \wpi{s}{\methodd}{} $$
+		     			  
+		 
 			 \comment{and this case holds}
-			  
-			  
-       \end{array}
-       $$ 
+			  	  
+
+       
 \end{description}
 \Qed \\
 
@@ -281,204 +269,79 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 
 \begin{description}
        \item[compositional statement]
-          $$\begin{array}{l}
-	     \wpSrcStmt{  \stmt_1 ;  \stmt_2 }{\psi}{\excPostExpl} = \\
-	     \comment{definition of \wpName } \\
-	     \wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\psi }{ \excPostSrc}} { \excPostSrc} \\\\
+          
+	     $$\wpSrcStmt{  \stmt_1 ;  \stmt_2 }{\psi}{\excPostExpl} = $$
+	     \comment{definition of \wpName } 
+	     $$\wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\psi }{ \excPostSrc}} { \excPostSrc} $$
 	     
 		\comment{definition of the compiler} \\
-                 \compileLabel{s}{ \stmt_1 ;  \stmt_2}{e} =
+                 $$\compileLabel{s}{ \stmt_1 ;  \stmt_2}{e} =
 		    \begin{array}{l}
 	                \compileLabel{s}{\stmt_1}{e'};\\
 			\compileLabel{e'+1}{\stmt_2}{e}
-	            \end{array}\\
-	      \\\\
+	            \end{array}$$
 
 	       \mbox{\rm\textit{\{it follows from  the induction hypothesis }}\\
-	       \mbox{\rm\textit{over $\stmt_2$ and the initial hypothesis about the postcondition\}}} \\
-	       \numConclusion{1} \    \wpSrcStmt{  \stmt_2 }{   \psi }{\excPostExpl } = \wpi{}{\methodd}{\ins{e'+1}} \\\\
+	       \mbox{\rm\textit{over $\stmt_2$ and the initial hypothesis about the postcondition\}}} 
+	       $$ \numConclusion{1} \    \wpSrcStmt{  \stmt_2 }{   \psi }{\excPostExpl } = \wpi{}{\methodd}{\ins{e'+1}} $$
 
 	       \mbox{\rm\textit{\{
 	       Lemma \ref{compile:prop:compProp1} states that $e$ and $e+1$ are in execution relation}}\\
 	      \mbox{\rm\textit{ Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
 	       \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e'$ and $e' + 1$}}\\
 	       \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
-	       \inter{e'}{e'+1} = \wpi{}{\methodd}{\ins{e'+1}}  \\\\
+	        $$\inter{e'}{e'+1} = \wpi{}{\methodd}{\ins{e'+1}} $$
 
-	       \comment{$\stmt_1$ is a strict substatement of $\stmt_1;\stmt_2$ and thus, from Property  \ref{compile:prop:compProp8} follows }  \\
-	        \forall  \mbox{\rm\texttt{Exc}}, \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e'}{\methodd.\excHandlerTable} = \\
-		                                 \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e}{\methodd.\excHandlerTable} \\
+	       \comment{$\stmt_1$ is a strict substatement of $\stmt_1;\stmt_2$ and thus, from Property  \ref{compile:prop:compProp8} follows }  
+	         $$ \forall  \mbox{\rm\texttt{Exc}}, \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e'}{\methodd.\excHandlerTable} = \\
+		                                 \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e}{\methodd.\excHandlerTable}   $$
 	       
-                \comment{from the above conclusion and the Def. \ref{defExc}  of function \getExcPost } \\           
-                \numConclusion{2} \               \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
-                                                                                   \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' )  \\\\
+                \comment{from the above conclusion and the Def. \ref{defExc}  of function \getExcPost } 
+                $$ \numConclusion{2} \               \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
+                                                                                   \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' ) $$ 
 										   
-		\comment{from   \numConclusion{1} and   \numConclusion{2}  we get that }	\\							   
-		\wpSrcStmt{  \stmt_1  }{  \wpSrcStmt{  \stmt_2  }{   \psi }{\excPostExpl }    }{\excPostExpl} = 
-			\wpi{}{\methodd}{\ins{s}}\\
+		\comment{from   \numConclusion{1} and   \numConclusion{2}  we get that }	
+	 $$	\wpSrcStmt{  \stmt_1  }{  \wpSrcStmt{  \stmt_2  }{   \psi }{\excPostExpl }    }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}} $$
 			\comment{and this case holds }
 		
-	\end{array}$$
-      \item[if statement] 
-           
-      $$\begin{array}{l}
-	\numConclusion{1} \     \wpSrcStmt{   \Myif \ (\expressionSrc_1 \ \rel \ \expressionSrc_2 ) 
-                                                               \Mythen \ \{ \stmt_1 \}   
-							       \Myelse \ \{ \stmt_2 \}  }{\psi}{\excPostExpl} = \\
-							       
 	
-	 \wpSrcExpr{ \expressionSrc_1 }{  \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2} 
-	 } { \excPostSrc }{v_1} \\
-	 with  \phi' = \begin{array}{l}  
-		            v_1 \rel v_2  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } \\
-			    \wedge \\
-			    v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } \\
-	               \end{array}
-	 \\\\
-     
-			\comment{definition of the compiler} \\\\
-	\numConclusion{2} \  
-	\compileLabel{s}{\Myif \ (\expressionSrc_1 \ \rel \ \expressionSrc_2 ) 
-                         \Mythen \ \{ \stmt_1 \}   
-			 \Myelse \ \{ \stmt_2 \} }{e} = \\
-	\compileLabel{s}{\expressionSrc_1}{e'}; \\
-	\compileLabel{e'+1}{\expressionSrc_2}{e''}; \\
-        e'' + 1: \ifCond \ e''' + 2;\\
-        \compileLabel{e'' + 2}{\stmt_2}{e'''}\\
-        e''' + 1: \goto \ e +  1; \\
-        \compileLabel{e''' +  2}{\stmt_1}{ e  }; \\\\
-
-
-	\comment{apply the induction hypothesis over $\stmt_1$ and the initial hypothesis } \\
-	\numConclusion{3} \ 	\wpSrcStmt{\stmt_1}{\psi }{\excPostExpl} = \wpi{}{\methodd}{\ins{e''' + 2}} \\\\
-	
-			
-	\mbox{\comment{\rm by initial hypothesis, we have   } }\\
-	\numConclusion{4} \ \psi = \inter{e}{e+1}  \\ 
-	\mbox{\rm\textit{\{ by the compiler definition $ \ins{e''' + 1} = \goto \ e +  1; $  and thus}} \\
-	\mbox{\rm{\textit{  $e'' + 1$ is in execution relation with $e + 1$ \}} }}\\
-	\numConclusion{5} \ \ins{e''' + 1} \execRel \ins{e + 1} \\
-				
-				
-                               	
-	\mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp5} which states that every instruction inside }} \\
-	\mbox{\rm\textit{the compilation of $\compileLabel{s}{\stmt}{e}$ , }} \\
-        \mbox{\rm\textit{is in the same execution relation with $\ins{e+1}$, }} \\
-	\mbox{\rm\textit{    Def. \ref{inter} for the function \interOnly, \numConclusion{4} and \numConclusion{5}   we conclude that \} } }\\
-	\numConclusion{6}  \   \inter{e}{e+1} = \inter{e''' + 1}{e+1}  = \psi\\
-	\mbox{\rm\textit{\{Property \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
-        \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e''$ and $e'' + 1$}}\\
-	\mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
-	\numConclusion{7} \ \inter{e'''}{e''' +1} = \wpi{e''' + 1}{m}{} \\
-	\mbox{\rm \comment{ From the definition of the \wpName  \ for \goto \ instructions and \numConclusion{7}  }}\\
-	\numConclusion{8}  \ \wpi{e''' + 1}{m}{} = \inter{e''' + 1}{e+1} \\
-				
-	\comment{ From \numConclusion{7}, \numConclusion{6}	and \numConclusion{8}{}}	\\
-	\numConclusion{9}	\  \inter{e'''}{e''' +1} = \inter{e}{e+1}	= \psi	\\
-								
-
-	\mbox{\rm\textit{\{From Property  \ref{compile:prop:compProp8} about the exception handlers for statements}}\\
-	\mbox{\rm\textit{and their strict substatements \}}}  \\
-	
-
-      \numConclusion{10} \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
-      \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e''' )  \\
-      \mbox{\rm\comment{apply the induction hypothesis over \numConclusion{9} and  \numConclusion{10}  } }\\ 
       
-      \numConclusion{11} \	\wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl} = \wpi{e''+2}{m}{} \\
-\end{array}$$
-$$ \begin{array}{l}
-      \comment{ apply the induction hypothesis over the initial hypothesis  }\\
-      \numConclusion{12} \ \wpSrcStmt{\stmt_1}{\psi}{\excPostExpl} = \wpi{e'''+2}{m}{} \\\\
-
-			
-
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%555
-      \mbox{\rm\textit{\{ from Property \ref{compile:prop:compProp4}  follows that the execution relation between $e''$ }}\\
-      \mbox{\rm\textit{and  $e'' + 1$ is not a loop edge. From Def. \ref{inter} for the function \interOnly{} we get   \}}}\\
-      \numConclusion{13} \  \inter{e''}{e'' + 1} = \wpi{ e'' + 1 }{m}{ } \\\\
-
-      \comment{by definition of conditional jump instruction follows } \\
-      \numConclusion{14} \  \wpi{ e'' + 1 }{m}{ } = \\
-      \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \subst{\counter}{\counter - 2} \\
-      \wedge \\
-      \neg  (  \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \subst{\counter}{\counter - 2} = \\
-      \mbox{\rm\textit{\{ from \numConclusion{11} and \numConclusion{12} follows that  $\wpi{e'''+2}{m}{}$ and $\wpi{e''+2}{m}{}$ are} }\\
-       \mbox{\rm\textit{ source assertion formulas and thus we can ommit substitution over \mbox{\rm\counter} \}}}\\
-       \stack{\counter} \ \rel \ \stack{\counter - 1 }  \Rightarrow \wpi{e'''+2}{m}{} \\
-      \wedge \\
-      \neg  ( \stack{\counter} \ \rel \ \stack{\counter - 1 } ) \Rightarrow \wpi{e''+2}{m}{} \\
-
-      \comment{from \numConclusion{14}, \numConclusion{13} and \numConclusion{1} }\\
-      \numConclusion{15} \ \psi'\subst{ v_2}{\stack{\counter } } \subst{ v_1}{\stack{\counter - 1} }  = \inter{e''}{e''+1} \\
-      
-      \comment{apply Lemma  \ref{pogComp:relWpExpr} over $\psi'$, \numConclusion{15} and $\expressionSrc_2$} \\
-      \numConclusion{16} \ \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}  \subst{ v_1}{\stack{\counter} } = \wpi{e'+1}{\methodd}{}\\
-       
-      \mbox{\rm\textit{\{Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
-      \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e'$ and $e' + 1$}}\\
-      \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
-      \numConclusion{17} \ \inter{e'}{e'+1} = \wpi{e'+1}{\methodd}{}\\
-      
-      \comment{from   \numConclusion{16} and \numConclusion{17}  apply Lemma  \ref{pogComp:relWpExpr} over 
-      $\wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2}$ and $\expressionSrc_1$} \\
-      \numConclusion{18} \  \wpSrcExpr{ \expressionSrc_1 }{  \wpSrcExpr{ \expressionSrc_2 }{ \phi'}{  \excPostSrc }{v_2} 
-	 } { \excPostSrc }{v_1}	= \wpi{s}{\methodd}{} \\
-
-	 \comment{from \numConclusion{18} and	\numConclusion{1} this case holds  }				  
- \end{array}$$
 	  
   \item[try catch statement] 
-        $$
-	  \begin{array}{l}
-	    \numConclusion{1} \    \wpSrcStmt{    \try \ \{ \stmt_1 \} 
+        
+	   $$ \numConclusion{1} \    \wpSrcStmt{    \try \ \{ \stmt_1 \} 
 		                                              \catch \ (\excType \ \var )\{ \stmt_2 \} 
-                                                }{\psi}{\excPostExpl} =  \\
-			\comment{by the definition of $\wpNameStmt$} \\
-	        \wpSrcStmt{\stmt_1
-	
-                           }
-                         { 
-	                 \psi}
-			 {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl }} } \\\\
+                                                }{\psi}{\excPostExpl} = $$
+			\comment{by the definition of $\wpNameStmt$} 
+	   $$     \wpSrcStmt{\stmt_1 }{  \psi} {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl }} } $$
 	        
-              \comment{definition of the compiler}\\
-	      	\numConclusion{2} \    \compileLabel{s}{ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \} }{e} = \\
+              \comment{definition of the compiler}
+	      $$\begin{array}{l}	\numConclusion{2} \    \compileLabel{s}{ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \} }{e} = \\
                       \compileLabel{s}{\stmt_1}{e'};   e' + 1: \goto \ e;  \compileLabel{e' + 2 }{\stmt_2}{e - 1}; e: \nop\\
 		                           
-			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType} )\\\\
-             
-		  
-              \comment{apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} \\
-	      \numConclusion{3} \   \wpSrcStmt{\stmt_2}{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} \\ 
-	      \comment{ from Lemma \ref{compile:prop:compProp10}  for the exceptional postcondition function for try catch }\\
-	      
-	      	      
-	       \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow\\
-	       \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = 
-	       \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable}  \\
-	       
+			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType}  \end{array} $$
+              \comment{apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} 
+	      $$\numConclusion{3} \   \wpSrcStmt{\stmt_2}{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} $$ 
+	      \comment{ from Lemma \ref{compile:prop:compProp10}  we know that the indexes $e$ and $e'$ has the same exception handlers~}
+	      $$ \begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow\\
+	       \left(\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = 
+	       \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} \right) 
 	       \wedge\\
-	        \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2\\
+	        \findExcHandler{\excType }{e'}{\methodd.\excHandlerTable} = e'+2\end{array}  $$
 	      
-	      \mbox{\rm\textit{\{from the definition of \getExcPost{} and  the initial hypothesis}}\\
-	      \mbox{\rm\textit{ about exceptinal postcondition functions\}}}\\
-	     
-	      \numConclusion{4} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = 
-                  \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' )\\
-	      \comment{we can also conclude from Prop.  \ref{compile:prop:compProp5} and  \ref{compile:prop:compProp4}  } \\
-	      \numConclusion{5} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1} \\
-	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{4} and  \numConclusion{5}    } \\
-	       \wpSrcStmt{
-	                 \stmt_1;
-	
-                           }
+	      \mbox{\rm\textit{\{from the definition of \getExcPost{} and  the initial hypothesis about the exceptional }}\\
+	      \mbox{\rm\textit{  postcondition functions for indexes $e$ and $e' $ \}}}
+	    	     $$ \numConclusion{4} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = 
+                  \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' )$$
+	      \comment{we can also conclude from Lemma   \ref{compile:prop:compProp4}  } 
+	     $$ \numConclusion{5} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1}$$
+	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{4} and  \numConclusion{5}    } 
+	      $$ \wpSrcStmt{\stmt_1; }
                          {  \psi}
-			 {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} } =\\
-			  \wpi{s}{\methodd}{}
+			 {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} } =
+			  \wpi{s}{\methodd}{}$$
 	      
-	   \end{array}
-	$$
+	   
 \end{description}
 \Qed \\
 

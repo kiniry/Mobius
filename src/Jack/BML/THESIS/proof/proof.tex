@@ -39,12 +39,13 @@ instruction holds in the prestate then in the poststate of the instruction the p
 
 \begin{lemma}[Single execution step correctness] \label{lemma0}
 Let us have a program \Program{} and a method \methodd{} in \Program.
-For every state $s =\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } $ and
-initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly }{ 0 } $ 
+For every states $s_n =\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } $ and
+
+and initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly }{ 0 } $ 
    of the execution of method \methodd \  if the following conditions hold: 
  \begin{itemize}
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{*} s_n$
-         \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
+         \item $ \methodd.\body[\pc_n] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \interp{\wpi{\ins{\pc_n}}{\methodd}{}}{s_n} $
 	 \item all methods in \Program{} respect their specification at level \level{k-1}  
 	 \item the verification conditions for \Program{} are valid formulas
@@ -53,13 +54,23 @@ initial state $s_{0} =\config{\heap_{0}  }{ 0 }{\lbrack \ \rbrack }{\locVarOnly 
   
   then : 
  \begin{itemize}
-         \item if  $ \ins{\pc_n} \neq \return $ and the instruction does not terminate on exception,\\
-	      $ s_{n+1} = \config{\heap_{n+1} }{\counterOnly_{n+1} }{ \stackOnly_{n+1}}{\locVarOnly_{n+1} }{ \pc_{n+1} }  $
-	       then  $ \interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}}  $   holds 
-        \item if  $ \ins{\pc_n} = \return $ then  $ \interp{\methodd.\normalPost}{s_{n+1}}  $   holds
-	\item else if $ \ins{\pc_n } \neq \return $ and the instruction terminates on a not handled exception \mbox{ \rm\texttt{Exc }}, then
-	      $ \interp{\methodd.\excPostSpec( \mbox{ \rm\texttt{Exc }} )}{ s_{n+1} }  $ 
+         
+        \item if  $ \ins{\pc_n} = \return $ and $s_{n+1} =\configFinalNorm{\heap_n}{\stackOnly_n( \counterOnly_n )} $  then  $ \interp{\methodd.\normalPost}{s_{n+1}}  $   holds
+%	\item else if $ \ins{\pc_n } \neq \return $ and the instruction terminates on a not handled exception \Exc , then
+	%      $ \interp{\methodd.\excPostSpec( \Exc )}{ s_{n+1} }  $ 
 	
+	\item if $\ins{\pc_n}\neq \athrow  $ throws a not handled exception of type $\Exc$,
+	 $ s_{n+1} = \configFinalExc{ \heap_{n+1}}{  \referenceOnly   }$ and $\heap.\heapTypeOf(\referenceOnly) = \Exc  $ and  $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$
+	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds.
+	
+	 \item if $\ins{\pc_n} = \athrow $ throws a not handled exception of type $\Exc$,
+	 	 $ s_{n+1} =\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)} $ and $\heap.\heapTypeOf(\stackOnly (\counterOnly) ) = \Exc  $ 
+	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $  holds.
+	 
+       \item  else $ \interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}}  $   holds 
+        % if  $ \ins{\pc_n} \neq \return $ and the instruction does not terminate on exception, \\
+	      % $ s_{n+1} = \config{\heap_{n+1} }{\counterOnly_{n+1} }{ \stackOnly_{n+1}}{\locVarOnly_{n+1} }{ \pc_{n+1} }  $ then
+	    %   else $ \interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}}  $   holds 
   \end{itemize} 
 \end{lemma}
 \textit{Proof:}
@@ -385,7 +396,7 @@ and state $\config{\heap_n}{\counterOnly_n}{\stackOnly_n}{\locVarOnly_n}{\pc_n} 
 such that :
  \begin{itemize}
          \item $ \methodd.\body[0] : s_{0} \stateTransWeight{k}^{n} s_n$
-         \item $ \methodd.\body[s] : s_n \stateTransWeight{k} s_{n+1}$
+         \item $ \methodd.\body[\pc_n] : s_n \stateTransWeight{k} s_{n+1}$
          \item $ \forall i, (\ 0 \leq i \leq n ) , \ \interp{\wpi{\ins{\pc_{i}} }{ \methodd } {  }}{ s_i } $  
 	 \item all methods in \Program{} respect their specification at level \level{k-1}  
 	 \item the verification conditions for \Program{} are valid formulas
@@ -394,18 +405,27 @@ such that :
 
 then the folloing holds:
 \begin{enumerate}
-	\item if $\ins{\pc_n} = \return$  then $\interp{\methodd.\normalPost} {\configFinalNorm{\heap_n}{\stackOnly_n( \counterOnly_n )}} $ holds.  
+	\item if $\ins{\pc_n} = \return$ and $s_{n+1} =\configFinalNorm{\heap_n}{\stackOnly_n( \counterOnly_n )} $ then $\interp{\methodd.\normalPost} {s_{n+1} } $ holds.  
 	
-	\item if $\ins{\pc_n}\neq \athrow  $ throws a not handled exception of type $\Exc$ \\ then
-	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds 
-	where $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$.
+        	\item if $\ins{\pc_n}\neq \athrow  $ throws a not handled exception of type $\Exc$,
+	 $ s_{n+1} = \configFinalExc{ \heap_{n+1}}{  \referenceOnly   }$, $\heap.\heapTypeOf(\referenceOnly) = \Exc  $ and  $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$
+	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds.
 	
-	 \item if $\ins{\pc_n} = \athrow $ throws a not handled exception of type $\Exc$ \\
-	 then $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $ holds 
+	 \item if $\ins{\pc_n} = \athrow $ throws a not handled exception of type $\Exc$,
+	 	 $ s_{n+1} =\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)} $ and $\heap.\heapTypeOf(\stackOnly (\counterOnly) ) = \Exc  $ 
+	 then  $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $  holds.
+
+
+%	\item if $\ins{\pc_n}\neq \athrow  $ throws a not handled exception of type $\Exc$ \\ then
+%	$\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n+1}}{  \referenceOnly   } } $ holds 
+%	where  $\heap.\heapTypeOf(\referenceOnly) = \Exc  $ and  $\newRef{\heap_n}{\Exc} = (\heap_{n+1}, \referenceOnly )$.
+%	
+%	 \item if $\ins{\pc_n} = \athrow $ throws a not handled exception of type $\Exc$ \\
+%	 then $\interp{\methodd.\excPostSpec( \Exc)}{\configFinalExc{ \heap_{n}}{  \stackOnly (\counterOnly)   } } $  holds
+%	 where $\heap.\heapTypeOf(\stackOnly (\counterOnly) ) = \Exc  $ 
 	
 	
-	\item else if there is a state $s_{n+1}$ such that another execution step can be done 
-	 $s_n  \stateTransWeight{k} s_{n+1}$ then  $\interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{  } } { s_{n+1} } $  holds
+	\item else   $\interp{ \wpi{\ins{\pc_{n+1}}}{\methodd}{  } } { s_{n+1} } $  holds
 \end{enumerate}
 \end{lemma}
 
@@ -445,25 +465,17 @@ $$ \begin{array}{l}
 \comment{from Lemma \ref{lemma0} we have }\\
 \interp{\inter{\pc_n}{\pc_{n+1}}}{s_{n+1}} \ = \\
 
- \mbox{\rm\comment{from the Def. \ref{inter} for an edge between a  }}\\				    
+ \comment{from the Def. \ref{inter} for an edge between a loop entry and a loop end }\\				    
             
-                 \interpTwoLines{  I \  \wedge\\
-                                             \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
+                 \interp{  I \  \wedge
+                                             \forall mod_i ,  i = 1..s \left( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} \right) 
                                  }  { s_{n+1}  }\\
-
-  %  \end{array} \\
- \mbox{\rm\comment{from the operational semantics of \load }}\\
-
- \interp{ 
-\begin{array}{l}   I \  \wedge\\
-                  \forall mod_i ,  i = 1..s ( I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{}) 
-\end{array}}{s_{n+1}}  \\
-
-
-\mbox{\rm \comment{we can get from the last formulation}}\\
+  
+\mbox{\rm \textit{\{we can get from the last formulation and}}\\
+\mbox{\rm \textit{the semantics of the universal quantification\}}}\\
   \numConclusion{1} \   \interp{I}   {s_{n+1} } \\
-                              \\
-                 \numConclusion{2}  \interp{ I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} }
+                              
+                 \numConclusion{2}  \ \interp{ I \Rightarrow \wpi{\ins{\pc_{n+1}}}{\methodd}{} }
                                      {s_{n+1}  } \\
    % \end{array} 
 \mbox{\rm \comment{ from \numConclusion{1}  and \numConclusion{2}  }}\\
@@ -497,12 +509,12 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 	 \\
  	
       \Myspace \interpTwoLines{ \begin{array}{l}
-	                                    I \\
+	                                    I 
 					    \wedge
-                                           \forall mod_i ,  i = 1..s ( \begin{array}{l } 
+                                           \forall mod_i ,  i = 1..s \left( \begin{array}{l } 
 	                                                           I \Rightarrow 
 	                                                           \wpi{\ins{loopEntry}}{\methodd}{} 
-							      \end{array})
+							      \end{array}\right)
 				 \end{array} }{s_k}  \\
          \\  
  \numConclusion{3} \ 	 \Myspace    s_k =^{\modifL} s_{n+1} 
@@ -532,7 +544,7 @@ Let us have a program \Program{} and a method \methodd{} in \Program.
  Let us have states  $s_{0}$ and $s_n$ such that: 
 \begin{itemize} 
      \item execution of method  \methodd{} starts  in state $s_{0}$ 
-     \item  makes $n$ steps to reach state $s_n$: $s_{0} \stateTransWeight{k}^{n} s_{n} $
+     \item  makes $n$ steps to reach the intermediate state $s_n$: $s_{0} \stateTransWeight{k}^{n} s_{n} $
      \item $\interp{ \wpi{\methodd.\body[0] } {\methodd}{}}{ s_{0}}$ holds
      \item all methods in \Program{} respect their specification at level \level{k-1}  
      \item the verification conditions for \Program{} are valid formulas
@@ -561,7 +573,7 @@ execution in a state in which the \fwpi{} precondition  for the method entry ins
 holds and the method terminates then the method postcondition holds in the method final state.
 
 \begin{lemma}[\fwpi \ precondition for method entry point holds initially]\label{lemma2}
-Let us have a program \Program{} and a method \methodd{} in \Program.
+Let us have a program \Program{} and a method \methodd{} in program \Program.
 For all states $s_0$ and $s_n$ such that   $\methodd : s_0  \stateTransTermWeight{k} s_n $
 and let $\interp{ \wpi{} {\methodd}{0}}{ s_{0}}$ holds. Assume that
   all methods in \Program{} respect their specification at level \level{k-1} and 
@@ -569,14 +581,18 @@ the verification condition for \Program{} are valid formulas.
 Let the program counter in state $s_n$ points to an instruction $\return $ or
  an instruction which throws an unhandled exception of type \mbox{\rm\texttt{Exc}}, then  the following holds:
 \begin{itemize}
-    \item if $\ins{\pc_n} = \return $ then $\interp{ \methodd.\normalPost}{s_{n+1}}$
-    \item  if $\ins{\pc_n}$ throws a not handled exception of type \mbox{\rm\texttt{Exc}} then  $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n+1}}$
+    \item if $\pc_{n-1} = \return $     then $\interp{ \methodd.\normalPost}{s_{n}}$
+
+    	\item if $\pc_{n-1}$ throws a not handled exception of type $\Exc$  then  $\interp{\methodd.\excPostSpec( \Exc)}{ s_{n} } $ holds.
+	
+
+%    \item  if $\ins{\pc_n}$ throws a not handled exception of type \mbox{\rm\texttt{Exc}} then  $\interp{ \methodd.\excPostSpec(\mbox{\rm\texttt{Exc}}  )}{s_{n}}$
 \end{itemize}
 \end{lemma}
 \textit{Proof:} 
 %By hypothesis the execution of method \methodd \ always terminates, i.e. there exists $n$ steps such that
 \textit{Let $ \ s_{0} \stateTransWeight{k}^{*} s_n $ and $\methodd.\body[\pc_n]$ is a \return \ or an instruction that throws a  not handled exception.
- Applying lemma \ref{lemma3}, we can get that $\forall i, 0 \le i \le n , \ \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ } }{ s_{i}}$. 
+ Applying lemma \ref{lemma3}, we can get that $\forall i, 0 \le i < n , \ \interp{ \wpi{\methodd.\body[\pc_i] } {\methodd}{ } }{ s_{i}}$. 
 We apply lemma \ref{lemma1} for the case for a \return \ or instruction that throws an unhandled exception which allows to conclude that the current statement holds.
 }\\
 \Qed\\

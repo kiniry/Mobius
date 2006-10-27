@@ -15,13 +15,16 @@ We will describe our reasoning in the direction opposite to its formalization in
  We start with our main objective and then start to ``zoom'' in the steps that must be made in order that it be achieved. 
 
 
-Thus, in order to establish our main theorem, we have to show that if the precondition calculated by 
+Thus, in order to establish our main theorem,
+we have to see under what conditions a single method is correct at a level \level{k}. The greater 
+  part of the proof is concentrated on this. Remind that a method correctness at level  \level{k} means 
+ if the precondition calculated by 
 the \fwpi{} for the entry instruction of the method
 holds in the initial state of the method
-then the postcondition of the method will hold in the final state of the method provided that the method terminates
-(Lemma \ref{lemma2}). 
+then the postcondition of the method will hold in the final state of the method provided that the method terminates. 
+This is the statement of  Lemma \ref{lemma2}. 
 
- For this, we have to establish that if the precondition calculated by
+ For justifying Lemma \ref{lemma2}, we first establish that if the precondition calculated by
 the \fwpi{} for the entry instruction of the method holds in the initial state of the method then the precondition calculated by \fwpi{}
 for every instruction reachable from the method entry instruction also holds in the prestate of that instruction. This is done in Lemma \ref{lemma3}. 
 We use here an induction over the number of execution steps made in the execution path.

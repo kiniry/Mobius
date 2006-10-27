@@ -33,20 +33,20 @@ in the compilation of the statement.
 For illustration, we may return back to the example Fig. \ref{pogEquiv:compile:prop}  on page \pageref{pogEquiv:compile:prop} and focus on the 
 compilation of the \lstinline!if!  statement   
 \lstinline!if ( i >= 0) then {v = i}! \lstinline!else {v = -i}! 
-which comprises instructions from 4 to 11. Note that sequential instructions   have as  successor the next instruction.  Thus, sequential
+which comprises instructions from 4 to 12. Note that sequential instructions   have as  successor the next instruction.  Thus, sequential
 instructions respect this condition. 
 Only jump instructions may cause control transfer outside the \lstinline!if! compilation. 
 We notice that the compilation contains two jump instructions. 
 The first is the instruction \lstinline!5 ifge 10! which jumps inside the compilation of the if statement
-and the instruction \lstinline!9 goto 12!  which jumps apparently to instruction 12. 
+and the instruction \lstinline!9 goto 12!  which jumps also inside.
 Thus, the compilation of the \lstinline!if! statement respects the property.
 
 
 \begin{compPropApp}[Jumps in statement compilation target instructions inside the statement compilation]\label{compile:prop:compProp1}
 
-    For any statement $\ExprStmt $, start label $s$ and end label $e$,
+    For any statement or expression $\ExprStmt $,  
     the compiler will produce a list of bytecode instruction $\compileLabel{s}{\ExprStmt}{e}$ such that every jump instruction(\goto {} or \ifCond) which is in the compilation 
-    and transfer the control flow outside the compilation jumps to the instruction $e + 1$  .
+    does not transfer the control outside the region of the compilation  $\compileLabel{s}{\ExprStmt}{e}$.
 
 \end{compPropApp}
 \textit{Proof:} 
@@ -96,9 +96,9 @@ The next  property  of the compiler is that any statement or expression   is
  compiled in a list of bytecode instructions 
 such that instructions inside the compilation of a statement or expression cannot be targetted by instructions 
  which are outside the statement compilation except for the first instruction in the compilation.
- For instance, the instructions 14-29 in the compilation of the while statement
- in Fig. \ref{pogEquiv:compile:prop} from Section \ref{compile:prop}
- can be reached from outside of the statement compilation only via the instruction at index 14.
+ For instance,  the instructions 15-30 in the compilation of the while statement
+ in Fig. \ref{pogEquiv:compile:prop} on page \pageref{pogEquiv:compile:prop}
+ can be reached from outside of the statement compilation only by passing through the instruction at index 15.
 
 \begin{compPropApp}[Compilation of statements and expressions cannot be jumped from outside inside]\label{compile:prop:compProp2}
  For all  statements and expressions $\ExprStmt'$  and $\ExprStmt$, such that $\ExprStmt'$  is a substatement of
@@ -160,7 +160,7 @@ a loop entry and a loop end  in the sense of Def.
 \end{compProp9A}
 \textit{Proof:}
 By structural induction over the compiled statement. The direction when statement contains a loop statement is trivial.
-We will show the other direction for compositional statements.
+We will show the other direction for compositional statements and if statement.
 \begin{description}
 \item[Compositional statement]
 Let us have the statement $\stmt_1;\stmt_2$ and its compilation 
@@ -187,9 +187,14 @@ Assume that the execution is a loop execution relation, i.e. $e' \execRel^{l} e'
  from the program entry point instruction which reaches $e'$ has a subpath $ subP $ which does not pass through $e'$ and which passes through $e'+1$.
  This is possible in two cases:
 \begin{itemize}
-\item  if there is a jump from outside $\compileLabel{s}{\stmt_1;\stmt_2}{e}$ to the instruction $e'+1$. This is not possible following Lemma \ref{compile:prop:compProp2}.
+\item  if there is a jump from outside $\compileLabel{s}{\stmt_1;\stmt_2}{e}$ to the instruction $e'+1$.
+       Two possibilities exist.  $\stmt_1;\stmt_2$ is a substatement of  statement $\stmt_3$, i.e. $\substatement{\stmt_3}{\stmt_1;\stmt_2 }$ 
+       and an instruction from the compilation  $\compileLabel{s''}{\stmt_3}{e''}$ of $\stmt_3$ but which does not belong to  $\compileLabel{s}{\stmt_1;\stmt_2}{e}$ 
+       jumps to $e'+1$.  This is not possible following Lemma \ref{compile:prop:compProp2}. The other possibility is that $\stmt_3$ precedes or follows
+       $\stmt_1;\stmt_2$, i.e. $\stmt_3;\stmt_1;\stmt_2$ or $\stmt_1;\stmt_2;\stmt_3$. But it is not possible that such  a jump exists from Lemma  \ref{compile:prop:compProp1}
 
-\item there is a jump from an instruction from $\compileLabel{s}{\stmt_1}{e'}$ to  $e'+1$ but this is not possible following Lemma \ref{compile:prop:compProp1}
+\item there is a jump instruction in $\compileLabel{s}{\stmt_1}{e'}$ to  $e'+1$ which is not the instruction $e'$
+      but this is not possible following Lemma \ref{compile:prop:compProp1}
 \end{itemize}
 
 
@@ -349,12 +354,8 @@ But this is in contradiction with \numConclusion{3} and thus the lemma holds als
   statement $\stmt'$ is its direct substatement, i.e. 
 $\strictsubstatement{\stmt}{\stmt'} $. Let 
  their respective compilations be  $\compileLabel{s}{\stmt}{e}$ and  $\compileLabel{s'}{\stmt'}{e'}$, then the following holds:
-$$ \begin{array}{l}
-          \forall \mbox{\rm\tt{Exc}}, \\
-	  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = 
-	  \phantom{\forall \mbox{\rm\tt{Exc}} }\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} 
-   \end{array}
-$$
+$$   \forall \mbox{\rm\tt{Exc}}, 
+	  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
 \end{compProp8A}
 \textit{Proof}: by contradiction \\
 \comment{i.e. assume that} \\
