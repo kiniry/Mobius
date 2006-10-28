@@ -14,7 +14,7 @@
 package jcf17;
 
 class c {
-    boolean result1, result2;
+    static boolean result1, result2;
   
     public static void m() {
         d2.b2 = d2.b2; // (relevant use of d2.b2)
