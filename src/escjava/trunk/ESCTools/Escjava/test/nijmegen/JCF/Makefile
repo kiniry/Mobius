@@ -10,3 +10,6 @@ runtests:
 		    echo `grep $$i info | grep OK ` ; \
 		    $(ESCJ) -classpath . -quiet $$i/*.java; \
 	done
+
+%-test:
+	$(ESCJ) -classpath . $*/*.java
