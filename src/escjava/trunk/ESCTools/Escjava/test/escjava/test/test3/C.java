@@ -9,7 +9,7 @@ public class C {
     }
     void test2() {                 
 	int x;
-	//@ assert x == 0;
+	//@ assert x == 0; // ERROR
     }
     void test3() {
 	int x;
@@ -21,7 +21,7 @@ public class C {
     }
     void test5() {
 	int x=0;
-	//@ assert x == 1;
+	//@ assert x == 1; // ERROR
     }
     void test6() {
 	int x=0;

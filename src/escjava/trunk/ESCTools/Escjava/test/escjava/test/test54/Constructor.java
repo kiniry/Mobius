@@ -27,11 +27,11 @@ class Constructor {
     initFields(sp, 8);  // violates non_null inside this call
     x += delta;
   }  // violates x's invariant
-
+  //@ requires delta >= 0;
   Constructor(int delta) {
     x = delta;
     initFields((String)null + (String)null, x + 1);
-    x %= 10;
+    x = x % 10;
     x++;
   }  // okay
 }
