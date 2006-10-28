@@ -16,13 +16,10 @@ public class Helper3 {
 
   // this method should not check as it calls a non-helper which violates the
   // object invariant in the precondition.
-  //@ modifies o;
   public Helper3() {
-    non_helper();
+    non_helper();  // ERROR - preconditions not satisfied
   }
   
-  // all other constructors and methods should check.
-  //@ modifies o;
   public Helper3(boolean b) {
     helper();
   }
@@ -30,7 +27,7 @@ public class Helper3 {
   // trying the nonhelper in a method
   //@ modifies o;
   public void m() {
-    //@ assert o != null;
+    helper();
     non_helper();
   }
   
@@ -44,5 +41,6 @@ public class Helper3 {
   private /*@ helper @*/ void helper() {
     o = new Object();
   }
+
 
 }
