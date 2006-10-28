@@ -22,9 +22,9 @@ ifneq ($(wildcard ${TOP}/Makefile.*local),)
 endif
 
 ## Set up Java path and file separators on a per-platform basis.
-ifdef COMPSEC
-     export SEP = '\'
-     export PSEP = ';'
+ifdef COMSPEC
+     export SEP = \\
+     export PSEP = ;
 else
      export SEP = /
      export PSEP = :
