@@ -399,42 +399,60 @@
 		   (<: (typeof s) arrayType))))
 
 ; === ESCJ 8: Section 5.1
+; integralMod is the computer mod - the sign of the result is the sign of the
+; first operand; it is not the mathematical mod, whose result is always positive
 
+; j != 0 ==> ((i/j)*j + (i%j) == i
 (BG_PUSH
- (FORALL (i j) (PATS (integralMod i j) (integralDiv i j))
+ (FORALL (i j) (PATS (integralDiv i j) )
+ ;(FORALL (i j) (PATS (integralMod i j) (integralDiv i j))
+	 (IMPLIES (NOT ( EQ j 0))
 	 (EQ (+ (* (integralDiv i j) j) (integralMod i j))
-	     i)))
+	     i))))
 
+;; FIXME? - If the above has a trigger of (integralMod i j) and the axiom
+;; below is also included, then we get some inconsistency and a failure of
+;; test 72
+
+; (i>=0 && j>0) ==> (i%j >= 0 && i%j < j)
 (BG_PUSH
  (FORALL (i j) (PATS (integralMod i j))
-	 (IMPLIES (< 0 j)
+	 (IMPLIES (AND (< 0 j) (<= 0 i))
 		  (AND (<= 0 (integralMod i j))
 		       (< (integralMod i j) j)))))
 
+; (j != 0) ==> (0%j == 0)
 (BG_PUSH
  (FORALL (i j) (PATS (integralMod i j))
-	 (IMPLIES (< j 0)
-		  (AND (< j (integralMod i j))
-		       (<= (integralMod i j) 0)))))
+	 (IMPLIES (AND (NOT (EQ j 0)) (EQ i 0))
+	  (EQ 0 (integralMod i j)))))
 
+; (j != 0) ==> ((i>=0) ==> (i%j)>=0 ))
 (BG_PUSH
- (FORALL (i j) 
-	 (PATS (integralMod (+ i j) j))
-	 (EQ (integralMod (+ i j) j) 
-	     (integralMod i j))))
+ (FORALL (i j) (PATS (integralMod i j))
+	 (IMPLIES (NOT (EQ j 0)) 
+	   (IMPLIES (<= 0 i) (<= 0 (integralMod i j))))))
 
+; (j != 0) ==> ((i<=0) ==> (i%j)<=0 ))
 (BG_PUSH
- (FORALL (i j)
-	 (PATS (integralMod (+ j i) j))
-	 (EQ (integralMod (+ j i) j) 
-	     (integralMod i j))))
+ (FORALL (i j) (PATS (integralMod i j))
+  (IMPLIES (NOT (EQ j 0)) 
+		(IMPLIES (<= i 0) (<= (integralMod i j) 0)))))
 
-(BG_PUSH 
- (FORALL (i)
-	 (PATS (integralMod 0 i))
-	 (IMPLIES (NOT (EQ i 0))
-		  (EQ (integralMod 0 i) 0)
- )))
+
+; Only true for mathMod
+;(BG_PUSH
+; (FORALL (i j) 
+;	 (PATS (integralMod (+ i j) j))
+;	 (EQ (integralMod (+ i j) j) 
+;	     (integralMod i j))))
+;
+;(BG_PUSH
+; (FORALL (i j)
+;	 (PATS (integralMod (+ j i) j))
+;	 (EQ (integralMod (+ j i) j) 
+;	     (integralMod i j))))
+
 ; to prevent a matching loop
 (BG_PUSH
  (FORALL (x y)
@@ -668,12 +686,62 @@
    (AND (<= 0 x) (<= 0 y))
    (AND (<= x (integralOr x y)) (<= y (integralOr x y))))))
 
+; ((x >= 0) & (y > 0)) ==> (x/y >= 0 & x >= (x/y) )
 (BG_PUSH
  (FORALL (x y)
   (PATS (integralDiv x y))
   (IMPLIES
    (AND (<= 0 x) (< 0 y))
    (AND (<= 0 (integralDiv x y)) (<= (integralDiv x y) x)))))
+
+; ((x <= 0) & (y > 0)) ==> (x/y <= 0 & x <= x/y))
+(BG_PUSH
+ (FORALL (x y)
+  (PATS (integralDiv x y))
+  (IMPLIES
+   (AND (<= x 0) (< 0 y))
+   (AND (<= (integralDiv x y) 0) (<= x (integralDiv x y))))))
+
+; ((x <= z) & (y > 0)) ==> (x/y <= z/y))
+(BG_PUSH
+ (FORALL (x y z)
+  (PATS (MPAT (integralDiv z y) (LE x z)))
+  (IMPLIES
+   (AND (<= x z) (< 0 y))
+   (<= (integralDiv x y) (integralDiv z y)))))
+
+; ( x >= 0 & y < 0) ==> (x/y)<=0
+(BG_PUSH
+ (FORALL (x y)
+  (PATS (integralDiv x y))
+  (IMPLIES
+   (AND (<= 0 x) (< y 0))
+   (<= (integralDiv x y) 0))))
+
+; ( x <= 0 & y < 0 ) ==> (x/y) >= 0
+(BG_PUSH
+ (FORALL (x y)
+  (PATS (integralDiv x y))
+  (IMPLIES
+   (AND (<= x 0) (< y 0))
+   (<= 0 (integralDiv x y)))))
+
+; (x <= 0 & y > 0) ==> (x/y) <= 0
+(BG_PUSH
+ (FORALL (x y)
+  (PATS (integralDiv x y))
+  (IMPLIES
+   (AND (<= x 0) (< 0 y))
+   (<= (integralDiv x y) 0))))
+
+; (x == 0 & y != 0) ==> (x/y)==0
+(BG_PUSH
+ (FORALL (x y)
+  (PATS (integralDiv x y))
+  (IMPLIES
+   (AND (EQ 0 x) (NOT (EQ 0 y)))
+   (EQ 0 (integralDiv x y)))))
+
 
 (BG_PUSH
  (FORALL (x y)
