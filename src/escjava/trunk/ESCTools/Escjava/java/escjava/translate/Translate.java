@@ -3814,7 +3814,7 @@ public final class Translate
     }
     else {
       //System.out.println("GETTING SPEC FOR CALL " + Location.toString(call.rd.loc) );
-      spec = GetSpec.getSpecForCall( call.rd, scope, predictedSynTargs );
+      spec = GetSpec.getSpecForCall( call.rd, scope, predictedSynTargs, rdCurrent );
       if (spec.modifiesEverything) {
         ErrorSet.caution(scall,
                          "A method that 'modifies everything' has been called; the verification of a body with such a call is not correct.");

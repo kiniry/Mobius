@@ -31,15 +31,17 @@ import javafe.util.*;
 public final class GetSpec {
   
   public static Spec getSpecForCall(/*@ non_null */RoutineDecl rd,
-      /*@ non_null */FindContributors scope, Set predictedSynTargs) {
+      /*@ non_null */FindContributors scope, Set predictedSynTargs,
+      RoutineDecl callingRoutine) {
     Spec spec = getCommonSpec(rd, scope, null);
-    return extendSpecForCall(spec, scope, predictedSynTargs);
+    return extendSpecForCall(spec, scope, predictedSynTargs,callingRoutine);
   }
   
   /* used for calls that are inlined */
   public static Spec getSpecForInline(/*@ non_null */RoutineDecl rd,
       /*@ non_null */FindContributors scope) {
-    return getCommonSpec(rd, scope, null);
+    Spec spec = getCommonSpec(rd, scope, null);
+    return spec;
     // TBW: Should also add NonNullInit checks somewhere!
   }
   
@@ -1211,7 +1213,7 @@ public final class GetSpec {
   //@ ensures \result != null;
   private static Spec extendSpecForCall(/*@ non_null */Spec spec,
 					/*@ non_null */FindContributors scope, 
-					Set predictedSynTargs) 
+					Set predictedSynTargs, RoutineDecl callingRoutine) 
   {
     //System.out.println("EXTEND START " + spec.postAssumptions.size());
     // FIXME - I'm not sure that \old variables not in the modifies list get
@@ -1393,6 +1395,48 @@ public final class GetSpec {
           
           spec.post.addElement(GC.freeCondition(GC.forall(ii.sdecl, impl,
               nopats), ii.prag.getStartLoc()));
+        }
+      }
+    }
+    
+    // FIXME - there are helper constructors for which we need to do this block, but
+    // we don't do it for the this call or super call at the beginning of the constructor body
+    // so for now we won't do it for any constructors
+    if ((callingRoutine instanceof ConstructorDecl) && !Helper.isHelper(spec.dmd.original) && !isConstructor) {
+      RoutineDecl calledRoutine = spec.dmd.original;
+      TypeDecl td = calledRoutine.parent;
+      TypeDeclElemVec elems = td.elems;
+      for (int i=0; i<elems.size(); ++i) {
+        TypeDeclElem tde = elems.elementAt(i);
+        if (tde instanceof FieldDecl) {
+          FieldDecl fd = (FieldDecl)tde;
+          SimpleModifierPragma p = NonNullPragma(fd);
+          if (Modifiers.isStatic(fd.modifiers)) {
+            // We don't check static fields since those are required to be initialized at the end of static init blocks
+            continue;
+          }
+          if (Modifiers.isStatic(calledRoutine.modifiers) &&
+                  !Modifiers.isStatic(fd.modifiers)) {
+            // Non-static fields are not relevant to static methods
+            continue;
+          }
+          //System.out.println("FIELD " + (fd).id + " NONNULL? " + (p!=null));
+          if (p!=null) {
+            VariableAccess v = TrAnExpr.makeVarAccess(fd,p.getStartLoc());
+            Expr e = v;
+            if (!Modifiers.isStatic(fd.modifiers)) e = GC.select(e, GC.thisvar);
+            e = GC.nary(TagConstants.REFNE, e, GC.nulllit);
+            e = LabelExpr.make(p.getStartLoc(), 
+                    p.getStartLoc(), // FIXME - annotation locatino or call location
+                    false,
+                    escjava.translate.
+                    GC.makeLabel("Pre",
+                             p.getStartLoc(),Location.NULL),
+                    e); 
+            Condition cond = GC.condition(TagConstants.CHKPRECONDITION,
+                    e, p.getStartLoc());
+            spec.pre.addElement(cond);
+          }
         }
       }
     }
