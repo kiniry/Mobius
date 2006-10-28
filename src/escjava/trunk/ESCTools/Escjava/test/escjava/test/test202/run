@@ -5,7 +5,7 @@
 # usage: run FLAGS
 
 echo $*
-export CP=".;t"
+export CP=".${PSEP}t"
 ${JAVAC} -classpath "$CP" A.java t/C.java
 ##### These should execute without error
 echo ZEROTH

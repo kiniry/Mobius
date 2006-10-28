@@ -26,8 +26,8 @@ ifdef COMPSEC
      export SEP = '\'
      export PSEP = ';'
 else
-     export SEP = '/'
-     export PSEP = ':'
+     export SEP = /
+     export PSEP = :
 endif
 
 ## Define a function to canonicalize paths that are parameters
