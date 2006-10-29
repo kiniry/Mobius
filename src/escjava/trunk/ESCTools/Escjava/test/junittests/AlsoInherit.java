@@ -20,7 +20,7 @@ public class AlsoInherit extends Parent {
 	public void p();	// ERROR - should have an also
 
 	//@ also_exsures (Exception) true; // OBSOLETE
-	public void pp();	
+	public void pp() throws Exception;	
 
 }
 
