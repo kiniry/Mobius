@@ -176,10 +176,10 @@ evaluation of the field access expression is  the  variable $var_{\scriptsize{ \
 
 For instance, if we have the formula $a.\fieldd = 3$ and the  state $s$ and an initial state $s_0$
  such that $\evalExp{a}{s} = \Mynull$ then the formula interpretation in $ s$  will be 
-$\interp{var_{\scriptsize{ a.\fieldd}} = 3 } {s} $. Because $var_{\scriptsize{ a.\fieldd}} $ is a free variable, we have implicitely an universal
- quantification over it, i.e. the latter is the same as  $   \interp{ \forall var_{a.\fieldd}, var_{\scriptsize{ a.\fieldd}} = 3  } {s}$ which is false.
+$var_{\scriptsize{ a.\fieldd}} = 3  $. Because $var_{\scriptsize{ a.\fieldd}} $ is a free variable, we have implicitely an universal
+ quantification over it, i.e. the latter is the same as  $   \forall var_{a.\fieldd}, var_{\scriptsize{ a.\fieldd}} = 3 $ which is false.
 The interpretation of the formula  $a.\fieldd = a.\fieldd $  in the same state $s$  is 
-$\interp{var_{\scriptsize{ a.\fieldd}} =var_{\scriptsize{ a.\fieldd}}   } {s} $ which is actually true.
+$var_{\scriptsize{ a.\fieldd}} =var_{\scriptsize{ a.\fieldd}}   $ which is actually true.
 
 
 %Thus, for instance the evaluation  $\evalExp{ \fieldAccess{\locVar{1}}{\fieldd}  }{s}$ of the expression $ \fieldAccess{\locVar{1}}{\fieldd} $  in the
