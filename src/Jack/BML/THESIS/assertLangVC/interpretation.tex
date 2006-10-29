@@ -6,7 +6,7 @@
 %\newtheorem{predicate}[interpExpr]{Definition}
 
 
-\section{Interpretation}\label{interpret}
+\subsection{Interpretation}\label{interpret}
 %
 In this section, we shall focus on the semantics of formulas and expressions w.r.t. a state configuration.
 A subtle point in giving the evaluation rules for expressions and the interpretation of formulas
@@ -18,7 +18,7 @@ To get a precise idea of the problem we can consider the following logical state
 
 $$
 \begin{array}{l} 
-\numConclusion{1} \  \fieldAccess{\exprWp}{\fieldd} == 3\\
+\numConclusion{1} \  \fieldAccess{\expression}{\fieldd} == 3\\
 \numConclusion{2} \ \arrayAccess{\expression_1} {\expression_2} == 5
 \end{array}
 $$   
@@ -29,47 +29,72 @@ $\exprWp$ is \Mynull. In case  \numConclusion{2}  the statement does not make se
 either $\expression_1 $ is \Mynull{} or $\expression_2$  is not in the bounds of $\expression_1 $.
 
 
-Building a logic for partiality is not trivial. Different solutions exist. 
-Gries and Schnieder \cite{gries95avoiding} give a solution to the problem which consists in function 
-underspecification  and thus  avoid the problem of undefideness.
- More particularly, their approach considers all functions as total but for argument values for which the function is actually 
-not defined the function may return whatever value. This approach, although practical requires certain restriction over the definition 
-of recursive functions in order to keep the logic consistent as pointed in \cite{schieder99adapting} by 
- B. Schieder and M. Broy. In the latter article \cite{schieder99adapting}, the authors give 
+Building a logic for partiality is not a trivial task. A naive three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
+ formulas might be \false{}, \true{} or undefined in a state appear to loose certain nice properties
+ which standard logic with equality have
+as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc. In \cite{schieder99adapting},  the authors give 
   an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
 undefined.  The logical connectives are extended in a non monotonic way and preserve the properties of the classical logic
 on the price  of having two sorts of equality.
-A naive three valued logic, where expressions may be evaluated to a value or  undefined  in a state and
- formulas might be \false{}, \true{} or undefined in a state appear to loose certain nice properties
- which standard logic with equality have
-as for instance associativity of equality, the excluded middle \cite{gries95avoiding} etc. 
-In \cite{burdy98treatment}, L. Burdy proposes a three valued logic in which the above features of classical logic are preserved.
+Another solution is to use well-definedness operators as in \cite{burdy98treatment}.
+There, the author proposes a three valued logic in which the above features of classical logic are preserved.
 He introduces a well-definedness operator $\wellDefined{}: \expression \cup \predWp \rightarrow \predWp$
  over expressions and formulas. Thus, formulas can be either \true{}, \false{} or not defined and
 expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
  gives the necessary and sufficient
- conditions such that $\expression$(\predWp ) is defined.
+ conditions such that an expression $\expression$ or a predicate \predWp{} are defined.
  More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
  holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to \false{}.
  This in particular, means that for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
  In the following, we define interpretation of formulas  in a two valued logic. However, a formula may hold in a state only under the condition that
  it is  defined, i.e. all the expression contained in the formula should have a meaning in  this state.
  
- Here, we shall not enter into these problems. Although the evaluation of expression is partial, we shall consider only the validity of well defined 
- formulas in a state, i.e. formulas which talk only about defined expressions in a state.
- Thus, we will avoid the treatment of partiality. In particular, we will remain in 
- a classical two valued logic. 
- Although, we ignore a lot of formulas, i.e. those which are not well defined,
- this will be sufficient for our proof of correctness of the verification condition generator later in Chapter \ref{proofGeneral} as 
- the verification condition generator preserves well definedness of formulas and moreover, we shall assume that specification are well defined.
+ Here, we shall use a two valued interpretation, which avoids the undefinedness
+by underspecification and which was proposed by Gries and Schnieder   in \cite{gries95avoiding}.
+ Their approach consists in function underspecification, which means that
+ all functions are considered  as total but for argument values for which the function is actually 
+not defined the function may return whatever value. For instance, using underspecification, the value of the function application  $1/0$  
+may have whatever value. The same happens for the expression $\fieldAccess{\Mynull}{\fieldd}$ where the function $\fieldd$ is underspecified for 
+the value $\Mynull$. In the settings of underspecification, the definition of validity of formulas is slightly different from the standard
+definition where functions are total.  In particular, if a formula \predWp{} contains an expression which is undefined
+then the formula must be valid for every value that can be assigned to the undefined expression.
 
- We use the notation $\interp{\predWp}{s}$ to say that the well defined formula  $\predWp$ is valid w.r.t. a current state  $s$ and an initial state $s_0$.
- $\interp{\predWp}{s}$ is defined in the standard way. For instance, the statement $\interp{\expression_1 \  \predicates \  \expression_2 }{s}$
+ We use the notation $\interp{\predWp}{s}$ to say that the formula  $\predWp$ is valid w.r.t.
+ a current state  $s$ and an initial state $s_0$. 
+% Let us see the meaning  of a formula \predWp{} which contains underspecified expression $\expression{}$
+% in  state $s$ and w.r.t. initial state $s_0$:
+% $$if \ \expression \ is \ underspecified \ then \  \interp{\predWp(\expression)}{s} \ holds \ if \ and \ only \ if \ \interp{  \forall x, \predWp(\expression)\subst{\expression}{x}  }{s}$$
+ For the cases when \predWp{} does not have undefined subexpressions,
+ $\interp{\predWp}{s}$ is defined in the standard way.  
+For instance, the statement $\interp{\expression_1 \  \predicates \  \expression_2 }{s}$
  by definition means that the evaluation   $\evalExp{ \expression_1 }{s } $ of $\expression_1$ and the evaluation $\evalExp{ \expression_2 }{s } $ of $\expression_2$
  are in relation $ \predicates$ or written formally that the following holds:
  $\evalExp{ \expression_1 }{s } \ \predicates \ \evalExp{ \expression_2 }{s}$.
  The formal statement   $\interp{\instances(\referenceOnly)}{s}$  by definition means that the reference \referenceOnly{} is part of the heap locations in state s or in other words 
  that the following holds  $\referenceOnly \in s.\heap.\heapLocs $.
+By using such a semantics, our examples above are false in any state.
+
+
+This approach, although practical imposes restrictions on  the definition 
+of recursive functions in order to keep the logic consistent as pointed in \cite{J95PFL}.
+In the literature, the common example is the factorial function which if defined recursively 
+as follows \textit{ fact(i) = if \ i = 0 \ else  fact(i - 1)*i }   allows to conclude that $ fact(-1) = -fact(-2) $. However,
+in \cite{gries95avoiding}, the authors point out that the reason for it is the function definition as it overspecifies  the function for negative integers.
+The correct definition of factorial using underspecification would be: $ fact(0) = 1; \forall i > 0, fact(i) = i*fact(i - 1) $.
+In our formalization, recursive functions are not a major issue as our assertion language does not handle recursive functions. 
+
+
+% Here, we shall not enter into these problems. Although the evaluation of expression is partial, we shall consider only the validity of well defined 
+% formulas in a state, i.e. formulas which talk only about defined expressions in a state.
+% Thus, we will avoid the treatment of partiality. In particular, we will remain in 
+% a classical two valued logic. 
+% Thus, we ignore a lot of formulas, i.e. those which are not well defined in a state, but howevrer
+% this will be sufficient for our proof of correctness of the verification condition generator later in Chapter \ref{proofGeneral}.
+% This is because we will assume that the specifications are well defined formulas and second, because  
+% the verification condition generator preserves well definedness of formulas. 
+
+
+
 
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%deprcated%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -121,92 +146,41 @@ expressions may evaluate to a value or be undefined. The operator  $\wellDefined
 %$$ 
 
  
-We define a function for expression evaluation
- $\evalExpName$ which evaluates expressions in a state has the following signature:
-%\rightharpoonup
+We define the underspecified expression evaluation function 
+ $\evalExpName$ which evaluates expressions in a state and which has the following signature:
+%\righthrpoonup
 $$
-\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup  \Values \cup \JavaType
+\evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs    \rightarrow \Values \cup \JavaType \cup Var
 $$
-The evaluation function is partial and  takes as arguments an expression of the assertion language presented in the previous Section 
-\ref{assertLang:lang} and two states (see Section \ref{def} for the definition of state)  and returns a value or a class type
-(see Section \ref{types} for the definition of values and types in the language). 
-
-
-\begin{interpretation}[Evaluation of expressions] \label{interpExpr} 
-The evaluation in a state \\
-$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expression$
-w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
-is denoted with $\evalExp{\expression}{s}$  and is defined inductively over the grammar of expressions $\expression$ \  as follows:
- 
+The evaluation function  takes as arguments an expression of the assertion language presented in the previous Section 
+\ref{assertLang:lang} and two states (see Section \ref{def} for the definition of state)  and returns a value, a class type
+(see Section \ref{types} for the definition of values and types in the language) or a variable in case of underspecification 
+which shows that the evaluation can be whatever value. 
+The evaluation of constant $v$ which can be $\Myint$   or  $\RefValues$, is itself $\evalExp{ v  }{s } = v $.
+Let us see the definition of the function for 
+field access expressions is the following:
 $$
-\begin{array}{lll}
-\evalExp{ v  }{s } & = & v\\
-  where \  v \in \  \Myint   \ \vee  \  v \in  \RefValues \\
+  \evalExp{\fieldAccess{\expression}{\fieldd  }  }{s}  =  
+ \left\{\begin{array}{ll}
+   var_{\scriptsize{ \fieldAccess{\expression}{\fieldd  }}  }         & if \  \evalExp{ \expression}{ s }  \notin \Dom(\heap(\fieldd)) \\
+                                                        & \\
+  \heap(\fieldd) (\evalExp{ \expression}{ s } )         & else
+\end{array}\right.$$
 
- \evalExp{\fieldAccess{\expression}{\fieldd  } ) }{s} & = & \heap(\fieldd) (\evalExp{ \expression}{ s } ) \\
-
-
- \evalExp{ \fieldAccess{ \expression_3}{\update{\fieldd}{\expression_1}{\expression_2} }}{ s } & = &
-\update{\heap}{\fieldd }{\update{\fieldd}{  \evalExp{\expression_1}{s } }{ \evalExp{\expression_2}{s }  }} (\fieldd)
-                                            (  \evalExp{\expression_3}{ s } ) \\
-
-
-
- \evalExp{\arrayAccess{\expression_1} {\expression_2}  }{ s } & = & 
-  \heap (\evalExp{ \expression_1}{ s } ,\evalExp{ \expression_2}{ s } )   \\
-
- \evalExp{ \update{ \arrayAccessOnly}{ (\expression_1 , \expression_2)}{ \expression_3} (\expression_4,\expression_5)  } { s } & =&
-  \update{\heap}{ ( \evalExp{\expression_1}{s } ,  \evalExp{\expression_2}{s } ) }  
-                 { \evalExp{\expression_3}{s }} 
-                 ( \evalExp{\expression_4}{s } ,  \evalExp{\expression_5}{ s  } ) \\
-
- \evalExp{ \locVar{i} } { s } & =  &\locVarOnly(i) \\
+We can see that if the evaluation $\evalExp{ \expression}{ s } $ is in the domain of the function representing the field \fieldd{},
+(i.e.  $\evalExp{ \expression}{ s } $ is different from \Mynull{}, evaluates to a reference in the heap),  
+then the evaluation of the field access expression evaluates to the application of the value  $\evalExp{ \expression}{ s } $ to
+the function  $\heap(\fieldd)$. However, if  $\evalExp{ \expression}{ s } $ is not in the domain of \fieldd{} then the 
+evaluation of the field access expression is  the  variable $var_{\scriptsize{ \fieldAccess{\expression}{\fieldd}}  }$.
 
 
- \evalExp{ \old{\exprWp} } { s } &  = & \evalExp{ \exprWp }{  s_{0}} \\
+For instance, if we have the formula $a.\fieldd = 3$ and the  state $s$ and an initial state $s_0$
+ such that $\evalExp{a}{s} = \Mynull$ then the formula interpretation in $ s$  will be 
+$\interp{var_{\scriptsize{ a.\fieldd}} = 3 } {s} $. Because $var_{\scriptsize{ a.\fieldd}} $ is a free variable, we have implicitely an universal
+ quantification over it, i.e. the latter is the same as  $   \interp{ \forall var_{a.\fieldd}, var_{\scriptsize{ a.\fieldd}} = 3  } {s}$ which is false.
+The interpretation of the formula  $a.\fieldd = a.\fieldd $  in the same state $s$  is 
+$\interp{var_{\scriptsize{ a.\fieldd}} =var_{\scriptsize{ a.\fieldd}}   } {s} $ which is actually true.
 
- \evalExp{\expression_1 \ \op \ \expression_2   } { s } &  =  &  \evalExp{\expression_1}{s} \op  \evalExp{\expression_2}{s}  \\
-
-
-\evalExp{ \typeof{\exprWp}}{s } & = &
-\left\{\begin{array}{ll}
-      \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
-      \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
-	   
-\end{array}\right. \\
-
-
-\evalExp{ \elemtype{\exprWp}}{s } & = &
-\left\{\begin{array}{ll}
-            \mbox{ \rm \texttt{T} }  & if \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
-\end{array}\right. \\					    
-
-
-\evalExp{ \TYPE }{s } & =  & \mbox{ \rm \texttt{java.lang.Class}} 
-\end{array}
-$$
-
-The evaluation of stack expressions can be done only in intermediate state configurations $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ :
-$$
-\begin{array}{lll}
- \evalExp{ \counter   } { s } & =  & \counterOnly \\
-
-
- \evalExp{ \stack{ \exprWp}   } { s } &  = & \stackOnly ( \evalExp{\exprWp}{s} ) \\
-
-
-\end{array}
-$$
-The evaluation of the following expressions can be done only in a final state $s = \configFinal{\heap}{\locVarOnly}{\Final }$:
-$$
-\begin{array}{ll}
-\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\locVarOnly}{\Res} \\
-\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\locVarOnly}{\Exc}
-\end{array}
-$$
-  
-
-\end{interpretation}
 
 %Thus, for instance the evaluation  $\evalExp{ \fieldAccess{\locVar{1}}{\fieldd}  }{s}$ of the expression $ \fieldAccess{\locVar{1}}{\fieldd} $  in the
 % state $s =\config{\heap}{\counterOnly}{ \stackOnly }{\locVar{1} \rightarrow \Mynull  }{\pc } $ is not defined.
@@ -249,9 +223,9 @@ $$
 %
 %
 %\evalPred{\predWp_1  \vee  \predWp_2 }{s} & = &  \left\{ \begin{array}{ll} 
-%                                                            \true  &  if \ \evalPred{\predWp_1}{s} = \true \   or   \    \evalPred{\predWp_2}{s} = \true  \\
-%							    \false &  if  \ \evalPred{\predWp_1}{s} =\false \  and   \  \evalPred{\predWp_2}{s} = \false \\
-%							    \bottom & else
+%                                                            \true   &  if \ \evalPred{\predWp_1}{s} = \true \   or   \    \evalPred{\predWp_2}{s} = \true  \\
+%							     \false  &  if  \ \evalPred{\predWp_1}{s} =\false \  and   \  \evalPred{\predWp_2}{s} = \false \\
+%							     \bottom & else
 %					     \end{array}\right.   \\
 %%
 %\evalPred{\predWp_1  \Rightarrow  \predWp_2 }{s} & = & \left\{ \begin{array}{ll} 
@@ -318,8 +292,7 @@ $$
 %represent relations between expressions, as \true only if the evaluation of these expressions is defined
 %in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
  
-
-The next definition defines a particular set of assertion formulas which  hold in every program state. We call them  valid formulas. 
+Finally, we identify  a particular set of assertion formulas which  hold in every program state. We call them  valid formulas. 
 \begin{interpretation}[Valid formulas]\label{assertLang:interpretation:valid}
   If an assertion formula  $ \predWp $ holds in any current state and any initial state, i.e.
 $\forall s, s_{0}, \  \interp{\predWp}{s} $ we say that this is a valid formula and we note it with :

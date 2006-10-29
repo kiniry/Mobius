@@ -14,7 +14,7 @@ methods will be invoked. This is the reason for requiring enough memory space fo
 \begin{figure}[!htp]
 \begin{frameit}
 \begin{center}
-\begin{minipage}[t]{110mm}
+\begin{minipage}[c]{\linewidth}%{110mm}
 \begin{lstlisting}[frame=trbl]
 Specification of method
  m in class A:
@@ -34,7 +34,7 @@ ensures  MemUsed  <=  \old(Mem) + l
 
 \end{minipage}
 
-\begin{minipage}[t]{110mm}
+\begin{minipage}[c]{\linewidth} %{110mm}
 \begin{lstlisting}[frame=trbl]
 void method n(A a)
 ...
@@ -64,7 +64,7 @@ We explain first the precondition. If the condition of line \srcCode{1} is not t
 
 \begin{figure}[!hbp]
 
-\begin{minipage}[t]{90mm}
+\begin{minipage}[c]{\linewidth}
 \begin{lstlisting}[frame=trbl]
 
  requires  MemUsed +
@@ -89,8 +89,7 @@ public void m()
  1 ifle 12}
  2 new A 
 // here reg(1) > 0 
-//@ set MemUsed =
-        MemUsed +  allocInstance(A)
+//@ set MemUsed = MemUsed +  allocInstance(A)
  3 invokespecial A.init
  4 aload 0
  5 iload 1
@@ -101,26 +100,23 @@ public void m()
 //value of reg(1)
  8 invokevirtual D.m
  9 new A
-//set MemUsed = MemUsed + 
-      allocInstance(A)
+//set MemUsed = MemUsed + allocInstance(A)
  10 invokespecial A.init
  11 goto 16
  target of the jump at  1
  12 new A
-//set MemUsed = MemUsed + 
-      allocInstance(A)
+//set MemUsed = MemUsed +  allocInstance(A)
  13 invokespecial A.init
  14 new  C
-//set MemUsed =
-      MemUsed +  allocInstance(C)
+//set MemUsed = MemUsed +  allocInstance(C)
  15 invokespecial C.init
  16 return
 \end{lstlisting} 
 \end{minipage}
 
-\phantom{aaaaa}
 
-\begin{minipage}[t]{90mm}
+
+\begin{minipage}[c]{\linewidth}%{90mm}
 \begin{lstlisting}[frame=trbl]
 public class D {
   public void m( int i) {
@@ -156,41 +152,44 @@ object of class \texttt{A}. The exceptional postcondition states
 that no allocation is performed if \texttt{NullpointerException} causes the execution termination.
 
 \begin{figure}[!hbp]
-$${\scriptsize
-\begin{array}{ll}
- \requires &  \local{1} != \Mynull \Rightarrow  \\
-           & \phantom{\local{1}} \Mem +  \allocInstance{A} \le \Max \\
-       %& \wedge \\
-       %&  \local{1} == \Mynull \Rightarrow  \\
-           %& \phantom{\local{1}} \Mem +  \allocInstance{B} + \allocInstance{A}   \le \Max \\
-  \modifies & \Mem \\
-  \ensures  & \Mem \le \old{\Mem} +  \allocInstance{A} \\
-  \exsures{} NullPointerExc  & \Mem == \old{\Mem}   \\
-\end{array}}$$
+% $$
+%\begin{array}{ll}
+%% \requires &  \local{1} != \Mynull \Rightarrow 
+%             \Mem +  \allocInstance{A} \le \Max \\
+%       %& \wedge \\
+%       %&  \local{1} == \Mynull \Rightarrow  \\
+%           %& \phantom{\local{1}} \Mem +  \allocInstance{B} + \allocInstance{A}   \le \Max \\
+%  \modifies & \Mem \\
+%  \ensures  & \Mem \le \old{\Mem} +  \allocInstance{A} \\
+%  \exsures{} \NullPointerExc \  & \Mem == \old{\Mem}   \\
+%\end{array}$$
 
 
-\begin{minipage}[t]{90mm}
-{\scriptsize
+\begin{minipage}[c]{\linewidth}
+
 \begin{lstlisting}[frame=trbl]
+ requires  reg(1) !=  null ==>  Mem +  allocInstance(A) <= Max 
+ modifies  Mem 
+ ensures   Mem  <= \old(Mem) +  \allocInstance(A) \\
+ exsures   NullPointerExc  Mem == old(Mem)
+
  0 load 0
  1 getfield C.b
  2 load 2
  3 putfield B.i
  4 new A 
-//set MemUsed = 
-  MemUsed +
-  allocInstance(A)
+//set MemUsed =  MemUsed + allocInstance(A)
  5 dup
  6 invokespecial A.init
  7 store 1
  8 return
 \end{lstlisting}
-}
+
 \end{minipage}
 
 
-\begin{minipage}[t]{90mm}
-{\scriptsize
+\begin{minipage}[c]{\linewidth}
+
 \begin{lstlisting}[frame=trbl]
 public class C{
  B b;
@@ -200,7 +199,7 @@ public class C{
  }
 }
 \end{lstlisting}
-}
+
 \end{minipage}
 
 \caption{\sc Example of a method with possible exceptional termination}

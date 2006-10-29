@@ -5,7 +5,7 @@ Especially, this is the case today when complex software applications  enter int
 which may potentially compromise confidential data (credit cards) or the performance of the
  computer system they are executed on (e.g. installing software which may format the hard disk of our PC).
 Also, errors in software conception may have disastrous effects, for instance
-the explosion of Ariane 5 due to an undertesting. Software correctness
+the crash of the European Ariane 5 launcher due to an under testing. More over, software correctness
  plays a crucial role in the overall software quality  in cases the latter take part in the automatic 
 control of engines which may put in danger lives, like airplanes or subways.
 
@@ -43,7 +43,7 @@ As we can see from the figure, the architecture relies on the following componen
    \item an algorithm which  generates logical (verification) conditions  from the annotations and the program.
          Such an algorithm is usually called verification condition generator. 
          The generated verification conditions are such that their truthfulness guarantees that the implementation respects the program specification  and thus,
-	 that the implementation respects its intended behaviour.
+	 that the implementation respects its intended behavior.
     
    \item a system for showing the validity of the verification conditions. This is normally done either by an automatic decision 
          procedure or interactive theorem prover.
@@ -155,7 +155,7 @@ In such situations, traditional PCC is not appropriate as it will fail to genera
 
 
 A solution to this problem is to give up automation in the certificate generation and thus, make the process of  the proof generation 
-on the producer site interactive, shown in Fig. \ref{intro:PPO}. As you can see in the figure, we propose that  the producer site
+on the producer site interactive as shown in Fig. \ref{intro:PPO}. As you can see in the figure, we propose that  the producer site
  \textit{generates the certificate interactively over the source code}. The advantage of 
 such an approach  is that the interactive proof will allow to identify bugs in the source code and
  correct them until the source becomes conform with the client  requirements. 
@@ -200,7 +200,7 @@ against potentially non trivial functional and security properties. The framewor
  guarantee the innocuousness of downloaded applications.  
  For instance, smart card applications are relying  on JavaCard, a dialect of Java tailored to small devices.
  Such devices, however, impose  security restrictions  to the software components  they run for which platforms like Java do not provide 
- sufficient mechanisms for their guarantee, e.g. preserving of confidentiality or limitted use of computational resources. Moreover,
+ sufficient mechanisms for their guarantee, e.g. preserving of confidentiality or limited use of computational resources. Moreover,
  the new generation of smart card platforms where installation of  software components after the card has been issued is possible, opens new security problems.
  Another example is the J2ME (which stands for Java 2 Micro Edition) which is widely used in mobile phone software industry.
  Mobile phone users benefit today from the possibility to install new software components on the phone system by the wireless net, 
@@ -225,11 +225,11 @@ against potentially non trivial functional and security properties. The framewor
  %	 It is in this perspective, that 
          We define a   specification language for bytecode called BML (short for Bytecode Modeling Language). 
 	 BML is the bytecode encoding of an important subset of JML (short for Java Modeling Language). The latter is a rich specification
-	 language tailored to Java source programs and allows to specify rich functional properties over Java source programs.
+	 language tailored to Java source programs and allows to specify complex functional properties over Java source programs.
 	 Thus, BML inherits the expressiveness of a subset JML and allows to encode potentially 
 	 complex functional and security policies over Java bytecode programs.
 	 We define an encoding of BML in the class file which is in conformance with the Java Virtual Machine specification \cite{VMSpec}.
-	 To owr knowledge, BML does not have predecessors that are tailored to Java bytecode.
+	 To our knowledge, BML does not have predecessors that are tailored to Java bytecode.
  
    \item [Verification condition generator for Java bytecode]
          %As we stated above, we target to build a framework where no assumptions for the compiler are made.
@@ -238,7 +238,7 @@ against potentially non trivial functional and security properties. The framewor
 	 arithmetic operations, object creation and manipulation,
 	 method invocations, exception throwing and handling, stack manipulation etc.
 	 The verification condition relies on a standard weakest predicate transformer function and we
-	 have proven its soundness relative to a Java operational semantics.
+	 have proved its soundness relative to a Java operational semantics.
 	 We have an implementation which is integrated in Jack (short for Java Applet Correctness Kit) \cite{BRL-JACK} which is a user friendly 
 	 plugin for the eclipse ide \footnote{http://www.eclipse.org/}. 
 	 
@@ -280,13 +280,13 @@ on bytecode, we can relate verification conditions to the particular program poi
 the program points which can be optimized. This gave issue to the publication \cite{DBLP:conf/cardis/CourbotPGV06}. 
 	 
 
-A natural continuation of the present ideas is putting together the bytecode verification condition generator, 
-	 the  BML language and the equivalence between source and bytecode verification conditions into a Proof Carrying Code framework for complex policies.
-	 In such a framework, the client
-	 will, as usual, rely  on the bytecode verification condition generator and  the certificate sent by the client. 
-	 However, differently from the existing schemes for PCC, the producer site will generate \textit{interactively} the certificate (formal proof) 
-	 over the \textit{source code}. This is motivated by the fact that the client policies may be non trivial and making an interactive proof over the source
-	 code will make finding the proof realistic.
+% A natural continuation of the present ideas is putting together the bytecode verification condition generator, 
+%	 the  BML language and the equivalence between source and bytecode verification conditions into a Proof Carrying Code framework for complex policies.
+%	 In such a framework, the client
+%	 will, as usual, rely  on the bytecode verification condition generator and  the certificate sent by the client. 
+%	 However, differently from the existing schemes for PCC, the producer site will generate \textit{interactively} the certificate (formal proof) 
+%	 over the \textit{source code}. This is motivated by the fact that the client policies may be non trivial and making an interactive proof over the source
+%	 code will make finding the proof realistic.
 \section{Related techniques}
 
 There exists different techniques for establishing that a program respects certain condition. Here, we make a brief review:

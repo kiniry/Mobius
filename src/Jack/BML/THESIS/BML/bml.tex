@@ -60,19 +60,19 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
      & \\
     $\expression$      & ::= $\Constants$ \\
                      &  $\mid$ \locVar{ \digits } \\ 
-       	             &  $\mid$ \fieldAccess{\expression}{\ident} \\
+       	             &  $\mid$ \fieldAccess{$\expression$}{\ident} \\
 		     &  $\mid$ \ident \\
-		     &  $\mid$ \arrayAccess{\expression} {\expression} \\	   
-		     &  $\mid$ \expression \ \op \ \expression   \\
+		     &  $\mid$ \arrayAccess{$\expression$} {$\expression$} \\	   
+		     &  $\mid$ $\expression$ \ \op \ $\expression$   \\
 		     &  $\mid$ \counter \\
-		     &  $\mid$ \stack{ \expression} \\
-                     &  $\mid$ \old{ \expression  } \\
+		     &  $\mid$ \stack{ $\expression$} \\
+                     &  $\mid$ \old{ $\expression$  } \\
                      &  $\mid$ \EXC    \\
 		     &  $\mid$ \result \\
 		     &  $\mid$ \boundVar \\
-		     &  $\mid$ \typeof{ \expression} \\
+		     &  $\mid$ \typeof{ $\expression$} \\
                      &  $\mid$ \type{\ident} \\
-                     &  $\mid$ \elemtype{\expression  }\\
+                     &  $\mid$ \elemtype{$\expression$  }\\
 		     &  $\mid$ \TYPE\\  
   & \\
  \op & ::=  \plus $\mid$ \minus $\mid$ \mult $\mid$ \divis $\mid$  \modulo \\
@@ -107,12 +107,12 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
 &\\
 \intraSpec & ::=  \loopSpec \\ 
              & $\mid$ \assert \ \formulaBc  \\                      
-	     & $\mid$ \set \ \expression \  \expression \\
+	     & $\mid$ \set \ $\expression$ \  $\expression$ \\
 & \\
 \loopSpec  & ::=  \begin{tabular}{l}  
                         \loopInv \  \formulaBc; \\ 
 			\loopMod \ list; \\ 
-                        \loopDecreases \ \expression; 
+                        \loopDecreases \ $\expression$; 
 	         \end{tabular}\\
  
  %   & \\ 
@@ -132,9 +132,9 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
  & \\ 
  \exsuresList & ::=   [ ] $\mid$  \exsures \ ( \ident )  \ \formulaBc  ; \exsuresList  \\
  & \\
-  \modifiesLoc & ::=  \fieldAccess{\expression}{\ident} \\
+  \modifiesLoc & ::=  \fieldAccess{$\expression$}{\ident} \\
                     & $\mid$ \locVar{i} \\ 
-                    & $\mid$ \arrayAccessMod{\expression}{\specIndex}\\
+                    & $\mid$ \arrayAccessMod{$\expression$}{\specIndex}\\
 		    & $\mid$ \everything \\
 		    & $\mid$ \nothing \\
               
@@ -173,18 +173,18 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
 In the following, we will discuss informally the semantics of the syntax structures of BML.
 Note that most of them have an identical counterpart in JML
  and their semantics in both languages is the same. 
- In the following, we will concentrate more on
- the specific syntactic features of BML and will just briefly comment
- the BML features which it inherits from JML like for instance, preconditions 
-and which we have mentioned already\footnote{because we have already discussed  in Section \ref{BCSLprelim}
- the JML constructs for pre and postconditions, loop invariants, operators like \jmlKey{old}, \result, etc. we would not 
-return to them anymore as their semantics is exactly the same as the one of JML}.  
+ % Thus, we will concentrate more on
+ %  the specific features of BML and will just briefly comment
+ %  the BML features which it inherits from JML like for instance, preconditions 
+ % and which we have mentioned already\footnote{because we have already discussed  in Section \ref{BCSLprelim}
+ %  the JML constructs for pre and postconditions, loop invariants, operators like \jmlKey{old}, \result, etc. we would not 
+ % return to them anymore as their semantics is exactly the same as the one of JML}.  
 
 
 \subsubsection{BML expressions}
 Among the common features of BML and JML are the following expressions:
 field access expressions $\fieldAccess{ \expression}{\ident}$, array access  
-($\arrayAccess{\expression^1} {\expression^2} $),  arithmetic expressions
+($\arrayAccess{\expression_1} {\expression_2} $),  arithmetic expressions
 ($\expression \ \op \ \expression$ ). Like JML, BML may talk about expression types.
 As the BML grammar shows,  $ \typeof{\expression}$  denotes the dynamic type of the expression $\expression$, 
  $ \type{ \ident } $  is the class  described at index $\ident$ in the constant pool of the corresponding class file.

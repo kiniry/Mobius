@@ -19,7 +19,7 @@
 	     into values (\Values).  
  
 
-       \item  a component \heapArrays \ which maps the components of arrays  into their values
+       \item  a component \heapArrays \ which is a partial function from the components of arrays  into their values
 
        \item  a component  \heapLocs  \ which stands for the  list of references that the heap has allocated  
               
@@ -47,21 +47,41 @@
 
  In the following, we are interested only in  heap objects \heap \ for which the components
  \heap.\heapFields \ and \heap.\heapArrays \ are functions defined only for references from the proper
- type, i.e. well-typed and which are in the list of references of the heap \heap.\heapLocs, i.e. well-defined: 
+ type, i.e. well-typed and which are in the list of references of the heap \heap.\heapLocs{} and are not \Mynull, i.e. well-defined: 
 
-% \ as well as that if a field function
-% returns a reference value then this reference value is once again in \heap.\heapLocs :
- $$\begin{array}{ll}
-          \forall  \fieldd : \FieldSet, \forall \referenceOnly \in \RefValues, &  \referenceOnly \in \Dom( \heap.\heapFields(\fieldd)) \Rightarrow \\
-	  &  \referenceOnly  \in \heap.\heapLocs  \wedge \\
-	  & \subtype{ \heap.\heapTypeOf(\referenceOnly ) }{\fieldd.\declaredIn} \\
-	  \wedge &  \\
-	  \forall \referenceOnly \in  \RefValuesArr, &  (\referenceOnly  , i ) \in \Dom (\heap.\heapArrays) \Rightarrow \\
-	  &  \referenceOnly  \in  \heap.\heapLocs \wedge \\
-	  & 0 \leq i < \heap.\heapFields( \length)( \referenceOnly)  
-	 
-   \end{array}
-  $$
+  $$\begin{array}{l}
+           \forall  \fieldd : \FieldSet,   \\
+   \begin{array}{ll} 
+   \Dom( \heap.\heapFields(\fieldd))  =    \{ \referenceOnly \mid &	
+                \referenceOnly  \in \heap.\heapLocs  \wedge \\
+ 	        &  \referenceOnly \neq \Mynull\\
+  	        & \subtype{ \heap.\heapTypeOf(\referenceOnly ) }{\fieldd.\declaredIn} \}  
+     \end{array}
+	  \\
+ 	  and  \\
+ 	  \begin{array}{ll}  \Dom (\heap.\heapArrays) = \{  \referenceOnly \mid 	&  \referenceOnly  \in  \heap.\heapLocs \wedge \\ 
+ 	  &  \referenceOnly \neq \Mynull\\
+ 	  &  0 \leq i < \heap.\heapFields( \length)( \referenceOnly)   \}  
+     \end{array}
+ 	 
+    \end{array}
+   $$
+
+%old formulation
+% $$\begin{array}{ll}
+%          \forall  \fieldd : \FieldSet, \forall \referenceOnly \in \RefValues, &  \referenceOnly \in \Dom( \heap.\heapFields(\fieldd)) \ \bydef\\
+%%%	  &  \referenceOnly  \in \heap.\heapLocs  \wedge \\
+%	  &  \referenceOnly \neq \Mynull\\
+%%	  & \subtype{ \heap.\heapTypeOf(\referenceOnly ) }{\fieldd.\declaredIn} \\
+%	  and &  \\
+%	  \forall \referenceOnly \in  \RefValuesArr, &  (\referenceOnly  , i ) \in \Dom (\heap.\heapArrays) \bydef\\
+%	  &  \referenceOnly  \in  \heap.\heapLocs \wedge \\ 
+%	  &  \referenceOnly \neq \Mynull\\
+%	  &  0 \leq i < \heap.\heapFields( \length)( \referenceOnly)  
+%	 
+%   \end{array}
+%  $$
+
 
 % Also, we assume that the heap must contain well formed values. By this, we mean that the heap  maps any field object \todo{is this restriction ok? }
 % \fieldd : \FieldSet \ which has a reference  type (i.e. the component \fieldd.\fieldType \ contains a reference type  )  
@@ -112,7 +132,7 @@
 
 
  $$  \begin{array}{l}
-            \newRef{\heap}{\clazz} = (\heap',\referenceOnly )     \iff^{def} \\
+            \newRef{\heap}{\clazz} = (\heap',\referenceOnly )    \bydef\\
 	    \\
 	    \referenceOnly \neq \Mynull \wedge \\ 
 	    \referenceOnly \notin \heap.\heapLocs \wedge   \\ 
@@ -186,7 +206,7 @@ $ \heap . \heapArrays (\referenceOnly, i )$ becomes $ \heap(\referenceOnly, i )$
    Whenever the  field $\fieldd$ for the object pointed by reference
  $\referenceOnly$ is updated  with the value \textit{val},
  the component \heap.\heapFields \ is updated:
- $$ \heap.\heapFields := \update{\heap.\heapFields}{\fieldd}{\update{\heap.\heapFields(\fieldd)}{\referenceOnly}{val}} $$  
+ $$ \update{\heap.\heapFields}{\fieldd}{\update{\heap.\heapFields(\fieldd)}{\referenceOnly}{val}} $$  
  In the following, for the sake of clarity, we will use another lighter notation for a field update which do not imply any ambiguities:
  $$ 
   \update{\heap}{\fieldd}{\update{\fieldd}{\referenceOnly}{val}} 
@@ -196,8 +216,8 @@ $ \heap . \heapArrays (\referenceOnly, i )$ becomes $ \heap(\referenceOnly, i )$
 
  If in the heap \heap \ 
  the $i^{th}$ component in the array referenced by $\referenceOnly$ is updated with the new value \textit{val},
- this results in assigning a new value of the component \heap.\heapArrays:
- $$\heap.\heapArrays := \update{\heap.\heapArrays}{(\referenceOnly , i)}{val} $$ 
+ this results in assigning in an update of the component \heap.\heapArrays:
+ $$\update{\heap.\heapArrays}{(\referenceOnly , i)}{val} $$ 
  In the following, for the sake of clarity, we will use another lighter notation for an update of an array component
  which do not imply any ambiguities:
  $$ 

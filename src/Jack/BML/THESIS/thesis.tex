@@ -99,18 +99,22 @@
   \input{BML/compiler.tex}
   \input{BML/relWork/relWork}
 
-%4
-\chapter{Assertion language for the verification condition generator}\label{assertLang}
-  \input{assertLangVC/assertionLang.tex}
-  \input{assertLangVC/BMLfragment.tex}
-  \input{assertLangVC/substitution.tex}
-  \input{assertLangVC/interpretation.tex}
-  \input{assertLangVC/extendMethod.tex} 
+
 
 
 %5
 \chapter{Verification condition generator for Java bytecode } \label{wpGeneral}
-  \input{wp/intro.tex}  
+  \input{wp/intro.tex}
+
+ %4
+\section{Assertion language for the verification condition generator}\label{assertLang}
+  \input{assertLangVC/assertionLang.tex}\label{assertLang}
+  \input{assertLangVC/BMLfragment.tex}
+  \input{assertLangVC/substitution.tex}
+  \input{assertLangVC/interpretation.tex}
+
+  \input{assertLangVC/extendMethod.tex} 
+ 
   \input{wp/wpbc.tex} 
   \input{wp/intermPred.tex}
   \input{wp/excPred.tex} 
@@ -165,8 +169,8 @@
   \input{applications/memory/mydefThesis}
   \lstset{numbers=none}
 
-  \section{Modeling memory consumption}\label{sec:verif}
-  \input{applications/memory/myIntro}  
+  \label{sec:verif}
+  \input{applications/memory/myIntro}   
   \input{applications/memory/motivatingExample}
   \input{applications/memory/technical}
   \input{applications/memory/examples}

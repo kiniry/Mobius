@@ -42,7 +42,7 @@
 \newcommand{\stackOnly}{\mbox{\rm St}}
 \newcommand{\stackOnlyParam}[1]{\mbox{\rm St}(#1)}
 \newcommand{\newStack}{ \lbrack~\rbrack  } % empty stack
-\newcommand{\update}[3]{ #1 [ \oplus {#2} \rightarrow {#3} ] }
+\newcommand{\update}[3]{ #1 ( \oplus {#2} \rightarrow {#3} ) }
 
 \newcommand{\counter}{\mbox{\rm\textbf{cntr}}}
 \newcommand{\counterOnly}{\mbox{\rm Cntr} }
@@ -96,7 +96,7 @@
 \newcommand{\Mynull}{\jmlKey{null}{}}
 %\newcommand{\this}{\texttt{this}}
 \newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
-\newcommand{\arrayAccess}[2]{\mbox{\rm\textbf{arrayAccess}}( #1, #2) }  %{\mbox{\rm arrAccess}(#1, #2)}
+\newcommand{\arrayAccess}[2]{ \mbox{\rm\textbf{arrAcc}}(#1,#2) }  %{\mbox{\rm arrAccess}(#1, #2)}
 \newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
 
 
@@ -393,7 +393,7 @@
 \newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
 \newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
-\newcommand{\expression}{\mbox{\rm\textit{E}}}
+\newcommand{\expression}{\mbox{\rm\textit{E}}^{\scriptsize{\mathcal{A}}}}
 \newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
 \newcommand{\expressions}{\mbox{\rm\textit{SpecExp}}_{bml}}
 
@@ -610,8 +610,8 @@
 %source expressions
 
 \newcommand{\formulaSrc}{\mathcal{F}}
-\newcommand{\expressionSrc}{\mathcal{E}}
-\newcommand{\expressionSrcRel}{\mathcal{E}^{\rel}}
+\newcommand{\expressionSrc}{\mbox{\rm\textit{E}}}
+\newcommand{\expressionSrcRel}{\expressionSrc^{\rel}}
 \newcommand{\constantInt}{\mbox{\rm\textbf{constInt}}}
 \newcommand{\constantBool}{\mbox{\rm\textbf{constBool}}}
 \newcommand{\constantRef}{\mbox{\rm\textbf{constRef}}}
@@ -623,7 +623,7 @@
 %statements
 
 \newcommand{\Myskip}{\mbox{\rm\texttt{skip}}} 
-\newcommand{\stmt}{\mathcal{S}} 
+\newcommand{\stmt}{\mbox{\rm\textit{S}}}
 \newcommand{\Myif}{\mbox{\rm\texttt{if}}}
 \newcommand{\Mythen}{\mbox{\rm\texttt{then}}} 
 \newcommand{\Myelse}{\mbox{\rm\texttt{else}}}
@@ -692,7 +692,7 @@
 \newcommand{\returnType}{\mbox{\rm\textsf{retType}}}
 
 
-\newcommand{\bydef}{^{\mbox{\rm{\textit{def}}}}}
+%\newcommand{\bydef}{^{\mbox{\rm{\textit{def}}}}}
 %\newcommand{\excType}{\mbox{\rm{\texttt{ExcClass}}}}
 
 
@@ -707,7 +707,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%WELL DEFINEDNESS%%%%%%%%%%%%%%5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-\newcommand{\wellDefined}[1]{\delta(#1)}
+\newcommand{\wellDefined}[1]{\Delta(#1)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Method lookup%%%%%%%%%%%%%%
 \newcommand{\lookupOnly}{\mbox{\rm\textit{lookUp}}}
@@ -720,3 +720,4 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5Establishing vcgen correctness%%%%%%%%%%%%%%%%%%%%
 \newcommand{\methOrder}{\prec} % order over methods : m is smaller than n if m can be called by n
 \newcommand{\Program}{\mbox{\rm\texttt{P}}}
+\newcommand{\bydef}{\iff^{def}}

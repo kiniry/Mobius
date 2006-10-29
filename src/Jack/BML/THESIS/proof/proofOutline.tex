@@ -71,7 +71,10 @@ or update the state and evaluate the original expression. The next section is de
 % The reader interested in how recursive methods are manipulated in the soundness proof
 % of program logics might look at \cite{Nipkow-MOD2001}.  
 
-Remember that we assume that the control flow graph of a method is reducible, or in other words there 
+Note that we do the proof under several assumptions. The first one is that the bytecode has passed the bytecode verification.
+This guarantees that when the bytecode  is executed every instructions gets from the operand stack values
+of the expected type. This assumption liberates of us from the obligation to make type checks in the verification condition generator.
+Next, we assume that the control flow graph of a method is reducible, or in other words there 
 are no cycles in the graph with two entries. This means that if program have cycles then they should 
 conform to Def. \ref{defLoop} from Section \ref{prelim:ctrFlow}.
 As we shall in the following, control flow graph reducibility plays an important role in

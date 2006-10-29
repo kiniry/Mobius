@@ -79,9 +79,11 @@ We say that the list of instructions  $l  = \lbrack \ins{i_1} \ldots \ins{i_n} \
  in the compilation of method \methodd{} if 
  \begin{itemize}
       \item none of the instructions is a target of an instruction $\ins{i_j}$ which does not belong to $l$ except for $\ins{i_1}$
-      \item none of the instructions in the set is a jump instruction, a \return{} or an \athrow instruction
-            i.e. $\forall m, m = 1..k \Rightarrow \neg( \ins{i_m} \in  \{\goto, \ifCond, \return, \athrow \} )  $ 
-      \item $  \forall j, i_1 \le  j < i_n , \neg  \ ( \ins{j} \execRel^{l} \ins{j + 1} ) $ 
+      \item none of the instructions in the set is a jump instruction, a \return{} or an \athrow{} instruction
+            i.e. %$\forall m, m = 1..k \Rightarrow \neg( \ins{i_m} \in  \{\goto, \ifCond, \return, \athrow \} )  $  
+                $  \forall j, i_1 \le  j < i_n ,   ( \ins{j} \execRel \ins{j + 1} ) $ 
+      \item none of the instructions except for the first one can be a loop entry in the sense of Def. \ref{defEdge}
+             $  \forall j, i_1 \le  j < i_n , \neg  \ ( \ins{j} \execRel^{l} \ins{j + 1} ) $ 
  \end{itemize}
 
 We denote such a list of instructions with $\ins{i_1};...;\ins{i_n}$

@@ -137,7 +137,8 @@ three conditions.
 The first condition of Def.\ref{seqInstr} states that none of the instructions is a target of an instruction
 outside of the compilation of the expression except from the first instruction. This follows from lemma \ref{compile:prop:compProp2}. 
 The second condition in Def. \ref{seqInstr}  requires that there are no control 
-transfer instructions (jumps, \return and \athrow)  in the list of instructions representing the  compilation of an expression.
+transfer instructions (jumps, \return and \athrow)  in the list of instructions representing the  compilation of an expression, i.e. that every 
+instruction in the compilation of an expression is in execution relation with the next instruction.
 This is established by induction over the structure of the expression.
 The third condition in Def. \ref{seqInstr} states that  the compilation $\compileLabel{s}{\expressionSrc}{e}$ is such that 
 no instruction except possibly for the first instruction in the expression compilation is in a loop execution relation with its predecessor in the sense of 

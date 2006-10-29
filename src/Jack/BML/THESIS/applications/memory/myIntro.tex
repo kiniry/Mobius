@@ -1,10 +1,61 @@
-In this chapter, we shall see how a bytecode verification condition generator can be used 
-for checking a software component w.r.t. to bounded memory consumption policies.
-Limited resource consumption policies are especially important for small device 
-which do have computational and store resource restrictions. Thus, developing techniques  that may statically 
-predict the resource consumption of an unknown program can be used for ensuring the security of small devices. 
-We  propose also an annotation inference algorithm against such policies.
 
+Memory consumption policies provide a means to control
+resource usage on constrained devices, and play an important role
+in ensuring the overall quality of software systems, and in
+particular resistance against resource exhaustion attacks. Such
+memory consumption policies have been previously enforced through
+static analyses, which yield automatic bounds at the
+cost of precision, or run-time analyses, which incur an overhead
+that is not acceptable for constrained devices.
+
+Several approaches have been suggested to date to enforce memory
+consumption policies for programs; all approaches are automatic,
+but none of them is ideally suited for TPDs, either for their
+lack of precision, or for the runtime penalty they impose on
+programs:
+\begin{itemize}
+\item \emph{Static analyses and abstract interpretations:} in such an
+approach, one performs an abstract execution of an approximation of
+the program. The approximation is chosen to be coarse enough to be
+computable, as a result of which it yields automatically bounds on
+memory consumption, but at the cost of precision. Such methods are not
+very accurate for recursive methods and loops, and often fail to
+provide bounds for programs that contain dynamic object creation
+within a loop or a recursive method;
+
+
+\item \emph{Proof-carrying code:} here the program
+comes equipped with a specification of its memory consumption, in the
+form of statements expressed in an appropriate program logic, and a
+certificate that establishes that the program verifies the memory
+consumption specification attached to it. The approach potentially
+allows for precise specifications. However, existing works on proof
+carrying code for resource usage sacrifice the possibility of
+enforcing accurate policies in favor of the possibility of generating
+automatically the specification and the certificate, in line with
+earlier work on certifying compilation;
+
+\item \emph{Run-time monitoring:} here the program also comes equipped
+with a specification of its memory consumption, but the verification
+is performed at run-time, and interrupted if the memory consumption
+policy is violated.
+ 
+
+
+Such an approach is both precise and automatic, but incurs a runtime
+overhead which makes it unsuitable for TPDs.
+\end{itemize}
+In this chapter, we study the use of logical methods to specify and
+verify statically precise memory consumption policies for Java
+bytecode programs. We demonstrate how the Bytecode Modeling
+Language BML  can be used to specify precise memory consumption policies
+for (sequential) Java, and how verification tools can
+be used to enforce such memory consumption policies. 
+
+
+Our broad conclusion is that logical methods provide a suitable means
+to specify and verify expressive memory consumption policies, with a
+minimal overhead.
 
 The remainder of the chapter is organized as follows. 
 Section \ref{sec:motivation} gives several motivating examples.

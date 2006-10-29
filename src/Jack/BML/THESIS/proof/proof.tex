@@ -508,7 +508,7 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 	
 	 \\
  	
-      \Myspace \interpTwoLines{ \begin{array}{l}
+      \Myspace \interp{ \begin{array}{l}
 	                                    I 
 					    \wedge
                                            \forall mod_i ,  i = 1..s \left( \begin{array}{l } 
@@ -516,7 +516,8 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 	                                                           \wpi{\ins{loopEntry}}{\methodd}{} 
 							      \end{array}\right)
 				 \end{array} }{s_k}  \\
-         \\  
+         \mbox{\rm\textit{\{it also follows that the states $s_k$ and $s_{n+1}$ are the same except for the locations in the}}\\
+        \mbox{\rm\textit{ modifies list \modifL of the loop  \}}} \\ 
  \numConclusion{3} \ 	 \Myspace    s_k =^{\modifL} s_{n+1} 
        \end{array}
     $$
@@ -535,7 +536,7 @@ $$\begin{array}{ll} \numConclusion{1} &  \interp{ I}{s_{n + 1}}  \end{array}$$
 
 \Qed
 
-We now shall see that starting execution of a method in a state where the \fwpi{}
+We now show that starting execution of a method in a state where the \fwpi{}
  predicate for the entry instruction holds implies that the  
 \fwpi{} for all the instructions in the execution path hold. 
 

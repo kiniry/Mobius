@@ -5,17 +5,22 @@
 
 
 %\subsection{Rules for single instruction}
-The weakest precondition predicate transformer function which for any instruction of the Java sequential fragment
+Now that we have introduced the assertion language of the verification condition genereator
+as well as the encoding of the method specification 
+in the method data structure, we can turn to the definition of the weakest predicate transformer function 
+which underlines the verification condition generator.
+ 
+Thus, the weakest precondition predicate transformer function which for any instruction of the Java sequential fragment
 determines the predicate that must hold in the prestate of the instruction has the following signature:
 
-$$ \fwpi :   (int,\bcIns)  \longrightarrow   \MethodSet   \longrightarrow \predWp $$
+$$ \fwpi :   int  \longrightarrow   \MethodSet   \longrightarrow \predWp $$
 The function \fwpi \ takes two arguments : 
 the second argument is the method \methodd \ to which the  instruction belongs
-and  the first argument is  the instruction (for instance  \putfield) along with its position in \methodd.
+and  the first argument is  the a point  in the body of  \methodd.
 %and finally the position of the instruction in the body of  \methodd.
 
 Let us first see what is the desired meaning of \fwpi.
-Particularly, we would like that the function \fwpi{}  returns a predicate $\wpi{ins}{\methodd}{pos}$
+Particularly, we would like that the function \fwpi{}  returns a predicate $\wpi{}{\methodd}{i}$
 such that  if it holds in the prestate of the method \methodd \  and if the
 \methodd{} terminates normally then the normal postcondition \methodd.\normalPost \ holds when 
 \methodd{} terminates execution, otherwise if \methodd \ terminates on an exception
@@ -38,7 +43,7 @@ may only guarantee that the postcondition holds under the assumption that the pr
 \begin{figure}[ht!]
 \begin{center}
 \begin{minipage}[c]{\linewidth} 
-\begin{minipage}[c]{.63\linewidth}
+\begin{minipage}[c]{\linewidth}
 \scriptsize{
 \begin{lstlisting}[frame=trbl]
 //@requires reg(1)>=0
@@ -53,31 +58,26 @@ may only guarantee that the postcondition holds under the assumption that the pr
 8 store 2
 9 iinc 3 //LOOP END
 //@loop_modifies reg(2),reg(3)
-//@loop_invariant I := 
-//@               reg(3)>=0 &&
-//@               reg(3)<=reg(1)&&
-//@               reg(2)==reg(3)*(reg(3)-1)/2
+//@loop_invariant I := reg(3)>=0 && reg(3)<=reg(1) && reg(2)==reg(3)*(reg(3)-1)/2
 10 load 3 //LOOP ENTRY 
 11 load 1
 12 if_icmplt 5 
 13 return
-//@ensures \result==
-           reg(1)*(reg(1)+1)/2
+//@ensures \result == reg(1)*(reg(1)+1)/2
 \end{lstlisting}} 
 \end{minipage}
 
 
 %\hfill
-\begin{minipage}[c]{.63\linewidth} 
+\begin{minipage}[c]{\linewidth} 
 \scriptsize{
 \begin{lstlisting}[frame=trbl]
 //@requires k >= 0 ;
 //@ensures \result == k*(k+1)/2;
 public void m(int k){
   int sum = 0;
-  //@loop_modifies sum, i;
-  //@loop_invariant i >= 0 
-  && i <=k && sum == i*(i-1)/2;
+  //@loop_modifies  sum, i;
+  //@loop_invariant i >= 0 && i <=k && sum == i*(i-1)/2;
   for (int i = 0;i < k;i++){
     sum = sum + i;
   } 

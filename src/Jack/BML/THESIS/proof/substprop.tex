@@ -28,8 +28,9 @@ $\update{s_1}{\locVarOnly(i) }{ \evalExp{ \expression_2 }{s_1}  }$.
 \begin{substLv}[Update  a local variable]\label{substLv}
 For any expressions $ \expression_1, \expression_2 $ 
 if we have that the states $s_1$ and $s_2$ are such that
-$ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
-$ s_2 =   \config{\heap}{\counterOnly }{ \stackOnly }{\update{\locVarOnly}{i}{ \evalExp{ \expression_2}{ s_1 } }}{\pc }  $ then 
+$ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$, %$\evalExp{ \expression_2}{ s_1 } \in \Values $ and 
+$ s_2 =   \config{\heap}{\counterOnly }{ \stackOnly }{\update{\locVarOnly}{i}{ \evalExp{ \expression_2}{ s_1 } }}{\pc }  $
+ then 
 the following holds:
 \begin{enumerate}
       \item $\evalExp{\substitution{\expression_1}{ \locVar{i} }{ \expression_2 }}{ s_1 } = \evalExp{\expression_1}{s_2} $
@@ -45,7 +46,7 @@ Proof
 	      $\evalExp{ \locVar{i} \subst{\locVar{i}  }{\expression_2 }}{s_1} = $\\
 	      \comment{apply substitution}\\
 	      $\evalExp{\expression_2}{s_1}=$\\
-	      \comment{by Def.\ref{interpExpr} of the evaluation  for local variables  and by the initial hypothesis for $s_2$ } \\
+	      \comment{ evaluation of local variables  and by the initial hypothesis for $s_2$ } \\ %by Def.\ref{interpExpr}
 	       $\evalExp{\locVar{i}}{s_2}$\\
 	   \end{longtable}
    
@@ -72,8 +73,8 @@ Proof
 \begin{substHeap}[Update of the heap]\label{substHeap}
 For any expressions $ \expression_1, \expression_2, \expression_3 $ and any field \fieldd
 if we have that the states $s_1$ and $s_2$ are such that
- $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and \\
-  $s_2 =  \config{ \update{\heap}{\fieldd }{\update{\fieldd}
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$,%$ \evalExp{\expression_2}{ s_1 } \in \Dom(\heap.\heapFields(\fieldd))$
+ and   $s_2 =  \config{ \update{\heap}{\fieldd }{\update{\fieldd}
                                                    {\evalExp{\expression_2}{ s_1 } }
                                                    {\evalExp{ \expression_3}{ s_1 } } } }
                                           {\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }   $  the following holds
@@ -90,19 +91,21 @@ if we have that the states $s_1$ and $s_2$ are such that
   $s_2 =  \config{\heap'}{\counterOnly}{ \update{\stackOnly}{\counterOnly}{\evalExp{\referenceOnly}{s_1}} }{\locVarOnly}{\pc } $ where
  $  \newRef{\heap}{\clazz} = (\heap', \referenceOnly)   $  the following holds
 \begin{enumerate}
-  \item \[ \begin{array}{l}   \evalExp{\expression_1 \begin{array}{l}
-                             \subst{ \stack{\counter}}{ \referenceOnly} \\
+  \item \[ \begin{array}{l}   \evalExp{\expression_1 %\begin{array}{l}
+                             \subst{ \stack{\counter}}{ \referenceOnly} %\\
 			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
                              \rbrack_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
-                             \end{array}}{s_1} \\
+                             %\end{array}
+                             }{s_1} \\
 			     = \\
                             \evalExp{\expression_1}{ s_2  } 
 			     \end{array}  \]
 
-     \item \[\begin{array}{l}  \interp{\psi \begin{array}{l}
-                              \subst{\stack{\counter}}{\referenceOnly }\\
+     \item \[\begin{array}{l}  \interp{\psi %\begin{array}{l}
+                              \subst{\stack{\counter}}{\referenceOnly }%\\
  			      \subst{\fieldd }{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType)}} _{  \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz}   }
-                              \end{array}}{s_1}\\
+                             % \end{array}
+                             }{s_1}\\
  			      \iff \\ 
  			     \interp{\psi}{s_2} 
  			     \end{array}  \]
@@ -157,7 +160,7 @@ if we have that the states $s_1$ and $s_2$ are such that
 \begin{substCntr}[Update the stack counter]\label{substCntr}
 For any expressions $ \expression_1, \expression_2 $ 
 if we have that the states $s_1$ and $s_2$ are such that
- $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and 
+ $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$, %$\evalExp{ \expression_2}{ s_1  } : \Myint$  and 
 $s_2 =  \config{\heap}{\evalExp{ \expression_2}{ s_1  } }{ \stackOnly }{\locVarOnly}{\pc }  $ then 
 the following holds:
 \begin{enumerate}
@@ -172,7 +175,7 @@ the following holds:
 \begin{substRet}[Return value property]\label{substRet} 
 For any expression $\expression_1$ and $\expression_2$,
 for any two states $s_1$ and $s_2$  such that
-$ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$ and \\
+$ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$,%$\evalExp{\expression_2}{s_1} \in \Values $ and 
 $ s_2 =   \configFinalNorm{\heap}{\evalExp{\expression_2}{s_1} } $ then 
 the following holds:
 \begin{enumerate}

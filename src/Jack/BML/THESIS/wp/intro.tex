@@ -11,9 +11,14 @@ about the modified locations by methods and loops.
 %In Section \ref{wp:discussionVC}, we discuss the existing approaches and motivate the choices done here.
 
 % definition of the wp
+In Section \ref{assertLang}, we discuss the assertion language which the  formalization of 
+the verification condition generator manipulates. The assertion language consists of a subset of the BML language 
+extended with few new constructs.
+In Section \ref{methExtend}, we show the data structures which encode the specification. 
+In Section  \ref{wpRules}, we focus on the verification calculus.
 As we stated earlier, our verification condition generator is based on a weakest precondition (wp) calculus.
  However, a logic tailored to stack based bytecode should take into account 
-particular bytecode features as for example the operand stack. Another particularity of our verification condition calculus (weakest precondition function)
+particular bytecode features as for example the operand stack. Another particularity of the verification condition calculus 
 is the propagation of verification conditions up to the program point similar to the definition of the weakest precondition calculus
 for the Java-like  source language in Chapter \ref{javaVerif}. To do this, we define the  weakest precondition predicate transformer
 in terms of two mutually recursive functions. 
@@ -22,12 +27,7 @@ in between the current instruction and
 its successor. A predicate which must hold between an instruction and its successor 
 depends on the precondition of the successor and the execution relation between the two instructions, namely 
 it depends on if the successor is a loop entry or not.
-This is explained in Section  \ref{wpRules}. 
-
-%example
 Section \ref{wp:example} gives an example for how the verification condition generator works.
-
-%related work
 Finally, section \ref{relWorkWp} is an overview of the existing work in the domain.
 % proof of correctness
 %An important question is the correctness of our methodology, i.e. what guarantees that if the verification procedure succeeds on a program then 

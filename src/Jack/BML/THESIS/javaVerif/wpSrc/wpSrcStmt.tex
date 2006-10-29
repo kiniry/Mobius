@@ -29,12 +29,6 @@ and that the postcondition holds at the end of the loop execution) are quantifie
 elements of the \modLoop{} list. This quantification allows to initialize correctly the variables that keep their values unchanged at the loop borders.
 Of course, in order to initialize these variables the result of the \wpName{} function for a loop must be propagated up to the program entry point.
 
-Although this complicates slightly the verification condition generator, the loop frame condition is useful as it can work 
-on weaker specification than a verification condition generator which does not support it. This actually means that the burden of writing specification 
-becomes definitely lighter, as the person which specifies an application must identify not  \textit{the strongest loop invariant }
-but a \textit{loop invariant}. Of course, he should also identify  the locations which are modified by the loop (locations that may have different values 
-at the end and at the beginning of a loop iteration). Modified locations in a loop is easier than identifying the variables not modified in the loop which 
-must be done if we decide not use loop frame conditions. 
 
 \begin{figure}[ht!]
 \begin{frameit}

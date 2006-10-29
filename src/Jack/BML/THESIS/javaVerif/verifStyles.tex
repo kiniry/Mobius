@@ -2,10 +2,10 @@
 \section{Program verification using program logic}\label{javaVerif:verifStyles}
 
 Now that we have defined the source language and its specification language, let us see 
-what are the possibile approaches for verifying that  a program respects its specification.
+what are the possible approaches for verifying that  a program respects its specification.
 
  A first possibility is to formalize the semantics of programs and then to perform the verification directly over this formalization.
-For instance, this was done in the Loop tool \cite{jacobs03java} where a denotational semantics for programs was formalized in the theorem prover PVS.
+For instance, this was done in a first version of the Loop tool \cite{jacobs03java} where a denotational semantics for programs was formalized in the theorem prover PVS.
  However, such a  verification needs a lot of user interaction which makes  difficult that this approach scale up.
  
 Another approach then consists in using an axiomatic semantics of the programming language for the verification process. 
@@ -16,7 +16,7 @@ and the interactive Java verification system Jive \cite{MH00Arc} are examples fo
   Hoare logic triples. A Hoare triple consists of a predicate $Pre$, a statement $\stmt$ and a predicate $Post$,  such 
 that if $Pre$  holds in the initial state of $\stmt$,  then  $Post$  holds in the final tate of $\stmt$. For denoting such 
 a Hoare  triple we use the  notation $\{Pre \}  \stmt \{Post\}$.
-Correctness of program $\stmt$ w.r.t. a precondition $Pre$ and postcondition   $Post$ is then established if a  tree can be built  by applying the inference rule of the Hoare
+Correctness of program $\stmt$ w.r.t. a precondition $Pre$ and postcondition   $Post$ is then established if a  derivation tree can be built  by applying the inference rule of the Hoare
 logic over the triple $\{Pre \}  \stmt \{Post\}$ and the  leaves of the tree are either axioms or valid formulas.
  Validity of formulas in the leaves of a Hoare logic tree is
 established by a decision procedure or a theorem prover. 
@@ -69,6 +69,18 @@ opens a gap between  the verified code and the source code as we verify  a progr
 Establishing the correctness of a verification systems which uses an intermediate language
 may be not trivial as the stages of the transformation of the original source program to its encoding in the intermediate language must be also proven correct. 
 
-To conclude, we consider that using predicate transformers for the generation of verification conditions makes the verification condition generator automatic 
-and that performing the verification directly on the program code is reliable as it guarantees that the proven program corresponds to the program that we want to prove. 
+Another point that we would like to discuss here is the use of loop frame conditions. 
+For instance, as  we saw from the examples in JML and our source language, we accompany loops not only with 
+loop invariants but with loop frame conditions, i.e. list of locations that may be modified by a loop.
+Although this complicates slightly the verification condition generator, the loop frame condition is useful as it can work 
+on weaker specification than a verification condition generator which does not support it. This in particular, implies that the burden of writing specification 
+becomes definitely lighter, as the person which specifies an application must identify not  \textit{the strongest loop invariant }
+but a \textit{loop invariant}. Of course, he should also identify  the locations which are modified by the loop (locations that may have different values 
+at the end and at the beginning of a loop iteration). However, modified locations in a loop is easier than identifying the variables not modified in the loop which 
+must be done if we decide not use loop frame conditions. 
+
+To conclude, we 
+ consider that  using predicate transformers for the generation of verification conditions makes the verification condition generator automatic. Moreover, 
+     performing the verification directly on the program code is more reliable as it guarantees that the proved program corresponds to the program that we want to prove.
+Last, we opt for specification which includes frame conditions as this leverages the specification burden.  
 %Thus, in the following we present a weakest predicate transformer defined for our source language.
