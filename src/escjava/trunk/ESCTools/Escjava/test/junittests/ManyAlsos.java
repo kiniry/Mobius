@@ -36,9 +36,9 @@ public class ManyAlsos {
     else
       _i = -1;
     switch (i) {
-      case -1: _o = null;
-      case 0: if (b) _i = 1; else _i = 2;
-      case 1: _o = new Object();
+      case -1: _o = null; break;
+      case 0: if (b) _i = 1; else _i = 2; break;
+      case 1: _o = new Object(); break;
       default:
         _o = new String();
     }

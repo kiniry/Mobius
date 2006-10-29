@@ -7,7 +7,7 @@ public class Inconsistent {
 		//@ assume b == c;
 		//@ assume a != c;
 		//@ assert a == d; // Passes, but inconsistent
-		//@ assert !(\lblpos A false);
+		//@ assert false; // does not fail
 	}
 	public void mm() {
 		int a,b,c,d;
@@ -20,6 +20,6 @@ public class Inconsistent {
 		//@ assume a == b;
 		//@ assume b == c;
 		//@ assert a == c;  // OK and consistent
-		//@ assert !(\lblpos B false);
+		//@ assert false; // should fail
 	}
 }

@@ -8,7 +8,7 @@ public class THERR {
         public THERR(int k) {
 	}
 
-        //@ requires i == 1; // SHOULD FAIL
+        //@ requires i == 1; 
 	public THERR(int k, int kk) {}
 
 	int ii = 1;
@@ -22,7 +22,7 @@ public class THERR {
 	}
 	public void p1() {
 		i = 1;
-		THERR z = new THERR(0);
+		THERR z = new THERR(0); // SHOULD FAIL
 	}
 	public void p2() {
 		THERR z = new THERR(0);
@@ -30,7 +30,7 @@ public class THERR {
 
 	public void q() {
 		ii = 0;
-		THERR z = new THERR();
+		THERR z = new THERR(); // SHOULD FAIL
 	}
 	public void q1() {
 		ii = 1;
@@ -42,13 +42,13 @@ public class THERR {
 
 	public void m() {
 		i = 0;
-		THERR z = new THERR(0,0);
+		THERR z = new THERR(0,0); // SHOULD FAIL
 	}
 	public void m1() {
 		i = 1;
 		THERR z = new THERR(0,0);
 	}
 	public void m2() {
-		THERR z = new THERR(0,0);
+		THERR z = new THERR(0,0); // SHOULD FAIL
 	}
 }

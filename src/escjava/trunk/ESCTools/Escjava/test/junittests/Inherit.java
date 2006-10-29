@@ -37,7 +37,7 @@ class M {
        int j = i.m(0);
        //@ assert \typeof(i) <: Inherit.class;
        //@ assert j >= 0; 
-       //@ assert j == 1; 
+       //@ assert j == 1;  // OK - if we had dynamically type specs FIXME
     }
     public void mm1a() {
        InheritS ii = new Inherit();
@@ -52,7 +52,7 @@ class M {
        int j = i.m(0);
        //@ assert \typeof(i) <: InheritB.class;
        //@ assert j >= 0; 
-       //@ assert j == 2; 
+       //@ assert j == 2;  // OK - if we had dynamically type specs FIXME
     }
     public void mm2a() {
        InheritS ii = new InheritB();
@@ -78,7 +78,7 @@ class M {
     //@ requires i != null;
     public void p(InheritS i) {
        //@ assume i instanceof Inherit;
-       //@ assert i.m(0) == 1;
+       //@ assert i.m(0) == 1;  // OK - if we had dynamically typed specs FIXME
     }
 
     //@ requires i != null;
@@ -95,7 +95,7 @@ class M {
     }
     //@ requires i != null;
     public void q3(InheritS i) {
-       if (i instanceof Inherit) i.m(-1); // OK
+       if (i instanceof Inherit) i.m(-1); // OK - if we had dynamically typed specs FIXME
     }
     //@ requires i != null;
     public void q4(InheritS i) {
