@@ -12,7 +12,7 @@ BEGIN
 END JType
 
 
-NumExpr[Name : TYPE] : DATATYPE
+NumExpr[Name : TYPE+] : DATATYPE
 BEGIN
 
   Int(i : int) : Int?
@@ -25,7 +25,7 @@ BEGIN
 END NumExpr
 
 
-BoolExpr[Name : TYPE] : DATATYPE
+BoolExpr[Name : TYPE+] : DATATYPE
 BEGIN
 
   IMPORTING NumExpr[Name]
@@ -47,7 +47,7 @@ BEGIN
 END BoolExpr
 
 
-Expr[Name : TYPE] : DATATYPE
+Expr[Name : TYPE+] : DATATYPE
 BEGIN
 
   IMPORTING BoolExpr[Name],
@@ -63,7 +63,7 @@ BEGIN
 END Expr
 
 
-Stmt[Name : TYPE] : DATATYPE
+Stmt[Name : TYPE+] : DATATYPE
 BEGIN
   
   IMPORTING Expr[Name]
@@ -82,7 +82,7 @@ BEGIN
 END Stmt
 
 
-SizeFunctions[Name : TYPE] : THEORY
+SizeFunctions[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING NumExpr[Name],
@@ -140,7 +140,7 @@ BEGIN
 END SizeFunctions
 
 
-Program[Name : TYPE] : THEORY
+Program[Name : TYPE+] : THEORY
 BEGIN
   
   IMPORTING JType,
