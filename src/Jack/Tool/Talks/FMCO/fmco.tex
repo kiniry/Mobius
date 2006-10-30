@@ -151,18 +151,17 @@ accountable for quality of their code
 \item Tight integration with IDE Eclipse
 \item JML used as annotation language
 \item Different means of validation possible
-
+\item Support for Simplify (automatic) and Coq (interactive) prover
 \item Special JACK view for verification condition browsing
-\item Propagation of annotations, based on implementation of
-verification condition generator
 \end{itemize}
 \end{slide}
 
 \begin{slide}{And more features of JACK}
 \begin{itemize}
+\item Generation and propagation of annotations, based on implementation of
+verification condition generator
 \item JML specifications compiled into BML (Bytecode Modeling Language)
 \item Support for verification of bytecode 
-\item Support for Simplify (automatic) and Coq (interactive) prover
 \end{itemize}
 \end{slide}
 
@@ -224,13 +223,13 @@ relatively complete
 \begin{itemize}
 \item Method \Blue{m} has specification: 
 \Blue{requires P; ensures Q}
-\item Method \Blue{n} calls method \Blue{m}\\
+\item Method \Blue{use} calls method \Blue{m}\\
 \item \Red{Runtime checking}: at all calls to \Blue{m} the specification is
 tested
-\item \Red{Static checking}: if \Blue{n} does not establish \Blue{P}, it
-needs to be propagated\\ Specification for \Blue{n}:
+\item \Red{Static checking}: if \Blue{use} does not establish \Blue{P}, it
+needs to be propagated\\ Specification for \Blue{use}:
 \Blue{requires P}
-\item If \Blue{n} does not invalidate \Blue{Q}, it can be
+\item If \Blue{use} does not invalidate \Blue{Q}, it can be
 propagated
 \end{itemize}
 \end{slide}
@@ -251,7 +250,7 @@ annotations are extracted from generated verification conditions
 \includegraphics[width=\textwidth]{screen9.ps}
 \end{slide}
 
-\begin{slide}{Assertion generation}
+\begin{slide}{Annotation generation for security properties}
 Two phases:
 \begin{itemize}
 \item \Blue{synthesising} core-annotations
@@ -312,24 +311,24 @@ transactions
 \end{itemize}
 \end{slide}
 
-\begin{slide}{Uncaught exception within transaction}
-\begin{alltt}
-\textbf{void appExchangeCurrency(...) \{
-   ...
-   \Blue{/*@ exsures (Exception) TRANSACT == 0; @*/} \{
-      ...
-      JCSystem.beginTransaction();	
-      try \{balance.setValue(decimal2);
-            ...
-      \} catch (DecimalException e) \{
-         ISOException.throwIt(
-              PurseApplet.OVERFLOW);
-      \}
-      JCSystem.commitTransaction();
-   \}
-   ...\}}
-\end{alltt}
-\end{slide}
+%\begin{slide}{Uncaught exception within transaction}
+%\begin{alltt}
+%\textbf{void appExchangeCurrency(...) \{
+%   ...
+%   \Blue{/*@ exsures (Exception) TRANSACT == 0; @*/} \{
+%      ...
+%      JCSystem.beginTransaction();	
+%      try \{balance.setValue(decimal2);
+%            ...
+%      \} catch (DecimalException e) \{
+%         ISOException.throwIt(
+%              PurseApplet.OVERFLOW);
+%      \}
+%      JCSystem.commitTransaction();
+%   \}
+%   ...\}}
+%\end{alltt}
+%\end{slide}
 
 \part{Support for bytecode}
 \begin{slide}{Proof carrying code}
@@ -364,7 +363,7 @@ conditions
  \item Expression language extended with bytecode specific constructs
 (constant pool indexes, local variables, stack counter, stack 
 expressions)
- \item Structural and type checking, \`a la BCV
+ \item Structural and type constraints, \`a la BCV
  \item Encoding in class file format
   \begin{itemize}
    \item Java compiler independent 
@@ -375,10 +374,10 @@ relevant program point
  \end{itemize}
 \end{slide} 
 
-\begin{slide}{Example: quicksort}
-\vspace*{-1.5em}
-\includegraphics[height=\textheight]{screen13.ps}
-\end{slide}
+%\begin{slide}{Example: quicksort}
+%\vspace*{-1.5em}
+%\includegraphics[height=\textheight]{screen13.ps}
+%\end{slide}
 
 \begin{slide}{Generated class file}
 \vspace*{-1.5em}
@@ -419,32 +418,15 @@ relevant program point
 \end{itemize}
 \end{slide}
 
-\begin{slide}{Verification condition generator}
-\begin{itemize}
- \item Covers the most important feature of 
- Java - object manipulation and creation, exceptions, 
-method invocations, arithmetic, stack manipulation etc.
- 
-% \item Contract-based approach
- \item Uses frame conditions for generation of tractable and provable
-verification conditions
- \item Proven sound under the hypothesis that the control flow graph is reducible
-\end{itemize}
-\end{slide}
 
  
 \begin{slide}{Relation between proof obligations on source and bytecode}
 \begin{itemize}
-\item Assumptions:
- \begin{itemize}
- \item non-optimising compiler 
- \item compiler produces reducible control flow graph
- \item compiler preserves exception handler
- \end{itemize}
+ \item Verification condition generator proven sound under the hypothesis that the control flow graph is reducible 
 
-\item Equivalence proven modulo:
- \begin{itemize}
- \item names - Java names are compiled into indexes of the constant pool or elements in the method's local variable table
+\item For non-optimising compiler equivalence of proof obligations modulo:
+ \begin{itemize} \item names - Java names are compiled into indexes of
+ the constant pool or elements in the method's local variable table
  
  \item types - Java types integer, short, byte and boolean are
  compiled into integers
@@ -467,40 +449,40 @@ JML models and logic of theorem prover
 \end{itemize}
 \end{slide}
 
-\begin{slide}{Coq}
-\begin{itemize}
-\item Based on \Blue{calculus of inductive constructions}
-\item Can express types, axioms, functions, variables, definitions,
-lemmas etc.
-\item Lemmas have to be proved, by building \Blue{proof term} out of
-the types, axioms, variables etc.
-\item \Blue{Tactics}: special commands called within a proof script
-\item \Blue{Custom tactics} can be created from more primitive ones
-\item Coq can easily express the logics for Jack
-\end{itemize}
-\end{slide}
+%\begin{slide}{Coq}
+%\begin{itemize}
+%\item Based on \Blue{calculus of inductive constructions}
+%\item Can express types, axioms, functions, variables, definitions,
+%lemmas etc.
+%\item Lemmas have to be proved, by building \Blue{proof term} out of
+%the types, axioms, variables etc.
+%\item \Blue{Tactics}: special commands called within a proof script
+%\item \Blue{Custom tactics} can be created from more primitive ones
+%\item Coq can easily express the logics for Jack
+%\end{itemize}
+%\end{slide}
 
 
-\begin{slide}{POs generated by Jack}
-\begin{itemize}
-\item Each hypothesis comes with \Blue{hints} about its origin
-\begin{itemize}
-\item Useful information for proof script 
-\item Separation of hypotheses
-\item Nearly human readable
-\end{itemize}
-\item Uses Coq's \Blue{pretty printing} 
-\item Tactics for cleaning and proving
-\begin{itemize}
-\item Achieves some level of automation
-\item Simplify is better for automatic proving
-\item But Coq proves (interactively) proof obligations that Simplify
-cannot handle
-\end{itemize}
-\end{itemize}
-\end{slide} 
+%\begin{slide}{POs generated by Jack}
+%\begin{itemize}
+%\item Each hypothesis comes with \Blue{hints} about its origin
+%\begin{itemize}
+%\item Useful information for proof script 
+%\item Separation of hypotheses
+%\item Nearly human readable
+%\end{itemize}
+%\item Uses Coq's \Blue{pretty printing} 
+%\item Tactics for cleaning and proving
+%\begin{itemize}
+%\item Achieves some level of automation
+%\item Simplify is better for automatic proving
+%\item But Coq proves (interactively) proof obligations that Simplify
+%cannot handle
+%\end{itemize}
+%\end{itemize}
+%\end{slide} 
 
-\begin{slide}{ProverEditor}
+\begin{slide}{CoqProverEditor}
 \begin{itemize}
 \item \Blue{Syntax highlighting}
  for both Coq file and proof view window
@@ -582,7 +564,7 @@ Coq types in JML:
 \end{alltt}
 In the Coq file user\_extensions.v:
 \begin{alltt}
-  \Blue{Definition} ObjectSet : set Reference.
+  \Blue{Definition} ObjectSet := set Reference.
 \end{alltt}
 \end{itemize}
 \end{slide}
