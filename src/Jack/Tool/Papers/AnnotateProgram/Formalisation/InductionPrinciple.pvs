@@ -1,0 +1,74 @@
+InductionPrinciple[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING Semantics[Name]
+
+  P : VAR Program
+
+  stmt_induction : LEMMA
+   FORALL(Q : [Stmt, PState, PState -> bool]) :
+    ((FORALL(s : Stmt, sigma1, sigma2 : PState) :
+         derives(P)(s, sigma1)(sigma2) IMPLIES
+         Q(s, sigma1, sigma2))
+    IFF
+    (FORALL(s : Stmt, sigma1, sigma2 : PState) :
+       up?(ex(sigma1)) AND sigma1 = sigma2 IMPLIES Q(s, sigma1, sigma2))
+    AND 
+    (FORALL(s : Stmt, sigma1, sigma2 : PState) :
+     CASES s OF
+      % If_p
+      IfThenElse(e, c1, c2) :
+        (IF eval(e)(sigma1)
+         THEN derives(P)(c1, sigma1)(sigma2) IMPLIES Q(c1, sigma1, sigma2)
+         ELSE derives(P)(c2, sigma1)(sigma2) IMPLIES Q(c2, sigma1, sigma2)
+         ENDIF)
+         IMPLIES Q(IfThenElse(e, c1, c2), sigma1, sigma2),
+      % Seq_p
+      Sequence(c1, c2) :
+        FORALL (tau : PState) :
+         (derives(P)(c1, sigma1)(tau) IMPLIES Q(c1, sigma1, tau)) AND
+         (derives(P)(c2, tau)(sigma2) IMPLIES Q(c2, tau, sigma2)) IMPLIES
+        Q(Sequence(c1, c2), sigma1, sigma2),
+      % LU_p
+      Set(vn, e) :
+         is_ghost(vn, sigma1) AND
+         FORALL (tau : PState)(v : Val) :
+           (derives(P)(e, sigma1)(v, tau) IMPLIES true) AND
+           (sigma2 = IF up?(ex(tau))
+                     THEN tau
+                     ELSE update_ghost(vn, v, tau)
+                     ENDIF) IMPLIES
+           Q(Set(vn, e), sigma1, sigma2),
+      % Skip_p
+      Skip : sigma1 = sigma2 IMPLIES Q(Skip, sigma1, sigma2),
+      % StmtExpr_p
+      StmtExpr(e) : 
+         FORALL (v : Val) :
+           (derives(P)(e, sigma1)(v, sigma2) IMPLIES true) IMPLIES
+           Q(StmtExpr(e), sigma1, sigma2),
+      % Throw_p
+      Throw: sigma2 = sigma1 WITH [ex := up(Throwable)] IMPLIES
+             Q(Throw, sigma1, sigma2),
+      % TryCatch_p
+      TryCatch(c1, c2, c3) :
+        FORALL(tau1, tau2, tau3 : PState) :
+          (derives(P)(c1, sigma1)(tau1) IMPLIES Q(c1, sigma1, tau1)) IMPLIES
+          (derives(P)(IF up?(ex(tau1)) THEN c2 ELSE Skip ENDIF, 
+                           tau1 WITH [ex := bottom])(tau2) IMPLIES
+                     Q(IF up?(ex(tau1)) THEN c2 ELSE Skip ENDIF,
+                       tau1 WITH [ex := bottom], tau2)) IMPLIES
+          derives(P)(c3, tau2 WITH [ex := bottom])(tau3) IMPLIES
+                     Q(c3, tau2 WITH [ex := bottom], tau3) IMPLIES
+          sigma2 = (# ex := IF up?(ex(tau2)) THEN ex(tau2) ELSE ex(tau3) ENDIF,
+                      st := st(tau3) #) IMPLIES
+          Q(TryCatch(c1, c2, c3), sigma1, sigma2),
+      % While_p
+      While(e, c) : 
+        (derives(P)(IfThenElse(e, While(e, c), Skip), sigma1)(sigma2)
+         IMPLIES Q(IfThenElse(e, While(e, c), Skip), sigma1, sigma2)) IMPLIES
+         Q(While(e, c), sigma1, sigma2)
+    ENDCASES))
+    
+
+
+END InductionPrinciple
