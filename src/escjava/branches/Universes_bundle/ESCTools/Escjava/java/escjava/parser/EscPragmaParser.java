@@ -2586,7 +2586,7 @@ public class EscPragmaParser extends Parse
   // FIXME - do we really allow modifier pragmas in here?
   public FormalParaDecl parseExsuresFormalParaDecl(
   /*@ non_null @*/EscPragmaLex l) {
-    int modifiers = parseModifiers(l);
+    int modifiers = parseModifiers(l, true);
     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
     Type paratype = parseExsuresType(l);
     Identifier idn;
@@ -2861,7 +2861,7 @@ public class EscPragmaParser extends Parse
       seqFormalParaDecl.push();
       while (l.ttype != TagConstants.RPAREN) {
         l.getNextToken(); // swallow COMMA
-        int modifiers = parseModifiers(l);
+        int modifiers = parseModifiers(l, true);
         ModifierPragmaVec modifierPragmas = this.modifierPragmas;
         int typeLoc = l.startingLoc;
         Type type = parseType(l);

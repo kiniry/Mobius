@@ -56,9 +56,15 @@ public class InitUniverses implements IESCInitComponentView {
 	}
 	
 	/**
-	 * TODO
+	 * The method returns an internally cached reference
+	 * to the Javafe Universes extension where all the
+	 * initialisation parameters are stored. The method
+	 * checks if the reference is non-null and in case
+	 * it is null it attempts to fetch the reference
+	 * from the Javafe Universe component. 
 	 * 
-	 * @return
+	 * @return the internal representation of the Javafe
+	 *         extension
 	 */
 	private javafe.extensions.universes.InitUniverses getJavafeInit() {
 		if (currentJavafeInit==null) {

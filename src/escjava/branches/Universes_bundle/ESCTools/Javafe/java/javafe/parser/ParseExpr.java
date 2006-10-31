@@ -248,21 +248,10 @@ public abstract class ParseExpr extends ParseType
                 else if( op == TagConstants.INSTANCEOF ) {
                     // get ReferenceType, and reduce
                     l.getNextToken();
-                    //alx: dw parse the universe modifiers
-                    int[] localUniverseArray=null;
-                    if (useUniverses) {
-                    	parseUniverses(l);
-                    	localUniverseArray = 
-			    (int[]) this.universeArray.clone();
-                    }
-		    //alx-end
+                    parseModifiers(l, false);
                     Type t = parseType( l );
                     e = InstanceOfExpr.make( e, t, locOp );
-
-                    //alx: dw set the universe modifiers
-                    if (useUniverses)
-                    	setUniverse(e,localUniverseArray,t,locOp);
-		    //alx-end
+                    assignExtensionTypeInformation(e,t,locOp);
           
                     // Now go to check following op
                     continue getOp;
@@ -317,7 +306,34 @@ public abstract class ParseExpr extends ParseType
         }
     }
 
-    /**********************************************************************
+	/**
+     * This method parses the type modifiers that are handled
+     * in extension comoponets and reside in pragmas.
+     * 
+     * @param l the lexer from which the modifier should
+     *        be extracted
+	 * @param inDeclaration 
+     * @return true when one of the extensions handles the
+     *         current modifier from the lexer
+     */
+    /**
+     * This method assigns the type information that has been
+     * collected in the extension components.
+     * 
+     * @param e the expression for which the information is to be
+     *          assigned
+     * @param t the Java type of the expression
+     * @param loc the location of the expression in lexer
+     */
+    private void assignExtensionTypeInformation(Expr e, Type t, int loc) {
+    	for (int i=0;i<initJavafeTypeExtensions.length;i++) {
+			initJavafeTypeExtensions[i].assignTypeInformation(e, t, loc);
+		}
+		
+	}
+
+
+	/**********************************************************************
 
      Parse a <TT>UnaryExpression</TT>.
 

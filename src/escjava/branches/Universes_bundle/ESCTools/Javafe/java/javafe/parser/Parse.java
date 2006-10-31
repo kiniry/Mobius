@@ -146,7 +146,7 @@ public class Parse extends ParseStmt
         l.getNextToken();
       else {
 	int locstart = l.startingLoc;
-	int modifiers = parseModifiers(l);
+	int modifiers = parseModifiers(l, true);
 	ModifierPragmaVec modifierPragmas = this.modifierPragmas;
 
 	  if (l.ttype == TagConstants.TYPEDECLELEMPRAGMA) {
@@ -217,7 +217,7 @@ public class Parse extends ParseStmt
   //@ ensures \result != null;
   protected TypeDecl parseTypeDeclaration(Lex l, boolean specOnly) {
     int locstart = l.startingLoc;
-    int modifiers = parseModifiers(l);
+    int modifiers = parseModifiers(l, true);
     ModifierPragmaVec modifierPragmas = this.modifierPragmas;
     return parseTypeDeclaration(l,specOnly,modifiers,modifierPragmas,
 					locstart);
@@ -431,7 +431,7 @@ VariableDeclarator:
 	    boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
 	    //alx-end
     int loc = l.startingLoc;
-    int modifiers = parseModifiers(l);
+    int modifiers = parseModifiers(l, true);
     //alx: dw clone the array to use it later
     int[] localUniverseArray = null;
     if (useUniverses)
@@ -675,53 +675,53 @@ VariableDeclarator:
   //@ ensures \result != null;
   public FormalParaDeclVec parseFormalParameterList(Lex l) 
   {
-	  //alx:
-	  boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
-	  //alx-end
-    /* Should be on LPAREN */
-    if( l.ttype != TagConstants.LPAREN ) 
-      fail(l.startingLoc, "Expected open paren");
-    if( l.lookahead(1) == TagConstants.RPAREN ) {
-      // Empty parameter list
-      expect( l, TagConstants.LPAREN );
-      expect( l, TagConstants.RPAREN );
-      return FormalParaDeclVec.make();
-    } else {
-      seqFormalParaDecl.push();
-      while( l.ttype != TagConstants.RPAREN ) {
-        l.getNextToken();                // swallow open paren or comma
-	int modifiers = parseModifiers(l);
-	//alx: dw save array to use it later
-	int[] localUniverseArray = null;
-	if (useUniverses)
-		localUniverseArray = (int[]) this.universeArray.clone();
-	//alx-end
+      //alx:
+      boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
+      //alx-end
+      /* Should be on LPAREN */
+      if( l.ttype != TagConstants.LPAREN ) 
+          fail(l.startingLoc, "Expected open paren");
+      if( l.lookahead(1) == TagConstants.RPAREN ) {
+          // Empty parameter list
+          expect( l, TagConstants.LPAREN );
+          expect( l, TagConstants.RPAREN );
+          return FormalParaDeclVec.make();
+      } else {
+          seqFormalParaDecl.push();
+          while( l.ttype != TagConstants.RPAREN ) {
+              l.getNextToken();                // swallow open paren or comma
+              int modifiers = parseModifiers(l, true);
+              //alx: dw save array to use it later
+              int[] localUniverseArray = null;
+              if (useUniverses)
+                  localUniverseArray = (int[]) this.universeArray.clone();
+              //alx-end
 
-	ModifierPragmaVec modifierPragmas = this.modifierPragmas;
-        Type type = parseType(l);
-        int locId = l.startingLoc;
-        Identifier id = parseIdentifier(l);
-        type = parseBracketPairs(l, type);
-	modifierPragmas = parseMoreModifierPragmas(l, modifierPragmas);
-	//alx: dw save array to the var decl node and add the node to the 
-        //        vector
-	if (useUniverses) seqFormalParaDecl.addElement( 
-		             setUniverse(FormalParaDecl.make(modifiers, 
+              ModifierPragmaVec modifierPragmas = this.modifierPragmas;
+              Type type = parseType(l);
+              int locId = l.startingLoc;
+              Identifier id = parseIdentifier(l);
+              type = parseBracketPairs(l, type);
+              modifierPragmas = parseMoreModifierPragmas(l, modifierPragmas);
+              //alx: dw save array to the var decl node and add the node to the 
+              //        vector
+              if (useUniverses) seqFormalParaDecl.addElement( 
+                                      setUniverse(FormalParaDecl.make(modifiers, 
                                                              modifierPragmas, 
                                                              id, 
                                                              type, 
                                                              locId ),
-                             localUniverseArray) );
-	else
-	//alx-end
-        seqFormalParaDecl.addElement( FormalParaDecl.make(modifiers,
-							  modifierPragmas, 
-							  id, type, locId ) );
-        if( l.ttype != TagConstants.RPAREN && l.ttype != TagConstants.COMMA )
-          fail(l.startingLoc, "Expected comma or close paren");
+                                      localUniverseArray) );
+              else
+                  //alx-end
+                  seqFormalParaDecl.addElement( FormalParaDecl.make(modifiers,
+                                                          modifierPragmas, 
+                                                          id, type, locId ) );
+              if( l.ttype != TagConstants.RPAREN && l.ttype != TagConstants.COMMA )
+                  fail(l.startingLoc, "Expected comma or close paren");
+          }
+          expect( l, TagConstants.RPAREN );
+          return FormalParaDeclVec.popFromStackVector( seqFormalParaDecl );
       }
-      expect( l, TagConstants.RPAREN );
-      return FormalParaDeclVec.popFromStackVector( seqFormalParaDecl );
-    }
   }
 }

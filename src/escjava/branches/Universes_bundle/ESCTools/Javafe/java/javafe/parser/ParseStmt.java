@@ -361,7 +361,7 @@ public abstract class ParseStmt extends ParseExpr
 
         // Stmt ::= ClassDecl | VarDeclInit   (Except those starting with IDENT)
         {
-            int modifiers = parseModifiers(l);
+            int modifiers = parseModifiers(l, true);
             ModifierPragmaVec pmodifiers = this.modifierPragmas;
             //alx: dw handle universes
             int[] localUniverseArray = (int[]) this.universeArray.clone();
@@ -616,7 +616,7 @@ public abstract class ParseStmt extends ParseExpr
                     break;
 
                 default:
-                    modifiers = parseModifiers(l);
+                    modifiers = parseModifiers(l, true);
                     pmodifiers = this.modifierPragmas;
 
                     if (modifiers != Modifiers.NONE || pmodifiers != null ||
@@ -896,7 +896,7 @@ public abstract class ParseStmt extends ParseExpr
     	//alx:
         boolean useUniverses = InitUniverses.getCurrentInit().getUseUniverseTypeSystem();
         //alx-end
-        int modifiers = parseModifiers(l);
+        int modifiers = parseModifiers(l, true);
         //alx: dw save the universe modifiers
         int[] localUniverseArray=null;
         if (useUniverses)

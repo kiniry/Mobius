@@ -416,7 +416,7 @@ public class TagConstants extends GeneratedTags
     public static final int ALSO_REQUIRES = ALSO_MODIFIES + 1;
 
     // Chalin-Kiniry experimental keywords for nullness, purity, and whatnot
-    public static final int NULLABLE = REP + 1;
+    public static final int NULLABLE = ALSO_REQUIRES + 1;
     public static final int NULLABLE_BY_DEFAULT = NULLABLE + 1;
     public static final int NON_NULL_BY_DEFAULT = NULLABLE_BY_DEFAULT + 1;
     public static final int OBS_PURE = NON_NULL_BY_DEFAULT + 1;
@@ -432,9 +432,9 @@ public class TagConstants extends GeneratedTags
     public static final int SPEC_SAFE_MATH = SPEC_JAVA_MATH + 1;
     public static final int SPEC_BIGINT_MATH = SPEC_SAFE_MATH + 1;
 
-    public static final int LASTESCKEYWORDTAG; //It is set in the static section
+    public static final int LASTESCKEYWORDTAG; //It is set in the static section below
 
-    public static final int LAST_TAG; //It is set in the static section
+    public static final int LAST_TAG; //It is set in the static section below
     
     static {
     	int lastESCFixedKeyword = SPEC_BIGINT_MATH+1;

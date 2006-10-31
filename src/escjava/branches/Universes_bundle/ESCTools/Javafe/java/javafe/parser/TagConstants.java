@@ -2,6 +2,8 @@
 
 package javafe.parser;
 
+import javafe.extensions.IJavafeLexerComponentView;
+import javafe.extensions.universes.LexerUniverses;
 import javafe.util.Assert;
 
 /**
@@ -11,6 +13,14 @@ import javafe.util.Assert;
 
 public class TagConstants extends javafe.ast.TagConstants
 {
+	
+	  /**
+	   * The array with all the extensions to the lexer.
+	   */
+	  static public /*@ non_null @*/ IJavafeLexerComponentView[] lexerJavafeComponents = {
+		 (IJavafeLexerComponentView) new LexerUniverses()
+	  };
+	
     public static final int EOF = javafe.ast.TagConstants.LAST_TAG + 1;
 
     // Value tokens
@@ -24,11 +34,6 @@ public class TagConstants extends javafe.ast.TagConstants
     public static final int STMTPRAGMA = POSTMODIFIERPRAGMA + 1;
     public static final int TYPEDECLELEMPRAGMA = STMTPRAGMA + 1;
     public static final int TYPEMODIFIERPRAGMA = TYPEDECLELEMPRAGMA + 1;
-
-    //alx: dw implicit peer tag, it cannot stand with the other universe 
-    //   modifiers, because it isn't a keyword
-    public static final int IMPL_PEER = TYPEMODIFIERPRAGMA + 1;
-    //alx-end
 
     public static final int UNKNOWN_KEYWORD = TYPEMODIFIERPRAGMA + 1;
 
@@ -103,16 +108,21 @@ public class TagConstants extends javafe.ast.TagConstants
     public static final int TRY      = TRUE + 1;
     public static final int VOID     = TRY + 1;
     public static final int VOLATILE = VOID + 1;
-    //alx: dw definition of the universe type modifiers as keywords
-    public static final int REP      = VOLATILE + 1;
-    public static final int PEER     = REP + 1;
-    public static final int READONLY = PEER + 1;
-    public static final int WHILE    = READONLY + 1;
-    //alx-end
-    public static final int LAST_KEYWORD = WHILE;
+    public static final int WHILE    = VOLATILE + 1;
+    
+    public static final int LAST_KEYWORD; //It is set in the static section below
 
-    public static final int LAST_TAG = LAST_KEYWORD;
+    public static final int LAST_TAG; //It is set in the static section below
 
+    static {
+    	int lastJavafeFixedKeyword = WHILE+1;
+    	for (int i=0; i<lexerJavafeComponents.length; i++)
+    		lastJavafeFixedKeyword = lexerJavafeComponents[i].reserveTagConstants(lastJavafeFixedKeyword);
+    	LAST_KEYWORD = lastJavafeFixedKeyword-1;
+    	LAST_TAG = LAST_KEYWORD;
+    }
+
+    
     /**
      * @return text representation of <code>code</code> (e.g., "=" for
      * <tt>ASSIGN</tt>).  Requires <code>code</code> is one of the
@@ -129,11 +139,12 @@ public class TagConstants extends javafe.ast.TagConstants
 
         if (code <= javafe.ast.TagConstants.LAST_TAG)
             return javafe.ast.TagConstants.toString(code);
-
-        //alx: dw special case for IMPL_PEER, it isn't a keyword
-        if (code==TagConstants.IMPL_PEER)
-        	return "[peer]";
-	//alx-end
+        
+        //check for tags in extensions
+        for (int i=0; i<lexerJavafeComponents.length; i++) {
+        	String s = lexerJavafeComponents[i].toString(code);
+        	if (s!=null) return s;
+        }
 
         return "Tag unknown to javafe.parser.TagConstants <" + code 
             + " (+" + (code - javafe.ast.TagConstants.LAST_TAG) + ") >";
@@ -206,10 +217,7 @@ public class TagConstants extends javafe.ast.TagConstants
         "package", "private", "protected", "public", "return",
         "short", "static", "strictfp", "super", "switch", "synchronized", "this",
         "throw", "throws", "transient", "true", "try", "void", "volatile", 
-	//alx: dw added rep, peer & readonly
-	"rep", "peer", "readonly", 
-	//alx-end
-	"while"
+        "while"
     };
 
     //@ invariant \nonnullelements(otherStrings);
