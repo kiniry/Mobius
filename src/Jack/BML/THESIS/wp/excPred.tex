@@ -52,16 +52,17 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
            \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
                      \forall \referenceOnly,\\
                       \Myspace    \neg \ \instances(\referenceOnly) \wedge \\
-		      \Myspace \referenceOnly \neq \Mynull \Rightarrow	\\
-
-       \Myspace    \Myspace  \left(   \methodd.\getExcPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})
-                    \begin{array}{l}
-                        \subst{\counter}{0} \\
-			\subst{\stack{0}}{\referenceOnly} \\
+		      \Myspace \referenceOnly \neq \Mynull	\\
+		      \Myspace \typeof{\referenceOnly} <: \mbox{ \rm \texttt{Exc}}  \Rightarrow\\
+          \Myspace  \left(   \methodd.\getExcPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})
+                    %\begin{array}{l}
+                        \subst{\counter}{0} %\\
+			\subst{\stack{0}}{\referenceOnly} %\\
                          \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
-                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } \\
-			  \subst{ \typeof{\referenceOnly}}{  \mbox{ \rm \texttt{Exc}} } \\
-                       \end{array} \right)
+                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } %\\
+			  %\subst{ \typeof{\referenceOnly}}{  \mbox{ \rm \texttt{Exc}} } \\
+                    %   \end{array} 
+\right)
         \end{array}$$   
 
 \end{defExcRuntime} 
@@ -74,7 +75,7 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
 
 
 The function $\methodd.\excPost$ will return a predicate which states that for every newly created exception reference  
-the predicate returned by the function \getExcPost \ must hold.
+the predicate returned by the function \getExcPost \ for the exception type \mbox{ \rm \texttt{Exc}}   and program point $i$ must hold.
 
 
  

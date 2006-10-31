@@ -60,7 +60,7 @@ expressions may evaluate to a value or be undefined. The operator  $\wellDefined
  a classical two valued logic. 
  Although, we ignore a lot of formulas, i.e. those which are not well defined,
  this will be sufficient for our proof of correctness of the verification condition generator later in Chapter \ref{proofGeneral} as 
- the verification condition generator preserves well definedness of formulas and moreover, we shall assume that specification are well defined.
+ the verification condition generator preserves well definedness of formulas in a state and moreover, we  assume that specification are well defined.
 
  We use the notation $\interp{\predWp}{s}$ to say that the well defined formula  $\predWp$ is valid w.r.t. a current state  $s$ and an initial state $s_0$.
  $\interp{\predWp}{s}$ is defined in the standard way. For instance, the statement $\interp{\expression_1 \  \predicates \  \expression_2 }{s}$
@@ -132,10 +132,10 @@ The evaluation function   takes as arguments an expression of the assertion lang
 
 
 \begin{interpretation}[Evaluation of expressions] \label{interpExpr} 
-The evaluation in a state \\
+The evaluation in a state 
 $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expression$
 w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
-is denoted with $\evalExp{\expression}{s}$  and is defined inductively over the grammar of expressions $\expression$ \  as follows:
+is denoted with $\evalExp{\expression}{s}$  and is defined in its domain inductively over its  the grammar of expressions $\expression$ \  as follows:
  
 $$
 \begin{array}{lll}
@@ -176,9 +176,9 @@ $$
 
 
 \evalExp{ \elemtype{\exprWp}}{s } & = &
-\left\{\begin{array}{ll}
-            \mbox{ \rm \texttt{T} }  & if \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
-\end{array}\right. \\					    
+\begin{array}{ll}
+            \mbox{ \rm \texttt{T} }  & where \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
+\end{array}\\
 
 
 \evalExp{ \TYPE }{s } & =  & \mbox{ \rm \texttt{java.lang.Class}} 

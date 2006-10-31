@@ -22,7 +22,7 @@ program applications as is the case for applications which target the domains me
 
  Another possibility is to use formal verification methods. 
 Contrary to program testing,  program verification guarantees that if the verification procedure  
-has been successful then the implementation respects the initial requirements for the software. There are few approaches 
+has been successful then the implementation respects the initial requirements for the software. There are two major approaches 
 in formal verification as for instance model checking and program logic. In this thesis, we will focus on the second approach.  
 In Fig. \ref{intro:srcVerif}, we give a general outline of the architecture for verifying source code programs.
 \begin{figure}[ht!]
@@ -80,8 +80,7 @@ This is in particular  the case for mobile code scenarios  where a code client
 executes an unknown or untrusted application. 
 Fig. \ref{intro:mobile} shows a schemata of mobile code scenarios. From the figure, we can see that in such scenarios 
 there are two counter parts:  a code producer and a code client. The producer generates the code and the client 
-receives the generated code. However, the client  normally does not have any evidence that the code respects the 
-his requirements.
+receives the generated code. However, the client  normally does not have any evidence that the code respects his requirements.
 \begin{figure}[ht!]
 %\begin{frameit}
 \begin{center}

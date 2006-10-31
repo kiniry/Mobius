@@ -148,31 +148,32 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		       \\
 		       \comment{instantiate \numConclusion{1} with \mbox{\rm\referenceOnly}$'$  } \\
 		       $$ \numConclusion{4}  \  	 \interpTwoLines{\begin{array}{l}
-			 \neg \ \instances(\referenceOnly' ) \wedge \\
-			  \referenceOnly' \neq \Mynull \Rightarrow \\  
-			  %\typeof{\referenceOnly'} = \type{\clazz} \Rightarrow \\ 
+			 \neg \ \instances(\referenceOnly' ) \wedge
+			  \referenceOnly' \neq \Mynull \Rightarrow \\
+			  %\typeof{\referenceOnly'} = \clazz  \Rightarrow \\  
+			  
 			\phantom{\forall}	\inter{i}{i+1} 
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
 		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-			       	\subst{ \typeof{\referenceOnly}}{ \clazz } 
+			       	\subst{ \typeof{\referenceOnly'}}{ \clazz } 
 		       \end{array}\end{array} } {\config{\heap _n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }}$$
 		       \mbox{\rm\comment{ from     \numConclusion{3}   }} \\
 		       \numConclusion{5} \\
 		       $$\interp{ \begin{array}{l}
-			              \neg \ \instances(\referenceOnly' ) \wedge \\
+			              \neg \ \instances(\referenceOnly' ) \wedge 
 				      \referenceOnly' \neq \Mynull \\
 				      %\typeof{\referenceOnly'} = \type{\clazz} 
 				\end{array}} { \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  }$$
 		
-		       \comment{ from     \numConclusion{4} and   \numConclusion{5} and Def. \ref{interpPred}  } \\	  
+		       \comment{ from     \numConclusion{4} and   \numConclusion{5} we obtain that the intermediate predicate holds in state $s_n$ } \\	  
                         $$ \interpTwoLines{\inter{i}{i+1} 
 			      \begin{array}{l} 
                                     \subst{ \counter}{ \counter + 1 } \\
 			            \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
 		                    \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-                                    \subst{ \typeof{\referenceOnly}}{ \clazz } 
+                                    \subst{ \typeof{\referenceOnly'}}{ \clazz } 
 			    \end{array} }{ \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  } $$
 		       
 		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap}, \ref{newHeap} }} \\
@@ -186,7 +187,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		case when the reference is \Mynull{} and the \NullPointerExc{} exception is  caught, and the case when the reference is not \Mynull.
 		We consider in the following only the last case, the others are treated in a rather similar way.
                 		   \comment{by initial hypothesis } \\ 
-                        $$ \interp{\wpi{\pc_n  \ \putfield   \ \fieldd }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} = $$
+                        $$ \interp{\wpi{\pc_n   }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} = $$
 			 \comment{definition of the wp function}  \\
 			 
 		  $$  \numConclusion{1}	\interpTwoLines{ \stack{\counter } \ne \Mynull \Rightarrow \\
@@ -250,10 +251,10 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 			$$  \interp{ \stack{\counter } \neq \Mynull }{ \config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }  } $$\\
 			 \comment{ from the above conclusion and \numConclusion{1} we get   } \\
 			 $$ \interpTwoLines{\inter{i}{i+1}
-                                                     \begin{array}{l}
-                                                              \subst{ \counter }{  \counter -2 } \\
+                                                    
+                                                              \subst{ \counter }{  \counter -2 } 
 							     \subst{  \fieldd}{ \update{\fieldd}{ \stack{\counter - 1}}{  \stack{\counter} } }
-						       \end{array} }{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} $$
+						        }{\config{\heap }{\counterOnly }{\stackOnly }{\locVarOnly }{\pc }} $$
 			 \mbox{\rm\textit{\{ applying lemmas \ref{substCntr} and \ref{substHeap}  and }}\\
 			\mbox{\rm\textit{ of the operational semantics of \putfield \}} } \\
 			$$\interp{ \inter{i}{i+1}}{s_{n+1}}$$			       
@@ -263,16 +264,16 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
                
 	   %\end{enumerate}
 
- \item method invokation 
+ \item method invokation $\pc_n =\invoke \ \mbox{\rm\texttt{n} }$
 We shall ignore here the part of the \wpName{} which concerns the exceptional termination for reasons of clarity. Treating the whole 
 definition of the \wpName{} for method invokation is done in a rather similar way as the part that we sketch here.
 
 \newcommand{\mInv}{\mbox{\rm \texttt{n}}}
-         $$\interp{\wpi{\invoke \ \mInv }{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$ \\
+         $$\interp{\wpi{ }{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$ \\
 			 \mbox{\rm\comment{definition of the wp function} } 
 
 	 $$\begin{array}{l}
-        \numConclusion{1} \   \interp{  \mbox{\rm\texttt{n} } .\pre\subst{\locVar{s}}{ \stack{\counter + s -\methodd.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs } } {s_n} \\ 
+        \numConclusion{1} \   \interp{  \mbox{\rm\texttt{n} } .\pre\subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs } } {s_n} \\ 
 	 				 			\wedge \\
 							
 	 \numConclusion{2} \  	 \interpTwoLines{\forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall res   \\ 
