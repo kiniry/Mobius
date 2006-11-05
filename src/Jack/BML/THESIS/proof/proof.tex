@@ -300,7 +300,8 @@ definition of the \wpName{} for method invokation is done in a rather similar wa
 		             where \\
 				                      \counterOnly_{n+1} = \counterOnly_n - \mbox{\rm \texttt{n}}.\numArgs + 1 \\
 						       \stackOnly_{n+1} = \update{\stackOnly_n}{\counterOnly_n}{\Res} \\
-						       \pc_{n+1}  = \pc_n + 1 \\\\
+						       \pc_{n+1}  = \pc_n + 1 \\
+						       \heap_{n+1} = \heap' \\\\
             \end{array}$$
 	   \mbox{\rm\textit{\{ As the verification conditions for the program \Program{} are valid, we can}}\\
 	   \mbox{\rm\textit{ get that the verification conditions that the specification of }}\\
@@ -314,27 +315,27 @@ definition of the \wpName{} for method invokation is done in a rather similar wa
 \comment{ \numConclusion{3} is equivalent to}\\ 
 $$ 
 \begin{array}{l}
-\numConclusion{6} \ \interp{ \mbox{\rm \texttt{n'}}.\pre\subst{\locVar{s}}{ \stack{\counter + s -\methodd.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }   }{s_n}  \Rightarrow \\
+\numConclusion{6} \ \interp{ \mbox{\rm \texttt{n'}}.\pre\subst{\locVar{s}}{ \stack{\counter + s -\mbox{\rm\texttt{n'}}.\numArgs }}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }   }{s_n}  \Rightarrow \\
 \interp{  \mbox{\rm \texttt{n'}}.\normalPost \subst{\result}{  \Res} 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } }.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}
+							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } .\numArgs} }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}
 \end{array}
 $$
 
 \comment{from \numConclusion{1} and \numConclusion{4} }\\
-$$ \numConclusion{7} \ \interp{ \mbox{\rm \texttt{n'}}.\pre\subst{\locVar{s}}{ \stack{\counter + s -\methodd.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }   }{s_n}$$
+$$ \numConclusion{7} \ \interp{ \mbox{\rm \texttt{n'}}.\pre\subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n'}}.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }   }{s_n}$$
 \comment{from \numConclusion{7} and \numConclusion{6} } \\
 $$ \numConclusion{8} \ \interp{  \mbox{\rm \texttt{n'}}.\normalPost \subst{\result}{  \Res} 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } }.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n} $$
+							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'}}}.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n} $$
 \comment{from \numConclusion{8} and \numConclusion{5} }\\
 $$ \numConclusion{9} \ \interp{\mInv.\normalPost\subst{\result}{  \Res} 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } }.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}  $$
+							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'}}}.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}  $$
 \mbox{\rm\textit{\{  instantiate the quantifications in \numConclusion{2} of the modified locations }}\\
 \mbox{\rm\textit{\modif{} with their values in state $s_{n+1}$ and the quantified variable}}\\
 \mbox{\rm\textit{ $res$ with \Res{} and from  \numConclusion{9} we obtain\}}}
  
 $$ \interp{\inter{i}{i+1 } %\begin{array}{l}
 						 \subst{\counter}{ \counter - \mbox{\rm\texttt{n'} } .\numArgs + 1}
-						 \subst{ \stack{\counter -  \mbox{\rm\texttt{n'} } .\numArgs +1 }}{ \Res }}{s_n}  $$
+						 \subst{ \stack{\counter -  \mbox{\rm\texttt{n'}} .\numArgs +1 }}{ \Res }}{s_n}  $$
 \comment{which by substitutions is equal to}
 $$\numConclusion{10} \ \interp{\inter{i}{i+1 }} { s_n\subst{\counterOnly_n}{\counterOnly_n - \mbox{\rm\texttt{n'} } .\numArgs + 1} \subst{ \stackOnly_n(\counterOnly_n -  \mbox{\rm\texttt{n'} } .\numArgs +1 )}{\Res}}$$
 
@@ -630,7 +631,7 @@ We can apply Lemma \ref{lemmaMethRespSpec} to every single method  \methodd{} in
 every method  \methodd{} is correct w.r.t. its specification at level \level{k}. This means that the program is correct at level k. 
 \end{description}
 From the base case and the inductive case, we can conclude that the program \Program{} is correct for every level \level{k} 
-and thus, we have proven the theorem.
+and thus, we have proven the statement.
  
 \Qed
 

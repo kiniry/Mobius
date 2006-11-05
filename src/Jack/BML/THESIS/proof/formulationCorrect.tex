@@ -11,11 +11,13 @@ In order to define what it means for the verification calculus to be correct we 
   
  As we want also to treat recursive calls, we use a standard technique which consists in  annotating the execution 
 relation in  the operational semantics with levels. A level of execution  stands for  the maximal call depth in the execution of a  method. 
-  Thus the operational semantics of a method invokation would be :
+  Thus, the operational semantics of a method invokation in case of normal termination\footnote{we are not exhaustive here about all the possible rules of the 
+operational semantics  for method invokation, but the other cases are similar}  would be :
  
 $$ \begin{array}{l}
              \frac{\begin{array}{l} 
-                        \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} } = \mbox{\rm n} \\
+                        \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{
+\heap.\heapTypeOf(\stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }) } = \mbox{\rm n} \\
 	                        \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
 	                      \mbox{\rm n}  :         \config{\heap}       
                                                        {0}
@@ -33,12 +35,12 @@ $$ \begin{array}{l}
 					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} 
 \end{array}$$
 
-This definition is rather intuitive and means that if a method \methodd{}
- has a maximal call depth \level{k+1} any method \mbox{\rm meth}  called in its body will have a maximal call depth \level{k}. 
-If a method execution has a maximal depth call \level{1} this means that the method execution does not perform any method calls.
-Thus an execution labeled with \level{0} does not exist.
+If a method invocation is at level \level{k} this means that the maximal call depth of the method is at most  \level{k-1}.
+If a method invocation is at level \level{1} this means that the method execution does not perform any method calls.
+Thus, a method invocation labeled with \level{0} does not exist. Moreover, if the invocation of  \methodd{}
+ is at level \level{k+1} any method \mbox{\rm meth}  called in its body will have a level \level{k}. 
  For the other instructions the weight of the maximal call depth is just passed. The rules for the instructions different from 
-method invokation have this general form: 
+method invocation have this general form: 
 $$ \begin{array}{l}
               \frac{ i \neq \invoke \  \methodd \vdash  i: s_1 \stateTrans s_2 }{ \methodd \vdash s_1 \stateTransWeight{k} s_2 , \  \level{k} > 0}
 \end{array}$$

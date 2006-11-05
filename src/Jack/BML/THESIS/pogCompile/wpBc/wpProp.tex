@@ -264,63 +264,136 @@ The next lemma states the same property but this time for the compilation of sta
 \end{thm}
 
 Proof : the proof is  by structural induction on the compilation of a statement and uses the properties of the compiler 
-        shown before. We scatch here the proof of few cases 
+        shown before. We give here the proof  for the cases of compositional statement, while and try catch statement.
+The rest of the cases proceed in a similar way.
 
 
 \begin{description}
        \item[compositional statement]
           
-	     $$\wpSrcStmt{  \stmt_1 ;  \stmt_2 }{\psi}{\excPostExpl} = $$
-	     \comment{definition of \wpName } 
-	     $$\wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\psi }{ \excPostSrc}} { \excPostSrc} $$
+	     $$\wpSrcStmt{  \stmt_1 ;  \stmt_2 }{\psi}{\excPostExpl} = 
+	     %\comment{by definition of \wpName{} this is  } 
+	     \wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\psi }{ \excPostSrc}} { \excPostSrc} $$
 	     
-		\comment{definition of the compiler} \\
+		\comment{from the compiler definition we get} %\\
                  $$\compileLabel{s}{ \stmt_1 ;  \stmt_2}{e} =
-		    \begin{array}{l}
-	                \compileLabel{s}{\stmt_1}{e'};\\
-			\compileLabel{e'+1}{\stmt_2}{e}
-	            \end{array}$$
+		    %\begin{array}{l}
+	                \compileLabel{s}{\stmt_1}{e'};%\\
+			\compileLabel{e'+1}{\stmt_2}{e}  $$
+	            %\end{array}
+		  
 
-	       \mbox{\rm\textit{\{it follows from  the induction hypothesis }}\\
-	       \mbox{\rm\textit{over $\stmt_2$ and the initial hypothesis about the postcondition\}}} 
+	       \comment{it follows from  the induction hypothesis over $\stmt_2$ and the initial hypothesis about the postcondition }
+	       %\mbox{\rm\textit{ \}}} 
 	       $$ \numConclusion{1} \    \wpSrcStmt{  \stmt_2 }{   \psi }{\excPostExpl } = \wpi{}{\methodd}{\ins{e'+1}} $$
 
 	       \mbox{\rm\textit{\{
 	       Lemma \ref{compile:prop:compProp1} states that $e$ and $e+1$ are in execution relation}}\\
 	      \mbox{\rm\textit{ Lemma \ref{compile:prop:compProp4} states that loop edges ($\execRel^{l}$) }} \\
 	       \mbox{\rm\textit{  appear only on loop statement compilation and thus, the edge between  $e'$ and $e' + 1$}}\\
-	       \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} \\
-	        $$\inter{e'}{e'+1} = \wpi{}{\methodd}{\ins{e'+1}} $$
+	       \mbox{\rm\textit{ is not a loop edge. In that case from Def. \ref{inter}  of the function \interOnly{} we get \}  }} 
+	        $$\numConclusion{2} \ \inter{e'}{e'+1} = \wpi{}{\methodd}{\ins{e'+1}} $$
 
-	       \comment{$\stmt_1$ is a strict substatement of $\stmt_1;\stmt_2$ and thus, from Property  \ref{compile:prop:compProp8} follows }  
-	         $$ \forall  \mbox{\rm\texttt{Exc}}, \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e'}{\methodd.\excHandlerTable} = \\
-		                                 \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e}{\methodd.\excHandlerTable}   $$
+	       \comment{statement $\stmt_1$ is a strict substatement of $\stmt_1;\stmt_2$ and thus, from Property  \ref{compile:prop:compProp8} follows }  
+	         $$ \forall  \mbox{\rm\texttt{Exc}}, \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e}{\methodd.\excHandlerTable} = 
+		                                 \methodd.\findExcHandler{\mbox{ \rm \texttt{Exc}}  }{e'}{\methodd.\excHandlerTable}   $$
 	       
                 \comment{from the above conclusion and the Def. \ref{defExc}  of function \getExcPost } 
-                $$ \numConclusion{2} \               \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
-                                                                                   \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e'' ) $$ 
+                $$ \numConclusion{3} \               \forall \mbox{\rm\texttt{Exc}}, \ \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e ) =  
+                                                                                   \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' ) $$ 
 										   
-		\comment{from   \numConclusion{1} and   \numConclusion{2}  we get that }	
+		\comment{from   \numConclusion{1},   \numConclusion{2} and \numConclusion{3} we get that }	
 	 $$	\wpSrcStmt{  \stmt_1  }{  \wpSrcStmt{  \stmt_2  }{   \psi }{\excPostExpl }    }{\excPostExpl} = \wpi{}{\methodd}{\ins{s}} $$
 			\comment{and this case holds }
 		
 	
       
-	  
+
+  \item[while statement]
+  $$\numConclusion{1} \   \begin{array}{l}   
+\wpSrcStmt{ \while \ (\expressionSrc_1 \ \rel \ \expressionSrc_2 ) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=\\
+    \invariant \ \wedge\\
+	       \forall \  m, m \in \modLoop , \\
+	       \invariant \Rightarrow %\\
+	 	     %\Myspace    \Myspace 
+		     \wpSrcExpr{\expressionSrc_1}{
+                     \wpSrcExpr{\expressionSrc_2}{   %\\\phantom{wp^{src}} 
+		     %\begin{array}{l}  		
+		           ( v_1 \rel v_2 )        \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \wedge  
+		          \neg (v_1 \rel v_2)    \Rightarrow  \normalPostSrc
+		     %\end{array}
+	       }{\excPostSrc } {v_2}}{\\ \phantom{\invariant \Rightarrow wpiSr\expressionSrc_1}
+	      \excPostSrc}{v_1} 
+
+                          \end{array}
+    $$
+   
+\comment{By the compiler function we get}
+ $$\begin{array}{l} \numConclusion{2} \  \compileLabel{s}{\while \ (\expressionSrc_1 \ \rel  \ \expressionSrc_2) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \} }{e} = \\
+         
+	       s: \goto \ e' + 1; \\
+	       \compileLabel{s +  1}{\stmt}{e' }; \\
+	       \compileLabel{e' +  1}{\expressionSrc_1}{e''};\\
+	       \compileLabel{e'' +  1}{\expressionSrc_2}{e-1};\\
+	       e : \ifCond \ s +  1; \\
+	       %e: \nop
+	       \\\\
+	       \addLoopTable{\methodd}{e'+1}{\invariant }{\modLoop}
+	 \end{array}$$
+
+\comment{From Lemma \ref{compile:prop:compProp4} we know that the execution relation between $e'$ and $e'+1$ is a loop execution relation. From Def. \ref{inter}, \pageref{inter} 
+     of the function \interOnly{} we conclude that  }
+ $$ \numConclusion{3} \  \inter{e'}{e'+1} = \invariant$$
+\comment{From Lemma \ref{compile:prop:compProp8} we get that the exception handlers for the last index $e'$ in the compilation of $\stmt$ and the index $e$ are the same.
+Thus, from the initial hypothesis for the exception handler function, we conclude that  }
+$$ \numConclusion{4}  \  \forall \mbox{\rm\texttt{Exc}} ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' ) $$
+\comment{We can apply the  induction hypothesis over \numConclusion{3}, \numConclusion{4}  and  statement $\stmt$}
+$$ \numConclusion{5}  \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} =  \wpi{}{\methodd}{\ins{s+1}}  $$
+\comment{From Lemma \ref{compile:prop:compProp4} we get that the execution relation between $e$ and $s+1$ is not a loop execution relation. From def. \ref{inter}, 
+we  conclude that  }
+$$\numConclusion{6}  \  \wpi{}{\methodd}{\ins{s+1}}  = \inter{e}{s+1}    $$
+\comment{By definition of the \wpName{} function for \ifCond{} and \numConclusion{6}, we conclude that the \wpName{}   is equivalent to }
+$$  \numConclusion{7}  \ \begin{array}{l}  \wpi{}{\methodd}{e} = \\
+                   \stack{\counter} \ \rel \ \stack{\counter - 1}  \Rightarrow  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc}\\
+			 \wedge  \\
+		  \neg ( \stack{\counter} \ \rel \ \stack{\counter - 1} )  \Rightarrow \inter{e}{e+1}
+           \end{array}  $$
+\comment{From \numConclusion{7}, we can apply the previous Lemma \ref{pogComp:relWpExpr} for expressions twice over $\expressionSrc_1$ and $\expressionSrc_2$ and we get that }
+
+$$ \numConclusion{8}  \ \begin{array}{l}\wpSrcExpr{\expressionSrc_1}{
+                     \wpSrcExpr{\expressionSrc_2}{   %\\\phantom{wp^{src}} 
+		     %\begin{array}{l}  		
+		           ( v_1 \rel v_2 )        \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \wedge  
+		          \neg (v_1 \rel v_2)    \Rightarrow  \normalPostSrc
+		     %\end{array}
+	       }{\excPostSrc } {v_2}}{\\ \phantom{\invariant \Rightarrow wpiSr\expressionSrc_1}
+	      \excPostSrc}{v_1} = \\ \wpi{}{\methodd}{e'+1} \end{array}  $$
+
+\comment{From  Lemma \ref{compile:prop:compProp4}, we  get that $e'+1$ is a loop entry instruction. From Def. \ref{inter} of the function \interOnly, we get that }
+$$\numConclusion{9}  \  \begin{array}{l}\wpi{}{\methodd}{s} =  \inter{s}{e'+1} = \\
+                \invariant \ \wedge \\
+	       \forall \  m, m \in \modLoop ,
+          i(\invariant \Rightarrow   \wpi{ }{ \methodd }{e'+1} ) \end{array}  $$  
+\comment{from   \numConclusion{8} and \numConclusion{9}  we conclude that this case holds }
+
+
+
   \item[try catch statement] 
         
-	   $$ \numConclusion{1} \    \wpSrcStmt{    \try \ \{ \stmt_1 \} 
+	   $$ \numConclusion{1} \   \begin{array}{l} \wpSrcStmt{    \try \ \{ \stmt_1 \} 
 		                                              \catch \ (\excType \ \var )\{ \stmt_2 \} 
-                                                }{\psi}{\excPostExpl} = $$
-			\comment{by the definition of $\wpNameStmt$} 
-	   $$     \wpSrcStmt{\stmt_1 }{  \psi} {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl }} } $$
+                                                }{\psi}{\excPostExpl} =\\ %$$
+			%\comment{by the definition of $\wpNameStmt$} 
+	   %$$    
+	    \wpSrcStmt{\stmt_1 }{  \psi} {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\stmt_2 }{\psi}{\excPostExpl }} } 
+	    \end{array}$$
 	        
-              \comment{definition of the compiler}
+              \comment{By definition of the compiler}
 	      $$\begin{array}{l}	\numConclusion{2} \    \compileLabel{s}{ \try \ \{ \stmt_1 \} \ \catch \ (\excType \ \var )\{ \stmt_2 \} }{e} = \\
                       \compileLabel{s}{\stmt_1}{e'};   e' + 1: \goto \ e;  \compileLabel{e' + 2 }{\stmt_2}{e - 1}; e: \nop\\
 		                           
 			\addExceptionTable{\methodd}{ s }{ e'  }{ e' + 2 }{\excType}  \end{array} $$
-              \comment{apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} 
+              \comment{Apply the induction hypothesis over $\stmt_2$ and the initial hypothesis} 
 	      $$\numConclusion{3} \   \wpSrcStmt{\stmt_2}{\psi}{\excPostExpl} = \wpi{e'+2}{\methodd}{} $$ 
 	      \comment{ from Lemma \ref{compile:prop:compProp10}  we know that the indexes $e$ and $e'$ has the same exception handlers~}
 	      $$ \begin{array}{l} \forall \mbox{\rm{\texttt{Exc}}},  \neg ( \mbox{\rm{\texttt{Exc}}} <: \excType ) \Rightarrow\\
@@ -331,12 +404,13 @@ Proof : the proof is  by structural induction on the compilation of a statement 
 	      
 	      \mbox{\rm\textit{\{from the definition of \getExcPost{} and  the initial hypothesis about the exceptional }}\\
 	      \mbox{\rm\textit{  postcondition functions for indexes $e$ and $e' $ \}}}
-	    	     $$ \numConclusion{4} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} } = 
+	    	     $$ \numConclusion{4} \ \forall \mbox{\rm\texttt{Exc}} ,  \update{\excPostExpl}{\excType}{ \wpi{e'+2}{\methodd}{} }(\mbox{\rm\texttt{Exc}}) = 
                   \methodd.\getExcPost(\mbox{\rm\texttt{Exc}}, e' )$$
-	      \comment{we can also conclude from Lemma   \ref{compile:prop:compProp4}  } 
-	     $$ \numConclusion{5} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e + 1} = \inter{e}{e+1}$$
-	      \comment{apply  induction hypothesis over  \numConclusion{1}, \numConclusion{4} and  \numConclusion{5}    } 
-	      $$ \wpSrcStmt{\stmt_1; }
+	      \comment{From Lemma   \ref{compile:prop:compProp4} that there are no loop edges between $e'$ and $e'+1$, $e'+1$ and $e$,
+	       $e$ and $e+1$. We can conclude from the definition of the function \interOnly{} that  } 
+	     $$ \numConclusion{5} \ \inter{e'}{e' + 1} = \inter{e'+1 }{e} = \inter{e}{e+1}$$
+	      \comment{We apply  induction hypothesis over  \numConclusion{1}, \numConclusion{4} and  \numConclusion{5}    } 
+	      $$ \wpSrcStmt{\stmt_1 }
                          {  \psi}
 			 {  \update{\excPostExpl}{\excType}{ \wpSrcStmt{\compileLabel{e'+2}{\stmt_2}{e} }{\psi}{\excPostExpl }} } =
 			  \wpi{s}{\methodd}{}$$

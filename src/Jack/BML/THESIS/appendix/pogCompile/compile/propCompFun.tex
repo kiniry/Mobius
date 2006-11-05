@@ -19,7 +19,7 @@
 \end{compProp0A}
 \textit{Proof:} 
 The proof  is by structural induction over the compiled statement.
-We scatch the case for compositional statement, the other cases being similar. 
+We sketch the case for compositional statement, the other cases being similar. 
 Remind that by compiler definition, we get that the compilation of $\stmt_1; \stmt_2$ starting at index $s$ is
  $\compileLabel{s}{\stmt_1; \stmt_2}{e} = \compileLabel{s}{\stmt_1}{e'};\compileLabel{e'+1}{\stmt_2}{e}$.
 By  induction hypothesis, we get that the lemma holds for $\compileLabel{e'+1}{\stmt_2}{e}$ and we get that $e \execRel e+1$ 
@@ -51,7 +51,7 @@ Thus, the compilation of the \lstinline!if! statement respects the property.
 \end{compPropApp}
 \textit{Proof:} 
 The proof is done by contradiction and uses structural induction. 
-We scatch the proof for the compilation of the if statement, the rest of the cases being similar. \\
+We sketch the proof for the compilation of the if statement, the rest of the cases being similar. \\
 Suppose that this is not true.
 Recall that the compilation of a conditional statement starting at index $s$  
 (Fig. \ref{pogEq:compile:compExpr:defStmt} on page \pageref{pogEq:compile:compExpr:defStmt}) is of the form:
@@ -94,7 +94,7 @@ The only cases that remain possible are the  jumps  $ e'' + 1: \ifCond \ e''' + 
 
 The next  property  of the compiler is that any statement or expression   is
  compiled in a list of bytecode instructions 
-such that instructions inside the compilation of a statement or expression cannot be targetted by instructions 
+such that instructions inside the compilation of a statement or expression cannot be targeted by instructions 
  which are outside the statement compilation except for the first instruction in the compilation.
  For instance,  the instructions 15-30 in the compilation of the while statement
  in Fig. \ref{pogEquiv:compile:prop} on page \pageref{pogEquiv:compile:prop}
@@ -241,6 +241,11 @@ $$
 
 For establishing Property \ref{compile:prop:compProp8}, we will need several auxiliary lemmas. First, we have to show that the regions described in the exception  handler table elements  
 correspond to statements which are declared in the try clause of try catch or try finally statements.  
+For instance, we can return back to the example in Fig. \ref{pogEquiv:compile:prop:exc} on page \pageref{pogEquiv:compile:prop:exc} 
+and see that  the exception handler table  \lstinline!abs!.\ExcHandler{}  contains one element which describes the unique exception handler
+in the method. In particular, it states that the region between 2 and 20 is protected from \NullPointerExc{} by the bytecode starting at index 22.
+ We may remark that the region between 2 and 20 corresponds to the compilation of the \lstinline!if! statement. 
+
  \begin{compPropApp}[Exception handler element corresponds to a statement]\label{compile:prop:compProp7}
     Every element  $ (s,e, eH, \Exc )$  in the exception handler table \methodd.\excHandlerTable  \
     resulting from the compilation of method \methodd{}
@@ -359,38 +364,42 @@ $$   \forall \mbox{\rm\tt{Exc}},
 	  \findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = \findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} $$
 \end{compProp8A}
 \textit{Proof}: by contradiction \\
-\comment{i.e. assume that} \\
-$\numConclusion{1} \ \strictsubstatement{\stmt}{\stmt'}   $, \\
-$\numConclusion{2} \ \compileLabel{s}{\stmt}{e}$,\\
-$\numConclusion{3} \ \compileLabel{s'}{\stmt'}{e'}$ \\
+Assume the following: \\
+$\numConclusion{1} \ \strictsubstatement{\stmt}{\stmt'} $, $\stmt'$ is a strict substatement of $\stmt$ \\
+$\numConclusion{2} \ \compileLabel{s}{\stmt}{e}$,  the compilation of $\stmt$  is in between $s$ and $e$ \\
+$\numConclusion{3} \ \compileLabel{s'}{\stmt'}{e'}$, the compilation of $\stmt'$  is in between $s'$ and $e'$   \\
 $\numConclusion{4} \ \exists s_1, e_1, eH_1, s_2, e_2, eH_2, \Exc $ such that\\
    $ (s_1,e_1, eH_1, \Exc )$ is in the exception handler table $\methodd.\excHandlerTable$\\
    $ (s_2,e_2, eH_2, \Exc )$ is in the exception handler table $\methodd.\excHandlerTable$\\
    $\findExcHandler{\mbox{\rm\tt{Exc}} }{e}{\methodd.\excHandlerTable} = eH_1$  \\
    $\findExcHandler{\mbox{\rm\tt{Exc}} }{e'}{\methodd.\excHandlerTable} = eH_2$  \\
    $ eH_1 \neq  eH_2  $ \\
-\comment{from definition of the function  \findExcHandlerOnly{} in Section \ref{opSem:exc}, page \pageref{opSem:exc} } \\
+From definition of the function  \findExcHandlerOnly{} in Section \ref{opSem:exc}, page \pageref{opSem:exc}, we get that if \findExcHandlerOnly{}
+returns an exception handler  for an index  this means that the index is in the region protected by the exception handler:\\
 $\numConclusion{5} \  s_1 \le e \le e_1$ \\
 $\numConclusion{6} \  s_2 \le e' \le e_2$ \\
-\comment{from Lemma \ref{compile:prop:compProp7} for the elements in the exception handler table  of a method  resulting from the compiler } \\
+From Lemma \ref{compile:prop:compProp7} we know that protected regions in the exception handler table 
+correspond to source statements: 
+ \\
 $\numConclusion{7} \ \exists \stmt_1, stmt^{try}_1 $ such that $  \compileLabel{s_1}{\stmt_1}{e_1}$ and $  stmt^{try}_1 = \try\{ \stmt_1\} \ldots $ \\
 $\numConclusion{8} \ \exists \stmt_2,stmt^{try}_2$ such that $ \compileLabel{s_2}{\stmt_2}{e_2} $ and $ stmt^{try}_2 = \try\{ \stmt_2\} \ldots $ \\
-\comment{from \numConclusion{1} and Lemma \ref{compile:prop:compProp6} for substatement preservation } \\
+From Lemma \ref{compile:prop:compProp6} we know that the compiler preserves the  substatement relation and thus, from \numConclusion{1} we conclude that 
+the first and last indexes in the compilation of $\stmt'$ are in the region determined by the first $s$ and last index $e$ of the compilation 
+of statement $\stmt$: \\
 $\numConclusion{9} \ s \le s' \wedge e' \le e  $ \\
-\comment{from Lemma \ref{compile:prop:compPropIndex} for instructions in a source statement compilation } \\
+From Lemma \ref{compile:prop:compPropIndex} for instructions in a source statement compilation:  \\
 $\numConclusion{10} \ s \le  e  \wedge s' \le  e'  $ \\
-\comment{from  \numConclusion{9}  and  \numConclusion{10}   } \\
+We conclude from \numConclusion{9}  and  \numConclusion{10}   that: \\
 $  \numConclusion{11}   s  \le  e' \le  e  $\\
-\comment{from  \numConclusion{11}, \numConclusion{6} and Lemma \ref{compile:prop:commonInstr} for common instructions in the compilation} \\
-$  \numConclusion{12} \    \substatement{\stmt}{\stmt_2} \vee \substatement{\stmt_2}{\stmt}  $
-
-\comment{from  \numConclusion{6}, \numConclusion{3} and Lemma \ref{compile:prop:commonInstr} for common instructions in the compilation} \\
+From  \numConclusion{11}, \numConclusion{6} and Lemma \ref{compile:prop:commonInstr} for common instructions in the compilation we
+get that either $\stmt_2$ is a substatement of $\stmt$  or vice versa\\
+$  \numConclusion{12} \    \substatement{\stmt}{\stmt_2} \vee \substatement{\stmt_2}{\stmt}  $\\
+Similarly, from \numConclusion{6} and \numConclusion{3} we get: \\
 $  \numConclusion{13} \    \substatement{\stmt'}{\stmt_2} \vee \substatement{\stmt_2}{\stmt'}  $\\
-\comment{ from \numConclusion{12} and \numConclusion{13} we have 4 cases: }\\ 
-
+From \numConclusion{12} and \numConclusion{13} we have 4 cases: \\ 
 \begin{description}
   \item[$ \substatement{\stmt'}{\stmt_2}  $] 
-       We show that the case $\substatement{\stmt'}{\stmt_2}$ is not possible. 
+       We show first that the cases when $\stmt_2$ is a direct substatement of $\stmt'$, i.e.  $\substatement{\stmt'}{\stmt_2}$ is not possible. 
        Because from \numConclusion{8}, we get that  $ \stmt_2$ is a direct substatement of $\stmt^{try}_2$ we conclude that
        $\stmt^{try}_2 $ is a substatement of $\stmt'$, i.e.    $\substatement{\stmt'}{ \stmt^{try}_2  }$.
        But from Lemma \ref{compile:prop:compProp6} and the way try catch  and try finally statements are compiled

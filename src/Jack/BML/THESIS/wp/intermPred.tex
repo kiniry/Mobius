@@ -34,7 +34,7 @@ $\ins{k}$ and is defined as follows:
 an index $s$ in the loop specification table  \methodd.\loopSpecTable{} such that  $ \methodd.\loopSpecTable[s].\posL = k $
 then the corresponding loop invariant  must hold:
 $$
-\inter{j}{k} \equiv  \methodd.\loopSpecTable[s].\invL
+\inter{j}{k} = \methodd.\loopSpecTable[s].\invL
 $$
 
 
@@ -45,17 +45,15 @@ i.e. after the execution of $\ins{j}$. We also require that \\
 $\methodd.\loopSpecTable[s].\invL$ implies the weakest precondition of the loop entry instruction. 
 The implication is quantified over the locations $ \methodd.\loopSpecTable[s].\modifL $ that may be modified in the loop body:
 
-$$\begin{array}{l} \inter{j}{k} \equiv \\ \begin{array}{l}
+$$\begin{array}{l} \inter{j}{k} = \\ \begin{array}{l}
           \methodd.\loopSpecTable[s].\invL \ \wedge \\
           \forall i , i = 1.. \methodd.\loopSpecTable[s].\modifL.length ,\\
-          \forall  \methodd.\loopSpecTable[s].\modifL[i], (\\
-	  \phantom{ \methodd.\loopSpecTable[s] }  \methodd.\loopSpecTable[s].\invL \Rightarrow \\
-	  \phantom{ \methodd.\loopSpecTable[s]  \methodd.\loopSpecTable[s] } \wpi{ }{ \methodd }{k} ) 
+          \forall  \methodd.\loopSpecTable[s].\modifL[i], (
+	           \methodd.\loopSpecTable[s].\invL \Rightarrow   \wpi{ }{ \methodd }{k} ) 
  \end{array}
  \end{array}  $$
 
 \item else 
-
-$$\inter{j}{k} \equiv \wpi{ }{\methodd}{k}$$
+$$\inter{j}{k} = \wpi{ }{\methodd}{k}$$
 \end{itemize}
 \end{defInter}

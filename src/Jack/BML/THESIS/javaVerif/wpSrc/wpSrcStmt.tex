@@ -79,19 +79,20 @@ $${\scriptsize
 	 } {\\ \phantom{wpiSr\expressionSrc_1}   \excPostSrc }{v_1} 
      \end{array} \\ \\ \\
 
-     \wpSrcStmt{ \while \ (\expressionSrcRel) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
+     \wpSrcStmt{ \while \ (\expressionSrc_1 \ \rel \ \expressionSrc_2 ) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
 	      \begin{array}{l} 
 	       \invariant \ \wedge\\
 	       \forall \  m, m \in \modLoop , \\
 	       \invariant \Rightarrow %\\
 	 	     %\Myspace    \Myspace 
-		     \wpSrcExpr{\expressionSrcRel}{%\\\phantom{wp^{src}} 
+		     \wpSrcExpr{\expressionSrc_1}{
+                     \wpSrcExpr{\expressionSrc_2}{   %\\\phantom{wp^{src}} 
 		     %\begin{array}{l}  		
-		           v = \Mytrue  \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \wedge % \\ 
-		           v = \Myfalse  \Rightarrow  \normalPostSrc
+		           ( v_1 \rel v_2 )        \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \wedge  
+		          \neg (v_1 \rel v_2)    \Rightarrow  \normalPostSrc
 		     %\end{array}
-	      }{ %\\ \Myspace \phantom{wp^{src}} 
-	      \excPostSrc}{v}  \end{array} \\ \\ \\
+	       }{\excPostSrc } {v_2}}{\\ \phantom{\invariant \Rightarrow wpiSr\expressionSrc_1}
+	      \excPostSrc}{v_1}  \end{array} \\ \\ \\
 
      \wpSrcStmt{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{return}}} \\
              \begin{array}{l}   \wpSrcExpr{ \expressionSrc}{ \normalPostSrc \subst{\result }{ v }} { \excPostSrc}{v}  \end{array}\\ \\ \\ 
