@@ -13,10 +13,10 @@ Open Scope Z_scope.
 Ltac genclear H := generalize H;clear H.
 
 Definition Time := Z.
-Definition t_int := Z.
-Definition t_long := Z.
-Definition t_float := R.
-Definition t_double := R.
+Definition int := Z.
+Definition long := Z.
+Definition float := R.
+Definition double := R.
 Variable Types : Set.
 Definition LockSet := Z.
 Variable Path : Set.
@@ -26,16 +26,16 @@ Definition Field := Reference.
 
 Inductive S: Set  := 
 	|   bool_to_S: bool -> S
-    |   int_to_S : t_int -> S
-    |   long_to_S: t_long -> S
-    |   float_to_S: t_float -> S
-    |   double_to_S: t_double -> S
+    |   int_to_S : int -> S
+    |   long_to_S: long -> S
+    |   float_to_S: float -> S
+    |   double_to_S: double -> S
     |   Reference_to_S: Reference -> S.
 Coercion bool_to_S : bool >-> S.
-Coercion int_to_S : t_int >-> S.
-Coercion long_to_S : t_long >-> S.
-Coercion float_to_S : t_float >-> S.
-Coercion double_to_S : t_double >-> S.
+Coercion int_to_S : int >-> S.
+Coercion long_to_S : long >-> S.
+Coercion float_to_S : float >-> S.
+Coercion double_to_S : double >-> S.
 Coercion Reference_to_S : Reference >-> S.
 
 
@@ -46,34 +46,34 @@ match s with
 end.
 Coercion S_to_bool : S >-> bool.
 
-Definition S_to_int (s:S): t_int :=
+Definition S_to_int (s:S): int :=
 match s with 
 | int_to_S b => b
 | _ => 0%Z
 end.
-Coercion S_to_int : S >-> t_int.
+Coercion S_to_int : S >-> int.
 
-Definition S_to_long (s:S): t_long :=
+Definition S_to_long (s:S): long :=
 match s with 
 | long_to_S b => b
 | _ => 0%Z
 end.
-Coercion S_to_long : S >-> t_long.
+Coercion S_to_long : S >-> long.
 
-Definition S_to_float (s:S): t_float :=
+Definition S_to_float (s:S): float :=
 match s with 
 | float_to_S b => b
 | _ => 0%R
 end.
-Coercion S_to_float : S >-> t_float.
+Coercion S_to_float : S >-> float.
 
 
-Definition S_to_double (s:S): t_double :=
+Definition S_to_double (s:S): double :=
 match s with 
 | double_to_S b => b
 | _ => 0%R
 end.
-Coercion S_to_double : S >-> t_double.
+Coercion S_to_double : S >-> double.
 
 Definition null : Reference := 0.
 
@@ -84,19 +84,75 @@ match s with
 end.
 Coercion S_to_Reference : S >-> Reference.
 
-Lemma Zeq_bool_sym :
-forall x:Z, Zeq_bool x x = true.
+
+
+
+Lemma negb_elim :
+    forall b, negb (negb b) = b.
+Proof fun b  => sym_eq (negb_intro b).
+
+Module Type Arith.
+Parameter t: Set.
+
+Variable EQ_bool : t -> t -> bool.
+
+Variable GE : t -> t -> Prop.
+Variable GT : t -> t -> Prop.
+Variable LE : t -> t -> Prop.
+Variable LT : t -> t -> Prop.
+
+Variable GE_bool : t -> t -> bool.
+Variable GT_bool : t -> t -> bool.
+Variable LE_bool : t -> t -> bool.
+Variable LT_bool : t -> t -> bool.
+
+Variable Div :  t -> t -> t.
+Variable Add : t -> t -> t.
+Variable Sub : t -> t -> t.
+Variable Mul : t -> t -> t.
+Variable Neg : t ->  t.
+
+Variable EQ_bool_sym :
+        forall x: t, EQ_bool x x = true.
+Variable EQ_bool_true:
+        forall x y: t, x = y -> EQ_bool x y = true.
+Variable EQ_bool_false:
+        forall x y: Z, x <> y ->Zeq_bool x y = false.
+End Arith.
+
+Module Int <: Arith.
+Definition t := int.
+Definition GE : int -> int -> Prop := fun (x y : Z) => x >= y.
+Definition GT : int -> int -> Prop := fun (x y : Z) =>  x > y.
+Definition LE : int-> int -> Prop := fun (x y : Z) => x <= y.
+Definition LT : int -> int -> Prop := fun (x y : Z) => x < y.
+Definition EQ_bool : int -> int -> bool := fun (x y : Z) => Zeq_bool x  y.
+Definition GE_bool : int -> int -> bool := fun (x y : Z) => Zge_bool x y.
+Definition GT_bool : int -> int -> bool := fun (x y : Z) => Zgt_bool x y.
+Definition LE_bool : int -> int -> bool := fun (x y : Z) =>  Zle_bool x y.
+Definition LT_bool : int -> int -> bool := fun (x y : Z) => Zlt_bool x y.
+Definition Div :  int -> int -> int := 
+             fun (x y : Z) =>(x  / y).
+Definition Add : int -> int -> int := 
+             fun (x y : Z) =>(x  + y).
+Definition Sub : int -> int -> int := 
+             fun (x y : Z) =>(x - y).
+Definition Mul : int -> int -> int := 
+             fun (x y : Z) =>(x  * y).
+Definition Neg : int -> int := 
+             fun (x : Z) =>(0 - x).
+Lemma EQ_bool_sym :
+forall x:Z, EQ_bool x x = true.
 Proof ( fun x => @eq_ind_r 
                    comparison Eq (fun c => (match  c with Eq => true | _ => false end) = true) 
                                  (refl_equal true) (x ?= x) (Zcompare_refl x)).
 
-Lemma Zeq_bool_true:
-forall x y: Z, x = y ->Zeq_bool x y = true.
-Proof fun x y H  => eq_ind_r (fun x0 : Z => Zeq_bool x0 y = true) (Zeq_bool_sym y) H.
+Lemma EQ_bool_true:
+forall x y: Z, x = y ->EQ_bool x y = true.
+Proof fun x y H  => eq_ind_r (fun x0 : Z => Zeq_bool x0 y = true) (EQ_bool_sym y) H.
 
-
-Lemma Zeq_bool_false:
-forall x y: Z, x <> y ->Zeq_bool x y = false.
+Lemma EQ_bool_false:
+forall x y: Z, x <> y -> EQ_bool x y = false.
 Proof
 fun x y H =>
 match Zcompare_Eq_iff_eq x y with
@@ -110,41 +166,14 @@ match Zcompare_Eq_iff_eq x y with
       | _ => fun _ => refl_equal false
        end a
 end.
-
-
-Lemma negb_elim :
-    forall b, negb (negb b) = b.
-Proof fun b  => sym_eq (negb_intro b).
+End Int.
 
 
 
-
-
-Definition integralGE : Z -> Z -> Prop := fun (x y : Z) => x >= y.
-Definition integralGT : Z -> Z -> Prop := fun (x y : Z) =>  x > y.
-Definition integralLE : Z-> Z -> Prop := fun (x y : Z) => x <= y.
-Definition integralLT : Z -> Z -> Prop := fun (x y : Z) => x < y.
-
-Definition integralEQ_bool : Z -> Z -> bool := fun (x y : Z) => Zeq_bool x  y.
-Definition integralGE_bool : Z -> Z -> bool := fun (x y : Z) => Zge_bool x y.
-Definition integralGT_bool : Z -> Z -> bool := fun (x y : Z) => Zgt_bool x y.
-Definition integralLE_bool : Z -> Z -> bool := fun (x y : Z) =>  Zle_bool x y.
-Definition integralLT_bool : Z -> Z -> bool := fun (x y : Z) => Zlt_bool x y.
-
-Definition integralDiv : Z -> Z -> Z := 
-             fun (x y : Z) =>(x  / y).
-Definition integralAdd : Z -> Z -> Z := 
-             fun (x y : Z) =>(x  + y).
-Definition integralSub : Z -> Z -> Z := 
-             fun (x y : Z) =>(x - y).
-Definition integralMul : Z -> Z -> Z := 
-             fun (x y : Z) =>(x  * y).
-Definition integralNeg : Z -> Z := 
-             fun (x : Z) =>(0 - x).
-Ltac unfoldEscArith := unfold  integralEQ_bool, integralGE_bool, integralLE_bool, integralGT_bool, integralLT_bool, integralGE, integralLE, integralGT, integralLT, integralAdd, integralSub, integralMul, integralNeg in *.
-
-
-
+Ltac unfoldEscArith := unfold  Int.EQ_bool, Int.GE_bool, 
+                                                     Int.LE_bool, Int.GT_bool, Int.LT_bool, 
+                                                     Int.GE, Int.LE, Int.GT, Int.LT, 
+                                                     Int.Add, Int.Sub, Int.Mul, Int.Neg in *.
 
 
 
@@ -205,52 +234,52 @@ Variable asField: Field -> Types -> Prop.
 Variable asElems: Elem -> Elem.
 Variable asLockSet: LockSet -> LockSet.
 
-Variable eClosedTime: Elem -> t_int.
+Variable eClosedTime: Elem -> Time.
 
 (* Array Logic *)
-Variable arrayShapeOne: t_int -> Reference.
-Variable arrayShapeMore: t_int-> Reference -> Reference.
+Variable arrayShapeOne: int -> Reference.
+Variable arrayShapeMore: int-> Reference -> Reference.
 Variable isNewArray: Reference -> Prop.
-Variable arrayLength: Reference -> t_int.
+Variable arrayLength: Reference -> int.
 Axiom arrayLengthAx :
-      forall (a : Reference), (integralLE 0 (arrayLength a)).
+      forall (a : Reference), (Int.LE 0 (arrayLength a)).
 (* Variable unset: S -> Z -> Z -> S. *)
 
 (* The operations on the heap - more or less *)
 Module Heap.
-Variable arrselect: Reference -> t_int -> S (* A *).
-Variable arrstore: Reference -> t_int -> S (* A *) -> Reference.
-Variable select: Reference -> Reference -> S (* A *).
-Variable store: Reference -> Reference ->  S (* A *)-> Reference.
+Variable arrselect: Reference -> int -> S.
+Variable arrstore: Reference -> int -> S -> Reference.
+Variable select: Reference -> Reference -> S.
+Variable store: Reference -> Reference ->  S -> Reference.
 
 Axiom select_store1: 
-    forall(var obj : Reference)(val : S (* A *)), (select (store var obj val) obj) = val.
+    forall(var obj : Reference)(val : S), (select (store var obj val) obj) = val.
 Axiom select_store2: 
-    forall(var obj1 obj2 :Reference) (val :  S (* A *)), 
+    forall(var obj1 obj2 :Reference) (val :  S), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
 Axiom arrselect_store1: 
-    forall(var :Reference) (obj :Z)(val :S (* A *)), (arrselect (arrstore var obj val) obj) = val.
+    forall(var :Reference) (obj : int)(val :S), (arrselect (arrstore var obj val) obj) = val.
 Axiom arrselect_store2: 
-    forall(var : Reference)(obj1 obj2 :Z) (val :  S (* A *)), 
+    forall(var : Reference)(obj1 obj2 :int) (val :  S), 
          obj1 <> obj2 -> 
                  (arrselect (arrstore var obj1 val) obj2) = (arrselect var obj2).
 
-Variable arrayFresh : Reference -> Time -> Time -> S -> S -> Types ->  S (* A *) -> Prop.
+Variable arrayFresh : Reference -> Time -> Time -> S -> Reference -> Types ->  S (* A *) -> Prop.
 
 (* array axioms2 *)
 Axiom array_axiom2 : 
-      forall (a: Reference) ( a0:Time) (b0:Time) (e : S) (n : t_int)  (T: Types)  (v :  S (* A *)),
-        ((arrayFresh a a0 b0 e (arrayShapeOne n)  T v) ->
-         (a0 <= (vAllocTime a))) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (isAllocated a  b0)) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (a <> null)) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (typeof a) = T) /\
-        ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
-         (arrayLength a) = n) (* /\
+      forall (array: Reference) ( a0:Time) (b0:Time) (obj : Reference) (n : int)  (T: Types)  (v :  S),
+        ((arrayFresh array a0 b0 obj (arrayShapeOne n)  T v) ->
+         (a0 <= (vAllocTime array))) /\
+        ((arrayFresh array  a0  b0 obj (arrayShapeOne n) T v) ->
+         (isAllocated array  b0)) /\
+        ((arrayFresh array  a0  b0 obj (arrayShapeOne n) T v) ->
+         (array <> null)) /\
+        ((arrayFresh array  a0  b0 obj (arrayShapeOne n) T v) ->
+         (typeof array) = T) /\
+        ((arrayFresh array  a0  b0 obj (arrayShapeOne n) T v) ->
+         (arrayLength array) = n) (* /\
         ((arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
          forall (i : Reference),
            (select (select e a) i) = v) *).
@@ -497,7 +526,7 @@ try match goal with
 end.
 
 Definition jVar := Z.
-Variable ivar : jVar -> t_int.
+Variable ivar : jVar -> int.
 Require Import List.
 Inductive jProp : Set :=
 | jforall : list jVar -> jProp-> jProp
