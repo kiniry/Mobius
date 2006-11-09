@@ -120,8 +120,21 @@ public class CoqProver extends ProverType {
     	}
     	Prelude p = new Prelude(new File(coqProofDir, PRELUDE_PATH));
     	p.generate();
-    	
-    	File coqCurrentProofDir = new File(coqProofDir, proofName);
+    	String className = proofName.substring(3, proofName.lastIndexOf("_"));
+    	className = className.substring(0, className.lastIndexOf("_"));
+    	if(className.charAt(className.length() - 1) == '_') {
+    		// _constructor_ case
+    		className = className.substring(0, className.lastIndexOf("_"));
+    		className = className.substring(0, className.lastIndexOf("_"));
+    	}
+    	className = className.substring(0, className.lastIndexOf("_"));
+    	String methodName = proofName.substring(4 + className.length());
+    	int ind = methodName.lastIndexOf('_', methodName.lastIndexOf('_') - 1);
+    	methodName = methodName.substring(0, ind) + "." + methodName.substring(ind +1);
+    	System.out.println(className);
+    	File coqCurrentClassDir = new File(coqProofDir, className);
+    	coqCurrentClassDir.mkdir();
+    	File coqCurrentProofDir = new File(coqCurrentClassDir, methodName);
     	coqCurrentProofDir.mkdir();
     	if (!(term instanceof TRoot)) {
     		TDisplay.err("For coq pretty printer, the node should be a root node!" + 
@@ -275,13 +288,13 @@ public class CoqProver extends ProverType {
         TNode._Time = TNode.addType("%Time", "Time");
         TNode._Type = TNode.addType("%Type", "Types");
         TNode._boolean = TNode.addType("boolean", "bool");
-        TNode._char = TNode.addType("char", "t_char");
-        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "t_double"); 
-        TNode._double = TNode.addType("double", "t_double"); 
+        TNode._char = TNode.addType("char", "char");
+        TNode._DOUBLETYPE = TNode.addType("DOUBLETYPE", "double"); 
+        TNode._double = TNode.addType("double", "double"); 
         TNode._Field = TNode.addType("%Field", "Field"); 
-        TNode._INTTYPE = TNode.addType("INTTYPE", "t_int");
-        TNode._integer = TNode.addType("integer", "t_int"); 
-        TNode._float = TNode.addType("float", "t_float");
+        TNode._INTTYPE = TNode.addType("INTTYPE", "int");
+        TNode._integer = TNode.addType("integer", "int"); 
+        TNode._float = TNode.addType("float", "float");
         TNode._Path = TNode.addType("%Path", "Path"); 
         // of terminating a function
         //_String = addType("String" "String"); fixme, does this type appears in original proof ?
@@ -597,7 +610,7 @@ public class CoqProver extends ProverType {
             if (name.equals("ecReturn") || name.equals("ecThrow")
             		|| name.equals("allocNew_")
             		|| name.equals("alloc_")
-                    || name.equals("t_int"))
+                    || name.equals("int"))
                 continue;
             
             // only writes variables with a known type ;)
