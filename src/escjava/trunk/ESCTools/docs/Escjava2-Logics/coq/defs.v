@@ -12,58 +12,77 @@ Open Scope Z_scope.
 (* LA tactique primitive *)
 Ltac genclear H := generalize H;clear H.
 
-(* Variable S: Set. *)
 Definition Time := Z.
 Definition t_int := Z.
 Definition t_long := Z.
 Definition t_float := R.
 Definition t_double := R.
 Variable Types : Set.
-Inductive S: Set  := 
-       Z_to_S : Z -> S.
-Coercion Z_to_S : Z >-> S.
-
-Definition LockSet := S.
-Definition Path := S.
-Definition Reference:= S.
-
+Definition LockSet := Z.
+Variable Path : Set.
+Definition Reference:= Z.
 Definition Elem := Reference.
 Definition Field := Reference.
 
-(* Some arithmetic things *)
-Variable S_to_Z : S -> Z.
-Coercion S_to_Z : S >-> Z.
-
-(* Variable Z_to_S : Z -> S. *)
-(* Axiom Z_to_S_elim : forall x,  S_to_Z (Z_to_S x) = x.*)
-(* Check  Z_to_S_elim. *)
-Variable S_to_bool : S -> bool.
-Coercion S_to_bool : S >-> bool.
-Variable S_false : S.
-Variable S_true : S.
-Axiom S_false_is_false : S_to_bool S_false = false.
-Axiom S_true_is_true : S_to_bool S_true = true.
-Definition bool_to_S (b:bool ) := 
-   if b then
-     S_true
-     else S_false.
-Hint Rewrite S_false_is_false S_true_is_true: escj.
+Inductive S: Set  := 
+	|   bool_to_S: bool -> S
+    |   int_to_S : t_int -> S
+    |   long_to_S: t_long -> S
+    |   float_to_S: t_float -> S
+    |   double_to_S: t_double -> S
+    |   Reference_to_S: Reference -> S.
 Coercion bool_to_S : bool >-> S.
-(* Axiom S_to_Z_det: 
-         forall x : S,  (S_to_Z x) = (S_to_Z x).
-Check S_to_Z_det. *)
-Lemma S_to_Z_inj:
-         forall x y: Z, (Z_to_S x) = (Z_to_S y) -> x = y.
-Proof.
-intros x y H.
-injection H.
-trivial.
-Qed.
+Coercion int_to_S : t_int >-> S.
+Coercion long_to_S : t_long >-> S.
+Coercion float_to_S : t_float >-> S.
+Coercion double_to_S : t_double >-> S.
+Coercion Reference_to_S : Reference >-> S.
 
-Axiom S_to_bool_det: 
-         forall x y: S,  x = y -> (S_to_bool x) = (S_to_bool y).
 
-Hint Immediate S_to_bool_det.
+Definition S_to_bool (s:S): bool :=
+match s with 
+| bool_to_S b => b
+| _ => false
+end.
+Coercion S_to_bool : S >-> bool.
+
+Definition S_to_int (s:S): t_int :=
+match s with 
+| int_to_S b => b
+| _ => 0%Z
+end.
+Coercion S_to_int : S >-> t_int.
+
+Definition S_to_long (s:S): t_long :=
+match s with 
+| long_to_S b => b
+| _ => 0%Z
+end.
+Coercion S_to_long : S >-> t_long.
+
+Definition S_to_float (s:S): t_float :=
+match s with 
+| float_to_S b => b
+| _ => 0%R
+end.
+Coercion S_to_float : S >-> t_float.
+
+
+Definition S_to_double (s:S): t_double :=
+match s with 
+| double_to_S b => b
+| _ => 0%R
+end.
+Coercion S_to_double : S >-> t_double.
+
+Definition null : Reference := 0.
+
+Definition S_to_Reference (s:S): Reference :=
+match s with 
+| Reference_to_S b => b
+| _ => null
+end.
+Coercion S_to_Reference : S >-> Reference.
 
 Lemma Zeq_bool_sym :
 forall x:Z, Zeq_bool x x = true.
@@ -98,16 +117,8 @@ Lemma negb_elim :
 Proof fun b  => sym_eq (negb_intro b).
 
 
-Ltac subst_S_to :=
-repeat match goal with 
-|[ H: S_to_bool ?x = _ |- _] =>
-      let v := fresh "X" in (set (v := S_to_bool x) in *; clearbody v; subst v)
-|[ H: S_to_Z ?x = _ |- _] =>
-      let v := fresh "X" in (set (v := S_to_bool x) in *; clearbody v; subst v)
-end.
 
-Hint Rewrite negb_elim :escj.
-Hint Resolve Zeq_bool_sym Zeq_bool_true Zeq_bool_false.
+
 
 Definition integralGE : Z -> Z -> Prop := fun (x y : Z) => x >= y.
 Definition integralGT : Z -> Z -> Prop := fun (x y : Z) =>  x > y.
@@ -136,10 +147,10 @@ Ltac unfoldEscArith := unfold  integralEQ_bool, integralGE_bool, integralLE_bool
 
 
 
-Variable null : Reference.
+
 Definition cast : Reference -> Types -> Reference := 
  fun (v:Reference)  (t: Types) => v.
-Variable fClosedTime : S -> Time.
+Variable fClosedTime : Field -> Time.
 
 Variable vAllocTime : Reference -> Time.
 Definition isAllocated: Reference -> Time -> Prop := 
@@ -203,25 +214,25 @@ Variable isNewArray: Reference -> Prop.
 Variable arrayLength: Reference -> t_int.
 Axiom arrayLengthAx :
       forall (a : Reference), (integralLE 0 (arrayLength a)).
-Variable unset: S -> Z -> Z -> S.
+(* Variable unset: S -> Z -> Z -> S. *)
 
 (* The operations on the heap - more or less *)
 Module Heap.
-Variable arrselect: S -> Z -> S (* A *).
-Variable arrstore: S -> Z -> S (* A *) -> S.
-Variable select: S -> S -> S (* A *).
-Variable store: S -> S ->  S (* A *)-> S.
+Variable arrselect: Reference -> t_int -> S (* A *).
+Variable arrstore: Reference -> t_int -> S (* A *) -> Reference.
+Variable select: Reference -> Reference -> S (* A *).
+Variable store: Reference -> Reference ->  S (* A *)-> Reference.
 
 Axiom select_store1: 
-    forall(var obj :S)(val : S (* A *)), (select (store var obj val) obj) = val.
+    forall(var obj : Reference)(val : S (* A *)), (select (store var obj val) obj) = val.
 Axiom select_store2: 
-    forall(var obj1 obj2 :S) (val :  S (* A *)), 
+    forall(var obj1 obj2 :Reference) (val :  S (* A *)), 
          obj1 <> obj2 -> 
                  (select (store var obj1 val) obj2) = (select var obj2).
 Axiom arrselect_store1: 
-    forall(var :S) (obj :Z)(val :S (* A *)), (arrselect (arrstore var obj val) obj) = val.
+    forall(var :Reference) (obj :Z)(val :S (* A *)), (arrselect (arrstore var obj val) obj) = val.
 Axiom arrselect_store2: 
-    forall(var :S)(obj1 obj2 :Z) (val :  S (* A *)), 
+    forall(var : Reference)(obj1 obj2 :Z) (val :  S (* A *)), 
          obj1 <> obj2 -> 
                  (arrselect (arrstore var obj1 val) obj2) = (arrselect var obj2).
 
@@ -484,4 +495,48 @@ try match goal with
        let h := fresh "H" in
         (assert(h := I); rewrite <- H in h; apply h); exact I
 end.
+
+Definition jVar := Z.
+Variable ivar : jVar -> t_int.
+Require Import List.
+Inductive jProp : Set :=
+| jforall : list jVar -> jProp-> jProp
+| jtrue : jProp
+| jfalse : jProp
+| jimply : jProp -> jProp -> jProp.
+
+(* Notation "A -> B" := (jimply A B) (at level 70) : jProp_scope. *)
+
+(* Notation "'forall' f" := (jforall f) (at level 70): jProp_scope. *)
+
+
+Definition jLemma := ((list jProp) * jProp)%type.
+
+Definition simplify : list jProp -> jProp -> jLemma := fun l p => (l, p).
+
+Fixpoint interpProp (p : jProp) {struct p} :  Prop :=
+match p with
+| jforall l p => interpProp p
+| jtrue => True
+| jfalse => False
+| jimply p1 p2 => (interpProp p1) -> interpProp p2
+end.
+Fixpoint interp_hypos (l: list jProp) (g: jProp) {struct l} : Prop :=
+match l with
+| cons a L => (interp_hypos L a) -> interpProp g
+| nil => interpProp g
+end.
+
+Definition interp (pr: jLemma): Prop :=
+match pr with
+   pair l g => interp_hypos l g
+end.
+
+Lemma eval : forall l p, interp (pair l p) -> interp (simplify l p).
+Proof with auto.
+intros.
+simpl in *.
+assumption.
+Qed.
+
 
