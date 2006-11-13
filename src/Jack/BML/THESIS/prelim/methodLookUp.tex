@@ -1,0 +1,37 @@
+\index{\lookupOnly}
+\section{Method lookup}
+
+Java allows that a class   declares a method \methodd{} with the same signature as in one of its super types.
+In this case, we say that method \methodd{}  overrides the corresponding method in the super type or interface.
+This is a nice object-oriented feature which allows when defining subtypes to change the behavior of the subtype
+ w.r.t. the superclass behavior.
+
+This however complicates slightly the invokation mechanism. Let us see why.
+ The problem arises because the types of variables  on execution time differ from the type 
+with which they are declared. In particular, in Java we talk about  dynamic type and static type of expressions.
+Dynamic types can not be determined statically, they can only be determined on execution time.
+For instance, if we have a Java expression 
+$a.\methodd()$ where  the variable $a$ is declared with type $A$ and class $A$ has a subclass $B$,
+ in the general case it is not possible  to deteremine statically if $a$ contains 
+a reference value of dynamic type $B$ or dynamic type $A$.
+ If a method  \methodd{} is invoked on object of dynamic type $B$
+accordingly to the semantics of Java, we intend to call the method declared in the class $B$ if a method with such signature is declared in $B$.
+
+
+Because this cannot be resolved statically,  it is the virtual machine which on execution time determines which method to execute. 
+ In order, to simulate this behavior we define the function \lookupOnly, which takes a method signature - its name, its argument types and its return value
+ and a class \class{} and determines either the method is declared
+in \class{} via the function \findMethodOnly{} which searches in the list of the method of class \class. If this is the case, then the lookup procedure returns the method in \class, otherwise the procedure continues recursively
+to look for the method in the super type \class.\superClass{} of \class. Finally, we give the function for the method look up:
+
+$$\begin{array}{l}
+\lookup{name}{ argTypes}{retType }{\class} = \\
+       \left\{\begin{array}{ll}
+             \methodd & \findMethod{name}{ argTypes} {retType}{\class} = \methodd \\
+	              & \\
+	     \methodd &    \begin{array}{l}
+                                  \findMethod{name}{ argTypes} {retType}{\class} = \bottom \wedge \\
+				  \lookup{name}{ argTypes} {retType}{\class.\superClass} = \methodd
+			\end{array}	  
+       \end{array}\right.
+\end{array}$$
