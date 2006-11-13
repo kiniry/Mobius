@@ -1,0 +1,31 @@
+
+
+\subsection{Verification conditions for a program} \label{wp:vcMeth}
+Supposing the execution of a method always terminates, the verification condition which expresses the fact that 
+ a method \methodd  respects its specification %, the  precondition $\methodd.\pre$ and the postcondition $\methodd.\post$ 
+is defined in the following way:
+$$ \methodd.\pre \Rightarrow \wpi{}{\methodd}{0}$$
+
+Moreover, if a method \methodd{} declared in a class \texttt{B} ( \methodd.\declaredIn = \texttt{B}) overrides  method \mbox{\rm\texttt{n}} from the super
+ class \texttt{B} of \texttt{A}, the specification of method \methodd{} must conform with the specification of method   \mbox{\rm\texttt{n}}:
+  This is expressed by the two covariant conditions over their pre and postconditions:
+	\begin{itemize}
+	   \item the precondition of the  overriden method \mbox{\rm\texttt{n}} must  imply
+	         the precondition of the overriding method  \methodd{}
+	   \item the postcondition of the overriding method  \methodd{}  must imply 
+	         the postcondition of the overriden method \mbox{\rm\texttt{n}}. This  must be true for normal postcondition and
+		 every  exceptional postcondition case
+	\end{itemize}
+
+
+Thus, we get also the following conditions for establishing the correctness of a method \methodd{} if method \methodd{}  overrides method \mbox{\rm\texttt{n}}:
+$$
+  \begin{array}{l}
+         \mbox{\rm\texttt{n}} . \pre \Rightarrow \methodd{}.\pre\\\\
+	 \methodd{}.\normalPost \Rightarrow \mbox{\rm\texttt{n}} .\normalPost\\\\
+	  \forall \mbox{\rm\texttt{Exc}} , \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )    \Rightarrow \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}  )
+   \end{array}
+$$
+
+The verfication conditions for a class \class{} are the set of verification conditions for every method declared in \class.
+The verification conditoins  for a program \Program{} are the verification conditions for all the classes in \Program{}.
