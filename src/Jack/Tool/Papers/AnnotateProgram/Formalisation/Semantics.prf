@@ -6,49 +6,49 @@
   (eval_TCC1-1 nil 3371189456 3371189465 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    796 600 nil nil))
  (eval_TCC2 0
   (eval_TCC2-1 nil 3371189456 3371189466 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    569 490 nil nil))
  (eval_TCC3 0
   (eval_TCC3-1 nil 3371189456 3371189466 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    552 470 nil nil))
  (eval_TCC4 0
   (eval_TCC4-1 nil 3371189456 3371189467 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    531 470 nil nil))
  (eval_TCC5 0
   (eval_TCC5-1 nil 3371189456 3371189467 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    529 470 nil nil))
  (eval_TCC6 0
   (eval_TCC6-1 nil 3371189456 3371189468 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    535 470 nil nil))
  (eval_TCC7 0
   (eval_TCC7-1 nil 3371189456 3371189468 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    541 480 nil nil))
  (eval_TCC8 0
   (eval_TCC8-1 nil 3371189456 3371189469 ("" (termination-tcc) nil nil)
    proved-complete
    ((reduce_nat adt-def-decl "[NumExpr -> nat]" NumExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    575 490 nil nil))
  (eval_TCC9 0
   (eval_TCC9-1 nil 3371189456 3371189469 ("" (subtype-tcc) nil nil)
@@ -58,31 +58,31 @@
   (eval_TCC10-1 nil 3371189456 3371189471
    ("" (termination-tcc) nil nil) proved-complete
    ((reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    2392 2120 nil nil))
  (eval_TCC11 0
   (eval_TCC11-1 nil 3371189456 3371189474
    ("" (termination-tcc) nil nil) proved-complete
    ((reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    2538 2280 nil nil))
  (eval_TCC12 0
   (eval_TCC12-1 nil 3371189456 3371189477
    ("" (termination-tcc) nil nil) proved-complete
    ((reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    2586 2300 nil nil))
  (eval_TCC13 0
   (eval_TCC13-1 nil 3371189456 3371189479
    ("" (termination-tcc) nil nil) proved-complete
    ((reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    2468 2190 nil nil))
  (eval_TCC14 0
   (eval_TCC14-1 nil 3371189456 3371189482
    ("" (termination-tcc) nil nil) proved-complete
    ((reduce_nat adt-def-decl "[BoolExpr -> nat]" BoolExpr_adt nil)
-    (Name formal-nonempty-type-decl nil Evaluation nil) nil nil)
+    (Name formal-nonempty-type-decl nil Evaluation nil))
    2574 2300 nil nil)))
 (Semantics
  (deriv_expr_TCC1 0
@@ -586,7 +586,7 @@
   (deriv_stmt_TCC13-1 nil 3371191509 3371193950
    ("" (termination-tcc) nil nil) unfinished nil 32 30 nil nil))
  (stmt_determ_step 0
-  (stmt_determ_step-1 nil 3371194190 3371198018
+  (stmt_determ_step-1 nil 3371194190 3372588553
    ("" (skosimp)
     ((""
       (lemma
@@ -599,83 +599,56 @@
               (("2" (skosimp)
                 (("2" (induct "s")
                   (("1" (skosimp*)
-                    (("1" (rewrite "deriv_stmt" -3)
-                      (("1" (rewrite "deriv_stmt" -4)
-                        (("1" (case "up?(ex(sigma!1))")
-                          (("1" (grind) nil nil)
-                           ("2" (assert)
-                            (("2" (flatten)
-                              (("2"
-                                (lift-if)
-                                (("2"
-                                  (split -4)
-                                  (("1"
-                                    (flatten)
-                                    (("1" (postpone) nil nil))
-                                    nil)
-                                   ("2" (postpone) nil nil))
-                                  nil))
-                                nil))
-                              nil))
-                            nil))
-                          nil))
-                        nil))
-                      nil))
+                    (("1" (hide -1 -2) (("1" (postpone) nil nil)) nil))
                     nil)
-                   ("2" (postpone) nil nil)
-                   ("3" (skosimp*)
-                    (("3" (rewrite "deriv_stmt" -1)
-                      (("3" (rewrite "deriv_stmt" -2)
-                        (("3" (case "up?(ex(sigma!1))")
-                          (("1" (grind) nil nil)
-                           ("2" (assert)
-                            (("2" (flatten)
+                   ("2" (skosimp*)
+                    (("2" (hide -1 -2)
+                      (("2" (rewrite "deriv_stmt" -1)
+                        (("2" (rewrite "deriv_stmt" -2)
+                          (("2" (case "up?(ex(sigma!1))")
+                            (("1" (grind) nil nil)
+                             ("2" (assert)
                               (("2"
                                 (skosimp*)
                                 (("2"
-                                  (lemma "expr_determ_step")
+                                  (inst-cp -7 "(m1!1, m1!2)")
                                   (("2"
-                                    (inst
-                                     -1
-                                     "P!1"
-                                     "Set2_var!1"
-                                     "x!1`1 - 1"
-                                     "x!1`2 - 1"
-                                     "sigma!1")
-                                    (("1"
-                                      (assert)
-                                      (("1"
-                                        (inst
-                                         -1
-                                         "v!1"
-                                         "v!2"
-                                         "tau!1"
-                                         "tau!2")
-                                        (("1"
-                                          (assert)
-                                          (("1"
-                                            (split -1)
-                                            (("1" (postpone) nil nil)
-                                             ("2"
-                                              (skosimp*)
+                                    (replace -4)
+                                    (("2"
+                                      (replace -1)
+                                      (("2"
+                                        (assert)
+                                        (("2"
+                                          (inst
+                                           -8
+                                           "Sequence1_var!1"
+                                           "sigma!1"
+                                           "tau!1"
+                                           "tau!2")
+                                          (("2"
+                                            (assert)
+                                            (("2"
+                                              (flatten)
                                               (("2"
                                                 (inst
-                                                 -11
-                                                 "(m1!1, m2!1)")
+                                                 -7
+                                                 "(m2!1, m2!2)")
                                                 (("2"
-                                                  (typepred "m1!1")
+                                                  (assert)
                                                   (("2"
-                                                    (typepred "m2!1")
+                                                    (inst
+                                                     -7
+                                                     "Sequence2_var!1"
+                                                     "tau!1"
+                                                     "sigma1!1"
+                                                     "sigma2!1")
                                                     (("2"
                                                       (assert)
                                                       (("2"
-                                                        (inst?)
+                                                        (flatten)
                                                         (("2"
-                                                          (inst?)
-                                                          (("2"
-                                                            (assert)
-                                                            nil
-                                                            nil))
+                                                          (assert)
+                                                          nil
                                                           nil))
                                                         nil))
                                                       nil))
@@ -686,9 +659,7 @@
                                             nil))
                                           nil))
                                         nil))
-                                      nil)
-                                     ("2" (assert) nil nil)
-                                     ("3" (assert) nil nil))
+                                      nil))
                                     nil))
                                   nil))
                                 nil))
@@ -698,9 +669,185 @@
                         nil))
                       nil))
                     nil)
-                   ("4" (postpone) nil nil) ("5" (postpone) nil nil)
-                   ("6" (postpone) nil nil) ("7" (postpone) nil nil)
-                   ("8" (postpone) nil nil))
+                   ("3" (skosimp*)
+                    (("3" (rewrite "deriv_stmt" -1)
+                      (("3" (rewrite "deriv_stmt" -2)
+                        (("3" (case "up?(ex(sigma!1))")
+                          (("1" (grind) nil nil)
+                           ("2" (assert)
+                            (("2" (flatten)
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (use
+                                   "expr_determ_step"
+                                   ("n1" "x!1`1 - 1" "n2" "x!1`2 - 1"))
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (inst
+                                       -1
+                                       "v!1"
+                                       "v!2"
+                                       "tau!1"
+                                       "tau!2")
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (split -1)
+                                          (("1"
+                                            (flatten)
+                                            (("1"
+                                              (lift-if)
+                                              (("1"
+                                                (assert)
+                                                (("1"
+                                                  (split -7)
+                                                  (("1"
+                                                    (flatten)
+                                                    (("1"
+                                                      (assert)
+                                                      nil
+                                                      nil))
+                                                    nil)
+                                                   ("2"
+                                                    (flatten)
+                                                    (("2"
+                                                      (assert)
+                                                      nil
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil)
+                                           ("2"
+                                            (skosimp*)
+                                            (("2"
+                                              (typepred "m1!1")
+                                              (("2"
+                                                (typepred "m2!1")
+                                                (("2"
+                                                  (inst
+                                                   -13
+                                                   "(m1!1, m2!1)")
+                                                  (("2"
+                                                    (assert)
+                                                    (("2"
+                                                      (inst
+                                                       -13
+                                                       "s!1"
+                                                       "sigma!2"
+                                                       "sigma1!2"
+                                                       "sigma2!2")
+                                                      (("2"
+                                                        (assert)
+                                                        nil
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil)
+                                   ("2" (assert) nil nil)
+                                   ("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("4" (skosimp*)
+                    (("4" (rewrite "deriv_stmt" -1)
+                      (("4" (rewrite "deriv_stmt" -2)
+                        (("4" (flatten) (("4" (assert) nil nil)) nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("5" (skosimp*)
+                    (("5" (rewrite "deriv_stmt" -1)
+                      (("5" (rewrite "deriv_stmt" -2)
+                        (("5" (case "up?(ex(sigma!1))")
+                          (("1" (grind) nil nil)
+                           ("2" (assert)
+                            (("2" (flatten)
+                              (("2"
+                                (skosimp*)
+                                (("2"
+                                  (use
+                                   "expr_determ_step"
+                                   ("n1" "x!1`1 - 1" "n2" "x!1`2 - 1"))
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (inst
+                                       -1
+                                       "v!1"
+                                       "v!2"
+                                       "sigma1!1"
+                                       "sigma2!1")
+                                      (("1"
+                                        (assert)
+                                        (("1"
+                                          (split -1)
+                                          (("1"
+                                            (flatten)
+                                            (("1" (assert) nil nil))
+                                            nil)
+                                           ("2"
+                                            (skosimp*)
+                                            (("2"
+                                              (inst -7 "(m1!1, m2!1)")
+                                              (("2"
+                                                (assert)
+                                                (("2"
+                                                  (inst
+                                                   -7
+                                                   "s!1"
+                                                   "sigma!2"
+                                                   "sigma1!2"
+                                                   "sigma2!2")
+                                                  (("2"
+                                                    (assert)
+                                                    nil
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil)
+                                   ("2" (assert) nil nil)
+                                   ("3" (assert) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("6" (skosimp*)
+                    (("6" (rewrite "deriv_stmt" -1)
+                      (("6" (rewrite "deriv_stmt" -2)
+                        (("6" (case "up?(ex(sigma!1))")
+                          (("1" (grind) nil nil)
+                           ("2" (assert) (("2" (postpone) nil nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("7" (postpone) nil nil) ("8" (postpone) nil nil))
                   nil))
                 nil))
               nil))
@@ -710,7 +857,7 @@
        ("2" (postpone) nil nil))
       nil))
     nil)
-   unfinished nil 536695 9340 t shostak))
+   unfinished nil 690363 16270 t shostak))
  (expr_determ 0
   (expr_determ-1 nil 3371191515 3371194184
    ("" (skosimp*)

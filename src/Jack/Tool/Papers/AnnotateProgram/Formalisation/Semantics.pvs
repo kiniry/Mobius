@@ -285,7 +285,7 @@ BEGIN
          EXISTS (v : Val) :
            deriv_expr(P)(e, sigma1, v, sigma2)(n - 1)(deriv_stmt_rec(n - 1)),
       % Throw_p
-      Throw: sigma2 = sigma1 WITH [ex := up(Throwable)],
+      Throw: sigma2 = sigma1 WITH [ex := up(Throwable)] AND n = 0,
       % TryCatch_p
       TryCatch(c1, c2, c3) :
         EXISTS(m1, m2, m3 : nat)(tau1, tau2, tau3 : PState) :
