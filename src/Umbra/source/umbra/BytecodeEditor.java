@@ -1,11 +1,13 @@
 package umbra;
 
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
@@ -24,6 +26,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
+
+import umbra.annot.AttributeReader;
+import umbra.annot.MethodSpecification;
+import umbra.annot.ReadAttributeException;
 
 /**
  * This is the main class defining the Bytecode Editor
@@ -129,8 +135,8 @@ public class BytecodeEditor extends TextEditor {
 	public void setRelation(AbstractDecoratedTextEditor editor, JavaClass jc) {
 		relatedEditor = editor;
 		javaClass = jc;
-		classGen = new ClassGen(javaClass);
-		((BytecodeDocumentProvider)getDocumentProvider()).setRelation(editor, javaClass, classGen, getEditorInput());
+		classGen = new ClassGen(jc);
+		((BytecodeDocumentProvider)getDocumentProvider()).setRelation(editor, jc, classGen, getEditorInput());
 	}
 	
 	/**
@@ -206,7 +212,7 @@ public class BytecodeEditor extends TextEditor {
 		SyntheticRepository strin = SyntheticRepository.getInstance(cp);
 		JavaClass jc = strin.loadClass(clname);
 		strin.removeClass(jc);
-		controlPrint(jc);
+		//controlPrint(jc);
 		Method[] methods = jc.getMethods();
 		byte[][] names = new byte[methods.length][256];
 		byte[][] code = new byte[methods.length][4096];
@@ -219,12 +225,15 @@ public class BytecodeEditor extends TextEditor {
 				names[i] = methods[i].toString().getBytes();
 				codeLen[i] = methods[i].getCode().toString().length();
 				String bareCode = methods[i].getCode().toString();
-//				code[i] = addComment(bareCode, commentTab, off).getBytes();
 				String c = addComment(bareCode, commentTab, interlineTab, off);
+				c = addAnnot(methods[i]) + c;
 				code[i] = c.getBytes();
 				codeLen[i] = c.length();
 				off += getOffset(bareCode);
 			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (ReadAttributeException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -251,6 +260,21 @@ public class BytecodeEditor extends TextEditor {
 		javaClass = jc;
 	}
 	
+	private String addAnnot(Method method) throws IOException, ReadAttributeException {
+		System.out.println(method.getAttributes().length + " annotation(s):");
+		if (method.getAttributes().length > 1) {
+			Unknown att = (Unknown)method.getAttributes()[1];
+			//System.out.println();
+			//System.out.println(att.toString());
+			//System.out.println(att.getBytes().length);
+			//System.out.println(att.getName());
+			MethodSpecification msp = AttributeReader.readMethodSpecification(att.getBytes());
+			String str = msp.getPrecondition().toString();
+			return ("//" + str + "\n");
+		}
+		return "";
+	}
+
 	/**
 	 * Computes position of the next instruction line in the Bytecode method.
 	 * 
