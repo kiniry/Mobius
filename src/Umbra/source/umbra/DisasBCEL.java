@@ -55,11 +55,13 @@ public class DisasBCEL implements IEditorActionDelegate {
 			//replaceClass(active);
 			String actlind = active.toOSString().substring(0, lind);
 			String fname = actlind + ".btc";
+			//fname = "hello/plik.txt";
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			IFile file = workspace.getRoot().getFile(new Path(fname));
 			FileEditorInput input = new FileEditorInput(file);
 			try {
 				IWorkbenchPage page = editor.getEditorSite().getPage();
+				//BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "org.eclipse.jdt.ui.CompilationUnitEditor", true);
 				BytecodeEditor bcEditor = (BytecodeEditor)page.openEditor(input, "umbra.BytecodeEditor", true);
 				bcEditor.refreshBytecode(active, null, null);
 				input = new FileEditorInput(file);
