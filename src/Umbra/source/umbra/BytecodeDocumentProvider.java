@@ -50,8 +50,8 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
 						BytecodePartitionScanner.THROWS});
 			partitioner.connect(document);
 			document.setDocumentPartitioner(partitioner);
-			contribution = BytecodeContribution.inUse();
-			contribution.addListener(document);
+			//contribution = BytecodeContribution.inUse();
+			//contribution.addListener(document);
 			return document;
 		}
 		return null;
