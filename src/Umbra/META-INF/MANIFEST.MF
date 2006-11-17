@@ -27,3 +27,4 @@ Export-Package: org.apache.bcel,
  umbra.instructions
 Import-Package: org.eclipse.ui.part,
  org.eclipse.ui.texteditor
+Bundle-ClassPath: libs/org.apache.bcel_5.1.0/bcel.jar
