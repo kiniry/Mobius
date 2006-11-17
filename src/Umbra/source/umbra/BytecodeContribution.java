@@ -30,10 +30,6 @@ public class BytecodeContribution extends ControlContribution {
 	/**
 	 * TODO
 	 */
-	private int num = 0;
-	/**
-	 * TODO
-	 */
 	private boolean needNew = true;
 	/**
 	 * TODO

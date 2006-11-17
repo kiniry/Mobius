@@ -31,16 +31,20 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 	/**
 	 * TODO
 	 */
-	private ColorManager colorManager;
+	private /*@ non_null @*/ ColorManager colorManager;
 	/**
 	 * TODO
 	 */
 	private int mod;
+	//@ invariant mod >= 0;
 	
 	/**
 	 * TODO
 	 */
-	public BytecodeConfiguration(ColorManager colorManager, int mod) {
+	/*@ requires mod >= 0;
+	  @
+	  @*/
+	public BytecodeConfiguration(/*@ non_null @*/ ColorManager colorManager, int mod) {
 		this.colorManager = colorManager;
 		this.mod = mod;
 	}
@@ -117,5 +121,5 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
 
 		return reconciler;
 	}
-	
+
 }
