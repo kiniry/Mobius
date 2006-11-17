@@ -99,7 +99,7 @@ public class BcelTestRun {
 
 	}
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws ClassNotFoundException
 	{
 		JavaClass jc = Repository.lookupClass(HWClName);
 		System.out.println("----- przed zmian� -----");
