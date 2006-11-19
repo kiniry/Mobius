@@ -7,7 +7,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.NEWARRAY;
 import org.apache.bcel.generic.Type;
 
-import umbra.IBytecodeStrings;
+import umbra.editor.IBytecodeStrings;
 
 /**
  * This class is related to some subset of instructions 

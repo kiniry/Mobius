@@ -10,7 +10,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.PUTFIELD;
 import org.apache.bcel.generic.PUTSTATIC;
 
-import umbra.IBytecodeStrings;
+import umbra.editor.IBytecodeStrings;
 
 /**
  * This class is related to some subset of instructions 

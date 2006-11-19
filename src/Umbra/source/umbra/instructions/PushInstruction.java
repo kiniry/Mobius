@@ -8,7 +8,7 @@ import org.apache.bcel.generic.*;
 
 
 
-import umbra.IBytecodeStrings;
+import umbra.editor.IBytecodeStrings;
 
 /**
  * This class is related to some subset of instructions 
