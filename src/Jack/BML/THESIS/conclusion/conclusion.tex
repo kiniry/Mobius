@@ -3,42 +3,73 @@ In the end of this thesis, we would like to summerize
 its contents and to focus on the future objectives. 
 
 % done. summary
-So far, we have seen how to perform verification over bytecode
-programs without compromising the compiler. In particular, the verification 
-scheme proposed allows to check a bytecode program against 
-non trivial functional and security properties. For this, we have 
+So far, we have  presented a bytecode logic which allows to reason about potentially
+complex  functional and security properties.
+ For this, we have 
 introduced a specification language BML tailored to Java bytecode, a compiler
 from the Java source specification language JML to BML and a verification 
 condition generator for Java bytecode programs. Moreover, we have
-shown that the verification procedure over Java like source program 
+shown that the verification procedure over Java like source program
 and Java like bytecode are syntactically equivalent (modulo names and types). 
 This scheme is actually part of the PCC architecture of 
 European project Mobius\footnote{the site name} which aims to resolve the problems
-of mobile and ubicuous computing via PCC.
+of mobile and ubicuous computing via PCC. 
+We have implemented a prototype of the bytecode verification condition generator and a compiler 
+from source JML specification into bytecode BML specification. Those components are integrated in the JACK verification framework. 
 
-% towards.PCC
-For building a PCC framework from the components cited above 
-there is still missing the proof certificate, the decision procedure
-that will be used by the producer for the certificate generation and the type checker used by the code
-client for checking the certificate. Important problems in this direction are
-\begin{itemize}
-  \item light weight verification condition generators. In particular, we refer 
-        to verification condition generation techniques which are simple and do not need
-	much computational resources. Because a verification condition generator always
-	form part of the trusted computing base on the client side, building such verification 
-	condition generators is important for on - device checking which rely on limitted computational 
-	resources  
-  
-  \item generation of compact certificates. This is important for several reasons.
-        The certificate may certainly  arrive via the network and should not corrupt the performance 
+JACK stands for Java Applet Correctness Kit. The tool is a plugin for the Java interface development
+ environment eclipse and has a user friendly interface. It was originally tailored to the verification of Java source programs 
+w.r.t. their JML specifications. The tool has an intermediate proof obligation language which allows to extend it easily to interface more 
+ theorem provers. Thus, the tool interfaces several theorem provers - Simplify which is an automatic decision procedure, the Atelier B and the Coq interactive
+theorem prover assistant. The extension of the tool to bytecode programs which we added also interfaces these theorem provers. The bytecode 
+verification condition generator works as follows. For the verification of a class file it will generate verification conditions for every
+ method of this class including the constructors. For generating the verification conditions over a method body, first the control flow
+ graph corresponding to the bytecode instruction is built.
+ Then the verification procedure proceeds by generating for every execution path in the control flow graph its corresponding verification conditions.
+The bytecode verification condition generator benefits from the original user friendly interface of the JACK tool. 
+We have used the prototype of the bytecode verification condition generator for the case studies presented in Chapter \ref{applications:optimComp}.
+
+The bytecode verification condition generator works only for the sequential fragment of Java. However, realistic applications 
+rely often on multithreading which are difficult to verify against a functional specification or security policy.
+ An important direction for future work is the extension of the verification procedure to multithreading. 
+
+The bytecode verification condition generator and the BML compiler is the first step to building a PCC framework. 
+The missing  part is  the certificate format which comes along with the bytecode and which  is the evidence for 
+that the bytecode respects the client requirements. Defining an encoding of the certificate should take into account several factors:
+\begin{itemize} 
+  \item certificate size must be reasonably small. This is important, for instance,  if the certified program comes over a network with a limitted bandwith
+  \item certificates must be easily checked. This means that the certificate checker is  small and simple.
+	       Of course, the code consumer might not want to spend all of its computation 
+	      resources for checking that the certificate guarantees the program conformence to its policies.     
+\end{itemize}
+
+Note that the certificate size and its checking complexity are dual: the bigger the certificate is more manageable is the checking process and viceversa. 
+The problem becomes even more difficult if the certificate must be checked on the device because of the computational and space constraints.
  
 
- \item efficient type checker on the client site. This is in particular important 
-        if the device is with limitted resources where a complex certificate checking procedure
-        may corrupt the performance of the device
-       
-    
-\end{itemize}
+% towards.PCC
+% For building a PCC framework from the components cited above 
+% % there is still missing the proof certificate, the decision procedure
+% that will be used by the producer for the certificate generation and the type checker used by the code
+% client for checking the certificate. Important problems in this direction are
+% \begin{itemize}
+%  \item light weight verification condition generators. In particular, we refer 
+%        to verification condition generation techniques which are simple and do not need
+%	much computational resources. Because a verification condition generator always
+%	form part of the trusted computing base on the client side, building such verification 
+%	condition generators is important for on - device checking which rely on limitted computational 
+%	resources  
+  
+%   \item generation of certificates. This is important for several reasons.
+%         The certificate may certainly  arrive via the network and should not corrupt the performance 
+%  
+% 
+% %  \item efficient type checker on the client site. This is in particular important 
+%         if the device is with limitted resources where a complex certificate checking procedure
+%         may corrupt the performance of the device
+%        
+%     
+% \end{itemize}
 
 
  %To do this,  it is still missing the proof
@@ -47,15 +78,8 @@ client for checking the certificate. Important problems in this direction are
 %client for checking the certificate. 
 
 % to do. type systems
-Another perspective in this direction is how   to encode
- type systems into the bytecode logic. 
+Another perspective in this direction is how   to encode type systems into the bytecode logic. 
 Type systems provide a high level of automation. 
-Their encoding in the verification condition generator can be useful
-especially on where the certificate checking is performed on a 
- device which is potentially with limited resources.
-
- So far, we have shown that the verification procedures over bytecode produced by
-a non optimizing compiler  and its respective source produce syntactically 
-equivalent verification conditions. The next step is to explore 
-the relation between  the verification conditions on bytecode produced by an optimizing compiler and its source.  
+Their encoding in the verification condition generator can be useful first because the certificate can be generated automatically and
+second because the type checking procedure is lighter than checking a logical proof.
 
