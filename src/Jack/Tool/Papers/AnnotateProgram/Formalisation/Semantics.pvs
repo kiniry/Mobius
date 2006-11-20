@@ -231,9 +231,9 @@ BEGIN
                                           tau8 WITH [ex := bottom])(m6)
                 AND ex(tau7) = ex(tau8)
            ENDIF) AND
-          tau9 = update_local(name(arg(md)), old_val_arg, tau8) AND
-          eval(inv)(tau9) AND
-          eval(post(md))(tau9),
+          sigma2 = update_local(name(arg(md)), old_val_arg, tau8) AND
+          eval(inv)(sigma2) AND
+          eval(post(md))(sigma2),
       NExpr(n) : 
         sigma1 = sigma2 AND
         NOT Bottom?(v) AND
@@ -316,8 +316,10 @@ BEGIN
     EXISTS(n : nat) : deriv_stmt(P)(s, sigma1, sigma2)(n)
 
 
-  expr_determ_step : LEMMA
-    FORALL(P : Program)(e : Expr)(n1, n2 : nat)(sigma : PState) :
+  IMPORTING WF[nat, nat]
+
+  expr_determ_step : LEMMA % :-)
+    FORALL(P : Program)(n1, n2 : nat)(e : Expr)(sigma : PState) :
     LET deriv_stmt_rec = 
         LAMBDA(p : nat) : 
           LAMBDA(P : Program)(s : Stmt, sigma1, sigma2 : PState)
@@ -334,7 +336,7 @@ BEGIN
         deriv_expr(P)(e, sigma, v2, sigma2)(n2)(deriv_stmt_rec(n2)) IMPLIES
           v1 = v2 AND sigma1 = sigma2 AND n1 = n2
 
-  stmt_determ_step : LEMMA
+  stmt_determ_step : LEMMA % :-)
     FORALL(P : Program)(n1, n2 : nat)(s : Stmt)(sigma : PState) :
       FORALL(sigma1, sigma2 : PState) :
         deriv_stmt(P)(s, sigma, sigma1)(n1) AND

@@ -1,0 +1,13 @@
+WF[A, B : TYPE] : THEORY
+BEGIN
+
+  ord1 : VAR pred[[A, A]]
+  ord2 : VAR pred[[B, B]]
+
+  well_founded?_product : LEMMA % :-)
+    well_founded?(ord1) IMPLIES
+      well_founded?(ord2) IMPLIES 
+        well_founded?(LAMBDA(x, y : [A, B]) : ord1(PROJ_1(x), PROJ_1(y)) AND
+                                              ord2(PROJ_2(x), PROJ_2(y)))
+
+END WF
