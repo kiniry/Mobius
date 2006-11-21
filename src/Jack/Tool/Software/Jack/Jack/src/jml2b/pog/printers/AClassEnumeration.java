@@ -6,28 +6,18 @@
  */
 package jml2b.pog.printers;
 
-import java.util.Enumeration;
-
 import jml2b.structure.java.AClass;
 
 /**
  *
  *  @author L. Burdy
  **/
-public class AClassEnumeration {
-
-	private Enumeration e;
+public abstract class AClassEnumeration {
 	
-	public AClassEnumeration(Enumeration e) {
-		this.e = e;
-	}
-	
-	public boolean hasMoreElements() {
-		return e.hasMoreElements();
-	}
+	public abstract boolean hasMoreElements();
 
-	public AClass nextElement() {
-		return (AClass) e.nextElement();
-	}
+
+	public abstract AClass nextElement();
+
 
 }

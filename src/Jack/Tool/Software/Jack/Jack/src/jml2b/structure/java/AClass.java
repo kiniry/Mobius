@@ -427,4 +427,18 @@ public abstract class AClass extends NamedNode implements IClass, Linkable {
 	 * @return
 	 */
 	public abstract Vector getOwnFields() ;
+	
+	
+	public boolean equals (Object o) {
+		if(!(o instanceof AClass))
+			return false;
+		AClass cl = (AClass) o;
+		if (cl == null)
+			return false;
+		return cl.hashCode() == this.hashCode();	
+	}
+	
+	public int hashCode() {
+		return getBName().hashCode();
+	}
 }

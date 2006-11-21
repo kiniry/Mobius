@@ -10,6 +10,7 @@
 package jml2b.pog.printers;
 
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Vector;
 
 import jml.JmlDeclParserTokenTypes;
@@ -35,12 +36,12 @@ public class ClassResolver
 	/**
 	 * The set of interfaces currenlty accessible from root package 
 	 **/
-	Vector interfaces;
+	HashSet interfaces;
 
 	/**
 	 * The set of classes currenlty accessible from root package 
 	 **/
-	Vector classes;
+	HashSet classes;
 
 	/*@
 	  @ invariant interfaces != null
@@ -51,8 +52,8 @@ public class ClassResolver
 	 * Constructs a file printer. Collects all accessible interfaces and classes.
 	 **/
 	public ClassResolver(JavaLoader p) {
-		interfaces = new Vector();
-		classes = new Vector();
+		interfaces = new HashSet();
+		classes = new HashSet();
 		getClassesAndInterfaces(p.getRoot());
 	}
 
@@ -83,7 +84,7 @@ public class ClassResolver
 
 	public Vector getJmlFiles() {
 		Vector res = new Vector();
-		Enumeration e = classes.elements();
+		AClassEnumeration e = new ClassIterator(classes);
 		while (e.hasMoreElements()) {
 			AClass c = (AClass) e.nextElement();
 			if (c.getJmlFile() != null) {
@@ -92,7 +93,7 @@ public class ClassResolver
 				res.add(jf);
 			}
 		}
-		e = interfaces.elements();
+		e = new ClassIterator(interfaces);
 		while (e.hasMoreElements()) {
 			AClass c = (AClass) e.nextElement();
 			if (c.getJmlFile() != null) {
@@ -109,14 +110,14 @@ public class ClassResolver
 	 * @return
 	 */
 	public AClassEnumeration getClasses() {
-		return new AClassEnumeration(classes.elements());
+		return new ClassIterator(classes);
 	}
 
 	/**
 	 * @return
 	 */
 	public AClassEnumeration getInterfaces() {
-		return new AClassEnumeration(interfaces.elements());
+		return new ClassIterator(interfaces);
 	}
 
 }

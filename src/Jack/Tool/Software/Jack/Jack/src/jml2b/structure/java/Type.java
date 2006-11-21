@@ -303,7 +303,7 @@ public class Type
 
 	public boolean equals(Type t) {
 		return tag == t.getTag()
-			&& (tag != T_REF || refType == t.refType)
+			&& (tag != T_REF || refType.equals(t.refType))
 			&& (tag != T_ARRAY || elemType.equals(t.elemType));
 	}
 
