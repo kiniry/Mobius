@@ -66,7 +66,7 @@ public class MethodSpecificationAttribute extends JmlAttributes {
 							jcp,
 							element,
 							true,
-							methodzz.getLocalVariableTable()));
+							lvt));
 		}
 		if (specBA == null)
 			return new byte[0];
