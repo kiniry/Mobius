@@ -106,7 +106,7 @@ expressions may evaluate to a value or be undefined. The operator  $\wellDefined
 %\wellDefined{ \arrayAccess{\expression_1} {\expression_2}   } = 
 %           \begin{array}{l}
 %             \expression_1 \neq \Mynull \wedge\\
-%	     0 \le  \expression_2 < \arraylength(\expression_1)
+%            0 \le  \expression_2 < \arraylength(\expression_1)
 %           \end{array} \\
 %
 %\wellDefined{\predWp_1 \wedge \predWp_2} =  \begin{array}{l} 
@@ -133,7 +133,7 @@ The evaluation function   takes as arguments an expression of the assertion lang
 
 \begin{interpretation}[Evaluation of expressions] \label{interpExpr} 
 The evaluation in a state 
-$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\locVarOnly}{\Final }$  of an expression $\expression$
+$s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\Final }$  of an expression $\expression$
 w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
 is denoted with $\evalExp{\expression}{s}$  and is defined in its domain inductively over its  the grammar of expressions $\expression$ \  as follows:
  
@@ -171,7 +171,7 @@ $$
 \left\{\begin{array}{ll}
       \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
       \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
-	   
+           
 \end{array}\right. \\
 
 
@@ -235,51 +235,51 @@ $$
 %
 %%\evalPred{  \neg \ \predWp  }{s} & = & \left\{ \begin{array}{ll} 
 %                                                 \true   &  if  \ \evalPred{\predWp}{s} = \false \\
-%						 \false  &  if  \ \evalPred{\predWp}{s} = \true \\
-%%						 \bottom &  else
-%				   \end{array}\right. 
+%                                                \false  &  if  \ \evalPred{\predWp}{s} = \true \\
+%%                                               \bottom &  else
+%                                  \end{array}\right. 
 %\\
 %%
 %\evalPred{\predWp_1  \wedge  \predWp_2 }{s} & = &   \left\{ \begin{array}{ll} 
 %                                                              \true  &  if  \ \evalPred{\predWp_1}{s} =\true \  and  \  \evalPred{\predWp_2}{s} = \true  \\
-%							      \false &  if  \ \evalPred{\predWp_1}{s} =\false \ or   \  \evalPred{\predWp_2}{s} = \false \\
-%							      \bottom & else
-%						   \end{array}\right.\\
+%                                                             \false &  if  \ \evalPred{\predWp_1}{s} =\false \ or   \  \evalPred{\predWp_2}{s} = \false \\
+%                                                             \bottom & else
+%                                                  \end{array}\right.\\
 %
 %
 %\evalPred{\predWp_1  \vee  \predWp_2 }{s} & = &  \left\{ \begin{array}{ll} 
 %                                                            \true  &  if \ \evalPred{\predWp_1}{s} = \true \   or   \    \evalPred{\predWp_2}{s} = \true  \\
-%							    \false &  if  \ \evalPred{\predWp_1}{s} =\false \  and   \  \evalPred{\predWp_2}{s} = \false \\
-%							    \bottom & else
-%					     \end{array}\right.   \\
+%                                                           \false &  if  \ \evalPred{\predWp_1}{s} =\false \  and   \  \evalPred{\predWp_2}{s} = \false \\
+%                                                           \bottom & else
+%                                            \end{array}\right.   \\
 %%
 %\evalPred{\predWp_1  \Rightarrow  \predWp_2 }{s} & = & \left\{ \begin{array}{ll} 
 %                                                                 \true   &  if \  \evalPred{\predWp_1}{s} = \false \ or  \ \evalPred{\predWp_2}{s}  = \true \\
-%								 \false  &  if \  \evalPred{\predWp_1}{s} =  \true \ and  \ \evalPred{\predWp_2}{s}  = \false \\
-%								 \bottom &  else
+%                                                                \false  &  if \  \evalPred{\predWp_1}{s} =  \true \ and  \ \evalPred{\predWp_2}{s}  = \false \\
+%                                                                \bottom &  else
 %                                                        \end{array}\right.\\
 %
 %\evalPred{\forall x  :T. \predWp(x)   }{s} & = & \left\{ \begin{array}{ll} 
 %                                                           \true   & if   \ \forall \mbox{ \rm \textbf{v}} \ of \ type \ T \  \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \true    \\
-%							   \false  & if   \ \exists \mbox{ \rm \textbf{v}} \ of \ type \ T \  \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \false \\
-%							   \bottom & else
-%						   \end{array}\right.   \\
+%                                                          \false  & if   \ \exists \mbox{ \rm \textbf{v}} \ of \ type \ T \  \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \false \\
+%                                                          \bottom & else
+%                                                  \end{array}\right.   \\
 %
 %
 %\evalPred{\exists x .  \predWp(x)   }{s} & = & \left\{ \begin{array}{ll} 
 %%                                                         \true  & if \ \exists \mbox{ \rm \textbf{v}} \ \in \Values  \ of \ type \ T  \\
 %                                                                & \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \true \\
-%							 \false & if \ \forall \mbox{ \rm \textbf{v}} \ \in \Values  \ of \ type \ T \\
+%                                                        \false & if \ \forall \mbox{ \rm \textbf{v}} \ \in \Values  \ of \ type \ T \\
  %                                                               & \evalPred{\predWp(\mbox{ \rm \textbf{v}})}{s} = \false \\
-%							 \bottom & else
+%                                                        \bottom & else
 %                                           \end{array}\right.   \\
 %                                          
 %
 %\evalPred{\expression_1 \  \predicates \  \expression_2 }{s} & = & 
 %%                    \left\{ \begin{array}{ll} 
 %                           \evalExp{\expression_1 }{s} \predicates \evalExp{\expression_2 }{s}  & \evalExp{\expression_1}{s} \neq \bottom \ and  \  \evalExp{\expression_2}{s} \neq \bottom\\
-%			    \bottom & else
-%		    \end{array}\right.   \\						    
+%                           \bottom & else
+%                   \end{array}\right.   \\                                                 
 %
 %
 %\evalPred{\instances(\referenceOnly) }{s} & = &   \referenceOnly \in \heap.\heapLocs

@@ -76,7 +76,7 @@ Moreover, we have experimented with the verification conditions on source and
  
 
  % extension  to PCC
-Beside this, in order to get a PCC architecture we still need to define the
+Beside this, in order to get a complete PCC framework we still need to define the
 format of the certificate, i.e. 
 the guarantee sent along with the bytecode which certifies that the bytecode 
 respects the client requirements. The decision for an encoding of the
@@ -85,11 +85,11 @@ several factors:
 \begin{itemize} 
   \item certificate size must be reasonably small. This is important, for
     instance,  if the certified program comes over a network 
-    with a limitted bandwith
+    with a limited bandwidth
   \item certificates must be easily checked. This means that the certificate checker is  small and simple.
                Of course, the code consumer might not want to spend all of its computation 
               resources for checking that the certificate guarantees the
-               program conformence to its policies.   
+               program conformance to its policies   
 \end{itemize}
 
 Certificate size and its checking complexity are dual: the
