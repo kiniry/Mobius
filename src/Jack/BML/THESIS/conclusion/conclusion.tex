@@ -21,9 +21,9 @@ from source JML specification into bytecode BML specification. Those components 
 JACK stands for Java Applet Correctness Kit. The tool is a plugin for the Java interface development
  environment eclipse and has a user friendly interface. It was originally tailored to the verification of Java source programs 
 w.r.t. their JML specifications. The tool has an intermediate proof obligation language which allows to extend it easily to interface more 
- theorem provers. Thus, the tool interfaces several theorem provers - Simplify
- which is an automatic decision procedure, the Atelier B and the Coq
- interactive theorem prover assistant. 
+ theorem provers. Thus, the tool interfaces several theorem provers -
+ Simplify,  an automatic decision procedure, the Atelier B and  Coq which are 
+ interactive theorem prover assistants. 
 
 
 The extension of the tool to  the verification of bytecode programs also interfaces these theorem provers. The bytecode 
@@ -31,7 +31,10 @@ verification condition generator works as follows. For the verification of a cla
  method of this class including the constructors. For generating the verification conditions over a method body, first the control flow
  graph corresponding to the bytecode instruction is built.
  Then the verification procedure proceeds by generating for every execution path in the control flow graph its corresponding verification conditions.
-The bytecode verification condition generator benefits from the original user friendly interface of the JACK tool. 
+The bytecode verification condition generator benefits from the original user
+friendly interface of the JACK tool and thus prints the verification conditions
+to the user in an understandable form. 
+
 As we already mentioned, we have an implementation also of the compiler from
 JML to BML. The compiler takes as input an annotated with JML Java source file
 and its corresponding class file and returns a class file augmented with
@@ -44,11 +47,13 @@ attributes containing the compilation of the JML annotation into BML.
  and moreover can benefit from the verification on source level. 
  However, the bytecode verification condition generator presented here works only for the
  sequential fragment of Java. This is a limitation  as realistic applications  
- rely often on multi-threading. Even the last Java Card provides support for
+ rely often on multi-threading. Endeed, even the last Java Card, which is 
+ particularly sensitive to the security problems as it normally deals with
+ sensitive and confidential data,  provides support for
  multi-threading programs. Thus, an important and challenging direction for future work
  is the extension of the verification procedure to multi-threading. 
- Also, in our work we have ignored floating point arithmetic which is also a
- candidate for future work.
+ Also, in our work we have ignored floating point arithmetic and thus an
+ extension of our  verification calculus is also a candidate for future work.
 
 % establish a relation btw Java and optimised version
 So far, we have shown that non-optimizing Java compilation
@@ -67,10 +72,11 @@ Moreover, we have experimented with the verification conditions on source and
  names for fields, method local variables and parameters are their identifiers which are given by the
  program developer. On bytecode method local variables and parameters are encoded as elements of the
  method register table and field names are encoded as numbers of the constant
- pool table of the class. A next simple but useful extension to the prototype
+ pool table of the class. A  simple but useful extension to the prototype for
+ bytecode verification
  is a compiler from source proof obligations to bytecode proof obligations
- which overcomes those differences. This can be considered also as a step in
- building a PCC architecture where the certificate generation benefits from
+ which overcomes those differences. This can be considered also as a step
+ towards the  building a PCC architecture where the certificate generation benefits from
  the source level verification and thus allows for treating sophisticated
  security policies.
  
@@ -80,8 +86,7 @@ Beside this, in order to get a complete PCC framework we still need to define th
 format of the certificate, i.e. 
 the guarantee sent along with the bytecode which certifies that the bytecode 
 respects the client requirements. The decision for an encoding of the
-certificate should take into account 
-several factors:
+certificate should take into account  the following conditions:
 \begin{itemize} 
   \item certificate size must be reasonably small. This is important, for
     instance,  if the certified program comes over a network 
@@ -93,13 +98,13 @@ several factors:
 \end{itemize}
 
 Certificate size and its checking complexity are dual: the
-bigger the certificate is more manageable is the checking 
+bigger the certificate is, the more manageable is the checking 
 process and vice versa.  The problem becomes even more difficult if the
 certificate must be checked on the device because 
 of the computational and space constraints. In this case, a possible solution
-is that the certificate is not stored on the device. It is instead checked
-while read and as soon as a piece  of the certificate is checked it is
-discarded and the checking continues with the next piece of the certificate.
+is that the certificate is not stored on the device. It is instead checked on
+the fly - every read piece is checked  and if the check is successful then 
+it is discarded and the checking continues with the still unread part of the certificate.
 % towards.PCC
 % For building a PCC framework from the components cited above 
 % % there is still missing the proof certificate, the decision procedure
@@ -135,7 +140,8 @@ Another perspective is the encoding of  type systems as suggested in \cite{Berin
 bytecode specification such that whenever the program is typeable then  the verification conditions generated over
 the bytecode and the specification are valid. This can be useful as type
 systems provide a high level of automation and thus certificate generation
-with type systems does not need user interaction.  \todo{references to the
-  work of M&L}
+with type systems does not need user interaction.  The encoding of type
+systems in a general logical verification scheme is one of the techniques used
+in the Mobius project.
 
 
