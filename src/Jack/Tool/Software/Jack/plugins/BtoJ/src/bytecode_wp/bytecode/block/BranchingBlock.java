@@ -2,8 +2,6 @@ package bytecode_wp.bytecode.block;
 
 import java.util.HashMap;
 
-import sun.security.krb5.Config;
-
 import jml2b.IJml2bConfiguration;
 import bytecode_wp.bcclass.attributes.ExsuresTable;
 import bytecode_wp.bytecode.BCInstruction;

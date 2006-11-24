@@ -3,8 +3,6 @@ package bytecode_wp.bytecode.objectmanipulation;
 import jml2b.IJml2bConfiguration;
 
 import org.apache.bcel.generic.InstructionHandle;
-import org.apache.xalan.transformer.KeyRefIterator;
-
 
 import bytecode_wp.bcclass.attributes.ExsuresTable;
 import bytecode_wp.bcexpression.Expression;
