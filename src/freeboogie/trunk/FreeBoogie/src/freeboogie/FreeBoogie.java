@@ -3,24 +3,11 @@ package freeboogie;
 
 /**
  * @author rgrig
- * @reviewer TODO
+ * @author reviewed by TODO
  */
 public class FreeBoogie {
-
-  /**
-   * 
-   */
-  public FreeBoogie() {
-    super();
-    // TODO Auto-generated constructor stub
-  }
-
-  /**
-   * @param args
-   */
+  /** @param args Command line arguments. */
   public static void main(String[] args) {
-    // TODO Auto-generated method stub
     System.out.println("Hello world!");
   }
-
 }
