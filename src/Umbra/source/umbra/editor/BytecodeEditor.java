@@ -262,13 +262,15 @@ public class BytecodeEditor extends TextEditor {
 	}
 	
 	private String addAnnot(Method method) throws IOException, ReadAttributeException {
-		System.out.println(method.getAttributes().length + " annotation(s):");
+		//System.out.println(method.getAttributes().length + " annotation(s):");
 		if (method.getAttributes().length > 1) {
 			Unknown att = (Unknown)method.getAttributes()[1];
-			//System.out.println();
-			//System.out.println(att.toString());
-			//System.out.println(att.getBytes().length);
-			//System.out.println(att.getName());
+			System.out.println(att.getBytes().length);
+			System.out.println();
+			for (int i = 0; i < att.getBytes().length; i++) {
+				System.out.print(Integer.toHexString((att.getBytes()[i] + 256) % 256) + " ");
+			}
+			System.out.println();
 			MethodSpecification msp = AttributeReader.readMethodSpecification(att.getBytes());
 			String str = msp.getPrecondition().toString();
 			return ("//" + str + "\n");
