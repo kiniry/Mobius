@@ -17,9 +17,12 @@ import org.apache.bcel.classfile.Unknown;
 import umbra.annot.attributes.MethodSpecification;
 import umbra.annot.attributes.SpecificationCase;
 import umbra.annot.bcexpression.ArithmeticExpression;
+import umbra.annot.bcexpression.BCLocalVariable;
 import umbra.annot.bcexpression.BitExpression;
 import umbra.annot.bcexpression.Expression;
 import umbra.annot.bcexpression.ExpressionConstants;
+import umbra.annot.bcexpression.FieldAccess;
+import umbra.annot.bcexpression.NULL;
 import umbra.annot.bcexpression.NumberLiteral;
 import umbra.annot.bcexpression.UnknownExpression;
 import umbra.annot.formula.Connector;
@@ -102,12 +105,12 @@ import bytecode_wp.modifexpression.SpecArray;*/
 public class AttributeReader {
 	private static int pos;
 
-	/*private static BCClass clazz;
+//	private static BCClass clazz;
 
 	
 	//private static BCLineNumber[] lineNumberTable;
 
-	private static BCLocalVariable[] localVariables;*/
+	private static BCLocalVariable[] localVariables;
 
 	public static final int ERROR_READING_OUT_OF_ARR = -1;
 
@@ -379,6 +382,8 @@ public class AttributeReader {
 			throws ReadAttributeException {
 		pos = 0;
 		int attribute_length = bytes.length;
+		System.out.println();
+		readByte(bytes);  //FIXME dlaczego??
 		Formula precondition = (Formula) readExpression(bytes);
 		/*int attributes_count = readAttributeCount(bytes);
 		if (attribute_length <= 0) {
@@ -561,6 +566,7 @@ public class AttributeReader {
 	private static Expression readExpression(byte[] bytes)
 			throws ReadAttributeException {
 		int _byte = readByte(bytes);
+		System.out.print(Integer.toHexString((_byte + 256) % 256) + "(" + pos + "), ");
 		if (_byte == Code.PLUS) { // ARithmetic
 			Expression e1 = readExpression(bytes);
 			Expression e2 = readExpression(bytes);
@@ -706,39 +712,41 @@ public class AttributeReader {
 			JavaType type = readJavaType(bytes);
 			Expression expr = readExpression(bytes);
 			CastExpression castExpr = new CastExpression(type, expr);
-			return castExpr;
-		} else if (_byte == Code.FULL_QUALIFIED_NAME) { // .
+			return castExpr;*/
+		} else if (_byte == Code.FULL_QUALIFIED_NAME) {
 			Expression expr = readExpression(bytes);
+//			for (int xx = 0; xx < 2; xx++)  // tego tu nie ma (3 linie)
+//				readByte(bytes);
 			Expression constant = readExpression(bytes);
-			if (constant instanceof OLD) {
-				constant = ((OLD) constant).getSubExpressions()[0];
-				if (expr instanceof OLD) {
-					expr = ((OLD) expr).getSubExpressions()[0];
-				}
-				Expression fieldAccessExpr = new OLD(new FieldAccess(constant,
-						expr));
-				return fieldAccessExpr;
-			}
+//			if (constant instanceof OLD) {
+//				constant = ((OLD) constant).getSubExpressions()[0];
+//				if (expr instanceof OLD) {
+//					expr = ((OLD) expr).getSubExpressions()[0];
+//				}
+//				Expression fieldAccessExpr = new OLD(new FieldAccess(constant,
+//						expr));
+//				return fieldAccessExpr;
+//			}
 			Expression fieldAccessExpr = new FieldAccess(constant, expr);
 			return fieldAccessExpr;
 			// else null; e.i. if a qualified name is found it must a field
 			// access expression
-		} else if (_byte == Code.BOOLEAN_EXPR) { // ? :
+		/*} else if (_byte == Code.BOOLEAN_EXPR) { // ? :
 			Formula condition = (Formula) readExpression(bytes);
 			Expression expr1 = readExpression(bytes);
 			Expression expr2 = readExpression(bytes);
 			ConditionalExpression conditionExpr = new ConditionalExpression(
 					condition, expr1, expr2);
 			return conditionExpr;
-		} else if (_byte == Code.THIS) { // this expression
-			Expression _this = localVariables[0];
-			return _this;
-		} else if (_byte == Code.OLD_THIS) {
-			Expression oldThis = new OLD(localVariables[0]);
-			return oldThis;
+*/		} else if (_byte == Code.THIS) { // this expression
+//			Expression _this = localVariables[0];
+//			return _this;
+//		} else if (_byte == Code.OLD_THIS) {
+//			Expression oldThis = new OLD(localVariables[0]);
+//			return oldThis;
 		} else if (_byte == Code.NULL) {
 			return NULL._NULL;
-		} else if ((_byte == Code.OLD_FIELD_REF)
+/*		} else if ((_byte == Code.OLD_FIELD_REF)
 				|| (_byte == Code.OLD_JML_MODEL_FIELD)) {
 			// see in the file remarks
 			int cpIndex = readShort(bytes);
@@ -769,19 +777,20 @@ public class AttributeReader {
 		} else if (_byte == Code.ARRAYLENGTH) {
 			ArrayLengthConstant length = ArrayLengthConstant.ARRAYLENGTHCONSTANT;
 			return length;
-		} else if (_byte == Code.FIELD_LOC) {
+*/		} else if (_byte == Code.FIELD_LOC) {
 			// read the index of the field_ref in the constant pool
 			int cpIndex = readShort(bytes);
 			// find the object in the constant field
-			BCConstant constantField = clazz.getConstantPool().getConstant(
-					cpIndex);
-			if (!(constantField instanceof BCConstantFieldRef)) {
-				throw new ReadAttributeException(
-						"Error reading in the Constant Pool : reason : CONSTANT_Fieldref  expected at index "
-								+ cpIndex);
-			}
-			return constantField;
-		} else if (_byte == Code.JML_MODEL_FIELD) {
+//			BCConstant constantField = clazz.getConstantPool().getConstant(
+//					cpIndex);
+//			if (!(constantField instanceof BCConstantFieldRef)) {
+//				throw new ReadAttributeException(
+//						"Error reading in the Constant Pool : reason : CONSTANT_Fieldref  expected at index "
+//								+ cpIndex);
+//			}
+//			return constantField;
+			return new UnknownExpression();
+/*		} else if (_byte == Code.JML_MODEL_FIELD) {
 			int cpIndex = readShort(bytes);
 			BCConstant constantField = clazz.getConstantPool().getConstant(
 					cpIndex);
@@ -946,13 +955,14 @@ public class AttributeReader {
 				return predicate;
 			}
 
-		/*} else if (_byte == Code.NOTEQ) {
+		} else if (_byte == Code.NOTEQ) {
 			Expression expr1 = readExpression(bytes);
 			Expression expr2 = readExpression(bytes);
 			Formula predicate = Formula.getFormula(Predicate2Ar.getPredicate(
 					expr1, expr2, PredicateSymbol.EQ), Connector.NOT);
 			return predicate;
-		} else if (_byte == Code.INSTANCEOF) {
+//			return new UnknownExpression();
+		/*} else if (_byte == Code.INSTANCEOF) {
 			Expression expr1 = readExpression(bytes);
 			JavaType type = readJavaType(bytes);
 			Formula predicate = new Predicate2Ar(type, expr1,
