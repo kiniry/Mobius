@@ -65,11 +65,11 @@ public abstract class Expression {
 			COUNTER,
 			new NumberLiteral(4),
 			ExpressionConstants.SUB);
-	}
+	}*/
 	
 	public static final NULL _NULL = NULL.getNULL();
 
-	public static final RESULT _RESULT = RESULT.getResult();*/
+//	public static final RESULT _RESULT = RESULT.getResult();
 	
 	protected Expression() {
 	}

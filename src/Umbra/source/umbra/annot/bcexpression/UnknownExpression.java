@@ -1,7 +1,9 @@
 package umbra.annot.bcexpression;
 
+import umbra.annot.formula.Formula;
 
-public class UnknownExpression extends Expression {
+
+public class UnknownExpression extends Formula {
 
 	public Expression copy() {
 		return this;
