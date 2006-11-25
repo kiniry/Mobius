@@ -57,29 +57,29 @@ public class Formula extends Expression {
 		super(_left, _right);
 	}
 
-	/*public static Formula getFormula(Formula f1, Quantificator[] quantifiers) {
-		if (f1 == Predicate0Ar.TRUE) {
-			return f1;
-		}
-		if (f1 == Predicate0Ar.FALSE) {
-			return f1;
-		}
-		QuantifiedFormula f = null;
-		f = new QuantifiedFormula(f1, quantifiers);
-		return f;
-	}
+//	public static Formula getFormula(Formula f1, Quantificator[] quantifiers) {
+//		if (f1 == Predicate0Ar.TRUE) {
+//			return f1;
+//		}
+//		if (f1 == Predicate0Ar.FALSE) {
+//			return f1;
+//		}
+//		QuantifiedFormula f = null;
+//		f = new QuantifiedFormula(f1, quantifiers);
+//		return f;
+//	}
 
-	public static Formula getFormula(Formula f1, Quantificator quantifier) {
-		if (f1 == Predicate0Ar.TRUE) {
-			return f1;
-		}
-		if (f1 == Predicate0Ar.FALSE) {
-			return f1;
-		}
-		QuantifiedFormula f = null;
-		f = new QuantifiedFormula(f1, quantifier);
-		return f;
-	}*/
+//	public static Formula getFormula(Formula f1, Quantificator quantifier) {
+//		if (f1 == Predicate0Ar.TRUE) {
+//			return f1;
+//		}
+//		if (f1 == Predicate0Ar.FALSE) {
+//			return f1;
+//		}
+//		QuantifiedFormula f = null;
+//		f = new QuantifiedFormula(f1, quantifier);
+//		return f;
+//	}
 
 	public static Formula getFormula(Formula _f1, byte _connector) {
 		if (_connector == Connector.NOT) {
@@ -88,6 +88,7 @@ public class Formula extends Expression {
 				f = new Formula(_f1, Connector.NOT);
 				return f;
 			}
+			return f;  //FIXME tego tu nie bylo!
 		}
 		return null;
 	}
@@ -99,7 +100,7 @@ public class Formula extends Expression {
 	 * @param _connector
 	 * @return
 	 */
-	/*public static Formula getFormula(Vector _f, byte _connector) {
+	public static Formula getFormula(Vector _f, byte _connector) {
 		Formula f;
 		if (_f.size() == 1) {
 			f = getFormula((Formula) _f.elementAt(0), _connector);
@@ -111,7 +112,7 @@ public class Formula extends Expression {
 		return f;
 	}
 
-	 */
+	
 
 	/**
 	 * generates from _f1, _f2, connector a simplfied formula
