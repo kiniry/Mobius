@@ -94,3 +94,6 @@ test103 Omit	benchmarks for predicate abstraction
 test200 Good
 test201 Good
 test202 Good	Tests error messages with a bad sourcepath
+
+testA0	Good	non_null on array types imposes nonnullelements.
+testB1	Omit	new assertion semantics (idc) test 1: not ready to commit it yet.
