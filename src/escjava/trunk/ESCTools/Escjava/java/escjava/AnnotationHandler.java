@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javafe.ast.ASTNode;
+import javafe.ast.ArrayType;
 import javafe.ast.BinaryExpr;
 import javafe.ast.CompilationUnit;
 import javafe.ast.ConstructorDecl;
@@ -38,6 +39,7 @@ import javafe.ast.TypeDeclVec;
 import javafe.ast.VariableAccess;
 import javafe.tc.TypeSig;
 import javafe.tc.Types;
+import javafe.util.Assert;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
 import escjava.ast.CondExprModifierPragma;
@@ -582,8 +584,14 @@ public class AnnotationHandler {
           TagConstants.NON_NULL);
       if (m == null) continue;
       int locNN = m.getStartLoc();
-      result.addElement(ExprModifierPragma.make(TagConstants.REQUIRES,
-          NonNullExpr.make(arg, locNN), locNN));
+    	// Note: v1.26 of Options.java saw the introduction of the "nne" option, which
+    	// has yet to be used.  I am temporarily making use of it here.
+    	Expr e = (numOfArrayDimOfReferenceType(arg.type) > 0 &&
+    			Main.options().nne)
+    		? (Expr) NonNullElementsExpr.make(arg, locNN) 
+    		: (Expr) NonNullExpr.make(arg, locNN);
+    	result.addElement(ExprModifierPragma.make(TagConstants.REQUIRES, e,
+    			locNN));
     }
 
     // Handle non_null on the result
@@ -1309,6 +1317,45 @@ public class AnnotationHandler {
       javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
       return e;
     }
+  }
+
+  static public class NonNullElementsExpr extends NaryExpr {
+
+	  protected NonNullElementsExpr(int op, /*@ non_null @*/ Expr arg, int locNN) {
+		  super(arg.getStartLoc(), arg.getEndLoc(), op, null, ExprVec.make(new Expr[] { arg }));
+	  }
+
+	  /**
+	   * @param fp a method formal parameter declared <code>non_null</code>.
+	   * @param locNN location of the <code>non_null</code> modifier of <code>arg</code>.
+	   * @return
+	   */
+	  static NonNullElementsExpr make(FormalParaDecl fp, int locNN) {
+		  Assert.notFalse(numOfArrayDimOfReferenceType(fp.type) > 0);
+		  int loc = fp.getStartLoc();
+		  Expr v = VariableAccess.make(fp.id, loc, fp);
+		  javafe.tc.FlowInsensitiveChecks.setType(v, fp.type);
+		  NonNullElementsExpr e = new NonNullElementsExpr(TagConstants.ELEMSNONNULL, v, locNN);
+		  javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+		  return e;
+	  }
+  }
+
+  /**
+   * @return 0 if t is not an array type, otherwise the number of array
+   *         dimensions for which the element type is a reference type.
+   */
+  //@ ensures \result >= 0;
+  public static int numOfArrayDimOfReferenceType(Type t) {
+	  int n = 0;
+	  while (t instanceof ArrayType) {
+		  Type elemType = ((ArrayType) t).elemType;
+		  if (!Types.isReferenceType(elemType))
+			  break;
+		  n++;
+		  t = elemType;
+	  }
+	  return n;
   }
 
   /**
