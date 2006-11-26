@@ -526,10 +526,10 @@ BogusFunctions.java:52: Error: Quantified expressions are not allowed in this co
 BogusFunctions.java:53: Error: Invalid types (int and TYPE) in equality comparison
   /*@ ensures \old(ii) == \old(tt); */  // illegal
                        ^
-BogusFunctions.java:54: Error: The function \old takes only one argument
+BogusFunctions.java:54: Error: The function \old takes one argument
   /*@ ensures \old() == \old(ii, ii); */  // illegal
               ^
-BogusFunctions.java:54: Error: The function \old takes only one argument
+BogusFunctions.java:54: Error: The function \old takes one argument
   /*@ ensures \old() == \old(ii, ii); */  // illegal
                         ^
 BogusFunctions.java:54: Error: Invalid types (void and void) in equality comparison
@@ -541,7 +541,7 @@ BogusFunctions.java:67: Error: Cannot convert java.lang.Object to a numeric type
 BogusFunctions.java:67: Error: Cannot convert java.lang.Object to a numeric type 
     /*@ assume (\max(\lockset) < 4) == (3 < \max(\lockset)); */  // il ...
                                             ^
-BogusFunctions.java:68: Error: The function \max takes only one argument
+BogusFunctions.java:68: Error: The function \max takes one argument
     /*@ assume \max() == \max(this); */  // illegal
                ^
 BogusFunctions.java:68: Error: Cannot convert BogusFunctions to LOCKSET
@@ -568,7 +568,7 @@ BogusFunctions.java:72: Error: Array index is not an integer
 BogusFunctions.java:73: Error: Invalid types (boolean and int) in equality comparison
     /*@ assume \lockset[this] == 12; */  // illegal
                               ^
-BogusFunctions.java:74: Error: The function \max takes only one argument
+BogusFunctions.java:74: Error: The function \max takes one argument
     /*@ assume \max(12, 13) == 13; */  // illegal
                ^
 BogusFunctions.java:74: Error: Invalid types (java.lang.Object and int) in equality comparison

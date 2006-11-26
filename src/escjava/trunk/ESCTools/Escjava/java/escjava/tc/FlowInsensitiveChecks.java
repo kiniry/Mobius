@@ -820,7 +820,7 @@ System.out.println("FOUND " + t);
           NaryExpr ne = (NaryExpr)e;
           if (ne.exprs.size() != 1)
             ErrorSet.error(ne.sloc, 
-                           "The function \\nonnullelements takes only one argument");
+                           "The function \\nonnullelements takes one argument");
           else {
             Expr nu = checkExpr(env, ne.exprs.elementAt(0),
                                 ArrayType.make(Types.javaLangObject(),
@@ -876,7 +876,7 @@ System.out.println("FOUND " + t);
           if( ne.exprs.size() != 1 ) {
             ErrorSet.error(ne.sloc, 
                            "The function " + TagConstants.toString(tag) + 
-                           " takes only one argument");
+                           " takes one argument");
             setType( e, Types.errorType );
           } else {
             // Get rid of this - FIXME - these are an obsolete definition
@@ -892,7 +892,7 @@ System.out.println("FOUND " + t);
           NaryExpr ne = (NaryExpr)e;
           if( ne.exprs.size() != 1 ) 
             ErrorSet.error(ne.sloc, 
-                           "The function \\elemtype takes only one argument");
+                           "The function \\elemtype takes one argument");
           else {
             Expr nu = checkExpr(env, ne.exprs.elementAt(0));
             ne.exprs.setElementAt( nu, 0 );			
@@ -912,7 +912,7 @@ System.out.println("FOUND " + t);
           if( ne.exprs.size() != 1 ) 
             ErrorSet.error(ne.sloc, 
                            "The function " + TagConstants.toString(tag) + 
-                           " takes only one argument");
+                           " takes one argument");
           else {
             // Note: the arguments are not evaluated
             Expr nu = checkExpr(env, ne.exprs.elementAt(0));
@@ -929,7 +929,7 @@ System.out.println("FOUND " + t);
           // FIXME - Is this a one argument function ?
           if( ne.exprs.size() != 1 ) 
             ErrorSet.error( ne.sloc, 
-			    "The function takes only one argument");
+			    "The function takes one argument");
           else {
             Expr nu = checkExpr(env, ne.exprs.elementAt(0));
             ne.exprs.setElementAt( nu, 0 );			
@@ -951,7 +951,7 @@ System.out.println("FOUND " + t);
           NaryExpr ne = (NaryExpr)e;
           if( ne.exprs.size() != 1 ) 
             ErrorSet.error( ne.sloc, 
-                            "The function \\max takes only one argument");
+                            "The function \\max takes one argument");
           else {
             Expr nu = checkExpr(env, ne.exprs.elementAt(0), Types.locksetType);
             ne.exprs.setElementAt( nu, 0 );			
@@ -965,7 +965,7 @@ System.out.println("FOUND " + t);
           NaryExpr ne = (NaryExpr)e;
           if( ne.exprs.size() != 1 ) {
             ErrorSet.error( ne.sloc, 
-                            "The function \\old takes only one argument");
+                            "The function \\old takes one argument");
             setType(e, Types.voidType);
           } else if (!isTwoStateContext) {
             ErrorSet.error(ne.sloc, 
@@ -990,7 +990,7 @@ System.out.println("FOUND " + t);
           NaryExpr ne = (NaryExpr)e;
           if( ne.exprs.size() != 1 ) 
             ErrorSet.error( ne.sloc, 
-                            "The function \\typeof takes only one argument");
+                            "The function \\typeof takes one argument");
           else {
             Expr ex = ne.exprs.elementAt(0);
             Expr nu = checkExpr(env, ex );

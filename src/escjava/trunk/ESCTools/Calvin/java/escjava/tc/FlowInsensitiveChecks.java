@@ -573,7 +573,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	NaryExpr ne = (NaryExpr)e;
 	if( ne.exprs.size() != 1 ) {
 	  ErrorSet.error( ne.sloc, 
-			 "The function fresh takes only one argument");
+			 "The function fresh takes one argument");
 	} else if (!isTwoStateContext) {
 	  ErrorSet.error(ne.sloc, "The function \\fresh cannot be used in this context");
 	} else if (isInsidePRE) {
@@ -628,7 +628,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	NaryExpr ne = (NaryExpr)e;
 	if( ne.exprs.size() != 1 ) 
 	  ErrorSet.error( ne.sloc, 
-			 "The function \\nonnullelements takes only one argument");
+			 "The function \\nonnullelements takes one argument");
 	else {
 	  Expr nu = checkExpr(env, ne.exprs.elementAt(0),
 			      ArrayType.make(Types.javaLangObject(),
@@ -679,7 +679,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	NaryExpr ne = (NaryExpr)e;
 	if( ne.exprs.size() != 1 ) 
 	  ErrorSet.error( ne.sloc, 
-			 "The function \\elemtype takes only one argument");
+			 "The function \\elemtype takes one argument");
 	else {
 	  Expr nu = checkExpr(env, ne.exprs.elementAt(0), Types.typecodeType);
 	  ne.exprs.setElementAt( nu, 0 );			
@@ -693,7 +693,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	NaryExpr ne = (NaryExpr)e;
 	if( ne.exprs.size() != 1 ) 
 	  ErrorSet.error( ne.sloc, 
-			 "The function \\max takes only one argument");
+			 "The function \\max takes one argument");
 	else {
 	  Expr nu = checkExpr(env, ne.exprs.elementAt(0), Types.locksetType);
 	  ne.exprs.setElementAt( nu, 0 );			
@@ -707,7 +707,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	NaryExpr ne = (NaryExpr)e;
 	if( ne.exprs.size() != 1 ) {
 	  ErrorSet.error( ne.sloc, 
-			 "The function \\old takes only one argument");
+			 "The function \\old takes one argument");
 	  setType(e, Types.voidType);
 	} else if (!isTwoStateContext) {
 	  ErrorSet.error(ne.sloc, 
@@ -732,7 +732,7 @@ public class FlowInsensitiveChecks extends javafe.tc.FlowInsensitiveChecks {
 	NaryExpr ne = (NaryExpr)e;
 	if( ne.exprs.size() != 1 ) 
 	  ErrorSet.error( ne.sloc, 
-			 "The function \\typeof takes only one argument");
+			 "The function \\typeof takes one argument");
 	else {
 	  Expr nu = 
 	    checkExpr(env, ne.exprs.elementAt(0), Types.javaLangObject() );
