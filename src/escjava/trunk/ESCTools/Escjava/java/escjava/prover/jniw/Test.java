@@ -1,4 +1,4 @@
-import escjava.prover.jniw.*;
+package escjava.prover.jniw;
 
 public class Test {
 
