@@ -2356,7 +2356,7 @@ public final class GetSpec {
    ****************************************************************************/
   
   /**
-   * * Decorates <code>GenericVarDecl</code>'s to point to * NonNullPragmas
+   * Decorates <code>GenericVarDecl</code>'s to point to NonNullPragmas
    * (SimpleModifierPragma's).
    */
   //@ invariant nonnullDecoration != null;
@@ -2367,8 +2367,8 @@ public final class GetSpec {
   "nonnullDecoration");
   
   /**
-   * * Mark v as non_null because of non_null pragma nonnull. * * Precondition:
-   * nonnull is a NON_NULL pragma. * * (Used to implement inheritence of
+   * Mark v as non_null because of non_null pragma nonnull.
+   * Precondition: nonnull is a NON_NULL pragma. (Used to implement inheritence of
    * non_null's.)
    */
   private static void setNonNullPragma(GenericVarDecl v,
@@ -2377,23 +2377,19 @@ public final class GetSpec {
   }
   
   /**
-   * * Has a particular declaration been declared non_null? If so, * return the
-   * non_null pragma responsible. Otherwise, return null.
-   * <p>* * Precondition: if the declaration is a formal parameter, then the *
+   * Has a particular declaration been declared non_null? If so, 
+   * return the non_null pragma responsible. Otherwise, return null.
+   * <ul>
+   * <li>Precondition: if the declaration is a formal parameter, then the
    * spec of it's routine has already been computed.
-   * <p>* * * WARNING: this is the only authorized way to determine this *
-   * information. Do *not* attempt to search for NON_NULL modifiers * directly.
+   * <li>WARNING: this is the only authorized way to determine this
+   * information. Do <em>not</em> attempt to search for NON_NULL modifiers 
+   * directly.
+   * </ul>
    * (This is needed to handle inherited NON_NULL's * properly.)
    */
-  public static SimpleModifierPragma NonNullPragma(GenericVarDecl v) {
-    // First check for a mark:
-    /*
-     * In JML, non_null pragmas do not inherit! SimpleModifierPragma mark =
-     * (SimpleModifierPragma) nonnullDecoration.get(v); if (mark != null) return
-     * mark;
-     */
-    
-    // Else fall back on a direct search of local modifiers:
+  public static /*@nullable*/ SimpleModifierPragma NonNullPragma(GenericVarDecl v) {
+    // In JML, non_null pragmas do not inherit!
     return (SimpleModifierPragma)Utils.findModifierPragma(v,
         TagConstants.NON_NULL);
   }
