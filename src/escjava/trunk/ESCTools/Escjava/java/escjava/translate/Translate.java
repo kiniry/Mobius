@@ -3451,6 +3451,11 @@ public final class Translate
 	  if (array.getTag() == TagConstants.VARIABLEACCESS) {
 		  nonNullPragma = GetSpec
 		  .NonNullPragma(((VariableAccess) array).decl);
+	  } else if (array.getTag() == TagConstants.FIELDACCESS) {
+		  FieldAccess fa = (FieldAccess)array;
+		  if (fa.decl != null) {
+			  nonNullPragma = GetSpec.NonNullPragma(fa.decl);
+		  } /* FIXME: else ? */
 	  } else {
 		  // FIXME: generalize to handle the other cases.
 		  System.err.println("Chalin: arrayRefWriteCheck: unexpected tag "
