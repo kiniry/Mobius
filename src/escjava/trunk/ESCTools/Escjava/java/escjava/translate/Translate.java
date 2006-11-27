@@ -3445,28 +3445,11 @@ public final class Translate
 	  if (!Types.isReferenceType(TypeCheck.inst.getType(ar)))
 		  return;
 
-	  SimpleModifierPragma nonNullPragma = null;
 	  /* Determine if ar is meant to be non-null.  Currently this can only
 	   * happen if some declarator is explicitly annotated with a non_null
 	   * pragma.  Hence, we look for this pragma ...
 	   */
-	  Expr array = ar.array;
-	  if (array.getTag() == TagConstants.VARIABLEACCESS) {
-		  nonNullPragma = GetSpec
-		  .NonNullPragma(((VariableAccess) array).decl);
-	  } else if (array.getTag() == TagConstants.FIELDACCESS) {
-		  FieldAccess fa = (FieldAccess)array;
-		  if (fa.decl != null) {
-			  nonNullPragma = GetSpec.NonNullPragma(fa.decl);
-		  } /* FIXME: else ? */
-	  } else {
-		  // FIXME: generalize to handle the other cases.
-		  System.err.println("Chalin: arrayRefWriteCheck: unexpected tag "
-				  + TagConstants.toString(array.getTag()));
-		  EscPrettyPrint.inst.print(System.err, 4, array);
-		  System.err.println("");
-	  }
-	  // Handle non_null variables
+	  SimpleModifierPragma nonNullPragma = getNonNullPragma(ar.array);
 	  if (nonNullPragma != null) {
 		  if (Rval == null) {
 			  Expr nullcheck = AnnotationHandler.makeNonNullExpr(rval,
@@ -3484,6 +3467,29 @@ public final class Translate
 	  }
   }
   
+  /* consider moving this into GetSpec.java */
+  private static SimpleModifierPragma getNonNullPragma(Expr array) {
+	  SimpleModifierPragma nonNullPragma = null;
+	  if (array.getTag() == TagConstants.VARIABLEACCESS) {
+		  nonNullPragma = GetSpec
+		  .NonNullPragma(((VariableAccess) array).decl);
+	  } else if (array.getTag() == TagConstants.FIELDACCESS) {
+		  FieldAccess fa = (FieldAccess) array;
+		  if (fa.decl != null) {
+			  nonNullPragma = GetSpec.NonNullPragma(fa.decl);
+		  } /* FIXME: else ? */
+	  } else if (array.getTag() == TagConstants.ARRAYREFEXPR) {
+		  nonNullPragma = getNonNullPragma(((ArrayRefExpr) array).array);
+	  } else {
+		  // FIXME:
+		  System.err.println("Chalin: getNonNullPragma: unexpected tag "
+				  + TagConstants.toString(array.getTag()));
+		  EscPrettyPrint.inst.print(System.err, 4, array);
+		  System.err.println("");
+	  }
+	  return nonNullPragma;
+  }
+
   /**
 	 * Insert checks done before writing variables, as prescribed by WriteCheck
 	 * in ESCJ 16. Handles writes of local, class, and instance variables (ESCJ
