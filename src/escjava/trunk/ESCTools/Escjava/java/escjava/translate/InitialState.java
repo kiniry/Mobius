@@ -79,7 +79,7 @@ public final class InitialState {
 	    // TypeCorrect[[ g ]]
 	    typeCorrect = TrAnExpr.typeCorrect(fd);
 	  } else {
-	    // FieldTypeCorrect[[ f ]]
+	    // FieldTypeCorrect[[ f ]], including non-null.
 	    typeCorrect = TrAnExpr.fieldTypeCorrect(fd);
 	  }
 	  conjuncts.addElement(typeCorrect);
