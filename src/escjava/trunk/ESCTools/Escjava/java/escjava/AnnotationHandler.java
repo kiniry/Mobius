@@ -604,10 +604,10 @@ public class AnnotationHandler {
         int locNN = m.getStartLoc();
         Expr r = ResExpr.make(locNN);
         javafe.tc.FlowInsensitiveChecks.setType(r, ((MethodDecl)rd).returnType);
-        Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
-        javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
-        Expr e = BinaryExpr.make(TagConstants.NE, r, n, locNN);
-        javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+    	Expr e = (numOfArrayDimOfReferenceType(((MethodDecl)rd).returnType) > 0 &&
+    			Main.options().nne)
+    		? (Expr) NonNullElementsExpr.make(r, locNN) 
+    		: (Expr) NonNullExpr.make(r, locNN);
         ExprModifierPragma emp = ExprModifierPragma.make(TagConstants.ENSURES,
             e, locNN);
         Utils.owningDecl.set(emp,rd);
@@ -1302,21 +1302,33 @@ public class AnnotationHandler {
     if (e != null) PrettyPrint.inst.print(System.out, 0, e);
   }
 
-  static public class NonNullExpr extends BinaryExpr {
+  static private class NonNullExpr extends BinaryExpr {
 
-    protected NonNullExpr(int op, /*@ non_null @*/ Expr left, /*@ non_null @*/ Expr right, int locOp) { 
-      super(op, left, right, locOp);
-    }
-    static NonNullExpr make(FormalParaDecl arg, int locNN) {
-      int loc = arg.getStartLoc();
-      Expr v = VariableAccess.make(arg.id, loc, arg);
-      javafe.tc.FlowInsensitiveChecks.setType(v, arg.type);
-      Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
-      javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
-      NonNullExpr e = new NonNullExpr(TagConstants.NE, v, n, locNN);
-      javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
-      return e;
-    }
+	  protected NonNullExpr(int op, /*@ non_null @*/ Expr left, /*@ non_null @*/ Expr right, int locOp) { 
+		  super(op, left, right, locOp);
+	  }
+
+	  /**
+	   * @param v a type checked (i.e. type annotated) expression usually 
+	   *        representing a variable.
+	   * @param locNN location of the non_null modifier whose desugaring
+	   *        expression is being returned by this method.
+	   * @return an expression of the form <code>v != null</code>.
+	   */
+	  public static NonNullExpr make(Expr v, int locNN) {
+		  Expr n = LiteralExpr.make(TagConstants.NULLLIT, null, locNN);
+		  javafe.tc.FlowInsensitiveChecks.setType(n, Types.nullType);
+		  NonNullExpr e = new NonNullExpr(TagConstants.NE, v, n, locNN);
+		  javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+		  return e;
+	  }
+
+	  public static NonNullExpr make(FormalParaDecl arg, int locNN) {
+		  int loc = arg.getStartLoc();
+		  Expr v = VariableAccess.make(arg.id, loc, arg);
+		  javafe.tc.FlowInsensitiveChecks.setType(v, arg.type);
+		  return make(v, locNN);
+	  }
   }
 
   static public class NonNullElementsExpr extends NaryExpr {
@@ -1325,19 +1337,23 @@ public class AnnotationHandler {
 		  super(arg.getStartLoc(), arg.getEndLoc(), op, null, ExprVec.make(new Expr[] { arg }));
 	  }
 
+	  public static NonNullElementsExpr make(Expr v, int locNN) {
+		  NonNullElementsExpr e = new NonNullElementsExpr(TagConstants.ELEMSNONNULL, v, locNN);
+		  javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
+		  return e;
+	  }
+
 	  /**
 	   * @param fp a method formal parameter declared <code>non_null</code>.
 	   * @param locNN location of the <code>non_null</code> modifier of <code>arg</code>.
 	   * @return
 	   */
-	  static NonNullElementsExpr make(FormalParaDecl fp, int locNN) {
+	  public static NonNullElementsExpr make(FormalParaDecl fp, int locNN) {
 		  Assert.notFalse(numOfArrayDimOfReferenceType(fp.type) > 0);
 		  int loc = fp.getStartLoc();
 		  Expr v = VariableAccess.make(fp.id, loc, fp);
 		  javafe.tc.FlowInsensitiveChecks.setType(v, fp.type);
-		  NonNullElementsExpr e = new NonNullElementsExpr(TagConstants.ELEMSNONNULL, v, locNN);
-		  javafe.tc.FlowInsensitiveChecks.setType(e, Types.booleanType);
-		  return e;
+		  return make(v, locNN);
 	  }
   }
 

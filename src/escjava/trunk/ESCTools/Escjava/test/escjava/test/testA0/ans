@@ -1,0 +1,11 @@
+NullArr.java:45: Warning: Method declared non_null may return null (NonNullResult)
+    }
+    ^
+Associated declaration is "NullArr.java", line 40, col 14:
+    public /*@non_null*/ Object[] m1b(/*@non_null*/ Object /*!non_null ...
+              ^
+Execution trace information:
+    Executed then branch in "NullArr.java", line 41, col 21.
+    Executed return in "NullArr.java", line 42, col 5.
+
+1 warning
