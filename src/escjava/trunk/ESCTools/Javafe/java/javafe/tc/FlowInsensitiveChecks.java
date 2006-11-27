@@ -2888,8 +2888,8 @@ public class FlowInsensitiveChecks
      * associated with an expression by the typechecking pass. If the expression does
      * not have an associated type, then null is returned.
      */
-    //@ requires i != null;
-    protected static Type getTypeOrNull(VarInit i) {
+    /* FIXME: Chalin - temporarily set to public because it is needed in escjava.AnnotationHandler.makeNonNullExpr(Expr, int) */
+    public static Type getTypeOrNull(/*@non_null*/ VarInit i) {
         return (Type)typeDecoration.get(i);
     }
 

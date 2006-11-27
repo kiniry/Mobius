@@ -1300,8 +1300,7 @@ public class AnnotationHandler {
    * This method constructs an Expr representing the constraint to be imposted
    * on v due to it being declared non_null.
    * 
-   * @param v
-   *            a type checked (i.e. type annotated) expression usually
+   * @param v   a type checked (i.e. type annotated) expression usually
    *            representing a variable.
    * @param locNN
    *            location of the non_null modifier whose desugaring expression
@@ -1309,7 +1308,9 @@ public class AnnotationHandler {
    * @return an expression of the form <code>v != null</code> or <code>\nonnullelements(v)</code>, depending on the type of v.
    */
   public static Expr makeNonNullExpr(Expr v, int locNN) {
-	  Type type = javafe.tc.FlowInsensitiveChecks.getType(v);
+	  Type type = 
+		  FlowInsensitiveChecks.getTypeOrNull(v); // FIXME: Chalin - use getType(v) instead.
+		  // TypeCheck.inst.getType(v);
 	  Expr e = (Main.options().nne &&
 			  numOfArrayDimOfReferenceType(type) > 0)
 			  ? (Expr) NonNullElementsExpr.make(v, locNN) 
@@ -1379,7 +1380,7 @@ public class AnnotationHandler {
    *         dimensions for which the element type is a reference type.
    */
   //@ ensures \result >= 0;
-  public static int numOfArrayDimOfReferenceType(Type t) {
+  public static int numOfArrayDimOfReferenceType(/*@nullable*/ Type t) {
 	  int n = 0;
 	  while (t instanceof ArrayType) {
 		  Type elemType = ((ArrayType) t).elemType;
