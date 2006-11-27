@@ -3442,6 +3442,9 @@ public final class Translate
 		  boolean inInitializerContext) {
 	  Assert.notFalse(locAssignOp != Location.NULL);
 	  
+	  if (!Types.isReferenceType(TypeCheck.inst.getType(ar)))
+		  return;
+
 	  SimpleModifierPragma nonNullPragma = null;
 	  /* Determine if ar is meant to be non-null.  Currently this can only
 	   * happen if some declarator is explicitly annotated with a non_null
