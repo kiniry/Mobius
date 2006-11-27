@@ -81,6 +81,7 @@ import javafe.util.Info;
 import javafe.util.Location;
 import javafe.util.Set;
 import javafe.util.StackVector;
+import escjava.AnnotationHandler;
 import escjava.Main;
 import escjava.Options;
 import escjava.ast.ArrayRangeRefExpr;
@@ -2698,7 +2699,7 @@ public final class Translate
                                      GC.nary(TagConstants.TYPEOF, array))),
                      Location.NULL, lhs.array);
           }
-
+          arrayRefWriteCheck(lhs, right, rval, x.locOp, false); // Chalin
           code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
           code.addElement(modify(GC.statevar,x.locOp));
           Expr a= GC.select(GC.elemsvar, array);
@@ -3424,24 +3425,82 @@ public final class Translate
   }
 
   /**
-   * Insert checks done before writing variables, as prescribed by WriteCheck in
-   * ESCJ 16.  Handles writes of local, class, and instance variables (ESCJ 16
-   * splits these into two WriteCheck functions).
-   *
-   * @param va is the variable being written; it must be either a
-   * <code>VariableAccess</code> (in the case of local variables and class fields)
-   * or a <code>SELECT</code> <code>NaryExpr</code> (in the case of instance
-   * fields).
-   * @param rval is the guarded command expression being written into
-   * <code>va</code>.  The argument <code>Rval</code> is either the Java expression
-   * from which <code>rval</code> was translated, or <code>null</code> if
-   * <code>rval</code> was somehow synthesized.
-   * @param locAssignOp is the location of the assignment operator that prescribes
-   * the write.  It is used to determine the location of the "wrong" part of the
-   * check's label.
-   * @param inInitializerContext indicates whether or not the expression whose
-   * write check is to be performed is the initializing expression of a field.
-   */
+   * This method was inspired from escjava.translate.Translate.writeCheck() though
+   * it only deals with non-nullity.
+   * 
+   * @param ar is an expression of the form array[indexExpr].
+   * 
+   * Hence, this method processes an assignment statement of the form
+   * <pre>array[indexExpr] = rval</pre>
+   * This method will determine the type of ar.  If it is non-null, then
+   * (like writeCheck()) it will add a check command to the GC program 
+   * being built.
+   * 
+   * @see escjava.translate.Translate.writeCheck() */
+  private void arrayRefWriteCheck(/* @ non_null */ArrayRefExpr ar,
+		  VarInit Rval, Expr rval, int locAssignOp,
+		  boolean inInitializerContext) {
+	  Assert.notFalse(locAssignOp != Location.NULL);
+	  
+	  SimpleModifierPragma nonNullPragma = null;
+	  /* Determine if ar is meant to be non-null.  Currently this can only
+	   * happen if some declarator is explicitly annotated with a non_null
+	   * pragma.  Hence, we look for this pragma ...
+	   */
+	  Expr array = ar.array;
+	  if (array.getTag() == TagConstants.VARIABLEACCESS) {
+		  nonNullPragma = GetSpec
+		  .NonNullPragma(((VariableAccess) array).decl);
+	  } else {
+		  // FIXME: generalize to handle the other cases.
+		  System.err.println("Chalin: arrayRefWriteCheck: unexpected tag "
+				  + TagConstants.toString(array.getTag()));
+		  EscPrettyPrint.inst.print(System.err, 4, array);
+		  System.err.println("");
+	  }
+	  // Handle non_null variables
+	  if (nonNullPragma != null) {
+		  if (Rval == null) {
+			  Expr nullcheck = AnnotationHandler.makeNonNullExpr(rval,
+					  nonNullPragma.getStartLoc());
+			  // GC.nary(TagConstants.REFNE, rval, GC.nulllit);
+			  addCheck(locAssignOp, TagConstants.CHKNONNULL, nullcheck,
+					  nonNullPragma.getStartLoc());
+		  } else // FIXME: Chalin: the following was just copied. Figure out if it is useful.
+			  if (!Main.options().excuseNullInitializers
+				  || !inInitializerContext
+				  || trim(Rval).getTag() != TagConstants.NULLLIT) {
+			  nullCheck(Rval, rval, locAssignOp, TagConstants.CHKNONNULL,
+					  nonNullPragma.getStartLoc());
+		  }
+	  }
+  }
+  
+  /**
+	 * Insert checks done before writing variables, as prescribed by WriteCheck
+	 * in ESCJ 16. Handles writes of local, class, and instance variables (ESCJ
+	 * 16 splits these into two WriteCheck functions).
+	 * 
+	 * @param va
+	 *            is the variable being written; it must be either a
+	 *            <code>VariableAccess</code> (in the case of local variables
+	 *            and class fields) or a
+	 *            <code>SELECT</code> <code>NaryExpr</code> (in the case of
+	 *            instance fields).
+	 * @param rval
+	 *            is the guarded command expression being written into
+	 *            <code>va</code>. The argument <code>Rval</code> is either
+	 *            the Java expression from which <code>rval</code> was
+	 *            translated, or <code>null</code> if <code>rval</code> was
+	 *            somehow synthesized.
+	 * @param locAssignOp
+	 *            is the location of the assignment operator that prescribes the
+	 *            write. It is used to determine the location of the "wrong"
+	 *            part of the check's label.
+	 * @param inInitializerContext
+	 *            indicates whether or not the expression whose write check is
+	 *            to be performed is the initializing expression of a field.
+	 */
   private void writeCheck(/*@ non_null */ Expr va, 
                           VarInit Rval, Expr rval, int locAssignOp,
                           boolean inInitializerContext) {
@@ -3461,7 +3520,8 @@ public final class Translate
     SimpleModifierPragma nonNullPragma = GetSpec.NonNullPragma(d);
     if (nonNullPragma != null) {
       if (Rval == null) {
-        Expr nullcheck = GC.nary(TagConstants.REFNE, rval, GC.nulllit);
+        Expr nullcheck = AnnotationHandler.makeNonNullExpr(rval, nonNullPragma.getStartLoc());
+        	// Chalin: was - GC.nary(TagConstants.REFNE, rval, GC.nulllit);
         addCheck(locAssignOp, TagConstants.CHKNONNULL, nullcheck,
                  nonNullPragma.getStartLoc());
       } else if (!Main.options().excuseNullInitializers || !inInitializerContext ||
