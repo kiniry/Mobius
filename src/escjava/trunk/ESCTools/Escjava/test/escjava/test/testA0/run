@@ -1,5 +1,0 @@
-#!/bin/sh
-# usage: run FLAGS
-
-${ESCJ} -nne 1 $* NullArr.java NullArr1b.java
-
