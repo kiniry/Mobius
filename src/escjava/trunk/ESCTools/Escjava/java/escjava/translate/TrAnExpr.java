@@ -18,6 +18,7 @@ import javafe.util.ErrorSet;
 import escjava.ast.*;
 import escjava.ast.TagConstants;
 import escjava.ast.Modifiers;
+import escjava.AnnotationHandler;
 import escjava.Main;
 import escjava.tc.Types;
 import escjava.parser.OldVarDecl;
@@ -1360,12 +1361,22 @@ public class TrAnExpr {
     
     SimpleModifierPragma nonNullPragma = GetSpec.NonNullPragma(fdecl);
     if (nonNullPragma != null) {
-      // (ALL s :: s != null ==> f[s] != null)
+      // (ALL s :: s != null ==> ...constraints on f[s]...)
       LocalVarDecl sDecl = UniqName.newBoundVariable('s');
       VariableAccess s = makeVarAccess(sDecl, Location.NULL);
-      Expr c0 = GC.nary(TagConstants.REFNE, s, GC.nulllit);
-      Expr c1 = GC.nary(TagConstants.REFNE, GC.select(f, s), GC.nulllit);
-      Expr quant = GC.forall(sDecl, GC.implies(c0, c1));
+      Expr antecedent = GC.nary(TagConstants.REFNE, s, GC.nulllit);
+      Expr consequent;
+    	if(Main.options().nne &&
+    			AnnotationHandler.numOfArrayDimOfReferenceType(fdecl.type) > 0) 
+    	{
+    		// FIXME: Chalin: handle arrays of arbitrary dimensions.
+    		// (ALL s :: s != null ==> nonnullelements(f[s],elems))
+    		consequent = GC.nary(TagConstants.ELEMSNONNULL, GC.select(f, s), GC.elemsvar);
+    	} else {
+    		// (ALL s :: s != null ==> f[s] != null)
+    		consequent = GC.nary(TagConstants.REFNE, GC.select(f, s), GC.nulllit);
+    	}
+      Expr quant = GC.forall(sDecl, GC.implies(antecedent, consequent));
       int locPragmaDecl = nonNullPragma.getStartLoc();
       LabelInfoToString.recordAnnotationAssumption(locPragmaDecl);
       if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
