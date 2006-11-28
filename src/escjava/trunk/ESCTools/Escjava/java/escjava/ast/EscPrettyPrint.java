@@ -189,7 +189,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     case TagConstants.IMMUTABLE:
     case TagConstants.IMPLIES_THAT:
     case TagConstants.INSTANCE:
-    case TagConstants.NULLABLE: // Chalin-Kiniry experiments
+    case TagConstants.NULLABLE:
     case TagConstants.MONITORED:
     case TagConstants.NON_NULL:
     case TagConstants.NON_NULL_BY_DEFAULT: // Chalin-Kiniry experiments
