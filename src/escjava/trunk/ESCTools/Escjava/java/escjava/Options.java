@@ -82,7 +82,8 @@ public class Options extends javafe.SrcToolOptions {
             { "-VCLimit <number>",
                     "Set the maximum size of the VC to <number> bytes;\n\tdefaults to 500,000." },
             { "-Warn <category>",
-                    "Turns on all warnings of category <category> if they are currently turned off." }
+                    "Turns on all warnings of category <category> if they are currently turned off." },
+            { "-nonNullByDefault", "Declarations of reference types are assumed to be non-null by default." }
     };
 
     final String[][] escPrivateOptionData = {
@@ -302,6 +303,9 @@ public class Options extends javafe.SrcToolOptions {
     // check "is-defined conditions" (IDCs) rather than normal specification correctness.
     public boolean idc = false;
     public boolean debug = false;
+
+    // Non-null by default and non-null types ...
+    public boolean nonNullByDefault = false;
 
     // print information about the vcg
     public boolean pErr = false;
@@ -929,6 +933,9 @@ public class Options extends javafe.SrcToolOptions {
             }
             namePCsize = new Integer(args[offset]).intValue();
             return offset + 1;
+        } else if (option.equals("-nonnullbydefault")) {
+        	nonNullByDefault = true;
+        	return offset;
         } else if (option.equals("-stats")) {
 
             /* no more parameter or last parameter 
