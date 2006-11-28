@@ -73,12 +73,9 @@ public class PvsProver extends ProverType {
             }
 
             TDisplay
-                    .warn(
-                            this,
-                            "getTypeInfo()",
-                            "Considering "
-                                    + caller.old
-                                    + " as a user defined type, or a not (yet) handled variable.");
+            .warn("Considering "
+            		+ caller.old
+            		+ " as a user defined type, or a not (yet) handled variable.");
 
             pvsRename(caller);
 
@@ -132,7 +129,7 @@ public class PvsProver extends ProverType {
          we use it to make the difference.
          */
         else if (caller.type == TNode._Type) {
-            TDisplay.warn(this, "pvsRename()", "Considering " + caller.old
+            TDisplay.warn("Considering " + caller.old
                     + " as a user defined type.");
 
             // renaming done here
@@ -145,13 +142,12 @@ public class PvsProver extends ProverType {
             //@ assert m1.groupCount() == 3;
 
             if (m1.groupCount() != 3)
-                TDisplay.err(this, "pvsRename()", "m.groupCount() != 3");
+                TDisplay.err("m.groupCount() != 3");
 
             for (i = 1; i <= m1.groupCount(); i++) {
 
                 if (m1.start(i) == -1 || m1.end(i) == -1)
-                    TDisplay.err(this, "pvsRename()",
-                            "Return value of regex matching is -1");
+                    TDisplay.err("Return value of regex matching is -1");
                 else {
 
                     String temp = caller.old.substring(m1.start(i), m1.end(i));
@@ -171,8 +167,7 @@ public class PvsProver extends ProverType {
                         //@ assert column != null;
                         break;
                     default:
-                        TDisplay.err(this, "pvsRename()",
-                                "Switch call incorrect, switch on value " + i);
+                        TDisplay.err("Switch call incorrect, switch on value " + i);
                         break;
                     }
                 } // no error in group
@@ -208,11 +203,10 @@ public class PvsProver extends ProverType {
             if (caller.old.startsWith("java.")) //check if in the form java.x.y 
                 caller.def = caller.old.replace('.', '_');
             else {
-                TDisplay.warn(this, "pvsRename()", "Type not handled  : "
+                TDisplay.warn("Type not handled  : "
                         + caller.old);
                 TDisplay
-                        .warn(this, "pvsRename()",
-                                "Considering it as a user defined type... ie ReferenceType");
+                        .warn("Considering it as a user defined type... ie ReferenceType");
                 caller.def = "ReferenceType";
             }
         }
@@ -312,13 +306,10 @@ public class PvsProver extends ProverType {
                 }
             } else
                 // FIXME test that it nevers happen
-                TDisplay
-                        .warn(
-                                this,
-                                "generateDeclarations",
-                                "Type of variable "
-                                        + keyTemp
-                                        + " is not set when declarating variables for the proof, skipping it...");
+            	TDisplay
+            	.warn("Type of variable "
+            			+ keyTemp
+            			+ " is not set when declarating variables for the proof, skipping it...");
         }
     }
 }

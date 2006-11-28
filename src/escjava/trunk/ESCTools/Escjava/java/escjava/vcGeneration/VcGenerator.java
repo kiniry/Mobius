@@ -628,8 +628,7 @@ public class VcGenerator {
                 break;
             }
             default:
-                TDisplay.err(this, "generateIfpTree",
-                        "translating old gc tree, methodName not recognized "
+                TDisplay.err("translating old gc tree, methodName not recognized "
                                 + methodName);
             }
 
@@ -666,8 +665,7 @@ public class VcGenerator {
                 currentParent.addSon(newNode);
                 currentParent = newNode;
             } else
-                TDisplay.err(this, "generateIfpTree",
-                        "QuantifiedExpr, unhandled tag : " + s);
+                TDisplay.err("QuantifiedExpr, unhandled tag : " + s);
 
             if (dot)
                 oldDot.append("\\n" + s + "\"");
@@ -684,8 +682,7 @@ public class VcGenerator {
         } else if (n instanceof SubstExpr) {
             SubstExpr m = (SubstExpr) n;
 
-            TDisplay.err(this, "generateIfpTree",
-                    "SubstExpr viewed and not handled");
+            TDisplay.err("SubstExpr viewed and not handled");
         } else if (n instanceof TypeDecl) {
 
             TypeDecl m = (TypeDecl) n;
@@ -741,8 +738,7 @@ public class VcGenerator {
 
             if (s == null)
                 TDisplay
-                        .err(this, "generateIfpTree",
-                                "case n instanceof TypeName, warning null reference not expected");
+                        .err("case n instanceof TypeName, warning null reference not expected");
 
             // we say that this name represents a type
             TName newNode = new TName(s);
@@ -858,11 +854,10 @@ public class VcGenerator {
             newRootNode = currentParent;
 
             if (newRootNode == null)
-                TDisplay.err(this, "generateIfpTree", "root node is null");
+                TDisplay.err("root node is null");
 
             if (!(newRootNode instanceof TRoot))
-                TDisplay.err(this, "generateIfpTree",
-                        "root node doesn't have type TRoot");
+                TDisplay.err("root node doesn't have type TRoot");
 
             //
             //firstNotSkipped = false;
@@ -870,7 +865,7 @@ public class VcGenerator {
             // we type the tree.
             newRootNode.typeTree();
             
-            TDisplay.info(this, "generateIfpTree", "tree has been typed");
+            TDisplay.info("tree has been typed");
 
         }
 

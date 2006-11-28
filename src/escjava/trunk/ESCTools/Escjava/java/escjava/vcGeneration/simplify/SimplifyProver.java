@@ -52,10 +52,9 @@ public class SimplifyProver extends ProverType {
                 if (caller.old.startsWith("java.")) //check if in the form java.x.y 
                     return "T_" + caller.old;
                 else {
-                    TDisplay.warn(this, "getVariableInfo()", "Type not handled : "
+                    TDisplay.warn("Type not handled : "
                             + caller.old);
-                    TDisplay.warn(this, "getVariableInfo()",
-                            "Considering it as a user defined type");
+                    TDisplay.warn("Considering it as a user defined type");
                     return "T_" + caller.old;
                 }
             }

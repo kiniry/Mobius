@@ -48,8 +48,7 @@ public class TPvsVisitor extends TVisitor {
     public void unaryGeneric(/*@ non_null @*/String s, TFunction n) throws IOException {
 
         if (n.sons.size() != 1)
-            TDisplay.err(this, "unaryGeneric(String s, TFunction n)",
-                    "An unary operator named " + s
+            TDisplay.err("An unary operator named " + s
                             + " has a number of sons equals to "
                             + n.sons.size() + " which is different from 1");
 
@@ -108,8 +107,7 @@ public class TPvsVisitor extends TVisitor {
     public void binOp(/*@ non_null @*/String s, TFunction n) throws IOException {
 
         if (n.sons.size() != 2)
-            TDisplay.err(this, "binOp(String s, TFunction n)",
-                    "Binary operator named " + s
+            TDisplay.err("Binary operator named " + s
                             + " has a number of sons equals to "
                             + n.sons.size() + " which is different from 2");
 
@@ -307,8 +305,7 @@ public class TPvsVisitor extends TVisitor {
         /*
          * As this node should be simplified in TProofSimplifier, we should not be here.
          */
-        TDisplay.err(this, "visitTIs",
-                "This node should have been simplified in TProofSimplifier");
+        TDisplay.err("This node should have been simplified in TProofSimplifier");
 
         /*
          * As the proof is typed, no need for this operator anymore.

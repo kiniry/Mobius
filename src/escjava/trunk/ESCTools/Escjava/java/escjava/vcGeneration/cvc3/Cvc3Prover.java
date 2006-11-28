@@ -84,7 +84,7 @@ public class Cvc3Prover extends ProverType {
               }
 
             }
-            TDisplay.warn(this,"getTypeInfo()","considering"+caller.old
+            TDisplay.warn("considering"+caller.old
               +"as a new user defined type or not yet handled variable.");
             cvc3Rename(caller);
             return caller.def;
@@ -328,9 +328,7 @@ public class Cvc3Prover extends ProverType {
 //           s.write(";\n");
            // dynamic type decl?
 
-           TDisplay.warn(this,
-                         "generateDeclarations",
-                         "Type of variable " + keytmp
+           TDisplay.warn("Type of variable " + keytmp
                           + " is not set when declarating variables for the proof, skipping it...");
          }
        }

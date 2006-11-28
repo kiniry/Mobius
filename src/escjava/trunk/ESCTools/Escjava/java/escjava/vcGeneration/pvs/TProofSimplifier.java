@@ -49,8 +49,7 @@ class TProofSimplifier extends TVisitor {
 
         //++
         if ((i = n.sons.indexOf(m)) == -1)
-            TDisplay.err(this, "simplify(TBoolAnd n, TNode m)",
-                    "!n.sons.contains(m)");
+            TDisplay.err("!n.sons.contains(m)");
         //++
         else
             n.sons.remove(i);
@@ -70,8 +69,7 @@ class TProofSimplifier extends TVisitor {
                 //++
                 if (!(n.getChildAt(0) instanceof TBoolRes))
                     TDisplay
-                            .err(this, "simplify(TBoolRes n, TNode m)",
-                                    "Remaining child does not return a boolean, continuing anyway...");
+                            .err("Remaining child does not return a boolean, continuing anyway...");
                 //++
 
                 /*
@@ -103,8 +101,7 @@ class TProofSimplifier extends TVisitor {
 
         //++
         if (i == -1)
-            TDisplay.err(this, "simplify(TFunction n, TNode m, TNode o)",
-                    "!n.contiains(m)");
+            TDisplay.err("!n.contiains(m)");
         //++
 
         n.sons.setElementAt(o, i);
@@ -282,8 +279,7 @@ class TProofSimplifier extends TVisitor {
             TBoolRes nTemp = (TBoolRes) n.parent;
             simplify(nTemp, n);
         } else
-            TDisplay.err(this, "visitTIs",
-                    "TIs node has a parent which type is != from TBoolRes");
+            TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
@@ -305,8 +301,7 @@ class TProofSimplifier extends TVisitor {
             TBoolRes nTemp = (TBoolRes) n.parent;
             simplify(nTemp, n);
         } else
-            TDisplay.err(this, "visitTForAll",
-                    "TIs node has a parent which type is != from TBoolRes");
+            TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
@@ -316,8 +311,7 @@ class TProofSimplifier extends TVisitor {
             TBoolRes nTemp = (TBoolRes) n.parent;
             simplify(nTemp, n);
         } else
-            TDisplay.err(this, "visitTExist",
-                    "TIs node has a parent which type is != from TBoolRes");
+            TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
@@ -374,8 +368,7 @@ class TProofSimplifier extends TVisitor {
             TBoolRes nTemp = (TBoolRes) n.parent;
             simplify(nTemp, n);
         } else
-            TDisplay.err(this, "visitTBoolean",
-                    "TIs node has a parent which type is != from TBoolRes");
+            TDisplay.err("TIs node has a parent which type is != from TBoolRes");
 
     }
 
