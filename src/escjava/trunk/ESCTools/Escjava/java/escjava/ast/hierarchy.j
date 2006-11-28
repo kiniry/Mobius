@@ -103,7 +103,7 @@ import escjava.ParsedRoutineSpecs;
  *         + SimpleModifierPragma () 
  *                   // Uninitialized, Monitored, NonNull, WritableDeferred,
  *                   // Helper, \Peer, \ReadOnly, \Rep,
- *                   // may_be_null, nullable_by_default, non_null_by_default, 
+ *                   // non_null, nullable, nullable_by_default, non_null_by_default, 
  *                   // obs_pure,
  *                   // code_java_math, code_safe_math, code_bigint_math,
  *                   // spec_java_math, spec_safe_math, spec_bigint_math
