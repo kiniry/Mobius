@@ -108,6 +108,7 @@ public abstract class InputStream {
     // FIXME - blocks until availableBytes > 0, if not at end of input
     // FIXME - not distinguishing that case from end of file
     //@ public normal_behavior
+    //@   requires b != null;
     //@   requires isOpen && availableBytes == 0;
     //@   modifies \nothing;
     //@   ensures \result == -1;
@@ -128,7 +129,7 @@ public abstract class InputStream {
     //@   ensures (\forall int i; \result <= i && i < b.length; b[i] == \old(b[i]));
     //@   signals_only IOException; // Something happened during the read
     //@ also public exceptional_behavior
-    //@   requires (b.length>0 && !isOpen) || b == null;
+    //@   requires b == null || (b.length>0 && !isOpen);
     //@   modifies \nothing;
     //@   signals_only IOException, NullPointerException;
     //@   signals (IOException) !isOpen;
