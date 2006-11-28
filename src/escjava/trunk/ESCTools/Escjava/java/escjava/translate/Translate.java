@@ -2843,9 +2843,13 @@ public final class Translate
             }
           }
 
-          rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(),
-                        op, oldLval, rval);
-          rval= addRelAsgCast(rval, lType, rType);
+	  if (op == TagConstants.STRINGCAT) {
+	    return addNewString(expr,oldLval,rval);
+	  } else {
+	    rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(),
+			  op, oldLval, rval);
+	    rval= addRelAsgCast(rval, lType, rType);
+	  }
     
           code.addElement(GC.subsubgets(GC.elemsvar, array, index, rval));
           code.addElement(modify(GC.statevar,locOp));
