@@ -41,12 +41,12 @@ public final class Utils
    * instead, for it properly handles inheritance of
    * <code>non_null</code> and <code>nullable</code> pragmas.
    **/
-  static public ModifierPragma findModifierPragma(/*@ non_null */ GenericVarDecl vdecl,
+  static public /*@nullable*/ ModifierPragma findModifierPragma(/*@ non_null */ GenericVarDecl vdecl,
                                                   int tag) {
     return findModifierPragma(vdecl.pmodifiers,tag);
   }
 
-  static public ModifierPragma findModifierPragma(ModifierPragmaVec mp,
+  static public /*@nullable*/ ModifierPragma findModifierPragma(ModifierPragmaVec mp,
                                                   int tag) {
     if (mp != null) {
       for (int j = 0; j < mp.size(); j++) {
