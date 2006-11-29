@@ -1,61 +1,96 @@
 
 In the end of this thesis, we would like to summerize 
-its contents and to focus on the future objectives. 
-
+its contents and discuss on the future objectives. We will start  
+\section{Achievements}
 % done. summary
 So far, we have  presented a bytecode logic which allows to reason about potentially
-complex  functional and security properties.
+sophisticated  functional and security properties.
  For this, we have 
 introduced a specification language BML tailored to Java bytecode, a compiler
 from the Java source specification language JML to BML and a verification 
 condition generator for Java bytecode programs. Moreover, we have
 shown that the verification procedure over Java like source program
 and Java like bytecode are syntactically equivalent (modulo names and types). 
-This scheme is actually part of the PCC architecture of 
+This scheme is actually part of the PCC architecture of the
 European project Mobius\footnote{the site name} which aims to resolve the problems
 of mobile and ubicuous computing via PCC. 
 We have implemented a prototype of the bytecode verification condition generator and a compiler 
 from source JML specification into bytecode BML specification. Those components are integrated in the JACK verification framework. 
 
-%presentation of the implementation
-JACK stands for Java Applet Correctness Kit. The tool is a plugin for the Java interface development
- environment eclipse and has a user friendly interface. It was originally tailored to the verification of Java source programs 
+JACK (short for Java Applet Correctness Kit) is designed as a plugin for the Java interface development
+ environment eclipse. 
+ It was originally tailored to the verification of Java source programs 
 w.r.t. their JML specifications. The tool has an intermediate proof obligation language which allows to extend it easily to interface more 
- theorem provers. Thus, the tool interfaces several theorem provers -
- Simplify,  an automatic decision procedure, the Atelier B and  Coq which are 
- interactive theorem prover assistants. 
-
-
-The extension of the tool to  the verification of bytecode programs also interfaces these theorem provers. The bytecode 
+ theorem provers. Thus, the tool interfaces several theorem provers - Simplify \cite{Simpl05DNS} which is an automatic decision procedure, 
+the Atelier B and the Coq interactive
+theorem prover assistant. The extension of the tool to bytecode programs which we added also interfaces these theorem provers. The bytecode 
 verification condition generator works as follows. For the verification of a class file it will generate verification conditions for every
  method of this class including the constructors. For generating the verification conditions over a method body, first the control flow
- graph corresponding to the bytecode instruction is built.
+ graph corresponding to the bytecode instruction is built. From this control flow graph an acyclic control flow graph where the backedges are 
+removed.
  Then the verification procedure proceeds by generating for every execution path in the control flow graph its corresponding verification conditions.
-The bytecode verification condition generator benefits from the original user
-friendly interface of the JACK tool and thus prints the verification conditions
-to the user in an understandable form. 
+For every program point which has an associated annotation (a loop entry instruction, a method invocation) the annotation is taken into account. 
+The bytecode verification condition generator benefits from the original user friendly interface of the JACK tool. 
+We have used the prototype of the bytecode verification condition generator for the case studies presented in Chapter \ref{applications:optimComp}.
 
-As we already mentioned, we have an implementation also of the compiler from
-JML to BML. The compiler takes as input an annotated with JML Java source file
-and its corresponding class file and returns a class file augmented with
-attributes containing the compilation of the JML annotation into BML.
 
-% extension to multithreading
- We have used the prototype of the bytecode verification condition generator
- for the case studies presented in Chapter \ref{applications:optimComp}. 
- We have thus shown that bytecode verification with logical methods is possible
- and moreover can benefit from the verification on source level. 
- However, the bytecode verification condition generator presented here works only for the
- sequential fragment of Java. This is a limitation  as realistic applications  
- rely often on multi-threading. Endeed, even the last Java Card, which is 
- particularly sensitive to the security problems as it normally deals with
- sensitive and confidential data,  provides support for
- multi-threading programs. Thus, an important and challenging direction for future work
- is the extension of the verification procedure to multi-threading. 
- Also, in our work we have ignored floating point arithmetic and thus an
- extension of our  verification calculus is also a candidate for future work.
+\section{Future work}
+In the following, we would like to identify the directions for extending the work presented in this thesis
 
-% establish a relation btw Java and optimised version
+\subsection{Language coverage of the verification condition generator}
+The bytecode verification condition generator works only for the sequential fragment of Java. But realistic applications 
+rely often on multi - threading which is difficult to verify against a functional specifications or security policies.
+One of the important aspects of the correctness of multi - threaded programs is the absence of deadlocks, 
+and race conditions. Such properties are ensured usually by static checking techniques \cite{}. 
+  However, checking multi - threaded
+ program applications against functional properties is also very useful. 
+ Thus, an important direction for future work is the extension of the verification procedure to multi - threaded programs. Such techniques for reasoning over
+the correctness of parallel programs  exist.
+ %The literature already proposes different techniques for checking parallel high-level programs against functional specifications.
+ For instance, the Owicki - Gries methodology \cite{nipkow99owickigries}  in which every point of interference is annotated and then the verification consists in establishing that
+ all the possible inter leavings of all the threads respect the annotation. This technique is on one hand not modular as the verification process 
+needs the implementation of every program component and on other hand the number of verification conditions may be very big.
+ Another approach is the rely guarantee technique which uses a Hoare style verification conditions \cite{nieto03relyguarantee}.
+There, the program points of interference are annotated not only with the predicate that must hold
+at the point but also with rely and guarantee  conditions which express what conditions the program guarantees to the other threads and what 
+the program requires from the other threads. This technique although tempting because of its modularity and the smaller number of verification conditions is difficult to apply
+as for guessing the rely and guarantee conditions requires an in - depth understanding of the program to be verified.  
+A more recent approach separates the verification in two parts - first checks of program atomicity  \cite{TES03CF} are done, i.e. that the program does not change its behavior however
+it is interleaved with other programs   and then verify functional properties using  methodologies for sequential programs as Hoare style reasoning for sequential Java. 
+In this last approach in the case of Java, the basic concern is to establish the atomicity of method bodies, i.e. method 
+execution does not depend on the possible interleaving with threads.
+
+
+
+
+\subsection{Property coverage for the specification language}
+The other axis which may be extended is the expressiveness of the specification language BML. 
+So far, BML supports method contracts - method pre and post  conditions, frame conditions, intermediate annotations as for instance
+loop invariants, class specifications as well as special specification operators.
+These are very useful aspects which allow for dealing with complex properties and 
+gives a semantics on bytecode level  to a relatively small subset of the 
+high specification language JML which corresponds to JML Level 0 \footnote{ http://www.cs.iastate.edu/~leavens/JML/jmlrefman/jmlrefman\_2.html\#SEC19}. 
+ But it is certainly of interest to support more features of JML in BML
+as this will turn the latter language richer. However, the meaning  of JML constructs 
+(at least from our experience up to  now) is the same as the meaning of their corresponding part in BML.  
+
+For example, such feature are  pure methods. These methods does not modify the program state and because in specifications only side effect free 
+expressions may occur, pure methods can be used in specifications.
+ This gives more expressive  specifications as the latter can talk about the result of method invocation. 
+Formalizing and establishing the meaning of pure methods is difficult and a literature exists for this problem.
+ As we said above, the treatment of pure methods is the same on source and bytecode.
+
+Another useful extension of BML might support keywords for expressing properties on multi threaded programs.
+Recently, E.Rodriguez and al. in \cite{RodriguezDFHLR05} proposed an extension for JML for multi threading programs.
+ Their proposal gives introduces  new specification keywords which allow to express that a variable is locked or
+ that a method is atomic or independent. Giving the semantics of these keywords is still an ongoing work but we consider that also in this
+case the meaning of these specification constructs does not differ on source and bytecode. 
+
+Also, support for specification constructions for alias control is certainly useful especially because it allows for a modular verification 
+of class invariants and frame conditions \cite{}.
+ 
+\subsection{Preservation of verification conditions}
+
 So far, we have shown that non-optimizing Java compilation
  preserves the  form of the verification conditions on source and
  bytecode. However, it is interesting to investigate if such a relation  holds also  for
@@ -73,38 +108,33 @@ Moreover, we have experimented with the verification conditions on source and
  program developer. On bytecode method local variables and parameters are encoded as elements of the
  method register table and field names are encoded as numbers of the constant
  pool table of the class. A  simple but useful extension to the prototype for
- bytecode verification
- is a compiler from source proof obligations to bytecode proof obligations
+ bytecode verification is a compiler from source proof obligations to bytecode proof obligations
  which overcomes those differences. This can be considered also as a step
  towards the  building a PCC architecture where the certificate generation benefits from
  the source level verification and thus allows for treating sophisticated
  security policies.
- 
+This result is important as it allows that bytecode programs  benefit from source verification. In particular, it makes
+feasable Proof Carrying Code paradigm for sophisticated client requirements. However, a step further in this direction is to investigate the 
+relation between source programs and their bytecode counterpart produced by an optimizing compiler. 
 
- % extension  to PCC
-Beside this, in order to get a complete PCC framework we still need to define the
-format of the certificate, i.e. 
-the guarantee sent along with the bytecode which certifies that the bytecode 
-respects the client requirements. The decision for an encoding of the
-certificate should take into account  the following conditions:
+
+\subsection{Towards a PCC architecture}
+
+The bytecode verification condition generator and the BML compiler is the first step towards a PCC framework. 
+The missing  part is  the certificate format which comes along with the bytecode and which  is the evidence for 
+that the bytecode respects the client requirements. Defining an encoding of the certificate should take into account several factors:
 \begin{itemize} 
-  \item certificate size must be reasonably small. This is important, for
-    instance,  if the certified program comes over a network 
-    with a limited bandwidth
+  \item certificate size must be reasonably small. This is important, for instance,  if the certified program comes over a network with a limitted bandwith
   \item certificates must be easily checked. This means that the certificate checker is  small and simple.
-               Of course, the code consumer might not want to spend all of its computation 
-              resources for checking that the certificate guarantees the
-               program conformance to its policies   
+	       Of course, the code consumer might not want to spend all of its computation 
+	      resources for checking that the certificate guarantees the program conformence to its policies.     
 \end{itemize}
 
-Certificate size and its checking complexity are dual: the
-bigger the certificate is, the more manageable is the checking 
-process and vice versa.  The problem becomes even more difficult if the
-certificate must be checked on the device because 
-of the computational and space constraints. In this case, a possible solution
-is that the certificate is not stored on the device. It is instead checked on
-the fly - every read piece is checked  and if the check is successful then 
-it is discarded and the checking continues with the still unread part of the certificate.
+Note that the certificate size and its checking complexity are dual: the bigger the certificate is more manageable is the checking process and viceversa. 
+The problem becomes even more difficult if the certificate must be checked on the device because of the computational and space constraints.
+ 
+
+
 % towards.PCC
 % For building a PCC framework from the components cited above 
 % % there is still missing the proof certificate, the decision procedure
@@ -113,10 +143,10 @@ it is discarded and the checking continues with the still unread part of the cer
 % \begin{itemize}
 %  \item light weight verification condition generators. In particular, we refer 
 %        to verification condition generation techniques which are simple and do not need
-%       much computational resources. Because a verification condition generator always
-%       form part of the trusted computing base on the client side, building such verification 
-%       condition generators is important for on - device checking which rely on limitted computational 
-%       resources  
+%	much computational resources. Because a verification condition generator always
+%	form part of the trusted computing base on the client side, building such verification 
+%	condition generators is important for on - device checking which rely on limitted computational 
+%	resources  
   
 %   \item generation of certificates. This is important for several reasons.
 %         The certificate may certainly  arrive via the network and should not corrupt the performance 
@@ -136,12 +166,8 @@ it is discarded and the checking continues with the still unread part of the cer
 %client for checking the certificate. 
 
 % to do. type systems
-Another perspective is the encoding of  type systems as suggested in \cite{BeringerH06},  into
-bytecode specification such that whenever the program is typeable then  the verification conditions generated over
-the bytecode and the specification are valid. This can be useful as type
-systems provide a high level of automation and thus certificate generation
-with type systems does not need user interaction.  The encoding of type
-systems in a general logical verification scheme is one of the techniques used
-in the Mobius project.
-
+Another perspective in this direction is how   to encode type systems into the bytecode logic. 
+Type systems provide a high level of automation. 
+Their encoding in the verification condition generator can be useful first because the certificate can be generated automatically and
+second because the type checking procedure is lighter than checking a logical proof.
 
