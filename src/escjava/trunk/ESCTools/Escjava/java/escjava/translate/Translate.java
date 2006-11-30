@@ -2844,7 +2844,7 @@ public final class Translate
           }
 
 	  if (op == TagConstants.STRINGCAT) {
-	    return addNewString(expr,oldLval,rval);
+	    rval = addNewString(expr,oldLval,rval);
 	  } else {
 	    rval= GC.nary(expr.getStartLoc(), expr.getEndLoc(),
 			  op, oldLval, rval);
