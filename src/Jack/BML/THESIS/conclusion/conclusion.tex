@@ -211,7 +211,12 @@ that they will reject a large amount of correct programs. A solution to this pro
 logic. In this approach, the unknown code comes supplied with a  derivation in the logic generated potentially with the help of user interaction 
 for the parts of the  code which can not be inferred by the type system.   The client side then applies a type inference procedure over  the
  unknown code and once it gets to the place in the parts of the code where the 
-type inference does not work but for which there is a derivation in the certificate, he will type check the proof.   
+type inference does not work but for which there is a derivation in the certificate, he will type check that derivation.   
 This is actually the approach which will be adopted in the Mobius project. 
 
-With this final remarks, we would like to conclude this thesis.
+
+The current thesis has been done as a preliminary work for the Mobius project and its objective was to 
+give the basis for the a bytecode verification framework and to show that it is feasible. The objectives of Mobius (short for Ubiquity, Mobility and Security) 
+is to build basis for guaranteeing security and trust in program application which are realistic in the presence of mobile and ubicuous computing. We hope that we have convinced
+the reader for the importance of such techniques and in particular the evolution from source verification to low level verification  and the necessity for
+human interaction in the verification process. We this would like to conclude the current thesis. 
