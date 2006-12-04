@@ -272,8 +272,7 @@ public class BytecodeEditor extends TextEditor {
 			}
 			System.out.println();
 			MethodSpecification msp = AttributeReader.readMethodSpecification(att.getBytes());
-			String str = msp.getPrecondition().toString();
-			return ("//" + str + "\n");
+			return (msp.printCode());
 		}
 		return "";
 	}
