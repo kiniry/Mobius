@@ -32,7 +32,9 @@ is the corresponding loop invariant. The bytecode verification in Jack uses the 
 the Atelier B and the Coq interactive theorem prover assistants. 
 
 The bytecode verification condition generator benefits also from the original user friendly interface of the JACK tool.  In particular, 
-the user can see the verification conditions in his prefer language - Java, Simplify, Coq or B.
+the user can see the verification conditions in his favorite language - Java, Simplify, Coq or B. The lemmas are classified 
+to what part of the annotation they refer to, as for instance, a lemma which refers to the establishment of the postcondition, or the preservation of the loop invariant.
+The hypothesis in the lemma also hold the index of the instruction from which they originate. 
 We have used the prototype of the bytecode verification condition generator for the case studies presented in Chapter \ref{applications:optimComp}.
 
 % JACK (short for Java Applet Correctness Kit) is designed as a plugin for the Java interface development
@@ -70,8 +72,9 @@ the first approach is not modular and requires a large amount of verification co
 %as for guessing the rely and guarantee conditions requires an in - depth understanding of the program to be verified.  
 Extending our verification scheme for bytecode will certainly be based on a more recent work  where one of the basic concerns is to establish method atomicity. 
 The notion of a statement atomicity states  that however a statement is interleaved with other parallel programs, the result of its execution will not change.
-The atomicity can be  detected via static checking \cite{TES03CF} using type systems. Thus, the program verification process is separated into parts -
-- first checks of program atomicity  \cite{TES03CF} are done  and then verify functional properties using  methodologies for sequential programs as Hoare style reasoning for sequential Java. 
+The atomicity can be  detected via static checking \cite{TES03CF} using type systems. Thus, the program verification process is separated in two parts
+- first checking for program atomicity  \cite{TES03CF} are done  
+and then verifying the functional correctness using  methodologies for sequential programs as Hoare style reasoning. 
 In this last approach in the case of Java, the basic concern is to establish the atomicity of method bodies, i.e. method 
 execution does not depend on the possible interleaving with threads.
 Recently, E.Rodriguez and al. in \cite{RodriguezDFHLR05} proposed an extension for JML for multi threaded
@@ -139,10 +142,18 @@ Moreover, we have experimented with the verification conditions on source and
 
 This result is important as it allows that bytecode programs  benefit from source verification. In particular, it makes
 feasable Proof Carrying Code paradigm for sophisticated client requirements. However, a step further in this direction is to investigate the 
-relation between source programs and their bytecode counterpart produced by an optimizing compiler. 
- This is especially  interesting for small devices with limited resources  where an optimized version of the rich Java code might be preferred. 
-A first step in this direction is the work of C. Kunz \cite{BGKRsas06} where he and his coautors show that an optimizing compiler for constant propagation, ... 
-preserves the proof .
+relation between source programs and their bytecode counterpart produced by an optimizing compiler.  This is interesting for several reasons.
+It is a fact that interpretation of bytecode on the JVM is slower than execution by its corresponding assembly code. 
+In order to speed up the execution time for a Java bytecode program, one might use 
+a just-in-time compilation which  translates on the fly the bytecode into the machine specific language. However, JIT compilation can potentially slow
+the execution exactly because it does the compilation on the fly.  Another possibility is to perform 
+optimizations on the bytecode. Currently, most of the  Java compilers do not support much optimizations.
+ However, there do already exist Java optimizing compilers, for instance the Soot optimization framework\footnote{http://www.sable.mcgill.ca/soot/} 
+and probably the number of the Java optimizing compilers will increase with the evolution of the language.
+A first step in the latter direction is the work of C. Kunz \cite{BGKRsas06} where he and his coautors show an algorithm for translating 
+certificates and annotations over a non optimized program into a certificate  and annotation for its optimized version.
+The algorithm that they show works for optimizations like constant propagation, loop induction,
+dead register elimination etc. 
 
 \subsection{Towards a PCC architecture}
 
@@ -194,6 +205,13 @@ The problem becomes even more difficult if the certificate must be checked on th
 % to do. type systems
 Another perspective in this direction is how   to encode type systems into the bytecode logic. 
 Type systems provide a high level of automation. 
-Their encoding in the verification condition generator can be useful first because the certificate can be generated automatically and
-second because the type checking procedure is lighter than checking a logical proof.
+Their encoding in the verification condition generator can be useful as the certificate can be generated
+ automatically and thus, leverages the user interaction. However, type systems are rather conservative in the sense 
+that they will reject a large amount of correct programs. A solution to this problem are hybrid certificates which combine both type systems and program 
+logic. In this approach, the unknown code comes supplied with a  derivation in the logic generated potentially with the help of user interaction 
+for the parts of the  code which can not be inferred by the type system.   The client side then applies a type inference procedure over  the
+ unknown code and once it gets to the place in the parts of the code where the 
+type inference does not work but for which there is a derivation in the certificate, he will type check the proof.   
+This is actually the approach which will be adopted in the Mobius project. 
 
+With this final remarks, we would like to conclude this thesis.
