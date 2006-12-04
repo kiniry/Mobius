@@ -1,38 +1,47 @@
 
-In the end of this thesis, we would like to summerize 
-its contents and discuss on the future objectives. We will start  
 \section{Achievements}
 % done. summary
-So far, we have  presented a bytecode logic which allows to reason about potentially
+So far, we have  presented an infrastructure for verification of Java bytecode programs 
+which benefits from verification over Java source programs and which allows to reason about potentially
 sophisticated  functional and security properties.
  For this, we have 
-introduced a specification language BML tailored to Java bytecode, a compiler
+introduced the bytecode specification language BML tailored to Java bytecode, a compiler
 from the Java source specification language JML to BML and a verification 
-condition generator for Java bytecode programs. Moreover, we have
-shown that the verification procedure over Java like source program
+condition generator for Java bytecode programs. 
+We have shown that the verification procedure is correct w.r.t. a big step  operational semantics of Java bytecode programs. 
+Moreover, we have
+proven that the verification procedure over Java like source program with object creation and manipulation,
+ methods, exceptions and subroutines
 and Java like bytecode are syntactically equivalent (modulo names and types). 
-This scheme is actually part of the PCC architecture of the
-European project Mobius\footnote{the site name} which aims to resolve the problems
-of mobile and ubicuous computing via PCC. 
-We have implemented a prototype of the bytecode verification condition generator and a compiler 
-from source JML specification into bytecode BML specification. Those components are integrated in the JACK verification framework. 
+%This scheme is actually part of the PCC architecture of the
+%European project Mobius\footnote{the site name} which aims to resolve the problems
+%of mobile and ubicuous computing via PCC. 
+ The weakest precondition calculus and the compiler from JML specification to BML specification has been 
+developed and integrated in the JACK verification framework.
 
-JACK (short for Java Applet Correctness Kit) is designed as a plugin for the Java interface development
- environment eclipse. 
- It was originally tailored to the verification of Java source programs 
-w.r.t. their JML specifications. The tool has an intermediate proof obligation language which allows to extend it easily to interface more 
- theorem provers. Thus, the tool interfaces several theorem provers - Simplify \cite{Simpl05DNS} which is an automatic decision procedure, 
-the Atelier B and the Coq interactive
-theorem prover assistant. The extension of the tool to bytecode programs which we added also interfaces these theorem provers. The bytecode 
-verification condition generator works as follows. For the verification of a class file it will generate verification conditions for every
- method of this class including the constructors. For generating the verification conditions over a method body, first the control flow
- graph corresponding to the bytecode instruction is built. From this control flow graph an acyclic control flow graph where the backedges are 
+ The extension of the tool to bytecode programs which we added also interfaces these theorem provers. The bytecode 
+verification condition generator works as follows. For the verification of a class file containing BML specification, it will generate verification conditions for every
+ method of this class including the constructors. For generating the verification conditions concerning a method implementation, first the control flow
+ graph corresponding to the bytecode instruction is built. The latter is transformed into an acyclic control flow graph where the backedges are 
 removed.
- Then the verification procedure proceeds by generating for every execution path in the control flow graph its corresponding verification conditions.
-For every program point which has an associated annotation (a loop entry instruction, a method invocation) the annotation is taken into account. 
-The bytecode verification condition generator benefits from the original user friendly interface of the JACK tool. 
+ Then the verification procedure proceeds by generating over every execution path in the control flow graph its corresponding verification conditions. 
+For every path which terminates by throwing an uncaught exception, the postcondition is the specified exceptional postcondition for this case. For the paths which terminate normally, 
+the normal postcondition is taken. For every path which terminates with an instruction which is dominated by a loop entry and whose direct successor is the same loop entry, the postcondition 
+is the corresponding loop invariant. The bytecode verification in Jack uses the intermediate language for the verification conditions and thus, bytecode verification conditions 
+ can be translated to several different theorem provers - Simplify \cite{Simpl05DNS} which is an automatic decision procedure, 
+the Atelier B and the Coq interactive theorem prover assistants. 
+
+The bytecode verification condition generator benefits also from the original user friendly interface of the JACK tool.  In particular, 
+the user can see the verification conditions in his prefer language - Java, Simplify, Coq or B.
 We have used the prototype of the bytecode verification condition generator for the case studies presented in Chapter \ref{applications:optimComp}.
 
+% JACK (short for Java Applet Correctness Kit) is designed as a plugin for the Java interface development
+% environment eclipse. 
+%% It was originally tailored to the verification of Java source programs 
+%w.r.t. their JML specifications. The tool has an intermediate proof obligation language which allows to extend it easily to interface more 
+% theorem provers. Thus, the tool interfaces several theorem provers - Simplify \cite{Simpl05DNS} which is an automatic decision procedure, 
+%%the Atelier B and the Coq interactive
+%theorem prover assistant. 
 
 \section{Future work}
 In the following, we would like to identify the directions for extending the work presented in this thesis
@@ -41,25 +50,36 @@ In the following, we would like to identify the directions for extending the wor
 The bytecode verification condition generator works only for the sequential fragment of Java. But realistic applications 
 rely often on multi - threading which is difficult to verify against a functional specifications or security policies.
 One of the important aspects of the correctness of multi - threaded programs is the absence of deadlocks, 
-and race conditions. Such properties are ensured usually by static checking techniques \cite{}. 
+and race conditions. Such properties can be ensured  by type systems \cite{FA99TSL,flanagan00typebased} or static verification based on program logic \cite{FLL02ESC}.  
   However, checking multi - threaded
- program applications against functional properties is also very useful. 
- Thus, an important direction for future work is the extension of the verification procedure to multi - threaded programs. Such techniques for reasoning over
-the correctness of parallel programs  exist.
- %The literature already proposes different techniques for checking parallel high-level programs against functional specifications.
- For instance, the Owicki - Gries methodology \cite{nipkow99owickigries}  in which every point of interference is annotated and then the verification consists in establishing that
- all the possible inter leavings of all the threads respect the annotation. This technique is on one hand not modular as the verification process 
-needs the implementation of every program component and on other hand the number of verification conditions may be very big.
- Another approach is the rely guarantee technique which uses a Hoare style verification conditions \cite{nieto03relyguarantee}.
-There, the program points of interference are annotated not only with the predicate that must hold
-at the point but also with rely and guarantee  conditions which express what conditions the program guarantees to the other threads and what 
-the program requires from the other threads. This technique although tempting because of its modularity and the smaller number of verification conditions is difficult to apply
-as for guessing the rely and guarantee conditions requires an in - depth understanding of the program to be verified.  
-A more recent approach separates the verification in two parts - first checks of program atomicity  \cite{TES03CF} are done, i.e. that the program does not change its behavior however
-it is interleaved with other programs   and then verify functional properties using  methodologies for sequential programs as Hoare style reasoning for sequential Java. 
+ program applications against functional properties is also  useful. 
+ Thus, an important direction for future work is the extension of the verification procedure to multi - threaded programs.
+The earliest work for  verification of  parallel programs is  the Owicki and Gries approach   
+\cite{nipkow99owickigries}  and the rely - guarantee approach. However, 
+the first approach is not modular and requires a large amount of verification conditions while for the second, the annotation procedure can not be automatised.
+
+% Such techniques for reasoning over the correctness of parallel programs  exist.
+% One of the first logic - based verification techniques for parallel programs is due to Owicki and Gries 
+%\cite{nipkow99owickigries}  in which every point of parallel interference is annotated and then the verification consists in establishing that
+% all the possible inter leavings of all the threads respect the annotation. This technique is on one hand not modular as the verification process 
+%needs the implementation of every program component and on other hand the number of verification conditions may be very big.
+% Another approach is the rely guarantee technique which uses a Hoare style verification conditions \cite{nieto03relyguarantee}.
+%There, the program points of interference are annotated not only with the predicate that must hold
+%at the point but also with rely and guarantee  conditions which express what conditions the program guarantees to the other threads and what 
+%the program requires from the other threads. This technique although tempting because of its modularity and the smaller number of verification conditions is difficult to apply
+%as for guessing the rely and guarantee conditions requires an in - depth understanding of the program to be verified.  
+Extending our verification scheme for bytecode will certainly be based on a more recent work  where one of the basic concerns is to establish method atomicity. 
+The notion of a statement atomicity states  that however a statement is interleaved with other parallel programs, the result of its execution will not change.
+The atomicity can be  detected via static checking \cite{TES03CF} using type systems. Thus, the program verification process is separated into parts -
+- first checks of program atomicity  \cite{TES03CF} are done  and then verify functional properties using  methodologies for sequential programs as Hoare style reasoning for sequential Java. 
 In this last approach in the case of Java, the basic concern is to establish the atomicity of method bodies, i.e. method 
 execution does not depend on the possible interleaving with threads.
-
+Recently, E.Rodriguez and al. in \cite{RodriguezDFHLR05} proposed an extension for JML for multi threaded
+ programs. Their proposal introduces  new specification keywords which allow to express that a variable is locked or
+ that a method is atomic. Giving the semantics of these keywords is still an ongoing work but we consider that
+ the meaning of these specification constructs does not differ on source and bytecode. 
+    
+ 
 
 
 
@@ -80,22 +100,25 @@ expressions may occur, pure methods can be used in specifications.
 Formalizing and establishing the meaning of pure methods is difficult and a literature exists for this problem.
  As we said above, the treatment of pure methods is the same on source and bytecode.
 
-Another useful extension of BML might support keywords for expressing properties on multi threaded programs.
-Recently, E.Rodriguez and al. in \cite{RodriguezDFHLR05} proposed an extension for JML for multi threading programs.
- Their proposal gives introduces  new specification keywords which allow to express that a variable is locked or
- that a method is atomic or independent. Giving the semantics of these keywords is still an ongoing work but we consider that also in this
-case the meaning of these specification constructs does not differ on source and bytecode. 
+
 
 Also, support for specification constructions for alias control is certainly useful especially because it allows for a modular verification 
-of class invariants and frame conditions \cite{}.
+of class invariants and frame conditions.
+The alias control is guaranteed through ownership type systems which check that only an owner of a reference can modify its contents.
+ This can considerably improve the current implementation for the verification of object invariants  \cite{DietlMueller05}.
+In particular, our way of proving object invariants is non modular - at every method call the invariants of all visible \todo{say what does it mean visibility}
+objects must be valid and they are assumed to hold when the call is terminated; similarly, when a method body is verified in its precondition the invariants of all visible
+objects are assumed to hold and at the end of the method body all these invariants must be established. 
+In practice, it is very difficult to verify that all the invariants for the all visible objects in a method  hold.
+In order to keep the number of the verification conditions reasonable, we check the invariants only for the current object this and the 
+objects received as parameters which is not sound.
+
  
 \subsection{Preservation of verification conditions}
 
 So far, we have shown that non-optimizing Java compilation
  preserves the  form of the verification conditions on source and
- bytecode. However, it is interesting to investigate if such a relation  holds also  for
- optimizing compilers. This is especially  interesting for small devices with limited resources
-  where an optimized version of the rich Java code might be preferred. 
+ bytecode. 
 % implement the compiler from Java source pogs to bytecode pogs
 Moreover, we have experimented with the verification conditions on source and
  bytecode in JACK and saw that in practice they are almost equivalent
@@ -113,10 +136,13 @@ Moreover, we have experimented with the verification conditions on source and
  towards the  building a PCC architecture where the certificate generation benefits from
  the source level verification and thus allows for treating sophisticated
  security policies.
+
 This result is important as it allows that bytecode programs  benefit from source verification. In particular, it makes
 feasable Proof Carrying Code paradigm for sophisticated client requirements. However, a step further in this direction is to investigate the 
 relation between source programs and their bytecode counterpart produced by an optimizing compiler. 
-
+ This is especially  interesting for small devices with limited resources  where an optimized version of the rich Java code might be preferred. 
+A first step in this direction is the work of C. Kunz \cite{BGKRsas06} where he and his coautors show that an optimizing compiler for constant propagation, ... 
+preserves the proof .
 
 \subsection{Towards a PCC architecture}
 
