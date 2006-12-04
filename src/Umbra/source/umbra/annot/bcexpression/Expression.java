@@ -112,7 +112,7 @@ public abstract class Expression {
 	 * @param _e2
 	 * @return - this object with the substitutions made
 	 */
-	public abstract Expression substitute(Expression _e1, Expression _e2);
+	//public abstract Expression substitute(Expression _e1, Expression _e2);
 	
 	public abstract String toString();
 

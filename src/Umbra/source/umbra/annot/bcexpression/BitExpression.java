@@ -64,16 +64,16 @@ public class BitExpression extends Expression {
 	 * @see bcexpression.Expression#substitute(bcexpression.Expression,
 	 *      bcexpression.Expression)
 	 */
-	public Expression substitute(Expression _e1, Expression _e2) {
-		if (equals(_e1)) {
-			return _e2;
-		}
-		Expression[] subExpr = getSubExpressions();
-		for (int i = 0; i < subExpr.length; i++) {
-			subExpr[i] = subExpr[i].substitute(_e1, _e2);
-		}
-		return this;
-	}
+//	public Expression substitute(Expression _e1, Expression _e2) {
+//		if (equals(_e1)) {
+//			return _e2;
+//		}
+//		Expression[] subExpr = getSubExpressions();
+//		for (int i = 0; i < subExpr.length; i++) {
+//			subExpr[i] = subExpr[i].substitute(_e1, _e2);
+//		}
+//		return this;
+//	}
 	/* (non-Javadoc)
 	 * @see bcexpression.Expression#toString()
 	 */

@@ -429,33 +429,33 @@ public class ArithmeticExpression extends Expression {
 	 * @param _e2
 	 * @return - this object with the substitutions made
 	 */
-	public Expression substitute(Expression _e1, Expression _e2) {
-		if (this.equals(_e1)) {
-			return _e2.copy();
-		}
-		Expression[] subExpr = getSubExpressions();
-		Expression[] subExpr1 = new Expression[subExpr.length];
-		for (int i = 0; i < subExpr.length; i++) {
-			// Util.dump(subExpr[i].toString());
-			subExpr1[i] = subExpr[i].substitute(_e1, _e2);
-		}
-
-		setSubExpressions(subExpr1);
-		// if this expression can be evaluated then evaluate it
-		Expression simplify = null;
-		if ((getSubExpressions() != null) && (getSubExpressions().length == 2)) {
-			simplify = getArithmeticExpression(getSubExpressions()[0],
-					getSubExpressions()[1], arithmetic_op);
-
-		} else {
-			simplify = getArithmeticExpression(getSubExpressions()[0],
-					arithmetic_op);
-		}
-		if (simplify != null) {
-			return simplify;
-		}
-		return this;
-	}
+//	public Expression substitute(Expression _e1, Expression _e2) {
+//		if (this.equals(_e1)) {
+//			return _e2.copy();
+//		}
+//		Expression[] subExpr = getSubExpressions();
+//		Expression[] subExpr1 = new Expression[subExpr.length];
+//		for (int i = 0; i < subExpr.length; i++) {
+//			// Util.dump(subExpr[i].toString());
+//			subExpr1[i] = subExpr[i].substitute(_e1, _e2);
+//		}
+//
+//		setSubExpressions(subExpr1);
+//		// if this expression can be evaluated then evaluate it
+//		Expression simplify = null;
+//		if ((getSubExpressions() != null) && (getSubExpressions().length == 2)) {
+//			simplify = getArithmeticExpression(getSubExpressions()[0],
+//					getSubExpressions()[1], arithmetic_op);
+//
+//		} else {
+//			simplify = getArithmeticExpression(getSubExpressions()[0],
+//					arithmetic_op);
+//		}
+//		if (simplify != null) {
+//			return simplify;
+//		}
+//		return this;
+//	}
 
 	/**
 	 * @param arithmetic_op

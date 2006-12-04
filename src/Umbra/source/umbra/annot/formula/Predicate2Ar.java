@@ -131,13 +131,13 @@ public class Predicate2Ar extends Predicate {
 		return p;
 	}
 
-	public Expression substitute(Expression _e, Expression _v) {
-		Expression term1 = getLeftExpr().substitute(_e, _v);
-		Expression term2 = getRightExpr().substitute(_e, _v);
-		setSubExpressions(new Expression[] { term1, term2 });
-		Expression simplify = simplify();
-		return simplify;
-	}
+//	public Expression substitute(Expression _e, Expression _v) {
+//		Expression term1 = getLeftExpr().substitute(_e, _v);
+//		Expression term2 = getRightExpr().substitute(_e, _v);
+//		setSubExpressions(new Expression[] { term1, term2 });
+//		Expression simplify = simplify();
+//		return simplify;
+//	}
 
 	/**
 	 * Returns either this object either an object which is a simplification of

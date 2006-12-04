@@ -6,6 +6,7 @@
  */
 package umbra.annot.attributes;
 
+import umbra.annot.formula.Predicate0Ar;
 import umbra.annot.formula.Formula;
 
 /*import bytecode_wp.formula.Connector;
@@ -34,8 +35,7 @@ public class MethodSpecification /*implements BCAttribute*/ {
 		
 	}
 	
-
-	/*private void init() {		
+	private void init() {		
 		if (specificationCases == null) {
 			return;
 		}
@@ -44,11 +44,9 @@ public class MethodSpecification /*implements BCAttribute*/ {
 		}
 	}
 
-
-
 	public SpecificationCase[] getSpecificationCases() {
 		return specificationCases;
-	}*/
+	}
 
 	
 	/**
@@ -112,4 +110,15 @@ public class MethodSpecification /*implements BCAttribute*/ {
 public Formula getReturnBoolConstraints() {
 	return returnBoolConstraints;
 }*/
+	
+	public String printCode() {
+		String code = "/*\n";
+		if (precondition != null)
+			if (precondition != Predicate0Ar.TRUE)
+				code += " *  requires " + precondition.toString() + "\n";
+		for (int i=0; i < specificationCases.length; i++)
+			code += specificationCases[i].printCode();
+		return code + " */\n";
+	}
+
 }

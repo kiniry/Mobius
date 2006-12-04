@@ -28,11 +28,11 @@ public class Predicate1Ar extends Predicate {
 		return getSubExpressions()[0];
 	}
 
-	public Expression substitute(Expression _e, Expression _v) {
-		Expression term = getTerm().substitute(_e, _v);
-		setSubExpressions(new Expression[]{term});
-		return this;
-	}
+//	public Expression substitute(Expression _e, Expression _v) {
+//		Expression term = getTerm().substitute(_e, _v);
+//		setSubExpressions(new Expression[]{term});
+//		return this;
+//	}
 	/**
 	 * renames the terms which this predicate is verified for
 	 */
