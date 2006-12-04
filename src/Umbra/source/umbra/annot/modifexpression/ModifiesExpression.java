@@ -14,10 +14,10 @@ import umbra.annot.bcexpression.Expression;
 //import bytecode_wp.bcexpression.javatype.JavaArrType;
 //import bytecode_wp.bcexpression.javatype.JavaReferenceType;
 //import bytecode_wp.bcexpression.javatype.JavaType;
-//import annot.constants.ArrayLengthConstant;
-//import annot.constants.BCConstantClass;
-//import annot.constants.BCConstantFieldRef;
-//import annot.constants.MemUsedConstant;
+//import umbra.annot.constants.ArrayLengthConstant;
+//import umbra.annot.constants.BCConstantClass;
+//import umbra.annot.constants.BCConstantFieldRef;
+//import umbra.annot.constants.MemUsedConstant;
 
 /**
  * 

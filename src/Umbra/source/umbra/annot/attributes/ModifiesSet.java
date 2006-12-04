@@ -9,7 +9,7 @@ import umbra.annot.modifexpression.ModifiesExpression;
 //import annot.bcclass.BCConstantPool;
 //import bytecode_wp.bcexpression.BCLocalVariable;
 //import bytecode_wp.bcexpression.Expression;
-//import annot.constants.BCConstantFieldRef;
+//import umbra.annot.constants.BCConstantFieldRef;
 //import annot.formula.Formula;
 //import annot.formula.Predicate0Ar;
 //import umbra.annot.modifexpression.Everything;
