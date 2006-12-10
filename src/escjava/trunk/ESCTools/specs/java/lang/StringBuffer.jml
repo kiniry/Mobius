@@ -295,7 +295,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized StringBuffer deleteCharAt(int index);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -307,7 +307,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized StringBuffer insert(int offset ,char[] ca, int offset2, int len);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -317,7 +317,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public StringBuffer insert(int offset, double d);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -327,7 +327,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized StringBuffer insert(int offset, char c);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -337,7 +337,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public StringBuffer insert(int offset, int i);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -348,7 +348,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized StringBuffer insert(int offset, char[] ca);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -358,7 +358,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public StringBuffer insert(int offset, boolean b);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -368,7 +368,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized StringBuffer insert(int offset, Object o);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
@@ -378,7 +378,7 @@ final public class StringBuffer implements java.io.Serializable, CharSequence {
     public synchronized StringBuffer insert(int offset, String s);
 
     /*@ public normal_behavior
-      @   requires 0 <= offset && offset < accumulatedString.length();
+      @   requires 0 <= offset && offset <= accumulatedString.length();
       @   assignable accumulatedString;
       @   ensures accumulatedString
       @           .equals(\old(accumulatedString.substring(0,offset)
