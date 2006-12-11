@@ -24,7 +24,7 @@ public abstract class TestCase extends junit.framework.Assert implements junit.f
 
     protected void tearDown() throws java.lang.Exception;
 
-    public java.lang.String toString();
+    public /*@non_null*/ java.lang.String toString();
 
     public java.lang.String getName();
 
