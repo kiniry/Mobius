@@ -3901,6 +3901,26 @@ public final class Translate
     }
     call.spec = spec;
 
+    // Remove all precondition generated conditions through IDC.
+    for (int i=spec.pre.size()-1;i>=0;i--) {
+      Condition cond = spec.pre.elementAt(i);
+      int label = cond.label;
+      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
+	spec.pre.removeElementAt(i);
+      }
+    }
+
+    // Remove all postcondition generated conditions through IDC.
+    for (int i=spec.post.size()-1;i>=0;i--) {
+      Condition cond = spec.post.elementAt(i);
+      int label = cond.label;
+      if (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+	  cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
+	spec.post.removeElementAt(i);
+      }
+    }
+
+
     Assert.notFalse( spec.dmd.args.size() == call.args.size(),
                      "formal args: " + spec.dmd.args.size()
                      + " actualargs: " + call.args.size() );
@@ -3961,14 +3981,12 @@ public final class Translate
     for(int i=0; i<spec.pre.size(); i++) {
       Condition cond = spec.pre.elementAt(i);
       int label = cond.label;
-      if (cond.label == TagConstants.CHKEXPRDEFINEDNESS ||
-	  cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
-	  cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
-	  // We do not need to check for definedness of the precondition of a called
-	  // method since such a definedness check will be done when the called
-	  // method spec is checked.
-	  continue;
-      }
+//       if (cond.label == TagConstants.CHKEXPRDEFINEDNESS) {
+// 	  // We do not need to check for definedness of the precondition of a called
+// 	  // method since such a definedness check will be done when the called
+// 	  // method spec is checked.
+// 	  continue;
+//       }
       Expr p = cond.pred;
       if (cond.label == TagConstants.CHKPRECONDITION) {
         p = mapLocation(p,locOpenParen);
@@ -4035,6 +4053,15 @@ public final class Translate
       for(int i=0; i<spec.post.size(); i++) {
         Condition cond = spec.post.elementAt(i);
         if (cond.label == TagConstants.CHKUNEXPECTEDEXCEPTION2) continue;
+
+// 	if (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+// 	    cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
+// 	  // We do not need to check for definedness of the postcondition of a called
+// 	  // method since such a definedness check will be done when the called
+// 	  // method spec is checked.
+// 	  continue;
+// 	}
+
         addCheck(rd.getEndLoc(),
                  cond.label,
                  GC.subst( call.scall, call.ecall, pt, cond.pred),
@@ -4289,6 +4316,13 @@ public final class Translate
           exceptionCondition = cond;
           continue;
         }
+// 	if (cond.label == TagConstants.CHKEXPRDEFNORMPOST ||
+// 	    cond.label == TagConstants.CHKEXPRDEFEXCEPOST) {
+// 	  // We do not need to check for definedness of the postcondition of a called
+// 	  // method since such a definedness check will be done when the called
+// 	  // method spec is checked.
+// 	  continue;
+// 	}
         code.addElement(GC.assumeAnnotation(cond.locPragmaDecl,
                                             GC.subst(call.scall, call.ecall,
                                                      pt, cond.pred)));
