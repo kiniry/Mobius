@@ -117,11 +117,11 @@ public class DefGCmd
 	case TagConstants.INTLIT:
 	case TagConstants.LONGLIT:
 	case TagConstants.NULLLIT: {
-	    break;
+		break;
 	}
 
 	case TagConstants.STRINGLIT: {
-	    break;
+		break;
 	}
 
 	case TagConstants.RESEXPR: {
@@ -150,7 +150,7 @@ public class DefGCmd
 				       Location.NULL);
 	      this.code.addElement(gc);
 	    }
-	    break;
+	    return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
 	}
       
 	case TagConstants.ARRAYREFEXPR: {
@@ -179,11 +179,12 @@ public class DefGCmd
 				  TagConstants.CHKINDEXTOOBIG,
 				  index2Big,Location.NULL);
 	  this.code.addElement(gc2);
+	  return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
 	}
       
 	case TagConstants.ARRAYRANGEREFEXPR:
 	case TagConstants.WILDREFEXPR: {
-	    break;
+		break;
 	}
       
 	case TagConstants.PARENEXPR: {
@@ -341,7 +342,7 @@ public class DefGCmd
 		trAndGen(me.args.elementAt(i));
 	    }
 	    // but then let TrAnExpr actually do the translation ...
-	    break;
+	    return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
 	}
       
 	case TagConstants.METHODINVOCATION: {
@@ -370,7 +371,7 @@ public class DefGCmd
 				       Location.NULL);
 	      this.code.addElement(gc);
 	    }
-	    break;
+	    return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
 	}
       
 	case TagConstants.NEWARRAYEXPR: {
@@ -516,7 +517,9 @@ public class DefGCmd
 			Location.toString(e.getStartLoc()));
 	    return null; // dummy return
 	}
-
+	// In all cases that fall through, add the ASSERT true; command.
+	GuardedCmd gc=ExprCmd.make(TagConstants.ASSERTCMD, GC.truelit, e.getStartLoc());
+	this.code.addElement(gc);
 	// In all cases that fall through, simply translate e into a GC expr.
 	return TrAnExpr.trSpecExpr(e, minHMap4Tr(), null);
     }
@@ -532,7 +535,11 @@ public class DefGCmd
 	// use the same map in all cases (constructor or not).
 	Hashtable map = new Hashtable();
 	map.put(GC.thisvar.decl, GC.resultvar);
-	return(map);
+	return(null); // Return null because its preferrable to see 
+	              // <code>this</code> in IDC GCs and not <code>RES</code>
+	              // which is used in constructors.  FIXME so that
+		          // the distinction between methods and constructors is
+		          // made.
     }
 
   
@@ -556,15 +563,28 @@ public class DefGCmd
 
     case TagConstants.ASSERTCMD: {
       ExprCmd ec=(ExprCmd)gc;
-// 	if (debug)
-// 	{
-// 	  System.out.println("GK-Trace: "+ec.pred);
-// 	  System.out.println("    i.e.: "+
-// 			     EscPrettyPrint.inst.toString(ec.pred));
-// 	}
-      Assert.notFalse(ec.pred.getTag() == TagConstants.LABELEXPR);
-      LabelExpr le=(LabelExpr)ec.pred;
-      le.expr=GC.implies(ante,le.expr);
+      Assert.notFalse(ec.pred.getTag() == TagConstants.LABELEXPR ||
+		      LiteralExpr.isValidTag(ec.pred.getTag()));
+      switch (ec.pred.getTag()) {
+      case TagConstants.LABELEXPR:
+	{
+	  LabelExpr le=(LabelExpr)ec.pred;
+	  le.expr=GC.implies(ante,le.expr);
+	  break;
+	}
+	
+      case TagConstants.BOOLEANLIT: 
+	{
+	  LiteralExpr le=(LiteralExpr)ec.pred;
+	  Expr newE = GC.implies(ante,le);
+	  ec.pred=newE;
+	  break;
+	}
+      default:
+	//@ unreachable;
+	Assert.notFalse(false);
+	break;
+      }
       return(ec);
     }
 
