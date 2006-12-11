@@ -19,7 +19,7 @@ public class TNotRemover  extends ATSimplifier{
 	 * is turned into implies false. 
 	 * i.e.: <code>(not e)</code> ===> <code>(e -> False)</code> 
 	 */
-	public void visitTBoolImplies(TBoolImplies n) throws IOException {
+	public void visitTBoolImplies(/*@non_null@*/ TBoolImplies n) throws IOException {
 		if(n.sons.size() != 2)
 			  TDisplay.warn(n.sons.size() +"sons, that's suspicious");
 

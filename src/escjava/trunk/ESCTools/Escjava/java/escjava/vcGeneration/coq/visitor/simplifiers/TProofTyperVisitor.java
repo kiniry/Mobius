@@ -531,7 +531,7 @@ public class TProofTyperVisitor extends TVisitor {
 		
 	}
 
-	public void visitTSum(TSum s) throws IOException {
+	public void visitTSum(/*@non_null@*/ TSum s) throws IOException {
 	
 	}
 

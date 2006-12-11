@@ -636,7 +636,7 @@ prefixOp("Unset",n);
 		
     }
 
-	public void visitTSum(TSum s) { 
+	public void visitTSum(/*@non_null@*/ TSum s) { 
 		// TODO Auto-generated method stub
 		
 	}

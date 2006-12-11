@@ -402,7 +402,7 @@ class TProofSimplifier extends TVisitor {
 		
 	}
 
-	public void visitTSum(TSum s) {
+	public void visitTSum(/*@non_null@*/ TSum s) {
 		// TODO Auto-generated method stub
 		
 	}
