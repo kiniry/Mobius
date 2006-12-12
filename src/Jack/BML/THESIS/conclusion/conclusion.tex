@@ -1,24 +1,26 @@
 
 \section{Achievements}
 % done. summary
-So far, we have  presented an infrastructure for verification of Java bytecode programs 
-which benefits from verification over Java source programs and which allows to reason about potentially
-sophisticated  functional and security properties.
- For this, we have 
+We have  presented an infrastructure for verification of Java bytecode programs   which allows to reason about potentially
+sophisticated  functional and security properties and
+which benefits from verification over Java source programs. We have also 
 introduced the bytecode specification language BML tailored to Java bytecode, a compiler
 from the Java source specification language JML to BML and a verification 
 condition generator for Java bytecode programs. 
 We have shown that the verification procedure is correct w.r.t. a big step  operational semantics of Java bytecode programs. 
 Moreover, we have
-proven that the verification procedure over Java like source program with object creation and manipulation,
- methods, exceptions and subroutines
+proven that the verification procedure for Java like programs
 and Java like bytecode are syntactically equivalent (modulo names and types). 
 %This scheme is actually part of the PCC architecture of the
 %European project Mobius\footnote{the site name} which aims to resolve the problems
 %of mobile and ubicuous computing via PCC. 
- The weakest precondition calculus and the compiler from JML specification to BML specification has been 
-developed and integrated in the JACK verification framework.
+We have developed a prototype of a verification condition generator based on the weakest precondition calculus presented in this thesis, as well 
+as a compiler from the corresponding subset of JML to BML.
+These two components have been integrated in the JACK \cite{BRL-JACK} verification framework 
+developed and supported by our research team Everest at INRIA Sophia Antipolis which has been initially designed for
+ the verification of Java source programs annotated with JML specification.
 
+We would like to give a brief description of the implementation of the verification condition generator.
  The extension of the tool to bytecode programs which we added also interfaces these theorem provers. The bytecode 
 verification condition generator works as follows. For the verification of a class file containing BML specification, it will generate verification conditions for every
  method of this class including the constructors. For generating the verification conditions concerning a method implementation, first the control flow
@@ -46,16 +48,15 @@ We have used the prototype of the bytecode verification condition generator for 
 %theorem prover assistant. 
 
 \section{Future work}
-In the following, we would like to identify the directions for extending the work presented in this thesis
+In the following, we identify the directions for extending the work presented in this thesis
 
 \subsection{Language coverage of the verification condition generator}
 The bytecode verification condition generator works only for the sequential fragment of Java. But realistic applications 
 rely often on multi - threading which is difficult to verify against a functional specifications or security policies.
 One of the important aspects of the correctness of multi - threaded programs is the absence of deadlocks, 
 and race conditions. Such properties can be ensured  by type systems \cite{FA99TSL,flanagan00typebased} or static verification based on program logic \cite{FLL02ESC}.  
-  However, checking multi - threaded
- program applications against functional properties is also  useful. 
- Thus, an important direction for future work is the extension of the verification procedure to multi - threaded programs.
+The absence of deadlock and race conditions is a first step in the verification of the functional correctness of multi threaded programs. In order to build a full 
+verification scheme for checking functional correctness more has to be done.
 The earliest work for  verification of  parallel programs is  the Owicki and Gries approach   
 \cite{nipkow99owickigries}  and the rely - guarantee approach. However, 
 the first approach is not modular and requires a large amount of verification conditions while for the second, the annotation procedure can not be automatised.
@@ -70,7 +71,7 @@ the first approach is not modular and requires a large amount of verification co
 %at the point but also with rely and guarantee  conditions which express what conditions the program guarantees to the other threads and what 
 %the program requires from the other threads. This technique although tempting because of its modularity and the smaller number of verification conditions is difficult to apply
 %as for guessing the rely and guarantee conditions requires an in - depth understanding of the program to be verified.  
-Extending our verification scheme for bytecode will certainly be based on a more recent work  where one of the basic concerns is to establish method atomicity. 
+Extending our verification scheme for bytecode will certainly be based on a more recent work  where one of the basic concerns is to establish method atomicity  \cite{TES03CF}. 
 The notion of a statement atomicity states  that however a statement is interleaved with other parallel programs, the result of its execution will not change.
 The atomicity can be  detected via static checking \cite{TES03CF} using type systems. Thus, the program verification process is separated in two parts
 - first checking for program atomicity  \cite{TES03CF} are done  
@@ -79,15 +80,14 @@ In this last approach in the case of Java, the basic concern is to establish the
 execution does not depend on the possible interleaving with threads.
 Recently, E.Rodriguez and al. in \cite{RodriguezDFHLR05} proposed an extension for JML for multi threaded
  programs. Their proposal introduces  new specification keywords which allow to express that a variable is locked or
- that a method is atomic. Giving the semantics of these keywords is still an ongoing work but we consider that
- the meaning of these specification constructs does not differ on source and bytecode. 
+ that a method is atomic.% Giving the semantics of these keywords is still an ongoing work but we consider that the meaning of these specification constructs does not differ on source and bytecode. 
     
  
 
 
 
 \subsection{Property coverage for the specification language}
-The other axis which may be extended is the expressiveness of the specification language BML. 
+Another direction which may be pursued as a future work of the thesis  is the extension of the expressiveness of the specification language BML. 
 So far, BML supports method contracts - method pre and post  conditions, frame conditions, intermediate annotations as for instance
 loop invariants, class specifications as well as special specification operators.
 These are very useful aspects which allow for dealing with complex properties and 
@@ -97,15 +97,15 @@ high specification language JML which corresponds to JML Level 0 \footnote{ http
 as this will turn the latter language richer. However, the meaning  of JML constructs 
 (at least from our experience up to  now) is the same as the meaning of their corresponding part in BML.  
 
-For example, such feature are  pure methods. These methods does not modify the program state and because in specifications only side effect free 
-expressions may occur, pure methods can be used in specifications.
- This gives more expressive  specifications as the latter can talk about the result of method invocation. 
-Formalizing and establishing the meaning of pure methods is difficult and a literature exists for this problem.
+ An important example is the  JML construct for pure methods which has been  identified as  a challenge in the position paper \cite{LeavensLeinoMueller06}. 
+ These methods does not modify the program state and thus, pure methods can be used in specifications 
+ (only side effect free  expressions may occur in expressions).
+ This gives more expressive  specifications as with them, for instance, specification can talk about the result of method invocation or use pure methods
+ as a predicate relating their  initial and final state. 
+ Formalizing and establishing the meaning of pure methods is difficult and a literature exists for this problem \cite{DarvasMueller06}.
  As we said above, the treatment of pure methods is the same on source and bytecode.
 
-
-
-Also, support for specification constructions for alias control is certainly useful especially because it allows for a modular verification 
+Also, support for specification constructions for alias control is certainly useful  especially because it allows for a modular verification 
 of class invariants and frame conditions.
 The alias control is guaranteed through ownership type systems which check that only an owner of a reference can modify its contents.
  This can considerably improve the current implementation for the verification of object invariants  \cite{DietlMueller05}.
@@ -121,9 +121,10 @@ objects received as parameters which is not sound.
 
 So far, we have shown that non-optimizing Java compilation
  preserves the  form of the verification conditions on source and
- bytecode. 
-% implement the compiler from Java source pogs to bytecode pogs
-Moreover, we have experimented with the verification conditions on source and
+ bytecode.  We identify two basic directions for future work:
+\begin{description}
+ \item[Source and non optimized bytecode verification conditions equivalent modulo] % implement the compiler from Java source pogs to bytecode pogs
+We have experimented with the verification conditions on source and
  bytecode in JACK and saw that in practice they are almost equivalent
  syntactically. From one part, there are the difference in the types 
  supported on bytecode and source level. For instance, the JVM does not
@@ -140,21 +141,24 @@ Moreover, we have experimented with the verification conditions on source and
  the source level verification and thus allows for treating sophisticated
  security policies.
 
-This result is important as it allows that bytecode programs  benefit from source verification. In particular, it makes
-feasable Proof Carrying Code paradigm for sophisticated client requirements. However, a step further in this direction is to investigate the 
-relation between source programs and their bytecode counterpart produced by an optimizing compiler.  This is interesting for several reasons.
-It is a fact that interpretation of bytecode on the JVM is slower than execution by its corresponding assembly code. 
-In order to speed up the execution time for a Java bytecode program, one might use 
-a just-in-time compilation which  translates on the fly the bytecode into the machine specific language. However, JIT compilation can potentially slow
-the execution exactly because it does the compilation on the fly.  Another possibility is to perform 
-optimizations on the bytecode. Currently, most of the  Java compilers do not support much optimizations.
+\item[Relation between verification conditions on Java source and optimized Java bytecode]
+ The equivalence  between verification conditions on source and the corresponding non optimized bytecode is important as it
+ allows that bytecode programs  benefit from source verification. In particular, it makes feasible Proof Carrying Code
+ for sophisticated client requirements.
+ However, a step further in this direction is to investigate the 
+ relation between source programs and their bytecode counterpart produced by an optimizing compiler.
+ This is interesting for the following reasons.
+ It is a fact that interpretation of bytecode on the JVM is slower than execution by its corresponding assembly code. 
+ In order to speed up the execution time for a Java bytecode program, one might use 
+ a just-in-time compilation which  translates on the fly the bytecode into the machine specific language. However, JIT compilation can potentially slow
+ the execution exactly because it does compilation on the fly.  Another possibility is to perform 
+ optimizations on the bytecode. Currently, most of the  Java compilers do not support much optimizations.
  However, there do already exist Java optimizing compilers, for instance the Soot optimization framework\footnote{http://www.sable.mcgill.ca/soot/} 
-and probably the number of the Java optimizing compilers will increase with the evolution of the language.
-A first step in the latter direction is the work of C. Kunz \cite{BGKRsas06} where he and his coautors show an algorithm for translating 
-certificates and annotations over a non optimized program into a certificate  and annotation for its optimized version.
-The algorithm that they show works for optimizations like constant propagation, loop induction,
-dead register elimination etc. 
-
+ and most probably the number of the Java optimizing compilers will increase with the evolution of the Java language.
+ A first step in the latter direction is the work of C. Kunz et al.\cite{BGKRsas06} who give an algorithm for translating 
+ certificates and annotations over a non optimized program into a certificate  and annotation for its optimized version.
+ Their work addresses  optimizations like constant propagation, loop induction, dead register elimination etc. 
+\end{description}
 \subsection{Towards a PCC architecture}
 
 The bytecode verification condition generator and the BML compiler is the first step towards a PCC framework. 
@@ -205,18 +209,19 @@ The problem becomes even more difficult if the certificate must be checked on th
 % to do. type systems
 Another perspective in this direction is how   to encode type systems into the bytecode logic. 
 Type systems provide a high level of automation. 
-Their encoding in the verification condition generator can be useful as the certificate can be generated
- automatically and thus, leverages the user interaction. However, type systems are rather conservative in the sense 
-that they will reject a large amount of correct programs. A solution to this problem are hybrid certificates which combine both type systems and program 
+Their encoding in the logic can be useful as the certificate can be generated
+ automatically and thus, avoids the user interaction. However, type systems are  conservative in the sense 
+that they tend to reject a large amount of correct programs. A possible solution to this problem are hybrid certificates which combine both type systems and program 
 logic. In this approach, the unknown code comes supplied with a  derivation in the logic generated potentially with the help of user interaction 
 for the parts of the  code which can not be inferred by the type system.   The client side then applies a type inference procedure over  the
  unknown code and once it gets to the place in the parts of the code where the 
 type inference does not work but for which there is a derivation in the certificate, he will type check that derivation.   
-This is actually the approach which will be adopted in the Mobius project. 
+This is actually an approach which will be adopted in the Mobius project. 
 
 
-The current thesis has been done as a preliminary work for the Mobius project and its objective was to 
-give the basis for the a bytecode verification framework and to show that it is feasible. The objectives of Mobius (short for Ubiquity, Mobility and Security) 
-is to build basis for guaranteeing security and trust in program application which are realistic in the presence of mobile and ubicuous computing. We hope that we have convinced
-the reader for the importance of such techniques and in particular the evolution from source verification to low level verification  and the necessity for
-human interaction in the verification process. We this would like to conclude the current thesis. 
+The objective of this thesis was to 
+give the basis for the a bytecode verification framework and to show that it is feasible. A further objective, pursued in the European project
+ Mobius (short for Ubiquity, Mobility and Security) 
+is to build basis for guaranteeing security and trust in program application in the presence of mobile and ubicuous computing. We hope that we have convinced
+the reader for the importance of such techniques and in particular of the evolution from source verification to
+ low level verification  and the necessity of an interactive verification process for building evidence for the security of unknown applications. 
