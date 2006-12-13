@@ -331,10 +331,10 @@ public class ErrorSet
 
   // Constants for use as the type field of report:
 
-  private static /*@ non_null */ final String CAUTION		= "Caution";
-  private static /*@ non_null */ final String WARNING		= "Warning";
-  private static /*@ non_null */ final String ERROR		= "Error";
-  private static /*@ non_null */ final String FATALERROR	= "Fatal error";
+  private static final /*@ non_null */ String CAUTION		= "Caution";
+  private static final /*@ non_null */ String WARNING		= "Warning";
+  private static final /*@ non_null */ String ERROR		= "Error";
+  private static final /*@ non_null */ String FATALERROR	= "Fatal error";
 
 
   /**

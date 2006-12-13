@@ -37,12 +37,12 @@ public class Utils {
   static public boolean disable = false;
   
   /** A cached value of the usual System out stream. */
-  //@ non_null spec_public
-  final private static PrintStream pso = System.out;
+  //@ spec_public
+  final private static /*@non_null*/ PrintStream pso = /* @ (non_null PrintStream) */ System.out;
 
   /** A cached value of the usual System err stream. */
-  //@ non_null spec_public
-  final private static PrintStream pse = System.err;
+  //@ spec_public
+  final private static /*@non_null*/ PrintStream pse = /* @ (non_null PrintStream) */ System.err;
   
   /** Redirects System.out and System.err to the given PrintStream. 
    Note that setStreams/restoreStreams operate on the global
@@ -187,10 +187,10 @@ public class Utils {
   // a b c+"asd"  should be three tokens, "a", "b", and  c+"asd" .
   static public class QuoteTokenizer {
     /** The String being tokenized */
-    /*@ non_null spec_public */ final private String ss;
+    /*@ spec_public */ final private /*@non_null*/ String ss;
     
     /** A char array representation of the String being tokenized */
-    /*@ non_null spec_public */ final private char[] cc;
+    /*@ spec_public */ final private /*@non_null*/ char[] cc;
     
     /** The position in the char array */
     /*@ spec_public */ private int pos = 0;

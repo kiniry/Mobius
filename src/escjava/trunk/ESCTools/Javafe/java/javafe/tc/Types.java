@@ -103,48 +103,48 @@ public class Types
      || tag == TagConstants.VOIDTYPE || tag == TagConstants.NULLTYPE
      || tag == TagConstants.BYTETYPE || tag == TagConstants.SHORTTYPE); */
     //@ ensures \result != null;
-    private static final PrimitiveType makePrimitiveType(int tag) {
+    private static final /*@ non_null */ PrimitiveType makePrimitiveType(int tag) {
         return JavafePrimitiveType.makeNonSyntax(tag);
     }
 
     //@ invariant voidType != null;
-    public static PrimitiveType 
+    public static /*@ non_null */ PrimitiveType 
             voidType = makePrimitiveType( TagConstants.VOIDTYPE );
 
     //@ invariant booleanType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             booleanType = makePrimitiveType( TagConstants.BOOLEANTYPE );
 
     //@ invariant intType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             intType = makePrimitiveType( TagConstants.INTTYPE );
 
     //@ invariant doubleType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             doubleType = makePrimitiveType( TagConstants.DOUBLETYPE );
 
     //@ invariant floatType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             floatType = makePrimitiveType( TagConstants.FLOATTYPE );
 
     //@ invariant longType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             longType = makePrimitiveType( TagConstants.LONGTYPE );
 
     //@ invariant charType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             charType = makePrimitiveType( TagConstants.CHARTYPE );
 
     //@ invariant nullType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             nullType = makePrimitiveType( TagConstants.NULLTYPE );
 
     //@ invariant byteType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             byteType = makePrimitiveType( TagConstants.BYTETYPE );
 
     //@ invariant shortType != null;
-    public static PrimitiveType
+    public static /*@ non_null */ PrimitiveType
             shortType = makePrimitiveType( TagConstants.SHORTTYPE );
 
     public static void remakeTypes() {
@@ -1005,7 +1005,7 @@ public class Types
   
     // ======================================================================
   
-    protected static Identifier lenId = Identifier.intern("length");
+    protected static /*@ non_null */ Identifier lenId = Identifier.intern("length");
   
     //@ invariant lengthFieldDecl.id == lenId;
     public static /*@ non_null */ FieldDecl lengthFieldDecl

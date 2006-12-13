@@ -623,7 +623,7 @@ public final class GC {
   //// Makers for variables
 
   //@ ensures \result != null;
-  public static VariableAccess makeVar(/*@ non_null @*/ Identifier name, int locId) {
+  public static /*@ non_null */ VariableAccess makeVar(/*@ non_null @*/ Identifier name, int locId) {
     LocalVarDecl v
       = LocalVarDecl.make(0, null, name, Types.anyType, locId,
 			  null, Location.NULL);
@@ -631,12 +631,12 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static VariableAccess makeVar(/*@ non_null @*/ String name, int locId) {
+  public static /*@ non_null */ VariableAccess makeVar(/*@ non_null @*/ String name, int locId) {
     return makeVar(Identifier.intern(name), locId);
   }
 
   //@ ensures \result != null;
-  public static VariableAccess makeFormalPara(/*@ non_null @*/ String name, 
+  public static /*@ non_null */ VariableAccess makeFormalPara(/*@ non_null @*/ String name, 
 					      /*@ non_null @*/ Type type,
 					      int locId) {
     Identifier nameId = Identifier.intern(name);
@@ -647,23 +647,23 @@ public final class GC {
 
 
   //@ ensures \result != null;
-  public static VariableAccess makeVar(/*@ non_null @*/ String name) {
+  public static /*@ non_null */ VariableAccess makeVar(/*@ non_null @*/ String name) {
     return makeVar(name, Location.NULL);
   }
 
   //@ ensures \result != null;
-  public static VariableAccess makeVar(/*@ non_null @*/ Identifier name) {
+  public static /*@ non_null */ VariableAccess makeVar(/*@ non_null @*/ Identifier name) {
     return makeVar(name, Location.NULL);
   }
 
   //@ ensures \result != null;
-  public static VariableAccess makeFormalPara(/*@ non_null @*/ String name, 
+  public static /*@ non_null */ VariableAccess makeFormalPara(/*@ non_null @*/ String name, 
 					      /*@ non_null @*/ Type type) {
     return makeFormalPara(name, type, Location.NULL);
   }
 
   //@ ensures \result != null;
-  public static VariableAccess makeFormalPara(/*@ non_null @*/ String name) {
+  public static /*@ non_null */ VariableAccess makeFormalPara(/*@ non_null @*/ String name) {
     return makeFormalPara(name, Types.anyType);
   }
 

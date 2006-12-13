@@ -7,7 +7,7 @@ public class ProverResponse
     /**
      * A singleton response code to indicate everything is fine.
      */
-    public /*@ non_null @*/ static ProverResponse OK =
+    public static /*@ non_null @*/ ProverResponse OK =
 	new ProverResponse();
 
     /**
@@ -18,21 +18,21 @@ public class ProverResponse
      * consulted for additional information, and no further calls, but
      * for {@link ProverInterface#stop_prover()} should be made.
      */
-    public /*@ non_null @*/ static ProverResponse FAIL =
+    public static /*@ non_null @*/ ProverResponse FAIL =
 	new ProverResponse();
 
     /**
      * A singleton response code to indicate a positive response to the
      * last command.
      */
-    public /*@ non_null @*/ static ProverResponse YES =
+    public static /*@ non_null @*/ ProverResponse YES =
 	new ProverResponse();
 
     /**
      * A singleton response code to indicate a negative response to the
      * last command.
      */
-    public /*@ non_null @*/ static ProverResponse NO =
+    public static /*@ non_null @*/ ProverResponse NO =
 	new ProverResponse();
 
     /**
@@ -40,7 +40,7 @@ public class ProverResponse
      * available.  The counter-example is contained in the {@link
      * #formula} field of this response object.
      */
-    public /*@ non_null @*/ static ProverResponse COUNTER_EXAMPLE =
+    public static /*@ non_null @*/ ProverResponse COUNTER_EXAMPLE =
 	new ProverResponse();
 
     /**
@@ -48,7 +48,7 @@ public class ProverResponse
      * corresponding prover call.  The {@link #info} field should be
      * consulted for additional information.
      */
-    public /*@ non_null @*/ static ProverResponse SYNTAX_ERROR =
+    public static /*@ non_null @*/ ProverResponse SYNTAX_ERROR =
 	new ProverResponse();
 
     /**
@@ -56,7 +56,7 @@ public class ProverResponse
      * information is available from the prover.  The {@link #info}
      * field should be consulted for additional information.
      */
-    public /*@ non_null @*/ static ProverResponse PROGRESS_INFORMATION =
+    public static /*@ non_null @*/ ProverResponse PROGRESS_INFORMATION =
 	new ProverResponse();
 
     /**
@@ -65,7 +65,7 @@ public class ProverResponse
      * {@link #formula} fields should be consulted for additional
      * information.
      */
-    public /*@ non_null @*/ static ProverResponse TIMEOUT =
+    public static /*@ non_null @*/ ProverResponse TIMEOUT =
 	new ProverResponse();
 
     /**
@@ -76,7 +76,7 @@ public class ProverResponse
      * #info} and/or {@link #formula} fields should be consulted for
      * additional information.
      */
-    public /*@ non_null @*/ static ProverResponse INCONSISTENCY_WARNING =
+    public static /*@ non_null @*/ ProverResponse INCONSISTENCY_WARNING =
 	new ProverResponse();
 
     /**

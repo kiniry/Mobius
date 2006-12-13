@@ -154,9 +154,9 @@ public final class Class implements java.io.Serializable {
     //@ ensures \result == _getName;
     public /*@ pure @*/ native /*@ non_null @*/ String getName();
 
-    public /*@ pure @*/ ClassLoader getClassLoader();
+    public /*@ pure nullable @*/ ClassLoader getClassLoader();
 
-    /*@ pure @*/ native ClassLoader getClassLoader0();
+    /*@ pure nullable @*/ native ClassLoader getClassLoader0();
 
     public /*@ pure @*/ native Class getSuperclass();
 

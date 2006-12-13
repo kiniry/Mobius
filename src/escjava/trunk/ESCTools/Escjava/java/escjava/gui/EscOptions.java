@@ -35,7 +35,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	GUI.  The array contains the text string, field name and the tooltip.
      */
     static /*@non_null*/ String[][] optionsShown = {
-	{"Control of Input:", null, null},
+	{"Control of Input:", "", ""},
 	{"source 1.4", "assertIsKeyword",	
 		"When enabled, Java 1.4 source (including assert statements)\n"+
 		"is parsed; when disabled 'assert' is treated as a nomal identifier" },
@@ -49,7 +49,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	{"parsePlus", "parsePlus",
 		"When enabled, JML annotations in '//@' and\n"+
 		"/*@' comments are parsed by the ESC/Java2 tool" },
-	{"Control of Output:",null,null},
+	{"Control of Output:","",""},
 	{"noCautions", 	"noCautions",
 		"When enabled, no Caution messages are output" },
 	{"noSemicolonWarnings", "noSemicolonWarnings",
@@ -59,7 +59,7 @@ public class EscOptions extends JPanel implements ActionListener {
 		"When enabled, no warnings about JML features that\n"+
 		"are not implemented in ESC/Java2 are issued" },
 
-	{"Debugging:", null, null},
+	{"Debugging:", "", ""},
 	{"verbose", "v",	"Shows lots of tracing output" },
 	{"showErrorLocation", "showErrorLocation",	"TBD description" },
 	{"showDesugaredSpecs", "desugaredSpecs",	"TBD description" },
@@ -165,7 +165,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	JCheckBox cb;
 	for (int i = 0; i<optionsShown.length; ++i) {
 	    String[] opttext = optionsShown[i];
-	    if (opttext[1] == null) {
+	    if (opttext[1].length() == 0) {
 		misc.add(new JLabel(opttext[0]));
 	    } else {
 		try {
@@ -260,7 +260,7 @@ public class EscOptions extends JPanel implements ActionListener {
     }
 
     static public class MListener implements ActionListener {
-	static private /*@non_null*/ String[] temp = new String[1];
+	static private final /*@non_null*/ String[] temp = new String[] {""};
 	//@ also
 	//@   requires e != null;
 	public void actionPerformed(/*@non_null*/ActionEvent e) {

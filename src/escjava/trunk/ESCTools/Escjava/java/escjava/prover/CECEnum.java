@@ -37,7 +37,7 @@ class CECEnum implements Enumeration {
     /**
      ** The Simplify subprocess. <p>
      **/
-    private /*@ non_null @*/ final SubProcess P;
+    private final /*@ non_null @*/ SubProcess P;
 
 
     /**

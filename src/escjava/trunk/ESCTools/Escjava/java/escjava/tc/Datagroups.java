@@ -26,12 +26,10 @@ public class Datagroups {
        the inheritance tree.
      */
 
-    //@ non_null
-    static private final ASTDecoration datagroups = 
+    static private final /*@ non_null */ ASTDecoration datagroups = 
                                           new ASTDecoration("datagroups");
     
-    //@ non_null
-    static final private List empty = new LinkedList();
+    static final private /*@ non_null */ List empty = new LinkedList();
     
     /** Get the items that are in the datagroup for fd */
     //@ requires fd != null;

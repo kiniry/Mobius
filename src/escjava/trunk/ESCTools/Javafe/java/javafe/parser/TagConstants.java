@@ -197,7 +197,7 @@ public class TagConstants extends javafe.ast.TagConstants
     //@ invariant keywordStrings.length == 1 + LAST_KEYWORD - FIRST_KEYWORD;
     //@ invariant \nonnullelements(keywordStrings);
     //@ spec_public
-    private static final String keywordStrings[] = {
+    private static final /*@ non_null */ String keywordStrings[] = {
         "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char",
         "class", "const", "continue", "default", "do", "double", "else",
         "extends", "false", "final", "finally", "float", "for", "goto", "if",
@@ -214,7 +214,7 @@ public class TagConstants extends javafe.ast.TagConstants
 
     //@ invariant \nonnullelements(otherStrings);
     //@ spec_public
-    private static final String otherStrings[] = {
+    private static final /*@ non_null */ String otherStrings[] = {
         "IDENT",
         "CHARLIT", "INTLIT", "2147483648",
         "LONGLIT", "9223372036854775808L", "FLOATLIT", "DOUBLELIT", "STRINGLIT",

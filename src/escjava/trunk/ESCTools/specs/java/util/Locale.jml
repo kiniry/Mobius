@@ -51,7 +51,7 @@ public final class Locale implements Cloneable, Serializable {
 
     public Locale(String language);
 
-    public static /*@ pure @*/ Locale getDefault();
+    public static /*@ non_null pure @*/ Locale getDefault();
 
     //@ public normal_behavior
     //@ requires newLocale != null;

@@ -47,7 +47,7 @@ abstract public class TNode {
      * It handles multiple renaming because each {@link VariableInfo} object contains 
      * multiples fields for renaming (take a look at it).
      */
-    static/*@ spec_public non_null @*/protected HashMap variablesName = null;
+    static /*@ spec_public non_null @*/ protected HashMap variablesName = new HashMap();
 
     /**
      * map containing all the types used in the proof.
@@ -64,7 +64,7 @@ abstract public class TNode {
      * If you make another call to setOutputType, it will add type the tree
      * for the new tree etc...
      */
-    static public/* spec_public */ /*@ non_null @*//* protected */HashMap typesName = null;
+    static public/* spec_public non_null protected */HashMap typesName = new HashMap();
 
     /**
      * We add some types that we know will be used to avoid looking

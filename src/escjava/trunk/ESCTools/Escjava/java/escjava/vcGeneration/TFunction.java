@@ -10,7 +10,7 @@ abstract public class TFunction extends TNode {
      * This field is not protected because we can remove childs
      * in TProofSimplifier.java
      */
-    /*@ non_null @*/public Vector sons = new Vector();
+    public /*@ non_null @*/ Vector sons = new Vector();
 
     /*@
      @ ensures \old(sons.size()) == sons.size()-1;

@@ -16,6 +16,7 @@ import javafe.util.Assert;
 import javafe.util.ErrorSet;
 
 import escjava.Main;
+import escjava.Options;
 import escjava.ast.ExprCmd;
 import escjava.ast.GCExpr;
 import escjava.ast.GuardedCmd;
@@ -65,7 +66,8 @@ public class DefGCmd
    * debug messages.
    *
    */
-  public static boolean debug = Main.options().debug;
+  private static final Options options = Main.options();
+  public static boolean debug = options!=null && options.debug;
 
   /**
    * Creates a new <code>DefGCmd</code> instance.

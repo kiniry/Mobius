@@ -57,9 +57,12 @@ public class Main extends javafe.SrcTool
     static public final String jarlocation; // can be null
     
     static {
-	java.net.URL urlJar = GUI.class.getClassLoader().getResource(
-								     "escjava/Main.class");
+	ClassLoader loader = GUI.class.getClassLoader();
+	//@ assert loader != null;
+	java.net.URL urlJar = loader.getResource("escjava/Main.class");
+	//@ assert urlJar != null;
         String urlStr = urlJar.toString();
+	//@ assert urlStr != null;
         int from = "jar:file:".length();
         int to = urlStr.indexOf("!/");
         if (to != -1) {

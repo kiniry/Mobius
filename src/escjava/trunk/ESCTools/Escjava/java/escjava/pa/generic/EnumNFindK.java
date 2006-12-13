@@ -12,6 +12,8 @@ import javafe.util.Location;
 import javafe.util.Assert;
 import javafe.util.StackVector;
 
+import java.io.PrintStream;
+
 import mocha.wrappers.jbdd.*;
 
 /* Abstractor that is like EnumMaxClausesFindMinAbstractor,
@@ -41,7 +43,7 @@ public class EnumNFindK implements Abstractor {
   private /*@ non_null @*/ Random random = new Random(seed);
   
   static {
-    System.out.println("invLeqK="+invLeqK);
+    (/* @ (non_null PrintStream) */ System.out).println("invLeqK="+invLeqK);
   }
   
   public EnumNFindK(/*@ non_null @*/ jbddManager bddManager, int k) {

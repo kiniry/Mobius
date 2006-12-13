@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class TName extends TVariable {
 
-    /*@ non_null @*/public String name;
+    public /*@ non_null @*/ String name;
 
     /**
      * type is supposed to be one of the object that is statically

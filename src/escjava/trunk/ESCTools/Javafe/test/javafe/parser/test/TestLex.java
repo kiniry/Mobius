@@ -105,7 +105,7 @@ public class TestLex implements PragmaParser
   // Below this point are instance variables and methods that
   // implement the javafe.parser.PragmaParser interface.
   
-  /*@ non_null spec_public @*/ private Lex l;
+  /*@ spec_public @*/ private /*@ non_null */ Lex l;
   
   private static final int IMPLIES = 48*1024;
   private static final int SUBTYPE = IMPLIES + 1;

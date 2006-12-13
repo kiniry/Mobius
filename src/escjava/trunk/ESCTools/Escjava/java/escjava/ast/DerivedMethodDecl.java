@@ -18,7 +18,7 @@ import escjava.translate.Substitute;
  **/
 
 public class DerivedMethodDecl {
-  /*@ non_null */ public RoutineDecl original;
+  public /*@ non_null */ RoutineDecl original;
 
   public FormalParaDeclVec args;
   public Type returnType;

@@ -106,7 +106,7 @@ public final class Identifier
     <TT>s</TT>. */
   //@ requires s != null;
   //@ ensures \result != null;
-  public static Identifier intern(String s) {
+  public static /*@ non_null */ Identifier intern(/*@ non_null */ String s) {
     // Expensive way of doing things, but at least we don't have
     // to rewrite the above code...
 

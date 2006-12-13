@@ -59,7 +59,7 @@ public class JWhich {
      **/
     //@ invariant extraExtensions.elementType == \type(String);
     //@ invariant !extraExtensions.containsNull;
-    public /*@ non_null @*/ static Vector extraExtensions = new Vector();
+    public static /*@ non_null @*/ Vector extraExtensions = new Vector();
 
 
     /**

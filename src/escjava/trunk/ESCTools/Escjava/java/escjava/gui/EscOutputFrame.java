@@ -60,8 +60,7 @@ public class EscOutputFrame extends JFrame {
 	FrameShower.show(this);
     }
 
-    //@ non_null
-    private JTextArea textArea;
+    private /*@ non_null */ JTextArea textArea;
 
     /** Appends text to that already contained in the frame. */
     //@ requires s != null;

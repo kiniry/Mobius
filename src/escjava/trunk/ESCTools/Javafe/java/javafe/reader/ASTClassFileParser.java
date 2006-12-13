@@ -57,7 +57,7 @@ class ASTClassFileParser extends ClassFileParser
      * Vector of methods and fields with Synthetic attributes.
      * Use this to weed out synthetic while constructing TypeDecl.
      */
-    /*@ non_null */ private Vector synthetics = new Vector();
+    private /*@ non_null */ Vector synthetics = new Vector();
     
     /**
      * Flag indicating whether the class being parsed has the synthetic
@@ -129,7 +129,7 @@ class ASTClassFileParser extends ClassFileParser
      * interface.
      */
     protected void addNonSyntheticDecls(/*@ non_null */ TypeDeclElemVec v, 
-	                                /*@ non_null */ TypeDeclElem elems[]) { 
+	                                /*@ non_null */ TypeDeclElem[] elems) { 
 	for (int i = 0; i < elems.length; i++) {
 	    if (synthetics.contains(elems[i])) { //@ nowarn;
 		continue;

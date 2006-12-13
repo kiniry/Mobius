@@ -16,8 +16,7 @@ import javafe.util.Location;
  */
 public class IdentifierNode extends ASTNode {
 
-    //@ non_null
-    final static private Map map = new HashMap();
+    final static private /*@ non_null*/ Map map = new HashMap();
     
     /** The wrapped Identifier */
     public Identifier id;

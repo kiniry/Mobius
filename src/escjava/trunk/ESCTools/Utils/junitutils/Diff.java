@@ -189,12 +189,10 @@ public class Diff {
   //---------------------------------------------------------------------
 
   /** This is the supplied old text, to be compared against the new text */
-  //@ non_null
-  private String oldText;
+  private /*@ non_null */ String oldText;
 
   /** This is the supplied new text, to be compared against the old text */
-  //@ non_null
-  private String newText;
+  private /*@ non_null */ String newText;
 
   /** This is set to true if the oldText and newText are not the same */
   private boolean _areDifferent;
@@ -211,18 +209,14 @@ public class Diff {
   //@ private invariant _areDifferent == areDifferent;
 
   /** This string holds line delimiters */
-  //@ non_null
-  private static final String DELIM = "\n\r\f";
+  private static final /*@ non_null */ String DELIM = "\n\r\f";
 
   /** This is the system new line character */
-  //@ non_null
-  private static final String NEWLINE = System.getProperty("line.separator");
+  private static final /*@ non_null */ String NEWLINE = /* @ (non_null String) */ System.getProperty("line.separator");
 
   /** This string is used to mark lines of old text */
-  //@ non_null
-  private static final String OLD_CH = "< ";
+  private static final /*@ non_null */ String OLD_CH = "< ";
 
   /** This string is used to mark lines of new text */
-  //@ non_null
-  private static final String NEW_CH = "> ";
+  private static final /*@ non_null */ String NEW_CH = "> ";
 }

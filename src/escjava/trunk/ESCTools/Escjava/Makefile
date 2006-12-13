@@ -180,7 +180,7 @@ version:
 	@touch ${VERSION_TEMP}
 	@echo "package escjava;" >> ${VERSION_TEMP}
 	@echo "public class Version {" >> ${VERSION_TEMP}
-	@echo "    public static final String VERSION = " \"${ESC_PROJECT}-${ESC_VERSION}\" ";" >> ${VERSION_TEMP}
+	@echo "    public static final /*@ non_null */ String VERSION = " \"${ESC_PROJECT}-${ESC_VERSION}\" ";" >> ${VERSION_TEMP}
 	@echo "}" >> ${VERSION_TEMP}
 	@if [ ! -e ${VERSION_FILE} ]; then \
 		cp ${VERSION_TEMP} ${VERSION_FILE} ; fi

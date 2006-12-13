@@ -40,7 +40,7 @@ import java.util.*;
 public class Java2Html 
 {
     static public String destination;
-    /*@ non_null */ static Vector packages = new Vector();
+    static /*@ non_null */Vector packages = new Vector();
     //@ invariant packages.elementType == \type(Package);
     //@ invariant !packages.containsNull;
     static long lines = 0;
@@ -116,7 +116,7 @@ public class Java2Html
     }
 
     // Maps filename to hashtable mapping offsets (Long) to String "<A HREF=...">
-    /*@ non_null */ static Hashtable declLinks = new Hashtable();
+    static /*@ non_null */ Hashtable declLinks = new Hashtable();
     //@ invariant declLinks.elementType == \type(Hashtable);
     //@ invariant declLinks.keyType == \type(String);
 
@@ -326,7 +326,7 @@ class JFile {
         return pack.FullClassName(this);
     }
     
-    /*@ non_null */ final StringBuffer buf = new StringBuffer();
+    final /*@ non_null */ StringBuffer buf = new StringBuffer();
     
     final void Flush(/*@ non_null */ LineNumberPrintWriter W) {
         if (buf.length() > 0) {
@@ -553,7 +553,7 @@ class JFile {
 	return Character.isJavaIdentifierPart((char)ch);
     }
     
-    /*@ non_null */ static Hashtable keywords = new Hashtable();
+    static /*@ non_null */ Hashtable keywords = new Hashtable();
     //@ invariant keywords.keyType == \type(String);
     
     static {
@@ -578,7 +578,7 @@ class JFile {
 }
 
 class VectorSorter {
-    /*@ non_null */ static private Vector dat;
+    static private /*@ non_null */ Vector dat;
 
     /*@ requires data.elementType == \type(Package) ||
                  data.elementType == \type(JFile); */
@@ -638,7 +638,7 @@ class VectorSorter {
 
 class LineNumberPrintWriter {
     /*@ spec_public */ private boolean inCodeSegment = false;
-    /*@ non_null */ private PrintWriter pw;
+    private /*@ non_null */ PrintWriter pw;
     private long lineNumber = 1;
     private boolean atBeginningOfLine = true;
 

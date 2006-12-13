@@ -17,8 +17,8 @@ import java.awt.EventQueue;
  */
 public class FrameShower implements Runnable {
 
-    //@ non_null spec_public
-    final private Frame frame;
+    //@ spec_public
+    final private /*@ non_null */ Frame frame;
 
     /** Creates a FrameShower object holding the given Frame.
      */
