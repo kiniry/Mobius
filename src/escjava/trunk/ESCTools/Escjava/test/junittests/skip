@@ -1,3 +1,4 @@
+## $Id$
 TestSuite.java
 ## Platform dependent
 PureCheck.java
@@ -11,6 +12,9 @@ StringFresh.java
 NonNullBad.java
 ## Varying output
 FormalNonnullInheritance.java
+## Bug 1 now contains a path ... until we fix this so that absolute paths are fixed to
+## have a common prefix (e.g. ESCTOOLSROOT) like in jdktests, I need to exclude this test
+Bug1
 #############################################
 ## Not fully implemented
 ##
