@@ -175,15 +175,14 @@ public class TestList extends LocalTestCase {
         assertTrue (b);       
 
         try {
-	    b = c.retainAll(null); // Throws exception
+	    b = c.retainAll(null); // illegal argument - Throws exception
             assertTrue( false);
         } catch (Exception e) {
             assertTrue( e instanceof NullPointerException);
 	    b = c.contains(i);
 	    assertTrue (b);
         }
-
-//@ assert false; // TEST FOR CONSISTENCY
+//@ assert false; // TEST FOR CONSISTENCY - no longer relevant due to use of illegal argument in call to retainAll()
     }
 
     //@ requires c != null;
@@ -195,7 +194,7 @@ public class TestList extends LocalTestCase {
         c.add(i);
 
         try {
-	    b = c.removeAll(null); // Throws exception
+	    b = c.removeAll(null); // illegal argument - Throws exception
             assertTrue( false);
         } catch (Exception e) {
             assertTrue( e instanceof NullPointerException);
@@ -212,7 +211,7 @@ public class TestList extends LocalTestCase {
         } catch (Exception e) {
         }
 
-//@ assert false; // TEST FOR CONSISTENCY
+//@ assert false; // TEST FOR CONSISTENCY - no longer relevant due to use of illegal argument in call to removeAll()
     }
 
     //@ requires c != null;

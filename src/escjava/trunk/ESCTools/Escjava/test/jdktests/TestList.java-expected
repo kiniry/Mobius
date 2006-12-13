@@ -7,18 +7,18 @@ TestList.java:143: Warning: Possible assertion failure (Assert)
 TestList.java:164: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
-TestList.java:186: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-Execution trace information:
-    Routine call returned exceptionally in "TestList.java", line 178, col 11.
-
-TestList.java:215: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
-Execution trace information:
-    Routine call returned exceptionally in "TestList.java", line 198, col 11.
-
+TestList.java:178: Warning: Possible assignment of null to variable declared non_null (NonNull)
+            b = c.retainAll(null); // illegal argument - Throws exception
+                           ^
+Associated declaration is "ESCTOOLSROOT/specs/java/util/Collection.spec", line 300, col 25:
+    boolean retainAll(/*@non_null*/ Collection c) throws NullPointerEx ...
+                         ^
+TestList.java:198: Warning: Possible assignment of null to variable declared non_null (NonNull)
+            b = c.removeAll(null); // illegal argument - Throws exception
+                           ^
+Associated declaration is "ESCTOOLSROOT/specs/java/util/Collection.spec", line 278, col 25:
+    boolean removeAll(/*@non_null*/ Collection c) throws NullPointerEx ...
+                         ^
 TestList.java:259: Warning: Possible assertion failure (Assert)
 //@ assert false; // TEST FOR CONSISTENCY
     ^
