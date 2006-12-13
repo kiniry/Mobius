@@ -1,24 +1,28 @@
 package java.util;
 
-// No specification given, because this class is obsolete.
 public abstract class Dictionary {
-    //@ ghost public \TYPE elementType;
-    //@ ghost public \TYPE keyType;
+    //@ public ghost \TYPE keyType = \type(Object);
+    //@ public ghost \TYPE elementType = \type(Object);
 
     //@ pure
     public Dictionary();
 
+    //@ modifies \nothing;
     public abstract int size();
 
+    //@ modifies \nothing;
     public abstract boolean isEmpty();
 
-    public abstract Enumeration keys();
+    //@ modifies \nothing;
+    public abstract /*@non_null*/ Enumeration keys();
 
-    public abstract Enumeration elements();
+    //@ modifies \nothing;
+    public abstract /*@non_null*/ Enumeration elements();
 
-    public abstract Object get(Object key);
+    //@ modifies \nothing;
+    public abstract /*@nullable*/ Object get(/*@non_null*/ Object key);
 
-    public abstract Object put(Object key, Object value);
+    public abstract /*@nullable*/ Object put(/*@non_null*/ Object key, /*@non_null*/ Object value);
 
-    public abstract Object remove(Object key);
+    public abstract /*@nullable*/ Object remove(/*@non_null*/ Object key);
 }

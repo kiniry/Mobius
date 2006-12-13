@@ -24,117 +24,81 @@ import java.io.*;
 
 public final class Locale implements Cloneable, Serializable {
 
-    static public final Locale ENGLISH;
-    static public final Locale FRENCH;
-    static public final Locale GERMAN;
-    static public final Locale ITALIAN;
-    static public final Locale JAPANESE;
-    static public final Locale KOREAN;
-    static public final Locale CHINESE;
-    static public final Locale SIMPLIFIED_CHINESE;
-    static public final Locale TRADITIONAL_CHINESE;
-    static public final Locale FRANCE;
-    static public final Locale GERMANY;
-    static public final Locale ITALY;
-    static public final Locale JAPAN;
-    static public final Locale KOREA;
-    static public final Locale CHINA;
-    static public final Locale PRC;
-    static public final Locale TAIWAN;
-    static public final Locale UK;
-    static public final Locale US;
-    static public final Locale CANADA;
-    static public final Locale CANADA_FRENCH;
+    static public final /*@non_null*/ Locale ENGLISH;
+    static public final /*@non_null*/ Locale FRENCH;
+    static public final /*@non_null*/ Locale GERMAN;
+    static public final /*@non_null*/ Locale ITALIAN;
+    static public final /*@non_null*/ Locale JAPANESE;
+    static public final /*@non_null*/ Locale KOREAN;
+    static public final /*@non_null*/ Locale CHINESE;
+    static public final /*@non_null*/ Locale SIMPLIFIED_CHINESE;
+    static public final /*@non_null*/ Locale TRADITIONAL_CHINESE;
+    static public final /*@non_null*/ Locale FRANCE;
+    static public final /*@non_null*/ Locale GERMANY;
+    static public final /*@non_null*/ Locale ITALY;
+    static public final /*@non_null*/ Locale JAPAN;
+    static public final /*@non_null*/ Locale KOREA;
+    static public final /*@non_null*/ Locale CHINA;
+    static public final /*@non_null*/ Locale PRC;
+    static public final /*@non_null*/ Locale TAIWAN;
+    static public final /*@non_null*/ Locale UK;
+    static public final /*@non_null*/ Locale US;
+    static public final /*@non_null*/ Locale CANADA;
+    static public final /*@non_null*/ Locale CANADA_FRENCH;
     static final long serialVersionUID;
-    public Locale(String language, String country, String variant);
-    public Locale(String language, String country);
+    public Locale(/*@non_null*/ String language,
+		  /*@non_null*/ String country,
+		  /*@non_null*/ String variant);
+    public Locale(/*@non_null*/ String language, 
+		  /*@non_null*/ String country);
 
-    public Locale(String language);
+    public Locale(/*@non_null*/ String language);
 
-    public static /*@ non_null pure @*/ Locale getDefault();
+    public static /*@pure*/ /*@non_null*/ Locale getDefault();
 
     //@ public normal_behavior
-    //@ requires newLocale != null;
     //@ modifies \everything;
     //@ ensures getDefault() == newLocale;
-    public static synchronized void setDefault(Locale newLocale);
+    public static synchronized void setDefault(/*@non_null*/ Locale newLocale);
 
-	//@ ensures \result != null;
-    public static /*@ pure @*/ Locale[] getAvailableLocales();
+    public static /*@pure*/ /*@non_null*/ Locale[] getAvailableLocales();
 
-	//@ ensures \result != null;
-    public static /*@ pure @*/ String[] getISOCountries();
+    public static /*@pure*/ /*@non_null*/ String[] getISOCountries();
 
-	//@ ensures \result != null;
-    public static /*@ pure @*/ String[] getISOLanguages();
+    public static /*@pure*/ /*@non_null*/ String[] getISOLanguages();
 
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getLanguage();
+    public /*@pure*/ /*@non_null*/ String getLanguage();
 
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getCountry();
+    public /*@pure*/ /*@non_null*/ String getCountry();
 
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getVariant();
+    public /*@pure*/ /*@non_null*/ String getVariant();
 
-	//@ also
-	//@ ensures \result != null;
-    public /*@ pure @*/ final String toString();
+    public /*@pure*/ /*@non_null*/ final String toString();
 
-
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getISO3Language()
+    public /*@pure*/ /*@non_null*/ String getISO3Language()
         throws MissingResourceException;
 
-
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getISO3Country()
+    public /*@pure*/ /*@non_null*/ String getISO3Country()
         throws MissingResourceException;
 
+    public final /*@pure*/ /*@non_null*/ String getDisplayLanguage();
 
-	//@ ensures \result != null;
-    public final /*@ pure @*/ String getDisplayLanguage();
+    public /*@pure*/ /*@non_null*/ String getDisplayLanguage(/*@non_null*/ Locale inLocale);
 
+    public final /*@pure*/ /*@non_null*/ String getDisplayCountry();
 
-	//@ public normal_behavior
-	//@ requires inLocale != null;
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getDisplayLanguage(Locale inLocale);
+    public /*@pure*/ /*@non_null*/ String getDisplayCountry(/*@non_null*/ Locale inLocale);
 
+    public final /*@pure*/ /*@non_null*/ String getDisplayVariant();
 
-	//@ ensures \result != null;
-    public final /*@ pure @*/ String getDisplayCountry();
+    public /*@pure*/ /*@non_null*/ String getDisplayVariant(/*@non_null*/ Locale inLocale);
 
+    public final /*@pure*/ /*@non_null*/ String getDisplayName();
 
-	//@ public normal_behavior
-	//@ requires inLocale != null;
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getDisplayCountry(Locale inLocale);
-
-
-	//@ ensures \result != null;
-    public final /*@ pure @*/ String getDisplayVariant();
-
-
-	//@ public normal_behavior
-	//@ requires inLocale != null;
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getDisplayVariant(Locale inLocale);
-
-
-	//@ ensures \result != null;
-    public final /*@ pure @*/ String getDisplayName();
-
-	//@ public normal_behavior
-	//@ requires inLocale != null;
-	//@ ensures \result != null;
-    public /*@ pure @*/ String getDisplayName(Locale inLocale);
-
-	//@ also
-	//@ ensures \result != null;
-    public Object clone();
+    public /*@pure*/ /*@non_null*/ String getDisplayName(/*@non_null*/ Locale inLocale);
+    public /*@non_null*/ Object clone();
 
     public synchronized int hashCode();
 
-    public /*@ pure @*/ boolean equals(Object obj);
+    public /*@ pure @*/ boolean equals(/*@nullable*/Object obj);
 }

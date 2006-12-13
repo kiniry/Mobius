@@ -105,7 +105,7 @@ public interface Collection {
           // so they are specified in the implementing classes
           signals_only RuntimeException;
       @*/
-    /*@ pure @*/ boolean contains(Object o);
+    /*@ pure @*/ boolean contains(/*@nullable*/ Object o);
 
     /*@ public normal_behavior
       @   ensures !containsNull && o == null ==> !\result;
@@ -147,7 +147,7 @@ public interface Collection {
       // @   ensures (\forall int i; 0<=i && i<\result.length; containsObject(\result[i]));
       @   ensures (\forall Object o; containsObject(o) <==> Arrays.contains(\result,o));
       @*/
-    /*@ pure @*/ Object[] toArray();
+    /*@ pure @*//*@non_null*/ Object[] toArray();
        
     /*@ public normal_behavior
       @   requires a!= null;
@@ -183,7 +183,7 @@ public interface Collection {
       @   assignable a[*];
       @   signals_only ArrayStoreException ;
       @*/
-    /*@ non_null @*/ Object[] toArray(Object[] a) throws NullPointerException, ArrayStoreException;
+    /*@ non_null @*/ Object[] toArray(/*@non_null*/ Object[] a) throws NullPointerException, ArrayStoreException;
 
     /*@ public behavior
       @   requires !containsNull ==> o != null;
@@ -203,7 +203,7 @@ public interface Collection {
           // operation is not supported.
           
       @*/
-    boolean add(Object o);
+    boolean add(/*@nullable*/ Object o);
 
     /*@ public behavior
       @   requires !containsNull ==> o != null;
@@ -221,7 +221,7 @@ public interface Collection {
           // is not allowed to be removed from the Collection, or the remove
           // operation is not supported.
       @*/
-    boolean remove(Object o) throws RuntimeException;
+    boolean remove(/*@nullable*/ Object o) throws RuntimeException;
 
     /*@ public behavior
       @   requires c != null && c != this;
@@ -235,7 +235,7 @@ public interface Collection {
       @  signals_only NullPointerException;
       @*/
               // FIXME - also the optional exceptions
-    /*@ pure @*/ boolean containsAll(Collection c) throws NullPointerException;
+    /*@ pure @*/ boolean containsAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     // FIXME - what if c == this in the following calls?
 
@@ -256,7 +256,7 @@ public interface Collection {
       @  signals_only NullPointerException;
       @*/
               // FIXME - also the optional exceptions
-    boolean addAll(Collection c) throws NullPointerException;
+    boolean addAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     /*@ public behavior
       @   requires c != null;
@@ -275,7 +275,7 @@ public interface Collection {
       @  signals_only NullPointerException;
       @*/
               // FIXME - also the optional exceptions
-    boolean removeAll(Collection c) throws NullPointerException;
+    boolean removeAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     /*@ public behavior
       @   requires c != null;
@@ -297,7 +297,7 @@ public interface Collection {
       @  signals_only NullPointerException;
       @*/
               // FIXME - also the optional exceptions
-    boolean retainAll(Collection c) throws NullPointerException;
+    boolean retainAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     /*@ public behavior
       @   assignable objectState; 
@@ -319,7 +319,7 @@ public interface Collection {
       @   ensures \result ==> (content.theSize == ((Collection)c).content.theSize);
       // Other behavior is inherited
       @*/
-    boolean equals(Object c);
+    boolean equals(/*@nullable*/ Object c);
 
     // Specification is inherited
     int hashCode();

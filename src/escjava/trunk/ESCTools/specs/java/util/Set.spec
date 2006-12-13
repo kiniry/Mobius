@@ -41,16 +41,16 @@ public interface Set extends Collection {
     boolean isEmpty();
 
     // specification inherited
-    boolean contains(Object o);
+    boolean contains(/*@nullable*/ Object o);
 
     // specification inherited
     Iterator iterator();
 
     // specification inherited
-    Object[] toArray();
+    /*@non_null*/ Object[] toArray();
 
     // specification inherited
-    Object[] toArray(Object[] a) throws NullPointerException;
+    /*@non_null*/ Object[] toArray(/*@non_null*/ Object[] a) throws NullPointerException;
 
     /*@ also
       @  public normal_behavior
@@ -60,7 +60,7 @@ public interface Set extends Collection {
       @    assignable \nothing;
       @    ensures !\result;
       @*/
-    boolean add(Object o);
+    boolean add(/*@nullable*/ Object o);
 
     /*@ also
        @ public normal_behavior
@@ -69,19 +69,19 @@ public interface Set extends Collection {
        @   ensures \result;
        @   ensures !contains(o);
        @*/
-    boolean remove(Object o);
+    boolean remove(/*@nullable*/ Object o);
 
     // Bulk Operations
 
     // specs are inherited
     //@ pure
-    boolean containsAll(Collection c) throws NullPointerException;
+    boolean containsAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     // specs are inherited
-    boolean addAll(Collection c) throws NullPointerException;
+    boolean addAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     // specs are inherited
-    boolean retainAll(Collection c) throws NullPointerException;
+    boolean retainAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     /*@ also public normal_behavior
        @   requires c != null;
@@ -92,7 +92,7 @@ public interface Set extends Collection {
        @   ensures size() <= \old(size());
        @   ensures \result <==> size() != \old(size());
        @*/
-    boolean removeAll(Collection c) throws NullPointerException;
+    boolean removeAll(/*@non_null*/ Collection c) throws NullPointerException;
 
     // specification inherited
     void clear();
@@ -107,7 +107,7 @@ public interface Set extends Collection {
              && contains(null) <==> ((Set)o).contains(null));
        @   ensures \result ==> (content.theSize == ((Set)o).content.theSize);
        @*/
-    /*@ pure @*/ boolean equals(Object o);
+    /*@ pure @*/ boolean equals(/*@nullable*/ Object o);
 
     // specification inherited
     int hashCode();
