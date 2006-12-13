@@ -45,13 +45,11 @@ abstract class Bill {
         //@                sum <= \old(sum)+(i-1)*i/2;
         for (int i=1;i<=n;i++) { this.sum = this.sum + round_cost(i); }
         return true;
-    } catch (Exception e){ return false; }
-  }
-}
+    } catch (Exception e){ return false; } } }
 \end{verbatim}
 }
 %\end{lstlisting}
-\caption{Class \texttt{Bill} with JML annotations} 
+\vspace*{-1em}\caption{Class \texttt{Bill} with JML annotations} 
 \label{FigJMLSpec}
 \end{figure}
 
