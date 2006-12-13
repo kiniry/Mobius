@@ -84,7 +84,7 @@ a keyword to refer to the return value of a method). Other important
 factors for the success of JML are its expressiveness and
 flexibility. JML is in particular suited to express many of the
 different security requirements that have been identified to be of
-interest for mobile device applications~\cite{Deliverable1.2}.
+interest for mobile device applications.%~\cite{Deliverable1.2}.
 
 
 Therefore, we define a variation of JML especially tailored to
@@ -100,16 +100,17 @@ into bytecode predicates.  This allows to do development and
 verification at source code level, while still being able to ship
 bytecode level proofs.  To the best of our knowledge, no other
 specification language with similar design goals exists for Java
-bytecode.
+bytecode. Notice that, even though the design of BML was motivated by
+the need to specify security requirements for mobile device
+applications, just as JML, BML is a general specification language
+that can be used for different kinds of applications.
 
-Section~\ref{SecJMLOverview} gives a quick summary of the relevant
-features of JML. Section~\ref{SecBML} then gives a detailed account of
-BML, describing its syntax and semantics, while
-Section~\ref{SecClassfile} proposes a format in which BML
-specifications can be stored in the class file (just as JML
-specifications can be written as special comments in the Java source
-code). Section~\ref{SecJMLtoBML} then discusses the compilation
-process from JML to BML, while Section~\ref{SecConcl} wraps up and
-discusses tool support and related and future work.
+Section~\ref{SecJMLOverview} quickly summarises the relevant features
+of JML. Section~\ref{SecBML} gives a detailed account of BML,
+describing its syntax and semantics, while Section~\ref{SecClassfile}
+proposes a format to store BML specifications in a class
+file. Section~\ref{SecJMLtoBML} discusses the compilation from JML to
+BML, while Section~\ref{SecConcl} wraps up and discusses tool support
+and related and future work.
 
 

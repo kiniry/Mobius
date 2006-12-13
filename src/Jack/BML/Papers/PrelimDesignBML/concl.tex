@@ -18,23 +18,24 @@ of abstraction. It is designed for program verification, and its
 semantics supports the development of a verification condition
 generator for unstructured code. Moreover, because of its close
 connection with JML, it is not too complicated to compile source code
-level specification into bytecode level specifications.
-
-The BML language as we have defined it now, corresponds roughly to JML
-level 0, \emph{i.e.}\ that part of JML whose semantics is relatively
-well understood. However, more advanced constructs of JML can be
-easily added to BML, if required.
+level specification into bytecode level specifications.  The BML
+language as we have defined it now, corresponds roughly to JML level
+0, \emph{i.e.}\ that part of JML whose semantics is relatively well
+understood. However, more advanced constructs of JML can be easily
+added to BML, if required.
 
 \begin{figure}[t]
-\includegraphics[width=\textwidth]{toolset.eps} 
+\begin{center}
+\includegraphics[width=0.9\textwidth]{toolset.eps} 
 \caption{Overview of \mobius tool set}\label{FigToolSet}
+\end{center}
 \end{figure}
 \paragraph{Tool support}
 As part of the \mobius project, we plan to develop a program
 verification tool set that supports both JML and
 BML. Figure~\ref{FigToolSet} outlines the general architecture of this
 tool set. Thus, both Java/JML and bytecode/BML can be used as input
-application. Annotated programs are translated into some guarded
+application. Annotated programs are translated into a guarded
 command format, for which an appropriate verification condition
 generator is used to generate proof obligations that can be discharged
 with a theorem prover (either automatic or interactive). To support
@@ -54,8 +55,9 @@ specifications. The latter can be implemented by a code
 transformation, inserting explicit run-time checks in the bytecode, or
 by extending the virtual machine to take the user-specific attributes
 with specifications into account.  It is also important to have tool
-support for checking the well-formedness of BML specifications. Such a
-tool can be built as an extension the Java bytecode verifier.
+support for checking the structural and typing constraints for BML
+specifications. Such a tool can be built as an extension the Java
+bytecode verifier.
 
 Our initial experiments with compilation of specifications has shown
 that there exists indeed a correspondence between the proof
@@ -78,8 +80,9 @@ applications is quite recent, and not too much work has been done in
 that direction. Several logics have been developed to reason about
 bytecode, \emph{e.g.}~by Bannwart \& M\"uller~\cite{BannwartMueller05}
 and within the MRG project~\cite{AspinallEtAl:TPHOLs2004}. However, in
-this work, no attention is given to how one can conveniently write
-understandable specifications for bytecode.
+this work the main focus was the development of a sound proof system,
+while the focus of BML is to write understandable specifications for
+bytecode.
 
 The development of BML is clearly inspired by the development of the
 JML specification language~\cite{JMLReferenceManual05}. Both JML and
@@ -103,6 +106,7 @@ files as starting point, so it is not possible to annotate bytecode
 applications directly.
 
 
-\subsection*{Acknowledgements}
+\subsubsection*{Acknowledgements}
 We thank Lennart Beringer and Olha Shkaravska for discussions about
 the semantics of BML. 
+\vspace*{-.5em}

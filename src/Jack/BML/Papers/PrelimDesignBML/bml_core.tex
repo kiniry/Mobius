@@ -2,7 +2,7 @@
 \label{SecBML}
 
 
-\subsection{Syntax of BML}
+%\subsection{Syntax of BML}
 
 Basically, BML has the same syntax as JML with two exceptions:
 \begin{enumerate}
@@ -14,27 +14,31 @@ they are added as special attributes to the bytecode; and
 \begin{figure}[t]
 
 \begin{tabular}{lll}
-\multicolumn{2}{l}{\varHook{predicate} ::= \(\ldots\)}\medskip\\
+\multicolumn{2}{l}{\varHook{predicate} ::= \(\ldots\)}\smallskip\\
 \multicolumn{2}{l}{\varHook{unary-expr-not-plus-minus} ::= \(\ldots\)}\\
 \hspace*{1cm} & \(\mid\) \varHook{primary-expr} [\varHook{primary-suffix}]\(\ldots\)\\ 
 
-\multicolumn{2}{l}{\varHook{primary-suffix} ::= \codeHook{.} \varHook{ident}}\\
-&\(\mid\) \codeHook{(} [\varHook{expression-list}] \codeHook{)}\\
-& \(\mid\) \codeHook{[} \varHook{expression} \codeHook{]}\\
+\multicolumn{3}{l}{\varHook{primary-suffix} ::= \codeHook{.} \varHook{ident}
+\(\mid\) \codeHook{(} [\varHook{expression-list}] \codeHook{)}
+ \(\mid\) \codeHook{[} \varHook{expression} \codeHook{]}}\\
+
 \multicolumn{2}{l}{\varHook{primary-expr} ::= 
 \codeHook{\#}\varHook{natural}} & \% reference in the constant pool \\
 &\(\mid\) \codeHook{lv[}\varHook{natural}\codeHook{]} &\% local variable \\
-&\(\mid\) \codeHook{cntr} &\% counter of the operand stack\\
+&\(\mid\) \varHook{bml-primary}\\
+&
+\multicolumn{2}{l}{\(\mid\) \varHook{constant} \(\mid\)
+\codeHook{super}
+\(\mid\) \codeHook{true} \(\mid\) \codeHook{false} \(\mid\)
+\codeHook{this} \(\mid\) \codeHook{null} 
+\(\mid\) \codeHook{(}\varHook{expression}\codeHook{)}
+\(\mid\) \varHook{jml-primary}}\\
+
+\multicolumn{2}{l}{\varHook{bml-primary} ::= \codeHook{cntr}} &\% counter of the operand stack\\
 &\(\mid\) \codeHook{st(}\varHook{additive-expr}\codeHook{)} &\% stack
 expressions\\
 &\(\mid\) \codeHook{length(}\varHook{expression}\codeHook{)} &\% array
-length \\
-&\(\mid\) \varHook{constant} \(\mid\)
-\codeHook{super}\\
-&\(\mid\) \codeHook{true} \(\mid\) \codeHook{false} \(\mid\)
-\codeHook{this} \(\mid\) \codeHook{null} \\
-&\(\mid\) \codeHook{(}\varHook{expression}\codeHook{)}\\
-&\(\mid\) \varHook{jml-primary}%\\
+length 
 %\\
 %\multicolumn{2}{l}{\varHook{store-ref-expression} ::= \varHook{store-ref-name}
 %[\varHook{store-ref-name-suffix}]}\\
@@ -50,15 +54,14 @@ length \\
 \label{FigBMLGrammar}
 \end{figure}
 
-\paragraph{Syntax for predicates and specification expressions}
-Figure~\ref{FigBMLGrammar} displays the most interesting part of this
-grammar for predicates and specification expressions, defining the
-syntax for primary expressions and primary suffixes (see
-Appendix~\ref{AppBML} for a short explanation of the syntax notation
-and the full grammar of predicates and specification
-expressions). Primary expressions, followed by zero or more primary
-suffixes, are the most basic form of expressions, formed by
-identifiers, bracketed expressions \emph{etc}.
+\paragraph{Syntax for BML predicates}
+Figure~\ref{FigBMLGrammar} displays the most interesting part of the
+grammar for BML predicates, defining the
+syntax for primary expressions and primary suffixes\footnote{See
+\texttt{http://www-sop.inria.fr/everest/BML} for the full grammar of BML.}.
+Primary expressions, followed by zero or more primary suffixes, are
+the most basic form of expressions, formed by identifiers, bracketed
+expressions \emph{etc}.
 
 Since only bytecode expressions can be used, all field names, class
 names \emph{etc.}\ are replaced by references to the constant pool (a
@@ -71,16 +74,15 @@ reuse local variable registers throughout the execution of a single
 method. Thus, when \emph{e.g.}\ type checking an annotation containing
 a local variable, it has to be taken into account at which point in
 the code the annotation is evaluated (but notice that this is not more
-complicated than reusing the same local variable names in different
+complicated than reusing the same local variable name in different
 block statements).
 
-In addition, we can use the stack counter (\codeHook{cntr}) and stack
-expressions (\codeHook{st(\(e\))}, where \(e\) is some arithmetic
-expression) to describe intermediate states of a computation.  These
-are only used to express predicates over states in the body of a
-method, they are not used in method specifications. We also add a
-special expression \codeHook{length(\(a\))}, denoting the length of
-array \(a\). Since the source code expression
+We can use the stack counter (\codeHook{cntr}) and stack expressions
+(\codeHook{st(\(e\))}, where \(e\) is some arithmetic expression) to
+describe intermediate states of a computation.  These are not used in
+method specifications. We also add a special expression
+\codeHook{length(\(a\))}, denoting the length of array \(a\). Since
+the source code expression
 \codeHook{\(a\).length} is compiled into a special bytecode
 instruction \codeHook{arraylength}, we also need a special
 specification construct for this at bytecode level.
@@ -109,18 +111,19 @@ BML should also support this\footnote{In fact, we think that both at
 source code and at bytecode level, specifications will benefit
 significantly from being allowed to use method calls in them.}.
 
+
 \paragraph{Class and method specifications}
 BML contains equivalent constructs for all specification constructs of
 JML Level 0 (see~\cite[\S2.9]{JMLReferenceManual05}), which defines
 the features that should be understood and checked by all JML
-tools. In addition, it contains several constructs from JML level 1,
+tools. It also contains several constructs from JML level 1,
 that we find important to be able to write meaningful specifications
 for the example applications studied in the \mobius project, namely
 static invariants; object and static constraints; and loop variants.
 
-We choose to keep a notion of loop specification in BML, even though
-there is no high level loop construct in bytecode. However, to be able
-to prove termination, one needs to prove decrease of a loop variant,
+We choose to keep the notion of loop specification in BML, even though
+there is no high level loop construct in bytecode. But to be able to
+prove termination, one needs to prove decrease of a loop variant,
 which makes the treatment of loops different from the treatment of
 other statements. Also, experiences with verification of realistic
 case studies have shown that it is beneficial to know which variables
@@ -137,7 +140,7 @@ the class file. This means that every class contains a table with
 invariant and constraint annotations, while each method has extra
 attributes containing its specifications. Finally, the code for the
 method body is annotated with local annotation tables for the assert
-annotations and the loop specifications. Section~\ref{SecClassFile}
+annotations and the loop specifications. Section~\ref{SecClassfile}
 defines the precise format of these attributes.
 
 
@@ -182,7 +185,7 @@ mentioned above.
 19 iinc 2 by 1
 loop_invariant 0 <= lv[2] && 0 <= lv[0].#24 && lv[2] <= lv[1] + 1 && 
                lv[0].#24 <= \old(lv[0].#24) + (lv[2] - 1) * lv[2]/2
-entry loop:
+entry loop: 
 22 iload_2
 23 iload_1
 24 if_icmple 5 
@@ -197,8 +200,9 @@ entry loop:
 \end{figure}
 
 To show a typical BML specification, Figure~\ref{FigBMLSpec} presents
-the BML version of the specification of method \codeHook{produce\_bill}
-of the JML example in Figure~\ref{FigJMLSpec}. Notice that the field
+the BML version of the JML specification of method
+\codeHook{produce\_bill} in Figure~\ref{FigJMLSpec}. Notice that the
+field
 \codeHook{sum} has been assigned the number 24 in the constant
 pool, and that it is always explicitly qualified with \codeHook{lv[0]}
 (denoting \codeHook{this}). Further, \codeHook{lv[1]} denotes the
@@ -258,14 +262,12 @@ semantics~\cite[\S 8.2]{JMLReferenceManual05}).
 
 
 
-\subsection{Well-formed BML specifications}
-A BML specification is said to be \emph{well-formed} if it satisfies
-several structural and typing constraints, similar to the structural
-and typing constraints that the bytecode verifier imposes over the
-class file format.
-
-Examples of typing constraints that a BML specification must
-respect are the following:
+\paragraph{Structural and typing constraints for BML specifications}
+BML specifications have to respect several structural and typing
+constraints, similar to the structural and typing constraints that the
+bytecode verifier imposes over the class file format.  Examples of
+typing constraints that a BML specification must respect are the
+following:
 \begin{itemize}
 \item field access expression
     $\fieldAccess{e}{\ident}$ is well-typed only if $e$ is
@@ -312,8 +314,8 @@ specification, $i$ must be a valid index in the method's local
 variables table.
 \end{itemize}
 
-These well-formedness checks for BML are best implemented as an
-extension of the bytecode verifier.
+These checks are best implemented as an extension of the bytecode
+verifier.
  
 
 %\subsection{Evaluation of BML expressions}
@@ -328,7 +330,7 @@ extension of the bytecode verifier.
 %conditional function, returning 1 if the condition is true, 0
 %otherwise.
 
-\subsection{Semantics of BML expressions}
+\paragraph{Semantics of BML expressions}
 
 The semantics of BML specifications follows the semantics of JML
 specifications~\cite{JMLReferenceManual05}. But, just as a JML
@@ -342,7 +344,8 @@ an earlier version, without exceptions) has been proven sound in Coq
 a direct verification condition generator has been proven sound, also
 in Coq. And, as a first step towards efficient tool development, a
 translation of bytecode into guarded commands has been defined and
-proven correct, \emph{w.r.t.}\ verification condition generation.
+proven correct, \emph{w.r.t.}\ verification condition
+generation~\cite{LehnerM07}.
 
 Defining the mapping of BML specifications into this \mobius base
 logic is defined in two steps. First the evaluation of predicates is
@@ -406,8 +409,7 @@ then at that point we add an assertion
 \end{verbatim}
 followed by:
 \begin{verbatim}
-//@ set loop_init = false;
-//@ set loop_variant = variant;
+//@ set loop_init = false; set loop_variant = variant;
 \end{verbatim}
 This ensures that every time the loop entry point \(l\) is reached
 again, the decrease of the loop variant is checked. Only a path that

@@ -9,6 +9,13 @@ appropriate sections of this manual. A detailed overview of the tools
 which support JML can be found in~\cite{BurdyCCEKLLP05}.
 
 
+To illustrate the different features of JML, Figure~\ref{FigJMLSpec}
+shows an example class specification, defining the class
+\texttt{Bill}. It contains an abstract method
+\texttt{round\unsc cost}, that computes the cost of a particular
+round. The method \texttt{produce\unsc bill} is supposed to sum up the
+costs of the different rounds. 
+
 %\lstset{numbers=left,numberstyle=\small,stepnumber=1,numbersep=5pt}
 \begin{figure}[th!]
 %\begin{lstlisting}[frame=trbl] 
@@ -16,17 +23,14 @@ which support JML can be found in~\cite{BurdyCCEKLLP05}.
 \begin{verbatim}
 /* @author Hermann Lehner, Aleksy Schubert
  * The Bill class provides an abstract implementation of the bill 
- * functionality. It calculates the aggregate cost for series of
- * investments based on the implementation of the method which gives 
- * the cost of a single round (to be implemented in subclasses). */
+ * functionality. It calculates the aggregate cost for series of investments
+ * based on the cost of a single round (to be implemented in subclasses). */
 abstract class Bill {
-
   private int sum;  //@ invariant sum>=0;
  
   /* This method gives a cost of a single round.
    * @param x is the number of the particular round
-   * @return the cost of the investment in this round, it's not
-   *         greater than <code>x</code> */
+   * @return the cost of the investment in this round, below <code>x</code> */
   //@ ensures 0 <= \result && \result <= x;
   abstract int round_cost(int x) throws Exception;
   
@@ -36,12 +40,11 @@ abstract class Bill {
   //@ requires n > 0;
   //@ ensures sum <= \old(sum)+n*(n+1)/2;
   public boolean produce_bill(int n){
-    try{
-      //@ loop_modifies sum, i;
-      //@ loop_invariant 0 <= i && 0 <= sum && i <= n + 1 && sum <= \old(sum)+(i-1)*i/2;
-      for (int i=1;i<=n;i++) 
-      { this.sum = this.sum + round_cost(i); }
-      return true;
+    try{//@ loop_modifies sum, i;
+        //@ loop_invariant 0 <= i && 0 <= sum && i <= n + 1 && 
+        //@                sum <= \old(sum)+(i-1)*i/2;
+        for (int i=1;i<=n;i++) { this.sum = this.sum + round_cost(i); }
+        return true;
     } catch (Exception e){ return false; }
   }
 }
@@ -52,12 +55,6 @@ abstract class Bill {
 \label{FigJMLSpec}
 \end{figure}
 
-To illustrate the different features of JML, Figure~\ref{FigJMLSpec}
-shows an example class specification, defining the class
-\texttt{Bill}. It contains an abstract method
-\texttt{round\unsc cost}, that computes the cost of a particular
-round. The method \texttt{produce\unsc bill} is supposed to sum up the
-costs of the different rounds. 
 
 In order not to interfere with the standard Java compiler, JML
 specifications are written as special comments (tagged with

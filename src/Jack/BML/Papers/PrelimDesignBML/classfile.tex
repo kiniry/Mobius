@@ -4,7 +4,7 @@
 To store BML specifications together with the bytecode it specifies,
 we encode them in the class file format. Recall that a class file
 contains all the information related to a single class or interface,
-\emph{i.e.}\ its class name, interfaces implemented by the class, its
+\emph{e.g.}\ its name, which interfaces it implements, its
 super class and the methods and fields it declares. The Java Virtual
 Machine Specification~\cite{JVMspec} prescribes the mandatory elements
 of the class file: the constant pool, the field information and the
@@ -13,33 +13,19 @@ constant pool upon class or interface creation. This will serve for
 loading, linking and resolution of references used in the class. The
 JVM specification allows to add user-specific information to the class
 file (\cite[\S4.7.1]{JVMspec}) as special user-specific attributes.
-When defining these attributes, we took the following considerations
-into account.
+We store BML specifications in such user-specific attributes, in a
+compiler-independent format. To ensure that the augmented class files
+are executable by any implementation of the JVM, the user-specific
+attributes cannot be inserted in the list with bytecode
+instructions. Instead BML annotations are stored separately from the
+method body, and where necessary the annotations contain the index of
+the instruction that they specify. The use of special attributes
+ensures that the presence of BML annotations does not have any impact
+on the application's performance, \emph{i.e.}, the augmented class
+file should not slow down loading or normal execution of the
+application. %Notice that this requirement is important for mobile
+%device applications, where one often has limited resources.
 
-\begin{description}
-\item [Java compiler independence]
-The format of BML specifications in a class file must not depend on
-any particular (non-optimising) compiler.
-    
-      
-\item [JVM compatibility]
-The class files augmented with the BML specification must be
-executable by any implementation of the JVM.  The JVM specification
-does not allow insertion of any user-specific data in the list with
-bytecode instructions, therefore BML annotations must be stored
-separately from the method body. Where necessary the annotations
-contain information about the index of the instruction that they
-specify. For instance, the attribute that stores BML loop
-specifications contains also the index of the entry point instruction
-of the loop.
-
-\item[Efficiency]
-The presence of BML annotations should not have any impact on the
-application's performance, \emph{i.e.}, the augmented class file
-should not slow down loading or normal execution of the
-application. Notice that this requirement is important for mobile
-device applications, where one often has limited resources.
-\end{description}	  
 
 For each class, we add the following information to the class file:
 \begin{itemize}
@@ -56,13 +42,12 @@ contains, and a list with the actual elements.
 
 If a model or a ghost field is dereferenced in the specification, then
 a \textbf{constantFieldRef} is added to the second constant pool as
-the Java compiler would do for any dereferenced Java field in the
-original constant pool of the class. Note that this guarantees that
-the JVM performance will not be affected because of the encoding of
-the BML specification.  In particular, if we would use the original
-constant pool for storing constants originating from specifications,
-the search time in the original constant pool might degrade
-significantly (especially for a large specification).
+the Java compiler does for any dereferenced Java field in the original
+constant pool of the class. Note that in this way, the BML encoding
+will not affect the JVM performance. In particular, if we would use
+the original constant pool for storing constants originating from
+specifications, the search time in the original constant pool might
+degrade significantly (especially for a large specification).
 
 %\footnote{The
 %JVM specification does not allow
@@ -86,9 +71,8 @@ u2  fields\unsc count;\\
     u2 name\unsc index;\\
     u2 descriptor\unsc index;\\
   \end{tabular}\\
-\} fields[fields\unsc count];\\
-\end{tabular}\\
-\}
+\} fields[fields\unsc count]; \} \\
+\end{tabular}
 \end{tabular}
 &
 \begin{tabular}[t]{l}
@@ -111,9 +95,8 @@ u2 spec\unsc count;\\
     \end{tabular}\\
   \} exsures[exsures\unsc count];\\
   \end{tabular}\\
-\} spec[spec\unsc count];   \\
-\end{tabular}\\
-\}
+\} spec[spec\unsc count];   \} \\
+\end{tabular}
 \end{tabular}
 \end{longtable}
 }
