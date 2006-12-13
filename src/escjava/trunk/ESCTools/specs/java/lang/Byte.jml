@@ -268,11 +268,11 @@ public /*@ pure @*/ final class Byte extends Number implements Comparable
     /*@ also
       @   public normal_behavior
       @   {|
-      @     requires obj != null && (obj instanceof Byte);
+      @     requires obj instanceof Byte;
       @     assignable \nothing;
       @     ensures \result == (theByte == ((Byte) obj).byteValue());
       @   also
-      @     requires obj == null || !(obj instanceof Byte);
+      @     requires !(obj instanceof Byte);
       @     assignable \nothing;
       @     ensures !\result;
       @   |}
@@ -294,18 +294,16 @@ public /*@ pure @*/ final class Byte extends Number implements Comparable
       @   ensures \result > 0;
       @ |}
       @*/
-    public int compareTo(Byte anotherByte);
+    public int compareTo(/*@ non_null */ Byte anotherByte);
 
-    /*@ also
-      @     public normal_behavior
-      @       requires o != null && (o instanceof Byte);
-      @       assignable \nothing;
-      @       ensures \result == compareTo((Byte) o);
-      @   also
-      @     public exceptional_behavior
-      @       requires o == null && !(o instanceof Byte);
-      @       assignable \nothing;
-      @       signals_only ClassCastException;
+    /*@ also public normal_behavior
+      @   requires o instanceof Byte;
+      @   assignable \nothing;
+      @   ensures \result == compareTo((Byte) o);
+      @ also public exceptional_behavior
+      @   requires o != null && !(o instanceof Byte);
+      @   assignable \nothing;
+      @   signals_only ClassCastException;
       @*/
     public int compareTo(Object o);
 }
