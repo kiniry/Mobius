@@ -1,7 +1,16 @@
-package java.awt.event;
+// $Id$
+//
+// While the documentation does not say that the File formal parameter must be
+// non-null, numerous examples (e.g. in org.multijava) show that it is assumed
+// to be non-null.
 
-public interface ActionListener extends java.util.EventListener {
-    void actionPerformed(/*@ non_null @*/ ActionEvent e);
+package javax.swing.filechooser;
+
+public abstract class FileFilter extends Object {
+
+    public FileFilter();
+    public abstract boolean accept(/*@non_null*/ java.io.File file);
+    public abstract /*@non_null*//*?*/ String getDescription();
 }
 
 // @(#)$Id$

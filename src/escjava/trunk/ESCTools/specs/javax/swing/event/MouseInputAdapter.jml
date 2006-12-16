@@ -1,7 +1,18 @@
-package java.awt.event;
+// $Id$
 
-public interface ActionListener extends java.util.EventListener {
-    void actionPerformed(/*@ non_null @*/ ActionEvent e);
+package javax.swing.event;
+
+public abstract class MouseInputAdapter extends Object implements MouseInputListener {
+
+    public MouseInputAdapter();
+
+    public void mouseClicked(/*@non_null*/ java.awt.event.MouseEvent e);
+    public void mouseDragged(/*@non_null*/ java.awt.event.MouseEvent e);
+    public void mouseEntered(/*@non_null*/ java.awt.event.MouseEvent e);
+    public void mouseExited(/*@non_null*/ java.awt.event.MouseEvent e);
+    public void mouseMoved(/*@non_null*/ java.awt.event.MouseEvent e);
+    public void mousePressed(/*@non_null*/ java.awt.event.MouseEvent e);
+    public void mouseReleased(/*@non_null*/ java.awt.event.MouseEvent e);
 }
 
 // @(#)$Id$
