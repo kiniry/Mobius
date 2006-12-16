@@ -1,17 +1,19 @@
-TestComparable.java:15: Warning: Possible assertion failure (Assert)
-    //@ assert i == -j;
-        ^
-TestComparable.java:34: Warning: Possible assertion failure (Assert)
-//@ assert false; // TEST FOR CONSISTENCY
-    ^
+TestComparable.java:9: Warning: Possible assignment of null to variable declared non_null (NonNull)
+        c.compareTo(null); // --> warn NonNull
+                   ^
+Associated declaration is "ESCTOOLSROOT/specs/java/lang/Comparable.spec", line 68, col 35:
+    /*@ pure @*/ int compareTo(/*@ non_null */ Object o);
+                                   ^
+TestComparable.java:20: Warning: Possible assertion failure (Assert)
+        //@ assert false; // TEST FOR CONSISTENCY
+            ^
 Execution trace information:
-    Routine call returned exceptionally in "TestComparable.java", line 20, col 8.
-    Routine call returned exceptionally in "TestComparable.java", line 28, col 8.
+    Routine call returned exceptionally in "TestComparable.java", line 15, col 7.
 
-TestComparable.java:35: Warning: Possible unexpected exception (Exception)
-  }
-  ^
-Execution trace information:
-    Routine call returned exceptionally in "TestComparable.java", line 11, col 14.
-
-3 warnings
+TestComparable.java:26: Warning: Possible assertion failure (Assert)
+        //@ assert false; // TEST FOR CONSISTENCY
+            ^
+TestComparable.java:37: Warning: Possible assertion failure (Assert)
+        //@ assert false; // TEST FOR CONSISTENCY
+            ^
+4 warnings

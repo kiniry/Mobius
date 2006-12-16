@@ -1,36 +1,39 @@
+// $Id$
+
 public class TestComparable extends LocalTestCase {
 
-  Comparable c,cc;
-  Object o;
+    private final /*@non_null*/ Comparable c = new Integer(331);
 
-  public void test() {}
+    public void testNull() {
+	// Test illegal null argument
+	c.compareTo(null); // --> warn NonNull
+    } //@ nowarn Exception;
 
-  public void NEtest1() {
-    //@ assume c != null && cc != null;
-    //@ assume Comparable.definedComparison(c.getClass(), cc.getClass());
-    int i = c.compareTo(c);
-    //@ assert i == 0;
-    i = c.compareTo(cc);
-    int j = cc.compareTo(c);
-    //@ assert i == -j;
-
-    //@ assume o != null;
-    //@ assume o.getClass() == \type(Object);
-    try {
-      c.compareTo(o);
-      //@ assert false;
-    } catch (Exception e) {
-      //@ assert e instanceof ClassCastException;
+    public void testIncomparableArgument() {
+	try {
+	    Object o = new Object(); // o is not comparable.
+	    c.compareTo(o);
+	    //@ unreachable;
+	} catch (Exception e) {
+	    //@ assert e instanceof ClassCastException;
+	}
+	//@ assert false; // TEST FOR CONSISTENCY
     }
 
-    Object oo = null;
-    try {
-      c.compareTo(oo);
-      //@ assert false;
-    } catch (Exception e) {
-      //@ assert e instanceof NullPointerException;
+    public void testReflexivity() {
+	int i = c.compareTo(c);
+	//@ assert i == 0;
+	//@ assert false; // TEST FOR CONSISTENCY
     }
 
-//@ assert false; // TEST FOR CONSISTENCY
-  }
+    public void testSymmetry() {
+	// Note that Integer's are Comparable
+	Comparable cc = new Integer(1);
+
+	int i = c.compareTo(cc);
+	int j = cc.compareTo(c);
+	//@ assert java.lang.Comparable.sgn(i) == -java.lang.Comparable.sgn(j);
+	//XXX assert i == -j; // this cannot be deduced from the spec.
+	//@ assert false; // TEST FOR CONSISTENCY
+    }
 }
