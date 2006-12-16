@@ -48,7 +48,7 @@ public class RefinementCachedReader extends CachedReader
      * Creating a cached version of a Reader:
      */
     //@ requires reader != null;
-    public RefinementCachedReader(Reader reader) {
+    public RefinementCachedReader(/*@ non_null */ Reader reader) {
 	super(reader);
 
 	//+@ set cache.keyType = \type(String);
@@ -71,7 +71,7 @@ public class RefinementCachedReader extends CachedReader
      *                                                 *
      **************************************************/
 
-    public CompilationUnit isAlreadyRead(GenericFile target) {
+    public /*@ nullable */ CompilationUnit isAlreadyRead(/*@ non_null */ GenericFile target) {
 	return (CompilationUnit)get(target);
     }
 
@@ -101,7 +101,7 @@ public class RefinementCachedReader extends CachedReader
      *
      * Target must be non-null.<p>
      */
-    public CompilationUnit read(/*@non_null*/GenericFile target, boolean avoidSpec) {
+    public /*@ nullable */ CompilationUnit read(/*@non_null*/GenericFile target, boolean avoidSpec) {
 	// Note - reading has the side effect of caching
 	CompilationUnit cu = (CompilationUnit)get(target);
 	if (cu != null) {
@@ -151,9 +151,9 @@ Don't complain, but don't do it twice either. ???
 	return result;
     }
 
-    protected ArrayList refinementSequence;
+    protected /*@ nullable */ ArrayList refinementSequence;
 
-    public CompilationUnit readRefinements(/*@ non_null @*/ CompilationUnit cu, boolean avoidSpec) {
+    public /*@ nullable */ CompilationUnit readRefinements(/*@ non_null @*/ CompilationUnit cu, boolean avoidSpec) {
      
 	    // Get and parse the package name
 	    Name pkgName = cu.pkgName;
@@ -292,7 +292,7 @@ Don't complain, but don't do it twice either. ???
 	    return newcu;
 	}
 
-    CompilationUnit getCombinedBinaries(/*null*/ Name pkgName, 
+    /*@ nullable */ CompilationUnit getCombinedBinaries(/*@nullable*/ Name pkgName, 
 					/*@ non_null @*/ String[] pkg, 
 					/*@ non_null @*/ ArrayList rs) 
     {
@@ -352,9 +352,9 @@ Don't complain, but don't do it twice either. ???
 
 	// result is a list of CompilationUnits
 	// result will contain something, perhaps just the given cu
-        //@ ensures \result != null;
-	ArrayList getRefinementSequence(/*@ non_null @*/ String[] pkgStrings,
-					Identifier type, 
+    //@ ensures \result != null;
+	/*@ non_null */ ArrayList getRefinementSequence(/*@ non_null @*/ String[] pkgStrings,
+					/*@ nullable @*/ Identifier type, 
 					/*@ non_null @*/ CompilationUnit cu, 
 					boolean avoidSpec) {
 	    ArrayList refinements = new ArrayList();
@@ -437,7 +437,7 @@ Don't complain, but don't do it twice either. ???
 	    return refinements;
 	}
 
-    public static GenericFile findRefined(/*@ non_null @*/ String[] pkgStrings, 
+    public static /*@ nullable */ GenericFile findRefined(/*@ non_null @*/ String[] pkgStrings, 
 					  /*@ non_null @*/ CompilationUnit cu) 
     {
 	    LexicalPragmaVec v = cu.lexicalPragmas;

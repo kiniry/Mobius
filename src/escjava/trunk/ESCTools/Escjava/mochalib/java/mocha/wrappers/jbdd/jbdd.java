@@ -30,64 +30,64 @@ public class jbdd {
   // arguments so it is better to define them static. Use them as follows:
   // jbdd bdd3 = jbdd.jbdd_and(bdd1, bdd2) 
 
-    //@ requires f != null && g != null;
-    //@ ensures  \result != null;
-  public static	native jbdd jbdd_and(jbdd f, jbdd g, boolean f_phase,
+    // @ requires f != null && g != null;
+    // @ ensures  \result != null;
+  public static	native /*@ non_null */ jbdd jbdd_and(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, boolean f_phase,
                                        boolean g_phase);
 
-    //@ requires f != null && g != null;
-    //@ requires smoothing_vars != null;
-    //@ ensures  \result != null;
-  public static	native jbdd jbdd_and_smooth(jbdd f, jbdd g, jbdd[]
+    // @ requires f != null && g != null;
+    // @ requires smoothing_vars != null;
+    // @ ensures  \result != null;
+  public static	native /*@ non_null */ jbdd jbdd_and_smooth(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, /*@ non_null */ jbdd[]
                                               smoothing_vars);
 
-    //@ requires f != null && g != null;
-    //@ requires smoothing_vars != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_clipping_and_smooth(jbdd f, jbdd g,
-                                                       jbdd[]
+    // @ requires f != null && g != null;
+    // @ requires smoothing_vars != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_clipping_and_smooth(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g,
+                                                       /*@ non_null */ jbdd[]
                                                        smoothing_vars, int
                                                        f_phase, int g_phase);
 
-    //@ requires f != null && g != null;
-    //@ requires smoothing_vars != null;
-    //@ ensures  \result != null;
-  public static	native jbdd jbdd_xor_smooth(jbdd f, jbdd g, jbdd[]
+    // @ requires f != null && g != null;
+    // @ requires smoothing_vars != null;
+    // @ ensures  \result != null;
+  public static	native /*@ non_null */ jbdd jbdd_xor_smooth(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, /*@ non_null */ jbdd[]
                                               smoothing_vars);
 
-    //@ requires f_min != null && f_max != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_between(jbdd f_min, jbdd f_max);
+    // @ requires f_min != null && f_max != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_between(/*@ non_null */ jbdd f_min, /*@ non_null */ jbdd f_max);
 
-    //@ requires f != null && v != null && g != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_compose(jbdd f, jbdd v, jbdd g);
+    // @ requires f != null && v != null && g != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_compose(/*@ non_null */ jbdd f, /*@ non_null */ jbdd v, /*@ non_null */ jbdd g);
 
-    //@ requires i != null && t != null && e != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_ite(jbdd i, jbdd t, jbdd e, boolean
+    // @ requires i != null && t != null && e != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_ite(/*@ non_null */ jbdd i, /*@ non_null */ jbdd t, /*@ non_null */ jbdd e, boolean
                                        i_phase, boolean t_phase, boolean
                                        e_phase);
 
-    //@ requires f != null && g != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_or(jbdd f, jbdd g, boolean f_phase,
+    // @ requires f != null && g != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_or(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, boolean f_phase,
                                       boolean g_phase);
 
-    //@ requires f != null && g != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_xnor (jbdd f, jbdd g);
+    // @ requires f != null && g != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_xnor (/*@ non_null */ jbdd f, /*@ non_null */ jbdd g);
 
-    //@ requires f != null && g != null;
-    //@ ensures  \result != null;
-  public static native jbdd jbdd_xor(jbdd f, jbdd g);
+    // @ requires f != null && g != null;
+    // @ ensures  \result != null;
+  public static native /*@ non_null */ jbdd jbdd_xor(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g);
 
-    //@ requires f != null && g != null;
-  public static native int jbdd_apa_compare_ratios(int a, jbdd f, jbdd g,
+    // @ requires f != null && g != null;
+  public static native int jbdd_apa_compare_ratios(int a, /*@ non_null */ jbdd f, /*@ non_null */ jbdd g,
                                                    int j, int k);
 
-    //@ requires f != null && g != null;
-  public static native int jbdd_estimate_cofactor(jbdd f, jbdd g, int n);
+    // @ requires f != null && g != null;
+  public static native int jbdd_estimate_cofactor(/*@ non_null */ jbdd f, /*@ non_null */ jbdd g, int n);
 
   //--------------------------------------------------------------------------
   // and these are the nonstatic functions
@@ -108,7 +108,7 @@ public class jbdd {
 						   /*@ non_null @*/ jbdd[] new_array);
   public native /*@ non_null @*/ jbdd jbdd_then();
   public native	/*@ non_null @*/ jbdd jbdd_top_var ();
-  public native	/*@ non_null @*/ jbdd jbdd_shortest_path(int [] weight, int [] support, int
+  public native	/*@ non_null @*/ jbdd jbdd_shortest_path(/*@ non_null */ int [] weight, /*@ non_null */ int [] support, /*@ non_null */ int
                                           [] length); // check -- this is
   // trouble
   public native	boolean jbddest_unate(int var_id, int phase); // shouldn't
@@ -124,7 +124,7 @@ public class jbdd {
   public native	double jbdd_correlation(/*@ non_null @*/ jbdd g);
   public native	int jbdd_get_free ();
   public native	long jbdd_get_manager();
-  public native	BitSet jbdd_get_support ();
+  public native	/*@ non_null */ BitSet jbdd_get_support ();
   public native	void jbdd_print();
   public native	int jbdd_print_minterm();
   public native	int jbdd_size();

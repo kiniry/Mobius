@@ -107,7 +107,7 @@ public final class InitialState {
     is = GC.and(conjuncts);
   }
 
-  private VariableAccess addMapping(GenericVarDecl vd) {
+  private /*@ non_null */ VariableAccess addMapping(/*@ non_null */ GenericVarDecl vd) {
     VariableAccess variant = GetSpec.createVarVariant(vd, "pre");
     premap.put(vd, variant);
     return variant;

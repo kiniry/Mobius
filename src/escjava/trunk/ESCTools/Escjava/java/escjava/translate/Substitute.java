@@ -32,7 +32,7 @@ public class Substitute {
    **/
 
   //@ ensures e != null ==> \result != null;
-  public static Expr doSubst(/*@ non_null */ Hashtable subst, Expr e) {
+  public static /*@ nullable */ Expr doSubst(/*@ non_null */ Hashtable subst, /*@ nullable */ Expr e) {
     if (e == null) {
 	return null;
     }
@@ -40,7 +40,7 @@ public class Substitute {
   }
 
   //@ ensures e != null ==> \result != null;
-  public static Expr doSimpleSubst(/*@ non_null */ Hashtable subst, Expr e) {
+  public static /*@ nullable */ Expr doSimpleSubst(/*@ non_null */ Hashtable subst, /*@ nullable */ Expr e) {
     if (e == null) {
 	return null;
     }
@@ -62,7 +62,7 @@ public class Substitute {
   //@ modifies rhsVars.s;
   //@ ensures rhsVars != null ==> \old(rhsVars.s) != null ==> rhsVars.s == \old(rhsVars.s);
   //@ ensures \result != null;
-  private static Expr doSubst(/*@ non_null */ Hashtable subst, Expr e,
+  private static /*@ non_null */ Expr doSubst(/*@ non_null */ Hashtable subst, /*@ non_null */ Expr e,
 			      /*@ non_null */ SetRef rhsVars) {
     Expr result = null;
     boolean newInstance = true;

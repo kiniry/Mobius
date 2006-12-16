@@ -88,8 +88,8 @@ public class jbddManager {
   public native void jbdd_realign_disable();
   public native int jbdd_realignment_enabled();
   public native int jbdd_debug_check();
-  public native void jbdd_dynamic_reordering(String string1, String string2);
-  public native int jbdd_reordering_status (String string1);
+  public native void jbdd_dynamic_reordering(/*@ non_null */ String string1, /*@ non_null */ String string2);
+  public native int jbdd_reordering_status (/*@ non_null */ String string1);
   public native void jbdd_reorder();
   public native int jbdd_shuffle_heap (/*@ non_null @*/ int [] ia);
   public native void jbdd_dynamic_reordering_disable();

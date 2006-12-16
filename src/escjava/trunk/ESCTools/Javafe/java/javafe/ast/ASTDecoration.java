@@ -83,7 +83,7 @@ public class ASTDecoration {
     */
     //@ requires n != null;
     //@ ensures \typeof(\result) <: decorationType;
-    public Object get(ASTNode n) {
+    public /*@ non_null */ Object get(/*@ non_null */ ASTNode n) {
 	Assert.notNull(n);
 	Object[] v=n.getDecorations();
 	if( v != null && my_slot < v.length )

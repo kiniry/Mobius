@@ -21,7 +21,7 @@ public class NoWarn
      ***************************************************/
 
     //@ spec_public
-    static private final int chkStatus[] 
+    static private final /*@ non_null */ int[] chkStatus 
             = new int[TagConstants.LASTESCCHECKTAG - 
                       TagConstants.FIRSTESCCHECKTAG + 1];
     //@ public invariant chkStatus != null;
@@ -105,7 +105,7 @@ public class NoWarn
      * Convert a nowarn category to its tag.  Returns 0 if the String
      * is not a valid nowarn category.
      */
-    public static int toNoWarnTag(String name) {
+    public static int toNoWarnTag(/*@ non_null */ String name) {
 	for (int i = TagConstants.FIRSTESCCHECKTAG;
              i <= TagConstants.LASTESCCHECKTAG; i++) {
 	    if (TagConstants.toString(i).equals(name)
@@ -144,7 +144,7 @@ public class NoWarn
 
     static private /*@ non_null @*/ LexicalPragmaVec nowarns = LexicalPragmaVec.make();
 
-    public static void registerNowarns(LexicalPragmaVec v) {
+    public static void registerNowarns(/*@ nullable */ LexicalPragmaVec v) {
         if (v != null)
             nowarns.append(v);
     }

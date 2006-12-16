@@ -197,7 +197,7 @@ public final class StackVector
     //@ modifies elementCount, elements;
     /*@ ensures (elementCount - currentStackBottom) ==
 	        (\old(elementCount) - currentStackBottom) + 1; */
-    public final void addElement(Object x) {
+    public final void addElement(/*@ non_null */ Object x) {
 	Assert.precondition(x != null);
 
 	addElementInternal(x);

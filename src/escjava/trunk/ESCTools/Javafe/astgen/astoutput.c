@@ -229,7 +229,7 @@ static void outputMaker(FILE *o, int ind, Class *class,
     fprintf(o, "//@ ensures \\result != null;\n");
 
     indent(o, ind); 
-    fprintf(o, "public static %s make(", class->name);
+    fprintf(o, "public static /*@ non_null */ %s make(", class->name);
 
     /* Output declarations of formals */
     i = fieldCount;
@@ -299,7 +299,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
     fprintf(o, "/** Return the first-but-ith child of a node. */\n");
     indent(o, ind);
     fprintf(o, "//@ requires 0 <= i;\n");
-    indent(o, ind);fprintf(o, "public abstract Object childAt(int i);\n\n");
+    indent(o, ind);fprintf(o, "public abstract /*@ nullable */ Object childAt(int i);\n\n");
 
     indent(o, ind);
     fprintf(o, "/** Return the tag of a node. */\n");
@@ -327,18 +327,18 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       char visitorArgResultRoot[1024];
       strcpy(visitorArgResultRoot, visitorRoot);
       strcat(visitorArgResultRoot, "ArgResult");
-      fprintf(o, "public abstract void accept(%s v);\n\n", visitorRoot);
+      fprintf(o, "public abstract void accept(/*@non_null*/ %s v);\n\n", visitorRoot);
       indent(o, ind);
       fprintf(o,"//@ requires v != null;\n");
       fprintf(o,"//@ ensures \\result != null;\n");
-      fprintf(o, "public abstract Object accept(%s v, Object o);\n\n", visitorArgResultRoot);
+      fprintf(o, "public abstract /*@ non_null */ Object accept(/*@ non_null */ %s v, Object o);\n\n", visitorArgResultRoot);
     }
     else {
-      fprintf(o, "public abstract void accept(" VISITORCLASS " v);\n\n");
+      fprintf(o, "public abstract void accept(/*@ non_null */ " VISITORCLASS " v);\n\n");
       indent(o, ind);
       fprintf(o,"//@ requires v != null;\n");
       fprintf(o,"//@ ensures \\result != null;\n");
-      fprintf(o, "public abstract Object accept(" VISITORARGRESULTCLASS " v, Object o);\n\n");
+      fprintf(o, "public abstract /*@ non_null */ Object accept(/*@ non_null */ " VISITORARGRESULTCLASS " v, Object o);\n\n");
     }
   }
 
@@ -373,7 +373,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
 
     /* Output childAt */
     indent(o, ind);
-    fprintf(o, "public final Object childAt(int index) {\n");
+    fprintf(o, "public final /*@ non_null */ Object childAt(int index) {\n");
     indent(o, ind+8); fprintf(o, "/*throws IndexOutOfBoundsException*/\n");
 
     indent(o, ind+3); fprintf(o, "if (index < 0)\n");
@@ -430,7 +430,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
   if (! class->abstract) {
     indent(o, ind);
     if (visitorRoot) {
-      fprintf(o, "public final void accept(%s v) { \n", visitorRoot);
+      fprintf(o, "public final void accept(/*@ non_null */ %s v) { \n", visitorRoot);
       indent(o, 2*ind);
       fprintf(o, "if (v instanceof " VISITORCLASS ") ");
       fprintf(o, "((" VISITORCLASS ")v).visit%s(this);\n",
@@ -438,7 +438,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       indent(o, ind);
       fprintf(o, "}\n\n");
     } else
-      fprintf(o,"public final void accept(" VISITORCLASS " v) { v.visit%s(this); }\n\n",
+      fprintf(o,"public final void accept(/*@ non_null */ " VISITORCLASS " v) { v.visit%s(this); }\n\n",
 	      class->name);
 
     /* output visitor arg result */
@@ -448,7 +448,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       char visitorArgResultRoot[1024];
       strcpy(visitorArgResultRoot, visitorRoot);
       strcat(visitorArgResultRoot, "ArgResult");
-      fprintf(o, "public final Object accept(%s v, Object o) { \n", visitorArgResultRoot);
+      fprintf(o, "public final /*@ nullable */ Object accept(/*@ non_null */ %s v, /*@ nullable */ Object o) { \n", visitorArgResultRoot);
       indent(o, 2*ind);
       fprintf(o, "if (v instanceof " VISITORARGRESULTCLASS ") ");
       fprintf(o, "return ((" VISITORARGRESULTCLASS ")v).visit%s(this, o); else return null;\n",

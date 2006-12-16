@@ -39,19 +39,19 @@ public class EscFrame extends JFrame {
     }
 
     static public final /*@non_null*/ JMenuBar menubar = new JMenuBar();
-    public EscOptions escoptionPanel;
-    public GuiOptionsPanel guioptionPanel;
-    private JTextArea listArea;
-    static JLabel label;
-    JScrollPane treeView;
-    JLabel sizeinfo;
-    JComponent guilight;
-    JComponent proverlight;
-    static JTree tree;
+    public /*@ non_null */ EscOptions escoptionPanel;
+    public /*@ non_null */ GuiOptionsPanel guioptionPanel;
+    private /*@ non_null */ JTextArea listArea;
+    static /*@ non_null */ JLabel label;
+    /*@ non_null */ JScrollPane treeView;
+    /*@ non_null */ JLabel sizeinfo;
+    /*@ non_null */ JComponent guilight;
+    /*@ non_null */ JComponent proverlight;
+    static /*@ non_null */ JTree tree;
 
-    JTextField currentdirText;
-    JTextField classpathText, specspathText;
-    JFileChooser fc = new JFileChooser(GUI.gui.options.currentdir);
+    /*@ non_null */ JTextField currentdirText;
+    /*@ non_null */ JTextField classpathText, specspathText;
+    /*@ non_null */ JFileChooser fc = new JFileChooser(GUI.gui.options.currentdir);
 
     public EscFrame() {
 	setTitle("ESC/Java2 (Version: " + escjava.Version.VERSION+ ")");
@@ -70,7 +70,7 @@ public class EscFrame extends JFrame {
 
     }
 
-    private void buildGUI(final /*@non_null*/ JFrame frame) {
+    private /*@ helper */ void buildGUI(final /*@non_null*/ JFrame frame) {
 	JTabbedPane tabbedPane = new JTabbedPane();
 	frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 	guioptionPanel = new GuiOptionsPanel();
@@ -124,7 +124,7 @@ public class EscFrame extends JFrame {
 	    }
 	});
 	classpathText.addFocusListener( new FocusAdapter() {
-	    public void focusLost(FocusEvent e) {
+	    public void focusLost(/*@ non_null */ FocusEvent e) {
 		String s = classpathText.getText();
 		if (s.equals(escjava.Main.options.userPath)) return;
 		escjava.Main.options.userPath = s;
@@ -145,7 +145,7 @@ public class EscFrame extends JFrame {
 	    }
 	});
 	specspathText.addFocusListener( new FocusAdapter() {
-	    public void focusLost(FocusEvent e) {
+	    public void focusLost(/*@ non_null */ FocusEvent e) {
 		String s = specspathText.getText();
 		if (s.equals(GUI.gui.options().specspath)) return;
 		GUI.gui.options().specspath = s;
@@ -163,7 +163,7 @@ public class EscFrame extends JFrame {
 	loadTextArea();
 	listArea.addFocusListener(
 	    new FocusAdapter() {
-		public void focusLost(FocusEvent e) {
+		public void focusLost(/*@ non_null */ FocusEvent e) {
 		    if (saveTextArea()) {
 			GUI.gui.restart(null);
 			label.setText("Clearing all results because the input changed");
@@ -269,7 +269,7 @@ public class EscFrame extends JFrame {
 	    new MouseInputAdapter() {
 	      //@ also
 	      //@    requires e != null;
-		public void mouseClicked(MouseEvent e) {
+		public void mouseClicked(/*@ non_null */ MouseEvent e) {
 		    if (e.getClickCount() != 1) return;
 		    Object o = ((DefaultMutableTreeNode)
 			tree.getClosestPathForLocation(e.getX(),e.getY()).
@@ -324,10 +324,10 @@ public class EscFrame extends JFrame {
 		public void actionPerformed(/*@non_null*/ActionEvent e) {
 		    fc.addChoosableFileFilter(
 			new FileFilter() {
-			    public boolean accept(File f) {
+			    public boolean accept(/*@ non_null */ File f) {
 				return !f.isFile() || f.getName().endsWith(".esc");
 			    }
-			    public String getDescription() {
+			    public /*@ non_null */ String getDescription() {
 				return "*.esc";
 			    }
 			});
@@ -556,7 +556,7 @@ public class EscFrame extends JFrame {
     }
 
     static private class LAF extends JRadioButtonMenuItem implements ActionListener {
-	public UIManager.LookAndFeelInfo laf;
+	public /*@ non_null */ UIManager.LookAndFeelInfo laf;
 	public LAF(/*@non_null*/ UIManager.LookAndFeelInfo laf) {
 	    super(laf.getName());
 	    this.laf = laf;
@@ -644,9 +644,9 @@ public class EscFrame extends JFrame {
     static private class EscRenderer extends DefaultTreeCellRenderer {
     //@ also
     //@   requires value != null;
-	public Component getTreeCellRendererComponent(
-                        JTree tree,
-                        Object value,
+	public /*@ non_null */ Component getTreeCellRendererComponent(
+                        /*@ non_null */ JTree tree,
+                        /*@ non_null */ Object value,
                         boolean sel,
                         boolean expanded,
                         boolean leaf,
@@ -675,7 +675,7 @@ public class EscFrame extends JFrame {
 	}
     }
 
-    private String cachedText = null;
+    private /*@ nullable */ String cachedText = null;
     public boolean saveTextArea() {
 	String s = listArea.getText();
 	if (s.equals(cachedText)) return false;
@@ -759,14 +759,14 @@ public class EscFrame extends JFrame {
 	    add(cb = new JCheckBox("",true));
 	}
 
-	public void setText(String s) {
+	public void setText(/*@ non_null */ String s) {
 	    label.setText(s);
 	}
 
 	public boolean isShowing() { return true; }
 
-	public /*@non_null*/ Component getTreeCellRendererComponent(JTree tree,
-                                              Object value,
+	public /*@non_null*/ Component getTreeCellRendererComponent(/*@ non_null */ JTree tree,
+                                              /*@ non_null */ Object value,
                                               boolean selected,
                                               boolean expanded,
                                               boolean leaf,

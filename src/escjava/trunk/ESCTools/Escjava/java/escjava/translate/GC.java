@@ -21,7 +21,7 @@ public final class GC {
   //// Makers for guarded commands
 
   //@ ensures \result != null;
-  public static GuardedCmd block(/*@ non_null @*/ GenericVarDeclVec v, 
+  public static /*@ non_null */ GuardedCmd block(/*@ non_null @*/ GenericVarDeclVec v, 
 				 /*@ non_null @*/ GuardedCmd g) 
   {
     if (v.size() == 0)
@@ -31,7 +31,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd blockL(Stmt label, GuardedCmd g) {
+  public static /*@ non_null */ GuardedCmd blockL(/*@ non_null */ Stmt label, /*@ non_null */ GuardedCmd g) {
     return trycmd(g, ifcmd( nary(TagConstants.ANYEQ,
 				 ecvar,
 				 symlit(label, "L_")),
@@ -40,18 +40,18 @@ public final class GC {
   }
 
   /** Requires <code>0 < cmds.size()</code>. */
-  public static GuardedCmd seq(/*@ non_null @*/ GuardedCmd g1,
+  public static /*@ non_null */ GuardedCmd seq(/*@ non_null @*/ GuardedCmd g1,
 			       /*@ non_null @*/ GuardedCmd g2)
     { GuardedCmd[] cvec= {g1,g2};
       return seq(GuardedCmdVec.make(cvec)); }
 
-  public static GuardedCmd seq(/*@ non_null @*/ GuardedCmd g1,
+  public static /*@ non_null */ GuardedCmd seq(/*@ non_null @*/ GuardedCmd g1,
 			       /*@ non_null @*/ GuardedCmd g2,
 			       /*@ non_null @*/ GuardedCmd g3 )
     { GuardedCmd[] cvec= {g1,g2,g3};
       return seq(GuardedCmdVec.make(cvec)); }
 
-  public static GuardedCmd seq(/*@ non_null @*/ GuardedCmd g1,
+  public static /*@ non_null */ GuardedCmd seq(/*@ non_null @*/ GuardedCmd g1,
 			       /*@ non_null @*/ GuardedCmd g2,
 			       /*@ non_null @*/ GuardedCmd g3,
 			       /*@ non_null @*/ GuardedCmd g4 )
@@ -63,7 +63,7 @@ public final class GC {
     **/
 
   //@ ensures \result != null;
-  public static GuardedCmd seq(/*@ non_null */ GuardedCmdVec cmds) {
+  public static /*@ non_null */ GuardedCmd seq(/*@ non_null */ GuardedCmdVec cmds) {
     int n;
     if (!Main.options().peepOptGC) {
       n = cmds.size();
@@ -118,20 +118,20 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd gets(/*@ non_null @*/ VariableAccess lhs, 
-				/*@ non_null @*/ Expr rhs) {
+  public static /*@ non_null */ GuardedCmd gets(/*@ non_null @*/ VariableAccess lhs, 
+				/*@ nullable @*/ Expr rhs) {
     return GetsCmd.make(lhs, rhs);
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd subgets(/*@ non_null @*/ VariableAccess lhs, 
+  public static /*@ non_null */ GuardedCmd subgets(/*@ non_null @*/ VariableAccess lhs, 
 				   /*@ non_null @*/ Expr index, 
 				   /*@ non_null @*/ Expr rhs) {
     return SubGetsCmd.make(lhs, rhs, index);
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd subsubgets(/*@ non_null @*/ VariableAccess lhs,
+  public static /*@ non_null */ GuardedCmd subsubgets(/*@ non_null @*/ VariableAccess lhs,
 				      /*@ non_null @*/ Expr array, 
 				      /*@ non_null @*/ Expr index,
 				      /*@ non_null @*/ Expr rhs) {
@@ -139,22 +139,22 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd restoreFrom(/*@ non_null @*/ VariableAccess lhs, 
+  public static /*@ non_null */ GuardedCmd restoreFrom(/*@ non_null @*/ VariableAccess lhs, 
 				       /*@ non_null @*/ Expr rhs) {
     return RestoreFromCmd.make(lhs, rhs);
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd raise() {
+  public static /*@ non_null */ GuardedCmd raise() {
     return SimpleCmd.make(TagConstants.RAISECMD, Location.NULL);
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd skip() {
+  public static /*@ non_null */ GuardedCmd skip() {
     return SimpleCmd.make(TagConstants.SKIPCMD, Location.NULL);
   }
 
-  public static LoopCmd loop(int sLoop, int eLoop, int locHotspot, 
+  public static /*@ non_null */ LoopCmd loop(int sLoop, int eLoop, int locHotspot, 
 			     /*@ non_null @*/ Hashtable oldmap,
 			     /*@ non_null @*/ ConditionVec J, 
 			     /*@ non_null @*/ DecreasesInfoVec decs,
@@ -168,7 +168,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd ifcmd(/*@ non_null @*/ Expr t, 
+  public static /*@ non_null */ GuardedCmd ifcmd(/*@ non_null @*/ Expr t, 
 				 /*@ non_null @*/ GuardedCmd c, 
 				 /*@ non_null @*/ GuardedCmd a) 
   {
@@ -182,14 +182,14 @@ public final class GC {
       commands, that is, <code>a [] b</code>. */
 
   //@ ensures \result != null;
-  public static GuardedCmd boxPopFromStackVector(/*@ non_null @*/ StackVector s) {
+  public static /*@ non_null */ GuardedCmd boxPopFromStackVector(/*@ non_null @*/ StackVector s) {
     GuardedCmdVec b = GuardedCmdVec.popFromStackVector(s);
     GuardedCmdVec a = GuardedCmdVec.popFromStackVector(s);
     return choosecmd(GC.seq(a), GC.seq(b));
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd choosecmd(/*@ non_null @*/ GuardedCmd a, 
+  public static /*@ non_null */ GuardedCmd choosecmd(/*@ non_null @*/ GuardedCmd a, 
 				     /*@ non_null @*/ GuardedCmd b) 
   {
     if (Main.options().peepOptGC) {
@@ -210,7 +210,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd trycmd(/*@ non_null @*/ GuardedCmd c, 
+  public static /*@ non_null */ GuardedCmd trycmd(/*@ non_null @*/ GuardedCmd c, 
 				  /*@ non_null @*/ GuardedCmd a) {
     if (Main.options().peepOptGC) {
       if (a.getTag() == TagConstants.RAISECMD) {
@@ -295,7 +295,7 @@ public final class GC {
      given condition <code>cond</code>.  */
 
   //@ ensures \result != null;
-  public static GuardedCmd check(int locUse,
+  public static /*@ non_null */ GuardedCmd check(int locUse,
 				 int errorName, 
 				 /*@ non_null @*/ Expr pred,
 				 int locPragmaDecl) {
@@ -303,21 +303,21 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd check(int locUse,
+  public static /*@ non_null */ GuardedCmd check(int locUse,
 				 int errorName, 
 				 /*@ non_null @*/ Expr pred,
 				 int locPragmaDecl,
-				 /*@ non_null @*/ Object aux) {
+				 /*@ nullable @*/ Object aux) {
 	return check(locUse,errorName, pred, locPragmaDecl, Location.NULL,aux);
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd check(int locUse,
+  public static /*@ non_null */ GuardedCmd check(int locUse,
 				 int errorName, 
 				 /*@ non_null @*/ Expr pred,
 				 int locPragmaDecl,
 				 int auxLoc,
-				 /*@ non_null @*/ Object aux) {
+				 /*@ nullable @*/ Object aux) {
     //Assert.notFalse(locUse != Location.NULL);
     if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
       pred = GuardExpr.make(pred, locPragmaDecl);
@@ -342,7 +342,7 @@ public final class GC {
   /** See description of <code>check</code> above. */
 
   //@ ensures \result != null;
-  public static GuardedCmd check(int locUse, /*@ non_null @*/ Condition cond) {
+  public static /*@ non_null */ GuardedCmd check(int locUse, /*@ non_null @*/ Condition cond) {
     Assert.notFalse(locUse != Location.NULL);
     return check(locUse, cond.label, cond.pred, cond.locPragmaDecl, null);
   }
@@ -350,9 +350,9 @@ public final class GC {
   /** See description of <code>check</code> above. */
 
   //@ ensures \result != null;
-  public static GuardedCmd check(int locUse, 
+  public static /*@ non_null */ GuardedCmd check(int locUse, 
 				 /*@ non_null @*/ Condition cond, 
-				 /*@ non_null @*/ Object aux) 
+				 /*@ nullable @*/ Object aux) 
   {
     Assert.notFalse(locUse != Location.NULL);
     return check(locUse, cond.label, cond.pred, cond.locPragmaDecl, aux);
@@ -360,7 +360,7 @@ public final class GC {
 
   //@ requires label != TagConstants.CHKFREE;
   //@ ensures \result != null;
-  public static Condition condition(int label, 
+  public static /*@ non_null */ Condition condition(int label, 
 				    /*@ non_null @*/ Expr pred,
 				    int locPragmaDecl) {
     Assert.notFalse(label != TagConstants.CHKFREE);
@@ -368,18 +368,18 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Condition freeCondition(/*@ non_null @*/ Expr pred, int locPragmaDecl) {
+  public static /*@ non_null */ Condition freeCondition(/*@ non_null @*/ Expr pred, int locPragmaDecl) {
     return Condition.make(TagConstants.CHKFREE, pred, locPragmaDecl);
   }
 
   //@ ensures \result != null;
-  public static Condition assumeCondition(/*@ non_null @*/ Expr pred, int locPragmaDecl) {
+  public static /*@ non_null */ Condition assumeCondition(/*@ non_null @*/ Expr pred, int locPragmaDecl) {
     return Condition.make(TagConstants.CHKASSUME, pred, locPragmaDecl);
   }
 
   //@ requires locPragmaDecl != Location.NULL;
   //@ ensures \result != null;
-  public static GuardedCmd assumeAnnotation(int locPragmaDecl,
+  public static /*@ non_null */ GuardedCmd assumeAnnotation(int locPragmaDecl,
 					    /*@ non_null */ Expr p) {
     if (Main.options().guardedVC && locPragmaDecl != Location.NULL) {
       p = GuardExpr.make(p, locPragmaDecl);
@@ -389,7 +389,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd assume(/*@ non_null @*/ Expr p) 
+  public static /*@ non_null */ GuardedCmd assume(/*@ non_null @*/ Expr p) 
   {
     if (Main.options().peepOptGC && isBooleanLiteral(p, true)) {
       return skip();
@@ -429,13 +429,13 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd assumeNegation(/*@ non_null @*/ Expr p) {
+  public static /*@ non_null */ GuardedCmd assumeNegation(/*@ non_null @*/ Expr p) {
     Expr non_p = not(p.getStartLoc(), p.getEndLoc(), p);
     return assume(non_p);
   }
 
   //@ ensures \result != null;
-  public static GuardedCmd fail() {
+  public static /*@ non_null */ GuardedCmd fail() {
     return assume(falselit);
   }
 
@@ -451,7 +451,7 @@ public final class GC {
 //  }
 
   //@ ensures \result != null;
-  private static GuardedCmd assertPredicate(int locUse,
+  private static /*@ non_null */ GuardedCmd assertPredicate(int locUse,
                                             int errorName, 
 					    /*@ non_null @*/ Expr pred,
                                             int locPragmaDecl,
@@ -478,7 +478,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Identifier makeLabel(/*@ non_null @*/ String name, 
+  public static /*@ non_null */ Identifier makeLabel(/*@ non_null @*/ String name, 
 				     int locPragmaDecl, int auxLoc, int locUse) {
 	String lab = name;
 	if (locPragmaDecl != Location.NULL) {
@@ -493,7 +493,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Identifier makeLabel(/*@ non_null @*/ String name, 
+  public static /*@ non_null */ Identifier makeLabel(/*@ non_null @*/ String name, 
 				     int locPragmaDecl, int locUse) {
 	String lab = name;
 	if (locPragmaDecl != Location.NULL) {
@@ -505,7 +505,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Identifier makeFullLabel(/*@ non_null @*/ String name, 
+  public static /*@ non_null */ Identifier makeFullLabel(/*@ non_null @*/ String name, 
 					 int locPragmaDecl, int locUse) 
   {
 	String lab = name;
@@ -520,7 +520,7 @@ public final class GC {
   //@ requires subst != null && target != null ;
   //+@ requires subst.keyType == \type(GenericVarDecl) ;
   //+@ requires subst.elementType <: \type(Expr) ;
-  public static Expr subst(int sloc, int eloc, Hashtable subst, Expr target)
+  public static /*@ non_null */ Expr subst(int sloc, int eloc, /*@ non_null */ Hashtable subst, /*@ non_null */ Expr target)
     {
       if ( !Main.options().lazySubst ) {
 	// perform substitution eagerly
@@ -542,8 +542,8 @@ public final class GC {
 
   //@ requires target != null ;
   //@ requires var!=null && val!=null;
-  public static Expr subst(int sloc, int eloc,
-			   GenericVarDecl var, Expr val, Expr target) {
+  public static /*@ non_null */ Expr subst(int sloc, int eloc,
+			   /*@ non_null */ GenericVarDecl var, /*@ non_null */ Expr val, /*@ non_null */ Expr target) {
     if ( !Main.options().lazySubst ) {
       // perform substitution eagerly
       Hashtable t = new Hashtable();
@@ -556,7 +556,7 @@ public final class GC {
 
   //@ requires target != null ;
   //@ requires var != null && val!=null;
-  public static Expr subst(GenericVarDecl var, Expr val, Expr target) {
+  public static /*@ non_null */ Expr subst(/*@ non_null */ GenericVarDecl var, /*@ non_null */ Expr val, /*@ non_null */ Expr target) {
     return subst( Location.NULL, Location.NULL, var, val, target );
   }
 
@@ -582,17 +582,17 @@ public final class GC {
     LiteralExpr.make(TagConstants.DOUBLELIT, new Double(0.0), Location.NULL);
 
   //@ ensures \result != null;
-  public static Expr symlit(/*null*/ String s) {
+  public static /*@ non_null */ Expr symlit(/*@nullable*/ String s) {
     return LiteralExpr.make(TagConstants.SYMBOLLIT, s, Location.NULL);
   }
 
   //@ ensures \result != null;
-  public static Expr symlit(/*@ non_null @*/ Stmt s, /*@ non_null @*/ String prefix) {
+  public static /*@ non_null */ Expr symlit(/*@ non_null @*/ Stmt s, /*@ non_null @*/ String prefix) {
     return symlit(prefix + UniqName.locToSuffix(s.getStartLoc()));
   }
 
   //@ ensures \result != null;
-  public static Expr zeroequiv(/*@ non_null @*/ Type t) {
+  public static /*@ non_null */ Expr zeroequiv(/*@ non_null @*/ Type t) {
     switch (t.getTag()) {
     case TagConstants.ARRAYTYPE:
     case TagConstants.NULLTYPE:
@@ -685,7 +685,7 @@ public final class GC {
 
   // LSvar is not final because it is temporarily updated at
   // synchronized expressions. See trExpr
-     public static VariableAccess LSvar = makeVar("LS",
+     public static /*@ non_null */ VariableAccess LSvar = makeVar("LS",
     			       UniqName.specialVariable);
 
 
@@ -709,10 +709,10 @@ public final class GC {
   //// Makers for expressions
 
   //@ ensures \result != null;
-  public static Expr typeExpr(/*@ non_null @*/ Type t)
+  public static /*@ non_null */ Expr typeExpr(/*@ non_null @*/ Type t)
     { return TypeExpr.make(Location.NULL, Location.NULL, t); }
 
-  public static Expr cast(/*@ non_null @*/ Expr e, 
+  public static /*@ non_null */ Expr cast(/*@ non_null @*/ Expr e, 
 			  /*@ non_null @*/ Type t) 
   {
 	if (e instanceof LiteralExpr)
@@ -727,38 +727,38 @@ public final class GC {
   // Various forms of nary()
 
   //@ ensures \result != null;
-  public static Expr nary(int tag, /*@ non_null */ Expr e) {
+  public static /*@ non_null */ Expr nary(int tag, /*@ non_null */ Expr e) {
     return nary(Location.NULL, Location.NULL, tag, e);
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int sloc, int eloc, int tag,
+  public static /*@ non_null */ Expr nary(int sloc, int eloc, int tag,
 			  /*@ non_null */ Expr e) {
     Expr[] args = { e };
     return nary( sloc, eloc, tag, ExprVec.make(args));
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int tag,
+  public static /*@ non_null */ Expr nary(int tag,
 			  /*@ non_null */ Expr e1, /*@ non_null */ Expr e2) {
     return nary(Location.NULL, Location.NULL, tag, e1, e2);
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int sloc, int eloc, int tag,
+  public static /*@ non_null */ Expr nary(int sloc, int eloc, int tag,
 			  /*@ non_null */ Expr e1, /*@ non_null */ Expr e2) {
     Expr[] args = { e1, e2 };
     return nary(sloc,eloc,tag, ExprVec.make(args));
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int tag, /*@ non_null */ Expr e1,
+  public static /*@ non_null */ Expr nary(int tag, /*@ non_null */ Expr e1,
 			  /*@ non_null */ Expr e2, /*@ non_null */ Expr e3) {
     return nary(Location.NULL, Location.NULL, tag, e1, e2, e3);
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int sloc, int eloc, int tag,
+  public static /*@ non_null */ Expr nary(int sloc, int eloc, int tag,
 			  /*@ non_null */ Expr e1, /*@ non_null */ Expr e2,
                           /*@ non_null */ Expr e3) {
     Expr[] args = { e1, e2, e3 };
@@ -766,26 +766,26 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int tag, /*@ non_null @*/ ExprVec ev) {
+  public static /*@ non_null */ Expr nary(int tag, /*@ non_null @*/ ExprVec ev) {
 	return nary(Location.NULL, Location.NULL, tag, ev);
   }
 
   //@ ensures \result != null;
-  public static Expr nary(/*@ non_null @*/ Identifier id, /*@ non_null @*/ ExprVec ev) {
+  public static /*@ non_null */ Expr nary(/*@ non_null @*/ Identifier id, /*@ non_null @*/ ExprVec ev) {
 	Expr e = nary(Location.NULL, Location.NULL, TagConstants.METHODCALL, ev);
 	((NaryExpr)e).methodName = id;
 	return e;
   }
 
   //@ ensures \result != null;
-  public static Expr nary(/*@ non_null @*/ Identifier id, /*@ non_null @*/ Expr e) {
+  public static /*@ non_null */ Expr nary(/*@ non_null @*/ Identifier id, /*@ non_null @*/ Expr e) {
 	ExprVec ev = ExprVec.make(1);
 	ev.addElement(e);
 	return nary(id,ev);
 }
 
   //@ ensures \result != null;
-  public static Expr nary(/*@ non_null @*/ Identifier id, 
+  public static /*@ non_null */ Expr nary(/*@ non_null @*/ Identifier id, 
 			  /*@ non_null @*/ Expr e1, 
 			  /*@ non_null @*/ Expr e2) 
   {
@@ -796,7 +796,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int sloc, int eloc, 
+  public static /*@ non_null */ Expr nary(int sloc, int eloc, 
 			  /*@ non_null @*/ Identifier id, 
 			  /*@ non_null @*/ ExprVec ev) 
   {
@@ -806,7 +806,7 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Expr nary(int sloc, int eloc, int tag, 
+  public static /*@ non_null */ Expr nary(int sloc, int eloc, int tag, 
 			  /*@ non_null @*/ ExprVec ev) 
   {
     if( Main.options().peepOptE ) {
@@ -948,27 +948,27 @@ public final class GC {
   //// Makers for other GCExpr nodes
 
   //@ ensures \result != null;
-  public static Expr select(/*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
+  public static /*@ non_null */ Expr select(/*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
     return nary(TagConstants.SELECT, c0, c1);
   }
 
   //@ ensures \result != null;
-  public static Expr not(/*@ non_null @*/ Expr c) {
+  public static /*@ non_null */ Expr not(/*@ non_null @*/ Expr c) {
     return not(Location.NULL, Location.NULL, c);
   }
 
   //@ ensures \result != null;
-  public static Expr not(int sloc, int eloc, /*@ non_null @*/ Expr c) {
+  public static /*@ non_null */ Expr not(int sloc, int eloc, /*@ non_null @*/ Expr c) {
     return nary(sloc, eloc, TagConstants.BOOLNOT, c);
   }
 
   //@ ensures \result != null;
-  public static Expr and(/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
+  public static /*@ non_null */ Expr and(/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
     return and(Location.NULL, Location.NULL, c1, c2);
   }
 
   //@ ensures \result != null;
-  public static Expr andx(/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
+  public static /*@ non_null */ Expr andx(/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
     ExprVec es = ExprVec.make(2);
     es.addElement(c1);
     es.addElement(c2);
@@ -976,82 +976,82 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Expr and(int sloc, int eloc, /*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
+  public static /*@ non_null */ Expr and(int sloc, int eloc, /*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
     Expr[] es = {c1, c2};
     return and( sloc, eloc, ExprVec.make(es) );
   }
 
   //@ ensures \result != null;
-  public static Expr and(/*@ non_null @*/ ExprVec v) {
+  public static /*@ non_null */ Expr and(/*@ non_null @*/ ExprVec v) {
     return and(Location.NULL, Location.NULL, v);
   }
 
   //@ ensures \result != null;
-  public static Expr and(int sloc, int eloc, /*@ non_null @*/ ExprVec v) {
+  public static /*@ non_null */ Expr and(int sloc, int eloc, /*@ non_null @*/ ExprVec v) {
     return nary( sloc, eloc, TagConstants.BOOLAND, v );
   }
 
   //@ ensures \result != null;
-  public static Expr or(/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
+  public static /*@ non_null */ Expr or(/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
     return or(Location.NULL, Location.NULL, c1, c2);
   }
 
   //@ ensures \result != null;
-  public static Expr or(int sloc, int eloc, 
+  public static /*@ non_null */ Expr or(int sloc, int eloc, 
 			/*@ non_null @*/ Expr c1, /*@ non_null @*/ Expr c2) {
     Expr[] es = {c1, c2};
     return or( sloc, eloc, ExprVec.make(es) );
   }
 
   //@ ensures \result != null;
-  public static Expr or(/*@ non_null @*/ ExprVec v) {
+  public static /*@ non_null */ Expr or(/*@ non_null @*/ ExprVec v) {
     return or(Location.NULL, Location.NULL, v);
   }
 
   //@ ensures \result != null;
-  public static Expr or(int sloc, int eloc, /*@ non_null @*/ ExprVec v) {
+  public static /*@ non_null */ Expr or(int sloc, int eloc, /*@ non_null @*/ ExprVec v) {
     return nary( sloc, eloc, TagConstants.BOOLOR, v );
   }
 
   //@ ensures \result != null;
-  public static Expr implies(/*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
+  public static /*@ non_null */ Expr implies(/*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
     return implies( Location.NULL, Location.NULL, c0, c1 );
   }
 
   //@ ensures \result != null;
-  public static Expr implies(int sloc, int eloc, /*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
+  public static /*@ non_null */ Expr implies(int sloc, int eloc, /*@ non_null @*/ Expr c0, /*@ non_null @*/ Expr c1) {
     return nary( sloc, eloc, TagConstants.BOOLIMPLIES, c0, c1);
   }
 
   //@ ensures \result != null;
-  public static Expr forall(/*@ non_null @*/ GenericVarDecl v, /*@ non_null @*/ Expr e) {
+  public static /*@ non_null */ Expr forall(/*@ non_null @*/ GenericVarDecl v, /*@ non_null @*/ Expr e) {
     return forall( Location.NULL, Location.NULL, v, GC.truelit, e, null );
   }
 
   //@ ensures \result != null;
-  public static Expr forall(/*@ non_null @*/ GenericVarDecl v, Expr range, /*@ non_null @*/ Expr e) {
+  public static /*@ non_null */ Expr forall(/*@ non_null @*/ GenericVarDecl v, /*@ nullable */ Expr range, /*@ non_null @*/ Expr e) {
     return forall( Location.NULL, Location.NULL, v, range, e, null );
   }
 
   //@ ensures \result != null;
-  public static Expr forall(/*@ non_null @*/ GenericVarDeclVec v, 
-			    /*null?*/ Expr range, 
-			    /*@ non_null @*/ Expr e) 
+  public static /*@ non_null */ Expr forall(/*@ non_null @*/ GenericVarDeclVec v, 
+			    /*@ nullable */  Expr range, 
+			    /*@ non_null */ Expr e) 
   {
     return quantifiedExpr( Location.NULL, Location.NULL, 
 		TagConstants.FORALL, v, range, e, null, null );
   }
 
   //@ ensures \result != null;
-  public static Expr forall(/*@ non_null @*/ GenericVarDecl v, 
-			    /*@ non_null @*/ Expr e, 
-			    ExprVec nopats) 
+  public static /*@ non_null */ Expr forall(/*@ non_null @*/ GenericVarDecl v, 
+			    /*@ non_null */ Expr e, 
+			    /*@ nullable */ ExprVec nopats) 
   {
     return forall( Location.NULL, Location.NULL, v, GC.truelit, e, nopats );
   }
 
   //@ ensures \result != null;
-  public static Expr forallwithpats(/*@ non_null @*/ GenericVarDecl v, 
+  public static /*@ non_null */ Expr forallwithpats(/*@ non_null @*/ GenericVarDecl v, 
 				    /*@ non_null @*/ Expr e, 
 				    /*@ non_null @*/ ExprVec pats) {
     return quantifiedExpr( Location.NULL, Location.NULL, 
@@ -1059,17 +1059,17 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Expr forall(int sloc, int eloc, /*@ non_null @*/ GenericVarDecl v,
-			    Expr range, /*@ non_null @*/ Expr e) {
+  public static /*@ non_null */ Expr forall(int sloc, int eloc, /*@ non_null @*/ GenericVarDecl v,
+			    /*@ nullable */ Expr range, /*@ non_null @*/ Expr e) {
     return forall(sloc, eloc, v, range, e, null);
   }
 
   //@ ensures \result != null;
-  public static Expr forall(int sloc, int eloc, 
+  public static /*@ non_null */ Expr forall(int sloc, int eloc, 
 			    /*@ non_null @*/ GenericVarDecl v, 
-			    Expr range, 
+			    /*@ nullable */ Expr range, 
 			    /*@ non_null @*/ Expr e,
-			    ExprVec nopats) {
+			    /*@nullable*/ExprVec nopats) {
     Assert.notNull(v);
     Assert.notNull(e);
 
@@ -1108,12 +1108,12 @@ public final class GC {
   }
 
   //@ ensures \result != null;
-  public static Expr quantifiedExpr(int sloc, int eloc, int tag,
+  public static /*@ non_null */ Expr quantifiedExpr(int sloc, int eloc, int tag,
 				    /*@ non_null @*/ GenericVarDecl v, 
-				    Expr range, 
+				    /*@ nullable */ Expr range, 
 				    /*@ non_null @*/ Expr e,
-				    ExprVec nopats, 
-				    ExprVec pats)
+				    /*@nullable*/ExprVec nopats, 
+				    /*@nullable*/ExprVec pats)
     {
       GenericVarDeclVec vs = GenericVarDeclVec.make();
       vs.addElement(v);
@@ -1121,12 +1121,12 @@ public final class GC {
     }
 
   //@ ensures \result != null;
-  public static Expr quantifiedExpr(int sloc, int eloc, int tag,
-				    /*@ non_null @*/ GenericVarDeclVec vs, 
-				    /*null?*/	Expr range, 
-				    /*@ non_null @*/ Expr e,
-				    /*null?*/	ExprVec nopats, 
-				    /*null?*/	ExprVec pats)
+  public static /*@ non_null */ Expr quantifiedExpr(int sloc, int eloc, int tag,
+				    /*@non_null*/ GenericVarDeclVec vs, 
+				    /*@nullable*/	Expr range, 
+				    /*@non_null*/ Expr e,
+				    /*@nullable*/	ExprVec nopats, 
+				    /*@nullable*/	ExprVec pats)
     {
       Assert.notFalse( tag == TagConstants.FORALL
 		       || tag == TagConstants.EXISTS );
@@ -1194,7 +1194,7 @@ public final class GC {
    */
   private static boolean selectiveAdd(/*@ non_null @*/ ExprVec to, 
 				      /*@ non_null @*/ ExprVec from,
-				      Expr bot, Expr top, int naryTagMerge)
+				      /*@ non_null @*/ Expr bot, /*@ non_null @*/ Expr top, int naryTagMerge)
     {
       for(int i=0; i<from.size(); i++) {
 	Expr e = from.elementAt(i);

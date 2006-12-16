@@ -234,7 +234,7 @@ public class EnumClausesAbstractor implements Abstractor {
 	}
     }
 
-    private void say(String s) {
+    private void say(/*@ non_null */ String s) {
 	if( noisy ) {
 	    System.out.println(s);
 	}

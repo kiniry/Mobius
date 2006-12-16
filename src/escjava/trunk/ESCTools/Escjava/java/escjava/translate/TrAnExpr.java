@@ -125,11 +125,11 @@ public class TrAnExpr {
       specialThisExpr = null;
     }
   }
-  public static Expr trSpecExpr(Expr e, Hashtable sp, Hashtable st) {
+  public static Expr trSpecExpr(Expr e, /*@ nullable */ Hashtable sp, /*@ nullable */ Hashtable st) {
     return inst.trSpecExprI(e,sp,st);
   }
   
-  public Expr trSpecExprI(Expr e, Hashtable sp, Hashtable st) {
+  public Expr trSpecExprI(Expr e, /*@ nullable */ Hashtable sp, /*@ nullable */ Hashtable st) {
     int tag = e.getTag();
     switch (tag) {
       case TagConstants.THISEXPR: {
@@ -1279,15 +1279,15 @@ public class TrAnExpr {
     return GC.nary(TagConstants.ANYEQ, v, fcall);
   }
   
-  public static Expr typeCorrectAs(GenericVarDecl vd, Type type) {
+  public static Expr typeCorrectAs(/*@ non_null */ GenericVarDecl vd, /*@ non_null */ Type type) {
     return typeAndNonNullCorrectAs(vd, type, null, false, null);
   }
   
-  public static Expr typeAndNonNullCorrectAs(GenericVarDecl vd,
-      Type type,
-      SimpleModifierPragma nonNullPragma,
+  public static Expr typeAndNonNullCorrectAs(/*@ non_null */ GenericVarDecl vd,
+      /*@ non_null */ Type type,
+      /*@ nullable */ SimpleModifierPragma nonNullPragma,
       boolean forceNonNull,
-      Hashtable sp) {
+      /*@ nullable */ Hashtable sp) {
     return GC.and(typeAndNonNullAllocCorrectAs(vd, type,
         nonNullPragma, forceNonNull,
         sp, true));
@@ -1298,11 +1298,11 @@ public class TrAnExpr {
    * append a couple of items without incurring another allocation.
    */
   
-  public static ExprVec typeAndNonNullAllocCorrectAs(GenericVarDecl vd,
-      Type type,
-      SimpleModifierPragma nonNullPragma,
+  public static ExprVec typeAndNonNullAllocCorrectAs(/*@ non_null */ GenericVarDecl vd,
+      /*@ non_null */ Type type,
+      /*@ nullable */ SimpleModifierPragma nonNullPragma,
       boolean forceNonNull,
-      Hashtable sp,
+      /*@ nullable */ Hashtable sp,
       boolean mentionAllocated) {
     VariableAccess v = makeVarAccess(vd, Location.NULL);
     ExprVec conjuncts = ExprVec.make(5);
@@ -1663,7 +1663,7 @@ public class TrAnExpr {
     return result;
   }
   
-  public static VariableAccess makeVarAccess(GenericVarDecl decl, int loc) {
+  public static VariableAccess makeVarAccess(/*@ non_null */ GenericVarDecl decl, int loc) {
     return VariableAccess.make(decl.id, loc, decl);
   }
   
@@ -1693,7 +1693,7 @@ public class TrAnExpr {
     }
   }
   
-  public static TypeExpr trType(Type type) {
+  public static /*@ non_null */ TypeExpr trType(/*@ non_null */ Type type) {
     // Other than unique-ification of type names, what distinguishes
     // Java types from the way they are represented in the verification
     // condition is that a Java array type "T[]" is represented as

@@ -13,16 +13,16 @@ package escjava.prover;
 
 public class SimplifyComment extends SimplifyOutput
 {
-    /*@ spec_public @*/ final String msg;
+    /*@ spec_public @*/ final /*@ non_null */ String msg;
 
     //@   ensures this.msg == msg;
-    SimplifyComment(String msg) {
+    SimplifyComment(/*@ non_null */ String msg) {
         super(COMMENT);
         this.msg = msg;
     }
 
     //@ ensures \result == msg;
-    public /*@ pure @*/ String getMsg() {
+    public /*@ pure @*/ /*@ non_null */ String getMsg() {
         return msg;
     }
 }

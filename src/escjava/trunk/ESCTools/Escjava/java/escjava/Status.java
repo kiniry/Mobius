@@ -78,7 +78,7 @@ public class Status {
 	return "ILLEGAL VALUE";
     }
 
-    static public Color toColor(int status) {
+    static public /*@ nullable */ Color toColor(int status) {
 	switch (status) {
 	    case TYPECHECKED_WAITING:
 	    case NOTPROCESSED: return null;

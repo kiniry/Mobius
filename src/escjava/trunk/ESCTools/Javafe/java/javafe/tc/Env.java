@@ -95,7 +95,7 @@ public abstract class Env {
      * its possible meanings is returned.<p>
      */
     abstract public TypeSig lookupSimpleTypeName(
-				TypeSig caller, /*@ non_null @*/ Identifier id,
+				/*@ nullable */ TypeSig caller, /*@ non_null @*/ Identifier id,
 						 int loc);
 
 

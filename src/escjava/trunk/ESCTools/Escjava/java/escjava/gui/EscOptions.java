@@ -25,7 +25,7 @@ public class EscOptions extends JPanel implements ActionListener {
     /** A reference to the Options structure in the ESC tool,
 	which serves as the document for this GUI. 
      */
-    protected escjava.Options doc;
+    protected /*@ non_null */ escjava.Options doc;
 
     /** A reference to the Class object of escjava.Options.
      */
@@ -70,16 +70,16 @@ public class EscOptions extends JPanel implements ActionListener {
 	//{"testMode", "testMode",		"TBD description" },
 	};
 
-    public EscOptions(escjava.Options doc) {
+    public EscOptions(/*@ non_null */ escjava.Options doc) {
 	build(doc);
     }
 
-    public void init(escjava.Options doc) {
+    public void init(/*@ non_null */ escjava.Options doc) {
 	// FIXME - change this so it does not rebuild the GUI every time
 	build(doc);
     }
 
-    public void build(escjava.Options doc) {
+    public void build(/*@ non_null */ escjava.Options doc) {
 	this.doc = doc;
 	removeAll();
 	JButton jb;
@@ -156,7 +156,7 @@ public class EscOptions extends JPanel implements ActionListener {
 	    });
 	simplify.addFocusListener(
 	    new FocusAdapter() {
-		public void focusLost(FocusEvent e) {
+		public void focusLost(/*@ non_null */ FocusEvent e) {
 		    System.setProperty("simplify",simplify.getText());
 	        }
 	    });

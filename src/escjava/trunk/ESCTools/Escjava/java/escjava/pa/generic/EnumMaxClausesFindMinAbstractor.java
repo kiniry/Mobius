@@ -103,7 +103,7 @@ public class EnumMaxClausesFindMinAbstractor implements Abstractor {
 		return oldR.jbdd_equal( R );
 	}
 	
-	private jbdd findMinClauseValid(/*@ non_null @*/ jbdd oldR,
+	private /*@ non_null @*/ jbdd findMinClauseValid(/*@ non_null @*/ jbdd oldR,
 			/*@ non_null @*/ Prover prover, 
 			/*@ non_null @*/ jbdd a, 
 			/*@ non_null @*/ jbdd b) 

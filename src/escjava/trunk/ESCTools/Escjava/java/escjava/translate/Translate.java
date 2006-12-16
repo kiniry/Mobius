@@ -3715,7 +3715,7 @@ public final class Translate
    * <code>code</code>.
    */
   //@ modifies code.elementCount;
-  private void addCheck(int locUse, int errorName, Expr pred, int locPragmaDecl) {
+  private void addCheck(int locUse, int errorName, /*@ non_null */ Expr pred, int locPragmaDecl) {
     code.addElement(GC.check(locUse, errorName, pred, locPragmaDecl));
   }
   

@@ -95,27 +95,27 @@ public class FindContributors
      * Our origin type; used to determine visibility and accessibility
      * when needed.
      */
-    public TypeSig originType;
+    public /*@ non_null */ TypeSig originType;
 
 
     /**
      * Enumerate the TypeSig contributors
      */
-    public Enumeration typeSigs() {
+    public /*@ non_null */ Enumeration typeSigs() {
 	return contributorTypes.elements();
     }
 
     /**
      * Enumerate the invariant contributors
      */
-    public Enumeration invariants() {
+    public /*@ non_null */ Enumeration invariants() {
 	return contributorInvariants.elements();
     }
 
     /**
      * Enumerate the field contributors
      */
-    public Enumeration fields() {
+    public /*@ non_null */ Enumeration fields() {
 	return contributorFields.elements();
     }
 
@@ -178,7 +178,7 @@ public class FindContributors
      *
      */
     // can be null
-    Hashtable fieldToPossible = new Hashtable();
+    /*@ nullable */ Hashtable fieldToPossible = new Hashtable();
 
 
 
@@ -189,7 +189,7 @@ public class FindContributors
      * Precondition: T has been resolved.<p>
      */
     //@ requires T != null;
-    private void addType(Type T) {
+    private void addType(/*@ non_null */ Type T) {
 	// TypeName case:
 	if (T instanceof TypeName) {
 	    T = TypeSig.getSig((TypeName)T);
@@ -255,7 +255,7 @@ public class FindContributors
      * closure properties. <p>
      */
     //@ requires fd != null;
-    private void addField(FieldDecl fd) {
+    private void addField(/*@ non_null */ FieldDecl fd) {
 	if (contributorFields.contains(fd))
 	    return;
 
@@ -282,7 +282,7 @@ public class FindContributors
      * Precondition: J is a possible invariant contributor, J "mentions
      * the field" fd.
      */
-    private void addPossibleMentions(FieldDecl fd, /*@ non_null @*/ ExprDeclPragma J) {
+    private void addPossibleMentions(/*@ non_null */ FieldDecl fd, /*@ non_null @*/ ExprDeclPragma J) {
 	ExprDeclPragmaVec range = (ExprDeclPragmaVec)fieldToPossible.get(fd);
 	if (range==null) {
 	    range = ExprDeclPragmaVec.make();
@@ -301,7 +301,7 @@ public class FindContributors
      * Precondition: J has been type checked.
      */
     //@ requires J != null;
-    private void addPossibleInvariant(ExprDeclPragma J) {
+    private void addPossibleInvariant(/*@ non_null */ ExprDeclPragma J) {
 	FieldDeclVec fieldsMentioned = fieldsInvariantMentions(J);
 
 	for (int i=0; i<fieldsMentioned.size(); i++) {
@@ -325,7 +325,7 @@ public class FindContributors
      * Precondition: J has been type checked.
      */
     //@ requires J != null;
-    private void addInvariant(ExprDeclPragma J) {
+    private void addInvariant(/*@ non_null */ ExprDeclPragma J) {
 	if (contributorInvariants.contains(J))
 	    return;
 
@@ -347,7 +347,7 @@ public class FindContributors
      * WARNING: N is assumed to have no free local or parameter
      * varables.
      */
-    private void walk(ASTNode N) {
+    private void walk(/*@ nullable */ ASTNode N) {
 	walk(N, null, true, new LinkedList());
     }
 
@@ -357,7 +357,7 @@ public class FindContributors
      *
      * Precondition: J must be an invariant, J must be typechecked.
      */
-    private FieldDeclVec fieldsInvariantMentions(ExprDeclPragma J) {
+    private /*@ non_null */ FieldDeclVec fieldsInvariantMentions(/*@ nullable */ ExprDeclPragma J) {
 	// We may cache this function later...
 
 	FieldDeclVec result = FieldDeclVec.make();
@@ -377,8 +377,8 @@ public class FindContributors
      *
      * Precondition: N has been typechecked.
      */
-    private void walk(ASTNode N, FieldDeclVec fields, boolean addTypes,
-				LinkedList visited) {
+    private void walk(/*@ nullable */ ASTNode N, /*@ nullable */ FieldDeclVec fields, boolean addTypes,
+				/*@ non_null */ LinkedList visited) {
 	/*
 	 * Leaf nodes:
 	 */
@@ -487,9 +487,9 @@ public class FindContributors
      * Precondition: the type declaring cd has been typechecked.
      */
     private void addImplicitConstructorRefs(/*@ non_null @*/ ConstructorDecl cd,
-					    FieldDeclVec fields,
+					    /*@ nullable */ FieldDeclVec fields,
 					    boolean addTypes,
-					    LinkedList visited) {
+					    /*@ non_null */ LinkedList visited) {
 	/*
 	 * Walk the initialization code derived from the same class as
 	 * the constructor:
@@ -536,9 +536,9 @@ public class FindContributors
      * Precondition: the TypeDecl has been typechecked.
      */
     private void walkInstanceInitialier(/*@ non_null @*/ TypeDecl td,
-					FieldDeclVec fields,
+					/*@ nullable */ FieldDeclVec fields,
 					boolean addTypes,
-					LinkedList visited) {
+					/*@ non_null */ LinkedList visited) {
 	for (int i = 0; i < td.elems.size(); i++) {
 	    TypeDeclElem tde = td.elems.elementAt(i);
 
@@ -571,10 +571,10 @@ public class FindContributors
      * Calculate the fields and types "mentioned" by a backedge to a
      * GenericVarDecl and then add them as per walk(,,).
      */
-    private void backedgeToGenericVarDecl(GenericVarDecl decl,
-				          FieldDeclVec fields,
+    private void backedgeToGenericVarDecl(/*@ non_null */ GenericVarDecl decl,
+				          /*@ nullable */ FieldDeclVec fields,
 				          boolean addTypes,
-					  LinkedList visited) {
+					  /*@ non_null */ LinkedList visited) {
 	// The length field of arraytypes is never considered "mentioned":
 	if (decl==javafe.tc.Types.lengthFieldDecl)
 	    return;
@@ -635,10 +635,10 @@ public class FindContributors
      * implementation of this method.)
      */
     //@ requires inlined == 0 || inlined == 1 || inlined == 2;
-    private void backedgeToRoutineDecl(RoutineDecl rd,
-				       FieldDeclVec fields,
+    private void backedgeToRoutineDecl(/*@ nullable */ RoutineDecl rd,
+				       /*@ nullable */ FieldDeclVec fields,
 				       boolean addTypes, 
-				       int inlined, LinkedList visited) {
+				       int inlined, /*@ non_null */ LinkedList visited) {
 	if (rd == null) return; // FIXME - this happens with some NewInstanceExpr
 	// FIXME - remove references to visited
 	//if (visited.contains(rd)) return;

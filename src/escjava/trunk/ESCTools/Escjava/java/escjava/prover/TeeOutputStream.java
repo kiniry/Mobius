@@ -80,7 +80,7 @@ public class TeeOutputStream extends FilterOutputStream
     //@ public normal_behavior
     //@ requires b != null;
     //@   modifies \everything;
-    public void write(byte b[]) throws IOException {
+    public void write(/*@ non_null */ byte[] b) throws IOException {
         out.write(b);
         out2.write(b);
     }
@@ -107,7 +107,7 @@ public class TeeOutputStream extends FilterOutputStream
     //@   requires b != null;
     //@   requires b.length >= off + len;
     //@   modifies \everything;
-    public void write(byte b[], int off, int len) throws IOException {
+    public void write(/*@ non_null */ byte[] b, int off, int len) throws IOException {
         out.write(b, off, len);
         out2.write(b, off, len);
     }

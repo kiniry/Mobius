@@ -20,16 +20,16 @@ import escjava.translate.Substitute;
 public class DerivedMethodDecl {
   public /*@ non_null */ RoutineDecl original;
 
-  public FormalParaDeclVec args;
-  public Type returnType;
-  public TypeNameVec throwsSet;
+  public /*@ non_null */ FormalParaDeclVec args;
+  public /*@ non_null */ Type returnType;
+  public /*@ non_null */ TypeNameVec throwsSet;
   public boolean usesFresh;
-  public ExprModifierPragmaVec requires;
-  public ModifiesGroupPragmaVec modifies;
+  public /*@ non_null */ ExprModifierPragmaVec requires;
+  public /*@ non_null */ ModifiesGroupPragmaVec modifies;
   public boolean modifiesEverything = false;
-  public ExprModifierPragmaVec ensures;
-  public VarExprModifierPragmaVec exsures;
-  public SimpleModifierPragma nonnull;  // refers to any one of the method's non_null pragmas, or null if none
+  public /*@ non_null */ ExprModifierPragmaVec ensures;
+  public /*@ non_null */ VarExprModifierPragmaVec exsures;
+  public /*@ non_null */ SimpleModifierPragma nonnull;  // refers to any one of the method's non_null pragmas, or null if none
 
   public DerivedMethodDecl(/*@ non_null */ RoutineDecl rd) {
     original = rd;
@@ -77,14 +77,14 @@ public class DerivedMethodDecl {
     return Modifiers.isSynchronized(original.modifiers);
   }
   
-  public Identifier getId() {
+  public /*@ non_null */ Identifier getId() {
     if (original instanceof MethodDecl)
       return ((MethodDecl)original).id;
     else
       return original.parent.id;
   }
 
-  public TypeDecl getContainingClass() {
+  public /*@ nullable */ TypeDecl getContainingClass() {
     return original.parent;
   }
 

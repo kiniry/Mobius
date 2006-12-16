@@ -248,7 +248,7 @@ public abstract class SList extends SExp
     //@ also
     //@ public exceptional_behavior
     //@   signals (SExpTypeError) true;
-    public /*@ pure @*/ SExp at(int i) throws SExpTypeError {
+    public /*@ pure @*/ /*@ non_null */ SExp at(int i) throws SExpTypeError {
 	SPair ptr = getPair();
 
 	for (; i > 0; i--)
@@ -305,7 +305,7 @@ public abstract class SList extends SExp
     //@   requires l != null;
     //@   modifies \everything;
     //@   ensures \result != null;
-    public static SList reverseD(SList l){
+    public static /*@ non_null */ SList reverseD(/*@ non_null */ SList l){
 	SList res = SNil.getNil();
 	while (! (l instanceof SNil)){
 	    SList temp = res; 
@@ -325,7 +325,7 @@ public abstract class SList extends SExp
     //@   modifies \everything;
     //@   ensures \result != null;
     //@   ensures \result.at(0) == x;
-    public SList addFront(SExp x) {
+    public /*@ non_null */ SList addFront(/*@ non_null */ SExp x) {
 	return new SPair(x, this);
     }
 
@@ -340,7 +340,7 @@ public abstract class SList extends SExp
     //@   modifies \everything;
     //@   ensures \result != null;
     //@   ensures \result.at(\result.length()) == x;
-    public SList addEnd(SExp x) {
+    public /*@ non_null */ SList addEnd(/*@ non_null */ SExp x) {
 	return append(make(x));	
     }
 

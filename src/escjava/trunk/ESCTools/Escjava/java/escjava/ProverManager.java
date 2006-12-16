@@ -17,7 +17,7 @@ public class ProverManager {
   public static interface Listener {
     void stateChanged(int s);
   }
-  public static Listener listener = null;
+  public static /*@ nullable */ Listener listener = null;
   
   final static private int NOTSTARTED = 0;
   final static private int STARTED = 1;
@@ -27,7 +27,7 @@ public class ProverManager {
   /*@ spec_public */ static private boolean isStarted = false;
   //@ private invariant status != NOTSTARTED <==> isStarted;
   
-  static private FindContributors savedScope = null;
+  static private /*@ nullable */ FindContributors savedScope = null;
   
   public static boolean useSimplify = false;
   public static boolean useSammy = false;
@@ -89,7 +89,7 @@ public class ProverManager {
   }
   
   synchronized
-  static public Simplify prover() {
+  static public /*@ non_null */ Simplify prover() {
     start();
     return simplify;
   }
@@ -162,7 +162,7 @@ public class ProverManager {
   }
   
   synchronized
-  static public void push(FindContributors scope) {
+  static public void push(/*@ non_null */ FindContributors scope) {
     start();
     if (simplify != null) {
       PrintStream ps = simplify.subProcessToStream();
@@ -179,7 +179,7 @@ public class ProverManager {
   // scope can be null
   //? ensures \result != null;
   synchronized
-  static public Enumeration prove(Expr vc, FindContributors scope) {
+  static public /*@ non_null */ Enumeration prove(/*@ non_null */ Expr vc, /*@ nullable */ FindContributors scope) {
    
     if (useSimplify) { 
       if (scope == null) {
@@ -227,18 +227,18 @@ public class ProverManager {
    * Our Simplify instance.
    */
   //-@ monitored
-  public static Simplify simplify;
+  public static /*@ nullable */ Simplify simplify;
   //@ private invariant isStarted ==> prover != null;
   
   /*
    * Our Sammy instance \\o \o/ o//
    */
-  public static Sammy sammy;
+  public static /*@ nullable */ Sammy sammy;
   //@ public static model Object prover;
   //@ static represents prover <- sammy;
 
   /*
    * Our Cvc3 instance.
    */
-  public static Cvc3 cvc3;
+  public static /*@ nullable */ Cvc3 cvc3;
 }

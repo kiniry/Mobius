@@ -4,15 +4,15 @@ import javafe.ast.*;
 
 public class RepHelper {
 
-    public TypeDecl td;
-    public ASTNode a;
+    public /*@ nullable */ TypeDecl td;
+    public /*@ nullable */ ASTNode a;
 
-    public RepHelper(TypeDecl td, FieldDecl fd) {
+    public RepHelper(/*@ nullable */ TypeDecl td, /*@ nullable */ FieldDecl fd) {
 	this.td = td;
 	this.a = fd;
     }
 
-    public RepHelper(TypeDecl td, RoutineDecl rd) {
+    public RepHelper(/*@ nullable */ TypeDecl td, /*@ nullable */ RoutineDecl rd) {
 	this.td = td;
 	this.a = rd;
     }
@@ -31,7 +31,7 @@ public class RepHelper {
 		this.td = ((javafe.tc.TypeSig)t).getTypeDecl();
     }
 
-    public boolean equals(Object o) {
+    public boolean equals(/*@ nullable */ Object o) {
 	if (!(o instanceof RepHelper)) return false;
 	RepHelper r = (RepHelper)o;
 	return td == r.td && a == r.a;

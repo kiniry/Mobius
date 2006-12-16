@@ -269,12 +269,12 @@ public class TypeSig extends Type
     /**
      * Our enclosing type or null iff we are a package-member type.
      */
-    public /*public readonly*/ TypeSig enclosingType;
+    public /*public readonly*/ /*@ nullable */ TypeSig enclosingType;
 
     /**
      * Our simple name or null if we are an anonymous type.
      */
-    public /*public readonly*/ String simpleName;
+    public /*public readonly*/ /*@ nullable */ String simpleName;
 
     /**
      * Are we a direct member of a package or a type? <p>
@@ -403,7 +403,7 @@ public class TypeSig extends Type
      * and an anonymous type otherwise. <p>
      */
     //@ requires !(enclosingEnv instanceof EnvForCU);
-    protected TypeSig(String simpleName,
+    protected TypeSig(/*@ nullable */ String simpleName,
 		      /*@ non_null @*/ Env enclosingEnv,
 		      /*@ non_null @*/ TypeDecl decl) {
 	super();   //@ nowarn Pre; // can't do set before super()
@@ -448,8 +448,8 @@ public class TypeSig extends Type
     //@ requires (decl==null) == (CU==null);
     protected TypeSig(/*@non_null*/ String[] packageName,
 		    /*@ non_null @*/ String simpleName,
-		    TypeSig enclosingType,
-		    TypeDecl decl, CompilationUnit CU) {
+		    /*@ nullable */ TypeSig enclosingType,
+		    /*@ nullable */ TypeDecl decl, /*@ nullable */ CompilationUnit CU) {
 	super();		//@ nowarn Pre; // can't do set before super
 
 	member = true;
@@ -540,7 +540,7 @@ public class TypeSig extends Type
     //- invariant map.keyType == \type(String);
     //- invariant map.elementType == \type(TypeSig);
     //@ spec_public
-    private static final Hashtable map = new Hashtable(101);
+    private static final /*@ non_null */ Hashtable map = new Hashtable(101);
 
     public static final void clear() {
 	map.clear();
@@ -569,7 +569,7 @@ public class TypeSig extends Type
      * This function should only be called by OutsideEnv. <p>
      */
     //@ requires \nonnullelements(P);
-    static public TypeSig lookup(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
+    static public /*@ nullable */ TypeSig lookup(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
 	return (TypeSig)map.get(getKey(P,T));
     }
 
@@ -587,7 +587,7 @@ public class TypeSig extends Type
      */
     //@ requires \nonnullelements(P);
     //@ ensures \result != null;
-    static /*package*/ TypeSig get(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
+    static /*package*/ /*@ non_null */ TypeSig get(/*@non_null*/ String[] P, /*@ non_null @*/ String T) {
 	String key = getKey(P,T);
 	TypeSig result = (TypeSig)map.get(key);
 	if (result != null)
@@ -615,7 +615,7 @@ public class TypeSig extends Type
      */
     //@ ensures \result != null;
     //@ ensures state>=PARSED;
-    public TypeDecl getTypeDecl() {
+    public /*@ non_null */ TypeDecl getTypeDecl() {
 	if (myTypeDecl==null)
 	     preload();
 
@@ -630,7 +630,7 @@ public class TypeSig extends Type
      * but this should be transparent to most clients.) <p>
      */
     //@ ensures \result != null;
-    public CompilationUnit getCompilationUnit() {
+    public /*@ non_null */ CompilationUnit getCompilationUnit() {
 	if (myTypeDecl==null)
 	     preload();
 
@@ -714,7 +714,7 @@ public class TypeSig extends Type
      * the constant THE_UNNAMED_PACKAGE is returned.
      */
     //@ ensures \result != null;
-    public String getPackageName() {
+    public /*@ non_null */ String getPackageName() {
       if (packageName.length == 0)
 	return THE_UNNAMED_PACKAGE;
 
@@ -728,7 +728,7 @@ public class TypeSig extends Type
       return P.toString();
     }
 
-    public final static String THE_UNNAMED_PACKAGE = "<the unnamed package>";
+    public final static /*@ non_null */ String THE_UNNAMED_PACKAGE = "<the unnamed package>";
 
 
     /**
@@ -736,7 +736,7 @@ public class TypeSig extends Type
      * human-readable string suitable for display.
      */
     //@ ensures \result != null;
-    public String getTypeName() {
+    public /*@ non_null */ String getTypeName() {
 	if (enclosingType==null) {
 	    // package-member type:
 	    return simpleName;
@@ -762,7 +762,7 @@ public class TypeSig extends Type
      * omitted if it is the unnamed package.
      */
     //@ ensures \result != null;
-     public String getExternalName() {
+     public /*@ non_null */ String getExternalName() {
          String P = getPackageName();
          if (P==THE_UNNAMED_PACKAGE)
              return getTypeName();
@@ -788,7 +788,7 @@ public class TypeSig extends Type
 	return 0; 
     }
 
-    public Object childAt(int i) {
+    public /*@ nullable */ Object childAt(int i) {
 	throw new IndexOutOfBoundsException();
     }	//@ nowarn Exception;
 
@@ -803,7 +803,7 @@ public class TypeSig extends Type
     }
 
     
-    public Object accept(VisitorArgResult v, Object o) {
+    public /*@ non_null */ Object accept(VisitorArgResult v, Object o) {
 	return v.visitType( this,o );
     }
     
@@ -850,7 +850,7 @@ public class TypeSig extends Type
      * null, then the resulting type is checked to be accessible
      * from the caller. <p>
      */
-    public TypeSig lookupType(TypeSig caller,
+    public /*@ non_null */ TypeSig lookupType(/*@ non_null */ TypeSig caller,
 				/*@ non_null @*/ Identifier id, int loc) {
 	// Look locally first:
 	TypeSig result = lookupLocalType(caller,id);
@@ -907,7 +907,7 @@ public class TypeSig extends Type
      * accessible from the caller.<p>
      */
 
-     public TypeSig lookupLocalType(TypeSig caller, Identifier id) {
+     public /*@ nullable */ TypeSig lookupLocalType(/*@ nullable */ TypeSig caller, /*@ non_null */ Identifier id) {
 	TypeDeclElemVec elems = getTypeDecl().elems;
 	for (int i=0; i<elems.size(); i++) {
 	    TypeDeclElem e = elems.elementAt(i);

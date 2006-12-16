@@ -11,23 +11,23 @@ public class TypeSig extends javafe.tc.TypeSig {
     //@ requires \nonnullelements(packageName);
     public TypeSig(/*@ non_null @*/ String[] packageName,
 		   /*@ non_null */ String simpleName,
-		   javafe.tc.TypeSig enclosingType,
-		   TypeDecl decl,
-		   CompilationUnit CU) {
+		   /*@ nullable */ javafe.tc.TypeSig enclosingType,
+		   /*@ nullable */ TypeDecl decl,
+		   /*@ nullable */ CompilationUnit CU) {
 	super(packageName,simpleName,enclosingType,decl,CU);
     }
 
-    public TypeSig(String simpleName,
+    public TypeSig(/*@ nullable */ String simpleName,
 		/*@ non_null */ javafe.tc.Env enclosingEnv,
 		/*@ non_null */ TypeDecl decl) {
 	super(simpleName,enclosingEnv,decl);
     }
 
-    public FieldDeclVec jmlFields;
-    public FieldDeclVec jmlHiddenFields;
-    public FieldDeclVec jmlDupFields;
+    public /*@ nullable */ FieldDeclVec jmlFields;
+    public /*@ non_null */ FieldDeclVec jmlHiddenFields;
+    public /*@ non_null */ FieldDeclVec jmlDupFields;
 
-    public boolean hasField(Identifier id) {
+    public boolean hasField(/*@ non_null */ Identifier id) {
 	// FIXME: jmlFIelds can be null for a JMLDataGroup
 	prep();
 	if (FlowInsensitiveChecks.inAnnotation && jmlFields != null) {
@@ -40,7 +40,7 @@ public class TypeSig extends javafe.tc.TypeSig {
 
     	//@ also
     	//@   requires caller != null;
-    public FieldDecl lookupField(Identifier id, 
+    public /*@non_null*/ FieldDecl lookupField(/*@non_null*/Identifier id, 
                                  /*@non_null*/javafe.tc.TypeSig caller) 
     		throws LookupException {
 	FieldDecl r = null;

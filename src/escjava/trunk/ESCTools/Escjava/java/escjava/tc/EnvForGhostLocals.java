@@ -102,7 +102,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      *
      * If isStaticContext() returns true, then this is the type of "this".
      */
-    public TypeSig getEnclosingClass() {
+    public /*@ nullable */ TypeSig getEnclosingClass() {
 	return parent.getEnclosingClass();
     }
 
@@ -114,7 +114,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * Note: this is considered a current instance, not an enclosing
      * instance, even inside its methods.
      */
-    public TypeSig getEnclosingInstance() {
+    public /*@ nullable */ TypeSig getEnclosingInstance() {
 	return parent.getEnclosingInstance();
     }
 
@@ -158,7 +158,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      * error is reported at that location via ErrorSet else one of
      * its possible meanings is returned.<p>
      */
-    public TypeSig lookupSimpleTypeName(TypeSig caller, /*@non_null*/Identifier id, int loc) {
+    public /*@ nullable */ TypeSig lookupSimpleTypeName(/*@ nullable */ TypeSig caller, /*@non_null*/Identifier id, int loc) {
 	// We bind no type variables ourshelves:
 	return parent.lookupSimpleTypeName(caller, id, loc);
     }
@@ -187,7 +187,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      *
      * In the field case, id disambiguates to C[.this].id.<p>
      */
-    public ASTNode locateFieldOrLocal(/*@non_null*/Identifier id) {
+    public /*@ nullable */ ASTNode locateFieldOrLocal(/*@non_null*/Identifier id) {
 	// Only return my declaration if it matches and we are in an
 	// annotation environment
 	if (id == decl.id && FlowInsensitiveChecks.inAnnotation)
@@ -208,7 +208,7 @@ public class EnvForGhostLocals extends Env implements/*privately*/ Cloneable {
      *
      * id disambiguates to C[.this].id.<p>
      */
-    public TypeSig locateMethod(/*@non_null*/Identifier id) {
+    public /*@ nullable */ TypeSig locateMethod(/*@non_null*/Identifier id) {
 	// we bind no methods ourshelves:
 	return parent.locateMethod(id);
     }

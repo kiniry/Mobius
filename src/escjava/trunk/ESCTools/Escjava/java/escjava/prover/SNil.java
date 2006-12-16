@@ -16,7 +16,7 @@ final class SNil extends SList
      * has not yet been allocated.
      */
     //@ spec_public
-    private static SNil single = null;
+    private static /*@ nullable */ SNil single = null;
 
     /**
      * Instance creation is private so we can ensure that at most one
@@ -63,7 +63,7 @@ final class SNil extends SList
     //@ also
     //@ private normal_behavior
     //@   ensures \result <==> (o == this);
-    public /*@ pure @*/ boolean equals(Object o) {
+    public /*@ pure @*/ boolean equals(/*@ nullable */ Object o) {
         return o == this;
     }
 

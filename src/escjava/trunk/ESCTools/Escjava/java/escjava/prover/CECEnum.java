@@ -56,7 +56,7 @@ class CECEnum implements Enumeration {
     //@ invariant pending.elementType == \type(SimplifyOutput);
     //@ invariant !pending.containsNull;
     //@ spec_public
-    private final Vector pending = new Vector();
+    private final /*@ non_null */ Vector pending = new Vector();
 
 
     /***************************************************
@@ -148,7 +148,7 @@ class CECEnum implements Enumeration {
      ** NoSuchElementException if no more elements are left.
      **/
     //@ also modifies simplifyDone;
-    public Object nextElement() /*throws NoSuchElementException*/ {
+    public /*@ non_null */ Object nextElement() /*throws NoSuchElementException*/ {
 	if (!hasMoreElements())
 	    throw new NoSuchElementException();
 
@@ -230,7 +230,7 @@ class CECEnum implements Enumeration {
     }
 
     //@ ensures \result != null;
-    private SimplifyResult readResultMessage() {
+    private /*@ non_null */ SimplifyResult readResultMessage() {
       String msg = P.readWord("\n");
       P.checkChar('\n');
       SimplifyResult result = null;

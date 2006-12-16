@@ -23,7 +23,7 @@ import escjava.prover.*;
   **/
 
 class Suggestion {
-  static /*null*/ String generate(int warningTag, Object auxInfo,
+  static /*@ nullable */ String generate(int warningTag, /*@ nullable */ Object auxInfo,
 			 /*@ non_null */ RoutineDecl rd,
 			 /*@ non_null */ Set directTargets,
 			 /*@ non_null */ SList cc, int locDecl) {
@@ -71,7 +71,7 @@ class Suggestion {
   }
 
   //@ ensures \result != null;
-  private static String gNull(/*@ non_null */ VarInit E,
+  private static /*@ non_null */ String gNull(/*@ non_null */ VarInit E,
 			      /*@ non_null */ RoutineDecl rd) {
     switch (E.getTag()) {
       case TagConstants.FIELDACCESS:
@@ -153,7 +153,7 @@ class Suggestion {
   }
 
   //@ ensures \result != null;
-  private static String gNeg(/*@ non_null */ VarInit E,
+  private static /*@ non_null */ String gNeg(/*@ non_null */ VarInit E,
 			     /*@ non_null */ RoutineDecl rd,
 			     /*@ non_null */ Set directTargets) {
     switch (E.getTag()) {
@@ -228,7 +228,7 @@ class Suggestion {
 
 
   //@ ensures \result != null;
-  private static String gArrStore(/*@ non_null */ VarInit E,
+  private static /*@ non_null */ String gArrStore(/*@ non_null */ VarInit E,
 				  /*@ non_null */ RoutineDecl rd) {
       switch (E.getTag()) {
       case TagConstants.FIELDACCESS:
@@ -332,7 +332,7 @@ class Suggestion {
   } 
 
 
-  private static String gInvariant(/*@ non_null */ Expr E,
+  private static /*@ nullable */ String gInvariant(/*@ non_null */ Expr E,
 				   /*@ non_null */ RoutineDecl rd,
 				   /*@ non_null */ SList cc,
 						   int locDecl) {
@@ -363,7 +363,7 @@ class Suggestion {
     **/
 
   //@ ensures \result != null;
-  static MethodDecl getOriginalMethod(/*@ non_null */ MethodDecl md) {
+  static /*@ non_null */ MethodDecl getOriginalMethod(/*@ non_null */ MethodDecl md) {
     MethodDecl orig = md;
     while (true) {
       MethodDecl mdSuper = FlowInsensitiveChecks.getSuperClassOverride(orig);
@@ -376,7 +376,7 @@ class Suggestion {
 
 
   //@ ensures \result != null;
-  private static String name(/*@ non_null */ Identifier id, int loc) {
+  private static /*@ non_null */ String name(/*@ non_null */ Identifier id, int loc) {
     String s = "'" + id + "'";
     if (!Location.isWholeFileLoc(loc)) {
       s += " at " + Location.toLineNumber(loc) + "," + Location.toColumn(loc);
@@ -387,7 +387,7 @@ class Suggestion {
 
 
   //@ ensures \result != null;
-  private static String typeName(/*@ non_null */ Type type) {
+  private static /*@ non_null */ String typeName(/*@ non_null */ Type type) {
       String name;
       if (type instanceof PrimitiveType) {
 	  PrimitiveType pt = (PrimitiveType) type;
@@ -443,7 +443,7 @@ class Suggestion {
     /* Finds fields that potentially need to be declared injective.  This
        routine simply searches for fields f in an expression of the form
        brokenObj.f.f' or brokenObj.f[i]. */
-    private static Set possiblyInjectiveFields(/*@ non_null */ Expr e) {
+    private static /*@ nullable */ Set possiblyInjectiveFields(/*@ non_null */ Expr e) {
 	if (e instanceof LabelExpr)
 	    return possiblyInjectiveFields(((LabelExpr) e).expr);
 	else if (e instanceof QuantifiedExpr)
@@ -533,7 +533,7 @@ class Suggestion {
     
     /* A helper function for possiblyInjectiveFields that checks for injective
        fields in NaryExprs. */
-    private static Set checkNaryExpr(/*@ non_null */ NaryExpr e) {
+    private static /*@ nullable */ Set checkNaryExpr(/*@ non_null */ NaryExpr e) {
 	ExprVec exprs = e.exprs;
 	int size = exprs.size();
 	Set total = new Set();

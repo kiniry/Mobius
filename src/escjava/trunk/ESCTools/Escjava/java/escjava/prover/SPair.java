@@ -28,14 +28,14 @@ import java.io.*;
      ** clients and should be non-null.
      **/
     //@ invariant head != null;
-    public SExp head;
+    public /*@ non_null */ SExp head;
 
     /**
      ** The tail of our list; this field should not be modified by
      ** clients and should be non-null.
      **/
     //@ invariant tail != null;
-    public SList tail;
+    public /*@ non_null */ SList tail;
 
 
     /***************************************************
@@ -50,7 +50,7 @@ import java.io.*;
      ** Both must be non-null.<p>
      **/
     //@ requires head != null && tail != null;
-    public SPair(SExp head, SList tail) {
+    public SPair(/*@ non_null */ SExp head, /*@ non_null */ SList tail) {
 	this.head = head;
 	this.tail = tail;
     }
@@ -87,7 +87,7 @@ import java.io.*;
     /**
      ** Return true if the heads are equal and the tails are equal.
      **/
-    public boolean equals(Object o) {
+    public boolean equals(/*@ nullable */ Object o) {
         if (!(o instanceof SPair)) return false;
         SPair a = (SPair)o;
         return this.head.equals(a.head) && this.tail.equals(a.tail);

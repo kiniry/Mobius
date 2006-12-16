@@ -106,7 +106,7 @@ public class VcToString {
   }
   
   // holds set of symbols used
-  //@ spec_public
+  /*@ spec_public */
   protected/*@  non_null */Set symbols = new Set();
   
   // string of initial assumptions
@@ -120,7 +120,7 @@ public class VcToString {
   
   protected VcToString() {}
   
-  protected String vc2Term(/*@ non_null */Expr e, Hashtable subst) {
+  protected /*@ non_null */ String vc2Term(/*@ non_null */Expr e, /*@ non_null */ Hashtable subst) {
     Assert.notNull(e);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     PrintStream ps = new PrintStream(baos);
@@ -131,7 +131,7 @@ public class VcToString {
     return s;
   }
   
-  protected void printDefpreds(/*@  non_null */PrintStream to, DefPredVec preds) {
+  protected void printDefpreds(/*@  non_null */PrintStream to, /*@ non_null */ DefPredVec preds) {
     for (int i = 0; i < preds.size(); i++) {
       DefPred dp = preds.elementAt(i);
       to.print("(DEFPRED (" + dp.predId);
@@ -144,9 +144,9 @@ public class VcToString {
     }
   }
   
-  protected DefPredVec preds;
+  protected /*@ nullable */ DefPredVec preds;
   
-  protected DefPredVec getDefpreds(/*@ non_null */Expr e) {
+  protected /*@ non_null */ DefPredVec getDefpreds(/*@ non_null */Expr e) {
     preds = DefPredVec.make();
     getDefpredsHelper(e);
     return preds;
@@ -207,7 +207,7 @@ public class VcToString {
     printFormula(out, subst, e);
   }
   
-  protected void printFormula(/*@ non_null */PrintStream out, Hashtable subst,
+  protected void printFormula(/*@ non_null */PrintStream out, /*@ non_null */ Hashtable subst,
 			      /*@ non_null */Expr e) {
     Assert.notNull(e);
     
@@ -215,7 +215,7 @@ public class VcToString {
   }
   
   protected void reallyPrintFormula(/*@ non_null */PrintStream out,
-				    Hashtable subst,
+				    /*@ non_null */ Hashtable subst,
 				    /*@ non_null */Expr e) {
     
     // System.out.print("printFormula: ");
@@ -504,7 +504,7 @@ public class VcToString {
   
   protected boolean insideNoPats = false;
   
-  protected void printTerm(/*@ non_null */PrintStream out, Hashtable subst,
+  protected void printTerm(/*@ non_null */PrintStream out, /*@ non_null */ Hashtable subst,
 			   /*@ non_null */Expr e) {
       
       termNumber++;
@@ -778,8 +778,8 @@ public class VcToString {
     }
   }
   
-  //@ requires ne.op == TagConstants.DTTFSA;
-  protected void printDttfsa(/*@ non_null */PrintStream out, Hashtable subst,
+  // @ requires ne.op == TagConstants.DTTFSA;
+  protected void printDttfsa(/*@ non_null */PrintStream out, /*@ non_null */ Hashtable subst,
 			     /*@ non_null */NaryExpr ne) {
     LiteralExpr lit = (LiteralExpr)ne.exprs.elementAt(1);
     String op = (String)lit.value;
@@ -803,7 +803,7 @@ public class VcToString {
   
   // ======================================================================
   
-  protected void printVarDecl(/*@ non_null */PrintStream out, GenericVarDecl decl) {
+  protected void printVarDecl(/*@ non_null */PrintStream out, /*@ non_null */ GenericVarDecl decl) {
     out.print(Atom.printableVersion(UniqName.variable(decl)));
   }
   
