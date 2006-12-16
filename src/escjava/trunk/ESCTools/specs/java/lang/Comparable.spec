@@ -1,6 +1,6 @@
 // @(#)$Id$
 
-// Copyright (C) 2001, 2002 Iowa State University
+// Copyright (C) 2001-2006 Iowa State University, DSRG.org.
 
 // This file is part of JML
 
@@ -23,7 +23,7 @@ package java.lang;
 /** JML's specification of java.lang.Comparable.
  * These are objects with a total ordering that is an equivalence relation.
  * @version $Revision$
- * @author Gary T. Leavens
+ * @author Gary T. Leavens, et al.
  */
 public interface Comparable {
 
@@ -46,34 +46,24 @@ public interface Comparable {
       @*/
 
     /*@ public normal_behavior
-      @    requires x != null && y != null;
-      @    ensures !(x <: \type(Comparable)) ==> !\result;
-      @    ensures !(y <: \type(Comparable)) ==> !\result;
-      @    ensures \result == definedComparison(y,x);
-      @ public static model pure boolean
-      @ definedComparison(Class x, Class y);
+      @   requires !(\typeof(o) <: \type(Comparable));
+      @   ensures  !\result;
+      @ also public normal_behavior
+      @   requires \typeof(o) <: \type(Comparable);
+      @    ensures ((\typeof(this) <: \typeof(o)) ||
+      @			(\typeof(o) <: \typeof(this))) ==> \result;
+      @ // subclasses will strengthen this contract.
+      @ public model pure boolean
+      @ definedComparison(non_null Object o);
       @*/
 
-    /*$ public normal_behavior
-      $   requires x != null && y != null;
-      $ public static model pure boolean
-      $		definedComparison(Object x, Object y);
-      $*/
-
-    /*@ 
-      @ public exceptional_behavior
-      @    requires o == null;
-      @    signals_only NullPointerException;
-      @ also public exceptional_behavior
-      @    requires o != null;
-      @    requires !definedComparison(this.getClass(), o.getClass());
+    /*@ public exceptional_behavior
+      @    requires !definedComparison(o);
       @    signals_only ClassCastException;
-      @ also
-      @   public behavior
-      @    requires o != null; 
-      @    requires definedComparison(getClass(), o.getClass());
+      @ also public normal_behavior
+      @    requires definedComparison(o);
       @    ensures o == this ==> \result == 0; // reflexive
-      @    //ensures sgn(\result) == - sgn(((Comparable)o).compareTo(this)); // antisymmetric
+      @    ensures sgn(\result) == - sgn(((Comparable)o).compareTo(this)); // antisymmetric
       @*/
     /*@ pure @*/ int compareTo(/*@ non_null */ Object o);
 
@@ -81,44 +71,4 @@ public interface Comparable {
     /*+@ public instance invariant
       @   (\forall Comparable x; x != null; x.compareTo(x) == 0);
       @*/
-
-    // compareTo is antisymmetric
-    /*-$ public instance invariant
-      $   (\forall Comparable x, y; x != null && y != null
-      $                             && definedComparison(x, y)
-      $                             && definedComparison(y, x);
-      $                 sgn(x.compareTo(y)) == -sgn(y.compareTo(x)) );
-      $*/
-
-    // compareTo is transitive
-    /*-$ public instance invariant
-      $     (\forall int n; n == -1 || n == 1;
-      $      (\forall Comparable x, y, z;
-      $              x != null && y != null && z != null
-      $               && definedComparison(x, y) && definedComparison(y, z)
-      $               && definedComparison(x, z);
-      $              sgn(x.compareTo(y)) == n && sgn(y.compareTo(z)) == n
-      $                 ==> sgn(x.compareTo(z)) == n));
-      $ public instance invariant
-      $     (\forall int n; n == -1 || n == 1;
-      $      (\forall Comparable x, y, z;
-      $             x != null && y != null && z != null
-      $              && definedComparison(x, y) && definedComparison(y, z)
-      $              && definedComparison(x, z);
-      $             (sgn(x.compareTo(y)) == 0 && sgn(y.compareTo(z)) == n
-      $               || sgn(x.compareTo(y)) == n && sgn(y.compareTo(z)) == 0)
-      $             ==> sgn(x.compareTo(z)) == n));
-      $*/
-
-    // compareTo returning 0 means the other argument
-    // is in the same equivalence class
-    /*-$ public instance invariant
-      $    (\forall Comparable x, y, z;
-      $             x != null && y != null && z != null
-      $              && definedComparison(x, y) && definedComparison(x, z)
-      $              && definedComparison(y, z);
-      $             sgn(x.compareTo(y)) == 0
-      $             ==> sgn(x.compareTo(z)) == sgn(y.compareTo(z)));
-      $*/
-
 }
