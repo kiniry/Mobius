@@ -97,7 +97,7 @@ public abstract class OutputStream extends Object {
       @   signals (IOException) (* an IO error occured *);
       @   signals (NullPointerException) b == null;
       @   signals_only IOException, NullPointerException; */
-    public void write(byte[] b) throws IOException;
+    public void write(/*@ non_null*/ byte[] b) throws IOException;
 
 // FIXME - record what was written
     /*@ public behavior
@@ -120,5 +120,5 @@ public abstract class OutputStream extends Object {
       @   assignable \nothing;
       @   //-@ signals_only IOException;
       @*/
-    public void write(byte[] b, int off, int len) throws IOException;
+    public void write(/*@ non_null*/ byte[] b, int off, int len) throws IOException;
 }

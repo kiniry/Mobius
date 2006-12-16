@@ -37,12 +37,12 @@ public class FilterOutputStream extends java.io.OutputStream {
     /*@
       @ 
       @*/
-    public void write(byte[] Param0)
+    public void write(/*@ non_null */ byte[] Param0)
         throws IOException;
 
     /*@
       @ 
       @*/
-    public void write(byte[] Param0, int Param1, int Param2)
+    public void write(/*@ non_null */ byte[] Param0, int Param1, int Param2)
         throws IOException;
 }

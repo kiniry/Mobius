@@ -75,7 +75,7 @@ public interface Comparable {
       @    ensures o == this ==> \result == 0; // reflexive
       @    //ensures sgn(\result) == - sgn(((Comparable)o).compareTo(this)); // antisymmetric
       @*/
-    /*@ pure @*/ int compareTo(Object o);
+    /*@ pure @*/ int compareTo(/*@ non_null */ Object o);
 
     // compareTo is reflexive
     /*+@ public instance invariant

@@ -448,7 +448,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       char visitorArgResultRoot[1024];
       strcpy(visitorArgResultRoot, visitorRoot);
       strcat(visitorArgResultRoot, "ArgResult");
-      fprintf(o, "public final /*@ nullable */ Object accept(/*@ non_null */ %s v, /*@ nullable */ Object o) { \n", visitorArgResultRoot);
+      fprintf(o, "public final /*@ non_null */ Object accept(/*@ non_null */ %s v, /*@ nullable */ Object o) { \n", visitorArgResultRoot);
       indent(o, 2*ind);
       fprintf(o, "if (v instanceof " VISITORARGRESULTCLASS ") ");
       fprintf(o, "return ((" VISITORARGRESULTCLASS ")v).visit%s(this, o); else return null;\n",
@@ -456,7 +456,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       indent(o, ind);
       fprintf(o, "}\n\n");
     } else {
-      fprintf(o,"public final Object accept(" VISITORARGRESULTCLASS " v, Object o) {"
+      fprintf(o,"public final /*@ non_null */ Object accept(/*@ non_null */ " VISITORARGRESULTCLASS " v, Object o) {"
 	      "return v.visit%s(this, o); }\n\n",
 	      class->name);
     }

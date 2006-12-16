@@ -796,14 +796,14 @@ public class TypeSig extends Type
 	return TagConstants.TYPESIG;
     }
 
-    public void accept(Visitor v) {
+    public void accept(/*@ non_null */ Visitor v) {
 	// v does not have a special visitor method for TypeSig
 	// so just use the one for Type
 	v.visitType( this );
     }
 
     
-    public /*@ non_null */ Object accept(VisitorArgResult v, Object o) {
+    public /*@ non_null */ Object accept(/*@ non_null */ VisitorArgResult v, /*@ nullable */ Object o) {
 	return v.visitType( this,o );
     }
     
@@ -1260,7 +1260,7 @@ public class TypeSig extends Type
     
     //@ ensures \result != null;
     //@ ensures \result.id == id;
-    public FieldDecl lookupField(Identifier id, /*@ non_null */ TypeSig caller) 
+    public /*@ non_null */ FieldDecl lookupField(/*@ non_null */ Identifier id, /*@ non_null */ TypeSig caller) 
             throws LookupException
     {
         FieldDeclVec fields = getFields(false);
@@ -1283,7 +1283,7 @@ public class TypeSig extends Type
     
     /** TBW */
     
-    public boolean hasField(Identifier id) {
+    public boolean hasField(/*@ non_null */ Identifier id) {
         FieldDeclVec fields = getFields(false);
         for(int i=0; i<fields.size(); i++)
             if (fields.elementAt(i).id == id) return true;

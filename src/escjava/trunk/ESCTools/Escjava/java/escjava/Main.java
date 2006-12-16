@@ -54,7 +54,7 @@ import javafe.ast.LShiftVisitor;
 
 public class Main extends javafe.SrcTool
 {
-    static public final String jarlocation; // can be null
+    static public final /*@ nullable */ String jarlocation; // can be null
     
     static {
 	ClassLoader loader = GUI.class.getClassLoader();
