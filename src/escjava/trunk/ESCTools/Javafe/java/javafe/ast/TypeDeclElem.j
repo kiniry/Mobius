@@ -11,9 +11,9 @@ public interface TypeDeclElem {
     /** Return the tag of a node. */
     public int getTag();
 
-    public void accept(Visitor v);
+    public void accept(/*@ non_null */ Visitor v);
 
-    public Object accept(VisitorArgResult v, Object o);	
+    public /*@ non_null */ Object accept(/*@ non_null */ VisitorArgResult v, /*@ nullable */ Object o);	
 
     /**
      ** Do we have a parent field? <p>
