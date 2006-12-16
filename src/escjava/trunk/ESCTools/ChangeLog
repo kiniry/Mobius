@@ -1,3 +1,861 @@
+2006-12-16  perryjames  <perry@dsrg.org>
+
+	* Javafe/java/javafe/ast/TypeDeclElem.j:
+	* Javafe/java/javafe/ast/IdentifierNode.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	* Javafe/astgen/astoutput.c:
+	* specs/java/io/FilterOutputStream.refines-spec:
+	* specs/java/io/OutputStream.refines-java:
+	* specs/java/lang/Comparable.spec:
+	* Escjava/java/escjava/Main.java:
+	update of nullity annotations
+
+	* Javafe/java/javafe/util/StackVector.java:
+	* Javafe/astgen/astoutput.c:
+	* Javafe/java/javafe/ast/ASTDecoration.java:
+	* Javafe/java/javafe/reader/CachedReader.java:
+	* Javafe/java/javafe/tc/Env.java:
+	* Javafe/java/javafe/tc/TypeSig.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbdd.java:
+	* Escjava/mochalib/java/mocha/wrappers/jbdd/jbddManager.java:
+	* Escjava/java/escjava/tc/EnvForGhostLocals.java:
+	* Escjava/java/escjava/tc/TypeSig.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/InitialState.java:
+	* Escjava/java/escjava/translate/NoWarn.java:
+	* Escjava/java/escjava/translate/RepHelper.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	* Escjava/java/escjava/translate/Suggestion.java:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/translate/UniqName.java:
+	* Escjava/java/escjava/translate/VcToString.java:
+	* Escjava/java/escjava/pa/generic/EnumClausesAbstractor.java:
+	* Escjava/java/escjava/pa/generic/EnumMaxClausesFindMinAbstractor.java:
+	* Escjava/java/escjava/parser/OldVarDecl.java:
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/prover/SList.java:
+	* Escjava/java/escjava/prover/SNil.java:
+	* Escjava/java/escjava/prover/SPair.java:
+	* Escjava/java/escjava/prover/SimplifyComment.java:
+	* Escjava/java/escjava/prover/TeeOutputStream.java:
+	* Escjava/java/escjava/reader/RefinementCachedReader.java:
+	* Escjava/java/escjava/backpred/FindContributors.java:
+	* Escjava/java/escjava/gui/EscFrame.java:
+	* Escjava/java/escjava/gui/EscOptions.java:
+	* Escjava/java/escjava/gui/TaskQueue.java:
+	* Escjava/java/escjava/ast/DerivedMethodDecl.java:
+	* Escjava/java/escjava/ProverManager.java:
+	* Escjava/java/escjava/Status.java:
+	* Escjava/java/escjava/ColorOptions.java:
+	updated nullity modifiers
+
+2006-12-13  chalin  <chalin@cs.concordia.ca>
+
+	* .externalToolBuilders/make-clean.launch:
+	* .externalToolBuilders/make-source.launch:
+	Removed env vars defintions for SIMPLIFY and ESCTOOLS_ROOT since
+	the values for these can be obtained from the environment (and
+	e.g. you don't want to fix SIMPLIFY to be the linux version as
+	this prevents us from running it under cygwin).
+
+	* Escjava/test/jdktests/TestList.java-expected: (fixed line numbers)
+	
+	* .settings/org.eclipse.jdt.core.prefs: 
+
+	* Escjava/test/junittests/Bug1.java-expected:
+	* Escjava/test/junittests/skip:
+	Need to skip Bug1 until we setup a process to replace absolute
+	path prefixes with e.g. ESCTOOLROOT as is done in jdktests.
+
+	* Escjava/test/jdktests/TestList.java-expected:
+	* Escjava/test/jdktests/TestList.java:
+	Fixed test to conform to adapted Collections spec.
+
+	* Escjava/test/junittests/Bug1.java-expected:
+	"Possible assignment of null to variable declared non_null" will
+	also now be reported.
+
+	* specs/java/io/File.refines-spec:
+	Fixes to specs; mainly added nullity annotations.
+
+	* specs/java/lang/Byte.jml: Fixes to specs (found during IDC work).
+
+	* specs/java/lang/Throwable.jml:
+	* specs/java/util/Collection.spec:
+	* specs/java/util/Dictionary.refines-spec:
+	* specs/java/util/Locale.jml:
+	* specs/java/util/ResourceBundle.jml:
+	* specs/java/util/Set.spec:
+	Updates to nullity modifiers.
+
+2006-12-13  perryjames  <perry@dsrg.org>
+
+	* Utils/junitutils/Utils.java:
+	* specs/java/lang/Class.jml:
+	* specs/java/util/Locale.jml:
+	* Javafe/java/javafe/util/ErrorSet.java:
+	* Javafe/java/jtools/jwhich/JWhich.java:
+	* Javafe/java/tohtml/Java2Html.java:
+	* Javafe/test/javafe/parser/test/TestLex.java:
+	* Utils/junitutils/Diff.java:
+	* Javafe/java/javafe/ast/Identifier.java:
+	* Javafe/java/javafe/ast/IdentifierNode.java:
+	* Javafe/java/javafe/parser/ParseType.java:
+	* Javafe/java/javafe/parser/TagConstants.java:
+	* Javafe/java/javafe/reader/ASTClassFileParser.java:
+	* Javafe/java/javafe/tc/Types.java:
+	* Escjava/java/escjava/prover/CECEnum.java:
+	* Escjava/java/escjava/prover/ProverResponse.java:
+	* Escjava/java/escjava/tc/Datagroups.java:
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	* Escjava/java/escjava/translate/GC.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/DerivedMethodDecl.java:
+	* Escjava/java/escjava/gui/EscOptions.java:
+	* Escjava/java/escjava/gui/EscOutputFrame.java:
+	* Escjava/java/escjava/gui/FrameShower.java:
+	* Escjava/java/escjava/gui/TaskQueue.java:
+	* Escjava/java/escjava/pa/generic/EnumNFindK.java:
+	* Escjava/Makefile:
+	update of nullity annotations
+
+2006-12-12  chalin  <chalin@cs.concordia.ca>
+
+	* specs/java/io/Reader.refines-spec:
+	* specs/java/io/InputStreamReader.refines-spec:
+	New *Reader specs.
+
+2006-12-11  chalin  <chalin@cs.concordia.ca>
+
+	* specs/junit/framework/TestCase.jml: Adding nullity modifiers.
+	With this commit, jmlc (of CVS HEAD) reports no errors when run on
+	escj. [2006-12-11]
+
+	* Escjava/java/escjava/vcGeneration/TDotVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/ATSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TAndRemover.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TNotRemover.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSplitter.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/cvc3/TCvc3Visitor.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/simplify/TSimplifyVisitor.java:
+	* Escjava/java/escjava/vcGeneration/xml/TXmlVisitor.java:
+	Cleaning up: adding nullity modifiers (to be consistent with
+	superclass method declaration).
+
+2006-12-11  g_karab  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	Modified DefGCmd.trAndGen() DefGCmd.morfAsserts so that all
+	non-generating GC expressions create the ASSERT true; command by
+	default.  Easier for tracing and showing the effects of IDCing in all
+	cases.
+	Modified DefGCmd.minHMap4Tr() so that a null map is returned instead
+	for the {this ==> RES} one.  This map is only needed for
+	constructors.  We still need to find a way to distinguish methods from
+	constructors in there for the time being and for our context this is
+	satisfactory.
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Modified the Translate.call() method.
+	When the spec for the call is read, remove all Spec.pre and Spec.post
+	conditions from the vectors that are generated through IDC.  This
+	solution is preferrable to just skipping them, because they are not
+	printed in the sugared version of the call spec when -idc is turn on.
+	I am pretty sure it will confuse more people if it was left as is.
+
+2006-12-10  chalin  <chalin@cs.concordia.ca>
+
+	* specs/java/lang/StringBuffer.jml:
+	insert() methods allow offset to be less than AND equal to the
+	StringBuffer lenght.  [Fix contributed by Perry@dsrg.org]
+
+2006-11-30  g_karab  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Made a fix pertinent to Bag506 which I missed on my previous commit.
+
+2006-11-28  chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/ast/Utils.java:
+	updated method contracts (added nullable)
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java: (updated comments)
+
+	* Escjava/java/escjava/ast/hierarchy.j:
+	Updated comments, i.e. list of SimpleModifierPragma now includes
+	non_null and nullable.
+
+	* Escjava/java/escjava/Options.java: Adding option, -nonNullByDefault.
+
+2006-11-28  g_karab  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/Translate.java:
+	Bug#506 - The problem with string concatanation was in
+	Translate.trExpr - in particular in the case body starting in line
+	2722.  There are three cases been dealt with in there:
+	1) VariableAccess
+	2) FieldAccess
+	3) ArrayRef
+	For the first two there is code that handles nodes with tag==STRINGCAT
+	on the last one however, there isn't.  I just added the code to do so.
+
+2006-11-28  chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/vcGeneration/cvc3/Cvc3Prover.java:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/pvs/PvsProver.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/pvs/TPvsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/simplify/SimplifyProver.java:
+	Replacing depricated method calls by the recommended replacements.
+
+	* specs/java/io/ByteArrayInputStream.refines-spec:
+	* specs/java/io/InputStream.refines-java:
+	Fixing of bugs reported by ESC/Java2 using definedness checking (IDC).
+
+	* specs/java/io/StringWriter.refines-spec:
+	* .project:
+	* .settings/org.eclipse.jdt.ui.prefs:
+	*** empty log message ***
+
+	* .settings/org.eclipse.jdt.core.prefs:
+	Must not rely on the default JRE to be 1.4 (and it is best to
+	continue building with a compliance level of 1.4 until we support
+	5.0).
+
+2006-11-27  chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/Translate.java:
+	escjava.translate.Translate.arrayRefWriteCheck() now handles array
+	refs to array refs.
+
+	* Escjava/java/escjava/translate/Translate.java:
+	escjava.translate.Translate.arrayRefWriteCheck() now returns
+	immediately if the array ref expression is not of a reference
+	type.
+
+	* Escjava/test/escjava/test/testA0/.cvsignore:
+
+	* Escjava/test/escjava/test/testA0/NullArr1b.java:
+	Added test case for assignment to element of arrays of primitive type.
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/AnnotationHandler.java:
+	In some situations escjava.AnnotationHandler.makeNonNullExpr(Expr,
+	int) is called with an Expr that is not properly type annotated
+	(has to do with handling of strings).  As a temporary fix, I am
+	making use of javafe.tc.FIC.getTypeOrNull().
+
+	* Escjava/java/escjava/translate/Translate.java:
+	escjava.translate.Translate.arrayRefWriteCheck(): now handling
+	case were array is an field access expression.
+
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/test/escjava/test/testA0/ans:
+	"a[i] = null" will now fail if a is declared non-null.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	(refactoring; no new functionality)
+
+	* Escjava/test/escjava/test/rtest:
+	Added tests for required environment variables.  If not set, issue
+	a warning and use a reasonable default -- this allows for simple
+	command line invocation of this script.
+
+	* Escjava/test/escjava/test/testA0/ans:
+	(removing execution trace information - since it is apparently not
+	generated when -q is used)
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/test/escjava/test/testA0/.cvsignore:
+	* Escjava/test/escjava/test/testA0/NullArr.java:
+	* Escjava/test/escjava/test/testA0/ans:
+	Added support for method return types (non_null array types).
+
+	* Escjava/test/escjava/test/testA0/run:
+	(Will remove and re-add in an attempt to get the unix permission
+	bits set right.)
+
+	* Escjava/test/escjava/test/testA0/NullArr1b.java:
+	* Escjava/test/escjava/test/testA0/run:
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	- escjava.translate.TrAnExpr.fieldTypeCorrect(FieldDecl): enhanced
+	support for non_null to include non-nullity of array elements.
+	- escjava/test/testA0: added NullArr1b.java.
+
+	* Escjava/java/escjava/translate/InitialState.java:
+	Updated comment (w.r.t. non-null).
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Misc. fixes to comments (regarding methods for handling of non_null).
+
+2006-11-26  chalin  <chalin@cs.concordia.ca>
+
+	* Escjava/test/escjava/test/alltests:
+	Two new entries: one for new non-null semantics for array
+	declarations and the other (currently disabled) for the new
+	definedness semantics.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/test/escjava/test/testA0/NullArr.java:
+	* Escjava/test/escjava/test/testA0/ans:
+	* Escjava/test/escjava/test/testA0/run:
+	One step closer to supporting non-null by default.  With this
+	commit, use of the "-nne 1" command line argument will cause escj
+	to constrain arrays declared non_null so that their elements
+	(currently in the first dimension only) are non-null as well.  (Of
+	course this only applies if the element type is a reference type.)
+
+	* Escjava/test/junittests/ParseDuration.java-expected:
+	* Escjava/test/junittests/TypeErrors.java-expected:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Escjava/test/escjava/test/test34/ans:
+	* Calvin/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Calvin/java/escjava/test/test34/ans:
+	Change in error message: dropping "only" from "takes only one
+	argument" to since "only" implies that more than one actual
+	parameter was given, when in fact there have been no actual
+	parameters.
+
+	* Escjava/java/escjava/prover/jniw/Test.java:
+	Adding missing package declaration.
+
+2006-11-09  everest  <everest@ucd.ie>
+
+	* docs/Escjava2-Logics/coq/defs.v:
+	changed the name of the type, the way arithmetic is handled.
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	some minor changes due to the new version of the logic (t_int -> int)
+
+	* docs/Escjava2-Logics/coq/defs.v:
+	I changed the definition of S (the sort used for the unsorted
+	operations ;) ) the coercion work better, etc...
+
+2006-10-31  alx-gforge  <alx-gforge@ucd.ie>
+
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/ParseUtil.java:
+	* Javafe/java/javafe/parser/TagConstants.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Escjava/java/escjava/parser/EscPragmaParser.java:
+	commit before leaving Nijmegen
+
+2006-10-29  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/Inconsistent.java-expected:
+	* Escjava/test/junittests/Inherit.java-expected:
+	* Escjava/test/junittests/InheritedInvariant.java:
+	Test results
+
+	* Escjava/test/junittests/Inconsistent.java:
+	* Escjava/test/junittests/Inherit.java:
+	* Escjava/test/junittests/ManyAlsos.java:
+	* Escjava/test/junittests/THERR.java:
+	* Escjava/test/junittests/skip:
+	Adjustments to various tests
+
+	* Escjava/test/junittests/AlsoInherit.java:
+	Fixing this test - not sure why it broke
+
+2006-10-28  davidcok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	Fix to Bug #138
+
+	* Escjava/test/junittests/Helper3.java:
+	* Escjava/test/junittests/Helper3.java-expected:
+	* Escjava/test/junittests/skip:
+	Fixed bug #138, Helper3 test
+
+	* Makefile.defs: Typos
+
+	* Escjava/test/nijmegen/JCF/jcf17/c.java: Correcting test
+
+	* Escjava/test/nijmegen/JCF/Makefile: Adding a debug target
+
+	* Escjava/test/escjava/test/test202/run:
+	* Makefile.defs:
+	Fixing a platform dependence
+
+	* Escjava/test/junittests/IntegralDivMod.java:
+	* Escjava/test/junittests/IntegralDivMod.java-expected:
+	New test related to integer division and mod
+
+	* Escjava/java/escjava/backpred/UnivBackPred.ax:
+	Edits to fix Bug #320 regarding the mod operator
+
+	* Escjava/test/escjava/test/test63/Div.java:
+	* Escjava/test/escjava/test/test54/Constructor.java:
+	* Escjava/test/escjava/test/test3/C.java:
+	Various edits to tests
+
+2006-10-26  jkiniry  <jkiniry@ucd.ie>
+
+	* docs/BUILDING_NEW_RELEASES.txt: Fixed tag example.
+
+	* release-files/RELEASE_NOTES.txt:
+	Added discussion of dependency on libtool and its availability on
+	OS X.
+
+	* docs/Escjava2-Provers/Makefile:
+	Tweaks to guarantee builds of library on OS X and Linux.  Still need
+	to double-check build test on Linux and on Windows.
+
+	* docs/Escjava2-Logics/pvs/vcGen_experiments/.cvsignore:
+	* docs/Escjava2-Provers/.cvsignore:
+	Ignoring some experimental files and built OS X dynamic link library.
+
+	* README.first:
+	Added discussion of mailing lists available and the status of Houdini
+	and Rcc.
+
+2006-10-26  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/escjava/test/Makefile: Adding a debug target
+
+	* Escjava/test/escjava/test/test202/.cvsignore:
+	* Escjava/test/escjava/test/test202/A.java:
+	* Escjava/test/escjava/test/test202/ans:
+	* Escjava/test/escjava/test/test202/run:
+	* Escjava/test/escjava/test/test202/t/.cvsignore:
+	* Escjava/test/escjava/test/test202/t/C.java:
+	* Escjava/test/escjava/test/alltests:
+	Adding a new test
+
+	* Escjava/test/escjava/test/rtestrun: Adding a debugging executable
+
+	* Javafe/java/javafe/SrcTool.java:
+	Correcting error message for parsing class files
+
+	* Escjava/test/jdktests/Makefile: Added a listing of skipped tests
+
+2006-10-25  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/jdktests/TestList.java-expected: Missed a changed test
+
+	* Escjava/test/junittests/skip:
+	Unskipping tests that are fixed with the fix of Bug #430
+
+	* Escjava/test/jdktests/TestList.java:
+	Some of the problems with this test were fixed by fixing Bug #430
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Substitute.java:
+	Fixes for Bug# 430.  The problem was incomplete substitution of
+	variable names within superclass specs when they are combined with
+	a routine's specifications - in particular in ObjecDesignators and
+	in the preconditions for modifies clauses.
+
+	* Escjava/test/junittests/Makefile:
+	part of the fix for line ending problems
+
+	* Escjava/test/junittests/SuperSpecBug.java-expected:
+	* Escjava/test/junittests/SuperSpecShortBug.java:
+	* Escjava/test/junittests/SuperSpecShortBug.java-expected:
+	* Escjava/test/junittests/SuperSpecShortBugA.java:
+	* Escjava/test/junittests/SuperSpecShortBugA.java-expected:
+	* Escjava/test/junittests/SuperSpecBug.java:
+	Test cases arising from Bug #430
+
+2006-10-24  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/Helper3.java: Adding modifies clauses
+
+	* Escjava/test/junittests/skip: More tests in progress
+
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	Better organization of constant folding
+
+	* Escjava/test/junittests/skip: Resolved line ending problem
+
+2006-10-23  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/skip:
+	skipping while resolving platform dependent line endings
+
+2006-10-22  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/Makefile:
+	Improvements/corrections to Makefile
+
+	* Escjava/test/jdktests/skip: Skipping TestBoolean for now
+
+	* Escjava/test/escjava/test/rtestall: Adding checks for unlisted tests
+
+	* Escjava/test/escjava/test/alltests: Adding tests 200 and 201
+
+	* Escjava/test/jdktests/TestSystem4.java:
+	New test that demonstrates a consistency problem in specs
+
+	* Escjava/test/escjava/test/test200/run:
+	* Escjava/test/escjava/test/test201/run:
+	forgot the test file
+
+	* Escjava/test/junittests/EmptyEx.java:
+	* Escjava/test/junittests/EmptyEx.java-expected:
+	New tests from bug report #200
+
+	* Escjava/java/escjava/gui/GUI.java:
+	Improved error reporting when the tool tries to parse a class file as source
+
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	Draft implementation of constant folding - Bug #499
+
+	* Javafe/java/javafe/SrcTool.java:
+	Improved error reporting when the tool tries to parse a class file as source
+
+	* Escjava/Makefile: A simplification in response to fixing Bug #499
+
+	* Escjava/test/junittests/StringCat.java:
+	* Escjava/test/junittests/StringCat.java-expected:
+	Adding a test case for Bug #259
+
+	* Escjava/test/escjava/test/test201/.cvsignore:
+	* Escjava/test/escjava/test/test201/ans:
+	* Escjava/test/escjava/test/test200/.cvsignore:
+	* Escjava/test/escjava/test/test200/ans:
+	Adding some tests to check bad command-line input
+
+2006-10-21  davidcok  <cok@frontiernet.net>
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java: Fix for Bug #241
+
+	* Escjava/java/escjava/Main.java:
+	Made having no inputs on the command line an error, per Bug#250
+
+	* Escjava/test/jdktests/skip: Turning off TestException for now
+
+	* Escjava/test/junittests/Makefile:
+	Improvements to options generation for tests
+
+	* Escjava/test/junittests/HelperWithBody.java:
+	* Escjava/test/junittests/HelperWithBody.java-expected:
+	New test to match a bug
+
+	* Javafe/java/javafe/SrcTool.java:
+	* Javafe/java/javafe/reader/StandardTypeReader.java:
+	* Javafe/java/javafe/tc/OutsideEnv.java:
+	fixing a problem when a package on the command line cannot be
+	found, and making it an error
+
+	* Escjava/test/junittests/HelperWithBody.java: new test from Bug#244
+
+	* Escjava/java/escjava/RefinementSequence.java:
+	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
+	* Javafe/java/javafe/ast/hierarchy.j:
+	* Javafe/java/javafe/parser/Parse.java:
+	Fix of Bug#244 - EscJava made an erroneous complaint that a method
+	had no body.  That was because methods whose bodies are not being
+	analyzed are parsed as specOnly and their bodies are ignored - so
+	it appears that they have no body.  I added a field to
+	distingguish no body because there is no body from no body because
+	it is ignored.
+
+	* Escjava/test/jdktests/Makefile:
+	Documented targets; fixed the Exception message that was appearing
+	in test output
+
+	* Escjava/test/junittests/Ghost.java:
+	* Escjava/test/junittests/Ghost.java-expected:
+	Updates to the Ghost.java test
+
+2006-10-20  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/skip: more updates
+
+	* Escjava/test/junittests/ECH.java-expected:
+	* Escjava/test/junittests/MartijnsPoint.java:
+	* Escjava/test/junittests/ECH.java:
+	new tests
+
+	* Escjava/test/jdktests/skip:
+	Covering up a botch of the TestSystem tests
+
+	* Escjava/test/jdktests/TestException.java:
+	Rearrangement to avoid resource problems
+
+	* Escjava/test/jdktests/TestSystem1.java:
+	changes to avoid problems that have been moved to TestSystem3.java
+
+	* Escjava/test/jdktests/skip:
+	update to reflect a problem in TestSystem3.java
+
+	* Escjava/test/jdktests/Makefile: new target for debugging
+
+	* Escjava/test/junittests/EXC.java-expected:
+	* Escjava/test/junittests/EXC.java:
+	* Escjava/test/junittests/ExceptionChild.java-expected:
+	* Escjava/test/junittests/skip:
+	updates now that problem #156 is fixed
+
+	* specs/java/util/Map.spec: Minor fix, I think
+
+	* specs/java/util/Arrays.refines-spec:
+	Putting this back to how it should be; also now works because of
+	other fixes in support of problem #280
+
+	* specs/java/io/PrintStream.refines-java:
+	* specs/java/io/FileOutputStream.spec:
+	Minor correction
+
+	* Makefile.defs: Definition of UTILS_PACKAGE_LIST
+
+	* Escjava/Makefile:
+	Additional targets and a rewrite of the self_typecheck target so
+	that it completes without running out of resources.
+
+	* Escjava/java/escjava/AnnotationHandler.java:
+	Part of fix to #280 and also to a set of problems with default
+	constructors - e.g. #225
+
+	* Escjava/java/escjava/ast/EscPrettyPrint.java:
+	Added a new print statement to output DerivedMethodDecls
+
+	* Escjava/java/escjava/translate/TrAnExpr.java:
+	Adding guards dependent on the exceptional and divergent specs so
+	that the use of pure methods in specs is more sound.  This also
+	fixes the problem with TestArrays (#280).
+
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Commented out debug helper statements
+
+2006-10-20  g_karab  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	Implemented generation of IDCs for postconditions; in particular we
+	group normal/exceptional postconditions for the appropriate
+	req. cl. expr. and the conjoin all these postconditions.  Use the
+	conjointed expression to generate IDC checks.
+
+2006-10-20  davidcok  <cok@frontiernet.net>
+
+	* Escjava/test/junittests/Makefile: Added a debug target
+
+2006-10-18  everest  <everest@ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofTyperVisitor.java:
+	Fixed some deduction for variable type/added some more explicit error messages
+
+	* docs/Escjava2-Logics/coq/defs.v:
+	added some coercion all over the place to gain in proof readability
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	Did a fix for the proof to be generated in a proper directory when
+	using with escjava eclipse plugin. This is a temporary fix, and it
+	shall be removed as soon as the way the esc/java generate files
+	with nvcg is modified.
+
+2006-10-14  davidcok  <cok@frontiernet.net>
+
+	* Makefile: correction to Makefile
+
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java: typo
+
+	* specs/java/util/Arrays.refines-spec: slight correction
+
+	* Makefile.defs: more uniform use of variables
+
+	* Makefile: minor enhancements
+
+	* Utils/Makefile: Using UTILS_CLASSFILES
+
+	* specs/java/util/Arrays.refines-spec: Correction to spec
+
+	* Javafe/Makefile: Utilizing variables more consistently
+
+	* Escjava/escj: Adjusted formatting; removed obsolete comments
+
+	* Escjava/Makefile: Comments added and clarified
+
+	* Makefile.defs: Abstracting the location of the Utils classfiles
+
+2006-10-13  davidcok  <cok@frontiernet.net>
+
+	* release-files/README.release:
+	* README.first: typos fixed
+
+	* slides/ETAPSTutorial/prosper.cls: adding missing file
+
+	* Rcc/java/rccwizard/.cvsignore: adding file
+
+2006-10-10  everest  <everest@ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/TFunction.j:
+	* Escjava/java/escjava/vcGeneration/VcGenerator.java:
+	* Escjava/java/escjava/vcGeneration/TName.java:
+	* Escjava/java/escjava/vcGeneration/TNode.java:
+	* Escjava/java/escjava/vcGeneration/TFunction.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TAndRemover.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TNotRemover.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSplitter.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	I changed the way of handling warning messages to make it simpler
+
+	* Escjava/java/escjava/vcGeneration/TDisplay.java:
+	Added some methods to simplify the use of the TDisplay class:
+	instead of taking 3 arguments the methods take only one and write the
+	same informations.
+	The method which take more arguments are marked deprecated since
+	the new ones infer the two missing arguments.
+	I added also some Javadoc
+
+2006-10-09  everest  <everest@ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/TVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofTyperVisitor.java:
+	added throws IOException to the TSum method... to make it alike
+	the other methods
+
+2006-10-09  erikpoll  <erikpoll@cs.ru.nl>
+
+	* Makefile:
+	Removed README.first and README.txt from the binary release.
+
+	Providing these two README files, in addition to README.release,
+	is only confusing for users just interested in using the tool.
+	README.release provides all the info they need
+
+2006-10-08  erikpoll  <erikpoll@cs.ru.nl>
+
+	* README.first:
+	Added warning for users of the binary release to ignore
+	README.first and _only_ read README.release
+
+	* Escjava/escj:
+	Changed this sh script into bash script
+
+2006-10-06  everest  <everest@ucd.ie>
+
+	* Escjava/generate-functions-vcGenerator.sh:
+	added the prelude generator for Coq
+
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/ATSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSplitter.java:
+	changed the simplifiers call to the rewrite method which makes more sense.
+
+	* Escjava/java/escjava/vcGeneration/ProverType.java:
+	added the throwing of an IOException the the rewrite method.
+
+	* Escjava/java/escjava/vcGeneration/help:
+	removed the call to generate-visitor-functions
+
+	* Escjava/java/escjava/vcGeneration/coq/Prelude.head:
+	* Escjava/java/escjava/vcGeneration/coq/TProofTyperVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/CoqProver.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqBoolVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/TProofSimplifier.java:
+	changed the visitor due to the use of coercion; changed the way
+	proof obligations are generated: now it generates a directory
+	coq_proof with subdirectories for each method with in each
+	directory several proofs with names like 1.v 2.v etc...  the
+	already present proof scripts are also reused when generated again
+
+	* Escjava/java/escjava/vcGeneration/coq/visitor/AArrayOpsVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/ABasicCoqVisitor.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/TCoqBoolVisitor.java:
+	changed the place of the bool visitor and removed few things due
+	to the coercion used in the prelude
+
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/ATSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TAndRemover.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TNotRemover.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSimplifier.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofSplitter.java:
+	* Escjava/java/escjava/vcGeneration/coq/visitor/simplifiers/TProofTyperVisitor.java:
+	the simplifier visitors used to
+	change the end not into an implies false
+	change some of the ands into implies
+	simplify the proof obligations
+	type the proof obligations
+	and split the proof obligations into several smaller proof obligations
+
+	* docs/Escjava2-Logics/coq/defs.v:
+	a new version of the prelude with more coercion
+
+	* Escjava/java/escjava/vcGeneration/clean.sh:
+	* Escjava/java/escjava/vcGeneration/help:
+	changed the clean.sh and help so that when building inside of
+	eclipse it generates coq plugin's Prelude.java
+
+2006-10-05  g_karab  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	- During IDC continue processing of postcondition that are not
+	implications; display however a warning message, when -debug is
+	turned on.
+	- Added comments to the code.
+
+2006-10-05  alx-gforge  <alx-gforge@ucd.ie>
+
+	* Javafe/java/javafe/ast/OperatorTags.java:
+	* Javafe/java/javafe/parser/Parse.java:
+	* Javafe/java/javafe/parser/ParseExpr.java:
+	* Javafe/java/javafe/parser/ParseStmt.java:
+	* Javafe/java/javafe/parser/ParseUtil.java:
+	* Javafe/java/javafe/tc/FlowInsensitiveChecks.java:
+	* Escjava/java/escjava/Options.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	* Javafe/java/javafe/Options.java:
+	* Escjava/Makefile, Escjava/escjava2:
+	* Makefile.defs:
+	+ Added extensions on the Javafe side
+	+ Linked ESC side with the Javafe side to return the same values
+	+ All compiles on the Javafe side
+
+	* Escjava/escjava2: New file.
+
+2006-10-04  everest  <everest@ucd.ie>
+
+	* Escjava/java/escjava/vcGeneration/TLiteral.j:
+	I changed the visibility of constructor TBoolean to public
+
+2006-10-03  g_karab  <g_karab@cs.concordia.ca>
+
+	* Escjava/java/escjava/translate/DefGCmd.java:
+	* Escjava/java/escjava/translate/ErrorMsg.java:
+	* Escjava/java/escjava/translate/GetSpec.java:
+	* Escjava/java/escjava/translate/Translate.java:
+	* Escjava/java/escjava/Main.java:
+	* Escjava/java/escjava/ast/TagConstants.java:
+	Made changes pertinent to definedness checking.  Specificicaly on
+	postcondition checking.
+
+2006-10-01  jkiniry  <jkiniry@ucd.ie>
+
+	* ChangeLog:
+	* Makefile.defs:
+	* README.first:
+	* Escjava/java/escjava/vcGeneration/.cvsignore:
+	* Javafe/Makefile:
+	* docs/BUILDING_NEW_RELEASES.txt:
+	* release-files/README.release:
+	* release-files/RELEASE_NOTES.txt:
+	Final updates for 2.0b0 release.
+
 2006-09-25  Patrice Chalin  <chalin@cs.concordia.ca>
 
 	* Escjava/java/escjava/tc/FlowInsensitiveChecks.java:
