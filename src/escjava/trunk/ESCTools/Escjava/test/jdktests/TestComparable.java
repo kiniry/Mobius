@@ -6,8 +6,13 @@ public class TestComparable extends LocalTestCase {
 
     public void testNull() {
 	// Test illegal null argument
-	c.compareTo(null); // --> warn NonNull
-    } //@ nowarn Exception;
+	try {
+	    c.compareTo(null); // --> warn NonNull
+	} catch (Exception e) {
+	    // ignore
+	}
+	//@ assert false; // TEST FOR CONSISTENCY
+    }
 
     public void testIncomparableArgument() {
 	try {
