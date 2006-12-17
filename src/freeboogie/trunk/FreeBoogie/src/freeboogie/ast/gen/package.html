@@ -1,0 +1,85 @@
+<html><head></head><body>
+
+<p>Generator for OO data structures based on an abstract grammar.</p>
+
+<p><b>Author:</b> rgrig, reviewed by NAME (DATE)</p>
+
+<p>
+The code generator described here reads in an abstract grammar and
+some template files and generates a set of files. The abstract grammar
+notation is described in the package <code>freeboogie.ast</code>.
+Here we describe the way the generator works and the format of the templates.
+</p>
+
+<p>
+The abstract grammar that describes the data structures used to represent
+an abstract grammar is the following.
+</p>
+
+<pre>
+AbstractClass = String! name;
+NormalClass = String! name, String! base, Members members, Enums enums, Invariants invs;
+Members = String! type, String! name, boolean isPrimitive, boolean isChild, boolean nonNull, Members tail;
+Enums = String! name, EnumValues values, Enums tail;
+EnumValues = String! name, EnumValues tail;
+Invariants = String! inv; Invariants tail;
+
+// invariants
+Members: isPrimitive <==> !isChild 
+</pre>
+
+<p>
+The generator implementation will use more efficient data structures--we
+can afford to be less strict since they are really simple. The grammar above
+serves as a support for the presentation of the macros that can be used
+in templates. But first let's see the escaping mechanism. A macro has the
+form <tt>@&lt;name@param_1@...@param_n@&gt;</tt>. They can be nested. Any
+textual occurence of @ must appear as @@ in the template file.
+</p>
+
+<table>
+<tr><th>Macro</th><th>Description</th></tr>
+
+<tr>
+<td><tt>@&lt;file@name@&gt;</tt></td>
+<td>The following characters will be written to file <i>name</i>.
+By default characters are written to the standard output.</td>
+</tr>
+
+<tr>
+<td><tt>@&lt;abstract_classes@text[@sep]@&gt;</tt></td>
+<td>Evaluates <i>text</i> once for every abstract class using (the optional)
+<i>sep</i> as a separator. This macro cannot nest within itself.</td>
+</tr>
+
+<tr>
+<td><tt>@&lt;acls_name@&gt;</tt></td>
+<td>The current abstract class name. Can only appear in the
+<tt>abstract_classes</tt> macro.</td>
+</tr>
+
+<tr>
+<td><tt>@&lt;normal_classes@text[@sep]@&gt;</tt></td>
+<td>Evaluates <i>text</i> once for every normal class using (the optional)
+<i>sep</i> as a separator. This macro cannot nest within itself.</td>
+</tr>
+
+<tr>
+<td><tt>@&lt;ncls_name@&gt;</tt></td>
+<td>The current normal class name. Can only appear within the 
+<tt>normal_classes</tt> macro.</td>
+</tr>
+
+<tr>
+<td><tt>@&lt;ncls_base@&gt;</tt></td>
+<td>The name of the base class of the current normal class.
+Can only appear within the <tt>normal_classes</tt> macro.</td>
+</tr>
+
+<tr>
+<td><tt>@&lt;members@text[@sep]&gt;</tt></td>
+<td>Evaluates </td>
+</tr>
+</table>
+
+</body></html>
