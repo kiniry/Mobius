@@ -1,5 +1,8 @@
 ## $Id$
-TestSystem3.java
+# When was the last time you wanted to set System.out to null? TestSystem1 essentially exercises the 
+# capability of setting the in, out and err fields to null.  As has been written in the spec file
+# for System, we gain more benefit by declaring these fields non-null.
+TestSystem1.java
 ## Tests with Simplify problems
 TestThrowable.java
 TestStringBuffer.java
