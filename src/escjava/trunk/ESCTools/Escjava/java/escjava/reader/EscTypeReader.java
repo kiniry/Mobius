@@ -185,7 +185,7 @@ public class EscTypeReader extends StandardTypeReader
 
     public /*@ non_null @*/ FilenameFilter filter() {
 	return new FilenameFilter() {
-	    public boolean accept(File f, String n) {
+	    public boolean accept(/*@non_null*/ File f, /*@non_null*/ String n) {
 		int p = n.indexOf('.');
 		if (p == -1) return false;
 		n = n.substring(p+1);

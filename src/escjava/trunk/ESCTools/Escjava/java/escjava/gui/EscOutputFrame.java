@@ -33,7 +33,7 @@ public class EscOutputFrame extends JFrame {
 	       text for that line as a task to the windowTasks queue (which
 	       is supposed to launch an editor).
 	    */
-	    public void mouseClicked(MouseEvent e) {
+	    public void mouseClicked(/*@non_null*/ MouseEvent e) {
 		JTextArea textArea = (JTextArea)e.getSource();
 		try {
 		    int p = textArea.getCaretPosition();
