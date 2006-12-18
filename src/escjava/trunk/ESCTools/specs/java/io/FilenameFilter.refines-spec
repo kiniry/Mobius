@@ -1,5 +1,5 @@
-// $Id$                                                                                                                                                                                                              
-//                                                                                                                                                                                                                   
+// $Id$
+//
 // While the documentation does not say that the formal parameters directory
 // and filename must be non-null, numerous examples (e.g. in the Eclipse JDT
 // core) show that they are assumed to be non-null.
