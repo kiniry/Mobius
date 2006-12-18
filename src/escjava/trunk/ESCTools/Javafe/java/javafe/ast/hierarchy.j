@@ -190,7 +190,7 @@ public abstract class ASTNode implements Cloneable
    */
 
   //@ invariant decorations != null ==> (\typeof(decorations) == \type(Object[]));
-  /*@spec_public*/ private Object[] decorations;  
+  /*@spec_public*/ private /*@nullable*/ Object[] decorations;  
 
     public int bogusField;
     //@ public model int startLoc;
@@ -239,16 +239,16 @@ public abstract class ASTNode implements Cloneable
   /**
    * Clone node, where the clone has the same decorations as original.
    */
-  public Object clone() {
+  public /*@non_null*/ Object clone() {
     return clone(true);
   }
   
-  public Object[] getDecorations() {
+  public /*@nullable*/ Object[] getDecorations() {
     return decorations;
   }
 
   //@ requires d != null ==> \typeof(d) == \type(Object[]);
-  public void setDecorations(Object d[]) {
+  public void setDecorations(/*@nullable*/ Object d[]) {
     decorations = d;
   }
     
@@ -314,7 +314,7 @@ public class CompilationUnit extends ASTNode
     return elems.elementAt(elems.size()-1).getEndLoc();
   }
 
-  public javafe.genericfile.GenericFile sourceFile() {
+  public /*@non_null*/ javafe.genericfile.GenericFile sourceFile() {
     return Location.toFile(loc);
   }
 }
