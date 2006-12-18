@@ -13,6 +13,7 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
@@ -27,7 +28,10 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 
-import umbra.annot.attributes.MethodSpecification;
+import umbra.annot.bcclass.BCClass;
+import umbra.annot.bcclass.RegisterTable;
+import umbra.annot.bcexpression.BCLocalVariable;
+import umbra.annot.bcexpression.javatype.JavaType;
 import umbra.annot.io.AttributeReader;
 import umbra.annot.io.ReadAttributeException;
 import umbra.history.IHistory;
@@ -214,30 +218,41 @@ public class BytecodeEditor extends TextEditor {
 		JavaClass jc = strin.loadClass(clname);
 		strin.removeClass(jc);
 		//controlPrint(jc);
+		ClassGen cg = new ClassGen(jc);
+		String clname2 = cg.getClassName();
+		ConstantPoolGen cpg = cg.getConstantPool();
 		Method[] methods = jc.getMethods();
 		byte[][] names = new byte[methods.length][256];
 		byte[][] code = new byte[methods.length][4096];
 		int[] namesLen = new int[methods.length];
 		int[] codeLen = new int[methods.length];
 		int off = 0;
-		for(int i = 0; i < methods.length; i++) {
-			try {
-				namesLen[i] = methods[i].toString().getBytes().length;
-				names[i] = methods[i].toString().getBytes();
-				codeLen[i] = methods[i].getCode().toString().length();
-				String bareCode = methods[i].getCode().toString();
-				String c = addComment(bareCode, commentTab, interlineTab, off);
-				c = addAnnot(methods[i]) + c;
-				code[i] = c.getBytes();
-				codeLen[i] = c.length();
-				off += getOffset(bareCode);
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (ReadAttributeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		BCClass bcc;
+		try {
+			bcc = new BCClass(jc);
+			for(int i = 0; i < methods.length; i++) {
+				try {
+					namesLen[i] = methods[i].toString().getBytes().length;
+					names[i] = methods[i].toString().getBytes();
+					codeLen[i] = methods[i].getCode().toString().length();
+					String bareCode = methods[i].getCode().toString();
+					String c = addComment(bareCode, commentTab, interlineTab, off);
+					c = addAnnot(methods[i], cpg, bcc, clname2) + c;
+					code[i] = c.getBytes();
+					codeLen[i] = c.length();
+					off += getOffset(bareCode);
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (ReadAttributeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+		} catch (ReadAttributeException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+		
 		byte[] contents = new byte[4096 * methods.length];
 		for(int i = 0, k = 0; i < methods.length; i++) {
 			for(int j = 0; j < namesLen[i]; j++, k++) {
@@ -261,7 +276,22 @@ public class BytecodeEditor extends TextEditor {
 		javaClass = jc;
 	}
 	
-	private String addAnnot(Method method) throws IOException, ReadAttributeException {
+	private BCLocalVariable[] createLocalVariables(MethodGen m, ConstantPoolGen cpGen) {
+		LocalVariableGen[] locVarTable = m.getLocalVariables();
+		if (locVarTable == null) {
+			return null;
+		}
+		BCLocalVariable[] bclv = new BCLocalVariable[locVarTable.length];
+		for (int i = 0; i < locVarTable.length; i++) {
+			JavaType type = JavaType.getJavaType(locVarTable[i].getType());
+			BCLocalVariable lv = new BCLocalVariable(locVarTable[i]
+					.getLocalVariable(cpGen), type);
+			bclv[i] = lv;
+		}
+		return bclv;
+	}
+	
+	private String addAnnot(Method method, ConstantPoolGen cpg, BCClass bcc, String cn) throws IOException, ReadAttributeException {
 		//System.out.println(method.getAttributes().length + " annotation(s):");
 		if (method.getAttributes().length > 1) {
 			Unknown att = (Unknown)method.getAttributes()[1];
@@ -271,8 +301,9 @@ public class BytecodeEditor extends TextEditor {
 //				System.out.print(Integer.toHexString((att.getBytes()[i] + 256) % 256) + " ");
 //			}
 //			System.out.println();
-			MethodSpecification msp = AttributeReader.readMethodSpecification(att.getBytes());
-			return (msp.printCode());
+			MethodGen mg = new MethodGen(method, cn, cpg);
+			BCLocalVariable[] bclv = createLocalVariables(mg, cpg);
+			return AttributeReader.printAttribute(att, bcc, bclv);
 		}
 		return "";
 	}

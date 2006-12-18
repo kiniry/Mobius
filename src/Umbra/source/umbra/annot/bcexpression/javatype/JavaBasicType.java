@@ -44,7 +44,7 @@ public class JavaBasicType extends JavaType  {
 	 * @param _type1
 	 * @param _type2
 	 * @return
-	 *//*
+	 */
 	public static boolean subType(JavaBasicType _type1 , JavaBasicType _type2 ) {
 		if ( (_type2 == JavaType.JavaSHORT )&& (_type1 == JavaType.JavaSHORT )) {
 			return true;
@@ -66,7 +66,7 @@ public class JavaBasicType extends JavaType  {
 		}
 		
 		return false;
-	}*/
+	}
 	
 		
 }

@@ -36,11 +36,11 @@ public class Predicate1Ar extends Predicate {
 	/**
 	 * renames the terms which this predicate is verified for
 	 */
-	public Expression rename(Expression _e, Expression _v) {
-		Expression term = getTerm().rename(_e, _v);
-		setSubExpressions(new Expression[]{term});
-		return this;
-	}
+//	public Expression rename(Expression _e, Expression _v) {
+//		Expression term = getTerm().rename(_e, _v);
+//		setSubExpressions(new Expression[]{term});
+//		return this;
+//	}
 
 	public Expression copy() {
 		Expression termCopy = getTerm().copy();

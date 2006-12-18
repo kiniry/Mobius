@@ -52,18 +52,18 @@ public class JavaType extends Expression  {
 		new JavaBasicType(Type.INT, COMPUTATIONAL_TYPE_1);
 	public static final JavaBasicType JavaLONG =
 		new JavaBasicType(Type.LONG, COMPUTATIONAL_TYPE_2);
-	//	public static final JavaBasicType  JavaFLOAT = new JavaBasicType(Type.FLOAT);
-	//	public static final JavaBasicType  JavaDOUBLE = new JavaBasicType(Type.DOUBLE);
+//	public static final JavaBasicType  JavaFLOAT = new JavaBasicType(Type.FLOAT);
+//	public static final JavaBasicType  JavaDOUBLE = new JavaBasicType(Type.DOUBLE);
 	public static final JavaBasicType JavaBOOLEAN =
 		new JavaBasicType(Type.BOOLEAN, COMPUTATIONAL_TYPE_1);
-	/*public static final JavaObjectType JavaSTRING =
-		new JavaObjectType(Type.STRING);*/
+	public static final JavaObjectType JavaSTRING =
+		new JavaObjectType(Type.STRING);
 	public static final JavaBasicType JavaCHAR =
 		new JavaBasicType(Type.CHAR, COMPUTATIONAL_TYPE_1);
 	public static final JavaBasicType JavaVOID =
 		new JavaBasicType(Type.VOID, COMPUTATIONAL_TYPE_1);
-	/*public static final JavaReferenceType JavaNULL =
-		new JavaReferenceType(Type.NULL);*/
+	public static final JavaReferenceType JavaNULL =
+		new JavaReferenceType(Type.NULL);
 
 	private static HashMap loadedTypes;
 
@@ -153,11 +153,11 @@ public class JavaType extends Expression  {
 		return null;
 	}
 
-	/*public static JavaReferenceType getJavaRefType(Type _type) {
+	public static JavaReferenceType getJavaRefType(Type _type) {
 		return getJavaRefType(_type.getSignature());
 	}
 	
-	public static JavaArrType getJavaArrTypeWithBasicType(JavaType type ) {
+	/*public static JavaArrType getJavaArrTypeWithBasicType(JavaType type ) {
 		String sig = type.getSignature();
 		String arrSig = "[" +sig;
 		JavaArrType arrType = (JavaArrType)getJavaRefType(arrSig);
@@ -173,7 +173,7 @@ public class JavaType extends Expression  {
 	 * 	or [[[Ljava/lang/String;
 	 * @return an object representing this type 
 	 */
-	/*public static JavaReferenceType getJavaRefType(String _signature) {
+	public static JavaReferenceType getJavaRefType(String _signature) {
 		_signature = _signature.replace('.', '/');
 		if ((!_signature.startsWith("L")) &&  (!_signature.startsWith("["))) {
 			_signature =  "L".concat(_signature);
@@ -200,7 +200,7 @@ public class JavaType extends Expression  {
 		}
 		loadedTypes.put(_jt.getSignature(), _jt);
 		return _jt;
-	}*/
+	}
 
 //	/**
 //	 * 

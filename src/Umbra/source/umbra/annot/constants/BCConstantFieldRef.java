@@ -5,10 +5,10 @@ import umbra.annot.bcexpression.javatype.JavaType;
 
 //import jml2b.IJml2bConfiguration;
 //import bytecode_to_JPO.B2JPackage;
-//import annot.bc.io.ReadAttributeException;
-//import annot.bcclass.BCClass;
-//import annot.bcclass.BCConstantPool;
-//import annot.bcclass.BCField;
+//import umbra.annot.io.ReadAttributeException;
+//import umbra.annot.bcclass.BCClass;
+//import umbra.annot.bcclass.BCConstantPool;
+//import umbra.annot.bcclass.BCField;
 //import bytecode_wp.bcexpression.Expression;
 //import bytecode_wp.bcexpression.FieldAccess;
 //import bytecode_wp.bcexpression.NumberLiteral;
@@ -16,11 +16,11 @@ import umbra.annot.bcexpression.javatype.JavaType;
 //import bytecode_wp.bcexpression.javatype.JavaType;
 //import bytecode_wp.bcexpression.overload.RefFunction;
 //import bytecode_wp.bytecode.block.IllegalLoopException;
-//import annot.formula.Connector;
-//import annot.formula.Formula;
-//import annot.formula.Predicate0Ar;
-//import annot.formula.Predicate2Ar;
-//import annot.formula.PredicateSymbol;
+//import umbra.annot.formula.Connector;
+//import umbra.annot.formula.Formula;
+//import umbra.annot.formula.Predicate0Ar;
+//import umbra.annot.formula.Predicate2Ar;
+//import umbra.annot.formula.PredicateSymbol;
 
 public class BCConstantFieldRef extends BCConstantRef {
     /**

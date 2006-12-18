@@ -1,16 +1,16 @@
 package umbra.annot.bcexpression;
 
 //import bytecode_wp.bcexpression.javatype.JavaType;
-//import annot.bcexpression.jml.OLD;
-//import annot.bcexpression.jml.TYPEOF;
+//import umbra.annot.bcexpression.jml.OLD;
+//import umbra.annot.bcexpression.jml.TYPEOF;
 //import bytecode_wp.bcexpression.overload.FieldOverride;
 //import umbra.annot.constants.BCConstantFieldRef;
-//import annot.formula.Connector;
-//import annot.formula.Formula;
-//import annot.formula.Predicate0Ar;
-//import annot.formula.Predicate2Ar;
-//import annot.formula.PredicateSymbol;
-//import annot.formula.Quantificator;
+//import umbra.annot.formula.Connector;
+//import umbra.annot.formula.Formula;
+//import umbra.annot.formula.Predicate0Ar;
+//import umbra.annot.formula.Predicate2Ar;
+//import umbra.annot.formula.PredicateSymbol;
+//import umbra.annot.formula.Quantificator;
 //import bytecode_wp.utils.FreshIntGenerator;
 
 public class FieldAccess extends Expression {

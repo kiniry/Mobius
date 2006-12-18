@@ -2,7 +2,7 @@ package umbra.annot.bcexpression;
 
 import org.apache.bcel.classfile.LocalVariable;
 
-//import umbra.annot.bcclass.BCMethod;
+import umbra.annot.bcclass.BCMethod;
 import umbra.annot.bcexpression.javatype.JavaType;
 
 /**
@@ -17,21 +17,25 @@ public class BCLocalVariable extends Expression {
 	private String name;
 	private JavaType type; 
 	private  int start_pc;
-	//private BCMethod method ;
+	private BCMethod method ;
 	
 	// when this a register that does not store any local variable
 	private static int UNDEF_LEN = -1;
-	public BCLocalVariable(String _name, int _start_pc, int _length,  int _index,  JavaType _type /*, BCMethod _method*/) {
+	public BCLocalVariable(String _name, int _start_pc, int _length,  int _index,  JavaType _type, BCMethod _method) {
 		name = _name;
 		start_pc = _start_pc;
 		length = _length;
 		index = _index;
 		type = _type;
-		//method = _method;
+		method = _method;
 	}
 
-	public BCLocalVariable(LocalVariable lv, JavaType _type/*, BCMethod _method*/) {
-		this(lv.getName(), lv.getStartPC() , lv.getLength() ,  lv.getIndex(), _type /*, _method*/);	
+	public BCLocalVariable(LocalVariable lv, JavaType _type) {
+		this(lv.getName(), lv.getStartPC() , lv.getLength() ,  lv.getIndex(), _type, null);	
+	}
+
+	public BCLocalVariable(LocalVariable lv, JavaType _type, BCMethod _method) {
+		this(lv.getName(), lv.getStartPC() , lv.getLength() ,  lv.getIndex(), _type, _method);	
 	}
 
 	/**
@@ -42,7 +46,7 @@ public class BCLocalVariable extends Expression {
 	 * @param _method
 	 */
 	public BCLocalVariable(int index ) {
-		this(null, 0 ,UNDEF_LEN   , index , null /*, null*/);	
+		this(null, 0 ,UNDEF_LEN   , index , null, null);	
 	}
 	
 //	/**
@@ -52,10 +56,9 @@ public class BCLocalVariable extends Expression {
 //	 * @param index
 //	 * @param _method
 //	 */
-//	public BCLocalVariable(int index ,  BCMethod _method) {
-//		this(null, 0 ,UNDEF_LEN   , index , null , _method);	
-//	}
-//
+	public BCLocalVariable(int index ,  BCMethod _method) {
+		this(null, 0 ,UNDEF_LEN   , index , null , _method);	
+	}
 	
 	/**
 	 * @return the index in the local variable table of this register
@@ -123,7 +126,7 @@ public class BCLocalVariable extends Expression {
 	 * @see bcexpression.Expression#copy()
 	 */
 	public Expression copy() {
-		BCLocalVariable copy = new BCLocalVariable(name, start_pc, length, index, type/*, method*/);
+		BCLocalVariable copy = new BCLocalVariable(name, start_pc, length, index, type, method);
 		return copy;
 	}
 //	/**

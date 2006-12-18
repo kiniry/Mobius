@@ -4,10 +4,10 @@ import umbra.annot.bcclass.BCConstantPool;
 
 //import jml2b.IJml2bConfiguration;
 //import bytecode_to_JPO.B2JPackage;
-//import annot.bc.io.ReadAttributeException;
-//import annot.bcclass.BCClass;
-//import annot.bcclass.BCConstantPool;
-//import annot.bcclass.BCField;
+//import umbra.annot.io.ReadAttributeException;
+//import umbra.annot.bcclass.BCClass;
+//import umbra.annot.bcclass.BCConstantPool;
+//import umbra.annot.bcclass.BCField;
 //import bytecode_wp.bcexpression.javatype.JavaReferenceType;
 //import bytecode_wp.bytecode.block.IllegalLoopException;
 

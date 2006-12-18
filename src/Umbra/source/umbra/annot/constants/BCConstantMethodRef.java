@@ -3,8 +3,8 @@ package umbra.annot.constants;
 import umbra.annot.bcclass.BCConstantPool;
 import umbra.annot.bcexpression.javatype.JavaType;
 
-//import annot.bcclass.BCConstantPool;
-//import annot.bcclass.utils.MethodSignature;
+//import umbra.annot.bcclass.BCConstantPool;
+//import umbra.annot.bcclass.utils.MethodSignature;
 //import bytecode_wp.bcexpression.javatype.JavaType;
 //import bytecode_wp.bcexpression.overload.RefFunction;
 
