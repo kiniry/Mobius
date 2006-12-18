@@ -1,6 +1,6 @@
 // @(#)$Id$
 
-// Copyright (C) 1998, 1999 Iowa State University
+// Copyright (C) 1998-2006 Iowa State University
 
 // This file is part of JML
 
@@ -36,16 +36,6 @@ public final class System {
 
     //@ public final ghost static boolean allowNullStreams = false;
 
-    public final static InputStream in;
-        /*@ public initially in != null; @*/ 
-        //@ public invariant !allowNullStreams ==> in != null;
-    public final static PrintStream out;
-        /*@ public initially out != null; @*/ 
-        //@ public invariant !allowNullStreams ==> out != null;
-    public final static PrintStream err;
-        /*@ public initially err != null; @*/ 
-        //@ public invariant !allowNullStreams ==> err != null;
-
     /*  In declaring allowNullStreams to be final, we restrict beyond what
         the JDK requires.  The JDK allows in, out and err to be set to null
         streams, in which case a NullPointerException is raised on any
@@ -55,7 +45,27 @@ public final class System {
         whereever in, out and err are used that they are non null.  This is
         a decided nuisance, and I think the programmer would rather be
         warned that a possibly null stream is being assigned. 
+
+	Since allowNullStreams = false and is declared as final, this means
+	that in, out and err are effectively non-null.  The only way to allow
+	them to be nullable is to modify this specification (or make a copy of
+	it) and change the value of allowNullStreams.  Since changing the
+	nullity requires changing the spec, and since some tools can do more
+	if in, out and err are explicitly declared non-null, we are going one
+	step further and annotating in, out and err as non_null.  If ever you
+	change allowNullStreams to be true, then you will need to change the
+	annotations of in, out and err to be nullable.
     */
+
+    public final static /*@non_null*//*see note above*/ InputStream in;
+        /*@ public initially in != null; @*/ 
+        //@ public invariant !allowNullStreams ==> in != null;
+    public final static /*@non_null*//*see note above*/ PrintStream out;
+        /*@ public initially out != null; @*/ 
+        //@ public invariant !allowNullStreams ==> out != null;
+    public final static /*@non_null*//*see note above*/ PrintStream err;
+        /*@ public initially err != null; @*/ 
+        //@ public invariant !allowNullStreams ==> err != null;
 
     //@ requires allowNullStreams || i != null;
     //@ assignable in;  // strangely enough, in is like a read-only var.
@@ -73,7 +83,7 @@ public final class System {
     public static void setErr(PrintStream e);
 
 
-    //@ public model static SecurityManager systemSecurityManager;
+    //@ public model static nullable SecurityManager systemSecurityManager;
 
     /*@  public normal_behavior
       @    requires s == null;
@@ -86,11 +96,11 @@ public final class System {
       @    ensures  systemSecurityManager == s;
       @    signals (SecurityException) (* if the change is not permitted *);
       @*/
-    public static void setSecurityManager(SecurityManager s) throws SecurityException;
+    public static void setSecurityManager(/*@nullable*/ SecurityManager s) throws SecurityException;
 
     //@ public normal_behavior
     //@   ensures \result == systemSecurityManager;
-    public /*@ pure @*/ static SecurityManager getSecurityManager();
+    public /*@ pure @*/ static /*@nullable*/ SecurityManager getSecurityManager();
 
     /** The last value of currentTimeMillis() that was returned */
 
@@ -104,20 +114,20 @@ public final class System {
     //@  ensures \result == time;
     public static native long currentTimeMillis();
 
-    /*@  public exceptional_behavior
-      @    requires src == null || dest == null;
-      @    assignable \nothing;
-      @    signals_only NullPointerException;
-      @ also
+    /*@ // public exceptional_behavior
+      @ //   requires src == null || dest == null;
+      @ //   assignable \nothing;
+      @ //   signals_only NullPointerException;
+      @ // also
       @  public exceptional_behavior
-      @    requires !(src == null || dest == null);
+      @    // requires !(src == null || dest == null);
       @    requires !(src.getClass().isArray()) || !(dest.getClass().isArray());
       @    assignable \nothing;
       @    signals_only ArrayStoreException;
       @ also // FIXME - unify with the previous spec case
       @ public exceptional_behavior
-      @   requires (* neither array is null *);
-      @   requires !(src == null || dest == null);
+      @   // requires (* neither array is null *);
+      @   // requires !(src == null || dest == null);
       @   requires (* either the src or dest are not arrays, or
       @               both src and dest are primitive arrays, but not of the sam
 e primitive type, or
@@ -136,7 +146,7 @@ t *);
       @   signals_only ArrayStoreException;
       @ also
       @  public exceptional_behavior
-      @    requires !(src == null || dest == null);
+      @    // requires !(src == null || dest == null);
       @    requires !(!(src.getClass().isArray()) || !(dest.getClass().isArray()));
       @    requires (srcPos < 0 || destPos < 0 || length < 0
       @                  || srcPos + length > ((Object[])src).length
@@ -146,7 +156,7 @@ t *);
       @    signals_only ArrayIndexOutOfBoundsException;
       @ also
       @  public normal_behavior
-      @    requires !(src == null || dest == null);
+      @    // requires !(src == null || dest == null);
       @    requires src.getClass().isArray() && dest.getClass().isArray();
       @    requires !(    srcPos < 0 || destPos < 0 || length < 0 );
              // FIXME - need the length restrictions for all primitive types
@@ -189,9 +199,9 @@ t *);
       @*/
     //@ implies_that
     //@   requires length >= 0 && 0 <= srcPos && 0 <= destPos;
-    public static native void arraycopy(Object src,
+    public static native void arraycopy(/*@non_null*/ Object src,
                                         int srcPos,
-                                        Object dest,
+                                        /*@non_null*/ Object dest,
                                         int destPos,
                                         int length);
 
@@ -200,7 +210,7 @@ t *);
     //@ public normal_behavior
     //@   ensures x == null ==> \result == 0;
     //-@ function
-    public /*@ pure @*/ static native int identityHashCode(Object x);
+    public /*@ pure @*/ static native int identityHashCode(/*@nullable*/ Object x);
 
     //@ public model static non_null Properties systemProperties;
     //@    initially systemProperties.containsKey("java.home");
@@ -248,7 +258,7 @@ t *);
     //@ also public exceptional_behavior
     //@   requires key == null;
     //@   signals_only NullPointerException;
-    public /*@ pure @*/ static String getProperty(String key) throws RuntimeException;
+    public /*@ pure @*/ static /*@nullable*/ String getProperty(/*@non_null*/ String key) throws RuntimeException;
 
 
 // FIXME - conflict between exceptions
@@ -260,7 +270,7 @@ t *);
     //@ also public exceptional_behavior
     //@   requires key == null;
     //@   signals_only NullPointerException;
-    public /*@ pure @*/ static String getProperty(String key, String def) throws RuntimeException;    
+    public /*@ pure @*/ static /*@nullable*/ String getProperty(/*@non_null*/ String key, /*@nullable*/ String def) throws RuntimeException;    
 
 
 // FIXME - conflict between exceptions
@@ -273,11 +283,11 @@ t *);
       @   assignable \not_specified;
       @   signals_only NullPointerException;
       @*/
-    public static String setProperty(String key, String value) throws RuntimeException;
+    public static /*@nullable*/ String setProperty(/*@non_null*/ String key, /*@nullable*/ String value) throws RuntimeException;
 
 
     /** @deprecated use java.lang.System.getProperty. */
-    public static /*@ pure @*/ String getenv(String name);
+    public static /*@ pure nullable @*/ String getenv(/*@non_null*/ String name);
 
     /*@ public behavior
       @    diverges true;
