@@ -211,9 +211,8 @@ public class Set implements Cloneable
      * that is, if the sets are disjoint, then <code>false</code> is returned.
      * The operation leaves both sets unchanged.
      */
-    //@ requires s != null;
     //@ requires s.elementType == elementType;
-    public boolean containsAny(Set s) {
+    public boolean containsAny(/*@non_null*/ Set s) {
       Enumeration e;
       if (size() < s.size()) {
 	e = ht.keys();
@@ -230,7 +229,7 @@ public class Set implements Cloneable
       return false;
     }
 
-    public Object clone() {
+    public /*@non_null*/ Object clone() {
       try {
 	Set s = (Set)super.clone();
 	//@ assume s.elementType == this.elementType;
@@ -239,9 +238,7 @@ public class Set implements Cloneable
 	return s;
       } catch (CloneNotSupportedException c) {
 	// shouldn't happen, since Set implements Cloneable
-	//@ unreachable; //@ nowarn; 
-	Assert.fail("unexpected CloneNotSupportedException exception");
-	return null; // satisfy compiler
+	throw new IllegalStateException("unreachable code reached!");
       }
     }
 
