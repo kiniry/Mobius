@@ -79,10 +79,15 @@ public class File implements Serializable, Comparable {
     //@ pure
     public int compareTo(/*@non_null*/ File path);
 
-    //@ axiom (\forall Class c; Comparable.definedComparison(File.class,c) == (c <: File.class));
+    //X axiom (\forall File f, Class c; f.definedComparison(c) == (c <: File.class));
+
+    /*@ also public normal_behavior
+      @    ensures \result == (\typeof(o) <: \typeof(this));
+      @ public model pure boolean definedComparison(non_null Object o);
+      @*/
 
     //@ also public normal_behavior
-    //@   requires o instanceof File && definedComparison(getClass(),o.getClass());
+    //@   requires o instanceof File && definedComparison(o);
     //@   ensures \result == this.compareTo((File)o);
     //@ pure
     public int compareTo(/*@non_null*/ Object o);
