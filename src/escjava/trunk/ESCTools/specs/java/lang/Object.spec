@@ -41,7 +41,7 @@ public class Object {
      * Used to specify (among other things) injectivity (see
      * the ESC/Java User's Manual).
      */
-    //@ ghost public Object owner;
+    //@ ghost public nullable Object owner;
         // NB It is inconvenient to include owner in objectState,
         // because generally we do not change the owner after initialization
 
@@ -56,8 +56,7 @@ public class Object {
       @   ensures \result == \typeof(this);
       @*/
     //-@ function // Not dependent on the state, just on the object identity
-    //@ non_null
-    public /*@ pure @*/ final Class getClass();
+    public /*@ pure @*/ final /*@non_null*/ Class getClass();
 
     //@ public model int theHashCode; in objectState;
 
@@ -93,12 +92,11 @@ public class Object {
       @  //  requires obj != null;
       @   // ensures \result == obj.equals(this);
       @*/
-    public /*@ pure @*/ boolean equals(/*@ \readonly @*/ Object obj);
+    public /*@ pure @*/ boolean equals(/*@ nullable \readonly @*/ Object obj);
 
     /*@ protected normal_behavior
       @   requires this instanceof Cloneable;
       @   assignable \nothing;
-      @   ensures \result != null;
 		// Note: clone is magic.  Object.clone ensures the following
 		// strict equality when it is called, and subclasses are
 		// expected to fulfill it by calling super.clone();
@@ -160,7 +158,7 @@ public class Object {
       @                ((byte[])\result)[i] == ((byte[])this)[i] );
 	// FIXME - needs the above replicated for each primitive type
 */
-    protected Object clone() throws CloneNotSupportedException;
+    protected /*@non_null*/ Object clone() throws CloneNotSupportedException;
 
     /** Use theString as the (pure) model value of toString() */
     //@ public model non_null String theString; in objectState;
