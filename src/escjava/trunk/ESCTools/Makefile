@@ -76,9 +76,11 @@ source: fix-perms
 	$(MAKE) -C Javafe source
 	$(MAKE) -C Escjava source generate_files
 
-test: build
+test: build test0 jml
+
+test0:
 	for d in $(SUBDIRS) ; do \
-	    $(MAKE) -C $$d $@ || exit 1; \
+	    $(MAKE) -C $$d test || exit 1; \
 	done
 
 # Use the following target if you have *some* files that were compiled with jmlc (e.g. Utils)
