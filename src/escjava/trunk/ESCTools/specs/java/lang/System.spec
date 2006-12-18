@@ -309,6 +309,6 @@ t *);
 
     public static void loadLibrary(/*@ non_null @*/ String libname);
 
-    public /*@ pure @*/ static native String mapLibraryName(String libname);
+    public /*@ pure @*/ static native String mapLibraryName(/*@non_null*/ String libname);
 
 }
