@@ -134,10 +134,9 @@ abstract public class TypeReader extends Reader
     */
     abstract public ArrayList findFiles(/*@ non_null @*/ String[] P);
 
-    //@ ensures \result != null;
-    public FilenameFilter filter() { 
+    public /*@non_null*/ FilenameFilter filter() { 
 	return new FilenameFilter() {
-		public boolean accept(File f, String s) { return true; }
+		public boolean accept(/*@non_null*/ File f, /*@non_null*/ String s) { return true; }
 	    }; 
     }
 }

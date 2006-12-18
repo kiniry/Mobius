@@ -274,7 +274,7 @@ public class StandardTypeReader extends TypeReader
 
   public /*@ non_null @*/ FilenameFilter filter() {
     return new FilenameFilter() {
-        public boolean accept(File f, String n) {
+        public boolean accept(/*@non_null*/ File f, /*@non_null*/ String n) {
           if (!f.isFile()) return false;
           if (n.endsWith(".java")) return true;
           return false;
