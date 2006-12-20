@@ -55,9 +55,12 @@ The bytecode verification condition generator works only for the sequential frag
 rely often on multi - threading which is difficult to verify against a functional specifications or security policies.
 One of the important aspects of the correctness of multi - threaded programs is the absence of deadlocks, 
 and race conditions. Such properties can be ensured  by type systems \cite{FA99TSL,flanagan00typebased} or static verification based on program logic \cite{FLL02ESC}.  
-The absence of deadlock and race conditions is a first step in the verification of the functional correctness of multi threaded programs. In order to build a full 
-verification scheme for checking functional correctness more has to be done.
-The earliest work for  verification of  parallel programs is  the Owicki and Gries approach   
+%The absence of deadlock and race conditions is a first step in the
+%verification of the functional correctness of multi threaded programs. In
+%order to build a full verification scheme for checking functional correctness
+%more has to be done.
+The earliest works in the field of parallel program  verification are
+  the Owicki and Gries approach   
 \cite{nipkow99owickigries}  and the rely - guarantee approach. However, 
 the first approach is not modular and requires a large amount of verification conditions while for the second, the annotation procedure can not be automatised.
 
@@ -165,13 +168,14 @@ The bytecode verification condition generator and the BML compiler is the first 
 The missing  part is  the certificate format which comes along with the bytecode and which  is the evidence for 
 that the bytecode respects the client requirements. Defining an encoding of the certificate should take into account several factors:
 \begin{itemize} 
-  \item certificate size must be reasonably small. This is important, for instance,  if the certified program comes over a network with a limitted bandwith
+  \item certificate size must be reasonably small. This is important, for
+  instance,  if the certified program comes over a network with a limited  bandwidth
   \item certificates must be easily checked. This means that the certificate checker is  small and simple.
-	       Of course, the code consumer might not want to spend all of its computation 
-	      resources for checking that the certificate guarantees the program conformence to its policies.     
+               Of course, the code consumer might not want to spend all of its computation 
+              resources for checking that the certificate guarantees the program conformance to its policies.     
 \end{itemize}
 
-Note that the certificate size and its checking complexity are dual: the bigger the certificate is more manageable is the checking process and viceversa. 
+Note that the certificate size and its checking complexity are dual: the bigger the certificate is more manageable is the checking process and vice versa. 
 The problem becomes even more difficult if the certificate must be checked on the device because of the computational and space constraints.
  
 
@@ -184,10 +188,10 @@ The problem becomes even more difficult if the certificate must be checked on th
 % \begin{itemize}
 %  \item light weight verification condition generators. In particular, we refer 
 %        to verification condition generation techniques which are simple and do not need
-%	much computational resources. Because a verification condition generator always
-%	form part of the trusted computing base on the client side, building such verification 
-%	condition generators is important for on - device checking which rely on limitted computational 
-%	resources  
+%       much computational resources. Because a verification condition generator always
+%       form part of the trusted computing base on the client side, building such verification 
+%       condition generators is important for on - device checking which rely on limitted computational 
+%       resources  
   
 %   \item generation of certificates. This is important for several reasons.
 %         The certificate may certainly  arrive via the network and should not corrupt the performance 
@@ -207,20 +211,20 @@ The problem becomes even more difficult if the certificate must be checked on th
 %client for checking the certificate. 
 
 % to do. type systems
-Another perspective in this direction is how   to encode type systems into the bytecode logic. 
-Type systems provide a high level of automation. 
-Their encoding in the logic can be useful as the certificate can be generated
+Another perspective in this direction is the encoding of  type systems into the bytecode logic. 
+Type systems provide a high level of automation. Their encoding in the logic can be useful as the certificate can be generated
  automatically and thus, avoids the user interaction. However, type systems are  conservative in the sense 
-that they tend to reject a large amount of correct programs. A possible solution to this problem are hybrid certificates which combine both type systems and program 
-logic. In this approach, the unknown code comes supplied with a  derivation in the logic generated potentially with the help of user interaction 
-for the parts of the  code which can not be inferred by the type system.   The client side then applies a type inference procedure over  the
+that they tend to reject a large amount of correct programs. A possible
+solution to this problem are hybrid certificates which combine both type
+systems and program logic. In this approach, the unknown code comes supplied with a  derivation in the logic generated potentially with the help of user interaction 
+for the parts of the  code which can not be inferred by the type system. The client side then applies a type inference procedure over  the
  unknown code and once it gets to the place in the parts of the code where the 
 type inference does not work but for which there is a derivation in the certificate, he will type check that derivation.   
 This is actually an approach which will be adopted in the Mobius project. 
 
 
-The objective of this thesis was to 
-give the basis for the a bytecode verification framework and to show that it is feasible. A further objective, pursued in the European project
+The objective of this thesis was to build a bytecode verification framework
+ for dealing with potentially sophisticated security and functional policies. A further objective, pursued in the European project
  Mobius (short for Ubiquity, Mobility and Security) 
 is to build basis for guaranteeing security and trust in program application in the presence of mobile and ubicuous computing. We hope that we have convinced
 the reader for the importance of such techniques and in particular of the evolution from source verification to
