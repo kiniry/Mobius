@@ -44,7 +44,7 @@ be expressive enough for this.
 Proof Carrying Code (PCC) is a typical example where the need to
 specify and verify executable code directly is imperative, in
 particular when one wishes to capture complex security policies that
-cannot be checked with a typechecker.  PCC is a possible solution to
+cannot be checked with a type checker.  PCC is a possible solution to
 support the secure downloading of applications on a mobile device. The
 executable code of an application comes together with a specification,
 and the necessary evidence from which the code client can easily
@@ -53,38 +53,39 @@ scenario, the code producer, who \emph{has} to produce a correctness
 proof, will often prefer to do the verification at source code level,
 and then compile the specification and the proof into the level of
 executable code. Realising a platform to support this scenario is one
-of the goals of the \mobius project\footnote{See
-\texttt{http://mobius.inria.fr}.}. 
+of the goals of the \mobius project (see
+\texttt{http://mobius.inria.fr}).
 
 This paper describes the low-level specification language that we
 propose to specify the security requirements for mobile device
 applications. Since the most common execution framework for mobile
-devices is the J2ME platform, our low-level specification language is
-tailored to Java bytecode. Our language is designed to support the
-verification of \emph{unstructured} code. And, as we want to be able to
-translate source code level specifications into bytecode level
-specifications, our specification language is also designed to be
-closely related to the Java Modeling Language (JML)\footnote{See
-\texttt{http://www.jmlspecs.org}.}.
+devices is the J2ME platform, our language is tailored to Java
+bytecode, and thus to the verification of \emph{unstructured}
+code. To be able to translate source code level specifications
+into bytecode level specifications, our specification language is also
+designed to be closely related to the Java Modeling Language (JML)
+(see
+\texttt{http://www.jmlspecs.org}).
 
 
 Over the last few years, JML has become the \emph{de facto}
 specification language for Java source code programs. Different tools
 exist that allow to validate, verify or generate JML specifications
 (see~\cite{BurdyCCEKLLP05} for an overview). Several case studies have
-demonstrated that JML can be used to specify realistic industrial
-examples, and that the different tools allow to find errors in the
-implementations (see \emph{e.g.}~\cite{BreunesseCHJ04}). One of the
-reasons for its success is that JML uses a Java-like
+demonstrated that JML can be used to specify and improve realistic
+industrial examples (see \emph{e.g.}~\cite{BreunesseCHJ04}). One of
+the reasons for its success is that JML uses a Java-like
 syntax. Specifications are written using preconditions, postcondition,
 class invariants and other annotations, where the different predicates
 are side-effect-free Java expressions, extended with
 specification-specific keywords (\emph{e.g.}\ logical quantifiers and
 a keyword to refer to the return value of a method). Other important
-factors for the success of JML are its expressiveness and
-flexibility. JML is in particular suited to express many of the
-different security requirements that have been identified to be of
-interest for mobile device applications.%~\cite{Deliverable1.2}.
+factors for the success of JML are its expressiveness and flexibility,
+and its ability to characterise typical security requirements.
+
+% JML is in particular suited to express many of the
+%different security requirements that have been identified to be of
+%interest for mobile device applications.%~\cite{Deliverable1.2}.
 
 
 Therefore, we define a variation of JML especially tailored to
@@ -103,7 +104,7 @@ specification language with similar design goals exists for Java
 bytecode. Notice that, even though the design of BML was motivated by
 the need to specify security requirements for mobile device
 applications, just as JML, BML is a general specification language
-that can be used for different kinds of applications.
+that can be used for different kinds of applications and analyses.
 
 Section~\ref{SecJMLOverview} quickly summarises the relevant features
 of JML. Section~\ref{SecBML} gives a detailed account of BML,

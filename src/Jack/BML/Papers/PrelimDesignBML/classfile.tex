@@ -1,4 +1,4 @@
-\section{Encoding BML specifications in the class file format}
+\section{Encoding BML specifications in the Class File Format}
 \label{SecClassfile}
 
 To store BML specifications together with the bytecode it specifies,
@@ -14,16 +14,19 @@ loading, linking and resolution of references used in the class. The
 JVM specification allows to add user-specific information to the class
 file (\cite[\S4.7.1]{JVMspec}) as special user-specific attributes.
 We store BML specifications in such user-specific attributes, in a
-compiler-independent format. To ensure that the augmented class files
-are executable by any implementation of the JVM, the user-specific
-attributes cannot be inserted in the list with bytecode
-instructions. Instead BML annotations are stored separately from the
-method body, and where necessary the annotations contain the index of
-the instruction that they specify. The use of special attributes
-ensures that the presence of BML annotations does not have any impact
-on the application's performance, \emph{i.e.}, the augmented class
-file should not slow down loading or normal execution of the
-application. %Notice that this requirement is important for mobile
+compiler-independent format\footnote{Another possibility would be to
+use metadata to encode the specifications, but this is only supported
+in Java 1.5, and it is (currently) not directly compatible with
+JML.}. To ensure that the augmented class files are executable by any
+implementation of the JVM, the user-specific attributes cannot be
+inserted in the list with bytecode instructions. Instead BML
+annotations are stored separately from the method body, and where
+necessary the annotations contain the index of the instruction that
+they specify. The use of special attributes ensures that the presence
+of BML annotations does not have any impact on the application's
+performance, \emph{i.e.}, the augmented class file should not slow
+down loading or normal execution of the application. %Notice that this
+requirement is important for mobile
 %device applications, where one often has limited resources.
 
 

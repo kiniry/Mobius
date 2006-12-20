@@ -1,4 +1,4 @@
-\section{Compiling JML specifications into BML specifications}\label{SecJMLtoBML} 
+\section{Compiling JML Specifications into BML Specifications}\label{SecJMLtoBML} 
 
 Since it is often easier and more intuitive to specify and verify at
 source code level, we have defined a compiler from JML to BML:
@@ -11,19 +11,19 @@ bytecode level proof. It is future work to define this in full detail,
 but some work in this direction has already been
 done~\cite{BartheRS05}.
 
-The JML specification is compiled separatedly from the Java source
+The JML specification is compiled separately from the Java source
 code. In fact, \JMLtoBML takes as input an annotated Java source file
 \emph{and} the Java class file produced by a non-optimising compiler
 with the debug flag set. %This debug information helps us to compile
 %the annotations correctly.
 
 From the debug information, we use in particular the
-\textbf{Line\_Number\_Table} and the \textbf{Local\_Variable\_Table}
+\textbf{Line\_ Number\_Table} and the \textbf{Local\_Variable\_Table}
 attributes. The presence of these attributes is
 optional~\cite{JVMspec}, but almost all standard non-optimising
-compilers can generate them. The \textbf{Line\_Number\_Table} is
-computed as part of the compilation of a method; it links line numbers
-in the Java source code with the Java bytecode instructions.  The
+compilers can generate them. The \textbf{Line\_Number\_Table} links
+line numbers in the Java source code with the Java bytecode
+instructions.  The
 \textbf{Local\_Variable\_Table} describes the local variables that
 appear in a method.  
 
@@ -36,10 +36,10 @@ cycle in the graph must have exactly one entry point
 non-optimising Java compilers produce reducible control flow graphs
 and in practice even most hand-written bytecode is reducible.
 
-The compilation from JML specifications into BML compilations is
-defined in several steps. As mentioned above, we assume that the Java
-source code has been compiled with the debug flag set, and that we
-have access to the generated class file.
+The compilation from JML specifications into BML is defined in several
+steps. As mentioned above, we assume that the Java source code has
+been compiled with the debug flag set, and that we have access to the
+generated class file.
 
 \begin{description}
 
