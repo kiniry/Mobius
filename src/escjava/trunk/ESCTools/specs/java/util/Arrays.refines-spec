@@ -103,12 +103,8 @@ public class Arrays {
 
     /*@  public normal_behavior
       @   requires a != null;
+      @   requires 0 <= fromIndex && fromIndex <= toIndex && toIndex < a.length;
       @   assignable a[fromIndex..toIndex-1];
-      @   ensures_redundantly (\forall int i;
-      @            0 <= i && i < fromIndex  
-      @            || toIndex <= i && i < a.length; 
-      @                \old(a[i]) == a[i]);
-      @   ensures_redundantly a.length == \old(a.length) && a != null;
       @   ensures (\forall int i; fromIndex < i && i < toIndex;
       @             a[i-1] <= a[i]);
       @   ensures (\forall int i;
@@ -128,7 +124,9 @@ public class Arrays {
       @   signals (NullPointerException) a == null;
       @   signals (IllegalArgumentException) fromIndex > toIndex;
       @   signals (ArrayIndexOutOfBoundsException) 
-      @             fromIndex < 0 || toIndex > a.length;
+      @             fromIndex < 0;
+      @   signals (ArrayIndexOutOfBoundsException) 
+      @             a != null && toIndex > a.length;
       @*/
     public static void sort(int[] a, int fromIndex, int toIndex);
 
@@ -506,7 +504,7 @@ public class Arrays {
       @   signals (ClassCastException)
       @     (* array contains elements not mutually comparable *);
       @*/
-    public static void sort(Object[] a, Comparator c);
+    public static void sort(Object[] a, /*@nullable*/ Comparator c);
 
     /*@  public normal_behavior
       @   requires a != null && c != null;
@@ -562,7 +560,7 @@ public class Arrays {
       @   signals (ArrayIndexOutOfBoundsException) 
       @            fromIndex < 0 || toIndex > a.length;
       @*/
-    public static void sort(Object[] a, int fromIndex, int toIndex, Comparator c);
+    public static void sort(Object[] a, int fromIndex, int toIndex, /*@nullable*/ Comparator c);
 
     //------------------------------------------------------------------------
 
@@ -906,7 +904,7 @@ public class Arrays {
       @   signals (ClassCastException) 
       @            (* array contains elements not comparable to key *);
       @*/
-    public static int binarySearch(Object[] a, Object key, Comparator c);
+    public static int binarySearch(Object[] a, Object key, /*@nullable*/ Comparator c);
 
     /*@  public normal_behavior
       @   requires a == null || a2 == null;
