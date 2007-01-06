@@ -35,7 +35,7 @@ $$  \begin{array}{l}
   \neg \expressionSrcRel \Rightarrow \wpName( \stmt_2, \normalPostSrc) \end{array}
 $$
 This rule is correct as far as the evaluation of the expression $\expressionSrcRel$ evaluates normally. But in our settings, this is not always the case.
-For instance, if $ \expressionSrcRel$ is the relational expression $\mbox{\rm\texttt{a}}.\fieldd > 0$ and    \mbox{\rm\texttt{a}} evaluates to 0
+For instance, if $ \expressionSrcRel$ is the relational expression $\mbox{\rm\texttt{a}}.\fieldd > 0$ and    \mbox{\rm\texttt{a}} evaluates to \Mynull{}
 the above rule does not capture the semantics of the exceptional termination. As we shall see in the following, the definition presented here  will allow us to manage in  appropriate way
  exceptional termination\footnote{although here, we rule out these cases, such a definition also allows for dealing with side effects of expression evaluation like change
  the value of a variable or location during the evaluation as for instance is the case for Java expressions like \lstinline!i++!}.

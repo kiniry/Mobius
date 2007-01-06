@@ -385,13 +385,20 @@ Psurl          = "ftp://ftp-sop.inria.fr/everest/publis/2003/BRL03fme.ps.gz"}
   OPTannote = 	 {}
 }
 
-@InProceedings{Ljbc,
-  author = 	 {Xavier Leroy},
-  title = 	 {{Java} Bytecode Verification: Algorithms and Formalizations},
-   booktitle = 	 "Journal of Automated Reasoning 2003",
-  year = 	 {2003},
-}
 
+
+@article{Ljbc,
+ author = {Xavier Leroy},
+ title = {Java Bytecode Verification: Algorithms and Formalizations},
+ journal = {Journal of Automated Reasoning},
+ volume = {30},
+ number = {3-4},
+ year = {2003},
+ issn = {0168-7433},
+ pages = {235--269},
+ publisher = {Kluwer Academic Publishers},
+ address = {Hingham, MA, USA},
+ }
 
 
 @InProceedings{F67amp,
@@ -508,12 +515,30 @@ Psurl          = "ftp://ftp-sop.inria.fr/everest/publis/2003/BRL03fme.ps.gz"}
     url = "citeseer.ist.psu.edu/qian97formal.html" 
 }
 
-@misc{pusch98proving,
-  author = "Cornelia Pusch",
-  title = "Proving the Soundness of a Java Bytecode Verifier in Isabelle/HOL",
-  text = "C. Pusch, Proving the Soundness of a Java Bytecode Verifier in Isabelle/HOL,
-    In OOPSLA'98 Workshop Formal Underpinnings of Java, 1998.",
-  year = "1998" }
+
+
+@Article{siveroni04operational,
+  author = "I. Siveroni",
+  title = "Operational semantics of the Java Card Virtual Machine",
+  journal = {Journal of Logic and Algebraic Programming},
+  volume= "58",
+  pages = "3-25",
+  text = "Igor Siveroni. Operational semantics of the Java Card Virtual Machine.
+    J. Logic and Automated Reasoning, 2004. To appear.",
+  year = "2004",
+  url = "citeseer.ist.psu.edu/siveroni04operational.html" }
+
+@inproceedings{pusch98proving,
+ author = {Cornelia Pusch},
+ title = {Proving the Soundness of a Java Bytecode Verifier Specification in Isabelle/HOL},
+ booktitle = {TACAS '99: Proceedings of the 5th International Conference on Tools and Algorithms for Construction and Analysis of Systems},
+ year = {1999},
+ isbn = {3-540-65703-7},
+ pages = {89--103},
+ publisher = {Springer-Verlag},
+ address = {London, UK},
+ }
+
 
 @techreport{KleinN04,
   author={Gerwin Klein and Tobias Nipkow},
@@ -525,13 +550,9 @@ Psurl          = "ftp://ftp-sop.inria.fr/everest/publis/2003/BRL03fme.ps.gz"}
   year=2004
 }
 
-@misc{siveroni04operational,
-  author = "I. Siveroni",
-  title = "Operational semantics of the Java Card Virtual Machine",
-  text = "Igor Siveroni. Operational semantics of the Java Card Virtual Machine.
-    J. Logic and Automated Reasoning, 2004. To appear.",
-  year = "2004",
-  url = "citeseer.ist.psu.edu/siveroni04operational.html" }
+
+
+
 
 % the Loop tool
 @misc{jacobs03java,
@@ -675,15 +696,15 @@ Psurl          = "ftp://ftp-sop.inria.fr/everest/publis/2003/BRL03fme.ps.gz"}
     year = "1998",
     url = "citeseer.ist.psu.edu/stata98type.html" }
 
-@misc{marche03krakatoa,
+@article{marche03krakatoa,
   author = "C. Marche and C. Paulin-Mohring and X. Urbain",
   title = "The Krakatoa Tool for Certification of Java/JavaCard Programs Annotated
     in JML",
-  text = "C. Marche, C. Paulin-Mohring, and X. Urbain. The krakatoa tool for certification
-    of java/javacard programs annotated in jml. Journal of Logic and Algebraic
-    Programming, 2003",
+  journal = "Journal of Logic and Algebraic Programming",
   year = "2003",
   url = "citeseer.ist.psu.edu/marche03krakatoa.html" }
+
+
 
 @article{burdy98treatment,
   author = "L. Burdy",
@@ -1054,7 +1075,7 @@ year = 2005
 @article{CHB03PLE,
  author = {Cristiano Calcagno and Peter O'Hearn and Richard Bornat},
  title = {Program logic and equivalence in the presence of garbage collection},
- journal = {Theor. Comput. Sci.},
+ journal = {Theoretical Computer Science},
  volume = {298},
  number = {3},
  year = {2003},
