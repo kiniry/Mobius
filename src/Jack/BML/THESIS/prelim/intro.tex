@@ -50,17 +50,40 @@ In particular, \textbf{the features supported} by our bytecode language are
 \textbf{The features not supported} by our bytecode language are 
 \begin{description} 
    \item[void methods]  Note that the current formalization can be extended to void methods without major difficulties.
-         However, in our implementation 
-         we treat void methods.
+         However, in our implementation  we treat void methods.
 
    \item [static fields and methods] Static data is shared between all the instances of the class
          where it is declared.  We can extend our formalization to deal with static fields and methods,
 	 however it would have made the presentation heavier without gaining new feature from the JVM bytecode language. 
 	 Once again, static methods are supported in the implementation of the verification condition generator.
 
-   \item [static initialization] This part of the JVM is discarded as its formal understanding is difficult and complex.
-         Static initialization is a good candidate for a future work. 
+   \item [static initialization]
+         This part of the JVM is discarded as the JVM specification is ambiguous on it and 
+	 thus, its formal understanding is difficult and complex.
+	 However, research exists on the subject as is the  work by Leino and
+	 al. \cite{krml153}  which deals with static initialization and  static invariants.
+	 %Static initialization is a challenging candidate for a future work. 
 
+   \item [garbage collection and finalization]
+         Both in the formalization presented in the following as well as in the implementation of the verification condition 
+	 generator, we do not support garbage collection, i.e.\ unused memory is never freed and assume
+	  an infinite memory. Garbage collection is the general name of techiques for freeing unused memory 
+	 for later reallocation. Finalizer methods are closely related to garbage collection.
+	 A program developer may write a finalizer method in a class to specify what are 
+	 the final operations to be done before an object of this class is reallocated. Finalizers are executed
+	 by the garbage collector. Reasoning and modeling a garbage collected heap should take into account the notion of reachability of an object in 
+	 the heap which can be not trivial. In particular, most of the existing formalizations of Java discard the garbage collection. 
+	 Also, standard program logic and semantics of program logic assertions do not take into account garbage collection,
+	 as for instance is the  standard Hoare logic. An interesting work which proposes a new semantics of assertions in a 
+	 language with garbage collection is \cite{CHB03PLE}. Although the treatment of garbage collection is  omitted here,
+	 it is an important part of the JVM and future extensions of the formalization here should take it into account.
+%	 Modeling a garbage collected heap should normally  consider a particular policy of garbage collection.
+%	 There exist two main approaches for detecting garbage memory: reference counting or tracing. 
+%	 However, although the Java Virtual Machine (JVM)  states that the JVM is garbage collected it does 
+%	 not define how the garbage collector must work. The designer of each JVM must decide how to implement the garbage-collected heap.
+%	 Thus, a model   of the JVM with garbage collection must be committed to a particular implementation of the JVM.
+%	 Although the treatment of garbage collection is  omitted here, it is an important part of the JVM and future extensions of the formalization here should take it into account.
+	     
    \item [subroutines] Subroutines in Java is a piece of code inside a method which must be executed 
          after another, no matter how the first terminate execution. 
 	 They correspond to the construction \texttt{try\{ \} finally \{ \} } in the Java language.
@@ -107,9 +130,14 @@ In particular, \textbf{the features supported} by our bytecode language are
 
    \item [arithmetic overflow] The arithmetic in Java is  bounded. This means that if the result of an 
          arithmetic operation exceeds (is below) the largest integer (the smallest)  the operation will
-	 result in overflow. The arithmetic proposed here is infinite. We could have designed the arithmetic
-	 operations such that they take into account the arithmetic overflow. 
-	 However, we consider that for the purposes of the present thesis this is not necessary and will 
+	 result in overflow. The arithmetic proposed here is infinite. 
+	 Note that depending on what are the objectives of a formalization of a programming language semantics,
+	 one might support or not bounded arithmetic.
+	 For instance,  ESC/java does not support bounded arithmetic for the sake of efficiency \cite{FLL02ESC}.  
+	 However, if the application domain of a verification tool targets programs which 
+	 are sensitive to arithmetic errors it is certainly of interest to support arithmetic overflow.  
+	 We could have designed the arithmetic operations such that they take into account the arithmetic overflow
+	 as we consider that for the purposes of the present thesis this is not necessary and will 
 	 complicate the presentation without bringing any particular feature of the bytecode. 
 	 
 

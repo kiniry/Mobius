@@ -45,7 +45,7 @@ do not restrict at all the compilation process.  We outline the categories of pr
 
 
 In the following, we use the notation $\ExprStmt$ when we refer both to statements $\stmt$ and expressions $\expressionSrc$.
-In the following, we take a closer look at the properties in question.
+Let us take a closer look at the properties in question.
  
  The first property that we observe is that the last instruction $\ins{e}$ in the compilation
  $\compileLabel{s}{\stmt}{e}$  of a statement $\stmt$ is always in execution relation
@@ -168,13 +168,13 @@ a loop entry and a loop end  in the sense of Def.
 \lstinline!3 getfield Number.value! & \\
 \lstinline!4 iflt 9!                  & \\
                                       & \\ &\\ &\\
-\lstinline!5 load n!                  & \Myspace\Myspace\lstinline!else {abs = - n.value;}!\\			
+\lstinline!5 load n!                  & \Myspace\Myspace\lstinline!then {abs =  n.value;}!\\			
 \lstinline!6 getfield Number.value! & \\
 \lstinline!7 store abs!                 & \\
                                       & \\ &\\ &\\
 \lstinline!8 goto 21!		      & \\
                                       & \\ &\\ &\\
-\lstinline!9 load n!		      & \Myspace\Myspace\lstinline!then {abs = n.value;}!\\
+\lstinline!9 load n!		      & \Myspace\Myspace\lstinline!else {abs = -n.value;}!\\
 \lstinline!18 getfield Number.value!&   \\
 \lstinline!19 neg!                    & \\
 \lstinline!20 store abs!	      & \\

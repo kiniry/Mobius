@@ -20,15 +20,15 @@ the control flow graph corresponds to a method body.
 %case for loops in methods on bytecode level. In order to discover a loop in a bytecode program we first need to define 
 %what is a bytecode program. Note that in the following, by a  bytecode program we mean a method body.
 Recall from Section \ref{clazz} that every method \methodd \ has an array of bytecode instructions \methodd.\body.
-The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $\methodd.\body[k]$. A method entry point instruction is 
- an instruction at which an execution of a method starts.
+%The $k-th$ instruction in the bytecode array $\methodd.\body$ is  denoted with $\methodd.\body[k]$.
+ A method entry point instruction is  an instruction at which an execution of a method starts.
  We assume that a method body has exactly one entry point
  and this is the first element in the method body $\methodd.\body[0]$.
 
  The array of bytecode instructions of a method \methodd \ determine the control flow graph $G( V , \execRel ) $   of method \methodd \ 
-in which the vertices are the instructions of the method body.
+in which the vertices are the instruction indexes of the method body:
 
-%$$ V = \{ ins \mid \exists k,  0 \leq k < \methodd.\body.length \wedge ins = \methodd.\body[k] \}$$
+$$ V = \{ k \mid   0 \leq k < \methodd.\body.length  \}$$
 
 % The following definition defines the set of edges in the control flow graph.
 %\begin{defEdge}[Edge in control flow graph]\label{defEdge}  
@@ -36,68 +36,69 @@ in which the vertices are the instructions of the method body.
 % The set of edges $\execRel$ is a relation between the vertices elements
 %$$ \execRel : V * V $$ and is defined  as follows:
 
-In Fig. \ref{defEdge} we can see the execution relation between instructions.
-Note first that we rather use the infix notation $\methodd.\body[j] \execRel \methodd.\body[k]$ instead of $(\methodd.\body[j], \methodd.\body[k]) \in \execRel$  %Note that the branch instructions $ \ifCond \ k $ or  $\goto \ k$ are   in execution relation with the instruction at index $k$.
- The definition says that there is an edge between two vertices $\methodd.\body[j]$ and  $\methodd.\body[k]$ if they may execute immediately one after another.
- We say that $\methodd.\body[j]$ is a predecessor of $\methodd.\body[k]$ and that  $\methodd.\body[k]$ is a successor of  $\methodd.\body[j]$.
+ Fig.\ \ref{defEdge} gives the definition of  the execution relation between instructions.
+Note first that we rather use the infix notation $j \execRel k$ instead of $(j, k) \in \execRel$.
+ Moreover, there is an edge between two vertices $j$ and  $k$ if they may execute immediately one after another.
+ We say that $j$ is a predecessor of $k$ and that  $k$ is a successor of  $j$.
  The definition states the \return \  instruction  does not have successors.
-If  $\methodd.\body[j ]$ is the jump instruction $ \ifCond \ k $ then  its successors are the instruction at index $k$ in the method body   
-$\methodd.\body[k]$  and the instruction $\methodd.\body[j + 1 ]$. 
+If  $\methodd.\body[j ]$ is the jump instruction $ \ifCond \ k $ then  its successors are the instruction at index $k$   and the instruction at index $j$ in $\methodd.\body$.
 From the definition, we also get that every instruction which potentially may throw an exception of type \texttt{Exc}
 has as successor the first instruction of the exception handler that may handle the exception type \texttt{Exc}. For instance, a successor
 of the instruction $\putfield$ is the exception handler entry point which can handle  the \NullPointerExc \ exception. 
 The possible successors of the instruction $\athrow$ are the entry point of any  exception handler  in the method \methodd.
 .
-% We will also use the notation $\next{\methodd.\body[j] }$ for denoting the successor of   $\methodd.\body[j]$ in a given execution path.
+% We will also use the notation $\next{j }$ for denoting the successor of   $j$ in a given execution path.
 \begin{figure}[ht!]
 \begin{frameit}
 $$ 
-{\scriptsize   \begin{array}{l} 
+%{\scriptsize  
+ \begin{array}{l} 
 
-                    \frac{ \methodd.\body[j] = \nop  } { \methodd.\body[j] \execRel \methodd.\body[j+1]  }
-                    \frac{ \methodd.\body[j] = \ifCond \ k  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+                    \frac{ \methodd.\body[j] = \nop  } { j \execRel j+1  }
+                    \frac{ \methodd.\body[j] = \ifCond \ k  } { j \execRel k  }\\\\
                   
-                    \frac{ \methodd.\body[j] = \goto \ k  }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+                    \frac{ \methodd.\body[j] = \goto \ k  }{ j \execRel k }\\\\
 
                     \frac{ \methodd.\body[j] = \putfield \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
-		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+		     }{ j \execRel k }\\\\
 
 		    \frac{ \methodd.\body[j] = \putfield \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
-		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		     }{ j \execRel k  }\\\\ 
 
 		     \frac{ \methodd.\body[j] = \getfield \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
-		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+		     } { j \execRel k  }\\\\
 
 		     \frac{ \methodd.\body[j] = \arrstore \ \findExcHandler{ \NullPointerExc}{j}{\methodd.\excHandlerTable} = k
-		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		     }{ j \execRel k  }\\\\ 
 
 		     \frac{ \methodd.\body[j] = \arrstore \ \findExcHandler{\ArrIndexOutOfBoundExc}{j}{\methodd.\excHandlerTable} = k
-		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		     }{ j \execRel k  }\\\\ 
 
 		     \frac{ \methodd.\body[j] = \arrload \ \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
-		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		     } { j \execRel k  }\\\\ 
 
                      \frac{ \methodd.\body[j] = \arrload \ \findExcHandler{\ArrIndexOutOfBoundExc }{j}{\methodd.\excHandlerTable} = k
-		     }{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		     }{ j \execRel k  }\\\\ 
 
 		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}   \ \findExcHandler{\NullPointerExc }{j}{\methodd.\excHandlerTable} = k
-		     } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\
+		     } { j \execRel k  }\\\\
 
 		     \frac{ \methodd.\body[j] = \invoke \ \mbox{\rm \texttt{n}}  \ 
                                 \begin{array}{l}
 				     \forall \mbox{\rm\texttt{Exc}}, \exists s , \mbox{\rm \texttt{n}}.\exceptions[s ] = \mbox{\rm\texttt{Exc}} \wedge  \\
 		                     \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k 
-                                \end{array}}{ \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+                                \end{array}}{ j \execRel k  }\\\\ 
 
                      \frac{ \methodd.\body[j] = \athrow  \ \forall \mbox{\rm\texttt{Exc}}, \findExcHandler{\mbox{\rm\texttt{Exc}} }{j}{\methodd.\excHandlerTable} = k}
-		    { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		    { j \execRel k  }\\\\ 
 		   
-		    \frac{ \methodd.\body[j] \neq  \goto \  \methodd.\body[j] \neq  \return  \  k = j + 1  } { \methodd.\body[j] \execRel \methodd.\body[k]  }\\\\ 
+		    \frac{ \methodd.\body[j] \neq  \goto \  \methodd.\body[j] \neq  \return  \  k = j + 1  } { j \execRel k  }\\\\ 
 
 		   
 	
   % \end{array} 
-\end{array}}$$
+\end{array}%}
+$$
 
 \caption{\sc  Execution relation between bytecode instructions in a control flow graph}
 \label{defEdge}
@@ -122,9 +123,10 @@ with entry point $\methodd.\body[0]$.
  In such a graph $G$, we say that $\ins{loopEntry}$ is a loop entry instruction and $\ins{loopEnd}$ is a loop end instruction
  of the same loop if the following conditions hold:
 \begin{itemize}
-\item for every path in the control flow graph $P$ from $\methodd.\body[0]$ to  $\ins{loopEnd}$ such that
-     $P~=~\methodd.\body[0] \execRel^{+} \ins{loopEnd}$
-     there exists a subpath which is a prefix of $P$  $subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$ such that $\ins{loopEnd} \notin  \ subP  $
+\item for every path $P$ in the control flow graph $P$ from $\methodd.\body[0]$ to  $\ins{loopEnd}$
+   % such that  $P~=~\methodd.\body[0] \execRel^{+} \ins{loopEnd}$
+     there exists a subpath $subP$ which is a prefix of $P$ and which terminates at $\ins{loopEntry}$  %$subP = \methodd.\body[0] \execRel^{*} \ins{loopEntry}$
+          such that $\ins{loopEnd}$ does not belong to   $subP$ %: $\ins{loopEnd} \notin  \ subP  $
 %every path in the control flow graph starting at the entry point $\methodd.\body[0]$  that reaches $\ins{loopEnd}$, passes before reaching $\ins{loopEnd}$
 % through  $\ins{loopEntry}$ 
 \item there is a path in the control flow graph in which $\ins{loopEntry}$  follows immediately after $\ins{loopEnd}$ ( $\ins{loopEnd} \execRel \ins{loopEntry}$)
@@ -136,7 +138,7 @@ In  \cite{ARUCom1986},  reducibility is defined in terms of the dominator relati
 Although  not said explicitly, the first condition in the upper definition corresponds to the dominator relation.%\footnote{we decided to not introduce the standard
 %definitions as it has several technical details for the exposition of which we would need more space and which are of not particular interest for the current thesis}.
 
-We illustrate the above definition with the control flow graph of the example from Fig. \ref{replaceSrc}.% in Fig. \ref{ctrlflow}.
+We illustrate the above definition with the control flow graph of the example from Fig.\ \ref{replaceSrc}.% in Fig. \ref{ctrlflow}.
 In the figure, we rather show the execution relation between basic blocks which is a standard notion denoting a sequence of instructions which execute sequentially
 and  where only the last one may be a jump and the first may be a target of a jump. 
 The black edges represent a sequential execution relation, while dashed edges represent  loop backedge, i.e. the edge which stands for the execution
@@ -156,7 +158,7 @@ of the control flow graph.
 \begin{center}
 %\includegraphics{bc.eps}
 \epsfig{file=figs/bc.eps, height=5in,  width=1.5in}
-\caption{{ \sc The control flow graph of the source program from Fig.\ref{replaceSrc}} }
+\caption{{ \sc The control flow graph of the source program from Fig.\ \ref{replaceSrc}} }
 \label{ctrlflow}
 \end{center}
 \end{frameit}

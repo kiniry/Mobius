@@ -27,7 +27,9 @@ $$\begin{array}{ll}
 	     %\RefValuesArr & ::= \{  ra_1, \ldots,\}   %: C\lbrack \rbrack,  C\lbrack \rbrack \in \reffArr
  \end{array}$$
 
-
+%%%%%%%%%%%%%%%ADDED for changing the proof of correctness 
+Every reference has an associated type which is determined by the  function  \heapTypeOf{}   which maps references to their dynamic type:
+$$\heapTypeOf   : \RefValues \rightarrow \AllRefs $$
 
 Every type has an associated default value which can be accessed via
 the function  \defaultValueOnly.  Particularly, for reference types (\AllRefs) the default value is 
@@ -39,6 +41,7 @@ $$ \defaultValue{\anyType} =
 	      \Mynull & \anyType \in \AllRefs  \\
 	       0 &  \anyType = \Myint
 	    \end{array}\right. $$
+
 
 We define also a subtyping relation as follows:
 
@@ -52,5 +55,6 @@ $$\begin{array}{ll}
   \frac{   }{\subtype{C[]}{\Object}} &  
   \frac{ \subtype{C1}{C2}}{\subtype{C1[]}{C2[]}} \\
   \end{array}$$
-Note that the subtyping relation that we use here is a subset of the Java subtyping relation. However, it is a subset of
-the Java's subtyping relation which includes as well interface and abstract class types.
+Note that the subtyping relation that we use here is a subset of the Java subtyping relation. However, 
+differently from the system of program types in Java, here we do not consider
+ interface and abstract class types.

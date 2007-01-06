@@ -2,11 +2,9 @@
  % \newcommand{\isFieldOf}[2]{\mbox{ \rm \textit{isFieldOf}}(#1, #2) }
 
  \section{Program, classes, fields and methods}\label{clazz}
- Java programs are a set of classes. As the JVM says \textit{`` A class declaration specifies a new reference type and provides its implementation. \ldots
- The body of a class declares members (fields and methods), static initializers, and constructors.''}
- In our formalization, classes are encoded with the data structure $\ClassSet$,  fields with $\FieldSet$ and
- methods are encoded with $\MethodSet$ data structure. 
- We define a domain for class names \ClassName, for field names \FieldName{} and for method names \MethodName{} respectively.
+ 
+ We turn our attention to modeling the structure of a Java class. In the following, classes are encoded with the data structure $\ClassSet$,  fields with $\FieldSet$ and
+ methods are encoded with $\MethodSet$ data structure.  In the following, we  use  the  domain  \ClassName{} for class names, \FieldName{}  for field names and  \MethodName{} for method names  respectively.
 
  An object of type \ClassSet \ is a tuple with the following components: list of field objects (\fields), which are declared in this class,
  list of the methods declared in the class (\methods), the name of the class (\className)   and the super class of the class (\superClass).

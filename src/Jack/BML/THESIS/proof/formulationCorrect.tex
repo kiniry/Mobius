@@ -9,7 +9,7 @@ In order to define what it means for the verification calculus to be correct we 
  before the intuition behind this notion is that if the method starts execution in a state 
  where its precondition  holds then if it terminates execution then its postcondition holds.
   
- As we want also to treat recursive calls, we use a standard technique which consists in  annotating the execution 
+ As we want also to treat recursive calls, we use a technique  known in the literature \cite{Nipkow-MOD2001} which consists in  annotating the execution 
 relation in  the operational semantics with levels. A level of execution  stands for  the maximal call depth in the execution of a  method. 
   Thus, the operational semantics of a method invokation in case of normal termination\footnote{we are not exhaustive here about all the possible rules of the 
 operational semantics  for method invokation, but the other cases are similar}  would be :

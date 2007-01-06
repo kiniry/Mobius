@@ -4,13 +4,18 @@
  the specification of the Java bytecode verifier. 
  Thus,  most of the existing formalizations are
  used for reasoning over the Java bytecode well-typedness.
- 
+  Differently from the aforementioned formalizations, our formalization will serve us to prove the verification condition scheme introduced 
+in Chapter \ref{wpGeneral}. 
+
  %cover a representative subset of the language.
  We can start with the work of Stata and Abadi \cite{stata98type} in which they propose a semantics  and 
   typing rules for checking the correct behavior of  subroutines in the presence of polymorphism.
  In \cite{FM99FFJ}  N.Freund and J.Mitchell extend the aforementioned work to 
  a language which supports all the Java features e.g.
  object manipulation and instance initialization, exception handling, arrays.
+In \cite{borger98defining}, Boerger and all formalize the semantics of the JVM as
+well as a compiler from Java to Java bytecode and exhibit conditions upon which a Java compiler
+can be proven to compile Java code correctly.
  In \cite{qian99formal}  Qian  gives a formalization in terms of a small step operational semantics of a
  large subset of the Java bytecode language including method calls, object creation and manipulation,
  exception throwing and handling as well subroutines, which is used for the formal specification of the language and the bytecode verifier.
@@ -21,9 +26,7 @@
  a compiler from Jinja to the language of the JVM. They prove the equivalence between the small and big step
  semantics of Jinja, the  type safety for the Jinja VM, the correctness of the bytecode verifier w.r.t. the type system
  and finally that the compiler preserves semantics and well-typedness.
-  
-
-% Java Card
+  % Java Card
   The small size and complexity of the JavaCard platform (the JVM version tailored to smart cards) 
  simplifies the formalization of the system and thus,
  has attracted  particularly the scientific interest. CertiCartes \cite{barthe01formal,barthe02formal}
@@ -31,5 +34,4 @@
  specification written in Coq of a defensive and an offensive JCVM and an abstract JCVM together with the specification
  of the Java Bytecode Verifier.  Siveroni proposes a formalization of the JCVM in \cite{siveroni04operational} in terms of
  a small step operational semantics. 
-
 

@@ -1,6 +1,7 @@
 % related work
 \todo{must look at  the MRG project in more detail}
-The use of type systems has been a useful tool for guaranteeing that well typed programs run within stated space-bounds. Previous work along these lines defined typed assembly languages, inspired on \cite{MWCG99tal} while others emphasised the use of type systems for functional languages \cite{AH02ats,Hofmann00tsb,HP99rdd}. 
+The use of type systems has been a useful tool for guaranteeing that well typed programs run within stated space-bounds.
+ Previous work along these lines defined typed assembly languages, inspired on \cite{MWCG99tal} while others emphasised the use of type systems for functional languages \cite{AH02ats,Hofmann00tsb,HP99rdd}. 
 
 
 For instance in~\cite{AC03hba} the authors present a first-order linearly typed assembly language which allows the safe reuse of heap space for elements of different types. The idea is to design a family of assembly languages which have high-level typing features (e.g. the use of a special {\em diamond} resource type) which are used to express resource bound constraints. Closely related to the previous-mentioned paper, \cite{VC04fta} describes a type theory for certified code, in which type safety guarantees cooperation with a mechanism to limit the CPU usage of untrusted code. Another recent work is \cite{ACDJ04fsb} where the resource bounds problem is studied in a simple stack machine. The authors show how to perform type, size and termination verifications at the level of the byte-code.
@@ -25,13 +26,13 @@ Another mechanical verification of a byte code language is \cite{CJPS05cmu}, whe
 Other related research direction concerns runtime memory analysis. The work \cite{GNYZ04pir} presents a method for analysing, monitoring and controlling dynamic memory allocation, using pointer and scope analysis. By instrumenting the source code they control memory allocation at run-time. In order to guarantee the desired memory allocation property, in \cite{fredlund04gcp} is implemented a runtime monitor to control the execution of a Java Card applet. The applet code is instrumented: a call to a monitor method is added before a \new\ instruction. Such monitor method has as parameter the size of the allocation request and it halts the execution of the applet if a predefined allocation bound is exceeded. 
 
 
-A similar results are presented in  \cite{CEILN05}. The verifier is based on a variant of Dijkstra's
+A similar results are presented in  \cite{ChanderEILN05}. The verifier is based on a variant of Dijkstra's
 weakest precondition calculus using "generalized predicates", which keeps
 track of the resource units available. Besides adding loop invariants,
 pre- and post-conditions, the programmer must insert "acquires"
 annotations to reserve the resource units to be consumed. Our approach has
 the advantage of treating recursive methods and exceptions, not taken into
-account in \cite{CEILN05}. Another difference with our work is that we
+account in \cite{ChanderEILN05}. Another difference with our work is that we
 operate on the bytecode instead of on the source code.
 
 %%% Local Variables:

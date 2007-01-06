@@ -2,10 +2,11 @@
 State configurations have an array of registers which is
  denoted with    
 \locVarOnly. Registers are addressed by indexing and 
- the index of the first local variable is zero. 
+ the index of the first register  is 0. 
 Thus, \locVarOnly(0) stands for the first register in the state configuration.
- An integer is be considered to be an index into the local variable array if and only if that integer is between zero and one less than the size of the local variable array.
-Registers are used to pass parameters on method invocation. On class method
- invocation any parameters are passed in consecutive local variables starting from register \locVarOnly(0). \locVarOnly(0) is always used to pass a
+ An integer is be considered to be an index into the register array if and only if that integer is between zero and one less than the size of the register array.
+Registers are used to pass parameters on method invocation. On static method
+ invocation, any parameters are passed in consecutive registers starting from register \locVarOnly(0). The register \locVarOnly(0) is always used to pass a
  reference to the object on which the instance method is being invoked
- (\texttt{this} in the Java programming language). Any parameters are subsequently passed in consecutive local variables starting from local variable 1.
+ (\texttt{this} in the Java programming language). 
+The other parameters are subsequently passed in consecutive registers starting at register at index 1.

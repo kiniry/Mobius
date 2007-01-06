@@ -1,3 +1,4 @@
+
  
 
 
@@ -19,8 +20,7 @@ the second argument is the method \methodd \ to which the  instruction belongs
 and  the first argument is  the a point  in the body of  \methodd.
 %and finally the position of the instruction in the body of  \methodd.
 
-Let us first see what is the desired meaning of \fwpi.
-Particularly, we would like that the function \fwpi{}  returns a predicate $\wpi{}{\methodd}{i}$
+Let us first see what is the desired meaning of \fwpi. Particularly, we would like that the function \fwpi{}  returns a predicate $\wpi{}{\methodd}{i}$
 such that  if it holds in the prestate of the method \methodd \  and if the
 \methodd{} terminates normally then the normal postcondition \methodd.\normalPost \ holds when 
 \methodd{} terminates execution, otherwise if \methodd \ terminates on an exception
@@ -99,7 +99,7 @@ public void m(int k){
 $$\fwpi( j ) =  S_k(\fwpi( k )) , where  \ j \execRel k $$
 
 where $S_k$ stands for a function which might be the identity function or a function which applies some substitution over its argument.
- We would do similarly for instructions that may branch - instructions which may jump (\goto{} and \ifCond{}) as well as instructions
+ We would proceed in a similar way with instructions that may branch - instructions which may jump (\goto{} and \ifCond{}) as well as instructions
  which may throw an exception (e.g. \putfield, \arrstore), but this time the predicate transformer for them depends on all of its successors:
 $$\fwpi( j ) = \bigwedge_k  C_k \Rightarrow S_k(\fwpi( k )) , where  \ j \execRel k $$
 The predicates $C_k$ stand for some condition to be filled in order that after the execution of instruction at index $j$ the instruction at index $k$ is executed.
@@ -152,8 +152,11 @@ The example shows that the function \fwpi{} depends  on the semantics of the ins
 for which it calculates a precondition and also on the execution relation it has with its successors.
 In order to define the function \fwpi{} we will use an intermediate function which shall decide 
 what is the postcondition of an instruction  upon the execution relation with its successors. This function 
-is introduced in the next subsection \ref{wp:interPred}.
- We will also see how the weakest precondition is defined in the presence of exceptions in subsection \ref{wp:Exc}.
+is introduced in the next subsection \ref{wp:interPred}. We will also see how the weakest precondition is defined in the presence of exceptions in subsection \ref{wp:Exc}.
 
+Note also that the calculation of the \wpName{} predicate may be done in a forward or backwards direction. By backwards direction, we mean that the calculation starts from 
+the ``ends'' of the control flow graph, i.e. from the \return{}  and \athrow{}  instructions and goes in a backwards directions to the predecessors upto reaching the program 
+entry point. A forward calculation starts from the entry point instruction and goes in a forward direction to the successors upto reching the return instructions or athrow instructions 
+of the control flow  graph.
 
 

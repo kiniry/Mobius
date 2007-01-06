@@ -14,9 +14,9 @@
   $$ \begin{array}{l}
           \wpi{ }{\methodd}{i} =\\
 	   \begin{array}{l} 
-                   \stack{\counter} \rel \stack{\counter - 1}  \Rightarrow  \inter{i}{n}\subst{\counter}{ \counter - 2 } \\
+                   \stack{\counter} \  \rel \ \stack{\counter - 1}  \Rightarrow  \inter{i}{n}\subst{\counter}{ \counter - 2 } \\
 			 \wedge  \\
-		  \neg ( \stack{\counter} \rel \stack{\counter - 1} )  \Rightarrow \inter{i}{i+1}\subst{\counter}{\counter - 2} 
+		  \neg ( \stack{\counter} \ \rel \ \stack{\counter - 1} )  \Rightarrow \inter{i}{i+1}\subst{\counter}{\counter - 2} 
            \end{array}
   \end{array}$$
    In case of a conditional jump, the weakest precondition depends on if  the condition of the jump is satisfied
@@ -144,7 +144,7 @@
 					\\
 					        \wedge \\				
 					
-						\stack{\counter} = \Mynull \Rightarrow 	\methodd.\excPost(i, \NullPointerExc)             
+						\stack{\counter} = \Mynull \Rightarrow 	\methodd.\excPost(i, \ArithExc)             
                                	\end{array} 
 				 \end{array}$$
 	\end{enumerate}
@@ -155,8 +155,9 @@
 		$$ \begin{array}{l}
                          \wpi{} {\methodd}{i}  =  \\
 		 
-		    \forall \freshVar,
-                    \neg \ \instances(\freshVar) \wedge 
+		    \forall \freshVar,\\
+                    \left(\begin{array}{l}  \neg \ \instances(\freshVar) \wedge
+		     \typeof{\freshVar} = \clazz \wedge
 		    \freshVar \neq \Mynull  \Rightarrow \\
 		     %   \Myspace \typeof{\freshVar} <: \class  \Rightarrow	\\
 		      
@@ -166,15 +167,16 @@
 		                                   \subst{ \counter}{ \counter + 1 } \\
 						   \subst{ \stack{ \counter + 1} }{\freshVar} \\
 						   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } \\
-				\subst{ \typeof{\referenceOnly}}{ \clazz } 
-		       \end{array}
+				%\subst{ \typeof{\freshVar}}{ \clazz } 
+		       \end{array} 
+                  \end{array} \right)
               \end{array}$$
 		  The postcondition of the instruction \new{} is the intermediate predicate $\inter{i}{i+1}$. The weakest precondition 
 		  of the instruction says that for any reference $\freshVar$ 
-		  if $\freshVar$ is not an instance reference  in the initial state of the execution of \methodd \ then
+		  if $\freshVar$ is not an instance reference  in the initial state of the execution of \methodd{} and whose type is \class{}  then
 		  the precondition is the same predicate but in which the stack
-		  counter is incremented and \freshVar  \ is pushed on the stack top  where the fields for the 
-		  \freshVar \ have the default value of their type. 
+		  counter is incremented and \freshVar{}  is pushed on the stack top  where the fields for the 
+		  \freshVar{} have the default value of their type. 
 	
 		
 		\item array creation, $  i =\newarray  \ \anyType $
@@ -182,10 +184,10 @@
 				 $$\begin{array}{l}
                                          \wpi{ } {\methodd}{i}  =  \\
 			\forall \referenceOnly,\\
-                        \Myspace    not \ \instances(\referenceOnly) \wedge \\
-			 \Myspace \referenceOnly \neq \Mynull \wedge \\
-			\Myspace \typeof{\referenceOnly} = \type{\anyType[ ]} \wedge \\
-			 	\Myspace \stack{\counter} \ge 0 \Rightarrow  \\
+                        \left(\begin{array}{l}    not \ \instances(\referenceOnly) \wedge \\
+			   \referenceOnly \neq \Mynull \wedge 
+			   \typeof{\referenceOnly} = \type{\anyType[ ]} \wedge 
+			  \stack{\counter} \ge 0 \Rightarrow  \\
 					 \Myspace     \Myspace  \inter{i}{i+1} \\
                                            \Myspace      \Myspace \begin{array}{l}        
 						        \subst{\stack{\counter} }{ \referenceOnly } \\
@@ -196,6 +198,7 @@
 						   \end{array} \\
 							\wedge \\
 						\stack{\counter} < 0 \Rightarrow    \methodd.\excPost( i, \NegativeArraySizeExc) \\
+                         \end{array}\right)
                                     \end{array} $$
 		  Here, the rule for array creation is similar to the rule for object creation.
 		  However, creation of an array might terminate exceptionally in case the length of the array stored 
@@ -355,7 +358,7 @@
 	 				 			       \forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall res (  \\ 
 	 				 				              \Myspace \mbox{\rm\texttt{n} } .\normalPost %\begin{array}{l}
 									               \subst{\result}{  res } %\\
-											\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } }.\numArgs }_{s = 0}^
+											\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
 { \mbox{\rm\texttt{n} }. \numArgs }                                                                                                	%\end{array}  
                                                                    \Rightarrow \\ 
 										      \\

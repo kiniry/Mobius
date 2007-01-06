@@ -29,7 +29,7 @@ Specification for method m in class B:
 
 requires MemUsed + l  <= Max 
 modifies MemUsed 
-ensures  MemUsed  <=  \old(Mem) + l
+ensures  MemUsed  <=  \old(MemUsed) + l
 \end{lstlisting}
 
 \end{minipage}
@@ -38,7 +38,7 @@ ensures  MemUsed  <=  \old(Mem) + l
 \begin{lstlisting}[frame=trbl]
 void method n(A a)
 ...
-//{ prove MemUsed <= Mem +max(l,k) }
+//{ prove MemUsed <= MemUsed +max(l,k) }
 invokevirtual m A
 //{ assume MemUsed <= \old{MemUsed} + max(l,k)}
 ...
@@ -155,23 +155,23 @@ that no allocation is performed if \texttt{NullpointerException} causes the exec
 % $$
 %\begin{array}{ll}
 %% \requires &  \local{1} != \Mynull \Rightarrow 
-%             \Mem +  \allocInstance{A} \le \Max \\
+%             \MemUsed +  \allocInstance{A} \le \Max \\
 %       %& \wedge \\
 %       %&  \local{1} == \Mynull \Rightarrow  \\
-%           %& \phantom{\local{1}} \Mem +  \allocInstance{B} + \allocInstance{A}   \le \Max \\
-%  \modifies & \Mem \\
-%  \ensures  & \Mem \le \old{\Mem} +  \allocInstance{A} \\
-%  \exsures{} \NullPointerExc \  & \Mem == \old{\Mem}   \\
+%           %& \phantom{\local{1}} \MemUsed +  \allocInstance{B} + \allocInstance{A}   \le \Max \\
+%  \modifies & \MemUsed \\
+%  \ensures  & \MemUsed \le \old{\Mem} +  \allocInstance{A} \\
+%  \exsures{} \NullPointerExc \  & \MemUsed == \old{\Mem}   \\
 %\end{array}$$
 
 
 \begin{minipage}[c]{\linewidth}
 
 \begin{lstlisting}[frame=trbl]
- requires  reg(1) !=  null ==>  Mem +  allocInstance(A) <= Max 
- modifies  Mem 
- ensures   Mem  <= \old(Mem) +  \allocInstance(A) \\
- exsures   NullPointerExc  Mem == old(Mem)
+ requires  reg(1) !=  null ==>  MemUsed +  allocInstance(A) <= Max 
+ modifies  MemUsed 
+ ensures   MemUsed  <= \old(MemUsed) +  \allocInstance(A) \\
+ exsures   NullPointerExc  MemUsed == old(MemUsed)
 
  0 load 0
  1 getfield C.b

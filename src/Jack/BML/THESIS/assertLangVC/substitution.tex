@@ -3,12 +3,11 @@ Substitution  is defined inductively
 in a standard way over the expression and formula structure. Still, we
 extend substitution to deal with field and array updates as follows:
 
-$$ \substitution{\expression}{ \fieldd }{ \update{\fieldd}{\expression}{\expression} } $$
-This substitution does not affect any of the ground expressions,, i.e. it does not affect 
-local variables ($\locVar{i}$), the constants of our language (\ConstantsWp),  the stack counter (\counter), the result expression
-(\result), the thrown exception instance variable (\EXC). For instance, the following substitution does not change $\locVar{1}$: 
+$$ \substitution{\expressionSrc}{ \fieldd }{ \update{\fieldd}{\expressionSrc}{\expressionSrc} } $$
+This substitution affects only field access expressions.
+ For instance, the following substitution does not change the variable \texttt{a}: 
 $$
- \substitution{\locVar{1}}{ \fieldd }{ \update{\fieldd}{\expression}{\expression} } = \locVar{1}
+ \substitution{\mbox{\rm \texttt{a}} }{ \fieldd }{ \update{\fieldd}{\expressionSrc}{\expressionSrc} } =\mbox{\rm \texttt{a}}
 $$ 
 Field substitution affects only field objects as we see in the following: 
 
@@ -16,35 +15,35 @@ Field substitution affects only field objects as we see in the following:
 
  
  %This is done by establishing the substitution rule for field access as follows:
- %$$  \substitution{\fieldd ( \expression^1)}{ \expression^2}{ \expression^3} =
- %\substitution{\fieldd}{ \expression^2}{ \expression^3} (  \substitution{ \expression^1  }{ \expression^2}{ \expression^3}) $$
+ %$$  \substitution{\fieldd ( \expressionSrc^1)}{ \expressionSrc^2}{ \expressionSrc^3} =
+ %\substitution{\fieldd}{ \expressionSrc^2}{ \expressionSrc^3} (  \substitution{ \expressionSrc^1  }{ \expressionSrc^2}{ \expressionSrc^3}) $$
 
 
 % Let us see how we define  substitution over field objects:
 $$  
 \begin{array}{l}
-\substitution{\fieldAccess{\expression}{\fieldd_1}}{\fieldd_2}{ \fieldd_2[ \oplus  \expression_1 \longrightarrow  \expression_2 ] } = \\\\
+\substitution{\fieldAccess{\expressionSrc}{\fieldd_1}}{\fieldd_2}{ \fieldd_2[ \oplus  \expressionSrc_1 \longrightarrow  \expressionSrc_2 ] } = \\\\
 \left\{\begin{array}{ll}
-       \fieldAccess{\expression}{\fieldd_1}    & if \ \fieldd_1 \neq \fieldd_2 \\
+       \fieldAccess{\expressionSrc}{\fieldd_1}    & if \ \fieldd_1 \neq \fieldd_2 \\
        & \\
-       \fieldAccess{\expression} {\fieldd_2[ \oplus  \expression_1 \longrightarrow  \expression_2 ]} & else 
+       \fieldAccess{\expressionSrc} {\fieldd_2[ \oplus  \expressionSrc_1 \longrightarrow  \expressionSrc_2 ]} & else 
  \end{array}
 \right. \\
 \\
 \\
-\substitution {\update{\fieldAccess{\expression}{\fieldd_1}}{  \expression_1 }{  \expression_2}} {\fieldd_2}{  \update{\fieldd_2}{  \expression_3 }{  \expression_4}       } = \\\\
+\substitution {\update{\fieldAccess{\expressionSrc}{\fieldd_1}}{  \expressionSrc_1 }{  \expressionSrc_2}} {\fieldd_2}{  \update{\fieldd_2}{  \expressionSrc_3 }{  \expressionSrc_4}       } = \\\\
 \left\{\begin{array}{ll}  
 
-\update{\fieldd_1}{ \substitution { \expression_1}{\fieldd_2}{  \update{\fieldd_2}{  \expression_3 }{  \expression_4}}  }{ \substitution { \expression_2}{\fieldd_2}{  \update{\fieldd_2}{  \expression_3 }{  \expression_4}} } & if \ \fieldd_1 \neq \fieldd_2  \\
+\update{\fieldd_1}{ \substitution { \expressionSrc_1}{\fieldd_2}{  \update{\fieldd_2}{  \expressionSrc_3 }{  \expressionSrc_4}}  }{ \substitution { \expressionSrc_2}{\fieldd_2}{  \update{\fieldd_2}{  \expressionSrc_3 }{  \expressionSrc_4}} } & if \ \fieldd_1 \neq \fieldd_2  \\
 
-%\fieldd[ \oplus \mbox{ \rm \texttt{r} }\substitution{ \expression_1}{ \expression_2} \longrightarrow  \mbox{ \rm \texttt{v} }\substitution{ \expression_1}{ \expression_2} ] 
+%\fieldd[ \oplus \mbox{ \rm \texttt{r} }\substitution{ \expressionSrc_1}{ \expressionSrc_2} \longrightarrow  \mbox{ \rm \texttt{v} }\substitution{ \expressionSrc_1}{ \expressionSrc_2} ] 
 
  \\ 
 % else \   \fieldd_1 = \fieldd_2  \ then \\ 
 \fieldd_1 \begin{array}{l}
-             \lbrack \oplus  \substitution { \expression_1}{\fieldd_2}{  \update{\fieldd_2}{  \expression_3 }{  \expression_4}}  \longrightarrow  
-                 \substitution { \expression_2}{\fieldd_2}{  \update{\fieldd_2}{  \expression_3 }{  \expression_4}}       \rbrack \\
-	     \lbrack \oplus  \expression_3 \longrightarrow  \expression_4 \rbrack
+             \lbrack \oplus  \substitution { \expressionSrc_1}{\fieldd_2}{  \update{\fieldd_2}{  \expressionSrc_3 }{  \expressionSrc_4}}  \longrightarrow  
+                 \substitution { \expressionSrc_2}{\fieldd_2}{  \update{\fieldd_2}{  \expressionSrc_3 }{  \expressionSrc_4}}       \rbrack \\
+	     \lbrack \oplus  \expressionSrc_3 \longrightarrow  \expressionSrc_4 \rbrack
 	     \end{array} & else \\
 
                
@@ -55,9 +54,9 @@ $$
 
 
 For example, consider the following  substitution expression:  
-$$ \substitution{\fieldAccess{\locVar{1}}{ \fieldd}}{\fieldd}{\update{\fieldd}{ \locVar{2} }{  3 }} $$
+$$ \substitution{\fieldAccess{a}{ \fieldd}}{\fieldd}{\update{\fieldd}{ b }{  3 }} $$
 This results in the new expression : 
-$$\update{\fieldAccess{\locVar{1}}{ \fieldd}}{ \locVar{2}  }{ 3} $$ 
+$$\update{\fieldAccess{a}{ \fieldd}}{ b  }{ 3} $$ 
 
 
-The same kind of substitution is allowed for array access expressions, where the array object \arrayAccessOnly  \ can be updated. 
+%The same kind of substitution is allowed for array access expressions, where the array object \arrayAccessOnly  \ can be updated. 

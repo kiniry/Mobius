@@ -83,7 +83,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		    	\comment{by initial hypothesis we have that the \wpName{} of the current instruction holds } 
 			$$\interp{\wpi{\return}{\pc_{n}}{\methodd}} {\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}  $$
 			\mbox{\rm\comment{by definition the weakest precondition for \return } }
-		        $$\interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } = $$
+		        $$\interp {\substitution{ \methodd.\normalPost }{ \result }{\stack{\topStack} }}  { \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } }  $$
 			\mbox{\rm\comment{by the substitution property \ref{substRet}  }}
 			 
                           $$\interp { \normalPost} { \configFinalNorm{\heap_n  }
@@ -103,12 +103,12 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 	                  
 			  
 			\comment{by initial hypothesis } \\
-			 $$ \interp{\wpi{\load \ i}{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} = $$ 
+			 $$ \interp{\wpi{\load \ i}{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$ 
 			 \mbox{\rm\comment{definition of the wp function} } \\
 			  $$
 			   \interp{  \inter{\pc_n }{\pc_n  +1 } \begin{array}{l} \subst{\topStack}{\topStack + 1} \\
 		                                                 \subst{\stack{\topStack + 1} } {\locVar{i} }
-	                                        \end{array}}{ \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } } = $$	
+	                                        \end{array}}{ \config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n } }  $$	
 			\comment{applying the substitution properties \ref{substCntr} and \ref{substStack} }\\
 		
 		       
@@ -125,20 +125,20 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 	\item   $\ins{\pc_n} = \new  \ \clazz $ 
 	        
 		      	\mbox{\rm\comment{by initial hypothesis }} \\ 
-                        $$ \interp{\wpi{\new \ \clazz }{\methodd}{\pc  }}{\config{\heap_n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }} = $$
+                        $$ \interp{\wpi{\new \ \clazz }{\methodd}{\pc  }}{\config{\heap_n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }} $$
 			  \mbox{\rm\comment{definition of the wp function} } \\
 			 
 	  $$	\numConclusion{1} \	\interpTwoLines{
 		      \begin{array}{l}
-			\forall \referenceOnly,  \neg \ \instances(\referenceOnly )\wedge \\
-			 \phantom{\forall}       \referenceOnly \neq \Mynull \Rightarrow \\
+			\forall \referenceOnly,  \neg \ \instances(\referenceOnly )\wedge  \typeof{\referenceOnly} = \clazz \wedge
+			   \referenceOnly \neq \Mynull \wedge \Rightarrow \\
                           %\phantom{\forall}      \typeof{\referenceOnly} = \type{\clazz} \Rightarrow \\ 
 			\phantom{\forall} \phantom{\forall} \inter{i}{i+1} 
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly} \\
 		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-			       	\subst{ \typeof{\referenceOnly}}{ \clazz } 
+			       %	\subst{ \typeof{\referenceOnly}}{ \clazz } 
 		       \end{array} \end{array}} {\config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }}   $$
 		       
 		       \comment{from the operational semantics of \new \ in section \ref{opSem}} \\
@@ -156,15 +156,15 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 			\begin{array}{l} 
                                \subst{ \counter}{ \counter + 1 } \\
 			       \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
-		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-			       	\subst{ \typeof{\referenceOnly'}}{ \clazz } 
+		               \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } %\\
+			     %  	\subst{ \typeof{\referenceOnly'}}{ \clazz } 
 		       \end{array}\end{array} } {\config{\heap _n }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }}$$
 		       \mbox{\rm\comment{ from     \numConclusion{3}   }} \\
 		       \numConclusion{5} \\
 		       $$\interp{ \begin{array}{l}
 			              \neg \ \instances(\referenceOnly' ) \wedge 
-				      \referenceOnly' \neq \Mynull \\
-				      %\typeof{\referenceOnly'} = \type{\clazz} 
+				      \referenceOnly' \neq \Mynull \wedge 
+				      \typeof{\referenceOnly'} = \clazz 
 				\end{array}} { \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  }$$
 		
 		       \comment{ from     \numConclusion{4} and   \numConclusion{5} we obtain that the intermediate predicate holds in state $s_n$ } \\	  
@@ -173,7 +173,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
                                     \subst{ \counter}{ \counter + 1 } \\
 			            \subst{ \stack{ \counter + 1} }{\referenceOnly'} \\
 		                    \subst{ \fieldd} { \update{\fieldd} { \referenceOnly' }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \clazz}} } \\
-                                    \subst{ \typeof{\referenceOnly'}}{ \clazz } 
+                                    %\subst{ \typeof{\referenceOnly'}}{ \clazz } 
 			    \end{array} }{ \config{\heap_n  }{\counterOnly_n  }{\stackOnly_n  }{\locVarOnly_n  }{\pc_n  }  } $$
 		       
 		       \mbox{\rm\textit{\{from lemmas \ref{substCntr},  \ref{substStack} and \ref{substHeap}, \ref{newHeap} }} \\
@@ -187,7 +187,7 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
 		case when the reference is \Mynull{} and the \NullPointerExc{} exception is  caught, and the case when the reference is not \Mynull.
 		We consider in the following only the last case, the others are treated in a rather similar way.
                 		   \comment{by initial hypothesis } \\ 
-                        $$ \interp{\wpi{\pc_n   }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} = $$
+                        $$ \interp{\wpi{\pc_n   }{\methodd}{}}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }} $$
 			 \comment{definition of the wp function}  \\
 			 
 		  $$  \numConclusion{1}	\interpTwoLines{ \stack{\counter } \ne \Mynull \Rightarrow \\

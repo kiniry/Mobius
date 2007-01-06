@@ -18,7 +18,7 @@
 \def\lstlanguagefiles{Jml.sty}
 \lstloadlanguages{Jml}
 \lstset{language=Jml,flexiblecolumns=false}
-
+\lstset{escapeinside={(*@}{@*)}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%Frame script for figures%%%%%%%%%%%%%%%%%%
@@ -42,7 +42,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\title{Bytecode Verification and its Applications}
+\title{ A framework for formal verification of Java bytecode against  functional and security policies}
     \begin{document}
     \lstset{language=Jml}
     \lstset{frameround=tttt}
@@ -66,7 +66,8 @@
    \input{javaVerif/prelim.tex}
 %   \input{javaVerif/JMLsemantics.tex}
    \input{javaVerif/verifStyles.tex}
-   \input{javaVerif/wpSrc/srcWp.tex}	  
+   \input{javaVerif/wpSrc/srcWp.tex}	
+   \input{assertLangVC/substitution.tex}
    \input{javaVerif/wpSrc/wpSrcExpr.tex}
    \input{javaVerif/wpSrc/wpSrcStmt.tex}
    %\input{javaVerif/jack.tex}
@@ -110,7 +111,7 @@
 \section{Assertion language for the verification condition generator}\label{assertLang}
   \input{assertLangVC/assertionLang.tex}\label{assertLang}
   \input{assertLangVC/BMLfragment.tex}
-  \input{assertLangVC/substitution.tex}
+
   \input{assertLangVC/interpretation.tex}
 
   \input{assertLangVC/extendMethod.tex} 
@@ -165,7 +166,7 @@
     \input{pogCompile/relatedWork/relWork.tex}
  
 %8
-\chapter{Constraint memory consumption policies using Hoare logics}\label{applications:memory}
+\chapter{Constrained memory consumption policies using verification condition generator}\label{applications:memory}
   \input{applications/memory/mydefThesis}
   \lstset{numbers=none}
 
@@ -182,7 +183,7 @@
 %       % deprecated\input{applications/memory/conclusion}
 
 %9 
-\chapter{A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}\label{applications:optimComp}
+\chapter{A low-footprint Java-to-native compilation scheme using BML}\label{applications:optimComp}
   \lstset{frameround=tttt}
   \input{applications/optimCompiler/intro}
   \input{applications/optimCompiler/aheadOfTimeComp}
@@ -198,13 +199,16 @@
  
 
 %10
- \chapter{Conclusion}
+ \chapter{Conclusion}\label{conclusion}
  \input{conclusion/conclusion}
 
-\appendix
-\chapter{Appendix}
 
-    \input{appendix/pogCompile/compile/propCompFun}
+\chapter{Appendix}
+\appendix
+%
+    \input{appendix/bmlEncode/appendix}\label{BMLencode}
+
+    \input{appendix/pogCompile/compile/propCompFun}\label{pogProofs}
     
    % COMMENTED TEMPORARY \input{appendix/pogCompile/pogEquiv/aux}
 

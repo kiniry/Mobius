@@ -23,7 +23,7 @@
 
        \item  a component  \heapLocs  \ which stands for the  list of references that the heap has allocated  
               
-       \item  a component \heapTypeOf   \ is a partial function  which maps references to their dynamic type 
+      % \item  a component \heapTypeOf   \ is a partial function  which maps references to their dynamic type 
  \end{itemize}
 
 
@@ -32,11 +32,11 @@
 
 
   $$ \begin{array}{l}
-         \forall  \heap : \HeapSet , \\
+         
          \heap = \left\{\begin{array}{ll}  \heapFields  &  : \FieldSet \rightharpoonup (  \RefValues \rightharpoonup \Values) \\
                                            \heapArrays  &  : \RefValuesArr * nat \rightharpoonup \Values \\
 					   \heapLocs    &  : list \ \RefValues \\
-					   \heapTypeOf  &  : \RefValues \rightharpoonup \AllRefs
+					  % \heapTypeOf  &  : \RefValues \rightharpoonup \AllRefs
                     \end{array} \right\}
    \end{array} $$
 
@@ -55,7 +55,7 @@
    \Dom( \heap.\heapFields(\fieldd))  =    \{ \referenceOnly \mid &	
                 \referenceOnly  \in \heap.\heapLocs  \wedge \\
  	        &  \referenceOnly \neq \Mynull\\
-  	        & \subtype{ \heap.\heapTypeOf(\referenceOnly ) }{\fieldd.\declaredIn} \}  
+  	        & \subtype{ \heapTypeOf(\referenceOnly ) }{\fieldd.\declaredIn} \}  
      \end{array}
 	  \\
  	  and  \\
@@ -137,7 +137,8 @@
 	    \referenceOnly \neq \Mynull \wedge \\ 
 	    \referenceOnly \notin \heap.\heapLocs \wedge   \\ 
 	    \heap'.\heapLocs = \referenceOnly \assocList \heap.\heapLocs \wedge \\ 
-	    \heap'.\heapTypeOf := \update{ \heap.\heapTypeOf}{ \referenceOnly}{\clazz}  \wedge \\ 
+	    \heapTypeOf(\referenceOnly) = \clazz \wedge \\
+	    %\heap'.\heapTypeOf := \update{ \heap.\heapTypeOf}{ \referenceOnly}{\clazz}  \wedge \\ 
             \begin{array}{ll}
 	           \forall  \fieldd : \FieldSet, & \instanceFlds{\fieldd}{\clazz} \Rightarrow \\
                                                  & \Myspace \heap'.\heapFields := 
@@ -177,7 +178,8 @@ $$ \newArrRefOnly :  \heap \rightarrow  \reffArr \rightarrow  \heap * refArr $$
 	    \referenceOnly \neq \Mynull \wedge \\ 
 	    \referenceOnly \notin \heap.\heapLocs \wedge   \\ 
 	    \heap'.\heapLocs = \referenceOnly \assocList \heap.\heapLocs \wedge \\ 
-	    \heap'.\heapTypeOf :=  \update{ \heap.\heapTypeOf}{ \referenceOnly}{\anyType\lbrack \ \rbrack  }  \wedge \\ 
+	    \heapTypeOf( \referenceOnly ) = \anyType\lbrack \ \rbrack  \wedge \\ 
+	    %\heap'.\heapTypeOf :=  \update{ \heap.\heapTypeOf}{ \referenceOnly}{\anyType\lbrack \ \rbrack  }  \wedge \\ 
             \heap'.\heapFields :=  \update{\heap'.\heapFields}{\length}{\update{\length}{ \referenceOnly}{ l }} \wedge  \\
 	    \forall i, 0 \le i < l  \Rightarrow   \heap'.\heapArrays :=
             \update{\heap'.\heapArrays}{(\referenceOnly , i)}{ \defaultValue{\anyType }  } \\

@@ -110,14 +110,17 @@ The following definition characterizes the executions that terminate.
  is the execution of its body up to reaching a final state configuration:
  
  $$
- {\scriptsize  \frac{\begin{array}{l}
+% {\small  
+\frac{\begin{array}{l}
           \methodd \vdash  \methodd.\body[0] :  
 	                    \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}  \stateTrans^{*} \configFinal{\heap'}{\Final}\\
 	\end{array}	 
        }
        {\methodd :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		    \stateTransTerm
-                   \configFinal{\heap'} {\Final} }}$$ \\
+                   \configFinal{\heap'} {\Final} }
+%}
+$$ \\
 
 
  
@@ -125,7 +128,7 @@ The following definition characterizes the executions that terminate.
    
 
 We now turn to the semantics of the individual instructions in our language. 
- Fig. \ref{opSem:jump} gives the rules for control transfer instructions. The first rule refers to
+ Fig.\ \ref{opSem:jump} gives the rules for control transfer instructions. The first rule refers to
 the instruction \ifCond. The condition \rel = $\{ =, \neq, \le, <, >, \ge \} $ is applied to the stack top  \stackOnlyParam{\counterOnly} and the element below the stack top 
 \stackOnlyParam{\counterOnly -1} which must be of type \Myint. If the condition evaluates to true then the control is transfered to the instruction
   at index \texttt{n}, otherwise the control continues at the instruction following the current instruction. The top two elements \stackOnlyParam{\counterOnly} and
@@ -139,25 +142,31 @@ the instruction \ifCond. The condition \rel = $\{ =, \neq, \le, <, >, \ge \} $ i
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
-           {\scriptsize \frac{ } 			       		               
+%           {\small 
+\frac{ } 			       		               
                       {\method \vdash \nop : \config{\heap }{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}
 		                      \stateTrans 
 				      \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc+1}} 
-            } \\    \\
-           {\scriptsize \frac{ \rel ( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1}) } 			       		               
+           % }
+ \\    \\
+      %     {
+\small \frac{ \rel ( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1}) } 			       		               
                       {\method \vdash \ifCond \ n : \config{\heap }{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}
 		                      \stateTrans 
 				      \config{\heap}{\counterOnly - 2}{\stackOnly}{\locVarOnly}{n}} 
-            } \\    \\
-		 {\scriptsize
+       %     } 
+\\    \\
+	%	 {\small
                  \frac{  not (\mbox{ \rm \texttt{ cond}}( \stackOnlyParam{\counterOnly}, \stackOnlyParam{\counterOnly - 1})) }		                             
                      {\methodd \vdash \ifCond \ n : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                    \stateTrans 
-                                    \config{\heap}{\counterOnly - 2}{\stackOnly}{\locVarOnly}{\pc + 1}} } \\ \\
-           {\scriptsize \frac{ } 
+                                    \config{\heap}{\counterOnly - 2}{\stackOnly}{\locVarOnly}{\pc + 1}} %}
+ \\ \\
+%           {\small
+ \frac{ } 
             {\methodd \vdash \return :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                    \stateTrans 
-                                    \configFinalNorm{\heap}{\stackOnlyParam{\counterOnly}}}   }
+                                    \configFinalNorm{\heap}{\stackOnlyParam{\counterOnly}}}   %}
 \end{array}
 $$
 
@@ -168,7 +177,7 @@ $$
 
 
 
- Fig. \ref{opSem:arithStack}  shows the semantics of  arithmetic instructions and instructions for loading and storing on the operand stack. 
+ Fig.\ \ref{opSem:arithStack}  shows the semantics of  arithmetic instructions and instructions for loading and storing on the operand stack. 
  Arithmetic instruction pop the values which are on the stack top \stackOnlyParam{\counterOnly}  and \stackOnlyParam{\counterOnly - 1}  at the position below
  and apply the corresponding arithmetic operation on them.
  The stack counter is decremented and  the resulting  value on the stack top \stackOnlyParam{\counterOnly - 1} \ \op \ \stackOnlyParam{\counterOnly}
@@ -191,7 +200,8 @@ found or not the instruction execution will terminate exceptionally or not.
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
-{\scriptsize \frac{ 
+%{\scriptsize 
+\frac{ 
 	   \begin{array}{l}
 	   \counterOnly' = \counterOnly - 1 \\
 	   \stackOnly' = \update{\stackOnly} {\counterOnly-1}{\stackOnlyParam{\counterOnly} \ \op \ \stackOnlyParam{\counterOnly-1}} \\
@@ -199,8 +209,10 @@ found or not the instruction execution will terminate exceptionally or not.
 	   \end{array}}
 		   {\method \vdash  \arithOp :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		          \stateTrans 
-                          \config{\heap}{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'} } } \\ \\ 
-{\scriptsize \frac{ 
+                          \config{\heap}{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'} } %}
+ \\ \\ 
+%{\scriptsize 
+\frac{ 
 	   \begin{array}{l}
 	   \op = \{ \mbox{\rm div}, \mbox{\rm rem}\} \\
 	   \stackOnly(\counterOnly) = 0 \\ 
@@ -209,9 +221,11 @@ found or not the instruction execution will terminate exceptionally or not.
 		   {\method \vdash  \arithOp :\config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		          \stateTrans 
 			  \configVar
-                           } }\\\\
+                           }% }
+\\\\
 
-{\scriptsize \frac{ \begin{array}{l}
+%{\scriptsize 
+\frac{ \begin{array}{l}
 	                \counterOnly' = \counterOnly + 1\\
 			\stackOnly' = \update{\stackOnly}{\counterOnly +  1}{ \locVarOnly(i) } \\
 			\pc' = \pc + 1
@@ -219,27 +233,35 @@ found or not the instruction execution will terminate exceptionally or not.
 	    } 
 	    {\method \vdash \load \ i : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		  \stateTrans 
-                  \config{\heap}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'}  } }\\\\
+                  \config{\heap}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'}  } 
+%}
+\\\\
 
 
-{\scriptsize \frac{  \begin{array}{l}
+%{\scriptsize 
+\frac{  \begin{array}{l}
 	                \counterOnly' = \counterOnly- 1\\
 			\locVarOnly' =	\update{\locVarOnly}{ i } { \stackOnlyParam{\counterOnly}} \\
 			\pc' = \pc + 1
 	          \end{array} }
                 {\method \vdash  \store \ i:  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		  \stateTrans 
-                  \config{\heap}{\counterOnly'}{\stackOnly }{\locVarOnly' }{\pc'} } } \\ \\ 
+                  \config{\heap}{\counterOnly'}{\stackOnly }{\locVarOnly' }{\pc'} } 
+%}
+ \\ \\ 
 
-{\scriptsize  \frac{ \begin{array}{l}	               
+%{\scriptsize 
+ \frac{ \begin{array}{l}	               
 			\locVarOnly' =  \update{\locVarOnly}{i}{ \locVarOnly(i) + 1}\\
 			\pc' = \pc + 1
 	          \end{array} } 
 	        {\method \vdash \iinc \ i :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		  \stateTrans 
-                  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly' }{\pc'}  }  }\\\\
+                  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly' }{\pc'}  }  %}
+\\\\
 
-{\scriptsize \frac{\begin{array}{l}
+%{\scriptsize 
+\frac{\begin{array}{l}
 	                \counterOnly' = \counterOnly + 1\\
 			\stackOnly' = \update{\stackOnly}{\counterOnly +  1}{i }\\
 			\pc' = \pc + 1
@@ -248,8 +270,10 @@ found or not the instruction execution will terminate exceptionally or not.
 		                                  \stateTrans  
 						  \config{\heap}{\counterOnly'}{\stackOnly' }
 						  {\locVarOnly}
-						  {\pc'}  } }\\\\
-{\scriptsize \frac{\begin{array}{l}
+						  {\pc'}  } %}
+\\\\
+%{\scriptsize 
+\frac{\begin{array}{l}
                                      \counterOnly' = \counterOnly - 1 \\
                                     \pc' = \pc + 1  
 		             \end{array}        
@@ -260,10 +284,12 @@ found or not the instruction execution will terminate exceptionally or not.
                                                          {\counterOnly'}
 							 {\stackOnly}
 							 {\locVarOnly}
-							 {\pc'}  } } \\\\
+							 {\pc'}  } %}
+ \\\\
 
 
-{\scriptsize \frac{ \begin{array}{l} 
+%{\scriptsize 
+\frac{ \begin{array}{l} 
                                     \counterOnly' = \counterOnly + 1\\
                                     \stackOnly' = \update{\stackOnly}{\counterOnly + 1}{ \stackOnly( \counterOnly ) } \\
 				    \pc' = \pc + 1  
@@ -275,7 +301,7 @@ found or not the instruction execution will terminate exceptionally or not.
                                                          {\counterOnly'}
 							 {\stackOnly' }
 							 {\locVarOnly}
-							 {\pc'}  } }
+							 {\pc'}  } %}
 \end{array}
 $$
 
@@ -293,7 +319,8 @@ $$
  $$ \begin{array}{l}
 
 
-{\scriptsize \frac{ \begin{array}{l}
+%{\scriptsize
+ \frac{ \begin{array}{l}
 	               \stackOnlyParam{\counterOnly - 1} \neq \Mynull   \\
                        %\left\{\begin{array}{l}
 		              \heap' = \update{\heap}{\fieldd }{\update{\fieldd}{\stackOnlyParam{\counterOnly - 1}}{\stackOnlyParam{\counterOnly }}} \\
@@ -304,20 +331,24 @@ $$
 		   }
                    { \methodd \vdash  \putfield \ \fieldd:  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
                                                \stateTrans  
-					       \config{\heap'}{\counterOnly'}{\stackOnly}{\locVarOnly}{\pc'} } } \\ \\ 
+					       \config{\heap'}{\counterOnly'}{\stackOnly}{\locVarOnly}{\pc'} } %}
+ \\ \\ 
 
 
-{\scriptsize \frac{ \begin{array}{l}
+%{\scriptsize 
+\frac{ \begin{array}{l}
 	                 \stackOnlyParam{\counterOnly - 1} = \Mynull   \\
 		         \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc, \methodd.\excHandlerTable ) =  \configVar			                  \end{array}
                       }
 		      {\methodd \vdash  \putfield \ \fieldd:  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 					          \stateTrans  
-						  \configVar }} \\ \\
+						  \configVar } %}
+ \\ \\
 
 
 
-{\scriptsize \frac{ \begin{array}{l}
+%{\scriptsize
+ \frac{ \begin{array}{l}
                                \stackOnlyParam{\counterOnly} \neq \Mynull \\
 	                       %\left\{\begin{array}{l}             
 			             \stackOnly' =  \update{\stackOnly}{\counterOnly}{ \heap(\fieldd)(\stackOnlyParam{\counterOnly} ) }\\
@@ -327,21 +358,41 @@ $$
                  }   
 		 {\methodd \vdash  \getfield \ \fieldd  :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}} }  \\\\
+						 \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}} %}
+  \\\\
 
 
 
-{\scriptsize  \frac{ \begin{array}{l}
+%{\scriptsize 
+ \frac{ \begin{array}{l}
 	                      \stackOnlyParam{\counterOnly} = \Mynull \\
 			       \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc, \methodd.\excHandlerTable ) =  \configVar                              \end{array}}
 		  {\methodd \vdash  \getfield \ \fieldd  :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \configVar} }\\\\
+						 \configVar} %}
+\end{array}
+$$
 
+\caption{\sc Operational semantics for field manipulation }
+\label{opSem:obj:manip1}
+\end{frameit}
+\end{figure}
+Fig.\ \ref{opSem:obj:manip1},  \ref{opSem:obj:manip2} and \ref{opSem:obj:creat}  give the semantics for instructions manipulating the program heap.
+Let us first focus on Fig.\ \ref{opSem:obj:manip} which shows how object fields are accessed and modified. 
+We shall concentrate on the instruction for field update \putfield{}, the instruction for  \arrstore{} and array length access \arraylength, the others being similar. 
+For instance, the instruction \putfield{} pops the top value contained on the stack top \stackOnlyParam{\counterOnly} 
+and the reference value contained in \stackOnlyParam{\counterOnly - 1} 
+	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull{} 
+%\footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
+%	for instance, \stackOnlyParam{\counterOnly - 1} contains certainly a reference        of type \texttt{C}  } , 
+the value of its field 	\fieldd{} for the object  is updated with the value\stackOnlyParam{\counterOnly} and
+ the counter \counterOnly{} is decremented. If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull{} then a \NullPointerExc{} is thrown. 
 
-
-
-	 {\scriptsize \frac{ \begin{array}{l} 
+\begin{figure}[ht!] 
+\begin{frameit}
+ $$ \begin{array}{l}
+	% {\scriptsize
+ \frac{ \begin{array}{l} 
 	             \stackOnlyParam{\counterOnly - 2} \neq \Mynull  \\
 		     0 \leq \stackOnlyParam{\counterOnly - 1  } < \length( \stackOnlyParam{\counterOnly - 2} )   \\
                      \heap' = \update{\heap}{( \stackOnlyParam{\counterOnly - 2},\stackOnlyParam{\counterOnly - 1} ) }{ \stackOnlyParam{\counterOnly}} \\
@@ -350,17 +401,21 @@ $$
 		\end{array}}
 		{\methodd \vdash  \arrstore \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \config{\heap'}{\counterOnly'}{\stackOnly}{\locVarOnly}{\pc'}} } \\ \\  
+						 \config{\heap'}{\counterOnly'}{\stackOnly}{\locVarOnly}{\pc'}} %}
+ \\ \\  
 
 
-       {\scriptsize \frac{ \begin{array}{l}
+       %{\scriptsize 
+\frac{ \begin{array}{l}
 	                      \stackOnlyParam{\counterOnly - 2} = \Mynull \\
 			      \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} , \NullPointerExc,\methodd.\excHandlerTable ) =  \configVar  \\  
 		   \end{array}}
 		 {\methodd \vdash  \arrstore \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } } \\ \\ 
-        {\scriptsize \frac{ \begin{array}{l} 
+						 \configVar }% }
+ \\ \\ 
+       % {\scriptsize 
+\frac{ \begin{array}{l} 
                                 \stackOnlyParam{\counterOnly - 2} \neq \Mynull  \\
 			  	( \stackOnlyParam{\counterOnly - 1} < 0 	\vee  \\
 			          \stackOnlyParam{\counterOnly - 1} \geq \length (  \stackOnlyParam{\counterOnly - 2 }  ) )  \\
@@ -368,9 +423,11 @@ $$
 		    \end{array}}
 		 {\methodd \vdash  \arrstore \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } } \\ \\
+						 \configVar } %}
+ \\ \\
 
-  {\scriptsize \frac{ \begin{array}{l}  \stackOnlyParam{\counterOnly - 1} \neq \Mynull  \ \\
+ % {\scriptsize 
+\frac{ \begin{array}{l}  \stackOnlyParam{\counterOnly - 1} \neq \Mynull  \ \\
 					 \stackOnlyParam{\counterOnly} \geq 0   \\
 					 \stackOnlyParam{\counterOnly} < \length (  \stackOnlyParam{\counterOnly - 1}  )  \\
 			       			       %\left\{\begin{array}{l}
@@ -381,18 +438,22 @@ $$
 			 \end{array}}
 			  {\methodd \vdash  \arrload \ :       \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 						 \stateTrans  
-						 \config{\heap}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'}} }\\ \\ 
+						 \config{\heap}{\counterOnly'}{\stackOnly'}{\locVarOnly}{\pc'}} %}
+\\ \\ 
 						 
 
-	  {\scriptsize \frac{ \begin{array}{l}
+	  %{\scriptsize
+ \frac{ \begin{array}{l}
 	                      \stackOnlyParam{\counterOnly - 1} = \Mynull   \\
 			      \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} , \NullPointerExc,\methodd.\excHandlerTable ) =  \configVar  \\  
 		 \end{array}}
 		 {\methodd \vdash  \arrload \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } } \\ \\
+						 \configVar } %}
+ \\ \\
 
-                 {\scriptsize \frac{ \begin{array}{l}   
+           %      {\scriptsize 
+\frac{ \begin{array}{l}   
 			      \stackOnlyParam{\counterOnly - 1} \neq \Mynull  \\
 			      ( \stackOnlyParam{\counterOnly} < 0 	\vee  \\
 			       \stackOnlyParam{\counterOnly} \geq \length (  \stackOnlyParam{\counterOnly - 1}  ) )   \\
@@ -400,9 +461,11 @@ $$
 		    \end{array}}
 		 {\methodd \vdash  \arrload \ :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                         \stateTrans  
-						 \configVar } }  \\ \\
+						 \configVar } %}
+  \\ \\
 
-  {\scriptsize \frac{ \begin{array}{l}
+  %   {\scriptsize
+ \frac{ \begin{array}{l}
 			            \stackOnlyParam{ \counterOnly } \neq \Mynull  \\
 				    \stackOnly'= \update{\stackOnly}{\counterOnly}{ \heap(\length)( {\stackOnlyParam{\counterOnly} } )  } \\ 
 				    \pc' = \pc+ 1
@@ -411,39 +474,33 @@ $$
 	        }
 	        {\methodd \vdash \arraylength :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                  \stateTrans  
-				  \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'} } } \\\\
+				  \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'} }  %  }
+ \\\\
 		     
 	 
 
-	   {\scriptsize	 \frac{ \begin{array}{l}
+  % 	   {\scriptsize	 
+\frac{ \begin{array}{l}
 			       \stackOnlyParam{ \counterOnly } = \Mynull    \\
 			        \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc ,\methodd.\excHandlerTable ) =  \configVar  
 			\end{array}
 		      }
 		      {\methodd \vdash \arraylength : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                      \stateTrans  
-						      \configVar} } \\\\
+						      \configVar}   % } 
+\\\\
 
 
 \end{array}
 $$
 
-\caption{\sc Operational semantics for object manipulation and method invokation }
-\label{opSem:obj:manip}
+\caption{\sc Operational semantics for array manipulation }
+\label{opSem:obj:manip2}
 \end{frameit}
 \end{figure}
-\clearpage
 
-Fig. \ref{opSem:obj:manip} and \ref{opSem:obj:creat}  give the semantics for instructions manipulating the program heap.
-Let us first focus on Fig. \ref{opSem:obj:manip} which shows how object fields are accessed and modified. 
-We shall concentrate on the instruction for field update \putfield{}, the instruction for  \arrstore{} and array length access \arraylength, the others being similar. 
-For instance, the instruction \putfield{} pops the top value contained on the stack top \stackOnlyParam{\counterOnly} 
-and the reference value contained in \stackOnlyParam{\counterOnly - 1} 
-	are popped from the operand stack. If \stackOnlyParam{\counterOnly - 1} is not \Mynull{} 
-%\footnote{here we assume that the code has passed successfully the bytecode verification procedure and thus,
-%	for instance, \stackOnlyParam{\counterOnly - 1} contains certainly a reference        of type \texttt{C}  } , 
-the value of its field 	\fieldd{} for the object  is updated with the value\stackOnlyParam{\counterOnly} and
- the counter \counterOnly{} is decremented. If the reference in \stackOnlyParam{\counterOnly - 1} is \Mynull{} then a \NullPointerExc{} is thrown. 
+
+
 
 %The instruction for an access of the a value of a particular field for a particular object reference is the 
 %instruction \getfield. The instruction pops the  
@@ -480,7 +537,7 @@ If the stack top element is \Mynull{} then a \NullPointerExc{} is thrown. Here w
  length is modeled via the special object field \length. 
 
 
-Let us now look at Fig. \ref{opSem:obj:creat} to  see how 
+Let us now look at Fig.\ \ref{opSem:obj:creat} to  see how 
 object creation is modeled.
 
  For example, a new class instance
@@ -499,7 +556,8 @@ In case the stack top is less than 0, then \NegativeArraySizeExc{} is thrown.
 \begin{frameit}
  $$ \begin{array}{l}
 
-{\scriptsize \frac{\begin{array}{l}
+% {\scriptsize 
+\frac{\begin{array}{l}
 			(\heap',\referenceOnly) = \newRef{\heap}{\clazz} \\ 
 			\counterOnly' = \counterOnly + 1\\
 			\stackOnly' = \update{\stackOnly}{\counterOnly +  1}{ \referenceOnly  } \\
@@ -511,10 +569,12 @@ In case the stack top is less than 0, then \NegativeArraySizeExc{} is thrown.
 			              {\counterOnly'}
 				      {\stackOnly' }
 				      {\locVarOnly}
-				      {\pc'}  } } \\ \\ 
+				      {\pc'}  } %} 
+\\ \\ 
 
 
-{\scriptsize \frac{\begin{array}{l}
+%{\scriptsize 
+\frac{\begin{array}{l}
 		               \stackOnlyParam{\counterOnly} \geq 0  \\
 			        %\left\{\begin{array}{l}
 			                    (\heap',\referenceOnly ) = \newArrRef{\heap}{type}{\stackOnlyParam{\counterOnly}}\\
@@ -529,20 +589,23 @@ In case the stack top is less than 0, then \NegativeArraySizeExc{} is thrown.
 			              {\counterOnly'}
 				      {\stackOnly' }
 				      {\locVarOnly}
-				      {\pc'}  } } \\ \\
-{\scriptsize \frac{\begin{array}{l}
+				      {\pc'}  } %} 
+\\ \\
+%{\scriptsize 
+\frac{\begin{array}{l}
 		               \stackOnlyParam{\counterOnly} < 0 \\
 			       \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NegativeArraySizeExc,\methodd.\excHandlerTable ) =  \configVar                	        \end{array}  }
                 {\methodd \vdash  \newarray \ \anyType :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 			                      \stateTrans  
-					      \configVar } } \\ \\
+					      \configVar } %}
+ \\ \\
 \end{array}$$
 \caption{\sc Operational semantics for object creation }
 \label{opSem:obj:creat}
 \end{frameit}
 \end{figure}
 
-Our language also supports instructions for checking if an object is of a given type. They are given in Fig. \ref{opSem:obj:typecheck}.
+Our language also supports instructions for checking if an object is of a given type. They are given in Fig.\ \ref{opSem:obj:typecheck}.
 For instance, the instruction \instanceof{} checks if the stack top element is 
  of subtype \clazz{}, then the   $1$ is pushed on the stack. If 
 the object reference is \Mynull or not a subtype of \clazz{} then $0$ is pushed on the stack top. 
@@ -552,7 +615,8 @@ a subclass of \clazz{} a \ClassCastExc{} is thrown.
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
-{\scriptsize \frac{ \begin{array}{l}
+%{\scriptsize 
+\frac{ \begin{array}{l}
                             \subtype{\heap.\heapTypeOf(\stackOnlyParam{\counterOnly})}{\clazz}  \\	
 		           % \begin{array}{l}    
 			          \stackOnly' = \update{\stackOnly}{\counterOnly}{1}   \\
@@ -562,10 +626,12 @@ a subclass of \clazz{} a \ClassCastExc{} is thrown.
 	              }
                       {\instanceof  \ \clazz : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                   \stateTrans  
-						   \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}} } \\ \\
+						   \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}} % }
+ \\ \\
 
 
-	{\scriptsize	\frac{ \begin{array}{l}
+%	{\scriptsize
+	\frac{ \begin{array}{l}
                              \neg ( \subtype{ \heap.\heapTypeOf( \stackOnlyParam{\counterOnly} ) }{\clazz}) \vee \stackOnlyParam{\counterOnly} = \Mynull  \\
 			       %   \begin{array}{l}
 			                \stackOnly' = \update{\stackOnly}{\counterOnly}{0}   \\
@@ -574,22 +640,26 @@ a subclass of \clazz{} a \ClassCastExc{} is thrown.
 		        \end{array} }
 		     {\methodd \vdash \instanceof  \ \tt{C} : \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                                   \stateTrans  
-						   \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}}}  \\ \\ 
+						   \config{\heap}{\counterOnly}{\stackOnly'}{\locVarOnly}{\pc'}}% }  
+\\ \\ 
 
 
-   {\scriptsize \frac{\begin{array}{l}
+ %  {\scriptsize
+ \frac{\begin{array}{l}
 		               \subtype{\heap.\heapTypeOf( \stackOnlyParam{\counterOnly})}{\clazz }   \vee \stackOnlyParam{\counterOnly} = \Mynull  \\
 			      \pc' =  \pc  +1 
 		 \end{array}}
 		  {\methodd \vdash \checkcast \ \clazz :     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                             \stateTrans  
-					     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc'}} } \\ \\ 
-	  {\scriptsize \frac{\begin{array}{l}	
+					     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc'}} %}
+ \\ \\ 
+	 % {\scriptsize 
+\frac{\begin{array}{l}	
 			       \neg (\subtype{\heap.\heapTypeOf(  \stackOnlyParam{\counterOnly} ) }{\clazz} )  \\
 			       \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \ClassCastExc,\methodd.\excHandlerTable ) =  \configVar                                              \end{array}}
 		  {\methodd \vdash \checkcast \ \clazz :     \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                             \stateTrans  
-					     \configVar} }  
+					     \configVar} % }  
 
 \end{array}$$
 \caption{\sc Operational semantics for type checking }
@@ -600,7 +670,7 @@ a subclass of \clazz{} a \ClassCastExc{} is thrown.
 
 
 The language presented here allows also to force  exception throwing. This is done via the
- instruction \athrow{} presented in Fig. \ref{opSem:obj:throw}.    The stack top element  must be a reference of an object of type  \Throwable. 
+ instruction \athrow{} presented in Fig.\ \ref{opSem:obj:throw}.    The stack top element  must be a reference of an object of type  \Throwable. 
 	 If the exception object on the stack top is not \Mynull{} then there are two possible execution of the instruction.
 	  Either there is not an exception handler  that protects this bytecode instruction from the 
 	  exception type and the current method \methodd{} terminates exceptionally by throwing the exception object \stackOnlyParam{\counterOnly} or
@@ -613,7 +683,8 @@ The language presented here allows also to force  exception throwing. This is do
  \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
- {\scriptsize \frac{ 
+ %{\scriptsize
+ \frac{ 
 	             \begin{array}{l}	 
 		           \stackOnlyParam{\counterOnly} \neq \Mynull   \\
 			   \findExcHandler{\heap.\heapTypeOf(  \stackOnlyParam{\counterOnly} )  }{\pc}{\methodd.\excHandlerTable} = \bottom 
@@ -621,8 +692,10 @@ The language presented here allows also to force  exception throwing. This is do
 	      }
               {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                         \stateTrans  
-					\configFinalExc{\heap }{\stackOnlyParam{\counterOnly} }} } \\ \\ 
-{\scriptsize \frac{ \begin{array}{l}	 
+					\configFinalExc{\heap }{\stackOnlyParam{\counterOnly} }}% } 
+\\ \\ 
+%{\scriptsize 
+\frac{ \begin{array}{l}	 
 		                \stackOnlyParam{\counterOnly} \neq \Mynull   \\
 				\findExcHandler{\heap.\heapTypeOf(  \stackOnlyParam{\counterOnly} )  }{\pc}{\methodd.\excHandlerTable} = \pc^{eH} \\
 				\stackOnly' = \update{\stackOnly}{0}{ \stackOnlyParam{\counterOnly} } \\
@@ -630,15 +703,17 @@ The language presented here allows also to force  exception throwing. This is do
 	      }
               {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                          \stateTrans  
-					   \config{\heap}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}  } } \\ \\  
-              {\scriptsize \frac{ \begin{array}{l}	 
+					   \config{\heap}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}  } %}
+ \\ \\  
+ %   {\scriptsize
+ \frac{ \begin{array}{l}	 
 	                     \stackOnlyParam{\counterOnly}  = \Mynull   \\
 			     \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc}, \NullPointerExc  ,\methodd.\excHandlerTable ) =  \configVar
       		    \end{array}	     
 	      }
               {\methodd \vdash \athrow :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                         \stateTrans  
-					  \configVar} } 
+					  \configVar} %} 
 	   
 \end{array}$$
 \caption{\sc Operational semantics for programmatic exceptions }
@@ -646,7 +721,7 @@ The language presented here allows also to force  exception throwing. This is do
 \end{frameit}
 \end{figure}
 
-       Finally, in Fig. \ref{opSem:obj:method}, we can see the semantics of method invocation. 
+       Finally, in Fig.\ \ref{opSem:obj:method}, we can see the semantics of method invocation. 
        As the rule shows, first the proper method \mbox{\rm n} to be executed will be looked for via the function \lookupOnly. 
        This is is done by taking from the data structure  \mbox{\rm meth} the method signature - the method name \mbox{\rm  meth}.\methodName, 
        its argument types \ \mbox{\rm meth}.\args{}  and its  return type \mbox{\rm method}.\retType. 
@@ -665,8 +740,9 @@ The language presented here allows also to force  exception throwing. This is do
 \begin{figure}[ht!] 
 \begin{frameit}
  $$ \begin{array}{l}
-              {\scriptsize \frac{\begin{array}{l} 
-                        \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} } = \mbox{\rm n} \\
+            %  {\scriptsize 
+\frac{\begin{array}{l} 
+                        \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\heapTypeOf( \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }) } = \mbox{\rm n} \\
 	                        \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
 	                      \mbox{\rm n}  :         \config{\heap}       
                                                        {0}
@@ -681,8 +757,10 @@ The language presented here allows also to force  exception throwing. This is do
 			         \end{array}  }	         
 	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} }  \\\\
-	   {\scriptsize \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }} }
+					\config{\heap' }{\counterOnly'}{\stackOnly' }{\locVarOnly}{\pc'}} %}
+  \\\\
+%  {\scriptsize
+ \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{\heapTypeOf( \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }) }
 	                            = \mbox{\rm n} \\
 	                            \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
 	                            \mbox{\rm n} :     \config{\heap}       
@@ -697,8 +775,10 @@ The language presented here allows also to force  exception throwing. This is do
 	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  
 		                         \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\configFinalExc{\heap'}{\Exc}	} }  \\\\
-	   {\scriptsize \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType } {\typeof{ \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } }}    = \mbox{\rm n} \\
+					\configFinalExc{\heap'}{\Exc}	} %}
+  \\\\
+	%   {\scriptsize
+ \frac{\begin{array}{l}\lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType } {\heapTypeOf( \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } )}    = \mbox{\rm n} \\
 	                        \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } \neq \Mynull   \\
 	                      \mbox{\rm n}:              \config{\heap}       
                                                        {0}
@@ -712,8 +792,10 @@ The language presented here allows also to force  exception throwing. This is do
 				\end{array} }	         
 	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-				\config{\heap'}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}	} } \\\\ 
-	   {\scriptsize \frac{\begin{array}{l} 
+				\config{\heap'}{0}{\stackOnly'}{\locVarOnly}{\pc^{eH}}	} %} 
+\\\\ 
+	   %{\scriptsize 
+\frac{\begin{array}{l} 
 	         
 	                         \stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs } = \Mynull   \\ 
 				 \getStateAfterExc( \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc},\NullPointerExc,\methodd.\excHandlerTable ) =  \configVar
@@ -721,11 +803,11 @@ The language presented here allows also to force  exception throwing. This is do
 	         }	         
 	         {\methodd \vdash \invoke \  \mbox{\rm meth} :  \config{\heap}{\counterOnly}{\stackOnly}{\locVarOnly}{\pc} 
 		                        \stateTrans  
-					\configVar} } 
+					\configVar} %} 
 
  	     					
 \end{array}$$
-\caption{\sc Operational semantics for method invokation}
+\caption{\sc Operational semantics for method invocation}
 \label{opSem:obj:method}
 \end{frameit}
 \end{figure}

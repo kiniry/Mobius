@@ -103,7 +103,7 @@
 %\newcommand{\loopInv}{loopInvariant}
 %\newcommand{\loopMod}{loopModifies}
 
-\newcommand{\result}{\jmlKey{$\backslash$result}}
+\newcommand{\result}{\jmlKey{result}}
 %\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
 %\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
 %\newcommand{\TYPE}{\jmlKey{TYPE} }
@@ -258,7 +258,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%Class Fields Methods%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- \newcommand{\class}{\mbox{\rm\texttt{Cl}}{}} % a generalization which stands for any Java class
+ \newcommand{\class}{\mbox{\rm\texttt{Class}}{}} % a generalization which stands for any Java class
 
  \newcommand{\FieldSet}{\mbox{\rm\textbf{Field}} } % the set of fields
  \newcommand{\FieldName}{\mbox{\rm\textbf{FieldName}}}
@@ -270,7 +270,7 @@
  \newcommand{\ClassName}{\mbox{\rm\textbf{ClassName}}} % the set of fields
  
  \newcommand{\clazz}{\mbox{\rm \textit{C}}}
- \newcommand{\fieldd}{\mbox{\rm \textit{f}} }
+ \newcommand{\fieldd}{\mbox{\rm \texttt{f}} }
  \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
  \newcommand{\methodt}{\mbox{\rm \texttt{n}}}
  %%%%%%%%%%%%%%%%%Class attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -344,10 +344,10 @@
  \newcommand{\getFreshRef}[2]{\mbox{\rm getFreshRef}(#1,#2)}
  \newcommand{\getFreshRefOnly}{\mbox{\rm getFreshRef} \ }
 
- \newcommand{\newRef}[2]{\mbox{\rm newRef}(#1,#2 ) } % creates a new reference in the store
- \newcommand{\newRefOnly}{\mbox{\rm newRef}}
- \newcommand{\newArrRef}[3]{\mbox{\rm newArrRef}(#1,#2,#3) \ } % creates a new reference in the store
- \newcommand{\newArrRefOnly}{\mbox{\rm newArrRef}}
+ \newcommand{\newRef}[2]{\mbox{\rm\textsf{newRef}}(#1,#2 ) } % creates a new reference in the store
+ \newcommand{\newRefOnly}{\mbox{\rm\textsf{newRef}}}
+ \newcommand{\newArrRef}[3]{\mbox{\rm\textsf{newArrRef}}(#1,#2,#3) \ } % creates a new reference in the store
+ \newcommand{\newArrRefOnly}{\mbox{\rm\textsf{newArrRef}}}
 
  \newcommand{\getLocations}[1]{\mbox{\rm getLoc}(#1) \ }
  \newcommand{\getLocationsOnly}{\mbox{\rm getLoc} \ } 
@@ -355,8 +355,8 @@
  \newcommand{\addNewLocationOnly}{\mbox{\rm allocator} \ }
  \newcommand{\defaultValue}[1]{\mbox{\rm\textsf{defVal}}(#1)} % default value for a type
  \newcommand{\defaultValueOnly}{\mbox{\rm \textsf{defVal}}}
- \newcommand{\instanceFlds}[2]{\mbox{\rm \textit{instFlds}}(#1, #2)} % isInstField (field, class )
- \newcommand{\instanceFldsOnly}{\mbox{\rm \textit{instFlds}}}
+ \newcommand{\instanceFlds}[2]{\mbox{\rm \textsf{instFlds}}(#1, #2)} % isInstField (field, class )
+ \newcommand{\instanceFldsOnly}{\mbox{\rm \textsf{instFlds}}}
  \newcommand{\Dom}{\mbox{\rm\textsf{Dom}}}
  \newcommand{\Range}{\mbox{\rm\textsf{Range}}}
  \newcommand{\anyType}{\mbox{\rm \texttt{T}}} % represents any Java Type
@@ -394,6 +394,8 @@
 \newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
 \newcommand{\expression}{\mbox{\rm\textit{E}}^{\scriptsize{\mathcal{A}}}}
+
+\newcommand{\FieldConstRef}{\mbox{\rm\textit{FieldConstRef}}}
 \newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
 \newcommand{\expressions}{\mbox{\rm\textit{SpecExp}}_{bml}}
 
@@ -416,8 +418,11 @@
 
 \newcommand{\MethodSpec}{\mbox{\rm\textit{methodSpec}}}
 \newcommand{\specCase}{\mbox{\rm\textit{specCase}}}
+\newcommand{\specCases}{\mbox{\rm\textit{specCases}}}
 \newcommand{\intraMethodSpec}{\mbox{\rm\textit{intraMethodSpec}}}
-\newcommand{\modifiesLoc}{\mbox{\rm\textit{locations}}}
+\newcommand{\modifiesLoc}{\mbox{\rm\textit{modLocation}}}
+\newcommand{\modifiesLocs}{\mbox{\rm\textit{modLocations}}}
+
 \newcommand{\specIndex}{ \mbox{\rm\textit{specIndex}}}
 \newcommand{\op}{\mbox{\rm\textit{op}}}
 \newcommand{\exsuresList }{\mbox{\rm\textit{exsuresList}}}
@@ -462,7 +467,7 @@
 \newcommand{\jmlStmt}[1]{\textrm{#1}}
 \newcommand{\specExpression}{\mathcal{E}^{spec}}
 
-\newcommand{\EXC}{ \mbox{$\backslash$\rm\textbf{EXC}}} % SPEC the spec variable used in exceptional postconditions to denote the thrown exception object
+\newcommand{\EXC}{ \mbox{\rm\textbf{EXC}}} % SPEC the spec variable used in exceptional postconditions to denote the thrown exception object
 
 
 
@@ -481,12 +486,16 @@
 
 
 %\newcommand{\result}{\jmlKey{$\backslash$result}}
-\newcommand{\old}[1]{\jmlKey{$\backslash$old(}#1\jmlKey{)}}
-\newcommand{\typeof}[1]{\jmlKey{$\backslash$typeof(}#1 \jmlKey{)}}
+\newcommand{\old}[1]{\jmlKey{old(}#1\jmlKey{)}}
+\newcommand{\oldOnly}{\jmlKey{old}}
+\newcommand{\typeof}[1]{\jmlKey{typeof(}#1 \jmlKey{)}}
+\newcommand{\typeofOnly}{\jmlKey{typeof}}
 \newcommand{\subtypeSpec}{<:}
-\newcommand{\type}[1]{\jmlKey{$\backslash$type(}#1 \jmlKey{)}}
-\newcommand{\TYPE}{\jmlKey{$\backslash$TYPE} }
-\newcommand{\elemtype}[1]{ \jmlKey{$\backslash$elemtype(}#1\jmlKey{)} } 
+\newcommand{\type}[1]{\jmlKey{type(}#1 \jmlKey{)}}
+\newcommand{\typeOnly}{\jmlKey{type}}
+\newcommand{\TYPE}{\jmlKey{TYPE} }
+\newcommand{\elemtype}[1]{\jmlKey{elemtype(}#1\jmlKey{)} } 
+\newcommand{\elemtypeOnly}{\jmlKey{elemtype}}
 %\newcommand{\excPost}{\psi^{exc}}
 
 
@@ -721,3 +730,6 @@
 \newcommand{\methOrder}{\prec} % order over methods : m is smaller than n if m can be called by n
 \newcommand{\Program}{\mbox{\rm\texttt{P}}}
 \newcommand{\bydef}{\iff^{def}}
+
+\newcommand{\myDiv}{\mbox{\rm div}}
+\newcommand{\myRem}{\mbox{\rm rem}}

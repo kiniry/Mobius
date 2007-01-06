@@ -1,3 +1,8 @@
+@string{ENTCS   = "ENTCS"}
+@string{springer = "Springer"}
+@string{lncs = "LNCS"}
+
+
 @inproceedings{Nipkow-MOD2001,
 author={Tobias Nipkow},
 title={Hoare Logics in {Isabelle/HOL}},
@@ -5,21 +10,27 @@ booktitle={Proof and System-Reliability},
 editor={H. Schwichtenberg and R. Steinbr\"uggen},
 publisher={Kluwer},year=2002,pages={341-367}}
 
-@INPROCEEDINGS{gta05:fast,
-  AUTHOR = {G. Barthe and T. Rezk and A. Saabas},
-  TITLE = {Proof obligations preserving compilation},
-  YEAR = {2005},
-  CROSSREF = {fast05},
-  URL = {http://www-sop.inria.fr/everest/personnel/Tamara.Rezk//publication/Barthe-Rezk-Saabas.pdf},
-  PAGES = {112-126},
-  TOPICS = {team}
+@inproceedings{gta05:fast,
+  author    = {Gilles Barthe and
+               Tamara Rezk and
+               Ando Saabas},
+  title     = {Proof Obligations Preserving Compilation.},
+  booktitle = {Formal Aspects in Security and Trust},
+  year      = {2005},
+  pages     = {112-126},
+  ee        = {http://dx.doi.org/10.1007/11679219_9}
 }
+
+
 @Book{JLS,
   author =	 {J. Gosling and B. Joy and G. Steele and G. Bracha},
   title = 	 {The Java Language Specification, Third Edition},
   publisher = 	 {Sun Microsystems, Inc.},
   year = 	 2005
 }
+
+
+
 @TechReport{VMSpec,
   author = {Tim Lindholm and Frank Yellin},
   title = {Java Virtual Machine Specification},
@@ -49,18 +60,7 @@ publisher={Kluwer},year=2002,pages={341-367}}
 
 
 
-@Manual{JMLRefMan,
-  title =    {JML Reference Manual},
-  author =   {G.T.Leavens and Erik Poll and Curtis Clifton and Yoonsik Cheon and
-Clyde Ruby and David Cok and Joseph Kiniry},
-  OPTorganization = {},
-  OPTaddress =   {},
-  OPTedition =   {},
-  OPTmonth =     {aug},
-  OPTyear =      {2004},
-  note =      {technical report},
-  OPTannote =    {}
-}
+
 
 
 
@@ -104,21 +104,32 @@ Clyde Ruby and David Cok and Joseph Kiniry},
   YEAR = {2006},
   PAGES = {329-344},
   EE = {http://dx.doi.org/10.1007/11733447_24},
-  CROSSREF = {DBLP:conf/cardis/2006},
-  BIBSOURCE = {DBLP, http://dblp.uni-trier.de},
   TOPICS = {team}
 }
 
 
-@INPROCEEDINGS{gmg05:sefm,
-  AUTHOR = {G. Barthe and M. Pavlova and G. Schneider},
-  TITLE = {{Precise analysis of memory consumption using program logics}},
-  CROSSREF = {sefm05},
-  PAGES = {86--95},
-  PDFURL = {ftp://ftp-sop.inria.fr/lemme/personnel/Gilles.Barthe/sefm2005.pdf},
-  TOPICS = {team}
+@inproceedings{AspinallEtAl:TPHOLs2004,
+  author = {D. Aspinall and L. Beringer and M. Hofmann and H. Loidl and A. Momigliano},
+  title = {A program logic for resource verification},
+  BOOKTITLE = {Proceedings of the 17th International
+    Conference on Theorem Proving in Higher Order Logics (TPHOLs2004)},
+  year = "2004",
+  url = "citeseer.ist.psu.edu/aspinall04program.html" 
 }
 
+
+
+@inproceedings{gmg05:sefm,
+ author = {Gilles Barthe and Mariela Pavlova and Gerardo Schneider},
+ title = {Precise Analysis of Memory Consumption using Program Logics},
+ booktitle = {SEFM '05: Proceedings of the Third IEEE International Conference on Software Engineering and Formal Methods},
+ year = {2005},
+ isbn = {0-7695-2435-4},
+ pages = {86--95},
+ doi = {http://dx.doi.org/10.1109/SEFM.2005.34},
+ publisher = {IEEE Computer Society},
+ address = {Washington, DC, USA},
+ }
 
 @Book{M97oos,
   AUTHOR =       "B.Meyer",
@@ -147,7 +158,7 @@ Clyde Ruby and David Cok and Joseph Kiniry},
   year = 	 {2004},
   URL = "http://research.microsoft.com/~nick/stacks.pdf"}
 
- @inproceedings{BM05plb,
+ @inproceedings{BannwartMueller05,
  author = {F. Y. Bannwart and P. M{\"u}ller},
  title = {A Logic for Bytecode},
  booktitle = {Bytecode Semantics, Verification, Analysis and Transformation (BYTECODE)},
@@ -160,20 +171,10 @@ Clyde Ruby and David Cok and Joseph Kiniry},
  publisher = {Elsevier}
 }
 
-@inproceedings{AspinallEtAl:TPHOLs2004,
-  author    = {D. Aspinall and
-               L. Beringer and
-               M. Hofmann and
-               H.-W. Loidl and
-               A. Momigliano},
-  title     = {A Program Logic for Resource Verification.},
-  year      = {2004},
-  pages     = {34-49},
-  ee        = {http://springerlink.metapress.com/openurl.asp?genre=article{\&}issn=0302-9743{\&}volume=3223{\&}spage=34},
-  crossref  = {DBLP:conf/tphol/2004},
-  bibsource = {DBLP, http://dblp.uni-trier.de}
-}
+
   
+
+
 
 @Manual{MultJava,
   title =    {The MultiJava Project },
@@ -284,9 +285,7 @@ Clyde Ruby and David Cok and Joseph Kiniry},
   title     = {Proving Pointer Programs in {Hoare Logic}.},
   booktitle = {MPC},
   year      = {2000},
-  pages     = {102--126},
-  crossref  = {DBLP:conf/mpc/2000},
-  bibsource = {DBLP, http://dblp.uni-trier.de}
+  pages     = {102--126}
 }
 
 
@@ -333,21 +332,12 @@ Title        = "{Java} Applet Correctness: A Developer-Oriented Approach",
 Booktitle    = "FME 2003: Formal Methods: International Symposium of Formal Methods Europe",
 Editor       = "K. Araki and S. Gnesi and D. Mandrioli",
 Pages        = "422--439",
-Publisher    = Springer,
+Publisher    = {Springer},
 Series       = "{LNCS}",
 Volume       = "2805",
 Year         = "2003",
-Psurl          = "ftp://ftp-sop.inria.fr/everest/publis/2003/BRL03fme.ps.gz",
-Abstract     = "This paper presents experiments on formal validation of Java
-applets. It describes a tool that has been developed at the Gemplus Research
-Labs. This tool allows to formally prove Java classes annotated with JML, an
-annotation language for Java that provides a framework for specifying class
-invariants and methods behaviours. The foundations and the main features of
-the tool are presented. The most innovative part of the tool is that it is
-tailored to be used by Java programmers, without any particular background in
-formal methods. To reduce the difficulty of using formal techniques, it aims
-to provide a user-friendly interface which hides to developers most of the
-formal features and provides a ``Java style view'' of lemmas."}
+Psurl          = "ftp://ftp-sop.inria.fr/everest/publis/2003/BRL03fme.ps.gz"}
+
 
 
 
@@ -446,20 +436,23 @@ formal features and provides a ``Java style view'' of lemmas."}
 
 
 
+@article{leinoWPUP,
+ author = {Mike Barnett and K. Rustan M. Leino},
+ title = {Weakest-precondition of unstructured programs},
+ journal = {SIGSOFT Softw. Eng. Notes},
+ volume = {31},
+ number = {1},
+ year = {2006},
+ issn = {0163-5948},
+ pages = {82--87},
+ doi = {http://doi.acm.org/10.1145/1108768.1108813},
+ publisher = {ACM Press},
+ address = {New York, NY, USA},
+ }
 
 
-@misc{leinoWPUP,
-   author = {Mike Barnett and K. Rustan M. Leino},
-   title = {Weakest-precondition of unstructured programs},
-   booktitle = {PASTE '05: The 6th ACM SIGPLAN-SIGSOFT workshop on Program analysis for software tools and engineering},
-   year = {2005},
-   isbn = {1-59593-239-9},
-   pages = {82--87},
-   location = {Lisbon, Portugal},
-   doi = {http://doi.acm.org/10.1145/1108792.1108813},
-   publisher = {ACM Press},
-   address = {New York, NY, USA},
-}
+
+
 
 
 
@@ -493,7 +486,8 @@ formal features and provides a ``Java style view'' of lemmas."}
     volume = "2028",
     pages = "302+",
     year = "2001",
-    url = "citeseer.ist.psu.edu/470034.html"}
+    url = "citeseer.ist.psu.edu/470034.html"
+}
 
 
 @inproceedings{barthe02formal,
@@ -502,7 +496,8 @@ formal features and provides a ``Java style view'' of lemmas."}
     booktitle = "{VMCAI}",
     pages = "32-45",
     year = "2002",
-    url = "citeseer.ist.psu.edu/barthe02formal.html" }
+    url = "citeseer.ist.psu.edu/barthe02formal.html" 
+}
 
 @inproceedings{qian99formal,
     author = "Zhenyu Qian",
@@ -510,7 +505,8 @@ formal features and provides a ``Java style view'' of lemmas."}
     booktitle = "Formal Syntax and Semantics of Java",
     pages = "271-312",
     year = "1999",
-    url = "citeseer.ist.psu.edu/qian97formal.html" }
+    url = "citeseer.ist.psu.edu/qian97formal.html" 
+}
 
 @misc{pusch98proving,
   author = "Cornelia Pusch",
@@ -558,7 +554,7 @@ formal features and provides a ``Java style view'' of lemmas."}
  pages = {576--580},
  doi = {http://doi.acm.org/10.1145/363235.363259},
  publisher = {ACM Press},
- address = {New York, NY, USA},
+ address = {New York, NY, USA}
  }
 
 @Misc{ESC2000LNS,
@@ -569,7 +565,7 @@ formal features and provides a ``Java style view'' of lemmas."}
   OPTmonth = 	 {},
   OPTyear = 	 {},
   OPTnote = 	 {},
-  OPTannote = 	 {}
+  OPTannote = 	 {},
   url = "citeseer.ist.psu.edu/article/jacobs03java.html" 
 }
 
@@ -587,13 +583,6 @@ formal features and provides a ``Java style view'' of lemmas."}
  address = {New York, NY, USA}
  }
 
-@misc{december-jml,
-  AUTHOR = "G.T. Leavens and E. Poll and C. Clifton and Y. Cheon and C. Ruby and  D. Cok and P. M{\"u}ller and J. Kiniry",
-  TITLE  = "{JML} Reference Manual",
-  year = 2005,
-  NOTE   = "Preliminary draft \\\verb+http://www.cs.iastate.edu/~leavens/JML/jmlrefman/jmlrefman_toc.html+"
-
- }
 
 @article{ECG01DDL,
  author = {Michael D. Ernst and Jake Cockrell and William G. Griswold and David Notkin},
@@ -606,14 +595,15 @@ formal features and provides a ``Java style view'' of lemmas."}
  pages = {99--123},
  url = {http://dx.doi.org/10.1109/32.908957},
  publisher = {IEEE Press},
- address = {Piscataway, NJ, USA},
+ address = {Piscataway, NJ, USA}
  }
+
 @TechReport{FB04LBT,
   author = 	 {Fabian Bannwart},
   title = 	 {A Logic for Bytecode and the Translation of Proofs from Sequential Java},
   institution =  {ETHZ},
   year = 	 {2004},
-  url = {http://sct.inf.ethz.ch/projects/student_doc/Fabian_Bannwart_paper.pdf}
+  url = {http://sct.inf.ethz.ch/projects/student_doc/Fabian_Bannwart_paper.pdf},
   OPTkey = 	 {},
   OPTtype = 	 {},
   OPTnumber = 	 {},
@@ -637,7 +627,6 @@ formal features and provides a ``Java style view'' of lemmas."}
     journal = "The Computer Journal",
     volume = "42",
     number = "2",
-    month = "????",
     pages = "73--81",
     year = "1999",
     url = "citeseer.ist.psu.edu/schieder99adapting.html" }
@@ -666,7 +655,7 @@ formal features and provides a ``Java style view'' of lemmas."}
  address = {New York, NY, USA},
  }
 
-@article{DRT03GLF,
+@inproceedings{DRT03GLF,
  author = {Marc Daumas and Laurence Rideau and Laurent Théry},
  title = {A Generic Library for Floating-Point Numbers and Its Application to Exact Computing},
  book = {Lecture Notes in Computer Science},
@@ -696,14 +685,15 @@ formal features and provides a ``Java style view'' of lemmas."}
   year = "2003",
   url = "citeseer.ist.psu.edu/marche03krakatoa.html" }
 
-@misc{burdy98treatment,
+@article{burdy98treatment,
   author = "L. Burdy",
   title = "A treatment of partiality: Its application to the B method",
-  text = "L. Burdy. A treatment of partiality: Its application to the B method. In
-    CADE-15 Workshop on Mechanization of Partial Functions. http://www.cs.bham.ac.uk/~mmk/cade98-partiality/index.html,
-    Lindau, Germany, 1998.",
+  BOOKTITLE = {CADE-15 Workshop on Mechanization of Partial Functions},
+  url ={ http://www.cs.bham.ac.uk/~mmk/cade98-partiality/index.html},
   year = "1998",
-  url = "citeseer.ist.psu.edu/burdy98treatment.html" }
+}
+
+
 
 @misc{barnett03verification,
   author = "M. Barnett and R. DeLine and M. Fahndrich and K. Rustan and M. Leino and W. Schulte",
@@ -787,7 +777,7 @@ formal features and provides a ``Java style view'' of lemmas."}
                of Multi-threaded Programs.},
   booktitle = {ECOOP},
   year      = {2005},
-  pages     = {551-576},
+  pages     = {551-576}
  }
 
 
@@ -797,7 +787,7 @@ formal features and provides a ``Java style view'' of lemmas."}
   booktitle  = "European Symposium on Programming (ESOP'03)",
   volume = "2618",
   Series = "{LNCS}",
-  pages ="348--362"
+  pages ="348--362",
   publisher = "Springer",
   year = "2003",
   url = "citeseer.ist.psu.edu/prensanieto03relyguarantee.html" }
@@ -835,14 +825,12 @@ formal features and provides a ``Java style view'' of lemmas."}
   year      = {2006},
   pages     = {389-405},
   ee        = {http://dx.doi.org/10.1007/11924661_24},
-  crossref  = {DBLP:conf/aplas/2006},
-  bibsource = {DBLP, http://dblp.uni-trier.de}
 }
 
  
 
 @inproceedings{FA99TSL,
- author = {Cormac Flanagan and Mart\&\#237;n Abadi},
+ author = {Cormac Flanagan and Martin Abadi},
  title = {Types for Safe Locking},
  booktitle = {ESOP '99: Proceedings of the 8th European Symposium on Programming Languages and Systems},
  year = {1999},
@@ -871,7 +859,6 @@ formal features and provides a ``Java style view'' of lemmas."}
  isbn = {1-58113-463-0},
  pages = {234--245},
  location = {Berlin, Germany},
- doi = {http://doi.acm.org/10.1145/512529.512558},
  publisher = {ACM Press},
  address = {New York, NY, USA},
  }
@@ -925,3 +912,164 @@ formal features and provides a ``Java style view'' of lemmas."}
  note = {to appear}
 }
  
+@Article{Mueller-Poetzsch-Heffter-Leavens06,
+  Key =                 {M\"{u}ller \& Poetzsch-Heffter \& Leavens},
+  Author =         {Peter M\"{u}ller and Arnd Poetzsch-Heffter and Gary
+                  T. Leavens},
+  Title =         "Modular Invariants for Layered Object Structures",
+  journal =          SCP,
+  volume =       62,
+  number =       3,
+  pages =        {253-286},
+  month =        Oct,
+  year =         2006,
+  URL =          {http://dx.doi.org/10.1016/j.scico.2006.03.001} }
+
+@article{Naumann-vstteFAC,
+  title={On Assertion-Based Encapsulation for Object Invariants and Simulations},
+  author= {David A. Naumann},
+  journal={Formal Aspects of Computing},
+  year=2006,
+  note={Special issue: Applicable Research on Formal Verification and
+  Development, to appear.} } 
+
+
+
+@INPROCEEDINGS{jacobs04amast,
+  AUTHOR = {Bart Jacobs and Claude March{\'e} and Nicole Rauch},
+  TITLE = {Formal Verification of a Commercial Smart Card Applet with
+  Multiple Tools},
+  BOOKTITLE = {Algebraic Methodology and Software Technology},
+  YEAR = 2004,
+  SERIES = {Lecture Notes in Computer Science},
+  VOLUME = 3116,
+  ADDRESS = {Stirling, UK},
+  MONTH = JUL,
+  PUBLISHER = {Springer-Verlag}
+}
+
+
+@inproceedings{SI77IABC,
+ author = {Norihisa Suzuki and Kiyoshi Ishihata},
+ title = {Implementation of an array bound checker},
+ booktitle = {POPL '77: Proceedings of the 4th ACM SIGACT-SIGPLAN symposium on Principles of programming languages},
+ year = {1977},
+ pages = {132--143},
+ location = {Los Angeles, California},
+ doi = {http://doi.acm.org/10.1145/512950.512963},
+ publisher = {ACM Press},
+ address = {New York, NY, USA},
+ }
+
+@inproceedings{FQ03PAQ,
+ author = {Cormac Flanagan and Shaz Qadeer},
+ title = {Predicate abstraction for software verification},
+ booktitle = {POPL '02: Proceedings of the 29th ACM SIGPLAN-SIGACT symposium on Principles of programming languages},
+ year = {2002},
+ isbn = {1-58113-450-9},
+ pages = {191--202},
+ location = {Portland, Oregon},
+ doi = {http://doi.acm.org/10.1145/503272.503291},
+ publisher = {ACM Press},
+ address = {New York, NY, USA},
+ }
+@inproceedings{ernst99dynamically,
+    author = "Michael D. Ernst and Jake Cockrell and William G. Griswold and David Notkin",
+    title = "Dynamically Discovering Likely Program Invariants to Support Program Evolution",
+    booktitle = "International Conference on Software Engineering",
+    pages = "213-224",
+    year = "1999",
+    url = "citeseer.ist.psu.edu/article/ernst99dynamically.html" }
+
+@INPROCEEDINGS{marche05tphols,
+  AUTHOR = {Claude March\'e and Christine Paulin-Mohring},
+  TITLE = {Reasoning about {Java} Programs with Aliasing and Frame
+  Conditions},
+  BOOKTITLE = {18th International Conference on Theorem Proving in Higher Order Logics},
+  EDITOR = {J. Hurd and T. Melham},
+  SERIES = {Lecture Notes in Computer Science},
+  YEAR = 2005,
+  ADDRESSE = {Oxford, UK},
+  MONTH = AUG,
+  PUBLISHER = {Springer-Verlag}
+}
+
+
+@inproceedings{leino94semantics,
+ author = {K. Rustan M. Leino and Jan L. A. van de Snepscheut},
+ title = {Semantics of Exceptions},
+ booktitle = {PROCOMET '94: Proceedings of the IFIP TC2/WG2.1/WG2.2/WG2.3 Working Conference on Programming Concepts, Methods and Calculi},
+ year = {1994},
+ isbn = {0-444-82020-5},
+ pages = {447--466},
+ publisher = {North-Holland},
+ }
+
+@inproceedings{krml153,
+  author = "K. Rustan M. Leino and Peter M{\"u}ller",
+  title = "Modular Verification of Static Class Invariants",
+  booktitle = "Proceedings, Formal Methods",
+  series={LNCS},
+  volume=3582,
+  pages = {26--42},
+  year = 2005
+}
+
+@misc{borger99initialization,
+  author = "E. Borger and W. Schulte",
+  title = "Initialization problems for Java",
+  text = "Egon Borger and Wolfram Schulte. Initialization problems for Java. Software---Concepts"
+}
+
+@inproceedings{borger98defining,
+    author = "Egon Borger and Wolfram Schulte",
+    title = "Defining the Java Virtual Machine as Platform for Provably Correct Java Compilation",
+    booktitle = "Mathematical Foundations of Computer Science",
+    pages = "17-35",
+    year = "1998",
+    url = "citeseer.ist.psu.edu/borger98defining.html" }
+
+@inproceedings{ChanderEILN05,
+title = "{JVer}: A {Java} {Verifier}",
+author = "A. Chander and D. Espinosa and N. Islam and P. Lee and G. Necula",
+booktitle = "Proceedings of the Conference on Computer Aided Verification (CAV'05)",
+year = 2005
+}
+
+@unpublished{JMLRefMan,
+AUTHOR = "G.T. Leavens and E. Poll and C. Clifton and Y. Cheon and C. Ruby and  D. Cok and P. M{\"u}ller and J. Kiniry",
+TITLE  = "{JML} Reference Manual",
+year = 2005,
+NOTE   = "\texttt{http://www.cs.iastate.edu/}\verb+~+\texttt{leavens\linebreak /JML/jmlrefman/jmlrefman\_toc.html}"
+}
+
+@inproceedings{BarnettCDJL05,
+title = "Boogie: A Modular Reusable Verifier for Object-Oriented Programs",
+author = "M. Barnett and B.-Y. E. Chang and R. DeLine and B. Jacobs and K.R.M. Leino",
+booktitle = "Formal Methods for Components and Objects (FMCO '05)",
+series = lncs,
+publisher = {springer},
+year = 2005
+}
+@article{CHB03PLE,
+ author = {Cristiano Calcagno and Peter O'Hearn and Richard Bornat},
+ title = {Program logic and equivalence in the presence of garbage collection},
+ journal = {Theor. Comput. Sci.},
+ volume = {298},
+ number = {3},
+ year = {2003},
+ issn = {0304-3975},
+ pages = {557--581},
+ doi = {http://dx.doi.org/10.1016/S0304-3975(02)00868-X},
+ publisher = {Elsevier Science Publishers Ltd.},
+ address = {Essex, UK},
+ }
+@inproceedings{NimmerE01:RV,
+   author = {Jeremy W. Nimmer and Michael D. Ernst},
+   title = {Static verification of dynamically detected program
+	invariants: Integrating {Daikon} and {ESC}/{Java}},
+   booktitle = {Proceedings of RV'01, First Workshop on Runtime Verification},
+   address = {Paris, France},
+   month = {July~23,},
+   year = {2001}
+}

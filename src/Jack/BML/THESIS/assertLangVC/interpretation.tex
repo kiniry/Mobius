@@ -170,14 +170,14 @@ $$
 \evalExp{ \typeof{\exprWp}}{s } & = &
 \left\{\begin{array}{ll}
       \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
-      \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
+      \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
            
 \end{array}\right. \\
 
 
 \evalExp{ \elemtype{\exprWp}}{s } & = &
 \begin{array}{ll}
-            \mbox{ \rm \texttt{T} }  & where \   \heap. \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
+            \mbox{ \rm \texttt{T} }  & where \   \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
 \end{array}\\
 
 
