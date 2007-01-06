@@ -21,14 +21,14 @@ flexibility.
 
 % tool support 
 JML is supported by several verification tools.
- Originally, it has been designed as a language of the runtime assertion checker~\cite{jmlrac} created by G.T. Leavens and \todo{who are the others}. 
+ Originally, it has been designed as a language of the runtime assertion checker~\cite{jmlrac} created by Yoonsik Cheon and G.T. Leavens. 
 The JML runtime assertion checker compiles both the Java code and the JML specification into executable bytecode and thus, 
 in this case, the verification consists in executing the resulting bytecode. Several static checkers based 
 on formal logic exist which use JML as a specification language. Esc/java~\cite{escjava}  whose first version used a subset 
  of JML \footnote{the current version of the tool esc/java 2  supports almost all JML constructs} is among the first tools supporting JML.
 Among the static checkers with JML  are
 the Loop tool developed by the Formal group at the University of Nijmegen,
-the Jack tool developed at Gemplus, the Krakatoa tool created by the Coq group at Inria, France.
+the Jack tool developed at Gemplus, the Krakatoa tool developed by the ProVal group at Inria, France.
 The tool Daikon \cite{ECG01DDL}  tool uses a subset of JML for detecting loop invariants by run of programs.
  A  detailed overview of the tools which support JML can  be found in~\cite{BurdyCCEKLLP03}.
 In the following, we shall proceed with the description of the basic features of JML which correspond basically to the
@@ -48,11 +48,25 @@ JML Level0 subset of JML.
     used in the method's postcondition, \jmlKey{$\backslash$typeof(expression)} which stands for the dynamic type of  \jmlKey{expression}, etc.
 
 
-\subsection{Method contracts}\label{javaVerif:JML:methodContracts}     
-For introducing method precondition and postcondition the keywords \jmlKey{requires} and \jmlKey{ensures} are used  
-    respectively,  \jmlKey{modifies} keyword introduces the locations that can be modified by the method, 
-    \jmlKey{loop\_invariant} stands for a loop invariant, the \jmlKey{loop\_modifies} keyword gives the 
-    locations modified by a loop etc. The latter is not standard in JML and is an extension introduced in~\cite{BRL-JACK}.
+\subsection{Method contracts and method intra specification}\label{javaVerif:JML:methodContracts}  
+Method contracts consists of the conditions upon which relies  and the conditions that the method guarantees.
+The conditions upon which a method relies are expressed in specifications as the method precondition, i.e. \ the method requires them to hold 
+in its pre state. The conditions which a method guarantees are expressed in specifications as the method postcondition, i.e. 
+ they express what the method guarantees to the methods that may invoke it. Method contracts 
+ are visible by the other methods in the program as they inform the other methods what they must establish when calling them current  method
+and what the current method guarantees them. Moreover, JML provides a third component in the method contract, the so called frame condition which 
+introduces the locations that can be modified by the method. Frame conditions are actually desugared as part of the postcondition as we shall see later in subsection 
+\ref{javaVerif:JML:frame}. For an insight information on method contracts, the reader may refer to \cite{M97oos}.
+
+Specifying methods may involve writing specification which is not visible by ``the outside world'' (the other methods in the program) but which are useful 
+for the program verification process. An example for such a specification are the loop invariants, which express a property which holds at the borders of a loop iteration.
+Moreover, here we shall allow that a loop is also accompanied by a frame condition which as in the case of method frame conditions
+ specifies which locations may be modified in a loop. Such an extension of JML is used in the tool Jack \cite{BRL-JACK}. We provide a more 
+insight discussion about them later in subsection \ref{javaVerif:JML:frame}. 
+
+For introducing method preconditions, postconditions and method frame conditions in JML the keywords \jmlKey{requires},
+ \jmlKey{ensures} and \jmlKey{modifies} keywords are used  respectively. Also for loop invariants and loop frame conditions,
+ the keywords \jmlKey{loop\_invariant} and \jmlKey{loop\_modifies} are used.
 Fig.~\ref{replaceSrc} gives an example of a Java class that models a list stored in a private array field. 
 The method \texttt{replace} will search in the array for the first occurrence of the object \texttt{obj1} passed as first argument
  and if found, it will be replaced with the object passed as second argument \texttt{obj2} and the method will return true; otherwise it 
@@ -63,9 +77,8 @@ modify any of the elements in the instance field \texttt{list}. The method postc
 \texttt{true} only if  the replacement has been done.
 The method body contains a loop (lines 17---22) which is specified with a loop fame condition and a loop invariant (lines 13---16).
   The loop invariant (lines 14---16) says that all the elements of the list that are inspected up to now are 
-different from the parameter object \texttt{obj1} as well as the local variable \texttt{i}  is a valid index in the array \texttt{list}.
-The loop frame condition (line 13)  states that only
- the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
+ different from the parameter object \texttt{obj1} as well as the local variable \texttt{i}  is a valid index in the array \texttt{list}.
+ The loop frame condition (line 13)  states that only the local variable \texttt{i} and any element of the array field \texttt{list} may be modified in the loop.
 
 \begin{figure}[ht!]
 \begin{lstlisting}[frame=trbl] 
@@ -104,17 +117,28 @@ public class ListArray {
  These variables are declared in comments with the \jmlKey{ghost} modificator and may be used only in specification clauses. Those variables 
  can also be assigned. Ghost variables are usually used  for expressing properties which can not be expressed with the program variables.
 
- Fig. \ref{bml:ghost} is an example for how ghost variables are used. The example shows the class \texttt{Transaction}
- which manages transactions in the program. The class is provided with a method for opening transactions \texttt{beginTransaction } and 
- a method for closing transactions (\texttt{commitTransaction}).  The specification declares a ghost variable
- \texttt{TRANS} (line 3) which keeps track if there is  a running transaction or not, i.e. if the value of  \texttt{TRANS} is 0
- then there is no running transaction and if it has value 1 then there is
- a running transaction. The specification of the methods \texttt{beginTransaction } and \texttt{commitTransaction}
- models the property for no nested transactions. Thus, when the method  \texttt{beginTransaction } is invoked the precondition (line 5) requires
+ We illustrate the utility of such variables through an example. 
+ Let us have a class class \texttt{Transaction}  which manages transactions in the program.  
+ The class is provided with a method for opening transactions \texttt{beginTransaction } and 
+ a method for closing transactions (\texttt{commitTransaction}). Suppose that we want to guarantee that in an application 
+ there are never nested transactions. A possibility is to declare a method \texttt{getTransactionDepth} which counts the number
+ of open transactions and use dynamic checks  for guaranteeing that there are no nested transactions. But this would require to modfify the code which is not desirable. 
+Another approach would be to use the method  \texttt{getTransactionDepth}  as far as its execution
+ does not affect the program state (i.e. it is pure) in the specification 
+ e.g. \ the precondition  of method \texttt{beginTransaction} will be \texttt{//@ requires getTransactionDepth() == 0}.
+However,  the treatment of pure methods is  complicated and its semantics is still not well established.
+ 
+ Fig. \ref{bml:ghost} is an example for how ghost variables can be used for specifying the no nested transaction property in a simple way.
+ The example shows the class \texttt{Transaction} which manages transactions in the program. 
+  The specification of the methods \texttt{beginTransaction } and \texttt{commitTransaction}
+ models the property for no nested transactions via the ghost variable
+ \texttt{TRANS} (declared on line 3) which keeps track if there is  a running transaction or not. In particuler, 
+ if the value of  \texttt{TRANS} is 0 then there is no running transaction and if it has value 1 then there is
+ a running transaction.  Thus, when the method  \texttt{beginTransaction } is invoked the precondition (line 5) requires
  that there should be no running transaction and when the method is terminated the postcondition guarantees (line 6) that there is already a transaction running.
  We can also remark that the variable  \texttt{TRANS} is set to its new value (line 8) in the  body  \texttt{beginTransaction}.
- Note that this high level property is difficult to express without the presence
- of the ghost variable \texttt{TRANS}.  
+% Note that this high level property is difficult to express without the presence of the ghost variable \texttt{TRANS}.  
+Note that this is a simple way for specifying this property without modifying the code. 
 
 \begin{figure}[ht!]
 \begin{lstlisting}[frame=trbl] 
@@ -135,29 +159,34 @@ public class Transaction {
     //@ set TRANS = 0; 
      ...
   }
-  
 }
 \end{lstlisting}
 \caption{\sc specifying No Nested Transaction property with ghost variable} 
 \label{bml:ghost}
 \end{figure}
 
-\subsection{Light and heavy weight specification}\label{javaVerif:JML:lightHeavy}
+
+
+
+\subsection{Light and heavy weight specification. Multiple specification cases}\label{javaVerif:JML:lightHeavy}
 A useful feature of JML is that it allows two kinds of method specification, a \light  \ and \heavy \ weight specification. 
 An example for a \light \  specification is the annotation of method \texttt{replace} (lines 5---9) in Fig. \ref{replaceSrc}. The specification in 
 the example states what is the expected behavior of the method and under what conditions it might be called.
 The user, however in JML, has also the possibility
-to write very detailed method specifications. This style of specification is called a \heavy  \ weight specification.
- It is introduced by the JML keywords \jmlKey{normal\_behavior} and \jmlKey{exceptional\_behavior}. As the keywords
+to write detailed method specifications which allow 
+to describe what are the different cases
+on which a method might be called and what is the behavior of the method in
+ every  case.
+ This   specification style is called a \heavy{} weight specification.
+ Heavy weight specification  are introduced by the JML keywords \jmlKey{normal\_behavior} and \jmlKey{exceptional\_behavior}. As the keywords
 suggest every of them specifies a specific normal or exceptional behavior of a method.  (see \cite{PD06LBR}). 
 
 The keyword  \jmlKey{normal\_behavior} introduces a precondition, frame condition and postcondition 
 such that if the precondition holds in the prestate of the
  method then the method will terminate normally and the postcondition will hold in the poststate.
- Note that this clause guarantees that the method will not terminate on an exception and thus the exceptional postcondition 
-for any kind of exception (i.e. for the exception class  \texttt{Exception}) is  \jmlKey{false}.
+
 % example for heavy weight specification
-An example for a \heavy \ weight specification is given in Fig. \ref{bml:heavySp}. In the figure, method \texttt{divide} has 
+An example for a \heavy{} weight specification is given in Fig. \ref{bml:heavySp}. In the figure, method \texttt{divide} has 
 two behaviors, one in case the method terminates normally (lines 11---14) and the other (lines 17---20) in case the method
  terminates by throwing an object reference of \texttt{ArithmeticException}.
  In the normal behavior case, the exceptional postcondition is omitted  specification as by default if the precondition (line 12 )
@@ -167,8 +196,6 @@ two behaviors, one in case the method terminates normally (lines 11---14) and th
  is used in case a  method overrides a method from the super class. In this case, the method specification (\heavy \ or \light \ weight) is preceded by the keyword \jmlKey{also} 
  to indicate that the method should respect also the specification of the super method.
 
-
-   
 \begin{figure}
 \begin{lstlisting}[frame=trbl]
 public class C {
@@ -182,7 +209,7 @@ public class C {
     }
    
     //@ public normal_behavior
-    //@ requires b > 0;
+    //@ requires b != 0;
     //@ modifies a;
     //@ ensures  a == \old(a) / b;  
     //@
@@ -198,38 +225,221 @@ public class C {
 \end{lstlisting}
 \caption{\sc An example for a method with a heavy weight specification in JML} \label{bml:heavySp}
 \end{figure}
+%desugaring
+In a light weight specification style the specifier might omit some of the specification. For instance, in Fig. \ref{bml:heavySp},
+the constructor \lstinline!C! is provided only with a precondition. On verification time, the missing part of an
+ incomplete light weight specification is set to its default values.  The default value for omitted precondition and postcondition 
+in a light weight specification is  \jmlKey{true} and for frame condition is \nothing\footnote{the default value for frame conditions
+may depend on our choice. For instance, in Jack the developer can set the default value for frame conditions to \nothing{} or \everything  }.
+
+
+
+A \heavy{} weight specification is a  syntactic sugar which is suitable for the specification process and  makes easier the understanding
+ of the specified code. The verification of  a heavy weight specification involves appropriate desugaring of such specification corresponding to its 
+semantics.  
+The meaning of \jmlKey{normal\_behavior}  clause guarantees that the method will not terminate on an exception and thus the exceptional postcondition 
+for any kind of exception, i.e.\ for the exception class  \texttt{Exception} is  \jmlKey{false}. Similarly, an
+ \jmlKey{exceptional\_behavior} clause guarantees that if its precondition holds then the method terminates on exception and the specified 
+exceptional postcondition will hold, i.e. \ its \ensures{} clause is always    \jmlKey{false}. 
+In case a method has several specification cases, then one of the  preconditions of its specification cases must hold when the method starts execution. 
+%That is why  if a method has several specification cases, then the preconditions of the specification cases must be disjoint.  
+Moreover, if the precondition of a particular method specification case holds in the method prestate then the postcondition of this specification case must hold.
+
+Fig.\ \ref{bml:Desugar}  shows  the desugared version of the method specification from  Fig. \ref{bml:heavySp}. As we can see, the specification of the constructor 
+\lstinline!C! contains all the specification clauses, where the postcondition is set to the default postcondition \lstinline!true!.
+The specification of the method \lstinline!divide! does not contain the syntactic sugar \jmlKey{normal\_behavior} and
+ \jmlKey{exceptional\_behavior} but explicitely specifies the behavior of the method in the two cases. Particularly, it contains now 
+two specification cases surrounded by the tags  \lstinline!{| |}!. The first one corresponds to the 
+\jmlKey{normal\_behavior} case, i.e.\ the exceptional postcondition is set to \lstinline!false! and  the second specification case corresponds to the 
+\jmlKey{exceptional\_behavior}, i.e.\ the normal postcondition is set to  \lstinline!false!.
+
+\begin{figure}
+\begin{lstlisting}[frame=trbl]
+public class C {
+    int a;
+    
+    //@ public instance invariant a > 0 ;
+    
+    //@ requires val > 0 ;
+    //@ modifies \nothing;
+    //@ ensures  true;
+    public C(int val){
+       a = val ;
+    }
+   
+    //@ requires   b != 0 || b ==0;
+    //@ {|
+    //@ requires b != 0;
+    //@ modifies a;
+    //@ ensures  a == \old(a) / b;  
+    //@ exsures (Exception) false
+    //@|}
+    //@ also 
+    //@ {|
+    //@ requires b == 0;
+    //@ modifies \nothing;
+    //@ ensures false;
+    //@ exsures (ArithmeticException) a == \old(a);
+    //@ |}
+    public void divide(int b) {
+        a = a / b;
+    }
+}
+\end{lstlisting}
+\caption{\sc Desugared specification of the example from Fig. \ref{bml:heavySp} } \label{bml:Desugar}
+\end{figure}
+
+
+
+
+\subsection{Frame conditions}\label{javaVerif:JML:frame}
+
+As we can see in Fig. \ref {bml:heavySp} JML allows for specifying a modifies clause for methods. 
+The \modifies{} clause or also the frame condition declares which are the locations that a method may modify.
+The example in Fig. \ref{replaceSrc} shows that we also allow frame condition in the loop introduced by the keyword \loopMod.
+The semantics of the method and loop frame conditions is almost the same except for the fact that a loop frame condition  may mention 
+method parameters or local variables.  Also, in the case for method frame condition their semantics is part of the method postcondition 
+while the semantics of  loop frame conditions can be encoded as part of the corresponding loop invariant.
+
+In the following, let us look what is the meaning of the loop frame condition.
+The semantics of a loop modifies list can be encoded as part of the invariant as a condition which states
+that all the locations not mentioned in the  loop modifies list must have the same value at the beginning and at the end state of a loop iteration.
+We illustrate this by an example. If a loop is specified with an invariant \invariant{} and the list of modified locations contains the expression \lstinline!a.f!:
+\begin{lstlisting}[frame=trbl]
+//@ loop_modifies a.f;
+//@ loop_invariant I;
+ while (e) {
+(*@ \ldots @*)
+} 
+\end{lstlisting}
+ then the augmented invariant resulting from the desugaring of the modifies clause is  : 
+\begin{lstlisting}[frame=trbl]
+//@ loop_invariant  I  &&
+//@  \forall ref; ref !=  a ==> ref.f == ref.f(*@'@*) && 
+//@  \forall g \forall ref; g != f ==>  ref.g == ref.g(*@'@*)
+while (e) {
+(*@ \ldots @*)
+} 
+\end{lstlisting}
+The first conjunct of the new invariant is the specified invariant \lstinline!I!. The second conjunct expresses the fact the value in the field  \lstinline!f!
+for every object which is different from the reference  \lstinline!a!  must have the same value in the beginning (\lstinline!ref.f!)and in the end of an iteration (\lstinline!ref.f!').
+ Note that if an expression has the same value at every  beginning and end of a loop iteration then it has the same value at the beginning and end of the loop.   
+The third conjunct expresses the fact that the value of any other field  \lstinline!g! different from  \lstinline!f! for any object 
+ \lstinline!ref! changes its value in the beginning and end of a loop iteration.
+This third part makes the verification of modifies frame conditions difficult as one has to enumerate explicitely all the fields of all the classes which are reachable.
+We do not discuss further the desugaring of the method modifies clauses in the method's postcondition as it is the same as for loop modifies clauses. 
+
+A very similar treatment of the  method and loop modifies clauses is done in Jack both on the Java source and Java bytecode verification condition generators.
+For method modifies,  the difference  from the above formula is that the third conjunct is missing as we already said it is difficult to enumerate the 
+whole heap. For loop modifies they are not verified but only assumed for the same reason of keeping the number of verification conditions reasonable. 
+
+
+ In \cite{marche05tphols}, the authors report for a change in the formalization of the heap in the verification tool Krakatoa which allows
+to treat also in a similar way as Jack the modifies clauses for methods. In this article, the authors also describe how to calculate read write effects of methods which
+ allows  to construct a reasonable part of the  third conjunct above. 
+
+May be here we may point out that not only the assertion of modifies clauses play a role in a verification condition but also their assumption.
+Assuming  modifies clauses on method invocation  and over the verification conditions for a loop allow to an appropriate verification condition generator to
+ initialise properly the variables or locations that are not modified by the loop or method. Consider the following example for a method
+ \lstinline!m! which calculates the sum of the k natural numbers in a loop where k is a method parameter:
+
+
+\begin{lstlisting}[frame=trbl]
+
+class A { 
+  int f;
+  //@ requires k >= 0;
+  //@ modifies this.f;
+  //@ ensures \result == this.f *(this.f+1)/2;
+  public int m(int k) {
+    this.f = k;
+    int sum = 0;
+	    
+    //@ loop_modifies sum, i;
+    //@ loop_invariant sum == (i*(i+1))/2 && i<=k;
+    for (int i = 0; i < k; i++) {
+      sum = sum + i;
+    }
+    return sum;
+  }
+}
+\end{lstlisting} 
+
+ Before calculating the sum the instance variable \lstinline!a.f! is set to the value of the parameter  \lstinline!k!.
+ Assuming then the modifies clause of the loop allows to initialise properly the value of \lstinline!a.f! and to  establish that
+ the program  is correct w.r.t. the specification. Of course, the verification condition condition generator 
+ must propagate the verification conditions up to the entry of the method body. 
+ Such a verification  scheme based on a weakest precondition predicate transformers allows for writing smaller specifications. 
+ Of course, here we could have used a stronger invariant (add in the loop invariant the fact that \lstinline!a.f == k! )
+ but in real programs the number of variables is usually larger than in this small example and the specification burden of the programmer will be inadmissable.
+ Actually, both verification condition generators on  Java source and bytecode in Jack propagate the verification conditions related to method correctness
+ upto the method body entry point. 
 
 \subsection{Class specification} \label{javaVerif:JML:classSpec}
-JML can be used to specify not only methods but also properties of a class or interfaces. 
+JML can be used to specify not only methods but also properties of a class or interface. 
 A Java class may be specified with an invariant or history constraints. An invariant of a class is a predicate which holds at all visible states of
-  every object of this class (see for the definition of visible state in the JML reference manual \cite{december-jml}). An invariant may be either static 
- (i.e. talks only about static fields) or instance (talks about instance fields).
-  A Class history constraints is a property which relates the initial and terminal state of every method in the corresponding class. 
+  every object of this class ).
+A visible state of an object is basically one of these cases:
+\begin{enumerate}   
+   \item at the poststate of a constructor where this object is a receiver
+   \item at the prestate of a finalizer of that object 
+   \item at the prestate and poststate of every method where this object is a receiver
+   \item in a state when no method, constructor or finalizer of this object  is in progress 
+\end{enumerate} 
+For a detailed discussion on visible states, the reader may refer to the JML reference manual \cite{JMLRefMan}.
+ An invariant may be either static (i.e. talks only about static fields) or instance (talks about instance fields). 
  The class \texttt{C}  in Fig.\ref{bml:heavySp} has also an instance invariant which states that the instance variable \texttt{a} is
- always greater than \texttt{0}.
+ always greater than \texttt{0}. A Class history constraints is similar to a class invariant but it does not describe one visible
+ state but rather relates  a visible state and any visible state that occurs later in the execution. It can be seen as a transitive relation between the 
+ visible states of an object.
 
-
-
-
-
-We would like to discuss in the following how JML constructs like class invariants and history constraints and inherited specification
-(multiple specification cases for a method) can be expressed as 
-method pre and postconditions:
-
-\begin{description} 
-  \item [Class invariants] A class invariant (\ClassInv)  is a property that must hold at every visible state of the class. This means that a
-        class invariant must hold when a method is called and also must be established at the end of a method execution. 
-	A class invariant must be established in the poststate 
-	of the constructor of this class.
-	Thus the semantics of
-	a class invariant is part of the pre and  postcondition of every method and is a part of the postcondition of the constructor of
-	the class to which it refers.
+%\begin{description} 
+ % \item [Class invariants] 
+        Let us now see how  class invariants   can be expressed as 
+	method pre and postconditions (the treatment of history constraints has the same features thus, we do not discuss them further).
+        Class invariants can be encoded as pre and postconditions of a method. We discuss here only the issue about 
+	instance invariants, the issue about is almost the same and the reader may refer to the JML manual \cite{JMLRefMan}.
+	From the first case of visible states described abovve, an instance invariant  must
+	be established by the constructor of this class which means that it must be part of the constructor's postcondition. 
+	From the  second case it follows that the invariant of an object must be part of the precondition of the finalizers of this object.
+	From the third case it follows that every method (not a constructor neither a finalizer ) that has as a receiver an object
+	must have as part of its pre and postcondition the object's invariant. The fourth case of a visible state implies that every method which does not have
+	as a receiver the object must preserve this object's invariant.
+	This actually means that every constructor must preserve  (has as pre and postcondition)  the invariant of
+	all objects except for the receiver object's invariant which must be only established
+	in the poststate. Similarly, a finalizer of an object must preserve the invariants of all the other objects and include in its precondition 
+	the object's invariant. Also every method must preserve
+	the invariants of the objects of all classes.
+	This actually makes the verification of class invariants a difficult task as all objects in 
+	the heap must be mentioned in every method's pre and postcondition (except for the particular cases of constructors and finalizers).  
+	When applications are large, this may even make the verification impossible because the number of verification conditions is not manageable.
+	Another problem is that the verification is non modular, i.e. extending an application with a new class requires to verify the whole application once again 
+	in order to see that the application respects the invariant of the newly added class.
+	That is why verification tools may make some compromises.  
+	In JACK, for instance, constructors in a class \texttt{C} preserve the invariants of all objects of class \texttt{C} and establish the invariant of the receiver
+	object of the constructor. Non constructor and non finaliser methods declared in class \texttt{C} preserve the invariant of all objects of class \texttt{C}.   
+	 
+	A recent approach which relies on alias control type systems \cite{DietlMueller05,Naumann-vstteFAC} facilitates the verification of invariants and 
+	makes it modular. This technique establishes a hierarchy  relation of ``owner and owned'' objects  in the heap and only owners of an object may modify its contents.
+	The alias control is guaranteed through ownership type systems which check that only an owner of a reference can modify its contents. 
+	Such technique  can be used also for the sound treatment of layer object structures \cite{Mueller-Poetzsch-Heffter-Leavens06}.
 	
+	
+	
+
+ % \item [Class invariants] 	A class invariant (\ClassInv)  is a property that must hold at every visible state of the class. This means that a
+   %      class invariant must hold when a method is called and also must be established at the end of a method execution. 
+ %	A class invariant must be established in the poststate 
+ %	of the constructor of this class.
+ %	Thus the semantics of
+ %	a class invariant is part of the pre and  postcondition of every method and is a part of the postcondition of the constructor of
+ %	the class to which it refers.
+ %	
         
-  \item [History constraints] A class history constraint (\ClassHistoryConstr) gives a relation between the pre and poststate of every method in the class. 
-        A class history constraint thus can be expressed as a postcondition of every method in the class.
+  %\item [History constraints] A class history constraint (\ClassHistoryConstr) gives a relation between the pre and poststate of every method in the class. 
+   %     A class history constraint thus can be expressed as a postcondition of every method in the class.
   
-\end{description}     
+%\end{description}     
 
  
 %  \subsection{Behavioral subtyping for overriding methods}\label{javaVerif:JML:subtyping}

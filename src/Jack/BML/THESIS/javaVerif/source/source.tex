@@ -3,26 +3,93 @@
 \newtheorem{ExpressionRel}[Expression]{Definition}
 \newtheorem{Statement}[Expression]{Definition}
 
-\section{Java like source language} \label{source}
+\section{Java like statements and expressions} \label{source}
+ 
+ Java programs are a set of classes. 
+ As the JVM says \textit{`` A class declaration specifies a new reference type and provides its implementation. \ldots The body of a class declares members (fields and methods) and constructors.''}. Fields represent the state of an object of the class where those fields are declared. 
+Fields have a name and a type. Thus, a  field declaration in a class states the name and type of the field.
+Methods are the constructs in a class which execute and allow to change the state of the objects at runtime.
+Class constructors are special methods which  initialize a new object of this class. 
+Constructors have the same name as the class to which they belong. 
+ A method declaration includes
+ the method name, the list of arguments which specifies their names and  types, the method return type as well as the method body.
+A method body in Java represents a Java statement. Statements are program constructs whose role is to determine the control flow of the program during execution. 
+Statements manipulate program constructs which represent values. Those constructs are the expressions of the language.
+Expressions do not determine the control flow but they evaluate to values. Values in our language are either references
+ or integers.
+For an illustration, consider the class declaration:
+\lstset{numbers=left}
+\begin{lstlisting}[frame=trbl] 
+class A {
+  int (*@ \fieldd @*);
+  
+  A(int c) {
+   \fieldd = c;
+  }
+
+  int (*@ \texttt{eqField} @*) ( A a ) {
+    if (a !=  (*@ \Mynull @*)) {
+      return 0;
+    }
+    if ( a.(*@\fieldd @*) == this.(*@\fieldd @*) ) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+\end{lstlisting}
 
 
-We present a source Java-like programming language which supports the following features:
-object manipulation and creation, method invokation, throwing and handling exceptions, subroutines etc. 
-The language has only side effect free expressions for the sake of simplicity.
- Fig. \ref{source:grammar} gives the formal grammar of the source language.
+The example shows  the declaration of class  \lstinline!A!.
+The class first declares a field named \fieldd{} of type integer (line 2).
+ Then follows the declaration of the class  constructor which initializes the field \fieldd{} to the value
+of the parameter \lstinline!c! (lines 4-6). The last component of the class is the  method \texttt{eqField}
+ which tests if the parameter \lstinline!a! of type  \lstinline!A!  is
+ equal to the receiver of the method call by returning 0 or 1 (lines 8-18).
+ Thus, the body of \texttt{eqField} first checks if  \lstinline!a!
+ is not \Mynull{} and if it is returns 0. Otherwise, if the field  \fieldd{} in the current object  and in the object 
+passed as the parameter \lstinline!a! are equal then the method returns 1 and if not returns 0. 
+
+
+
+%In the following, we shall concentrate on the syntax and  semantics of statements and expression language which is close to the statements and expressions in Java. 
+ %We present a source Java-like programming language which supports the following features:
+%object manipulation and creation, method invocation, throwing and handling exceptions, subroutines etc. 
+In the following, we shall concentrate in more detail on the statements and expressions typical for 
+object oriented languages e.g.\ object manipulation and creation, method invocation, throwing and handling exceptions and subroutines.
+Fig. \ref{source:grammar} gives the formal grammar.
+ 
 \begin{figure}[ht!] 
 \begin{frameit}
-   $$ \begin{array} {ll}    
+   $$ \begin{array} {ll}
+   % %   \program :: = & \class;\\
+    %                 & \\
+ %		    & \\
+ %
+ %
+    %  \class ::=      & list \fieldDecls list \methods\\
+    %                  & \\
+ %		     & \\
+    %  \fieldDecls ::= & \Type \id \\ 
+    %                  %& \mid \Type \id;\fieldDecls  \\
+                
+ %		     & \\ 
+ %		     & \\
+  %    \method ::=& id (list type argName) type \{ \stmt \}  \\
+   %              & \\ 
+ %		& \\
+ 		        
      \expressionSrc ::=         & \constantInt  \\
 				%& \mid \Mytrue \\ 
 				%& \mid \Myfalse \\
 				& \mid \Mynull  \\
 				& \mid \this \\
 				& \mid \expressionSrc \ \op \ \expressionSrc \\  
-				& \mid \expressionSrc.f \\
+				& \mid \expressionSrc.\fieldd \\
 				& \mid \var \\
-  			        & \mid (Class) \ \expressionSrc \\
-				& \mid \expressionSrc.m() \\
+  			        & \mid (\class) \ \expressionSrc \\
+				& \mid \expressionSrc.\methodd() \\
 				& \mid  \newSrc \ \class  ( ) \\
 				& \\
 				&  \op \in \{ +, - , *, \}  \\
@@ -53,24 +120,14 @@ The language has only side effect free expressions for the sake of simplicity.
 \end{figure}
 
 
-    As we can see from the figure, the language supports 
-    integer constants $\constantInt$, the null constant \Mynull \ 
-    denoting  the empty reference, a construct \this \ for referring to the current object,  
-    arithmetic expressions  $\expressionSrc \ op \ \expressionSrc$ where $op \in  \{+ , - , div , rem, * \}$.
-    The value stored in a field \fieldd \ for the object reference $\expressionSrc $ is denoted with
-    the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions with   $(Class) \expressionSrc$
-    and method local variables  and parameters with identifiers taken from the set \var.  
-    The language also has constructs for expressing method invokation.  For the sake of clarity we consider only non void  instance  methods which does not 
-    receive parameters.
-    Thus, the first expression in the syntax of the method invokation stands for the receiver object.  
-    The language supports also instance creation construct. Note that constructors like methods do not take arguments.
-    The semantics of instance creation expression $\newSrc \ \class{}$  is that it 
-    creates a new reference of type \class{} in the heap  which is initialised by the class constructor $\class$.
-    A relation between    expressions is denoted with
-    $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$.
-  
-    The source language supports also standard control flow constructs like 
+   The nonterminal \stmt{} introduces the grammar for statements.  
+    Our source language supports also standard control flow constructs like 
     compositional statement, conditional statement, assignment statement, return statement etc.
+    They have the usual semantics of programs with exceptional and normal termination.
+     For instance, the meaning of the compositional statements $\stmt;\stmt  $
+    is that if the first statement terminates execution normally then the second statement is executed. Moreover, if the first or second statement 
+    terminates on exception then the whole statement terminates on exception 
+    
 % the statement which does nothing \Myskip, the  compositional statement
 %  $\stmt;\stmt$. The conditional statement
 %  $\Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} $ $  \Myelse \ \{ \stmt \}  $ which stands for
@@ -78,7 +135,7 @@ The language has only side effect free expressions for the sake of simplicity.
 %   The semantics of the construct is the standard one, i.e. if the relation expression $\expressionSrcRel$ 
 %  evaluates to true then the statement in the $ \Mythen$ branch is executed, otherwise the statement in the
 %  $\Myelse$ branch is executed. 
-  There is also a construct for handling exceptions $ \try  \ \{ \stmt \} $ $ \catch \ (\mbox{\rm\texttt{Exc}})\ \{ \stmt \}  $.
+  The construct  $ \try  \ \{ \stmt \} $ $ \catch \ (\mbox{\rm\texttt{Exc}})\ \{ \stmt \}  $  allows for handling exceptions.
   Its meaning is that if the statement following the $ \try $ keyword throws an exception of type \texttt{Exc} then
   the exception will be caught by the statement following the  $ \catch $ keyword. The language also supports 
   try finally statements, a construct which is particular to the Java language.
@@ -130,3 +187,20 @@ The language has only side effect free expressions for the sake of simplicity.
 %\label{pogComp:source:example}
 
 %\end{figure}
+Let us now turn to the expression grammar. As we can see from the figure, the language supports 
+    integer constants $\constantInt$, the null constant \Mynull \ 
+    denoting  the empty reference, a construct \this \ for referring to the current object,  
+    arithmetic expressions  $\expressionSrc \ op \ \expressionSrc$ where $op \in  \{+ , - , div , rem, * \}$.
+    The value stored in a field named \fieldd \ for the object reference $\expressionSrc $ is denoted with
+    the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions with   $(\class) \expressionSrc$
+    and method local variables  and parameters with identifiers taken from the set  \var.  
+    The language also has constructs for expressing method invokation.  For the sake of clarity we consider only non void  instance  methods which does not 
+    receive parameters.
+    Thus, the first expression in the syntax of the method invocation stands for the receiver object.  
+    The language supports also instance creation construct. Note that constructors like methods do not take arguments.
+    The semantics of instance creation expression $\newSrc \ \class{}$  is that it 
+    creates a new reference of type \class{} in the heap  which is initialised by the class constructor $\class$.
+    A relation between    expressions is denoted with
+    $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$.  
+    We could have considered a larger set of boolean expressions like for instance logical connectors $\wedge, \vee \ldots$
+     but we limit our language only to  relational expressions for the sake of simplicity without losing any particular feature of the language.

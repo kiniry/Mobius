@@ -32,13 +32,39 @@ Although the inference rule tells us what must be proven for the substatements f
 A user interaction is needed to determine  $Post'$. This situation occurs often also with the other rules in the logic.
 Actually,  even for small programs, a lot of human interaction  is necessary when  using Hoare style reasoning.
   
-Another possibility is to apply a  more calculational approach. It consists in an algorithm which 
-from a given postcondition $Post$   of statement $\stmt$ calculates the weakest predicate $WP$ 
+Another possibility is to apply a  more calculational approach. It consists in an algorithm \wpName~ which 
+from a given postcondition $Post$   of statement $\stmt$ calculates the weakest predicate $\wpName(\stmt, Post)$ 
 that must hold in the  prestate of $\stmt$. Then, for establishing that
-  $\stmt$ respects a precondition
-  $Pre$ and the postcondition   $Post$ it is sufficient to show that $Pre$ implies $WP$, i.e. the verification
-condition $Pre \Rightarrow WP$. 
-The calculation of the weakest predicate is a completely automatic procedure which uses the so called weakest precondition predicate transformer function. 
+  $\stmt$ respects a precondition  $Pre$ and the postcondition   $Post$ it is sufficient to show that $Pre$ implies $\wpName(\stmt, Post) $, i.e. that 
+the verification condition $Pre \Rightarrow \wpName(\stmt, Post)$ holds. 
+The calculation of the weakest predicate can also be a difficult task because  the weakest precondition for a while statement of
+$\wpName( \while ( c ) \do \{ \stmt \} ,Post) = X$ is the weakest solution of the following recurrence:
+
+$$\begin{array}{l}
+(\neg c \wedge X) \Rightarrow  Post \wedge \\
+X \Rightarrow c \Rightarrow \wpName (\stmt, X) 
+\end{array}$$
+ 
+ Actually, the predicate $X$ is the loop invariant but it is a fact there is no automatic procedure for finding an invariant for any loop.
+ This means that the weakest precondition function can neither be completely automated. However, there do exist techniques for an approximative calculation of invariants: 
+induction -iteration  \cite{SI77IABC} based on iteration of the weakest precondition function over the loop body,
+predicate abstraction methods \cite{FQ03PAQ} using abstract interpretation, dynamic invariant detection in the Daikon tool \cite{ernst99dynamically}.
+For instance, ESC/java uses the Daikon  for inferring loop invariants \cite{NimmerE01:RV}.  
+However, all of these approaches have shortcomings either because the calculation is very intensive and may loop forever (in the first case),
+ because  of an underapproximation (as in the second case) or not always returning 
+a result (as in the third case).  
+We can actually ``help'' the \wpName~ by supplying the loop invariants for the loop statements.
+ In that case, the rules of \wpName~ for loop would be :
+$$ \begin{array}{l} 
+    \wpName ( \while  ( c ) \lbrack \invariant \rbrack \  \do \{ \stmt \} ,Post) = \\
+   \invariant \wedge \\
+   (\invariant \wedge \neg c) \Rightarrow Post  \wedge \\
+    (\invariant \wedge  c) \Rightarrow \wpName(\stmt, \invariant)
+   \end{array} $$
+which makes the \wpName~ automated.  In this case, although we do not calculate the weakest precondition but a weak precondition it is actually 
+sufficient for our purposes. Note that in the following, we will continue to call  the predicate transformer which uses annotations a
+ weakest precondition predicate transformer function. 
+
  Note that there also exists a strongest postcondition predicate transformer function which works in a forward direction 
  (contrary to the weakest precondition). However, the strongest postcondition predicate transformer
  did not gain popularity because of  the way it treats assignments. Particularly, the strongest postcondition calculus
@@ -48,10 +74,11 @@ For more detailed information on strongest postcondition calculus the reader may
 Using weakest predicate transformers in program verification thus, avoids to deal with Hoare logic inference rules. 
  This means that the user
  interacts (if needed) only in proving the verification conditions. 
-This approach underline the extended static checker for ESC/java \cite{escjava} and Jack tool \cite{BRL-JACK}. 
-These tools scale up and has been used in verification of real case studies \cite{HuismanJB01}, \cite{BBCGHLPR06:FMCO}.
+This approach underlines the extended static checker for ESC/java \cite{escjava}, 
+ the Jack tool \cite{BRL-JACK} and Krakatoa \cite{marche03krakatoa}. 
+These tools scale up and has been used in verification of real case studies \cite{HuismanJB01,BBCGHLPR06:FMCO,jacobs04amast}.
 
-Another aspect of program verification using logical methods is also whether the verification should be performed directly over the original programs
+Another aspect of program verification using logical methods is also whether the verification should be performed directly over the original program
 or  an intermediate language should be used. Let us see what are intermediate languages and how they can be used in the verification scheme.
 For instance, the simple guarded command language can be used as an intermediate language in the verification procedure.
  The guarded command   language supports  only few program constructs but which are 
@@ -68,8 +95,9 @@ However, we consider that an intermediate language
 opens a gap between  the verified code and the source code as we verify  a program in the intermediate language and not the original source program.
 Establishing the correctness of a verification systems which uses an intermediate language
 may be not trivial as the stages of the transformation of the original source program to its encoding in the intermediate language must be also proven correct. 
+In particular, the verification ESC/java tool which uses an intermediate language does not have a proof of correctness \cite{FLL02ESC}.
 
-Another point that we would like to discuss here is the use of loop frame conditions. 
+A point that we would like also to discuss here  is the use of loop frame conditions. 
 For instance, as  we saw from the examples in JML and our source language, we accompany loops not only with 
 loop invariants but with loop frame conditions, i.e. list of locations that may be modified by a loop.
 Although this complicates slightly the verification condition generator, the loop frame condition is useful as it can work 
@@ -79,8 +107,7 @@ but a \textit{loop invariant}. Of course, he should also identify  the locations
 at the end and at the beginning of a loop iteration). However, modified locations in a loop is easier than identifying the variables not modified in the loop which 
 must be done if we decide not use loop frame conditions. 
 
-To conclude, we 
- consider that  using predicate transformers for the generation of verification conditions makes the verification condition generator automatic. Moreover, 
+To conclude, we  consider that  using predicate transformers for the generation of verification conditions makes the verification condition generator automatic. Moreover, 
      performing the verification directly on the program code is more reliable as it guarantees that the proved program corresponds to the program that we want to prove.
 Last, we opt for specification which includes frame conditions as this leverages the specification burden.  
 %Thus, in the following we present a weakest predicate transformer defined for our source language.

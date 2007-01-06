@@ -1,134 +1,135 @@
 
-\subsubsection{Statements}\label{pog:wpSrc:wpStmt}
+\subsection{Weakest precondition predicate transformer for statements}\label{pog:wpSrc:wpStmt}
 
 In the following, we discuss  the weakest precondition predicate transformer for  control statements.
- We will not give an exhaustive overview of the \wpName{} rules for statements as they are standard 
+ We will not give an exhaustive overview of the \wpName{} rules for statements 
 but we will rather  concentrate on few which we consider illustrative. 
 
-Fig. \ref{pog:wpSrc:wpStmt:withoutExc} gives  the rule for  field assignment and conditional control transfer
-statements which do not deal with exceptions. They are defined in a standard way. 
-The rule for field assignment shows that the statement may terminate normally or on an exception. 
+Fig. \ref{pog:wpSrc:wpStmt:withoutExc} gives  the rule for statements. The rule for field assignment shows that the statement may terminate normally or on an exception. 
 In particular, if the  dereferenced object reference $\expressionSrc_1$ does not evaluate to \Mynull{} 
  then  the postcondition $\normalPostSrc{}$ must hold where the value of the field \fieldd{} for the 
-evaluation $v_1$ of $\expressionSrc_1$ is changed to the value  $v_2$ of  $\expressionSrc_2$.
+evaluation $v_1$ of $\expressionSrc_1$ is changed to the value  $v_2$ of  $\expressionSrc_2$. 
+The aliasing is treated by an update of the field with the new value for the corresponding reference. 
 If  the  dereferenced object reference $\expressionSrc_1$  evaluates to \Mynull{} then the postcondition 
 $ \excPostSrc(\NullPointerExc) $ must hold.
-The rule for the conditional statement is also standard.
 
-Let us now look  at the rule \textsf{while} which is slightly different from 
+
+The rule \textsf{while} which is slightly different from 
 standard rules for \wpName{} for loops as it uses the list \modLoop{}  which stands for the locations that may be modified  in a loop iteration. 
-%The difference is in the \modLoop{} framecondition which is a list of the locations that might be modified in a loop iteration. 
-%Note that here we consider that this list is correct and thus, we do not verify its validity. 
-We assume here that this list is correct, i.e. we assume that a location not mentioned in the list  \modLoop{} of a loop 
-will have the same values at the borders of the loop iteration.
- Actually, if we want to verify   it, we can express it as part of the loop invariant. Remind that a loop invariant  is a predicate which must hold
-whenever the loop entry is reached. The semantics of a \modLoop{} list can be encoded as part of the invariant as a condition which states
-that all the locations not mentioned in the \modLoop{} must have the same value at the beginning and at the end state of a loop iteration.
-As we can see in the figure, the conditions resulting from \wpName{} over a loop statement ( which stand for the loop preservation at loop borders 
-and that the postcondition holds at the end of the loop execution) are quantified over the 
+
+%We  assume here that this list is correct, i.e. we assume that the execution of a loop preserves the values of the locations not mentioned in the list  \modLoop{} of the loop.
+ Actually, if we want to verify   it, we can express it as part of the loop invariant as described in subsection \ref{javaVerif:JML:frame}.
+ Recall that a loop invariant  is a predicate which must hold whenever the loop entry is reached.
+Thus, the first conjunct of the \wpName{} asserts that the invariant \invariant{} holds when the loop starts execution. 
+The second conjunct is actually the \wpName{}  of the loop condition. We calculate the precondition of 
+ the conditional expression upon a postcondition which expresses first that if it evaluates to true then the invariant must imply the \wpName{} of the loop body which terminates
+ execution in a state where  the invariant holds and second, that upon the termination of the loop, i.e.\ the condition evaluates to false the invariant implies the 
+statement's postcondition $\normalPost$.  These two conditions  are quantified over the 
 elements of the \modLoop{} list. This quantification allows to initialize correctly the variables that keep their values unchanged at the loop borders.
-Of course, in order to initialize these variables the result of the \wpName{} function for a loop must be propagated up to the program entry point.
+%Of course, in order to initialize these variables the result of the \wpName{} function for a loop must be propagated up to the program entry point.
 
 
 \begin{figure}[ht!]
 \begin{frameit}
 $${\scriptsize 
         \begin{array}{l} 
-	   \wpSrcStmt{ \stmt_1;\stmt_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{seq}}} \\
+	   \wpSrcStmt{ \stmt_1;\stmt_2}{\normalPostSrc }{ \excPostSrc } =\\ % ^{\mbox{\rm\textsf{seq}}} \\
 	   \begin{array}{l} 
              \wpSrcStmt{\stmt_1 }{\wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc}} { \excPostSrc} 
            \end{array} \\ \\ \\
-    \wpSrcStmt{ \var = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =^{\mbox{\rm\textsf{locVarAssign}}} \\
+    \wpSrcStmt{ \var = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = \\ %^{\mbox{\rm\textsf{locVarAssign}}} \\
                   \begin{array}{l}   \wpSrcExpr{\expressionSrc_2 }{ 
 				    \normalPostSrc \subst{\var}{v}   
 				   }{ \excPostSrc}{v}  
 		  \end{array} \\ \\ \\
-    \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } = ^{\mbox{\rm\textsf{fieldAssign}}}\\
+    \wpSrcStmt{ \expressionSrc_1.\fieldd = \expressionSrc_2}{\normalPostSrc }{ \excPostSrc } =\\ % ^{\mbox{\rm\textsf{fieldAssign}}}\\
                \begin{array}{l} 
 	       \wpSrcStmt{\expressionSrc_1}{  %\\
 	        %\phantom{wpiSr}
 		 \wpSrcExpr{\expressionSrc_2 }{ %\\
 		%\phantom{wpiSr}\phantom{wpiSr}
-		%\begin{array}{l}
-		    v_1 \neq \Mynull  \Rightarrow % \\
+		\begin{array}{l}
+		    v_1 \neq \Mynull  \Rightarrow 
 	         %\phantom{wpiSr} 
-		  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   %\\
-		 \wedge %\\
+		  \normalPostSrc \subst{\fieldd}{\update{\fieldd}{ v_1}{  v_2}}   \\
+		 \wedge \\
 		 v_1  = \Mynull  \Rightarrow  %\\
 		   %\phantom{wpiSr}   
-		   \excPostSrc(\NullPointerExc) 
-		   %\end{array}
+                    (\forall \freshVar, (\neg \instances(\freshVar) \wedge \freshVar \neq \Mynull ) \Rightarrow \\
+                   \Myspace \excPostSrc( \NullPointerExc  ) \subst{\EXC}{\freshVar} ) 
+		\end{array} 
                    }{ %\\ \phantom{wpiSr}\phantom{wpiSr}  
 		   \excPostSrc}{v_2} 
-		   }{ \\ \phantom{\expressionSrc_1.\fieldd = \expressionSrc_2 }  
+		   }{  %\\ \phantom{\expressionSrc_1.\fieldd = \expressionSrc_2 }  
 		   \excPostSrc}{v_1} 
 		   \end{array} \\ \\ \\
 
-    \wpSrcStmt{ \begin{array}{l} \Myif \  (  \expressionSrc_1 \ \rel \ \expressionSrc_2   )  \Mythen  \{ \stmt_1 \}   \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } 
+    \wpSrcStmt{ \begin{array}{l} \Myif \  (  \expressionSrcRel  )  \Mythen  \{ \stmt_1 \}   \Myelse \ \{ \stmt_2 \} \end{array}}{\normalPostSrc}{ \excPostSrc } 
      =^{\mbox{\rm\textsf{if}}}\\
 
          \begin{array}{l} 
-	 \wpSrcExpr{ \expressionSrc_1 }{ 
-	               \wpSrcExpr{ \expressionSrc_2 }{
+	 \wpSrcExpr{ \expressionSrcRel }{ 
+	               
 		         %\begin{array}{l}  
-		           v_1 \rel v_2  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } %\\
-			    \wedge \\
-			  \phantom{wpiSr\expressionSrc_1wpiSr\expressionSrc_2} \neg v_1 \rel v_2   \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } %\\
+		           v  \Rightarrow \wpSrcStmt{\stmt_1 }{\normalPostSrc }{ \excPostSrc } %\\
+			    \wedge 
+			   \neg v  \Rightarrow \wpSrcStmt{\stmt_2 }{\normalPostSrc }{ \excPostSrc } %\\
 	               %\end{array}
-		       }{\excPostSrc }{v_2} 
-	 } {\\ \phantom{wpiSr\expressionSrc_1}   \excPostSrc }{v_1} 
+		       
+	 } {   \excPostSrc }{v} 
      \end{array} \\ \\ \\
 
-     \wpSrcStmt{ \while \ (\expressionSrc_1 \ \rel \ \expressionSrc_2 ) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}=^{\mbox{\rm\textsf{while}}} \\
+     \wpSrcStmt{ \while \ (\expressionSrcRel ) \ \lbrack \invariant, \modLoop \rbrack \  \do \ \{ \stmt \}}{ \normalPostSrc}{\excPostSrc}= \\ %^{\mbox{\rm\textsf{while}}} \\
 	      \begin{array}{l} 
-	       \invariant \ \wedge\\
-	       \forall \  m, m \in \modLoop , \\
+	       \invariant \\ \wedge\\
+	       \forall \  mod, mod \in \modLoop , \\
 	       \invariant \Rightarrow %\\
 	 	     %\Myspace    \Myspace 
-		     \wpSrcExpr{\expressionSrc_1}{
-                     \wpSrcExpr{\expressionSrc_2}{   %\\\phantom{wp^{src}} 
+		     \wpSrcExpr{\expressionSrcRel}{
+                        %\\\phantom{wp^{src}} 
 		     %\begin{array}{l}  		
-		           ( v_1 \rel v_2 )        \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} \wedge  
-		          \neg (v_1 \rel v_2)    \Rightarrow  \normalPostSrc
+		             v         \Rightarrow \  \wpSrcStmt{ \stmt }{\invariant} {\excPostSrc} 
+			    \wedge  
+		          \neg v    \Rightarrow  \normalPostSrc
 		     %\end{array}
-	       }{\excPostSrc } {v_2}}{\\ \phantom{\invariant \Rightarrow wpiSr\expressionSrc_1}
-	      \excPostSrc}{v_1}  \end{array} \\ \\ \\
+	       } {\excPostSrc}{v}  \end{array} \\ \\ \\
 
      \wpSrcStmt{ \returnSrc \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{return}}} \\
              \begin{array}{l}   \wpSrcExpr{ \expressionSrc}{ \normalPostSrc \subst{\result }{ v }} { \excPostSrc}{v}  \end{array}\\ \\ \\ 
 
- \wpSrcStmt{ \throw \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{throw}}}\\
+ \wpSrcStmt{ \throw \ \expressionSrc }{ \normalPostSrc}{\excPostSrc} =\\ %^{\mbox{\rm\textsf{throw}}}\\
 	       \begin{array}{l} 
 	      \wpSrcExpr{\expressionSrc}{%\\ \phantom{wpiSr} 
-                  %\begin{array}{l}
+                  \begin{array}{l}
 		       
-	                v = \Mynull \Rightarrow \excPostSrc( \NullPointerExc  )  %\\
-			\wedge %\\
-			 v \neq \Mynull \Rightarrow%\\
-			 %\Myspace
+	                v = \Mynull \Rightarrow 
+                            (\forall \freshVar, (\neg \instances(\freshVar) \wedge \freshVar \neq \Mynull ) \Rightarrow \excPostSrc( \NullPointerExc  ) \subst{\EXC}{\freshVar} )  \\
+			\wedge \\
+			 v \neq \Mynull \Rightarrow
+			 
 			  \left(\begin{array}{l}  
 				 \forall \mbox{\rm\texttt{Exc} } , \\
-				 \typeof{ v } <: \mbox{\rm\texttt{Exc} }   \Rightarrow \\
+				 \typeof{ v } <: \mbox{\rm\texttt{Exc} }   \Rightarrow %\\
 				 \Myspace   \methodd.\excPostSrc( \mbox{\rm\texttt{Exc} }    ) \subst{\EXC}{v}
 			  \end{array}\right) 
 
 			  
-	          %\end{array}
+	          \end{array}
 		  }   
 		     { %\\ \phantom{wpiSr}  
 		     \excPostSrc}{v} 
 	   \end{array}     \\ \\ \\
 
- \wpSrcStmt{ \try \ \{ \stmt_1 \} \ \catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{try catch}}}\\
+ \wpSrcStmt{ \try \ \{ \stmt_1 \} \ \catch (  \mbox{\rm\texttt{Exc}} \ c )\ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =\\ %^{\mbox{\rm\textsf{try catch}}}\\
               \begin{array}{l}
 	      \wpSrcStmt{ \stmt_1}{ %\\ 
 	                 %\phantom{wpiSr} 
 			 \normalPostSrc}{ %\\ 
 			 %\phantom{wpiSr}
-			  \update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} }} 
+			  \update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPostSrc}{\excPostSrc} \subst{c}{\EXC} }} 
 	      \end{array} \\ \\ \\
 
-\wpSrcStmt{ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =^{\mbox{\rm\textsf{try finally}}}\\
+\wpSrcStmt{ \try \ \{ \stmt_1 \} \ \finally \ \{ \stmt_2 \} } { \normalPostSrc}{\excPostSrc} =\\ %^{\mbox{\rm\textsf{try finally}}}\\
        \begin{array}{l} 
 	 \wpSrcStmt{ \stmt_1}{%\\ \phantom{wpiSr}
                      \wpSrcStmt{\stmt_2}{ \normalPostSrc} { \excPostSrc}}{ \\ \phantom{wpSrc\stmt_1}
@@ -136,7 +137,9 @@ $${\scriptsize
 		                                    \left(\begin{array}{l}
                                                         \EXC \neq \Mynull \Rightarrow \excPostSrc(\Exception) 
 							\wedge\\
-							\EXC = \Mynull \Rightarrow \excPostSrc(\NullPointerExc)
+							\EXC = \Mynull \Rightarrow\\
+                                         (\forall \freshVar, (\neg \instances(\freshVar) \wedge \freshVar \neq \Mynull ) \Rightarrow \\ 
+                                             \Myspace \excPostSrc( \NullPointerExc  ) \subst{\EXC}{\freshVar} )      %\excPostSrc(\NullPointerExc)
 						     \end{array}\right) } { \excPostSrc }   } }
        \end{array} 
 
@@ -161,7 +164,7 @@ $\update{\excPostSrc}{ \mbox{\rm\texttt{Exc}} }{\wpSrcStmt{\stmt_2}{ \normalPost
 \textsf{try catch} statement as  dual to the rule of the  compositional statement where in the latter we rather change the normal postcondition. 
  
 
-The  \textsf{try finally} statement is more complicated. It calculates the precondition of the try statement $\stmt_1$ where it takes as normal postcondition
+The  \textsf{try finally} statement  calculates the precondition of the try statement $\stmt_1$ where it takes as normal postcondition
 the precondition of the finally statement $\stmt_2$  calculated upon the initial normal postcondition $\normalPostSrc$ and exceptional postcondition function
  $\excPostSrc$. This expresses the fact that after the try statement terminates normally the finally statement must be executed and the whole statement will terminate 
 as the finally statement. 
@@ -169,7 +172,7 @@ On the other hand, the exceptional postcondition function passed to the try stat
 type \Exception{}. It is updated 
  with the precondition of the finally statement $\stmt_2$ calculated of the $\wpNameSrcExpr$ which takes as normal postcondition a predicate which we explain in the following.
 The postcondition which must hold in the poststate of  $\stmt_2$  states that   $\excPostSrc(\Exception)$ holds in the normal poststate of $\stmt_2$ if the variable
-\EXC{} which stands for the thrown exception object is not \Mynull. It also states that the if \EXC{} is not \Mynull then the exceptional
+\EXC{} which stands for the thrown exception object is not \Mynull. It also states that the if \EXC{} is not \Mynull{} then the exceptional
 postcondition  $\excPostSrc(\NullPointerExc)$ in case of a thrown \NullPointerExc{} is thrown.
 
  The exception type \Exception{} is the super class of all exception types and thus, 
