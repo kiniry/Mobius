@@ -21,8 +21,7 @@ developed and supported by our research team Everest at INRIA Sophia Antipolis w
  the verification of Java source programs annotated with JML specification.
 
 We would like to give a brief description of the implementation of the verification condition generator.
- The extension of the tool to bytecode programs which we added also interfaces these theorem provers. The bytecode 
-verification condition generator works as follows. For the verification of a class file containing BML specification, it will generate verification conditions for every
+The bytecode verification condition generator works as follows. For the verification of a class file containing BML specification, it will generate verification conditions for every
  method of this class including the constructors. For generating the verification conditions concerning a method implementation, first the control flow
  graph corresponding to the bytecode instruction is built. The latter is transformed into an acyclic control flow graph where the backedges are 
 removed.
@@ -153,14 +152,15 @@ We have experimented with the verification conditions on source and
  This is interesting for the following reasons.
  It is a fact that interpretation of bytecode on the JVM is slower than execution by its corresponding assembly code. 
  In order to speed up the execution time for a Java bytecode program, one might use 
- a just-in-time compilation which  translates on the fly the bytecode into the machine specific language. However, JIT compilation can potentially slow
+ a just-in-time (JIT for short) compilation which  translates on the fly the bytecode into the machine specific language. However, JIT compilation can potentially slow
  the execution exactly because it does compilation on the fly.  Another possibility is to perform 
  optimizations on the bytecode. Currently, most of the  Java compilers do not support much optimizations.
  However, there do already exist Java optimizing compilers, for instance the Soot optimization framework\footnote{http://www.sable.mcgill.ca/soot/} 
  and most probably the number of the Java optimizing compilers will increase with the evolution of the Java language.
- A first step in the latter direction is the work of C. Kunz et al.\cite{BGKRsas06} who give an algorithm for translating 
+ This also means that verification of optimized programs will also become an issue.
+ A first step in this direction is the work of C. Kunz et al.\cite{BGKRsas06} who give an algorithm for translating 
  certificates and annotations over a non optimized program into a certificate  and annotation for its optimized version.
- Their work addresses  optimizations like constant propagation, loop induction, dead register elimination etc. 
+ Their work addresses  optimizations like constant propagation, loop induction and dead register elimination for a simple language.  
 \end{description}
 \subsection{Towards a PCC architecture}
 
@@ -173,6 +173,7 @@ that the bytecode respects the client requirements. Defining an encoding of the 
   \item certificates must be easily checked. This means that the certificate checker is  small and simple.
                Of course, the code consumer might not want to spend all of its computation 
               resources for checking that the certificate guarantees the program conformance to its policies.     
+
 \end{itemize}
 
 Note that the certificate size and its checking complexity are dual: the bigger the certificate is more manageable is the checking process and vice versa. 
