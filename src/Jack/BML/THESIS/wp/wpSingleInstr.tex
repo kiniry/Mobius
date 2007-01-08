@@ -166,17 +166,17 @@
                                     \inter{i}{i+1} \begin{array}{l}
 		                                   \subst{ \counter}{ \counter + 1 } \\
 						   \subst{ \stack{ \counter + 1} }{\freshVar} \\
-						   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \forall \fieldd: \FieldSet. \subtype{\fieldd.\declaredIn}{  \class}} } \\
+						   \subst{ \fieldd} { \update{\fieldd} { \freshVar }{\defaultValue{ \fieldd.  \fieldType } } }_{{\small \fieldd}}^{{\small \subtype{\fieldd.\declaredIn}{  \class}} } \\
 				%\subst{ \typeof{\freshVar}}{ \clazz } 
 		       \end{array} 
                   \end{array} \right)
               \end{array}$$
 		  The postcondition of the instruction \new{} is the intermediate predicate $\inter{i}{i+1}$. The weakest precondition 
 		  of the instruction says that for any reference $\freshVar$ 
-		  if $\freshVar$ is not an instance reference  in the initial state of the execution of \methodd{} and whose type is \class{}  then
+		  if $\freshVar$ is not an instance reference  in the state before the execution of the instryction and whose type is \class{}  then
 		  the precondition is the same predicate but in which the stack
-		  counter is incremented and \freshVar{}  is pushed on the stack top  where the fields for the 
-		  \freshVar{} have the default value of their type. 
+		  counter is incremented and \freshVar{}  is pushed on the stack top. The fields for the 
+		  \freshVar{} have the default value of their type which is expressed through series of substitutions ${\small \subtype{\fieldd.\declaredIn}{  \class}}  $. 
 	
 		
 		\item array creation, $  i =\newarray  \ \anyType $

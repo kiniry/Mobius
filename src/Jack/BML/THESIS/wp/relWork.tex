@@ -1,14 +1,12 @@
 \section{Related work} \label{relWorkWp}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In the following, we review briefly the existing work related to bytecode verification
- and more particularly program verification tailored to Java bytecode programs. 
-
  Floyd is among the first to work on program verification using logic methods for unstructured program
  languages (see \cite{F67amp}). Following the Floyd's approach, T.Hoare gives a formal logic for program verification in \cite{Hoare69ABC} known
  today under the name Hoare logic. Dijkstra and Scholten \cite{WPCDS} proposes then an efficient way for applying Hoare logic in
  program verification, in particular they propose two predicate transformer calculus and give their formal semantics. 
-
+ 
+% With the increasing popularity of Java in security domains like networking, mobile phones, smart cards the design of
+% verification conditions tailored to this language has also increased
+ 
 % Concerning bytecode validation, there exists several approaches depending on the kind of properties that one want to check for.
  
 % Bytecode verification is concerned with establishing that a bytecode is well typed 
@@ -17,9 +15,9 @@ In the following, we review briefly the existing work related to bytecode verifi
 %work where program correctness is defined in terms of functional correctness. The JVM, for example, 
 %is provided with a bytecode verifier. There is a lot of research work done in the domain 
 %and for a detailed overview of the state of the art one can look at~\cite{Ljbc}.  
-
-   
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In the following, we review briefly the existing work related to bytecode verification
+ and more particularly program verification tailored to Java bytecode programs. 
 Few works have been dedicated to the definition of a bytecode logic. Among the earliest work in the field of bytecode verification 
 is the thesis of C.Quigley  \cite{Quigley03PLJ} in which Hoare logic rules are given for a bytecode like language. This work is limited 
 to a subset of the Java virtual machine instructions and does not treat for example method calls,
@@ -29,9 +27,12 @@ to a subset of the Java virtual machine instructions and does not treat for exam
 The work by Nick Benton \cite{B04tlsj} gives a  typed logic for a bytecode language with stacks and jumps. 
 The technique that he proposes checks that both types and specifications are respected.
 The language is simple and supports basically stack and arithmetic operations. A proof of correctness
-w.r.t. an operational semantics is given.
+w.r.t. an operational semantics is given. Differently from this work, here we assume that program are well typed. 
+This is a safe assumption as the JVM is supplied with a bytecode verifier \cite{Ljbc}. 
+We consider that the separation of the concerns for well typedness and functional correctness between the bytecode verifier
+and a verification condition generator is a good design decision.
 
-Following the work of Nick Benton, Bannwart and Muller \cite{BM05plb} give  a Hoare logic rules
+Following the work of Nick Benton, Bannwart and Muller \cite{BannwartMueller05} give  a Hoare logic rules
 for a bytecode language with objects and  exceptions. A compiler from source proofs into bytecode proofs is also defined. 
 As in our work, they assume that the bytecode is well-typed. 
 In particular, they define a Hoare-style bytecode logic which consists in building a derivation tree 
@@ -42,22 +43,35 @@ where we generate directly  verification conditions using a weakest precondition
  also requires user interaction as far as the generated verification conditions are hard to prove but automation 
  is possible as far as the verification conditions are simple.
   
+ In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java   bytecode subset) which features
+ object manipulation, exceptions, method invocations. The verification framework is   based on a verification condition generator which uses
+ weakest preconditions. The  framework is developped  in the interactive theorem prover Isabelle/HOL and proven sound and complete. 
+ They show how the safety policy against an arithmetic overflow can be checked. As in our case, they also assume that the program is provided
+with annotations (e.g. \ loop invariants). 
 
-
-% In ~\cite{WildmoserN-ESOP05}, M. Wildmoser and T. Nipkow describe a framework for verifying Jinja (a Java subset) bytecode 
-% against arithmetic overflow.   They provide an implemenation in the interactive theorem prover Isabelle.
 % In this work, we have implemented a 
 
- The Spec\# (\cite{BLS04sp}) programming system developed at Microsoft proposes a static verification framework where 
+ The Spec\# \cite{BLS04sp} programming system developed at Microsoft proposes a static verification framework where 
  the method and class contracts  (pre, post conditions, exceptional postconditions, class invariants) are inserted in the intermediate code . 
  Spec\# is a superset of the C\# programming language, with a built-in  specification language, 
  which proposes a verification framework (there is a choice to perform the checks either at runtime or statically). 
  The verification procedure \cite{leinoWPUP} includes several processing stages of the bytecode program -  
  elimination of irreducible loops, transformation into an acyclic control flow graph,
- translation of the bytecode into a guarded passive command language program. Despite that here in our implementation we also
- do a transformation in the graph into an acyclic program, we consider that in a mobile code scenario
- one should limit the number of program transformations for several reasons.
- First, we need a verification procedure as simple as possible, and second every transformation must be proven correct which is not always trivial.      
+ translation of the bytecode into a guarded passive command language program. 
+ These transformations of course, facilitate the verification procedure.
+ Transforming the bytecode into an acyclic control flow graph (or simply identifying the loop entries)
+ allows for an easy treatment of loop invariants. As we said earlier, using an intermediate language allows to treat a smaller
+ language and thus the changes in the verification condition generator can be easily applied. 
+ Moreover, supporting an intermediate language allows for using the same verification framework for different programming languages. 
+ Passification avoids duplication of formulas which can be exponential in the number of the conditional branches in a program 
+\cite{RL05EWP}. This method consists basically in converting a program into a single assignment form.
+ Despite that  in our implementation we also
+  transform  the control graph into an acyclic program, we consider that in a mobile code scenario
+ one should limit the number of program transformations for the following reasons.
+ A design of a verification condition generator should be as simple as possible especially.
+ A verification framework which relies on several layers of transformations
+ can be relatively complex.  Second,  a verification condition generator must be proven correct. In the case of several transformations this may be not trivial.
+
 
 % Another topic related to the present work is PCC.
 %  PCC and the certifying compiler were proposed by Necula (see \cite{Necula97,ComNec,DesNecLee98}). PCC is an architecture for establishing trust in untrusted code 

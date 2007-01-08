@@ -17,7 +17,7 @@ operational semantics  for method invokation, but the other cases are similar}  
 $$ \begin{array}{l}
              \frac{\begin{array}{l} 
                         \lookup{\mbox{\rm meth}.\methodName}{ \mbox{\rm meth}.\args  }{\mbox{\rm meth}.\returnType }{
-\heap.\heapTypeOf(\stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }) } = \mbox{\rm n} \\
+\heapTypeOf(\stackOnlyParam{ \counterOnly - \mbox{\rm meth}.\numArgs }) } = \mbox{\rm n} \\
 	                        \stackOnlyParam{ \counterOnly - \mbox{\rm n}.\numArgs } \neq \Mynull   \\
 	                      \mbox{\rm n}  :         \config{\heap}       
                                                        {0}
@@ -47,15 +47,15 @@ $$ \begin{array}{l}
  
 We now first define what does it mean for a method to respect its specification at level \level{k}
 \begin{defCorrect}[method respects its specification at level k] \label{defCorrectLevel}
-For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost
-and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd \ respects its specification if 
+For every method \methodd \ with precondition \methodd.\pre, normal postcondition \methodd.\normalPost{}
+and exceptional postcondition function \methodd.\excPostSpec, we say that \methodd{} respects its specification at level \level{k} if 
 for every two states $s_0$ and $s_1$ such that :
 \begin{itemize}
       
       \item   $\methodd : s_0  \stateTransTermWeight{k} s_1   $
       \item   $ \interp{\methodd.\pre }{ s_0 }$
 \end{itemize}
-Then if \methodd \ terminates normally then the normal postcondition holds in the final state $s_1 $, i.e.  $\interp{\methodd.\normalPost}{s_1}$ holds. 
+Then if \methodd{} terminates normally then the normal postcondition holds in the final state $s_1 $, i.e.  $\interp{\methodd.\normalPost}{s_1}$ holds. 
 Otherwise, if  \methodd{}  terminates on an exception \mbox{ \rm \texttt{Exc}} the exceptional postcondition holds in the poststate $s_1 $, i.e.
 $ \interp{\methodd.\excPostSpec(  \mbox{ \rm \texttt{Exc}} )}{s_1} $ holds.
  % Moreover, if method $\methodd$ overrides method \mbox{\rm\texttt{n}} then the specification of \methodd{} must be such that

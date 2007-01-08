@@ -38,7 +38,7 @@ $$\methodd.\excPost : int   \longrightarrow \excType \longrightarrow  \predWp  $
 $ \methodd.\excPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})$ 
 returns the predicate that must hold in the preststate of the instruction at index \textit{i}  which may throw a runtime exception of type \texttt{Exc}.
 Note that the function $\methodd.\excPost$  does not deal with programmatic exceptions thrown by the instruction \athrow,
- neither exception caused by a method invokation
+ neither exception caused by a method invocation
 (execution of instruction \invoke) as the exceptions thrown by those instructions are handled in a different way as we
  shall see later in the definition of the \fwpi \ function in the next subsection.  
 
@@ -51,15 +51,15 @@ The function application $\methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \r
             \ins{i} \neq \athrow \wedge \ins{i} \neq \invoke \Rightarrow  \\
            \methodd.\excPost( \mbox{ \rm \textit{i}} ,  \mbox{ \rm \texttt{Exc}}) = \\
                      \forall \referenceOnly,\\
-                      \Myspace    \neg \ \instances(\referenceOnly) \wedge \\
+                      \Myspace    (\neg \ \instances(\referenceOnly) \wedge \\
 		      \Myspace \referenceOnly \neq \Mynull	\\
-		      \Myspace \typeof{\referenceOnly} <: \mbox{ \rm \texttt{Exc}}  \Rightarrow\\
+		      \Myspace \typeof{\referenceOnly} = \mbox{ \rm \texttt{Exc}})  \Rightarrow\\
           \Myspace  \left(   \methodd.\getExcPost(\mbox{ \rm \textit{i}},  \mbox{ \rm \texttt{Exc}})
                     %\begin{array}{l}
                         \subst{\counter}{0} %\\
 			\subst{\stack{0}}{\referenceOnly} %\\
-                         \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{{\small \forall \fieldd : \FieldSet, \ 
-                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} } } %\\
+                         \subst{ \fieldd} { \update{\fieldd} { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) } }_{\fieldd}^{
+                         \subtype{\fieldd.\declaredIn}{ \mbox{ \rm \texttt{Exc}}} }  %\\
 			  %\subst{ \typeof{\referenceOnly}}{  \mbox{ \rm \texttt{Exc}} } \\
                     %   \end{array} 
 \right)

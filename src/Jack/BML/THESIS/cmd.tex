@@ -96,8 +96,8 @@
 \newcommand{\Mynull}{\jmlKey{null}{}}
 %\newcommand{\this}{\texttt{this}}
 \newcommand{\fieldAccess}[2]{#1\mbox{\rm\textbf{.}}#2}
-\newcommand{\arrayAccess}[2]{ \mbox{\rm\textbf{arrAcc}}(#1,#2) }  %{\mbox{\rm arrAccess}(#1, #2)}
-\newcommand{\arrayAccessOnly}{\mbox{\rm arrAccess}}
+\newcommand{\arrayAccess}[2]{\arrayAccessOnly (#1,#2) }  %{\mbox{\rm arrAccess}(#1, #2)}
+\newcommand{\arrayAccessOnly}{\mbox{\rm\textbf{arrAccess}}}
 
 
 %\newcommand{\loopInv}{loopInvariant}
@@ -270,7 +270,9 @@
  \newcommand{\ClassName}{\mbox{\rm\textbf{ClassName}}} % the set of fields
  
  \newcommand{\clazz}{\mbox{\rm \textit{C}}}
- \newcommand{\fieldd}{\mbox{\rm \texttt{f}} }
+ \newcommand{\fieldd}{\mbox{\rm \texttt{f}}}
+ \newcommand{\fieldt}{\mbox{\rm \texttt{g}}}
+
  \newcommand{\methodd}{\mbox{\rm \texttt{m}}}
  \newcommand{\methodt}{\mbox{\rm \texttt{n}}}
  %%%%%%%%%%%%%%%%%Class attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -552,7 +554,7 @@
 \newcommand{\constantsWp}{\mbox{\rm\textit{constants}}}
 \newcommand{\expressionsWp}{\mbox{\rm\textit{Expr}}}
 \newcommand{\typeExpWp}{\mbox{\rm\textit{T}}}
-\newcommand{\var}{\mbox{\rm\textbf{var}}}
+\newcommand{\var}{\mbox{\rm\textit{Var}}}
 \newcommand{\instances}{\mbox{\rm\textbf{instances}}}
 
 \newcommand{\ConstantsWp}{\mbox{\rm\textit{constants}}}
@@ -621,7 +623,7 @@
 \newcommand{\formulaSrc}{\mathcal{F}}
 \newcommand{\expressionSrc}{\mbox{\rm\textit{E}}}
 \newcommand{\expressionSrcRel}{\expressionSrc^{\rel}}
-\newcommand{\constantInt}{\mbox{\rm\textbf{constInt}}}
+\newcommand{\constantInt}{\mbox{\rm\textit{IntConst}}}
 \newcommand{\constantBool}{\mbox{\rm\textbf{constBool}}}
 \newcommand{\constantRef}{\mbox{\rm\textbf{constRef}}}
 
@@ -733,3 +735,9 @@
 
 \newcommand{\myDiv}{\mbox{\rm div}}
 \newcommand{\myRem}{\mbox{\rm rem}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\validLocVarIndex}{\mbox{\rm\textsf{validLocVarInd}}}
+\newcommand{\inHeap}{\mbox{\rm\textsf{wf}}}

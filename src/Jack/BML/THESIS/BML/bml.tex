@@ -129,7 +129,7 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
  & \\
   \specCase & ::=    \{$\vert$ \\
                     & \phantom{aaa} \begin{tabular}{l}  
-                              \requires  \ \formulaBc; \\
+                                 \requires  \ \formulaBc; \\
                                  \modifies  \  \modifiesLocs;  \\
 				 \ensures \ \formulaBc; \\
 				 \exsuresList\\
@@ -513,11 +513,11 @@ Loop specification :
     atIndex 19;
     loop_modifies lv(0).#19[*],  lv(3);
     loop_invariant
-      lv(3) >= 0 &&  
-      lv(3) < lv(0).#19.arrLength &&
+      lv(3) >= 0 (*@ $\wedge$ @*) 
+      lv(3) < lv(0).#19.arrLength (*@ $\wedge$ @*)
       \forall  bv_1 ; 
-               ( bv_1(*@ $\ge$ @*)  0 &&
-               bv_1 < lv(0).#19.arrLength ==> 
+               ( bv_1(*@ $\ge$ @*)  0  (*@ $\wedge$ @*) 
+               bv_1 < lv(0).#19.arrLength (*@ $\Rightarrow$ @*) 
                     lv(0).#19[bv_1]  (*@ $\neq$ @*)  lv(1) )
 
  public int replace(Object  lv(1),Object lv(2) )

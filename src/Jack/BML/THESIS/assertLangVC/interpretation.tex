@@ -10,7 +10,7 @@
 %
 In this section, we shall focus on the semantics of formulas and expressions w.r.t. a state configuration.
 A subtle point in giving the evaluation rules for expressions and the interpretation of formulas
-is the fact that the evaluation is actually  a partial function.% Note that we shall give a semantics which ignores partiality in the language. Of course, this is an 
+is the fact that the evaluation is actually  a partial function. % Note that we shall give a semantics which ignores partiality in the language. Of course, this is an 
 %important theoretical question which by itself have given rise to a lot of research and h%as received different answers.
 %The part which deserves a more  careful attention is the question of partiality in the language.
 What we mean by partiality is the existence of functions like division or dereferencing of a field, array indexing etc. 
@@ -18,23 +18,27 @@ To get a precise idea of the problem we can consider the following logical state
 
 $$
 \begin{array}{l} 
-\numConclusion{1} \  \fieldAccess{\exprWp}{\fieldd} == 3\\
+\numConclusion{1} \  \fieldAccess{\expression}{\fieldd} == 3\\
 \numConclusion{2} \ \arrayAccess{\expression_1} {\expression_2} == 5
 \end{array}
 $$   
 
 Under certain conditions, these formulas may not have a meaning. In case 
-\numConclusion{1}  the statement does not make sense if
-$\exprWp$ is \Mynull. In case  \numConclusion{2}  the statement does not make sense if 
-either $\expression_1 $ is \Mynull{} or $\expression_2$  is not in the bounds of $\expression_1 $.
-
+\numConclusion{1},  the statement does not make sense in a state where
+$\expression$ is a reference which does not belong to the valid references in the heap 
+or evaluates to  \Mynull. In case  \numConclusion{2}  the statement does not make sense in 
+a state where if either $\expression_1 $ is not a valid reference in the current or is \Mynull{}  or $\expression_2$  is not in the bounds of $\expression_1 $.
 
 Building a logic for partiality is not trivial. Different solutions exist. 
-Gries and Schnieder \cite{gries95avoiding} give a solution to the problem which consists in function 
-underspecification  and thus  avoid the problem of undefideness.
+Gries and Schnieder \cite{gries95avoiding} give a solution which consists in function 
+underspecification  and thus  avoid the problem of undefideness. 
  More particularly, their approach considers all functions as total but for argument values for which the function is actually 
-not defined the function may return whatever value. This approach, although practical requires certain restriction over the definition 
-of recursive functions in order to keep the logic consistent as pointed in \cite{J95PFL}. In  \cite{schieder99adapting}, the authors give 
+not defined the function may return whatever value. 
+For instance, in such interpretation of undefidness the formula 
+This approach, although practical requires certain restriction over the definition 
+of recursive functions in order to keep the logic consistent as pointed in \cite{J95PFL}.
+This approach is adopted in JML \cite{JMLRefMan}.
+ In  \cite{schieder99adapting}, the authors give 
   an extension  of the calculus of boolean structures proposed by Dijkstra and Scholten (\cite{WPCDS}) with a  third boolean value 
 undefined.  The logical connectives are extended in a non monotonic way and preserve the properties of the classical logic
 on the price  of having two sorts of equality.
@@ -47,20 +51,47 @@ He introduces a well-definedness operator $\wellDefined{}: \expression \cup \pre
  over expressions and formulas. Thus, formulas can be either \true{}, \false{} or not defined and
 expressions may evaluate to a value or be undefined. The operator  $\wellDefined{\expression}$ ($\wellDefined{\predWp}$) 
  gives the necessary and sufficient
- conditions such that $\expression$(\predWp ) is defined.
- More particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
- holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to \false{}.
- This in particular, means that for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
- In the following, we define interpretation of formulas  in a two valued logic. However, a formula may hold in a state only under the condition that
- it is  defined, i.e. all the expression contained in the formula should have a meaning in  this state.
+ conditions such that $\expression$(\predWp ) is defined. 
+ Particularly, the application of the operator   $\wellDefined{\expression}$  ($\wellDefined{\predWp}$) over $\expression$  (\predWp ) 
+ evaluates only either to \true{} or \false{}, i.e.  it holds in a state only if the expression $\expression$ has  a value in this state, otherwise it is interpreted to \false{}.   
  
- Here, we shall not enter into these problems. Although the evaluation of expression is partial, we shall consider only the validity of well defined 
- formulas in a state, i.e. formulas which talk only about defined expressions in a state.
- Thus, we will avoid the treatment of partiality. In particular, we will remain in 
- a classical two valued logic. 
- Although, we ignore a lot of formulas, i.e. those which are not well defined,
+ This in particular, means that for every formula and its subexpressions additional verification conditions for well-definedness must be generated.
+ Thus a formula may hold in a state only under the condition that
+ it is  defined, i.e. all the expression contained in the formula should have a meaning in  this state.
+  Here, we shall not enter in details of the definition of the well definedness operator  $\wellDefined{}$  but discuss it informally through an example.
+   Let us see the definition of  the operator  $\wellDefined{}$   in case of an array access:
+$$
+\begin{array}{l}
+ \wellDefined{ \arrayAccess{\expression_1} {\expression_2} } = 
+            \begin{array}{l}
+              \wellDefined{\expression_1} \wedge \\
+	      \wellDefined{\expression_2} \wedge \\
+             \instances(\expression_1) \wedge \\
+              \expression_1 \neq \Mynull \wedge\\
+             0 \le  \expression_2 < \arraylength(\expression_1)
+            \end{array} 
+ %\\
+ %\\
+ % \wellDefined{ \locVar{i}} = \validLocVarIndex(i)
+ \end{array}
+$$
+
+ Thus for an array access to be well formed, we require that its two subexpressions are well formed, that 
+ $\expression_1$ denotes a reference in the heap in the current state, that the evaluation of $ \expression_2 $ is a valid index in the array 
+ $\expression_1$. %For a local variable access, the well definedness condition is expressed through the predicate  \validLocVarIndex{} whose interpretation is that  the index is a valid index in the array of local registers. 
+ 
+ Although the evaluation of expression is partial, we shall consider only the validity of well defined 
+ formulas in a state, i.e. formulas which talk only about well defined expressions in a state. 
+ Thus we define interpretation of formulas  in a two valued logic.
+ %Well definedness is usually established as we said above by the validity of a formula which expresses that
+ %a specification formula or expression is well defined. Those formulas are generated by 
+ %a well definedness operator. 
+ 
+ We ignore a lot of formulas, i.e. those which are not well defined,
  this will be sufficient for our proof of correctness of the verification condition generator later in Chapter \ref{proofGeneral} as 
- the verification condition generator preserves well definedness of formulas in a state and moreover, we  assume that specification are well defined.
+ we assume that programs are bytecode verified and that specifications
+ are well defined. Under these assumptions and because the verification condition generator preserves well definedness of formulas, we 
+ can perform the correctness proof. 
 
  We use the notation $\interp{\predWp}{s}$ to say that the well defined formula  $\predWp$ is valid w.r.t. a current state  $s$ and an initial state $s_0$.
  $\interp{\predWp}{s}$ is defined in the standard way. For instance, the statement $\interp{\expression_1 \  \predicates \  \expression_2 }{s}$
@@ -121,7 +152,7 @@ expressions may evaluate to a value or be undefined. The operator  $\wellDefined
 
  
 We define a function for expression evaluation
- $\evalExpName$ which evaluates expressions in a state has the following signature:
+ $\evalExpName$ which evaluates expressions in a state and which has the following signature:
 %\rightharpoonup
 $$
 \evalExpName : \expression \rightarrow \SetConfigs  \rightarrow \SetConfigs  \rightharpoonup  \Values \cup \JavaType
@@ -135,7 +166,7 @@ The evaluation function   takes as arguments an expression of the assertion lang
 The evaluation in a state 
 $s = \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$  or $s = \configFinal{\heap}{\Final }$  of an expression $\expression$
 w.r.t. an initial state $ s_{0} = \config{\heap_{0}}{ 0 }{ \lbrack \ \rbrack  }{\locVarOnly}{ 0 } $ 
-is denoted with $\evalExp{\expression}{s}$  and is defined in its domain inductively over its  the grammar of expressions $\expression$ \  as follows:
+is denoted with $\evalExp{\expression}{s}$  and is defined in its domain inductively over  the grammar of expressions $\expression$ \  as follows:
  
 $$
 \begin{array}{lll}
@@ -162,22 +193,22 @@ $$
  \evalExp{ \locVar{i} } { s } & =  &\locVarOnly(i) \\
 
 
- \evalExp{ \old{\exprWp} } { s } &  = & \evalExp{ \exprWp }{  s_{0}} \\
+ \evalExp{ \old{\expression} } { s } &  = & \evalExp{ \expression }{  s_{0}} \\
 
  \evalExp{\expression_1 \ \op \ \expression_2   } { s } &  =  &  \evalExp{\expression_1}{s} \op  \evalExp{\expression_2}{s}  \\
 
 
-\evalExp{ \typeof{\exprWp}}{s } & = &
+\evalExp{ \typeof{\expression}}{s } & = &
 \left\{\begin{array}{ll}
-      \Myint                                           & \evalExp{\exprWp}{s} \in \Myint \\
-      \heapTypeOf(\evalExp{\exprWp}{s} ) & else \\
+      \Myint                                           & \evalExp{\expression}{s} \in \Myint \\
+      \heapTypeOf(\evalExp{\expression}{s} ) & else \\
            
 \end{array}\right. \\
 
 
-\evalExp{ \elemtype{\exprWp}}{s } & = &
+\evalExp{ \elemtype{\expression}}{s } & = &
 \begin{array}{ll}
-            \mbox{ \rm \texttt{T} }  & where \   \heapTypeOf(\evalExp{\exprWp}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
+            \mbox{ \rm \texttt{T} }  & where \   \heapTypeOf(\evalExp{\expression}{s} ) = \mbox{ \rm \texttt{T[ ] } } 
 \end{array}\\
 
 
@@ -191,16 +222,16 @@ $$
  \evalExp{ \counter   } { s } & =  & \counterOnly \\
 
 
- \evalExp{ \stack{ \exprWp}   } { s } &  = & \stackOnly ( \evalExp{\exprWp}{s} ) \\
+ \evalExp{ \stack{ \expression}   } { s } &  = & \stackOnly ( \evalExp{\expression}{s} ) \\
 
 
 \end{array}
 $$
-The evaluation of the following expressions can be done only in a final state $s = \configFinal{\heap}{\locVarOnly}{\Final }$:
+The evaluation of the following expressions can be done only in a final state:
 $$
 \begin{array}{ll}
-\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\locVarOnly}{\Res} \\
-\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\locVarOnly}{\Exc}
+\evalExp{ \result }{s } = \Res  & where \ s=  \configFinalNorm{\heap}{\Res} \\
+\evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\Exc}
 \end{array}
 $$
   
@@ -318,9 +349,11 @@ $$
 %in $s$ and $s_0$. However, the interpretation of the logical connectors is standard.
  
 
-The next definition defines a particular set of assertion formulas which  hold in every program state. We call them  valid formulas. 
+The next definition introduces the notion of an assertion formula logically valid 
+in every program state. We call such formulas  valid formulas. 
+
 \begin{interpretation}[Valid formulas]\label{assertLang:interpretation:valid}
   If an assertion formula  $ \predWp $ holds in any current state and any initial state, i.e.
-$\forall s, s_{0}, \  \interp{\predWp}{s} $ we say that this is a valid formula and we note it with :
+$\forall s, s_{0}, \  \interp{\predWp}{s}$ we say that this is a valid formula and we note it with :
   $\validFormula{\predWp} $ 
 \end{interpretation}

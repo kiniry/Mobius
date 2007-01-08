@@ -14,7 +14,7 @@ $$ \begin{array}{l} % \forall \methodd: \MethodSet, \\
 							  \excHandlerTable & : list \ \ExcHandler  \\
 							  \exceptions &  : list \ \ClassSet_{exc}\\
 							  \pre & : \predWp \\
-							  \modif & :   list \ x\expression \\
+							  \modif & :   \modifiesLocs \\ 
 							  \excPostSpec & : \excType \rightharpoonup \predWp \\
 							  \normalPost & : \predWp \\
                                                           \loopSpecTable & : list \ \LoopSpecSet 
@@ -26,9 +26,9 @@ Let's see the meaning of the new elements in the method data structure.
 \begin{itemize}
      \item \methodd.\pre \ gives the precondition of the method, i.e. the predicate that must hold
            whenever \methodd \  is called
-     \item \methodd.\normalPost \ is the postcondition of the method in case \methodd terminates normally  
+     \item \methodd.\normalPost \ is the postcondition of the method in case \methodd{} terminates normally  
      
-     \item \methodd.\modif \ is also called the method frame condition. It is a list of expressions that the method
+     \item \methodd.\modif \ is also called the method frame condition. It is a list of locations that the method
             may modify during its execution    
      
      \item \methodd.\excPostSpec \ is a total function from exception types to formulas which returns the predicate
@@ -52,7 +52,7 @@ $$ \begin{array}{l}
       \LoopSpecSet = \left\{\begin{array}{ll}  
                                        \posL   & : nat \\
                                        \invL   & : \predWp \\                 
-	                               \modifL   & :  list \ \expression  
+	                               \modifL   & :   \modifiesLocs
                             \end{array}  \right\} 
      \end{array} $$ \todo{define modifies locations in the grammar }
 

@@ -1,5 +1,5 @@
 
-\section{Achievements}
+\section{Results}
 % done. summary
 We have  presented an infrastructure for verification of Java bytecode programs   which allows to reason about potentially
 sophisticated  functional and security properties and
@@ -49,8 +49,9 @@ We have used the prototype of the bytecode verification condition generator for 
 \section{Future work}
 In the following, we identify the directions for extending the work presented in this thesis
 
-\subsection{Language coverage of the verification condition generator}
-The bytecode verification condition generator works only for the sequential fragment of Java. But realistic applications 
+\subsection{ Verification condition generator}
+A first direction for future work concerning the verification condition generator is its extension.
+Currently, it works only for the sequential fragment of Java. But realistic applications 
 rely often on multi - threading which is difficult to verify against a functional specifications or security policies.
 One of the important aspects of the correctness of multi - threaded programs is the absence of deadlocks, 
 and race conditions. Such properties can be ensured  by type systems \cite{FA99TSL,flanagan00typebased} or static verification based on program logic \cite{FLL02ESC}.  
@@ -83,9 +84,13 @@ execution does not depend on the possible interleaving with threads.
 Recently, E.Rodriguez and al. in \cite{RodriguezDFHLR05} proposed an extension for JML for multi threaded
  programs. Their proposal introduces  new specification keywords which allow to express that a variable is locked or
  that a method is atomic.% Giving the semantics of these keywords is still an ongoing work but we consider that the meaning of these specification constructs does not differ on source and bytecode. 
-    
  
-
+Next point which can be interesting is to provide a machine checked proof for the soundness result. 
+This can be especially interesting for a PCC where such a proof will be necessary for the client site. 
+Currently, the soundness statement is expressed in terms of method contracts. 
+Moreover, here we have assumed the soundness of the frame conditions.
+But an extension  of the soundness theorem w.r.t. to assertions which must hold at particular program points may be useful for
+expressing for instance, safety policies which concern intermediate program states.
 
 
 \subsection{Property coverage for the specification language}

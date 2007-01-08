@@ -12,11 +12,13 @@ BML  expressions (nonterminal $\expression$) and predicates
 
         \begin{itemize}
 	       \item update field access expression 
-		  $\update{\fieldd}{ \expression}{\expression}(\expression)$.
+		  $\fieldAccess{\expression }{\update{\fieldd}{ \expression}{\expression}}$.
+		 
 
 	       \item update array access expression 
                    $ \update{ \arrayAccessOnly}{ (\expression , \expression)}{ \expression} (\expression,\expression)$
 	\end{itemize}
+         The semantics of those syntactic constructs has been explained already in subsection \ref{subst} on \pageref{subst}.
 
 	The verification calculus will need to talk about reference values. Thus we extend the BML expression grammar to  support
 	reference values \RefValues. Note that in the following integers \Myint\  and \RefValues \ will be referred to with \Values.

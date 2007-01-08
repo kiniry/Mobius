@@ -9,17 +9,22 @@ This substitution affects only field access expressions.
 $$
  \substitution{\mbox{\rm \texttt{a}} }{ \fieldd }{ \update{\fieldd}{\expressionSrc}{\expressionSrc} } =\mbox{\rm \texttt{a}}
 $$ 
-Field substitution affects only field objects as we see in the following: 
+Field substitution affects only field objects as in  the following example: 
 
-
-
+$$
+ \substitution{\mbox{\rm \texttt{b}}.\fieldd }{ \fieldd }{ \update{\fieldd}{a}{3} } = \mbox{\rm \texttt{b}}. \update{\fieldd}{a}{3}
+$$ 
+Here, the substitution affects the field expression by making an update over the field \fieldd : $\mbox{\rm \texttt{b}}. \update{\fieldd}{a}{3}$.
+The semantics of the resulting expression is that if \mbox{\rm \texttt{b}} = \mbox{\rm \texttt{a}}  then the whole expression 
+$\mbox{\rm \texttt{b}}. \update{\fieldd}{a}{3}$ simplifies to $3$ otherwise simplifies to $\mbox{\rm \texttt{b}}.\fieldd $.
  
- %This is done by establishing the substitution rule for field access as follows:
+ %This  done by establishing the substitution rule for field access as follows:
  %$$  \substitution{\fieldd ( \expressionSrc^1)}{ \expressionSrc^2}{ \expressionSrc^3} =
  %\substitution{\fieldd}{ \expressionSrc^2}{ \expressionSrc^3} (  \substitution{ \expressionSrc^1  }{ \expressionSrc^2}{ \expressionSrc^3}) $$
 
 
 % Let us see how we define  substitution over field objects:
+Formally, we define substitution over field objects as follows:
 $$  
 \begin{array}{l}
 \substitution{\fieldAccess{\expressionSrc}{\fieldd_1}}{\fieldd_2}{ \fieldd_2[ \oplus  \expressionSrc_1 \longrightarrow  \expressionSrc_2 ] } = \\\\
@@ -52,11 +57,6 @@ $$
 \right. 
 \end{array}$$ 
 
-
-For example, consider the following  substitution expression:  
-$$ \substitution{\fieldAccess{a}{ \fieldd}}{\fieldd}{\update{\fieldd}{ b }{  3 }} $$
-This results in the new expression : 
-$$\update{\fieldAccess{a}{ \fieldd}}{ b  }{ 3} $$ 
 
 
 %The same kind of substitution is allowed for array access expressions, where the array object \arrayAccessOnly  \ can be updated. 

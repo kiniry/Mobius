@@ -82,16 +82,3 @@ As we shall in the following, control flow graph reducibility plays an important
 Note that this restriction (as we said earlier) is realistic as every non-optimizing Java compiler produces
 reducible control flow graphs and even hand written code is usually reducible.
 
-
-We would like to make a last but not least remark. The proof for soundness presented here would seem large w.r.t. 
-the proof of soundness of Spec\# presented in  \cite{leinoWPUP}. Spec\# relies on several transformations over the 
-bytecode. First, a transformation of the potentially irreducible control flow graph to a reducible one is done.
-The second step  is converting the reducible control flow graph into an acyclic graph by removing the loop backedges.
- The third step consists in translating programs into a single-assignment form.
-The fourth step is converting the program into a  guarded command language and finally, the fifth and last 
-step is passifying the guarded command language program which means changing assignments
-to \texttt{assume} statements. The proof presented in  
-\cite{leinoWPUP} is done for  programs written in passified guarded command language.
-But what is the formal guarantee that the initial  bytecode program is also correct? 
-A proof of soundness for Spec\# which takes into account all the transformation stages can be 
-already complex. 

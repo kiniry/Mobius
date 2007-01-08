@@ -80,7 +80,7 @@ Fig. \ref{source:grammar} gives the formal grammar.
    %              & \\ 
  %		& \\
  		        
-     \expressionSrc ::=         & \constantInt  \\
+     \expressionSrc  & ::=         \constantInt  \\
 				%& \mid \Mytrue \\ 
 				%& \mid \Myfalse \\
 				& \mid \Mynull  \\
@@ -96,14 +96,14 @@ Fig. \ref{source:grammar} gives the formal grammar.
 				%& \mid \expressionSrcRel \\
                                 & \\
 				& \\
-     \expressionSrcRel ::=      & \expressionSrc \ \rel \ \expressionSrc \\
+     \expressionSrcRel  &::=      \expressionSrc \ \rel \ \expressionSrc \\
 				%& \mid \expressionSrc \ \instanceofSrc \ Class\\
 				& \\   
 				& \rel \in \{ \le, < ,  \ge, >, = , \neq \}      \\
 				& \\
 				& \\
-      \stmt ::=		        %& \Myskip \\
-                                & \mid \stmt;\stmt \\
+      \stmt & ::=		        %& \Myskip \\
+                                 \stmt;\stmt \\
                                 & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
 			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
 		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\

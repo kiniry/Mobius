@@ -15,10 +15,10 @@ of substitution and the semantic notion of evaluation. Particularly, we shall se
 As an intermediate execution state $ \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc } $ 
 is composed from several elements, a heap \heap{}, the stack counter \counterOnly, the operand stack \stackOnly{} 
 and the array of registers \locVarOnly, we shall state for each component a separate lemma.
-In the following, we shall sketch the proof only of the first lemma, the other lemmas having a similar proof. 
+In the following, we shall sketch the proof only of those lemmas, that we consider representative  the others having a similar proof. 
 
 Let us now look at the next formal statement.
-It refers to the fact that if we substitute in a give expression $\expression_1$ 
+It refers to the fact that if we substitute in an expression $\expression_1$ 
 the expression  \locVar{i} which represents the local variable at index i
  with another expression $\expression_2$ and evaluate the resulting expression in a state $s_1$
  we will get the same value if we evaluate   $\expression_1$  in the state 
@@ -30,8 +30,7 @@ For any expressions $ \expression_1, \expression_2 $
 if we have that the states $s_1$ and $s_2$ are such that
 $ s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$, %$\evalExp{ \expression_2}{ s_1 } \in \Values $ and 
 $ s_2 =   \config{\heap}{\counterOnly }{ \stackOnly }{\update{\locVarOnly}{i}{ \evalExp{ \expression_2}{ s_1 } }}{\pc }  $
- then 
-the following holds:
+and $i$ is a valid index in the array of method register \locVarOnly{} then the following holds:
 \begin{enumerate}
       \item $\evalExp{\substitution{\expression_1}{ \locVar{i} }{ \expression_2 }}{ s_1 } = \evalExp{\expression_1}{s_2} $
       \item $\interp{\substitution{\psi}{ \locVar{i} }{ \expression_2 }}{ s_1 } \iff \interp{\psi}{s_2} $
@@ -53,37 +52,55 @@ the following holds:
 
 
  \item second case of the lemma. It is by induction on the structure of the formula $\psi$. We sketch the case when 
-          $ \psi = \exprWp_1 \  \predicates \  \exprWp_2 $
+          $ \psi = \expression_1 \  \predicates \  \expression_2 $
 	    
 	    \begin{longtable}{l} 
-               $\interp{(\exprWp_1 \  \predicates \  \exprWp_2 )\subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
+               $\interp{(\expression_1 \  \predicates \  \expression_2 )\subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
 	       \comment{apply substitution}\\
-	       $\interp{\exprWp_1\subst{ \locVar{i} }{ \expression_2 }  \  \predicates \  \exprWp_2 \subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
+	       $\interp{\expression_1\subst{ \locVar{i} }{ \expression_2 }  \  \predicates \  \expression_2 \subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
 	       \comment{interpretation of formulas }\\
-	        $\evalExp{\exprWp_1\subst{ \locVar{i} }{ \expression_2 } }{s_1}  \  \predicates \ \evalExp{ \exprWp_2 \subst{ \locVar{i} }{ \expression_2 }}x  {s_1} = $ \\
+	        $\evalExp{\expression_1\subst{ \locVar{i} }{ \expression_2 } }{s_1}  \  \predicates \ \evalExp{ \expression_2 \subst{ \locVar{i} }{ \expression_2 }} {s_1} = $ \\
 		\comment{from the first part of the lemma and the initial hypothesis for $s_2$ we get } \\
-		 $\evalExp{\exprWp_1}{s_2}  \  \predicates \  \evalExp{\exprWp_2} {s_2} = $ \\
+		 $\evalExp{\expression_1}{s_2}  \  \predicates \  \evalExp{\expression_2} {s_2} = $ \\
 		 \comment{from definition of formula interpretation in a state}\\
-		 $ \interp{\exprWp_1 \  \predicates \  \exprWp_2}{s_2}$
+		 $ \interp{\expression_1 \  \predicates \  \expression_2}{s_2}$
 	     \end{longtable}
 	
   
 \end{enumerate}
 
 \begin{substHeap}[Update of the heap]\label{substHeap}
-For any expressions $ \expression_1, \expression_2, \expression_3 $ and any field \fieldd
-if we have that the states $s_1$ and $s_2$ are such that
- $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$,%$ \evalExp{\expression_2}{ s_1 } \in \Dom(\heap.\heapFields(\fieldd))$
+For any expressions $ \expression_1, \expression_2, \expression_3 $ and any field \fieldd{}
+if we have that the states $s_1$ and $s_2$ are such that the evaluation of $\expression_1$ 
+  $\evalExp{\expression_2}{ s_1 } $ is different from \Mynull{} and the evaluation of $\expression_3$ is either an instance in the heap
+or of type \Myint{},   $s_1 =   \config{\heap}{\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }$,%$ \evalExp{\expression_2}{ s_1 } \in \Dom(\heap.\heapFields(\fieldd))$
  and \\
    $s_2 =  \config{ \update{\heap}{\fieldd }{\update{\fieldd}
                                                    {\evalExp{\expression_2}{ s_1 } }
                                                    {\evalExp{ \expression_3}{ s_1 } } } }
                                           {\counterOnly}{ \stackOnly }{\locVarOnly}{\pc }   $  the following holds
 \begin{enumerate}
-  \item $ \evalExp{\substitution{\expression_1}{\fieldd}{ \update{ \fieldd  }{\expression_2}{\expression_3} }}{ s_1 } =  \evalExp{\expression_1}{ s_2  }  $
+  \item $ \evalExp{\substitution{\expression_1} {\fieldd}{ \update{ \fieldd  }{\expression_2}{\expression_3} } }{ s_1 } =  \evalExp{\expression_1}{ s_2  }  $
   \item $ \interp{\substitution{\psi}{\fieldd}{ \update{ \fieldd  }{\expression_2}{\expression_3} }}{ s_1 } \iff  \interp{\psi}{ s_2  }  $
 \end{enumerate}
 \end{substHeap}
+\textit{Proof} \\
+We scatch only the first part of the lemma, the second part is by structural induction as in the previous lemma, second case.
+\begin{enumerate}
+\item   By structural induction on the structure of $\expression_1$.  We look at the case when $\expression_1 = \expression_2.\fieldd$
+    \begin{longtable}{l} 
+	       $\evalExp{ \expression_2.\fieldd \subst{\fieldd}{ \update{ \fieldd  }{\expression_2}{\expression_3} }  } {s_1} = $\\
+               \comment{apply substitution over fields as described in subsection \ref{subst} page \pageref{subst} } \\
+	       $\evalExp{ \expression_2. \update{ \fieldd  }{\expression_2}{\expression_3}  }{s_1} = $ \\
+               \comment{simplify the expression as in subsection \ref{subst} page \pageref{subst} }\\
+	       $\evalExp{ \expression_3}{s_1} = $\\
+	       \comment{evaluation of field access expression and by the initial hypothesis for $s_2$} \\
+	       $\evalExp{ \expression_2.\fieldd}{s_2}$
+	       
+    \end{longtable}
+       
+
+\end{enumerate}
 
  \begin{newHeap}[Update of the heap with a newly allocated object]\label{newHeap}
 For any expressions $ \expression_1$  
@@ -94,8 +111,7 @@ if we have that the states $s_1$ and $s_2$ are such that
 \begin{enumerate}
   \item \[ \begin{array}{l}   \evalExp{\expression_1 %\begin{array}{l}
                              \subst{ \stack{\counter}}{ \referenceOnly} %\\
-			     \lbrack  \fieldd \leftarrow \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }  
-                             \rbrack_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
+			     \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }}_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
                              %\end{array}
                              }{s_1} \\
 			     = \\
@@ -115,7 +131,27 @@ if we have that the states $s_1$ and $s_2$ are such that
  \end{enumerate}
  \end{newHeap}
 
+\textit{Proof} \\
+We scatch only the first part of the lemma, the second part is by structural induction as in the first lemma, second case.
+\begin{enumerate}
+\item   By structural induction on the structure of $\expression_1$.  We look at the case when $\expression_1 = \stack{\counter}.\fieldt$ where the field \fieldt{}
+ is declared in class \clazz.
+    \begin{longtable}{l} 
+         $\evalExp{\stack{\counter}.\fieldt \subst{ \stack{\counter}}{ \referenceOnly} 
+			    \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType )  } }_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }   } {s_1} = $\\   
+         \comment{applying the first substitution over \stack{\counter}.\fieldt{}  }\\
+         $\evalExp{ \referenceOnly.\fieldt \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType )  } }_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} } }{s_1} $\\
+         \{ \textit{  as by initial hypothesis \fieldt{} is declared in class \clazz{}  the series of substitutions over } \\
+        \textit{  the fields declared in any subtype of \clazz{} results in} \} \\
+           $\evalExp{\referenceOnly.\update{\fieldt}{ \referenceOnly}{ \defaultValueOnly( \fieldt.\fieldType ) } }{s_1}=$ \\
+	    \comment{simplify the field update expression }  \\
+	    $\evalExp{ \defaultValueOnly( \fieldt.\fieldType ) } {s_1} = $ \\
+              \comment{by initial hypothesis about the state $s_2$ and definition of the function $\newRef{\heap}{\clazz}$  in section \ref{heap} we get}\\
+	      $ \evalExp{\stack{\counter}.\fieldt  }{s_2 } $
+     \end{longtable}
+       
 
+\end{enumerate}
 
 
 %Proof : by structural induction on the structure of $\expression_1$ 
@@ -190,8 +226,8 @@ the following holds:
 
 % In the following, we adopt a lighter notation for the update  configuration expressions of the form:
 
-%  $$\substitution{ state }{ E }{ \interp{\exprWp}{ state  }  }   , \ E \in \{ \heap, \counterOnly, \stackOnly, \locVarOnly, \pc \} $$
+%  $$\substitution{ state }{ E }{ \interp{\expression}{ state  }  }   , \ E \in \{ \heap, \counterOnly, \stackOnly, \locVarOnly, \pc \} $$
 % and instead, we write 
-% $$\substitution{ state }{ E }{ \exprWp }$$
+% $$\substitution{ state }{ E }{ \expression }$$
 
 
