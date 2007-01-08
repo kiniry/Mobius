@@ -14,7 +14,7 @@ logic. A later version of the Loop tool  \cite{jacobs03java}
 and the interactive Java verification system Jive \cite{MH00Arc} are examples for  Java program verification tools which use  a Hoare style reasoning.   
  Hoare logic consists in a system of inference rules defined inductively over the statement structure. The inference rules manipulate
   Hoare logic triples. A Hoare triple consists of a predicate $Pre$, a statement $\stmt$ and a predicate $Post$,  such 
-that if $Pre$  holds in the initial state of $\stmt$,  then  $Post$  holds in the final tate of $\stmt$. For denoting such 
+that if $Pre$  holds in the initial state of $\stmt$,  then  $Post$  holds in the final state of $\stmt$. For denoting such 
 a Hoare  triple we use the  notation $\{Pre \}  \stmt \{Post\}$.
 Correctness of program $\stmt$ w.r.t. a precondition $Pre$ and postcondition   $Post$ is then established if a  derivation tree can be built  by applying the inference rule of the Hoare
 logic over the triple $\{Pre \}  \stmt \{Post\}$ and the  leaves of the tree are either axioms or valid formulas.
@@ -27,7 +27,7 @@ For instance, we may consider the Hoare  logic rule for the compositional statem
 $$\frac{ \{Pre \}  \stmt_1 \{Post'\} \  \ \{Post'\}  \stmt_2 \{Post\}  }{ \{Pre \}  \stmt_1;\stmt_2 \{Post\} }$$
 The rule states that if there is a predicate $Post'$ such that the triples  $\{Pre \}  \stmt_1 \{Post'\}$ and $\{Post'\}  \stmt_2 \{Post\} $ hold then the triple
 $\{Pre \}  \stmt_1;\stmt_2 \{Post\} $ holds. 
-Although the inference rule tells us what must be proven for the substatements for establishing the correctness of $\{Pre \}  \stmt_1;\stmt_2 \{Post\} $,
+Although the inference rule tells us what must be proved for the substatements for establishing the correctness of $\{Pre \}  \stmt_1;\stmt_2 \{Post\} $,
  it does not tell which is the predicate $Post'$.
 A user interaction is needed to determine  $Post'$. This situation occurs often also with the other rules in the logic.
 Actually,  even for small programs, a lot of human interaction  is necessary when  using Hoare style reasoning.
@@ -94,7 +94,7 @@ ESC/java (\cite{escjava}) and the Java verification system Krakatoa \cite{marche
 However, we consider that an intermediate language 
 opens a gap between  the verified code and the source code as we verify  a program in the intermediate language and not the original source program.
 Establishing the correctness of a verification systems which uses an intermediate language
-may be not trivial as the stages of the transformation of the original source program to its encoding in the intermediate language must be also proven correct. 
+may be not trivial as the stages of the transformation of the original source program to its encoding in the intermediate language must be also proved correct. 
 In particular, the verification ESC/java tool which uses an intermediate language does not have a proof of correctness \cite{FLL02ESC}.
 
 A point that we would like also to discuss here  is the use of loop frame conditions. 

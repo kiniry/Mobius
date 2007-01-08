@@ -10,8 +10,7 @@ that is not acceptable for constrained devices.
 
 Several approaches have been suggested to date to enforce memory
 consumption policies for programs; all approaches are automatic,
-but none of them is ideally suited for TPDs, either for their
-lack of precision, or for the runtime penalty they impose on
+but none of them is ideally suited for TPDs(short for Trusted Personal Devices), either for their lack of precision, or for the runtime penalty they impose on
 programs:
 \begin{itemize}
 \item \emph{Static analysis and abstract interpretations:} in such an
@@ -47,10 +46,9 @@ overhead which makes it unsuitable for TPDs.
 \end{itemize}
 In this chapter, we study the use of logical methods to specify and
 verify statically precise memory consumption policies for Java
-bytecode programs. We demonstrate how the Bytecode Modeling
-Language BML  can be used to specify precise memory consumption policies
-for (sequential) Java, and how verification tools can
-be used to enforce such memory consumption policies. 
+bytecode programs. In particular, we show a methodology how 
+to specify precise memory consumption policies
+for (sequential) Java.%, and how verification tools can be used to enforce such memory consumption policies. 
 
 
 Our broad conclusion is that logical methods provide a suitable means

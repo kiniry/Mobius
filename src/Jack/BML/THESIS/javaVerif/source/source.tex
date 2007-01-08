@@ -144,7 +144,7 @@ Fig. \ref{source:grammar} gives the formal grammar.
   whole try statement will terminate as the finally block. If the try block terminates on exception \Exc{} and if the finally block
   terminates normally, the whole try finally statement terminates  on the exception  \Exc{}.  If the try block terminates on exception \Exc{} and if the finally block
   terminates on exception \Exc' then the whole try finally  terminates on exception \Exc'.
-  Loop statements are also supported.  Note that their syntax inlcudes  a formula \invariant \ which must hold whenever 
+  Loop statements are also supported.  Note that their syntax includes  a formula \invariant \ which must hold whenever 
   the loop entry is reached as well as a  list of expressions
   \modLoop \ which lists the locations that  may not have the same value at the beginning
   and at the end of a loop iteration. Note that a  variable should not be in the list \modLoop{} even if during a loop iteration its value is changed
@@ -194,12 +194,12 @@ Let us now turn to the expression grammar. As we can see from the figure, the la
     The value stored in a field named \fieldd \ for the object reference $\expressionSrc $ is denoted with
     the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions with   $(\class) \expressionSrc$
     and method local variables  and parameters with identifiers taken from the set  \var.  
-    The language also has constructs for expressing method invokation.  For the sake of clarity we consider only non void  instance  methods which does not 
+    The language also has constructs for expressing method invocation.  For the sake of clarity we consider only non void  instance  methods which does not 
     receive parameters.
     Thus, the first expression in the syntax of the method invocation stands for the receiver object.  
     The language supports also instance creation construct. Note that constructors like methods do not take arguments.
     The semantics of instance creation expression $\newSrc \ \class{}$  is that it 
-    creates a new reference of type \class{} in the heap  which is initialised by the class constructor $\class$.
+    creates a new reference of type \class{} in the heap  which is initialized by the class constructor $\class$.
     A relation between    expressions is denoted with
     $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$.  
     We could have considered a larger set of boolean expressions like for instance logical connectors $\wedge, \vee \ldots$

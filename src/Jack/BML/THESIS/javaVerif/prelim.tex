@@ -118,21 +118,19 @@ public class ListArray {
  can also be assigned. Ghost variables are usually used  for expressing properties which can not be expressed with the program variables.
 
  We illustrate the utility of such variables through an example. 
- Let us have a class class \texttt{Transaction}  which manages transactions in the program.  
- The class is provided with a method for opening transactions \texttt{beginTransaction } and 
+ Let us have a class \texttt{Transaction}  which manages transactions in the program as shown in  Fig. \ref{bml:ghost}.  
+ The class is provided with a method for opening transactions (\texttt{beginTransaction}) and 
  a method for closing transactions (\texttt{commitTransaction}). Suppose that we want to guarantee that in an application 
  there are never nested transactions. A possibility is to declare a method \texttt{getTransactionDepth} which counts the number
- of open transactions and use dynamic checks  for guaranteeing that there are no nested transactions. But this would require to modfify the code which is not desirable. 
+ of open transactions and use dynamic checks  for guaranteeing that there are no nested transactions. But this would require to modify the code which is not desirable. 
 Another approach would be to use the method  \texttt{getTransactionDepth}  as far as its execution
  does not affect the program state (i.e. it is pure) in the specification 
  e.g. \ the precondition  of method \texttt{beginTransaction} will be \texttt{//@ requires getTransactionDepth() == 0}.
 However,  the treatment of pure methods is  complicated and its semantics is still not well established.
- 
- Fig. \ref{bml:ghost} is an example for how ghost variables can be used for specifying the no nested transaction property in a simple way.
- The example shows the class \texttt{Transaction} which manages transactions in the program. 
+ Ghost variables can be used for specifying the no nested transaction property in a simple way.
   The specification of the methods \texttt{beginTransaction } and \texttt{commitTransaction}
  models the property for no nested transactions via the ghost variable
- \texttt{TRANS} (declared on line 3) which keeps track if there is  a running transaction or not. In particuler, 
+ \texttt{TRANS} (declared on line 3) which keeps track if there is  a running transaction or not. In particular, 
  if the value of  \texttt{TRANS} is 0 then there is no running transaction and if it has value 1 then there is
  a running transaction.  Thus, when the method  \texttt{beginTransaction } is invoked the precondition (line 5) requires
  that there should be no running transaction and when the method is terminated the postcondition guarantees (line 6) that there is already a transaction running.
@@ -248,7 +246,7 @@ Moreover, if the precondition of a particular method specification case holds in
 Fig.\ \ref{bml:Desugar}  shows  the desugared version of the method specification from  Fig. \ref{bml:heavySp}. As we can see, the specification of the constructor 
 \lstinline!C! contains all the specification clauses, where the postcondition is set to the default postcondition \lstinline!true!.
 The specification of the method \lstinline!divide! does not contain the syntactic sugar \jmlKey{normal\_behavior} and
- \jmlKey{exceptional\_behavior} but explicitely specifies the behavior of the method in the two cases. Particularly, it contains now 
+ \jmlKey{exceptional\_behavior} but explicitly specifies the behavior of the method in the two cases. Particularly, it contains now 
 two specification cases surrounded by the tags  \lstinline!{| |}!. The first one corresponds to the 
 \jmlKey{normal\_behavior} case, i.e.\ the exceptional postcondition is set to \lstinline!false! and  the second specification case corresponds to the 
 \jmlKey{exceptional\_behavior}, i.e.\ the normal postcondition is set to  \lstinline!false!.
@@ -326,7 +324,7 @@ for every object which is different from the reference  \lstinline!a!  must have
  Note that if an expression has the same value at every  beginning and end of a loop iteration then it has the same value at the beginning and end of the loop.   
 The third conjunct expresses the fact that the value of any other field  \lstinline!g! different from  \lstinline!f! for any object 
  \lstinline!ref! changes its value in the beginning and end of a loop iteration.
-This third part makes the verification of modifies frame conditions difficult as one has to enumerate explicitely all the fields of all the classes which are reachable.
+This third part makes the verification of modifies frame conditions difficult as one has to enumerate explicitly all the fields of all the classes which are reachable.
 We do not discuss further the desugaring of the method modifies clauses in the method's postcondition as it is the same as for loop modifies clauses. 
 
 A very similar treatment of the  method and loop modifies clauses is done in Jack both on the Java source and Java bytecode verification condition generators.
@@ -340,7 +338,7 @@ to treat also in a similar way as Jack the modifies clauses for methods. In this
 
 May be here we may point out that not only the assertion of modifies clauses play a role in a verification condition but also their assumption.
 Assuming  modifies clauses on method invocation  and over the verification conditions for a loop allow to an appropriate verification condition generator to
- initialise properly the variables or locations that are not modified by the loop or method. Consider the following example for a method
+ initialize properly the variables or locations that are not modified by the loop or method. Consider the following example for a method
  \lstinline!m! which calculates the sum of the k natural numbers in a loop where k is a method parameter:
 
 
@@ -366,14 +364,14 @@ class A {
 \end{lstlisting} 
 
  Before calculating the sum the instance variable \lstinline!a.f! is set to the value of the parameter  \lstinline!k!.
- Assuming then the modifies clause of the loop allows to initialise properly the value of \lstinline!a.f! and to  establish that
+ Assuming then the modifies clause of the loop allows to initialize properly the value of \lstinline!a.f! and to  establish that
  the program  is correct w.r.t. the specification. Of course, the verification condition condition generator 
  must propagate the verification conditions up to the entry of the method body. 
  Such a verification  scheme based on a weakest precondition predicate transformers allows for writing smaller specifications. 
  Of course, here we could have used a stronger invariant (add in the loop invariant the fact that \lstinline!a.f == k! )
- but in real programs the number of variables is usually larger than in this small example and the specification burden of the programmer will be inadmissable.
+ but in real programs the number of variables is usually larger than in this small example and the specification burden of the programmer will be inadmissible.
  Actually, both verification condition generators on  Java source and bytecode in Jack propagate the verification conditions related to method correctness
- upto the method body entry point. 
+ up to the method body entry point. 
 
 \subsection{Class specification} \label{javaVerif:JML:classSpec}
 JML can be used to specify not only methods but also properties of a class or interface. 
@@ -399,7 +397,7 @@ For a detailed discussion on visible states, the reader may refer to the JML ref
 	method pre and postconditions (the treatment of history constraints has the same features thus, we do not discuss them further).
         Class invariants can be encoded as pre and postconditions of a method. We discuss here only the issue about 
 	instance invariants, the issue about is almost the same and the reader may refer to the JML manual \cite{JMLRefMan}.
-	From the first case of visible states described abovve, an instance invariant  must
+	From the first case of visible states described above, an instance invariant  must
 	be established by the constructor of this class which means that it must be part of the constructor's postcondition. 
 	From the  second case it follows that the invariant of an object must be part of the precondition of the finalizers of this object.
 	From the third case it follows that every method (not a constructor neither a finalizer ) that has as a receiver an object
@@ -417,7 +415,7 @@ For a detailed discussion on visible states, the reader may refer to the JML ref
 	in order to see that the application respects the invariant of the newly added class.
 	That is why verification tools may make some compromises.  
 	In JACK, for instance, constructors in a class \texttt{C} preserve the invariants of all objects of class \texttt{C} and establish the invariant of the receiver
-	object of the constructor. Non constructor and non finaliser methods declared in class \texttt{C} preserve the invariant of all objects of class \texttt{C}.   
+	object of the constructor. Non constructor and non finalizer methods declared in class \texttt{C} preserve the invariant of all objects of class \texttt{C}.   
 	 
 	A recent approach which relies on alias control type systems \cite{DietlMueller05,Naumann-vstteFAC} facilitates the verification of invariants and 
 	makes it modular. This technique establishes a hierarchy  relation of ``owner and owned'' objects  in the heap and only owners of an object may modify its contents.

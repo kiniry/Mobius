@@ -2,36 +2,77 @@
 
 \section{Related work}\label{bml:relWork}
 
-The interest in specification and verification of bytecode
-applications is quite recent, and not too much work has been done in
-that direction. Several logics have been developed to reason about
-bytecode, \emph{e.g.}~by Bannwart \& M\"uller~\cite{BannwartMueller05}
-and within the MRG project~\cite{AspinallEtAl:TPHOLs2004}. However, in
-this work the main focus was the development of a sound proof system,
-while the focus of BML is to write understandable specifications for
-bytecode. JVer is a tool to verify annotated
-bytecode~\cite{ChanderEILN05}. However, as specification language they
-use a subset of JML, \emph{i.e.}\ a source code level specification language.
+The idea of introducing annotations in the bytecode is actually not so recent.  
+For instance, the possibility to check a property at run-time, using the \texttt{assert}
+ construct, has been long adopted in the C programming language and recently also in Java (Java
+1.5, see \cite[\S 14.10]{JLS}). Checking runtime simple assertions,
+ as for instance that a reference is not  null is certainly very useful as it
+ allows for detecting bugs early in the development process.    
+But  in the presence of mobile code, the need for more
+ powerful specification mechanisms arises. In particular, because mobile code verification scheme
+ relies on static verification schemes, such specification mechanisms must be suitable 
+ for static verification. Moreover, bytecode specification language can be interesting for software audit
+ which does not trust the compiler. Another reason to 
+ consider a rich specification bytecode language  is the verification of programs which
+ are written directly in bytecode. 
+
+Although verification of bytecode programs has started to attract 
+the scientific interest,  not too much work has been done in
+the direction of bytecode specification. Several logics have been developed to reason about
+bytecode but none of them discusses the issue about a formalism for expressing program properties.
+For instance, in~\cite{BannwartMueller05} Bannwart \& M\"uller propose a general purpose Hoare style bytecode logic
+ which is proven correct and complete. They also address the issue of compiling Hoare style derivations 
+from the source language into Hoare style derivations over bytecode in order to cope with complex properties in a PCC scenarios.
+ However, they do not discuss the issue of the formalism into which to
+ express those program properties. Within the MRG project~\cite{AspinallEtAl:TPHOLs2004}, a resource aware logic is designed for Grail, a bytecode
+language which combines functional and object oriented features.  However, there also the main focus is the development of a sound proof system.
+% In both cases, the authors address the problem of building an infrastructure for PCC.
+ %But in order to make such a framework work especially for nontrivial policies, the untrusted code should come  annotated.
+ BML comes in reply to the need of  writing  and encoding understandable specifications for
+bytecode.
 
 The development of BML is clearly inspired by the development of the
 JML specification language~\cite{JMLRefMan}. Both JML and
 BML follow the Design by Contract principle introduced first in
-Eiffel~\cite{Meyer97}. The Boogie project~\cite{BarnettCDJL05}
-introduces in similarly the Design by Contract principles into the C\#
-programming language, both at source code level and for CIL, the .NET
-intermediate language.  The possibility to check a property at
-run-time, using the \texttt{assert} construct, has been long 
-adopted in the C programming language and recently also in Java (Java
-1.5, see \cite[\S 14.10]{JLS}). 
+Eiffel~\cite{Meyer97}. However, currently BML supports only a subset of JML which corresponds
+basically to the so called Level 0 of JML~\cite{JMLRefMan}.
+JML is a rich specification language which supports many specification constructs. 
+The semantics of few of these specification constructs is still under discussion.
+Despite this, JML is ``the most popular formal specification'' of Java and thus 
+we consider that supporting a relation between a Java bytecode specification language and JML is important.  
 
-Finally, we should mention the Extended Virtual Platform
-project\footnote{See
-\url{http://www.cs.usm.maine.edu/~mroyer/xvp/}.}. This project aims at
-developing a framework that allows to compile JML annotations, to
+% JVer is a tool to verify annotated
+%bytecode~\cite{ChanderEILN05}. However, as specification language they
+%use a subset of JML, \emph{i.e.}\ a source code level specification language.
+
+The Extended Virtual Platform project\footnote{See \url{http://www.cs.usm.maine.edu/~mroyer/xvp/}.} also is very close to JML.
+ This project aims at developing a framework that allows to compile JML annotations, to
 allow run-time checking~\cite{AlagicXVP05}. However, in contrast to
 our work, they do not intend to do static verification of bytecode
 programs. Moreover, their platform takes JML-annotated source code
 files as starting point, so it is not possible to annotate bytecode
 applications directly.
+
+The Spec\# programming system~\cite{BLS04sp} is probably the system which is closest to BML as  
+introduces in similarly the Design by Contract principles into the C\#
+programming language. %, both at source code level and for CIL, the .NETintermediate language.
+The system consists of the following components:  a programming language Spec\#, a compiler from Spec\# to 
+CIL,( the .NET intermediate language), a runtime checker and a static verification which is
+ based on a intermediate language BoogiePL and the static verifier Boogie~\cite{BarnettCDJL05}.
+ In particular, Spec\# is a superset of the programming language  C\#. Spec\# allows for expressing method (preconditions, postconditions and frameconditions )
+ and class contracts as well as class contracts (class invariants). Moreover, the language extends the programming type system with non - null types.
+ This in particular, means that one of the design goals of Spec\# is to alter the underlying programming language. This is a difference between JML and Spec \#
+ and consequently, between BML and Spec\#. Both JML and BML are clearly separated from Java, i.e. they can not force a programmer 
+ to change the programming code. The purpose of BML is to provide the means for verifying statically standard Java bytecode.
+ Spec\# programs can be verified dynamically and statically. 
+ Both verification styles work actually  on  CIL programs.
+ Thus the Spec\# compiler produces not only CIL code but also metadata which contains 
+ the specification. Moreover, Spec\# supports the C\# custom attributes in specifications which are compiled
+ into metadata in the CIL format. This metadata  information is then used by the verification mechanisms on runtime
+ or statically. For the moment,  BML is not connected to metadata which becomes official part of the newest
+ Java 5 (Tiger). But note that  we have taken the design  decision to relate BML to JML via a compiler. For the moment we have not considered such possibilty 
+ but we could exploit in the future the facilities of metadata via a compiler from Java metadata to BML. 
+ 
+
 
 

@@ -118,17 +118,24 @@ More formally, this is expressed in the next lemma.
 \end{figure}
 
 \begin{thm}\label{pogComp:relWpExpr}
-     For every expression $\expressionSrc$ and its compilation  $\compileLabel{s}{\expressionSrc}{e}$, the following holds :
-
-  $$ \begin{array}{l} 
-      \forall \psi,   \forall w_1, \ldots w_{k}, k \ge 0 \\
-	\psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \wedge \\
-	 \forall \Exc ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\Exc, e ) \Rightarrow \\\\
-	 \wpSrcExpr{\expressionSrc }{\psi}{\excPostExpl}{v} \subst{w_i}{\stack{\counter - i + 1}} _{i = 1 \ldots k} =
-	\wpi{s}{\methodd}{}
-	
-     \end{array}
-  $$    
+     For every expression $\expressionSrc$ and its compilation  $\compileLabel{s}{\expressionSrc}{e}$  let have a 
+formula  $\psi$ and expressions $w_1 \ldots w_{k}, k \ge 0 $ such that 
+$$\begin{array}{l} 	
+        \psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \wedge \\
+	 \forall \Exc ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\Exc, e )
+\end{array} $$
+then the following holds 
+$$  \wpSrcExpr{\expressionSrc }{\psi}{\excPostExpl}{v} \subst{w_i}{\stack{\counter - i + 1}} _{i = 1 \ldots k} =
+	\wpi{s}{\methodd}{} $$
+ %  $$ \begin{array}{l} 
+ %     \forall \psi,   \forall w_1, \ldots w_{k}, k \ge 0 \\
+ %	\psi \subst{v}{\stack{\counter}}\subst{w_i}{\stack{\counter - i}}_{i = 1 \ldots k}  = \inter{e}{e+1} \wedge \\
+ %	 \forall \Exc ,  \excPostExpl( \mbox{\rm\texttt{Exc}} ) = \methodd.\getExcPost(\Exc, e ) \Rightarrow \\\\
+ %	 \wpSrcExpr{\expressionSrc }{\psi}{\excPostExpl}{v} \subst{w_i}{\stack{\counter - i + 1}} _{i = 1 \ldots k} =
+ %	\wpi{s}{\methodd}{}
+ %	
+    %  \end{array}
+  % $$    
  \end{thm}
 Proof: the proof is by structural induction over the expression structure. We sketch 
 the cases for field access and arithmetic expressions.
@@ -251,8 +258,8 @@ the cases for field access and arithmetic expressions.
 
 The next lemma states the same property but this time for the compilation of statements.
 \begin{thm}\label{relWpStmt}
-     For every compiled statement $\compileLabel{s}{\stmt}{e}$  in  method \methodd, formula $\psi$ and 
-    function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
+     Let us have the statement $\stmt$, its compilation $\compileLabel{s}{\stmt}{e}$  in  method \methodd, the formula $\psi$
+     and the exceptional   function $\excPostExpl : \mbox{ \rm \texttt{ExcType}}  \rightarrow \formulaBc $ such that 
 
       \begin{enumerate}
             \item if $e+1$ exists  then $\psi = \inter{e}{e+1}$
