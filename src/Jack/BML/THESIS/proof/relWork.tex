@@ -1,0 +1,59 @@
+\section{Related work}\label{proof:relWork}
+
+Proving the soundness of a verification framework is important as such a proof 
+can guarantee the reliability of such framework. That is why most of the programming logic
+or verification conditions are also supplied with such a proof. 
+Being  a verification condition generator, a Hoare logic tailored to a structured or unstructured language, 
+ its proof of soundness requires a formalization of the operational semantics  w.r.t. the proof of soundness is done.  
+
+ Let us make a review of the verification programming logics tailored to source programs and provided with a proof
+ of correctness. The proof presented here has been inspired by the proof of soundness presented by Nipkow in \cite{Nipkow-MOD2001}
+ of a Hoare logic tailored to structures language which supports as while loops, exceptions, expression with side effects,
+ recursive procedures, procedure calls. Moreover, the author gives a completeness proof  as well as a proof of  total correctness.
+  The proof has been done in the theorem prover Isabelle/HOL. The modeling of the 
+ assertion language uses a  shallow embedding, i.e. the assertions are functions from program states to 
+  the propositions of the theorem prover Isabelle/HOL. The same induction over the method depth call underlines the proof. 
+
+ The Loop tool designed to support JML and tailored to the PVS theorem prover
+  provides also a proof of soundness of the weakest precondition calculus which underlines
+ its verification scheme \cite{Jacobs04WPJ}. The Jive system which is an interactive program theorem prover tailored to a Java subset is
+ also  proven correct \cite{MH00Arc}.
+   
+ In \cite{BannwartMueller05}, Bannwart and Muller  give a soundness proof of the bytecode a Hoare style
+ logic they define tailored to Java-like bytecode  which also uses also an induction over the method call depth and
+ thus, is valid for recursive methods. 
+
+ The bytecode logic presented  M. Wildmoser and T. Nipkow \cite{WildmoserN-ESOP05} also is supplied with a proof in Isabelle/HOL. There, the soundness
+ result is expressed w.r.t. to a safety policy. A safety policy is expressed not only as method pre and postconditions but also as 
+annotations at intermediate  program  points. For instance, such a policy can be that no instruction may cause an arithmetic overflow, thus
+arithmetic instructions in a bytecode will be accompanied by an assertion which expresses this fact.
+Their soundness result states that if the verification conditions are provable then
+ the assertions which express the safety policy holds at the particular program states. 
+We have decided not prove the soundness of intermediate assertions in order to keep things simple,
+ although we consider this will not present a major problem. This issue is described in Section \ref{conclusion}.
+
+A verification framework whose objectives is to provide a full automation may sacrifice completeness or even soundness.
+This can be especially the case of verification systems for source code verification where user 
+will be not willing to spend hours on the verification process. For instance, ESC/java
+ \cite{escjava} is based on intentional trade-offs of unsoundness with other properties of the checker, 
+such as frequency of false alarms (incompleteness) and efficiency. Such unsoundness is introduced from different sources: unsound loop checking, unsound
+verification of behavioral subtyping, etc.  As far as the tool gives adequate results to the user and allows him 
+to discover  many other bugs in the program, giving up soundness  is a good price to pay. 
+However, for bytecode logic this is not desirable. A potential application of  a bytecode logic are mobile code scenarios
+where the client system may rely on such a logic and thus, the soundness of the logic is necessary. 
+
+Moreover, we consider that a bytecode logic must be designed directly over the  bytecode. 
+In particular, applying transformations over the bytecode programs may turn 
+the proof of soundness in a difficult task.  
+ The proof for soundness presented here would seem large w.r.t. 
+the proof of soundness of Spec\# presented in  \cite{leinoWPUP}. Spec\# relies on several transformations over the 
+bytecode. First, a transformation of the potentially irreducible control flow graph to a reducible one is done.
+The second step  is converting the reducible control flow graph into an acyclic graph by removing the loop backedges.
+ The third step consists in translating programs into a single-assignment form.
+The fourth step is converting the program into a  guarded command language and finally, the fifth and last 
+step is passifying the guarded command language program which means changing assignments
+to \texttt{assume} statements. The proof presented in  
+\cite{leinoWPUP} is done for  programs written in passified guarded command language.
+But what is the formal guarantee that the initial  bytecode program is also correct? 
+A proof of soundness for Spec\# which takes into account all the transformation stages can be 
+already complex. 
