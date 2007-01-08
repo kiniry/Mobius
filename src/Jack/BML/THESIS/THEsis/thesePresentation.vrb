@@ -1,0 +1,17 @@
+\frametitle {Future directions. PCC. Light weight verification condition generator }
+     \begin{itemize}
+                          \item  certificate generation on the producer site - no constraints on the computational resources used
+    \item certificate checking on the  client site - should use few computational resources
+      \item both sites use a verification condition generator
+       \end{itemize}
+
+
+\begin{figure}[hc]
+\begin{center}
+%\includegraphics{bc.eps}
+\epsfig{file=figs/VCefficient.eps}
+%\caption{\sc Mobile code verification}
+%\label{intro:mobileVerif}
+\end{center}
+\end{figure}
+

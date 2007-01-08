@@ -1,0 +1,140 @@
+\beamer@endinputifotherversion {3.01pt}
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\sectionentry {1}{Context}{2}{Context}{0}}
+\headcommand {\beamer@sectionpages {1}{1}}
+\headcommand {\beamer@subsectionpages {1}{1}}
+\headcommand {\slideentry {1}{0}{2}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\slideentry {1}{0}{3}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\slideentry {1}{0}{4}{4/4}{}{0}}
+\headcommand {\beamer@framepages {4}{4}}
+\headcommand {\sectionentry {2}{Motivations}{5}{Motivations}{0}}
+\headcommand {\beamer@sectionpages {2}{4}}
+\headcommand {\beamer@subsectionpages {2}{4}}
+\headcommand {\slideentry {2}{0}{5}{5/5}{}{0}}
+\headcommand {\beamer@framepages {5}{5}}
+\headcommand {\slideentry {2}{0}{6}{6/6}{}{0}}
+\headcommand {\beamer@framepages {6}{6}}
+\headcommand {\slideentry {2}{0}{7}{7/7}{}{0}}
+\headcommand {\beamer@framepages {7}{7}}
+\headcommand {\slideentry {2}{0}{8}{8/8}{}{0}}
+\headcommand {\beamer@framepages {8}{8}}
+\headcommand {\slideentry {2}{0}{9}{9/9}{}{0}}
+\headcommand {\beamer@framepages {9}{9}}
+\headcommand {\slideentry {2}{0}{10}{10/10}{}{0}}
+\headcommand {\beamer@framepages {10}{10}}
+\headcommand {\slideentry {2}{0}{11}{11/11}{}{0}}
+\headcommand {\beamer@framepages {11}{11}}
+\headcommand {\slideentry {2}{0}{12}{12/12}{}{0}}
+\headcommand {\beamer@framepages {12}{12}}
+\headcommand {\sectionentry {3}{Bytecode Modeling Language}{13}{Bytecode Modeling Language}{0}}
+\headcommand {\beamer@sectionpages {5}{12}}
+\headcommand {\beamer@subsectionpages {5}{12}}
+\headcommand {\slideentry {3}{0}{13}{13/13}{}{0}}
+\headcommand {\beamer@framepages {13}{13}}
+\headcommand {\slideentry {3}{0}{14}{14/14}{}{0}}
+\headcommand {\beamer@framepages {14}{14}}
+\headcommand {\slideentry {3}{0}{15}{15/15}{}{0}}
+\headcommand {\beamer@framepages {15}{15}}
+\headcommand {\slideentry {3}{0}{16}{16/16}{}{0}}
+\headcommand {\beamer@framepages {16}{16}}
+\headcommand {\slideentry {3}{0}{17}{17/17}{}{0}}
+\headcommand {\beamer@framepages {17}{17}}
+\headcommand {\slideentry {3}{0}{18}{18/18}{}{0}}
+\headcommand {\beamer@framepages {18}{18}}
+\headcommand {\slideentry {3}{0}{19}{19/19}{}{0}}
+\headcommand {\beamer@framepages {19}{19}}
+\headcommand {\sectionentry {4}{Verification condition generator for Java bytecode}{20}{Verification condition generator for Java bytecode}{0}}
+\headcommand {\beamer@sectionpages {13}{19}}
+\headcommand {\beamer@subsectionpages {13}{19}}
+\headcommand {\slideentry {4}{0}{20}{20/20}{}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\slideentry {4}{0}{21}{21/22}{}{0}}
+\headcommand {\beamer@framepages {21}{22}}
+\headcommand {\slideentry {4}{0}{22}{23/28}{}{0}}
+\headcommand {\beamer@framepages {23}{28}}
+\headcommand {\slideentry {4}{0}{23}{29/29}{}{0}}
+\headcommand {\beamer@framepages {29}{29}}
+\headcommand {\slideentry {4}{0}{24}{30/30}{}{0}}
+\headcommand {\beamer@framepages {30}{30}}
+\headcommand {\slideentry {4}{0}{25}{31/40}{}{0}}
+\headcommand {\beamer@framepages {31}{40}}
+\headcommand {\slideentry {4}{0}{26}{41/41}{}{0}}
+\headcommand {\beamer@framepages {41}{41}}
+\headcommand {\sectionentry {5}{Relation between bytecode and source verification conditions}{42}{Relation between bytecode and source verification conditions}{0}}
+\headcommand {\beamer@sectionpages {20}{41}}
+\headcommand {\beamer@subsectionpages {20}{41}}
+\headcommand {\slideentry {5}{0}{27}{42/42}{}{0}}
+\headcommand {\beamer@framepages {42}{42}}
+\headcommand {\slideentry {5}{0}{28}{43/43}{}{0}}
+\headcommand {\beamer@framepages {43}{43}}
+\headcommand {\slideentry {5}{0}{29}{44/44}{}{0}}
+\headcommand {\beamer@framepages {44}{44}}
+\headcommand {\slideentry {5}{0}{30}{45/45}{}{0}}
+\headcommand {\beamer@framepages {45}{45}}
+\headcommand {\slideentry {5}{0}{31}{46/46}{}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {5}{0}{32}{47/47}{}{0}}
+\headcommand {\beamer@framepages {47}{47}}
+\headcommand {\slideentry {5}{0}{33}{48/48}{}{0}}
+\headcommand {\beamer@framepages {48}{48}}
+\headcommand {\slideentry {5}{0}{34}{49/55}{}{0}}
+\headcommand {\beamer@framepages {49}{55}}
+\headcommand {\sectionentry {6}{Applications}{56}{Applications}{0}}
+\headcommand {\beamer@sectionpages {42}{55}}
+\headcommand {\beamer@subsectionpages {42}{55}}
+\headcommand {\slideentry {6}{0}{35}{56/56}{}{0}}
+\headcommand {\beamer@framepages {56}{56}}
+\headcommand {\beamer@subsectionpages {56}{56}}
+\headcommand {\slideentry {6}{1}{1}{57/57}{Java-to-Native Compilation}{0}}
+\headcommand {\beamer@framepages {57}{57}}
+\headcommand {\slideentry {6}{1}{2}{58/59}{Java-to-Native Compilation}{0}}
+\headcommand {\beamer@framepages {58}{59}}
+\headcommand {\slideentry {6}{1}{3}{60/60}{Java-to-Native Compilation}{0}}
+\headcommand {\beamer@framepages {60}{60}}
+\headcommand {\slideentry {6}{1}{4}{61/61}{Java-to-Native Compilation}{0}}
+\headcommand {\beamer@framepages {61}{61}}
+\headcommand {\slideentry {6}{1}{5}{62/62}{Java-to-Native Compilation}{0}}
+\headcommand {\beamer@framepages {62}{62}}
+\headcommand {\slideentry {6}{1}{6}{63/63}{Java-to-Native Compilation}{0}}
+\headcommand {\beamer@framepages {63}{63}}
+\headcommand {\beamer@subsectionpages {57}{63}}
+\headcommand {\slideentry {6}{2}{1}{64/64}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {64}{64}}
+\headcommand {\slideentry {6}{2}{2}{65/67}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {65}{67}}
+\headcommand {\slideentry {6}{2}{3}{68/72}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {68}{72}}
+\headcommand {\slideentry {6}{2}{4}{73/73}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {73}{73}}
+\headcommand {\slideentry {6}{2}{5}{74/74}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {74}{74}}
+\headcommand {\slideentry {6}{2}{6}{75/77}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {75}{77}}
+\headcommand {\slideentry {6}{2}{7}{78/78}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {78}{78}}
+\headcommand {\slideentry {6}{2}{8}{79/79}{Constraint memory consumption policies using program logic}{0}}
+\headcommand {\beamer@framepages {79}{79}}
+\headcommand {\sectionentry {7}{Future work}{80}{Future work}{0}}
+\headcommand {\beamer@sectionpages {56}{79}}
+\headcommand {\beamer@subsectionpages {64}{79}}
+\headcommand {\slideentry {7}{0}{9}{80/80}{}{0}}
+\headcommand {\beamer@framepages {80}{80}}
+\headcommand {\beamer@subsectionpages {80}{80}}
+\headcommand {\slideentry {7}{1}{1}{81/81}{Results}{0}}
+\headcommand {\beamer@framepages {81}{81}}
+\headcommand {\slideentry {7}{1}{2}{82/82}{Results}{0}}
+\headcommand {\beamer@framepages {82}{82}}
+\headcommand {\slideentry {7}{1}{3}{83/83}{Results}{0}}
+\headcommand {\beamer@framepages {83}{83}}
+\headcommand {\slideentry {7}{1}{4}{84/84}{Results}{0}}
+\headcommand {\beamer@framepages {84}{84}}
+\headcommand {\slideentry {7}{1}{5}{85/85}{Results}{0}}
+\headcommand {\beamer@framepages {85}{85}}
+\headcommand {\beamer@partpages {1}{85}}
+\headcommand {\beamer@subsectionpages {81}{85}}
+\headcommand {\beamer@sectionpages {80}{85}}
+\headcommand {\beamer@documentpages {85}}
+\headcommand {\def \inserttotalframenumber {70}}
