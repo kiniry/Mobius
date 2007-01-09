@@ -3540,7 +3540,17 @@ public final class Translate
       if (Rval == null) {
         Expr nullcheck = AnnotationHandler.makeNonNullExpr(rval, nonNullPragma.getStartLoc());
         	// Chalin: was - GC.nary(TagConstants.REFNE, rval, GC.nulllit);
-        addCheck(locAssignOp, TagConstants.CHKNONNULL, nullcheck,
+        // GK Start - BUG515 fix.
+        Assert.notFalse(nullcheck instanceof BinaryExpr, "This should be a BinaryExpr:"+nullcheck);
+        // g_karab: considering both left and right sides are GC exprs 
+	//          then we can just create a new nary expression.
+        Expr gcExprNullCheck = GC.nary( nullcheck.getStartLoc(), 
+					nullcheck.getEndLoc(), 
+					TagConstants.REFNE,
+					((BinaryExpr)nullcheck).left,
+					((BinaryExpr)nullcheck).right);
+        // GK End - BUG515 fix.
+        addCheck(locAssignOp, TagConstants.CHKNONNULL, gcExprNullCheck,
                  nonNullPragma.getStartLoc());
       } else if (!Main.options().excuseNullInitializers || !inInitializerContext ||
                  trim(Rval).getTag() != TagConstants.NULLLIT) {
