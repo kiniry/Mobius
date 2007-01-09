@@ -60,20 +60,20 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
      & \\
     $\expression$      & ::= $\Constants$ \\
                      &  $\mid$ \locVar{ \digits } \\ 
-       	             &  $\mid$ \fieldAccess{$\expression$}{\FieldConstRef} \\
-		     &  $\mid$ \ident \\
-		     &  $\mid$ \arrayAccess{$\expression$} {$\expression$} \\	   
-		     &  $\mid$ $\expression$ \ \op \ $\expression$   \\
-		     &  $\mid$ \counter \\
-		     &  $\mid$ \stack{ $\expression$} \\
+                     &  $\mid$ \fieldAccess{$\expression$}{\FieldConstRef} \\
+                     &  $\mid$ \ident \\
+                     &  $\mid$ \arrayAccess{$\expression$} {$\expression$} \\      
+                     &  $\mid$ $\expression$ \ \op \ $\expression$   \\
+                     &  $\mid$ \counter \\
+                     &  $\mid$ \stack{ $\expression$} \\
                      &  $\mid$ \old{ $\expression$  } \\
                      &  $\mid$ \EXC    \\
-		     &  $\mid$ \result \\
-		     &  $\mid$ \boundVar \\
-		     &  $\mid$ \typeof{ $\expression$} \\
+                     &  $\mid$ \result \\
+                     &  $\mid$ \boundVar \\
+                     &  $\mid$ \typeof{ $\expression$} \\
                      &  $\mid$ \type{\ident} \\
                      &  $\mid$ \elemtype{$\expression$  }\\
-		     &  $\mid$ \TYPE\\  
+                     &  $\mid$ \TYPE\\  
   & \\
   \FieldConstRef     & ::= \ident  \\
   & \\
@@ -85,15 +85,15 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
   & \\
  $\formulaBc$ & ::= 
            $ \expression \ \predicates \  \expression $  \\
-	  & $\mid$  \true \\
-	  & $\mid$  \false  \\	
+          & $\mid$  \true \\
+          & $\mid$  \false  \\  
           & $\mid$ not \ $\formulaBc $ \\
-	  & $\mid$ $\formulaBc  \wedge  \formulaBc $\\
-	  & $\mid$ $\formulaBc \vee  \formulaBc$ \\
-	  & $\mid$ $ \formulaBc  \Rightarrow \formulaBc$ \\
+          & $\mid$ $\formulaBc  \wedge  \formulaBc $\\
+          & $\mid$ $\formulaBc \vee  \formulaBc$ \\
+          & $\mid$ $ \formulaBc  \Rightarrow \formulaBc$ \\
           & $\mid$ $\formulaBc \iff  \formulaBc$ \\
-	  & $\mid$ $\forall \ \boundVar , \formulaBc$\\
-	  & $\mid$ $\exists \ \boundVar  , \formulaBc$	 \\
+          & $\mid$ $\forall \ \boundVar , \formulaBc$\\
+          & $\mid$ $\exists \ \boundVar  , \formulaBc$   \\
     & \\
   \ClassSpec & ::=  \ClassInv \ \invModifier \  \formulaBc  \\
                  & $\mid$ \ClassHistoryConstr  \ \formulaBc   \\
@@ -101,27 +101,27 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
    & \\
    
  \invModifier & ::= \instance $\mid$ \static \\
-		 
+                 
     & \\
   \intraMethodSpec & ::=  \begin{tabular}{l}  \atIndex \ nat; \\
-		                            \intraSpec ; 
-			  \end{tabular}\\
+                                            \intraSpec ; 
+                          \end{tabular}\\
 &\\
 \intraSpec & ::=  \loopSpec \\ 
              & $\mid$ \assert \ \formulaBc  \\                      
-	     & $\mid$ \set \ $\expression$ \  $\expression$ \\
+             & $\mid$ \set \ $\expression$ \  $\expression$ \\
 & \\
 \loopSpec  & ::=  \begin{tabular}{l}  
                         \loopInv \  \formulaBc; \\ 
-			\loopMod \ \modifiesLocs; \\ 
+                        \loopMod \ \modifiesLocs; \\ 
                         \loopDecreases \ $\expression$; 
-	         \end{tabular}\\
+                 \end{tabular}\\
  
 & \\ 
   \MethodSpec & ::=  \begin{tabular}{l}   
                           \requires \ \formulaBc;\\
-			  \specCases; \\
-		    \end{tabular}\\
+                          \specCases; \\
+                    \end{tabular}\\
 & \\
 \specCases & ::= \specCase \\     
                     & $\mid$  \specCase \ \also \ \specCases \\
@@ -131,10 +131,10 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
                     & \phantom{aaa} \begin{tabular}{l}  
                                  \requires  \ \formulaBc; \\
                                  \modifies  \  \modifiesLocs;  \\
-				 \ensures \ \formulaBc; \\
-				 \exsuresList\\
-				 
-		     \end{tabular}  \\
+                                 \ensures \ \formulaBc; \\
+                                 \exsuresList\\
+                                 
+                     \end{tabular}  \\
                     &\phantom{aaa} $\vert$\} \\
  & \\ 
  \exsuresList & ::=   [ ] $\mid$  \exsures \ ( \ident )  \ \formulaBc  ; \exsuresList  \\
@@ -144,8 +144,8 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
   \modifiesLoc & ::=  \fieldAccess{$\expression$}{\FieldConstRef } \\
                     & $\mid$ \locVar{i} \\ 
                     & $\mid$ \arrayAccessMod{$\expression$}{\specIndex}\\
-		    & $\mid$ \everything \\
-		    & $\mid$ \nothing \\
+                    & $\mid$ \everything \\
+                    & $\mid$ \nothing \\
               
  & \\
  \specIndex & ::= \all  $ \mid $   $\expression_1 $ \ldots  $\expression_2 $  $\mid $    $\expression $ \\            
@@ -158,21 +158,21 @@ Section  \ref{BCSL} gives the formal grammar of  BML as well as an informal desc
 %       & \\
 %       \bmlKeyWords & ::= \requires \\
 %                       & $\mid$ \ensures \\
-%		       & $\mid$ \modifies \\
-%		       & $\mid$ \assert \\
-%		       & $\mid$ \set \\
-%		       & $\mid$ \exsures \\
-%		       & $\mid$  \also \\
-%		       & $\mid$  \ClassInv \\
-%		       & $\mid$ \ClassHistoryConstr \\
-%		       & $\mid$ \atIndex \\ 
-%		       & $\mid$ \loopInv \\
-%		       & $\mid$ \loopDecreases \\
-%		       & $\mid$ \loopMod \\
-%		       & $\mid$ \jmlKey{$\backslash$ typeof} \\
-%		       & $\mid$ \jmlKey{$\backslash$ elemtype}\\
-%		       & $\mid$ \TYPE\\
-%		       & $\mid$ \result 
+%                      & $\mid$ \modifies \\
+%                      & $\mid$ \assert \\
+%                      & $\mid$ \set \\
+%                      & $\mid$ \exsures \\
+%                      & $\mid$  \also \\
+%                      & $\mid$  \ClassInv \\
+%                      & $\mid$ \ClassHistoryConstr \\
+%                      & $\mid$ \atIndex \\ 
+%                      & $\mid$ \loopInv \\
+%                      & $\mid$ \loopDecreases \\
+%                      & $\mid$ \loopMod \\
+%                      & $\mid$ \jmlKey{$\backslash$ typeof} \\
+%                      & $\mid$ \jmlKey{$\backslash$ elemtype}\\
+%                      & $\mid$ \TYPE\\
+%                      & $\mid$ \result 
 \end{longtable}
 %$$
 
@@ -246,7 +246,7 @@ Method specification:
    {| 
     requires lv(1)(*@ $\neq$ @*) 0;
     modifies lv(0).#19;
-    ensures  lv(0).#19 == \old( lv(0).#19 ) / lv(1);
+    ensures  lv(0).#19 = \old( lv(0).#19 ) / lv(1);
     exsures  ( #25 ) false;  
    |}
    also 
@@ -254,7 +254,7 @@ Method specification:
     requires lv(1) == 0;
     modifies \nothing;
     ensures false;
-    exsures ( #26 ) lv(0).#19  == \old(lv(0).#19);
+    exsures ( #26 ) lv(0).#19  = \old(lv(0).#19);
    |}
 
  public void divide(int lv(1)) 
@@ -274,18 +274,18 @@ Method specification:
 %             $\Constants$. 
 %             A constant is either a signed or unsigned integer, or an identier.  
 %             Integers are defined in a standard way. Identifiers correspond 
-%	     to indexes in the constant pool of a Java class and are always prefixed by the symbol $\#$. 
+%            to indexes in the constant pool of a Java class and are always prefixed by the symbol $\#$. 
 %             
 %      \item  $\locVar{i}$ a local variable in the array of local variables of a method at index $i$.
 %             Note that the array of local variables of a method in a class file
 %             is the list containing both the formal parameters of the method and
-%	     the variables declared locally in the method.
+%            the variables declared locally in the method.
 %             
 %             
 %      \item  field access expressions where $\fieldAccess{ \expression}{\ident}$ stands for accessing the field which 
 %             is at index $\ident$ in the class constant pool of the class 
 %             for the reference denoted by the expression  $ \expression $. 
-%	      	    
+%                   
 %               
  %     \item  array access expression where $\arrayAccess{\expression^1} {\expression^2} $ stands for an access to the element at index $ \expression^2$ 
 %             in the array denoted by the expression $ \expression^1$. This corresponds to the Java notation $\expression^1[\expression^2 ]  $ 
@@ -314,8 +314,8 @@ execution. Stack expressions are represented in BML as follows:
              For instance, the element below the stack top is represented with $\stack{\counter - 1}$ 
              % Differently from the JML, our bytecode specification language has to take into 
              % account the operand stack and its counter. 
-	     Note that those expressions may appear in predicates that refer to intermediate instructions in the bytecode. 
-	   
+             Note that those expressions may appear in predicates that refer to intermediate instructions in the bytecode. 
+           
  \end{itemize}
 
 
@@ -329,7 +329,7 @@ execution. Stack expressions are represented in BML as follows:
 %      \item $\elemtype{\expression}$ denotes the type of the elements of the array $\expression$
 %      \item \TYPE.  This keyword stands for the Java type \texttt{java.lang.Class}\footnote{In the Java Application Programming Interface (API), 
 %            instances of the class \texttt{java.lang.Class} represent Java classes, interfaces or basic types}. Notice that expressions
-%	    $ \typeof{\expression}$, $\type{\ident}$ and $\elemtype{ \expression }$ are of type \TYPE.     
+%           $ \typeof{\expression}$, $\type{\ident}$ and $\elemtype{ \expression }$ are of type \TYPE.     
 %
 % \end{itemize}
 
@@ -365,7 +365,7 @@ of the type of the ghost field. The second $\ident$ is the index in the constant
 %      \item \ClassHistoryConstr. 
 %      \item  $\declare \ \ghost \ \ident  \ \ident$ declares a special specification variable which we call ghost variable.
 %             These variables do not change the program behaviour although they might be assigned to as we shall see later in this section.
-%	     Ghost variables are used only for specification purposes and  are not ``seen'' by the Java Virtual Machine.   
+%            Ghost variables are used only for specification purposes and  are not ``seen'' by the Java Virtual Machine.   
 %\end{itemize}
  
 \subsubsection{Frame conditions} 
@@ -384,25 +384,25 @@ We look now what are the syntax constructs that may appear in the frame conditio
              in the constant pool for the reference denoted by  $\expression$ 
       \item $\locVar{i}$ states that the local variable may modified by a loop. Note that this kind of modified
             expression makes sense only for expressions modified in a loop.
-	    Indeed, a modification of a local variable does not make sense for a method frame condition, 
-	    as methods in Java are called by value, and
-	    thus, a method can not cause a modification of a local variable that is observable from the outside of the method.
-	    
+            Indeed, a modification of a local variable does not make sense for a method frame condition, 
+            as methods in Java are called by value, and
+            thus, a method can not cause a modification of a local variable that is observable from the outside of the method.
+            
       \item  $\arrayAccessMod{\expression}{\specIndex}$ states that the components at the indexes specified by $\specIndex$ in
             the array denoted by $\expression$ may be modified. The indexes of the array components that may be modified $\specIndex$
-	    have the following syntax:
-	    \begin{itemize}
-	          \item $i$ is the index of the component at index $i$. For instance, 
-		        $\arrayAccessMod{\expression}{i}$ means that the array component at index $i$ might be modified.
-	          \item \all \ specifies that all the components of the array may be modified, i.e. the expression 
-		         $\arrayAccessMod{\expression}{\all}$ means that any element in the array may potentially be modified.
+            have the following syntax:
+            \begin{itemize}
+                  \item $i$ is the index of the component at index $i$. For instance, 
+                        $\arrayAccessMod{\expression}{i}$ means that the array component at index $i$ might be modified.
+                  \item \all \ specifies that all the components of the array may be modified, i.e. the expression 
+                         $\arrayAccessMod{\expression}{\all}$ means that any element in the array may potentially be modified.
                        % $$ \forall \ i ,   0  \le i < \length(\expression ) \Rightarrow \arrayAccessMod{\expression}{i }$$
-		       
-		  \item $ \expression_1 .. \expression_2$ specifies the interval of array components between the index $\expression_1$  and $\expression_2$.  
-		        %Thus, the modified expression  $\arrayAccessMod{\expression}{i_1 .. i_2}$ is a syntactic sugar for 
-			%  $$ \forall \ i ,  i_1 \leq i \wedge  i \leq i_2 \Rightarrow \arrayAccessMod{\expression}{i }$$
-			 
-	    \end{itemize}
+                       
+                  \item $ \expression_1 .. \expression_2$ specifies the interval of array components between the index $\expression_1$  and $\expression_2$.  
+                        %Thus, the modified expression  $\arrayAccessMod{\expression}{i_1 .. i_2}$ is a syntactic sugar for 
+                        %  $$ \forall \ i ,  i_1 \leq i \wedge  i \leq i_2 \Rightarrow \arrayAccessMod{\expression}{i }$$
+                         
+            \end{itemize}
 
       \item $\everything $ states that every location might be modified by the method or loop
       \item $\nothing$ states that no location might be modified by a method or loop
@@ -460,20 +460,20 @@ the specification cases explicitely declare their behavior as described in subse
 %%            In case this clause is not written in the specification explicitely, then the default postcondition   \Mytrue \  must hold.
  %     \item $\modifies \ list \ \modifiesLoc $   which is the frame condition of the specification case and denotes the 
 %            the locations that may be modified by the method if the precondition of this specification case holds in the prestate.
-%	    This in particular means that a location that is not mentioned in the \modifies \  clause may be modified. 
-%	    If the modifies clause is omitted, then the default modifies specification is \modifies \ \everything
+%           This in particular means that a location that is not mentioned in the \modifies \  clause may be modified. 
+%           If the modifies clause is omitted, then the default modifies specification is \modifies \ \everything
 %      \item \exsuresList \  is the list of the exceptional postconditions that should hold in this specification case. In particular,
  %           every element in the list of exceptional postconditions has the following structure 
-%	    $ \exsures \ ( \ident )  $ $\ \formulaBc$. 
-%	    Note that  at index $\ident$  there is a constant which stands for some exception class  $\mbox{\rm\texttt{Exc}}$.
-%	    The semantics of such a specification expression is that if the method 
-%	    containing the exceptional postcondition terminates on an exception of type   $\mbox{\rm\texttt{Exc}}$
-%	    then the predicate denoted by $\formulaBc$ must hold in the poststate. Note that the list of exceptional postcondition may be empty.
-%	    Also the list of exceptional postconditions might not be complete w.r.t. exceptions that may be thrown  by the method.
-%	    In both cases, for every
-%	    exception that might be thrown by the method for which no explicite exceptional postcondition is given,
-%	     we take the default exceptional postcondition
-%	    \Myfalse
+%           $ \exsures \ ( \ident )  $ $\ \formulaBc$. 
+%           Note that  at index $\ident$  there is a constant which stands for some exception class  $\mbox{\rm\texttt{Exc}}$.
+%           The semantics of such a specification expression is that if the method 
+%           containing the exceptional postcondition terminates on an exception of type   $\mbox{\rm\texttt{Exc}}$
+%           then the predicate denoted by $\formulaBc$ must hold in the poststate. Note that the list of exceptional postcondition may be empty.
+%           Also the list of exceptional postconditions might not be complete w.r.t. exceptions that may be thrown  by the method.
+%           In both cases, for every
+%           exception that might be thrown by the method for which no explicite exceptional postcondition is given,
+%            we take the default exceptional postcondition
+%           \Myfalse
 %\end{itemize}
 %\todo{give the bytecode version of the example with heavy weight specification}
 
@@ -559,24 +559,24 @@ Loop specification :
 %        to which the specification refers. 
 %  \item  $\intraSpec$ specifies the property that must hold in  every  state that reaches the instruction at the index  specified by $ \atIndex \ nat$.
 %         We allow the following local assertions:  
-%	 
+%        
 %\begin{itemize}
 %  \item  \loopSpec \ gives the specification of a loop. It has the following syntax: 
 %          \begin{itemize}
-%	     \item $\loopInv \  \formulaBc $  where $  \formulaBc $ is   the property that must hold  whenever the corresponding
-%	           loop entry instruction is reached during execution
+%            \item $\loopInv \  \formulaBc $  where $  \formulaBc $ is   the property that must hold  whenever the corresponding
+%                  loop entry instruction is reached during execution
 %             \item $\loopMod \ list \ loc$  is the list of locations modified in the loop. This means that at the borders
-%	           of every iteration (beginning and end), all the expressions not mentioned in the loop frame condition must have
-%		   the same value.  
+%                  of every iteration (beginning and end), all the expressions not mentioned in the loop frame condition must have
+%                  the same value.  
 %             \item $ \loopDecreases \ \expression $ specifies the expression $\expression $ which guarantees loop termination. 
-%	           The values of   $\expression $ must be from a well founded set (usually from $\Myint$ type ) and the values
-%%		    of   $\expression $ should decrease at every iteration 
+%                  The values of   $\expression $ must be from a well founded set (usually from $\Myint$ type ) and the values
+%%                  of   $\expression $ should decrease at every iteration 
 %            \end{itemize}
 %
 %  \item  $  \assert \ \formulaBc $ specifies the predicate $\formulaBc $ that must hold at the corresponding position in the bytecode
 %
 %  \item  $ \set \ \expression \  \expression $ is a special expression that allows to set the value of a specification ghost variable. This means
 %         that the first argument must denote a reference to a ghost variable, while the second expression is the new value that this 
-%	 ghost variable is assigned to. \todo{what about assigning nonghost value to a ghost field of reference type}
+%        ghost variable is assigned to. \todo{what about assigning nonghost value to a ghost field of reference type}
 %%\end{itemize}
 %\end{itemize}

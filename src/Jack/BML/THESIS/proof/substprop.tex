@@ -42,30 +42,30 @@ and $i$ is a valid index in the array of method register \locVarOnly{} then the 
          by structural induction on the structure of $\expression_1$.  We look only at the simple case
       when $ \expression_1 = \locVar{i} $. The other cases proceed in a similar way. 
            \begin{longtable}{l} 
-	      $\evalExp{ \locVar{i} \subst{\locVar{i}  }{\expression_2 }}{s_1} = $\\
-	      \comment{apply substitution}\\
-	      $\evalExp{\expression_2}{s_1}=$\\
-	      \comment{ evaluation of local variables  and by the initial hypothesis for $s_2$ } \\ %by Def.\ref{interpExpr}
-	       $\evalExp{\locVar{i}}{s_2}$\\
-	   \end{longtable}
+              $\evalExp{ \locVar{i} \subst{\locVar{i}  }{\expression_2 }}{s_1} = $\\
+              \comment{apply substitution}\\
+              $\evalExp{\expression_2}{s_1}=$\\
+              \comment{ evaluation of local variables  and by the initial hypothesis for $s_2$ } \\ %by Def.\ref{interpExpr}
+               $\evalExp{\locVar{i}}{s_2}$\\
+           \end{longtable}
    
 
 
  \item second case of the lemma. It is by induction on the structure of the formula $\psi$. We sketch the case when 
           $ \psi = \expression_1 \  \predicates \  \expression_2 $
-	    
-	    \begin{longtable}{l} 
+            
+            \begin{longtable}{l} 
                $\interp{(\expression_1 \  \predicates \  \expression_2 )\subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
-	       \comment{apply substitution}\\
-	       $\interp{\expression_1\subst{ \locVar{i} }{ \expression_2 }  \  \predicates \  \expression_2 \subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
-	       \comment{interpretation of formulas }\\
-	        $\evalExp{\expression_1\subst{ \locVar{i} }{ \expression_2 } }{s_1}  \  \predicates \ \evalExp{ \expression_2 \subst{ \locVar{i} }{ \expression_2 }} {s_1} = $ \\
-		\comment{from the first part of the lemma and the initial hypothesis for $s_2$ we get } \\
-		 $\evalExp{\expression_1}{s_2}  \  \predicates \  \evalExp{\expression_2} {s_2} = $ \\
-		 \comment{from definition of formula interpretation in a state}\\
-		 $ \interp{\expression_1 \  \predicates \  \expression_2}{s_2}$
-	     \end{longtable}
-	
+               \comment{apply substitution}\\
+               $\interp{\expression_1\subst{ \locVar{i} }{ \expression_2 }  \  \predicates \  \expression_2 \subst{ \locVar{i} }{ \expression_2 }  }{s_1} =$ \\
+               \comment{interpretation of formulas }\\
+                $\evalExp{\expression_1\subst{ \locVar{i} }{ \expression_2 } }{s_1}  \  \predicates \ \evalExp{ \expression_2 \subst{ \locVar{i} }{ \expression_2 }} {s_1} = $ \\
+                \comment{from the first part of the lemma and the initial hypothesis for $s_2$ we get } \\
+                 $\evalExp{\expression_1}{s_2}  \  \predicates \  \evalExp{\expression_2} {s_2} = $ \\
+                 \comment{from definition of formula interpretation in a state}\\
+                 $ \interp{\expression_1 \  \predicates \  \expression_2}{s_2}$
+             \end{longtable}
+        
   
 \end{enumerate}
 
@@ -89,14 +89,14 @@ We scatch only the first part of the lemma, the second part is by structural ind
 \begin{enumerate}
 \item   By structural induction on the structure of $\expression_1$.  We look at the case when $\expression_1 = \expression_2.\fieldd$
     \begin{longtable}{l} 
-	       $\evalExp{ \expression_2.\fieldd \subst{\fieldd}{ \update{ \fieldd  }{\expression_2}{\expression_3} }  } {s_1} = $\\
+               $\evalExp{ \expression_2.\fieldd \subst{\fieldd}{ \update{ \fieldd  }{\expression_2}{\expression_3} }  } {s_1} = $\\
                \comment{apply substitution over fields as described in subsection \ref{subst} page \pageref{subst} } \\
-	       $\evalExp{ \expression_2. \update{ \fieldd  }{\expression_2}{\expression_3}  }{s_1} = $ \\
+               $\evalExp{ \expression_2. \update{ \fieldd  }{\expression_2}{\expression_3}  }{s_1} = $ \\
                \comment{simplify the expression as in subsection \ref{subst} page \pageref{subst} }\\
-	       $\evalExp{ \expression_3}{s_1} = $\\
-	       \comment{evaluation of field access expression and by the initial hypothesis for $s_2$} \\
-	       $\evalExp{ \expression_2.\fieldd}{s_2}$
-	       
+               $\evalExp{ \expression_3}{s_1} = $\\
+               \comment{evaluation of field access expression and by the initial hypothesis for $s_2$} \\
+               $\evalExp{ \expression_2.\fieldd}{s_2}$
+               
     \end{longtable}
        
 
@@ -111,21 +111,23 @@ if we have that the states $s_1$ and $s_2$ are such that
 \begin{enumerate}
   \item \[ \begin{array}{l}   \evalExp{\expression_1 %\begin{array}{l}
                              \subst{ \stack{\counter}}{ \referenceOnly} %\\
-			     \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType ) }}_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }
+                             \subst{ \fieldd}{ \update{\fieldd } {
+                                 \referenceOnly }{\defaultValueOnly( \fieldd.
+                                 \fieldType ) }}_{ \small{ \fieldd}}^ { \small \subtype{ \fieldd.\declaredIn}{ \clazz} }
                              %\end{array}
                              }{s_1} \\
-			     = \\
+                             = \\
                             \evalExp{\expression_1}{ s_2  } 
-			     \end{array}  \]
+                             \end{array}  \]
 
      \item \[\begin{array}{l}  \interp{\psi %\begin{array}{l}
                               \subst{\stack{\counter}}{\referenceOnly }%\\
- 			      \subst{\fieldd }{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType)}} _{  \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz}   }
+                              \subst{\fieldd }{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.\fieldType)}}_{ \small{ \fieldd}}^ { \small \subtype{ \fieldd.\declaredIn}{ \clazz} }
                              % \end{array}
                              }{s_1}\\
- 			      \iff \\ 
- 			     \interp{\psi}{s_2} 
- 			     \end{array}  \]
+                              \iff \\ 
+                             \interp{\psi}{s_2} 
+                             \end{array}  \]
  
  
  \end{enumerate}
@@ -138,16 +140,21 @@ We scatch only the first part of the lemma, the second part is by structural ind
  is declared in class \clazz.
     \begin{longtable}{l} 
          $\evalExp{\stack{\counter}.\fieldt \subst{ \stack{\counter}}{ \referenceOnly} 
-			    \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType )  } }_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} }   } {s_1} = $\\   
+                            \subst{ \fieldd}{ \update{\fieldd } {
+                            \referenceOnly }{\defaultValueOnly( \fieldd.
+                            \fieldType )  } }_{ \small{ \fieldd}}^ { \small \subtype{ \fieldd.\declaredIn}{ \clazz} }
+                                  }{s_1}  =$ \\
          \comment{applying the first substitution over \stack{\counter}.\fieldt{}  }\\
-         $\evalExp{ \referenceOnly.\fieldt \subst{ \fieldd}{ \update{\fieldd } { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType )  } }_{ \forall \fieldd: \FieldSet, \subtype{ \fieldd.\declaredIn}{ \clazz} } }{s_1} $\\
+         $\evalExp{ \referenceOnly.\fieldt \subst{ \fieldd}{ \update{\fieldd }
+         { \referenceOnly }{\defaultValueOnly( \fieldd.  \fieldType )  } }_{ \small{ \fieldd}}^ { \small \subtype{ \fieldd.\declaredIn}{ \clazz} }
+                                  }{s_1}  =$ \\ 
          \{ \textit{  as by initial hypothesis \fieldt{} is declared in class \clazz{}  the series of substitutions over } \\
         \textit{  the fields declared in any subtype of \clazz{} results in} \} \\
            $\evalExp{\referenceOnly.\update{\fieldt}{ \referenceOnly}{ \defaultValueOnly( \fieldt.\fieldType ) } }{s_1}=$ \\
-	    \comment{simplify the field update expression }  \\
-	    $\evalExp{ \defaultValueOnly( \fieldt.\fieldType ) } {s_1} = $ \\
+            \comment{simplify the field update expression }  \\
+            $\evalExp{ \defaultValueOnly( \fieldt.\fieldType ) } {s_1} = $ \\
               \comment{by initial hypothesis about the state $s_2$ and definition of the function $\newRef{\heap}{\clazz}$  in section \ref{heap} we get}\\
-	      $ \evalExp{\stack{\counter}.\fieldt  }{s_2 } $
+              $ \evalExp{\stack{\counter}.\fieldt  }{s_2 } $
      \end{longtable}
        
 
@@ -158,21 +165,21 @@ We scatch only the first part of the lemma, the second part is by structural ind
 %\begin{enumerate}
 %\item we consider the first case of the lemma 
 %\begin{itemize}
-%	  
+%         
  %    \item $\expression_1 = \stack{\counter} $
 %      
 %      $$
-%	    \begin{array}{l}
-%	          ( left ) \  \substitution{\stack{\counter}  }{ \stack{\counter} }{ \referenceOnly }    = \referenceOnly \\
-%		  \Rightarrow \\
-%		\numConclusion{1} \  \evalExp{\substitution {\stack{\counter}  }{ \referenceOnly }{ \expression_2 }}{ s_1 } =   \evalExp{\referenceOnly}{s_1} \\
-%		  \\
-%		  (right ) \  \evalExp{\locVar{i}}{s_2} = \\
-%		  \mbox{\rm\comment{by Def.\ref{interpExpr} of the evaluation  for local variables  }} \\
-%		\numConclusion{2} \  =  \evalExp{\expression_2}{s_1} \\
-%		 \mbox{\rm\comment{from \numConclusion{1} \  and \numConclusion{2} \ we get that the lemma holds in this case  }}
-%	    \end{array} 
-%	   $$
+%           \begin{array}{l}
+%                 ( left ) \  \substitution{\stack{\counter}  }{ \stack{\counter} }{ \referenceOnly }    = \referenceOnly \\
+%                 \Rightarrow \\
+%               \numConclusion{1} \  \evalExp{\substitution {\stack{\counter}  }{ \referenceOnly }{ \expression_2 }}{ s_1 } =   \evalExp{\referenceOnly}{s_1} \\
+%                 \\
+%                 (right ) \  \evalExp{\locVar{i}}{s_2} = \\
+%                 \mbox{\rm\comment{by Def.\ref{interpExpr} of the evaluation  for local variables  }} \\
+%               \numConclusion{2} \  =  \evalExp{\expression_2}{s_1} \\
+%                \mbox{\rm\comment{from \numConclusion{1} \  and \numConclusion{2} \ we get that the lemma holds in this case  }}
+%           \end{array} 
+%          $$
 
 %\end{itemize}
 %%\item by structural induction over the structure of the formula $\psi$

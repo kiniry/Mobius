@@ -65,7 +65,7 @@ $$
  \wellDefined{ \arrayAccess{\expression_1} {\expression_2} } = 
             \begin{array}{l}
               \wellDefined{\expression_1} \wedge \\
-	      \wellDefined{\expression_2} \wedge \\
+     \wellDefined{\expression_2} \wedge \\
              \instances(\expression_1) \wedge \\
               \expression_1 \neq \Mynull \wedge\\
              0 \le  \expression_2 < \arraylength(\expression_1)
@@ -91,10 +91,14 @@ $$
  this will be sufficient for our proof of correctness of the verification condition generator later in Chapter \ref{proofGeneral} as 
  we assume that programs are bytecode verified and that specifications
  are well defined. Under these assumptions and because the verification condition generator preserves well definedness of formulas, we 
- can perform the correctness proof. 
+ can perform the correctness proof in Chapter \ref{proofGeneral}.
 
- We use the notation $\interp{\predWp}{s}$ to say that the well defined formula  $\predWp$ is valid w.r.t. a current state  $s$ and an initial state $s_0$.
- $\interp{\predWp}{s}$ is defined in the standard way. For instance, the statement $\interp{\expression_1 \  \predicates \  \expression_2 }{s}$
+ We use the notation $\interp{\predWp}{s}$ to say that the well defined
+  formula  $\predWp$ is valid w.r.t. a current state
+  $s$ and an initial state $s_0$.
+
+The interpretation $\interp{\predWp}{s}$ is defined in the standard way.
+ For instance, the statement $\interp{\expression_1 \  \predicates \  \expression_2 }{s}$
  by definition means that the evaluation   $\evalExp{ \expression_1 }{s } $ of $\expression_1$ and the evaluation $\evalExp{ \expression_2 }{s } $ of $\expression_2$
  are in relation $ \predicates$ or written formally that the following holds:
  $\evalExp{ \expression_1 }{s } \ \predicates \ \evalExp{ \expression_2 }{s}$.
@@ -353,7 +357,6 @@ The next definition introduces the notion of an assertion formula logically vali
 in every program state. We call such formulas  valid formulas. 
 
 \begin{interpretation}[Valid formulas]\label{assertLang:interpretation:valid}
-  If an assertion formula  $ \predWp $ holds in any current state and any initial state, i.e.
-$\forall s, s_{0}, \  \interp{\predWp}{s}$ we say that this is a valid formula and we note it with :
-  $\validFormula{\predWp} $ 
+  We say that the formula  $ \predWp $ a valid formula if forall states $s$  $\interpSpecTwoStates{\predWp}{s}{s}$. 
+We note this with  $\validFormula{\predWp}$ 
 \end{interpretation}

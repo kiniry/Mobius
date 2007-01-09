@@ -65,54 +65,54 @@ Fig. \ref{source:grammar} gives the formal grammar.
    $$ \begin{array} {ll}
    % %   \program :: = & \class;\\
     %                 & \\
- %		    & \\
+ %                  & \\
  %
  %
     %  \class ::=      & list \fieldDecls list \methods\\
     %                  & \\
- %		     & \\
+ %                   & \\
     %  \fieldDecls ::= & \Type \id \\ 
     %                  %& \mid \Type \id;\fieldDecls  \\
                 
- %		     & \\ 
- %		     & \\
+ %                   & \\ 
+ %                   & \\
   %    \method ::=& id (list type argName) type \{ \stmt \}  \\
    %              & \\ 
- %		& \\
- 		        
+ %              & \\
+                        
      \expressionSrc  & ::=         \constantInt  \\
-				%& \mid \Mytrue \\ 
-				%& \mid \Myfalse \\
-				& \mid \Mynull  \\
-				& \mid \this \\
-				& \mid \expressionSrc \ \op \ \expressionSrc \\  
-				& \mid \expressionSrc.\fieldd \\
-				& \mid \var \\
-  			        & \mid (\class) \ \expressionSrc \\
-				& \mid \expressionSrc.\methodd() \\
-				& \mid  \newSrc \ \class  ( ) \\
-				& \\
-				&  \op \in \{ +, - , *, \}  \\
-				%& \mid \expressionSrcRel \\
+                                %& \mid \Mytrue \\ 
+                                %& \mid \Myfalse \\
+                                & \mid \Mynull  \\
+                                & \mid \this \\
+                                & \mid \expressionSrc \ \op \ \expressionSrc \\  
+                                & \mid \expressionSrc.\fieldd \\
+                                & \mid \var \\
+                                & \mid (\class) \ \expressionSrc \\
+                                & \mid \expressionSrc.\methodd() \\
+                                & \mid  \newSrc \ \class  ( ) \\
                                 & \\
-				& \\
+                                &  \op \in \{ +, - , *, \}  \\
+                                %& \mid \expressionSrcRel \\
+                                & \\
+                                & \\
      \expressionSrcRel  &::=      \expressionSrc \ \rel \ \expressionSrc \\
-				%& \mid \expressionSrc \ \instanceofSrc \ Class\\
-				& \\   
-				& \rel \in \{ \le, < ,  \ge, >, = , \neq \}      \\
-				& \\
-				& \\
-      \stmt & ::=		        %& \Myskip \\
+                                %& \mid \expressionSrc \ \instanceofSrc \ Class\\
+                                & \\   
+                                & \rel \in \{ \le, < ,  \ge, >, = , \neq \}      \\
+                                & \\
+                                & \\
+      \stmt & ::=                       %& \Myskip \\
                                  \stmt;\stmt \\
                                 & \mid \Myif \ (\expressionSrcRel) \ \Mythen \ \{ \stmt \} \  \Myelse \ \{ \stmt \}  \\
-			        & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
-		                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
-			%	& \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
-				& \mid \throw \ \expressionSrc  \\
+                                & \mid \try  \ \{ \stmt \}  \ \catch \ ( \mbox{\rm\texttt{Exc} } )\ \{ \stmt \} \\
+                                & \mid \try  \ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+                        %       & \mid \try  \ \{ \stmt \} \ \catch \ ( \mbox{\rm\texttt{Exc} }  )\ \{ \stmt \} \ \finally \ \{ \stmt \} \\
+                                & \mid \throw \ \expressionSrc  \\
                                 & \mid \while \ (\expressionSrcRel) \lbrack \invariant, \modLoop \rbrack \ \do \ \{ \stmt \}\ \\
-				& \mid \returnSrc \  \expressionSrc \\
-			%	& \mid \returnSrc \\
-                   		& \mid \expressionSrc = \expressionSrc \\        
+                                & \mid \returnSrc \  \expressionSrc \\
+                        %       & \mid \returnSrc \\
+                                & \mid \expressionSrc = \expressionSrc \\        
     \end{array} $$
 \caption{\sc Source language}
 \label{source:grammar}
@@ -194,13 +194,16 @@ Let us now turn to the expression grammar. As we can see from the figure, the la
     The value stored in a field named \fieldd \ for the object reference $\expressionSrc $ is denoted with
     the construct  $ \fieldAccess{\expressionSrc}{\fieldd} $, cast expressions with   $(\class) \expressionSrc$
     and method local variables  and parameters with identifiers taken from the set  \var.  
-    The language also has constructs for expressing method invocation.  For the sake of clarity we consider only non void  instance  methods which does not 
-    receive parameters.
-    Thus, the first expression in the syntax of the method invocation stands for the receiver object.  
-    The language supports also instance creation construct. Note that constructors like methods do not take arguments.
+    The language also has constructs for expressing method invocation. 
+    Thus, the first expression in the syntax of the method invocation
+    $\expressionSrc.\methodd()$ stands for the receiver object of the method
+    call and \methodd{} is the name of the invoked method. For the sake of clarity we consider only non void  instance  methods which does not 
+    receive parameters. Moreover, we assume that methods always return a
+    value. The language supports also instance creation construct. Note that constructors like methods do not take arguments.
     The semantics of instance creation expression $\newSrc \ \class{}$  is that it 
     creates a new reference of type \class{} in the heap  which is initialized by the class constructor $\class$.
-    A relation between    expressions is denoted with
+    For class constructors, we also assume that they do not take parameters
+    for the same reasons as above.   A relation between    expressions is denoted with
     $\expressionSrc \ \rel \ \expressionSrc $ where $\rel  \in \{ \le, < ,  \ge, >, = , \neq \}$.  
     We could have considered a larger set of boolean expressions like for instance logical connectors $\wedge, \vee \ldots$
      but we limit our language only to  relational expressions for the sake of simplicity without losing any particular feature of the language.
