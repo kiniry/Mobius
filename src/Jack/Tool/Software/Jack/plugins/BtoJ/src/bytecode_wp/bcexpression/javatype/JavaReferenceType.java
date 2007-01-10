@@ -20,6 +20,7 @@ public class JavaReferenceType extends JavaType {
 	/*private BCConstantClass bcc;*/
 	
 	public static final JavaReferenceType ReferenceType = new JavaReferenceType();
+	public static String JavaRefTypeName = "REFERENCE";
 	
 	public JavaReferenceType() {
 		

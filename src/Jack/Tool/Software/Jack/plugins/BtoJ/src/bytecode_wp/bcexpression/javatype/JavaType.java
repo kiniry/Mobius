@@ -24,8 +24,7 @@ import bytecode_wp.bcexpression.jml.JML_CONST_TYPE;
 public class JavaType extends Expression  {
 	private Type bcelType; //still keeping reference to the bcel type object
 
-	public JavaType() {
-	}
+	
 	
 	/**
 	 * this is a static variable that representing the type of all types 
@@ -61,8 +60,16 @@ public class JavaType extends Expression  {
 	public static final JavaReferenceType JavaNULL =
 		new JavaReferenceType(Type.NULL);
 
+	//any Java type
+	public static final JavaType JavaTYPE = new JavaType();
+	
 	private static HashMap loadedTypes;
-
+	
+	
+	
+	public JavaType() {
+	}
+	
 	protected JavaType(Type _type, NumberLiteral _compType) {
 		bcelType = _type;
 		computationalType = _compType;
@@ -148,6 +155,8 @@ public class JavaType extends Expression  {
 			}
 		return null;
 	}
+	
+	
 
 	public static JavaReferenceType getJavaRefType(Type _type) {
 		return getJavaRefType(_type.getSignature());

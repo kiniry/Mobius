@@ -86,6 +86,9 @@ public class JavaArrType extends JavaReferenceType {
 	 * @return
 	 */
 	public JavaType getElementType() {
+		if (elementType == null) {
+			return JavaReferenceType.ReferenceType;
+		}
 		return elementType;
 	}
 
