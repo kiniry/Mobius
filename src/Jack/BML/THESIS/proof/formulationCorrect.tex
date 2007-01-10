@@ -8,7 +8,12 @@ In order to define what it means for the verification calculus to be correct we 
  precise what does it mean that a  method respects its specification. As we have stated 
  before the intuition behind this notion is that if the method starts execution in a state 
  where its precondition  holds then if it terminates execution then its postcondition holds.
-  
+   
+ We shall concentrate on the correctness of method pre and postconditions. We shall assume that the modified locations are
+ correct. Moreover, we shall not deal with expression referring to the initial state of the heap. This last aspect needs a
+ formalization of heaps in intermediate states especially in the case of method calls and loops. Such a formalization and proof of a
+logic which deals old expressions is presented in \cite{}. 
+
  As we want also to treat recursive calls, we use a technique  known in the literature \cite{Nipkow-MOD2001} which consists in  annotating the execution 
 relation in  the operational semantics with levels. A level of execution  stands for  the maximal call depth in the execution of a  method. 
   Thus, the operational semantics of a method invokation in case of normal termination\footnote{we are not exhaustive here about all the possible rules of the 

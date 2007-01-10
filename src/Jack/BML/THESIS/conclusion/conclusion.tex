@@ -108,7 +108,8 @@ as this will turn the latter language richer. However, the meaning  of JML const
  These methods does not modify the program state and thus, pure methods can be used in specifications 
  (only side effect free  expressions may occur in expressions).
  This gives more expressive  specifications as with them, for instance, specification can talk about the result of method invocation or use pure methods
- as a predicate relating their  initial and final state. 
+ as a predicate relating their  initial and final state.  Moreover, observational purity is certainly 
+ of interest \cite{obspure}.
  Formalizing and establishing the meaning of pure methods is difficult and a literature exists for this problem \cite{DarvasMueller06}.
  As we said above, the treatment of pure methods is the same on source and bytecode.
 

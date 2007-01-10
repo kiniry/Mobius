@@ -4,7 +4,7 @@
 \BOOKMARK [1][]{Outline4}{Verification condition generator for Java bytecode}{}
 \BOOKMARK [1][]{Outline5}{Relation between bytecode and source verification conditions}{}
 \BOOKMARK [1][]{Outline6}{Applications}{}
-\BOOKMARK [2][]{Outline6.1.57}{Java-to-Native Compilation}{Outline6}
-\BOOKMARK [2][]{Outline6.2.64}{Constraint memory consumption policies using program logic}{Outline6}
+\BOOKMARK [2][]{Outline6.1.61}{Java-to-Native Compilation}{Outline6}
+\BOOKMARK [2][]{Outline6.2.68}{Constraint memory consumption policies using program logic}{Outline6}
 \BOOKMARK [1][]{Outline7}{Future work}{}
-\BOOKMARK [2][]{Outline7.1.81}{Results}{Outline7}
+\BOOKMARK [2][]{Outline7.1.85}{Results}{Outline7}

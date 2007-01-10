@@ -4,7 +4,7 @@
 \newtheorem{substCntr}[substHeap]{Lemma}
 \newtheorem{substLv}[substHeap]{Lemma}
 \newtheorem{substRet}[substHeap]{Lemma}
-
+\newtheorem{substOld}[substHeap]{Lemma}
 
 \newtheorem{valid}{Definition}[section]
 
@@ -227,6 +227,21 @@ the following holds:
       \item $\interp{\substitution{\psi}{ \result}{ \expression_2 }}{ s_1 } \iff \interp{\psi}{s_2} $
 \end{enumerate}
 \end{substRet}
+
+% The next lemma refers to formulas which may contain 
+% old sub expressions of the form $\old{expression}$. It states that if  a  formula $\psi$
+%is valid w.r.t. to a state $s$ and initial state $s'_0$  we can substitute the values of the old expressions ($\old{\ast}$) 
+%with  their  values  from w.r.t. $s'_0 $ and $s$ and then the resulting formula will be valid w.r.t. the states
+%$s$ and $s_0$ where we know that the allocated instances in heap \heap {}    
+ 
+
+  
+%\begin{substOld}[Old value property]\label{substOld} 
+%For any  formula $\psi$,  states $s_0$ $s'_0$ and $s$  the following holds
+%$$  \interpSpecTwoStates{\psi  \subst{\old{\ast}}{\evalExpStates{\ast} {s_0}{s'_0}}}{s_0}{s} \Leftrightarrow 
+%\interpSpecTwoStates{\psi }{s'_0 }{s} $$
+%\end{substOld}
+
 
 
 

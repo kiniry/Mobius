@@ -1,4 +1,4 @@
-
+\newtheorem{thmVC}{Definition}[section]
 
 \subsection{Verification conditions} \label{wp:vcMeth}
 Let us see now how with the help of the \wpName{} we can express 
@@ -29,10 +29,15 @@ states that the specified method precondition  \methodd.\pre{} implies the
  actually reflect properly the semantics of our programming language. Thus the
  verification condition  will be as shown in the following: % Fig. \ref{vc:impl}. 
 %\begin{frameit}
+\begin{thmVC}\label{wp:vc:impl}The verification condition which expresses that a method \methodd{}
+  respects its specification precondition \methodd.\pre{}, postcondition
+  \methodd.\normalPost{} and exceptional postcondition function   \methodd.\excPostSpec{} is:
+
  $$ \methodd.\pre  \wedge \locVar{0} \wedge \instances( \locVar{0} ) \wedge
 \neq \Mynull   
-\wedge \instancesLocVars(\methodd)  \wedge \subTypesLocVars(\methodd)   \Rightarrow
+\wedge \instancesLocVars(\methodd )  \wedge \subTypesLocVars(\methodd )   \Rightarrow
  \wpi{}{\methodd}{0} $$
+\end{thmVC}
 %\caption{Verification condition for that method implementation respects method
 %specification}\label{vc:impl}
 %\end{frameit}
@@ -43,9 +48,9 @@ As we can see, the verification condition assumes not only the specified
  a natural condition as because of the semantics of our language
  method may be executed only on a non null reference which belongs to the
  current heap. Next, we also take as  a hypothesis the formula  \instancesLocVars{} which is
-parameterized by the method \methodd{} and which stands stands for:
+parameterized by the method \methodd{} and   which stands stands for:
 
-$$ \instancesLocVars(\methodd)  =  \forall i.
+$$ \instancesLocVars(\methodd  )  =  \forall i.
  1 \le i \le \methodd.\numArgs,  \methodd. \args[i] <: \Object \Rightarrow  \instances( \locVar{i} )
   \vee \locVar{i} = \Mynull
 $$
@@ -62,7 +67,7 @@ The next formula in the assumption of the verification condition is
 following:
 
 $$ \subTypesLocVars (\methodd)  =  \forall i.
- 0 \le i \le \methodd.\numArgs,  \locVar{i} <: \methodd. \args[i]
+ 0 \le i \le \methodd.\numArgs,  \typeof{\locVar{i}} <: \methodd. \args[i]
 $$
 
 Thus we assume that any local variable $\locVar{i}, 0 \le i \le \methodd.\numArgs$ 
@@ -178,20 +183,31 @@ If a method \methodd{} declared in a class \lstinline!B! overrides
 %Fig. \ \ref{vc:subty} shpws
 In the next, we  show the  conditions for establishing the
  correctness of a method \methodd{} if method \methodd{}  overrides method \mbox{\rm\texttt{n}}:
+\begin{thmVC}\label{wp:vc:subt}{Verification conditions for correct subtyping}
+The verification condition which express that a method \methodd{} which overrides
+method   \mbox{\rm\texttt{n}} is a behavioral subtype is given in the following:
+
 %\begin{figure}
 %\begin{frameit}
-$$
-  \begin{array}{l}
-         \mbox{\rm\texttt{n}}.\pre \wedge  
+
+
+$$ 
+  \begin{array}{l} 
+          \forall  \boundVar_0,  \ldots , \boundVar_{\mbox{\rm\texttt{n}}.\numArgs },
+      \left(  \begin{array}{l}  \left( \begin{array}{l}
+          \mbox{\rm\texttt{n}}.\pre \wedge  
           \locVar{0} \neq \Mynull \wedge
-          \instances(\locVar{0}) \wedge
-          \instancesLocVars(\mbox{\rm\texttt{n}} ) \wedge 
-          \subTypesLocVars(\mbox{\rm\texttt{n}} )
-            \Rightarrow  \methodd{}.\pre\\\\
+          \instances(\locVar{0}) \wedge\\
+          \instancesLocVars(\mbox{\rm\texttt{n}} )  \wedge 
+          \subTypesLocVars(\mbox{\rm\texttt{n}} ) 
+            \end{array}\right) %\subst{\locVar{i} }{ \boundVar_i}_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs }
+            \Rightarrow %\\
+          \methodd{}.\pre  \end{array}\right) \subst{\locVar{i} }{ \boundVar_i}_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs }  
+\\\\
+ 
 
-
-         \forall \boundVar, \\
-           \left( \begin{array}{l}
+         \forall \boundVar, \boundVar_0,  \ldots ,\boundVar_{\mbox{\rm\texttt{n}}.\numArgs },\\
+           \left(  \begin{array}{l}  \left( \begin{array}{l}
              
              \methodd{}.\normalPost \subst{\result}{\boundVar} \wedge  
              \boundVar <: \mbox{\rm\texttt{n}}.\retType \wedge\\
@@ -201,35 +217,46 @@ $$
              \subTypesLocVars(\mbox{\rm\texttt{n}} ) \wedge\\
              \instances(\locVar{0})  \end{array}\right)
        \Rightarrow \mbox{\rm\texttt{n}}.\normalPost \subst{\result}{\boundVar}
-           \\\\
-          \forall \boundVar, \\
-          \left( \begin{array}{l} 
-          \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  ) \subst{\EXC}{\boundVar}  \wedge   
-          \instances(\EXC) \wedge \\
-          \boundVar <: \mbox{\rm\texttt{Exc}} \wedge
-          \locVar{0} \neq \Mynull \wedge
-          \instances(\locVar{0}) \wedge\\
-          \instancesLocVars \wedge 
-          \subTypesLocVars\\
-         \end{array}\right)
+        \end{array}\right)\subst{\locVar{i} }{ \boundVar_i}_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs }
+          
+
+ \\\\
+
+          \forall \boundVar, \boundVar_0,  \ldots ,\boundVar_{\mbox{\rm\texttt{n}}.\numArgs },\\
+        \left( \begin{array}{l} 
+           \left( \begin{array}{l} 
+           \methodd{}.\excPostSpec(\mbox{\rm\texttt{Exc}}  ) \subst{\EXC}{\boundVar}  \wedge  \\ 
+           \instances(\boundVar) \wedge \\
+           \boundVar <: \mbox{\rm\texttt{Exc}} \wedge\\
+           \locVar{0} \neq \Mynull \wedge\\
+           \instances(\locVar{0}) \wedge\\
+           \instancesLocVars \wedge 
+           \subTypesLocVars\\
+          \end{array}\right)
           \Rightarrow
-          \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}) \subst{\EXC}{\boundVar}  , \\
+          \mbox{\rm\texttt{n}}.\excPostSpec(\mbox{\rm\texttt{Exc}}) \subst{\EXC}{\boundVar}  \end{array}\right)\subst{\locVar{i} }{ \boundVar_i}_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs } 
+          \\ \\
           where \ \mbox{\rm\texttt{Exc}} \in \mbox{\rm\texttt{n}}.\exceptions
    \end{array}
 $$
+\end{thmVC}
 %\caption{Verification conditions for behavioral subtyping}\label{vc:subty}
 %\end{frameit}
 %\end{figure}
 As in the verfication conditions conditions concerning  only method
 specification above, they all use additional assumption concerning the types
-and values of the local variables. As explained above, we the first condition expresses the fact that
+and values of the local variables. As explained above, the first condition expresses the fact that
 the precondition of the overriding method is stronger than the precondition it
-overrides. This is the so called contravariant rule.
+overrides. This is the so called contravariant rule. Note that the implication
+ must hold for any valid value of the local variables  (i.e. for those of reference type they must be valid references in the heap and moreover, the receiver
+of the call  must be not \Mynull)
  
 The second  condition expresses the fact that the normal postcondition of the
  overriding method is stronger than than the postcondition specified in the
-  method it overrides. We quantify over the postcond
+  method it overrides. We quantify over the postcondition result as well as the values of the local variables including the receiver
+ of the method call \locVar{0}.
  Finally, the third formula represents a series of
   formulas which show that the postcondition for any exceptional outcome of
-  the overriding method must respect the condition of the overriden method.  
+  the overriding method must respect the condition of the overriden method.  Similarly, we want that the implication holds for any
+ valid values of the local variables and of the exception object which of the expected exception type \texttt{Exc}. 
 

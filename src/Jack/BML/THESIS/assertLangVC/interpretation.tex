@@ -1,6 +1,7 @@
 
 %\newtheorem{wellDef}{Definition}[section]
 \newtheorem{interpretation}{Definition}[section]
+\newtheorem{assertLangTh}{Lemma}[section]
 %\newtheorem{interpTypeExpr}[interpExpr]{Definition} 
 %\newtheorem{interpPred}[interpExpr]{Definition}
 %\newtheorem{predicate}[interpExpr]{Definition}
@@ -197,7 +198,7 @@ $$
  \evalExp{ \locVar{i} } { s } & =  &\locVarOnly(i) \\
 
 
- \evalExp{ \old{\expression} } { s } &  = & \evalExp{ \expression }{  s_{0}} \\
+% \evalExp{ \old{\expression} } { s } &  = & \evalExp{ \expression }{  s_{0}} \\
 
  \evalExp{\expression_1 \ \op \ \expression_2   } { s } &  =  &  \evalExp{\expression_1}{s} \op  \evalExp{\expression_2}{s}  \\
 
@@ -238,11 +239,32 @@ $$
 \evalExp{ \EXC }{s } = \Exc  & where \ s=  \configFinalExc{\heap}{\Exc}
 \end{array}
 $$
-  
+  \end{interpretation}
 
-\end{interpretation}
+% The definition is standard, except that we evaluate w.r.t. to two states, an initial and a final state. Actually, the unique non standard
+% case is the evaluation of an old expression ( $\old{\expression}$) where $\expression$ is evaluated in the initial state.
+% We can actually make a more general conclusion, i.e.\ if an expression ( formula) does not contain old subexpressions then the initial state does not
+% matter for the evaluation of expressions or the validity in a state of a formula.
 
-%Thus, for instance the evaluation  $\evalExp{ \fieldAccess{\locVar{1}}{\fieldd}  }{s}$ of the expression $ \fieldAccess{\locVar{1}}{\fieldd} $  in the
+ 
+%\begin{assertLangTh}\label{assert:interp:oldExp}
+%Let $\expression$ be an expression which does not contain subexpressions of the form $\old{\expression'}$.
+%Then for any two initial states $s_0, s'_0$, the evaluation of $\expression$ in the state $s$ 
+%is the  same:
+%$$ \evalExpStates{ \expression }{s_0 }{s} = \evalExpStates{ \expression }{s'_0 }{s} $$
+%\end{assertLangTh}
+%The proof is by induction over the expression structure. 
+%%
+%\begin{assertLangTh}\label{assert:interp:oldExp}
+%Let $\psi$ be a formula which does not contain subexpressions of the form $\old{\expression'}$.
+%Then for any two initial states $s_0, s'_0$, the interpretation of  of $\psi$ in the state $s$ 
+%is the  same:
+%$$ \interpSpecTwoStates{ \psi }{s_0 }{s} \Leftrightarrow  \interpSpecTwoStates { \psi }{s'_0 }{s} $$
+%\end{assertLangTh}
+
+
+
+% Thus, for instance the evaluation  $\evalExp{ \fieldAccess{\locVar{1}}{\fieldd}  }{s}$ of the expression $ \fieldAccess{\locVar{1}}{\fieldd} $  in the
 % state $s =\config{\heap}{\counterOnly}{ \stackOnly }{\locVar{1} \rightarrow \Mynull  }{\pc } $ is not defined.
 
 

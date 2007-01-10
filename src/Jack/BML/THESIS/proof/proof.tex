@@ -291,85 +291,101 @@ We are going to see only the proofs for the instructions \return , \load, \new{}
                
 	   %\end{enumerate}
 
- \item method invocation $\methodd.\body[\pc_n =\invoke] \ \mbox{\rm\texttt{n} }$
+ \item method invocation $\methodd.\body[\pc_n] =\invoke \ \mbox{\rm\texttt{n} }$
 We shall ignore here the part of the \wpName{} which concerns the exceptional termination for reasons of clarity. Treating the whole 
 definition of the \wpName{} for method invokation is done in a rather similar way as the part that we sketch here.
 
 \newcommand{\mInv}{\mbox{\rm \texttt{n}}}
-         $$\interp{\wpi{ }{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$ \\
-			 \mbox{\rm\comment{definition of the wp function} } 
+         %$$\interp{\wpi{ }{\methodd}{\pc_n  }}{\config{\heap_n }{\counterOnly_n }{\stackOnly_n }{\locVarOnly_n }{\pc_n }}$$ \\
+       \comment{definition of the \wpName{} function for method invokation, we get first that the precondition of the invoked method holds  } 
 
-	 $$\begin{array}{l}
-        \numConclusion{1} \   \interp{  \mbox{\rm\texttt{n} } .\pre\subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs } } {s_n} \\ 
-	 				 			\wedge \\
-							
-	 \numConclusion{2} \  	 \interpTwoLines{\forall  mod ,  ( mod \in \mbox{\rm\texttt{n} } .\modif ), \forall res   \\ 
-	 				 		\left(	\begin{array}{l}   \Myspace \mbox{\rm\texttt{n} } .\normalPost %\begin{array}{l}
-							\subst{\result}{  res } 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } }.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }                                                                                                	%\end{array}  
-                    \Rightarrow \\ 
-			      \inter{i}{i+1 } %\begin{array}{l}
-						 \subst{\counter}{ \counter - \mbox{\rm\texttt{n'} } .\numArgs + 1 }
-						 \subst{ \stack{\counter -  \mbox{\rm\texttt{n'} } .\numArgs + 1 }}{ res }																%	\end{array}	
-																								
-	 				 			 	\end{array}\right)  } {s_n}	\end{array} $$
+	 $$  \numConclusion{1} \   
+\interp{  \mbox{\rm\texttt{n} } .\pre\subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs } } {s_n}$$
+ 
+\comment{and second we get also that the postcondition of the invoked method \mbox{\rm\texttt{n'} } .\normalPost implies $\inter{i}{i+1}$ }
+ $$\begin{array}{l}		
+   					
+	 \numConclusion{2} \  	 s_0, s_n \vDash
+                       \forall res, \boundVar_1 , \ldots ,\boundVar_{\mbox{\rm\texttt{n} } .\modif.length }  \\
+           
+	 				 				      \mbox{\rm\texttt{n} } .\normalPost %\begin{array}{l}
+									\subst{\result}{  res } %\\
+									%\subst{\mbox{\rm\texttt{n} } .\modif[i]}{  \boundVar_i }_{i=0}^{ \mbox{\rm\texttt{n} } .\modif.length }
+									%\subst{\old{\ast}}{\ast}	 
+									\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
+{ \mbox{\rm\texttt{n} }. \numArgs }                                                                                                	%\end{array}  
+                                                                   \Rightarrow \\ 
+										      
+										      \inter{i}{i+1 } %\begin{array}{l}
+										                                   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs}
+														   \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ res }																%	\end{array}																									
+	 				 			 	\end{array} $$
+
+	   \mbox{\rm\textit{\{ As the verification conditions for the program \Program{} are valid, we can}}\\
+	   \mbox{\rm\textit{ get that the verification conditions that  \mbox{\rm \texttt{n'}} }}\\
+	    \mbox{\rm\textit{  is a behavioral subtype the overriden method \mbox{\rm\texttt{n}}  }} \\
+	    \mbox{\rm\textit{ and we get that the first two conditions from Def. \ref{wp:vc:subt} on page \pageref{wp:vc:subt}  hold which we denote as }}\\
+           \mbox{\rm\textit{ \mbox{\rm \ref{wp:vc:subt}.1}  and  \mbox{\rm\ref{wp:vc:subt}.2 } \}}}
+	   $$  \begin{array}{l}\numConclusion{3} \  \validFormula{ \ref{wp:vc:subt}.1 } \\
+	     \numConclusion{4} \  \validFormula{ \ref{wp:vc:subt}.2  } 
+	      \end{array}$$
+  \mbox{\rm\textit{\{from the fact that we consider only valid states, we can deduce from the validity of \numConclusion{1} and  }}\\
+  \mbox{\rm\textit{   \numConclusion{5} that the the precondition of the overriding method holds in state $s_n$ w.r.t. initial state $s_0$ \}} }\\
+      $$\interp{\mbox{\rm \texttt{n'}}.\pre \subst{\locVar{i} }{ \stack{\counter + s - \mbox{\rm\texttt{n} }.\numArgs} }_{i=0}^{\mbox{\rm\texttt{n}}.\numArgs }   }{ s_n}  $$
+
  \mbox{\rm\textit{\{      From the operational semantics of method invocation the method lookup function}}\\
  \mbox{\rm\textit{   \lookupOnly{} will find the method \mbox{\rm \texttt{n'}} which overrides method }}\\
-  \mbox{\rm\textit{   \mbox{\rm\texttt{n}} and which will be actually executed. Because \mbox{\rm \texttt{n'}} respects its }}\\
-  \mbox{\rm\textit{specification level at \level{k-1}, we can apply the initial hypothesis for \mbox{\rm\texttt{n'}} and we then get :\}}}
+ \mbox{\rm\textit{   \mbox{\rm\texttt{n}} and which will be actually executed.  }}\\
+ \mbox{\rm\textit{  The method  \mbox{\rm \texttt{n'}} will be executed at initial state $s'$ described below and ends in the state $ \configFinalNorm{\heap'}{\Res}$}}\\
+ \mbox{\rm\textit{ Because \mbox{\rm \texttt{n'}} respects its specification level at \level{k-1}, }}\\
+ \mbox{\rm\textit{ we can apply the initial hypothesis for \mbox{\rm\texttt{n'}} and the}} \\
+ \mbox{\rm\textit{   concrete initial and ffinal states  and we then get\}}}
                 $$  \begin{array}{l}
-		  \numConclusion{3} \  \interp{ \mbox{\rm \texttt{n'}}.\pre  }{\config{\heap_n}       
+		  \numConclusion{6} \  \interp{ \mbox{\rm \texttt{n'}}.\pre  }{s'}
+                                           \Rightarrow 
+                                 \interp{ \mbox{\rm \texttt{n'}}.\normalPost  }{\configFinalNorm{\heap'}{\Res}} \\\\
+		             where \\              s'=  \config{\heap_n}       
                                                        {0}
 						       {\newStack }
                                                        {\lbrack \stackOnly_n( \counterOnly_n - \mbox{\rm \texttt{n'}}.\numArgs ),\ldots ,\stackOnly_n( \counterOnly_n)\rbrack }
-						       {0}} \Rightarrow \\
-                \interp{ \mbox{\rm \texttt{n'}}.\normalPost  }{\configFinalNorm{\heap'}{\Res}} \\\\
-		             where \\
+						       {0} \\
+						       
 				                      \counterOnly_{n+1} = \counterOnly_n - \mbox{\rm \texttt{n}}.\numArgs + 1 \\
 						       \stackOnly_{n+1} = \update{\stackOnly_n}{\counterOnly_n}{\Res} \\
 						       \pc_{n+1}  = \pc_n + 1 \\
 						       \heap_{n+1} = \heap' \\\\
             \end{array}$$
-	   \mbox{\rm\textit{\{ As the verification conditions for the program \Program{} are valid, we can}}\\
-	   \mbox{\rm\textit{ get that the verification conditions that the specification of }}\\
-	    \mbox{\rm\textit{ \mbox{\rm \texttt{n'}}  is in compliance with the specification of the overriden method \mbox{\rm\texttt{n}}  \}}} \\
-
-	   $$  \begin{array}{l}\numConclusion{4} \  \validFormula{\mInv.\pre \Rightarrow \mbox{\rm \texttt{n'}}.\pre   } \\
-	     \numConclusion{5} \  \validFormula{\mbox{\rm \texttt{n'}}.\normalPost \Rightarrow  \mInv.\normalPost  } 
-	      \end{array}$$
 
 
-\comment{ \numConclusion{3} is equivalent to}\\ 
+ \mbox{\rm\textit{\{ From the validity of method  \mbox{\rm \texttt{n'}} \numConclusion{6} and \numConclusion{5}, we get that the postcondition of  \mbox{\rm \texttt{n'}}  }}\\ 
+ \mbox{\rm\textit{ holds in the terminal state $ \configFinalNorm{\heap'}{\Res}$ w.r.t. the initial state $s'$ of the execution of method \mbox{\rm \texttt{n'}}   \} }}
+    $$\numConclusion{7}  \ \interp{\mbox{\rm \texttt{n'}}.\normalPost }{\configFinalNorm{\heap'}{\Res} } $$ 
+
+  \mbox{\rm\textit{\{  Because the postcondition \mbox{\rm \texttt{n'}}.\normalPost{} does not mention the operand stack, neither the stack counter   }}\\
+ \mbox{\rm\textit{ and because of the relation between $s_{n+1}$ and  $ \configFinalNorm{\heap'}{\Res}$  we can conclude that the following also holds } }
+
+$$\numConclusion{7}  \ \interp{\mbox{\rm \texttt{n'}}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
+{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} } $$
+ 
+ \mbox{\rm\textit{ \{ We can apply the second part of the behavioral subtyping from Lemma  \ref{wp:vc:subt} which expresses that } } \\
+ \mbox{\rm\textit{the method respects its postcondition and because of \numConclusion{7} and get \}} }\\ 
+$$
+\interp{\mbox{\rm \texttt{n}}.\normalPost \subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n} } .\numArgs} }_{s = 0}^
+{ \mbox{\rm\texttt{n} }. \numArgs }  \subst{\result}{\Res } }{s_{n} } 
+$$
+\mbox{\rm\textit{ \{ We can apply the resulting judgement with modus ponens to \numConclusion{2}  where}}\\
+\mbox{\rm\textit{  we initialise the quantification over the modified locations with their }}\\
+\mbox{\rm\textit{  values in state $s_n$ and the variable $res$ to \Res \} }}
 $$ 
-\begin{array}{l}
-\numConclusion{6} \ \interp{ \mbox{\rm \texttt{n'}}.\pre\subst{\locVar{s}}{ \stack{\counter + s -\mbox{\rm\texttt{n'}}.\numArgs }}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }   }{s_n}  \Rightarrow \\
-\interp{  \mbox{\rm \texttt{n'}}.\normalPost \subst{\result}{  \Res} 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'} } .\numArgs} }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}
-\end{array}
+\interp{\inter{i}{i+1 }   \subst{\counter}{ \counter - \mbox{\rm\texttt{n} } .\numArgs} \subst{ \stack{\counter -  \mbox{\rm\texttt{n} } .\numArgs  }}{ \Res }}{s_n}
 $$
 
-\comment{from \numConclusion{1} and \numConclusion{4} }\\
-$$ \numConclusion{7} \ \interp{ \mbox{\rm \texttt{n'}}.\pre\subst{\locVar{s}}{ \stack{\counter + s - \mbox{\rm\texttt{n'}}.\numArgs}}_{s = 0}^{ \mbox{\rm\texttt{n} }  .\numArgs }   }{s_n}$$
-\comment{from \numConclusion{7} and \numConclusion{6} } \\
-$$ \numConclusion{8} \ \interp{  \mbox{\rm \texttt{n'}}.\normalPost \subst{\result}{  \Res} 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'}}}.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n} $$
-\comment{from \numConclusion{8} and \numConclusion{5} }\\
-$$ \numConclusion{9} \ \interp{\mInv.\normalPost\subst{\result}{  \Res} 
-							\subst{ \locVar{s}}{\stack{\counter + s - \mbox{\rm\texttt{n'}}}.\numArgs }_{s = 0}^{\mbox{\rm\texttt{n} }. \numArgs }  }{s_n}  $$
-\mbox{\rm\textit{\{  instantiate the quantifications in \numConclusion{2} of the modified locations }}\\
-\mbox{\rm\textit{\modif{} with their values in state $s_{n+1}$ and the quantified variable}}\\
-\mbox{\rm\textit{ $res$ with \Res{} and from  \numConclusion{9} we obtain\}}}
- 
-$$ \interp{\inter{i}{i+1 } %\begin{array}{l}
-						 \subst{\counter}{ \counter - \mbox{\rm\texttt{n'} } .\numArgs + 1}
-						 \subst{ \stack{\counter -  \mbox{\rm\texttt{n'}} .\numArgs +1 }}{ \Res }}{s_n}  $$
-\comment{which by substitutions is equal to}
-$$\numConclusion{10} \ \interp{\inter{i}{i+1 }} { s_n\subst{\counterOnly_n}{\counterOnly_n - \mbox{\rm\texttt{n'} } .\numArgs + 1} \subst{ \stackOnly_n(\counterOnly_n -  \mbox{\rm\texttt{n'} } .\numArgs +1 )}{\Res}}$$
+\mbox{\textit{\{we can apply Lemma \ref{substCntr} for substitution of the stack counter as well as the stack }}\\
+\mbox{\textit{ \label{substStack} and by the operational semantics of the instruction \invoke{} in case of normal termination get  \}}}
 
-\comment{from the operational semantics of method invocation}
-$$\numConclusion{11} \ 
- s_{n+1} = s_n\subst{\counterOnly_n}{\counterOnly_n - \mbox{\rm\texttt{n'} } .\numArgs + 1} \subst{ \stackOnly_n(\counterOnly_n -  \mbox{\rm\texttt{n'} } .\numArgs +1 )}{\Res}  $$
-\comment{from \numConclusion{10} and \numConclusion{11}, we get the desired result in this case}
+$$ 
+\interp{\inter{i}{i+1 }  }{s_{n+1}}
+$$
 \end{enumerate}
 \Qed \\
 

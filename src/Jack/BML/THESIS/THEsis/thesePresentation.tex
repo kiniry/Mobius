@@ -93,26 +93,57 @@
         \item   downloading and execution of unkown application on a PC - web application  
 \end{itemize}
  
-  Ensuring that such applications respect certain conditions is important
+ For different but important reasons these application domains may
+ require that the software  respects different requirements - security constraints,
+ confidentiality, evidence  for trust
+
+  
 \end{frame}
 
 \begin{frame}[shrink]
-\frametitle{Java}
+\frametitle{Checking software requirements}
  % the de facto language for web applications , mobile phones, what ever smart cards
 \begin{itemize}
-  \item platform independent
-  \item type safety,  bytecode verifier
-    \item garbage collection
-     
-       \item sandbox mechanism for untrusted applications % provides builtin security mechanisms in the Virtual machine
-
-\end{itemize}
-
-\begin{itemize}
-  \item the defacto language for web applications
-  \item widely used in mobile phone applications, or whatever smart card applications
+  \item dynamic testing  - test success guarantees only that for the tested input the program behaves well
+  \item formal methods -  success guarantees software correctness  
+    \begin{itemize}
+      \item  model checking
+       \item program logic
+     \end{itemize}
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}[shrink]
+\frametitle{Source verification framework}
+ 
+\begin{center}
+\epsfig{file=figs/sourceVerification.eps}
+\end{center}
+Tools 
+\begin{itemize}
+  \item Caveat,  Caduceus for C
+  \item ESC/java, Krakatoa,  Loop,  Jack for Java 
+ 
+\end{itemize}
+ \end{frame}
+
+\begin{frame}[shrink]
+\frametitle{Source verification }
+\begin{itemize}
+  \item suitable for software audit
+  \item but does not say anything about the compiled code
+   \item however, it is not always suitable
+     \begin{itemize}
+          \item when the code is written in an executable (interpreted) code
+          \item domains which does not allow trust in the compiler 
+          \item mobile code  
+     \end{itemize} 
+\end{itemize}
+ 
+ 
+\end{frame}
+
 
 \section{Motivations}
 % give a reply to the need for guaranteeing that an unknown application is harmless 
@@ -147,25 +178,24 @@
                 \item e.g. the sandbox mechanism in Java  % is this stack inspection mechanism
 		\item runtime overhead  
         \end{itemize}
-    \item program logic  verification 
-         \begin{itemize} 
-                \item e.g. verification tools like esc/java, Jack, Jive, Loop tool \ldots
-                \item powerful, may verify for complex functional and security properties
-	        \item however \ldots 
-	 \end{itemize}
+    \item program logic  verification for executable(interpreted) code 
+        % \begin{itemize} 
+          %        \item e.g. verification tools like esc/java, Jack, Jive, Loop tool \ldots
+           % %        \item powerful, may verify for complex functional and security properties
+	     %     \item however \ldots 
+	  % \end{itemize}
  \end{itemize}
 \end{frame}
 
 %2.1
-\begin{frame}[shrink]
-\frametitle{Source verification architecture}
-\begin{figure} 
-\begin{center}
-\epsfig{file=figs/sourceVerification.eps} % , width=5in, height=3in }
-%\caption{Source verification architecture}
-\end{center}
-\end{figure}
-\end{frame}
+%\begin{frame}[shrink]
+%\frametitle{Source verification architecture}
+%\begin{figure} 
+%\begin{center}
+%\epsfig{file=figs/sourceVerification.eps} % , width=5in, height=3in }
+ % \end{center}
+% \end{figure}
+% \end{frame}
 
 
 
@@ -184,6 +214,14 @@
 \end{figure}
 \end{frame}
 
+\begin{frame}[shrink]
+\frametitle{Mobile code verification}  
+Shortcomings: certificate generation is an expensive procedure
+ \begin{itemize}
+     \item the client system may be small (TPDs,mobile phones )
+      \item or just not willing to curropt his machine performance (PC)  
+ \end{itemize}
+\end{frame}
 
 
 %2.4
@@ -197,6 +235,16 @@
 %\label{intro:mobileVerif}
 \end{center}
 \end{figure}
+\end{frame}
+
+\begin{frame}[shrink]
+\frametitle{Proof carrying code architecture for mobile code}
+Shortcomings: guarantees only safety properties but
+ the client system may have complex requirements
+ \begin{itemize}
+     \item patching operating system 
+      \item  interface upgrade
+ \end{itemize}
 \end{frame}
 
 %.2.5
@@ -225,6 +273,23 @@
 \end{itemize}
 \end{center}
 \end{figure}
+\end{frame}
+
+
+\begin{frame}[shrink]
+\frametitle{Java}
+ % the de facto language for web applications , mobile phones, what ever smart cards
+\begin{itemize}
+  \item platform independent
+  \item type safety,  bytecode verifier
+    \item garbage collection
+       \item sandbox mechanism for untrusted applications % provides builtin security mechanisms in the Virtual machine
+\end{itemize}
+
+\begin{itemize}
+  \item the defacto language for web applications
+  \item widely used in mobile phone applications, or whatever smart card applications
+\end{itemize}
 \end{frame}
 
 %==================================================================================

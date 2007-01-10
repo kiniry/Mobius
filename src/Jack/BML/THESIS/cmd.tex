@@ -289,7 +289,7 @@
  %%%%%%%%%%%%%%%%%Method attributes%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
  \newcommand{\methodName}{\mbox{\rm\textsf{Name}}}
  \newcommand{\retType}{\mbox{\rm\textsf{retType}}}
- \newcommand{\args}{\mbox{\rm\textsf{args}}}
+ \newcommand{\args}{\mbox{\rm\textsf{argsType}}}
  \newcommand{\numArgs}{\mbox{\rm\textsf{nArgs}}}
  \newcommand{\body}{\mbox{\rm\textsf{body}}}
  \newcommand{\entryPoint}{\mbox{\rm\textsf{entryPnt}}}
@@ -395,7 +395,7 @@
 \newcommand{\terminal}{ \mbox{\rm\textbf{boldface}} }
 \newcommand{\keyWord}{ \mbox{\rm\textsf{sans serif}} }
 
-\newcommand{\expression}{\mbox{\rm\textit{E}}^{\scriptsize{\mathcal{A}}}}
+\newcommand{\expression}{\mbox{\rm\textit{E}}}
 
 \newcommand{\FieldConstRef}{\mbox{\rm\textit{FieldConstRef}}}
 \newcommand{\typeExp}{\mbox{\rm\textit{T}}_{bml}}
@@ -409,8 +409,8 @@
 \newcommand{\digit}{\mbox{\rm\textit{digit}}}
 \newcommand{\digits}{\mbox{\rm\textit{digits}}}
 \newcommand{\nonZeroDigit}{\mbox{\rm\textit{nonZerodigit}}}
-\newcommand{\boundVar}{\mbox{\rm\textit{boundVar}}}
-\newcommand{\bound}{\mbox{\rm\textbf{bv}}}
+\newcommand{\boundVar}{\mbox{\rm\textbf{v}}}
+\newcommand{\bound}{\mbox{\rm\textbf{v}}}
 \newcommand{\unsignedInt}{\mbox{\rm\textit{unsignedInt}}}
 \newcommand{\RefValuesSpec}{\mbox{\rm\textit{refVal}}}
 \newcommand{\ClassSpec}{\mbox{\rm\textit{classSpec}}}
@@ -510,7 +510,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5interpetation%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\evalExp}[2]{[\![#1]\!]_{s_{0}, #2}}%{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
+\newcommand{\evalExp}[2]{[\![#1]\!]_{ #2}}%{\Arrowvert #1 \Arrowvert_{s_{0}, #2} }  % evaluation of an expression #1 in  a state configuration #2
+\newcommand{\evalExpStates}[3]{[\![#1]\!]_{#2, #3}} % two explicite states
 \newcommand{\evalPred}[2]{[\![#1]\!]_{s_{0}, #2}}
 \newcommand{\evalExpName}{[\![*]\!]_{*,*}} 
 \newcommand{\evalPredName}{\evalExpName}
@@ -519,8 +520,8 @@
 
 
 \newcommand{\interpSpecTwoStates}[3]{#2, #3 \vDash #1} 
-\newcommand{\interp}[2]{s_{0}, #2 \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
-\newcommand{\interpTwoLines}[2]{ \begin{array}{l}s_{0}, #2  \vDash \\ 
+\newcommand{\interp}[2]{ #2 \vDash #1} % interpretation of a predicate  #1 in  a state configuration #2
+\newcommand{\interpTwoLines}[2]{ \begin{array}{l} #2  \vDash \\ 
                                          #1 
                                   \end{array}}
 
