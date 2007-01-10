@@ -46,7 +46,7 @@ In the following, we look in details at the phases of the compilation process:
 }
 
 \begin{itemize}
-\item \textbf{access\_flag}: The kind of access that is allowed to the field
+\item \textbf{access\_flag}: The kind of access that is allowed to the field. Possible values are public, protected and private  
 
 \item \textbf{name\_index}:  The index in the constant pool which contains information about the source name of the field
 
@@ -244,9 +244,9 @@ JML\=Loop\_specification\_attribute \{\\
 }
 
 \begin{itemize}
-\item \textbf{index}: The index in the  \texttt{LineNumberTable } where the beginning of the corresponding loop is described
+\item \textbf{index}: The index in the  \texttt{LineNumberTable } where the beginning of the corresponding loop is described. It is of length 2 bytes (\textbf{u2})
 
-\item \textbf{modifies[]}: The array of locations that may be modified
+\item \textbf{modifies[]}: The array of locations that may be modified. It is of length 2 bytes (\textbf{u2})
 
 \item \textbf{invariant }: The predicate that is the loop invariant. It is a compilation of the JML formula in the low level specification language
 
