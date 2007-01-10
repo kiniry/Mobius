@@ -1,0 +1,199 @@
+\documentclass[final,nocolorBG,a4,marieke,nototal,ps, accumulate,slideColor]{prosper}
+
+\addtolength{\textheight}{-1cm}
+
+\usepackage{pstricks,pst-node,pst-text,pst-3d}
+\usepackage{amsmath}
+\usepackage{alltt}
+\usepackage{epsfig}
+
+\usepackage{colordvi}
+\usepackage{proof}
+\usepackage{epsf}
+\usepackage{amssymb}
+
+\input{prooftree}
+\newcommand{\textttbf}[1]{\texttt{\textbf{#1}}}
+ \def \bsl       {\symbol{92}}
+ \def \unsc      {\symbol{95}}
+
+\title{High-level languages for security properties}
+\subtitle{}
+\author{Marieke Huisman}
+\institution{INRIA Sophia Antipolis
+\medskip\\
+\Blue{Contributions by LIFC, Vasco and Everest project}}
+\email{Marieke.Huisman@inria.fr}
+
+\slideCaption{High-level languages for security properties}
+\Logo{}
+\begin{document} 
+
+\maketitle
+
+\begin{slide}{Overview}
+\begin{itemize}
+\item Motivation
+\item Contributions
+\item Tools, implementations and on-going work
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Enforcing security properties}
+\begin{itemize}
+\item \Blue{Security expert}: from global notions of security to set
+of rules
+\item \Blue{Developers}: try to obey rules
+\item \Blue{Security audit}: manual code inspection whether rules
+obeyed
+\item Need for tools to help security audit
+\item Gap between global notion and rules, and between security rules
+and specifications understood by tools 
+\end{itemize}
+\end{slide}
+
+
+\begin{slide}{Typical examples of security rules}
+\begin{itemize}
+  \item Atomicity \item Applet life cycle \item Exception handling
+  \item Access control
+\end{itemize}
+\end{slide}
+
+
+\begin{slide}{Two different approaches}
+\begin{itemize}
+\item Express security properties in existing language\\
+Advantage: reuse of existing tools
+\item Develop specific languages\\
+Advantage: tailored techniques
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Use of existing languages}
+\begin{itemize}
+\item Study different available formats to express such properties
+\begin{itemize}
+\item Different kinds of automata
+\item Temporal logic
+\end{itemize}
+\item Define mapping of such a format into JML annotations
+\item Considering both safety and liveness properties
+\item Implementations in JACK and JAG
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Development of own language}
+\begin{itemize}
+\item Concrete applications used to identify relevant properties
+\item Result: property language for G\'en\'esyst and access control
+policy language for MECA.  
+\end{itemize}
+\end{slide}
+
+\begin{slide}{JACK: Java Applet Correctness Kit}
+\begin{itemize}
+\item Implements an annotation propagation algorithm
+\item Core-annotations for methods directly involved in the method
+\item Propagation ensures possibility of static verification
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Propagation example}
+\begin{alltt}
+\textbf{public void m() \{
+   ...
+   \Blue{// will require TRANSACT == 0}
+   JCSystem.beginTransaction();
+   \Blue{// TRANSACT modified} 
+   \Blue{// ensures TRANSACT == 1}
+   ...
+   \Blue{// will require TRANSACT == 1}
+   JSSystem.commitTransaction();
+   \Blue{// TRANSACT modified} 
+   \Blue{// ensures TRANSACT == 0}
+   ...
+   \}}
+\end{alltt}
+\end{slide}
+
+\begin{slide}{Current work: formalisation of the annotation
+generation}
+\begin{itemize}
+\item Property expressed as MVA automato
+\begin{itemize}
+\item transitions labelled with method names
+\item conditional branching
+\item can inspect program state
+\item transitions can update automaton state
+\end{itemize}
+\item MVA monitors program execution
+\item MVA state encoded with ghost variables, transitions defined as
+appropriate set-statements, unreachable error state expressed with
+invariant
+\end{itemize}
+\end{slide}
+
+
+\begin{slide}{Current work: formalisation of the annotation
+generation}
+\begin{itemize}
+\item Two step translation, using special \Blue{preset} and
+\Blue{postset} constructs as part of the method specification
+\item Monitoring program with MVA does not get stuck iff run-time
+checking does not find (new) assertion violation
+\item Future work: extend with propagation, and prove static
+verification result
+\end{itemize}
+\end{slide}
+
+\begin{slide}{JAG: JML Annotation Generator}
+\begin{itemize}
+\item Generates JML annotations for a given temporal property,
+including liveness properties
+\item Tool accepts different input formats (internal representation
+with B\"uchi automat)
+\item For liveness properties a progress condition on the environment
+has to be established: use of Hoare logic with progress condition.
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Current work: generalisation to other
+programming/annotation languages}
+\begin{itemize}
+\item Define trace-based semantics of programming language
+\item Define semantics of the annotations
+\item Characterising the annotations needed for the verification of
+LTL properties
+\item Characterising verification conditions for the appropriate
+annotations
+\end{itemize}
+\end{slide}
+
+\begin{slide}{MECA: Models for Access Control}
+\begin{itemize}
+\item Automatically generates check to ensure access control policies
+\item Based on different access control models
+\item Access control policy and application modeled as B-machines
+\item Meca defines which information must be given to describe the
+access control policy
+\item Meca inserts appropriate checks on the permissions in the application
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Current work: }
+\end{slide}
+
+\begin{slide}{To summarise}
+\begin{itemize}
+\item Two different approaches: development of special targeted
+language and encoding of existing format in annotations
+\item Work continues in different directions:
+\begin{itemize}
+\item Formalisation
+\item Generalisation
+\item 
+\end{itemize}
+\end{itemize}
+\end{slide}
+\end{document}
