@@ -141,6 +141,8 @@ import bytecode_wp.formula.Predicate0Ar;
 import bytecode_wp.formula.Predicate2Ar;
 import bytecode_wp.formula.PredicateSymbol;
 import bytecode_wp.memory.allocation.MethodAllocation;
+import bytecode_wp.memory.allocation1.CalculateMeth;
+import bytecode_wp.memory.allocation1.CalculateMethFrwrd;
 import bytecode_wp.modifexpression.ModifiesExpression;
 import bytecode_wp.modifexpression.ModifiesIdent;
 import bytecode_wp.utils.Util;
@@ -211,9 +213,10 @@ public class BCMethod extends AccessFlags {
 			throws ReadAttributeException {
 		super(_mg.getAccessFlags());
 		clazz = _class;
+		name = _mg.getName();
 		setLocalVariables(_mg, cpGen);
 		setExceptionsThrown(_mg.getExceptions());
-		name = _mg.getName();
+		
 		setArgNames(_mg.getArgumentNames());
 		setArgumentTypes(_mg.getArgumentTypes());
 		setReturnType(_mg.getReturnType());
@@ -259,7 +262,10 @@ public class BCMethod extends AccessFlags {
 		setLineNumbers(bcelMethod.getLineNumberTable(bcelMethod
 				.getConstantPool()));
 		setAttributes(bcelMethod.getAttributes());
-		initTrace();
+		initTrace();//find loop entries
+		if (MEMCHECK ) {
+			initMethCons(); // infer an upper bound for the memory used by the method
+		}
 		setAsserts();
 		setInvariantToHoldAtMethCall();
 		setInvariantInMethodSpecification();
@@ -485,6 +491,7 @@ public class BCMethod extends AccessFlags {
 			if (_attributes[i] instanceof Unknown) {
 				privateAttr = (Unknown) _attributes[i];
 				BCAttribute bcAttribute = null;
+				
 				if (localVariables != null) {
 					bcAttribute = AttributeReader.readAttribute(privateAttr,
 							clazz, lineNumberTable, localVariables
@@ -551,17 +558,27 @@ public class BCMethod extends AccessFlags {
 	}
 
 	/**
+	 * this method sets the local variables of a method
 	 * @param 
 	 */
 	private void setLocalVariables(MethodGen m, ConstantPoolGen cpGen) {
 		LocalVariableGen[] locVarTable = m.getLocalVariables();
-		if (locVarTable == null) {
+		if ( (locVarTable == null ) || (locVarTable.length <= 0)) {
+			
+			if ( (bcelMethod != null) && (bcelMethod.isAbstract())) {
+				String[] names  = bcelMethod.getArgumentNames();
+				Type[] types   = bcelMethod.getArgumentTypes();
+				localVariables = new RegisterTable();
+				for (int i = 0; i < names.length; i++) {
+					JavaType type = JavaType.getJavaType(types[i]);
+					BCLocalVariable lv = new BCLocalVariable(names[i], i, type, this);					
+					localVariables.addRegister(lv);
+				}
+			}
 			return;
 		}
 
-		if (locVarTable.length <= 0) {
-			return;
-		}
+		
 
 		localVariables = new RegisterTable();
 
@@ -1170,14 +1187,15 @@ public class BCMethod extends AccessFlags {
 						.getFormula(this_neq_null, Connector.NOT);
 				Integer key4 = wp.addHyp(0, this_neq_null);
 				wp.addHypsToVCs(key4);
-
+			}
+			for (int k = 0 ; k < localVariables.getLength(); k++){
 				Predicate this_subType_ = new Predicate2Ar(new TYPEOF(
-						getLocalVariableAtIndex(0)), getLocalVariableAtIndex(0)
+						getLocalVariableAtIndex(k)), getLocalVariableAtIndex(k)
 						.getType(), PredicateSymbol.SUBTYPE);
 				Integer key5 = wp.addHyp(0, this_subType_);
 				wp.addHypsToVCs(key5);
-
 			}
+			
 
 			/* Logger.get().println(wp); */
 		}
@@ -1339,6 +1357,14 @@ public class BCMethod extends AccessFlags {
 	// //////////////Memory constraint consumption specification/////
 	// //////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////
+	int memUsed =  -1;
+	public static boolean MEMCHECK = false;
+	
+	private void initMethCons() {
+		memUsed = CalculateMethFrwrd.memConsMeth( bytecode); 
+		System.out.println(getSignature() + " : MEMUSED = " + memUsed );
+	}
+	
 	public void initMethodSpecForMemoryConsumption() {
 		// requires MemUsed + alloc <= Max
 		FieldAccess memUsed = new FieldAccess(MemUsedConstant.MemUsedCONSTANT);
