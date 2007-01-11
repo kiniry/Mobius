@@ -10,10 +10,12 @@
 package bytecode_to_JPO;
 
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Vector;
 
 import jml2b.IJml2bConfiguration;
 import jml2b.pog.printers.AClassEnumeration;
+import jml2b.pog.printers.ClassIterator;
 import jml2b.pog.printers.IClassResolver;
 import bytecode_wp.bcclass.BCClass;
 
@@ -23,12 +25,12 @@ import bytecode_wp.bcclass.BCClass;
  **/
 public class B2JClassResolver implements IClassResolver {
 
-	Vector classes;
-	Vector interfaces;
+	HashSet classes;
+	HashSet interfaces;
 	
 	public B2JClassResolver(IJml2bConfiguration config, B2JPackage ja, BCClass clazz) {
-		classes = new Vector();
-		interfaces = new Vector();
+		classes = new HashSet();
+		interfaces = new HashSet();
 		Enumeration e = ja.getClasses().elements();
 		while (e.hasMoreElements()) {
 			BCClass element = (BCClass) e.nextElement();
@@ -38,10 +40,10 @@ public class B2JClassResolver implements IClassResolver {
 	}
 	
 	public AClassEnumeration getClasses() {
-		return new AClassEnumeration(classes.elements());
+		return new ClassIterator(classes);
 	}
 	public AClassEnumeration getInterfaces() {
-		return new AClassEnumeration(interfaces.elements());
+		return new ClassIterator(interfaces);
 	}
 	public Vector getJmlFiles() {
 		return new Vector();
