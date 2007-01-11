@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import jml2b.pog.Pog;
+import jml2b.pog.util.IdentifierResolver;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -155,7 +156,8 @@ public class POGGenerator implements IRunnableWithProgress {
 			
 			long endTime = System.currentTimeMillis();
 			Util.out.println("WP done " + ( endTime - startTime));
-			// IdentifierResolver.init(config);
+			IdentifierResolver.softInit(config);
+			
 			B2JClass bjc = ((B2JPackage) config.getPackage()).addB2JClass(
 					config, clazz, true);
 			BCJmlFile bcjm = new BCJmlFile(bjc, mchName, config.getSubdirectory());
@@ -170,11 +172,15 @@ public class POGGenerator implements IRunnableWithProgress {
 			sTranslation.writeObject(hm);
 			sTranslation.close();
 			sBcSource.close();
-			Pog.garbageIdent(bcjm);
+			try {
+				Pog.garbageIdent(bcjm);
+			}
+			catch (Throwable e) {
+				e.printStackTrace();
+			}
 			Pog.saveFiles(config, bcjm, monitor, new Vector(), new Vector(),
 					new B2JClassResolver(config, (B2JPackage) config
 							.getPackage(), clazz));
-
 			if (resource != null) {
 				try {
 					resource.setPersistentProperty(
@@ -204,6 +210,9 @@ public class POGGenerator implements IRunnableWithProgress {
 					JackPlugin.DIALOG_TITLE, e.getMessage());
 			// } catch (Jml2bException rea) {
 			// Logger.err.println(rea.getMessage());
+		} catch (Exception e) {
+			Logger.warn.println(e);
+			e.printStackTrace();
 		}
 		
 		monitor.setCanceled(false);

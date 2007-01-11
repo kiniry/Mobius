@@ -12,10 +12,12 @@ package bytecode_to_JPO;
 import jack.util.Logger;
 import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.Jml2bException;
+import jml2b.pog.util.IdentifierResolver;
 import jml2b.structure.AField;
 import jml2b.structure.java.AClass;
 import jml2b.structure.java.Field;
 import jml2b.structure.java.IModifiers;
+import jml2b.structure.java.ParsedItem;
 import jml2b.structure.java.Type;
 import bytecode_wp.bcclass.BCField;
 import bytecode_wp.bcexpression.javatype.JavaType;
@@ -25,56 +27,104 @@ import bytecode_wp.constants.BCConstantFieldRef;
  * 
  * @author L. Burdy
  */
-public class B2JField extends Field implements IModifiers {
+public class B2JField extends Field {
 
 	/** */
 	private static final long serialVersionUID = 1L;
-	BCField f;
-	//BCConstantFieldRef fcp;
-	String name;
-	B2JClass defC;
-	IJml2bConfiguration config;
+	private BCField f;
+	private B2JClass defC;
 	/**
 	 * @param field
 	 */
-//	public B2JField(IJml2bConfiguration config, BCConstantFieldRef fieldR, B2JClass def) {
-//		this.config = config;
-////		BCClass c = ((JavaClassLoader) config.getPackage()).getClass(fieldR.getConstantClass().getName());
-////		BCField[] fa = c.getFields();
-////		for (int i = 0; i < fa.length; i++) {
-////			if (fa[i].getName().equals(fieldR.getName()))
-////			f = fa[i];
-////		}
-//		//fcp = fieldR;
-//		f = fieldR.getBCField(config);
-//		name = "FieldRef_" + fieldR.getCPIndex() + "_" + fieldR.getName();
-//		defC = def;
-//	}
+
+	
 	public B2JField(IJml2bConfiguration config, BCField f, B2JClass def) {
-		this.config = config;
-//		BCClass c = ((JavaClassLoader) config.getPackage()).getClass(fieldR.getConstantClass().getName());
-//		BCField[] fa = c.getFields();
-//		for (int i = 0; i < fa.length; i++) {
-//			if (fa[i].getName().equals(fieldR.getName()))
-//			f = fa[i];
-//		}
-		//fcp = fieldR;
+		super(ParsedItem.$empty, getModifiers(f), getType(config, f), 
+				f.getName(), null);
 		this.f = f;
-//		f = fieldR.getBCField(config);
-		name = "FieldRef_" + def.getBName() + "_" + f.getName();
 		defC = def;
+		
+		nameIndex = IdentifierResolver.addIdent(this);
 	}
-	public BCField getBCField() {
-		return f;
+	private static Type getType(IJml2bConfiguration config, BCField f) {
+		try {
+			return B2JProofs.toType(config, f.getType());
+		}
+		catch (Jml2bException j2be) 
+		{
+				Logger.err.println(j2be.getMessage());
+				return null;
+		}
+	}
+	public static class FieldModifier implements IModifiers {
+		private BCField f;
+		public FieldModifier(BCField f) {
+			this.f = f;
+		}
+		
+		public String emit() {
+			//TODO: implement it.
+			return "";
+		}
+		
+		public boolean isFinal() {
+			return f.isFinal();
+		}
+
+		public boolean isPackageVisible() {
+			return f.isVisible();
+		}
+
+		public boolean isPrivate() {
+			return f.isPrivate();
+		}
+
+		public boolean isProtected() {
+			return f.isProtected();
+		}
+
+		public boolean isStatic() {
+			return f.isStatic();
+		}
+		
+
+		public boolean isExternalVisible() {
+			return f.isPublic() || f.isProtected();
+		}
+		public boolean isProtectedNotSpecPublic() {
+		return f.isProtected();
+		}
+		
+		public boolean isPure() {
+			return false;
+		}
+		public boolean isGhost() {
+			return false;
+		}
+		public boolean isNative() {
+			return false;
+		}
+		
+
+		public boolean isModel() {
+			return false;
+		}
+
+		public boolean isJml() {
+			return true;
+		}
+
+		public boolean isPublic() {
+			return f.isPublic();
+		}
+		
+		
+	}
+	
+	private static IModifiers getModifiers(BCField f) {
+		return new FieldModifier(f);
 	}
 
-	public String getBName() {
-		return name;
-	}
-
-	public String getName() {
-		return name;
-	}
 	/**
 	 * this method is called when searching for the field corresponding to a cp field index 
 	 * called in B2JClass.search(BCConstantFieldRef fieldR)
@@ -92,55 +142,13 @@ public class B2JField extends Field implements IModifiers {
 		//return (JavaType)fcp.getType();
 	}
 
-	public Type getType() {
-		try {
-		return B2JProofs.toType(config, f.getType());
-		}
-		catch (Jml2bException j2be) 
-		{
-			Logger.err.println(j2be.getMessage());
-			return null;
-			}
-		}
-
-	public boolean isFinal() {
-		return f.isFinal();
-	}
-
-	public boolean isPackageVisible() {
-		return f.isVisible();
-	}
-
-	public boolean isPrivate() {
-		return f.isPrivate();
-	}
-
-	public boolean isProtected() {
-		return f.isProtected();
-	}
-
-	public boolean isStatic() {
-		return f.isStatic();
-	}
-
-	public IModifiers getModifiers() {
-		return this;
-	}
 
 	public AClass getDefiningClass() {
 		return defC;
 	}
 	
-	public boolean isModel() {
-		return false;
-	}
 	
-	public boolean isExternalVisible() {
-		return f.isPublic() || f.isProtected();
-	}
-	public boolean isProtectedNotSpecPublic() {
-	return f.isProtected();
-	}
+	
 
 	public static AField search(IJml2bConfiguration config, BCConstantFieldRef fieldR) {
 		B2JClass c = ((B2JPackage) config.getPackage()).search(fieldR.getConstantClass().getName());
@@ -166,21 +174,6 @@ public class B2JField extends Field implements IModifiers {
 //		defC = new B2JClass(config, c, false);
 	}
 
-	/* (non-Javadoc)
-	 * @see jml2b.structure.java.IModifiers#isPure()
-	 */
-	public boolean isPure() {
-	return false;
-	}
 
-	public String toString() {
-		return name;
-	}
-	public boolean isGhost() {
-		return false;
-	}
-	public boolean isNative() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 }
