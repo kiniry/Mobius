@@ -129,9 +129,7 @@ public class BCTypeALOAD
 			new Predicate2Ar( new Stack(Expression.COUNTER),_arrlength.copy(), PredicateSymbol.GRTEQ);
 		Formula _index_less_0 = new Predicate2Ar(new Stack(Expression.COUNTER), new NumberLiteral(0), PredicateSymbol.LESS);
 		Formula _index_out_of_bounds  = Formula.getFormula( _index_grt_eq_len, _index_less_0, Connector.OR);
-		if (getPosition() == 72) {
-			System.out.println("here");
-		}
+		
 		VCGPath _wp_arr_out_of_bounds =
 			getWpForException(config,
 				(JavaObjectType) JavaType.getJavaRefType(
