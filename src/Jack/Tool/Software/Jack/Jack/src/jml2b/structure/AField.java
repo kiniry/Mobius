@@ -6,12 +6,12 @@
  */
 package jml2b.structure;
 
+import jml2b.link.Linkable;
 import jml2b.structure.java.Declaration;
-import jml2b.structure.java.Modifiers;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.ParsedItem;
 import jml2b.structure.java.Type;
 import jml2b.structure.statement.Expression;
-import jml2b.link.Linkable;
 
 /**
  *
@@ -21,7 +21,7 @@ public abstract class AField extends Declaration implements Linkable {
 
 	public AField() {}
 	
-	 public AField(ParsedItem pi, Modifiers mods) {
+	 public AField(ParsedItem pi, IModifiers mods) {
         super(pi, mods);
 }
 	 

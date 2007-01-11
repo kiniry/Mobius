@@ -15,6 +15,7 @@ import jml2b.exceptions.PogException;
 import jml2b.formula.IModifiesField;
 import jml2b.structure.java.Class;
 import jml2b.structure.java.Declaration;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.Modifiers;
 import jml2b.structure.java.ParsedItem;
@@ -31,12 +32,12 @@ public abstract class AMethod extends Declaration implements IModifiesField {
 	public AMethod() {
 	}
 	
-	public AMethod(JmlFile jf, AST tree, Modifiers m, Class defining)
+	public AMethod(JmlFile jf, AST tree, IModifiers m, Class defining)
 	throws Jml2bException {
 	super(jf, tree, m, defining);
 	}
 	
-	public AMethod(ParsedItem pi, Modifiers m, Class defining)
+	public AMethod(ParsedItem pi, IModifiers m, Class defining)
 	throws Jml2bException {
 	super(pi, m, defining);
 	}

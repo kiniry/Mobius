@@ -14,6 +14,7 @@ import jml2b.exceptions.Jml2bException;
 import jml2b.exceptions.PogException;
 import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Class;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.Modifiers;
 import jml2b.structure.java.ParsedItem;
@@ -46,7 +47,7 @@ class RepresentsSuchThat extends Represents {
 	public RepresentsSuchThat(
 		JmlFile jf,
 		AST tree,
-		Modifiers m,
+		IModifiers m,
 		Class defining) {
 		super(jf, tree, m, defining);
 	}
@@ -60,7 +61,7 @@ class RepresentsSuchThat extends Represents {
 	 **/
 	private RepresentsSuchThat(
 		ParsedItem pi,
-		Modifiers mod,
+		IModifiers mod,
 		Modifies m,
 		Expression e) {
 		super(pi, mod, m, e);
@@ -69,7 +70,7 @@ class RepresentsSuchThat extends Represents {
 	public Object clone() {
 		return new RepresentsSuchThat(
 			this,
-			(Modifiers) getModifiers(),
+			getModifiers(),
 			(Modifies) getDepend().clone(),
 			(Expression) getGluingInvariant().clone());
 	}

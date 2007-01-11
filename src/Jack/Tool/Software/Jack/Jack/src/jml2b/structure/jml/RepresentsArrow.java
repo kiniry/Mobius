@@ -17,6 +17,7 @@ import jml2b.formula.BinaryForm;
 import jml2b.formula.IFormToken;
 import jml2b.pog.lemma.FormulaWithSpecMethodDecl;
 import jml2b.structure.java.Class;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.Modifiers;
 import jml2b.structure.java.ParsedItem;
@@ -45,7 +46,7 @@ class RepresentsArrow extends Represents {
 	/*@
 	  @ requires m != null;
 	  @*/
-	public RepresentsArrow(JmlFile jf, AST tree, Modifiers m, Class defining) {
+	public RepresentsArrow(JmlFile jf, AST tree, IModifiers m, Class defining) {
 		super(jf, tree, m, defining);
 	}
 
@@ -58,7 +59,7 @@ class RepresentsArrow extends Represents {
 	 **/
 	private RepresentsArrow(
 		ParsedItem pi,
-		Modifiers mod,
+		IModifiers mod,
 		Modifies m,
 		Expression e) {
 		super(pi, mod, m, e);
@@ -67,7 +68,7 @@ class RepresentsArrow extends Represents {
 	public Object clone() {
 		return new RepresentsArrow(
 			this,
-			(Modifiers) getModifiers(),
+			getModifiers(),
 			(Modifies) getDepend().clone(),
 			(Expression) getGluingInvariant().clone());
 	}

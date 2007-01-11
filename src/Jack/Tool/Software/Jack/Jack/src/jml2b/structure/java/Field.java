@@ -58,7 +58,7 @@ public class Field extends AField implements Serializable {
 	}
 	
 	//@ requires t != null;
-	public Field(ParsedItem pi, Modifiers m, Type t, String n, Expression a) {
+	public Field(ParsedItem pi, IModifiers m, Type t, String n, Expression a) {
 		super(pi, m);
 		type = t;
 		name = n;
@@ -71,7 +71,7 @@ public class Field extends AField implements Serializable {
 
 	//@ requires (pi != null) && (t != null);
 	public Field(ParsedItem pi, Type t, String n) {
-		super(pi, (Modifiers) null);
+		super(pi, (IModifiers) null);
 		type = t;
 		name = n;
 	}
@@ -239,9 +239,14 @@ public class Field extends AField implements Serializable {
 
 	public String emit() {
 		String s = "    ";
-		if (getModifiers() != null && ((Modifiers) getModifiers()).isJml())
-			s += "//@";
-		s += (getModifiers() != null ? getModifiers().emit() : "");
+		IModifiers mods = getModifiers();
+		if (mods != null) {
+			if(mods instanceof Modifiers) {
+				if(((Modifiers) mods).isJml())
+					s += "//@";
+			}
+			s += getModifiers().emit();	
+		}	
 		s += type.toJava() + " ";
 		s += name + " = ";
 		s += assign.toJava(0);

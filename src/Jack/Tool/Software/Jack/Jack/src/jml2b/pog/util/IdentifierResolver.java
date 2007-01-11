@@ -71,7 +71,17 @@ public class IdentifierResolver extends Profiler {
 				null,
 				false));
 	}
-
+	
+	/**
+	 * Same as above, but softer
+	 * @param config
+	 * @throws Jml2bException
+	 */
+	public static void softInit(IJml2bConfiguration config) throws Jml2bException {
+		// Initialize array of B name with arraylength.
+		bIdents = new Vector();
+		count = 0;
+	}
 	/**
 	 * Returns the name in the B syntax of an identifier
 	 * @param index The index of the searched identifier

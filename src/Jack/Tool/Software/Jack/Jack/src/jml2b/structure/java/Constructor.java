@@ -36,7 +36,7 @@ public class Constructor extends Method {
 	Vector saved;
 
 	//@ requires defining != null;
-	Constructor(JmlFile jf, AST tree, Modifiers mods, Class defining)
+	Constructor(JmlFile jf, AST tree, IModifiers mods, Class defining)
 		throws Jml2bException {
 		super(jf, tree, mods, defining);
 		// set the name to the name of the class, since this could break 
@@ -45,7 +45,7 @@ public class Constructor extends Method {
 	}
 
 	//@ requires defining != null;
-	Constructor(ParsedItem pi, Modifiers mods, Class defining)
+	Constructor(ParsedItem pi, IModifiers mods, Class defining)
 		throws Jml2bException {
 		super(pi, mods, defining);
 		// set the name to the name of the class, since this could break 

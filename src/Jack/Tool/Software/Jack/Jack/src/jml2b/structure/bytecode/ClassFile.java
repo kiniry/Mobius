@@ -377,4 +377,12 @@ public class ClassFile extends AClass implements IModifiers, Serializable {
 	public boolean isGhost() {
 	return false;
 	}
+
+	public boolean isJml() {
+		return true;
+	}
+
+	public boolean isPublic() {
+		return jcIsPublic;
+	}
 }

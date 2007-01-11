@@ -10,6 +10,7 @@
 package jml2b.pog.util;
 
 import jml2b.structure.java.Field;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.Modifiers;
 import jml2b.structure.java.ParsedItem;
 import jml2b.structure.java.Type;
@@ -32,7 +33,7 @@ public class TemporaryField extends Field {
 	 **/
 	public TemporaryField(
 		ParsedItem pi,
-		Modifiers m,
+		IModifiers m,
 		Type t,
 		String n,
 		Expression a) {

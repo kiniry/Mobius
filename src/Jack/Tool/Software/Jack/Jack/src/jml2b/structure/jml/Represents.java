@@ -18,6 +18,7 @@ import jml2b.exceptions.TokenException;
 import jml2b.link.LinkContext;
 import jml2b.structure.java.Class;
 import jml2b.structure.java.Declaration;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.JmlFile;
 import jml2b.structure.java.Modifiers;
 import jml2b.structure.java.ParsedItem;
@@ -42,7 +43,7 @@ public abstract class Represents extends Declaration implements JmlExpression {
 	public static Represents create(
 		JmlFile jf,
 		AST tree,
-		Modifiers m,
+		IModifiers m,
 		Class defining)
 		throws Jml2bException {
 		switch (tree.getType()) {
@@ -83,7 +84,7 @@ public abstract class Represents extends Declaration implements JmlExpression {
 	/*@
 	  @ requires m != null && e != null;
 	  @*/
-	Represents(ParsedItem pi, Modifiers mod, Modifies m, Expression e) {
+	Represents(ParsedItem pi, IModifiers mod, Modifies m, Expression e) {
 		super(pi, mod);
 		depend = m;
 		gluingInvariant = e;
@@ -99,7 +100,7 @@ public abstract class Represents extends Declaration implements JmlExpression {
 	/*@
 	  @ requires m != null;
 	  @*/
-	public Represents(JmlFile jf, AST tree, Modifiers m, Class defining) {
+	public Represents(JmlFile jf, AST tree, IModifiers m, Class defining) {
 		super(jf, tree, m, defining);
 	}
 

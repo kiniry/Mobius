@@ -21,7 +21,7 @@ public interface IModifiers {
 	public  boolean isExternalVisible();
 	
 	public boolean isPackageVisible();
-	
+	public boolean isPublic();
 	public boolean isProtected();
 	
 	public boolean isStatic();
@@ -53,5 +53,7 @@ public interface IModifiers {
 	boolean isNative();
 	boolean isGhost();
 //	public boolean isJml();
-	
+
+	boolean isJml();
+
 }

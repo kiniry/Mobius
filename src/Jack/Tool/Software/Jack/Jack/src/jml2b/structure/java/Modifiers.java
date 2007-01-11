@@ -302,4 +302,9 @@ public class Modifiers extends  Profiler implements IModifiers, Serializable {
 		// TODO Auto-generated method stub
 		return isSet(ModFlags.GHOST);
 	}
+
+	public boolean isPublic() {
+		
+		return isSet(ModFlags.PUBLIC);
+	}
 }

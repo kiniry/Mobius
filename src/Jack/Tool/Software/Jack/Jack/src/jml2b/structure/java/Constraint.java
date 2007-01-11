@@ -24,7 +24,7 @@ public class Constraint extends Invariant {
 	/*@
 	  @ requires m != null;
 	  @*/
-	public Constraint(JmlFile jf, AST tree, Modifiers m, Class defining) {
+	public Constraint(JmlFile jf, AST tree, IModifiers m, Class defining) {
 		super(jf, tree, m, defining);
 	}
 

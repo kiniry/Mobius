@@ -30,7 +30,7 @@ import antlr.collections.AST;
  */
 public class VarDeclParser extends Profiler implements Linkable {
 	Type type;
-	Modifiers mods;
+	IModifiers mods;
 
 	/** 
 	 * Vector containing the parsed variables. All the elements stored inside
@@ -55,7 +55,7 @@ public class VarDeclParser extends Profiler implements Linkable {
 	 * 
 	 * @param m the modifiers that will be used for the parsed variables.
 	 */
-	public VarDeclParser(Modifiers m) {
+	public VarDeclParser(IModifiers m) {
 		parsedVars = new Vector();
 		mods = m;
 	}

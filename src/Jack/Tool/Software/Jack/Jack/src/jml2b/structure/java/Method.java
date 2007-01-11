@@ -113,7 +113,7 @@ public class Method
 		
 	}
 	
-	public Method(JmlFile jf, AST tree, Modifiers m, Class defining)
+	public Method(JmlFile jf, AST tree, IModifiers m, Class defining)
 		throws Jml2bException {
 		super(jf, tree, m, defining);
 
@@ -132,12 +132,15 @@ public class Method
 		specCases = new Vector();
 	}
 
-	public Method(ParsedItem pi, Modifiers m, Class defining)
+	public Method(ParsedItem pi, IModifiers m, Class defining)
 		throws Jml2bException {
 		super(pi, m, defining);
-
-		if (m.isSet(ModFlags.NATIVE)) {
-			m.setFlag(ModFlags.ABSTRACT);
+		if (m instanceof Modifiers) {
+			Modifiers mm = (Modifiers) m;
+			if (mm.isSet(ModFlags.NATIVE)) {
+				mm.setFlag(ModFlags.ABSTRACT);
+			}
+			
 		}
 
 		signature = new Parameters();
@@ -179,10 +182,14 @@ public class Method
 	}
 
 	public boolean hasNoCode() {
-		Modifiers m = (Modifiers) getModifiers();
-		return m.isSet(ModFlags.ABSTRACT)
-			|| m.isSet(ModFlags.NATIVE)
-			|| m.isSet(ModFlags.GHOST);
+		IModifiers mod = getModifiers();
+		if(mod instanceof Modifiers) {
+			Modifiers m = (Modifiers) mod;
+			return m.isSet(ModFlags.ABSTRACT)
+				|| m.isSet(ModFlags.NATIVE)
+				|| m.isSet(ModFlags.GHOST);
+		}
+		else return false;
 	}
 
 	public AST parse(JmlFile jmlFile, AST a) throws Jml2bException {
@@ -209,7 +216,7 @@ public class Method
 		AST a,
 		Expression current_req,
 		Vector label,
-		Modifiers mods,
+		IModifiers mods,
 		int type)
 		throws Jml2bException {
 		switch (a.getType()) {
@@ -254,7 +261,7 @@ public class Method
 		AST a,
 		Expression current_req,
 		Vector labels,
-		Modifiers mods,
+		IModifiers mods,
 		int type)
 		throws Jml2bException {
 
@@ -387,7 +394,7 @@ public class Method
 				current_req,
 				labels,
 				mods,
-				(Modifiers) getModifiers(),
+				getModifiers(),
 				type);
 
 			// add the case to the list of spec_cases
@@ -408,7 +415,7 @@ public class Method
 	  @*/
 	private void parseBehaviorSpec(JmlFile file, AST a, boolean get_requires)
 		throws Jml2bException {
-		Modifiers mods = null;
+		IModifiers mods = null;
 		// the type of the case (defaults to lightweight).
 		int type = SpecCase.LIGHTWEIGHT_CASE;
 
@@ -682,7 +689,7 @@ public class Method
 		if (requires != null) {
 			requires.linkStatements(config, f);
 			if (specCases.isEmpty()) {
-				SpecCase tmp = new SpecCase(config, (Modifiers) getModifiers());
+				SpecCase tmp = new SpecCase(config, getModifiers());
 				// 
 				tmp.link(config, f);
 				errors += tmp.linkStatements(config, f);

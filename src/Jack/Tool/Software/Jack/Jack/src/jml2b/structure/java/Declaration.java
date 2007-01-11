@@ -26,7 +26,7 @@ public abstract class Declaration
     /** 
      * The modifiers corresponding to the declaration.
      */
-    private Modifiers modifiers;
+    private IModifiers modifiers;
     /**
      * The class that contains the declaration.
      */
@@ -51,7 +51,7 @@ public abstract class Declaration
     /*@
       @ requires mods != null;
       @*/
-    public Declaration(ParsedItem pi, Modifiers mods) {
+    public Declaration(ParsedItem pi, IModifiers mods) {
         super(pi);
         modifiers = mods;
     }
@@ -67,7 +67,7 @@ public abstract class Declaration
     /*@ 
       @ requires mods != null;
       @*/
-    public Declaration(JmlFile jf, AST tree, Modifiers mods, Class defining) {
+    public Declaration(JmlFile jf, AST tree, IModifiers mods, Class defining) {
         super(jf, tree);
         modifiers = mods;
         definingClass = defining;
@@ -83,7 +83,7 @@ public abstract class Declaration
     /*@ 
       @ requires mods != null;
       @*/
-    public Declaration(ParsedItem pi, Modifiers mods, Class defining) {
+    public Declaration(ParsedItem pi, IModifiers mods, Class defining) {
         super(pi);
         modifiers = mods;
         definingClass = defining;

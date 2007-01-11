@@ -352,7 +352,7 @@ public class ModifiesList
 				newF =
 					new TemporaryField(
 						f,
-						(Modifiers) f.getModifiers(),
+						f.getModifiers(),
 						f.getType(),
 						(String) o,
 						f.getAssign());

@@ -414,7 +414,7 @@ public class JmlFile implements Serializable, IJmlFile {
 	  @    ast.getType() == JmlDeclParserTokenTypes.MODIFIER_SET;
 	  @*/
 	protected AST parseClass(AST ast) throws Jml2bException {
-		Modifiers mods = new Modifiers(ast);
+		IModifiers mods = new Modifiers(ast);
 		ast = ast.getNextSibling();
 
 		// in case we are parsing an external class, ignore classes that

@@ -239,4 +239,12 @@ public class ClassMethod extends AMethod implements IModifiers, Serializable {
 		return false;
 	}
 
+	public boolean isJml() {
+		return true;
+	}
+
+	public boolean isPublic() {
+		return mIsPublic;
+	}
+
 }

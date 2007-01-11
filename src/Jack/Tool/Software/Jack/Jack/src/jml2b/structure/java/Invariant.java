@@ -37,11 +37,11 @@ public class Invariant extends Declaration implements TypeCheckable {
 	/*@
 	  @ requires m != null;
 	  @*/
-	public Invariant(JmlFile jf, AST tree, Modifiers m, Class defining) {
+	public Invariant(JmlFile jf, AST tree, IModifiers m, Class defining) {
 		super(jf, tree, m, defining);
 	}
 
-	Invariant(Expression e, Modifiers m, Class c) {
+	Invariant(Expression e, IModifiers m, Class c) {
 		super(e, m, c);
 		property = e;
 	}

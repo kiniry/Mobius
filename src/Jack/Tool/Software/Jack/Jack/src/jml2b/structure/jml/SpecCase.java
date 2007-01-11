@@ -219,13 +219,13 @@ public class SpecCase
 	//		modifiers = mods;
 	//	}
 
-	public SpecCase(IJml2bConfiguration config, Modifiers mods)
+	public SpecCase(IJml2bConfiguration config, IModifiers mods)
 		throws Jml2bException {
 		labels = new Vector();
 		requires = config.getDefaultRequires();
 		ensures = config.getDefaultEnsures();
 		exsure = config.getDefaultExsures();
-		if (mods.isSet(ModFlags.PURE))
+		if (mods.isPure())
 			modifies = new ModifiesNothing();
 		else
 			modifies = config.getDefaultModifies();
@@ -358,8 +358,8 @@ public class SpecCase
 		IJml2bConfiguration config,
 		Expression req,
 		Vector labels,
-		Modifiers mods,
-		Modifiers methodMods,
+		IModifiers mods,
+		IModifiers methodMods,
 		int type)
 		throws Jml2bException {
 		requires = req != null ? req : config.getDefaultRequires();
@@ -384,7 +384,7 @@ public class SpecCase
 		}
 
 		if (modifies == null)
-			if (methodMods != null && methodMods.isSet(ModFlags.PURE))
+			if (methodMods != null && methodMods.isPure())
 				modifies = new ModifiesNothing();
 			else
 				modifies = config.getDefaultModifies();
@@ -457,7 +457,7 @@ public class SpecCase
 		LinkUtils.linkStatements(config, exsure.elements(), f);
 		if (modifies != null) {
 			modifies.linkStatements(config, f);
-			if (((Modifiers) f.currentMethod.getModifiers()).isSet(ModFlags.PURE)
+			if (( f.currentMethod.getModifiers()).isPure()
 				&& !(modifies instanceof ModifiesNothing))
 				throw new LinkException(
 					"Pure methods cannot have a modifies clause different from \\nothing",

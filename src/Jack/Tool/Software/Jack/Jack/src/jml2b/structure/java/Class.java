@@ -67,7 +67,7 @@ extends AClass
 	/** 
 	 * The modifiers of the class (i.e. public, protected, etc...). 
 	 */
-	private Modifiers modifiers = new Modifiers(0);
+	private IModifiers modifiers = new Modifiers(0);
 
 	/** 
 	 * (short) name of the class. 
@@ -198,7 +198,7 @@ extends AClass
 		JmlFile jf,
 		AST tree,
 		Package class_package,
-		Modifiers mods,
+		IModifiers mods,
 		boolean external) {
 		super(jf, tree);
 		linkedState = STATE_UNLINKED;
@@ -838,7 +838,12 @@ extends AClass
 	 *     <code>VAR_DECL</code>.
 	 */
 	/*@ requires interfaceModifier == true; */
-	private void fixInterfaceModifiers(Modifiers mods, int node_type) {
+	private void fixInterfaceModifiers(IModifiers imods, int node_type) {
+		if(imods instanceof Modifiers) {
+			return;
+		}
+		Modifiers mods= (Modifiers)imods;
+		
 		switch (node_type) {
 			case METH :
 				// set the abstract and public flag for interfaces methods
@@ -965,7 +970,7 @@ extends AClass
 	protected AST parseMethod(
 		JmlFile jmlFile,
 		AST a,
-		Modifiers mods,
+		IModifiers mods,
 		Class class1)
 		throws Jml2bException {
 		Method d = new Method(jmlFile, a.getFirstChild(), mods, this);
@@ -982,7 +987,7 @@ extends AClass
 	 * @param mods the modifiers corresponding to the parsed field.
 	 * @throws Jml2bException 
 	 */
-	void parseFields(JmlFile jmlFile, AST a, Modifiers mods)
+	void parseFields(JmlFile jmlFile, AST a, IModifiers mods)
 		throws Jml2bException {
 		VarDeclParser parser = new VarDeclParser(mods);
 		parser.parse(jmlFile, a);
@@ -1058,7 +1063,7 @@ extends AClass
 
 	// add the default constructor if no constructor is provided.
 	protected void addDefaultConstructor() throws Jml2bException {
-		Modifiers mods = new Modifiers(ModFlags.PUBLIC);
+		IModifiers mods = new Modifiers(ModFlags.PUBLIC);
 		Constructor c =
 			new Constructor(new ParsedItem(getJmlFile()), mods, this);
 		c.setBody(new StSkip());
@@ -1736,7 +1741,7 @@ extends AClass
 							new TerminalExp(new Identifier(f)),
 							"==",
 							f.getAssign()),
-						(Modifiers) f.getModifiers(),
+						(IModifiers) f.getModifiers(),
 						this));
 			}
 		}
