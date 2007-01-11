@@ -147,8 +147,9 @@ public class StaticPrelude1 extends Printer {
 									"j_convert c_min" + t + " c_max" + t + ".");
 		}
 		stream.println("");
-		stream.println("Add Ring t_int j_add j_mul 1%Z 0%Z j_neg Zeq ZTheory\n" +
-						"[ Zpos Zneg 0%Z xO xI 1%positive ].\n");
+		// seems ring doesn't work this way anymore
+//		stream.println("Add Ring t_int j_add j_mul 1%Z 0%Z j_neg Zeq ZTheory\n" +
+//						"[ Zpos Zneg 0%Z xO xI 1%positive ].\n");
 		
 		
 		//TODO: Delete the following lines...

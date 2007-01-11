@@ -3,7 +3,7 @@
 <plugin
    id="coq.plugin"
    name="Coq plug-in"
-   version="1.3.6"
+   version="1.3.7"
    provider-name="INRIA Sophia - Everest project"
    class="coqPlugin.CoqPlugin">
 

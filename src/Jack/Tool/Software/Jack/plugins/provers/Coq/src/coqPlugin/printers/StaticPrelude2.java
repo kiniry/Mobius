@@ -117,7 +117,7 @@ public class StaticPrelude2 extends Printer {
 				"Proof. intros; unfold overridingCoupleRef; rewrite REFeq_eq_true; trivial. Qed.");
 		stream.println(
 				"Definition  overridingCoupleZ (T:Set) (f:Z -> T)(a:Z) (b:T) (c:Z) :="
-					+ " if (Zeq a c) then b else (f c).");
+					+ " if (Zeq_bool a c) then b else (f c).");
 		stream.println("Lemma overridingCoupleZ_diff : forall T f a b c, a <> c -> overridingCoupleZ T f a b c = f c.\n" + 
 		"Proof. intros; unfold overridingCoupleZ; rewrite not_eq_false_Zeq; trivial. Qed.");
 
@@ -200,6 +200,11 @@ public class StaticPrelude2 extends Printer {
 	 */
 
 	private void printMyBoolEq(PrintStream stream) {
+		stream.println("Lemma not_true_is_false: forall (b: bool), ~(b=true) -> b=false.");
+		stream.println("Proof.\n" +
+				"induction b. intro; elim H; auto. intro; auto.\n" +
+				"Qed.\n");
+		
 		stream.println("Variable REFeq : "+ CoqType.Reference +" -> "+ CoqType.Reference +" -> bool.");
 		stream.println("Variable REFeq_refl : forall x, REFeq x x = true. ");
 		stream.println(
@@ -236,27 +241,34 @@ public class StaticPrelude2 extends Printer {
 		stream.println(" intros x y; case (exists_REFeq_eq x y). intros b; case b; intro H.");
 		stream.println(" left; apply REFeq_eq; assumption. right; apply REFeq_false_not_eq ; assumption.");
 		stream.println("Qed.");
-		stream.println("Lemma Zeq_refl : forall x, Zeq x x = true.\n" +
+		stream.println("Lemma Zeq_refl : forall x, Zeq_bool x x = true.\n" +
 				"Proof.\n" +
-				" intros; unfold Zeq; rewrite Zcompare_refl; trivial.\n" +
+				" intros; unfold Zeq_bool; rewrite Zcompare_refl; trivial.\n" +
 				"Qed.");
 		stream.println(
-			"Lemma Zeq_eq : forall x y, Zeq x y = true -> x = y.\n" +
-			" intros x y H; apply Zeq_prop; rewrite H; exact I.\n" +
+			"Lemma Zeq_eq : forall x y, Zeq_bool x y = true -> x = y.\n" +
+			" intros x y H.\n" + 
+			"unfold Zeq_bool in *.\n" +
+			"destruct ( Zcompare_Eq_iff_eq x y) as [h1 h2].\n" +
+			"apply h1.\n" +
+			"destruct (x ?= y); try discriminate; auto.\n" +
 			"Qed.");
-		stream.println("Lemma Zeq_eq_true: forall x y, x = y -> Zeq x y = true.\n" +
+		 
+		stream.println("Lemma Zeq_eq_true: forall x y, x = y -> Zeq_bool x y = true.\n" +
 				"Proof.\n" +
 				" intros x y H;rewrite H;apply Zeq_refl.\n" +
 				"Qed.");
 			
 
-		stream.println("Lemma not_eq_false_Zeq : forall x y, x<>y -> Zeq x y = false.\n" +
+		stream.println("Lemma not_eq_false_Zeq : forall x y, x<>y -> Zeq_bool x y = false.\n" +
 				"Proof.\n" +
-				" intros x y H; assert (H1 := Zeq_prop x y);destruct (Zeq x y);trivial.\n" +
-				" elim H; apply H1;exact I.\n" +
+				" intros x y H.\n" +
+				"destruct ( Zcompare_Eq_iff_eq x y) as [h1 h2]. unfold Zeq_bool.\n" +
+				"destruct (x ?= y); auto.\n" +
+				"destruct H; auto.\n" +
 				"Qed.");
 		
-		stream.println("Lemma Zeq_false_not_eq :  forall x y, Zeq x y = false -> x <> y.\n" +
+		stream.println("Lemma Zeq_false_not_eq :  forall x y, Zeq_bool x y = false -> x <> y.\n" +
 				"Proof.\n" +
 				" intros x y H1 H2; rewrite H2 in H1; rewrite Zeq_refl in H1; discriminate H1.\n" +
 				"Qed. ");

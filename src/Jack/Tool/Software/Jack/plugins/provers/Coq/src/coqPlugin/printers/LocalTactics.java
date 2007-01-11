@@ -399,10 +399,10 @@ public class LocalTactics extends Printer {
 				"  |  [H : REFeq ?x ?y = false |- _ ] =>\n" +
 				"           let H1 := fresh \"H\" in \n" +
 				"           (assert (H1 :=  REFeq_false_not_eq x y H); clear H)\n" +
-				"  | [H : Zeq ?x ?y = true |- _ ] =>\n" +
+				"  | [H : Zeq_bool ?x ?y = true |- _ ] =>\n" +
 				"           let H1 := fresh \"H\" in \n" +
 				"           (assert (H1 :=  Zeq_eq x y H);clear H)\n" +
-				"  |  [H : Zeq ?x ?y = false |- _ ] =>\n" +
+				"  |  [H : Zeq_bool ?x ?y = false |- _ ] =>\n" +
 				"           let H1 := fresh \"H\" in \n" +
 				"           (assert (H1 :=  Zeq_false_not_eq x y H); clear H)\n" +
 				       "   end.");
@@ -425,10 +425,10 @@ public class LocalTactics extends Printer {
 			"      rewrite H1 in H2\n" + 
 			"   | [H1 : REFeq ?x ?y = true, H2 : context [if (REFeq ?x ?y) then _ else _]  |- _] => \n" + 
 			"       rewrite H1 in H2\n" + 
-			"   | [H : context  [Zeq ?x ?x] |- _ ] => rewrite (Zeq_refl x) in H\n" + 
-			"   | [H1 : Zeq ?x ?y = false, H2 : context [if (Zeq ?x ?y) then _ else _] |- _]  => \n" + 
+			"   | [H : context  [Zeq_bool ?x ?x] |- _ ] => rewrite (Zeq_refl x) in H\n" + 
+			"   | [H1 : Zeq_bool ?x ?y = false, H2 : context [if (Zeq_bool ?x ?y) then _ else _] |- _]  => \n" + 
 			"      rewrite H1 in H2\n" + 
-			"   | [H1 : Zeq ?x ?y = true, H2 : context [if (Zeq ?x ?y) then _ else _]  |- _] => \n" + 
+			"   | [H1 : Zeq_bool ?x ?y = true, H2 : context [if (Zeq_bool ?x ?y) then _ else _]  |- _] => \n" + 
 			"       rewrite H1 in H2\n" + 
 			"   | [H : context [if ?b then _ else _ ]|- _] => gendestruct b;intros\n" + 
 			"   | [|- context [if ?b then _ else _]] => gendestruct b;intros\n" + 
