@@ -103,7 +103,7 @@ public class AnnotationGenerator extends Generator {
 						Enumeration e1 = c.getFields();
 						while (e1.hasMoreElements()) {
 							AField f = (AField) e1.nextElement();
-							if (((Modifiers) f.getModifiers()).isJml()) {
+							if ((f.getModifiers()).isJml()) {
 								fields.add(f);
 								jcp.add(configuration, f);
 							}

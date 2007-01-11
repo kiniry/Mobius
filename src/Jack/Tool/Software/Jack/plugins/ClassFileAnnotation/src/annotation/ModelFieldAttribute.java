@@ -37,7 +37,7 @@ public class ModelFieldAttribute extends JmlAttributes {
 		tmp[l++] = (byte) (fields_count % 256);
 		while (e.hasMoreElements()) {
 			AField a = (AField) e.nextElement();
-			byte acces_flag = getAccesFlag((Modifiers) a.getModifiers());
+			byte acces_flag = getAccesFlag(a.getModifiers());
 			short name_index = jcp.getOrCreateNameIndex(a);
 			short descriptor_index = jcp.getOrCreateDescriptorIndex(config, a.getType());
 			tmp[l++] = (byte) (acces_flag / 256);

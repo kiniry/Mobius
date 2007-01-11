@@ -17,8 +17,8 @@ import jml.JmlDeclParserTokenTypes;
 import jml2b.IJml2bConfiguration;
 import jml2b.exceptions.Jml2bException;
 import jml2b.structure.java.Field;
+import jml2b.structure.java.IModifiers;
 import jml2b.structure.java.Identifier;
-import jml2b.structure.java.ModFlags;
 import jml2b.structure.java.Modifiers;
 import jml2b.structure.java.Type;
 import jml2b.structure.jml.Exsures;
@@ -574,15 +574,15 @@ public class JmlAttributes extends Attribute {
 		}
 	}
 
-	static byte getAccesFlag(Modifiers modifiers) {
+	static byte getAccesFlag(IModifiers modifiers) {
 		byte flag = 0x00;
-		if (modifiers.isSet(ModFlags.PUBLIC))
+		if (modifiers.isPublic())
 			flag |= 0x01;
-		if (modifiers.isSet(ModFlags.PRIVATE))
+		if (modifiers.isPrivate())
 			flag |= 0x02;
-		if (modifiers.isSet(ModFlags.PROTECTED))
+		if (modifiers.isProtected())
 			flag |= 0x04;
-		if (modifiers.isSet(ModFlags.STATIC))
+		if (modifiers.isStatic())
 			flag |= 0x08;
 		return flag;
 	}
