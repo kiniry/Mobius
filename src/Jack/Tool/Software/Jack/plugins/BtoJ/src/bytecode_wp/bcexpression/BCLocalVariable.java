@@ -45,6 +45,9 @@ public class BCLocalVariable extends Expression {
 		this(lv.getName(), lv.getStartPC() , lv.getLength() ,  lv.getIndex(), _type , _method);	
 	}
 
+	public BCLocalVariable(String name, int ind, JavaType _type,  BCMethod _method) {
+		this(name, 0 , 0 ,  ind, _type , _method);	
+	}
 	/**
 	 * this constructor is used in class invariants to represent  this 
 	 * object. That is why it is not related to any method
