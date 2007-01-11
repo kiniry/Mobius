@@ -94,4 +94,12 @@ public class ArrayAccessExpression extends Expression implements RefFunction {
 		ArrayAccessExpression copy = new ArrayAccessExpression(copySubExpr[0], copySubExpr[1] );
 		return copy;
 	}
+	
+	
+	public Expression atStateArr(int instrIndex) {
+
+        ValueAtState valueOfArrAtState = new ValueAtState(
+                this, instrIndex);
+        return valueOfArrAtState;
+	}
 }
