@@ -1,0 +1,311 @@
+\documentclass{beamer}
+
+\usetheme{default}
+\usepackage{tikz}
+\usepackage{graphics}
+\usepackage{pgflibraryshapes}
+
+\usepackage{listings}
+
+\lstset{escapeinside={(*@}{@*)}}
+\lstset{commentstyle=\color{blue!50!black}\textit,tabsize=2,keywordstyle=\color{green!50!black}}
+\lstset{backgroundcolor=\color{lightgray!50}}
+%\lstset{frame=trbl,frameround=DDDD}
+\lstset{numbers=left, numberstyle=\footnotesize}
+
+\usepackage{multirow}
+\newcommand{\benchname}[1]{\texttt{#1}}
+
+
+\setbeamercovered{dynamic}
+\beamertemplatenavigationsymbolsempty
+
+\title[CARDIS'06]{A Low-Footprint Java-to-Native Compilation Scheme Using Formal Methods}
+\author[Alexandre.Courbot@lifl.fr]{\textbf{Alexandre Courbot}, Mariela Pavlova, Gilles Grimaud, Jean-Jacques Vandewalle}
+%\institute{IRCICA/LIFL, Univ. Lille 1, CNRS UMR 8022, INRIA Futurs, France 
+%
+%POPS research group}
+\date[CARDIS'06]{Seventh Smart Card Research and Advanced Application IFIP Conference, April 19th, 2006}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Java-to-Native Compilation}
+
+\subsection{Why Compile Java Bytecode into Native Code?}
+
+\begin{frame}
+\frametitle{Java-to-Native Compilation}
+
+Compiling Java bytecode into native code brings runtime advantages:
+\begin{itemize}
+\item Faster execution
+\item Especially beneficial for restrained systems with non-sophisticated JVMs
+\end{itemize}
+But Java-to-Native compilation also comes with drawbacks:
+\begin{itemize}
+\item Native code is typically 3 to 4 times bigger than bytecode,
+\end{itemize}
+\end{frame}
+
+\subsection{Why is Native Code so Huge?}
+
+\begin{frame}[fragile]
+\frametitle{Why is Native Code so Huge? An Example}
+
+The \emph{idiv} bytecode throws an \texttt{ArithmeticException} if the divisor is equal to zero:
+
+\begin{columns}
+\begin{column}{5.1cm}
+\begin{lstlisting}[language=jvmis]
+iload i
+iload j
+idiv
+ireturn
+\end{lstlisting}
+\end{column}
+\begin{column}{5.1cm}
+\begin{lstlisting}[language=C]
+int i, j;
+(*@\alert<2->{if (j == 0)}@*)
+	(*@\alert<2->{THROW(ArithmeticException);}@*)
+RETURN_INT(i / j);
+\end{lstlisting}
+\end{column}
+\end{columns}
+\bigskip
+There are many checks of this kind:
+\begin{itemize}
+\item Checking a pointer is not \emph{null} before dereferencing it,
+\item Checking an array is accessed inside its bounds,
+\item Checking an array is created with a positive size,
+\item Checking affected types are compatible,
+\item ...
+\end{itemize}
+SPECjvm98: 2964 exception check sites for a native size of 23598 bytes (Ishizaki et al.).
+\end{frame}
+
+\subsection{Possible Times for Compilation}
+
+\begin{frame}
+\frametitle{Compilation Times}
+Java-to-Native compilation is typically done at two moments:
+
+\textbf{Ahead-Of-Time:}
+\begin{itemize}
+\item Performed off-board,
+\item Methods to compile must be selected in advance,
+\item No or little time constraints,
+%\item Process can take advantage of an underlying compiler (e.g. C compiler).
+%\item Native code is linked with the JVM,
+\item Native code replaces the bytecode,
+\end{itemize}
+
+\textbf{Just-In-Time:}
+\begin{itemize}
+\item Performed by an on-board compiler,
+\item Methods to compile are chosen by the JVM,
+\item Little time to perform optimizations,
+\item Native code must be stored in writable memory in addition to the bytecode
+\end{itemize}
+
+In either cases, the runtime exceptions check sites must be issued.
+\end{frame}
+
+
+\section{The Method}
+
+\begin{frame}
+\frametitle{Suppressing Exceptions Check Sites}
+
+Runtime exceptions are (usually) a safety against programming errors. They should not be triggered by sane code.
+
+We propose to formally prove that runtime exceptions are never thrown by a program.
+
+Methodology:
+\begin{enumerate}
+\item Annotate source code with JML specification to express that no runtime exception will be thrown
+\item Compile JML specification into BCSL as user-defined class file attributes
+\item Generate and prove verification conditions over the bytecode and BCSL
+\item Annotate class files with useless runtime exception check sites attribute
+\end{enumerate}
+\end{frame}
+
+\subsection{Annotating with JML}
+
+\begin{frame}[fragile]
+\frametitle{Annotating Source with JML}
+
+Write annotations that express no runtime exception is thrown.
+\begin{lstlisting}[language=java]
+private/*@spec_public */short tab[];
+//@invariant tab != null;
+//@requires size <= tab.length;
+//@ensures true;
+//@exsures (Exception) false;
+public void clear(int size) {
+  int code;
+  //@loop_modifies code, tab[*];
+  //@loop_invariant code <= size && code >= 0;
+  for (code = 0; code < size; code++) {
+    tab[code] = 0;
+  }
+}
+\end{lstlisting}
+
+\only<1>{Lines 2 and 3 specifies what the method requires from its callers}
+\only<2>{Lines 4 and 5 specifies what the method guarantees to its callers}
+\only<3>{Lines 8 and 9 specifies the loop invariants}
+\end{frame}
+
+\subsection{Compiling the Classes with their JML Annotations}
+
+\begin{frame}[fragile]
+\frametitle{Compile JML annotations into BCSL attributes}
+
+Class files are enriched with a user-defined BCSL attribute that expresses the JML specification.
+
+\begin{lstlisting}[language=jvmis]
+//@invariant tab(lv[0]) != null;
+//@requires lv[1] <= length(tab(lv[0]));
+//@ensures true;
+//@exsures (Exception) false;
+
+method clear
+  iconst_0
+  istore_2
+  ...
+  return
+\end{lstlisting}
+\end{frame}
+
+\subsection{Generating the Verification Conditions}
+
+\begin{frame}
+\frametitle{Generating the Verification Conditions}
+
+Annotations are verified by the Java Applet Correction Kit (JACK).
+
+Verification conditions are generated using a weakest precondition calculus.
+
+They are then verified using a theorem prover (Simplify, Coq, AtelierB, ...)
+
+A method can be optimized if:
+\begin{itemize}
+\item The precondition is respected at every call site,
+\item The normal and exceptional postconditions always hold.
+\end{itemize}
+
+
+\end{frame}
+
+\subsection{Optimizing the Native Code}
+
+\begin{frame}
+\frametitle{Optimizing the Native Code}
+
+When a runtime exception throwing bytecode is met by the compiler, the useless exception sites attribute is checked with the bytecode index to see if the exception site is needed.
+
+\begin{itemize}
+\item Cheap and efficient for both ahead-of-time and just-in-time compilations
+\item The annotations must be trusted!
+\end{itemize}
+
+\end{frame}
+
+\subsection{Experimental Results}
+
+\begin{frame}
+\frametitle{Experimental Results}
+\begin{center}
+  Number of necessary exception check sites
+
+  \bigskip
+  \begin{tabular}{|l|r@{\extracolsep{0.2cm}}rr|}
+    \hline
+    \multirow{2}*{Program} & \multicolumn{3}{c|}{\# of exception check sites} \\
+    \cline{2-4} & Bytecode & ~~~~~~JC & Proven AOT\\
+    \hline
+    \benchname{crypt} & 190 & 79 & 1\\
+    \benchname{banking} & 170 & 12 & 0\\
+    \benchname{scheduler} & 215 & 25 & 0\\
+    \benchname{tcpip} & 1893 & 288 & 0\\
+    \hline
+  \end{tabular}
+  \bigskip
+  \begin{tabular}{|l|r@{\extracolsep{0.2cm}}rr|}
+    \hline
+    \multirow{2}*{Program} &  \multicolumn{3}{c|}{Memory footprint (bytes)}\\
+    \cline{2-4} & Bytecode & Naive AOT & Proven AOT\\
+    \hline
+    \benchname{crypt} & 1256 & 5330 & 1592\\
+    \benchname{banking} & 2320 & 5634 & 3582\\
+    \benchname{scheduler} & 2208 & 5416 & 2504\\
+    \benchname{tcpip} & 15497 & 41540 & 18064\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Experimental Results}
+\begin{center}
+  Human work
+
+  \bigskip
+  \begin{tabular}{|l|r@{\extracolsep{0.5cm}}r|}
+    \hline
+    \multirow{2}*{Program} & \multicolumn{2}{c|}{Source code size (bytes)}\\
+    \cline{2-3} & ~~~~~~~~~Code & JML\\
+    \hline
+    \benchname{crypt} & 4113 & 1882\\
+    \benchname{banking} & 11845 & 15775\\
+    \benchname{scheduler} & 12539 & 3399\\
+    \benchname{tcpip} & 83017 & 15379\\
+    \hline
+  \end{tabular}
+  \bigskip
+  \begin{tabular}{|l|r@{\extracolsep{0.5cm}}r|}
+    \hline
+    \multirow{2}*{Program} & \multicolumn{2}{c|}{Proved lemmas}\\
+    \cline{2-3} & Automatically & Manually\\
+    \hline
+    \benchname{crypt} & 227 & 77 \\
+    \benchname{banking} & 379 & 159\\
+    \benchname{scheduler} & 226 & 49\\
+    \benchname{tcpip} & 2233 & 2191\\
+    \hline
+  \end{tabular}
+\end{center}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}
+\frametitle{Conclusion}
+
+We presented a way to dramatically reduce the size of native code generated through Java bytecode by removing runtime exception check sites.
+\begin{itemize}
+\item JML annotations are used to generate verification conditions over runtime exceptions
+\item Sites are removed only if it is formally proved they are not useful
+\item Final size nearly as compact as original bytecode for ARM thumb!
+\end{itemize}
+
+Limitations:
+\begin{itemize}
+\item Right now, we are unable to remove exception check sites related to monitors
+\item Dynamic class loading is not safe if the loaded classes call optimized native code
+\item Human work still rather consequent, requires a verification expert to make it through!
+\end{itemize}
+\end{frame}
+
+
+\end{document}
