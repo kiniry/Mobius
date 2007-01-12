@@ -99,6 +99,35 @@ Advantage: tailored techniques
 \end{itemize}
 \end{slide}
 
+\begin{slide}{JAG: JML Annotation Generator}
+\begin{itemize}
+\item Generates JML annotations for a given temporal property,
+including liveness properties
+\item Tool accepts different input formats (internal representation
+with B\"uchi automata)
+\item For liveness properties a progress condition on the environment
+has to be established: use of Hoare logic with progress condition
+\Red{\[\{|P|\}S\{|Q|\}\]}
+\vspace*{-1em}
+\begin{itemize}
+\item Partial correctness \(\{P\}S\{Q\}\)
+\item If \(S\) diverges, it satisfies a progress hypothesis
+\end{itemize}
+\end{itemize}
+\end{slide}
+
+\begin{slide}{Current work: generalisation to other
+programming/annotation languages}
+\begin{itemize}
+\item Define trace-based semantics of programming language
+\item Define semantics of the annotations
+\item Characterising the annotations needed for the verification of
+LTL properties
+\item Characterising verification conditions for the appropriate
+annotations
+\end{itemize}
+\end{slide}
+
 \begin{slide}{JACK: Java Applet Correctness Kit}
 \begin{itemize}
 \item Implements an annotation propagation algorithm
@@ -170,34 +199,6 @@ verification result
 \end{itemize}
 \end{slide}
 
-\begin{slide}{JAG: JML Annotation Generator}
-\begin{itemize}
-\item Generates JML annotations for a given temporal property,
-including liveness properties
-\item Tool accepts different input formats (internal representation
-with B\"uchi automata)
-\item For liveness properties a progress condition on the environment
-has to be established: use of Hoare logic with progress condition
-\Red{\[\{|P|\}S\{|Q|\}\]}
-\vspace*{-1em}
-\begin{itemize}
-\item Partial correctness \(\{P\}S\{Q\}\)
-\item If \(S\) diverges, it satisfies a progress hypothesis
-\end{itemize}
-\end{itemize}
-\end{slide}
-
-\begin{slide}{Current work: generalisation to other
-programming/annotation languages}
-\begin{itemize}
-\item Define trace-based semantics of programming language
-\item Define semantics of the annotations
-\item Characterising the annotations needed for the verification of
-LTL properties
-\item Characterising verification conditions for the appropriate
-annotations
-\end{itemize}
-\end{slide}
 
 \begin{slide}{MECA: Models for Access Control}
 \begin{itemize}
@@ -229,9 +230,8 @@ access control policy
 \end{itemize}
 \item Work continues in different directions:
 \begin{itemize}
-\item Formalisation
 \item Generalisation
-\item 
+\item Formalisation
 \end{itemize}
 \end{itemize}
 \end{slide}
