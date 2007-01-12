@@ -15,7 +15,11 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import bytecode_wp.bcclass.attributes.SET;
 import bytecode_wp.bcexpression.javatype.JavaType;
+import bytecode_wp.bytecode.branch.BCConditionalBranch;
 import bytecode_wp.bytecode.branch.BCGOTO;
+import bytecode_wp.bytecode.branch.BCJumpInstruction;
+import bytecode_wp.bytecode.objectmanipulation.BCNEW;
+import bytecode_wp.bytecode.objectmanipulation.BCNEWARRAY;
 import bytecode_wp.formula.Formula;
 import bytecode_wp.utils.Util;
 
@@ -79,7 +83,7 @@ public abstract  class BCInstruction  implements ByteCode {
 	
 	public BCInstruction(InstructionHandle  _instruction)  {
 		instructionHandle = _instruction; 
-		setPosition(instructionHandle.getPosition());
+		setPosition(instructionHandle.getPosition());		
 	}
 	
 	public InstructionHandle getInstructionHandle() {
@@ -176,6 +180,27 @@ public abstract  class BCInstruction  implements ByteCode {
 			targetersInstr.add(instr);
 		}
 		return targetersInstr;
+		/*//if (targeters == null) {
+			targeters = new Vector();
+			for (int i = 0; i < bytecode.length; i++ ) {
+				if (bytecode[i] instanceof BCConditionalBranch ) {
+					if ( bytecode[i].getNext() == this ) {
+						targeters.add(bytecode[i]);
+					} 
+					if (((BCConditionalBranch)bytecode[i]).getTarget() == this ) {
+						targeters.add(bytecode[i]);
+					}
+				} else if (bytecode[i] instanceof BCGOTO ) {
+					if (((BCGOTO)bytecode[i]).getTarget() == this ) {
+						targeters.add(bytecode[i]);
+					}
+				} else if ( (bytecode[i].getNext() == this ) && ! (bytecode[i] instanceof BCTypeRETURN) ) {
+					targeters.add(bytecode[i]);
+				}
+			}
+		//}
+	return targeters;
+	*/	
 	}
 
 	/**
@@ -190,6 +215,7 @@ public abstract  class BCInstruction  implements ByteCode {
 		for (int i = 0; i < vector.size() ; i++) {
 			BCInstruction instr = (BCInstruction)vector.elementAt(i);
 			targeters.add(new Integer( instr.getPosition()));
+			//targeters.add(instr);
 		}
 	}
 	
@@ -202,6 +228,7 @@ public abstract  class BCInstruction  implements ByteCode {
 			targeters = new Vector();
 		}
 		targeters.add(new Integer( _t.getPosition()));
+		//targeters.add(_t ); 
 	} 
 	
 	
@@ -215,6 +242,7 @@ public abstract  class BCInstruction  implements ByteCode {
 			return;
 		}
 		targeters.remove(new Integer( instr.getPosition() ));
+		//targeters.remove(instr);
 	}
 	
 	public void dump(String _s) {
@@ -286,23 +314,54 @@ public abstract  class BCInstruction  implements ByteCode {
 		return bytecode;
 	}
 	
-	/////////////////////////////////////////////////////////
-	//////////////Allocation/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
 	
-	/*private  int allocate= 0;
-	
-	*//**
-	 * @return Returns the allocate.
-	 *//*
-	public int getAllocate() {
-		return allocate;
+	/**
+	 * a method which returns all the instructions that are target of the current instruction
+	 * Note that loop end will behave "abnormally " because they have a missing backedge
+	 * @return
+	 */
+	public Vector getTargets() {
+		Vector targets  = null;
+		if (this instanceof BCConditionalBranch ) {
+			targets = new Vector();
+			targets.addElement(getNext() );
+			targets.addElement(((BCConditionalBranch)this).getTarget());
+		} else if (this instanceof BCGOTO ) {
+			targets = new Vector();
+			targets.addElement(((BCGOTO)this).getTarget());
+		} else if (this instanceof BCLoopEnd) {
+			BCInstruction wr = ((BCLoopEnd) this).getWrappedInstruction();
+			targets = wr.getTargets();
+		} else if (this instanceof BCLoopStart) {
+			BCInstruction wr = ((BCLoopStart) this).getWrappedInstruction();
+			targets = wr.getTargets();
+		} else {
+			targets = new Vector();
+			targets.addElement(getNext());
+		}
+		return targets;
 	}
 	
-	*//**
-	 * @param allocate The allocate to set.
-	 *//*
-	public void setAllocate(int _allocate) {
-		allocate = allocate +  _allocate;
-	}*/
+	////////////////////////////////////////////////////////////
+	//////////////ALLOCATION and MEMORY CONSUMPTION POLICIES////
+	///////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////
+	private  int allocate= 0;
+	
+	/**
+	 * @return Returns the allocate.
+	 */
+	public int alloc() {
+		if (this instanceof BCNEW) {
+			return 1;
+		} else if (this instanceof BCNEWARRAY ) {
+			return 10;
+		} else {
+			return 0;
+		}
+		
+	}
+	
+	
 }
