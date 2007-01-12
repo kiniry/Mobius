@@ -125,12 +125,16 @@ public class B2JProofs extends Proofs {
 			throws IOException {
 		int hypNum = fBcm.getLocalVariables().length;
 		Enumeration e = fPos.elements();
+		int iCase = 0;
 		while (e.hasMoreElements()) {
+			
 			VCGPath f = (VCGPath) e.nextElement();
+			
 			for (int i = 0; i < f.getNumVc(); i++) {
-				save(f, i, hypNum, s, jf);
+				save(iCase, f, i, hypNum, s, jf);
 				hypNum += getHypAsVirtualFormula(f, i).size();//f.getHypothesisAt(i).size();
 			}
+			iCase ++;
 		}
 	}
 
@@ -302,10 +306,10 @@ public class B2JProofs extends Proofs {
 		return false;
 	}
 
-	private void save(VCGPath f, int n, int hypNum, JpoOutputStream s, IJmlFile jf) throws IOException {
+	private void save(int iCase, VCGPath f, int n, int hypNum, JpoOutputStream s, IJmlFile jf) throws IOException {
 		// the header or so they say?
-		s.writeUTF(""); // name
-		s.writeUTF(""); // caseNum
+		s.writeUTF(fBcm.getName()); // name
+		s.writeUTF("" + iCase); // caseNum
 		
 		// the total size
 		s.writeInt(getHypAsVirtualFormula(f, n).size() + fBcm.getLocalVariables().length);
